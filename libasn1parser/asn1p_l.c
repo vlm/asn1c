@@ -4020,7 +4020,7 @@ asn1p_atoi(char *ptr) {
 	if(errno == ERANGE) {
 		fprintf(stderr,
 			"Value \"%s\" at line %d is too large "
-			"for this compiler! Please contact the vendor.",
+			"for this compiler! Please contact the asn1c author.\n",
 			ptr, yylineno);
 		errno = ERANGE;	/* Restore potentially clobbered errno */
 	}
