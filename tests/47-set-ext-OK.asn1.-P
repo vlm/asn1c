@@ -48,7 +48,7 @@ static ber_tlv_tag_t asn_DEF_T1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_T1_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 14 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 14 */
 };
 static uint8_t asn_DEF_T1_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
@@ -60,7 +60,7 @@ static asn_SET_specifics_t asn_DEF_T1_specs = {
 	asn_DEF_T1_tag2el,
 	1,	/* Count of tags in the map */
 	asn_DEF_T1_tag2el,	/* Same as above */
-	1,	/* Count of tags in the CANONICAL-XER map */
+	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
 	(unsigned int *)asn_DEF_T1_mmap	/* Mandatory elements map */
 };
@@ -136,7 +136,7 @@ static ber_tlv_tag_t asn_DEF_T2_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_T2_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 15 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 15 */
 };
 static uint8_t asn_DEF_T2_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
@@ -148,7 +148,7 @@ static asn_SET_specifics_t asn_DEF_T2_specs = {
 	asn_DEF_T2_tag2el,
 	1,	/* Count of tags in the map */
 	asn_DEF_T2_tag2el,	/* Same as above */
-	1,	/* Count of tags in the CANONICAL-XER map */
+	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
 	(unsigned int *)asn_DEF_T2_mmap	/* Mandatory elements map */
 };
@@ -218,7 +218,7 @@ static asn_TYPE_member_t asn_MBR_T3[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_DEF_T3_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 16 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 16 */
 };
 static asn_CHOICE_specifics_t asn_DEF_T3_specs = {
 	sizeof(struct T3),
@@ -293,7 +293,7 @@ static asn_TYPE_member_t asn_MBR_T4[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_DEF_T4_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 17 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 17 */
 };
 static asn_CHOICE_specifics_t asn_DEF_T4_specs = {
 	sizeof(struct T4),

@@ -70,7 +70,7 @@ static ber_tlv_tag_t asn_DEF_T_tags[] = {
 static asn_TYPE_tag2member_t asn_DEF_T_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 1, 0, 0 }, /* s at 16 */
     { (ASN_TAG_CLASS_APPLICATION | (3 << 2)), 0, 0, 0 }, /* i at 15 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* b at 18 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* b at 18 */
 };
 static uint8_t asn_DEF_T_mmap[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (1 << 6) | (0 << 5)
@@ -82,7 +82,7 @@ static asn_SET_specifics_t asn_DEF_T_specs = {
 	asn_DEF_T_tag2el,
 	3,	/* Count of tags in the map */
 	asn_DEF_T_tag2el,	/* Same as above */
-	3,	/* Count of tags in the CANONICAL-XER map */
+	3,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
 	(unsigned int *)asn_DEF_T_mmap	/* Mandatory elements map */
 };

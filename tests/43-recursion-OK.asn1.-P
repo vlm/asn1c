@@ -157,7 +157,7 @@ static asn_TYPE_tag2member_t asn_DEF_Test_structure_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 3, 0, 0 }, /* t-member4 at 19 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 1 }, /* t-member2 at 16 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, -1, 0 }, /* t-member3 at 17 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 }, /* t-member1 at 15 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* t-member1 at 15 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_Test_structure_1_specs = {
 	sizeof(struct Test_structure_1),
@@ -311,7 +311,7 @@ static asn_TYPE_tag2member_t asn_DEF_Choice_1_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* and at 22 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* or at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* not at 24 */
-    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 3, 0, 0 }, /* other at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 3, 0, 0 } /* other at 26 */
 };
 static asn_CHOICE_specifics_t asn_DEF_Choice_1_specs = {
 	sizeof(struct Choice_1),
@@ -390,7 +390,7 @@ static ber_tlv_tag_t asn_DEF_Test_structure_2_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_Test_structure_2_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 }, /* m1 at 28 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 at 28 */
 };
 static uint8_t asn_DEF_Test_structure_2_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
@@ -402,7 +402,7 @@ static asn_SET_specifics_t asn_DEF_Test_structure_2_specs = {
 	asn_DEF_Test_structure_2_tag2el,
 	1,	/* Count of tags in the map */
 	asn_DEF_Test_structure_2_tag2el,	/* Same as above */
-	1,	/* Count of tags in the CANONICAL-XER map */
+	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
 	(unsigned int *)asn_DEF_Test_structure_2_mmap	/* Mandatory elements map */
 };
@@ -476,7 +476,7 @@ static ber_tlv_tag_t asn_DEF_Test_structure_3_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_Test_structure_3_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 }, /* m1 at 29 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 at 29 */
 };
 static uint8_t asn_DEF_Test_structure_3_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
@@ -488,7 +488,7 @@ static asn_SET_specifics_t asn_DEF_Test_structure_3_specs = {
 	asn_DEF_Test_structure_3_tag2el,
 	1,	/* Count of tags in the map */
 	asn_DEF_Test_structure_3_tag2el,	/* Same as above */
-	1,	/* Count of tags in the CANONICAL-XER map */
+	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
 	(unsigned int *)asn_DEF_Test_structure_3_mmap	/* Mandatory elements map */
 };
