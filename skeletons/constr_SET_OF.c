@@ -526,7 +526,6 @@ SET_OF_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 
 	(const void *)list = sptr;
-
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
