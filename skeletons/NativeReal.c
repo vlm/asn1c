@@ -28,7 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	asn_generic_no_constraint,
 	NativeReal_decode_ber,
 	NativeReal_encode_der,
-	0,				/* Not implemented yet */
+	NativeReal_decode_xer,
 	NativeReal_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeReal_tags,
@@ -142,6 +142,41 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+
+
+/*
+ * Decode the chunk of XML text encoding REAL.
+ */
+asn_dec_rval_t
+NativeReal_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+	asn_dec_rval_t rval;
+	REAL_t *st = 0;
+	double *Dbl = (double *)*sptr;
+
+	if(!Dbl) {
+		(void *)Dbl = *sptr = CALLOC(1, sizeof(double));
+		if(!Dbl) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	rval = REAL_decode_xer(opt_codec_ctx, td, (void **)&st, opt_mname,
+		buf_ptr, size);
+	if(rval.code == RC_OK) {
+		if(asn_REAL2double(st, Dbl)) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+		}
+	} else {
+		rval.consumed = 0;
+	}
+	asn_DEF_REAL.free_struct(&asn_DEF_REAL, st, 0);
+	return rval;
+}
 
 asn_enc_rval_t
 NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
