@@ -15,7 +15,7 @@
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
 #ifndef	WIN32
-#include <inttypes.h>	/* C99 Standard specifies this file, for uintXX_t */
+#include <stdint.h>	/* C99 Standard specifies this file, for uintXX_t */
 #else
 typedef	unsigned char		uint8_t;
 typedef	unsigned short int	uint16_t;

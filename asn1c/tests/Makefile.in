@@ -33,9 +33,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
 host_triplet = @host@
-target_triplet = @target@
 subdir = asn1c/tests
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -163,7 +161,7 @@ check_SCRIPTS = check-assembly.sh
 TESTS_ENVIRONMENT = CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
 @CPLUSPLUS_FOUND_FALSE@TESTS = check-*.c
 @CPLUSPLUS_FOUND_TRUE@TESTS = check-*.c check-*.cc	## Include C++ test filed (.cc)
-EXTRA_DIST = ${check_SCRIPTS} check-*.c*
+EXTRA_DIST = $(check_SCRIPTS) check-*.c*
 all: all-am
 
 .SUFFIXES:
