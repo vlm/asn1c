@@ -70,6 +70,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		if(!(arg->flags & A1C_USE_NATIVE_INTEGERS))
 			produce_st = 1;
 		break;
+	case ASN_BASIC_BIT_STRING:
 	case ASN_BASIC_OCTET_STRING:
 		produce_st = 1;
 			break;
@@ -79,7 +80,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		break;
 	}
 	if(produce_st)
-	OUT("const %s_t *st = sptr;\n", MKID(arg->expr->Identifier));
+	OUT("const %s_t *st = sptr;\n",
+		asn1c_type_name(arg, arg->expr, TNF_SAFE));
 
 	if(r_size || r_value) {
 		if(r_size) {
@@ -350,12 +352,13 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 
 	OUT("/* The underlying type is %s */\n",
 		ASN_EXPR_TYPE2STR(etype));
-	OUT("const %s_t *st = sptr;\n", MKID(arg->expr->Identifier));
+	OUT("const %s_t *st = sptr;\n",
+		asn1c_type_name(arg, arg->expr, TNF_SAFE));
 
 	switch(etype) {
 	case ASN_STRING_UTF8String:
-		OUT("uint8_t *ch = st->buf;\n");
-		OUT("uint8_t *end = ch + st->size;\n");
+		OUT("const uint8_t *ch = st->buf;\n");
+		OUT("const uint8_t *end = ch + st->size;\n");
 		OUT("\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
@@ -364,35 +367,35 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 		natural_stop = 0xffffffffUL;
 		break;
 	case ASN_STRING_UniversalString:
-		OUT("uint32_t *ch = st->buf;\n");
-		OUT("uint32_t *end = ch + st->size;\n");
+		OUT("const uint32_t *ch = st->buf;\n");
+		OUT("const uint32_t *end = ch + st->size;\n");
 		OUT("\n");
 		OUT("if(st->size % 4) return 0; /* (size%4)! */\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
-			OUT("uint32_t cv = (((uint8_t *)ch)[0] << 24)\n");
-			OUT("\t\t| (((uint8_t *)ch)[1] << 16)\n");
-			OUT("\t\t| (((uint8_t *)ch)[2] << 8)\n");
-			OUT("\t\t|  ((uint8_t *)ch)[3]\n");
+			OUT("uint32_t cv = (((const uint8_t *)ch)[0] << 24)\n");
+			OUT("\t\t| (((const uint8_t *)ch)[1] << 16)\n");
+			OUT("\t\t| (((const uint8_t *)ch)[2] << 8)\n");
+			OUT("\t\t|  ((const uint8_t *)ch)[3];\n");
 			if(!range) OUT("if(cv > 255) return 0;\n");
 		natural_stop = 0xffffffffUL;
 		break;
 	case ASN_STRING_BMPString:
-		OUT("uint16_t *ch = st->buf;\n");
-		OUT("uint16_t *end = ch + st->size;\n");
+		OUT("const uint16_t *ch = st->buf;\n");
+		OUT("const uint16_t *end = ch + st->size;\n");
 		OUT("\n");
 		OUT("if(st->size % 2) return 0; /* (size%2)! */\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
-			OUT("uint16_t cv = (((uint8_t *)ch)[0] << 8)\n");
-			OUT("\t\t| ((uint8_t *)ch)[1];\n");
+			OUT("uint16_t cv = (((const uint8_t *)ch)[0] << 8)\n");
+			OUT("\t\t| ((const uint8_t *)ch)[1];\n");
 			if(!range) OUT("if(cv > 255) return 0;\n");
 		natural_stop = 0xffff;
 		break;
 	case ASN_BASIC_OCTET_STRING:
 	default:
-		OUT("uint8_t *ch = st->buf;\n");
-		OUT("uint8_t *end = ch + st->size;\n");
+		OUT("const uint8_t *ch = st->buf;\n");
+		OUT("const uint8_t *end = ch + st->size;\n");
 		OUT("\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
@@ -531,7 +534,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 		if(arg->flags & A1C_USE_NATIVE_INTEGERS) {
-			OUT("value = *(int *)sptr;\n");
+			OUT("value = *(const int *)sptr;\n");
 		} else {
 			OUT("if(asn1_INTEGER2long(st, &value)) {\n");
 				INDENT(+1);
@@ -543,14 +546,21 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 		}
 		break;
 	case ASN_BASIC_BOOLEAN:
-		OUT("value = (*(int *)sptr) ? 1 : 0;\n");
+		OUT("value = (*(const int *)sptr) ? 1 : 0;\n");
 		break;
 	default:
-		WARNING("Value cannot be determined "
-			"for constraint check for %s at line %d\n",
-			arg->expr->Identifier, arg->expr->_lineno);
-		OUT("#error Value cannot be determined for %s at %d\n",
-			arg->expr->Identifier, arg->expr->_lineno);
+		WARNING("%s:%d: Value cannot be determined "
+			"for constraint check for %s",
+			arg->mod->source_file_name,
+			arg->expr->_lineno,
+			arg->expr->Identifier
+		);
+		OUT_NOINDENT(
+			"#error %s:%d: Value of %s cannot be determined\n",
+			arg->mod->source_file_name,
+			arg->expr->_lineno,
+			arg->expr->Identifier
+		);
 		break;
 	}
 
