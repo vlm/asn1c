@@ -6,8 +6,9 @@ DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
 
 T ::= SEQUENCE {
-    i	 INTEGER,
-    any	 [1] EXPLICIT ANY
+    i	 INTEGER OPTIONAL,
+    any	 [1] EXPLICIT ANY,
+    ...
 }
 
 END
