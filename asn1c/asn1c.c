@@ -83,13 +83,15 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_ALL_DEFS_GLOBAL;
 		} else if(strcmp(optarg, "bless-SIZE") == 0) {
 			asn1_fixer_flags |= A1F_EXTENDED_SizeConstraint;
+		} else if(strcmp(optarg, "double-identifiers") == 0) {
+			asn1_compiler_flags |= A1C_DOUBLE_IDENTIFIERS;
 		} else if(strncmp(optarg, "known-extern-type=", 18) == 0) {
 			char *known_type = optarg + 18;
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
-		} else if(strcmp(optarg, "native-integers") == 0) {
-			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
-		} else if(strcmp(optarg, "native-types") == 0) {
+		} else if(
+			strcmp(optarg, "native-integers") == 0 /* Legacy */
+			|| strcmp(optarg, "native-types") == 0) {
 			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
 		} else if(strcmp(optarg, "no-constraints") == 0) {
 			asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
@@ -316,7 +318,7 @@ usage(const char *av0) {
 "  -fall-defs-global     Don't make the asn1_DEF_'s of structure members \"static\"\n"
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
 "  -fknown-extern-type=<name>    Pretend this type is known\n"
-"  -fnative-types        Use \"int\" instead of INTEGER_t whenever possible\n"
+"  -fnative-types        Use \"long\" instead of INTEGER_t whenever possible, etc.\n"
 "  -fno-constraints      Do not generate constraint checking code\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
 "  -ftypes88             Pretend to support only ASN.1:1988 embedded types\n"
