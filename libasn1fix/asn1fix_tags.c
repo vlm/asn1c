@@ -1,7 +1,7 @@
 #include "asn1fix_internal.h"
 
 int
-asn1f_fetch_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag) {
+asn1f_fetch_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, int flags) {
 	int ret;
 
 	if(expr->tag.tag_class != TC_NOCLASS) {
@@ -19,6 +19,11 @@ asn1f_fetch_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct as
 		memset(tag, 0, sizeof(*tag));
 		tag->tag_class = TC_UNIVERSAL;
 		tag->tag_value = expr_type2uclass_value[expr->expr_type];
+		if(flags && expr->expr_type == ASN_TYPE_ANY) {
+			assert(tag->tag_value == 0);
+			tag->tag_value = -1;
+			return 0;
+		}
 		return (tag->tag_value == 0) ? -1 : 0;
 	}
 
@@ -37,7 +42,8 @@ asn1f_fetch_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct as
 			return -1;
 
 		expr->_mark |= TM_RECURSION;
-		ret = asn1f_fetch_tag(asn, expr->module, expr, tag);
+		ret = asn1f_fetch_tag(asn, expr->module, expr, tag,
+			flags);
 		expr->_mark &= ~TM_RECURSION;
 		return ret;
 	}

@@ -2,7 +2,10 @@
 
 static int asn1f_parametrize(arg_t *arg, asn1p_expr_t *ex, asn1p_expr_t *ptype);
 static int asn1f_param_process_recursive(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
+static int asn1f_param_process_constraints(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
+
 static asn1p_expr_t *_referenced_argument(asn1p_ref_t *ref, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
+static int _process_constraints(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
 
 int
 asn1f_fix_parametrized_assignment(arg_t *arg) {
@@ -79,6 +82,7 @@ asn1f_parametrize(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype) {
 	 * as a child of the expression, replacing all occurences of
 	 * symbols which are defined as parametrized type arguments
 	 * with the actual values.
+	 * 3. Don't forget to parametrize the subtype constraints.
 	 */
 
 	nex = asn1p_expr_clone(ptype, 0);
@@ -117,34 +121,40 @@ asn1f_param_process_recursive(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptyp
 
 	TQ_FOR(child, &(expr->members), next) {
 		asn1p_expr_t *ra;
-		asn1p_expr_t *ne;
+		asn1p_expr_t *ne;	/* new expression (clone) */
+
+		if(asn1f_param_process_constraints(arg, child, ptype, actargs))
+			return -1;
 
 		ra = _referenced_argument(child->reference, ptype, actargs);
-		if(ra == NULL) continue;
-
-		DEBUG("Substituting parameter for %s %s at line %d",
-			child->Identifier,
-			asn1f_printable_reference(child->reference),
-			child->_lineno
-		);
-
-		assert(child->meta_type == AMT_TYPEREF);
-		assert(child->expr_type == A1TC_REFERENCE);
-
-		ne = asn1p_expr_clone(ra, 0);
-		if(ne == NULL) return -1;
-		assert(ne->Identifier == 0);
-		ne->Identifier = strdup(child->Identifier);
-		if(ne->Identifier == 0) {
-			asn1p_expr_free(ne);
-			return -1;
+		if(ra) {
+			DEBUG("Substituting parameter for %s %s at line %d",
+				child->Identifier,
+				asn1f_printable_reference(child->reference),
+				child->_lineno
+			);
+	
+			assert(child->meta_type == AMT_TYPEREF);
+			assert(child->expr_type == A1TC_REFERENCE);
+	
+			ne = asn1p_expr_clone(ra, 0);
+			if(ne == NULL) return -1;
+			assert(ne->Identifier == 0);
+			ne->Identifier = strdup(child->Identifier);
+			if(ne->Identifier == 0) {
+				asn1p_expr_free(ne);
+				return -1;
+			}
+			SUBSTITUTE(child, ne);
 		}
-		SUBSTITUTE(child, ne);
 	}
 
 	return 0;
 }
 
+/*
+ * Check that the given ref looks like an argument of a parametrized type.
+ */
 static asn1p_expr_t *
 _referenced_argument(asn1p_ref_t *ref, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
 	asn1p_expr_t *aa;
@@ -163,3 +173,84 @@ _referenced_argument(asn1p_ref_t *ref, asn1p_expr_t *ptype, asn1p_expr_t *actarg
 
 	return NULL;
 }
+
+/*
+ * Search for parameters inside constraints.
+ */
+static int
+asn1f_param_process_constraints(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
+	asn1p_constraint_t *cts;
+	int ret;
+
+	if(!expr->constraints) return 0;
+
+	cts = asn1p_constraint_clone(expr->constraints);
+	assert(cts);
+
+	ret = _process_constraints(arg, cts, ptype, actargs);
+	if(ret == 1) {
+		asn1p_constraint_free(expr->constraints);
+		expr->constraints = cts;
+		ret = 0;
+	} else {
+		asn1p_constraint_free(cts);
+	}
+
+	return ret;
+}
+
+static int
+_process_constraints(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
+	asn1p_value_t *values[3];
+	int rvalue = 0;
+	size_t i;
+
+	values[0] = ct->value;
+	values[1] = ct->range_start;
+	values[2] = ct->range_stop;
+
+	for(i = 0; i < sizeof(values)/sizeof(values[0]); i++) {
+		asn1p_value_t *v = values[i];
+		asn1p_expr_t *ra;
+		asn1p_ref_t *ref;
+		char *str;
+
+		if(!v || v->type != ATV_REFERENCED) continue;
+
+		ref = v->value.reference;
+		ra = _referenced_argument(ref, ptype, actargs);
+		if(!ra) continue;
+
+		DEBUG("_process_constraints(%s), ra=%s",
+			asn1f_printable_reference(ref), ra->Identifier);
+
+		str = strdup(ra->Identifier);
+		if(!str) return -1;
+
+		assert(ref->comp_count == 1);
+		ref = asn1p_ref_new(ref->_lineno);
+		if(!ref) { free(str); return -1; }
+
+		if(asn1p_ref_add_component(ref, str, 0)) {
+			free(str);
+			return -1;
+		}
+
+		asn1p_ref_free(v->value.reference);
+		v->value.reference = ref;
+		rvalue = 1;
+	}
+
+	/* Process the rest of constraints recursively */
+	for(i = 0; i < ct->el_count; i++) {
+		int ret = _process_constraints(arg, ct->elements[i],
+			ptype, actargs);
+		if(ret == -1)
+			rvalue = -1;
+		else if(ret == 1 && rvalue != -1)
+			rvalue = 1;
+	}
+
+	return rvalue;
+}
+

@@ -93,7 +93,7 @@ asn1constraint_pullup(arg_t *arg) {
 
 		expr->combined_constraints = ct_parent;
 		if(ct_expr->type == ACT_CA_SET) {
-			int i;
+			unsigned int i;
 			for(i = 0; i < ct_expr->el_count; i++) {
 				if(asn1p_constraint_insert(
 					expr->combined_constraints,
@@ -120,9 +120,9 @@ asn1constraint_pullup(arg_t *arg) {
 
 int
 asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, asn1p_expr_type_e etype, enum asn1p_constraint_type_e effective_type) {
+	unsigned int el;
 	int rvalue = 0;
 	int ret;
-	int el;
 
 	if(!ct) return 0;
 
@@ -208,7 +208,7 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 
 static void
 _remove_exceptions(arg_t *arg, asn1p_constraint_t *ct) {
-	int i;
+	unsigned int i;
 
 	for(i = 0; i < ct->el_count; i++) {
 		if(ct->elements[i]->type == ACT_EL_EXT)
