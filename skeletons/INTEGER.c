@@ -186,8 +186,8 @@ INTEGER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 int
 INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
+	char scratch[32];	/* Enough for 64-bit integer */
 	const INTEGER_t *st = sptr;
-	char scratch[32];
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
 	signed long accum;
@@ -202,9 +202,24 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(st->size == 0)
 		return cb("0", 1, app_key);
 
+	/*
+	 * Advance buf pointer until the start of the value's body.
+	 * This will make us able to process large integers using simple case,
+	 * when the actual value is small
+	 * (0x0000000000abcdef would yield a fine 0x00abcdef)
+	 */
+	/* Skip the insignificant leading bytes */
+	for(; buf < buf_end-1; buf++) {
+		switch(*buf) {
+		case 0x00: if((buf[1] & 0x80) == 0) continue; break;
+		case 0xff: if((buf[1] & 0x80) != 0) continue; break;
+		}
+		break;
+	}
+
 	/* Simple case: the integer size is small */
-	if((size_t)st->size < sizeof(accum) || (st->buf[0] & 0x80)) {
-		accum = (st->buf[0] & 0x80) ? -1 : 0;
+	if((size_t)(buf_end - buf) <= sizeof(accum)) {
+		accum = (*buf & 0x80) ? -1 : 0;
 		for(; buf < buf_end; buf++)
 			accum = (accum << 8) | *buf;
 		ret = snprintf(scratch, sizeof(scratch), "%ld", accum);
@@ -213,9 +228,10 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	}
 
 	/* Output in the long xx:yy:zz... format */
+	/* TODO: replace with generic algorithm (Knuth TAOCP Vol 2, 4.3.1) */
 	for(p = scratch; buf < buf_end; buf++) {
 		static char h2c[16] = "0123456789ABCDEF";
-		if((p - scratch) >= (ssize_t)(sizeof(scratch) / 2)) {
+		if((p - scratch) >= (ssize_t)(sizeof(scratch) - 4)) {
 			/* Flush buffer */
 			if(cb(scratch, p - scratch, app_key))
 				return -1;
@@ -225,6 +241,8 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		*p++ = h2c[*buf & 0x0F];
 		*p++ = ':';
 	}
+	if(p != scratch)
+		p--;	/* Remove the last ':' */
 
 	return cb(scratch, p - scratch, app_key);
 }

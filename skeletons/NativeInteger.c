@@ -166,7 +166,7 @@ int
 NativeInteger_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const int *Int = sptr;
-	char scratch[32];
+	char scratch[32];	/* Enough for 64-bit int */
 	int ret;
 
 	(void)td;	/* Unused argument */
