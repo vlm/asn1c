@@ -26,6 +26,13 @@ asn_struct_free_f ANY_free;
  * Handy conversion routines. *
  ******************************/
 
+/* Convert another ASN.1 type into the ANY. This implies DER encoding. */
+int ANY_fromType(ANY_t *, asn1_TYPE_descriptor_t *td, void *struct_ptr);
+ANY_t *ANY_new_fromType(asn1_TYPE_descriptor_t *td, void *struct_ptr);
+
+/* Convert the contents of the ANY type into the specified type. */
+int ANY_to_type(ANY_t *, asn1_TYPE_descriptor_t *td, void **struct_ptr);
+
 #define	ANY_fromBuf(s, buf, size)	OCTET_STRING_fromBuf((s), (buf), (size))
 #define	ANY_new_fromBuf(buf, size)	OCTET_STRING_new_fromBuf((buf), (size))
 
