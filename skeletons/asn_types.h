@@ -14,20 +14,13 @@
 #include <sys/types.h>	/* For size_t */
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
-#ifndef	WIN32
-#include <stdint.h>	/* C99 Standard specifies this file, for uintXX_t */
-#else
-typedef	unsigned char		uint8_t;
-typedef	unsigned short int	uint16_t;
-typedef	unsigned int		uint32_t;
-typedef	int			ssize_t;
-#endif
+#include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
 
-#ifdef WIN32
+#ifdef	WIN32
 #define	 snprintf	_snprintf
 #define	 vsnprintf	_vsnprintf
 #define	alloca(size)	_alloca(size)
-#endif
+#endif	/* WIN32 */
 
 #ifndef	__GNUC__
 #define	__attribute__(ignore)
