@@ -590,9 +590,11 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Phase 0: Check that the opening tag matches our expectations.
 	 * Phase 1: Processing body and reacting on closing tag.
 	 * Phase 2: Processing inner type.
-	 * Phase 3: Only waiting for closing tag
+	 * Phase 3: Only waiting for closing tag.
+	 * Phase 4: Skipping unknown extensions.
+	 * Phase 5: PHASED OUT
 	 */
-	for(edx = ctx->step; ctx->phase <= 3;) {
+	for(edx = ctx->step; ctx->phase <= 4;) {
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
@@ -653,6 +655,27 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
+
+		/* Skip the extensions section */
+		if(ctx->phase == 4) {
+			ASN_DEBUG("skip_unknown(%d, %ld)",
+				tcv, (long)ctx->left);
+			switch(xer_skip_unknown(tcv, &ctx->left)) {
+			case -1:
+				ctx->phase = 5;
+				RETURN(RC_FAIL);
+				continue;
+			case 1:
+				ctx->phase = 3;
+			case 0:
+				XER_ADVANCE(ch_size);
+				continue;
+			case 2:
+				ctx->phase = 3;
+				break;
+			}
+		}
+
 		switch(tcv) {
 		case XCT_BOTH:
 			break;	/* No CHOICE? */
@@ -660,7 +683,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			if(ctx->phase != 3)
 				break;
 			XER_ADVANCE(ch_size);
-			ctx->phase = 4;	/* Phase out */
+			ctx->phase = 5;	/* Phase out */
 			RETURN(RC_OK);
 		case XCT_OPENING:
 			if(ctx->phase == 0) {
@@ -704,11 +727,21 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			/* It is expected extension */
 			if(specs->extensible) {
-				ASN_DEBUG("Got anticipated extension, "
-					"but NOT IMPLEMENTED YET");
+				ASN_DEBUG("Got anticipated extension");
 				/*
-				 * TODO: implement skipping of extensions
+				 * Check for (XCT_BOTH or XCT_UNKNOWN_BO)
+				 * By using a mask. Only record a pure
+				 * <opening> tags.
 				 */
+				if(tcv & XCT_CLOSING) {
+					/* Found </extension> without body */
+					ctx->phase = 3; /* Terminating */
+				} else {
+					ctx->left = 1;
+					ctx->phase = 4; /* Skip ...'s */
+				}
+				XER_ADVANCE(ch_size);
+				continue;
 			}
 
 			/* Fall through */
@@ -720,7 +753,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		break;
 	}
 
-	ctx->phase = 4;	/* Phase out, just in case */
+	ctx->phase = 5;	/* Phase out, just in case */
 	RETURN(RC_FAIL);
 }
 
