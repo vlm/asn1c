@@ -950,13 +950,13 @@ ClassField:
 		$$->meta_type = AMT_OBJECTFIELD;
 		$$->marker = $2;
 	}
-	| ClassFieldIdentifier Type optMarker optUnique {
+	| ClassFieldIdentifier Type optUnique optMarker {
 		$$ = $2;
 		$$->Identifier = $1.name;
-		$$->marker = $3;
-		$$->unique = $4;
+		$$->marker = $4;
+		$$->unique = $3;
 	}
-	| ClassFieldIdentifier ClassFieldIdentifier optMarker optUnique {
+	| ClassFieldIdentifier ClassFieldIdentifier optUnique optMarker {
 		int ret;
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
@@ -968,8 +968,8 @@ ClassField:
 		checkmem(ret == 0);
 		$$->expr_type = A1TC_CLASSFIELD;
 		$$->meta_type = AMT_OBJECTFIELD;
-		$$->marker = $3;
-		$$->unique = $4;
+		$$->marker = $4;
+		$$->unique = $3;
 	}
 	;
 
