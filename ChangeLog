@@ -1,4 +1,13 @@
 
+0.9.7.2:	2004-Oct-12
+
+	* Empty SEQUENCE and SET clauses are now allowed.
+
+0.9.7.1:	2004-Oct-12
+
+	* Fixed automatic tagging for extensions of compound types.
+	* Fixed ParametrizedReference parsing: {} are now recognized.
+
 0.9.7:	2004-Oct-11
 
 	* Finished CANONICAL-XER implementation by adding SET and SET OF

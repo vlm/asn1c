@@ -76,7 +76,7 @@ static asn1p_value_t *
 	asn1p_paramlist_t	*a_plist;	/* A pargs list */
 	struct asn1p_expr_marker_s a_marker;	/* OPTIONAL/DEFAULT */
 	enum asn1p_constr_pres_e a_pres;	/* PRESENT/ABSENT/OPTIONAL */
-	asn1_integer_t		 a_int;
+	asn1c_integer_t		 a_int;
 	char	*tv_str;
 	struct {
 		char *buf;
@@ -239,6 +239,7 @@ static asn1p_value_t *
 %type	<a_value>		Value
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
+%type	<a_expr>		optComponentTypeLists
 %type	<a_expr>		ComponentTypeLists
 %type	<a_expr>		ComponentType
 %type	<a_expr>		AlternativeTypeLists
@@ -618,6 +619,12 @@ ImportsElement:
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_REFERENCE;
 	}
+	| TypeRefName '{' '}' {		/* Completely equivalent to above */
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->Identifier = $1;
+		$$->expr_type = A1TC_REFERENCE;
+	}
 	| Identifier {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
@@ -654,6 +661,12 @@ ExportsBody:
 
 ExportsElement:
 	TypeRefName {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->Identifier = $1;
+		$$->expr_type = A1TC_EXPORTVAR;
+	}
+	| TypeRefName '{' '}' {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->Identifier = $1;
@@ -841,6 +854,10 @@ ActualParameter:
 /*
  * A collection of constructed data type members.
  */
+optComponentTypeLists:
+	{ $$ = asn1p_expr_new(yylineno); }
+	| ComponentTypeLists { $$ = $1; };
+
 ComponentTypeLists:
 	ComponentType {
 		$$ = asn1p_expr_new(yylineno);
@@ -1065,13 +1082,13 @@ TypeDeclaration:
 		$$->expr_type = ASN_CONSTR_CHOICE;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE '{' ComponentTypeLists '}'	{
+	| TOK_SEQUENCE '{' optComponentTypeLists '}'	{
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_SEQUENCE;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SET '{' ComponentTypeLists '}'		{
+	| TOK_SET '{' optComponentTypeLists '}'		{
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_SET;
