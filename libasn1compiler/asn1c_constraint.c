@@ -109,7 +109,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	OUT("if(!sptr) {\n");
 		INDENT(+1);
 		OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
-		OUT("\t\"%%s: value not given\", td->name);\n");
+		OUT("\t\"%%s: value not given (%%s:%%d)\",\n");
+		OUT("\ttd->name, __FILE__, __LINE__);\n");
 		OUT("return -1;\n");
 		INDENT(-1);
 	OUT("}\n");
@@ -173,7 +174,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	OUT("} else {\n");
 		INDENT(+1);
 			OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
-			OUT("\t\"%%s: constraint failed\", td->name);\n");
+			OUT("\t\"%%s: constraint failed (%%s:%%d)\",\n");
+			OUT("\ttd->name, __FILE__, __LINE__);\n");
 			OUT("return -1;\n");
 		INDENT(-1);
 	OUT("}\n");
@@ -542,7 +544,8 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 			OUT("if(asn1_INTEGER2long(st, &value)) {\n");
 				INDENT(+1);
 				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
-				OUT("\t\"%%s: value too large\", td->name);\n");
+				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
+				OUT("\ttd->name, __FILE__, __LINE__);\n");
 				OUT("return -1;\n");
 				INDENT(-1);
 			OUT("}\n");

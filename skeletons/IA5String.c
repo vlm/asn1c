@@ -43,17 +43,18 @@ IA5String_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			if(*buf > 0x7F) {
 				_ASN_ERRLOG(app_errlog, app_key,
 					"%s: value byte %d out of range: "
-					"%d > 127",
+					"%d > 127 (%s:%d)",
 					td->name,
 					(buf - st->buf) + 1,
-					*buf
-				);
+					*buf,
+					__FILE__, __LINE__);
 				return -1;
 			}
 		}
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 

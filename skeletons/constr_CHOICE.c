@@ -481,7 +481,8 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 
@@ -515,7 +516,8 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		}
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: no CHOICE element given", td->name);
+			"%s: no CHOICE element given",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
