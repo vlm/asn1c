@@ -137,6 +137,8 @@ asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
 		return "SingleTypeConstraint";
 	case ACT_CT_WCOMPS:
 		return "MultipleTypeConstraints";
+	case ACT_CT_CTDBY:
+		return "UserDefinedConstraint";
 	case ACT_CA_SET:
 		return "SET";
 	case ACT_CA_CRC:

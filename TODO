@@ -10,9 +10,9 @@ which is already completed. Also see #3.2.
 
 2. MEDIUM:
 
-2.1 Support for DEFAULT encoding and decoding, at least in INTEGER/ENUMERATED types.
-2.2 Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
+2.1 Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
+	Requires something from 1.2 (Information Object Classes).
 
 3. MINOR:
 
-3.1 Parsing of CONSTRAINED BY clauses
+3.1 Support for DEFAULT encoding and decoding, at least in INTEGER/ENUMERATED types.
