@@ -22,6 +22,7 @@ static int asn1c_lang_C_type_SET_def(arg_t *arg);
 static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
 static int _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p);
+static int check_if_extensible(asn1p_expr_t *expr);
 static int emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int*tags_impl_skip);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
 static int emit_constraint_checking_code(arg_t *arg);
@@ -400,7 +401,6 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	int elements;
 	int tags_impl_skip = 0;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
-	int extensible = 0;
 	tag2el_t *tag2el = NULL;
 	int tag2el_count = 0;
 	char *p;
@@ -518,7 +518,8 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 		OUT("%d,\t/* Elements count */\n", elements);
 		OUT("asn1_DEF_%s_tag2el,\n", p);
 		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
-		OUT("%d,\t/* Whether extensible */\n", extensible);
+		OUT("%d,\t/* Whether extensible */\n",
+			check_if_extensible(expr));
 		OUT("(unsigned int *)asn1_DEF_%s_mmap\t/* Mandatory elements map */\n", p);
 	);
 	OUT("};\n");
@@ -720,7 +721,6 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	int elements;	/* Number of elements */
 	int tags_impl_skip = 0;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
-	int extensible = 0;
 	tag2el_t *tag2el = NULL;
 	int tag2el_count = 0;
 	char *p;
@@ -821,7 +821,8 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		OUT("%d,\t/* Elements count */\n", elements);
 		OUT("asn1_DEF_%s_tag2el,\n", p);
 		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
-		OUT("%d\t/* Whether extensible */\n", extensible);
+		OUT("%d\t/* Whether extensible */\n",
+			check_if_extensible(expr));
 	);
 	OUT("};\n");
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
@@ -1079,6 +1080,14 @@ asn1c_lang_C_type_EXTENSIBLE(arg_t *arg) {
 	OUT(" * possible extensions are below.\n");
 	OUT(" */\n");
 
+	return 0;
+}
+
+static int check_if_extensible(asn1p_expr_t *expr) {
+	asn1p_expr_t *v;
+	TQ_FOR(v, &(expr->members), next) {
+		if(v->expr_type == A1TC_EXTENSIBLE) return 1;
+	}
 	return 0;
 }
 
@@ -1996,3 +2005,4 @@ _find_terminal_type(arg_t *arg) {
 	if(expr) return expr->expr_type;
 	return A1TC_INVALID;
 }
+

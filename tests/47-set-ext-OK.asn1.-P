@@ -1,0 +1,312 @@
+
+/*** <<< DEPS [T1] >>> ***/
+
+/* Dependencies for T1 */
+#include <INTEGER.h>
+
+
+/*
+ * Method of determining the components presence
+ */
+enum T1_PR_e {
+	T1_PR_i,	/* Member i is present */
+};
+#include <constr_SET.h>
+
+extern asn1_TYPE_descriptor_t asn1_DEF_T1;
+
+/*** <<< TYPE-DECLS [T1] >>> ***/
+
+
+typedef struct T1 {
+	INTEGER_t	 i;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pT1, T1_PR_x) */
+	unsigned int _presence_map
+		[((1+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} T1_t;
+
+/*** <<< STAT-DEFS [T1] >>> ***/
+
+#include <constr_SET.h>
+
+static asn1_SET_element_t asn1_DEF_T1_elements[] = {
+	{ offsetof(struct T1, i), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		0,
+		(void *)&asn1_DEF_INTEGER,
+		"i"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_T1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_T1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 14 */
+};
+static uint8_t asn1_DEF_T1_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7)
+};
+static asn1_SET_specifics_t asn1_DEF_T1_specs = {
+	sizeof(struct T1),
+	offsetof(struct T1, _ber_dec_ctx),
+	offsetof(struct T1, _presence_map),
+	asn1_DEF_T1_elements,
+	1,	/* Elements count */
+	asn1_DEF_T1_tag2el,
+	1,	/* Count of tags in the map */
+	1,	/* Whether extensible */
+	(unsigned int *)asn1_DEF_T1_mmap	/* Mandatory elements map */
+};
+asn1_TYPE_descriptor_t asn1_DEF_T1 = {
+	"T1",
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_print,
+	SET_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_T1_tags,
+	sizeof(asn1_DEF_T1_tags)
+		/sizeof(asn1_DEF_T1_tags[0]),
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	&asn1_DEF_T1_specs	/* Additional specs */
+};
+
+
+/*** <<< DEPS [T2] >>> ***/
+
+/* Dependencies for T2 */
+#include <INTEGER.h>
+
+
+/*
+ * Method of determining the components presence
+ */
+enum T2_PR_e {
+	T2_PR_i,	/* Member i is present */
+};
+#include <constr_SET.h>
+
+extern asn1_TYPE_descriptor_t asn1_DEF_T2;
+
+/*** <<< TYPE-DECLS [T2] >>> ***/
+
+
+typedef struct T2 {
+	INTEGER_t	 i;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pT2, T2_PR_x) */
+	unsigned int _presence_map
+		[((1+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} T2_t;
+
+/*** <<< STAT-DEFS [T2] >>> ***/
+
+#include <constr_SET.h>
+
+static asn1_SET_element_t asn1_DEF_T2_elements[] = {
+	{ offsetof(struct T2, i), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		0,
+		(void *)&asn1_DEF_INTEGER,
+		"i"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_T2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_T2_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 15 */
+};
+static uint8_t asn1_DEF_T2_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7)
+};
+static asn1_SET_specifics_t asn1_DEF_T2_specs = {
+	sizeof(struct T2),
+	offsetof(struct T2, _ber_dec_ctx),
+	offsetof(struct T2, _presence_map),
+	asn1_DEF_T2_elements,
+	1,	/* Elements count */
+	asn1_DEF_T2_tag2el,
+	1,	/* Count of tags in the map */
+	1,	/* Whether extensible */
+	(unsigned int *)asn1_DEF_T2_mmap	/* Mandatory elements map */
+};
+asn1_TYPE_descriptor_t asn1_DEF_T2 = {
+	"T2",
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_print,
+	SET_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_T2_tags,
+	sizeof(asn1_DEF_T2_tags)
+		/sizeof(asn1_DEF_T2_tags[0]),
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	&asn1_DEF_T2_specs	/* Additional specs */
+};
+
+
+/*** <<< DEPS [T3] >>> ***/
+
+/* Dependencies for T3 */
+#include <INTEGER.h>
+
+extern asn1_TYPE_descriptor_t asn1_DEF_T3;
+
+/*** <<< TYPE-DECLS [T3] >>> ***/
+
+
+typedef struct T3 {
+	enum {
+		T3_PR_NOTHING,	/* No components present */
+		T3_PR_i,
+	} present;
+	union {
+		INTEGER_t	 i;
+		/*
+		 * This type is extensible,
+		 * possible extensions are below.
+		 */
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} T3_t;
+
+/*** <<< STAT-DEFS [T3] >>> ***/
+
+#include <constr_CHOICE.h>
+
+static asn1_CHOICE_element_t asn1_DEF_T3_elements[] = {
+	{ offsetof(struct T3, choice.i), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		0,
+		(void *)&asn1_DEF_INTEGER,
+		"i"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_T3_tags[] = {
+	
+};
+static asn1_TYPE_tag2member_t asn1_DEF_T3_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 16 */
+};
+static asn1_CHOICE_specifics_t asn1_DEF_T3_specs = {
+	sizeof(struct T3),
+	offsetof(struct T3, _ber_dec_ctx),
+	offsetof(struct T3, present),
+	sizeof(((struct T3 *)0)->present),
+	asn1_DEF_T3_elements,
+	1,	/* Elements count */
+	asn1_DEF_T3_tag2el,
+	1,	/* Count of tags in the map */
+	1	/* Whether extensible */
+};
+asn1_TYPE_descriptor_t asn1_DEF_T3 = {
+	"T3",
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_print,
+	CHOICE_free,
+	CHOICE_outmost_tag,
+	asn1_DEF_T3_tags,
+	sizeof(asn1_DEF_T3_tags)
+		/sizeof(asn1_DEF_T3_tags[0]),
+	0,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	&asn1_DEF_T3_specs	/* Additional specs */
+};
+
+
+/*** <<< DEPS [T4] >>> ***/
+
+/* Dependencies for T4 */
+#include <INTEGER.h>
+
+extern asn1_TYPE_descriptor_t asn1_DEF_T4;
+
+/*** <<< TYPE-DECLS [T4] >>> ***/
+
+
+typedef struct T4 {
+	enum {
+		T4_PR_NOTHING,	/* No components present */
+		T4_PR_i,
+	} present;
+	union {
+		INTEGER_t	 i;
+		/*
+		 * This type is extensible,
+		 * possible extensions are below.
+		 */
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} T4_t;
+
+/*** <<< STAT-DEFS [T4] >>> ***/
+
+#include <constr_CHOICE.h>
+
+static asn1_CHOICE_element_t asn1_DEF_T4_elements[] = {
+	{ offsetof(struct T4, choice.i), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		0,
+		(void *)&asn1_DEF_INTEGER,
+		"i"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_T4_tags[] = {
+	
+};
+static asn1_TYPE_tag2member_t asn1_DEF_T4_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 17 */
+};
+static asn1_CHOICE_specifics_t asn1_DEF_T4_specs = {
+	sizeof(struct T4),
+	offsetof(struct T4, _ber_dec_ctx),
+	offsetof(struct T4, present),
+	sizeof(((struct T4 *)0)->present),
+	asn1_DEF_T4_elements,
+	1,	/* Elements count */
+	asn1_DEF_T4_tag2el,
+	1,	/* Count of tags in the map */
+	1	/* Whether extensible */
+};
+asn1_TYPE_descriptor_t asn1_DEF_T4 = {
+	"T4",
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_print,
+	CHOICE_free,
+	CHOICE_outmost_tag,
+	asn1_DEF_T4_tags,
+	sizeof(asn1_DEF_T4_tags)
+		/sizeof(asn1_DEF_T4_tags[0]),
+	0,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	&asn1_DEF_T4_specs	/* Additional specs */
+};
+
