@@ -1,6 +1,10 @@
 #ifndef	_ASN1FIX_INTERNAL_H_
 #define	_ASN1FIX_INTERNAL_H_
 
+#ifdef	HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 /*
  * System headers required in various modules.
  */

@@ -1,5 +1,5 @@
 #include "asn1fix_internal.h"
-
+#include "asn1fix.h"
 
 char const *
 asn1f_printable_reference(asn1p_ref_t *ref) {
@@ -272,5 +272,61 @@ asn1f_count_children(asn1p_expr_t *expr) {
 	}
 
 	return count;
+}
+
+
+static char **known_types;
+static int known_types_count;
+static int known_types_size;
+
+static int _known_types_cmp(const void *ap, const void *bp) {
+	const char *a = *(const char * const *)ap;
+	const char *b = *(const char * const *)bp;
+	return strcmp(a, b);
+}
+
+int
+asn1f_make_known_external_type(const char *type_name) {
+	char *tname;
+
+	/* Check for duplicates */
+	if(asn1f_check_known_external_type(type_name) == 0) {
+		errno = EEXIST;
+		return -1;
+	}
+
+	/* Ensure enough space */
+	if(known_types_count <= known_types_size) {
+		int n = known_types_size ? known_types_size << 1 : 4;
+		void *p;
+		p = realloc(known_types, n * sizeof(known_types[0]));
+		if(!p) return -1;
+		known_types = p;
+		known_types_size = n;
+	}
+
+	tname = strdup(type_name);
+	if(!tname) return -1;
+
+	known_types[known_types_count++] = tname;
+
+#ifdef	HAVE_MERGESORT
+	mergesort
+#else
+	qsort
+#endif
+	(known_types, known_types_count, sizeof(known_types[0]),
+		_known_types_cmp);
+
+	return 0;
+}
+
+int
+asn1f_check_known_external_type(const char *type_name) {
+	void *p = bsearch(&type_name, known_types, known_types_count,
+		sizeof(known_types[0]), _known_types_cmp);
+	if(p) return 0;
+	errno = ESRCH;
+	return -1;
 }
 

@@ -27,4 +27,10 @@ int asn1f_process(asn1p_t *_asn,
 	enum asn1f_flags,
 	void (*error_log_callback)(int _severity, const char *fmt, ...));
 
+
+/*
+ * Explicitly mark type as known.
+ */
+int asn1f_make_known_external_type(const char *);
+
 #endif	/* ASN1FIX_H */
