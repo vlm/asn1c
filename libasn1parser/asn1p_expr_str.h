@@ -47,8 +47,8 @@ static char *asn1p_expr_type2str[] __attribute__ ((unused)) = {
  */
 #define	ASN_EXPR_TYPE2STR(type)					\
 	(							\
-	(((ssize_t)type) < 0					\
-	|| ((size_t)type) >= sizeof(asn1p_expr_type2str)	\
+	(((ssize_t)(type)) < 0					\
+	|| ((size_t)(type)) >= sizeof(asn1p_expr_type2str)	\
 		/ sizeof(asn1p_expr_type2str[0]))		\
 		? (char *)0					\
 		: asn1p_expr_type2str[(type)]			\

@@ -36,13 +36,13 @@ print<<EOM;
 /*
  * Convert the ASN.1 expression type back into the string representation.
  */
-#define	ASN_EXPR_TYPE2STR(type)				\\
-	(						\\
-	((type) < 0					\\
-	|| (type) >= sizeof(asn1p_expr_type2str)	\\
-		/ sizeof(asn1p_expr_type2str[0]))	\\
-		? (char *)0				\\
-		: asn1p_expr_type2str[(type)]		\\
+#define	ASN_EXPR_TYPE2STR(type)					\\
+	(							\\
+	(((ssize_t)(type)) < 0					\\
+	|| ((size_t)(type)) >= sizeof(asn1p_expr_type2str)	\\
+		/ sizeof(asn1p_expr_type2str[0]))		\\
+		? (char *)0					\\
+		: asn1p_expr_type2str[(type)]			\\
 	)
 
 #endif	/* ASN1_PARSER_EXPR_STR_H */
