@@ -602,7 +602,9 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 		arg->embed--;
 		assert(arg->target->target == OT_TYPE_DECLS);
 	} else {
-		OUT("%s", asn1c_type_name(arg, memb, TNF_RSAFE));
+		OUT("%s", asn1c_type_name(arg, memb,
+			(memb->marker.flags & EM_UNRECURSE)
+				? TNF_RSAFE : TNF_CTYPE));
 	}
 	OUT(") list;\n");
 	INDENT(-1);

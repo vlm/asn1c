@@ -25,7 +25,10 @@ BEGIN
 
 	Ypet ::= SET {
 		epyt	Epyt,
-		plain	INTEGER DEFAULT 7
+		plain	INTEGER DEFAULT 7,
+		senums	SET OF EnumType
 	}
+
+	EnumType ::= ENUMERATED { one, two }
 
 END
