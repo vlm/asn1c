@@ -101,7 +101,7 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 	REDIR(OT_FUNC_DECLS);					\
 	OUT_NOINDENT("extern asn_TYPE_descriptor_t "		\
 			"asn_DEF_%s;\n",			\
-			MKID_nc(expr->Identifier));		\
+			MKID(expr->Identifier));		\
 	REDIR(saved_target);					\
 } while(0)
 

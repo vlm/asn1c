@@ -278,7 +278,7 @@ extern asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName;
 
 /*** <<< CTABLES [RelativeDistinguishedName] >>> ***/
 
-static int permitted_alphabet_table_1[256] = {
+static int permitted_alphabet_table_0[256] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
 0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,	/*             ,-.  */
@@ -289,8 +289,8 @@ static int permitted_alphabet_table_1[256] = {
 1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* pqrstuvwxyz      */
 };
 
-static int check_permitted_alphabet_1(const void *sptr) {
-	int *table = permitted_alphabet_table_1;
+static int check_permitted_alphabet_0(const void *sptr) {
+	int *table = permitted_alphabet_table_0;
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -319,7 +319,7 @@ memb_IA5String_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(!check_permitted_alphabet_1(sptr)) {
+	if(!check_permitted_alphabet_0(st)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

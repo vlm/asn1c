@@ -12,10 +12,10 @@ ModuleTestCircularReferences
 BEGIN
 
 	Type ::= SEQUENCE {
-		data SEQUENCE OF Epyt
+		data SEQUENCE OF EpytRef
 	}
 
-	-- EpytRef ::= Epyt
+	EpytRef ::= Epyt
 
 	Epyt ::= SEQUENCE {
 		stype	SET OF Type,
