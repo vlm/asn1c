@@ -1,0 +1,28 @@
+
+ModuleTestIndirectChoiceFine {iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	37 }
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+T ::= CHOICE {
+    t-a	 INTEGER,
+    t-b	 OCTET STRING,
+    t-c	 [1] EXPLICIT Choice1,
+    t-d	 [3] IMPLICIT Choice2
+}
+
+Choice1 ::= CHOICE {
+    c-a	 OCTET STRING,
+    c-b	 INTEGER
+}
+
+Choice2 ::= [2] EXPLICIT CHOICE {
+    c-a	 OCTET STRING,
+    c-b	 INTEGER,
+    c-d	 [3] EXPLICIT Choice1
+}
+
+Choice3 ::= [3] EXPLICIT Choice2
+
+END
