@@ -1,9 +1,20 @@
 #LyX 1.3 created this file. For more info see http://www.lyx.org/
 \lyxformat 221
 \textclass book
+\begin_preamble
+%\fancyhf{}
+%\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1\ sdf}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{\thesection.\ #1}}}
+%\fancyhead[LE,RO]{\thepage}
+%\fancyhead[LO]{\rightmark}
+%\fancyhead[RE]]{\leftmark}
+\usepackage{extramarks}
+\lhead{\firstxmark}
+\rfoot{\lastxmark}
+\end_preamble
 \language english
 \inputencoding latin1
-\fontscheme ae
+\fontscheme times
 \graphics default
 \paperfontsize default
 \spacing single 
@@ -21,8 +32,8 @@
 \quotes_language swedish
 \quotes_times 2
 \papercolumns 1
-\papersides 1
-\paperpagestyle default
+\papersides 2
+\paperpagestyle fancy
 
 \layout Title
 
@@ -38,8 +49,34 @@ Lev Walkin <
 \layout Standard
 
 
+\begin_inset ERT
+status Open
+
+\layout Standard
+
+\backslash 
+extramarks{Document version 0.9}{}
+\end_inset 
+
+
+\layout Standard
+
+
 \begin_inset LatexCommand \tableofcontents{}
 
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+pagestyle{headings}
 \end_inset 
 
 
@@ -159,7 +196,7 @@ UsageExampleModule1
       asn1c(5) docs(2) usage(1) 1 } 
 \layout LyX-Code
 
-    AUTOMATIC TAGS DEFINITIONS ::=
+    DEFINITIONS AUTOMATIC TAGS ::=
 \layout LyX-Code
 
 BEGIN
@@ -177,7 +214,7 @@ Rectangle ::= SEQUENCE {
     height  INTEGER,        -- Height of the rectangle
 \layout LyX-Code
 
-    width   INTEGER,        -- Width of the rectangle
+    width   INTEGER         -- Width of the rectangle
 \layout LyX-Code
 
 }
@@ -190,11 +227,19 @@ END
 \layout Standard
 
 The module header consists of module name (UsageExampleModule1), the module
- object identifier ({...}), some flags (AUTOMATIC TAGS) and 
+ object identifier ({...}), a keyword 
 \begin_inset Quotes sld
 \end_inset 
 
-DEFINITIONS ::= BEGIN
+DEFINITIONS
+\begin_inset Quotes srd
+\end_inset 
+
+, a set of module flags (AUTOMATIC TAGS) and 
+\begin_inset Quotes sld
+\end_inset 
+
+::= BEGIN
 \begin_inset Quotes srd
 \end_inset 
 
@@ -232,10 +277,16 @@ The INTEGER type is a signed natural number type without any restrictions
 SimpleInteger ::= INTEGER
 \layout LyX-Code
 
+ 
+\layout LyX-Code
+
 -- An integer with a very limited range
 \layout LyX-Code
 
 SmallInt ::= INTEGER (0..127)
+\layout LyX-Code
+
+ 
 \layout LyX-Code
 
 -- Integer, negative
@@ -254,10 +305,13 @@ The ENUMERATED type is semantically equivalent to the INTEGER type with
 FruitId ::= ENUMERATED { apple(1), orange(2) }
 \layout LyX-Code
 
+ 
+\layout LyX-Code
+
 -- The numbers in braces are optional,
 \layout LyX-Code
 
--- the enumeration may be performed
+-- the enumeration can be performed
 \layout LyX-Code
 
 -- automatically by the compiler
@@ -315,10 +369,16 @@ For example, the very first ASN.1 module in this document has the following
 ExampleOID ::= OBJECT IDENTIFIER
 \layout LyX-Code
 
+ 
+\layout LyX-Code
+
 usageExampleModule1-oid ExampleOID
 \layout LyX-Code
 
   ::= { 1 3 6 1 4 1 9363 1 5 2 1 1 }
+\layout LyX-Code
+
+ 
 \layout LyX-Code
 
 -- An identifier of the Internet.
@@ -348,6 +408,9 @@ The RELATIVE-OID type has the semantics of a subtree of an OBJECT IDENTIFIER.
 this-document RELATIVE-OID ::= { docs(2) usage(1) }
 \layout LyX-Code
 
+ 
+\layout LyX-Code
+
 this-example RELATIVE-OID ::= {
 \layout LyX-Code
 
@@ -361,7 +424,7 @@ The IA5String type
 \layout Standard
 
 This is essentially the ASCII, with 128 character codes available (7 lower
- bits of 8-bit byte).
+ bits of an 8-bit byte).
 \layout Subsection
 
 The UTF8String type
@@ -584,13 +647,17 @@ The character string with the alphabet which is more or less a subset of
 \begin_inset Quotes sld
 \end_inset 
 
+
+\series bold 
 ~
+\series default 
+
 \begin_inset Quotes srd
 \end_inset 
 
  (tilde).
- Alternatively, the alphabet may be represented as the PrintableString alphabet
- described earlier, plus the following characters: 
+ Alternatively, the alphabet may be described as the PrintableString alphabet
+ presented earlier, plus the following characters: 
 \begin_inset Quotes sld
 \end_inset 
 
@@ -828,7 +895,11 @@ _
 \begin_inset Quotes sld
 \end_inset 
 
+
+\series bold 
 ~
+\series default 
+
 \begin_inset Quotes srd
 \end_inset 
 
@@ -954,10 +1025,16 @@ This one is the list (array) of simple or constructed types:
 ManyIntegers ::= SEQUENCE OF INTEGER
 \layout LyX-Code
 
+ 
+\layout LyX-Code
+
 -- Example 2
 \layout LyX-Code
 
 ManyRectangles ::= SEQUENCE OF Rectangle
+\layout LyX-Code
+
+ 
 \layout LyX-Code
 
 -- More complex example:
@@ -990,6 +1067,9 @@ The SET OF type models the bag of structures.
 SetOfApples :: SET OF Apple
 \layout LyX-Code
 
+ 
+\layout LyX-Code
+
 -- Set of integers encoding the kind of a fruit
 \layout LyX-Code
 
@@ -1018,7 +1098,7 @@ supported
 \begin_inset Quotes srd
 \end_inset 
 
- too, as long as an object-oriented approach is not a definitive factor.
+ too, as long as an class-based approach is not a definitive factor.
 \end_inset 
 
 ).
@@ -1043,7 +1123,13 @@ collapsed false
 \emph on 
 int
 \emph default 
- types instead of generic INTEGER_t.
+ types instead of infinite width INTEGER_t structures.
+ See Table 
+\begin_inset LatexCommand \vref{cap:asn1c-cmdopts}
+
+\end_inset 
+
+.
 \end_inset 
 
 :
@@ -1063,9 +1149,9 @@ typedef struct Rectangle_s {
 
 This would not be of much value for such a simple specification, so the
  compiler goes further and actually produces the code which fills in this
- structure by parsing the binary
+ structure by parsing the opaque binary
 \begin_inset Foot
-collapsed false
+collapsed true
 
 \layout Standard
 
@@ -1076,13 +1162,37 @@ BER, CER and DER encodings are binary.
  data provided in some buffer.
  It also produces the code that takes this structure as an argument and
  performs structure serialization by emitting a series of bytes.
-\layout Section
+\layout Chapter
 
 Quick start
 \layout Standard
 
-After building and installing the compiler, the asn1c command may be used
- to compile the ASN.1 specification
+After building and installing the compiler, the 
+\emph on 
+asn1c
+\begin_inset Foot
+collapsed false
+
+\layout Standard
+
+The 1 symbol in asn
+\series bold 
+1
+\series default 
+c is a digit, not an 
+\begin_inset Quotes sld
+\end_inset 
+
+ell
+\begin_inset Quotes srd
+\end_inset 
+
+ letter.
+\end_inset 
+
+
+\emph default 
+ command may be used to compile the ASN.1 specification
 \begin_inset Foot
 collapsed false
 
@@ -1093,7 +1203,15 @@ This is probably
 not
 \series default 
  what you want to try out right now -- read through the rest of this chapter
- to find out about -P option.
+ to find out about 
+\series bold 
+-P
+\series default 
+ and 
+\series bold 
+-R
+\series default 
+ options.
 \end_inset 
 
 :
@@ -1104,8 +1222,8 @@ asn1c
 <spec.asn1>
 \layout Standard
 
-If several specifications contain interdependencies, all of them must be
- specified:
+If several specifications contain interdependencies, all of the files must
+ be specified altogether:
 \layout LyX-Code
 
 asn1c 
@@ -1113,27 +1231,536 @@ asn1c
 <spec1.asn1> <spec2.asn1> ...
 \layout Standard
 
-The compiler -E and -EF options are used for testing the parser and the
- semantic fixer, respectively.
- These options will instruct the compiler to dump out the parsed (and fixed)
- ASN.1 specification as it was "understood" by the compiler.
- It might might be useful to check whether a particular syntactic construction
+The compiler 
+\series bold 
+-E
+\series default 
+ and 
+\series bold 
+-EF
+\series default 
+ options are used for testing the parser and the semantic fixer, respectively.
+ These options will instruct the compiler to dump out the parsed (and fixed,
+ if 
+\series bold 
+-F
+\series default 
+ is involved) ASN.1 specification as it was "understood" by the compiler.
+ It might be useful to check whether a particular syntactic construction
  is properly supported by the compiler.
 \layout LyX-Code
 
-asn1c -EF 
+asn1c 
+\series bold 
+-EF
+\series default 
+ 
 \emph on 
 <spec-to-test.asn1>
 \layout Standard
 
-The -P option is used to dump the compiled output on the screen instead
- of creating a bunch of .c and .h files on disk in the current directory.
- You would probably want to start with -P option instead of creating a mess
- in your current directory.
+The 
+\series bold 
+-P
+\series default 
+ option is used to dump the compiled output on the screen instead of creating
+ a bunch of .c and .h files on disk in the current directory.
+ You would probably want to start with 
+\series bold 
+-P
+\series default 
+ option instead of creating a mess in your current directory.
+ Another option, 
+\series bold 
+-R
+\series default 
+, asks compiler to only generate the files which need to be generated, and
+ supress linking in the numerous support files.
+\layout Standard
+
+Print the compiled output instead of creating multiple source files:
+\layout LyX-Code
+
+asn1c 
+\series bold 
+-P
+\series default 
+ 
+\emph on 
+<spec-to-compile-and-print.asn1>
+\layout LyX-Code
+
+\layout Chapter
+
+Using the ASN.1 Compiler
 \layout Section
 
-Slow start
-\layout Subsection
+Command-line options
+\layout Standard
+
+The Table 
+\begin_inset LatexCommand \vref{cap:asn1c-cmdopts}
+
+\end_inset 
+
+ summarizes various options affecting the compiler's behavior.
+\layout Standard
+
+
+\begin_inset Float table
+wide false
+collapsed true
+
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="20" columns="2">
+<features>
+<column alignment="left" valignment="top" leftline="true" width="0">
+<column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Overall Options
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Description
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-E
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Stop after the parsing stage and print the reconstructed ASN.1 specification
+ code to the standard output.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-F
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Used together with -E, instructs the compiler to stop after the ASN.1 syntax
+ tree fixing stage and dump the reconstructed ASN.1 specification to the
+ standard output.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-P
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Dump the compiled output to the standard output instead of cre- ating the
+ target language files on disk.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-R
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Restrict the compiler to generate only the ASN.1 tables, omit- ting the usual
+ support code.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-S 
+\emph on 
+<directory>
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Use the specified directory with ASN.1 skeleton files.
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-t 
+\emph on 
+<data-string>
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Interpret the data-string as a sequence of hexadecimal values representing
+ the start of BER TLV encoding.
+ Print the human readable explanation.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Warning Options
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Description
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-Werror
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Treat warnings as errors; abort if any warning is produced.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-Wdebug-lexer
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Enable lexer debugging during the ASN.1 parsing stage.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-Wdebug-fixer
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+ Enable ASN.1 syntax  tree  fixer  debugging  during  the  fixing stage.
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-Wdebug-compiler
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Enable debugging during the actual compile time.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Language Options
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Description
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-fbless-SIZE
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which
+ this constraint is normally prohibited by the standard.
+ This is a violation of an ASN.1 standard and compiler may fail to produce
+ the meaningful code.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-fnative-integers
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Use native machine's integer types whenever possible, instead of the complex
+ ASN.1 INTEGER and ENUMERATED types.
+ 
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-funnamed-unions
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Enable  unnamed  unions  in the definitions of target language's structures.
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-ftypes88
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Use only ASN.1:1988 embedded types.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Output Options
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+Description
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-print-constraints
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+When -EF are also specified, this option forces the compiler to explain
+ its internal understanding of subtype constraints.
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-print-lines
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Generate "-- #line" comments in -E output.
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{cap:asn1c-cmdopts}
+
+\end_inset 
+
+The list of asn1c command line options
+\end_inset 
+
+
+\layout Section
 
 Recognizing compiler output
 \layout Standard
@@ -1157,17 +1784,8 @@ Rectangle.h
 
 A set of helper .c and .h files which contain generic encoders, decoders and
  other useful routines.
- There will be many of them, some of them even not necessary
-\begin_inset Foot
-collapsed false
-
-\layout Standard
-
-Soon the compiler will be modified to emit the smallest subset of necessary
- files.
-\end_inset 
-
-, but the overall amount of code after compiling will be rather small anyway.
+ There will be quite a few of them, some of them even are not always necessary,
+ but the overall amount of code after compiling will be rather small anyway.
 \layout Standard
 
 It is your responsibility to create .c file with the
@@ -1233,14 +1851,14 @@ int main()
 \end_inset 
 
 
-\layout Subsection
+\layout Section
 
 Invoking the ASN.1 helper code from the application
 \layout Standard
 
-First of all, you would want to include one or more header files into your
- application.
- For the Rectangle module, including the Rectangle.h file is enough:
+First of all, you should to include one or more header files into your applicati
+on.
+ For our Rectangle module, including the Rectangle.h file is enough:
 \layout LyX-Code
 
 #include <Rectangle.h>
@@ -1252,7 +1870,10 @@ The header files defines the C structure corresponding to the ASN.1 definition
  For example, here is the code which frees the Rectangle_t structure:
 \layout LyX-Code
 
-Rectangle_t *rect = ;
+Rectangle_t *rect = ...;
+\layout LyX-Code
+
+ 
 \layout LyX-Code
 
 asn1_DEF_Rectangle->free_struct(&asn1_DEF_Rectangle,
@@ -1366,7 +1987,7 @@ Here is how the buffer can be deserialized into the structure:
 Rectangle_t *
 \layout LyX-Code
 
-simple_deserializer(void *buffer, size_t buf_size) {
+simple_deserializer(const void *buffer, size_t buf_size) {
 \layout LyX-Code
 
     Rectangle_t *rect = 0;    /* Note this 0! */
@@ -1407,6 +2028,9 @@ simple_deserializer(void *buffer, size_t buf_size) {
 \layout LyX-Code
 
     } else {
+\layout LyX-Code
+
+        /* Free partially decoded rect */
 \layout LyX-Code
 
         asn1_DEF_Rectangle->free_struct(
@@ -1461,7 +2085,7 @@ Restartable decoding is a little bit trickier: you need to provide the old
 \end_inset 
 
 
-\layout Subsubsection
+\layout Subsection
 
 
 \begin_inset LatexCommand \label{sub:Decoding-BER}
@@ -1575,7 +2199,7 @@ always
 
 Please look into ber_decoder.h for the precise definition of ber_decode()
  and related types.
-\layout Subsubsection
+\layout Subsection
 
 
 \begin_inset LatexCommand \label{sub:Encoding-DER}
@@ -1610,7 +2234,10 @@ As with BER decoder, the DER encoder may be invoked either directly from
  */
 \layout LyX-Code
 
-int _write_stream(void *buffer, size_t size, void *app_key) {
+static int
+\layout LyX-Code
+
+write_stream(const void *buffer, size_t size, void *app_key) {
 \layout LyX-Code
 
     FILE *ostream = app_key;
@@ -1667,7 +2294,7 @@ simple_serializer(FILE *ostream, Rectangle_t *rect) {
     rval = der_encode(&asn1_DEF_Rect, rect,
 \layout LyX-Code
 
-        _write_stream, ostream);
+        write_stream, ostream);
 \layout LyX-Code
 
     if(rval
@@ -1760,7 +2387,7 @@ It is actually faster too: the encoder might skip over some computations
 
 Please look into der_encoder.h for the precise definition of der_encode()
  and related types.
-\layout Subsubsection
+\layout Subsection
 
 
 \begin_inset LatexCommand \label{sub:Validating-the-target}
@@ -1791,7 +2418,7 @@ The asn_check_constraints() function checks the type for various implicit
 
 Please look into constraints.h for the precise definition of asn_check_constraint
 s() and related types.
-\layout Subsubsection
+\layout Subsection
 
 
 \begin_inset LatexCommand \label{sub:Printing-the-target}
@@ -1811,7 +2438,7 @@ asn_fprint(stdout, &asn1_DEF_Rectangle, rect);
 
 Please look into constr_TYPE.h for the precise definition of asn_fprint()
  and related types.
-\layout Subsubsection
+\layout Subsection
 
 
 \begin_inset LatexCommand \label{sub:Freeing-the-target}
@@ -1937,6 +2564,16 @@ free_struct
 \emph default 
  function with the target structure pointer set to 0 (NULL), the function
  will do nothing.
+\layout Bibliography
+\bibitem [ASN1C]{ASN1C}
+
+Free ASN.1 Compiler.
+ 
+\begin_inset LatexCommand \htmlurl{http://lionet.info/asn1/}
+
+\end_inset 
+
+
 \layout Bibliography
 \bibitem [Dub00]{Dub00}
 
