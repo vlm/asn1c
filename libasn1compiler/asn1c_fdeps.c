@@ -1,0 +1,180 @@
+#include "asn1c_internal.h"
+#include "asn1c_fdeps.h"
+
+static asn1c_fdeps_t *asn1c_new_dep(const char *filename);
+static int asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d);
+
+int
+asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *data) {
+	char *fname;
+	int i;
+
+	if(!deps || !data || !*data)
+		return 0;
+	if(!cur) cur = deps;
+
+	if(cur->used_somewhere)
+		return 1;	/* Already activated */
+
+	(const char *)fname = data;
+	if(*data == '#') {
+		const char *start = data;
+		const char *end = 0;
+
+		start = strchr(data, '<');
+		if(start) {
+			start++;
+			end = strchr(start, '>');
+		}
+		if(end) {
+			fname = alloca((end - start) + 1);
+			memcpy(fname, start, end - start);
+			fname[end-start] = '\0';
+		} else {
+			return 0;
+		}
+	}
+
+	if(cur->filename && strcmp(cur->filename, fname) == 0) {
+		cur->used_somewhere = 1;
+
+		/* Activate subdependencies */
+		for(i = 0; i < cur->el_count; i++) {
+			asn1c_activate_dependency(deps,
+				cur->elements[i],
+				cur->elements[i]->filename);
+		}
+
+		/*
+		 * This might be a link to someplace else.
+		 */
+		return asn1c_activate_dependency(deps, NULL, fname);
+	} else {
+		for(i = 0; i < cur->el_count; i++) {
+			asn1c_activate_dependency(deps,
+				cur->elements[i], fname);
+		}
+	}
+
+	return 0;
+}
+
+asn1c_fdeps_t *
+asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
+	asn1c_fdeps_t *deps;
+	asn1c_fdeps_t *cur;
+	char buf[4096];
+	FILE *f;
+	int hit_COMMON_FILES = 0;
+
+	(void)arg;
+
+	if(!datadir || strlen(datadir) > sizeof(buf) / 2) {
+		errno = EINVAL;
+		return NULL;
+	} else {
+		sprintf(buf, "%s/file-dependencies", datadir);
+	}
+
+	f = fopen(buf, "r");
+	if(!f) return NULL;
+
+	deps = asn1c_new_dep(0);
+	assert(deps);
+
+	while(fgets(buf, sizeof(buf), f)) {
+		char *p = strchr(buf, '#');
+		if(p) *p = '\0';	/* Remove comments */
+
+		cur = deps;
+		for(p = strtok(buf, " \t\r\n"); p;
+				p = strtok(NULL, " \t\r\n")) {
+			asn1c_fdeps_t *d;
+			/*
+			 * If hit "COMMON-FILES:", treat everything else
+			 * as a huge dependency.
+			 */
+			if(strcmp(p, "COMMON-FILES:") == 0) {
+				hit_COMMON_FILES = 1;
+				break;
+			}
+			d = asn1c_new_dep(p);
+			assert(d);
+			d->used_somewhere = hit_COMMON_FILES;
+
+			if(asn1c_dep_add(cur, d) == 1)
+				cur = d;
+		}
+	}
+
+	fclose(f);
+
+	return deps;
+}
+
+static asn1c_fdeps_t *
+asn1c_new_dep(const char *filename) {
+	asn1c_fdeps_t *d;
+
+	d = calloc(1, sizeof(*d));
+	if(filename) {
+		d->filename = strdup(filename);
+		if(!d->filename) return NULL;
+	}
+
+	return d;
+}
+
+static int
+asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d) {
+	int n;
+
+	/* Check for duplicates */
+	for(n = 0; n < deps->el_count; n++) {
+		if(strcmp(deps->elements[n]->filename, d->filename) == 0)
+			return 0;
+	}
+
+	if(deps->el_count == deps->el_size) {
+		n = deps->el_size?deps->el_size << 2:16;
+		void *p = realloc(deps->elements,
+			n * sizeof(deps->elements[0]));
+		assert(p);
+		deps->elements = p;
+		deps->el_size = n;
+	}
+
+	deps->elements[deps->el_count++] = d;
+	return 1;
+}
+
+asn1c_fdeps_t *
+asn1c_deps_makelist(asn1c_fdeps_t *deps) {
+	asn1c_fdeps_t *dlist;
+	asn1c_fdeps_t *d;
+	int i;
+
+	if(!deps) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	dlist = asn1c_new_dep(0);
+
+	if(deps->filename && deps->used_somewhere) {
+		d = asn1c_new_dep(deps->filename);
+		asn1c_dep_add(dlist, d);
+	}
+
+	for(i = 0; i < deps->el_count; i++) {
+		int j;
+		d = asn1c_deps_makelist(deps->elements[i]);
+		assert(!d->filename);
+		for(j = 0; j < d->el_count; j++) {
+			asn1c_dep_add(dlist, d->elements[j]);
+		}
+	}
+
+	return dlist;
+}
+
