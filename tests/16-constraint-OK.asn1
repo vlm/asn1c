@@ -3,22 +3,34 @@
 
 -- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
 -- .spelio.software.asn1c.test (9363.1.5.1)
--- .16
+-- .16 1
+-- .16 2
 
-ModuleTestConstraint
+ModuleTestConstraint1
 	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
-		spelio(9363) software(1) asn1c(5) test(1) 16 }
+		spelio(9363) software(1) asn1c(5) test(1) 16 1 }
 	DEFINITIONS ::=
 BEGIN
+	IMPORTS Type1 FROM ModuleTestConstraint2;
 
 	-- external reference
 	Type0 ::= IA5String (Type6)
+	Type6 ::= IA5String (Type1)
+END
+
+ModuleTestConstraint2
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 16 2 }
+	DEFINITIONS ::=
+BEGIN
+	EXPORTS Type1;
+
+	-- external reference
 	Type1 ::= IA5String (SIZE(1..ten,...))(FROM("a".."z"|"#",...))
 	Type2 ::= IA5String (SIZE (MIN..4)|FROM ("abc"))
 	Type3 ::= BMPString (SIZE(1))
 	Type4 ::= INTEGER (1..MAX)
 	Type5 ::= BOOLEAN (TRUE|FALSE)
-	Type6 ::= IA5String (Type1)
 
 	ten INTEGER ::= 10
 
