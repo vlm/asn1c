@@ -15,7 +15,8 @@ static void _default_error_logger(int _severity, const char *fmt, ...);
 static int asn1f_fix_module(arg_t *arg);
 static int asn1f_fix_simple(arg_t *arg);	/* For INTEGER/ENUMERATED */
 static int asn1f_fix_constructed(arg_t *arg);	/* For SEQUENCE/SET/CHOICE */
-static int asn1f_fix_constraints(arg_t *arg);	/* For subtype constraints */
+static int asn1f_resolve_constraints(arg_t *arg); /* For subtype constraints */
+static int asn1f_check_constraints(arg_t *arg);	/* For subtype constraints */
 
 arg_t a1f_replace_me_with_proper_interface_arg;
 
@@ -102,6 +103,7 @@ static int
 asn1f_fix_module(arg_t *arg) {
 	asn1p_expr_t *expr;
 	int rvalue = 0;
+	int ret;
 
 	switch((arg->mod->module_flags & MSF_MASK_TAGS)) {
 	case MSF_NOFLAGS:
@@ -140,7 +142,6 @@ asn1f_fix_module(arg_t *arg) {
 	 * Order is not important.
 	 */
 	TQ_FOR(expr, &(arg->mod->members), next) {
-		int ret;
 		arg->expr = expr;
 
 		if(expr->meta_type == AMT_PARAMTYPE)
@@ -178,7 +179,7 @@ asn1f_fix_module(arg_t *arg) {
 		/*
 		 * Resolve references in constraints.
 		 */
-		ret = asn1f_recurse_expr(arg, asn1f_fix_constraints);
+		ret = asn1f_recurse_expr(arg, asn1f_resolve_constraints);
 		RET2RVAL(ret, rvalue);
 
 		/*
@@ -195,7 +196,6 @@ asn1f_fix_module(arg_t *arg) {
 	 * 5. Automatic tagging
 	 */
 	TQ_FOR(expr, &(arg->mod->members), next) {
-		int ret;
 
 		arg->expr = expr;
 
@@ -210,7 +210,6 @@ asn1f_fix_module(arg_t *arg) {
 	 * 9. fix spaces in cstrings
 	 */
 	TQ_FOR(expr, &(arg->mod->members), next) {
-		int ret;
 		arg->expr = expr;
 
 		ret = asn1f_recurse_expr(arg, asn1f_fix_bit_string);
@@ -226,10 +225,21 @@ asn1f_fix_module(arg_t *arg) {
 	 * ... Check for tags distinctness.
 	 */
 	TQ_FOR(expr, &(arg->mod->members), next) {
-		int ret;
 		arg->expr = expr;
 
 		ret = asn1f_recurse_expr(arg, asn1f_check_constr_tags_distinct);
+		RET2RVAL(ret, rvalue);
+
+		assert(arg->expr == expr);
+	}
+
+	/*
+	 * Check semantic validity of constraints.
+	 */
+	TQ_FOR(expr, &(arg->mod->members), next) {
+		arg->expr = expr;
+
+		ret = asn1f_recurse_expr(arg, asn1f_check_constraints);
 		RET2RVAL(ret, rvalue);
 
 		assert(arg->expr == expr);
@@ -287,7 +297,7 @@ asn1f_fix_constructed(arg_t *arg) {
 }
 
 static int
-asn1f_fix_constraints(arg_t *arg) {
+asn1f_resolve_constraints(arg_t *arg) {
 	asn1p_expr_t *top_parent;
 	asn1p_expr_type_e etype;
 	int rvalue = 0;
@@ -302,25 +312,38 @@ asn1f_fix_constraints(arg_t *arg) {
 		arg->expr->constraints, etype, 0);
 	RET2RVAL(ret, rvalue);
 
+	return rvalue;
+}
+
+static int
+asn1f_check_constraints(arg_t *arg) {
+	static enum asn1p_constraint_type_e test_types[] = {
+		ACT_EL_RANGE, ACT_CT_SIZE, ACT_CT_FROM };
+	asn1p_expr_t *top_parent;
+	asn1cnst_range_t *range;
+	asn1p_expr_type_e etype;
+	unsigned int i;
+	int rvalue = 0;
+	int ret;
+
+	top_parent = asn1f_find_terminal_type(arg, arg->expr);
+	if(!top_parent)
+		return 0;
+	etype = top_parent->expr_type;
+
 	ret = asn1constraint_pullup(arg);
 	RET2RVAL(ret, rvalue);
 
-	if(top_parent) {
-		static enum asn1p_constraint_type_e test_types[] = {
-			ACT_EL_RANGE, ACT_CT_SIZE, ACT_CT_FROM };
-		unsigned int i;
-		for(i = 0; i < sizeof(test_types)/sizeof(test_types[0]); i++) {
-			asn1cnst_range_t *range;
-			range = asn1constraint_compute_PER_range(
-					top_parent->expr_type,
-					arg->expr->combined_constraints,
-					test_types[i], 0, 0);
-			if(!range && errno == EPERM)
-				return -1;
-			asn1constraint_range_free(range);
-		}
+	for(i = 0; i < sizeof(test_types)/sizeof(test_types[0]); i++) {
+		range = asn1constraint_compute_PER_range(
+				top_parent->expr_type,
+				arg->expr->combined_constraints,
+				test_types[i], 0, 0);
+		if(!range && errno == EPERM)
+			return -1;
+		asn1constraint_range_free(range);
 	}
-	
+
 	return rvalue;
 }
 

@@ -313,6 +313,11 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 		if(type != ACT_CT_FROM)
 			return 0;
 		break;
+	case ATV_REFERENCED:
+		FATAL("Unrecognized constraint element \"%s\" at line %d",
+			asn1f_printable_reference(val->value.reference),
+			lineno);
+		return -1;
 	default:
 		FATAL("Unrecognized constraint element at line %d",
 			lineno);
@@ -878,7 +883,8 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 
 	ret  = _range_fill(vmin, minmax, &range->left,
 				range, type, ct->_lineno);
-	ret |= _range_fill(vmax, minmax, &range->right,
+	if(!ret)
+	ret = _range_fill(vmax, minmax, &range->right,
 				range, type, ct->_lineno);
 	if(ret) {
 		_range_free(range);
