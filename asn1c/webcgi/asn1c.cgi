@@ -141,7 +141,8 @@ unless($session) {
 	bark("md5 program is rotten here") if(length($session) != 32);
 	$sessionDir = makeSessionDirName($TMPDIR, $session);
 	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed);
-	my $ck = cookie(-name=>'SessionID', -value=>$session, -expires=>'+1y');
+	my $ck = cookie(-name=>'SessionID', -value=>$session,
+			-path=>'/', -expires=>'+1y');
 	print header(-expires=>'-1y', -cookie=>$ck);
 	$HTTPHeaderGenerated = 1;
 } else {
