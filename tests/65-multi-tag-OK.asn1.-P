@@ -61,7 +61,7 @@ T1_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 
 asn_dec_rval_t
 T1_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
 	T1_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
@@ -76,7 +76,7 @@ T1_encode_der(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 T1_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
 	T1_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
@@ -190,7 +190,7 @@ T2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 
 asn_dec_rval_t
 T2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
 	T2_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
@@ -205,7 +205,7 @@ T2_encode_der(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 T2_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
 	T2_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
@@ -317,7 +317,7 @@ T3_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 
 asn_dec_rval_t
 T3_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
 	T3_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
@@ -332,7 +332,7 @@ T3_encode_der(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 T3_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
 	T3_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
@@ -442,7 +442,7 @@ T4_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 
 asn_dec_rval_t
 T4_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
 	T4_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
@@ -457,7 +457,7 @@ T4_encode_der(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 T4_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
 	T4_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
@@ -562,7 +562,7 @@ T5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 
 asn_dec_rval_t
 T5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
 	T5_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
@@ -577,7 +577,7 @@ T5_encode_der(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 T5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
 	T5_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
@@ -681,7 +681,7 @@ T6_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 
 asn_dec_rval_t
 T6_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
 	T6_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
@@ -696,7 +696,7 @@ T6_encode_der(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 T6_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
 	T6_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
@@ -799,7 +799,7 @@ T_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 
 asn_dec_rval_t
 T_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
 	T_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
@@ -814,7 +814,7 @@ T_encode_der(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 T_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
 	T_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
