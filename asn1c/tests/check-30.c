@@ -164,7 +164,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 		assert(t.b.size == 3);
 		assert(strcmp(t.b.buf, "xyz") == 0);
 		if(buf == buf3) {
-			assert(t.c->value);
+			assert(t.c);
 		} else {
 			assert(t.c == 0);
 		}
