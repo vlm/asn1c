@@ -26,7 +26,7 @@
 
 \layout Title
 
-ASN.1 Compiler: Usage
+Using the Free ASN.1 Compiler
 \layout Author
 
 Lev Walkin <
@@ -43,9 +43,12 @@ Lev Walkin <
 \end_inset 
 
 
+\layout Part
+
+ASN.1 Basics
 \layout Chapter
 
-Basics of ASN.1
+Abstract Syntax Notation: ASN.1
 \layout Standard
 
 
@@ -59,7 +62,7 @@ This chapter defines some basic ASN.1 concepts and describes several most
 
 \end_inset 
 
- or the ASN.1 standard itself 
+ or the ASN.1 body of standards itself 
 \begin_inset LatexCommand \cite{ITU-T/ASN.1}
 
 \end_inset 
@@ -991,9 +994,12 @@ SetOfApples :: SET OF Apple
 \layout LyX-Code
 
 FruitBag ::= SET OF ENUMERATED { apple, orange }
+\layout Part
+
+Using the ASN.1 Compiler
 \layout Chapter
 
-ASN.1 Compiler Usage
+Introduction to the ASN.1 Compiler
 \layout Standard
 
 The purpose of the ASN.1 compiler, of which this document is part, is to
