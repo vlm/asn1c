@@ -169,24 +169,22 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 * From the place where we've left it previously,
 		 * try to decode the next member from the list of
 		 * this structure's elements.
-		 * (ctx->step) stores the member being processed
-		 * between invocations and the microphase {0,1} of parsing
-		 * that member:
-		 * 	step = (2 * <member_number> + <microphase>).
-		 * Note, however, that the elements in BER may arrive out of
+		 * Note that elements in BER may arrive out of
 		 * order, yet DER mandates that they shall arive in the
 		 * canonical order of their tags. So, there is a room
 		 * for optimization.
 		 */
-	  for(edx = (ctx->step >> 1); edx < td->elements_count;
-			ctx->step = (ctx->step & ~1) + 2,
-				edx = (ctx->step >> 1)) {
+	  for(;; ctx->step = 0) {
+		asn_TYPE_tag2member_t *t2m;
+		asn_TYPE_tag2member_t key;
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
 		ssize_t tag_len;	/* Length of TLV's T */
 
-		if(ctx->step & 1)
+		if(ctx->step & 1) {
+			edx = ctx->step >> 1;
 			goto microphase2;
+		}
 
 		/*
 		 * MICROPHASE 1: Synchronize decoding.
@@ -226,59 +224,47 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			}
 		}
 
-		if(BER_TAGS_EQUAL(tlv_tag, elements[edx].tag)) {
+		key.el_tag = tlv_tag;
+		(void *)t2m = bsearch(&key,
+				specs->tag2el, specs->tag2el_count,
+				sizeof(specs->tag2el[0]), _t2e_cmp);
+		if(t2m) {
 			/*
-			 * The elements seem to go in order.
-			 * This is not particularly strange,
-			 * but is not strongly anticipated either.
+			 * Found the element corresponding to the tag.
 			 */
+			edx = t2m->el_no;
+			ctx->step = (edx << 1) + 1;
+			ASN_DEBUG("Got tag %s (%s), edx %d",
+				ber_tlv_tag_string(tlv_tag), td->name, edx);
+		} else if(specs->extensible == 0) {
+			ASN_DEBUG("Unexpected tag %s "
+				"in non-extensible SET %s",
+				ber_tlv_tag_string(tlv_tag), td->name);
+			RETURN(RC_FAIL);
 		} else {
-			asn_TYPE_tag2member_t *t2m;
-			asn_TYPE_tag2member_t key;
+			/* Skip this tag */
+			ssize_t skip;
 
-			key.el_tag = tlv_tag;
-			(void *)t2m = bsearch(&key,
-					specs->tag2el, specs->tag2el_count,
-					sizeof(specs->tag2el[0]), _t2e_cmp);
-			if(t2m) {
-				/*
-				 * Found the element corresponding to the tag.
-				 */
-				edx = t2m->el_no;
-				ctx->step = 2 * edx;
-			} else if(specs->extensible == 0) {
-				ASN_DEBUG("Unexpected tag %s "
-					"in non-extensible SET %s",
-					ber_tlv_tag_string(tlv_tag), td->name);
-				RETURN(RC_FAIL);
-			} else {
-				/* Skip this tag */
-				ssize_t skip;
+			ASN_DEBUG("Skipping unknown tag %s",
+				ber_tlv_tag_string(tlv_tag));
 
-				ASN_DEBUG("Skipping unknown tag %s",
-					ber_tlv_tag_string(tlv_tag));
+			skip = ber_skip_length(opt_codec_ctx,
+				BER_TLV_CONSTRUCTED(ptr),
+				(char *)ptr + tag_len, LEFT - tag_len);
 
-				skip = ber_skip_length(opt_codec_ctx,
-					BER_TLV_CONSTRUCTED(ptr),
-					(char *)ptr + tag_len, LEFT - tag_len);
-
-				switch(skip) {
-				case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
-					/* Fall through */
-				case -1: RETURN(RC_FAIL);
-				}
-
-				ADVANCE(skip + tag_len);
-				ctx->step -= 2;
-				edx--;
-				continue;  /* Try again with the next tag */
+			switch(skip) {
+			case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
+				/* Fall through */
+			case -1: RETURN(RC_FAIL);
 			}
+
+			ADVANCE(skip + tag_len);
+			continue;  /* Try again with the next tag */
 		}
 
 		/*
 		 * MICROPHASE 2: Invoke the member-specific decoder.
 		 */
-		ctx->step |= 1;	/* Confirm entering next microphase */
 	microphase2:
 
 		/*
@@ -375,8 +361,9 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			if(specs->extensible == 0 || ctx->phase == 4) {
 				ASN_DEBUG("Unexpected continuation "
-					"of a non-extensible type %s",
-					td->name);
+					"of a non-extensible type %s "
+					"(ptr=%02x)",
+					td->name, *(uint8_t *)ptr);
 				RETURN(RC_FAIL);
 			}
 
