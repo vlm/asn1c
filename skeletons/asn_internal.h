@@ -46,9 +46,9 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; };
 /*
  * Invoke the application-supplied callback and fail, if something is wrong.
  */
-#define	__ASN_E_cbc(buf, size)	(cb((buf), (size), app_key) == -1)
+#define	__ASN_E_cbc(buf, size)	(cb((buf), (size), app_key) < 0)
 #define	_ASN_E_CALLBACK(foo)	do {					\
-		if(foo)	_ASN_ENCODE_FAILED;				\
+		if(foo)	goto cb_failed;					\
 	} while(0)
 #define	_ASN_CALLBACK(buf, size)					\
 	_ASN_E_CALLBACK(__ASN_E_cbc(buf, size))

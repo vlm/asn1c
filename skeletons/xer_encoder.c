@@ -19,12 +19,7 @@ xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 	size_t mlen;
 	int xcan = (xer_flags & XER_F_CANONICAL) ? 1 : 2;
 
-	if(!td || !sptr) {
-		er.encoded = -1;
-		er.failed_type = td;
-		er.structure_ptr = sptr;
-		return er;
-	}
+	if(!td || !sptr) goto cb_failed;
 
 	mname = td->name;
 	mlen = strlen(mname);
@@ -34,11 +29,13 @@ xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 	tmper = td->xer_encoder(td, sptr, 1, xer_flags, cb, app_key);
 	if(tmper.encoded == -1) return tmper;
 
-	_ASN_CALLBACK3("</", xcan, mname, mlen, ">\n",xcan);
+	_ASN_CALLBACK3("</", 2, mname, mlen, ">\n", xcan);
 
-	er.encoded = 2 + (2 * xcan) + (2 * mlen) + tmper.encoded;
+	er.encoded = 4 + xcan + (2 * mlen) + tmper.encoded;
 
 	return er;
+cb_failed:
+	_ASN_ENCODE_FAILED;
 }
 
 /*
