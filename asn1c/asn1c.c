@@ -54,20 +54,20 @@ main(int ac, char **av) {
 		print_arg__fix_n_print = 1;
 		break;
 	case 'f':
-		if(strcmp(optarg, "types88") == 0) {
-			asn1_parser_flags |= A1P_TYPES_RESTRICT_TO_1988;
-		} else if(strcmp(optarg, "constr90") == 0) {
-			asn1_parser_flags |= A1P_CONSTRUCTS_RESTRICT_TO_1990;
-		} else if(strcmp(optarg, "native-integers") == 0) {
-			asn1_compiler_flags |= A1C_USE_NATIVE_INTEGERS;
-		} else if(strcmp(optarg, "unnamed-unions") == 0) {
-			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
+		if(strcmp(optarg, "all-defs-global") == 0) {
+			asn1_compiler_flags |= A1C_ALL_DEFS_GLOBAL;
+		} else if(strcmp(optarg, "bless-SIZE") == 0) {
+			asn1_fixer_flags |= A1F_EXTENDED_SizeConstraint;
 		} else if(strncmp(optarg, "known-extern-type=", 18) == 0) {
 			char *known_type = optarg + 18;
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
-		} else if(strcmp(optarg, "bless-SIZE") == 0) {
-			asn1_fixer_flags |= A1F_EXTENDED_SizeConstraint;
+		} else if(strcmp(optarg, "native-integers") == 0) {
+			asn1_compiler_flags |= A1C_USE_NATIVE_INTEGERS;
+		} else if(strcmp(optarg, "unnamed-unions") == 0) {
+			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
+		} else if(strcmp(optarg, "types88") == 0) {
+			asn1_parser_flags |= A1P_TYPES_RESTRICT_TO_1988;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
@@ -286,10 +286,8 @@ usage(char *av0) {
 "  -Wdebug-compiler      --//-- compiler\n"
 "\n"
 
+"  -fall-defs-global     Don't make the asn1_DEF_'s of structure members \"static\"\n"
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
-/*
-"  -fconstr90            Use only ASN.1:1990 constructs (not available)\n"
-*/
 "  -fknown-extern-type=<name>    Pretend this type is known\n"
 "  -fnative-integers     Use int instead of INTEGER_t whenever possible\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"

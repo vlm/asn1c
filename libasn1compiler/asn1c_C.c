@@ -45,6 +45,7 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tag
 
 #define	C99_MODE	(!(arg->flags & A1C_NO_C99))
 #define	UNNAMED_UNIONS	(arg->flags & A1C_UNNAMED_UNIONS)
+#define	HIDE_INNER_DEFS	(arg->embed && !(arg->flags & A1C_ALL_DEFS_GLOBAL))
 
 #define	PCTX_DEF INDENTED(		\
 	OUT("\n");			\
@@ -867,7 +868,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	REDIR(OT_FUNC_DECLS);
 
 	p = MKID(expr->Identifier);
-	OUT("extern asn1_TYPE_descriptor_t asn1_DEF_%s;\n", p);
+	if(HIDE_INNER_DEFS) OUT("/* ");
+	OUT("extern asn1_TYPE_descriptor_t asn1_DEF_%s;", p);
+	if(HIDE_INNER_DEFS) OUT(" // (Use -fall-defs-global to expose) */");
+	OUT("\n");
 	OUT("asn_constr_check_f %s_constraint;\n", p);
 	OUT("ber_type_decoder_f %s_decode_ber;\n", p);
 	OUT("der_type_encoder_f %s_encode_der;\n", p);
@@ -1297,6 +1301,8 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip
 	char *p;
 
 	p = MKID(expr->Identifier);
+	if(HIDE_INNER_DEFS)
+		OUT("static /* Use -fall-defs-global to expose */\n");
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
 	INDENTED(
 		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);

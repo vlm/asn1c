@@ -1309,13 +1309,13 @@ The Table
 
 \begin_inset Float table
 wide false
-collapsed true
+collapsed false
 
 \layout Standard
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="20" columns="2">
+<lyxtabular version="3" rows="21" columns="2">
 <features>
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -1593,6 +1593,29 @@ Language Options
 
 \series bold 
 Description
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-fall-defs-global
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Normally the compiler hides the definitions (asn1_DEF_xxx) of the inner
+ structure elements (members of SEQUENCE, SET and other types).
+ This option makes all such definitions global.
+ Enabling this option may pollute the namespace by making lots of asn1_DEF_xxx
+ structures globally visible, but will allow you to manipulate (encode and
+ decode) the individual members of any complex ASN.1 structure.
 \end_inset 
 </cell>
 </row>
