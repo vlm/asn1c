@@ -40,7 +40,6 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **int_structure, void *buf_ptr, size_t size, int tag_mode) {
 	INTEGER_t *st = (INTEGER_t *)*int_structure;
 	ber_dec_rval_t rval;
-	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
 
 	/*
@@ -61,8 +60,7 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags.
 	 */
-	rval = ber_check_tags(td, &ctx,
-		buf_ptr, size, tag_mode, &length, 0);
+	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 

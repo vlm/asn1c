@@ -3,22 +3,25 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
-#include <constr_TYPE.h>
 #include <assert.h>
 
 #undef	ADVANCE
-#define	ADVANCE(num_bytes)	do {			\
-		size_t num = num_bytes;			\
-		ptr = ((char *)ptr) + num;		\
-		size -= num;				\
-		consumed_myself += num;			\
+#define	ADVANCE(num_bytes)	do {					\
+		size_t num = num_bytes;					\
+		ptr = ((char *)ptr) + num;				\
+		size -= num;						\
+		consumed_myself += num;					\
 	} while(0)
 #undef	RETURN
-#define	RETURN(_code)	do {				\
-		ber_dec_rval_t rval;			\
-		rval.code = _code;			\
-		rval.consumed = consumed_myself;	\
-		return rval;				\
+#define	RETURN(_code)	do {						\
+		ber_dec_rval_t rval;					\
+		rval.code = _code;					\
+		if(opt_ctx) opt_ctx->step = step; /* Save context */	\
+		if(_code == RC_OK || opt_ctx)				\
+			rval.consumed = consumed_myself;		\
+		else							\
+			rval.consumed = 0;	/* Context-free */	\
+		return rval;						\
 	} while(0)
 
 /*
@@ -42,7 +45,7 @@ ber_decode(asn1_TYPE_descriptor_t *type_descriptor,
  * Check the set of <TL<TL<TL...>>> tags matches the definition.
  */
 ber_dec_rval_t
-ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
+ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx,
 		void *ptr, size_t size, int tag_mode,
 		ber_tlv_len_t *last_length, int *opt_tlv_form) {
 	ssize_t consumed_myself = 0;
@@ -53,6 +56,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 	ber_tlv_len_t limit_len = -1;
 	int expect_00_terminators = 0;
 	int tlv_constr = -1;	/* If CHOICE, opt_tlv_form is not given */
+	int step = opt_ctx ? opt_ctx->step : 0;	/* Where we left previously */
 	int tagno;
 
 	/*
@@ -77,11 +81,11 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 	 * it appropriately.
 	 */
 
-	tagno = ctx->step	/* Continuing where left previously */
+	tagno = step	/* Continuing where left previously */
 		+ (tag_mode==1?-1:0)
 		;
 	ASN_DEBUG("ber_check_tags(%s, size=%ld, tm=%d, step=%d, tagno=%d)",
-		td->name, (long)size, tag_mode, ctx->step, tagno);
+		td->name, (long)size, tag_mode, step, tagno);
 	//assert(td->tags_count >= 1); ?May not be the case for CHOICE or ANY.
 
 	if(tag_mode == 0 && tagno == td->tags_count) {
@@ -102,23 +106,25 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
 		}
+		ASN_DEBUG("Advancing %ld in ANY case",
+			(long)(tag_len + len_len));
 		ADVANCE(tag_len + len_len);
 	} else {
 		assert(tagno < td->tags_count);	/* At least one loop */
 	}
-	for((void)tagno; tagno < td->tags_count; tagno++, ctx->step++) {
+	for((void)tagno; tagno < td->tags_count; tagno++, step++) {
 
 		/*
 		 * Fetch and process T from TLV.
 		 */
 		tag_len = ber_fetch_tag(ptr, size, &tlv_tag);
 			ASN_DEBUG("Fetching tag from {%p,%ld} %02X..%02X: "
-				"len %ld, tag %s",
+				"len %ld, step %d, tag %s",
 				ptr, (long)size,
 				size?*(uint8_t *)ptr:0,
 				((size_t)tag_len<size&&tag_len>0)
 					?*((uint8_t *)ptr + tag_len):0,
-				(long)tag_len,
+				(long)tag_len, step,
 				ber_tlv_tag_string(tlv_tag));
 		switch(tag_len) {
 		case -1: RETURN(RC_FAIL);
@@ -131,7 +137,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		 * If {I}, don't check anything.
 		 * If {I,B,C}, check B and C unless we're at I.
 		 */
-		if(tag_mode != 0 && ctx->step == 0) {
+		if(tag_mode != 0 && step == 0) {
 			/*
 			 * We don't expect tag to match here.
 			 * It's just because we don't know how the tag
@@ -158,11 +164,15 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		 */
 		if(tagno < (td->tags_count - 1)) {
 			if(tlv_constr == 0) {
+				ASN_DEBUG("tlv_constr = %d, expfail",
+					tlv_constr);
 				RETURN(RC_FAIL);
 			}
 		} else {
 			if(td->last_tag_form != tlv_constr
 			&& td->last_tag_form != -1) {
+				ASN_DEBUG("last_tag_form %d != %d",
+					td->last_tag_form, tlv_constr);
 				RETURN(RC_FAIL);
 			}
 		}
@@ -172,6 +182,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		 */
 		len_len = ber_fetch_length(tlv_constr,
 			(char *)ptr + tag_len, size - tag_len, &tlv_len);
+		ASN_DEBUG("Fetchinig len = %ld", (long)len_len);
 		switch(len_len) {
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
@@ -227,7 +238,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		if((ssize_t)size > limit_len) {
 			/*
 			 * Make sure that we won't consume more bytes
-			 * from the large buffer than the inferred limit.
+			 * from the parent frame than the inferred limit.
 			 */
 			size = limit_len;
 		}
