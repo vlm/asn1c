@@ -145,13 +145,10 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 		 * Fetch and process T from TLV.
 		 */
 		tag_len = ber_fetch_tag(ptr, size, &tlv_tag);
-			ASN_DEBUG("Fetching tag from {%p,%ld} %02X..%02X: "
-				"len %ld, step %d, tag %s",
+			ASN_DEBUG("Fetching tag from {%p,%ld}: "
+				"len %ld, step %d, tagno %d got %s",
 				ptr, (long)size,
-				size?*(uint8_t *)ptr:0,
-				((size_t)tag_len<size&&tag_len>0)
-					?*((uint8_t *)ptr + tag_len):0,
-				(long)tag_len, step,
+				(long)tag_len, step, tagno,
 				ber_tlv_tag_string(tlv_tag));
 		switch(tag_len) {
 		case -1: RETURN(RC_FAIL);
