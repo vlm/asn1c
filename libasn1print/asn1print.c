@@ -126,9 +126,9 @@ asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
 	for(ac = 0; ac < oid->arcs_count; ac++) {
 		const char *arcname = oid->arcs[ac].name;
 
-		if(accum + strlen(arcname ? arcname : "") > 75) {
+		if(accum + strlen(arcname ? arcname : "") > 72) {
 			printf("\n\t");
-			accum = 0;
+			accum = 8;
 		} else {
 			accum += printf(" ");
 		}
