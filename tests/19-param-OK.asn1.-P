@@ -35,7 +35,7 @@ typedef struct Certificate {
 static int
 memb_signature_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const BIT_STRING_t *st = sptr;
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -288,7 +288,7 @@ static int permitted_alphabet_table_1[256] = {
 static int check_permitted_alphabet_1(const void *sptr) {
 	int *table = permitted_alphabet_table_1;
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -305,7 +305,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 static int
 memb_IA5String_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
