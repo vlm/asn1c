@@ -20,6 +20,7 @@ asn_struct_free_f BOOLEAN_free;
 asn_struct_print_f BOOLEAN_print;
 ber_type_decoder_f BOOLEAN_decode_ber;
 der_type_encoder_f BOOLEAN_encode_der;
+xer_type_decoder_f BOOLEAN_decode_xer;
 xer_type_encoder_f BOOLEAN_encode_xer;
 
 #endif	/* _BOOLEAN_H_ */
