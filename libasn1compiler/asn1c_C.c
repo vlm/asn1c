@@ -24,7 +24,7 @@ static int asn1c_lang_C_type_SEQUENCE_def(arg_t *arg);
 static int asn1c_lang_C_type_SET_def(arg_t *arg);
 static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
-static int _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p);
+static int _print_tag(arg_t *arg, struct asn1p_type_tag_s *tag_p);
 static int check_if_extensible(asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
@@ -903,20 +903,10 @@ static int check_if_extensible(asn1p_expr_t *expr) {
 }
 
 static int
-_print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p) {
-	struct asn1p_type_tag_s tag;
-
-	if(tag_p) {
-		tag = *tag_p;
-	} else {
-		if(asn1f_fetch_tag(arg->asn, arg->mod, expr, &tag, 0)) {
-			OUT("-1 /* Ambiguous tag (CHOICE|ANY?) */");
-			return 0;
-		}
-	}
+_print_tag(arg_t *arg, struct asn1p_type_tag_s *tag) {
 
 	OUT("(");
-	switch(tag.tag_class) {
+	switch(tag->tag_class) {
 	case TC_UNIVERSAL:		OUT("ASN_TAG_CLASS_UNIVERSAL"); break;
 	case TC_APPLICATION:		OUT("ASN_TAG_CLASS_APPLICATION"); break;
 	case TC_CONTEXT_SPECIFIC:	OUT("ASN_TAG_CLASS_CONTEXT"); break;
@@ -924,7 +914,7 @@ _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p) {
 	case TC_NOCLASS:
 		break;
 	}
-	OUT(" | (%lld << 2))", tag.tag_value);
+	OUT(" | (%lld << 2))", tag->tag_value);
 
 	return 0;
 }
@@ -1030,7 +1020,7 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no) {
 
 	assert(el_no >= 0);
 
-	ret = asn1f_fetch_tag(arg->asn, arg->mod, arg->expr, &tag, 1);
+	ret = asn1f_fetch_outmost_tag(arg->asn, arg->mod, arg->expr, &tag, 1);
 	if(ret == 0) {
 		tag2el_t *te;
 		int new_count = (*count) + 1;
@@ -1106,7 +1096,7 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
 		int i;
 		for(i = 0; i < tag2el_count; i++) {
 			OUT("    { ");
-			_print_tag(arg, expr, &tag2el[i].el_tag);
+			_print_tag(arg, &tag2el[i].el_tag);
 			OUT(", ");
 			OUT("%d, ", tag2el[i].el_no);
 			OUT("%d, ", tag2el[i].toff_first);
@@ -1148,7 +1138,7 @@ emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice
 	INDENT(+1);
 	if(expr->tag.tag_class) {
 		tags_count++;
-		_print_tag(arg, expr, &expr->tag);
+		_print_tag(arg, &expr->tag);
 		if(expr->tag.tag_mode != TM_EXPLICIT)
 			(*tags_impl_skip)++;
 	} else {
@@ -1165,7 +1155,7 @@ emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice
 			tag.tag_class = TC_UNIVERSAL;
 			tag.tag_mode = TM_IMPLICIT;
 			tag.tag_value = expr_type2uclass_value[expr->expr_type];
-			_print_tag(arg, expr, &tag);
+			_print_tag(arg, &tag);
 			tags_count++;
 		}
 	}
@@ -1201,6 +1191,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	static int global_memb_unique;
 	int save_target;
 	arg_t tmp_arg;
+	struct asn1p_type_tag_s outmost_tag;
 	char *p;
 
 	OUT("{ ");
@@ -1228,7 +1219,12 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	INDENT(+1);
 	if(C99_MODE) OUT(".tag = ");
-	_print_tag(arg, expr , NULL);
+	if(asn1f_fetch_outmost_tag(arg->asn,
+			expr->module, expr, &outmost_tag, 0)) {
+		OUT("-1 /* Ambiguous tag (CHOICE|ANY?) */");
+	} else {
+		_print_tag(arg, &outmost_tag);
+	}
 	OUT(",\n");
 	if(C99_MODE) OUT(".tag_mode = ");
 	if(expr->tag.tag_class) {
