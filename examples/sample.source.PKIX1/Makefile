@@ -1,0 +1,355 @@
+ASN_MODULE_SOURCES=	\
+	Attribute.c	\
+	AttributeType.c	\
+	AttributeValue.c	\
+	AttributeTypeAndValue.c	\
+	X520name.c	\
+	X520CommonName.c	\
+	X520LocalityName.c	\
+	X520StateOrProvinceName.c	\
+	X520OrganizationName.c	\
+	X520OrganizationalUnitName.c	\
+	X520Title.c	\
+	X520dnQualifier.c	\
+	X520countryName.c	\
+	X520SerialNumber.c	\
+	X520Pseudonym.c	\
+	DomainComponent.c	\
+	EmailAddress.c	\
+	Name.c	\
+	RDNSequence.c	\
+	DistinguishedName.c	\
+	RelativeDistinguishedName.c	\
+	DirectoryString.c	\
+	Certificate.c	\
+	TBSCertificate.c	\
+	Version.c	\
+	CertificateSerialNumber.c	\
+	Validity.c	\
+	Time.c	\
+	UniqueIdentifier.c	\
+	SubjectPublicKeyInfo.c	\
+	Extensions.c	\
+	Extension.c	\
+	CertificateList.c	\
+	TBSCertList.c	\
+	AlgorithmIdentifier.c	\
+	ORAddress.c	\
+	BuiltInStandardAttributes.c	\
+	CountryName.c	\
+	AdministrationDomainName.c	\
+	NetworkAddress.c	\
+	X121Address.c	\
+	TerminalIdentifier.c	\
+	PrivateDomainName.c	\
+	OrganizationName.c	\
+	NumericUserIdentifier.c	\
+	PersonalName.c	\
+	OrganizationalUnitNames.c	\
+	OrganizationalUnitName.c	\
+	BuiltInDomainDefinedAttributes.c	\
+	BuiltInDomainDefinedAttribute.c	\
+	ExtensionAttributes.c	\
+	ExtensionAttribute.c	\
+	CommonName.c	\
+	TeletexCommonName.c	\
+	TeletexOrganizationName.c	\
+	TeletexPersonalName.c	\
+	TeletexOrganizationalUnitNames.c	\
+	TeletexOrganizationalUnitName.c	\
+	PDSName.c	\
+	PhysicalDeliveryCountryName.c	\
+	PostalCode.c	\
+	PhysicalDeliveryOfficeName.c	\
+	PhysicalDeliveryOfficeNumber.c	\
+	ExtensionORAddressComponents.c	\
+	PhysicalDeliveryPersonalName.c	\
+	PhysicalDeliveryOrganizationName.c	\
+	ExtensionPhysicalDeliveryAddressComponents.c	\
+	UnformattedPostalAddress.c	\
+	StreetAddress.c	\
+	PostOfficeBoxAddress.c	\
+	PosteRestanteAddress.c	\
+	UniquePostalName.c	\
+	LocalPostalAttributes.c	\
+	PDSParameter.c	\
+	ExtendedNetworkAddress.c	\
+	PresentationAddress.c	\
+	TerminalType.c	\
+	TeletexDomainDefinedAttributes.c	\
+	TeletexDomainDefinedAttribute.c	\
+	AuthorityKeyIdentifier.c	\
+	KeyIdentifier.c	\
+	SubjectKeyIdentifier.c	\
+	KeyUsage.c	\
+	PrivateKeyUsagePeriod.c	\
+	CertificatePolicies.c	\
+	PolicyInformation.c	\
+	CertPolicyId.c	\
+	PolicyQualifierInfo.c	\
+	PolicyQualifierId.c	\
+	CPSuri.c	\
+	UserNotice.c	\
+	NoticeReference.c	\
+	DisplayText.c	\
+	PolicyMappings.c	\
+	SubjectAltName.c	\
+	GeneralNames.c	\
+	GeneralName.c	\
+	AnotherName.c	\
+	EDIPartyName.c	\
+	IssuerAltName.c	\
+	SubjectDirectoryAttributes.c	\
+	BasicConstraints.c	\
+	NameConstraints.c	\
+	GeneralSubtrees.c	\
+	GeneralSubtree.c	\
+	BaseDistance.c	\
+	PolicyConstraints.c	\
+	SkipCerts.c	\
+	CRLDistributionPoints.c	\
+	DistributionPoint.c	\
+	DistributionPointName.c	\
+	ReasonFlags.c	\
+	ExtKeyUsageSyntax.c	\
+	KeyPurposeId.c	\
+	InhibitAnyPolicy.c	\
+	FreshestCRL.c	\
+	AuthorityInfoAccessSyntax.c	\
+	AccessDescription.c	\
+	SubjectInfoAccessSyntax.c	\
+	CRLNumber.c	\
+	IssuingDistributionPoint.c	\
+	BaseCRLNumber.c	\
+	CRLReason.c	\
+	CertificateIssuer.c	\
+	HoldInstructionCode.c	\
+	InvalidityDate.c
+
+ASN_MODULE_HEADERS=	\
+	Attribute.h	\
+	AttributeType.h	\
+	AttributeValue.h	\
+	AttributeTypeAndValue.h	\
+	X520name.h	\
+	X520CommonName.h	\
+	X520LocalityName.h	\
+	X520StateOrProvinceName.h	\
+	X520OrganizationName.h	\
+	X520OrganizationalUnitName.h	\
+	X520Title.h	\
+	X520dnQualifier.h	\
+	X520countryName.h	\
+	X520SerialNumber.h	\
+	X520Pseudonym.h	\
+	DomainComponent.h	\
+	EmailAddress.h	\
+	Name.h	\
+	RDNSequence.h	\
+	DistinguishedName.h	\
+	RelativeDistinguishedName.h	\
+	DirectoryString.h	\
+	Certificate.h	\
+	TBSCertificate.h	\
+	Version.h	\
+	CertificateSerialNumber.h	\
+	Validity.h	\
+	Time.h	\
+	UniqueIdentifier.h	\
+	SubjectPublicKeyInfo.h	\
+	Extensions.h	\
+	Extension.h	\
+	CertificateList.h	\
+	TBSCertList.h	\
+	AlgorithmIdentifier.h	\
+	ORAddress.h	\
+	BuiltInStandardAttributes.h	\
+	CountryName.h	\
+	AdministrationDomainName.h	\
+	NetworkAddress.h	\
+	X121Address.h	\
+	TerminalIdentifier.h	\
+	PrivateDomainName.h	\
+	OrganizationName.h	\
+	NumericUserIdentifier.h	\
+	PersonalName.h	\
+	OrganizationalUnitNames.h	\
+	OrganizationalUnitName.h	\
+	BuiltInDomainDefinedAttributes.h	\
+	BuiltInDomainDefinedAttribute.h	\
+	ExtensionAttributes.h	\
+	ExtensionAttribute.h	\
+	CommonName.h	\
+	TeletexCommonName.h	\
+	TeletexOrganizationName.h	\
+	TeletexPersonalName.h	\
+	TeletexOrganizationalUnitNames.h	\
+	TeletexOrganizationalUnitName.h	\
+	PDSName.h	\
+	PhysicalDeliveryCountryName.h	\
+	PostalCode.h	\
+	PhysicalDeliveryOfficeName.h	\
+	PhysicalDeliveryOfficeNumber.h	\
+	ExtensionORAddressComponents.h	\
+	PhysicalDeliveryPersonalName.h	\
+	PhysicalDeliveryOrganizationName.h	\
+	ExtensionPhysicalDeliveryAddressComponents.h	\
+	UnformattedPostalAddress.h	\
+	StreetAddress.h	\
+	PostOfficeBoxAddress.h	\
+	PosteRestanteAddress.h	\
+	UniquePostalName.h	\
+	LocalPostalAttributes.h	\
+	PDSParameter.h	\
+	ExtendedNetworkAddress.h	\
+	PresentationAddress.h	\
+	TerminalType.h	\
+	TeletexDomainDefinedAttributes.h	\
+	TeletexDomainDefinedAttribute.h	\
+	AuthorityKeyIdentifier.h	\
+	KeyIdentifier.h	\
+	SubjectKeyIdentifier.h	\
+	KeyUsage.h	\
+	PrivateKeyUsagePeriod.h	\
+	CertificatePolicies.h	\
+	PolicyInformation.h	\
+	CertPolicyId.h	\
+	PolicyQualifierInfo.h	\
+	PolicyQualifierId.h	\
+	CPSuri.h	\
+	UserNotice.h	\
+	NoticeReference.h	\
+	DisplayText.h	\
+	PolicyMappings.h	\
+	SubjectAltName.h	\
+	GeneralNames.h	\
+	GeneralName.h	\
+	AnotherName.h	\
+	EDIPartyName.h	\
+	IssuerAltName.h	\
+	SubjectDirectoryAttributes.h	\
+	BasicConstraints.h	\
+	NameConstraints.h	\
+	GeneralSubtrees.h	\
+	GeneralSubtree.h	\
+	BaseDistance.h	\
+	PolicyConstraints.h	\
+	SkipCerts.h	\
+	CRLDistributionPoints.h	\
+	DistributionPoint.h	\
+	DistributionPointName.h	\
+	ReasonFlags.h	\
+	ExtKeyUsageSyntax.h	\
+	KeyPurposeId.h	\
+	InhibitAnyPolicy.h	\
+	FreshestCRL.h	\
+	AuthorityInfoAccessSyntax.h	\
+	AccessDescription.h	\
+	SubjectInfoAccessSyntax.h	\
+	CRLNumber.h	\
+	IssuingDistributionPoint.h	\
+	BaseCRLNumber.h	\
+	CRLReason.h	\
+	CertificateIssuer.h	\
+	HoldInstructionCode.h	\
+	InvalidityDate.h
+
+ASN_MODULE_HEADERS+=ANY.h
+ASN_MODULE_SOURCES+=ANY.c
+ASN_MODULE_HEADERS+=BIT_STRING.h
+ASN_MODULE_SOURCES+=BIT_STRING.c
+ASN_MODULE_HEADERS+=BMPString.h
+ASN_MODULE_SOURCES+=BMPString.c
+ASN_MODULE_HEADERS+=BOOLEAN.h
+ASN_MODULE_SOURCES+=BOOLEAN.c
+ASN_MODULE_HEADERS+=ENUMERATED.h
+ASN_MODULE_SOURCES+=ENUMERATED.c
+ASN_MODULE_HEADERS+=INTEGER.h
+ASN_MODULE_HEADERS+=GeneralizedTime.h
+ASN_MODULE_SOURCES+=GeneralizedTime.c
+ASN_MODULE_HEADERS+=IA5String.h
+ASN_MODULE_SOURCES+=IA5String.c
+ASN_MODULE_SOURCES+=INTEGER.c
+ASN_MODULE_HEADERS+=NumericString.h
+ASN_MODULE_SOURCES+=NumericString.c
+ASN_MODULE_HEADERS+=OBJECT_IDENTIFIER.h
+ASN_MODULE_SOURCES+=OBJECT_IDENTIFIER.c
+ASN_MODULE_HEADERS+=PrintableString.h
+ASN_MODULE_SOURCES+=PrintableString.c
+ASN_MODULE_HEADERS+=TeletexString.h
+ASN_MODULE_SOURCES+=TeletexString.c
+ASN_MODULE_HEADERS+=UTCTime.h
+ASN_MODULE_SOURCES+=UTCTime.c
+ASN_MODULE_HEADERS+=UTF8String.h
+ASN_MODULE_SOURCES+=UTF8String.c
+ASN_MODULE_HEADERS+=UniversalString.h
+ASN_MODULE_SOURCES+=UniversalString.c
+ASN_MODULE_HEADERS+=VisibleString.h
+ASN_MODULE_SOURCES+=VisibleString.c
+ASN_MODULE_HEADERS+=asn_SEQUENCE_OF.h
+ASN_MODULE_SOURCES+=asn_SEQUENCE_OF.c
+ASN_MODULE_HEADERS+=asn_SET_OF.h
+ASN_MODULE_SOURCES+=asn_SET_OF.c
+ASN_MODULE_HEADERS+=constr_CHOICE.h
+ASN_MODULE_SOURCES+=constr_CHOICE.c
+ASN_MODULE_HEADERS+=constr_SEQUENCE.h
+ASN_MODULE_SOURCES+=constr_SEQUENCE.c
+ASN_MODULE_HEADERS+=constr_SEQUENCE_OF.h
+ASN_MODULE_SOURCES+=constr_SEQUENCE_OF.c
+ASN_MODULE_HEADERS+=constr_SET.h
+ASN_MODULE_SOURCES+=constr_SET.c
+ASN_MODULE_HEADERS+=constr_SET_OF.h
+ASN_MODULE_SOURCES+=constr_SET_OF.c
+ASN_MODULE_HEADERS+=asn_types.h
+ASN_MODULE_HEADERS+=asn_internal.h
+ASN_MODULE_HEADERS+=OCTET_STRING.h
+ASN_MODULE_SOURCES+=OCTET_STRING.c
+ASN_MODULE_HEADERS+=ber_decoder.h
+ASN_MODULE_SOURCES+=ber_decoder.c
+ASN_MODULE_HEADERS+=ber_tlv_length.h
+ASN_MODULE_SOURCES+=ber_tlv_length.c
+ASN_MODULE_HEADERS+=ber_tlv_tag.h
+ASN_MODULE_SOURCES+=ber_tlv_tag.c
+ASN_MODULE_HEADERS+=constr_TYPE.h
+ASN_MODULE_SOURCES+=constr_TYPE.c
+ASN_MODULE_HEADERS+=constraints.h
+ASN_MODULE_SOURCES+=constraints.c
+ASN_MODULE_HEADERS+=der_encoder.h
+ASN_MODULE_SOURCES+=der_encoder.c
+ASN_MODULE_HEADERS+=xer_encoder.h
+ASN_MODULE_SOURCES+=xer_encoder.c
+
+
+lib_LTLIBRARIES=libsomething.la
+libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
+
+# This file may be used as an input for make(3)
+# Remove the lines below to convert it into a pure .am file
+TARGET = x509dump
+CFLAGS += -I. -g -DHAVE_CONFIG_H
+OBJS=${ASN_MODULE_SOURCES:.c=.o} $(TARGET).o
+
+all: $(TARGET)
+
+$(TARGET): ${OBJS}
+	$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
+
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+.c.o:
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+clean:
+	rm -f $(TARGET)
+	rm -f $(OBJS)
+
+
+Attribute.c: regenerate.Makefile
+	./regenerate.Makefile
+	make
+	exit
+
+distclean: clean
+	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
+	rm -f Makefile.am.sample

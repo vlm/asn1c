@@ -21,5 +21,9 @@ $(ASN1_FILES_0): crfc2asn1.pl $(ASN1_SOURCE_0)
 $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
 	./crfc2asn1.pl $(ASN1_SOURCE_1)
 
-EXTRA_DIST = rfc*.txt
+EXTRA_DIST = rfc*.txt				\
+	sample.source.PKIX1/x509dump.c		\
+	sample.source.PKIX1/config.h		\
+	sample.source.PKIX1/Makefile		\
+	sample.source.PKIX1/regenerate.Makefile
 CLEANFILES = *.asn1
