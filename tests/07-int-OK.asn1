@@ -1,0 +1,26 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .7
+
+ModuleTestInt1
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 7 }
+	DEFINITIONS ::=
+BEGIN
+
+	int123456 INTEGER ::= 123456
+
+	Interval ::= INTEGER (1..int123456)
+
+	SameInterval INTEGER ::= { 1 | 2 | 3 | 4 | 5 | 6 }
+
+	Reason ::= INTEGER {
+			no-reason(0),
+			negative-reason(-10),
+			some-large-value(1324324)
+		}
+
+END

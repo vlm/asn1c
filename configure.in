@@ -1,0 +1,95 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(libasn1parser/asn1p_y.y)
+AC_CANONICAL_SYSTEM
+AC_PREREQ(2.53)
+AM_INIT_AUTOMAKE(asn1c, 0.8.10)
+
+AC_SUBST(PATH)
+
+AM_MAINTAINER_MODE
+
+AM_PROG_LIBTOOL
+
+dnl *** Autoconf support ***
+AC_ARG_ENABLE(autoconf,
+  [  --disable-autoconf      disable automatic generation of configure script ],
+  enable_autoconf=$enableval, enable_autoconf=yes
+)
+AC_PATH_PROG(AUTOCONF, autoconf, @echo autoconf not available)
+AC_PATH_PROG(AUTOHEADER, autoheader, @echo autoheader not available)
+if test -z "$AUTOCONF"; then enable_autoconf=no ; fi
+if test -z "$AUTOHEADER"; then enable_autoconf=no ; fi
+if test x$enable_autoconf = xyes; then
+  CONFIGURE_DEPENDS="configure.in aclocal.m4"
+fi
+AC_SUBST(CONFIGURE_DEPENDS)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_YACC
+AM_PROG_LEX
+AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)
+
+dnl *** Building mingw32 with cygwin compiler ***
+case "$build" in
+*cygwin*)
+  case "$target" in
+  *mingw*)
+    CC="$CC -mno-cygwin"
+  esac ;;
+esac
+
+AC_ARG_ENABLE(autoconf,
+  [  --enable-Werror         abort compilation after any C compiler warning],
+  ADD_CFLAGS="-Werror")
+AC_SUBST(ADD_CFLAGS)
+
+dnl Add these flags if we're using GCC.
+case "$GCC" in
+ yes)
+   CFLAGS="$CFLAGS -Wall"
+   CFLAGS="$CFLAGS -Wshadow"
+   CFLAGS="$CFLAGS -Wcast-qual"
+   CFLAGS="$CFLAGS -Wcast-align"
+   CFLAGS="$CFLAGS -Wmissing-prototypes"
+   CFLAGS="$CFLAGS -Wmissing-declarations"
+   CFLAGS="$CFLAGS -Wredundant-decls"
+   CFLAGS="$CFLAGS -Wnested-externs"
+   ;;
+esac
+
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(errno.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+AC_STRUCT_TM
+AC_CHECK_TYPE(intmax_t, int64_t)
+
+AC_CHECK_FUNCS(strtoimax strtoll)
+
+AM_CONFIG_HEADER(config.h)
+
+AC_OUTPUT(			\
+libasn1compiler/Makefile	\
+skeletons/tests/Makefile	\
+libasn1parser/Makefile		\
+libasn1print/Makefile		\
+asn1c/tests/Makefile		\
+libasn1fix/Makefile		\
+skeletons/Makefile		\
+examples/Makefile		\
+tests/Makefile			\
+asn1c/Makefile			\
+doc/Makefile			\
+Makefile			\
+)
+

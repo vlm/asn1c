@@ -1,0 +1,6 @@
+
+Here are the canonical encoder/decoder algorithms that work with the tables
+constructed by the compiler. The compiler itself does not generate code,
+it just creates those tables and then copies (links) over these files
+which contain generic algorithms.
+

@@ -1,0 +1,22 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .23
+
+ModuleTestBitString
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 23 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	v28 INTEGER ::= 28
+
+	BS1	::= BIT STRING { first(0), third(2), twenty-eight(v28) }
+
+	one-zero-one BS1 ::= { first, third }	-- Equivalent to '101'B
+
+	one0one BS1 ::= '1010000'B		-- Equivalent to '101'B
+
+END

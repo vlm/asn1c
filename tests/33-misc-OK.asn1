@@ -1,0 +1,33 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .33
+
+ModuleTestMiscComplex
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 33 }
+	DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+	T ::= SEQUENCE {
+		a [1] INTEGER,
+		...,
+		b [2] EXPLICIT 	BitString,
+		c [8] IMPLICIT  Label,
+		d [10] IMPLICIT Int,
+		e [12] T2
+	}
+
+	BitString ::= [8] BIT STRING
+
+	Label	::= [9] EXPLICIT UTF8String
+
+	Label2	::= [1] Label
+
+	Int	::= [3] IMPLICIT INTEGER { a(1), b(2) }
+
+	T2	::= SEQUENCE { l Label2 }
+
+END

@@ -1,0 +1,14 @@
+QUICK START INSTALLATION
+========================
+
+./configure	# Configure the build infrastructure for your platform
+make		# Build the libraries and the compiler
+make check	# Ensure that the code is still behaving well
+		# after compiling on your platform
+make install	# Install the compiler into standard location
+
+
+QUICK USAGE GUIDE
+=================
+
+For usage guide and more information please refer to README file.

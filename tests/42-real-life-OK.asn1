@@ -1,0 +1,67 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .42
+
+ModuleLAPStorage
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 42 }
+	DEFINITIONS EXTENSIBILITY IMPLIED ::=
+BEGIN
+
+	/*
+	 * A package representing a distinguished log line.
+	 * It contains
+	 *  - a digest of that line (actually, a normalized
+	 *    form with bells (\007) in place of variable components),
+	 *  - one or more sets of variable parts (presumably with different
+	 *    acceptability rules).
+	 */
+	LogLine ::= SEQUENCE {
+		line-digest	IA5String,	-- Log line normal form
+		varsets		SEQUENCE (1..MAX) OF VariablePartSet
+	}
+
+	/*
+	 * This package contains a set of variable components of a log line.
+	 * Each variable component may contain one or more "value samples",
+	 * or a range between two samples.
+	 */
+	VariablePartSet ::= SEQUENCE {
+		vparts		SEQUENCE (0..MAX) OF VariablePart, -- {123,321}
+		resolution	ActionItem
+	}
+
+	/*
+	 * A description of a single variable part.
+	 */
+	VariablePart ::= CHOICE {
+		-- A set of acceptable values
+		vset	SET (1..MAX) OF VisibleString,
+		-- A range of acceptable values
+		vrange	SEQUENCE {
+			from	VisibleString,
+			to	VisibleString
+		}
+	}
+
+	/*
+	 * What to do with the log line.
+	 */
+	ActionItem ::= SEQUENCE {
+		accept-as	ENUMERATED {
+			unknown,	-- Action yet unknown.
+			safe,		-- No action, just move on.
+			unsafe,		-- Unsafe message. Inform NOC.
+			...
+		},
+		notify	SEQUENCE {	-- How to notify NOC.
+			critical  BOOLEAN,		-- Emit critical message
+			email	  SET OF VisibleString,	-- Send emails
+			...
+		} OPTIONAL
+	}
+
+END

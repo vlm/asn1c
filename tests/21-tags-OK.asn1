@@ -1,0 +1,34 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .21 1
+-- .21 2
+
+ModuleTestTags1
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 21 1 }
+	DEFINITIONS EXPLICIT TAGS ::=
+BEGIN
+
+	T1 ::= CHOICE {
+			first	[0] INTEGER,
+			second	[1] INTEGER
+		}
+
+END
+
+ModuleTestTags2
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 21 2 }
+	DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+	IMPORTS T1 FROM ModuleTestTags1;
+
+	T2 ::= SEQUENCE {
+			one	[0] T1,
+			two	[1] IA5String
+		}
+
+END

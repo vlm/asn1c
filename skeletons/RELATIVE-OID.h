@@ -1,0 +1,30 @@
+/*-
+ * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Redistribution and modifications are permitted subject to BSD license.
+ */
+#ifndef	_RELATIVE_OID_H_
+#define	_RELATIVE_OID_H_
+
+#include <constr_TYPE.h>
+#include <OBJECT_IDENTIFIER.h>
+
+/* Implemented in terms of OBJECT IDENTIFIER */
+typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t;
+
+extern asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID;
+
+asn_struct_print_f RELATIVE_OID_print;
+
+/**********************************
+ * Some handy conversion routines *
+ **********************************/
+
+/* See OBJECT_IDENTIFIER_set_arcs_l() function in OBJECT_IDENTIFIER.h */
+int RELATIVE_OID_set_arcs_l(RELATIVE_OID_t *_roid,
+	unsigned long *arcs, int arcs_slots);
+
+/* See OBJECT_IDENTIFIER_get_arcs_l() function in OBJECT_IDENTIFIER.h */
+int RELATIVE_OID_get_arcs_l(RELATIVE_OID_t *_roid,
+	unsigned long *arcs, int arcs_slots);
+
+#endif	/* _RELATIVE_OID_H_ */
