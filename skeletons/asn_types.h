@@ -14,7 +14,7 @@
 #include <sys/types.h>	/* For size_t */
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
-#if __STDC_VERSION__ < 199901L
+#ifndef	WIN32
 #include <inttypes.h>	/* C99 Standard specifies this file, for uintXX_t */
 #else
 typedef	unsigned char		uint8_t;

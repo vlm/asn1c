@@ -58,8 +58,8 @@
 /*
  * See the definitions.
  */
-static inline int _fetch_present_idx(const void *struct_ptr, int off, int size);
-static inline void _set_present_idx(void *sptr, int offset, int size, int pres);
+static int _fetch_present_idx(const void *struct_ptr, int off, int size);
+static void _set_present_idx(void *sptr, int offset, int size, int pres);
 
 /*
  * Tags are canonically sorted in the tag to member table.
@@ -593,7 +593,7 @@ CHOICE_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
  * is guaranteed to be aligned properly. ASN.1 compiler itself does not
  * produce packed code.
  */
-static inline int
+static int
 _fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
 	const void *present_ptr;
 	int present;
@@ -613,7 +613,7 @@ _fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
 	return present;
 }
 
-static inline void
+static void
 _set_present_idx(void *struct_ptr, int pres_offset, int pres_size, int present) {
 	void *present_ptr;
 	present_ptr = ((char *)struct_ptr) + pres_offset;
