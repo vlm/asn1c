@@ -134,7 +134,7 @@ The Abstract Syntax Notation One is used to formally describe the semantics
  number of bits in the integer type), thus it is important to have a way
  to describe the data in a manner which is independent from the particular
  machine's representation.
- The ASN.1 specifications is used to achieve one or more of the following:
+ The ASN.1 specifications are used to achieve the following:
 \layout Itemize
 
 The specification expressed in the ASN.1 notation is a formal and precise
@@ -167,7 +167,7 @@ This ASN.1 specification describes a constructed type,
 Rectangle
 \emph default 
 , containing two integer fields.
- This specification may tell the reader that there is this kind of data
+ This specification may tell the reader that there exists this kind of data
  structure and that some entity may be prepared to send or receive it.
  The question on 
 \emph on 
@@ -196,15 +196,14 @@ marshaling
 \begin_inset Quotes srd
 \end_inset 
 
-) the data: BER, CER, DER and XER, some of them which will be described
- later.
+) the data: BER, CER, DER and XER, some of them which will be outlined later.
 \layout Standard
 
 The complete specification must be wrapped in a module, which looks like
  this:
 \layout LyX-Code
 
-UsageExampleModule1
+RectangleModule1
 \layout LyX-Code
 
     { iso org(3) dod(6) internet(1) private(4)
@@ -213,7 +212,7 @@ UsageExampleModule1
       enterprise(1) spelio(9363) software(1)
 \layout LyX-Code
 
-      asn1c(5) docs(2) usage(1) 1 } 
+      asn1c(5) docs(2) rectangle(1) 1 } 
 \layout LyX-Code
 
     DEFINITIONS AUTOMATIC TAGS ::=
@@ -246,7 +245,7 @@ Rectangle ::= SEQUENCE {
 END
 \layout Standard
 
-The module header consists of module name (UsageExampleModule1), the module
+The module header consists of module name (RectangleModule1), the module
  object identifier ({...}), a keyword 
 \begin_inset Quotes sld
 \end_inset 
@@ -392,7 +391,7 @@ ExampleOID ::= OBJECT IDENTIFIER
  
 \layout LyX-Code
 
-usageExampleModule1-oid ExampleOID
+rectangleModule1-oid ExampleOID
 \layout LyX-Code
 
   ::= { 1 3 6 1 4 1 9363 1 5 2 1 1 }
@@ -2775,12 +2774,436 @@ free_struct
 \emph default 
  function with the target structure pointer set to 0 (NULL), the function
  will do nothing.
+\layout Part
+
+Examples
+\layout Chapter
+
+Step-by-step: A 
+\begin_inset Quotes sld
+\end_inset 
+
+Rectangle
+\begin_inset Quotes srd
+\end_inset 
+
+ Decoder
+\layout Standard
+
+This chapter will help you to create a simple decoder of a simple 
+\begin_inset Quotes sld
+\end_inset 
+
+Rectangle
+\begin_inset Quotes srd
+\end_inset 
+
+ type used throughout this document.
+\layout Enumerate
+
+Create a file named 
+\series bold 
+rectangle.asn1
+\series default 
+ with the following contents:
+\begin_deeper 
+\layout LyX-Code
+
+RectangleModule1 DEFINITIONS ::=
+\layout LyX-Code
+
+BEGIN
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+Rectangle ::= SEQUENCE {
+\layout LyX-Code
+
+    height  INTEGER,
+\layout LyX-Code
+
+    width   INTEGER
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+END
+\end_deeper 
+\layout Enumerate
+
+Compile it into the set of .c and .h files using asn1c compiler 
+\begin_inset LatexCommand \cite{ASN1C}
+
+\end_inset 
+
+:
+\begin_deeper 
+\layout LyX-Code
+
+
+\emph on 
+asn1c -fnative-types 
+\series bold 
+\emph default 
+rectangle.asn1
+\end_deeper 
+\layout Enumerate
+
+Alternatively, use the Online ASN.1 compiler 
+\begin_inset LatexCommand \cite{AONL}
+
+\end_inset 
+
+ by uploading the 
+\series bold 
+rectangle.asn1
+\series default 
+ file into the Web form and unpacking the produced archive into the target
+ directory on your computer.
+\layout Enumerate
+
+By this time, you should have multiple files in the current directory, including
+ the Rectangle.c and Rectangle.h files.
+\layout Enumerate
+
+Create a main() routine which takes the binary input file, decodes it as
+ it were a BER-encoded Rectangle type, and print out the text (XML) representati
+on of the Rectangle type.
+ Let's name the file 
+\series bold 
+main.c
+\series default 
+:
+\begin_deeper 
+\layout LyX-Code
+
+
+\size small 
+#include <stdio.h>
+\layout LyX-Code
+
+
+\size small 
+#include <sys/types.h>
+\layout LyX-Code
+
+
+\size small 
+#include <Rectangle.h>   /* Rectangle ASN.1 type  */
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+int main(int ac, char **av) {
+\layout LyX-Code
+
+
+\size small 
+    char buf[1024];      /* Temporary buffer      */
+\layout LyX-Code
+
+
+\size small 
+    Rectangle_t *rectangle = 0; /* Type to decode */
+\layout LyX-Code
+
+
+\size small 
+    asn_dec_rval_t rval; /* Decoder return value  */
+\layout LyX-Code
+
+
+\size small 
+    FILE *fp;            /* Input file handler    */
+\layout LyX-Code
+
+
+\size small 
+    size_t size;         /* Number of bytes read  */
+\layout LyX-Code
+
+
+\size small 
+    char *filename;      /* Input file name */
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+    /* Require a single filename argument */
+\layout LyX-Code
+
+
+\size small 
+    if(ac != 2) {
+\layout LyX-Code
+
+
+\size small 
+      fprintf(stderr, 
+\begin_inset Quotes sld
+\end_inset 
+
+Usage: %s <file.ber>
+\backslash 
+n
+\begin_inset Quotes srd
+\end_inset 
+
+, av[0]);
+\layout LyX-Code
+
+
+\size small 
+      exit(64); /* better, EX_USAGE */
+\layout LyX-Code
+
+
+\size small 
+    } else {
+\layout LyX-Code
+
+
+\size small 
+      filename = av[1];
+\layout LyX-Code
+
+
+\size small 
+    }
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+    /* Open input file as read-only binary */
+\layout LyX-Code
+
+
+\size small 
+    fp = fopen(filename, 
+\begin_inset Quotes sld
+\end_inset 
+
+rb
+\begin_inset Quotes srd
+\end_inset 
+
+);
+\layout LyX-Code
+
+
+\size small 
+    if(!fp) {
+\layout LyX-Code
+
+
+\size small 
+      perror(filename);
+\layout LyX-Code
+
+
+\size small 
+      exit(66); /* better, EX_NOINPUT */
+\layout LyX-Code
+
+
+\size small 
+    }
+\layout LyX-Code
+
+
+\size small 
+  
+\layout LyX-Code
+
+
+\size small 
+    /* Read up to the buffer size */
+\layout LyX-Code
+
+
+\size small 
+    size = fread(buf, 1, sizeof(buf), fp);
+\layout LyX-Code
+
+
+\size small 
+    fclose(fp);
+\layout LyX-Code
+
+
+\size small 
+    if(!size) {
+\layout LyX-Code
+
+
+\size small 
+      fprintf(stderr, 
+\begin_inset Quotes sld
+\end_inset 
+
+%s: Empty or broken
+\backslash 
+n
+\begin_inset Quotes srd
+\end_inset 
+
+, filename);
+\layout LyX-Code
+
+
+\size small 
+      exit(65); /* better, EX_DATAERR */
+\layout LyX-Code
+
+
+\size small 
+    }
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+    /* Decode the input buffer as Rectangle type */
+\layout LyX-Code
+
+
+\size small 
+    rval = ber_decode(0, &asn_DEF_Rectangle,
+\layout LyX-Code
+
+
+\size small 
+      (void **)&rectangle, buf, size);
+\layout LyX-Code
+
+
+\size small 
+    if(rval.code != RC_OK) {
+\layout LyX-Code
+
+
+\size small 
+      fprintf(stderr,
+\layout LyX-Code
+
+
+\size small 
+        
+\begin_inset Quotes sld
+\end_inset 
+
+%s: Broken Rectangle encoding at byte %ld
+\backslash 
+n
+\begin_inset Quotes srd
+\end_inset 
+
+,
+\layout LyX-Code
+
+
+\size small 
+        filename, (long)rval.consumed);
+\layout LyX-Code
+
+
+\size small 
+      exit(65); /* better, EX_DATAERR */
+\layout LyX-Code
+
+
+\size small 
+    }
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+    /* Print the decoded Rectangle type as XML */
+\layout LyX-Code
+
+
+\size small 
+    xer_fprint(stdout, &asn_DEF_Rectangle, rectangle);
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+    return 0; /* Decoding finished successfully */
+\layout LyX-Code
+
+
+\size small 
+}
+\end_deeper 
+\layout Enumerate
+
+Compile all files together using C compiler:
+\begin_deeper 
+\layout LyX-Code
+
+
+\emph on 
+cc -I.
+ -o rdecode *.c
+\end_deeper 
+\layout Enumerate
+
+Voila! You have just created the Rectangle type decoder named 
+\series bold 
+rdecode
+\series default 
+!
 \layout Bibliography
 \bibitem [ASN1C]{ASN1C}
 
 The OpenSource ASN.1 Compiler.
  
 \begin_inset LatexCommand \htmlurl{http://lionet.info/asn1c/}
+
+\end_inset 
+
+
+\layout Bibliography
+\bibitem [AONL]{AONL}
+
+Online ASN.1 Compiler.
+ 
+\begin_inset LatexCommand \htmlurl{http://lionet.info/asn1c/asn1c.cgi}
 
 \end_inset 
 
