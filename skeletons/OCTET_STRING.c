@@ -389,17 +389,17 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
  * Encode OCTET STRING type using DER.
  */
 der_enc_rval_t
-OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
+OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	der_enc_rval_t erval;
 	OCTET_STRING_t *st = (OCTET_STRING_t *)ptr;
 	int add_byte = 0;
 	int is_bit_str = (td->specifics == (void *)-1);
-	int is_ANY_type = (td->specifics == (void *)1;
+	int is_ANY_type = (td->specifics == (void *)1);
 
 	ASN_DEBUG("%s %s as OCTET STRING",
-		cb?"Estimating":"Encoding", sd->name);
+		cb?"Estimating":"Encoding", td->name);
 
 	/*
 	 * Canonicalize BIT STRING.
@@ -417,10 +417,10 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	if(is_ANY_type) {
 		erval.encoded = 0;
 	} else {
-		erval.encoded = der_write_tags(sd, st->size + add_byte,
+		erval.encoded = der_write_tags(td, st->size + add_byte,
 			tag_mode, tag, cb, app_key);
 		if(erval.encoded == -1) {
-			erval.failed_type = sd;
+			erval.failed_type = td;
 			erval.structure_ptr = ptr;
 			return erval;
 		}
@@ -450,7 +450,7 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 			ret = cb(buf, size, app_key);
 			if(ret == -1) {
 				erval.encoded = -1;
-				erval.failed_type = sd;
+				erval.failed_type = td;
 				erval.structure_ptr = ptr;
 				return erval;
 			}
