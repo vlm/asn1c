@@ -22,6 +22,7 @@ static int asn1c_lang_C_type_SET_def(arg_t *arg);
 static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
 static int _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p);
+static int emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int*tags_impl_skip);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
 static int emit_constraint_checking_code(arg_t *arg);
 static int emit_single_constraint_check(arg_t *arg, asn1p_constraint_t *ct, int mode);
@@ -245,34 +246,17 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	});
 	OUT("};\n");
 
-	p = MKID(expr->Identifier);
-	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n", p);
-	INDENTED(
-		if(expr->tag.tag_class) {
-			_print_tag(arg, expr, &expr->tag);
-			if(expr->tag.tag_mode != TM_EXPLICIT)
-				tags_impl_skip++;
-		}
-		if(!expr->tag.tag_class
-		|| (expr->meta_type == AMT_TYPE
-			&& expr->tag.tag_mode == TM_EXPLICIT)) {
-			struct asn1p_type_tag_s tag;
-			if(expr->tag.tag_class)
-				OUT(",\n");
-			tag.tag_class = TC_UNIVERSAL;
-			tag.tag_mode = TM_IMPLICIT;
-			tag.tag_value = expr_type2uclass_value[expr->expr_type];
-			_print_tag(arg, expr, &tag);
-		}
-		OUT("\n");
-	);
-	OUT("};\n");
+	/*
+	 * Print out asn1_DEF_<type>_tags[] vector.
+	 */
+	emit_tags_vector(arg, expr, &tags_impl_skip);
 
 	/*
 	 * Tags to elements map.
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count);
 
+	p = MKID(expr->Identifier);
 	OUT("static asn1_SEQUENCE_specifics_t asn1_DEF_%s_specs = {\n", p);
 	INDENTED(
 		OUT("sizeof(struct %s),\n", p);
@@ -306,6 +290,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	OUT("};\n");
 	OUT("\n");
 
+	p = MKID(expr->Identifier);
 	REDIR(OT_DEPS);
 	OUT("#include <constr_SEQUENCE.h>\n");
 	OUT("\n");
@@ -483,28 +468,10 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	});
 	OUT("};\n");
 
-	p = MKID(expr->Identifier);
-	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n", p);
-	INDENTED(
-		if(expr->tag.tag_class) {
-			_print_tag(arg, expr, &expr->tag);
-			if(expr->tag.tag_mode != TM_EXPLICIT)
-				tags_impl_skip++;
-		}
-		if(!expr->tag.tag_class
-		|| (expr->meta_type == AMT_TYPE
-			&& expr->tag.tag_mode == TM_EXPLICIT)) {
-			struct asn1p_type_tag_s tag;
-			if(expr->tag.tag_class)
-				OUT(",\n");
-			tag.tag_class = TC_UNIVERSAL;
-			tag.tag_mode = TM_IMPLICIT;
-			tag.tag_value = expr_type2uclass_value[expr->expr_type];
-			_print_tag(arg, expr, &tag);
-		}
-		OUT("\n");
-	);
-	OUT("};\n");
+	/*
+	 * Print out asn1_DEF_<type>_tags[] vector.
+	 */
+	emit_tags_vector(arg, expr, &tags_impl_skip);
 
 	/*
 	 * Tags to elements map.
@@ -514,6 +481,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	/*
 	 * Emit a map of mandatory elements.
 	 */
+	p = MKID(expr->Identifier);
 	OUT("static uint8_t asn1_DEF_%s_mmap", p);
 	OUT("[(%d + (8 * sizeof(unsigned int)) - 1) / 8]", elements);
 	OUT(" = {\n", p);
@@ -651,29 +619,12 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	);
 	OUT("};\n");
 
-	p = MKID(expr->Identifier);
-	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n", p);
-	INDENTED(
-		if(expr->tag.tag_class) {
-			_print_tag(arg, expr, &expr->tag);
-			if(expr->tag.tag_mode != TM_EXPLICIT)
-				tags_impl_skip++;
-		}
-		if(!expr->tag.tag_class
-		|| (expr->meta_type == AMT_TYPE
-			&& expr->tag.tag_mode == TM_EXPLICIT)) {
-			struct asn1p_type_tag_s tag;
-			if(expr->tag.tag_class)
-				OUT(",\n");
-			tag.tag_class = TC_UNIVERSAL;
-			tag.tag_mode = TM_IMPLICIT;
-			tag.tag_value = expr_type2uclass_value[expr->expr_type];
-			_print_tag(arg, expr, &tag);
-		}
-		OUT("\n");
-	);
-	OUT("};\n");
+	/*
+	 * Print out asn1_DEF_<type>_tags[] vector.
+	 */
+	emit_tags_vector(arg, expr, &tags_impl_skip);
 
+	p = MKID(expr->Identifier);
 	OUT("static asn1_SET_OF_specifics_t asn1_DEF_%s_specs = {\n", p);
 	INDENTED(
 		OUT("sizeof(struct %s),\n", p);
@@ -977,29 +928,12 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 	REDIR(OT_STAT_DEFS);
 
-	p = MKID(expr->Identifier);
-	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n", p);
-	INDENTED(
-		if(expr->tag.tag_class) {
-			_print_tag(arg, expr, &expr->tag);
-			if(expr->tag.tag_mode != TM_EXPLICIT)
-				tags_impl_skip++;
-		}
-		if(!expr->tag.tag_class
-		|| (expr->meta_type == AMT_TYPE
-			&& expr->tag.tag_mode == TM_EXPLICIT)) {
-			struct asn1p_type_tag_s tag;
-			if(expr->tag.tag_class)
-				OUT(",\n");
-			tag.tag_class = TC_UNIVERSAL;
-			tag.tag_mode = TM_IMPLICIT;
-			tag.tag_value = expr_type2uclass_value[expr->expr_type];
-			_print_tag(arg, expr, &tag);
-		}
-		OUT("\n");
-	);
-	OUT("};\n");
+	/*
+	 * Print out asn1_DEF_<type>_tags[] vector.
+	 */
+	emit_tags_vector(arg, expr, &tags_impl_skip);
 
+	p = MKID(expr->Identifier);
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
 	INDENTED(
 		OUT("\"%s\",\n", expr->Identifier);
@@ -1353,6 +1287,38 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
 	OUT("};\n");
 
 	return 0;;
+}
+
+static int
+emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip) {
+	char *p;
+
+	p = MKID(expr->Identifier);
+	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n", p);
+	INDENTED(
+		if(expr->tag.tag_class) {
+			_print_tag(arg, expr, &expr->tag);
+			if(expr->tag.tag_mode != TM_EXPLICIT)
+				(*tags_impl_skip)++;
+		} else {
+			(*tags_impl_skip)++;
+		}
+		if(!expr->tag.tag_class
+		|| (expr->meta_type == AMT_TYPE
+			&& expr->tag.tag_mode == TM_EXPLICIT)) {
+			struct asn1p_type_tag_s tag;
+			if(expr->tag.tag_class)
+				OUT(",\n");
+			tag.tag_class = TC_UNIVERSAL;
+			tag.tag_mode = TM_IMPLICIT;
+			tag.tag_value = expr_type2uclass_value[expr->expr_type];
+			_print_tag(arg, expr, &tag);
+		}
+		OUT("\n");
+	);
+	OUT("};\n");
+
+	return 0;
 }
 
 static int
@@ -1722,7 +1688,7 @@ emit_alphabet_tables(arg_t *arg, asn1p_constraint_t *ct, int *table) {
 		if(ch_start > ch_stop) {
 			WARNING("Empty character range "
 			"alphabet constraint at line %d", ct->_lineno);
-			OUT("#warning Empty character range "
+			OUT_NOINDENT("#warning Empty character range "
 			"alphabet constraint at line %d\n", ct->_lineno);
 			break;
 		}
@@ -1942,9 +1908,12 @@ emit_size_determination_code(arg_t *arg) {
 			OUT("size = st->size;\n");
 			break;
 		} else {
-			WARNING("Size operation is not defined for %s",
-				ASN_EXPR_TYPE2STR(etype));
-			OUT("#warning Size operation not defined!\n");
+			const char *type_name = ASN_EXPR_TYPE2STR(etype);
+			if(!type_name) type_name = arg->expr->Identifier;
+			WARNING("SIZE constraint is not defined for %s",
+				type_name);
+			OUT_NOINDENT("#warning SIZE constraint "
+				"not defined for %s!\n", type_name);
 			OUT("size = st->size;\n");
 		}
 		return -1;
@@ -2024,6 +1993,6 @@ static asn1p_expr_type_e
 _find_terminal_type(arg_t *arg) {
 	asn1p_expr_t *expr;
 	expr = asn1f_find_terminal_type_ex(arg->asn, arg->mod, arg->expr, NULL);
-	assert(expr);
-	return expr->expr_type;
+	if(expr) return expr->expr_type;
+	return A1TC_INVALID;
 }
