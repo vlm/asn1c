@@ -1,9 +1,18 @@
-ModuleTestConstraint { iso org(3) dod(6) internet(1) private(4) enterprise(1)
-	spelio(9363) software(1) asn1c(5) test(1) 16 }
+ModuleTestConstraint1 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 16 1 }
 DEFINITIONS ::=
 BEGIN
 
 Type0 ::= IA5String (((SIZE(1..10))(FROM("a".."z" | "#"))))
+
+Type6 ::= IA5String ((SIZE(1..10))(FROM("a".."z" | "#")))
+
+END
+
+ModuleTestConstraint2 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 16 2 }
+DEFINITIONS ::=
+BEGIN
 
 Type1 ::= IA5String (SIZE(1..10,...))(FROM("a".."z" | "#",...))
 
@@ -14,8 +23,6 @@ Type3 ::= BMPString (SIZE(1))
 Type4 ::= INTEGER (1..MAX)
 
 Type5 ::= BOOLEAN (TRUE | FALSE)
-
-Type6 ::= IA5String ((SIZE(1..10))(FROM("a".."z" | "#")))
 
 ten INTEGER ::= 10
 
