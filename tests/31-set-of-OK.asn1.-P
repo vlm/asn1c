@@ -13,7 +13,7 @@ extern asn1_TYPE_descriptor_t asn1_DEF_Forest;
 
 
 typedef struct Forest {
-	A_SET_OF(struct Tree) list;
+	A_SET_OF(Tree_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	ber_dec_ctx_t _ber_dec_ctx;
@@ -158,7 +158,7 @@ extern asn1_TYPE_descriptor_t asn1_DEF_Stuff;
 
 typedef struct Stuff {
 	struct trees {
-		A_SET_OF(struct Forest) list;
+		A_SET_OF(Forest_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		ber_dec_ctx_t _ber_dec_ctx;

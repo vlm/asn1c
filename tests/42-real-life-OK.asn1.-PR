@@ -17,7 +17,7 @@ extern asn1_TYPE_descriptor_t asn1_DEF_LogLine;
 typedef struct LogLine {
 	IA5String_t	 line_digest;
 	struct varsets {
-		A_SEQUENCE_OF(struct VariablePartSet) list;
+		A_SEQUENCE_OF(VariablePartSet_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		ber_dec_ctx_t _ber_dec_ctx;
@@ -171,7 +171,7 @@ extern asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet;
 
 typedef struct VariablePartSet {
 	struct vparts {
-		A_SEQUENCE_OF(struct VariablePart) list;
+		A_SEQUENCE_OF(VariablePart_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		ber_dec_ctx_t _ber_dec_ctx;

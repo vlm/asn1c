@@ -200,7 +200,7 @@ extern asn1_TYPE_descriptor_t asn1_DEF_Name;
 
 
 typedef struct Name {
-	A_SEQUENCE_OF(struct RelativeDistinguishedName) list;
+	A_SEQUENCE_OF(RelativeDistinguishedName_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	ber_dec_ctx_t _ber_dec_ctx;
