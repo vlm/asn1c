@@ -299,9 +299,9 @@ ASN_MODULE_HEADERS+=constr_SET.h
 ASN_MODULE_SOURCES+=constr_SET.c
 ASN_MODULE_SOURCES+=constr_SET_OF.c
 ASN_MODULE_HEADERS+=asn_application.h
-ASN_MODULE_HEADERS+=asn_internal.h
-ASN_MODULE_HEADERS+=asn_codecs.h
 ASN_MODULE_HEADERS+=asn_system.h
+ASN_MODULE_HEADERS+=asn_codecs.h
+ASN_MODULE_HEADERS+=asn_internal.h
 ASN_MODULE_HEADERS+=OCTET_STRING.h
 ASN_MODULE_SOURCES+=OCTET_STRING.c
 ASN_MODULE_HEADERS+=BIT_STRING.h
@@ -357,8 +357,8 @@ Attribute.c: regenerate.Makefile
 	./regenerate.Makefile
 	make
 
-$(TARGET).o: ../decoder-template.c
-	$(CC) $(CFLAGS) -o $(TARGET).o -c ../decoder-template.c
+$(TARGET).o: ../../skeletons/asn-decoder-template.c
+	$(CC) $(CFLAGS) -o $(TARGET).o -c $<
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
