@@ -85,6 +85,7 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 	case ACT_CA_UNI:
 	case ACT_CA_INT:
 	case ACT_CA_EXC:
+	case ACT_CA_AEX:
 		return 1;
 	}
 
