@@ -11,8 +11,7 @@
 #define	ASN1C_ENVIRONMENT_VERSION	96	/* Compile-time version */
 int get_asn1c_environment_version(void);	/* Run-time version */
 
-#include <asn_types.h>
-#include <constr_TYPE.h>
+#include <asn_application.h>	/* Application-visible API */
 
 #define	CALLOC(nmemb, size)	calloc(nmemb, size)
 #define	MALLOC(size)		malloc(size)
@@ -28,7 +27,8 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 #ifdef	__GNUC__
 #define	ASN_DEBUG(fmt, args...)	do {		\
 		fprintf(stderr, fmt, ##args);	\
-		fprintf(stderr, "\n");		\
+		fprintf(stderr, " (%s:%d)\n",	\
+			__FILE__, __LINE__);	\
 	} while(0)
 #else	/* !__GNUC__ */
 extern void ASN_DEBUG_f(const char *fmt, ...);
