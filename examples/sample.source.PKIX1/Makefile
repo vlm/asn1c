@@ -352,6 +352,11 @@ clean:
 	rm -f $(TARGET)
 	rm -f $(OBJS)
 
+regen: regenerate-from-asn1-source
+
+regenerate-from-asn1-source:
+	../../asn1c/asn1c -S ../../skeletons ../rfc3280-PKIX1Explicit88.asn1 ../rfc3280-PKIX1Implicit88.asn1
+
 
 Attribute.c: regenerate.Makefile
 	./regenerate.Makefile
