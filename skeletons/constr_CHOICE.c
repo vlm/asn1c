@@ -96,7 +96,7 @@ _search4tag(const void *ap, const void *bp) {
 /*
  * The decoder of the CHOICE type.
  */
-ber_dec_rval_t
+asn_dec_rval_t
 CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
@@ -113,7 +113,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	ber_tlv_tag_t tlv_tag;	/* T from TLV */
 	ssize_t tag_len;	/* Length of TLV's T */
-	ber_dec_rval_t rval;	/* Return code from subparsers */
+	asn_dec_rval_t rval;	/* Return code from subparsers */
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 

@@ -40,6 +40,7 @@ static asn_SET_OF_specifics_t asn_DEF_Forest_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_Forest = {
 	"Forest",
+	"Forest",
 	SET_OF_free,
 	SET_OF_print,
 	SET_OF_constraint,
@@ -114,6 +115,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_Tree_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_Tree = {
+	"Tree",
 	"Tree",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -235,6 +237,7 @@ static asn_SET_OF_specifics_t asn_DEF_trees_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_trees = {
 	"trees",
+	"trees",
 	SET_OF_free,
 	SET_OF_print,
 	SET_OF_constraint,
@@ -280,6 +283,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_anything_member_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_anything_member = {
 	"",
+	"",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -319,6 +323,7 @@ static asn_SET_OF_specifics_t asn_DEF_anything_specs = {
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_anything = {
+	"anything",
 	"anything",
 	SET_OF_free,
 	SET_OF_print,
@@ -370,6 +375,7 @@ static asn_CHOICE_specifics_t asn_DEF_other_specs = {
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_other = {
+	"other",
 	"other",
 	CHOICE_free,
 	CHOICE_print,
@@ -440,6 +446,7 @@ static asn_SET_specifics_t asn_DEF_Stuff_specs = {
 	(unsigned int *)asn_DEF_Stuff_mmap	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_Stuff = {
+	"Stuff",
 	"Stuff",
 	SET_free,
 	SET_print,

@@ -21,12 +21,13 @@ static ber_tlv_tag_t asn_DEF_UTCTime_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	"UTCTime",
+	"UTCTime",
 	OCTET_STRING_free,
 	UTCTime_print,
 	UTCTime_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	0,				/* Not implemented yet */
+	OCTET_STRING_decode_xer_utf8,
 	UTCTime_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UTCTime_tags,
@@ -88,7 +89,7 @@ UTCTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		sptr = &st;
 	}
 
-	return OCTET_STRING_encode_xer_ascii(td, sptr, ilevel, flags,
+	return OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
 		cb, app_key);
 }
 

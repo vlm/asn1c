@@ -21,7 +21,7 @@ xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!td || !sptr) goto cb_failed;
 
-	mname = td->name;
+	mname = td->xml_tag;
 	mlen = strlen(mname);
 
 	_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);

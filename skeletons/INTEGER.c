@@ -16,6 +16,7 @@ static ber_tlv_tag_t asn_DEF_INTEGER_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	"INTEGER",
+	"INTEGER",
 	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,
 	asn_generic_no_constraint,

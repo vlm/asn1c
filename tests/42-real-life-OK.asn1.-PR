@@ -85,6 +85,7 @@ static asn_SET_OF_specifics_t asn_DEF_varsets_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_varsets = {
 	"varsets",
+	"varsets",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -136,6 +137,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_LogLine_specs = {
 	3	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_LogLine = {
+	"LogLine",
 	"LogLine",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -233,6 +235,7 @@ static asn_SET_OF_specifics_t asn_DEF_vparts_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vparts = {
 	"vparts",
+	"vparts",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -284,6 +287,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_VariablePartSet_specs = {
 	3	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
+	"VariablePartSet",
 	"VariablePartSet",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -410,6 +414,7 @@ static asn_SET_OF_specifics_t asn_DEF_vset_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vset = {
 	"vset",
+	"vset",
 	SET_OF_free,
 	SET_OF_print,
 	SET_OF_constraint,
@@ -463,6 +468,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_vrange_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vrange = {
 	"vrange",
+	"vrange",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -512,6 +518,7 @@ static asn_CHOICE_specifics_t asn_DEF_VariablePart_specs = {
 	1	/* Whether extensible */
 };
 asn_TYPE_descriptor_t asn_DEF_VariablePart = {
+	"VariablePart",
 	"VariablePart",
 	CHOICE_free,
 	CHOICE_print,
@@ -604,6 +611,7 @@ static asn_SET_OF_specifics_t asn_DEF_email_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_email = {
 	"email",
+	"email",
 	SET_OF_free,
 	SET_OF_print,
 	SET_OF_constraint,
@@ -657,6 +665,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_notify_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_notify = {
 	"notify",
+	"notify",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -708,6 +717,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_ActionItem_specs = {
 	3	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_ActionItem = {
+	"ActionItem",
 	"ActionItem",
 	SEQUENCE_free,
 	SEQUENCE_print,

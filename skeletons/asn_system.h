@@ -5,8 +5,8 @@
 /*
  * Miscellaneous system-dependent types.
  */
-#ifndef	_ASN_TYPES_H_
-#define	_ASN_TYPES_H_
+#ifndef	_ASN_SYSTEM_H_
+#define	_ASN_SYSTEM_H_
 
 #ifdef	HAVE_CONFIG_H
 #include "config.h"
@@ -31,7 +31,7 @@
  * 2. Sun Solaris requires <alloca.h> for alloca(3),
  * but does not have <stdint.h>.
  */
-#if	(!defined(__FreeBSD__) || !defined(_SYS_INTTYPES_H_))
+#if	(!defined(__FreeBSD__) || !defined(_SYS_INTSYSTEM_H_))
 #if	defined(sun)
 #include <alloca.h>	/* For alloca(3) */
 #else
@@ -62,4 +62,4 @@
 #endif /* __GNUC__ */
 #endif	/* MIN */
 
-#endif	/* _ASN_TYPES_H_ */
+#endif	/* _ASN_SYSTEM_H_ */

@@ -5,7 +5,7 @@
 #ifndef	_ASN1_CONSTRAINTS_VALIDATOR_H_
 #define	_ASN1_CONSTRAINTS_VALIDATOR_H_
 
-#include <asn_types.h>	/* System-dependent types */
+#include <asn_system.h>		/* Platform-dependent types */
 
 struct asn_TYPE_descriptor_s;		/* Forward declaration */
 

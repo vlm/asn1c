@@ -8,7 +8,7 @@
 #ifndef	_ASN_INTERNAL_H_
 #define	_ASN_INTERNAL_H_
 
-#define	ASN1C_ENVIRONMENT_VERSION	96	/* Compile-time version */
+#define	ASN1C_ENVIRONMENT_VERSION	98	/* Compile-time version */
 int get_asn1c_environment_version(void);	/* Run-time version */
 
 #include <asn_application.h>	/* Application-visible API */

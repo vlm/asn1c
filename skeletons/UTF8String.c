@@ -14,13 +14,14 @@ static ber_tlv_tag_t asn_DEF_UTF8String_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_UTF8String = {
 	"UTF8String",
+	"UTF8String",
 	OCTET_STRING_free,
 	UTF8String_print,
 	UTF8String_constraint,      /* Check for invalid codes, etc. */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	0,				/* Not implemented yet */
-	OCTET_STRING_encode_xer_ascii,	/* Already in UTF-8 format */
+	OCTET_STRING_encode_der,
+	OCTET_STRING_decode_xer_utf8,
+	OCTET_STRING_encode_xer_utf8,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UTF8String_tags,
 	sizeof(asn_DEF_UTF8String_tags)

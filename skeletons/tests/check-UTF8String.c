@@ -4,6 +4,8 @@
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>
 #include <der_encoder.c>
+#include <xer_decoder.c>
+#include <xer_support.c>
 #include <constraints.c>
 #include <sys/time.h>
 

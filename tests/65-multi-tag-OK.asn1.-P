@@ -59,7 +59,7 @@ T1_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 T1_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T1_inherit_TYPE_descriptor(td);
@@ -100,6 +100,7 @@ static ber_tlv_tag_t asn_DEF_T1_all_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T1 = {
+	"T1",
 	"T1",
 	T1_free,
 	T1_print,
@@ -180,7 +181,7 @@ T2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 T2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T2_inherit_TYPE_descriptor(td);
@@ -219,6 +220,7 @@ static ber_tlv_tag_t asn_DEF_T2_all_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T2 = {
+	"T2",
 	"T2",
 	T2_free,
 	T2_print,
@@ -299,7 +301,7 @@ T3_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 T3_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T3_inherit_TYPE_descriptor(td);
@@ -336,6 +338,7 @@ static ber_tlv_tag_t asn_DEF_T3_all_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T3 = {
+	"T3",
 	"T3",
 	T3_free,
 	T3_print,
@@ -416,7 +419,7 @@ T4_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 T4_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T4_inherit_TYPE_descriptor(td);
@@ -448,6 +451,7 @@ static ber_tlv_tag_t asn_DEF_T4_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T4 = {
+	"T4",
 	"T4",
 	T4_free,
 	T4_print,
@@ -528,7 +532,7 @@ T5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 T5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T5_inherit_TYPE_descriptor(td);
@@ -559,6 +563,7 @@ static ber_tlv_tag_t asn_DEF_T5_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T5 = {
+	"T5",
 	"T5",
 	T5_free,
 	T5_print,
@@ -658,7 +663,7 @@ T_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 T_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T_inherit_TYPE_descriptor(td);
@@ -690,6 +695,7 @@ static ber_tlv_tag_t asn_DEF_T_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
 	"T",
 	T_free,
 	T_print,
@@ -775,6 +781,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_Ts_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_Ts = {
+	"Ts",
 	"Ts",
 	SEQUENCE_free,
 	SEQUENCE_print,

@@ -14,13 +14,14 @@ static ber_tlv_tag_t asn_DEF_UniversalString_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	"UniversalString",
+	"UniversalString",
 	OCTET_STRING_free,
 	UniversalString_print,      /* Convert into UTF8 and print */
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
 	0,				/* Not implemented yet */
-	UniversalString_encode_xer,	/* Conver into UTF8 */
+	UniversalString_encode_xer,	/* Convert into UTF8 */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)

@@ -12,7 +12,7 @@ typedef struct asn_CHOICE_specifics_s {
 	 * Target structure description.
 	 */
 	int struct_size;	/* Size of the target structure. */
-	int ctx_offset;		/* Offset of the ber_dec_ctx_t member */
+	int ctx_offset;		/* Offset of the asn_codec_ctx_t member */
 	int pres_offset;	/* Identifier of the present member */
 	int pres_size;		/* Size of the identifier (enum) */
 

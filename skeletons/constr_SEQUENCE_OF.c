@@ -92,7 +92,8 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_TYPE_member_t *element = td->elements;
 	A_SEQUENCE_OF(void) *list;
 	const char *mname = specs->as_XMLValueList
-		? 0 : ((*element->name) ? element->name : element->type->name);
+		? 0 : ((*element->name)
+			? element->name : element->type->xml_tag);
 	unsigned int mlen = mname ? strlen(mname) : 0;
 	int xcan = (flags & XER_F_CANONICAL);
 	int i;

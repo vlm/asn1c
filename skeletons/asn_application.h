@@ -8,7 +8,8 @@
 #ifndef	_ASN_APPLICATION_H_
 #define	_ASN_APPLICATION_H_
 
-#include <asn_types.h>		/* for platform-dependent types */
+#include <asn_system.h>		/* for platform-dependent types */
+#include <asn_codecs.h>		/* for ASN.1 codecs specifics */
 
 /*
  * Generic type of an application-defined callback to return various

@@ -10,12 +10,12 @@
 /*
  * Decode an always-primitive type.
  */
-ber_dec_rval_t
+asn_dec_rval_t
 ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **sptr, void *buf_ptr, size_t size, int tag_mode) {
 	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)*sptr;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	ber_tlv_len_t length;
 
 	/*

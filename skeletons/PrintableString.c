@@ -14,13 +14,14 @@ static ber_tlv_tag_t asn_DEF_PrintableString_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	"PrintableString",
+	"PrintableString",
 	OCTET_STRING_free,
-	OCTET_STRING_print_ascii,   /* ASCII subset */
+	OCTET_STRING_print_utf8,	/* ASCII subset */
 	PrintableString_constraint,
-	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	0,				/* Not implemented yet */
-	OCTET_STRING_encode_xer_ascii,/* Implemented in terms of OCTET STRING */
+	OCTET_STRING_decode_ber,      /* Implemented in terms of OCTET STRING */
+	OCTET_STRING_encode_der,
+	OCTET_STRING_decode_xer_utf8,
+	OCTET_STRING_encode_xer_utf8,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_PrintableString_tags,
 	sizeof(asn_DEF_PrintableString_tags)

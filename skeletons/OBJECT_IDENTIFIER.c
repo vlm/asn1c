@@ -16,6 +16,7 @@ static ber_tlv_tag_t asn_DEF_OBJECT_IDENTIFIER_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	"OBJECT IDENTIFIER",
+	"OBJECT_IDENTIFIER",
 	ASN__PRIMITIVE_TYPE_free,
 	OBJECT_IDENTIFIER_print,
 	OBJECT_IDENTIFIER_constraint,

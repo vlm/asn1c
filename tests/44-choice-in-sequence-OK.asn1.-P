@@ -100,6 +100,7 @@ static asn_CHOICE_specifics_t asn_DEF_e_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_e = {
 	"e",
+	"e",
 	CHOICE_free,
 	CHOICE_print,
 	CHOICE_constraint,
@@ -148,6 +149,7 @@ static asn_CHOICE_specifics_t asn_DEF_h_specs = {
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_h = {
+	"h",
 	"h",
 	CHOICE_free,
 	CHOICE_print,
@@ -215,6 +217,7 @@ static asn_CHOICE_specifics_t asn_DEF_b_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_b = {
 	"b",
+	"b",
 	CHOICE_free,
 	CHOICE_print,
 	CHOICE_constraint,
@@ -269,6 +272,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_T_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
 	"T",
 	SEQUENCE_free,
 	SEQUENCE_print,

@@ -14,13 +14,14 @@ static ber_tlv_tag_t asn_DEF_GraphicString_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_GraphicString = {
 	"GraphicString",
+	"GraphicString",
 	OCTET_STRING_free,
 	OCTET_STRING_print,         /* non-ascii string */
 	asn_generic_unknown_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	0,				/* Not implemented yet */
-	OCTET_STRING_encode_xer,    /* Implemented in terms of OCTET STRING */
+	OCTET_STRING_encode_der,
+	OCTET_STRING_decode_xer_hex,
+	OCTET_STRING_encode_xer,	/* Can't expect it to be ASCII/UTF8 */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_GraphicString_tags,
 	sizeof(asn_DEF_GraphicString_tags)

@@ -14,6 +14,7 @@ static ber_tlv_tag_t asn_DEF_ENUMERATED_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	"ENUMERATED",
+	"ENUMERATED",
 	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,			/* Implemented in terms of INTEGER */
 	asn_generic_no_constraint,

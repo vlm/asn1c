@@ -19,7 +19,7 @@ _print(const void *buffer, size_t size, void *app_key) {
 static void
 check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	OBJECT_IDENTIFIER_t *oid;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	unsigned long arcs[10];
 	int alen;
 	int i;
@@ -66,7 +66,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 static void
 check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	RELATIVE_OID_t *oid;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	unsigned long arcs[10];
 	int alen;
 	int i;

@@ -88,6 +88,7 @@ static asn_SET_specifics_t asn_DEF_T_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
+	"T",
 	SET_free,
 	SET_print,
 	SET_constraint,

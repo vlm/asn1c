@@ -2,6 +2,8 @@
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>
 #include <der_encoder.c>
+#include <xer_decoder.c>
+#include <xer_support.c>
 #include <constraints.c>
 #undef	ADVANCE
 #undef	RETURN
@@ -37,7 +39,7 @@ check(int size) {
 	OCTET_STRING_t *os;
 	OCTET_STRING_t *nos = 0;
 	asn_enc_rval_t erval;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	int i;
 
 	os = OCTET_STRING_new_fromBuf(&asn_DEF_OCTET_STRING, 0, size);

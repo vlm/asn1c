@@ -49,6 +49,7 @@ static asn_SET_OF_specifics_t asn_DEF_collection_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_collection = {
 	"collection",
+	"collection",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -100,6 +101,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_T_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
 	"T",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -176,6 +178,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_T2_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_T2 = {
+	"T2",
 	"T2",
 	SEQUENCE_free,
 	SEQUENCE_print,

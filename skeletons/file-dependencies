@@ -44,7 +44,8 @@ constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h
 COMMON-FILES:	# This is a special section
 asn_application.h
 asn_internal.h
-asn_types.h
+asn_codecs.h
+asn_system.h			# Platform-dependent types
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
 BIT_STRING.h BIT_STRING.c	# This one is necessary for the above one
 ber_decoder.h ber_decoder.c
@@ -54,4 +55,5 @@ ber_tlv_tag.h ber_tlv_tag.c
 constr_TYPE.h constr_TYPE.c
 constraints.h constraints.c
 der_encoder.h der_encoder.c
+xer_decoder.h xer_decoder.c xer_support.h xer_support.c	# XER/XML decoding
 xer_encoder.h xer_encoder.c

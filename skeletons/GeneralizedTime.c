@@ -123,12 +123,13 @@ static ber_tlv_tag_t asn_DEF_GeneralizedTime_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	"GeneralizedTime",
+	"GeneralizedTime",
 	OCTET_STRING_free,
 	GeneralizedTime_print,
 	GeneralizedTime_constraint, /* Check validity of time */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
-	GeneralizedTime_encode_der, /* Implemented in terms of OCTET STRING */
-	0,				/* Not implemented yet */
+	GeneralizedTime_encode_der,
+	OCTET_STRING_decode_xer_utf8,
 	GeneralizedTime_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_GeneralizedTime_tags,
@@ -231,7 +232,7 @@ GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		sptr = &st;
 	}
 
-	return OCTET_STRING_encode_xer_ascii(td, sptr, ilevel, flags,
+	return OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
 		cb, app_key);
 }
 

@@ -54,6 +54,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_T1_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
+	"T1",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -129,6 +130,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_T2_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_T2 = {
+	"T2",
 	"T2",
 	SEQUENCE_free,
 	SEQUENCE_print,

@@ -3,7 +3,6 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
-#include <asn_types.h>	/* for MALLOC/REALLOC/FREEMEM */
 #include <asn_SET_OF.h>
 #include <errno.h>
 

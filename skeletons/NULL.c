@@ -14,6 +14,7 @@ static ber_tlv_tag_t asn_DEF_NULL_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_NULL = {
 	"NULL",
+	"NULL",
 	BOOLEAN_free,
 	NULL_print,
 	asn_generic_no_constraint,
