@@ -44,7 +44,7 @@ CXXFLAGS=\${COMMON_FLAGS} ${CXXFLAGS}
 
 all: check-executable
 check-executable: compiled-module *.c*
-	\$(CC) \$(CFLAGS) -o check-executable *.c*
+	\$(CC) \$(CFLAGS) -o check-executable -lm *.c*
 
 # Compile the corresponding .asn1 spec.
 compiled-module: ${asn_module} ../../asn1c
