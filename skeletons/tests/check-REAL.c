@@ -1,10 +1,12 @@
 #define	EMIT_ASN_DEBUG	1
 #include <REAL.c>
-#include <ber_codec_prim.c>
+#include <asn_codecs_prim.c>
 #include <ber_decoder.c>
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>
 #include <der_encoder.c>
+#include <xer_decoder.c>
+#include <xer_support.c>
 #include <constraints.c>
 
 static char reconstructed[2][512];
