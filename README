@@ -6,9 +6,10 @@ For quick installation tips read INSTALL.
 For more complete documentation on this compiler and on using the
 results of compilation please look into ./doc directory.
 
+Please also read the FAQ file.
+
 An excellent book on ASN.1 is written by Olivier Dubuisson:
 "ASN.1 Communication between heterogeneous systems", ISBN:0-12-6333361-0.
-
 
 QUICK START
 ===========
@@ -16,12 +17,12 @@ QUICK START
 After building [and installing] the compiler (see INSTALL), you may use
 the asn1c command to compile the ASN.1 specification:
 
-	asn1c <spec.asn1>
+	asn1c <module.asn1>
 
 If several specifications contain interdependencies, all of them must be
 specified:
 
-	asn1c <spec1.asn1> <spec2.asn1> ...
+	asn1c <module1.asn1> <module2.asn1> ...
 
 The ./examples directory contains several ASN.1 modules and a script to
 extract ASN.1 modules from RFC documents. To compile X.509 PKI module:
@@ -30,8 +31,8 @@ extract ASN.1 modules from RFC documents. To compile X.509 PKI module:
 
 In this example, -P option is used to instruct the compiler to print the
 compiled text on the standard output instead of creating multiple .c
-and .h files for every ASN.1 type found inside the specified files.
-This is useful for debugging and tests automation.
+and .h files for every ASN.1 type found inside the specified ASN.1 modules.
+This is useful for debugging and test automation.
 
 The compiler -E and -EF options are used for testing the parser and
 the semantic fixer, respectively. These options will instruct the compiler
@@ -40,7 +41,7 @@ to dump out the parsed (and fixed) ASN.1 specification as it was
 whether a particular syntactic construction is properly supported
 by the compiler.
 
-	asn1c -EF <spec-to-test.asn1>
+	asn1c -EF <module-to-test.asn1>
 
 
 MODEL OF OPERATION
@@ -49,10 +50,10 @@ MODEL OF OPERATION
 The asn1c compiler works by processing the ASN.1 module specification
 in several stages:
 1. In the first stage, the ASN.1 file is parsed.
-	(Parsing produces an ASN.1 syntax tree for the subsequent levels.)
+	(Parsing produces an ASN.1 syntax tree for the subsequent levels)
 2. In the second stage, the syntax tree is "fixed".
-	(Fixing is done by checking the tree for semantic errors
-	 and by transforming the tree into the canonical representation.)
+	(Fixing is a process of checking the tree for semantic errors,
+	 accompanied by the tree transformation into the canonical form)
 3. In the third stage, the syntax tree is compiled into the target language.
 
 There are several command-line options reserved for printing the results
