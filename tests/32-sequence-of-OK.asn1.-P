@@ -6,7 +6,7 @@
 
 /*** <<< FWD-DECLS [Programming] >>> ***/
 
-struct Fault;	/* Forward declaration */
+struct Fault;
 
 /*** <<< TYPE-DECLS [Programming] >>> ***/
 
@@ -74,7 +74,7 @@ asn_TYPE_descriptor_t asn_DEF_Programming = {
 
 /*** <<< FWD-DECLS [Fault] >>> ***/
 
-struct Error;	/* Forward declaration */
+struct Error;
 
 /*** <<< TYPE-DECLS [Fault] >>> ***/
 

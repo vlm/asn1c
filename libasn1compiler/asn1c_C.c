@@ -920,7 +920,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			&& (terminal->expr_type & ASN_CONSTR_MASK)) {
 				tnfmt = TNF_RSAFE;
 				REDIR(OT_FWD_DECLS);
-				OUT("%s;\t/* Forward declaration */\n",
+				OUT("%s;\n",
 					asn1c_type_name(arg, arg->expr, tnfmt));
 			}
 		}
@@ -1569,7 +1569,7 @@ emit_include_dependencies(arg_t *arg) {
 				&& (terminal->expr_type & ASN_CONSTR_MASK)) {
 				int saved_target = arg->target->target;
 				REDIR(OT_FWD_DECLS);
-				OUT("%s;\t/* Forward declaration */\n",
+				OUT("%s;\n",
 					asn1c_type_name(arg, memb, TNF_RSAFE));
 				REDIR(saved_target);
 				memb->marker.flags |= EM_UNRECURSE;
