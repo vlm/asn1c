@@ -135,7 +135,7 @@ OS__add_stack_el(struct _stack *st) {
 		nel->got = 0;
 		/* Retain the nel->cont_level, it's correct. */
 	} else {
-		(void *)nel = CALLOC(1, sizeof(struct _stack_el));
+		nel = (struct _stack_el *)CALLOC(1, sizeof(struct _stack_el));
 		if(nel == NULL)
 			return NULL;
 	
@@ -187,7 +187,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	 * Create the string if does not exist.
 	 */
 	if(st == NULL) {
-		(void *)st = *os_structure = CALLOC(1, specs->struct_size);
+		*os_structure = CALLOC(1, specs->struct_size);
+		st = (BIT_STRING_t *)*os_structure;
 		if(st == NULL)
 			RETURN(RC_FAIL);
 	}
@@ -212,7 +213,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 			 */
 			ctx->ptr = _new_stack();
 			if(ctx->ptr) {
-				(void *)stck = ctx->ptr;
+				stck = (struct _stack *)ctx->ptr;
 			} else {
 				RETURN(RC_FAIL);
 			}
@@ -234,7 +235,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		/*
 		 * Fill the stack with expectations.
 		 */
-		(void *)stck = ctx->ptr;
+		stck = (struct _stack *)ctx->ptr;
 		sel = stck->cur_ptr;
 	  do {
 		ber_tlv_tag_t tlv_tag;
@@ -409,7 +410,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		NEXT_PHASE(ctx);
 		/* Fall through */
 	case 2:
-		(void *)stck = ctx->ptr;
+		stck = (struct _stack *)ctx->ptr;
 		sel = stck->cur_ptr;
 		ASN_DEBUG("Phase 2: Need %ld bytes, size=%ld, alrg=%ld, wn=%d",
 			(long)sel->left, (long)size, (long)sel->got,
