@@ -54,7 +54,8 @@ GeneralizedTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	errno = EPERM;			/* Just an unlikely error code */
 	tloc = asn_GT2time(st, 0, 0);
 	if(tloc == -1 && errno != EPERM) {
-		_ASN_ERRLOG("%s: Invalid time format: %s",
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: Invalid time format: %s",
 			td->name, strerror(errno));
 		return -1;
 	}

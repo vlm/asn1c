@@ -37,16 +37,19 @@ BIT_STRING_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	if(st && st->buf) {
 		if(st->size) {
 			if(st->size == 1 && st->buf[0] != 0) {
-				_ASN_ERRLOG("%s: invalid padding byte",
+				_ASN_ERRLOG(app_errlog, app_key,
+					"%s: invalid padding byte",
 					td->name);
 				return -1;
 			}
 		} else {
-			_ASN_ERRLOG("%s: no padding byte", td->name);
+			_ASN_ERRLOG(app_errlog, app_key,
+				"%s: no padding byte", td->name);
 			return -1;
 		}
 	} else {
-		_ASN_ERRLOG("%s: value not given", td->name);
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
 		return -1;
 	}
 

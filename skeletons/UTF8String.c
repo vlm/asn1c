@@ -60,7 +60,8 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 			int w = _UTF8String_h1[ch >> 4];
 			if(want) {	/* Continuation expected */
 				if(w) {
-					_ASN_ERRLOG("%s: UTF-8 expectation "
+					_ASN_ERRLOG(app_errlog, app_key,
+						"%s: UTF-8 expectation "
 						"failed at byte %d",
 						opt_type_name,
 						(buf - st->buf) + 1);
@@ -75,7 +76,7 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 						break;
 					/* Fall through */
 				case 0:
-					_ASN_ERRLOG(
+					_ASN_ERRLOG(app_errlog, app_key,
 						"%s: UTF-8 expectation"
 						"failed at byte %d",
 						opt_type_name,
@@ -89,14 +90,16 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 
 		/* If still want something, then something is wrong */
 		if(want) {
-			_ASN_ERRLOG("%s: truncated UTF-8 sequence",
+			_ASN_ERRLOG(app_errlog, app_key,
+				"%s: truncated UTF-8 sequence",
 				opt_type_name);
 			return -1;
 		}
 
 		return length;
 	} else {
-		_ASN_ERRLOG("%s: value not given", opt_type_name);
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", opt_type_name);
 		return -1;
 	}
 }

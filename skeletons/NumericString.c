@@ -46,7 +46,8 @@ NumericString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
 				continue;
 			}
-			_ASN_ERRLOG("%s: value byte %d "
+			_ASN_ERRLOG(app_errlog, app_key,
+				"%s: value byte %d "
 				"not in NumericString alphabet (%d)",
 				td->name,
 				(buf - st->buf) + 1,
@@ -55,7 +56,8 @@ NumericString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			return -1;
 		}
 	} else {
-		_ASN_ERRLOG("%s: value not given", td->name);
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
 		return -1;
 	}
 

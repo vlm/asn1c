@@ -46,10 +46,10 @@ asn_constr_check_f asn_generic_unknown_constraint; /* Not fully supported */
  * Invoke the callback with a complete error message.
  */
 #ifdef	__GNUC__
-#define	_ASN_ERRLOG(fmt, args...)	do {	\
-	if(app_errlog)				\
-		_asn_i_log_error(app_errlog,	\
-			app_key, fmt, ##args);	\
+#define	_ASN_ERRLOG(app_errlog, app_key, fmt, args...)	do {	\
+	if(app_errlog)						\
+		_asn_i_log_error(app_errlog,			\
+			app_key, fmt, ##args);			\
 } while(0);
 #else	/* Preprocessor does not support variable args macros */
 #define	_ASN_ERRLOG	if(app_errlog) _asn_i_log_error
