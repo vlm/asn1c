@@ -1,7 +1,8 @@
 
-0.8.17:	2004-Aug-10
+0.8.17:	2004-Aug-11
 
 	* Improved compiler output: duplicate #includes eliminated.
+	* Win32 portability fixes.
 
 0.8.16:	2004-Jul-22
 

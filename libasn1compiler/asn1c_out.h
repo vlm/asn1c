@@ -13,6 +13,8 @@ typedef struct out_chunk {
 
 typedef struct compiler_streams {
 	enum {
+		OT_IGNORE	= -1,
+		OT_ASSERT	= 0,
 		OT_INCLUDES,	/* #include files */
 		OT_DEPS,	/* Dependencies (other than #includes) */
 		OT_TYPE_DECLS,	/* Type declarations */
@@ -25,7 +27,7 @@ typedef struct compiler_streams {
 } compiler_streams_t;
 
 static char *_compiler_stream2str[] __attribute__ ((unused))
-    = { "INCLUDES", "DEPS", "TYPE-DECLS", "FUNC-DECLS", "STAT-DEFS", "CODE" };
+    = { "ASSERT", "INCLUDES", "DEPS", "TYPE-DECLS", "FUNC-DECLS", "STAT-DEFS", "CODE" };
 
 int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 

@@ -13,17 +13,17 @@
 		b_PR_d,
 		b_PR_e,
 		b_PR_h,
-	} b_PR_e;
+	} b_PR;
 			typedef enum e_PR {
 				e_PR_NOTHING,	/* No components present */
 				e_PR_f,
 				e_PR_g,
-			} e_PR_e;
+			} e_PR;
 			typedef enum h_PR {
 				h_PR_NOTHING,	/* No components present */
 				h_PR_i,
 				h_PR_j,
-			} h_PR_e;
+			} h_PR;
 extern asn1_TYPE_descriptor_t asn1_DEF_T;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
@@ -32,12 +32,12 @@ extern asn1_TYPE_descriptor_t asn1_DEF_T;
 typedef struct T {
 	NULL_t	 a;
 	struct b {
-		b_PR_e present;
+		b_PR present;
 		union {
 			NULL_t	 c;
 			NULL_t	 d;
 			struct e {
-				e_PR_e present;
+				e_PR present;
 				union {
 					NULL_t	 f;
 					NULL_t	 g;
@@ -47,7 +47,7 @@ typedef struct T {
 				ber_dec_ctx_t _ber_dec_ctx;
 			} e;
 			struct h {
-				h_PR_e present;
+				h_PR present;
 				union {
 					NULL_t	 i;
 					NULL_t	 j;
@@ -82,8 +82,6 @@ typedef struct T {
 					"g"
 					},
 			};
-			static ber_tlv_tag_t asn1_DEF_e_tags[] = {
-			};
 			static asn1_TYPE_tag2member_t asn1_DEF_e_tag2el[] = {
 			    { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 0, 0, 0 }, /* f at 20 */
 			    { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 1, 0, 0 }, /* g at 21 */
@@ -107,9 +105,8 @@ typedef struct T {
 				CHOICE_print,
 				CHOICE_free,
 				CHOICE_outmost_tag,
-				asn1_DEF_e_tags,
-				sizeof(asn1_DEF_e_tags)
-					/sizeof(asn1_DEF_e_tags[0]),
+				0,	/* No explicit tags (pointer) */
+				0,	/* No explicit tags (count) */
 				0,	/* Tags to skip */
 				1,	/* Whether CONSTRUCTED */
 				&asn1_DEF_e_specs	/* Additional specs */
@@ -128,8 +125,6 @@ typedef struct T {
 					(void *)&asn1_DEF_NULL,
 					"j"
 					},
-			};
-			static ber_tlv_tag_t asn1_DEF_h_tags[] = {
 			};
 			static asn1_TYPE_tag2member_t asn1_DEF_h_tag2el[] = {
 			    { (ASN_TAG_CLASS_PRIVATE | (1 << 2)), 0, 0, 0 }, /* i at 24 */
@@ -154,9 +149,8 @@ typedef struct T {
 				CHOICE_print,
 				CHOICE_free,
 				CHOICE_outmost_tag,
-				asn1_DEF_h_tags,
-				sizeof(asn1_DEF_h_tags)
-					/sizeof(asn1_DEF_h_tags[0]),
+				0,	/* No explicit tags (pointer) */
+				0,	/* No explicit tags (count) */
 				0,	/* Tags to skip */
 				1,	/* Whether CONSTRUCTED */
 				&asn1_DEF_h_specs	/* Additional specs */
@@ -188,8 +182,6 @@ typedef struct T {
 			"h"
 			},
 	};
-	static ber_tlv_tag_t asn1_DEF_b_tags[] = {
-	};
 	static asn1_TYPE_tag2member_t asn1_DEF_b_tag2el[] = {
 	    { (ASN_TAG_CLASS_PRIVATE | (5 << 2)), 0, 0, 0 }, /* c at 17 */
 	    { (ASN_TAG_CLASS_PRIVATE | (6 << 2)), 1, 0, 0 }, /* d at 18 */
@@ -216,9 +208,8 @@ typedef struct T {
 		CHOICE_print,
 		CHOICE_free,
 		CHOICE_outmost_tag,
-		asn1_DEF_b_tags,
-		sizeof(asn1_DEF_b_tags)
-			/sizeof(asn1_DEF_b_tags[0]),
+		0,	/* No explicit tags (pointer) */
+		0,	/* No explicit tags (count) */
 		0,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_b_specs	/* Additional specs */
@@ -269,7 +260,7 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)
-		/sizeof(asn1_DEF_T_tags[0]),
+		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_T_specs	/* Additional specs */

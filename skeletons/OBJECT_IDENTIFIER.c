@@ -359,11 +359,15 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 	unsigned LE = 1;
 	unsigned isLittleEndian = *(char *)&LE;
 #endif
-	uint8_t buffer[arcval_size];
 	uint8_t *tp, *tend;
 	unsigned int cache;
 	uint8_t *bp = arcbuf;
 	int bits;
+#ifdef	__GNUC__
+	uint8_t buffer[arcval_size];
+#else
+	uint8_t *buffer = alloca(arcval_size);
+#endif
 
 	if(isLittleEndian && !prepared_order) {
 		uint8_t *a = arcval + arcval_size - 1;
