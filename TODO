@@ -12,7 +12,11 @@ which is already completed.
 		Support for slicing the IOCs to produce "views"
 		is not yet designed.
 
-MINOR:
+MEDIUM:
 
 1. Support for DEFAULT encoding and decoding, at least in INTEGER/ENUMERATED types.
-3. Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
+2. Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
+
+MINOR:
+
+1. Parsing of CONSTRAINED BY clauses

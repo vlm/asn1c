@@ -302,8 +302,10 @@ asn1f_fix_constr_autotag(arg_t *arg) {
 	TQ_FOR(v, &(expr->members), next) {
 		int must_explicit;
 
-		if(v->expr_type == A1TC_EXTENSIBLE)
-			break;
+		if(v->expr_type == A1TC_EXTENSIBLE) {
+			/* 28.5, d) */
+			continue;
+		}
 
 		if(0) {
 			/* This may be not true in case COMPONENTS OF */
