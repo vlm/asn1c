@@ -42,11 +42,11 @@ char *ber_tlv_tag_string(ber_tlv_tag_t tag);
 ssize_t ber_fetch_tag(void *bufptr, size_t size, ber_tlv_tag_t *tag_r);
 
 /*
- * This function serializes the tag (T from TLV) in DER format.
+ * This function serializes the tag (T from TLV) in BER format.
  * It always return number of bytes necessary to represent the tag,
  * it is a caller's responsibility to check the return value
  * against the supplied buffer's size.
  */
-ssize_t der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufptr, size_t size);
+ssize_t ber_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufptr, size_t size);
 
 #endif	/* _BER_TLV_TAG_H_ */
