@@ -18,6 +18,9 @@
 #include <sys/types.h>	/* For size_t */
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
+#ifndef	__NO_ASSERT_H__
+#include <assert.h>	/* for assert() macro */
+#endif
 
 #ifdef	WIN32
 

@@ -4,7 +4,6 @@
  */
 #include <asn_internal.h>
 #include <ANY.h>
-#include <assert.h>
 #include <errno.h>
 
 static asn_OCTET_STRING_specifics_t asn_DEF_ANY_specs = {

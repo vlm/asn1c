@@ -3,7 +3,6 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
-#include <assert.h>
 
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {					\

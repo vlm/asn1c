@@ -7,7 +7,6 @@
 #include <GeneralizedTime.h>
 #include <time.h>
 #include <errno.h>
-#include <assert.h>
 
 #ifndef	__NO_ASN_TABLE__
 

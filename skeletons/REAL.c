@@ -11,7 +11,6 @@
 #include <stdlib.h>	/* for strtod(3) */
 #include <math.h>
 #include <errno.h>
-#include <assert.h>
 #include <REAL.h>
 
 #undef	INT_MAX

@@ -5,7 +5,6 @@
 #include <asn_internal.h>
 #include <UniversalString.h>
 #include <UTF8String.h>
-#include <assert.h>
 
 /*
  * UniversalString basic type description.

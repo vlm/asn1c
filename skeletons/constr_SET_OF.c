@@ -5,7 +5,6 @@
 #include <asn_internal.h>
 #include <constr_SET_OF.h>
 #include <asn_SET_OF.h>
-#include <assert.h>
 
 /*
  * Number of bytes left for this structure.

@@ -8,9 +8,6 @@
 #include <GeneralizedTime.h>
 #include <time.h>
 #include <errno.h>
-#ifndef	__NO_ASSERT_H__
-#include <assert.h>
-#endif	/* __NO_ASSERT_H__ */
 
 #if	defined(WIN32)
 #warning PLEASE STOP AND READ!

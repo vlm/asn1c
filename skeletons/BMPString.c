@@ -5,7 +5,6 @@
 #include <asn_internal.h>
 #include <BMPString.h>
 #include <UTF8String.h>
-#include <assert.h>
 
 /*
  * BMPString basic type description.

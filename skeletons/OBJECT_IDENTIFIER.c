@@ -5,7 +5,6 @@
 #include <asn_internal.h>
 #include <OBJECT_IDENTIFIER.h>
 #include <limits.h>	/* for CHAR_BIT */
-#include <assert.h>
 #include <errno.h>
 
 /*
