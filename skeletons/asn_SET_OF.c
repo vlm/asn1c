@@ -80,6 +80,7 @@ asn_set_empty(void *asn_set_of_x) {
 					as->free(as->array[as->count]);
 			}
 			free(as->array);
+			as->array = 0;
 		}
 		as->count = 0;
 		as->size = 0;
