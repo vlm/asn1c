@@ -28,7 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
-	0,				/* Not implemented yet */
+	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeInteger_tags,
@@ -110,7 +110,7 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		 * This expression hopefully will be optimized away
 		 * by compiler.
 		 */
-		if(sizeof(int) != sizeof(long) && (*Int != l)) {
+		if(sizeof(int) != sizeof(long) && ((long)*Int != l)) {
 			*Int = 0;	/* Safe value */
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -163,6 +163,52 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 	}
 	return erval;
 }
+
+/*
+ * Decode the chunk of XML text encoding INTEGER.
+ */
+asn_dec_rval_t
+NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+	asn_dec_rval_t rval;
+	INTEGER_t *st = 0;
+	int *Int = (int *)*sptr;
+
+	if(!Int) {
+		(void *)Int = *sptr = CALLOC(1, sizeof(int));
+		if(!Int) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	rval = INTEGER_decode_xer(opt_codec_ctx, td, (void **)&st, opt_mname,
+		buf_ptr, size);
+	if(rval.code == RC_OK) {
+		long l;
+		if(asn_INTEGER2long(st, &l)) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+		} else {
+			*Int = l;
+
+			/* int might be shorter than long */
+			if(sizeof(int) != sizeof(long) && ((long)*Int != l)) {
+				*Int = 0;	/* Safe value */
+				rval.code = RC_FAIL;
+				rval.consumed = 0;
+				return rval;
+			}
+		}
+	} else {
+		rval.consumed = 0;
+	}
+	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, st, 0);
+	return rval;
+}
+
 
 asn_enc_rval_t
 NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,

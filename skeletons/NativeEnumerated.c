@@ -26,7 +26,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
-	0,				/* Not implemented yet */
+	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeEnumerated_tags,
