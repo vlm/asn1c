@@ -5,6 +5,7 @@ enum asn1print_flags {
 	APF_NOFLAGS,
 	APF_LINE_COMMENTS	= 0x01, /* Include line comments */
 	APF_DEBUG_CONSTRAINTS	= 0x02,	/* Explain constraints */
+	APF_PRINT_XML_DTD	= 0x04,	/* Generate XML DTD */
 };
 
 /*
