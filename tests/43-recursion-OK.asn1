@@ -25,4 +25,7 @@ BEGIN
 		other [4] INTEGER
 	}
 
+	Test-structure-2 ::= SET { m1 Test-structure-3 OPTIONAL }
+	Test-structure-3 ::= SET { m1 Test-structure-2 OPTIONAL }
+
 END
