@@ -159,8 +159,9 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 check_SCRIPTS = check-assembly.sh
-TESTS_ENVIRONMENT = ./check-assembly.sh
-TESTS = check-*.c*
+TESTS_ENVIRONMENT = CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
+@CPLUSPLUS_FOUND_FALSE@TESTS = check-*.c
+@CPLUSPLUS_FOUND_TRUE@TESTS = check-*.c check-*.cc	## Include C++ test filed (.cc)
 EXTRA_DIST = ${check_SCRIPTS} check-*.c*
 all: all-am
 

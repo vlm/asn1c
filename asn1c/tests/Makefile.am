@@ -1,7 +1,7 @@
 
 check_SCRIPTS = check-assembly.sh
 
-TESTS_ENVIRONMENT= ./check-assembly.sh
+TESTS_ENVIRONMENT= CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
 
 if CPLUSPLUS_FOUND
 TESTS = check-*.c check-*.cc	## Include C++ test filed (.cc)
