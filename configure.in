@@ -87,8 +87,8 @@ AC_CHECK_FUNCS(mergesort)
 AM_CONFIG_HEADER(config.h)
 
 AC_OUTPUT(			\
-libasn1compiler/Makefile	\
 skeletons/tests/Makefile	\
+libasn1compiler/Makefile	\
 libasn1parser/Makefile		\
 libasn1print/Makefile		\
 asn1c/tests/Makefile		\
