@@ -9,7 +9,7 @@
 #include <assert.h>
 #endif	/* __NO_ASSERT_H__ */
 
-#if	defined(WIN32) || defined(__CYGWIN__)
+#if	defined(WIN32)
 #warning PLEASE STOP AND READ!
 #warning	localtime_r is implemented via localtime(), which is not thread-safe.
 #warning	gmtime_r is implemented via gmtime(), which is not thread-safe.
