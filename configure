@@ -1881,7 +1881,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=asn1c
- VERSION=0.9.1
+ VERSION=0.9.2
 
 
 cat >>confdefs.h <<_ACEOF
@@ -21394,15 +21394,13 @@ fi
 
 case "$host_os" in
 cygwin*)
-	CFLAGS="$CFLAGS -DWIN32"
-	case "$target" in
+		case "$target" in
 	*mingw*)
 		CC="$CC -mno-cygwin"
 	esac
 	;;
 mingw* | p32*)
-	CFLAGS="$CFLAGS -DWIN32"
-	;;
+		;;
 esac
 
 # Check whether --enable-autoconf or --disable-autoconf was given.
