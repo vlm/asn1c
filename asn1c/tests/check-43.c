@@ -17,6 +17,7 @@ main(int ac, char **av) {
 	(void)av;	/* Unused argument */
 
 	memset(&ts1, 0, sizeof(ts1));
+	memset(&cs1, 0, sizeof(cs1));
 
 	/*
 	 * No plans to fill it up: just checking whether it compiles or not.
