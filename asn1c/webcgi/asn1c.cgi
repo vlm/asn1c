@@ -418,8 +418,8 @@ if($history) {
 		$history .= "<FONT SIZE=-1 COLOR=#404040>"
 			. "<FONT COLOR=darkred><B>Bottom line:</B> ASN.1 compiler was unable to process some of the input files.</FONT><BR>"
 			. "This is typically caused by syntax errors in the input files.\n"
-			. "Such errors are normally fixed by removing or adding a couple of characters in the ASN.1 module.\n"
-			. "<BR><B>Please consider clicking on an appropriate &quot;<I>Help me fix it!</I>&quot; link above.</B>\n"
+			. "Such errors are normally fixed by removing or adding a couple of characters in the ASN.1 module.<BR>\n"
+			. "<BR><B><FONT COLOR=darkred>Please consider clicking on an appropriate &quot;<I>Help me fix it!</I>&quot; link above.</FONT></B><BR>\n"
 			. "An email will be sent to a person who will gladly fix the ASN.1 module for you. (The typical turn-around time is less than 24 hours.)\n"
 			. "<BR>This is <B>free</B>, and highly advisable.\n"
 			. "Your request will help us make a better compiler!\n"
@@ -485,7 +485,7 @@ $content
 <CENTER><ADDRESS><FONT SIZE=-1 FACE=Courier COLOR=#404040>
 <A HREF=http://lionet.info/asn1c>The ASN.1 Compiler</A>
 	Copyright &copy; 2003, 2004
-Lev Walkin &lt;<A HREF=mailto:vlm&#64;lionet.info>vlm&#64;lionet.info</A>&gt;
+Lev Walkin &lt;<A HREF=mailto:vlm&#64;lionet.info?Subject=asn1c>vlm&#64;lionet.info</A>&gt;
 </FONT></ADDRESS></CENTER>
 </BODY>
 </HTML>
