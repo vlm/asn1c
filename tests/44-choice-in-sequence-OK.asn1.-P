@@ -1,23 +1,29 @@
 
-/*** <<< DEPS [T] >>> ***/
+/*** <<< INCLUDES [T] >>> ***/
 
-/* Dependencies for T */
 #include <NULL.h>
-
-/* Dependencies for b */
-#include <NULL.h>
-#include <NULL.h>
-
-/* Dependencies for e */
-#include <NULL.h>
-#include <NULL.h>
-
-/* Dependencies for h */
-#include <NULL.h>
-#include <NULL.h>
-
+#include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
 
+/*** <<< DEPS [T] >>> ***/
+
+	typedef enum b_PR {
+		b_PR_NOTHING,	/* No components present */
+		b_PR_c,
+		b_PR_d,
+		b_PR_e,
+		b_PR_h,
+	} b_PR_e;
+			typedef enum e_PR {
+				e_PR_NOTHING,	/* No components present */
+				e_PR_f,
+				e_PR_g,
+			} e_PR_e;
+			typedef enum h_PR {
+				h_PR_NOTHING,	/* No components present */
+				h_PR_i,
+				h_PR_j,
+			} h_PR_e;
 extern asn1_TYPE_descriptor_t asn1_DEF_T;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
@@ -26,22 +32,12 @@ extern asn1_TYPE_descriptor_t asn1_DEF_T;
 typedef struct T {
 	NULL_t	 a;
 	struct b {
-		enum {
-			b_PR_NOTHING,	/* No components present */
-			b_PR_c,
-			b_PR_d,
-			b_PR_e,
-			b_PR_h,
-		} present;
+		b_PR_e present;
 		union {
 			NULL_t	 c;
 			NULL_t	 d;
 			struct e {
-				enum {
-					e_PR_NOTHING,	/* No components present */
-					e_PR_f,
-					e_PR_g,
-				} present;
+				e_PR_e present;
 				union {
 					NULL_t	 f;
 					NULL_t	 g;
@@ -51,11 +47,7 @@ typedef struct T {
 				ber_dec_ctx_t _ber_dec_ctx;
 			} e;
 			struct h {
-				enum {
-					h_PR_NOTHING,	/* No components present */
-					h_PR_i,
-					h_PR_j,
-				} present;
+				h_PR_e present;
 				union {
 					NULL_t	 i;
 					NULL_t	 j;
@@ -76,8 +68,6 @@ typedef struct T {
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-			#include <constr_CHOICE.h>
-			
 			static asn1_CHOICE_element_t asn1_DEF_e_elements[] = {
 				{ offsetof(struct e, choice.f), 0,
 					(ASN_TAG_CLASS_PRIVATE | (7 << 2)),
@@ -124,8 +114,6 @@ typedef struct T {
 				1,	/* Whether CONSTRUCTED */
 				&asn1_DEF_e_specs	/* Additional specs */
 			};
-			
-			#include <constr_CHOICE.h>
 			
 			static asn1_CHOICE_element_t asn1_DEF_h_elements[] = {
 				{ offsetof(struct h, choice.i), 0,
@@ -174,8 +162,6 @@ typedef struct T {
 				&asn1_DEF_h_specs	/* Additional specs */
 			};
 			
-	#include <constr_CHOICE.h>
-	
 	static asn1_CHOICE_element_t asn1_DEF_b_elements[] = {
 		{ offsetof(struct b, choice.c), 0,
 			(ASN_TAG_CLASS_PRIVATE | (5 << 2)),
@@ -238,8 +224,6 @@ typedef struct T {
 		&asn1_DEF_b_specs	/* Additional specs */
 	};
 	
-#include <constr_SEQUENCE.h>
-
 static asn1_SEQUENCE_element_t asn1_DEF_T_elements[] = {
 	{ offsetof(struct T, a), 0,
 		(ASN_TAG_CLASS_PRIVATE | (2 << 2)),
