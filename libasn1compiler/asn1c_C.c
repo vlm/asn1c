@@ -7,7 +7,6 @@
 #include "asn1c_constraint.h"
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
-#include "asn1c_compat.h"
 #include <asn1fix_export.h>	/* Stuff exported by libasn1fix */
 
 typedef struct tag2el_s {
@@ -1704,9 +1703,6 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	int using_type_name = 0;
 	char *p;
 
-	OUT("/* %s defined in %s near line %d */\n",
-		MKID_nc(expr->Identifier),
-		a1c_basename(arg->mod->source_file_name), expr->_lineno);
 	if(HIDE_INNER_DEFS)
 		OUT("static /* Use -fall-defs-global to expose */\n");
 	OUT("asn_TYPE_descriptor_t asn_DEF_%s", MKID_nc(expr->Identifier));
