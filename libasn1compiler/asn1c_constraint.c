@@ -76,9 +76,10 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			produce_st = 1;
 		break;
 	}
-	if(produce_st)
-	OUT("const %s_t *st = sptr;\n",
-		asn1c_type_name(arg, arg->expr, TNF_SAFE));
+	if(produce_st) {
+		char *tname = asn1c_type_name(arg, arg->expr, TNF_SAFE);
+		OUT("const %s_t *st = (const %s_t *)sptr;\n", tname, tname);
+	}
 
 	if(r_size || r_value) {
 		if(r_size) {
@@ -360,6 +361,7 @@ static int
 emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	asn1c_integer_t natural_stop;
 	asn1p_expr_t *terminal;
+	char *tname;
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->expr);
 	if(terminal) {
@@ -368,8 +370,8 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	} else {
 		terminal = arg->expr;
 	}
-	OUT("const %s_t *st = sptr;\n",
-		asn1c_type_name(arg, terminal, TNF_SAFE));
+	tname = asn1c_type_name(arg, terminal, TNF_SAFE);
+	OUT("const %s_t *st = (const %s_t *)sptr;\n", tname, tname);
 
 	switch(terminal->expr_type) {
 	case ASN_STRING_UTF8String:
