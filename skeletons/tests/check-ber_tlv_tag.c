@@ -19,6 +19,7 @@ struct tag_control_s {
 	{ 1, { 29 }, 		1, ASN_TAG_CLASS_UNIVERSAL, 29, 0 },
 	{ 1, { 0xbf, 31 }, 	0, ASN_TAG_CLASS_CONTEXT, 31, 1 },
 	{ 2, { 0xbf, 31 }, 	1, ASN_TAG_CLASS_CONTEXT, 31, 1 },
+	{ 2, { 0xbf, 83 }, 	1, ASN_TAG_CLASS_CONTEXT, 83, 1 },
 	{ 2, { 0xbf, 127 }, 	1, ASN_TAG_CLASS_CONTEXT, 127, 1 },
 	{ 2, { 0xbf, 129 }, 	0, ASN_TAG_CLASS_CONTEXT, 127, 1 },
 	{ 3, { 0xbf, 129, 0 }, 	1, ASN_TAG_CLASS_CONTEXT, 128, 1 },
