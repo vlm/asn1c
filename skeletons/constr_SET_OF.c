@@ -5,6 +5,7 @@
 #include <asn_internal.h>
 #include <constr_SET_OF.h>
 #include <asn_SET_OF.h>
+#include <assert.h>
 
 /*
  * Number of bytes left for this structure.
@@ -449,6 +450,43 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+typedef struct xer_tmp_enc_s {
+	void *buffer;
+	size_t offset;
+	size_t size;
+} xer_tmp_enc_t;
+static int
+SET_OF_encode_xer_callback(const void *buffer, size_t size, void *key) {
+	xer_tmp_enc_t *t = (xer_tmp_enc_t *)key;
+	if(t->offset + size >= t->size) {
+		size_t newsize = (t->size << 2) + size;
+		void *p = REALLOC(t->buffer, newsize);
+		if(!p) return -1;
+		t->buffer = p;
+		t->size = newsize;
+	}
+	memcpy((char *)t->buffer + t->offset, buffer, size);
+	t->offset += size;
+	return 0;
+}
+static int
+SET_OF_xer_order(const void *aptr, const void *bptr) {
+	const xer_tmp_enc_t *a = (const xer_tmp_enc_t *)aptr;
+	const xer_tmp_enc_t *b = (const xer_tmp_enc_t *)bptr;
+	size_t minlen = a->offset;
+	int ret;
+	if(b->offset < minlen) minlen = b->offset;
+	/* Well-formed UTF-8 has this nice lexicographical property... */
+	ret = memcmp(a->buffer, b->buffer, minlen);
+	if(ret != 0) return ret;
+	if(a->offset == b->offset)
+		return 0;
+	if(a->offset == minlen)
+		return -1;
+	return 1;
+}
+
+
 asn_enc_rval_t
 SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
@@ -461,18 +499,35 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		? 0 : ((*element->name) ? element->name : element->type->name);
 	size_t mlen = mname ? strlen(mname) : 0;
 	int xcan = (flags & XER_F_CANONICAL);
+	xer_tmp_enc_t *encs = 0;
+	size_t encs_count = 0;
+	void *original_app_key = app_key;
+	asn_app_consume_bytes_f *original_cb = cb;
 	int i;
 
 	if(!sptr) _ASN_ENCODE_FAILED;
 
+	(void *)list = sptr;
+
+	if(xcan) {
+		encs = (xer_tmp_enc_t *)MALLOC(list->count * sizeof(encs[0]));
+		if(!encs) _ASN_ENCODE_FAILED;
+		cb = SET_OF_encode_xer_callback;
+	}
+
 	er.encoded = 0;
 
-	(void *)list = sptr;
 	for(i = 0; i < list->count; i++) {
 		asn_enc_rval_t tmper;
 
 		void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
+
+		if(encs) {
+			memset(&encs[encs_count], 0, sizeof(encs[0]));
+			app_key = &encs[encs_count];
+			encs_count++;
+		}
 
 		if(mname) {
 			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel);
@@ -481,7 +536,11 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		tmper = element->type->xer_encoder(element->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
-		if(tmper.encoded == -1) return tmper;
+		if(tmper.encoded == -1) {
+			td = tmper.failed_type;
+			sptr = tmper.structure_ptr;
+			goto cb_failed;
+		}
 
 		if(mname) {
 			_ASN_CALLBACK3("</", 2, mname, mlen, ">", 1);
@@ -493,6 +552,37 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
 
+	if(encs) {
+		xer_tmp_enc_t *enc = encs;
+		xer_tmp_enc_t *end = encs + encs_count;
+		ssize_t control_size = 0;
+
+		cb = original_cb;
+		app_key = original_app_key;
+		qsort(encs, encs_count, sizeof(encs[0]), SET_OF_xer_order);
+
+		for(; enc < end; enc++) {
+			_ASN_CALLBACK(enc->buffer, enc->offset);
+			FREEMEM(enc->buffer);
+			enc->buffer = 0;
+			control_size += enc->offset;
+		}
+		assert(control_size == er.encoded);
+	}
+
+	goto cleanup;
+cb_failed:
+	er.encoded = -1;
+	er.failed_type = td;
+	er.structure_ptr = sptr;
+cleanup:
+	if(encs) {
+		while(encs_count-- > 0) {
+			if(encs[encs_count].buffer)
+				FREEMEM(encs[encs_count].buffer);
+		}
+		free(encs);
+	}
 	return er;
 }
 
