@@ -74,7 +74,10 @@ asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) 
 
 	TQ_FOR(tc, &(mod->members), next) {
 		asn1print_expr(asn, mod, tc, flags, 0);
-		printf("\n\n");
+		if(flags & APF_DEBUG_CONSTRAINTS)
+			printf("\n");
+		else
+			printf("\n\n");
 	}
 
 	printf("END\n");
@@ -420,6 +423,7 @@ asn1print_constraint_explain(asn1p_expr_type_e expr_type,
 
 static int
 asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1print_flags flags, int level) {
+	int SEQ_OF = 0;
 
 	if(flags & APF_LINE_COMMENTS)
 	INDENT("-- #line %d\n", tc->_lineno);
@@ -462,6 +466,19 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	case A1TC_CLASSFIELD:
 		/* Nothing to print here */
 		break;
+	case ASN_CONSTR_SET_OF:
+	case ASN_CONSTR_SEQUENCE_OF:
+		SEQ_OF = 1;
+		if(tc->expr_type == ASN_CONSTR_SET_OF)
+			printf(" SET");
+		else
+			printf(" SEQUENCE");
+		if(tc->constraints) {
+			printf(" ");
+			asn1print_constraint(tc->constraints, flags);
+		}
+		printf(" OF");
+		break;
 	default:
 		{
 			char *p = ASN_EXPR_TYPE2STR(tc->expr_type);
@@ -481,8 +498,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	if(TQ_FIRST(&(tc->members))) {
 		asn1p_expr_t *se;	/* SubExpression */
 
-		if((tc->expr_type != ASN_CONSTR_SEQUENCE_OF
-		&& tc->expr_type != ASN_CONSTR_SET_OF)
+		if(!SEQ_OF
 		|| TQ_FIRST(&(tc->members))->expr_type & ASN_CONSTR_MASK)
 			printf(" {\n");
 
@@ -502,8 +518,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			}
 		}
 
-		if((tc->expr_type != ASN_CONSTR_SEQUENCE_OF
-		&& tc->expr_type != ASN_CONSTR_SET_OF)
+		if(!SEQ_OF
 		|| TQ_FIRST(&(tc->members))->expr_type & ASN_CONSTR_MASK) {
 			printf("\n");
 			INDENT("}");
@@ -513,7 +528,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	if(tc->with_syntax)
 		asn1print_with_syntax(tc->with_syntax, flags);
 
-	if(tc->constraints) {
+	if(!SEQ_OF && tc->constraints) {
 		printf(" ");
 		asn1print_constraint(tc->constraints, flags);
 	}
@@ -533,7 +548,8 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			printf(")");
 	}
 
-	if(flags & APF_DEBUG_CONSTRAINTS) {
+	if(flags & APF_DEBUG_CONSTRAINTS
+	&& tc->expr_type != A1TC_EXTENSIBLE) {
 		asn1p_expr_t *top_parent;
 
 		if(tc->combined_constraints) {
@@ -543,10 +559,12 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 
 		top_parent = asn1f_find_terminal_type_ex(asn, mod, tc, NULL);
 		if(top_parent) {
-			printf("\n-- PER-visible constraints: ");
+			printf("\n-- PER-visible constraints (%s): ",
+				top_parent->Identifier);
 			asn1print_constraint_explain(top_parent->expr_type,
 				tc->combined_constraints);
 		}
+		printf("\n");
 	}
 
 	return 0;
