@@ -143,29 +143,6 @@ struct xdp_arg_s {
 	int want_more;
 };
 
-/*
- * Check whether this buffer consists of entirely XER whitespace characters.
- */
-static int
-xer_decode__check_whitespace(void *chunk_buf, size_t chunk_size) {
-	char *p = (char *)chunk_buf;
-	char *pend = p + chunk_size;
-	for(; p < pend; p++) {
-		switch(*p) {
-		/* X.693, #8.1.4
-		 * HORISONTAL TAB (9)
-		 * LINE FEED (10)
-		 * CARRIAGE RETURN (13)
-		 * SPACE (32)
-		 */
-		case 0x09: case 0x0a: case 0x0d: case 0x20:
-			break;
-		default:
-			return 0;
-		}
-	}
-	return 1;	/* All whitespace */
-}
 
 static int
 xer_decode__unexpected_tag(void *key, void *chunk_buf, size_t chunk_size) {
@@ -173,7 +150,7 @@ xer_decode__unexpected_tag(void *key, void *chunk_buf, size_t chunk_size) {
 	ssize_t decoded;
 
 	if(arg->decoded_something) {
-		if(xer_decode__check_whitespace(chunk_buf, chunk_size))
+		if(xer_is_whitespace(chunk_buf, chunk_size))
 			return chunk_size;
 		/*
 		 * Decoding was done once already. Prohibit doing it again.
@@ -197,7 +174,7 @@ xer_decode__body(void *key, void *chunk_buf, size_t chunk_size, int have_more) {
 	ssize_t decoded;
 
 	if(arg->decoded_something) {
-		if(xer_decode__check_whitespace(chunk_buf, chunk_size))
+		if(xer_is_whitespace(chunk_buf, chunk_size))
 			return chunk_size;
 		/*
 		 * Decoding was done once already. Prohibit doing it again.

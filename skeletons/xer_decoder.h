@@ -79,4 +79,12 @@ ssize_t xer_next_token(int *stateContext, void *buffer, size_t size,
 xer_check_tag_e xer_check_tag(const void *buf_ptr, int size,
 		const char *need_tag);
 
+/*
+ * Check whether this buffer consists of entirely XER whitespace characters.
+ * RETURN VALUES:
+ * 1:	Whitespace or empty string
+ * 0:	Non-whitespace
+ */
+int xer_is_whitespace(void *chunk_buf, size_t chunk_size);
+
 #endif	/* _XER_DECODER_H_ */

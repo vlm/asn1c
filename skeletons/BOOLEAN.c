@@ -137,7 +137,6 @@ static ssize_t
 BOOLEAN__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
 	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
 	char *p = (char *)chunk_buf;
-	char *pend = p + chunk_size;
 
 	if(chunk_size == 0) return -1;
 
@@ -158,14 +157,8 @@ BOOLEAN__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
 			return -1;
 		}
 	} else {
-		for(; p < pend; p++) {
-			switch(*p) {
-			case 0x09: case 0x0a: case 0x0d: case 0x20:
-				break;
-			default:
-				return -1;	/* Not whitespace */
-			}
-		}
+		if(!xer_is_whitespace(chunk_buf, chunk_size))
+			return -1;
 	}
 
 	return chunk_size;
