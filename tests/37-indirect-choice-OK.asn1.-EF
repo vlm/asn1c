@@ -20,7 +20,8 @@ Choice1 ::= CHOICE {
 Choice2 ::= [2] EXPLICIT CHOICE {
     c-a	 OCTET STRING,
     c-b	 INTEGER,
-    c-d	 [3] EXPLICIT Choice1
+    c-d	 [3] EXPLICIT Choice1,
+    c-e	 [4] EXPLICIT Choice1
 }
 
 Choice3 ::= [3] EXPLICIT Choice2

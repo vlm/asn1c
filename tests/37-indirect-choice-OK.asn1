@@ -26,7 +26,8 @@ BEGIN
 	Choice2 ::= [2] CHOICE {
 		c-a OCTET STRING,
 		c-b INTEGER,
-		c-d [3] Choice1
+		c-d [3] Choice1,
+		c-e [4] Choice1
 	}
 
 	Choice3 ::= [3] EXPLICIT Choice2		-- tags [3] [2]
