@@ -68,7 +68,9 @@ int OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen,
  * >=0:		Number of arcs contained in the OBJECT IDENTIFIER
  */
 int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
-	void *_arcs, unsigned int _arc_type_size, unsigned int _arc_slots);
+	void *_arcs,			/* i.e., unsigned int arcs[N] */
+	unsigned int _arc_type_size,	/* i.e., sizeof(arcs[0]) */
+	unsigned int _arc_slots		/* i.e., N */);
 
 /*
  * This functions initializes the OBJECT IDENTIFIER object with
@@ -80,15 +82,18 @@ int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
  * -1/ENOMEM:	Memory allocation failed
  * 0:		The object was initialized with new arcs.
  */
-int OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *_oid,
-	unsigned long *_arcs, unsigned int _arc_slots);
+int OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *_oid,
+	void *_arcs,			/* i.e., unsigned int arcs[N] */
+	unsigned int _arc_type_size,	/* i.e., sizeof(arcs[0]) */
+	unsigned int _arc_slots		/* i.e., N */);
 
 /*
  * Internal functions.
+ * Used by RELATIVE-OID implementation in particular.
  */
 int OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen,
 	signed int add, void *value, unsigned int value_size);
-int OBJECT_IDENTIFIER_get_single_arc_l(uint8_t *arcbuf, unsigned int arclen,
-	signed int add, unsigned long *value);
+int OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf,
+	void *arcval, unsigned int arcval_size, int _prepared_order);
 
 #endif	/* _OBJECT_IDENTIFIER_H_ */

@@ -118,6 +118,12 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 			 * type, there is still possible to fit it when there
 			 * are few unused high bits in the arc value
 			 * representaion.
+			 * 
+			 * Moreover, there is a possibility that the
+			 * number could actually fit the arc space, given
+			 * that add is negative, but we don't handle
+			 * such "temporary lack of precision" situation here.
+			 * May be considered as a bug.
 			 */
 			uint8_t mask = (0xff << (7-(arclen - rvsize))) & 0x7f;
 			if((*arcbuf & mask)) {
@@ -156,7 +162,7 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 		inc = +1;	/* Big endian is known [at compile time] */
 
 	{
-		unsigned int bits;	/* typically no more than 3-4 bits */
+		int bits;	/* typically no more than 3-4 bits */
 
 		/* Clear the high unused bits */
 		for(bits = rvsize - arclen;
@@ -287,7 +293,7 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 	int add = 0;
 	int i;
 
-	if(!oid || !oid->buf) {
+	if(!oid || !oid->buf || (arc_slots && arc_type_size <= 1)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -335,37 +341,158 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 	return num_arcs;
 }
 
+
+/*
+ * Save the single value as an object identifier arc.
+ */
+inline int
+OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arcval_size, int prepared_order) {
+	/*
+	 * The following conditions must hold:
+	 * assert(arcval);
+	 * assert(arcval_size > 0);
+	 * assert(arcbuf);
+	 */
+#ifdef	WORDS_BIGENDIAN
+	const unsigned isLittleEndian = 0;
+#else
+	unsigned LE = 1;
+	unsigned isLittleEndian = *(char *)&LE;
+#endif
+	uint8_t buffer[arcval_size];
+	uint8_t *tp, *tend;
+	unsigned int cache;
+	uint8_t *bp = arcbuf;
+	int bits;
+
+	if(isLittleEndian && !prepared_order) {
+		uint8_t *a = arcval + arcval_size - 1;
+		uint8_t *aend = arcval;
+		uint8_t *msb = buffer + arcval_size - 1;
+		for(tp = buffer; a >= aend; tp++, a--)
+			if((*tp = *a) && (tp < msb))
+				msb = tp;
+		tend = &buffer[arcval_size];
+		tp = msb;	/* Most significant non-zero byte */
+	} else {
+		/* Look for most significant non-zero byte */
+		tend = arcval + arcval_size;
+		for(tp = arcval; tp < tend - 1; tp++)
+			if(*tp) break;
+	}
+
+	/*
+	 * Split the value in 7-bits chunks.
+	 */
+	bits = ((tend - tp) * CHAR_BIT) % 7;
+	if(bits) {
+		cache = *tp >> (CHAR_BIT - bits);
+		if(cache) {
+			*bp++ = cache | 0x80;
+			cache = *tp++;
+			bits = CHAR_BIT - bits;
+		} else {
+			bits = -bits;
+		}
+	} else {
+		cache = 0;
+	}
+	for(; tp < tend; tp++) {
+		cache = (cache << CHAR_BIT) + *tp;
+		bits += CHAR_BIT;
+		while(bits >= 7) {
+			bits -= 7;
+			*bp++ = 0x80 | (cache >> bits);
+		}
+	}
+	if(bits) *bp++ = cache;
+	bp[-1] &= 0x7f;	/* Clear the last bit */
+
+	return bp - arcbuf;
+}
+
 int
-OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, unsigned int arc_slots) {
+OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
 	uint8_t *buf;
 	uint8_t *bp;
-	unsigned long long first_value;
+	unsigned LE = 1;	/* Little endian (x86) */
+	unsigned isLittleEndian = *((char *)&LE);
+	unsigned int arc0;
+	unsigned int arc1;
+	unsigned size;
 	unsigned i;
-	int size;
 
-	if(oid == NULL || arcs == NULL || arc_slots < 2) {
+	if(!oid || !arcs || arc_type_size < 1 || arc_slots < 2) {
 		errno = EINVAL;
 		return -1;
 	}
 
-	if(arcs[0] <= 1) {
-		if(arcs[1] >= 39) {
+	switch(arc_type_size) {
+	case sizeof(char):
+		arc0 = ((unsigned char *)arcs)[0];
+		arc1 = ((unsigned char *)arcs)[1];
+		break;
+	case sizeof(short):
+		arc0 = ((unsigned short *)arcs)[0];
+		arc1 = ((unsigned short *)arcs)[1];
+		break;
+	case sizeof(int):
+		arc0 = ((unsigned int *)arcs)[0];
+		arc1 = ((unsigned int *)arcs)[1];
+		break;
+	default:
+		arc1 = arc0 = 0;
+		if(isLittleEndian) {	/* Little endian (x86) */
+			unsigned char *ps, *pe;
+			/* If more significant bytes are present,
+			 * make them > 255 quick */
+			for(ps = arcs + 1, pe = ps+arc_type_size; ps < pe; ps++)
+				arc0 |= *ps, arc1 |= *(ps + arc_type_size);
+			arc0 <<= CHAR_BIT, arc1 <<= CHAR_BIT;
+			arc0 = *((unsigned char *)arcs + 0);
+			arc1 = *((unsigned char *)arcs + arc_type_size);
+		} else {
+			unsigned char *ps, *pe;
+			/* If more significant bytes are present,
+			 * make them > 255 quick */
+			for(ps = arcs, pe = ps+arc_type_size - 1; ps < pe; ps++)
+				arc0 |= *ps, arc1 |= *(ps + arc_type_size);
+			arc0 = *((unsigned char *)arcs + arc_type_size - 1);
+			arc1 = *((unsigned char *)arcs +(arc_type_size<< 1)-1);
+		}
+	}
+
+	/*
+	 * The previous chapter left us with the first and the second arcs.
+	 * The values are not precise (that is, they are valid only if
+	 * they're less than 255), but OK for the purposes of making
+	 * the sanity test below.
+	 */
+	if(arc0 <= 1) {
+		if(arc1 >= 39) {
 			/* 8.19.4: At most 39 subsequent values (including 0) */
 			errno = ERANGE;
 			return -1;
 		}
-	} else if(arcs[0] > 2) {
+	} else if(arc0 > 2) {
 		/* 8.19.4: Only three values are allocated from the root node */
 		errno = ERANGE;
 		return -1;
 	}
-
-	first_value = arcs[0] * 40 + arcs[1];
+	/*
+	 * After above tests it is known that the value of arc0 is completely
+	 * trustworthy (0..2). However, the arc1's value is still meaningless.
+	 */
 
 	/*
 	 * Roughly estimate the maximum size necessary to encode these arcs.
+	 * This estimation implicitly takes in account the following facts,
+	 * that cancel each other:
+	 * 	* the first two arcs are encoded in a single value.
+	 * 	* the first value may require more space (+1 byte)
+	 * 	* the value of the first arc which is in range (0..2)
 	 */
-	size = ((sizeof(arcs[0]) + 1) * 8 / 7) * arc_slots;
+	size = ((arc_type_size * CHAR_BIT + 6) / 7) * arc_slots;
 	bp = buf = MALLOC(size + 1);
 	if(!buf) {
 		/* ENOMEM */
@@ -373,67 +500,60 @@ OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, unsi
 	}
 
 	/*
-	 * Encode the arcs and refine the encoding size.
+	 * Encode the first two arcs.
+	 * These require special treatment.
 	 */
-	size = 0;
-
 	{
-		uint8_t tbuf[sizeof(first_value) * 2];
-		uint8_t *tp = tbuf;
-		int arc_len = 0;
-		int add = 0;
+		uint8_t first_value[1 + arc_type_size];	/* of two arcs */
+		uint8_t *fv = first_value;
+		uint8_t *tp;
 
-		for(; first_value; first_value >>= 7) {
-			unsigned int b7 = first_value & 0x7f;
-			*tp++ = 0x80 | b7;
-			add++;
-			if(b7) { arc_len += add; add = 0; }
-		}
-
-		if(arc_len) {
-			tp = &tbuf[arc_len - 1];
-			/* The last octet does not have bit 8 set. */
-			*tbuf &= 0x7f;
-			for(; tp >= tbuf; tp--)
-				*bp++ = *tp;
-			size += arc_len;
+		/*
+		 * Simulate first_value = arc0 * 40 + arc1;
+		 */
+		/* Copy the second (1'st) arcs[1] into the first_value */
+		*fv++ = 0;
+		(char *)arcs += arc_type_size;
+		if(isLittleEndian) {
+			uint8_t *aend = arcs - 1;
+			uint8_t *a1 = arcs + arc_type_size - 1;
+			for(; a1 > aend; fv++, a1--) *fv = *a1;
 		} else {
-			*bp++ = 0;
-			size++;
+			uint8_t *a1 = arcs;
+			uint8_t *aend = a1 + arc_type_size;
+			for(; a1 < aend; fv++, a1++) *fv = *a1;
 		}
+		/* Increase the first_value by arc0 */
+		arc0 *= 40;	/* (0..80) */
+		for(tp = first_value + arc_type_size; tp >= first_value; tp--) {
+			unsigned int v = *tp;
+			v += arc0;
+			*tp = v;
+			if(v >= (1 << CHAR_BIT)) arc0 = v >> CHAR_BIT;
+			else break;
+		}
+
+		assert(tp >= first_value);
+
+		bp += OBJECT_IDENTIFIER_set_single_arc(bp, first_value,
+			fv - first_value, 1);
+ 	}
+
+	/*
+	 * Save the rest of arcs.
+	 */
+	for((char *)arcs += arc_type_size, i = 2;
+			i < arc_slots; i++, (char *)arcs += arc_type_size) {
+		bp += OBJECT_IDENTIFIER_set_single_arc(bp,
+			arcs, arc_type_size, 0);
 	}
 
-	for(i = 2; i < arc_slots; i++) {
-		unsigned long value = arcs[i];
-		uint8_t tbuf[sizeof(value) * 2];  /* Conservatively sized */
-		uint8_t *tp = tbuf;
-		int arc_len = 0;
-		int add = 0;
-
-		for(; value; value >>= 7) {
-			unsigned int b7 = value & 0x7F;
-			*tp++ = 0x80 | b7;
-			add++;
-			if(b7) { arc_len += add; add = 0; }
-		}
-
-		if(arc_len) {
-			tp = &tbuf[arc_len - 1];
-			/* The last octet does not have bit 8 set. */
-			*tbuf &= 0x7f;
-			for(; tp >= tbuf; tp--)
-				*bp++ = *tp;
-			size += arc_len;
-		} else {
-			*bp++ = 0;
-			size++;
-		}
-	}
+	assert((bp - buf) <= size);
 
 	/*
 	 * Replace buffer.
 	 */
-	oid->size = size;
+	oid->size = bp - buf;
 	bp = oid->buf;
 	oid->buf = buf;
 	if(bp) FREEMEM(bp);

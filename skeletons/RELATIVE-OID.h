@@ -19,12 +19,12 @@ asn_struct_print_f RELATIVE_OID_print;
  * Some handy conversion routines *
  **********************************/
 
-/* See OBJECT_IDENTIFIER_set_arcs_l() function in OBJECT_IDENTIFIER.h */
-int RELATIVE_OID_set_arcs_l(RELATIVE_OID_t *_roid,
-	unsigned long *arcs, int arcs_slots);
-
 /* See OBJECT_IDENTIFIER_get_arcs() function in OBJECT_IDENTIFIER.h */
 int RELATIVE_OID_get_arcs(RELATIVE_OID_t *_roid,
 	void *arcs, unsigned int arc_type_size, unsigned int arc_slots);
+
+/* See OBJECT_IDENTIFIER_set_arcs() function in OBJECT_IDENTIFIER.h */
+int RELATIVE_OID_set_arcs(RELATIVE_OID_t *_roid,
+	void *arcs, unsigned int arc_type_size, unsigned int arcs_slots);
 
 #endif	/* _RELATIVE_OID_H_ */
