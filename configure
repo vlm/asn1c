@@ -21401,11 +21401,16 @@ mingw* | p32*)
 		;;
 esac
 
-# Check whether --enable-autoconf or --disable-autoconf was given.
-if test "${enable_autoconf+set}" = set; then
-  enableval="$enable_autoconf"
-  ADD_CFLAGS="-Werror -W -Wpointer-arith"
+# Check whether --enable-Werror or --disable-Werror was given.
+if test "${enable_Werror+set}" = set; then
+  enableval="$enable_Werror"
+  enable_werror=$enableval
+else
+  enable_werror=no
 fi;
+if test x$enable_werror = xyes; then
+  ADD_CFLAGS="-Werror -W -Wpointer-arith"
+fi
 
 
 case "$GCC" in
