@@ -163,16 +163,20 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 		return rval;					\
 	} while(0)
 
-#define	XER_GOT_BODY(chunk_buf, chunk_size)	do {		\
+#define	XER_GOT_BODY(chunk_buf, chunk_size, size)	do {	\
 		ssize_t converted_size = body_receiver		\
 			(struct_key, chunk_buf, chunk_size,	\
 				(size_t)chunk_size < size);	\
 		if(converted_size == -1) RETURN(RC_FAIL);	\
+		if(converted_size == 0 && size == chunk_size) {	\
+			ctx->step = xer_state;			\
+			RETURN(RC_WMORE);			\
+		}						\
 		chunk_size = converted_size;			\
 	} while(0)
 #define	XER_GOT_EMPTY()	do {					\
-		ssize_t chunk_size = 0;				\
-		XER_GOT_BODY(0, chunk_size);			\
+	if(body_receiver(struct_key, 0, 0, size > 0) == -1)	\
+			RETURN(RC_FAIL);			\
 	} while(0)
 
 /*
@@ -231,7 +235,7 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 					 * any text is just ignored here.
 					 */
 				} else {
-					XER_GOT_BODY(buf_ptr, ch_size);
+					XER_GOT_BODY(buf_ptr, ch_size, size);
 				}
 				ADVANCE(ch_size);
 				continue;
