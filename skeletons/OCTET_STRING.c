@@ -247,9 +247,9 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 
 
 		ASN_DEBUG("%p, s->l=%ld, s->wn=%ld, s->g=%ld\n", sel,
-			(long)sel?sel->left:0,
-			(long)sel?sel->want_nulls:0,
-			(long)sel?sel->got:0
+			(long)(sel?sel->left:0),
+			(long)(sel?sel->want_nulls:0),
+			(long)(sel?sel->got:0)
 		);
 		if(sel && sel->left <= 0 && sel->want_nulls == 0) {
 			if(sel->prev) {
@@ -273,7 +273,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		tl = ber_fetch_tag(buf_ptr, Left, &tlv_tag);
 		ASN_DEBUG("fetch tag(size=%ld,L=%ld), %sstack, left=%ld, wn=%ld, tl=%ld",
 			(long)size, (long)Left, sel?"":"!",
-			(long)sel?sel->left:0, (long)sel?sel->want_nulls:0,
+			(long)(sel?sel->left:0),
+			(long)(sel?sel->want_nulls:0),
 			(long)tl);
 		switch(tl) {
 		case -1: RETURN(RC_FAIL);
