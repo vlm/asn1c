@@ -353,8 +353,13 @@ process_line(const char *fname, char *line, int lineno) {
 			continue;
 		}
 		cl++;
+		if(*cl != '#') {
+			fputc(*cl, stdout);
+			continue;
+		}
+		cl++;
 		if(*cl != 'x') {
-			fprintf(stderr, "%s: Expected \"&xNN;\" at line %d\n",
+			fprintf(stderr, "%s: Expected \"&#xNN;\" at line %d\n",
 				fname, lineno);
 			exit(EX_DATAERR);
 		}
@@ -373,7 +378,7 @@ process_line(const char *fname, char *line, int lineno) {
 				v |= clv - 'a' + 10; break;
 			default:
 				fprintf(stderr,
-					"%s: Expected \"&xNN;\" at line %d (%c)\n",
+					"%s: Expected \"&#xNN;\" at line %d (%c)\n",
 					fname, lineno, clv);
 				exit(EX_DATAERR);
 			}
@@ -381,7 +386,7 @@ process_line(const char *fname, char *line, int lineno) {
 		cl++;
 		if(*cl != ';') {
 			fprintf(stderr,
-				"%s: Expected \"&xNN;\" at line %d\n",
+				"%s: Expected \"&#xNN;\" at line %d\n",
 				fname, lineno);
 			exit(EX_DATAERR);
 		}

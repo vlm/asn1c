@@ -1,5 +1,5 @@
 
-0.9.8:	2004-Oct-20
+0.9.8:	2004-Oct-25
 
 	* Initial XER (XML) decoding implementation.
 	* -X command line option added to asn1c to generate XML DTD.
@@ -7,6 +7,7 @@
 	* Code compiled and tested on Sun Solaris 9 @ sparc.
 	  Improved includes/defines of/for system headers.
 	* ber_dec_rval_t renamed into asn_dec_rval_t: more generality.
+	* Removed confusion between &xNN; and &#xNN; in enber and unber.
 
 0.9.7.1:	2004-Oct-12
 
