@@ -71,21 +71,21 @@ static asn_TYPE_member_t asn_MBR_toBeSigned[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "version"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, signature),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_OBJECT_IDENTIFIER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "signature"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, issuer),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Name,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "issuer"
 		},
 };
@@ -133,14 +133,14 @@ static asn_TYPE_member_t asn_MBR_Certificate[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_toBeSigned,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "toBeSigned"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, algorithm),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_OBJECT_IDENTIFIER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "algorithm"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, signature),
@@ -217,7 +217,7 @@ static asn_TYPE_member_t asn_MBR_Name[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_RelativeDistinguishedName,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };

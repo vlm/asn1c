@@ -70,7 +70,7 @@ static asn_TYPE_member_t asn_MBR_varsets[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VariablePartSet,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -110,7 +110,7 @@ static asn_TYPE_member_t asn_MBR_LogLine[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_IA5String,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "line-digest"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, varsets),
@@ -220,7 +220,7 @@ static asn_TYPE_member_t asn_MBR_vparts[] = {
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VariablePart,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -267,7 +267,7 @@ static asn_TYPE_member_t asn_MBR_VariablePartSet[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_ActionItem,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "resolution"
 		},
 };
@@ -399,7 +399,7 @@ static asn_TYPE_member_t asn_MBR_vset[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VisibleString,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -439,14 +439,14 @@ static asn_TYPE_member_t asn_MBR_vrange[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VisibleString,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "from"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct vrange, to),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VisibleString,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "to"
 		},
 };
@@ -500,7 +500,7 @@ static asn_TYPE_member_t asn_MBR_VariablePart[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_vrange,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "vrange"
 		},
 };
@@ -596,7 +596,7 @@ static asn_TYPE_member_t asn_MBR_email[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VisibleString,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -636,14 +636,14 @@ static asn_TYPE_member_t asn_MBR_notify[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_BOOLEAN,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "critical"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, email),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_email,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "email"
 		},
 };
@@ -690,14 +690,14 @@ static asn_TYPE_member_t asn_MBR_ActionItem[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_ENUMERATED,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "accept-as"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ActionItem, notify),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_notify,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "notify"
 		},
 };
