@@ -10,11 +10,40 @@
 #endif	/* __NO_ASSERT_H__ */
 
 #ifdef	WIN32
-#define	localtime_r(tlocp, tmp)	(*tmp = localtime(tlocp))
 #warning PLEASE STOP AND READ!
-#warning localtime_r is implemented via localtime(), which is not thread-safe. You must fix the code to insert appropriate locking if you want to use asn_GT2time() or asn_UT2time().
+#warning	localtime_r is implemented via localtime(), which is not thread-safe.
+#warning	gmtime_r is implemented via gmtime(), which is not thread-safe.
+#warning
+#warning	You must fix the code by inserting appropriate locking
+#warning	if you want to use asn_GT2time() or asn_UT2time().
 #warning PLEASE STOP AND READ!
-#endif
+
+static struct tm *localtime_r(time_t *tloc, struct tm *result) {
+	struct tm *tm;
+	if((tm = localtime(tloc)))
+		return memcpy(result, tm, sizeof(struct tm));
+	return 0;
+}
+
+static struct tm *gmtime_r(time_t *tloc, struct tm *result) {
+	struct tm *tm;
+	if((tm = gmtime(tloc)))
+		return memcpy(result, tm, sizeof(struct tm));
+	return 0;
+}
+
+/* vlm: I am not sure about validity of this algorithm. */
+static time_t timegm(struct tm *tm) {
+	struct tm tmp;
+	time_t tloc = mktime(tm);
+	localtime_r(&tloc, &tmp);	/* Figure out our GMT offset */
+	tloc += tmp.tm_gmtoff;
+	tm->tm_zone = "GMT";
+	tm->tm_gmtoff = 0;	/* Simulate GMT */
+	return tloc;
+}
+
+#endif	/* WIN32 */
 
 #ifndef	__NO_ASN_TABLE__
 
@@ -337,9 +366,9 @@ local_finish:
 
 	/*** AT THIS POINT tm_s is either GMT or local (unknown) ****/
 
-	if(offset_specified)
+	if(offset_specified) {
 		tloc = timegm(&tm_s);
-	else {
+	} else {
 		/*
 		 * Without an offset (or 'Z'),
 		 * we can only guess that it is a local zone.
