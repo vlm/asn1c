@@ -2,7 +2,8 @@
 
 tmpfile=".check-parsing.$$.tmp"
 
-diff -a . . 2>/dev/null && diffArgs="-a"
+diff -a . . 2>/dev/null && diffArgs="-a"		# Assume text files
+diff -u . . 2>/dev/null && diffArgs="$diffArgs -u"	# Unified diff output
 
 ec=0
 
@@ -12,7 +13,7 @@ for ref in ../tests/*.asn1.-*; do
 	echo "Checking $src against $ref"
 	./asn1c "-$flags" "$src" > "$tmpfile" || ec=$?
 	if [ $? = 0 ]; then
-		diff $diffArgs -u "$ref" "$tmpfile" || ec=$?
+		diff $diffArgs "$ref" "$tmpfile" || ec=$?
 	fi
 	if [ "$1" != "regenerate" ]; then
 		rm -f "$tmpfile"
