@@ -20,8 +20,8 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,		/* Implemented in terms of INTEGER */
-	0,				/* Not implemented yet */
-	INTEGER_encode_xer,		/* Implemented in terms of INTEGER */
+	INTEGER_decode_xer,	/* This is temporary! */
+	INTEGER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_ENUMERATED_tags,
 	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
