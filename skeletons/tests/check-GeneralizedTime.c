@@ -14,20 +14,24 @@ check(char *time_str, time_t expect, int as_gmt) {
 	tloc = asn_GT2time(&gt, &tm, as_gmt);
 	printf("%s: [%s] -> %ld == %ld\n",
 		as_gmt?"GMT":"ofs", time_str, (long)tloc, (long)expect);
-	if(tloc != -1)
-	printf("\t%04d-%02d-%02dT%02d:%02d:%02d%+03ld%02ld\n",
+
+	if(tloc != -1) {
+		printf("\t%04d-%02d-%02dT%02d:%02d:%02d%+03ld%02ld\n",
 		tm.tm_year + 1900,
 		tm.tm_mon + 1,
 		tm.tm_mday,
 		tm.tm_hour,
 		tm.tm_min,
 		tm.tm_sec,
-		(tm.tm_gmtoff / 3600),
-		labs(tm.tm_gmtoff % 3600)
-	);
+		(GMTOFF(tm) / 3600),
+		labs(GMTOFF(tm) % 3600)
+		);
+	}
 	assert(tloc == expect);
 
-	assert(tloc == -1 || as_gmt == 0 || tm.tm_gmtoff == 0);
+#ifdef	HAVE_TM_GMTOFF
+	assert(tloc == -1 || as_gmt == 0 || GMTOFF(tm) == 0);
+#endif
 
 	if(!as_gmt) check(time_str, expect, 1);
 }

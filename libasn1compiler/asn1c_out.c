@@ -12,7 +12,6 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	int lf_found;
 	va_list ap;
 	out_chunk_t *m;
-	char *buf;
 	int ret;
 
 	switch(arg->target->target) {
@@ -49,34 +48,29 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 		dst->indented = 0;
 
 	/*
-	 * Estimate necessary size.
-	 */
-	buf = "";
-	va_start(ap, fmt);
-	ret = vsnprintf(buf, 0, fmt, ap);
-	va_end(ap);
-	assert(ret >= 0);
-
-	/*
 	 * Allocate buffer.
 	 */
 	m = calloc(1, sizeof(out_chunk_t));
 	if(m == NULL) return -1;
-	m->len = ret + 1;
-	m->buf = malloc(ret + 1);
-	if(m->buf == NULL) {
-		free(m);
-		return -1;
-	}
 
-	/*
-	 * Fill the buffer.
-	 */
-	va_start(ap, fmt);
-	ret = vsnprintf(m->buf, m->len, fmt, ap);
-	assert(ret < m->len);
+	m->len = 16;
+	do {
+		void *tmp;
+		m->len <<= 2;
+		tmp = realloc(m->buf, m->len);
+		if(tmp) {
+			m->buf = (char *)tmp;
+		} else {
+			free(m->buf);
+			free(m);
+			return -1;
+		}
+		va_start(ap, fmt);
+		ret = vsnprintf(m->buf, m->len, fmt, ap);
+		va_end(ap);
+	} while(ret >= (m->len - 1) || ret < 0);
+
 	m->len = ret;
-	va_end(ap);
 
 	if(arg->target->target == OT_INCLUDES) {
 		out_chunk_t *v;

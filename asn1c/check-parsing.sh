@@ -2,6 +2,8 @@
 
 tmpfile=".check-parsing.$$.tmp"
 
+diff -a . . 2>/dev/null && diffArgs="-a"
+
 ec=0
 
 for ref in ../tests/*.asn1.-*; do
@@ -10,7 +12,7 @@ for ref in ../tests/*.asn1.-*; do
 	echo "Checking $src against $ref"
 	./asn1c "-$flags" "$src" > "$tmpfile" || ec=$?
 	if [ $? = 0 ]; then
-		diff -a -u "$ref" "$tmpfile" || ec=$?
+		diff $diffArgs -u "$ref" "$tmpfile" || ec=$?
 	fi
 	if [ "$1" != "regenerate" ]; then
 		rm -f "$tmpfile"

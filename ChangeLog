@@ -1,8 +1,10 @@
 
-0.9.8:	2004-Oct-13
+0.9.8:	2004-Oct-20
 
 	* -X command line option added to asn1c to generate XML DTD.
 	* Empty SEQUENCE and SET clauses are now allowed.
+	* Code compiled and tested on Sun Solaris 9 @ sparc.
+	  Improved includes/defines of/for system headers.
 
 0.9.7.1:	2004-Oct-12
 
@@ -200,7 +202,7 @@
 	* Compiler: fixed recursive ASN.1 types inclusion (Severity: low,
 	  Security impact: none).
 	* Parser: IMPORTS/FROM fixes, now allowing multiple sections.
-	* Code compiled and checked on PowerPC (@MacOS X). No major portability
+	* Code compiled and tested on MacOS X (@ PowerPC). No major portability
 	  issues experienced.
 
 0.8.7:	2004-Apr-11	T-version-0-8-7

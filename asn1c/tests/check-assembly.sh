@@ -11,10 +11,10 @@ if [ "x$1" = "x" ]; then
 fi
 
 # Compute the .asn1 spec name by the given file name.
-source=$(echo "$1" | sed -e 's/.*\///')
+source=`echo "$1" | sed -e 's/.*\///'`
 testno=`echo "$source" | cut -f2 -d'-' | cut -f1 -d'.'`
 
-args=$(echo "$source" | sed -e 's/\.c[c]*$//')
+args=`echo "$source" | sed -e 's/\.c[c]*$//'`
 testdir=test-${args}
 
 OFS=$IFS
@@ -30,9 +30,10 @@ if [ ! -d $testdir ]; then
 	mkdir $testdir		|| exit $?
 fi
 cd $testdir			|| exit $?
-ln -fs ../$source		|| exit $?
+rm -f ./$source 2>/dev/null
+ln -fns ../$source		|| exit $?
 
-asn_module=$(echo ../../../tests/${testno}-*.asn1)
+asn_module=`echo ../../../tests/${testno}-*.asn1`
 
 # Create a Makefile for the project.
 cat > Makefile <<EOM
@@ -41,6 +42,8 @@ cat > Makefile <<EOM
 COMMON_FLAGS= -I. -DEMIT_ASN_DEBUG
 CFLAGS=\${COMMON_FLAGS} ${CFLAGS}
 CXXFLAGS=\${COMMON_FLAGS} ${CXXFLAGS}
+
+CC=${CC}
 
 all: check-executable
 check-executable: compiled-module *.c*

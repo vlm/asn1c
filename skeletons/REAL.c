@@ -57,7 +57,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		buf = "<NOT-A-NUMBER/>";
 		buflen = 15;
 		return (cb(buf, buflen, app_key) < 0) ? -1 : buflen;
-	} else if(isinf(d)) {
+	} else if(!finite(d)) {
 		if(copysign(1.0, d) < 0.0) {
 			buf = "<MINUS-INFINITY/>";
 			buflen = 17;
@@ -416,7 +416,7 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 			st->buf[0] = 0x42;	/* NaN */
 			st->buf[1] = 0;
 			st->size = 1;
-		} else if(isinf(dbl_value)) {
+		} else if(!finite(dbl_value)) {
 			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x41;	/* MINUS-INFINITY */
 			} else {
