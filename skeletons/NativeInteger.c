@@ -176,7 +176,8 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	int *Int = (int *)*sptr;
 
 	if(!Int) {
-		(void *)Int = *sptr = CALLOC(1, sizeof(int));
+		*sptr = CALLOC(1, sizeof(int));
+		Int = (int *)*sptr;
 		if(!Int) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;

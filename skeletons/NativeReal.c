@@ -54,7 +54,8 @@ NativeReal_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	 * If the structure is not there, allocate it.
 	 */
 	if(Dbl == NULL) {
-		(void *)Dbl = *dbl_ptr = CALLOC(1, sizeof(*Dbl));
+		*dbl_ptr = CALLOC(1, sizeof(*Dbl));
+		Dbl = (double *)*dbl_ptr;
 		if(Dbl == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -156,7 +157,8 @@ NativeReal_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	double *Dbl = (double *)*sptr;
 
 	if(!Dbl) {
-		(void *)Dbl = *sptr = CALLOC(1, sizeof(double));
+		*sptr = CALLOC(1, sizeof(double));
+		Dbl = (double *)*sptr;
 		if(!Dbl) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;

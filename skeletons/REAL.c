@@ -640,7 +640,7 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 	ptr += buflen;
 	buflen = ptr - buf;
 
-	(void *)ptr = MALLOC(buflen + 1);
+	ptr = (uint8_t *)MALLOC(buflen + 1);
 	if(!ptr) return -1;
 
 	memcpy(ptr, buf, buflen);
