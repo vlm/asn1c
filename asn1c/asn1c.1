@@ -4,9 +4,8 @@
 .TH ASN1C 1 "\*(Dt" "ASN.1 Compiler" "ASN.1 Compiler"
 .SH NAME
 asn1c \- ASN.1 Compiler
-.ND ASN.1 compiler
 .SH SYNOPSIS
-asn1c [\fB\-E\fR [\fB-F\fR] | \fB\-P\fR | \fB\-R\fR | \fB\-t\fR\fIdata-string\fR]
+asn1c [\fB\-E\fR [\fB-F\fR] | \fB\-P\fR | \fB\-R\fR]
       [\fB\-S\fR\fIdir\fR]
       [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR...] [\fB\-p\fR\fIrint-\fR...]
       \fIinfile\fR...
@@ -19,7 +18,6 @@ and other encoding standards.
 \fIOverall Options\fR
 \fB\-E \-F \-P \-R\fR
 .BI "\-S " directory
-.BI "\-t " data-string
 .TP
 \fIWarning Options\fR
 .br
@@ -55,10 +53,6 @@ omitting the usual support code.
 .TP
 \fB\-S\fR \fIdirectory\fR
 Use the specified directory with ASN.1 skeleton files.
-.TP
-\fB\-t\fR \fIdata-string\fR
-Interpret the data-string as a sequence of hexadecimal values representing
-the start of BER TLV encoding. Print the human readable explanation.
 .SH WARNING OPTIONS
 .TP
 .B \-Werror
@@ -104,5 +98,8 @@ its internal understanding of subtype constraints.
 .TP
 .B \-print-lines
 Generate "-- #line" comments in \fB-E\fR output.
+.SH SEE ALSO
+.TP
+\&\fIunber\fR\|(1)
 .SH AUTHORS
 Lev Walkin <vlm@lionet.info>
