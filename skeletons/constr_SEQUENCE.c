@@ -352,7 +352,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				/* Skip this tag */
 				ssize_t skip;
 
-				skip = ber_skip_length(
+				skip = ber_skip_length(opt_codec_ctx,
 					BER_TLV_CONSTRUCTED(ptr),
 					(char *)ptr + tag_len, LEFT - tag_len);
 				ASN_DEBUG("Skip length %d in %s",
@@ -474,7 +474,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				RETURN(RC_FAIL);
 			}
 
-			ll = ber_skip_length(
+			ll = ber_skip_length(opt_codec_ctx,
 				BER_TLV_CONSTRUCTED(ptr),
 				(char *)ptr + tl, LEFT - tl);
 			switch(ll) {

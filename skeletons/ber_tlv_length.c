@@ -74,11 +74,27 @@ ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
 }
 
 ssize_t
-ber_skip_length(int _is_constructed, void *ptr, size_t size) {
+ber_skip_length(asn_codec_ctx_t *opt_codec_ctx,
+		int _is_constructed, void *ptr, size_t size) {
 	ber_tlv_len_t vlen;	/* Length of V in TLV */
 	ssize_t tl;		/* Length of L in TLV */
 	ssize_t ll;		/* Length of L in TLV */
 	size_t skip;
+
+	/*
+	 * Make sure we didn't exceed the maximum stack size.
+	 */
+	if(opt_codec_ctx && opt_codec_ctx->max_stack_size) {
+		ptrdiff_t usedstack = ((char *)opt_codec_ctx - (char *)&size);
+		/* double negative is required to avoid int wrap-around */
+		if(usedstack > 0) usedstack = -usedstack;
+		ASN_DEBUG("Current stack size %ld", -(long)usedstack);
+		if(usedstack < -(ptrdiff_t)opt_codec_ctx->max_stack_size) {
+			ASN_DEBUG("Stack limit %ld reached",
+				(long)opt_codec_ctx->max_stack_size);
+			return -1;
+		}
+	}
 
 	/*
 	 * Determine the size of L in TLV.
@@ -107,7 +123,8 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 		tl = ber_fetch_tag(ptr, size, &tag);
 		if(tl <= 0) return tl;
 
-		ll = ber_skip_length(BER_TLV_CONSTRUCTED(ptr),
+		ll = ber_skip_length(opt_codec_ctx,
+			BER_TLV_CONSTRUCTED(ptr),
 			((char *)ptr) + tl, size - tl);
 		if(ll <= 0) return ll;
 
