@@ -121,7 +121,7 @@ check_REGEN(int *arcs, int acount) {
 	int ret;
 	int i;
 
-	printf("Encoding (R) {");
+	fprintf(stderr, "Encoding (R) {");
 	for(i = 0; i < acount; i++) {
 		printf(" %u", arcs[i]);
 	}
@@ -158,7 +158,7 @@ check_REGEN_OID(int *arcs, int acount) {
 	int ret;
 	int i;
 
-	printf("Encoding (O) {");
+	fprintf(stderr, "Encoding (O) {");
 	for(i = 0; i < acount; i++) {
 		printf(" %u", arcs[i]);
 	}
