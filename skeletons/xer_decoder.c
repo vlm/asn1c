@@ -137,12 +137,13 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 					return ct;
 				}
 			}
-			return XCT_UNEXPECTED;
+			return (XCT__UNK__MASK | ct);
 		}
 		if(b == 0)
 			return XCT_BROKEN;	/* Embedded 0 in buf?! */
 	}
-	if(*need_tag) return XCT_UNEXPECTED;
+	if(*need_tag)
+		return (XCT__UNK__MASK | ct);
 
 	return ct;
 }
@@ -272,7 +273,7 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 			ADVANCE(ch_size);
 			ctx->phase = 2;	/* Phase out */
 			RETURN(RC_OK);
-		case XCT_UNEXPECTED:
+		case XCT_UNKNOWN_BO:
 			if(!ctx->phase) break;
 			/*
 			 * Certain tags in the body may be expected.

@@ -623,6 +623,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 	int xer_state;			/* XER low level parsing context */
 	int edx;			/* Element index */
+	int edx_end;
 
 	/*
 	 * Create the target structure if it is not present already.
@@ -649,6 +650,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
 		asn_TYPE_member_t *elm;
+		int n;
 
 		/*
 		 * Go inside the inner member of a sequence.
@@ -740,9 +742,8 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				continue;
 			}
 			/* Fall through */
-		case XCT_UNEXPECTED: {
-			int edx_end;
-			int n;
+		case XCT_UNKNOWN_OP:
+		case XCT_UNKNOWN_BO:
 
 			ASN_DEBUG("XER/SEQUENCE: tcv=%d, ph=%d",
 				tcv, ctx->phase);
@@ -754,6 +755,8 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			 * Search which member corresponds to this tag.
 			 */
 			edx_end = edx + elements[edx].optional + 1;
+			if(edx_end > td->elements_count)
+				edx_end = td->elements_count;
 			for(n = edx; n < edx_end; n++) {
 				elm = &td->elements[n];
 				tcv = xer_check_tag(buf_ptr,ch_size,elm->name);
@@ -766,18 +769,29 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					ctx->step = edx = n;
 					ctx->phase = 2;
 					break;
-				case XCT_UNEXPECTED:
+				case XCT_UNKNOWN_OP:
+				case XCT_UNKNOWN_BO:
 					continue;
-				case XCT_CLOSING:
 				default:
 					n = edx_end;
 					break;	/* Phase out */
 				}
 				break;
 			}
-			if(n == edx_end) break;
-			continue;
-		  }
+			if(n != edx_end)
+				continue;
+
+			/* It is expected extension */
+			if(IN_EXTENSION_GROUP(specs,
+				edx + elements[edx].optional)) {
+				ASN_DEBUG("Got anticipated extension at %d, "
+					"but NOT IMPLEMENTED YET", edx);
+				/*
+				 * TODO: implement skipping of extensions
+				 */
+			}
+
+			/* Fall through */
 		default:
 			break;
 		}
