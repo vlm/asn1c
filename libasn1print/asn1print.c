@@ -31,6 +31,7 @@ static int asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, e
 int
 asn1print(asn1p_t *asn, enum asn1print_flags flags) {
 	asn1p_module_t *mod;
+	int modno = 0;
 
 	if(asn == NULL) {
 		errno = EINVAL;
@@ -38,6 +39,7 @@ asn1print(asn1p_t *asn, enum asn1print_flags flags) {
 	}
 
 	TQ_FOR(mod, &(asn->modules), mod_next) {
+		if(modno++) printf("\n");
 		asn1print_module(asn, mod, flags);
 	}
 
@@ -48,7 +50,7 @@ static int
 asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) {
 	asn1p_expr_t *tc;
 
-	printf("\n%s ", mod->Identifier);
+	printf("%s ", mod->Identifier);
 	if(mod->module_oid) {
 		asn1print_oid(mod->module_oid, flags);
 		printf("\n");
