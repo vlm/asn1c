@@ -51,7 +51,7 @@ esac
 
 AC_ARG_ENABLE(autoconf,
   [  --enable-Werror         abort compilation after any C compiler warning],
-  ADD_CFLAGS="-Werror -W")
+  ADD_CFLAGS="-Werror -W -Wpointer-arith")
 AC_SUBST(ADD_CFLAGS)
 
 dnl Add these flags if we're using GCC.
@@ -61,7 +61,6 @@ case "$GCC" in
    CFLAGS="$CFLAGS -Wshadow"
    CFLAGS="$CFLAGS -Wcast-qual"
    CFLAGS="$CFLAGS -Wcast-align"
-   CFLAGS="$CFLAGS -Wpointer-arith"
    CFLAGS="$CFLAGS -Wchar-subscripts"
    CFLAGS="$CFLAGS -Wmissing-prototypes"
    CFLAGS="$CFLAGS -Wmissing-declarations"
