@@ -12,6 +12,7 @@ $TMPDIR = '/tmp/asn1c-cgi-jail/';
 $SUIDHelper = './asn1c-suid-helper';
 $SkeletonsDir = '/usr/local/share/asn1c';	# Will be needed only once
 $MD5ProgramPath = 'md5';
+$DM = 0750;	# Directory mode for all mkdirs.
 
 $warn = '<CENTER><FONT SIZE=+1><B>';
 $unwarn = '</B></FONT></CENTER>';
@@ -72,17 +73,17 @@ sub isoTime() {
 # Create the necessary environment for chrooting into.
 sub prepareChrootEnvironment() {
 	return 1 if(-d $TMPDIR);	# Envuronment already exists
-	mkdir $TMPDIR or bark($OpEnvFailed, $!);	# Global directory
-	mkdir $TMPDIR . 'sessions' or bark($OpEnvFailed, $!); # User sessions
-	mkdir $TMPDIR . 'bin' or bark($OpEnvFailed, $!);	# asn1c location
-	mkdir $TMPDIR . 'skeletons' or bark($OpEnvFailed, $!);	# asn1c data
+	mkdir $TMPDIR, $DM, or bark($OpEnvFailed, $!);	# Global directory
+	mkdir $TMPDIR . 'sessions', $DM or bark($OpEnvFailed, $!); # sessions
+	mkdir $TMPDIR . 'bin', $DM or bark($OpEnvFailed, $!);	# asn1c location
+	mkdir $TMPDIR . 'skeletons', $DM or bark($OpEnvFailed, $!); # asn1c data
 	my $compiler_location = `cd / && which asn1c 2>/dev/null`
 		or bark($OpEnvFailed, $!);			# copy asn1c in
 	$compiler_location =~ s/[^\/a-z1-9.-]//ig;
 	bark($OpEnvFailed, $!) unless($compiler_location =~ /^\//);
 	if(-d '/lib') {
 		# Merge in dynamic libc
-		mkdir $TMPDIR . 'lib' or bark($OpEnvFailed, $!);
+		mkdir $TMPDIR . 'lib', $DM or bark($OpEnvFailed, $!);
 		system("cd $TMPDIR/lib && "
 			. "for i in"
 				. " /lib/libc.*"
@@ -90,9 +91,9 @@ sub prepareChrootEnvironment() {
 			. 'do ln $i; done');
 	} elsif(-d '/usr/lib') {
 		# There's no /lib on MacOS
-		mkdir $TMPDIR . 'usr' or bark($OpEnvFailed, $!);
-		mkdir $TMPDIR . 'usr/lib' or bark($OpEnvFailed, $!);
-		mkdir $TMPDIR . 'usr/lib/system' or bark($OpEnvFailed, $!);
+		mkdir $TMPDIR . 'usr', $DM or bark($OpEnvFailed, $!);
+		mkdir $TMPDIR . 'usr/lib', $DM or bark($OpEnvFailed, $!);
+		mkdir $TMPDIR . 'usr/lib/system', $DM or bark($OpEnvFailed, $!);
 		system("cd $TMPDIR/usr/lib && "
 			. "for i in"
 				. " /usr/lib/libc.*"
@@ -134,7 +135,7 @@ unless($session) {
 	$session =~ s/[^a-f0-9]//ig;
 	bark("md5 program is rotten here") if(length($session) != 32);
 	$sessionDir = makeSessionDirName($TMPDIR, $session);
-	mkdir($sessionDir) or bark($SandBoxInitFailed);
+	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed);
 	my $ck = cookie(-name=>'SessionID', -value=>$session, -expires=>'+1y');
 	print header(-cookie=>$ck);
 } else {
@@ -143,7 +144,8 @@ unless($session) {
 
 	# Make sure the session directory exists
 	$sessionDir = makeSessionDirName($TMPDIR, $session);
-	mkdir($sessionDir) or bark($SandBoxInitFailed) unless(-d $sessionDir);
+	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed)
+		unless(-d $sessionDir);
 
 	local $t = param('time');
 	local $trans = param('trans');
@@ -229,7 +231,7 @@ if($#gotSafeNames >= 0) {
 	print LOG "\tDST=$transactionDir";
 
 	my $sandbox = $sessionDir . '/' . $transactionDir;
-	mkdir($sandbox) or bark($SandBoxInitFailed);
+	mkdir($sandbox, $DM) or bark($SandBoxInitFailed);
 
 	open(I, '> ' . $sandbox . '/+Names');
 	print I join("\n", @gotNames);
