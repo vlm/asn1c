@@ -46,7 +46,7 @@
 #include <ber_tlv_length.c>
 #include <OBJECT_IDENTIFIER.c>
 #include <RELATIVE-OID.c>
-#include <INTEGER.c>
+#include <ber_codec_prim.c>
 
 static void usage(const char *av0);	/* Print the Usage screen and exit */
 static int process(const char *fname);	/* Perform the BER decoding */
@@ -677,5 +677,5 @@ decode_tlv_from_string(const char *datastring) {
 /*
  * Dummy functions.
  */
-ber_dec_rval_t ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx, void *ptr, size_t size, int tag_mode, ber_tlv_len_t *last_length, int *opt_tlv_form) { ber_dec_rval_t rv; (void)td; (void)opt_ctx; (void)ptr; (void)size; (void)tag_mode; (void)last_length; (void)opt_tlv_form; return rv; }
-ssize_t der_write_tags(asn1_TYPE_descriptor_t *td, size_t slen, int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) { (void)td; (void)slen; (void)tag_mode; (void)tag; (void)cb; (void)app_key; return -1; }
+ber_dec_rval_t ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx, void *ptr, size_t size, int tag_mode, int last_tag_form, ber_tlv_len_t *last_length, int *opt_tlv_form) { ber_dec_rval_t rv; (void)td; (void)opt_ctx; (void)ptr; (void)size; (void)tag_mode; (void)last_tag_form; (void)last_length; (void)opt_tlv_form; return rv; }
+ssize_t der_write_tags(asn1_TYPE_descriptor_t *td, size_t slen, int tag_mode, int last_tag_form, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) { (void)td; (void)slen; (void)tag_mode; (void)last_tag_form; (void)tag; (void)cb; (void)app_key; return -1; }
