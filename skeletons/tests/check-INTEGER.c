@@ -166,13 +166,15 @@ main(int ac, char **av) {
 	check_xer(0, "<INTEGER>-2147483648</INTEGER>", -2147483648);
 	check_xer(0, "<INTEGER>+2147483647</INTEGER>", 2147483647);
 	check_xer(0, "<INTEGER>2147483647</INTEGER>", 2147483647);
-	check_xer(-1, "<INTEGER>2147483648</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>2147483649</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>3147483649</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>4147483649</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>5147483649</INTEGER>", 0);	/* unobvious */
-	check_xer(-1, "<INTEGER>9147483649</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>9999999999</INTEGER>", 0);
+	if(sizeof(long) == 4) {
+		check_xer(-1, "<INTEGER>2147483648</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>2147483649</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>3147483649</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>4147483649</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>5147483649</INTEGER>", 0); /* special */
+		check_xer(-1, "<INTEGER>9147483649</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>9999999999</INTEGER>", 0);
+	}
 
 	return 0;
 }
