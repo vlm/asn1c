@@ -86,7 +86,7 @@ static asn_TYPE_member_t asn_MBR_e[] = {
 };
 static asn_TYPE_tag2member_t asn_DEF_e_tag2el[] = {
     { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 0, 0, 0 }, /* f at 20 */
-    { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 1, 0, 0 }, /* g at 21 */
+    { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 1, 0, 0 } /* g at 21 */
 };
 static asn_CHOICE_specifics_t asn_DEF_e_specs = {
 	sizeof(struct e),
@@ -136,7 +136,7 @@ static asn_TYPE_member_t asn_MBR_h[] = {
 };
 static asn_TYPE_tag2member_t asn_DEF_h_tag2el[] = {
     { (ASN_TAG_CLASS_PRIVATE | (1 << 2)), 0, 0, 0 }, /* i at 24 */
-    { (ASN_TAG_CLASS_PRIVATE | (2 << 2)), 1, 0, 0 }, /* j at 25 */
+    { (ASN_TAG_CLASS_PRIVATE | (2 << 2)), 1, 0, 0 } /* j at 25 */
 };
 static asn_CHOICE_specifics_t asn_DEF_h_specs = {
 	sizeof(struct h),
@@ -203,7 +203,7 @@ static asn_TYPE_tag2member_t asn_DEF_b_tag2el[] = {
     { (ASN_TAG_CLASS_PRIVATE | (6 << 2)), 1, 0, 0 }, /* d at 18 */
     { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 2, 0, 0 }, /* f at 20 */
     { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 2, 0, 0 }, /* g at 21 */
-    { (ASN_TAG_CLASS_PRIVATE | (9 << 2)), 3, 0, 0 }, /* h at 24 */
+    { (ASN_TAG_CLASS_PRIVATE | (9 << 2)), 3, 0, 0 } /* h at 24 */
 };
 static asn_CHOICE_specifics_t asn_DEF_b_specs = {
 	sizeof(struct b),
@@ -261,7 +261,7 @@ static asn_TYPE_tag2member_t asn_DEF_T_tag2el[] = {
     { (ASN_TAG_CLASS_PRIVATE | (6 << 2)), 1, 0, 0 }, /* d at 18 */
     { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 1, 0, 0 }, /* f at 20 */
     { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 1, 0, 0 }, /* g at 21 */
-    { (ASN_TAG_CLASS_PRIVATE | (9 << 2)), 1, 0, 0 }, /* h at 24 */
+    { (ASN_TAG_CLASS_PRIVATE | (9 << 2)), 1, 0, 0 } /* h at 24 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_T_specs = {
 	sizeof(struct T),
