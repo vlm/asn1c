@@ -31,7 +31,7 @@
  */
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr += num;			\
+		(char *)ptr += num;		\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -128,7 +128,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (st + specs->ctx_offset);
+	ctx = (ber_dec_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -206,7 +206,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 
 				skip = ber_skip_length(
 					BER_TLV_CONSTRUCTED(ptr),
-					ptr + tag_len, LEFT - tag_len);
+					(char *)ptr + tag_len, LEFT - tag_len);
 
 				switch(skip) {
 				case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
@@ -468,7 +468,7 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 		return asn1_TYPE_outmost_tag(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag);
 	} else {
-		return -1;
+		return (ber_tlv_tag_t)-1;
 	}
 }
 

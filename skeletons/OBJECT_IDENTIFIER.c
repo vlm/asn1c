@@ -154,7 +154,7 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 #ifndef	WORDS_BIGENDIAN
 	if(*(unsigned char *)&LE) {	/* Little endian (x86) */
 		/* "Convert" to big endian */
-		rvbuf += rvsize / CHAR_BIT - 1;
+		(unsigned char *)rvbuf += rvsize / CHAR_BIT - 1;
 		((unsigned char *)rvstart)--;
 		inc = -1;	/* Descending */
 	} else
@@ -167,7 +167,7 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 		/* Clear the high unused bits */
 		for(bits = rvsize - arclen;
 			bits > CHAR_BIT;
-				rvbuf += inc, bits -= CHAR_BIT)
+				(unsigned char *)rvbuf += inc, bits -= CHAR_BIT)
 				*(unsigned char *)rvbuf = 0;
 
 		/* Fill the body of a value */
@@ -177,17 +177,17 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 			if(bits >= CHAR_BIT) {
 				bits -= CHAR_BIT;
 				*(unsigned char *)rvbuf = (cache >> bits);
-				rvbuf += inc;
+				(unsigned char *)rvbuf += inc;
 			}
 		}
 		if(bits) {
 			*(unsigned char *)rvbuf = cache;
-			rvbuf += inc;
+			(unsigned char *)rvbuf += inc;
 		}
 	}
 
 	if(add) {
-		for(rvbuf -= inc; rvbuf != rvstart; rvbuf -= inc) {
+		for((unsigned char *)rvbuf -= inc; rvbuf != rvstart; (unsigned char *)rvbuf -= inc) {
 			int v = add + *(unsigned char *)rvbuf;
 			if(v & (-1 << CHAR_BIT)) {
 				*(unsigned char *)rvbuf
@@ -287,7 +287,7 @@ OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
 int
 OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 		unsigned int arc_type_size, unsigned int arc_slots) {
-	void *arcs_end = arcs + (arc_type_size * arc_slots);
+	void *arcs_end = (char *)arcs + (arc_type_size * arc_slots);
 	int num_arcs = 0;
 	int startn = 0;
 	int add = 0;
@@ -319,10 +319,10 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 
 			add = -40 * first_arc;
 			memset(arcs, 0, arc_type_size);
-			*(unsigned char *)(arcs
+			*(unsigned char *)((char *)arcs
 				+ ((*(char *)&LE)?0:(arc_type_size - 1)))
 					= first_arc;
-			arcs += arc_type_size;
+			(char *)arcs += arc_type_size;
 		}
 
 		/* Decode, if has space */
@@ -332,7 +332,7 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 					arcs, arc_type_size))
 				return -1;
 			startn = i + 1;
-			arcs += arc_type_size;
+			(char *)arcs += arc_type_size;
 			add = 0;
 		}
 		num_arcs++;
@@ -371,7 +371,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 #endif
 
 	if(isLittleEndian && !prepared_order) {
-		uint8_t *a = arcval + arcval_size - 1;
+		uint8_t *a = (unsigned char *)arcval + arcval_size - 1;
 		uint8_t *aend = arcval;
 		uint8_t *msb = buffer + arcval_size - 1;
 		for(tp = buffer; a >= aend; tp++, a--)
@@ -381,7 +381,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 		tp = msb;	/* Most significant non-zero byte */
 	} else {
 		/* Look for most significant non-zero byte */
-		tend = arcval + arcval_size;
+		tend = (unsigned char *)arcval + arcval_size;
 		for(tp = arcval; tp < tend - 1; tp++)
 			if(*tp) break;
 	}
@@ -451,7 +451,8 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 			unsigned char *ps, *pe;
 			/* If more significant bytes are present,
 			 * make them > 255 quick */
-			for(ps = arcs + 1, pe = ps+arc_type_size; ps < pe; ps++)
+			for(ps = (unsigned char *)arcs + 1, pe = ps+arc_type_size;
+					ps < pe; ps++)
 				arc0 |= *ps, arc1 |= *(ps + arc_type_size);
 			arc0 <<= CHAR_BIT, arc1 <<= CHAR_BIT;
 			arc0 = *((unsigned char *)arcs + 0);
@@ -512,10 +513,15 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 		uint8_t *tp;
 #ifdef	__GNUC__
 		uint8_t first_value[1 + arc_type_size];	/* of two arcs */
+		uint8_t *fv = first_value;
 #else
 		uint8_t *first_value = alloca(1 + arc_type_size);
-#endif
 		uint8_t *fv = first_value;
+		if(!first_value) {
+			errno = ENOMEM;
+			return -1;
+		}
+#endif
 
 		/*
 		 * Simulate first_value = arc0 * 40 + arc1;
@@ -524,8 +530,8 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 		*fv++ = 0;
 		(char *)arcs += arc_type_size;
 		if(isLittleEndian) {
-			uint8_t *aend = arcs - 1;
-			uint8_t *a1 = arcs + arc_type_size - 1;
+			uint8_t *aend = (unsigned char *)arcs - 1;
+			uint8_t *a1 = (unsigned char *)arcs + arc_type_size - 1;
 			for(; a1 > aend; fv++, a1--) *fv = *a1;
 		} else {
 			uint8_t *a1 = arcs;

@@ -87,7 +87,7 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 	 * Indefinite length!
 	 */
 	ASN_DEBUG("Skipping indefinite length");
-	for(skip = ll, ptr += ll, size -= ll;;) {
+	for(skip = ll, (char *)ptr += ll, size -= ll;;) {
 		ber_tlv_tag_t tag;
 
 		/* Fetch the tag */
@@ -95,7 +95,7 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 		if(tl <= 0) return tl;
 
 		ll = ber_skip_length(BER_TLV_CONSTRUCTED(ptr),
-			ptr + tl, size - tl);
+			(char *)ptr + tl, size - tl);
 		if(ll <= 0) return ll;
 
 		skip += tl + ll;
@@ -109,7 +109,7 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 		&& ((uint8_t *)ptr)[1] == 0)
 			return skip;
 
-		ptr  += tl + ll;
+		(char *)ptr  += tl + ll;
 		size -= tl + ll;
  	}
 

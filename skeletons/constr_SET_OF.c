@@ -31,7 +31,7 @@
  */
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr += num;			\
+		(char *)ptr += num;		\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -95,7 +95,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (st + specs->ctx_offset);
+	ctx = (ber_dec_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously

@@ -31,7 +31,7 @@
  */
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr += num;			\
+		(char *)ptr += num;		\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -138,7 +138,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (st + specs->ctx_offset);
+	ctx = (ber_dec_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -336,7 +336,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 
 				skip = ber_skip_length(
 					BER_TLV_CONSTRUCTED(ptr),
-					ptr + tag_len, LEFT - tag_len);
+					(char *)ptr + tag_len, LEFT - tag_len);
 				ASN_DEBUG("Skip length %d in %s",
 					(int)skip, sd->name);
 				switch(skip) {
@@ -455,7 +455,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 
 			ll = ber_skip_length(
 				BER_TLV_CONSTRUCTED(ptr),
-				ptr + tl, LEFT - tl);
+				(char *)ptr + tl, LEFT - tl);
 			switch(ll) {
 			case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 				/* Fall through */

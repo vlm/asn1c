@@ -93,7 +93,7 @@ asn_UT2time(const UTCTime_t *st, struct tm *_tm, int as_gmt) {
 		return -1;
 	}
 
-	gt.buf = buf;
+	gt.buf = (unsigned char *)buf;
 	gt.size = st->size + 2;
 	memcpy(gt.buf + 2, st->buf, st->size);
 	if(st->buf[0] > 0x35) {

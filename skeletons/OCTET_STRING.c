@@ -38,7 +38,7 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 
 #define	ADVANCE(num_bytes)	do {	\
 		size_t num = num_bytes;	\
-		buf_ptr += num;		\
+		(char *)buf_ptr += num;	\
 		size -= num;		\
 		consumed_myself += num;	\
 	} while(0)
@@ -239,7 +239,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		tlv_constr = BER_TLV_CONSTRUCTED(buf_ptr);
 
 		ll = ber_fetch_length(tlv_constr,
-				buf_ptr + tl, size - tl, &tlv_len);
+				(char *)buf_ptr + tl, size - tl, &tlv_len);
 		ASN_DEBUG("Got tag=%s, tl=%d, len=%d, ll=%d, {%d, %d}",
 			ber_tlv_tag_string(tlv_tag), tl, tlv_len, ll,
 			((uint8_t *)buf_ptr)[0],
@@ -325,7 +325,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 				 */
 				st->buf[st->size-1] &= 0xff << st->buf[0];
 
-				APPEND((buf_ptr+1), (len - 1));
+				APPEND(((char *)buf_ptr+1), (len - 1));
 				st->buf[0] = *(uint8_t *)buf_ptr;
 				sel->bits_chopped = 1;
 			} else {
@@ -457,7 +457,7 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 int
 OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	static char h2c[16] = "0123456789ABCDEF";
+	static const char *h2c = "0123456789ABCDEF";
 	const OCTET_STRING_t *st = sptr;
 	char scratch[16 * 3 + 4];
 	char *p = scratch;

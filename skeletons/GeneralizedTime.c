@@ -437,7 +437,7 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 		if(!opt_gt) { free(buf); return 0; }
 	}
 
-	opt_gt->buf = buf;
+	opt_gt->buf = (unsigned char *)buf;
 	opt_gt->size = size;
 
 	return opt_gt;
