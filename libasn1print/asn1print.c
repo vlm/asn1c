@@ -171,8 +171,12 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 	switch(val->type) {
 	case ATV_NOVALUE:
 		break;
-	case ATV_REFERENCED:
-		return asn1print_ref(val->value.reference, flags);
+	case ATV_NULL:
+		printf("NULL");
+		return 0;
+	case ATV_REAL:
+		printf("%f", val->value.v_double);
+		return 0;
 	case ATV_INTEGER:
 		printf("%lld", (long long)val->value.v_integer);
 		return 0;
@@ -180,9 +184,6 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 	case ATV_MAX: printf("MAX"); return 0;
 	case ATV_FALSE: printf("FALSE"); return 0;
 	case ATV_TRUE: printf("TRUE"); return 0;
-	case ATV_REAL:
-		printf("%f", val->value.v_double);
-		return 0;
 	case ATV_STRING:
 		{
 			char *p = val->value.string.buf;
@@ -229,6 +230,11 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 				printf("'H");
 			}
 		}
+	case ATV_REFERENCED:
+		return asn1print_ref(val->value.reference, flags);
+	case ATV_CHOICE_IDENTIFIER:
+		printf("%s: ", val->value.choice_identifier.identifier);
+		return asn1print_value(val->value.choice_identifier.value, flags);
 	}
 
 	assert(val->type || !"Unknown");
@@ -533,10 +539,13 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			 * Print the expression as it were a stand-alone type.
 			 */
 			asn1print_expr(asn, mod, se, flags, level + 4);
-			if((se->marker & EM_DEFAULT) == EM_DEFAULT)
-				printf(" DEFAULT <?>");
-			else if((se->marker & EM_OPTIONAL) == EM_OPTIONAL)
+			if((se->marker.flags & EM_DEFAULT) == EM_DEFAULT) {
+				printf(" DEFAULT ");
+				asn1print_value(se->marker.default_value, flags);
+			} else if((se->marker.flags & EM_OPTIONAL)
+					== EM_OPTIONAL) {
 				printf(" OPTIONAL");
+			}
 			if(TQ_NEXT(se, next)) {
 				printf(",");
 				INDENT("\n");
@@ -564,9 +573,11 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	if(tc->meta_type == AMT_VALUE
 	&& tc->expr_type != A1TC_EXTENSIBLE) {
 		if(tc->expr_type == A1TC_UNIVERVAL) {
-			printf("(");
-			asn1print_value(tc->value, flags);
-			printf(")");
+			if(tc->value) {
+				printf("(");
+				asn1print_value(tc->value, flags);
+				printf(")");
+			}
 		} else {
 			printf(" ::= ");
 			asn1print_value(tc->value, flags);
