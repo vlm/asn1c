@@ -1650,7 +1650,7 @@ fi
 
 # Define the identity of the package.
 PACKAGE=asn1c
-VERSION=0.8.10
+VERSION=0.8.11
 
 cat >>confdefs.h <<_ACEOF
 #define PACKAGE "$PACKAGE"
@@ -4756,7 +4756,7 @@ esac
 # Check whether --enable-autoconf or --disable-autoconf was given.
 if test "${enable_autoconf+set}" = set; then
   enableval="$enable_autoconf"
-  ADD_CFLAGS="-Werror"
+  ADD_CFLAGS="-Werror -W"
 fi;
 
 

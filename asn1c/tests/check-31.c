@@ -74,6 +74,8 @@ int bytes_compare(const void *bufferp, size_t size, void *key) {
 	const uint8_t *buffer = bufferp;
 	assert(buf_pos + size <= sizeof(buf1_reconstr));
 
+	(void)key;	/* Unused argument */
+
 	fprintf(stderr,  "  writing %d (%d)\n", (int)size, buf_pos + (int)size);
 
 	for(; size; buf_pos++, size--, buffer++) {

@@ -133,12 +133,14 @@ check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 		&& strcmp(tp->b.choice.b2.buf, "z") == 0);
 }
 
-int buf_pos;
-int buf_size;
+size_t buf_pos;
+size_t buf_size;
 uint8_t *buf;
 
 static int
 buf_fill(const void *buffer, size_t size, void *app_key) {
+
+	(void)app_key;
 
 	if(buf_pos + size > buf_size) {
 		fprintf(stderr, "%d + %d > %d\n", buf_pos, (int)size, buf_size);
@@ -184,10 +186,10 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 }
 
 static void
-partial_read(uint8_t *buf, int size) {
+partial_read(uint8_t *buf, size_t size) {
 	T_t t, *tp;
 	ber_dec_rval_t rval;
-	int i1, i2;
+	size_t i1, i2;
 	uint8_t *buf1 = alloca(size);
 	uint8_t *buf2 = alloca(size);
 	uint8_t *buf3 = alloca(size);
@@ -203,11 +205,11 @@ partial_read(uint8_t *buf, int size) {
 	for(i1 = 0; i1 < size; i1++) {
 		for(i2 = i1; i2 < size; i2++) {
 			uint8_t *chunk1 = buf;
-			int size1 = i1;
+			size_t size1 = i1;
 			uint8_t *chunk2 = buf + size1;
-			int size2 = i2 - i1;
+			size_t size2 = i2 - i1;
 			uint8_t *chunk3 = buf + size1 + size2;
-			int size3 = size - size1 - size2;
+			size_t size3 = size - size1 - size2;
 
 			fprintf(stderr, "\n%d:{%d, %d, %d}...\n",
 				size, size1, size2, size3);
