@@ -45,13 +45,15 @@
 #include <ber_tlv_tag.c>
 #include <ber_tlv_length.c>
 
-static void usage(const char *av0);	/* Print the Usage screen and exit */
+static void usage(const char *av0, int);/* Print the Usage screen and exit */
 static int process(const char *fname);	/* Perform the BER decoding */
 static int process_line(const char *fname, char *line, int lineno);
 
 #undef	COPYRIGHT
 #define	COPYRIGHT	\
 	"Copyright (c) 2004 Lev Walkin <vlm@lionet.info>\n"
+
+static int no_validation;	/* -n */
 
 int
 main(int ac, char **av) {
@@ -61,15 +63,20 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "hv")) != -1)
+	while((ch = getopt(ac, av, "nhv")) != -1)
 	switch(ch) {
+	case 'n':
+		no_validation++;
+		break;
 	case 'v':
-		fprintf(stderr, "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT);
+		usage(av[0], 1);
+		fprintf(stderr, "Convert unber(1)'s output back into BER, "
+			"v" VERSION "\n" COPYRIGHT);
 		exit(0);
 		break;
 	case 'h':
 	default:
-		usage(av[0]);
+		usage(av[0], 0);
 	}
 
 	/*
@@ -101,11 +108,15 @@ main(int ac, char **av) {
  * Print the usage screen and exit(EX_USAGE).
  */
 static void
-usage(const char *av0) {
+usage(const char *av0, int copyright_only) {
+	fprintf(stderr, 
+		"Convert unber(1)'s output back into BER, "
+			"v" VERSION "\n" COPYRIGHT);
+	if(copyright_only) exit(0);
 	fprintf(stderr,
-"Convertor of under(1) output back into BER, v" VERSION "\n" COPYRIGHT
-"Usage: %s [-] [file ...]\n"
-	, av0);
+		"Usage: %s [-n] [-] [file ...]\n"
+		"Options:\n"
+		"  -n      Disable XML input validation\n", av0);
 	exit(EX_USAGE);
 }
 
@@ -184,9 +195,18 @@ process_line(const char *fname, char *line, int lineno) {
 	(void)fname;
 
 	/* Find a tag opening angle bracket */
-	for(; *line == ' '; line++);
+	for(; *line == ' ' || *line == '\t'; line++);
 	op = line;
-	if(*op != '<') {
+	switch(*op) {
+	case '<':	/* That's what we want! A tag opening */
+		break;
+	case '-':	/* This is a comment (dash-dash) */
+		if(op[1] == *op)
+	case '\r':
+	case '\n':
+	case '#':	/* This is a comment */
+			return 0;
+	default:
 		fprintf(stderr, "%s: Missing '<' after whitespace\n", fname);
 		exit(EX_DATAERR);
 	}
@@ -240,10 +260,10 @@ process_line(const char *fname, char *line, int lineno) {
 	tcl_pos = strstr(op, "T=\"[");
 	tl_pos = strstr(op, "TL=\"");
 	v_pos = strstr(op, "V=\"");
-	if(!tcl_pos || !tl_pos || !v_pos) {
+	if(!tcl_pos || !tl_pos || (!v_pos && constr != 2)) {
 		fprintf(stderr,
 			"%s: Mandatory attribute %s is not found at line %d\n",
-			fname, (!tcl_pos)?"T":(v_pos?"V":"TCL"), lineno);
+			fname, (!tcl_pos)?"T":((!v_pos)?"V":"TL"), lineno);
 		exit(EX_DATAERR);
 	}
 	errno = 0;
@@ -368,11 +388,12 @@ process_line(const char *fname, char *line, int lineno) {
 		fputc(v, stdout);
 	  }
 	  if(len != tlv_len) {
+		if(no_validation) fprintf(stderr, "Warning: ");
 		fprintf(stderr,
 			"%s: Could not encode value of %d chars "
 			"at line %d in %d bytes\n",
 			fname, len, lineno, tlv_len);
-		exit(EX_DATAERR);
+		if(!no_validation) exit(EX_DATAERR);
 	  }
 	}
 	

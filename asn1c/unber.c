@@ -158,7 +158,7 @@ typedef enum pd_code {
 	PD_FINISHED	= 0,
 	PD_EOF		= 1,
 } pd_code_e;
-static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t limit);
+static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t limit, ssize_t *decoded, int expect_eoc);
 static void print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t);
 static int print_V(const char *fname, FILE *fp, ber_tlv_tag_t, ber_tlv_len_t);
 
@@ -169,6 +169,7 @@ static int
 process(const char *fname) {
 	FILE *fp;
 	pd_code_e pdc;
+	ssize_t decoded = 0;
 
 	if(strcmp(fname, "-")) {
 		fp = fopen(fname, "r");
@@ -184,7 +185,7 @@ process(const char *fname) {
 	 * Fetch out BER-encoded data until EOF or error.
 	 */
 	do {
-		pdc = process_deeper(fname, fp, 0, -1);
+		pdc = process_deeper(fname, fp, 0, -1, &decoded, 0);
 	} while(pdc == PD_FINISHED && !single_type_decoding);
 
 	if(fp != stdin)
@@ -198,7 +199,7 @@ process(const char *fname) {
 /*
  * Process the TLV recursively.
  */
-static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t limit) {
+static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t limit, ssize_t *decoded, int expect_eoc) {
 	unsigned char tagbuf[32];
 	ssize_t tblen = 0;
 	pd_code_e pdc = PD_FINISHED;
@@ -266,52 +267,57 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 			continue;
 		}
 
-		if(tagbuf[0] == '\0' && tagbuf[1] == '\0') {
-			/* End of content octets */
-			return PD_FINISHED;
-		}
-
 		/* Make sure the T & L decoders took exactly the whole buffer */
 		assert((t_len + l_len) == tblen);
 
-		print_TL(0, level, constr, tblen, tlv_tag, tlv_len);
+		if(!expect_eoc || tagbuf[0] || tagbuf[1])
+			print_TL(0, level, constr, tblen, tlv_tag, tlv_len);
 
 		if(limit != -1) {
 			/* If limit is set, account for the TL sequence */
 			limit -= (t_len + l_len);
 			assert(limit >= 0);
-		}
 
-		if(limit != -1) {
 			if(tlv_len > limit) {
 				fprintf(stderr,
 				"%s: Structure advertizes length (%ld) "
 				"greater than of a parent container (%ld)\n",
 					fname, (long)tlv_len, (long)limit);
 				return PD_FAILED;
-			} else if(tlv_len != -1) {
-				/* Account for the V */
-				limit -= tlv_len;
 			}
 		}
 
+		*decoded += t_len + l_len;
+
+		if(expect_eoc && tagbuf[0] == '\0' && tagbuf[1] == '\0') {
+			/* End of content octets */
+			print_TL(1, level - 1, 1, 2, 0, -1);
+			return PD_FINISHED;
+		}
+
 		if(constr) {
+			ssize_t dec = 0;
 			/*
 			 * This is a constructed type. Process recursively.
 			 */
-
-			/* Get the new subframe limit from the structure tags */
-			if(tlv_len == -1)
-				tlv_len = limit;
-
 			printf(">\n");	/* Close the opening tag */
-			pdc = process_deeper(fname, fp, level + 1, tlv_len);
+			pdc = process_deeper(fname, fp, level + 1,
+				tlv_len == -1 ? limit : tlv_len,
+				&dec, tlv_len == -1);
 			if(pdc == PD_FAILED) return pdc;
+			if(limit != -1) limit -= dec;
+			*decoded += dec;
+			if(tlv_len == -1) {
+				tblen = 0;
+				continue;
+			}
 		} else {
-
 			assert(tlv_len >= 0);
 			if(print_V(fname, fp, tlv_tag, tlv_len))
 				return PD_FAILED;
+
+			limit -= tlv_len;
+			*decoded += tlv_len;
 		}
 
 		print_TL(1, level, constr, tblen, tlv_tag, tlv_len);
@@ -339,9 +345,9 @@ print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, be
 	ber_tlv_tag_fwrite(tlv_tag, stdout);
 	printf("\"");
 
-	if(!fin) {
+	if(!fin || tlv_len == -1)
 		printf(" TL=\"%ld\"", (long)tlen);
-
+	if(!fin) {
 		if(tlv_len == -1)
 			printf(" V=\"Indefinite\"");
 		else

@@ -29,7 +29,8 @@ By default, unber continues decoding until the end of file (input stream).
 Use the specified number of spaces for output indentation. Default is 4 spaces.
 .TP
 \fB\-p\fR
-Do \fInot\fR attempt pretty-printing of known ASN.1 types (strings, INTEGER, BOOLEAN, etc).
+Do \fInot\fR attempt pretty-printing of known ASN.1 types (OBJECT IDENTIFIER, INTEGER, BOOLEAN, etc). By default, some ASN.1 types are converted into
+the text representation. This option is required for \&\fIenber\fR\|(1).
 .TP
 \fB\-t\fR \fIdata-string\fR
 Interpret the data-string as a sequence of hexadecimal values representing
@@ -62,7 +63,7 @@ Likely name of the underlying ASN.1 type (for UNIVERSAL tags)
 [\fIF\fR]
 Indicates that the value was reformatted (pretty-printed)
 .P
-Example:
+Sample XML output:
 .Vb
 \&  <I T="[UNIVERSAL 16]" TL="2" V="Indefinite" A="SEQUENCE">
 \&      <P T="[UNIVERSAL 19]" TL="2" V="2" A="PrintableString">US</P>
@@ -84,10 +85,19 @@ Decode the binary stream taken from the standard input:
 .Vb
 \&    cat \fI...\fR | unber \fB-\fR
 .Ve
-Decode the binary stream into the same stream (see \fIenber\fR\|(1)):
+Decode the binary stream into the same stream (see \&\fIenber\fR\|(1)):
 .Vb
 \&    cat \fI...\fR | unber \fB-p\fR \fB-\fR | enber \fB-\fR > filename.ber\fI\fR
 .Ve
+.SH FOOTNOTES
+The constructed XML output is not necessarily well-formed.
+.P
+When indefinite length encoding is being used, the BER sequence, which is not
+terminated with the end-of-content octets, will cause the terminating \fB</I>\fR
+XML tag to disappear.
+Thus, the invalid BER framing directly causes invalid XML output.
+.P
+The \&\fIenber\fR\|(1) utility understands this convention correctly.
 .SH SEE ALSO
 .TP
 \&\fIenber\fR\|(1), \&\fIasn1c\fR\|(1)
