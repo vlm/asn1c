@@ -10,7 +10,7 @@ for ref in ../tests/*.asn1.-*; do
 	echo "Checking $src against $ref"
 	./asn1c "-$flags" "$src" > "$tmpfile" || ec=$?
 	if [ $? = 0 ]; then
-		diff -u "$ref" "$tmpfile" || ec=$?
+		diff -a -u "$ref" "$tmpfile" || ec=$?
 	fi
 	rm -f "$tmpfile"
 done
