@@ -16,6 +16,7 @@ Where
 	<arbitrary-name> is arbitrary string, without dots
 	OK	file syntax and semantics are absolutely correct
 	SE	file semantics is wrong
+	SW	file semantics is suspicious (warning)
 	NP	file syntax is incorrect, file not parseable
 	<compiler-flags>	command-line flags for compiler
 
