@@ -905,7 +905,7 @@ _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p) {
 	if(tag_p) {
 		tag = *tag_p;
 	} else {
-		if(asn1f_fetch_tag(arg->asn, arg->mod, expr, &tag)) {
+		if(asn1f_fetch_tag(arg->asn, arg->mod, expr, &tag, 0)) {
 			OUT("-1 /* Ambiguous tag (CHOICE|ANY?) */");
 			return 0;
 		}
@@ -1026,11 +1026,19 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no) {
 
 	assert(el_no >= 0);
 
-	ret = asn1f_fetch_tag(arg->asn, arg->mod, arg->expr, &tag);
+	ret = asn1f_fetch_tag(arg->asn, arg->mod, arg->expr, &tag, 1);
 	if(ret == 0) {
 		tag2el_t *te;
 		int new_count = (*count) + 1;
 		void *p;
+
+		if(tag.tag_value == -1) {
+			/*
+			 * This is an untagged ANY type,
+			 * proceed without adding a tag
+			 */
+			return 0;
+		}
 
 		p = realloc(*tag2el, new_count * sizeof(tag2el_t));
 		if(p)	*tag2el = p;
@@ -1075,18 +1083,6 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no) {
 				arg->expr->_lineno);
 			return -1;
 		}
-	}
-
-	if(arg->expr->expr_type == ASN_TYPE_ANY
-	&& arg->expr->tag.tag_class == TC_NOCLASS) {
-		if(arg->expr->marker) {
-			FATAL("Untagged optional ANY type for %s at line %d",
-				arg->expr->Identifier,
-				arg->expr->_lineno);
-			return -1;
-		}
-		/* Allow to proceed without adding a tag */
-		return 0;
 	}
 
 	DEBUG("No tag for %s at line %d",
