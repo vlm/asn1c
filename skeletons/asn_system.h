@@ -31,7 +31,7 @@
  * 2. Sun Solaris requires <alloca.h> for alloca(3),
  * but does not have <stdint.h>.
  */
-#if	(!defined(__FreeBSD__) || !defined(_SYS_INTSYSTEM_H_))
+#if	(!defined(__FreeBSD__) || !defined(_SYS_INTTYPES_H_))
 #if	defined(sun)
 #include <alloca.h>	/* For alloca(3) */
 #else
