@@ -173,17 +173,18 @@ typedef struct asn1p_expr_s {
 		asn1_integer_t tag_value;
 	} tag;
 
+	enum asn1p_expr_marker_e {
+		EM_NOMARK,
+		EM_INDIRECT	= 0x01,	/* 0001: Represent as pointer */
+		EM_OPTIONAL	= 0x03,	/* 0011: Optional member */
+		EM_DEFAULT	= 0x07,	/* 0111: FIXME: store the value */
+	} marker;
+	int unique;	/* UNIQUE */
+
 	/*
 	 * Whether automatic tagging is applicable for subtypes.
 	 */
 	int auto_tags_OK;
-
-	enum asn1p_expr_marker_e {
-		EM_NOMARK,
-		EM_OPTIONAL,
-		EM_DEFAULT,	/* FIXME: store the value somewhere. */
-	} marker;
-	int unique;	/* UNIQUE */
 
 	/*
 	 * Members of the constructed type.

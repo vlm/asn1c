@@ -533,11 +533,10 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			 * Print the expression as it were a stand-alone type.
 			 */
 			asn1print_expr(asn, mod, se, flags, level + 4);
-			switch(se->marker) {
-			case EM_NOMARK: break;
-			case EM_OPTIONAL: printf(" OPTIONAL"); break;
-			case EM_DEFAULT: printf(" DEFAULT <?>"); break;
-			}
+			if(se->marker & EM_DEFAULT)
+				printf(" DEFAULT <?>");
+			else if(se->marker & EM_OPTIONAL)
+				printf(" OPTIONAL");
 			if(TQ_NEXT(se, next)) {
 				printf(",");
 				INDENT("\n");
