@@ -39,7 +39,7 @@ typedef struct ConstructedType {
 
 /*** <<< STAT-DEFS [ConstructedType] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_ConstructedType[] = {
+static asn_TYPE_member_t asn_MBR_ConstructedType_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct ConstructedType, field),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -48,16 +48,16 @@ static asn_TYPE_member_t asn_MBR_ConstructedType[] = {
 		.name = "field"
 		},
 };
-static ber_tlv_tag_t asn_DEF_ConstructedType_tags[] = {
+static ber_tlv_tag_t asn_DEF_ConstructedType_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_ConstructedType_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_ConstructedType_1_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 0, 0, 0 } /* field at 18 */
 };
-static asn_SEQUENCE_specifics_t asn_DEF_ConstructedType_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_ConstructedType_1_specs = {
 	sizeof(struct ConstructedType),
 	offsetof(struct ConstructedType, _asn_ctx),
-	asn_DEF_ConstructedType_tag2el,
+	asn_MAP_ConstructedType_1_tag2el,
 	1,	/* Count of tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -73,15 +73,15 @@ asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_ConstructedType_tags,
-	sizeof(asn_DEF_ConstructedType_tags)
-		/sizeof(asn_DEF_ConstructedType_tags[0]), /* 1 */
-	asn_DEF_ConstructedType_tags,	/* Same as above */
-	sizeof(asn_DEF_ConstructedType_tags)
-		/sizeof(asn_DEF_ConstructedType_tags[0]), /* 1 */
-	asn_MBR_ConstructedType,
+	asn_DEF_ConstructedType_1_tags,
+	sizeof(asn_DEF_ConstructedType_1_tags)
+		/sizeof(asn_DEF_ConstructedType_1_tags[0]), /* 1 */
+	asn_DEF_ConstructedType_1_tags,	/* Same as above */
+	sizeof(asn_DEF_ConstructedType_1_tags)
+		/sizeof(asn_DEF_ConstructedType_1_tags[0]), /* 1 */
+	asn_MBR_ConstructedType_1,
 	1,	/* Elements count */
-	&asn_DEF_ConstructedType_specs	/* Additional specs */
+	&asn_SPC_ConstructedType_1_specs	/* Additional specs */
 };
 
 
@@ -120,7 +120,7 @@ T_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-T_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+T_0_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_ConstructedType.free_struct;
 	td->print_struct   = asn_DEF_ConstructedType.print_struct;
 	td->ber_decoder    = asn_DEF_ConstructedType.ber_decoder;
@@ -135,21 +135,21 @@ T_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 void
 T_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	T_inherit_TYPE_descriptor(td);
+	T_0_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
 T_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	T_inherit_TYPE_descriptor(td);
+	T_0_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
 T_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
-	T_inherit_TYPE_descriptor(td);
+	T_0_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
@@ -157,14 +157,14 @@ asn_enc_rval_t
 T_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	T_inherit_TYPE_descriptor(td);
+	T_0_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
 T_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, void *bufptr, size_t size) {
-	T_inherit_TYPE_descriptor(td);
+	T_0_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
@@ -172,14 +172,14 @@ asn_enc_rval_t
 T_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	T_inherit_TYPE_descriptor(td);
+	T_0_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T_tags[] = {
+static ber_tlv_tag_t asn_DEF_T_0_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
@@ -194,12 +194,12 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_decode_xer,
 	T_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T_tags,
-	sizeof(asn_DEF_T_tags)
-		/sizeof(asn_DEF_T_tags[0]) - 1, /* 1 */
-	asn_DEF_T_tags,	/* Same as above */
-	sizeof(asn_DEF_T_tags)
-		/sizeof(asn_DEF_T_tags[0]), /* 2 */
+	asn_DEF_T_0_tags,
+	sizeof(asn_DEF_T_0_tags)
+		/sizeof(asn_DEF_T_0_tags[0]) - 1, /* 1 */
+	asn_DEF_T_0_tags,	/* Same as above */
+	sizeof(asn_DEF_T_0_tags)
+		/sizeof(asn_DEF_T_0_tags[0]), /* 2 */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };

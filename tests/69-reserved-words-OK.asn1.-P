@@ -73,27 +73,27 @@ memb_char_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_class_tags[] = {
+static ber_tlv_tag_t asn_DEF_class_2_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_class_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_class_2_tag2el[] = {
 };
-static uint8_t asn_DEF_class_mmap[(0 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_class_2_mmap[(0 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	0
 };
-static asn_SET_specifics_t asn_DEF_class_specs = {
+static asn_SET_specifics_t asn_SPC_class_2_specs = {
 	sizeof(struct Class),
 	offsetof(struct Class, _asn_ctx),
 	offsetof(struct Class, _presence_map),
-	asn_DEF_class_tag2el,
+	asn_MAP_class_2_tag2el,
 	0,	/* Count of tags in the map */
-	asn_DEF_class_tag2el,	/* Same as above */
+	asn_MAP_class_2_tag2el,	/* Same as above */
 	0,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_DEF_class_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_class_2_mmap	/* Mandatory elements map */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_class = {
+asn_TYPE_descriptor_t asn_DEF_class_2 = {
 	"class",
 	"class",
 	SET_free,
@@ -104,17 +104,17 @@ asn_TYPE_descriptor_t asn_DEF_class = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_class_tags,
-	sizeof(asn_DEF_class_tags)
-		/sizeof(asn_DEF_class_tags[0]), /* 1 */
-	asn_DEF_class_tags,	/* Same as above */
-	sizeof(asn_DEF_class_tags)
-		/sizeof(asn_DEF_class_tags[0]), /* 1 */
+	asn_DEF_class_2_tags,
+	sizeof(asn_DEF_class_2_tags)
+		/sizeof(asn_DEF_class_2_tags[0]), /* 1 */
+	asn_DEF_class_2_tags,	/* Same as above */
+	sizeof(asn_DEF_class_2_tags)
+		/sizeof(asn_DEF_class_2_tags[0]), /* 1 */
 	0, 0,	/* No members */
-	&asn_DEF_class_specs	/* Additional specs */
+	&asn_SPC_class_2_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_T[] = {
+static asn_TYPE_member_t asn_MBR_T_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Int),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -132,7 +132,7 @@ static asn_TYPE_member_t asn_MBR_T[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Class),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_class,
+		.type = (void *)&asn_DEF_class_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "class"
 		},
@@ -144,19 +144,19 @@ static asn_TYPE_member_t asn_MBR_T[] = {
 		.name = "double"
 		},
 };
-static ber_tlv_tag_t asn_DEF_T_tags[] = {
+static ber_tlv_tag_t asn_DEF_T_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_T_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* int at 15 */
     { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 1, 0, 0 }, /* char at 16 */
     { (ASN_TAG_CLASS_UNIVERSAL | (9 << 2)), 3, 0, 0 }, /* double at 18 */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, 0, 0 } /* class at 17 */
 };
-static asn_SEQUENCE_specifics_t asn_DEF_T_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_T_1_specs = {
 	sizeof(struct T),
 	offsetof(struct T, _asn_ctx),
-	asn_DEF_T_tag2el,
+	asn_MAP_T_1_tag2el,
 	4,	/* Count of tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -172,14 +172,14 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T_tags,
-	sizeof(asn_DEF_T_tags)
-		/sizeof(asn_DEF_T_tags[0]), /* 1 */
-	asn_DEF_T_tags,	/* Same as above */
-	sizeof(asn_DEF_T_tags)
-		/sizeof(asn_DEF_T_tags[0]), /* 1 */
-	asn_MBR_T,
+	asn_DEF_T_1_tags,
+	sizeof(asn_DEF_T_1_tags)
+		/sizeof(asn_DEF_T_1_tags[0]), /* 1 */
+	asn_DEF_T_1_tags,	/* Same as above */
+	sizeof(asn_DEF_T_1_tags)
+		/sizeof(asn_DEF_T_1_tags[0]), /* 1 */
+	asn_MBR_T_1,
 	4,	/* Elements count */
-	&asn_DEF_T_specs	/* Additional specs */
+	&asn_SPC_T_1_specs	/* Additional specs */
 };
 

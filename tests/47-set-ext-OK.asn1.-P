@@ -35,7 +35,7 @@ typedef struct T1 {
 
 /*** <<< STAT-DEFS [T1] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_T1[] = {
+static asn_TYPE_member_t asn_MBR_T1_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T1, i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -44,25 +44,25 @@ static asn_TYPE_member_t asn_MBR_T1[] = {
 		.name = "i"
 		},
 };
-static ber_tlv_tag_t asn_DEF_T1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T1_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_T1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T1_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 14 */
 };
-static uint8_t asn_DEF_T1_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_T1_1_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
 };
-static asn_SET_specifics_t asn_DEF_T1_specs = {
+static asn_SET_specifics_t asn_SPC_T1_1_specs = {
 	sizeof(struct T1),
 	offsetof(struct T1, _asn_ctx),
 	offsetof(struct T1, _presence_map),
-	asn_DEF_T1_tag2el,
+	asn_MAP_T1_1_tag2el,
 	1,	/* Count of tags in the map */
-	asn_DEF_T1_tag2el,	/* Same as above */
+	asn_MAP_T1_1_tag2el,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_DEF_T1_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_T1_1_mmap	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
@@ -75,15 +75,15 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T1_tags,
-	sizeof(asn_DEF_T1_tags)
-		/sizeof(asn_DEF_T1_tags[0]), /* 1 */
-	asn_DEF_T1_tags,	/* Same as above */
-	sizeof(asn_DEF_T1_tags)
-		/sizeof(asn_DEF_T1_tags[0]), /* 1 */
-	asn_MBR_T1,
+	asn_DEF_T1_1_tags,
+	sizeof(asn_DEF_T1_1_tags)
+		/sizeof(asn_DEF_T1_1_tags[0]), /* 1 */
+	asn_DEF_T1_1_tags,	/* Same as above */
+	sizeof(asn_DEF_T1_1_tags)
+		/sizeof(asn_DEF_T1_1_tags[0]), /* 1 */
+	asn_MBR_T1_1,
 	1,	/* Elements count */
-	&asn_DEF_T1_specs	/* Additional specs */
+	&asn_SPC_T1_1_specs	/* Additional specs */
 };
 
 
@@ -123,7 +123,7 @@ typedef struct T2 {
 
 /*** <<< STAT-DEFS [T2] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_T2[] = {
+static asn_TYPE_member_t asn_MBR_T2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T2, i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -132,25 +132,25 @@ static asn_TYPE_member_t asn_MBR_T2[] = {
 		.name = "i"
 		},
 };
-static ber_tlv_tag_t asn_DEF_T2_tags[] = {
+static ber_tlv_tag_t asn_DEF_T2_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_T2_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T2_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 15 */
 };
-static uint8_t asn_DEF_T2_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_T2_1_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
 };
-static asn_SET_specifics_t asn_DEF_T2_specs = {
+static asn_SET_specifics_t asn_SPC_T2_1_specs = {
 	sizeof(struct T2),
 	offsetof(struct T2, _asn_ctx),
 	offsetof(struct T2, _presence_map),
-	asn_DEF_T2_tag2el,
+	asn_MAP_T2_1_tag2el,
 	1,	/* Count of tags in the map */
-	asn_DEF_T2_tag2el,	/* Same as above */
+	asn_MAP_T2_1_tag2el,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_DEF_T2_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_T2_1_mmap	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_T2 = {
 	"T2",
@@ -163,15 +163,15 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T2_tags,
-	sizeof(asn_DEF_T2_tags)
-		/sizeof(asn_DEF_T2_tags[0]), /* 1 */
-	asn_DEF_T2_tags,	/* Same as above */
-	sizeof(asn_DEF_T2_tags)
-		/sizeof(asn_DEF_T2_tags[0]), /* 1 */
-	asn_MBR_T2,
+	asn_DEF_T2_1_tags,
+	sizeof(asn_DEF_T2_1_tags)
+		/sizeof(asn_DEF_T2_1_tags[0]), /* 1 */
+	asn_DEF_T2_1_tags,	/* Same as above */
+	sizeof(asn_DEF_T2_1_tags)
+		/sizeof(asn_DEF_T2_1_tags[0]), /* 1 */
+	asn_MBR_T2_1,
 	1,	/* Elements count */
-	&asn_DEF_T2_specs	/* Additional specs */
+	&asn_SPC_T2_1_specs	/* Additional specs */
 };
 
 
@@ -208,7 +208,7 @@ typedef struct T3 {
 
 /*** <<< STAT-DEFS [T3] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_T3[] = {
+static asn_TYPE_member_t asn_MBR_T3_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T3, choice.i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -217,15 +217,15 @@ static asn_TYPE_member_t asn_MBR_T3[] = {
 		.name = "i"
 		},
 };
-static asn_TYPE_tag2member_t asn_DEF_T3_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T3_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 16 */
 };
-static asn_CHOICE_specifics_t asn_DEF_T3_specs = {
+static asn_CHOICE_specifics_t asn_SPC_T3_1_specs = {
 	sizeof(struct T3),
 	offsetof(struct T3, _asn_ctx),
 	offsetof(struct T3, present),
 	sizeof(((struct T3 *)0)->present),
-	asn_DEF_T3_tag2el,
+	asn_MAP_T3_1_tag2el,
 	1,	/* Count of tags in the map */
 	1	/* Whether extensible */
 };
@@ -244,9 +244,9 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	asn_MBR_T3,
+	asn_MBR_T3_1,
 	1,	/* Elements count */
-	&asn_DEF_T3_specs	/* Additional specs */
+	&asn_SPC_T3_1_specs	/* Additional specs */
 };
 
 
@@ -283,7 +283,7 @@ typedef struct T4 {
 
 /*** <<< STAT-DEFS [T4] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_T4[] = {
+static asn_TYPE_member_t asn_MBR_T4_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T4, choice.i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -292,15 +292,15 @@ static asn_TYPE_member_t asn_MBR_T4[] = {
 		.name = "i"
 		},
 };
-static asn_TYPE_tag2member_t asn_DEF_T4_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T4_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 17 */
 };
-static asn_CHOICE_specifics_t asn_DEF_T4_specs = {
+static asn_CHOICE_specifics_t asn_SPC_T4_1_specs = {
 	sizeof(struct T4),
 	offsetof(struct T4, _asn_ctx),
 	offsetof(struct T4, present),
 	sizeof(((struct T4 *)0)->present),
-	asn_DEF_T4_tag2el,
+	asn_MAP_T4_1_tag2el,
 	1,	/* Count of tags in the map */
 	1	/* Whether extensible */
 };
@@ -319,8 +319,8 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	asn_MBR_T4,
+	asn_MBR_T4_1,
 	1,	/* Elements count */
-	&asn_DEF_T4_specs	/* Additional specs */
+	&asn_SPC_T4_1_specs	/* Additional specs */
 };
 
