@@ -1,3 +1,3 @@
 
-EXTRA_DIST = *.pdf
+EXTRA_DIST = *.pdf *.html
 CLEANFILES = *.*~
