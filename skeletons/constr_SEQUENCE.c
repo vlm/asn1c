@@ -79,11 +79,11 @@ _t2e_cmp(const void *ap, const void *bp) {
 		ber_tlv_tag_t b_value = BER_TAG_VALUE(b->el_tag);
 
 		if(a_value == b_value) {
-			if(a->el_no < b->el_no)
-				return -1;
+			if(a->el_no > b->el_no)
+				return 1;
 			/*
 			 * Important: we do not check
-			 * for a->el_no being greater than b->el_no!
+			 * for a->el_no <= b->el_no!
 			 */
 			return 0;
 		} else if(a_value < b_value)
@@ -267,8 +267,10 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 			asn1_TYPE_tag2member_t key;
 			key.el_tag = tlv_tag;
 			key.el_no = edx;
+			printf("key = %p\n", &key);
 			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);
+			printf("t2m = %p\n", t2m);
 			if(t2m) {
 				asn1_TYPE_tag2member_t *best = 0;
 				asn1_TYPE_tag2member_t *t2m_f, *t2m_l;
