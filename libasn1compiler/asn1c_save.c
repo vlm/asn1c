@@ -1,6 +1,10 @@
 #include "asn1c_internal.h"
 #include "asn1c_compat.h"
 #include "asn1c_fdeps.h"
+#include "asn1c_lang.h"
+#include "asn1c_misc.h"
+#include "asn1c_save.h"
+#include "asn1c_out.h"
 
 static int asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *);
 static int asn1c_print_streams(arg_t *arg);
@@ -114,14 +118,14 @@ asn1c_print_streams(arg_t *arg)  {
 
 	for(i = 1; i < OT_MAX; i++) {
 		out_chunk_t *ot;
-		if(TQ_FIRST(&cs->targets[i]) == NULL)
+		if(TQ_FIRST(&cs->destination[i].chunks) == NULL)
 			continue;
 
 		printf("\n/*** <<< %s [%s] >>> ***/\n\n",
 			_compiler_stream2str[i],
 			expr->Identifier);
 
-		TQ_FOR(ot, &(cs->targets[i]), next) {
+		TQ_FOR(ot, &(cs->destination[i].chunks), next) {
 			fwrite(ot->buf, ot->len, 1, stdout);
 		}
 	}
@@ -178,18 +182,18 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 
 	fprintf(fp_h, "#include <constr_TYPE.h>\n\n");
 
-	TQ_FOR(ot, &(cs->targets[OT_INCLUDES]), next) {
+	TQ_FOR(ot, &(cs->destination[OT_INCLUDES].chunks), next) {
 		asn1c_activate_dependency(deps, 0, ot->buf);
 		fwrite(ot->buf, ot->len, 1, fp_h);
 	}
 	fprintf(fp_h, "\n");
-	TQ_FOR(ot, &(cs->targets[OT_DEPS]), next)
+	TQ_FOR(ot, &(cs->destination[OT_DEPS].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_h);
 	fprintf(fp_h, "\n");
-	TQ_FOR(ot, &(cs->targets[OT_TYPE_DECLS]), next)
+	TQ_FOR(ot, &(cs->destination[OT_TYPE_DECLS].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_h);
 	fprintf(fp_h, "\n");
-	TQ_FOR(ot, &(cs->targets[OT_FUNC_DECLS]), next)
+	TQ_FOR(ot, &(cs->destination[OT_FUNC_DECLS].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_h);
 
 	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n\n"
@@ -197,12 +201,14 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 		header_id);
 
 	fprintf(fp_c, "#include <%s.h>\n\n", expr->Identifier);	/* Myself */
-	TQ_FOR(ot, &(cs->targets[OT_STAT_DEFS]), next)
+	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
-	TQ_FOR(ot, &(cs->targets[OT_CODE]), next)
+	TQ_FOR(ot, &(cs->destination[OT_CODE].chunks), next)
+		fwrite(ot->buf, ot->len, 1, fp_c);
+	TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 7);
+	assert(OT_MAX == 8);
 
 	fclose(fp_c);
 	fclose(fp_h);
