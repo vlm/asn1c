@@ -14,7 +14,7 @@ int asn1f_fix_constr_ext(arg_t *);
 /*
  * Fix tagging in constructed types.
  */
-int asn1f_fix_constr_tag(arg_t *);
+int asn1f_fix_constr_tag(arg_t *, int fix_top_level);
 
 /*
  * Check distinctive tagging in constructed types.

@@ -699,8 +699,8 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 	asn1p_value_t *vmin;
 	asn1p_value_t *vmax;
 	int expectation_met;
+	unsigned int i;
 	int ret;
-	int i;
 
 	if(!exmet) {
 		exmet = &expectation_met;

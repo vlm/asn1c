@@ -159,15 +159,21 @@ asn1f_fix_module(arg_t *arg) {
 		RET2RVAL(ret, rvalue);
 
 		/*
-		 * 2.[234] Process SEQUENCE/SET/CHOICE types.
-		 */
-		ret = asn1f_recurse_expr(arg, asn1f_fix_constructed);
-		RET2RVAL(ret, rvalue);
-
-		/*
 		 * 2.5.4
 		 */
 		ret = asn1f_recurse_expr(arg, asn1f_fix_dereference_types);
+		RET2RVAL(ret, rvalue);
+
+		/*
+		 * Fix tagging of top-level types.
+		 */
+		ret = asn1f_fix_constr_tag(arg, 1);
+		RET2RVAL(ret, rvalue);
+
+		/*
+		 * 2.[234] Process SEQUENCE/SET/CHOICE types.
+		 */
+		ret = asn1f_recurse_expr(arg, asn1f_fix_constructed);
 		RET2RVAL(ret, rvalue);
 
 		/*
@@ -239,6 +245,10 @@ asn1f_fix_module(arg_t *arg) {
 	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
 
+		if(arg->expr->meta_type == AMT_PARAMTYPE)
+			/* Do not process the parametrized types here */
+			continue;
+
 		ret = asn1f_recurse_expr(arg, asn1f_check_constraints);
 		RET2RVAL(ret, rvalue);
 
@@ -286,7 +296,7 @@ asn1f_fix_constructed(arg_t *arg) {
 	RET2RVAL(ret, rvalue);
 
 	/* Fix tagging */
-	ret = asn1f_fix_constr_tag(arg);
+	ret = asn1f_fix_constr_tag(arg, 0);
 	RET2RVAL(ret, rvalue);
 
 	/* Import COMPONENTS OF stuff */
@@ -308,6 +318,8 @@ asn1f_resolve_constraints(arg_t *arg) {
 		etype = top_parent->expr_type;
 	else	etype = A1TC_INVALID;
 
+	DEBUG("asn1f_resolve_constraints(%s)", arg->expr->Identifier);
+
 	ret = asn1constraint_resolve(arg, arg->expr->module,
 		arg->expr->constraints, etype, 0);
 	RET2RVAL(ret, rvalue);
@@ -326,6 +338,10 @@ asn1f_check_constraints(arg_t *arg) {
 	int rvalue = 0;
 	int ret;
 
+	DEBUG("asn1f_check_constraints(%s{%d/%d})",
+		arg->expr->Identifier,
+		arg->expr->meta_type, arg->expr->expr_type);
+
 	top_parent = asn1f_find_terminal_type(arg, arg->expr);
 	if(!top_parent)
 		return 0;
@@ -339,8 +355,13 @@ asn1f_check_constraints(arg_t *arg) {
 				etype,
 				arg->expr->combined_constraints,
 				test_types[i], 0, 0, 0);
-		if(!range && errno == EPERM)
+		if(!range && errno == EPERM) {
+			FATAL("This error happened for %s (%d) at line %d",
+				arg->expr->Identifier,
+				arg->expr->meta_type,
+				arg->expr->_lineno);
 			return -1;
+		}
 		asn1constraint_range_free(range);
 	}
 

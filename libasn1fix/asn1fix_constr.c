@@ -1,7 +1,10 @@
 #include "asn1fix_internal.h"
 
+#define	AFT_IMAGINARY_ANY	1	/* _fetch_tag() flag */
+
 static int _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v);
 static int _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b);
+static int _asn1f_fix_type_tag(arg_t *arg, asn1p_expr_t *expr);
 
 int
 asn1f_pull_components_of(arg_t *arg) {
@@ -77,6 +80,9 @@ asn1f_pull_components_of(arg_t *arg) {
 	return r_value;
 }
 
+/*
+ * Fix extensibility parts inside constructed types (SEQUENCE, SET, CHOICE).
+ */
 int
 asn1f_fix_constr_ext(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -103,6 +109,10 @@ asn1f_fix_constr_ext(arg_t *arg) {
 	TQ_INIT(&ext_list);
 	cur_list = (void *)&root_list;
 
+	/*
+	 * Split the set of fields into two lists, the root list
+	 * and the extensions list.
+	 */
 	while((v = TQ_REMOVE(&(expr->members), next))) {
 		if(v->expr_type == A1TC_EXTENSIBLE) {
 			ext_count++;
@@ -161,15 +171,29 @@ asn1f_fix_constr_ext(arg_t *arg) {
 
 
 int
-asn1f_fix_constr_tag(arg_t *arg) {
+asn1f_fix_constr_tag(arg_t *arg, int fix_top_level) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
-	int fl_impl_tags = 0;
-	int fl_auto_tags = 0;
 	int root_tagged = 0;	/* The root component is manually tagged */
 	int ext_tagged = 0;	/* The extensions are manually tagged */
 	int component_number = 0;
 	int r_value = 0;
+
+	DEBUG("%s(%s) for line %d", __func__,
+		expr->Identifier, expr->_lineno);
+
+	/*
+	 * Fix the top-level type itself first.
+	 */
+	if(fix_top_level) {
+		if(expr->tag.tag_class == TC_NOCLASS)
+			return r_value;
+
+		if(_asn1f_fix_type_tag(arg, expr))
+			r_value = -1;
+
+		return r_value;
+	}
 
 	switch(expr->expr_type) {
 	case ASN_CONSTR_SEQUENCE:
@@ -180,14 +204,7 @@ asn1f_fix_constr_tag(arg_t *arg) {
 		return 0;
 	}
 
-	fl_impl_tags = (arg->mod->module_flags & MSF_IMPLICIT_TAGS);
-	fl_auto_tags = (arg->mod->module_flags & MSF_AUTOMATIC_TAGS);
-
-	DEBUG("%s(%s) {%d, %d} for line %d", __func__,
-		expr->Identifier, fl_impl_tags, fl_auto_tags, expr->_lineno);
-
 	TQ_FOR(v, &(expr->members), next) {
-		int must_explicit = 0;
 
 		if(v->expr_type == A1TC_EXTENSIBLE) {
 			component_number++;
@@ -196,43 +213,18 @@ asn1f_fix_constr_tag(arg_t *arg) {
 
 		if(v->tag.tag_class == TC_NOCLASS) {
 			continue;
-		} else {
-			switch(component_number) {
-			case 0: case 2:
-				root_tagged = 1; break;
-			default:
-				ext_tagged = 1; break;
-			}
 		}
 
-		must_explicit = _asn1f_check_if_tag_must_be_explicit(arg, v);
-
-		if(fl_impl_tags) {
-			if(v->tag.tag_mode != TM_EXPLICIT) {
-				if(must_explicit)
-					v->tag.tag_mode = TM_EXPLICIT;
-				else
-					v->tag.tag_mode = TM_IMPLICIT;
-			}
-		} else {
-			if(v->tag.tag_mode == TM_DEFAULT) {
-				v->tag.tag_mode = TM_EXPLICIT;
-			}
+		switch(component_number) {
+		case 0: case 2:
+			root_tagged = 1; break;
+		default:
+			ext_tagged = 1; break;
 		}
 
-		/*
-		 * Perform a final sanity check.
-		 */
-		if(must_explicit) {
-			if(v->tag.tag_mode == TM_IMPLICIT) {
-				FATAL("%s tagged in IMPLICIT mode "
-					"but must be EXPLICIT at line %d",
-					v->Identifier, v->_lineno);
-				r_value = -1;
-			} else {
-				v->tag.tag_mode = TM_EXPLICIT;
-			}
-		}
+		if(_asn1f_fix_type_tag(arg, v))
+			r_value = -1;
+
 	}
 
 	if(ext_tagged && !root_tagged) {
@@ -241,8 +233,46 @@ asn1f_fix_constr_tag(arg_t *arg) {
 			"but root components are not",
 			expr->Identifier, expr->_lineno);
 		r_value = -1;
-	} else if(!root_tagged && !ext_tagged && fl_auto_tags) {
+	} else if(!root_tagged && !ext_tagged
+			&& (arg->mod->module_flags & MSF_AUTOMATIC_TAGS)) {
+		/* Make a decision on automatic tagging */
 		expr->auto_tags_OK = 1;
+	}
+
+	return r_value;
+}
+
+static int
+_asn1f_fix_type_tag(arg_t *arg, asn1p_expr_t *expr) {
+	int must_explicit = _asn1f_check_if_tag_must_be_explicit(arg, expr);
+	int fl_impl_tags = (arg->mod->module_flags & MSF_IMPLICIT_TAGS);
+	int r_value = 0;
+
+	if(fl_impl_tags) {
+		if(expr->tag.tag_mode != TM_EXPLICIT) {
+			if(must_explicit)
+				expr->tag.tag_mode = TM_EXPLICIT;
+			else
+				expr->tag.tag_mode = TM_IMPLICIT;
+		}
+	} else {
+		if(expr->tag.tag_mode == TM_DEFAULT) {
+			expr->tag.tag_mode = TM_EXPLICIT;
+		}
+	}
+
+	/*
+	 * Perform a final sanity check.
+	 */
+	if(must_explicit) {
+		if(expr->tag.tag_mode == TM_IMPLICIT) {
+			FATAL("%s tagged in IMPLICIT mode "
+				"but must be EXPLICIT at line %d",
+				expr->Identifier, expr->_lineno);
+			r_value = -1;
+		} else {
+			expr->tag.tag_mode = TM_EXPLICIT;
+		}
 	}
 
 	return r_value;
@@ -333,11 +363,25 @@ asn1f_check_constr_tags_distinct(arg_t *arg) {
 
 static int
 _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v) {
+	struct asn1p_type_tag_s tag;
+	struct asn1p_type_tag_s save_tag;
 	asn1p_expr_t *reft;
+	int ret;
+
+	/*
+	 * Fetch the _next_ tag for this type.
+	 */
+	save_tag = v->tag;			/* Save existing tag */
+	memset(&v->tag, 0, sizeof(v->tag));	/* Remove it temporarily */
+	ret = asn1f_fetch_tag(arg->asn, arg->mod, v, &tag, 0);
+	v->tag = save_tag;			/* Restore the tag back */
+
+	if(ret == 0) return 0;	/* If found tag, it's okay */
 
 	reft = asn1f_find_terminal_type(arg, v);
 	if(reft) {
 		switch(reft->expr_type) {
+		case ASN_TYPE_ANY:
 		case ASN_CONSTR_CHOICE:
 			return 1;
 		default:
@@ -357,8 +401,8 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 	int ra, rb;
 	int ret;
 
-	ra = asn1f_fetch_tag(arg->asn, arg->mod, a, &ta);
-	rb = asn1f_fetch_tag(arg->asn, arg->mod, b, &tb);
+	ra = asn1f_fetch_tag(arg->asn, arg->mod, a, &ta, AFT_IMAGINARY_ANY);
+	rb = asn1f_fetch_tag(arg->asn, arg->mod, b, &tb, AFT_IMAGINARY_ANY);
 
 	/*
 	 * If both tags are explicitly or implicitly given, use them.
@@ -367,8 +411,12 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		/*
 		 * Simple case: fetched both tags.
 		 */
-		if(ta.tag_value == tb.tag_value
-		&& ta.tag_class == tb.tag_class) {
+
+		if((ta.tag_value == tb.tag_value
+			&& ta.tag_class == tb.tag_class)
+		|| ta.tag_value == -1	/* Spread IMAGINARY ANY tag... */
+		|| tb.tag_value == -1	/* ...it is an evil virus, fear it! */
+		) {
 			char *p = (a->expr_type == A1TC_EXTENSIBLE)
 				?"potentially ":"";
 			FATAL("Component \"%s\" at line %d %shas the same tag "
