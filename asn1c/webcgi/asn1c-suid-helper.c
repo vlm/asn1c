@@ -12,16 +12,17 @@
  */
 int
 main(int ac, char **av) {
-	char **argv;
+	char cmdPath[32];
 	char *envp[] = { NULL };	/* Empty environment */
 	int ret;
 	int i;
 
-	if(ac < 3) {
+	if(ac < 4) {
 		setgid(getgid());
 		setuid(getuid());
 		fprintf(stderr,
-			"Usage: %s <chroot-to> <chdir-to> [options]\n", av[0]);
+		"Usage: %s <chroot-to> <chdir-to> <command> [options]\n",
+		av[0]);
 		exit(EX_USAGE);
 	}
 
@@ -48,20 +49,34 @@ main(int ac, char **av) {
 		exit(EX_DATAERR);
 	}
 
-	argv = calloc(ac + 1, sizeof(*argv));
-	if(argv) {
-		argv[0] = "asn1c";
-		argv[1] = "-S/skeletons";
-		memcpy(argv + 2, av + 3, (ac - 3) * sizeof(*argv));
+
+	/*
+	 * Add an argument if this is an asn1c compiler.
+	 */
+	if(strcmp(av[3], "asn1c") == 0) {
+		ac -= 2;
+		av += 2;
+		av[0] = "asn1c";
+		av[1] = "-S/skeletons";
+		i = 2;
+		strcpy(cmdPath, "/bin/asn1c");
 	} else {
-		perror("malloc()");
-		exit(EX_OSERR);
+		ac -= 3;
+		av += 3;
+		i = 0;
 	}
+
+	if(strlen(av[0]) > sizeof(cmdPath)/2) {
+		fprintf(stderr, "Insecure command name: %s\n", av[0]);
+		exit(EX_DATAERR);
+	}
+	memcpy(cmdPath, "/bin/", 5);
+	strcpy(cmdPath + 5, av[0]);
 
 	/*
 	 * Check arguments for the permitted alphabet constraints.
 	 */
-	for(i = 3; i < ac; i++) {
+	for(; i < ac; i++) {
 		char *p;
 		for(p = av[i];; p++) {
 			switch(*p) {
@@ -80,7 +95,8 @@ main(int ac, char **av) {
 		}
 	}
 
-	execve("/bin/asn1c", argv, envp);
+	execve(cmdPath, av, envp);
+	perror(cmdPath);
 
 	exit(EX_UNAVAILABLE);
 }
