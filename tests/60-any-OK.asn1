@@ -8,7 +8,7 @@
 ModuleTestANY
 	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
 		spelio(9363) software(1) asn1c(5) test(1) 60 }
-	DEFINITIONS ::=
+	DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
 
 	T1 ::= SEQUENCE {
@@ -18,7 +18,7 @@ BEGIN
 
 	T2 ::= SEQUENCE {
 		i	INTEGER,
-		any	[0] EXPLICIT ANY OPTIONAL
+		any	[0] ANY OPTIONAL
 	}
 
 END
