@@ -21,7 +21,8 @@ BEGIN
 
 	Sequence ::= SEQUENCE {
 		integer		INTEGER,
-		sequence	Sequence OPTIONAL,	-- backreference
+		sequence	Sequence   OPTIONAL,	-- backreference
+		bits		BIT STRING OPTIONAL,
 		string		UTF8String
 	}
 
