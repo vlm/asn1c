@@ -1132,9 +1132,14 @@ emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_ta
 	enum tvm_compat tv_mode = _TVM_SAME;
 	int i;
 
+	/* Cleanup before proceeding. */
+	*tags_count_r = 0;
+	*all_tags_count_r = 0;
+
 	/* Fetch a chain of tags */
 	tags_count = asn1f_fetch_tags(arg->asn, arg->mod, expr, &tags, 0);
-	if(tags_count < 0) return -1;
+	if(tags_count < 0)
+		return -1;
 
 	/* Fetch a chain of tags */
 	all_tags_count = asn1f_fetch_tags(arg->asn, arg->mod, expr,
