@@ -127,6 +127,9 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	asn_enc_rval_t erval;
 	REAL_t tmp;
 
+	/* Prepare a temporary clean structure */
+	memset(&tmp, 0, sizeof(tmp));
+
 	if(asn_double2REAL(&tmp, Dbl)) {
 		erval.encoded = -1;
 		erval.failed_type = td;
@@ -140,6 +143,10 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 		assert(erval.structure_ptr == &tmp);
 		erval.structure_ptr = ptr;
 	}
+
+	/* Free possibly allocated members of the temporary structure */
+	asn_DEF_REAL.free_struct(&asn_DEF_REAL, &tmp, 1);
+
 	return erval;
 }
 
