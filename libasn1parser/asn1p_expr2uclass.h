@@ -1,6 +1,10 @@
 #ifndef	ASN1_PARSER_EXPR2UCLASS_H
 #define	ASN1_PARSER_EXPR2UCLASS_H
 
+#ifndef	__GNUC__
+#define	__attribute__(x)	/* unused */
+#endif
+
 static int expr_type2uclass_value[ASN_EXPR_TYPE_MAX]
 		__attribute__ ((unused)) = {
 	[ ASN_BASIC_BOOLEAN ]		= 1,

@@ -1,6 +1,6 @@
-#include <asn1fix_internal.h>
-#include <asn1fix_constraint.h>
-#include <asn1fix_crange.h>
+#include "asn1fix_internal.h"
+#include "asn1fix_constraint.h"
+#include "asn1fix_crange.h"
 
 #undef	FATAL
 #define	FATAL(fmt, args...)	do {			\

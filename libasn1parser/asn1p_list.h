@@ -37,11 +37,11 @@
 	for((var) = TQ_FIRST((head));			\
 		(var); (var) = TQ_NEXT((var), field))
 
+/* MSVC does not have typeof(), cannot prevent side effects! */
 #define	TQ_ADD(head, xel, field) do {			\
-	typeof(xel) __el = xel;				\
-	assert(TQ_NEXT((__el), field) == 0);		\
-        *(head)->tq_tail = (__el);			\
-        (head)->tq_tail = &TQ_NEXT((__el), field);	\
+	assert(TQ_NEXT((xel), field) == 0);		\
+        *(head)->tq_tail = (xel);			\
+        (head)->tq_tail = &TQ_NEXT((xel), field);	\
 	} while(0)
 
 /*

@@ -1,24 +1,26 @@
 #include "asn1c_internal.h"
-#include <asn1c_compat.h>
-
-#ifdef	HAVE_SYS_PARAM_H
-#include <sys/param.h>	/* For MAXPATHLEN */
-#endif
+#include "asn1c_compat.h"
 
 #ifndef	MAXPATHLEN
 #define	MAXPATHLEN	1024
 #endif
 
 #ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
+#ifdef	WIN32
+#define	DEFFILEMODE	0
+#else
 #define	DEFFILEMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+#endif
 #endif
 
 FILE *
 asn1c_open_file(const char *name, const char *ext) {
 	int created = 1;
+#ifndef	WIN32
 	struct stat sb;
+#endif
 	char *fname;
-	int len;
+	size_t len;
 	FILE *fp;
 	int fd;
 
@@ -42,6 +44,7 @@ asn1c_open_file(const char *name, const char *ext) {
 		return NULL;
 	}
 
+#ifndef	WIN32
 	/*
 	 * Check sanity.
 	 */
@@ -53,6 +56,9 @@ asn1c_open_file(const char *name, const char *ext) {
 	}
 
 	(void)ftruncate(fd, 0);
+#else
+	_chsize(fd, 0);
+#endif	/* WIN32 */
 
 	/*
 	 * Convert file descriptor into file pointer.

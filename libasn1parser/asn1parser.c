@@ -35,7 +35,7 @@ asn1p_parse_buffer(const char *buffer, int size /* = -1 */, enum asn1p_flags fla
 	}
 
 	if(size < 0)
-		size = strlen(buffer);
+		size = (int)strlen(buffer);
 
 	ybuf = asn1p__scan_bytes(buffer, size);
 	if(!ybuf) {
@@ -67,7 +67,9 @@ asn1p_parse_buffer(const char *buffer, int size /* = -1 */, enum asn1p_flags fla
  */
 asn1p_t *
 asn1p_parse_file(const char *filename, enum asn1p_flags flags) {
+#ifndef	WIN32
 	struct stat sb;
+#endif
 	asn1p_t *a = 0;
 	void *ap;
 	FILE *fp;
@@ -84,6 +86,7 @@ asn1p_parse_file(const char *filename, enum asn1p_flags flags) {
 		return NULL;
 	}
 
+#ifndef	WIN32
 	if(fstat(fileno(fp), &sb)
 	|| !S_ISREG(sb.st_mode)) {
 		fclose(fp);
@@ -92,6 +95,7 @@ asn1p_parse_file(const char *filename, enum asn1p_flags flags) {
 		errno = EINVAL;
 		return NULL;
 	}
+#endif	/* WIN32 */
 
 	asn1p_lineno = 1;
 

@@ -5,7 +5,7 @@
 #ifndef	_ASN1FIX_EXPORT_H_
 #define	_ASN1FIX_EXPORT_H_
 
-#include <asn1fix_tags.h>
+#include "asn1fix_tags.h"
 
 /*
  * Create a human-readable representation of a reference and value.

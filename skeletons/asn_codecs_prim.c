@@ -55,10 +55,19 @@ ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 		return rval;
 	}
 
+	st->size = (int)length;
+	/* The following better be optimized away. */
+	if(sizeof(st->size) != sizeof(length)
+			&& (ber_tlv_len_t)st->size != length) {
+		st->size = 0;
+		rval.code = RC_FAIL;
+		rval.consumed = 0;
+		return rval;
+	}
+
 	st->buf = (uint8_t *)MALLOC(length + 1);
-	if(st->buf) {
-		st->size = length;
-	} else {
+	if(!st->buf) {
+		st->size = 0;
 		rval.code = RC_FAIL;
 		rval.consumed = 0;
 		return rval;
@@ -146,14 +155,14 @@ struct xdp_arg_s {
 };
 
 
-static int
+static ssize_t
 xer_decode__unexpected_tag(void *key, void *chunk_buf, size_t chunk_size) {
 	struct xdp_arg_s *arg = (struct xdp_arg_s *)key;
 	ssize_t decoded;
 
 	if(arg->decoded_something) {
 		if(xer_is_whitespace(chunk_buf, chunk_size))
-			return chunk_size;
+			return 0;	/* Skip it. */
 		/*
 		 * Decoding was done once already. Prohibit doing it again.
 		 */

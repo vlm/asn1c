@@ -32,7 +32,7 @@ asn1c_make_identifier(enum ami_flags_e flags, char *arg1, ...) {
 	va_list ap;
 	char *str;
 	char *nextstr;
-	int size;
+	size_t size;
 	char *p;
 
 	if(arg1 == NULL)

@@ -111,27 +111,30 @@ asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) 
 
 static int
 asn1print_oid(asn1p_oid_t *oid, enum asn1print_flags flags) {
+	size_t accum = 0;
 	int ac;
-	int accum = 0;
 
 	(void)flags;	/* Unused argument */
 
 	printf("{");
 	for(ac = 0; ac < oid->arcs_count; ac++) {
-		if(accum + strlen(oid->arcs[ac].name?:"") > 50) {
+		const char *arcname = oid->arcs[ac].name;
+
+		if(accum + strlen(arcname ? arcname : "") > 50) {
 			printf("\n\t");
 			accum = 0;
-		} else if(ac) printf(" ");
+		} else if(ac) {
+			printf(" ");
+		}
 
-		if(oid->arcs[ac].name) {
-			printf("%s", oid->arcs[ac].name);
+		if(arcname) {
+			printf("%s", arcname);
 			if(oid->arcs[ac].number >= 0) {
 				printf("(%" PRIdASN ")", oid->arcs[ac].number);
 			}
 			accum += strlen(oid->arcs[ac].name);
 		} else {
-			printf("%d",
-				(int)oid->arcs[ac].number);
+			printf("%" PRIdASN, oid->arcs[ac].number);
 		}
 		accum += 4;
 	}
