@@ -113,6 +113,7 @@ ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
  * 
  * WARNING: The function always returns the real number of arcs,
  * even if there is no sufficient (_arc_slots) provided.
+ * This is useful for (_arc_slots) value estimation.
  */
 int OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	long arcs[], unsigned int arcs_slots, char **oid_text_end);
