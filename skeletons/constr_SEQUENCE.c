@@ -621,7 +621,6 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	asn_dec_rval_t rval;		/* Return value from a decoder */
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
-	int xer_state;			/* XER low level parsing context */
 	int edx;			/* Element index */
 	int edx_end;
 
@@ -644,8 +643,10 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Phase 0: Check that the opening tag matches our expectations.
 	 * Phase 1: Processing body and reacting on closing tag.
 	 * Phase 2: Processing inner type.
+	 * Phase 3: Skipping unknown extensions.
+	 * Phase 4: PHASED OUT
 	 */
-	for(xer_state = ctx->left, edx = ctx->step; ctx->phase <= 2;) {
+	for(edx = ctx->step; ctx->phase <= 3;) {
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
@@ -679,7 +680,6 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			if(tmprval.code != RC_OK)
 				RETURN(tmprval.code);
 			ctx->phase = 1;	/* Back to body processing */
-			ctx->left = xer_state = 0;	/* New, clean state */
 			ctx->step = ++edx;
 			ASN_DEBUG("XER/SEQUENCE phase => %d, step => %d",
 				ctx->phase, ctx->step);
@@ -689,12 +689,10 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Get the next part of the XML stream.
 		 */
-		ch_size = xer_next_token(&xer_state, buf_ptr, size, &ch_type);
+		ch_size = xer_next_token(buf_ptr, size, &ch_type);
 		switch(ch_size) {
 		case -1: RETURN(RC_FAIL);
-		case 0:
-			ctx->left = xer_state;
-			RETURN(RC_WMORE);
+		case 0:  RETURN(RC_WMORE);
 		default:
 			switch(ch_type) {
 			case PXER_COMMENT:	/* Got XML comment */
@@ -708,6 +706,26 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
 		ASN_DEBUG("XER/SEQUENCE: tcv = %d, ph=%d", tcv, ctx->phase);
+
+		/* Skip the extensions section */
+		if(ctx->phase == 3) {
+			switch(xer_skip_unknown(tcv, &ctx->left)) {
+			case -1:
+				ctx->phase = 4;
+				RETURN(RC_FAIL);
+			case 0:
+				XER_ADVANCE(ch_size);
+				continue;
+			case 1:
+				XER_ADVANCE(ch_size);
+				ctx->phase = 1;
+				continue;
+			case 2:
+				ctx->phase = 1;
+				break;
+			}
+		}
+
 		switch(tcv) {
 		case XCT_CLOSING:
 			if(ctx->phase == 0) break;
@@ -727,7 +745,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 						> td->elements_count)
 				) {
 					XER_ADVANCE(ch_size);
-					ctx->phase = 3;	/* Phase out */
+					ctx->phase = 4;	/* Phase out */
 					RETURN(RC_OK);
 				} else {
 					ASN_DEBUG("Premature end of XER SEQUENCE");
@@ -784,11 +802,20 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			/* It is expected extension */
 			if(IN_EXTENSION_GROUP(specs,
 				edx + elements[edx].optional)) {
-				ASN_DEBUG("Got anticipated extension at %d, "
-					"but NOT IMPLEMENTED YET", edx);
+				ASN_DEBUG("Got anticipated extension at %d", edx);
 				/*
-				 * TODO: implement skipping of extensions
+				 * Check for (XCT_BOTH or XCT_UNKNOWN_BO)
+				 * By using a mask. Only record a pure
+				 * <opening> tags.
 				 */
+				if(tcv & XCT_CLOSING) {
+					/* Found </extension> without body */
+				} else {
+					ctx->left = 1;
+					ctx->phase = 3;	/* Skip ...'s */
+				}
+				XER_ADVANCE(ch_size);
+				continue;
 			}
 
 			/* Fall through */
@@ -800,7 +827,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		break;
 	}
 
-	ctx->phase = 3;	/* "Phase out" on hard failure */
+	ctx->phase = 4;	/* "Phase out" on hard failure */
 	RETURN(RC_FAIL);
 }
 

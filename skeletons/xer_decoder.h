@@ -63,8 +63,7 @@ asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	PXER_TEXT,	/* Plain text between XER tags */
 	PXER_COMMENT,	/* A comment, may be part of */
   } pxer_chunk_type_e;
-ssize_t xer_next_token(int *stateContext, void *buffer, size_t size,
-	pxer_chunk_type_e *_ch_type);
+ssize_t xer_next_token(void *buffer, size_t size, pxer_chunk_type_e *_ch_type);
 
 /*
  * This function checks the buffer against the tag name is expected to occur.
@@ -89,5 +88,10 @@ xer_check_tag_e xer_check_tag(const void *buf_ptr, int size,
  * 0:	Non-whitespace
  */
 int xer_is_whitespace(void *chunk_buf, size_t chunk_size);
+
+/*
+ * Skip the series of anticipated extensions.
+ */
+int xer_skip_unknown(xer_check_tag_e tcv, ber_tlv_len_t *depth);
 
 #endif	/* _XER_DECODER_H_ */

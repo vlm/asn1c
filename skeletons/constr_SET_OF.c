@@ -482,7 +482,6 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	asn_dec_rval_t rval;		/* Return value from a decoder */
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
-	int xer_state;			/* XER low level parsing context */
 
 	/*
 	 * Create the target structure if it is not present already.
@@ -503,7 +502,7 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Phase 1: Processing body and reacting on closing tag.
 	 * Phase 2: Processing inner type.
 	 */
-	for(xer_state = ctx->left; ctx->phase <= 2;) {
+	for(; ctx->phase <= 2;) {
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
@@ -530,7 +529,6 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				RETURN(tmprval.code);
 			}
 			ctx->phase = 1;	/* Back to body processing */
-			ctx->left = xer_state = 0;	/* New, clean state */
 			ASN_DEBUG("XER/SET OF phase => %d", ctx->phase);
 			/* Fall through */
 		}
@@ -538,12 +536,10 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Get the next part of the XML stream.
 		 */
-		ch_size = xer_next_token(&xer_state, buf_ptr, size, &ch_type);
+		ch_size = xer_next_token(buf_ptr, size, &ch_type);
 		switch(ch_size) {
 		case -1: RETURN(RC_FAIL);
-		case 0:
-			ctx->left = xer_state;
-			RETURN(RC_WMORE);
+		case 0:  RETURN(RC_WMORE);
 		default:
 			switch(ch_type) {
 			case PXER_COMMENT:	/* Got XML comment */
