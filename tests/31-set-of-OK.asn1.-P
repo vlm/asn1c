@@ -104,7 +104,7 @@ static ber_tlv_tag_t asn_DEF_Tree_tags[] = {
 };
 static asn_TYPE_tag2member_t asn_DEF_Tree_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* height at 17 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 }, /* width at 19 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* width at 19 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_Tree_specs = {
 	sizeof(struct Tree),
@@ -270,7 +270,7 @@ static ber_tlv_tag_t asn_DEF_anything_Member_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_anything_Member_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 }, /* cup-of-coffee at 32 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* cup-of-coffee at 32 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_anything_Member_specs = {
 	sizeof(struct anything_Member),
@@ -362,7 +362,7 @@ static asn_TYPE_member_t asn_MBR_other[] = {
 };
 static asn_TYPE_tag2member_t asn_DEF_other_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a at 26 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 1, 0, 0 }, /* b at 28 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 1, 0, 0 } /* b at 28 */
 };
 static asn_CHOICE_specifics_t asn_DEF_other_specs = {
 	sizeof(struct other),
@@ -424,12 +424,12 @@ static asn_TYPE_tag2member_t asn_DEF_Stuff_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* a at 26 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything at 34 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* b at 28 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 } /* b at 28 */
 };
 static asn_TYPE_tag2member_t asn_DEF_Stuff_tag2el_cxer[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything at 34 */
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* a at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 } /* a at 26 */
 };
 static uint8_t asn_DEF_Stuff_mmap[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7) | (0 << 6) | (0 << 5)
@@ -441,7 +441,7 @@ static asn_SET_specifics_t asn_DEF_Stuff_specs = {
 	asn_DEF_Stuff_tag2el,
 	4,	/* Count of tags in the map */
 	asn_DEF_Stuff_tag2el_cxer,
-	3,	/* Count of tags in the CANONICAL-XER map */
+	3,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
 	(unsigned int *)asn_DEF_Stuff_mmap	/* Mandatory elements map */
 };

@@ -88,7 +88,7 @@ static asn_SET_specifics_t asn_DEF_class_specs = {
 	asn_DEF_class_tag2el,
 	0,	/* Count of tags in the map */
 	asn_DEF_class_tag2el,	/* Same as above */
-	0,	/* Count of tags in the CANONICAL-XER map */
+	0,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
 	(unsigned int *)asn_DEF_class_mmap	/* Mandatory elements map */
 };
@@ -151,7 +151,7 @@ static asn_TYPE_tag2member_t asn_DEF_T_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* int at 15 */
     { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 1, 0, 0 }, /* char at 16 */
     { (ASN_TAG_CLASS_UNIVERSAL | (9 << 2)), 3, 0, 0 }, /* double at 18 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, 0, 0 }, /* class at 17 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, 0, 0 } /* class at 17 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_T_specs = {
 	sizeof(struct T),
