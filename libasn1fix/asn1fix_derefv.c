@@ -15,6 +15,18 @@ asn1f_fix_dereference_values(arg_t *arg) {
 		}
 	}
 
+	return r_value;
+}
+
+
+/*
+ * Dereference DEFAULT values
+ */
+int
+asn1f_fix_dereference_defaults(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	int r_value = 0;
+
 	if(expr->marker.default_value) {
 		arg_t tmparg = *arg;
 		asn1p_expr_t tmpexpr = *expr;
