@@ -98,6 +98,8 @@ asn1cnst_range_t *
 asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 	DECL(uint7,	0x00, 0x7f);
 	DECL(uint8,	0x00, 0xff);
+	DECL(uint16,	0x00, 0xffff);
+	DECL(uint31,	0x00, 0x7fffffff);
 	DECL(Space,	0x20, 0x20);
 	DECL(ApostropheAndParens, 0x27, 0x29);
 	DECL(PlusTillColon, 0x2b, 0x3a);
@@ -169,6 +171,11 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 		return &range_uint7;
 	case ASN_BASIC_OCTET_STRING:
 		return &range_uint8;
+	case ASN_STRING_BMPString:
+		return &range_uint16;
+	case ASN_STRING_UniversalString:
+	case ASN_STRING_UTF8String:
+		return &range_uint31;
 	case ASN_BASIC_UTCTime:
 		return &range_UTCTime;
 	case ASN_BASIC_GeneralizedTime:
