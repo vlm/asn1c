@@ -54,7 +54,6 @@ a1c_dirname(const char *path) {
 
 	/* One-pass determination of the last char of the pathname */
 	for(pend = path; ; pend++) {
-		printf("-%c", *pend);
 		switch(*pend) {
 		case '\0': break;
 		case '/':
@@ -69,7 +68,6 @@ a1c_dirname(const char *path) {
 		}
 		break;
 	}
-	printf("\n");
 
 	if(last <= path) {
 		strcpy(strbuf, *path == '/' ? "/" : ".");
