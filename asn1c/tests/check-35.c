@@ -9,7 +9,7 @@
 
 uint8_t buf1[] = {
 	32 | 17,		/* [UNIVERSAL 17], constructed */
-	13,	/* L */
+	15,	/* L */
 
 	/* b CHOICE { b2 ObjectDescriptor }*/
 	7,			/* [UNIVERSAL 7] */
@@ -22,9 +22,11 @@ uint8_t buf1[] = {
 
 	/* a NumericString */
 	18,			/* [UNIVERSAL 18] */
-	2,	/* L */
-  'n',
-  's',
+	4,	/* L */
+  '=',
+  '<',
+  '&',
+  '>',
 
 	/* d.r-oid RELATIVE-OID */
 	13,			/* [UNIVERSAL 13] */
@@ -36,7 +38,7 @@ uint8_t buf1[] = {
 
 uint8_t buf1_reconstr[] = {
 	32 | 17,		/* [UNIVERSAL 17], constructed */
-	14,	/* L */
+	16,	/* L */
 
 	/* c BOOLEAN */
 	1,			/* [UNIVERSAL 1] */
@@ -56,20 +58,24 @@ uint8_t buf1_reconstr[] = {
 
 	/* a NumericString */
 	18,			/* [UNIVERSAL 18] */
-	2,	/* L */
-  'n',
-  's'
+	4,	/* L */
+  '=',
+  '<',
+  '&',
+  '>',
 };
 
 uint8_t buf2[] = {
 	32 | 17,		/* [UNIVERSAL 17], constructed */
-	13,	/* L */
+	15,	/* L */
 
 	/* a NumericString */
 	18,			/* [UNIVERSAL 18] */
-	2,	/* L */
-  'n',
-  's',
+	4,	/* L */
+  '=',
+  '<',
+  '&',
+  '>',
 
 	/* c BOOLEAN */
 	1,			/* [UNIVERSAL 1] */
@@ -90,7 +96,7 @@ uint8_t buf2[] = {
 
 uint8_t buf2_reconstr[] = {
 	32 | 17,		/* [UNIVERSAL 17], constructed */
-	13,	/* L */
+	15,	/* L */
 
 	/* c BOOLEAN */
 	1,			/* [UNIVERSAL 1] */
@@ -104,9 +110,11 @@ uint8_t buf2_reconstr[] = {
 
 	/* a NumericString */
 	18,			/* [UNIVERSAL 18] */
-	2,	/* L */
-  'n',
-  's',
+	4,	/* L */
+  '=',
+  '<',
+  '&',
+  '>',
 
 	/* b CHOICE { b1 IA5String }*/
 	22,			/* [UNIVERSAL 22] */
@@ -128,7 +136,7 @@ check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == consumed);
 
-	assert(strcmp(tp->a.buf, "ns") == 0);
+	assert(strcmp(tp->a.buf, "=<&>") == 0);
 	assert(strcmp(tp->b.choice.b1.buf, "z") == 0
 		&& strcmp(tp->b.choice.b2.buf, "z") == 0);
 
@@ -288,11 +296,12 @@ check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
 
 	xer_off = 0;
 	er = xer_encode(&asn_DEF_T, tp, XER_F_CANONICAL, xer_cb, 0);
-	assert(er.encoded == xer_off);
 	assert(xer_off);
 	xer_buf[xer_off] = 0;
-	printf("[%s] vs [%s]\n", xer_buf, xer_sample);
-	assert(xer_off = xer_sample_len);
+	printf("[%s] (%d/%d) vs [%s] (%d)\n",
+		xer_buf, er.encoded, xer_off, xer_sample, xer_sample_len);
+	assert(er.encoded == xer_off);
+	assert(xer_off == xer_sample_len);
 	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);
 }
 
@@ -307,12 +316,12 @@ main(int ac, char **av) {
 	check(&t, buf1, sizeof(buf1) + 10, sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
 	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
-	check_xer(buf1, sizeof(buf1), "<T><c><false/></c><b><b2>z</b2></b><a>ns</a><d><r-oid>85.79</r-oid></d></T>");
+	check_xer(buf1, sizeof(buf1), "<T><c><false/></c><b><b2>z</b2></b><a>=&lt;&amp;&gt;</a><d><r-oid>85.79</r-oid></d></T>");
 
 	check(&t, buf2, sizeof(buf2) + 10, sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
 	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
-	check_xer(buf2, sizeof(buf2), "<T><c><true/></c><b><b1>z</b1></b><a>ns</a><d><oid>2.1</oid></d></T>");
+	check_xer(buf2, sizeof(buf2), "<T><c><true/></c><b><b1>z</b1></b><a>=&lt;&amp;&gt;</a><d><oid>2.1</oid></d></T>");
 
 	/* Split the buffer in parts and check decoder restartability */
 	partial_read(buf1, sizeof(buf1));

@@ -210,7 +210,7 @@ check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
 	assert(xer_off);
 	xer_buf[xer_off] = 0;
 	printf("[%s] vs [%s]\n", xer_buf, xer_sample);
-	assert(xer_off = xer_sample_len);
+	assert(xer_off == xer_sample_len);
 	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);
 }
 
