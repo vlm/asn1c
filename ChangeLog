@@ -1,5 +1,5 @@
 
-0.9.5:	2004-Sep-14
+0.9.5:	2004-Sep-17
 
 	* Fixed CER (common BER) decoder code. See check-25.c/VisibleString
 	  case for details. X.690 specifies that inner structures in BER
