@@ -12,7 +12,11 @@ for ref in ../tests/*.asn1.-*; do
 	if [ $? = 0 ]; then
 		diff -a -u "$ref" "$tmpfile" || ec=$?
 	fi
-	rm -f "$tmpfile"
+	if [ "$1" != "regenerate" ]; then
+		rm -f "$tmpfile"
+	else
+		mv "$tmpfile" "$ref"
+	fi
 done
 
 exit $ec

@@ -23,11 +23,15 @@
 
 static void usage(char *av0);	/* Print the Usage screen and exit(EX_USAGE) */
 
+#undef	COPYRIGHT
+#define	COPYRIGHT	\
+	"Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>\n"
+
 int
 main(int ac, char **av) {
 	enum asn1p_flags     asn1_parser_flags	= A1P_NOFLAGS;
 	enum asn1f_flags     asn1_fixer_flags	= A1F_NOFLAGS;
-	enum asn1c_flags     asn1_compiler_flags= A1C_NOFLAGS;
+	enum asn1c_flags     asn1_compiler_flags= A1C_NO_C99;
 	enum asn1print_flags asn1_printer_flags	= APF_NOFLAGS;
 	int print_arg__print_out = 0;	/* Don't compile, just print parsed */
 	int print_arg__fix_n_print = 0;	/* Fix and print */
@@ -41,7 +45,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "EFf:LPp:RS:t:W:")) != -1)
+	while((ch = getopt(ac, av, "EFf:hLPp:RS:t:vW:")) != -1)
 	switch(ch) {
 	case 'E':
 		print_arg__print_out = 1;
@@ -56,28 +60,30 @@ main(int ac, char **av) {
 			asn1_parser_flags |= A1P_CONSTRUCTS_RESTRICT_TO_1990;
 		} else if(strcmp(optarg, "native-integers") == 0) {
 			asn1_compiler_flags |= A1C_USE_NATIVE_INTEGERS;
-		} else if(strcmp(optarg, "no-c99") == 0) {
-			asn1_compiler_flags |= A1C_NO_C99;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
 		} else if(strncmp(optarg, "known-extern-type=", 18) == 0) {
 			char *known_type = optarg + 18;
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
+		} else if(strcmp(optarg, "bless-SIZE") == 0) {
+			asn1_fixer_flags |= A1F_EXTENDED_SizeConstraint;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
 		}
 		break;
-	case 'L':
-		asn1_printer_flags |= APF_LINE_COMMENTS;
-		break;
+	case 'h':
+		usage(av[0]);
 	case 'P':
 		asn1_compiler_flags |= A1C_PRINT_COMPILED;
+		asn1_compiler_flags &= ~A1C_NO_C99;
 		break;
 	case 'p':
 		if(strcmp(optarg, "rint-constraints") == 0) {
 			asn1_printer_flags |= APF_DEBUG_CONSTRAINTS;
+		} else if(strcmp(optarg, "rint-lines") == 0) {
+			asn1_printer_flags |= APF_LINE_COMMENTS;
 		} else {
 			fprintf(stderr, "-p%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
@@ -93,6 +99,10 @@ main(int ac, char **av) {
 		if(decode_tlv_from_string(optarg))
 			exit(EX_DATAERR);
 		exit(0);
+	case 'v':
+		fprintf(stderr, "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT);
+		exit(0);
+		break;
 	case 'W':
 		if(strcmp(optarg, "error") == 0) {
 			warnings_as_errors = 1;
@@ -125,8 +135,7 @@ main(int ac, char **av) {
 		}
 		if(asn1_printer_flags) {
 			fprintf(stderr, "Error: "
-				"-L and -print-constraints "
-				"require -E\n");
+				"-print-... arguments require -E\n");
 			exit(EX_USAGE);
 		}
 	}
@@ -255,36 +264,41 @@ main(int ac, char **av) {
 static void
 usage(char *av0) {
 	fprintf(stderr,
-	"ASN.1 Compiler, v" VERSION "\n"
-	"Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>\n"
-	"Usage: %s [options] ...\n"
-	"Where [options] are:\n"
-	"\t-E\tRun only the ASN.1 parser and print out the tree\n"
-	"\t-F\tDuring -E operation, also perform tree fixing\n"
-	"\t-L\tGenerate \"-- #line\" comments in -E output\n"
-	"\n"
-	"\t-P      \tConcatenate and print the compiled text\n"
-	"\t-R      \tRestrict output (tables only, no support code)\n"
-	"\t-S <dir>\tDirectory with support (skeleton?) files\n"
-	"\t        \t(Default is \"%s\")\n"
-	"\n"
-	"\t-t <data>\tDecode the given tag[/length] sequence\n"
-	"\n"
-	"\t-ftypes88\tUse only ASN.1:1988 embedded types\n"
+"ASN.1 Compiler, v" VERSION "\n" COPYRIGHT
+"Usage: %s [options] infile...\n"
+"Where [options] are:\n"
+"  -E                    Run only the ASN.1 parser and print out the tree\n"
+"  -F                    During -E operation, also perform tree fixing\n"
+"\n"
+"  -P                    Concatenate and print the compiled text\n"
+"  -R                    Restrict output (tables only, no support code)\n"
+"  -S <dir>              Directory with support (skeleton?) files\n"
+"                        (Default is \"%s\")\n"
+"\n"
+
+"  -t <data-string>      Decode the given tag[/length] sequence\n"
+"                        (e.g. -t \"bf 20\")\n"
+"\n"
+
+"  -Werror               Treat warnings as errors; abort if any warning\n"
+"  -Wdebug-lexer         Enable verbose debugging output from lexer\n"
+"  -Wdebug-fixer         --//-- semantics processor\n"
+"  -Wdebug-compiler      --//-- compiler\n"
+"\n"
+
+"  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
 /*
-	"\t-fconstr90\tUse only ASN.1:1990 constructs (not available)\n"
+"  -fconstr90            Use only ASN.1:1990 constructs (not available)\n"
 */
-	"\t-fknown-extern-type=<name>\tPretend this type is known\n"
-	"\t-fnative-integers\tUse int instead of INTEGER_t whenever possible\n"
-	"\t-fno-c99\tDisable C99 extensions\n"
-	"\t-funnamed-unions\tEnable unnamed unions in structures\n"
-	"\n"
-	"\t-print-constraints\tExplain subtype constraints (debug)\n"
-	"\n"
-	"\t-Werror \tTreat warnings as errors; abort if any warning\n"
-	"\t-Wdebug-lexer\tEnable verbose debugging output from lexer\n"
-	"\t-Wdebug-fixer\tDebug ASN.1 semantics processor\n"
-	"\t-Wdebug-compiler\tDebug ASN.1 compiler\n"
+"  -fknown-extern-type=<name>    Pretend this type is known\n"
+"  -fnative-integers     Use int instead of INTEGER_t whenever possible\n"
+"  -funnamed-unions      Enable unnamed unions in structures\n"
+"  -ftypes88             Use only ASN.1:1988 embedded types\n"
+"\n"
+
+"  -print-constraints    Explain subtype constraints (debug)\n"
+"  -print-lines          Generate \"-- #line\" comments in -E output\n"
+
 	,
 	a1c_basename(av0), DATADIR
 	);
