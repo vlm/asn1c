@@ -33,22 +33,29 @@ while(<>) {
 		# The least correct way to find the start of ASN
 		# definition.
 		#
-		if(/^[ \t]*END[ \t]*$/) {
+		if(/^[ \t]*END[ \t]*(--.*)?$/) {
 			print STDERR
 			"Missed an ASN.1 grammar before line ". $. ."?\n";
-			unlink($currentFile) or die "Can't remove $!";
-			print STDERR "Removed $currentFile";
 			exit(1);
 		}
 
+		my $modName = '';	# ASN.1 module name
 		my $rfcid = '';
 		$rfcid = $1 . '-' if($ARGV =~ /([a-z0-9]+)/i);
 
-		if(/^[ \t]+([A-Za-z0-9-]+).*DEFINITIONS.*::=/) {
-			$currentFname = $rfcid . $1 . ".asn1";
+		if(/^[ \t]+([A-Z][A-Za-z0-9-]*).*DEFINITIONS.*::=/) {
+			$modName = $1;
+			$currentFname = $rfcid . $modName . ".asn1";
 			$inasn = 1;
-		} elsif(/^[ \t]*([A-Za-z0-9-]+).*{.*iso/) {
-			$currentFname = $rfcid . $1 . ".asn1";
+		} elsif(/^[ \t]*([A-Z][A-Za-z0-9-]*).*{[ \t]*iso/
+		|| /^[ \t]*{[ \t]*iso/) {
+			$modName = $1;
+			unless(length($modName)) {
+				next unless $prevLine =~
+					/^[ \t]*([A-Z][A-Za-z0-9-]*)[ \t]*$/;
+				$modName = $1;
+			}
+			$currentFname = $rfcid . $modName . ".asn1";
 			my @a = ($_);
 			my $i;
 			for($i = 0; $i < 8; $i++) {
@@ -62,10 +69,11 @@ while(<>) {
 			}
 			next unless $inasn;
 		} else {
+			$prevLine = $_;
 			next;
 		}
 
-		print STDERR "Found $1 at line $. => $currentFname\n";
+		print STDERR "Found $modName at line $.\n=> Saving as $currentFname\n";
 		open(O, "> $currentFname") or die "Can't open $currentFname";
 		select(O);
 
@@ -77,7 +85,7 @@ while(<>) {
 		print "\n";
 	}
 
-	if(/^[ \t]*END[ \t]*$/) {
+	if(/^[ \t]*END[ \t]*(--.*)?$/) {
 		print;
 		select(STDOUT);
 		close(O);
@@ -92,7 +100,7 @@ while(<>) {
 	# ASN.1 extraction and do not want to alter the ASN.1 specs.
 	#
 	if(
-/^(.*)((UniversalString|BMPString|UTF8String)\s+::=\s+\[[A-Z]+\s\d+\]\sIMPLICIT\sOCTET\sSTRING)(.*)$/ms
+/^([ \t]*)((UniversalString|BMPString|UTF8String)\s+::=\s+\[[A-Z]+\s\d+\]\sIMPLICIT\sOCTET\sSTRING)(.*)$/ms
 	) {
 		print "\n-- Legacy redefinition of $3 removed by $0:\n";
 		print "$1-- $2 -- $4";
