@@ -54,6 +54,16 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 		flags &= ~A1F_DEBUG;
 	}
 
+	/* Allow SIZE() constraint for INTEGER and other types */
+	if(flags & A1F_EXTENDED_SizeConstraint) {
+		arg.flags |= A1F_EXTENDED_SizeConstraint;
+		flags &= ~A1F_EXTENDED_SizeConstraint;
+		if(arg.debug) {
+			arg.debug(-1,
+				"Extended SizeConstraint support enabled");
+		}
+	}
+
 	a1f_replace_me_with_proper_interface_arg = arg;
 
 	/*
@@ -273,16 +283,21 @@ asn1f_fix_constructed(arg_t *arg) {
 static int
 asn1f_fix_constraints(arg_t *arg) {
 	asn1p_expr_t *top_parent;
+	asn1p_expr_type_e etype;
 	int rvalue = 0;
 	int ret;
 
-	ret = asn1constraint_resolve(arg, arg->expr->constraints);
+	top_parent = asn1f_find_terminal_type(arg, arg->expr, NULL);
+	if(top_parent)
+		etype = top_parent->expr_type;
+	else	etype = A1TC_INVALID;
+
+	ret = asn1constraint_resolve(arg, arg->expr->constraints, etype, 0);
 	RET2RVAL(ret, rvalue);
 
 	ret = asn1constraint_pullup(arg);
 	RET2RVAL(ret, rvalue);
 
-	top_parent = asn1f_find_terminal_type(arg, arg->expr, NULL);
 	if(top_parent) {
 		static enum asn1p_constraint_type_e test_types[] = {
 			ACT_EL_RANGE, ACT_CT_SIZE, ACT_CT_FROM };

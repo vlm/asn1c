@@ -120,8 +120,7 @@ asn1constraint_pullup(arg_t *arg) {
 }
 
 int
-asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct) {
-	asn1p_expr_t *top_parent;
+asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e etype, enum asn1p_constraint_type_e effective_type) {
 	int rvalue = 0;
 	int ret;
 	int el;
@@ -130,6 +129,18 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 
 	/* Don't touch information object classes */
 	switch(ct->type) {
+	case ACT_CT_SIZE:
+	case ACT_CT_FROM:
+		if(effective_type && effective_type != ct->type) {
+			FATAL("%s at line %d: "
+				"Incompatible nested %s within %s",
+				arg->expr->Identifier, ct->_lineno,
+				asn1p_constraint_type2str(ct->type),
+				asn1p_constraint_type2str(effective_type)
+			);
+		}
+		effective_type = ct->type;
+		break;
 	case ACT_CT_WCOMP:
 	case ACT_CT_WCOMPS:
 	case ACT_CA_CRC:
@@ -138,21 +149,26 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 		break;
 	}
 
-	top_parent = asn1f_find_terminal_type(arg, arg->expr, 0);
-	if(top_parent) {
-		ret = asn1constraint_compatible(top_parent->expr_type,
-			ct->type);
+	if(etype != A1TC_INVALID) {
+		enum asn1p_constraint_type_e check_type;
+
+		check_type = effective_type ? effective_type : ct->type;
+
+		ret = asn1constraint_compatible(etype, check_type);
 		switch(ret) {
 		case -1:	/* If unknown, assume OK. */
 		case  1:
 			break;
 		case 0:
+			if(effective_type == ACT_CT_SIZE
+			&& (arg->flags & A1F_EXTENDED_SizeConstraint))
+				break;
 		default:
 			FATAL("%s at line %d: "
 				"Constraint type %s is not applicable to %s",
 				arg->expr->Identifier, ct->_lineno,
-				asn1p_constraint_type2str(ct->type),
-				ASN_EXPR_TYPE2STR(top_parent->expr_type)
+				asn1p_constraint_type2str(check_type),
+				ASN_EXPR_TYPE2STR(etype)
 			);
 			rvalue = -1;
 			break;
@@ -163,6 +179,9 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 			arg->expr->Identifier, arg->expr->_lineno);
 	}
 
+	/*
+	 * Resolve all possible references, wherever they occur.
+	 */
 	if(ct->value && ct->value->type == ATV_REFERENCED) {
 		ret = _constraint_value_resolve(arg, &ct->value);
 		RET2RVAL(ret, rvalue);
@@ -176,8 +195,12 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 		RET2RVAL(ret, rvalue);
 	}
 
+	/*
+	 * Proceed recursively.
+	 */
 	for(el = 0; el < ct->el_count; el++) {
-		ret = asn1constraint_resolve(arg, ct->elements[el]);
+		ret = asn1constraint_resolve(arg, ct->elements[el],
+			etype, effective_type);
 		RET2RVAL(ret, rvalue);
 	}
 
