@@ -1,0 +1,315 @@
+
+/*** <<< INCLUDES [Test-structure-1] >>> ***/
+
+#include <Test-structure-1.h>
+#include <INTEGER.h>
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [Test-structure-1] >>> ***/
+
+extern asn1_TYPE_descriptor_t asn1_DEF_Test_structure_1;
+
+/*** <<< TYPE-DECLS [Test-structure-1] >>> ***/
+
+
+typedef struct Test_structure_1 {
+	struct t_member1 {
+		A_SET_OF(struct Test_structure_1) list;
+		
+		/* Context for parsing across buffer boundaries */
+		ber_dec_ctx_t _ber_dec_ctx;
+	} t_member1;
+	struct t_member2 {
+		A_SEQUENCE_OF(struct Test_structure_1) list;
+		
+		/* Context for parsing across buffer boundaries */
+		ber_dec_ctx_t _ber_dec_ctx;
+	} t_member2;
+	struct Test_structure_1	*t_member3	/* OPTIONAL */;
+	INTEGER_t	 t_member4;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} Test_structure_1_t;
+
+/*** <<< STAT-DEFS [Test-structure-1] >>> ***/
+
+static asn1_TYPE_member_t asn1_MBR_t_member1[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_Test_structure_1,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn1_DEF_t_member1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_t_member1_specs = {
+	sizeof(struct t_member1),
+	offsetof(struct t_member1, _ber_dec_ctx),
+};
+static /* Use -fall-defs-global to expose */
+asn1_TYPE_descriptor_t asn1_DEF_t_member1 = {
+	"t-member1",
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_print,
+	SET_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_t_member1_tags,
+	sizeof(asn1_DEF_t_member1_tags)
+		/sizeof(asn1_DEF_t_member1_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_t_member1,
+	1,	/* Single element */
+	&asn1_DEF_t_member1_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_t_member2[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_Test_structure_1,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn1_DEF_t_member2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_t_member2_specs = {
+	sizeof(struct t_member2),
+	offsetof(struct t_member2, _ber_dec_ctx),
+};
+static /* Use -fall-defs-global to expose */
+asn1_TYPE_descriptor_t asn1_DEF_t_member2 = {
+	"t-member2",
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_t_member2_tags,
+	sizeof(asn1_DEF_t_member2_tags)
+		/sizeof(asn1_DEF_t_member2_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_t_member2,
+	1,	/* Single element */
+	&asn1_DEF_t_member2_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_Test_structure_1[] = {
+	{ 0, offsetof(struct Test_structure_1, t_member1),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_t_member1,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "t-member1"
+		},
+	{ 0, offsetof(struct Test_structure_1, t_member2),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_t_member2,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "t-member2"
+		},
+	{ 1, offsetof(struct Test_structure_1, t_member3),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_Test_structure_1,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "t-member3"
+		},
+	{ 0, offsetof(struct Test_structure_1, t_member4),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "t-member4"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_Test_structure_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_Test_structure_1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 3, 0, 0 }, /* t-member4 at 19 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 1 }, /* t-member2 at 16 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, -1, 0 }, /* t-member3 at 17 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 }, /* t-member1 at 15 */
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_Test_structure_1_specs = {
+	sizeof(struct Test_structure_1),
+	offsetof(struct Test_structure_1, _ber_dec_ctx),
+	asn1_DEF_Test_structure_1_tag2el,
+	4,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_Test_structure_1 = {
+	"Test-structure-1",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_Test_structure_1_tags,
+	sizeof(asn1_DEF_Test_structure_1_tags)
+		/sizeof(asn1_DEF_Test_structure_1_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_Test_structure_1,
+	4,	/* Elements count */
+	&asn1_DEF_Test_structure_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Choice-1] >>> ***/
+
+#include <Choice-1.h>
+#include <INTEGER.h>
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Choice-1] >>> ***/
+
+typedef enum Choice_1_PR {
+	Choice_1_PR_NOTHING,	/* No components present */
+	Choice_1_PR_and,
+	Choice_1_PR_or,
+	Choice_1_PR_not,
+	Choice_1_PR_other,
+} Choice_1_PR;
+extern asn1_TYPE_descriptor_t asn1_DEF_Choice_1;
+
+/*** <<< TYPE-DECLS [Choice-1] >>> ***/
+
+
+typedef struct Choice_1 {
+	Choice_1_PR present;
+	union {
+		struct Choice_1	 and;
+		struct or {
+			A_SET_OF(struct Choice_1) list;
+			
+			/* Context for parsing across buffer boundaries */
+			ber_dec_ctx_t _ber_dec_ctx;
+		} or;
+		struct Choice_1	 not;
+		INTEGER_t	 other;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} Choice_1_t;
+
+/*** <<< STAT-DEFS [Choice-1] >>> ***/
+
+static asn1_TYPE_member_t asn1_MBR_or[] = {
+	{ 0, 0,
+		.tag = -1 /* Ambiguous tag (CHOICE|ANY?) */,
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_Choice_1,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn1_DEF_or_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_or_specs = {
+	sizeof(struct or),
+	offsetof(struct or, _ber_dec_ctx),
+};
+static /* Use -fall-defs-global to expose */
+asn1_TYPE_descriptor_t asn1_DEF_or = {
+	"or",
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_print,
+	SET_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_or_tags,
+	sizeof(asn1_DEF_or_tags)
+		/sizeof(asn1_DEF_or_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_or,
+	1,	/* Single element */
+	&asn1_DEF_or_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_Choice_1[] = {
+	{ 0, offsetof(struct Choice_1, choice.and),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = (void *)&asn1_DEF_Choice_1,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "and"
+		},
+	{ 0, offsetof(struct Choice_1, choice.or),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn1_DEF_or,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "or"
+		},
+	{ 0, offsetof(struct Choice_1, choice.not),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = (void *)&asn1_DEF_Choice_1,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "not"
+		},
+	{ 0, offsetof(struct Choice_1, choice.other),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = (void *)&asn1_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "other"
+		},
+};
+static asn1_TYPE_tag2member_t asn1_DEF_Choice_1_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* and at 22 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* or at 23 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* not at 24 */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 3, 0, 0 }, /* other at 26 */
+};
+static asn1_CHOICE_specifics_t asn1_DEF_Choice_1_specs = {
+	sizeof(struct Choice_1),
+	offsetof(struct Choice_1, _ber_dec_ctx),
+	offsetof(struct Choice_1, present),
+	sizeof(((struct Choice_1 *)0)->present),
+	asn1_DEF_Choice_1_tag2el,
+	4,	/* Count of tags in the map */
+	0	/* Whether extensible */
+};
+asn1_TYPE_descriptor_t asn1_DEF_Choice_1 = {
+	"Choice-1",
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_print,
+	CHOICE_free,
+	CHOICE_outmost_tag,
+	0,	/* No explicit tags (pointer) */
+	0,	/* No explicit tags (count) */
+	0,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_Choice_1,
+	4,	/* Elements count */
+	&asn1_DEF_Choice_1_specs	/* Additional specs */
+};
+

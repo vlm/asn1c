@@ -14,13 +14,15 @@ BEGIN
 	Test-structure-1 ::= SEQUENCE {
 		t-member1 SET OF Test-structure-1,
 		t-member2 SEQUENCE OF Test-structure-1,
-		t-member3 Test-structure-1 OPTIONAL
+		t-member3 Test-structure-1 OPTIONAL,
+		t-member4 INTEGER
 	}
 
-	Sets ::= SEQUENCE {
-		s-member1 SET OF INTEGER,
-		s-member2 SET OF ENUMERATED { a, b },
-		s-member3 SET OF IA5String
+	Choice-1 ::= CHOICE {
+		and   [1] Choice-1,
+		or    [2] IMPLICIT SET OF Choice-1,
+		not   [3] Choice-1,
+		other [4] INTEGER
 	}
 
 END
