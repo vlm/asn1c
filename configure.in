@@ -61,9 +61,10 @@ case "$GCC" in
    CFLAGS="$CFLAGS -Wshadow"
    CFLAGS="$CFLAGS -Wcast-qual"
    CFLAGS="$CFLAGS -Wcast-align"
+   CFLAGS="$CFLAGS -Wpointer-arith"
+   CFLAGS="$CFLAGS -Wchar-subscripts"
    CFLAGS="$CFLAGS -Wmissing-prototypes"
    CFLAGS="$CFLAGS -Wmissing-declarations"
-   CFLAGS="$CFLAGS -Wredundant-decls"
    ;;
 esac
 
