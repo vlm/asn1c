@@ -1,0 +1,18 @@
+MAJOR:
+
+1. Support for the explicit subtype constraints:
+	Name ::= IA5String (FROM("A".."Z"))
+   Status: in progress.
+
+2. Support for Information Object Classes.
+   Status: support for parsing IOCs is mostly present. Support for slicing
+   the IOCs to produce "views" is not yet designed.
+
+3. Support for PER encoding. Requires advanced subtype constraints support (#1)
+
+4. Support for XER encoding.
+
+MISC:
+
+1. Make sure asn1_DEF_<TYPE>_tags is not an empty structure.
+

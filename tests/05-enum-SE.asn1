@@ -1,0 +1,21 @@
+
+-- SE: Semantic error
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .5
+
+ModuleTestEnum3
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 5 }
+	DEFINITIONS ::=
+BEGIN
+
+	enum1 Enum1 ::= red
+
+	Enum1 ::= ENUMERATED { red(5), green(4), ..., blue(6),
+		-- second extension marker is not allowed --
+		...,
+		white(7) }
+
+END

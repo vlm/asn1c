@@ -1,0 +1,6 @@
+
+This directory contains several convertors from known text formats into
+the ASN.1 specifications, as well as examples of these formats and the
+sample convertor's output.
+
+Try ../asn1c/asn1c -P *PKIX*93.asn1

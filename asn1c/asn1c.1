@@ -1,0 +1,99 @@
+.de Id
+..
+.Id $Id"
+.TH ASN1C 1 "\*(Dt" "ASN.1 Compiler" "ASN.1 Compiler"
+.SH NAME
+asn1c \- ASN.1 Compiler
+.ND ASN.1 compiler
+.SH SYNOPSIS
+.B asn1c
+.RI "[ " option " | " filename " ].\|.\|."
+.SH DESCRIPTION
+asn1c is a tool to compile the ASN.1 specifications into C language structures
+and accompanying routines to perform data encoding and decoding.
+.SH OPTIONS
+.TP
+.B Overall Options
+\-E
+\-F
+\-L
+\-N
+\-P
+.RI "\-S " directory
+\-R
+.TP
+.B Language Options
+.br
+\-ftypes88
+\-fnative-integers
+\-fno-c99
+\-funnamed-unions
+.TP
+.B Warning Options
+.br
+\-Werror
+\-Wdebug-lexer
+\-Wdebug-fixer
+\-Wdebug-compiler
+.SH OVERALL OPTIONS
+.TP
+.B \-E
+Stop after the parsing stage. The output is reconstructed ASN.1
+specification code, which is sent to the standard output.
+.TP
+.B \-F
+Used together with \c
+.B \-E\c
+, instructs the compiler to stop after the ASN.1 syntax
+tree fixing stage and dump the reconstructed ASN.1 specification
+to the standard output.
+.TP
+.B \-L
+Generate "-- #line" comments in
+.B -E
+output.
+.TP
+.B \-N
+Do not generate certain type of comments in
+.B -E
+output.
+.TP
+.B \-P
+Dump the compiled output to the standard output instead of creating the
+target language files on disk.
+.TP
+.B \-S directory
+Use the specified directory with ASN.1 skeleton files.
+.TP
+.B \-R
+Restrict the compiler to generate only the ASN.1 tables,
+omitting the usual support code.
+.SH LANGUAGE OPTIONS
+.TP
+.B \-ftypes88
+Use only ASN.1:1988 embedded types.
+.TP
+.B \-fnative-integers
+Use native machine's integer types whenever possible,
+instead of the complex ASN.1 INTEGER and ENUMERATED types.
+.TP
+.B \-fno-c99
+Disable use of certain C99 extensions, like designated initializers.
+.TP
+.B \-funnamed-unions
+Enable unnamed unions in structures definitions.
+.SH WARNING OPTIONS
+.TP
+.B \-Werror
+Treat warnings as errors; abort if any warning is produced.
+.TP
+.B \-Wdebug-lexer
+Enable lexer debugging during the ASN.1 parsing stage.
+.TP
+.B \-Wdebug-fixer
+Enable ASN.1 syntax tree fixer debugging during the fixing stage.
+.TP
+.B \-Wdebug-compiler
+Enable debugging during the actual compile time.
+.SH AUTHORS
+Lev Walkin <vlm@lionet.info>

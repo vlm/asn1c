@@ -1,0 +1,130 @@
+
+0.8.10:	2004-Jun-02
+
+	* Added const qualifier where necessary.
+	* Changed position of outmost_tag fetcher within asn1_TYPE_descriptor_t
+	  structure.
+
+0.8.9:	2004-May-26
+
+	* Added *_{get|set}_arcs_*() functions for OBJECT IDENTIFIER
+	  and RELATIVE-OID, together with test cases.
+
+0.8.8:	2004-May-09
+
+	* Introduced subtype constraints support (incomplete!).
+	* Fixed compiler. If the last member of the SEQUENCE is OPTIONAL
+	  and absent in the encoding, and the type is extensible (...) or
+	  EXTENSIBILITY IMPLIED flag is set, then the structure could not
+	  be correctly decoded. (Severity: high, Security impact: low).
+	* Compiler: fixed recursive ASN.1 types inclusion (Severity: low,
+	  Security impact: none).
+	* Parser: IMPORTS/FROM fixes, now allowing multiple sections.
+	* Code compiled and checked on PowerPC (@MacOS X). No major portability
+	  issues experienced.
+
+0.8.7:	2004-Apr-11	T-version-0-8-7
+
+	* Fixed SEQUENCE BER decoder: if the last member of the SEQUENCE is
+	  OPTIONAL and absent in the encoding, RC_FAIL was returned instead
+	  of RC_OK (Severity: high, Security impact: low).
+	* Added test case to check the above problem.
+	* Added test case to check -fnative-integers mode.
+
+0.8.6:	2004-Apr-03	T-version-0-8-6
+
+	* Fixed compiler output for embedded ASN.1 structures.
+
+0.8.5:	2004-Mar-28	T-version-0-8-5
+
+	* Fixed ber_tlv_length() computation problem (Severity: blocker,
+	  Security impact: none).
+	  Reported by <vss@high.net.ru>
+
+0.8.4:	2004-Mar-22
+
+	* Removed RC_ITAG enumeration element from BER decoder.
+	  This return code did not have much practical value.
+
+0.8.3:	2004-Mar-14	T-version-0-8-3
+
+	* Fixed SET::BER decoder: restart after reaching a buffer boundary
+	  weas broken (Severity: blocker, Security impact: low).
+	* Fixed OCTET STRING::BER decoder: restart after reaching a buffer
+	  boundary was broken (Severity: blocker, Security impact: low).
+	  Reported by <vss@high.net.ru>
+	* Added test cases to check decoders restartability.
+	* Slightly more general INTEGER2long decoder.
+	* Allowed nested /* C-type */ comments, as per X.680:2002.
+
+0.8.2:	2004-Mar-01	T-version-0-8-2
+
+	* Fixed SEQUENCE BER decoder: an OPTIONAL element was required, where
+	  should not have been (Severity: major; Security impact: low).
+	* Fixed print_struct pointer inheritance.
+	* Added -fno-c99 and -funnamed-unions
+
+0.8.1:	2004-Feb-22
+
+	* -R switch to asn1c: Omit support code, compile only the tables.
+	* Introduced NativeInteger pseudotype.
+	* Corrected the informal print_struct()'s output format.
+
+0.8.0:	2004-Feb-03	T-version-0-8-0
+
+	* Some documentation is created (a .pdf and a short manual page).
+	* Last touches to the code.
+
+0.7.9:	2004-Feb-01	T-version-0-7-9
+
+	* Human readable printing support.
+	* Support for implicit (standard) constraints.
+
+0.7.8:	2004-Jan-31
+
+	* SET now rejects duplicate fields in the data stream.
+
+0.7.7:	2004-Jan-25
+
+	* Added types: GeneralizedTime and UTCTime.
+
+0.7.6:	2004-Jan-24	T-version-0-7-6
+
+	* DER encoding of a SET OF now involves dynamic sorting.
+
+0.7.5:	2004-Jan-24	T-version-0-7-5
+
+	* DER encoding of a SET with untagged CHOICE
+	  now involves dynamic sorting.
+
+0.7.0:	2004-Jan-19	T-version-0-7-0
+
+	* A bunch of DER encoders is implemented.
+
+0.6.6:	2004-Jan-11
+
+	* Implemented CHOICE decoder.
+	* Implemented destructors support.
+
+0.6.5:	2004-Jan-03
+
+	* Implemented SET decoder.
+	* Implemented SET OF and SEQUENCE OF decoders.
+
+0.6.4:	2003-Dec-31
+
+	* Implemented BOOLEAN, NULL, ENUMERATED decoders.
+	* Implemented OCTET STRING decoder.
+	* Implemented BIT STRING decoder.
+
+0.6:	2003-Dec-30
+
+	* First decoding of a BER-encoded structure!
+
+0.5:	2003-Dec-28
+
+	* Framework and most of the compiler backbone coding done.
+
+0.1:	2003-Nov-28
+
+	* Programming started.

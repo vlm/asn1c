@@ -1,0 +1,29 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .10
+
+ModuleTestInt4
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 10 }
+	DEFINITIONS ::=
+BEGIN
+
+	alpha INTEGER ::= 1
+	Type1 ::= INTEGER { alpha(2) }
+	Type2 ::= INTEGER { alpha(3), beta(alpha) }
+	gamma Type2 ::= beta	-- equals 1 --
+	delta Type2 ::= alpha	-- equals 3 --
+
+	/*
+	 *  The following are for post-fix checking by the check_fixer.
+	 * It will be able to pick-up these values if the file is parseable,
+	 * even if it contains some semantic errors.
+	 */
+
+	check-gamma INTEGER ::= 1	-- check "gamma"'s value
+	check-delta INTEGER ::= 3	-- check "delta"'s value
+
+END

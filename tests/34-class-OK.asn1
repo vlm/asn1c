@@ -1,0 +1,51 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .34
+
+ModuleTestClassSimple
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 34 }
+	DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+	-- First CLASS
+
+	EXTENSION ::= CLASS {
+		&id	OBJECT IDENTIFIER UNIQUE,
+		&ExtnType
+	} WITH SYNTAX {
+		SYNTAX		&ExtnType
+		IDENTIFIED BY	&id
+	}
+
+	-- Basic CLASS extraction
+	Ext1	::= SEQUENCE {
+			extnId	EXTENSION.&id
+		}
+
+	-- Second CLASS
+
+	EXTENSION-ATTRIBUTE ::= CLASS {
+		&id	INTEGER (0..ub-extension-attributes) UNIQUE,
+		&Type
+	} WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+	terminal-type EXTENSION-ATTRIBUTE ::= {TerminalType IDENTIFIED BY 23}
+
+	-- Advanced CLASS extraction
+
+	ExtensionAttribute ::= SEQUENCE {
+		extension-attribute-type [0] EXTENSION-ATTRIBUTE.&id
+				({ExtensionAttributeTable}),
+		extension-attribute-value [1] EXTENSION-ATTRIBUTE.&Type
+			({ExtensionAttributeTable} {@extension-attribute-type})
+	}
+
+	-- Variables referenced by subtype constraints
+
+	ub-extension-attributes INTEGER ::= 256
+
+END

@@ -1,0 +1,31 @@
+
+0. ASN.1 grammar parser is written mostly with respect to constructing a tree,
+so a tree destruction is not fully supported and certain memory leaks are
+known. Not a huge problem for run-once programs like a compiler.
+NOTE:	This statement does not apply to the target code _produced_
+	by the compiler.
+
+1. REAL type is not supported yet.
+
+2. For purposes of compilation, INTEGER type is modelled using a large
+static type (asn_integer_t), but defined as any positive or negative value
+by ASN.1. Not a problem as most specifications use very small values anyway.
+NOTE:	This statement does not apply to the target code _produced_
+	by the compiler.
+
+3. ASN Macros are prohibited by the current ASN.1 standard,
+and are not supported.
+
+4. Multiple tags applied at the same level are not supported:
+	BadTags ::= [0] EXPLICIT [2] IMPLICIT OtherType
+   The same thing could be achieved by using the indirection:
+	GoodTags     ::= [0] EXPLICIT OtherTypePtr
+	OtherTypePtr ::= [2] IMPLICIT OtherType
+
+5. Mixed definite/indefinite length in a _single_ BER tags sequence is not
+supported. Should not be a problem in the real world. Please note that it
+is still possible, for example, to encode a wrapper structure using definite
+length, and encode its substructure member using indefinite length. The BER
+decoder is perfectly capable of decoding such sequences.
+
+

@@ -1,0 +1,6 @@
+
+This is a very funny test automation. The name of the check-*.c file is used
+as a pointer to the file in ../..//tests/*-*.asn1. This file is compiled
+using the asn1c from above directory. Then, everything is build together
+in a temporary directory with a check-*.c used as a testing engine.
+

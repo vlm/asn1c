@@ -1,0 +1,171 @@
+
+/*** <<< DEPS [T] >>> ***/
+
+/* Dependencies for T */
+#include <INTEGER.h>
+
+/* Dependencies for collection */
+#include <T2.h>
+#include <asn_SEQUENCE_OF.h>
+
+	#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE.h>
+
+extern asn1_TYPE_descriptor_t asn1_DEF_T;
+
+/*** <<< TYPE-DECLS [T] >>> ***/
+
+
+typedef struct T {
+	INTEGER_t	 int;
+	struct collection {
+		A_SEQUENCE_OF(struct T2) list;
+		
+		/* Context for parsing across buffer boundaries */
+		ber_dec_ctx_t _ber_dec_ctx;
+	} collection;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} T_t;
+
+/*** <<< STAT-DEFS [T] >>> ***/
+
+	static asn1_SET_OF_element_t asn1_DEF_collection_elements[] = {
+		{ (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+			(void *)&asn1_DEF_T2 },
+	};
+	static ber_tlv_tag_t asn1_DEF_collection_tags[] = {
+		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+	};
+	static asn1_SET_OF_specifics_t asn1_DEF_collection_specs = {
+		sizeof(struct collection),
+		offsetof(struct collection, _ber_dec_ctx),
+		asn1_DEF_collection_elements
+	};
+	asn1_TYPE_descriptor_t asn1_DEF_collection = {
+		"collection",
+		SEQUENCE_OF_constraint,
+		SEQUENCE_OF_decode_ber,
+		SEQUENCE_OF_encode_der,
+		SEQUENCE_OF_print,
+		SEQUENCE_OF_free,
+		0,	/* Use generic outmost tag fetcher */
+		asn1_DEF_collection_tags,
+		sizeof(asn1_DEF_collection_tags)
+			/sizeof(asn1_DEF_collection_tags[0]),
+		0,	/* Tags to skip */
+		1,	/* Whether CONSTRUCTED */
+		&asn1_DEF_collection_specs	/* Additional specs */
+	};
+	
+#include <constr_SEQUENCE.h>
+
+static asn1_SEQUENCE_element_t asn1_DEF_T_elements[] = {
+	{ offsetof(struct T, int), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		0,
+		(void *)&asn1_DEF_INTEGER,
+		"int"
+		},
+	{ offsetof(struct T, collection), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		0,
+		(void *)&asn1_DEF_collection,
+		"collection"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_T_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_T_specs = {
+	sizeof(struct T),
+	offsetof(struct T, _ber_dec_ctx),
+	asn1_DEF_T_elements,
+	2,	/* Elements count */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_T = {
+	"T",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_T_tags,
+	sizeof(asn1_DEF_T_tags)
+		/sizeof(asn1_DEF_T_tags[0]),
+	0,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	&asn1_DEF_T_specs	/* Additional specs */
+};
+
+
+/*** <<< DEPS [T2] >>> ***/
+
+/* Dependencies for T2 */
+#include <BOOLEAN.h>
+#include <UTF8String.h>
+
+#include <constr_SEQUENCE.h>
+
+extern asn1_TYPE_descriptor_t asn1_DEF_T2;
+
+/*** <<< TYPE-DECLS [T2] >>> ***/
+
+
+typedef struct T2 {
+	BOOLEAN_t	 flag;
+	UTF8String_t	 str;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} T2_t;
+
+/*** <<< STAT-DEFS [T2] >>> ***/
+
+#include <constr_SEQUENCE.h>
+
+static asn1_SEQUENCE_element_t asn1_DEF_T2_elements[] = {
+	{ offsetof(struct T2, flag), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
+		0,
+		(void *)&asn1_DEF_BOOLEAN,
+		"flag"
+		},
+	{ offsetof(struct T2, str), 0,
+		(ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
+		0,
+		(void *)&asn1_DEF_UTF8String,
+		"str"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_T2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_T2_specs = {
+	sizeof(struct T2),
+	offsetof(struct T2, _ber_dec_ctx),
+	asn1_DEF_T2_elements,
+	2,	/* Elements count */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_T2 = {
+	"T2",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_T2_tags,
+	sizeof(asn1_DEF_T2_tags)
+		/sizeof(asn1_DEF_T2_tags[0]),
+	0,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	&asn1_DEF_T2_specs	/* Additional specs */
+};
+
