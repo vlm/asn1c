@@ -1,7 +1,7 @@
 
 AM_CPPFLAGS =	\
-	-I${top_srcdir}/libasn1parser	\
-	-I${top_srcdir}/libasn1fix
+	-I$(top_srcdir)/libasn1parser	\
+	-I$(top_srcdir)/libasn1fix
 
 noinst_LTLIBRARIES = libasn1compiler.la
 
@@ -17,11 +17,3 @@ libasn1compiler_la_SOURCES =			\
 	asn1c_compat.c asn1c_compat.h		\
 	asn1c_fdeps.c asn1c_fdeps.h		\
 	asn1c_internal.h
-
-TESTS = $(check_PROGRAMS)
-
-check_PROGRAMS = check_compiler
-
-check_compiler_LDADD = $(noinst_LTLIBRARIES)		\
-	$(top_builddir)/libasn1parser/libasn1parser.la	\
-	$(top_builddir)/libasn1fix/libasn1fix.la

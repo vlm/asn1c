@@ -1,4 +1,6 @@
 #include "asn1c_internal.h"
+#include "asn1c_misc.h"
+
 #include <asn1fix_export.h>
 
 /*

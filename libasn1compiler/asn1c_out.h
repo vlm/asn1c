@@ -19,15 +19,21 @@ typedef struct compiler_streams {
 		OT_DEPS,	/* Dependencies (other than #includes) */
 		OT_TYPE_DECLS,	/* Type declarations */
 		OT_FUNC_DECLS,	/* Function declarations */
-		OT_STAT_DEFS,	/* Static definitions */
+		OT_CTABLES,	/* Constraint tables */
 		OT_CODE,	/* Some code */
+		OT_STAT_DEFS,	/* Static definitions */
 		OT_MAX
 	} target;
-	TQ_HEAD(out_chunk_t) targets[OT_MAX];
+
+	struct compiler_stream_destination_s {
+		TQ_HEAD(out_chunk_t) chunks;
+		int indent_level;
+		int indented;
+	} destination[OT_MAX];
 } compiler_streams_t;
 
 static char *_compiler_stream2str[] __attribute__ ((unused))
-    = { "ASSERT", "INCLUDES", "DEPS", "TYPE-DECLS", "FUNC-DECLS", "STAT-DEFS", "CODE" };
+    = { "ASSERT", "INCLUDES", "DEPS", "TYPE-DECLS", "FUNC-DECLS", "CTABLES", "CODE", "STAT-DEFS" };
 
 int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 
@@ -38,19 +44,20 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 
 /* Redirect output to a different stream. */
 #define	REDIR(foo)	do { arg->target->target = foo; } while(0)
-
-#define	INDENT(val)		arg->indent_level += (val)
-#define	INDENTED(code)	do {			\
-		INDENT(+1);			\
-		do { code; } while(0);		\
-		INDENT(-1);			\
+#define INDENT_LEVEL	\
+		arg->target->destination[arg->target->target].indent_level
+#define	INDENT(val)	INDENT_LEVEL += (val)
+#define	INDENTED(code)	do {					\
+		INDENT(+1);					\
+		do { code; } while(0);				\
+		INDENT(-1);					\
 	} while(0)
 
-#define	FLAT(code)	do {			\
-		int _il = arg->indent_level;	\
-		arg->indent_level = 0;		\
-		do { code; } while(0);		\
-		arg->indent_level = _il;	\
+#define	FLAT(code)	do {					\
+		int _il = INDENT_LEVEL;				\
+		INDENT_LEVEL = 0;				\
+		do { code; } while(0);				\
+		INDENT_LEVEL = _il;				\
 	} while(0)
 
 #define	EMBED(ev)	do {					\
@@ -68,11 +75,11 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 
 /* Output a piece of text into a default stream */
 #define	OUT(fmt, args...)	asn1c_compiled_output(arg, fmt, ##args)
-#define	OUT_NOINDENT(fmt, args...)	do {	\
-	int _saved_indent = arg->indent_level;	\
-	arg->indent_level = 0;			\
-	OUT(fmt, ##args);			\
-	arg->indent_level = _saved_indent;	\
+#define	OUT_NOINDENT(fmt, args...)	do {			\
+	int _saved_indent = INDENT_LEVEL;			\
+	INDENT_LEVEL = 0;					\
+	OUT(fmt, ##args);					\
+	INDENT_LEVEL = _saved_indent;				\
 } while(0)
 
 /* Generate #include line */

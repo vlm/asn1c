@@ -1,4 +1,5 @@
 #include "asn1c_internal.h"
+#include "asn1c_out.h"
 
 /*
  * Add an elementary chunk of target language text
@@ -6,6 +7,7 @@
  */
 int
 asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
+	struct compiler_stream_destination_s *dst;
 	const char *p;
 	int lf_found;
 	va_list ap;
@@ -20,6 +22,7 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 		assert(arg->target->target != OT_ASSERT);
 		return -1;
 	default:
+		dst = &arg->target->destination[arg->target->target];
 		break;
 	}
 
@@ -37,16 +40,16 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	/*
 	 * Print out the indentation.
 	 */
-	if(arg->indented == 0) {
-		int i = arg->indent_level;
-		arg->indented = 1;
+	if(dst->indented == 0) {
+		int i = dst->indent_level;
+		dst->indented = 1;
 		while(i--) {
 			ret = asn1c_compiled_output(arg, "\t");
 			if(ret == -1) return -1;
 		}
 	}
 	if(lf_found)
-		arg->indented = 0;
+		dst->indented = 0;
 
 	/*
 	 * Estimate necessary size.
@@ -80,7 +83,7 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 
 	if(arg->target->target == OT_INCLUDES) {
 		out_chunk_t *v;
-		TQ_FOR(v, &(arg->target->targets[OT_INCLUDES]), next) {
+		TQ_FOR(v, &dst->chunks, next) {
 			if(m->len == v->len
 			&& !memcmp(m->buf, v->buf, m->len))
 				break;
@@ -93,7 +96,7 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 		}
 	}
 
-	TQ_ADD(&(arg->target->targets[arg->target->target]), m, next);
+	TQ_ADD(&dst->chunks, m, next);
 
 	return 0;
 }

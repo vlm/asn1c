@@ -1,4 +1,7 @@
 #include "asn1c_internal.h"
+#include "asn1c_lang.h"
+#include "asn1c_out.h"
+#include "asn1c_save.h"
 
 static void default_logger_cb(int, const char *fmt, ...);
 static int asn1c_compile_expr(arg_t *arg);
@@ -73,7 +76,7 @@ asn1c_compile_expr(arg_t *arg) {
 	type_cb = asn1_lang_map[expr->meta_type][expr->expr_type].type_cb;
 	if(type_cb) {
 
-		if(arg->indent_level == 0)
+		if(arg->target->destination[OT_TYPE_DECLS].indent_level == 0)
 			OUT("\n");
 
 		DEBUG("Compiling %s at line %d",
@@ -134,7 +137,7 @@ asn1c_attach_streams(asn1p_expr_t *expr) {
 
 	cs = expr->data;
 	for(i = 0; i < OT_MAX; i++) {
-		TQ_INIT(&(cs->targets[i]));
+		TQ_INIT(&(cs->destination[i].chunks));
 	}
 
 	return 0;

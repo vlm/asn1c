@@ -1,9 +1,12 @@
 #include "asn1c_internal.h"
 #include "asn1c_constraint.h"
+#include "asn1c_misc.h"
+#include "asn1c_out.h"
 
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportable stuff from libasn1fix */
 
+static int asn1c_emit_constraint_tables(arg_t *arg, int got_size);
 static int emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range);
 static int emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
@@ -22,6 +25,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	asn1p_expr_type_e etype;
 	asn1p_constraint_t *ct;
 	int got_something = 0;
+	int produce_st = 0;
 
 	ct = expr->combined_constraints;
 	if(ct == NULL)
@@ -57,6 +61,24 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		}
 	}
 
+	/*
+	 * Do we really need an "*st = sptr" pointer?
+	 */
+	switch(etype) {
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_ENUMERATED:
+		if(!(arg->flags & A1C_USE_NATIVE_INTEGERS))
+			produce_st = 1;
+		break;
+	case ASN_BASIC_OCTET_STRING:
+		produce_st = 1;
+			break;
+	default:
+		if(etype & ASN_STRING_MASK)
+			produce_st = 1;
+		break;
+	}
+	if(produce_st)
 	OUT("const %s_t *st = sptr;\n", MKID(arg->expr->Identifier));
 
 	if(r_size || r_value) {
@@ -96,6 +118,13 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	if(r_size)
 		emit_size_determination_code(arg, etype);
 
+	INDENT(-1);
+	REDIR(OT_CTABLES);
+	/* Emit FROM() tables */
+	asn1c_emit_constraint_tables(arg, r_size?1:0);
+	REDIR(OT_CODE);
+	INDENT(+1);
+
 	/*
 	 * Here is an if() {} else {} constaint checking code.
 	 */
@@ -126,6 +155,12 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		}
 		if(!got_something) {
 			OUT("1 /* No applicable constraints whatsoever */");
+			OUT(") {\n");
+			INDENT(-1);
+			INDENTED(OUT("/* Nothing is here. See below */\n"));
+			OUT("}\n");
+			OUT("\n");
+			return 1;
 		}
 	INDENT(-1);
 	OUT(") {\n");
@@ -144,16 +179,19 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	return 0;
 }
 
-int
-asn1c_emit_constraint_tables(arg_t *arg, asn1p_constraint_t *ct) {
+static int
+asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 	asn1_integer_t range_start;
 	asn1_integer_t range_stop;
 	asn1p_expr_type_e etype;
 	asn1cnst_range_t *range;
+	asn1p_constraint_t *ct;
+	int utf8_full_alphabet_check = 0;
+	int max_table_size = 256;
 	int table[256];
 	int use_table;
 
-	if(!ct) ct = arg->expr->combined_constraints;
+	ct = arg->expr->combined_constraints;
 	if(!ct) return 0;
 
 	etype = _find_terminal_type(arg);
@@ -180,10 +218,21 @@ asn1c_emit_constraint_tables(arg_t *arg, asn1p_constraint_t *ct) {
 	 * Check if we need a test table to check the alphabet.
 	 */
 	use_table = 1;
+	if(range->el_count == 0) {
+		/*
+		 * It's better to have a short if() check
+		 * than waste 4k of table space
+		 */
+		use_table = 0;
+	}
 	if((range_stop - range_start) > 255)
 		use_table = 0;
-	if(range->el_count == 0)
-		use_table = 0;
+	if(etype == ASN_STRING_UTF8String) {
+		if(range_stop >= 0x80)
+			use_table = 0;
+		else
+			max_table_size = 128;
+	}
 
 	if(!ct->_compile_mark)
 		ct->_compile_mark = ++global_compile_mark;
@@ -203,15 +252,15 @@ asn1c_emit_constraint_tables(arg_t *arg, asn1p_constraint_t *ct) {
 			}
 			for(v = r->left.value; v <= r->right.value; v++) {
 				assert((v - range_start) >= 0);
-				assert((v - range_start) < 256);
+				assert((v - range_start) < max_table_size);
 				table[v - range_start] = ++n;
 			}
 		}
 
-		OUT("static int permitted_alphabet_table_%d[256] = {\n",
-			ct->_compile_mark);
 		untl = (range_stop - range_start) + 1;
 		untl += (untl % 16)?16 - (untl % 16):0;
+		OUT("static int permitted_alphabet_table_%d[%d] = {\n",
+			ct->_compile_mark, max_table_size);
 		for(n = 0; n < untl; n++) {
 			OUT("%d,", table[n]?1:0);
 			if(!((n+1) % 16)) {
@@ -238,11 +287,42 @@ asn1c_emit_constraint_tables(arg_t *arg, asn1p_constraint_t *ct) {
 		}
 		OUT("};\n");
 		OUT("\n");
+	} else if(etype == ASN_STRING_UTF8String) {
+		/*
+		 * UTF8String type is a special case in many respects.
+		 */
+		assert(range_stop > 255);	/* This one's unobvious */
+		if(got_size) {
+			/*
+			 * Size has been already determined.
+			 * The UTF8String length checker also checks
+			 * for the syntax validity, so we don't have
+			 * to repeat this process twice.
+			 */
+			ct->_compile_mark = 0;	/* Don't generate code */
+			asn1constraint_range_free(range);
+			return 0;
+		} else {
+			utf8_full_alphabet_check = 1;
+		}
+	} else {
+		/*
+		 * This permitted alphabet check will be
+		 * expressed using conditional statements
+		 * instead of table lookups. Table would be
+		 * to large or otherwise inappropriate (too sparse?).
+		 */
 	}
 
 	OUT("static int check_permitted_alphabet_%d(const void *sptr) {\n",
 			ct->_compile_mark);
-		INDENT(+1);
+	INDENT(+1);
+	if(utf8_full_alphabet_check) {
+		OUT("if(UTF8String_length((UTF8String_t *)sptr, td->name, \n");
+		OUT("\tapp_errlog, app_key) == -1)\n");
+		OUT("\t\treturn 0; /* Alphabet (sic!) test failed. */\n");
+		OUT("\n");
+	} else {
 		if(use_table) {
 			OUT("int *table = permitted_alphabet_table_%d;\n",
 				ct->_compile_mark);
@@ -250,8 +330,9 @@ asn1c_emit_constraint_tables(arg_t *arg, asn1p_constraint_t *ct) {
 		} else {
 			emit_alphabet_check_loop(arg, range);
 		}
-		OUT("return 1;\n");
-		INDENT(-1);
+	}
+	OUT("return 1;\n");
+	INDENT(-1);
 	OUT("}\n");
 	OUT("\n");
 
@@ -338,6 +419,7 @@ static int
 emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1_integer_t natural_start, asn1_integer_t natural_stop) {
 	int ignore_left;
 	int ignore_right;
+	int generated_something = 0;
 	int i;
 
 	for(i = -1; i < range->el_count; i++) {
@@ -381,9 +463,10 @@ emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varn
 				(long long)r->right.value);
 		}
 		if(r != range) OUT(")");
+		generated_something = 1;
 	}
 
-	return 0;
+	return generated_something;
 }
 
 static int
@@ -412,16 +495,18 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 	case ASN_CONSTR_SEQUENCE_OF:
 		OUT("{ /* Determine the number of elements */\n");
 			INDENT(+1);
-			OUT("A_%s_OF(void) *list;\n",
+			OUT("const A_%s_OF(void) *list;\n",
 				etype==ASN_CONSTR_SET_OF?"SET":"SEQUENCE");
-			OUT("(void *)list = st;\n");
+			OUT("(const void *)list = sptr;\n");
 			OUT("size = list->count;\n");
 			INDENT(-1);
 		OUT("}\n");
 		break;
+	case ASN_BASIC_OCTET_STRING:
+		OUT("size = st->size;\n");
+		break;
 	default:
-		if((etype & ASN_STRING_MASK)
-		|| etype == ASN_BASIC_OCTET_STRING) {
+		if(etype & ASN_STRING_MASK) {
 			OUT("size = st->size;\n");
 			break;
 		} else {
@@ -446,7 +531,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 		if(arg->flags & A1C_USE_NATIVE_INTEGERS) {
-			OUT("value = *(int *)st;\n");
+			OUT("value = *(int *)sptr;\n");
 		} else {
 			OUT("if(asn1_INTEGER2long(st, &value)) {\n");
 				INDENT(+1);
@@ -458,7 +543,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 		}
 		break;
 	case ASN_BASIC_BOOLEAN:
-		OUT("value = (*(int *)st) ? 1 : 0;\n");
+		OUT("value = (*(int *)sptr) ? 1 : 0;\n");
 		break;
 	default:
 		WARNING("Value cannot be determined "

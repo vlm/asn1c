@@ -33,15 +33,8 @@ typedef struct arg_s {
 	asn1p_module_t	*mod;
 	asn1p_expr_t	*expr;
 
-	int indent_level;
-	int indented;
 	int embed;
 } arg_t;
-
-#include "asn1c_lang.h"		/* Target language initialization */
-#include "asn1c_misc.h"		/* Miscellaneous functions */
-#include "asn1c_out.h"		/* Handle output during compilation */
-#include "asn1c_save.h"		/* Save compiled output */
 
 /*
  * Logging.
