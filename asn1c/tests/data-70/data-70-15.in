@@ -1,0 +1,5 @@
+<PDU>
+	<extensibleSet>
+		<string>one <nul/> two</string>
+	</extensibleSet>
+</PDU>
