@@ -51,8 +51,8 @@ typedef struct asn_enc_rval_s {
 	void *structure_ptr;
 } asn_enc_rval_t;
 #define	_ASN_ENCODE_FAILED do {					\
-	asn_enc_rval_t __er = { -1, td, sptr };			\
-	return __er;						\
+	asn_enc_rval_t tmp_error = { -1, td, sptr };		\
+	return tmp_error;					\
 } while(0)
 
 /*
