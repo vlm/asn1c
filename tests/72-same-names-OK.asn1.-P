@@ -407,7 +407,7 @@ memb_a_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_a_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_a_8_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	size_t size;
@@ -540,12 +540,12 @@ asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
 	&asn_SPC_one_name_2_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_another_name_5[] = {
+static asn_TYPE_member_t asn_MBR_another_name_8[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_BIT_STRING,
-		.memb_constraints = memb_a_5_constraint,
+		.memb_constraints = memb_a_8_constraint,
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, b),
@@ -556,23 +556,23 @@ static asn_TYPE_member_t asn_MBR_another_name_5[] = {
 		.name = "b"
 		},
 };
-static ber_tlv_tag_t asn_DEF_another_name_5_tags[] = {
+static ber_tlv_tag_t asn_DEF_another_name_8_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_another_name_5_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_another_name_8_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* b at 42 */
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* a at 40 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_another_name_5_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_another_name_8_specs = {
 	sizeof(struct another_name),
 	offsetof(struct another_name, _asn_ctx),
-	asn_MAP_another_name_5_tag2el,
+	asn_MAP_another_name_8_tag2el,
 	2,	/* Count of tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_another_name_5 = {
+asn_TYPE_descriptor_t asn_DEF_another_name_8 = {
 	"another-name",
 	"another-name",
 	SEQUENCE_free,
@@ -583,48 +583,48 @@ asn_TYPE_descriptor_t asn_DEF_another_name_5 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_another_name_5_tags,
-	sizeof(asn_DEF_another_name_5_tags)
-		/sizeof(asn_DEF_another_name_5_tags[0]), /* 1 */
-	asn_DEF_another_name_5_tags,	/* Same as above */
-	sizeof(asn_DEF_another_name_5_tags)
-		/sizeof(asn_DEF_another_name_5_tags[0]), /* 1 */
-	asn_MBR_another_name_5,
+	asn_DEF_another_name_8_tags,
+	sizeof(asn_DEF_another_name_8_tags)
+		/sizeof(asn_DEF_another_name_8_tags[0]), /* 1 */
+	asn_DEF_another_name_8_tags,	/* Same as above */
+	sizeof(asn_DEF_another_name_8_tags)
+		/sizeof(asn_DEF_another_name_8_tags[0]), /* 1 */
+	asn_MBR_another_name_8,
 	2,	/* Elements count */
-	&asn_SPC_another_name_5_specs	/* Additional specs */
+	&asn_SPC_another_name_8_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_two_name_4[] = {
+static asn_TYPE_member_t asn_MBR_two_name_7[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct two_name, another_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_another_name_5,
+		.type = (void *)&asn_DEF_another_name_8,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "another-name"
 		},
 };
-static ber_tlv_tag_t asn_DEF_two_name_4_tags[] = {
+static ber_tlv_tag_t asn_DEF_two_name_7_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_two_name_4_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_two_name_7_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 40 */
 };
-static uint8_t asn_MAP_two_name_4_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_two_name_7_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
 };
-static asn_SET_specifics_t asn_SPC_two_name_4_specs = {
+static asn_SET_specifics_t asn_SPC_two_name_7_specs = {
 	sizeof(struct two_name),
 	offsetof(struct two_name, _asn_ctx),
 	offsetof(struct two_name, _presence_map),
-	asn_MAP_two_name_4_tag2el,
+	asn_MAP_two_name_7_tag2el,
 	1,	/* Count of tags in the map */
-	asn_MAP_two_name_4_tag2el,	/* Same as above */
+	asn_MAP_two_name_7_tag2el,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
-	(unsigned int *)asn_MAP_two_name_4_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_two_name_7_mmap	/* Mandatory elements map */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_two_name_4 = {
+asn_TYPE_descriptor_t asn_DEF_two_name_7 = {
 	"two-name",
 	"two-name",
 	SET_free,
@@ -635,15 +635,15 @@ asn_TYPE_descriptor_t asn_DEF_two_name_4 = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_two_name_4_tags,
-	sizeof(asn_DEF_two_name_4_tags)
-		/sizeof(asn_DEF_two_name_4_tags[0]), /* 1 */
-	asn_DEF_two_name_4_tags,	/* Same as above */
-	sizeof(asn_DEF_two_name_4_tags)
-		/sizeof(asn_DEF_two_name_4_tags[0]), /* 1 */
-	asn_MBR_two_name_4,
+	asn_DEF_two_name_7_tags,
+	sizeof(asn_DEF_two_name_7_tags)
+		/sizeof(asn_DEF_two_name_7_tags[0]), /* 1 */
+	asn_DEF_two_name_7_tags,	/* Same as above */
+	sizeof(asn_DEF_two_name_7_tags)
+		/sizeof(asn_DEF_two_name_7_tags[0]), /* 1 */
+	asn_MBR_two_name_7,
 	1,	/* Elements count */
-	&asn_SPC_two_name_4_specs	/* Additional specs */
+	&asn_SPC_two_name_7_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_Type2_1[] = {
@@ -657,7 +657,7 @@ static asn_TYPE_member_t asn_MBR_Type2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Type2, choice.two_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_two_name_4,
+		.type = (void *)&asn_DEF_two_name_7,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "two-name"
 		},

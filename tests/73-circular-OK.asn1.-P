@@ -153,7 +153,7 @@ EpytRef_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-EpytRef_0_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+EpytRef_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Epyt.free_struct;
 	td->print_struct   = asn_DEF_Epyt.print_struct;
 	td->ber_decoder    = asn_DEF_Epyt.ber_decoder;
@@ -168,21 +168,21 @@ EpytRef_0_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 void
 EpytRef_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	EpytRef_0_inherit_TYPE_descriptor(td);
+	EpytRef_1_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
 EpytRef_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	EpytRef_0_inherit_TYPE_descriptor(td);
+	EpytRef_1_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
 EpytRef_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
-	EpytRef_0_inherit_TYPE_descriptor(td);
+	EpytRef_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
@@ -190,14 +190,14 @@ asn_enc_rval_t
 EpytRef_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	EpytRef_0_inherit_TYPE_descriptor(td);
+	EpytRef_1_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
 EpytRef_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, void *bufptr, size_t size) {
-	EpytRef_0_inherit_TYPE_descriptor(td);
+	EpytRef_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
@@ -205,14 +205,14 @@ asn_enc_rval_t
 EpytRef_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	EpytRef_0_inherit_TYPE_descriptor(td);
+	EpytRef_1_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
 /*** <<< STAT-DEFS [EpytRef] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_EpytRef_0_tags[] = {
+static ber_tlv_tag_t asn_DEF_EpytRef_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_EpytRef = {
@@ -226,12 +226,12 @@ asn_TYPE_descriptor_t asn_DEF_EpytRef = {
 	EpytRef_decode_xer,
 	EpytRef_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_EpytRef_0_tags,
-	sizeof(asn_DEF_EpytRef_0_tags)
-		/sizeof(asn_DEF_EpytRef_0_tags[0]), /* 1 */
-	asn_DEF_EpytRef_0_tags,	/* Same as above */
-	sizeof(asn_DEF_EpytRef_0_tags)
-		/sizeof(asn_DEF_EpytRef_0_tags[0]), /* 1 */
+	asn_DEF_EpytRef_1_tags,
+	sizeof(asn_DEF_EpytRef_1_tags)
+		/sizeof(asn_DEF_EpytRef_1_tags[0]), /* 1 */
+	asn_DEF_EpytRef_1_tags,	/* Same as above */
+	sizeof(asn_DEF_EpytRef_1_tags)
+		/sizeof(asn_DEF_EpytRef_1_tags[0]), /* 1 */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };
@@ -381,6 +381,7 @@ asn_TYPE_descriptor_t asn_DEF_Epyt = {
 
 #include <Epyt.h>
 #include <INTEGER.h>
+#include <IA5String.h>
 #include <EnumType.h>
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
@@ -396,6 +397,8 @@ typedef enum Ypet_PR {
 	Ypet_PR_epyt,	/* Member epyt is present */
 	Ypet_PR_plain,	/* Member plain is present */
 	Ypet_PR_senums,	/* Member senums is present */
+	Ypet_PR_patest1,	/* Member patest1 is present */
+	Ypet_PR_patest2,	/* Member patest2 is present */
 } Ypet_PR;
 
 /*** <<< TYPE-DECLS [Ypet] >>> ***/
@@ -409,10 +412,12 @@ typedef struct Ypet {
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
 	} senums;
+	IA5String_t	 patest1;
+	IA5String_t	 patest2;
 	
 	/* Presence bitmask: ASN_SET_ISPRESENT(pYpet, Ypet_PR_x) */
 	unsigned int _presence_map
-		[((3+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+		[((5+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -422,9 +427,89 @@ typedef struct Ypet {
 
 extern asn_TYPE_descriptor_t asn_DEF_Ypet;
 
+/*** <<< CTABLES [Ypet] >>> ***/
+
+static int check_permitted_alphabet_6(const void *sptr) {
+	/* The underlying type is IA5String */
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 65 && cv <= 90)) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_7(const void *sptr) {
+	/* The underlying type is IA5String */
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 97 && cv <= 122)) return -1;
+	}
+	return 0;
+}
+
+
+/*** <<< CODE [Ypet] >>> ***/
+
+static int
+memb_patest1_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_6(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_patest2_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_7(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
 /*** <<< STAT-DEFS [Ypet] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_senums_2[] = {
+static asn_TYPE_member_t asn_MBR_senums_4[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
@@ -433,16 +518,16 @@ static asn_TYPE_member_t asn_MBR_senums_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_senums_2_tags[] = {
+static ber_tlv_tag_t asn_DEF_senums_4_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_senums_2_specs = {
+static asn_SET_OF_specifics_t asn_SPC_senums_4_specs = {
 	sizeof(struct senums),
 	offsetof(struct senums, _asn_ctx),
 	1,	/* XER encoding is XMLValueList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_senums_2 = {
+asn_TYPE_descriptor_t asn_DEF_senums_4 = {
 	"senums",
 	"senums",
 	SET_OF_free,
@@ -453,15 +538,15 @@ asn_TYPE_descriptor_t asn_DEF_senums_2 = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_senums_2_tags,
-	sizeof(asn_DEF_senums_2_tags)
-		/sizeof(asn_DEF_senums_2_tags[0]), /* 1 */
-	asn_DEF_senums_2_tags,	/* Same as above */
-	sizeof(asn_DEF_senums_2_tags)
-		/sizeof(asn_DEF_senums_2_tags[0]), /* 1 */
-	asn_MBR_senums_2,
+	asn_DEF_senums_4_tags,
+	sizeof(asn_DEF_senums_4_tags)
+		/sizeof(asn_DEF_senums_4_tags[0]), /* 1 */
+	asn_DEF_senums_4_tags,	/* Same as above */
+	sizeof(asn_DEF_senums_4_tags)
+		/sizeof(asn_DEF_senums_4_tags[0]), /* 1 */
+	asn_MBR_senums_4,
 	1,	/* Single element */
-	&asn_SPC_senums_2_specs	/* Additional specs */
+	&asn_SPC_senums_4_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
@@ -482,9 +567,23 @@ static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, senums),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_senums_2,
+		.type = (void *)&asn_DEF_senums_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "senums"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, patest1),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = (void *)&asn_DEF_IA5String,
+		.memb_constraints = memb_patest1_1_constraint,
+		.name = "patest1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, patest2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = (void *)&asn_DEF_IA5String,
+		.memb_constraints = memb_patest2_1_constraint,
+		.name = "patest2"
 		},
 };
 static ber_tlv_tag_t asn_DEF_Ypet_1_tags[] = {
@@ -493,19 +592,21 @@ static ber_tlv_tag_t asn_DEF_Ypet_1_tags[] = {
 static asn_TYPE_tag2member_t asn_MAP_Ypet_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* plain at 28 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* epyt at 27 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, 0, 0 } /* senums at 30 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, 0, 0 }, /* senums at 29 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 3, 0, 0 }, /* patest1 at 30 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 4, 0, 0 } /* patest2 at 31 */
 };
-static uint8_t asn_MAP_Ypet_1_mmap[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
-	(1 << 7) | (0 << 6) | (1 << 5)
+static uint8_t asn_MAP_Ypet_1_mmap[(5 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7) | (0 << 6) | (1 << 5) | (1 << 4) | (1 << 3)
 };
 static asn_SET_specifics_t asn_SPC_Ypet_1_specs = {
 	sizeof(struct Ypet),
 	offsetof(struct Ypet, _asn_ctx),
 	offsetof(struct Ypet, _presence_map),
 	asn_MAP_Ypet_1_tag2el,
-	3,	/* Count of tags in the map */
+	5,	/* Count of tags in the map */
 	asn_MAP_Ypet_1_tag2el,	/* Same as above */
-	3,	/* Count of tags in the CXER map */
+	5,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
 	(unsigned int *)asn_MAP_Ypet_1_mmap	/* Mandatory elements map */
 };
@@ -527,7 +628,7 @@ asn_TYPE_descriptor_t asn_DEF_Ypet = {
 	sizeof(asn_DEF_Ypet_1_tags)
 		/sizeof(asn_DEF_Ypet_1_tags[0]), /* 1 */
 	asn_MBR_Ypet_1,
-	3,	/* Elements count */
+	5,	/* Elements count */
 	&asn_SPC_Ypet_1_specs	/* Additional specs */
 };
 

@@ -71,7 +71,7 @@ memb_varsets_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [LogLine] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_varsets_2[] = {
+static asn_TYPE_member_t asn_MBR_varsets_3[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
@@ -80,16 +80,16 @@ static asn_TYPE_member_t asn_MBR_varsets_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_varsets_2_tags[] = {
+static ber_tlv_tag_t asn_DEF_varsets_3_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_varsets_2_specs = {
+static asn_SET_OF_specifics_t asn_SPC_varsets_3_specs = {
 	sizeof(struct varsets),
 	offsetof(struct varsets, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_varsets_2 = {
+asn_TYPE_descriptor_t asn_DEF_varsets_3 = {
 	"varsets",
 	"varsets",
 	SEQUENCE_OF_free,
@@ -100,15 +100,15 @@ asn_TYPE_descriptor_t asn_DEF_varsets_2 = {
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_varsets_2_tags,
-	sizeof(asn_DEF_varsets_2_tags)
-		/sizeof(asn_DEF_varsets_2_tags[0]), /* 1 */
-	asn_DEF_varsets_2_tags,	/* Same as above */
-	sizeof(asn_DEF_varsets_2_tags)
-		/sizeof(asn_DEF_varsets_2_tags[0]), /* 1 */
-	asn_MBR_varsets_2,
+	asn_DEF_varsets_3_tags,
+	sizeof(asn_DEF_varsets_3_tags)
+		/sizeof(asn_DEF_varsets_3_tags[0]), /* 1 */
+	asn_DEF_varsets_3_tags,	/* Same as above */
+	sizeof(asn_DEF_varsets_3_tags)
+		/sizeof(asn_DEF_varsets_3_tags[0]), /* 1 */
+	asn_MBR_varsets_3,
 	1,	/* Single element */
-	&asn_SPC_varsets_2_specs	/* Additional specs */
+	&asn_SPC_varsets_3_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
@@ -122,7 +122,7 @@ static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, varsets),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_varsets_2,
+		.type = (void *)&asn_DEF_varsets_3,
 		.memb_constraints = memb_varsets_1_constraint,
 		.name = "varsets"
 		},
@@ -448,7 +448,7 @@ asn_TYPE_descriptor_t asn_DEF_vset_2 = {
 	&asn_SPC_vset_2_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_vrange_3[] = {
+static asn_TYPE_member_t asn_MBR_vrange_4[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct vrange, from),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
@@ -464,23 +464,23 @@ static asn_TYPE_member_t asn_MBR_vrange_3[] = {
 		.name = "to"
 		},
 };
-static ber_tlv_tag_t asn_DEF_vrange_3_tags[] = {
+static ber_tlv_tag_t asn_DEF_vrange_4_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_vrange_3_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_vrange_4_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0, 0, 1 }, /* from at 45 */
     { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1, -1, 0 } /* to at 46 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_vrange_3_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_vrange_4_specs = {
 	sizeof(struct vrange),
 	offsetof(struct vrange, _asn_ctx),
-	asn_MAP_vrange_3_tag2el,
+	asn_MAP_vrange_4_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_vrange_3 = {
+asn_TYPE_descriptor_t asn_DEF_vrange_4 = {
 	"vrange",
 	"vrange",
 	SEQUENCE_free,
@@ -491,15 +491,15 @@ asn_TYPE_descriptor_t asn_DEF_vrange_3 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_vrange_3_tags,
-	sizeof(asn_DEF_vrange_3_tags)
-		/sizeof(asn_DEF_vrange_3_tags[0]), /* 1 */
-	asn_DEF_vrange_3_tags,	/* Same as above */
-	sizeof(asn_DEF_vrange_3_tags)
-		/sizeof(asn_DEF_vrange_3_tags[0]), /* 1 */
-	asn_MBR_vrange_3,
+	asn_DEF_vrange_4_tags,
+	sizeof(asn_DEF_vrange_4_tags)
+		/sizeof(asn_DEF_vrange_4_tags[0]), /* 1 */
+	asn_DEF_vrange_4_tags,	/* Same as above */
+	sizeof(asn_DEF_vrange_4_tags)
+		/sizeof(asn_DEF_vrange_4_tags[0]), /* 1 */
+	asn_MBR_vrange_4,
 	2,	/* Elements count */
-	&asn_SPC_vrange_3_specs	/* Additional specs */
+	&asn_SPC_vrange_4_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
@@ -513,7 +513,7 @@ static asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vrange),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_vrange_3,
+		.type = (void *)&asn_DEF_vrange_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "vrange"
 		},
@@ -724,7 +724,7 @@ asn_TYPE_descriptor_t asn_DEF_accept_as_2 = {
 	&asn_SPC_accept_as_2_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_email_4[] = {
+static asn_TYPE_member_t asn_MBR_email_9[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
@@ -733,16 +733,16 @@ static asn_TYPE_member_t asn_MBR_email_4[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_email_4_tags[] = {
+static ber_tlv_tag_t asn_DEF_email_9_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_email_4_specs = {
+static asn_SET_OF_specifics_t asn_SPC_email_9_specs = {
 	sizeof(struct email),
 	offsetof(struct email, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_email_4 = {
+asn_TYPE_descriptor_t asn_DEF_email_9 = {
 	"email",
 	"email",
 	SET_OF_free,
@@ -753,18 +753,18 @@ asn_TYPE_descriptor_t asn_DEF_email_4 = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_email_4_tags,
-	sizeof(asn_DEF_email_4_tags)
-		/sizeof(asn_DEF_email_4_tags[0]), /* 1 */
-	asn_DEF_email_4_tags,	/* Same as above */
-	sizeof(asn_DEF_email_4_tags)
-		/sizeof(asn_DEF_email_4_tags[0]), /* 1 */
-	asn_MBR_email_4,
+	asn_DEF_email_9_tags,
+	sizeof(asn_DEF_email_9_tags)
+		/sizeof(asn_DEF_email_9_tags[0]), /* 1 */
+	asn_DEF_email_9_tags,	/* Same as above */
+	sizeof(asn_DEF_email_9_tags)
+		/sizeof(asn_DEF_email_9_tags[0]), /* 1 */
+	asn_MBR_email_9,
 	1,	/* Single element */
-	&asn_SPC_email_4_specs	/* Additional specs */
+	&asn_SPC_email_9_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_notify_3[] = {
+static asn_TYPE_member_t asn_MBR_notify_7[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, critical),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
@@ -775,28 +775,28 @@ static asn_TYPE_member_t asn_MBR_notify_3[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, email),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_email_4,
+		.type = (void *)&asn_DEF_email_9,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "email"
 		},
 };
-static ber_tlv_tag_t asn_DEF_notify_3_tags[] = {
+static ber_tlv_tag_t asn_DEF_notify_7_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_notify_3_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_notify_7_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* critical at 61 */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* email at 62 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_notify_3_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_notify_7_specs = {
 	sizeof(struct notify),
 	offsetof(struct notify, _asn_ctx),
-	asn_MAP_notify_3_tag2el,
+	asn_MAP_notify_7_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_notify_3 = {
+asn_TYPE_descriptor_t asn_DEF_notify_7 = {
 	"notify",
 	"notify",
 	SEQUENCE_free,
@@ -807,15 +807,15 @@ asn_TYPE_descriptor_t asn_DEF_notify_3 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_notify_3_tags,
-	sizeof(asn_DEF_notify_3_tags)
-		/sizeof(asn_DEF_notify_3_tags[0]), /* 1 */
-	asn_DEF_notify_3_tags,	/* Same as above */
-	sizeof(asn_DEF_notify_3_tags)
-		/sizeof(asn_DEF_notify_3_tags[0]), /* 1 */
-	asn_MBR_notify_3,
+	asn_DEF_notify_7_tags,
+	sizeof(asn_DEF_notify_7_tags)
+		/sizeof(asn_DEF_notify_7_tags[0]), /* 1 */
+	asn_DEF_notify_7_tags,	/* Same as above */
+	sizeof(asn_DEF_notify_7_tags)
+		/sizeof(asn_DEF_notify_7_tags[0]), /* 1 */
+	asn_MBR_notify_7,
 	2,	/* Elements count */
-	&asn_SPC_notify_3_specs	/* Additional specs */
+	&asn_SPC_notify_7_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
@@ -829,7 +829,7 @@ static asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct ActionItem, notify),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_notify_3,
+		.type = (void *)&asn_DEF_notify_7,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "notify"
 		},

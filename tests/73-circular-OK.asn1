@@ -26,7 +26,9 @@ BEGIN
 	Ypet ::= SET {
 		epyt	Epyt,
 		plain	INTEGER DEFAULT 7,
-		senums	SET OF EnumType
+		senums	SET OF EnumType,
+		patest1	[1] IA5String (FROM("A".."Z")),
+		patest2	[2] IA5String (FROM("a".."z"))
 	}
 
 	EnumType ::= ENUMERATED { one, two }
