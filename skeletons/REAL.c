@@ -12,7 +12,7 @@
 #undef	INT_MAX
 #define	INT_MAX	((int)(((unsigned int)-1) >> 1))
 
-static const double real_zero;
+static volatile double real_zero = 0.0;
 #ifndef	NAN
 #define	NAN	(real_zero/real_zero)
 #endif

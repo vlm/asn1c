@@ -571,12 +571,8 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	uint8_t *end;
 	size_t i;
 
-	if(!st || !st->buf) {
-		er.encoded = -1;
-		er.failed_type = td;
-		er.structure_ptr = sptr;
-		return er;
-	}
+	if(!st || !st->buf)
+		_ASN_ENCODE_FAILED;
 
 	er.encoded = 0;
 
@@ -621,6 +617,8 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	return er;
+cb_failed:
+	_ASN_ENCODE_FAILED;
 }
 
 asn_enc_rval_t
@@ -636,7 +634,8 @@ OCTET_STRING_encode_xer_ascii(asn_TYPE_descriptor_t *td, void *sptr,
 	if(!st || !st->buf)
 		_ASN_ENCODE_FAILED;
 
-	_ASN_CALLBACK(st->buf, st->size);
+	if(cb(st->buf, st->size, app_key) < 0)
+		_ASN_ENCODE_FAILED;
 	er.encoded = st->size;
 
 	return er;

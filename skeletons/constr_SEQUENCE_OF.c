@@ -128,5 +128,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
 
 	return er;
+cb_failed:
+	_ASN_ENCODE_FAILED;
 }
 
