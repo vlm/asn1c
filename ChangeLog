@@ -1,4 +1,13 @@
 
+0.8.13:	2004-Jun-29
+
+	* Fixed compiler: the skip values for IMPLICIT tagging were broken
+	  in some complex cases where one type is defined using another.
+	  (Test case 46) (Severity: medium, Security impact: low).
+	* Added -fknown-extern-type command line parameter to asn1c.
+	* Removed -N command line flag and underlying functionality
+	  to honor KISS principle.
+
 0.8.12:	2004-Jun-17
 
 	* RELATIVE-OID and OBJECT IDENTIFIER encoders/decoders are not bound
