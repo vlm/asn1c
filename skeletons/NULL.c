@@ -3,6 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
+#include <asn_codecs_prim.h>
 #include <NULL.h>
 #include <BOOLEAN.h>	/* Implemented in terms of BOOLEAN type */
 
@@ -20,8 +21,8 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,	/* Implemented in terms of BOOLEAN */
 	NULL_encode_der,	/* Special handling of DER encoding */
-	0,				/* Not implemented yet */
-	NULL_encode_xer,	/* Special handling of DER encoding */
+	NULL_decode_xer,
+	NULL_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
@@ -63,6 +64,25 @@ NULL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = 0;
 
 	return er;
+}
+
+
+static ssize_t
+NULL__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+	(void)sptr;
+	if(xer_is_whitespace(chunk_buf, chunk_size))
+		return chunk_size;
+	return -1;
+}
+
+asn_dec_rval_t
+NULL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+
+	return xer_decode_primitive(opt_codec_ctx, td,
+		sptr, sizeof(NULL_t), opt_mname, buf_ptr, size,
+		NULL__xer_body_decode);
 }
 
 int
