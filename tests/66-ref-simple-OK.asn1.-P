@@ -70,7 +70,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 typedef enum SimpleType {
 	SimpleType_one	= 0,
 	SimpleType_two	= 1,
-	SimpleType_three	= 2,
+	SimpleType_three	= 2
 } SimpleType_e;
 
 /*** <<< TYPE-DECLS [SimpleType] >>> ***/
@@ -163,6 +163,26 @@ SimpleType_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [SimpleType] >>> ***/
 
+static asn_INTEGER_enum_map_t asn_MAP_SimpleType_enum2value[] = {
+	{ "one",	0 },
+	{ "three",	2 },
+	{ "two",	1 }
+};
+static asn_INTEGER_enum_map_t asn_MAP_SimpleType_value2enum[] = {
+	{ "one",	0 },
+	{ "two",	1 },
+	{ "three",	2 }
+};
+static asn_INTEGER_specifics_t asn_DEF_SimpleType_specs = {
+	/* Two name<->value maps sorted differently;
+	 * this may seem like a waste of space,
+	 * but the strings actually share it.
+	 */
+	asn_MAP_SimpleType_enum2value,	/* "tag" => N; sorted by tag */
+	asn_MAP_SimpleType_value2enum,	/* N => "tag"; sorted by N */
+	3,	/* Number of elements in the maps */
+	0	/* Enumeration is not extensible */
+};
 static ber_tlv_tag_t asn_DEF_SimpleType_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
@@ -183,7 +203,7 @@ asn_TYPE_descriptor_t asn_DEF_SimpleType = {
 	asn_DEF_SimpleType_tags,	/* Same as above */
 	sizeof(asn_DEF_SimpleType_tags)
 		/sizeof(asn_DEF_SimpleType_tags[0]), /* 1 */
-	0, 0,	/* No members */
-	0	/* No specifics */
+	0, 0,	/* Defined elsewhere */
+	&asn_DEF_SimpleType_specs	/* Additional specs */
 };
 
