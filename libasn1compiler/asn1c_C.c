@@ -1514,14 +1514,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		OUT("%s_constraint,\n", p);
 		OUT("%s_decode_ber,\n", p);
 		OUT("%s_encode_der,\n", p);
-		switch(expr->expr_type) {
-		case ASN_CONSTR_SET_OF:
-		case ASN_CONSTR_SEQUENCE_OF:
-			OUT("0,\t\t\t\t/* Not implemented yet */\n");
-			break;
-		default:
-			OUT("%s_decode_xer,\n", p);
-		}
+		OUT("%s_decode_xer,\n", p);
 		OUT("%s_encode_xer,\n", p);
 
 		if(expr->expr_type == ASN_CONSTR_CHOICE) {
