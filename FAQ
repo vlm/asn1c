@@ -1,0 +1,14 @@
+
+Q: Your compiler supplies a der_encode() procedure. How do I encode BER?
+A:
+	The DER (and CER) are stricter subsets of a more generic BER encoding
+	method. If you encode data with DER or CER, all BER-conformant decoders
+	will easily understand that. Hence, to encode data in the BER format,
+	simply use the DER encoder, der_encode().
+
+	See also:	ISO/IEC 8825-1 / X.690:
+			"ASN.1 encoding rules: Specification of
+			 Basic Encoding Rules (BER),
+			 Canonical Encoding Rules (CER) and
+			 Distinguished Encoding Rules (DER)"
+
