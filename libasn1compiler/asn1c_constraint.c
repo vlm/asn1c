@@ -570,7 +570,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 static asn1p_expr_type_e
 _find_terminal_type(arg_t *arg) {
 	asn1p_expr_t *expr;
-	expr = asn1f_find_terminal_type_ex(arg->asn, arg->mod, arg->expr, NULL);
+	expr = asn1f_find_terminal_type_ex(arg->asn, arg->mod, arg->expr);
 	if(expr) return expr->expr_type;
 	return A1TC_INVALID;
 }
