@@ -151,8 +151,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			if(rval.code != RC_OK) {
 				ASN_DEBUG("%s tagging check failed: %d",
 					td->name, rval.code);
-				consumed_myself += rval.consumed;
-				RETURN(rval.code);
+				return rval;
 			}
 
 			if(ctx->left >= 0) {
@@ -330,6 +329,8 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					/*
 					 * Correctly finished with <0><0>.
 					 */
+					ADVANCE(2);
+					ctx->left++;
 					continue;
 				}
 			} else {
@@ -338,8 +339,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				RETURN(RC_FAIL);
 			}
 
-			ADVANCE(2);
-			ctx->left++;
+			/* UNREACHABLE */
 		}
 
 		NEXT_PHASE(ctx);
