@@ -34,8 +34,8 @@ check(int type, char *tagname, char *xmlbuf, char *verify) {
 	rc = decoder(0, td, (void **)&st, tagname, xmlbuf, xmllen);
 	printf("[%s] => [%s]:%d vs [%s]:%d, code %d\n",
 		xmlbuf,
-		st ? st->buf : 0, st ? st->size : 0,
-		verify, verlen, rc.code);
+		st ? st->buf : "", st ? st->size : 0,
+		verify ? verify : "", verlen, rc.code);
 
 	if(verify) {
 		assert(rc.code == RC_OK);
