@@ -163,23 +163,19 @@ SimpleType_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [SimpleType] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_SimpleType_enum2value[] = {
-	{ "one",	0 },
-	{ "three",	2 },
-	{ "two",	1 }
-};
 static asn_INTEGER_enum_map_t asn_MAP_SimpleType_value2enum[] = {
-	{ "one",	0 },
-	{ "two",	1 },
-	{ "three",	2 }
+	{ 0,	3,	"one" },
+	{ 1,	3,	"two" },
+	{ 2,	5,	"three" }
+};
+static unsigned int asn_MAP_SimpleType_enum2value[] = {
+	0,	/* one(0) */
+	2,	/* three(2) */
+	1	/* two(1) */
 };
 static asn_INTEGER_specifics_t asn_DEF_SimpleType_specs = {
-	/* Two name<->value maps sorted differently;
-	 * this may seem like a waste of space,
-	 * but the strings actually share it.
-	 */
-	asn_MAP_SimpleType_enum2value,	/* "tag" => N; sorted by tag */
-	asn_MAP_SimpleType_value2enum,	/* N => "tag"; sorted by N */
+	asn_MAP_SimpleType_value2enum,	/* "tag" => N; sorted by tag */
+	asn_MAP_SimpleType_enum2value,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
 	0	/* Enumeration is not extensible */
 };

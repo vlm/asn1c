@@ -667,25 +667,21 @@ accept_as_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [ActionItem] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_accept_as_enum2value[] = {
-	{ "safe",	1 },
-	{ "unknown",	0 },
-	{ "unsafe",	2 }
+static asn_INTEGER_enum_map_t asn_MAP_accept_as_value2enum[] = {
+	{ 0,	7,	"unknown" },
+	{ 1,	4,	"safe" },
+	{ 2,	6,	"unsafe" }
 	/* This list is extensible */
 };
-static asn_INTEGER_enum_map_t asn_MAP_accept_as_value2enum[] = {
-	{ "unknown",	0 },
-	{ "safe",	1 },
-	{ "unsafe",	2 }
+static unsigned int asn_MAP_accept_as_enum2value[] = {
+	1,	/* safe(1) */
+	0,	/* unknown(0) */
+	2	/* unsafe(2) */
 	/* This list is extensible */
 };
 static asn_INTEGER_specifics_t asn_DEF_accept_as_specs = {
-	/* Two name<->value maps sorted differently;
-	 * this may seem like a waste of space,
-	 * but the strings actually share it.
-	 */
-	asn_MAP_accept_as_enum2value,	/* "tag" => N; sorted by tag */
-	asn_MAP_accept_as_value2enum,	/* N => "tag"; sorted by N */
+	asn_MAP_accept_as_value2enum,	/* "tag" => N; sorted by tag */
+	asn_MAP_accept_as_enum2value,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
 	1	/* Enumeration is extensible */
 };
