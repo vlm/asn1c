@@ -13,6 +13,7 @@
 #define	_NativeInteger_H_
 
 #include <asn_application.h>
+#include <INTEGER.h>
 
 extern asn_TYPE_descriptor_t asn_DEF_NativeInteger;
 

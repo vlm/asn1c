@@ -75,6 +75,9 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 	OUT(fmt, ##args);					\
 	INDENT_LEVEL = _saved_indent;				\
 } while(0)
+#define	OUT_DEBUG(fmt, args...) do {				\
+		if(arg->flags & A1C_DEBUG) OUT(fmt, ##args);	\
+	} while(0)
 
 /* Generate #include line */
 #define	GEN_INCLUDE(filename)	do {				\

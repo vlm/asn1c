@@ -788,7 +788,8 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			break;
 		}
 
-		ASN_DEBUG("Unexpected XML tag in SET");
+		ASN_DEBUG("Unexpected XML tag in SET, expected \"%s\"",
+			xml_tag);
 		break;
 	}
 

@@ -258,12 +258,14 @@ REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
  * Decode the chunk of XML text encoding REAL.
  */
 static ssize_t
-REAL__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+REAL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
 	REAL_t *st = (REAL_t *)sptr;
 	double value;
 	char *xerdata = (char *)chunk_buf;
 	char *endptr = 0;
 	char *b;
+
+	(void)td;
 
 	if(!chunk_size) return -1;
 
