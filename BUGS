@@ -27,8 +27,5 @@ length, and encode its substructure member using indefinite length. The BER
 decoder is perfectly capable of decoding such sequences.
 
 5. Encoding or decoding of structures with combined length greater than 16MB
-is not tested. There are some size determination bugs lurking in the produced
-code, which may cause integer overflow in certain edge cases. This restriction
-should not cause a problem in the real world, as higher level protocol typically
-have similar or tighter restrictions on the supported PDU size.
+is not tested.
 
