@@ -79,6 +79,11 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, const enum asn1p_constraint_
 			type_expr, val_type_expr);
 	if(ret == -1) {
 		switch(type_expr->expr_type) {
+		default:
+			if(!(type_expr->expr_type & ASN_STRING_MASK))
+				break;
+			/* Compatibility rules are not defined */
+			/* Fall through */
 		case ASN_BASIC_INTEGER:
 		case ASN_BASIC_ENUMERATED:
 			FATAL("Incompatible type of \"%s\" (%s) at line %d "
@@ -96,10 +101,8 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, const enum asn1p_constraint_
 			 * We can't deal with OIDs inheritance properly yet.
 			 */
 			return 0;
-		default:
-			break;
 		}
-		WARNING("Incompatible type of \"%s\" (%s) at line %d "
+		WARNING("Possibly incompatible type of \"%s\" (%s) at line %d "
 			"with \"%s\" (%s) at line %d",
 			type_expr->Identifier,
 				ASN_EXPR_TYPE2STR(type_expr->expr_type),

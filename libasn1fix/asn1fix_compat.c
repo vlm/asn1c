@@ -23,25 +23,37 @@ asn1f_check_type_compatibility(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 	assert(atype != A1TC_REFERENCE);
 	assert(btype != A1TC_REFERENCE);
 
+	if(a == b)
+		return 0;	/* Fairly obviously */
+
 	if(atype != btype) {
 		/*
-		 * Limited compatibility.
+		 * Limited cross-compatibility of integer types.
 		 */
 		if((atype == A1TC_UNIVERVAL && btype == ASN_BASIC_INTEGER)
 		|| (atype == A1TC_UNIVERVAL && btype == ASN_BASIC_ENUMERATED)
 		)
 			return 0;
+
+		/* Limited cross-compatibility of string types */
+		if((atype & ASN_STRING_MASK)
+		&& (btype & ASN_STRING_MASK)) {
+			/* X.680, B.5 */
+			int akm = (atype & ASN_STRING_KM_MASK)
+				|| atype == ASN_STRING_UTF8String;
+			int bkm = (btype & ASN_STRING_KM_MASK)
+				|| btype == ASN_STRING_UTF8String;
+			return (akm == bkm) ? 0 : -1;
+		}
+
 		DEBUG("\t%s and %s are not compatible",
 			a->Identifier, b->Identifier);
 		return -1;	/* Fairly obviously */
 	}
 
-	if(a == b)
-		return 0;	/* Fairly obviously */
-
 	switch(atype) {
 	case ASN_BASIC_INTEGER:
-		/* All integers are compatible */
+		/* All integers are compatible, X.680, B.4.5 */
 		return 0;
 	case ASN_BASIC_ENUMERATED:
 		/*
@@ -55,6 +67,11 @@ asn1f_check_type_compatibility(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		}
 		return 0;
 	default:
+		if((atype & ASN_STRING_MASK)
+		&& (btype & ASN_STRING_MASK)) {
+			/* String type is compatible with the same type */
+			return 0;
+		}
 		/* Compatibility is not defined yet */
 		DEBUG("\tCompatibility rule is not defined for %s and %s",
 			a->Identifier, b->Identifier);
