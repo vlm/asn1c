@@ -1,8 +1,10 @@
 
 docsdir = $(datadir)/doc/asn1c
 
-docs_DATA = *.pdf *.html
+docs_DATA =	$(srcdir)/*.pdf	\
+		$(srcdir)/*.html
 
-EXTRA_DIST = *.pdf *.html
+EXTRA_DIST =	$(srcdir)/*.pdf	\
+		$(srcdir)/*.html
 
 CLEANFILES = *.*~

@@ -166,15 +166,15 @@ ASN1_FILES_1 = \
 	rfc3280-PKIX1Explicit88.asn1	\
 	rfc3280-PKIX1Implicit88.asn1
 
-EXTRA_DIST = rfc*.txt				\
-	sample.source.PKIX1/README		\
-	sample.source.PKIX1/config.h		\
-	sample.source.PKIX1/Makefile		\
-	sample.source.PKIX1/regenerate.Makefile	\
-	sample.source.TAP3/README		\
-	sample.source.TAP3/config.h		\
-	sample.source.TAP3/Makefile		\
-	sample.source.TAP3/regenerate.Makefile
+EXTRA_DIST = $(srcdir)/rfc*.txt					\
+	$(srcdir)/sample.source.PKIX1/README			\
+	$(srcdir)/sample.source.PKIX1/config.h			\
+	$(srcdir)/sample.source.PKIX1/Makefile			\
+	$(srcdir)/sample.source.PKIX1/regenerate.Makefile	\
+	$(srcdir)/sample.source.TAP3/README			\
+	$(srcdir)/sample.source.TAP3/config.h			\
+	$(srcdir)/sample.source.TAP3/Makefile			\
+	$(srcdir)/sample.source.TAP3/regenerate.Makefile
 
 CLEANFILES = $(ASN1_FILES_1)
 all: all-am
@@ -246,7 +246,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/sample.source.PKIX1 $(distdir)/sample.source.TAP3
+	$(mkdir_p) $(distdir)/$(srcdir) $(distdir)/$(srcdir)/sample.source.PKIX1 $(distdir)/$(srcdir)/sample.source.TAP3
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

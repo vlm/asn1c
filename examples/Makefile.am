@@ -11,15 +11,15 @@ all: $(ASN1_FILES_1)
 $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
 	./crfc2asn1.pl $(ASN1_SOURCE_1)
 
-EXTRA_DIST = rfc*.txt				\
-	sample.source.PKIX1/README		\
-	sample.source.PKIX1/config.h		\
-	sample.source.PKIX1/Makefile		\
-	sample.source.PKIX1/regenerate.Makefile	\
-	sample.source.TAP3/README		\
-	sample.source.TAP3/config.h		\
-	sample.source.TAP3/Makefile		\
-	sample.source.TAP3/regenerate.Makefile
+EXTRA_DIST = $(srcdir)/rfc*.txt					\
+	$(srcdir)/sample.source.PKIX1/README			\
+	$(srcdir)/sample.source.PKIX1/config.h			\
+	$(srcdir)/sample.source.PKIX1/Makefile			\
+	$(srcdir)/sample.source.PKIX1/regenerate.Makefile	\
+	$(srcdir)/sample.source.TAP3/README			\
+	$(srcdir)/sample.source.TAP3/config.h			\
+	$(srcdir)/sample.source.TAP3/Makefile			\
+	$(srcdir)/sample.source.TAP3/regenerate.Makefile
 
 CLEANFILES = $(ASN1_FILES_1)
 

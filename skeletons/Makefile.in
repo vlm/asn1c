@@ -170,7 +170,10 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 SUBDIRS = tests
-dist_pkgdata_DATA = *.[ch] file-dependencies
+dist_pkgdata_DATA = \
+		$(srcdir)/*.[ch]		\
+		$(srcdir)/file-dependencies
+
 all: all-recursive
 
 .SUFFIXES:
