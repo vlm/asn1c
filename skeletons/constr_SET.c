@@ -643,7 +643,7 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				RETURN(RC_FAIL);
 			}
 
-			elm = &td->elements[edx];
+			elm = &elements[edx];
 
 			if(elm->flags & ATF_POINTER) {
 				/* Member is a pointer to another structure */
@@ -724,7 +724,7 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			 * Search which member corresponds to this tag.
 			 */
 			for(edx = 0; edx < td->elements_count; edx++) {
-				elm = &td->elements[edx];
+				elm = &elements[edx];
 				tcv = xer_check_tag(buf_ptr,ch_size,elm->name);
 				switch(tcv) {
 				case XCT_BOTH:
