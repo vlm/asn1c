@@ -345,17 +345,20 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 
 static int
 emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
-	asn1p_expr_type_e etype;
 	asn1_integer_t natural_stop;
+	asn1p_expr_t *terminal;
 
-	etype = _find_terminal_type(arg);
-
-	OUT("/* The underlying type is %s */\n",
-		ASN_EXPR_TYPE2STR(etype));
+	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->mod, arg->expr);
+	if(terminal) {
+		OUT("/* The underlying type is %s */\n",
+			ASN_EXPR_TYPE2STR(terminal->expr_type));
+	} else {
+		terminal = arg->expr;
+	}
 	OUT("const %s_t *st = sptr;\n",
-		asn1c_type_name(arg, arg->expr, TNF_SAFE));
+		asn1c_type_name(arg, terminal, TNF_SAFE));
 
-	switch(etype) {
+	switch(terminal->expr_type) {
 	case ASN_STRING_UTF8String:
 		OUT("const uint8_t *ch = st->buf;\n");
 		OUT("const uint8_t *end = ch + st->size;\n");

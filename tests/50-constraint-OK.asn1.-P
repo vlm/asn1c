@@ -8,7 +8,6 @@
 
 typedef INTEGER_t	 Int1_t;
 
-
 /*** <<< FUNC-DECLS [Int1] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Int1;
@@ -109,7 +108,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int1 = {
 
 typedef Int1_t	 Int2_t;
 
-
 /*** <<< FUNC-DECLS [Int2] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Int2;
@@ -125,7 +123,7 @@ int
 Int2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Int2_t *st = sptr;
+	const Int1_t *st = sptr;
 	long value;
 	
 	if(!sptr) {
@@ -229,7 +227,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int2 = {
 
 typedef Int2_t	 Int3_t;
 
-
 /*** <<< FUNC-DECLS [Int3] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Int3;
@@ -245,7 +242,7 @@ int
 Int3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Int3_t *st = sptr;
+	const Int2_t *st = sptr;
 	long value;
 	
 	if(!sptr) {
@@ -349,7 +346,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int3 = {
 
 typedef Int3_t	 Int4_t;
 
-
 /*** <<< FUNC-DECLS [Int4] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Int4;
@@ -365,7 +361,7 @@ int
 Int4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Int4_t *st = sptr;
+	const Int3_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -463,7 +459,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int4 = {
 
 typedef Int4_t	 Int5_t;
 
-
 /*** <<< FUNC-DECLS [Int5] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Int5;
@@ -479,7 +474,7 @@ int
 Int5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Int5_t *st = sptr;
+	const Int4_t *st = sptr;
 	long value;
 	
 	if(!sptr) {
@@ -583,7 +578,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int5 = {
 
 typedef INTEGER_t	 ExtensibleExtensions_t;
 
-
 /*** <<< FUNC-DECLS [ExtensibleExtensions] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_ExtensibleExtensions;
@@ -599,7 +593,7 @@ int
 ExtensibleExtensions_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const ExtensibleExtensions_t *st = sptr;
+	const INTEGER_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -696,7 +690,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ExtensibleExtensions = {
 
 
 typedef IA5String_t	 Str1_t;
-
 
 /*** <<< FUNC-DECLS [Str1] >>> ***/
 
@@ -798,7 +791,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str1 = {
 
 typedef Str1_t	 Str2_t;
 
-
 /*** <<< FUNC-DECLS [Str2] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Str2;
@@ -812,9 +804,9 @@ asn_struct_free_f Str2_free;
 
 static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
-	const Str1_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -830,7 +822,7 @@ int
 Str2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Str2_t *st = sptr;
+	const Str1_t *st = sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -931,7 +923,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str2 = {
 
 typedef Str2_t	 Str3_t;
 
-
 /*** <<< FUNC-DECLS [Str3] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Str3;
@@ -956,9 +947,9 @@ static int permitted_alphabet_table_2[256] = {
 static int check_permitted_alphabet_2(const void *sptr) {
 	int *table = permitted_alphabet_table_2;
 	/* The underlying type is IA5String */
-	const Str2_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -974,7 +965,7 @@ int
 Str3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Str3_t *st = sptr;
+	const Str2_t *st = sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -1075,7 +1066,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str3 = {
 
 typedef IA5String_t	 PER_Visible_t;
 
-
 /*** <<< FUNC-DECLS [PER-Visible] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_PER_Visible;
@@ -1090,8 +1080,8 @@ asn_struct_free_f PER_Visible_free;
 static int check_permitted_alphabet_3(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1107,7 +1097,7 @@ int
 PER_Visible_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const PER_Visible_t *st = sptr;
+	const IA5String_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1205,7 +1195,6 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible = {
 
 typedef PER_Visible_t	 PER_Visible_2_t;
 
-
 /*** <<< FUNC-DECLS [PER-Visible-2] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_PER_Visible_2;
@@ -1219,9 +1208,9 @@ asn_struct_free_f PER_Visible_2_free;
 
 static int check_permitted_alphabet_4(const void *sptr) {
 	/* The underlying type is IA5String */
-	const PER_Visible_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1237,7 +1226,7 @@ int
 PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const PER_Visible_2_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1335,7 +1324,6 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible_2 = {
 
 typedef PER_Visible_t	 Not_PER_Visible_1_t;
 
-
 /*** <<< FUNC-DECLS [Not-PER-Visible-1] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_1;
@@ -1349,9 +1337,9 @@ asn_struct_free_f Not_PER_Visible_1_free;
 
 static int check_permitted_alphabet_5(const void *sptr) {
 	/* The underlying type is IA5String */
-	const PER_Visible_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1367,7 +1355,7 @@ int
 Not_PER_Visible_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Not_PER_Visible_1_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1465,7 +1453,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_1 = {
 
 typedef PER_Visible_t	 Not_PER_Visible_2_t;
 
-
 /*** <<< FUNC-DECLS [Not-PER-Visible-2] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_2;
@@ -1481,7 +1468,7 @@ int
 Not_PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Not_PER_Visible_2_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1579,7 +1566,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_2 = {
 
 typedef PER_Visible_t	 Not_PER_Visible_3_t;
 
-
 /*** <<< FUNC-DECLS [Not-PER-Visible-3] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_3;
@@ -1595,7 +1581,7 @@ int
 Not_PER_Visible_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Not_PER_Visible_3_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1693,7 +1679,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_3 = {
 
 typedef PER_Visible_t	 SIZE_but_not_FROM_t;
 
-
 /*** <<< FUNC-DECLS [SIZE-but-not-FROM] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_SIZE_but_not_FROM;
@@ -1707,9 +1692,9 @@ asn_struct_free_f SIZE_but_not_FROM_free;
 
 static int check_permitted_alphabet_6(const void *sptr) {
 	/* The underlying type is IA5String */
-	const PER_Visible_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1725,7 +1710,7 @@ int
 SIZE_but_not_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const SIZE_but_not_FROM_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -1826,7 +1811,6 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_but_not_FROM = {
 
 typedef PER_Visible_t	 SIZE_and_FROM_t;
 
-
 /*** <<< FUNC-DECLS [SIZE-and-FROM] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_SIZE_and_FROM;
@@ -1840,9 +1824,9 @@ asn_struct_free_f SIZE_and_FROM_free;
 
 static int check_permitted_alphabet_7(const void *sptr) {
 	/* The underlying type is IA5String */
-	const PER_Visible_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1858,7 +1842,7 @@ int
 SIZE_and_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const SIZE_and_FROM_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -1959,7 +1943,6 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_and_FROM = {
 
 typedef PER_Visible_t	 Neither_SIZE_nor_FROM_t;
 
-
 /*** <<< FUNC-DECLS [Neither-SIZE-nor-FROM] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Neither_SIZE_nor_FROM;
@@ -1973,9 +1956,9 @@ asn_struct_free_f Neither_SIZE_nor_FROM_free;
 
 static int check_permitted_alphabet_8(const void *sptr) {
 	/* The underlying type is IA5String */
-	const PER_Visible_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1991,7 +1974,7 @@ int
 Neither_SIZE_nor_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Neither_SIZE_nor_FROM_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -2089,7 +2072,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Neither_SIZE_nor_FROM = {
 
 typedef Utf8_2_t	 Utf8_3_t;
 
-
 /*** <<< FUNC-DECLS [Utf8-3] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Utf8_3;
@@ -2115,9 +2097,9 @@ static int permitted_alphabet_table_9[128] = {
 static int check_permitted_alphabet_9(const void *sptr) {
 	int *table = permitted_alphabet_table_9;
 	/* The underlying type is UTF8String */
-	const Utf8_2_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const UTF8String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -2134,7 +2116,7 @@ int
 Utf8_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Utf8_3_t *st = sptr;
+	const Utf8_2_t *st = sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -2236,7 +2218,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_3 = {
 
 typedef Utf8_1_t	 Utf8_2_t;
 
-
 /*** <<< FUNC-DECLS [Utf8-2] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_Utf8_2;
@@ -2252,7 +2233,7 @@ int
 Utf8_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
-	const Utf8_2_t *st = sptr;
+	const Utf8_1_t *st = sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -2352,7 +2333,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_2 = {
 
 
 typedef UTF8String_t	 Utf8_1_t;
-
 
 /*** <<< FUNC-DECLS [Utf8-1] >>> ***/
 
