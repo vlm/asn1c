@@ -29,8 +29,8 @@ A:
 	you have special requirements, we can work it out.
 
 	However, the asn1c compiler is able to understand the newer PKIX1
-	ASN.1 specs, contained in RFC3280, which obsole RFC2459.
-	Try this one out instead:
+	ASN.1 specs, contained in RFC3280, which obsoletes RFC2459.
+	To compile the sample X.509 certificate dump utility, try this out:
 
 		cd ./examples/sample.source.PKIX1
 		make
