@@ -1,0 +1,421 @@
+
+/*** <<< INCLUDES [PDU] >>> ***/
+
+#include <Sequence.h>
+#include <Set.h>
+#include <SetOf.h>
+#include <SeqOf.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [PDU] >>> ***/
+
+typedef enum PDU_PR {
+	PDU_PR_NOTHING,	/* No components present */
+	PDU_PR_sequence,
+	PDU_PR_set,
+	PDU_PR_setOf,
+	PDU_PR_seqOf,
+} PDU_PR;
+extern asn_TYPE_descriptor_t asn_DEF_PDU;
+
+/*** <<< TYPE-DECLS [PDU] >>> ***/
+
+
+typedef struct PDU {
+	PDU_PR present;
+	union {
+		Sequence_t	 sequence;
+		Set_t	 set;
+		SetOf_t	 setOf;
+		SeqOf_t	 seqOf;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} PDU_t;
+
+/*** <<< STAT-DEFS [PDU] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_PDU[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.sequence),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Sequence,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "sequence"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.set),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Set,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "set"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOf),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_SetOf,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "setOf"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.seqOf),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_SeqOf,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "seqOf"
+		},
+};
+static asn_TYPE_tag2member_t asn_DEF_PDU_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* sequence at 19 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* set at 20 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* setOf at 21 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* seqOf at 23 */
+};
+static asn_CHOICE_specifics_t asn_DEF_PDU_specs = {
+	sizeof(struct PDU),
+	offsetof(struct PDU, _asn_ctx),
+	offsetof(struct PDU, present),
+	sizeof(((struct PDU *)0)->present),
+	asn_DEF_PDU_tag2el,
+	4,	/* Count of tags in the map */
+	0	/* Whether extensible */
+};
+asn_TYPE_descriptor_t asn_DEF_PDU = {
+	"PDU",
+	"PDU",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	asn_MBR_PDU,
+	4,	/* Elements count */
+	&asn_DEF_PDU_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Sequence] >>> ***/
+
+#include <INTEGER.h>
+#include <Sequence.h>
+#include <BIT_STRING.h>
+#include <UTF8String.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [Sequence] >>> ***/
+
+
+struct Sequence;	/* Forward declaration */
+extern asn_TYPE_descriptor_t asn_DEF_Sequence;
+
+/*** <<< TYPE-DECLS [Sequence] >>> ***/
+
+
+typedef struct Sequence {
+	INTEGER_t	 integer;
+	struct Sequence	*sequence	/* OPTIONAL */;
+	BIT_STRING_t	*bits	/* OPTIONAL */;
+	UTF8String_t	 string;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Sequence_t;
+
+/*** <<< STAT-DEFS [Sequence] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Sequence[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, integer),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "integer"
+		},
+	{ ATF_POINTER, 2, offsetof(struct Sequence, sequence),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Sequence,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "sequence"
+		},
+	{ ATF_POINTER, 1, offsetof(struct Sequence, bits),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_BIT_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "bits"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, string),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "string"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Sequence_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_DEF_Sequence_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* integer at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* sequence at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* bits at 28 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* string at 29 */
+};
+static asn_SEQUENCE_specifics_t asn_DEF_Sequence_specs = {
+	sizeof(struct Sequence),
+	offsetof(struct Sequence, _asn_ctx),
+	asn_DEF_Sequence_tag2el,
+	4,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Sequence = {
+	"Sequence",
+	"Sequence",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Sequence_tags,
+	sizeof(asn_DEF_Sequence_tags)
+		/sizeof(asn_DEF_Sequence_tags[0]), /* 1 */
+	asn_DEF_Sequence_tags,	/* Same as above */
+	sizeof(asn_DEF_Sequence_tags)
+		/sizeof(asn_DEF_Sequence_tags[0]), /* 1 */
+	asn_MBR_Sequence,
+	4,	/* Elements count */
+	&asn_DEF_Sequence_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Set] >>> ***/
+
+#include <RELATIVE-OID.h>
+#include <OCTET_STRING.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [Set] >>> ***/
+
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum Set_PR {
+	Set_PR_roid,	/* Member roid is present */
+	Set_PR_opaque,	/* Member opaque is present */
+} Set_PR;
+extern asn_TYPE_descriptor_t asn_DEF_Set;
+
+/*** <<< TYPE-DECLS [Set] >>> ***/
+
+
+typedef struct Set {
+	RELATIVE_OID_t	 roid;
+	OCTET_STRING_t	*opaque	/* OPTIONAL */;
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pSet, Set_PR_x) */
+	unsigned int _presence_map
+		[((2+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Set_t;
+
+/*** <<< STAT-DEFS [Set] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Set[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Set, roid),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_RELATIVE_OID,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "roid"
+		},
+	{ ATF_POINTER, 1, offsetof(struct Set, opaque),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_OCTET_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "opaque"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Set_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_TYPE_tag2member_t asn_DEF_Set_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* roid at 33 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* opaque at 34 */
+};
+static uint8_t asn_DEF_Set_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7) | (0 << 6)
+};
+static asn_SET_specifics_t asn_DEF_Set_specs = {
+	sizeof(struct Set),
+	offsetof(struct Set, _asn_ctx),
+	offsetof(struct Set, _presence_map),
+	asn_DEF_Set_tag2el,
+	2,	/* Count of tags in the map */
+	asn_DEF_Set_tag2el,	/* Same as above */
+	2,	/* Count of tags in the CANONICAL-XER map */
+	0,	/* Whether extensible */
+	(unsigned int *)asn_DEF_Set_mmap	/* Mandatory elements map */
+};
+asn_TYPE_descriptor_t asn_DEF_Set = {
+	"Set",
+	"Set",
+	SET_free,
+	SET_print,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_decode_xer,
+	SET_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Set_tags,
+	sizeof(asn_DEF_Set_tags)
+		/sizeof(asn_DEF_Set_tags[0]), /* 1 */
+	asn_DEF_Set_tags,	/* Same as above */
+	sizeof(asn_DEF_Set_tags)
+		/sizeof(asn_DEF_Set_tags[0]), /* 1 */
+	asn_MBR_Set,
+	2,	/* Elements count */
+	&asn_DEF_Set_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [SetOf] >>> ***/
+
+#include <REAL.h>
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+
+/*** <<< DEPS [SetOf] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SetOf;
+
+/*** <<< TYPE-DECLS [SetOf] >>> ***/
+
+
+typedef struct SetOf {
+	A_SET_OF(REAL_t) list;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SetOf_t;
+
+/*** <<< STAT-DEFS [SetOf] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_SetOf[] = {
+	{ ATF_NOFLAGS, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (9 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_REAL,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_SetOf_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_SET_OF_specifics_t asn_DEF_SetOf_specs = {
+	sizeof(struct SetOf),
+	offsetof(struct SetOf, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+asn_TYPE_descriptor_t asn_DEF_SetOf = {
+	"SetOf",
+	"SetOf",
+	SET_OF_free,
+	SET_OF_print,
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_decode_xer,
+	SET_OF_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_SetOf_tags,
+	sizeof(asn_DEF_SetOf_tags)
+		/sizeof(asn_DEF_SetOf_tags[0]), /* 1 */
+	asn_DEF_SetOf_tags,	/* Same as above */
+	sizeof(asn_DEF_SetOf_tags)
+		/sizeof(asn_DEF_SetOf_tags[0]), /* 1 */
+	asn_MBR_SetOf,
+	1,	/* Single element */
+	&asn_DEF_SetOf_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [SeqOf] >>> ***/
+
+#include <INTEGER.h>
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
+
+/*** <<< DEPS [SeqOf] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SeqOf;
+
+/*** <<< TYPE-DECLS [SeqOf] >>> ***/
+
+
+typedef struct SeqOf {
+	A_SEQUENCE_OF(INTEGER_t) list;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SeqOf_t;
+
+/*** <<< STAT-DEFS [SeqOf] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_SeqOf[] = {
+	{ ATF_NOFLAGS, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "id"
+		},
+};
+static ber_tlv_tag_t asn_DEF_SeqOf_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_DEF_SeqOf_specs = {
+	sizeof(struct SeqOf),
+	offsetof(struct SeqOf, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+asn_TYPE_descriptor_t asn_DEF_SeqOf = {
+	"SeqOf",
+	"SeqOf",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_SeqOf_tags,
+	sizeof(asn_DEF_SeqOf_tags)
+		/sizeof(asn_DEF_SeqOf_tags[0]), /* 1 */
+	asn_DEF_SeqOf_tags,	/* Same as above */
+	sizeof(asn_DEF_SeqOf_tags)
+		/sizeof(asn_DEF_SeqOf_tags[0]), /* 1 */
+	asn_MBR_SeqOf,
+	1,	/* Single element */
+	&asn_DEF_SeqOf_specs	/* Additional specs */
+};
+
