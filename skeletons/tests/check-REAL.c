@@ -1,6 +1,6 @@
 #define	EMIT_ASN_DEBUG	1
-#include <INTEGER.c>
 #include <REAL.c>
+#include <ber_codec_prim.c>
 #include <ber_decoder.c>
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>

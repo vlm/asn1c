@@ -28,7 +28,6 @@ asn1_TYPE_descriptor_t asn1_DEF_NumericString = {
 	asn1_DEF_NumericString_tags,
 	sizeof(asn1_DEF_NumericString_tags)
 	  / sizeof(asn1_DEF_NumericString_tags[0]),
-	-1,	/* Both ways are fine */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

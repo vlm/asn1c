@@ -4,7 +4,6 @@
  */
 #include <asn_internal.h>
 #include <REAL.h>
-#include <INTEGER.h>
 #include <stdlib.h>	/* for strtod(3) */
 #include <math.h>
 #include <errno.h>
@@ -30,11 +29,11 @@ static ber_tlv_tag_t asn1_DEF_REAL_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_REAL = {
 	"REAL",
-	INTEGER_free,
+	ASN__PRIMITIVE_TYPE_free,
 	REAL_print,
 	asn_generic_no_constraint,
-	INTEGER_decode_ber,	/* Implemented in terms of INTEGER type */
-	INTEGER_encode_der,
+	ber_decode_primitive,
+	der_encode_primitive,
 	0,				/* Not implemented yet */
 	REAL_encode_xer,
 	0, /* Use generic outmost tag fetcher */
@@ -42,7 +41,6 @@ asn1_TYPE_descriptor_t asn1_DEF_REAL = {
 	sizeof(asn1_DEF_REAL_tags) / sizeof(asn1_DEF_REAL_tags[0]),
 	asn1_DEF_REAL_tags,	/* Same as above */
 	sizeof(asn1_DEF_REAL_tags) / sizeof(asn1_DEF_REAL_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -55,6 +53,28 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 	const char *fmt = canonical?"%15E":"f";
 	ssize_t ret;
 
+	/*
+	 * Check whether it is a special value.
+	 */
+	if(finite(d) == 0) {
+                if(isinf(d)) {
+                        if(copysign(1.0, d) < 0.0) {
+				buf = "<MINUS-INFINITY/>";
+				buflen = 17;
+                        } else {
+				buf = "<PLUS-INFINITY/>";
+				buflen = 16;
+                        }
+		} else {
+			buf = "<NOT-A-NUMBER/>";
+			buflen = 15;
+		}
+		return (cb(buf, buflen, app_key) < 0) ? -1 : buflen;
+	}
+
+	/*
+	 * Use the libc's double printing, hopefully they got it right.
+	 */
 	do {
 		ret = snprintf(buf, buflen, fmt, d);
 		if(ret < 0) {
@@ -66,7 +86,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 			break;
 		}
 		if(buf != local_buf) free(buf);
-		(void *)buf = MALLOC(buflen);
+		buf = (char *)MALLOC(buflen);
 		if(!buf) return -1;
 	} while(1);
 
@@ -118,18 +138,20 @@ int
 REAL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const REAL_t *st = (const REAL_t *)sptr;
+	ssize_t ret;
 	double d;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
 	if(!st || !st->buf)
-		return cb("<absent>", 8, app_key);
+		ret = cb("<absent>", 8, app_key);
+	else if(asn1_REAL2double(st, &d))
+		ret = cb("<error>", 7, app_key);
+	else
+		ret = REAL__dump(d, 0, cb, app_key);
 
-	if(asn1_REAL2double(st, &d))
-		return cb("<error>", 7, app_key);
-
-	return (REAL__dump(d, 0, cb, app_key) < 0) ? -1 : 0;
+	return (ret < 0) ? -1 : 0;
 }
 
 asn_enc_rval_t
@@ -338,7 +360,7 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 	|| expval == INT_MAX	/* catches finite() which catches isnan() */
 	) {
 		if(!st->buf || st->size < 2) {
-			(void *)ptr = MALLOC(2);
+			ptr = (uint8_t *)MALLOC(2);
 			if(!ptr) return -1;
 			st->buf = ptr;
 		}

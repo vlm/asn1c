@@ -158,7 +158,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 		 */
 
 		rval = ber_check_tags(td, ctx, ptr, size,
-			tag_mode, &ctx->left, 0);
+			tag_mode, 1, &ctx->left, 0);
 		if(rval.code != RC_OK) {
 			ASN_DEBUG("%s tagging check failed: %d",
 				td->name, rval.code);
@@ -534,7 +534,7 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Encode the TLV for the sequence itself.
 	 */
-	ret = der_write_tags(td, computed_size, tag_mode, tag, cb, app_key);
+	ret = der_write_tags(td, computed_size, tag_mode, 1, tag, cb, app_key);
 	ASN_DEBUG("Wrote tags: %ld (+%ld)", (long)ret, (long)computed_size);
 	if(ret == -1) {
 		erval.encoded = -1;
@@ -632,11 +632,11 @@ SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	int edx;
 	int ret;
 
-	if(!sptr) return cb("<absent>", 8, app_key);
+	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	/* Dump preamble */
-	if(cb(td->name, strlen(td->name), app_key)
-	|| cb(" ::= {\n", 7, app_key))
+	if(cb(td->name, strlen(td->name), app_key) < 0
+	|| cb(" ::= {", 6, app_key) < 0)
 		return -1;
 
 	for(edx = 0; edx < td->elements_count; edx++) {
@@ -651,27 +651,23 @@ SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		}
 
 		/* Indentation */
-		for(ret = 0; ret < ilevel; ret++) cb(" ", 1, app_key);
+		_i_INDENT(1);
 
 		/* Print the member's name and stuff */
-		if(cb(elm->name, strlen(elm->name), app_key)
-		|| cb(": ", 2, app_key))
+		if(cb(elm->name, strlen(elm->name), app_key) < 0
+		|| cb(": ", 2, app_key) < 0)
 			return -1;
 
 		/* Print the member itself */
-		ret = elm->type->print_struct(elm->type, memb_ptr, ilevel + 4,
+		ret = elm->type->print_struct(elm->type, memb_ptr, ilevel + 1,
 			cb, app_key);
-		if(ret) return ret;
-
-		/* Print out the terminator */
-		ret = cb("\n", 1, app_key);
 		if(ret) return ret;
 	}
 
-	/* Indentation */
-	for(ret = 0; ret < ilevel - 4; ret++) cb(" ", 1, app_key);
+	ilevel--;
+	_i_INDENT(1);
 
-	return cb("}", 1, app_key);
+	return (cb("}", 1, app_key) < 0) ? -1 : 0;
 }
 
 void

@@ -5,9 +5,10 @@
 #ifndef	_OBJECT_IDENTIFIER_H_
 #define	_OBJECT_IDENTIFIER_H_
 
-#include <INTEGER.h>
+#include <asn_application.h>
+#include <ber_codec_prim.h>
 
-typedef INTEGER_t OBJECT_IDENTIFIER_t; /* Implemented via INTEGER */
+typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t;
 
 extern asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER;
 

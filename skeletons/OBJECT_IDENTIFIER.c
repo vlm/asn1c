@@ -16,11 +16,11 @@ static ber_tlv_tag_t asn1_DEF_OBJECT_IDENTIFIER_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
 	"OBJECT IDENTIFIER",
-	INTEGER_free,
+	ASN__PRIMITIVE_TYPE_free,
 	OBJECT_IDENTIFIER_print,
 	OBJECT_IDENTIFIER_constraint,
-	INTEGER_decode_ber,	/* Implemented in terms of INTEGER type */
-	OBJECT_IDENTIFIER_encode_der,
+	ber_decode_primitive,
+	der_encode_primitive,
 	0,				/* Not implemented yet */
 	OBJECT_IDENTIFIER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
@@ -30,51 +30,10 @@ asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
 	asn1_DEF_OBJECT_IDENTIFIER_tags,	/* Same as above */
 	sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
-
-/*
- * Encode OBJECT IDENTIFIER type using DER.
- */
-asn_enc_rval_t
-OBJECT_IDENTIFIER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t erval;
-	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)ptr;
-
-	ASN_DEBUG("%s %s as OBJECT IDENTIFIER (tm=%d)",
-		cb?"Encoding":"Estimating", sd->name, tag_mode);
-
-	erval.encoded = der_write_tags(sd, st->size, tag_mode, tag,
-		cb, app_key);
-	ASN_DEBUG("OBJECT IDENTIFIER %s wrote tags %d",
-		sd->name, (int)erval.encoded);
-	if(erval.encoded == -1) {
-		erval.failed_type = sd;
-		erval.structure_ptr = ptr;
-		return erval;
-	}
-
-	if(cb && st->buf) {
-		int ret = cb(st->buf, st->size, app_key);
-		if(ret < 0) {
-			erval.encoded = -1;
-			erval.failed_type = sd;
-			erval.structure_ptr = ptr;
-			return erval;
-		}
-	} else {
-		assert(st->buf || st->size == 0);
-	}
-
-	erval.encoded += st->size;
-
-	return erval;
-}
 
 int
 OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
@@ -101,11 +60,12 @@ OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 
 int
-OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbuf, unsigned int rvsize) {
+OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbufp, unsigned int rvsize) {
 	unsigned LE __attribute__ ((unused)) = 1; /* Little endian (x86) */
 	uint8_t *arcend = arcbuf + arclen;	/* End of arc */
-	void *rvstart = rvbuf;	/* Original start of the value buffer */
 	unsigned int cache = 0;	/* No more than 14 significant bits */
+	unsigned char *rvbuf = (unsigned char *)rvbufp;
+	unsigned char *rvstart = rvbuf;	/* Original start of the value buffer */
 	int inc;	/* Return value growth direction */
 
 	rvsize *= CHAR_BIT;	/* bytes to bits */
@@ -155,15 +115,15 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 			errno = ERANGE;	/* Overflow */
 			return -1;
 		}
-		*(unsigned long *)rvbuf = accum + add;
+		*(unsigned long *)rvbuf = accum + add;	/* alignment OK! */
 		return 0;
 	}
 
 #ifndef	WORDS_BIGENDIAN
 	if(*(unsigned char *)&LE) {	/* Little endian (x86) */
 		/* "Convert" to big endian */
-		(unsigned char *)rvbuf += rvsize / CHAR_BIT - 1;
-		((unsigned char *)rvstart)--;
+		rvbuf += rvsize / CHAR_BIT - 1;
+		rvstart--;
 		inc = -1;	/* Descending */
 	} else
 #endif	/* !WORDS_BIGENDIAN */
@@ -175,8 +135,8 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 		/* Clear the high unused bits */
 		for(bits = rvsize - arclen;
 			bits > CHAR_BIT;
-				(unsigned char *)rvbuf += inc, bits -= CHAR_BIT)
-				*(unsigned char *)rvbuf = 0;
+				rvbuf += inc, bits -= CHAR_BIT)
+				*rvbuf = 0;
 
 		/* Fill the body of a value */
 		for(; arcbuf < arcend; arcbuf++) {
@@ -184,25 +144,24 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 			bits += 7;
 			if(bits >= CHAR_BIT) {
 				bits -= CHAR_BIT;
-				*(unsigned char *)rvbuf = (cache >> bits);
-				(unsigned char *)rvbuf += inc;
+				*rvbuf = (cache >> bits);
+				rvbuf += inc;
 			}
 		}
 		if(bits) {
-			*(unsigned char *)rvbuf = cache;
-			(unsigned char *)rvbuf += inc;
+			*rvbuf = cache;
+			rvbuf += inc;
 		}
 	}
 
 	if(add) {
-		for((unsigned char *)rvbuf -= inc; rvbuf != rvstart; (unsigned char *)rvbuf -= inc) {
-			int v = add + *(unsigned char *)rvbuf;
+		for(rvbuf -= inc; rvbuf != rvstart; rvbuf -= inc) {
+			int v = add + *rvbuf;
 			if(v & (-1 << CHAR_BIT)) {
-				*(unsigned char *)rvbuf
-					= (unsigned char)(v + (1 << CHAR_BIT));
+				*rvbuf = (unsigned char)(v + (1 << CHAR_BIT));
 				add = -1;
 			} else {
-				*(unsigned char *)rvbuf = v;
+				*rvbuf = v;
 				break;
 			}
 		}
@@ -331,16 +290,16 @@ OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
 	(void)ilevel;	/* Unused argument */
 
 	if(!st || !st->buf)
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	/* Dump preamble */
-	if(cb("{ ", 2, app_key))
+	if(cb("{ ", 2, app_key) < 0)
 		return -1;
 
 	if(OBJECT_IDENTIFIER__dump_body(st, cb, app_key) < 0)
 		return -1;
 
-	return cb(" }", 2, app_key);
+	return (cb(" }", 2, app_key) < 0) ? -1 : 0;
 }
 
 int

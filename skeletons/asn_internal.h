@@ -31,7 +31,7 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 			__FILE__, __LINE__);	\
 	} while(0)
 #else	/* !__GNUC__ */
-extern void ASN_DEBUG_f(const char *fmt, ...);
+void ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
 #endif	/* __GNUC__ */
 #else	/* EMIT_ASN_DEBUG != 1 */
@@ -60,13 +60,20 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; };
 		|| __ASN_E_cbc(buf3, size3))
 
 #define	_i_ASN_TEXT_INDENT(nl, level) do {				\
-		int __level = (level);					\
-		int __nl = ((nl) != 0);					\
-		int __i;						\
-		if(__nl) _ASN_CALLBACK("\n", 1);			\
-		for(__i = 0; __i < __level; __i++)			\
-			_ASN_CALLBACK("    ", 4);			\
-		er.encoded += __nl + 4 * __level;			\
+	int __level = (level);						\
+	int __nl = ((nl) != 0);						\
+	int __i;							\
+	if(__nl) _ASN_CALLBACK("\n", 1);				\
+	for(__i = 0; __i < __level; __i++)				\
+		_ASN_CALLBACK("    ", 4);				\
+	er.encoded += __nl + 4 * __level;				\
+} while(0)
+
+#define	_i_INDENT(nl)	do {						\
+	int __i;							\
+	if((nl) && cb("\n", 1, app_key) < 0) return -1;			\
+	for(__i = 0; __i < ilevel; __i++)				\
+		if(cb("    ", 4, app_key) < 0) return -1;		\
 } while(0)
 
 #endif	/* _ASN_INTERNAL_H_ */

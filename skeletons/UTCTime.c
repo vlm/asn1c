@@ -15,7 +15,9 @@
  * UTCTime basic type description.
  */
 static ber_tlv_tag_t asn1_DEF_UTCTime_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (23 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (23 << 2)),	/* [UNIVERSAL 23] IMPLICIT ...*/
+	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),  /* [UNIVERSAL 26] IMPLICIT ...*/
+	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
 asn1_TYPE_descriptor_t asn1_DEF_UTCTime = {
 	"UTCTime",
@@ -29,11 +31,10 @@ asn1_TYPE_descriptor_t asn1_DEF_UTCTime = {
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_UTCTime_tags,
 	sizeof(asn1_DEF_UTCTime_tags)
-	  / sizeof(asn1_DEF_UTCTime_tags[0]),
-	asn1_DEF_UTCTime_tags,	/* Same as above */
+	  / sizeof(asn1_DEF_UTCTime_tags[0]) - 2,
+	asn1_DEF_UTCTime_tags,
 	sizeof(asn1_DEF_UTCTime_tags)
 	  / sizeof(asn1_DEF_UTCTime_tags[0]),
-	-1,	/* Both ways are fine */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -106,16 +107,16 @@ UTCTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 		errno = EPERM;
 		if(asn_UT2time(st, &tm, 1) == -1 && errno != EPERM)
-			return cb("<bad-value>", 11, app_key);
+			return (cb("<bad-value>", 11, app_key) < 0) ? -1 : 0;
 
 		ret = snprintf(buf, sizeof(buf),
 			"%04d-%02d-%02d %02d:%02d%02d (GMT)",
 			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 			tm.tm_hour, tm.tm_min, tm.tm_sec);
 		assert(ret > 0 && ret < (int)sizeof(buf));
-		return cb(buf, ret, app_key);
+		return (cb(buf, ret, app_key) < 0) ? -1 : 0;
 	} else {
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }
 

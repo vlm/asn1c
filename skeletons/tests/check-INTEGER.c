@@ -1,4 +1,5 @@
 #include <INTEGER.c>
+#include <ber_codec_prim.c>
 #include <ber_decoder.c>
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>

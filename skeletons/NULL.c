@@ -26,7 +26,6 @@ asn1_TYPE_descriptor_t asn1_DEF_NULL = {
 	sizeof(asn1_DEF_NULL_tags) / sizeof(asn1_DEF_NULL_tags[0]),
 	asn1_DEF_NULL_tags,	/* Same as above */
 	sizeof(asn1_DEF_NULL_tags) / sizeof(asn1_DEF_NULL_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -37,7 +36,7 @@ NULL_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
 
-	erval.encoded = der_write_tags(td, 0, tag_mode, tag, cb, app_key);
+	erval.encoded = der_write_tags(td, 0, tag_mode, 0, tag, cb, app_key);
 	if(erval.encoded == -1) {
 		erval.failed_type = td;
 		erval.structure_ptr = ptr;
@@ -73,8 +72,8 @@ NULL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	(void)ilevel;	/* Unused argument */
 
 	if(sptr) {
-		return cb("<present>", 9, app_key);
+		return (cb("<present>", 9, app_key) < 0) ? -1 : 0;
 	} else {
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }

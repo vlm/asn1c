@@ -11,7 +11,6 @@
  */
 #include <asn_internal.h>
 #include <NativeReal.h>
-#include <INTEGER.h>
 #include <REAL.h>
 #include <assert.h>
 
@@ -35,7 +34,6 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeReal = {
 	sizeof(asn1_DEF_NativeReal_tags) / sizeof(asn1_DEF_NativeReal_tags[0]),
 	asn1_DEF_NativeReal_tags,	/* Same as above */
 	sizeof(asn1_DEF_NativeReal_tags) / sizeof(asn1_DEF_NativeReal_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -68,7 +66,7 @@ NativeReal_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags.
 	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, &length, 0);
+	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, 0, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 
@@ -132,8 +130,8 @@ NativeReal_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 		return erval;
 	}
 	
-	/* Encode fake REAL */
-	erval = INTEGER_encode_der(td, &tmp, tag_mode, tag, cb, app_key);
+	/* Encode a fake REAL */
+	erval = der_encode_primitive(td, &tmp, tag_mode, tag, cb, app_key);
 	if(erval.encoded == -1) {
 		assert(erval.structure_ptr == &tmp);
 		erval.structure_ptr = ptr;
@@ -148,13 +146,12 @@ NativeReal_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const double *Dbl = (const double *)sptr;
 	asn_enc_rval_t er;
-	double d;
 
 	(void)ilevel;
 
 	if(!Dbl) _ASN_ENCODE_FAILED;
 
-	er.encoded = REAL__dump(d, flags & XER_F_CANONICAL, cb, app_key);
+	er.encoded = REAL__dump(*Dbl, flags & XER_F_CANONICAL, cb, app_key);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
 	return er;
@@ -171,7 +168,7 @@ NativeReal_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
-	if(!Dbl) return cb("<absent>", 8, app_key);
+	if(!Dbl) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	return (REAL__dump(*Dbl, 0, cb, app_key) < 0) ? -1 : 0;
 }

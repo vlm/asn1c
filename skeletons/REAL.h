@@ -6,11 +6,9 @@
 #define	ASN_TYPE_REAL_H
 
 #include <asn_application.h>
+#include <ber_codec_prim.h>
 
-typedef struct REAL {
-	uint8_t *buf;	/* Buffer with REAL type encoding */
-	int size;	/* Size of the buffer */
-} REAL_t;
+typedef ASN__PRIMITIVE_TYPE_t REAL_t;
 
 extern asn1_TYPE_descriptor_t asn1_DEF_REAL;
 

@@ -4,6 +4,7 @@
  */
 #include <asn_internal.h>
 #include <ENUMERATED.h>
+#include <ber_codec_prim.h>
 
 /*
  * ENUMERATED basic type description.
@@ -13,10 +14,10 @@ static ber_tlv_tag_t asn1_DEF_ENUMERATED_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED = {
 	"ENUMERATED",
-	INTEGER_free,			/* Implemented in terms of INTEGER */
+	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,			/* Implemented in terms of INTEGER */
 	asn_generic_no_constraint,
-	INTEGER_decode_ber,		/* Implemented in terms of INTEGER */
+	ber_decode_primitive,
 	INTEGER_encode_der,		/* Implemented in terms of INTEGER */
 	0,				/* Not implemented yet */
 	INTEGER_encode_xer,		/* Implemented in terms of INTEGER */
@@ -25,7 +26,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED = {
 	sizeof(asn1_DEF_ENUMERATED_tags) / sizeof(asn1_DEF_ENUMERATED_tags[0]),
 	asn1_DEF_ENUMERATED_tags,	/* Same as above */
 	sizeof(asn1_DEF_ENUMERATED_tags) / sizeof(asn1_DEF_ENUMERATED_tags[0]),
-	0,	/* Primitive */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

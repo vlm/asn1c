@@ -9,7 +9,7 @@ enum asn_tag_class {
 	ASN_TAG_CLASS_UNIVERSAL		= 0,	/* 0b00 */
 	ASN_TAG_CLASS_APPLICATION	= 1,	/* 0b01 */
 	ASN_TAG_CLASS_CONTEXT		= 2,	/* 0b10 */
-	ASN_TAG_CLASS_PRIVATE		= 3,	/* 0b11 */
+	ASN_TAG_CLASS_PRIVATE		= 3	/* 0b11 */
 };
 typedef unsigned ber_tlv_tag_t;	/* BER TAG from Tag-Length-Value */
 

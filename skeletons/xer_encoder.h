@@ -13,7 +13,7 @@ struct asn1_TYPE_descriptor_s;	/* Forward declaration */
 enum xer_encoder_flags_e {
 	/* Mode of encoding */
 	XER_F_BASIC	= 0x01,	/* BASIC-XER (pretty-printing) */
-	XER_F_CANONICAL	= 0x02,	/* Canonical XER (strict rules, unreadable) */
+	XER_F_CANONICAL	= 0x02	/* Canonical XER (strict rules, unreadable) */
 };
 
 /*

@@ -18,9 +18,8 @@ asn1_TYPE_descriptor_t asn1_DEF_ANY = {
 	ANY_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
-	-1,	/* Both ways are fine (primitive and constructed) */
 	0, 0,	/* No members */
-	(void *)1	/* Special indicator that this is an ANY type */
+	(void *)2	/* Special indicator that this is an ANY type */
 };
 
 
@@ -139,7 +138,7 @@ static int ANY__consume_bytes(const void *buffer, size_t size, void *key) {
 		size_t nsize = (arg->size ? arg->size << 2 : 16) + size;
 		void *p = REALLOC(arg->buffer, nsize);
 		if(!p) return -1;
-		(void *)arg->buffer = p;
+		arg->buffer = (uint8_t *)p;
 		arg->size = nsize;
 	}
 

@@ -4,6 +4,7 @@
  */
 #include <asn_internal.h>
 #include <INTEGER.h>
+#include <ber_codec_prim.h>	/* Encoder and decoder of a primitive */
 #include <assert.h>
 #include <errno.h>
 
@@ -15,10 +16,10 @@ static ber_tlv_tag_t asn1_DEF_INTEGER_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
 	"INTEGER",
-	INTEGER_free,
+	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,
 	asn_generic_no_constraint,
-	INTEGER_decode_ber,
+	ber_decode_primitive,
 	INTEGER_encode_der,
 	0,				/* Not implemented yet */
 	INTEGER_encode_xer,
@@ -27,89 +28,21 @@ asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
 	sizeof(asn1_DEF_INTEGER_tags) / sizeof(asn1_DEF_INTEGER_tags[0]),
 	asn1_DEF_INTEGER_tags,	/* Same as above */
 	sizeof(asn1_DEF_INTEGER_tags) / sizeof(asn1_DEF_INTEGER_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
 /*
- * Decode INTEGER type.
- */
-ber_dec_rval_t
-INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
-	void **int_structure, void *buf_ptr, size_t size, int tag_mode) {
-	INTEGER_t *st = (INTEGER_t *)*int_structure;
-	ber_dec_rval_t rval;
-	ber_tlv_len_t length;
-
-	/*
-	 * If the structure is not there, allocate it.
-	 */
-	if(st == NULL) {
-		(void *)st = *int_structure = CALLOC(1, sizeof(*st));
-		if(st == NULL) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
-	}
-
-	ASN_DEBUG("Decoding %s as INTEGER (tm=%d)",
-		td->name, tag_mode);
-
-	/*
-	 * Check tags.
-	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, &length, 0);
-	if(rval.code != RC_OK)
-		return rval;
-
-	ASN_DEBUG("%s length is %d bytes", td->name, (int)length);
-
-	/*
-	 * Make sure we have this length.
-	 */
-	buf_ptr = ((char *)buf_ptr) + rval.consumed;
-	size -= rval.consumed;
-	if(length > (ber_tlv_len_t)size) {
-		rval.code = RC_WMORE;
-		rval.consumed = 0;
-		return rval;
-	}
-
-	st->buf = (uint8_t *)MALLOC(length);
-	if(st->buf) {
-		st->size = length;
-	} else {
-		rval.code = RC_FAIL;
-		rval.consumed = 0;
-		return rval;
-	}
-
-	memcpy(st->buf, buf_ptr, st->size);
-
-	rval.code = RC_OK;
-	rval.consumed += length;
-
-	ASN_DEBUG("Took %ld/%ld bytes to encode %s",
-		(long)rval.consumed,
-		(long)length, td->name);
-
-	return rval;
-}
-
-/*
  * Encode INTEGER type using DER.
  */
 asn_enc_rval_t
-INTEGER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
+INTEGER_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t erval;
-	INTEGER_t *st = (INTEGER_t *)ptr;
+	INTEGER_t *st = (INTEGER_t *)sptr;
 
 	ASN_DEBUG("%s %s as INTEGER (tm=%d)",
-		cb?"Encoding":"Estimating", sd->name, tag_mode);
+		cb?"Encoding":"Estimating", td->name, tag_mode);
 
 	/*
 	 * Canonicalize integer in the buffer.
@@ -155,32 +88,7 @@ INTEGER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 
 	} /* if(1) */
 
-	erval.encoded = der_write_tags(sd, st->size, tag_mode, tag,
-		cb, app_key);
-	ASN_DEBUG("INTEGER %s wrote tags %d", sd->name, (int)erval.encoded);
-	if(erval.encoded == -1) {
-		erval.failed_type = sd;
-		erval.structure_ptr = ptr;
-		return erval;
-	}
-
-	if(cb && st->buf) {
-		ssize_t ret;
-
-		ret = cb(st->buf, st->size, app_key);
-		if(ret == -1) {
-			erval.encoded = -1;
-			erval.failed_type = sd;
-			erval.structure_ptr = ptr;
-			return erval;
-		}
-	} else {
-		assert(st->buf || st->size == 0);
-	}
-
-	erval.encoded += st->size;
-
-	return erval;
+	return der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
 }
 
 /*
@@ -254,13 +162,17 @@ int
 INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
+	ssize_t ret;
 
 	(void)td;
 	(void)ilevel;
 
-	if(!st && !st->buf) return cb("<absent>", 8, app_key);
+	if(!st && !st->buf)
+		ret = cb("<absent>", 8, app_key);
+	else
+		ret = INTEGER__dump(st, cb, app_key);
 
-	return (INTEGER__dump(st, cb, app_key) < 0) ? -1 : 0;
+	return (ret < 0) ? -1 : 0;
 }
 
 asn_enc_rval_t
@@ -280,25 +192,6 @@ INTEGER_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
 	return er;
-}
-
-void
-INTEGER_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	INTEGER_t *st = (INTEGER_t *)ptr;
-
-	if(!td || !st)
-		return;
-
-	ASN_DEBUG("Freeing %s as INTEGER (%d, %p, %p)",
-		td->name, contents_only, st, st->buf);
-
-	if(st->buf) {
-		FREEMEM(st->buf);
-	}
-
-	if(!contents_only) {
-		FREEMEM(st);
-	}
 }
 
 int

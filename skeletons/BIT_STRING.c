@@ -4,6 +4,7 @@
  */
 #include <asn_internal.h>
 #include <BIT_STRING.h>
+#include <asn_internal.h>
 
 /*
  * BIT STRING basic type description.
@@ -27,9 +28,8 @@ asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
 	asn1_DEF_BIT_STRING_tags,	/* Same as above */
 	sizeof(asn1_DEF_BIT_STRING_tags)
 	  / sizeof(asn1_DEF_BIT_STRING_tags[0]),
-	-1,	/* Both ways are fine */
 	0, 0,	/* No members */
-	(void *)-1	/* Special indicator that this is a BIT STRING */
+	(void *)1	/* Special indicator that this is a BIT STRING */
 };
 
 /*
@@ -144,9 +144,10 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 	(void)td;	/* Unused argument */
 
-	if(!st || !st->buf) return cb("<absent>", 8, app_key);
+	if(!st || !st->buf)
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
-	ilevel += 4;
+	ilevel++;
 	buf = st->buf;
 	end = buf + st->size;
 
@@ -156,12 +157,9 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	for(buf++; buf < end; buf++) {
 		if(((buf - st->buf) - 1) % 16 == 0 && (st->size > 17)
 				&& buf != st->buf+1) {
-			int i;
-			/* Indentation */
-			if(cb("\n", 1, app_key)) return -1;
-			for(i = 0; i < ilevel; i++) cb(" ", 1, app_key);
+			_i_INDENT(1);
 			/* Dump the string */
-			if(cb(scratch, p - scratch, app_key)) return -1;
+			if(cb(scratch, p - scratch, app_key) < 0) return -1;
 			p = scratch;
 		}
 		*p++ = h2c[*buf >> 4];
@@ -173,13 +171,11 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		p--;	/* Eat the tailing space */
 
 		if((st->size > 17)) {
-			int i;
-			if(cb("\n", 1, app_key)) return -1;
-			for(i = 0; i < ilevel; i++) cb(" ", 1, app_key);
+			_i_INDENT(1);
 		}
 
 		/* Dump the incomplete 16-bytes row */
-		if(cb(scratch, p - scratch, app_key))
+		if(cb(scratch, p - scratch, app_key) < 0)
 			return -1;
 	}
 

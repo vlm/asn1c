@@ -48,6 +48,7 @@ asn_internal.h
 asn_types.h
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
 ber_decoder.h ber_decoder.c
+ber_codec_prim.c ber_codec_prim.h
 ber_tlv_length.h ber_tlv_length.c
 ber_tlv_tag.h ber_tlv_tag.c
 constr_TYPE.h constr_TYPE.c
