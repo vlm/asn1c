@@ -367,6 +367,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 	uint8_t buffer[arcval_size];
 #else
 	uint8_t *buffer = alloca(arcval_size);
+	if(!buffer) { errno = ENOMEM; return -1; }
 #endif
 
 	if(isLittleEndian && !prepared_order) {

@@ -108,7 +108,7 @@ _asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
 	 */
 	len = ret + 1;
 	p = alloca(len);
-	if(!p) return;	/* Can't be though. */
+	if(!p) return;	/* Can fail on !x86. */
 
 	
 	va_start(ap, fmt);

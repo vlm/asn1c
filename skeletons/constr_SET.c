@@ -447,6 +447,12 @@ SET_encode_der(asn1_TYPE_descriptor_t *sd,
 	if(t2m_build_own) {
 		t2m = alloca(specs->elements_count * sizeof(t2m[0]));
 		t2m_count = 0;
+		if(!t2m) {	/* There are such platforms */
+			my_erval.encoded = -1;
+			my_erval.failed_type = sd;
+			my_erval.structure_ptr = ptr;
+			return my_erval;
+		}
 	} else {
 		/*
 		 * There is no untagged CHOICE in this SET.

@@ -60,7 +60,10 @@ der_write_tags(asn1_TYPE_descriptor_t *sd,
 		 */
 		int stag_offset;
 		tags = alloca((sd->tags_count + 1) * sizeof(ber_tlv_tag_t));
-		if(tags == NULL) return -1;	/* Impossible on i386 */
+		if(!tags) {	/* Can fail on !x86 */
+			errno = ENOMEM;
+			return -1;
+		}
 		tags_count = sd->tags_count
 			+ 1	/* EXPLICIT or IMPLICIT tag is given */
 			- ((tag_mode==-1)?sd->tags_impl_skip:0);
@@ -79,7 +82,10 @@ der_write_tags(asn1_TYPE_descriptor_t *sd,
 		return 0;
 
 	lens = alloca(tags_count * sizeof(lens[0]));
-	if(lens == NULL) return -1;
+	if(!lens) {
+		errno = ENOMEM;
+		return -1;
+	}
 
 	/*
 	 * Array of tags is initialized.
