@@ -11,6 +11,7 @@
 $TMPDIR = '/tmp/asn1c-cgi-jail/';
 $SUIDHelper = './asn1c-suid-helper';
 $SkeletonsDir = '/usr/local/share/asn1c';	# Will be needed only once
+$CompilerLocation = '/usr/local/bin/asn1c';	# asn1c binary location
 $MD5ProgramPath = 'md5';
 $DM = 0750;	# Directory mode for all mkdirs.
 
@@ -77,10 +78,6 @@ sub prepareChrootEnvironment() {
 	mkdir $TMPDIR . 'sessions', $DM or bark($OpEnvFailed, $!); # sessions
 	mkdir $TMPDIR . 'bin', $DM or bark($OpEnvFailed, $!);	# asn1c location
 	mkdir $TMPDIR . 'skeletons', $DM or bark($OpEnvFailed, $!); # asn1c data
-	my $compiler_location = `cd / && which asn1c 2>/dev/null`
-		or bark($OpEnvFailed, $!);			# copy asn1c in
-	$compiler_location =~ s/[^\/a-z1-9.-]//ig;
-	bark($OpEnvFailed, $!) unless($compiler_location =~ /^\//);
 	if(-d '/lib') {
 		# Merge in dynamic libc
 		mkdir $TMPDIR . 'lib', $DM or bark($OpEnvFailed, $!);
@@ -102,7 +99,7 @@ sub prepareChrootEnvironment() {
 				. " /usr/lib/dy*"
 			. '; do ln $i; done');
 	}
-	system("cp $compiler_location $TMPDIR/bin 2>/dev/null") == 0
+	system("cp $CompilerLocation $TMPDIR/bin 2>/dev/null") == 0
 		or bark($OpEnvFailed, $!);
 	system("cp -r $SkeletonsDir/* $TMPDIR/skeletons >/dev/null 2>&1") == 0
 			or bark($OpEnvFailed, $!);
@@ -137,7 +134,8 @@ unless($session) {
 	$sessionDir = makeSessionDirName($TMPDIR, $session);
 	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed);
 	my $ck = cookie(-name=>'SessionID', -value=>$session, -expires=>'+1y');
-	print header(-cookie=>$ck);
+	print header(-expires=>'-1y', -cookie=>$ck);
+	$HTTPHeaderGenerated = 1;
 } else {
 	$session =~ s/[^a-f0-9]//ig;
 	bark("Nope, try again") if(length($session) != 32);	# cool hacker?
@@ -183,10 +181,7 @@ unless($session) {
 		}
 		exit(0);
 	}
-
-	print header();
 }
-$HTTPHeaderGenerated = 1;
 
 open(LOG, ">> $sessionDir/+logfile") or bark("Sandbox error: $!");
 print LOG isoTime() . "\tIP=$ENV{REMOTE_ADDR}";
@@ -407,7 +402,7 @@ print LOG "\n";	# Finalize logging record
 
 PRINTOUT:
 
-print header() unless($HTTPHeaderGenerated);
+print header(-expires=>'-1y') unless($HTTPHeaderGenerated);
 
 # If environment has never been set up completely, remove it.
 if($EnvironmentSetOK != 1 && $TMPDIR ne "/") {
