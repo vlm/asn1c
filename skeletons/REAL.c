@@ -3,8 +3,9 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #if	defined(__alpha)
-#define	_ISOC99_SOURCE	/* For quiet NAN, indirectly through bits/nan.h */
-#define	_BSD_SOURCE	/* To reintroduce finite(3) */
+#define	_ISOC99_SOURCE		/* For quiet NAN, through bits/nan.h */
+#define	_BSD_SOURCE		/* To reintroduce finite(3) */
+#include <sys/resource.h>	/* For INFINITY */
 #endif
 #include <asn_internal.h>
 #include <stdlib.h>	/* for strtod(3) */
@@ -16,9 +17,14 @@
 #undef	INT_MAX
 #define	INT_MAX	((int)(((unsigned int)-1) >> 1))
 
-static volatile double real_zero = 0.0;
+#if	!(defined(NAN) || defined(INFINITY))
+static volatile double real_zero __attribute__ ((unused)) = 0.0;
+#endif
 #ifndef	NAN
 #define	NAN	(real_zero/real_zero)
+#endif
+#ifndef	INFINITY
+#define	INFINITY	(1.0/real_zero)
 #endif
 
 /*
@@ -54,12 +60,12 @@ typedef enum specialRealValue {
 static struct specialRealValue_s {
 	char *string;
 	size_t length;
-	double dv;
+	long dv;
 } specialRealValue[] = {
 #define	SRV_SET(foo, val)	{ foo, sizeof(foo) - 1, val }
-	SRV_SET("<NOT-A-NUMBER/>", 0.0),
-	SRV_SET("<MINUS-INFINITY/>", -1.0),
-	SRV_SET("<PLUS-INFINITY/>", 1.0),
+	SRV_SET("<NOT-A-NUMBER/>", 0),
+	SRV_SET("<MINUS-INFINITY/>", -1),
+	SRV_SET("<PLUS-INFINITY/>", 1),
 #undef	SRV_SET
 };
 
@@ -269,12 +275,25 @@ REAL__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
 		for(i = 0; i < sizeof(specialRealValue)
 				/ sizeof(specialRealValue[0]); i++) {
 			struct specialRealValue_s *srv = &specialRealValue[i];
+			double dv;
+
 			if(srv->length != chunk_size
 			|| memcmp(srv->string, chunk_buf, chunk_size))
 				continue;
 
-			if(asn_double2REAL(st, srv->dv / real_zero))
-				return -1;
+			/*
+			 * It could've been done using
+			 * (double)srv->dv / real_zero,
+			 * but it summons fp exception on some platforms.
+			 */
+			switch(srv->dv) {
+			case -1: dv = - INFINITY; break;
+			case 0: dv = NAN;	break;
+			case 1: dv = INFINITY;	break;
+			default: return -1;
+			}
+
+			if(asn_double2REAL(st, dv)) return -1;
 
 			return chunk_size;
 		}
@@ -337,10 +356,10 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 
 		switch(st->buf[0]) {
 		case 0x40:	/* 01000000: PLUS-INFINITY */
-			*dbl_value = 1.0/real_zero;
+			*dbl_value = INFINITY;
 			return 0;
 		case 0x41:	/* 01000001: MINUS-INFINITY */
-			*dbl_value = -1.0/real_zero;
+			*dbl_value = - INFINITY;
 			return 0;
 			/*
 			 * The following cases are defined by

@@ -88,8 +88,8 @@ check(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sam
 		printf("%02x", *p);
 	printf("] (ilogb %d)\n", ilogb(val));
 
-	printf("%.12f vs %.12f\n", orig_dbl, val);
-	assert(orig_dbl == val || (isnan(orig_dbl) && isnan(val)));
+	printf("%.12f vs %.12f\n", val, orig_dbl);
+	assert((isnan(orig_dbl) && isnan(val)) || val == orig_dbl);
 	printf("OK\n");
 
 	check_str_repr(val, sample, canonical_sample);
@@ -98,7 +98,7 @@ check(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sam
 uint8_t buf_1_0[]  = { 0x80, 0xcc, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t buf_1_1[]  = { 0x80, 0xcc, 0x11, 0x99, 0x99, 0x99, 0x99, 0x99, 0x9a };
 uint8_t buf_3_14[] = { 0x80, 0xcd, 0x19, 0x1e, 0xb8, 0x51, 0xeb, 0x85, 0x1f };
-/* These ones are very interesting! It checks mantissa overflow! */
+/* These ones are very interesting! They check mantissa overflow! */
 uint8_t buf_mo1[]  = { 0xC0, 0xc5, 0x19, 0x1e, 0xb8, 0x51, 0xeb, 0x85, 0x1f,3};
 uint8_t buf_mo2[]  = { 0x80, 0xbd, 0x19, 0x1e, 0xb8, 0x51, 0xeb, 0x85, 0x1f,3,2};
 
@@ -189,11 +189,11 @@ check_xer(int fuzzy, double orig_value) {
 	ret = asn_REAL2double(newst1, &value1);
 	assert(ret == 0);
 
-	assert(value0 == orig_value
-		|| (isnan(value0) && isnan(orig_value))
+	assert((isnan(value0) && isnan(orig_value))
+		|| value0 == orig_value
 		|| fuzzy);
-	assert(value1 == orig_value
-		|| (isnan(value1) && isnan(orig_value)));
+	assert((isnan(value1) && isnan(orig_value))
+		|| value1 == orig_value);
 
 	assert(newst0->size == st.size || fuzzy);
 	assert(newst1->size == st.size);
@@ -250,9 +250,18 @@ main() {
 	check_buf(buf_mo2, sizeof(buf_mo2),	3.14, "3.14", "3.14E0");
 
 
+#ifdef	NAN
+	check_xer(0, NAN);	/* "<NOT-A-NUMBER/>" */
+#else
 	check_xer(0, zero/zero);	/* "<NOT-A-NUMBER/>" */
+#endif
+#ifdef	INFINITY
+	check_xer(0, INFINITY);		/* "<PLUS-INFINITY/>" */
+	check_xer(0, -INFINITY);	/* "<MINUS-INFINITY/>" */
+#else
 	check_xer(0, 1.0/zero);		/* "<PLUS-INFINITY/>" */
 	check_xer(0, -1.0/zero);	/* "<MINUS-INFINITY/>" */
+#endif
 	check_xer(0, 1.0);
 	check_xer(0, -1.0);
 	check_xer(0, 1.5);
