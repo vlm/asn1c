@@ -13,6 +13,7 @@
 	* Improved DEFAULT Value parsing and pretty-printing.
 	* Condition on distinct tags checker was incorrectly dealing with
 	  tagged CHOICE types. Fixed. Modified tests/37-indirect-choice-OK.asn1
+	* Improved type name generation code ("struct foo" vs "foo_t").
 	* Fixed constraint checking code incorrectly dealing with imported
 	  types with constraint values defined in other modules.
 	* Real REAL support! (Haven't tested denormals support yet!)

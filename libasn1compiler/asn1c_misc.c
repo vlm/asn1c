@@ -112,23 +112,17 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			return asn1c_type_name(&tmp, tmp.expr, _format);
 		}
 
-		if(_format == TNF_RSAFE || _format == TNF_CTYPE) {
+		if(_format == TNF_CTYPE) {
 			/*
-			 * The recursion-safe format is requested.
-			 * The problem here is that only constructed types
-			 * might be referenced with "struct".
-			 * Change RSAFE to CTYPE if the terminal type
-			 * is primitive.
+			 * If the component references the type itself,
+			 * switch to a recursion safe type representation
+			 * ("struct foo" instead of "foo_t").
 			 */
 			asn1p_expr_t *terminal;
 			terminal = asn1f_find_terminal_type_ex(
-				arg->asn, arg->mod, arg->expr);
-			if(terminal) {
-				if(terminal->expr_type
-					& (ASN_BASIC_MASK | ASN_STRING_MASK))
-					_format = TNF_CTYPE;
-				if(terminal == top_parent)
-					_format = TNF_RSAFE;
+				arg->asn, arg->mod, expr);
+			if(terminal && terminal == top_parent) {
+				_format = TNF_RSAFE;
 			}
 		}
 		break;
@@ -179,7 +173,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 				_format = TNF_CTYPE;
 			typename = ASN_EXPR_TYPE2STR(expr->expr_type);
 		} else {
-			_format = TNF_SAFE;
+			_format = TNF_RSAFE;
 			typename = expr->Identifier;
 		}
 	}
@@ -196,7 +190,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 		return asn1c_make_identifier(0, "struct", " ", typename, 0);
 	}
 
-	assert("!unreachable");
+	assert(!"unreachable");
 	return typename;
 }
 

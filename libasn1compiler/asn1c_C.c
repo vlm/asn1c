@@ -452,7 +452,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 		arg->embed--;
 		assert(arg->target->target == OT_TYPE_DECLS);
 	} else {
-		OUT("%s", asn1c_type_name(arg, memb, TNF_RSAFE));
+		OUT("%s", asn1c_type_name(arg, memb, TNF_CTYPE));
 	}
 	OUT(") list;\n");
 	INDENT(-1);
@@ -728,8 +728,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	if(arg->embed) {
 		REDIR(OT_TYPE_DECLS);
 
-		OUT("%s\t", asn1c_type_name(arg, arg->expr,
-			expr->marker.flags?TNF_RSAFE:TNF_CTYPE));
+		OUT("%s\t", asn1c_type_name(arg, arg->expr, TNF_CTYPE));
 		OUT("%s", expr->marker.flags?"*":" ");
 		OUT("%s", MKID(expr->Identifier));
 		if((expr->marker.flags & EM_DEFAULT) == EM_DEFAULT)

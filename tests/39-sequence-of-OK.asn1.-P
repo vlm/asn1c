@@ -17,7 +17,7 @@ extern asn1_TYPE_descriptor_t asn1_DEF_T;
 typedef struct T {
 	INTEGER_t	 int;
 	struct collection {
-		A_SEQUENCE_OF(struct T2) list;
+		A_SEQUENCE_OF(T2_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		ber_dec_ctx_t _ber_dec_ctx;
