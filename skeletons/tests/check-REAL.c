@@ -75,7 +75,7 @@ check(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sam
 	printf("converted into [");
 	for(p = rn->buf, end = p + rn->size; p < end; p++)
 		printf("%02x", *p);
-	printf("]\n");
+	printf("]: %d\n", rn->size);
 
 	ret = asn1_REAL2double(rn, &val);
 	assert(ret == 0);
@@ -86,8 +86,7 @@ check(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sam
 	printf("] (ilogb %d)\n", ilogb(val));
 
 	printf("%.12f vs %.12f\n", orig_dbl, val);
-
-	assert(orig_dbl == val);
+	assert(orig_dbl == val || (isnan(orig_dbl) && isnan(val)));
 	printf("OK\n");
 
 	check_str_repr(val, sample, canonical_sample);
@@ -144,9 +143,11 @@ check_buf(uint8_t *buf, size_t bufsize, double verify, const char *sample, const
 int
 main() {
 	REAL_t rn;
+	static const double c_NaN = 0.0;
 
 	memset(&rn, 0, sizeof(rn));
 
+	check(&rn, c_NaN/c_NaN, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>");
 	check(&rn, 0.0, "0", "0");
 	check(&rn, -0.0, "-0", "-0");	/* minus-zero */
 	check(&rn, 1.0, "1.0", "1.0E0");

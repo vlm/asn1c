@@ -17,8 +17,8 @@
 #endif
 
 #ifndef	NAN
-static const double nan0;
-#define	NAN	(nan0/nan0)
+static const double real_nan0;
+#define	NAN	(real_nan0/real_nan0)
 #endif
 
 /*
@@ -60,13 +60,17 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 	/*
 	 * ilogb(+-0) returns -INT_MAX or INT_MIN (platform-dependent)
 	 * ilogb(+-inf) returns INT_MAX
+	 * ilogb(NaN) returns INT_MIN or INT_MAX (platform-dependent)
 	 */
 	expval = ilogb(d);
-	if(expval <= -INT_MAX	/* Also catches (d == 0) */
-	|| expval == INT_MAX	/* catches finite() which catches isnan() */
+	if(expval <= -INT_MAX	/* Also catches +-0 and maybe isnan() */
+	|| expval == INT_MAX	/* catches isfin() and maybe isnan() */
 	) {
 		/* fpclassify(3) is not portable yet */
-		if(expval <= -INT_MAX) {
+		if(isnan(d)) {
+			buf = "<NOT-A-NUMBER/>";
+			buflen = 15;
+		} else if(expval <= -INT_MAX) {
 			if(copysign(1.0, d) < 0.0) {
 				buf = "-0";
 				buflen = 2;
@@ -74,7 +78,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 				buf = "0";
 				buflen = 1;
 			}
-		} else if(isinf(d)) {
+		} else {	/* isinf() */
                         if(copysign(1.0, d) < 0.0) {
 				buf = "<MINUS-INFINITY/>";
 				buflen = 17;
@@ -82,9 +86,6 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 				buf = "<PLUS-INFINITY/>";
 				buflen = 16;
                         }
-		} else {
-			buf = "<NOT-A-NUMBER/>";
-			buflen = 15;
 		}
 		return (cb(buf, buflen, app_key) < 0) ? -1 : buflen;
 	}
@@ -271,7 +272,7 @@ asn1_REAL2double(const REAL_t *st, double *dbl_value) {
 			*dbl_value = NAN;
 			return 0;
 		case 0x43:	/* 01000011: minus zero */
-			*dbl_value = NAN;
+			*dbl_value = -0.0;
 			return 0;
 		}
 
@@ -412,11 +413,11 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 	/*
 	 * ilogb(+-0) returns -INT_MAX or INT_MIN (platform-dependent)
 	 * ilogb(+-inf) returns INT_MAX
+	 * ilogb(NaN) returns INT_MIN or INT_MAX (platform-dependent)
 	 */
 	expval = ilogb(dbl_value);
-
-	if(expval <= -INT_MAX	/* Also catches (dbl_value == 0) */
-	|| expval == INT_MAX	/* catches finite() which catches isnan() */
+	if(expval <= -INT_MAX	/* Also catches +-0 and maybe isnan() */
+	|| expval == INT_MAX	/* catches isfin() and maybe isnan() */
 	) {
 		if(!st->buf || st->size < 2) {
 			ptr = (uint8_t *)MALLOC(2);
@@ -424,7 +425,11 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 			st->buf = ptr;
 		}
 		/* fpclassify(3) is not portable yet */
-		if(expval <= -INT_MAX) {
+		if(isnan(dbl_value)) {
+			st->buf[0] = 0x42;	/* NaN */
+			st->buf[1] = 0;
+			st->size = 1;
+		} else if(expval <= -INT_MAX) {
 			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x80 | 0x40;
 				st->buf[1] = 0;
@@ -433,16 +438,12 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 				st->buf[0] = 0;	/* JIC */
 				st->size = 0;
 			}
-		} else if(isinf(dbl_value)) {
+		} else {	/* isinf() */
 			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x41;	/* MINUS-INFINITY */
 			} else {
 				st->buf[0] = 0x40;	/* PLUS-INFINITY */
 			}
-			st->buf[1] = 0;
-			st->size = 1;
-		} else {
-			st->buf[0] = 0x42;	/* NaN */
 			st->buf[1] = 0;
 			st->size = 1;
 		}
