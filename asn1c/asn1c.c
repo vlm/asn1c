@@ -63,10 +63,10 @@ main(int ac, char **av) {
 		}
 		break;
 	case 'L':
-		print_arg__flags = APF_LINE_COMMENTS;
+		print_arg__flags |= APF_LINE_COMMENTS;
 		break;
 	case 'N':
-		print_arg__flags = APF_NO_SOURCE_COMMENTS;
+		print_arg__flags |= APF_NO_SOURCE_COMMENTS;
 		break;
 	case 'P':
 		asn1_compiler_flags |= A1C_PRINT_COMPILED;
