@@ -89,6 +89,7 @@ load_object(enum expectation expectation, char *fbuf, int size) {
 
 		if(expectation != EXP_BROKEN) {
 			assert(rval.code == RC_OK);
+			assert(fbuf_offset == size);
 		} else {
 			assert(rval.code != RC_OK);
 			fprintf(stderr, "Failed, but this was expected\n");
