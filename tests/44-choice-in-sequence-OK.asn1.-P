@@ -176,7 +176,7 @@ static asn1_TYPE_member_t asn1_MBR_b[] = {
 		.name = "d"
 		},
 	{ 0, offsetof(struct b, choice.e),
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = -1 /* Ambiguous tag (CHOICE|ANY?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_e,
 		.memb_constraints = 0,	/* Defer to actual type */
@@ -232,7 +232,7 @@ static asn1_TYPE_member_t asn1_MBR_T[] = {
 		.name = "a"
 		},
 	{ 0, offsetof(struct T, b),
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = -1 /* Ambiguous tag (CHOICE|ANY?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_b,
 		.memb_constraints = 0,	/* Defer to actual type */
