@@ -1,8 +1,8 @@
 #define	__NO_ASN_TABLE__
-#include "../UTCTime.c"
+#include <UTCTime.c>
 #define	__NO_ASSERT_H__
-#include "../GeneralizedTime.c"
-#include "../constraints.c"
+#include <GeneralizedTime.c>
+#include <constraints.c>
 
 static void
 check(char *time_str, time_t sample, int as_gmt) {
@@ -35,6 +35,8 @@ check(char *time_str, time_t sample, int as_gmt) {
 int
 main(int ac, char **av) {
 
+	(void)av;
+
 	check("0401250", -1, 0);
 	check("0401250930", -1, 0);	/* "Z" or "(+|-)hhmm" required */
 	check("04012509300", -1, 0);
@@ -65,5 +67,13 @@ main(int ac, char **av) {
 der_enc_rval_t
 OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr, int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
 	der_enc_rval_t erval;
+
+	(void)td;
+	(void)ptr;
+	(void)tag_mode;
+	(void)tag;
+	(void)cb;
+	(void)app_key;
+
 	return erval;
 }

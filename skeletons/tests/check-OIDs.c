@@ -1,11 +1,12 @@
-#include "../OBJECT_IDENTIFIER.c"
-#include "../RELATIVE-OID.c"
-#include "../INTEGER.c"
-#include "../ber_decoder.c"
-#include "../ber_tlv_length.c"
-#include "../ber_tlv_tag.c"
-#include "../der_encoder.c"
-#include "../constraints.c"
+#include <OBJECT_IDENTIFIER.c>
+#include <RELATIVE-OID.c>
+#include <INTEGER.c>
+#include <ber_decoder.c>
+#include <ber_tlv_length.c>
+#include <ber_tlv_tag.c>
+#include <der_encoder.c>
+#include <constraints.c>
+
 #include <sys/time.h>
 
 static int

@@ -1,6 +1,6 @@
 #define	__NO_ASN_TABLE__
-#include "../GeneralizedTime.c"
-#include "../constraints.c"
+#include <GeneralizedTime.c>
+#include <constraints.c>
 
 static void
 check(char *time_str, time_t expect, int as_gmt) {
@@ -45,7 +45,7 @@ rcheck(time_t tloc, const char *expect, int force_gmt) {
 		assert(expect);
 		printf("[%s] vs [%s] (%d)\n",
 			gt->buf, expect, force_gmt);
-		assert(gt->size == strlen(gt->buf));
+		assert(gt->size == (int)strlen(gt->buf));
 		assert(!strcmp(gt->buf, expect));
 	} else {
 		assert(!expect);
@@ -54,6 +54,8 @@ rcheck(time_t tloc, const char *expect, int force_gmt) {
 
 int
 main(int ac, char **av) {
+
+	(void)av;
 
 	check("200401250", -1, 0);
 	check("2004012509300", -1, 0);
@@ -98,5 +100,13 @@ main(int ac, char **av) {
 der_enc_rval_t
 OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr, int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
 	der_enc_rval_t erval;
+
+	(void)td;
+	(void)ptr;
+	(void)tag_mode;
+	(void)tag;
+	(void)cb;
+	(void)app_key;
+
 	return erval;
 }

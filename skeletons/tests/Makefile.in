@@ -13,7 +13,7 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c check-UTCTime.c
+SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c check-UTCTime.c check-ber_tlv_tag.c
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -38,8 +38,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-check_PROGRAMS = check-OIDs$(EXEEXT) check-GeneralizedTime$(EXEEXT) \
-	check-UTCTime$(EXEEXT) check-INTEGER$(EXEEXT)
+check_PROGRAMS = check-ber_tlv_tag$(EXEEXT) check-OIDs$(EXEEXT) \
+	check-GeneralizedTime$(EXEEXT) check-UTCTime$(EXEEXT) \
+	check-INTEGER$(EXEEXT)
 subdir = skeletons/tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -61,13 +62,17 @@ check_OIDs_LDADD = $(LDADD)
 check_UTCTime_SOURCES = check-UTCTime.c
 check_UTCTime_OBJECTS = check-UTCTime.$(OBJEXT)
 check_UTCTime_LDADD = $(LDADD)
+check_ber_tlv_tag_SOURCES = check-ber_tlv_tag.c
+check_ber_tlv_tag_OBJECTS = check-ber_tlv_tag.$(OBJEXT)
+check_ber_tlv_tag_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/check-GeneralizedTime.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-INTEGER.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-OIDs.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/check-UTCTime.Po
+@AMDEP_TRUE@	./$(DEPDIR)/check-UTCTime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/check-ber_tlv_tag.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
@@ -77,9 +82,9 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-UTCTime.c
+	check-UTCTime.c check-ber_tlv_tag.c
 DIST_SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-UTCTime.c
+	check-UTCTime.c check-ber_tlv_tag.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -193,8 +198,8 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-AM_CPPFLAGS = -I${top_srcdir}/skeletons
-TESTS = ${check_PROGRAMS}
+AM_CPPFLAGS = -I$(top_srcdir)/skeletons
+TESTS = $(check_PROGRAMS)
 all: all-am
 
 .SUFFIXES:
@@ -247,6 +252,9 @@ check-OIDs$(EXEEXT): $(check_OIDs_OBJECTS) $(check_OIDs_DEPENDENCIES)
 check-UTCTime$(EXEEXT): $(check_UTCTime_OBJECTS) $(check_UTCTime_DEPENDENCIES) 
 	@rm -f check-UTCTime$(EXEEXT)
 	$(LINK) $(check_UTCTime_LDFLAGS) $(check_UTCTime_OBJECTS) $(check_UTCTime_LDADD) $(LIBS)
+check-ber_tlv_tag$(EXEEXT): $(check_ber_tlv_tag_OBJECTS) $(check_ber_tlv_tag_DEPENDENCIES) 
+	@rm -f check-ber_tlv_tag$(EXEEXT)
+	$(LINK) $(check_ber_tlv_tag_LDFLAGS) $(check_ber_tlv_tag_OBJECTS) $(check_ber_tlv_tag_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -258,6 +266,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-INTEGER.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-OIDs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-UTCTime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-ber_tlv_tag.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
