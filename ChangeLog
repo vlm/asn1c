@@ -1,7 +1,11 @@
 
 0.9.10:	2005-Feb-24
 
-	* Fixes #1150856 (vvvy@users.sourceforge.net).
+	* Fixed #1150856.
+	  Reported by <vvvy@users.sourceforge.net>.
+	* Fixed XER XMLValueList encoding and decoding.
+	  (Test case 70) (Severity: high, Secruity impact: low)
+	  Reported by <siden@ul-gsm.ru>.
 
 0.9.9:	2005-Feb-22
 
@@ -42,8 +46,8 @@
 
 0.9.7:	2004-Oct-11
 
-	* Finished CANONICAL-XER implementation by adding SET and SET OF
-	  canonical ordering support.
+	* Finished CXER implementation by adding SET and SET OF canonical
+	  ordering support.
 	* Fixed unber(1) limits controlling logic.
 	* Removed C99'izm from the x509dump, now understood by older compilers.
 	* Enhanced UTF8String constraint validation, now it checks
