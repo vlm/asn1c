@@ -192,9 +192,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		rval = ber_check_tags(opt_codec_ctx, td, ctx,
 			buf_ptr, size, tag_mode, -1,
 			&ctx->left, &tlv_constr);
-		if(rval.code != RC_OK) {
-			RETURN(rval.code);
-		}
+		if(rval.code != RC_OK)
+			return rval;
 
 		if(tlv_constr) {
 			/*
@@ -693,7 +692,7 @@ OCTET_STRING_encode_xer_ascii(asn_TYPE_descriptor_t *td, void *sptr,
 	buf = st->buf;
 	end = buf + st->size;
 	for(ss = buf; buf < end; buf++) {
-		int ch = *buf;
+		unsigned int ch = *buf;
 		int s_len;	/* Special encoding sequence length */
 
 		/*
