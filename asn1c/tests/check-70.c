@@ -80,7 +80,7 @@ static PDU_t *
 load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or_xer how) {
 	asn_dec_rval_t rval;
 	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
-		asn_TYPE_descriptor_t *, void **, void *, size_t);
+		asn_TYPE_descriptor_t *, void **, const void *, size_t);
 	PDU_t *st = 0;
 	int csize = 1;
 
