@@ -87,6 +87,7 @@ main() {
 	uint8_t buf1[] = { 0x85, 0x00, 0x01, 0x02, 0x03, 0x04 };
 	uint8_t buf2[] = { 0x85, 0x00, 0x7f, 0xff, 0x03, 0x04 };
 	uint8_t buf3[] = { 0x85, 0x00, 0x7f, 0xff, 0xff, 0x04 };
+	uint8_t buf4[] = { 0x89, 0x00, 0x7f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x04 };
 	ber_tlv_len_t tlv_len;
 	ssize_t ret;
 	int i;
@@ -104,9 +105,15 @@ main() {
 	printf("ret=%ld, len=%ld\n", (long)ret, (long)tlv_len);
 	assert(ret == sizeof(buf2));
 
-	ret = ber_fetch_length(0, buf3, sizeof(buf3), &tlv_len);
-	printf("ret=%ld\n", (long)ret);
-	assert(ret == -1);
+	if(sizeof(tlv_len) == 4) {
+		ret = ber_fetch_length(0, buf3, sizeof(buf3), &tlv_len);
+		printf("ret=%ld\n", (long)ret);
+		assert(ret == -1);
+	} else if(sizeof(tlv_len) == 8) {
+		ret = ber_fetch_length(0, buf4, sizeof(buf4), &tlv_len);
+		printf("ret=%ld\n", (long)ret);
+		assert(ret == -1);
+	}
 
 	return 0;
 }

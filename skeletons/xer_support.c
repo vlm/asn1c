@@ -88,7 +88,7 @@ _charclass[256] = {
 /*
  * Parser itself
  */
-int pxml_parse(int *stateContext, void *xmlbuf, size_t size, pxml_callback_f *cb, void *key) {
+ssize_t pxml_parse(int *stateContext, void *xmlbuf, size_t size, pxml_callback_f *cb, void *key) {
 	pstate_e state = (pstate_e)*stateContext;
 	char *chunk_start = (char *)xmlbuf;
 	char *p = chunk_start;

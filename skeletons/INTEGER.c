@@ -379,24 +379,24 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 	 * a) shall not all be ones; and
 	 * b) shall not all be zero.
 	 */
-	for(p = pstart; p < pend1; p += add) {
+	for(p = pstart; p != pend1; p += add) {
 		switch(*p) {
-		case 0x00: if((p[1] & 0x80) == 0)
+		case 0x00: if((*(p+add) & 0x80) == 0)
 				continue;
 			break;
-		case 0xff: if((p[1] & 0x80))
+		case 0xff: if((*(p+add) & 0x80))
 				continue;
 			break;
 		}
 		break;
 	}
 	/* Copy the integer body */
-	for(pstart = p, bp = buf; p <= pend1;)
-		*bp++ = *p++;
+	for(pstart = p, bp = buf, pend1 += add; p != pend1; p += add)
+		*bp++ = *p;
 
 	if(st->buf) FREEMEM(st->buf);
 	st->buf = buf;
-	st->size = p - pstart;
+	st->size = bp - buf;
 
 	return 0;
 }
