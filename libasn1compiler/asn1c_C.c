@@ -1200,10 +1200,21 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	static int global_memb_unique;
 	int save_target;
 	arg_t tmp_arg;
-	struct asn1p_type_tag_s outmost_tag;
+	struct asn1p_type_tag_s outmost_tag_s;
+	struct asn1p_type_tag_s *outmost_tag;
 	char *p;
 
+	if(asn1f_fetch_outmost_tag(arg->asn,
+			expr->module, expr, &outmost_tag_s, 1)) {
+		outmost_tag = 0;
+	} else {
+		outmost_tag = &outmost_tag_s;
+	}
+
 	OUT("{ ");
+
+	if(outmost_tag && outmost_tag->tag_value == -1)
+		OUT("ATF_OPEN_TYPE | ");
 	OUT("%s, ", expr->marker?"ATF_POINTER":"ATF_NOFLAGS");
 	if((expr->marker & EM_OPTIONAL) == EM_OPTIONAL) {
 		asn1p_expr_t *tv;
@@ -1229,12 +1240,15 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	INDENT(+1);
 	if(C99_MODE) OUT(".tag = ");
-	if(asn1f_fetch_outmost_tag(arg->asn,
-			expr->module, expr, &outmost_tag, 0)) {
-		OUT("-1 /* Ambiguous tag (CHOICE|ANY?) */");
+	if(outmost_tag) {
+		if(outmost_tag->tag_value == -1)
+			OUT("-1 /* Ambiguous tag (ANY?) */");
+		else
+			_print_tag(arg, outmost_tag);
 	} else {
-		_print_tag(arg, &outmost_tag);
+		OUT("-1 /* Ambiguous tag (CHOICE?) */");
 	}
+
 	OUT(",\n");
 	if(C99_MODE) OUT(".tag_mode = ");
 	if(expr->tag.tag_class) {

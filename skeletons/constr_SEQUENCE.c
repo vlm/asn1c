@@ -257,6 +257,14 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 				edx = n;
 				ctx->step = 1 + 2 * edx;	/* Remember! */
 				goto microphase2;
+			} else if(elements[n].flags & ATF_OPEN_TYPE) {
+				/*
+				 * This is the ANY type, which may bear
+				 * any flag whatsoever.
+				 */
+				edx = n;
+				ctx->step = 1 + 2 * edx;	/* Remember! */
+				goto microphase2;
 			} else if(elements[n].tag == (ber_tlv_tag_t)-1) {
 				use_bsearch = 1;
 				break;
@@ -304,18 +312,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 			 * or an extension (...),
 			 * or an end of the indefinite-length structure.
 			 */
-
 			if(!IN_EXTENSION_GROUP(specs, edx)) {
-				if(elements[edx].tag == (ber_tlv_tag_t)-1
-				/* FIXME: any support */
-				&& (elements[edx].flags & ATF_POINTER) == 0) {
-					/*
-					 * This must be the ANY type.
-					 */
-					ctx->step |= 1;
-					goto microphase2;
-				}
-
 				ASN_DEBUG("Unexpected tag %s",
 					ber_tlv_tag_string(tlv_tag));
 				ASN_DEBUG("Expected tag %s (%s)%s",

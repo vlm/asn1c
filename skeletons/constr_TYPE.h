@@ -97,6 +97,7 @@ typedef struct asn1_TYPE_member_s {
 	enum asn1_TYPE_flags_e {
 		ATF_NOFLAGS,
 		ATF_POINTER	= 0x01,	/* Represented by the pointer */
+		ATF_OPEN_TYPE	= 0x02,	/* ANY type, without meaningful tag */
 	} flags;			/* Element's presentation flags */
 	int optional;	/* Following optional members, including current */
 	int memb_offset;		/* Offset of the element */
