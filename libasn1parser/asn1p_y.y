@@ -1395,11 +1395,11 @@ BasicString:
 	TOK_BMPString { $$ = ASN_STRING_BMPString; }
 	| TOK_GeneralString {
 		$$ = ASN_STRING_GeneralString;
-		return yyerror("GeneralString is not supported");
+		fprintf(stderr, "WARNING: GeneralString is not fully supported");
 	}
 	| TOK_GraphicString {
 		$$ = ASN_STRING_GraphicString;
-		return yyerror("GraphicString is not supported");
+		fprintf(stderr, "WARNING: GraphicString is not fully supported");
 	}
 	| TOK_IA5String { $$ = ASN_STRING_IA5String; }
 	| TOK_ISO646String { $$ = ASN_STRING_ISO646String; }
@@ -1407,14 +1407,14 @@ BasicString:
 	| TOK_PrintableString { $$ = ASN_STRING_PrintableString; }
 	| TOK_T61String {
 		$$ = ASN_STRING_T61String;
-		return yyerror("T61String not implemented yet");
+		fprintf(stderr, "WARNING: T61String is not fully supported");
 	}
 	| TOK_TeletexString { $$ = ASN_STRING_TeletexString; }
 	| TOK_UniversalString { $$ = ASN_STRING_UniversalString; }
 	| TOK_UTF8String { $$ = ASN_STRING_UTF8String; }
 	| TOK_VideotexString {
 		$$ = ASN_STRING_VideotexString;
-		return yyerror("VideotexString is no longer supported");
+		fprintf(stderr, "WARNING: VideotexString is not fully supported");
 	}
 	| TOK_VisibleString { $$ = ASN_STRING_VisibleString; }
 	| TOK_ObjectDescriptor { $$ = ASN_STRING_ObjectDescriptor; }
