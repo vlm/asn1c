@@ -100,8 +100,8 @@ int
 RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_size, unsigned int arcs_slots) {
 	uint8_t *buf;
 	uint8_t *bp;
-	int size;
-	int i;
+	unsigned int size;
+	unsigned int i;
 
 	if(roid == NULL || arcs == NULL || arc_type_size < 1) {
 		errno = EINVAL;
@@ -126,7 +126,7 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 			arcs, arc_type_size, 0);
 	}
 
-	assert((bp - buf) <= size);
+	assert((unsigned)(bp - buf) <= size);
 
 	/*
 	 * Replace buffer.

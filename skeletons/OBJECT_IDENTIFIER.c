@@ -548,7 +548,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 			arcs, arc_type_size, 0);
 	}
 
-	assert((bp - buf) <= size);
+	assert((unsigned)(bp - buf) <= size);
 
 	/*
 	 * Replace buffer.
