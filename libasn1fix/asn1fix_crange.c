@@ -167,10 +167,19 @@ _range_print(const asn1cnst_range_t *range) {
 
 	if(_edge_compare(&range->left, &range->right)) {
 		printf("(%s.", _edge_value(&range->left));
-		printf(".%s)", _edge_value(&range->right));
+		printf(".%s", _edge_value(&range->right));
 	} else {
-		printf("(%s)", _edge_value(&range->left));
+		printf("(%s", _edge_value(&range->left));
 	}
+
+	if(range->extensible) {
+		printf(",...)");
+	} else {
+		printf(")");
+	}
+
+	if(range->incompatible) printf("/I");
+	if(range->not_PER_visible) printf("/!V");
 
 	if(range->el_count) {
 		int i;
@@ -231,6 +240,9 @@ static int _range_merge_in(asn1cnst_range_t *into, asn1cnst_range_t *cr) {
 	asn1cnst_range_t *r;
 	int prev_count = into->el_count;
 	int i;
+
+	into->not_PER_visible |= cr->not_PER_visible;
+	into->extensible |= cr->extensible;
 
 	/*
 	 * Add the element OR all its children "into".
@@ -481,8 +493,15 @@ _range_intersection(asn1cnst_range_t *range, const asn1cnst_range_t *with, int s
 	int ret;
 	int i, j;
 
-	if(with->empty_constraint || range->empty_constraint) {
-		range->empty_constraint = 1;	/* Propagate error */
+	assert(!range->incompatible);
+
+	/* Propagate errors */
+	range->extensible |= with->extensible;
+	range->not_PER_visible |= with->not_PER_visible;
+	range->empty_constraint |= with->empty_constraint;
+
+	if(range->empty_constraint) {
+		/* No use in intersecting empty constraints */
 		return 0;
 	}
 
@@ -609,7 +628,7 @@ _range_union(asn1cnst_range_t *range) {
 			 * Still, range may be joined: (1..4)(5..10).
 			 * This logic is valid only for whole numbers
 			 * (i.e., not REAL type, but REAL constraints
-			 * are not PER-visible (X.691, 9.3.12).
+			 * are not PER-visible (X.691, #9.3.12).
 			 */
 			if(ra->right.type == ARE_VALUE
 			&& rb->left.type == ARE_VALUE
@@ -674,7 +693,7 @@ _range_canonicalize(asn1cnst_range_t *range) {
 }
 
 asn1cnst_range_t *
-asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet) {
+asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, int strict_PV) {
 	asn1cnst_range_t *range;
 	asn1cnst_range_t *tmp;
 	asn1p_value_t *vmin;
@@ -689,7 +708,8 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 	}
 
 	/*
-	 * Check if the requested constraint is compatible with expression type.
+	 * Check if the requested constraint is theoretically compatible
+	 * with the given expression type.
 	 */
 	if(asn1constraint_compatible(expr_type, type) != 1) {
 		errno = EINVAL;
@@ -730,7 +750,15 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		range = _range_new();
 	}
 
-	if(!ct || range->not_PER_visible)
+	/*
+	 * X.691, #9.3.6
+	 * Constraints on restricter character string types
+	 * which are not known-multiplier are not PER-visible.
+	 */
+	if((expr_type & ASN_STRING_NKM_MASK))
+		range->not_PER_visible = 1;
+
+	if(!ct || (strict_PV && range->not_PER_visible))
 		return range;
 
 	switch(ct->type) {
@@ -746,9 +774,11 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		break;
 	case ACT_EL_EXT:
 		if(!*exmet) {
-			range->not_PER_visible = 1;
+			range->incompatible = 1;
 		} else {
-			range->extensible = 1;
+			_range_free(range);
+			errno = ERANGE;
+			range = 0;
 		}
 		return range;
 	case ACT_CT_SIZE:
@@ -756,12 +786,24 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		if(type == ct->type) {
 			*exmet = 1;
 		} else {
-			range->not_PER_visible = 1;
+			range->incompatible = 1;
 			return range;
 		}
 		assert(ct->el_count == 1);
-		return asn1constraint_compute_PER_range(expr_type,
-			ct->elements[0], type, minmax, exmet);
+		tmp = asn1constraint_compute_PER_range(expr_type,
+			ct->elements[0], type, minmax, exmet, strict_PV);
+		if(tmp) {
+			_range_free(range);
+		} else {
+			if(errno == ERANGE) {
+				range->empty_constraint = 1;
+				range->extensible = 1;
+				tmp = range;
+			} else {
+				_range_free(range);
+			}
+		}
+		return tmp;
 	case ACT_CA_SET:	/* (10..20)(15..17) */
 	case ACT_CA_INT:	/* SIZE(1..2) ^ FROM("ABCD") */
 
@@ -769,13 +811,29 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		for(i = 0; i < ct->el_count; i++) {
 			tmp = asn1constraint_compute_PER_range(expr_type,
 				ct->elements[i], type,
-				ct->type==ACT_CA_SET?range:minmax, exmet);
+				ct->type==ACT_CA_SET?range:minmax, exmet,
+				strict_PV);
 			if(!tmp) {
-				_range_free(range);
-				return NULL;
+				if(errno == ERANGE) {
+					continue;
+				} else {
+					_range_free(range);
+					return NULL;
+				}
 			}
 
-			if(tmp->not_PER_visible) {
+			if(tmp->incompatible) {
+				/*
+				 * Ignore constraints
+				 * incompatible with arguments:
+				 * 	SIZE(1..2) ^ FROM("ABCD")
+				 * either SIZE or FROM will be ignored.
+				 */
+				_range_free(tmp);
+				continue;
+			}
+
+			if(strict_PV && tmp->not_PER_visible) {
 				if(ct->type == ACT_CA_SET) {
 					/*
 					 * X.691, #9.3.18:
@@ -789,17 +847,6 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 				}
 				_range_free(tmp);
 				continue;
-			}
-
-			range->extensible |= tmp->extensible;
-
-			if(tmp->extensible && type == ACT_CT_FROM) {
-				/*
-				 * X.691, #9.3.10:
-				 * Extensible permitted alphabet constraints
-				 * are not PER-visible.
-				 */
-				range->not_PER_visible = 1;
 			}
 
 			ret = _range_intersection(range, tmp,
@@ -817,40 +864,100 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 	case ACT_CA_CSV:	/* SIZE(1..2, 3..4) */
 	case ACT_CA_UNI:	/* SIZE(1..2) | FROM("ABCD") */
 
-		/* Merge everything. Canonicalizator will do union magic */
+		/*
+		 * Grab the first valid constraint.
+		 */
+		tmp = 0;
 		for(i = 0; i < ct->el_count; i++) {
 			tmp = asn1constraint_compute_PER_range(expr_type,
-				ct->elements[i], type, minmax, exmet);
+				ct->elements[i], type, minmax, exmet,
+				strict_PV);
 			if(!tmp) {
-				_range_free(range);
-				return NULL;
+				if(errno == ERANGE) {
+					range->extensible = 1;
+					continue;
+				} else {
+					_range_free(range);
+					return NULL;
+				}
+			}
+			if(tmp->incompatible) {
+				_range_free(tmp);
+				tmp = 0;
+			}
+			break;
+		}
+		if(tmp) {
+			tmp->extensible |= range->extensible;
+			tmp->empty_constraint |= range->empty_constraint;
+			_range_free(range);
+			range = tmp;
+		} else {
+			range->incompatible = 1;
+			return range;
+		}
+
+		/*
+		 * Merge with the rest of them.
+		 * Canonicalizator will do the union magic.
+		 */
+		for(; i < ct->el_count; i++) {
+			tmp = asn1constraint_compute_PER_range(expr_type,
+				ct->elements[i], type, minmax, exmet,
+				strict_PV);
+			if(!tmp) {
+				if(errno == ERANGE) {
+					range->extensible = 1;
+					continue;
+				} else {
+					_range_free(range);
+					return NULL;
+				}
+			}
+
+			if(tmp->incompatible) {
+				_range_free(tmp);
+				_range_canonicalize(range);
+				range->incompatible = 1;
+				return range;
 			}
 
 			if(tmp->empty_constraint) {
-				/* Ignore empty constraints */
+				/*
+				 * Ignore empty constraints in OR logic.
+				 */
+				range->extensible |= tmp->extensible;
 				_range_free(tmp);
 				continue;
 			}
-
-			range->not_PER_visible |= tmp->not_PER_visible;
-			range->extensible |= tmp->extensible;
 
 			_range_merge_in(range, tmp);
 		}
 
 		_range_canonicalize(range);
 
-		if(range->not_PER_visible) {
+		if(range->extensible && type == ACT_CT_FROM) {
+			/*
+			 * X.691, #9.3.10:
+			 * Extensible permitted alphabet constraints
+			 * are not PER-visible.
+			 */
+			range->not_PER_visible = 1;
+		}
+
+		if(strict_PV && range->not_PER_visible) {
 			/*
 			 * X.691, #9.3.19:
 			 * If not PER-visible constraint is part of UNION,
-			 * the resulting constraint is not PER-visible.
+			 * the whole resulting constraint is not PER-visible.
 			 */
 			_range_free(range);
 			if(minmax)
 				range = _range_clone(minmax);
 			else
 				range = _range_new();
+			range->not_PER_visible = 1;
+			range->incompatible = 1;
 		}
 
 		return range;
@@ -862,10 +969,10 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		assert(ct->el_count >= 1);
 		_range_free(range);
 		range = asn1constraint_compute_PER_range(expr_type,
-			ct->elements[0], type, minmax, exmet);
+			ct->elements[0], type, minmax, exmet, strict_PV);
 		return range;
 	default:
-		range->not_PER_visible = 1;
+		range->incompatible = 1;
 		return range;
 	}
 
@@ -874,7 +981,7 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		/*
 		 * Expectation is not met. Return the default range.
 		 */
-		range->not_PER_visible = 1;
+		range->incompatible = 1;
 		return range;
 	}
 
