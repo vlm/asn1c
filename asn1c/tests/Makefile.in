@@ -62,6 +62,8 @@ CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CONFIGURE_DEPENDS = @CONFIGURE_DEPENDS@
+CPLUSPLUS_FOUND_FALSE = @CPLUSPLUS_FOUND_FALSE@
+CPLUSPLUS_FOUND_TRUE = @CPLUSPLUS_FOUND_TRUE@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -158,8 +160,8 @@ target_os = @target_os@
 target_vendor = @target_vendor@
 check_SCRIPTS = check-assembly.sh
 TESTS_ENVIRONMENT = ./check-assembly.sh
-TESTS = check-*.c
-EXTRA_DIST = ${check_SCRIPTS} check-*.c
+TESTS = check-*.c*
+EXTRA_DIST = ${check_SCRIPTS} check-*.c*
 all: all-am
 
 .SUFFIXES:

@@ -2,9 +2,14 @@
 check_SCRIPTS = check-assembly.sh
 
 TESTS_ENVIRONMENT= ./check-assembly.sh
-TESTS = check-*.c
 
-EXTRA_DIST = ${check_SCRIPTS} check-*.c
+if CPLUSPLUS_FOUND
+TESTS = check-*.c check-*.cc	## Include C++ test filed (.cc)
+else
+TESTS = check-*.c
+endif
+
+EXTRA_DIST = ${check_SCRIPTS} check-*.c*
 
 clean:
 	for t in test-*; do rm -rf $$t; done
