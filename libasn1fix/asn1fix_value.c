@@ -3,7 +3,7 @@
 static int _asn1f_copy_value(arg_t *arg, asn1p_expr_t *to,asn1p_expr_t *from);
 
 int
-asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, enum asn1p_constraint_type_e *opt_constr_type) {
+asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, const enum asn1p_constraint_type_e *opt_constr_type) {
 	asn1p_expr_t *val_type_expr;
 	asn1p_expr_t *value_expr;
 	asn1p_expr_t *type_expr;
