@@ -1765,7 +1765,7 @@ emit_alphabet_tables(arg_t *arg, asn1p_constraint_t *ct, int *table) {
 				}
 			}
 			OUT("};\n");
-			OUT("static int check_alphabet_%x(void *sptr) {\n", ct);
+			OUT("static int check_alphabet_%x(const void *sptr) {\n", ct);
 			INDENT(+1);
 			OUT("int *table = alphabet_table_%x;\n", ct);
 			emit_alphabet_check_cycle(arg);
