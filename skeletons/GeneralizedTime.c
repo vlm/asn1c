@@ -32,6 +32,24 @@ static struct tm *gmtime_r(time_t *tloc, struct tm *result) {
 	return 0;
 }
 
+#define	tzset()	_tzset()
+static time_t timegm(struct tm *tm) {
+	time_t tloc;
+	char *tz;
+
+	tz = getenv("TZ");
+	setenv("TZ", "", 1);
+	tzset();
+	tloc = mktime(tm);
+	if (tz)
+		setenv("TZ", tz, 1);
+	else
+		unsetenv("TZ");
+	tzset();
+	return tloc;
+}
+
+#if 0	/* Alternate version */
 /* vlm: I am not sure about validity of this algorithm. */
 static time_t timegm(struct tm *tm) {
 	struct tm tmp;
@@ -42,7 +60,7 @@ static time_t timegm(struct tm *tm) {
 	tm->tm_gmtoff = 0;	/* Simulate GMT */
 	return tloc;
 }
-
+#endif
 #endif	/* WIN32 */
 
 #ifndef	__NO_ASN_TABLE__
