@@ -366,13 +366,20 @@ asn1print_crange_value(asn1cnst_edge_t *edge, int as_char) {
 }
 
 static int
-asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_t *ct, enum asn1p_constraint_type_e type) {
+asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, int strict_PER_visible) {
 	asn1cnst_range_t *range;
 	int as_char = (type==ACT_CT_FROM);
 	int i;
 
-	range = asn1constraint_compute_PER_range(expr_type, ct, type, 0, 0);
+	range = asn1constraint_compute_PER_range(expr_type, ct, type,
+			0, 0, strict_PER_visible);
 	if(!range) return -1;
+
+	if(range->incompatible
+	|| (strict_PER_visible && range->not_PER_visible)) {
+		asn1constraint_range_free(range);
+		return 0;
+	}
 
 	switch(type) {
 	case ACT_CT_FROM: printf("(FROM("); break;
@@ -410,13 +417,13 @@ asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_
 
 static int
 asn1print_constraint_explain(asn1p_expr_type_e expr_type,
-		asn1p_constraint_t *ct) {
+		asn1p_constraint_t *ct, int s_PV) {
 
-	asn1print_constraint_explain_type(expr_type, ct, ACT_EL_RANGE);
+	asn1print_constraint_explain_type(expr_type, ct, ACT_EL_RANGE, s_PV);
 	printf(" ");
-	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_SIZE);
+	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_SIZE, s_PV);
 	printf(" ");
-	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_FROM);
+	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_FROM, s_PV);
 
 	return 0;
 }
@@ -564,10 +571,14 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 
 		top_parent = asn1f_find_terminal_type_ex(asn, mod, tc);
 		if(top_parent) {
+			printf("\n-- Practical constraints (%s): ",
+				top_parent->Identifier);
+			asn1print_constraint_explain(top_parent->expr_type,
+				tc->combined_constraints, 0);
 			printf("\n-- PER-visible constraints (%s): ",
 				top_parent->Identifier);
 			asn1print_constraint_explain(top_parent->expr_type,
-				tc->combined_constraints);
+				tc->combined_constraints, 1);
 		}
 		printf("\n");
 	}
