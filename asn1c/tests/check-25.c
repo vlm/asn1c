@@ -94,7 +94,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	tp = memset(&t, 0, sizeof(t));
 
 	fprintf(stderr, "Buf %p (%d)\n", buf, (int)size);
-	rval = ber_decode(&asn1_DEF_T, (void **)&tp, buf, size);
+	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d, expected %d\n",
 		(int)rval.code, (int)rval.consumed, (int)consumed);
 
@@ -136,7 +136,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 		assert(rval.consumed <= consumed);
 	}
 
-	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 }
 
 static void
@@ -208,7 +208,7 @@ partial_read(uint8_t *buf, size_t size) {
 			tp = memset(&t, 0, sizeof(t));
 
 			fprintf(stderr, "=> Chunk 1 (%d):\n", (int)size1);
-			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
+			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				tbuf1, size1);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size1);
@@ -220,7 +220,7 @@ partial_read(uint8_t *buf, size_t size) {
 			}
 
 			fprintf(stderr, "=> Chunk 2 (%d):\n", (int)size2);
-			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
+			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				tbuf2, size2);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size2);
@@ -232,12 +232,12 @@ partial_read(uint8_t *buf, size_t size) {
 			}
 
 			fprintf(stderr, "=> Chunk 3 (%d):\n", (int)size3);
-			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
+			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				tbuf3, size3);
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
-			asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+			asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 		}
 	}
 }

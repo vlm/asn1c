@@ -137,7 +137,7 @@ check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 	tp = memset(tp, 0, sizeof(*tp));
 
 	fprintf(stderr, "Buf %p (%d)\n", (int)buf, (int)size);
-	rval = ber_decode(&asn1_DEF_T, (void **)&tp, buf, size);
+	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
 
@@ -145,10 +145,10 @@ check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 	assert(rval.consumed == consumed);
 
 	fprintf(stderr, "=== asn_fprint() ===\n");
-	ret = asn_fprint(stderr, &asn1_DEF_T, tp);
+	ret = asn_fprint(stderr, &asn_DEF_T, tp);
 	assert(ret == 0);
 	fprintf(stderr, "=== xer_fprint() ===\n");
-	ret = xer_fprint(stderr, &asn1_DEF_T, tp);
+	ret = xer_fprint(stderr, &asn_DEF_T, tp);
 	fprintf(stderr, "=== END ===\n");
 	assert(ret == 0);
 
@@ -194,7 +194,7 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 	/*
 	 * Try to re-create using DER encoding.
 	 */
-	erval = der_encode(&asn1_DEF_T, tp, buf_fill, 0);
+	erval = der_encode(&asn_DEF_T, tp, buf_fill, 0);
 	assert(erval.encoded != -1);
 	if(erval.encoded != cmp_buf_size) {
 		printf("%d != %d\n", (int)erval.encoded, (int)cmp_buf_size);
@@ -252,7 +252,7 @@ partial_read(uint8_t *buf, size_t size) {
 			tp = memset(&t, 0, sizeof(t));
 
 			fprintf(stderr, "=> Chunk 1 (%d):\n", (int)size1);
-			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
+			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				buf1, size1);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size1);
@@ -264,7 +264,7 @@ partial_read(uint8_t *buf, size_t size) {
 			}
 
 			fprintf(stderr, "=> Chunk 2 (%d):\n", (int)size2);
-			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
+			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				buf2, size2);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size2);
@@ -276,12 +276,12 @@ partial_read(uint8_t *buf, size_t size) {
 			}
 
 			fprintf(stderr, "=> Chunk 3 (%d):\n", (int)size3);
-			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
+			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				buf3, size3);
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
-			asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+			asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 		}
 	}
 }
@@ -293,27 +293,27 @@ main() {
 	/* Check exact buf0 */
 	check(&t, buf0, sizeof(buf0), sizeof(buf0));
 	compare(&t, buf0_reconstr, sizeof(buf0_reconstr));
-	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check exact buf1 */
 	check(&t, buf1, sizeof(buf1), sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
-	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check slightly more than buf1 */
 	check(&t, buf1, sizeof(buf1) + 10, sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
-	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check exact buf2 */
 	check(&t, buf2, sizeof(buf2), sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
-	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check slightly more than buf2 */
 	check(&t, buf2, sizeof(buf2) + 10, sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
-	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
+	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
 
 	/* Split the buffer in parts and check decoder restartability */
 	partial_read(buf0, sizeof(buf0));

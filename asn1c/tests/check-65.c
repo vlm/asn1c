@@ -53,14 +53,14 @@ uint8_t buf2[] = {
 
 static void
 check_1(int is_ok, uint8_t *buf, int size, size_t consumed) {
-	asn1_TYPE_descriptor_t *td = &asn1_DEF_T1;
+	asn_TYPE_descriptor_t *td = &asn_DEF_T1;
 	ber_dec_rval_t rval;
 	T1_t t, *tp;
 
 	tp = memset(&t, 0, sizeof(t));
 
 	fprintf(stderr, "Buf %p\n", buf);
-	rval = ber_decode(td, (void **)&tp, buf, size);
+	rval = ber_decode(0, td, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
 
@@ -76,14 +76,14 @@ check_1(int is_ok, uint8_t *buf, int size, size_t consumed) {
 
 static void
 check_2(int is_ok, uint8_t *buf, int size, size_t consumed) {
-	asn1_TYPE_descriptor_t *td = &asn1_DEF_T;
+	asn_TYPE_descriptor_t *td = &asn_DEF_T;
 	ber_dec_rval_t rval;
 	T_t t, *tp;
 
 	tp = memset(&t, 0, sizeof(t));
 
 	fprintf(stderr, "Buf %p\n", buf);
-	rval = ber_decode(td, (void **)&tp, buf, size);
+	rval = ber_decode(0, td, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
 
