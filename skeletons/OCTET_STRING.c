@@ -150,7 +150,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	 * This is a some sort of a hack.
 	 * The OCTET STRING decoder is being used in BIT STRING mode.
 	 */
-	int is_bit_str = (td->specifics==(void *)-1)?1:0;
+	int is_bit_str = (td->specifics==(void *)-1);
 
 	ASN_DEBUG("Decoding %s as %s (%ld)",
 		td->name,
