@@ -184,7 +184,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 				if(expr->expr_type == ASN_BASIC_REAL)
 					return "double";
 				else
-					return "int";
+					return "long";
 			default: break;
 			}
 			switch(expr->expr_type) {
