@@ -1103,7 +1103,7 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		(void *struct_ptr, void *chunk_buf, size_t chunk_size,
 			int have_more)
 ) {
-	OCTET_STRING_t *st = *sptr;
+	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
 	asn_OCTET_STRING_specifics_t *specs = td->specifics
 				? (asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_DEF_OCTET_STRING_specs;
