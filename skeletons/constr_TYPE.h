@@ -23,10 +23,11 @@ struct asn_TYPE_member_s;	/* Forward declaration */
  * included into certain target language's structures, such as compound types.
  */
 typedef struct asn_struct_ctx_s {
-	int phase;		/* Decoding phase */
-	int step;		/* Elementary step of a phase */
-	ber_tlv_len_t left;	/* Number of bytes left, -1 for indefinite */
+	short phase;		/* Decoding phase */
+	short step;		/* Elementary step of a phase */
+	int context;		/* Other context information */
 	void *ptr;		/* Decoder-specific stuff (stack elements) */
+	ber_tlv_len_t left;	/* Number of bytes left, -1 for indefinite */
 } asn_struct_ctx_t;
 
 #include <ber_decoder.h>	/* Basic Encoding Rules decoder */

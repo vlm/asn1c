@@ -146,7 +146,7 @@ BOOLEAN__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
 			/* "<false/>" */
 			*st = 0;
 			break;
-		case XCT_UNEXPECTED:
+		case XCT_UNKNOWN_BO:
 			if(xer_check_tag(chunk_buf, chunk_size, "true")
 					!= XCT_BOTH)
 				return -1;
