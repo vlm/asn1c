@@ -283,7 +283,7 @@ SimpleInteger ::= INTEGER
 -- An integer with a very limited range
 \layout LyX-Code
 
-SmallInt ::= INTEGER (0..127)
+SmallPositiveInt ::= INTEGER (0..127)
 \layout LyX-Code
 
  
@@ -512,7 +512,11 @@ The character string with the following alphabet: space,
 \begin_inset Quotes sld
 \end_inset 
 
+
+\series bold 
 ,
+\series default 
+
 \begin_inset Quotes srd
 \end_inset 
 
@@ -636,14 +640,14 @@ z
 \begin_inset Quotes srd
 \end_inset 
 
-)
+).
 \layout Subsection
 
 The VisibleString type
 \layout Standard
 
 The character string with the alphabet which is more or less a subset of
- ASCII between space and 
+ ASCII between the space and the 
 \begin_inset Quotes sld
 \end_inset 
 
@@ -655,8 +659,10 @@ The character string with the alphabet which is more or less a subset of
 \begin_inset Quotes srd
 \end_inset 
 
- (tilde).
- Alternatively, the alphabet may be described as the PrintableString alphabet
+ symbol (tilde).
+\layout Standard
+
+Alternatively, the alphabet may be described as the PrintableString alphabet
  presented earlier, plus the following characters: 
 \begin_inset Quotes sld
 \end_inset 
@@ -1586,10 +1592,10 @@ Description
 
 \layout Standard
 
-Normally the compiler hides the definitions (asn1_DEF_xxx) of the inner
- structure elements (members of SEQUENCE, SET and other types).
+Normally the compiler hides the definitions (asn_DEF_xxx) of the inner structure
+ elements (members of SEQUENCE, SET and other types).
  This option makes all such definitions global.
- Enabling this option may pollute the namespace by making lots of asn1_DEF_xxx
+ Enabling this option may pollute the namespace by making lots of asn_DEF_xxx
  structures globally visible, but will allow you to manipulate (encode and
  decode) the individual members of any complex ASN.1 structure.
 \end_inset 
@@ -1894,7 +1900,7 @@ Rectangle_t *rect = ...;
  
 \layout LyX-Code
 
-asn1_DEF_Rectangle->free_struct(&asn1_DEF_Rectangle,
+asn_DEF_Rectangle->free_struct(&asn_DEF_Rectangle,
 \layout LyX-Code
 
     rect, 0);
@@ -1909,7 +1915,7 @@ rect
  for this Rectangle_t structure.
  The 
 \emph on 
-asn1_DEF_Rectangle
+asn_DEF_Rectangle
 \emph default 
  is the type descriptor, which holds a collection of generic routines to
  deal with the Rectangle_t structure.
@@ -2008,7 +2014,7 @@ ly valid and constrained to appropriate implicit or explicit subtype constraints
 
 Each of the above function takes the type descriptor (
 \emph on 
-asn1_DEF_\SpecialChar \ldots{}
+asn_DEF_\SpecialChar \ldots{}
 
 \emph default 
 ) and the target structure (
@@ -2038,10 +2044,10 @@ simple_deserializer(const void *buffer, size_t buf_size) {
  
 \layout LyX-Code
 
-    rval = asn1_DEF_Rectangle->ber_decoder(
+    rval = asn_DEF_Rectangle->ber_decoder(0,
 \layout LyX-Code
 
-          &asn1_DEF_Rectangle,
+          &asn_DEF_Rectangle,
 \layout LyX-Code
 
           (void **)&rect,
@@ -2072,10 +2078,10 @@ simple_deserializer(const void *buffer, size_t buf_size) {
         /* Free partially decoded rect */
 \layout LyX-Code
 
-        asn1_DEF_Rectangle->free_struct(
+        asn_DEF_Rectangle->free_struct(
 \layout LyX-Code
 
-            &asn1_DEF_Rectangle, rect, 0);
+            &asn_DEF_Rectangle, rect, 0);
 \layout LyX-Code
 
         return 0;
@@ -2188,13 +2194,13 @@ ber_decode
  less wordy notation:
 \layout LyX-Code
 
-rval = ber_decode(&asn1_DEF_Rectangle, (void **)&rect,
+rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect,
 \layout LyX-Code
 
     buffer, buf_size);
 \layout Standard
 
-Note that the initial (asn1_DEF_Rectangle->ber_decoder) reference is gone,
+Note that the initial (asn_DEF_Rectangle->ber_decoder) reference is gone,
  and also the last argument (0) is no longer necessary.
 \layout Standard
 
@@ -2205,7 +2211,7 @@ The BER de
 \emph on 
 coder
 \emph default 
- may fail because (
+ may fail because of (
 \emph on 
 the following RC_\SpecialChar \ldots{}
  codes are defined in ber_decoder.h
@@ -2262,7 +2268,7 @@ canonical
 \layout Standard
 
 As with BER decoder, the DER encoder may be invoked either directly from
- the ASN.1 type descriptor (asn1_DEF_Rectangle) or from the stand-alone function,
+ the ASN.1 type descriptor (asn_DEF_Rectangle) or from the stand-alone function,
  which is somewhat simpler:
 \layout LyX-Code
 
@@ -2335,7 +2341,7 @@ simple_serializer(FILE *ostream, Rectangle_t *rect) {
  
 \layout LyX-Code
 
-    er = der_encode(&asn1_DEF_Rect, rect,
+    er = der_encode(&asn_DEF_Rect, rect,
 \layout LyX-Code
 
         write_stream, ostream);
@@ -2495,7 +2501,7 @@ print_as_XML(FILE *ostream, Rectangle_t *rect) {
  
 \layout LyX-Code
 
-    er = xer_encode(&asn1_DEF_Rect, rect,
+    er = xer_encode(&asn_DEF_Rect, rect,
 \layout LyX-Code
 
         XER_F_BASIC, /* BASIC-XER or CANONICAL-XER */
@@ -2570,7 +2576,7 @@ There are two ways to print the target structure: either invoke the print_struct
  which is a simpler wrapper of the former:
 \layout LyX-Code
 
-asn_fprint(stdout, &asn1_DEF_Rectangle, rect);
+asn_fprint(stdout, &asn_DEF_Rectangle, rect);
 \layout Standard
 
 Please look into constr_TYPE.h for the precise definition of asn_fprint()
@@ -2585,7 +2591,7 @@ Another practical alternative to this custom format printing would be to
  xer_fprint() call:
 \layout LyX-Code
 
-xer_fprint(stdout, &asn1_DEF_Rectangle, rect);
+xer_fprint(stdout, &asn_DEF_Rectangle, rect);
 \layout Standard
 
 See Section 
@@ -2669,10 +2675,10 @@ struct my_figure *mf =
  */
 \layout LyX-Code
 
-asn1_DEF_Rectangle->free_struct(
+asn_DEF_Rectangle->free_struct(
 \layout LyX-Code
 
-    &asn1_DEF_Rectangle, &mf->rect, 
+    &asn_DEF_Rectangle, &mf->rect, 
 \emph on 
 1
 \emph default 
@@ -2704,10 +2710,10 @@ Rectangle_t *rect =
  */
 \layout LyX-Code
 
-asn1_DEF_Rectangle->free_struct(
+asn_DEF_Rectangle->free_struct(
 \layout LyX-Code
 
-    &asn1_DEF_Rectangle, rect, 
+    &asn_DEF_Rectangle, rect, 
 \emph on 
 0
 \emph default 
