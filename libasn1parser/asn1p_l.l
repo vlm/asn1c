@@ -285,7 +285,9 @@ WSP	[\t\r\v\f\n ]
 	}
 
 ABSENT			return TOK_ABSENT;
+	/*
 ABSTRACT-SYNTAX		return TOK_ABSTRACT_SYNTAX;
+	*/
 ALL			return TOK_ALL;
 ANY			{
 				/* Appeared in 1990, removed in 1997 */
@@ -485,9 +487,10 @@ WITH			return TOK_WITH;
 			yylineno, yytext);
 		while(YYSTATE != INITIAL)
 			yy_pop_state();
-		yy_top_state();		/* Just to use this function. */
-		yyterminate();
-		yy_fatal_error("Unexpected token");
+		if(0) {
+			yy_top_state();	/* Just to use this function. */
+			yy_fatal_error("Parse error");
+		}
 		return -1;
 }
 
