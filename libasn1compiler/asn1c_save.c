@@ -216,7 +216,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 
 	fprintf(fp_h, "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n");
 
-	fprintf(fp_h, "#include <constr_TYPE.h>\n\n");
+	fprintf(fp_h, "#include <asn_application.h>\n\n");
 
 	TQ_FOR(ot, &(cs->destination[OT_INCLUDES].chunks), next) {
 		asn1c_activate_dependency(deps, 0, ot->buf);

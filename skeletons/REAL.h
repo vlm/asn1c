@@ -5,7 +5,7 @@
 #ifndef	ASN_TYPE_REAL_H
 #define	ASN_TYPE_REAL_H
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 typedef struct REAL {
 	uint8_t *buf;	/* Buffer with REAL type encoding */

@@ -5,7 +5,7 @@
 #ifndef	_BOOLEAN_H_
 #define	_BOOLEAN_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 /*
  * The underlying integer may contain various values, but everything

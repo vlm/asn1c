@@ -5,7 +5,7 @@
 #ifndef	_ISO646String_H_
 #define	_ISO646String_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 #include <VisibleString.h>
 
 typedef VisibleString_t ISO646String_t;	/* Implemented using VisibleString */

@@ -5,7 +5,7 @@
 #ifndef	_CONSTR_SET_OF_H_
 #define	_CONSTR_SET_OF_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 typedef struct asn1_SET_OF_specifics_s {
 	/*

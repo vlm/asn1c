@@ -5,10 +5,9 @@
 #ifndef	_IA5String_H_
 #define	_IA5String_H_
 
-#include <constr_TYPE.h>
 #include <OCTET_STRING.h>
 
-typedef OCTET_STRING_t IA5String_t;  /* Implemented in terms of OCTET STRING */
+typedef OCTET_STRING_t IA5String_t;  /* Implemented via OCTET STRING */
 
 /*
  * IA5String ASN.1 type definition.

@@ -5,7 +5,7 @@
 #ifndef	ASN_TYPE_NULL_H
 #define	ASN_TYPE_NULL_H
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 /*
  * The value of the NULL type is meaningless: see BOOLEAN if you want to

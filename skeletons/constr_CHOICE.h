@@ -5,7 +5,7 @@
 #ifndef	_CONSTR_CHOICE_H_
 #define	_CONSTR_CHOICE_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 typedef struct asn1_CHOICE_specifics_s {
 	/*

@@ -5,7 +5,7 @@
 #ifndef	_INTEGER_H_
 #define	_INTEGER_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 typedef struct INTEGER {
 	uint8_t *buf;	/* Buffer with consecutive INTEGER bits (big-endian) */

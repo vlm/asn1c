@@ -11,8 +11,6 @@
 #ifndef	_CONSTR_TYPE_H
 #define	_CONSTR_TYPE_H
 
-#include <asn_types.h>		/* System-dependent types */
-
 struct asn1_TYPE_descriptor_s;	/* Forward declaration */
 struct asn1_TYPE_member_s;	/* Forward declaration */
 

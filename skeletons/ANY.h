@@ -5,7 +5,6 @@
 #ifndef ASN_TYPE_ANY_H
 #define ASN_TYPE_ANY_H
 
-#include <constr_TYPE.h>
 #include <OCTET_STRING.h>	/* Implemented via OCTET SRING type */
 
 typedef struct ANY {
