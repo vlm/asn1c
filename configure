@@ -21392,12 +21392,17 @@ if test "$LEX" = :; then
   LEX=${am_missing_run}flex
 fi
 
-case "$build" in
-*cygwin*)
-  case "$target" in
-  *mingw*)
-    CC="$CC -mno-cygwin"
-  esac ;;
+case "$host_os" in
+cygwin*)
+	CFLAGS="$CFLAGS -DWIN32"
+	case "$target" in
+	*mingw*)
+		CC="$CC -mno-cygwin"
+	esac
+	;;
+mingw* | p32*)
+	CFLAGS="$CFLAGS -DWIN32"
+	;;
 esac
 
 # Check whether --enable-autoconf or --disable-autoconf was given.
