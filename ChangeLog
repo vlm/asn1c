@@ -1,11 +1,12 @@
 
-0.9.9:	2005-Feb-18
+0.9.9:	2005-Feb-22
 
 	* First release of XER (XML) decoding implementation (somewhat
 	  experimental).
 	* ANY allocation routine fixed.
 	  Reported by <mikko.ahonen@elma.net>.
 	* Fixed tag parsing (tags like "[ 0 ]" were not supported).
+	* Compiler now checks for duplicate ASN.1 types across modules.
 
 0.9.8:	2005-Jan-17
 
