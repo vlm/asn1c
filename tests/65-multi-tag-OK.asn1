@@ -16,7 +16,7 @@ BEGIN
 	T3 ::= [4] IMPLICIT T4
 	T4 ::= [5] EXPLICIT T5
 	T5 ::= [6] IMPLICIT T6
-	T6 ::= INTEGER
+	T6 ::= REAL
 
 	T ::= [0] IMPLICIT Ts
 

@@ -536,12 +536,12 @@ asn1_TYPE_descriptor_t asn1_DEF_T5 = {
 
 /*** <<< INCLUDES [T6] >>> ***/
 
-#include <REAL.h>
+#include <NativeReal.h>
 
 /*** <<< TYPE-DECLS [T6] >>> ***/
 
 
-typedef REAL_t	 T6_t;
+typedef double	 T6_t;
 
 /*** <<< FUNC-DECLS [T6] >>> ***/
 
@@ -559,25 +559,25 @@ T6_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
 	/* Make the underlying type checker permanent */
-	td->check_constraints = asn1_DEF_REAL.check_constraints;
+	td->check_constraints = asn1_DEF_NativeReal.check_constraints;
 	return td->check_constraints
 		(td, sptr, app_errlog, app_key);
 }
 
 /*
- * This type is implemented using REAL,
+ * This type is implemented using NativeReal,
  * so adjust the DEF appropriately.
  */
 static void
 T6_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_REAL.ber_decoder;
-	td->der_encoder    = asn1_DEF_REAL.der_encoder;
-	td->free_struct    = asn1_DEF_REAL.free_struct;
-	td->print_struct   = asn1_DEF_REAL.print_struct;
-	td->last_tag_form  = asn1_DEF_REAL.last_tag_form;
-	td->elements       = asn1_DEF_REAL.elements;
-	td->elements_count = asn1_DEF_REAL.elements_count;
-	td->specifics      = asn1_DEF_REAL.specifics;
+	td->ber_decoder    = asn1_DEF_NativeReal.ber_decoder;
+	td->der_encoder    = asn1_DEF_NativeReal.der_encoder;
+	td->free_struct    = asn1_DEF_NativeReal.free_struct;
+	td->print_struct   = asn1_DEF_NativeReal.print_struct;
+	td->last_tag_form  = asn1_DEF_NativeReal.last_tag_form;
+	td->elements       = asn1_DEF_NativeReal.elements;
+	td->elements_count = asn1_DEF_NativeReal.elements_count;
+	td->specifics      = asn1_DEF_NativeReal.specifics;
 }
 
 ber_dec_rval_t
