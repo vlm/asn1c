@@ -1,4 +1,8 @@
 
+0.9.3:	2004-Aug-25
+
+	* Compiled under cygwin.
+
 0.9.2:	2004-Aug-24
 
 	* More flexible subtype constraints handling, with relaxed
