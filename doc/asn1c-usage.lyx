@@ -2,15 +2,24 @@
 \lyxformat 221
 \textclass book
 \begin_preamble
-%\fancyhf{}
-%\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1\ sdf}{}}
-%\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{\thesection.\ #1}}}
-%\fancyhead[LE,RO]{\thepage}
-%\fancyhead[LO]{\rightmark}
-%\fancyhead[RE]]{\leftmark}
 \usepackage{extramarks}
 \lhead{\firstxmark}
 \rfoot{\lastxmark}
+\usepackage{color}
+\definecolor{gray40}{gray}{.4}
+\definecolor{urlblue}{rgb}{0,0,.6}
+\usepackage[colorlinks=true,
+linkcolor={gray40},
+urlcolor={urlblue},
+pdfauthor={Lev Walkin},
+pdftitle={Using the OpenSource ASN.1 Compiler},
+pdfkeywords={ASN.1,asn1c,compiler}
+]{hyperref}
+%\fancyhf{}
+%\fancyhead[LE,RO]{\thepage}
+%\fancyhead[LO]{\rightmark}
+%\fancyhead[RE]{\leftmark}
+%\fancyfoot[R]{\lastxmark}
 \end_preamble
 \language english
 \inputencoding latin1
@@ -25,8 +34,8 @@
 \use_natbib 0
 \use_numerical_citations 0
 \paperorientation portrait
-\secnumdepth 3
-\tocdepth 3
+\secnumdepth 2
+\tocdepth 2
 \paragraph_separation indent
 \defskip medskip
 \quotes_language swedish
@@ -37,12 +46,17 @@
 
 \layout Title
 
-Using the Open ASN.1 Compiler
+Using the OpenSource ASN.1 Compiler
 \layout Author
 
 Lev Walkin <
-\begin_inset LatexCommand \url{vlm@lionet.info}
+\begin_inset ERT
+status Collapsed
 
+\layout Standard
+
+\backslash 
+href{mailto:vlm@lionet.info?Subject=asn1c}{vlm@lionet.info}
 \end_inset 
 
 >
@@ -55,7 +69,13 @@ status Open
 \layout Standard
 
 \backslash 
-extramarks{$Revision$ -- describes asn1c-0.9.6}{}
+lhead{Document describes 
+\backslash 
+href{http://lionet.info/soft/asn1c-0.9.6.tar.gz}{asn1c-0.9.6}}
+\layout Standard
+
+\backslash 
+rhead{$Revision$}
 \end_inset 
 
 
@@ -71,7 +91,7 @@ extramarks{$Revision$ -- describes asn1c-0.9.6}{}
 
 
 \begin_inset ERT
-status Collapsed
+status Open
 
 \layout Standard
 
@@ -320,19 +340,19 @@ FruitId ::= ENUMERATED { apple(1), orange(2) }
 ComputerOSType ::= ENUMERATED {
 \layout LyX-Code
 
-    FreeBSD,          -- will be 0
+    FreeBSD,          -- acquires value 0
 \layout LyX-Code
 
-    Windows,          -- will be 1
+    Windows,          -- acquires value 1
 \layout LyX-Code
 
-    Solaris(5),       -- will remain 5
+    Solaris(5),       -- remains 5
 \layout LyX-Code
 
-    Linux,            -- will be 6
+    Linux,            -- becomes 6
 \layout LyX-Code
 
-    MacOS             -- will be 7
+    MacOS             -- becomes 7
 \layout LyX-Code
 
 }
@@ -936,7 +956,7 @@ Address ::= SEQUENCE {
     -- The apartment number may be omitted
 \layout LyX-Code
 
-    apartmentNumber     NumericString OPTIONAL,
+    apartmentNumber      NumericString OPTIONAL,
 \layout LyX-Code
 
     streetName           PrintableString,
@@ -1322,7 +1342,7 @@ collapsed false
 
 \begin_inset  Tabular
 <lyxtabular version="3" rows="21" columns="2">
-<features>
+<features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
 <row topline="true" bottomline="true">
@@ -1641,7 +1661,7 @@ Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which
 
 \size small 
 Use the native machine's data types (int, double) whenever possible, instead
- of the compound ASN.1 INTEGER_t, ENUMERATED_t and REAL_t types.
+ of the compound INTEGER_t, ENUMERATED_t and REAL_t types.
  
 \end_inset 
 </cell>
@@ -1701,11 +1721,13 @@ Enable  unnamed  unions  in the definitions of target language's structures.
 
 
 \size small 
-Use only ASN.1:1988 embedded types.
+Pretend to support only ASN.1:1988 embedded types.
+ Certain reserved words, such as UniversalString and BMPString, become ordinary
+ type references and may be redefined by the specification.
 \end_inset 
 </cell>
 </row>
-<row topline="true">
+<row topline="true" newpage="true">
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -1877,7 +1899,16 @@ int main()
 
 \layout Section
 
-Invoking the ASN.1 helper code from the application
+Invoking the ASN.1 helper code from an application
+\begin_inset OptArg
+collapsed true
+
+\layout Standard
+
+Invoking the helper code
+\end_inset 
+
+
 \layout Standard
 
 First of all, you should to include one or more header files into your applicati
@@ -2731,7 +2762,7 @@ free_struct
 
 The OpenSource ASN.1 Compiler.
  
-\begin_inset LatexCommand \htmlurl{http://lionet.info/asn1/}
+\begin_inset LatexCommand \htmlurl{http://lionet.info/asn1c/}
 
 \end_inset 
 
