@@ -1364,7 +1364,7 @@ emit_constraint_checking_code(arg_t *arg) {
 		ACT_EL_VALUE);
 
 	if(size_present || value_present) {
-		OUT("%s_t *st = sptr;\n", MKID(arg->expr->Identifier));
+		OUT("const %s_t *st = sptr;\n", MKID(arg->expr->Identifier));
 		if(size_present) {
 			OUT("size_t size;\n");
 			OUT("size_t min_size __attribute__ ((unused)) = %ld;\n",
@@ -1848,7 +1848,7 @@ emit_alphabet_check_cycle(arg_t *arg) {
 
 	OUT("/* The underlying type is %s */\n",
 		ASN_EXPR_TYPE2STR(etype));
-	OUT("%s_t *st = sptr;\n", MKID(arg->expr->Identifier));
+	OUT("const %s_t *st = sptr;\n", MKID(arg->expr->Identifier));
 
 	switch(etype) {
 	case ASN_STRING_UTF8String:
