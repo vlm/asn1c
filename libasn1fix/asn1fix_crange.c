@@ -326,7 +326,7 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 			return 0;
 		break;
 	case ATV_REFERENCED:
-		FATAL("Unrecognized constraint element \"%s\" at line %d",
+		FATAL("Unresolved constraint element \"%s\" at line %d",
 			asn1f_printable_reference(val->value.reference),
 			lineno);
 		return -1;
