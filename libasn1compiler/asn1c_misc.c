@@ -1,10 +1,6 @@
 #include "asn1c_internal.h"
 #include <asn1fix_export.h>
 
-#ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
-#define	DEFFILEMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
-#endif
-
 /*
  * Construct identifier from multiple parts.
  * Convert unsafe characters to underscores.
@@ -83,60 +79,6 @@ asn1c_make_identifier(int unsafe_only_spaces, char *arg1, ...) {
 	assert((p - storage) <= storage_size);
 
 	return storage;
-}
-
-FILE *
-asn1c_open_file(arg_t *arg, const char *name, const char *ext) {
-	int created = 1;
-	struct stat sb;
-	char *fname;
-	int len;
-	FILE *fp;
-	int fd;
-
-	(void)arg;	/* Unused argument */
-
-	/*
-	 * Compute filenames.
-	 */
-	len = strlen(name) + strlen(ext) + 1;
-	fname = alloca(len);
-	snprintf(fname, len, "%s%s", name, ext);
-
-	/*
-	 * Create files.
-	 */
-	fd = open(fname, O_CREAT | O_EXCL | O_WRONLY, DEFFILEMODE);
-	if(fd == -1 && errno == EEXIST) {
-		fd = open(fname, O_WRONLY, DEFFILEMODE);
-		created = 0;
-	}
-	if(fd == -1) {
-		perror(fname);
-		return NULL;
-	}
-
-	/*
-	 * Check sanity.
-	 */
-	if(fstat(fd, &sb) || !S_ISREG(sb.st_mode)) {
-		fprintf(stderr, "%s: Not a regular file\n", fname);
-		if(created) unlink(fname);
-		close(fd);
-		return NULL;
-	}
-
-	(void)ftruncate(fd, 0);
-
-	/*
-	 * Convert file descriptor into file pointer.
-	 */
-	fp = fdopen(fd, "w");
-	if(fp == NULL) {
-		if(created) unlink(fname);
-		close(fd);
-	}
-	return fp;
 }
 
 char *
