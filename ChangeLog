@@ -2,6 +2,8 @@
 0.8.11:	2004-Jun-05
 
 	* Enforsed stricter conformance with C standards.
+	* SEQUENCE decoder is now equipped with the sorted map
+	  in case of complex CHOICE descendants. Test case 44 created.
 
 0.8.10:	2004-Jun-02
 
