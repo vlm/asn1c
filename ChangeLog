@@ -12,6 +12,8 @@
 	  Reported by <Dominique.Nerriec@alcatel.fr>.
 	* Constraints on primitive types being defined are now supported.
 	  (Test case 74) (Severity: low, Security impact: none)
+	* XMLValueList generation fixed for CHOICE type.
+	  (Severity: medium, Security impact: none)
 
 0.9.11:	2005-Mar-04
 
