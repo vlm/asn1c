@@ -1,8 +1,10 @@
 
-0.9.6.1:	2004-Oct-01
+0.9.7:	2004-Oct-02
 
 	* Fixed unber limits controlling logic.
 	* Removed C99'izm from the x509dump, now understood by older compilers.
+	* Enhanced UTF8String constraint validation, now it checks
+	  for the minimal encoding length; API of UTF8String_length() changed.
 
 0.9.6:	2004-Sep-29
 
