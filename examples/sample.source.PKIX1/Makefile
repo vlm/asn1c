@@ -360,6 +360,7 @@ regenerate-from-asn1-source:
 
 Attribute.c: regenerate.Makefile
 	./regenerate.Makefile
+	@touch Attribute.c
 	make
 
 $(TARGET).o: ../../skeletons/asn-decoder-template.c
