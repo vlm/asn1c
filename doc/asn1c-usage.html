@@ -1374,7 +1374,7 @@ the file <B>main.c</B>:
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;return&nbsp;(wrote&nbsp;==&nbsp;size)&nbsp;?&nbsp;0&nbsp;:&nbsp;-1;</FONT>
 <FONT SIZE="-1">}</FONT>
 &nbsp;
-<FONT SIZE="-1">int&nbsp;main(int&nbsp;ac,&nbsp;char&nbsp;*av)&nbsp;{</FONT>
+<FONT SIZE="-1">int&nbsp;main(int&nbsp;ac,&nbsp;char&nbsp;**av)&nbsp;{</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;Rectangle_t&nbsp;*rectangle;&nbsp;/*&nbsp;Type&nbsp;to&nbsp;encode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;asn_enc_rval_t&nbsp;ec;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Encoder&nbsp;return&nbsp;value&nbsp;&nbsp;*/</FONT>
 &nbsp;
@@ -1403,7 +1403,7 @@ the file <B>main.c</B>:
 &nbsp;<FONT SIZE="-1">&nbsp;</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Encode&nbsp;the&nbsp;Rectangle&nbsp;type&nbsp;as&nbsp;BER&nbsp;(DER)&nbsp;*/</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ec&nbsp;=&nbsp;der_encode(&amp;asn_DEF_Rectangle,</FONT>
-&nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rectangle,&nbsp;write_out,&nbsp;stream);</FONT>
+&nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rectangle,&nbsp;write_out,&nbsp;fp);</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fclose(fp);</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ec.encoded&nbsp;==&nbsp;-1)&nbsp;{</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,</FONT>
