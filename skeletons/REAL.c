@@ -31,7 +31,7 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
-	0,				/* Not implemented yet */
+	REAL_decode_xer,
 	REAL_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_REAL_tags,
@@ -40,6 +40,23 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
+};
+
+typedef enum specialRealValue {
+	SRV__NOT_A_NUMBER,
+	SRV__MINUS_INFINITY,
+	SRV__PLUS_INFINITY
+} specialRealValue_e;
+static struct specialRealValue_s {
+	char *string;
+	int length;
+	double dv;
+} specialRealValue[] = {
+#define	SRV_SET(foo, val)	{ foo, sizeof(foo) - 1, val }
+	SRV_SET("<NOT-A-NUMBER/>", 0.0),
+	SRV_SET("<MINUS-INFINITY/>", -1.0),
+	SRV_SET("<PLUS-INFINITY/>", 1.0),
+#undef	SRV_SET
 };
 
 ssize_t
@@ -55,16 +72,16 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 	 */
 	/* fpclassify(3) is not portable yet */
 	if(isnan(d)) {
-		buf = "<NOT-A-NUMBER/>";
-		buflen = 15;
+		buf = specialRealValue[SRV__NOT_A_NUMBER].string;
+		buflen = specialRealValue[SRV__NOT_A_NUMBER].length;
 		return (cb(buf, buflen, app_key) < 0) ? -1 : buflen;
 	} else if(!finite(d)) {
 		if(copysign(1.0, d) < 0.0) {
-			buf = "<MINUS-INFINITY/>";
-			buflen = 17;
+			buf = specialRealValue[SRV__MINUS_INFINITY].string;
+			buflen = specialRealValue[SRV__MINUS_INFINITY].length;
 		} else {
-			buf = "<PLUS-INFINITY/>";
-			buflen = 16;
+			buf = specialRealValue[SRV__PLUS_INFINITY].string;
+			buflen = specialRealValue[SRV__PLUS_INFINITY].length;
 		}
 		return (cb(buf, buflen, app_key) < 0) ? -1 : buflen;
 	} else if(ilogb(d) <= -INT_MAX) {
@@ -99,12 +116,13 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 	if(canonical) {
 		/*
 		 * Transform the "[-]d.dddE+-dd" output into "[-]d.dddE[-]d"
+		 * Check that snprintf() constructed the output correctly.
 		 */
 		char *dot, *E;
 		char *end = buf + buflen;
 		char *last_zero;
 
-		dot = (buf[0] == '-') ? (buf + 2) : (buf + 1);
+		dot = (buf[0] == 0x2d /* '-' */) ? (buf + 2) : (buf + 1);
 		if(*dot >= 0x30) {
 			errno = EINVAL;
 			return -1;	/* Not a dot, really */
@@ -116,7 +134,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 				char *expptr = ++E;
 				char *s = expptr;
 				int sign;
-				if(*expptr == '+') {
+				if(*expptr == 0x2b /* '+' */) {
 					/* Skip the "+" */
 					buflen -= 1;
 					sign = 0;
@@ -135,8 +153,12 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 				}
 				if(*last_zero == 0x30) {
 					*last_zero = 0x45;	/* E */
+					buflen -= s - (last_zero + 1);
 					s = last_zero + 1;
-					if(sign) *s++ = '-';
+					if(sign) {
+						*s++ = 0x2d /* '-' */;
+						buflen++;
+					}
 				}
 				for(; expptr <= end; s++, expptr++)
 					*s = *expptr;
@@ -220,6 +242,69 @@ REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	return er;
 }
+
+
+/*
+ * Decode the chunk of XML text encoding REAL.
+ */
+static ssize_t
+REAL__xer_body_decode(REAL_t *st, void *chunk_buf, size_t chunk_size) {
+	double value;
+	char *xerdata = (char *)chunk_buf;
+	char *endptr = 0;
+	char *b;
+
+	if(!chunk_size) return -1;
+
+	/*
+	 * Decode an XMLSpecialRealValue: <MINUS-INFINITY>, etc.
+	 */
+	if(xerdata[0] == 0x3c /* '<' */) {
+		size_t i;
+		for(i = 0; i < sizeof(specialRealValue)
+				/ sizeof(specialRealValue[0]); i++) {
+			struct specialRealValue_s *srv = &specialRealValue[i];
+			if(srv->length != chunk_size
+			|| memcmp(srv->string, chunk_buf, chunk_size))
+				continue;
+
+			if(asn_double2REAL(st, srv->dv / real_zero))
+				return -1;
+
+			return chunk_size;
+		}
+		ASN_DEBUG("Unknown XMLSpecialRealValue");
+		return -1;
+	}
+
+	/*
+	 * Copy chunk into the nul-terminated string, and run strtod.
+	 */
+	b = MALLOC(chunk_size + 1);
+	if(!b) return -1;
+	memcpy(b, chunk_buf, chunk_size);
+	b[chunk_size] = 0;
+
+	value = strtod(b, &endptr);
+	free(b);
+	if(endptr == b) return -1;
+
+	if(asn_double2REAL(st, value))
+		return -1;
+
+	return endptr - b;
+}
+
+asn_dec_rval_t
+REAL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+
+	return xer_decode_primitive(opt_codec_ctx, td,
+		(ASN__PRIMITIVE_TYPE_t **)sptr, opt_mname,
+		buf_ptr, size, REAL__xer_body_decode);
+}
+
 
 int
 asn_REAL2double(const REAL_t *st, double *dbl_value) {
@@ -344,6 +429,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 			m = scalbn(m, 8) + *ptr;
 	}
 
+	if(0)
 	ASN_DEBUG("m=%.10f, scF=%d, bF=%d, expval=%d, ldexp()=%f, scalbn()=%f",
 		m, scaleF, baseF, expval,
 		ldexp(m, expval * baseF + scaleF),
