@@ -11,7 +11,7 @@ static int emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range);
 static int emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_range_t *r_value);
 static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
-static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1_integer_t natural_start, asn1_integer_t natural_stop);
+static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop);
 
 #define	MKID(id)	asn1c_make_identifier(0, (id), 0)
 
@@ -187,8 +187,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 
 static int
 asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
-	asn1_integer_t range_start;
-	asn1_integer_t range_stop;
+	asn1c_integer_t range_start;
+	asn1c_integer_t range_stop;
 	asn1p_expr_type_e etype;
 	asn1cnst_range_t *range;
 	asn1p_constraint_t *ct;
@@ -262,7 +262,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		memset(table, 0, sizeof(table));
 		for(i = -1; i < range->el_count; i++) {
 			asn1cnst_range_t *r;
-			asn1_integer_t v;
+			asn1c_integer_t v;
 			if(i == -1) {
 				if(range->el_count) continue;
 				r = range;
@@ -362,7 +362,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 
 static int
 emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
-	asn1_integer_t natural_stop;
+	asn1c_integer_t natural_stop;
 	asn1p_expr_t *terminal;
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->expr);
@@ -439,7 +439,7 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 }
 
 static int
-emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1_integer_t natural_start, asn1_integer_t natural_stop) {
+emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop) {
 	int ignore_left;
 	int ignore_right;
 	int generated_something = 0;
@@ -573,7 +573,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 				break;
 			}
 
-			OUT("if(asn1_INTEGER2long(st, &value)) {\n");
+			OUT("if(asn_INTEGER2long(st, &value)) {\n");
 				INDENT(+1);
 				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
 				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
@@ -587,7 +587,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 		if(arg->flags & A1C_USE_NATIVE_TYPES) {
 			OUT("value = *(const double *)sptr;\n");
 		} else {
-			OUT("if(asn1_REAL2double(st, &value)) {\n");
+			OUT("if(asn_REAL2double(st, &value)) {\n");
 				INDENT(+1);
 				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
 				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
