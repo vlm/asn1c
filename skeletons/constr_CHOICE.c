@@ -238,8 +238,8 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 		 * and also a type of containment (it may be contained
 		 * as pointer or using inline inclusion).
 		 */
-		if(elm->optional) {
-			/* Optional member, hereby, a simple pointer */
+		if(elm->flags & ATF_POINTER) {
+			/* Member is a pointer to another structure */
 			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 		} else {
 			/*
@@ -386,10 +386,17 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *td,
 	 * Seek over the present member of the structure.
 	 */
 	elm = &td->elements[present-1];
-	if(elm->optional) {
+	if(elm->flags & ATF_POINTER) {
 		memb_ptr = *(void **)((char *)struct_ptr + elm->memb_offset);
 		if(memb_ptr == 0) {
-			erval.encoded = 0;
+			if(elm->optional) {
+				erval.encoded = 0;
+			} else {
+				/* Mandatory element absent */
+				erval.encoded = -1;
+				erval.failed_type = td;
+				erval.structure_ptr = struct_ptr;
+			}
 			return erval;
 		}
 	} else {
@@ -458,7 +465,7 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)
 					((const char *)ptr + elm->memb_offset);
 		} else {
@@ -494,9 +501,16 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
-			if(!memb_ptr) return 0;
+			if(!memb_ptr) {
+				if(elm->optional)
+					return 0;
+				_ASN_ERRLOG(app_errlog, app_key,
+					"%s: mandatory CHOICE element %s absent (%s:%d)",
+					td->name, elm->name, __FILE__, __LINE__);
+				return -1;
+			}
 		} else {
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
@@ -542,7 +556,7 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) return cb("<absent>", 8, app_key);
 		} else {
@@ -583,7 +597,7 @@ CHOICE_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		void *memb_ptr;
 
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
 			if(memb_ptr)
 				elm->type->free_struct(elm->type, memb_ptr, 0);

@@ -30,7 +30,7 @@ typedef struct T {
 /*** <<< STAT-DEFS [T] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_collection[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_T2,
@@ -65,14 +65,14 @@ asn1_TYPE_descriptor_t asn1_DEF_collection = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_T[] = {
-	{ 0, offsetof(struct T, int),
+	{ ATF_NOFLAGS, 0, offsetof(struct T, int),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "int"
 		},
-	{ 0, offsetof(struct T, collection),
+	{ ATF_NOFLAGS, 0, offsetof(struct T, collection),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_collection,
@@ -138,14 +138,14 @@ typedef struct T2 {
 /*** <<< STAT-DEFS [T2] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_T2[] = {
-	{ 0, offsetof(struct T2, flag),
+	{ ATF_NOFLAGS, 0, offsetof(struct T2, flag),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "flag"
 		},
-	{ 0, offsetof(struct T2, str),
+	{ ATF_NOFLAGS, 0, offsetof(struct T2, str),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_UTF8String,

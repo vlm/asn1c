@@ -39,7 +39,7 @@ typedef struct Test_structure_1 {
 /*** <<< STAT-DEFS [Test-structure-1] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_t_member1[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_Test_structure_1,
@@ -74,7 +74,7 @@ asn1_TYPE_descriptor_t asn1_DEF_t_member1 = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_t_member2[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_Test_structure_1,
@@ -109,28 +109,28 @@ asn1_TYPE_descriptor_t asn1_DEF_t_member2 = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_Test_structure_1[] = {
-	{ 0, offsetof(struct Test_structure_1, t_member1),
+	{ ATF_NOFLAGS, 0, offsetof(struct Test_structure_1, t_member1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_t_member1,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "t-member1"
 		},
-	{ 0, offsetof(struct Test_structure_1, t_member2),
+	{ ATF_NOFLAGS, 0, offsetof(struct Test_structure_1, t_member2),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_t_member2,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "t-member2"
 		},
-	{ 1, offsetof(struct Test_structure_1, t_member3),
+	{ ATF_POINTER, 1, offsetof(struct Test_structure_1, t_member3),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_Test_structure_1,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "t-member3"
 		},
-	{ 0, offsetof(struct Test_structure_1, t_member4),
+	{ ATF_NOFLAGS, 0, offsetof(struct Test_structure_1, t_member4),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
@@ -199,14 +199,14 @@ extern asn1_TYPE_descriptor_t asn1_DEF_Choice_1;
 typedef struct Choice_1 {
 	Choice_1_PR present;
 	union {
-		struct Choice_1	 and;
+		struct Choice_1	*and;
 		struct or {
 			A_SET_OF(struct Choice_1) list;
 			
 			/* Context for parsing across buffer boundaries */
 			ber_dec_ctx_t _ber_dec_ctx;
 		} or;
-		struct Choice_1	 not;
+		struct Choice_1	*not;
 		INTEGER_t	 other;
 	} choice;
 	
@@ -217,7 +217,7 @@ typedef struct Choice_1 {
 /*** <<< STAT-DEFS [Choice-1] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_or[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = -1 /* Ambiguous tag (CHOICE|ANY?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_Choice_1,
@@ -252,28 +252,28 @@ asn1_TYPE_descriptor_t asn1_DEF_or = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_Choice_1[] = {
-	{ 0, offsetof(struct Choice_1, choice.and),
+	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.and),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = (void *)&asn1_DEF_Choice_1,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "and"
 		},
-	{ 0, offsetof(struct Choice_1, choice.or),
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice_1, choice.or),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn1_DEF_or,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "or"
 		},
-	{ 0, offsetof(struct Choice_1, choice.not),
+	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.not),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = (void *)&asn1_DEF_Choice_1,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "not"
 		},
-	{ 0, offsetof(struct Choice_1, choice.other),
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice_1, choice.other),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = (void *)&asn1_DEF_INTEGER,

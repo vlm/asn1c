@@ -66,7 +66,7 @@ memb_varsets_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [LogLine] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_varsets[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_VariablePartSet,
@@ -101,14 +101,14 @@ asn1_TYPE_descriptor_t asn1_DEF_varsets = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_LogLine[] = {
-	{ 0, offsetof(struct LogLine, line_digest),
+	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, line_digest),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_IA5String,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "line-digest"
 		},
-	{ 0, offsetof(struct LogLine, varsets),
+	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, varsets),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_varsets,
@@ -208,7 +208,7 @@ memb_vparts_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [VariablePartSet] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_vparts[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = -1 /* Ambiguous tag (CHOICE|ANY?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_VariablePart,
@@ -243,14 +243,14 @@ asn1_TYPE_descriptor_t asn1_DEF_vparts = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_VariablePartSet[] = {
-	{ 0, offsetof(struct VariablePartSet, vparts),
+	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, vparts),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_vparts,
 		.memb_constraints = memb_vparts_2_constraint,
 		.name = "vparts"
 		},
-	{ 0, offsetof(struct VariablePartSet, resolution),
+	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, resolution),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_ActionItem,
@@ -378,7 +378,7 @@ memb_vset_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [VariablePart] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_vset[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_VisibleString,
@@ -413,14 +413,14 @@ asn1_TYPE_descriptor_t asn1_DEF_vset = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_vrange[] = {
-	{ 0, offsetof(struct vrange, from),
+	{ ATF_NOFLAGS, 0, offsetof(struct vrange, from),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "from"
 		},
-	{ 0, offsetof(struct vrange, to),
+	{ ATF_NOFLAGS, 0, offsetof(struct vrange, to),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_VisibleString,
@@ -463,14 +463,14 @@ asn1_TYPE_descriptor_t asn1_DEF_vrange = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_VariablePart[] = {
-	{ 0, offsetof(struct VariablePart, choice.vset),
+	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vset),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_vset,
 		.memb_constraints = memb_vset_3_constraint,
 		.name = "vset"
 		},
-	{ 0, offsetof(struct VariablePart, choice.vrange),
+	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vrange),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_vrange,
@@ -563,7 +563,7 @@ typedef struct ActionItem {
 /*** <<< STAT-DEFS [ActionItem] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_email[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_VisibleString,
@@ -598,14 +598,14 @@ asn1_TYPE_descriptor_t asn1_DEF_email = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_notify[] = {
-	{ 0, offsetof(struct notify, critical),
+	{ ATF_NOFLAGS, 0, offsetof(struct notify, critical),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "critical"
 		},
-	{ 0, offsetof(struct notify, email),
+	{ ATF_NOFLAGS, 0, offsetof(struct notify, email),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_email,
@@ -648,14 +648,14 @@ asn1_TYPE_descriptor_t asn1_DEF_notify = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_ActionItem[] = {
-	{ 0, offsetof(struct ActionItem, accept_as),
+	{ ATF_NOFLAGS, 0, offsetof(struct ActionItem, accept_as),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_ENUMERATED,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "accept-as"
 		},
-	{ 1, offsetof(struct ActionItem, notify),
+	{ ATF_POINTER, 1, offsetof(struct ActionItem, notify),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_notify,

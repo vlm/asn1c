@@ -121,7 +121,7 @@ typedef struct ConstructedType {
 /*** <<< STAT-DEFS [ConstructedType] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_ConstructedType[] = {
-	{ 0, offsetof(struct ConstructedType, field),
+	{ ATF_NOFLAGS, 0, offsetof(struct ConstructedType, field),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn1_DEF_PrimitiveType,

@@ -67,21 +67,21 @@ memb_signature_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [Certificate] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_toBeSigned[] = {
-	{ 0, offsetof(struct toBeSigned, version),
+	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, version),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "version"
 		},
-	{ 0, offsetof(struct toBeSigned, signature),
+	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, signature),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_OBJECT_IDENTIFIER,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "signature"
 		},
-	{ 0, offsetof(struct toBeSigned, issuer),
+	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, issuer),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_Name,
@@ -125,21 +125,21 @@ asn1_TYPE_descriptor_t asn1_DEF_toBeSigned = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_Certificate[] = {
-	{ 0, offsetof(struct Certificate, toBeSigned),
+	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, toBeSigned),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_toBeSigned,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "toBeSigned"
 		},
-	{ 0, offsetof(struct Certificate, algorithm),
+	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, algorithm),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_OBJECT_IDENTIFIER,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "algorithm"
 		},
-	{ 0, offsetof(struct Certificate, signature),
+	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, signature),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_BIT_STRING,
@@ -205,7 +205,7 @@ typedef struct Name {
 /*** <<< STAT-DEFS [Name] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_Name[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_RelativeDistinguishedName,
@@ -317,7 +317,7 @@ memb_IA5String_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [RelativeDistinguishedName] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_RelativeDistinguishedName[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_IA5String,
