@@ -16,7 +16,8 @@ LDADD =	\
 	${top_builddir}/libasn1print/libasn1print.la	\
 	${top_builddir}/libasn1compiler/libasn1compiler.la
 
-asn1c_SOURCES = asn1c.c decoder.c decoder.h
+asn1c_SOURCES = asn1c.c	\
+	tlv_decoder.c tlv_decoder.h
 
 bin_PROGRAMS = asn1c
 

@@ -53,7 +53,7 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_asn1c_OBJECTS = asn1c.$(OBJEXT) decoder.$(OBJEXT)
+am_asn1c_OBJECTS = asn1c.$(OBJEXT) tlv_decoder.$(OBJEXT)
 asn1c_OBJECTS = $(am_asn1c_OBJECTS)
 asn1c_LDADD = $(LDADD)
 asn1c_DEPENDENCIES = ${top_builddir}/libasn1parser/libasn1parser.la \
@@ -63,7 +63,8 @@ asn1c_DEPENDENCIES = ${top_builddir}/libasn1parser/libasn1parser.la \
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/asn1c.Po ./$(DEPDIR)/decoder.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/asn1c.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tlv_decoder.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
@@ -213,7 +214,9 @@ LDADD = \
 	${top_builddir}/libasn1print/libasn1print.la	\
 	${top_builddir}/libasn1compiler/libasn1compiler.la
 
-asn1c_SOURCES = asn1c.c decoder.c decoder.h
+asn1c_SOURCES = asn1c.c	\
+	tlv_decoder.c tlv_decoder.h
+
 dist_man1_MANS = asn1c.1
 check_SCRIPTS = check-parsing.sh
 TESTS = check-parsing.sh
@@ -291,7 +294,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decoder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tlv_decoder.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
