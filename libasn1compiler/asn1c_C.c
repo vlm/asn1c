@@ -1145,32 +1145,32 @@ emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice
 
 	p = MKID(expr->Identifier);
 	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n", p);
-	INDENTED(
-		if(expr->tag.tag_class) {
+	INDENT(+1);
+	if(expr->tag.tag_class) {
+		tags_count++;
+		_print_tag(arg, expr, &expr->tag);
+		if(expr->tag.tag_mode != TM_EXPLICIT)
+			(*tags_impl_skip)++;
+	} else {
+		if(!choice_mode)
+			(*tags_impl_skip)++;
+	}
+	if(!choice_mode) {
+		if(!expr->tag.tag_class
+		|| (expr->meta_type == AMT_TYPE
+			&& expr->tag.tag_mode == TM_EXPLICIT)) {
+			struct asn1p_type_tag_s tag;
+			if(expr->tag.tag_class)
+				OUT(",\n");
+			tag.tag_class = TC_UNIVERSAL;
+			tag.tag_mode = TM_IMPLICIT;
+			tag.tag_value = expr_type2uclass_value[expr->expr_type];
+			_print_tag(arg, expr, &tag);
 			tags_count++;
-			_print_tag(arg, expr, &expr->tag);
-			if(expr->tag.tag_mode != TM_EXPLICIT)
-				(*tags_impl_skip)++;
-		} else {
-			if(!choice_mode)
-				(*tags_impl_skip)++;
 		}
-		if(!choice_mode) {
-			if(!expr->tag.tag_class
-			|| (expr->meta_type == AMT_TYPE
-				&& expr->tag.tag_mode == TM_EXPLICIT)) {
-				struct asn1p_type_tag_s tag;
-				if(expr->tag.tag_class)
-					OUT(",\n");
-				tag.tag_class = TC_UNIVERSAL;
-				tag.tag_mode = TM_IMPLICIT;
-				tag.tag_value = expr_type2uclass_value[expr->expr_type];
-				_print_tag(arg, expr, &tag);
-				tags_count++;
-			}
-		}
-		OUT("\n");
-	);
+	}
+	OUT("\n");
+	INDENT(-1);
 	OUT("};\n");
 
 	return tags_count;
