@@ -458,7 +458,15 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSet = {
 
 #include <UTF8String.h>
 #include <INTEGER.h>
+#include <ENUMERATED.h>
 #include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [ExtensibleSequence] >>> ***/
+
+typedef enum Enum {
+	enum_b	= 0,
+	enum_a	= 1
+} enum_e;
 
 /*** <<< TYPE-DECLS [ExtensibleSequence] >>> ***/
 
@@ -469,6 +477,7 @@ typedef struct ExtensibleSequence {
 	 * possible extensions are below.
 	 */
 	INTEGER_t	*integer	/* OPTIONAL */;
+	ENUMERATED_t	*Enum;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -476,24 +485,145 @@ typedef struct ExtensibleSequence {
 
 /*** <<< FUNC-DECLS [ExtensibleSequence] >>> ***/
 
+/* extern asn_TYPE_descriptor_t asn_DEF_enum_5;	// (Use -fall-defs-global to expose) */
 extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence;
+
+/*** <<< CODE [ExtensibleSequence] >>> ***/
+
+static int
+enum_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	return td->check_constraints(td, sptr, app_errlog, app_key);
+}
+
+/*
+ * This type is implemented using ENUMERATED,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+enum_5_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
+	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
+	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
+	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
+	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
+	td->elements       = asn_DEF_ENUMERATED.elements;
+	td->elements_count = asn_DEF_ENUMERATED.elements_count;
+    /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+}
+
+static void
+enum_5_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	enum_5_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+static int
+enum_5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	enum_5_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+static asn_dec_rval_t
+enum_5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
+	enum_5_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+static asn_enc_rval_t
+enum_5_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	enum_5_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+static asn_dec_rval_t
+enum_5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+	enum_5_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+static asn_enc_rval_t
+enum_5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	enum_5_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
 
 /*** <<< STAT-DEFS [ExtensibleSequence] >>> ***/
 
+static asn_INTEGER_enum_map_t asn_MAP_enum_5_value2enum[] = {
+	{ 0,	1,	"b" },
+	{ 1,	1,	"a" }
+};
+static unsigned int asn_MAP_enum_5_enum2value[] = {
+	1,	/* a(1) */
+	0	/* b(0) */
+};
+static asn_INTEGER_specifics_t asn_SPC_enum_5_specs = {
+	asn_MAP_enum_5_value2enum,	/* "tag" => N; sorted by tag */
+	asn_MAP_enum_5_enum2value,	/* N => "tag"; sorted by N */
+	2,	/* Number of elements in the maps */
+	0,	/* Enumeration is not extensible */
+	1	/* Strict enumeration */
+};
+static ber_tlv_tag_t asn_DEF_enum_5_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_enum_5 = {
+	"enum",
+	"enum",
+	enum_5_free,
+	enum_5_print,
+	enum_5_constraint,
+	enum_5_decode_ber,
+	enum_5_encode_der,
+	enum_5_decode_xer,
+	enum_5_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_enum_5_tags,
+	sizeof(asn_DEF_enum_5_tags)
+		/sizeof(asn_DEF_enum_5_tags[0]) - 1, /* 1 */
+	asn_DEF_enum_5_tags,	/* Same as above */
+	sizeof(asn_DEF_enum_5_tags)
+		/sizeof(asn_DEF_enum_5_tags[0]), /* 2 */
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_enum_5_specs	/* Additional specs */
+};
+
 static asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
-	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence, string),
+	{ ATF_POINTER, 3, offsetof(struct ExtensibleSequence, string),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "string"
 		},
-	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence, integer),
+	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence, integer),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "integer"
+		},
+	{ ATF_POINTER, 0, offsetof(struct ExtensibleSequence, Enum),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_enum_5,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "enum"
 		},
 };
 static ber_tlv_tag_t asn_DEF_ExtensibleSequence_1_tags[] = {
@@ -501,15 +631,16 @@ static ber_tlv_tag_t asn_DEF_ExtensibleSequence_1_tags[] = {
 };
 static asn_TYPE_tag2member_t asn_MAP_ExtensibleSequence_1_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 49 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* integer at 51 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* integer at 51 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* enum at 52 */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_ExtensibleSequence_1_specs = {
 	sizeof(struct ExtensibleSequence),
 	offsetof(struct ExtensibleSequence, _asn_ctx),
 	asn_MAP_ExtensibleSequence_1_tag2el,
-	2,	/* Count of tags in the map */
+	3,	/* Count of tags in the map */
 	0,	/* Start extensions */
-	3	/* Stop extensions */
+	4	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
 	"ExtensibleSequence",
@@ -529,7 +660,7 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
 	sizeof(asn_DEF_ExtensibleSequence_1_tags)
 		/sizeof(asn_DEF_ExtensibleSequence_1_tags[0]), /* 1 */
 	asn_MBR_ExtensibleSequence_1,
-	2,	/* Elements count */
+	3,	/* Elements count */
 	&asn_SPC_ExtensibleSequence_1_specs	/* Additional specs */
 };
 
