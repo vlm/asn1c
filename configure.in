@@ -49,11 +49,11 @@ mingw* | p32*)
 	;;
 esac
 
-AC_ARG_ENABLE(autoconf,
+AC_ARG_ENABLE(Werror,
   [  --enable-Werror         abort compilation after any C compiler warning],
 	enable_werror=$enableval, enable_werror=no)
 if test x$enable_werror = xyes; then
-  ADD_CFLAGS="-Werror -W -Wpointer-arith")
+  ADD_CFLAGS="-Werror -W -Wpointer-arith"
 fi
 AC_SUBST(ADD_CFLAGS)
 
