@@ -1399,7 +1399,8 @@ ConstraintElementSet:
 		checkmem(ct);
 		ct->type = ACT_EL_EXT;
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
-		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, $5);
+		ct = $$;
+		CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $5);
 	}
 	| TOK_ThreeDots {
 		$$ = asn1p_constraint_new(yylineno);
