@@ -11,8 +11,8 @@
 
 #if	defined(WIN32)
 #warning PLEASE STOP AND READ!
-#warning	localtime_r is implemented via localtime(), which is not thread-safe.
-#warning	gmtime_r is implemented via gmtime(), which is not thread-safe.
+#warning	localtime_r is implemented via localtime(), which may be not thread-safe.
+#warning	gmtime_r is implemented via gmtime(), which may be not thread-safe.
 #warning
 #warning	You must fix the code by inserting appropriate locking
 #warning	if you want to use asn_GT2time() or asn_UT2time().
@@ -32,39 +32,76 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 	return 0;
 }
 
+#define	tzset()	_tzset()
+#define	_EMULATE_TIMEGM
+
+#endif	/* WIN32 */
+
+/*
+ * Where to look for offset from GMT, Phase I.
+ * Several platforms are known.
+ */
+#if defined(__FreeBSD__)				\
+	|| (defined(__GNUC__) && defined(__APPLE_CC__))	\
+	|| (defined __GLIBC__ && __GLIBC__ >= 2)
+#undef	HAVE_TM_GMTOFF
+#define	HAVE_TM_GMTOFF
+#endif	/* BSDs and newer glibc */
+
+/*
+ * Where to look for offset from GMT, Phase II.
+ */
+#ifdef	HAVE_TM_GMTOFF
+#define	GMTOFF(tm)	((tm).tm_gmtoff)
+#else	/* HAVE_TM_GMTOFF */
+#define	GMTOFF(tm)	(-timezone)
+#endif	/* HAVE_TM_GMTOFF */
+
+/*
+ * Override our GMTOFF decision for other known platforms.
+ */
+#ifdef __CYGWIN__
+#undef	GMTOFF
+static long GMTOFF(struct tm a){
+	struct tm *lt;
+	time_t local_time, gmt_time;
+	long zone;
+
+	tzset();
+	gmt_time = time (NULL);
+
+	lt = gmtime(&gmt_time);
+
+	local_time = mktime(lt);
+	return (gmt_time - local_time);
+}
+#define	_EMULATE_TIMEGM
+
+#endif	/* __CYGWIN__ */
+
+#ifdef	_EMULATE_TIMEGM
 static time_t timegm(struct tm *tm) {
 	time_t tloc;
 	char *tz;
 	char *buf;
 
 	tz = getenv("TZ");
-         _putenv("TZ=UTC");
-	_tzset();
+	_putenv("TZ=UTC");
+	tzset();
 	tloc = mktime(tm);
 	if (tz) {
-		buf = alloca(strlen(tz) + 4);
-		sprintf(buf, "TZ=%s", tz);
+		int bufsize = strlen(tz) + 4;
+		buf = alloca(bufsize);
+		snprintf(buf, bufsize, "TZ=%s", tz);
 	} else {
 		buf = "TZ=";
 	}
 	_putenv(buf);
-	_tzset();
+	tzset();
 	return tloc;
 }
+#endif	/* _EMULATE_TIMEGM */
 
-#if 0	/* Alternate version */
-/* vlm: I am not sure about validity of this algorithm. */
-static time_t timegm(struct tm *tm) {
-	struct tm tmp;
-	time_t tloc = mktime(tm);
-	localtime_r(&tloc, &tmp);	/* Figure out our GMT offset */
-	tloc += tmp.tm_gmtoff;
-	tm->tm_zone = "GMT";
-	tm->tm_gmtoff = 0;	/* Simulate GMT */
-	return tloc;
-}
-#endif
-#endif	/* WIN32 */
 
 #ifndef	__NO_ASN_TABLE__
 
@@ -184,26 +221,6 @@ GeneralizedTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		return cb("<absent>", 8, app_key);
 	}
 }
-
-/*
- * Where to look for offset from GMT, Phase I.
- * Several platforms are known.
- */
-#if defined(__FreeBSD__)				\
-	|| (defined(__GNUC__) && defined(__APPLE_CC__))	\
-	|| (defined __GLIBC__ && __GLIBC__ >= 2)
-#undef	HAVE_TM_GMTOFF
-#define	HAVE_TM_GMTOFF
-#endif	/* BSDs and newer glibc */
-
-/*
- * Where to look for offset from GMT, Phase II.
- */
-#ifdef	HAVE_TM_GMTOFF
-#define	GMTOFF(tm)	((tm).tm_gmtoff)
-#else	/* HAVE_TM_GMTOFF */
-#define	GMTOFF(tm)	(-timezone)
-#endif	/* HAVE_TM_GMTOFF */
 
 time_t
 asn_GT2time(const GeneralizedTime_t *st, struct tm *ret_tm, int as_gmt) {
