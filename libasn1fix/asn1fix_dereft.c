@@ -26,7 +26,7 @@ asn1f_fix_dereference_types(arg_t *arg) {
 	/*
 	 * Follow the reference.
 	 */
-	type_expr = asn1f_find_terminal_type(arg, expr, 0);
+	type_expr = asn1f_find_terminal_type(arg, expr);
 	if(type_expr == NULL) {
 		const char *type_name;
 
@@ -42,35 +42,6 @@ asn1f_fix_dereference_types(arg_t *arg) {
 		FATAL("Unknown type \"%s\" referenced by \"%s\" at line %d",
 			type_name, expr->Identifier, expr->_lineno);
 		return -1;
-	}
-
-	/*
-	 * Copying members of the source expression
-	 * into the current expression.
-	 */
-	if(0) {
-		asn1p_expr_t *tmp_clone;
-
-		tmp_clone = asn1p_expr_clone(type_expr);
-		if(tmp_clone == NULL) {
-			FATAL("Could not clone \"%s\" at line %d",
-				type_expr->Identifier, type_expr->_lineno);
-			return -1;
-		}
-
-		/*
-		 * Replace the referenced type with its definition.
-		 */
-		DEBUG("\tChanging type of \"%s\":%x to %x for line %d",
-			expr->Identifier,
-			expr->expr_type,
-			type_expr->expr_type,
-			expr->_lineno
-		);
-		expr->expr_type = type_expr->expr_type;
-		expr->members = tmp_clone->members;
-		memset(&tmp_clone->members, 0, sizeof(tmp_clone->members));
-		asn1p_expr_free(tmp_clone);
 	}
 
 	return r_value;

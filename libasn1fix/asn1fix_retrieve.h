@@ -36,11 +36,10 @@ asn1p_module_t *asn1f_lookup_module(arg_t *arg,
 /*
  * Return the reference to a destination of the given reference,
  * symbol lookup. Not a recursive function.
- * Optional module reference may be assigned a module in which the
- * particular expr was found.
  */
-asn1p_expr_t *asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref,
-		asn1p_module_t **opt_module_r);
+asn1p_expr_t *asn1f_lookup_symbol(arg_t *arg,
+		asn1p_module_t *mod,
+		asn1p_ref_t *ref);
 
 /*
  * Recursively find the original type for the given expression.
@@ -54,8 +53,7 @@ asn1p_expr_t *asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref,
  * would return an expression for Type4.
  * WARNING: No attempts are made to honor constraints at this moment.
  */
-asn1p_expr_t *asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *tc,
-	asn1p_module_t **opt_module_r);
+asn1p_expr_t *asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *tc);
 
 /*
  * Recursively find the original value for the given expression.
@@ -67,7 +65,6 @@ asn1p_expr_t *asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *tc,
  * Then this function will return the expression for value2 if given
  * the v as an argment.
  */
-asn1p_expr_t *asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *tc,
-	asn1p_module_t **opt_module_r);
+asn1p_expr_t *asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *tc);
 
 #endif	/* _ASN1FIX_RETRIEVE_H_ */

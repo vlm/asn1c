@@ -4,7 +4,6 @@ static int _asn1f_copy_value(arg_t *arg, asn1p_expr_t *to,asn1p_expr_t *from);
 
 int
 asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
-	asn1p_module_t *val_mod;
 	asn1p_expr_t *val_type_expr;
 	asn1p_expr_t *value_expr;
 	asn1p_expr_t *type_expr;
@@ -20,7 +19,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	/*
 	 * 1. Find the terminal type for this assignment.
 	 */
-	type_expr = asn1f_find_terminal_type(arg, expr, 0);
+	type_expr = asn1f_find_terminal_type(arg, expr);
 	DEBUG("%s(): terminal type %p", __func__, type_expr);
 	if(type_expr == 0) {
 		DEBUG("\tTerminal type for %s not found", expr->Identifier);
@@ -33,7 +32,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	/*
 	 * 2. Find the terminal value also.
 	 */
-	value_expr = asn1f_find_terminal_value(arg, expr, &val_mod);
+	value_expr = asn1f_find_terminal_value(arg, expr);
 	if(value_expr) {
 		DEBUG("\tTerminal value for %s->%s is %s at line %d",
 			expr->Identifier, asn1f_printable_value(expr->value),
@@ -47,8 +46,8 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	/*
 	 * 3. Find the _type_ of a _terminal value_.
 	 */
-	WITH_MODULE(val_mod,
-		val_type_expr = asn1f_find_terminal_type(arg, value_expr, 0));
+	WITH_MODULE(value_expr->module,
+		val_type_expr = asn1f_find_terminal_type(arg, value_expr));
 	if(val_type_expr) {
 		DEBUG("\tTerminal type of value %s->%s is %s at line %d",
 			expr->Identifier, asn1f_printable_value(expr->value),

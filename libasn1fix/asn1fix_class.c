@@ -23,14 +23,12 @@ static asn1p_expr_t *
 asn1f_class_dot_lookup(arg_t *arg, asn1p_expr_t *obj, asn1p_ref_t *ref);
 
 asn1p_expr_t *
-asn1f_class_access(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **mod_r) {
+asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	asn1p_expr_t *obj;		/* Information Object or Object Set */
 	object_category_e obj_cat;	/* Object category */
 	//field_category_e field_cat;	/* Field category */
 	asn1p_expr_t *result;
 	asn1p_ref_t tmpref;
-
-	(void)mod_r;	/* Unused argument */
 
 	assert(ref->comp_count > 1);
 
@@ -47,7 +45,7 @@ asn1f_class_access(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **mod_r) {
 
 	tmpref = *ref;
 	tmpref.comp_count = 1;
-	obj = asn1f_lookup_symbol(arg, &tmpref, 0);
+	obj = asn1f_lookup_symbol(arg, mod, &tmpref);
 	if(obj == NULL) {
 		errno = ESRCH;
 		return NULL;
