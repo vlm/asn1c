@@ -2491,7 +2491,7 @@ case 131:
     break;}
 case 132:
 #line 1324 "asn1p_y.y"
-{ printf("push\n"); asn1p_lexer_hack_push_opaque_state(); ;
+{ asn1p_lexer_hack_push_opaque_state(); ;
     break;}
 case 133:
 #line 1324 "asn1p_y.y"
