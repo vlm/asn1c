@@ -1,2 +1,10 @@
-*-B.*	-	The file is intentionally broken
-*-D.*	-	Reconstructing should yield different data
+Mode of operation:
+
+	Each of the *.in files is XER-decoded, then converted into DER,
+	then decoded from DER and encoded into XER again, and compared
+	to the original encoding.
+
+Naming conventions:
+
+*-B.in	-	The file is intentionally broken
+*-D.in	-	Reconstructing should yield different data
