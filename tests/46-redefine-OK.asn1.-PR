@@ -52,7 +52,7 @@ static ber_tlv_tag_t asn_DEF_ConstructedType_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_ConstructedType_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 0, 0, 0 }, /* field at 18 */
+    { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 0, 0, 0 } /* field at 18 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_ConstructedType_specs = {
 	sizeof(struct ConstructedType),
