@@ -105,8 +105,8 @@ ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
  * If (oid_txt_length == -1), the strlen() will be invoked to determine the
  * size of the (oid_text) string.
  * 
- * After return, the optional (oid_text_end) is set to the character after
- * the last parsed one. (oid_text_end) is never less than (oid_text).
+ * After return, the optional (opt_oid_text_end) is set to the character after
+ * the last parsed one. (opt_oid_text_end) is never less than (oid_text).
  * 
  * RETURN VALUES:
  *   -1:	Parse error.
@@ -117,7 +117,7 @@ ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
  * This is useful for (_arc_slots) value estimation.
  */
 int OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
-	long arcs[], unsigned int arcs_slots, const char **oid_text_end);
+	long arcs[], unsigned int arcs_slots, const char **opt_oid_text_end);
 
 /*
  * Internal functions.
