@@ -402,9 +402,9 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
 		ASN_DEBUG("In %s SEQUENCE decoded %d %s of %d "
-			"in %d bytes rval.code %d",
+			"in %d bytes rval.code %d, size=%d",
 			td->name, edx, elements[edx].type->name,
-			(int)LEFT, (int)rval.consumed, rval.code);
+			(int)LEFT, (int)rval.consumed, rval.code, (int)size);
 		switch(rval.code) {
 		case RC_OK:
 			break;
@@ -413,6 +413,8 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 				ADVANCE(rval.consumed);
 				RETURN(RC_WMORE);
 			}
+			ASN_DEBUG("Size violation (c->l=%ld <= s=%ld)",
+				(long)ctx->left, (long)size);
 			/* Fall through */
 		case RC_FAIL: /* Fatal error */
 			RETURN(RC_FAIL);
