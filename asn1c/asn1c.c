@@ -28,7 +28,7 @@ main(int ac, char **av) {
 	enum asn1p_flags     asn1_parser_flags	= A1P_NOFLAGS;
 	enum asn1f_flags     asn1_fixer_flags	= A1F_NOFLAGS;
 	enum asn1c_flags     asn1_compiler_flags= A1C_NOFLAGS;
-	enum asn1print_flags_e asn1_print_flags	= APF_NOFLAGS;
+	enum asn1print_flags asn1_printer_flags	= APF_NOFLAGS;
 	int print_arg__print_out = 0;	/* Don't compile, just print parsed */
 	int print_arg__fix_n_print = 0;	/* Fix and print */
 	int warnings_as_errors = 0;	/* Treat warnings as errors */
@@ -41,7 +41,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "EFf:LPRS:t:W:")) != -1)
+	while((ch = getopt(ac, av, "EFf:LPp:RS:t:W:")) != -1)
 	switch(ch) {
 	case 'E':
 		print_arg__print_out = 1;
@@ -70,10 +70,18 @@ main(int ac, char **av) {
 		}
 		break;
 	case 'L':
-		asn1_print_flags |= APF_LINE_COMMENTS;
+		asn1_printer_flags |= APF_LINE_COMMENTS;
 		break;
 	case 'P':
 		asn1_compiler_flags |= A1C_PRINT_COMPILED;
+		break;
+	case 'p':
+		if(strcmp(optarg, "rint-constraints") == 0) {
+			asn1_printer_flags |= APF_DEBUG_CONSTRAINTS;
+		} else {
+			fprintf(stderr, "-p%s: Invalid argument\n", optarg);
+			exit(EX_USAGE);
+		}
 		break;
 	case 'R':
 		asn1_compiler_flags |= A1C_OMIT_SUPPORT_CODE;
@@ -113,6 +121,12 @@ main(int ac, char **av) {
 	if(!print_arg__print_out) {
 		if(print_arg__fix_n_print) {
 			fprintf(stderr, "Error: -F requires -E\n");
+			exit(EX_USAGE);
+		}
+		if(asn1_printer_flags) {
+			fprintf(stderr, "Error: "
+				"-L and -print-constraints "
+				"require -E\n");
 			exit(EX_USAGE);
 		}
 	}
@@ -160,7 +174,7 @@ main(int ac, char **av) {
 	 * Dump the parsed ASN.1 tree if -E specified and -F is NOT given.
 	 */
 	if(print_arg__print_out && !print_arg__fix_n_print) {
-		if(asn1print(asn, asn1_print_flags))
+		if(asn1print(asn, asn1_printer_flags))
 			exit(EX_SOFTWARE);
 		return 0;
 	}
@@ -187,7 +201,7 @@ main(int ac, char **av) {
 	 * Dump the parsed ASN.1 tree if -E specified and -F is given.
 	 */
 	if(print_arg__print_out && print_arg__fix_n_print) {
-		if(asn1print(asn, asn1_print_flags))
+		if(asn1print(asn, asn1_printer_flags))
 			exit(EX_SOFTWARE);
 		return 0;
 	}
@@ -241,36 +255,38 @@ main(int ac, char **av) {
 static void
 usage(char *av0) {
 	fprintf(stderr,
-		"ASN.1 Compiler, v" VERSION "\n"
-		"Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>\n"
-		"Usage: %s [options] ...\n"
-		"Where [options] are:\n"
-		"\t-E\tRun only the ASN.1 parser and print out the tree\n"
-		"\t-F\tDuring -E operation, also perform tree fixing\n"
-		"\t-L\tGenerate \"-- #line\" comments in -E output\n"
-		"\n"
-		"\t-P      \tConcatenate and print the compiled text\n"
-		"\t-S <dir>\tDirectory with support (skeleton?) files\n"
-		"\t        \t(Default is \"%s\")\n"
-		"\t-R      \tRestrict output (tables only, no support code)\n"
-		"\n"
-		"\t-t <data>\tDecode the given tag[/length] sequence\n"
-		"\n"
-		"\t-ftypes88\tUse only ASN.1:1988 embedded types\n"
+	"ASN.1 Compiler, v" VERSION "\n"
+	"Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>\n"
+	"Usage: %s [options] ...\n"
+	"Where [options] are:\n"
+	"\t-E\tRun only the ASN.1 parser and print out the tree\n"
+	"\t-F\tDuring -E operation, also perform tree fixing\n"
+	"\t-L\tGenerate \"-- #line\" comments in -E output\n"
+	"\n"
+	"\t-P      \tConcatenate and print the compiled text\n"
+	"\t-S <dir>\tDirectory with support (skeleton?) files\n"
+	"\t        \t(Default is \"%s\")\n"
+	"\t-R      \tRestrict output (tables only, no support code)\n"
+	"\n"
+	"\t-t <data>\tDecode the given tag[/length] sequence\n"
+	"\n"
+	"\t-ftypes88\tUse only ASN.1:1988 embedded types\n"
 /*
-		"\t-fconstr90\tUse only ASN.1:1990 constructs (not available)\n"
+	"\t-fconstr90\tUse only ASN.1:1990 constructs (not available)\n"
 */
-		"\t-fknown-extern-type=<name>\tPretend this type is known\n"
-		"\t-fnative-integers\tUse int instead of INTEGER_t whenever possible\n"
-		"\t-fno-c99\tDisable C99 extensions\n"
-		"\t-funnamed-unions\tEnable unnamed unions in structures\n"
-		"\n"
-		"\t-Werror \tTreat warnings as errors; abort if any warning\n"
-		"\t-Wdebug-lexer\tEnable verbose debugging output from lexer\n"
-		"\t-Wdebug-fixer\tDebug ASN.1 semantics processor\n"
-		"\t-Wdebug-compiler\tDebug ASN.1 compiler\n"
-		,
-		a1c_basename(av0), DATADIR
+	"\t-fknown-extern-type=<name>\tPretend this type is known\n"
+	"\t-fnative-integers\tUse int instead of INTEGER_t whenever possible\n"
+	"\t-fno-c99\tDisable C99 extensions\n"
+	"\t-funnamed-unions\tEnable unnamed unions in structures\n"
+	"\n"
+	"\t-print-constraints\tExplain subtype constraints (debug)\n"
+	"\n"
+	"\t-Werror \tTreat warnings as errors; abort if any warning\n"
+	"\t-Wdebug-lexer\tEnable verbose debugging output from lexer\n"
+	"\t-Wdebug-fixer\tDebug ASN.1 semantics processor\n"
+	"\t-Wdebug-compiler\tDebug ASN.1 compiler\n"
+	,
+	a1c_basename(av0), DATADIR
 	);
 	exit(EX_USAGE);
 }
