@@ -139,8 +139,8 @@ check_REGEN(int *arcs, int acount) {
 
 	printf("Encoded  (R) {");
 	for(i = 0; i < alen; i++) {
-		printf(" %lu", tmp_arcs[i]);
-		assert((unsigned long)arcs[i] == tmp_arcs[i]);
+		printf(" %lu)", tmp_arcs[i]);
+		assert(arcs[i] == (int)tmp_arcs[i]);
 	}
 	printf(" }\n");
 }
@@ -177,7 +177,7 @@ check_REGEN_OID(int *arcs, int acount) {
 	printf("Encoded  (O) { ");
 	for(i = 0; i < alen; i++) {
 		printf("%lu ", tmp_arcs[i]); fflush(stdout);
-		assert((unsigned long)arcs[i] == tmp_arcs[i]);
+		assert(arcs[i] == (int)tmp_arcs[i]);
 	}
 	printf("}\n");
 }
