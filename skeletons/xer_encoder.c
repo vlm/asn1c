@@ -42,7 +42,19 @@ xer_encode(asn1_TYPE_descriptor_t *td, void *sptr,
 	return er;
 }
 
-static int _print2fp(const void *buffer, size_t size, void *app_key);
+/*
+ * This is a helper function for xer_fprint, which directs all the incoming data
+ * into the provided file descriptor.
+ */
+static int
+xer__print2fp(const void *buffer, size_t size, void *app_key) {
+	FILE *stream = (FILE *)app_key;
+
+	if(fwrite(buffer, 1, size, stream) != size)
+		return -1;
+
+	return 0;
+}
 
 int
 xer_fprint(FILE *stream, asn1_TYPE_descriptor_t *td, void *sptr) {
@@ -52,20 +64,9 @@ xer_fprint(FILE *stream, asn1_TYPE_descriptor_t *td, void *sptr) {
 	if(!td || !sptr)
 		return -1;
 
-	er = xer_encode(td, sptr, XER_F_BASIC, _print2fp, stream);
+	er = xer_encode(td, sptr, XER_F_BASIC, xer__print2fp, stream);
 	if(er.encoded == -1)
 		return -1;
 
 	return fflush(stream);
 }
-
-static int
-_print2fp(const void *buffer, size_t size, void *app_key) {
-	FILE *stream = (FILE *)app_key;
-
-	if(fwrite(buffer, 1, size, stream) != size)
-		return -1;
-
-	return 0;
-}
-

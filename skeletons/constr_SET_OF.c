@@ -24,12 +24,13 @@
  * if the V processor returns with "want more data" even if the buffer
  * contains way more data than the V processor have seen.
  */
-#define	SIZE_VIOLATION	(ctx->left != -1 && (size_t)ctx->left <= size)
+#define	SIZE_VIOLATION	(ctx->left >= 0 && (size_t)ctx->left <= size)
 
 /*
  * This macro "eats" the part of the buffer which is definitely "consumed",
  * i.e. was correctly converted into local representation or rightfully skipped.
  */
+#undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
 		ptr = ((char *)ptr) + num;	\
@@ -42,6 +43,8 @@
 /*
  * Switch to the next phase of parsing.
  */
+#undef	NEXT_PHASE
+#undef	PHASE_OUT
 #define	NEXT_PHASE(ctx)	do {			\
 		ctx->phase++;			\
 		ctx->step = 0;			\
@@ -51,6 +54,7 @@
 /*
  * Return a standardized complex structure.
  */
+#undef	RETURN
 #define	RETURN(_code)	do {			\
 		rval.code = _code;		\
 		rval.consumed = consumed_myself;\

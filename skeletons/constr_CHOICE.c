@@ -30,6 +30,7 @@
  * This macro "eats" the part of the buffer which is definitely "consumed",
  * i.e. was correctly converted into local representation or rightfully skipped.
  */
+#undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
 		ptr = ((char *)ptr) + num;	\
@@ -42,6 +43,7 @@
 /*
  * Switch to the next phase of parsing.
  */
+#undef	NEXT_PHASE
 #define	NEXT_PHASE(ctx)	do {			\
 		ctx->phase++;			\
 		ctx->step = 0;			\
@@ -50,6 +52,7 @@
 /*
  * Return a standardized complex structure.
  */
+#undef	RETURN
 #define	RETURN(_code)	do {			\
 		rval.code = _code;		\
 		rval.consumed = consumed_myself;\
@@ -616,9 +619,11 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		}
 
 		/* Print member's name and stuff */
-		if(cb(elm->name, strlen(elm->name), app_key)
-		|| cb(": ", 2, app_key))
-			return -1;
+		if(0) {
+			if(cb(elm->name, strlen(elm->name), app_key)
+			|| cb(": ", 2, app_key))
+				return -1;
+		}
 
 		return elm->type->print_struct(elm->type, memb_ptr, ilevel,
 			cb, app_key);

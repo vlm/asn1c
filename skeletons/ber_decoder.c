@@ -6,13 +6,16 @@
 #include <constr_TYPE.h>
 #include <assert.h>
 
+#undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
 		ptr = ((char *)ptr) + num;		\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
+#undef	RETURN
 #define	RETURN(_code)	do {				\
+		fprintf(stderr, "-----%d", __LINE__);		\
 		ber_dec_rval_t rval;			\
 		rval.code = _code;			\
 		rval.consumed = consumed_myself;	\
@@ -100,6 +103,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
 		}
+		ADVANCE(tag_len + len_len);
 	} else {
 		assert(tagno < td->tags_count);	/* At least one loop */
 	}

@@ -30,6 +30,7 @@
  * This macro "eats" the part of the buffer which is definitely "consumed",
  * i.e. was correctly converted into local representation or rightfully skipped.
  */
+#undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
 		ptr = ((char *)ptr) + num;	\
@@ -42,6 +43,8 @@
 /*
  * Switch to the next phase of parsing.
  */
+#undef	NEXT_PHASE
+#undef	PHASE_OUT
 #define	NEXT_PHASE(ctx)	do {			\
 		ctx->phase++;			\
 		ctx->step = 0;			\
@@ -51,6 +54,7 @@
 /*
  * Return a standardized complex structure.
  */
+#undef	RETURN
 #define	RETURN(_code)	do {			\
 		rval.code = _code;		\
 		rval.consumed = consumed_myself;\
@@ -228,7 +232,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 		 */
 		tag_len = ber_fetch_tag(ptr, LEFT, &tlv_tag);
 		ASN_DEBUG("Current tag in %s SEQUENCE for element %d "
-			"(%s) is %s encoded in %d bytes, left %ld",
+			"(%s) is %s encoded in %d bytes, of frame %ld",
 			td->name, edx, elements[edx].name,
 			ber_tlv_tag_string(tlv_tag), (int)tag_len, (long)LEFT);
 		switch(tag_len) {

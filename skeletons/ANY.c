@@ -29,16 +29,15 @@ ANY_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 
-	(void)ilevel;
-	(void)flags;
-	(void)cb;
-	(void)app_key;
+	if(flags & XER_F_CANONICAL) {
+		/*
+		 * Canonical XER-encoding of ANY type is not supported.
+		 */
+		_ASN_ENCODE_FAILED;
+	}
 
-	/*
-	 * XER-encoding of ANY type is not supported.
-	 */
-
-	_ASN_ENCODE_FAILED;
+	/* Dump as binary */
+	return OCTET_STRING_encode_xer(td, sptr, ilevel, flags, cb, app_key);
 }
 
 struct _callback_arg {

@@ -78,6 +78,7 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 	char *p = scratch;
 	char *scend = scratch + (sizeof(scratch) - 10);
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+	int xcan = (flags & XER_F_CANONICAL);
 	uint8_t *buf;
 	uint8_t *end;
 
@@ -94,8 +95,7 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 	 */
 	for(buf++; buf < end; buf++) {
 		int v = *buf;
-		int nline = (flags & XER_F_CANONICAL)
-			?0:((((buf - st->buf) - 1) % 16) == 0);
+		int nline = xcan?0:((((buf - st->buf) - 1) % 8) == 0);
 		if(p >= scend || nline) {
 			er.encoded += p - scratch;
 			_ASN_CALLBACK(scratch, p - scratch);
@@ -108,7 +108,8 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	er.encoded += p - scratch;
-	_ASN_CALLBACK(scratch, p - scratch);
+	if(!xcan && (((buf - st->buf) - 1) % 8) == 0)
+		_i_ASN_TEXT_INDENT(1, ilevel);
 
 	if(buf < end + 1) {
 		int v = *buf;
@@ -119,6 +120,9 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 		er.encoded += p - scratch;
 		_ASN_CALLBACK(scratch, p - scratch);
 	}
+
+	if(!xcan && ((st->size - 1) % 8) == 0)
+		_i_ASN_TEXT_INDENT(1, ilevel - 1);
 
 	return er;
 }
@@ -149,7 +153,8 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	 * Hexadecimal dump.
 	 */
 	for(buf++; buf < end; buf++) {
-		if(((buf - st->buf) - 1) % 16 == 0 && (st->size > 16)) {
+		if(((buf - st->buf) - 1) % 16 == 0 && (st->size > 17)
+				&& buf != st->buf+1) {
 			int i;
 			/* Indentation */
 			if(cb("\n", 1, app_key)) return -1;
@@ -162,9 +167,21 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		*p++ = h2c[*buf & 0x0F];
 		*p++ = 0x20;
 	}
-	if(p > scratch) p--;	/* Eat the tailing space */
 
-	/* Dump the incomplete 16-bytes row */
-	return cb(scratch, p - scratch, app_key);
+	if(p > scratch) {
+		p--;	/* Eat the tailing space */
+
+		if((st->size > 17)) {
+			int i;
+			if(cb("\n", 1, app_key)) return -1;
+			for(i = 0; i < ilevel; i++) cb(" ", 1, app_key);
+		}
+
+		/* Dump the incomplete 16-bytes row */
+		if(cb(scratch, p - scratch, app_key))
+			return -1;
+	}
+
+	return 0;
 }
 

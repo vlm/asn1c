@@ -34,6 +34,9 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	0	/* No specifics */
 };
 
+#undef	_CH_PHASE
+#undef	NEXT_PHASE
+#undef	PREV_PHASE
 #define	_CH_PHASE(ctx, inc) do {	\
 		if(ctx->phase == 0)	\
 			ctx->step = 0;	\
@@ -42,6 +45,7 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 #define	NEXT_PHASE(ctx)	_CH_PHASE(ctx, +1)
 #define	PREV_PHASE(ctx)	_CH_PHASE(ctx, -1)
 
+#undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
 		buf_ptr = ((char *)buf_ptr) + num;	\
@@ -49,12 +53,14 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 		consumed_myself += num;			\
 	} while(0)
 
+#undef	RETURN
 #define	RETURN(_code)	do {			\
 		rval.code = _code;		\
 		rval.consumed = consumed_myself;\
 		return rval;			\
 	} while(0)
 
+#undef	APPEND
 #define	APPEND(bufptr, bufsize)	do {					\
 		size_t _bs = (bufsize);					\
 		size_t _ns = ctx->step;	/* Allocated */			\
@@ -161,8 +167,10 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	} type_type
 		= (enum type_type_e)(int)td->specifics;	/* An ugly hack */
 
-	ASN_DEBUG("Decoding %s as %s (%ld)",
-		td->name, "OCTET STRING", (long)size);
+	ASN_DEBUG("Decoding %s as %s (frame %ld)",
+		td->name,
+		(type_type == _TT_GENERIC) ? "OCTET STRING" : "OS-SpecialCase",
+		(long)size);
 
 	/*
 	 * Create the string if does not exist.
@@ -188,8 +196,8 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			RETURN(rval.code);
 		}
 
-		ASN_DEBUG("OS length is %d bytes, form %d",
-			(int)ctx->left, tlv_constr);
+		ASN_DEBUG("OS length is %d bytes, form %d (consumed %d==0)",
+			(int)ctx->left, tlv_constr, rval.consumed);
 
 		if(tlv_constr) {
 			/*
@@ -198,18 +206,6 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			ctx->ptr = _new_stack();
 			if(ctx->ptr) {
 				(void *)stck = ctx->ptr;
-#if 0
-				if(ctx->left < 0) {
-					stck->cur_ptr->want_nulls = -ctx->left;
-					stck->cur_ptr->left = -1;
-				} else {
-					stck->cur_ptr->want_nulls = 0;
-					stck->cur_ptr->left = ctx->left;
-				}
-				ASN_DEBUG("+EXPECT1 left=%d wn=%d",
-					stck->cur_ptr->left,
-					stck->cur_ptr->want_nulls);
-#endif
 				if(type_type == _TT_BIT_STRING) {
 					/* Number of meaningless tail bits */
 					APPEND("\0", 1);
@@ -555,6 +551,9 @@ OCTET_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 			*p++ = h2c[(*buf >> 4) & 0x0F];
 			*p++ = h2c[*buf & 0x0F];
 		}
+
+		_ASN_CALLBACK(scratch, p-scratch);	/* Dump the rest */
+		er.encoded += p - scratch;
 	} else {
 		for(i = 0; buf < end; buf++, i++) {
 			if(!(i % 16) && (i || st->size > 16)) {
@@ -567,11 +566,14 @@ OCTET_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 			*p++ = h2c[*buf & 0x0F];
 			*p++ = 0x20;
 		}
-		if(i) p--;	/* Remove the tail space */
+		if(p - scratch) {
+			p--;	/* Remove the tail space */
+			_ASN_CALLBACK(scratch, p-scratch); /* Dump the rest */
+			er.encoded += p - scratch;
+			if(st->size > 16)
+				_i_ASN_TEXT_INDENT(1, ilevel-1);
+		}
 	}
-
-	_ASN_CALLBACK(scratch, p-scratch);	/* Dump the rest */
-	er.encoded += p - scratch;
 
 	return er;
 }
@@ -629,9 +631,14 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		*p++ = h2c[*buf & 0x0F];
 		*p++ = 0x20;
 	}
-	if(i) p--;	/* Remove the tail space */
 
-	return cb(scratch, p - scratch, app_key);
+	if(p > scratch) {
+		p--;	/* Remove the tail space */
+		if(cb(scratch, p - scratch, app_key))
+			return -1;
+	}
+
+	return 0;
 }
 
 int
