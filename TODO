@@ -1,7 +1,7 @@
 MAJOR:
 
 1. Support for PER encoding. Requires advanced subtype constraints support,
-which is just completed.
+which is already completed.
 
 2. Support for XER encoding.
 
@@ -12,4 +12,5 @@ which is just completed.
 
 MINOR:
 
-1. Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
+1. Support for DEFAULT encoding and decoding, at least in INTEGER/ENUMERATED types.
+2. Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
