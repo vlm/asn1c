@@ -16,14 +16,15 @@
 #include <assert.h>	/* for assert(3) */
 #include <sysexits.h>	/* for EX_* exit codes */
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 extern asn_TYPE_descriptor_t asn_DEF;	/* ASN.1 type to be decoded */
 
 /*
- * Open file and parse its BER contens.
+ * Open file and parse its contens.
  */
-static void *data_decode_from_file(const char *fname, ssize_t suggested_bufsize);
+static void *data_decode_from_file(asn_TYPE_descriptor_t *asnTypeOfPDU,
+	const char *fname, ssize_t suggested_bufsize);
 
        int opt_debug;	/* -d */
 static int opt_check;	/* -c */
@@ -40,6 +41,7 @@ static int opt_toxml;	/* -x */
 int
 main(int ac, char **av) {
 	ssize_t suggested_bufsize = 8192;  /* close or equal to stdio buffer */
+	asn_TYPE_descriptor_t *pduType = &asn_DEF;
 	int number_of_iterations = 1;
 	int num;
 	int ch;
@@ -126,7 +128,8 @@ main(int ac, char **av) {
 		/*
 		 * Decode the encoded structure from file.
 		 */
-		structure = data_decode_from_file(fname, suggested_bufsize);
+		structure = data_decode_from_file(pduType,
+				fname, suggested_bufsize);
 		if(!structure) {
 			/* Error message is already printed */
 			exit(EX_DATAERR);
@@ -134,10 +137,10 @@ main(int ac, char **av) {
 
 		fprintf(stderr, "%s: decoded successfully\n", fname);
 
-		if(opt_print) asn_fprint(stdout, &asn_DEF, structure);
+		if(opt_print) asn_fprint(stdout, pduType, structure);
 
 		if(opt_toxml
-		&& xer_fprint(stdout, &asn_DEF, structure)) {
+		&& xer_fprint(stdout, pduType, structure)) {
 			fprintf(stderr, "%s: Cannot convert into XML\n", fname);
 			exit(EX_UNAVAILABLE);
 		}
@@ -146,7 +149,7 @@ main(int ac, char **av) {
 		if(opt_check) {
 			char errbuf[128];
 			size_t errlen = sizeof(errbuf);
-			if(asn_check_constraints(&asn_DEF, structure,
+			if(asn_check_constraints(pduType, structure,
 				errbuf, &errlen)) {
 				fprintf(stderr, "%s: ASN.1 constraint "
 					"check failed: %s\n", fname, errbuf);
@@ -154,7 +157,7 @@ main(int ac, char **av) {
 			}
 		}
 
-		asn_DEF.free_struct(&asn_DEF, structure, 0);
+		pduType->free_struct(pduType, structure, 0);
 	  }
 	}
 
@@ -203,7 +206,7 @@ static void buf_extend(size_t bySize) {
 	}
 }
 
-static void *data_decode_from_file(const char *fname, ssize_t suggested_bufsize) {
+static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *fname, ssize_t suggested_bufsize) {
 	static char *fbuf;
 	static ssize_t fbuf_size;
 	static asn_codec_ctx_t s_codec_ctx;
@@ -253,7 +256,7 @@ static void *data_decode_from_file(const char *fname, ssize_t suggested_bufsize)
 			memcpy(bufend, fbuf, rd);
 			buf_len += rd;
 
-			rval = ber_decode(opt_codec_ctx, &asn_DEF,
+			rval = ber_decode(opt_codec_ctx, pduType,
 				(void **)&structure, bufptr, buf_len);
 			DEBUG("ber_decode(%ld) consumed %ld, code %d",
 				(long)buf_len, (long)rval.consumed, rval.code);
@@ -267,8 +270,8 @@ static void *data_decode_from_file(const char *fname, ssize_t suggested_bufsize)
 		} else {
 			using_local_buf = 1;
 
-			/* Feed the chunk of data into a BER decoder routine */
-			rval = ber_decode(opt_codec_ctx, &asn_DEF,
+			/* Feed the chunk of data into a decoder routine */
+			rval = ber_decode(opt_codec_ctx, pduType,
 				(void **)&structure, fbuf, rd);
 			DEBUG("ber_decode(%ld) consumed %ld, code %d",
 				(long)rd, (long)rval.consumed, rval.code);
@@ -302,10 +305,10 @@ static void *data_decode_from_file(const char *fname, ssize_t suggested_bufsize)
 	fclose(fp);
 
 	/* Clean up partially decoded structure */
-	asn_DEF.free_struct(&asn_DEF, structure, 0);
+	pduType->free_struct(pduType, structure, 0);
 
 	fprintf(stderr, "%s: "
-		"BER failure past %lld byte\n",
+		"Decode failed past %lld byte\n",
 		fname, (long long)(buf_shifted + buf_offset));
 
 	return 0;
