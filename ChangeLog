@@ -1,6 +1,8 @@
 
-0.9.6:	2004-Sep-27
+0.9.6:	2004-Sep-29
 
+	* Added several security firewalls: decoder's stack usage control
+	  and the stricter checking of the TLV length.
 	* Implemented BASIC-XER encoding support (X.693).
 	* Implemented unber(1) and enber(1) for BER<->XML translation.
 	* Implemented CGI for online ASN.1 compilation (asn1c/webcgi).
@@ -14,7 +16,9 @@
 	  types (BOOLEAN, INTEGER, and REAL). The problem occured when the
 	  encoding of such type is split between several bytes.
 	  (Severity: high, Security impact: low)
+	* Support for cross-referencing type definitions (updated ./tests/43-*).
 	* Fixed pretty-printing of the REAL type. Added lots of test cases.
+	* Renamed asn1_* into asn_* in function and type names.
 	* Updated documentation.
 
 0.9.5:	2004-Sep-17
