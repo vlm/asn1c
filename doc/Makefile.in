@@ -156,7 +156,7 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-EXTRA_DIST = *.pdf
+EXTRA_DIST = *.pdf *.html
 CLEANFILES = *.*~
 all: all-am
 
