@@ -196,7 +196,6 @@ static asn1p_value_t *
 /* Misc tags */
 %token			TOK_TwoDots		/* .. */
 %token			TOK_ThreeDots		/* ... */
-%token	<a_tag>		TOK_tag			/* [0] */
 
 
 /*
@@ -266,7 +265,8 @@ static asn1p_value_t *
 %type	<a_type>		BasicString
 %type	<tv_opaque>		Opaque
 //%type	<tv_opaque>		StringValue
-%type	<a_tag>			Tag		/* [UNIVERSAL 0] IMPLICIT */
+%type	<a_tag>			Tag 		/* [UNIVERSAL 0] IMPLICIT */
+%type	<a_tag>			TagClass TagTypeValue TagPlicit
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_constr>		optConstraints
 %type	<a_constr>		Constraints
@@ -1942,18 +1942,29 @@ optTag:
 	;
 
 Tag:
-	TOK_tag {
+	TagTypeValue TagPlicit {
 		$$ = $1;
-		$$.tag_mode = TM_DEFAULT;
+		$$.tag_mode = $2.tag_mode;
 	}
-	| TOK_tag TOK_IMPLICIT {
-		$$ = $1;
-		$$.tag_mode = TM_IMPLICIT;
-	}
-	| TOK_tag TOK_EXPLICIT {
-		$$ = $1;
-		$$.tag_mode = TM_EXPLICIT;
-	}
+	;
+
+TagTypeValue:
+	'[' TagClass TOK_number ']' {
+		$$ = $2;
+		$$.tag_value = $3;
+	};
+
+TagClass:
+	{ $$.tag_class = TC_CONTEXT_SPECIFIC; }
+	| TOK_UNIVERSAL { $$.tag_class = TC_UNIVERSAL; }
+	| TOK_APPLICATION { $$.tag_class = TC_APPLICATION; }
+	| TOK_PRIVATE { $$.tag_class = TC_PRIVATE; }
+	;
+
+TagPlicit:
+	{ $$.tag_mode = TM_DEFAULT; }
+	| TOK_IMPLICIT { $$.tag_mode = TM_IMPLICIT; }
+	| TOK_EXPLICIT { $$.tag_mode = TM_EXPLICIT; }
 	;
 
 TypeRefName:
