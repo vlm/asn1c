@@ -36,15 +36,19 @@ static struct tm *gmtime_r(time_t *tloc, struct tm *result) {
 static time_t timegm(struct tm *tm) {
 	time_t tloc;
 	char *tz;
+	char *buf;
 
 	tz = getenv("TZ");
-	setenv("TZ", "", 1);
+         _putenv("TZ=UTC");
 	tzset();
 	tloc = mktime(tm);
-	if (tz)
-		setenv("TZ", tz, 1);
-	else
-		unsetenv("TZ");
+	if (tz) {
+		buf = alloca(strlen(tz) + 4);
+		sprintf(buf, "TZ=%s", tz);
+	} else {
+		buf = "TZ=";
+	}
+	_putenv(buf);
 	tzset();
 	return tloc;
 }
