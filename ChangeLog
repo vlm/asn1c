@@ -1,4 +1,8 @@
 
+0.9.9:	2005-Jan-17
+
+	* Initial XER (XML) decoding implementation.
+
 0.9.8:	2005-Jan-17
 
 	* [NEW PLATFORM] Compiled and tested on Linux @ alpha64 (LP64).
@@ -8,7 +12,6 @@
 	  other floating point exceptions quietly. Smooth transition!
 	* [NEW PLATFORM] Compiled and tested on Sun Solaris 9 @ sparc.
 	  Improved includes/defines of/for system headers.
-	* Initial XER (XML) decoding implementation.
 	* -X command line option added to asn1c to generate XML DTD.
 	* Empty SEQUENCE and SET clauses are now allowed.
 	* Removed confusion between &xNN; and &#xNN; in enber and unber.
