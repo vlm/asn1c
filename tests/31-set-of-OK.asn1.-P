@@ -201,6 +201,7 @@ static asn1_SET_OF_specifics_t asn1_DEF_trees_specs = {
 	sizeof(struct trees),
 	offsetof(struct trees, _ber_dec_ctx),
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_trees = {
 	"trees",
 	SET_OF_constraint,
@@ -242,6 +243,7 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_anything_member_specs = {
 	0,	/* Start extensions */
 	2	/* Stop extensions */
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_anything_member = {
 	"",
 	SEQUENCE_constraint,
@@ -276,6 +278,7 @@ static asn1_SET_OF_specifics_t asn1_DEF_anything_specs = {
 	sizeof(struct anything),
 	offsetof(struct anything, _ber_dec_ctx),
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_anything = {
 	"anything",
 	SET_OF_constraint,

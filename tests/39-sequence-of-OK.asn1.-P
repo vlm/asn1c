@@ -45,6 +45,7 @@ static asn1_SET_OF_specifics_t asn1_DEF_collection_specs = {
 	sizeof(struct collection),
 	offsetof(struct collection, _ber_dec_ctx),
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_collection = {
 	"collection",
 	SEQUENCE_OF_constraint,
