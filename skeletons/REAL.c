@@ -257,17 +257,17 @@ REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 /*
  * Decode the chunk of XML text encoding REAL.
  */
-static ssize_t
-REAL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
+static enum xer_pbd_rval
+REAL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	REAL_t *st = (REAL_t *)sptr;
 	double value;
-	char *xerdata = (char *)chunk_buf;
+	const char *xerdata = (const char *)chunk_buf;
 	char *endptr = 0;
 	char *b;
 
 	(void)td;
 
-	if(!chunk_size) return -1;
+	if(!chunk_size) return XPBD_BROKEN_ENCODING;
 
 	/*
 	 * Decode an XMLSpecialRealValue: <MINUS-INFINITY>, etc.
@@ -292,33 +292,34 @@ REAL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, si
 			case -1: dv = - INFINITY; break;
 			case 0: dv = NAN;	break;
 			case 1: dv = INFINITY;	break;
-			default: return -1;
+			default: return XPBD_SYSTEM_FAILURE;
 			}
 
-			if(asn_double2REAL(st, dv)) return -1;
+			if(asn_double2REAL(st, dv))
+				return XPBD_SYSTEM_FAILURE;
 
-			return chunk_size;
+			return XPBD_BODY_CONSUMED;
 		}
 		ASN_DEBUG("Unknown XMLSpecialRealValue");
-		return -1;
+		return XPBD_BROKEN_ENCODING;
 	}
 
 	/*
 	 * Copy chunk into the nul-terminated string, and run strtod.
 	 */
 	b = (char *)MALLOC(chunk_size + 1);
-	if(!b) return -1;
+	if(!b) return XPBD_SYSTEM_FAILURE;
 	memcpy(b, chunk_buf, chunk_size);
 	b[chunk_size] = 0;	/* nul-terminate */
 
 	value = strtod(b, &endptr);
 	free(b);
-	if(endptr == b) return -1;
+	if(endptr == b) return XPBD_BROKEN_ENCODING;
 
 	if(asn_double2REAL(st, value))
-		return -1;
+		return XPBD_SYSTEM_FAILURE;
 
-	return endptr - b;
+	return XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t

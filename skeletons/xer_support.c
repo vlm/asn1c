@@ -58,6 +58,7 @@ _charclass[256] = {
 #define	LANGLE	0x3c	/* '<' */
 #define	CEQUAL	0x3d	/* '=' */
 #define	RANGLE	0x3e	/* '>' */
+#define	CQUEST	0x3f	/* '?' */
 
 /* Invoke token callback */
 #define	TOKEN_CB_CALL(type, _ns, _current_too, _final) do {	\
@@ -88,14 +89,14 @@ _charclass[256] = {
 /*
  * Parser itself
  */
-ssize_t pxml_parse(int *stateContext, void *xmlbuf, size_t size, pxml_callback_f *cb, void *key) {
+ssize_t pxml_parse(int *stateContext, const void *xmlbuf, size_t size, pxml_callback_f *cb, void *key) {
 	pstate_e state = (pstate_e)*stateContext;
-	char *chunk_start = (char *)xmlbuf;
-	char *p = chunk_start;
-	char *end = p + size;
+	const char *chunk_start = (const char *)xmlbuf;
+	const char *p = chunk_start;
+	const char *end = p + size;
 
 	for(; p < end; p++) {
-	  int C = *(unsigned char *)p;
+	  int C = *(const unsigned char *)p;
 	  switch(state) {
 	  case ST_TEXT:
 		/*
@@ -229,6 +230,6 @@ ssize_t pxml_parse(int *stateContext, void *xmlbuf, size_t size, pxml_callback_f
 
 finish:
 	*stateContext = (int)state;
-	return chunk_start - (char *)xmlbuf;
+	return chunk_start - (const char *)xmlbuf;
 }
 

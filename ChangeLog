@@ -1,9 +1,15 @@
 
-0.9.12:	2005-Mar-05
+0.9.12:	2005-Mar-09
 
 	* Fixed a name clash in produced constraint checking code.
 	* #includes are now in single quotes (to solve a name
 	  clash with system's <time.h> on a Win32 system). 
+	* Small refinement of XML DTD generation (`asn1c -X`).
+	* Relaxed XER processing rules to skip extra whitespace
+	  in some more places. It also skips XML comments (although
+	  prohibited by X.693, #8.2.1).
+	  (Test case 70) (Severity: medium, Security impact: none)
+	  Reported by <Dominique.Nerriec@alcatel.fr>.
 
 0.9.11:	2005-Mar-04
 
@@ -53,7 +59,7 @@
 	  identifiers (./tests/68-*-OK.asn1).
 	* ber_dec_rval_t renamed into asn_dec_rval_t: more generality.
 	* Extensions in CHOICE types are properly marked as non-pointers
-	  (Test case 59) (Severity: medium, Secruity impact: medium)
+	  (Test case 59) (Severity: medium, Security impact: medium)
 	  Reported by <roman.pfender@sdm.de>.
 	* Tagged CHOICE type is now supported again.
 	  (Test case 59) (Severity: low, Security impact: low)
@@ -77,7 +83,7 @@
 	  optionals-laden indefinite length structure. The code was previously
 	  refusing to parse such structures.
 	* Fixed explicitly tagged ANY type encoding and decoding
-	  (Severity: medium, Secruity impact: low).
+	  (Severity: medium, Security impact: low).
 	* Fixed CHOICE code spin when indefinite length structures appear
 	  in the extensions (Severity: medium, Security impact: medium).
 	  Reported by <siden@ul-gsm.ru>.
@@ -95,7 +101,7 @@
 	* Added -fno-constraints option to asn1c, which disabled generation of
 	  ASN.1 subtype constraints checking code.
 	* Added ASN1C_ENVIRONMENT_VERSION and get_asn1c_environment_version().
-	* Fixed ANY type decoding (Severity: high, Secruity impact: low).
+	* Fixed ANY type decoding (Severity: high, Security impact: low).
 	* Fixed BER decoder restartability problem with certain primitive
 	  types (BOOLEAN, INTEGER, and REAL). The problem occured when the
 	  encoding of such type is split between several bytes.

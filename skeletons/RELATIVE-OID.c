@@ -86,8 +86,8 @@ RELATIVE_OID_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	return (cb(" }", 2, app_key) < 0) ? -1 : 0;
 }
 
-static ssize_t
-RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
+static enum xer_pbd_rval
+RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
 	char *endptr;
 	long s_arcs[6];
@@ -99,27 +99,30 @@ RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk
 
 	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
 		(const char *)chunk_buf, chunk_size,
-		arcs, 6, &endptr);
-	if(arcs_count < 0)
-		return -1;	/* Expecting at least zero arcs */
-	if(arcs_count > 6) {
+		arcs, sizeof(s_arcs)/sizeof(s_arcs[0]), &endptr);
+	if(arcs_count < 0) {
+		/* Expecting at least zero arcs */
+		return XPBD_BROKEN_ENCODING;
+	}
+
+	if((size_t)arcs_count > sizeof(s_arcs)/sizeof(s_arcs[0])) {
 		arcs = (long *)MALLOC(arcs_count * sizeof(long));
-		if(!arcs) return -1;
+		if(!arcs) return XPBD_SYSTEM_FAILURE;
 		ret = OBJECT_IDENTIFIER_parse_arcs(
 			(const char *)chunk_buf, chunk_size,
 			arcs, arcs_count, &endptr);
 		if(ret != arcs_count)
-			return -1;	/* assert?.. */
+			return XPBD_SYSTEM_FAILURE;	/* assert?.. */
 	}
 
 	/*
 	 * Convert arcs into BER representation.
 	 */
 	ret = RELATIVE_OID_set_arcs(st, arcs, sizeof(*arcs), arcs_count);
-	if(ret) return -1;
+	if(ret) return XPBD_BROKEN_ENCODING;
 	if(arcs != s_arcs) FREEMEM(arcs);
 
-	return endptr - (char *)chunk_buf;
+	return XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t

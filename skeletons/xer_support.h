@@ -32,7 +32,7 @@ typedef enum {
  * The chunk is NOT '\0'-terminated.
  */
 typedef int (pxml_callback_f)(pxml_chunk_type_e _type,
-	void *_chunk_data, size_t _chunk_size, void *_key);
+	const void *_chunk_data, size_t _chunk_size, void *_key);
 
 /*
  * Parse the given buffer as it were a chunk of XML data.
@@ -41,7 +41,7 @@ typedef int (pxml_callback_f)(pxml_chunk_type_e _type,
  * It will always be lesser than or equal to the specified _size.
  * The next invocation of this function must account the difference.
  */
-ssize_t pxml_parse(int *_stateContext, void *_buf, size_t _size,
+ssize_t pxml_parse(int *_stateContext, const void *_buf, size_t _size,
 	pxml_callback_f *cb, void *_key);
 
 #endif	/* _XER_SUPPORT_H_ */

@@ -148,17 +148,16 @@ ASN__PRIMITIVE_TYPE_free(asn_TYPE_descriptor_t *td, void *sptr,
 struct xdp_arg_s {
 	asn_TYPE_descriptor_t *type_descriptor;
 	void *struct_key;
-	ssize_t (*prim_body_decode)(asn_TYPE_descriptor_t *td,
-		void *struct_key, void *chunk_buf, size_t chunk_size);
+	xer_primitive_body_decoder_f *prim_body_decoder;
 	int decoded_something;
 	int want_more;
 };
 
 
-static ssize_t
-xer_decode__unexpected_tag(void *key, void *chunk_buf, size_t chunk_size) {
+static int
+xer_decode__unexpected_tag(void *key, const void *chunk_buf, size_t chunk_size) {
 	struct xdp_arg_s *arg = (struct xdp_arg_s *)key;
-	ssize_t decoded;
+	enum xer_pbd_rval bret;
 
 	if(arg->decoded_something) {
 		if(xer_is_whitespace(chunk_buf, chunk_size))
@@ -169,21 +168,28 @@ xer_decode__unexpected_tag(void *key, void *chunk_buf, size_t chunk_size) {
 		return -1;
 	}
 
-	decoded = arg->prim_body_decode(arg->type_descriptor,
+	bret = arg->prim_body_decoder(arg->type_descriptor,
 		arg->struct_key, chunk_buf, chunk_size);
-	if(decoded < 0) {
-		return -1;
-	} else {
+	switch(bret) {
+	case XPBD_SYSTEM_FAILURE:
+	case XPBD_DECODER_LIMIT:
+	case XPBD_BROKEN_ENCODING:
+		break;
+	case XPBD_BODY_CONSUMED:
 		/* Tag decoded successfully */
 		arg->decoded_something = 1;
+		/* Fall through */
+	case XPBD_NOT_BODY_IGNORE:	/* Safe to proceed further */
 		return 0;
 	}
+
+	return -1;
 }
 
 static ssize_t
-xer_decode__body(void *key, void *chunk_buf, size_t chunk_size, int have_more) {
+xer_decode__body(void *key, const void *chunk_buf, size_t chunk_size, int have_more) {
 	struct xdp_arg_s *arg = (struct xdp_arg_s *)key;
-	ssize_t decoded;
+	enum xer_pbd_rval bret;
 
 	if(arg->decoded_something) {
 		if(xer_is_whitespace(chunk_buf, chunk_size))
@@ -207,14 +213,22 @@ xer_decode__body(void *key, void *chunk_buf, size_t chunk_size, int have_more) {
 		return -1;
 	}
 
-	decoded = arg->prim_body_decode(arg->type_descriptor,
+	bret = arg->prim_body_decoder(arg->type_descriptor,
 		arg->struct_key, chunk_buf, chunk_size);
-	if(decoded < 0) {
-		return -1;
-	} else {
+	switch(bret) {
+	case XPBD_SYSTEM_FAILURE:
+	case XPBD_DECODER_LIMIT:
+	case XPBD_BROKEN_ENCODING:
+		break;
+	case XPBD_BODY_CONSUMED:
+		/* Tag decoded successfully */
 		arg->decoded_something = 1;
-		return decoded;
+		/* Fall through */
+	case XPBD_NOT_BODY_IGNORE:	/* Safe to proceed further */
+		return chunk_size;
 	}
+
+	return -1;
 }
 
 
@@ -225,8 +239,7 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	size_t struct_size,
 	const char *opt_mname,
 	void *buf_ptr, size_t size,
-	ssize_t (*prim_body_decode)(asn_TYPE_descriptor_t *td,
-		void *struct_key, void *chunk_buf, size_t chunk_size)
+	xer_primitive_body_decoder_f *prim_body_decoder
 ) {
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 	asn_struct_ctx_t s_ctx;
@@ -249,7 +262,7 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	memset(&s_ctx, 0, sizeof(s_ctx));
 	s_arg.type_descriptor = td;
 	s_arg.struct_key = *sptr;
-	s_arg.prim_body_decode = prim_body_decode;
+	s_arg.prim_body_decoder = prim_body_decoder;
 	s_arg.decoded_something = 0;
 	s_arg.want_more = 0;
 
@@ -260,9 +273,16 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	case RC_OK:
 		if(!s_arg.decoded_something) {
 			char ch;
-			/* Opportunity has come and gone. Where's the result? */
-			if(prim_body_decode(s_arg.type_descriptor,
-				s_arg.struct_key, &ch, 0) != 0) {
+			ASN_DEBUG("Primitive body is not recognized, "
+				"supplying empty one");
+			/*
+			 * Decoding opportunity has come and gone.
+			 * Where's the result?
+			 * Try to feed with empty body, see if it eats it.
+			 */
+			if(prim_body_decoder(s_arg.type_descriptor,
+				s_arg.struct_key, &ch, 0)
+					!= XPBD_BODY_CONSUMED) {
 				/*
 				 * This decoder does not like empty stuff.
 				 */
