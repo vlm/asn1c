@@ -1,5 +1,6 @@
 
 The X.509 (PKIX1) certificate decoder. Invoking `make` will compile the ASN.1
-specifications from the RFC3280 in the above directory. This x509dump.c will
-supply the missing "int main()" routine which drives the decoding process.
+specifications from the RFC3280 in the above directory.
+The ../decoder-template.c will supply the missing "int main()" routine
+which drives the decoding process.
 

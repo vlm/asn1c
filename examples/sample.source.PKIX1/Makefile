@@ -357,6 +357,9 @@ Attribute.c: regenerate.Makefile
 	./regenerate.Makefile
 	make
 
+$(TARGET).o: ../decoder-template.c
+	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_Certificate -o $(TARGET).o -c ../decoder-template.c
+
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 	rm -f Makefile.am.sample

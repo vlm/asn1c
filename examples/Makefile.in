@@ -174,8 +174,8 @@ ASN1_FILES_1 = \
 	rfc3280-PKIX1Implicit88.asn1
 
 EXTRA_DIST = rfc*.txt				\
+	decoder-template.c			\
 	sample.source.PKIX1/README		\
-	sample.source.PKIX1/x509dump.c		\
 	sample.source.PKIX1/config.h		\
 	sample.source.PKIX1/Makefile		\
 	sample.source.PKIX1/regenerate.Makefile
