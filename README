@@ -3,6 +3,8 @@ WHAT TO READ?
 
 For quick installation tips read INSTALL.
 
+For the list of asn1c command line options, see `asn1c -h` or `man asn1c`.
+
 For more complete documentation on this compiler and on using the
 results of compilation please look into ./doc directory.
 
