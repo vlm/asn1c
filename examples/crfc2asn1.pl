@@ -69,7 +69,7 @@ while(<>) {
 		$found++;
 		print "\n";
 		print "-- \n";
-		print "-- Grammar found in $ARGV by $0 at " . $. . "\n";
+		print "-- ASN.1 module found in $ARGV by $0 at " . $. . "\n";
 		print "-- \n";
 		print "\n";
 	}
