@@ -69,7 +69,7 @@ status Open
 \layout Standard
 
 \backslash 
-lhead{Document describes 
+lhead{This document describes 
 \backslash 
 href{http://lionet.info/asn1c}{asn1c-0.9.9}}
 \layout Standard
@@ -109,17 +109,17 @@ Introduction to the ASN.1 Compiler
 \layout Standard
 
 The purpose of the ASN.1 compiler, of which this document is part, is to
- convert the ASN.1 specifications into some other target language.
+ convert the specifications in ASN.1 notation into some other language.
  At this moment, only C and C++ target languages are supported, the latter
- in upward compatibility mode.
+ is in upward compatibility mode.
 \layout Standard
 
 The compiler reads the specification and emits a series of target language
  structures (C's structs, unions, enums) describing the corresponding ASN.1
  types.
- Also, it creates the code which allows automatic serialization and deserializat
-ion of these structures using several standardized encoding rules (BER,
- DER, XER).
+ The compiler also creates the code which allows automatic serialization
+ and deserialization of these structures using several standardized encoding
+ rules (BER, DER, XER).
 \layout Standard
 
 For example, suppose the following ASN.1 module is given
@@ -249,7 +249,7 @@ This is probably
 not
 \series default 
  what you want to try out right now -- read through the rest of this chapter
- and check the table 
+ and check the Table 
 \begin_inset LatexCommand \vref{cap:asn1c-cmdopts}
 
 \end_inset 
@@ -959,9 +959,9 @@ Invoking the helper code
 
 \layout Standard
 
-First of all, you should to include one or more header files into your applicati
-on.
- For our Rectangle module, including the Rectangle.h file is enough:
+First of all, you should include one or more header files into your application.
+ Typically, it is enough to include the header file of the main PDU type.
+ For our Rectangle module, including the Rectangle.h file is sufficient:
 \layout LyX-Code
 
 #include <Rectangle.h>
@@ -990,17 +990,21 @@ This code defines a
 rect
 \emph default 
  pointer which points to the Rectangle_t structure which needs to be freed.
- The second line invokes the generic free_struct routine created specifically
- for this Rectangle_t structure.
+ The second line invokes the generic 
+\emph on 
+free_struct()
+\emph default 
+ routine created specifically for this Rectangle_t structure.
  The 
 \emph on 
 asn_DEF_Rectangle
 \emph default 
- is the type descriptor, which holds a collection of generic routines to
- deal with the Rectangle_t structure.
+ is the type descriptor, which holds a collection of routines to deal with
+ the Rectangle_t structure.
 \layout Standard
 
-There are several generic functions available:
+The following member functions of the asn_DEF_Rectangle type descriptor
+ are of interest:
 \layout Description
 
 ber_decoder This is the generic 
@@ -1113,13 +1117,15 @@ Decoding BER
 \layout Standard
 
 The Basic Encoding Rules describe the most widely used (by the ASN.1 community)
- way how the structure can be encoded and decoded.
+ way to encode and decode a given structure in a machine-independent way.
  Several other encoding rules (CER, DER) define a more restrictive versions
  of BER, so the generic BER parser is also capable of decoding the data
  encoded by CER and DER encoders.
  The opposite is not true.
 \layout Standard
 
+
+\emph on 
 The ASN.1 compiler provides the generic BER decoder which is implicitly capable
  of decoding BER, CER and DER encoded data.
 \layout Standard
@@ -1142,16 +1148,17 @@ You may concatenate these buffers and feed the BER decoder with 300 bytes
 You may feed it the first buffer of 100 bytes of data, realize that the
  ber_decoder consumed only 95 bytes from it and later feed the decoder with
  205 bytes buffer which consists of 5 unprocessed bytes from the first buffer
- and the latter 200 bytes from the second buffer.
+ and the additional 200 bytes from the second buffer.
 \layout Standard
 
-This is not as convenient as it could be (like, the BER encoder would consume
+This is not as convenient as it could be (like, the BER encoder could consume
  the whole 100 bytes and keep these 5 bytes in some temporary storage),
- but in case of stream-based processing it might actually be OK.
+ but in case of existing stream based processing it might actually fit well
+ into existing algorithm.
  Suggestions are welcome.
 \layout Standard
 
-Here is the simplest example which shows how to invoke a BER decoder.
+Here is the simplest example of BER decoding.
 \layout LyX-Code
 
 Rectangle_t *
@@ -1226,35 +1233,35 @@ The code above defines a function,
 \emph on 
 simple_deserializer
 \emph default 
-, which takes a buffer and its length and expected to return a pointer to
- the Rectangle_t structure.
+, which takes a buffer and its length and is expected to return a pointer
+ to the Rectangle_t structure.
  Inside, it tries to convert the bytes passed into the target structure
- (rect) using the generic BER decoder and returns the rect pointer afterwards.
+ (rect) using the BER decoder and returns the rect pointer afterwards.
  If the structure cannot be deserialized, it frees the memory which might
  be left allocated by the unfinished 
 \emph on 
 ber_decoder
 \emph default 
  routine and returns 0 (no data).
- This
+ (This
 \series bold 
  freeing is necessary
 \series default 
  because the ber_decoder is a restartable procedure, and may fail just because
- there is more data needs to be provided before decoding could be finalized.
+ there is more data needs to be provided before decoding could be finalized).
  The code above obviously does not take into account the way the 
 \emph on 
-ber_decoder
+ber_decoder()
 \emph default 
  failed, so the freeing is necessary because the part of the buffer may
  already be decoded into the structure by the time something goes wrong.
 \layout Standard
 
-A little less wordy would be to invoke a 
+A little less wordy would be to invoke a globally available 
 \emph on 
-ber_decode
+ber_decode()
 \emph default 
- function instead of dereferencing the asn_DEF_Rectangle:
+ function instead of dereferencing the asn_DEF_Rectangle type descriptor:
 \layout LyX-Code
 
 rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect,
@@ -1623,6 +1630,15 @@ XML_to_Rectangle(const void *buffer, size_t buf_size) {
 The decoder takes both BASIC-XER and CANONICAL-XER encodings.
 \layout Standard
 
+The decoder shares its data consumption properties with BER decoder; please
+ read the Section 
+\begin_inset LatexCommand \vref{sub:Decoding-BER}
+
+\end_inset 
+
+ to know more.
+\layout Standard
+
 Please look into xer_decoder.h for the precise definition of xer_decode()
  and related types.
 \layout Subsection
@@ -1738,14 +1754,14 @@ In this example, the application programmer defined a custom structure with
  of the Rectangle_t structure.
  If the freeing is necessary, the usual procedure of freeing everything
  must not be applied to the &rect pointer itself, because it does not point
- to the memory block directly allocated by memory allocation routine, but
- instead lies within such a block allocated for my_figure structure.
+ to the memory block directly allocated by the memory allocation routine,
+ but instead lies within a block allocated for the my_figure structure.
 \layout Standard
 
 To solve this problem, the free_struct routine has the additional argument
- (besides the intuitive type descriptor and target structure pointers),
- which is the flag specifying whether the outer pointer itself must be freed
- (0, default) or it should be left intact (non-zero value).
+ (besides the obvious type descriptor and target structure pointers), which
+ is the flag specifying whether the outer pointer itself must be freed (0,
+ default) or it should be left intact (non-zero value).
 \layout LyX-Code
 
 
