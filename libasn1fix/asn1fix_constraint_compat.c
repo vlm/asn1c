@@ -16,6 +16,8 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 	switch(constr_type) {
 	case ACT_INVALID:
 		return 0;
+	case ACT_EL_TYPE:
+		return 1;
 	case ACT_EL_VALUE:
 		return 1;
 	case ACT_EL_RANGE:
