@@ -38,12 +38,17 @@ AC_PROG_YACC
 AM_PROG_LEX
 
 dnl *** Building mingw32 with cygwin compiler ***
-case "$build" in
-*cygwin*)
-  case "$target" in
-  *mingw*)
-    CC="$CC -mno-cygwin"
-  esac ;;
+case "$host_os" in
+cygwin*)
+	CFLAGS="$CFLAGS -DWIN32"
+	case "$target" in
+	*mingw*)
+		CC="$CC -mno-cygwin"
+	esac
+	;;
+mingw* | p32*)
+	CFLAGS="$CFLAGS -DWIN32"
+	;;
 esac
 
 AC_ARG_ENABLE(autoconf,
