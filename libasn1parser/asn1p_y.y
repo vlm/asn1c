@@ -233,7 +233,9 @@ static asn1p_value_t *
 %type	<a_expr>		DefinedTypeRef
 %type	<a_expr>		ValueSetDefinition  /* Val INTEGER ::= {1|2} */
 %type	<a_expr>		ValueDefinition		/* val INTEGER ::= 1*/
-%type	<a_value>		optValueSetBody
+%type	<a_expr>		optValueSetBody
+%type	<a_expr>		ValueSetBody
+%type	<a_expr>		ValueSetElement
 %type	<a_value>		InlineOrDefinedValue
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
@@ -694,7 +696,27 @@ DefinedTypeRef:
 
 optValueSetBody:
 	{ }
-	| ElementSetSpecs {
+	| ValueSetBody {
+	}
+	;
+
+/*
+ * X.680 does not permit ElementSetSpecs starting with ellipsis,
+ * i.e. (..., A, B). This is very strange: the ElementSetSpecs is used
+ * inside ValueSet, and ValueSets "in the wild" tend to have the first
+ * ellipsis.
+ */
+ValueSetBody:
+	ValueSetElement {
+	}
+	| ValueSetBody ',' ValueSetElement {
+	}
+	;
+
+ValueSetElement:
+	TOK_ThreeDots {
+	}
+	| ElementSetSpec {
 	}
 	;
 
@@ -981,7 +1003,7 @@ WithSyntaxFormatToken:
 
 ExtensionAndException:
 	TOK_ThreeDots {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		checkmem($$->Identifier);
@@ -989,7 +1011,7 @@ ExtensionAndException:
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_ThreeDots '!' DefinedValue {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		checkmem($$->Identifier);
@@ -998,7 +1020,7 @@ ExtensionAndException:
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_ThreeDots '!' SignedNumber {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		$$->value = $3;
@@ -1058,7 +1080,7 @@ TypeDeclaration:
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_SEQUENCE optConstraints TOK_OF TypeDeclaration {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
@@ -1066,7 +1088,7 @@ TypeDeclaration:
 		TQ_ADD(&($$->members), $4, next);
 	}
 	| TOK_SET optConstraints TOK_OF TypeDeclaration {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SET_OF;
@@ -1074,14 +1096,14 @@ TypeDeclaration:
 		TQ_ADD(&($$->members), $4, next);
 	}
 	| TOK_ANY 					{
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->expr_type = ASN_TYPE_ANY;
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_ANY TOK_DEFINED TOK_BY Identifier		{
 		int ret;
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->reference = asn1p_ref_new(yylineno);
 		ret = asn1p_ref_add_component($$->reference,
@@ -1352,7 +1374,7 @@ BasicTypeId_UniverationCompatible:
 
 BasicType:
 	BasicTypeId {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->expr_type = $1;
 		$$->meta_type = AMT_TYPE;
@@ -1361,7 +1383,7 @@ BasicType:
 		if($2) {
 			$$ = $2;
 		} else {
-			$$ = asn1p_expr_new(asn1p_lineno);
+			$$ = asn1p_expr_new(yylineno);
 			checkmem($$);
 		}
 		$$->expr_type = $1;
@@ -1774,7 +1796,7 @@ optUniverationDefinition:
 
 UniverationDefinition:
 	'{' '}' {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 	}
 	| '{' UniverationList '}' {
@@ -1784,7 +1806,7 @@ UniverationDefinition:
 
 UniverationList:
 	UniverationElement {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		TQ_ADD(&($$->members), $1, next);
 	}
@@ -1796,14 +1818,14 @@ UniverationList:
 
 UniverationElement:
 	Identifier {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
 		$$->Identifier = $1;
 	}
 	| Identifier '(' SignedNumber ')' {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
@@ -1811,7 +1833,7 @@ UniverationElement:
 		$$->value = $3;
 	}
 	| Identifier '(' DefinedValue ')' {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
@@ -1819,14 +1841,14 @@ UniverationElement:
 		$$->value = $3;
 	}
 	| SignedNumber {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
 		$$->value = $1;
 	}
 	| TOK_ThreeDots {
-		$$ = asn1p_expr_new(asn1p_lineno);
+		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		checkmem($$->Identifier);
@@ -2032,7 +2054,7 @@ yyerror(const char *msg) {
 	fprintf(stderr,
 		"ASN.1 grammar parse error "
 		"near line %d (token \"%s\"): %s\n",
-		asn1p_lineno, asn1p_text, msg);
+		yylineno, asn1p_text, msg);
 	return -1;
 }
 
