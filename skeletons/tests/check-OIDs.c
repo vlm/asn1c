@@ -47,17 +47,20 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	alen = OBJECT_IDENTIFIER_get_arcs(oid,
 		arcs, sizeof(arcs[0]), sizeof(arcs)/sizeof(arcs[0]));
 	assert(alen > 0);
-	assert(alen == ck_len);
 
+	printf("OBJECT_IDENTIFIER_get_arcs() => {");
 	/*
 	 * Make sure they are equivalent.
 	 */
-	printf("OBJECT_IDENTIFIER_get_arcs() => {");
 	for(i = 0; i < alen; i++) {
 		printf(" %lu", arcs[i]);
-		assert(arcs[i] == (unsigned long)ck_buf[i]);
+		if(alen == ck_len) {
+			assert(arcs[i] == (unsigned long)ck_buf[i]);
+		}
 	}
 	printf(" }\n");
+	assert(alen == ck_len);
+
 }
 
 static void
@@ -278,12 +281,22 @@ main() {
 	int buf15_check[] = { 0, 0, 0xf000 };
 	int buf16_check[] = { 0, 0, 0, 1, 0 };
 	int buf17_check[] = { 2, 0xffffffAf, 0xff00ff00, 0 };
+	int buf18_check[] = { 2, 2, 1, 1 };
+
+	/* { joint-iso-itu-t 2 1 1 } */
+	uint8_t buf19[] = {
+		0x06,	/* OBJECT IDENTIFIER */
+		0x03,	/* Length */
+		0x52, 0x01, 0x01
+	};
+	int buf19_check[] = { 2, 2, 1, 1 };
 
 
 	CHECK_OID(1);	/* buf1, buf1_check */
 	CHECK_ROID(2);	/* buf2, buf2_check */
 	CHECK_OID(3);	/* buf3, buf3_check */
 	CHECK_OID(4);	/* buf4, buf4_check */
+	CHECK_OID(19);	/* buf19, buf19_check */
 
 	CHECK_REGEN(5);	/* Regenerate RELATIVE-OID */
 	CHECK_REGEN(6);
@@ -306,6 +319,7 @@ main() {
 	CHECK_REGEN_OID(15);
 	CHECK_REGEN_OID(16);
 	CHECK_REGEN_OID(17);
+	CHECK_REGEN_OID(18);
 
 	for(i = 0; i < 100000; i++) {
 		int bufA_check[3] = { 2, i, rand() };
