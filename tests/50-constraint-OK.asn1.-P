@@ -1084,6 +1084,137 @@ asn1_TYPE_descriptor_t asn1_DEF_Str3 = {
 };
 
 
+/*** <<< INCLUDES [Str4] >>> ***/
+
+#include <IA5String.h>
+
+/*** <<< TYPE-DECLS [Str4] >>> ***/
+
+
+typedef IA5String_t	 Str4_t;
+
+/*** <<< FUNC-DECLS [Str4] >>> ***/
+
+extern asn1_TYPE_descriptor_t asn1_DEF_Str4;
+asn_constr_check_f Str4_constraint;
+ber_type_decoder_f Str4_decode_ber;
+der_type_encoder_f Str4_encode_der;
+asn_struct_print_f Str4_print;
+asn_struct_free_f Str4_free;
+
+/*** <<< CTABLES [Str4] >>> ***/
+
+static int check_permitted_alphabet_3(const void *sptr) {
+	/* The underlying type is IA5String */
+	const IA5String_t *st = sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv <= 127)) return -1;
+	}
+	return 0;
+}
+
+
+/*** <<< CODE [Str4] >>> ***/
+
+int
+Str4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	
+	const IA5String_t *st = sptr;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_3(sptr)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using IA5String,
+ * so adjust the DEF appropriately.
+ */
+static void
+Str4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
+	td->ber_decoder    = asn1_DEF_IA5String.ber_decoder;
+	td->der_encoder    = asn1_DEF_IA5String.der_encoder;
+	td->free_struct    = asn1_DEF_IA5String.free_struct;
+	td->print_struct   = asn1_DEF_IA5String.print_struct;
+	td->last_tag_form  = asn1_DEF_IA5String.last_tag_form;
+	td->elements       = asn1_DEF_IA5String.elements;
+	td->elements_count = asn1_DEF_IA5String.elements_count;
+	td->specifics      = asn1_DEF_IA5String.specifics;
+}
+
+ber_dec_rval_t
+Str4_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
+	Str4_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(td, structure,
+		bufptr, size, tag_mode);
+}
+
+der_enc_rval_t
+Str4_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Str4_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+int
+Str4_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Str4_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+void
+Str4_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Str4_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+
+/*** <<< STAT-DEFS [Str4] >>> ***/
+
+static ber_tlv_tag_t asn1_DEF_Str4_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
+};
+asn1_TYPE_descriptor_t asn1_DEF_Str4 = {
+	"Str4",
+	Str4_constraint,
+	Str4_decode_ber,
+	Str4_encode_der,
+	Str4_print,
+	Str4_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_Str4_tags,
+	sizeof(asn1_DEF_Str4_tags)
+		/sizeof(asn1_DEF_Str4_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	-0,	/* Unknown yet */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
 /*** <<< INCLUDES [PER-Visible] >>> ***/
 
 #include <IA5String.h>
@@ -1104,7 +1235,7 @@ asn_struct_free_f PER_Visible_free;
 
 /*** <<< CTABLES [PER-Visible] >>> ***/
 
-static int check_permitted_alphabet_3(const void *sptr) {
+static int check_permitted_alphabet_4(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -1134,7 +1265,7 @@ PER_Visible_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(!check_permitted_alphabet_3(sptr)) {
+	if(!check_permitted_alphabet_4(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1235,7 +1366,7 @@ asn_struct_free_f PER_Visible_2_free;
 
 /*** <<< CTABLES [PER-Visible-2] >>> ***/
 
-static int check_permitted_alphabet_4(const void *sptr) {
+static int check_permitted_alphabet_5(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -1265,7 +1396,7 @@ PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(!check_permitted_alphabet_4(sptr)) {
+	if(!check_permitted_alphabet_5(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1366,7 +1497,7 @@ asn_struct_free_f Not_PER_Visible_1_free;
 
 /*** <<< CTABLES [Not-PER-Visible-1] >>> ***/
 
-static int check_permitted_alphabet_5(const void *sptr) {
+static int check_permitted_alphabet_6(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -1396,7 +1527,7 @@ Not_PER_Visible_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(!check_permitted_alphabet_5(sptr)) {
+	if(!check_permitted_alphabet_6(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1497,7 +1628,7 @@ asn_struct_free_f Not_PER_Visible_2_free;
 
 /*** <<< CTABLES [Not-PER-Visible-2] >>> ***/
 
-static int check_permitted_alphabet_6(const void *sptr) {
+static int check_permitted_alphabet_7(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -1527,7 +1658,7 @@ Not_PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(!check_permitted_alphabet_6(sptr)) {
+	if(!check_permitted_alphabet_7(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1628,7 +1759,7 @@ asn_struct_free_f Not_PER_Visible_3_free;
 
 /*** <<< CTABLES [Not-PER-Visible-3] >>> ***/
 
-static int check_permitted_alphabet_7(const void *sptr) {
+static int check_permitted_alphabet_8(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -1658,7 +1789,7 @@ Not_PER_Visible_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(!check_permitted_alphabet_7(sptr)) {
+	if(!check_permitted_alphabet_8(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1759,7 +1890,7 @@ asn_struct_free_f SIZE_but_not_FROM_free;
 
 /*** <<< CTABLES [SIZE-but-not-FROM] >>> ***/
 
-static int check_permitted_alphabet_8(const void *sptr) {
+static int check_permitted_alphabet_9(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -1792,7 +1923,7 @@ SIZE_but_not_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	size = st->size;
 	
 	if((size >= 1 && size <= 4)
-		 && !check_permitted_alphabet_8(sptr)) {
+		 && !check_permitted_alphabet_9(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1893,7 +2024,7 @@ asn_struct_free_f SIZE_and_FROM_free;
 
 /*** <<< CTABLES [SIZE-and-FROM] >>> ***/
 
-static int check_permitted_alphabet_9(const void *sptr) {
+static int check_permitted_alphabet_10(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -1926,7 +2057,7 @@ SIZE_and_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	size = st->size;
 	
 	if((size >= 1 && size <= 4)
-		 && !check_permitted_alphabet_9(sptr)) {
+		 && !check_permitted_alphabet_10(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -2027,7 +2158,7 @@ asn_struct_free_f Neither_SIZE_nor_FROM_free;
 
 /*** <<< CTABLES [Neither-SIZE-nor-FROM] >>> ***/
 
-static int check_permitted_alphabet_10(const void *sptr) {
+static int check_permitted_alphabet_11(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -2057,7 +2188,7 @@ Neither_SIZE_nor_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(!check_permitted_alphabet_10(sptr)) {
+	if(!check_permitted_alphabet_11(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -2158,7 +2289,7 @@ asn_struct_free_f Utf8_3_free;
 
 /*** <<< CTABLES [Utf8-3] >>> ***/
 
-static int permitted_alphabet_table_11[128] = {
+static int permitted_alphabet_table_12[128] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
@@ -2169,8 +2300,8 @@ static int permitted_alphabet_table_11[128] = {
 1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* pqrstuvwxyz      */
 };
 
-static int check_permitted_alphabet_11(const void *sptr) {
-	int *table = permitted_alphabet_table_11;
+static int check_permitted_alphabet_12(const void *sptr) {
+	int *table = permitted_alphabet_table_12;
 	/* The underlying type is UTF8String */
 	const UTF8String_t *st = sptr;
 	const uint8_t *ch = st->buf;
@@ -2205,7 +2336,7 @@ Utf8_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	if(size == (size_t)-1) return -1;
 	
 	if((size >= 1 && size <= 2)
-		 && !check_permitted_alphabet_11(sptr)) {
+		 && !check_permitted_alphabet_12(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

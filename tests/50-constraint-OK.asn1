@@ -16,6 +16,7 @@ BEGIN
 	Int3 ::= Int2 (MIN..ten)	-- Means (0..10)
 	Int4 ::= Int3 (5..MAX,...,1..4)	-- Means (5..10,...,1..4)
 	Int5 ::= Int4 (MIN..5)		-- Means (5)
+	-- Int6 ::= INTEGER (Int5) -- -- Not yet supported
 
 	ten Int1 ::= other-ten
 	other-ten Int2 ::= 10
@@ -28,6 +29,8 @@ BEGIN
 					-- Means (SIZE(0..20 | 25..30))
 	Str3 ::= Str2 (SIZE(10..27))(FROM("ABC"|"def"))
 					-- (SIZE(10..20,25..27))(FROM("ABCdef"))
+	Str4 ::= IA5String ("ABCD"|SIZE(4))
+					-- Not PER-visible
 
 	PER-Visible ::= IA5String (FROM("A".."F"))
 	PER-Visible-2 ::= PER-Visible (FROM("E".."F"))	-- Means (FROM("EF"))
