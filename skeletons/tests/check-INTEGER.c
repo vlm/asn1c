@@ -1,9 +1,9 @@
-#include "../INTEGER.c"
-#include "../ber_decoder.c"
-#include "../ber_tlv_length.c"
-#include "../ber_tlv_tag.c"
-#include "../der_encoder.c"
-#include "../constraints.c"
+#include <INTEGER.c>
+#include <ber_decoder.c>
+#include <ber_tlv_length.c>
+#include <ber_tlv_tag.c>
+#include <der_encoder.c>
+#include <constraints.c>
 
 static char *shared_scratch_start;
 
