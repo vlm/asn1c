@@ -16,11 +16,13 @@ BEGIN
 	 */
 
 	PDU ::= CHOICE {
-		sequence	Sequence,
-		set		Set,
-		setOf		SetOf,
-		seqOf		SeqOf,
-		extensibleSet	ExtensibleSet
+		sequence		Sequence,
+		set			Set,
+		setOf			SetOf,
+		sequenceOf		SequenceOf,
+		extensibleSet		ExtensibleSet,
+		extensibleSequence	ExtensibleSequence,
+		...
 	}
 
 	Sequence ::= SEQUENCE {
@@ -40,7 +42,13 @@ BEGIN
 		...
 	}
 
+	ExtensibleSequence ::= SEQUENCE {
+		string	UTF8String OPTIONAL,
+		...,
+		integer	INTEGER	OPTIONAL
+	}
+
 	SetOf ::= SET OF REAL
-	SeqOf ::= SEQUENCE OF id INTEGER
+	SequenceOf ::= SEQUENCE OF id INTEGER
 
 END
