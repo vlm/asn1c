@@ -596,7 +596,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			asn1print_constraint(tc->combined_constraints, flags);
 		}
 
-		top_parent = asn1f_find_terminal_type_ex(asn, mod, tc);
+		top_parent = asn1f_find_terminal_type_ex(asn, tc);
 		if(top_parent) {
 			printf("\n-- Practical constraints (%s): ",
 				top_parent->Identifier);
