@@ -91,6 +91,7 @@ OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
+
 int
 OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbuf, unsigned int rvsize) {
 	unsigned LE = 1;	/* Little endian (x86) */
@@ -130,23 +131,39 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 		}
 	}
 
+	/* Faster path for common size */
+	if(rvsize == (CHAR_BIT * sizeof(unsigned long))) {
+		unsigned long accum;
+		/* Gather all bits into the accumulator */
+		for(accum = cache; arcbuf < arcend; arcbuf++)
+			accum = (accum << 7) | (*arcbuf & ~0x80);
+		if(accum < (unsigned)-add) {
+			errno = ERANGE;	/* Overflow */
+			return -1;
+		}
+		*(unsigned long *)rvbuf = accum + add;
+		return 0;
+	}
+
 #ifndef	WORDS_BIGENDIAN
 	if(*(unsigned char *)&LE) {	/* Little endian (x86) */
 		/* "Convert" to big endian */
-		rvbuf += rvsize / CHAR_BIT;
+		rvbuf += rvsize / CHAR_BIT - 1;
+		((unsigned char *)rvstart)--;
 		inc = -1;	/* Descending */
-	} else {
-		inc = +1;	/* Ascending */
-	}
+	} else
 #endif	/* !WORDS_BIGENDIAN */
+		inc = +1;	/* Big endian is known [at compile time] */
 
-	{	/* Native big endian (Sparc, PPC) */
+	{
 		unsigned int bits;	/* typically no more than 3-4 bits */
+
 		/* Clear the high unused bits */
 		for(bits = rvsize - arclen;
 			bits > CHAR_BIT;
 				rvbuf += inc, bits -= CHAR_BIT)
 				*(unsigned char *)rvbuf = 0;
+
 		/* Fill the body of a value */
 		for(; arcbuf < arcend; arcbuf++) {
 			cache = (cache << 7) | (*arcbuf & 0x7f);
@@ -323,8 +340,8 @@ OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, unsi
 	uint8_t *buf;
 	uint8_t *bp;
 	unsigned long long first_value;
+	unsigned i;
 	int size;
-	int i;
 
 	if(oid == NULL || arcs == NULL || arc_slots < 2) {
 		errno = EINVAL;
@@ -423,3 +440,4 @@ OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, unsi
 
 	return 0;
 }
+
