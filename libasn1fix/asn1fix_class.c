@@ -117,6 +117,9 @@ asn1f_class_object_category(asn1p_expr_t *expr) {
 
 static field_category_e
 asn1f_class_field_category(asn1p_expr_t *ofield) {
+
+	assert(ofield);
+
 	if(ofield->Identifier[0] != '&') {
 		assert(ofield->Identifier[0] == '&');
 		return OFC_INVALID;
@@ -194,10 +197,12 @@ asn1f_class_dot_lookup(arg_t *arg, asn1p_expr_t *obj, asn1p_ref_t *ref) {
 
 		ofield = asn1f_lookup_child(obj, comp_name);
 		if(ofield == NULL) {
-			DEBUG("Cannot find field \"%s\" in \"%s\" at line %d",
+			FATAL("Cannot find field \"%s\" in \"%s\" at line %d",
 				ref->components[1].name,
 				obj->Identifier,
 				obj->_lineno);
+			errno = EPERM;
+			return NULL;
 		}
 
 		/*
