@@ -2,7 +2,6 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#define	__USE_BSD	/* To enable tm_gmtoff in glibc */
 #include <GeneralizedTime.h>
 #include <time.h>
 #include <errno.h>

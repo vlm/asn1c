@@ -191,7 +191,7 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 			int v = add + *(unsigned char *)rvbuf;
 			if(v & (-1 << CHAR_BIT)) {
 				*(unsigned char *)rvbuf
-					= v + (1 << CHAR_BIT);
+					= (unsigned char)(v + (1 << CHAR_BIT));
 				add = -1;
 			} else {
 				*(unsigned char *)rvbuf = v;
@@ -223,7 +223,7 @@ OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
 	/* Fill the scratch buffer in reverse. */
 	p = scratch + sizeof(scratch);
 	for(; accum; accum /= 10)
-		*(--p) = (accum % 10) + 0x30;
+		*(--p) = (char)(accum % 10) + 0x30;
 
 	return cb(p, sizeof(scratch) - (p - scratch), app_key);
 }
