@@ -482,7 +482,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			if(tmp_memb.Identifier == 0) {
 				tmp_memb.Identifier = strdup(
 					asn1c_make_identifier(0,
-						expr->Identifier, "member", 0));
+						expr->Identifier, "Member", 0));
 				assert(tmp_memb.Identifier);
 			}
 			tmp.default_cb(&tmp);
@@ -538,7 +538,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	INDENT(+1);
 		v = TQ_FIRST(&(expr->members));
 		if(!v->Identifier) {
-			v->Identifier = strdup("member");
+			v->Identifier = strdup("Member");
 			assert(v->Identifier);
 		}
 		v->_anonymous_type = 1;
@@ -1447,7 +1447,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		} else {
 			char *id = MKID_nr(expr->Identifier);
 			if(expr->_anonymous_type
-					&& !strcmp(expr->Identifier, "member"))
+					&& !strcmp(expr->Identifier, "Member"))
 				id = asn1c_type_name(arg, expr, TNF_SAFE);
 			OUT("memb_%s_%d_constraint,\n", id,
 				++global_memb_unique);
@@ -1456,7 +1456,14 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("0,\t/* Defer constraints checking to the member type */\n");
 	}
 	if(C99_MODE) OUT(".name = ");
-	OUT("\"%s\"\n", expr->_anonymous_type ? "" : expr->Identifier);
+	if(1) {
+		if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member"))
+			OUT("\"\"\n");
+		else
+			OUT("\"%s\"\n", expr->Identifier);
+	} else {
+		OUT("\"%s\"\n", expr->_anonymous_type ? "" : expr->Identifier);
+	}
 	OUT("},\n");
 	INDENT(-1);
 
@@ -1466,7 +1473,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	save_target = arg->target->target;
 	REDIR(OT_CODE);
 
-	if(expr->_anonymous_type && !strcmp(expr->Identifier, "member"))
+	if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member"))
 		p = asn1c_type_name(arg, expr, TNF_SAFE);
 	else
 		p = MKID_nr(expr->Identifier);
