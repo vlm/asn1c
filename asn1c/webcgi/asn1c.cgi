@@ -376,6 +376,12 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "&trans=$f"
 		. "&show=tgz\">"
 		. "Fetch results (.tgz)</A></NOBR>";
+	} else {
+		$results .= '<BR><FONT SIZE=+1><A HREF="mailto:asn1c@lionet.info?Subject=asn1c compiler help: '
+			. "transaction $tNum ("
+			. join(', ', @safeNames)
+			. ") failed with code $ec"
+			. '">Request free help</A></FONT>';
 	}
 
 	$history .= "<TR>"
