@@ -49,6 +49,12 @@ asn1print(asn1p_t *asn, enum asn1print_flags flags) {
 		asn1print_module(asn, mod, flags);
 	}
 
+	if(flags & APF_PRINT_XML_DTD) {
+		/* Values for BOOLEAN */
+		printf("<!ELEMENT true EMPTY>\n");
+		printf("<!ELEMENT false EMPTY>\n");
+	}
+
 	return 0;
 }
 
@@ -670,15 +676,6 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 
 	if(!expr->Identifier) return 0;
 
-	if(expr->expr_type == ASN_CONSTR_CHOICE
-	|| expr->expr_type == ASN_CONSTR_SEQUENCE_OF
-	|| expr->expr_type == ASN_CONSTR_SET_OF
-	|| expr->expr_type == ASN_CONSTR_SET
-	|| expr->expr_type == ASN_BASIC_INTEGER
-	|| expr->expr_type == ASN_BASIC_ENUMERATED) {
-		expr_unordered = 1;
-	}
-
 	if(flags & APF_LINE_COMMENTS)
 		INDENT("<!-- #line %d -->\n", expr->_lineno);
 	INDENT("<!ELEMENT %s", expr->Identifier);
@@ -691,6 +688,12 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 		}
 		expr = se;
 		dont_involve_children = 1;
+	}
+
+	if((expr->expr_type & ASN_CONSTR_MASK)
+	|| expr->expr_type == ASN_BASIC_INTEGER
+	|| expr->expr_type == ASN_BASIC_ENUMERATED) {
+		expr_unordered = 1;
 	}
 
 	if(TQ_FIRST(&expr->members)) {
@@ -738,7 +741,7 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 
 	} else switch(expr->expr_type) {
 	case ASN_BASIC_BOOLEAN:
-		printf("(true|false)");
+		printf(" (true|false)");
 		break;
 	case ASN_CONSTR_CHOICE:
 	case ASN_CONSTR_SET:
