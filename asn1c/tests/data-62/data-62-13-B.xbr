@@ -1,0 +1,8 @@
+<C T="[UNIVERSAL 16]" TL="2" V="8">
+	<C T="[1]" TL="2" V="6">
+		<I T="[PRIVATE 1]" TL="2">
+		</I>
+		<I T="[PRIVATE 2]" TL="2">
+		-- Do not terminate: no end-of-content octets is intended.
+	</C>
+</C>
