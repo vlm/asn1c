@@ -442,6 +442,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	}
 
 	if(tc->meta_type != AMT_VALUE
+	&& tc->meta_type != AMT_VALUESET
 	&& tc->expr_type != A1TC_EXTENSIBLE) {
 		if(level) {
 			if(tc->Identifier)
@@ -503,14 +504,27 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		asn1print_ref(tc->reference, flags);
 	}
 
+	if(tc->meta_type == AMT_VALUESET)
+		printf(" ::=");
+
 	/*
 	 * Display the descendants (children) of the current type.
 	 */
-	if(TQ_FIRST(&(tc->members))) {
+	if(TQ_FIRST(&(tc->members))
+	|| (tc->expr_type & ASN_CONSTR_MASK)
+	|| tc->meta_type == AMT_VALUESET
+	|| tc->meta_type == AMT_OBJECT
+	|| tc->meta_type == AMT_OBJECTSET
+	) {
 		asn1p_expr_t *se;	/* SubExpression */
 		int put_braces = !SEQ_OF; /* Don't need 'em, if SET OF... */
 
-		if(put_braces) printf(" {\n");
+		if(put_braces) {
+			printf(" {");
+			if(TQ_FIRST(&tc->members))
+				printf("\n");
+			else	printf(" }");
+		}
 
 		TQ_FOR(se, &(tc->members), next) {
 			/*
@@ -528,7 +542,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			}
 		}
 
-		if(put_braces) {
+		if(put_braces && TQ_FIRST(&tc->members)) {
 			printf("\n");
 			INDENT("}");
 		}

@@ -5,6 +5,7 @@
 	  PER visibility rules for actual constraints checking code generator.
 	* Indirect references in constraints resolver code fixed.
 	* Avoided compilation warning on gcc 3.3.3 systems.
+	* Better ValueSet printing.
 
 0.9.1:	2004-Aug-23
 
