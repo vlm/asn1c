@@ -12,3 +12,26 @@ A:
 			 Canonical Encoding Rules (CER) and
 			 Distinguished Encoding Rules (DER)"
 
+
+Q: I've tried doing ./asn1c/asn1c -P examples/*PKIX*93*, but compiler spits
+   several fatal failures and exits.
+A:
+	The PKIX1 specifications uses ASN.1 Information Object Classes,
+	which is arguably one of the most complex ASN.1 concepts.
+
+	The asn1c parser and fixer subsystems currently understand most of
+	IOC syntax, but the compiler can cope with only the very basic
+	IOC semantics.
+
+	The goal of asn1c is to adequately support the practically necessary
+	subset of IOCs to compile PKIX1 and other real-world specs,
+	but this milestone isn't yet reached. Please contact me in case
+	you have special requirements, we can work it out.
+
+	P.S. Parser and fixer are now able to grok PKIX1, try this out:
+
+		./asn1c/asn1c -E -F examples/*PKIX*93*
+
+-- 
+Lev Walkin
+vlm@lionet.info
