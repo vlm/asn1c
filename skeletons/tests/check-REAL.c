@@ -143,13 +143,15 @@ check_buf(uint8_t *buf, size_t bufsize, double verify, const char *sample, const
 int
 main() {
 	REAL_t rn;
-	static const double c_NaN = 0.0;
+	static const double zero = 0.0;
 
 	memset(&rn, 0, sizeof(rn));
 
-	check(&rn, c_NaN/c_NaN, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>");
 	check(&rn, 0.0, "0", "0");
 	check(&rn, -0.0, "-0", "-0");	/* minus-zero */
+	check(&rn, zero/zero, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>");
+	check(&rn, 1.0/zero, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>");
+	check(&rn, -1.0/zero, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>");
 	check(&rn, 1.0, "1.0", "1.0E0");
 	check(&rn, -1.0, "-1.0", "-1.0E0");
 	check(&rn, 1.5, "1.5", "1.5E0");
