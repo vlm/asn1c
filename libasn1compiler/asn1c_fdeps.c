@@ -136,8 +136,9 @@ asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d) {
 	}
 
 	if(deps->el_count == deps->el_size) {
+		void *p;
 		n = deps->el_size?deps->el_size << 2:16;
-		void *p = realloc(deps->elements,
+		p = realloc(deps->elements,
 			n * sizeof(deps->elements[0]));
 		assert(p);
 		deps->elements = p;
