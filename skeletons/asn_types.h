@@ -52,14 +52,4 @@
 #endif /* __GNUC__ */
 #endif	/* MIN */
 
-/*
- * Generic type of an application-defined callback to return various
- * types of data to the application.
- * EXPECTED RETURN VALUES:
- *  -1: Failed to consume bytes. Abort the mission.
- * Other return values indicate success, and ignored.
- */
-typedef int (asn_app_consume_bytes_f)(const void *buffer, size_t size,
-	void *application_specific_key);
-
 #endif	/* _ASN_TYPES_H_ */
