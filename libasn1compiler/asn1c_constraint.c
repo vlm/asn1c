@@ -523,8 +523,7 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 			INDENT(+1);
 			OUT("const A_%s_OF(void) *list;\n",
 				etype==ASN_CONSTR_SET_OF?"SET":"SEQUENCE");
-			OUT("list = (const A_%s_OF(void) *)sptr;\n",
-				etype==ASN_CONSTR_SET_OF?"SET":"SEQUENCE");
+			OUT("(const void *)list = sptr;\n");
 			OUT("size = list->count;\n");
 			INDENT(-1);
 		OUT("}\n");
