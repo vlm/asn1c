@@ -8,7 +8,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <HEAD>
 <TITLE>Using the Open Source ASN.1 Compiler</TITLE>
 <META NAME="description" CONTENT="Using the Open Source ASN.1 Compiler">
-<META NAME="ASN.1, asn1c, compiler, BER, DER, XER\">
+<META NAME="keywords" CONTENT="ASN.1, asn1c, compiler, BER, DER, XER">
 
 
 
@@ -586,7 +586,7 @@ language structures and surrounding maintenance code. For example,
 the C structure which may be created by compiler to represent the
 simple <I>Rectangle</I> specification defined earlier in this document,
 may look like this<A NAME="tex2html2"
-  HREF="#foot801"><SUP>2.2</SUP></A>:
+  HREF="#foot803"><SUP>2.2</SUP></A>:
 
 <P>
 
@@ -612,8 +612,8 @@ Quick start</A>
 
 <P>
 After building and installing the compiler, the <I>asn1c</I><A NAME="tex2html4"
-  HREF="#foot802"><SUP>3.1</SUP></A> command may be used to compile the ASN.1 specification<A NAME="tex2html5"
-  HREF="#foot803"><SUP>3.2</SUP></A>:
+  HREF="#foot804"><SUP>3.1</SUP></A> command may be used to compile the ASN.1 specification<A NAME="tex2html5"
+  HREF="#foot805"><SUP>3.2</SUP></A>:
 
 <P>
 
@@ -679,7 +679,7 @@ the compiler's behavior.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="806"></A>
+<DIV ALIGN="CENTER"><A NAME="808"></A>
 <TABLE>
 <CAPTION><STRONG><A NAME=Table1>Table 1:</A></STRONG>
 The list of asn1c command line options</CAPTION>
@@ -823,7 +823,7 @@ be possible to compile everything with the single instruction:
 
 <BLOCKQUOTE><PRE>
 cc&nbsp;-o&nbsp;rectangle&nbsp;*.c&nbsp;&nbsp;&nbsp;#&nbsp;It&nbsp;could&nbsp;be&nbsp;<I>that</I>&nbsp;simple<A NAME="tex2html7"
-  HREF="#foot809"><SUP>4.1</SUP></A>
+  HREF="#foot811"><SUP>4.1</SUP></A>
 </PRE>
 </BLOCKQUOTE>
 
@@ -874,37 +874,37 @@ There are several generic functions available:
 <DD>This is the generic <I>restartable</I><A NAME="tex2html8"
   HREF="#foot253"><SUP>4.2</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
 and/or fill the target structure for you. Please refer to Section
-[<A HREF="#sub:Decoding-BER">Decoding-BER</A>].
+[<A HREF="#sub:Decoding-BER">Decoding BER</A>].
 </DD>
 <DT><STRONG>der_encoder</STRONG></DT>
 <DD>This is the generic DER encoder (Distinguished Encoding
 Rules). This encoder will take the target structure and encode it
-into a series of bytes. Please refer to Section [<A HREF="#sub:Encoding-DER">Encoding-DER</A>].
+into a series of bytes. Please refer to Section [<A HREF="#sub:Encoding-DER">Encoding DER</A>].
 </DD>
 <DT><STRONG>xer_encoder</STRONG></DT>
 <DD>This is the generic XER encoder (XML Encoding Rules).
 This encoder will take the target structure and represent it as an
-XML (text) document. Please refer to Section [<A HREF="#sub:Encoding-XER">Encoding-XER</A>].
+XML (text) document. Please refer to Section [<A HREF="#sub:Encoding-XER">Encoding XER</A>].
 </DD>
 <DT><STRONG>check_constraints</STRONG></DT>
 <DD>Check that the contents of the target structure
 are semantically valid and constrained to appropriate implicit or
-explicit subtype constraints. Please refer to Section sub:Validating-the-target.
+explicit subtype constraints. Please refer to Section <A HREF="#sub:Validating-the-target">Validating the target</A>.
 </DD>
 <DT><STRONG>print_struct</STRONG></DT>
 <DD>This function convert the contents of the passed target
 structure into human readable form. This form is not formal and cannot
 be converted back into the structure, but it may turn out to be useful
-for debugging or quick-n-dirty printing. Please refer to Section [<A HREF="#sub:Printing-the-target">Printing-the-target</A>].
+for debugging or quick-n-dirty printing. Please refer to Section [<A HREF="#sub:Printing-the-target">Printing the target</A>].
 </DD>
 <DT><STRONG>free_struct</STRONG></DT>
 <DD>This is a generic disposal which frees the target structure.
-Please refer to Section [<A HREF="#sub:Freeing-the-target">Freeing-the-target</A>].
+Please refer to Section [<A HREF="#sub:Freeing-the-target">Freeing the target</A>].
 </DD>
 </DL>
 check_constraints Check that the contents of the target structure
 are semantically valid and constrained to appropriate implicit or
-explicit subtype constraints. Please refer to Section sub:Validating-the-target.
+explicit subtype constraints. Please refer to Section <A HREF="#sub:Validating-the-target">Validating the target</A>.
 
 <P>
 Each of the above function takes the type descriptor (<I>asn_DEF_...</I>)
@@ -958,7 +958,7 @@ decoded into the structure by the time something goes wrong.
 Restartable decoding is a little bit trickier: you need to provide
 the old target structure pointer (which might be already half-decoded)
 and react on RC_WMORE return code. This will be explained later in
-Section sub:Decoding-BER
+Section <A HREF="#sub:Decoding-BER">Decoding BER</A>
 
 <P>
 
@@ -1132,7 +1132,7 @@ The XER stands for XML Encoding Rules, where XML, in turn, is eXtensible
 Markup Language, a text-based format for information exchange. The
 encoder routine API comes in two flavors: stdio-based and callback-based.
 With the callback-based encoder, the encoding process is very similar
-to the DER one, described in Section sub:Encoding-DER. The
+to the DER one, described in Section <A HREF="#sub:Encoding-DER">Encoding DER</A>. The
 following example uses the definition of write_stream() from up there.
 
 <P>
@@ -1144,7 +1144,7 @@ following example uses the definition of write_stream() from up there.
 &nbsp;*&nbsp;NOTE:&nbsp;Do&nbsp;not&nbsp;copy&nbsp;this&nbsp;code&nbsp;verbatim!
 &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;stdio&nbsp;output&nbsp;is&nbsp;necessary,
 &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;the&nbsp;xer_fprint()&nbsp;procedure&nbsp;instead.
-&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;Section&nbsp;sub:Printing-the-target.
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;Section&nbsp;<A HREF="#sub:Printing-the-target">Printing the target</A>.
 &nbsp;*/
 int
 print_as_XML(FILE&nbsp;*ostream,&nbsp;Rectangle_t&nbsp;*rect)&nbsp;{
@@ -1162,7 +1162,7 @@ Please look into xer_encoder.h for the precise definition of xer_encode()
 and related types.
 
 <P>
-See Section [<A HREF="#sub:Printing-the-target">Printing-the-target</A>] for the example of stdio-based
+See Section [<A HREF="#sub:Printing-the-target">Printing the target</A>] for the example of stdio-based
 XML encoder and other pretty-printing suggestions.
 
 <P>
@@ -1226,7 +1226,7 @@ call:
 xer_fprint(stdout,&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect);
 </PRE>
 </BLOCKQUOTE>
-See Section sub:Encoding-XER for XML-related details.
+See Section <A HREF="#sub:Encoding-XER">Encoding XER</A> for XML-related details.
 
 <P>
 
@@ -1617,10 +1617,10 @@ END
 <LI>Compile the file according to procedures shown in the previous chapter.
 </LI>
 <LI>Modify the Rectangle type processing routine (you can start with the
-main() routine shown in the Section sec:A-Rectangle-Decoder)
+main() routine shown in the Section <A HREF="#sec:A-Rectangle-Decoder">A Rectangle Decoder</A>)
 by placing the following snippet of code <I>before</I> encoding and/or
 <I>after</I> decoding the Rectangle type<A NAME="tex2html10"
-  HREF="#foot874"><SUP>6.1</SUP></A>:
+  HREF="#foot876"><SUP>6.1</SUP></A>:
 
 <P>
 
@@ -1648,15 +1648,21 @@ by placing the following snippet of code <I>before</I> encoding and/or
 </LI>
 <LI>Compile the resulting C code as shown in the previous chapters.
 </LI>
+<LI>Try to test the constraints checking code by assigning integer value
+101 to the <B>.height</B> member of the Rectangle structure, or
+a negative value to the <B>.width</B> member. In either case, the
+program should print ''Constraint validation failed'' message, followed
+by the short explanation why validation did not succeed.
+</LI>
 <LI>Done.
 </LI>
 </OL> 
 <H2><A NAME="SECTION05000000000000000000">
 Bibliography</A>
 </H2><DL COMPACT><DD><P></P><DT><A NAME="ASN1C">ASN1C</A>
-<DD>The Open Source ASN.1 Compiler. <A HREF=http://lionet.info/>http://lionet.info/</A>asn1c
+<DD>The Open Source ASN.1 Compiler. <A HREF=http://lionet.info/asn1c>http://lionet.info/asn1c</A>
 <P></P><DT><A NAME="AONL">AONL</A>
-<DD>Online ASN.1 Compiler. <A HREF=http://lionet.info/asn1c/>http://lionet.info/asn1c/</A>asn1c.cgi
+<DD>Online ASN.1 Compiler. <A HREF=http://lionet.info/asn1c/asn1c.cgi>http://lionet.info/asn1c/asn1c.cgi</A>
 <P></P><DT><A NAME="Dub00">Dub00</A>
 <DD>Olivier Dubuisson -- <I>ASN.1 Communication between heterogeneous
 systems</I> -- Morgan Kaufmann Publishers, 2000. <A HREF=http://asn1.elibel.tm.fr/en/book/>http://asn1.elibel.tm.fr/en/book/</A>.
@@ -1674,7 +1680,7 @@ ISBN:0-12-6333361-0.
 not a definitive factor.
 
 </DD>
-<DT><A NAME="foot801">... this</A><A
+<DT><A NAME="foot803">... this</A><A
  HREF="asn1c-usage.html#tex2html2"><SUP>2.2</SUP></A></DT>
 <DD><I>-fnative-types</I> compiler option is used to produce basic C <I>int</I>
 types instead of infinite width INTEGER_t structures. See <A HREF=#Table1>Table 1</A>.
@@ -1686,19 +1692,19 @@ types instead of infinite width INTEGER_t structures. See <A HREF=#Table1>Table 
 text (XML) based.
 
 </DD>
-<DT><A NAME="foot802">...asn1c</A><A
+<DT><A NAME="foot804">...asn1c</A><A
  HREF="asn1c-usage.html#tex2html4"><SUP>3.1</SUP></A></DT>
 <DD>The 1 symbol in asn<B>1</B>c is a digit, not an ''ell'' letter.
 
 </DD>
-<DT><A NAME="foot803">... specification</A><A
+<DT><A NAME="foot805">... specification</A><A
  HREF="asn1c-usage.html#tex2html5"><SUP>3.2</SUP></A></DT>
 <DD>This is probably <B>not</B> what you want to try out right now -
 read through the rest of this chapter to find out about <B>-P</B>
 and <B>-R</B> options.
 
 </DD>
-<DT><A NAME="foot809">...that&nbsp;simple</A><A
+<DT><A NAME="foot811">...that&nbsp;simple</A><A
  HREF="asn1c-usage.html#tex2html7"><SUP>4.1</SUP></A></DT>
 <DD>Provided that you've also created a .c file with the <I>int main()</I>
 routine.
@@ -1717,7 +1723,7 @@ buffer to continue decoding.
 which aren't important for the size determination.
 
 </DD>
-<DT><A NAME="foot874">... type</A><A
+<DT><A NAME="foot876">... type</A><A
  HREF="asn1c-usage.html#tex2html10"><SUP>6.1</SUP></A></DT>
 <DD>Placing the constraint checking code <I>before</I> encoding helps
 to make sure you know the data is correct and within constraints before
