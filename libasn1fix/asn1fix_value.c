@@ -22,7 +22,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	type_expr = asn1f_find_terminal_type(arg, expr);
 	DEBUG("%s(): terminal type %p", __func__, type_expr);
 	if(type_expr == 0) {
-		DEBUG("\tTerminal type for %s not found", expr->Identifier);
+		FATAL("Terminal type for is %s not found", expr->Identifier);
 		return -1;
 	}
 
@@ -64,10 +64,26 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	 */
 	ret = asn1f_check_type_compatibility(arg, type_expr, val_type_expr);
 	if(ret == -1) {
-		DEBUG("\tIncompatible type of %s at %d with %s at %d",
+		switch(type_expr->expr_type) {
+		case ASN_BASIC_INTEGER:
+		case ASN_BASIC_ENUMERATED:
+			FATAL("Incompatible type of %s at %d with %s at %d",
 			type_expr->Identifier, type_expr->_lineno,
 			val_type_expr->Identifier, val_type_expr->_lineno);
-		return -1;
+			return -1;
+		case ASN_BASIC_OBJECT_IDENTIFIER:
+			/*
+			 * Ignore this for now.
+			 * We can't deal with OIDs inheritance properly yet.
+			 */
+			return 0;
+		default:
+			break;
+		}
+		WARNING("\tIncompatible type of %s at %d with %s at %d",
+			type_expr->Identifier, type_expr->_lineno,
+			val_type_expr->Identifier, val_type_expr->_lineno);
+		return 1;
 	}
 
 	if(asn1f_look_value_in_type(arg, val_type_expr, expr) == -1)
