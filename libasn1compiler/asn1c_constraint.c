@@ -8,7 +8,7 @@
 
 static int asn1c_emit_constraint_tables(arg_t *arg, int got_size);
 static int emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range);
-static int emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype);
+static int emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_range_t *r_value);
 static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
 static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1_integer_t natural_start, asn1_integer_t natural_stop);
@@ -115,7 +115,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	OUT("\n");
 
 	if(r_value)
-		emit_value_determination_code(arg, etype);
+		emit_value_determination_code(arg, etype, r_value);
 	if(r_size)
 		emit_size_determination_code(arg, etype);
 
@@ -544,7 +544,7 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 }
 
 static int
-emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
+emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_range_t *r_value) {
 
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
@@ -552,6 +552,23 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 		if(arg->flags & A1C_USE_NATIVE_INTEGERS) {
 			OUT("value = *(const int *)sptr;\n");
 		} else {
+			if(r_value->el_count == 0
+			&& (
+				/* Speed-up common case: (0..MAX) */
+				(r_value->left.type == ARE_VALUE
+				&& r_value->left.value == 0
+				&& r_value->right.type == ARE_MAX)
+			    ||
+				/* Speed-up common case: (MIN..-1) */
+				(r_value->left.type == ARE_MIN
+				&& r_value->right.type == ARE_VALUE
+				&& r_value->right.value == -1)
+			)) {
+				OUT("/* Check if the sign bit is present */\n");
+				OUT("value = st->buf ? ((st->buf[0] & 0x80) ? -1 : 1) : 0;\n");
+				break;
+			}
+
 			OUT("if(asn1_INTEGER2long(st, &value)) {\n");
 				INDENT(+1);
 				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
