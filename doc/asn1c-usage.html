@@ -254,7 +254,7 @@ necessary, the subtype constraints must be used.
 SimpleInteger&nbsp;::=&nbsp;INTEGER
 &nbsp;
 --&nbsp;An&nbsp;integer&nbsp;with&nbsp;a&nbsp;very&nbsp;limited&nbsp;range
-SmallInt&nbsp;::=&nbsp;INTEGER&nbsp;(0..127)
+SmallPositiveInt&nbsp;::=&nbsp;INTEGER&nbsp;(0..127)
 &nbsp;
 --&nbsp;Integer,&nbsp;negative
 NegativeInt&nbsp;::=&nbsp;INTEGER&nbsp;(MIN..0)
@@ -400,10 +400,10 @@ The PrintableString type</A>
 <P>
 The character string with the following alphabet: space, ''<B>'</B>''
 (single quote), ''<B>(</B>'', ''<B>)</B>'', ''<B>+</B>'',
-'','' (comma), ''<B>-</B>'', ''<B>.</B>'', ''<B>/</B>'',
+''<B>,</B>'' (comma), ''<B>-</B>'', ''<B>.</B>'', ''<B>/</B>'',
 digits (''0'' to ''9''), ''<B>:</B>'', ''<B>=</B>'', ''<B>?</B>'',
 upper-case and lower-case letters (''A'' to ''Z'' and ''a''
-to ''z'')
+to ''z'').
 
 <P>
 
@@ -413,7 +413,10 @@ The VisibleString type</A>
 
 <P>
 The character string with the alphabet which is more or less a subset
-of ASCII between space and ''<B>~</B>'' (tilde).
+of ASCII between the space and the ''<B>~</B>''
+symbol (tilde).
+
+<P>
 Alternatively, the alphabet may be described as the PrintableString
 alphabet presented earlier, plus the following characters: ''<B>!</B>'',
 ''<B>''</B>'', ''<B>#</B>'', ''<B>$</B>'', ''<B>%</B>'',
@@ -557,12 +560,12 @@ Introduction to the ASN.1 Compiler</A>
 The purpose of the ASN.1 compiler, of which this document is part,
 is to convert the ASN.1 specifications to some other target language
 (currently, only C is supported<A NAME="tex2html1"
-  HREF="#foot144"><SUP>2.1</SUP></A>). The compiler reads the specification and emits a series of target
+  HREF="#foot145"><SUP>2.1</SUP></A>). The compiler reads the specification and emits a series of target
 language structures and surrounding maintenance code. For example,
 the C structure which may be created by compiler to represent the
 simple <I>Rectangle</I> specification defined earlier in this document,
 may look like this<A NAME="tex2html2"
-  HREF="#foot403"><SUP>2.2</SUP></A>:
+  HREF="#foot404"><SUP>2.2</SUP></A>:
 
 <P>
 
@@ -576,7 +579,7 @@ typedef&nbsp;struct&nbsp;Rectangle_s&nbsp;{
 This would not be of much value for such a simple specification, so
 the compiler goes further and actually produces the code which fills
 in this structure by parsing the opaque binary<A NAME="tex2html3"
-  HREF="#foot151"><SUP>2.3</SUP></A> data provided in some buffer. It also produces the code that takes
+  HREF="#foot152"><SUP>2.3</SUP></A> data provided in some buffer. It also produces the code that takes
 this structure as an argument and performs structure serialization
 by emitting a series of bytes.
 
@@ -588,8 +591,8 @@ Quick start</A>
 
 <P>
 After building and installing the compiler, the <I>asn1c</I><A NAME="tex2html4"
-  HREF="#foot404"><SUP>3.1</SUP></A> command may be used to compile the ASN.1 specification<A NAME="tex2html5"
-  HREF="#foot405"><SUP>3.2</SUP></A>:
+  HREF="#foot405"><SUP>3.1</SUP></A> command may be used to compile the ASN.1 specification<A NAME="tex2html5"
+  HREF="#foot406"><SUP>3.2</SUP></A>:
 
 <P>
 
@@ -655,7 +658,7 @@ the compiler's behavior.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="408"></A>
+<DIV ALIGN="CENTER"><A NAME="409"></A>
 <TABLE>
 <CAPTION><STRONG><A NAME=Table1>Table 1:</A></STRONG>
 The list of asn1c command line options</CAPTION>
@@ -706,10 +709,10 @@ ting the usual support code.</FONT></TD></TR>
 <B>Description</B></TD></TR>
 </TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fall-defs-global</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-Normally the compiler hides the definitions (asn1_DEF_xxx) of the
+Normally the compiler hides the definitions (asn_DEF_xxx) of the
 inner structure elements (members of SEQUENCE, SET and other types).
 This option makes all such definitions global. Enabling this option
-may pollute the namespace by making lots of asn1_DEF_xxx structures
+may pollute the namespace by making lots of asn_DEF_xxx structures
 globally visible, but will allow you to manipulate (encode and decode)
 the individual members of any complex ASN.1 structure.</TD></TR>
 </TBODY><TBODY>
@@ -793,7 +796,7 @@ be possible to compile everything with the single instruction:
 
 <BLOCKQUOTE><PRE>
 cc&nbsp;-o&nbsp;rectangle&nbsp;*.c&nbsp;&nbsp;&nbsp;#&nbsp;It&nbsp;could&nbsp;be&nbsp;<I>that</I>&nbsp;simple<A NAME="tex2html7"
-  HREF="#foot411"><SUP>4.1</SUP></A>
+  HREF="#foot412"><SUP>4.1</SUP></A>
 </PRE>
 </BLOCKQUOTE>
 
@@ -825,14 +828,14 @@ structure:
 <BLOCKQUOTE><PRE>
 Rectangle_t&nbsp;*rect&nbsp;=&nbsp;...;
 &nbsp;
-asn1_DEF_Rectangle-&gt;free_struct(&amp;asn1_DEF_Rectangle,
+asn_DEF_Rectangle-&gt;free_struct(&amp;asn_DEF_Rectangle,
 &nbsp;&nbsp;&nbsp;&nbsp;rect,&nbsp;0);
 </PRE>
 </BLOCKQUOTE>
 This code defines a <I>rect</I> pointer which points to the Rectangle_t
 structure which needs to be freed. The second line invokes the generic
 free_struct routine created specifically for this Rectangle_t structure.
-The <I>asn1_DEF_Rectangle</I> is the type descriptor, which holds
+The <I>asn_DEF_Rectangle</I> is the type descriptor, which holds
 a collection of generic routines to deal with the Rectangle_t structure.
 
 <P>
@@ -842,7 +845,7 @@ There are several generic functions available:
 <DL>
 <DT><STRONG>ber_decoder</STRONG></DT>
 <DD>This is the generic <I>restartable</I><A NAME="tex2html8"
-  HREF="#foot238"><SUP>4.2</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
+  HREF="#foot239"><SUP>4.2</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
 and/or fill the target structure for you. Please refer to Section
 [<A HREF="#sub:Decoding-BER">Decoding-BER</A>].
 </DD>
@@ -877,7 +880,7 @@ are semantically valid and constrained to appropriate implicit or
 explicit subtype constraints. Please refer to Section sub:Validating-the-target.
 
 <P>
-Each of the above function takes the type descriptor (<I>asn1_DEF_...</I>)
+Each of the above function takes the type descriptor (<I>asn_DEF_...</I>)
 and the target structure (<I>rect</I>, in the above example). The
 target structure is typically created by the generic BER decoder or
 by the application itself.
@@ -893,8 +896,8 @@ simple_deserializer(const&nbsp;void&nbsp;*buffer,&nbsp;size_t&nbsp;buf_size)&nbs
 &nbsp;&nbsp;&nbsp;&nbsp;Rectangle_t&nbsp;*rect&nbsp;=&nbsp;0;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Note&nbsp;this&nbsp;0!&nbsp;*/
 &nbsp;&nbsp;&nbsp;&nbsp;ber_dec_rval_t&nbsp;rval;
 &nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;rval&nbsp;=&nbsp;asn1_DEF_Rectangle-&gt;ber_decoder(
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,
+&nbsp;&nbsp;&nbsp;&nbsp;rval&nbsp;=&nbsp;asn_DEF_Rectangle-&gt;ber_decoder(0,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void&nbsp;**)&amp;rect,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer,&nbsp;buf_size,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0);
@@ -903,8 +906,8 @@ simple_deserializer(const&nbsp;void&nbsp;*buffer,&nbsp;size_t&nbsp;buf_size)&nbs
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;rect;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Decoding&nbsp;succeeded&nbsp;*/
 &nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Free&nbsp;partially&nbsp;decoded&nbsp;rect&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn1_DEF_Rectangle-&gt;free_struct(
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;rect,&nbsp;0);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect,&nbsp;0);
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;
 &nbsp;&nbsp;&nbsp;&nbsp;}
 }
@@ -985,18 +988,18 @@ wrapper of the former approach into a less wordy notation:
 <P>
 
 <BLOCKQUOTE><PRE>
-rval&nbsp;=&nbsp;ber_decode(&amp;asn1_DEF_Rectangle,&nbsp;(void&nbsp;**)&amp;rect,
+rval&nbsp;=&nbsp;ber_decode(0,&nbsp;&amp;asn_DEF_Rectangle,&nbsp;(void&nbsp;**)&amp;rect,
 &nbsp;&nbsp;&nbsp;&nbsp;buffer,&nbsp;buf_size);
 </PRE>
 </BLOCKQUOTE>
-Note that the initial (asn1_DEF_Rectangle-&gt;ber_decoder) reference
+Note that the initial (asn_DEF_Rectangle-&gt;ber_decoder) reference
 is gone, and also the last argument (0) is no longer necessary.
 
 <P>
 These two ways of invocations are fully equivalent.
 
 <P>
-The BER de<I>coder</I> may fail because (<I>the following RC_...
+The BER de<I>coder</I> may fail because of (<I>the following RC_...
 codes are defined in ber_decoder.h</I>):
 
 <P>
@@ -1039,8 +1042,8 @@ X.509 certificates.
 
 <P>
 As with BER decoder, the DER encoder may be invoked either directly
-from the ASN.1 type descriptor (asn1_DEF_Rectangle) or from the
-stand-alone function, which is somewhat simpler:
+from the ASN.1 type descriptor (asn_DEF_Rectangle) or from the stand-alone
+function, which is somewhat simpler:
 
 <P>
 
@@ -1068,7 +1071,7 @@ ssize_t
 simple_serializer(FILE&nbsp;*ostream,&nbsp;Rectangle_t&nbsp;*rect)&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;asn_enc_rval_t&nbsp;er;&nbsp;&nbsp;/*&nbsp;Encoder&nbsp;return&nbsp;value&nbsp;*/
 &nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;er&nbsp;=&nbsp;der_encode(&amp;asn1_DEF_Rect,&nbsp;rect,
+&nbsp;&nbsp;&nbsp;&nbsp;er&nbsp;=&nbsp;der_encode(&amp;asn_DEF_Rect,&nbsp;rect,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write_stream,&nbsp;ostream);
 &nbsp;&nbsp;&nbsp;&nbsp;if(er.<B>encoded</B>&nbsp;==&nbsp;-1)&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*
@@ -1098,7 +1101,7 @@ DER encoder will essentially do the same thing (i.e., encode the data)
 but no callbacks will be invoked (so the data goes nowhere). It may
 prove useful to determine the size of the structure's encoding before
 actually doing the encoding<A NAME="tex2html9"
-  HREF="#foot314"><SUP>4.3</SUP></A>.
+  HREF="#foot315"><SUP>4.3</SUP></A>.
 
 <P>
 Please look into der_encoder.h for the precise definition of der_encode()
@@ -1133,7 +1136,7 @@ int
 print_as_XML(FILE&nbsp;*ostream,&nbsp;Rectangle_t&nbsp;*rect)&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;asn_enc_rval_t&nbsp;er;&nbsp;&nbsp;/*&nbsp;Encoder&nbsp;return&nbsp;value&nbsp;*/
 &nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;er&nbsp;=&nbsp;xer_encode(&amp;asn1_DEF_Rect,&nbsp;rect,
+&nbsp;&nbsp;&nbsp;&nbsp;er&nbsp;=&nbsp;xer_encode(&amp;asn_DEF_Rect,&nbsp;rect,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XER_F_BASIC,&nbsp;/*&nbsp;BASIC-XER&nbsp;or&nbsp;CANONICAL-XER&nbsp;*/
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write_stream,&nbsp;ostream);
 &nbsp;
@@ -1190,7 +1193,7 @@ function, which is a simpler wrapper of the former:
 <P>
 
 <BLOCKQUOTE><PRE>
-asn_fprint(stdout,&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;rect);
+asn_fprint(stdout,&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect);
 </PRE>
 </BLOCKQUOTE>
 Please look into constr_TYPE.h for the precise definition of asn_fprint()
@@ -1206,7 +1209,7 @@ call:
 <P>
 
 <BLOCKQUOTE><PRE>
-xer_fprint(stdout,&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;rect);
+xer_fprint(stdout,&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect);
 </PRE>
 </BLOCKQUOTE>
 See Section sub:Encoding-XER for XML-related details.
@@ -1260,8 +1263,8 @@ struct&nbsp;my_figure&nbsp;*mf&nbsp;=&nbsp;<B>...</B>;
 &nbsp;*&nbsp;Freeing&nbsp;the&nbsp;Rectangle_td
 &nbsp;*&nbsp;without&nbsp;freeing&nbsp;the&nbsp;mf-&gt;rect&nbsp;pointer
 &nbsp;*/
-asn1_DEF_Rectangle-&gt;free_struct(
-&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;&amp;mf-&gt;rect,&nbsp;<I>1</I>&nbsp;/*&nbsp;!free&nbsp;*/);
+asn_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,&nbsp;&amp;mf-&gt;rect,&nbsp;<I>1</I>&nbsp;/*&nbsp;!free&nbsp;*/);
 &nbsp;
 /*&nbsp;Rectangle_t&nbsp;is&nbsp;a&nbsp;stand-alone&nbsp;pointer&nbsp;*/
 Rectangle_t&nbsp;*rect&nbsp;=&nbsp;<B>...</B>;
@@ -1269,8 +1272,8 @@ Rectangle_t&nbsp;*rect&nbsp;=&nbsp;<B>...</B>;
 &nbsp;*&nbsp;Freeing&nbsp;the&nbsp;Rectangle_t
 &nbsp;*&nbsp;and&nbsp;freeing&nbsp;the&nbsp;rect&nbsp;pointer
 &nbsp;*/
-asn1_DEF_Rectangle-&gt;free_struct(
-&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;rect,&nbsp;<I>0</I>&nbsp;/*&nbsp;free&nbsp;the&nbsp;pointer&nbsp;too&nbsp;*/);
+asn_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect,&nbsp;<I>0</I>&nbsp;/*&nbsp;free&nbsp;the&nbsp;pointer&nbsp;too&nbsp;*/);
 </PRE>
 </BLOCKQUOTE>
 It is safe to invoke the <I>free_struct</I> function with the target
@@ -1292,50 +1295,50 @@ ISBN:0-12-6333361-0.
 <P>
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot144">... supported</A><A
+<DT><A NAME="foot145">... supported</A><A
  HREF="asn1c-usage.html#tex2html1"><SUP>2.1</SUP></A></DT>
 <DD>C++ is ''supported'' too, as long as an class-based approach is
 not a definitive factor.
 
 </DD>
-<DT><A NAME="foot403">... this</A><A
+<DT><A NAME="foot404">... this</A><A
  HREF="asn1c-usage.html#tex2html2"><SUP>2.2</SUP></A></DT>
 <DD><I>-fnative-types</I> compiler option is used to produce basic C <I>int</I>
 types instead of infinite width INTEGER_t structures. See <A HREF=#Table1>Table 1</A>.
 
 </DD>
-<DT><A NAME="foot151">... binary</A><A
+<DT><A NAME="foot152">... binary</A><A
  HREF="asn1c-usage.html#tex2html3"><SUP>2.3</SUP></A></DT>
 <DD>BER, CER and DER encodings are binary. However, the XER encoding is
 text (XML) based.
 
 </DD>
-<DT><A NAME="foot404">...asn1c</A><A
+<DT><A NAME="foot405">...asn1c</A><A
  HREF="asn1c-usage.html#tex2html4"><SUP>3.1</SUP></A></DT>
 <DD>The 1 symbol in asn<B>1</B>c is a digit, not an ''ell'' letter.
 
 </DD>
-<DT><A NAME="foot405">... specification</A><A
+<DT><A NAME="foot406">... specification</A><A
  HREF="asn1c-usage.html#tex2html5"><SUP>3.2</SUP></A></DT>
 <DD>This is probably <B>not</B> what you want to try out right now -
 read through the rest of this chapter to find out about <B>-P</B>
 and <B>-R</B> options.
 
 </DD>
-<DT><A NAME="foot411">...that&nbsp;simple</A><A
+<DT><A NAME="foot412">...that&nbsp;simple</A><A
  HREF="asn1c-usage.html#tex2html7"><SUP>4.1</SUP></A></DT>
 <DD>Provided that you've also created a .c file with the <I>int main()</I>
 routine.
 
 </DD>
-<DT><A NAME="foot238">...restartable</A><A
+<DT><A NAME="foot239">...restartable</A><A
  HREF="asn1c-usage.html#tex2html8"><SUP>4.2</SUP></A></DT>
 <DD>Restartable means that if the decoder encounters the end of the buffer,
 it will fail, but may later be invoked again with the rest of the
 buffer to continue decoding.
 
 </DD>
-<DT><A NAME="foot314">... encoding</A><A
+<DT><A NAME="foot315">... encoding</A><A
  HREF="asn1c-usage.html#tex2html9"><SUP>4.3</SUP></A></DT>
 <DD>It is actually faster too: the encoder might skip over some computations
 which aren't important for the size determination.
@@ -1344,7 +1347,7 @@ which aren't important for the size determination.
 </DL><BR><HR>
 <ADDRESS>
 Lev Walkin
-2004-09-26
+2004-09-29
 </ADDRESS>
 </BODY>
 </HTML>
