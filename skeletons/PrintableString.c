@@ -72,11 +72,11 @@ PrintableString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		for(; buf < end; buf++) {
 			if(!_PrintableString_alphabet[*buf]) {
 				_ASN_ERRLOG(app_errlog, app_key,
-					"%s: value byte %d (%d) "
+					"%s: value byte %ld (%d) "
 					"not in PrintableString alphabet "
 					"(%s:%d)",
 					td->name,
-					(buf - st->buf) + 1,
+					(long)((buf - st->buf) + 1),
 					*buf,
 					__FILE__, __LINE__);
 				return -1;

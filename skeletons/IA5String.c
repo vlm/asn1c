@@ -48,10 +48,10 @@ IA5String_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		for(; buf < end; buf++) {
 			if(*buf > 0x7F) {
 				_ASN_ERRLOG(app_errlog, app_key,
-					"%s: value byte %d out of range: "
+					"%s: value byte %ld out of range: "
 					"%d > 127 (%s:%d)",
 					td->name,
-					(buf - st->buf) + 1,
+					(long)((buf - st->buf) + 1),
 					*buf,
 					__FILE__, __LINE__);
 				return -1;
