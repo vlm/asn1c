@@ -12,6 +12,9 @@
 #include <winsock2.h>	/* for ntohl() */
 #endif
 
+/* Check that all the mandatory members are present */
+static int _SET_is_populated(asn_TYPE_descriptor_t *td, void *st);
+
 /*
  * Number of bytes left for this structure.
  * (ctx->left) indicates the number of bytes _transferred_ for the structure.
@@ -381,39 +384,51 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		ctx->phase = 5;
 	case 5:
-		/*
-		 * Check that all mandatory elements are present.
-		 */
-		for(edx = 0; edx < td->elements_count;
-			edx += (8 * sizeof(specs->_mandatory_elements[0]))) {
-			unsigned int midx, pres, must;
-
-			midx = edx/(8 * sizeof(specs->_mandatory_elements[0]));
-			pres = ((unsigned int *)((char *)st+specs->pres_offset))[midx];
-			must = ntohl(specs->_mandatory_elements[midx]);
-
-			if((pres & must) == must) {
-				/*
-				 * Yes, everything seems to be in place.
-				 */
-			} else {
-				ASN_DEBUG("One or more mandatory elements "
-					"of a SET %s %d (%08x.%08x)=%08x "
-					"are not present",
-					td->name,
-					midx,
-					pres,
-					must,
-					(~(pres & must) & must)
-				);
-				RETURN(RC_FAIL);
-			}
-		}
+		/* Check that all mandatory elements are present. */
+		if(!_SET_is_populated(td, st))
+			RETURN(RC_FAIL);
 
 		NEXT_PHASE(ctx);
 	}
 	
 	RETURN(RC_OK);
+}
+
+static int
+_SET_is_populated(asn_TYPE_descriptor_t *td, void *st) {
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	int edx;
+
+	/*
+	 * Check that all mandatory elements are present.
+	 */
+	for(edx = 0; edx < td->elements_count;
+		edx += (8 * sizeof(specs->_mandatory_elements[0]))) {
+		unsigned int midx, pres, must;
+
+		midx = edx/(8 * sizeof(specs->_mandatory_elements[0]));
+		pres = ((unsigned int *)((char *)st+specs->pres_offset))[midx];
+		must = ntohl(specs->_mandatory_elements[midx]);
+
+		if((pres & must) == must) {
+			/*
+			 * Yes, everything seems to be in place.
+			 */
+		} else {
+			ASN_DEBUG("One or more mandatory elements "
+				"of a SET %s %d (%08x.%08x)=%08x "
+				"are not present",
+				td->name,
+				midx,
+				pres,
+				must,
+				(~(pres & must) & must)
+			);
+			return 0;
+		}
+	}
+
+	return 1;
 }
 
 /*
@@ -553,6 +568,195 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	}
 
 	return er;
+}
+
+#undef	XER_ADVANCE
+#define	XER_ADVANCE(num_bytes)	do {			\
+		size_t num = num_bytes;			\
+		buf_ptr = ((char *)buf_ptr) + num;	\
+		size -= num;				\
+		consumed_myself += num;			\
+	} while(0)
+
+/*
+ * Decode the XER (XML) data.
+ */
+asn_dec_rval_t
+SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	void **struct_ptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+	/*
+	 * Bring closer parts of structure description.
+	 */
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elements = td->elements;
+	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
+
+	/*
+	 * ... and parts of the structure being constructed.
+	 */
+	void *st = *struct_ptr;	/* Target structure. */
+	asn_struct_ctx_t *ctx;	/* Decoder context */
+
+	asn_dec_rval_t rval;		/* Return value from a decoder */
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int xer_state;			/* XER low level parsing context */
+	int edx;			/* Element index */
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(st == 0) {
+		st = *struct_ptr = CALLOC(1, specs->struct_size);
+		if(st == 0) RETURN(RC_FAIL);
+	}
+
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+
+	/*
+	 * Phases of XER/XML processing:
+	 * Phase 0: Check that the opening tag matches our expectations.
+	 * Phase 1: Processing body and reacting on closing tag.
+	 * Phase 2: Processing inner type.
+	 */
+	for(xer_state = ctx->left, edx = ctx->step; ctx->phase <= 2;) {
+		pxer_chunk_type_e ch_type;	/* XER chunk type */
+		ssize_t ch_size;		/* Chunk size */
+		xer_check_tag_e tcv;		/* Tag check value */
+		asn_TYPE_member_t *elm;
+
+		/*
+		 * Go inside the inner member of a set.
+		 */
+		if(ctx->phase == 2) {
+			asn_dec_rval_t tmprval;
+			void *memb_ptr;		/* Pointer to the member */
+			void **memb_ptr2;	/* Pointer to that pointer */
+
+			if(ASN_SET_ISPRESENT2((char *)st + specs->pres_offset,
+					edx)) {
+				ASN_DEBUG("SET %s: Duplicate element %s (%d)",
+				td->name, elements[edx].name, edx);
+				RETURN(RC_FAIL);
+			}
+
+			elm = &td->elements[edx];
+
+			if(elm->flags & ATF_POINTER) {
+				/* Member is a pointer to another structure */
+				memb_ptr2 = (void **)((char *)st
+					+ elm->memb_offset);
+			} else {
+				memb_ptr = (char *)st + elm->memb_offset;
+				memb_ptr2 = &memb_ptr;
+			}
+
+			/* Invoke the inner type decoder, m.b. multiple times */
+			tmprval = elm->type->xer_decoder(opt_codec_ctx,
+					elm->type, memb_ptr2, elm->name,
+					buf_ptr, size);
+			XER_ADVANCE(tmprval.consumed);
+			if(tmprval.code != RC_OK)
+				RETURN(tmprval.code);
+			ctx->phase = 1;	/* Back to body processing */
+			ctx->left = xer_state = 0;	/* New, clean state */
+			ASN_SET_MKPRESENT((char *)st + specs->pres_offset, edx);
+			ASN_DEBUG("XER/SET phase => %d", ctx->phase);
+			/* Fall through */
+		}
+
+		/*
+		 * Get the next part of the XML stream.
+		 */
+		ch_size = xer_next_token(&xer_state, buf_ptr, size, &ch_type);
+		switch(ch_size) {
+		case -1: RETURN(RC_FAIL);
+		case 0:
+			ctx->left = xer_state;
+			RETURN(RC_WMORE);
+		default:
+			switch(ch_type) {
+			case PXER_COMMENT:	/* Got XML comment */
+			case PXER_TEXT:		/* Ignore free-standing text */
+				XER_ADVANCE(ch_size);	/* Skip silently */
+				continue;
+			case PXER_TAG:
+				break;	/* Check the rest down there */
+			}
+		}
+
+		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
+		ASN_DEBUG("XER/SET: tcv = %d, ph=%d", tcv, ctx->phase);
+		switch(tcv) {
+		case XCT_CLOSING:
+			if(ctx->phase == 0) break;
+			ctx->phase = 0;
+			/* Fall through */
+		case XCT_BOTH:
+			if(ctx->phase == 0) {
+				if(_SET_is_populated(td, st)) {
+					XER_ADVANCE(ch_size);
+					ctx->phase = 3;	/* Phase out */
+					RETURN(RC_OK);
+				} else {
+					ASN_DEBUG("Premature end of XER SET");
+					RETURN(RC_FAIL);
+				}
+			}
+			/* Fall through */
+		case XCT_OPENING:
+			if(ctx->phase == 0) {
+				XER_ADVANCE(ch_size);
+				ctx->phase = 1;	/* Processing body phase */
+				continue;
+			}
+			/* Fall through */
+		case XCT_UNEXPECTED:
+
+			ASN_DEBUG("XER/SET: tcv=%d, ph=%d", tcv, ctx->phase);
+			if(ctx->phase != 1)
+				break;	/* Really unexpected */
+
+			/*
+			 * Search which member corresponds to this tag.
+			 */
+			for(edx = 0; edx < td->elements_count; edx++) {
+				elm = &td->elements[edx];
+				tcv = xer_check_tag(buf_ptr,ch_size,elm->name);
+				switch(tcv) {
+				case XCT_BOTH:
+				case XCT_OPENING:
+					/*
+					 * Process this member.
+					 */
+					ctx->step = edx;
+					ctx->phase = 2;
+					break;
+				case XCT_UNEXPECTED:
+					continue;
+				case XCT_CLOSING:
+				default:
+					edx = td->elements_count;
+					break;	/* Phase out */
+				}
+				break;
+			}
+			if(edx != td->elements_count)
+				continue;
+			/* Fall through */
+		default:
+			break;
+		}
+
+		ASN_DEBUG("Unexpected XML tag in SET");
+		break;
+	}
+
+	ctx->phase = 3;	/* "Phase out" on hard failure */
+	RETURN(RC_FAIL);
 }
 
 asn_enc_rval_t
