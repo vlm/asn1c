@@ -161,8 +161,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		if(rval.code != RC_OK) {
 			ASN_DEBUG("%s tagging check failed: %d",
 				td->name, rval.code);
-			consumed_myself += rval.consumed;
-			RETURN(rval.code);
+			return rval;
 		}
 
 		if(ctx->left >= 0)
@@ -238,6 +237,35 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 			/* Fall through */
 		case -1: RETURN(RC_FAIL);
+		}
+
+		if(ctx->left < 0 && ((uint8_t *)ptr)[0] == 0) {
+			if(LEFT < 2) {
+				if(SIZE_VIOLATION)
+					RETURN(RC_FAIL);
+				else
+					RETURN(RC_WMORE);
+			} else if(((uint8_t *)ptr)[1] == 0) {
+			ASN_DEBUG("edx = %d, opt = %d, ec=%d",
+				edx, elements[edx].optional,
+				td->elements_count);
+				if((edx + elements[edx].optional
+					== td->elements_count)
+				|| (IN_EXTENSION_GROUP(specs, edx)
+					&& specs->ext_before
+						> td->elements_count)) {
+					/*
+					 * Yeah, baby! Found the terminator
+					 * of the indefinite length structure.
+					 */
+					/*
+					 * Proceed to the canonical
+					 * finalization function.
+					 * No advancing is necessary.
+					 */
+					goto phase3;
+				}
+			}
 		}
 
 		/*
@@ -319,35 +347,14 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			 * or an end of the indefinite-length structure.
 			 */
 			if(!IN_EXTENSION_GROUP(specs, edx)) {
-				ASN_DEBUG("Unexpected tag %s",
-					ber_tlv_tag_string(tlv_tag));
+				ASN_DEBUG("Unexpected tag %s (at %d)",
+					ber_tlv_tag_string(tlv_tag), edx);
 				ASN_DEBUG("Expected tag %s (%s)%s",
 					ber_tlv_tag_string(elements[edx].tag),
 					elements[edx].name,
 					elements[edx].optional
 						?" or alternatives":"");
 				RETURN(RC_FAIL);
-			}
-
-			if(ctx->left < 0
-				&& ((uint8_t *)ptr)[0] == 0) {
-				if(LEFT < 2) {
-					if(SIZE_VIOLATION)
-						RETURN(RC_FAIL);
-					else
-						RETURN(RC_WMORE);
-				} else if(((uint8_t *)ptr)[1] == 0) {
-					/*
-					 * Yeah, baby! Found the terminator
-					 * of the indefinite length structure.
-					 */
-					/*
-					 * Proceed to the canonical
-					 * finalization function.
-					 * No advancing is necessary.
-					 */
-					goto phase3;
-				}
 			} else {
 				/* Skip this tag */
 				ssize_t skip;
