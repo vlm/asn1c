@@ -71,10 +71,12 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 	int step = opt_ctx ? opt_ctx->step : 0;	/* Where we left previously */
 	int tagno;
 
+	/*
+	 * Make sure we didn't exceed the maximum stack size.
+	 */
 	if(opt_codec_ctx && opt_codec_ctx->max_stack_size) {
 		ptrdiff_t usedstack = ((char *)opt_codec_ctx - (char *)&size);
-		/* do not change the semantics:
-		 * double negative is required to avoid int wrap-around */
+		/* double negative is required to avoid int wrap-around */
 		if(usedstack > 0) usedstack = -usedstack;
 		ASN_DEBUG("Current stack size %ld", -(long)usedstack);
 		if(usedstack < -(ptrdiff_t)opt_codec_ctx->max_stack_size) {
