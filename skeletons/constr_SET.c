@@ -277,7 +277,8 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * already decoded elements.
 		 */
 		if(ASN_SET_ISPRESENT2(st + specs->pres_offset, edx)) {
-			ASN_DEBUG("Duplicate element %d", edx);
+			ASN_DEBUG("SET %s: Duplicate element %s (%d)",
+				sd->name, elements[edx].name, edx);
 			RETURN(RC_FAIL);
 		}
 		
