@@ -55,7 +55,7 @@ status Open
 \layout Standard
 
 \backslash 
-extramarks{$Revision$ -- describes asn1c-0.9.5}{}
+extramarks{$Revision$ -- describes asn1c-0.9.6}{}
 \end_inset 
 
 
@@ -1315,7 +1315,7 @@ collapsed false
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="21" columns="2">
+<lyxtabular version="3" rows="20" columns="2">
 <features>
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -1426,7 +1426,7 @@ Restrict the compiler to generate only the ASN.1 tables, omit- ting the usual
 \end_inset 
 </cell>
 </row>
-<row topline="true">
+<row topline="true" bottomline="true">
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -1445,30 +1445,6 @@ Restrict the compiler to generate only the ASN.1 tables, omit- ting the usual
 
 \size small 
 Use the specified directory with ASN.1 skeleton files.
-\end_inset 
-</cell>
-</row>
-<row topline="true" bottomline="true">
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\layout Standard
-
--t 
-\emph on 
-<data-string>
-\end_inset 
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\layout Standard
-
-
-\size small 
-Interpret the data-string as a sequence of hexadecimal values representing
- the start of BER TLV encoding.
- Print the human readable explanation.
 \end_inset 
 </cell>
 </row>
@@ -1923,16 +1899,6 @@ asn1_DEF_Rectangle
 There are several generic functions available:
 \layout Description
 
-check_constraints Check that the contents of the target structure are semantical
-ly valid and constrained to appropriate implicit or explicit subtype constraints.
- Please refer to Section 
-\begin_inset LatexCommand \vref{sub:Validating-the-target}
-
-\end_inset 
-
-.
-\layout Description
-
 ber_decoder This is the generic 
 \emph on 
 restartable
@@ -1959,10 +1925,31 @@ BER decoder (Basic Encoding Rules).
 \layout Description
 
 der_encoder This is the generic DER encoder (Distinguished Encoding Rules).
- This decoder will take the target structure and encode it into a series
+ This encoder will take the target structure and encode it into a series
  of bytes.
  Please refer to Section 
 \begin_inset LatexCommand \ref{sub:Encoding-DER}
+
+\end_inset 
+
+.
+\layout Description
+
+xer_encoder This is the generic XER encoder (XML Encoding Rules).
+ This encoder will take the target structure and represent it as an XML
+ (text) document.
+ Please refer to Section 
+\begin_inset LatexCommand \ref{sub:Encoding-XER}
+
+\end_inset 
+
+.
+\layout Description
+
+check_constraints Check that the contents of the target structure are semantical
+ly valid and constrained to appropriate implicit or explicit subtype constraints.
+ Please refer to Section 
+\begin_inset LatexCommand \vref{sub:Validating-the-target}
 
 \end_inset 
 
@@ -1984,6 +1971,16 @@ print_struct This function convert the contents of the passed target structure
 free_struct This is a generic disposal which frees the target structure.
  Please refer to Section 
 \begin_inset LatexCommand \ref{sub:Freeing-the-target}
+
+\end_inset 
+
+.
+\layout Standard
+
+check_constraints Check that the contents of the target structure are semantical
+ly valid and constrained to appropriate implicit or explicit subtype constraints.
+ Please refer to Section 
+\begin_inset LatexCommand \vref{sub:Validating-the-target}
 
 \end_inset 
 
@@ -2232,8 +2229,13 @@ Please look into ber_decoder.h for the precise definition of ber_decode()
 Encoding DER
 \layout Standard
 
-The Distinguished Encoding Rules is the variant of BER encoding rules which
- is oriented on representing the structures with length known beforehand.
+The Distinguished Encoding Rules is the 
+\emph on 
+canonical
+\emph default 
+ variant of BER encoding rules.
+ The DER is best suited to encode the structures where all the lengths are
+ known beforehand.
  This is probably exactly how you want to encode: either after a BER decoding
  or after a manual fill-up, the target structure contains the data which
  size is implicitly known before encoding.
@@ -2308,21 +2310,21 @@ ssize_t
 simple_serializer(FILE *ostream, Rectangle_t *rect) {
 \layout LyX-Code
 
-    der_enc_rval_t rval;  /* Return value */
+    asn_enc_rval_t er;  /* Encoder return value */
 \layout LyX-Code
 
  
 \layout LyX-Code
 
-    rval = der_encode(&asn1_DEF_Rect, rect,
+    er = der_encode(&asn1_DEF_Rect, rect,
 \layout LyX-Code
 
         write_stream, ostream);
 \layout LyX-Code
 
-    if(rval
+    if(er.
 \series bold 
-.encoded
+encoded
 \series default 
  == -1) {
 \layout LyX-Code
@@ -2330,7 +2332,7 @@ simple_serializer(FILE *ostream, Rectangle_t *rect) {
         /*
 \layout LyX-Code
 
-         * Failure to encode the rectangle data.
+         * Failed to encode the rectangle data.
 \layout LyX-Code
 
          */
@@ -2349,9 +2351,9 @@ n
 ,
 \layout LyX-Code
 
-            rval
+            er.
 \series bold 
-.failed_type
+failed_type
 \series default 
 ->name,
 \layout LyX-Code
@@ -2368,7 +2370,7 @@ n
         /* Return the number of bytes */
 \layout LyX-Code
 
-        return rval.encoded;
+        return er.encoded;
 \layout LyX-Code
 
     }
@@ -2410,6 +2412,99 @@ It is actually faster too: the encoder might skip over some computations
 
 Please look into der_encoder.h for the precise definition of der_encode()
  and related types.
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{sub:Encoding-XER}
+
+\end_inset 
+
+Encoding XER
+\layout Standard
+
+The XER stands for XML Encoding Rules, where XML, in turn, is eXtensible
+ Markup Language, a text-based format for information exchange.
+ The encoder routine API comes in two flavors: stdio-based and callback-based.
+ With the callback-based encoder, the encoding process is very similar to
+ the DER one, described in Section 
+\begin_inset LatexCommand \vref{sub:Encoding-DER}
+
+\end_inset 
+
+.
+ The following example uses the definition of write_stream() from up there.
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * This procedure generates the XML document
+\layout LyX-Code
+
+ * by invoking the XER encoder.
+\layout LyX-Code
+
+ * NOTE: Do not copy this code verbatim!
+\layout LyX-Code
+
+ *       If the stdio output is necessary,
+\layout LyX-Code
+
+ *       use the xer_fprint() procedure instead.
+\layout LyX-Code
+
+ *       See Section 
+\begin_inset LatexCommand \vref{sub:Printing-the-target}
+
+\end_inset 
+
+.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+int
+\layout LyX-Code
+
+print_as_XML(FILE *ostream, Rectangle_t *rect) {
+\layout LyX-Code
+
+    asn_enc_rval_t er;  /* Encoder return value */
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+    er = xer_encode(&asn1_DEF_Rect, rect,
+\layout LyX-Code
+
+        XER_F_BASIC, /* BASIC-XER or CANONICAL-XER */
+\layout LyX-Code
+
+        write_stream, ostream);
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+    return (er.encoded == -1) ? -1 : 0;
+\layout LyX-Code
+
+}
+\layout Standard
+
+Please look into xer_encoder.h for the precise definition of xer_encode()
+ and related types.
+\layout Standard
+
+See Section 
+\begin_inset LatexCommand \ref{sub:Printing-the-target}
+
+\end_inset 
+
+ for the example of stdio-based XML encoder and other pretty-printing suggestion
+s.
 \layout Subsection
 
 
@@ -2461,6 +2556,25 @@ asn_fprint(stdout, &asn1_DEF_Rectangle, rect);
 
 Please look into constr_TYPE.h for the precise definition of asn_fprint()
  and related types.
+\layout Standard
+
+Another practical alternative to this custom format printing would be to
+ invoke XER encoder.
+ The default BASIC-XER encoder performs reasonable formatting for the output
+ to be useful and human readable.
+ To invoke the XER decoder in a manner similar to asn_fprint(), use the
+ xer_fprint() call:
+\layout LyX-Code
+
+xer_fprint(stdout, &asn1_DEF_Rectangle, rect);
+\layout Standard
+
+See Section 
+\begin_inset LatexCommand \vref{sub:Encoding-XER}
+
+\end_inset 
+
+ for XML-related details.
 \layout Subsection
 
 
