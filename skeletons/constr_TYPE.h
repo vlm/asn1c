@@ -84,6 +84,16 @@ typedef struct asn1_TYPE_descriptor_s {
 } asn1_TYPE_descriptor_t;
 
 /*
+ * BER tag to element number mapping.
+ */
+typedef struct asn1_TYPE_tag2member_s {
+	ber_tlv_tag_t el_tag;	/* Outmost tag of the member */
+	int el_no;		/* Index of the associated member, base 0 */
+} asn1_TYPE_tag2member_t;
+
+
+
+/*
  * This function is a wrapper around (td)->print_struct, which prints out
  * the contents of the target language's structure (struct_ptr) into the
  * file pointer (stream) in human readable form.

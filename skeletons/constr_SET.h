@@ -15,19 +15,10 @@ typedef struct asn1_SET_element_s {
 	int optional;			/* Whether the element is optional */
 	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
 	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
-	asn1_TYPE_descriptor_t
-		*type;			/* Member type descriptor */
+	asn1_TYPE_descriptor_t *type;	/* Member type descriptor */
 	char *name;			/* ASN.1 identifier of the element */
 } asn1_SET_element_t;
 
-/*
- * Map between the outmost tag of the element and the corresponding
- * element's index.
- */
-typedef struct asn1_SET_tag2member_s {
-	ber_tlv_tag_t el_tag;	/* Outmost tag of the member */
-	int el_no;		/* Index of the associated member, base 0 */
-} asn1_SET_tag2member_t;
 
 typedef struct asn1_SET_specifics_s {
 	/*
@@ -46,7 +37,7 @@ typedef struct asn1_SET_specifics_s {
 	/*
 	 * Tags to members mapping table (sorted).
 	 */
-	asn1_SET_tag2member_t *tag2el;
+	asn1_TYPE_tag2member_t *tag2el;
 	int tag2el_count;
 
 	/*

@@ -15,15 +15,9 @@ typedef struct asn1_CHOICE_element_s {
 	int optional;			/* Whether the element is optional */
 	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
 	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
-	asn1_TYPE_descriptor_t
-		*type;			/* Member type descriptor */
+	asn1_TYPE_descriptor_t *type;	/* Member type descriptor */
 	char *name;			/* ASN.1 identifier of the element */
 } asn1_CHOICE_element_t;
-
-typedef struct asn1_CHOICE_tag2member_s {
-	ber_tlv_tag_t el_tag;	/* Outmost tag of the member */
-	int el_no;		/* Index of the associated member, base 0 */
-} asn1_CHOICE_tag2member_t;
 
 typedef struct asn1_CHOICE_specifics_s {
 	/*
@@ -43,7 +37,7 @@ typedef struct asn1_CHOICE_specifics_s {
 	/*
 	 * Tags to members mapping table.
 	 */
-	asn1_CHOICE_tag2member_t *tag2el;
+	asn1_TYPE_tag2member_t *tag2el;
 	int tag2el_count;
 
 	/*

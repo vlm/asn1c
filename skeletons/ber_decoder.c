@@ -54,7 +54,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *head, ber_dec_ctx_t *ctx,
 
 	/*
 	 * So what does all this tags_impl_skip stuff mean?
-	 * Imagine two types,
+	 * Imagine the two types,
 	 * 	A ::= [5] IMPLICIT	T
 	 * 	B ::= [2] EXPLICIT	T
 	 * Where T is defined as
