@@ -1109,9 +1109,12 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	 * Create the string if does not exist.
 	 */
 	if(!*sptr) {
-		*sptr = CALLOC(1, specs->struct_size);
-		if(*sptr == NULL) {
+		OCTET_STRING_t *st;
+		(void *)st = *sptr = CALLOC(1, specs->struct_size);
+		if(st) st->buf = (uint8_t *)CALLOC(1, 1);
+		if(!*sptr || !st->buf) {
 			asn_dec_rval_t rval;
+			if(*sptr) FREEMEM(*sptr);
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
 			return rval;
