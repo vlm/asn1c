@@ -207,15 +207,15 @@ process_line(const char *fname, char *line, int lineno) {
 	case '#':	/* This is a comment */
 			return 0;
 	default:
-		fprintf(stderr, "%s: Missing '<' after whitespace\n", fname);
+		fprintf(stderr, "%s: Missing '<' after whitespace at line %d\n", fname, lineno);
 		exit(EX_DATAERR);
 	}
 
 	/* Find a tag closing angle bracket */
 	for(; *line && *line != '>'; line++) {
 		if(*line < ' ') {
-			fprintf(stderr, "%s: Invalid charset (%d)\n",
-				fname, *(const unsigned char *)line);
+			fprintf(stderr, "%s: Invalid charset (%d) at line %d\n",
+				fname, *(const unsigned char *)line, lineno);
 			exit(EX_DATAERR);
 		}
 	}
