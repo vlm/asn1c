@@ -6,6 +6,8 @@
 #ifndef	_XER_SUPPORT_H_
 #define	_XER_SUPPORT_H_
 
+#include <asn_system.h>		/* Platform-specific types */
+
 /*
  * Types of data transferred to the application.
  */
