@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{This document describes 
 \backslash 
-href{http://lionet.info/asn1c}{asn1c-0.9.9}}
+href{http://lionet.info/asn1c}{asn1c-0.9.11}}
 \layout Standard
 
 \backslash 
@@ -459,7 +459,7 @@ collapsed false
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="22" columns="2">
+<lyxtabular version="3" rows="24" columns="2">
 <features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -471,6 +471,7 @@ collapsed false
 
 
 \series bold 
+\size small 
 Overall Options
 \end_inset 
 </cell>
@@ -481,6 +482,7 @@ Overall Options
 
 
 \series bold 
+\size small 
 Description
 \end_inset 
 </cell>
@@ -491,6 +493,8 @@ Description
 
 \layout Standard
 
+
+\size small 
 -E
 \end_inset 
 </cell>
@@ -512,6 +516,8 @@ Stop after the parsing stage and print the reconstructed ASN.1 specification
 
 \layout Standard
 
+
+\size small 
 -F
 \end_inset 
 </cell>
@@ -534,6 +540,8 @@ Used together with -E, instructs the compiler to stop after the ASN.1 syntax
 
 \layout Standard
 
+
+\size small 
 -P
 \end_inset 
 </cell>
@@ -555,6 +563,8 @@ Dump the compiled output to the standard output instead of cre- ating the
 
 \layout Standard
 
+
+\size small 
 -R
 \end_inset 
 </cell>
@@ -576,6 +586,8 @@ Restrict the compiler to generate only the ASN.1 tables, omit- ting the usual
 
 \layout Standard
 
+
+\size small 
 -S 
 \emph on 
 <directory>
@@ -598,6 +610,8 @@ Use the specified directory with ASN.1 skeleton files.
 
 \layout Standard
 
+
+\size small 
 -X
 \end_inset 
 </cell>
@@ -606,6 +620,8 @@ Use the specified directory with ASN.1 skeleton files.
 
 \layout Standard
 
+
+\size small 
 Generate the XML DTD for the specified ASN.1 modules.
 \end_inset 
 </cell>
@@ -618,6 +634,7 @@ Generate the XML DTD for the specified ASN.1 modules.
 
 
 \series bold 
+\size small 
 Warning Options
 \end_inset 
 </cell>
@@ -628,6 +645,7 @@ Warning Options
 
 
 \series bold 
+\size small 
 Description
 \end_inset 
 </cell>
@@ -638,6 +656,8 @@ Description
 
 \layout Standard
 
+
+\size small 
 -Werror
 \end_inset 
 </cell>
@@ -658,6 +678,8 @@ Treat warnings as errors; abort if any warning is produced.
 
 \layout Standard
 
+
+\size small 
 -Wdebug-lexer
 \end_inset 
 </cell>
@@ -678,6 +700,8 @@ Enable lexer debugging during the ASN.1 parsing stage.
 
 \layout Standard
 
+
+\size small 
 -Wdebug-fixer
 \end_inset 
 </cell>
@@ -698,6 +722,8 @@ Enable lexer debugging during the ASN.1 parsing stage.
 
 \layout Standard
 
+
+\size small 
 -Wdebug-compiler
 \end_inset 
 </cell>
@@ -720,6 +746,7 @@ Enable debugging during the actual compile time.
 
 
 \series bold 
+\size small 
 Language Options
 \end_inset 
 </cell>
@@ -730,6 +757,7 @@ Language Options
 
 
 \series bold 
+\size small 
 Description
 \end_inset 
 </cell>
@@ -740,6 +768,8 @@ Description
 
 \layout Standard
 
+
+\size small 
 -fall-defs-global
 \end_inset 
 </cell>
@@ -748,6 +778,8 @@ Description
 
 \layout Standard
 
+
+\size small 
 Normally the compiler hides the definitions (asn_DEF_xxx) of the inner structure
  elements (members of SEQUENCE, SET and other types).
  This option makes all such definitions global.
@@ -763,6 +795,8 @@ Normally the compiler hides the definitions (asn_DEF_xxx) of the inner structure
 
 \layout Standard
 
+
+\size small 
 -fbless-SIZE
 \end_inset 
 </cell>
@@ -786,6 +820,32 @@ Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which
 
 \layout Standard
 
+
+\size small 
+-fcompound-names
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Use complex names for C structures.
+ Using complex names prevents name clashes in case the module reuses the
+ same identifiers in multiple contexts.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
 -fnative-types
 \end_inset 
 </cell>
@@ -808,6 +868,8 @@ Use the native machine's data types (int, double) whenever possible, instead
 
 \layout Standard
 
+
+\size small 
 -fno-constraints
 \end_inset 
 </cell>
@@ -816,8 +878,10 @@ Use the native machine's data types (int, double) whenever possible, instead
 
 \layout Standard
 
+
+\size small 
 Do not generate ASN.1 subtype constraint checking code.
- This may make a shorter executable.
+ This may produce a shorter executable.
 \end_inset 
 </cell>
 </row>
@@ -827,6 +891,30 @@ Do not generate ASN.1 subtype constraint checking code.
 
 \layout Standard
 
+
+\size small 
+-fno-include-deps
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Do not generate courtesy #include lines for non-critical dependencies.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
 -funnamed-unions
 \end_inset 
 </cell>
@@ -847,6 +935,8 @@ Enable  unnamed  unions  in the definitions of target language's structures.
 
 \layout Standard
 
+
+\size small 
 -ftypes88
 \end_inset 
 </cell>
@@ -871,6 +961,7 @@ Pretend to support only ASN.1:1988 embedded types.
 
 
 \series bold 
+\size small 
 Output Options
 \end_inset 
 </cell>
@@ -881,6 +972,7 @@ Output Options
 
 
 \series bold 
+\size small 
 Description
 \end_inset 
 </cell>
@@ -891,6 +983,8 @@ Description
 
 \layout Standard
 
+
+\size small 
 -print-constraints
 \end_inset 
 </cell>
@@ -912,6 +1006,8 @@ When -EF are also specified, this option forces the compiler to explain
 
 \layout Standard
 
+
+\size small 
 -print-lines
 \end_inset 
 </cell>
