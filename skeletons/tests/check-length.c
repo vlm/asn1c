@@ -97,15 +97,15 @@ main() {
 	}
 
 	ret = ber_fetch_length(0, buf1, sizeof(buf1), &tlv_len);
-	printf("ret=%d, len=%d\n", ret, tlv_len);
+	printf("ret=%ld, len=%ld\n", (long)ret, (long)tlv_len);
 	assert(ret == sizeof(buf1));
 
 	ret = ber_fetch_length(0, buf2, sizeof(buf2), &tlv_len);
-	printf("ret=%d, len=%d\n", ret, tlv_len);
+	printf("ret=%ld, len=%ld\n", (long)ret, (long)tlv_len);
 	assert(ret == sizeof(buf2));
 
 	ret = ber_fetch_length(0, buf3, sizeof(buf3), &tlv_len);
-	printf("ret=%d\n", ret);
+	printf("ret=%ld\n", (long)ret);
 	assert(ret == -1);
 
 	return 0;
