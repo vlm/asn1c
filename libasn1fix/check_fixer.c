@@ -246,7 +246,7 @@ post_fix_check_element(asn1p_module_t *mod, asn1p_expr_t *check_expr) {
 			"CHECKER: Unsupported value type of \"%s\": "
 			"%d at line %d of %s\n",
 			check_expr->Identifier,
-			value?value->type:-1,
+			value?(signed)value->type:-1,
 			expr->_lineno,
 			mod->source_file_name
 		);
