@@ -63,7 +63,8 @@ asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	PXER_TEXT,	/* Plain text between XER tags */
 	PXER_COMMENT,	/* A comment, may be part of */
   } pxer_chunk_type_e;
-ssize_t xer_next_token(void *buffer, size_t size, pxer_chunk_type_e *_ch_type);
+ssize_t xer_next_token(int *stateContext,
+	void *buffer, size_t size, pxer_chunk_type_e *_ch_type);
 
 /*
  * This function checks the buffer against the tag name is expected to occur.

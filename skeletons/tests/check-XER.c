@@ -17,10 +17,11 @@ check_next(char *xerbuf, int expected_chunk_size, pxer_chunk_type_e expected_chu
 	int xerbuf_len = strlen(xerbuf);
 	pxer_chunk_type_e ch_type;
 	ssize_t ch_size;
+	int state = 0;
 
 	if(expected_chunk_size == -1)
 		expected_chunk_size = xerbuf_len;
-	ch_size = xer_next_token(xerbuf, xerbuf_len, &ch_type);
+	ch_size = xer_next_token(&state, xerbuf, xerbuf_len, &ch_type);
 
 	printf("[%s]:%d\n", xerbuf, xerbuf_len);
 	printf("chunk sizes: %d vs %d, chunk types: %d vs %d\n",

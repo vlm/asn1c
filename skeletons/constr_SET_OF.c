@@ -536,7 +536,8 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Get the next part of the XML stream.
 		 */
-		ch_size = xer_next_token(buf_ptr, size, &ch_type);
+		ch_size = xer_next_token(&ctx->context,
+			buf_ptr, size, &ch_type);
 		switch(ch_size) {
 		case -1: RETURN(RC_FAIL);
 		case 0:  RETURN(RC_WMORE);

@@ -51,13 +51,13 @@ xer__token_cb(pxml_chunk_type_e type, void *_chunk_data, size_t _chunk_size, voi
  * Fetch the next token from the XER/XML stream.
  */
 ssize_t
-xer_next_token(void *buffer, size_t size, pxer_chunk_type_e *ch_type) {
+xer_next_token(int *stateContext, void *buffer, size_t size, pxer_chunk_type_e *ch_type) {
 	struct xer__cb_arg arg;
-	int stateContext = 0;
+	int new_stateContext = *stateContext;
 	ssize_t ret;
 
 	arg.callback_not_invoked = 1;
-	ret = pxml_parse(&stateContext, buffer, size, xer__token_cb, &arg);
+	ret = pxml_parse(&new_stateContext, buffer, size, xer__token_cb, &arg);
 	if(ret < 0) return -1;
 	if(arg.callback_not_invoked) {
 		assert(ret == 0);	/* No data was consumed */
@@ -65,7 +65,6 @@ xer_next_token(void *buffer, size_t size, pxer_chunk_type_e *ch_type) {
 	} else {
 		assert(arg.chunk_size);
 		assert(arg.chunk_buf == buffer);
-		assert(stateContext == 0);
 	}
 
 	/*
@@ -85,6 +84,7 @@ xer_next_token(void *buffer, size_t size, pxer_chunk_type_e *ch_type) {
 		break;
 	}
 
+	*stateContext = new_stateContext;
 	return arg.chunk_size;
 }
 
@@ -136,13 +136,13 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 					return ct;
 				}
 			}
-			return (XCT__UNK__MASK | ct);
+			return (xer_check_tag_e)(XCT__UNK__MASK | ct);
 		}
 		if(b == 0)
 			return XCT_BROKEN;	/* Embedded 0 in buf?! */
 	}
 	if(*need_tag)
-		return (XCT__UNK__MASK | ct);
+		return (xer_check_tag_e)(XCT__UNK__MASK | ct);
 
 	return ct;
 }
@@ -168,7 +168,8 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 			(struct_key, chunk_buf, chunk_size,	\
 				(size_t)chunk_size < size);	\
 		if(converted_size == -1) RETURN(RC_FAIL);	\
-		if(converted_size == 0 && size == chunk_size)	\
+		if(converted_size == 0				\
+			&& size == (size_t)chunk_size)		\
 			RETURN(RC_WMORE);			\
 		chunk_size = converted_size;			\
 	} while(0)
@@ -212,7 +213,8 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 		/*
 		 * Get the next part of the XML stream.
 		 */
-		ch_size = xer_next_token(buf_ptr, size, &ch_type);
+		ch_size = xer_next_token(&ctx->context, buf_ptr, size,
+			&ch_type);
 		switch(ch_size) {
 		case -1: RETURN(RC_FAIL);
 		case 0:
