@@ -1,13 +1,16 @@
 #ifndef	_ASN1_COMPILER_INTERNAL_H_
 #define	_ASN1_COMPILER_INTERNAL_H_
 
+#ifdef	HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>		/* for fstat(2) */
 #include <unistd.h>		/* for unlink(2) */
 #include <fcntl.h>		/* for open(2) */
 #include <glob.h>		/* for glob(3) */
-#include <libgen.h>		/* for basename(3) */
 #include <string.h>
 #include <ctype.h>		/* for isalnum(3) */
 #include <stdarg.h>

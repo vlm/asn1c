@@ -8,7 +8,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>		/* for stat(2) */
 #include <unistd.h>
-#include <libgen.h>		/* for basename(3) */
 #include <sysexits.h>		/* for EX_USAGE */
 #include <assert.h>
 #include <errno.h>
@@ -17,6 +16,8 @@
 #include <asn1fix.h>		/* Fix the ASN.1 tree */
 #include <asn1print.h>		/* Print the ASN.1 tree */
 #include <asn1compiler.h>	/* Compile the ASN.1 tree */
+
+#include <asn1c_compat.h>	/* Portable basename(3) and dirname(3) */
 
 static void usage(char *av0);	/* Print the Usage screen and exit(EX_USAGE) */
 
@@ -118,7 +119,7 @@ main(int ac, char **av) {
 		av += optind;
 	} else {
 		fprintf(stderr, "%s: No input files specified\n",
-			basename(av[0]));
+			a1c_basename(av[0]));
 		exit(1);
 	}
 
@@ -201,7 +202,7 @@ main(int ac, char **av) {
 			char *p;
 			int len;
 
-			p = dirname(av[-optind]);
+			p = a1c_dirname(av[-optind]);
 
 			len = strlen(p) + sizeof("/../skeletons");
 			skeletons_dir = alloca(len);
@@ -261,7 +262,7 @@ usage(char *av0) {
 		"\t-Wdebug-fixer\tDebug ASN.1 semantics processor\n"
 		"\t-Wdebug-compiler\tDebug ASN.1 compiler\n"
 		,
-		basename(av0), DATADIR
+		a1c_basename(av0), DATADIR
 	);
 	exit(EX_USAGE);
 }
