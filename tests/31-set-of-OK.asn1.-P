@@ -48,7 +48,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Forest = {
 	asn1_DEF_Forest_tags,
 	sizeof(asn1_DEF_Forest_tags)
 		/sizeof(asn1_DEF_Forest_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Forest,
 	1,	/* Single element */
@@ -120,7 +119,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Tree = {
 	asn1_DEF_Tree_tags,
 	sizeof(asn1_DEF_Tree_tags)
 		/sizeof(asn1_DEF_Tree_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Tree,
 	2,	/* Elements count */
@@ -213,7 +211,6 @@ asn1_TYPE_descriptor_t asn1_DEF_trees = {
 	asn1_DEF_trees_tags,
 	sizeof(asn1_DEF_trees_tags)
 		/sizeof(asn1_DEF_trees_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_trees,
 	1,	/* Single element */
@@ -255,7 +252,6 @@ asn1_TYPE_descriptor_t asn1_DEF_anything_member = {
 	asn1_DEF_anything_member_tags,
 	sizeof(asn1_DEF_anything_member_tags)
 		/sizeof(asn1_DEF_anything_member_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_anything_member,
 	1,	/* Elements count */
@@ -290,7 +286,6 @@ asn1_TYPE_descriptor_t asn1_DEF_anything = {
 	asn1_DEF_anything_tags,
 	sizeof(asn1_DEF_anything_tags)
 		/sizeof(asn1_DEF_anything_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_anything,
 	1,	/* Single element */
@@ -343,7 +338,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Stuff = {
 	asn1_DEF_Stuff_tags,
 	sizeof(asn1_DEF_Stuff_tags)
 		/sizeof(asn1_DEF_Stuff_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Stuff,
 	2,	/* Elements count */

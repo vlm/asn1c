@@ -2,14 +2,20 @@
 
 #define	ADD_TAG(skip, newtag)	do {					\
 	void *__p;							\
-	if(skip) { skip--; break; }					\
+	if(skip) {							\
+		if(newtag.tag_mode != TM_IMPLICIT)			\
+			skip--;						\
+		break;							\
+	} else {							\
+		if(newtag.tag_mode == TM_IMPLICIT)			\
+			skip++;						\
+	}								\
 	__p = realloc((*tags),						\
 		sizeof(struct asn1p_type_tag_s) * (count + 1));		\
 	if(!__p) return -1;						\
 	*tags = __p;							\
 	(*tags)[count++] = newtag;					\
 	if((flags & AFT_FETCH_OUTMOST)) return count;			\
-	if(newtag.tag_mode == TM_IMPLICIT) skip++;			\
 } while(0)
 
 static int
@@ -46,11 +52,33 @@ asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int
 	}
 
 	if(expr->meta_type == AMT_TYPEREF) {
-		expr = asn1f_lookup_symbol(arg, expr->module, expr->reference);
-		if(expr == NULL) return -1;
+		asn1p_expr_t *nexpr;
+		nexpr = asn1f_lookup_symbol(arg, expr->module, expr->reference);
+		if(nexpr == NULL) {
+			if(errno != EEXIST)	/* -fknown-extern-type */
+				return -1;
+			if(!count)
+				return 0;	/* OK */
+			if((*tags)[count-1].tag_mode == TM_IMPLICIT) {
+				WARNING("Tagging mode for %s "
+					"is IMPLICIT, assuming %s "
+					"has exactly one tag",
+					expr->Identifier,
+					asn1f_printable_reference(expr->reference)
+				);
+				return count;
+			}
+			FATAL("Tagging mode %s -> %s "
+				"dangerously incompatible",
+				expr->Identifier,
+				asn1f_printable_reference(expr->reference)
+			);
+			return -1;
+		} else {
+			arg->expr = nexpr;
+		}
 		if(expr->_mark & TM_RECURSION)
 			return -1;
-		arg->expr = expr;
 		expr->_mark |= TM_RECURSION;
 		count = asn1f_fetch_tags_impl(arg, tags, count, skip, flags);
 		expr->_mark &= ~TM_RECURSION;

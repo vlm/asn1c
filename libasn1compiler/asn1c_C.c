@@ -29,7 +29,7 @@ static int check_if_extensible(asn1p_expr_t *expr);
 static int expr_better_indirect(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
-static int emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice_mode);
+static int emit_tags_vector(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
 
 enum etd_cp {
@@ -42,7 +42,7 @@ enum etd_spec {
 	ETD_NO_SPECIFICS,
 	ETD_HAS_SPECIFICS
 };
-static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip, int elements_count, enum etd_cp, enum etd_spec);
+static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int elements_count, enum etd_cp, enum etd_spec);
 
 #define	C99_MODE	(!(arg->flags & A1C_NO_C99))
 #define	UNNAMED_UNIONS	(arg->flags & A1C_UNNAMED_UNIONS)
@@ -169,7 +169,6 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int elements;	/* Number of elements */
-	int tags_impl_skip = 0;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int ext_start = -1;
 	int ext_stop = -1;
@@ -215,7 +214,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	/*
 	 * Print out asn1_DEF_<type>_tags[] vector.
 	 */
-	tags_count = emit_tags_vector(arg, expr, &tags_impl_skip, 0);
+	tags_count = emit_tags_vector(arg, expr);
 
 	/*
 	 * Tags to elements map.
@@ -239,7 +238,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	/*
 	 * Emit asn1_DEF_xxx table.
 	 */
-	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, elements,
+	emit_type_DEF(arg, expr, tags_count, elements,
 			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
@@ -319,7 +318,6 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int elements;
-	int tags_impl_skip = 0;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	tag2el_t *tag2el = NULL;
 	int tag2el_count = 0;
@@ -363,7 +361,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	/*
 	 * Print out asn1_DEF_<type>_tags[] vector.
 	 */
-	tags_count = emit_tags_vector(arg, expr, &tags_impl_skip, 0);
+	tags_count = emit_tags_vector(arg, expr);
 
 	/*
 	 * Tags to elements map.
@@ -419,7 +417,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	/*
 	 * Emit asn1_DEF_xxx table.
 	 */
-	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, elements,
+	emit_type_DEF(arg, expr, tags_count, elements,
 			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
@@ -484,7 +482,6 @@ static int
 asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
-	int tags_impl_skip = 0;
 	int tags_count;
 	char *p;
 
@@ -516,7 +513,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	/*
 	 * Print out asn1_DEF_<type>_tags[] vector.
 	 */
-	tags_count = emit_tags_vector(arg, expr, &tags_impl_skip, 0);
+	tags_count = emit_tags_vector(arg, expr);
 
 	p = MKID(expr->Identifier);
 	OUT("static asn1_SET_OF_specifics_t asn1_DEF_%s_specs = {\n", p);
@@ -529,7 +526,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	/*
 	 * Emit asn1_DEF_xxx table.
 	 */
-	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, 1,
+	emit_type_DEF(arg, expr, tags_count, 1,
 			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
@@ -599,7 +596,6 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int elements;	/* Number of elements */
-	int tags_impl_skip = 0;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	tag2el_t *tag2el = NULL;
 	int tag2el_count = 0;
@@ -647,7 +643,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		 */
 		tags_count = 0;
 	} else {
-		tags_count = emit_tags_vector(arg, expr, &tags_impl_skip, 1);
+		tags_count = emit_tags_vector(arg, expr);
 	}
 
 	/*
@@ -672,7 +668,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	/*
 	 * Emit asn1_DEF_xxx table.
 	 */
-	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, elements,
+	emit_type_DEF(arg, expr, tags_count, elements,
 			ETD_CP_CONSTRUCTED /*either?!*/, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
@@ -727,7 +723,6 @@ asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 int
 asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
-	int tags_impl_skip = 0;
 	int tags_count;
 	char *p;
 
@@ -761,9 +756,9 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	/*
 	 * Print out asn1_DEF_<type>_tags[] vector.
 	 */
-	tags_count = emit_tags_vector(arg, expr, &tags_impl_skip, 0);
+	tags_count = emit_tags_vector(arg, expr);
 
-	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, 0,
+	emit_type_DEF(arg, expr, tags_count, 0,
 			ETD_CP_UNKNOWN, ETD_NO_SPECIFICS);
 
 	REDIR(OT_CODE);
@@ -814,11 +809,18 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("%s_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {\n", p);
 	INDENT(+1);
 	{
+	asn1p_expr_t *terminal = asn1f_find_terminal_type_ex(arg->asn, arg->mod, expr);
 	char *type_name = asn1c_type_name(arg, expr, TNF_SAFE);
 	OUT("td->ber_decoder    = asn1_DEF_%s.ber_decoder;\n",    type_name);
 	OUT("td->der_encoder    = asn1_DEF_%s.der_encoder;\n",    type_name);
 	OUT("td->free_struct    = asn1_DEF_%s.free_struct;\n",    type_name);
 	OUT("td->print_struct   = asn1_DEF_%s.print_struct;\n",   type_name);
+	if(!terminal && !tags_count) {
+	  OUT("/* The next two lines are because of -fknown-extern-type */\n");
+	  OUT("td->tags           = asn1_DEF_%s.tags;\n",         type_name);
+	  OUT("td->tags_count     = asn1_DEF_%s.tags_count;\n",   type_name);
+	  OUT("/* End of these lines */\n");
+	}
 	OUT("td->last_tag_form  = asn1_DEF_%s.last_tag_form;\n",  type_name);
 	OUT("td->elements       = asn1_DEF_%s.elements;\n",       type_name);
 	OUT("td->elements_count = asn1_DEF_%s.elements_count;\n", type_name);
@@ -834,8 +836,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	INDENTED(
 	OUT("\tvoid **structure, void *bufptr, size_t size, int tag_mode) {\n");
 	OUT("%s_inherit_TYPE_descriptor(td);\n", p);
-	OUT("return td->ber_decoder(td, structure,\n");
-	OUT("\tbufptr, size, tag_mode);\n");
+	OUT("return td->ber_decoder(td, structure, bufptr, size, tag_mode);\n");
 	);
 	OUT("}\n");
 	OUT("\n");
@@ -1122,56 +1123,31 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
 }
 
 static int
-emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice_mode) {
+emit_tags_vector(arg_t *arg, asn1p_expr_t *expr) {
+	struct asn1p_type_tag_s *tags = 0;
 	int tags_count = 0;
-	int save_target = arg->target->target;
-	char *p;
+	int i;
 
-	if(save_target != OT_IGNORE) {
-		int save_impl_skip = *tags_impl_skip;
-		REDIR(OT_IGNORE);
-		tags_count = emit_tags_vector(arg, expr,
-			tags_impl_skip, choice_mode);
-		REDIR(save_target);
-		if(tags_count) {
-			*tags_impl_skip = save_impl_skip;
-			tags_count = 0;
-		} else {
-			return 0;
-		}
-	}
-			
+	/* Fetch a chain of tags */
+	tags_count = asn1f_fetch_tags(arg->asn, arg->mod, expr, &tags, 0);
+	if(tags_count <= 0)
+		return 0;
 
-	p = MKID(expr->Identifier);
-	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n", p);
+	OUT("static ber_tlv_tag_t asn1_DEF_%s_tags[] = {\n",
+		MKID(expr->Identifier));
 	INDENT(+1);
-	if(expr->tag.tag_class) {
-		tags_count++;
-		_print_tag(arg, &expr->tag);
-		if(expr->tag.tag_mode != TM_EXPLICIT)
-			(*tags_impl_skip)++;
-	} else {
-		if(!choice_mode)
-			(*tags_impl_skip)++;
+
+	/* Print the array of collected tags */
+	for(i = 0; i < tags_count; i++) {
+		if(i) OUT(",\n");
+		_print_tag(arg, &tags[i]);
 	}
-	if(!choice_mode) {
-		if(!expr->tag.tag_class
-		|| (expr->meta_type == AMT_TYPE
-			&& expr->tag.tag_mode == TM_EXPLICIT)) {
-			struct asn1p_type_tag_s tag;
-			if(expr->tag.tag_class)
-				OUT(",\n");
-			tag.tag_class = TC_UNIVERSAL;
-			tag.tag_mode = TM_IMPLICIT;
-			tag.tag_value = expr_type2uclass_value[expr->expr_type];
-			_print_tag(arg, &tag);
-			tags_count++;
-		}
-	}
+
 	OUT("\n");
 	INDENT(-1);
 	OUT("};\n");
 
+	free(tags);
 	return tags_count;
 }
 
@@ -1317,7 +1293,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 }
 
 static int
-emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip, int elements_count, enum etd_cp cp, enum etd_spec spec) {
+emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int elements_count, enum etd_cp cp, enum etd_spec spec) {
 	char *p;
 
 	p = MKID(expr->Identifier);
@@ -1355,7 +1331,6 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip
 			OUT("0,\t/* No explicit tags (count) */\n");
 		}
 
-		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
 		switch(cp) {
 		case ETD_CP_UNKNOWN:
 			OUT("-0,\t/* Unknown yet */\n");

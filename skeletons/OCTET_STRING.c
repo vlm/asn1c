@@ -23,7 +23,6 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	asn1_DEF_OCTET_STRING_tags,
 	sizeof(asn1_DEF_OCTET_STRING_tags)
 	  / sizeof(asn1_DEF_OCTET_STRING_tags[0]),
-	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	-1,	/* Both ways are fine (primitive and constructed) */
 	0, 0,	/* No members */
 	0	/* No specifics */

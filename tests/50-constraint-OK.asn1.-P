@@ -49,8 +49,7 @@ ber_dec_rval_t
 Int1_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Int1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -92,7 +91,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int1 = {
 	asn1_DEF_Int1_tags,
 	sizeof(asn1_DEF_Int1_tags)
 		/sizeof(asn1_DEF_Int1_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -167,8 +165,7 @@ ber_dec_rval_t
 Int2_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Int2_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -197,7 +194,7 @@ Int2_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Int2] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Int2_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Int2 = {
 	"Int2",
@@ -210,7 +207,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int2 = {
 	asn1_DEF_Int2_tags,
 	sizeof(asn1_DEF_Int2_tags)
 		/sizeof(asn1_DEF_Int2_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -289,8 +285,7 @@ ber_dec_rval_t
 Int3_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Int3_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -319,7 +314,7 @@ Int3_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Int3] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Int3_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Int3 = {
 	"Int3",
@@ -332,7 +327,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int3 = {
 	asn1_DEF_Int3_tags,
 	sizeof(asn1_DEF_Int3_tags)
 		/sizeof(asn1_DEF_Int3_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -411,8 +405,7 @@ ber_dec_rval_t
 Int4_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Int4_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -441,7 +434,7 @@ Int4_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Int4] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Int4_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Int4 = {
 	"Int4",
@@ -454,7 +447,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int4 = {
 	asn1_DEF_Int4_tags,
 	sizeof(asn1_DEF_Int4_tags)
 		/sizeof(asn1_DEF_Int4_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -533,8 +525,7 @@ ber_dec_rval_t
 Int5_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Int5_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -563,7 +554,7 @@ Int5_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Int5] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Int5_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Int5 = {
 	"Int5",
@@ -576,7 +567,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int5 = {
 	asn1_DEF_Int5_tags,
 	sizeof(asn1_DEF_Int5_tags)
 		/sizeof(asn1_DEF_Int5_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -655,8 +645,7 @@ ber_dec_rval_t
 ExtensibleExtensions_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	ExtensibleExtensions_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -698,7 +687,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ExtensibleExtensions = {
 	asn1_DEF_ExtensibleExtensions_tags,
 	sizeof(asn1_DEF_ExtensibleExtensions_tags)
 		/sizeof(asn1_DEF_ExtensibleExtensions_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -755,8 +743,7 @@ ber_dec_rval_t
 Str1_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Str1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -798,7 +785,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str1 = {
 	asn1_DEF_Str1_tags,
 	sizeof(asn1_DEF_Str1_tags)
 		/sizeof(asn1_DEF_Str1_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -889,8 +875,7 @@ ber_dec_rval_t
 Str2_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Str2_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -919,7 +904,7 @@ Str2_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Str2] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Str2_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Str2 = {
 	"Str2",
@@ -932,7 +917,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str2 = {
 	asn1_DEF_Str2_tags,
 	sizeof(asn1_DEF_Str2_tags)
 		/sizeof(asn1_DEF_Str2_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1034,8 +1018,7 @@ ber_dec_rval_t
 Str3_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Str3_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1064,7 +1047,7 @@ Str3_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Str3] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Str3_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Str3 = {
 	"Str3",
@@ -1077,7 +1060,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str3 = {
 	asn1_DEF_Str3_tags,
 	sizeof(asn1_DEF_Str3_tags)
 		/sizeof(asn1_DEF_Str3_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1165,8 +1147,7 @@ ber_dec_rval_t
 Str4_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Str4_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1208,7 +1189,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str4 = {
 	asn1_DEF_Str4_tags,
 	sizeof(asn1_DEF_Str4_tags)
 		/sizeof(asn1_DEF_Str4_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1296,8 +1276,7 @@ ber_dec_rval_t
 PER_Visible_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	PER_Visible_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1339,7 +1318,6 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible = {
 	asn1_DEF_PER_Visible_tags,
 	sizeof(asn1_DEF_PER_Visible_tags)
 		/sizeof(asn1_DEF_PER_Visible_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1427,8 +1405,7 @@ ber_dec_rval_t
 PER_Visible_2_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	PER_Visible_2_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1457,7 +1434,7 @@ PER_Visible_2_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [PER-Visible-2] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_PER_Visible_2_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_PER_Visible_2 = {
 	"PER-Visible-2",
@@ -1470,7 +1447,6 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible_2 = {
 	asn1_DEF_PER_Visible_2_tags,
 	sizeof(asn1_DEF_PER_Visible_2_tags)
 		/sizeof(asn1_DEF_PER_Visible_2_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1558,8 +1534,7 @@ ber_dec_rval_t
 Not_PER_Visible_1_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Not_PER_Visible_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1588,7 +1563,7 @@ Not_PER_Visible_1_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Not-PER-Visible-1] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Not_PER_Visible_1_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_1 = {
 	"Not-PER-Visible-1",
@@ -1601,7 +1576,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_1 = {
 	asn1_DEF_Not_PER_Visible_1_tags,
 	sizeof(asn1_DEF_Not_PER_Visible_1_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_1_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1689,8 +1663,7 @@ ber_dec_rval_t
 Not_PER_Visible_2_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Not_PER_Visible_2_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1719,7 +1692,7 @@ Not_PER_Visible_2_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Not-PER-Visible-2] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Not_PER_Visible_2_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_2 = {
 	"Not-PER-Visible-2",
@@ -1732,7 +1705,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_2 = {
 	asn1_DEF_Not_PER_Visible_2_tags,
 	sizeof(asn1_DEF_Not_PER_Visible_2_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_2_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1820,8 +1792,7 @@ ber_dec_rval_t
 Not_PER_Visible_3_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Not_PER_Visible_3_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1850,7 +1821,7 @@ Not_PER_Visible_3_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Not-PER-Visible-3] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Not_PER_Visible_3_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_3 = {
 	"Not-PER-Visible-3",
@@ -1863,7 +1834,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_3 = {
 	asn1_DEF_Not_PER_Visible_3_tags,
 	sizeof(asn1_DEF_Not_PER_Visible_3_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_3_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1954,8 +1924,7 @@ ber_dec_rval_t
 SIZE_but_not_FROM_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	SIZE_but_not_FROM_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -1984,7 +1953,7 @@ SIZE_but_not_FROM_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [SIZE-but-not-FROM] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_SIZE_but_not_FROM_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_SIZE_but_not_FROM = {
 	"SIZE-but-not-FROM",
@@ -1997,7 +1966,6 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_but_not_FROM = {
 	asn1_DEF_SIZE_but_not_FROM_tags,
 	sizeof(asn1_DEF_SIZE_but_not_FROM_tags)
 		/sizeof(asn1_DEF_SIZE_but_not_FROM_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2088,8 +2056,7 @@ ber_dec_rval_t
 SIZE_and_FROM_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	SIZE_and_FROM_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -2118,7 +2085,7 @@ SIZE_and_FROM_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [SIZE-and-FROM] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_SIZE_and_FROM_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_SIZE_and_FROM = {
 	"SIZE-and-FROM",
@@ -2131,7 +2098,6 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_and_FROM = {
 	asn1_DEF_SIZE_and_FROM_tags,
 	sizeof(asn1_DEF_SIZE_and_FROM_tags)
 		/sizeof(asn1_DEF_SIZE_and_FROM_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2219,8 +2185,7 @@ ber_dec_rval_t
 Neither_SIZE_nor_FROM_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Neither_SIZE_nor_FROM_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -2249,7 +2214,7 @@ Neither_SIZE_nor_FROM_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Neither-SIZE-nor-FROM] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Neither_SIZE_nor_FROM_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Neither_SIZE_nor_FROM = {
 	"Neither-SIZE-nor-FROM",
@@ -2262,7 +2227,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Neither_SIZE_nor_FROM = {
 	asn1_DEF_Neither_SIZE_nor_FROM_tags,
 	sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags)
 		/sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2367,8 +2331,7 @@ ber_dec_rval_t
 Utf8_3_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Utf8_3_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -2397,7 +2360,7 @@ Utf8_3_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Utf8-3] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Utf8_3_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (12 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Utf8_3 = {
 	"Utf8-3",
@@ -2410,7 +2373,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_3 = {
 	asn1_DEF_Utf8_3_tags,
 	sizeof(asn1_DEF_Utf8_3_tags)
 		/sizeof(asn1_DEF_Utf8_3_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2485,8 +2447,7 @@ ber_dec_rval_t
 Utf8_2_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Utf8_2_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -2515,7 +2476,7 @@ Utf8_2_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [Utf8-2] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_Utf8_2_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (0 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (12 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_Utf8_2 = {
 	"Utf8-2",
@@ -2528,7 +2489,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_2 = {
 	asn1_DEF_Utf8_2_tags,
 	sizeof(asn1_DEF_Utf8_2_tags)
 		/sizeof(asn1_DEF_Utf8_2_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2585,8 +2545,7 @@ ber_dec_rval_t
 Utf8_1_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	Utf8_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -2628,7 +2587,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_1 = {
 	asn1_DEF_Utf8_1_tags,
 	sizeof(asn1_DEF_Utf8_1_tags)
 		/sizeof(asn1_DEF_Utf8_1_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */

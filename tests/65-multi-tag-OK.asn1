@@ -1,0 +1,29 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .65
+
+ModuleTestMultipleTags
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 65 }
+	DEFINITIONS ::=
+BEGIN
+
+	T1 ::= [2] EXPLICIT T2
+	T2 ::= [3] EXPLICIT T3
+	T3 ::= [4] IMPLICIT T4
+	T4 ::= [5] EXPLICIT T5
+	T5 ::= [6] IMPLICIT T6
+	T6 ::= INTEGER
+
+	T ::= [0] IMPLICIT Ts
+
+	Ts ::= [123] IMPLICIT SEQUENCE {
+		m1	[1] IMPLICIT T2,	-- [1][4][6]
+		m2	[2] EXPLICIT T3 OPTIONAL, -- [2][4][6]
+		m3	[3] IMPLICIT T3 	-- [3][6]
+	}
+
+END

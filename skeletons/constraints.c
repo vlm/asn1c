@@ -112,12 +112,13 @@ _asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
 
 	
 	va_start(ap, fmt);
-	ret = vsnprintf(buf, len, fmt, ap);
+	ret = vsnprintf(p, len, fmt, ap);
 	va_end(ap);
 	if(ret < 0 || ret >= (ssize_t)len) {
 		ret = sizeof("<broken vsnprintf>") - 1;
 		memcpy(buf, "<broken vsnprintf>", ret + 1);
+		p = buf;
 	}
 
-	cb(buf, ret, key);
+	cb(p, ret, key);
 }
