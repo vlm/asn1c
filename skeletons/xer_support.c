@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2003, 2004 X/IO Labs, xiolabs.com.
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * 	All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <assert.h>
