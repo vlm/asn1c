@@ -214,7 +214,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case RC_OK:
 			{
 				A_SET_OF(void) *list;
-				list = (A_SET_OF(void) *)st;
+				(void *)list = (void *)st;
 				if(ASN_SET_ADD(list, ctx->ptr) != 0)
 					RETURN(RC_FAIL);
 				else
@@ -329,7 +329,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */
-	list = (A_SET_OF(void) *)ptr;
+	(void *)list = ptr;
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		erval = der_encoder(elm_type, memb_ptr, 0, elm->tag, 0, 0);
@@ -507,7 +507,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!sptr) _ASN_ENCODE_FAILED;
 
-	list = (A_SET_OF(void) *)sptr;
+	(void *)list = sptr;
 
 	if(xcan) {
 		encs = (xer_tmp_enc_t *)MALLOC(list->count * sizeof(encs[0]));
@@ -601,7 +601,7 @@ SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	|| cb(" ::= {", 6, app_key) < 0)
 		return -1;
 
-	list = (const A_SET_OF(void) *)sptr;
+	(const void *)list = sptr;
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
@@ -630,7 +630,7 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		 * Could not use set_of_empty() because of (*free)
 		 * incompatibility.
 		 */
-		list = (A_SET_OF(void) *)ptr;
+		(void *)list = ptr;
 		for(i = 0; i < list->count; i++) {
 			void *memb_ptr = list->array[i];
 			if(memb_ptr)
@@ -661,7 +661,7 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 
-	list = (const A_SET_OF(void) *)sptr;
+	(const void *)list = sptr;
 
 	constr = element->memb_constraints;
 	if(!constr) constr = element->type->check_constraints;
