@@ -30,9 +30,12 @@ A:
 
 	However, the asn1c compiler is able to understand the newer PKIX1
 	ASN.1 specs, contained in RFC3280, which obsole RFC2459.
-	Try this one out:
+	Try this one out instead:
 
-		./asn1c/asn1c -P examples/rfc3280-*.asn1
+		cd ./examples/sample.source.PKIX1
+		make
+		./x509dump -h
+
 
 -- 
 Lev Walkin
