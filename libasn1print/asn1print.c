@@ -333,10 +333,36 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 		printf(")");
 		break;
 	case ACT_CT_WCOMP:
-		printf("WITH COMPONENT ???");
+		assert(ct->el_count != 0);
+		assert(ct->el_count == 1);
+		printf("WITH COMPONENT (");
+		asn1print_constraint(ct->elements[0], flags);
+		printf(")");
 		break;
-	case ACT_CT_WCOMPS:
-		printf("WITH COMPONENTS { ??? }");
+	case ACT_CT_WCOMPS: {
+			unsigned int i;
+			printf("WITH COMPONENTS { ");
+			for(i = 0; i < ct->el_count; i++) {
+				asn1p_constraint_t *cel = ct->elements[i];
+				if(i) printf(", ");
+				fwrite(cel->value->value.string.buf,
+					1, cel->value->value.string.size,
+					stdout);
+				if(cel->el_count) {
+					assert(cel->el_count == 1);
+					printf(" ");
+					asn1print_constraint(cel->elements[0],
+						flags);
+				}
+				switch(cel->presence) {
+				case ACPRES_DEFAULT: break;
+				case ACPRES_PRESENT: printf(" PRESENT"); break;
+				case ACPRES_ABSENT: printf(" ABSENT"); break;
+				case ACPRES_OPTIONAL: printf(" OPTIONAL");break;
+				}
+			}
+			printf(" }");
+		}
 		break;
 	case ACT_CT_CTDBY:
 		printf("CONSTRAINED BY ");

@@ -1,5 +1,5 @@
 
-0.9.13:	2005-Mar-24
+0.9.13:	2005-Mar-28
 
 	* Added extra const qualifiers into the support code.
 	* More RFC variations supported in crfc2asn1.pl.
@@ -8,6 +8,7 @@
 	* Parsing support for CONSTRAINED BY. (Test case 79).
 	* Support for CharsDefn (Quadruple and Tuple, most used in
 	  ASN1-CHARACTER-MODULE) (Test case 80).
+	* Pretty-printing support for WITH COMPONENT[S]. (Test case 82).
 
 0.9.12:	2005-Mar-10
 
