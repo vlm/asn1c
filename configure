@@ -1881,7 +1881,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=asn1c
- VERSION=0.9.1
+ VERSION=0.9
 
 
 cat >>confdefs.h <<_ACEOF
@@ -21409,7 +21409,6 @@ fi;
 
 case "$GCC" in
  yes)
-   CFLAGS="$CFLAGS -W"
    CFLAGS="$CFLAGS -Wall"
    CFLAGS="$CFLAGS -Wshadow"
    CFLAGS="$CFLAGS -Wcast-qual"
