@@ -31,17 +31,17 @@ Set ::= SET {
 
 ExtensibleSet ::= SET {
     string	 [0] IMPLICIT UTF8String OPTIONAL,
-    ...
+    ...,
+    enum	 [1] IMPLICIT ENUMERATED {
+        b(0),    
+        a(1)
+    }
 }
 
 ExtensibleSequence ::= SEQUENCE {
     string	 [0] IMPLICIT UTF8String OPTIONAL,
     ...,
-    integer	 [1] IMPLICIT INTEGER OPTIONAL,
-    enum	 [2] IMPLICIT ENUMERATED {
-        b(0),    
-        a(1)
-    }
+    integer	 [1] IMPLICIT INTEGER OPTIONAL
 }
 
 SetOf ::= SET OF REAL
