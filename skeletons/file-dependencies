@@ -41,11 +41,11 @@ constr_SEQUENCE_OF.h constr_SEQUENCE_OF.c asn_SEQUENCE_OF.h constr_SET_OF.h
 constr_SET.h constr_SET.c
 constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h
 
-COMMON-FILES:	# This is a special section
-asn_application.h
-asn_internal.h
-asn_codecs.h
+COMMON-FILES:			# THIS IS A SPECIAL SECTION
+asn_application.h		# Applications should include this file
 asn_system.h			# Platform-dependent types
+asn_codecs.h			# Return types of encoders and decoders
+asn_internal.h			# Internal stuff
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
 BIT_STRING.h BIT_STRING.c	# This one is necessary for the above one
 asn_codecs_prim.c asn_codecs_prim.h	# enc/decoders for primitive types
@@ -58,3 +58,4 @@ constraints.h constraints.c	# Subtype constraints support
 xer_support.h xer_support.c	# XML parsing
 xer_decoder.h xer_decoder.c	# XER decoding support
 xer_encoder.h xer_encoder.c	# XER encoding support
+#asn-decoder-template.c		# Template for quick decoder creation
