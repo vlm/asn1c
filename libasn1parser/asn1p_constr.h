@@ -11,7 +11,8 @@ typedef struct asn1p_constraint_s {
 		/*
 		 * Constraint elements.
 		 */
-		ACT_EL_VALUE,		/* 123, "A", T (elementary value) */
+		ACT_EL_TYPE,		/* T (contained subtype) */
+		ACT_EL_VALUE,		/* 123, "A", (elementary value) */
 		ACT_EL_RANGE,		/* 1..2 (elementary range) */
 		ACT_EL_LLRANGE,		/* 1<..2 (elementary range) */
 		ACT_EL_RLRANGE,		/* 1..<2 (elementary range) */
@@ -43,8 +44,9 @@ typedef struct asn1p_constraint_s {
 	} presence;
 
 	/*
-	 * A single values.
+	 * Separate types and values.
 	 */
+	asn1p_value_t *containedSubtype;
 	asn1p_value_t *value;
 	asn1p_value_t *range_start;
 	asn1p_value_t *range_stop;

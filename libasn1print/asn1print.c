@@ -284,6 +284,9 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 		printf("(");
 
 	switch(ct->type) {
+	case ACT_EL_TYPE:
+		asn1print_value(ct->value, flags);
+		break;
 	case ACT_EL_VALUE:
 		asn1print_value(ct->value, flags);
 		break;
