@@ -104,8 +104,7 @@ asn1f_fix_constr_ext(arg_t *arg) {
 		return 0;
 	}
 
-	DEBUG("%s(%s) for line %d", __func__,
-		expr->Identifier, expr->_lineno);
+	DEBUG("(%s) for line %d", expr->Identifier, expr->_lineno);
 
 	TQ_INIT(&root_list);
 	TQ_INIT(&ext_list);
@@ -181,8 +180,7 @@ asn1f_fix_constr_tag(arg_t *arg, int fix_top_level) {
 	int component_number = 0;
 	int r_value = 0;
 
-	DEBUG("%s(%s) for line %d", __func__,
-		expr->Identifier, expr->_lineno);
+	DEBUG("(%s) for line %d", expr->Identifier, expr->_lineno);
 
 	/*
 	 * Fix the top-level type itself first.
@@ -296,8 +294,7 @@ asn1f_fix_constr_autotag(arg_t *arg) {
 		return 0;
 	}
 
-	DEBUG("%s(%s) for line %d", __func__,
-		expr->Identifier, expr->_lineno);
+	DEBUG("(%s) for line %d", expr->Identifier, expr->_lineno);
 
 	TQ_FOR(v, &(expr->members), next) {
 		int must_explicit;

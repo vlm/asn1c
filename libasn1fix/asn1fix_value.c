@@ -16,14 +16,14 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	if(expr->value->type != ATV_REFERENCED)
 		return 0;
 
-	DEBUG("%s(=\"%s\", %x)", __func__,
+	DEBUG("(=\"%s\", %x)",
 		asn1f_printable_value(expr->value), expr->expr_type);
 
 	/*
 	 * 1. Find the terminal type for this assignment.
 	 */
 	type_expr = asn1f_find_terminal_type(arg, expr);
-	DEBUG("%s(): terminal type %p", __func__, type_expr);
+	DEBUG("terminal type %p", type_expr);
 	if(type_expr == 0) {
 		FATAL("Terminal type for is %s not found", expr->Identifier);
 		return -1;
@@ -148,7 +148,7 @@ asn1f_look_value_in_type(arg_t *arg,
 	&& type_expr->expr_type != ASN_BASIC_ENUMERATED)
 		return 0;
 
-	DEBUG("%s(for %s in %s %x) for line %d", __func__,
+	DEBUG("(for %s in %s %x) for line %d",
 		asn1f_printable_value(value_expr->value),
 		type_expr->Identifier,
 		type_expr->expr_type,

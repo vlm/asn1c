@@ -124,6 +124,8 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 	int rvalue = 0;
 	int ret;
 
+	DEBUG("%s", arg->expr->Identifier);
+
 	if(!ct) return 0;
 
 	/* Don't touch information object classes */

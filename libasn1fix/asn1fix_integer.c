@@ -23,7 +23,7 @@ asn1f_fix_integer(arg_t *arg) {
 	if(expr->expr_type != ASN_BASIC_INTEGER)
 		return 0;	/* Just ignore it */
 
-	DEBUG("%s(\"%s\", %x) for line %d", __func__,
+	DEBUG("(\"%s\", %x) for line %d",
 		expr->Identifier, expr->expr_type, expr->_lineno);
 
 	/*

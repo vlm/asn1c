@@ -13,8 +13,7 @@ asn1f_fix_bit_string(arg_t *arg) {
 	if(expr->meta_type == AMT_VALUE) {
 		asn1p_expr_t *ttype;
 
-		DEBUG("%s(%s) for line %d", __func__,
-			expr->Identifier, expr->_lineno);
+		DEBUG("(%s) for line %d", expr->Identifier, expr->_lineno);
 
 		ttype = asn1f_find_terminal_type(arg, expr);
 		if(ttype && ttype->expr_type == ASN_BASIC_BIT_STRING) {
@@ -31,7 +30,7 @@ asn1f_fix_bit_string_value(arg_t *arg, asn1p_expr_t *ttype) {
 	asn1p_expr_t *expr = arg->expr;
 	int r_value = 0;
 
-	DEBUG("%s(%s) for line %d", __func__,
+	DEBUG("(%s) for line %d",
 		expr->Identifier, expr->_lineno);
 
 	switch(expr->value->type) {

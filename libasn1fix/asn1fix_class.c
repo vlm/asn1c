@@ -32,9 +32,7 @@ asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 
 	assert(ref->comp_count > 1);
 
-	DEBUG("%s(%s) for line %d", __func__,
-		asn1f_printable_reference(ref),
-		ref->_lineno);
+	DEBUG("(%s) for line %d", asn1f_printable_reference(ref), ref->_lineno);
 
 	/*
 	 * Fetch the first part of the reference (OBJECT or ObjectSet).

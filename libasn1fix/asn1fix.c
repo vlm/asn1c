@@ -347,7 +347,7 @@ asn1f_resolve_constraints(arg_t *arg) {
 		etype = top_parent->expr_type;
 	else	etype = A1TC_INVALID;
 
-	DEBUG("asn1f_resolve_constraints(%s)", arg->expr->Identifier);
+	DEBUG("(%s)", arg->expr->Identifier);
 
 	ret = asn1constraint_resolve(arg, arg->expr->module,
 		arg->expr->constraints, etype, 0);
@@ -367,7 +367,7 @@ asn1f_check_constraints(arg_t *arg) {
 	int rvalue = 0;
 	int ret;
 
-	DEBUG("asn1f_check_constraints(%s{%d/%d})",
+	DEBUG("(%s{%d/%d})",
 		arg->expr->Identifier,
 		arg->expr->meta_type, arg->expr->expr_type);
 
