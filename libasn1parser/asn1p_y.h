@@ -128,7 +128,6 @@ typedef union {
 #define	TOK_UNION	352
 #define	TOK_TwoDots	353
 #define	TOK_ThreeDots	354
-#define	TOK_tag	355
 
 
 extern YYSTYPE asn1p_lval;

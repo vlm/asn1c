@@ -24,7 +24,7 @@ int asn1p_lexer_pedantic_1990 = 0;
 int asn1p_lexer_types_year = 0;
 int asn1p_lexer_constructs_year = 0;
 static int _check_dashes(char *ptr);
-static asn1_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
+static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 
 /*
  * Check that the type is defined in the year of the standard choosen.
@@ -240,50 +240,6 @@ WSP	[\t\r\v\f\n ]
 		return TOK_number;
 	}
 
-	/*
-	 * Tags
-	 */
-\[(UNIVERSAL[ \t\r\v\f\n]+|APPLICATION[ \t\r\v\f\n]+|PRIVATE[ \t\r\v\f\n]+)?[0-9]+\]	{
-		char *p;
-		memset(&asn1p_lval.a_tag, 0, sizeof(asn1p_lval.a_tag));
-		switch(yytext[1]) {
-		case 'U':
-			asn1p_lval.a_tag.tag_class = TC_UNIVERSAL;
-			p = yytext + sizeof("UNIVERSAL") + 1;
-			break;
-		case 'A':
-			asn1p_lval.a_tag.tag_class = TC_APPLICATION;
-			p = yytext + sizeof("APPLICATION") + 1;
-			break;
-		case 'P':
-			asn1p_lval.a_tag.tag_class = TC_PRIVATE;
-			p = yytext + sizeof("PRIVATE") + 1;
-			break;
-		default:
-			assert(yytext[1] >= '0' && yytext[1] <= '9');
-			asn1p_lval.a_tag.tag_class = TC_CONTEXT_SPECIFIC;
-			p = yytext + 1;
-			break;
-		}
-		asn1p_lval.a_tag.tag_value = asn1p_atoi(p);
-		if(*p == '0' && asn1p_lval.a_tag.tag_value) {
-			fprintf(stderr,
-			"Tag value at line %d "
-			"cannot start with zero "
-			"and have multiple digits: \"%s\"\n",
-			yylineno, yytext);
-			return -1;
-		}
-		return TOK_tag;
-	}
-
-\[[A-Z]+[ \t\r\v\f\n]+[0-9]+\]	{
-		fprintf(stderr,
-			"Unsupported tag syntax at line %d: \"%s\"\n",
-			yylineno, yytext);
-		return -1;
-	}
-
 ABSENT			return TOK_ABSENT;
 	/*
 ABSTRACT-SYNTAX		return TOK_ABSTRACT_SYNTAX;
@@ -443,9 +399,9 @@ WITH			return TOK_WITH;
 "..."		return TOK_ThreeDots;
 ".."		return TOK_TwoDots;
 
-[(){},;:|!.&@\[\]]	return yytext[0];
-
 {WSP}+	/* Ignore whitespace */
+
+[(){},;:|!.&@\[\]]	return yytext[0];
 
 [^A-Za-z0-9:=,{}<.@()[]'\"|&^*;!-] {
 		if(TYPE_LIFETIME(1994, 0))
@@ -550,9 +506,9 @@ _check_dashes(char *ptr) {
 	return 0;
 }
 
-static asn1_integer_t
+static asn1c_integer_t
 asn1p_atoi(char *ptr) {
-	asn1_integer_t value;
+	asn1c_integer_t value;
 	errno = 0;	/* Clear the error code */
 
 	if(sizeof(value) <= sizeof(int)) {
