@@ -336,9 +336,9 @@ asn1f_check_constraints(arg_t *arg) {
 
 	for(i = 0; i < sizeof(test_types)/sizeof(test_types[0]); i++) {
 		range = asn1constraint_compute_PER_range(
-				top_parent->expr_type,
+				etype,
 				arg->expr->combined_constraints,
-				test_types[i], 0, 0);
+				test_types[i], 0, 0, 0);
 		if(!range && errno == EPERM)
 			return -1;
 		asn1constraint_range_free(range);
