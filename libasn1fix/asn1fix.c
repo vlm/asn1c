@@ -27,6 +27,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 	arg_t arg;
 	int fatals = 0;
 	int warnings = 0;
+	int ret;
 
 	/*
 	 * Check validity of arguments.
@@ -78,7 +79,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 	 * PHASE I.
 	 */
 	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
-		int ret = asn1f_fix_module__phase_1(&arg);
+		ret = asn1f_fix_module__phase_1(&arg);
 		/*
 		 * These lines are used for illustration purposes.
 		 * RET2RVAL() is used everywhere else.
@@ -88,7 +89,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 	}
 	/* PHASE II. */
 	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
-		int ret = asn1f_fix_module__phase_2(&arg);
+		ret = asn1f_fix_module__phase_2(&arg);
 		if(ret == -1) fatals++;
 		if(ret == 1) warnings++;
 	}
@@ -109,6 +110,38 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 	asn1p_expr_t *expr;
 	int rvalue = 0;
 	int ret;
+	asn1p_module_t *omod;
+
+	/*
+	 * Check that we don't have a similarly named module.
+	 */
+	TQ_FOR(omod, &arg->asn->modules, mod_next) {
+		int sameNames;
+		if(omod == arg->mod) break;
+		sameNames = strcmp(omod->Identifier, arg->mod->Identifier)?0:1;
+		if(omod->module_oid && arg->mod->module_oid) {
+			/* Compare only the OID. */
+			if(asn1p_oid_compare(omod->module_oid,
+					arg->mod->module_oid) == 0) {
+				FATAL("ASN.1 module %s from %s "
+					"has the same OBJECT IDENTIFIER"
+					" as module %s from %s",
+					arg->mod->Identifier,
+					arg->mod->source_file_name,
+					omod->Identifier,
+					omod->source_file_name
+				);
+				RET2RVAL(-1, rvalue);
+			} else if(sameNames) {
+				WARNING("ASN.1 module %s is defined more than once, with different OIDs", omod->Identifier);
+				RET2RVAL(1, rvalue);
+			}
+		} else if(sameNames) {
+			FATAL("ASN.1 module %s is defined more than once",
+				omod->Identifier);
+			RET2RVAL(-1, rvalue);
+		}
+	}
 
 	switch((arg->mod->module_flags & MSF_MASK_TAGS)) {
 	case MSF_NOFLAGS:
