@@ -102,6 +102,7 @@ asn_struct_print_f T_print;
 asn_constr_check_f T_constraint;
 ber_type_decoder_f T_decode_ber;
 der_type_encoder_f T_encode_der;
+xer_type_decoder_f T_decode_xer;
 xer_type_encoder_f T_encode_xer;
 
 /*** <<< CODE [T] >>> ***/
@@ -160,6 +161,13 @@ T_encode_der(asn_TYPE_descriptor_t *td,
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
+asn_dec_rval_t
+T_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+	T_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
 asn_enc_rval_t
 T_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
@@ -183,7 +191,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_constraint,
 	T_decode_ber,
 	T_encode_der,
-	0,				/* Not implemented yet */
+	T_decode_xer,
 	T_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags,
