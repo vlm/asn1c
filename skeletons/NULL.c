@@ -67,13 +67,15 @@ NULL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 }
 
 
-static ssize_t
-NULL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
+static enum xer_pbd_rval
+NULL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	(void)td;
 	(void)sptr;
+
 	if(xer_is_whitespace(chunk_buf, chunk_size))
-		return chunk_size;
-	return -1;
+		return XPBD_BODY_CONSUMED;
+	else
+		return XPBD_BROKEN_ENCODING;
 }
 
 asn_dec_rval_t

@@ -133,16 +133,14 @@ BOOLEAN_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 /*
  * Decode the chunk of XML text encoding INTEGER.
  */
-static ssize_t
-BOOLEAN__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
+static enum xer_pbd_rval
+BOOLEAN__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
-	char *p = (char *)chunk_buf;
+	const char *p = (const char *)chunk_buf;
 
 	(void)td;
 
-	if(chunk_size == 0) return -1;
-
-	if(p[0] == 0x3c /* '<' */) {
+	if(chunk_size && p[0] == 0x3c /* '<' */) {
 		switch(xer_check_tag(chunk_buf, chunk_size, "false")) {
 		case XCT_BOTH:
 			/* "<false/>" */
@@ -151,19 +149,20 @@ BOOLEAN__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf,
 		case XCT_UNKNOWN_BO:
 			if(xer_check_tag(chunk_buf, chunk_size, "true")
 					!= XCT_BOTH)
-				return -1;
+				return XPBD_BROKEN_ENCODING;
 			/* "<true/>" */
 			*st = 1;	/* Or 0xff as in DER?.. */
 			break;
 		default:
-			return -1;
+			return XPBD_BROKEN_ENCODING;
 		}
+		return XPBD_BODY_CONSUMED;
 	} else {
-		if(!xer_is_whitespace(chunk_buf, chunk_size))
-			return -1;
+		if(xer_is_whitespace(chunk_buf, chunk_size))
+			return XPBD_NOT_BODY_IGNORE;
+		else
+			return XPBD_BROKEN_ENCODING;
 	}
-
-	return chunk_size;
 }
 
 

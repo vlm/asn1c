@@ -299,8 +299,8 @@ INTEGER__map_value2enum(asn_INTEGER_specifics_t *specs, long value) {
 /*
  * Decode the chunk of XML text encoding INTEGER.
  */
-static ssize_t
-INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
+static enum xer_pbd_rval
+INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	long sign = 1;
 	long value;
@@ -345,7 +345,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf,
 
 			if(new_value / 10 != value)
 				/* Overflow */
-				return -1;
+				return XPBD_DECODER_LIMIT;
 
 			value = new_value + (lv - 0x30);
 			/* Check for two's complement overflow */
@@ -357,7 +357,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf,
 					sign = 1;
 				} else {
 					/* Overflow */
-					return -1;
+					return XPBD_DECODER_LIMIT;
 				}
 			}
 		    }
@@ -377,20 +377,26 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf,
 				}
 				ASN_DEBUG("Unknown identifier for INTEGER");
 			}
-			return -1;
+			return XPBD_BROKEN_ENCODING;
 		}
 		break;
 	}
 
-	if(state != ST_DIGITS)
-		return -1;	/* No digits */
+	if(state != ST_DIGITS) {
+		if(xer_is_whitespace(chunk_buf, chunk_size)) {
+			return XPBD_NOT_BODY_IGNORE;
+		} else {
+			ASN_DEBUG("No useful digits in output");
+			return XPBD_BROKEN_ENCODING;	/* No digits */
+		}
+	}
 
 	value *= sign;	/* Change sign, if needed */
 
 	if(asn_long2INTEGER(st, value))
-		return -1;
+		return XPBD_SYSTEM_FAILURE;
 
-	return lp - lstart;
+	return XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t

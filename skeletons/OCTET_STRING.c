@@ -691,7 +691,7 @@ static struct OCTET_STRING__xer_escape_table_s {
 };
 
 static int
-OS__check_escaped_control_char(void *buf, int size) {
+OS__check_escaped_control_char(const void *buf, int size) {
 	size_t i;
 	/*
 	 * Inefficient algorithm which translates the escape sequences
@@ -709,7 +709,7 @@ OS__check_escaped_control_char(void *buf, int size) {
 }
 
 static int
-OCTET_STRING__handle_control_chars(void *struct_ptr, void *chunk_buf, size_t chunk_size) {
+OCTET_STRING__handle_control_chars(void *struct_ptr, const void *chunk_buf, size_t chunk_size) {
 	/*
 	 * This might be one of the escape sequences
 	 * for control characters. Check it out.
@@ -778,11 +778,11 @@ OCTET_STRING_encode_xer_utf8(asn_TYPE_descriptor_t *td, void *sptr,
 /*
  * Convert from hexadecimal format (cstring): "AB CD EF"
  */
-static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, void *chunk_buf, size_t chunk_size, int have_more) {
+static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, const void *chunk_buf, size_t chunk_size, int have_more) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
-	char *chunk_stop = (char *)chunk_buf;
-	char *p = chunk_stop;
-	char *pend = p + chunk_size;
+	const char *chunk_stop = (const char *)chunk_buf;
+	const char *p = chunk_stop;
+	const char *pend = p + chunk_size;
 	unsigned int clv = 0;
 	int half = 0;	/* Half bit */
 	uint8_t *buf;
@@ -800,7 +800,7 @@ static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, void *chunk_buf, si
 	 * than chunk_size, then it'll be equivalent to "ABC0".
 	 */
 	for(; p < pend; p++) {
-		int ch = *(unsigned char *)p;
+		int ch = *(const unsigned char *)p;
 		switch(ch) {
 		case 0x09: case 0x0a: case 0x0c: case 0x0d:
 		case 0x20:
@@ -849,16 +849,16 @@ static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, void *chunk_buf, si
 	assert(st->size <= _ns);
 	st->buf[st->size] = 0;		/* Courtesy termination */
 
-	return (chunk_stop - (char *)chunk_buf);	/* Converted size */
+	return (chunk_stop - (const char *)chunk_buf);	/* Converted size */
 }
 
 /*
  * Convert from binary format: "00101011101"
  */
-static ssize_t OCTET_STRING__convert_binary(void *sptr, void *chunk_buf, size_t chunk_size, int have_more) {
+static ssize_t OCTET_STRING__convert_binary(void *sptr, const void *chunk_buf, size_t chunk_size, int have_more) {
 	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
-	char *p = (char *)chunk_buf;
-	char *pend = p + chunk_size;
+	const char *p = (const char *)chunk_buf;
+	const char *pend = p + chunk_size;
 	int bits_unused = st->bits_unused & 0x7;
 	uint8_t *buf;
 
@@ -880,7 +880,7 @@ static ssize_t OCTET_STRING__convert_binary(void *sptr, void *chunk_buf, size_t 
 	 * Convert series of 0 and 1 into the octet string.
 	 */
 	for(; p < pend; p++) {
-		int ch = *(unsigned char *)p;
+		int ch = *(const unsigned char *)p;
 		switch(ch) {
 		case 0x09: case 0x0a: case 0x0c: case 0x0d:
 		case 0x20:
@@ -918,9 +918,9 @@ static ssize_t OCTET_STRING__convert_binary(void *sptr, void *chunk_buf, size_t 
  * Something like strtod(), but with stricter rules.
  */
 static int
-OS__strtoent(int base, char *buf, char *end, int32_t *return_value) {
+OS__strtoent(int base, const char *buf, const char *end, int32_t *ret_value) {
 	int32_t val = 0;
-	char *p;
+	const char *p;
 
 	for(p = buf; p < end; p++) {
 		int ch = *p;
@@ -939,7 +939,7 @@ OS__strtoent(int base, char *buf, char *end, int32_t *return_value) {
 			val = val * base + (ch - 0x61 + 10);
 			break;
 		case 0x3b:	/* ';' */
-			*return_value = val;
+			*ret_value = val;
 			return (p - buf) + 1;
 		default:
 			return -1;	/* Character set error */
@@ -953,10 +953,10 @@ OS__strtoent(int base, char *buf, char *end, int32_t *return_value) {
 /*
  * Convert from the plain UTF-8 format, expanding entity references: "2 &lt; 3"
  */
-static ssize_t OCTET_STRING__convert_entrefs(void *sptr, void *chunk_buf, size_t chunk_size, int have_more) {
+static ssize_t OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf, size_t chunk_size, int have_more) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
-	char *p = (char *)chunk_buf;
-	char *pend = p + chunk_size;
+	const char *p = (const char *)chunk_buf;
+	const char *pend = p + chunk_size;
 	uint8_t *buf;
 
 	/* Reallocate buffer */
@@ -970,7 +970,7 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, void *chunk_buf, size_t
 	 * Convert series of 0 and 1 into the octet string.
 	 */
 	for(; p < pend; p++) {
-		int ch = *(unsigned char *)p;
+		int ch = *(const unsigned char *)p;
 		int len;	/* Length of the rest of the chunk */
 
 		if(ch != 0x26 /* '&' */) {
@@ -981,11 +981,11 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, void *chunk_buf, size_t
 		/*
 		 * Process entity reference.
 		 */
-		len = chunk_size - (p - (char *)chunk_buf);
+		len = chunk_size - (p - (const char *)chunk_buf);
 		if(len == 1 /* "&" */) goto want_more;
 		if(p[1] == 0x23 /* '#' */) {
-			char *pval;	/* Pointer to start of digits */
-			int32_t val;	/* Entity reference value */
+			const char *pval;	/* Pointer to start of digits */
+			int32_t val;		/* Entity reference value */
 			int base;
 
 			if(len == 2 /* "&#" */) goto want_more;
@@ -1078,7 +1078,7 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, void *chunk_buf, size_t
 			*buf++ = ch;
 			continue;
 		}
-		chunk_size = (p - (char *)chunk_buf);
+		chunk_size = (p - (const char *)chunk_buf);
 		/* Processing stalled: need more data */
 		break;
 	}
@@ -1098,9 +1098,9 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
 	const char *opt_mname, void *buf_ptr, size_t size,
 	int (*opt_unexpected_tag_decoder)
-		(void *struct_ptr, void *chunk_buf, size_t chunk_size),
+		(void *struct_ptr, const void *chunk_buf, size_t chunk_size),
 	ssize_t (*body_receiver)
-		(void *struct_ptr, void *chunk_buf, size_t chunk_size,
+		(void *struct_ptr, const void *chunk_buf, size_t chunk_size,
 			int have_more)
 ) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;

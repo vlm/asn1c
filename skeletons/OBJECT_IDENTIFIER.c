@@ -263,8 +263,8 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 	return wrote_len;
 }
 
-static ssize_t
-OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
+static enum xer_pbd_rval
+OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
 	char *endptr;
 	long s_arcs[10];
@@ -275,27 +275,31 @@ OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *
 	(void)td;
 
 	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
-		(const char *)chunk_buf, chunk_size, arcs, 10, &endptr);
-	if(arcs_count <= 0)
-		return -1;	/* Expecting more than zero arcs */
-	if(arcs_count > 10) {
+		(const char *)chunk_buf, chunk_size, arcs,
+			sizeof(s_arcs)/sizeof(s_arcs[0]), &endptr);
+	if(arcs_count <= 0) {
+		/* Expecting more than zero arcs */
+		return XPBD_BROKEN_ENCODING;
+	}
+
+	if((size_t)arcs_count > sizeof(s_arcs)/sizeof(s_arcs[0])) {
 		arcs = (long *)MALLOC(arcs_count * sizeof(long));
-		if(!arcs) return -1;
+		if(!arcs) return XPBD_SYSTEM_FAILURE;
 		ret = OBJECT_IDENTIFIER_parse_arcs(
 			(const char *)chunk_buf, chunk_size,
 			arcs, arcs_count, &endptr);
 		if(ret != arcs_count)
-			return -1;	/* assert?.. */
+			return XPBD_SYSTEM_FAILURE;	/* assert?.. */
 	}
 
 	/*
 	 * Convert arcs into BER representation.
 	 */
 	ret = OBJECT_IDENTIFIER_set_arcs(st, arcs, sizeof(*arcs), arcs_count);
-	if(ret) return -1;
+	if(ret) return XPBD_BROKEN_ENCODING;
 	if(arcs != s_arcs) FREEMEM(arcs);
 
-	return endptr - (char *)chunk_buf;
+	return XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t

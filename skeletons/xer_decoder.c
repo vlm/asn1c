@@ -33,12 +33,12 @@ xer_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 struct xer__cb_arg {
 	pxml_chunk_type_e	chunk_type;
 	size_t			chunk_size;
-	void			*chunk_buf;
+	const void		*chunk_buf;
 	int callback_not_invoked;
 };
 
 static int
-xer__token_cb(pxml_chunk_type_e type, void *_chunk_data, size_t _chunk_size, void *key) {
+xer__token_cb(pxml_chunk_type_e type, const void *_chunk_data, size_t _chunk_size, void *key) {
 	struct xer__cb_arg *arg = (struct xer__cb_arg *)key;
 	arg->chunk_type = type;
 	arg->chunk_size = _chunk_size;
@@ -51,7 +51,7 @@ xer__token_cb(pxml_chunk_type_e type, void *_chunk_data, size_t _chunk_size, voi
  * Fetch the next token from the XER/XML stream.
  */
 ssize_t
-xer_next_token(int *stateContext, void *buffer, size_t size, pxer_chunk_type_e *ch_type) {
+xer_next_token(int *stateContext, const void *buffer, size_t size, pxer_chunk_type_e *ch_type) {
 	struct xer__cb_arg arg;
 	int new_stateContext = *stateContext;
 	ssize_t ret;
@@ -151,7 +151,7 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {				\
 		size_t num = (num_bytes);			\
-		buf_ptr = ((char *)buf_ptr) + num;		\
+		buf_ptr = ((const char *)buf_ptr) + num;	\
 		size -= num;					\
 		consumed_myself += num;				\
 	} while(0)
@@ -186,11 +186,11 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	asn_struct_ctx_t *ctx,	/* Type decoder context */
 	void *struct_key,
 	const char *xml_tag,	/* Expected XML tag */
-	void *buf_ptr, size_t size,
+	const void *buf_ptr, size_t size,
 	int (*opt_unexpected_tag_decoder)
-		(void *struct_key, void *chunk_buf, size_t chunk_size),
+		(void *struct_key, const void *chunk_buf, size_t chunk_size),
 	ssize_t (*body_receiver)
-		(void *struct_key, void *chunk_buf, size_t chunk_size,
+		(void *struct_key, const void *chunk_buf, size_t chunk_size,
 			int have_more)
 	) {
 
@@ -301,9 +301,9 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 
 
 int
-xer_is_whitespace(void *chunk_buf, size_t chunk_size) {
-	char *p = (char *)chunk_buf;
-	char *pend = p + chunk_size;
+xer_is_whitespace(const void *chunk_buf, size_t chunk_size) {
+	const char *p = (const char *)chunk_buf;
+	const char *pend = p + chunk_size;
 
 	for(; p < pend; p++) {
 		switch(*p) {

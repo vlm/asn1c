@@ -43,11 +43,11 @@ asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	asn_struct_ctx_t *ctx,	/* Type decoder context */
 	void *struct_key,	/* Treated as opaque pointer */
 	const char *xml_tag,	/* Expected XML tag name */
-	void *buf_ptr, size_t size,
+	const void *buf_ptr, size_t size,
 	int (*opt_unexpected_tag_decoder)
-		(void *struct_key, void *chunk_buf, size_t chunk_size),
+		(void *struct_key, const void *chunk_buf, size_t chunk_size),
 	ssize_t (*body_receiver)
-		(void *struct_key, void *chunk_buf, size_t chunk_size,
+		(void *struct_key, const void *chunk_buf, size_t chunk_size,
 			int have_more)
 	);
 
@@ -64,7 +64,7 @@ asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	PXER_COMMENT,	/* A comment, may be part of */
   } pxer_chunk_type_e;
 ssize_t xer_next_token(int *stateContext,
-	void *buffer, size_t size, pxer_chunk_type_e *_ch_type);
+	const void *buffer, size_t size, pxer_chunk_type_e *_ch_type);
 
 /*
  * This function checks the buffer against the tag name is expected to occur.
@@ -88,7 +88,7 @@ xer_check_tag_e xer_check_tag(const void *buf_ptr, int size,
  * 1:	Whitespace or empty string
  * 0:	Non-whitespace
  */
-int xer_is_whitespace(void *chunk_buf, size_t chunk_size);
+int xer_is_whitespace(const void *chunk_buf, size_t chunk_size);
 
 /*
  * Skip the series of anticipated extensions.
