@@ -13,8 +13,6 @@ static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
 static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop);
 
-#define	MKID(id)	asn1c_make_identifier(0, (id), 0)
-
 static int global_compile_mark;
 
 int
