@@ -333,8 +333,11 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 		printf(")");
 		break;
 	case ACT_CT_WCOMP:
+		printf("WITH COMPONENT ???");
+		break;
 	case ACT_CT_WCOMPS:
-		printf("???");
+		printf("WITH COMPONENTS { ??? }");
+		break;
 	case ACT_CT_CTDBY:
 		printf("CONSTRAINED BY ");
 		assert(ct->value->type == ATV_UNPARSED);
