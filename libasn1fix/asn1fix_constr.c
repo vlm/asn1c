@@ -71,6 +71,7 @@ asn1f_fix_constr_ext(arg_t *arg) {
 			v->Identifier = strdup("...");
 			v->expr_type = A1TC_EXTENSIBLE;
 			v->meta_type = AMT_TYPE;
+			v->_lineno = expr->_lineno;	/* The best we can do */
 			if(v->Identifier == NULL) {
 				asn1p_expr_free(v);
 				r_value = -1;
@@ -302,6 +303,15 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 				b->Identifier,
 				b->_lineno
 			);
+			if((arg->mod->module_flags & MSF_EXTENSIBILITY_IMPLIED)
+			&& (a->expr_type == A1TC_EXTENSIBLE)
+			&& (b->expr_type == A1TC_EXTENSIBLE)) {
+				FATAL("The previous error is due to "
+					"improper use of "
+					"EXTENSIBILITY IMPLIED flag "
+					"of module %s",
+					arg->mod->Identifier);
+			}
 			return -1;
 		} else {
 			/* Tags are distinct */
