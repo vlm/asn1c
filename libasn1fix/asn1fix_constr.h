@@ -2,6 +2,11 @@
 #define	_ASN1FIX_CONSTRUCTED_H_
 
 /*
+ * Pull in COMPONENTS OF.
+ */
+int asn1f_pull_components_of(arg_t *);
+
+/*
  * Fix extensions in constructed types.
  */
 int asn1f_fix_constr_ext(arg_t *);

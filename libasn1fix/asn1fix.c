@@ -117,7 +117,9 @@ asn1f_fix_module(arg_t *arg) {
 
 	switch((arg->mod->module_flags & MSF_MASK_INSTRUCTIONS)) {
 	case MSF_NOFLAGS:
-		//arg->mod->module_flags |= MSF_TAG_INSTRUCTIONS;
+		/*
+		 * arg->mod->module_flags |= MSF_TAG_INSTRUCTIONS;
+		 */
 		break;
 	case MSF_unk_INSTRUCTIONS:
 		WARNING("Module %s defined with unrecognized "
@@ -277,6 +279,10 @@ asn1f_fix_constructed(arg_t *arg) {
 	ret = asn1f_fix_constr_tag(arg);
 	RET2RVAL(ret, rvalue);
 
+	/* Import COMPONENTS OF stuff */
+	ret = asn1f_pull_components_of(arg);
+	RET2RVAL(ret, rvalue);
+
 	return rvalue;
 }
 
@@ -287,12 +293,13 @@ asn1f_fix_constraints(arg_t *arg) {
 	int rvalue = 0;
 	int ret;
 
-	top_parent = asn1f_find_terminal_type(arg, arg->expr, NULL);
+	top_parent = asn1f_find_terminal_type(arg, arg->expr);
 	if(top_parent)
 		etype = top_parent->expr_type;
 	else	etype = A1TC_INVALID;
 
-	ret = asn1constraint_resolve(arg, arg->expr->constraints, etype, 0);
+	ret = asn1constraint_resolve(arg, arg->expr->module,
+		arg->expr->constraints, etype, 0);
 	RET2RVAL(ret, rvalue);
 
 	ret = asn1constraint_pullup(arg);
