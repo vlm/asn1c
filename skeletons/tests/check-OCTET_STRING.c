@@ -80,6 +80,7 @@ main() {
 	check(UTF8, 0, "<OCTET_STRING>one, two, three</OCTET_STRING>",
 		"one, two, three");
 
+	check(UTF8, "z", "<z></z>", "");
 	check(UTF8, "z", "<z z z>&lt;&amp;&gt;</z z z>", "<&>");
 	check(UTF8, "z", "<z z z>a&lt;b&amp;c&gt;d</z z z>", "a<b&c>d");
 	check(UTF8, "z", "<z z z>a&lt</z z z>", "a&lt");
