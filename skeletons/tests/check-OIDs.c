@@ -269,7 +269,10 @@ main() {
 	CHECK_REGEN_OID(12);
 	CHECK_REGEN_OID(13);
 
-	check_speed();
+	if(getenv("CHECK_SPEED")) {
+		/* Useful for developers only */
+		check_speed();
+	}
 
 	return 0;
 }
