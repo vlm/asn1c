@@ -43,7 +43,7 @@
 
 0.8.11:	2004-Jun-05
 
-	* Enforsed stricter conformance with C standards.
+	* Enforced stricter conformance with C standards.
 	* SEQUENCE BER decoder is now equipped with the sorted map
 	  in case of complex CHOICE descendants. Test case 44 created.
 
