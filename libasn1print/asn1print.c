@@ -638,6 +638,7 @@ static int
 asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum asn1print_flags flags, int level) {
 	asn1p_expr_t *se;
 	int expr_unordered = 0;
+	int dont_involve_children = 0;
 
 	switch(expr->meta_type) {
 	case AMT_TYPE:
@@ -667,10 +668,11 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 	if(expr->expr_type == A1TC_REFERENCE) {
 		se = asn1f_find_terminal_type_ex(asn, expr);
 		if(!se) {
-			printf("(ANY)");
+			printf(" (ANY)");
 			return 0;
 		}
 		expr = se;
+		dont_involve_children = 1;
 	}
 
 	if(TQ_FIRST(&expr->members)) {
@@ -716,31 +718,57 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 		if(expr->expr_type == ASN_CONSTR_SET)
 			printf("*");
 
-	} else if((expr->expr_type & ASN_CONSTR_MASK)
-		|| expr->expr_type == ASN_BASIC_NULL) {
+	} else switch(expr->expr_type) {
+	case ASN_BASIC_BOOLEAN:
+		printf("(true|false)");
+		break;
+	case ASN_CONSTR_CHOICE:
+	case ASN_CONSTR_SET:
+	case ASN_CONSTR_SET_OF:
+	case ASN_CONSTR_SEQUENCE:
+	case ASN_CONSTR_SEQUENCE_OF:
+	case ASN_BASIC_NULL:
+	case A1TC_UNIVERVAL:
 		printf(" EMPTY");
-	} else if(expr->expr_type == A1TC_UNIVERVAL) {
-		printf(" EMPTY");
-	} else if(expr->expr_type == ASN_TYPE_ANY) {
-		printf(" ANY"); 
-	} else if(expr->expr_type == ASN_BASIC_BIT_STRING
-		|| expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER
-		|| expr->expr_type == ASN_BASIC_RELATIVE_OID
-		|| expr->expr_type == ASN_BASIC_UTCTime
-		|| expr->expr_type == ASN_BASIC_GeneralizedTime
-	) {
+		break;
+	case ASN_TYPE_ANY:
+		printf(" ANY");
+		break;
+	case ASN_BASIC_BIT_STRING:
+	case ASN_BASIC_OCTET_STRING:
+	case ASN_BASIC_OBJECT_IDENTIFIER:
+	case ASN_BASIC_RELATIVE_OID:
+	case ASN_BASIC_UTCTime:
+	case ASN_BASIC_GeneralizedTime:
+	case ASN_BASIC_INTEGER:
+	case ASN_STRING_NumericString:
+	case ASN_STRING_PrintableString:
 		printf(" (#CDATA)");
-	} else {
+		break;
+	case ASN_STRING_VisibleString:
+	case ASN_STRING_ISO646String:
+		/* Entity references, but not XML elements may be present */
 		printf(" (#PCDATA)");
+		break;
+	case ASN_BASIC_REAL:		/* e.g. <MINUS-INFINITY/> */
+	case ASN_BASIC_ENUMERATED:	/* e.g. <enumIdentifier1/> */
+	default:
+		/*
+		 * XML elements are allowed.
+		 * For example, a UTF8String may contain "<bel/>".
+		 */
+		printf(" ANY");
 	}
 	printf(">\n");
 
 	/*
 	 * Display the descendants (children) of the current type.
 	 */
-	TQ_FOR(se, &(expr->members), next) {
-		if(se->expr_type == A1TC_EXTENSIBLE) continue;
-		asn1print_expr_dtd(asn, mod, se, flags, level + 1);
+	if(!dont_involve_children) {
+		TQ_FOR(se, &(expr->members), next) {
+			if(se->expr_type == A1TC_EXTENSIBLE) continue;
+			asn1print_expr_dtd(asn, mod, se, flags, level + 1);
+		}
 	}
 
 	return 0;
