@@ -456,12 +456,14 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 
 	if(present > 0 || present <= specs->elements_count) {
 		asn1_CHOICE_element_t *elm = &specs->elements[present-1];
-		void *memb_ptr;
+		const void *memb_ptr;
 
 		if(elm->optional) {
-			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
+			memb_ptr = *(const void * const *)
+					((const char *)ptr + elm->memb_offset);
 		} else {
-			memb_ptr = (void *)((char *)ptr + elm->memb_offset);
+			memb_ptr = (const void *)
+					((const char *)ptr + elm->memb_offset);
 		}
 
 		return asn1_TYPE_outmost_tag(elm->type, memb_ptr,
