@@ -1,4 +1,10 @@
 
+0.8.14:	2004-Jun-30
+
+	* Fixed compiler: extensibility of CHOICE and SET type has not been
+	  taken into account during table construction.
+	  (Test case 47) (Severity: high, Security impact: low)
+
 0.8.13:	2004-Jun-29
 
 	* Fixed compiler: the skip values for IMPLICIT tagging were broken
