@@ -3,6 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
+#include <asn_codecs_prim.h>
 #include <BOOLEAN.h>
 
 /*
@@ -19,7 +20,7 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,
 	BOOLEAN_encode_der,
-	0,				/* Not implemented yet */
+	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BOOLEAN_tags,
@@ -126,6 +127,59 @@ BOOLEAN_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	erval.encoded += 1;
 
 	return erval;
+}
+
+
+/*
+ * Decode the chunk of XML text encoding INTEGER.
+ */
+static ssize_t
+BOOLEAN__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
+	char *p = (char *)chunk_buf;
+	char *pend = p + chunk_size;
+
+	if(chunk_size == 0) return -1;
+
+	if(p[0] == 0x3c /* '<' */) {
+		switch(xer_check_tag(chunk_buf, chunk_size, "false")) {
+		case XCT_BOTH:
+			/* "<false/>" */
+			*st = 0;
+			break;
+		case XCT_UNEXPECTED:
+			if(xer_check_tag(chunk_buf, chunk_size, "true")
+					!= XCT_BOTH)
+				return -1;
+			/* "<true/>" */
+			*st = 1;	/* Or 0xff as in DER?.. */
+			break;
+		default:
+			return -1;
+		}
+	} else {
+		for(; p < pend; p++) {
+			switch(*p) {
+			case 0x09: case 0x0a: case 0x0d: case 0x20:
+				break;
+			default:
+				return -1;	/* Not whitespace */
+			}
+		}
+	}
+
+	return chunk_size;
+}
+
+
+asn_dec_rval_t
+BOOLEAN_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+
+	return xer_decode_primitive(opt_codec_ctx, td,
+		sptr, sizeof(BOOLEAN_t), opt_mname, buf_ptr, size,
+		BOOLEAN__xer_body_decode);
 }
 
 asn_enc_rval_t
