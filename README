@@ -27,9 +27,10 @@ specified:
 	asn1c <module1.asn1> <module2.asn1> ...
 
 The ./examples directory contains several ASN.1 modules and a script to
-extract ASN.1 modules from RFC documents. To compile X.509 PKI module:
+extract ASN.1 modules from RFC documents. Refer to the README file in that
+directory. To compile X.509 PKI module:
 
-	./asn1c/asn1c -P ./examples/*PKIX*93*.asn1
+	./asn1c/asn1c -P ./examples/rfc3280-*.asn1
 
 In this example, -P option is used to instruct the compiler to print the
 compiled text on the standard output instead of creating multiple .c
