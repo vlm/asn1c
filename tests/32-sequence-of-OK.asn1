@@ -11,12 +11,14 @@ ModuleTestSequenceSimple
 	DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
 
-	Programming ::= SEQUENCE OF Fault
+	Programming ::= SEQUENCE SIZE(1..maxSize) OF Fault
 
 	Fault ::= SET OF Error
 
 	Error ::= SEQUENCE {
 			...
 		}
+
+	maxSize INTEGER ::= 10
 
 END
