@@ -220,7 +220,7 @@ static asn1p_value_t *
 %type	<a_expr>		ExportsElement
 %type	<a_expr>		DataTypeMember
 %type	<a_expr>		ExtensionAndException
-%type	<a_expr>		TypeDeclaration
+%type	<a_expr>		UnconstrainedTypeDeclaration
 %type	<a_ref>			ComplexTypeReference
 %type	<a_ref>			ComplexTypeReferenceAmpList
 %type	<a_refcomp>		ComplexTypeReferenceElement
@@ -239,6 +239,7 @@ static asn1p_value_t *
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
 %type	<a_expr>		ConstructedType
+%type	<a_expr>		ConstructedTypeConstrained
 %type	<a_expr>		ConstructedDataTypeDefinition
 //%type	<a_expr>		optUniverationDefinition
 %type	<a_expr>		UniverationDefinition
@@ -265,6 +266,7 @@ static asn1p_value_t *
 %type	<a_tag>			Tag		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_constr>		optConstraints
+%type	<a_constr>		Constraints
 %type	<a_constr>		SetOfConstraints
 %type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */
 %type	<a_constr>		ElementSetSpec		/* 1..2,...,3 */
@@ -804,7 +806,7 @@ ActualParameterList:
 	;
 
 ActualParameter:
-	TypeDeclaration {
+	UnconstrainedTypeDeclaration {
 		$$ = $1;
 	}
 	| Identifier {
@@ -960,10 +962,20 @@ DataTypeMember:
 	;
 
 ConstrainedTypeDeclaration:
-	TypeDeclaration optConstraints optMarker {
+	UnconstrainedTypeDeclaration optConstraints optMarker {
 		$$ = $1;
-		$$->constraints = $2;
+		if($$->constraints) {
+			assert(!$2);
+		} else {
+			$$->constraints = $2;
+		}
 		$$->marker = $3;
+	}
+	| ConstructedTypeConstrained {
+		/* This type includes constraints on its own */
+		$$ = $1;
+		checkmem($$);
+		assert($$->meta_type);
 	}
 	;
 
@@ -996,7 +1008,7 @@ ExtensionAndException:
 	}
 	;
 
-TypeDeclaration:
+UnconstrainedTypeDeclaration:
 	BasicType {
 		$$ = $1;
 	}
@@ -1319,6 +1331,26 @@ BasicString:
 	| TOK_ObjectDescriptor { $$ = ASN_STRING_ObjectDescriptor; }
 	;
 
+
+ConstructedTypeConstrained:
+	TOK_SEQUENCE optConstraints TOK_OF ConstrainedTypeDeclaration {
+		$$ = asn1p_expr_new(asn1p_lineno);
+		checkmem($$);
+		$$->constraints = $2;
+		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
+		$$->meta_type = AMT_TYPE;
+		TQ_ADD(&($$->members), $4, next);
+	}
+	| TOK_SET optConstraints TOK_OF ConstrainedTypeDeclaration {
+		$$ = asn1p_expr_new(asn1p_lineno);
+		checkmem($$);
+		$$->constraints = $2;
+		$$->expr_type = ASN_CONSTR_SET_OF;
+		$$->meta_type = AMT_TYPE;
+		TQ_ADD(&($$->members), $4, next);
+	}
+	;
+
 ConstructedType:
 	TOK_CHOICE '{' ConstructedDataTypeDefinition '}'	{
 		$$ = $3;
@@ -1337,22 +1369,6 @@ ConstructedType:
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_SET;
 		$$->meta_type = AMT_TYPE;
-	}
-	| TOK_SEQUENCE optConstraints TOK_OF TypeDeclaration {
-		$$ = asn1p_expr_new(asn1p_lineno);
-		checkmem($$);
-		$$->constraints = $2;
-		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
-		$$->meta_type = AMT_TYPE;
-		TQ_ADD(&($$->members), $4, next);
-	}
-	| TOK_SET optConstraints TOK_OF TypeDeclaration {
-		$$ = asn1p_expr_new(asn1p_lineno);
-		checkmem($$);
-		$$->constraints = $2;
-		$$->expr_type = ASN_CONSTR_SET_OF;
-		$$->meta_type = AMT_TYPE;
-		TQ_ADD(&($$->members), $4, next);
 	}
 	| TOK_ANY 						{
 		$$ = asn1p_expr_new(asn1p_lineno);
@@ -1382,7 +1398,13 @@ Except:		      TOK_EXCEPT;
 
 optConstraints:
 	{ $$ = 0; }
-	| SetOfConstraints {
+	| Constraints {
+		$$ = $1;
+	}
+	;
+
+Constraints:
+	SetOfConstraints {
 		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
 	}
 	| TOK_SIZE '('  ElementSetSpecs ')' {
@@ -1390,12 +1412,7 @@ optConstraints:
 		 * This is a special case, for compatibility purposes.
 		 * It goes without parentheses.
 		 */
-		int ret;
-		$$ = asn1p_constraint_new(yylineno);
-		checkmem($$);
-		$$->type = ACT_CT_SIZE;
-		ret = asn1p_constraint_insert($$, $3);
-		checkmem(ret == 0);
+		CONSTRAINT_INSERT($$, ACT_CT_SIZE, $3, 0);
 	}
 	;
 
