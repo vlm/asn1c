@@ -21,7 +21,7 @@ asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime = {
 	"GeneralizedTime",
 	GeneralizedTime_constraint, /* Check validity of time */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
+	GeneralizedTime_encode_der, /* Implemented in terms of OCTET STRING */
 	GeneralizedTime_print,
 	OCTET_STRING_free,
 	0, /* Use generic outmost tag fetcher */
@@ -45,7 +45,7 @@ GeneralizedTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	time_t tloc;
 
 	errno = EPERM;			/* Just an unlikely error code */
-	tloc = asn_GT2time(st, 0);
+	tloc = asn_GT2time(st, 0, 0);
 	if(tloc == -1 && errno != EPERM) {
 		_ASN_ERRLOG("%s: Invalid time format: %s",
 			td->name, strerror(errno));
@@ -53,6 +53,47 @@ GeneralizedTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 
 	return 0;
+}
+
+der_enc_rval_t
+GeneralizedTime_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
+	int tag_mode, ber_tlv_tag_t tag,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	GeneralizedTime_t *st = ptr;
+	der_enc_rval_t erval;
+
+	/* If not canonical DER, re-encode into canonical DER. */
+	if(st->size && st->buf[st->size-1] != 'Z') {
+		struct tm tm;
+		time_t tloc;
+
+		errno = EPERM;
+		tloc = asn_GT2time(st, &tm, 1);	/* Recognize time */
+		if(tloc == -1 && errno != EPERM) {
+			/* Failed to recognize time. Fail completely. */
+			erval.encoded = -1;
+			erval.failed_type = td;
+			erval.structure_ptr = ptr;
+			return erval;
+		}
+		st = asn_time2GT(0, &tm, 1);	/* Save time canonically */
+		if(!st) {
+			/* Memory allocation failure. */
+			erval.encoded = -1;
+			erval.failed_type = td;
+			erval.structure_ptr = ptr;
+			return erval;
+		}
+	}
+
+	erval = OCTET_STRING_encode_der(td, st, tag_mode, tag, cb, app_key);
+
+	if(st != ptr) {
+		FREEMEM(st->buf);
+		FREEMEM(st);
+	}
+
+	return erval;
 }
 
 int
@@ -69,11 +110,11 @@ GeneralizedTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		int ret;
 
 		errno = EPERM;
-		if(asn_GT2time(st, &tm) == -1 && errno != EPERM)
+		if(asn_GT2time(st, &tm, 1) == -1 && errno != EPERM)
 			return cb("<bad-value>", 11, app_key);
 
 		ret = snprintf(buf, sizeof(buf),
-			"%04d-%02d-%02d %02d:%02d%02d",
+			"%04d-%02d-%02d %02d:%02d%02d (GMT)",
 			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 			tm.tm_hour, tm.tm_min, tm.tm_sec);
 		assert(ret > 0 && ret < (int)sizeof(buf));
@@ -96,19 +137,19 @@ GeneralizedTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
  * Where to look for offset from GMT, Phase II.
  */
 #ifdef	HAVE_TM_ZONE
-#define	GMTOFF	(tm_s.tm_gmtoff)
+#define	GMTOFF(tm)	((tm).tm_gmtoff)
 #else	/* HAVE_TM_ZONE */
-#define	GMTOFF	(-timezone)
+#define	GMTOFF(tm)	(-timezone)
 #endif	/* HAVE_TM_ZONE */
 
 time_t
-asn_GT2time(const GeneralizedTime_t *st, struct tm *_tm) {
+asn_GT2time(const GeneralizedTime_t *st, struct tm *ret_tm, int as_gmt) {
 	struct tm tm_s;
 	uint8_t *buf;
 	uint8_t *end;
-	int tm_gmtoff_h = 0;
-	int tm_gmtoff_m = 0;
-	int tm_gmtoff = 0;	/* h + m */
+	int gmtoff_h = 0;
+	int gmtoff_m = 0;
+	int gmtoff = 0;	/* h + m */
 	int offset_specified = 0;
 	time_t tloc;
 
@@ -240,22 +281,22 @@ offset:
 		return -1;
 	}
 	buf++;
-	B2F(tm_gmtoff_h);
-	B2F(tm_gmtoff_h);
+	B2F(gmtoff_h);
+	B2F(gmtoff_h);
 	if(buf[-3] == 0x2D)	/* Negative */
-		tm_gmtoff = -1;
+		gmtoff = -1;
 	else
-		tm_gmtoff = 1;
+		gmtoff = 1;
 
 	if((end - buf) == 2) {
-		B2F(tm_gmtoff_m);
-		B2F(tm_gmtoff_m);
+		B2F(gmtoff_m);
+		B2F(gmtoff_m);
 	} else if(end != buf) {
 		errno = EINVAL;
 		return -1;
 	}
 
-	tm_gmtoff = tm_gmtoff * (3600 * tm_gmtoff_h + 60 * tm_gmtoff_m);
+	gmtoff = gmtoff * (3600 * gmtoff_h + 60 * gmtoff_m);
 
 	/* Fall through */
 utc_finish:
@@ -282,25 +323,110 @@ local_finish:
 	tm_s.tm_year -= 1900;
 	tm_s.tm_isdst = -1;
 
-	tloc = mktime(&tm_s);
+	tm_s.tm_sec -= gmtoff;
+
+	/*** AT THIS POINT tm_s is either GMT or local (unknown) ****/
+
+	if(offset_specified)
+		tloc = timegm(&tm_s);
+	else {
+		/*
+		 * Without an offset (or 'Z'),
+		 * we can only guess that it is a local zone.
+		 * Interpret it in this fashion.
+		 */
+		tloc = mktime(&tm_s);
+	}
 	if(tloc == -1) {
 		errno = EINVAL;
 		return -1;
 	}
 
-	if(offset_specified) {
-		/*
-		 * Offset from GMT is specified in the time expression.
-		 */
-		tloc += GMTOFF - tm_gmtoff;
-		if(_tm && (localtime_r(&tloc, &tm_s) == NULL)) {
-			/* Could not reconstruct the time */
-			return -1;
+	if(ret_tm) {
+		if(as_gmt) {
+			if(offset_specified) {
+				*ret_tm = tm_s;
+			} else {
+				if(gmtime_r(&tloc, ret_tm) == 0) {
+					errno = EINVAL;
+					return -1;
+				}
+			}
+		} else {
+			if(localtime_r(&tloc, ret_tm) == 0) {
+				errno = EINVAL;
+				return -1;
+			}
 		}
 	}
 
-	if(_tm) memcpy(_tm, &tm_s, sizeof(struct tm));
-
 	return tloc;
 }
+
+
+GeneralizedTime_t *
+asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
+	struct tm tm_s;
+	long gmtoff;
+	const unsigned int buf_size = 24; /* 4+2+2 +2+2+2 +4 + cushion */
+	char *buf;
+	char *p;
+	int size;
+
+	/* Check arguments */
+	if(!tm) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	/* Pre-allocate a buffer of sufficient yet small length */
+	buf = MALLOC(buf_size);
+	if(!buf) return 0;
+
+	gmtoff = GMTOFF(*tm);
+
+	if(force_gmt && gmtoff) {
+		tm_s = *tm;
+		tm_s.tm_sec -= gmtoff;
+		timegm(&tm_s);	/* Fix the time */
+		assert(!GMTOFF(tm_s));
+		tm = &tm_s;
+	}
+
+	size = snprintf(buf, buf_size, "%04d%02d%02d%02d%02d%02d",
+		tm->tm_year + 1900,
+		tm->tm_mon + 1,
+		tm->tm_mday,
+		tm->tm_hour,
+		tm->tm_min,
+		tm->tm_sec
+	);
+	assert(size == 14);
+
+	p = buf + size;
+	if(force_gmt) {
+		*p++ = 0x5a;	/* 'Z' */
+		*p++ = 0;
+		size++;
+	} else {
+		int ret = snprintf(p, buf_size - size, "%+03ld%02ld",
+			gmtoff / 3600, gmtoff % 3600);
+		assert(ret >= 5 && ret <= 7);
+		size += ret;
+	}
+
+	if(opt_gt) {
+		if(opt_gt->buf)
+			FREEMEM(opt_gt->buf);
+	} else {
+		opt_gt = CALLOC(1, sizeof *opt_gt);
+		if(!opt_gt) { free(buf); return 0; }
+	}
+
+	opt_gt->buf = buf;
+	opt_gt->size = size;
+
+	return opt_gt;
+}
+
 
