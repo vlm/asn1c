@@ -241,8 +241,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	int *table = permitted_alphabet_table_1;
 	/* The underlying type is IA5String */
 	const IA5String_t *st = sptr;
-	uint8_t *ch = st->buf;
-	uint8_t *end = ch + st->size;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -255,9 +255,9 @@ static int check_permitted_alphabet_1(const void *sptr) {
 /*** <<< CODE [RelativeDistinguishedName] >>> ***/
 
 static int
-memb_IA5String_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_IA5String_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const (null)_t *st = sptr;
+	const IA5String_t *st = sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -284,7 +284,7 @@ static asn1_TYPE_member_t asn1_MBR_RelativeDistinguishedName[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_IA5String,
-		.memb_constraints = memb_IA5String_constraint,
+		.memb_constraints = memb_IA5String_1_constraint,
 		.name = ""
 		},
 };
