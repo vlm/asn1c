@@ -10,7 +10,10 @@
 #include "asn1print.h"
 
 #define	INDENT(fmt, args...)	do {					\
-		int __i = level; while(__i--) printf("    ");		\
+		if(!(flags & APF_NOINDENT)) {				\
+			int __i = level;				\
+			while(__i--) printf("    ");			\
+		}							\
 		printf(fmt, ##args);					\
 	} while(0)
 
@@ -460,7 +463,7 @@ static int
 asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1print_flags flags, int level) {
 	int SEQ_OF = 0;
 
-	if(flags & APF_LINE_COMMENTS)
+	if(flags & APF_LINE_COMMENTS && !(flags & APF_NOINDENT))
 		INDENT("-- #line %d\n", tc->_lineno);
 	if(tc->Identifier)
 		INDENT("%s", tc->Identifier);
@@ -473,7 +476,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	&& tc->meta_type != AMT_VALUESET
 	&& tc->expr_type != A1TC_EXTENSIBLE) {
 		if(level) {
-			if(tc->Identifier)
+			if(tc->Identifier && !(flags & APF_NOINDENT))
 				printf("\t");
 		} else {
 			printf(" ::=");
@@ -496,9 +499,10 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		SEQ_OF = 1; /* Equivalent to SET OF for printint purposes */
 		printf("    COMPONENTS OF");
 		break;
+	case A1TC_PARAMETRIZED:
+		flags |= APF_NOINDENT;
 	case A1TC_REFERENCE:
 	case A1TC_UNIVERVAL:
-	case A1TC_PARAMETRIZED:
 		break;
 	case A1TC_CLASSDEF:
 		printf(" CLASS");
@@ -528,7 +532,8 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	}
 
 	if(tc->reference) {
-		printf(" ");
+		if(!(flags & APF_NOINDENT))
+			printf(" ");
 		asn1print_ref(tc->reference, flags);
 	}
 
@@ -548,10 +553,17 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		int put_braces = !SEQ_OF; /* Don't need 'em, if SET OF... */
 
 		if(put_braces) {
-			printf(" {");
-			if(TQ_FIRST(&tc->members))
-				printf("\n");
-			else	printf(" }");
+			if(flags & APF_NOINDENT) {
+				printf("{");
+				if(!TQ_FIRST(&tc->members))
+					printf("}");
+			} else {
+				printf(" {");
+				if(TQ_FIRST(&tc->members))
+					printf("\n");
+				else
+					printf(" }");
+			}
 		}
 
 		TQ_FOR(se, &(tc->members), next) {
@@ -568,12 +580,14 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			}
 			if(TQ_NEXT(se, next)) {
 				printf(",");
-				INDENT("\n");
+				if(!(flags & APF_NOINDENT))
+					INDENT("\n");
 			}
 		}
 
 		if(put_braces && TQ_FIRST(&tc->members)) {
-			printf("\n");
+			if(!(flags & APF_NOINDENT))
+				printf("\n");
 			INDENT("}");
 		}
 	}
@@ -605,7 +619,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	}
 
 	/*
-	 * The following section exists entirely for debugging only.
+	 * The following section exists entirely for debugging.
 	 */
 	if(flags & APF_DEBUG_CONSTRAINTS
 	&& tc->expr_type != A1TC_EXTENSIBLE) {
