@@ -1,0 +1,30 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .44
+
+ModuleChoiceInSequence
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 44 }
+	DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+	T ::= [PRIVATE 1] SEQUENCE {
+		a [PRIVATE 2] NULL,
+		b CHOICE {
+			c [PRIVATE 5] NULL,
+			d [PRIVATE 6] NULL,
+			e CHOICE {
+				f [PRIVATE 7] NULL,
+				g [PRIVATE 8] NULL
+			},
+			h [PRIVATE 9] CHOICE {	-- EXPLICIT!
+				i [PRIVATE 1] NULL,
+				j [PRIVATE 2] NULL
+			}
+		}
+	}
+
+END
