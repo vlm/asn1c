@@ -49,7 +49,7 @@ asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime = {
 int
 GeneralizedTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const GeneralizedTime_t *st = sptr;
+	const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
 	time_t tloc;
 
 	errno = EPERM;			/* Just an unlikely error code */
@@ -67,7 +67,7 @@ der_enc_rval_t
 GeneralizedTime_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	GeneralizedTime_t *st = ptr;
+	GeneralizedTime_t *st = (GeneralizedTime_t *)ptr;
 	der_enc_rval_t erval;
 
 	/* If not canonical DER, re-encode into canonical DER. */
@@ -107,7 +107,7 @@ GeneralizedTime_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 int
 GeneralizedTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	const GeneralizedTime_t *st = sptr;
+	const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
@@ -390,7 +390,7 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 	}
 
 	/* Pre-allocate a buffer of sufficient yet small length */
-	buf = MALLOC(buf_size);
+	(void *)buf = MALLOC(buf_size);
 	if(!buf) return 0;
 
 	gmtoff = GMTOFF(*tm);
@@ -433,7 +433,7 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 		if(opt_gt->buf)
 			FREEMEM(opt_gt->buf);
 	} else {
-		opt_gt = CALLOC(1, sizeof *opt_gt);
+		(void *)opt_gt = CALLOC(1, sizeof *opt_gt);
 		if(!opt_gt) { free(buf); return 0; }
 	}
 

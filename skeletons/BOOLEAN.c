@@ -32,14 +32,14 @@ ber_dec_rval_t
 BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **bool_structure, void *buf_ptr, size_t size,
 		int tag_mode) {
-	BOOLEAN_t *st = *bool_structure;
+	BOOLEAN_t *st = (BOOLEAN_t *)*bool_structure;
 	ber_dec_rval_t rval;
 	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
 	ber_tlv_len_t lidx;
 
 	if(st == NULL) {
-		st = *bool_structure = CALLOC(1, sizeof(*st));
+		(void *)st = *bool_structure = CALLOC(1, sizeof(*st));
 		if(st == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -96,7 +96,7 @@ BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	der_enc_rval_t erval;
-	BOOLEAN_t *st = sptr;
+	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
 
 	erval.encoded = der_write_tags(td, 1, tag_mode, tag, cb, app_key);
 	if(erval.encoded == -1) {
@@ -127,7 +127,7 @@ BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 int
 BOOLEAN_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	const BOOLEAN_t *st = sptr;
+	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */

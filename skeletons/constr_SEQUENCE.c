@@ -69,8 +69,9 @@
  */
 static int
 _t2e_cmp(const void *ap, const void *bp) {
-	const asn1_TYPE_tag2member_t *a = ap;
-	const asn1_TYPE_tag2member_t *b = bp;
+	const asn1_TYPE_tag2member_t *a = (const asn1_TYPE_tag2member_t *)ap;
+	const asn1_TYPE_tag2member_t *b = (const asn1_TYPE_tag2member_t *)bp;
+
 	int a_class = BER_TAG_CLASS(a->el_tag);
 	int b_class = BER_TAG_CLASS(b->el_tag);
 
@@ -107,7 +108,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_SEQUENCE_specifics_t *specs = sd->specifics;
+	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)sd->specifics;
 	asn1_SEQUENCE_element_t *elements = specs->elements;
 
 	/*
@@ -184,7 +185,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	  for(edx = (ctx->step >> 1); edx < specs->elements_count;
 			edx++, ctx->step = (ctx->step & ~1) + 2) {
 		void *memb_ptr;		/* Pointer to the member */
-		void *memb_ptr2;	/* Pointer to that pointer */
+		void **memb_ptr2;	/* Pointer to that pointer */
 		ssize_t tag_len;	/* Length of TLV's T */
 		int opt_edx_end;	/* Next non-optional element */
 		int use_bsearch;
@@ -267,7 +268,8 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 			asn1_TYPE_tag2member_t key;
 			key.el_tag = tlv_tag;
 			key.el_no = edx;
-			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
+			(void *)t2m = bsearch(&key,
+				specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);
 			if(t2m) {
 				asn1_TYPE_tag2member_t *best = 0;
@@ -366,7 +368,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 */
 		if(elements[edx].optional) {
 			/* Optional member, hereby, a simple pointer */
-			memb_ptr2 = (char *)st + elements[edx].memb_offset;
+			memb_ptr2 = (void **)((char *)st + elements[edx].memb_offset);
 		} else {
 			/*
 			 * A pointer to a pointer
@@ -379,7 +381,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * Invoke the member fetch routine according to member's type
 		 */
 		rval = elements[edx].type->ber_decoder(
-				(void *)elements[edx].type,
+				elements[edx].type,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
 		ASN_DEBUG("In %s SEQUENCE decoded %d %s in %d bytes code %d",
@@ -479,7 +481,7 @@ der_enc_rval_t
 SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
 	void *ptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SEQUENCE_specifics_t *specs = sd->specifics;
+	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)sd->specifics;
 	size_t computed_size = 0;
 	der_enc_rval_t erval;
 	ssize_t ret;
@@ -564,7 +566,7 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
 int
 SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SEQUENCE_specifics_t *specs = td->specifics;
+	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)td->specifics;
 	int edx;
 	int ret;
 
@@ -612,7 +614,7 @@ SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 void
 SEQUENCE_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
-	asn1_SEQUENCE_specifics_t *specs = td->specifics;
+	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)td->specifics;
 	int edx;
 
 	if(!td || !sptr)
@@ -641,7 +643,7 @@ SEQUENCE_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 int
 SEQUENCE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_SEQUENCE_specifics_t *specs = td->specifics;
+	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)td->specifics;
 	int edx;
 
 	if(!sptr) {

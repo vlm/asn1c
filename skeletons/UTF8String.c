@@ -39,7 +39,8 @@ int
 UTF8String_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	ssize_t len;
-	len = UTF8String_length(sptr, td->name, app_errlog, app_key);
+	len = UTF8String_length((const UTF8String_t *)sptr, td->name,
+		app_errlog, app_key);
 	if(len > 0) len = 0;
 	return len;
 }
@@ -103,7 +104,7 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 int
 UTF8String_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	const UTF8String_t *st = sptr;
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */

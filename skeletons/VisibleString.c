@@ -52,7 +52,7 @@ static int _VisibleString_alphabet[256] = {
 int
 VisibleString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const VisibleString_t *st = sptr;
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
 
 	if(st && st->buf) {
 		uint8_t *buf = st->buf;

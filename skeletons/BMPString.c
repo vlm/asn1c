@@ -32,7 +32,7 @@ asn1_TYPE_descriptor_t asn1_DEF_BMPString = {
 int
 BMPString_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	const BMPString_t *st = sptr;
+	const BMPString_t *st = (const BMPString_t *)sptr;
 	uint16_t *wchar;
 	uint16_t *wend;
 	char scratch[128];			/* Scratchpad buffer */

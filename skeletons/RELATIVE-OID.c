@@ -32,7 +32,7 @@ asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 int
 RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	const RELATIVE_OID_t *st = sptr;
+	const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
 	int startn;
 	int i;
 
@@ -112,7 +112,7 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	 * Roughly estimate the maximum size necessary to encode these arcs.
 	 */
 	size = ((arc_type_size * CHAR_BIT + 6) / 7) * arcs_slots;
-	bp = buf = MALLOC(size + 1);
+	bp = buf = (uint8_t *)MALLOC(size + 1);
 	if(!buf) {
 		/* ENOMEM */
 		return -1;

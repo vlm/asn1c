@@ -48,7 +48,7 @@ asn_fprint(FILE *stream, asn1_TYPE_descriptor_t *td, const void *struct_ptr) {
 /* Dump the data into the specified stdio stream */
 static int
 _print2fp(const void *buffer, size_t size, void *app_key) {
-	FILE *stream = app_key;
+	FILE *stream = (FILE *)app_key;
 
 	if(fwrite(buffer, 1, size, stream) != size)
 		return -1;
