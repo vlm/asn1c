@@ -7,6 +7,11 @@
 #include <assert.h>
 #include <errno.h>
 
+static asn_OCTET_STRING_specifics_t asn_DEF_ANY_specs = {
+	sizeof(ANY_t),
+	offsetof(ANY_t, _asn_ctx),
+	2	/* Special indicator that this is an ANY type */
+};
 asn_TYPE_descriptor_t asn_DEF_ANY = {
 	"ANY",
 	OCTET_STRING_free,
@@ -19,7 +24,7 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
 	0, 0,	/* No members */
-	(void *)2	/* Special indicator that this is an ANY type */
+	&asn_DEF_ANY_specs,
 };
 
 
@@ -94,7 +99,7 @@ ANY_new_fromType(asn_TYPE_descriptor_t *td, void *sptr) {
 
 	if(ANY_fromType(&tmp, td, sptr)) return 0;
 
-	st = (ANY_t *)MALLOC(sizeof(*st));
+	st = (ANY_t *)CALLOC(1, sizeof(ANY_t *));
 	if(st) {
 		*st = tmp;
 		return st;

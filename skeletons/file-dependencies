@@ -7,7 +7,6 @@
 #
 
 ANY.h ANY.c
-BIT_STRING.h BIT_STRING.c
 BMPString.h BMPString.c
 BOOLEAN.h BOOLEAN.c
 ENUMERATED.h ENUMERATED.c INTEGER.h
@@ -47,6 +46,7 @@ asn_application.h
 asn_internal.h
 asn_types.h
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
+BIT_STRING.h BIT_STRING.c	# This one is necessary for the above one
 ber_decoder.h ber_decoder.c
 ber_codec_prim.c ber_codec_prim.h
 ber_tlv_length.h ber_tlv_length.c

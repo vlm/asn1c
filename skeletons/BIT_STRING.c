@@ -12,6 +12,11 @@
 static ber_tlv_tag_t asn_DEF_BIT_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
 };
+static asn_OCTET_STRING_specifics_t asn_DEF_BIT_STRING_specs = {
+	sizeof(BIT_STRING_t),
+	offsetof(BIT_STRING_t, _asn_ctx),
+	1,	/* Special indicator that this is a BIT STRING type */
+};
 asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	"BIT STRING",
 	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
@@ -29,7 +34,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	sizeof(asn_DEF_BIT_STRING_tags)
 	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
 	0, 0,	/* No members */
-	(void *)1	/* Special indicator that this is a BIT STRING */
+	&asn_DEF_BIT_STRING_specs
 };
 
 /*
@@ -41,16 +46,9 @@ BIT_STRING_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 
 	if(st && st->buf) {
-		if(st->size) {
-			if(st->size == 1 && st->buf[0] != 0) {
-				_ASN_ERRLOG(app_errlog, app_key,
-					"%s: invalid padding byte (%s:%d)",
-					td->name, __FILE__, __LINE__);
-				return -1;
-			}
-		} else {
+		if(st->size == 1 && st->bits_unused) {
 			_ASN_ERRLOG(app_errlog, app_key,
-				"%s: no padding byte (%s:%d)",
+				"%s: invalid padding byte (%s:%d)",
 				td->name, __FILE__, __LINE__);
 			return -1;
 		}
@@ -93,9 +91,9 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	/*
 	 * Binary dump
 	 */
-	for(buf++; buf < end; buf++) {
+	for(; buf < end; buf++) {
 		int v = *buf;
-		int nline = xcan?0:((((buf - st->buf) - 1) % 8) == 0);
+		int nline = xcan?0:(((buf - st->buf) % 8) == 0);
 		if(p >= scend || nline) {
 			er.encoded += p - scratch;
 			_ASN_CALLBACK(scratch, p - scratch);
@@ -107,7 +105,7 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		p += 8;
 	}
 
-	if(!xcan && (((buf - st->buf) - 1) % 8) == 0)
+	if(!xcan && ((buf - st->buf) % 8) == 0)
 		_i_ASN_TEXT_INDENT(1, ilevel);
 	er.encoded += p - scratch;
 	_ASN_CALLBACK(scratch, p - scratch);
@@ -115,9 +113,9 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(buf == end) {
 		int v = *buf;
-		int mbit = st->buf[0];	/* bits to skip from the right */
+		int ubits = st->bits_unused;
 		int i;
-		for(i = 7; i >= mbit; i--)
+		for(i = 7; i >= ubits; i--)
 			*p++ = (v & (1 << i)) ? 0x31 : 0x30;
 		er.encoded += p - scratch;
 		_ASN_CALLBACK(scratch, p - scratch);
@@ -156,9 +154,9 @@ BIT_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	/*
 	 * Hexadecimal dump.
 	 */
-	for(buf++; buf < end; buf++) {
-		if(((buf - st->buf) - 1) % 16 == 0 && (st->size > 17)
-				&& buf != st->buf+1) {
+	for(; buf < end; buf++) {
+		if((buf - st->buf) % 16 == 0 && (st->size > 16)
+				&& buf != st->buf) {
 			_i_INDENT(1);
 			/* Dump the string */
 			if(cb(scratch, p - scratch, app_key) < 0) return -1;
@@ -172,7 +170,7 @@ BIT_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(p > scratch) {
 		p--;	/* Eat the tailing space */
 
-		if((st->size > 17)) {
+		if((st->size > 16)) {
 			_i_INDENT(1);
 		}
 
