@@ -267,10 +267,8 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 			asn1_TYPE_tag2member_t key;
 			key.el_tag = tlv_tag;
 			key.el_no = edx;
-			printf("key = %p\n", &key);
 			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);
-			printf("t2m = %p\n", t2m);
 			if(t2m) {
 				asn1_TYPE_tag2member_t *best = 0;
 				asn1_TYPE_tag2member_t *t2m_f, *t2m_l;
