@@ -53,7 +53,7 @@ LTLIBRARIES = $(noinst_LTLIBRARIES)
 libasn1compiler_la_LIBADD =
 am_libasn1compiler_la_OBJECTS = asn1compiler.lo asn1c_misc.lo \
 	asn1c_out.lo asn1c_lang.lo asn1c_save.lo asn1c_C.lo \
-	asn1c_compat.lo
+	asn1c_constraint.lo asn1c_compat.lo asn1c_fdeps.lo
 libasn1compiler_la_OBJECTS = $(am_libasn1compiler_la_OBJECTS)
 check_compiler_SOURCES = check_compiler.c
 check_compiler_OBJECTS = check_compiler.$(OBJEXT)
@@ -66,6 +66,8 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/asn1c_C.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1c_compat.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/asn1c_constraint.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/asn1c_fdeps.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1c_lang.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1c_misc.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1c_out.Plo \
@@ -208,7 +210,9 @@ libasn1compiler_la_SOURCES = \
 	asn1c_lang.c asn1c_lang.h		\
 	asn1c_save.c asn1c_save.h		\
 	asn1c_C.c asn1c_C.h			\
+	asn1c_constraint.c asn1c_constraint.h	\
 	asn1c_compat.c asn1c_compat.h		\
+	asn1c_fdeps.c asn1c_fdeps.h		\
 	asn1c_internal.h
 
 TESTS = $(check_PROGRAMS)
@@ -279,6 +283,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c_C.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c_compat.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c_constraint.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c_fdeps.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c_lang.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c_misc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c_out.Plo@am__quote@

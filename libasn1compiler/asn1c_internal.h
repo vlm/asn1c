@@ -11,7 +11,7 @@
 #include <unistd.h>		/* for unlink(2) */
 #include <fcntl.h>		/* for open(2) */
 #include <glob.h>		/* for glob(3) */
-#include <string.h>
+#include <string.h>		/* for strlen(3) and memset(3) */
 #include <ctype.h>		/* for isalnum(3) */
 #include <stdarg.h>
 #include <errno.h>
