@@ -257,7 +257,7 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 		}
 		/* fpclassify(3) is not portable yet */
 		if(expval == -INT_MAX) {
-			if(signbit(dbl_value)) {
+			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x80 | 0x40;
 				st->buf[1] = 0;
 				st->size = 2;
@@ -266,7 +266,7 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 				st->size = 0;
 			}
 		} else if(isinf(dbl_value)) {
-			if(signbit(dbl_value)) {
+			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x41;	/* MINUS-INFINITY */
 			} else {
 				st->buf[0] = 0x40;	/* PLUS-INFINITY */
