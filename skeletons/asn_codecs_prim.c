@@ -22,12 +22,13 @@ ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	 * If the structure is not there, allocate it.
 	 */
 	if(st == NULL) {
-		(void *)st = *sptr = CALLOC(1, sizeof(*st));
+		st = (ASN__PRIMITIVE_TYPE_t *)CALLOC(1, sizeof(*st));
 		if(st == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
 			return rval;
 		}
+		*sptr = (void *)st;
 	}
 
 	ASN_DEBUG("Decoding %s as plain primitive (tm=%d)",
