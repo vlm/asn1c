@@ -732,13 +732,13 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				ctx->phase = 1;	/* Processing body phase */
 				continue;
 			}
+			/* Fall through */
 		case XCT_UNEXPECTED: {
 			int edx_end;
 			int n;
 
 			if(!ctx->phase
-			|| edx >= td->elements_count
-			|| !IN_EXTENSION_GROUP(specs, td->elements_count))
+			|| edx >= td->elements_count)
 				break;	/* Really unexpected */
 
 			/*
