@@ -1,0 +1,59 @@
+ModuleTestXERDecoding {iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	70 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+PDU ::= CHOICE {
+    sequence	 [0] IMPLICIT Sequence,
+    set	 [1] IMPLICIT Set,
+    setOf	 [2] IMPLICIT SetOf,
+    sequenceOf	 [3] IMPLICIT SequenceOf,
+    extensibleSet	 [4] IMPLICIT ExtensibleSet,
+    extensibleSequence	 [5] IMPLICIT ExtensibleSequence,
+    setOfNULL	 [6] IMPLICIT SetOfNULL,
+    setOfEnums	 [7] IMPLICIT SetOfEnums,
+    seqOfZuka	 [8] IMPLICIT SeqOfZuka,
+    ...
+}
+
+Sequence ::= SEQUENCE {
+    integer	 [0] IMPLICIT INTEGER,
+    sequence	 [1] IMPLICIT Sequence OPTIONAL,
+    bits	 [2] IMPLICIT BIT STRING OPTIONAL,
+    string	 [3] IMPLICIT UTF8String
+}
+
+Set ::= SET {
+    roid	 [0] IMPLICIT RELATIVE-OID,
+    opaque	 [1] IMPLICIT OCTET STRING OPTIONAL
+}
+
+ExtensibleSet ::= SET {
+    string	 [0] IMPLICIT UTF8String OPTIONAL,
+    ...
+}
+
+ExtensibleSequence ::= SEQUENCE {
+    string	 [0] IMPLICIT UTF8String OPTIONAL,
+    ...,
+    integer	 [1] IMPLICIT INTEGER OPTIONAL
+}
+
+SetOf ::= SET OF REAL
+
+SetOfNULL ::= SET OF NULL
+
+SetOfEnums ::= SET OF ENUMERATED {
+        one(0),    
+        two(1)
+    }
+
+SequenceOf ::= SEQUENCE OF    id	 INTEGER {
+        one(1),    
+        two(2)
+    }
+
+SeqOfZuka ::= SEQUENCE OF    zuka	 NULL
+
+END
