@@ -46,9 +46,6 @@ static int
 asn1print_module(asn1p_module_t *mod, enum asn1print_flags_e flags) {
 	asn1p_expr_t *tc;
 
-	if(!(flags & APF_NO_SOURCE_COMMENTS))
-		printf("\n-- Contents of \"%s\"\n", mod->source_file_name);
-
 	printf("\n%s ", mod->Identifier);
 	if(mod->module_oid) {
 		asn1print_oid(mod->module_oid, flags);
