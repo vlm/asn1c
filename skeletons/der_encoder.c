@@ -134,7 +134,7 @@ der_write_TL(ber_tlv_tag_t tag, ber_tlv_len_t len,
 	ssize_t tmp;
 
 	/* Serialize tag (T from TLV) into possibly zero-length buffer */
-	tmp = der_tlv_tag_serialize(tag, buf, buf_size);
+	tmp = ber_tlv_tag_serialize(tag, buf, buf_size);
 	if(tmp == -1 || tmp > (ssize_t)sizeof(buf)) return -1;
 	size += tmp;
 

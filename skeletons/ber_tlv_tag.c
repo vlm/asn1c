@@ -100,7 +100,7 @@ ber_tlv_tag_string(ber_tlv_tag_t tag) {
 
 
 ssize_t
-der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
+ber_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 	int tclass = BER_TAG_CLASS(tag);
 	ber_tlv_tag_t tval = BER_TAG_VALUE(tag);
 	uint8_t *buf = (uint8_t *)bufp;
