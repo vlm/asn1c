@@ -100,9 +100,11 @@ asn1print_oid(asn1p_oid_t *oid, enum asn1print_flags flags) {
 		} else if(ac) printf(" ");
 
 		if(oid->arcs[ac].name) {
-			printf("%s(%d)",
-				oid->arcs[ac].name,
-				(int)oid->arcs[ac].number);
+			printf("%s", oid->arcs[ac].name);
+			if(oid->arcs[ac].number >= 0) {
+				printf("(%lld)",
+					(long long)oid->arcs[ac].number);
+			}
 			accum += strlen(oid->arcs[ac].name);
 		} else {
 			printf("%d",
@@ -289,7 +291,7 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 		{
 			char *symtable[] = { " EXCEPT ", " ^ ", " | ", ",",
 					"", "(" };
-			int i;
+			unsigned int i;
 			for(i = 0; i < ct->el_count; i++) {
 				enum asn1print_flags nflags = flags;
 				if(i) fputs(symtable[symno], stdout);
@@ -562,13 +564,14 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 
 	if(tc->meta_type == AMT_VALUE
 	&& tc->expr_type != A1TC_EXTENSIBLE) {
-		if(tc->expr_type == A1TC_UNIVERVAL)
+		if(tc->expr_type == A1TC_UNIVERVAL) {
 			printf("(");
-		else
-			printf(" ::= ");
-		asn1print_value(tc->value, flags);
-		if(tc->expr_type == A1TC_UNIVERVAL)
+			asn1print_value(tc->value, flags);
 			printf(")");
+		} else {
+			printf(" ::= ");
+			asn1print_value(tc->value, flags);
+		}
 	}
 
 	/*
