@@ -15,8 +15,7 @@ typedef struct asn1_SEQUENCE_element_s {
 	int optional;			/* Whether the element is optional */
 	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
 	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
-	asn1_TYPE_descriptor_t
-		*type;			/* Member type descriptor */
+	asn1_TYPE_descriptor_t *type;	/* Member type descriptor */
 	char *name;			/* ASN.1 identifier of the element */
 } asn1_SEQUENCE_element_t;
 
@@ -32,6 +31,12 @@ typedef struct asn1_SEQUENCE_specifics_s {
 	 */
 	asn1_SEQUENCE_element_t *elements;
 	int elements_count;
+
+	/*
+	 * Tags to members mapping table (sorted).
+	 */
+	asn1_TYPE_tag2member_t *tag2el;
+	int tag2el_count;
 
 	/*
 	 * Description of an extensions group.

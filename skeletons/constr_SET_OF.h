@@ -9,8 +9,7 @@
 
 typedef struct asn1_SET_OF_element_s {
 	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
-	asn1_TYPE_descriptor_t
-		*type;			/* Member type descriptor */
+	asn1_TYPE_descriptor_t *type;	/* Member type descriptor */
 } asn1_SET_OF_element_t;
 
 typedef struct asn1_SET_OF_specifics_s {

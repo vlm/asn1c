@@ -61,8 +61,8 @@
  */
 static int
 _t2e_cmp(const void *ap, const void *bp) {
-	const asn1_SET_tag2member_t *a = ap;
-	const asn1_SET_tag2member_t *b = bp;
+	const asn1_TYPE_tag2member_t *a = ap;
+	const asn1_TYPE_tag2member_t *b = bp;
 	int a_class = BER_TAG_CLASS(a->el_tag);
 	int b_class = BER_TAG_CLASS(b->el_tag);
 
@@ -225,8 +225,8 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 			 * but is not strongly anticipated either.
 			 */
 		} else {
-			asn1_SET_tag2member_t *t2m;
-			asn1_SET_tag2member_t key;
+			asn1_TYPE_tag2member_t *t2m;
+			asn1_TYPE_tag2member_t key;
 
 			key.el_tag = tlv_tag;
 			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
@@ -430,7 +430,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *sd,
 	size_t computed_size = 0;
 	der_enc_rval_t my_erval;
 	int t2m_build_own = (specs->tag2el_count != specs->elements_count);
-	asn1_SET_tag2member_t *t2m;
+	asn1_TYPE_tag2member_t *t2m;
 	int t2m_count;
 	ssize_t ret;
 	int edx;

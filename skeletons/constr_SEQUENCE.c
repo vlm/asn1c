@@ -3,6 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <constr_SEQUENCE.h>
+#include <assert.h>
 
 /*
  * Number of bytes left for this structure.
@@ -61,6 +62,35 @@
 #define	IN_EXTENSION_GROUP(specs, memb_idx)	\
 	( ((memb_idx) > (specs)->ext_after)	\
 	&&((memb_idx) < (specs)->ext_before))
+
+
+/*
+ * Tags are canonically sorted in the tag2element map.
+ */
+static int
+_t2e_cmp(const void *ap, const void *bp) {
+	const asn1_TYPE_tag2member_t *a = ap;
+	const asn1_TYPE_tag2member_t *b = bp;
+	int a_class = BER_TAG_CLASS(a->el_tag);
+	int b_class = BER_TAG_CLASS(b->el_tag);
+
+	if(a_class == b_class) {
+		ber_tlv_tag_t a_value = BER_TAG_VALUE(a->el_tag);
+		ber_tlv_tag_t b_value = BER_TAG_VALUE(b->el_tag);
+
+		if(a_value == b_value)
+			return 0;
+		else if(a_value < b_value)
+			return -1;
+		else
+			return 1;
+	} else if(a_class < b_class) {
+		return -1;
+	} else {
+		return 1;
+	}
+}
+
 
 /*
  * The decoder of the SEQUENCE type.
@@ -151,6 +181,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		void *memb_ptr2;	/* Pointer to that pointer */
 		ssize_t tag_len;	/* Length of TLV's T */
 		int opt_edx_end;	/* Next non-optional element */
+		int use_bsearch;
 		int n;
 
 		if(ctx->step & 1)
@@ -196,9 +227,15 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		/*
 		 * Find the next available type with this tag.
 		 */
+		use_bsearch = 0;
 		opt_edx_end = edx + elements[edx].optional + 1;
 		if(opt_edx_end > specs->elements_count)
 			opt_edx_end = specs->elements_count;	/* Cap */
+		else if(opt_edx_end - edx > 5) {
+			/* Limit the scope of linear search */
+			opt_edx_end = edx + 5;
+			use_bsearch = 1;
+		}
 		for(n = edx; n < opt_edx_end; n++) {
 			if(BER_TAGS_EQUAL(tlv_tag, elements[n].tag)) {
 				/*
@@ -207,9 +244,38 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 				 * Reposition over the right element.
 				 */
 				edx = n;
-				ctx->step = 2 * edx;	/* Remember! */
+				ctx->step = 1 + 2 * edx;	/* Remember! */
+				goto microphase2;
+			} else if(elements[n].tag == (ber_tlv_tag_t)-1) {
+				use_bsearch = 1;
 				break;
 			}
+		}
+		if(use_bsearch) {
+			/*
+			 * Resorch to a binary search over
+			 * sorted array of tags.
+			 */
+			asn1_TYPE_tag2member_t *t2m;
+			asn1_TYPE_tag2member_t key;
+			key.el_tag = tlv_tag;
+			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
+				sizeof(specs->tag2el[0]), _t2e_cmp);
+			if(t2m && t2m->el_no >= edx) {
+				/*
+				 * Rewind to the first element with that tag,
+				 * `cause bsearch() does not guarantee order.
+				 */
+				while(t2m > specs->tag2el
+					&& BER_TAGS_EQUAL(tlv_tag,
+						t2m[-1].el_tag)
+					&& t2m[-1].el_no >= edx)
+					t2m++;
+				edx = t2m->el_no;
+				ctx->step = 1 + 2 * edx;
+				goto microphase2;
+			}
+			n = opt_edx_end;
 		}
 		if(n == opt_edx_end) {
 			/*
@@ -222,8 +288,9 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 			if(!IN_EXTENSION_GROUP(specs, edx)) {
 				ASN_DEBUG("Unexpected tag %s",
 					ber_tlv_tag_string(tlv_tag));
-				ASN_DEBUG("Expected tag %s%s",
+				ASN_DEBUG("Expected tag %s (%s)%s",
 					ber_tlv_tag_string(elements[edx].tag),
+					elements[edx].name,
 					elements[edx].optional
 						?" or alternatives":"");
 				RETURN(RC_FAIL);
@@ -388,6 +455,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	
 	RETURN(RC_OK);
 }
+
 
 /*
  * The DER encoder of the SEQUENCE type.
@@ -574,7 +642,7 @@ SEQUENCE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		const void *memb_ptr;
 
 		if(elm->optional) {
-			memb_ptr = *(const void **)((const char *)sptr + elm->memb_offset);
+			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
