@@ -657,7 +657,6 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
-		printf("XER/CHOICE tcv=%d ph=%d\n", tcv, ctx->phase);
 		switch(tcv) {
 		case XCT_BOTH:
 			break;	/* No CHOICE? */
@@ -695,7 +694,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					ctx->phase = 2;
 					break;
 				case XCT_UNEXPECTED:
-					continue;	/* or continue; */
+					continue;
 				case XCT_CLOSING:
 				default:
 					edx = td->elements_count;
@@ -703,8 +702,9 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				}
 				break;
 			}
-			if(edx == td->elements_count) break;
-			continue;
+			if(edx != td->elements_count)
+				continue;
+			/* Fall through */
 		default:
 			break;
 		}

@@ -767,7 +767,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					ctx->phase = 2;
 					break;
 				case XCT_UNEXPECTED:
-					continue;	/* or continue; */
+					continue;
 				case XCT_CLOSING:
 				default:
 					n = edx_end;
