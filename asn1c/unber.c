@@ -698,3 +698,4 @@ ssize_t der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode, int
 
 asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx, void *struct_key, const char *xml_tag, void *buf_ptr, size_t size, int (*otd)(void *struct_key, void *chunk_buf, size_t chunk_size), ssize_t (*br)(void *struct_key, void *chunk_buf, size_t chunk_size, int have_more)) { asn_dec_rval_t rv; (void)opt_codec_ctx; (void)ctx; (void)struct_key; (void)xml_tag; (void)buf_ptr; (void)size; (void)otd; (void)br; return rv; }
 
+int xer_is_whitespace(void *b, size_t s) { (void)b; (void)s; return 0; }
