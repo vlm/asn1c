@@ -173,11 +173,14 @@ typedef struct asn1p_expr_s {
 		asn1_integer_t tag_value;
 	} tag;
 
-	enum asn1p_expr_marker_e {
-		EM_NOMARK,
-		EM_INDIRECT	= 0x01,	/* 0001: Represent as pointer */
-		EM_OPTIONAL	= 0x03,	/* 0011: Optional member */
-		EM_DEFAULT	= 0x07,	/* 0111: FIXME: store the value */
+	struct asn1p_expr_marker_s {
+		enum asn1p_expr_marker_e {
+			EM_NOMARK,
+			EM_INDIRECT	= 0x01,	/* 0001: Represent as pointer */
+			EM_OPTIONAL	= 0x03,	/* 0011: Optional member */
+			EM_DEFAULT	= 0x07,	/* 0111: default_value */
+		} flags;
+		asn1p_value_t *default_value;	/* For EM_DEFAULT case */
 	} marker;
 	int unique;	/* UNIQUE */
 
