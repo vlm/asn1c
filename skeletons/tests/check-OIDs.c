@@ -1,5 +1,5 @@
-#include "../RELATIVE-OID.c"
 #include "../OBJECT_IDENTIFIER.c"
+#include "../RELATIVE-OID.c"
 #include "../INTEGER.c"
 #include "../ber_decoder.c"
 #include "../ber_tlv_length.c"
@@ -42,6 +42,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	OBJECT_IDENTIFIER_print(&asn1_DEF_OBJECT_IDENTIFIER, oid, 0, _print, 0);
 	printf("\n");
 
+	memset(arcs, 'A', sizeof(arcs));
 	alen = OBJECT_IDENTIFIER_get_arcs(oid,
 		arcs, sizeof(arcs[0]), sizeof(arcs)/sizeof(arcs[0]));
 	assert(alen > 0);
@@ -85,6 +86,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	RELATIVE_OID_print(&asn1_DEF_RELATIVE_OID, oid, 0, _print, 0);
 	printf("\n");
 
+	memset(arcs, 'A', sizeof(arcs));
 	alen = RELATIVE_OID_get_arcs(oid,
 		arcs, sizeof(arcs[0]), sizeof(arcs)/sizeof(arcs[0]));
 	assert(alen > 0);
@@ -113,21 +115,23 @@ check_REGEN(int *arcs, int acount) {
 	int ret;
 	int i;
 
-	printf("Encoding {");
+	printf("Encoding (R) {");
 	for(i = 0; i < acount; i++) {
 		printf(" %u", arcs[i]);
 	}
 	printf(" }\n");
 
-	ret = RELATIVE_OID_set_arcs_l(&oid, (unsigned long *)arcs, acount);
+	ret = RELATIVE_OID_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
 	assert(ret == 0);
 
+	memset(tmp_arcs, 'A', sizeof(tmp_arcs));
 	alen = RELATIVE_OID_get_arcs(&oid, tmp_arcs,
 		sizeof(tmp_arcs[0]), tmp_alen);
 	assert(alen >= 0);
-	assert(alen < tmp_alen);
+	assert(alen <= tmp_alen);
+	assert(alen == acount);
 
-	printf("Encoded {");
+	printf("Encoded  (R) {");
 	for(i = 0; i < alen; i++) {
 		printf(" %lu", tmp_arcs[i]);
 		assert((unsigned long)arcs[i] == tmp_arcs[i]);
@@ -148,26 +152,28 @@ check_REGEN_OID(int *arcs, int acount) {
 	int ret;
 	int i;
 
-	printf("Encoding {");
+	printf("Encoding (O) {");
 	for(i = 0; i < acount; i++) {
 		printf(" %u", arcs[i]);
 	}
 	printf(" }\n");
 
-	ret = OBJECT_IDENTIFIER_set_arcs_l(&oid, (unsigned long *)arcs, acount);
+	ret = OBJECT_IDENTIFIER_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
 	assert(ret == 0);
 
+	memset(tmp_arcs, 'A', sizeof(tmp_arcs));
 	alen = OBJECT_IDENTIFIER_get_arcs(&oid,
 		tmp_arcs, sizeof(tmp_arcs[0]), tmp_alen);
 	assert(alen >= 0);
-	assert(alen < tmp_alen);
+	assert(alen <= tmp_alen);
+	assert(alen == acount);
 
-	printf("Encoded {");
+	printf("Encoded  (O) { ");
 	for(i = 0; i < alen; i++) {
-		printf(" %lu", tmp_arcs[i]);
+		printf("%lu ", tmp_arcs[i]); fflush(stdout);
 		assert((unsigned long)arcs[i] == tmp_arcs[i]);
 	}
-	printf(" }\n");
+	printf("}\n");
 }
 
 static int
@@ -224,6 +230,8 @@ check_speed() {
 
 int
 main() {
+	int i;
+
 	/* {joint-iso-itu-t 230 3} */
 	uint8_t buf1[] = {
 		0x06,	/* OBJECT IDENTIFIER */
@@ -240,34 +248,75 @@ main() {
 	};
 	int buf2_check[] = { 8571, 3, 2 };
 
-	int buf3_check[] = { 0 };
-	int buf4_check[] = { 1 };
-	int buf5_check[] = { 80, 40 };
-	int buf6_check[] = { 127 };
-	int buf7_check[] = { 128 };
-	int buf8_check[] = { 65535, 65536 };
-	int buf9_check[] = { 100000, 0x20000, 1234, 256, 127, 128 };
-	int buf10_check[] = { 0, 0xffffffff, 0xff00ff00, 0 };
-	int buf11_check[] = { 0, 1, 2 };
-	int buf12_check[] = { 1, 38, 3 };
-	int buf13_check[] = { 0, 0, 0xf000 };
+	/* {joint-iso-itu-t 42 } */
+	uint8_t buf3[] = {
+		0x06,	/* OBJECT IDENTIFIER */
+		0x01,	/* Length */
+		0x7A
+	};
+	int buf3_check[] = { 2, 42 };
+
+	/* {joint-iso-itu-t 25957 } */
+	uint8_t buf4[] = {
+		0x06,	/* OBJECT IDENTIFIER */
+		0x03,	/* Length */
+		0x81, 0x80 + 0x4B, 0x35
+	};
+	int buf4_check[] = { 2, 25957 };
+
+	int buf5_check[] = { 0 };
+	int buf6_check[] = { 1 };
+	int buf7_check[] = { 80, 40 };
+	int buf8_check[] = { 127 };
+	int buf9_check[] = { 128 };
+	int buf10_check[] = { 65535, 65536 };
+	int buf11_check[] = { 100000, 0x20000, 1234, 256, 127, 128 };
+	int buf12_check[] = { 0, 0xffffffff, 0xff00ff00, 0 };
+	int buf13_check[] = { 0, 1, 2 };
+	int buf14_check[] = { 1, 38, 3 };
+	int buf15_check[] = { 0, 0, 0xf000 };
+	int buf16_check[] = { 0, 0, 0, 1, 0 };
+	int buf17_check[] = { 2, 0xffffffAf, 0xff00ff00, 0 };
 
 
 	CHECK_OID(1);	/* buf1, buf1_check */
 	CHECK_ROID(2);	/* buf2, buf2_check */
+	CHECK_OID(3);	/* buf3, buf3_check */
+	CHECK_OID(4);	/* buf4, buf4_check */
 
-	CHECK_REGEN(3);	/* Regenerate RELATIVE-OID */
-	CHECK_REGEN(4);
-	CHECK_REGEN(5);
+	CHECK_REGEN(5);	/* Regenerate RELATIVE-OID */
 	CHECK_REGEN(6);
 	CHECK_REGEN(7);
 	CHECK_REGEN(8);
 	CHECK_REGEN(9);
 	CHECK_REGEN(10);
+	CHECK_REGEN(11);
+	CHECK_REGEN(12);
+	CHECK_REGEN(13);
+	CHECK_REGEN(14);
+	CHECK_REGEN(15);
+	CHECK_REGEN(16);
+	CHECK_REGEN(17);
 	CHECK_REGEN_OID(1);	/* Regenerate OBJECT IDENTIFIER */
-	CHECK_REGEN_OID(11);
-	CHECK_REGEN_OID(12);
+	CHECK_REGEN_OID(3);	/* Regenerate OBJECT IDENTIFIER */
+	CHECK_REGEN_OID(4);	/* Regenerate OBJECT IDENTIFIER */
 	CHECK_REGEN_OID(13);
+	CHECK_REGEN_OID(14);
+	CHECK_REGEN_OID(15);
+	CHECK_REGEN_OID(16);
+	CHECK_REGEN_OID(17);
+
+	for(i = 0; i < 100000; i++) {
+		int bufA_check[3] = { 2, i, rand() };
+		int bufB_check[2] = { rand(), i * 121 };
+		CHECK_REGEN(A);
+		CHECK_REGEN_OID(A);
+		CHECK_REGEN(B);
+		if(i > 100) i++;
+		if(i > 500) i++;
+		if(i > 1000) i += 3;
+		if(i > 5000) i += 151;
+	}
 
 	if(getenv("CHECK_SPEED")) {
 		/* Useful for developers only */

@@ -3,6 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <RELATIVE-OID.h>
+#include <limits.h>	/* for CHAR_BIT */
 #include <assert.h>
 #include <errno.h>
 
@@ -96,13 +97,13 @@ RELATIVE_OID_get_arcs(RELATIVE_OID_t *roid,
 }
 
 int
-RELATIVE_OID_set_arcs_l(RELATIVE_OID_t *roid, unsigned long *arcs, int arcs_slots) {
+RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_size, unsigned int arcs_slots) {
 	uint8_t *buf;
 	uint8_t *bp;
 	int size;
 	int i;
 
-	if(roid == NULL || arcs == NULL || arcs_slots < 0) {
+	if(roid == NULL || arcs == NULL || arc_type_size < 1) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -110,7 +111,7 @@ RELATIVE_OID_set_arcs_l(RELATIVE_OID_t *roid, unsigned long *arcs, int arcs_slot
 	/*
 	 * Roughly estimate the maximum size necessary to encode these arcs.
 	 */
-	size = ((sizeof(arcs[0]) + 1) * 8 / 7) * arcs_slots;
+	size = ((arc_type_size * CHAR_BIT + 6) / 7) * arcs_slots;
 	bp = buf = MALLOC(size + 1);
 	if(!buf) {
 		/* ENOMEM */
@@ -118,45 +119,23 @@ RELATIVE_OID_set_arcs_l(RELATIVE_OID_t *roid, unsigned long *arcs, int arcs_slot
 	}
 
 	/*
-	 * Encode the arcs and refine the encoding size.
+	 * Encode the arcs.
 	 */
-	size = 0;
-	for(i = 0; i < arcs_slots; i++) {
-		unsigned long value = arcs[i];
-		uint8_t tbuf[sizeof(value) * 2];  /* Conservatively sized */
-		uint8_t *tp = tbuf;
-		int arc_len = 0;
-		int add;
-
-		for(add = 1; value; value >>= 7, add++) {
-			unsigned int b7 = value & 0x7F;
-			*tp++ = 0x80 | b7;
-			if(b7) {
-				arc_len += add;
-				add = 0;
-			}
-		}
-
-		if(arc_len) {
-			tp = &tbuf[arc_len - 1];
-			/* The last octet does not have bit 8 set. */
-			*tbuf &= 0x7f;
-			for(; tp >= tbuf; tp--)
-				*bp++ = *tp;
-			size += arc_len;
-		} else {
-			*bp++ = 0;
-			size++;
-		}
+	for(i = 0; i < arcs_slots; i++, (char *)arcs += arc_type_size) {
+		bp += OBJECT_IDENTIFIER_set_single_arc(bp,
+			arcs, arc_type_size, 0);
 	}
+
+	assert((bp - buf) <= size);
 
 	/*
 	 * Replace buffer.
 	 */
-	roid->size = size;
+	roid->size = bp - buf;
 	bp = roid->buf;
 	roid->buf = buf;
 	if(bp) FREEMEM(bp);
 
 	return 0;
 }
+
