@@ -177,7 +177,8 @@ static asn_INTEGER_specifics_t asn_DEF_SimpleType_specs = {
 	asn_MAP_SimpleType_value2enum,	/* "tag" => N; sorted by tag */
 	asn_MAP_SimpleType_enum2value,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
-	0	/* Enumeration is not extensible */
+	0,	/* Enumeration is not extensible */
+	1	/* Strict enumeration */
 };
 static ber_tlv_tag_t asn_DEF_SimpleType_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
