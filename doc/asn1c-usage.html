@@ -6,8 +6,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Using the Free ASN.1 Compiler</TITLE>
-<META NAME="description" CONTENT="Using the Free ASN.1 Compiler">
+<TITLE>Using the Open ASN.1 Compiler</TITLE>
+<META NAME="description" CONTENT="Using the Open ASN.1 Compiler">
 <META NAME="asn1c, ASN.1, free, compiler, BER, DER, PER, XER\">
 
 
@@ -21,7 +21,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <P>
-<H1 ALIGN="CENTER">Using the Free ASN.1 Compiler</H1><DIV>
+<H1 ALIGN="CENTER">Using the Open ASN.1 Compiler</H1><DIV>
 
 <P ALIGN="CENTER"><STRONG>Lev Walkin &lt;vlm@lionet.info&gt;</STRONG></P>
 </DIV>
@@ -705,6 +705,14 @@ explanation.</FONT></TD></TR>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B>Language Options</B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <B>Description</B></TD></TR>
 </TBODY><TBODY>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fall-defs-global</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+Normally the compiler hides the definitions (asn1_DEF_xxx) of the
+inner structure elements (members of SEQUENCE, SET and other types).
+This option makes all such definitions global. Enabling this option
+may pollute the namespace by making lots of asn1_DEF_xxx structures
+globally visible, but will allow you to manipulate (encode and decode)
+the individual members of any complex ASN.1 structure.</TD></TR>
+</TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fbless-SIZE</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Allow SIZE() constraint for INTEGER, ENUMERATED, and other
 types for which this constraint is normally prohibited by the standard.
@@ -1198,7 +1206,7 @@ structure pointer set to 0 (NULL), the function will do nothing.
 <H2><A NAME="SECTION04000000000000000000">
 Bibliography</A>
 </H2><DL COMPACT><DD><P></P><DT><A NAME="ASN1C">ASN1C</A>
-<DD>Free ASN.1 Compiler. http://lionet.info/asn1/
+<DD>The OpenSource ASN.1 Compiler. http://lionet.info/asn1/
 <P></P><DT><A NAME="Dub00">Dub00</A>
 <DD>Olivier Dubuisson - <I>ASN.1 Communication between heterogeneous
 systems</I> - Morgan Kaufmann Publishers, 2000. http://asn1.elibel.tm.fr/en/book/.
@@ -1262,7 +1270,7 @@ which aren't important for the size determination.
 </DL><BR><HR>
 <ADDRESS>
 Lev Walkin
-2004-08-23
+2004-09-07
 </ADDRESS>
 </BODY>
 </HTML>
