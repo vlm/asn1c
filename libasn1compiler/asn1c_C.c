@@ -98,7 +98,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		TQ_FOR(v, &(expr->members), next) {
 			switch(v->expr_type) {
 			case A1TC_UNIVERVAL:
-				OUT("\t%s\t= %lld,\n",
+				OUT("\t%s\t= %" PRIdASN ",\n",
 					asn1c_make_identifier(0,
 						expr->Identifier,
 						v->Identifier, 0),
@@ -969,7 +969,7 @@ _print_tag(arg_t *arg, struct asn1p_type_tag_s *tag) {
 	case TC_NOCLASS:
 		break;
 	}
-	OUT(" | (%lld << 2))", tag->tag_value);
+	OUT(" | (%" PRIdASN " << 2))", tag->tag_value);
 
 	return 0;
 }

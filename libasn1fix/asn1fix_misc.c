@@ -51,8 +51,8 @@ asn1f_printable_value(asn1p_value_t *v) {
 			memcpy(buf + sizeof(buf) - 4, "...", 4);
 		return buf;
 	case ATV_INTEGER:
-		ret = snprintf(buf, sizeof(buf), "%lld",
-			(long long)v->value.v_integer);
+		ret = snprintf(buf, sizeof(buf), "%" PRIdASN,
+			v->value.v_integer);
 		if(ret >= (ssize_t)sizeof(buf))
 			memcpy(buf + sizeof(buf) - 4, "...", 4);
 		return buf;

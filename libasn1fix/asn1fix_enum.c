@@ -102,9 +102,9 @@ asn1f_fix_enum(arg_t *arg) {
 				 */
 				FATAL(
 					"Enumeration %s at line %d: "
-					"Explicit value \"%s(%lld)\" "
+					"Explicit value \"%s(%" PRIdASN ")\" "
 					"is not greater "
-					"than previous values (max %lld)",
+					"than previous values (max %" PRIdASN ")",
 					expr->Identifier,
 					ev->_lineno,
 					ev->Identifier,
