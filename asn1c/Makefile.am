@@ -7,6 +7,7 @@ AM_CPPFLAGS = \
 	-I${top_srcdir}/libasn1parser	\
 	-I${top_srcdir}/libasn1print	\
 	-I${top_srcdir}/libasn1fix	\
+	-I${top_srcdir}/skeletons	\
 	-DDATADIR=\"${pkgdatadir}\"
 
 LDADD =	\
@@ -14,6 +15,8 @@ LDADD =	\
 	${top_builddir}/libasn1fix/libasn1fix.la	\
 	${top_builddir}/libasn1print/libasn1print.la	\
 	${top_builddir}/libasn1compiler/libasn1compiler.la
+
+asn1c_SOURCES = asn1c.c decoder.c decoder.h
 
 bin_PROGRAMS = asn1c
 

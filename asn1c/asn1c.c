@@ -19,14 +19,16 @@
 
 #include <asn1c_compat.h>	/* Portable basename(3) and dirname(3) */
 
+#include "decoder.h"		/* -t: decode TL[V?] string */
+
 static void usage(char *av0);	/* Print the Usage screen and exit(EX_USAGE) */
 
 int
 main(int ac, char **av) {
-	enum asn1p_flags asn1_parser_flags	= A1P_NOFLAGS;
-	enum asn1f_flags asn1_fixer_flags	= A1F_NOFLAGS;
-	enum asn1c_flags asn1_compiler_flags	= A1C_NOFLAGS;
-	enum asn1print_flags_e print_arg__flags = APF_NOFLAGS;
+	enum asn1p_flags     asn1_parser_flags	= A1P_NOFLAGS;
+	enum asn1f_flags     asn1_fixer_flags	= A1F_NOFLAGS;
+	enum asn1c_flags     asn1_compiler_flags= A1C_NOFLAGS;
+	enum asn1print_flags asn1_print_flags	= APF_NOFLAGS;
 	int print_arg__print_out = 0;	/* Don't compile, just print parsed */
 	int print_arg__fix_n_print = 0;	/* Fix and print */
 	int warnings_as_errors = 0;	/* Treat warnings as errors */
@@ -39,7 +41,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "EFf:LPRS:W:")) != -1)
+	while((ch = getopt(ac, av, "EFf:LPRS:t:W:")) != -1)
 	switch(ch) {
 	case 'E':
 		print_arg__print_out = 1;
@@ -62,13 +64,16 @@ main(int ac, char **av) {
 			char *known_type = optarg + 18;
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
+		} else if(strcmp(optarg, "undoc") == 0) {
+			/* Enable undocumented operation */
+			asn1_print_flags |= APF_FULL_CONSTRAINTS;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
 		}
 		break;
 	case 'L':
-		print_arg__flags |= APF_LINE_COMMENTS;
+		asn1_print_flags |= APF_LINE_COMMENTS;
 		break;
 	case 'P':
 		asn1_compiler_flags |= A1C_PRINT_COMPILED;
@@ -79,6 +84,10 @@ main(int ac, char **av) {
 	case 'S':
 		skeletons_dir = optarg;
 		break;
+	case 't':
+		if(decode_tlv_from_string(optarg))
+			exit(EX_DATAERR);
+		exit(0);
 	case 'W':
 		if(strcmp(optarg, "error") == 0) {
 			warnings_as_errors = 1;
@@ -151,10 +160,10 @@ main(int ac, char **av) {
 	}
 
 	/*
-	 * Dump the parsed ASN.1 tree if -E specified and -F is not given.
+	 * Dump the parsed ASN.1 tree if -E specified and -F is NOT given.
 	 */
 	if(print_arg__print_out && !print_arg__fix_n_print) {
-		if(asn1print(asn, print_arg__flags))
+		if(asn1print(asn, asn1_print_flags))
 			exit(EX_SOFTWARE);
 		return 0;
 	}
@@ -181,7 +190,7 @@ main(int ac, char **av) {
 	 * Dump the parsed ASN.1 tree if -E specified and -F is given.
 	 */
 	if(print_arg__print_out && print_arg__fix_n_print) {
-		if(asn1print(asn, print_arg__flags))
+		if(asn1print(asn, asn1_print_flags))
 			exit(EX_SOFTWARE);
 		return 0;
 	}
@@ -247,6 +256,8 @@ usage(char *av0) {
 		"\t-S <dir>\tDirectory with support (skeleton?) files\n"
 		"\t        \t(Default is \"%s\")\n"
 		"\t-R      \tRestrict output (tables only, no support code)\n"
+		"\n"
+		"\t-t <data>\tDecode the given tag[/length] sequence\n"
 		"\n"
 		"\t-ftypes88\tUse only ASN.1:1988 embedded types\n"
 /*
