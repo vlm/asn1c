@@ -31,6 +31,10 @@ enum asn1c_flags {
 	 * Enable use of unnamed unions (non-portable feature).
 	 */
 	A1C_UNNAMED_UNIONS	= 0x0020,
+	/*
+	 * Don't make the asn1_DEF_'s of structure members "static".
+	 */
+	A1C_ALL_DEFS_GLOBAL	= 0x0040,
 };
 
 /*
