@@ -345,9 +345,11 @@ asn1f_make_known_external_type(const char *type_name) {
 
 int
 asn1f_check_known_external_type(const char *type_name) {
-	void *p = bsearch(&type_name, known_types, known_types_count,
-		sizeof(known_types[0]), _known_types_cmp);
-	if(p) return 0;
+	if(known_types_count) {
+		void *p = bsearch(&type_name, known_types, known_types_count,
+				sizeof(known_types[0]), _known_types_cmp);
+		if(p) return 0;
+	}
 	errno = ESRCH;
 	return -1;
 }

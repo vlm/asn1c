@@ -1,7 +1,7 @@
 #define	__NO_ASN_TABLE__
-#include <UTCTime.c>
-#define	__NO_ASSERT_H__
 #include <GeneralizedTime.c>
+#define	__NO_ASN_TABLE__
+#include <UTCTime.c>
 #include <constraints.c>
 
 static void
@@ -23,11 +23,11 @@ check(char *time_str, time_t sample, int as_gmt) {
 		tm.tm_hour,
 		tm.tm_min,
 		tm.tm_sec,
-		tm.tm_gmtoff
+		GMTOFF(tm)
 	);
 	assert(tloc == sample);
 
-	assert(tloc == -1 || as_gmt == 0 || tm.tm_gmtoff == 0);
+	assert(tloc == -1 || as_gmt == 0 || GMTOFF(tm) == 0);
 
 	if(as_gmt) check(time_str, sample, as_gmt);
 }

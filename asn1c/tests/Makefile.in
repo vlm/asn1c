@@ -157,7 +157,7 @@ target_os = @target_os@
 target_vendor = @target_vendor@
 AM_CFLAGS = @ADD_CFLAGS@
 check_SCRIPTS = check-assembly.sh
-TESTS_ENVIRONMENT = CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
+TESTS_ENVIRONMENT = CC="${CC}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
 @CPLUSPLUS_FOUND_FALSE@TESTS = check-*.c
 @CPLUSPLUS_FOUND_TRUE@TESTS = check-*.c check-*.cc	## Include C++ test filed (.cc)
 EXTRA_DIST = \

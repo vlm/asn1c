@@ -2,6 +2,8 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#define	_POSIX_PTHREAD_SEMANTICS	/* for Sun */
+#define	_REENTRANT			/* for Sun */
 #include <asn_internal.h>
 #include <GeneralizedTime.h>
 #include <time.h>
@@ -34,9 +36,14 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 }
 
 #define	tzset()	_tzset()
+#define	putenv()	_putenv()
 #define	_EMULATE_TIMEGM
 
 #endif	/* WIN32 */
+
+#if	defined(sun)
+#define	_EMULATE_TIMEGM
+#endif
 
 /*
  * Where to look for offset from GMT, Phase I.
@@ -87,7 +94,7 @@ static time_t timegm(struct tm *tm) {
 	char *buf;
 
 	tz = getenv("TZ");
-	_putenv("TZ=UTC");
+	putenv("TZ=UTC");
 	tzset();
 	tloc = mktime(tm);
 	if (tz) {
@@ -97,7 +104,7 @@ static time_t timegm(struct tm *tm) {
 	} else {
 		buf = "TZ=";
 	}
-	_putenv(buf);
+	putenv(buf);
 	tzset();
 	return tloc;
 }

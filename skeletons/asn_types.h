@@ -12,7 +12,7 @@
 #include "config.h"
 #endif
 
-#include <stdio.h>	/* For fprintf() */
+#include <stdio.h>	/* For snprintf(3) */
 #include <stdlib.h>	/* For *alloc(3) */
 #include <string.h>	/* For memcpy(3) */
 #include <sys/types.h>	/* For size_t */
@@ -21,12 +21,22 @@
 
 #include <inttypes.h>	/* C99 specifies this file */
 
+#if	defined(sun)
+#include <ieeefp.h>	/* for finite(3) */
+#endif
+
 /*
- * Earlier FreeBSD version didn't have <stdint.h>,
+ * 1. Earlier FreeBSD version didn't have <stdint.h>,
  * but <inttypes.h> was present.
+ * 2. Sun Solaris requires <alloca.h> for alloca(3),
+ * but does not have <stdint.h>.
  */
-#if	!defined(__FreeBSD__) || !defined(_SYS_INTTYPES_H_) /* Workaround */
+#if	(!defined(__FreeBSD__) || !defined(_SYS_INTTYPES_H_))
+#if	defined(sun)
+#include <alloca.h>	/* For alloca(3) */
+#else
 #include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
+#endif
 #endif
 
 #ifdef	WIN32
