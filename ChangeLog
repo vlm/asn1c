@@ -5,6 +5,7 @@
 	* More RFC variations supported in crfc2asn1.pl.
 	* Refined string values compatibility. (Test cases 77, 78).
 	* Support for ContainedSubtype constraints. (Test case 16).
+	* Parsing support for CONSTRAINED BY. (Test case 79).
 
 0.9.12:	2005-Mar-10
 

@@ -1388,12 +1388,11 @@ DefinedValue:
 
 Opaque:
 	TOK_opaque {
-		$$.len = $1.len + 2;
+		$$.len = $1.len + 1;
 		$$.buf = malloc($$.len + 1);
 		checkmem($$.buf);
 		$$.buf[0] = '{';
-		$$.buf[1] = ' ';
-		memcpy($$.buf + 2, $1.buf, $1.len);
+		memcpy($$.buf + 1, $1.buf, $1.len);
 		$$.buf[$$.len] = '\0';
 		free($1.buf);
 	}
@@ -1622,6 +1621,15 @@ ConstraintSubtypeElement:
 	}
 	| WithComponents {
 		$$ = $1;
+	}
+	| TOK_CONSTRAINED TOK_BY '{'
+		{ asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = ACT_CT_CTDBY;
+		$$->value = asn1p_value_frombuf($5.buf, $5.len, 0);
+		checkmem($$->value);
+		$$->value->type = ATV_UNPARSED;
 	}
 	;
 

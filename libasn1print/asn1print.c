@@ -322,6 +322,11 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 	case ACT_CT_WCOMP:
 	case ACT_CT_WCOMPS:
 		printf("???");
+	case ACT_CT_CTDBY:
+		printf("CONSTRAINED BY ");
+		assert(ct->value->type == ATV_UNPARSED);
+		fwrite(ct->value->value.string.buf,
+			1, ct->value->value.string.size, stdout);
 		break;
 	case ACT_CA_SET: symno++;
 	case ACT_CA_CRC: symno++;
