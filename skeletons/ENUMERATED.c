@@ -19,7 +19,9 @@ asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED = {
 	INTEGER_free,			/* Implemented in terms of INTEGER */
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_ENUMERATED_tags,
-	sizeof(asn1_DEF_ENUMERATED_tags)/sizeof(asn1_DEF_ENUMERATED_tags[0]),
+	sizeof(asn1_DEF_ENUMERATED_tags) / sizeof(asn1_DEF_ENUMERATED_tags[0]),
+	asn1_DEF_ENUMERATED_tags,	/* Same as above */
+	sizeof(asn1_DEF_ENUMERATED_tags) / sizeof(asn1_DEF_ENUMERATED_tags[0]),
 	0,	/* Primitive */
 	0, 0,	/* No members */
 	0	/* No specifics */

@@ -8,7 +8,8 @@
  * ObjectDescriptor basic type description.
  */
 static ber_tlv_tag_t asn1_DEF_ObjectDescriptor_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (7 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (7 << 2)),	/* [UNIVERSAL 7] IMPLICIT ... */
+	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
 asn1_TYPE_descriptor_t asn1_DEF_ObjectDescriptor = {
 	"ObjectDescriptor",
@@ -18,6 +19,9 @@ asn1_TYPE_descriptor_t asn1_DEF_ObjectDescriptor = {
 	OCTET_STRING_print_ascii,   /* Treat as ASCII subset (it's not) */
 	OCTET_STRING_free,
 	0, /* Use generic outmost tag fetcher */
+	asn1_DEF_ObjectDescriptor_tags,
+	sizeof(asn1_DEF_ObjectDescriptor_tags)
+	  / sizeof(asn1_DEF_ObjectDescriptor_tags[0]) - 1,
 	asn1_DEF_ObjectDescriptor_tags,
 	sizeof(asn1_DEF_ObjectDescriptor_tags)
 	  / sizeof(asn1_DEF_ObjectDescriptor_tags[0]),

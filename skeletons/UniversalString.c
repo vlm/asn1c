@@ -8,7 +8,8 @@
  * UniversalString basic type description.
  */
 static ber_tlv_tag_t asn1_DEF_UniversalString_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (28 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (28 << 2)),	/* [UNIVERSAL 28] IMPLICIT ...*/
+	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
 asn1_TYPE_descriptor_t asn1_DEF_UniversalString = {
 	"UniversalString",
@@ -18,6 +19,9 @@ asn1_TYPE_descriptor_t asn1_DEF_UniversalString = {
 	UniversalString_print,      /* Convert into UTF8 and print */
 	OCTET_STRING_free,
 	0, /* Use generic outmost tag fetcher */
+	asn1_DEF_UniversalString_tags,
+	sizeof(asn1_DEF_UniversalString_tags)
+	  / sizeof(asn1_DEF_UniversalString_tags[0]) - 1,
 	asn1_DEF_UniversalString_tags,
 	sizeof(asn1_DEF_UniversalString_tags)
 	  / sizeof(asn1_DEF_UniversalString_tags[0]),

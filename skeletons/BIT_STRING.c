@@ -21,6 +21,9 @@ asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
 	asn1_DEF_BIT_STRING_tags,
 	sizeof(asn1_DEF_BIT_STRING_tags)
 	  / sizeof(asn1_DEF_BIT_STRING_tags[0]),
+	asn1_DEF_BIT_STRING_tags,	/* Same as above */
+	sizeof(asn1_DEF_BIT_STRING_tags)
+	  / sizeof(asn1_DEF_BIT_STRING_tags[0]),
 	-1,	/* Both ways are fine */
 	0, 0,	/* No members */
 	(void *)-1	/* Special indicator that this is a BIT STRING */

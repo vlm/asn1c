@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <OCTET_STRING.h>
@@ -21,6 +21,9 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	OCTET_STRING_free,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_OCTET_STRING_tags,
+	sizeof(asn1_DEF_OCTET_STRING_tags)
+	  / sizeof(asn1_DEF_OCTET_STRING_tags[0]),
+	asn1_DEF_OCTET_STRING_tags,	/* Same as above */
 	sizeof(asn1_DEF_OCTET_STRING_tags)
 	  / sizeof(asn1_DEF_OCTET_STRING_tags[0]),
 	-1,	/* Both ways are fine (primitive and constructed) */
@@ -54,6 +57,7 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 		size_t _ns = ctx->step;	/* Allocated */			\
 		if(_ns <= (size_t)(st->size + _bs)) {			\
 			void *ptr;					\
+			/* Be nice and round to the memory allocator */	\
 			do { _ns = _ns ? _ns<<2 : 16; }			\
 			    while(_ns <= (size_t)(st->size + _bs));	\
 			ptr = REALLOC(st->buf, _ns);			\
@@ -81,6 +85,7 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
  */
 struct _stack_el {
 	ber_tlv_len_t	left;	/* What's left to read */
+	int	cont_level;	/* Depth of subcontainment */
 	int	want_nulls;	/* Want null "end of content" octets? */
 	int	bits_chopped;	/* Flag in BIT STRING mode */
 	struct _stack_el *prev;
@@ -95,17 +100,23 @@ static struct _stack_el *
 _add_stack_el(struct _stack *st) {
 	struct _stack_el *nel;
 
+	/*
+	 * Reuse the old stack frame or allocate a new one.
+	 */
 	if(st->cur_ptr && st->cur_ptr->next) {
 		nel = st->cur_ptr->next;
 		nel->left = 0;
 		nel->want_nulls = 0;
 		nel->bits_chopped = 0;
+		/* Retain nel->cont_level, it's correct. */
 	} else {
 		(void *)nel = CALLOC(1, sizeof(struct _stack_el));
 		if(nel == NULL)
 			return NULL;
 	
 		if(st->tail) {
+			/* Increase a subcontainment depth */
+			nel->cont_level = st->tail->cont_level + 1;
 			st->tail->next = nel;
 		}
 		nel->prev = st->tail;
@@ -136,13 +147,16 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*os_structure;
 	ber_dec_rval_t rval;
 	ber_dec_ctx_t *ctx;
-	ber_tlv_tag_t terminal_tag;	/* Inner tag for constructed types */
 	ssize_t consumed_myself = 0;
 	struct _stack *stck;	/* A stack structure */
 	struct _stack_el *sel;	/* Stack element */
 	int tlv_constr;
-	int is_bit_str = 0;	/* See below under switch(td->specifics) */
-	int is_ANY_type = 0;	/* See below under switch(td->specifics) */
+	enum type_type_e {
+		_TT_GENERIC	= 0,	/* Just a random OCTET STRING */
+		_TT_BIT_STRING	= -1,	/* BIT STRING type, a special case */
+		_TT_ANY		= 1,	/* ANY type, a special case too */
+	} type_type
+		= (enum type_type_e)(int)td->specifics;	/* An ugly hack */
 
 	ASN_DEBUG("Decoding %s as %s (%ld)",
 		td->name, "OCTET STRING", (long)size);
@@ -158,25 +172,6 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 
 	/* Restore parsing context */
 	ctx = &st->_ber_dec_ctx;
-
-	switch((int)td->specifics) {
-	case 0:
-		terminal_tag = asn1_DEF_OCTET_STRING_tags[0];	/* [U4] */
-		break;
-	case -1:	/* BIT STRING */
-		/*
-		 * This is some sort of a hack.
-		 * The OCTET STRING decoder is being used in BIT STRING mode.
-		 */
-		is_bit_str = 1;
-		terminal_tag = ASN_TAG_CLASS_UNIVERSAL | (3 << 2);
-		break;
-	default:	/* Just in case; fall through */
-	case  1:	/* ANY type */
-		is_ANY_type = 1;
-		terminal_tag = -1;
-		break;
-	}
 
 	switch(ctx->phase) {
 	case 0:
@@ -212,7 +207,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 					stck->cur_ptr->left,
 					stck->cur_ptr->want_nulls);
 #endif
-				if(is_bit_str) {
+				if(type_type == _TT_BIT_STRING) {
 					/* Number of meaningless tail bits */
 					APPEND("\0", 1);
 				}
@@ -224,7 +219,8 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			 * Jump into stackless primitive decoding.
 			 */
 			_CH_PHASE(ctx, 3);
-			if(is_ANY_type) APPEND(buf_ptr, rval.consumed);
+			if(type_type == _TT_ANY)
+				APPEND(buf_ptr, rval.consumed);
 			ADVANCE(rval.consumed);
 			goto phase3;
 		}
@@ -241,6 +237,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	  do {
 		ber_tlv_tag_t tlv_tag;
 		ber_tlv_len_t tlv_len;
+		ber_tlv_tag_t expected_tag;
 		ssize_t tl, ll;
 
 		ASN_DEBUG("fetch tag(size=%d), %sstack, left=%d, want0=%d",
@@ -271,7 +268,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			&& ((uint8_t *)buf_ptr)[1] == 0)
 		{
 			ADVANCE(2);
-			if(is_ANY_type) APPEND("\0\0", 2);
+			if(type_type == _TT_ANY) APPEND("\0\0", 2);
 
 			ASN_DEBUG("Eat EOC; wn=%d--", sel->want_nulls);
 
@@ -294,8 +291,38 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			}
 
 			continue;
-		} else if(tlv_tag != terminal_tag
-				&& terminal_tag != (ber_tlv_tag_t)-1) {
+		}
+
+		/*
+		 * Set up expected tags,
+		 * depending on ASN.1 type being decoded.
+		 */
+		switch(type_type) {
+		case _TT_BIT_STRING:
+			/* X.690: 8.6.4.1, NOTE 2 */
+			/* Fall through */
+		case _TT_GENERIC:
+		default:
+			if(sel) {
+				int level = sel->cont_level;
+				if(level < td->all_tags_count) {
+					expected_tag = td->all_tags[level];
+					break;
+				} else if(td->all_tags_count) {
+					expected_tag = td->all_tags
+						[td->all_tags_count - 1];
+					break;
+				}
+				/* else, Fall through */
+			}
+			/* Fall through */
+		case _TT_ANY:
+			expected_tag = tlv_tag;
+			break;
+		}
+
+
+		if(tlv_tag != expected_tag) {
 			char buf[2][32];
 			ber_tlv_tag_snprint(tlv_tag,
 				buf[0], sizeof(buf[0]));
@@ -313,17 +340,18 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		if(sel) {
 			sel->want_nulls = (tlv_len==-1);
 			sel->left = tlv_len;
-			ASN_DEBUG("+EXPECT2 left=%d wn=%d",
-				sel->left, sel->want_nulls);
+			ASN_DEBUG("+EXPECT2 left=%d wn=%d, clvl=%d",
+				sel->left, sel->want_nulls, sel->cont_level);
 		} else {
 			RETURN(RC_FAIL);
 		}
 
-		if(is_ANY_type) APPEND(buf_ptr, tl + ll);
+		if(type_type == _TT_ANY) APPEND(buf_ptr, tl + ll);
 		ADVANCE(tl+ll);
 	  } while(tlv_constr);
 		if(sel == NULL) {
 			/* Finished operation, "phase out" */
+			ASN_DEBUG("Phase out");
 			_CH_PHASE(ctx, +3);
 			break;
 		}
@@ -343,7 +371,8 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		len = ((ber_tlv_len_t)size < sel->left)
 				? (ber_tlv_len_t)size : sel->left;
 		if(len > 0) {
-			if(is_bit_str && sel->bits_chopped == 0) {
+			if(type_type == _TT_BIT_STRING
+			&& sel->bits_chopped == 0) {
 				/*
 				 * Finalize the previous chunk:
 				 * strip down unused bits.
@@ -394,7 +423,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * BIT STRING-specific processing.
 	 */
-	if(is_bit_str && st->size >= 2) {
+	if(type_type == _TT_BIT_STRING && st->size >= 2) {
 		/* Finalize BIT STRING: zero out unused bits. */
 		st->buf[st->size-1] &= 0xff << st->buf[0];
 	}

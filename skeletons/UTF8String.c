@@ -8,7 +8,8 @@
  * UTF8String basic type description.
  */
 static ber_tlv_tag_t asn1_DEF_UTF8String_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (12 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),	/* [UNIVERSAL 12] IMPLICIT ...*/
+	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),	/* ... OCTET STRING */
 };
 asn1_TYPE_descriptor_t asn1_DEF_UTF8String = {
 	"UTF8String",
@@ -18,6 +19,9 @@ asn1_TYPE_descriptor_t asn1_DEF_UTF8String = {
 	UTF8String_print,
 	OCTET_STRING_free,
 	0, /* Use generic outmost tag fetcher */
+	asn1_DEF_UTF8String_tags,
+	sizeof(asn1_DEF_UTF8String_tags)
+	  / sizeof(asn1_DEF_UTF8String_tags[0]) - 1,
 	asn1_DEF_UTF8String_tags,
 	sizeof(asn1_DEF_UTF8String_tags)
 	  / sizeof(asn1_DEF_UTF8String_tags[0]),

@@ -8,7 +8,8 @@
  * T61String basic type description.
  */
 static ber_tlv_tag_t asn1_DEF_T61String_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (20 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (20 << 2)),	/* [UNIVERSAL 20] IMPLICIT ...*/
+	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
 asn1_TYPE_descriptor_t asn1_DEF_T61String = {
 	"T61String",
@@ -18,6 +19,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T61String = {
 	OCTET_STRING_print,         /* non-ascii string */
 	OCTET_STRING_free,
 	0, /* Use generic outmost tag fetcher */
+	asn1_DEF_T61String_tags,
+	sizeof(asn1_DEF_T61String_tags)
+	  / sizeof(asn1_DEF_T61String_tags[0]) - 1,
 	asn1_DEF_T61String_tags,
 	sizeof(asn1_DEF_T61String_tags)
 	  / sizeof(asn1_DEF_T61String_tags[0]),
