@@ -1,0 +1,1172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Using the Free ASN.1 Compiler</TITLE>
+<META NAME="description" CONTENT="Using the Free ASN.1 Compiler">
+<META NAME="asn1c, ASN.1, free, compiler, BER, DER, PER, XER\">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+
+</HEAD>
+
+<BODY >
+
+<P>
+
+<P>
+
+<P>
+<H1 ALIGN="CENTER">Using the Free ASN.1 Compiler</H1><DIV>
+
+<P ALIGN="CENTER"><STRONG>Lev Walkin &lt;vlm@lionet.info&gt;</STRONG></P>
+</DIV>
+<BR>
+
+<H2><A NAME="SECTION01000000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html38"
+  HREF="asn1c-usage.html#SECTION02000000000000000000">ASN.1 Basics</A>
+<UL>
+<LI><A NAME="tex2html39"
+  HREF="asn1c-usage.html#SECTION02100000000000000000">Abstract Syntax Notation: ASN.1</A>
+<UL>
+<LI><A NAME="tex2html40"
+  HREF="asn1c-usage.html#SECTION02110000000000000000">Some of the ASN.1 Basic Types</A>
+<UL>
+<LI><A NAME="tex2html41"
+  HREF="asn1c-usage.html#SECTION02111000000000000000">The BOOLEAN type</A>
+<LI><A NAME="tex2html42"
+  HREF="asn1c-usage.html#SECTION02112000000000000000">The INTEGER type</A>
+<LI><A NAME="tex2html43"
+  HREF="asn1c-usage.html#SECTION02113000000000000000">The ENUMERATED type</A>
+<LI><A NAME="tex2html44"
+  HREF="asn1c-usage.html#SECTION02114000000000000000">The OCTET STRING type</A>
+<LI><A NAME="tex2html45"
+  HREF="asn1c-usage.html#SECTION02115000000000000000">The OBJECT IDENTIFIER type</A>
+<LI><A NAME="tex2html46"
+  HREF="asn1c-usage.html#SECTION02116000000000000000">The RELATIVE-OID type</A>
+</UL>
+<LI><A NAME="tex2html47"
+  HREF="asn1c-usage.html#SECTION02120000000000000000">Some of the ASN.1 String Types</A>
+<UL>
+<LI><A NAME="tex2html48"
+  HREF="asn1c-usage.html#SECTION02121000000000000000">The IA5String type</A>
+<LI><A NAME="tex2html49"
+  HREF="asn1c-usage.html#SECTION02122000000000000000">The UTF8String type</A>
+<LI><A NAME="tex2html50"
+  HREF="asn1c-usage.html#SECTION02123000000000000000">The NumericString type</A>
+<LI><A NAME="tex2html51"
+  HREF="asn1c-usage.html#SECTION02124000000000000000">The PrintableString type</A>
+<LI><A NAME="tex2html52"
+  HREF="asn1c-usage.html#SECTION02125000000000000000">The VisibleString type</A>
+</UL>
+<LI><A NAME="tex2html53"
+  HREF="asn1c-usage.html#SECTION02130000000000000000">ASN.1 Constructed Types</A>
+<UL>
+<LI><A NAME="tex2html54"
+  HREF="asn1c-usage.html#SECTION02131000000000000000">The SEQUENCE type</A>
+<LI><A NAME="tex2html55"
+  HREF="asn1c-usage.html#SECTION02132000000000000000">The SET type</A>
+<LI><A NAME="tex2html56"
+  HREF="asn1c-usage.html#SECTION02133000000000000000">The CHOICE type</A>
+<LI><A NAME="tex2html57"
+  HREF="asn1c-usage.html#SECTION02134000000000000000">The SEQUENCE OF type</A>
+<LI><A NAME="tex2html58"
+  HREF="asn1c-usage.html#SECTION02135000000000000000">The SET OF type</A>
+</UL>
+</UL>
+</UL><BR>
+<LI><A NAME="tex2html59"
+  HREF="asn1c-usage.html#SECTION03000000000000000000">Using the ASN.1 Compiler</A>
+<UL>
+<LI><A NAME="tex2html60"
+  HREF="asn1c-usage.html#SECTION03100000000000000000">Introduction to the ASN.1 Compiler</A>
+<UL>
+<LI><A NAME="tex2html61"
+  HREF="asn1c-usage.html#SECTION03110000000000000000">Quick start</A>
+<LI><A NAME="tex2html62"
+  HREF="asn1c-usage.html#SECTION03120000000000000000">Slow start</A>
+<UL>
+<LI><A NAME="tex2html63"
+  HREF="asn1c-usage.html#SECTION03121000000000000000">Recognizing compiler output</A>
+<LI><A NAME="tex2html64"
+  HREF="asn1c-usage.html#SECTION03122000000000000000">Invoking the ASN.1 helper code from the application</A>
+</UL>
+</UL>
+</UL><BR>
+<LI><A NAME="tex2html65"
+  HREF="asn1c-usage.html#SECTION04000000000000000000">Bibliography</A>
+</UL>
+<!--End of Table of Contents-->
+
+<P>
+
+<H1><A NAME="SECTION02000000000000000000">
+ASN.1 Basics</A>
+</H1>
+
+<P>
+
+<H1><A NAME="SECTION02100000000000000000">
+Abstract Syntax Notation: ASN.1</A>
+</H1>
+
+<P>
+<I>This chapter defines some basic ASN.1 concepts and describes
+several most widely used types. It is by no means an authoritative
+or complete reference. For more complete ASN.1 description, please
+refer to Olivier Dubuisson's book [<A
+ HREF="asn1c-usage.html#Dub00">Dub00</A>] or the ASN.1 body
+of standards itself [<A
+ HREF="asn1c-usage.html#ITU-T_ASN.1">ITU-T/ASN.1</A>].</I>
+
+<P>
+The Abstract Syntax Notation One is used to formally describe the
+semantics of data transmitted across the network. Two communicating
+parties may have different formats of their native data types (i.e.
+number of bits in the integer type), thus it is important to have
+a way to describe the data in a manner which is independent from the
+particular machine's representation. The ASN.1 specifications is used
+to achieve one or more of the following:
+
+<P>
+
+<UL>
+<LI>The specification expressed in the ASN.1 notation is a formal and
+precise way to communicate the data semantics to human readers;
+</LI>
+<LI>The ASN.1 specifications may be used as input for automatic compilers
+which produce the code for some target language (C, C++, Java, etc)
+to encode and decode the data according to some encoding rules (which
+are also defined by the ASN.1 standard).
+</LI>
+</UL>
+Consider the following example:
+
+<P>
+
+<DD><PRE>
+
+Rectangle&nbsp;::=&nbsp;SEQUENCE&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;height&nbsp;&nbsp;INTEGER,
+&nbsp;&nbsp;&nbsp;&nbsp;width&nbsp;&nbsp;&nbsp;INTEGER
+}
+
+</PRE>
+</DD>
+This ASN.1 specification describes a constructed type, <I>Rectangle</I>,
+containing two integer fields. This specification may tell the reader
+that there is this kind of data structure and that some entity may
+be prepared to send or receive it. The question on <I>how</I> that
+entity is going to send or receive the <I>encoded data</I> is outside
+the scope of ASN.1. For example, this data structure may be encoded
+according to some encoding rules and sent to the destination using
+the TCP protocol. The ASN.1 specifies several ways of encoding (or
+''serializing'', or ''marshaling'') the data: BER, CER, DER and
+XER, some of them which will be described later.
+
+<P>
+The complete specification must be wrapped in a module, which looks
+like this:
+
+<P>
+
+<DD><PRE>
+
+UsageExampleModule1
+&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;iso&nbsp;org(3)&nbsp;dod(6)&nbsp;internet(1)&nbsp;private(4)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enterprise(1)&nbsp;spelio(9363)&nbsp;software(1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn1c(5)&nbsp;docs(2)&nbsp;usage(1)&nbsp;1&nbsp;}&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;AUTOMATIC&nbsp;TAGS&nbsp;DEFINITIONS&nbsp;::=
+BEGIN
+&nbsp;
+--&nbsp;This&nbsp;is&nbsp;a&nbsp;comment&nbsp;which&nbsp;describes&nbsp;nothing.
+Rectangle&nbsp;::=&nbsp;SEQUENCE&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;height&nbsp;&nbsp;INTEGER,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Height&nbsp;of&nbsp;the&nbsp;rectangle
+&nbsp;&nbsp;&nbsp;&nbsp;width&nbsp;&nbsp;&nbsp;INTEGER,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Width&nbsp;of&nbsp;the&nbsp;rectangle
+}
+&nbsp;
+END
+
+</PRE>
+</DD>
+The module header consists of module name (UsageExampleModule1), the
+module object identifier ({...}), some flags (AUTOMATIC TAGS) and
+''DEFINITIONS ::= BEGIN''. The module ends with an ''END'' statement.
+
+<P>
+
+<H1><A NAME="SECTION02110000000000000000">
+Some of the ASN.1 Basic Types</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION02111000000000000000">
+The BOOLEAN type</A>
+</H2>
+
+<P>
+The BOOLEAN type models the simple binary TRUE/FALSE, YES/NO, ON/OFF
+or a similar kind of two-way choice.
+
+<P>
+
+<H2><A NAME="SECTION02112000000000000000">
+The INTEGER type</A>
+</H2>
+
+<P>
+The INTEGER type is a signed natural number type without any restrictions
+on its size. If the automatic checking on INTEGER value bounds are
+necessary, the subtype constraints must be used.
+
+<P>
+
+<DD><PRE>
+
+SimpleInteger&nbsp;::=&nbsp;INTEGER
+--&nbsp;An&nbsp;integer&nbsp;with&nbsp;a&nbsp;very&nbsp;limited&nbsp;range
+SmallInt&nbsp;::=&nbsp;INTEGER&nbsp;(0..127)
+--&nbsp;Integer,&nbsp;negative
+NegativeInt&nbsp;::=&nbsp;INTEGER&nbsp;(MIN..0)
+
+</PRE>
+</DD>
+
+<P>
+
+<H2><A NAME="SECTION02113000000000000000">
+The ENUMERATED type</A>
+</H2>
+
+<P>
+The ENUMERATED type is semantically equivalent to the INTEGER type
+with some integer values explicitly named.
+
+<P>
+
+<DD><PRE>
+
+FruitId&nbsp;::=&nbsp;ENUMERATED&nbsp;{&nbsp;apple(1),&nbsp;orange(2)&nbsp;}
+--&nbsp;The&nbsp;numbers&nbsp;in&nbsp;braces&nbsp;are&nbsp;optional,
+--&nbsp;the&nbsp;enumeration&nbsp;may&nbsp;be&nbsp;performed
+--&nbsp;automatically&nbsp;by&nbsp;the&nbsp;compiler
+ComputerOSType&nbsp;::=&nbsp;ENUMERATED&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;FreeBSD,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;Windows,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;Solaris(5),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;remain&nbsp;5
+&nbsp;&nbsp;&nbsp;&nbsp;Linux,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;6
+&nbsp;&nbsp;&nbsp;&nbsp;MacOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;7
+}
+
+</PRE>
+</DD>
+
+<P>
+
+<H2><A NAME="SECTION02114000000000000000">
+The OCTET STRING type</A>
+</H2>
+
+<P>
+This type models the sequence of 8-bit bytes. This may be used to
+transmit some opaque data or data serialized by other types of encoders
+(i.e. video file, photo picture, etc).
+
+<P>
+
+<H2><A NAME="SECTION02115000000000000000">
+The OBJECT IDENTIFIER type</A>
+</H2>
+
+<P>
+The OBJECT IDENTIFIER is used to represent the unique identifier of
+any object, starting from the very root of the registration tree.
+If your organization needs to uniquely identify something (a router,
+a room, a person, a standard, or whatever), you are encouraged to
+get your own identification subtree at http://www.iana.org/protocols/forms.htm.
+
+<P>
+For example, the very first ASN.1 module in this document has the
+following OBJECT IDENTIFIER: 1 3 6 1 4 1 9363 1 5 2 1 1.
+
+<P>
+
+<DD><PRE>
+
+ExampleOID&nbsp;::=&nbsp;OBJECT&nbsp;IDENTIFIER
+usageExampleModule1-oid&nbsp;ExampleOID
+&nbsp;&nbsp;::=&nbsp;{&nbsp;1&nbsp;3&nbsp;6&nbsp;1&nbsp;4&nbsp;1&nbsp;9363&nbsp;1&nbsp;5&nbsp;2&nbsp;1&nbsp;1&nbsp;}
+--&nbsp;An&nbsp;identifier&nbsp;of&nbsp;the&nbsp;Internet.
+internet-id&nbsp;OBJECT&nbsp;IDENTIFIER
+&nbsp;&nbsp;::=&nbsp;{&nbsp;iso(1)&nbsp;identified-organization(3)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dod(6)&nbsp;internet(1)&nbsp;}
+
+</PRE>
+</DD>
+As you see, names are optional.
+
+<P>
+
+<H2><A NAME="SECTION02116000000000000000">
+The RELATIVE-OID type</A>
+</H2>
+
+<P>
+The RELATIVE-OID type has the semantics of a subtree of an OBJECT
+IDENTIFIER. There may be no need to repeat the whole sequence of numbers
+from the root of the registration tree where the only thing of interest
+is some of the tree's subsequence.
+
+<P>
+
+<DD><PRE>
+
+this-document&nbsp;RELATIVE-OID&nbsp;::=&nbsp;{&nbsp;docs(2)&nbsp;usage(1)&nbsp;}
+this-example&nbsp;RELATIVE-OID&nbsp;::=&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;this-document&nbsp;assorted-examples(0)&nbsp;this-example(1)&nbsp;}
+
+</PRE>
+</DD>
+
+<P>
+
+<H1><A NAME="SECTION02120000000000000000">
+Some of the ASN.1 String Types</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION02121000000000000000">
+The IA5String type</A>
+</H2>
+
+<P>
+This is essentially the ASCII, with 128 character codes available
+(7 lower bits of 8-bit byte).
+
+<P>
+
+<H2><A NAME="SECTION02122000000000000000">
+The UTF8String type</A>
+</H2>
+
+<P>
+This is the character string which encodes the full Unicode range
+(4 bytes) using multibyte character sequences.
+
+<P>
+
+<H2><A NAME="SECTION02123000000000000000">
+The NumericString type</A>
+</H2>
+
+<P>
+This type represents the character string with the alphabet consisting
+of numbers (''0'' to ''9'') and a space.
+
+<P>
+
+<H2><A NAME="SECTION02124000000000000000">
+The PrintableString type</A>
+</H2>
+
+<P>
+The character string with the following alphabet: space, ''<B>'</B>''
+(single quote), ''<B>(</B>'', ''<B>)</B>'', ''<B>+</B>'',
+'','' (comma), ''<B>-</B>'', ''<B>.</B>'', ''<B>/</B>'',
+digits (''0'' to ''9''), ''<B>:</B>'', ''<B>=</B>'', ''<B>?</B>'',
+upper-case and lower-case letters (''A'' to ''Z'' and ''a''
+to ''z'')
+
+<P>
+
+<H2><A NAME="SECTION02125000000000000000">
+The VisibleString type</A>
+</H2>
+
+<P>
+The character string with the alphabet which is more or less a subset
+of ASCII between space and ''~'' (tilde). Alternatively,
+the alphabet may be represented as the PrintableString alphabet described
+earlier, plus the following characters: ''<B>!</B>'', ''<B>''</B>'',
+''<B>#</B>'', ''<B>$</B>'', ''<B>%</B>'', ''<B>&amp;</B>'',
+''<B>*</B>'', ''<B>;</B>'', ''<B>&lt;</B>'', ''<B>&gt;</B>'',
+''<B>[</B>'', ''<B>&#92;</B>'', ''<B>]</B>'',
+''<B>&#94;</B>'', ''<B>_</B>'', ''<B>`</B>''
+(single left quote), ''<B>{</B>'', ''<B>|</B>'', ''<B>}</B>'',
+''~''.
+
+<P>
+
+<H1><A NAME="SECTION02130000000000000000">
+ASN.1 Constructed Types</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION02131000000000000000">
+The SEQUENCE type</A>
+</H2>
+
+<P>
+This is an ordered collection of other simple or constructed types.
+The SEQUENCE constructed type resembles the C ''struct'' statement.
+
+<P>
+
+<DD><PRE>
+
+Address&nbsp;::=&nbsp;SEQUENCE&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;The&nbsp;apartment&nbsp;number&nbsp;may&nbsp;be&nbsp;omitted
+&nbsp;&nbsp;&nbsp;&nbsp;apartmentNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NumericString&nbsp;OPTIONAL,
+&nbsp;&nbsp;&nbsp;&nbsp;streetName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PrintableString,
+&nbsp;&nbsp;&nbsp;&nbsp;cityName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PrintableString,
+&nbsp;&nbsp;&nbsp;&nbsp;stateName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PrintableString,
+&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;This&nbsp;one&nbsp;may&nbsp;be&nbsp;omitted&nbsp;too
+&nbsp;&nbsp;&nbsp;&nbsp;zipNo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NumericString&nbsp;OPTIONAL
+}
+
+</PRE>
+</DD>
+
+<P>
+
+<H2><A NAME="SECTION02132000000000000000">
+The SET type</A>
+</H2>
+
+<P>
+This is a collection of other simple or constructed types. Ordering
+is not important. The data may arrive in the order which is different
+from the order of specification. Data is encoded in the order not
+necessarily corresponding to the order of specification.
+
+<P>
+
+<H2><A NAME="SECTION02133000000000000000">
+The CHOICE type</A>
+</H2>
+
+<P>
+This type is just a choice between the subtypes specified in it. The
+CHOICE type contains at most one of the subtypes specified, and it
+is always implicitly known which choice is being decoded or encoded.
+This one resembles the C ''union'' statement.
+
+<P>
+The following type defines a response code, which may be either an
+integer code or a boolean ''true''/''false'' code.
+
+<P>
+
+<DD><PRE>
+
+ResponseCode&nbsp;::=&nbsp;CHOICE&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;intCode&nbsp;&nbsp;&nbsp;&nbsp;INTEGER,
+&nbsp;&nbsp;&nbsp;&nbsp;boolCode&nbsp;&nbsp;&nbsp;BOOLEAN
+}
+
+</PRE>
+</DD>
+
+<P>
+
+<H2><A NAME="SECTION02134000000000000000">
+The SEQUENCE OF type</A>
+</H2>
+
+<P>
+This one is the list (array) of simple or constructed types:
+
+<P>
+
+<DD><PRE>
+
+--&nbsp;Example&nbsp;1
+ManyIntegers&nbsp;::=&nbsp;SEQUENCE&nbsp;OF&nbsp;INTEGER
+--&nbsp;Example&nbsp;2
+ManyRectangles&nbsp;::=&nbsp;SEQUENCE&nbsp;OF&nbsp;Rectangle
+--&nbsp;More&nbsp;complex&nbsp;example:
+--&nbsp;an&nbsp;array&nbsp;of&nbsp;structures&nbsp;defined&nbsp;in&nbsp;place.
+ManyCircles&nbsp;::=&nbsp;SEQUENCE&nbsp;OF&nbsp;SEQUENCE&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radius&nbsp;INTEGER
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+</PRE>
+</DD>
+
+<P>
+
+<H2><A NAME="SECTION02135000000000000000">
+The SET OF type</A>
+</H2>
+
+<P>
+The SET OF type models the bag of structures. It resembles the SEQUENCE
+OF type, but the order is not important: i.e. the elements may arrive
+in the order which is not necessarily the same as the in-memory order
+on the remote machines.
+
+<P>
+
+<DD><PRE>
+
+--&nbsp;A&nbsp;set&nbsp;of&nbsp;structures&nbsp;defined&nbsp;elsewhere
+SetOfApples&nbsp;::&nbsp;SET&nbsp;OF&nbsp;Apple
+--&nbsp;Set&nbsp;of&nbsp;integers&nbsp;encoding&nbsp;the&nbsp;kind&nbsp;of&nbsp;a&nbsp;fruit
+FruitBag&nbsp;::=&nbsp;SET&nbsp;OF&nbsp;ENUMERATED&nbsp;{&nbsp;apple,&nbsp;orange&nbsp;}
+
+</PRE>
+</DD>
+
+<P>
+
+<H1><A NAME="SECTION03000000000000000000">
+Using the ASN.1 Compiler</A>
+</H1>
+
+<P>
+
+<H1><A NAME="SECTION03100000000000000000">
+Introduction to the ASN.1 Compiler</A>
+</H1>
+
+<P>
+The purpose of the ASN.1 compiler, of which this document is part,
+is to convert the ASN.1 specifications to some other target language
+(currently, only C is supported<A NAME="tex2html1"
+  HREF="#foot136"><SUP>2.1</SUP></A>). The compiler reads the specification and emits a series of target
+language structures and surrounding maintenance code. For example,
+the C structure which may be created by compiler to represent the
+simple <I>Rectangle</I> specification defined earlier in this document,
+may look like this<A NAME="tex2html2"
+  HREF="#foot315"><SUP>2.2</SUP></A>:
+
+<P>
+
+<DD><PRE>
+
+typedef&nbsp;struct&nbsp;Rectangle_s&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;height;
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;width;
+}&nbsp;Rectangle_t;
+
+</PRE>
+</DD>
+This would not be of much value for such a simple specification, so
+the compiler goes further and actually produces the code which fills
+in this structure by parsing the binary<A NAME="tex2html3"
+  HREF="#foot142"><SUP>2.3</SUP></A> data provided in some buffer. It also produces the code that takes
+this structure as an argument and performs structure serialization
+by emitting a series of bytes.
+
+<P>
+
+<H1><A NAME="SECTION03110000000000000000">
+Quick start</A>
+</H1>
+
+<P>
+After building and installing the compiler, the asn1c command may
+be used to compile the ASN.1 specification<A NAME="tex2html4"
+  HREF="#foot316"><SUP>2.4</SUP></A>:
+
+<P>
+
+<DD><PRE>
+
+asn1c&nbsp;<I>&lt;spec.asn1&gt;</I>
+
+</PRE>
+</DD>
+If several specifications contain interdependencies, all of them must
+be specified:
+
+<P>
+
+<DD><PRE>
+
+asn1c&nbsp;<I>&lt;spec1.asn1&gt;&nbsp;&lt;spec2.asn1&gt;&nbsp;...</I>
+
+</PRE>
+</DD>
+The compiler -E and -EF options are used for testing the parser and
+the semantic fixer, respectively. These options will instruct the
+compiler to dump out the parsed (and fixed) ASN.1 specification as
+it was &#34;understood&#34; by the compiler. It might might
+be useful to check whether a particular syntactic construction is
+properly supported by the compiler.
+
+<P>
+
+<DD><PRE>
+
+asn1c&nbsp;-EF&nbsp;<I>&lt;spec-to-test.asn1&gt;</I>
+
+</PRE>
+</DD>
+The -P option is used to dump the compiled output on the screen instead
+of creating a bunch of .c and .h files on disk in the current directory.
+You would probably want to start with -P option instead of creating
+a mess in your current directory.
+
+<P>
+
+<H1><A NAME="SECTION03120000000000000000">
+Slow start</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION03121000000000000000">
+Recognizing compiler output</A>
+</H2>
+
+<P>
+After compiling, the following entities will be created in your current
+directory:
+
+<P>
+
+<UL>
+<LI>A set of .c and .h files, generally a single pair for each type defined
+in the ASN.1 specifications. These files will be named similarly to
+the ASN.1 types (<I>Rectangle.c</I> and <I>Rectangle.h</I> for the
+specification defined in the beginning of this document).
+</LI>
+<LI>A set of helper .c and .h files which contain generic encoders, decoders
+and other useful routines. There will be many of them, some of them
+even not necessary<A NAME="tex2html5"
+  HREF="#foot161"><SUP>2.5</SUP></A>, but the overall amount of code after compiling will be rather small
+anyway.
+</LI>
+</UL>
+It is your responsibility to create .c file with the <I>int main()</I>
+routine and the Makefile (if needed). Compiler helps you with the
+latter by creating the Makefile.am.sample, containing the skeleton
+definition for the automake, should you want to use autotools.
+
+<P>
+In other words, after compiling the Rectangle module, you have the
+following set of files: { Makefile.am.sample, Rectangle.c, Rectangle.h,
+<B>...</B> }, where <B>''...''</B> stands for the
+set of additional ''helper'' files created by the compiler. If you
+add the simple file with the <I>int main()</I> routine, it would even
+be possible to compile everything with the single instruction:
+
+<P>
+
+<DD><PRE>
+
+cc&nbsp;-o&nbsp;rectangle&nbsp;*.c&nbsp;&nbsp;&nbsp;#&nbsp;It&nbsp;could&nbsp;be&nbsp;<I>that</I>&nbsp;simple<A NAME="tex2html6"
+  HREF="#foot319"><SUP>2.6</SUP></A>
+
+</PRE>
+</DD>
+
+<P>
+
+<H2><A NAME="SECTION03122000000000000000">
+Invoking the ASN.1 helper code from the application</A>
+</H2>
+
+<P>
+First of all, you would want to include one or more header files into
+your application. For the Rectangle module, including the Rectangle.h
+file is enough:
+
+<P>
+
+<DD><PRE>
+
+#include&nbsp;&lt;Rectangle.h&gt;
+
+</PRE>
+</DD>
+The header files defines the C structure corresponding to the ASN.1
+definition of a rectangle and the declaration of the ASN.1 type descriptor,
+which is used as an argument to most of the functions provided by
+the ASN.1 module. For example, here is the code which frees the Rectangle_t
+structure:
+
+<P>
+
+<DD><PRE>
+
+Rectangle_t&nbsp;*rect&nbsp;=&nbsp;;
+asn1_DEF_Rectangle-&gt;free_struct(&amp;asn1_DEF_Rectangle,
+&nbsp;&nbsp;&nbsp;&nbsp;rect,&nbsp;0);
+
+</PRE>
+</DD>
+This code defines a <I>rect</I> pointer which points to the Rectangle_t
+structure which needs to be freed. The second line invokes the generic
+free_struct routine created specifically for this Rectangle_t structure.
+The <I>asn1_DEF_Rectangle</I> is the type descriptor, which holds
+a collection of generic routines to deal with the Rectangle_t structure.
+
+<P>
+There are several generic functions available:
+
+<P>
+<DL>
+<DT><STRONG>check_constraints</STRONG></DT>
+<DD>Check that the contents of the target structure
+are semantically valid and constrained to appropriate implicit or
+explicit subtype constraints. Please refer to Section sub:Validating-the-target.
+</DD>
+<DT><STRONG>ber_decoder</STRONG></DT>
+<DD>This is the generic <I>restartable</I><A NAME="tex2html7"
+  HREF="#foot183"><SUP>2.7</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
+and/or fill the target structure for you. Please refer to Section
+[<A HREF="#sub:Decoding-BER">Decoding-BER</A>].
+</DD>
+<DT><STRONG>der_encoder</STRONG></DT>
+<DD>This is the generic DER encoder (Distinguished Encoding
+Rules). This decoder will take the target structure and encode it
+into a series of bytes. Please refer to Section [<A HREF="#sub:Encoding-DER">Encoding-DER</A>].
+</DD>
+<DT><STRONG>print_struct</STRONG></DT>
+<DD>This function convert the contents of the passed target
+structure into human readable form. This form is not formal and cannot
+be converted back into the structure, but it may turn out to be useful
+for debugging or quick-n-dirty printing. Please refer to Section [<A HREF="#sub:Printing-the-target">Printing-the-target</A>].
+</DD>
+<DT><STRONG>free_struct</STRONG></DT>
+<DD>This is a generic disposal which frees the target structure.
+Please refer to Section [<A HREF="#sub:Freeing-the-target">Freeing-the-target</A>].
+</DD>
+</DL>
+Each of the above function takes the type descriptor (<I>asn1_DEF_...</I>)
+and the target structure (<I>rect</I>, in the above example). The
+target structure is typically created by the generic BER decoder or
+by the application itself.
+
+<P>
+Here is how the buffer can be deserialized into the structure:
+
+<P>
+
+<DD><PRE>
+
+Rectangle_t&nbsp;*
+simple_deserializer(void&nbsp;*buffer,&nbsp;size_t&nbsp;buf_size)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;Rectangle_t&nbsp;*rect&nbsp;=&nbsp;0;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Note&nbsp;this&nbsp;0!&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;ber_dec_rval_t&nbsp;rval;
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;rval&nbsp;=&nbsp;asn1_DEF_Rectangle-&gt;ber_decoder(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void&nbsp;**)&amp;rect,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer,&nbsp;buf_size,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0);
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;if(rval<B>.code</B>&nbsp;==&nbsp;RC_OK)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;rect;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Decoding&nbsp;succeeded&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn1_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;rect,&nbsp;0);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}
+
+</PRE>
+</DD>
+The code above defines a function, <I>simple_deserializer</I>, which
+takes a buffer and its length and expected to return a pointer to
+the Rectangle_t structure. Inside, it tries to convert the bytes
+passed into the target structure (rect) using the generic BER decoder
+and returns the rect pointer afterwards. If the structure cannot be
+deserialized, it frees the memory which might be left allocated by
+the unfinished <I>ber_decoder</I> routine and returns NULL. <B>This
+freeing is necessary</B> because the ber_decoder is a restartable procedure,
+and may fail just because there is more data needs to be provided
+before decoding could be finalized. The code above obviously does
+not take into account the way the <I>ber_decoder</I> failed, so the
+freeing is necessary because the part of the buffer may already be
+decoded into the structure by the time something goes wrong.
+
+<P>
+Restartable decoding is a little bit trickier: you need to provide
+the old target structure pointer (which might be already half-decoded)
+and react on RC_WMORE return code. This will be explained later in
+Section sub:Decoding-BER
+
+<P>
+
+<H3><A NAME="SECTION03122100000000000000"></A><A NAME="sub:Decoding-BER"></A><BR>
+Decoding BER
+</H3>
+
+<P>
+The Basic Encoding Rules describe the basic way how the structure
+can be encoded and decoded. Several other encoding rules (CER, DER)
+define a more restrictive versions of BER, so the generic BER parser
+is also capable of decoding the data encoded by CER and DER encoders.
+The opposite is not true.
+
+<P>
+The ASN.1 compiler provides the generic BER decoder which is implicitly
+capable of decoding BER, CER and DER encoded data.
+
+<P>
+The decoder is restartable (stream-oriented), which means that in
+case the buffer has less data than it is expected, the decoder will
+process whatever it is available and ask for more data to be provided.
+Please note that the decoder may actually process less data than it
+is given in the buffer, which means that you should be able to make
+the next buffer contain the unprocessed part of the previous buffer.
+
+<P>
+Suppose, you have two buffers of encoded data: 100 bytes and 200 bytes.
+
+<P>
+
+<UL>
+<LI>You may concatenate these buffers and feed the BER decoder with 300
+bytes of data, or
+</LI>
+<LI>You may feed it the first buffer of 100 bytes of data, realize that
+the ber_decoder consumed only 95 bytes from it and later feed the
+decoder with 205 bytes buffer which consists of 5 unprocessed bytes
+from the first buffer and the latter 200 bytes from the second buffer.
+</LI>
+</UL>
+This is not as convenient as it could be (like, the BER encoder would
+consume the whole 100 bytes and keep these 5 bytes in some temporary
+storage), but in case of stream-based processing it might actually
+be OK. Suggestions are welcome.
+
+<P>
+There are two ways to invoke a BER decoder. The first one is a direct
+reference of the type-specific decoder. This way was shown in the
+previous example of <I>simple_deserializer</I> function. The second
+way is to invoke a <I>ber_decode</I> function, which is just a simple
+wrapper of the former approach into a less wordy notation:
+
+<P>
+
+<DD><PRE>
+
+rval&nbsp;=&nbsp;ber_decode(&amp;asn1_DEF_Rectangle,&nbsp;(void&nbsp;**)&amp;rect,
+&nbsp;&nbsp;&nbsp;&nbsp;buffer,&nbsp;buf_size);
+
+</PRE>
+</DD>
+Note that the initial (asn1_DEF_Rectangle-&gt;ber_decoder) reference
+is gone, and also the last argument (0) is no longer necessary.
+
+<P>
+These two ways of invocations are fully equivalent.
+
+<P>
+The BER de<I>coder</I> may fail because (<I>the following RC_...
+codes are defined in ber_decoder.h</I>):
+
+<P>
+
+<UL>
+<LI>RC_WMORE: There is more data expected than it is provided (stream
+mode continuation feature);
+</LI>
+<LI>RC_FAIL: General failure to decode the buffer;
+</LI>
+<LI>... other codes may be defined as well.
+</LI>
+</UL>
+Together with the return code (.code) the ber_dec_rval_t type contains
+the number of bytes which is consumed from the buffer. In the previous
+hypothetical example of two buffers (of 100 and 200 bytes), the first
+call to ber_decode() would return with .code = RC_WMORE and .consumed
+= 95. The .consumed field of the BER decoder return value is <B>always</B>
+valid, even if the decoder succeeds or fails with any other return
+code.
+
+<P>
+Please look into ber_decoder.h for the precise definition of ber_decode()
+and related types.
+
+<P>
+
+<H3><A NAME="SECTION03122200000000000000"></A><A NAME="sub:Encoding-DER"></A><BR>
+Encoding DER
+</H3>
+
+<P>
+The Distinguished Encoding Rules is the variant of BER encoding rules
+which is oriented on representing the structures with length known
+beforehand. This is probably exactly how you want to encode: either
+after a BER decoding or after a manual fill-up, the target structure
+contains the data which size is implicitly known before encoding.
+The DER encoding is used, for example, to encode X.509 certificates.
+
+<P>
+As with BER decoder, the DER encoder may be invoked either directly
+from the ASN.1 type descriptor (asn1_DEF_Rectangle) or from the
+stand-alone function, which is somewhat simpler:
+
+<P>
+
+<DD><PRE>
+
+/*
+&nbsp;*&nbsp;This&nbsp;is&nbsp;a&nbsp;custom&nbsp;function&nbsp;which&nbsp;writes&nbsp;the
+&nbsp;*&nbsp;encoded&nbsp;output&nbsp;into&nbsp;some&nbsp;FILE&nbsp;stream.
+&nbsp;*/
+int&nbsp;_write_stream(void&nbsp;*buffer,&nbsp;size_t&nbsp;size,&nbsp;void&nbsp;*app_key)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;FILE&nbsp;*ostream&nbsp;=&nbsp;app_key;
+&nbsp;&nbsp;&nbsp;&nbsp;size_t&nbsp;wrote;
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;wrote&nbsp;=&nbsp;fwrite(buffer,&nbsp;1,&nbsp;size,&nbsp;ostream);
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(wrote&nbsp;==&nbsp;size)&nbsp;?&nbsp;0&nbsp;:&nbsp;-1;
+}
+&nbsp;
+/*
+&nbsp;*&nbsp;This&nbsp;is&nbsp;the&nbsp;serializer&nbsp;itself,
+&nbsp;*&nbsp;it&nbsp;supplies&nbsp;the&nbsp;DER&nbsp;encoder&nbsp;with&nbsp;the
+&nbsp;*&nbsp;pointer&nbsp;to&nbsp;the&nbsp;custom&nbsp;output&nbsp;function.
+&nbsp;*/
+ssize_t
+simple_serializer(FILE&nbsp;*ostream,&nbsp;Rectangle_t&nbsp;*rect)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;der_enc_rval_t&nbsp;rval;&nbsp;&nbsp;/*&nbsp;Return&nbsp;value&nbsp;*/
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;rval&nbsp;=&nbsp;der_encode(&amp;asn1_DEF_Rect,&nbsp;rect,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_write_stream,&nbsp;ostream);
+&nbsp;&nbsp;&nbsp;&nbsp;if(rval<B>.encoded</B>&nbsp;==&nbsp;-1)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Failure&nbsp;to&nbsp;encode&nbsp;the&nbsp;rectangle&nbsp;data.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,&nbsp;''Cannot&nbsp;encode&nbsp;%s:&nbsp;%s&#92;n'',
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rval<B>.failed_type</B>-&gt;name,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strerror(errno));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;-1;
+&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bytes&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;rval.encoded;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}
+
+</PRE>
+</DD>
+As you see, the DER encoder does not write into some sort of buffer
+or something. It just invokes the custom function (possible, multiple
+times) which would save the data into appropriate storage. The optional
+argument <I>app_key</I> is opaque for the DER encoder code and just
+used by <I>_write_stream()</I> as the pointer to the appropriate
+output stream to be used.
+
+<P>
+If the custom write function is not given (passed as 0), then the
+DER encoder will essentially do the same thing (i.e., encode the data)
+but no callbacks will be invoked (so the data goes nowhere). It may
+prove useful to determine the size of the structure's encoding before
+actually doing the encoding<A NAME="tex2html8"
+  HREF="#foot253"><SUP>2.8</SUP></A>.
+
+<P>
+Please look into der_encoder.h for the precise definition of der_encode()
+and related types.
+
+<P>
+
+<H3><A NAME="SECTION03122300000000000000"></A><A NAME="sub:Validating-the-target"></A><BR>
+Validating the target structure
+</H3>
+
+<P>
+Sometimes the target structure needs to be validated. For example,
+if the structure was created by the application (as opposed to being
+decoded from some external source), some important information required
+by the ASN.1 specification might be missing. On the other hand, the
+successful decoding of the data from some external source does not
+necessarily mean that the data is fully valid either. It might well
+be the case that the specification describes some subtype constraints
+that were not taken into account during decoding, and it would actually
+be useful to perform the last check when the data is ready to be encoded
+or when the data has just been decoded to ensure its validity according
+to some stricter rules.
+
+<P>
+The asn_check_constraints() function checks the type for various
+implicit and explicit constraints. It is recommended to use asn_check_constraints()
+function after each decoding and before each encoding.
+
+<P>
+Please look into constraints.h for the precise definition of asn_check_constraints()
+and related types.
+
+<P>
+
+<H3><A NAME="SECTION03122400000000000000"></A><A NAME="sub:Printing-the-target"></A><BR>
+Printing the target structure
+</H3>
+
+<P>
+There are two ways to print the target structure: either invoke the
+print_struct member of the ASN.1 type descriptor, or using the asn_fprint()
+function, which is a simpler wrapper of the former:
+
+<P>
+
+<DD><PRE>
+
+asn_fprint(stdout,&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;rect);
+
+</PRE>
+</DD>
+Please look into constr_TYPE.h for the precise definition of asn_fprint()
+and related types.
+
+<P>
+
+<H3><A NAME="SECTION03122500000000000000"></A><A NAME="sub:Freeing-the-target"></A><BR>
+Freeing the target structure
+</H3>
+
+<P>
+Freeing the structure is slightly more complex than it may seem to.
+When the ASN.1 structure is freed, all the members of the structure
+and their submembers etc etc are recursively freed too. But it might
+not be feasible to free the structure itself. Consider the following
+case:
+
+<P>
+
+<DD><PRE>
+
+struct&nbsp;my_figure&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;The&nbsp;custom&nbsp;structure&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;flags;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;&lt;some&nbsp;custom&nbsp;member&gt;&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;The&nbsp;type&nbsp;is&nbsp;generated&nbsp;by&nbsp;the&nbsp;ASN.1&nbsp;compiler&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;<I>Rectangle_t&nbsp;rect;</I>
+&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;other&nbsp;members&nbsp;of&nbsp;the&nbsp;structure&nbsp;*/
+};
+
+</PRE>
+</DD>
+In this example, the application programmer defined a custom structure
+with one ASN.1-derived member (rect). This member is not a reference
+to the Rectangle_t, but an in-place inclusion of the Rectangle_t
+structure. If the freeing is necessary, the usual procedure of freeing
+everything must not be applied to the &amp;rect pointer itself, because
+it does not point to the memory block directly allocated by memory
+allocation routine, but instead lies within such a block allocated
+for my_figure structure.
+
+<P>
+To solve this problem, the free_struct routine has the additional
+argument (besides the intuitive type descriptor and target structure
+pointers), which is the flag specifying whether the outer pointer
+itself must be freed (0, default) or it should be left intact (non-zero
+value).
+
+<P>
+
+<DD><PRE>
+
+/*&nbsp;Rectangle_t&nbsp;is&nbsp;defined&nbsp;within&nbsp;my_figure&nbsp;*/
+struct&nbsp;my_figure&nbsp;*mf&nbsp;=&nbsp;<B>...</B>;
+/*
+&nbsp;*&nbsp;Freeing&nbsp;the&nbsp;Rectangle_td
+&nbsp;*&nbsp;without&nbsp;freeing&nbsp;the&nbsp;mf-&gt;rect&nbsp;pointer
+&nbsp;*/
+asn1_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;&amp;mf-&gt;rect,&nbsp;<I>1</I>&nbsp;/*&nbsp;!free&nbsp;*/);
+&nbsp;
+/*&nbsp;Rectangle_t&nbsp;is&nbsp;a&nbsp;stand-alone&nbsp;pointer&nbsp;*/
+Rectangle_t&nbsp;*rect&nbsp;=&nbsp;<B>...</B>;
+/*
+&nbsp;*&nbsp;Freeing&nbsp;the&nbsp;Rectangle_t
+&nbsp;*&nbsp;and&nbsp;freeing&nbsp;the&nbsp;rect&nbsp;pointer
+&nbsp;*/
+asn1_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn1_DEF_Rectangle,&nbsp;rect,&nbsp;<I>0</I>&nbsp;/*&nbsp;free&nbsp;the&nbsp;pointer&nbsp;too&nbsp;*/);
+
+</PRE>
+</DD>
+It is safe to invoke the <I>free_struct</I> function with the target
+structure pointer set to 0 (NULL), the function will do nothing.
+
+<P>
+ 
+<H2><A NAME="SECTION04000000000000000000">
+Bibliography</A>
+</H2><DL COMPACT><DD><P></P><DT><A NAME="Dub00">Dub00</A>
+<DD>Olivier Dubuisson - <I>ASN.1 Communication between heterogeneous
+systems</I> - Morgan Kaufmann Publishers, 2000. http://asn1.elibel.tm.fr/en/book/.
+ISBN:0-12-6333361-0.
+<P></P><DT><A NAME="ITU-T_ASN.1">ITU-T/ASN.1</A>
+<DD>ITU-T Study Group 17 - Languages for Telecommunication Systems http://www.itu.int/ITU-T/studygroups/com17/languages/</DL>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot136">... supported</A><A
+ HREF="asn1c-usage.html#tex2html1"><SUP>2.1</SUP></A></DT>
+<DD>C++ is ''supported'' too, as long as an object-oriented approach
+is not a definitive factor.
+
+</DD>
+<DT><A NAME="foot315">... this</A><A
+ HREF="asn1c-usage.html#tex2html2"><SUP>2.2</SUP></A></DT>
+<DD><I>-fnative-integers</I> compiler option is used to produce basic
+C <I>int</I> types instead of generic INTEGER_t.
+
+</DD>
+<DT><A NAME="foot142">... binary</A><A
+ HREF="asn1c-usage.html#tex2html3"><SUP>2.3</SUP></A></DT>
+<DD>BER, CER and DER encodings are binary. However, the XER encoding is
+text (XML) based.
+
+</DD>
+<DT><A NAME="foot316">... specification</A><A
+ HREF="asn1c-usage.html#tex2html4"><SUP>2.4</SUP></A></DT>
+<DD>This is probably <B>not</B> what you want to try out right now -
+read through the rest of this chapter to find out about -P option.
+
+</DD>
+<DT><A NAME="foot161">... necessary</A><A
+ HREF="asn1c-usage.html#tex2html5"><SUP>2.5</SUP></A></DT>
+<DD>Soon the compiler will be modified to emit the smallest subset of
+necessary files.
+
+</DD>
+<DT><A NAME="foot319">...that&nbsp;simple</A><A
+ HREF="asn1c-usage.html#tex2html6"><SUP>2.6</SUP></A></DT>
+<DD>Provided that you've also created a .c file with the <I>int main()</I>
+routine.
+
+</DD>
+<DT><A NAME="foot183">...restartable</A><A
+ HREF="asn1c-usage.html#tex2html7"><SUP>2.7</SUP></A></DT>
+<DD>Restartable means that if the decoder encounters the end of the buffer,
+it will fail, but may later be invoked again with the rest of the
+buffer to continue decoding.
+
+</DD>
+<DT><A NAME="foot253">... encoding</A><A
+ HREF="asn1c-usage.html#tex2html8"><SUP>2.8</SUP></A></DT>
+<DD>It is actually faster too: the encoder might skip over some computations
+which aren't important for the size determination.
+
+</DD>
+</DL><BR><HR>
+<ADDRESS>
+Lev Walkin
+2004-08-06
+</ADDRESS>
+</BODY>
+</HTML>
