@@ -184,7 +184,7 @@ typedef struct asn1p_expr_s {
 	int unique;	/* UNIQUE */
 
 	/*
-	 * Whether automatic tagging is applicable for subtypes.
+	 * Whether automatic tagging may be applied for subtypes.
 	 */
 	int auto_tags_OK;
 
@@ -217,7 +217,11 @@ typedef struct asn1p_expr_s {
 		TM_RECURSION,	/* Used to break recursion */
 	} _mark;
 
-	int _anonymous_type;	/* Used by the compiler */
+	/*
+	 * Some tags used by the compiler.
+	 */
+	int _anonymous_type;	/* This type is unnamed */
+	int _type_unique_index;	/* A per top-level-type unique index */
 
 	/*
 	 * Opaque data may be attached to this structure,
