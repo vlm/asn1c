@@ -45,31 +45,19 @@ static long compute_xxx_size(arg_t *arg, int _max);
 	OUT("/* Context for parsing across buffer boundaries */\n");	\
 	OUT("ber_dec_ctx_t _ber_dec_ctx;\n"));
 
-#define	DEPENDENCIES	do {			\
-	int saved_target = arg->target->target;	\
-	int saved_indent = arg->indent_level;	\
-	int comment_printed = 0;		\
-	REDIR(OT_DEPS);				\
-	arg->indent_level = 0;			\
-	TQ_FOR(v, &(expr->members), next) {	\
-		if((!(v->expr_type & ASN_CONSTR_MASK)	\
-		&& v->expr_type > ASN_CONSTR_MASK)	\
-		|| v->meta_type == AMT_TYPEREF) {	\
-			if(!comment_printed++)		\
-				OUT("/* Dependencies for %s */\n",	\
-				asn1c_type_name(arg, expr, TNF_UNMODIFIED));	\
-			OUT("#include <%s.h>\n",			\
-				asn1c_type_name(arg, v, TNF_INCLUDE));	\
-		}					\
-	}						\
-	if(expr->expr_type == ASN_CONSTR_SET_OF)	\
-		OUT("#include <asn_SET_OF.h>\n");	\
-	if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF)	\
-		OUT("#include <asn_SEQUENCE_OF.h>\n");	\
-	OUT("\n");				\
-	REDIR(saved_target);			\
-	INDENT(saved_indent);			\
-	} while(0)
+#define	DEPENDENCIES	do {						\
+	TQ_FOR(v, &(expr->members), next) {				\
+		if((!(v->expr_type & ASN_CONSTR_MASK)			\
+		&& v->expr_type > ASN_CONSTR_MASK)			\
+		|| v->meta_type == AMT_TYPEREF) {			\
+			GEN_INCLUDE(asn1c_type_name(arg, v, TNF_INCLUDE));\
+		}							\
+	}								\
+	if(expr->expr_type == ASN_CONSTR_SET_OF)			\
+		GEN_INCLUDE("asn_SET_OF");				\
+	if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF)			\
+		GEN_INCLUDE("asn_SEQUENCE_OF");				\
+} while(0)
 
 #define	MKID(id)	asn1c_make_identifier(0, (id), 0)
 
@@ -187,10 +175,11 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 		return -1;
 	}
 
-	REDIR(OT_STAT_DEFS);
+	GEN_INCLUDE("constr_SEQUENCE");
+	if(!arg->embed)
+		GEN_DECLARE(expr);	/* asn1_DEF_xxx */
 
-	OUT("#include <constr_SEQUENCE.h>\n");
-	OUT("\n");
+	REDIR(OT_STAT_DEFS);
 
 	/*
 	 * Print out the table according to which the parsing is performed.
@@ -291,12 +280,6 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	OUT("};\n");
 	OUT("\n");
 
-	p = MKID(expr->Identifier);
-	REDIR(OT_DEPS);
-	OUT("#include <constr_SEQUENCE.h>\n");
-	OUT("\n");
-	if(!arg->embed)
-	OUT("extern asn1_TYPE_descriptor_t asn1_DEF_%s;\n", p);
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
@@ -413,11 +396,11 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 		return -1;
 	}
 
+	GEN_INCLUDE("constr_SET");
+	if(!arg->embed)
+		GEN_DECLARE(expr);	/* asn1_DEF_xxx */
 
 	REDIR(OT_STAT_DEFS);
-
-	OUT("#include <constr_SET.h>\n");
-	OUT("\n");
 
 	/*
 	 * Print out the table according to which the parsing is performed.
@@ -542,11 +525,6 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	OUT("};\n");
 	OUT("\n");
 
-	REDIR(OT_DEPS);
-	OUT("#include <constr_SET.h>\n");
-	OUT("\n");
-	if(!arg->embed)
-	OUT("extern asn1_TYPE_descriptor_t asn1_DEF_%s;\n", p);
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
@@ -588,14 +566,16 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	int tags_impl_skip = 0;
 	char *p;
 
-	REDIR(OT_DEPS);
-
+	/*
+	 * Print out the table according to which the parsing is performed.
+	 */
 	if(seq_of) {
-		OUT("#include <constr_SEQUENCE_OF.h>\n");
+		GEN_INCLUDE("constr_SEQUENCE_OF");
 	} else {
-		OUT("#include <constr_SET_OF.h>\n");
-		OUT("\n");
+		GEN_INCLUDE("constr_SET_OF");
 	}
+	if(!arg->embed)
+		GEN_DECLARE(expr);	/* asn1_DEF_xxx */
 
 	REDIR(OT_STAT_DEFS);
 
@@ -660,9 +640,6 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	OUT("};\n");
 	OUT("\n");
 
-	REDIR(OT_DEPS);
-	if(!arg->embed)
-	OUT("extern asn1_TYPE_descriptor_t asn1_DEF_%s;\n", p);
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
@@ -676,7 +653,29 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 
 	DEPENDENCIES;
 
+	REDIR(OT_DEPS);
+
 	p = MKID(expr->Identifier);
+	OUT("typedef enum %s_PR {\n", p);
+	INDENTED(
+		p = MKID(expr->Identifier);
+		OUT("%s_PR_NOTHING,\t"
+			"/* No components present */\n", p);
+		TQ_FOR(v, &(expr->members), next) {
+			if(v->expr_type == A1TC_EXTENSIBLE) {
+				OUT("/* Extensions may appear below */\n");
+				continue;
+			}
+			p = MKID(expr->Identifier);
+			OUT("%s_PR_", p);
+			p = MKID(v->Identifier);
+			OUT("%s,\n", p, p);
+		}
+	);
+	p = MKID(expr->Identifier);
+	OUT("} %s_PR_e;\n", p);
+
+	REDIR(OT_TYPE_DECLS);
 
 	if(arg->embed) {
 		OUT("struct %s {\n", p);
@@ -685,20 +684,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	}
 
 	INDENTED(
-		OUT("enum {\n");
-		INDENTED(
-			OUT("%s_PR_NOTHING,\t"
-				"/* No components present */\n", p);
-			TQ_FOR(v, &(expr->members), next) {
-				if(v->expr_type == A1TC_EXTENSIBLE) continue;
-				p = MKID(expr->Identifier);
-				OUT("%s_PR_", p);
-				p = MKID(v->Identifier);
-				OUT("%s,\n", p, p);
-			}
-		);
-		OUT("} present;\n");
-
+		OUT("%s_PR_e present;\n", p);
 		OUT("union {\n", p);
 		TQ_FOR(v, &(expr->members), next) {
 			EMBED(v);
@@ -733,10 +719,11 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		return -1;
 	}
 
-	REDIR(OT_STAT_DEFS);
+	GEN_INCLUDE("constr_CHOICE");
+	if(!arg->embed)
+		GEN_DECLARE(expr);	/* asn1_DEF_xxx */
 
-	OUT("#include <constr_CHOICE.h>\n");
-	OUT("\n");
+	REDIR(OT_STAT_DEFS);
 
 	/*
 	 * Print out the table according to which the parsing is performed.
@@ -844,9 +831,6 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	OUT("};\n");
 	OUT("\n");
 
-	REDIR(OT_DEPS);
-	if(!arg->embed)
-	OUT("extern asn1_TYPE_descriptor_t asn1_DEF_%s;\n", p);
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
@@ -916,9 +900,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		return 0;
 	}
 
-	REDIR(OT_DEPS);
 
-	OUT("#include <%s.h>\n", asn1c_type_name(arg, expr, TNF_INCLUDE));
+	GEN_INCLUDE(asn1c_type_name(arg, expr, TNF_INCLUDE));
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -1068,6 +1051,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("der_type_encoder_f %s_encode_der;\n", p);
 	OUT("asn_struct_print_f %s_print;\n", p);
 	OUT("asn_struct_free_f %s_free;\n", p);
+
+	REDIR(OT_TYPE_DECLS);
 
 	return 0;
 }

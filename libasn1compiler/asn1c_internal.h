@@ -40,37 +40,6 @@ typedef struct arg_s {
 #include "asn1c_out.h"		/* Handle output during compilation */
 #include "asn1c_save.h"		/* Save compiled output */
 
-#define	INDENT(val)		arg->indent_level += (val)
-#define	INDENTED(code)	do {			\
-		INDENT(+1);			\
-		do { code; } while(0);		\
-		INDENT(-1);			\
-	} while(0)
-#define	FLAT(code)	do {			\
-		int _il = arg->indent_level;	\
-		arg->indent_level = 0;		\
-		do { code; } while(0);		\
-		arg->indent_level = _il;	\
-	} while(0)
-#define	EMBED(ev)	do {			\
-		REDIR(OT_TYPE_DECLS);		\
-		arg->embed++;			\
-		INDENTED(arg_t _tmp = *arg;	\
-			_tmp.expr = ev;		\
-			_tmp.default_cb(&_tmp);	\
-		);				\
-		arg->embed--;			\
-	} while(0)
-#define	OUT(fmt, args...)	asn1c_compiled_output(arg, fmt, ##args)
-#define	OUT_NOINDENT(fmt, args...)	do {	\
-	int _saved_indent = arg->indent_level;	\
-	arg->indent_level = 0;			\
-	asn1c_compiled_output(arg, fmt, ##args);\
-	arg->indent_level = _saved_indent;	\
-} while(0)
-
-#define	REDIR(foo)	do { arg->target->target = foo; } while(0)
-
 /*
  * Logging.
  */

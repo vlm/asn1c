@@ -180,6 +180,9 @@ asn1c_save_streams(arg_t *arg)  {
 
 	fprintf(fp_h, "#include <constr_TYPE.h>\n\n");
 
+	TQ_FOR(ot, &(cs->targets[OT_INCLUDES]), next)
+		fwrite(ot->buf, ot->len, 1, fp_h);
+	fprintf(fp_h, "\n");
 	TQ_FOR(ot, &(cs->targets[OT_DEPS]), next)
 		fwrite(ot->buf, ot->len, 1, fp_h);
 	fprintf(fp_h, "\n");
@@ -189,17 +192,17 @@ asn1c_save_streams(arg_t *arg)  {
 	TQ_FOR(ot, &(cs->targets[OT_FUNC_DECLS]), next)
 		fwrite(ot->buf, ot->len, 1, fp_h);
 
-	fprintf(fp_c, "#include <%s.h>\n\n", expr->Identifier);
+	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n\n"
+			"#endif\t/* _%s_H_ */\n",
+		header_id);
+
+	fprintf(fp_c, "#include <%s.h>\n\n", expr->Identifier);	/* Myself */
 	TQ_FOR(ot, &(cs->targets[OT_STAT_DEFS]), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->targets[OT_CODE]), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 5);
-
-	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n\n"
-			"#endif\t/* _%s_H_ */\n",
-		header_id);
+	assert(OT_MAX == 6);
 
 	fclose(fp_c);
 	fclose(fp_h);

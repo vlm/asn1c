@@ -35,6 +35,8 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 			if(ret == -1) return -1;
 		}
 	}
+	if(lf_found)
+		arg->indented = 0;
 
 	/*
 	 * Estimate necessary size.
@@ -66,10 +68,22 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	m->len = ret;
 	va_end(ap);
 
-	TQ_ADD(&(arg->target->targets[arg->target->target]), m, next);
+	if(arg->target->target == OT_INCLUDES) {
+		out_chunk_t *v;
+		TQ_FOR(v, &(arg->target->targets[OT_INCLUDES]), next) {
+			if(m->len == v->len
+			&& !memcmp(m->buf, v->buf, m->len))
+				break;
+		}
+		if(v) {
+			/* Entry is already present. Skip it. */
+			free(m->buf);
+			free(m);
+			return 0;
+		}
+	}
 
-	if(lf_found)
-		arg->indented = 0;
+	TQ_ADD(&(arg->target->targets[arg->target->target]), m, next);
 
 	return 0;
 }
