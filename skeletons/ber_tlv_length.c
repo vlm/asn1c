@@ -3,7 +3,6 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
-#include <constr_TYPE.h>
 #include <ber_tlv_length.h>
 #include <ber_tlv_tag.h>
 
@@ -117,7 +116,7 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 	/* UNREACHABLE */
 }
 
-ssize_t
+size_t
 der_tlv_length_serialize(ber_tlv_len_t len, void *bufp, size_t size) {
 	size_t required_size;	/* Size of len encoding */
 	uint8_t *buf = (uint8_t *)bufp;

@@ -31,10 +31,10 @@ ssize_t ber_skip_length(int _is_constructed, void *bufptr, size_t size);
 
 /*
  * This function serializes the length (L from TLV) in DER format.
- * It always return number of bytes necessary to represent the length,
+ * It always returns number of bytes necessary to represent the length,
  * it is a caller's responsibility to check the return value
  * against the supplied buffer's size.
  */
-ssize_t der_tlv_length_serialize(ber_tlv_len_t len, void *bufptr, size_t size);
+size_t der_tlv_length_serialize(ber_tlv_len_t len, void *bufptr, size_t size);
 
 #endif	/* _BER_TLV_LENGTH_H_ */
