@@ -112,7 +112,6 @@ asn1_TYPE_descriptor_t asn1_DEF_e = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_e,
 	2,	/* Elements count */
 	&asn1_DEF_e_specs	/* Additional specs */
@@ -162,7 +161,6 @@ asn1_TYPE_descriptor_t asn1_DEF_h = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_h,
 	2,	/* Elements count */
 	&asn1_DEF_h_specs	/* Additional specs */
@@ -229,7 +227,6 @@ asn1_TYPE_descriptor_t asn1_DEF_b = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_b,
 	4,	/* Elements count */
 	&asn1_DEF_b_specs	/* Additional specs */
@@ -287,7 +284,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	asn1_DEF_T_tags,	/* Same as above */
 	sizeof(asn1_DEF_T_tags)
 		/sizeof(asn1_DEF_T_tags[0]), /* 2 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_T,
 	2,	/* Elements count */
 	&asn1_DEF_T_specs	/* Additional specs */

@@ -63,7 +63,6 @@ asn1_TYPE_descriptor_t asn1_DEF_collection = {
 	asn1_DEF_collection_tags,	/* Same as above */
 	sizeof(asn1_DEF_collection_tags)
 		/sizeof(asn1_DEF_collection_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_collection,
 	1,	/* Single element */
 	&asn1_DEF_collection_specs	/* Additional specs */
@@ -116,7 +115,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	asn1_DEF_T_tags,	/* Same as above */
 	sizeof(asn1_DEF_T_tags)
 		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_T,
 	2,	/* Elements count */
 	&asn1_DEF_T_specs	/* Additional specs */
@@ -193,7 +191,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	asn1_DEF_T2_tags,	/* Same as above */
 	sizeof(asn1_DEF_T2_tags)
 		/sizeof(asn1_DEF_T2_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_T2,
 	2,	/* Elements count */
 	&asn1_DEF_T2_specs	/* Additional specs */

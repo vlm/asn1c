@@ -10,107 +10,12 @@ typedef INTEGER_t	 Int1_t;
 
 /*** <<< FUNC-DECLS [Int1] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_Int1;
-asn_struct_free_f Int1_free;
-asn_struct_print_f Int1_print;
-asn_constr_check_f Int1_constraint;
-ber_type_decoder_f Int1_decode_ber;
-der_type_encoder_f Int1_encode_der;
-xer_type_encoder_f Int1_encode_xer;
+/* This type is equivalent to INTEGER */
+#define	asn1_DEF_Int1	asn1_DEF_INTEGER
 
 /*** <<< CODE [Int1] >>> ***/
 
-int
-Int1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
-	td->check_constraints = asn1_DEF_INTEGER.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
-}
-
-/*
- * This type is implemented using INTEGER,
- * so here we adjust the DEF accordingly.
- */
-static void
-Int1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->free_struct    = asn1_DEF_INTEGER.free_struct;
-	td->print_struct   = asn1_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn1_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn1_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn1_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn1_DEF_INTEGER.xer_encoder;
-	td->last_tag_form  = asn1_DEF_INTEGER.last_tag_form;
-	td->elements       = asn1_DEF_INTEGER.elements;
-	td->elements_count = asn1_DEF_INTEGER.elements_count;
-	td->specifics      = asn1_DEF_INTEGER.specifics;
-}
-
-void
-Int1_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Int1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Int1_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Int1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-ber_dec_rval_t
-Int1_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
-	Int1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Int1_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Int1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_enc_rval_t
-Int1_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Int1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-
-/*** <<< STAT-DEFS [Int1] >>> ***/
-
-static ber_tlv_tag_t asn1_DEF_Int1_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
-};
-asn1_TYPE_descriptor_t asn1_DEF_Int1 = {
-	"Int1",
-	Int1_free,
-	Int1_print,
-	Int1_constraint,
-	Int1_decode_ber,
-	Int1_encode_der,
-	0,				/* Not implemented yet */
-	Int1_encode_xer,
-	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_Int1_tags,
-	sizeof(asn1_DEF_Int1_tags)
-		/sizeof(asn1_DEF_Int1_tags[0]), /* 1 */
-	asn1_DEF_Int1_tags,	/* Same as above */
-	sizeof(asn1_DEF_Int1_tags)
-		/sizeof(asn1_DEF_Int1_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
-	0, 0,	/* No members */
-	0	/* No specifics */
-};
+/* This type is equivalent to INTEGER */
 
 
 /*** <<< INCLUDES [Int2] >>> ***/
@@ -137,7 +42,6 @@ xer_type_encoder_f Int2_encode_xer;
 int
 Int2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Int1_t *st = sptr;
 	long value;
 	
@@ -174,7 +78,6 @@ Int2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Int1.der_encoder;
 	td->xer_decoder    = asn1_DEF_Int1.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Int1.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Int1.last_tag_form;
 	td->elements       = asn1_DEF_Int1.elements;
 	td->elements_count = asn1_DEF_Int1.elements_count;
 	td->specifics      = asn1_DEF_Int1.specifics;
@@ -239,7 +142,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int2 = {
 	asn1_DEF_Int2_tags,	/* Same as above */
 	sizeof(asn1_DEF_Int2_tags)
 		/sizeof(asn1_DEF_Int2_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -269,7 +171,6 @@ xer_type_encoder_f Int3_encode_xer;
 int
 Int3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Int2_t *st = sptr;
 	long value;
 	
@@ -310,7 +211,6 @@ Int3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Int2.der_encoder;
 	td->xer_decoder    = asn1_DEF_Int2.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Int2.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Int2.last_tag_form;
 	td->elements       = asn1_DEF_Int2.elements;
 	td->elements_count = asn1_DEF_Int2.elements_count;
 	td->specifics      = asn1_DEF_Int2.specifics;
@@ -375,7 +275,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int3 = {
 	asn1_DEF_Int3_tags,	/* Same as above */
 	sizeof(asn1_DEF_Int3_tags)
 		/sizeof(asn1_DEF_Int3_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -405,7 +304,6 @@ xer_type_encoder_f Int4_encode_xer;
 int
 Int4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Int3_t *st = sptr;
 	long value;
 	
@@ -446,7 +344,6 @@ Int4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Int3.der_encoder;
 	td->xer_decoder    = asn1_DEF_Int3.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Int3.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Int3.last_tag_form;
 	td->elements       = asn1_DEF_Int3.elements;
 	td->elements_count = asn1_DEF_Int3.elements_count;
 	td->specifics      = asn1_DEF_Int3.specifics;
@@ -511,7 +408,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int4 = {
 	asn1_DEF_Int4_tags,	/* Same as above */
 	sizeof(asn1_DEF_Int4_tags)
 		/sizeof(asn1_DEF_Int4_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -541,7 +437,6 @@ xer_type_encoder_f Int5_encode_xer;
 int
 Int5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Int4_t *st = sptr;
 	long value;
 	
@@ -582,7 +477,6 @@ Int5_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Int4.der_encoder;
 	td->xer_decoder    = asn1_DEF_Int4.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Int4.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Int4.last_tag_form;
 	td->elements       = asn1_DEF_Int4.elements;
 	td->elements_count = asn1_DEF_Int4.elements_count;
 	td->specifics      = asn1_DEF_Int4.specifics;
@@ -647,7 +541,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Int5 = {
 	asn1_DEF_Int5_tags,	/* Same as above */
 	sizeof(asn1_DEF_Int5_tags)
 		/sizeof(asn1_DEF_Int5_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -677,7 +570,6 @@ xer_type_encoder_f ExtensibleExtensions_encode_xer;
 int
 ExtensibleExtensions_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const INTEGER_t *st = sptr;
 	long value;
 	
@@ -718,7 +610,6 @@ ExtensibleExtensions_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn1_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn1_DEF_INTEGER.xer_encoder;
-	td->last_tag_form  = asn1_DEF_INTEGER.last_tag_form;
 	td->elements       = asn1_DEF_INTEGER.elements;
 	td->elements_count = asn1_DEF_INTEGER.elements_count;
 	td->specifics      = asn1_DEF_INTEGER.specifics;
@@ -783,7 +674,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ExtensibleExtensions = {
 	asn1_DEF_ExtensibleExtensions_tags,	/* Same as above */
 	sizeof(asn1_DEF_ExtensibleExtensions_tags)
 		/sizeof(asn1_DEF_ExtensibleExtensions_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -800,107 +690,12 @@ typedef IA5String_t	 Str1_t;
 
 /*** <<< FUNC-DECLS [Str1] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_Str1;
-asn_struct_free_f Str1_free;
-asn_struct_print_f Str1_print;
-asn_constr_check_f Str1_constraint;
-ber_type_decoder_f Str1_decode_ber;
-der_type_encoder_f Str1_encode_der;
-xer_type_encoder_f Str1_encode_xer;
+/* This type is equivalent to IA5String */
+#define	asn1_DEF_Str1	asn1_DEF_IA5String
 
 /*** <<< CODE [Str1] >>> ***/
 
-int
-Str1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
-	td->check_constraints = asn1_DEF_IA5String.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
-}
-
-/*
- * This type is implemented using IA5String,
- * so here we adjust the DEF accordingly.
- */
-static void
-Str1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->free_struct    = asn1_DEF_IA5String.free_struct;
-	td->print_struct   = asn1_DEF_IA5String.print_struct;
-	td->ber_decoder    = asn1_DEF_IA5String.ber_decoder;
-	td->der_encoder    = asn1_DEF_IA5String.der_encoder;
-	td->xer_decoder    = asn1_DEF_IA5String.xer_decoder;
-	td->xer_encoder    = asn1_DEF_IA5String.xer_encoder;
-	td->last_tag_form  = asn1_DEF_IA5String.last_tag_form;
-	td->elements       = asn1_DEF_IA5String.elements;
-	td->elements_count = asn1_DEF_IA5String.elements_count;
-	td->specifics      = asn1_DEF_IA5String.specifics;
-}
-
-void
-Str1_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Str1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Str1_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Str1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-ber_dec_rval_t
-Str1_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
-	Str1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Str1_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Str1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_enc_rval_t
-Str1_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Str1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-
-/*** <<< STAT-DEFS [Str1] >>> ***/
-
-static ber_tlv_tag_t asn1_DEF_Str1_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
-};
-asn1_TYPE_descriptor_t asn1_DEF_Str1 = {
-	"Str1",
-	Str1_free,
-	Str1_print,
-	Str1_constraint,
-	Str1_decode_ber,
-	Str1_encode_der,
-	0,				/* Not implemented yet */
-	Str1_encode_xer,
-	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_Str1_tags,
-	sizeof(asn1_DEF_Str1_tags)
-		/sizeof(asn1_DEF_Str1_tags[0]), /* 1 */
-	asn1_DEF_Str1_tags,	/* Same as above */
-	sizeof(asn1_DEF_Str1_tags)
-		/sizeof(asn1_DEF_Str1_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
-	0, 0,	/* No members */
-	0	/* No specifics */
-};
+/* This type is equivalent to IA5String */
 
 
 /*** <<< INCLUDES [Str2] >>> ***/
@@ -943,7 +738,6 @@ static int check_permitted_alphabet_1(const void *sptr) {
 int
 Str2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Str1_t *st = sptr;
 	size_t size;
 	
@@ -980,7 +774,6 @@ Str2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Str1.der_encoder;
 	td->xer_decoder    = asn1_DEF_Str1.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Str1.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Str1.last_tag_form;
 	td->elements       = asn1_DEF_Str1.elements;
 	td->elements_count = asn1_DEF_Str1.elements_count;
 	td->specifics      = asn1_DEF_Str1.specifics;
@@ -1045,7 +838,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str2 = {
 	asn1_DEF_Str2_tags,	/* Same as above */
 	sizeof(asn1_DEF_Str2_tags)
 		/sizeof(asn1_DEF_Str2_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1102,7 +894,6 @@ static int check_permitted_alphabet_2(const void *sptr) {
 int
 Str3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Str2_t *st = sptr;
 	size_t size;
 	
@@ -1139,7 +930,6 @@ Str3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Str2.der_encoder;
 	td->xer_decoder    = asn1_DEF_Str2.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Str2.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Str2.last_tag_form;
 	td->elements       = asn1_DEF_Str2.elements;
 	td->elements_count = asn1_DEF_Str2.elements_count;
 	td->specifics      = asn1_DEF_Str2.specifics;
@@ -1204,7 +994,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str3 = {
 	asn1_DEF_Str3_tags,	/* Same as above */
 	sizeof(asn1_DEF_Str3_tags)
 		/sizeof(asn1_DEF_Str3_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1250,7 +1039,6 @@ static int check_permitted_alphabet_3(const void *sptr) {
 int
 Str4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const IA5String_t *st = sptr;
 	
 	if(!sptr) {
@@ -1284,7 +1072,6 @@ Str4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_IA5String.der_encoder;
 	td->xer_decoder    = asn1_DEF_IA5String.xer_decoder;
 	td->xer_encoder    = asn1_DEF_IA5String.xer_encoder;
-	td->last_tag_form  = asn1_DEF_IA5String.last_tag_form;
 	td->elements       = asn1_DEF_IA5String.elements;
 	td->elements_count = asn1_DEF_IA5String.elements_count;
 	td->specifics      = asn1_DEF_IA5String.specifics;
@@ -1349,7 +1136,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Str4 = {
 	asn1_DEF_Str4_tags,	/* Same as above */
 	sizeof(asn1_DEF_Str4_tags)
 		/sizeof(asn1_DEF_Str4_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1395,7 +1181,6 @@ static int check_permitted_alphabet_4(const void *sptr) {
 int
 PER_Visible_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const IA5String_t *st = sptr;
 	
 	if(!sptr) {
@@ -1429,7 +1214,6 @@ PER_Visible_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_IA5String.der_encoder;
 	td->xer_decoder    = asn1_DEF_IA5String.xer_decoder;
 	td->xer_encoder    = asn1_DEF_IA5String.xer_encoder;
-	td->last_tag_form  = asn1_DEF_IA5String.last_tag_form;
 	td->elements       = asn1_DEF_IA5String.elements;
 	td->elements_count = asn1_DEF_IA5String.elements_count;
 	td->specifics      = asn1_DEF_IA5String.specifics;
@@ -1494,7 +1278,6 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible = {
 	asn1_DEF_PER_Visible_tags,	/* Same as above */
 	sizeof(asn1_DEF_PER_Visible_tags)
 		/sizeof(asn1_DEF_PER_Visible_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1540,7 +1323,6 @@ static int check_permitted_alphabet_5(const void *sptr) {
 int
 PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
@@ -1574,7 +1356,6 @@ PER_Visible_2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn1_DEF_PER_Visible.xer_decoder;
 	td->xer_encoder    = asn1_DEF_PER_Visible.xer_encoder;
-	td->last_tag_form  = asn1_DEF_PER_Visible.last_tag_form;
 	td->elements       = asn1_DEF_PER_Visible.elements;
 	td->elements_count = asn1_DEF_PER_Visible.elements_count;
 	td->specifics      = asn1_DEF_PER_Visible.specifics;
@@ -1639,7 +1420,6 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible_2 = {
 	asn1_DEF_PER_Visible_2_tags,	/* Same as above */
 	sizeof(asn1_DEF_PER_Visible_2_tags)
 		/sizeof(asn1_DEF_PER_Visible_2_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1685,7 +1465,6 @@ static int check_permitted_alphabet_6(const void *sptr) {
 int
 Not_PER_Visible_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
@@ -1719,7 +1498,6 @@ Not_PER_Visible_1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn1_DEF_PER_Visible.xer_decoder;
 	td->xer_encoder    = asn1_DEF_PER_Visible.xer_encoder;
-	td->last_tag_form  = asn1_DEF_PER_Visible.last_tag_form;
 	td->elements       = asn1_DEF_PER_Visible.elements;
 	td->elements_count = asn1_DEF_PER_Visible.elements_count;
 	td->specifics      = asn1_DEF_PER_Visible.specifics;
@@ -1784,7 +1562,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_1 = {
 	asn1_DEF_Not_PER_Visible_1_tags,	/* Same as above */
 	sizeof(asn1_DEF_Not_PER_Visible_1_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_1_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1830,7 +1607,6 @@ static int check_permitted_alphabet_7(const void *sptr) {
 int
 Not_PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
@@ -1864,7 +1640,6 @@ Not_PER_Visible_2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn1_DEF_PER_Visible.xer_decoder;
 	td->xer_encoder    = asn1_DEF_PER_Visible.xer_encoder;
-	td->last_tag_form  = asn1_DEF_PER_Visible.last_tag_form;
 	td->elements       = asn1_DEF_PER_Visible.elements;
 	td->elements_count = asn1_DEF_PER_Visible.elements_count;
 	td->specifics      = asn1_DEF_PER_Visible.specifics;
@@ -1929,7 +1704,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_2 = {
 	asn1_DEF_Not_PER_Visible_2_tags,	/* Same as above */
 	sizeof(asn1_DEF_Not_PER_Visible_2_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_2_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1975,7 +1749,6 @@ static int check_permitted_alphabet_8(const void *sptr) {
 int
 Not_PER_Visible_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
@@ -2009,7 +1782,6 @@ Not_PER_Visible_3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn1_DEF_PER_Visible.xer_decoder;
 	td->xer_encoder    = asn1_DEF_PER_Visible.xer_encoder;
-	td->last_tag_form  = asn1_DEF_PER_Visible.last_tag_form;
 	td->elements       = asn1_DEF_PER_Visible.elements;
 	td->elements_count = asn1_DEF_PER_Visible.elements_count;
 	td->specifics      = asn1_DEF_PER_Visible.specifics;
@@ -2074,7 +1846,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_3 = {
 	asn1_DEF_Not_PER_Visible_3_tags,	/* Same as above */
 	sizeof(asn1_DEF_Not_PER_Visible_3_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_3_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2120,7 +1891,6 @@ static int check_permitted_alphabet_9(const void *sptr) {
 int
 SIZE_but_not_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const PER_Visible_t *st = sptr;
 	size_t size;
 	
@@ -2157,7 +1927,6 @@ SIZE_but_not_FROM_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn1_DEF_PER_Visible.xer_decoder;
 	td->xer_encoder    = asn1_DEF_PER_Visible.xer_encoder;
-	td->last_tag_form  = asn1_DEF_PER_Visible.last_tag_form;
 	td->elements       = asn1_DEF_PER_Visible.elements;
 	td->elements_count = asn1_DEF_PER_Visible.elements_count;
 	td->specifics      = asn1_DEF_PER_Visible.specifics;
@@ -2222,7 +1991,6 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_but_not_FROM = {
 	asn1_DEF_SIZE_but_not_FROM_tags,	/* Same as above */
 	sizeof(asn1_DEF_SIZE_but_not_FROM_tags)
 		/sizeof(asn1_DEF_SIZE_but_not_FROM_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2268,7 +2036,6 @@ static int check_permitted_alphabet_10(const void *sptr) {
 int
 SIZE_and_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const PER_Visible_t *st = sptr;
 	size_t size;
 	
@@ -2305,7 +2072,6 @@ SIZE_and_FROM_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn1_DEF_PER_Visible.xer_decoder;
 	td->xer_encoder    = asn1_DEF_PER_Visible.xer_encoder;
-	td->last_tag_form  = asn1_DEF_PER_Visible.last_tag_form;
 	td->elements       = asn1_DEF_PER_Visible.elements;
 	td->elements_count = asn1_DEF_PER_Visible.elements_count;
 	td->specifics      = asn1_DEF_PER_Visible.specifics;
@@ -2370,7 +2136,6 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_and_FROM = {
 	asn1_DEF_SIZE_and_FROM_tags,	/* Same as above */
 	sizeof(asn1_DEF_SIZE_and_FROM_tags)
 		/sizeof(asn1_DEF_SIZE_and_FROM_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2416,7 +2181,6 @@ static int check_permitted_alphabet_11(const void *sptr) {
 int
 Neither_SIZE_nor_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const PER_Visible_t *st = sptr;
 	
 	if(!sptr) {
@@ -2450,7 +2214,6 @@ Neither_SIZE_nor_FROM_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn1_DEF_PER_Visible.xer_decoder;
 	td->xer_encoder    = asn1_DEF_PER_Visible.xer_encoder;
-	td->last_tag_form  = asn1_DEF_PER_Visible.last_tag_form;
 	td->elements       = asn1_DEF_PER_Visible.elements;
 	td->elements_count = asn1_DEF_PER_Visible.elements_count;
 	td->specifics      = asn1_DEF_PER_Visible.specifics;
@@ -2515,7 +2278,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Neither_SIZE_nor_FROM = {
 	asn1_DEF_Neither_SIZE_nor_FROM_tags,	/* Same as above */
 	sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags)
 		/sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2574,7 +2336,6 @@ static int check_permitted_alphabet_12(const void *sptr) {
 int
 Utf8_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Utf8_2_t *st = sptr;
 	size_t size;
 	
@@ -2612,7 +2373,6 @@ Utf8_3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Utf8_2.der_encoder;
 	td->xer_decoder    = asn1_DEF_Utf8_2.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Utf8_2.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Utf8_2.last_tag_form;
 	td->elements       = asn1_DEF_Utf8_2.elements;
 	td->elements_count = asn1_DEF_Utf8_2.elements_count;
 	td->specifics      = asn1_DEF_Utf8_2.specifics;
@@ -2677,7 +2437,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_3 = {
 	asn1_DEF_Utf8_3_tags,	/* Same as above */
 	sizeof(asn1_DEF_Utf8_3_tags)
 		/sizeof(asn1_DEF_Utf8_3_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2707,7 +2466,6 @@ xer_type_encoder_f Utf8_2_encode_xer;
 int
 Utf8_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
 	const Utf8_1_t *st = sptr;
 	size_t size;
 	
@@ -2744,7 +2502,6 @@ Utf8_2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Utf8_1.der_encoder;
 	td->xer_decoder    = asn1_DEF_Utf8_1.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Utf8_1.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Utf8_1.last_tag_form;
 	td->elements       = asn1_DEF_Utf8_1.elements;
 	td->elements_count = asn1_DEF_Utf8_1.elements_count;
 	td->specifics      = asn1_DEF_Utf8_1.specifics;
@@ -2809,7 +2566,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_2 = {
 	asn1_DEF_Utf8_2_tags,	/* Same as above */
 	sizeof(asn1_DEF_Utf8_2_tags)
 		/sizeof(asn1_DEF_Utf8_2_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2826,107 +2582,12 @@ typedef UTF8String_t	 Utf8_1_t;
 
 /*** <<< FUNC-DECLS [Utf8-1] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_Utf8_1;
-asn_struct_free_f Utf8_1_free;
-asn_struct_print_f Utf8_1_print;
-asn_constr_check_f Utf8_1_constraint;
-ber_type_decoder_f Utf8_1_decode_ber;
-der_type_encoder_f Utf8_1_encode_der;
-xer_type_encoder_f Utf8_1_encode_xer;
+/* This type is equivalent to UTF8String */
+#define	asn1_DEF_Utf8_1	asn1_DEF_UTF8String
 
 /*** <<< CODE [Utf8-1] >>> ***/
 
-int
-Utf8_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
-	td->check_constraints = asn1_DEF_UTF8String.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
-}
-
-/*
- * This type is implemented using UTF8String,
- * so here we adjust the DEF accordingly.
- */
-static void
-Utf8_1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->free_struct    = asn1_DEF_UTF8String.free_struct;
-	td->print_struct   = asn1_DEF_UTF8String.print_struct;
-	td->ber_decoder    = asn1_DEF_UTF8String.ber_decoder;
-	td->der_encoder    = asn1_DEF_UTF8String.der_encoder;
-	td->xer_decoder    = asn1_DEF_UTF8String.xer_decoder;
-	td->xer_encoder    = asn1_DEF_UTF8String.xer_encoder;
-	td->last_tag_form  = asn1_DEF_UTF8String.last_tag_form;
-	td->elements       = asn1_DEF_UTF8String.elements;
-	td->elements_count = asn1_DEF_UTF8String.elements_count;
-	td->specifics      = asn1_DEF_UTF8String.specifics;
-}
-
-void
-Utf8_1_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Utf8_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Utf8_1_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Utf8_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-ber_dec_rval_t
-Utf8_1_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
-	Utf8_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Utf8_1_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Utf8_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_enc_rval_t
-Utf8_1_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Utf8_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-
-/*** <<< STAT-DEFS [Utf8-1] >>> ***/
-
-static ber_tlv_tag_t asn1_DEF_Utf8_1_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (12 << 2))
-};
-asn1_TYPE_descriptor_t asn1_DEF_Utf8_1 = {
-	"Utf8-1",
-	Utf8_1_free,
-	Utf8_1_print,
-	Utf8_1_constraint,
-	Utf8_1_decode_ber,
-	Utf8_1_encode_der,
-	0,				/* Not implemented yet */
-	Utf8_1_encode_xer,
-	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_Utf8_1_tags,
-	sizeof(asn1_DEF_Utf8_1_tags)
-		/sizeof(asn1_DEF_Utf8_1_tags[0]), /* 1 */
-	asn1_DEF_Utf8_1_tags,	/* Same as above */
-	sizeof(asn1_DEF_Utf8_1_tags)
-		/sizeof(asn1_DEF_Utf8_1_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
-	0, 0,	/* No members */
-	0	/* No specifics */
-};
+/* This type is equivalent to UTF8String */
 
 
 /*** <<< INCLUDES [VisibleIdentifier] >>> ***/
@@ -2940,15 +2601,34 @@ typedef Identifier_t	 VisibleIdentifier_t;
 
 /*** <<< FUNC-DECLS [VisibleIdentifier] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_VisibleIdentifier;
-asn_struct_free_f VisibleIdentifier_free;
-asn_struct_print_f VisibleIdentifier_print;
-asn_constr_check_f VisibleIdentifier_constraint;
-ber_type_decoder_f VisibleIdentifier_decode_ber;
-der_type_encoder_f VisibleIdentifier_encode_der;
-xer_type_encoder_f VisibleIdentifier_encode_xer;
+/* This type is equivalent to Identifier */
+#define	asn1_DEF_VisibleIdentifier	asn1_DEF_Identifier
 
-/*** <<< CTABLES [VisibleIdentifier] >>> ***/
+/*** <<< CODE [VisibleIdentifier] >>> ***/
+
+/* This type is equivalent to Identifier */
+
+
+/*** <<< INCLUDES [Identifier] >>> ***/
+
+#include <VisibleString.h>
+
+/*** <<< TYPE-DECLS [Identifier] >>> ***/
+
+
+typedef VisibleString_t	 Identifier_t;
+
+/*** <<< FUNC-DECLS [Identifier] >>> ***/
+
+extern asn1_TYPE_descriptor_t asn1_DEF_Identifier;
+asn_struct_free_f Identifier_free;
+asn_struct_print_f Identifier_print;
+asn_constr_check_f Identifier_constraint;
+ber_type_decoder_f Identifier_decode_ber;
+der_type_encoder_f Identifier_encode_der;
+xer_type_encoder_f Identifier_encode_xer;
+
+/*** <<< CTABLES [Identifier] >>> ***/
 
 static int permitted_alphabet_table_14[256] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
@@ -2976,13 +2656,12 @@ static int check_permitted_alphabet_14(const void *sptr) {
 }
 
 
-/*** <<< CODE [VisibleIdentifier] >>> ***/
+/*** <<< CODE [Identifier] >>> ***/
 
 int
-VisibleIdentifier_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+Identifier_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	const Identifier_t *st = sptr;
+	const VisibleString_t *st = sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -3007,166 +2686,6 @@ VisibleIdentifier_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using Identifier,
- * so here we adjust the DEF accordingly.
- */
-static void
-VisibleIdentifier_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->free_struct    = asn1_DEF_Identifier.free_struct;
-	td->print_struct   = asn1_DEF_Identifier.print_struct;
-	td->ber_decoder    = asn1_DEF_Identifier.ber_decoder;
-	td->der_encoder    = asn1_DEF_Identifier.der_encoder;
-	td->xer_decoder    = asn1_DEF_Identifier.xer_decoder;
-	td->xer_encoder    = asn1_DEF_Identifier.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Identifier.last_tag_form;
-	td->elements       = asn1_DEF_Identifier.elements;
-	td->elements_count = asn1_DEF_Identifier.elements_count;
-	td->specifics      = asn1_DEF_Identifier.specifics;
-}
-
-void
-VisibleIdentifier_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	VisibleIdentifier_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-VisibleIdentifier_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	VisibleIdentifier_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-ber_dec_rval_t
-VisibleIdentifier_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
-	VisibleIdentifier_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-VisibleIdentifier_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	VisibleIdentifier_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_enc_rval_t
-VisibleIdentifier_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	VisibleIdentifier_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-
-/*** <<< STAT-DEFS [VisibleIdentifier] >>> ***/
-
-static ber_tlv_tag_t asn1_DEF_VisibleIdentifier_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2))
-};
-asn1_TYPE_descriptor_t asn1_DEF_VisibleIdentifier = {
-	"VisibleIdentifier",
-	VisibleIdentifier_free,
-	VisibleIdentifier_print,
-	VisibleIdentifier_constraint,
-	VisibleIdentifier_decode_ber,
-	VisibleIdentifier_encode_der,
-	0,				/* Not implemented yet */
-	VisibleIdentifier_encode_xer,
-	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_VisibleIdentifier_tags,
-	sizeof(asn1_DEF_VisibleIdentifier_tags)
-		/sizeof(asn1_DEF_VisibleIdentifier_tags[0]), /* 1 */
-	asn1_DEF_VisibleIdentifier_tags,	/* Same as above */
-	sizeof(asn1_DEF_VisibleIdentifier_tags)
-		/sizeof(asn1_DEF_VisibleIdentifier_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
-	0, 0,	/* No members */
-	0	/* No specifics */
-};
-
-
-/*** <<< INCLUDES [Identifier] >>> ***/
-
-#include <VisibleString.h>
-
-/*** <<< TYPE-DECLS [Identifier] >>> ***/
-
-
-typedef VisibleString_t	 Identifier_t;
-
-/*** <<< FUNC-DECLS [Identifier] >>> ***/
-
-extern asn1_TYPE_descriptor_t asn1_DEF_Identifier;
-asn_struct_free_f Identifier_free;
-asn_struct_print_f Identifier_print;
-asn_constr_check_f Identifier_constraint;
-ber_type_decoder_f Identifier_decode_ber;
-der_type_encoder_f Identifier_encode_der;
-xer_type_encoder_f Identifier_encode_xer;
-
-/*** <<< CTABLES [Identifier] >>> ***/
-
-static int permitted_alphabet_table_15[256] = {
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,	/*     $            */
-1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,	/* 0123456789       */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  ABCDEFGHIJKLMNO */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,	/* PQRSTUVWXYZ    _ */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  abcdefghijklmno */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* pqrstuvwxyz      */
-};
-
-static int check_permitted_alphabet_15(const void *sptr) {
-	int *table = permitted_alphabet_table_15;
-	/* The underlying type is VisibleString */
-	const VisibleString_t *st = sptr;
-	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
-	
-	for(; ch < end; ch++) {
-		uint8_t cv = *ch;
-		if(!table[cv]) return -1;
-	}
-	return 0;
-}
-
-
-/*** <<< CODE [Identifier] >>> ***/
-
-int
-Identifier_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	const VisibleString_t *st = sptr;
-	size_t size;
-	
-	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
-	
-	size = st->size;
-	
-	if((size >= 1 && size <= 32)
-		 && !check_permitted_alphabet_15(sptr)) {
-		/* Constraint check succeeded */
-		return 0;
-	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
-}
-
-/*
  * This type is implemented using VisibleString,
  * so here we adjust the DEF accordingly.
  */
@@ -3178,7 +2697,6 @@ Identifier_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_VisibleString.der_encoder;
 	td->xer_decoder    = asn1_DEF_VisibleString.xer_decoder;
 	td->xer_encoder    = asn1_DEF_VisibleString.xer_encoder;
-	td->last_tag_form  = asn1_DEF_VisibleString.last_tag_form;
 	td->elements       = asn1_DEF_VisibleString.elements;
 	td->elements_count = asn1_DEF_VisibleString.elements_count;
 	td->specifics      = asn1_DEF_VisibleString.specifics;
@@ -3243,7 +2761,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Identifier = {
 	asn1_DEF_Identifier_tags,	/* Same as above */
 	sizeof(asn1_DEF_Identifier_tags)
 		/sizeof(asn1_DEF_Identifier_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
