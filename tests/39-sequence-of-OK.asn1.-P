@@ -15,7 +15,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T;
 
 
 typedef struct T {
-	INTEGER_t	 int;
+	INTEGER_t	 Int;
 	struct collection {
 		A_SEQUENCE_OF(T2_t) list;
 		
@@ -70,7 +70,7 @@ asn_TYPE_descriptor_t asn_DEF_collection = {
 };
 
 static asn_TYPE_member_t asn_MBR_T[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct T, int),
+	{ ATF_NOFLAGS, 0, offsetof(struct T, Int),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,

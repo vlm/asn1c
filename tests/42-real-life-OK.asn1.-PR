@@ -47,7 +47,7 @@ memb_varsets_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	{ /* Determine the number of elements */
 		const A_SEQUENCE_OF(void) *list;
-		list = (const A_SEQUENCE_OF(void) *)sptr;
+		(const void *)list = sptr;
 		size = list->count;
 	}
 	
@@ -376,7 +376,7 @@ memb_vset_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	{ /* Determine the number of elements */
 		const A_SET_OF(void) *list;
-		list = (const A_SET_OF(void) *)sptr;
+		(const void *)list = sptr;
 		size = list->count;
 	}
 	
