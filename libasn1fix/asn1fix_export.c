@@ -43,15 +43,13 @@ asn1f_class_access_ex(asn1p_t *asn,
 }
 
 asn1p_expr_t *
-asn1f_find_terminal_type_ex(asn1p_t *asn,
-		asn1p_module_t *mod,
-		asn1p_expr_t *expr) {
+asn1f_find_terminal_type_ex(asn1p_t *asn, asn1p_expr_t *expr) {
 	arg_t arg;
 
 	memset(&arg, 0, sizeof(arg));
 
 	arg.asn = asn;
-	arg.mod = mod;
+	arg.mod = expr->module;
 	arg.expr = expr;
 	arg.eh = a1f_replace_me_with_proper_interface_arg.eh;
 	arg.debug = a1f_replace_me_with_proper_interface_arg.debug;

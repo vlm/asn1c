@@ -31,8 +31,7 @@ asn1p_expr_t *asn1f_class_access_ex(asn1p_t *asn, asn1p_module_t *mod,
 /*
  * Exportable version of asn1f_find_terminal_type().
  */
-asn1p_expr_t *asn1f_find_terminal_type_ex(asn1p_t *asn, asn1p_module_t *mod,
-	asn1p_expr_t *tc);
+asn1p_expr_t *asn1f_find_terminal_type_ex(asn1p_t *asn, asn1p_expr_t *tc);
 
 /*
  * Exportable version of asn1f_fix_dereference_values();
