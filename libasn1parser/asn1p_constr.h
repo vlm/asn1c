@@ -59,6 +59,8 @@ typedef struct asn1p_constraint_s {
 	int _lineno;	/* Position in a source file */
 } asn1p_constraint_t;
 
+/* Human-readable constraint type description */
+char *asn1p_constraint_type2str(enum asn1p_constraint_type_e);
 
 /*
  * Constructors and a recursive destructor.

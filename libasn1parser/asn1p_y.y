@@ -15,6 +15,7 @@ int yylex(void);
 int yyerror(const char *msg);
 void asn1p_lexer_hack_push_opaque_state(void);
 void asn1p_lexer_hack_enable_with_syntax(void);
+void asn1p_lexer_hack_push_encoding_control(void);
 #define	yylineno	asn1p_lineno
 extern int asn1p_lineno;
 
@@ -99,7 +100,7 @@ static asn1p_value_t *
 %token	<a_int>		TOK_number
 %token	<a_int>		TOK_number_negative
 %token	<tv_str>	TOK_typereference
-%token	<tv_str>	TOK_objectclassreference	/* "CLASS1" */
+%token	<tv_str>	TOK_capitalreference		/* "CLASS1" */
 %token	<tv_str>	TOK_typefieldreference		/* "&Pork" */
 %token	<tv_str>	TOK_valuefieldreference		/* "&id" */
 
@@ -129,6 +130,7 @@ static asn1p_value_t *
 %token			TOK_DEFINED
 %token			TOK_EMBEDDED
 %token			TOK_ENCODED
+%token			TOK_ENCODING_CONTROL
 %token			TOK_END
 %token			TOK_ENUMERATED
 %token			TOK_EXPLICIT
@@ -147,6 +149,7 @@ static asn1p_value_t *
 %token			TOK_IMPORTS
 %token			TOK_INCLUDES
 %token			TOK_INSTANCE
+%token			TOK_INSTRUCTIONS
 %token			TOK_INTEGER
 %token			TOK_ISO646String
 %token			TOK_MAX
@@ -186,9 +189,9 @@ static asn1p_value_t *
 %token			TOK_VisibleString
 %token			TOK_WITH
 
-%left			'|' TOK_UNION
-%left			'^' TOK_INTERSECTION
 %left			TOK_EXCEPT
+%left			'^' TOK_INTERSECTION
+%left			'|' TOK_UNION
 
 /* Misc tags */
 %token			TOK_TwoDots		/* .. */
@@ -262,14 +265,10 @@ static asn1p_value_t *
 %type	<a_tag>			Tag		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_constr>		optConstraints
-%type	<a_constr>		Constraints
-%type	<a_constr>		SingleConstraint	/* (SIZE(2)) */
-%type	<a_constr>		ConstraintElementSet	/* 1..2,...,3 */
+%type	<a_constr>		SetOfConstraints
+%type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */
+%type	<a_constr>		ElementSetSpec		/* 1..2,...,3 */
 %type	<a_constr>		ConstraintSubtypeElement /* 1..2 */
-%type	<a_constr>		ConstraintElementIntersection
-%type	<a_constr>		ConstraintElementException
-%type	<a_constr>		ConstraintElementUnion
-%type	<a_constr>		ConstraintElement
 %type	<a_constr>		SimpleTableConstraint
 %type	<a_constr>		TableConstraint
 %type	<a_constr>		WithComponents
@@ -429,6 +428,22 @@ ModuleSpecificationFlag:
 	| TOK_EXTENSIBILITY TOK_IMPLIED {
 		$$ = MSF_EXTENSIBILITY_IMPLIED;
 	}
+	/* EncodingReferenceDefault */
+	| TOK_capitalreference TOK_INSTRUCTIONS {
+		/* X.680Amd1 specifies TAG and XER */
+		if(strcmp($1, "TAG") == 0) {
+		 	$$ = MSF_TAG_INSTRUCTIONS;
+		} else if(strcmp($1, "XER") == 0) {
+		 	$$ = MSF_XER_INSTRUCTIONS;
+		} else {
+			fprintf(stderr,
+				"WARNING: %s INSTRUCTIONS at line %d: "
+				"Unrecognized encoding reference\n",
+				$1, yylineno);
+		 	$$ = MSF_unk_INSTRUCTIONS;
+		}
+		free($1);
+	}
 	;
 
 /*
@@ -437,7 +452,6 @@ ModuleSpecificationFlag:
 optModuleSpecificationBody:
 	{ $$ = 0; }
 	| ModuleSpecificationBody {
-		assert($1);
 		$$ = $1;
 	}
 	;
@@ -451,6 +465,12 @@ ModuleSpecificationBody:
 	}
 	| ModuleSpecificationBody ModuleSpecificationElement {
 		$$ = $1;
+
+		/* Behave well when one of them is skipped. */
+		if(!($1)) {
+			if($2) $$ = $2;
+			break;
+		}
 
 #ifdef	MY_IMPORT
 #error	MY_IMPORT DEFINED ELSEWHERE!
@@ -514,6 +534,16 @@ ModuleSpecificationElement:
 		assert($1->expr_type != A1TC_INVALID);
 		assert($1->meta_type != AMT_INVALID);
 		TQ_ADD(&($$->members), $1, next);
+	}
+	| TOK_ENCODING_CONTROL TOK_capitalreference 
+		{ asn1p_lexer_hack_push_encoding_control(); }
+			{
+		fprintf(stderr,
+			"WARNING: ENCODING-CONTROL %s "
+			"specification at line %d ignored\n",
+			$2, yylineno);
+		free($2);
+		$$ = 0;
 	}
 
 	/*
@@ -662,7 +692,7 @@ DefinedTypeRef:
 
 optValueSetBody:
 	{ }
-	| ConstraintElementSet {
+	| ElementSetSpecs {
 	}
 	;
 
@@ -1346,20 +1376,19 @@ ConstructedType:
 /*
  * Data type constraints.
  */
-optConstraints:
-	{ $$ = 0; }
-	| Constraints { $$ = $1; }
-	;
-
 Union:		'|' | TOK_UNION;
 Intersection:	'^' | TOK_INTERSECTION;
 Except:		      TOK_EXCEPT;
 
-Constraints:
-	TOK_SIZE '('  ConstraintElementSet ')' {
+optConstraints:
+	{ $$ = 0; }
+	| SetOfConstraints {
+		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
+	}
+	| TOK_SIZE '('  ElementSetSpecs ')' {
 		/*
 		 * This is a special case, for compatibility purposes.
-		 * It goes without parenthesis.
+		 * It goes without parentheses.
 		 */
 		int ret;
 		$$ = asn1p_constraint_new(yylineno);
@@ -1368,80 +1397,70 @@ Constraints:
 		ret = asn1p_constraint_insert($$, $3);
 		checkmem(ret == 0);
 	}
-	| SingleConstraint {
-		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
-	}
-	| Constraints SingleConstraint {
-		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $2);
-	}
 	;
 
-SingleConstraint:
-	'(' ConstraintElementSet ')' {
+SetOfConstraints:
+	'(' ElementSetSpecs ')' {
 		$$ = $2;
 	}
+	| SetOfConstraints '(' ElementSetSpecs ')' {
+		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $3);
+	}
 	;
 
-ConstraintElementSet:
-	ConstraintElement {
+ElementSetSpecs:
+	ElementSetSpec {
 		$$ = $1;
 	}
-	| ConstraintElement ',' TOK_ThreeDots {
+	| ElementSetSpec ',' TOK_ThreeDots {
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno);
-		checkmem(ct);
 		ct->type = ACT_EL_EXT;
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
 	}
-	| ConstraintElement ',' TOK_ThreeDots ',' ConstraintElement {
+	| ElementSetSpec ',' TOK_ThreeDots ',' ElementSetSpec {
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno);
-		checkmem(ct);
 		ct->type = ACT_EL_EXT;
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
 		ct = $$;
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $5);
 	}
-	| TOK_ThreeDots {
-		$$ = asn1p_constraint_new(yylineno);
-		checkmem($$);
-		$$->type = ACT_EL_EXT;
-	}
-	| TOK_ThreeDots ',' ConstraintElement {
-		asn1p_constraint_t *ct;
-		ct = asn1p_constraint_new(yylineno);
-		checkmem(ct);
-		ct->type = ACT_EL_EXT;
-		CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $3);
-	}
 	;
 
-ConstraintElement: ConstraintElementUnion { $$ = $1; } ;
-
-ConstraintElementUnion:
-	ConstraintElementIntersection { $$ = $1; }
-	| ConstraintElementUnion Union ConstraintElementIntersection {
+ElementSetSpec:
+	ConstraintSubtypeElement {
+		$$ = $1;
+	}
+	| ElementSetSpec Union ConstraintSubtypeElement {
 		CONSTRAINT_INSERT($$, ACT_CA_UNI, $1, $3);
 	}
-	;
-
-ConstraintElementIntersection:
-	ConstraintElementException { $$ = $1; }
-	| ConstraintElementIntersection Intersection
-		ConstraintElementException {
+	| ElementSetSpec Intersection ConstraintSubtypeElement {
 		CONSTRAINT_INSERT($$, ACT_CA_INT, $1, $3);
 	}
-	;
-
-ConstraintElementException:
-	ConstraintSubtypeElement { $$ = $1; }
-	| ConstraintElementException Except ConstraintSubtypeElement {
+	| ConstraintSubtypeElement Except ConstraintSubtypeElement {
 		CONSTRAINT_INSERT($$, ACT_CA_EXC, $1, $3);
 	}
 	;
 
 ConstraintSubtypeElement:
-	ConstraintValue {
+	ConstraintSpec '(' ElementSetSpecs ')' {
+		int ret;
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = $1;
+		ret = asn1p_constraint_insert($$, $3);
+		checkmem(ret == 0);
+	}
+	| '(' ElementSetSpecs ')' {
+		int ret;
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = ACT_CA_SET;
+		ret = asn1p_constraint_insert($$, $2);
+		checkmem(ret == 0);
+	}
+	| ConstraintValue {
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
 		$$->type = ACT_EL_VALUE;
@@ -1454,13 +1473,30 @@ ConstraintSubtypeElement:
 		$$->range_start = $1;
 		$$->range_stop = $3;
 	}
-	| ConstraintSpec '(' ConstraintElementSet ')' {
-		int ret;
+	| TOK_MIN ConstraintRangeSpec ConstraintValue {
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
-		$$->type = $1;
-		ret = asn1p_constraint_insert($$, $3);
-		checkmem(ret == 0);
+		$$->type = $2;
+		$$->range_start = asn1p_value_fromint(-123);
+		$$->range_stop = $3;
+		$$->range_start->type = ATV_MIN;
+	}
+	| ConstraintValue ConstraintRangeSpec TOK_MAX {
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = $2;
+		$$->range_start = $1;
+		$$->range_stop = asn1p_value_fromint(321);
+		$$->range_stop->type = ATV_MAX;
+	}
+	| TOK_MIN ConstraintRangeSpec TOK_MAX {
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = $2;
+		$$->range_start = asn1p_value_fromint(-123);
+		$$->range_stop = asn1p_value_fromint(321);
+		$$->range_start->type = ATV_MIN;
+		$$->range_stop->type = ATV_MAX;
 	}
 	| TableConstraint {
 		$$ = $1;
@@ -1505,16 +1541,7 @@ ConstraintValue:
 		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
 		checkmem($$);
 	}
-	| TOK_MIN {
-		$$ = asn1p_value_fromint(123);
-		checkmem($$);
-		$$->type = ATV_MIN;
-	}
-	| TOK_MAX {
-		$$ = asn1p_value_fromint(321);
-		checkmem($$);
-		$$->type = ATV_MAX;
-	}
+
 	| TOK_FALSE {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
@@ -1841,14 +1868,15 @@ TypeRefName:
 		checkmem($1);
 		$$ = $1;
 	}
-	| TOK_objectclassreference {
+	| TOK_capitalreference {
 		checkmem($1);
 		$$ = $1;
 	}
 	;
 
+
 ObjectClassReference:
-	TOK_objectclassreference {
+	TOK_capitalreference {
 		checkmem($1);
 		$$ = $1;
 	}

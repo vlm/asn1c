@@ -57,6 +57,7 @@ asn1p_expr_clone(asn1p_expr_t *expr) {
 	CLCLONE(Identifier, strdup);
 	CLCLONE(reference, asn1p_ref_clone);
 	CLCLONE(constraints, asn1p_constraint_clone);
+	CLCLONE(combined_constraints, asn1p_constraint_clone);
 	CLCLONE(params, asn1p_paramlist_clone);
 	CLCLONE(value, asn1p_value_clone);
 	CLCLONE(with_syntax, asn1p_wsyntx_clone);
@@ -90,6 +91,8 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 			asn1p_ref_free(expr->reference);
 		if(expr->constraints)
 			asn1p_constraint_free(expr->constraints);
+		if(expr->combined_constraints)
+			asn1p_constraint_free(expr->combined_constraints);
 		if(expr->params)
 			asn1p_paramlist_free(expr->params);
 		if(expr->value)
