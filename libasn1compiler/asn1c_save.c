@@ -253,7 +253,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 		header_id);
 
 	fprintf(fp_c, "#include <asn_internal.h>\n\n");
-	fprintf(fp_c, "#include <%s.h>\n\n", expr->Identifier);	/* Myself */
+	fprintf(fp_c, "#include \"%s.h\"\n\n", expr->Identifier);
 	if(arg->flags & A1C_NO_INCLUDE_DEPS)
 		SAVE_STREAM(fp_c, OT_POST_INCLUDE, "", 1);
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)

@@ -70,7 +70,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_e_3[] = {
+static asn_TYPE_member_t asn_MBR_e_6[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct e, choice.f),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (7 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -86,21 +86,21 @@ static asn_TYPE_member_t asn_MBR_e_3[] = {
 		.name = "g"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_e_3_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_e_6_tag2el[] = {
     { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 0, 0, 0 }, /* f at 20 */
     { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 1, 0, 0 } /* g at 21 */
 };
-static asn_CHOICE_specifics_t asn_SPC_e_3_specs = {
+static asn_CHOICE_specifics_t asn_SPC_e_6_specs = {
 	sizeof(struct e),
 	offsetof(struct e, _asn_ctx),
 	offsetof(struct e, present),
 	sizeof(((struct e *)0)->present),
-	asn_MAP_e_3_tag2el,
+	asn_MAP_e_6_tag2el,
 	2,	/* Count of tags in the map */
 	0	/* Whether extensible */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_e_3 = {
+asn_TYPE_descriptor_t asn_DEF_e_6 = {
 	"e",
 	"e",
 	CHOICE_free,
@@ -115,12 +115,12 @@ asn_TYPE_descriptor_t asn_DEF_e_3 = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	asn_MBR_e_3,
+	asn_MBR_e_6,
 	2,	/* Elements count */
-	&asn_SPC_e_3_specs	/* Additional specs */
+	&asn_SPC_e_6_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_h_4[] = {
+static asn_TYPE_member_t asn_MBR_h_9[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct h, choice.i),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -136,21 +136,21 @@ static asn_TYPE_member_t asn_MBR_h_4[] = {
 		.name = "j"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_h_4_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_h_9_tag2el[] = {
     { (ASN_TAG_CLASS_PRIVATE | (1 << 2)), 0, 0, 0 }, /* i at 24 */
     { (ASN_TAG_CLASS_PRIVATE | (2 << 2)), 1, 0, 0 } /* j at 25 */
 };
-static asn_CHOICE_specifics_t asn_SPC_h_4_specs = {
+static asn_CHOICE_specifics_t asn_SPC_h_9_specs = {
 	sizeof(struct h),
 	offsetof(struct h, _asn_ctx),
 	offsetof(struct h, present),
 	sizeof(((struct h *)0)->present),
-	asn_MAP_h_4_tag2el,
+	asn_MAP_h_9_tag2el,
 	2,	/* Count of tags in the map */
 	0	/* Whether extensible */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_h_4 = {
+asn_TYPE_descriptor_t asn_DEF_h_9 = {
 	"h",
 	"h",
 	CHOICE_free,
@@ -165,12 +165,12 @@ asn_TYPE_descriptor_t asn_DEF_h_4 = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	asn_MBR_h_4,
+	asn_MBR_h_9,
 	2,	/* Elements count */
-	&asn_SPC_h_4_specs	/* Additional specs */
+	&asn_SPC_h_9_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_b_2[] = {
+static asn_TYPE_member_t asn_MBR_b_3[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.c),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -188,36 +188,36 @@ static asn_TYPE_member_t asn_MBR_b_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.e),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_e_3,
+		.type = (void *)&asn_DEF_e_6,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "e"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.h),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (9 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
-		.type = (void *)&asn_DEF_h_4,
+		.type = (void *)&asn_DEF_h_9,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "h"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_b_2_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_b_3_tag2el[] = {
     { (ASN_TAG_CLASS_PRIVATE | (5 << 2)), 0, 0, 0 }, /* c at 17 */
     { (ASN_TAG_CLASS_PRIVATE | (6 << 2)), 1, 0, 0 }, /* d at 18 */
     { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 2, 0, 0 }, /* f at 20 */
     { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 2, 0, 0 }, /* g at 21 */
     { (ASN_TAG_CLASS_PRIVATE | (9 << 2)), 3, 0, 0 } /* h at 24 */
 };
-static asn_CHOICE_specifics_t asn_SPC_b_2_specs = {
+static asn_CHOICE_specifics_t asn_SPC_b_3_specs = {
 	sizeof(struct b),
 	offsetof(struct b, _asn_ctx),
 	offsetof(struct b, present),
 	sizeof(((struct b *)0)->present),
-	asn_MAP_b_2_tag2el,
+	asn_MAP_b_3_tag2el,
 	5,	/* Count of tags in the map */
 	0	/* Whether extensible */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_b_2 = {
+asn_TYPE_descriptor_t asn_DEF_b_3 = {
 	"b",
 	"b",
 	CHOICE_free,
@@ -232,9 +232,9 @@ asn_TYPE_descriptor_t asn_DEF_b_2 = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	asn_MBR_b_2,
+	asn_MBR_b_3,
 	4,	/* Elements count */
-	&asn_SPC_b_2_specs	/* Additional specs */
+	&asn_SPC_b_3_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_T_1[] = {
@@ -248,7 +248,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, b),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_b_2,
+		.type = (void *)&asn_DEF_b_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "b"
 		},

@@ -35,7 +35,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_collection_2[] = {
+static asn_TYPE_member_t asn_MBR_collection_3[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
@@ -44,16 +44,16 @@ static asn_TYPE_member_t asn_MBR_collection_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_collection_2_tags[] = {
+static ber_tlv_tag_t asn_DEF_collection_3_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_collection_2_specs = {
+static asn_SET_OF_specifics_t asn_SPC_collection_3_specs = {
 	sizeof(struct collection),
 	offsetof(struct collection, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_collection_2 = {
+asn_TYPE_descriptor_t asn_DEF_collection_3 = {
 	"collection",
 	"collection",
 	SEQUENCE_OF_free,
@@ -64,15 +64,15 @@ asn_TYPE_descriptor_t asn_DEF_collection_2 = {
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_collection_2_tags,
-	sizeof(asn_DEF_collection_2_tags)
-		/sizeof(asn_DEF_collection_2_tags[0]), /* 1 */
-	asn_DEF_collection_2_tags,	/* Same as above */
-	sizeof(asn_DEF_collection_2_tags)
-		/sizeof(asn_DEF_collection_2_tags[0]), /* 1 */
-	asn_MBR_collection_2,
+	asn_DEF_collection_3_tags,
+	sizeof(asn_DEF_collection_3_tags)
+		/sizeof(asn_DEF_collection_3_tags[0]), /* 1 */
+	asn_DEF_collection_3_tags,	/* Same as above */
+	sizeof(asn_DEF_collection_3_tags)
+		/sizeof(asn_DEF_collection_3_tags[0]), /* 1 */
+	asn_MBR_collection_3,
 	1,	/* Single element */
-	&asn_SPC_collection_2_specs	/* Additional specs */
+	&asn_SPC_collection_3_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_T_1[] = {
@@ -86,7 +86,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, collection),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_collection_2,
+		.type = (void *)&asn_DEF_collection_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "collection"
 		},

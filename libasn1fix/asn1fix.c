@@ -442,15 +442,6 @@ asn1f_apply_unique_index(arg_t *arg) {
 	static int unique_index;
 	if(!arg) { unique_index = 0; return 0; }
 
-	switch(arg->expr->expr_type) {
-	case ASN_BASIC_ENUMERATED:
-		break;
-	default:
-		if(arg->expr->expr_type & ASN_CONSTR_MASK)
-			break;
-		return 0;
-	}
-
 	arg->expr->_type_unique_index = ++unique_index;
 
 	return 0;

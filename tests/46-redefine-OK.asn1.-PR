@@ -33,7 +33,7 @@ PrimitiveType_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-PrimitiveType_0_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+PrimitiveType_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_OCTET_STRING.free_struct;
 	td->print_struct   = asn_DEF_OCTET_STRING.print_struct;
 	td->ber_decoder    = asn_DEF_OCTET_STRING.ber_decoder;
@@ -48,21 +48,21 @@ PrimitiveType_0_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 void
 PrimitiveType_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	PrimitiveType_0_inherit_TYPE_descriptor(td);
+	PrimitiveType_1_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
 PrimitiveType_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	PrimitiveType_0_inherit_TYPE_descriptor(td);
+	PrimitiveType_1_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
 PrimitiveType_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
-	PrimitiveType_0_inherit_TYPE_descriptor(td);
+	PrimitiveType_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
@@ -70,14 +70,14 @@ asn_enc_rval_t
 PrimitiveType_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	PrimitiveType_0_inherit_TYPE_descriptor(td);
+	PrimitiveType_1_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
 PrimitiveType_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, void *bufptr, size_t size) {
-	PrimitiveType_0_inherit_TYPE_descriptor(td);
+	PrimitiveType_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
@@ -85,14 +85,14 @@ asn_enc_rval_t
 PrimitiveType_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	PrimitiveType_0_inherit_TYPE_descriptor(td);
+	PrimitiveType_1_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
 /*** <<< STAT-DEFS [PrimitiveType] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_PrimitiveType_0_tags[] = {
+static ber_tlv_tag_t asn_DEF_PrimitiveType_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_PrimitiveType = {
@@ -106,12 +106,12 @@ asn_TYPE_descriptor_t asn_DEF_PrimitiveType = {
 	PrimitiveType_decode_xer,
 	PrimitiveType_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_PrimitiveType_0_tags,
-	sizeof(asn_DEF_PrimitiveType_0_tags)
-		/sizeof(asn_DEF_PrimitiveType_0_tags[0]), /* 1 */
-	asn_DEF_PrimitiveType_0_tags,	/* Same as above */
-	sizeof(asn_DEF_PrimitiveType_0_tags)
-		/sizeof(asn_DEF_PrimitiveType_0_tags[0]), /* 1 */
+	asn_DEF_PrimitiveType_1_tags,
+	sizeof(asn_DEF_PrimitiveType_1_tags)
+		/sizeof(asn_DEF_PrimitiveType_1_tags[0]), /* 1 */
+	asn_DEF_PrimitiveType_1_tags,	/* Same as above */
+	sizeof(asn_DEF_PrimitiveType_1_tags)
+		/sizeof(asn_DEF_PrimitiveType_1_tags[0]), /* 1 */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -217,7 +217,7 @@ T_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-T_0_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_ConstructedType.free_struct;
 	td->print_struct   = asn_DEF_ConstructedType.print_struct;
 	td->ber_decoder    = asn_DEF_ConstructedType.ber_decoder;
@@ -232,21 +232,21 @@ T_0_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 void
 T_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	T_0_inherit_TYPE_descriptor(td);
+	T_1_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
 T_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	T_0_inherit_TYPE_descriptor(td);
+	T_1_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
 T_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
-	T_0_inherit_TYPE_descriptor(td);
+	T_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
@@ -254,14 +254,14 @@ asn_enc_rval_t
 T_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	T_0_inherit_TYPE_descriptor(td);
+	T_1_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
 T_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, void *bufptr, size_t size) {
-	T_0_inherit_TYPE_descriptor(td);
+	T_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
@@ -269,14 +269,14 @@ asn_enc_rval_t
 T_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	T_0_inherit_TYPE_descriptor(td);
+	T_1_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T_0_tags[] = {
+static ber_tlv_tag_t asn_DEF_T_1_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
@@ -291,12 +291,12 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_decode_xer,
 	T_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T_0_tags,
-	sizeof(asn_DEF_T_0_tags)
-		/sizeof(asn_DEF_T_0_tags[0]) - 1, /* 1 */
-	asn_DEF_T_0_tags,	/* Same as above */
-	sizeof(asn_DEF_T_0_tags)
-		/sizeof(asn_DEF_T_0_tags[0]), /* 2 */
+	asn_DEF_T_1_tags,
+	sizeof(asn_DEF_T_1_tags)
+		/sizeof(asn_DEF_T_1_tags[0]) - 1, /* 1 */
+	asn_DEF_T_1_tags,	/* Same as above */
+	sizeof(asn_DEF_T_1_tags)
+		/sizeof(asn_DEF_T_1_tags[0]), /* 2 */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };
