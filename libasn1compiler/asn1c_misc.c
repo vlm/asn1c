@@ -119,8 +119,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			 * ("struct foo" instead of "foo_t").
 			 */
 			asn1p_expr_t *terminal;
-			terminal = asn1f_find_terminal_type_ex(
-				arg->asn, arg->mod, expr);
+			terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 			if(terminal && terminal == top_parent) {
 				_format = TNF_RSAFE;
 			}
