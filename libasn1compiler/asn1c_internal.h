@@ -62,6 +62,12 @@ typedef struct arg_s {
 		arg->embed--;			\
 	} while(0)
 #define	OUT(fmt, args...)	asn1c_compiled_output(arg, fmt, ##args)
+#define	OUT_NOINDENT(fmt, args...)	do {	\
+	int _saved_indent = arg->indent_level;	\
+	arg->indent_level = 0;			\
+	asn1c_compiled_output(arg, fmt, ##args);\
+	arg->indent_level = _saved_indent;	\
+} while(0)
 
 #define	REDIR(foo)	do { arg->target->target = foo; } while(0)
 
