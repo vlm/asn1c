@@ -108,3 +108,42 @@ asn1p_constraint_insert(asn1p_constraint_t *into, asn1p_constraint_t *what) {
 
 	return 0;
 }
+
+
+char *
+asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
+	switch(type) {
+	case ACT_INVALID:
+		return "INVALID";
+	case ACT_EL_VALUE:
+		return "SingleValue";
+	case ACT_EL_RANGE:
+	case ACT_EL_LLRANGE:
+	case ACT_EL_RLRANGE:
+	case ACT_EL_ULRANGE:
+		return "ValueRange";
+	case ACT_EL_EXT:
+		return "...";
+	case ACT_CT_SIZE:
+		return "SizeConstraint";
+	case ACT_CT_FROM:
+		return "PermittedAlphabet";
+	case ACT_CT_WCOMP:
+		return "SingleTypeConstraint";
+	case ACT_CT_WCOMPS:
+		return "MultipleTypeConstraints";
+	case ACT_CA_SET:
+		return "SET";
+	case ACT_CA_CRC:
+		return "ComponentRelationConstraint";
+	case ACT_CA_CSV:
+		return "CSV";
+	case ACT_CA_UNI:
+		return "UNION";
+	case ACT_CA_INT:
+		return "INTERSECTION";
+	case ACT_CA_EXC:
+		return "EXCEPT";
+	}
+	return "UNKNOWN";
+}

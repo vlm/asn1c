@@ -10,6 +10,7 @@
 int asn1p_lex(void);
 void asn1p_lexer_hack_push_opaque_state(void);		/* Used in .y */
 void asn1p_lexer_hack_enable_with_syntax(void);		/* Used in .y */
+void asn1p_lexer_hack_push_encoding_control(void);	/* Used in .y */
 
 #define	YY_FATAL_ERROR(msg)	do {			\
 		fprintf(stderr,				\
@@ -76,7 +77,7 @@ static asn1_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 %}
 
 %option	never-interactive
-%option	noinput nounput
+%option	noinput 
 %option	noyywrap stack
 /* Performance penalty is OK */
 %option yylineno	
@@ -89,6 +90,7 @@ static asn1_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 %x cpp_comment
 %x quoted
 %x opaque
+%x encoding_control
 %x with_syntax
 
 /* Newline */
@@ -190,6 +192,19 @@ WSP	[\t\r\v\f\n ]
 
 	}
 
+<encoding_control>{
+	ENCODING-CONTROL	{
+			const char *s = "ENCODING-CONTROL";
+			const char *p = s + sizeof("ENCODING-CONTROL") - 2;
+			for(; p >= s; p--) unput(*p);
+			yy_pop_state();
+		}
+	END	unput('D'); unput('N'); unput('E'); yy_pop_state();
+	[^{} \t\r\v\f\n]+
+	[[:alnum:]]+
+	.	/* Eat everything else */
+	"\n"
+	}
 
 '[0-9A-F \t\r\v\f\n]+'H {
 		/* " \t\r\n" weren't allowed in ASN.1:1990. */
@@ -311,6 +326,7 @@ DEFINED			{
 DEFINITIONS		return TOK_DEFINITIONS;
 EMBEDDED		return TOK_EMBEDDED;
 ENCODED			return TOK_ENCODED;
+ENCODING-CONTROL	return TOK_ENCODING_CONTROL;
 END			return TOK_END;
 ENUMERATED		return TOK_ENUMERATED;
 EXCEPT			return TOK_EXCEPT;
@@ -330,6 +346,7 @@ IMPLIED			return TOK_IMPLIED;
 IMPORTS			return TOK_IMPORTS;
 INCLUDES		return TOK_INCLUDES;
 INSTANCE		return TOK_INSTANCE;
+INSTRUCTIONS		return TOK_INSTRUCTIONS;
 INTEGER			return TOK_INTEGER;
 INTERSECTION		return TOK_INTERSECTION;
 ISO646String		return TOK_ISO646String;
@@ -405,7 +422,7 @@ WITH			return TOK_WITH;
 [A-Z][A-Z0-9-]*	{
 		CHECK_DASHES;
 		asn1p_lval.tv_str = strdup(yytext);
-		return TOK_objectclassreference;
+		return TOK_capitalreference;
 	}
 
 	/*
@@ -460,6 +477,7 @@ WITH			return TOK_WITH;
 
 }
 
+[|^]	return yytext[0];	/* Union, Intersection */
 
 <*>.	{
 		fprintf(stderr,
@@ -485,17 +503,16 @@ WITH			return TOK_WITH;
 /*
  * Very dirty but wonderful hack allowing to rule states from within .y file.
  */
-void
-asn1p_lexer_hack_push_opaque_state() {
-	yy_push_state(opaque);
-}
+void asn1p_lexer_hack_push_opaque_state() { yy_push_state(opaque); }
 
 /*
  * Another hack which disables recognizing some tokens when inside WITH SYNTAX.
  */
-void
-asn1p_lexer_hack_enable_with_syntax() {
-	yy_push_state(with_syntax);
+void asn1p_lexer_hack_enable_with_syntax() { yy_push_state(with_syntax); }
+
+/* Yet another */
+void asn1p_lexer_hack_push_encoding_control() {
+	yy_push_state(encoding_control);
 }
 
 /*

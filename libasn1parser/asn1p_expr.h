@@ -125,6 +125,12 @@ typedef struct asn1p_expr_s {
 	asn1p_constraint_t *constraints;
 
 	/*
+	 * This field is holding the transformed constraints, with all the
+	 * parent constraints taken into account.
+	 */
+	asn1p_constraint_t *combined_constraints;
+
+	/*
 	 * A list of parameters for parametrized type declaration
 	 * (AMT_PARAMTYPE).
 	 */
