@@ -812,11 +812,11 @@ static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, void *chunk_buf, si
 			break;
 		case 0x41: case 0x42: case 0x43:	/* ABC */
 		case 0x44: case 0x45: case 0x46:	/* DEF */
-			clv = (clv << 4) + (ch - (0x41 + 10));
+			clv = (clv << 4) + (ch - 0x41 + 10);
 			break;
 		case 0x61: case 0x62: case 0x63:	/* abc */
 		case 0x64: case 0x65: case 0x66:	/* def */
-			clv = (clv << 4) + (ch - (0x61 + 10));
+			clv = (clv << 4) + (ch - 0x61 + 10);
 			break;
 		default:
 			*buf = 0;	/* JIC */
@@ -932,11 +932,11 @@ OS__strtoent(int base, char *buf, char *end, int32_t *return_value) {
 			break;
 		case 0x41: case 0x42: case 0x43:	/* ABC */
 		case 0x44: case 0x45: case 0x46:	/* DEF */
-			val = val * base + (ch - (0x41 + 10));
+			val = val * base + (ch - 0x41 + 10);
 			break;
 		case 0x61: case 0x62: case 0x63:	/* abc */
 		case 0x64: case 0x65: case 0x66:	/* def */
-			val = val * base + (ch - (0x61 + 10));
+			val = val * base + (ch - 0x61 + 10);
 			break;
 		case 0x3b:	/* ';' */
 			*return_value = val;
