@@ -40,11 +40,13 @@ static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
 	OUT("ber_dec_ctx_t _ber_dec_ctx;\n"));
 
 #define	DEPENDENCIES	do {						\
-	TQ_FOR(v, &(expr->members), next) {				\
-		if((!(v->expr_type & ASN_CONSTR_MASK)			\
-		&& v->expr_type > ASN_CONSTR_MASK)			\
-		|| v->meta_type == AMT_TYPEREF) {			\
-			GEN_INCLUDE(asn1c_type_name(arg, v, TNF_INCLUDE));\
+	asn1p_expr_t *__m;						\
+	TQ_FOR(__m, &(expr->members), next) {				\
+		if((!(__m->expr_type & ASN_CONSTR_MASK)			\
+		&& __m->expr_type > ASN_CONSTR_MASK)			\
+		|| __m->meta_type == AMT_TYPEREF) {			\
+			GEN_INCLUDE(asn1c_type_name(arg,		\
+				__m, TNF_INCLUDE));			\
 		}							\
 	}								\
 	if(expr->expr_type == ASN_CONSTR_SET_OF)			\
@@ -124,8 +126,7 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	DEPENDENCIES;
 
 	if(arg->embed) {
-		OUT("struct %s {\n",
-			MKID(expr->Identifier));
+		OUT("struct %s {\n", MKID(expr->Identifier));
 	} else {
 		OUT("typedef struct %s {\n",
 			MKID(expr->Identifier));
@@ -141,9 +142,9 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	}
 
 	PCTX_DEF;
-	OUT("} %s%s", expr->marker?"*":"",
-		MKID(expr->Identifier));
-	if(arg->embed) OUT(";\n"); else OUT("_t;\n");
+	OUT("} %s%s%s", expr->marker?"*":"",
+		expr->_anonymous_type ? "" : MKID(expr->Identifier),
+		arg->embed ? "" : "_t");
 
 	return asn1c_lang_C_type_SEQUENCE_def(arg);
 }
@@ -221,7 +222,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	OUT("};\n");
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
 	INDENTED(
-		OUT("\"%s\",\n", expr->Identifier);
+		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
 		OUT("SEQUENCE_constraint,\n");
 		OUT("SEQUENCE_decode_ber,\n");
 		OUT("SEQUENCE_encode_der,\n");
@@ -249,34 +250,6 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
-}
-
-int
-asn1c_lang_C_type_SEQUENCE_OF(arg_t *arg) {
-	asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *v;
-
-	DEPENDENCIES;
-
-	if(arg->embed) {
-		OUT("struct %s {\n", MKID(expr->Identifier));
-	} else {
-		OUT("typedef struct %s {\n", MKID(expr->Identifier));
-	}
-
-	TQ_FOR(v, &(expr->members), next) {
-		INDENTED(OUT("A_SEQUENCE_OF(%s) list;\n",
-			asn1c_type_name(arg, v, TNF_RSAFE)));
-	}
-
-	PCTX_DEF;
-	OUT("} %s%s", expr->marker?"*":"", MKID(expr->Identifier));
-	if(arg->embed) OUT(";\n"); else OUT("_t;\n");
-
-	/*
-	 * SET OF/SEQUENCE OF definition, SEQUENCE OF mode.
-	 */
-	return asn1c_lang_C_type_SEx_OF_def(arg, 1);
 }
 
 int
@@ -338,8 +311,9 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s", expr->marker?"*":"", MKID(expr->Identifier));
-	if(arg->embed) OUT(";\n"); else OUT("_t;\n");
+	OUT("} %s%s%s", expr->marker?"*":"",
+		expr->_anonymous_type ? "" : MKID(expr->Identifier),
+		arg->embed ? "" : "_t");
 
 	return asn1c_lang_C_type_SET_def(arg);
 }
@@ -445,7 +419,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	OUT("};\n");
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
 	INDENTED(
-		OUT("\"%s\",\n", expr->Identifier);
+		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
 		OUT("SET_constraint,\n");
 		OUT("SET_decode_ber,\n");
 		OUT("SET_encode_der,\n");
@@ -476,32 +450,56 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 }
 
 int
-asn1c_lang_C_type_SET_OF(arg_t *arg) {
+asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *v;
+	asn1p_expr_t *memb;
 
 	DEPENDENCIES;
 
 	if(arg->embed) {
 		OUT("struct %s {\n", MKID(expr->Identifier));
 	} else {
-		OUT("typedef struct %s {\n",
-			MKID(expr->Identifier));
+		OUT("typedef struct %s {\n", MKID(expr->Identifier));
 	}
 
-	TQ_FOR(v, &(expr->members), next) {
-		INDENTED(OUT("A_SET_OF(%s) list;\n",
-			asn1c_type_name(arg, v, TNF_RSAFE)));
+	memb = TQ_FIRST(&expr->members);
+
+	INDENT(+1);
+	OUT("A_%s_OF(",
+		(arg->expr->expr_type == ASN_CONSTR_SET_OF)
+			? "SET" : "SEQUENCE");
+	if(memb->expr_type & ASN_CONSTR_MASK) {
+		arg_t tmp;
+		asn1p_expr_t tmp_memb;
+		arg->embed++;
+			tmp = *arg;
+			tmp.expr = &tmp_memb;
+			tmp_memb = *memb;
+			tmp_memb._anonymous_type = 1;
+			tmp_memb.Identifier = strdup(
+				asn1c_make_identifier(0,
+					expr->Identifier, "member", 0));
+			assert(tmp_memb.Identifier);
+			tmp.default_cb(&tmp);
+			free(tmp_memb.Identifier);
+		arg->embed--;
+		assert(arg->target->target == OT_TYPE_DECLS);
+	} else {
+		OUT("%s", asn1c_type_name(arg, memb, TNF_RSAFE));
 	}
+	OUT(") list;\n");
+	INDENT(-1);
 
 	PCTX_DEF;
-	OUT("} %s%s", expr->marker?"*":"", MKID(expr->Identifier));
-	if(arg->embed) OUT(";\n"); else OUT("_t;\n");
+	OUT("} %s%s%s", expr->marker?"*":"",
+		expr->_anonymous_type ? "" : MKID(expr->Identifier),
+		arg->embed ? "" : "_t");
 
 	/*
-	 * SET OF/SEQUENCE OF definition, SET OF mode.
+	 * SET OF/SEQUENCE OF definition
 	 */
-	return asn1c_lang_C_type_SEx_OF_def(arg, 0);
+	return asn1c_lang_C_type_SEx_OF_def(arg,
+		(arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF));
 }
 
 static int
@@ -551,7 +549,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	OUT("};\n");
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
 	INDENTED(
-		OUT("\"%s\",\n", expr->Identifier);
+		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
 		if(seq_of) {
 			OUT("SEQUENCE_OF_constraint,\n");
 			OUT("SEQUENCE_OF_decode_ber,\n");
@@ -593,43 +591,42 @@ int
 asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
-	char *p;
+	char *id;
 
 	DEPENDENCIES;
 
 	REDIR(OT_DEPS);
 
-	p = MKID(expr->Identifier);
-	OUT("typedef enum %s_PR {\n", p);
+	id = MKID(expr->Identifier);
+	OUT("typedef enum %s_PR {\n", id);
 	INDENTED(
-		p = MKID(expr->Identifier);
 		OUT("%s_PR_NOTHING,\t"
-			"/* No components present */\n", p);
+			"/* No components present */\n", id);
 		TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				OUT("/* Extensions may appear below */\n");
 				continue;
 			}
-			p = MKID(expr->Identifier);
-			OUT("%s_PR_", p);
-			p = MKID(v->Identifier);
-			OUT("%s,\n", p, p);
+			id = MKID(expr->Identifier);
+			OUT("%s_PR_", id);
+			id = MKID(v->Identifier);
+			OUT("%s,\n", id, id);
 		}
 	);
-	p = MKID(expr->Identifier);
-	OUT("} %s_PR;\n", p);
+	id = MKID(expr->Identifier);
+	OUT("} %s_PR;\n", id);
 
 	REDIR(OT_TYPE_DECLS);
 
 	if(arg->embed) {
-		OUT("struct %s {\n", p);
+		OUT("struct %s {\n", id);
 	} else {
-		OUT("typedef struct %s {\n", p);
+		OUT("typedef struct %s {\n", id);
 	}
 
 	INDENTED(
-		OUT("%s_PR present;\n", p);
-		OUT("union {\n", p);
+		OUT("%s_PR present;\n", id);
+		OUT("union {\n", id);
 		TQ_FOR(v, &(expr->members), next) {
 			EMBED(v);
 		}
@@ -638,8 +635,9 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s", expr->marker?"*":"", MKID(expr->Identifier));
-	if(arg->embed) OUT(";\n"); else OUT("_t;\n");
+	OUT("} %s%s%s", expr->marker?"*":"",
+		expr->_anonymous_type ? "" : MKID(expr->Identifier),
+		arg->embed ? "" : "_t");
 
 	return asn1c_lang_C_type_CHOICE_def(arg);
 }
@@ -720,7 +718,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	OUT("};\n");
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
 	INDENTED(
-		OUT("\"%s\",\n", expr->Identifier);
+		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
 		OUT("CHOICE_constraint,\n");
 		OUT("CHOICE_decode_ber,\n");
 		OUT("CHOICE_encode_der,\n");
@@ -756,17 +754,16 @@ asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 
 	ref = arg->expr->reference;
 	if(ref->components[ref->comp_count-1].name[0] == '&') {
-		asn1p_module_t *mod;
 		asn1p_expr_t *extract;
 		arg_t tmp;
 		int ret;
 
-		extract = asn1f_class_access_ex(arg->asn, arg->mod, arg->expr,
-			ref, &mod);
+		extract = asn1f_class_access_ex(arg->asn, arg->mod,
+			arg->expr, ref);
 		if(extract == NULL)
 			return -1;
 
-		extract = asn1p_expr_clone(extract);
+		extract = asn1p_expr_clone(extract, 0);
 		if(extract) {
 			if(extract->Identifier)
 				free(extract->Identifier);
@@ -781,7 +778,7 @@ asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 
 		tmp = *arg;
 		tmp.asn = arg->asn;
-		tmp.mod = mod;
+		tmp.mod = extract->module;
 		tmp.expr = extract;
 
 		ret = arg->default_cb(&tmp);
@@ -808,10 +805,9 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("%s\t", asn1c_type_name(arg, arg->expr,
 			expr->marker?TNF_RSAFE:TNF_CTYPE));
 		OUT("%s", expr->marker?"*":" ");
-		OUT("%s;", MKID(expr->Identifier));
+		OUT("%s", MKID(expr->Identifier));
 		if(expr->marker) OUT("\t/* %s */",
 			(expr->marker==EM_OPTIONAL)?"OPTIONAL":"DEFAULT");
-		OUT("\n");
 
 		REDIR(OT_TYPE_DECLS);
 		return 0;
@@ -824,8 +820,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 	OUT("typedef %s\t", asn1c_type_name(arg, arg->expr, TNF_CTYPE));
 	OUT("%s", expr->marker?"*":" ");
-	OUT("%s_t;\n", MKID(expr->Identifier));
-	OUT("\n");
+	OUT("%s_t", MKID(expr->Identifier));
 
 	REDIR(OT_STAT_DEFS);
 
@@ -837,7 +832,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	p = MKID(expr->Identifier);
 	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
 	INDENTED(
-		OUT("\"%s\",\n", expr->Identifier);
+		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
 		OUT("%s_constraint,\n", p);
 		OUT("%s_decode_ber,\n", p);
 		OUT("%s_encode_der,\n", p);
@@ -1167,9 +1162,10 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no) {
 	if(arg->expr->expr_type == A1TC_REFERENCE) {
 		arg_t tmp = *arg;
 		asn1p_expr_t *expr;
-		expr = asn1f_lookup_symbol_ex(tmp.asn, &tmp.mod, tmp.expr,
+		expr = asn1f_lookup_symbol_ex(tmp.asn, tmp.mod, tmp.expr,
 			arg->expr->reference);
 		if(expr) {
+			tmp.mod = expr->module;
 			tmp.expr = expr;
 			return _add_tag2el_member(&tmp, tag2el, count, el_no);
 		} else {
@@ -1273,8 +1269,7 @@ _expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 	asn1p_expr_t *v;
 	int elements = 0;
 
-	topmost_parent = asn1f_find_terminal_type_ex(arg->asn,
-				arg->mod, expr, 0);
+	topmost_parent = asn1f_find_terminal_type_ex(arg->asn, arg->mod, expr);
 	if(!topmost_parent) return 0;
 
 	if(!(topmost_parent->expr_type & ASN_CONSTR_MASK))
@@ -1290,6 +1285,7 @@ _expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 
 static int
 _emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
+	static int global_memb_unique;
 	int save_target;
 	arg_t tmp_arg;
 	char *p;
@@ -1331,14 +1327,22 @@ _emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("0,\n");
 	}
 	if(C99_MODE) OUT(".type = ");
-	OUT("(void *)&asn1_DEF_%s,\n",
-		asn1c_type_name(arg, expr, TNF_SAFE));
+	if((expr->expr_type & ASN_CONSTR_MASK)
+	&& (arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF
+		|| arg->expr->expr_type == ASN_CONSTR_SET_OF)) {
+		OUT("(void *)&asn1_DEF_%s_member,\n",
+			MKID(arg->expr->Identifier));
+	} else {
+		OUT("(void *)&asn1_DEF_%s,\n",
+			asn1c_type_name(arg, expr, TNF_SAFE));
+	}
 	if(C99_MODE) OUT(".memb_constraints = ");
 	if(expr->constraints) {
 		p = MKID(expr->Identifier);
 		if(!expr->Identifier)
 			p = asn1c_type_name(arg, expr, TNF_SAFE);
-		OUT("memb_%s_constraint,\n", p);
+		OUT("memb_%s_%d_constraint,\n", p,
+			++global_memb_unique);
 	} else {
 		OUT("0,\t/* Defer to actual type */\n");
 	}
@@ -1358,7 +1362,7 @@ _emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	else
 		p = asn1c_type_name(arg, expr, TNF_SAFE);
 	OUT("static int\n");
-	OUT("memb_%s_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,\n", p);
+	OUT("memb_%s_%d_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,\n", p, global_memb_unique);
 	INDENT(+1);
 	OUT("\t\tasn_app_consume_bytes_f *app_errlog, void *app_key) {\n");
 	tmp_arg = *arg;
