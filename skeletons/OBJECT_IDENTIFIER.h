@@ -29,27 +29,29 @@ int OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen,
 
 /*
  * This function fills an (_arcs) array with OBJECT IDENTIFIER arcs
- * up to specified (_arcs_slots) elements.
+ * up to specified (_arc_slots) elements.
  * The function always returns the real number of arcs, even if there is no
- * sufficient (_arcs_slots) provided.
+ * sufficient (_arc_slots) provided.
  * 
  * EXAMPLE:
  * 	void print_arcs(OBJECT_IDENTIFIER_t *oid) {
  * 		unsigned long fixed_arcs[10];	// Try with fixed space first
  * 		unsigned long *arcs = fixed_arcs;
- * 		int arcs_slots = sizeof(fixed_arcs)/sizeof(fixed_arcs[0]); // 10
+ * 		int arc_type_size = sizeof(fixed_arcs[0]);	// sizeof(long)
+ * 		int arc_slots = sizeof(fixed_arcs)/sizeof(fixed_arcs[0]); // 10
  * 		int count;	// Real number of arcs.
  * 		int i;
  * 
- * 		count = OBJECT_IDENTIFIER_get_arcs_l(oid, arcs, arcs_slots);
+ * 		count = OBJECT_IDENTIFIER_get_arcs(oid, arcs,
+ * 			arc_type_size, arc_slots);
  * 		// If necessary, reallocate arcs array and try again.
- * 		if(count > arcs_slots) {
- * 			arcs_slots = count;
- * 			arcs = malloc(arcs_slots * sizeof(arcs[0]));
+ * 		if(count > arc_slots) {
+ * 			arc_slots = count;
+ * 			arcs = malloc(arc_type_size * arc_slots);
  * 			if(!arcs) return;
- * 			count = OBJECT_IDENTIFIER_get_arcs_l(oid,
- * 				arcs, arcs_slots);
- * 			assert(count == arcs_slots);
+ * 			count = OBJECT_IDENTIFIER_get_arcs(oid, arcs,
+ * 				arc_type_size, arc_slots);
+ * 			assert(count == arc_slots);
  * 		}
  * 
  * 		// Print the contents of the arcs array.
@@ -65,13 +67,8 @@ int OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen,
  * -1/ERANGE:	One or more arcs have value out of array cell type range.
  * >=0:		Number of arcs contained in the OBJECT IDENTIFIER
  */
-int OBJECT_IDENTIFIER_get_arcs_l(OBJECT_IDENTIFIER_t *_oid,
-	unsigned long *_arcs, int _arcs_slots);
-/*
-int OBJECT_IDENTIFIER_get_arcs_im(OBJECT_IDENTIFIER_t *_oid,
-	uintmax_t *_arcs, int _arcs_slots);
- */
-
+int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
+	void *_arcs, unsigned int _arc_type_size, unsigned int _arc_slots);
 
 /*
  * This functions initializes the OBJECT IDENTIFIER object with
@@ -84,12 +81,14 @@ int OBJECT_IDENTIFIER_get_arcs_im(OBJECT_IDENTIFIER_t *_oid,
  * 0:		The object was initialized with new arcs.
  */
 int OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *_oid,
-	unsigned long *arcs, int arcs_slots);
+	unsigned long *_arcs, unsigned int _arc_slots);
 
 /*
  * Internal functions.
  */
-int OBJECT_IDENTIFIER_get_arc_l(uint8_t *arcbuf, int arclen,
-	int add, unsigned long *value);
+int OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen,
+	signed int add, void *value, unsigned int value_size);
+int OBJECT_IDENTIFIER_get_single_arc_l(uint8_t *arcbuf, unsigned int arclen,
+	signed int add, unsigned long *value);
 
 #endif	/* _OBJECT_IDENTIFIER_H_ */

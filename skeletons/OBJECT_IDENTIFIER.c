@@ -3,6 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <OBJECT_IDENTIFIER.h>
+#include <limits.h>	/* for CHAR_BIT */
 #include <assert.h>
 #include <errno.h>
 
@@ -91,33 +92,99 @@ OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 }
 
 int
-OBJECT_IDENTIFIER_get_arc_l(uint8_t *arcbuf, int arclen, int add, unsigned long *rvalue) {
-	unsigned long accum;
-	uint8_t *arcend = arcbuf + arclen;
+OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbuf, unsigned int rvsize) {
+	unsigned LE = 1;	/* Little endian (x86) */
+	uint8_t *arcend = arcbuf + arclen;	/* End of arc */
+	void *rvstart = rvbuf;	/* Original start of the value buffer */
+	unsigned int cache = 0;	/* No more than 14 significant bits */
+	int inc;	/* Return value growth direction */
 
-	if((size_t)arclen * 7 > 8 * sizeof(accum)) {
-		if((size_t)arclen * 7 <= 8 * (sizeof(accum) + 1)) {
-			if((*arcbuf & ~0x8f)) {
+	rvsize *= CHAR_BIT;	/* bytes to bits */
+	arclen *= 7;		/* bytes to bits */
+
+	/*
+	 * The arc has the number of bits
+	 * cannot be represented using supplied return value type.
+	 */
+	if(arclen > rvsize) {
+		if(arclen > (rvsize + CHAR_BIT)) {
+			errno = ERANGE;	/* Overflow */
+			return -1;
+		} else {
+			/*
+			 * Even if the number of bits in the arc representation
+			 * is higher than the width of supplied * return value
+			 * type, there is still possible to fit it when there
+			 * are few unused high bits in the arc value
+			 * representaion.
+			 */
+			uint8_t mask = (0xff << (7-(arclen - rvsize))) & 0x7f;
+			if((*arcbuf & mask)) {
 				errno = ERANGE;	/* Overflow */
 				return -1;
 			}
-		} else {
+			/* Fool the routine computing unused bits */
+			arclen -= 7;
+			cache = *arcbuf & 0x7f;
+			arcbuf++;
+		}
+	}
+
+#ifndef	WORDS_BIGENDIAN
+	if(*(unsigned char *)&LE) {	/* Little endian (x86) */
+		/* "Convert" to big endian */
+		rvbuf += rvsize / CHAR_BIT;
+		inc = -1;	/* Descending */
+	} else {
+		inc = +1;	/* Ascending */
+	}
+#endif	/* !WORDS_BIGENDIAN */
+
+	{	/* Native big endian (Sparc, PPC) */
+		unsigned int bits;	/* typically no more than 3-4 bits */
+		/* Clear the high unused bits */
+		for(bits = rvsize - arclen;
+			bits > CHAR_BIT;
+				rvbuf += inc, bits -= CHAR_BIT)
+				*(unsigned char *)rvbuf = 0;
+		/* Fill the body of a value */
+		for(; arcbuf < arcend; arcbuf++) {
+			cache = (cache << 7) | (*arcbuf & 0x7f);
+			bits += 7;
+			if(bits >= CHAR_BIT) {
+				bits -= CHAR_BIT;
+				*(unsigned char *)rvbuf = (cache >> bits);
+				rvbuf += inc;
+			}
+		}
+		if(bits) {
+			*(unsigned char *)rvbuf = cache;
+			rvbuf += inc;
+		}
+	}
+
+	if(add) {
+		for(rvbuf -= inc; rvbuf != rvstart; rvbuf -= inc) {
+			int v = add + *(unsigned char *)rvbuf;
+			if(v & (-1 << CHAR_BIT)) {
+				*(unsigned char *)rvbuf
+					= v + (1 << CHAR_BIT);
+				add = -1;
+			} else {
+				*(unsigned char *)rvbuf = v;
+				break;
+			}
+		}
+		if(rvbuf == rvstart) {
+			/* No space to carry over */
 			errno = ERANGE;	/* Overflow */
 			return -1;
 		}
 	}
 
-	/* Gather all bits into the accumulator */
-	for(accum = 0; arcbuf < arcend; arcbuf++)
-		accum = (accum << 7) | (*arcbuf & ~0x80);
-
-	assert(accum >= (unsigned long)-add);
-	accum += add;	/* Actually, a negative value */
-
-	*rvalue = accum;
-
 	return 0;
 }
+
 
 int
 OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
@@ -126,7 +193,8 @@ OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
 	unsigned long accum;	/* Bits accumulator */
 	char *p;		/* Position in the scratch buffer */
 
-	if(OBJECT_IDENTIFIER_get_arc_l(arcbuf, arclen, add, &accum))
+	if(OBJECT_IDENTIFIER_get_single_arc(arcbuf, arclen, add,
+			&accum, sizeof(accum)))
 		return -1;
 
 	/* Fill the scratch buffer in reverse. */
@@ -194,10 +262,10 @@ OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
 }
 
 int
-OBJECT_IDENTIFIER_get_arcs_l(OBJECT_IDENTIFIER_t *oid,
-	unsigned long *arcs, int arcs_slots) {
-	unsigned long arc_value;
-	int cur_arc = 0;
+OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
+		unsigned int arc_type_size, unsigned int arc_slots) {
+	void *arcs_end = arcs + (arc_type_size * arc_slots);
+	int num_arcs = 0;
 	int startn = 0;
 	int add = 0;
 	int i;
@@ -212,56 +280,53 @@ OBJECT_IDENTIFIER_get_arcs_l(OBJECT_IDENTIFIER_t *oid,
 		if((b & 0x80))			/* Continuation expected */
 			continue;
 
-		if(startn == 0) {
+		if(num_arcs == 0) {
 			/*
 			 * First two arcs are encoded through the backdoor.
 			 */
-			if(i) {
-				add = -80;
-				if(cur_arc < arcs_slots) arcs[cur_arc] = 2;
-				cur_arc++;
-			} else if(b <= 39) {
-				add = 0;
-				if(cur_arc < arcs_slots) arcs[cur_arc] = 0;
-				cur_arc++;
-			} else if(b < 79) {
-				add = -40;
-				if(cur_arc < arcs_slots) arcs[cur_arc] = 1;
-				cur_arc++;
-			} else {
-				add = -80;
-				if(cur_arc < arcs_slots) arcs[cur_arc] = 2;
-				cur_arc++;
-			}
+			unsigned LE = 1;	/* Little endian */
+			int first_arc;
+			num_arcs++;
+			if(!arc_slots) { num_arcs++; continue; }
+
+			if(i) first_arc = 2;
+			else if(b <= 39) first_arc = 0;
+			else if(b < 79)	first_arc = 1;
+			else first_arc = 2;
+
+			add = -40 * first_arc;
+			memset(arcs, 0, arc_type_size);
+			*(unsigned char *)(arcs
+				+ ((*(char *)&LE)?0:(arc_type_size - 1)))
+					= first_arc;
+			arcs += arc_type_size;
 		}
 
-		/* Do not fill */
-		if(cur_arc >= arcs_slots) {
+		/* Decode, if has space */
+		if(arcs < arcs_end) {
+			if(OBJECT_IDENTIFIER_get_single_arc(&oid->buf[startn],
+				i - startn + 1, add,
+					arcs, arc_type_size))
+				return -1;
 			startn = i + 1;
-			continue;
+			arcs += arc_type_size;
+			add = 0;
 		}
-
-		if(OBJECT_IDENTIFIER_get_arc_l(&oid->buf[startn],
-				i - startn + 1,
-				add, &arc_value))
-			return -1;
-		arcs[cur_arc++] = arc_value;
-		startn = i + 1;
-		add = 0;
+		num_arcs++;
 	}
 
-	return cur_arc;
+	return num_arcs;
 }
 
 int
-OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, int arcs_slots) {
+OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, unsigned int arc_slots) {
 	uint8_t *buf;
 	uint8_t *bp;
 	unsigned long long first_value;
 	int size;
 	int i;
 
-	if(oid == NULL || arcs == NULL || arcs_slots < 2) {
+	if(oid == NULL || arcs == NULL || arc_slots < 2) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -283,7 +348,7 @@ OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, int 
 	/*
 	 * Roughly estimate the maximum size necessary to encode these arcs.
 	 */
-	size = ((sizeof(arcs[0]) + 1) * 8 / 7) * arcs_slots;
+	size = ((sizeof(arcs[0]) + 1) * 8 / 7) * arc_slots;
 	bp = buf = MALLOC(size + 1);
 	if(!buf) {
 		/* ENOMEM */
@@ -321,7 +386,7 @@ OBJECT_IDENTIFIER_set_arcs_l(OBJECT_IDENTIFIER_t *oid, unsigned long *arcs, int 
 		}
 	}
 
-	for(i = 2; i < arcs_slots; i++) {
+	for(i = 2; i < arc_slots; i++) {
 		unsigned long value = arcs[i];
 		uint8_t tbuf[sizeof(value) * 2];  /* Conservatively sized */
 		uint8_t *tp = tbuf;

@@ -6,6 +6,7 @@
 #include "../ber_tlv_tag.c"
 #include "../der_encoder.c"
 #include "../constraints.c"
+#include <sys/time.h>
 
 static int
 _print(const void *buffer, size_t size, void *app_key) {
@@ -40,8 +41,8 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	OBJECT_IDENTIFIER_print(&asn1_DEF_OBJECT_IDENTIFIER, oid, 0, _print, 0);
 	printf("\n");
 
-	alen = OBJECT_IDENTIFIER_get_arcs_l(oid,
-		arcs, sizeof(arcs)/sizeof(arcs[0]));
+	alen = OBJECT_IDENTIFIER_get_arcs(oid,
+		arcs, sizeof(arcs[0]), sizeof(arcs)/sizeof(arcs[0]));
 	assert(alen > 0);
 	assert(alen == ck_len);
 
@@ -83,8 +84,8 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	RELATIVE_OID_print(&asn1_DEF_RELATIVE_OID, oid, 0, _print, 0);
 	printf("\n");
 
-	alen = RELATIVE_OID_get_arcs_l(oid,
-		arcs, sizeof(arcs)/sizeof(arcs[0]));
+	alen = RELATIVE_OID_get_arcs(oid,
+		arcs, sizeof(arcs[0]), sizeof(arcs)/sizeof(arcs[0]));
 	assert(alen > 0);
 	assert(alen == ck_len);
 
@@ -120,7 +121,8 @@ check_REGEN(int *arcs, int acount) {
 	ret = RELATIVE_OID_set_arcs_l(&oid, (unsigned long *)arcs, acount);
 	assert(ret == 0);
 
-	alen = RELATIVE_OID_get_arcs_l(&oid, tmp_arcs, tmp_alen);
+	alen = RELATIVE_OID_get_arcs(&oid, tmp_arcs,
+		sizeof(tmp_arcs[0]), tmp_alen);
 	assert(alen >= 0);
 	assert(alen < tmp_alen);
 
@@ -154,7 +156,8 @@ check_REGEN_OID(int *arcs, int acount) {
 	ret = OBJECT_IDENTIFIER_set_arcs_l(&oid, (unsigned long *)arcs, acount);
 	assert(ret == 0);
 
-	alen = OBJECT_IDENTIFIER_get_arcs_l(&oid, tmp_arcs, tmp_alen);
+	alen = OBJECT_IDENTIFIER_get_arcs(&oid,
+		tmp_arcs, sizeof(tmp_arcs[0]), tmp_alen);
 	assert(alen >= 0);
 	assert(alen < tmp_alen);
 
@@ -164,6 +167,48 @@ check_REGEN_OID(int *arcs, int acount) {
 		assert(arcs[i] == tmp_arcs[i]);
 	}
 	printf(" }\n");
+}
+
+static int
+check_speed() {
+	uint8_t buf[] = { 0x80 | 7, 0x80 | 2, 0x80 | 3, 0x80 | 4, 13 };
+	int ret = 0;
+	int cycles = 100000000;
+	double a, b, c;
+	struct timeval tv;
+	unsigned long value;
+	int i;
+
+	ret = OBJECT_IDENTIFIER_get_single_arc(buf, sizeof(buf), 0,
+		&value, sizeof(value));
+	assert(ret == 0);
+	assert(value == 0x7040c20d);
+
+	gettimeofday(&tv, 0);
+	a = tv.tv_sec + tv.tv_usec / 1000000.0;
+	for(i = 0; i < cycles; i++) {
+		ret = OBJECT_IDENTIFIER_get_single_arc(buf, sizeof(buf), 0,
+			&value, sizeof(value));
+	}
+	assert(ret == 0);
+	assert(value == 0x7040c20d);
+	gettimeofday(&tv, 0);
+	b = tv.tv_sec + tv.tv_usec / 1000000.0;
+	for(i = 0; i < cycles; i++) {
+		ret = OBJECT_IDENTIFIER_get_single_arc(buf, sizeof(buf), 0,
+			&value, sizeof(value));
+	}
+	assert(ret == 0);
+	assert(value == 0x7040c20d);
+	gettimeofday(&tv, 0);
+	c = tv.tv_sec + tv.tv_usec / 1000000.0;
+
+	a = b - a;
+	b = c - b;
+	printf("Time for single_arc(): %f\n", a);
+	printf("Time for  get_arc_l(): %f\n", b);
+
+	return 0;
 }
 
 #define	CHECK_OID(n)	check_OID(buf ## n, sizeof(buf ## n),		\
@@ -179,13 +224,13 @@ check_REGEN_OID(int *arcs, int acount) {
 
 int
 main(int ac, char **av) {
-	/* {joint-iso-itu-t 100 3} */
+	/* {joint-iso-itu-t 230 3} */
 	uint8_t buf1[] = {
 		0x06,	/* OBJECT IDENTIFIER */
 		0x03,	/* Length */
-		0x81, 0x34, 0x03
+		0x82, 0x36, 0x03
 	};
-	int buf1_check[] = { 2, 100, 3 };
+	int buf1_check[] = { 2, 230, 3 };
 
 	/* {8571 3 2} */
 	uint8_t buf2[] = {
@@ -223,6 +268,8 @@ main(int ac, char **av) {
 	CHECK_REGEN_OID(11);
 	CHECK_REGEN_OID(12);
 	CHECK_REGEN_OID(13);
+
+	check_speed();
 
 	return 0;
 }
