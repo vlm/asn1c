@@ -2,7 +2,7 @@
 
 #define	ADD_TAG(skip, newtag)	do {					\
 	void *__p;							\
-	if(skip) {							\
+	if(skip && !(flags & AFT_FULL_COLLECT)) {			\
 		if(newtag.tag_mode != TM_IMPLICIT)			\
 			skip--;						\
 		break;							\

@@ -15,7 +15,7 @@ uint8_t buf1[] = {
 	2,	/* L */
   150,
   70,
-	/* b BOOLEAN */
+	/* b [2] IMPLICIT BOOLEAN */
 	128 | 2,		/* [2] */
 	1,	/* L */
   0xff,
@@ -26,30 +26,35 @@ uint8_t buf1[] = {
 	10,			/* [UNIVERSAL 10] */
 	1,	/* L */
   222,
+	/* e OCTET STRING */
 	4,			/* [UNIVERSAL 4] */
 	3,	/* L */
 	'x',
 	'y',
 	'z',
-	/* f OCTET STRING */
-	32 | 4,			/* [UNIVERSAL 4], constructed */
+	/*
+	 * X.690 specifies that inner structures must be tagged by
+	 * stripping off the outer tag for each subsequent level.
+	 */
+	/* f [5] IMPLICIT VisibleString */
+	128 | 32 | 5,		/* [5], constructed */
 	128,	/* L indefinite */
-		4,		/* [UNIVERSAL 4], primitive */
+		26,	/* [UNIVERSAL 26] (VisibleString), primitive */
 		2,
   'l',
   'o',
-		32 | 4,		/* [UNIVERSAL 4], recursively constructed */
+		32 | 26,	/* [UNIVERSAL 26], recursively constructed */
 		128,
-			4,
+			4,	/* [UNIVERSAL 4] (OCTET STRING), primitive */
 			1,
   'v',
-			4,
+			4,	/* [UNIVERSAL 4], primitive */
 			2,
   'e',
   '_',
 		0,
 		0,
-		4,		/* [UNIVERSAL 4], primitive */
+		26,	/* [UNIVERSAL 26], primitive */
 		2,
   'i',
   't',
@@ -61,8 +66,8 @@ uint8_t buf1[] = {
 	2,	/* Skip 2 bits */
 	147,
 	150,	/* => 148 */
-	/* h BIT STRING */
-	32 | 3,			/* [UNIVERSAL 3], constructed */
+	/* h [7] BIT STRING */
+	128 | 32 | 7,			/* [7], constructed */
 	128,	/* L indefinite */
 		3,			/* [UNIVERSAL 3], primitive */
 		3,	/* L */
@@ -73,7 +78,7 @@ uint8_t buf1[] = {
 		2,	/* L */
 		1,	/* Skip 1 bit */
 		143,	/* => 142 */
-	0,	/* End of f */
+	0,	/* End of h */
 	0,
 	0,	/* End of the whole structure */
 	0,

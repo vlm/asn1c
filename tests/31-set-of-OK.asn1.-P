@@ -48,6 +48,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Forest = {
 	asn1_DEF_Forest_tags,
 	sizeof(asn1_DEF_Forest_tags)
 		/sizeof(asn1_DEF_Forest_tags[0]), /* 1 */
+	asn1_DEF_Forest_tags,	/* Same as above */
+	sizeof(asn1_DEF_Forest_tags)
+		/sizeof(asn1_DEF_Forest_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Forest,
 	1,	/* Single element */
@@ -117,6 +120,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Tree = {
 	SEQUENCE_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Tree_tags,
+	sizeof(asn1_DEF_Tree_tags)
+		/sizeof(asn1_DEF_Tree_tags[0]), /* 1 */
+	asn1_DEF_Tree_tags,	/* Same as above */
 	sizeof(asn1_DEF_Tree_tags)
 		/sizeof(asn1_DEF_Tree_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
@@ -193,7 +199,8 @@ static asn1_TYPE_member_t asn1_MBR_trees[] = {
 		},
 };
 static ber_tlv_tag_t asn1_DEF_trees_tags[] = {
-	(ASN_TAG_CLASS_CONTEXT | (0 << 2))
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn1_SET_OF_specifics_t asn1_DEF_trees_specs = {
 	sizeof(struct trees),
@@ -210,7 +217,10 @@ asn1_TYPE_descriptor_t asn1_DEF_trees = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_trees_tags,
 	sizeof(asn1_DEF_trees_tags)
-		/sizeof(asn1_DEF_trees_tags[0]), /* 1 */
+		/sizeof(asn1_DEF_trees_tags[0]) - 1, /* 1 */
+	asn1_DEF_trees_tags,	/* Same as above */
+	sizeof(asn1_DEF_trees_tags)
+		/sizeof(asn1_DEF_trees_tags[0]), /* 2 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_trees,
 	1,	/* Single element */
@@ -252,6 +262,9 @@ asn1_TYPE_descriptor_t asn1_DEF_anything_member = {
 	asn1_DEF_anything_member_tags,
 	sizeof(asn1_DEF_anything_member_tags)
 		/sizeof(asn1_DEF_anything_member_tags[0]), /* 1 */
+	asn1_DEF_anything_member_tags,	/* Same as above */
+	sizeof(asn1_DEF_anything_member_tags)
+		/sizeof(asn1_DEF_anything_member_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_anything_member,
 	1,	/* Elements count */
@@ -268,7 +281,8 @@ static asn1_TYPE_member_t asn1_MBR_anything[] = {
 		},
 };
 static ber_tlv_tag_t asn1_DEF_anything_tags[] = {
-	(ASN_TAG_CLASS_CONTEXT | (1 << 2))
+	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn1_SET_OF_specifics_t asn1_DEF_anything_specs = {
 	sizeof(struct anything),
@@ -285,7 +299,10 @@ asn1_TYPE_descriptor_t asn1_DEF_anything = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_anything_tags,
 	sizeof(asn1_DEF_anything_tags)
-		/sizeof(asn1_DEF_anything_tags[0]), /* 1 */
+		/sizeof(asn1_DEF_anything_tags[0]) - 1, /* 1 */
+	asn1_DEF_anything_tags,	/* Same as above */
+	sizeof(asn1_DEF_anything_tags)
+		/sizeof(asn1_DEF_anything_tags[0]), /* 2 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_anything,
 	1,	/* Single element */
@@ -336,6 +353,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Stuff = {
 	SET_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Stuff_tags,
+	sizeof(asn1_DEF_Stuff_tags)
+		/sizeof(asn1_DEF_Stuff_tags[0]), /* 1 */
+	asn1_DEF_Stuff_tags,	/* Same as above */
 	sizeof(asn1_DEF_Stuff_tags)
 		/sizeof(asn1_DEF_Stuff_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */

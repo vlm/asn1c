@@ -4,6 +4,7 @@
 enum asn1f_aft_flags_e {
 	AFT_IMAGINARY_ANY	= 0x01,	/* Treat ANY tag as [IMAGINARY ANY] */
 	AFT_FETCH_OUTMOST	= 0x02,	/* Fetch only outmost tag */
+	AFT_FULL_COLLECT	= 0x04,	/* Collect all tags */
 };
 
 /*

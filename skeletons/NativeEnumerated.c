@@ -26,7 +26,9 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeEnumerated = {
 	NativeInteger_free,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_NativeEnumerated_tags,
-	sizeof(asn1_DEF_NativeEnumerated_tags)/sizeof(asn1_DEF_NativeEnumerated_tags[0]),
+	sizeof(asn1_DEF_NativeEnumerated_tags) / sizeof(asn1_DEF_NativeEnumerated_tags[0]),
+	asn1_DEF_NativeEnumerated_tags,	/* Same as above */
+	sizeof(asn1_DEF_NativeEnumerated_tags) / sizeof(asn1_DEF_NativeEnumerated_tags[0]),
 	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */

@@ -83,6 +83,14 @@ static ber_tlv_tag_t asn1_DEF_T1_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
 };
+static ber_tlv_tag_t asn1_DEF_T1_all_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (5 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
 asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	"T1",
 	T1_constraint,
@@ -94,6 +102,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	asn1_DEF_T1_tags,
 	sizeof(asn1_DEF_T1_tags)
 		/sizeof(asn1_DEF_T1_tags[0]), /* 4 */
+	asn1_DEF_T1_all_tags,
+	sizeof(asn1_DEF_T1_all_tags)
+		/sizeof(asn1_DEF_T1_all_tags[0]), /* 6 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -183,6 +194,13 @@ static ber_tlv_tag_t asn1_DEF_T2_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
 };
+static ber_tlv_tag_t asn1_DEF_T2_all_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (5 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
 asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	"T2",
 	T2_constraint,
@@ -194,6 +212,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	asn1_DEF_T2_tags,
 	sizeof(asn1_DEF_T2_tags)
 		/sizeof(asn1_DEF_T2_tags[0]), /* 3 */
+	asn1_DEF_T2_all_tags,
+	sizeof(asn1_DEF_T2_all_tags)
+		/sizeof(asn1_DEF_T2_all_tags[0]), /* 5 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -282,6 +303,12 @@ static ber_tlv_tag_t asn1_DEF_T3_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
 };
+static ber_tlv_tag_t asn1_DEF_T3_all_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (5 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
 asn1_TYPE_descriptor_t asn1_DEF_T3 = {
 	"T3",
 	T3_constraint,
@@ -293,6 +320,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T3 = {
 	asn1_DEF_T3_tags,
 	sizeof(asn1_DEF_T3_tags)
 		/sizeof(asn1_DEF_T3_tags[0]), /* 2 */
+	asn1_DEF_T3_all_tags,
+	sizeof(asn1_DEF_T3_all_tags)
+		/sizeof(asn1_DEF_T3_all_tags[0]), /* 4 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -379,7 +409,8 @@ T4_free(asn1_TYPE_descriptor_t *td,
 
 static ber_tlv_tag_t asn1_DEF_T4_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (5 << 2)),
-	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
+	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_T4 = {
 	"T4",
@@ -391,7 +422,10 @@ asn1_TYPE_descriptor_t asn1_DEF_T4 = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T4_tags,
 	sizeof(asn1_DEF_T4_tags)
-		/sizeof(asn1_DEF_T4_tags[0]), /* 2 */
+		/sizeof(asn1_DEF_T4_tags[0]) - 1, /* 2 */
+	asn1_DEF_T4_tags,	/* Same as above */
+	sizeof(asn1_DEF_T4_tags)
+		/sizeof(asn1_DEF_T4_tags[0]), /* 3 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -477,7 +511,8 @@ T5_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [T5] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_T5_tags[] = {
-	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
+	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_T5 = {
 	"T5",
@@ -489,7 +524,10 @@ asn1_TYPE_descriptor_t asn1_DEF_T5 = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T5_tags,
 	sizeof(asn1_DEF_T5_tags)
-		/sizeof(asn1_DEF_T5_tags[0]), /* 1 */
+		/sizeof(asn1_DEF_T5_tags[0]) - 1, /* 1 */
+	asn1_DEF_T5_tags,	/* Same as above */
+	sizeof(asn1_DEF_T5_tags)
+		/sizeof(asn1_DEF_T5_tags[0]), /* 2 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -588,6 +626,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T6 = {
 	asn1_DEF_T6_tags,
 	sizeof(asn1_DEF_T6_tags)
 		/sizeof(asn1_DEF_T6_tags[0]), /* 1 */
+	asn1_DEF_T6_tags,	/* Same as above */
+	sizeof(asn1_DEF_T6_tags)
+		/sizeof(asn1_DEF_T6_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -673,7 +714,9 @@ T_free(asn1_TYPE_descriptor_t *td,
 /*** <<< STAT-DEFS [T] >>> ***/
 
 static ber_tlv_tag_t asn1_DEF_T_tags[] = {
-	(ASN_TAG_CLASS_CONTEXT | (0 << 2))
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (123 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 asn1_TYPE_descriptor_t asn1_DEF_T = {
 	"T",
@@ -685,7 +728,10 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)
-		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
+		/sizeof(asn1_DEF_T_tags[0]) - 2, /* 1 */
+	asn1_DEF_T_tags,	/* Same as above */
+	sizeof(asn1_DEF_T_tags)
+		/sizeof(asn1_DEF_T_tags[0]), /* 3 */
 	-0,	/* Unknown yet */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -740,7 +786,8 @@ static asn1_TYPE_member_t asn1_MBR_Ts[] = {
 		},
 };
 static ber_tlv_tag_t asn1_DEF_Ts_tags[] = {
-	(ASN_TAG_CLASS_CONTEXT | (123 << 2))
+	(ASN_TAG_CLASS_CONTEXT | (123 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn1_TYPE_tag2member_t asn1_DEF_Ts_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* m1 at 24 */
@@ -765,7 +812,10 @@ asn1_TYPE_descriptor_t asn1_DEF_Ts = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Ts_tags,
 	sizeof(asn1_DEF_Ts_tags)
-		/sizeof(asn1_DEF_Ts_tags[0]), /* 1 */
+		/sizeof(asn1_DEF_Ts_tags[0]) - 1, /* 1 */
+	asn1_DEF_Ts_tags,	/* Same as above */
+	sizeof(asn1_DEF_Ts_tags)
+		/sizeof(asn1_DEF_Ts_tags[0]), /* 2 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Ts,
 	3,	/* Elements count */

@@ -66,6 +66,9 @@ asn1_TYPE_descriptor_t asn1_DEF_t_member1 = {
 	asn1_DEF_t_member1_tags,
 	sizeof(asn1_DEF_t_member1_tags)
 		/sizeof(asn1_DEF_t_member1_tags[0]), /* 1 */
+	asn1_DEF_t_member1_tags,	/* Same as above */
+	sizeof(asn1_DEF_t_member1_tags)
+		/sizeof(asn1_DEF_t_member1_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_t_member1,
 	1,	/* Single element */
@@ -98,6 +101,9 @@ asn1_TYPE_descriptor_t asn1_DEF_t_member2 = {
 	SEQUENCE_OF_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_t_member2_tags,
+	sizeof(asn1_DEF_t_member2_tags)
+		/sizeof(asn1_DEF_t_member2_tags[0]), /* 1 */
+	asn1_DEF_t_member2_tags,	/* Same as above */
 	sizeof(asn1_DEF_t_member2_tags)
 		/sizeof(asn1_DEF_t_member2_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
@@ -164,6 +170,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Test_structure_1 = {
 	asn1_DEF_Test_structure_1_tags,
 	sizeof(asn1_DEF_Test_structure_1_tags)
 		/sizeof(asn1_DEF_Test_structure_1_tags[0]), /* 1 */
+	asn1_DEF_Test_structure_1_tags,	/* Same as above */
+	sizeof(asn1_DEF_Test_structure_1_tags)
+		/sizeof(asn1_DEF_Test_structure_1_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Test_structure_1,
 	4,	/* Elements count */
@@ -223,7 +232,8 @@ static asn1_TYPE_member_t asn1_MBR_or[] = {
 		},
 };
 static ber_tlv_tag_t asn1_DEF_or_tags[] = {
-	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn1_SET_OF_specifics_t asn1_DEF_or_specs = {
 	sizeof(struct or),
@@ -240,7 +250,10 @@ asn1_TYPE_descriptor_t asn1_DEF_or = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_or_tags,
 	sizeof(asn1_DEF_or_tags)
-		/sizeof(asn1_DEF_or_tags[0]), /* 1 */
+		/sizeof(asn1_DEF_or_tags[0]) - 1, /* 1 */
+	asn1_DEF_or_tags,	/* Same as above */
+	sizeof(asn1_DEF_or_tags)
+		/sizeof(asn1_DEF_or_tags[0]), /* 2 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_or,
 	1,	/* Single element */
@@ -300,8 +313,10 @@ asn1_TYPE_descriptor_t asn1_DEF_Choice_1 = {
 	CHOICE_print,
 	CHOICE_free,
 	CHOICE_outmost_tag,
-	0,	/* No explicit tags (pointer) */
-	0,	/* No explicit tags (count) */
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Choice_1,
 	4,	/* Elements count */

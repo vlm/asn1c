@@ -20,9 +20,9 @@ BEGIN
 				a(1), b(2)
 				},
 		e	OCTET STRING,
-		f 	OCTET STRING,
+		f [5]	VisibleString,
 		g	BIT STRING,
-		h	BIT STRING,
+		h [7]	BIT STRING,
 		...
 	}
 

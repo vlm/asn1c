@@ -91,6 +91,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Int1 = {
 	asn1_DEF_Int1_tags,
 	sizeof(asn1_DEF_Int1_tags)
 		/sizeof(asn1_DEF_Int1_tags[0]), /* 1 */
+	asn1_DEF_Int1_tags,	/* Same as above */
+	sizeof(asn1_DEF_Int1_tags)
+		/sizeof(asn1_DEF_Int1_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -205,6 +208,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Int2 = {
 	Int2_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Int2_tags,
+	sizeof(asn1_DEF_Int2_tags)
+		/sizeof(asn1_DEF_Int2_tags[0]), /* 1 */
+	asn1_DEF_Int2_tags,	/* Same as above */
 	sizeof(asn1_DEF_Int2_tags)
 		/sizeof(asn1_DEF_Int2_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -327,6 +333,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Int3 = {
 	asn1_DEF_Int3_tags,
 	sizeof(asn1_DEF_Int3_tags)
 		/sizeof(asn1_DEF_Int3_tags[0]), /* 1 */
+	asn1_DEF_Int3_tags,	/* Same as above */
+	sizeof(asn1_DEF_Int3_tags)
+		/sizeof(asn1_DEF_Int3_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -445,6 +454,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Int4 = {
 	Int4_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Int4_tags,
+	sizeof(asn1_DEF_Int4_tags)
+		/sizeof(asn1_DEF_Int4_tags[0]), /* 1 */
+	asn1_DEF_Int4_tags,	/* Same as above */
 	sizeof(asn1_DEF_Int4_tags)
 		/sizeof(asn1_DEF_Int4_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -567,6 +579,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Int5 = {
 	asn1_DEF_Int5_tags,
 	sizeof(asn1_DEF_Int5_tags)
 		/sizeof(asn1_DEF_Int5_tags[0]), /* 1 */
+	asn1_DEF_Int5_tags,	/* Same as above */
+	sizeof(asn1_DEF_Int5_tags)
+		/sizeof(asn1_DEF_Int5_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -687,6 +702,9 @@ asn1_TYPE_descriptor_t asn1_DEF_ExtensibleExtensions = {
 	asn1_DEF_ExtensibleExtensions_tags,
 	sizeof(asn1_DEF_ExtensibleExtensions_tags)
 		/sizeof(asn1_DEF_ExtensibleExtensions_tags[0]), /* 1 */
+	asn1_DEF_ExtensibleExtensions_tags,	/* Same as above */
+	sizeof(asn1_DEF_ExtensibleExtensions_tags)
+		/sizeof(asn1_DEF_ExtensibleExtensions_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -783,6 +801,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Str1 = {
 	Str1_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Str1_tags,
+	sizeof(asn1_DEF_Str1_tags)
+		/sizeof(asn1_DEF_Str1_tags[0]), /* 1 */
+	asn1_DEF_Str1_tags,	/* Same as above */
 	sizeof(asn1_DEF_Str1_tags)
 		/sizeof(asn1_DEF_Str1_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -915,6 +936,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Str2 = {
 	Str2_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Str2_tags,
+	sizeof(asn1_DEF_Str2_tags)
+		/sizeof(asn1_DEF_Str2_tags[0]), /* 1 */
+	asn1_DEF_Str2_tags,	/* Same as above */
 	sizeof(asn1_DEF_Str2_tags)
 		/sizeof(asn1_DEF_Str2_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -1060,6 +1084,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Str3 = {
 	asn1_DEF_Str3_tags,
 	sizeof(asn1_DEF_Str3_tags)
 		/sizeof(asn1_DEF_Str3_tags[0]), /* 1 */
+	asn1_DEF_Str3_tags,	/* Same as above */
+	sizeof(asn1_DEF_Str3_tags)
+		/sizeof(asn1_DEF_Str3_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1187,6 +1214,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Str4 = {
 	Str4_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Str4_tags,
+	sizeof(asn1_DEF_Str4_tags)
+		/sizeof(asn1_DEF_Str4_tags[0]), /* 1 */
+	asn1_DEF_Str4_tags,	/* Same as above */
 	sizeof(asn1_DEF_Str4_tags)
 		/sizeof(asn1_DEF_Str4_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -1318,6 +1348,9 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible = {
 	asn1_DEF_PER_Visible_tags,
 	sizeof(asn1_DEF_PER_Visible_tags)
 		/sizeof(asn1_DEF_PER_Visible_tags[0]), /* 1 */
+	asn1_DEF_PER_Visible_tags,	/* Same as above */
+	sizeof(asn1_DEF_PER_Visible_tags)
+		/sizeof(asn1_DEF_PER_Visible_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1445,6 +1478,9 @@ asn1_TYPE_descriptor_t asn1_DEF_PER_Visible_2 = {
 	PER_Visible_2_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_PER_Visible_2_tags,
+	sizeof(asn1_DEF_PER_Visible_2_tags)
+		/sizeof(asn1_DEF_PER_Visible_2_tags[0]), /* 1 */
+	asn1_DEF_PER_Visible_2_tags,	/* Same as above */
 	sizeof(asn1_DEF_PER_Visible_2_tags)
 		/sizeof(asn1_DEF_PER_Visible_2_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -1576,6 +1612,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_1 = {
 	asn1_DEF_Not_PER_Visible_1_tags,
 	sizeof(asn1_DEF_Not_PER_Visible_1_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_1_tags[0]), /* 1 */
+	asn1_DEF_Not_PER_Visible_1_tags,	/* Same as above */
+	sizeof(asn1_DEF_Not_PER_Visible_1_tags)
+		/sizeof(asn1_DEF_Not_PER_Visible_1_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1705,6 +1744,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_2 = {
 	asn1_DEF_Not_PER_Visible_2_tags,
 	sizeof(asn1_DEF_Not_PER_Visible_2_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_2_tags[0]), /* 1 */
+	asn1_DEF_Not_PER_Visible_2_tags,	/* Same as above */
+	sizeof(asn1_DEF_Not_PER_Visible_2_tags)
+		/sizeof(asn1_DEF_Not_PER_Visible_2_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1832,6 +1874,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Not_PER_Visible_3 = {
 	Not_PER_Visible_3_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Not_PER_Visible_3_tags,
+	sizeof(asn1_DEF_Not_PER_Visible_3_tags)
+		/sizeof(asn1_DEF_Not_PER_Visible_3_tags[0]), /* 1 */
+	asn1_DEF_Not_PER_Visible_3_tags,	/* Same as above */
 	sizeof(asn1_DEF_Not_PER_Visible_3_tags)
 		/sizeof(asn1_DEF_Not_PER_Visible_3_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -1966,6 +2011,9 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_but_not_FROM = {
 	asn1_DEF_SIZE_but_not_FROM_tags,
 	sizeof(asn1_DEF_SIZE_but_not_FROM_tags)
 		/sizeof(asn1_DEF_SIZE_but_not_FROM_tags[0]), /* 1 */
+	asn1_DEF_SIZE_but_not_FROM_tags,	/* Same as above */
+	sizeof(asn1_DEF_SIZE_but_not_FROM_tags)
+		/sizeof(asn1_DEF_SIZE_but_not_FROM_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2098,6 +2146,9 @@ asn1_TYPE_descriptor_t asn1_DEF_SIZE_and_FROM = {
 	asn1_DEF_SIZE_and_FROM_tags,
 	sizeof(asn1_DEF_SIZE_and_FROM_tags)
 		/sizeof(asn1_DEF_SIZE_and_FROM_tags[0]), /* 1 */
+	asn1_DEF_SIZE_and_FROM_tags,	/* Same as above */
+	sizeof(asn1_DEF_SIZE_and_FROM_tags)
+		/sizeof(asn1_DEF_SIZE_and_FROM_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2225,6 +2276,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Neither_SIZE_nor_FROM = {
 	Neither_SIZE_nor_FROM_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Neither_SIZE_nor_FROM_tags,
+	sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags)
+		/sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags[0]), /* 1 */
+	asn1_DEF_Neither_SIZE_nor_FROM_tags,	/* Same as above */
 	sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags)
 		/sizeof(asn1_DEF_Neither_SIZE_nor_FROM_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
@@ -2373,6 +2427,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_3 = {
 	asn1_DEF_Utf8_3_tags,
 	sizeof(asn1_DEF_Utf8_3_tags)
 		/sizeof(asn1_DEF_Utf8_3_tags[0]), /* 1 */
+	asn1_DEF_Utf8_3_tags,	/* Same as above */
+	sizeof(asn1_DEF_Utf8_3_tags)
+		/sizeof(asn1_DEF_Utf8_3_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2489,6 +2546,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_2 = {
 	asn1_DEF_Utf8_2_tags,
 	sizeof(asn1_DEF_Utf8_2_tags)
 		/sizeof(asn1_DEF_Utf8_2_tags[0]), /* 1 */
+	asn1_DEF_Utf8_2_tags,	/* Same as above */
+	sizeof(asn1_DEF_Utf8_2_tags)
+		/sizeof(asn1_DEF_Utf8_2_tags[0]), /* 1 */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2585,6 +2645,9 @@ asn1_TYPE_descriptor_t asn1_DEF_Utf8_1 = {
 	Utf8_1_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Utf8_1_tags,
+	sizeof(asn1_DEF_Utf8_1_tags)
+		/sizeof(asn1_DEF_Utf8_1_tags[0]), /* 1 */
+	asn1_DEF_Utf8_1_tags,	/* Same as above */
 	sizeof(asn1_DEF_Utf8_1_tags)
 		/sizeof(asn1_DEF_Utf8_1_tags[0]), /* 1 */
 	-0,	/* Unknown yet */

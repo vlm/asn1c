@@ -57,6 +57,9 @@ asn1_TYPE_descriptor_t asn1_DEF_collection = {
 	asn1_DEF_collection_tags,
 	sizeof(asn1_DEF_collection_tags)
 		/sizeof(asn1_DEF_collection_tags[0]), /* 1 */
+	asn1_DEF_collection_tags,	/* Same as above */
+	sizeof(asn1_DEF_collection_tags)
+		/sizeof(asn1_DEF_collection_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_collection,
 	1,	/* Single element */
@@ -103,6 +106,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	SEQUENCE_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
+	sizeof(asn1_DEF_T_tags)
+		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
+	asn1_DEF_T_tags,	/* Same as above */
 	sizeof(asn1_DEF_T_tags)
 		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */
@@ -175,6 +181,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	SEQUENCE_free,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T2_tags,
+	sizeof(asn1_DEF_T2_tags)
+		/sizeof(asn1_DEF_T2_tags[0]), /* 1 */
+	asn1_DEF_T2_tags,	/* Same as above */
 	sizeof(asn1_DEF_T2_tags)
 		/sizeof(asn1_DEF_T2_tags[0]), /* 1 */
 	1,	/* Whether CONSTRUCTED */

@@ -24,6 +24,9 @@ asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	asn1_DEF_RELATIVE_OID_tags,
 	sizeof(asn1_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn1_DEF_RELATIVE_OID_tags[0]),
+	asn1_DEF_RELATIVE_OID_tags,	/* Same as above */
+	sizeof(asn1_DEF_RELATIVE_OID_tags)
+	    / sizeof(asn1_DEF_RELATIVE_OID_tags[0]),
 	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */

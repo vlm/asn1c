@@ -24,6 +24,9 @@ asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
 	asn1_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags[0]),
+	asn1_DEF_OBJECT_IDENTIFIER_tags,	/* Same as above */
+	sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags)
+	    / sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags[0]),
 	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -98,7 +101,7 @@ OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 int
 OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbuf, unsigned int rvsize) {
-	unsigned LE = 1;	/* Little endian (x86) */
+	unsigned LE __attribute__ ((unused)) = 1; /* Little endian (x86) */
 	uint8_t *arcend = arcbuf + arclen;	/* End of arc */
 	void *rvstart = rvbuf;	/* Original start of the value buffer */
 	unsigned int cache = 0;	/* No more than 14 significant bits */

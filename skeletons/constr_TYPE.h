@@ -70,10 +70,13 @@ typedef struct asn1_TYPE_descriptor_s {
 	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
 
 	/*
-	 * Tags that are expected, with some of their vital properties.
+	 * Tags that are expected to occur.
 	 */
-	ber_tlv_tag_t *tags;	/* At least one tag must be specified */
+	ber_tlv_tag_t *tags;	/* Effective tags sequence for this type */
 	int tags_count;		/* Number of tags which are expected */
+	ber_tlv_tag_t *all_tags;/* Every tag for BER/containment */
+	int all_tags_count;	/* Number of tags */
+
 	int last_tag_form;	/* Acceptable form of the tag (prim, constr) */
 
 	/*
@@ -92,12 +95,13 @@ typedef struct asn1_TYPE_descriptor_s {
 /*
  * An element of the constructed type, i.e. SEQUENCE, SET, CHOICE.
  */
+  enum asn1_TYPE_flags_e {
+	ATF_NOFLAGS,
+	ATF_POINTER	= 0x01,	/* Represented by the pointer */
+	ATF_OPEN_TYPE	= 0x02,	/* ANY type, without meaningful tag */
+  };
 typedef struct asn1_TYPE_member_s {
-	enum asn1_TYPE_flags_e {
-		ATF_NOFLAGS,
-		ATF_POINTER	= 0x01,	/* Represented by the pointer */
-		ATF_OPEN_TYPE	= 0x02,	/* ANY type, without meaningful tag */
-	} flags;			/* Element's presentation flags */
+	enum asn1_TYPE_flags_e flags;	/* Element's presentation flags */
 	int optional;	/* Following optional members, including current */
 	int memb_offset;		/* Offset of the element */
 	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
