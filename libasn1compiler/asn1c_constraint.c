@@ -170,8 +170,17 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	INDENT(-1);
 	OUT(") {\n");
 		INDENT(+1);
-		OUT("/* Constraint check succeeded */\n");
-		OUT("return 0;\n");
+		switch(etype) {
+		case ASN_CONSTR_SEQUENCE_OF:
+			OUT("/* SEQUENCE validation code is the same as SET */\n");
+		case ASN_CONSTR_SET_OF:
+			OUT("/* Perform validation of the inner elements */\n");
+			OUT("return SET_OF_constraint(td, list, app_errlog, app_key);\n");
+			break;
+		default:
+			OUT("/* Constraint check succeeded */\n");
+			OUT("return 0;\n");
+		}
 		INDENT(-1);
 	OUT("} else {\n");
 		INDENT(+1);
