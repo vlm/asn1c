@@ -47,17 +47,34 @@ asn1_TYPE_descriptor_t asn1_DEF_REAL = {
 
 ssize_t
 REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) {
-	char local_buf[32];
+	char local_buf[64];
 	char *buf = local_buf;
 	ssize_t buflen = sizeof(local_buf);
-	const char *fmt = canonical?"%15E":"f";
+	const char *fmt = canonical?"%.15E":"%.15f";
 	ssize_t ret;
+	int expval;
 
 	/*
 	 * Check whether it is a special value.
 	 */
-	if(finite(d) == 0) {
-                if(isinf(d)) {
+	/*
+	 * ilogb(+-0) returns -INT_MAX or INT_MIN (platform-dependent)
+	 * ilogb(+-inf) returns INT_MAX
+	 */
+	expval = ilogb(d);
+	if(expval <= -INT_MAX	/* Also catches (d == 0) */
+	|| expval == INT_MAX	/* catches finite() which catches isnan() */
+	) {
+		/* fpclassify(3) is not portable yet */
+		if(expval <= -INT_MAX) {
+			if(copysign(1.0, d) < 0.0) {
+				buf = "-0";
+				buflen = 2;
+			} else {
+				buf = "0";
+				buflen = 1;
+			}
+		} else if(isinf(d)) {
                         if(copysign(1.0, d) < 0.0) {
 				buf = "<MINUS-INFINITY/>";
 				buflen = 17;
@@ -90,42 +107,84 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		if(!buf) return -1;
 	} while(1);
 
-	/*
-	 * Transform the "[-]d.dddE+-dd" output into "[-]d.dddE[-]d"
-	 */
 	if(canonical) {
+		/*
+		 * Transform the "[-]d.dddE+-dd" output into "[-]d.dddE[-]d"
+		 */
 		char *dot, *E;
 		char *end = buf + buflen;
+		char *last_zero;
 
 		dot = (buf[0] == '-') ? (buf + 2) : (buf + 1);
 		if(*dot >= 0x30) {
 			errno = EINVAL;
 			return -1;	/* Not a dot, really */
 		}
-		*dot = '.';		/* Replace possible comma */
+		*dot = 0x2e;		/* Replace possible comma */
 
-		for(E = dot; dot < end; E++) {
-			if(*E == 'E') {
-				char *s = ++E;
-				if(*E == '+') {
-					/* Skip the "+" too */
-					buflen -= 2;
-				} else {
+		for(last_zero = dot + 2, E = dot; dot < end; E++) {
+			if(*E == 0x45) {
+				char *expptr = ++E;
+				char *s = expptr;
+				int sign;
+				if(*expptr == '+') {
+					/* Skip the "+" */
 					buflen -= 1;
+					sign = 0;
+				} else {
+					sign = 1;
 					s++;
 				}
-				E += 2;
-				if(E[-1] != '0' || E > end) {
+				expptr++;
+				if(expptr > end) {
 					errno = EINVAL;
 					return -1;
 				}
-				for(; E <= end; s++, E++)
-					*s = *E;
+				if(*expptr == 0x30) {
+					buflen--;
+					expptr++;
+				}
+				if(*last_zero == 0x30) {
+					*last_zero = 0x45;	/* E */
+					s = last_zero + 1;
+					if(sign) *s++ = '-';
+				}
+				for(; expptr <= end; s++, expptr++)
+					*s = *expptr;
+				break;
+			} else if(*E == 0x30) {
+				if(*last_zero != 0x30)
+					last_zero = E;
 			}
 		}
 		if(E == end) {
 			errno = EINVAL;
 			return -1;		/* No promised E */
+		}
+	} else {
+		/*
+		 * Remove trailing zeros.
+		 */
+		char *end = buf + buflen;
+		char *last_zero = end;
+		char *z;
+		for(z = end - 1; z > buf; z--) {
+			switch(*z) {
+			case 0x030:
+				last_zero = z;
+			case 0x31: case 0x32: case 0x33: case 0x34:
+			case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+				continue;
+			default:	/* Catch dot and other separators */
+				*z = 0x2e;	/* Replace possible comma */
+				if(last_zero == z + 1) {	/* leave x.0 */
+					last_zero++;
+				}
+				buflen = last_zero - buf;
+				*last_zero = '\0';
+				break;
+			}
+			break;
 		}
 	}
 
