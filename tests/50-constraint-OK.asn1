@@ -1,0 +1,42 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .50
+
+ModuleNestedConstraintsCheck
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 50 }
+	DEFINITIONS ::=
+BEGIN
+
+	Int1 ::= INTEGER
+	Int2 ::= Int1 (0..MAX)		-- X.680-0207::41.4.4
+	Int3 ::= Int2 (MIN..ten)	-- Means (0..10)
+	Int4 ::= Int3 (5..MAX,...,1..4)	-- Means (5..10,...,1..4)
+	Int5 ::= Int4 (MIN..5)		-- Means (5)
+
+	ten Int1 ::= other-ten
+	other-ten Int2 ::= 10
+
+	-- G.4.3.4
+	ExtensibleExtensions ::= INTEGER ((1..256,...) INTERSECTION (1..256))  
+
+	Str1 ::= IA5String
+	Str2 ::= Str1 (SIZE(MIN..20 | 25..30))	
+					-- Means (SIZE(0..20 | 25..30))
+	Str3 ::= Str2 (SIZE(10..27))(FROM("ABC"|"def"))
+					-- (SIZE(10..20,25..27))(FROM("ABCdef"))
+
+	PER-Visible ::= IA5String (FROM("A".."F"))
+	PER-Visible-2 ::= PER-Visible (FROM("E".."F"))	-- Means (FROM("EF"))
+	-- The following maintain parent permitted alphabet constraint
+	Not-PER-Visible-1 ::= PER-Visible (FROM("AB") | SIZE(1..2))
+	Not-PER-Visible-2 ::= PER-Visible (FROM("AB",...))
+	Not-PER-Visible-3 ::= PER-Visible (FROM("AB"),...)
+	SIZE-but-not-FROM ::= PER-Visible (SIZE(1..4) ^ FROM("ABCD",...))
+	SIZE-and-FROM ::= PER-Visible (SIZE(1..4) ^ FROM("ABCD"))
+	Neither-SIZE-nor-FROM ::= PER-Visible (SIZE(1..4) | FROM("ABCD",...))
+
+END
