@@ -123,13 +123,12 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 			/* Compare only the OID. */
 			if(asn1p_oid_compare(omod->module_oid,
 					arg->mod->module_oid) == 0) {
-				FATAL("ASN.1 module %s from %s "
+				FATAL("ASN.1 module %s in %s "
 					"has the same OBJECT IDENTIFIER"
-					" as module %s from %s",
-					arg->mod->Identifier,
-					arg->mod->source_file_name,
+					" as module %s",
 					omod->Identifier,
-					omod->source_file_name
+					omod->source_file_name,
+					arg->mod->Identifier
 				);
 				RET2RVAL(-1, rvalue);
 			} else if(sameNames) {
