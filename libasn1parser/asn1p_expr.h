@@ -216,6 +216,7 @@ typedef struct asn1p_expr_s {
 	enum {
 		TM_NOMARK,
 		TM_RECURSION,	/* Used to break recursion */
+		TM_BROKEN,	/* A warning was already issued */
 	} _mark;
 
 	/*
