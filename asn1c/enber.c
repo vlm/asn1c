@@ -316,14 +316,6 @@ process_line(const char *fname, char *line, int lineno) {
 	}
 	tlv_tag = ((tag_value << 2) | tag_class);
 
-	if(0) {
-		printf("[%s>]\n", op);
-		printf(" <%c T=\"%s\" TL=\"%d\" V=\"%d\">\n",
-			constr?'C':'P',
-			ber_tlv_tag_string(tlv_tag),
-			tl_len, tlv_len);
-	}
-
 	ret = ber_tlv_tag_serialize(tlv_tag, buf, sizeof(buf));
 	assert(ret >= 1 && (size_t)ret < sizeof(buf));
 	if(constr == 2) {
