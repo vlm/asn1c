@@ -4,3 +4,6 @@ as a pointer to the file in ../../tests/N-*.asn1. This file is compiled
 using the asn1c compiler from above directory. Then, everything is build
 together in a temporary directory with a check-N.c used as a testing engine.
 
+For manual execution of a specific test case, use the following pattern:
+
+	./check-assembly.sh check-<NN>.c
