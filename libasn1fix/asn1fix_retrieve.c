@@ -48,6 +48,13 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 	 */
 	mod = asn1f_lookup_module(arg, xp->from, xp->from_oid);
 	if(mod == NULL) {
+		/* Conditional debug */
+		if(!(arg->expr->_mark & TM_BROKEN)) {
+			arg->expr->_mark |= TM_BROKEN;
+			FATAL("Cannot find module %s "
+				"mentioned for %s at line %d",
+				xp->from, name, arg->expr->_lineno);
+		}
 		/* ENOENT/ETOOMANYREFS */
 		return NULL;
 	}
@@ -220,6 +227,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	 */
 	if(imports_from) {
 		asn1p_ref_t tmpref = *ref;
+		asn1p_expr_t *expr;
 		if(modulename) {
 			/*
 			 * The modulename is specified inside this reference.
@@ -230,7 +238,26 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 			tmpref.comp_count--;
 			assert(tmpref.comp_count > 0);
 		}
-		return asn1f_lookup_symbol(arg, imports_from, &tmpref);
+
+		expr = asn1f_lookup_symbol(arg, imports_from, &tmpref);
+		if(!expr && !(arg->expr->_mark & TM_BROKEN)) {
+			arg->expr->_mark |= TM_BROKEN;
+			if(modulename) {
+				FATAL("Module %s referred by %s in module %s "
+					"does not contain the requested symbol",
+				imports_from->Identifier,
+				asn1f_printable_reference(ref),
+				mod->Identifier);
+			} else {
+				FATAL("Module %s referred in IMPORTS section "
+				"for %s of module %s does not contain "
+				"the requested symbol",
+				imports_from->Identifier,
+				asn1f_printable_reference(ref),
+				mod->Identifier);
+			}
+		}
+		return expr;
 	}
 
 	/*
@@ -316,7 +343,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value) {
 	}
 
 	/*
-	 * Lookup inside the default module.
+	 * Lookup inside the default module and its IMPORTS section.
 	 */
 	tc = asn1f_lookup_symbol(arg, expr->module, ref);
 	if(tc == NULL) {
@@ -367,8 +394,14 @@ asn1f_compatible_with_exports(arg_t *arg, asn1p_module_t *mod, const char *name)
 			return 0;
 	}
 
-	DEBUG("Symbol \"%s\" contradicts with EXPORTS of module %s",
-		name, mod->Identifier);
+	/* Conditional debug */
+	if(!(arg->expr->_mark & TM_BROKEN)) {
+		arg->expr->_mark |= TM_BROKEN;
+		FATAL("EXPORTS section of module %s in %s "
+			"does not mention %s at line %d",
+			mod->Identifier, mod->source_file_name, name,
+			arg->expr->_lineno);
+	}
 
 	errno = ESRCH;
 	return -1;
