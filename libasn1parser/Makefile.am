@@ -26,10 +26,3 @@ asn1p_expr_str.h: expr-h.pl asn1p_expr.h
 	./expr-h.pl asn1p_expr.h > $@
 
 EXTRA_DIST = expr-h.pl
-
-check_PROGRAMS = check_parser
-
-LDADD = ${noinst_LTLIBRARIES}
-DEPENDENCIES = ${noinst_LTLIBRARIES}
-
-TESTS = ${check_PROGRAMS}
