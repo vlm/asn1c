@@ -1,5 +1,5 @@
 
-check_SCRIPTS = ./check-assembly.sh
+check_SCRIPTS = check-assembly.sh
 
 TESTS_ENVIRONMENT= ./check-assembly.sh
 TESTS = check-*.c
