@@ -8,6 +8,8 @@
 	  the "Spouse" case in A.3.
 	  (Severity: medium, Security impact: low)
 	* Added converters between any generic type and the ANY type.
+	* Parser fixed: Information Object Class fields may be taged.
+	* Parser fixed: tagged types inside SEQUENCE OF/SET OF support.
 
 0.9.4:	2004-Sep-10
 
