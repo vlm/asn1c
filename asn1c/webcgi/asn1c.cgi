@@ -510,7 +510,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "Fetch results (.tgz)</A></NOBR>"
 		if $allowFetchResults;
 	if($ec ne "0") {
-		local $eml, @resp;
+		local ($eml, @resp);
 		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpResp')
 			and @resp = <H>;
 		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpReq')
