@@ -9,10 +9,10 @@
 /*
  * ENUMERATED basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_ENUMERATED_tags[] = {
+static ber_tlv_tag_t asn_DEF_ENUMERATED_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED = {
+asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	"ENUMERATED",
 	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,			/* Implemented in terms of INTEGER */
@@ -22,10 +22,10 @@ asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED = {
 	0,				/* Not implemented yet */
 	INTEGER_encode_xer,		/* Implemented in terms of INTEGER */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_ENUMERATED_tags,
-	sizeof(asn1_DEF_ENUMERATED_tags) / sizeof(asn1_DEF_ENUMERATED_tags[0]),
-	asn1_DEF_ENUMERATED_tags,	/* Same as above */
-	sizeof(asn1_DEF_ENUMERATED_tags) / sizeof(asn1_DEF_ENUMERATED_tags[0]),
+	asn_DEF_ENUMERATED_tags,
+	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
+	asn_DEF_ENUMERATED_tags,	/* Same as above */
+	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

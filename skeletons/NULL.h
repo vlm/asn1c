@@ -13,7 +13,7 @@
  */
 typedef int NULL_t;
 
-extern asn1_TYPE_descriptor_t asn1_DEF_NULL;
+extern asn_TYPE_descriptor_t asn_DEF_NULL;
 
 asn_struct_print_f NULL_print;
 der_type_encoder_f NULL_encode_der;

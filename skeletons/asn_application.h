@@ -20,6 +20,6 @@
 typedef int (asn_app_consume_bytes_f)(const void *buffer, size_t size,
 	void *application_specific_key);
 
-#include <constr_TYPE.h>	/* for asn1_TYPE_descriptor_t */
+#include <constr_TYPE.h>	/* for asn_TYPE_descriptor_t */
 
 #endif	/* _ASN_APPLICATION_H_ */

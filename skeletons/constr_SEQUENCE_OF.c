@@ -10,10 +10,10 @@
  * The DER encoder of the SEQUENCE OF type.
  */
 asn_enc_rval_t
-SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
+SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_TYPE_member_t *elm = td->elements;
+	asn_TYPE_member_t *elm = td->elements;
 	A_SEQUENCE_OF(void) *list;
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
@@ -84,12 +84,12 @@ SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 }
 
 asn_enc_rval_t
-SEQUENCE_OF_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
-        asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
-	asn1_TYPE_member_t *element = td->elements;
+        asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	asn_TYPE_member_t *element = td->elements;
 	A_SEQUENCE_OF(void) *list;
 	const char *mname = specs->as_XMLValueList
 		? 0 : ((*element->name) ? element->name : element->type->name);

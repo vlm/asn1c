@@ -7,16 +7,16 @@
 
 #include <asn_application.h>
 
-typedef struct asn1_SET_OF_specifics_s {
+typedef struct asn_SET_OF_specifics_s {
 	/*
 	 * Target structure description.
 	 */
 	int struct_size;	/* Size of the target structure. */
-	int ctx_offset;		/* Offset of the ber_dec_ctx_t member */
+	int ctx_offset;		/* Offset of the asn_struct_ctx_t member */
 
 	/* XER-specific stuff */
 	int as_XMLValueList;	/* The member type must be encoded like this */
-} asn1_SET_OF_specifics_t;
+} asn_SET_OF_specifics_t;
 
 /*
  * A set specialized functions dealing with the SET OF type.

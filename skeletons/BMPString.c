@@ -8,11 +8,11 @@
 /*
  * BMPString basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_BMPString_tags[] = {
+static ber_tlv_tag_t asn_DEF_BMPString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (30 << 2)),	/* [UNIVERSAL 30] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_BMPString = {
+asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	"BMPString",
 	OCTET_STRING_free,          /* Implemented in terms of OCTET STRING */
 	BMPString_print,
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_BMPString = {
 	0,				/* Not implemented yet */
 	BMPString_encode_xer,		/* Conver to UTF8 */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_BMPString_tags,
-	sizeof(asn1_DEF_BMPString_tags)
-	  / sizeof(asn1_DEF_BMPString_tags[0]) - 1,
-	asn1_DEF_BMPString_tags,
-	sizeof(asn1_DEF_BMPString_tags)
-	  / sizeof(asn1_DEF_BMPString_tags[0]),
+	asn_DEF_BMPString_tags,
+	sizeof(asn_DEF_BMPString_tags)
+	  / sizeof(asn_DEF_BMPString_tags[0]) - 1,
+	asn_DEF_BMPString_tags,
+	sizeof(asn_DEF_BMPString_tags)
+	  / sizeof(asn_DEF_BMPString_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -74,7 +74,7 @@ BMPString__dump(const BMPString_t *st,
 }
 
 asn_enc_rval_t
-BMPString_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+BMPString_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const BMPString_t *st = (const BMPString_t *)sptr;
@@ -93,7 +93,7 @@ BMPString_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-BMPString_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+BMPString_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const BMPString_t *st = (const BMPString_t *)sptr;
 

@@ -10,7 +10,7 @@
 
 typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t;
 
-extern asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER;
+extern asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER;
 
 asn_struct_print_f OBJECT_IDENTIFIER_print;
 asn_constr_check_f OBJECT_IDENTIFIER_constraint;

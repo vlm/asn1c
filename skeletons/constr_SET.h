@@ -8,18 +8,18 @@
 #include <asn_application.h>
 
 
-typedef struct asn1_SET_specifics_s {
+typedef struct asn_SET_specifics_s {
 	/*
 	 * Target structure description.
 	 */
 	int struct_size;	/* Size of the target structure. */
-	int ctx_offset;		/* Offset of the ber_dec_ctx_t member */
+	int ctx_offset;		/* Offset of the asn_struct_ctx_t member */
 	int pres_offset;	/* Offset of _presence_map member */
 
 	/*
 	 * Tags to members mapping table (sorted).
 	 */
-	asn1_TYPE_tag2member_t *tag2el;
+	asn_TYPE_tag2member_t *tag2el;
 	int tag2el_count;
 
 	/*
@@ -27,7 +27,7 @@ typedef struct asn1_SET_specifics_s {
 	 */
 	int extensible;				/* Whether SET is extensible */
 	unsigned int *_mandatory_elements;	/* Bitmask of mandatory ones */
-} asn1_SET_specifics_t;
+} asn_SET_specifics_t;
 
 /*
  * A set specialized functions dealing with the SET type.

@@ -70,8 +70,8 @@
  */
 static int
 _t2e_cmp(const void *ap, const void *bp) {
-	const asn1_TYPE_tag2member_t *a = (const asn1_TYPE_tag2member_t *)ap;
-	const asn1_TYPE_tag2member_t *b = (const asn1_TYPE_tag2member_t *)bp;
+	const asn_TYPE_tag2member_t *a = (const asn_TYPE_tag2member_t *)ap;
+	const asn_TYPE_tag2member_t *b = (const asn_TYPE_tag2member_t *)bp;
 
 	int a_class = BER_TAG_CLASS(a->el_tag);
 	int b_class = BER_TAG_CLASS(b->el_tag);
@@ -97,22 +97,21 @@ _t2e_cmp(const void *ap, const void *bp) {
  * The decoder of the SET type.
  */
 ber_dec_rval_t
-SET_decode_ber(asn1_TYPE_descriptor_t *td,
+SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)td->specifics;
-	asn1_TYPE_member_t *elements = td->elements;
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elements = td->elements;
 
 	/*
 	 * Parts of the structure being constructed.
 	 */
 	void *st = *struct_ptr;	/* Target structure. */
-	ber_dec_ctx_t *ctx;	/* Decoder context */
+	asn_struct_ctx_t *ctx;	/* Decoder context */
 
 	ber_tlv_tag_t tlv_tag;	/* T from TLV */
-	//ber_tlv_len_t tlv_len;	/* L from TLV */
 	ber_dec_rval_t rval;	/* Return code from subparsers */
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
@@ -133,7 +132,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (ber_dec_ctx_t *)((char *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -146,7 +145,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *td,
 		 * perfectly fits our expectations.
 		 */
 
-		rval = ber_check_tags(td, ctx, ptr, size,
+		rval = ber_check_tags(opt_codec_ctx, td, ctx, ptr, size,
 			tag_mode, 1, &ctx->left, 0);
 		if(rval.code != RC_OK) {
 			ASN_DEBUG("%s tagging check failed: %d",
@@ -235,8 +234,8 @@ SET_decode_ber(asn1_TYPE_descriptor_t *td,
 			 * but is not strongly anticipated either.
 			 */
 		} else {
-			asn1_TYPE_tag2member_t *t2m;
-			asn1_TYPE_tag2member_t key;
+			asn_TYPE_tag2member_t *t2m;
+			asn_TYPE_tag2member_t key;
 
 			key.el_tag = tlv_tag;
 			(void *)t2m = bsearch(&key,
@@ -312,7 +311,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = elements[edx].type->ber_decoder(
+		rval = elements[edx].type->ber_decoder(opt_codec_ctx,
 				elements[edx].type,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
@@ -435,14 +434,14 @@ SET_decode_ber(asn1_TYPE_descriptor_t *td,
  * The DER encoder of the SET type.
  */
 asn_enc_rval_t
-SET_encode_der(asn1_TYPE_descriptor_t *td,
+SET_encode_der(asn_TYPE_descriptor_t *td,
 	void *ptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)td->specifics;
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
 	size_t computed_size = 0;
 	asn_enc_rval_t my_erval;
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
-	asn1_TYPE_tag2member_t *t2m;
+	asn_TYPE_tag2member_t *t2m;
 	int t2m_count;
 	ssize_t ret;
 	int edx;
@@ -472,7 +471,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *td,
 	 * Gather the length of the underlying members sequence.
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
-		asn1_TYPE_member_t *elm = &td->elements[edx];
+		asn_TYPE_member_t *elm = &td->elements[edx];
 		asn_enc_rval_t erval;
 		void *memb_ptr;
 
@@ -504,7 +503,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *td,
 		 */
 		if(t2m_build_own) {
 			t2m[t2m_count].el_no = edx;
-			t2m[t2m_count].el_tag = asn1_TYPE_outmost_tag(
+			t2m[t2m_count].el_tag = asn_TYPE_outmost_tag(
 				elm->type, memb_ptr, elm->tag_mode, elm->tag);
 			t2m_count++;
 		} else {
@@ -548,7 +547,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *td,
 	 * Encode all members.
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
-		asn1_TYPE_member_t *elm;
+		asn_TYPE_member_t *elm;
 		asn_enc_rval_t erval;
 		void *memb_ptr;
 
@@ -582,7 +581,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-SET_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
@@ -596,7 +595,7 @@ SET_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_enc_rval_t tmper;
-		asn1_TYPE_member_t *elm = &td->elements[edx];
+		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		const char *mname = elm->name;
 		unsigned int mlen = strlen(elm->name);
@@ -628,7 +627,7 @@ SET_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-SET_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+SET_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	int edx;
 	int ret;
@@ -641,7 +640,7 @@ SET_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		return -1;
 
 	for(edx = 0; edx < td->elements_count; edx++) {
-		asn1_TYPE_member_t *elm = &td->elements[edx];
+		asn_TYPE_member_t *elm = &td->elements[edx];
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
@@ -671,7 +670,7 @@ SET_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-SET_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+SET_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	int edx;
 
 	if(!td || !ptr)
@@ -680,7 +679,7 @@ SET_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	ASN_DEBUG("Freeing %s as SET", td->name);
 
 	for(edx = 0; edx < td->elements_count; edx++) {
-		asn1_TYPE_member_t *elm = &td->elements[edx];
+		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
@@ -698,7 +697,7 @@ SET_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 }
 
 int
-SET_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	int edx;
 
@@ -713,7 +712,7 @@ SET_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	 * Iterate over structure members and check their validity.
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
-		asn1_TYPE_member_t *elm = &td->elements[edx];
+		asn_TYPE_member_t *elm = &td->elements[edx];
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {

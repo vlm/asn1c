@@ -17,7 +17,7 @@ static asn_app_consume_bytes_f _print2fp;
  * Return the outmost tag of the type.
  */
 ber_tlv_tag_t
-asn1_TYPE_outmost_tag(asn1_TYPE_descriptor_t *type_descriptor,
+asn_TYPE_outmost_tag(asn_TYPE_descriptor_t *type_descriptor,
 		const void *struct_ptr, int tag_mode, ber_tlv_tag_t tag) {
 
 	if(tag_mode)
@@ -33,7 +33,7 @@ asn1_TYPE_outmost_tag(asn1_TYPE_descriptor_t *type_descriptor,
  * Print the target language's structure in human readable form.
  */
 int
-asn_fprint(FILE *stream, asn1_TYPE_descriptor_t *td, const void *struct_ptr) {
+asn_fprint(FILE *stream, asn_TYPE_descriptor_t *td, const void *struct_ptr) {
 	if(!stream) stream = stdout;
 	if(!td || !struct_ptr) {
 		errno = EINVAL;

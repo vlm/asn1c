@@ -10,7 +10,7 @@
 
 typedef ASN__PRIMITIVE_TYPE_t REAL_t;
 
-extern asn1_TYPE_descriptor_t asn1_DEF_REAL;
+extern asn_TYPE_descriptor_t asn_DEF_REAL;
 
 asn_struct_print_f REAL_print;
 xer_type_encoder_f REAL_encode_xer;
@@ -27,7 +27,7 @@ ssize_t REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *a
  *  0: Value converted successfully
  * -1: An error occured while converting the value: invalid format.
  */
-int asn1_REAL2double(const REAL_t *real_ptr, double *d);
-int asn1_double2REAL(REAL_t *real_ptr, double d);
+int asn_REAL2double(const REAL_t *real_ptr, double *d);
+int asn_double2REAL(REAL_t *real_ptr, double d);
 
 #endif	/* ASN_TYPE_REAL_H */

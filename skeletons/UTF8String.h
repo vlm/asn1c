@@ -9,7 +9,7 @@
 
 typedef OCTET_STRING_t UTF8String_t;	/* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_UTF8String;
+extern asn_TYPE_descriptor_t asn_DEF_UTF8String;
 
 asn_struct_print_f UTF8String_print;
 asn_constr_check_f UTF8String_constraint;

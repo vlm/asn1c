@@ -9,10 +9,10 @@
 /*
  * NULL basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_NULL_tags[] = {
+static ber_tlv_tag_t asn_DEF_NULL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (5 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_NULL = {
+asn_TYPE_descriptor_t asn_DEF_NULL = {
 	"NULL",
 	BOOLEAN_free,
 	NULL_print,
@@ -22,16 +22,16 @@ asn1_TYPE_descriptor_t asn1_DEF_NULL = {
 	0,				/* Not implemented yet */
 	NULL_encode_xer,	/* Special handling of DER encoding */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_NULL_tags,
-	sizeof(asn1_DEF_NULL_tags) / sizeof(asn1_DEF_NULL_tags[0]),
-	asn1_DEF_NULL_tags,	/* Same as above */
-	sizeof(asn1_DEF_NULL_tags) / sizeof(asn1_DEF_NULL_tags[0]),
+	asn_DEF_NULL_tags,
+	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
+	asn_DEF_NULL_tags,	/* Same as above */
+	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
 asn_enc_rval_t
-NULL_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
+NULL_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
@@ -46,7 +46,7 @@ NULL_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 }
 
 asn_enc_rval_t
-NULL_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+NULL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
@@ -65,7 +65,7 @@ NULL_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-NULL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 
 	(void)td;	/* Unused argument */

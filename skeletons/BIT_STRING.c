@@ -9,10 +9,10 @@
 /*
  * BIT STRING basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_BIT_STRING_tags[] = {
+static ber_tlv_tag_t asn_DEF_BIT_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
+asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	"BIT STRING",
 	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
 	BIT_STRING_print,
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
 	0,				/* Not implemented yet */
 	BIT_STRING_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_BIT_STRING_tags,
-	sizeof(asn1_DEF_BIT_STRING_tags)
-	  / sizeof(asn1_DEF_BIT_STRING_tags[0]),
-	asn1_DEF_BIT_STRING_tags,	/* Same as above */
-	sizeof(asn1_DEF_BIT_STRING_tags)
-	  / sizeof(asn1_DEF_BIT_STRING_tags[0]),
+	asn_DEF_BIT_STRING_tags,
+	sizeof(asn_DEF_BIT_STRING_tags)
+	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
+	asn_DEF_BIT_STRING_tags,	/* Same as above */
+	sizeof(asn_DEF_BIT_STRING_tags)
+	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
 	0, 0,	/* No members */
 	(void *)1	/* Special indicator that this is a BIT STRING */
 };
@@ -36,7 +36,7 @@ asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
  * BIT STRING generic constraint.
  */
 int
-BIT_STRING_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+BIT_STRING_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 
@@ -70,7 +70,7 @@ static char *_bit_pattern[16] = {
 };
 
 asn_enc_rval_t
-BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
@@ -118,7 +118,7 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 		int mbit = st->buf[0];	/* bits to skip from the right */
 		int i;
 		for(i = 7; i >= mbit; i--)
-			*p++ = (v & (1 << i)) ? '1' : '0';
+			*p++ = (v & (1 << i)) ? 0x31 : 0x30;
 		er.encoded += p - scratch;
 		_ASN_CALLBACK(scratch, p - scratch);
 	}
@@ -133,7 +133,7 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
  * BIT STRING specific contents printer.
  */
 int
-BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+BIT_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	static const char *h2c = "0123456789ABCDEF";
 	char scratch[64];

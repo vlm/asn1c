@@ -8,11 +8,11 @@
 /*
  * UniversalString basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_UniversalString_tags[] = {
+static ber_tlv_tag_t asn_DEF_UniversalString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (28 << 2)),	/* [UNIVERSAL 28] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_UniversalString = {
+asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	"UniversalString",
 	OCTET_STRING_free,
 	UniversalString_print,      /* Convert into UTF8 and print */
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_UniversalString = {
 	0,				/* Not implemented yet */
 	UniversalString_encode_xer,	/* Conver into UTF8 */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_UniversalString_tags,
-	sizeof(asn1_DEF_UniversalString_tags)
-	  / sizeof(asn1_DEF_UniversalString_tags[0]) - 1,
-	asn1_DEF_UniversalString_tags,
-	sizeof(asn1_DEF_UniversalString_tags)
-	  / sizeof(asn1_DEF_UniversalString_tags[0]),
+	asn_DEF_UniversalString_tags,
+	sizeof(asn_DEF_UniversalString_tags)
+	  / sizeof(asn_DEF_UniversalString_tags[0]) - 1,
+	asn_DEF_UniversalString_tags,
+	sizeof(asn_DEF_UniversalString_tags)
+	  / sizeof(asn_DEF_UniversalString_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -93,7 +93,7 @@ UniversalString__dump(const UniversalString_t *st,
 }
 
 asn_enc_rval_t
-UniversalString_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+UniversalString_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
@@ -112,7 +112,7 @@ UniversalString_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-UniversalString_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+UniversalString_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 

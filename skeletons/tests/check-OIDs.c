@@ -31,7 +31,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf("}\n");
 
 	oid = NULL;
-	rval = ber_decode(&asn1_DEF_OBJECT_IDENTIFIER, (void *)&oid, buf, len);
+	rval = ber_decode(0, &asn_DEF_OBJECT_IDENTIFIER, (void *)&oid, buf, len);
 	assert(rval.code == RC_OK);
 
 	assert(oid->size == (ssize_t)len - 2);
@@ -40,7 +40,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	 * Print the contents for visual debugging.
 	 */
 	printf("OBJECT_IDENTIFIER_print() => ");
-	OBJECT_IDENTIFIER_print(&asn1_DEF_OBJECT_IDENTIFIER, oid, 0, _print, 0);
+	OBJECT_IDENTIFIER_print(&asn_DEF_OBJECT_IDENTIFIER, oid, 0, _print, 0);
 	printf("\n");
 
 	memset(arcs, 'A', sizeof(arcs));
@@ -78,7 +78,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf("}\n");
 
 	oid = NULL;
-	rval = ber_decode(&asn1_DEF_RELATIVE_OID, (void *)&oid, buf, len);
+	rval = ber_decode(0, &asn_DEF_RELATIVE_OID, (void *)&oid, buf, len);
 	assert(rval.code == RC_OK);
 
 	assert(oid->size == (ssize_t)len - 2);
@@ -87,7 +87,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	 * Print the contents for visual debugging.
 	 */
 	printf("RELATIVE_OID_print() => ");
-	RELATIVE_OID_print(&asn1_DEF_RELATIVE_OID, oid, 0, _print, 0);
+	RELATIVE_OID_print(&asn_DEF_RELATIVE_OID, oid, 0, _print, 0);
 	printf("\n");
 
 	memset(arcs, 'A', sizeof(arcs));

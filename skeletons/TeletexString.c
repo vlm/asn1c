@@ -8,11 +8,11 @@
 /*
  * TeletexString basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_TeletexString_tags[] = {
+static ber_tlv_tag_t asn_DEF_TeletexString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (20 << 2)),	/* [UNIVERSAL 20] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_TeletexString = {
+asn_TYPE_descriptor_t asn_DEF_TeletexString = {
 	"TeletexString",
 	OCTET_STRING_free,
 	OCTET_STRING_print,         /* non-ascii string */
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_TeletexString = {
 	0,				/* Not implemented yet */
 	OCTET_STRING_encode_xer,    /* Implemented in terms of OCTET STRING */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_TeletexString_tags,
-	sizeof(asn1_DEF_TeletexString_tags)
-	  / sizeof(asn1_DEF_TeletexString_tags[0]) - 1,
-	asn1_DEF_TeletexString_tags,
-	sizeof(asn1_DEF_TeletexString_tags)
-	  / sizeof(asn1_DEF_TeletexString_tags[0]),
+	asn_DEF_TeletexString_tags,
+	sizeof(asn_DEF_TeletexString_tags)
+	  / sizeof(asn_DEF_TeletexString_tags[0]) - 1,
+	asn_DEF_TeletexString_tags,
+	sizeof(asn_DEF_TeletexString_tags)
+	  / sizeof(asn_DEF_TeletexString_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

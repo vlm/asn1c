@@ -38,14 +38,14 @@ check(uint8_t *buf, int size, long check_long, int check_ret) {
 	}
 	printf("]: ");
 
-	ret = asn1_INTEGER2long(&val, &rlong);
+	ret = asn_INTEGER2long(&val, &rlong);
 	printf(" (%ld, %d) vs (%ld, %d)\n",
 		rlong, ret, check_long, check_ret);
 	assert(ret == check_ret);
 	assert(rlong == check_long);
 
 	shared_scratch_start = scratch;
-	ret = INTEGER_print(&asn1_DEF_INTEGER, &val, 0, _print2buf, scratch);
+	ret = INTEGER_print(&asn_DEF_INTEGER, &val, 0, _print2buf, scratch);
 	assert(shared_scratch_start < scratch + sizeof(scratch));
 	assert(ret == 0);
 	ret = snprintf(verify, sizeof(verify), "%ld", check_long);

@@ -9,6 +9,6 @@
 
 typedef OCTET_STRING_t VideotexString_t;  /* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_VideotexString;
+extern asn_TYPE_descriptor_t asn_DEF_VideotexString;
 
 #endif	/* _VideotexString_H_ */

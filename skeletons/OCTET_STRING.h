@@ -11,10 +11,10 @@ typedef struct OCTET_STRING {
 	uint8_t *buf;	/* Buffer with consecutive OCTET_STRING bits */
 	int size;	/* Size of the buffer */
 
-	ber_dec_ctx_t _ber_dec_ctx;	/* Parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;	/* Parsing across buffer boundaries */
 } OCTET_STRING_t;
 
-extern asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING;
+extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
 
 asn_struct_free_f OCTET_STRING_free;
 asn_struct_print_f OCTET_STRING_print;

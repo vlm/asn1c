@@ -14,7 +14,7 @@
 
 #include <asn_application.h>
 
-extern asn1_TYPE_descriptor_t asn1_DEF_NativeInteger;
+extern asn_TYPE_descriptor_t asn_DEF_NativeInteger;
 
 asn_struct_free_f  NativeInteger_free;
 asn_struct_print_f NativeInteger_print;

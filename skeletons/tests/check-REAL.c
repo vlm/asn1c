@@ -69,7 +69,7 @@ check(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sam
 		printf("%02x", *p);
 	printf("]\n");
 
-	ret = asn1_double2REAL(rn, orig_dbl);
+	ret = asn_double2REAL(rn, orig_dbl);
 	assert(ret == 0);
 
 	printf("converted into [");
@@ -77,7 +77,7 @@ check(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sam
 		printf("%02x", *p);
 	printf("]: %d\n", rn->size);
 
-	ret = asn1_REAL2double(rn, &val);
+	ret = asn_REAL2double(rn, &val);
 	assert(ret == 0);
 
 	printf("and back to double: [");
@@ -114,7 +114,7 @@ check_buf(uint8_t *buf, size_t bufsize, double verify, const char *sample, const
 	rn.buf = 0;
 	rn.size = 0;
 
-	ret = asn1_double2REAL(&rn, verify);
+	ret = asn_double2REAL(&rn, verify);
 	assert(ret == 0);
 
 	printf("canonical DER: [");
@@ -130,7 +130,7 @@ check_buf(uint8_t *buf, size_t bufsize, double verify, const char *sample, const
 		printf("%02x", *p);
 	printf("]\n");
 
-	ret = asn1_REAL2double(&rn, &val);
+	ret = asn_REAL2double(&rn, &val);
 	assert(ret == 0);
 
 	printf("%.12f vs %.12f\n", verify, val);

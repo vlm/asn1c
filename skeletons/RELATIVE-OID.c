@@ -12,10 +12,10 @@
 /*
  * RELATIVE-OID basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_RELATIVE_OID_tags[] = {
+static ber_tlv_tag_t asn_DEF_RELATIVE_OID_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (13 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
+asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	"RELATIVE-OID",
 	ASN__PRIMITIVE_TYPE_free,
 	RELATIVE_OID_print,
@@ -25,12 +25,12 @@ asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	0,				/* Not implemented yet */
 	RELATIVE_OID_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_RELATIVE_OID_tags,
-	sizeof(asn1_DEF_RELATIVE_OID_tags)
-	    / sizeof(asn1_DEF_RELATIVE_OID_tags[0]),
-	asn1_DEF_RELATIVE_OID_tags,	/* Same as above */
-	sizeof(asn1_DEF_RELATIVE_OID_tags)
-	    / sizeof(asn1_DEF_RELATIVE_OID_tags[0]),
+	asn_DEF_RELATIVE_OID_tags,
+	sizeof(asn_DEF_RELATIVE_OID_tags)
+	    / sizeof(asn_DEF_RELATIVE_OID_tags[0]),
+	asn_DEF_RELATIVE_OID_tags,	/* Same as above */
+	sizeof(asn_DEF_RELATIVE_OID_tags)
+	    / sizeof(asn_DEF_RELATIVE_OID_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -65,7 +65,7 @@ RELATIVE_OID__dump_body(const RELATIVE_OID_t *st, asn_app_consume_bytes_f *cb, v
 }
 
 int
-RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+RELATIVE_OID_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
 
@@ -86,7 +86,7 @@ RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 asn_enc_rval_t
-RELATIVE_OID_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+RELATIVE_OID_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;

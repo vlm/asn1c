@@ -7,7 +7,7 @@
 
 #include <asn_application.h>
 
-typedef struct asn1_CHOICE_specifics_s {
+typedef struct asn_CHOICE_specifics_s {
 	/*
 	 * Target structure description.
 	 */
@@ -19,14 +19,14 @@ typedef struct asn1_CHOICE_specifics_s {
 	/*
 	 * Tags to members mapping table.
 	 */
-	asn1_TYPE_tag2member_t *tag2el;
+	asn_TYPE_tag2member_t *tag2el;
 	int tag2el_count;
 
 	/*
 	 * Extensions-related stuff.
 	 */
 	int extensible;			/* Whether CHOICE is extensible */
-} asn1_CHOICE_specifics_t;
+} asn_CHOICE_specifics_t;
 
 /*
  * A set specialized functions dealing with the CHOICE type.

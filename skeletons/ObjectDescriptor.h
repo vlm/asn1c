@@ -9,6 +9,6 @@
 
 typedef GraphicString_t ObjectDescriptor_t;  /* Implemented via GraphicString */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_ObjectDescriptor;
+extern asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor;
 
 #endif	/* _ObjectDescriptor_H_ */

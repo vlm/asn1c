@@ -11,7 +11,8 @@
  * Decode an always-primitive type.
  */
 ber_dec_rval_t
-ber_decode_primitive(asn1_TYPE_descriptor_t *td,
+ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
 	void **sptr, void *buf_ptr, size_t size, int tag_mode) {
 	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)*sptr;
 	ber_dec_rval_t rval;
@@ -35,7 +36,8 @@ ber_decode_primitive(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags and extract value length.
 	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, 0, &length, 0);
+	rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size,
+			tag_mode, 0, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 
@@ -78,7 +80,7 @@ ber_decode_primitive(asn1_TYPE_descriptor_t *td,
  * Encode an always-primitive type using DER.
  */
 asn_enc_rval_t
-der_encode_primitive(asn1_TYPE_descriptor_t *td, void *sptr,
+der_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
@@ -113,7 +115,7 @@ der_encode_primitive(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 void
-ASN__PRIMITIVE_TYPE_free(asn1_TYPE_descriptor_t *td, void *sptr,
+ASN__PRIMITIVE_TYPE_free(asn_TYPE_descriptor_t *td, void *sptr,
 		int contents_only) {
 	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)sptr;
 

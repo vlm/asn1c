@@ -11,10 +11,10 @@
 /*
  * INTEGER basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_INTEGER_tags[] = {
+static ber_tlv_tag_t asn_DEF_INTEGER_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
+asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	"INTEGER",
 	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,
@@ -24,10 +24,10 @@ asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
 	0,				/* Not implemented yet */
 	INTEGER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_INTEGER_tags,
-	sizeof(asn1_DEF_INTEGER_tags) / sizeof(asn1_DEF_INTEGER_tags[0]),
-	asn1_DEF_INTEGER_tags,	/* Same as above */
-	sizeof(asn1_DEF_INTEGER_tags) / sizeof(asn1_DEF_INTEGER_tags[0]),
+	asn_DEF_INTEGER_tags,
+	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
+	asn_DEF_INTEGER_tags,	/* Same as above */
+	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -36,7 +36,7 @@ asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
  * Encode INTEGER type using DER.
  */
 asn_enc_rval_t
-INTEGER_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
+INTEGER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
@@ -146,10 +146,10 @@ INTEGER__dump(const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 		}
 		*p++ = h2c[*buf >> 4];
 		*p++ = h2c[*buf & 0x0F];
-		*p++ = ':';
+		*p++ = 0x3a;	/* ":" */
 	}
 	if(p != scratch)
-		p--;	/* Remove the last ':' */
+		p--;	/* Remove the last ":" */
 
 	wrote += p - scratch;
 	return (cb(scratch, p - scratch, app_key) < 0) ? -1 : wrote;
@@ -159,7 +159,7 @@ INTEGER__dump(const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
  * INTEGER specific human-readable output.
  */
 int
-INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	ssize_t ret;
@@ -176,7 +176,7 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 asn_enc_rval_t
-INTEGER_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
@@ -195,7 +195,7 @@ INTEGER_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-asn1_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
+asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
 	uint8_t *b, *end;
 	size_t size;
 	long l;

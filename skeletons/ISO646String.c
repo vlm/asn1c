@@ -8,11 +8,11 @@
 /*
  * ISO646String basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_ISO646String_tags[] = {
+static ber_tlv_tag_t asn_DEF_ISO646String_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),	/* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_ISO646String = {
+asn_TYPE_descriptor_t asn_DEF_ISO646String = {
 	"ISO646String",
 	OCTET_STRING_free,
 	OCTET_STRING_print_ascii,   /* ASCII subset */
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_ISO646String = {
 	0,				/* Not implemented yet */
 	OCTET_STRING_encode_xer_ascii,/* Implemented in terms of OCTET STRING */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_ISO646String_tags,
-	sizeof(asn1_DEF_ISO646String_tags)
-	  / sizeof(asn1_DEF_ISO646String_tags[0]) - 1,
-	asn1_DEF_ISO646String_tags,
-	sizeof(asn1_DEF_ISO646String_tags)
-	  / sizeof(asn1_DEF_ISO646String_tags[0]),
+	asn_DEF_ISO646String_tags,
+	sizeof(asn_DEF_ISO646String_tags)
+	  / sizeof(asn_DEF_ISO646String_tags[0]) - 1,
+	asn_DEF_ISO646String_tags,
+	sizeof(asn_DEF_ISO646String_tags)
+	  / sizeof(asn_DEF_ISO646String_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

@@ -17,10 +17,10 @@
 /*
  * NativeReal basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_NativeReal_tags[] = {
+static ber_tlv_tag_t asn_DEF_NativeReal_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_NativeReal = {
+asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	"REAL",			/* The ASN.1 type is still REAL */
 	NativeReal_free,
 	NativeReal_print,
@@ -30,10 +30,10 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeReal = {
 	0,				/* Not implemented yet */
 	NativeReal_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_NativeReal_tags,
-	sizeof(asn1_DEF_NativeReal_tags) / sizeof(asn1_DEF_NativeReal_tags[0]),
-	asn1_DEF_NativeReal_tags,	/* Same as above */
-	sizeof(asn1_DEF_NativeReal_tags) / sizeof(asn1_DEF_NativeReal_tags[0]),
+	asn_DEF_NativeReal_tags,
+	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
+	asn_DEF_NativeReal_tags,	/* Same as above */
+	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -42,7 +42,8 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeReal = {
  * Decode REAL type.
  */
 ber_dec_rval_t
-NativeReal_decode_ber(asn1_TYPE_descriptor_t *td,
+NativeReal_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
 	void **dbl_ptr, void *buf_ptr, size_t size, int tag_mode) {
 	double *Dbl = (double *)*dbl_ptr;
 	ber_dec_rval_t rval;
@@ -66,7 +67,8 @@ NativeReal_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags.
 	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, 0, &length, 0);
+	rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size,
+			tag_mode, 0, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 
@@ -94,7 +96,7 @@ NativeReal_decode_ber(asn1_TYPE_descriptor_t *td,
 		tmp.buf = (uint8_t *)buf_ptr;
 		tmp.size = length;
 
-		if(asn1_REAL2double(&tmp, &d)) {
+		if(asn_REAL2double(&tmp, &d)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
 			return rval;
@@ -116,14 +118,14 @@ NativeReal_decode_ber(asn1_TYPE_descriptor_t *td,
  * Encode the NativeReal using the standard REAL type DER encoder.
  */
 asn_enc_rval_t
-NativeReal_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
+NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	double Dbl = *(const double *)ptr;
 	asn_enc_rval_t erval;
 	REAL_t tmp;
 
-	if(asn1_double2REAL(&tmp, Dbl)) {
+	if(asn_double2REAL(&tmp, Dbl)) {
 		erval.encoded = -1;
 		erval.failed_type = td;
 		erval.structure_ptr = ptr;
@@ -141,7 +143,7 @@ NativeReal_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 
 
 asn_enc_rval_t
-NativeReal_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const double *Dbl = (const double *)sptr;
@@ -161,7 +163,7 @@ NativeReal_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
  * REAL specific human-readable output.
  */
 int
-NativeReal_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+NativeReal_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const double *Dbl = (const double *)sptr;
 
@@ -174,7 +176,7 @@ NativeReal_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-NativeReal_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+NativeReal_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 	if(!td || !ptr)
 		return;

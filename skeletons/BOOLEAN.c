@@ -8,10 +8,10 @@
 /*
  * BOOLEAN basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_BOOLEAN_tags[] = {
+static ber_tlv_tag_t asn_DEF_BOOLEAN_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (1 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN = {
+asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	"BOOLEAN",
 	BOOLEAN_free,
 	BOOLEAN_print,
@@ -21,10 +21,10 @@ asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN = {
 	0,				/* Not implemented yet */
 	BOOLEAN_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_BOOLEAN_tags,
-	sizeof(asn1_DEF_BOOLEAN_tags) / sizeof(asn1_DEF_BOOLEAN_tags[0]),
-	asn1_DEF_BOOLEAN_tags,	/* Same as above */
-	sizeof(asn1_DEF_BOOLEAN_tags) / sizeof(asn1_DEF_BOOLEAN_tags[0]),
+	asn_DEF_BOOLEAN_tags,
+	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
+	asn_DEF_BOOLEAN_tags,	/* Same as above */
+	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -33,7 +33,8 @@ asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN = {
  * Decode BOOLEAN type.
  */
 ber_dec_rval_t
-BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
+BOOLEAN_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
+		asn_TYPE_descriptor_t *td,
 		void **bool_value, void *buf_ptr, size_t size,
 		int tag_mode) {
 	BOOLEAN_t *st = (BOOLEAN_t *)*bool_value;
@@ -56,7 +57,8 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags.
 	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, 0, &length, 0);
+	rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size,
+		tag_mode, 0, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 
@@ -94,7 +96,7 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
+BOOLEAN_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
@@ -126,7 +128,7 @@ BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 asn_enc_rval_t
-BOOLEAN_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+BOOLEAN_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
@@ -149,7 +151,7 @@ BOOLEAN_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-BOOLEAN_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+BOOLEAN_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
 	const char *buf;
@@ -175,7 +177,7 @@ BOOLEAN_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-BOOLEAN_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+BOOLEAN_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr && !contents_only) {
 		FREEMEM(ptr);
 	}

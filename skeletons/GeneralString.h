@@ -9,6 +9,6 @@
 
 typedef OCTET_STRING_t GeneralString_t;	/* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_GeneralString;
+extern asn_TYPE_descriptor_t asn_DEF_GeneralString;
 
 #endif	/* _GeneralString_H_ */

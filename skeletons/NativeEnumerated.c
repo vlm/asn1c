@@ -15,10 +15,10 @@
 /*
  * NativeEnumerated basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_NativeEnumerated_tags[] = {
+static ber_tlv_tag_t asn_DEF_NativeEnumerated_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_NativeEnumerated = {
+asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	"ENUMERATED",			/* The ASN.1 type is still ENUMERATED */
 	NativeInteger_free,
 	NativeInteger_print,
@@ -28,10 +28,10 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeEnumerated = {
 	0,				/* Not implemented yet */
 	NativeInteger_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_NativeEnumerated_tags,
-	sizeof(asn1_DEF_NativeEnumerated_tags) / sizeof(asn1_DEF_NativeEnumerated_tags[0]),
-	asn1_DEF_NativeEnumerated_tags,	/* Same as above */
-	sizeof(asn1_DEF_NativeEnumerated_tags) / sizeof(asn1_DEF_NativeEnumerated_tags[0]),
+	asn_DEF_NativeEnumerated_tags,
+	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
+	asn_DEF_NativeEnumerated_tags,	/* Same as above */
+	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

@@ -17,10 +17,10 @@
 /*
  * NativeInteger basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_NativeInteger_tags[] = {
+static ber_tlv_tag_t asn_DEF_NativeInteger_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_NativeInteger = {
+asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	"INTEGER",			/* The ASN.1 type is still INTEGER */
 	NativeInteger_free,
 	NativeInteger_print,
@@ -30,10 +30,10 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeInteger = {
 	0,				/* Not implemented yet */
 	NativeInteger_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_NativeInteger_tags,
-	sizeof(asn1_DEF_NativeInteger_tags) / sizeof(asn1_DEF_NativeInteger_tags[0]),
-	asn1_DEF_NativeInteger_tags,	/* Same as above */
-	sizeof(asn1_DEF_NativeInteger_tags) / sizeof(asn1_DEF_NativeInteger_tags[0]),
+	asn_DEF_NativeInteger_tags,
+	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
+	asn_DEF_NativeInteger_tags,	/* Same as above */
+	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -42,7 +42,8 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeInteger = {
  * Decode INTEGER type.
  */
 ber_dec_rval_t
-NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
+NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
 	void **int_ptr, void *buf_ptr, size_t size, int tag_mode) {
 	int *Int = (int *)*int_ptr;
 	ber_dec_rval_t rval;
@@ -66,7 +67,8 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags.
 	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, 0, &length, 0);
+	rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size,
+			tag_mode, 0, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 
@@ -94,7 +96,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 		tmp.buf = (uint8_t *)buf_ptr;
 		tmp.size = length;
 
-		if(asn1_INTEGER2long(&tmp, &l)) {
+		if(asn_INTEGER2long(&tmp, &l)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
 			return rval;
@@ -128,7 +130,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
  * Encode the NativeInteger using the standard INTEGER type DER encoder.
  */
 asn_enc_rval_t
-NativeInteger_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
+NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	unsigned int Int = *(unsigned int *)ptr;	/* Disable sign ext. */
@@ -162,7 +164,7 @@ NativeInteger_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 }
 
 asn_enc_rval_t
-NativeInteger_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	char scratch[32];	/* Enough for 64-bit int */
@@ -186,7 +188,7 @@ NativeInteger_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
  * INTEGER specific human-readable output.
  */
 int
-NativeInteger_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+NativeInteger_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const int *Int = (const int *)sptr;
 	char scratch[32];	/* Enough for 64-bit int */
@@ -205,7 +207,7 @@ NativeInteger_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-NativeInteger_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+NativeInteger_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 	if(!td || !ptr)
 		return;

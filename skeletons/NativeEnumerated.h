@@ -14,6 +14,6 @@
 
 #include <NativeInteger.h>
 
-extern asn1_TYPE_descriptor_t asn1_DEF_NativeEnumerated;
+extern asn_TYPE_descriptor_t asn_DEF_NativeEnumerated;
 
 #endif	/* _NativeEnumerated_H_ */

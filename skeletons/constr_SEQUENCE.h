@@ -7,17 +7,17 @@
 
 #include <asn_application.h>
 
-typedef struct asn1_SEQUENCE_specifics_s {
+typedef struct asn_SEQUENCE_specifics_s {
 	/*
 	 * Target structure description.
 	 */
 	int struct_size;	/* Size of the target structure. */
-	int ctx_offset;		/* Offset of the ber_dec_ctx_t member */
+	int ctx_offset;		/* Offset of the asn_struct_ctx_t member */
 
 	/*
 	 * Tags to members mapping table (sorted).
 	 */
-	asn1_TYPE_tag2member_t *tag2el;
+	asn_TYPE_tag2member_t *tag2el;
 	int tag2el_count;
 
 	/*
@@ -25,7 +25,7 @@ typedef struct asn1_SEQUENCE_specifics_s {
 	 */
 	int ext_after;	/* Extensions start after this member */
 	int ext_before;	/* Extensions stop before this member */
-} asn1_SEQUENCE_specifics_t;
+} asn_SEQUENCE_specifics_t;
 
 
 /*

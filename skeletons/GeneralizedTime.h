@@ -9,7 +9,7 @@
 
 typedef OCTET_STRING_t GeneralizedTime_t;  /* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime;
+extern asn_TYPE_descriptor_t asn_DEF_GeneralizedTime;
 
 asn_struct_print_f GeneralizedTime_print;
 asn_constr_check_f GeneralizedTime_constraint;
@@ -36,7 +36,7 @@ time_t asn_GT2time(const GeneralizedTime_t *, struct tm *_optional_tm4fill,
  * Convert a struct tm into GeneralizedTime.
  * If __opt_gt is not given, this function will try to allocate one.
  * If force_gmt is given, the resulting GeneralizedTime will be forced
- * into a GMT time zone (encoding ends with 'Z').
+ * into a GMT time zone (encoding ends with a "Z").
  * On error, this function returns 0 and sets errno.
  */
 GeneralizedTime_t *asn_time2GT(GeneralizedTime_t *__opt_gt, const struct tm *,

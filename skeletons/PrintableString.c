@@ -8,11 +8,11 @@
 /*
  * PrintableString basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_PrintableString_tags[] = {
+static ber_tlv_tag_t asn_DEF_PrintableString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (19 << 2)),	/* [UNIVERSAL 19] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_PrintableString = {
+asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	"PrintableString",
 	OCTET_STRING_free,
 	OCTET_STRING_print_ascii,   /* ASCII subset */
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_PrintableString = {
 	0,				/* Not implemented yet */
 	OCTET_STRING_encode_xer_ascii,/* Implemented in terms of OCTET STRING */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_PrintableString_tags,
-	sizeof(asn1_DEF_PrintableString_tags)
-	  / sizeof(asn1_DEF_PrintableString_tags[0]) - 1,
-	asn1_DEF_PrintableString_tags,
-	sizeof(asn1_DEF_PrintableString_tags)
-	  / sizeof(asn1_DEF_PrintableString_tags[0]),
+	asn_DEF_PrintableString_tags,
+	sizeof(asn_DEF_PrintableString_tags)
+	  / sizeof(asn_DEF_PrintableString_tags[0]) - 1,
+	asn_DEF_PrintableString_tags,
+	sizeof(asn_DEF_PrintableString_tags)
+	  / sizeof(asn_DEF_PrintableString_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -56,7 +56,7 @@ static int _PrintableString_alphabet[256] = {
 };
 
 int
-PrintableString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+PrintableString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 
