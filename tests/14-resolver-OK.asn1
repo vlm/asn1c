@@ -5,19 +5,26 @@
 -- .spelio.software.asn1c.test (9363.1.5.1)
 -- .14 1
 -- .14 2
+-- .14 3
 
 ModuleTestResolver2
 	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
 		spelio(9363) software(1) asn1c(5) test(1) 14 1 }
 	DEFINITIONS ::=
 BEGIN
-	IMPORTS Enumeration, beta FROM
+	IMPORTS Enumeration, beta, gamma FROM
 		OtherModuleRenamed
 		{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
 			spelio(9363) software(1) asn1c(5) test(1) 14 2 };
 
-	-- external reference
+	-- external references
 	alpha Enumeration ::= beta
+	other Enumeration ::= gamma
+	
+	Struct ::= SEQUENCE {
+		member1	[1]	ModuleTestResolver3.Enumeration OPTIONAL,
+		member2	[2]	OtherModuleRenamed.Enumeration DEFAULT b
+	}
 
 	-- 
 	-- The following are for post-fix checking by the check_fixer.
@@ -26,6 +33,7 @@ BEGIN
 	-- 
 
 	check-alpha INTEGER ::= 2
+	check-other INTEGER ::= 1
 
 END
 
@@ -34,12 +42,25 @@ ModuleTestResolver3
 		spelio(9363) software(1) asn1c(5) test(1) 14 2 }
 	DEFINITIONS ::=
 BEGIN
-	EXPORTS Enumeration, beta ;
+	EXPORTS Enumeration, beta, gamma;
+	IMPORTS gamma, HiddenEnum FROM HiddenModule;
 
 	beta HiddenEnum ::= b
 
+	Enumeration ::= ENUMERATED { a(1), b(2) }	-- the same type --
+
+END
+
+HiddenModule
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 14 3 }
+	DEFINITIONS ::=
+BEGIN
+	EXPORTS HiddenEnum, gamma;
+	IMPORTS Enumeration FROM ModuleTestResolver3;
+
 	HiddenEnum ::= ENUMERATED { a(1), b(2) }
 
-	Enumeration ::= ENUMERATED { a(1), b(2) }	-- the same type --
+	gamma Enumeration ::= a
 
 END

@@ -1,0 +1,51 @@
+
+ModuleTestResolver2 {iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	14 1 }
+DEFINITIONS ::=
+BEGIN
+
+alpha Enumeration ::= 2
+
+other Enumeration ::= 1
+
+Struct ::= SEQUENCE {
+    member1	 [1] EXPLICIT ModuleTestResolver3.Enumeration OPTIONAL,
+    member2	 [2] EXPLICIT OtherModuleRenamed.Enumeration DEFAULT 2
+}
+
+check-alpha INTEGER ::= 2
+
+check-other INTEGER ::= 1
+
+END
+
+ModuleTestResolver3 {iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	14 2 }
+DEFINITIONS ::=
+BEGIN
+
+beta HiddenEnum ::= 2
+
+Enumeration ::= ENUMERATED {
+    a(1),
+    b(2)
+}
+
+END
+
+HiddenModule {iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	14 3 }
+DEFINITIONS ::=
+BEGIN
+
+HiddenEnum ::= ENUMERATED {
+    a(1),
+    b(2)
+}
+
+gamma Enumeration ::= 1
+
+END
