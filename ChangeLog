@@ -1,4 +1,9 @@
 
+0.9.2:	2004-Aug-24
+
+	* Indirect references in constraints resolver code fixed.
+	* Avoided compilation warning on gcc 3.3.3 systems.
+
 0.9.1:	2004-Aug-23
 
 	* Documentation updated: doc/asn1c-usage.pdf

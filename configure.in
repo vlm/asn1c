@@ -3,7 +3,7 @@ AC_INIT(libasn1parser/asn1p_y.y)
 AC_CANONICAL_BUILD
 AC_CANONICAL_TARGET
 AC_PREREQ(2.53)
-AM_INIT_AUTOMAKE(asn1c, 0.9.1)
+AM_INIT_AUTOMAKE(asn1c, 0.9.2)
 
 AC_SUBST(PATH)
 
@@ -40,14 +40,14 @@ AM_PROG_LEX
 dnl *** Building mingw32 with cygwin compiler ***
 case "$host_os" in
 cygwin*)
-	CFLAGS="$CFLAGS -DWIN32"
+	dnl CFLAGS="$CFLAGS -DWIN32"
 	case "$target" in
 	*mingw*)
 		CC="$CC -mno-cygwin"
 	esac
 	;;
 mingw* | p32*)
-	CFLAGS="$CFLAGS -DWIN32"
+	dnl CFLAGS="$CFLAGS -DWIN32"
 	;;
 esac
 

@@ -7,7 +7,7 @@
 
 #define	ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		(char *)ptr += num;			\
+		ptr = ((char *)ptr) + num;		\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)

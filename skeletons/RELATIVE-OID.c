@@ -87,7 +87,7 @@ RELATIVE_OID_get_arcs(RELATIVE_OID_t *roid,
 					i - startn + 1, 0,
 					arcs, arc_type_size))
 				return -1;
-			(char *)arcs += arc_type_size;
+			arcs = ((char *)arcs) + arc_type_size;
 			num_arcs++;
 		}
 
@@ -122,7 +122,7 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	/*
 	 * Encode the arcs.
 	 */
-	for(i = 0; i < arcs_slots; i++, (char *)arcs += arc_type_size) {
+	for(i = 0; i < arcs_slots; i++, arcs = ((char *)arcs) + arc_type_size) {
 		bp += OBJECT_IDENTIFIER_set_single_arc(bp,
 			arcs, arc_type_size, 0);
 	}

@@ -37,7 +37,7 @@
  */
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		(char *)ptr += num;		\
+		ptr = ((char *)ptr) + num;	\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
