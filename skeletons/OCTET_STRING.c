@@ -246,10 +246,10 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 					?(ssize_t)size:sel->left);
 
 
-		ASN_DEBUG("%p, s->l=%d, s->wn=%d, s->g=%d\n", sel,
-			sel?sel->left:0,
-			sel?sel->want_nulls:0,
-			sel?sel->got:0
+		ASN_DEBUG("%p, s->l=%ld, s->wn=%ld, s->g=%ld\n", sel,
+			(long)sel?sel->left:0,
+			(long)sel?sel->want_nulls:0,
+			(long)sel?sel->got:0
 		);
 		if(sel && sel->left <= 0 && sel->want_nulls == 0) {
 			if(sel->prev) {
@@ -271,9 +271,10 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		}
 
 		tl = ber_fetch_tag(buf_ptr, Left, &tlv_tag);
-		ASN_DEBUG("fetch tag(size=%d,L=%d), %sstack, left=%d, wn=%d, tl=%d",
-			(int)size, Left, sel?"":"!",
-			sel?sel->left:0, sel?sel->want_nulls:0, tl);
+		ASN_DEBUG("fetch tag(size=%ld,L=%ld), %sstack, left=%ld, wn=%ld, tl=%ld",
+			(long)size, (long)Left, sel?"":"!",
+			(long)sel?sel->left:0, (long)sel?sel->want_nulls:0,
+			(long)tl);
 		switch(tl) {
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
@@ -392,8 +393,9 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		sel->got += tlvl;
 		ADVANCE(tlvl);
 
-		ASN_DEBUG("+EXPECT2 got=%d left=%d, wn=%d, clvl=%d",
-			sel->got, sel->left, sel->want_nulls, sel->cont_level);
+		ASN_DEBUG("+EXPECT2 got=%ld left=%ld, wn=%d, clvl=%d",
+			(long)sel->got, (long)sel->left,
+			sel->want_nulls, sel->cont_level);
 
 	  } while(tlv_constr);
 		if(sel == NULL) {
@@ -495,10 +497,10 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		st->buf[st->size-1] &= 0xff << st->bits_unused;
 	}
 
-	ASN_DEBUG("Took %d bytes to encode %s: [%s]:%d",
-		consumed_myself, td->name,
+	ASN_DEBUG("Took %ld bytes to encode %s: [%s]:%ld",
+		(long)consumed_myself, td->name,
 		(type_variant == _TT_GENERIC) ? (char *)st->buf : "<data>",
-		st->size);
+		(long)st->size);
 
 
 	RETURN(RC_OK);

@@ -652,9 +652,10 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 */
 		if(ctx->phase == 2) {
 			asn_dec_rval_t tmprval;
-			elm = &td->elements[edx];
 			void *memb_ptr;		/* Pointer to the member */
 			void **memb_ptr2;	/* Pointer to that pointer */
+
+			elm = &td->elements[edx];
 
 			if(elm->flags & ATF_POINTER) {
 				/* Member is a pointer to another structure */
