@@ -24,10 +24,8 @@ typedef	int			ssize_t;
 #endif
 
 #ifdef WIN32
-#define	 snprintf(str, size, format, args...)	\
-	_snprintf(str, size, format, ##args)
-#define	 vsnprintf(str, size, format, ap)	\
-	_vsnprintf(str, size, format, ap)
+#define	 snprintf	_snprintf
+#define	 vsnprintf	_vsnprintf
 #define	alloca(size)	_alloca(size)
 #endif
 
@@ -59,10 +57,15 @@ typedef	int			ssize_t;
  */
 #ifndef	ASN_DEBUG	/* If debugging code is not defined elsewhere... */
 #if	EMIT_ASN_DEBUG == 1	/* And it was asked to emit this code... */
+#ifdef	__GNUC__
 #define	ASN_DEBUG(fmt, args...)	do {		\
 		fprintf(stderr, fmt, ##args);	\
 		fprintf(stderr, "\n");		\
 	} while(0)
+#else	/* !__GNUC__ */
+extern void ASN_DEBUG_f(const char *fmt, ...);
+#define	ASN_DEBUG	ASN_DEBUG_f
+#endif	/* __GNUC__ */
 #else	/* EMIT_ASN_DEBUG */
 #define	ASN_DEBUG(fmt, args...)	((void)0)	/* Emit a no-op operator */
 #endif	/* EMIT_ASN_DEBUG */
