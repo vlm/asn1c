@@ -39,7 +39,7 @@ ber_decode(asn1_TYPE_descriptor_t *type_descriptor,
  * Check the set of <TL<TL<TL...>>> tags matches the definition.
  */
 ber_dec_rval_t
-ber_check_tags(asn1_TYPE_descriptor_t *head, ber_dec_ctx_t *ctx,
+ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		void *ptr, size_t size, int tag_mode,
 		ber_tlv_len_t *last_length, int *opt_tlv_form) {
 	ssize_t consumed_myself = 0;
@@ -83,28 +83,33 @@ ber_check_tags(asn1_TYPE_descriptor_t *head, ber_dec_ctx_t *ctx,
 	 * This is because the implicit tag at above structure may replace 
 	 * zero or more (or every) tags which follow it. We don't care
 	 * about the precise number, as it is already computed for us
-	 * by the ASN.1 compiler and placed into head->tags_impl_skip.
+	 * by the ASN.1 compiler and placed into td->tags_impl_skip.
 	 * So let's suppose the only tag left after implicit tagging is {I}.
-	 * Yet, the table we have is {A,B,C} and head->tags_impl_skip=3.
+	 * Yet, the table we have is {A,B,C} and td->tags_impl_skip=3.
 	 * We need to check at least one tag in the loop, so the loop range
 	 * is modified so it will be invoked at least one time.
 	 */
 	tagno = ctx->step	/* Continuing where left previously */
-		+ (tag_mode==-1?(head->tags_impl_skip-1):0)
+		+ (tag_mode==-1?(td->tags_impl_skip-1):0)
 		+ (tag_mode==1?-1:0)
 		;
-	//assert(head->tags_count >= 1); ?May not be the case for CHOICE!
-	assert(tagno < head->tags_count);	/* At least one loop */
-	for((void)tagno; tagno < head->tags_count; tagno++, ctx->step++) {
+	ASN_DEBUG("ber_check_tags(%s, size=%ld, tm=%d, step=%d, tagno=%d)",
+		td->name, (long)size, tag_mode, ctx->step, tagno);
+	//assert(td->tags_count >= 1); ?May not be the case for CHOICE!
+	assert(tagno < td->tags_count);	/* At least one loop */
+	for((void)tagno; tagno < td->tags_count; tagno++, ctx->step++) {
 
 		/*
 		 * Fetch and process T from TLV.
 		 */
 		tag_len = ber_fetch_tag(ptr, size, &tlv_tag);
-			ASN_DEBUG("Fetching tag from {%p,%ld} %02X: "
+			ASN_DEBUG("Fetching tag from {%p,%ld} %02X..%02X: "
 				"len %ld, tag %s",
 				ptr, (long)size,
-				*(uint8_t *)ptr, (long)tag_len,
+				size?*(uint8_t *)ptr:0,
+				(tag_len<size&&tag_len>0)
+					?*((uint8_t *)ptr + tag_len):0,
+				(long)tag_len,
 				ber_tlv_tag_string(tlv_tag));
 		switch(tag_len) {
 		case -1: RETURN(RC_FAIL);
@@ -125,12 +130,12 @@ ber_check_tags(asn1_TYPE_descriptor_t *head, ber_dec_ctx_t *ctx,
 			 */
 		} else {
 		    assert(tagno >= 0);	/* Guaranteed by the code above */
-		    if(tlv_tag != head->tags[tagno]) {
+		    if(tlv_tag != td->tags[tagno]) {
 			/*
 			 * Unexpected tag. Too bad.
 			 */
 		    	ASN_DEBUG("Expected: %s, expectation failed",
-				ber_tlv_tag_string(head->tags[tagno]));
+				ber_tlv_tag_string(td->tags[tagno]));
 			RETURN(RC_FAIL);
 		    }
 		}
@@ -142,13 +147,13 @@ ber_check_tags(asn1_TYPE_descriptor_t *head, ber_dec_ctx_t *ctx,
 		 * If this one is the last one, check that the tag form
 		 * matches the one given in descriptor.
 		 */
-		if(tagno < (head->tags_count - 1)) {
+		if(tagno < (td->tags_count - 1)) {
 			if(tlv_constr == 0) {
 				RETURN(RC_FAIL);
 			}
 		} else {
-			if(head->last_tag_form != tlv_constr
-			&& head->last_tag_form != -1) {
+			if(td->last_tag_form != tlv_constr
+			&& td->last_tag_form != -1) {
 				RETURN(RC_FAIL);
 			}
 		}
