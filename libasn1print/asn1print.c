@@ -456,6 +456,10 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			asn1print_value(tc->value, flags);
 		}
 		break;
+	case A1TC_COMPONENTS_OF:
+		SEQ_OF = 1; /* Equivalent to SET OF for printint purposes */
+		printf("    COMPONENTS OF");
+		break;
 	case A1TC_REFERENCE:
 	case A1TC_UNIVERVAL:
 	case A1TC_PARAMETRIZED:
@@ -497,14 +501,13 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	 */
 	if(TQ_FIRST(&(tc->members))) {
 		asn1p_expr_t *se;	/* SubExpression */
+		int put_braces = !SEQ_OF; /* Don't need 'em, if SET OF... */
 
-		if(!SEQ_OF
-		|| TQ_FIRST(&(tc->members))->expr_type & ASN_CONSTR_MASK)
-			printf(" {\n");
+		if(put_braces) printf(" {\n");
 
 		TQ_FOR(se, &(tc->members), next) {
 			/*
-			 * Print the expression as it were stand-alone type.
+			 * Print the expression as it were a stand-alone type.
 			 */
 			asn1print_expr(asn, mod, se, flags, level + 4);
 			switch(se->marker) {
@@ -518,8 +521,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			}
 		}
 
-		if(!SEQ_OF
-		|| TQ_FIRST(&(tc->members))->expr_type & ASN_CONSTR_MASK) {
+		if(put_braces) {
 			printf("\n");
 			INDENT("}");
 		}
@@ -548,6 +550,9 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			printf(")");
 	}
 
+	/*
+	 * The following section exists entirely for debugging only.
+	 */
 	if(flags & APF_DEBUG_CONSTRAINTS
 	&& tc->expr_type != A1TC_EXTENSIBLE) {
 		asn1p_expr_t *top_parent;
@@ -557,7 +562,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			asn1print_constraint(tc->combined_constraints, flags);
 		}
 
-		top_parent = asn1f_find_terminal_type_ex(asn, mod, tc, NULL);
+		top_parent = asn1f_find_terminal_type_ex(asn, mod, tc);
 		if(top_parent) {
 			printf("\n-- PER-visible constraints (%s): ",
 				top_parent->Identifier);
