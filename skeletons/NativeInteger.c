@@ -173,6 +173,7 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		void *buf_ptr, size_t size) {
 	asn_dec_rval_t rval;
 	INTEGER_t *st = 0;
+	void *st_ptr = (void *)&st;
 	int *Int = (int *)*sptr;
 
 	if(!Int) {
@@ -185,8 +186,8 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		}
 	}
 
-	rval = INTEGER_decode_xer(opt_codec_ctx, td, (void **)&st, opt_mname,
-		buf_ptr, size);
+	rval = INTEGER_decode_xer(opt_codec_ctx, td, (void **)st_ptr, 
+		opt_mname, buf_ptr, size);
 	if(rval.code == RC_OK) {
 		long l;
 		if(asn_INTEGER2long(st, &l)) {
