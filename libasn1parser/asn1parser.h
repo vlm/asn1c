@@ -30,6 +30,13 @@
  * specified inside ASN.1 grammar.
  */
 typedef	intmax_t asn1_integer_t;
+#ifdef	PRIdMAX
+#define	PRIdASN	PRIdMAX
+#define	PRIuASN	PRIuMAX
+#else
+#define	PRIdASN	"lld"	/* Or j? */
+#define	PRIuASN	"llu"	/* Or j? */
+#endif
 
 #include <asn1p_list.h>
 #include <asn1p_oid.h>		/* Object identifiers (OIDs) */
