@@ -103,7 +103,7 @@ asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype)
 	asn1p_module_t *mod;
 	asn1p_expr_t *V;
 	asn1p_expr_t *bit;
-	asn1_integer_t aI;
+	asn1c_integer_t aI;
 	uint8_t *bitbuf;
 	int bits;
 	int psize;
