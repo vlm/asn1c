@@ -21,13 +21,14 @@ typedef struct asn1cnst_range_s {
 	int el_size;
 
 	int empty_constraint;	/* If yes, too bad. */
-	int extensible;		/* Extension marker (...) present. */
+	int extensible;		/* Extension marker (...) is in effect. */
 
-	int not_PER_visible;	/* Contains non PER-visible components */
+	int incompatible;	/* Constraint incompatible with argument */
+	int not_PER_visible;	/* Contains not PER-visible components */
 } asn1cnst_range_t;
 
 /*
- * Compute the PER-visible constraint range.
+ * Compute the constraint range with variable PER visibility restrictions.
  * 
  * (expr_type) must have the type of the top-level parent ASN.1 type.
  * (required_type) must be one of ACT_EL_RANGE, ACT_CT_SIZE or ACT_CT_FROM.
@@ -41,7 +42,8 @@ asn1cnst_range_t *asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type,
 	const asn1p_constraint_t *ct,
 	enum asn1p_constraint_type_e required_type,
 	const asn1cnst_range_t *minmax,
-	int *expectation_met);
+	int *expectation_met,
+	int strict_PER_visibility);
 void asn1constraint_range_free(asn1cnst_range_t *);
 
 /*
