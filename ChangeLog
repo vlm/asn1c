@@ -3,7 +3,7 @@
 
 	* Fixed parser: memory leak in free_struct code for SET OF/SEQUENCE OF.
 	  (Severity: high, Security impact: medium)
-	* Fixed parser: invalid memory reference in CHECK.
+	* Fixed parser: invalid memory reference in code constructing tags.
 	  (Test case 48) (Severity: high, Security impact: medium)
 	  When encoding data for certain ASN.1 specifications containing
 	  explicit tags, the tag is always written incorrectly due to

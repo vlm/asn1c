@@ -33,7 +33,7 @@ set +x
 
 # Create a Makefile for the project.
 cat > Makefile <<EOM
-CFLAGS=-I. -Wall -g ${CFLAGS} -DEMIT_ASN_DEBUG
+CFLAGS=-I. -W -Wall -Werror -g ${CFLAGS} -DEMIT_ASN_DEBUG
 SRCS=`echo *.c`
 OBJS=\${SRCS:.c=.o}
 check-executable: \${OBJS}
