@@ -449,6 +449,172 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+#undef	XER_ADVANCE
+#define	XER_ADVANCE(num_bytes)	do {			\
+		size_t num = num_bytes;			\
+		buf_ptr = ((char *)buf_ptr) + num;	\
+		size -= num;				\
+		consumed_myself += num;			\
+	} while(0)
+
+/*
+ * Decode the XER (XML) data.
+ */
+asn_dec_rval_t
+SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	void **struct_ptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+	/*
+	 * Bring closer parts of structure description.
+	 */
+	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	asn_TYPE_member_t *element = td->elements;
+	const char *elm_tag = specs->as_XMLValueList
+		? 0 : ((*element->name)
+		? element->name : element->type->xml_tag);
+	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
+
+	/*
+	 * ... and parts of the structure being constructed.
+	 */
+	void *st = *struct_ptr;	/* Target structure. */
+	asn_struct_ctx_t *ctx;	/* Decoder context */
+
+	asn_dec_rval_t rval;		/* Return value from a decoder */
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int xer_state;			/* XER low level parsing context */
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(st == 0) {
+		st = *struct_ptr = CALLOC(1, specs->struct_size);
+		if(st == 0) RETURN(RC_FAIL);
+	}
+
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+
+	/*
+	 * Phases of XER/XML processing:
+	 * Phase 0: Check that the opening tag matches our expectations.
+	 * Phase 1: Processing body and reacting on closing tag.
+	 * Phase 2: Processing inner type.
+	 */
+	for(xer_state = ctx->left; ctx->phase <= 2;) {
+		pxer_chunk_type_e ch_type;	/* XER chunk type */
+		ssize_t ch_size;		/* Chunk size */
+		xer_check_tag_e tcv;		/* Tag check value */
+
+		/*
+		 * Go inside the inner member of a set.
+		 */
+		if(ctx->phase == 2) {
+			asn_dec_rval_t tmprval;
+
+			/* Invoke the inner type decoder, m.b. multiple times */
+			tmprval = element->type->xer_decoder(opt_codec_ctx,
+					element->type, &ctx->ptr, elm_tag,
+					buf_ptr, size);
+			if(tmprval.code == RC_OK) {
+				A_SET_OF(void) *list;
+				(void *)list = (void *)st;
+				if(ASN_SET_ADD(list, ctx->ptr) != 0)
+					RETURN(RC_FAIL);
+				ctx->ptr = 0;
+				XER_ADVANCE(tmprval.consumed);
+			} else {
+				XER_ADVANCE(tmprval.consumed);
+				RETURN(tmprval.code);
+			}
+			ctx->phase = 1;	/* Back to body processing */
+			ctx->left = xer_state = 0;	/* New, clean state */
+			ASN_DEBUG("XER/SET OF phase => %d", ctx->phase);
+			/* Fall through */
+		}
+
+		/*
+		 * Get the next part of the XML stream.
+		 */
+		ch_size = xer_next_token(&xer_state, buf_ptr, size, &ch_type);
+		switch(ch_size) {
+		case -1: RETURN(RC_FAIL);
+		case 0:
+			ctx->left = xer_state;
+			RETURN(RC_WMORE);
+		default:
+			switch(ch_type) {
+			case PXER_COMMENT:	/* Got XML comment */
+			case PXER_TEXT:		/* Ignore free-standing text */
+				XER_ADVANCE(ch_size);	/* Skip silently */
+				continue;
+			case PXER_TAG:
+				break;	/* Check the rest down there */
+			}
+		}
+
+		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
+		ASN_DEBUG("XER/SET OF: tcv = %d, ph=%d", tcv, ctx->phase);
+		switch(tcv) {
+		case XCT_CLOSING:
+			if(ctx->phase == 0) break;
+			ctx->phase = 0;
+			/* Fall through */
+		case XCT_BOTH:
+			if(ctx->phase == 0) {
+				/* No more things to decode */
+				XER_ADVANCE(ch_size);
+				ctx->phase = 3;	/* Phase out */
+				RETURN(RC_OK);
+			}
+			/* Fall through */
+		case XCT_OPENING:
+			if(ctx->phase == 0) {
+				XER_ADVANCE(ch_size);
+				ctx->phase = 1;	/* Processing body phase */
+				continue;
+			}
+			/* Fall through */
+		case XCT_UNEXPECTED:
+
+			ASN_DEBUG("XER/SET OF: tcv=%d, ph=%d", tcv, ctx->phase);
+			if(ctx->phase != 1)
+				break;	/* Really unexpected */
+
+			/*
+			 * Search which member corresponds to this tag.
+			 */
+			tcv = xer_check_tag(buf_ptr, ch_size, elm_tag);
+			switch(tcv) {
+			case XCT_BOTH:
+			case XCT_OPENING:
+				/*
+				 * Process this member.
+				 */
+				ctx->phase = 2;
+				continue;
+			case XCT_UNEXPECTED:
+			case XCT_CLOSING:
+			default:
+				break;	/* Phase out */
+			}
+			/* Fall through */
+		default:
+			break;
+		}
+
+		ASN_DEBUG("Unexpected XML tag in SET OF");
+		break;
+	}
+
+	ctx->phase = 3;	/* "Phase out" on hard failure */
+	RETURN(RC_FAIL);
+}
+
+
+
 typedef struct xer_tmp_enc_s {
 	void *buffer;
 	size_t offset;
