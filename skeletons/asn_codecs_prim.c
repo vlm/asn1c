@@ -246,8 +246,13 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	case RC_OK:
 		if(!s_arg.decoded_something) {
 			/* Opportunity has come and gone. Where's the result? */
-			rc.code = RC_FAIL;
-			rc.consumed = 0;
+			if(prim_body_decode(s_arg.struct_key, "", 0) != 0) {
+				/*
+				 * This decoder does not like empty stuff.
+				 */
+				rc.code = RC_FAIL;
+				rc.consumed = 0;
+			}
 		}
 		break;
 	case RC_WMORE:
