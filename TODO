@@ -1,13 +1,9 @@
 MAJOR:
 
-1. Support for XER decoding.
-   Status:	The BASIC-XER and CANONICAL-XER are implemented.
-		The XER decoding is not yet implemented.
-
-2. Support for PER encoding. Requires advanced subtype constraints support,
+1. Support for PER encoding. Requires advanced subtype constraints support,
 which is already completed.
 
-3. Support for Information Object Classes.
+2. Support for Information Object Classes.
    Status:	Support for parsing IOCs is mostly present.
 		Support for slicing the IOCs to produce "views"
 		is not yet designed.
