@@ -3,6 +3,7 @@
 
 	* Improved compiler output: duplicate #includes eliminated.
 	* Win32 portability fixes.
+	* More compatibility with C++ or non-GCC compilers.
 
 0.8.16:	2004-Jul-22
 
