@@ -4,7 +4,6 @@
 enum asn1print_flags_e {
 	APF_NOFLAGS		= 0x00,
 	APF_LINE_COMMENTS	= 0x01,
-	APF_NO_SOURCE_COMMENTS	= 0x02,
 };
 
 /*
