@@ -967,6 +967,17 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("\n");
 
 	p = MKID(expr->Identifier);
+	OUT("asn_dec_rval_t\n");
+	OUT("%s_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n", p);
+	INDENTED(
+	OUT("\tvoid **structure, const char *opt_mname, void *bufptr, size_t size) {\n");
+	OUT("%s_inherit_TYPE_descriptor(td);\n", p);
+	OUT("return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr->Identifier);
 	OUT("asn_enc_rval_t\n");
 	OUT("%s_encode_xer(asn_TYPE_descriptor_t *td, void *structure,\n", p);
 	INDENTED(
@@ -990,6 +1001,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("asn_constr_check_f %s_constraint;\n", p);
 	OUT("ber_type_decoder_f %s_decode_ber;\n", p);
 	OUT("der_type_encoder_f %s_encode_der;\n", p);
+	OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 	OUT("xer_type_encoder_f %s_encode_xer;\n", p);
 
 	REDIR(OT_TYPE_DECLS);
@@ -1496,7 +1508,11 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		OUT("%s_constraint,\n", p);
 		OUT("%s_decode_ber,\n", p);
 		OUT("%s_encode_der,\n", p);
-		OUT("0,				/* Not implemented yet */\n");
+		if(!(expr->expr_type & ASN_CONSTR_MASK)
+			&& (expr->expr_type != ASN_CONSTR_SEQUENCE))
+		OUT("%s_decode_xer,\n", p);
+		else
+		OUT("0,\t\t\t\t/* Not implemented yet */\n");
 		OUT("%s_encode_xer,\n", p);
 
 		p = MKID(expr->Identifier);
