@@ -322,7 +322,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 	if(utf8_full_alphabet_check) {
 		OUT("if(UTF8String_length((UTF8String_t *)sptr, td->name, \n");
 		OUT("\tapp_errlog, app_key) == -1)\n");
-		OUT("\t\treturn 0; /* Alphabet (sic!) test failed. */\n");
+		OUT("\t\treturn -1; /* Alphabet (sic!) test failed. */\n");
 		OUT("\n");
 	} else {
 		if(use_table) {
@@ -333,7 +333,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 			emit_alphabet_check_loop(arg, range);
 		}
 	}
-	OUT("return 1;\n");
+	OUT("return 0;\n");
 	INDENT(-1);
 	OUT("}\n");
 	OUT("\n");
@@ -366,33 +366,33 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
 			OUT("uint8_t cv = *ch;\n");
-			if(!range) OUT("if(cv >= 0x80) return 0;\n");
+			if(!range) OUT("if(cv >= 0x80) return -1;\n");
 		natural_stop = 0xffffffffUL;
 		break;
 	case ASN_STRING_UniversalString:
 		OUT("const uint32_t *ch = st->buf;\n");
 		OUT("const uint32_t *end = ch + st->size;\n");
 		OUT("\n");
-		OUT("if(st->size % 4) return 0; /* (size%4)! */\n");
+		OUT("if(st->size % 4) return -1; /* (size%4)! */\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
 			OUT("uint32_t cv = (((const uint8_t *)ch)[0] << 24)\n");
 			OUT("\t\t| (((const uint8_t *)ch)[1] << 16)\n");
 			OUT("\t\t| (((const uint8_t *)ch)[2] << 8)\n");
 			OUT("\t\t|  ((const uint8_t *)ch)[3];\n");
-			if(!range) OUT("if(cv > 255) return 0;\n");
+			if(!range) OUT("if(cv > 255) return -1;\n");
 		natural_stop = 0xffffffffUL;
 		break;
 	case ASN_STRING_BMPString:
 		OUT("const uint16_t *ch = st->buf;\n");
 		OUT("const uint16_t *end = ch + st->size;\n");
 		OUT("\n");
-		OUT("if(st->size % 2) return 0; /* (size%2)! */\n");
+		OUT("if(st->size % 2) return -1; /* (size%2)! */\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
 			OUT("uint16_t cv = (((const uint8_t *)ch)[0] << 8)\n");
 			OUT("\t\t| ((const uint8_t *)ch)[1];\n");
-			if(!range) OUT("if(cv > 255) return 0;\n");
+			if(!range) OUT("if(cv > 255) return -1;\n");
 		natural_stop = 0xffff;
 		break;
 	case ASN_BASIC_OCTET_STRING:
@@ -410,9 +410,9 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	if(range) {
 		OUT("if(!(");
 		emit_range_comparison_code(arg, range, "cv", 0, natural_stop);
-		OUT(")) return 0;\n");
+		OUT(")) return -1;\n");
 	} else {
-		OUT("if(!table[cv]) return 0;\n");
+		OUT("if(!table[cv]) return -1;\n");
 	}
 
 	INDENT(-1);

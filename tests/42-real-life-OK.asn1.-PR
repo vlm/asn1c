@@ -52,7 +52,7 @@ memb_varsets_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if((size >= 1)) {
 		/* Constraint check succeeded */
-		return 1;
+		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: constraint failed", td->name);
@@ -359,7 +359,7 @@ memb_vset_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if((size >= 1)) {
 		/* Constraint check succeeded */
-		return 1;
+		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: constraint failed", td->name);

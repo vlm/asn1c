@@ -246,9 +246,9 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!table[cv]) return 0;
+		if(!table[cv]) return -1;
 	}
-	return 1;
+	return 0;
 }
 
 
@@ -268,7 +268,7 @@ memb_IA5String_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(check_permitted_alphabet_1(sptr)) {
 		/* Constraint check succeeded */
-		return 1;
+		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: constraint failed", td->name);
