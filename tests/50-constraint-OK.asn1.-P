@@ -133,12 +133,8 @@ Int2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn1_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	/* Check if the sign bit is present */
+	value = st->buf ? ((st->buf[0] & 0x80) ? -1 : 1) : 0;
 	
 	if((value >= 0)) {
 		/* Constraint check succeeded */
