@@ -39,7 +39,7 @@ asn1p_oid_free(asn1p_oid_t *oid) {
 }
 
 asn1p_oid_arc_t *
-asn1p_oid_arc_new(const char *optName, asn1_integer_t optNumber /* = -1 */) {
+asn1p_oid_arc_new(const char *optName, asn1c_integer_t optNumber /* = -1 */) {
 	asn1p_oid_arc_t *arc;
 
 	arc = calloc(1, sizeof *arc);
@@ -66,7 +66,7 @@ asn1p_oid_compare(asn1p_oid_t *a, asn1p_oid_t *b) {
 	int i;
 
 	for(i = 0; ; i++) {
-		asn1_integer_t cmp;
+		asn1c_integer_t cmp;
 
 		if(b->arcs_count > i) {
 			if(a->arcs_count <= i)

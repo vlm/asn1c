@@ -19,7 +19,7 @@ typedef union {
 	asn1p_paramlist_t	*a_plist;	/* A pargs list */
 	struct asn1p_expr_marker_s a_marker;	/* OPTIONAL/DEFAULT */
 	enum asn1p_constr_pres_e a_pres;	/* PRESENT/ABSENT/OPTIONAL */
-	asn1_integer_t		 a_int;
+	asn1c_integer_t		 a_int;
 	char	*tv_str;
 	struct {
 		char *buf;

@@ -1808,7 +1808,7 @@ int asn1p_lexer_pedantic_1990 = 0;
 int asn1p_lexer_types_year = 0;
 int asn1p_lexer_constructs_year = 0;
 static int _check_dashes(char *ptr);
-static asn1_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
+static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 
 /*
  * Check that the type is defined in the year of the standard choosen.
@@ -3957,9 +3957,9 @@ _check_dashes(char *ptr) {
 	return 0;
 }
 
-static asn1_integer_t
+static asn1c_integer_t
 asn1p_atoi(char *ptr) {
-	asn1_integer_t value;
+	asn1c_integer_t value;
 	errno = 0;	/* Clear the error code */
 
 	if(sizeof(value) <= sizeof(int)) {
