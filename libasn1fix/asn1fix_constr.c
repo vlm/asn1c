@@ -3,6 +3,79 @@
 static int _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v);
 static int _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b);
 
+int
+asn1f_pull_components_of(arg_t *arg) {
+	TQ_HEAD(asn1p_expr_t) list;
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *memb;
+	int r_value = 0;
+
+	switch(expr->expr_type) {
+	case ASN_CONSTR_SEQUENCE:
+	case ASN_CONSTR_SET:
+		break;
+	default:
+		return 0;
+	}
+
+	TQ_INIT(&list);
+
+	/*
+	 * Look into
+	 */
+	while((memb = TQ_REMOVE(&(expr->members), next))) {
+		asn1p_expr_t *coft;	/* COMPONENTS OF thing itself */
+		asn1p_expr_t *terminal;	/* Terminal of the referenced type */
+
+		if(memb->expr_type != A1TC_COMPONENTS_OF) {
+			TQ_ADD(&list, memb, next);
+			continue;
+		}
+
+		coft = TQ_FIRST(&memb->members);
+		assert(coft);
+		assert(!TQ_NEXT(coft, next));
+
+		/*
+		 * Find the referenced type.
+		 */
+		terminal = asn1f_find_terminal_type(arg, coft);
+		if(!terminal || (terminal->expr_type != expr->expr_type)) {
+			FATAL("COMPONENTS OF at line %d "
+				"must reference a %s type",
+				coft->_lineno,
+				expr->expr_type==ASN_CONSTR_SET
+					? "SET" : "SEQUENCE"
+			);
+			TQ_ADD(&list, memb, next);
+			r_value = -1;
+			continue;
+		}
+
+		/*
+		 * Clone the final structure.
+		 */
+
+		coft = asn1p_expr_clone(terminal, 1 /* Skip extensions */);
+		if(!coft) return -1;	/* ENOMEM */
+
+		asn1p_expr_free(memb);	/* Don't need it anymore*/
+
+		/*
+		 * Move all components of the cloned structure
+		 * into the current one.
+		 */
+		while((memb = TQ_REMOVE(&(coft->members), next)))
+			TQ_ADD(&list, memb, next);
+
+		asn1p_expr_free(coft);	/* Remove wrapper */
+	}
+
+	/* Move the stuff back */
+	TQ_HEAD_COPY(&(expr->members), &list);
+
+	return r_value;
+}
 
 int
 asn1f_fix_constr_ext(arg_t *arg) {
@@ -203,7 +276,10 @@ asn1f_fix_constr_autotag(arg_t *arg) {
 		if(v->expr_type == A1TC_EXTENSIBLE)
 			break;
 
-		assert(v->tag.tag_class == TC_NOCLASS);
+		if(0) {
+			/* This may be not true in case COMPONENTS OF */
+			assert(v->tag.tag_class == TC_NOCLASS);
+		}
 
 		must_explicit = _asn1f_check_if_tag_must_be_explicit(arg, v);
 
@@ -259,7 +335,7 @@ static int
 _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v) {
 	asn1p_expr_t *reft;
 
-	reft = asn1f_find_terminal_type(arg, v, 0);
+	reft = asn1f_find_terminal_type(arg, v);
 	if(reft) {
 		switch(reft->expr_type) {
 		case ASN_CONSTR_CHOICE:
@@ -329,13 +405,12 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		b->Identifier, b->expr_type);
 
 	if(a->meta_type == AMT_TYPEREF) {
-		asn1p_module_t *mod;
 
 		DEBUG(" %s is a type reference", a->Identifier);
 
-		a = asn1f_lookup_symbol(arg, a->reference, &mod);
+		a = asn1f_lookup_symbol(arg, a->module, a->reference);
 		if(!a) return 0;	/* Already FATAL()'ed somewhere else */
-		WITH_MODULE(mod, ret = _asn1f_compare_tags(arg, a, b));
+		WITH_MODULE(a->module, ret = _asn1f_compare_tags(arg, a, b));
 		return ret;
 	}
 
