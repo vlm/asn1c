@@ -218,9 +218,8 @@ static asn1p_value_t *
 %type	<a_xports>		ExportsBody
 %type	<a_expr>		ImportsElement
 %type	<a_expr>		ExportsElement
-%type	<a_expr>		DataTypeMember
 %type	<a_expr>		ExtensionAndException
-%type	<a_expr>		UnconstrainedTypeDeclaration
+%type	<a_expr>		TypeDeclaration
 %type	<a_ref>			ComplexTypeReference
 %type	<a_ref>			ComplexTypeReferenceAmpList
 %type	<a_refcomp>		ComplexTypeReferenceElement
@@ -229,7 +228,7 @@ static asn1p_value_t *
 %type	<a_expr>		ClassFieldList
 %type	<a_expr>		ClassField
 %type	<a_expr>		ClassDeclaration
-%type	<a_expr>		ConstrainedTypeDeclaration
+%type	<a_expr>		Type
 %type	<a_expr>		DataTypeReference	/* Type1 ::= Type2 */
 %type	<a_expr>		DefinedTypeRef
 %type	<a_expr>		ValueSetDefinition  /* Val INTEGER ::= {1|2} */
@@ -238,9 +237,10 @@ static asn1p_value_t *
 %type	<a_value>		InlineOrDefinedValue
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
-%type	<a_expr>		ConstructedType
-%type	<a_expr>		ConstructedTypeConstrained
-%type	<a_expr>		ConstructedDataTypeDefinition
+%type	<a_expr>		ComponentTypeLists
+%type	<a_expr>		ComponentType
+%type	<a_expr>		AlternativeTypeLists
+%type	<a_expr>		AlternativeType
 //%type	<a_expr>		optUniverationDefinition
 %type	<a_expr>		UniverationDefinition
 %type	<a_expr>		UniverationList
@@ -718,7 +718,7 @@ DataTypeReference:
 		$$->expr_type = A1TC_TYPEID;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TypeRefName TOK_PPEQ optTag ConstrainedTypeDeclaration {
+	| TypeRefName TOK_PPEQ optTag Type {
 		$$ = $4;
 		$$->Identifier = $1;
 		$$->tag = $3;
@@ -741,8 +741,7 @@ DataTypeReference:
 	 *   }
 	 * === EOF ===
 	 */
-	| TypeRefName '{' ParameterArgumentList '}'
-		TOK_PPEQ ConstrainedTypeDeclaration {
+	| TypeRefName '{' ParameterArgumentList '}' TOK_PPEQ Type {
 		$$ = $6;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
@@ -806,7 +805,7 @@ ActualParameterList:
 	;
 
 ActualParameter:
-	UnconstrainedTypeDeclaration {
+	Type {
 		$$ = $1;
 	}
 	| Identifier {
@@ -821,15 +820,59 @@ ActualParameter:
 /*
  * A collection of constructed data type members.
  */
-ConstructedDataTypeDefinition:
-	DataTypeMember {
+ComponentTypeLists:
+	ComponentType {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		TQ_ADD(&($$->members), $1, next);
 	}
-	| ConstructedDataTypeDefinition ',' DataTypeMember {
+	| ComponentTypeLists ',' ComponentType {
 		$$ = $1;
 		TQ_ADD(&($$->members), $3, next);
+	}
+	;
+
+ComponentType:
+	TaggedIdentifier Type optMarker {
+		$$ = $2;
+		assert($$->Identifier == 0);
+		$$->Identifier = $1.name;
+		$$->tag = $1.tag;
+		$$->marker = $3;
+	}
+	| TOK_COMPONENTS TOK_OF Type {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->meta_type = $3->meta_type;
+		$$->expr_type = A1TC_COMPONENTS_OF;
+		TQ_ADD(&($$->members), $3, next);
+	}
+	| ExtensionAndException {
+		$$ = $1;
+	}
+	;
+
+AlternativeTypeLists:
+	AlternativeType {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		TQ_ADD(&($$->members), $1, next);
+	}
+	| AlternativeTypeLists ',' AlternativeType {
+		$$ = $1;
+		TQ_ADD(&($$->members), $3, next);
+	}
+	;
+
+AlternativeType:
+	TaggedIdentifier Type {
+		$$ = $2;
+		assert($$->Identifier == 0);
+		$$->Identifier = $1.name;
+		$$->tag = $1.tag;
+	}
+	| ExtensionAndException {
+		$$ = $1;
 	}
 	;
 
@@ -871,10 +914,11 @@ ClassField:
 		$$->meta_type = AMT_OBJECTFIELD;
 		$$->marker = $2;
 	}
-	| ClassFieldIdentifier ConstrainedTypeDeclaration optUnique {
+	| ClassFieldIdentifier Type optMarker optUnique {
 		$$ = $2;
 		$$->Identifier = $1.name;
-		$$->unique = $3;
+		$$->marker = $3;
+		$$->unique = $4;
 	}
 	| ClassFieldIdentifier ClassFieldIdentifier optMarker optUnique {
 		int ret;
@@ -935,50 +979,6 @@ WithSyntaxFormatToken:
 	}
 	;
 
-/*
- * A data type member goes like this
- * ===
- * memb1 [0] Type1 { a(1), b(2) } (2)
- * ===
- * Therefore, we propose a split.
- * ^^^^^^^^^ ^^^^^^^^^^
- * ^TaggedIdentifier  ^TypeDeclaration
- * 				^ConstrainedTypeDeclaration
- */
-
-/*
- * A member of a constructed data type ("a" or "b" in above example).
- */
-DataTypeMember:
-	TaggedIdentifier ConstrainedTypeDeclaration {
-		$$ = $2;
-		assert($$->Identifier == 0);
-		$$->Identifier = $1.name;
-		$$->tag = $1.tag;
-	}
-	| ExtensionAndException {
-		$$ = $1;
-	}
-	;
-
-ConstrainedTypeDeclaration:
-	UnconstrainedTypeDeclaration optConstraints optMarker {
-		$$ = $1;
-		if($$->constraints) {
-			assert(!$2);
-		} else {
-			$$->constraints = $2;
-		}
-		$$->marker = $3;
-	}
-	| ConstructedTypeConstrained {
-		/* This type includes constraints on its own */
-		$$ = $1;
-		checkmem($$);
-		assert($$->meta_type);
-	}
-	;
-
 ExtensionAndException:
 	TOK_ThreeDots {
 		$$ = asn1p_expr_new(asn1p_lineno);
@@ -1008,7 +1008,28 @@ ExtensionAndException:
 	}
 	;
 
-UnconstrainedTypeDeclaration:
+Type:
+	TypeDeclaration optConstraints {
+		$$ = $1;
+		/*
+		 * Outer constraint for SEQUENCE OF and SET OF applies
+		 * to the inner type.
+		 */
+		if($$->expr_type == ASN_CONSTR_SEQUENCE_OF
+		|| $$->expr_type == ASN_CONSTR_SET_OF) {
+			assert(!TQ_FIRST(&($$->members))->constraints);
+			TQ_FIRST(&($$->members))->constraints = $2;
+		} else {
+			if($$->constraints) {
+				assert(!$2);
+			} else {
+				$$->constraints = $2;
+			}
+		}
+	}
+	;
+
+TypeDeclaration:
 	BasicType {
 		$$ = $1;
 	}
@@ -1018,11 +1039,58 @@ UnconstrainedTypeDeclaration:
 		$$->expr_type = $1;
 		$$->meta_type = AMT_TYPE;
 	}
-	| ConstructedType {
-		$$ = $1;
-		checkmem($$);
-		assert($$->meta_type);
+	| TOK_CHOICE '{' AlternativeTypeLists '}'	{
+		$$ = $3;
+		assert($$->expr_type == A1TC_INVALID);
+		$$->expr_type = ASN_CONSTR_CHOICE;
+		$$->meta_type = AMT_TYPE;
 	}
+	| TOK_SEQUENCE '{' ComponentTypeLists '}'	{
+		$$ = $3;
+		assert($$->expr_type == A1TC_INVALID);
+		$$->expr_type = ASN_CONSTR_SEQUENCE;
+		$$->meta_type = AMT_TYPE;
+	}
+	| TOK_SET '{' ComponentTypeLists '}'		{
+		$$ = $3;
+		assert($$->expr_type == A1TC_INVALID);
+		$$->expr_type = ASN_CONSTR_SET;
+		$$->meta_type = AMT_TYPE;
+	}
+	| TOK_SEQUENCE optConstraints TOK_OF TypeDeclaration {
+		$$ = asn1p_expr_new(asn1p_lineno);
+		checkmem($$);
+		$$->constraints = $2;
+		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
+		$$->meta_type = AMT_TYPE;
+		TQ_ADD(&($$->members), $4, next);
+	}
+	| TOK_SET optConstraints TOK_OF TypeDeclaration {
+		$$ = asn1p_expr_new(asn1p_lineno);
+		checkmem($$);
+		$$->constraints = $2;
+		$$->expr_type = ASN_CONSTR_SET_OF;
+		$$->meta_type = AMT_TYPE;
+		TQ_ADD(&($$->members), $4, next);
+	}
+	| TOK_ANY 					{
+		$$ = asn1p_expr_new(asn1p_lineno);
+		checkmem($$);
+		$$->expr_type = ASN_CONSTR_ANY;
+		$$->meta_type = AMT_TYPE;
+	}
+	| TOK_ANY TOK_DEFINED TOK_BY Identifier		{
+		int ret;
+		$$ = asn1p_expr_new(asn1p_lineno);
+		checkmem($$);
+		$$->reference = asn1p_ref_new(yylineno);
+		ret = asn1p_ref_add_component($$->reference,
+			$4, RLT_lowercase);
+		checkmem(ret == 0);
+		$$->expr_type = ASN_CONSTR_ANY;
+		$$->meta_type = AMT_TYPE;
+	}
+	;
 	/*
 	 * A parametrized assignment.
 	 */
@@ -1331,63 +1399,6 @@ BasicString:
 	| TOK_ObjectDescriptor { $$ = ASN_STRING_ObjectDescriptor; }
 	;
 
-
-ConstructedTypeConstrained:
-	TOK_SEQUENCE optConstraints TOK_OF ConstrainedTypeDeclaration {
-		$$ = asn1p_expr_new(asn1p_lineno);
-		checkmem($$);
-		$$->constraints = $2;
-		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
-		$$->meta_type = AMT_TYPE;
-		TQ_ADD(&($$->members), $4, next);
-	}
-	| TOK_SET optConstraints TOK_OF ConstrainedTypeDeclaration {
-		$$ = asn1p_expr_new(asn1p_lineno);
-		checkmem($$);
-		$$->constraints = $2;
-		$$->expr_type = ASN_CONSTR_SET_OF;
-		$$->meta_type = AMT_TYPE;
-		TQ_ADD(&($$->members), $4, next);
-	}
-	;
-
-ConstructedType:
-	TOK_CHOICE '{' ConstructedDataTypeDefinition '}'	{
-		$$ = $3;
-		assert($$->expr_type == A1TC_INVALID);
-		$$->expr_type = ASN_CONSTR_CHOICE;
-		$$->meta_type = AMT_TYPE;
-	}
-	| TOK_SEQUENCE '{' ConstructedDataTypeDefinition '}'	{
-		$$ = $3;
-		assert($$->expr_type == A1TC_INVALID);
-		$$->expr_type = ASN_CONSTR_SEQUENCE;
-		$$->meta_type = AMT_TYPE;
-	}
-	| TOK_SET '{' ConstructedDataTypeDefinition '}'		{
-		$$ = $3;
-		assert($$->expr_type == A1TC_INVALID);
-		$$->expr_type = ASN_CONSTR_SET;
-		$$->meta_type = AMT_TYPE;
-	}
-	| TOK_ANY 						{
-		$$ = asn1p_expr_new(asn1p_lineno);
-		checkmem($$);
-		$$->expr_type = ASN_CONSTR_ANY;
-		$$->meta_type = AMT_TYPE;
-	}
-	| TOK_ANY TOK_DEFINED TOK_BY Identifier			{
-		int ret;
-		$$ = asn1p_expr_new(asn1p_lineno);
-		checkmem($$);
-		$$->reference = asn1p_ref_new(yylineno);
-		ret = asn1p_ref_add_component($$->reference,
-			$4, RLT_lowercase);
-		checkmem(ret == 0);
-		$$->expr_type = ASN_CONSTR_ANY;
-		$$->meta_type = AMT_TYPE;
-	}
-	;
 
 /*
  * Data type constraints.

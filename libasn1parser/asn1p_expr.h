@@ -35,12 +35,14 @@ typedef enum asn1p_expr_type {
 	A1TC_BITVECTOR,		/* A plain collection of bits */
 	A1TC_OPAQUE,		/* Opaque data encoded as a bitvector */
 	A1TC_EXTENSIBLE,	/* An extension marker "..." */
+	A1TC_COMPONENTS_OF,	/* COMPONENTS OF clause */
 	A1TC_PARAMETRIZED,	/* A parametrized type declaration */
 	A1TC_VALUESET,		/* Value set definition */
 	A1TC_CLASSDEF,		/* Information Object Class */
 	A1TC_CLASSFIELD,	/* Information Object Class field */
 	A1TC_INSTANCE,		/* Instance of Object Class */
 	A1TC_TYPEID,		/* Type identifier */
+
 	/*
 	 * ASN.1 Constructed types
 	 */
@@ -69,6 +71,7 @@ typedef enum asn1p_expr_type {
 	ASN_BASIC_CHARACTER_STRING,
 	ASN_BASIC_UTCTime,
 	ASN_BASIC_GeneralizedTime,
+
 	/*
 	 * ASN.1 String types
 	 */
@@ -92,6 +95,8 @@ typedef enum asn1p_expr_type {
 
 #include "asn1p_expr_str.h"
 #include "asn1p_expr2uclass.h"
+
+struct asn1p_module_s;	/* Forward declaration */
 
 /*
  * A named collection of types.
@@ -192,6 +197,9 @@ typedef struct asn1p_expr_s {
 	 * grammar source.
 	 */
 	int _lineno;
+
+	struct asn1p_module_s *module;	/* Defined in module */
+
 	/*
 	 * Marks are used for various purposes.
 	 * Here are some predefined ones.
@@ -200,6 +208,8 @@ typedef struct asn1p_expr_s {
 		TM_NOMARK,
 		TM_RECURSION,	/* Used to break recursion */
 	} _mark;
+
+	int _anonymous_type;	/* Used by the compiler */
 
 	/*
 	 * Opaque data may be attached to this structure,
@@ -214,7 +224,7 @@ typedef struct asn1p_expr_s {
  * Constructor and destructor.
  */
 asn1p_expr_t *asn1p_expr_new(int _lineno);
-asn1p_expr_t *asn1p_expr_clone(asn1p_expr_t *);
+asn1p_expr_t *asn1p_expr_clone(asn1p_expr_t *, int skip_extensions);
 void asn1p_expr_free(asn1p_expr_t *expr);
 
 #endif	/* ASN1_PARSER_EXPR_H */

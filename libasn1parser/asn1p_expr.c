@@ -23,9 +23,10 @@ asn1p_expr_new(int _lineno) {
 }
 
 asn1p_expr_t *
-asn1p_expr_clone(asn1p_expr_t *expr) {
+asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
 	asn1p_expr_t *clone;
 	asn1p_expr_t *tcmemb;	/* Child of tc */
+	int hit_ext = 0;
 
 	clone = asn1p_expr_new(expr->_lineno);
 	if(clone == NULL) return NULL;
@@ -45,7 +46,8 @@ asn1p_expr_clone(asn1p_expr_t *expr) {
 	CLCOPY(meta_type);
 	CLCOPY(expr_type);
 	CLCOPY(tag);
-	CLCOPY(marker);
+	CLCOPY(marker);		/* OPTIONAL/DEFAULT */
+	CLCOPY(module);
 	CLCOPY(_mark);
 
 	clone->data = 0;	/* Do not clone this */
@@ -66,7 +68,16 @@ asn1p_expr_clone(asn1p_expr_t *expr) {
 	 * Copy all the children of this expr.
 	 */
 	TQ_FOR(tcmemb, &(expr->members), next) {
-		asn1p_expr_t *cmemb = asn1p_expr_clone(tcmemb);
+		asn1p_expr_t *cmemb;
+
+		if(skip_extensions
+		&& tcmemb->expr_type == A1TC_EXTENSIBLE) {
+			hit_ext++; /* Even if hit_ext wraps around, we're OK. */
+			continue;
+		}
+		if(hit_ext == 1) continue;	/* Skip between ...'s */
+
+		cmemb = asn1p_expr_clone(tcmemb, skip_extensions);
 		if(cmemb == NULL) {
 			asn1p_expr_free(clone);
 			return NULL;
