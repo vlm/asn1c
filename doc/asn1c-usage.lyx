@@ -37,7 +37,7 @@
 
 \layout Title
 
-Using the Free ASN.1 Compiler
+Using the Open ASN.1 Compiler
 \layout Author
 
 Lev Walkin <
@@ -2590,7 +2590,7 @@ free_struct
 \layout Bibliography
 \bibitem [ASN1C]{ASN1C}
 
-Free ASN.1 Compiler.
+The OpenSource ASN.1 Compiler.
  
 \begin_inset LatexCommand \htmlurl{http://lionet.info/asn1/}
 
