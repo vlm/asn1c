@@ -25,9 +25,9 @@ main(int ac, char **av) {
 	enum asn1p_flags asn1_parser_flags	= A1P_NOFLAGS;
 	enum asn1f_flags asn1_fixer_flags	= A1F_NOFLAGS;
 	enum asn1c_flags asn1_compiler_flags	= A1C_NOFLAGS;
+	enum asn1print_flags_e print_arg__flags = APF_NOFLAGS;
 	int print_arg__print_out = 0;	/* Don't compile, just print parsed */
 	int print_arg__fix_n_print = 0;	/* Fix and print */
-	enum asn1print_flags_e print_arg__flags = APF_NOFLAGS;
 	int warnings_as_errors = 0;	/* Treat warnings as errors */
 	char *skeletons_dir = NULL;	/* Directory with supplementary stuff */
 	asn1p_t *asn = 0;		/* An ASN.1 parsed tree */
@@ -38,7 +38,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "EFf:LNPRS:W:")) != -1)
+	while((ch = getopt(ac, av, "EFf:LPRS:W:")) != -1)
 	switch(ch) {
 	case 'E':
 		print_arg__print_out = 1;
@@ -57,6 +57,10 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_NO_C99;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
+		} else if(strncmp(optarg, "known-extern-type=", 18) == 0) {
+			char *known_type = optarg + 18;
+			ret = asn1f_make_known_external_type(known_type);
+			assert(ret == 0 || errno == EEXIST);
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
@@ -64,9 +68,6 @@ main(int ac, char **av) {
 		break;
 	case 'L':
 		print_arg__flags |= APF_LINE_COMMENTS;
-		break;
-	case 'N':
-		print_arg__flags |= APF_NO_SOURCE_COMMENTS;
 		break;
 	case 'P':
 		asn1_compiler_flags |= A1C_PRINT_COMPILED;
@@ -240,7 +241,6 @@ usage(char *av0) {
 		"\t-E\tRun only the ASN.1 parser and print out the tree\n"
 		"\t-F\tDuring -E operation, also perform tree fixing\n"
 		"\t-L\tGenerate \"-- #line\" comments in -E output\n"
-		"\t-N\tDo not generate certain type of comments in -E output\n"
 		"\n"
 		"\t-P      \tConcatenate and print the compiled text\n"
 		"\t-S <dir>\tDirectory with support (skeleton?) files\n"
@@ -251,7 +251,8 @@ usage(char *av0) {
 /*
 		"\t-fconstr90\tUse only ASN.1:1990 constructs (not available)\n"
 */
-		"\t-fnative-integers\tUse native integers where possible\n"
+		"\t-fknown-extern-type=<name>\tPretend this type is known\n"
+		"\t-fnative-integers\tUse int instead of INTEGER_t whenever possible\n"
 		"\t-fno-c99\tDisable C99 extensions\n"
 		"\t-funnamed-unions\tEnable unnamed unions in structures\n"
 		"\n"
