@@ -738,12 +738,12 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 	case ASN_BASIC_OCTET_STRING:
 	case ASN_BASIC_OBJECT_IDENTIFIER:
 	case ASN_BASIC_RELATIVE_OID:
+	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_UTCTime:
 	case ASN_BASIC_GeneralizedTime:
-	case ASN_BASIC_INTEGER:
 	case ASN_STRING_NumericString:
 	case ASN_STRING_PrintableString:
-		printf(" (#CDATA)");
+		printf(" (#PCDATA)");
 		break;
 	case ASN_STRING_VisibleString:
 	case ASN_STRING_ISO646String:
