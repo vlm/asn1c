@@ -168,7 +168,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	OUT(") {\n");
 		INDENT(+1);
 		OUT("/* Constraint check succeeded */\n");
-		OUT("return 1;\n");
+		OUT("return 0;\n");
 		INDENT(-1);
 	OUT("} else {\n");
 		INDENT(+1);
