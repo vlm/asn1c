@@ -12,6 +12,15 @@
 #undef	INT_MAX
 #define	INT_MAX	((int)(((unsigned int)-1) >> 1))
 
+#ifndef	INFINITY
+#define	INFINITY	HUGE_VAL
+#endif
+
+#ifndef	NAN
+static const double nan0;
+#define	NAN	(nan0/nan0)
+#endif
+
 /*
  * REAL basic type description.
  */
