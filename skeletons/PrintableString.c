@@ -64,7 +64,8 @@ PrintableString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		 */
 		for(; buf < end; buf++) {
 			if(!_PrintableString_alphabet[*buf]) {
-				_ASN_ERRLOG("%s: value byte %d "
+				_ASN_ERRLOG(app_errlog, app_key,
+					"%s: value byte %d "
 					"not in PrintableString alphabet (%d)",
 					td->name,
 					(buf - st->buf) + 1,
@@ -74,7 +75,8 @@ PrintableString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			}
 		}
 	} else {
-		_ASN_ERRLOG("%s: value not given", td->name);
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
 		return -1;
 	}
 

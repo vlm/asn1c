@@ -520,7 +520,8 @@ SET_OF_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	int i;
 
 	if(!sptr) {
-		_ASN_ERRLOG("%s: value not given", td->name);
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
 		return -1;
 	}
 

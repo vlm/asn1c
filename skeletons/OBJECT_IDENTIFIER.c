@@ -79,12 +79,14 @@ OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 	if(st && st->buf) {
 		if(st->size < 1) {
-			_ASN_ERRLOG("%s: at least one numerical value expected",
+			_ASN_ERRLOG(app_errlog, app_key,
+				"%s: at least one numerical value expected",
 				td->name);
 			return -1;
 		}
 	} else {
-		_ASN_ERRLOG("%s: value not given", td->name);
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
 		return -1;
 	}
 

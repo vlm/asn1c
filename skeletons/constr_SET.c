@@ -660,7 +660,8 @@ SET_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	int edx;
 
 	if(!sptr) {
-		_ASN_ERRLOG("%s: value not given", td->name);
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
 		return -1;
 	}
 
@@ -676,7 +677,7 @@ SET_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			if(!memb_ptr) {
 				if(ASN_SET_ISPRESENT2(
 					&(specs->_mandatory_elements), edx)) {
-					_ASN_ERRLOG(
+					_ASN_ERRLOG(app_errlog, app_key,
 						"%s: mandatory element "
 						"%s absent",
 						td->name, elm->name);
