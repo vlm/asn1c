@@ -1,5 +1,5 @@
 
-0.9.7:	2004-Oct-03
+0.9.7:	2004-Oct-04
 
 	* Finished CANONICAL-XER implementation by adding SET and SET OF
 	  canonical ordering support.
@@ -7,6 +7,12 @@
 	* Removed C99'izm from the x509dump, now understood by older compilers.
 	* Enhanced UTF8String constraint validation, now it checks
 	  for the minimal encoding length; API of UTF8String_length() changed.
+	* Fixed SEQUENCE dealing with premature termination of the
+	  optionals-laden indefinite length structure. The code was previously
+	  refusing to parse such structures.
+	* Fixed CHOICE code spin when indefinite length structures appear
+	  in the extensions (Severity: medium, Security impact: medium).
+	  Reported by <siden@ul-gsm.ru>.
 
 0.9.6:	2004-Sep-29
 
@@ -289,3 +295,29 @@
 0.1:	2003-Nov-28
 
 	* Programming started.
+
+=== Bug importance disclosure terms ===
+
+SEVERITY.
+    This term applies to the frequence the particular construct is used
+    in the real world. The higher the frequency, the more chances of triggering
+    this bug.
+	low:	The ASN.1 specifications which could trigger
+		this kind of bug are not widespread.
+	medium:	The particular ASN.1 construct is used quite often,
+		so the chance of triggering an error is considerable.
+	high:	This fix is considered urgent, or the particular ASN.1
+		construct triggering this bug is in wide use.
+
+SECURITY IMPACT.
+    This term applies to the amount of potential damage a bug exploitation
+    could cause.
+	low:	The local exploitation is unlikely; the remote exploitation
+		is impossible.
+	medium:	The remote exploitation is possible when a particular ASN.1
+		construct is being used. If possible, only hard failure, spin
+		or memory leak are the possible outcome: no shellcode
+		injection could possibly be carried by the attack.
+	high:	The remote shellcode injection is possible, or the bug is
+		otherwise remotely exploitable for most specifications.
+
