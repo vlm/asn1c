@@ -82,11 +82,17 @@ static asn1_SEQUENCE_element_t asn1_DEF_LogLine_elements[] = {
 static ber_tlv_tag_t asn1_DEF_LogLine_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
+static asn1_TYPE_tag2member_t asn1_DEF_LogLine_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1 }, /* varsets at 25 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 0 }, /* line-digest at 23 */
+};
 static asn1_SEQUENCE_specifics_t asn1_DEF_LogLine_specs = {
 	sizeof(struct LogLine),
 	offsetof(struct LogLine, _ber_dec_ctx),
 	asn1_DEF_LogLine_elements,
 	2,	/* Elements count */
+	asn1_DEF_LogLine_tag2el,
+	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
@@ -190,11 +196,17 @@ static asn1_SEQUENCE_element_t asn1_DEF_VariablePartSet_elements[] = {
 static ber_tlv_tag_t asn1_DEF_VariablePartSet_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
+static asn1_TYPE_tag2member_t asn1_DEF_VariablePartSet_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0 }, /* vparts at 33 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1 }, /* resolution at 35 */
+};
 static asn1_SEQUENCE_specifics_t asn1_DEF_VariablePartSet_specs = {
 	sizeof(struct VariablePartSet),
 	offsetof(struct VariablePartSet, _ber_dec_ctx),
 	asn1_DEF_VariablePartSet_elements,
 	2,	/* Elements count */
+	asn1_DEF_VariablePartSet_tag2el,
+	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
@@ -318,11 +330,17 @@ typedef struct VariablePart {
 		static ber_tlv_tag_t asn1_DEF_vrange_tags[] = {
 			(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 		};
+		static asn1_TYPE_tag2member_t asn1_DEF_vrange_tag2el[] = {
+		    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0 }, /* from at 45 */
+		    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1 }, /* to at 46 */
+		};
 		static asn1_SEQUENCE_specifics_t asn1_DEF_vrange_specs = {
 			sizeof(struct vrange),
 			offsetof(struct vrange, _ber_dec_ctx),
 			asn1_DEF_vrange_elements,
 			2,	/* Elements count */
+			asn1_DEF_vrange_tag2el,
+			2,	/* Count of tags in the map */
 			1,	/* Start extensions */
 			3	/* Stop extensions */
 		};
@@ -361,7 +379,7 @@ static asn1_CHOICE_element_t asn1_DEF_VariablePart_elements[] = {
 static ber_tlv_tag_t asn1_DEF_VariablePart_tags[] = {
 	
 };
-static asn1_CHOICE_tag2member_t asn1_DEF_VariablePart_tag2el[] = {
+static asn1_TYPE_tag2member_t asn1_DEF_VariablePart_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1 }, /* vrange at 45 */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0 }, /* vset at 42 */
 };
@@ -500,11 +518,17 @@ typedef struct ActionItem {
 	static ber_tlv_tag_t asn1_DEF_notify_tags[] = {
 		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 	};
+	static asn1_TYPE_tag2member_t asn1_DEF_notify_tag2el[] = {
+	    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0 }, /* critical at 61 */
+	    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1 }, /* email at 62 */
+	};
 	static asn1_SEQUENCE_specifics_t asn1_DEF_notify_specs = {
 		sizeof(struct notify),
 		offsetof(struct notify, _ber_dec_ctx),
 		asn1_DEF_notify_elements,
 		2,	/* Elements count */
+		asn1_DEF_notify_tag2el,
+		2,	/* Count of tags in the map */
 		1,	/* Start extensions */
 		3	/* Stop extensions */
 	};
@@ -543,11 +567,17 @@ static asn1_SEQUENCE_element_t asn1_DEF_ActionItem_elements[] = {
 static ber_tlv_tag_t asn1_DEF_ActionItem_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
+static asn1_TYPE_tag2member_t asn1_DEF_ActionItem_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0 }, /* accept-as at 55 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1 }, /* notify at 61 */
+};
 static asn1_SEQUENCE_specifics_t asn1_DEF_ActionItem_specs = {
 	sizeof(struct ActionItem),
 	offsetof(struct ActionItem, _ber_dec_ctx),
 	asn1_DEF_ActionItem_elements,
 	2,	/* Elements count */
+	asn1_DEF_ActionItem_tag2el,
+	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
