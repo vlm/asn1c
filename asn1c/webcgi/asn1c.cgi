@@ -12,8 +12,9 @@ $TMPDIR = '/tmp/asn1c-cgi-jail/';
 $SUIDHelper = './asn1c-suid-helper';
 $SkeletonsDir = '/usr/local/share/asn1c';	# Will be needed only once
 $CompilerLocation = '/usr/local/bin/asn1c';	# asn1c binary location
+$HelpDBFile = $TMPDIR . '/var/db/Help-DB';	# Help requests database
 $HashProgramPath = 'md5';			# Program to hash the input
-$DM = 0750;					# Directory mode for all mkdirs.
+$DM = 0750;					# Directory mode for all mkdirs
 $MaxHistoryItems = 5;				# Number of items in History
 $DynamicHistory = 'yes';			# Full/Short history
 $safeFilename = '^[a-z0-9_-]+[.a-z0-9_-]*$';	# Safe filename
@@ -92,6 +93,8 @@ sub prepareChrootEnvironment() {
 	mkdir $TMPDIR . 'sessions', $DM or bark($OpEnvFailed, $!); # sessions
 	mkdir $TMPDIR . 'bin', $DM or bark($OpEnvFailed, $!);	# asn1c location
 	mkdir $TMPDIR . 'skeletons', $DM or bark($OpEnvFailed, $!); # asn1c data
+	mkdir $TMPDIR . 'var', $DM or bark($OpEnvFailed, $!);
+	mkdir $TMPDIR . 'var/db', $DM or bark($OpEnvFailed, $!);
 	if(-d '/lib') {
 		# Merge in dynamic libc
 		mkdir $TMPDIR . 'lib', $DM or bark($OpEnvFailed, $!);
@@ -277,17 +280,28 @@ unless($session) {
 $transHelp = param('transHelp');
 if(defined($transHelp)
 && $transHelp =~ /^([0-9]+)--([0-9TZ:+-]{14,})--([_.a-zA-Z0-9-]+)$/) {
-	open(S, "| sendmail -it") or bark("Cannot perform help request, please email to the address below");
+	open(S, "| sendmail -it")
+		or bark("Cannot perform help request, "
+			. "please email to the address below");
 	print S "From: $userEmail\n";
 	print S "To: $HelpEmail\n";
-	print S "Subject: asn1c help requested for $3 ($1)\n";
+	print S "Subject: asn1c help requested for $3 ($1) by $userEmail\n";
 	print S "\n";
-	print S "User $userEmail requested help with\n$session/$2--$3 ($1)\n";
-	print S "\n-- \nasn1c\n";
+	print S "\n-- \n";
+	print S "User $userEmail requested help with\n";
+	print S "$session/$2--$3 ($1)\n";
 	close(S);
-	open(S, '>> ' . $sessionDir . '/' . $2 . '--' . $3 . '/+HelpReq');
+
+	open(S, '>> ' . $sessionDir . '/' . $2 . '--' . $3 . '/+HelpReq')
+		or bark("Cannot perform help request, "
+			. "please email to the address below");
 	print S "$userEmail\n";
 	close(S);
+
+	open(S, '>> ' . $HelpDBFile);	# Susceptible to race condition.
+	print S "$session/$2--$1--$3\n";
+	close(S);
+
 	$content = '<CENTER>Transaction '
 		. "$1 ($3) is marked for manual processing.<BR>"
 		. "Results will be mailed to "
@@ -368,11 +382,13 @@ if($#gotSafeNames >= 0) {
 	my $optE = param('optE');
 	my $optEF = param('optEF');
 	my $optNT = param('optNT');
+	my $optCN = param('optCN');
 	$options .= " -Wdebug-lexer"
 		if(defined($optDebugL) && $optDebugL eq "on");
 	$options .= " -E" if(defined($optE) && $optE eq "on");
 	$options .= " -EF" if(defined($optEF) && $optEF eq "on");
 	$options .= " -fnative-types" if(defined($optNT) && $optNT eq "on");
+	$options .= " -fcompound-names" if(defined($optCN) && $optNT eq "on");
 	my $CompileASN = "$TMPDIR/bin/asn1c -v | sed -e 's/^/-- /'"
 			. " > $sandbox/+Compiler.Log 2>&1"
 		. "; $SUIDHelper $TMPDIR $inChDir $options @gotSafeNames "
@@ -413,6 +429,7 @@ $form =
 . "<INPUT TYPE=checkbox NAME=optE> Just parse and dump (do not compile) (<I>-E</I>)<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optEF> Parse, perform semantic checks, and dump (<I>-E -F</I>)<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optNT CHECKED=on> Employ native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>\n"
+. "<INPUT TYPE=checkbox NAME=optCN> Prevent name clashes in compiled output (<I>-fcompound-names</I>)<BR>\n"
 . "</FONT>"
 . "<P>\n"
 . "<INPUT TYPE=submit VALUE=\"Proceed with ASN.1 compilation\">"
@@ -430,6 +447,7 @@ my @transactions = sort { $b cmp $a }
 		(grep {/^[0-9TZ:+-]{14,}--[_.a-zA-Z0-9-]+$/}
 			readdir(SD));
 my $CountHistoryItems = 0;
+my $fullresp = param("fullresp");
 foreach my $trans (sort { $b cmp $a } @transactions) {
 	next unless($trans =~ /^([0-9TZ:+-]{14,})--([_.a-zA-Z0-9-]+)$/);
 
@@ -492,10 +510,23 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "Fetch results (.tgz)</A></NOBR>"
 		if $allowFetchResults;
 	if($ec ne "0") {
-		local $eml;
+		local $eml, @resp;
+		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpResp')
+			and @resp = <H>;
 		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpReq')
 			and chomp($eml = <H>);
-		if(defined($eml)) {
+		if($#resp >= 0) {
+			shift(@resp) while($resp[0] =~ /^$/);
+			if($fullresp eq $tNum) {
+				$results .= "<P><B>Analysis:</B><BLOCKQUOTE>";
+				$results .= join("<BR>", @resp);
+				$results .= "</BLOCKQUOTE>";
+				$results .= "(<A HREF=\"$myName\">Hide full text</A>)";
+			} else {
+				$results .= "<P><B>Analysis:</B> $resp[0]<BR>";
+				$results .= "(<A HREF=\"$myName?fullresp=$tNum\">Show full text</A>)";
+			}
+		} elsif($eml) {
 			$results .= "<P><FONT COLOR=darkred Family=Serif><B>"
 				. "Status: manual help requested<BR>"
 				. " by <FONT COLOR=black>$eml</FONT>,<BR>"
