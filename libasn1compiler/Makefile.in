@@ -50,21 +50,18 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libasn1compiler_la_DEPENDENCIES =  \
-	${top_builddir}/libasn1parser/libasn1parser.la \
-	${top_builddir}/libasn1fix/libasn1fix.la
+libasn1compiler_la_LIBADD =
 am_libasn1compiler_la_OBJECTS = asn1compiler.lo asn1c_misc.lo \
 	asn1c_out.lo asn1c_lang.lo asn1c_save.lo asn1c_C.lo \
 	asn1c_compat.lo
 libasn1compiler_la_OBJECTS = $(am_libasn1compiler_la_OBJECTS)
 check_compiler_SOURCES = check_compiler.c
 check_compiler_OBJECTS = check_compiler.$(OBJEXT)
-check_compiler_LDADD = $(LDADD)
 am__DEPENDENCIES_1 = libasn1compiler.la
-am__DEPENDENCIES_2 = ${top_builddir}/libasn1parser/libasn1parser.la \
-	${top_builddir}/libasn1fix/libasn1fix.la
 check_compiler_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_2)
+	$(top_builddir)/libasn1parser/libasn1parser.la \
+	$(top_builddir)/libasn1cnst/libasn1cnst.la \
+	$(top_builddir)/libasn1fix/libasn1fix.la
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -215,13 +212,12 @@ libasn1compiler_la_SOURCES = \
 	asn1c_compat.c asn1c_compat.h		\
 	asn1c_internal.h
 
-libasn1compiler_la_LIBADD = \
-	${top_builddir}/libasn1parser/libasn1parser.la	\
-	${top_builddir}/libasn1fix/libasn1fix.la
+TESTS = $(check_PROGRAMS)
+check_compiler_LDADD = $(noinst_LTLIBRARIES)		\
+	$(top_builddir)/libasn1parser/libasn1parser.la	\
+	$(top_builddir)/libasn1cnst/libasn1cnst.la	\
+	$(top_builddir)/libasn1fix/libasn1fix.la
 
-TESTS = ${check_PROGRAMS}
-LDADD = ${noinst_LTLIBRARIES} ${libasn1compiler_la_LIBADD}
-DEPENDENCIES = ${LDADD} 
 all: all-am
 
 .SUFFIXES:
