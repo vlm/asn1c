@@ -8,13 +8,26 @@
 #ifndef	_ASN_TYPES_H_
 #define	_ASN_TYPES_H_
 
+#ifdef	HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>	/* For fprintf() */
 #include <stdlib.h>	/* For *alloc(3) */
 #include <string.h>	/* For memcpy(3) */
 #include <sys/types.h>	/* For size_t */
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
+
+#include <inttypes.h>	/* C99 specifies this file */
+
+/*
+ * Earlier FreeBSD version didn't have <stdint.h>,
+ * but <inttypes.h> was present.
+ */
+#if	!defined(__FreeBSD__) || !defined(_SYS_INTTYPES_H_) /* Workaround */
 #include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
+#endif
 
 #ifdef	WIN32
 #define	 snprintf	_snprintf
