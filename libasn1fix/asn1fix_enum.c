@@ -7,7 +7,7 @@ int
 asn1f_fix_enum(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *ev;
-	asn1_integer_t max_value = -1;
+	asn1c_integer_t max_value = -1;
 	int rvalue = 0;
 	asn1p_expr_t *ext_marker = NULL;	/* "..." position */
 	int ret;
@@ -21,7 +21,7 @@ asn1f_fix_enum(arg_t *arg) {
 	 * 1. Scan the enumeration values in search for inconsistencies.
 	 */
 	TQ_FOR(ev, &(expr->members), next) {
-		asn1_integer_t eval;
+		asn1c_integer_t eval;
 
 		if(ev->value)
 			DEBUG("\tItem %s(%s)", ev->Identifier,

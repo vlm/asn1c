@@ -8,7 +8,7 @@ typedef struct asn1cnst_edge_s {
 		ARE_VALUE,
 	} type;
 	int lineno;	/* Line where the corresponding token was found */
-	asn1_integer_t value;	/* Value when type is ARE_VALUE */
+	asn1c_integer_t value;	/* Value when type is ARE_VALUE */
 } asn1cnst_edge_t;
 
 typedef struct asn1cnst_range_s {

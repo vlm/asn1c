@@ -352,7 +352,7 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 		 * However, (FROM("abc".."def")) is forbidden.
 		 * See also 47.4.4.
 		 */
-		asn1_integer_t vmin, vmax;
+		asn1c_integer_t vmin, vmax;
 		vmin = vmax = *p;
 		for(; p < pend; p++) {
 			asn1cnst_range_t *nr = _range_new();

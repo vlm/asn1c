@@ -287,7 +287,7 @@ int
 asn1f_fix_constr_autotag(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
-	asn1_integer_t tag_value = 0;
+	asn1c_integer_t tag_value = 0;
 	int r_value = 0;
 
 	switch(expr->expr_type) {
