@@ -4,7 +4,9 @@
 #include <Sequence.h>
 #include <Set.h>
 #include <SetOf.h>
-#include <SeqOf.h>
+#include <SequenceOf.h>
+#include <ExtensibleSet.h>
+#include <ExtensibleSequence.h>
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [PDU] >>> ***/
@@ -14,7 +16,10 @@ typedef enum PDU_PR {
 	PDU_PR_sequence,
 	PDU_PR_set,
 	PDU_PR_setOf,
-	PDU_PR_seqOf,
+	PDU_PR_sequenceOf,
+	PDU_PR_extensibleSet,
+	PDU_PR_extensibleSequence,
+	/* Extensions may appear below */
 } PDU_PR;
 extern asn_TYPE_descriptor_t asn_DEF_PDU;
 
@@ -27,7 +32,13 @@ typedef struct PDU {
 		Sequence_t	 sequence;
 		Set_t	 set;
 		SetOf_t	 setOf;
-		SeqOf_t	 seqOf;
+		SequenceOf_t	 sequenceOf;
+		ExtensibleSet_t	 extensibleSet;
+		ExtensibleSequence_t	 extensibleSequence;
+		/*
+		 * This type is extensible,
+		 * possible extensions are below.
+		 */
 	} choice;
 	
 	/* Context for parsing across buffer boundaries */
@@ -58,19 +69,35 @@ static asn_TYPE_member_t asn_MBR_PDU[] = {
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "setOf"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.seqOf),
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.sequenceOf),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_SeqOf,
+		.type = (void *)&asn_DEF_SequenceOf,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.name = "seqOf"
+		.name = "sequenceOf"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSet),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_ExtensibleSet,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "extensibleSet"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSequence),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_ExtensibleSequence,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "extensibleSequence"
 		},
 };
 static asn_TYPE_tag2member_t asn_DEF_PDU_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* sequence at 19 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* set at 20 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* setOf at 21 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* seqOf at 23 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* sequenceOf at 22 */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 4, 0, 0 }, /* extensibleSet at 23 */
+    { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 5, 0, 0 }, /* extensibleSequence at 24 */
 };
 static asn_CHOICE_specifics_t asn_DEF_PDU_specs = {
 	sizeof(struct PDU),
@@ -78,8 +105,8 @@ static asn_CHOICE_specifics_t asn_DEF_PDU_specs = {
 	offsetof(struct PDU, present),
 	sizeof(((struct PDU *)0)->present),
 	asn_DEF_PDU_tag2el,
-	4,	/* Count of tags in the map */
-	0	/* Whether extensible */
+	6,	/* Count of tags in the map */
+	1	/* Whether extensible */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",
@@ -97,7 +124,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
 	asn_MBR_PDU,
-	4,	/* Elements count */
+	6,	/* Elements count */
 	&asn_DEF_PDU_specs	/* Additional specs */
 };
 
@@ -165,10 +192,10 @@ static ber_tlv_tag_t asn_DEF_Sequence_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_Sequence_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* integer at 26 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* sequence at 27 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* bits at 28 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* string at 29 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* integer at 29 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* sequence at 30 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* bits at 31 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* string at 32 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_Sequence_specs = {
 	sizeof(struct Sequence),
@@ -256,8 +283,8 @@ static ber_tlv_tag_t asn_DEF_Set_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_Set_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* roid at 33 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* opaque at 34 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* roid at 36 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* opaque at 37 */
 };
 static uint8_t asn_DEF_Set_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (0 << 6)
@@ -293,6 +320,175 @@ asn_TYPE_descriptor_t asn_DEF_Set = {
 	asn_MBR_Set,
 	2,	/* Elements count */
 	&asn_DEF_Set_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [ExtensibleSet] >>> ***/
+
+#include <UTF8String.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [ExtensibleSet] >>> ***/
+
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum ExtensibleSet_PR {
+	ExtensibleSet_PR_string,	/* Member string is present */
+} ExtensibleSet_PR;
+extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSet;
+
+/*** <<< TYPE-DECLS [ExtensibleSet] >>> ***/
+
+
+typedef struct ExtensibleSet {
+	UTF8String_t	*string	/* OPTIONAL */;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pExtensibleSet, ExtensibleSet_PR_x) */
+	unsigned int _presence_map
+		[((1+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} ExtensibleSet_t;
+
+/*** <<< STAT-DEFS [ExtensibleSet] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_ExtensibleSet[] = {
+	{ ATF_POINTER, 1, offsetof(struct ExtensibleSet, string),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "string"
+		},
+};
+static ber_tlv_tag_t asn_DEF_ExtensibleSet_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_TYPE_tag2member_t asn_DEF_ExtensibleSet_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 41 */
+};
+static uint8_t asn_DEF_ExtensibleSet_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(0 << 7)
+};
+static asn_SET_specifics_t asn_DEF_ExtensibleSet_specs = {
+	sizeof(struct ExtensibleSet),
+	offsetof(struct ExtensibleSet, _asn_ctx),
+	offsetof(struct ExtensibleSet, _presence_map),
+	asn_DEF_ExtensibleSet_tag2el,
+	1,	/* Count of tags in the map */
+	asn_DEF_ExtensibleSet_tag2el,	/* Same as above */
+	1,	/* Count of tags in the CANONICAL-XER map */
+	1,	/* Whether extensible */
+	(unsigned int *)asn_DEF_ExtensibleSet_mmap	/* Mandatory elements map */
+};
+asn_TYPE_descriptor_t asn_DEF_ExtensibleSet = {
+	"ExtensibleSet",
+	"ExtensibleSet",
+	SET_free,
+	SET_print,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_decode_xer,
+	SET_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_ExtensibleSet_tags,
+	sizeof(asn_DEF_ExtensibleSet_tags)
+		/sizeof(asn_DEF_ExtensibleSet_tags[0]), /* 1 */
+	asn_DEF_ExtensibleSet_tags,	/* Same as above */
+	sizeof(asn_DEF_ExtensibleSet_tags)
+		/sizeof(asn_DEF_ExtensibleSet_tags[0]), /* 1 */
+	asn_MBR_ExtensibleSet,
+	1,	/* Elements count */
+	&asn_DEF_ExtensibleSet_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [ExtensibleSequence] >>> ***/
+
+#include <UTF8String.h>
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [ExtensibleSequence] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence;
+
+/*** <<< TYPE-DECLS [ExtensibleSequence] >>> ***/
+
+
+typedef struct ExtensibleSequence {
+	UTF8String_t	*string	/* OPTIONAL */;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	INTEGER_t	*integer	/* OPTIONAL */;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} ExtensibleSequence_t;
+
+/*** <<< STAT-DEFS [ExtensibleSequence] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_ExtensibleSequence[] = {
+	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence, string),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "string"
+		},
+	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence, integer),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "integer"
+		},
+};
+static ber_tlv_tag_t asn_DEF_ExtensibleSequence_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_DEF_ExtensibleSequence_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 46 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* integer at 48 */
+};
+static asn_SEQUENCE_specifics_t asn_DEF_ExtensibleSequence_specs = {
+	sizeof(struct ExtensibleSequence),
+	offsetof(struct ExtensibleSequence, _asn_ctx),
+	asn_DEF_ExtensibleSequence_tag2el,
+	2,	/* Count of tags in the map */
+	0,	/* Start extensions */
+	3	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
+	"ExtensibleSequence",
+	"ExtensibleSequence",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_ExtensibleSequence_tags,
+	sizeof(asn_DEF_ExtensibleSequence_tags)
+		/sizeof(asn_DEF_ExtensibleSequence_tags[0]), /* 1 */
+	asn_DEF_ExtensibleSequence_tags,	/* Same as above */
+	sizeof(asn_DEF_ExtensibleSequence_tags)
+		/sizeof(asn_DEF_ExtensibleSequence_tags[0]), /* 1 */
+	asn_MBR_ExtensibleSequence,
+	2,	/* Elements count */
+	&asn_DEF_ExtensibleSequence_specs	/* Additional specs */
 };
 
 
@@ -358,29 +554,29 @@ asn_TYPE_descriptor_t asn_DEF_SetOf = {
 };
 
 
-/*** <<< INCLUDES [SeqOf] >>> ***/
+/*** <<< INCLUDES [SequenceOf] >>> ***/
 
 #include <INTEGER.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 
-/*** <<< DEPS [SeqOf] >>> ***/
+/*** <<< DEPS [SequenceOf] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_SeqOf;
+extern asn_TYPE_descriptor_t asn_DEF_SequenceOf;
 
-/*** <<< TYPE-DECLS [SeqOf] >>> ***/
+/*** <<< TYPE-DECLS [SequenceOf] >>> ***/
 
 
-typedef struct SeqOf {
+typedef struct SequenceOf {
 	A_SEQUENCE_OF(INTEGER_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} SeqOf_t;
+} SequenceOf_t;
 
-/*** <<< STAT-DEFS [SeqOf] >>> ***/
+/*** <<< STAT-DEFS [SequenceOf] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_SeqOf[] = {
+static asn_TYPE_member_t asn_MBR_SequenceOf[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -389,17 +585,17 @@ static asn_TYPE_member_t asn_MBR_SeqOf[] = {
 		.name = "id"
 		},
 };
-static ber_tlv_tag_t asn_DEF_SeqOf_tags[] = {
+static ber_tlv_tag_t asn_DEF_SequenceOf_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_DEF_SeqOf_specs = {
-	sizeof(struct SeqOf),
-	offsetof(struct SeqOf, _asn_ctx),
+static asn_SET_OF_specifics_t asn_DEF_SequenceOf_specs = {
+	sizeof(struct SequenceOf),
+	offsetof(struct SequenceOf, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
-asn_TYPE_descriptor_t asn_DEF_SeqOf = {
-	"SeqOf",
-	"SeqOf",
+asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
+	"SequenceOf",
+	"SequenceOf",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -408,14 +604,14 @@ asn_TYPE_descriptor_t asn_DEF_SeqOf = {
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_SeqOf_tags,
-	sizeof(asn_DEF_SeqOf_tags)
-		/sizeof(asn_DEF_SeqOf_tags[0]), /* 1 */
-	asn_DEF_SeqOf_tags,	/* Same as above */
-	sizeof(asn_DEF_SeqOf_tags)
-		/sizeof(asn_DEF_SeqOf_tags[0]), /* 1 */
-	asn_MBR_SeqOf,
+	asn_DEF_SequenceOf_tags,
+	sizeof(asn_DEF_SequenceOf_tags)
+		/sizeof(asn_DEF_SequenceOf_tags[0]), /* 1 */
+	asn_DEF_SequenceOf_tags,	/* Same as above */
+	sizeof(asn_DEF_SequenceOf_tags)
+		/sizeof(asn_DEF_SequenceOf_tags[0]), /* 1 */
+	asn_MBR_SequenceOf,
 	1,	/* Single element */
-	&asn_DEF_SeqOf_specs	/* Additional specs */
+	&asn_DEF_SequenceOf_specs	/* Additional specs */
 };
 
