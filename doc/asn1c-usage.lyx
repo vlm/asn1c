@@ -3931,6 +3931,27 @@ n
 Compile the resulting C code as shown in the previous chapters.
 \layout Enumerate
 
+Try to test the constraints checking code by assigning integer value 101
+ to the 
+\series bold 
+.height
+\series default 
+ member of the Rectangle structure, or a negative value to the 
+\series bold 
+.width
+\series default 
+ member.
+ In either case, the program should print 
+\begin_inset Quotes sld
+\end_inset 
+
+Constraint validation failed
+\begin_inset Quotes srd
+\end_inset 
+
+ message, followed by the short explanation why validation did not succeed.
+\layout Enumerate
+
 Done.
 \layout Bibliography
 \bibitem [ASN1C]{ASN1C}
