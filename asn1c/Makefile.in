@@ -59,7 +59,6 @@ asn1c_LDADD = $(LDADD)
 asn1c_DEPENDENCIES = $(top_builddir)/libasn1parser/libasn1parser.la \
 	$(top_builddir)/libasn1print/libasn1print.la \
 	$(top_builddir)/libasn1fix/libasn1fix.la \
-	$(top_builddir)/libasn1cnst/libasn1cnst.la \
 	$(top_builddir)/libasn1compiler/libasn1compiler.la
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -213,7 +212,6 @@ LDADD = \
 	$(top_builddir)/libasn1parser/libasn1parser.la	\
 	$(top_builddir)/libasn1print/libasn1print.la	\
 	$(top_builddir)/libasn1fix/libasn1fix.la	\
-	$(top_builddir)/libasn1cnst/libasn1cnst.la	\
 	$(top_builddir)/libasn1compiler/libasn1compiler.la
 
 asn1c_SOURCES = asn1c.c	\

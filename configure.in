@@ -53,6 +53,7 @@ AC_SUBST(ADD_CFLAGS)
 dnl Add these flags if we're using GCC.
 case "$GCC" in
  yes)
+   CFLAGS="$CFLAGS -W"
    CFLAGS="$CFLAGS -Wall"
    CFLAGS="$CFLAGS -Wshadow"
    CFLAGS="$CFLAGS -Wcast-qual"
