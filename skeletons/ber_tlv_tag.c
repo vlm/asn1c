@@ -7,7 +7,7 @@
 #include <errno.h>
 
 ssize_t
-ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
+ber_fetch_tag(const void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 	ber_tlv_tag_t val;
 	ber_tlv_tag_t tclass;
 	size_t skipped;
@@ -15,7 +15,7 @@ ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 	if(size == 0)
 		return 0;
 
-	val = *(uint8_t *)ptr;
+	val = *(const uint8_t *)ptr;
 	tclass = (val >> 6);
 	if((val &= 0x1F) != 0x1F) {
 		/*
@@ -30,9 +30,10 @@ ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 	 * Each octet contains 7 bits of useful information.
 	 * The MSB is 0 if it is the last octet of the tag.
 	 */
-	for(val = 0, ptr = ((char *)ptr) + 1, skipped = 2;
-			skipped <= size; ptr = ((char *)ptr) + 1, skipped++) {
-		unsigned int oct = *(uint8_t *)ptr;
+	for(val = 0, ptr = ((const char *)ptr) + 1, skipped = 2;
+			skipped <= size;
+				ptr = ((const char *)ptr) + 1, skipped++) {
+		unsigned int oct = *(const uint8_t *)ptr;
 		if(oct & 0x80) {
 			val = (val << 7) | (oct & 0x7F);
 			/*

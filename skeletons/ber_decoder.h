@@ -17,7 +17,7 @@ struct asn_codec_ctx_s;		/* Forward declaration */
 asn_dec_rval_t ber_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,
 	void **struct_ptr,	/* Pointer to a target structure's pointer */
-	void *buffer,		/* Data to be decoded */
+	const void *buffer,	/* Data to be decoded */
 	size_t size		/* Size of that buffer */
 	);
 
@@ -27,7 +27,7 @@ asn_dec_rval_t ber_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 typedef asn_dec_rval_t (ber_type_decoder_f)(
 		struct asn_codec_ctx_s *opt_codec_ctx,
 		struct asn_TYPE_descriptor_s *type_descriptor,
-		void **struct_ptr, void *buf_ptr, size_t size,
+		void **struct_ptr, const void *buf_ptr, size_t size,
 		int tag_mode);
 
 /*******************************
@@ -45,7 +45,7 @@ asn_dec_rval_t ber_check_tags(
 		struct asn_codec_ctx_s *opt_codec_ctx,	/* optional context */
 		struct asn_TYPE_descriptor_s *type_dsc,
 		asn_struct_ctx_t *opt_ctx,	/* saved decoding context */
-		void *ptr, size_t size,
+		const void *ptr, size_t size,
 		int tag_mode,		/* {-1,0,1}: IMPLICIT, no, EXPLICIT */
 		int last_tag_form,	/* {-1,0:1}: any, primitive, constr */
 		ber_tlv_len_t *last_length,

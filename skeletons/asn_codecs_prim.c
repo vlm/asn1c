@@ -13,7 +13,7 @@
 asn_dec_rval_t
 ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
-	void **sptr, void *buf_ptr, size_t size, int tag_mode) {
+	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
 	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)*sptr;
 	asn_dec_rval_t rval;
 	ber_tlv_len_t length;
@@ -47,7 +47,7 @@ ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Make sure we have this length.
 	 */
-	buf_ptr = ((char *)buf_ptr) + rval.consumed;
+	buf_ptr = ((const char *)buf_ptr) + rval.consumed;
 	size -= rval.consumed;
 	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;
@@ -238,7 +238,7 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	void **sptr,
 	size_t struct_size,
 	const char *opt_mname,
-	void *buf_ptr, size_t size,
+	const void *buf_ptr, size_t size,
 	xer_primitive_body_decoder_f *prim_body_decoder
 ) {
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;

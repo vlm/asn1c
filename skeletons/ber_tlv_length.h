@@ -17,7 +17,7 @@ typedef ssize_t ber_tlv_len_t;
  * On return with >0, len_r is constrained as -1..MAX, where -1 mean
  * that the value is of indefinite length.
  */
-ssize_t ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
+ssize_t ber_fetch_length(int _is_constructed, const void *bufptr, size_t size,
 	ber_tlv_len_t *len_r);
 
 /*
@@ -30,7 +30,7 @@ ssize_t ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
 struct asn_codec_ctx_s;	/* Forward declaration */
 ssize_t ber_skip_length(
 	struct asn_codec_ctx_s *opt_codec_ctx,	/* optional context */
-	int _is_constructed, void *bufptr, size_t size);
+	int _is_constructed, const void *bufptr, size_t size);
 
 /*
  * This function serializes the length (L from TLV) in DER format.

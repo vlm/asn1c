@@ -7,15 +7,15 @@
 #include <ber_tlv_tag.h>
 
 ssize_t
-ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
+ber_fetch_length(int _is_constructed, const void *bufptr, size_t size,
 		ber_tlv_len_t *len_r) {
-	uint8_t *buf = (uint8_t *)bufptr;
+	const uint8_t *buf = (const uint8_t *)bufptr;
 	unsigned oct;
 
 	if(size == 0)
 		return 0;	/* Want more */
 
-	oct = *(uint8_t *)buf;
+	oct = *(const uint8_t *)buf;
 	if((oct & 0x80) == 0) {
 		/*
 		 * Short definite length.
@@ -75,7 +75,7 @@ ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
 
 ssize_t
 ber_skip_length(asn_codec_ctx_t *opt_codec_ctx,
-		int _is_constructed, void *ptr, size_t size) {
+		int _is_constructed, const void *ptr, size_t size) {
 	ber_tlv_len_t vlen;	/* Length of V in TLV */
 	ssize_t tl;		/* Length of L in TLV */
 	ssize_t ll;		/* Length of L in TLV */
@@ -116,7 +116,7 @@ ber_skip_length(asn_codec_ctx_t *opt_codec_ctx,
 	 * Indefinite length!
 	 */
 	ASN_DEBUG("Skipping indefinite length");
-	for(skip = ll, ptr = ((char *)ptr) + ll, size -= ll;;) {
+	for(skip = ll, ptr = ((const char *)ptr) + ll, size -= ll;;) {
 		ber_tlv_tag_t tag;
 
 		/* Fetch the tag */
@@ -125,7 +125,7 @@ ber_skip_length(asn_codec_ctx_t *opt_codec_ctx,
 
 		ll = ber_skip_length(opt_codec_ctx,
 			BER_TLV_CONSTRUCTED(ptr),
-			((char *)ptr) + tl, size - tl);
+			((const char *)ptr) + tl, size - tl);
 		if(ll <= 0) return ll;
 
 		skip += tl + ll;
@@ -135,11 +135,11 @@ ber_skip_length(asn_codec_ctx_t *opt_codec_ctx,
 		 * two consecutive 0 octets.
 		 * Check if it is true.
 		 */
-		if(((uint8_t *)ptr)[0] == 0
-		&& ((uint8_t *)ptr)[1] == 0)
+		if(((const uint8_t *)ptr)[0] == 0
+		&& ((const uint8_t *)ptr)[1] == 0)
 			return skip;
 
-		ptr = ((char *)ptr) + tl + ll;
+		ptr = ((const char *)ptr) + tl + ll;
 		size -= tl + ll;
  	}
 

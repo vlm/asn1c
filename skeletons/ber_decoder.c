@@ -8,7 +8,7 @@
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {					\
 		size_t num = num_bytes;					\
-		ptr = ((char *)ptr) + num;				\
+		ptr = ((const char *)ptr) + num;			\
 		size -= num;						\
 		consumed_myself += num;					\
 	} while(0)
@@ -30,7 +30,7 @@
 asn_dec_rval_t
 ber_decode(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *type_descriptor,
-	void **struct_ptr, void *ptr, size_t size) {
+	void **struct_ptr, const void *ptr, size_t size) {
 	asn_codec_ctx_t s_codec_ctx;
 
 	/*
@@ -58,7 +58,7 @@ ber_decode(asn_codec_ctx_t *opt_codec_ctx,
 asn_dec_rval_t
 ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 		asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx,
-		void *ptr, size_t size, int tag_mode, int last_tag_form,
+		const void *ptr, size_t size, int tag_mode, int last_tag_form,
 		ber_tlv_len_t *last_length, int *opt_tlv_form) {
 	ssize_t consumed_myself = 0;
 	ssize_t tag_len;
@@ -128,7 +128,7 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 		}
 		tlv_constr = BER_TLV_CONSTRUCTED(ptr);
 		len_len = ber_fetch_length(tlv_constr,
-			(char *)ptr + tag_len, size - tag_len, &tlv_len);
+			(const char *)ptr + tag_len, size - tag_len, &tlv_len);
 		switch(len_len) {
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
@@ -208,7 +208,7 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 		 * Fetch and process L from TLV.
 		 */
 		len_len = ber_fetch_length(tlv_constr,
-			(char *)ptr + tag_len, size - tag_len, &tlv_len);
+			(const char *)ptr + tag_len, size - tag_len, &tlv_len);
 		ASN_DEBUG("Fetchinig len = %ld", (long)len_len);
 		switch(len_len) {
 		case -1: RETURN(RC_FAIL);

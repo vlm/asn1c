@@ -44,7 +44,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 asn_dec_rval_t
 NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
-	void **nint_ptr, void *buf_ptr, size_t size, int tag_mode) {
+	void **nint_ptr, const void *buf_ptr, size_t size, int tag_mode) {
 	long *native = (long *)*nint_ptr;
 	asn_dec_rval_t rval;
 	ber_tlv_len_t length;
@@ -77,7 +77,7 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Make sure we have this length.
 	 */
-	buf_ptr = ((char *)buf_ptr) + rval.consumed;
+	buf_ptr = ((const char *)buf_ptr) + rval.consumed;
 	size -= rval.consumed;
 	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;
@@ -93,7 +93,7 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	{
 		INTEGER_t tmp;
 		long l;
-		tmp.buf = (uint8_t *)buf_ptr;
+		(const uint8_t *)tmp.buf = (const uint8_t *)buf_ptr;
 		tmp.size = length;
 
 		if(asn_INTEGER2long(&tmp, &l)) {
@@ -169,7 +169,7 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 asn_dec_rval_t
 NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		void *buf_ptr, size_t size) {
+		const void *buf_ptr, size_t size) {
 	asn_dec_rval_t rval;
 	INTEGER_t *st = 0;
 	void *st_ptr = (void *)&st;

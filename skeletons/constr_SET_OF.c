@@ -34,7 +34,7 @@
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr = ((char *)ptr) + num;	\
+		ptr = ((const char *)ptr) + num;\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -67,7 +67,7 @@
  */
 asn_dec_rval_t
 SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
+	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
@@ -166,13 +166,13 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case -1: RETURN(RC_FAIL);
 		}
 
-		if(ctx->left < 0 && ((uint8_t *)ptr)[0] == 0) {
+		if(ctx->left < 0 && ((const uint8_t *)ptr)[0] == 0) {
 			if(LEFT < 2) {
 				if(SIZE_VIOLATION)
 					RETURN(RC_FAIL);
 				else
 					RETURN(RC_WMORE);
-			} else if(((uint8_t *)ptr)[1] == 0) {
+			} else if(((const uint8_t *)ptr)[1] == 0) {
 				/*
 				 * Found the terminator of the
 				 * indefinite length structure.
@@ -241,15 +241,15 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 */
 		while(ctx->left < 0) {
 			if(LEFT < 2) {
-				if(LEFT > 0 && ((char *)ptr)[0] != 0) {
+				if(LEFT > 0 && ((const char *)ptr)[0] != 0) {
 					/* Unexpected tag */
 					RETURN(RC_FAIL);
 				} else {
 					RETURN(RC_WMORE);
 				}
 			}
-			if(((char *)ptr)[0] == 0
-			&& ((char *)ptr)[1] == 0) {
+			if(((const char *)ptr)[0] == 0
+			&& ((const char *)ptr)[1] == 0) {
 				ADVANCE(2);
 				ctx->left++;
 			} else {
@@ -452,7 +452,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		buf_ptr = ((char *)buf_ptr) + num;	\
+		buf_ptr = ((const char *)buf_ptr) + num;\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -463,7 +463,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 asn_dec_rval_t
 SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
-		void *buf_ptr, size_t size) {
+		const void *buf_ptr, size_t size) {
 	/*
 	 * Bring closer parts of structure description.
 	 */

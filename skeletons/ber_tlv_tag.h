@@ -18,7 +18,7 @@ typedef unsigned ber_tlv_tag_t;	/* BER TAG from Tag-Length-Value */
  */
 #define	BER_TAG_CLASS(tag)	((tag) & 0x3)
 #define	BER_TAG_VALUE(tag)	((tag) >> 2)
-#define	BER_TLV_CONSTRUCTED(tagptr)	(((*(uint8_t *)tagptr) & 0x20)?1:0)
+#define	BER_TLV_CONSTRUCTED(tagptr)	(((*(const uint8_t *)tagptr)&0x20)?1:0)
 
 #define	BER_TAGS_EQUAL(tag1, tag2)	((tag1) == (tag2))
 
@@ -39,7 +39,7 @@ char *ber_tlv_tag_string(ber_tlv_tag_t tag);
  * 	-1:	Fatal error deciphering tag.
  *	>0:	Number of bytes used from bufptr. tag_r will contain the tag.
  */
-ssize_t ber_fetch_tag(void *bufptr, size_t size, ber_tlv_tag_t *tag_r);
+ssize_t ber_fetch_tag(const void *bufptr, size_t size, ber_tlv_tag_t *tag_r);
 
 /*
  * This function serializes the tag (T from TLV) in BER format.

@@ -81,7 +81,7 @@ NULL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_b
 asn_dec_rval_t
 NULL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		void *buf_ptr, size_t size) {
+		const void *buf_ptr, size_t size) {
 
 	return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(NULL_t), opt_mname, buf_ptr, size,
