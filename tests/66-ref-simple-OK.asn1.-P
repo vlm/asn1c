@@ -27,7 +27,7 @@ static asn_TYPE_member_t asn_MBR_T[] = {
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_SimpleType,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.name = ""
+		.name = "named"
 		},
 };
 static ber_tlv_tag_t asn_DEF_T_tags[] = {

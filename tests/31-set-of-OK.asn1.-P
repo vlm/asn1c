@@ -177,7 +177,7 @@ typedef struct Stuff {
 		asn_struct_ctx_t _asn_ctx;
 	} *trees;
 	struct anything {
-		A_SET_OF(struct anything_member {
+		A_SET_OF(struct anything_Member {
 			BIT_STRING_t	 cup_of_coffee;
 			/*
 			 * This type is extensible,
@@ -257,8 +257,8 @@ asn_TYPE_descriptor_t asn_DEF_trees = {
 	&asn_DEF_trees_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_anything_member[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct anything_member, cup_of_coffee),
+static asn_TYPE_member_t asn_MBR_anything_Member[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct anything_Member, cup_of_coffee),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_BIT_STRING,
@@ -266,22 +266,22 @@ static asn_TYPE_member_t asn_MBR_anything_member[] = {
 		.name = "cup-of-coffee"
 		},
 };
-static ber_tlv_tag_t asn_DEF_anything_member_tags[] = {
+static ber_tlv_tag_t asn_DEF_anything_Member_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_anything_member_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_anything_Member_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 }, /* cup-of-coffee at 32 */
 };
-static asn_SEQUENCE_specifics_t asn_DEF_anything_member_specs = {
-	sizeof(struct anything_member),
-	offsetof(struct anything_member, _asn_ctx),
-	asn_DEF_anything_member_tag2el,
+static asn_SEQUENCE_specifics_t asn_DEF_anything_Member_specs = {
+	sizeof(struct anything_Member),
+	offsetof(struct anything_Member, _asn_ctx),
+	asn_DEF_anything_Member_tag2el,
 	1,	/* Count of tags in the map */
 	0,	/* Start extensions */
 	2	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_anything_member = {
+asn_TYPE_descriptor_t asn_DEF_anything_Member = {
 	"",
 	"",
 	SEQUENCE_free,
@@ -292,15 +292,15 @@ asn_TYPE_descriptor_t asn_DEF_anything_member = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_anything_member_tags,
-	sizeof(asn_DEF_anything_member_tags)
-		/sizeof(asn_DEF_anything_member_tags[0]), /* 1 */
-	asn_DEF_anything_member_tags,	/* Same as above */
-	sizeof(asn_DEF_anything_member_tags)
-		/sizeof(asn_DEF_anything_member_tags[0]), /* 1 */
-	asn_MBR_anything_member,
+	asn_DEF_anything_Member_tags,
+	sizeof(asn_DEF_anything_Member_tags)
+		/sizeof(asn_DEF_anything_Member_tags[0]), /* 1 */
+	asn_DEF_anything_Member_tags,	/* Same as above */
+	sizeof(asn_DEF_anything_Member_tags)
+		/sizeof(asn_DEF_anything_Member_tags[0]), /* 1 */
+	asn_MBR_anything_Member,
 	1,	/* Elements count */
-	&asn_DEF_anything_member_specs	/* Additional specs */
+	&asn_DEF_anything_Member_specs	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_anything[] = {
