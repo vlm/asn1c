@@ -1444,7 +1444,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 				++global_memb_unique);
 		}
 	} else {
-		OUT("0,\t/* Defer to actual type */\n");
+		OUT("0,\t/* Defer constraints checking to the member type */\n");
 	}
 	if(C99_MODE) OUT(".name = ");
 	OUT("\"%s\"\n", expr->_anonymous_type ? "" : expr->Identifier);
