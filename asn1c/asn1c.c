@@ -313,7 +313,7 @@ usage(const char *av0) {
 "  -fnative-types        Use \"int\" instead of INTEGER_t whenever possible\n"
 "  -fno-constraints      Do not generate constraint checking code\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
-"  -ftypes88             Use only ASN.1:1988 embedded types\n"
+"  -ftypes88             Pretend to support only ASN.1:1988 embedded types\n"
 "\n"
 
 "  -print-constraints    Explain subtype constraints (debug)\n"

@@ -301,11 +301,17 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 			 * This is a constructed type. Process recursively.
 			 */
 			printf(">\n");	/* Close the opening tag */
+			if(tlv_len != -1 && limit != -1) {
+				assert(limit >= tlv_len);
+			}
 			pdc = process_deeper(fname, fp, level + 1,
 				tlv_len == -1 ? limit : tlv_len,
 				&dec, tlv_len == -1);
 			if(pdc == PD_FAILED) return pdc;
-			if(limit != -1) limit -= dec;
+			if(limit != -1) {
+				assert(limit >= dec);
+				limit -= dec;
+			}
 			*decoded += dec;
 			if(tlv_len == -1) {
 				tblen = 0;
@@ -316,7 +322,10 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 			if(print_V(fname, fp, tlv_tag, tlv_len))
 				return PD_FAILED;
 
-			limit -= tlv_len;
+			if(limit != -1) {
+				assert(limit >= tlv_len);
+				limit -= tlv_len;
+			}
 			*decoded += tlv_len;
 		}
 

@@ -80,7 +80,7 @@ an ASN.1 standard and compiler may fail to produce the meaningful code.
 .TP
 .B \-fnative-types
 Use the native machine's data types (int, double) whenever possible,
-instead of the compound ASN.1 INTEGER_t, ENUMERATED_t and REAL_t types.
+instead of the compound INTEGER_t, ENUMERATED_t and REAL_t types.
 .TP
 .B \-fno-constraints
 Do not generate ASN.1 subtype constraint checking code. This may make a shorter executable.
@@ -89,7 +89,9 @@ Do not generate ASN.1 subtype constraint checking code. This may make a shorter 
 Enable unnamed unions in the definitions of target language's structures.
 .TP
 .B \-ftypes88
-Use only ASN.1:1988 embedded types.
+Pretend to support only ASN.1:1988 embedded types. Certain reserved words,
+such as UniversalString and BMPString, become ordinary type references
+and may be redefined by the specification.
 .SH OUTPUT OPTIONS
 .TP
 .B \-print-constraints
