@@ -11,7 +11,7 @@ ModuleTestSequenceSimple
 	DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
 
-	Programming ::= SEQUENCE SIZE(1..maxSize) OF Fault
+	Programming ::= SEQUENCE SIZE(1..maxSize) OF [0] IMPLICIT Fault
 
 	Fault ::= SET OF Error
 
