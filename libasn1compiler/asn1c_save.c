@@ -13,10 +13,12 @@ static int asn1c_copy_over(arg_t *arg, char *path);
 static int identical_files(const char *fname1, const char *fname2);
 
 int
-asn1c_save_compiled_output(arg_t *arg, const char *datadir) {
+asn1c_save_compiled_output(arg_t *arg, const char *datadir,
+		int argc, char **argv) {
 	asn1c_fdeps_t *deps = 0;
-	FILE *mkf;
 	asn1c_fdeps_t *dlist;
+	FILE *mkf;
+	int i;
 
 	deps = asn1c_read_file_dependencies(arg, datadir);
 	if(!deps && datadir) {
@@ -78,7 +80,6 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir) {
 		char buf[8129];
 		char *dir_end;
 		size_t dlen = strlen(datadir);
-		int i;
 
 		assert(dlen < (sizeof(buf) / 2 - 2));
 		memcpy(buf, datadir, dlen);
@@ -126,8 +127,14 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir) {
 		"\nclean:"
 		"\n\trm -f $(TARGET)"
 		"\n\trm -f $(OBJS)\n"
-		"\n"
+		"\nregen: regenerate-from-asn1-source\n"
+		"\nregenerate-from-asn1-source:\n\t"
 	);
+
+	for(i = 0; i < argc; i++)
+		fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
+	fprintf(mkf, "\n\n");
+
 	fclose(mkf);
 	fprintf(stderr, "Generated Makefile.am.sample\n");
 
@@ -225,7 +232,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	fprintf(fp_h, "#include <asn_application.h>\n");
 
 #define	SAVE_STREAM(fp, idx, msg, actdep)	do {			\
-	if(TQ_FIRST(&(cs->destination[idx].chunks)) && msg)		\
+	if(TQ_FIRST(&(cs->destination[idx].chunks)) && *msg)		\
 		fprintf(fp, "\n/* %s */\n", msg);			\
 	TQ_FOR(ot, &(cs->destination[idx].chunks), next) {		\
 		if(actdep) asn1c_activate_dependency(deps, 0, ot->buf);	\
@@ -248,7 +255,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	fprintf(fp_c, "#include <asn_internal.h>\n\n");
 	fprintf(fp_c, "#include <%s.h>\n\n", expr->Identifier);	/* Myself */
 	if(arg->flags & A1C_NO_INCLUDE_DEPS)
-		SAVE_STREAM(fp_c, OT_POST_INCLUDE, 0, 1);
+		SAVE_STREAM(fp_c, OT_POST_INCLUDE, "", 1);
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CODE].chunks), next)
