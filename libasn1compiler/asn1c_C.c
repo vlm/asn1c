@@ -6,11 +6,21 @@
 #include "asn1c_C.h"
 #include <asn1fix_export.h>	/* exportable stuff from libasn1fix */
 
+typedef struct tag2el_s {
+	struct asn1p_type_tag_s el_tag;
+	int el_no;
+	asn1p_expr_t *from_expr;
+} tag2el_t;
+
+static int _fill_tag2el_map(arg_t *arg, tag2el_t **tag2el, int *count, int el_no);
+static int _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no);
+
 static int asn1c_lang_C_type_SEQUENCE_def(arg_t *arg);
 static int asn1c_lang_C_type_SET_def(arg_t *arg);
 static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
 static int _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p);
+static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
 static int emit_constraint_checking_code(arg_t *arg);
 static int emit_single_constraint_check(arg_t *arg, asn1p_constraint_t *ct, int mode);
 static int emit_alphabet_tables(arg_t *arg, asn1p_constraint_t *ct, int *table);
@@ -22,15 +32,6 @@ static int emit_size_determination_code(arg_t *arg);
 static long compute_min_size(arg_t *arg);
 static long compute_max_size(arg_t *arg);
 static long compute_xxx_size(arg_t *arg, int _max);
-
-typedef struct tag2el_s {
-	struct asn1p_type_tag_s el_tag;
-	int el_no;
-	asn1p_expr_t *from_expr;
-} tag2el_t;
-
-static int _fill_tag2el_map(arg_t *arg, tag2el_t **tag2el, int *count, int el_no);
-static int _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no);
 
 #define	C99_MODE	(arg->flags & A1C_NO_C99)
 #define	UNNAMED_UNIONS	(arg->flags & A1C_UNNAMED_UNIONS)
@@ -170,7 +171,17 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int ext_start = -1;
 	int ext_stop = -1;
+	tag2el_t *tag2el = NULL;
+	int tag2el_count = 0;
 	char *p;
+
+	/*
+	 * Fetch every inner tag from the tag to elements map.
+	 */
+	if(_fill_tag2el_map(arg, &tag2el, &tag2el_count, -1)) {
+		if(tag2el) free(tag2el);
+		return -1;
+	}
 
 	REDIR(OT_STAT_DEFS);
 
@@ -255,12 +266,19 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	);
 	OUT("};\n");
 
+	/*
+	 * Tags to elements map.
+	 */
+	emit_tag2member_map(arg, tag2el, tag2el_count);
+
 	OUT("static asn1_SEQUENCE_specifics_t asn1_DEF_%s_specs = {\n", p);
 	INDENTED(
 		OUT("sizeof(struct %s),\n", p);
 		OUT("offsetof(struct %s, _ber_dec_ctx),\n", p);
 		OUT("asn1_DEF_%s_elements,\n", p);
 		OUT("%d,\t/* Elements count */\n", elements);
+		OUT("asn1_DEF_%s_tag2el,\n", p);
+		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
 		OUT("%d,\t/* Start extensions */\n",
 			ext_start);
 		OUT("%d\t/* Stop extensions */\n",
@@ -388,61 +406,6 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	return asn1c_lang_C_type_SET_def(arg);
 }
 
-/*
- * Compare tags according to their canonical order.
- * Canonical order: [UNIVERSAL] [APPLICATION] [] [PRIVATE]
- * As you see, the class is encoded using the two lowest bits.
- */
-static arg_t *_ctc_arg;
-static int _canonical_tags_cmp(const void *ap, const void *bp)
-	__attribute__ ((unused));
-static int
-_canonical_tags_cmp(const void *ap, const void *bp) {
-	asn1p_expr_t *a, *b;
-	struct asn1p_type_tag_s ta, tb;
-
-	(const asn1p_expr_t *)a = *(const asn1p_expr_t * const *)ap;
-	(const asn1p_expr_t *)b = *(const asn1p_expr_t * const *)bp;
-
-	if(asn1f_fetch_tag(_ctc_arg->asn, _ctc_arg->mod, a, &ta)
-	|| asn1f_fetch_tag(_ctc_arg->asn, _ctc_arg->mod, b, &tb))
-		return 0;
-
-	if(ta.tag_class == tb.tag_class) {
-		if(ta.tag_value == tb.tag_value)
-			return 0;
-		else if(ta.tag_value < tb.tag_value)
-			return -1;
-		else
-			return 1;
-	} else if(ta.tag_class < tb.tag_class) {
-		return -1;
-	} else {
-		return 1;
-	}
-}
-
-static int
-_tag2el_cmp(const void *ap, const void *bp) {
-	const tag2el_t *a = ap;
-	const tag2el_t *b = bp;
-	const struct asn1p_type_tag_s *ta = &a->el_tag;
-	const struct asn1p_type_tag_s *tb = &b->el_tag;
-
-	if(ta->tag_class == tb->tag_class) {
-		if(ta->tag_value == tb->tag_value)
-			return 0;
-		else if(ta->tag_value < tb->tag_value)
-			return -1;
-		else
-			return 1;
-	} else if(ta->tag_class < tb->tag_class) {
-		return -1;
-	} else {
-		return 1;
-	}
-}
-
 static int
 asn1c_lang_C_type_SET_def(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -461,12 +424,6 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	if(_fill_tag2el_map(arg, &tag2el, &tag2el_count, -1)) {
 		if(tag2el) free(tag2el);
 		return -1;
-	} else {
-		/*
-		 * Sort the map according to canonical order of their tags.
-		 */
-		_ctc_arg = arg;
-		qsort(tag2el, tag2el_count, sizeof(*tag2el), _tag2el_cmp);
 	}
 
 
@@ -550,22 +507,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	/*
 	 * Tags to elements map.
 	 */
-	p = MKID(expr->Identifier);
-	OUT("static asn1_SET_tag2member_t asn1_DEF_%s_tag2el[] = {\n", p);
-	if(tag2el_count) {
-		int i;
-		for(i = 0; i < tag2el_count; i++) {
-			OUT("    { ");
-			_print_tag(arg, expr, &tag2el[i].el_tag);
-			OUT(", ");
-			OUT("%d ", tag2el[i].el_no);
-			OUT("}, /* %s at %d */\n",
-				tag2el[i].from_expr->Identifier,
-				tag2el[i].from_expr->_lineno
-			);
-		}
-	}
-	OUT("};\n");
+	emit_tag2member_map(arg, tag2el, tag2el_count);
 
 	/*
 	 * Emit a map of mandatory elements.
@@ -836,12 +778,6 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	if(_fill_tag2el_map(arg, &tag2el, &tag2el_count, -1)) {
 		if(tag2el) free(tag2el);
 		return -1;
-	} else {
-		/*
-		 * Sort the map according to canonical order of their tags.
-		 */
-		_ctc_arg = arg;
-		qsort(tag2el, tag2el_count, sizeof(*tag2el), _tag2el_cmp);
 	}
 
 	REDIR(OT_STAT_DEFS);
@@ -920,22 +856,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	/*
 	 * Tags to elements map.
 	 */
-	p = MKID(expr->Identifier);
-	OUT("static asn1_CHOICE_tag2member_t asn1_DEF_%s_tag2el[] = {\n", p);
-	if(tag2el_count) {
-		int i;
-		for(i = 0; i < tag2el_count; i++) {
-			OUT("    { ");
-			_print_tag(arg, expr, &tag2el[i].el_tag);
-			OUT(", ");
-			OUT("%d ", tag2el[i].el_no);
-			OUT("}, /* %s at %d */\n",
-				tag2el[i].from_expr->Identifier,
-				tag2el[i].from_expr->_lineno
-			);
-		}
-	}
-	OUT("};\n");
+	emit_tag2member_map(arg, tag2el, tag2el_count);
 
 	OUT("static asn1_CHOICE_specifics_t asn1_DEF_%s_specs = {\n", p);
 	INDENTED(
@@ -1252,6 +1173,35 @@ _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p) {
 	return 0;
 }
 
+
+static int
+_tag2el_cmp(const void *ap, const void *bp) {
+	const tag2el_t *a = ap;
+	const tag2el_t *b = bp;
+	const struct asn1p_type_tag_s *ta = &a->el_tag;
+	const struct asn1p_type_tag_s *tb = &b->el_tag;
+
+	if(ta->tag_class == tb->tag_class) {
+		if(ta->tag_value == tb->tag_value) {
+			/*
+			 * Sort by their respective positions.
+			 */
+			if(a->el_no < b->el_no)
+				return -1;
+			else if(a->el_no > b->el_no)
+				return 1;
+			return 0;
+		} else if(ta->tag_value < tb->tag_value)
+			return -1;
+		else
+			return 1;
+	} else if(ta->tag_class < tb->tag_class) {
+		return -1;
+	} else {
+		return 1;
+	}
+}
+
 /*
  * For constructed types, number of external tags may be greater than
  * number of elements in the type because of CHOICE type.
@@ -1284,6 +1234,11 @@ _fill_tag2el_map(arg_t *arg, tag2el_t **tag2el, int *count, int el_no) {
 
 		element++;
 	}
+
+	/*
+	 * Sort the map according to canonical order of their tags.
+	 */
+	qsort(*tag2el, *count, sizeof(**tag2el), _tag2el_cmp);
 
 	return 0;
 }
@@ -1346,6 +1301,30 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no) {
 		arg->expr->_lineno);
 
 	return -1;
+}
+
+static int
+emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
+	asn1p_expr_t *expr = arg->expr;
+
+	OUT("static asn1_TYPE_tag2member_t asn1_DEF_%s_tag2el[] = {\n",
+		MKID(expr->Identifier));
+	if(tag2el_count) {
+		int i;
+		for(i = 0; i < tag2el_count; i++) {
+			OUT("    { ");
+			_print_tag(arg, expr, &tag2el[i].el_tag);
+			OUT(", ");
+			OUT("%d ", tag2el[i].el_no);
+			OUT("}, /* %s at %d */\n",
+				tag2el[i].from_expr->Identifier,
+				tag2el[i].from_expr->_lineno
+			);
+		}
+	}
+	OUT("};\n");
+
+	return 0;;
 }
 
 static int
