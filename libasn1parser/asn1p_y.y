@@ -98,6 +98,8 @@ static asn1p_value_t *
 %token	<tv_str>	TOK_hstring
 %token	<tv_str>	TOK_identifier
 %token	<a_int>		TOK_number
+%token	<a_int>		TOK_tuple
+%token	<a_int>		TOK_quadruple
 %token	<a_int>		TOK_number_negative
 %token	<tv_str>	TOK_typereference
 %token	<tv_str>	TOK_capitalreference		/* "CLASS1" */
@@ -1319,7 +1321,7 @@ Value:
 		$$->value.choice_identifier.identifier = $1;
 		$$->value.choice_identifier.value = $3;
 	}
-	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+	| '{' { printf("push\n"); asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
 		$$ = asn1p_value_frombuf($3.buf, $3.len, 0);
 		checkmem($$);
 		$$->type = ATV_UNPARSED;
@@ -1392,6 +1394,17 @@ RestrictedCharacterStringValue:
 		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
 		checkmem($$);
 	}
+	| TOK_tuple {
+		$$ = asn1p_value_fromint($1);
+		checkmem($$);
+		$$->type = ATV_TUPLE;
+	}
+	| TOK_quadruple {
+		$$ = asn1p_value_fromint($1);
+		checkmem($$);
+		$$->type = ATV_QUADRUPLE;
+	}
+	/*
 	| '{' TOK_number ',' TOK_number '}' {
 		asn1c_integer_t v = ($2 << 4) + $4;
 		if($2 > 7) return yyerror("X.680:2003, #37.14 "
@@ -1416,6 +1429,7 @@ RestrictedCharacterStringValue:
 		checkmem($$);
 		$$->type = ATV_QUADRUPLE;
 	}
+	*/
 	;
 
 Opaque:

@@ -399,21 +399,6 @@ WITH			return TOK_WITH;
 "..."		return TOK_ThreeDots;
 ".."		return TOK_TwoDots;
 
-{WSP}+	/* Ignore whitespace */
-
-[(){},;:|!.&@\[\]]	return yytext[0];
-
-[^A-Za-z0-9:=,{}<.@()[]'\"|&^*;!-] {
-		if(TYPE_LIFETIME(1994, 0))
-			fprintf(stderr, "ERROR: ");
-		fprintf(stderr,
-		"Symbol '%c' at line %d is prohibited "
-		"by ASN.1:1994 and ASN.1:1997\n",
-			yytext[0], yylineno);
-		if(TYPE_LIFETIME(1994, 0))
-			return -1;
-	}
-
 <with_syntax>{
 
 	[^&{} \t\r\v\f\n]+	{
@@ -435,7 +420,91 @@ WITH			return TOK_WITH;
 
 }
 
-[|^]	return yytext[0];	/* Union, Intersection */
+
+{WSP}+	/* Ignore whitespace */
+
+
+[{][\t\r\v\f\n ]*[0-7][,][\t\r\v\f\n ]*[0-9]+[\t\r\v\f\n ]*[}]	{
+		asn1c_integer_t v1 = -1, v2 = -1;
+		char *p;
+		for(p = yytext; *p; p++)
+			if(*p >= '0' && *p <= '9')
+			{ v1 = asn1p_atoi(p); break; }
+		while(*p >= '0' && *p <= '9') p++;	/* Skip digits */
+		for(; *p; p++) if(*p >= '0' && *p <= '9')
+			{ v2 = asn1p_atoi(p); break; }
+		if(v1 < 0 || v1 > 7) {
+			fprintf(stderr, "%s at line %d: X.680:2003, #37.14 "
+				"mandates 0..7 range for Tuple's TableColumn\n",
+				yytext, yylineno);
+			return -1;
+		}
+		if(v2 < 0 || v2 > 15) {
+			fprintf(stderr, "%s at line %d: X.680:2003, #37.14 "
+				"mandates 0..15 range for Tuple's TableRow\n",
+				yytext, yylineno);
+			return -1;
+		}
+		asn1p_lval.a_int = (v1 << 4) + v2;
+		return TOK_tuple;
+	}
+
+[{][\t\r\v\f\n ]*[0-9]+[,][\t\r\v\f\n ]*[0-9]+[,][\t\r\v\f\n ]*[0-9]+[,][\t\r\v\f\n ]*[0-9]+[\t\r\v\f\n ]*[}]	{
+		asn1c_integer_t v1 = -1, v2 = -1, v3 = -1, v4 = -1;
+		char *p;
+		for(p = yytext; *p; p++)
+			if(*p >= '0' && *p <= '9')
+			{ v1 = asn1p_atoi(p); break; }
+		while(*p >= '0' && *p <= '9') p++;	/* Skip digits */
+		for(; *p; p++) if(*p >= '0' && *p <= '9')
+			{ v2 = asn1p_atoi(p); break; }
+		while(*p >= '0' && *p <= '9') p++;
+		for(; *p; p++) if(*p >= '0' && *p <= '9')
+			{ v3 = asn1p_atoi(p); break; }
+		while(*p >= '0' && *p <= '9') p++;
+		for(; *p; p++) if(*p >= '0' && *p <= '9')
+			{ v4 = asn1p_atoi(p); break; }
+		if(v1 < 0 || v1 > 127) {
+			fprintf(stderr, "%s at line %d: X.680:2003, #37.12 "
+				"mandates 0..127 range for Quadruple's Group\n",
+				yytext, yylineno);
+			return -1;
+		}
+		if(v2 < 0 || v2 > 255) {
+			fprintf(stderr, "%s at line %d: X.680:2003, #37.12 "
+				"mandates 0..255 range for Quadruple's Plane\n",
+				yytext, yylineno);
+			return -1;
+		}
+		if(v3 < 0 || v3 > 255) {
+			fprintf(stderr, "%s at line %d: X.680:2003, #37.12 "
+				"mandates 0..255 range for Quadruple's Row\n",
+				yytext, yylineno);
+			return -1;
+		}
+		if(v4 < 0 || v4 > 255) {
+			fprintf(stderr, "%s at line %d: X.680:2003, #37.12 "
+				"mandates 0..255 range for Quadruple's Cell\n",
+				yytext, yylineno);
+			return -1;
+		}
+		asn1p_lval.a_int = (v1 << 24) | (v2 << 16) | (v3 << 8) | v4;
+		return TOK_quadruple;
+	}
+
+
+[(){},;:|!.&@\[\]^]	return yytext[0];
+
+[^A-Za-z0-9:=,{}<.@()[]'\"|&^*;!-] {
+		if(TYPE_LIFETIME(1994, 0))
+			fprintf(stderr, "ERROR: ");
+		fprintf(stderr,
+		"Symbol '%c' at line %d is prohibited "
+		"by ASN.1:1994 and ASN.1:1997\n",
+			yytext[0], yylineno);
+		if(TYPE_LIFETIME(1994, 0))
+			return -1;
+	}
 
 <*>.	{
 		fprintf(stderr,
