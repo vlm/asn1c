@@ -1,0 +1,315 @@
+
+/*** <<< INCLUDES [Certificate] >>> ***/
+
+#include <OBJECT_IDENTIFIER.h>
+#include <BIT_STRING.h>
+#include <INTEGER.h>
+#include <Name.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [Certificate] >>> ***/
+
+extern asn1_TYPE_descriptor_t asn1_DEF_Certificate;
+
+/*** <<< TYPE-DECLS [Certificate] >>> ***/
+
+
+typedef struct Certificate {
+	struct toBeSigned {
+		INTEGER_t	 version;
+		OBJECT_IDENTIFIER_t	 signature;
+		Name_t	 issuer;
+		
+		/* Context for parsing across buffer boundaries */
+		ber_dec_ctx_t _ber_dec_ctx;
+	} toBeSigned;
+	OBJECT_IDENTIFIER_t	 algorithm;
+	BIT_STRING_t	 signature;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} Certificate_t;
+
+/*** <<< STAT-DEFS [Certificate] >>> ***/
+
+static asn1_TYPE_member_t asn1_MBR_toBeSigned[] = {
+	{ 0, offsetof(struct toBeSigned, version),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "version"
+		},
+	{ 0, offsetof(struct toBeSigned, signature),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_OBJECT_IDENTIFIER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "signature"
+		},
+	{ 0, offsetof(struct toBeSigned, issuer),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_Name,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "issuer"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_toBeSigned_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_toBeSigned_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* version at 21 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* signature at 22 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, 0, 0 }, /* issuer at 24 */
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_toBeSigned_specs = {
+	sizeof(struct toBeSigned),
+	offsetof(struct toBeSigned, _ber_dec_ctx),
+	asn1_DEF_toBeSigned_tag2el,
+	3,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_toBeSigned = {
+	"toBeSigned",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_toBeSigned_tags,
+	sizeof(asn1_DEF_toBeSigned_tags)
+		/sizeof(asn1_DEF_toBeSigned_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_toBeSigned,
+	3,	/* Elements count */
+	&asn1_DEF_toBeSigned_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_Certificate[] = {
+	{ 0, offsetof(struct Certificate, toBeSigned),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_toBeSigned,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "toBeSigned"
+		},
+	{ 0, offsetof(struct Certificate, algorithm),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_OBJECT_IDENTIFIER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "algorithm"
+		},
+	{ 0, offsetof(struct Certificate, signature),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_BIT_STRING,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "signature"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_Certificate_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_Certificate_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 2, 0, 0 }, /* signature at 18 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* algorithm at 16 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* toBeSigned at 21 */
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_Certificate_specs = {
+	sizeof(struct Certificate),
+	offsetof(struct Certificate, _ber_dec_ctx),
+	asn1_DEF_Certificate_tag2el,
+	3,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_Certificate = {
+	"Certificate",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_Certificate_tags,
+	sizeof(asn1_DEF_Certificate_tags)
+		/sizeof(asn1_DEF_Certificate_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_Certificate,
+	3,	/* Elements count */
+	&asn1_DEF_Certificate_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Name] >>> ***/
+
+#include <RelativeDistinguishedName.h>
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
+
+/*** <<< DEPS [Name] >>> ***/
+
+extern asn1_TYPE_descriptor_t asn1_DEF_Name;
+
+/*** <<< TYPE-DECLS [Name] >>> ***/
+
+
+typedef struct Name {
+	A_SEQUENCE_OF(struct RelativeDistinguishedName) list;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} Name_t;
+
+/*** <<< STAT-DEFS [Name] >>> ***/
+
+static asn1_TYPE_member_t asn1_MBR_Name[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_RelativeDistinguishedName,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn1_DEF_Name_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_Name_specs = {
+	sizeof(struct Name),
+	offsetof(struct Name, _ber_dec_ctx),
+};
+asn1_TYPE_descriptor_t asn1_DEF_Name = {
+	"Name",
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_Name_tags,
+	sizeof(asn1_DEF_Name_tags)
+		/sizeof(asn1_DEF_Name_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_Name,
+	1,	/* Single element */
+	&asn1_DEF_Name_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [RelativeDistinguishedName] >>> ***/
+
+#include <IA5String.h>
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+
+/*** <<< DEPS [RelativeDistinguishedName] >>> ***/
+
+extern asn1_TYPE_descriptor_t asn1_DEF_RelativeDistinguishedName;
+
+/*** <<< TYPE-DECLS [RelativeDistinguishedName] >>> ***/
+
+
+typedef struct RelativeDistinguishedName {
+	A_SET_OF(IA5String_t) list;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} RelativeDistinguishedName_t;
+
+/*** <<< CTABLES [RelativeDistinguishedName] >>> ***/
+
+static int permitted_alphabet_table_1[256] = {
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
+0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,	/*             ,-.  */
+1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,	/* 0        9       */
+0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  ABCDEFGHIJKLMNO */
+1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* PQRSTUVWXYZ      */
+0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  abcdefghijklmno */
+1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* pqrstuvwxyz      */
+};
+
+static int check_permitted_alphabet_1(const void *sptr) {
+	int *table = permitted_alphabet_table_1;
+	/* The underlying type is IA5String */
+	const (null)_t *st = sptr;
+	uint8_t *ch = st->buf;
+	uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!table[cv]) return 0;
+	}
+	return 1;
+}
+
+
+/*** <<< CODE [RelativeDistinguishedName] >>> ***/
+
+static int
+memb_IA5String_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const (null)_t *st = sptr;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
+		return -1;
+	}
+	
+	
+	if(check_permitted_alphabet_1(sptr)) {
+		/* Constraint check succeeded */
+		return 1;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed", td->name);
+		return -1;
+	}
+}
+
+
+/*** <<< STAT-DEFS [RelativeDistinguishedName] >>> ***/
+
+static asn1_TYPE_member_t asn1_MBR_RelativeDistinguishedName[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_IA5String,
+		.memb_constraints = memb_IA5String_constraint,
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn1_DEF_RelativeDistinguishedName_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_RelativeDistinguishedName_specs = {
+	sizeof(struct RelativeDistinguishedName),
+	offsetof(struct RelativeDistinguishedName, _ber_dec_ctx),
+};
+asn1_TYPE_descriptor_t asn1_DEF_RelativeDistinguishedName = {
+	"RelativeDistinguishedName",
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_print,
+	SET_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_RelativeDistinguishedName_tags,
+	sizeof(asn1_DEF_RelativeDistinguishedName_tags)
+		/sizeof(asn1_DEF_RelativeDistinguishedName_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_RelativeDistinguishedName,
+	1,	/* Single element */
+	&asn1_DEF_RelativeDistinguishedName_specs	/* Additional specs */
+};
+
