@@ -1,6 +1,6 @@
 <PDU>
 	<extensibleSequence>
 		<string>one <nul/> two</string>
-		<extension> </another> <something></something> </extension>
+		<extension> <another/> <something></something> </extension>
 	</extensibleSequence>
 </PDU>
