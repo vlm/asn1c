@@ -351,7 +351,6 @@ clean:
 Attribute.c: regenerate.Makefile
 	./regenerate.Makefile
 	make
-	exit
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
