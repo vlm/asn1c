@@ -751,21 +751,17 @@ SetOfEnums_Member_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [SetOfEnums] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_SetOfEnums_Member_enum2value[] = {
-	{ "one",	0 },
-	{ "oneMore",	1 }
-};
 static asn_INTEGER_enum_map_t asn_MAP_SetOfEnums_Member_value2enum[] = {
-	{ "one",	0 },
-	{ "oneMore",	1 }
+	{ 0,	3,	"one" },
+	{ 1,	7,	"oneMore" }
+};
+static unsigned int asn_MAP_SetOfEnums_Member_enum2value[] = {
+	0,	/* one(0) */
+	1	/* oneMore(1) */
 };
 static asn_INTEGER_specifics_t asn_DEF_SetOfEnums_Member_specs = {
-	/* Two name<->value maps sorted differently;
-	 * this may seem like a waste of space,
-	 * but the strings actually share it.
-	 */
-	asn_MAP_SetOfEnums_Member_enum2value,	/* "tag" => N; sorted by tag */
-	asn_MAP_SetOfEnums_Member_value2enum,	/* N => "tag"; sorted by N */
+	asn_MAP_SetOfEnums_Member_value2enum,	/* "tag" => N; sorted by tag */
+	asn_MAP_SetOfEnums_Member_enum2value,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
 	0	/* Enumeration is not extensible */
 };
@@ -936,23 +932,19 @@ id_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [SequenceOf] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_id_enum2value[] = {
-	{ "one",	1 },
-	{ "two",	2 }
+static asn_INTEGER_enum_map_t asn_MAP_id_value2enum[] = {
+	{ 1,	3,	"one" },
+	{ 2,	3,	"two" }
 	/* This list is extensible */
 };
-static asn_INTEGER_enum_map_t asn_MAP_id_value2enum[] = {
-	{ "one",	1 },
-	{ "two",	2 }
+static unsigned int asn_MAP_id_enum2value[] = {
+	0,	/* one(1) */
+	1	/* two(2) */
 	/* This list is extensible */
 };
 static asn_INTEGER_specifics_t asn_DEF_id_specs = {
-	/* Two name<->value maps sorted differently;
-	 * this may seem like a waste of space,
-	 * but the strings actually share it.
-	 */
-	asn_MAP_id_enum2value,	/* "tag" => N; sorted by tag */
-	asn_MAP_id_value2enum,	/* N => "tag"; sorted by N */
+	asn_MAP_id_value2enum,	/* "tag" => N; sorted by tag */
+	asn_MAP_id_enum2value,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
 	1	/* Enumeration is extensible */
 };
