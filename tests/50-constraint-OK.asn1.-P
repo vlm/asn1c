@@ -2346,8 +2346,13 @@ Utf8_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	size = UTF8String_length(st, td->name, app_errlog, app_key);
-	if(size == (size_t)-1) return -1;
+	size = UTF8String_length(st);
+	if(size < 0) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: UTF-8: broken encoding (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
 	
 	if((size >= 1 && size <= 2)
 		 && !check_permitted_alphabet_12(sptr)) {
@@ -2476,8 +2481,13 @@ Utf8_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	size = UTF8String_length(st, td->name, app_errlog, app_key);
-	if(size == (size_t)-1) return -1;
+	size = UTF8String_length(st);
+	if(size < 0) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: UTF-8: broken encoding (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
 	
 	if((size >= 1 && size <= 2)) {
 		/* Constraint check succeeded */
