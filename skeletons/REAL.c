@@ -245,9 +245,13 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 		return -1;
 	}
 
+	/*
+	 * ilogb(+-0) returns -INT_MAX or INT_MIN (platform-dependent)
+	 * ilogb(+-inf) returns INT_MAX
+	 */
 	expval = ilogb(dbl_value);
 
-	if(expval == -INT_MAX	/* Also catches (dbl_value == 0) */
+	if(expval <= -INT_MAX	/* Also catches (dbl_value == 0) */
 	|| expval == INT_MAX	/* catches finite() which catches isnan() */
 	) {
 		if(!st->buf || st->size < 2) {
@@ -256,7 +260,7 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 			st->buf = ptr;
 		}
 		/* fpclassify(3) is not portable yet */
-		if(expval == -INT_MAX) {
+		if(expval <= -INT_MAX) {
 			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x80 | 0x40;
 				st->buf[1] = 0;
@@ -283,10 +287,11 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 
 	if(littleEndian) {
 		uint8_t *s = ((uint8_t *)&dbl_value) + sizeof(dbl_value) - 2;
+		uint8_t *start = ((uint8_t *)&dbl_value);
 		uint8_t *d;
 
 		bmsign = 0x80 | ((s[1] >> 1) & 0x40);	/* binary mask & - */
-		for(mstop = d = dscr; s >= (uint8_t *)&dbl_value; d++, s--) {
+		for(mstop = d = dscr; s >= start; d++, s--) {
 			*d = *s;
 			if(*d) mstop = d;
 		}
@@ -346,7 +351,6 @@ asn1_double2REAL(REAL_t *st, double dbl_value) {
 			*ptr++ = expval >> 8;
 			*ptr++ = expval;
 		} else {
-			assert((expval >> 23) == -1);
 			*ptr++ = bmsign | 0x02;
 			*ptr++ = expval >> 16;
 			*ptr++ = expval >> 8;
