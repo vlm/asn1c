@@ -7,7 +7,7 @@
 #
 
 ANY.h ANY.c
-BMPString.h BMPString.c
+BMPString.h BMPString.c UTF8String.h
 BOOLEAN.h BOOLEAN.c
 ENUMERATED.h ENUMERATED.c INTEGER.h
 GeneralString.h GeneralString.c
@@ -30,7 +30,7 @@ T61String.h T61String.c
 TeletexString.h TeletexString.c	
 UTCTime.h UTCTime.c GeneralizedTime.h
 UTF8String.h UTF8String.c
-UniversalString.h UniversalString.c
+UniversalString.h UniversalString.c UTF8String.h
 VideotexString.h VideotexString.c
 VisibleString.h VisibleString.c
 asn_SEQUENCE_OF.h asn_SEQUENCE_OF.c asn_SET_OF.h
