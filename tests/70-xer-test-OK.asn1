@@ -16,7 +16,8 @@ BEGIN
 	 */
 
 	PDU ::= CHOICE {
-		sequence Sequence
+		sequence	Sequence,
+		set		Set
 	}
 
 	Sequence ::= SEQUENCE {
@@ -24,6 +25,11 @@ BEGIN
 		sequence	Sequence   OPTIONAL,	-- backreference
 		bits		BIT STRING OPTIONAL,
 		string		UTF8String
+	}
+
+	Set ::= SET {
+		roid		RELATIVE-OID,
+		opaque		OCTET STRING	OPTIONAL
 	}
 
 END
