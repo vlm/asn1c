@@ -63,52 +63,34 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 
 	if(st && st->buf) {
-		size_t length = 0;
+		size_t length;
 		uint8_t *buf = st->buf;
 		uint8_t *end = buf + st->size;
-		int want;	/* Number of bytes wanted */
 
-		for(want = 0; buf < end; buf++) {
-			uint8_t ch = *buf;
-			int w = UTF8String_ht[0][ch >> 4];
-			if(want) {	/* Continuation expected */
-				if(w) {
-					_ASN_ERRLOG(app_errlog, app_key,
-						"%s: UTF-8 expectation "
-						"failed at byte %d (%s:%d)",
-						opt_type_name,
-						(buf - st->buf) + 1,
-						__FILE__, __LINE__);
-					return -1;
-				}
-				want--;
-			} else {
-				switch(w) {
-				case -1:	/* Long UTF-8 */
-					w = UTF8String_ht[1][ch & 0x0F];
-					if(w != -1)
-						break;
-					/* Fall through */
-				case 0:	/* But we should want something! */
-					_ASN_ERRLOG(app_errlog, app_key,
-						"%s: UTF-8 expectation"
-						"failed at byte %d (%s:%d)",
-						opt_type_name,
-						(buf - st->buf) + 1,
-						__FILE__, __LINE__);
-					return -1;
-				}
-				want = w - 1;	/* Expect this much */
+		for(length = 0; buf < end; length++) {
+			int ch = *buf;
+			int want = UTF8String_ht[0][ch >> 4];
+			switch(want) {
+			case -1: /* Second half of the table, long sequence */
+				want = UTF8String_ht[1][ch & 0x0F];
+				if(want != -1)
+					break;	/* Fine value */
+			case 0:	/* 10xxxxxx should not appear here */
+				_ASN_ERRLOG(app_errlog, app_key,
+					"%s: UTF-8 expectation failed "
+					"at byte %d (%s:%d)",
+					opt_type_name,
+					(buf - st->buf) + 1,
+					__FILE__, __LINE__);
+				return -1;
 			}
-			if(!want) length++;
-		}
-
-		/* If still want something, then something is wrong */
-		if(want) {
-			_ASN_ERRLOG(app_errlog, app_key,
-				"%s: truncated UTF-8 sequence (%s:%d)",
-				opt_type_name, __FILE__, __LINE__);
-			return -1;
+			if(buf + want > end) {
+				_ASN_ERRLOG(app_errlog, app_key,
+					"%s: truncated UTF-8 sequence (%s:%d)",
+					opt_type_name, __FILE__, __LINE__);
+				return -1;
+			}
+			buf += want;
 		}
 
 		return length;
