@@ -37,7 +37,7 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 asn_dec_rval_t
 BOOLEAN_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		asn_TYPE_descriptor_t *td,
-		void **bool_value, void *buf_ptr, size_t size,
+		void **bool_value, const void *buf_ptr, size_t size,
 		int tag_mode) {
 	BOOLEAN_t *st = (BOOLEAN_t *)*bool_value;
 	asn_dec_rval_t rval;
@@ -66,7 +66,7 @@ BOOLEAN_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 
 	ASN_DEBUG("Boolean length is %d bytes", (int)length);
 
-	buf_ptr = ((char *)buf_ptr) + rval.consumed;
+	buf_ptr = ((const char *)buf_ptr) + rval.consumed;
 	size -= rval.consumed;
 	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;
@@ -84,7 +84,7 @@ BOOLEAN_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		 * value is already TRUE.
 		 * BOOLEAN is not supposed to contain meaningful data anyway.
 		 */
-		*st |= ((uint8_t *)buf_ptr)[lidx];
+		*st |= ((const uint8_t *)buf_ptr)[lidx];
 	}
 
 	rval.code = RC_OK;
@@ -169,7 +169,7 @@ BOOLEAN__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 asn_dec_rval_t
 BOOLEAN_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		void *buf_ptr, size_t size) {
+		const void *buf_ptr, size_t size) {
 
 	return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(BOOLEAN_t), opt_mname, buf_ptr, size,

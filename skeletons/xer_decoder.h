@@ -15,7 +15,7 @@ struct asn_TYPE_descriptor_s;	/* Forward declaration */
 asn_dec_rval_t xer_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,
 	void **struct_ptr,	/* Pointer to a target structure's pointer */
-	void *buffer,		/* Data to be decoded */
+	const void *buffer,	/* Data to be decoded */
 	size_t size		/* Size of that buffer */
 	);
 
@@ -26,7 +26,7 @@ typedef asn_dec_rval_t (xer_type_decoder_f)(asn_codec_ctx_t *opt_codec_ctx,
 		struct asn_TYPE_descriptor_s *type_descriptor,
 		void **struct_ptr,
 		const char *opt_mname,	/* Member name */
-		void *buf_ptr, size_t size
+		const void *buf_ptr, size_t size
 	);
 
 /*******************************
@@ -61,7 +61,7 @@ asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
   typedef enum pxer_chunk_type {
 	PXER_TAG,	/* Complete XER tag */
 	PXER_TEXT,	/* Plain text between XER tags */
-	PXER_COMMENT,	/* A comment, may be part of */
+	PXER_COMMENT	/* A comment, may be part of */
   } pxer_chunk_type_e;
 ssize_t xer_next_token(int *stateContext,
 	const void *buffer, size_t size, pxer_chunk_type_e *_ch_type);
@@ -77,7 +77,7 @@ ssize_t xer_next_token(int *stateContext,
 	XCT__UNK__MASK	= 4,	/* Mask of everything unexpected */
 	XCT_UNKNOWN_OP	= 5,	/* Unexpected <opening> tag */
 	XCT_UNKNOWN_CL	= 6,	/* Unexpected </closing> tag */
-	XCT_UNKNOWN_BO	= 7,	/* Unexpected <modified/> tag */
+	XCT_UNKNOWN_BO	= 7	/* Unexpected <modified/> tag */
   } xer_check_tag_e;
 xer_check_tag_e xer_check_tag(const void *buf_ptr, int size,
 		const char *need_tag);

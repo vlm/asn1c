@@ -34,7 +34,7 @@
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr = ((char *)ptr) + num;	\
+		ptr = ((const char *)ptr) + num;\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -99,7 +99,7 @@ _search4tag(const void *ap, const void *bp) {
  */
 asn_dec_rval_t
 CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
+	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
@@ -211,7 +211,8 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 				skip = ber_skip_length(opt_codec_ctx,
 					BER_TLV_CONSTRUCTED(ptr),
-					(char *)ptr + tag_len, LEFT - tag_len);
+					(const char *)ptr + tag_len,
+					LEFT - tag_len);
 
 				switch(skip) {
 				case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
@@ -320,13 +321,13 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			/*
 			 * Expected <0><0>...
 			 */
-			if(((uint8_t *)ptr)[0] == 0) {
+			if(((const uint8_t *)ptr)[0] == 0) {
 				if(LEFT < 2) {
 					if(SIZE_VIOLATION)
 						RETURN(RC_FAIL);
 					else
 						RETURN(RC_WMORE);
-				} else if(((uint8_t *)ptr)[1] == 0) {
+				} else if(((const uint8_t *)ptr)[1] == 0) {
 					/*
 					 * Correctly finished with <0><0>.
 					 */
@@ -543,7 +544,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		buf_ptr = ((char *)buf_ptr) + num;	\
+		buf_ptr = ((const char *)buf_ptr) + num;\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -554,7 +555,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 asn_dec_rval_t
 CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
-		void *buf_ptr, size_t size) {
+		const void *buf_ptr, size_t size) {
 	/*
 	 * Bring closer parts of structure description.
 	 */

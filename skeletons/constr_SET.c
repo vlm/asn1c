@@ -42,7 +42,7 @@ static int _SET_is_populated(asn_TYPE_descriptor_t *td, void *st);
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr = ((char *)ptr) + num;	\
+		ptr = ((const char *)ptr) + num;\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -101,7 +101,7 @@ _t2e_cmp(const void *ap, const void *bp) {
  */
 asn_dec_rval_t
 SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
+	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
@@ -211,13 +211,13 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case -1: RETURN(RC_FAIL);
 		}
 
-		if(ctx->left < 0 && ((uint8_t *)ptr)[0] == 0) {
+		if(ctx->left < 0 && ((const uint8_t *)ptr)[0] == 0) {
 			if(LEFT < 2) {
 				if(SIZE_VIOLATION)
 					RETURN(RC_FAIL);
 				else
 					RETURN(RC_WMORE);
-			} else if(((uint8_t *)ptr)[1] == 0) {
+			} else if(((const uint8_t *)ptr)[1] == 0) {
 				/*
 				 * Found the terminator of the
 				 * indefinite length structure.
@@ -253,7 +253,7 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			skip = ber_skip_length(opt_codec_ctx,
 				BER_TLV_CONSTRUCTED(ptr),
-				(char *)ptr + tag_len, LEFT - tag_len);
+				(const char *)ptr + tag_len, LEFT - tag_len);
 
 			switch(skip) {
 			case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
@@ -345,13 +345,13 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			 * If expected <0><0>...
 			 */
 			if(ctx->left < 0
-				&& ((uint8_t *)ptr)[0] == 0) {
+				&& ((const uint8_t *)ptr)[0] == 0) {
 				if(LEFT < 2) {
 					if(SIZE_VIOLATION)
 						RETURN(RC_FAIL);
 					else
 						RETURN(RC_WMORE);
-				} else if(((uint8_t *)ptr)[1] == 0) {
+				} else if(((const uint8_t *)ptr)[1] == 0) {
 					/*
 					 * Correctly finished with <0><0>.
 					 */
@@ -366,13 +366,13 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				ASN_DEBUG("Unexpected continuation "
 					"of a non-extensible type %s "
 					"(ptr=%02x)",
-					td->name, *(uint8_t *)ptr);
+					td->name, *(const uint8_t *)ptr);
 				RETURN(RC_FAIL);
 			}
 
 			ll = ber_skip_length(opt_codec_ctx,
 				BER_TLV_CONSTRUCTED(ptr),
-				(char *)ptr + tl, LEFT - tl);
+				(const char *)ptr + tl, LEFT - tl);
 			switch(ll) {
 			case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 				/* Fall through */
@@ -573,7 +573,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		buf_ptr = ((char *)buf_ptr) + num;	\
+		buf_ptr = ((const char *)buf_ptr) + num;\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -584,7 +584,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 asn_dec_rval_t
 SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
-		void *buf_ptr, size_t size) {
+		const void *buf_ptr, size_t size) {
 	/*
 	 * Bring closer parts of structure description.
 	 */

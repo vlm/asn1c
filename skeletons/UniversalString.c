@@ -98,7 +98,7 @@ UniversalString__dump(const UniversalString_t *st,
 asn_dec_rval_t
 UniversalString_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
-		const char *opt_mname, void *buf_ptr, size_t size) {
+		const char *opt_mname, const void *buf_ptr, size_t size) {
 	asn_dec_rval_t rc;
 
 	rc = OCTET_STRING_decode_xer_utf8(opt_codec_ctx, td, sptr, opt_mname,

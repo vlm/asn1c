@@ -54,7 +54,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {			\
 		size_t num = (num_bytes);		\
-		buf_ptr = ((char *)buf_ptr) + num;	\
+		buf_ptr = ((const char *)buf_ptr) + num;\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -164,7 +164,7 @@ _new_stack() {
 asn_dec_rval_t
 OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
-	void **os_structure, void *buf_ptr, size_t size, int tag_mode) {
+	void **os_structure, const void *buf_ptr, size_t size, int tag_mode) {
 	asn_OCTET_STRING_specifics_t *specs = td->specifics
 				? (asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_DEF_OCTET_STRING_specs;
@@ -285,7 +285,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		tlv_constr = BER_TLV_CONSTRUCTED(buf_ptr);
 
 		ll = ber_fetch_length(tlv_constr,
-				(char *)buf_ptr + tl, Left - tl, &tlv_len);
+				(const char *)buf_ptr + tl,Left - tl,&tlv_len);
 		ASN_DEBUG("Got tag=%s, tc=%d, left=%ld, tl=%ld, len=%ld, ll=%ld",
 			ber_tlv_tag_string(tlv_tag), tlv_constr,
 				(long)Left, (long)tl, (long)tlv_len, (long)ll);
@@ -295,8 +295,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		}
 
 		if(sel && sel->want_nulls
-			&& ((uint8_t *)buf_ptr)[0] == 0
-			&& ((uint8_t *)buf_ptr)[1] == 0)
+			&& ((const uint8_t *)buf_ptr)[0] == 0
+			&& ((const uint8_t *)buf_ptr)[1] == 0)
 		{
 
 			ASN_DEBUG("Eat EOC; wn=%d--", sel->want_nulls);
@@ -426,8 +426,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 			if(type_variant == _TT_BIT_STRING
 			&& sel->bits_chopped == 0) {
 				/* Put the unused-bits-octet away */
-				st->bits_unused = *(uint8_t *)buf_ptr;
-				APPEND(((char *)buf_ptr+1), (len - 1));
+				st->bits_unused = *(const uint8_t *)buf_ptr;
+				APPEND(((const char *)buf_ptr+1), (len - 1));
 				sel->bits_chopped = 1;
 			} else {
 				APPEND(buf_ptr, len);
@@ -457,7 +457,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		if(size < (size_t)ctx->left) {
 			if(!size) RETURN(RC_WMORE);
 			if(type_variant == _TT_BIT_STRING && ctx->step == 0) {
-				st->bits_unused = *(uint8_t *)buf_ptr;
+				st->bits_unused = *(const uint8_t *)buf_ptr;
 				ctx->left--;
 				ADVANCE(1);
 			}
@@ -469,7 +469,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		} else {
 			if(type_variant == _TT_BIT_STRING
 			&& ctx->step == 0 && ctx->left) {
-				st->bits_unused = *(uint8_t *)buf_ptr;
+				st->bits_unused = *(const uint8_t *)buf_ptr;
 				ctx->left--;
 				ADVANCE(1);
 			}
@@ -1096,7 +1096,7 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf, 
 static asn_dec_rval_t
 OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
-	const char *opt_mname, void *buf_ptr, size_t size,
+	const char *opt_mname, const void *buf_ptr, size_t size,
 	int (*opt_unexpected_tag_decoder)
 		(void *struct_ptr, const void *chunk_buf, size_t chunk_size),
 	ssize_t (*body_receiver)
@@ -1156,7 +1156,7 @@ sta_failed:
 asn_dec_rval_t
 OCTET_STRING_decode_xer_hex(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
-		const char *opt_mname, void *buf_ptr, size_t size) {
+		const char *opt_mname, const void *buf_ptr, size_t size) {
 	return OCTET_STRING__decode_xer(opt_codec_ctx, td, sptr, opt_mname,
 		buf_ptr, size, 0, OCTET_STRING__convert_hexadecimal);
 }
@@ -1167,7 +1167,7 @@ OCTET_STRING_decode_xer_hex(asn_codec_ctx_t *opt_codec_ctx,
 asn_dec_rval_t
 OCTET_STRING_decode_xer_binary(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
-		const char *opt_mname, void *buf_ptr, size_t size) {
+		const char *opt_mname, const void *buf_ptr, size_t size) {
 	return OCTET_STRING__decode_xer(opt_codec_ctx, td, sptr, opt_mname,
 		buf_ptr, size, 0, OCTET_STRING__convert_binary);
 }
@@ -1178,7 +1178,7 @@ OCTET_STRING_decode_xer_binary(asn_codec_ctx_t *opt_codec_ctx,
 asn_dec_rval_t
 OCTET_STRING_decode_xer_utf8(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
-		const char *opt_mname, void *buf_ptr, size_t size) {
+		const char *opt_mname, const void *buf_ptr, size_t size) {
 	return OCTET_STRING__decode_xer(opt_codec_ctx, td, sptr, opt_mname,
 		buf_ptr, size,
 		OCTET_STRING__handle_control_chars,
