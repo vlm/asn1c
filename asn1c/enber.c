@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -35,7 +35,7 @@
 
 #undef  COPYRIGHT
 #define COPYRIGHT       \
-	"Copyright (c) 2004 Lev Walkin <vlm@lionet.info>\n"
+	"Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>\n"
 
 static void usage(const char *av0, int);/* Print the Usage screen and exit */
 static int process(const char *fname);	/* Perform the BER decoding */
@@ -58,9 +58,6 @@ main(int ac, char **av) {
 		break;
 	case 'v':
 		usage(av[0], 1);
-		fprintf(stderr, "Convert unber(1)'s output back into BER, "
-			"v" VERSION "\n" COPYRIGHT);
-		exit(0);
 		break;
 	case 'h':
 	default:
@@ -209,14 +206,16 @@ process_line(const char *fname, char *line, int lineno) {
 	}
 	cl = line;
 	if(*cl != '>') {
-		fprintf(stderr, "%s: Missing '>'\n", fname);
+		fprintf(stderr, "%s: Missing '>' at line %d\n", fname, lineno);
 		exit(EX_DATAERR);
 	}
 
 	/* Ignore closing tags */
 	if(op[1] == '/') {
 		if(strchr(cl, '<')) {	/* We are not very robust */
-			fprintf(stderr, "%s: Multiple tags per line\n", fname);
+			fprintf(stderr,
+				"%s: Multiple tags per line at line %d\n",
+				fname, lineno);
 			exit(EX_DATAERR);
 		}
 		/* End-of-content octets */
@@ -228,20 +227,23 @@ process_line(const char *fname, char *line, int lineno) {
 	}
 
 	switch(op[1]) {
+	case '!': return 0;	/* A comment */
+	case '?': return 0;	/* An XML preamble */
 	case 'C': constr = 1; break;
 	case 'P': constr = 0; break;
 	case 'I': constr = 2; break;
 	default:
 		fprintf(stderr,
-			"%s: Expected \"C\"/\"P\"/\"I\" as the XML tag name (%c)\n",
-				fname, op[1]);
+			"%s: Expected \"C\"/\"P\"/\"I\" as the XML tag name (%c) at line %d\n",
+				fname, op[1], lineno);
 		exit(EX_DATAERR);
 	}
 
 	*cl = '\0';
 	if(cl[-1] == 'F') {
-		fprintf(stderr, "%s: Uses pretty-printing of values. "
-			"Use -p option to unber\n", fname);
+		fprintf(stderr,
+			"%s: Detected pretty-printing of primitive types at line %d. "
+			"Re-run `unber` with -p option to disable pretty-printing.\n", fname, lineno);
 		exit(EX_DATAERR);
 	}
 
