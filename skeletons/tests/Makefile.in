@@ -13,7 +13,7 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c check-UTCTime.c check-ber_tlv_tag.c check-length.c
+SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c check-REAL.c check-UTCTime.c check-ber_tlv_tag.c check-length.c
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -38,7 +38,8 @@ POST_UNINSTALL = :
 host_triplet = @host@
 check_PROGRAMS = check-ber_tlv_tag$(EXEEXT) check-length$(EXEEXT) \
 	check-OIDs$(EXEEXT) check-GeneralizedTime$(EXEEXT) \
-	check-UTCTime$(EXEEXT) check-INTEGER$(EXEEXT)
+	check-UTCTime$(EXEEXT) check-INTEGER$(EXEEXT) \
+	check-REAL$(EXEEXT)
 subdir = skeletons/tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -57,6 +58,9 @@ check_INTEGER_LDADD = $(LDADD)
 check_OIDs_SOURCES = check-OIDs.c
 check_OIDs_OBJECTS = check-OIDs.$(OBJEXT)
 check_OIDs_LDADD = $(LDADD)
+check_REAL_SOURCES = check-REAL.c
+check_REAL_OBJECTS = check-REAL.$(OBJEXT)
+check_REAL_LDADD = $(LDADD)
 check_UTCTime_SOURCES = check-UTCTime.c
 check_UTCTime_OBJECTS = check-UTCTime.$(OBJEXT)
 check_UTCTime_LDADD = $(LDADD)
@@ -72,6 +76,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/check-GeneralizedTime.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-INTEGER.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-OIDs.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/check-REAL.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-UTCTime.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-ber_tlv_tag.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-length.Po
@@ -84,9 +89,11 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-UTCTime.c check-ber_tlv_tag.c check-length.c
+	check-REAL.c check-UTCTime.c check-ber_tlv_tag.c \
+	check-length.c
 DIST_SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-UTCTime.c check-ber_tlv_tag.c check-length.c
+	check-REAL.c check-UTCTime.c check-ber_tlv_tag.c \
+	check-length.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -251,6 +258,9 @@ check-INTEGER$(EXEEXT): $(check_INTEGER_OBJECTS) $(check_INTEGER_DEPENDENCIES)
 check-OIDs$(EXEEXT): $(check_OIDs_OBJECTS) $(check_OIDs_DEPENDENCIES) 
 	@rm -f check-OIDs$(EXEEXT)
 	$(LINK) $(check_OIDs_LDFLAGS) $(check_OIDs_OBJECTS) $(check_OIDs_LDADD) $(LIBS)
+check-REAL$(EXEEXT): $(check_REAL_OBJECTS) $(check_REAL_DEPENDENCIES) 
+	@rm -f check-REAL$(EXEEXT)
+	$(LINK) $(check_REAL_LDFLAGS) $(check_REAL_OBJECTS) $(check_REAL_LDADD) $(LIBS)
 check-UTCTime$(EXEEXT): $(check_UTCTime_OBJECTS) $(check_UTCTime_DEPENDENCIES) 
 	@rm -f check-UTCTime$(EXEEXT)
 	$(LINK) $(check_UTCTime_LDFLAGS) $(check_UTCTime_OBJECTS) $(check_UTCTime_LDADD) $(LIBS)
@@ -270,6 +280,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-GeneralizedTime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-INTEGER.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-OIDs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-REAL.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-UTCTime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-ber_tlv_tag.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-length.Po@am__quote@
