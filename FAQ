@@ -1,7 +1,17 @@
 
-Q: How to build a simplest BER (XER) encoder or decoder?
-A:
+1.Q: Is it possible to build the asn1c compiler on Win32?
+1.A:
+	At this point, the asn1c source code is tied to GCC-specific
+	extensions in several key places. The CYGWIN environment with
+	gcc compiler may be what are you looking for.
 
+	Please also consider using the Online ASN.1 compiler at
+		http://lionet.info/asn1c
+	which generates platform-independent code.
+
+
+2.Q: How to build a simplest BER (XER) encoder or decoder?
+2.A:
 	Please see "Examples" section of ./doc/asn1c-usage.pdf
 
 	Also, try the following to build the X.509v3 parser:
@@ -11,8 +21,8 @@ A:
 		./x509dump -h
 
 
-Q: Your compiler supplies a der_encode() procedure. How do I encode BER?
-A:
+3.Q: Your compiler supplies a der_encode() procedure. How do I encode BER?
+3.A:
 	The DER (and CER) are stricter subsets of a more generic BER encoding
 	method. If you encode data with DER or CER, all BER-conformant decoders
 	will easily understand that. Hence, to encode data in the BER format,
