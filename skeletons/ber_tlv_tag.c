@@ -3,7 +3,6 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
-#include <constr_TYPE.h>
 #include <ber_tlv_tag.h>
 #include <errno.h>
 
@@ -100,7 +99,7 @@ ber_tlv_tag_string(ber_tlv_tag_t tag) {
 }
 
 
-ssize_t
+size_t
 ber_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 	int tclass = BER_TAG_CLASS(tag);
 	ber_tlv_tag_t tval = BER_TAG_VALUE(tag);
