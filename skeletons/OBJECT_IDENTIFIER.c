@@ -509,9 +509,13 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 	 * These require special treatment.
 	 */
 	{
-		uint8_t first_value[1 + arc_type_size];	/* of two arcs */
-		uint8_t *fv = first_value;
 		uint8_t *tp;
+#ifdef	__GNUC__
+		uint8_t first_value[1 + arc_type_size];	/* of two arcs */
+#else
+		uint8_t *first_value = alloca(1 + arc_type_size);
+#endif
+		uint8_t *fv = first_value;
 
 		/*
 		 * Simulate first_value = arc0 * 40 + arc1;
