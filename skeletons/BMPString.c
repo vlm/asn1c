@@ -123,7 +123,7 @@ BMPString_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 				*((uint8_t *)dstwc + 0) = wch >> 8;
 				*((uint8_t *)dstwc + 1) = wch;
 			}
-			dstwc = (uint16_t)REALLOC(wcs, 2 * (wcs_len + 1));
+			dstwc = (uint16_t *)REALLOC(wcs, 2 * (wcs_len + 1));
 			if(!dstwc) {
 				FREEMEM(wcs);
 				rc.code = RC_FAIL;
