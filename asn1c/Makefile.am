@@ -8,13 +8,13 @@ AM_CPPFLAGS = \
 	-I${top_srcdir}/libasn1print	\
 	-I${top_srcdir}/libasn1fix	\
 	-I${top_srcdir}/skeletons	\
-	-DDATADIR=\"${pkgdatadir}\"
+	-DDATADIR=\"$(pkgdatadir)\"
 
 LDADD =	\
-	${top_builddir}/libasn1parser/libasn1parser.la	\
-	${top_builddir}/libasn1fix/libasn1fix.la	\
-	${top_builddir}/libasn1print/libasn1print.la	\
-	${top_builddir}/libasn1compiler/libasn1compiler.la
+	$(top_builddir)/libasn1parser/libasn1parser.la	\
+	$(top_builddir)/libasn1print/libasn1print.la	\
+	$(top_builddir)/libasn1fix/libasn1fix.la	\
+	$(top_builddir)/libasn1compiler/libasn1compiler.la
 
 asn1c_SOURCES = asn1c.c	\
 	tlv_decoder.c tlv_decoder.h
