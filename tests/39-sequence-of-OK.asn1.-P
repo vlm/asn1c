@@ -55,7 +55,7 @@ asn_TYPE_descriptor_t asn_DEF_collection = {
 	SEQUENCE_OF_constraint,
 	SEQUENCE_OF_decode_ber,
 	SEQUENCE_OF_encode_der,
-	0,				/* Not implemented yet */
+	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_collection_tags,

@@ -46,7 +46,7 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	0,				/* Not implemented yet */
+	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Forest_tags,
@@ -243,7 +243,7 @@ asn_TYPE_descriptor_t asn_DEF_trees = {
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	0,				/* Not implemented yet */
+	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_trees_tags,
@@ -330,7 +330,7 @@ asn_TYPE_descriptor_t asn_DEF_anything = {
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	0,				/* Not implemented yet */
+	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_anything_tags,
@@ -453,7 +453,7 @@ asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
-	0,				/* Not implemented yet */
+	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Stuff_tags,
