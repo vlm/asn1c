@@ -103,6 +103,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 		assert(t.g->size == 3);
 		assert(t.g->buf[0] == 2);
 		assert(t.g->buf[1] == 147);
+		assert(t.g->buf[2] != 150);
 		assert(t.g->buf[2] == 148);
 
 		printf("%d\n", t.h->buf[3]);

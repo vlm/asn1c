@@ -172,7 +172,7 @@ buf_fill(const void *buffer, size_t size, void *app_key) {
 	return 0;
 }
 
-void
+static void
 compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 	der_enc_rval_t erval;
 	int i;
@@ -277,11 +277,8 @@ partial_read(uint8_t *buf, size_t size) {
 }
 
 int
-main(int ac, char **av) {
+main() {
 	T_t t;
-
-	(void)ac;	/* Unused argument */
-	(void)av;	/* Unused argument */
 
 	/* Check exact buf0 */
 	check(&t, buf0, sizeof(buf0), sizeof(buf0));

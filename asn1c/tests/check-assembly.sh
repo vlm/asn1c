@@ -40,13 +40,13 @@ SRCS=`echo *.c*`
 OBJS1=\${SRCS:.c=.o}
 OBJS=\${OBJS1:.cc=.o}
 check-executable: \${OBJS}
-	\${CC} \${CFLAGS} -o check-executable \${OBJS}
+	\$(CC) \$(CFLAGS) -o check-executable \$(OBJS)
 .SUFFIXES:
 .SUFFIXES: .c .cc .o
 .c.o:
-	\${CC} \${CFLAGS} -o \$@ -c \$<
+	\$(CC) \$(CFLAGS) -o \$@ -c \$<
 .cc.o:
-	\${CXX} \${CXXFLAGS} -o \$@ -c \$<
+	\$(CXX) \$(CXXFLAGS) -o \$@ -c \$<
 check: check-executable
 	./check-executable
 clean:

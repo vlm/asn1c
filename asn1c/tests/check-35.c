@@ -155,7 +155,7 @@ buf_fill(const void *buffer, size_t size, void *app_key) {
 	return 0;
 }
 
-void
+static void
 compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 	der_enc_rval_t erval;
 	int i;
