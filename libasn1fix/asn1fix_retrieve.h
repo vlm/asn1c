@@ -20,7 +20,7 @@ asn1p_expr_t *asn1f_lookup_child(asn1p_expr_t *tc, const char *name);
  * NULL/EPERM:	The name was not found in EXPORTS section of the source module.
  * Also, NULL with errno values defined by asn1f_lookup_module().
  */
-asn1p_module_t *asn1f_lookup_in_imports(arg_t *arg, const char *name);
+asn1p_module_t *asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name);
 
 /*
  * Return a module by its name or optional OID.
