@@ -1067,7 +1067,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->elements_count = asn_DEF_%s.elements_count;\n", type_name);
 	if(etd_spec != ETD_NO_SPECIFICS) {
 		INDENT(-1);
-		OUT("    /* ");
+		OUT("     /* ");
 	}
 	OUT("td->specifics      = asn_DEF_%s.specifics;",        type_name);
 	if(etd_spec == ETD_NO_SPECIFICS) {
