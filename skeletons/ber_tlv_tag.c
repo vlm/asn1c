@@ -104,7 +104,7 @@ der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 	ber_tlv_tag_t tval = BER_TAG_VALUE(tag);
 	uint8_t *buf = (uint8_t *)bufp;
 	uint8_t *end;
-	size_t computed_size;
+	size_t required_size;
 	int i;
 
 	if(tval <= 30) {
@@ -118,29 +118,26 @@ der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 
 	/*
 	 * Compute the size of the subsequent bytes.
-	 * The routine is written so every floating-point
-	 * operation is done at compile time.
-	 * Note, there is a subtle problem lurking here,
-	 * could you guess where it is? :)
-	 * Hint: what happens when ((8*sizeof(tag))%7) == 0?
 	 */
-	computed_size = 1 + 8 * sizeof(tag) / 7;
-	for(i = (8*sizeof(tag)) - ((8*sizeof(tag))%7); i >= 7; i -= 7) {
-		if((tval >> i) & 0x7F) break;
-		computed_size--;
+	for(required_size = 1, i = 7; i < 8 * sizeof(tag); i += 7) {
+		if(tag >> i)
+			required_size++;
+		else
+			break;
 	}
+
+	if(size < required_size)
+		return required_size + 1;
 
 	/*
 	 * Fill in the buffer, space permitting.
 	 */
-	if(size > computed_size)
-		end = buf + computed_size;
-	else
-		end = buf + size;
-	for((void)i; buf < end; i -= 7, buf++) {
-		*buf = 0x80 | ((tval>>i) & 0x7F);
+	end = buf + required_size - 1;
+	for(i -= 7; buf <= end; i -= 7, buf++) {
+		*buf = 0x80 | ((tval >> i) & 0x7F);
 	}
+	*end &= 0x7F;	/* Clear the last high bit */
 
-	return computed_size + 1;
+	return required_size + 1;
 }
 
