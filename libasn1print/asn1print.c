@@ -5,6 +5,7 @@
 
 #include <asn1parser.h>
 #include <asn1fix_export.h>
+#include <asn1fix_crange.h>
 
 #include "asn1print.h"
 
