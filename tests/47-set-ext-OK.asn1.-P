@@ -72,7 +72,7 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
-	0,				/* Not implemented yet */
+	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags,
@@ -160,7 +160,7 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
-	0,				/* Not implemented yet */
+	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags,

@@ -46,7 +46,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	0,				/* Not implemented yet */
+	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags,
