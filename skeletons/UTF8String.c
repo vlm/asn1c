@@ -32,13 +32,20 @@ asn_TYPE_descriptor_t asn_DEF_UTF8String = {
 	0	/* No specifics */
 };
 
-static int _UTF8String_h1[16] = {
-	1, 1, 1, 1, 1, 1, 1, 1,	/* 0x0 ... 0x7 */
-	0, 0, 0, 0, 2, 2, 3, -1
-};
-static int _UTF8String_h2[16] = {
-	4, 4, 4, 4, 4, 4, 4, 4, /* 0xF0 .. 0xF7 */
-	5, 5, 5, 5, 6, 6, -1, -1
+/*
+ * This is the table of length expectations.
+ * The second half of this table is only applicable to the long sequentes.
+ */
+static int UTF8String_ht[2][16] = {
+	{ /* 0x0 ... 0x7 */
+	  /* 0000..0111 */
+	  1, 1, 1, 1, 1, 1, 1, 1,
+	  /* 1000..1011(0), 1100..1101(2), 1110(3), 1111(-1) */
+	  0, 0, 0, 0, 2, 2, 3, -1 },
+	{ /* 0xF0 .. 0xF7 */
+	  /* 11110000..11110111 */
+	  4, 4, 4, 4, 4, 4, 4, 4,
+	  5, 5, 5, 5, 6, 6, -1, -1 }
 };
 
 int
@@ -63,7 +70,7 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 
 		for(want = 0; buf < end; buf++) {
 			uint8_t ch = *buf;
-			int w = _UTF8String_h1[ch >> 4];
+			int w = UTF8String_ht[0][ch >> 4];
 			if(want) {	/* Continuation expected */
 				if(w) {
 					_ASN_ERRLOG(app_errlog, app_key,
@@ -78,11 +85,11 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 			} else {
 				switch(w) {
 				case -1:	/* Long UTF-8 */
-					w = _UTF8String_h2[ch & 0xF0];
+					w = UTF8String_ht[1][ch & 0x0F];
 					if(w != -1)
 						break;
 					/* Fall through */
-				case 0:
+				case 0:	/* But we should want something! */
 					_ASN_ERRLOG(app_errlog, app_key,
 						"%s: UTF-8 expectation"
 						"failed at byte %d (%s:%d)",
