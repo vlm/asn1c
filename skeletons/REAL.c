@@ -20,10 +20,10 @@ static const double real_zero;
 /*
  * REAL basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_REAL_tags[] = {
+static ber_tlv_tag_t asn_DEF_REAL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_REAL = {
+asn_TYPE_descriptor_t asn_DEF_REAL = {
 	"REAL",
 	ASN__PRIMITIVE_TYPE_free,
 	REAL_print,
@@ -33,10 +33,10 @@ asn1_TYPE_descriptor_t asn1_DEF_REAL = {
 	0,				/* Not implemented yet */
 	REAL_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_REAL_tags,
-	sizeof(asn1_DEF_REAL_tags) / sizeof(asn1_DEF_REAL_tags[0]),
-	asn1_DEF_REAL_tags,	/* Same as above */
-	sizeof(asn1_DEF_REAL_tags) / sizeof(asn1_DEF_REAL_tags[0]),
+	asn_DEF_REAL_tags,
+	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
+	asn_DEF_REAL_tags,	/* Same as above */
+	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -182,7 +182,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 }
 
 int
-REAL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+REAL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const REAL_t *st = (const REAL_t *)sptr;
 	ssize_t ret;
@@ -193,7 +193,7 @@ REAL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 	if(!st || !st->buf)
 		ret = cb("<absent>", 8, app_key);
-	else if(asn1_REAL2double(st, &d))
+	else if(asn_REAL2double(st, &d))
 		ret = cb("<error>", 7, app_key);
 	else
 		ret = REAL__dump(d, 0, cb, app_key);
@@ -202,7 +202,7 @@ REAL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 asn_enc_rval_t
-REAL_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	REAL_t *st = (REAL_t *)sptr;
@@ -211,7 +211,7 @@ REAL_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 
 	(void)ilevel;
 
-	if(!st || !st->buf || asn1_REAL2double(st, &d))
+	if(!st || !st->buf || asn_REAL2double(st, &d))
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = REAL__dump(d, flags & XER_F_CANONICAL, cb, app_key);
@@ -221,7 +221,7 @@ REAL_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-asn1_REAL2double(const REAL_t *st, double *dbl_value) {
+asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	unsigned int octv;
 
 	if(!st || !st->buf) {
@@ -372,7 +372,7 @@ asn1_REAL2double(const REAL_t *st, double *dbl_value) {
  * [1 bit sign]  [11 bits exponent]  [52 bits mantissa]
  */
 int
-asn1_double2REAL(REAL_t *st, double dbl_value) {
+asn_double2REAL(REAL_t *st, double dbl_value) {
 #ifdef	WORDS_BIGENDIAN		/* Known to be big-endian */
 	int littleEndian = 0;
 #else				/* need to test: have no explicit information */

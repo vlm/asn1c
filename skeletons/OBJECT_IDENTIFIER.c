@@ -11,10 +11,10 @@
 /*
  * OBJECT IDENTIFIER basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_OBJECT_IDENTIFIER_tags[] = {
+static ber_tlv_tag_t asn_DEF_OBJECT_IDENTIFIER_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (6 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
+asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	"OBJECT IDENTIFIER",
 	ASN__PRIMITIVE_TYPE_free,
 	OBJECT_IDENTIFIER_print,
@@ -24,19 +24,19 @@ asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
 	0,				/* Not implemented yet */
 	OBJECT_IDENTIFIER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_OBJECT_IDENTIFIER_tags,
-	sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags)
-	    / sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags[0]),
-	asn1_DEF_OBJECT_IDENTIFIER_tags,	/* Same as above */
-	sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags)
-	    / sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags[0]),
+	asn_DEF_OBJECT_IDENTIFIER_tags,
+	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
+	    / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
+	asn_DEF_OBJECT_IDENTIFIER_tags,	/* Same as above */
+	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
+	    / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
 
 int
-OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 
@@ -263,7 +263,7 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 }
 
 asn_enc_rval_t
-OBJECT_IDENTIFIER_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
@@ -282,7 +282,7 @@ OBJECT_IDENTIFIER_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
+OBJECT_IDENTIFIER_print(asn_TYPE_descriptor_t *td, const void *sptr,
 	int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
 	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 

@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <errno.h>
 
-asn1_TYPE_descriptor_t asn1_DEF_ANY = {
+asn_TYPE_descriptor_t asn_DEF_ANY = {
 	"ANY",
 	OCTET_STRING_free,
 	OCTET_STRING_print,
@@ -24,7 +24,7 @@ asn1_TYPE_descriptor_t asn1_DEF_ANY = {
 
 
 asn_enc_rval_t
-ANY_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+ANY_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 
@@ -48,7 +48,7 @@ struct _callback_arg {
 static int ANY__consume_bytes(const void *buffer, size_t size, void *key);
 
 int
-ANY_fromType(ANY_t *st, asn1_TYPE_descriptor_t *td, void *sptr) {
+ANY_fromType(ANY_t *st, asn_TYPE_descriptor_t *td, void *sptr) {
 	struct _callback_arg arg;
 	asn_enc_rval_t erval;
 
@@ -81,7 +81,7 @@ ANY_fromType(ANY_t *st, asn1_TYPE_descriptor_t *td, void *sptr) {
 }
 
 ANY_t *
-ANY_new_fromType(asn1_TYPE_descriptor_t *td, void *sptr) {
+ANY_new_fromType(asn_TYPE_descriptor_t *td, void *sptr) {
 	ANY_t tmp;
 	ANY_t *st;
 
@@ -105,7 +105,7 @@ ANY_new_fromType(asn1_TYPE_descriptor_t *td, void *sptr) {
 }
 
 int
-ANY_to_type(ANY_t *st, asn1_TYPE_descriptor_t *td, void **struct_ptr) {
+ANY_to_type(ANY_t *st, asn_TYPE_descriptor_t *td, void **struct_ptr) {
 	ber_dec_rval_t rval;
 	void *newst = 0;
 
@@ -120,7 +120,7 @@ ANY_to_type(ANY_t *st, asn1_TYPE_descriptor_t *td, void **struct_ptr) {
 		return 0;
 	}
 
-	rval = ber_decode(td, (void **)&newst, st->buf, st->size);
+	rval = ber_decode(0, td, (void **)&newst, st->buf, st->size);
 	if(rval.code == RC_OK) {
 		*struct_ptr = newst;
 		return 0;

@@ -11,7 +11,7 @@
  * The XER encoder of any type. May be invoked by the application.
  */
 asn_enc_rval_t
-xer_encode(asn1_TYPE_descriptor_t *td, void *sptr,
+xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 	enum xer_encoder_flags_e xer_flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er, tmper;
@@ -56,7 +56,7 @@ xer__print2fp(const void *buffer, size_t size, void *app_key) {
 }
 
 int
-xer_fprint(FILE *stream, asn1_TYPE_descriptor_t *td, void *sptr) {
+xer_fprint(FILE *stream, asn_TYPE_descriptor_t *td, void *sptr) {
 	asn_enc_rval_t er;
 
 	if(!stream) stream = stdout;

@@ -8,11 +8,11 @@
 /*
  * ObjectDescriptor basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_ObjectDescriptor_tags[] = {
+static ber_tlv_tag_t asn_DEF_ObjectDescriptor_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (7 << 2)),	/* [UNIVERSAL 7] IMPLICIT ... */
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_ObjectDescriptor = {
+asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor = {
 	"ObjectDescriptor",
 	OCTET_STRING_free,
 	OCTET_STRING_print_ascii,   /* Treat as ASCII subset (it's not) */
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_ObjectDescriptor = {
 	0,				/* Not implemented yet */
 	OCTET_STRING_encode_xer_ascii,/* Implemented in terms of OCTET STRING */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_ObjectDescriptor_tags,
-	sizeof(asn1_DEF_ObjectDescriptor_tags)
-	  / sizeof(asn1_DEF_ObjectDescriptor_tags[0]) - 1,
-	asn1_DEF_ObjectDescriptor_tags,
-	sizeof(asn1_DEF_ObjectDescriptor_tags)
-	  / sizeof(asn1_DEF_ObjectDescriptor_tags[0]),
+	asn_DEF_ObjectDescriptor_tags,
+	sizeof(asn_DEF_ObjectDescriptor_tags)
+	  / sizeof(asn_DEF_ObjectDescriptor_tags[0]) - 1,
+	asn_DEF_ObjectDescriptor_tags,
+	sizeof(asn_DEF_ObjectDescriptor_tags)
+	  / sizeof(asn_DEF_ObjectDescriptor_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

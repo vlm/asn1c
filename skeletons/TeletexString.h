@@ -9,6 +9,6 @@
 
 typedef OCTET_STRING_t TeletexString_t;	/* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_TeletexString;
+extern asn_TYPE_descriptor_t asn_DEF_TeletexString;
 
 #endif	/* _TeletexString_H_ */

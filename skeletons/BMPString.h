@@ -9,7 +9,7 @@
 
 typedef OCTET_STRING_t BMPString_t;  /* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_BMPString;
+extern asn_TYPE_descriptor_t asn_DEF_BMPString;
 
 asn_struct_print_f BMPString_print;	/* Human-readable output */
 xer_type_encoder_f BMPString_encode_xer;

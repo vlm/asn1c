@@ -8,11 +8,11 @@
 /*
  * UTF8String basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_UTF8String_tags[] = {
+static ber_tlv_tag_t asn_DEF_UTF8String_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),	/* [UNIVERSAL 12] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_UTF8String = {
+asn_TYPE_descriptor_t asn_DEF_UTF8String = {
 	"UTF8String",
 	OCTET_STRING_free,
 	UTF8String_print,
@@ -22,12 +22,12 @@ asn1_TYPE_descriptor_t asn1_DEF_UTF8String = {
 	0,				/* Not implemented yet */
 	OCTET_STRING_encode_xer_ascii,	/* Already in UTF-8 format */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_UTF8String_tags,
-	sizeof(asn1_DEF_UTF8String_tags)
-	  / sizeof(asn1_DEF_UTF8String_tags[0]) - 1,
-	asn1_DEF_UTF8String_tags,
-	sizeof(asn1_DEF_UTF8String_tags)
-	  / sizeof(asn1_DEF_UTF8String_tags[0]),
+	asn_DEF_UTF8String_tags,
+	sizeof(asn_DEF_UTF8String_tags)
+	  / sizeof(asn_DEF_UTF8String_tags[0]) - 1,
+	asn_DEF_UTF8String_tags,
+	sizeof(asn_DEF_UTF8String_tags)
+	  / sizeof(asn_DEF_UTF8String_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -42,7 +42,7 @@ static int _UTF8String_h2[16] = {
 };
 
 int
-UTF8String_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+UTF8String_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	ssize_t len;
 	len = UTF8String_length((const UTF8String_t *)sptr, td->name,
@@ -113,7 +113,7 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 }
 
 int
-UTF8String_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+UTF8String_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 

@@ -7,7 +7,7 @@
 
 #include <asn_types.h>	/* System-dependent types */
 
-struct asn1_TYPE_descriptor_s;		/* Forward declaration */
+struct asn_TYPE_descriptor_s;		/* Forward declaration */
 
 /*
  * Validate the structure according to the ASN.1 constraints.
@@ -18,7 +18,7 @@ struct asn1_TYPE_descriptor_s;		/* Forward declaration */
  * to encode an error message (properly 0-terminated).
  */
 int
-asn_check_constraints(struct asn1_TYPE_descriptor_s *type_descriptor,
+asn_check_constraints(struct asn_TYPE_descriptor_s *type_descriptor,
 	const void *struct_ptr,	/* Target language's structure */
 	char *errbuf,		/* Returned error description */
 	size_t *errlen		/* Length of the error description */
@@ -29,7 +29,7 @@ asn_check_constraints(struct asn1_TYPE_descriptor_s *type_descriptor,
  * associated with every type descriptor.
  */
 typedef int (asn_constr_check_f)(
-	struct asn1_TYPE_descriptor_s *type_descriptor,
+	struct asn_TYPE_descriptor_s *type_descriptor,
 	const void *struct_ptr,
 	asn_app_consume_bytes_f *optional_app_errlog,	/* Log the error */
 	void *optional_app_key		/* Opaque key passed to app_errlog */

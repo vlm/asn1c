@@ -109,12 +109,12 @@ static time_t timegm(struct tm *tm) {
 /*
  * GeneralizedTime basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_GeneralizedTime_tags[] = {
+static ber_tlv_tag_t asn_DEF_GeneralizedTime_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (24 << 2)),	/* [UNIVERSAL 24] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),  /* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime = {
+asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	"GeneralizedTime",
 	OCTET_STRING_free,
 	GeneralizedTime_print,
@@ -124,12 +124,12 @@ asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime = {
 	0,				/* Not implemented yet */
 	GeneralizedTime_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_GeneralizedTime_tags,
-	sizeof(asn1_DEF_GeneralizedTime_tags)
-	  / sizeof(asn1_DEF_GeneralizedTime_tags[0]) - 2,
-	asn1_DEF_GeneralizedTime_tags,
-	sizeof(asn1_DEF_GeneralizedTime_tags)
-	  / sizeof(asn1_DEF_GeneralizedTime_tags[0]),
+	asn_DEF_GeneralizedTime_tags,
+	sizeof(asn_DEF_GeneralizedTime_tags)
+	  / sizeof(asn_DEF_GeneralizedTime_tags[0]) - 2,
+	asn_DEF_GeneralizedTime_tags,
+	sizeof(asn_DEF_GeneralizedTime_tags)
+	  / sizeof(asn_DEF_GeneralizedTime_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -140,7 +140,7 @@ asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime = {
  * Check that the time looks like the time.
  */
 int
-GeneralizedTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+GeneralizedTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
 	time_t tloc;
@@ -158,14 +158,14 @@ GeneralizedTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 }
 
 asn_enc_rval_t
-GeneralizedTime_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
+GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	GeneralizedTime_t *st = (GeneralizedTime_t *)ptr;
 	asn_enc_rval_t erval;
 
 	/* If not canonical DER, re-encode into canonical DER. */
-	if(st->size && st->buf[st->size-1] != 'Z') {
+	if(st->size && st->buf[st->size-1] != 0x5a) {
 		struct tm tm;
 		time_t tloc;
 
@@ -199,7 +199,7 @@ GeneralizedTime_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 }
 
 asn_enc_rval_t
-GeneralizedTime_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	OCTET_STRING_t st;
@@ -229,7 +229,7 @@ GeneralizedTime_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-GeneralizedTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+GeneralizedTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
 
@@ -445,7 +445,7 @@ local_finish:
 		tloc = timegm(&tm_s);
 	} else {
 		/*
-		 * Without an offset (or 'Z'),
+		 * Without an offset (or "Z"),
 		 * we can only guess that it is a local zone.
 		 * Interpret it in this fashion.
 		 */
@@ -523,7 +523,7 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 
 	p = buf + size;
 	if(force_gmt) {
-		*p++ = 0x5a;	/* 'Z' */
+		*p++ = 0x5a;	/* "Z" */
 		*p++ = 0;
 		size++;
 	} else {

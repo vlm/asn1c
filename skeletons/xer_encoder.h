@@ -7,7 +7,7 @@
 
 #include <asn_application.h>
 
-struct asn1_TYPE_descriptor_s;	/* Forward declaration */
+struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /* Flags used by the xer_encode() and (*xer_type_encoder_f), defined below */
 enum xer_encoder_flags_e {
@@ -19,7 +19,7 @@ enum xer_encoder_flags_e {
 /*
  * The XER encoder of any type. May be invoked by the application.
  */
-asn_enc_rval_t xer_encode(struct asn1_TYPE_descriptor_s *type_descriptor,
+asn_enc_rval_t xer_encode(struct asn_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr,	/* Structure to be encoded */
 		enum xer_encoder_flags_e xer_flags,
 		asn_app_consume_bytes_f *consume_bytes_cb,
@@ -34,13 +34,13 @@ asn_enc_rval_t xer_encode(struct asn1_TYPE_descriptor_s *type_descriptor,
  * 	-1: Problem printing the structure.
  * WARNING: No sensible errno value is returned.
  */
-int xer_fprint(FILE *stream, struct asn1_TYPE_descriptor_s *td, void *sptr);
+int xer_fprint(FILE *stream, struct asn_TYPE_descriptor_s *td, void *sptr);
 
 /*
  * Type of the generic XER encoder.
  */
 typedef asn_enc_rval_t (xer_type_encoder_f)(
-		struct asn1_TYPE_descriptor_s *type_descriptor,
+		struct asn_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr,	/* Structure to be encoded */
 		int ilevel,		/* Level of indentation */
 		enum xer_encoder_flags_e xer_flags,

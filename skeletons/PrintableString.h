@@ -9,7 +9,7 @@
 
 typedef OCTET_STRING_t PrintableString_t;  /* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_PrintableString;
+extern asn_TYPE_descriptor_t asn_DEF_PrintableString;
 
 asn_constr_check_f PrintableString_constraint;
 

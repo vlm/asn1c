@@ -14,12 +14,12 @@
 /*
  * UTCTime basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_UTCTime_tags[] = {
+static ber_tlv_tag_t asn_DEF_UTCTime_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (23 << 2)),	/* [UNIVERSAL 23] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),  /* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_UTCTime = {
+asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	"UTCTime",
 	OCTET_STRING_free,
 	UTCTime_print,
@@ -29,12 +29,12 @@ asn1_TYPE_descriptor_t asn1_DEF_UTCTime = {
 	0,				/* Not implemented yet */
 	UTCTime_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_UTCTime_tags,
-	sizeof(asn1_DEF_UTCTime_tags)
-	  / sizeof(asn1_DEF_UTCTime_tags[0]) - 2,
-	asn1_DEF_UTCTime_tags,
-	sizeof(asn1_DEF_UTCTime_tags)
-	  / sizeof(asn1_DEF_UTCTime_tags[0]),
+	asn_DEF_UTCTime_tags,
+	sizeof(asn_DEF_UTCTime_tags)
+	  / sizeof(asn_DEF_UTCTime_tags[0]) - 2,
+	asn_DEF_UTCTime_tags,
+	sizeof(asn_DEF_UTCTime_tags)
+	  / sizeof(asn_DEF_UTCTime_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -45,7 +45,7 @@ asn1_TYPE_descriptor_t asn1_DEF_UTCTime = {
  * Check that the time looks like the time.
  */
 int
-UTCTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+UTCTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const UTCTime_t *st = (const UTCTime_t *)sptr;
 	time_t tloc;
@@ -63,7 +63,7 @@ UTCTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 }
 
 asn_enc_rval_t
-UTCTime_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+UTCTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	OCTET_STRING_t st;
@@ -93,7 +93,7 @@ UTCTime_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-UTCTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+UTCTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const UTCTime_t *st = (const UTCTime_t *)sptr;
 

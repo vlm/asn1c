@@ -2,7 +2,7 @@
 #include <constraints.h>
 
 int
-asn_generic_no_constraint(asn1_TYPE_descriptor_t *type_descriptor,
+asn_generic_no_constraint(asn_TYPE_descriptor_t *type_descriptor,
 	const void *struct_ptr, asn_app_consume_bytes_f *cb, void *key) {
 
 	(void)type_descriptor;	/* Unused argument */
@@ -15,7 +15,7 @@ asn_generic_no_constraint(asn1_TYPE_descriptor_t *type_descriptor,
 }
 
 int
-asn_generic_unknown_constraint(asn1_TYPE_descriptor_t *type_descriptor,
+asn_generic_unknown_constraint(asn_TYPE_descriptor_t *type_descriptor,
 	const void *struct_ptr, asn_app_consume_bytes_f *cb, void *key) {
 
 	(void)type_descriptor;	/* Unused argument */
@@ -54,7 +54,7 @@ __fill_errbuf(const void *buffer, size_t size, void *app_key) {
 }
 
 int
-asn_check_constraints(asn1_TYPE_descriptor_t *type_descriptor,
+asn_check_constraints(asn_TYPE_descriptor_t *type_descriptor,
 	const void *struct_ptr, char *errbuf, size_t *errlen) {
 
 	if(errlen) {

@@ -9,6 +9,6 @@
 
 typedef INTEGER_t ENUMERATED_t;		/* Implemented via INTEGER */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED;
+extern asn_TYPE_descriptor_t asn_DEF_ENUMERATED;
 
 #endif	/* _ENUMERATED_H_ */

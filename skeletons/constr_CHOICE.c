@@ -70,8 +70,8 @@ static void _set_present_idx(void *sptr, int offset, int size, int pres);
  */
 static int
 _search4tag(const void *ap, const void *bp) {
-	const asn1_TYPE_tag2member_t *a = (const asn1_TYPE_tag2member_t *)ap;
-	const asn1_TYPE_tag2member_t *b = (const asn1_TYPE_tag2member_t *)bp;
+	const asn_TYPE_tag2member_t *a = (const asn_TYPE_tag2member_t *)ap;
+	const asn_TYPE_tag2member_t *b = (const asn_TYPE_tag2member_t *)bp;
 
 	int a_class = BER_TAG_CLASS(a->el_tag);
 	int b_class = BER_TAG_CLASS(b->el_tag);
@@ -97,23 +97,22 @@ _search4tag(const void *ap, const void *bp) {
  * The decoder of the CHOICE type.
  */
 ber_dec_rval_t
-CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
+CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
-	asn1_TYPE_member_t *elements = td->elements;
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elements = td->elements;
 
 	/*
 	 * Parts of the structure being constructed.
 	 */
 	void *st = *struct_ptr;	/* Target structure. */
-	ber_dec_ctx_t *ctx;	/* Decoder context */
+	asn_struct_ctx_t *ctx;	/* Decoder context */
 
 	ber_tlv_tag_t tlv_tag;	/* T from TLV */
 	ssize_t tag_len;	/* Length of TLV's T */
-	//ber_tlv_len_t tlv_len;	/* L from TLV */
 	ber_dec_rval_t rval;	/* Return code from subparsers */
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
@@ -133,7 +132,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (ber_dec_ctx_t *)((char *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -147,7 +146,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 		 */
 
 		if(tag_mode || td->tags_count) {
-			rval = ber_check_tags(td, ctx, ptr, size,
+			rval = ber_check_tags(opt_codec_ctx, td, ctx, ptr, size,
 				tag_mode, -1, &ctx->left, 0);
 			if(rval.code != RC_OK) {
 				ASN_DEBUG("%s tagging check failed: %d",
@@ -184,8 +183,8 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 		}
 
 		do {
-			asn1_TYPE_tag2member_t *t2m;
-			asn1_TYPE_tag2member_t key;
+			asn_TYPE_tag2member_t *t2m;
+			asn_TYPE_tag2member_t key;
 
 			key.el_tag = tlv_tag;
 			(void *)t2m = bsearch(&key,
@@ -231,7 +230,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 		 * Read in the element.
 		 */
 	    do {
-		asn1_TYPE_member_t *elm;/* CHOICE's element */
+		asn_TYPE_member_t *elm;/* CHOICE's element */
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
 
@@ -256,7 +255,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = elm->type->ber_decoder(elm->type,
+		rval = elm->type->ber_decoder(opt_codec_ctx, elm->type,
 				memb_ptr2, ptr, LEFT,
 				elm->tag_mode);
 		switch(rval.code) {
@@ -353,12 +352,12 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-CHOICE_encode_der(asn1_TYPE_descriptor_t *td,
+CHOICE_encode_der(asn_TYPE_descriptor_t *td,
 		void *struct_ptr,
 		int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
-	asn1_TYPE_member_t *elm;	/* CHOICE element */
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elm;	/* CHOICE element */
 	asn_enc_rval_t erval;
 	void *memb_ptr;
 	size_t computed_size = 0;
@@ -453,8 +452,8 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *td,
 }
 
 ber_tlv_tag_t
-CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber_tlv_tag_t tag) {
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
+CHOICE_outmost_tag(asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber_tlv_tag_t tag) {
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	assert(tag_mode == 0);
@@ -466,7 +465,7 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 	present = _fetch_present_idx(ptr, specs->pres_offset, specs->pres_size);
 
 	if(present > 0 || present <= td->elements_count) {
-		asn1_TYPE_member_t *elm = &td->elements[present-1];
+		asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
@@ -477,7 +476,7 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 					((const char *)ptr + elm->memb_offset);
 		}
 
-		return asn1_TYPE_outmost_tag(elm->type, memb_ptr,
+		return asn_TYPE_outmost_tag(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag);
 	} else {
 		return (ber_tlv_tag_t)-1;
@@ -485,9 +484,9 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 }
 
 int
-CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	if(!sptr) {
@@ -502,7 +501,7 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	 */
 	present = _fetch_present_idx(sptr, specs->pres_offset,specs->pres_size);
 	if(present > 0 && present <= td->elements_count) {
-		asn1_TYPE_member_t *elm = &td->elements[present-1];
+		asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
@@ -541,10 +540,10 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 }
 
 asn_enc_rval_t
-CHOICE_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_CHOICE_specifics_t *specs=(asn1_CHOICE_specifics_t *)td->specifics;
+	asn_CHOICE_specifics_t *specs=(asn_CHOICE_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int present;
 
@@ -560,7 +559,7 @@ CHOICE_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 		_ASN_ENCODE_FAILED;
 	}  else {
 		asn_enc_rval_t tmper;
-		asn1_TYPE_member_t *elm = &td->elements[present-1];
+		asn_TYPE_member_t *elm = &td->elements[present-1];
 		void *memb_ptr;
 		const char *mname = elm->name;
 		unsigned int mlen = strlen(mname);
@@ -592,9 +591,9 @@ CHOICE_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
@@ -608,7 +607,7 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	 * Print that element.
 	 */
 	if(present > 0 && present <= td->elements_count) {
-		asn1_TYPE_member_t *elm = &td->elements[present-1];
+		asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
@@ -633,8 +632,8 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-CHOICE_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
+CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	if(!td || !ptr)
@@ -651,7 +650,7 @@ CHOICE_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	 * Free that element.
 	 */
 	if(present > 0 && present <= td->elements_count) {
-		asn1_TYPE_member_t *elm = &td->elements[present-1];
+		asn_TYPE_member_t *elm = &td->elements[present-1];
 		void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {

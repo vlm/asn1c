@@ -13,7 +13,7 @@
 
 #include <asn_application.h>
 
-extern asn1_TYPE_descriptor_t asn1_DEF_NativeReal;
+extern asn_TYPE_descriptor_t asn_DEF_NativeReal;
 
 asn_struct_free_f  NativeReal_free;
 asn_struct_print_f NativeReal_print;

@@ -13,7 +13,7 @@ static ssize_t der_write_TL(ber_tlv_tag_t tag, ber_tlv_len_t len,
  * The DER encoder of any type.
  */
 asn_enc_rval_t
-der_encode(asn1_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
+der_encode(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
 	asn_app_consume_bytes_f *consume_bytes, void *app_key) {
 
 	ASN_DEBUG("DER encoder invoked for %s",
@@ -32,7 +32,7 @@ der_encode(asn1_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
  * Write out leading TL[v] sequence according to the type definition.
  */
 ssize_t
-der_write_tags(asn1_TYPE_descriptor_t *sd,
+der_write_tags(asn_TYPE_descriptor_t *sd,
 		size_t struct_length,
 		int tag_mode, int last_tag_form,
 		ber_tlv_tag_t tag,	/* EXPLICIT or IMPLICIT tag */

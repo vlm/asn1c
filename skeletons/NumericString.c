@@ -8,11 +8,11 @@
 /*
  * NumericString basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_NumericString_tags[] = {
+static ber_tlv_tag_t asn_DEF_NumericString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (18 << 2)),	/* [UNIVERSAL 18] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-asn1_TYPE_descriptor_t asn1_DEF_NumericString = {
+asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	"NumericString",
 	OCTET_STRING_free,
 	OCTET_STRING_print_ascii,   /* ASCII subset */
@@ -22,18 +22,18 @@ asn1_TYPE_descriptor_t asn1_DEF_NumericString = {
 	0,				/* Not implemented yet */
 	OCTET_STRING_encode_xer_ascii,/* Implemented in terms of OCTET STRING */
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_NumericString_tags,
-	sizeof(asn1_DEF_NumericString_tags)
-	  / sizeof(asn1_DEF_NumericString_tags[0]) - 1,
-	asn1_DEF_NumericString_tags,
-	sizeof(asn1_DEF_NumericString_tags)
-	  / sizeof(asn1_DEF_NumericString_tags[0]),
+	asn_DEF_NumericString_tags,
+	sizeof(asn_DEF_NumericString_tags)
+	  / sizeof(asn_DEF_NumericString_tags[0]) - 1,
+	asn_DEF_NumericString_tags,
+	sizeof(asn_DEF_NumericString_tags)
+	  / sizeof(asn_DEF_NumericString_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
 int
-NumericString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+NumericString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const NumericString_t *st = (const NumericString_t *)sptr;
 

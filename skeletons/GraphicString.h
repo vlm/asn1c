@@ -9,6 +9,6 @@
 
 typedef OCTET_STRING_t GraphicString_t;	/* Implemented via OCTET STRING */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_GraphicString;
+extern asn_TYPE_descriptor_t asn_DEF_GraphicString;
 
 #endif	/* _GraphicString_H_ */

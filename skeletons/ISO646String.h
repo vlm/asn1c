@@ -10,6 +10,6 @@
 
 typedef VisibleString_t ISO646String_t;	/* Implemented using VisibleString */
 
-extern asn1_TYPE_descriptor_t asn1_DEF_ISO646String;
+extern asn_TYPE_descriptor_t asn_DEF_ISO646String;
 
 #endif	/* _ISO646String_H_ */
