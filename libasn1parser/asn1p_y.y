@@ -23,9 +23,9 @@ extern int asn1p_lineno;
 static asn1p_value_t *
 	_convert_bitstring2binary(char *str, int base);
 
-#define	checkmem(ptr)	do {				\
-		if(!(ptr))				\
-		return yyerror("Memory failure");	\
+#define	checkmem(ptr)	do {					\
+		if(!(ptr))					\
+		return yyerror("Memory failure");		\
 	} while(0)
 
 #define	CONSTRAINT_INSERT(root, constr_type, arg1, arg2) do {	\
@@ -818,11 +818,11 @@ ActualParameterList:
 	ActualParameter {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_expr_add($$, $1);
 	}
 	| ActualParameterList ',' ActualParameter {
 		$$ = $1;
-		TQ_ADD(&($$->members), $3, next);
+		asn1p_expr_add($$, $3);
 	}
 	;
 
@@ -846,11 +846,11 @@ ComponentTypeLists:
 	ComponentType {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_expr_add($$, $1);
 	}
 	| ComponentTypeLists ',' ComponentType {
 		$$ = $1;
-		TQ_ADD(&($$->members), $3, next);
+		asn1p_expr_add($$, $3);
 	}
 	;
 
@@ -867,7 +867,7 @@ ComponentType:
 		checkmem($$);
 		$$->meta_type = $3->meta_type;
 		$$->expr_type = A1TC_COMPONENTS_OF;
-		TQ_ADD(&($$->members), $3, next);
+		asn1p_expr_add($$, $3);
 	}
 	| ExtensionAndException {
 		$$ = $1;
@@ -878,11 +878,11 @@ AlternativeTypeLists:
 	AlternativeType {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_expr_add($$, $1);
 	}
 	| AlternativeTypeLists ',' AlternativeType {
 		$$ = $1;
-		TQ_ADD(&($$->members), $3, next);
+		asn1p_expr_add($$, $3);
 	}
 	;
 
@@ -919,11 +919,11 @@ ClassFieldList:
 		checkmem($$);
 		$$->expr_type = A1TC_CLASSDEF;
 		$$->meta_type = AMT_OBJECT;
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_expr_add($$, $1);
 	}
 	| ClassFieldList ',' ClassField {
 		$$ = $1;
-		TQ_ADD(&($$->members), $3, next);
+		asn1p_expr_add($$, $3);
 	}
 	;
 
@@ -1085,7 +1085,7 @@ TypeDeclaration:
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
 		$$->meta_type = AMT_TYPE;
-		TQ_ADD(&($$->members), $4, next);
+		asn1p_expr_add($$, $4);
 	}
 	| TOK_SET optConstraints TOK_OF TypeDeclaration {
 		$$ = asn1p_expr_new(yylineno);
@@ -1093,7 +1093,7 @@ TypeDeclaration:
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SET_OF;
 		$$->meta_type = AMT_TYPE;
-		TQ_ADD(&($$->members), $4, next);
+		asn1p_expr_add($$, $4);
 	}
 	| TOK_ANY 					{
 		$$ = asn1p_expr_new(yylineno);
@@ -1808,11 +1808,11 @@ UniverationList:
 	UniverationElement {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_expr_add($$, $1);
 	}
 	| UniverationList ',' UniverationElement {
 		$$ = $1;
-		TQ_ADD(&($$->members), $3, next);
+		asn1p_expr_add($$, $3);
 	}
 	;
 
