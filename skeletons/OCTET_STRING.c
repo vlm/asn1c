@@ -37,11 +37,11 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 #define	NEXT_PHASE(ctx)	_CH_PHASE(ctx, +1)
 #define	PREV_PHASE(ctx)	_CH_PHASE(ctx, -1)
 
-#define	ADVANCE(num_bytes)	do {	\
-		size_t num = num_bytes;	\
-		(char *)buf_ptr += num;	\
-		size -= num;		\
-		consumed_myself += num;	\
+#define	ADVANCE(num_bytes)	do {			\
+		size_t num = num_bytes;			\
+		buf_ptr = ((char *)buf_ptr) + num;	\
+		size -= num;				\
+		consumed_myself += num;			\
 	} while(0)
 
 #define	RETURN(_code)	do {			\

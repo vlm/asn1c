@@ -332,7 +332,7 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 			*(unsigned char *)((char *)arcs
 				+ ((*(char *)&LE)?0:(arc_type_size - 1)))
 					= first_arc;
-			(char *)arcs += arc_type_size;
+			arcs = ((char *)arcs) + arc_type_size;
 		}
 
 		/* Decode, if has space */
@@ -342,7 +342,7 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 					arcs, arc_type_size))
 				return -1;
 			startn = i + 1;
-			(char *)arcs += arc_type_size;
+			arcs = ((char *)arcs) + arc_type_size;
 			add = 0;
 		}
 		num_arcs++;
@@ -538,7 +538,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 		 */
 		/* Copy the second (1'st) arcs[1] into the first_value */
 		*fv++ = 0;
-		(char *)arcs += arc_type_size;
+		arcs = ((char *)arcs) + arc_type_size;
 		if(isLittleEndian) {
 			uint8_t *aend = (unsigned char *)arcs - 1;
 			uint8_t *a1 = (unsigned char *)arcs + arc_type_size - 1;
@@ -567,8 +567,9 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 	/*
 	 * Save the rest of arcs.
 	 */
-	for((char *)arcs += arc_type_size, i = 2;
-			i < arc_slots; i++, (char *)arcs += arc_type_size) {
+	for(arcs = ((char *)arcs) + arc_type_size, i = 2;
+		i < arc_slots;
+			i++, arcs = ((char *)arcs) + arc_type_size) {
 		bp += OBJECT_IDENTIFIER_set_single_arc(bp,
 			arcs, arc_type_size, 0);
 	}

@@ -43,26 +43,8 @@ CFLAGS=\${COMMON_FLAGS} ${CFLAGS}
 CXXFLAGS=\${COMMON_FLAGS} ${CXXFLAGS}
 
 all: check-executable
-check-executable: compiled-module object-files
-	\$(CC) \$(CFLAGS) -o check-executable *.o
-
-# Cannot track dependencies automatically because files are not known beforehand
-object-files: *.c*
-	@for sfile in *.c; do						\\
-		ofile=\`echo "\$\$sfile" | sed -e 's/\.c[c]*\$\$/.o/'\`;	\\
-		if [ "\$\$sfile" -nt "\$\$ofile" ]; then			\\
-			echo "\$(CC) \$(CFLAGS) -o \$\$ofile -c \$\$sfile";	\\
-			\$(CC) \$(CFLAGS) -o \$\$ofile -c \$\$sfile;		\\
-		fi;							\\
-	done
-	@for sfile in *.cc; do						\\
-		ofile=\`echo "\$\$sfile" | sed -e 's/\.c[c]*\$\$/.o/'\`;	\\
-		if [ "\$\$sfile" -nt "\$\$ofile" ]; then			\\
-			echo "\$(CXX) \$(CXXFLAGS) -o \$\$ofile -c \$\$sfile";\\
-			\$(CXX) \$(CXXFLAGS) -o \$\$ofile -c \$\$sfile;	\\
-		fi;							\\
-	done
-	@touch object-files
+check-executable: compiled-module *.c*
+	\$(CC) \$(CFLAGS) -o check-executable *.c*
 
 # Compile the corresponding .asn1 spec.
 compiled-module: ${asn_module} ../../asn1c
