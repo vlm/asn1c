@@ -1,6 +1,6 @@
 <PDU>
 	<extensibleSet>
-		<extension> <!-- ext --> </extension>
+		<extension> <!-- <ext> --> </extension>
 		<!-- zzz -->
 		<zuka/>
 	</extensibleSet>

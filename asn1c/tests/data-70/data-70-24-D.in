@@ -1,6 +1,6 @@
 <PDU>
 	<extensibleSequence>
 		<extensibleSequence/>
-		<integer>234</integer>
+		<integer><!-- <zzz> -->234</integer>
 	</extensibleSequence>
 </PDU>

@@ -1,5 +1,5 @@
 <PDU>
 	<extensibleSet>
-		<string>something&#x20here</string>
+		<string>some<!-- <zzz> -->thing&#x20here</string>
 	</extensibleSet>
 </PDU>

@@ -1,6 +1,6 @@
 <PDU>
 	<setOf>
 		<REAL>3.14</REAL>
-		<REAL><!--zzz--><PLUS-INFINITY/></REAL>
+		<REAL><!--<zzz>--><PLUS-INFINITY/></REAL>
 	</setOf>
 </PDU>
