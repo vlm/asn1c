@@ -1,4 +1,14 @@
 
+0.9.5:	2004-Sep-13
+
+	* Fixed CER (common BER) decoder code. See check-25.c/VisibleString
+	  case for details. X.690 specifies that inner structures in BER
+	  encoding must be tagged by stripping off the outer tag for each
+	  subsequent containment level. See also X.690: 8.21.5.4 and
+	  the "Spouse" case in A.3.
+	  (Severity: medium, Security impact: low)
+	* Added converters between any generic type and the ANY type.
+
 0.9.4:	2004-Sep-10
 
 	* More support for recursive type definitions.
