@@ -183,6 +183,7 @@ static ssize_t
 INTEGER__xer_body_decode(INTEGER_t *st, void *chunk_buf, size_t chunk_size) {
 	long sign = 1;
 	long value;
+	char *lp;
 	char *lstart = (char *)chunk_buf;
 	char *lstop = chunk_buf + chunk_size;
 	enum {
@@ -190,12 +191,13 @@ INTEGER__xer_body_decode(INTEGER_t *st, void *chunk_buf, size_t chunk_size) {
 		ST_WAITDIGITS,
 		ST_DIGITS,
 	} state = ST_SKIPSPACE;
+
 	/*
 	 * We may receive a tag here. But we aren't ready to deal with it yet.
 	 * So, just use stroul()-like code and serialize the result.
 	 */
-	for(value = 0; lstart < lstop; lstart++) {
-		int lv = *lstart;
+	for(value = 0, lp = lstart; lp < lstop; lp++) {
+		int lv = *lp;
 		switch(lv) {
 		case 0x09: case 0x0a: case 0x0d: case 0x20:
 			if(state == ST_SKIPSPACE) continue;
@@ -217,20 +219,29 @@ INTEGER__xer_body_decode(INTEGER_t *st, void *chunk_buf, size_t chunk_size) {
 		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
 			if(state != ST_DIGITS) state = ST_DIGITS;
 
-			value = value * 10 + (lv - 0x30);
+		    {
+			long new_value = value * 10;
+
+			if(new_value / 10 != value)
+				/* Overflow */
+				return -1;
+
+			value = new_value + (lv - 0x30);
 			/* Check for two's complement overflow */
 			if(value < 0) {
 				/* Check whether it is a LONG_MIN */
 				if(sign == -1
 				&& value == ~((unsigned long)-1 >> 1)) {
-					sign = 0;
+					sign = 1;
 				} else {
 					/* Overflow */
 					return -1;
 				}
 			}
+		    }
 			continue;
 		}
+		break;
 	}
 
 	if(state != ST_DIGITS)
@@ -241,7 +252,7 @@ INTEGER__xer_body_decode(INTEGER_t *st, void *chunk_buf, size_t chunk_size) {
 	if(asn_long2INTEGER(st, value))
 		return -1;
 
-	return lstop - lstart;
+	return lp - lstart;
 }
 
 asn_dec_rval_t
