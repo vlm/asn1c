@@ -225,7 +225,7 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		key.el_tag = tlv_tag;
-		(void *)t2m = bsearch(&key,
+		t2m = (asn_TYPE_tag2member_t *)bsearch(&key,
 				specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);
 		if(t2m) {
@@ -436,7 +436,8 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Use existing, or build our own tags map.
 	 */
 	if(t2m_build_own) {
-		(void *)t2m = alloca(td->elements_count * sizeof(t2m[0]));
+		t2m = (asn_TYPE_tag2member_t *)alloca(
+				td->elements_count * sizeof(t2m[0]));
 		if(!t2m) _ASN_ENCODE_FAILED; /* There are such platforms */
 		t2m_count = 0;
 	} else {

@@ -25,7 +25,7 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */
-	(void *)list = ptr;
+	list = (A_SEQUENCE_OF(void) *)ptr;
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		erval = elm->type->der_encoder(elm->type, memb_ptr,
@@ -102,7 +102,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	er.encoded = 0;
 
-	(void *)list = sptr;
+	list = (A_SEQUENCE_OF(void) *)sptr;
 	for(i = 0; i < list->count; i++) {
 		asn_enc_rval_t tmper;
 

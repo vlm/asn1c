@@ -653,7 +653,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	} state = ST_SKIPSPACE;
 
 	if(!oid_text || oid_txt_length < -1 || (arcs_slots && !arcs)) {
-		if(oid_text_end) (const char *)*oid_text_end = oid_text;
+		if(oid_text_end) *(const char **)oid_text_end = oid_text;
 		errno = EINVAL;
 		return -1;
 	}
@@ -705,7 +705,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	} /* for() */
 
 
-	if(oid_text_end) (const char *)*oid_text_end = oid_text;
+	if(oid_text_end) *(const char **)oid_text_end = oid_text;
 
 	/* Finalize last arc */
 	switch(state) {
