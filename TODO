@@ -1,23 +1,25 @@
-MAJOR:
+1. MAJOR:
 
-1. Support for PER encoding. Requires advanced subtype constraints support,
-which is already completed.
+1.1 Support for PER encoding. Requires advanced subtype constraints support,
+which is already completed. Also see #3.2.
 
-2. Support for Information Object Classes.
+1.2 Support for Information Object Classes.
    Status:	Support for parsing IOCs is mostly present.
 		Support for slicing the IOCs to produce "views"
 		is not yet designed.
 
-MEDIUM:
+2. MEDIUM:
 
-1. Support for DEFAULT encoding and decoding, at least in INTEGER/ENUMERATED types.
-2. Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
+2.1 Support for DEFAULT encoding and decoding, at least in INTEGER/ENUMERATED types.
+2.2 Support for EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
 
-MINOR:
+3. MINOR:
 
-1. Parsing of CONSTRAINED BY clauses
+3.1 Parsing of CONSTRAINED BY clauses
 
-2. If the generated target language source file is not different from
+3.2 Support for ContainedSubtype constraint.
+
+3.3 If the generated target language source file is not different from
 the one already present (except maybe a compiler version in comments), 
 do not update the file. Prevents trashing file dependencies in multifile
 compilation.
