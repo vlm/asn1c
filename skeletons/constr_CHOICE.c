@@ -569,7 +569,6 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	asn_dec_rval_t rval;		/* Return value of a decoder */
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
-	int xer_state;			/* XER low level parsing context */
 	int edx;			/* Element index */
 
 	/*
@@ -593,7 +592,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Phase 2: Processing inner type.
 	 * Phase 3: Only waiting for closing tag
 	 */
-	for(xer_state = ctx->left, edx = ctx->step; ctx->phase <= 3;) {
+	for(edx = ctx->step; ctx->phase <= 3;) {
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
@@ -623,7 +622,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					elm->type, memb_ptr2, elm->name,
 					buf_ptr, size);
 			XER_ADVANCE(tmprval.consumed);
-			ASN_DEBUG("XER/CHOICE: itdf: code=%d, xs=%d", tmprval.code, xer_state);
+			ASN_DEBUG("XER/CHOICE: itdf: code=%d", tmprval.code);
 			if(tmprval.code != RC_OK)
 				RETURN(tmprval.code);
 			assert(_fetch_present_idx(st,
@@ -631,7 +630,6 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			/* Record what we've got */
 			_set_present_idx(st,
 				specs->pres_offset, specs->pres_size, edx + 1);
-			ctx->left = xer_state = 0;	/* New, clean state */
 			ctx->phase = 3;
 			/* Fall through */
 		}
@@ -639,12 +637,10 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Get the next part of the XML stream.
 		 */
-		ch_size = xer_next_token(&xer_state, buf_ptr, size, &ch_type);
+		ch_size = xer_next_token(buf_ptr, size, &ch_type);
 		switch(ch_size) {
 		case -1: RETURN(RC_FAIL);
-		case 0:
-			ctx->left = xer_state;
-			RETURN(RC_WMORE);
+		case 0:  RETURN(RC_WMORE);
 		default:
 			switch(ch_type) {
 			case PXER_COMMENT:	/* Got XML comment */

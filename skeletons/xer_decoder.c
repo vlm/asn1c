@@ -51,14 +51,13 @@ xer__token_cb(pxml_chunk_type_e type, void *_chunk_data, size_t _chunk_size, voi
  * Fetch the next token from the XER/XML stream.
  */
 ssize_t
-xer_next_token(int *stateContext, void *buffer, size_t size,
-		pxer_chunk_type_e *ch_type) {
+xer_next_token(void *buffer, size_t size, pxer_chunk_type_e *ch_type) {
 	struct xer__cb_arg arg;
+	int stateContext = 0;
 	ssize_t ret;
-	int new_stateContext = *stateContext;
 
 	arg.callback_not_invoked = 1;
-	ret = pxml_parse(&new_stateContext, buffer, size, xer__token_cb, &arg);
+	ret = pxml_parse(&stateContext, buffer, size, xer__token_cb, &arg);
 	if(ret < 0) return -1;
 	if(arg.callback_not_invoked) {
 		assert(ret == 0);	/* No data was consumed */
@@ -66,6 +65,7 @@ xer_next_token(int *stateContext, void *buffer, size_t size,
 	} else {
 		assert(arg.chunk_size);
 		assert(arg.chunk_buf == buffer);
+		assert(stateContext == 0);
 	}
 
 	/*
@@ -85,7 +85,6 @@ xer_next_token(int *stateContext, void *buffer, size_t size,
 		break;
 	}
 
-	*stateContext = new_stateContext;	/* Update the context */
 	return arg.chunk_size;
 }
 
@@ -169,10 +168,8 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 			(struct_key, chunk_buf, chunk_size,	\
 				(size_t)chunk_size < size);	\
 		if(converted_size == -1) RETURN(RC_FAIL);	\
-		if(converted_size == 0 && size == chunk_size) {	\
-			ctx->step = xer_state;			\
+		if(converted_size == 0 && size == chunk_size)	\
 			RETURN(RC_WMORE);			\
-		}						\
 		chunk_size = converted_size;			\
 	} while(0)
 #define	XER_GOT_EMPTY()	do {					\
@@ -198,7 +195,6 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 
 	asn_dec_rval_t rval;
 	ssize_t consumed_myself = 0;
-	int xer_state;			/* XER low level parsing context */
 
 	(void)opt_codec_ctx;
 
@@ -208,7 +204,7 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	 * Phase 1: Processing body and reacting on closing tag.
 	 */
 	if(ctx->phase > 1) RETURN(RC_FAIL);
-	for(xer_state = ctx->step;;) {
+	for(;;) {
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
@@ -216,11 +212,10 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 		/*
 		 * Get the next part of the XML stream.
 		 */
-		ch_size = xer_next_token(&xer_state, buf_ptr, size, &ch_type);
+		ch_size = xer_next_token(buf_ptr, size, &ch_type);
 		switch(ch_size) {
 		case -1: RETURN(RC_FAIL);
 		case 0:
-			ctx->step = xer_state;
 			RETURN(RC_WMORE);
 		default:
 			switch(ch_type) {
@@ -319,4 +314,30 @@ xer_is_whitespace(void *chunk_buf, size_t chunk_size) {
 	}
 	return 1;       /* All whitespace */
 }
+
+/*
+ * This is a vastly simplified, non-validating XML tree skipper.
+ */
+int
+xer_skip_unknown(xer_check_tag_e tcv, ber_tlv_len_t *depth) {
+	assert(*depth > 0);
+	switch(tcv) {
+	case XCT_BOTH:
+	case XCT_UNKNOWN_BO:
+		/* These negate each other. */
+		return 0;
+	case XCT_OPENING:
+	case XCT_UNKNOWN_OP:
+		++(*depth);
+		return 0;
+	case XCT_CLOSING:
+	case XCT_UNKNOWN_CL:
+		if(--(*depth) == 0)
+			return (tcv == XCT_CLOSING) ? 2 : 1;
+		return 0;
+	default:
+		return -1;
+	}
+}
+
 
