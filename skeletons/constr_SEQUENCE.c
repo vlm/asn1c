@@ -573,8 +573,8 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		if(tmperval.encoded == -1)
 			return tmperval;
 		computed_size -= tmperval.encoded;
-		ASN_DEBUG("Member %d %s of SEQUENCE %s encoded in %d bytes",
-			edx, elm->name, td->name, tmperval.encoded);
+		ASN_DEBUG("Member %d %s of SEQUENCE %s encoded in %ld bytes",
+			edx, elm->name, td->name, (long)tmperval.encoded);
 	}
 
 	if(computed_size != 0) {

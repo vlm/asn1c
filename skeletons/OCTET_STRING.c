@@ -286,9 +286,9 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 
 		ll = ber_fetch_length(tlv_constr,
 				(char *)buf_ptr + tl, Left - tl, &tlv_len);
-		ASN_DEBUG("Got tag=%s, tc=%d, left=%ld, tl=%d, len=%d, ll=%d",
+		ASN_DEBUG("Got tag=%s, tc=%d, left=%ld, tl=%ld, len=%ld, ll=%ld",
 			ber_tlv_tag_string(tlv_tag), tlv_constr,
-				(long)Left, tl, tlv_len, ll);
+				(long)Left, (long)tl, (long)tlv_len, (long)ll);
 		switch(ll) {
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
