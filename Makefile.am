@@ -1,7 +1,7 @@
 
 SUBDIRS = 				\
-	libasn1parser libasn1print	\
-	libasn1fix libasn1compiler	\
+	libasn1parser libasn1fix	\
+	libasn1print libasn1compiler	\
 	skeletons examples tests	\
 	doc asn1c
 
