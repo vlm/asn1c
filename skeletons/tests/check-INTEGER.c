@@ -78,6 +78,34 @@ check(uint8_t *buf, int size, long check_long, int check_ret) {
 	}
 }
 
+static void
+check_xer(int tofail, char *xmldata, long orig_value) {
+	INTEGER_t *st = 0;
+	asn_dec_rval_t rc;
+	long value;
+	int ret;
+
+	printf("[%s] vs %ld:\n", xmldata, orig_value);
+
+	rc = xer_decode(0, &asn_DEF_INTEGER, (void *)&st,
+		xmldata, strlen(xmldata));
+	if(rc.code != RC_OK) {
+		assert(tofail);
+		printf("\tfailed, as expected\n");
+		return;
+	}
+	assert(!tofail);
+
+	ret = asn_INTEGER2long(st, &value);
+	assert(ret == 0);
+
+	printf("\t%ld\n", value);
+
+	assert(value == orig_value);
+
+	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, st, 0);
+}
+
 int
 main(int ac, char **av) {
 	uint8_t buf1[] = { 1 };
@@ -109,6 +137,41 @@ main(int ac, char **av) {
 	CHECK(buf11, 0x80000000, 0);
 	CHECK(buf12, -32768, 0);
 	CHECK(buf13, -128, 0);
+
+	check_xer(-1, "", 0);
+	check_xer(-1, "<INTEGER></INTEGER>", 0);
+	check_xer(-1, "<INTEGER>-</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>+</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>+-</INTEGER>", 0);
+	check_xer(0, "<INTEGER>+0</INTEGER>", 0);
+	check_xer(0, "<INTEGER>-0</INTEGER>", 0);
+	check_xer(0, "<INTEGER>+1</INTEGER>", 1);
+	check_xer(0, "<INTEGER>-1</INTEGER>", -1);
+	check_xer(0, "<INTEGER>1</INTEGER>", 1);
+	check_xer(0, "<INTEGER>-15</INTEGER>", -15);
+	check_xer(0, "<INTEGER>+15</INTEGER>", 15);
+	check_xer(0, "<INTEGER>15</INTEGER>", 15);
+	check_xer(0, "<INTEGER> 15</INTEGER>", 15);
+	check_xer(0, "<INTEGER> 15 </INTEGER>", 15);
+	check_xer(0, "<INTEGER>15 </INTEGER>", 15);
+	check_xer(0, "<INTEGER> +15 </INTEGER>", 15);
+	check_xer(-1, "<INTEGER> +15 -</INTEGER>", 0);
+	check_xer(-1, "<INTEGER> +15 1</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>+ 15</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>12<z>34</INTEGER>", 0);
+	check_xer(0, "<INTEGER>1234</INTEGER>", 1234);
+	check_xer(-1, "<INTEGER>1234 5678</INTEGER>", 0);
+	check_xer(0, "<INTEGER>-2147483647</INTEGER>", -2147483647);
+	check_xer(0, "<INTEGER>-2147483648</INTEGER>", -2147483648);
+	check_xer(0, "<INTEGER>+2147483647</INTEGER>", 2147483647);
+	check_xer(0, "<INTEGER>2147483647</INTEGER>", 2147483647);
+	check_xer(-1, "<INTEGER>2147483648</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>2147483649</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>3147483649</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>4147483649</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>5147483649</INTEGER>", 0);	/* unobvious */
+	check_xer(-1, "<INTEGER>9147483649</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>9999999999</INTEGER>", 0);
 
 	return 0;
 }
