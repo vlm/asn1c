@@ -10,12 +10,10 @@
 #include <constraints.c>
 #include <sys/time.h>
 
-#define	HEX	0
-#define	BINARY	1
-#define	UTF8	2
+enum encoding_type { HEX, BINARY, UTF8 };
 
 static void
-check(int type, char *tagname, char *xmlbuf, char *verify) {
+check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 	int xmllen = strlen(xmlbuf);
 	int verlen = verify ? strlen(verify) : 0;
 	asn_TYPE_descriptor_t *td = &asn_DEF_OCTET_STRING;
@@ -24,11 +22,16 @@ check(int type, char *tagname, char *xmlbuf, char *verify) {
 	xer_type_decoder_f *decoder = 0;
 
 	switch(type) {
-	case HEX: decoder = OCTET_STRING_decode_xer_hex; break;
+	case HEX:
+		decoder = OCTET_STRING_decode_xer_hex;
+		break;
 	case BINARY:
 		td = &asn_DEF_BIT_STRING;
-		decoder = OCTET_STRING_decode_xer_binary; break;
-	case UTF8: decoder = OCTET_STRING_decode_xer_utf8; break;
+		decoder = OCTET_STRING_decode_xer_binary;
+		break;
+	case UTF8:
+		decoder = OCTET_STRING_decode_xer_utf8;
+		break;
 	}
 
 	rc = decoder(0, td, (void **)&st, tagname, xmlbuf, xmllen);
@@ -71,6 +74,11 @@ main() {
 	check(HEX, "z", "ignored<z>40</z>stuff", "@");
 
 	check(HEX, "tag", "<tag>4</tag>", "@");
+	check(HEX, "a-z", "<a-z>7 375 73 6c6 9<!--/-->6 b</a-z>", "suslik");
+
+	/* This one has a comment in a not-yet-supported place */ 
+	/* check(HEX, "a-z", "<a-z>73 75 73 6c 6<!--/-->9 6b</a-z>",
+		"suslik"); */
 
 	check(BINARY, "tag", "<tag/>", "");
 	check(BINARY, "tag", "<tag>blah</tag>", 0);
