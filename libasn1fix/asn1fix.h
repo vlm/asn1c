@@ -12,7 +12,7 @@
  */
 enum asn1f_flags {
 	A1F_NOFLAGS,
-	A1F_DEBUG,	/* Print debugging output using (_is_fatal = -1) */
+	A1F_DEBUG		= 0x01,	/* Print debugging output */
 };
 
 /*

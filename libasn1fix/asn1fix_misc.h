@@ -5,18 +5,6 @@
 #define	_ASN1FIX_MISC_H_
 
 /*
- * Return a pointer to the locally held string with human-readable
- * definition of the value.
- */
-char const *asn1f_printable_value(asn1p_value_t *);
-
-/*
- * Return a pointer to the locally held string with human-readable
- * definition of the reference.
- */
-char const *asn1f_printable_reference(asn1p_ref_t *);
-
-/*
  * Recursively invoke a given function over the given expr and all its
  * children.
  */

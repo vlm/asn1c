@@ -21,6 +21,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	 * 1. Find the terminal type for this assignment.
 	 */
 	type_expr = asn1f_find_terminal_type(arg, expr, 0);
+	DEBUG("%s(): terminal type %p", __func__, type_expr);
 	if(type_expr == 0) {
 		DEBUG("\tTerminal type for %s not found", expr->Identifier);
 		return -1;

@@ -16,6 +16,7 @@
 #include <assert.h>
 
 #include <asn1parser.h>		/* Our lovely ASN.1 parser module */
+#include <asn1fix.h>
 
 /*
  * A definition of a function that will log error messages.
@@ -32,6 +33,7 @@ typedef struct arg_s {
 	error_logger_f   eh;
 	error_logger_f   debug;
 	void            *key;           /* The next level key */
+	enum asn1f_flags flags;
 } arg_t;
 
 /*
@@ -51,6 +53,9 @@ typedef struct arg_s {
 #include "asn1fix_dereft.h"		/* Dereference types */
 #include "asn1fix_derefv.h"		/* Dereference values */
 #include "asn1fix_tags.h"		/* Tags-related stuff */
+#include "asn1fix_constraint.h"		/* Constraint manipulation */
+#include "asn1fix_crange.h"		/* Constraint groking, exportable */
+#include "asn1fix_export.h"		/* Exported functions */
 
 
 /*

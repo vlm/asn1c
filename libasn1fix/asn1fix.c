@@ -17,6 +17,7 @@ static int asn1f_fix_simple(arg_t *arg);	/* For INTEGER/ENUMERATED */
 static int asn1f_fix_constructed(arg_t *arg);	/* For SEQUENCE/SET/CHOICE */
 static int asn1f_fix_constraints(arg_t *arg);	/* For subtype constraints */
 
+arg_t a1f_replace_me_with_proper_interface_arg;
 
 /*
  * Scan every module defined here in search for inconsistences.
@@ -53,6 +54,8 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 		flags &= ~A1F_DEBUG;
 	}
 
+	a1f_replace_me_with_proper_interface_arg = arg;
+
 	/*
 	 * Check that we haven't missed an unknown flag.
 	 */
@@ -74,6 +77,8 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 		if(ret == 1) warnings++;
 	}
 
+	memset(&a1f_replace_me_with_proper_interface_arg, 0, sizeof(arg_t));
+
 	/*
 	 * Compute a return value.
 	 */
@@ -88,8 +93,7 @@ asn1f_fix_module(arg_t *arg) {
 	asn1p_expr_t *expr;
 	int rvalue = 0;
 
-	switch((arg->mod->module_flags
-	& (MSF_EXPLICIT_TAGS | MSF_IMPLICIT_TAGS | MSF_AUTOMATIC_TAGS))) {
+	switch((arg->mod->module_flags & MSF_MASK_TAGS)) {
 	case MSF_NOFLAGS:
 	case MSF_EXPLICIT_TAGS:
 	case MSF_IMPLICIT_TAGS:
@@ -97,6 +101,24 @@ asn1f_fix_module(arg_t *arg) {
 		break;
 	default:
 		FATAL("Module %s defined with ambiguous global tagging mode",
+			arg->mod->Identifier);
+		RET2RVAL(-1, rvalue);
+	}
+
+	switch((arg->mod->module_flags & MSF_MASK_INSTRUCTIONS)) {
+	case MSF_NOFLAGS:
+		//arg->mod->module_flags |= MSF_TAG_INSTRUCTIONS;
+		break;
+	case MSF_unk_INSTRUCTIONS:
+		WARNING("Module %s defined with unrecognized "
+			"encoding reference", arg->mod->Identifier);
+		RET2RVAL(1, rvalue);
+		/* Fall through */
+	case MSF_TAG_INSTRUCTIONS:
+	case MSF_XER_INSTRUCTIONS:
+		break;
+	default:
+		FATAL("Module %s defined with ambiguous encoding reference",
 			arg->mod->Identifier);
 		RET2RVAL(-1, rvalue);
 	}
@@ -249,86 +271,34 @@ asn1f_fix_constructed(arg_t *arg) {
 }
 
 static int
-_constraint_value_resolve(arg_t *arg, asn1p_value_t **value) {
-	asn1p_expr_t expr;
-	asn1p_expr_t *tmp_expr;
-	asn1p_module_t *tmp_mod;
-	asn1p_module_t *mod_r = NULL;
-	int rvalue = 0;
-	int ret;
-
-	tmp_expr = asn1f_lookup_symbol(arg, (*value)->value.reference, &mod_r);
-	if(tmp_expr == NULL) {
-		FATAL("Cannot find symbol %s "
-			"used in %s subtype constraint at line %d",
-			asn1f_printable_reference((*value)->value.reference),
-			arg->expr->Identifier, arg->expr->_lineno);
-		assert((*value)->type == ATV_REFERENCED);
-		return -1;
-	}
-
-	memset(&expr, 0, sizeof(expr));
-	expr.meta_type = tmp_expr->meta_type;
-	expr.expr_type = tmp_expr->expr_type;
-	expr.Identifier = tmp_expr->Identifier;
-	expr.value = *value;
-	tmp_expr = arg->expr;
-	tmp_mod = arg->mod;
-	arg->expr = &expr;
-	arg->mod = mod_r;
-	ret = asn1f_fix_dereference_values(arg);
-	RET2RVAL(ret, rvalue);
-	arg->expr = tmp_expr;
-	arg->mod = tmp_mod;
-	assert(expr.value);
-	*value = expr.value;
-
-	return rvalue;
-}
-
-static int
-_resolve_constraints(arg_t *arg, asn1p_constraint_t *ct) {
-	int rvalue = 0;
-	int ret;
-	int el;
-
-	/* Don't touch information object classes */
-	if(ct->type == ACT_CT_WCOMP
-	|| ct->type == ACT_CT_WCOMPS
-	|| ct->type == ACT_CA_CRC)
-		return 0;
-
-	if(ct->value && ct->value->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, &ct->value);
-		RET2RVAL(ret, rvalue);
-	}
-	if(ct->range_start && ct->range_start->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, &ct->range_start);
-		RET2RVAL(ret, rvalue);
-	}
-	if(ct->range_stop && ct->range_stop->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, &ct->range_stop);
-		RET2RVAL(ret, rvalue);
-	}
-
-	for(el = 0; el < ct->el_count; el++) {
-		ret = _resolve_constraints(arg, ct->elements[el]);
-		RET2RVAL(ret, rvalue);
-	}
-
-	return rvalue;
-}
-
-static int
 asn1f_fix_constraints(arg_t *arg) {
+	asn1p_expr_t *top_parent;
 	int rvalue = 0;
 	int ret;
 
-	if(arg->expr->constraints) {
-		ret = _resolve_constraints(arg, arg->expr->constraints);
-		RET2RVAL(ret, rvalue);
-	}
+	ret = asn1constraint_resolve(arg, arg->expr->constraints);
+	RET2RVAL(ret, rvalue);
 
+	ret = asn1constraint_pullup(arg);
+	RET2RVAL(ret, rvalue);
+
+	top_parent = asn1f_find_terminal_type(arg, arg->expr, NULL);
+	if(top_parent) {
+		static enum asn1p_constraint_type_e test_types[] = {
+			ACT_EL_RANGE, ACT_CT_SIZE, ACT_CT_FROM };
+		unsigned int i;
+		for(i = 0; i < sizeof(test_types)/sizeof(test_types[0]); i++) {
+			asn1cnst_range_t *range;
+			range = asn1constraint_compute_PER_range(
+					top_parent->expr_type,
+					arg->expr->combined_constraints,
+					test_types[i], 0, 0);
+			if(!range && errno == EPERM)
+				return -1;
+			asn1constraint_range_free(range);
+		}
+	}
+	
 	return rvalue;
 }
 
