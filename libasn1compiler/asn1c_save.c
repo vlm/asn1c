@@ -200,6 +200,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 			"#endif\t/* _%s_H_ */\n",
 		header_id);
 
+	fprintf(fp_c, "#include <asn_internal.h>\n\n");
 	fprintf(fp_c, "#include <%s.h>\n\n", expr->Identifier);	/* Myself */
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
