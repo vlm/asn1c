@@ -18,7 +18,7 @@
 	} while(0)
 
 static int asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags);
-static int asn1print_oid(asn1p_oid_t *oid, enum asn1print_flags flags);
+static int asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags);
 static int asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags flags);
 static int asn1print_tag(asn1p_expr_t *tc, enum asn1print_flags flags);
 static int asn1print_params(asn1p_paramlist_t *pl,enum asn1print_flags flags);
@@ -67,7 +67,7 @@ asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) 
 
 	printf("%s ", mod->Identifier);
 	if(mod->module_oid) {
-		asn1print_oid(mod->module_oid, flags);
+		asn1print_oid(strlen(mod->Identifier), mod->module_oid, flags);
 		printf("\n");
 	}
 
@@ -116,8 +116,8 @@ asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) 
 }
 
 static int
-asn1print_oid(asn1p_oid_t *oid, enum asn1print_flags flags) {
-	size_t accum = 0;
+asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
+	size_t accum = prior_len;
 	int ac;
 
 	(void)flags;	/* Unused argument */
@@ -126,23 +126,22 @@ asn1print_oid(asn1p_oid_t *oid, enum asn1print_flags flags) {
 	for(ac = 0; ac < oid->arcs_count; ac++) {
 		const char *arcname = oid->arcs[ac].name;
 
-		if(accum + strlen(arcname ? arcname : "") > 50) {
+		if(accum + strlen(arcname ? arcname : "") > 75) {
 			printf("\n\t");
 			accum = 0;
-		} else if(ac) {
-			printf(" ");
+		} else {
+			accum += printf(" ");
 		}
 
 		if(arcname) {
-			printf("%s", arcname);
+			accum += printf("%s", arcname);
 			if(oid->arcs[ac].number >= 0) {
-				printf("(%" PRIdASN ")", oid->arcs[ac].number);
+				accum += printf("(%" PRIdASN ")",
+					oid->arcs[ac].number);
 			}
-			accum += strlen(oid->arcs[ac].name);
 		} else {
-			printf("%" PRIdASN, oid->arcs[ac].number);
+			accum += printf("%" PRIdASN, oid->arcs[ac].number);
 		}
-		accum += 4;
 	}
 	printf(" }");
 
