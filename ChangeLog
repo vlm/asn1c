@@ -1,6 +1,8 @@
 
 0.9.2:	2004-Aug-24
 
+	* More flexible subtype constraints handling, with relaxed
+	  PER visibility rules for actual constraints checking code generator.
 	* Indirect references in constraints resolver code fixed.
 	* Avoided compilation warning on gcc 3.3.3 systems.
 
