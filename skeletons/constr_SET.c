@@ -16,7 +16,7 @@
  * (ctx->left) indicates the number of bytes _transferred_ for the structure.
  * (size) contains the number of bytes in the buffer passed.
  */
-#define	LEFT	((size<(size_t)ctx->left)?size:ctx->left)
+#define	LEFT	((size<(size_t)ctx->left)?size:(size_t)ctx->left)
 
 /*
  * If the subprocessor function returns with an indication that it wants
