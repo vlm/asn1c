@@ -12,23 +12,29 @@ ModuleTestANYSyntax
 BEGIN
 
 	T ::= CHOICE {
-		s1 T1,
-		s2 T2
+		s1 T1-ext,
+		s2 T2,
+		s3 T3
 	}
 
-	T1 ::= SEQUENCE {
+	T1-ext ::= SEQUENCE {
 		i	INTEGER OPTIONAL,
 		any	[1] ANY,	-- Converted into [1] EXPLICIT ANY
 		...
 	}
 
 	T2 ::= [16] SEQUENCE {
-			m1  [0] NumericString,
-			m2  [1] BOOLEAN,
-			m3  [3] SEQUENCE OF NumericString,
-			o4  [4] BOOLEAN OPTIONAL,
-			o5  [5] BOOLEAN OPTIONAL,
-			o6  [6] BOOLEAN OPTIONAL
+		m1  [0] NumericString,
+		m2  [1] BOOLEAN,
+		m3  [3] SEQUENCE OF NumericString,
+		o4  [4] BOOLEAN OPTIONAL,
+		o5  [5] BOOLEAN OPTIONAL,
+		o6  [6] BOOLEAN OPTIONAL
+	}
+
+	T3 ::= SET {
+		m1  [0] NumericString,
+		m2  [1] BOOLEAN
 	}
 
 END

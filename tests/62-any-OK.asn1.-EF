@@ -5,11 +5,12 @@ DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
 
 T ::= CHOICE {
-    s1	 T1,
-    s2	 T2
+    s1	 T1-ext,
+    s2	 T2,
+    s3	 T3
 }
 
-T1 ::= SEQUENCE {
+T1-ext ::= SEQUENCE {
     i	 INTEGER OPTIONAL,
     any	 [1] EXPLICIT ANY,
     ...
@@ -22,6 +23,11 @@ T2 ::= [16] IMPLICIT SEQUENCE {
     o4	 [4] IMPLICIT BOOLEAN OPTIONAL,
     o5	 [5] IMPLICIT BOOLEAN OPTIONAL,
     o6	 [6] IMPLICIT BOOLEAN OPTIONAL
+}
+
+T3 ::= SET {
+    m1	 [0] IMPLICIT NumericString,
+    m2	 [1] IMPLICIT BOOLEAN
 }
 
 END
