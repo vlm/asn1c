@@ -1,0 +1,5 @@
+<PDU>
+	<extensibleSequence>
+		<string>one <nul/> two</string>
+	</extensibleSequence>
+</PDU>

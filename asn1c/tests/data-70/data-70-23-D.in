@@ -1,0 +1,9 @@
+<PDU>
+	<extensibleSequence>
+		<string></string>
+		<one></one>
+		<two> <two/> </two>
+		<extensibleSequence/>
+		<integer>234</integer>
+	</extensibleSequence>
+</PDU>
