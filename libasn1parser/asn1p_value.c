@@ -123,6 +123,8 @@ asn1p_value_clone(asn1p_value_t *v) {
 		case ATV_MAX:
 		case ATV_FALSE:
 		case ATV_TRUE:
+		case ATV_TUPLE:
+		case ATV_QUADRUPLE:
 			clone = asn1p_value_fromint(v->value.v_integer);
 			if(clone) clone->type = v->type;
 			return clone;
@@ -174,6 +176,8 @@ asn1p_value_free(asn1p_value_t *v) {
 		case ATV_MAX:
 		case ATV_FALSE:
 		case ATV_TRUE:
+		case ATV_TUPLE:
+		case ATV_QUADRUPLE:
 			/* No freeing necessary */
 			break;
 		case ATV_STRING:

@@ -20,7 +20,9 @@ typedef struct asn1p_value_s {
 		ATV_MIN,
 		ATV_TRUE,
 		ATV_FALSE,
-		ATV_STRING,
+		ATV_TUPLE,	/* { 1, 15 } */
+		ATV_QUADRUPLE,	/* { 0, 14, 0, 255 } */
+		ATV_STRING,	/* "abcdef" */
 		ATV_UNPARSED,
 		ATV_BITVECTOR,
 		ATV_REFERENCED,	/* Reference to a value defined elsewhere */

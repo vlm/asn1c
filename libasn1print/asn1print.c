@@ -215,6 +215,19 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 	case ATV_MAX: printf("MAX"); return 0;
 	case ATV_FALSE: printf("FALSE"); return 0;
 	case ATV_TRUE: printf("TRUE"); return 0;
+	case ATV_TUPLE:
+		printf("{%d, %d}",
+			(int)(val->value.v_integer >> 4),
+			(int)(val->value.v_integer & 0x0f));
+		return 0;
+	case ATV_QUADRUPLE:
+		printf("{%d, %d, %d, %d}",
+			(int)((val->value.v_integer >> 24) & 0xff),
+			(int)((val->value.v_integer >> 16) & 0xff),
+			(int)((val->value.v_integer >> 8) & 0xff),
+			(int)((val->value.v_integer >> 0) & 0xff)
+		);
+		return 0;
 	case ATV_STRING:
 		{
 			char *p = val->value.string.buf;
@@ -339,16 +352,20 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 					"", "(" };
 			unsigned int i;
 			for(i = 0; i < ct->el_count; i++) {
-				enum asn1print_flags nflags = flags;
 				if(i) fputs(symtable[symno], stdout);
 				if(ct->type == ACT_CA_CRC) fputs("{", stdout);
-				asn1print_constraint(ct->elements[i], nflags);
+				asn1print_constraint(ct->elements[i], flags);
 				if(ct->type == ACT_CA_CRC) fputs("}", stdout);
 				if(i+1 < ct->el_count
 				&& ct->type == ACT_CA_SET)
 					fputs(")", stdout);
 			}
 		}
+		break;
+	case ACT_CA_AEX:
+		assert(ct->el_count == 1);
+		printf("ALL EXCEPT ");
+		asn1print_constraint(ct->elements[0], flags);
 		break;
 	case ACT_INVALID:
 		assert(ct->type != ACT_INVALID);

@@ -286,6 +286,7 @@ static asn1p_value_t *
 %type	<a_value>		ContainedSubtype
 %type	<a_ctype>		ConstraintSpec
 %type	<a_ctype>		ConstraintRangeSpec
+%type	<a_value>		RestrictedCharacterStringValue
 %type	<a_wsynt>		optWithSyntax
 %type	<a_wsynt>		WithSyntax
 %type	<a_wsynt>		WithSyntaxFormat
@@ -1346,9 +1347,8 @@ Value:
 		$$ = _convert_bitstring2binary($1, 'H');
 		checkmem($$);
 	}
-	| TOK_cstring {
-		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
-		checkmem($$);
+	| RestrictedCharacterStringValue {
+		$$ = $$;
 	}
 	| SignedNumber {
 		$$ = $1;
@@ -1383,6 +1383,38 @@ DefinedValue:
 		checkmem($$);
 		free($1);
 		free($3);
+	}
+	;
+
+
+RestrictedCharacterStringValue:
+	TOK_cstring {
+		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
+		checkmem($$);
+	}
+	| '{' TOK_number ',' TOK_number '}' {
+		asn1c_integer_t v = ($2 << 4) + $4;
+		if($2 > 7) return yyerror("X.680:2003, #37.14 "
+				"mandates 0..7 range for Tuple's TableColumn");
+		if($4 > 15) return yyerror("X.680:2003, #37.14 "
+				"mandates 0..15 range for Tuple's TableRow");
+		$$ = asn1p_value_fromint(v);
+		checkmem($$);
+		$$->type = ATV_TUPLE;
+	}
+	| '{' TOK_number ',' TOK_number ',' TOK_number ',' TOK_number '}' {
+		asn1c_integer_t v = ($2 << 24) | ($4 << 16) | ($6 << 8) | $8;
+		if($2 > 127) return yyerror("X.680:2003, #37.12 "
+				"mandates 0..127 range for Quadruple's Group");
+		if($4 > 255) return yyerror("X.680:2003, #37.12 "
+				"mandates 0..255 range for Quadruple's Plane");
+		if($6 > 255) return yyerror("X.680:2003, #37.12 "
+				"mandates 0..255 range for Quadruple's Row");
+		if($8 > 255) return yyerror("X.680:2003, #37.12 "
+				"mandates 0..255 range for Quadruple's Cell");
+		$$ = asn1p_value_fromint(v);
+		checkmem($$);
+		$$->type = ATV_QUADRUPLE;
 	}
 	;
 
@@ -1544,6 +1576,9 @@ ElementSetSpec:
 	ConstraintSubtypeElement {
 		$$ = $1;
 	}
+	| TOK_ALL TOK_EXCEPT ConstraintSubtypeElement {
+		CONSTRAINT_INSERT($$, ACT_CA_AEX, $3, 0);
+	}
 	| ElementSetSpec Union ConstraintSubtypeElement {
 		CONSTRAINT_INSERT($$, ACT_CA_UNI, $1, $3);
 	}
@@ -1663,9 +1698,8 @@ SingleValue:
 	| SignedNumber {
 		$$ = $1;
 	}
-	| TOK_cstring {
-		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
-		checkmem($$);
+	| RestrictedCharacterStringValue {
+		$$ = $1;
 	}
 	| Identifier {
 		asn1p_ref_t *ref;
