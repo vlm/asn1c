@@ -1,13 +1,16 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
-/* Define to 1 if you have the <errno.h> header file. */
-#undef HAVE_ERRNO_H
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `mergesort' function. */
+#undef HAVE_MERGESORT
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -26,6 +29,9 @@
 
 /* Define to 1 if you have the `strtoll' function. */
 #undef HAVE_STRTOLL
+
+/* Define to 1 if you have the <sys/param.h> header file. */
+#undef HAVE_SYS_PARAM_H
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H

@@ -19,12 +19,15 @@
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
 
+#ifdef	WIN32
+
+#define	 snprintf	_snprintf
+#define	 vsnprintf	_vsnprintf
+#define	alloca(size)	_alloca(size)
+
+#else	/* !WIN32 */
+
 #include <inttypes.h>	/* C99 specifies this file */
-
-#if	defined(sun)
-#include <ieeefp.h>	/* for finite(3) */
-#endif
-
 /*
  * 1. Earlier FreeBSD version didn't have <stdint.h>,
  * but <inttypes.h> was present.
@@ -34,15 +37,12 @@
 #if	(!defined(__FreeBSD__) || !defined(_SYS_INTTYPES_H_))
 #if	defined(sun)
 #include <alloca.h>	/* For alloca(3) */
+#include <ieeefp.h>	/* for finite(3) */
 #else
 #include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
-#endif
+#endif	/* defined(sun) */
 #endif
 
-#ifdef	WIN32
-#define	 snprintf	_snprintf
-#define	 vsnprintf	_vsnprintf
-#define	alloca(size)	_alloca(size)
 #endif	/* WIN32 */
 
 #ifndef	__GNUC__

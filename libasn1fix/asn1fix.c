@@ -1,10 +1,5 @@
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <stdarg.h>
-
-#include "asn1fix.h"
 #include "asn1fix_internal.h"
+#include "asn1fix.h"
 
 /* Print everything to stderr */
 static void _default_error_logger(int _severity, const char *fmt, ...);

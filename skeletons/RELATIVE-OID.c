@@ -220,7 +220,7 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	/*
 	 * Replace buffer.
 	 */
-	roid->size = bp - buf;
+	roid->size = (int)(bp - buf);
 	bp = roid->buf;
 	roid->buf = buf;
 	if(bp) FREEMEM(bp);

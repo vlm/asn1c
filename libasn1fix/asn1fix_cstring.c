@@ -2,7 +2,7 @@
 
 struct _cstring_pattern {
 	char *start;
-	int length;
+	size_t length;
 };
 static int _asn1f_cstring_find_line_pattern(char *s, struct _cstring_pattern *);
 
@@ -55,7 +55,7 @@ _asn1f_cstring_find_line_pattern(char *s, struct _cstring_pattern *cp) {
 		case '\0':
 		default:
 			if(newline_found) {
-				cp->length = s - cp->start;
+				cp->length = (size_t)(s - cp->start);
 				return 1;
 			}
 

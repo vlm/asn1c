@@ -19,11 +19,11 @@ char const *
 asn1f_printable_value(asn1p_value_t *v) {
 	static char buf[128];
 	static char *managedptr;
-	static int managedptr_len;
+	static size_t managedptr_len;
 	int ret;
 
 #define	ENSURE(len)	do {						\
-		int __len = (len);					\
+		size_t __len = (len);					\
 		if(__len >= managedptr_len) {				\
 			if(managedptr)					\
 				free(managedptr);			\
@@ -69,7 +69,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 		{
 			uint8_t *bitvector;
 			char *ptr;
-			int len;
+			size_t len;
 			int i;
 			/*
 			 * Compute number of bytes necessary
@@ -110,13 +110,13 @@ asn1f_printable_value(asn1p_value_t *v) {
 			*ptr++ = '\'';
 			*ptr++ = (bits%8)?'B':'H';
 			*ptr++ = 'H';
-			assert((ptr - managedptr) == len);
+			assert(len == (size_t)(ptr - managedptr));
 			return managedptr;
 		}
 	case ATV_REFERENCED:
 		{
 			asn1p_ref_t *ref;
-			char reflen;
+			size_t reflen;
 			char *ptr;
 			int i;
 
@@ -141,7 +141,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 					*ptr++ = *nc;
 			}
 			*ptr++ = '\0';
-			assert(reflen == (ptr - managedptr));
+			assert(reflen == (size_t)(ptr - managedptr));
 			return managedptr;
 		}
 	case ATV_CHOICE_IDENTIFIER:
@@ -158,7 +158,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 
 			ret = snprintf(managedptr, managedptr_len + 1,
 				"%s: %s", cid, val);
-			assert(ret >= 0 && ret <= managedptr_len);
+			assert(ret >= 0 && (size_t)ret <= managedptr_len);
 			free(val);
 			return managedptr;
 		}

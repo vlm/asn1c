@@ -276,7 +276,7 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 			 */
 			if(opt_unexpected_tag_decoder
 			&& opt_unexpected_tag_decoder(struct_key,
-					buf_ptr, ch_size) == 0) {
+					buf_ptr, ch_size) >= 0) {
 				/* Tag's processed fine */
 				ADVANCE(ch_size);
 				if(!ctx->phase) {

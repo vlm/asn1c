@@ -7,15 +7,36 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>		/* for fstat(2) */
-#include <unistd.h>		/* for unlink(2) */
-#include <fcntl.h>		/* for open(2) */
-#include <glob.h>		/* for glob(3) */
 #include <string.h>		/* for strlen(3) and memset(3) */
 #include <ctype.h>		/* for isalnum(3) */
+#include <sys/types.h>		/* for fstat(2) */
 #include <stdarg.h>
 #include <errno.h>
 #include <assert.h>
+
+#ifdef	HAVE_SYS_STAT_H
+#include <sys/stat.h>		/* for fstat(2) */
+#endif
+
+#ifdef	HAVE_UNISTD_H
+#include <unistd.h>		/* for unlink(2) */
+#endif
+
+#ifdef	WIN32
+#include <io.h>
+#define	open	_open
+#define	close	_close
+#define	alloca		_alloca
+#define	snprintf	_snprintf
+#define	vsnprintf	_vsnprintf
+#else
+#include <fcntl.h>		/* for open(2) */
+#include <glob.h>		/* for glob(3) */
+#endif
+
+#ifdef	HAVE_SYS_PARAM_H
+#include <sys/param.h>	/* For MAXPATHLEN */
+#endif
 
 #include "asn1compiler.h"
 

@@ -1,10 +1,6 @@
 #ifndef	ASN1C_COMPAT_H
 #define	ASN1C_COMPAT_H
 
-#ifdef	HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 /*
  * Open the arbitrary file by its base name and extension.
  */

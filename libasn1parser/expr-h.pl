@@ -9,6 +9,10 @@ print<<EOM;
 #ifndef	ASN1_PARSER_EXPR_STR_H
 #define	ASN1_PARSER_EXPR_STR_H
 
+#ifndef	__GNUC__
+#define	__attribute__(x)	/* unused */
+#endif
+
 static char *asn1p_expr_type2str[] __attribute__ ((unused)) = {
 EOM
 

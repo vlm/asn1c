@@ -10,13 +10,29 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <ctype.h>		/* isupper() */
 #include <errno.h>
 #include <assert.h>
 
+#ifdef	HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #include <asn1parser.h>		/* Our lovely ASN.1 parser module */
-#include <asn1fix.h>
+#include "asn1fix.h"
+
+#ifdef	WIN32
+#define	EX_NOINPUT	66
+#define	EX_DATAERR	65
+#define	snprintf	_snprintf
+#define	strcasecmp	stricmp
+#endif
+
+#ifndef	ETOOMANYREFS
+#define	ETOOMANYREFS	144
+#endif
 
 /*
  * A definition of a function that will log error messages.

@@ -76,11 +76,12 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir) {
 	if(dlist) {
 		char buf[8129];
 		char *dir_end;
-		int i = strlen(datadir);
+		size_t dlen = strlen(datadir);
+		int i;
 
-		assert(i < (int)(sizeof(buf) / 2 - 2));
-		memcpy(buf, datadir, i);
-		dir_end = buf + i;
+		assert(dlen < (sizeof(buf) / 2 - 2));
+		memcpy(buf, datadir, dlen);
+		dir_end = buf + dlen;
 		*dir_end++ = '/';
 
 		for(i = 0; i < dlist->el_count; i++) {
@@ -254,6 +255,35 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	return 0;
 }
 
+/*
+ * Copy file for real.
+ */
+static int
+real_copy(const char *src, const char *dst) {
+	unsigned char buf[8192];
+	FILE *fpsrc, *fpdst;
+	size_t len;
+	int retval = 0;
+
+	fpsrc = fopen(src, "rb");
+	if(!fpsrc) { errno = EIO; return -1; }
+	fpdst = fopen(src, "wb");
+	if(!fpdst) { fclose(fpsrc); errno = EIO; return -1; }
+
+	while(!feof(fpsrc)) {
+		len = fread(buf, 1, sizeof(buf), fpsrc);
+		if(fwrite(buf, 1, len, fpsrc) != len) {
+			errno = EIO;
+			retval = -1;
+			break;
+		}
+	}
+
+	fclose(fpsrc);
+	fclose(fpdst);
+	return retval;
+}
+
 static int
 asn1c_copy_over(arg_t *arg, char *path) {
 	char *fname;
@@ -261,7 +291,13 @@ asn1c_copy_over(arg_t *arg, char *path) {
 	(void)arg;	/* Unused argument */
 
 	fname = a1c_basename(path);
-	if(!fname || symlink(path, fname)) {
+	if(!fname
+#ifdef	WIN32
+		|| real_copy(path, fname)
+#else
+		|| (1 ? symlink(path, fname) : real_copy(path, fname))
+#endif
+	) {
 		if(errno == EEXIST) {
 			struct stat sb1, sb2;
 			if(stat(path, &sb1) == 0
