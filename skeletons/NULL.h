@@ -17,6 +17,7 @@ extern asn_TYPE_descriptor_t asn_DEF_NULL;
 
 asn_struct_print_f NULL_print;
 der_type_encoder_f NULL_encode_der;
+xer_type_decoder_f NULL_decode_xer;
 xer_type_encoder_f NULL_encode_xer;
 
 #endif	/* NULL_H */
