@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -28,13 +28,24 @@
  * The BER decoder of any type.
  */
 ber_dec_rval_t
-ber_decode(asn1_TYPE_descriptor_t *type_descriptor,
+ber_decode(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *type_descriptor,
 	void **struct_ptr, void *ptr, size_t size) {
+	asn_codec_ctx_t s_codec_ctx;
+
+	/*
+	 * Satisfy the requirement that the codec context
+	 * must be allocated on the stack.
+	 */
+	if(opt_codec_ctx && opt_codec_ctx->max_stack_size) {
+		s_codec_ctx = *opt_codec_ctx;
+		opt_codec_ctx = &s_codec_ctx;
+	}
 
 	/*
 	 * Invoke type-specific decoder.
 	 */
-	return type_descriptor->ber_decoder(type_descriptor,
+	return type_descriptor->ber_decoder(opt_codec_ctx, type_descriptor,
 		struct_ptr,	/* Pointer to the destination structure */
 		ptr, size,	/* Buffer and its size */
 		0		/* Default tag mode is 0 */
@@ -45,7 +56,8 @@ ber_decode(asn1_TYPE_descriptor_t *type_descriptor,
  * Check the set of <TL<TL<TL...>>> tags matches the definition.
  */
 ber_dec_rval_t
-ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx,
+ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
+		asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx,
 		void *ptr, size_t size, int tag_mode, int last_tag_form,
 		ber_tlv_len_t *last_length, int *opt_tlv_form) {
 	ssize_t consumed_myself = 0;
@@ -58,6 +70,19 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx,
 	int tlv_constr = -1;	/* If CHOICE, opt_tlv_form is not given */
 	int step = opt_ctx ? opt_ctx->step : 0;	/* Where we left previously */
 	int tagno;
+
+	if(opt_codec_ctx && opt_codec_ctx->max_stack_size) {
+		ptrdiff_t usedstack = ((char *)opt_codec_ctx - (char *)&size);
+		/* do not change the semantics:
+		 * double negative is required to avoid int wrap-around */
+		if(usedstack > 0) usedstack = -usedstack;
+		ASN_DEBUG("Current stack size %ld", -(long)usedstack);
+		if(usedstack < -(ptrdiff_t)opt_codec_ctx->max_stack_size) {
+			ASN_DEBUG("Stack limit %ld reached",
+				(long)opt_codec_ctx->max_stack_size);
+			RETURN(RC_FAIL);
+		}
+	}
 
 	/*
 	 * So what does all this implicit skip stuff mean?
@@ -86,7 +111,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx,
 		;
 	ASN_DEBUG("ber_check_tags(%s, size=%ld, tm=%d, step=%d, tagno=%d)",
 		td->name, (long)size, tag_mode, step, tagno);
-	//assert(td->tags_count >= 1); ?May not be the case for CHOICE or ANY.
+	/* assert(td->tags_count >= 1) May not be the case for CHOICE or ANY */
 
 	if(tag_mode == 0 && tagno == td->tags_count) {
 		/*
@@ -222,6 +247,10 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx,
 		 */
 		if(limit_len == -1) {
 			limit_len    = tlv_len + tag_len + len_len;
+			if(limit_len < 0) {
+				/* Too great tlv_len value? */
+				RETURN(RC_FAIL);
+			}
 		} else if(limit_len != tlv_len + tag_len + len_len) {
 			/*
 			 * Inner TLV specifies length which is inconsistent
