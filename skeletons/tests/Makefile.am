@@ -6,6 +6,7 @@ check_PROGRAMS = \
 	check-OIDs		\
 	check-GeneralizedTime	\
 	check-UTCTime		\
-	check-INTEGER
+	check-INTEGER		\
+	check-REAL
 
 TESTS = $(check_PROGRAMS)
