@@ -70,7 +70,7 @@ asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	0,				/* Not implemented yet */
+	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ConstructedType_tags,

@@ -237,7 +237,7 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	0,				/* Not implemented yet */
+	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
@@ -312,7 +312,7 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	0,				/* Not implemented yet */
+	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */

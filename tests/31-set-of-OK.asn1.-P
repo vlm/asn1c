@@ -122,7 +122,7 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	0,				/* Not implemented yet */
+	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Tree_tags,
@@ -289,7 +289,7 @@ asn_TYPE_descriptor_t asn_DEF_anything_member = {
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	0,				/* Not implemented yet */
+	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_anything_member_tags,
@@ -382,7 +382,7 @@ asn_TYPE_descriptor_t asn_DEF_other = {
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	0,				/* Not implemented yet */
+	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */

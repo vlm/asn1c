@@ -175,7 +175,7 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_1 = {
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	0,				/* Not implemented yet */
+	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Test_structure_1_tags,
@@ -330,7 +330,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice_1 = {
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	0,				/* Not implemented yet */
+	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
