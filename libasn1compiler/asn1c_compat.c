@@ -1,7 +1,5 @@
+#include "asn1c_internal.h"
 #include <asn1c_compat.h>
-
-#include <string.h>
-#include <errno.h>
 
 #ifdef	HAVE_SYS_PARAM_H
 #include <sys/param.h>	/* For MAXPATHLEN */
@@ -10,6 +8,63 @@
 #ifndef	MAXPATHLEN
 #define	MAXPATHLEN	1024
 #endif
+
+#ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
+#define	DEFFILEMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+#endif
+
+FILE *
+asn1c_open_file(const char *name, const char *ext) {
+	int created = 1;
+	struct stat sb;
+	char *fname;
+	int len;
+	FILE *fp;
+	int fd;
+
+	/*
+	 * Compute filenames.
+	 */
+	len = strlen(name) + strlen(ext) + 1;
+	fname = alloca(len);
+	snprintf(fname, len, "%s%s", name, ext);
+
+	/*
+	 * Create files.
+	 */
+	fd = open(fname, O_CREAT | O_EXCL | O_WRONLY, DEFFILEMODE);
+	if(fd == -1 && errno == EEXIST) {
+		fd = open(fname, O_WRONLY, DEFFILEMODE);
+		created = 0;
+	}
+	if(fd == -1) {
+		perror(fname);
+		return NULL;
+	}
+
+	/*
+	 * Check sanity.
+	 */
+	if(fstat(fd, &sb) || !S_ISREG(sb.st_mode)) {
+		fprintf(stderr, "%s: Not a regular file\n", fname);
+		if(created) unlink(fname);
+		close(fd);
+		return NULL;
+	}
+
+	(void)ftruncate(fd, 0);
+
+	/*
+	 * Convert file descriptor into file pointer.
+	 */
+	fp = fdopen(fd, "w");
+	if(fp == NULL) {
+		if(created) unlink(fname);
+		close(fd);
+	}
+	return fp;
+}
+
 
 char *
 a1c_basename(const char *path) {
@@ -33,7 +88,7 @@ a1c_basename(const char *path) {
 
 	for(name = pend; name > path && name[-1] != '/'; name--);
 
-	if((pend - name) >= sizeof(strbuf) - 1) {
+	if((pend - name) >= (int)sizeof(strbuf) - 1) {
 		errno = ENAMETOOLONG;
 		return 0;
 	}
@@ -79,7 +134,7 @@ a1c_dirname(const char *path) {
 		return strbuf;
 	}
 
-	if((last - path) >= sizeof(strbuf)) {
+	if((last - path) >= (int)sizeof(strbuf)) {
 		errno = ENAMETOOLONG;
 		return 0;
 	}

@@ -20,9 +20,4 @@ enum tnfmt {
 };
 char *asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format);
 
-/*
- * Open the arbitrary file by its base name and extension.
- */
-FILE *asn1c_open_file(arg_t *arg, const char *base_part, const char *extension);
-
 #endif	/* _ASN1_COMPILER_MISC_H_ */
