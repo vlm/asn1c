@@ -41,10 +41,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/asn1c-usage.pdf doc/asn1c-usage.html
 %attr(755,root,root) %{_bindir}
 %attr(644,root,root) %{_datadir}/asn1c
-%{_mandir}/man1/asn1c.1*
+%{_mandir}/man1
 
 %changelog
 
 * Tue Sep 18 2004 Lev Walkin <vlm@lionet.info>
 - First version of asn1c.spec
+
+* Sun Sep 26 2004 Lev Walkin <vlm@lionet.info>
+- All manuals are now getting installed, including new onws: unber.1 and enber.1
 
