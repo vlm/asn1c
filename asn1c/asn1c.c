@@ -63,7 +63,9 @@ main(int ac, char **av) {
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
 		} else if(strcmp(optarg, "native-integers") == 0) {
-			asn1_compiler_flags |= A1C_USE_NATIVE_INTEGERS;
+			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
+		} else if(strcmp(optarg, "native-types") == 0) {
+			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
 		} else if(strcmp(optarg, "types88") == 0) {
@@ -289,7 +291,7 @@ usage(char *av0) {
 "  -fall-defs-global     Don't make the asn1_DEF_'s of structure members \"static\"\n"
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
 "  -fknown-extern-type=<name>    Pretend this type is known\n"
-"  -fnative-integers     Use int instead of INTEGER_t whenever possible\n"
+"  -fnative-types        Use \"int\" instead of INTEGER_t whenever possible\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
 "  -ftypes88             Use only ASN.1:1988 embedded types\n"
 "\n"
