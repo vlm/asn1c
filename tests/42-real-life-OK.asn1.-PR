@@ -58,9 +58,8 @@ memb_varsets_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	if((size >= 1)) {
-		/* SEQUENCE validation code is the same as SET */
 		/* Perform validation of the inner elements */
-		return SET_OF_constraint(td, list, app_errlog, app_key);
+		return td->check_constraints(td, sptr, app_errlog, app_key);
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: constraint failed (%s:%d)",
@@ -397,7 +396,7 @@ memb_vset_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	if((size >= 1)) {
 		/* Perform validation of the inner elements */
-		return SET_OF_constraint(td, list, app_errlog, app_key);
+		return td->check_constraints(td, sptr, app_errlog, app_key);
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: constraint failed (%s:%d)",
