@@ -46,6 +46,5 @@ OCTET_STRING_t *OCTET_STRING_new_fromBuf(const char *str, int size);
 
 /* Handy conversion from the C string into the OCTET STRING. */
 #define	OCTET_STRING_fromString(s, str)	OCTET_STRING_fromBuf(s, str, -1);
-#define	OCTET_STRING_fromString(s, str)	OCTET_STRING_fromBuf(s, str, -1);
 
 #endif	/* _OCTET_STRING_H_ */
