@@ -237,7 +237,7 @@ _process_constraints(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_t *ptype, as
 			asn1f_printable_reference(ref), ra->Identifier);
 
 		if(ra->expr_type == A1TC_PARAMETRIZED) {
-			DEBUG("Double parametrization");
+			DEBUG("Double %s", "parametrization");
 		}
 
 		assert(ra->Identifier);
