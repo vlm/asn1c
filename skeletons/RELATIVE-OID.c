@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <RELATIVE-OID.h>
 #include <limits.h>	/* for CHAR_BIT */
 #include <assert.h>
@@ -15,11 +16,13 @@ static ber_tlv_tag_t asn1_DEF_RELATIVE_OID_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	"RELATIVE-OID",
+	INTEGER_free,
+	RELATIVE_OID_print,
 	asn_generic_no_constraint,
 	INTEGER_decode_ber,	/* Implemented in terms of INTEGER type */
 	OBJECT_IDENTIFIER_encode_der,
-	RELATIVE_OID_print,
-	INTEGER_free,
+	0,				/* Not implemented yet */
+	RELATIVE_OID_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_RELATIVE_OID_tags,
 	sizeof(asn1_DEF_RELATIVE_OID_tags)
@@ -32,12 +35,39 @@ asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	0	/* No specifics */
 };
 
+static ssize_t
+RELATIVE_OID__dump_body(const RELATIVE_OID_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
+	ssize_t wrote = 0;
+	ssize_t ret;
+	int startn;
+	int i;
+
+	for(i = 0, startn = 0; i < st->size; i++) {
+		uint8_t b = st->buf[i];
+		if((b & 0x80))			/* Continuation expected */
+			continue;
+		if(startn) {
+			/* Separate arcs */
+			if(cb(".", 1, app_key) < 0)
+				return -1;
+			wrote++;
+		}
+
+		ret = OBJECT_IDENTIFIER__dump_arc(&st->buf[startn],
+			i - startn + 1, 0, cb, app_key);
+		if(ret < 0) return -1;
+		wrote += ret;
+
+		startn = i + 1;
+	}
+
+	return wrote;
+}
+
 int
 RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
-	int startn;
-	int i;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
@@ -49,21 +79,30 @@ RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(cb("{ ", 2, app_key))
 		return -1;
 
-	for(i = 0, startn = 0; i < st->size; i++) {
-		uint8_t b = st->buf[i];
-		if((b & 0x80))			/* Continuation expected */
-			continue;
-		if(startn && cb(" ", 1, app_key))	/* Separate arcs */
-			return -1;
-		if(OBJECT_IDENTIFIER_print_arc(&st->buf[startn],
-			i - startn + 1, 0, cb, app_key))
-			return -1;
-		startn = i + 1;
-	}
+	if(RELATIVE_OID__dump_body(st, cb, app_key) < 0)
+		return -1;
 
 	return cb(" }", 2, app_key);
 }
 
+asn_enc_rval_t
+RELATIVE_OID_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
+	asn_enc_rval_t er;
+
+	(void)ilevel;	/* Unused argument */
+	(void)flags;	/* Unused argument */
+
+	if(!st || !st->buf)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = RELATIVE_OID__dump_body(st, cb, app_key);
+	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+
+	return er;
+}
 
 int
 RELATIVE_OID_get_arcs(RELATIVE_OID_t *roid,

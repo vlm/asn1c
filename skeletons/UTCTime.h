@@ -12,8 +12,9 @@ typedef OCTET_STRING_t UTCTime_t;  /* Implemented using OCTET STRING */
 
 extern asn1_TYPE_descriptor_t asn1_DEF_UTCTime;
 
-asn_constr_check_f UTCTime_constraint;
 asn_struct_print_f UTCTime_print;
+asn_constr_check_f UTCTime_constraint;
+xer_type_encoder_f UTCTime_encode_xer;
 
 /***********************
  * Some handy helpers. *

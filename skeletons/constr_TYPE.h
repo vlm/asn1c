@@ -2,18 +2,52 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_CONSTR_TYPE_H_
-#define	_CONSTR_TYPE_H_
+/*
+ * This file contains the declaration structure called "ASN.1 Type Definition",
+ * which holds all information necessary for encoding and decoding routines.
+ * This structure even contains pointer to these encoding and decoding routines
+ * for each defined ASN.1 type.
+ */
+#ifndef	_CONSTR_TYPE_H
+#define	_CONSTR_TYPE_H
 
 #include <asn_types.h>		/* System-dependent types */
+
+struct asn1_TYPE_descriptor_s;	/* Forward declaration */
+struct asn1_TYPE_member_s;	/* Forward declaration */
+
+/*
+ * Type of the return value of the encoding functions (der_encode, xer_encode).
+ */
+typedef struct asn_enc_rval_s {
+	/*
+	 * Number of bytes encoded.
+	 * -1 indicates failure to encode the structure.
+	 * In this case, the members below this one are meaningful.
+	 */
+	ssize_t encoded;
+
+	/*
+	 * Members meaningful when (encoded == -1), for post mortem analysis.
+	 */
+
+	/* Type which cannot be encoded */
+	struct asn1_TYPE_descriptor_s *failed_type;
+
+	/* Pointer to the structure of that type */
+	void *structure_ptr;
+} asn_enc_rval_t;
+#define	_ASN_ENCODE_FAILED do {					\
+	asn_enc_rval_t __er = { -1, td, sptr };			\
+	return __er;						\
+} while(0)
+
 #include <ber_tlv_length.h>
 #include <ber_tlv_tag.h>
 #include <ber_decoder.h>
 #include <der_encoder.h>
+#include <xer_encoder.h>
 #include <constraints.h>
-
-struct asn1_TYPE_descriptor_s;	/* Forward declaration */
-struct asn1_TYPE_member_s;	/* Forward declaration */
 
 /*
  * Free the structure according to its specification.
@@ -58,11 +92,13 @@ typedef struct asn1_TYPE_descriptor_s {
 	 * Generalized functions for dealing with the specific type.
 	 * May be directly invoked by applications.
 	 */
+	asn_struct_free_f  *free_struct;	/* Free the structure */
+	asn_struct_print_f *print_struct;	/* Human readable output */
 	asn_constr_check_f *check_constraints;	/* Constraints validator */
 	ber_type_decoder_f *ber_decoder;	/* Free-form BER decoder */
 	der_type_encoder_f *der_encoder;	/* Canonical DER encoder */
-	asn_struct_print_f *print_struct;	/* Human readable output */
-	asn_struct_free_f  *free_struct;	/* Free the structure */
+	int (*xer_decoder);/* PLACEHOLDER */ /* Free-form XER decoder */
+	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
 
 	/*
 	 * Functions used internally. Should not be used by applications.
@@ -129,6 +165,7 @@ typedef struct asn1_TYPE_tag2member_s {
  * RETURN VALUES:
  * 	 0: The structure is printed.
  * 	-1: Problem dumping the structure.
+ * (See also xer_fprint() in xer_encoder.h)
  */
 int asn_fprint(FILE *stream,		/* Destination stream descriptor */
 	asn1_TYPE_descriptor_t *td,	/* ASN.1 type descriptor */

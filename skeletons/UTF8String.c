@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <UTF8String.h>
 
 /*
@@ -13,11 +14,13 @@ static ber_tlv_tag_t asn1_DEF_UTF8String_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_UTF8String = {
 	"UTF8String",
+	OCTET_STRING_free,
+	UTF8String_print,
 	UTF8String_constraint,      /* Check for invalid codes, etc. */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	UTF8String_print,
-	OCTET_STRING_free,
+	0,				/* Not implemented yet */
+	OCTET_STRING_encode_xer_ascii,	/* Already in UTF-8 format */
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_UTF8String_tags,
 	sizeof(asn1_DEF_UTF8String_tags)

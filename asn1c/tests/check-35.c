@@ -131,6 +131,9 @@ check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 	assert(strcmp(tp->a.buf, "ns") == 0);
 	assert(strcmp(tp->b.choice.b1.buf, "z") == 0
 		&& strcmp(tp->b.choice.b2.buf, "z") == 0);
+
+	asn_fprint(stderr, &asn1_DEF_T, tp);
+	xer_fprint(stderr, &asn1_DEF_T, tp);
 }
 
 size_t buf_pos;
@@ -157,7 +160,7 @@ buf_fill(const void *buffer, size_t size, void *app_key) {
 
 static void
 compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	int i;
 
 	buf_size = cmp_buf_size + 100;
@@ -268,12 +271,10 @@ main(int ac, char **av) {
 
 	check(&t, buf1, sizeof(buf1) + 10, sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
-	asn_fprint(stderr, &asn1_DEF_T, &t);
 	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
 
 	check(&t, buf2, sizeof(buf2) + 10, sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
-	asn_fprint(stderr, &asn1_DEF_T, &t);
 	asn1_DEF_T.free_struct(&asn1_DEF_T, &t, 1);
 
 	/* Split the buffer in parts and check decoder restartability */

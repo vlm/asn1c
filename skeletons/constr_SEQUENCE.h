@@ -31,10 +31,11 @@ typedef struct asn1_SEQUENCE_specifics_s {
 /*
  * A set specialized functions dealing with the SEQUENCE type.
  */
+asn_struct_free_f SEQUENCE_free;
+asn_struct_print_f SEQUENCE_print;
 asn_constr_check_f SEQUENCE_constraint;
 ber_type_decoder_f SEQUENCE_decode_ber;
 der_type_encoder_f SEQUENCE_encode_der;
-asn_struct_print_f SEQUENCE_print;
-asn_struct_free_f SEQUENCE_free;
+xer_type_encoder_f SEQUENCE_encode_xer;
 
 #endif	/* _CONSTR_SEQUENCE_H_ */

@@ -16,9 +16,10 @@ typedef int BOOLEAN_t;
 
 extern asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN;
 
+asn_struct_free_f BOOLEAN_free;
+asn_struct_print_f BOOLEAN_print;
 ber_type_decoder_f BOOLEAN_decode_ber;
 der_type_encoder_f BOOLEAN_encode_der;
-asn_struct_print_f BOOLEAN_print;
-asn_struct_free_f BOOLEAN_free;
+xer_type_encoder_f BOOLEAN_encode_xer;
 
 #endif	/* _BOOLEAN_H_ */

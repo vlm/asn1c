@@ -43,11 +43,6 @@
 #define	offsetof(s, m)	((ptrdiff_t)&(((s *)0)->m) - (ptrdiff_t)((s *)0))
 #endif	/* offsetof */
 
-#define	CALLOC(nmemb, size)	calloc(nmemb, size)
-#define	MALLOC(size)		malloc(size)
-#define	REALLOC(oldptr, size)	realloc(oldptr, size)
-#define	FREEMEM(ptr)		free(ptr)
-
 #ifndef	MIN		/* Suitable for comparing primitive types (integers) */
 #if defined(__GNUC__)
 #define	MIN(a,b)	({ __typeof a _a = a; __typeof b _b = b;	\
@@ -56,31 +51,6 @@
 #define	MIN(a,b)	((a)<(b)?(a):(b))	/* Unsafe variant */
 #endif /* __GNUC__ */
 #endif	/* MIN */
-
-/*
- * A macro for debugging the ASN.1 internals.
- * You may enable or override it.
- */
-#ifndef	ASN_DEBUG	/* If debugging code is not defined elsewhere... */
-#if	EMIT_ASN_DEBUG == 1	/* And it was asked to emit this code... */
-#ifdef	__GNUC__
-#define	ASN_DEBUG(fmt, args...)	do {		\
-		fprintf(stderr, fmt, ##args);	\
-		fprintf(stderr, "\n");		\
-	} while(0)
-#else	/* !__GNUC__ */
-extern void ASN_DEBUG_f(const char *fmt, ...);
-#define	ASN_DEBUG	ASN_DEBUG_f
-#endif	/* __GNUC__ */
-#else	/* EMIT_ASN_DEBUG != 1 */
-#ifdef	__GNUC__
-#define	ASN_DEBUG(fmt, args...)	((void)0)	/* Emit a no-op operator */
-#else	/* __GNUC__ */
-static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; };
-#endif	/* __GNUC__ */
-#endif	/* EMIT_ASN_DEBUG */
-#endif	/* ASN_DEBUG */
-
 
 /*
  * Generic type of an application-defined callback to return various

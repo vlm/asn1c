@@ -14,6 +14,7 @@ typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t;
 extern asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID;
 
 asn_struct_print_f RELATIVE_OID_print;
+xer_type_encoder_f RELATIVE_OID_encode_xer;
 
 /**********************************
  * Some handy conversion routines *

@@ -15,7 +15,8 @@ typedef int NULL_t;
 
 extern asn1_TYPE_descriptor_t asn1_DEF_NULL;
 
-der_type_encoder_f NULL_encode_der;
 asn_struct_print_f NULL_print;
+der_type_encoder_f NULL_encode_der;
+xer_type_encoder_f NULL_encode_xer;
 
 #endif	/* NULL_H */

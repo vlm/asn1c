@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <ISO646String.h>
 
 /*
@@ -13,11 +14,13 @@ static ber_tlv_tag_t asn1_DEF_ISO646String_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_ISO646String = {
 	"ISO646String",
+	OCTET_STRING_free,
+	OCTET_STRING_print_ascii,   /* ASCII subset */
 	VisibleString_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_print_ascii,   /* ASCII subset */
-	OCTET_STRING_free,
+	0,				/* Not implemented yet */
+	OCTET_STRING_encode_xer_ascii,/* Implemented in terms of OCTET STRING */
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_ISO646String_tags,
 	sizeof(asn1_DEF_ISO646String_tags)

@@ -48,7 +48,8 @@ static void
 check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T1_t t, *tp;
 	ber_dec_rval_t rval;
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
+	int ret;
 	int i;
 
 	tp = memset(&t, 0, sizeof(t));
@@ -104,8 +105,12 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 		assert(buf1[i] == buf2[i]);
 	}
 
-	fprintf(stderr, "=== PRINT ===\n");
-	asn_fprint(stderr, &asn1_DEF_T1, tp);
+	fprintf(stderr, "=== asn_fprint() ===\n");
+	ret = asn_fprint(stderr, &asn1_DEF_T1, tp);
+	assert(ret == 0);
+	fprintf(stderr, "=== xer_fprint() ===\n");
+	ret = xer_fprint(stderr, &asn1_DEF_T1, tp);
+	assert(ret == 0);
 	fprintf(stderr, "=== EOF ===\n");
 }
 

@@ -136,6 +136,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	assert(buf_pos == sizeof(buf1_reconstr));
 
 	asn_fprint(stderr, &asn1_DEF_Forest, &t);
+	xer_fprint(stderr, &asn1_DEF_Forest, &t);
 
 	asn1_DEF_Forest.free_struct(&asn1_DEF_Forest, &t, 1);
 }

@@ -80,15 +80,18 @@ static ber_tlv_tag_t asn1_DEF_varsets_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_varsets_specs = {
 	sizeof(struct varsets),
 	offsetof(struct varsets, _ber_dec_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_varsets = {
 	"varsets",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
 	SEQUENCE_OF_decode_ber,
 	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_print,
-	SEQUENCE_OF_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_varsets_tags,
 	sizeof(asn1_DEF_varsets_tags)
@@ -135,11 +138,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_LogLine_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 	"LogLine",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_LogLine_tags,
 	sizeof(asn1_DEF_LogLine_tags)
@@ -226,15 +231,18 @@ static ber_tlv_tag_t asn1_DEF_vparts_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_vparts_specs = {
 	sizeof(struct vparts),
 	offsetof(struct vparts, _ber_dec_ctx),
+	1,	/* XER encoding is XMLValueList */
 };
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_vparts = {
 	"vparts",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
 	SEQUENCE_OF_decode_ber,
 	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_print,
-	SEQUENCE_OF_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_vparts_tags,
 	sizeof(asn1_DEF_vparts_tags)
@@ -281,11 +289,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_VariablePartSet_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
 	"VariablePartSet",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_VariablePartSet_tags,
 	sizeof(asn1_DEF_VariablePartSet_tags)
@@ -400,15 +410,18 @@ static ber_tlv_tag_t asn1_DEF_vset_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_vset_specs = {
 	sizeof(struct vset),
 	offsetof(struct vset, _ber_dec_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_vset = {
 	"vset",
+	SET_OF_free,
+	SET_OF_print,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	SET_OF_print,
-	SET_OF_free,
+	0,				/* Not implemented yet */
+	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_vset_tags,
 	sizeof(asn1_DEF_vset_tags)
@@ -456,11 +469,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_vrange_specs = {
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_vrange = {
 	"vrange",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_vrange_tags,
 	sizeof(asn1_DEF_vrange_tags)
@@ -505,11 +520,13 @@ static asn1_CHOICE_specifics_t asn1_DEF_VariablePart_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 	"VariablePart",
+	CHOICE_free,
+	CHOICE_print,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	CHOICE_print,
-	CHOICE_free,
+	0,				/* Not implemented yet */
+	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -590,15 +607,18 @@ static ber_tlv_tag_t asn1_DEF_email_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_email_specs = {
 	sizeof(struct email),
 	offsetof(struct email, _ber_dec_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_email = {
 	"email",
+	SET_OF_free,
+	SET_OF_print,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	SET_OF_print,
-	SET_OF_free,
+	0,				/* Not implemented yet */
+	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_email_tags,
 	sizeof(asn1_DEF_email_tags)
@@ -646,11 +666,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_notify_specs = {
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_notify = {
 	"notify",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_notify_tags,
 	sizeof(asn1_DEF_notify_tags)
@@ -697,11 +719,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_ActionItem_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_ActionItem = {
 	"ActionItem",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_ActionItem_tags,
 	sizeof(asn1_DEF_ActionItem_tags)

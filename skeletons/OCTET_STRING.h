@@ -16,11 +16,13 @@ typedef struct OCTET_STRING {
 
 extern asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING;
 
-ber_type_decoder_f OCTET_STRING_decode_ber;
-der_type_encoder_f OCTET_STRING_encode_der;
+asn_struct_free_f OCTET_STRING_free;
 asn_struct_print_f OCTET_STRING_print;
 asn_struct_print_f OCTET_STRING_print_ascii;
-asn_struct_free_f OCTET_STRING_free;
+ber_type_decoder_f OCTET_STRING_decode_ber;
+der_type_encoder_f OCTET_STRING_encode_der;
+xer_type_encoder_f OCTET_STRING_encode_xer;
+xer_type_encoder_f OCTET_STRING_encode_xer_ascii;
 
 /***********************************
  * Some handy conversion routines. *

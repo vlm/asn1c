@@ -15,10 +15,13 @@ typedef struct REAL {
 extern asn1_TYPE_descriptor_t asn1_DEF_REAL;
 
 asn_struct_print_f REAL_print;
+xer_type_encoder_f REAL_encode_xer;
 
 /***********************************
  * Some handy conversion routines. *
  ***********************************/
+
+ssize_t REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key);
 
 /*
  * Convert between native double type and REAL representation (DER).

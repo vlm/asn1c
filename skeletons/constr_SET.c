@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <constr_SET.h>
 #include <assert.h>	/* for assert() */
 
@@ -430,13 +431,13 @@ SET_decode_ber(asn1_TYPE_descriptor_t *td,
 /*
  * The DER encoder of the SET type.
  */
-der_enc_rval_t
+asn_enc_rval_t
 SET_encode_der(asn1_TYPE_descriptor_t *td,
 	void *ptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)td->specifics;
 	size_t computed_size = 0;
-	der_enc_rval_t my_erval;
+	asn_enc_rval_t my_erval;
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
 	asn1_TYPE_tag2member_t *t2m;
 	int t2m_count;
@@ -469,7 +470,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn1_TYPE_member_t *elm = &td->elements[edx];
-		der_enc_rval_t erval;
+		asn_enc_rval_t erval;
 		void *memb_ptr;
 
 		/*
@@ -545,7 +546,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn1_TYPE_member_t *elm;
-		der_enc_rval_t erval;
+		asn_enc_rval_t erval;
 		void *memb_ptr;
 
 		/* Encode according to the tag order */
@@ -575,6 +576,52 @@ SET_encode_der(asn1_TYPE_descriptor_t *td,
 	}
 
 	return my_erval;
+}
+
+asn_enc_rval_t
+SET_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t er;
+	int xcan = (flags & XER_F_CANONICAL);
+	int edx;
+
+	if(!sptr)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = 0;
+
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_enc_rval_t tmper;
+		asn1_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;
+		const char *mname = elm->name;
+		unsigned int mlen = strlen(elm->name);
+
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+			if(!memb_ptr) continue;	/* OPTIONAL element? */
+		} else {
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+		}
+
+		if(!xcan)
+			_i_ASN_TEXT_INDENT(1, ilevel);
+		_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
+
+		/* Print the member itself */
+		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
+				ilevel + 1, flags, cb, app_key);
+		if(tmper.encoded == -1) return tmper;
+
+		_ASN_CALLBACK3("</", 2, mname, mlen, ">", 1);
+
+		er.encoded += 5 + (2 * mlen) + tmper.encoded;
+	}
+
+	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
+
+	return er;
 }
 
 int

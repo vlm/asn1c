@@ -2,6 +2,7 @@
  * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <IA5String.h>
 
 /*
@@ -13,11 +14,13 @@ static ber_tlv_tag_t asn1_DEF_IA5String_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_IA5String = {
 	"IA5String",
+	OCTET_STRING_free,
+	OCTET_STRING_print_ascii,  /* ASCII subset */
 	IA5String_constraint,       /* Constraint on the alphabet */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_print_ascii,  /* ASCII subset */
-	OCTET_STRING_free,
+	0,				/* Not implemented yet */
+	OCTET_STRING_encode_xer_ascii,/* Implemented in terms of OCTET STRING */
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_IA5String_tags,
 	sizeof(asn1_DEF_IA5String_tags)
@@ -63,3 +66,4 @@ IA5String_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 	return 0;
 }
+

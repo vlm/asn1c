@@ -17,10 +17,11 @@ typedef struct ANY {
 
 extern asn1_TYPE_descriptor_t asn1_DEF_ANY;
 
+asn_struct_free_f ANY_free;
+asn_struct_print_f ANY_print;
 ber_type_decoder_f ANY_decode_ber;
 der_type_encoder_f ANY_encode_der;
-asn_struct_print_f ANY_print;
-asn_struct_free_f ANY_free;
+xer_type_encoder_f ANY_encode_xer;
 
 /******************************
  * Handy conversion routines. *

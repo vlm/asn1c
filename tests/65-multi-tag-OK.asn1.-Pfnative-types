@@ -11,11 +11,12 @@ typedef T2_t	 T1_t;
 /*** <<< FUNC-DECLS [T1] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T1;
+asn_struct_free_f T1_free;
+asn_struct_print_f T1_print;
 asn_constr_check_f T1_constraint;
 ber_type_decoder_f T1_decode_ber;
 der_type_encoder_f T1_encode_der;
-asn_struct_print_f T1_print;
-asn_struct_free_f T1_free;
+xer_type_encoder_f T1_encode_xer;
 
 /*** <<< CODE [T1] >>> ***/
 
@@ -35,29 +36,23 @@ T1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
  */
 static void
 T1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_T2.ber_decoder;
-	td->der_encoder    = asn1_DEF_T2.der_encoder;
 	td->free_struct    = asn1_DEF_T2.free_struct;
 	td->print_struct   = asn1_DEF_T2.print_struct;
+	td->ber_decoder    = asn1_DEF_T2.ber_decoder;
+	td->der_encoder    = asn1_DEF_T2.der_encoder;
+	td->xer_decoder    = asn1_DEF_T2.xer_decoder;
+	td->xer_encoder    = asn1_DEF_T2.xer_encoder;
 	td->last_tag_form  = asn1_DEF_T2.last_tag_form;
 	td->elements       = asn1_DEF_T2.elements;
 	td->elements_count = asn1_DEF_T2.elements_count;
 	td->specifics      = asn1_DEF_T2.specifics;
 }
 
-ber_dec_rval_t
-T1_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+void
+T1_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
 	T1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-der_enc_rval_t
-T1_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
@@ -67,11 +62,27 @@ T1_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-void
-T1_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
+ber_dec_rval_t
+T1_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+T1_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_enc_rval_t
+T1_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
@@ -93,11 +104,13 @@ static ber_tlv_tag_t asn1_DEF_T1_all_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	"T1",
+	T1_free,
+	T1_print,
 	T1_constraint,
 	T1_decode_ber,
 	T1_encode_der,
-	T1_print,
-	T1_free,
+	0,				/* Not implemented yet */
+	T1_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T1_tags,
 	sizeof(asn1_DEF_T1_tags)
@@ -123,11 +136,12 @@ typedef T3_t	 T2_t;
 /*** <<< FUNC-DECLS [T2] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T2;
+asn_struct_free_f T2_free;
+asn_struct_print_f T2_print;
 asn_constr_check_f T2_constraint;
 ber_type_decoder_f T2_decode_ber;
 der_type_encoder_f T2_encode_der;
-asn_struct_print_f T2_print;
-asn_struct_free_f T2_free;
+xer_type_encoder_f T2_encode_xer;
 
 /*** <<< CODE [T2] >>> ***/
 
@@ -147,29 +161,23 @@ T2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
  */
 static void
 T2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_T3.ber_decoder;
-	td->der_encoder    = asn1_DEF_T3.der_encoder;
 	td->free_struct    = asn1_DEF_T3.free_struct;
 	td->print_struct   = asn1_DEF_T3.print_struct;
+	td->ber_decoder    = asn1_DEF_T3.ber_decoder;
+	td->der_encoder    = asn1_DEF_T3.der_encoder;
+	td->xer_decoder    = asn1_DEF_T3.xer_decoder;
+	td->xer_encoder    = asn1_DEF_T3.xer_encoder;
 	td->last_tag_form  = asn1_DEF_T3.last_tag_form;
 	td->elements       = asn1_DEF_T3.elements;
 	td->elements_count = asn1_DEF_T3.elements_count;
 	td->specifics      = asn1_DEF_T3.specifics;
 }
 
-ber_dec_rval_t
-T2_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+void
+T2_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
 	T2_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-der_enc_rval_t
-T2_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T2_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
@@ -179,11 +187,27 @@ T2_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-void
-T2_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
+ber_dec_rval_t
+T2_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T2_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+T2_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T2_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_enc_rval_t
+T2_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T2_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
@@ -203,11 +227,13 @@ static ber_tlv_tag_t asn1_DEF_T2_all_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	"T2",
+	T2_free,
+	T2_print,
 	T2_constraint,
 	T2_decode_ber,
 	T2_encode_der,
-	T2_print,
-	T2_free,
+	0,				/* Not implemented yet */
+	T2_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T2_tags,
 	sizeof(asn1_DEF_T2_tags)
@@ -233,11 +259,12 @@ typedef T4_t	 T3_t;
 /*** <<< FUNC-DECLS [T3] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T3;
+asn_struct_free_f T3_free;
+asn_struct_print_f T3_print;
 asn_constr_check_f T3_constraint;
 ber_type_decoder_f T3_decode_ber;
 der_type_encoder_f T3_encode_der;
-asn_struct_print_f T3_print;
-asn_struct_free_f T3_free;
+xer_type_encoder_f T3_encode_xer;
 
 /*** <<< CODE [T3] >>> ***/
 
@@ -257,29 +284,23 @@ T3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
  */
 static void
 T3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_T4.ber_decoder;
-	td->der_encoder    = asn1_DEF_T4.der_encoder;
 	td->free_struct    = asn1_DEF_T4.free_struct;
 	td->print_struct   = asn1_DEF_T4.print_struct;
+	td->ber_decoder    = asn1_DEF_T4.ber_decoder;
+	td->der_encoder    = asn1_DEF_T4.der_encoder;
+	td->xer_decoder    = asn1_DEF_T4.xer_decoder;
+	td->xer_encoder    = asn1_DEF_T4.xer_encoder;
 	td->last_tag_form  = asn1_DEF_T4.last_tag_form;
 	td->elements       = asn1_DEF_T4.elements;
 	td->elements_count = asn1_DEF_T4.elements_count;
 	td->specifics      = asn1_DEF_T4.specifics;
 }
 
-ber_dec_rval_t
-T3_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+void
+T3_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
 	T3_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-der_enc_rval_t
-T3_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T3_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
@@ -289,11 +310,27 @@ T3_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-void
-T3_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
+ber_dec_rval_t
+T3_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T3_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+T3_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T3_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_enc_rval_t
+T3_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T3_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
@@ -311,11 +348,13 @@ static ber_tlv_tag_t asn1_DEF_T3_all_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T3 = {
 	"T3",
+	T3_free,
+	T3_print,
 	T3_constraint,
 	T3_decode_ber,
 	T3_encode_der,
-	T3_print,
-	T3_free,
+	0,				/* Not implemented yet */
+	T3_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T3_tags,
 	sizeof(asn1_DEF_T3_tags)
@@ -341,11 +380,12 @@ typedef T5_t	 T4_t;
 /*** <<< FUNC-DECLS [T4] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T4;
+asn_struct_free_f T4_free;
+asn_struct_print_f T4_print;
 asn_constr_check_f T4_constraint;
 ber_type_decoder_f T4_decode_ber;
 der_type_encoder_f T4_encode_der;
-asn_struct_print_f T4_print;
-asn_struct_free_f T4_free;
+xer_type_encoder_f T4_encode_xer;
 
 /*** <<< CODE [T4] >>> ***/
 
@@ -365,29 +405,23 @@ T4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
  */
 static void
 T4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_T5.ber_decoder;
-	td->der_encoder    = asn1_DEF_T5.der_encoder;
 	td->free_struct    = asn1_DEF_T5.free_struct;
 	td->print_struct   = asn1_DEF_T5.print_struct;
+	td->ber_decoder    = asn1_DEF_T5.ber_decoder;
+	td->der_encoder    = asn1_DEF_T5.der_encoder;
+	td->xer_decoder    = asn1_DEF_T5.xer_decoder;
+	td->xer_encoder    = asn1_DEF_T5.xer_encoder;
 	td->last_tag_form  = asn1_DEF_T5.last_tag_form;
 	td->elements       = asn1_DEF_T5.elements;
 	td->elements_count = asn1_DEF_T5.elements_count;
 	td->specifics      = asn1_DEF_T5.specifics;
 }
 
-ber_dec_rval_t
-T4_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+void
+T4_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
 	T4_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-der_enc_rval_t
-T4_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T4_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
@@ -397,11 +431,27 @@ T4_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-void
-T4_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
+ber_dec_rval_t
+T4_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T4_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+T4_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T4_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_enc_rval_t
+T4_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T4_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
@@ -414,11 +464,13 @@ static ber_tlv_tag_t asn1_DEF_T4_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T4 = {
 	"T4",
+	T4_free,
+	T4_print,
 	T4_constraint,
 	T4_decode_ber,
 	T4_encode_der,
-	T4_print,
-	T4_free,
+	0,				/* Not implemented yet */
+	T4_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T4_tags,
 	sizeof(asn1_DEF_T4_tags)
@@ -444,11 +496,12 @@ typedef T6_t	 T5_t;
 /*** <<< FUNC-DECLS [T5] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T5;
+asn_struct_free_f T5_free;
+asn_struct_print_f T5_print;
 asn_constr_check_f T5_constraint;
 ber_type_decoder_f T5_decode_ber;
 der_type_encoder_f T5_encode_der;
-asn_struct_print_f T5_print;
-asn_struct_free_f T5_free;
+xer_type_encoder_f T5_encode_xer;
 
 /*** <<< CODE [T5] >>> ***/
 
@@ -468,29 +521,23 @@ T5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
  */
 static void
 T5_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_T6.ber_decoder;
-	td->der_encoder    = asn1_DEF_T6.der_encoder;
 	td->free_struct    = asn1_DEF_T6.free_struct;
 	td->print_struct   = asn1_DEF_T6.print_struct;
+	td->ber_decoder    = asn1_DEF_T6.ber_decoder;
+	td->der_encoder    = asn1_DEF_T6.der_encoder;
+	td->xer_decoder    = asn1_DEF_T6.xer_decoder;
+	td->xer_encoder    = asn1_DEF_T6.xer_encoder;
 	td->last_tag_form  = asn1_DEF_T6.last_tag_form;
 	td->elements       = asn1_DEF_T6.elements;
 	td->elements_count = asn1_DEF_T6.elements_count;
 	td->specifics      = asn1_DEF_T6.specifics;
 }
 
-ber_dec_rval_t
-T5_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+void
+T5_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
 	T5_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-der_enc_rval_t
-T5_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T5_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
@@ -500,11 +547,27 @@ T5_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-void
-T5_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
+ber_dec_rval_t
+T5_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T5_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+T5_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T5_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_enc_rval_t
+T5_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T5_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
@@ -516,11 +579,13 @@ static ber_tlv_tag_t asn1_DEF_T5_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T5 = {
 	"T5",
+	T5_free,
+	T5_print,
 	T5_constraint,
 	T5_decode_ber,
 	T5_encode_der,
-	T5_print,
-	T5_free,
+	0,				/* Not implemented yet */
+	T5_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T5_tags,
 	sizeof(asn1_DEF_T5_tags)
@@ -546,11 +611,12 @@ typedef double	 T6_t;
 /*** <<< FUNC-DECLS [T6] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T6;
+asn_struct_free_f T6_free;
+asn_struct_print_f T6_print;
 asn_constr_check_f T6_constraint;
 ber_type_decoder_f T6_decode_ber;
 der_type_encoder_f T6_encode_der;
-asn_struct_print_f T6_print;
-asn_struct_free_f T6_free;
+xer_type_encoder_f T6_encode_xer;
 
 /*** <<< CODE [T6] >>> ***/
 
@@ -570,29 +636,23 @@ T6_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
  */
 static void
 T6_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_NativeReal.ber_decoder;
-	td->der_encoder    = asn1_DEF_NativeReal.der_encoder;
 	td->free_struct    = asn1_DEF_NativeReal.free_struct;
 	td->print_struct   = asn1_DEF_NativeReal.print_struct;
+	td->ber_decoder    = asn1_DEF_NativeReal.ber_decoder;
+	td->der_encoder    = asn1_DEF_NativeReal.der_encoder;
+	td->xer_decoder    = asn1_DEF_NativeReal.xer_decoder;
+	td->xer_encoder    = asn1_DEF_NativeReal.xer_encoder;
 	td->last_tag_form  = asn1_DEF_NativeReal.last_tag_form;
 	td->elements       = asn1_DEF_NativeReal.elements;
 	td->elements_count = asn1_DEF_NativeReal.elements_count;
 	td->specifics      = asn1_DEF_NativeReal.specifics;
 }
 
-ber_dec_rval_t
-T6_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+void
+T6_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
 	T6_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-der_enc_rval_t
-T6_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T6_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
@@ -602,11 +662,27 @@ T6_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-void
-T6_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
+ber_dec_rval_t
+T6_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T6_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+T6_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T6_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_enc_rval_t
+T6_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T6_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
@@ -617,11 +693,13 @@ static ber_tlv_tag_t asn1_DEF_T6_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T6 = {
 	"T6",
+	T6_free,
+	T6_print,
 	T6_constraint,
 	T6_decode_ber,
 	T6_encode_der,
-	T6_print,
-	T6_free,
+	0,				/* Not implemented yet */
+	T6_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T6_tags,
 	sizeof(asn1_DEF_T6_tags)
@@ -647,11 +725,12 @@ typedef Ts_t	 T_t;
 /*** <<< FUNC-DECLS [T] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T;
+asn_struct_free_f T_free;
+asn_struct_print_f T_print;
 asn_constr_check_f T_constraint;
 ber_type_decoder_f T_decode_ber;
 der_type_encoder_f T_encode_der;
-asn_struct_print_f T_print;
-asn_struct_free_f T_free;
+xer_type_encoder_f T_encode_xer;
 
 /*** <<< CODE [T] >>> ***/
 
@@ -671,29 +750,23 @@ T_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
  */
 static void
 T_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->ber_decoder    = asn1_DEF_Ts.ber_decoder;
-	td->der_encoder    = asn1_DEF_Ts.der_encoder;
 	td->free_struct    = asn1_DEF_Ts.free_struct;
 	td->print_struct   = asn1_DEF_Ts.print_struct;
+	td->ber_decoder    = asn1_DEF_Ts.ber_decoder;
+	td->der_encoder    = asn1_DEF_Ts.der_encoder;
+	td->xer_decoder    = asn1_DEF_Ts.xer_decoder;
+	td->xer_encoder    = asn1_DEF_Ts.xer_encoder;
 	td->last_tag_form  = asn1_DEF_Ts.last_tag_form;
 	td->elements       = asn1_DEF_Ts.elements;
 	td->elements_count = asn1_DEF_Ts.elements_count;
 	td->specifics      = asn1_DEF_Ts.specifics;
 }
 
-ber_dec_rval_t
-T_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
+void
+T_free(asn1_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
 	T_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-der_enc_rval_t
-T_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
@@ -703,11 +776,27 @@ T_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-void
-T_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
+ber_dec_rval_t
+T_decode_ber(asn1_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+T_encode_der(asn1_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_enc_rval_t
+T_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	T_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 
@@ -720,11 +809,13 @@ static ber_tlv_tag_t asn1_DEF_T_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T = {
 	"T",
+	T_free,
+	T_print,
 	T_constraint,
 	T_decode_ber,
 	T_encode_der,
-	T_print,
-	T_free,
+	0,				/* Not implemented yet */
+	T_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)
@@ -804,11 +895,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_Ts_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_Ts = {
 	"Ts",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Ts_tags,
 	sizeof(asn1_DEF_Ts_tags)

@@ -2,6 +2,7 @@
  * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <INTEGER.h>
 #include <assert.h>
 #include <errno.h>
@@ -14,11 +15,13 @@ static ber_tlv_tag_t asn1_DEF_INTEGER_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
 	"INTEGER",
+	INTEGER_free,
+	INTEGER_print,
 	asn_generic_no_constraint,
 	INTEGER_decode_ber,
 	INTEGER_encode_der,
-	INTEGER_print,
-	INTEGER_free,
+	0,				/* Not implemented yet */
+	INTEGER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_INTEGER_tags,
 	sizeof(asn1_DEF_INTEGER_tags) / sizeof(asn1_DEF_INTEGER_tags[0]),
@@ -100,11 +103,11 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 /*
  * Encode INTEGER type using DER.
  */
-der_enc_rval_t
+asn_enc_rval_t
 INTEGER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	INTEGER_t *st = (INTEGER_t *)ptr;
 
 	ASN_DEBUG("%s %s as INTEGER (tm=%d)",
@@ -185,24 +188,19 @@ INTEGER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 /*
  * INTEGER specific human-readable output.
  */
-int
-INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
+static ssize_t
+INTEGER__dump(const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 	char scratch[32];	/* Enough for 64-bit integer */
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
 	signed long accum;
+	ssize_t wrote = 0;
 	char *p;
 	int ret;
 
-	(void)td;	/* Unused argument */
-	(void)ilevel;	/* Unused argument */
-
-	if(!st && !st->buf) return cb("<absent>", 8, app_key);
-
-	if(st->size == 0)
-		return cb("0", 1, app_key);
+	if(st->size == 0) {
+		return (cb("0", 1, app_key) < 0) ? -1 : 1;
+	}
 
 	/*
 	 * Advance buf pointer until the start of the value's body.
@@ -226,7 +224,7 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 			accum = (accum << 8) | *buf;
 		ret = snprintf(scratch, sizeof(scratch), "%ld", accum);
 		assert(ret > 0 && ret < (int)sizeof(scratch));
-		return cb(scratch, ret, app_key);
+		return (cb(scratch, ret, app_key) < 0) ? -1 : ret;
 	}
 
 	/* Output in the long xx:yy:zz... format */
@@ -235,8 +233,9 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		static const char *h2c = "0123456789ABCDEF";
 		if((p - scratch) >= (ssize_t)(sizeof(scratch) - 4)) {
 			/* Flush buffer */
-			if(cb(scratch, p - scratch, app_key))
+			if(cb(scratch, p - scratch, app_key) < 0)
 				return -1;
+			wrote += p - scratch;
 			p = scratch;
 		}
 		*p++ = h2c[*buf >> 4];
@@ -246,7 +245,43 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(p != scratch)
 		p--;	/* Remove the last ':' */
 
-	return cb(scratch, p - scratch, app_key);
+	wrote += p - scratch;
+	return (cb(scratch, p - scratch, app_key) < 0) ? -1 : wrote;
+}
+
+/*
+ * INTEGER specific human-readable output.
+ */
+int
+INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
+
+	(void)td;
+	(void)ilevel;
+
+	if(!st && !st->buf) return cb("<absent>", 8, app_key);
+
+	return (INTEGER__dump(st, cb, app_key) < 0) ? -1 : 0;
+}
+
+asn_enc_rval_t
+INTEGER_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
+	asn_enc_rval_t er;
+
+	(void)ilevel;
+	(void)flags;
+	
+	if(!st && !st->buf)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = INTEGER__dump(st, cb, app_key);
+	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+
+	return er;
 }
 
 void

@@ -97,14 +97,28 @@ main(int ac, char **av) {
  * Dummy function.
  */
 
-der_enc_rval_t
+asn_enc_rval_t
 OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr, int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 
 	(void)td;
 	(void)ptr;
 	(void)tag_mode;
 	(void)tag;
+	(void)cb;
+	(void)app_key;
+
+	return erval;
+}
+
+asn_enc_rval_t
+OCTET_STRING_encode_xer_ascii(asn1_TYPE_descriptor_t *td, void *ptr, int ilevel, enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t erval;
+
+	(void)td;
+	(void)ptr;
+	(void)ilevel;
+	(void)flags;
 	(void)cb;
 	(void)app_key;
 

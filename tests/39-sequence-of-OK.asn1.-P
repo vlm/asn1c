@@ -44,15 +44,18 @@ static ber_tlv_tag_t asn1_DEF_collection_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_collection_specs = {
 	sizeof(struct collection),
 	offsetof(struct collection, _ber_dec_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_collection = {
 	"collection",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
 	SEQUENCE_OF_decode_ber,
 	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_print,
-	SEQUENCE_OF_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_collection_tags,
 	sizeof(asn1_DEF_collection_tags)
@@ -99,11 +102,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_T_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T = {
 	"T",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)
@@ -174,11 +179,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_T2_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	"T2",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T2_tags,
 	sizeof(asn1_DEF_T2_tags)

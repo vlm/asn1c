@@ -12,10 +12,11 @@
  * A set specialized functions dealing with the SEQUENCE OF type.
  * Implemented using SET OF.
  */
+#define	SEQUENCE_OF_free	SET_OF_free
+#define	SEQUENCE_OF_print	SET_OF_print
 #define	SEQUENCE_OF_constraint	SET_OF_constraint
 #define	SEQUENCE_OF_decode_ber	SET_OF_decode_ber
 der_type_encoder_f SEQUENCE_OF_encode_der;
-#define	SEQUENCE_OF_print	SET_OF_print
-#define	SEQUENCE_OF_free	SET_OF_free
+xer_type_encoder_f SEQUENCE_OF_encode_xer;
 
 #endif	/* _CONSTR_SET_OF_H_ */

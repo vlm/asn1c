@@ -15,9 +15,10 @@
 
 extern asn1_TYPE_descriptor_t asn1_DEF_NativeReal;
 
+asn_struct_free_f  NativeReal_free;
+asn_struct_print_f NativeReal_print;
 ber_type_decoder_f NativeReal_decode_ber;
 der_type_encoder_f NativeReal_encode_der;
-asn_struct_print_f NativeReal_print;
-asn_struct_free_f  NativeReal_free;
+xer_type_encoder_f NativeReal_encode_xer;
 
 #endif	/* ASN_TYPE_NativeReal_H */

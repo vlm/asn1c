@@ -100,11 +100,13 @@ static asn1_CHOICE_specifics_t asn1_DEF_e_specs = {
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_e = {
 	"e",
+	CHOICE_free,
+	CHOICE_print,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	CHOICE_print,
-	CHOICE_free,
+	0,				/* Not implemented yet */
+	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -148,11 +150,13 @@ static asn1_CHOICE_specifics_t asn1_DEF_h_specs = {
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_h = {
 	"h",
+	CHOICE_free,
+	CHOICE_print,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	CHOICE_print,
-	CHOICE_free,
+	0,				/* Not implemented yet */
+	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -213,11 +217,13 @@ static asn1_CHOICE_specifics_t asn1_DEF_b_specs = {
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_b = {
 	"b",
+	CHOICE_free,
+	CHOICE_print,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	CHOICE_print,
-	CHOICE_free,
+	0,				/* Not implemented yet */
+	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -267,11 +273,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_T_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T = {
 	"T",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)

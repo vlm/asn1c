@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <UTCTime.h>
 #include <GeneralizedTime.h>
 #include <time.h>
@@ -18,11 +19,13 @@ static ber_tlv_tag_t asn1_DEF_UTCTime_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_UTCTime = {
 	"UTCTime",
+	OCTET_STRING_free,
+	UTCTime_print,
 	UTCTime_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	UTCTime_print,
-	OCTET_STRING_free,
+	0,				/* Not implemented yet */
+	UTCTime_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_UTCTime_tags,
 	sizeof(asn1_DEF_UTCTime_tags)
@@ -56,6 +59,36 @@ UTCTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 
 	return 0;
+}
+
+asn_enc_rval_t
+UTCTime_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	OCTET_STRING_t st;
+
+	if(flags & XER_F_CANONICAL) {
+		char buf[32];
+		struct tm tm;
+		ssize_t ret;
+
+		errno = EPERM;
+		if(asn_UT2time((UTCTime_t *)sptr, &tm, 1) == -1
+				&& errno != EPERM)
+			_ASN_ENCODE_FAILED;
+	
+		ret = snprintf(buf, sizeof(buf), "%02d%02d%02d%02d%02d%02dZ",
+				tm.tm_year % 100, tm.tm_mon + 1, tm.tm_mday,
+				tm.tm_hour, tm.tm_min, tm.tm_sec);
+		assert(ret > 0 && ret < (int)sizeof(buf));
+	
+		st.buf = (uint8_t *)buf;
+		st.size = ret;
+		sptr = &st;
+	}
+
+	return OCTET_STRING_encode_xer_ascii(td, sptr, ilevel, flags,
+		cb, app_key);
 }
 
 int

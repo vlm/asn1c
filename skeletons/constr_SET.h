@@ -32,11 +32,12 @@ typedef struct asn1_SET_specifics_s {
 /*
  * A set specialized functions dealing with the SET type.
  */
+asn_struct_free_f SET_free;
+asn_struct_print_f SET_print;
 asn_constr_check_f SET_constraint;
 ber_type_decoder_f SET_decode_ber;
 der_type_encoder_f SET_encode_der;
-asn_struct_print_f SET_print;
-asn_struct_free_f SET_free;
+xer_type_encoder_f SET_encode_xer;
 
 /***********************
  * Some handy helpers. *

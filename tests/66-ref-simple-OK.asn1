@@ -5,13 +5,13 @@
 -- .spelio.software.asn1c.test (9363.1.5.1)
 -- .66
 
-ModuleTestReferenceToSimpleType
+ModuleTestReferenceToNamedSimpleType
 	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
 		spelio(9363) software(1) asn1c(5) test(1) 66 }
 	DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
 
-   T ::= SET OF SimpleType
+   T ::= SET OF named SimpleType
 
    SimpleType ::= ENUMERATED { one, two, three }
 
