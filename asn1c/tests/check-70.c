@@ -33,10 +33,10 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	memcpy(buf + buf_offset, buffer, size);
 	b = buf + buf_offset;
 	bend = b + size;
-	printf("=> [");
+	fprintf(stderr, "=> [");
 	for(; b < bend; b++)
-		printf("%c", *b);
-	printf("]:%ld\n", (long)size);
+		fprintf(stderr, "%c", *b);
+	fprintf(stderr, "]:%ld\n", (long)size);
 	buf_offset += size;
 	return 0;
 }
@@ -82,28 +82,39 @@ load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or
 	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
 		asn_TYPE_descriptor_t *, void **, void *, size_t);
 	PDU_t *st = 0;
-	int csize;
+	int csize = 1;
 
 	if(how == AS_DER)
 		zer_decode = ber_decode;
 	else
 		zer_decode = xer_decode;
-		
 
-	fprintf(stderr, "LOADING OBJECT OF SIZE %d\n", size);
+	if(getenv("INITIAL_CHUNK_SIZE"))
+		csize = atoi(getenv("INITIAL_CHUNK_SIZE"));
 
 	/* Perform multiple iterations with multiple chunks sizes */
-	for(csize = 1; csize < 20; csize += 1) {
+	for(; csize < 20; csize += 1) {
 		int fbuf_offset = 0;
 		int fbuf_left = size;
 		int fbuf_chunk = csize;
+
+		fprintf(stderr, "LOADING OBJECT OF SIZE %d, chunks %d\n",
+			size, csize);
 
 		if(st) asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
 		st = 0;
 
 		do {
-			fprintf(stderr, "Decoding from %d with %d (left %d)\n",
-				fbuf_offset, fbuf_chunk, fbuf_left);
+			fprintf(stderr, "Decoding bytes %d..%d (left %d)\n",
+				fbuf_offset,
+					fbuf_chunk < fbuf_left
+						? fbuf_chunk : fbuf_left,
+					fbuf_left);
+			if(st) {
+				fprintf(stderr, "=== currently ===\n");
+				asn_fprint(stderr, &asn_DEF_PDU, st);
+				fprintf(stderr, "=== end ===\n");
+			}
 			rval = zer_decode(0, &asn_DEF_PDU, (void **)&st,
 				fbuf + fbuf_offset,
 					fbuf_chunk < fbuf_left 
