@@ -1,11 +1,13 @@
 
-0.9.6:	2004-Sep-24
+0.9.6:	2004-Sep-26
 
 	* Implemented BASIC-XER encoding support (X.693).
 	* Implemented unber(1) and enber(1) for BER<->XML translation.
 	* Implemented CGI for online ASN.1 compilation (asn1c/webcgi).
 	* Implemented the sample X.509 decoder (./examples/sample.source.PKIX1).
 	* NamedType is now supported for SET OF/SEQUENCE OF type.
+	* Added -fno-constraints option to asn1c, which disabled generation of
+	  ASN.1 subtype constraints checking code.
 	* Added ASN1C_ENVIRONMENT_VERSION and get_asn1c_environment_version().
 	* Fixed ANY type decoding (Severity: high, Secruity impact: low).
 	* Fixed BER decoder restartability problem with certain primitive
