@@ -9,4 +9,6 @@ check_PROGRAMS = \
 	check-INTEGER		\
 	check-REAL
 
+LDADD = -lm
+
 TESTS = $(check_PROGRAMS)
