@@ -6,7 +6,6 @@
 #include <asn_internal.h>
 #include <INTEGER.h>
 #include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */
-#include <assert.h>
 #include <errno.h>
 
 /*
@@ -93,8 +92,7 @@ INTEGER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	return der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
 }
 
-static const asn_INTEGER_enum_map_t *INTEGER__map_value2enum(asn_INTEGER_specifics_t *specs, long value);
-static const asn_INTEGER_enum_map_t *INTEGER__map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop);
+static const asn_INTEGER_enum_map_t *INTEGER_map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop);
 
 /*
  * INTEGER specific human-readable output.
@@ -139,7 +137,7 @@ INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_by
 				accum = (accum << 8) | *buf;
 		}
 
-		el = INTEGER__map_value2enum(specs, accum);
+		el = INTEGER_map_value2enum(specs, accum);
 		if(el) {
 			scrsize = el->enum_len + 32;
 			scr = (char *)alloca(scrsize);
@@ -240,7 +238,7 @@ INTEGER__compar_enum2value(const void *kp, const void *am) {
 }
 
 static const asn_INTEGER_enum_map_t *
-INTEGER__map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop) {
+INTEGER_map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop) {
 	asn_INTEGER_enum_map_t *el_found;
 	int count = specs ? specs->map_count : 0;
 	struct e2v_key key;
@@ -287,8 +285,8 @@ INTEGER__compar_value2enum(const void *kp, const void *am) {
 	else return 1;
 }
 
-static const asn_INTEGER_enum_map_t *
-INTEGER__map_value2enum(asn_INTEGER_specifics_t *specs, long value) {
+const asn_INTEGER_enum_map_t *
+INTEGER_map_value2enum(asn_INTEGER_specifics_t *specs, long value) {
 	int count = specs ? specs->map_count : 0;
 	if(!count) return 0;
 	return (asn_INTEGER_enum_map_t *)bsearch(&value, specs->value2enum,
@@ -366,7 +364,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		case 0x3c:	/* '<' */
 			if(state == ST_SKIPSPACE) {
 				const asn_INTEGER_enum_map_t *el;
-				el = INTEGER__map_enum2value(
+				el = INTEGER_map_enum2value(
 					(asn_INTEGER_specifics_t *)
 					td->specifics, lstart, lstop);
 				if(el) {

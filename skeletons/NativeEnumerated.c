@@ -27,7 +27,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
+	NativeEnumerated_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
@@ -36,4 +36,36 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
+
+asn_enc_rval_t
+NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
+        int ilevel, enum xer_encoder_flags_e flags,
+                asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+        asn_enc_rval_t er;
+        const long *native = (const long *)sptr;
+	const asn_INTEGER_enum_map_t *el;
+
+        (void)ilevel;
+        (void)flags;
+
+        if(!native) _ASN_ENCODE_FAILED;
+
+	el = INTEGER_map_value2enum(specs, *native);
+	if(el) {
+		size_t srcsize = el->enum_len + 5;
+		char *src = (char *)alloca(srcsize);
+
+		er.encoded = snprintf(src, srcsize, "<%s/>", el->enum_name);
+		assert(er.encoded > 0 && (size_t)er.encoded < srcsize);
+		if(cb(src, er.encoded, app_key) < 0) _ASN_ENCODE_FAILED;
+		return er;
+	} else {
+		ASN_DEBUG("ASN.1 forbids dealing with "
+			"unknown value of ENUMERATED type");
+		_ASN_ENCODE_FAILED;
+	}
+
+        return er;
+}
 
