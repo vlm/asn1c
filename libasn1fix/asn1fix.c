@@ -14,6 +14,7 @@ static int asn1f_fix_constructed(arg_t *arg);	/* For SEQUENCE/SET/CHOICE */
 static int asn1f_resolve_constraints(arg_t *arg); /* For subtype constraints */
 static int asn1f_check_constraints(arg_t *arg);	/* For subtype constraints */
 static int asn1f_check_duplicate(arg_t *arg);
+static int asn1f_apply_unique_index(arg_t *arg);
 
 arg_t a1f_replace_me_with_proper_interface_arg;
 
@@ -274,6 +275,13 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 		ret = asn1f_recurse_expr(arg, asn1f_check_constraints);
 		RET2RVAL(ret, rvalue);
 
+		/*
+		 * Uniquely tag each inner type.
+		 */
+		asn1f_apply_unique_index(0);
+		ret = asn1f_recurse_expr(arg, asn1f_apply_unique_index);
+		RET2RVAL(ret, rvalue);
+
 		assert(arg->expr == expr);
 	}
 
@@ -425,6 +433,25 @@ asn1f_check_duplicate(arg_t *arg) {
 		}
 		if(tmparg.mod == arg->mod) break;
 	}
+
+	return 0;
+}
+
+static int
+asn1f_apply_unique_index(arg_t *arg) {
+	static int unique_index;
+	if(!arg) { unique_index = 0; return 0; }
+
+	switch(arg->expr->expr_type) {
+	case ASN_BASIC_ENUMERATED:
+		break;
+	default:
+		if(arg->expr->expr_type & ASN_CONSTR_MASK)
+			break;
+		return 0;
+	}
+
+	arg->expr->_type_unique_index = ++unique_index;
 
 	return 0;
 }
