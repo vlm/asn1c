@@ -4,8 +4,7 @@
 # $Id$
 # $Author$
 #
-# Simple tool that fetches known ASN.1 specifications from the
-# stream of LyX data.
+# Simple tool that extracts known ASN.1 modules from the stream of LyX data.
 #
 
 if($#ARGV == -1) {
