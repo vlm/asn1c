@@ -8,7 +8,7 @@
 
 /*** <<< FWD-DECLS [T] >>> ***/
 
-struct T2;	/* Forward declaration */
+struct T2;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
 

@@ -196,7 +196,7 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 
 /*** <<< FWD-DECLS [Name] >>> ***/
 
-struct RelativeDistinguishedName;	/* Forward declaration */
+struct RelativeDistinguishedName;
 
 /*** <<< TYPE-DECLS [Name] >>> ***/
 

@@ -10,7 +10,7 @@
 
 /*** <<< FWD-DECLS [Test-structure-1] >>> ***/
 
-struct Test_structure_1;	/* Forward declaration */
+struct Test_structure_1;
 
 /*** <<< TYPE-DECLS [Test-structure-1] >>> ***/
 
@@ -214,7 +214,7 @@ typedef enum Choice_1_PR {
 
 /*** <<< FWD-DECLS [Choice-1] >>> ***/
 
-struct Choice_1;	/* Forward declaration */
+struct Choice_1;
 
 /*** <<< TYPE-DECLS [Choice-1] >>> ***/
 
@@ -369,7 +369,7 @@ typedef enum Test_structure_2_PR {
 
 /*** <<< FWD-DECLS [Test-structure-2] >>> ***/
 
-struct Test_structure_3;	/* Forward declaration */
+struct Test_structure_3;
 
 /*** <<< TYPE-DECLS [Test-structure-2] >>> ***/
 
@@ -462,7 +462,7 @@ typedef enum Test_structure_3_PR {
 
 /*** <<< FWD-DECLS [Test-structure-3] >>> ***/
 
-struct Test_structure_2;	/* Forward declaration */
+struct Test_structure_2;
 
 /*** <<< TYPE-DECLS [Test-structure-3] >>> ***/
 

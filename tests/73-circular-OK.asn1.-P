@@ -7,7 +7,7 @@
 
 /*** <<< FWD-DECLS [Type] >>> ***/
 
-struct Epyt;	/* Forward declaration */
+struct Epyt;
 
 /*** <<< TYPE-DECLS [Type] >>> ***/
 
@@ -245,8 +245,8 @@ asn_TYPE_descriptor_t asn_DEF_EpytRef = {
 
 /*** <<< FWD-DECLS [Epyt] >>> ***/
 
-struct Type;	/* Forward declaration */
-struct Ypet;	/* Forward declaration */
+struct Type;
+struct Ypet;
 
 /*** <<< TYPE-DECLS [Epyt] >>> ***/
 
