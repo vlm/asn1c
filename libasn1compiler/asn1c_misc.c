@@ -94,6 +94,8 @@ asn1c_open_file(arg_t *arg, const char *name, const char *ext) {
 	FILE *fp;
 	int fd;
 
+	(void)arg;	/* Unused argument */
+
 	/*
 	 * Compute filenames.
 	 */

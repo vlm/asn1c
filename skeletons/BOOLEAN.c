@@ -21,7 +21,8 @@ asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN = {
 	asn1_DEF_BOOLEAN_tags,
 	sizeof(asn1_DEF_BOOLEAN_tags)/sizeof(asn1_DEF_BOOLEAN_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
-	0	/* Always in primitive form */
+	0,	/* Always in primitive form */
+	0	/* No specifics */
 };
 
 /*
@@ -33,7 +34,7 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 		int tag_mode) {
 	BOOLEAN_t *st = *bool_structure;
 	ber_dec_rval_t rval;
-	ber_dec_ctx_t ctx = { 0 };
+	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
 	ber_tlv_len_t lidx;
 
@@ -61,7 +62,7 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 
 	buf_ptr += rval.consumed;
 	size -= rval.consumed;
-	if(length > size) {
+	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;
 		rval.consumed = 0;
 		return rval;
@@ -127,6 +128,9 @@ int
 BOOLEAN_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const BOOLEAN_t *st = sptr;
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
 
 	if(st) {
 		if(st->value)

@@ -30,6 +30,8 @@ asn1f_class_access(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **mod_r) {
 	asn1p_expr_t *result;
 	asn1p_ref_t tmpref;
 
+	(void)mod_r;	/* Unused argument */
+
 	assert(ref->comp_count > 1);
 
 	DEBUG("%s(%s) for line %d", __func__,

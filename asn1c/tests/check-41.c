@@ -130,7 +130,7 @@ uint8_t buf2_reconstr[] = {
 
 
 static void
-check(T_t *tp, uint8_t *buf, int size, int consumed) {
+check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 	ber_dec_rval_t rval;
 
 	tp = memset(tp, 0, sizeof(*tp));
@@ -277,6 +277,9 @@ partial_read(uint8_t *buf, int size) {
 int
 main(int ac, char **av) {
 	T_t t;
+
+	(void)ac;	/* Unused argument */
+	(void)av;	/* Unused argument */
 
 	/* Check exact buf0 */
 	check(&t, buf0, sizeof(buf0), sizeof(buf0));

@@ -208,6 +208,8 @@ static int
 asn1c_copy_over(arg_t *arg, char *path) {
 	char *fname = basename(path);
 
+	(void)arg;	/* Unused argument */
+
 	if(symlink(path, fname)) {
 		if(errno == EEXIST) {
 			struct stat sb1, sb2;

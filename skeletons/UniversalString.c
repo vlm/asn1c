@@ -23,6 +23,7 @@ asn1_TYPE_descriptor_t asn1_DEF_UniversalString = {
 	  / sizeof(asn1_DEF_UniversalString_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	-1,	/* Both ways are fine */
+	0	/* No specifics */
 };
 
 
@@ -34,6 +35,9 @@ UniversalString_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	uint32_t *wend;
 	char scratch[128];			/* Scratchpad buffer */
 	char *p;
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
 
 	if(!st || !st->buf) return cb("<absent>", 8, app_key);
 

@@ -11,6 +11,9 @@ int
 main(int ac, char **av) {
 	Programming_t p;
 
+	(void)ac;	/* Unused argument */
+	(void)av;	/* Unused argument */
+
 	memset(&p, 0, sizeof(p));
 
 	/*

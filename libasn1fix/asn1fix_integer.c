@@ -114,7 +114,7 @@ static int
 _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type) {
 	asn1p_module_t *mod = NULL;
 	asn1p_expr_t *next_expr;
-	int expr_type;
+	asn1p_expr_type_e expr_type;
 	int ret;
 
 	expr_type = expr->expr_type;

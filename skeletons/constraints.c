@@ -4,6 +4,12 @@
 int
 asn_generic_no_constraint(asn1_TYPE_descriptor_t *type_descriptor,
 	const void *struct_ptr, asn_app_consume_bytes_f *cb, void *key) {
+
+	(void)type_descriptor;	/* Unused argument */
+	(void)struct_ptr;	/* Unused argument */
+	(void)cb;	/* Unused argument */
+	(void)key;	/* Unused argument */
+
 	/* Nothing to check */
 	return 0;
 }
@@ -11,6 +17,12 @@ asn_generic_no_constraint(asn1_TYPE_descriptor_t *type_descriptor,
 int
 asn_generic_unknown_constraint(asn1_TYPE_descriptor_t *type_descriptor,
 	const void *struct_ptr, asn_app_consume_bytes_f *cb, void *key) {
+
+	(void)type_descriptor;	/* Unused argument */
+	(void)struct_ptr;	/* Unused argument */
+	(void)cb;	/* Unused argument */
+	(void)key;	/* Unused argument */
+
 	/* Unknown how to check */
 	return 0;
 }
@@ -86,7 +98,7 @@ _asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
 		/* Fall through */
 	}
 
-	if(ret < sizeof(buf)) {
+	if(ret < (ssize_t)sizeof(buf)) {
 		cb(buf, ret, key);
 		return;
 	}
@@ -102,7 +114,7 @@ _asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
 	va_start(ap, fmt);
 	ret = vsnprintf(buf, len, fmt, ap);
 	va_end(ap);
-	if(ret < 0 || ret >= len) {
+	if(ret < 0 || ret >= (ssize_t)len) {
 		ret = sizeof("<broken vsnprintf>") - 1;
 		memcpy(buf, "<broken vsnprintf>", ret + 1);
 	}

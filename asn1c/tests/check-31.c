@@ -92,7 +92,7 @@ int bytes_compare(const void *bufferp, size_t size, void *key) {
 }
 
 static void
-check(int is_ok, uint8_t *buf, int size, int consumed) {
+check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	Forest_t t, *tp;
 	ber_dec_rval_t rval;
 
@@ -166,6 +166,9 @@ try_corrupt(uint8_t *buf, int size) {
 
 int
 main(int ac, char **av) {
+
+	(void)ac;	/* Unused argument */
+	(void)av;	/* Unused argument */
 
 	check(1, buf1, sizeof(buf1), sizeof(buf1));
 	try_corrupt(buf1, sizeof(buf1));

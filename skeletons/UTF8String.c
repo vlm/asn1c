@@ -23,6 +23,7 @@ asn1_TYPE_descriptor_t asn1_DEF_UTF8String = {
 	  / sizeof(asn1_DEF_UTF8String_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	-1,	/* Both ways are fine */
+	0	/* No specifics */
 };
 
 static int _UTF8String_h1[16] = {
@@ -103,6 +104,9 @@ int
 UTF8String_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const UTF8String_t *st = sptr;
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
 
 	if(st && st->buf) {
 		return cb(st->buf, st->size, app_key);

@@ -68,7 +68,7 @@ SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		encoding_size += erval.encoded;
 	}
 
-	if(computed_size != encoding_size) {
+	if(computed_size != (size_t)encoding_size) {
 		/*
 		 * Encoded size is not equal to the computed size.
 		 */

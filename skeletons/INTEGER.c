@@ -23,7 +23,8 @@ asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
 	asn1_DEF_INTEGER_tags,
 	sizeof(asn1_DEF_INTEGER_tags)/sizeof(asn1_DEF_INTEGER_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
-	0	/* Always in primitive form */
+	0,	/* Always in primitive form */
+	0	/* No specifics */
 };
 
 /*
@@ -34,7 +35,7 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **int_structure, void *buf_ptr, size_t size, int tag_mode) {
 	INTEGER_t *st = *int_structure;
 	ber_dec_rval_t rval;
-	ber_dec_ctx_t ctx = { 0 };
+	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
 
 	/*
@@ -67,7 +68,7 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 	 */
 	buf_ptr += rval.consumed;
 	size -= rval.consumed;
-	if(length > size) {
+	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;
 		rval.consumed = 0;
 		return rval;
@@ -193,25 +194,28 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	char *p;
 	int ret;
 
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
+
 	if(!st && !st->buf) return cb("<absent>", 8, app_key);
 
 	if(st->size == 0)
 		return cb("0", 1, app_key);
 
 	/* Simple case: the integer size is small */
-	if(st->size < sizeof(accum) || (st->buf[0] & 0x80)) {
+	if((size_t)st->size < sizeof(accum) || (st->buf[0] & 0x80)) {
 		accum = (st->buf[0] & 0x80) ? -1 : 0;
 		for(; buf < buf_end; buf++)
 			accum = (accum << 8) | *buf;
 		ret = snprintf(scratch, sizeof(scratch), "%ld", accum);
-		assert(ret > 0 && ret < sizeof(scratch));
+		assert(ret > 0 && ret < (int)sizeof(scratch));
 		return cb(scratch, ret, app_key);
 	}
 
 	/* Output in the long xx:yy:zz... format */
 	for(p = scratch; buf < buf_end; buf++) {
 		static char h2c[16] = "0123456789ABCDEF";
-		if((p - scratch) >= (sizeof(scratch) / 2)) {
+		if((p - scratch) >= (ssize_t)(sizeof(scratch) / 2)) {
 			/* Flush buffer */
 			if(cb(scratch, p - scratch, app_key))
 				return -1;

@@ -65,9 +65,9 @@ asn1c_compile_expr(arg_t *arg) {
 	int (*type_cb)(arg_t *);
 	int ret;
 
-	assert(expr->meta_type >= AMT_INVALID);
+	assert((int)expr->meta_type >= AMT_INVALID);
 	assert(expr->meta_type < AMT_EXPR_META_MAX);
-	assert(expr->expr_type >= A1TC_INVALID);
+	assert((int)expr->expr_type >= A1TC_INVALID);
 	assert(expr->expr_type < ASN_EXPR_TYPE_MAX);
 
 	type_cb = asn1_lang_map[expr->meta_type][expr->expr_type].type_cb;

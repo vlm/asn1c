@@ -24,7 +24,8 @@ asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
 	sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
-	0	/* Always in primitive form */
+	0,	/* Always in primitive form */
+	0	/* No specifics */
 };
 
 
@@ -94,8 +95,8 @@ OBJECT_IDENTIFIER_get_arc_l(uint8_t *arcbuf, int arclen, int add, unsigned long 
 	unsigned long accum;
 	uint8_t *arcend = arcbuf + arclen;
 
-	if(arclen * 7 > 8 * sizeof(accum)) {
-		if(arclen * 7 <= 8 * (sizeof(accum) + 1)) {
+	if((size_t)arclen * 7 > 8 * sizeof(accum)) {
+		if((size_t)arclen * 7 <= 8 * (sizeof(accum) + 1)) {
 			if((*arcbuf & ~0x8f)) {
 				errno = ERANGE;	/* Overflow */
 				return -1;
@@ -110,8 +111,8 @@ OBJECT_IDENTIFIER_get_arc_l(uint8_t *arcbuf, int arclen, int add, unsigned long 
 	for(accum = 0; arcbuf < arcend; arcbuf++)
 		accum = (accum << 7) | (*arcbuf & ~0x80);
 
+	assert(accum >= (unsigned long)-add);
 	accum += add;	/* Actually, a negative value */
-	assert(accum >= 0);
 
 	*rvalue = accum;
 
@@ -143,6 +144,9 @@ OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
 	int startn;
 	int add = 0;
 	int i;
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
 
 	if(!st || !st->buf)
 		return cb("<absent>", 8, app_key);

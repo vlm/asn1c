@@ -75,13 +75,13 @@ asn1f_printable_value(asn1p_value_t *v) {
 		}
 	case ATV_REAL:
 		ret = snprintf(buf, sizeof(buf), "%f", v->value.v_double);
-		if(ret >= sizeof(buf))
+		if(ret >= (ssize_t)sizeof(buf))
 			memcpy(buf + sizeof(buf) - 4, "...", 4);
 		return buf;
 	case ATV_INTEGER:
 		ret = snprintf(buf, sizeof(buf), "%lld",
 			(long long)v->value.v_integer);
-		if(ret >= sizeof(buf))
+		if(ret >= (ssize_t)sizeof(buf))
 			memcpy(buf + sizeof(buf) - 4, "...", 4);
 		return buf;
 	case ATV_MIN: return "MIN";
@@ -126,7 +126,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 					*ptr++ = ((uc >> (7-(i%8)))&1)?'1':'0';
 				}
 			} else {
-				char hextable[16] = "0123456789ABCDEF";
+				static const char *hextable="0123456789ABCDEF";
 				/*
 				 * Dump byte by byte.
 				 */

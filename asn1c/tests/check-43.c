@@ -13,6 +13,9 @@ main(int ac, char **av) {
 	Test_structure_1_t ts1;
 	Sets_t s1;
 
+	(void)ac;	/* Unused argument */
+	(void)av;	/* Unused argument */
+
 	memset(&ts1, 0, sizeof(ts1));
 	memset(&s1, 0, sizeof(s1));
 

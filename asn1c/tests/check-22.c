@@ -32,6 +32,9 @@ int buf2_pos;
 
 static int
 buf2_fill(const void *buffer, size_t size, void *app_key) {
+
+	(void)app_key;
+
 	if(buf2_pos + size > sizeof(buf2))
 		return -1;
 
@@ -42,7 +45,7 @@ buf2_fill(const void *buffer, size_t size, void *app_key) {
 }
 
 static void
-check(int is_ok, uint8_t *buf, int size, int consumed) {
+check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T1_t t, *tp;
 	ber_dec_rval_t rval;
 	der_enc_rval_t erval;
@@ -57,7 +60,7 @@ check(int is_ok, uint8_t *buf, int size, int consumed) {
 
 	if(is_ok) {
 		assert(rval.code == RC_OK);
-		assert(rval.consumed == consumed);
+		assert(rval.consumed == (size_t)consumed);
 		assert(t.a.size == 2);
 		assert(t.b.present == b_PR_n);
 		assert(t.b.choice.n.size == 1);
@@ -73,7 +76,7 @@ check(int is_ok, uint8_t *buf, int size, int consumed) {
 				|| t.c.size != 1
 			);
 		}
-		assert(rval.consumed <= consumed);
+		assert(rval.consumed <= (size_t)consumed);
 		return;
 	}
 
@@ -89,7 +92,7 @@ check(int is_ok, uint8_t *buf, int size, int consumed) {
 		printf("%d != %d\n", (int)erval.encoded, (int)sizeof(buf1));
 	}
 	assert(erval.encoded == sizeof(buf1));
-	for(i = 0; i < sizeof(buf1); i++) {
+	for(i = 0; i < (ssize_t)sizeof(buf1); i++) {
 		if(buf1[i] != buf2[i]) {
 			fprintf(stderr, "Recreated buffer content mismatch:\n");
 			fprintf(stderr, "Byte %d, %x != %x (%d != %d)\n",
@@ -132,6 +135,9 @@ try_corrupt(uint8_t *buf, int size) {
 
 int
 main(int ac, char **av) {
+
+	(void)ac;	/* Unused argument */
+	(void)av;	/* Unused argument */
 
 	check(1, buf1, sizeof(buf1), sizeof(buf1));
 	try_corrupt(buf1, sizeof(buf1));

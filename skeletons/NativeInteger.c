@@ -30,7 +30,8 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeInteger = {
 	asn1_DEF_NativeInteger_tags,
 	sizeof(asn1_DEF_NativeInteger_tags)/sizeof(asn1_DEF_NativeInteger_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
-	0	/* Always in primitive form */
+	0,	/* Always in primitive form */
+	0	/* No specifics */
 };
 
 /*
@@ -41,7 +42,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **int_ptr, void *buf_ptr, size_t size, int tag_mode) {
 	int *Int = *int_ptr;
 	ber_dec_rval_t rval;
-	ber_dec_ctx_t ctx = { 0 };
+	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
 
 	/*
@@ -74,7 +75,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	 */
 	buf_ptr += rval.consumed;
 	size -= rval.consumed;
-	if(length > size) {
+	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;
 		rval.consumed = 0;
 		return rval;
@@ -168,9 +169,12 @@ NativeInteger_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	char scratch[32];
 	int ret;
 
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
+
 	if(Int) {
 		ret = snprintf(scratch, sizeof(scratch), "%d", *Int);
-		assert(ret > 0 && ret < sizeof(scratch));
+		assert(ret > 0 && ret < (int)sizeof(scratch));
 		return cb(scratch, ret, app_key);
 	} else {
 		return cb("<absent>", 8, app_key);

@@ -22,7 +22,8 @@ asn1_TYPE_descriptor_t asn1_DEF_NULL = {
 	asn1_DEF_NULL_tags,
 	sizeof(asn1_DEF_NULL_tags)/sizeof(asn1_DEF_NULL_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
-	0	/* Always in primitive form */
+	0,	/* Always in primitive form */
+	0	/* No specifics */
 };
 
 der_enc_rval_t
@@ -43,6 +44,10 @@ NULL_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 int
 NULL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
+
 	if(sptr) {
 		return cb("<present>", 9, app_key);
 	} else {
