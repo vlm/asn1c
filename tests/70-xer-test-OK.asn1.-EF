@@ -46,7 +46,7 @@ SetOfNULL ::= SET OF NULL
 
 SetOfEnums ::= SET OF ENUMERATED {
         one(0),    
-        two(1)
+        oneMore(1)
     }
 
 SequenceOf ::= SEQUENCE OF    id	 INTEGER {

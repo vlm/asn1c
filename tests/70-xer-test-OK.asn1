@@ -53,7 +53,7 @@ BEGIN
 
 	SetOf ::= SET OF REAL
 	SetOfNULL ::= SET OF NULL
-	SetOfEnums ::= SET OF ENUMERATED { one, two }
+	SetOfEnums ::= SET OF ENUMERATED { one, oneMore }
 	SequenceOf ::= SEQUENCE OF id INTEGER { one(1), two(2) }
 	SeqOfZuka ::= SEQUENCE OF zuka NULL
 

@@ -659,7 +659,7 @@ asn_TYPE_descriptor_t asn_DEF_SetOfNULL = {
 
 typedef enum SetOfEnums_Member {
 	SetOfEnums_Member_one	= 0,
-	SetOfEnums_Member_two	= 1
+	SetOfEnums_Member_oneMore	= 1
 } SetOfEnums_Member_e;
 extern asn_TYPE_descriptor_t asn_DEF_SetOfEnums;
 
@@ -701,7 +701,7 @@ SetOfEnums_Member_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->elements       = asn_DEF_ENUMERATED.elements;
 	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-	td->specifics      = asn_DEF_ENUMERATED.specifics;
+    /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
 }
 
 static void
@@ -753,11 +753,11 @@ SetOfEnums_Member_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 static asn_INTEGER_enum_map_t asn_MAP_SetOfEnums_Member_enum2value[] = {
 	{ "one",	0 },
-	{ "two",	1 }
+	{ "oneMore",	1 }
 };
 static asn_INTEGER_enum_map_t asn_MAP_SetOfEnums_Member_value2enum[] = {
 	{ "one",	0 },
-	{ "two",	1 }
+	{ "oneMore",	1 }
 };
 static asn_INTEGER_specifics_t asn_DEF_SetOfEnums_Member_specs = {
 	/* Two name<->value maps sorted differently;
@@ -886,7 +886,7 @@ id_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->elements       = asn_DEF_INTEGER.elements;
 	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+    /* td->specifics      = asn_DEF_INTEGER.specifics;	// Defined explicitly */
 }
 
 static void
