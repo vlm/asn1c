@@ -305,7 +305,7 @@ asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *expr) {
 
 static asn1p_expr_t *
 asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
-	asn1p_ref_t *ref;
+	asn1p_ref_t *ref = 0;
 	asn1p_expr_t *tc;
 
 	switch(what) {
