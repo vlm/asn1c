@@ -1103,26 +1103,34 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		(void *struct_ptr, void *chunk_buf, size_t chunk_size,
 			int have_more)
 ) {
+	OCTET_STRING_t *st = *sptr;
 	asn_OCTET_STRING_specifics_t *specs = td->specifics
 				? (asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_DEF_OCTET_STRING_specs;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 	asn_struct_ctx_t *ctx;		/* Per-structure parser context */
+	asn_dec_rval_t rval;		/* Return value from the decoder */
+	int st_allocated;
 
 	/*
 	 * Create the string if does not exist.
 	 */
-	if(!*sptr) {
-		OCTET_STRING_t *st;
+	if(!st) {
 		st = (OCTET_STRING_t *)CALLOC(1, specs->struct_size);
-		if(st) st->buf = (uint8_t *)CALLOC(1, 1);
 		*sptr = (void *)st;
-		if(!st || !st->buf) {
-			asn_dec_rval_t rval;
-			if(*sptr) FREEMEM(*sptr);
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
+		if(!st) goto sta_failed;
+		st_allocated = 1;
+	} else  st_allocated = 0;
+	if(!st->buf) {
+		/* This is separate from above section */
+		st->buf = (uint8_t *)CALLOC(1, 1);
+		if(!st->buf) {
+			if(st_allocated) {
+				*sptr = 0;
+				goto stb_failed;
+			} else {
+				goto sta_failed;
+			}
 		}
 	}
 
@@ -1131,6 +1139,13 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 
 	return xer_decode_general(opt_codec_ctx, ctx, *sptr, xml_tag,
 		buf_ptr, size, opt_unexpected_tag_decoder, body_receiver);
+
+stb_failed:
+	FREEMEM(st);
+sta_failed:
+	rval.code = RC_FAIL;
+	rval.consumed = 0;
+	return rval;
 }
 
 /*

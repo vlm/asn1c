@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -539,7 +540,6 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 }
 
-#undef	ADVANCE	/* Just in case */
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
@@ -548,6 +548,9 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		consumed_myself += num;			\
 	} while(0)
 
+/*
+ * Decode the XER (XML) data.
+ */
 asn_dec_rval_t
 CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
@@ -564,7 +567,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void *st = *struct_ptr;	/* Target structure. */
 	asn_struct_ctx_t *ctx;	/* Decoder context */
 
-	asn_dec_rval_t rval;
+	asn_dec_rval_t rval;		/* Return value of a decoder */
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 	int xer_state;			/* XER low level parsing context */
 	int edx;			/* Element index */
@@ -590,9 +593,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Phase 2: Processing inner type.
 	 * Phase 3: Only waiting for closing tag
 	 */
-
-	if(ctx->phase > 3) RETURN(RC_FAIL);
-	for(xer_state = ctx->left, edx = ctx->step;;) {
+	for(xer_state = ctx->left, edx = ctx->step; ctx->phase <= 3;) {
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
@@ -617,12 +618,19 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				memb_ptr2 = &memb_ptr;
 			}
 
+			/* Start/Continue decoding the inner member */
 			tmprval = elm->type->xer_decoder(opt_codec_ctx,
 					elm->type, memb_ptr2, elm->name,
 					buf_ptr, size);
 			XER_ADVANCE(tmprval.consumed);
+			ASN_DEBUG("XER/CHOICE: itdf: code=%d, xs=%d", tmprval.code, xer_state);
 			if(tmprval.code != RC_OK)
 				RETURN(tmprval.code);
+			assert(_fetch_present_idx(st,
+				specs->pres_offset, specs->pres_size) == 0);
+			/* Record what we've got */
+			_set_present_idx(st,
+				specs->pres_offset, specs->pres_size, edx + 1);
 			ctx->left = xer_state = 0;	/* New, clean state */
 			ctx->phase = 3;
 			/* Fall through */
@@ -648,25 +656,22 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			}
 		}
 
-		tcv = xer_check_tag(buf_ptr, size, xml_tag);
+		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
+		printf("XER/CHOICE tcv=%d ph=%d\n", tcv, ctx->phase);
 		switch(tcv) {
 		case XCT_BOTH:
-			if(ctx->phase == 3)
-				break;
+			break;	/* No CHOICE? */
 		case XCT_CLOSING:
-			if(ctx->phase == 0)
+			if(ctx->phase != 3)
 				break;
 			XER_ADVANCE(ch_size);
-			ctx->phase = 4;
+			ctx->phase = 4;	/* Phase out */
 			RETURN(RC_OK);
 		case XCT_OPENING:
 			if(ctx->phase == 0) {
 				XER_ADVANCE(ch_size);
 				ctx->phase = 1;	/* Processing body phase */
 				continue;
-			} else if(ctx->phase == 3) {
-				/* But we're waiting for closing! */
-				break;
 			}
 			/* Fall through */
 		case XCT_UNEXPECTED:
@@ -675,11 +680,11 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				break;	/* Really unexpected */
 
 			/*
-			 * Search which member corresponds to this tag.
+			 * Search which inner member corresponds to this tag.
 			 */
 			for(edx = 0; edx < td->elements_count; edx++) {
 				elm = &td->elements[edx];
-				tcv = xer_check_tag(buf_ptr, size, elm->name);
+				tcv = xer_check_tag(buf_ptr,ch_size,elm->name);
 				switch(tcv) {
 				case XCT_BOTH:
 				case XCT_OPENING:
@@ -704,7 +709,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			break;
 		}
 
-		ASN_DEBUG("Unexpected XML tag in SEQUENCE");
+		ASN_DEBUG("Unexpected XML tag in CHOICE");
 		break;
 	}
 

@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -588,7 +589,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	return erval;
 }
 
-#undef	ADVANCE	/* Just in case */
+
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
@@ -597,6 +598,9 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		consumed_myself += num;			\
 	} while(0)
 
+/*
+ * Decode the XER (XML) data.
+ */
 asn_dec_rval_t
 SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
@@ -604,17 +608,18 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+	asn_SEQUENCE_specifics_t *specs
+		= (asn_SEQUENCE_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elements = td->elements;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 
 	/*
-	 * Parts of the structure being constructed.
+	 * ... and parts of the structure being constructed.
 	 */
 	void *st = *struct_ptr;	/* Target structure. */
 	asn_struct_ctx_t *ctx;	/* Decoder context */
 
-	asn_dec_rval_t rval;
+	asn_dec_rval_t rval;		/* Return value from a decoder */
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 	int xer_state;			/* XER low level parsing context */
 	int edx;			/* Element index */
@@ -639,16 +644,14 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Phase 1: Processing body and reacting on closing tag.
 	 * Phase 2: Processing inner type.
 	 */
-
-	if(ctx->phase > 2) RETURN(RC_FAIL);
-	for(xer_state = ctx->left, edx = ctx->step;;) {
+	for(xer_state = ctx->left, edx = ctx->step; ctx->phase <= 2;) {
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
 		asn_TYPE_member_t *elm;
 
 		/*
-		 * Go inside the member.
+		 * Go inside the inner member of a sequence.
 		 */
 		if(ctx->phase == 2) {
 			asn_dec_rval_t tmprval;
@@ -666,15 +669,18 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				memb_ptr2 = &memb_ptr;
 			}
 
+			/* Invoke the inner type decoder, m.b. multiple times */
 			tmprval = elm->type->xer_decoder(opt_codec_ctx,
 					elm->type, memb_ptr2, elm->name,
 					buf_ptr, size);
 			XER_ADVANCE(tmprval.consumed);
 			if(tmprval.code != RC_OK)
 				RETURN(tmprval.code);
-			ctx->phase = 1;
+			ctx->phase = 1;	/* Back to body processing */
 			ctx->left = xer_state = 0;	/* New, clean state */
 			ctx->step = ++edx;
+			ASN_DEBUG("XER/SEQUENCE phase => %d, step => %d",
+				ctx->phase, ctx->step);
 			/* Fall through */
 		}
 
@@ -698,11 +704,11 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			}
 		}
 
-		tcv = xer_check_tag(buf_ptr, size, xml_tag);
+		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
+		ASN_DEBUG("XER/SEQUENCE: tcv = %d, ph=%d", tcv, ctx->phase);
 		switch(tcv) {
 		case XCT_CLOSING:
 			if(ctx->phase == 0) break;
-			XER_ADVANCE(ch_size);
 			ctx->phase = 0;
 			/* Fall through */
 		case XCT_BOTH:
@@ -720,7 +726,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				) {
 					XER_ADVANCE(ch_size);
 					ctx->phase = 3;	/* Phase out */
-					continue;
+					RETURN(RC_OK);
 				} else {
 					ASN_DEBUG("Premature end of XER SEQUENCE");
 					RETURN(RC_FAIL);
@@ -738,7 +744,9 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			int edx_end;
 			int n;
 
-			if(!ctx->phase
+			ASN_DEBUG("XER/SEQUENCE: tcv=%d, ph=%d",
+				tcv, ctx->phase);
+			if(ctx->phase != 1
 			|| edx >= td->elements_count)
 				break;	/* Really unexpected */
 
@@ -748,7 +756,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			edx_end = edx + elements[edx].optional + 1;
 			for(n = edx; n < edx_end; n++) {
 				elm = &td->elements[n];
-				tcv = xer_check_tag(buf_ptr, size, elm->name);
+				tcv = xer_check_tag(buf_ptr,ch_size,elm->name);
 				switch(tcv) {
 				case XCT_BOTH:
 				case XCT_OPENING:
@@ -778,7 +786,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		break;
 	}
 
-	ctx->phase = 3;	/* Phase out, just in case */
+	ctx->phase = 3;	/* "Phase out" on hard failure */
 	RETURN(RC_FAIL);
 }
 

@@ -55,9 +55,10 @@ xer_next_token(int *stateContext, void *buffer, size_t size,
 		pxer_chunk_type_e *ch_type) {
 	struct xer__cb_arg arg;
 	ssize_t ret;
+	int new_stateContext = *stateContext;
 
 	arg.callback_not_invoked = 1;
-	ret = pxml_parse(stateContext, buffer, size, xer__token_cb, &arg);
+	ret = pxml_parse(&new_stateContext, buffer, size, xer__token_cb, &arg);
 	if(ret < 0) return -1;
 	if(arg.callback_not_invoked) {
 		assert(ret == 0);	/* No data was consumed */
@@ -84,6 +85,7 @@ xer_next_token(int *stateContext, void *buffer, size_t size,
 		break;
 	}
 
+	*stateContext = new_stateContext;	/* Update the context */
 	return arg.chunk_size;
 }
 
@@ -98,6 +100,8 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 	xer_check_tag_e ct = XCT_OPENING;
 
 	if(size < 2 || buf[0] != LANGLE || buf[size-1] != RANGLE) {
+		if(size >= 2)
+		ASN_DEBUG("Broken XML tag: \"%c...%c\"", buf[0], buf[size - 1]);
 		return XCT_BROKEN;
 	}
 
