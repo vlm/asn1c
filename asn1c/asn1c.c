@@ -28,7 +28,7 @@ main(int ac, char **av) {
 	enum asn1p_flags     asn1_parser_flags	= A1P_NOFLAGS;
 	enum asn1f_flags     asn1_fixer_flags	= A1F_NOFLAGS;
 	enum asn1c_flags     asn1_compiler_flags= A1C_NOFLAGS;
-	enum asn1print_flags asn1_print_flags	= APF_NOFLAGS;
+	enum asn1print_flags_e asn1_print_flags	= APF_NOFLAGS;
 	int print_arg__print_out = 0;	/* Don't compile, just print parsed */
 	int print_arg__fix_n_print = 0;	/* Fix and print */
 	int warnings_as_errors = 0;	/* Treat warnings as errors */
@@ -64,9 +64,6 @@ main(int ac, char **av) {
 			char *known_type = optarg + 18;
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
-		} else if(strcmp(optarg, "undoc") == 0) {
-			/* Enable undocumented operation */
-			asn1_print_flags |= APF_FULL_CONSTRAINTS;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
