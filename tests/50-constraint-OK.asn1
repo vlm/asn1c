@@ -35,6 +35,7 @@ BEGIN
 	Not-PER-Visible-1 ::= PER-Visible (FROM("AB") | SIZE(1..2))
 	Not-PER-Visible-2 ::= PER-Visible (FROM("AB",...))
 	Not-PER-Visible-3 ::= PER-Visible (FROM("AB"),...)
+
 	SIZE-but-not-FROM ::= PER-Visible (SIZE(1..4) ^ FROM("ABCD",...))
 	SIZE-and-FROM ::= PER-Visible (SIZE(1..4) ^ FROM("ABCD"))
 	Neither-SIZE-nor-FROM ::= PER-Visible (SIZE(1..4) | FROM("ABCD",...))
