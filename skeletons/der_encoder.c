@@ -36,7 +36,7 @@ typedef struct enc_to_buf_arg {
 	size_t left;
 } enc_to_buf_arg;
 static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
-	enc_to_buf_arg *arg = key;
+	enc_to_buf_arg *arg = (enc_to_buf_arg *)key;
 
 	if(arg->left < size)
 		return -1;	/* Data exceeds the available buffer size */
@@ -64,7 +64,7 @@ der_encode_to_buffer(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
 		struct_ptr,	/* Pointer to the destination structure */
 		0, 0, encode_to_buffer_cb, &arg);
 	if(ec.encoded != -1) {
-		assert(ec.encoded == (*buffer_size - arg.left));
+		assert(ec.encoded == (ssize_t)(*buffer_size - arg.left));
 		/* Return the encoded contents size */
 		*buffer_size = ec.encoded;
 	}

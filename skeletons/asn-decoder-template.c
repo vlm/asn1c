@@ -192,7 +192,7 @@ static void buf_extend(size_t bySize) {
 		size_t newsize = (buf_size << 2) + bySize;
 		void *p = realloc(buffer, newsize);
 		if(p) {
-			buffer = p;
+			buffer = (char *)p;
 			buf_size = newsize;
 
 			DEBUG("\tBuffer reallocated to %ld", (long)newsize);
@@ -228,7 +228,7 @@ static void *data_decode_from_file(const char *fname, ssize_t suggested_bufsize)
 
 	/* prepare the file buffer */
 	if(fbuf_size != suggested_bufsize) {
-		fbuf = realloc(fbuf, suggested_bufsize);
+		fbuf = (char *)realloc(fbuf, suggested_bufsize);
 		if(!fbuf) {
 			perror("realloc()");
 			exit(EX_OSERR);
