@@ -13,8 +13,6 @@ static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
 static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop);
 
-static int global_compile_mark;
-
 int
 asn1c_emit_constraint_checking_code(arg_t *arg) {
 	asn1cnst_range_t *r_size;
@@ -23,6 +21,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	asn1p_expr_type_e etype;
 	asn1p_constraint_t *ct;
 	int got_something = 0;
+	int alphabet_table_compiled;
 	int produce_st = 0;
 
 	ct = expr->combined_constraints;
@@ -125,7 +124,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	INDENT(-1);
 	REDIR(OT_CTABLES);
 	/* Emit FROM() tables */
-	asn1c_emit_constraint_tables(arg, r_size?1:0);
+	alphabet_table_compiled =
+		(asn1c_emit_constraint_tables(arg, r_size?1:0) == 1);
 	REDIR(OT_CODE);
 	INDENT(+1);
 
@@ -152,10 +152,11 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 					"value", -1, -1);
 			OUT(")");
 		}
-		if(ct->_compile_mark) {
+		if(alphabet_table_compiled) {
 			if(got_something++) { OUT("\n"); OUT(" && "); }
-			OUT("!check_permitted_alphabet_%d(sptr)",
-				ct->_compile_mark);
+			OUT("!check_permitted_alphabet_%d(%s)",
+				arg->expr->_type_unique_index,
+				produce_st ? "st" : "sptr");
 		}
 		if(!got_something) {
 			OUT("1 /* No applicable constraints whatsoever */");
@@ -252,9 +253,6 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 			max_table_size = 128;
 	}
 
-	if(!ct->_compile_mark)
-		ct->_compile_mark = ++global_compile_mark;
-
 	if(use_table) {
 		int i, n = 0;
 		int untl;
@@ -278,7 +276,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		untl = (range_stop - range_start) + 1;
 		untl += (untl % 16)?16 - (untl % 16):0;
 		OUT("static int permitted_alphabet_table_%d[%d] = {\n",
-			ct->_compile_mark, max_table_size);
+			arg->expr->_type_unique_index, max_table_size);
 		for(n = 0; n < untl; n++) {
 			OUT("%d,", table[n]?1:0);
 			if(!((n+1) % 16)) {
@@ -316,7 +314,6 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 			 * for the syntax validity, so we don't have
 			 * to repeat this process twice.
 			 */
-			ct->_compile_mark = 0;	/* Don't generate code */
 			asn1constraint_range_free(range);
 			return 0;
 		} else {
@@ -332,7 +329,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 	}
 
 	OUT("static int check_permitted_alphabet_%d(const void *sptr) {\n",
-			ct->_compile_mark);
+			arg->expr->_type_unique_index);
 	INDENT(+1);
 	if(utf8_full_alphabet_check) {
 		OUT("if(UTF8String_length((const UTF8String_t *)sptr) < 0)\n");
@@ -341,7 +338,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 	} else {
 		if(use_table) {
 			OUT("int *table = permitted_alphabet_table_%d;\n",
-				ct->_compile_mark);
+				arg->expr->_type_unique_index);
 			emit_alphabet_check_loop(arg, 0);
 		} else {
 			emit_alphabet_check_loop(arg, range);
@@ -354,7 +351,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 
 	asn1constraint_range_free(range);
 
-	return 0;
+	return 1;
 }
 
 static int

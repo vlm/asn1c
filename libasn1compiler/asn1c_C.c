@@ -967,7 +967,9 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	}
 	if((!expr->constraints || (arg->flags & A1C_NO_CONSTRAINTS))
 	&& (arg->embed || expr->tag.tag_class == TC_NOCLASS)
-	&& etd_spec == ETD_NO_SPECIFICS) {
+	&& etd_spec == ETD_NO_SPECIFICS
+	&& 0	/* This shortcut is incompatible with XER */
+	) {
 		char *type_name;
 		REDIR(OT_FUNC_DECLS);
 		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
