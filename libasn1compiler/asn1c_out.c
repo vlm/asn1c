@@ -18,9 +18,6 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	switch(arg->target->target) {
 	case OT_IGNORE:
 		return 0;
-	case OT_ASSERT:
-		assert(arg->target->target != OT_ASSERT);
-		return -1;
 	default:
 		dst = &arg->target->destination[arg->target->target];
 		break;
