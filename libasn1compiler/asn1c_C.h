@@ -7,9 +7,8 @@ int asn1c_lang_C_type_REFERENCE(arg_t *);
 int asn1c_lang_C_type_EXTENSIBLE(arg_t *);
 
 int asn1c_lang_C_type_SEQUENCE(arg_t *);
-int asn1c_lang_C_type_SEQUENCE_OF(arg_t *);
 int asn1c_lang_C_type_SET(arg_t *);
-int asn1c_lang_C_type_SET_OF(arg_t *);
+int asn1c_lang_C_type_SEx_OF(arg_t *);	/* SET OF or  SEQUENCE OF */
 int asn1c_lang_C_type_CHOICE(arg_t *);
 
 int asn1c_lang_C_type_INTEGER(arg_t *);
@@ -24,11 +23,11 @@ static asn1_language_map_t asn1_lang_C[] __attribute__ ((unused)) = {
 	 * Constructed types
 	 */
 	{ AMT_TYPE, ASN_CONSTR_SEQUENCE,	asn1c_lang_C_type_SEQUENCE },
-	{ AMT_TYPE, ASN_CONSTR_SEQUENCE_OF,	asn1c_lang_C_type_SEQUENCE_OF },
-	{ AMT_TYPEREF, ASN_CONSTR_SEQUENCE_OF,	asn1c_lang_C_type_SEQUENCE_OF },
+	{ AMT_TYPE, ASN_CONSTR_SEQUENCE_OF,	asn1c_lang_C_type_SEx_OF, },
+	{ AMT_TYPEREF, ASN_CONSTR_SEQUENCE_OF,	asn1c_lang_C_type_SEx_OF },
 	{ AMT_TYPE, ASN_CONSTR_SET,		asn1c_lang_C_type_SET },
-	{ AMT_TYPE, ASN_CONSTR_SET_OF,		asn1c_lang_C_type_SET_OF },
-	{ AMT_TYPEREF, ASN_CONSTR_SET_OF,	asn1c_lang_C_type_SET_OF },
+	{ AMT_TYPE, ASN_CONSTR_SET_OF,		asn1c_lang_C_type_SEx_OF },
+	{ AMT_TYPEREF, ASN_CONSTR_SET_OF,	asn1c_lang_C_type_SEx_OF },
 	{ AMT_TYPE, ASN_CONSTR_CHOICE,		asn1c_lang_C_type_CHOICE },
 	/*
 	 * Basic types
