@@ -15,6 +15,7 @@
 	* ber_dec_rval_t renamed into asn_dec_rval_t: more generality.
 	* Removed order dependency in DEFAULT references to ENUMERATED
 	  identifiers (./tests/68-*-OK.asn1).
+	* Implemented der_encode_to_buffer() procedure.
 
 0.9.7.1:	2004-Oct-12
 
