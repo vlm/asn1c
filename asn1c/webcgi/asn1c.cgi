@@ -40,12 +40,19 @@ $homePath = "<FONT FACE=Courier SIZE=-1>"
 # The code below rarely requires any modification #
 ###################################################
 
-my $redirect = '';	# No redirection by default
-my $content = '';	# Default content is empty
-
 use CGI qw/param cookie header upload escapeHTML/;
 
 $|=1;	# Enable AutoFlush (for older versions of Perl)
+
+my $redirect = '';	# No redirection by default
+my $redirect_bottom = '';	# No redirection text by default
+my $content = '';	# Default content is empty
+
+sub IssueRedirect() {
+	$redirect = "<META HTTP-EQUIV=\"Refresh\" "
+		. "CONTENT=\"5; URL=$myName\">";
+	$redirect_bottom = "<P><CENTER>This page will <A HREF=$ASN1C_Page/asn1c.cgi>disappear</A> in 5 seconds.</CENTER>"
+}
 
 # If something goes wrong, this function is invoked to display the error message
 sub bark($@) {
@@ -147,19 +154,28 @@ my $EnvironmentSetOK = prepareChrootEnvironment();
 # Record user's email.
 #
 $userEmail = cookie('userEmail');
-$userEmail = $defaultUserEmail unless $userEmail;
+$userEmail = $defaultUserEmail unless defined($userEmail);
 $tmpEmail = param('email');
-if(defined($tmpEmail)
-	&& $tmpEmail ne $userEmail) {
+if(defined($tmpEmail)) {
 	unless($tmpEmail =~ /^\s*([a-z0-9._+-]+@[a-z0-9.+-]+)\s*$/i) {
 		bark("Invalid email address: "
 			. "<B><FONT COLOR=darkred>$tmpEmail</FONT></B>");
 	}
+	my $previousEmail = $userEmail;
 	$userEmail = $1;
-	local $ck = cookie(-name=>'userEmail',
-		-value=>$userEmail,
-		-path=>'/', -expires=>'+1d');
-	print "Set-Cookie: " . $ck . "\n";
+	if($userEmail eq $defaultUserEmail) {
+		IssueRedirect();
+		bark("Please enter <FONT COLOR=red>your own</FONT> "
+			. "email address, "
+			. "instead of default \"<FONT COLOR=darkred>$defaultUserEmail</FONT>\"");
+	}
+	if($userEmail ne $previousEmail) {
+		# Refresh cookie contents.
+		local $ck = cookie(-name=>'userEmail',
+			-value=>$userEmail,
+			-path=>'/', -expires=>'+1d');
+		print "Set-Cookie: " . $ck . "\n";
+	}
 }
 
 #
@@ -264,7 +280,7 @@ if(defined($transHelp)
 	open(S, "| sendmail -it") or bark("Cannot perform help request, please email to the address below");
 	print S "From: $userEmail\n";
 	print S "To: $HelpEmail\n";
-	print S "Subject: asn1c help requested for $2--$3\n";
+	print S "Subject: asn1c help requested for $3 ($1)\n";
 	print S "\n";
 	print S "User $userEmail requested help with\n$session/$2--$3 ($1)\n";
 	print S "\n-- \nasn1c\n";
@@ -275,10 +291,9 @@ if(defined($transHelp)
 	$content = '<CENTER>Transaction '
 		. "$1 ($3) is marked for manual processing.<BR>"
 		. "Results will be mailed to "
-		. "<FONT COLOR=darkgreen>$userEmail</FONT> shortly.<BR>"
-		. "<P>This page will <A HREF=$ASN1C_Page/asn1c.cgi>disappear</A> in 5 seconds."
+		. "<FONT COLOR=darkgreen>$userEmail</FONT> shortly."
 		. "</CONTENT>";
-	$redirect = "<META HTTP-EQUIV=\"Refresh\"šCONTENT=\"5\">";
+	IssueRedirect();
 	goto PRINTOUT;
 }
 
@@ -619,6 +634,8 @@ $redirect
 $homePath
 
 $content
+
+$redirect_bottom
 
 <HR WIDTH=70%>
 <CENTER><ADDRESS><FONT SIZE=-1 FACE=Courier COLOR=#404040>
