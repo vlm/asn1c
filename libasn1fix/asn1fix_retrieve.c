@@ -23,15 +23,14 @@ asn1f_lookup_child(asn1p_expr_t *tc, const char *name) {
 }
 
 asn1p_module_t *
-asn1f_lookup_in_imports(arg_t *arg, const char *name) {
-	asn1p_module_t *mod;
+asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 	asn1p_xports_t *xp;
 	asn1p_expr_t *tc;
 
 	/*
 	 * Search in which exactly module this name is defined.
 	 */
-	TQ_FOR(xp, &(arg->mod->imports), xp_next) {
+	TQ_FOR(xp, &(mod->imports), xp_next) {
 		TQ_FOR(tc, &(xp->members), next) {
 			if(strcmp(name, tc->Identifier) == 0)
 				break;
@@ -137,7 +136,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 asn1p_expr_t *
 asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	asn1p_expr_t *ref_tc;			/* Referenced tc */
-	asn1p_module_t *src_mod;
+	asn1p_module_t *imports_from;
 	char *modulename;
 	char *identifier;
 
@@ -188,8 +187,8 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	 * fetch that module.
 	 */
 	if(modulename) {
-		src_mod = asn1f_lookup_module(arg, modulename, 0);
-		if(src_mod == NULL) {
+		imports_from = asn1f_lookup_module(arg, modulename, 0);
+		if(imports_from == NULL) {
 			FATAL("Module \"%s\" "
 				"mentioned at line %d is not found",
 				modulename, ref->_lineno);
@@ -200,13 +199,13 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 		 * Check that the EXPORTS section of this module contains
 		 * the symbol we care about, or it is EXPORTS ALL.
 		 */
-		if(asn1f_compatible_with_exports(arg, src_mod, identifier)) {
+		if(asn1f_compatible_with_exports(arg,imports_from,identifier)) {
 			errno = EPERM;
 			return NULL;
 		}
 	} else {
-		src_mod = asn1f_lookup_in_imports(arg, identifier);
-		if(src_mod == NULL && errno != ESRCH) {
+		imports_from = asn1f_lookup_in_imports(arg, mod, identifier);
+		if(imports_from == NULL && errno != ESRCH) {
 			/*
 			 * Return only of the name was not found.
 			 * If module was not found or more serious error
@@ -216,12 +215,28 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 		}
 	}
 
-	if(src_mod == 0) src_mod = mod;
+	/*
+	 * The symbol is being imported from another module.
+	 */
+	if(imports_from) {
+		asn1p_ref_t tmpref = *ref;
+		if(modulename) {
+			/*
+			 * The modulename is specified inside this reference.
+			 * To avoid recursion, reformat the reference
+			 * as it were local to that module.
+			 */
+			tmpref.components++;	/* Hide the first element */
+			tmpref.comp_count--;
+			assert(tmpref.comp_count > 0);
+		}
+		return asn1f_lookup_symbol(arg, imports_from, &tmpref);
+	}
 
 	/*
-	 * Now we know where to search for a value.
+	 * Now we know where to search for a value: in the current module.
 	 */
-	TQ_FOR(ref_tc, &(src_mod->members), next) {
+	TQ_FOR(ref_tc, &(mod->members), next) {
 		if(ref_tc->Identifier)
 		if(strcmp(ref_tc->Identifier, identifier) == 0)
 			break;
@@ -229,7 +244,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	if(ref_tc == NULL) {
 		DEBUG("Module \"%s\" does not contain \"%s\" "
 			"mentioned at line %d: %s",
-			src_mod->Identifier,
+			mod->Identifier,
 			identifier,
 			ref->_lineno,
 			strerror(errno)
