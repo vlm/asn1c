@@ -3,7 +3,6 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <constr_CHOICE.h>
-#include <netinet/in.h>	/* for ntohl */
 #include <assert.h>
 
 /*
