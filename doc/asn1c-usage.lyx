@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{Document describes 
 \backslash 
-href{http://lionet.info/asn1c}{asn1c-0.9.8}}
+href{http://lionet.info/asn1c}{asn1c-0.9.9}}
 \layout Standard
 
 \backslash 
@@ -102,129 +102,50 @@ pagestyle{headings}
 
 \layout Part
 
-ASN.1 Basics
+Using the ASN.1 Compiler
 \layout Chapter
 
-Abstract Syntax Notation: ASN.1
+Introduction to the ASN.1 Compiler
 \layout Standard
 
-
-\emph on 
-This chapter defines some basic ASN.1 concepts and describes several most
- widely used types.
- It is by no means an authoritative or complete reference.
- For more complete ASN.1 description, please refer to Olivier Dubuisson's
- book 
-\begin_inset LatexCommand \cite{Dub00}
-
-\end_inset 
-
- or the ASN.1 body of standards itself 
-\begin_inset LatexCommand \cite{ITU-T/ASN.1}
-
-\end_inset 
-
-.
+The purpose of the ASN.1 compiler, of which this document is part, is to
+ convert the ASN.1 specifications into some other target language.
+ At this moment, only C and C++ target languages are supported, the latter
+ in upward compatibility mode.
 \layout Standard
 
-The Abstract Syntax Notation One is used to formally describe the semantics
- of data transmitted across the network.
- Two communicating parties may have different formats of their native data
- types (i.e.
- number of bits in the integer type), thus it is important to have a way
- to describe the data in a manner which is independent from the particular
- machine's representation.
- The ASN.1 specifications are used to achieve the following:
-\layout Itemize
-
-The specification expressed in the ASN.1 notation is a formal and precise
- way to communicate the data semantics to human readers;
-\layout Itemize
-
-The ASN.1 specifications may be used as input for automatic compilers which
- produce the code for some target language (C, C++, Java, etc) to encode
- and decode the data according to some encoding rules (which are also defined
- by the ASN.1 standard).
+The compiler reads the specification and emits a series of target language
+ structures (C's structs, unions, enums) describing the corresponding ASN.1
+ types.
+ Also, it creates the code which allows automatic serialization and deserializat
+ion of these structures using several standardized encoding rules (BER,
+ DER, XER).
 \layout Standard
 
-Consider the following example:
-\layout LyX-Code
+For example, suppose the following ASN.1 module is given
+\begin_inset Foot
+collapsed true
 
-Rectangle ::= SEQUENCE {
-\layout LyX-Code
-
-    height  INTEGER,
-\layout LyX-Code
-
-    width   INTEGER
-\layout LyX-Code
-
-}
 \layout Standard
 
-This ASN.1 specification describes a constructed type, 
-\emph on 
-Rectangle
-\emph default 
-, containing two integer fields.
- This specification may tell the reader that there exists this kind of data
- structure and that some entity may be prepared to send or receive it.
- The question on 
-\emph on 
-how
-\emph default 
- that entity is going to send or receive the 
-\emph on 
-encoded data
-\emph default 
- is outside the scope of ASN.1.
- For example, this data structure may be encoded according to some encoding
- rules and sent to the destination using the TCP protocol.
- The ASN.1 specifies several ways of encoding (or 
-\begin_inset Quotes sld
+Please look into Part 
+\begin_inset LatexCommand \vref{par:ASN.1-Basics}
+
 \end_inset 
 
-serializing
-\begin_inset Quotes srd
+ for a quick reference on how to understand the ASN.1 notation.
 \end_inset 
 
-, or 
-\begin_inset Quotes sld
-\end_inset 
-
-marshaling
-\begin_inset Quotes srd
-\end_inset 
-
-) the data: BER, CER, DER and XER, some of them which will be outlined later.
-\layout Standard
-
-The complete specification must be wrapped in a module, which looks like
- this:
+:
 \layout LyX-Code
 
-RectangleModule1
-\layout LyX-Code
-
-    { iso org(3) dod(6) internet(1) private(4)
-\layout LyX-Code
-
-      enterprise(1) spelio(9363) software(1)
-\layout LyX-Code
-
-      asn1c(5) docs(2) rectangle(1) 1 } 
-\layout LyX-Code
-
-    DEFINITIONS AUTOMATIC TAGS ::=
+RectangleTest DEFINITIONS ::=
 \layout LyX-Code
 
 BEGIN
 \layout LyX-Code
 
  
-\layout LyX-Code
-
--- This is a comment which describes nothing.
 \layout LyX-Code
 
 Rectangle ::= SEQUENCE {
@@ -245,898 +166,10 @@ Rectangle ::= SEQUENCE {
 END
 \layout Standard
 
-The module header consists of module name (RectangleModule1), the module
- object identifier ({...}), a keyword 
-\begin_inset Quotes sld
-\end_inset 
-
-DEFINITIONS
-\begin_inset Quotes srd
-\end_inset 
-
-, a set of module flags (AUTOMATIC TAGS) and 
-\begin_inset Quotes sld
-\end_inset 
-
-::= BEGIN
-\begin_inset Quotes srd
-\end_inset 
-
-.
- The module ends with an 
-\begin_inset Quotes sld
-\end_inset 
-
-END
-\begin_inset Quotes srd
-\end_inset 
-
- statement.
-\layout Section
-
-Some of the ASN.1 Basic Types
-\layout Subsection
-
-The BOOLEAN type
-\layout Standard
-
-The BOOLEAN type models the simple binary TRUE/FALSE, YES/NO, ON/OFF or
- a similar kind of two-way choice.
-\layout Subsection
-
-The INTEGER type
-\layout Standard
-
-The INTEGER type is a signed natural number type without any restrictions
- on its size.
- If the automatic checking on INTEGER value bounds are necessary, the subtype
- constraints must be used.
-\layout LyX-Code
-
-SimpleInteger ::= INTEGER
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
--- An integer with a very limited range
-\layout LyX-Code
-
-SmallPositiveInt ::= INTEGER (0..127)
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
--- Integer, negative
-\layout LyX-Code
-
-NegativeInt ::= INTEGER (MIN..0)
-\layout Subsection
-
-The ENUMERATED type
-\layout Standard
-
-The ENUMERATED type is semantically equivalent to the INTEGER type with
- some integer values explicitly named.
-\layout LyX-Code
-
-FruitId ::= ENUMERATED { apple(1), orange(2) }
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
--- The numbers in braces are optional,
-\layout LyX-Code
-
--- the enumeration can be performed
-\layout LyX-Code
-
--- automatically by the compiler
-\layout LyX-Code
-
-ComputerOSType ::= ENUMERATED {
-\layout LyX-Code
-
-    FreeBSD,          -- acquires value 0
-\layout LyX-Code
-
-    Windows,          -- acquires value 1
-\layout LyX-Code
-
-    Solaris(5),       -- remains 5
-\layout LyX-Code
-
-    Linux,            -- becomes 6
-\layout LyX-Code
-
-    MacOS             -- becomes 7
-\layout LyX-Code
-
-}
-\layout Subsection
-
-The OCTET STRING type
-\layout Standard
-
-This type models the sequence of 8-bit bytes.
- This may be used to transmit some opaque data or data serialized by other
- types of encoders (i.e.
- video file, photo picture, etc).
-\layout Subsection
-
-The OBJECT IDENTIFIER type
-\layout Standard
-
-The OBJECT IDENTIFIER is used to represent the unique identifier of any
- object, starting from the very root of the registration tree.
- If your organization needs to uniquely identify something (a router, a
- room, a person, a standard, or whatever), you are encouraged to get your
- own identification subtree at 
-\begin_inset LatexCommand \htmlurl{http://www.iana.org/protocols/forms.htm}
-
-\end_inset 
-
-.
-\layout Standard
-
-For example, the very first ASN.1 module in this document has the following
- OBJECT IDENTIFIER: 1 3 6 1 4 1 9363 1 5 2 1 1.
-\layout LyX-Code
-
-ExampleOID ::= OBJECT IDENTIFIER
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
-rectangleModule1-oid ExampleOID
-\layout LyX-Code
-
-  ::= { 1 3 6 1 4 1 9363 1 5 2 1 1 }
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
--- An identifier of the Internet.
-\layout LyX-Code
-
-internet-id OBJECT IDENTIFIER
-\layout LyX-Code
-
-  ::= { iso(1) identified-organization(3)
-\layout LyX-Code
-
-        dod(6) internet(1) }
-\layout Standard
-
-As you see, names are optional.
-\layout Subsection
-
-The RELATIVE-OID type
-\layout Standard
-
-The RELATIVE-OID type has the semantics of a subtree of an OBJECT IDENTIFIER.
- There may be no need to repeat the whole sequence of numbers from the root
- of the registration tree where the only thing of interest is some of the
- tree's subsequence.
-\layout LyX-Code
-
-this-document RELATIVE-OID ::= { docs(2) usage(1) }
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
-this-example RELATIVE-OID ::= {
-\layout LyX-Code
-
-    this-document assorted-examples(0) this-example(1) }
-\layout Section
-
-Some of the ASN.1 String Types
-\layout Subsection
-
-The IA5String type
-\layout Standard
-
-This is essentially the ASCII, with 128 character codes available (7 lower
- bits of an 8-bit byte).
-\layout Subsection
-
-The UTF8String type
-\layout Standard
-
-This is the character string which encodes the full Unicode range (4 bytes)
- using multibyte character sequences.
-\layout Subsection
-
-The NumericString type
-\layout Standard
-
-This type represents the character string with the alphabet consisting of
- numbers (
-\begin_inset Quotes sld
-\end_inset 
-
-0
-\begin_inset Quotes srd
-\end_inset 
-
- to 
-\begin_inset Quotes sld
-\end_inset 
-
-9
-\begin_inset Quotes srd
-\end_inset 
-
-) and a space.
-\layout Subsection
-
-The PrintableString type
-\layout Standard
-
-The character string with the following alphabet: space, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-'
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
- (single quote), 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-(
-\series default 
-
-\begin_inset Quotes sld
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-)
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-+
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-,
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
- (comma), 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
--
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-.
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-/
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, digits (
-\begin_inset Quotes sld
-\end_inset 
-
-0
-\begin_inset Quotes srd
-\end_inset 
-
- to 
-\begin_inset Quotes sld
-\end_inset 
-
-9
-\begin_inset Quotes srd
-\end_inset 
-
-), 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-:
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-=
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-?
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, upper-case and lower-case letters (
-\begin_inset Quotes sld
-\end_inset 
-
-A
-\begin_inset Quotes srd
-\end_inset 
-
- to 
-\begin_inset Quotes sld
-\end_inset 
-
-Z
-\begin_inset Quotes srd
-\end_inset 
-
- and 
-\begin_inset Quotes sld
-\end_inset 
-
-a
-\begin_inset Quotes srd
-\end_inset 
-
- to 
-\begin_inset Quotes sld
-\end_inset 
-
-z
-\begin_inset Quotes srd
-\end_inset 
-
-).
-\layout Subsection
-
-The VisibleString type
-\layout Standard
-
-The character string with the alphabet which is more or less a subset of
- ASCII between the space and the 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-~
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
- symbol (tilde).
-\layout Standard
-
-Alternatively, the alphabet may be described as the PrintableString alphabet
- presented earlier, plus the following characters: 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-!
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-
-\begin_inset Quotes srd
-\end_inset 
-
-
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-#
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-$
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-%
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-&
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-*
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-;
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-<
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
->
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-[
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-
-\backslash 
-
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-]
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-^
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-_
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-`
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
- (single left quote), 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-{
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-|
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-}
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-, 
-\begin_inset Quotes sld
-\end_inset 
-
-
-\series bold 
-~
-\series default 
-
-\begin_inset Quotes srd
-\end_inset 
-
-.
-\layout Section
-
-ASN.1 Constructed Types
-\layout Subsection
-
-The SEQUENCE type
-\layout Standard
-
-This is an ordered collection of other simple or constructed types.
- The SEQUENCE constructed type resembles the C 
-\begin_inset Quotes sld
-\end_inset 
-
-struct
-\begin_inset Quotes srd
-\end_inset 
-
- statement.
-\layout LyX-Code
-
-Address ::= SEQUENCE {
-\layout LyX-Code
-
-    -- The apartment number may be omitted
-\layout LyX-Code
-
-    apartmentNumber      NumericString OPTIONAL,
-\layout LyX-Code
-
-    streetName           PrintableString,
-\layout LyX-Code
-
-    cityName             PrintableString,
-\layout LyX-Code
-
-    stateName            PrintableString,
-\layout LyX-Code
-
-    -- This one may be omitted too
-\layout LyX-Code
-
-    zipNo                NumericString OPTIONAL
-\layout LyX-Code
-
-}
-\layout Subsection
-
-The SET type
-\layout Standard
-
-This is a collection of other simple or constructed types.
- Ordering is not important.
- The data may arrive in the order which is different from the order of specifica
-tion.
- Data is encoded in the order not necessarily corresponding to the order
- of specification.
-\layout Subsection
-
-The CHOICE type
-\layout Standard
-
-This type is just a choice between the subtypes specified in it.
- The CHOICE type contains at most one of the subtypes specified, and it
- is always implicitly known which choice is being decoded or encoded.
- This one resembles the C 
-\begin_inset Quotes sld
-\end_inset 
-
-union
-\begin_inset Quotes srd
-\end_inset 
-
- statement.
-\layout Standard
-
-The following type defines a response code, which may be either an integer
- code or a boolean 
-\begin_inset Quotes sld
-\end_inset 
-
-true
-\begin_inset Quotes srd
-\end_inset 
-
-/
-\begin_inset Quotes srd
-\end_inset 
-
-false
-\begin_inset Quotes srd
-\end_inset 
-
- code.
-\layout LyX-Code
-
-ResponseCode ::= CHOICE {
-\layout LyX-Code
-
-    intCode    INTEGER,
-\layout LyX-Code
-
-    boolCode   BOOLEAN
-\layout LyX-Code
-
-}
-\layout LyX-Code
-
-\layout Subsection
-
-The SEQUENCE OF type
-\layout Standard
-
-This one is the list (array) of simple or constructed types:
-\layout LyX-Code
-
--- Example 1
-\layout LyX-Code
-
-ManyIntegers ::= SEQUENCE OF INTEGER
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
--- Example 2
-\layout LyX-Code
-
-ManyRectangles ::= SEQUENCE OF Rectangle
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
--- More complex example:
-\layout LyX-Code
-
--- an array of structures defined in place.
-\layout LyX-Code
-
-ManyCircles ::= SEQUENCE OF SEQUENCE {
-\layout LyX-Code
-
-                            radius INTEGER
-\layout LyX-Code
-
-                            }
-\layout Subsection
-
-The SET OF type
-\layout Standard
-
-The SET OF type models the bag of structures.
- It resembles the SEQUENCE OF type, but the order is not important: i.e.
- the elements may arrive in the order which is not necessarily the same
- as the in-memory order on the remote machines.
-\layout LyX-Code
-
--- A set of structures defined elsewhere
-\layout LyX-Code
-
-SetOfApples :: SET OF Apple
-\layout LyX-Code
-
- 
-\layout LyX-Code
-
--- Set of integers encoding the kind of a fruit
-\layout LyX-Code
-
-FruitBag ::= SET OF ENUMERATED { apple, orange }
-\layout Part
-
-Using the ASN.1 Compiler
-\layout Chapter
-
-Introduction to the ASN.1 Compiler
-\layout Standard
-
-The purpose of the ASN.1 compiler, of which this document is part, is to
- convert the ASN.1 specifications to some other target language (currently,
- only C is supported
+The compiler would read this ASN.1 definition and produce the following C
+ type
 \begin_inset Foot
-collapsed false
-
-\layout Standard
-
-C++ is 
-\begin_inset Quotes sld
-\end_inset 
-
-supported
-\begin_inset Quotes srd
-\end_inset 
-
- too, as long as an class-based approach is not a definitive factor.
-\end_inset 
-
-).
- The compiler reads the specification and emits a series of target language
- structures and surrounding maintenance code.
- For example, the C structure which may be created by compiler to represent
- the simple 
-\emph on 
-Rectangle
-\emph default 
- specification defined earlier in this document, may look like this
-\begin_inset Foot
-collapsed false
+collapsed true
 
 \layout Standard
 
@@ -1172,24 +205,12 @@ typedef struct Rectangle_s {
 } Rectangle_t;
 \layout Standard
 
-This would not be of much value for such a simple specification, so the
- compiler goes further and actually produces the code which fills in this
- structure by parsing the opaque binary
-\begin_inset Foot
-collapsed true
+It would also create the code for converting this structure into platform-indepe
+ndent wire representation (a serializer API) and the decoder of such wire
+ representation back into local, machine-specific type (a deserializer API).
+\layout Section
 
-\layout Standard
-
-BER, CER and DER encodings are binary.
- However, the XER encoding is text (XML) based.
-\end_inset 
-
- data provided in some buffer.
- It also produces the code that takes this structure as an argument and
- performs structure serialization by emitting a series of bytes.
-\layout Chapter
-
-Quick start
+Quick start with asn1c
 \layout Standard
 
 After building and installing the compiler, the 
@@ -1217,9 +238,9 @@ ell
 
 
 \emph default 
- command may be used to compile the ASN.1 specification
+ command may be used to compile the ASN.1 module
 \begin_inset Foot
-collapsed false
+collapsed true
 
 \layout Standard
 
@@ -1228,6 +249,11 @@ This is probably
 not
 \series default 
  what you want to try out right now -- read through the rest of this chapter
+ and check the table 
+\begin_inset LatexCommand \vref{cap:asn1c-cmdopts}
+
+\end_inset 
+
  to find out about 
 \series bold 
 -P
@@ -1244,16 +270,16 @@ not
 
 asn1c 
 \emph on 
-<spec.asn1>
+<module.asn1>
 \layout Standard
 
-If several specifications contain interdependencies, all of the files must
+If several ASN.1 modules contain interdependencies, all of the files must
  be specified altogether:
 \layout LyX-Code
 
 asn1c 
 \emph on 
-<spec1.asn1> <spec2.asn1> ...
+<module1.asn1> <module2.asn1> ...
 \layout Standard
 
 The compiler 
@@ -1281,7 +307,7 @@ asn1c
 \series default 
  
 \emph on 
-<spec-to-test.asn1>
+<module-to-test.asn1>
 \layout Standard
 
 The 
@@ -1312,15 +338,107 @@ asn1c
 \series default 
  
 \emph on 
-<spec-to-compile-and-print.asn1>
-\layout LyX-Code
-
-\layout Chapter
-
-Using the ASN.1 Compiler
+<module-to-compile-and-print.asn1>
 \layout Section
 
-Command-line options
+Recognizing compiler output
+\layout Standard
+
+After compiling, the following entities will be created in your current
+ directory:
+\layout Itemize
+
+A set of .c and .h files, generally a single pair for each type defined in
+ the ASN.1 specifications.
+ These files will be named similarly to the ASN.1 types (
+\emph on 
+Rectangle.c
+\emph default 
+ and 
+\emph on 
+Rectangle.h
+\emph default 
+ for the RectangleTest ASN.1 module defined in the beginning of this document).
+\layout Itemize
+
+A set of helper .c and .h files which contain generic encoders, decoders and
+ other useful routines.
+ There will be quite a few of them, some of them even are not always necessary,
+ but the overall amount of code after compilation will be rather small anyway.
+\layout Itemize
+
+A 
+\emph on 
+Makefile.am.sample
+\emph default 
+ file mentioning all the files created at the earlier steps.
+ This file is suitable for either automake suite or the plain `make` utility.
+\layout Standard
+
+It is your responsibility to create .c file with the
+\emph on 
+ int main()
+\emph default 
+ routine.
+\layout Standard
+
+In other words, after compiling the Rectangle module, you have the following
+ set of files: { Makefile.am.sample, Rectangle.c, Rectangle.h, 
+\series bold 
+\SpecialChar \ldots{}
+
+\series default 
+ }, where 
+\series bold 
+
+\begin_inset Quotes sld
+\end_inset 
+
+\SpecialChar \ldots{}
+
+\begin_inset Quotes srd
+\end_inset 
+
+
+\series default 
+ stands for the set of additional 
+\begin_inset Quotes sld
+\end_inset 
+
+helper
+\begin_inset Quotes srd
+\end_inset 
+
+ files created by the compiler.
+ If you add a simple file with the 
+\emph on 
+int main()
+\emph default 
+ routine, it would even be possible to compile everything with the single
+ instruction:
+\layout LyX-Code
+
+cc -I.
+ -o rectangle.exe *.c   # It could be 
+\emph on 
+that
+\emph default 
+ simple
+\layout Standard
+
+Refer to the Chapter 
+\begin_inset LatexCommand \vref{cha:Step-by-step-examples}
+
+\end_inset 
+
+ for a sample 
+\emph on 
+int main()
+\emph default 
+ routine.
+\layout Section
+
+Command line options
 \layout Standard
 
 The Table 
@@ -1333,6 +451,7 @@ The Table
 
 
 \begin_inset Float table
+placement h
 wide false
 collapsed false
 
@@ -1823,100 +942,12 @@ The list of asn1c command line options
 \end_inset 
 
 
+\layout Chapter
+
+Using the ASN.1 Compiler
 \layout Section
 
-Recognizing compiler output
-\layout Standard
-
-After compiling, the following entities will be created in your current
- directory:
-\layout Itemize
-
-A set of .c and .h files, generally a single pair for each type defined in
- the ASN.1 specifications.
- These files will be named similarly to the ASN.1 types (
-\emph on 
-Rectangle.c
-\emph default 
- and 
-\emph on 
-Rectangle.h
-\emph default 
- for the specification defined in the beginning of this document).
-\layout Itemize
-
-A set of helper .c and .h files which contain generic encoders, decoders and
- other useful routines.
- There will be quite a few of them, some of them even are not always necessary,
- but the overall amount of code after compiling will be rather small anyway.
-\layout Standard
-
-It is your responsibility to create .c file with the
-\emph on 
- int main()
-\emph default 
- routine and the Makefile (if needed).
- Compiler helps you with the latter by creating the Makefile.am.sample, containing
- the skeleton definition for the automake, should you want to use autotools.
-\layout Standard
-
-In other words, after compiling the Rectangle module, you have the following
- set of files: { Makefile.am.sample, Rectangle.c, Rectangle.h, 
-\series bold 
-\SpecialChar \ldots{}
-
-\series default 
- }, where 
-\series bold 
-
-\begin_inset Quotes sld
-\end_inset 
-
-\SpecialChar \ldots{}
-
-\begin_inset Quotes srd
-\end_inset 
-
-
-\series default 
- stands for the set of additional 
-\begin_inset Quotes sld
-\end_inset 
-
-helper
-\begin_inset Quotes srd
-\end_inset 
-
- files created by the compiler.
- If you add the simple file with the 
-\emph on 
-int main()
-\emph default 
- routine, it would even be possible to compile everything with the single
- instruction:
-\layout LyX-Code
-
-cc -o rectangle *.c   # It could be 
-\emph on 
-that
-\emph default 
- simple
-\begin_inset Foot
-collapsed false
-
-\layout Standard
-
-Provided that you've also created a .c file with the 
-\emph on 
-int main()
-\emph default 
- routine.
-\end_inset 
-
-
-\layout Section
-
-Invoking the ASN.1 helper code from an application
+Invoking the ASN.1 helper code
 \begin_inset OptArg
 collapsed true
 
@@ -1990,7 +1021,7 @@ Restartable means that if the decoder encounters the end of the buffer,
 BER decoder (Basic Encoding Rules).
  This decoder would create and/or fill the target structure for you.
  Please refer to Section 
-\begin_inset LatexCommand \ref{sub:Decoding-BER}
+\begin_inset LatexCommand \vref{sub:Decoding-BER}
 
 \end_inset 
 
@@ -2001,18 +1032,29 @@ der_encoder This is the generic DER encoder (Distinguished Encoding Rules).
  This encoder will take the target structure and encode it into a series
  of bytes.
  Please refer to Section 
-\begin_inset LatexCommand \ref{sub:Encoding-DER}
+\begin_inset LatexCommand \vref{sub:Encoding-DER}
 
 \end_inset 
 
 .
 \layout Description
 
-xer_encoder This is the generic XER encoder (XML Encoding Rules).
+xer_encoder This is the XER encoder (XML Encoding Rules).
  This encoder will take the target structure and represent it as an XML
- (text) document.
+ (text) document using either BASIC-XER or CANONICAL-XER encoding rules.
  Please refer to Section 
-\begin_inset LatexCommand \ref{sub:Encoding-XER}
+\begin_inset LatexCommand \vref{sub:Encoding-XER}
+
+\end_inset 
+
+.
+\layout Description
+
+xer_decoder This is the generic XER decoder.
+ It takes both BASIC-XER or CANONICAL-XER encodings and deserializes the
+ data into a local, machine-dependent representation.
+ Please refer to Section 
+\begin_inset LatexCommand \vref{sub:Decoding-XER}
 
 \end_inset 
 
@@ -2034,7 +1076,7 @@ print_struct This function convert the contents of the passed target structure
  This form is not formal and cannot be converted back into the structure,
  but it may turn out to be useful for debugging or quick-n-dirty printing.
  Please refer to Section 
-\begin_inset LatexCommand \ref{sub:Printing-the-target}
+\begin_inset LatexCommand \vref{sub:Printing-the-target}
 
 \end_inset 
 
@@ -2043,17 +1085,7 @@ print_struct This function convert the contents of the passed target structure
 
 free_struct This is a generic disposal which frees the target structure.
  Please refer to Section 
-\begin_inset LatexCommand \ref{sub:Freeing-the-target}
-
-\end_inset 
-
-.
-\layout Standard
-
-check_constraints Check that the contents of the target structure are semantical
-ly valid and constrained to appropriate implicit or explicit subtype constraints.
- Please refer to Section 
-\begin_inset LatexCommand \vref{sub:Validating-the-target}
+\begin_inset LatexCommand \vref{sub:Freeing-the-target}
 
 \end_inset 
 
@@ -2070,11 +1102,56 @@ asn_DEF_\SpecialChar \ldots{}
 rect
 \emph default 
 , in the above example).
- The target structure is typically created by the generic BER decoder or
- by the application itself.
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{sub:Decoding-BER}
+
+\end_inset 
+
+Decoding BER
 \layout Standard
 
-Here is how the buffer can be deserialized into the structure:
+The Basic Encoding Rules describe the most widely used (by the ASN.1 community)
+ way how the structure can be encoded and decoded.
+ Several other encoding rules (CER, DER) define a more restrictive versions
+ of BER, so the generic BER parser is also capable of decoding the data
+ encoded by CER and DER encoders.
+ The opposite is not true.
+\layout Standard
+
+The ASN.1 compiler provides the generic BER decoder which is implicitly capable
+ of decoding BER, CER and DER encoded data.
+\layout Standard
+
+The decoder is restartable (stream-oriented), which means that in case the
+ buffer has less data than it is expected, the decoder will process whatever
+ there is available and ask for more data to be provided.
+ Please note that the decoder may actually process less data than it was
+ given in the buffer, which means that you must be able to make the next
+ buffer contain the unprocessed part of the previous buffer.
+\layout Standard
+
+Suppose, you have two buffers of encoded data: 100 bytes and 200 bytes.
+\layout Itemize
+
+You may concatenate these buffers and feed the BER decoder with 300 bytes
+ of data, or
+\layout Itemize
+
+You may feed it the first buffer of 100 bytes of data, realize that the
+ ber_decoder consumed only 95 bytes from it and later feed the decoder with
+ 205 bytes buffer which consists of 5 unprocessed bytes from the first buffer
+ and the latter 200 bytes from the second buffer.
+\layout Standard
+
+This is not as convenient as it could be (like, the BER encoder would consume
+ the whole 100 bytes and keep these 5 bytes in some temporary storage),
+ but in case of stream-based processing it might actually be OK.
+ Suggestions are welcome.
+\layout Standard
+
+Here is the simplest example which shows how to invoke a BER decoder.
 \layout LyX-Code
 
 Rectangle_t *
@@ -2092,7 +1169,11 @@ simple_deserializer(const void *buffer, size_t buf_size) {
  
 \layout LyX-Code
 
-    rval = asn_DEF_Rectangle->ber_decoder(0,
+    rval = 
+\series bold 
+asn_DEF_Rectangle->ber_decoder
+\series default 
+(0,
 \layout LyX-Code
 
           &asn_DEF_Rectangle,
@@ -2154,10 +1235,10 @@ simple_deserializer
 \emph on 
 ber_decoder
 \emph default 
- routine and returns NULL.
- 
+ routine and returns 0 (no data).
+ This
 \series bold 
-This freeing is necessary
+ freeing is necessary
 \series default 
  because the ber_decoder is a restartable procedure, and may fail just because
  there is more data needs to be provided before decoding could be finalized.
@@ -2169,77 +1250,11 @@ ber_decoder
  already be decoded into the structure by the time something goes wrong.
 \layout Standard
 
-Restartable decoding is a little bit trickier: you need to provide the old
- target structure pointer (which might be already half-decoded) and react
- on RC_WMORE return code.
- This will be explained later in Section 
-\begin_inset LatexCommand \vref{sub:Decoding-BER}
-
-\end_inset 
-
-
-\layout Subsection
-
-
-\begin_inset LatexCommand \label{sub:Decoding-BER}
-
-\end_inset 
-
-Decoding BER
-\layout Standard
-
-The Basic Encoding Rules describe the basic way how the structure can be
- encoded and decoded.
- Several other encoding rules (CER, DER) define a more restrictive versions
- of BER, so the generic BER parser is also capable of decoding the data
- encoded by CER and DER encoders.
- The opposite is not true.
-\layout Standard
-
-The ASN.1 compiler provides the generic BER decoder which is implicitly capable
- of decoding BER, CER and DER encoded data.
-\layout Standard
-
-The decoder is restartable (stream-oriented), which means that in case the
- buffer has less data than it is expected, the decoder will process whatever
- it is available and ask for more data to be provided.
- Please note that the decoder may actually process less data than it is
- given in the buffer, which means that you should be able to make the next
- buffer contain the unprocessed part of the previous buffer.
-\layout Standard
-
-Suppose, you have two buffers of encoded data: 100 bytes and 200 bytes.
-\layout Itemize
-
-You may concatenate these buffers and feed the BER decoder with 300 bytes
- of data, or
-\layout Itemize
-
-You may feed it the first buffer of 100 bytes of data, realize that the
- ber_decoder consumed only 95 bytes from it and later feed the decoder with
- 205 bytes buffer which consists of 5 unprocessed bytes from the first buffer
- and the latter 200 bytes from the second buffer.
-\layout Standard
-
-This is not as convenient as it could be (like, the BER encoder would consume
- the whole 100 bytes and keep these 5 bytes in some temporary storage),
- but in case of stream-based processing it might actually be OK.
- Suggestions are welcome.
-\layout Standard
-
-There are two ways to invoke a BER decoder.
- The first one is a direct reference of the type-specific decoder.
- This way was shown in the previous example of 
-\emph on 
-simple_deserializer
-\emph default 
- function.
- The second way is to invoke a 
+A little less wordy would be to invoke a 
 \emph on 
 ber_decode
 \emph default 
- function, which is just a simple wrapper of the former approach into a
- less wordy notation:
+ function instead of dereferencing the asn_DEF_Rectangle:
 \layout LyX-Code
 
 rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect,
@@ -2252,7 +1267,7 @@ Note that the initial (asn_DEF_Rectangle->ber_decoder) reference is gone,
  and also the last argument (0) is no longer necessary.
 \layout Standard
 
-These two ways of invocations are fully equivalent.
+These two ways of BER decoder invocations are fully equivalent.
 \layout Standard
 
 The BER de
@@ -2312,7 +1327,7 @@ canonical
  This is probably exactly how you want to encode: either after a BER decoding
  or after a manual fill-up, the target structure contains the data which
  size is implicitly known before encoding.
- The DER encoding is used, for example, to encode X.509 certificates.
+ Among other uses, the DER encoding is used to encode X.509 certificates.
 \layout Standard
 
 As with BER decoder, the DER encoder may be invoked either directly from
@@ -2510,7 +1525,7 @@ print_as_XML(FILE *ostream, Rectangle_t *rect) {
  
 \layout LyX-Code
 
-    er = xer_encode(&asn_DEF_Rect, rect,
+    er = xer_encode(&asn_DEF_Rectangle, rect,
 \layout LyX-Code
 
         XER_F_BASIC, /* BASIC-XER or CANONICAL-XER */
@@ -2539,6 +1554,77 @@ See Section
 
  for the example of stdio-based XML encoder and other pretty-printing suggestion
 s.
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{sub:Decoding-XER}
+
+\end_inset 
+
+Decoding XER
+\layout Standard
+
+The data encoded using the XER rules can be subsequently decoded using the
+ xer_decode() API call:
+\layout LyX-Code
+
+Rectangle_t *
+\layout LyX-Code
+
+XML_to_Rectangle(const void *buffer, size_t buf_size) {
+\layout LyX-Code
+
+    Rectangle_t *rect = 0; /* Note this 0! */
+\layout LyX-Code
+
+    asn_dec_rval_t rval;
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+    rval = xer_decode(0, &asn_DEF_Rectangle, (void **)&rect,
+\layout LyX-Code
+
+        buffer, buf_size);
+\layout LyX-Code
+
+    if(rval
+\series bold 
+.code
+\series default 
+ == RC_OK) {
+\layout LyX-Code
+
+        return rect;          /* Decoding succeeded */
+\layout LyX-Code
+
+    } else {
+\layout LyX-Code
+
+        /* Free partially decoded rect */
+\layout LyX-Code
+
+        asn_DEF_Rectangle->free_struct(
+\layout LyX-Code
+
+            &asn_DEF_Rectangle, rect, 0);
+\layout LyX-Code
+
+        return 0;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+}
+\layout Standard
+
+The decoder takes both BASIC-XER and CANONICAL-XER encodings.
+\layout Standard
+
+Please look into xer_decoder.h for the precise definition of xer_decode()
+ and related types.
 \layout Subsection
 
 
@@ -2662,10 +1748,19 @@ To solve this problem, the free_struct routine has the additional argument
  (0, default) or it should be left intact (non-zero value).
 \layout LyX-Code
 
-/* Rectangle_t is defined within my_figure */
+
+\series bold 
+/* 1.
+ Rectangle_t is defined within my_figure */
 \layout LyX-Code
 
-struct my_figure *mf = 
+struct my_figure {
+\layout LyX-Code
+
+    Rectangle_t rect;
+\layout LyX-Code
+
+} *mf = 
 \series bold 
 ...
 \series default 
@@ -2675,10 +1770,10 @@ struct my_figure *mf =
 /*
 \layout LyX-Code
 
- * Freeing the Rectangle_td
+ * Freeing the Rectangle_t
 \layout LyX-Code
 
- * without freeing the mf->rect pointer
+ * without freeing the mf->rect area
 \layout LyX-Code
 
  */
@@ -2688,16 +1783,26 @@ asn_DEF_Rectangle->free_struct(
 \layout LyX-Code
 
     &asn_DEF_Rectangle, &mf->rect, 
-\emph on 
+\series bold 
 1
-\emph default 
- /* !free */);
-\layout LyX-Code
-
+\emph on 
  
+\emph default 
+/* !free */
+\series default 
+);
 \layout LyX-Code
 
-/* Rectangle_t is a stand-alone pointer */
+    
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+
+\series bold 
+/* 2.
+ Rectangle_t is a stand-alone pointer */
 \layout LyX-Code
 
 Rectangle_t *rect = 
@@ -2723,10 +1828,14 @@ asn_DEF_Rectangle->free_struct(
 \layout LyX-Code
 
     &asn_DEF_Rectangle, rect, 
-\emph on 
+\series bold 
 0
+\emph on 
+ 
 \emph default 
- /* free the pointer too */);
+/* free the pointer too */
+\series default 
+);
 \layout Standard
 
 It is safe to invoke the 
@@ -2735,9 +1844,6 @@ free_struct
 \emph default 
  function with the target structure pointer set to 0 (NULL), the function
  will do nothing.
-\layout Part
-
-Examples
 \layout Chapter
 
 
@@ -3953,6 +3059,1016 @@ Constraint validation failed
 \layout Enumerate
 
 Done.
+\layout Part
+
+
+\begin_inset LatexCommand \label{par:ASN.1-Basics}
+
+\end_inset 
+
+ASN.1 Basics
+\layout Chapter
+
+
+\begin_inset LatexCommand \label{cha:Abstract-Syntax-Notation:}
+
+\end_inset 
+
+Abstract Syntax Notation: ASN.1
+\layout Standard
+
+
+\emph on 
+This chapter defines some basic ASN.1 concepts and describes several most
+ widely used types.
+ It is by no means an authoritative or complete reference.
+ For more complete ASN.1 description, please refer to Olivier Dubuisson's
+ book 
+\begin_inset LatexCommand \cite{Dub00}
+
+\end_inset 
+
+ or the ASN.1 body of standards itself 
+\begin_inset LatexCommand \cite{ITU-T/ASN.1}
+
+\end_inset 
+
+.
+\layout Standard
+
+The Abstract Syntax Notation One is used to formally describe the semantics
+ of data transmitted across the network.
+ Two communicating parties may have different formats of their native data
+ types (i.e.
+ number of bits in the integer type), thus it is important to have a way
+ to describe the data in a manner which is independent from the particular
+ machine's representation.
+ The ASN.1 specifications are used to achieve the following:
+\layout Itemize
+
+The specification expressed in the ASN.1 notation is a formal and precise
+ way to communicate the data semantics to human readers;
+\layout Itemize
+
+The ASN.1 specifications may be used as input for automatic compilers which
+ produce the code for some target language (C, C++, Java, etc) to encode
+ and decode the data according to some encoding rules (which are also defined
+ by the ASN.1 standard).
+\layout Standard
+
+Consider the following example:
+\layout LyX-Code
+
+Rectangle ::= SEQUENCE {
+\layout LyX-Code
+
+    height  INTEGER,
+\layout LyX-Code
+
+    width   INTEGER
+\layout LyX-Code
+
+}
+\layout Standard
+
+This ASN.1 specification describes a constructed type, 
+\emph on 
+Rectangle
+\emph default 
+, containing two integer fields.
+ This specification may tell the reader that there exists this kind of data
+ structure and that some entity may be prepared to send or receive it.
+ The question on 
+\emph on 
+how
+\emph default 
+ that entity is going to send or receive the 
+\emph on 
+encoded data
+\emph default 
+ is outside the scope of ASN.1.
+ For example, this data structure may be encoded according to some encoding
+ rules and sent to the destination using the TCP protocol.
+ The ASN.1 specifies several ways of encoding (or 
+\begin_inset Quotes sld
+\end_inset 
+
+serializing
+\begin_inset Quotes srd
+\end_inset 
+
+, or 
+\begin_inset Quotes sld
+\end_inset 
+
+marshaling
+\begin_inset Quotes srd
+\end_inset 
+
+) the data: BER, PER, XER and others, including CER and DER derivatives
+ from BER.
+\layout Standard
+
+The complete specification must be wrapped in a module, which looks like
+ this:
+\layout LyX-Code
+
+RectangleModule1
+\layout LyX-Code
+
+    { iso org(3) dod(6) internet(1) private(4)
+\layout LyX-Code
+
+      enterprise(1) spelio(9363) software(1)
+\layout LyX-Code
+
+      asn1c(5) docs(2) rectangle(1) 1 } 
+\layout LyX-Code
+
+    DEFINITIONS AUTOMATIC TAGS ::=
+\layout LyX-Code
+
+BEGIN
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- This is a comment which describes nothing.
+\layout LyX-Code
+
+Rectangle ::= SEQUENCE {
+\layout LyX-Code
+
+    height  INTEGER,        -- Height of the rectangle
+\layout LyX-Code
+
+    width   INTEGER         -- Width of the rectangle
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+END
+\layout Standard
+
+The module header consists of module name (RectangleModule1), the module
+ object identifier ({...}), a keyword 
+\begin_inset Quotes sld
+\end_inset 
+
+DEFINITIONS
+\begin_inset Quotes srd
+\end_inset 
+
+, a set of module flags (AUTOMATIC TAGS) and 
+\begin_inset Quotes sld
+\end_inset 
+
+::= BEGIN
+\begin_inset Quotes srd
+\end_inset 
+
+.
+ The module ends with an 
+\begin_inset Quotes sld
+\end_inset 
+
+END
+\begin_inset Quotes srd
+\end_inset 
+
+ statement.
+\layout Section
+
+Some of the ASN.1 Basic Types
+\layout Subsection
+
+The BOOLEAN type
+\layout Standard
+
+The BOOLEAN type models the simple binary TRUE/FALSE, YES/NO, ON/OFF or
+ a similar kind of two-way choice.
+\layout Subsection
+
+The INTEGER type
+\layout Standard
+
+The INTEGER type is a signed natural number type without any restrictions
+ on its size.
+ If the automatic checking on INTEGER value bounds are necessary, the subtype
+ constraints must be used.
+\layout LyX-Code
+
+SimpleInteger ::= INTEGER
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- An integer with a very limited range
+\layout LyX-Code
+
+SmallPositiveInt ::= INTEGER (0..127)
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- Integer, negative
+\layout LyX-Code
+
+NegativeInt ::= INTEGER (MIN..0)
+\layout Subsection
+
+The ENUMERATED type
+\layout Standard
+
+The ENUMERATED type is semantically equivalent to the INTEGER type with
+ some integer values explicitly named.
+\layout LyX-Code
+
+FruitId ::= ENUMERATED { apple(1), orange(2) }
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- The numbers in braces are optional,
+\layout LyX-Code
+
+-- the enumeration can be performed
+\layout LyX-Code
+
+-- automatically by the compiler
+\layout LyX-Code
+
+ComputerOSType ::= ENUMERATED {
+\layout LyX-Code
+
+    FreeBSD,          -- acquires value 0
+\layout LyX-Code
+
+    Windows,          -- acquires value 1
+\layout LyX-Code
+
+    Solaris(5),       -- remains 5
+\layout LyX-Code
+
+    Linux,            -- becomes 6
+\layout LyX-Code
+
+    MacOS             -- becomes 7
+\layout LyX-Code
+
+}
+\layout Subsection
+
+The OCTET STRING type
+\layout Standard
+
+This type models the sequence of 8-bit bytes.
+ This may be used to transmit some opaque data or data serialized by other
+ types of encoders (i.e.
+ video file, photo picture, etc).
+\layout Subsection
+
+The OBJECT IDENTIFIER type
+\layout Standard
+
+The OBJECT IDENTIFIER is used to represent the unique identifier of any
+ object, starting from the very root of the registration tree.
+ If your organization needs to uniquely identify something (a router, a
+ room, a person, a standard, or whatever), you are encouraged to get your
+ own identification subtree at 
+\begin_inset LatexCommand \htmlurl{http://www.iana.org/protocols/forms.htm}
+
+\end_inset 
+
+.
+\layout Standard
+
+For example, the very first ASN.1 module in this Chapter (RectangleModule1)
+ has the following OBJECT IDENTIFIER: 1 3 6 1 4 1 9363 1 5 2 1 1.
+\layout LyX-Code
+
+ExampleOID ::= OBJECT IDENTIFIER
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+rectangleModule1-oid ExampleOID
+\layout LyX-Code
+
+  ::= { 1 3 6 1 4 1 9363 1 5 2 1 1 }
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- An identifier of the Internet.
+\layout LyX-Code
+
+internet-id OBJECT IDENTIFIER
+\layout LyX-Code
+
+  ::= { iso(1) identified-organization(3)
+\layout LyX-Code
+
+        dod(6) internet(1) }
+\layout Standard
+
+As you see, names are optional.
+\layout Subsection
+
+The RELATIVE-OID type
+\layout Standard
+
+The RELATIVE-OID type has the semantics of a subtree of an OBJECT IDENTIFIER.
+ There may be no need to repeat the whole sequence of numbers from the root
+ of the registration tree where the only thing of interest is some of the
+ tree's subsequence.
+\layout LyX-Code
+
+this-document RELATIVE-OID ::= { docs(2) usage(1) }
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+this-example RELATIVE-OID ::= {
+\layout LyX-Code
+
+    this-document assorted-examples(0) this-example(1) }
+\layout Section
+
+Some of the ASN.1 String Types
+\layout Subsection
+
+The IA5String type
+\layout Standard
+
+This is essentially the ASCII, with 128 character codes available (7 lower
+ bits of an 8-bit byte).
+\layout Subsection
+
+The UTF8String type
+\layout Standard
+
+This is the character string which encodes the full Unicode range (4 bytes)
+ using multibyte character sequences.
+\layout Subsection
+
+The NumericString type
+\layout Standard
+
+This type represents the character string with the alphabet consisting of
+ numbers (
+\begin_inset Quotes sld
+\end_inset 
+
+0
+\begin_inset Quotes srd
+\end_inset 
+
+ to 
+\begin_inset Quotes sld
+\end_inset 
+
+9
+\begin_inset Quotes srd
+\end_inset 
+
+) and a space.
+\layout Subsection
+
+The PrintableString type
+\layout Standard
+
+The character string with the following alphabet: space, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+'
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+ (single quote), 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+(
+\series default 
+
+\begin_inset Quotes sld
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+)
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
++
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+,
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+ (comma), 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+-
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+.
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+/
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, digits (
+\begin_inset Quotes sld
+\end_inset 
+
+0
+\begin_inset Quotes srd
+\end_inset 
+
+ to 
+\begin_inset Quotes sld
+\end_inset 
+
+9
+\begin_inset Quotes srd
+\end_inset 
+
+), 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+:
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+=
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+?
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, upper-case and lower-case letters (
+\begin_inset Quotes sld
+\end_inset 
+
+A
+\begin_inset Quotes srd
+\end_inset 
+
+ to 
+\begin_inset Quotes sld
+\end_inset 
+
+Z
+\begin_inset Quotes srd
+\end_inset 
+
+ and 
+\begin_inset Quotes sld
+\end_inset 
+
+a
+\begin_inset Quotes srd
+\end_inset 
+
+ to 
+\begin_inset Quotes sld
+\end_inset 
+
+z
+\begin_inset Quotes srd
+\end_inset 
+
+).
+\layout Subsection
+
+The VisibleString type
+\layout Standard
+
+The character string with the alphabet which is more or less a subset of
+ ASCII between the space and the 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+~
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+ symbol (tilde).
+\layout Standard
+
+Alternatively, the alphabet may be described as the PrintableString alphabet
+ presented earlier, plus the following characters: 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+!
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+
+\begin_inset Quotes srd
+\end_inset 
+
+
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+#
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+$
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+%
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+&
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+*
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+;
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+<
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+>
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+[
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+
+\backslash 
+
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+]
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+^
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+_
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+`
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+ (single left quote), 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+{
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+|
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+}
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+, 
+\begin_inset Quotes sld
+\end_inset 
+
+
+\series bold 
+~
+\series default 
+
+\begin_inset Quotes srd
+\end_inset 
+
+.
+\layout Section
+
+ASN.1 Constructed Types
+\layout Subsection
+
+The SEQUENCE type
+\layout Standard
+
+This is an ordered collection of other simple or constructed types.
+ The SEQUENCE constructed type resembles the C 
+\begin_inset Quotes sld
+\end_inset 
+
+struct
+\begin_inset Quotes srd
+\end_inset 
+
+ statement.
+\layout LyX-Code
+
+Address ::= SEQUENCE {
+\layout LyX-Code
+
+    -- The apartment number may be omitted
+\layout LyX-Code
+
+    apartmentNumber      NumericString OPTIONAL,
+\layout LyX-Code
+
+    streetName           PrintableString,
+\layout LyX-Code
+
+    cityName             PrintableString,
+\layout LyX-Code
+
+    stateName            PrintableString,
+\layout LyX-Code
+
+    -- This one may be omitted too
+\layout LyX-Code
+
+    zipNo                NumericString OPTIONAL
+\layout LyX-Code
+
+}
+\layout Subsection
+
+The SET type
+\layout Standard
+
+This is a collection of other simple or constructed types.
+ Ordering is not important.
+ The data may arrive in the order which is different from the order of specifica
+tion.
+ Data is encoded in the order not necessarily corresponding to the order
+ of specification.
+\layout Subsection
+
+The CHOICE type
+\layout Standard
+
+This type is just a choice between the subtypes specified in it.
+ The CHOICE type contains at most one of the subtypes specified, and it
+ is always implicitly known which choice is being decoded or encoded.
+ This one resembles the C 
+\begin_inset Quotes sld
+\end_inset 
+
+union
+\begin_inset Quotes srd
+\end_inset 
+
+ statement.
+\layout Standard
+
+The following type defines a response code, which may be either an integer
+ code or a boolean 
+\begin_inset Quotes sld
+\end_inset 
+
+true
+\begin_inset Quotes srd
+\end_inset 
+
+/
+\begin_inset Quotes srd
+\end_inset 
+
+false
+\begin_inset Quotes srd
+\end_inset 
+
+ code.
+\layout LyX-Code
+
+ResponseCode ::= CHOICE {
+\layout LyX-Code
+
+    intCode    INTEGER,
+\layout LyX-Code
+
+    boolCode   BOOLEAN
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+\layout Subsection
+
+The SEQUENCE OF type
+\layout Standard
+
+This one is the list (array) of simple or constructed types:
+\layout LyX-Code
+
+-- Example 1
+\layout LyX-Code
+
+ManyIntegers ::= SEQUENCE OF INTEGER
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- Example 2
+\layout LyX-Code
+
+ManyRectangles ::= SEQUENCE OF Rectangle
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- More complex example:
+\layout LyX-Code
+
+-- an array of structures defined in place.
+\layout LyX-Code
+
+ManyCircles ::= SEQUENCE OF SEQUENCE {
+\layout LyX-Code
+
+                            radius INTEGER
+\layout LyX-Code
+
+                            }
+\layout Subsection
+
+The SET OF type
+\layout Standard
+
+The SET OF type models the bag of structures.
+ It resembles the SEQUENCE OF type, but the order is not important: i.e.
+ the elements may arrive in the order which is not necessarily the same
+ as the in-memory order on the remote machines.
+\layout LyX-Code
+
+-- A set of structures defined elsewhere
+\layout LyX-Code
+
+SetOfApples :: SET OF Apple
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+-- Set of integers encoding the kind of a fruit
+\layout LyX-Code
+
+FruitBag ::= SET OF ENUMERATED { apple, orange }
 \layout Bibliography
 \bibitem [ASN1C]{ASN1C}
 
