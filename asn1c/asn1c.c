@@ -19,7 +19,7 @@
 
 #include <asn1c_compat.h>	/* Portable basename(3) and dirname(3) */
 
-#include "decoder.h"		/* -t: decode TL[V?] string */
+#include "tlv_decoder.h"	/* -t: decode TL[V?] string */
 
 static void usage(char *av0);	/* Print the Usage screen and exit(EX_USAGE) */
 
