@@ -12,7 +12,8 @@
  */
 enum asn1f_flags {
 	A1F_NOFLAGS,
-	A1F_DEBUG		= 0x01,	/* Print debugging output */
+	A1F_DEBUG			= 0x01,	/* Print debugging output */
+	A1F_EXTENDED_SizeConstraint	= 0x02,	/* Enable constraint gen code */
 };
 
 /*
