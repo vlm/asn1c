@@ -1078,9 +1078,9 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, void *chunk_buf, size_t
 			*buf++ = ch;
 			continue;
 		}
-		*buf = 0;	/* JIC */
+		chunk_size = (p - (char *)chunk_buf);
 		/* Processing stalled: need more data */
-		return (p - (char *)chunk_buf);
+		break;
 	}
 
 	st->size = buf - st->buf;
@@ -1120,7 +1120,9 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		*sptr = (void *)st;
 		if(!st) goto sta_failed;
 		st_allocated = 1;
-	} else  st_allocated = 0;
+	} else {
+		st_allocated = 0;
+	}
 	if(!st->buf) {
 		/* This is separate from above section */
 		st->buf = (uint8_t *)CALLOC(1, 1);
