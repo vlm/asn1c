@@ -11,7 +11,12 @@ else
 TESTS = check-*.c
 endif
 
-EXTRA_DIST = $(check_SCRIPTS) check-*.c*
+EXTRA_DIST = $(check_SCRIPTS) check-*.c* data-*/*.*
 
 clean:
-	for t in test-*; do rm -rf $$t; done
+	rm -rf test-*
+
+SUFFIXES = .xbr .ber
+
+.xbr.ber:
+	../enber $< > $@

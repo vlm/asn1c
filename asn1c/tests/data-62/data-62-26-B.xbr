@@ -1,0 +1,11 @@
+<I T="[UNIVERSAL 16]" TL="2" V="Indefinite">
+	<C T="[1]" TL="2" V="14">
+		<I T="[PRIVATE 1]" TL="2">
+			<C T="[123]" TL="3" V="5">
+				<C T="[23]" TL="2" V="3">
+					<P T="[UNIVERSAL 19]" TL="2" V="1">z</P>
+				</C>
+			</C>
+		</I>
+	</C>
+</I>
