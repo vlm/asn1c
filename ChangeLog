@@ -1,5 +1,5 @@
 
-0.9.8:	2004-Oct-26
+0.9.8:	2004-Oct-30
 
 	* [NEW PLATFORM] Compiled and tested on Linux @ alpha64 (LP64).
 	  Some code needed to be fixed regarding int-long conversions
@@ -13,6 +13,8 @@
 	* Empty SEQUENCE and SET clauses are now allowed.
 	* Removed confusion between &xNN; and &#xNN; in enber and unber.
 	* ber_dec_rval_t renamed into asn_dec_rval_t: more generality.
+	* Removed order dependency in DEFAULT references to ENUMERATED
+	  identifiers (./tests/68-*-OK.asn1).
 
 0.9.7.1:	2004-Oct-12
 

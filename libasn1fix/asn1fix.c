@@ -262,6 +262,12 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 			continue;
 
 		/*
+		 * Dereference DEFAULT values.
+		 */
+		ret = asn1f_recurse_expr(arg, asn1f_fix_dereference_defaults);
+		RET2RVAL(ret, rvalue);
+
+		/*
 		 * Check semantic validity of constraints.
 		 */
 		ret = asn1f_recurse_expr(arg, asn1f_check_constraints);
