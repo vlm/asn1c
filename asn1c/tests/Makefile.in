@@ -160,12 +160,15 @@ check_SCRIPTS = check-assembly.sh
 TESTS_ENVIRONMENT = CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
 @CPLUSPLUS_FOUND_FALSE@TESTS = check-*.c
 @CPLUSPLUS_FOUND_TRUE@TESTS = check-*.c check-*.cc	## Include C++ test filed (.cc)
-EXTRA_DIST = $(check_SCRIPTS) check-*.c* data-*/*.*
-SUFFIXES = .xbr .ber
+EXTRA_DIST = \
+	$(check_SCRIPTS)	\
+	check-*.c*		\
+	data-*/Makefile		\
+	data-*/*.*
+
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .xbr .ber
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -400,9 +403,6 @@ uninstall-am: uninstall-info-am
 
 clean:
 	rm -rf test-*
-
-.xbr.ber:
-	../enber $< > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
