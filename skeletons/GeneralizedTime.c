@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#define	__USE_BSD	/* To enable tm_gmtoff in glibc */
 #include <GeneralizedTime.h>
 #include <time.h>
 #include <errno.h>
@@ -135,19 +136,21 @@ GeneralizedTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
  * Where to look for offset from GMT, Phase I.
  * Several platforms are known.
  */
-#if defined(__FreeBSD__) || (defined(__GNUC__) && defined(__APPLE_CC__))
-#undef	HAVE_TM_ZONE
-#define	HAVE_TM_ZONE
-#endif	/* BSDs */
+#if defined(__FreeBSD__)				\
+	|| (defined(__GNUC__) && defined(__APPLE_CC__))	\
+	|| (defined __GLIBC__ && __GLIBC__ >= 2)
+#undef	HAVE_TM_GMTOFF
+#define	HAVE_TM_GMTOFF
+#endif	/* BSDs and newer glibc */
 
 /*
  * Where to look for offset from GMT, Phase II.
  */
-#ifdef	HAVE_TM_ZONE
+#ifdef	HAVE_TM_GMTOFF
 #define	GMTOFF(tm)	((tm).tm_gmtoff)
-#else	/* HAVE_TM_ZONE */
+#else	/* HAVE_TM_GMTOFF */
 #define	GMTOFF(tm)	(-timezone)
-#endif	/* HAVE_TM_ZONE */
+#endif	/* HAVE_TM_GMTOFF */
 
 time_t
 asn_GT2time(const GeneralizedTime_t *st, struct tm *ret_tm, int as_gmt) {
@@ -396,8 +399,12 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 		tm_s = *tm;
 		tm_s.tm_sec -= gmtoff;
 		timegm(&tm_s);	/* Fix the time */
-		assert(!GMTOFF(tm_s));
 		tm = &tm_s;
+#ifdef	HAVE_TM_GMTOFF
+		assert(!GMTOFF(tm_s));	/* Will fix itself */
+#else
+		gmtoff = 0;		/* Intervention required */
+#endif
 	}
 
 	size = snprintf(buf, buf_size, "%04d%02d%02d%02d%02d%02d",
