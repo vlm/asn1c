@@ -1321,7 +1321,7 @@ Value:
 		$$->value.choice_identifier.identifier = $1;
 		$$->value.choice_identifier.value = $3;
 	}
-	| '{' { printf("push\n"); asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
 		$$ = asn1p_value_frombuf($3.buf, $3.len, 0);
 		checkmem($$);
 		$$->type = ATV_UNPARSED;

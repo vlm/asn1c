@@ -282,7 +282,7 @@ main(int ac, char **av) {
 		exit(EX_SOFTWARE);
 	}
 
-	return 2;
+	return 0;
 }
 
 /*
