@@ -1,12 +1,16 @@
 WHAT TO READ?
 =============
 
-For quick installation tips read INSTALL.
+If you haven't installed the asn1c yet, read the INSTALL file for
+a short installation guide.
 
 For the list of asn1c command line options, see `asn1c -h` or `man asn1c`.
 
 For more complete documentation on this compiler and on using the
-results of compilation please look into ./doc directory.
+results of compilation phase, please look into asn1c-usage.{pdf,html}.
+If you are building the compiler from the sources, these documents reside
+in the ./doc directory, otherwise they lie nearby the README file you're
+reading right now.
 
 Please also read the FAQ file.
 
@@ -19,18 +23,19 @@ QUICK START
 After building [and installing] the compiler (see INSTALL), you may use
 the asn1c command to compile the ASN.1 specification:
 
-	asn1c <module.asn1>
+	asn1c <module.asn1>			# Compile module
 
 If several specifications contain interdependencies, all of them must be
 specified:
 
-	asn1c <module1.asn1> <module2.asn1> ...
+	asn1c <module1.asn1> <module2.asn1> ...	# Compile interdependent modules
 
-The ./examples directory contains several ASN.1 modules and a script to
-extract ASN.1 modules from RFC documents. Refer to the README file in that
-directory. To compile X.509 PKI module:
+If you are building the asn1c from the sources, the ./examples directory
+contains several ASN.1 modules and a script to extract the ASN.1 modules
+from RFC documents. Refer to the README file in that directory.
+To compile the X.509 PKI module:
 
-	./asn1c/asn1c -P ./examples/rfc3280-*.asn1
+	./asn1c/asn1c -P ./examples/rfc3280-*.asn1	# Compile-n-print
 
 In this example, -P option is used to instruct the compiler to print the
 compiled text on the standard output instead of creating multiple .c
@@ -44,7 +49,7 @@ to dump out the parsed (and fixed) ASN.1 specification as it was
 whether a particular syntactic construction is properly supported
 by the compiler.
 
-	asn1c -EF <module-to-test.asn1>
+	asn1c -EF <module-to-test.asn1>		# Check semantic validity
 
 
 MODEL OF OPERATION

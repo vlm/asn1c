@@ -13,7 +13,9 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c check-REAL.c check-UTCTime.c check-ber_tlv_tag.c check-length.c
+
+
+SOURCES = asn1c-suid-helper.c
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -36,12 +38,9 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = @host@
-check_PROGRAMS = check-ber_tlv_tag$(EXEEXT) check-length$(EXEEXT) \
-	check-OIDs$(EXEEXT) check-GeneralizedTime$(EXEEXT) \
-	check-UTCTime$(EXEEXT) check-INTEGER$(EXEEXT) \
-	check-REAL$(EXEEXT)
-subdir = skeletons/tests
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+noinst_PROGRAMS = asn1c-suid-helper$(EXEEXT)
+subdir = asn1c/webcgi
+DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -49,44 +48,15 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-check_GeneralizedTime_SOURCES = check-GeneralizedTime.c
-check_GeneralizedTime_OBJECTS = check-GeneralizedTime.$(OBJEXT)
-check_GeneralizedTime_LDADD = $(LDADD)
-check_GeneralizedTime_DEPENDENCIES =
-check_INTEGER_SOURCES = check-INTEGER.c
-check_INTEGER_OBJECTS = check-INTEGER.$(OBJEXT)
-check_INTEGER_LDADD = $(LDADD)
-check_INTEGER_DEPENDENCIES =
-check_OIDs_SOURCES = check-OIDs.c
-check_OIDs_OBJECTS = check-OIDs.$(OBJEXT)
-check_OIDs_LDADD = $(LDADD)
-check_OIDs_DEPENDENCIES =
-check_REAL_SOURCES = check-REAL.c
-check_REAL_OBJECTS = check-REAL.$(OBJEXT)
-check_REAL_LDADD = $(LDADD)
-check_REAL_DEPENDENCIES =
-check_UTCTime_SOURCES = check-UTCTime.c
-check_UTCTime_OBJECTS = check-UTCTime.$(OBJEXT)
-check_UTCTime_LDADD = $(LDADD)
-check_UTCTime_DEPENDENCIES =
-check_ber_tlv_tag_SOURCES = check-ber_tlv_tag.c
-check_ber_tlv_tag_OBJECTS = check-ber_tlv_tag.$(OBJEXT)
-check_ber_tlv_tag_LDADD = $(LDADD)
-check_ber_tlv_tag_DEPENDENCIES =
-check_length_SOURCES = check-length.c
-check_length_OBJECTS = check-length.$(OBJEXT)
-check_length_LDADD = $(LDADD)
-check_length_DEPENDENCIES =
+PROGRAMS = $(noinst_PROGRAMS)
+asn1c_suid_helper_SOURCES = asn1c-suid-helper.c
+asn1c_suid_helper_OBJECTS = asn1c-suid-helper.$(OBJEXT)
+asn1c_suid_helper_LDADD = $(LDADD)
+SCRIPTS = $(noinst_SCRIPTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/check-GeneralizedTime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/check-INTEGER.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/check-OIDs.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/check-REAL.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/check-UTCTime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/check-ber_tlv_tag.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/check-length.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/asn1c-suid-helper.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
@@ -95,12 +65,8 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-REAL.c check-UTCTime.c check-ber_tlv_tag.c \
-	check-length.c
-DIST_SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-REAL.c check-UTCTime.c check-ber_tlv_tag.c \
-	check-length.c
+SOURCES = asn1c-suid-helper.c
+DIST_SOURCES = asn1c-suid-helper.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -213,9 +179,7 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-AM_CPPFLAGS = -I$(top_srcdir)/skeletons
-LDADD = -lm
-TESTS = $(check_PROGRAMS)
+noinst_SCRIPTS = asn1c.cgi
 all: all-am
 
 .SUFFIXES:
@@ -229,9 +193,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  skeletons/tests/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  asn1c/webcgi/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  skeletons/tests/Makefile
+	  $(AUTOMAKE) --gnu  asn1c/webcgi/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -250,33 +214,15 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-clean-checkPROGRAMS:
-	@list='$(check_PROGRAMS)'; for p in $$list; do \
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; for p in $$list; do \
 	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
-check-GeneralizedTime$(EXEEXT): $(check_GeneralizedTime_OBJECTS) $(check_GeneralizedTime_DEPENDENCIES) 
-	@rm -f check-GeneralizedTime$(EXEEXT)
-	$(LINK) $(check_GeneralizedTime_LDFLAGS) $(check_GeneralizedTime_OBJECTS) $(check_GeneralizedTime_LDADD) $(LIBS)
-check-INTEGER$(EXEEXT): $(check_INTEGER_OBJECTS) $(check_INTEGER_DEPENDENCIES) 
-	@rm -f check-INTEGER$(EXEEXT)
-	$(LINK) $(check_INTEGER_LDFLAGS) $(check_INTEGER_OBJECTS) $(check_INTEGER_LDADD) $(LIBS)
-check-OIDs$(EXEEXT): $(check_OIDs_OBJECTS) $(check_OIDs_DEPENDENCIES) 
-	@rm -f check-OIDs$(EXEEXT)
-	$(LINK) $(check_OIDs_LDFLAGS) $(check_OIDs_OBJECTS) $(check_OIDs_LDADD) $(LIBS)
-check-REAL$(EXEEXT): $(check_REAL_OBJECTS) $(check_REAL_DEPENDENCIES) 
-	@rm -f check-REAL$(EXEEXT)
-	$(LINK) $(check_REAL_LDFLAGS) $(check_REAL_OBJECTS) $(check_REAL_LDADD) $(LIBS)
-check-UTCTime$(EXEEXT): $(check_UTCTime_OBJECTS) $(check_UTCTime_DEPENDENCIES) 
-	@rm -f check-UTCTime$(EXEEXT)
-	$(LINK) $(check_UTCTime_LDFLAGS) $(check_UTCTime_OBJECTS) $(check_UTCTime_LDADD) $(LIBS)
-check-ber_tlv_tag$(EXEEXT): $(check_ber_tlv_tag_OBJECTS) $(check_ber_tlv_tag_DEPENDENCIES) 
-	@rm -f check-ber_tlv_tag$(EXEEXT)
-	$(LINK) $(check_ber_tlv_tag_LDFLAGS) $(check_ber_tlv_tag_OBJECTS) $(check_ber_tlv_tag_LDADD) $(LIBS)
-check-length$(EXEEXT): $(check_length_OBJECTS) $(check_length_DEPENDENCIES) 
-	@rm -f check-length$(EXEEXT)
-	$(LINK) $(check_length_LDFLAGS) $(check_length_OBJECTS) $(check_length_LDADD) $(LIBS)
+asn1c-suid-helper$(EXEEXT): $(asn1c_suid_helper_OBJECTS) $(asn1c_suid_helper_DEPENDENCIES) 
+	@rm -f asn1c-suid-helper$(EXEEXT)
+	$(LINK) $(asn1c_suid_helper_LDFLAGS) $(asn1c_suid_helper_OBJECTS) $(asn1c_suid_helper_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -284,13 +230,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-GeneralizedTime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-INTEGER.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-OIDs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-REAL.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-UTCTime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-ber_tlv_tag.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-length.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c-suid-helper.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -374,79 +314,6 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
-check-TESTS: $(TESTS)
-	@failed=0; all=0; xfail=0; xpass=0; skip=0; \
-	srcdir=$(srcdir); export srcdir; \
-	list='$(TESTS)'; \
-	if test -n "$$list"; then \
-	  for tst in $$list; do \
-	    if test -f ./$$tst; then dir=./; \
-	    elif test -f $$tst; then dir=; \
-	    else dir="$(srcdir)/"; fi; \
-	    if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
-	      all=`expr $$all + 1`; \
-	      case " $(XFAIL_TESTS) " in \
-	      *" $$tst "*) \
-		xpass=`expr $$xpass + 1`; \
-		failed=`expr $$failed + 1`; \
-		echo "XPASS: $$tst"; \
-	      ;; \
-	      *) \
-		echo "PASS: $$tst"; \
-	      ;; \
-	      esac; \
-	    elif test $$? -ne 77; then \
-	      all=`expr $$all + 1`; \
-	      case " $(XFAIL_TESTS) " in \
-	      *" $$tst "*) \
-		xfail=`expr $$xfail + 1`; \
-		echo "XFAIL: $$tst"; \
-	      ;; \
-	      *) \
-		failed=`expr $$failed + 1`; \
-		echo "FAIL: $$tst"; \
-	      ;; \
-	      esac; \
-	    else \
-	      skip=`expr $$skip + 1`; \
-	      echo "SKIP: $$tst"; \
-	    fi; \
-	  done; \
-	  if test "$$failed" -eq 0; then \
-	    if test "$$xfail" -eq 0; then \
-	      banner="All $$all tests passed"; \
-	    else \
-	      banner="All $$all tests behaved as expected ($$xfail expected failures)"; \
-	    fi; \
-	  else \
-	    if test "$$xpass" -eq 0; then \
-	      banner="$$failed of $$all tests failed"; \
-	    else \
-	      banner="$$failed of $$all tests did not behave as expected ($$xpass unexpected passes)"; \
-	    fi; \
-	  fi; \
-	  dashes="$$banner"; \
-	  skipped=""; \
-	  if test "$$skip" -ne 0; then \
-	    skipped="($$skip tests were not run)"; \
-	    test `echo "$$skipped" | wc -c` -gt `echo "$$banner" | wc -c` && \
-	      dashes="$$skipped"; \
-	  fi; \
-	  report=""; \
-	  if test "$$failed" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then \
-	    report="Please report to $(PACKAGE_BUGREPORT)"; \
-	    test `echo "$$report" | wc -c` -gt `echo "$$banner" | wc -c` && \
-	      dashes="$$report"; \
-	  fi; \
-	  dashes=`echo "$$dashes" | sed s/./=/g`; \
-	  echo "$$dashes"; \
-	  echo "$$banner"; \
-	  test -n "$$skipped" && echo "$$skipped"; \
-	  test -n "$$report" && echo "$$report"; \
-	  echo "$$dashes"; \
-	  test "$$failed" -eq 0; \
-	else :; fi
-
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
@@ -475,10 +342,8 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
-	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile
+all-am: Makefile $(PROGRAMS) $(SCRIPTS)
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -506,7 +371,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
+clean-am: clean-generic clean-libtool clean-noinstPROGRAMS \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -555,17 +420,17 @@ ps-am:
 
 uninstall-am: uninstall-info-am
 
-.PHONY: CTAGS GTAGS all all-am check check-TESTS check-am clean \
-	clean-checkPROGRAMS clean-generic clean-libtool ctags \
-	distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-exec install-exec-am install-info \
-	install-info-am install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-info-am
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
+	clean-libtool clean-noinstPROGRAMS ctags distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-info-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

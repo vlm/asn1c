@@ -143,7 +143,6 @@ PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
-PATH = @PATH@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
@@ -196,7 +195,7 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-SUBDIRS = . tests
+SUBDIRS = . tests webcgi
 AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS = \
 	-I${top_srcdir}/libasn1compiler	\

@@ -3,9 +3,7 @@ AC_INIT(libasn1parser/asn1p_y.y)
 AC_CANONICAL_BUILD
 AC_CANONICAL_TARGET
 AC_PREREQ(2.53)
-AM_INIT_AUTOMAKE(asn1c, 0.9.5)
-
-AC_SUBST(PATH)
+AM_INIT_AUTOMAKE(asn1c, 0.9.6)
 
 AM_MAINTAINER_MODE
 
@@ -91,6 +89,7 @@ skeletons/tests/Makefile	\
 libasn1compiler/Makefile	\
 libasn1parser/Makefile		\
 libasn1print/Makefile		\
+asn1c/webcgi/Makefile		\
 asn1c/tests/Makefile		\
 libasn1fix/Makefile		\
 skeletons/Makefile		\
@@ -98,6 +97,7 @@ examples/Makefile		\
 tests/Makefile			\
 asn1c/Makefile			\
 doc/Makefile			\
+asn1c.spec			\
 Makefile			\
 )
 
