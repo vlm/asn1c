@@ -1,15 +1,13 @@
 
-/*** <<< DEPS [T] >>> ***/
+/*** <<< INCLUDES [T] >>> ***/
 
-/* Dependencies for T */
 #include <INTEGER.h>
-
-/* Dependencies for collection */
 #include <T2.h>
 #include <asn_SEQUENCE_OF.h>
-
-	#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [T] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T;
 
@@ -59,8 +57,6 @@ typedef struct T {
 		&asn1_DEF_collection_specs	/* Additional specs */
 	};
 	
-#include <constr_SEQUENCE.h>
-
 static asn1_SEQUENCE_element_t asn1_DEF_T_elements[] = {
 	{ offsetof(struct T, int), 0,
 		(ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
@@ -109,13 +105,13 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 };
 
 
-/*** <<< DEPS [T2] >>> ***/
+/*** <<< INCLUDES [T2] >>> ***/
 
-/* Dependencies for T2 */
 #include <BOOLEAN.h>
 #include <UTF8String.h>
-
 #include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [T2] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_T2;
 
@@ -131,8 +127,6 @@ typedef struct T2 {
 } T2_t;
 
 /*** <<< STAT-DEFS [T2] >>> ***/
-
-#include <constr_SEQUENCE.h>
 
 static asn1_SEQUENCE_element_t asn1_DEF_T2_elements[] = {
 	{ offsetof(struct T2, flag), 0,
