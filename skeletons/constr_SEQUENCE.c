@@ -588,6 +588,199 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	return erval;
 }
 
+#undef	ADVANCE	/* Just in case */
+#undef	XER_ADVANCE
+#define	XER_ADVANCE(num_bytes)	do {			\
+		size_t num = num_bytes;			\
+		buf_ptr = ((char *)buf_ptr) + num;	\
+		size -= num;				\
+		consumed_myself += num;			\
+	} while(0)
+
+asn_dec_rval_t
+SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	void **struct_ptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+	/*
+	 * Bring closer parts of structure description.
+	 */
+	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elements = td->elements;
+	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
+
+	/*
+	 * Parts of the structure being constructed.
+	 */
+	void *st = *struct_ptr;	/* Target structure. */
+	asn_struct_ctx_t *ctx;	/* Decoder context */
+
+	asn_dec_rval_t rval;
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int xer_state;			/* XER low level parsing context */
+	int edx;			/* Element index */
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(st == 0) {
+		st = *struct_ptr = CALLOC(1, specs->struct_size);
+		if(st == 0) RETURN(RC_FAIL);
+	}
+
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+
+
+	/*
+	 * Phases of XER/XML processing:
+	 * Phase 0: Check that the opening tag matches our expectations.
+	 * Phase 1: Processing body and reacting on closing tag.
+	 * Phase 2: Processing inner type.
+	 */
+
+	if(ctx->phase > 2) RETURN(RC_FAIL);
+	for(xer_state = ctx->left, edx = ctx->step;;) {
+		pxer_chunk_type_e ch_type;	/* XER chunk type */
+		ssize_t ch_size;		/* Chunk size */
+		xer_check_tag_e tcv;		/* Tag check value */
+		asn_TYPE_member_t *elm;
+
+		/*
+		 * Go inside the member.
+		 */
+		if(ctx->phase == 2) {
+			asn_dec_rval_t tmprval;
+			elm = &td->elements[edx];
+			void *memb_ptr;		/* Pointer to the member */
+			void **memb_ptr2;	/* Pointer to that pointer */
+
+			if(elm->flags & ATF_POINTER) {
+				/* Member is a pointer to another structure */
+				memb_ptr2 = (void **)((char *)st
+					+ elm->memb_offset);
+			} else {
+				memb_ptr = (char *)st + elm->memb_offset;
+				memb_ptr2 = &memb_ptr;
+			}
+
+			tmprval = elm->type->xer_decoder(opt_codec_ctx,
+					elm->type, memb_ptr2, elm->name,
+					buf_ptr, size);
+			XER_ADVANCE(tmprval.consumed);
+			if(tmprval.code != RC_OK)
+				RETURN(tmprval.code);
+			ctx->phase = 1;
+			ctx->left = xer_state = 0;	/* New, clean state */
+			ctx->step = ++edx;
+			/* Fall through */
+		}
+
+		/*
+		 * Get the next part of the XML stream.
+		 */
+		ch_size = xer_next_token(&xer_state, buf_ptr, size, &ch_type);
+		switch(ch_size) {
+		case -1: RETURN(RC_FAIL);
+		case 0:
+			ctx->left = xer_state;
+			RETURN(RC_WMORE);
+		default:
+			switch(ch_type) {
+			case PXER_COMMENT:	/* Got XML comment */
+			case PXER_TEXT:		/* Ignore free-standing text */
+				XER_ADVANCE(ch_size);	/* Skip silently */
+				continue;
+			case PXER_TAG:
+				break;	/* Check the rest down there */
+			}
+		}
+
+		tcv = xer_check_tag(buf_ptr, size, xml_tag);
+		switch(tcv) {
+		case XCT_CLOSING:
+			if(ctx->phase == 0) break;
+			XER_ADVANCE(ch_size);
+			ctx->phase = 0;
+			/* Fall through */
+		case XCT_BOTH:
+			if(ctx->phase == 0) {
+				if(edx >= td->elements_count
+				   ||
+				   /* Explicit OPTIONAL specs reaches the end */
+				    (edx + elements[edx].optional
+					== td->elements_count)
+				   ||
+				   /* All extensions are optional */
+				   (IN_EXTENSION_GROUP(specs, edx)
+					&& specs->ext_before
+						> td->elements_count)
+				) {
+					XER_ADVANCE(ch_size);
+					ctx->phase = 3;	/* Phase out */
+					continue;
+				} else {
+					ASN_DEBUG("Premature end of XER SEQUENCE");
+					RETURN(RC_FAIL);
+				}
+			}
+			/* Fall through */
+		case XCT_OPENING:
+			if(ctx->phase == 0) {
+				XER_ADVANCE(ch_size);
+				ctx->phase = 1;	/* Processing body phase */
+				continue;
+			}
+		case XCT_UNEXPECTED: {
+			int edx_end;
+			int n;
+
+			if(!ctx->phase
+			|| edx >= td->elements_count
+			|| !IN_EXTENSION_GROUP(specs, td->elements_count))
+				break;	/* Really unexpected */
+
+			/*
+			 * Search which member corresponds to this tag.
+			 */
+			edx_end = edx + elements[edx].optional + 1;
+			for(n = edx; n < edx_end; n++) {
+				elm = &td->elements[n];
+				tcv = xer_check_tag(buf_ptr, size, elm->name);
+				switch(tcv) {
+				case XCT_BOTH:
+				case XCT_OPENING:
+					/*
+					 * Process this member.
+					 */
+					ctx->step = edx = n;
+					ctx->phase = 2;
+					break;
+				case XCT_UNEXPECTED:
+					continue;	/* or continue; */
+				case XCT_CLOSING:
+				default:
+					n = edx_end;
+					break;	/* Phase out */
+				}
+				break;
+			}
+			if(n == edx_end) break;
+			continue;
+		  }
+		default:
+			break;
+		}
+
+		ASN_DEBUG("Unexpected XML tag in SEQUENCE");
+		break;
+	}
+
+	ctx->phase = 3;	/* Phase out, just in case */
+	RETURN(RC_FAIL);
+}
+
 asn_enc_rval_t
 SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
