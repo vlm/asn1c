@@ -76,7 +76,7 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 } while(0)
 
 /* MKID() without checking for reserved keywords */
-#define	MKID_nr(id)	asn1c_make_identifier(0, (id), 0)
+#define	MKID_nc(id)	asn1c_make_identifier(0, (id), 0)
 #define	MKID(id)	asn1c_make_identifier(AMI_CHECK_RESERVED, (id), 0)
 
 int
@@ -160,7 +160,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		REDIR(OT_STAT_DEFS);
 
 		OUT("static asn_INTEGER_enum_map_t asn_MAP_%s_value2enum[] = {\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byValue);
 		for(eidx = 0; eidx < el_count; eidx++) {
 			v2e[eidx].idx = eidx;
@@ -174,7 +174,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		OUT("};\n");
 
 		OUT("static unsigned int asn_MAP_%s_enum2value[] = {\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byName);
 		for(eidx = 0; eidx < el_count; eidx++) {
 			OUT("\t%d%s\t/* %s(%" PRIdASN ") */\n",
@@ -187,14 +187,14 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		OUT("};\n");
 
 		OUT("static asn_INTEGER_specifics_t asn_DEF_%s_specs = {\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 		INDENT(+1);
 		OUT("asn_MAP_%s_value2enum,\t"
 			"/* \"tag\" => N; sorted by tag */\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 		OUT("asn_MAP_%s_enum2value,\t"
 			"/* N => \"tag\"; sorted by N */\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 		OUT("%d,\t/* Number of elements in the maps */\n",
 			el_count);
 		OUT("%d,\t/* Enumeration is %sextensible */\n",
@@ -277,7 +277,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	if(expr_elements_count(arg, expr)) {
 		int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 
-		p = MKID_nr(expr->Identifier);
+		p = MKID_nc(expr->Identifier);
 		OUT("static asn_TYPE_member_t asn_MBR_%s[] = {\n", p);
 
 		elements = 0;
@@ -308,12 +308,12 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
 	OUT("static asn_SEQUENCE_specifics_t asn_DEF_%s_specs = {\n",
-		MKID_nr(expr->Identifier));
+		MKID_nc(expr->Identifier));
 	p = MKID(expr->Identifier);
 	INDENTED(
 		OUT("sizeof(struct %s),\n", p);
 		OUT("offsetof(struct %s, _asn_ctx),\n", p);
-		OUT("asn_DEF_%s_tag2el,\n", MKID_nr(expr->Identifier));
+		OUT("asn_DEF_%s_tag2el,\n", MKID_nc(expr->Identifier));
 		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
 		OUT("%d,\t/* Start extensions */\n",
 			ext_start);
@@ -356,7 +356,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 		INDENTED(
 			out_identifiers_chain(arg, 0);
 			OUT("_PR_");
-			id = MKID_nr(v->Identifier);
+			id = MKID_nc(v->Identifier);
 			OUT("%s,\t/* Member %s is present */\n",
 				id, id)
 		);
@@ -384,7 +384,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	}
 
 	INDENTED(
-		id = MKID_nr(expr->Identifier);
+		id = MKID_nc(expr->Identifier);
 		OUT("\n");
 		OUT("/* Presence bitmask: ASN_SET_ISPRESENT(p%s, %s_PR_x) */\n",
 			id, id);
@@ -445,7 +445,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 		int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 
 		OUT("static asn_TYPE_member_t asn_MBR_%s[] = {\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 	
 		elements = 0;
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
@@ -480,7 +480,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	 * Emit a map of mandatory elements.
 	 */
 	OUT("static uint8_t asn_DEF_%s_mmap",
-		MKID_nr(expr->Identifier));
+		MKID_nc(expr->Identifier));
 	p = MKID(expr->Identifier);
 	OUT("[(%d + (8 * sizeof(unsigned int)) - 1) / 8]", elements);
 	OUT(" = {\n", p);
@@ -511,13 +511,13 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	OUT("};\n");
 
 	OUT("static asn_SET_specifics_t asn_DEF_%s_specs = {\n",
-		MKID_nr(expr->Identifier));
+		MKID_nc(expr->Identifier));
 	p = MKID(expr->Identifier);
 	INDENTED(
 		OUT("sizeof(struct %s),\n", p);
 		OUT("offsetof(struct %s, _asn_ctx),\n", p);
 		OUT("offsetof(struct %s, _presence_map),\n", p);
-		p = MKID_nr(expr->Identifier);
+		p = MKID_nc(expr->Identifier);
 		OUT("asn_DEF_%s_tag2el,\n", p);
 		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
 		if(tag2el_cxer)
@@ -648,7 +648,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	tv_mode = emit_tags_vectors(arg, expr, &tags_count, &all_tags_count);
 
 	OUT("static asn_SET_OF_specifics_t asn_DEF_%s_specs = {\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 	p = MKID(expr->Identifier);
 	INDENTED(
 		OUT("sizeof(struct %s),\n", p);
@@ -692,7 +692,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 			}
 			out_identifiers_chain(arg, 0);
 			OUT("_PR_");
-			id = MKID_nr(v->Identifier);
+			id = MKID_nc(v->Identifier);
 			OUT("%s,\n", id, id);
 		}
 	);
@@ -794,14 +794,14 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
 	OUT("static asn_CHOICE_specifics_t asn_DEF_%s_specs = {\n",
-		MKID_nr(expr->Identifier));
+		MKID_nc(expr->Identifier));
 	p = MKID(expr->Identifier);
 	INDENTED(
 		OUT("sizeof(struct %s),\n", p);
 		OUT("offsetof(struct %s, _asn_ctx),\n", p);
 		OUT("offsetof(struct %s, present),\n", p);
 		OUT("sizeof(((struct %s *)0)->present),\n", p);
-		OUT("asn_DEF_%s_tag2el,\n", MKID_nr(expr->Identifier));
+		OUT("asn_DEF_%s_tag2el,\n", MKID_nc(expr->Identifier));
 		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
 		OUT("%d\t/* Whether extensible */\n",
 			check_if_extensible(expr));
@@ -944,7 +944,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
 		OUT("/* This type is equivalent to %s */\n", type_name);
 		if(HIDE_INNER_DEFS) OUT("/* ");
-		OUT("#define\tasn_DEF_%s\t", MKID_nr(expr->Identifier));
+		OUT("#define\tasn_DEF_%s\t", MKID_nc(expr->Identifier));
 		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
 		OUT("asn_DEF_%s", type_name);
 		if(HIDE_INNER_DEFS)
@@ -1122,7 +1122,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 	REDIR(OT_FUNC_DECLS);
 
-	p = MKID_nr(expr->Identifier);
+	p = MKID_nc(expr->Identifier);
 	if(HIDE_INNER_DEFS) {
 		OUT("/* extern asn_TYPE_descriptor_t asn_DEF_%s;"
 			"\t// (Use -fall-defs-global to expose) */\n", p);
@@ -1374,7 +1374,7 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *
 	asn1p_expr_t *expr = arg->expr;
 
 	OUT("static asn_TYPE_tag2member_t asn_DEF_%s_tag2el%s[] = {\n",
-		MKID_nr(expr->Identifier), opt_modifier?opt_modifier:"");
+		MKID_nc(expr->Identifier), opt_modifier?opt_modifier:"");
 	if(tag2el_count) {
 		int i;
 		for(i = 0; i < tag2el_count; i++) {
@@ -1441,7 +1441,7 @@ emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_ta
 
 #define	EMIT_TAGS_TABLE(name, tags, tags_count)	do {			\
 		OUT("static ber_tlv_tag_t asn_DEF_%s%s_tags[] = {\n",	\
-			MKID_nr(expr->Identifier), name);		\
+			MKID_nc(expr->Identifier), name);		\
 		INDENT(+1);						\
 		/* Print the array of collected tags */			\
 		for(i = 0; i < tags_count; i++) {			\
@@ -1573,10 +1573,10 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		&& expr->_anonymous_type
 			&& !strcmp(expr->Identifier, "Member")) {
 		OUT("(void *)&asn_DEF_%s_Member,\n",
-			MKID_nr(arg->expr->Identifier));
+			MKID_nc(arg->expr->Identifier));
 	} else if(complex_contents) {
 		OUT("(void *)&asn_DEF_%s,\n",
-			MKID_nr(expr->Identifier));
+			MKID_nc(expr->Identifier));
 	} else {
 		OUT("(void *)&asn_DEF_%s,\n",
 			asn1c_type_name(arg, expr, TNF_SAFE));
@@ -1586,7 +1586,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		if(arg->flags & A1C_NO_CONSTRAINTS) {
 			OUT("0,\t/* No check because of -fno-constraints */\n");
 		} else {
-			char *id = MKID_nr(expr->Identifier);
+			char *id = MKID_nc(expr->Identifier);
 			if(expr->_anonymous_type
 					&& !strcmp(expr->Identifier, "Member"))
 				id = asn1c_type_name(arg, expr, TNF_SAFE);
@@ -1617,7 +1617,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member"))
 		p = asn1c_type_name(arg, expr, TNF_SAFE);
 	else
-		p = MKID_nr(expr->Identifier);
+		p = MKID_nc(expr->Identifier);
 	OUT("static int\n");
 	OUT("memb_%s_%d_constraint(asn_TYPE_descriptor_t *td, const void *sptr,\n", p, global_memb_unique);
 	INDENT(+1);
@@ -1647,7 +1647,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	if(HIDE_INNER_DEFS)
 		OUT("static /* Use -fall-defs-global to expose */\n");
 	OUT("asn_TYPE_descriptor_t asn_DEF_%s = {\n",
-		MKID_nr(expr->Identifier));
+		MKID_nc(expr->Identifier));
 	p = MKID(expr->Identifier);
 	INDENT(+1);
 		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
@@ -1671,7 +1671,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			OUT("0,\t/* Use generic outmost tag fetcher */\n");
 		}
 
-		p = MKID_nr(expr->Identifier);
+		p = MKID_nc(expr->Identifier);
 		if(tags_count) {
 			OUT("asn_DEF_%s_tags,\n", p);
 			OUT("sizeof(asn_DEF_%s_tags)\n", p);
@@ -1800,7 +1800,7 @@ out_identifiers_chain(arg_t *arg, int check_reserved_keywords) {
 	if(check_reserved_keywords)
 		id = MKID(expr->Identifier);
 	else
-		id = MKID_nr(expr->Identifier);
+		id = MKID_nc(expr->Identifier);
 	OUT("%s", id);
 
 	return 0;
