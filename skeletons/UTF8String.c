@@ -35,7 +35,7 @@ asn_TYPE_descriptor_t asn_DEF_UTF8String = {
 
 /*
  * This is the table of length expectations.
- * The second half of this table is only applicable to the long sequentes.
+ * The second half of this table is only applicable to the long sequences.
  */
 static int UTF8String_ht[2][16] = {
 	{ /* 0x0 ... 0x7 */
