@@ -42,7 +42,8 @@ BEGIN
 
 	ExtensibleSet ::= SET {
 		string	UTF8String OPTIONAL,
-		...
+		...,
+		enum	ENUMERATED { b, a }
 	}
 
 	ExtensibleSequence ::= SEQUENCE {
