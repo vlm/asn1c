@@ -32,7 +32,7 @@ asn1f_fix_dereference_values(arg_t *arg) {
 			r_value = -1;
 		}
 
-		if(expr->value->type != ATV_INTEGER) {
+		if(0 && expr->value->type != ATV_INTEGER) {
 			FATAL(
 				"INTEGER value %s at line %d: "
 				"Incompatible value specified: %s",
