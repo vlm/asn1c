@@ -102,8 +102,7 @@ asn1print_oid(asn1p_oid_t *oid, enum asn1print_flags flags) {
 		if(oid->arcs[ac].name) {
 			printf("%s", oid->arcs[ac].name);
 			if(oid->arcs[ac].number >= 0) {
-				printf("(%lld)",
-					(long long)oid->arcs[ac].number);
+				printf("(%" PRIdASN ")", oid->arcs[ac].number);
 			}
 			accum += strlen(oid->arcs[ac].name);
 		} else {
@@ -151,7 +150,7 @@ asn1print_tag(asn1p_expr_t *tc, enum asn1print_flags flags) {
 	case TC_CONTEXT_SPECIFIC:
 		break;
 	}
-	printf("%lld]", (long long)tag->tag_value);
+	printf("%" PRIdASN "]", tag->tag_value);
 
 	switch(tag->tag_mode) {
 	case TM_DEFAULT: break;
@@ -178,7 +177,7 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 		printf("%f", val->value.v_double);
 		return 0;
 	case ATV_INTEGER:
-		printf("%lld", (long long)val->value.v_integer);
+		printf("%" PRIdASN, val->value.v_integer);
 		return 0;
 	case ATV_MIN: printf("MIN"); return 0;
 	case ATV_MAX: printf("MAX"); return 0;
@@ -367,7 +366,7 @@ asn1print_crange_value(asn1cnst_edge_t *edge, int as_char) {
 		if(as_char) {
 			printf("\"%c\"", (unsigned char)edge->value);
 		} else {
-			printf("%lld", (long long)edge->value);
+			printf("%" PRIdASN, edge->value);
 		}
 	}
 	return 0;
