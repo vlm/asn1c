@@ -30,16 +30,16 @@ asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN = {
  */
 ber_dec_rval_t
 BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **bool_structure, void *buf_ptr, size_t size,
+		void **bool_value, void *buf_ptr, size_t size,
 		int tag_mode) {
-	BOOLEAN_t *st = (BOOLEAN_t *)*bool_structure;
+	BOOLEAN_t *st = (BOOLEAN_t *)*bool_value;
 	ber_dec_rval_t rval;
 	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
 	ber_tlv_len_t lidx;
 
 	if(st == NULL) {
-		(void *)st = *bool_structure = CALLOC(1, sizeof(*st));
+		(void *)st = *bool_value = CALLOC(1, sizeof(*st));
 		if(st == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -71,22 +71,22 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Compute boolean value.
 	 */
-	for(st->value = 0, lidx = 0;
-		(lidx < length) && st->value == 0; lidx++) {
+	for(*st = 0, lidx = 0;
+		(lidx < length) && *st == 0; lidx++) {
 		/*
 		 * Very simple approach: read bytes until the end or
 		 * value is already TRUE.
 		 * BOOLEAN is not supposed to contain meaningful data anyway.
 		 */
-		st->value |= ((uint8_t *)buf_ptr)[lidx];
+		*st |= ((uint8_t *)buf_ptr)[lidx];
 	}
 
 	rval.code = RC_OK;
 	rval.consumed += length;
 
-	ASN_DEBUG("Took %ld/%ld bytes to encode %s, value=%ld",
+	ASN_DEBUG("Took %ld/%ld bytes to encode %s, value=%d",
 		(long)rval.consumed, (long)length,
-		td->name, (long)st->value);
+		td->name, *st);
 	
 	return rval;
 }
@@ -109,7 +109,7 @@ BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 		uint8_t bool_value;
 		ssize_t ret;
 
-		bool_value = st->value?0xff:0; /* 0xff mandated by DER */
+		bool_value = *st?0xff:0; /* 0xff mandated by DER */
 		ret = cb(&bool_value, 1, app_key);
 		if(ret == -1) {
 			erval.encoded = -1;
@@ -133,7 +133,7 @@ BOOLEAN_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	(void)ilevel;	/* Unused argument */
 
 	if(st) {
-		if(st->value)
+		if(*st)
 			return cb("TRUE", 4, app_key);
 		else
 			return cb("FALSE", 5, app_key);
