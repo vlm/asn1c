@@ -34,7 +34,7 @@ check(int type, char *tagname, char *xmlbuf, char *verify) {
 	rc = decoder(0, td, (void **)&st, tagname, xmlbuf, xmllen);
 	printf("[%s] => [%s]:%d vs [%s]:%d, code %d\n",
 		xmlbuf,
-		st ? st->buf : "", st ? st->size : 0,
+		st ? (const char *)st->buf : "", st ? st->size : 0,
 		verify ? verify : "", verlen, rc.code);
 
 	if(verify) {
@@ -67,6 +67,8 @@ main() {
 	check(HEX, "z", "<z><!-- -->>40</z>", 0);
 	check(HEX, "z", "<z><!-- <some <sometag>-->40</z>", "@");
 	check(HEX, "z", "<z><!-- <some <sometag-->>40</z>", 0);
+
+	check(HEX, "z", "ignored<z>40</z>stuff", "@");
 
 	check(HEX, "tag", "<tag>4</tag>", "@");
 

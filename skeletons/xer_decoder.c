@@ -220,11 +220,15 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 				continue;
 			case PXER_TEXT:
 				if(ctx->phase == 0) {
-					/* Unexpected data */
-					/* TODO: ignore whitespace? */
-					RETURN(RC_FAIL);
+					/*
+					 * We have to ignore whitespace here,
+					 * but in order to be forward compatible
+					 * with EXTENDED-XER (EMBED-VALUES, #25)
+					 * any text is just ignored here.
+					 */
+				} else {
+					XER_GOT_BODY(buf_ptr, ch_size);
 				}
-				XER_GOT_BODY(buf_ptr, ch_size);
 				ADVANCE(ch_size);
 				continue;
 			case PXER_TAG:
