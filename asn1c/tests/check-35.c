@@ -120,7 +120,7 @@ check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 
 	tp = memset(tp, 0, sizeof(*tp));
 
-	fprintf(stderr, "Buf %p (%d)\n", buf, size);
+	fprintf(stderr, "Buf %p (%d)\n", buf, (int)size);
 	rval = ber_decode(&asn1_DEF_T, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
@@ -143,13 +143,14 @@ buf_fill(const void *buffer, size_t size, void *app_key) {
 	(void)app_key;
 
 	if(buf_pos + size > buf_size) {
-		fprintf(stderr, "%d + %d > %d\n", buf_pos, (int)size, buf_size);
+		fprintf(stderr, "%d + %d > %d\n",
+			(int)buf_pos, (int)size, (int)buf_size);
 		return -1;
 	}
 
 	memcpy(buf + buf_pos, buffer, size);
 	buf_pos += size;
-	fprintf(stderr, "   written %d (%d)\n", (int)size, buf_pos);
+	fprintf(stderr, "   written %d (%d)\n", (int)size, (int)buf_pos);
 
 	return 0;
 }
@@ -212,7 +213,7 @@ partial_read(uint8_t *buf, size_t size) {
 			size_t size3 = size - size1 - size2;
 
 			fprintf(stderr, "\n%d:{%d, %d, %d}...\n",
-				size, size1, size2, size3);
+				(int)size, (int)size1, (int)size2, (int)size3);
 
 			memset(buf1, 0, size);
 			memset(buf2, 0, size);
@@ -223,7 +224,7 @@ partial_read(uint8_t *buf, size_t size) {
 
 			tp = memset(&t, 0, sizeof(t));
 
-			fprintf(stderr, "=> Chunk 1 (%d):\n", size1);
+			fprintf(stderr, "=> Chunk 1 (%d):\n", (int)size1);
 			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
 				buf1, size1);
 			assert(rval.code == RC_WMORE);
@@ -235,7 +236,7 @@ partial_read(uint8_t *buf, size_t size) {
 				size2 += leftover;
 			}
 
-			fprintf(stderr, "=> Chunk 2 (%d):\n", size2);
+			fprintf(stderr, "=> Chunk 2 (%d):\n", (int)size2);
 			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
 				buf2, size2);
 			assert(rval.code == RC_WMORE);
@@ -247,7 +248,7 @@ partial_read(uint8_t *buf, size_t size) {
 				size3 += leftover;
 			}
 
-			fprintf(stderr, "=> Chunk 3 (%d):\n", size3);
+			fprintf(stderr, "=> Chunk 3 (%d):\n", (int)size3);
 			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
 				buf3, size3);
 			assert(rval.code == RC_OK);

@@ -70,7 +70,7 @@ uint8_t buf1_reconstr[] = {
 };
 
 int buf_pos;
-int bytes_compare(const void *bufferp, size_t size, void *key) {
+static int bytes_compare(const void *bufferp, size_t size, void *key) {
 	const uint8_t *buffer = bufferp;
 	assert(buf_pos + size <= sizeof(buf1_reconstr));
 

@@ -1,4 +1,6 @@
 
+AM_CFLAGS = @ADD_CFLAGS@
+
 check_SCRIPTS = check-assembly.sh
 
 TESTS_ENVIRONMENT= CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
