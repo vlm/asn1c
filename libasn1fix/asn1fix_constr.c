@@ -68,8 +68,10 @@ asn1f_pull_components_of(arg_t *arg) {
 		 * Move all components of the cloned structure
 		 * into the current one.
 		 */
-		while((memb = TQ_REMOVE(&(coft->members), next)))
+		while((memb = TQ_REMOVE(&(coft->members), next))) {
 			TQ_ADD(&list, memb, next);
+			memb->parent_expr = expr;
+		}
 
 		asn1p_expr_free(coft);	/* Remove wrapper */
 	}
@@ -159,7 +161,7 @@ asn1f_fix_constr_ext(arg_t *arg) {
 				asn1p_expr_free(v);
 				r_value = -1;
 			} else {
-				TQ_ADD(&(expr->members), v, next);
+				asn1p_expr_add(expr, v);
 			}
 		} else {
 			r_value = -1;

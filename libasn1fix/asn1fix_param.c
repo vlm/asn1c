@@ -58,15 +58,23 @@ asn1f_fix_parametrized_assignment(arg_t *arg) {
 	return asn1f_parametrize(arg, expr, ptype);
 }
 
-#define	SUBSTITUTE(to, from)	do {		\
-		asn1p_expr_t tmp;		\
-		tmp = *(to);			\
-		*(to) = *(from);		\
-		*(from) = tmp;			\
-		(to)->next = tmp.next;		\
-		memset(&((from)->next), 0,	\
-			sizeof((from)->next));	\
-		asn1p_expr_free(from);		\
+#define	SUBSTITUTE(to, from)	do {				\
+		asn1p_expr_t tmp, *__v;				\
+		tmp = *(to);					\
+		*(to) = *(from);				\
+		TQ_MOVE(&(to)->members, &(from)->members);	\
+		*(from) = tmp;					\
+		(to)->next = tmp.next;				\
+		(to)->parent_expr = tmp.parent_expr;		\
+		memset(&((from)->next), 0,			\
+			sizeof((from)->next));			\
+		memset(&((from)->members), 0,			\
+			sizeof((from)->members));		\
+		asn1p_expr_free(from);				\
+		TQ_FOR(__v, &((to)->members), next) {		\
+			assert(__v->parent_expr == (from));	\
+			__v->parent_expr = (to);		\
+		}						\
 	} while(0)
 
 static int

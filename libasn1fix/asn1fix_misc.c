@@ -171,6 +171,7 @@ asn1f_recurse_expr(arg_t *arg, int (*callback)(arg_t *arg)) {
 	 */
 	TQ_FOR(arg->expr, &(expr->members), next) {
 		assert(arg->expr->expr_type != A1TC_INVALID);
+		assert(arg->expr->parent_expr == expr);
 		ret = asn1f_recurse_expr(arg, callback);
 		RET2RVAL(ret, rvalue);
 	}

@@ -82,11 +82,21 @@ asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
 			asn1p_expr_free(clone);
 			return NULL;
 		}
-		TQ_ADD(&(clone->members), cmemb, next);
+		asn1p_expr_add(clone, cmemb);
 	}
 
 	return clone;
 }
+
+/*
+ * Add expression as a member of another.
+ */
+void
+asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what) {
+	TQ_ADD(&(to->members), what, next);
+	what->parent_expr = to;
+}
+
 
 /*
  * Destruct the types collection structure.
@@ -95,6 +105,16 @@ void
 asn1p_expr_free(asn1p_expr_t *expr) {
 	if(expr) {
 		asn1p_expr_t *tm;
+
+		/* Remove all children */
+		while((tm = TQ_REMOVE(&(expr->members), next))) {
+			if(tm->parent_expr != expr)
+				printf("<%s:%p !-> %s:%p>\n",
+					tm->Identifier, tm->parent_expr,
+					expr->Identifier, expr);
+			assert(tm->parent_expr == expr);
+			asn1p_expr_free(tm);
+		}
 
 		if(expr->Identifier)
 			free(expr->Identifier);
@@ -110,11 +130,6 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 			asn1p_value_free(expr->value);
 		if(expr->with_syntax)
 			asn1p_wsyntx_free(expr->with_syntax);
-
-		/* Remove all children */
-		while((tm = TQ_REMOVE(&(expr->members), next))) {
-			asn1p_expr_free(tm);
-		}
 
 		if(expr->data && expr->data_free)
 			expr->data_free(expr->data);

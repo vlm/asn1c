@@ -195,13 +195,15 @@ typedef struct asn1p_expr_s {
 	 */
 	TQ_ENTRY(struct asn1p_expr_s)	next;
 
+	struct asn1p_expr_s *parent_expr;	/* optional */
+
+	struct asn1p_module_s *module;	/* Defined in module */
+
 	/*
 	 * Line number where this structure is defined in the original
 	 * grammar source.
 	 */
 	int _lineno;
-
-	struct asn1p_module_s *module;	/* Defined in module */
 
 	/*
 	 * Marks are used for various purposes.
@@ -228,6 +230,7 @@ typedef struct asn1p_expr_s {
  */
 asn1p_expr_t *asn1p_expr_new(int _lineno);
 asn1p_expr_t *asn1p_expr_clone(asn1p_expr_t *, int skip_extensions);
+void asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what);
 void asn1p_expr_free(asn1p_expr_t *expr);
 
 #endif	/* ASN1_PARSER_EXPR_H */
