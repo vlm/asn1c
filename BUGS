@@ -36,5 +36,3 @@ outside the signed long range.
 BIT STRING types. The problem is that it is unclear how to forward-compatibly
 handle the future extensions.
 
-
-
