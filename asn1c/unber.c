@@ -493,7 +493,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		printf("%" PRIdMAX, collector);
+		printf("%" PRIdASN, collector);
 		break;
 	case ASN_BASIC_OBJECT_IDENTIFIER:
 		if(vbuf) {
