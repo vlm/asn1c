@@ -17,10 +17,12 @@ $HashProgramPath = 'md5';			# Program to hash the input
 $DM = 0750;					# Directory mode for all mkdirs
 $MaxHistoryItems = 5;				# Number of items in History
 $DynamicHistory = 'yes';			# Full/Short history
-$safeFilename = '^[a-z0-9_-]+[.a-z0-9_-]*$';	# Safe filename
+$safeFilenameRE = '[a-zA-Z0-9_]+[.a-zA-Z0-9_-]{0,200}';  # Safe filename regex
+$safeTimeRE = '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}';
 $ASN1C_Page = 'http://lionet.info/asn1c';
 $HelpEmail = 'asn1c@lionet.info';
 $defaultUserEmail = 'your@email-for-reply';
+$DataERR = 65;					# EX_DATAERR from <sysexits.h>
 
 $warn = '<CENTER><FONT SIZE=+1><B>';
 $unwarn = '</B></FONT></CENTER>';
@@ -52,7 +54,7 @@ my $content = '';	# Default content is empty
 sub IssueRedirect() {
 	$redirect = "<META HTTP-EQUIV=\"Refresh\" "
 		. "CONTENT=\"5; URL=$myName\">";
-	$redirect_bottom = "<P><CENTER>This page will <A HREF=$ASN1C_Page/asn1c.cgi>disappear</A> in 5 seconds.</CENTER>"
+	$redirect_bottom = "<P><CENTER>This page will <A HREF=$myName>disappear</A> in 5 seconds.</CENTER>"
 }
 
 # If something goes wrong, this function is invoked to display the error message
@@ -64,8 +66,8 @@ sub bark($@) {
 
 # Make the directory name containing session files for the given Session ID
 sub makeSessionDirName($$) {
-	local $pfx = shift;	# Prefix is the name of the top-level directory
-	local $sid = shift;	# Session identifier (md5)
+	my $pfx = shift;	# Prefix is the name of the top-level directory
+	my $sid = shift;	# Session identifier (md5)
 	$pfx . '/sessions/' . $sid . '/';
 }
 
@@ -73,7 +75,7 @@ sub makeSessionDirName($$) {
 my $cachedTime;
 sub isoTime() {
 	return $cachedTime if $cachedTime;
-	local @tm = localtime(time);
+	my @tm = localtime(time);
 
 	$tm[5] += 1900;
 	$tm[4] += 1;
@@ -132,9 +134,9 @@ sub prepareChrootEnvironment() {
 }
 
 sub makeArchive($$) {
-	local $TMPDIR = shift;
-	local $sandbox = shift;
-	local $archName = $sandbox . '/+Archive.tgz';
+	my $TMPDIR = shift;
+	my $sandbox = shift;
+	my $archName = $sandbox . '/+Archive.tgz';
 
 	if(! -f $archName) {
 		system("cd $sandbox && "
@@ -174,7 +176,7 @@ if(defined($tmpEmail)) {
 	}
 	if($userEmail ne $previousEmail) {
 		# Refresh cookie contents.
-		local $ck = cookie(-name=>'userEmail',
+		my $ck = cookie(-name=>'userEmail',
 			-value=>$userEmail,
 			-path=>'/', -expires=>'+1d');
 		print "Set-Cookie: " . $ck . "\n";
@@ -191,7 +193,7 @@ if (defined($tmpHSParam)
  && $tmpHSParam ne $HistoryShow
  && $tmpHSParam =~ /^(full|short)$/) {
 	$HistoryShow = $tmpHSParam;
-	local $ck = cookie(-name=>'HistoryShow',
+	my $ck = cookie(-name=>'HistoryShow',
 		-value=>$HistoryShow,
 		-path=>'/', -expires=>'+1h');
 	print "Set-Cookie: " . $ck . "\n";
@@ -224,8 +226,7 @@ unless($session) {
 	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed);
 	my $ck = cookie(-name=>'SessionID', -value=>$session,
 			-path=>'/', -expires=>'+1y');
-	print header(-expires=>'-1y', -cookie=>$ck);
-	$HTTPHeaderGenerated = 1;
+	print "Set-Cookie: " . $ck . "\n";
 } else {
 	$session =~ s/[^a-f0-9]//ig;
 	bark("Nope, try again") if(length($session) != 32);	# cool hacker?
@@ -235,21 +236,28 @@ unless($session) {
 	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed)
 		unless(-d $sessionDir);
 
-	local $t = param('time');
-	local $file = param('file');
-	local $fetch = param('fetch');
-	local $show = param('show');
+	my $t = param('time');
+	my $file = param('file');
+	my $fetch = param('fetch');
+	my $show = param('show');
+	my $remove = param('remove');
+
 	unless(defined($t) && defined($file)
-		&& $t =~ /^[0-9TZ:+-]{14,}$/
-		&& $file =~ /$safeFilename/i) {
+		&& $t =~ /^${safeTimeRE}$/
+		&& $file =~ /^${safeFilenameRE}$/
+		&& ($fetch eq '' or $fetch =~ /^${safeFilenameRE}$/)
+	) {
+		$file = '';
 		$fetch = '';
 		$show = '';
+		$remove = '';
 	}
-	if($fetch =~ /$safeFilename/i || $show =~ /^(log|tgz)$/) {
-		local $sandbox = $sessionDir . '/' . $t . '--' . $file;
+	if($fetch ne '' or $show =~ /^(log|unber|tgz)$/ or $remove ne '') {
+		my $sandbox = $sessionDir . '/' . $t . '--' . $file;
+		my $targetFile = '';
 
 		if($show eq 'tgz') {
-			local $tarball = makeArchive($TMPDIR, $sandbox);
+			my $tarball = makeArchive($TMPDIR, $sandbox);
 			defined $tarball
 				or bark("Cannot create archive [$sandbox]");
 
@@ -257,20 +265,27 @@ unless($session) {
 			printf("Content-Encoding: gzip\n\n");
 			exec("cat $tarball");
 			exit(0);
-		}
-
-		if($show eq 'log') {
-			$sandbox .= '/+Compiler.Log';
+		} elsif($show eq 'unber') {
+			$targetFile = $sandbox . '/+UNBER';
+		} elsif($show eq 'log') {
+			$targetFile = $sandbox . '/+Compiler.Log';
+		} elsif($remove ne '') {
+			print "Status: 303 See Other\n";
+			print "Location: $myName\n";
+			print "\n";
+			rename($sandbox,
+				$sessionDir . '/' . $t . '-R--' . $file);
+			exit(0);
 		} else {
-			$sandbox .= '/' . $fetch;
+			$targetFile = $sandbox . '/' . $fetch;
 		}
-		open(I, "< " . $sandbox)
-			or bark("Invalid or outdated request: [$sandbox] [$show] $!");
-		printf "Content-Type: text/plain\n\n";
-		while(<I>) {
-			print;
+		if($targetFile ne '') {
+			open(I, '< ' . $targetFile)
+				or bark("Invalid or outdated request $!");
+			printf "Content-Type: text/plain\n\n";
+			print while <I>;
+			exit(0);
 		}
-		exit(0);
 	}
 }
 
@@ -279,7 +294,7 @@ unless($session) {
 #
 $transHelp = param('transHelp');
 if(defined($transHelp)
-&& $transHelp =~ /^([0-9]+)--([0-9TZ:+-]{14,})--([_.a-zA-Z0-9-]+)$/) {
+&& $transHelp =~ /^([0-9]+)--($safeTimeRE)--($safeFilenameRE)$/) {
 	open(S, "| sendmail -it")
 		or bark("Cannot perform help request, "
 			. "please email to the address below");
@@ -326,11 +341,10 @@ if($#gotNames != -1 && $gotNames[0] ne "") {
 	$gotFile = undef;
 }
 
+my $asnText = param('text');
+
 if($#gotNames == -1) {
-	my $text = param('text');
-	if($text) {
-		push(@gotNames, 'module.asn1');
-	}
+	push(@gotNames, 'module.asn1') if $asnText;
 }
 
 # Make safe filenames
@@ -339,7 +353,7 @@ foreach my $fname (@gotNames) {
 	s/.*\///g;	# Strip directory components
 	s/.*\\//g;	# Strip directory components (DOS version)
 	s/^[.-]/_/g;	# Don't allow filenames starting with a dot or a dash
-	s/[^._a-z0-9-]/_/gi;
+	s/[^._a-zA-Z0-9-]/_/g;
 	if(!length($_)) {
 		print LOG "\n";
 		bark("Too strange filename: \"$fname\"");
@@ -364,14 +378,16 @@ if($#gotSafeNames >= 0) {
 	open(O, '> ' . $sandbox . '/+safeNames');
 	print O join("\n", @gotSafeNames);
 	for(my $i = 0; $i <= $#gotSafeNames; $i++) {
-		local $name = $gotSafeNames[$i];
+		my $name = $gotSafeNames[$i];
 		open(O, '> ' . $sandbox . '/'. $name);
 		if($#gotFiles == -1) {
-			print O scalar(param('text'));
+			print O $asnText;	# param(text)
+			unlink $sessionDir . '/lastText';
+			symlink $transactionDir . '/' . $name,
+				$sessionDir . '/lastText';
 		} else {
-			while(<$gotFile>) {
-				print O;
-			}
+			# Save the uploaded data into specified file
+			print O while <$gotFile>;
 		}
 	}
 	close(O);
@@ -391,53 +407,107 @@ if($#gotSafeNames >= 0) {
 	$options .= " -fcompound-names" if(defined($optCN) && $optNT eq "on");
 	my $CompileASN = "$TMPDIR/bin/asn1c -v | sed -e 's/^/-- /'"
 			. " > $sandbox/+Compiler.Log 2>&1"
-		. "; $SUIDHelper $TMPDIR $inChDir $options @gotSafeNames "
+		. "; $SUIDHelper $TMPDIR $inChDir asn1c $options @gotSafeNames "
 			. " >> $sandbox/+Compiler.Log 2>&1"
-		. "; echo \$? > $sandbox/+ExitCode";
-	system($CompileASN);
-	bark("Failed to initiate compilation process: $!")
-		if(!-r $sandbox . '/+ExitCode');
-	makeArchive($TMPDIR, $sandbox);
+		. "; ec=\$?; echo \$ec > $sandbox/+ExitCode"
+		. "; exit \$ec";
+
+	my $ec = (256 * $DataERR);	# Simulate EX_DATAERR
+	my $fType = param('fileType');
+
+	# Compile as ASN.1 text
+	if($fType ne 'ber') {
+		$ec = system($CompileASN);
+		bark("Failed to initiate compilation process: $!")
+			if(!-r $sandbox . '/+ExitCode');
+	}
+
+	if($ec == (256 * $DataERR) and $fType ne 'asn') {
+		# Unrecognized ASN.1 module format.
+		# Try out BER decoding.
+		my $uec = system("$SUIDHelper $TMPDIR $inChDir unber @gotSafeNames > $TMPDIR/$inChDir/+UNBER.tmp 2>&1");
+		if(($uec == 0 or $fType eq 'ber')
+		and open(U, "> $TMPDIR/$inChDir/+UNBER")) {
+			my $fnames = escapeHTML(join(", ", @gotNames));
+			open(T, "< $TMPDIR/$inChDir/+UNBER.tmp");
+			print U "<!-- BER structure of $fnames; decoded by 'unber' (c) Lev Walkin <vlm\@lionet.info> -->\n";
+			print U while <T>;
+			close(U);
+			close(T);
+		}
+		unlink("$TMPDIR/$inChDir/+UNBER.tmp");
+	} else {
+		makeArchive($TMPDIR, $sandbox);
+	}
+	if($ENV{REQUEST_METHOD} ne 'GET') {
+		print "Status: 303 See Other\n";
+		print "Location: $myName\n";
+	}
 }
 
-#print join("<BR>\n", `env`);
+my $rtt = '';
+if(-f $sessionDir . '/lastText') {
+	if(param('resetText')) {
+		unlink $sessionDir . '/lastText';
+	} else {
+		$rtt = "<BR>&nbsp;&nbsp;[<A HREF=$myName?resetText=ok>refill with sample ASN.1 module text</A>]";
+	}
+}
 
 $form =
   "<FORM METHOD=POST ACTION=$myName ENCTYPE=\"multipart/form-data\">"
-. "Pick the ASN.1 module file:<BR>\n"
-. "<INPUT TYPE=file NAME=file SIZE=35><BR clear=all>\n"
-. "Or enter the ASN.1 module text into the following area:<BR>\n"
+. "<TABLE BORDER=0><TR><TD>&nbsp;</TD><TD COLSPAN=2>"
+. "Pick the ASN.1 module or binary encoded data file:\n"
+. "</TD></TR><TD VALIGN=top><FONT COLOR=green>&rArr;</FONT></TD><TD>"
+. "<SELECT NAME=fileType>"
+. "<OPTION VALUE=auto>Autodetect type of file ..."
+. "<OPTION VALUE=asn>ASN.1 text file ..."
+. "<OPTION VALUE=ber>BER/DER/CER data ..."
+. "</SELECT>"
+. "</TD><TD ALIGN=right>"
+. "<INPUT TYPE=file NAME=file SIZE=13>"
+. "</TD></TR><TR><TD>&nbsp;</TD><TD COLSPAN=2>"
+. "Or paste the ASN.1 text into the following area:$rtt\n"
+. "</TD></TR><TD VALIGN=top><FONT COLOR=green>&rArr;</FONT></TD><TD COLSPAN=2>"
 . "<TEXTAREA NAME=text ROWS=16 COLS=60>\n"
-. "/*\n"
-. " * This ASN.1 specification is given for illustrative purposes.\n"
-. " * Your own ASN.1 module must be properly formed too!\n"
-. " * (Make sure it has BEGIN/END statements, etc.)\n"
-. " */\n"
-. "TestModule  { iso org(3) dod(6) internet(1) private(4)\n"
-. "        1 spelio(9363) software(1) asn1c(5) webcgi(2) 1 }\n"
-. "DEFINITIONS ::= BEGIN\n"
-. "\n"
-. "  TestType ::= SEQUENCE {\n"
-. "      num [PRIVATE 1] INTEGER,\n"
-. "      str UTF8String (SIZE(1..20)) OPTIONAL\n"
-. "  }\n"
-. "\n"
-. "END\n"
-. "</TEXTAREA><BR>\n"
-. "<P>"
-. "<FONT SIZE=-1>"
+;
+if(open(T, '< ' . $sessionDir . '/lastText')) {
+	$form .= escapeHTML($_) while <T>;
+	close(T);
+} else {
+	$form .= ""
+	. "/*\n"
+	. " * This ASN.1 specification is given for illustrative purposes.\n"
+	. " * Your own ASN.1 module must be properly formed too!\n"
+	. " * (Make sure it has BEGIN/END statements, etc.)\n"
+	. " */\n"
+	. "TestModule DEFINITIONS ::= \n"
+	. "BEGIN\n"
+	. "\n"
+	. "  TestType ::= SEQUENCE {\n"
+	. "      num [PRIVATE 1] INTEGER,\n"
+	. "      str UTF8String (SIZE(1..20)) OPTIONAL\n"
+	. "  }\n"
+	. "\n"
+	. "END\n"
+	;
+}
+
+$form .= "</TEXTAREA>\n"
+. "</TD></TR><TD COLSPAN=3 ID=extrasmall"
+. " STYLE=\"border-left: dashed 1px rgb(200, 200, 200);\">\n"
 . "These options may be used to control the compiler's behavior:<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optDebugL> Debug lexer (<I>-Wdebug-lexer</I>)<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optE> Just parse and dump (do not compile) (<I>-E</I>)<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optEF> Parse, perform semantic checks, and dump (<I>-E -F</I>)<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optNT CHECKED=on> Employ native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>\n"
+. "<INPUT TYPE=checkbox NAME=optE> Just parse and dump (do not verify) (<I>-E</I>)<BR>\n"
+. "<INPUT TYPE=checkbox NAME=optEF> Parse, verify validity, and dump (<I>-E -F</I>)<BR>\n"
+. "<INPUT TYPE=checkbox NAME=optNT CHECKED=on> Use native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optCN> Prevent name clashes in compiled output (<I>-fcompound-names</I>)<BR>\n"
 . "<I>... the command line ASN.1 compiler, <A HREF=$ASN1C_Page>asn1c</A>, supports many other parameters</I>."
 . "</FONT>"
-. "<P>\n"
+. "</TD></TR><TD VALIGN=top><FONT COLOR=green>&rArr;</FONT></TD><TD COLSPAN=2>"
 . "<INPUT TYPE=submit VALUE=\"Proceed with ASN.1 compilation\">"
 . " (<A HREF=$ASN1C_Page>What is ASN.1?</A>)"
-. "</FORM>";
+. "</FORM></TD></TR></TABLE>";
 
 #
 # Gather previous transactions to generate the history page.
@@ -447,51 +517,70 @@ $form =
 #
 opendir(SD, $sessionDir) or bark("Cannot open sandbox: $!");
 my @transactions = sort { $b cmp $a }
-		(grep {/^[0-9TZ:+-]{14,}--[_.a-zA-Z0-9-]+$/}
+		(grep {/^${safeTimeRE}(-R)?--${safeFilenameRE}?$/}
 			readdir(SD));
 my $CountHistoryItems = 0;
+my $CountGlobalItems = 0;
+my $CountShownItems = 0;
 my $fullresp = param("fullresp");
 foreach my $trans (sort { $b cmp $a } @transactions) {
-	next unless($trans =~ /^([0-9TZ:+-]{14,})--([_.a-zA-Z0-9-]+)$/);
+	$CountGlobalItems++;
+	next unless($trans =~ /^($safeTimeRE)--($safeFilenameRE)$/);
+	$CountHistoryItems++;
+	next if($CountHistoryItems > $MaxHistoryItems
+		&& $HistoryShow ne 'full');
+	$CountShownItems++;
 
-	local ($t, $f) = ($1, $2);
-	local $origTime = $t;
+	my ($t, $f) = ($1, $2);
+	my $origTime = $t;
 	$t =~ s/T/ /;	# "1999-01-02T13:53:12" => "1999-01-02 13:53:12"
 
 	# Global transaction number
-	local $tNum = 1 + $#transactions - $CountHistoryItems;
+	my $tNum = 2 + $#transactions - $CountGlobalItems;
 
 	# Open the list of file names under which these files are known
 	# at the remote system.
 	open(I, '< ' . $sessionDir . '/' . $trans . '/+Names');
-	local @Names = <I>;
+	my @Names = <I>;
 
 	# Open the list of "safe" file names under which these files
 	# are known to our file system.
 	open(I, '< ' . $sessionDir . '/' . $trans . '/+safeNames');
-	local @safeNames = <I>;
+	my @safeNames = <I>;
 
 	# Create a list of real file names whith appropriate links to the
 	# "safe" file names for subsequent file fetching.
-	local @markedNames = ();
+	my @markedNames = ();
 	for(my $i = 0; $i <= $#Names; $i++) {
 		local $_ = "<A HREF=\"$myName?time="
 			. escapeHTML($origTime)
 			. "&file=$f"
-			. "&fetch=$safeNames[$i]\">$Names[$i]</A>";
+			. "&fetch=$safeNames[$i]\" ID=modrefs>"
+			. escapeHTML($Names[$i])
+			. "</A>";
 		@markedNames = (@markedNames, $_);
 	}
 
-	local $ec = '';
+	my $ec = '';
 	open(I, '< ' . $sessionDir . '/' . $trans . '/+ExitCode')
 		and chop($ec = <I>);
+
+	my $resCode = "log";
+	my $resText = "Show compiler log";
 
 	if($ec eq "0") {
 		$results = "<FONT COLOR=darkgreen><B>"
 			. "Compiled OK</B></FONT><BR>\n";
+	} elsif(-f $sessionDir . '/' . $trans . '/+UNBER') {
+		my $msg = 'This looks like a BER-encoded data';
+		$msg = "Treating input as BER-encoded data" if $ec eq '';
+		$results = "<FONT COLOR=darkgreen><B>$msg</B></FONT><BR>\n";
+		$resText = "Show BER structure";
+		$resCode = "unber";
+		$ec = 0;
 	} else {
 		my $why = $ec;
-		$why = "<NOBR>Invalid input file</NOBR>" if $ec == 65;
+		$why = "<NOBR>Broken input file</NOBR>" if $ec == $DataERR;
 		$results = "<FONT COLOR=darkred SIZE=-1>"
 			. "<NOBR>ASN.1 compiler error:</NOBR> "
 			. "$why</FONT><BR>\n";
@@ -503,20 +592,22 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 
 	$results .= "<NOBR>"
 		. ($allowFetchResults ? '1. ' : '')
-		. "<A HREF=\"$myName/$f-$tNum.Log?time="
+		. "<A HREF=\"$myName/$f-$tNum.$resCode?time="
 		. escapeHTML($origTime)
 		. "&file=$f"
-		. "&show=log\">"
-		. "Show compiler log</A></NOBR>";
+		. "&show=$resCode\">"
+		. "$resText</A>"
+		. ($ec ? ' &larr;' : '')
+		. "</NOBR>";
 	$results .= "<BR>\n<NOBR>"
 		. "2. <A HREF=\"$myName/$f-$tNum.tgz?time="
 		. escapeHTML($origTime)
 		. "&file=$f"
 		. "&show=tgz\">"
-		. "Fetch compiled C sources (.tgz)</A></NOBR>"
+		. "Fetch compiled C sources (.tgz)</A> &larr;</NOBR>"
 		if $allowFetchResults;
 	if($ec ne "0") {
-		local ($eml, @resp);
+		my ($eml, @resp);
 		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpResp')
 			and @resp = <H>;
 		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpReq')
@@ -524,13 +615,17 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		if($#resp >= 0) {
 			shift(@resp) while($resp[0] =~ /^$/);
 			if($fullresp eq $tNum) {
-				$results .= "<P><B>Analysis:</B><BLOCKQUOTE>";
-				$results .= join("<BR>", @resp);
+				my $r = join("<BR>", @resp);
+				$r =~ s/ /&nbsp;/g;
+				$results .= "<P><B>Analysis:</B>";
+				$results .= "<BR>(<A HREF=\"$myName\">Hide full explanation</A>)";
+				$results .= "<BLOCKQUOTE>";
+				$results .= $r;
 				$results .= "</BLOCKQUOTE>";
-				$results .= "(<A HREF=\"$myName\">Hide full text</A>)";
+				$results .= "(<A HREF=\"$myName\">Hide full explanation</A>)";
 			} else {
 				$results .= "<P><B>Analysis:</B> $resp[0]<BR>";
-				$results .= "(<A HREF=\"$myName?fullresp=$tNum\">Show full text</A>)";
+				$results .= "(<A HREF=\"$myName?fullresp=$tNum\">Show full explanation</A>)";
 			}
 		} elsif($eml) {
 			$results .= "<P><FONT COLOR=darkred Family=Serif><B>"
@@ -539,81 +634,77 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 				. "expect results in a few hours.<B></FONT>";
 		} else {
 			$results .= '<P>'
-			. "<FONT SIZE=-2>To get free help, leave a return address:</FONT><BR>"
+			. "To get free help, leave a return address:<BR>"
 			. "<INPUT TYPE=text NAME=email VALUE=\"$userEmail\"><BR>"
 			. "<INPUT TYPE=hidden NAME=transHelp VALUE=\"$tNum--$trans\">"
 			. '<INPUT TYPE=Submit VALUE="Help me fix it!">'
-			. '<!-- <A HREF="mailto:asn1c@lionet.info?Subject=asn1c compiler help: '
-			. "transaction $tNum ("
-			. join(', ', @safeNames)
-			. ") failed with code $ec"
-			. '&body=leave body empty or add more comments">Help me fix it!</A> (See bottom line) -->'
 			;
 			$atLeastOneError = 1;
 		}
 	}
 
 	$trColor = ' BGCOLOR=#f8f8f8';
-	$trColor = ' BGCOLOR=#d0ffe0' unless($CountHistoryItems);
-	$tNum = '<I>' . $tNum . '</I>' unless($CountHistoryItems);
+	$trColor = ' BGCOLOR=#d0ffe0' if $CountHistoryItems == 1;
 
 	$history .= "<TR $trColor>"
-		. "<TH ALIGN=center><FONT FACE=Helvetica SIZE=-2>$tNum</FONT></TH>"
-		. "<TD ALIGN=center><FONT SIZE=-1 FACE=Helvetica>"
+		. "<TH ALIGN=center ID=num>$tNum"
+		. "<BR><FONT FACE=Serif>[<A ID=modrefs "
+			. "HREF=\"$myName?time="
+			. escapeHTML($origTime)
+			. "&file=$f&remove=$tNum\""
+			. ">&times;</A>]</FONT>"
+		. "</TH>"
+		. "<TD ALIGN=center>"
 		. join(", ", @markedNames)
-		. "</FONT></TD>"
-		. "<FORM METHOD=POST ACTION=$myName><TD><FONT SIZE=-2 FACE=Helvetica>"
+		. "</TD></TD>"
+		. "<FORM METHOD=POST ACTION=$myName><TD ID=extrasmall>"
 			. $results
 			. "</TD></FORM>"
-		. "</TR>\n";
-	
-	last if(++$CountHistoryItems >= $MaxHistoryItems
-		&& $HistoryShow ne 'full');
+		. "</TR>"
+		;
 }
 
 if($DynamicHistory eq 'yes') {
 	# [Un-]limit number of history items
-	$HistoryItemsHidden = 1 + $#transactions - $CountHistoryItems;
+	$HistoryItemsHidden = $CountHistoryItems - $CountShownItems;
 	if($HistoryItemsHidden > 0) {
 		# Propose to expand the list.
-		local $item = 'item';
+		my $item = 'item';
 		$HistoryItemsHidden == 1 or $item = 'items';
 		$history .= "<TR BGCOLOR=white><TD COLSPAN=3 ALIGN=center>"
-			. "<FONT SIZE=-1><A HREF=\"$myName?history=full\">"
+			. "<A HREF=\"$myName?history=full\">"
 			. "Show full history</A> "
 			. "($HistoryItemsHidden hidden $item)"
-			. "</FONT></TD></TR>\n";
+			. "</TD></TR>\n";
 	} elsif($HistoryShow eq "full" && $#transactions >= $MaxHistoryItems) {
 		# Propose to shorten the list.
-		local $item = 'item';
+		my $item = 'item';
 		$MaxHistoryItems == 1 or $item = 'items';
 		$history .= "<TR BGCOLOR=white><TD COLSPAN=3 ALIGN=center>"
-			. "<FONT SIZE=-1><A HREF=\"$myName?history=short\">"
+			. "<A HREF=\"$myName?history=short\">"
 			. "Short history</A> ($MaxHistoryItems $item)"
-			. "</FONT></TD></TR>\n";
+			. "</TD></TR>\n";
 	}
 }
 
 if($history) {
 	$history = "<H3>History</H3>"
-	. "<TABLE CELLPADDING=0 CELLSPACING=0 BGCOLOR=#404040 WIDTH=100%><TR><TD>"
+	. "<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 BGCOLOR=#404040 WIDTH=100%><TR><TD>"
 	. "<TABLE BORDER=0 CELLPADDING=5 CELLSPACING=1 WIDTH=100%>\n"
 	. "<TR BGCOLOR=#e0f0d0>"
-	. "<TH WIDTH=1%><FONT COLOR=#404040 FACE=Courier>N</FONT></TH>"
-	. "<TH><FONT COLOR=#404040 FACE=Courier>Files processed</FONT></TH>"
-	. "<TH><FONT COLOR=#404040 FACE=Courier>Result</FONT></TH>"
+	. "<TH WIDTH=1%>N</TH><TH>Files processed</TH><TH>Result</TH>\n"
 	. "</TR>\n"
 	. $history . "</TABLE></TD></TR></TABLE><BR>\n";
 
 	if($atLeastOneError) {
-		$history .= "<FONT SIZE=-1 COLOR=#404040>"
-			. "<FONT COLOR=darkred><B>Bottom line:</B> ASN.1 compiler was unable to process some of the input files.</FONT><BR>"
+		$history .= "<FONT COLOR=#404040>"
+			. "<FONT COLOR=darkred><B>Bottom line:</B> ASN.1 compiler was unable to process some of the input.</FONT><BR>"
 			. "This is typically caused by syntax errors in the input files.\n"
 			. "Such errors are normally fixed by removing or adding a couple of characters in the ASN.1 module.<BR>\n"
 			. "<BR><B><FONT COLOR=darkred>Please consider clicking on the appropriate &quot;<I>Help me fix it!</I>&quot; button above.</FONT></B><BR>\n"
-			. "An email will be sent to a person who will gladly fix the ASN.1 module for you. (The typical turn-around time is less than 24 hours.)\n"
+			. "An email will be sent to a live person who will fix the ASN.1 module for you. (The typical turn-around time is less than 24 hours.)\n"
 			. "<BR>This is <B>free</B>, and highly advisable.\n"
-			. "Your request will help us make a better compiler!\n"
+			. "<BR>Your request will help us make a better compiler!\n"
 			. "<BR>Thank you."
 			. "</FONT>";
 	}
@@ -633,11 +724,10 @@ $content .=
 . "$form"
 . "</TD><TD WIDTH=60% HEIGHT=50% ALIGN=center VALIGN=$histValign>$history \n"
 . "</TD></TR><TR><TD HEIGHT=50% VALIGN=bottom>"
-	. "<FONT SIZE=-1><B>Privacy Note:</B> this page is tailored "
+	. "<B>Privacy Note:</B> this page is tailored "
 	. "to your browser using a cryprographically strong cookie. "
 	. "<I>Other users will see their own (different) data.</I> "
 	. "(<A HREF=asn1c-privacy.html>Read more...</A>)"
-	. "</FONT>"
 . "</TD></TR></TABLE>";
 
 $ua = $ENV{HTTP_USER_AGENT};
@@ -648,7 +738,7 @@ print LOG "\n";	# Finalize logging record
 
 PRINTOUT:
 
-print header(-expires=>'-1y') unless($HTTPHeaderGenerated);
+print header(-expires=>'-1y');
 
 # If environment has never been set up completely, remove it.
 if($EnvironmentSetOK != 1 && $TMPDIR ne "/") {
@@ -662,8 +752,35 @@ print<<EOM;
 <META NAME="Description" CONTENT="Free Online ASN.1 Compiler">
 $redirect
 <STYLE TYPE="text/css">
+	TH {
+		font-size: 11pt;
+		color: #404040;
+		font-family: monospace;
+	}
+	TH#num {
+		font-size: 8pt;
+		font-family: sans-serif;
+	}
+        TD {
+                font-size: 10pt;
+                font-family: sans-serif;
+	}
 	TD#inputbox {
 		border-right: dashed 1px rgb(200, 200, 200);
+	}
+	TD#extrasmall {
+                font-size: 8pt;
+                font-family: sans-serif;
+	}
+	A#modrefs {
+		color: #606060;
+		text-decoration: none;
+	}
+	A:hover#modrefs {
+		text-decoration: underline;
+	}
+	A:visited#modrefs {
+		color: #b06060;
 	}
 </STYLE>
 </HEAD>
