@@ -96,7 +96,7 @@ static int bytes_compare(const void *bufferp, size_t size, void *key) {
 static void
 check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	Forest_t t, *tp;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 
 	tp = memset(&t, 0, sizeof(t));
 
@@ -156,7 +156,7 @@ xer_cb(const void *buffer, size_t size, void *key) {
 static void
 check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
 	Forest_t *tp = 0;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	asn_enc_rval_t er;
 	int xer_sample_len = strlen(xer_sample);
 

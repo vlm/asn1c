@@ -54,7 +54,7 @@ uint8_t buf2[] = {
 static void
 check_1(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	asn_TYPE_descriptor_t *td = &asn_DEF_T1;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	T1_t t, *tp;
 
 	tp = memset(&t, 0, sizeof(t));
@@ -77,7 +77,7 @@ check_1(int is_ok, uint8_t *buf, int size, size_t consumed) {
 static void
 check_2(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	asn_TYPE_descriptor_t *td = &asn_DEF_T;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	T_t t, *tp;
 
 	tp = memset(&t, 0, sizeof(t));

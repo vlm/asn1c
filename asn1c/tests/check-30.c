@@ -144,7 +144,7 @@ uint8_t buf5[] = {
 static void
 check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T_t t, *tp;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 
 	fprintf(stderr, "\nMust %s:\n", is_ok?"suceed":"fail");
 
@@ -195,7 +195,7 @@ xer_cb(const void *buffer, size_t size, void *key) {
 static void
 check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
 	T_t *tp = 0;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	asn_enc_rval_t er;
 	int xer_sample_len = strlen(xer_sample);
 

@@ -56,7 +56,7 @@ save_object(void *bs, asn_TYPE_descriptor_t *td) {
 
 static int
 load_object(void *bs, asn_TYPE_descriptor_t *td) {
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 
 	fprintf(stderr, "\nLOADING OBJECT OF SIZE %d\n", buf_offset);
 
