@@ -100,7 +100,7 @@ ANY_new_fromType(asn_TYPE_descriptor_t *td, void *sptr) {
 
 	if(ANY_fromType(&tmp, td, sptr)) return 0;
 
-	st = (ANY_t *)CALLOC(1, sizeof(ANY_t *));
+	st = (ANY_t *)CALLOC(1, sizeof(ANY_t));
 	if(st) {
 		*st = tmp;
 		return st;
