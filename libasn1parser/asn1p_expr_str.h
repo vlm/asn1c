@@ -51,7 +51,7 @@ static char *asn1p_expr_type2str[] __attribute__ ((unused)) = {
 	|| ((size_t)(type)) >= sizeof(asn1p_expr_type2str)	\
 		/ sizeof(asn1p_expr_type2str[0]))		\
 		? (char *)0					\
-		: asn1p_expr_type2str[(type)]			\
+		: asn1p_expr_type2str[(int)(type)]		\
 	)
 
 #endif	/* ASN1_PARSER_EXPR_STR_H */
