@@ -19,9 +19,7 @@
 
 #include <asn1c_compat.h>	/* Portable basename(3) and dirname(3) */
 
-#include "tlv_decoder.h"	/* -t: decode TL[V?] string */
-
-static void usage(char *av0);	/* Print the Usage screen and exit(EX_USAGE) */
+static void usage(const char *av0);	/* Print the Usage screen and exit */
 
 #undef	COPYRIGHT
 #define	COPYRIGHT	\
@@ -45,7 +43,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "EFf:hLPp:RS:t:vW:")) != -1)
+	while((ch = getopt(ac, av, "EFf:hLPp:RS:vW:")) != -1)
 	switch(ch) {
 	case 'E':
 		print_arg__print_out = 1;
@@ -97,10 +95,6 @@ main(int ac, char **av) {
 	case 'S':
 		skeletons_dir = optarg;
 		break;
-	case 't':
-		if(decode_tlv_from_string(optarg))
-			exit(EX_DATAERR);
-		exit(0);
 	case 'v':
 		fprintf(stderr, "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT);
 		exit(0);
@@ -264,11 +258,11 @@ main(int ac, char **av) {
  * Print the usage screen and exit(EX_USAGE).
  */
 static void
-usage(char *av0) {
+usage(const char *av0) {
 	fprintf(stderr,
 "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT
-"Usage: %s [options] infile...\n"
-"Where [options] are:\n"
+"Usage: %s [options] file ...\n"
+"Options:\n"
 "  -E                    Run only the ASN.1 parser and print out the tree\n"
 "  -F                    During -E operation, also perform tree fixing\n"
 "\n"
@@ -276,10 +270,6 @@ usage(char *av0) {
 "  -R                    Restrict output (tables only, no support code)\n"
 "  -S <dir>              Directory with support (skeleton?) files\n"
 "                        (Default is \"%s\")\n"
-"\n"
-
-"  -t <data-string>      Decode the given tag[/length] sequence\n"
-"                        (e.g. -t \"bf 20\")\n"
 "\n"
 
 "  -Werror               Treat warnings as errors; abort if any warning\n"
