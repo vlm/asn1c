@@ -18,21 +18,20 @@
 #warning	if you want to use asn_GT2time() or asn_UT2time().
 #warning PLEASE STOP AND READ!
 
-static struct tm *localtime_r(time_t *tloc, struct tm *result) {
+static struct tm *localtime_r(const time_t *tloc, struct tm *result) {
 	struct tm *tm;
 	if((tm = localtime(tloc)))
 		return memcpy(result, tm, sizeof(struct tm));
 	return 0;
 }
 
-static struct tm *gmtime_r(time_t *tloc, struct tm *result) {
+static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 	struct tm *tm;
 	if((tm = gmtime(tloc)))
 		return memcpy(result, tm, sizeof(struct tm));
 	return 0;
 }
 
-#define	tzset()	_tzset()
 static time_t timegm(struct tm *tm) {
 	time_t tloc;
 	char *tz;
@@ -40,7 +39,7 @@ static time_t timegm(struct tm *tm) {
 
 	tz = getenv("TZ");
          _putenv("TZ=UTC");
-	tzset();
+	_tzset();
 	tloc = mktime(tm);
 	if (tz) {
 		buf = alloca(strlen(tz) + 4);
@@ -49,7 +48,7 @@ static time_t timegm(struct tm *tm) {
 		buf = "TZ=";
 	}
 	_putenv(buf);
-	tzset();
+	_tzset();
 	return tloc;
 }
 
