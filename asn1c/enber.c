@@ -328,8 +328,8 @@ process_line(const char *fname, char *line, int lineno) {
 	}
 	if(ret != tl_len) {
 		fprintf(stderr, "%s: Cannot encode TL at line %d "
-			"in the given number of bytes (%d!=%d)\n",
-			fname, lineno, ret, tl_len);
+			"in the given number of bytes (%ld!=%ld)\n",
+			fname, lineno, (long)ret, (long)tl_len);
 		exit(EX_DATAERR);
 	}
 	if(constr) *buf |= 0x20;	/* Enable "constructed" bit */
