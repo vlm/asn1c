@@ -20,8 +20,14 @@ BEGIN
 
 	-- The following clause tests OPTIONAL.
 	Stuff ::= SET {
-			trees    [0] SET OF Forest OPTIONAL,
-			anything [1] SET OF
+			trees    [1] SET OF Forest OPTIONAL,
+			...,
+			other    CHOICE {
+				a [0] INTEGER,
+				b [3] INTEGER
+			},
+			...,
+			anything [2] SET OF
 				SEQUENCE {
 					cup-of-coffee	BIT STRING,
 					...

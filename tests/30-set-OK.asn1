@@ -12,10 +12,10 @@ ModuleTestSetSimple
 BEGIN
 
 	T ::= SET {
-		a [APPLICATION 3] INTEGER,
-		b IA5String,
+		i [APPLICATION 3] INTEGER,
+		s IA5String,
 		...,
-		c [2] BOOLEAN
+		b [2] BOOLEAN
 	}
 
 END

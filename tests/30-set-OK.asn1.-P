@@ -1,0 +1,109 @@
+
+/*** <<< INCLUDES [T] >>> ***/
+
+#include <INTEGER.h>
+#include <IA5String.h>
+#include <BOOLEAN.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [T] >>> ***/
+
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum T_PR {
+	T_PR_i,	/* Member i is present */
+	T_PR_s,	/* Member s is present */
+	T_PR_b,	/* Member b is present */
+} T_PR;
+extern asn_TYPE_descriptor_t asn_DEF_T;
+
+/*** <<< TYPE-DECLS [T] >>> ***/
+
+
+typedef struct T {
+	INTEGER_t	 i;
+	IA5String_t	 s;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	BOOLEAN_t	*b;
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pT, T_PR_x) */
+	unsigned int _presence_map
+		[((3+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} T_t;
+
+/*** <<< STAT-DEFS [T] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_T[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct T, i),
+		.tag = (ASN_TAG_CLASS_APPLICATION | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "i"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, s),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_IA5String,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "s"
+		},
+	{ ATF_POINTER, 0, offsetof(struct T, b),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_BOOLEAN,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "b"
+		},
+};
+static ber_tlv_tag_t asn_DEF_T_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_TYPE_tag2member_t asn_DEF_T_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 1, 0, 0 }, /* s at 16 */
+    { (ASN_TAG_CLASS_APPLICATION | (3 << 2)), 0, 0, 0 }, /* i at 15 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* b at 18 */
+};
+static uint8_t asn_DEF_T_mmap[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7) | (1 << 6) | (0 << 5)
+};
+static asn_SET_specifics_t asn_DEF_T_specs = {
+	sizeof(struct T),
+	offsetof(struct T, _asn_ctx),
+	offsetof(struct T, _presence_map),
+	asn_DEF_T_tag2el,
+	3,	/* Count of tags in the map */
+	asn_DEF_T_tag2el,	/* Same as above */
+	3,	/* Count of tags in the CANONICAL-XER map */
+	1,	/* Whether extensible */
+	(unsigned int *)asn_DEF_T_mmap	/* Mandatory elements map */
+};
+asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
+	SET_free,
+	SET_print,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	0,				/* Not implemented yet */
+	SET_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_T_tags,
+	sizeof(asn_DEF_T_tags)
+		/sizeof(asn_DEF_T_tags[0]), /* 1 */
+	asn_DEF_T_tags,	/* Same as above */
+	sizeof(asn_DEF_T_tags)
+		/sizeof(asn_DEF_T_tags[0]), /* 1 */
+	asn_MBR_T,
+	3,	/* Elements count */
+	&asn_DEF_T_specs	/* Additional specs */
+};
+
