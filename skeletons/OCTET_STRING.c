@@ -93,10 +93,11 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
  */
 struct _stack_el {
 	ber_tlv_len_t	left;	/* What's left to read (or -1) */
-	ber_tlv_len_t	frame;	/* What was planned to read (or -1) */
+	ber_tlv_len_t	got;	/* What was actually processed */
 	int	cont_level;	/* Depth of subcontainment */
 	int	want_nulls;	/* Want null "end of content" octets? */
 	int	bits_chopped;	/* Flag in BIT STRING mode */
+	ber_tlv_tag_t	tag;	/* For debugging purposes */
 	struct _stack_el *prev;
 	struct _stack_el *next;
 };
@@ -115,7 +116,8 @@ OS__add_stack_el(struct _stack *st) {
 	if(st->cur_ptr && st->cur_ptr->next) {
 		nel = st->cur_ptr->next;
 		nel->bits_chopped = 0;
-		/* Retain nel->cont_level, it's correct. */
+		nel->got = 0;
+		/* Retain the nel->cont_level, it's correct. */
 	} else {
 		(void *)nel = CALLOC(1, sizeof(struct _stack_el));
 		if(nel == NULL)
@@ -156,7 +158,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	ber_dec_ctx_t *ctx;
 	ssize_t consumed_myself = 0;
 	struct _stack *stck;	/* A stack structure */
-	struct _stack_el *sel;	/* Stack element */
+	struct _stack_el *sel = 0;	/* Stack element */
 	int tlv_constr;
 	enum type_type_e {
 		_TT_GENERIC	= 0,	/* Just a random OCTET STRING */
@@ -231,16 +233,40 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		ber_tlv_tag_t tlv_tag;
 		ber_tlv_len_t tlv_len;
 		ber_tlv_tag_t expected_tag;
-		ssize_t tl, ll;
+		ssize_t tl, ll, tlvl;
 				/* This one works even if (sel->left == -1) */
 		ssize_t Left = ((!sel||(size_t)sel->left >= size)
-					?size:(size_t)sel->left);
+					?(ssize_t)size:sel->left);
 
 
-		ASN_DEBUG("fetch tag(size=%d,L=%d), %sstack, left=%d, want0=%d",
-			(int)size, Left, sel?"":"!",
-			sel?sel->left:0, sel?sel->want_nulls:0);
+		ASN_DEBUG("%p, s->l=%d, s->wn=%d, s->g=%d\n", sel,
+			sel?sel->left:0,
+			sel?sel->want_nulls:0,
+			sel?sel->got:0
+		);
+		if(sel && sel->left <= 0 && sel->want_nulls == 0) {
+			if(sel->prev) {
+				struct _stack_el *prev = sel->prev;
+				if(prev->left != -1) {
+					if(prev->left < sel->got)
+						RETURN(RC_FAIL);
+					prev->left -= sel->got;
+				}
+				prev->got += sel->got;
+				sel = stck->cur_ptr = prev;
+				if(!sel) break;
+				tlv_constr = 1;
+				continue;
+			} else {
+				sel = stck->cur_ptr = 0;
+				break;	/* Nothing to wait */
+			}
+		}
+
 		tl = ber_fetch_tag(buf_ptr, Left, &tlv_tag);
+		ASN_DEBUG("fetch tag(size=%d,L=%d), %sstack, left=%d, wn=%d, tl=%d",
+			(int)size, Left, sel?"":"!",
+			sel?sel->left:0, sel?sel->want_nulls:0, tl);
 		switch(tl) {
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
@@ -250,11 +276,9 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 
 		ll = ber_fetch_length(tlv_constr,
 				(char *)buf_ptr + tl, Left - tl, &tlv_len);
-		ASN_DEBUG("Got tag=%s, tc=%d, size=%d, tl=%d, len=%d, ll=%d, {%d, %d}",
+		ASN_DEBUG("Got tag=%s, tc=%d, left=%ld, tl=%d, len=%d, ll=%d",
 			ber_tlv_tag_string(tlv_tag), tlv_constr,
-				(int)Left, tl, tlv_len, ll,
-			((uint8_t *)buf_ptr)[0],
-			((uint8_t *)buf_ptr)[1]);
+				(long)Left, tl, tlv_len, ll);
 		switch(ll) {
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);
@@ -264,26 +288,21 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			&& ((uint8_t *)buf_ptr)[0] == 0
 			&& ((uint8_t *)buf_ptr)[1] == 0)
 		{
-			ADVANCE(2);
-			if(type_type == _TT_ANY) APPEND("\0\0", 2);
 
 			ASN_DEBUG("Eat EOC; wn=%d--", sel->want_nulls);
+
+			if(type_type == _TT_ANY) APPEND("\0\0", 2);
+
+			ADVANCE(2);
+			sel->got += 2;
+			if(sel->left != -1) {
+				sel->left -= 2;	/* assert(sel->left >= 2) */
+			}
 
 			sel->want_nulls--;
 			if(sel->want_nulls == 0) {
 				/* Move to the next expectation */
-				sel = stck->cur_ptr = sel->prev;
-				if(sel == NULL)
-					break;
-			}
-
-			if(sel->want_nulls) {
-				/*
-				 * Simulate while(TRUE) for this loop.
-				 * This is necessary to fetch the next
-				 * expectation after current "end of content",
-				 * for which tlv_constr is 0.
-				 */
+				sel->left = 0;
 				tlv_constr = 1;
 			}
 
@@ -331,33 +350,34 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		}
 
 		/*
-		 * Consult with the old expectation.
-		 * Check that it knows what we are doing here, and how much.
-		 */
-		if(sel && sel->left != -1) {
-			if(sel->left < (tl + ll))
-				RETURN(RC_FAIL);
-			sel->left -= (tl + ll);
-			if(sel->left < tlv_len)
-				RETURN(RC_FAIL);
-		}
-
-
-		/*
 		 * Append a new expectation.
 		 */
 		sel = OS__add_stack_el(stck);
-		if(sel) {
-			sel->want_nulls = (tlv_len==-1);
-			sel->frame = sel->left = tlv_len;
-			ASN_DEBUG("+EXPECT2 frame=%d wn=%d, clvl=%d",
-				sel->frame, sel->want_nulls, sel->cont_level);
-		} else {
-			RETURN(RC_FAIL);
-		}
+		if(!sel) RETURN(RC_FAIL);
 
-		if(type_type == _TT_ANY) APPEND(buf_ptr, tl + ll);
-		ADVANCE(tl+ll);
+		tlvl = tl + ll;	/* Combined length of T and L encoding */
+
+		sel->tag = tlv_tag;
+
+		sel->want_nulls = (tlv_len==-1);
+		if(sel->prev && sel->prev->left != -1) {
+			/* Check that the parent frame is big enough */
+			if(sel->prev->left < tlvl + (tlv_len==-1?0:tlv_len))
+				RETURN(RC_FAIL);
+			if(tlv_len == -1)
+				sel->left = sel->prev->left - tlvl;
+			else
+				sel->left = tlv_len;
+		} else {
+			sel->left = tlv_len;
+		}
+		if(type_type == _TT_ANY) APPEND(buf_ptr, tlvl);
+		sel->got += tlvl;
+		ADVANCE(tlvl);
+
+		ASN_DEBUG("+EXPECT2 got=%d left=%d, wn=%d, clvl=%d",
+			sel->got, sel->left, sel->want_nulls, sel->cont_level);
+
 	  } while(tlv_constr);
 		if(sel == NULL) {
 			/* Finished operation, "phase out" */
@@ -371,8 +391,9 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	case 2:
 		(void *)stck = ctx->ptr;
 		sel = stck->cur_ptr;
-		ASN_DEBUG("Phase 2: Need %ld bytes, size=%ld",
-			(long)sel->left, (long)size);
+		ASN_DEBUG("Phase 2: Need %ld bytes, size=%ld, alrg=%ld, wn=%d",
+			(long)sel->left, (long)size, (long)sel->got,
+				sel->want_nulls);
 	    {
 		ber_tlv_len_t len;
 
@@ -397,33 +418,17 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			}
 			ADVANCE(len);
 			sel->left -= len;
+			sel->got += len;
 		}
 
-		if(sel->left)
+		if(sel->left) {
+			ASN_DEBUG("OS left %ld, size = %ld, wn=%d\n",
+				(long)sel->left, (long)size, sel->want_nulls);
 			RETURN(RC_WMORE);
-
-		while(sel->left == 0) {
-			ASN_DEBUG("sel %p, l=%d, f=%d, %p->l=%d p->f=%d\n",
-				sel, sel->left, sel->frame,
-				sel->prev,
-				sel->prev?sel->prev->left:0,
-				sel->prev?sel->prev->frame:0
-			);
-			if(sel->prev) {
-				if(sel->prev->left != -1) {
-					if(sel->prev->left < sel->frame)
-						RETURN(RC_FAIL);
-					sel->prev->left -= sel->frame;
-				}
-				sel = stck->cur_ptr = sel->prev;
-				if(sel->left) {
-					PREV_PHASE(ctx);
-					goto phase1;
-				}
-			} else {
-				break;
-			}
 		}
+
+		PREV_PHASE(ctx);
+		goto phase1;
 	    }
 		break;
 	case 3:
@@ -446,6 +451,15 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		break;
 	}
 
+	if(sel) {
+		ASN_DEBUG("3sel p=%p, wn=%d, l=%ld, g=%ld, size=%ld",
+			sel->prev, sel->want_nulls,
+			(long)sel->left, (long)sel->got, (long)size);
+		if(sel->prev || sel->want_nulls > 1 || sel->left > 0) {
+			RETURN(RC_WMORE);
+		}
+	}
+
 	/*
 	 * BIT STRING-specific processing.
 	 */
@@ -458,10 +472,8 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		consumed_myself, td->name,
 		(type_type == _TT_GENERIC) ? (char *)st->buf : "", st->size);
 
-	rval.code = RC_OK;
-	rval.consumed = consumed_myself;
 
-	return rval;
+	RETURN(RC_OK);
 }
 
 /*
