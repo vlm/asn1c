@@ -51,11 +51,12 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	} while(0)
 
 #define	APPEND(bufptr, bufsize)	do {					\
+		size_t _bs = (bufsize);					\
 		size_t _ns = ctx->step;	/* Allocated */			\
-		if(_ns <= (size_t)(st->size + bufsize)) {		\
+		if(_ns <= (size_t)(st->size + _bs)) {			\
 			void *ptr;					\
 			do { _ns = _ns ? _ns<<2 : 16; }			\
-				while(_ns <= (size_t)(st->size + bufsize));	\
+			    while(_ns <= (size_t)(st->size + _bs));	\
 			ptr = REALLOC(st->buf, _ns);			\
 			if(ptr) {					\
 				st->buf = (uint8_t *)ptr;		\
@@ -64,8 +65,8 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 				RETURN(RC_FAIL);			\
 			}						\
 		}							\
-		memcpy(st->buf + st->size, bufptr, bufsize);		\
-		st->size += bufsize;					\
+		memcpy(st->buf + st->size, bufptr, _bs);		\
+		st->size += _bs;					\
 		if(st->size < 0)					\
 			/* Why even care?.. JIC */			\
 			RETURN(RC_FAIL);				\
@@ -124,12 +125,6 @@ _new_stack() {
 	if(st == NULL)
 		return NULL;
 
-	st->cur_ptr = _add_stack_el(st);
-	if(st->cur_ptr == NULL) {
-		FREEMEM(st);
-		return NULL;
-	}
-
 	return st;
 }
 
@@ -142,20 +137,16 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*os_structure;
 	ber_dec_rval_t rval;
 	ber_dec_ctx_t *ctx;
+	ber_tlv_tag_t terminal_tag;	/* Inner tag for constructed types */
 	ssize_t consumed_myself = 0;
 	struct _stack *stck;	/* A stack structure */
 	struct _stack_el *sel;	/* Stack element */
 	int tlv_constr;
-	/*
-	 * This is a some sort of a hack.
-	 * The OCTET STRING decoder is being used in BIT STRING mode.
-	 */
-	int is_bit_str = (td->specifics==(void *)-1);
+	int is_bit_str = 0;	/* See below under switch(td->specifics) */
+	int is_ANY_type = 0;	/* See below under switch(td->specifics) */
 
 	ASN_DEBUG("Decoding %s as %s (%ld)",
-		td->name,
-		is_bit_str ? "BIT STRING" : "OCTET STRING",
-		(long)size);
+		td->name, "OCTET STRING", (long)size);
 
 	/*
 	 * Create the string if does not exist.
@@ -168,6 +159,25 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 
 	/* Restore parsing context */
 	ctx = &st->_ber_dec_ctx;
+
+	switch((int)td->specifics) {
+	case 0:
+		terminal_tag = asn1_DEF_OCTET_STRING_tags[0];	/* [U4] */
+		break;
+	case -1:	/* BIT STRING */
+		/*
+		 * This is some sort of a hack.
+		 * The OCTET STRING decoder is being used in BIT STRING mode.
+		 */
+		is_bit_str = 1;
+		terminal_tag = ASN_TAG_CLASS_UNIVERSAL | (3 << 2);
+		break;
+	default:	/* Just in case; fall through */
+	case  1:	/* ANY type */
+		is_ANY_type = 1;
+		terminal_tag = -1;
+		break;
+	}
 
 	switch(ctx->phase) {
 	case 0:
@@ -191,6 +201,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			ctx->ptr = _new_stack();
 			if(ctx->ptr) {
 				(void *)stck = ctx->ptr;
+#if 0
 				if(ctx->left < 0) {
 					stck->cur_ptr->want_nulls = -ctx->left;
 					stck->cur_ptr->left = -1;
@@ -198,10 +209,12 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 					stck->cur_ptr->want_nulls = 0;
 					stck->cur_ptr->left = ctx->left;
 				}
-				ASN_DEBUG("Expectation left=%d wn=%d added",
+				ASN_DEBUG("+EXPECT1 left=%d wn=%d",
 					stck->cur_ptr->left,
 					stck->cur_ptr->want_nulls);
+#endif
 				if(is_bit_str) {
+					/* Number of meaningless tail bits */
 					APPEND("\0", 1);
 				}
 			} else {
@@ -212,11 +225,11 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			 * Jump into stackless primitive decoding.
 			 */
 			_CH_PHASE(ctx, 3);
+			if(is_ANY_type) APPEND(buf_ptr, rval.consumed);
 			ADVANCE(rval.consumed);
 			goto phase3;
 		}
 
-		ADVANCE(rval.consumed);
 		NEXT_PHASE(ctx);
 		/* Fall through */
 	case 1:
@@ -231,6 +244,9 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		ber_tlv_len_t tlv_len;
 		ssize_t tl, ll;
 
+		ASN_DEBUG("fetch tag(size=%d), %sstack, left=%d, want0=%d",
+			(int)size, sel?"":"!",
+			sel?sel->left:0, sel?sel->want_nulls:0);
 		tl = ber_fetch_tag(buf_ptr, size, &tlv_tag);
 		switch(tl) {
 		case -1: RETURN(RC_FAIL);
@@ -241,8 +257,9 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 
 		ll = ber_fetch_length(tlv_constr,
 				(char *)buf_ptr + tl, size - tl, &tlv_len);
-		ASN_DEBUG("Got tag=%s, tl=%d, len=%d, ll=%d, {%d, %d}",
-			ber_tlv_tag_string(tlv_tag), tl, tlv_len, ll,
+		ASN_DEBUG("Got tag=%s, tc=%d, size=%d, tl=%d, len=%d, ll=%d, {%d, %d}",
+			ber_tlv_tag_string(tlv_tag), tlv_constr,
+				(int)size, tl, tlv_len, ll,
 			((uint8_t *)buf_ptr)[0],
 			((uint8_t *)buf_ptr)[1]);
 		switch(ll) {
@@ -250,30 +267,36 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		case 0: RETURN(RC_WMORE);
 		}
 
-		if(sel->want_nulls
+		if(sel && sel->want_nulls
 			&& ((uint8_t *)buf_ptr)[0] == 0
 			&& ((uint8_t *)buf_ptr)[1] == 0)
 		{
+			ADVANCE(2);
+			if(is_ANY_type) APPEND("\0\0", 2);
+
+			ASN_DEBUG("Eat EOC; wn=%d--", sel->want_nulls);
+
 			sel->want_nulls--;
 			if(sel->want_nulls == 0) {
 				/* Move to the next expectation */
 				sel = stck->cur_ptr = sel->prev;
-				if(sel == NULL) {
-					ADVANCE(2);
+				if(sel == NULL)
 					break;
-				}
 			}
+
 			if(sel->want_nulls) {
 				/*
 				 * Simulate while(TRUE) for this loop.
 				 * This is necessary to fetch the next
-				 * "end of content" expectation.
+				 * expectation after current "end of content",
+				 * for which tlv_constr is 0.
 				 */
-				ADVANCE(2);
 				tlv_constr = 1;
-				continue;
 			}
-		} else if(tlv_tag != td->tags[td->tags_count-1]) {
+
+			continue;
+		} else if(tlv_tag != terminal_tag
+				&& terminal_tag != (ber_tlv_tag_t)-1) {
 			char buf[2][32];
 			ber_tlv_tag_snprint(tlv_tag,
 				buf[0], sizeof(buf[0]));
@@ -291,12 +314,13 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		if(sel) {
 			sel->want_nulls = (tlv_len==-1);
 			sel->left = tlv_len;
-			ASN_DEBUG("Expectation %d %d added",
+			ASN_DEBUG("+EXPECT2 left=%d wn=%d",
 				sel->left, sel->want_nulls);
 		} else {
 			RETURN(RC_FAIL);
 		}
 
+		if(is_ANY_type) APPEND(buf_ptr, tl + ll);
 		ADVANCE(tl+ll);
 	  } while(tlv_constr);
 		if(sel == NULL) {
