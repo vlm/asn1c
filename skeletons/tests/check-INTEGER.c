@@ -1,9 +1,11 @@
 #include <INTEGER.c>
-#include <ber_codec_prim.c>
+#include <asn_codecs_prim.c>
 #include <ber_decoder.c>
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>
 #include <der_encoder.c>
+#include <xer_decoder.c>
+#include <xer_support.c>
 #include <constraints.c>
 
 static char *shared_scratch_start;
@@ -44,6 +46,20 @@ check(uint8_t *buf, int size, long check_long, int check_ret) {
 	assert(ret == check_ret);
 	assert(rlong == check_long);
 
+	if(check_ret == 0) {
+		INTEGER_t val2;
+		long rlong2;
+		val2.buf = 0;
+		val2.size = 0;
+		ret = asn_long2INTEGER(&val2, rlong);
+		assert(ret == 0);
+		assert(val2.buf);
+		assert(val2.size <= val.size);	/* At least as compact */
+		ret = asn_INTEGER2long(&val, &rlong2);
+		assert(ret == 0);
+		assert(rlong == rlong2);
+	}
+
 	shared_scratch_start = scratch;
 	ret = INTEGER_print(&asn_DEF_INTEGER, &val, 0, _print2buf, scratch);
 	assert(shared_scratch_start < scratch + sizeof(scratch));
@@ -74,6 +90,9 @@ main(int ac, char **av) {
 	uint8_t buf8[] = { 0x7f, 0x7e, 0x7d, 0x7c };
 	uint8_t buf9[] = { 0, 0x7f, 0x7e, 0x7d, 0x7c };
 	uint8_t buf10[] = { 0, 0, 0, 0, 0, 0, 0x7f, 0x7e, 0x7d, 0x7c };
+	uint8_t buf11[] = { 0x80, 0, 0, 0 };
+	uint8_t buf12[] = { 0x80, 0 };
+	uint8_t buf13[] = { 0x80 };
 
 #define	CHECK(buf, val, ret)	check(buf, sizeof(buf), val, ret)
 
@@ -87,6 +106,9 @@ main(int ac, char **av) {
 	CHECK(buf8, 0x7F7E7D7C, 0);
 	CHECK(buf9, 0x7F7E7D7C, 0);
 	CHECK(buf10, 0x7F7E7D7C, 0);
+	CHECK(buf11, 0x80000000, 0);
+	CHECK(buf12, -32768, 0);
+	CHECK(buf13, -128, 0);
 
 	return 0;
 }
