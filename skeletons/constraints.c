@@ -1,6 +1,5 @@
 #include <asn_internal.h>
 #include <constraints.h>
-#include <constr_TYPE.h>
 
 int
 asn_generic_no_constraint(asn1_TYPE_descriptor_t *type_descriptor,

@@ -3,7 +3,6 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
-#include <constr_TYPE.h>
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>
@@ -43,7 +42,7 @@ xer_encode(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 /*
- * This is a helper function for xer_fprint, which directs all the incoming data
+ * This is a helper function for xer_fprint, which directs all incoming data
  * into the provided file descriptor.
  */
 static int

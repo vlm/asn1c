@@ -5,7 +5,7 @@
 #ifndef	_DER_ENCODER_H_
 #define	_DER_ENCODER_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 struct asn1_TYPE_descriptor_s;	/* Forward declaration */
 

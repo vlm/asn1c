@@ -5,10 +5,9 @@
 #ifndef	_ENUMERATED_H_
 #define	_ENUMERATED_H_
 
-#include <constr_TYPE.h>
 #include <INTEGER.h>
 
-typedef INTEGER_t ENUMERATED_t;		/* Implemented in terms of INTEGER */
+typedef INTEGER_t ENUMERATED_t;		/* Implemented via INTEGER */
 
 extern asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED;
 

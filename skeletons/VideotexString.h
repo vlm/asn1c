@@ -5,10 +5,9 @@
 #ifndef	_VideotexString_H_
 #define	_VideotexString_H_
 
-#include <constr_TYPE.h>
 #include <OCTET_STRING.h>
 
-typedef OCTET_STRING_t VideotexString_t;	/* Implemented in terms of OCTET STRING */
+typedef OCTET_STRING_t VideotexString_t;  /* Implemented via OCTET STRING */
 
 extern asn1_TYPE_descriptor_t asn1_DEF_VideotexString;
 

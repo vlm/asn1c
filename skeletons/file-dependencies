@@ -43,8 +43,9 @@ constr_SET.h constr_SET.c
 constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h
 
 COMMON-FILES:	# This is a special section
-asn_types.h
+asn_application.h
 asn_internal.h
+asn_types.h
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
 ber_decoder.h ber_decoder.c
 ber_tlv_length.h ber_tlv_length.c

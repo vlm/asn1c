@@ -11,7 +11,7 @@
 #ifndef	ASN_TYPE_NativeReal_H
 #define	ASN_TYPE_NativeReal_H
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 extern asn1_TYPE_descriptor_t asn1_DEF_NativeReal;
 

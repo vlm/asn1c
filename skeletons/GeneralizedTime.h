@@ -5,10 +5,9 @@
 #ifndef	_GeneralizedTime_H_
 #define	_GeneralizedTime_H_
 
-#include <constr_TYPE.h>
 #include <OCTET_STRING.h>
 
-typedef OCTET_STRING_t GeneralizedTime_t;  /* Implemented using OCTET STRING */
+typedef OCTET_STRING_t GeneralizedTime_t;  /* Implemented via OCTET STRING */
 
 extern asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime;
 

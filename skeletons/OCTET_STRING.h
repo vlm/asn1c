@@ -5,7 +5,7 @@
 #ifndef	_OCTET_STRING_H_
 #define	_OCTET_STRING_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 typedef struct OCTET_STRING {
 	uint8_t *buf;	/* Buffer with consecutive OCTET_STRING bits */

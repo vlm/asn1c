@@ -5,10 +5,9 @@
 #ifndef	_ObjectDescriptor_H_
 #define	_ObjectDescriptor_H_
 
-#include <constr_TYPE.h>
 #include <GraphicString.h>
 
-typedef GraphicString_t ObjectDescriptor_t;	/* Implemented in terms of. */
+typedef GraphicString_t ObjectDescriptor_t;  /* Implemented via GraphicString */
 
 extern asn1_TYPE_descriptor_t asn1_DEF_ObjectDescriptor;
 

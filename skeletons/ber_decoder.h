@@ -5,7 +5,7 @@
 #ifndef	_BER_DECODER_H_
 #define	_BER_DECODER_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 struct asn1_TYPE_descriptor_s;	/* Forward declaration */
 
@@ -68,7 +68,7 @@ typedef ber_dec_rval_t (ber_type_decoder_f)(
  * head->last_tag_form is non-zero.
  */
 ber_dec_rval_t ber_check_tags(struct asn1_TYPE_descriptor_s *type_dsc,
-		ber_dec_ctx_t *ctx,	/* saved context */
+		ber_dec_ctx_t *opt_ctx,	/* saved context */
 		void *ptr, size_t size,
 		int tag_mode,		/* {-1,0,1}: IMPLICIT, no, EXPLICIT */
 		ber_tlv_len_t *last_length,

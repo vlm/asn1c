@@ -12,7 +12,7 @@
 #ifndef	_NativeInteger_H_
 #define	_NativeInteger_H_
 
-#include <constr_TYPE.h>
+#include <asn_application.h>
 
 extern asn1_TYPE_descriptor_t asn1_DEF_NativeInteger;
 

@@ -5,10 +5,9 @@
 #ifndef	_RELATIVE_OID_H_
 #define	_RELATIVE_OID_H_
 
-#include <constr_TYPE.h>
 #include <OBJECT_IDENTIFIER.h>
 
-/* Implemented in terms of OBJECT IDENTIFIER */
+/* Implemented via OBJECT IDENTIFIER */
 typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t;
 
 extern asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID;
