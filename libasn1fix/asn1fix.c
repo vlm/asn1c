@@ -96,8 +96,6 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 
 	memset(&a1f_replace_me_with_proper_interface_arg, 0, sizeof(arg_t));
 
-	memset(&a1f_replace_me_with_proper_interface_arg, 0, sizeof(arg_t));
-
 	/*
 	 * Compute a return value.
 	 */
@@ -256,9 +254,6 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 	int rvalue = 0;
 	int ret;
 
-	/*
-	 * Check semantic validity of constraints.
-	 */
 	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
 
@@ -266,6 +261,9 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 			/* Do not process the parametrized types here */
 			continue;
 
+		/*
+		 * Check semantic validity of constraints.
+		 */
 		ret = asn1f_recurse_expr(arg, asn1f_check_constraints);
 		RET2RVAL(ret, rvalue);
 
