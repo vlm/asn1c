@@ -198,10 +198,12 @@ print LOG isoTime() . "\tIP=$ENV{REMOTE_ADDR}";
 @gotSafeNames = ();
 @gotNames = param('file');
 if($#gotNames != -1 && $gotNames[0] ne "") {
+	$gotFile = param('file');
 	@gotFiles = upload('file');
 } else {
 	@gotNames = ();
 	@gotFiles = ();
+	$gotFile = undef;
 }
 
 if($#gotNames == -1) {
@@ -237,22 +239,22 @@ if($#gotSafeNames >= 0) {
 	my $sandbox = $sessionDir . '/' . $transactionDir;
 	mkdir($sandbox, $DM) or bark($SandBoxInitFailed);
 
-	open(I, '> ' . $sandbox . '/+Names');
-	print I join("\n", @gotNames);
-	open(I, '> ' . $sandbox . '/+safeNames');
-	print I join("\n", @gotSafeNames);
+	open(O, '> ' . $sandbox . '/+Names');
+	print O join("\n", @gotNames);
+	open(O, '> ' . $sandbox . '/+safeNames');
+	print O join("\n", @gotSafeNames);
 	for(my $i = 0; $i <= $#gotSafeNames; $i++) {
 		local $name = $gotSafeNames[$i];
-		open(I, '> ' . $sandbox . '/'. $name);
+		open(O, '> ' . $sandbox . '/'. $name);
 		if($#gotFiles == -1) {
-			print I scalar(param('text'));
+			print O scalar(param('text'));
 		} else {
-			while(<$gotFiles[$I]>) {
-				print I;
+			while(<$gotFile>) {
+				print O;
 			}
 		}
-		close(I);
 	}
+	close(O);
 
 	my $inChDir = makeSessionDirName("/", $session) . $transactionDir;
 	my $options = '';
