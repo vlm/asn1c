@@ -95,7 +95,7 @@ static ber_tlv_tag_t asn_DEF_toBeSigned_tags[] = {
 static asn_TYPE_tag2member_t asn_DEF_toBeSigned_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* version at 21 */
     { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* signature at 22 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, 0, 0 }, /* issuer at 24 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, 0, 0 } /* issuer at 24 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_toBeSigned_specs = {
 	sizeof(struct toBeSigned),
@@ -157,7 +157,7 @@ static ber_tlv_tag_t asn_DEF_Certificate_tags[] = {
 static asn_TYPE_tag2member_t asn_DEF_Certificate_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 2, 0, 0 }, /* signature at 17 */
     { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* algorithm at 16 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* toBeSigned at 21 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* toBeSigned at 21 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_Certificate_specs = {
 	sizeof(struct Certificate),
