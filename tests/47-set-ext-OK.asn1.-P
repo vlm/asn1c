@@ -1,8 +1,10 @@
 
-/*** <<< DEPS [T1] >>> ***/
+/*** <<< INCLUDES [T1] >>> ***/
 
-/* Dependencies for T1 */
 #include <INTEGER.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [T1] >>> ***/
 
 
 /*
@@ -11,8 +13,6 @@
 enum T1_PR_e {
 	T1_PR_i,	/* Member i is present */
 };
-#include <constr_SET.h>
-
 extern asn1_TYPE_descriptor_t asn1_DEF_T1;
 
 /*** <<< TYPE-DECLS [T1] >>> ***/
@@ -34,8 +34,6 @@ typedef struct T1 {
 } T1_t;
 
 /*** <<< STAT-DEFS [T1] >>> ***/
-
-#include <constr_SET.h>
 
 static asn1_SET_element_t asn1_DEF_T1_elements[] = {
 	{ offsetof(struct T1, i), 0,
@@ -82,10 +80,12 @@ asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 };
 
 
-/*** <<< DEPS [T2] >>> ***/
+/*** <<< INCLUDES [T2] >>> ***/
 
-/* Dependencies for T2 */
 #include <INTEGER.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [T2] >>> ***/
 
 
 /*
@@ -94,8 +94,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 enum T2_PR_e {
 	T2_PR_i,	/* Member i is present */
 };
-#include <constr_SET.h>
-
 extern asn1_TYPE_descriptor_t asn1_DEF_T2;
 
 /*** <<< TYPE-DECLS [T2] >>> ***/
@@ -117,8 +115,6 @@ typedef struct T2 {
 } T2_t;
 
 /*** <<< STAT-DEFS [T2] >>> ***/
-
-#include <constr_SET.h>
 
 static asn1_SET_element_t asn1_DEF_T2_elements[] = {
 	{ offsetof(struct T2, i), 0,
@@ -165,21 +161,25 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 };
 
 
+/*** <<< INCLUDES [T3] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_CHOICE.h>
+
 /*** <<< DEPS [T3] >>> ***/
 
-/* Dependencies for T3 */
-#include <INTEGER.h>
-
+typedef enum T3_PR {
+	T3_PR_NOTHING,	/* No components present */
+	T3_PR_i,
+	/* Extensions may appear below */
+} T3_PR_e;
 extern asn1_TYPE_descriptor_t asn1_DEF_T3;
 
 /*** <<< TYPE-DECLS [T3] >>> ***/
 
 
 typedef struct T3 {
-	enum {
-		T3_PR_NOTHING,	/* No components present */
-		T3_PR_i,
-	} present;
+	T3_PR_e present;
 	union {
 		INTEGER_t	 i;
 		/*
@@ -193,8 +193,6 @@ typedef struct T3 {
 } T3_t;
 
 /*** <<< STAT-DEFS [T3] >>> ***/
-
-#include <constr_CHOICE.h>
 
 static asn1_CHOICE_element_t asn1_DEF_T3_elements[] = {
 	{ offsetof(struct T3, choice.i), 0,
@@ -238,21 +236,25 @@ asn1_TYPE_descriptor_t asn1_DEF_T3 = {
 };
 
 
+/*** <<< INCLUDES [T4] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_CHOICE.h>
+
 /*** <<< DEPS [T4] >>> ***/
 
-/* Dependencies for T4 */
-#include <INTEGER.h>
-
+typedef enum T4_PR {
+	T4_PR_NOTHING,	/* No components present */
+	T4_PR_i,
+	/* Extensions may appear below */
+} T4_PR_e;
 extern asn1_TYPE_descriptor_t asn1_DEF_T4;
 
 /*** <<< TYPE-DECLS [T4] >>> ***/
 
 
 typedef struct T4 {
-	enum {
-		T4_PR_NOTHING,	/* No components present */
-		T4_PR_i,
-	} present;
+	T4_PR_e present;
 	union {
 		INTEGER_t	 i;
 		/*
@@ -266,8 +268,6 @@ typedef struct T4 {
 } T4_t;
 
 /*** <<< STAT-DEFS [T4] >>> ***/
-
-#include <constr_CHOICE.h>
 
 static asn1_CHOICE_element_t asn1_DEF_T4_elements[] = {
 	{ offsetof(struct T4, choice.i), 0,

@@ -1,15 +1,13 @@
 
-/*** <<< DEPS [LogLine] >>> ***/
+/*** <<< INCLUDES [LogLine] >>> ***/
 
-/* Dependencies for LogLine */
 #include <IA5String.h>
-
-/* Dependencies for varsets */
 #include <VariablePartSet.h>
 #include <asn_SEQUENCE_OF.h>
-
-	#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [LogLine] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_LogLine;
 
@@ -63,8 +61,6 @@ typedef struct LogLine {
 		&asn1_DEF_varsets_specs	/* Additional specs */
 	};
 	
-#include <constr_SEQUENCE.h>
-
 static asn1_SEQUENCE_element_t asn1_DEF_LogLine_elements[] = {
 	{ offsetof(struct LogLine, line_digest), 0,
 		(ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
@@ -113,17 +109,15 @@ asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 };
 
 
-/*** <<< DEPS [VariablePartSet] >>> ***/
+/*** <<< INCLUDES [VariablePartSet] >>> ***/
 
-/* Dependencies for VariablePartSet */
 #include <ActionItem.h>
-
-/* Dependencies for vparts */
 #include <VariablePart.h>
 #include <asn_SEQUENCE_OF.h>
-
-	#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [VariablePartSet] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet;
 
@@ -177,8 +171,6 @@ typedef struct VariablePartSet {
 		&asn1_DEF_vparts_specs	/* Additional specs */
 	};
 	
-#include <constr_SEQUENCE.h>
-
 static asn1_SEQUENCE_element_t asn1_DEF_VariablePartSet_elements[] = {
 	{ offsetof(struct VariablePartSet, vparts), 0,
 		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
@@ -227,32 +219,29 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
 };
 
 
-/*** <<< DEPS [VariablePart] >>> ***/
+/*** <<< INCLUDES [VariablePart] >>> ***/
 
-
-/* Dependencies for vset */
 #include <VisibleString.h>
 #include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+#include <constr_SEQUENCE.h>
+#include <constr_CHOICE.h>
 
-		#include <constr_SET_OF.h>
-		
-/* Dependencies for vrange */
-#include <VisibleString.h>
-#include <VisibleString.h>
+/*** <<< DEPS [VariablePart] >>> ***/
 
-		#include <constr_SEQUENCE.h>
-		
+typedef enum VariablePart_PR {
+	VariablePart_PR_NOTHING,	/* No components present */
+	VariablePart_PR_vset,
+	VariablePart_PR_vrange,
+	/* Extensions may appear below */
+} VariablePart_PR_e;
 extern asn1_TYPE_descriptor_t asn1_DEF_VariablePart;
 
 /*** <<< TYPE-DECLS [VariablePart] >>> ***/
 
 
 typedef struct VariablePart {
-	enum {
-		VariablePart_PR_NOTHING,	/* No components present */
-		VariablePart_PR_vset,
-		VariablePart_PR_vrange,
-	} present;
+	VariablePart_PR_e present;
 	union {
 		struct vset {
 			A_SET_OF(VisibleString_t) list;
@@ -311,8 +300,6 @@ typedef struct VariablePart {
 			&asn1_DEF_vset_specs	/* Additional specs */
 		};
 		
-		#include <constr_SEQUENCE.h>
-		
 		static asn1_SEQUENCE_element_t asn1_DEF_vrange_elements[] = {
 			{ offsetof(struct vrange, from), 0,
 				(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
@@ -360,8 +347,6 @@ typedef struct VariablePart {
 			&asn1_DEF_vrange_specs	/* Additional specs */
 		};
 		
-#include <constr_CHOICE.h>
-
 static asn1_CHOICE_element_t asn1_DEF_VariablePart_elements[] = {
 	{ offsetof(struct VariablePart, choice.vset), 0,
 		(ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
@@ -411,10 +396,16 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 };
 
 
-/*** <<< DEPS [ActionItem] >>> ***/
+/*** <<< INCLUDES [ActionItem] >>> ***/
 
-/* Dependencies for ActionItem */
 #include <ENUMERATED.h>
+#include <BOOLEAN.h>
+#include <VisibleString.h>
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [ActionItem] >>> ***/
 
 	typedef enum accept_as {
 		accept_as_unknown	= 0,
@@ -424,19 +415,6 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 		 * Enumeration is extensible
 		 */
 	} accept_as_e;
-/* Dependencies for notify */
-#include <BOOLEAN.h>
-
-/* Dependencies for email */
-#include <VisibleString.h>
-#include <asn_SET_OF.h>
-
-		#include <constr_SET_OF.h>
-		
-	#include <constr_SEQUENCE.h>
-	
-#include <constr_SEQUENCE.h>
-
 extern asn1_TYPE_descriptor_t asn1_DEF_ActionItem;
 
 /*** <<< TYPE-DECLS [ActionItem] >>> ***/
@@ -499,8 +477,6 @@ typedef struct ActionItem {
 			&asn1_DEF_email_specs	/* Additional specs */
 		};
 		
-	#include <constr_SEQUENCE.h>
-	
 	static asn1_SEQUENCE_element_t asn1_DEF_notify_elements[] = {
 		{ offsetof(struct notify, critical), 0,
 			(ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
@@ -548,8 +524,6 @@ typedef struct ActionItem {
 		&asn1_DEF_notify_specs	/* Additional specs */
 	};
 	
-#include <constr_SEQUENCE.h>
-
 static asn1_SEQUENCE_element_t asn1_DEF_ActionItem_elements[] = {
 	{ offsetof(struct ActionItem, accept_as), 0,
 		(ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
