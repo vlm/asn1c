@@ -128,6 +128,8 @@ process_data(enum expectation expectation, char *fbuf, int size) {
 		assert(buf_offset == size);
 		assert(memcmp(buf, fbuf, buf_offset) == 0);
 		break;
+	case EXP_OK:
+		break;
 	}
 
 	asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
