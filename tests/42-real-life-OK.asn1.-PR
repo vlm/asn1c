@@ -209,7 +209,7 @@ memb_vparts_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 static asn1_TYPE_member_t asn1_MBR_vparts[] = {
 	{ ATF_NOFLAGS, 0, 0,
-		.tag = -1 /* Ambiguous tag (CHOICE|ANY?) */,
+		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_VariablePart,
 		.memb_constraints = 0,	/* Defer to actual type */
