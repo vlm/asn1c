@@ -1,0 +1,50 @@
+#
+# $Id$
+#
+
+Name: @PACKAGE@
+Version: @VERSION@
+Release: 1
+Copyright: Lev Walkin <vlm@lionet.info>
+Source: %{name}-%{version}.tar.gz
+Url: http://asn1c.sourceforge.net/
+BuildRoot: /var/tmp/%{name}-root
+
+Group: Development/Languages
+
+Summary:	The ASN.1 to C compiler
+
+%description
+The asn1c compiler turns ASN.1 specifications into C language source files.
+The source files would contain BER/CER/DER encoders and decoders for the
+given abstract notation.
+
+%prep
+%setup -q
+
+%build
+./configure
+%{_make} DESTDIR=$RPM_BUILD_ROOT
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%{__make} install-exec DESTDIR=$RPM_BUILD_ROOT
+(cd skeletons && %{__make} install-data DESTDIR=$RPM_BUILD_ROOT)
+(cd asn1c && %{__make} install-man DESTDIR=$RPM_BUILD_ROOT)
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%doc README FAQ COPYING ChangeLog BUGS TODO
+%doc doc/asn1c-usage.pdf doc/asn1c-usage.html
+%attr(755,root,root) %{_bindir}
+%attr(644,root,root) %{_datadir}/asn1c
+%{_mandir}/man1/asn1c.1*
+
+%changelog
+
+* Tue Sep 18 2004 Lev Walkin <vlm@lionet.info>
+- First version of asn1c.spec
+
