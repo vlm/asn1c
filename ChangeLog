@@ -1,7 +1,9 @@
 
-0.9.9:	2005-Jan-17
+0.9.9:	2005-Jan-21
 
 	* Initial XER (XML) decoding implementation.
+	* ANY allocation routine fixed.
+	  Reported by <mikko.ahonen@elma.net>.
 
 0.9.8:	2005-Jan-17
 
