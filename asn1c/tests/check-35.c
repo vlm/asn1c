@@ -203,7 +203,7 @@ partial_read(uint8_t *buf, size_t size) {
 	/*
 	 * Divide the space (size) into three blocks in various combinations:
 	 *   |<----->i1<----->i2<----->|
-	 *   ^ buf                     ^ buf+size
+	 *   ^ buf		     ^ buf+size
 	 * Try to read block by block.
 	 */
 	for(i1 = 0; i1 < size; i1++) {
@@ -262,6 +262,41 @@ partial_read(uint8_t *buf, size_t size) {
 	}
 }
 
+static char xer_buf[128];
+static int xer_off;
+
+static int
+xer_cb(const void *buffer, size_t size, void *key) {
+	(void)key;
+	assert(xer_off + size < sizeof(xer_buf));
+	memcpy(xer_buf + xer_off, buffer, size);
+	xer_off += size;
+	return 0;
+}
+
+static void
+check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
+	T_t *tp = 0;
+	ber_dec_rval_t rval;
+	asn_enc_rval_t er;
+	int xer_sample_len = strlen(xer_sample);
+
+	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
+	assert(rval.code == RC_OK);
+	assert(rval.consumed == size);
+	assert(tp);
+
+	xer_off = 0;
+	er = xer_encode(&asn_DEF_T, tp, XER_F_CANONICAL, xer_cb, 0);
+	assert(er.encoded == xer_off);
+	assert(xer_off);
+	xer_buf[xer_off] = 0;
+	printf("[%s] vs [%s]\n", xer_buf, xer_sample);
+	assert(xer_off = xer_sample_len);
+	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);
+}
+
+
 int
 main(int ac, char **av) {
 	T_t t;
@@ -272,10 +307,12 @@ main(int ac, char **av) {
 	check(&t, buf1, sizeof(buf1) + 10, sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
 	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	check_xer(buf1, sizeof(buf1), "<T><c><false/></c><b><b2>z</b2></b><a>ns</a><d><r-oid>85.79</r-oid></d></T>");
 
 	check(&t, buf2, sizeof(buf2) + 10, sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
 	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	check_xer(buf2, sizeof(buf2), "<T><c><true/></c><b><b1>z</b1></b><a>ns</a><d><oid>2.1</oid></d></T>");
 
 	/* Split the buffer in parts and check decoder restartability */
 	partial_read(buf1, sizeof(buf1));

@@ -396,6 +396,8 @@ static asn_SET_specifics_t asn_DEF_Test_structure_2_specs = {
 	offsetof(struct Test_structure_2, _presence_map),
 	asn_DEF_Test_structure_2_tag2el,
 	1,	/* Count of tags in the map */
+	asn_DEF_Test_structure_2_tag2el,	/* Same as above */
+	1,	/* Count of tags in the CANONICAL-XER map */
 	0,	/* Whether extensible */
 	(unsigned int *)asn_DEF_Test_structure_2_mmap	/* Mandatory elements map */
 };
@@ -479,6 +481,8 @@ static asn_SET_specifics_t asn_DEF_Test_structure_3_specs = {
 	offsetof(struct Test_structure_3, _presence_map),
 	asn_DEF_Test_structure_3_tag2el,
 	1,	/* Count of tags in the map */
+	asn_DEF_Test_structure_3_tag2el,	/* Same as above */
+	1,	/* Count of tags in the CANONICAL-XER map */
 	0,	/* Whether extensible */
 	(unsigned int *)asn_DEF_Test_structure_3_mmap	/* Mandatory elements map */
 };

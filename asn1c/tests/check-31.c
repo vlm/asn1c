@@ -141,6 +141,41 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	asn_DEF_Forest.free_struct(&asn_DEF_Forest, &t, 1);
 }
 
+static char xer_buf[512];
+static int xer_off;
+
+static int
+xer_cb(const void *buffer, size_t size, void *key) {
+	(void)key;
+	assert(xer_off + size < sizeof(xer_buf));
+	memcpy(xer_buf + xer_off, buffer, size);
+	xer_off += size;
+	return 0;
+}
+
+static void
+check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
+	Forest_t *tp = 0;
+	ber_dec_rval_t rval;
+	asn_enc_rval_t er;
+	int xer_sample_len = strlen(xer_sample);
+
+	rval = ber_decode(0, &asn_DEF_Forest, (void **)&tp, buf, size);
+	assert(rval.code == RC_OK);
+	assert(rval.consumed == size);
+	assert(tp);
+
+	xer_off = 0;
+	er = xer_encode(&asn_DEF_Forest, tp, XER_F_CANONICAL, xer_cb, 0);
+	assert(er.encoded == xer_off);
+	assert(xer_off);
+	xer_buf[xer_off] = 0;
+	printf("[%s] vs [%s]\n", xer_buf, xer_sample);
+	assert(xer_off = xer_sample_len);
+	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);
+}
+
+
 static void
 try_corrupt(uint8_t *buf, int size) {
 	uint8_t *tmp;
@@ -174,6 +209,7 @@ main(int ac, char **av) {
 	(void)av;	/* Unused argument */
 
 	check(1, buf1, sizeof(buf1), sizeof(buf1));
+	check_xer(buf1, sizeof(buf1), "<Forest><Tree><height>100</height><width>80</width></Tree><Tree><height>110</height><width>82</width></Tree></Forest>");
 	try_corrupt(buf1, sizeof(buf1));
 	check(1, buf1, sizeof(buf1) + 20, sizeof(buf1));
 

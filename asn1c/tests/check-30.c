@@ -53,12 +53,12 @@ uint8_t buf3[] = {
 	32 | 17,		/* [UNIVERSAL 17], constructed */
 	14,	/* L */
 
-	/* a INTEGER */
+	/* INTEGER */
 	64 | 3,			/* [APPLICATION 3] */
 	1,	/* L */
   96,
 
-	/* b IA5String */
+	/* IA5String */
 	22,			/* [UNIVERSAL 22] */
 	3,	/* L */
 	'x',
@@ -70,7 +70,7 @@ uint8_t buf3[] = {
 	1,	/* L */
   96,
 
-	/* c [2] BOOLEAN */
+	/* [2] BOOLEAN */
 	((2 << 6) + 2),			/* [2] */
 	1,	/* L */
 	0xff
@@ -115,12 +115,12 @@ uint8_t buf5[] = {
 	32 | 17,		/* [UNIVERSAL 17], constructed */
 	0x80,	/* indefinite L */
 
-	/* a INTEGER */
+	/* INTEGER */
 	64 | 3,			/* [APPLICATION 3] */
 	1,	/* L */
   96,
 
-	/* b IA5String */
+	/* IA5String */
 	22,			/* [UNIVERSAL 22] */
 	3,	/* L */
 	'x',
@@ -159,24 +159,59 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 		assert(rval.code == RC_OK);
 		assert(rval.consumed == consumed);
 
-		assert(t.a.size == 1);
-		assert(t.a.buf[0] == 96);
-		assert(t.b.size == 3);
-		assert(strcmp(t.b.buf, "xyz") == 0);
+		assert(t.i.size == 1);
+		assert(t.i.buf[0] == 96);
+		assert(t.s.size == 3);
+		assert(strcmp(t.s.buf, "xyz") == 0);
 		if(buf == buf3) {
-			assert(t.c);
+			assert(t.b);
 		} else {
-			assert(t.c == 0);
+			assert(t.b == 0);
 		}
 	} else {
 		if(rval.code == RC_OK) {
-			assert(t.a.size != 1
-			|| t.b.size != 3
-			|| !t.c
+			assert(t.i.size != 1
+			|| t.s.size != 3
+			|| !t.b
 			);
 		}
 		assert(rval.consumed <= consumed);
 	}
+}
+
+
+static char xer_buf[128];
+static int xer_off;
+
+static int
+xer_cb(const void *buffer, size_t size, void *key) {
+	(void)key;
+	assert(xer_off + size < sizeof(xer_buf));
+	memcpy(xer_buf + xer_off, buffer, size);
+	xer_off += size;
+	return 0;
+}
+
+static void
+check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
+	T_t *tp = 0;
+	ber_dec_rval_t rval;
+	asn_enc_rval_t er;
+	int xer_sample_len = strlen(xer_sample);
+
+	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
+	assert(rval.code == RC_OK);
+	assert(rval.consumed == size);
+	assert(tp);
+
+	xer_off = 0;
+	er = xer_encode(&asn_DEF_T, tp, XER_F_CANONICAL, xer_cb, 0);
+	assert(er.encoded == xer_off);
+	assert(xer_off);
+	xer_buf[xer_off] = 0;
+	printf("[%s] vs [%s]\n", xer_buf, xer_sample);
+	assert(xer_off = xer_sample_len);
+	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);
 }
 
 static void
@@ -218,6 +253,9 @@ main(int ac, char **av) {
 	check(1, buf5, sizeof(buf5), sizeof(buf5));
 	check(1, buf5, sizeof(buf5) + 1, sizeof(buf5));
 	check(0, buf5, sizeof(buf5) - 1, sizeof(buf5));
+
+	check_xer(buf1, sizeof(buf1), "<T><s>xyz</s><i>96</i></T>");
+	check_xer(buf3, sizeof(buf3), "<T><s>xyz</s><i>96</i><b><true/></b></T>");
 
 	fprintf(stderr, "\nPseudo-random buffer corruptions must fail\n");
 	try_corrupt(buf1, sizeof(buf1));
