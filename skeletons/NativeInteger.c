@@ -147,9 +147,9 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 	uint8_t buf[sizeof(int)];
 	uint8_t *p;
 
-	/* Prepare fake INTEGER */
+	/* Prepare a fake INTEGER */
 	for(p = buf + sizeof(buf) - 1; p >= buf; p--, Int >>= 8)
-		*p = Int & 0xff;
+		*p = Int;
 
 	tmp.buf = buf;
 	tmp.size = sizeof(buf);
