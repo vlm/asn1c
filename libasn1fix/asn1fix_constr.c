@@ -1,6 +1,6 @@
 #include "asn1fix_internal.h"
 
-#define	AFT_IMAGINARY_ANY	1	/* _fetch_tag() flag */
+#define	AFT_MAGIC_ANY	1	/* _fetch_tag() flag */
 
 static int _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v);
 static int _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b);
@@ -375,7 +375,7 @@ _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v) {
 	 */
 	save_tag = v->tag;			/* Save existing tag */
 	memset(&v->tag, 0, sizeof(v->tag));	/* Remove it temporarily */
-	ret = asn1f_fetch_tag(arg->asn, arg->mod, v, &tag, 0);
+	ret = asn1f_fetch_outmost_tag(arg->asn, arg->mod, v, &tag, 0);
 	v->tag = save_tag;			/* Restore the tag back */
 
 	if(ret == 0) return 0;	/* If found tag, it's okay */
@@ -403,8 +403,8 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 	int ra, rb;
 	int ret;
 
-	ra = asn1f_fetch_tag(arg->asn, arg->mod, a, &ta, AFT_IMAGINARY_ANY);
-	rb = asn1f_fetch_tag(arg->asn, arg->mod, b, &tb, AFT_IMAGINARY_ANY);
+	ra = asn1f_fetch_outmost_tag(arg->asn, arg->mod, a, &ta, AFT_MAGIC_ANY);
+	rb = asn1f_fetch_outmost_tag(arg->asn, arg->mod, b, &tb, AFT_MAGIC_ANY);
 
 	/*
 	 * If both tags are explicitly or implicitly given, use them.
