@@ -1,8 +1,15 @@
 
+0.8.12:	2004-Jun-14
+
+	* RELATIVE-OID and OBJECT IDENTIFIER decoders are not bound
+	  anymore to an integer type of specific size (unsigned long).
+	* SEQUENCE BER decoder fixed again for complex CHOICE case
+	  (Test case 44).
+
 0.8.11:	2004-Jun-05
 
 	* Enforsed stricter conformance with C standards.
-	* SEQUENCE decoder is now equipped with the sorted map
+	* SEQUENCE BER decoder is now equipped with the sorted map
 	  in case of complex CHOICE descendants. Test case 44 created.
 
 0.8.10:	2004-Jun-02
