@@ -114,7 +114,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			 */
 			asn1p_expr_t *terminal;
 			terminal = asn1f_find_terminal_type_ex(
-				arg->asn, arg->mod, arg->expr, NULL);
+				arg->asn, arg->mod, arg->expr);
 			if(terminal
 			&& (terminal->expr_type
 				& (ASN_BASIC_MASK | ASN_STRING_MASK)))
