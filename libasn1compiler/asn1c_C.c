@@ -1431,7 +1431,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	if(C99_MODE) OUT(".type = ");
 	if(expr->_anonymous_type && (expr->expr_type & ASN_CONSTR_MASK)) {
-		OUT("(void *)&asn_DEF_%s_member,\n",
+		OUT("(void *)&asn_DEF_%s_Member,\n",
 			MKID_nr(arg->expr->Identifier));
 	} else if(expr->expr_type & ASN_CONSTR_MASK) {
 		OUT("(void *)&asn_DEF_%s,\n",
