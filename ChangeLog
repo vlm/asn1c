@@ -3,6 +3,11 @@
 
 	* Reworked subtype constraints handling, aiming at PER-applicability.
 
+0.8.19:	2004-Aug-18
+
+	* Fixed BER encoder (problem encoding large tag values)
+	  (Severity: medium, Security impact: low)
+
 0.8.18:	2004-Aug-12
 
 	* Parser: fixed multiple IMPORTS problem (incorrect assertion).
