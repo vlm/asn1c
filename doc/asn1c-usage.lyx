@@ -55,7 +55,7 @@ status Open
 \layout Standard
 
 \backslash 
-extramarks{$Revision$ -- describes asn1c-0.9.3}{}
+extramarks{$Revision$ -- describes asn1c-0.9.5}{}
 \end_inset 
 
 
@@ -1117,7 +1117,7 @@ collapsed false
 
 
 \emph on 
--fnative-integers
+-fnative-types
 \emph default 
  compiler option is used to produce basic C 
 \emph on 
@@ -1648,7 +1648,7 @@ Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which
 
 \layout Standard
 
--fnative-integers
+-fnative-types
 \end_inset 
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
@@ -1658,8 +1658,8 @@ Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which
 
 
 \size small 
-Use native machine's integer types whenever possible, instead of the complex
- ASN.1 INTEGER and ENUMERATED types.
+Use the native machine's data types (int, double) whenever possible, instead
+ of the compound ASN.1 INTEGER_t, ENUMERATED_t and REAL_t types.
  
 \end_inset 
 </cell>
