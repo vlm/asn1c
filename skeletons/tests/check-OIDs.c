@@ -10,6 +10,7 @@
 
 static int
 _print(const void *buffer, size_t size, void *app_key) {
+	(void)app_key;
 	fwrite(buffer, size, 1, stdout);
 	return 0;
 }
@@ -23,7 +24,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	int i;
 
 	printf("Checking {");
-	for(i = 0; i < len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
+	for(i = 0; i < (int)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
 	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
 	printf("}\n");
@@ -32,7 +33,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	rval = ber_decode(&asn1_DEF_OBJECT_IDENTIFIER, (void *)&oid, buf, len);
 	assert(rval.code == RC_OK);
 
-	assert(oid->size == len - 2);
+	assert(oid->size == (ssize_t)len - 2);
 
 	/*
 	 * Print the contents for visual debugging.
@@ -52,7 +53,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf("OBJECT_IDENTIFIER_get_arcs() => {");
 	for(i = 0; i < alen; i++) {
 		printf(" %lu", arcs[i]);
-		assert(arcs[i] == ck_buf[i]);
+		assert(arcs[i] == (unsigned long)ck_buf[i]);
 	}
 	printf(" }\n");
 }
@@ -66,7 +67,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	int i;
 
 	printf("Checking {");
-	for(i = 0; i < len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
+	for(i = 0; i < (ssize_t)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
 	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
 	printf("}\n");
@@ -75,7 +76,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	rval = ber_decode(&asn1_DEF_RELATIVE_OID, (void *)&oid, buf, len);
 	assert(rval.code == RC_OK);
 
-	assert(oid->size == len - 2);
+	assert(oid->size == (ssize_t)len - 2);
 
 	/*
 	 * Print the contents for visual debugging.
@@ -95,7 +96,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf("RELATIVE_OID_get_arcs() => {");
 	for(i = 0; i < alen; i++) {
 		printf(" %lu", (unsigned long)arcs[i]);
-		assert(arcs[i] == ck_buf[i]);
+		assert(arcs[i] == (unsigned long)ck_buf[i]);
 	}
 	printf(" }\n");
 }
@@ -129,7 +130,7 @@ check_REGEN(int *arcs, int acount) {
 	printf("Encoded {");
 	for(i = 0; i < alen; i++) {
 		printf(" %lu", tmp_arcs[i]);
-		assert(arcs[i] == tmp_arcs[i]);
+		assert((unsigned long)arcs[i] == tmp_arcs[i]);
 	}
 	printf(" }\n");
 }
@@ -164,7 +165,7 @@ check_REGEN_OID(int *arcs, int acount) {
 	printf("Encoded {");
 	for(i = 0; i < alen; i++) {
 		printf(" %lu", tmp_arcs[i]);
-		assert(arcs[i] == tmp_arcs[i]);
+		assert((unsigned long)arcs[i] == tmp_arcs[i]);
 	}
 	printf(" }\n");
 }
@@ -179,8 +180,7 @@ check_speed() {
 	unsigned long value;
 	int i;
 
-	ret = OBJECT_IDENTIFIER_get_single_arc(buf, sizeof(buf), 0,
-		&value, sizeof(value));
+	ret = OBJECT_IDENTIFIER_get_single_arc(buf, sizeof(buf), 0, &value, sizeof(value));
 	assert(ret == 0);
 	assert(value == 0x7040c20d);
 
@@ -223,7 +223,7 @@ check_speed() {
 		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
 
 int
-main(int ac, char **av) {
+main() {
 	/* {joint-iso-itu-t 230 3} */
 	uint8_t buf1[] = {
 		0x06,	/* OBJECT IDENTIFIER */
