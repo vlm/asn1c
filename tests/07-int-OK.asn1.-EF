@@ -9,7 +9,7 @@ int123456 INTEGER ::= 123456
 
 Interval ::= INTEGER (1..123456)
 
-SameInterval ::= INTEGER
+SameInterval INTEGER ::= { }
 
 Reason ::= INTEGER {
     no-reason(0),
