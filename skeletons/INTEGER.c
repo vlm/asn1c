@@ -352,6 +352,8 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 	uint8_t *p;
 	uint8_t *pstart;
 	uint8_t *pend1;
+	int littleEndian = 1;	/* Run-time detection */
+	int add;
 
 	if(!st) {
 		errno = EINVAL;
@@ -361,15 +363,23 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 	buf = (uint8_t *)MALLOC(sizeof(value));
 	if(!buf) return -1;
 
-	pstart = (uint8_t *)&value;
-	pend1 = pstart + sizeof(value) - 1;
+	if(*(char *)&littleEndian) {
+		pstart = (uint8_t *)&value + sizeof(value) - 1;
+		pend1 = (uint8_t *)&value;
+		add = -1;
+	} else {
+		pstart = (uint8_t *)&value;
+		pend1 = pstart + sizeof(value) - 1;
+		add = 1;
+	}
+
 	/*
 	 * If the contents octet consists of more than one octet,
 	 * then bits of the first octet and bit 8 of the second octet:
 	 * a) shall not all be ones; and
 	 * b) shall not all be zero.
 	 */
-	for(p = pstart; p < pend1; p++) {
+	for(p = pstart; p < pend1; p += add) {
 		switch(*p) {
 		case 0x00: if((p[1] & 0x80) == 0)
 				continue;
