@@ -21,6 +21,7 @@
 
 /* Scanner skeleton version:
  * $Header$
+ * $FreeBSD: src/usr.bin/lex/flex.skl,v 1.4 1999/10/27 07:56:44 obrien Exp $
  */
 
 #define FLEX_SCANNER
@@ -1802,7 +1803,7 @@ static asn1_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 
 /* Newline */
 /* White-space */
-#line 1806 "lex.yy.c"
+#line 1807 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1956,7 +1957,7 @@ YY_DECL
 #line 99 "asn1p_l.l"
 
 
-#line 1960 "lex.yy.c"
+#line 1961 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -2898,7 +2899,7 @@ YY_RULE_SETUP
 #line 483 "asn1p_l.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 2902 "lex.yy.c"
+#line 2903 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
