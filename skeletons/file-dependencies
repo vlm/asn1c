@@ -26,7 +26,7 @@ OBJECT_IDENTIFIER.h OBJECT_IDENTIFIER.c INTEGER.h
 ObjectDescriptor.h ObjectDescriptor.c GraphicString.h
 PrintableString.h PrintableString.c
 REAL.h REAL.c INTEGER.h
-RELATIVE-OID.h RELATIVE-OID.c OBJECT-IDENTIFIER.h
+RELATIVE-OID.h RELATIVE-OID.c OBJECT_IDENTIFIER.h
 T61String.h T61String.c
 TeletexString.h TeletexString.c	
 UTCTime.h UTCTime.c GeneralizedTime.h
