@@ -1,0 +1,6 @@
+<PDU>
+	<extensibleSequence>
+		<extensibleSequence/>
+		<integer>123 456</integer>
+	</extensibleSequence>
+</PDU>
