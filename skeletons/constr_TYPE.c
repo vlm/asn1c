@@ -56,3 +56,15 @@ _print2fp(const void *buffer, size_t size, void *app_key) {
 	return 0;
 }
 
+
+/*
+ * Some compilers do not support variable args macros.
+ * This function is a replacement of ASN_DEBUG() macro.
+ */
+void ASN_DEBUG_f(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	fprintf(stderr, "\n");
+	va_end(ap);
+}
