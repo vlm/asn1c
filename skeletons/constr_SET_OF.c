@@ -498,7 +498,9 @@ SET_OF_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 			if(memb_ptr)
 			element->type->free_struct(element->type, memb_ptr, 0);
 		}
-		list->count = 0;	/* Just in case */
+		list->count = 0;	/* No meaningful elements left */
+
+		asn_set_empty(list);	/* Remove (list->array) */
 
 		if(!contents_only) {
 			FREEMEM(ptr);
