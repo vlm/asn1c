@@ -1,6 +1,5 @@
 /*-
- * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>
- * All rights reserved.
+ * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,18 +24,7 @@
  *
  * $Id$
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sysexits.h>		/* for EX_USAGE */
-#include <assert.h>
-#include <errno.h>
-
-#ifdef	HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "sys-common.h"
 
 #include <asn1parser.h>		/* For static string tables */
 
@@ -48,13 +36,13 @@
 #include <RELATIVE-OID.c>
 #include <asn_codecs_prim.c>
 
+#undef  COPYRIGHT
+#define COPYRIGHT       \
+	"Copyright (c) 2004 Lev Walkin <vlm@lionet.info>\n"
+
 static void usage(const char *av0);	/* Print the Usage screen and exit */
 static int process(const char *fname);	/* Perform the BER decoding */
 static int decode_tlv_from_string(const char *datastring);
-
-#undef	COPYRIGHT
-#define	COPYRIGHT	\
-	"Copyright (c) 2004 Lev Walkin <vlm@lionet.info>\n"
 
 static int single_type_decoding = 0;	/* -1 enables that */
 static int pretty_printing = 1;		/* -p disables that */

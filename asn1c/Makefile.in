@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 SOURCES = asn1c.c enber.c unber.c
 
 srcdir = @srcdir@
@@ -39,8 +40,8 @@ POST_UNINSTALL = :
 host_triplet = @host@
 bin_PROGRAMS = asn1c$(EXEEXT) unber$(EXEEXT) enber$(EXEEXT)
 subdir = asn1c
-DIST_COMMON = README $(dist_man1_MANS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+DIST_COMMON = README $(dist_man1_MANS) $(noinst_HEADERS) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -87,6 +88,7 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 man1dir = $(mandir)/man1
 NROFF = nroff
 MANS = $(dist_man1_MANS)
+HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = $(SUBDIRS)
@@ -216,6 +218,7 @@ asn1c_LDADD = \
 	$(top_builddir)/libasn1fix/libasn1fix.la	\
 	$(top_builddir)/libasn1compiler/libasn1compiler.la
 
+noinst_HEADERS = sys-common.h
 dist_man1_MANS = asn1c.1 unber.1 enber.1
 check_SCRIPTS = check-parsing.sh
 TESTS = check-parsing.sh
@@ -618,7 +621,7 @@ check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_SCRIPTS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-recursive
-all-am: Makefile $(PROGRAMS) $(MANS)
+all-am: Makefile $(PROGRAMS) $(MANS) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
 	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"; do \
