@@ -1113,9 +1113,10 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	 */
 	if(!*sptr) {
 		OCTET_STRING_t *st;
-		(void *)st = *sptr = CALLOC(1, specs->struct_size);
+		st = (OCTET_STRING_t *)CALLOC(1, specs->struct_size);
 		if(st) st->buf = (uint8_t *)CALLOC(1, 1);
-		if(!*sptr || !st->buf) {
+		*sptr = (void *)st;
+		if(!st || !st->buf) {
 			asn_dec_rval_t rval;
 			if(*sptr) FREEMEM(*sptr);
 			rval.code = RC_FAIL;
