@@ -435,11 +435,11 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
  */
 asn_enc_rval_t
 SET_encode_der(asn_TYPE_descriptor_t *td,
-	void *ptr, int tag_mode, ber_tlv_tag_t tag,
+	void *sptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
 	size_t computed_size = 0;
-	asn_enc_rval_t my_erval;
+	asn_enc_rval_t er;
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
 	asn_TYPE_tag2member_t *t2m;
 	int t2m_count;
@@ -451,12 +451,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 */
 	if(t2m_build_own) {
 		(void *)t2m = alloca(td->elements_count * sizeof(t2m[0]));
-		if(!t2m) {	/* There are such platforms */
-			my_erval.encoded = -1;
-			my_erval.failed_type = td;
-			my_erval.structure_ptr = ptr;
-			return my_erval;
-		}
+		if(!t2m) _ASN_ENCODE_FAILED; /* There are such platforms */
 		t2m_count = 0;
 	} else {
 		/*
@@ -472,14 +467,14 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
-		asn_enc_rval_t erval;
+		asn_enc_rval_t tmper;
 		void *memb_ptr;
 
 		/*
 		 * Compute the length of the encoding of this member.
 		 */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) {
 				if(t2m_build_own) {
 					t2m[t2m_count].el_no = edx;
@@ -489,14 +484,14 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 				continue;
 			}
 		} else {
-			memb_ptr = (void *)((char *)ptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
-		erval = elm->type->der_encoder(elm->type, memb_ptr,
+		tmper = elm->type->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
 			0, 0);
-		if(erval.encoded == -1)
-			return erval;
-		computed_size += erval.encoded;
+		if(tmper.encoded == -1)
+			return tmper;
+		computed_size += tmper.encoded;
 
 		/*
 		 * Remember the outmost tag of this member.
@@ -533,72 +528,74 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Encode the TLV for the sequence itself.
 	 */
 	ret = der_write_tags(td, computed_size, tag_mode, 1, tag, cb, app_key);
-	if(ret == -1) {
-		my_erval.encoded = -1;
-		my_erval.failed_type = td;
-		my_erval.structure_ptr = ptr;
-		return my_erval;
-	}
-	my_erval.encoded = computed_size + ret;
+	if(ret == -1) _ASN_ENCODE_FAILED;
+	er.encoded = computed_size + ret;
 
-	if(!cb) return my_erval;
+	if(!cb) return er;
 
 	/*
 	 * Encode all members.
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm;
-		asn_enc_rval_t erval;
+		asn_enc_rval_t tmper;
 		void *memb_ptr;
 
 		/* Encode according to the tag order */
 		elm = &td->elements[t2m[edx].el_no];
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {
-			memb_ptr = (void *)((char *)ptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
-		erval = elm->type->der_encoder(elm->type, memb_ptr,
+		tmper = elm->type->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
 			cb, app_key);
-		if(erval.encoded == -1)
-			return erval;
-		computed_size -= erval.encoded;
+		if(tmper.encoded == -1)
+			return tmper;
+		computed_size -= tmper.encoded;
 	}
 
 	if(computed_size != 0) {
 		/*
 		 * Encoded size is not equal to the computed size.
 		 */
-		my_erval.encoded = -1;
-		my_erval.failed_type = td;
-		my_erval.structure_ptr = ptr;
+		_ASN_ENCODE_FAILED;
 	}
 
-	return my_erval;
+	return er;
 }
 
 asn_enc_rval_t
 SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int xcan = (flags & XER_F_CANONICAL);
+	asn_TYPE_tag2member_t *t2m = specs->tag2el_cxer;
+	int t2m_count = specs->tag2el_cxer_count;
 	int edx;
 
 	if(!sptr)
 		_ASN_ENCODE_FAILED;
 
+	assert(t2m_count == td->elements_count);
+
 	er.encoded = 0;
 
-	for(edx = 0; edx < td->elements_count; edx++) {
+	for(edx = 0; edx < t2m_count; edx++) {
 		asn_enc_rval_t tmper;
-		asn_TYPE_member_t *elm = &td->elements[edx];
+		asn_TYPE_member_t *elm;
 		void *memb_ptr;
-		const char *mname = elm->name;
-		unsigned int mlen = strlen(elm->name);
+		const char *mname;
+		unsigned int mlen;
+
+		elm = &td->elements[t2m[edx].el_no];
+		mname = elm->name;
+		mlen = strlen(elm->name);
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
@@ -624,6 +621,8 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
 
 	return er;
+cb_failed:
+	_ASN_ENCODE_FAILED;
 }
 
 int

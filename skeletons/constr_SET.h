@@ -18,9 +18,18 @@ typedef struct asn_SET_specifics_s {
 
 	/*
 	 * Tags to members mapping table (sorted).
+	 * Sometimes suitable for DER encoding (untagged CHOICE is present);
+	 * if so, tag2el_count will be greater than td->elements_count.
 	 */
 	asn_TYPE_tag2member_t *tag2el;
 	int tag2el_count;
+
+	/*
+	 * Tags to members mapping table, second edition.
+	 * Suitable for CANONICAL-XER encoding.
+	 */
+	asn_TYPE_tag2member_t *tag2el_cxer;
+	int tag2el_cxer_count;
 
 	/*
 	 * Extensions-related stuff.
