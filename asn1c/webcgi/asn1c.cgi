@@ -16,6 +16,7 @@ $HashProgramPath = 'md5';			# Program to hash the input
 $DM = 0750;					# Directory mode for all mkdirs.
 $MaxHistoryItems = 5;				# Number of items in History
 $DynamicHistory = 'yes';			# Full/Short history
+$safeFilename = '^[a-z0-9_-]+[.a-z0-9_-]*$';	# Safe filename
 
 $warn = '<CENTER><FONT SIZE=+1><B>';
 $unwarn = '</B></FONT></CENTER>';
@@ -116,6 +117,26 @@ sub prepareChrootEnvironment() {
 	return 1;
 }
 
+sub makeArchive($$) {
+	local $TMPDIR = shift;
+	local $sandbox = shift;
+	local $archName = $sandbox . '/+Archive.tgz';
+
+	if(! -f $archName) {
+		system("cd $sandbox && "
+			. "for i in ./*.[ch]; do if [ -L \$i ]; then"
+			. " cp $TMPDIR/skeletons/\$i \$i.-;"
+			. " mv \$i.- \$i;"
+			. " fi done && tar --dereference --ignore-failed-read --owner nobody --group nobody -zcf +tmp." . $$ . " *.[ch] Makefile* +Compiler.Log *.asn *.asn1"
+			. " && rm -f ./*.[ch] ./Makefile*"
+			. " && mv ./+tmp." . $$ . " $archName"
+			. " || rm -f ./+tmp." . $$);
+		undef unless -f $archName;
+	}
+
+	$archName;
+}
+
 my $EnvironmentSetOK = prepareChrootEnvironment();
 
 #
@@ -175,32 +196,31 @@ unless($session) {
 	local $trans = param('trans');
 	local $fetch = param('fetch');
 	local $show = param('show');
-
-	unless($t =~ /^[0-9TZ:+-]{14,}$/ && $trans =~ /^[.a-z0-9_-]+$/i) {
+	unless($t =~ /^[0-9TZ:+-]{14,}$/ && $trans =~ /$safeFilename/i) {
 		$fetch = '';
 		$show = '';
 	}
-	if($fetch =~ /^[.a-z0-9_-]+$/i || $show =~ /^(log|tgz)$/) {
-		local $fname = $sessionDir . '/' . $t . '--' . $trans;
+	if($fetch =~ /$safeFilename/i || $show =~ /^(log|tgz)$/) {
+		local $sandbox = $sessionDir . '/' . $t . '--' . $trans;
 
 		if($show eq 'tgz') {
+			local $tarball = makeArchive($TMPDIR, $sandbox);
+			defined $tarball
+				or bark("Cannot create archive [$sandbox]");
+
 			printf("Content-Type: application/x-tar\n");
 			printf("Content-Encoding: gzip\n\n");
-			exec("cd $fname && "
-				. "for i in *.[ch]; do if [ -L \$i ]; then"
-				. " cp $TMPDIR/skeletons/\$i \$i.-;"
-				. " mv \$i.- \$i;"
-				. " fi done && tar --dereference --owner nobody --group nobody -zcvf - ./*.[ch] ./Makefile*");
+			exec("cat $tarball");
 			exit(0);
 		}
 
 		if($show eq 'log') {
-			$fname .= '/+Log';
+			$sandbox .= '/+Compiler.Log';
 		} else {
-			$fname .= '/' . $fetch;
+			$sandbox .= '/' . $fetch;
 		}
-		open(I, "< " . $fname)
-			or bark("Invalid or outdated request: [$fname] [$show] $!");
+		open(I, "< " . $sandbox)
+			or bark("Invalid or outdated request: [$sandbox] [$show] $!");
 		printf "Content-Type: text/plain\n\n";
 		while(<I>) {
 			print;
@@ -280,13 +300,14 @@ if($#gotSafeNames >= 0) {
 	$options .= " -EF" if(param("optEF") eq "on");
 	$options .= " -fnative-types" if(param("optNT") eq "on");
 	my $CompileASN = "$TMPDIR/bin/asn1c -v | sed -e 's/^/-- /'"
-			. " > $sandbox/+Log 2>&1"
+			. " > $sandbox/+Compiler.Log 2>&1"
 		. "; $SUIDHelper $TMPDIR $inChDir $options @gotSafeNames "
-			. " >> $sandbox/+Log 2>&1"
+			. " >> $sandbox/+Compiler.Log 2>&1"
 		. "; echo \$? > $sandbox/+ExitCode";
 	system($CompileASN);
 	bark("Failed to initiate compilation process: $!")
 		if(!-r $sandbox . '/+ExitCode');
+	makeArchive($TMPDIR, $sandbox);
 }
 
 #print join("<BR>\n", `env`);
@@ -378,21 +399,25 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 			. "Error during compilation: $ec</FONT><BR>\n";
 	}
 
+	$allowFetchResults = $ec eq "0"
+		&& (-f $sessionDir . '/' . $trans . '/+Archive.tgz'
+		|| -f $sessionDir . '/' . $trans . '/Makefile.am.sample');
+
 	$results .= "<NOBR>"
-		. (($ec eq "0") ? '1. ' : '')
-		. "<A HREF=\"$myName?time="
+		. ($allowFetchResults ? '1. ' : '')
+		. "<A HREF=\"$myName/$f-$tNum.Log?time="
 		. escapeHTML($origTime)
 		. "&trans=$f"
 		. "&show=log\">"
 		. "Show compiler log</A></NOBR>";
-	if($ec eq "0") {
-		$results .= "<BR>\n<NOBR>"
-		. "2. <A HREF=\"$myName?time="
+	$results .= "<BR>\n<NOBR>"
+		. "2. <A HREF=\"$myName/$f-$tNum.tgz?time="
 		. escapeHTML($origTime)
 		. "&trans=$f"
 		. "&show=tgz\">"
-		. "Fetch results (.tgz)</A></NOBR>";
-	} else {
+		. "Fetch results (.tgz)</A></NOBR>"
+		if $allowFetchResults;
+	if($ec ne "0") {
 		$results .= '<P>'
 			. '<FONT SIZE=-1><A HREF="mailto:asn1c@lionet.info?Subject=asn1c compiler help: '
 			. "transaction $tNum ("
