@@ -1,3 +1,9 @@
+/*
+ * Mode of operation:
+ * Each of the *.in files is XER-decoded, then converted into DER,
+ * then decoded from DER and encoded into XER again. The resulting
+ * stream is compared with the corresponding .out file.
+ */
 #undef	NDEBUG
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +19,6 @@
 enum expectation {
 	EXP_OK,		/* Encoding/decoding must succeed */
 	EXP_BROKEN,	/* Decoding must fail */
-	EXP_RECLESS,	/* Reconstruction is allowed to yield less data */
 	EXP_DIFFERENT,	/* Reconstruction will yield different encoding */
 };
 
@@ -36,35 +41,54 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	return 0;
 }
 
-static int
-save_object(PDU_t *st) {
+enum der_or_xer {
+	AS_DER,
+	AS_XER,
+};
+
+static void
+save_object_as(PDU_t *st, enum der_or_xer how) {
 	asn_enc_rval_t rval; /* Return value */
 
 	buf_offset = 0;
-	
-	rval = xer_encode(&asn_DEF_PDU, st, XER_F_BASIC, _buf_writer, 0);
+
+	/*
+	 * Save object using specified method.
+	 */
+	switch(how) {
+	case AS_DER:
+		rval = der_encode(&asn_DEF_PDU, st,
+			_buf_writer, 0);
+		break;
+	case AS_XER:
+		rval = xer_encode(&asn_DEF_PDU, st, XER_F_BASIC,
+			_buf_writer, 0);
+		break;
+	}
 	if (rval.encoded == -1) {
 		fprintf(stderr,
 			"Cannot encode %s: %s\n",
 			rval.failed_type->name, strerror(errno));
 		assert(rval.encoded != -1);
-		return -1;	/* JIC */
+		return;
 	}
 
-	fprintf(stderr, "=== re-encoded ===\n");
-	fwrite(buf, 1, buf_offset, stderr);
-	fprintf(stderr, "=== end ===\n");
-
 	fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
-
-	return 0;
 }
 
 static PDU_t *
-load_object(enum expectation expectation, char *fbuf, int size) {
+load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or_xer how) {
 	asn_dec_rval_t rval;
+	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
+		asn_TYPE_descriptor_t *, void **, void *, size_t);
 	PDU_t *st = 0;
 	int csize;
+
+	if(how == AS_DER)
+		zer_decode = ber_decode;
+	else
+		zer_decode = xer_decode;
+		
 
 	fprintf(stderr, "LOADING OBJECT OF SIZE %d\n", size);
 
@@ -80,10 +104,10 @@ load_object(enum expectation expectation, char *fbuf, int size) {
 		do {
 			fprintf(stderr, "Decoding from %d with %d (left %d)\n",
 				fbuf_offset, fbuf_chunk, fbuf_left);
-			rval = xer_decode(0, &asn_DEF_PDU, (void **)&st,
+			rval = zer_decode(0, &asn_DEF_PDU, (void **)&st,
 				fbuf + fbuf_offset,
 					fbuf_chunk < fbuf_left 
-						? fbuf_chunk : fbuf_left);
+					? fbuf_chunk : fbuf_left);
 			fbuf_offset += rval.consumed;
 			fbuf_left -= rval.consumed;
 			if(rval.code == RC_WMORE)
@@ -94,13 +118,17 @@ load_object(enum expectation expectation, char *fbuf, int size) {
 
 		if(expectation != EXP_BROKEN) {
 			assert(rval.code == RC_OK);
-			assert(fbuf_offset - size < 2
+			if(how == AS_DER) {
+				assert(fbuf_offset == size);
+			} else {
+				assert(fbuf_offset - size < 2
 				|| (fbuf_offset + 1 /* "\n" */  == size
 					&& fbuf[size - 1] == '\n')
 				|| (fbuf_offset + 2 /* "\r\n" */  == size
 					&& fbuf[size - 2] == '\r'
 					&& fbuf[size - 1] == '\n')
-			);
+				);
+			}
 		} else {
 			assert(rval.code != RC_OK);
 			fprintf(stderr, "Failed, but this was expected\n");
@@ -113,32 +141,67 @@ load_object(enum expectation expectation, char *fbuf, int size) {
 	return st;
 }
 
+static int
+xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
+	char *oend = obuf + osize;
+	char *nend = nbuf + nsize;
+
+	if((osize && !nsize) || (!osize && nsize))
+		return 0;	/* not equal apriori */
+
+	while(1) {
+		while(obuf < oend && isspace(*obuf)) obuf++;
+		while(nbuf < nend && isspace(*nbuf)) nbuf++;
+
+		if(obuf == oend || nbuf == nend) {
+			if(obuf == oend && nbuf == nend)
+				break;
+			fprintf(stderr, "%s data in reconstructed encoding\n",
+				(obuf == oend) ? "More" : "Less");
+			return 0;
+		}
+
+		if(*obuf != *nbuf) {
+			printf("%c%c != %c%c\n",
+				obuf[0], obuf[1],
+				nbuf[0], nbuf[1]);
+			return 0;
+		}
+		obuf++, nbuf++;
+	}
+
+	return 1;
+}
 
 static void
-process_data(enum expectation expectation, char *fbuf, int size) {
+process_XER_data(enum expectation expectation, char *fbuf, int size) {
 	PDU_t *st;
 	int ret;
 
-	st = load_object(expectation, fbuf, size);
+	st = load_object_from(expectation, fbuf, size, AS_XER);
 	if(!st) return;
 
-	ret = save_object(st);
-	assert(buf_offset < sizeof(buf));
-	assert(ret == 0);
+	/* Save and re-load as DER */
+	save_object_as(st, AS_DER);
+	st = load_object_from(expectation, buf, buf_offset, AS_DER);
+	assert(st);
+
+	save_object_as(st, AS_XER);
+	fprintf(stderr, "=== original ===\n");
+	fwrite(fbuf, 1, size, stderr);
+	fprintf(stderr, "=== re-encoded ===\n");
+	fwrite(buf, 1, buf_offset, stderr);
+	fprintf(stderr, "=== end ===\n");
 
 	switch(expectation) {
-	case EXP_RECLESS:
-		assert(buf_offset > 0 && buf_offset < size);
-		assert(memcmp(buf + 2, fbuf + 2, buf_offset - 2) == 0);
-		break;
 	case EXP_DIFFERENT:
-		assert(buf_offset > 0 && buf_offset < size);
+		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
 		break;
 	case EXP_BROKEN:
-		assert(buf_offset == size);
-		assert(memcmp(buf, fbuf, buf_offset) == 0);
+		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
 		break;
 	case EXP_OK:
+		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
 		break;
 	}
 
@@ -165,8 +228,6 @@ process(const char *fname) {
 		expectation = EXP_BROKEN; break;
 	case 'D':	/* Reconstructing should yield different data */
 		expectation = EXP_DIFFERENT; break;
-	case 'L':	/* Extensions are present */
-		expectation = EXP_RECLESS; break;
 	default:
 		expectation = EXP_OK; break;
 	}
@@ -185,7 +246,7 @@ process(const char *fname) {
 
 	assert(rd < sizeof(fbuf));	/* expect small files */
 
-	process_data(expectation, fbuf, rd);
+	process_XER_data(expectation, fbuf, rd);
 
 	return 1;
 }
@@ -197,14 +258,17 @@ main() {
 	int processed_files = 0;
 	char *str;
 
-	dir = opendir("../data-70");
-	assert(dir);
-
 	/* Process a specific test file */
 	str = getenv("DATA_70_FILE");
 	if(str && strncmp(str, "data-70-", 8) == 0)
 		process(str);
 
+	dir = opendir("../data-70");
+	assert(dir);
+
+	/*
+	 * Process each file in that directory.
+	 */
 	while((dent = readdir(dir))) {
 		if(strncmp(dent->d_name, "data-70-", 8) == 0)
 			if(process(dent->d_name))
