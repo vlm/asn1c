@@ -250,6 +250,7 @@ static asn1p_value_t *
 %type	<tv_str>		TypeRefName
 %type	<tv_str>		ObjectClassReference
 %type	<tv_str>		Identifier
+%type	<tv_str>		optIdentifier
 %type	<a_parg>		ParameterArgumentName
 %type	<a_plist>		ParameterArgumentList
 %type	<a_expr>		ActualParameter
@@ -1076,23 +1077,25 @@ TypeDeclaration:
 		$$->expr_type = ASN_CONSTR_SET;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE optConstraints TOK_OF optTag TypeDeclaration {
+	| TOK_SEQUENCE optConstraints TOK_OF optIdentifier optTag TypeDeclaration {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
 		$$->meta_type = AMT_TYPE;
-		$5->tag = $4;
-		asn1p_expr_add($$, $5);
+		$6->Identifier = $4;
+		$6->tag = $5;
+		asn1p_expr_add($$, $6);
 	}
-	| TOK_SET optConstraints TOK_OF optTag TypeDeclaration {
+	| TOK_SET optConstraints TOK_OF optIdentifier optTag TypeDeclaration {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SET_OF;
 		$$->meta_type = AMT_TYPE;
-		$5->tag = $4;
-		asn1p_expr_add($$, $5);
+		$6->Identifier = $4;
+		$6->tag = $5;
+		asn1p_expr_add($$, $6);
 	}
 	| TOK_ANY 					{
 		$$ = asn1p_expr_new(yylineno);
@@ -1954,6 +1957,12 @@ ObjectClassReference:
 		$$ = $1;
 	}
 	;
+
+optIdentifier:
+	{ $$ = 0; }
+	| Identifier {
+		$$ = $1;
+	}
 
 Identifier:
 	TOK_identifier {
