@@ -89,6 +89,7 @@ main() {
 	check(UTF8, "z", "<z z z>a&#32;b</z z z>", "a b");
 	check(UTF8, "z", "<z>a&#32323;b</z>", "a\347\271\203b");
 	check(UTF8, "z", "<z>a&#3000000000;b</z>", "a&#3000000000;b");
+	check(UTF8, "z", "<z>a&#5000000000;b</z>", "a&#5000000000;b");
 	check(UTF8, "z", "<z>a&#300</z>", "a&#300");
 	check(UTF8, "z", "<z>a&#-300;</z>", "a&#-300;");
 	check(UTF8, "z", "<z>a<ff/>b</z>", "a\014b");

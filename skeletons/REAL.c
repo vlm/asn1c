@@ -2,12 +2,16 @@
  * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#if	defined(__alpha)
+#define	_ISOC99_SOURCE	/* For quiet NAN, indirectly through bits/nan.h */
+#define	_BSD_SOURCE	/* To reintroduce finite(3) */
+#endif
 #include <asn_internal.h>
-#include <REAL.h>
 #include <stdlib.h>	/* for strtod(3) */
 #include <math.h>
 #include <errno.h>
 #include <assert.h>
+#include <REAL.h>
 
 #undef	INT_MAX
 #define	INT_MAX	((int)(((unsigned int)-1) >> 1))

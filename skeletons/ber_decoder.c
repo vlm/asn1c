@@ -255,8 +255,8 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 			 * Inner TLV specifies length which is inconsistent
 			 * with the outer TLV's length value.
 			 */
-			ASN_DEBUG("Outer TLV is %d and inner is %d",
-				limit_len, tlv_len);
+			ASN_DEBUG("Outer TLV is %ld and inner is %ld",
+				(long)limit_len, (long)tlv_len);
 			RETURN(RC_FAIL);
 		}
 

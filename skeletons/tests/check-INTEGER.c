@@ -44,6 +44,7 @@ check(uint8_t *buf, int size, long check_long, int check_ret) {
 	printf(" (%ld, %d) vs (%ld, %d)\n",
 		rlong, ret, check_long, check_ret);
 	assert(ret == check_ret);
+	printf("%ld %ld\n", rlong, check_long);
 	assert(rlong == check_long);
 
 	if(check_ret == 0) {
@@ -134,7 +135,7 @@ main(int ac, char **av) {
 	CHECK(buf8, 0x7F7E7D7C, 0);
 	CHECK(buf9, 0x7F7E7D7C, 0);
 	CHECK(buf10, 0x7F7E7D7C, 0);
-	CHECK(buf11, 0x80000000, 0);
+	CHECK(buf11, -2147483648, 0);	/* 0x80000000 */
 	CHECK(buf12, -32768, 0);
 	CHECK(buf13, -128, 0);
 

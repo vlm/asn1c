@@ -914,8 +914,8 @@ static ssize_t OCTET_STRING__convert_binary(void *sptr, void *chunk_buf, size_t 
  * Something like strtod(), but with stricter rules.
  */
 static int
-OS__strtoent(int base, char *buf, char *end, long *return_value) {
-	long val = 0;
+OS__strtoent(int base, char *buf, char *end, int32_t *return_value) {
+	int32_t val = 0;
 	char *p;
 
 	for(p = buf; p < end; p++) {
@@ -981,7 +981,7 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, void *chunk_buf, size_t
 		if(len == 1 /* "&" */) goto want_more;
 		if(p[1] == 0x23 /* '#' */) {
 			char *pval;	/* Pointer to start of digits */
-			long val;	/* Entity reference value */
+			int32_t val;	/* Entity reference value */
 			int base;
 
 			if(len == 2 /* "&#" */) goto want_more;
