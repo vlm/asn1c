@@ -1,5 +1,5 @@
 
-0.9:	2004-Aug-12
+0.9.1:	2004-Aug-12
 
 	* Reworked subtype constraints handling, aiming at PER-applicability.
 
