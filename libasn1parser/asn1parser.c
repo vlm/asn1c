@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <assert.h>
@@ -181,10 +181,12 @@ _asn1p_fix_modules(asn1p_t *a, const char *fname) {
 	asn1p_module_t *mod;
 	TQ_FOR(mod, &(a->modules), mod_next) {
 		asn1p_expr_t *expr;
+		int flen = strlen(fname) + 1;
 
-		mod->source_file_name = strdup(fname);
+		mod->source_file_name = malloc(flen);
 		if(mod->source_file_name == NULL)
 			return -1;
+		memcpy(mod->source_file_name, fname, flen);
 
 		TQ_FOR(expr, &(mod->members), next) {
 			_asn1p_apply_module2expr(expr, mod);
