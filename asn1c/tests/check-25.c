@@ -107,12 +107,11 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 
 		assert(t.g->size == 2);
 		assert(t.g->bits_unused == 2);
-		printf("%d %d\n", t.g->buf[0], t.g->buf[1]);
+		fprintf(stderr, "%d %d\n", t.g->buf[0], t.g->buf[1]);
 		assert(t.g->buf[0] == 147);
 		assert(t.g->buf[1] != 150);
 		assert(t.g->buf[1] == 148);
 
-		printf("%d\n", t.h->buf[3]);
 		assert(t.h->size == 3);
 		assert(t.h->bits_unused == 1);
 		assert(t.h->buf[0] == 140);
