@@ -46,7 +46,7 @@ asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
 	CLCOPY(meta_type);
 	CLCOPY(expr_type);
 	CLCOPY(tag);
-	CLCOPY(marker);		/* OPTIONAL/DEFAULT */
+	CLCOPY(marker.flags);		/* OPTIONAL/DEFAULT */
 	CLCOPY(module);
 	CLCOPY(_mark);
 
@@ -62,6 +62,7 @@ asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
 	CLCLONE(combined_constraints, asn1p_constraint_clone);
 	CLCLONE(params, asn1p_paramlist_clone);
 	CLCLONE(value, asn1p_value_clone);
+	CLCLONE(marker.default_value, asn1p_value_clone);
 	CLCLONE(with_syntax, asn1p_wsyntx_clone);
 
 	/*
@@ -128,6 +129,8 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 			asn1p_paramlist_free(expr->params);
 		if(expr->value)
 			asn1p_value_free(expr->value);
+		if(expr->marker.default_value)
+			asn1p_value_free(expr->marker.default_value);
 		if(expr->with_syntax)
 			asn1p_wsyntx_free(expr->with_syntax);
 
