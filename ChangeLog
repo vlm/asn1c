@@ -1,4 +1,9 @@
 
+0.9.4:	2004-Sep-07
+
+	* More support for recursive type definitions.
+	* Explicit support for ANY type decoding.
+
 0.9.3:	2004-Sep-07
 
 	* Extended constraints support in parametrized types.
