@@ -150,16 +150,25 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 #endif
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		if((arg->flags & A1C_USE_NATIVE_INTEGERS)) {
+	case ASN_BASIC_REAL:
+		if((arg->flags & A1C_USE_NATIVE_TYPES)) {
 			switch(_format) {
 			case TNF_CTYPE:
 			case TNF_RSAFE:
-				return "int";
-			default:
-				if(expr->expr_type == ASN_BASIC_INTEGER)
-					return "NativeInteger";
+				if(expr->expr_type == ASN_BASIC_REAL)
+					return "double";
 				else
-					return "NativeEnumerated";
+					return "int";
+			default: break;
+			}
+			switch(expr->expr_type) {
+			case ASN_BASIC_INTEGER:
+				return "NativeInteger";
+			case ASN_BASIC_ENUMERATED:
+				return "NativeEnumerated";
+			case ASN_BASIC_REAL:
+				return "NativeReal";
+			default: break;
 			}
 		}
 		/* Fall through */
