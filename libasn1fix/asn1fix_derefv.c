@@ -8,47 +8,31 @@ asn1f_fix_dereference_values(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	int r_value = 0;
 
-	if(expr->meta_type != AMT_VALUE)
-		return 0;	/* Just ignore it */
-
-	if(expr->value == NULL)
-		return 0;	/* Just ignore it */
-
-	if(expr->value && expr->value->type != ATV_REFERENCED)
-		return 0;	/* Not a reference */
-
-	DEBUG("%s(%s %x ::= %s) for line %d", __func__,
-		expr->Identifier, expr->expr_type,
-		asn1f_printable_value(expr->value), expr->_lineno);
-
-	/*
-	 * If this integer has a value, check that this value
-	 * is an integer. If it is a reference, resolve it.
-	 */
-	if(expr->value) {
-
+	if(expr->value && expr->meta_type == AMT_VALUE) {
 		if(asn1f_value_resolve(arg, expr)) {
 			/* This function will emit messages */
 			r_value = -1;
 		}
+	}
 
-		if(0 && expr->value->type != ATV_INTEGER) {
-			FATAL(
-				"INTEGER value %s at line %d: "
-				"Incompatible value specified: %s",
-				expr->Identifier,
-				expr->_lineno,
-				asn1f_printable_value(expr->value)
-			);
-			r_value = -1;
+	if(expr->marker.default_value) {
+		arg_t tmparg = *arg;
+		asn1p_expr_t tmpexpr = *expr;
+
+		switch(expr->marker.default_value->type) {
+		default:
+			return r_value;
+		case ATV_REFERENCED:
+			break;
 		}
-	} else {
-		FATAL("Value of \"%s\" at line %d: "
-			"Incompatible value specified",
-			expr->Identifier,
-			expr->_lineno
-		);
-		r_value = -1;
+
+		tmparg.expr = &tmpexpr;
+		tmpexpr.meta_type = AMT_VALUE;
+		tmpexpr.marker.default_value = 0;
+		tmpexpr.value = expr->marker.default_value;
+		if(asn1f_value_resolve(&tmparg, &tmpexpr))
+			r_value = -1;
+		expr->marker.default_value = tmpexpr.value;
 	}
 
 	return r_value;
