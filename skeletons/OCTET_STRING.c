@@ -1231,7 +1231,7 @@ OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 				: &asn_DEF_OCTET_STRING_specs;
 	asn_struct_ctx_t *ctx = (asn_struct_ctx_t *)
 					((char *)st + specs->ctx_offset);
-	struct _stack *stck = (struct _stack *)ctx->ptr;
+	struct _stack *stck;
 
 	if(!td || !st)
 		return;
@@ -1245,6 +1245,7 @@ OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 	/*
 	 * Remove decode-time stack.
 	 */
+	stck = (struct _stack *)ctx->ptr;
 	if(stck) {
 		while(stck->tail) {
 			struct _stack_el *sel = stck->tail;
