@@ -1,5 +1,5 @@
 
-0.9.13:	2005-Mar-17
+0.9.13:	2005-Mar-20
 
 	* Added extra const qualifiers into the support code.
 	* More RFC variations supported in crfc2asn1.pl.
