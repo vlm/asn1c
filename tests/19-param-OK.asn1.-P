@@ -240,7 +240,7 @@ static int permitted_alphabet_table_1[256] = {
 static int check_permitted_alphabet_1(const void *sptr) {
 	int *table = permitted_alphabet_table_1;
 	/* The underlying type is IA5String */
-	const (null)_t *st = sptr;
+	const IA5String_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	

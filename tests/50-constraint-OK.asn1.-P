@@ -812,7 +812,7 @@ asn_struct_free_f Str2_free;
 
 static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
-	const Str2_t *st = sptr;
+	const Str1_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -956,7 +956,7 @@ static int permitted_alphabet_table_2[256] = {
 static int check_permitted_alphabet_2(const void *sptr) {
 	int *table = permitted_alphabet_table_2;
 	/* The underlying type is IA5String */
-	const Str3_t *st = sptr;
+	const Str2_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -1089,7 +1089,7 @@ asn_struct_free_f PER_Visible_free;
 
 static int check_permitted_alphabet_3(const void *sptr) {
 	/* The underlying type is IA5String */
-	const PER_Visible_t *st = sptr;
+	const IA5String_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -1219,7 +1219,7 @@ asn_struct_free_f PER_Visible_2_free;
 
 static int check_permitted_alphabet_4(const void *sptr) {
 	/* The underlying type is IA5String */
-	const PER_Visible_2_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -1349,7 +1349,7 @@ asn_struct_free_f Not_PER_Visible_1_free;
 
 static int check_permitted_alphabet_5(const void *sptr) {
 	/* The underlying type is IA5String */
-	const Not_PER_Visible_1_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -1707,7 +1707,7 @@ asn_struct_free_f SIZE_but_not_FROM_free;
 
 static int check_permitted_alphabet_6(const void *sptr) {
 	/* The underlying type is IA5String */
-	const SIZE_but_not_FROM_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -1840,7 +1840,7 @@ asn_struct_free_f SIZE_and_FROM_free;
 
 static int check_permitted_alphabet_7(const void *sptr) {
 	/* The underlying type is IA5String */
-	const SIZE_and_FROM_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -1973,7 +1973,7 @@ asn_struct_free_f Neither_SIZE_nor_FROM_free;
 
 static int check_permitted_alphabet_8(const void *sptr) {
 	/* The underlying type is IA5String */
-	const Neither_SIZE_nor_FROM_t *st = sptr;
+	const PER_Visible_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
@@ -2115,7 +2115,7 @@ static int permitted_alphabet_table_9[128] = {
 static int check_permitted_alphabet_9(const void *sptr) {
 	int *table = permitted_alphabet_table_9;
 	/* The underlying type is UTF8String */
-	const Utf8_3_t *st = sptr;
+	const Utf8_2_t *st = sptr;
 	uint8_t *ch = st->buf;
 	uint8_t *end = ch + st->size;
 	
