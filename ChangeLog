@@ -1,7 +1,13 @@
 
-0.9.11:	2005-Feb-28
+0.9.11:	2005-Mar-04
 
 	* X.693:8.3.4 prohibits anything but SignedNumber; fixed XER codec.
+	* Released -fcompound-names to fix the name clashes in the code
+	  produced by the asn1c.
+	* If the compiled file contents are the same as in already existing
+	  file (left from previous compilation), the old file is retained.
+	  This prevents thrashing `make` dependencies if amount of changes in
+	  the original ASN.1 module(s) is small.
 
 0.9.10:	2005-Feb-25
 
