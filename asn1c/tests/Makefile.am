@@ -11,12 +11,11 @@ else
 TESTS = check-*.c
 endif
 
-EXTRA_DIST = $(check_SCRIPTS) check-*.c* data-*/*.*
+EXTRA_DIST =			\
+	$(check_SCRIPTS)	\
+	check-*.c*		\
+	data-*/Makefile		\
+	data-*/*.*
 
 clean:
 	rm -rf test-*
-
-SUFFIXES = .xbr .ber
-
-.xbr.ber:
-	../enber $< > $@
