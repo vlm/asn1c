@@ -158,6 +158,7 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
+AM_CFLAGS = @ADD_CFLAGS@
 check_SCRIPTS = check-assembly.sh
 TESTS_ENVIRONMENT = CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
 @CPLUSPLUS_FOUND_FALSE@TESTS = check-*.c

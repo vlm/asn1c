@@ -168,9 +168,9 @@ partial_read(uint8_t *buf, size_t size) {
 	T_t t, *tp;
 	ber_dec_rval_t rval;
 	size_t i1, i2;
-	uint8_t *buf1 = alloca(size);
-	uint8_t *buf2 = alloca(size);
-	uint8_t *buf3 = alloca(size);
+	uint8_t *tbuf1 = alloca(size);
+	uint8_t *tbuf2 = alloca(size);
+	uint8_t *tbuf3 = alloca(size);
 
 	fprintf(stderr, "\nPartial read sequence...\n");
 
@@ -190,44 +190,44 @@ partial_read(uint8_t *buf, size_t size) {
 			size_t size3 = size - size1 - size2;
 
 			fprintf(stderr, "\n%d:{%d, %d, %d}...\n",
-				size, size1, size2, size3);
+				(int)size, (int)size1, (int)size2, (int)size3);
 
-			memset(buf1, 0, size);
-			memset(buf2, 0, size);
-			memset(buf3, 0, size);
-			memcpy(buf1, chunk1, size1);
-			memcpy(buf2, chunk2, size2);
-			memcpy(buf3, chunk3, size3);
+			memset(tbuf1, 0, size);
+			memset(tbuf2, 0, size);
+			memset(tbuf3, 0, size);
+			memcpy(tbuf1, chunk1, size1);
+			memcpy(tbuf2, chunk2, size2);
+			memcpy(tbuf3, chunk3, size3);
 
 			tp = memset(&t, 0, sizeof(t));
 
-			fprintf(stderr, "=> Chunk 1 (%d):\n", size1);
+			fprintf(stderr, "=> Chunk 1 (%d):\n", (int)size1);
 			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
-				buf1, size1);
+				tbuf1, size1);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size1);
 			if(rval.consumed < size1) {
 				int leftover = size1 - rval.consumed;
-				memcpy(buf2, buf1 + rval.consumed, leftover);
-				memcpy(buf2 + leftover, chunk2, size2);
+				memcpy(tbuf2, tbuf1 + rval.consumed, leftover);
+				memcpy(tbuf2 + leftover, chunk2, size2);
 				size2 += leftover;
 			}
 
-			fprintf(stderr, "=> Chunk 2 (%d):\n", size2);
+			fprintf(stderr, "=> Chunk 2 (%d):\n", (int)size2);
 			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
-				buf2, size2);
+				tbuf2, size2);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size2);
 			if(rval.consumed < size2) {
 				int leftover = size2 - rval.consumed;
-				memcpy(buf3, buf2 + rval.consumed, leftover);
-				memcpy(buf3 + leftover, chunk3, size3);
+				memcpy(tbuf3, tbuf2 + rval.consumed, leftover);
+				memcpy(tbuf3 + leftover, chunk3, size3);
 				size3 += leftover;
 			}
 
-			fprintf(stderr, "=> Chunk 3 (%d):\n", size3);
+			fprintf(stderr, "=> Chunk 3 (%d):\n", (int)size3);
 			rval = ber_decode(&asn1_DEF_T, (void **)&tp,
-				buf3, size3);
+				tbuf3, size3);
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
