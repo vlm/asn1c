@@ -173,8 +173,11 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 			/*
 			 * Unexpected tag. Too bad.
 			 */
-		    	ASN_DEBUG("Expected: %s, expectation failed",
-				ber_tlv_tag_string(td->tags[tagno]));
+		    	ASN_DEBUG("Expected: %s, "
+				"expectation failed (tn=%d, tm=%d)",
+				ber_tlv_tag_string(td->tags[tagno]),
+				tagno, tag_mode
+			);
 			RETURN(RC_FAIL);
 		    }
 		}
