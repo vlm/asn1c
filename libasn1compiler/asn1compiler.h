@@ -42,7 +42,7 @@ enum asn1c_flags {
 	/*
 	 * Generate type_id_PR_member things identifiers of id_PR_member.
 	 */
-	A1C_DOUBLE_IDENTIFIERS	= 0x0100,
+	A1C_COMPOUND_NAMES	= 0x0100,
 };
 
 /*

@@ -14,7 +14,7 @@
 #endif
 
 FILE *
-asn1c_open_file(const char *name, const char *ext) {
+asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	int created = 1;
 #ifndef	WIN32
 	struct stat sb;
@@ -22,22 +22,35 @@ asn1c_open_file(const char *name, const char *ext) {
 	char *fname;
 	size_t len;
 	FILE *fp;
+	int ret;
 	int fd;
 
 	/*
 	 * Compute filenames.
 	 */
-	len = strlen(name) + strlen(ext) + 1;
+	len = strlen(name) + strlen(ext) + sizeof(".XXXXXX");
 	fname = alloca(len);
-	snprintf(fname, len, "%s%s", name, ext);
+	ret = snprintf(fname, len, "%s%s%s", name, ext,
+		opt_tmpname ? ".XXXXXX" : "");
+	assert(ret > 0 && ret < len);
 
-	/*
-	 * Create files.
-	 */
-	fd = open(fname, O_CREAT | O_EXCL | O_WRONLY, DEFFILEMODE);
-	if(fd == -1 && errno == EEXIST) {
-		fd = open(fname, O_WRONLY, DEFFILEMODE);
-		created = 0;
+	if(opt_tmpname) {
+		/*
+		 * Create temporary file.
+		 */
+		fd = mkstemp(fname);
+#ifndef	WIN32
+		(void)fchmod(fd, DEFFILEMODE);
+#endif
+	} else {
+		/*
+		 * Create specified file, or open the old one.
+		 */
+		fd = open(fname, O_CREAT | O_EXCL | O_WRONLY, DEFFILEMODE);
+		if(fd == -1 && errno == EEXIST) {
+			fd = open(fname, O_WRONLY, DEFFILEMODE);
+			created = 0;
+		}
 	}
 	if(fd == -1) {
 		perror(fname);
@@ -68,6 +81,13 @@ asn1c_open_file(const char *name, const char *ext) {
 		if(created) unlink(fname);
 		close(fd);
 	}
+
+	/* Return the temporary file name */
+	if(opt_tmpname) {
+		*opt_tmpname = strdup(fname);
+		assert(*opt_tmpname);
+	}
+
 	return fp;
 }
 
