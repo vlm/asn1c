@@ -83,9 +83,10 @@ sub prepareChrootEnvironment() {
 		mkdir $TMPDIR . 'lib', $DM or bark($OpEnvFailed, $!);
 		system("cd $TMPDIR/lib && "
 			. "for i in"
-				. " /lib/libc.*"
-				. " /lib/libm.*"
-			. 'do ln $i; done');
+				. " /lib/ld-linux.*"	# Linux ELF loader
+				. " /lib/libc.*"	# Standard C library
+				. " /lib/libm.*"	# Math library
+			. '; do ln $i; done');
 	} elsif(-d '/usr/lib') {
 		# There's no /lib on MacOS
 		mkdir $TMPDIR . 'usr', $DM or bark($OpEnvFailed, $!);
@@ -98,6 +99,13 @@ sub prepareChrootEnvironment() {
 				. " /usr/lib/system/libmath*"
 				. " /usr/lib/dy*"
 			. '; do ln $i; done');
+	}
+	if(-d '/usr/libexec') {
+		# FreeBSD ELF loader
+		mkdir $TMPDIR . 'usr', $DM;
+		mkdir $TMPDIR . 'usr/libexec',$DM or bark($OpEnvFailed, $!);
+		system("cd $TMPDIR/usr/libexec && "
+			. 'for i in /usr/libexec/ld-elf.*; do ln $i; done');
 	}
 	system("cp $CompilerLocation $TMPDIR/bin 2>/dev/null") == 0
 		or bark($OpEnvFailed, $!);
@@ -242,6 +250,7 @@ if($#gotSafeNames >= 0) {
 				print I;
 			}
 		}
+		close(I);
 	}
 
 	my $inChDir = makeSessionDirName("/", $session) . $transactionDir;
@@ -250,8 +259,12 @@ if($#gotSafeNames >= 0) {
 	$options .= " -E" if(param("optE") eq "on");
 	$options .= " -EF" if(param("optEF") eq "on");
 	$options .= " -fnative-types" if(param("optNT") eq "on");
-	system("$TMPDIR/bin/asn1c -v 2>&1 | sed -e 's/^/-- /' > $sandbox/\+Log && $SUIDHelper $TMPDIR $inChDir $options @gotSafeNames >> $sandbox/+Log 2>&1; "
-		. "echo \$? > $sandbox/+ExitCode");
+	my $CompileASN = "$TMPDIR/bin/asn1c -v | sed -e 's/^/-- /'"
+			. " > $sandbox/+Log 2>&1"
+		. "; $SUIDHelper $TMPDIR $inChDir $options @gotSafeNames "
+			. " >> $sandbox/+Log 2>&1"
+		. "; echo \$? > $sandbox/+ExitCode";
+	system($CompileASN);
 	bark("Failed to initiate compilation process: $!")
 		if(!-r $sandbox . '/+ExitCode');
 }
@@ -298,14 +311,19 @@ $form =
 # by this particular browser (cookie-tracked).
 #
 opendir(SD, $sessionDir) or bark("Cannot open sandbox: $!");
-my @transactions = readdir(SD);
+my @transactions = sort { $b cmp $a }
+		(grep {/^[0-9TZ:+-]{14,}--[_.a-zA-Z0-9-]+$/}
+			readdir(SD));
 my $CountHistoryItems = 0;
-foreach my $trans (sort { $b <=> $a } @transactions) {
+foreach my $trans (sort { $b cmp $a } @transactions) {
 	next unless($trans =~ /^([0-9TZ:+-]{14,})--([_.a-zA-Z0-9-]+)$/);
 
 	local ($t, $f) = ($1, $2);
 	local $origTime = $t;
 	$t =~ s/T/ /;	# 1999-01-02T13:53:12 => 1999-01-02 13:53:12
+
+	# Global transaction number
+	local $tNum = 1 + $#transactions - $CountHistoryItems;
 
 	# Open the list of file names under which these files are known
 	# at the remote system.
@@ -329,9 +347,11 @@ foreach my $trans (sort { $b <=> $a } @transactions) {
 	}
 
 	open(I, '< ' . $sessionDir . '/' . $trans . '/+ExitCode');
-	local $ec = int(<I>);
+	local $ec = <I>;
 
-	if($ec == 0) {
+	chop($ec);
+
+	if($ec eq "0") {
 		$results = "<FONT COLOR=darkgreen><B>"
 			. "Compiled OK</B></FONT><BR>\n";
 	} else {
@@ -340,13 +360,13 @@ foreach my $trans (sort { $b <=> $a } @transactions) {
 	}
 
 	$results .= "<NOBR>"
-		. (($ec == 0) ? '1. ' : '')
+		. (($ec eq "0") ? '1. ' : '')
 		. "<A HREF=\"$myName?time="
 		. escapeHTML($origTime)
 		. "&trans=$f"
 		. "&show=log\">"
 		. "Show compiler log</A></NOBR>";
-	if($ec == 0) {
+	if($ec eq "0") {
 		$results .= "<BR>\n<NOBR>"
 		. "2. <A HREF=\"$myName?time="
 		. escapeHTML($origTime)
@@ -355,8 +375,8 @@ foreach my $trans (sort { $b <=> $a } @transactions) {
 		. "Fetch results (.tgz)</A></NOBR>";
 	}
 
-	$history .=
-		"<TR><TD BGCOLOR=white ALIGN=center><FONT FACE=Helvetica SIZE=-2>$t</FONT></TD>"
+	$history .= "<TR>"
+		. "<TH BGCOLOR=white ALIGN=center><FONT FACE=Helvetica SIZE=-2>$tNum</FONT></TH>"
 		. "<TD BGCOLOR=white ALIGN=center><FONT SIZE=-1 FACE=Helvetica>"
 		. join(", ", @markedNames)
 		. "</FONT></TD>"
@@ -372,14 +392,14 @@ if($history) {
 	. "<TABLE CELLPADDING=0 CELLSPACING=0 BGCOLOR=#404040 WIDTH=100%><TR><TD>"
 	. "<TABLE BORDER=0 CELLPADDING=5 CELLSPACING=1 WIDTH=100%>\n"
 	. "<TR BGCOLOR=#e0f0d0>"
-	. "<TH><FONT COLOR=#404040 FACE=Courier>Time</FONT></TH>"
+	. "<TH WIDTH=1%><FONT COLOR=#404040 FACE=Courier>N</FONT></TH>"
 	. "<TH><FONT COLOR=#404040 FACE=Courier>Files processed</FONT></TH>"
 	. "<TH><FONT COLOR=#404040 FACE=Courier>Result</FONT></TH>"
 	. "</TR>\n"
 	. $history . "</TABLE></TD></TR></TABLE><BR>\n";
 }
 
-$content =
+$content .=
   "<TABLE WIDTH=100% BORDER=0 CELLPADDING=5><TR><TD VALIGN=top>\n"
 . "<H3 ALIGN=center>ASN.1 Input</H3>\n"
 . "$form\n"
