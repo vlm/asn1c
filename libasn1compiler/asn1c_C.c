@@ -19,8 +19,6 @@ typedef struct tag2el_s {
 
 static int _fill_tag2el_map(arg_t *arg, tag2el_t **tag2el, int *count, int el_no);
 static int _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no);
-static int _expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
-static int _emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 
 static int asn1c_lang_C_type_SEQUENCE_def(arg_t *arg);
 static int asn1c_lang_C_type_SET_def(arg_t *arg);
@@ -28,8 +26,22 @@ static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
 static int _print_tag(arg_t *arg, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag_p);
 static int check_if_extensible(asn1p_expr_t *expr);
+static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
+static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice_mode);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
+
+enum etd_cp {
+	ETD_CP_UNKNOWN		= -2,
+	ETD_CP_EITHER		= -1,
+	ETD_CP_PRIMITIVE	=  0,
+	ETD_CP_CONSTRUCTED	=  1,
+};
+enum etd_spec {
+	ETD_NO_SPECIFICS,
+	ETD_HAS_SPECIFICS
+};
+static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip, int elements_count, enum etd_cp, enum etd_spec);
 
 #define	C99_MODE	(!(arg->flags & A1C_NO_C99))
 #define	UNNAMED_UNIONS	(arg->flags & A1C_UNNAMED_UNIONS)
@@ -193,7 +205,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 			continue;
 		}
 		elements++;
-		_emit_member_table(arg, v);
+		emit_member_table(arg, v);
 	});
 	OUT("};\n");
 
@@ -220,32 +232,12 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 			(ext_stop<ext_start)?elements+1:ext_stop, ext_stop);
 	);
 	OUT("};\n");
-	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
-	INDENTED(
-		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
-		OUT("SEQUENCE_constraint,\n");
-		OUT("SEQUENCE_decode_ber,\n");
-		OUT("SEQUENCE_encode_der,\n");
-		OUT("SEQUENCE_print,\n");
-		OUT("SEQUENCE_free,\n");
-		OUT("0,\t/* Use generic outmost tag fetcher */\n");
-		if(tags_count) {
-			OUT("asn1_DEF_%s_tags,\n", p);
-			OUT("sizeof(asn1_DEF_%s_tags)\n", p);
-			OUT("\t/sizeof(asn1_DEF_%s_tags[0]), /* %d */\n",
-				p, tags_count);
-		} else {
-			OUT("0,\t/* No explicit tags (pointer) */\n");
-			OUT("0,\t/* No explicit tags (count) */\n");
-		}
-		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
-		OUT("%d,\t/* Whether CONSTRUCTED */\n", 1);
-		OUT("asn1_MBR_%s,\n", p);
-		OUT("%d,\t/* Elements count */\n", elements);
-		OUT("&asn1_DEF_%s_specs\t/* Additional specs */\n", p);
-	);
-	OUT("};\n");
-	OUT("\n");
+
+	/*
+	 * Emit asn1_DEF_xxx table.
+	 */
+	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, elements,
+			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -360,7 +352,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 			continue;
 		}
 		elements++;
-		_emit_member_table(arg, v);
+		emit_member_table(arg, v);
 	});
 	OUT("};\n");
 
@@ -417,32 +409,12 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 		OUT("(unsigned int *)asn1_DEF_%s_mmap\t/* Mandatory elements map */\n", p);
 	);
 	OUT("};\n");
-	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
-	INDENTED(
-		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
-		OUT("SET_constraint,\n");
-		OUT("SET_decode_ber,\n");
-		OUT("SET_encode_der,\n");
-		OUT("SET_print,\n");
-		OUT("SET_free,\n");
-		OUT("0,\t/* Use generic outmost tag fetcher */\n");
-		if(tags_count) {
-			OUT("asn1_DEF_%s_tags,\n", p);
-			OUT("sizeof(asn1_DEF_%s_tags)\n", p);
-			OUT("\t/sizeof(asn1_DEF_%s_tags[0]), /* %d */\n",
-				p, tags_count);
-		} else {
-			OUT("0,\t/* No explicit tags (pointer) */\n");
-			OUT("0,\t/* No explicit tags (count) */\n");
-		}
-		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
-		OUT("%d,\t/* Whether CONSTRUCTED */\n", 1);
-		OUT("asn1_MBR_%s,\n", p);
-		OUT("%d,\t/* Elements count */\n", elements);
-		OUT("&asn1_DEF_%s_specs\t/* Additional specs */\n", p);
-	);
-	OUT("};\n");
-	OUT("\n");
+
+	/*
+	 * Emit asn1_DEF_xxx table.
+	 */
+	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, elements,
+			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -531,7 +503,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 
 	INDENTED(
 		v = TQ_FIRST(&(expr->members));
-		_emit_member_table(arg, v);
+		emit_member_table(arg, v);
 	);
 	OUT("};\n");
 
@@ -547,40 +519,12 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 		OUT("offsetof(struct %s, _ber_dec_ctx),\n", p);
 	);
 	OUT("};\n");
-	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
-	INDENTED(
-		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
-		if(seq_of) {
-			OUT("SEQUENCE_OF_constraint,\n");
-			OUT("SEQUENCE_OF_decode_ber,\n");
-			OUT("SEQUENCE_OF_encode_der,\n");
-			OUT("SEQUENCE_OF_print,\n");
-			OUT("SEQUENCE_OF_free,\n");
-		} else {
-			OUT("SET_OF_constraint,\n");
-			OUT("SET_OF_decode_ber,\n");
-			OUT("SET_OF_encode_der,\n");
-			OUT("SET_OF_print,\n");
-			OUT("SET_OF_free,\n");
-		}
-		OUT("0,\t/* Use generic outmost tag fetcher */\n");
-		if(tags_count) {
-			OUT("asn1_DEF_%s_tags,\n", p);
-			OUT("sizeof(asn1_DEF_%s_tags)\n", p);
-			OUT("\t/sizeof(asn1_DEF_%s_tags[0]), /* %d */\n",
-				p, tags_count);
-		} else {
-			OUT("0,\t/* No explicit tags (pointer) */\n");
-			OUT("0,\t/* No explicit tags (count) */\n");
-		}
-		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
-		OUT("%d,\t/* Whether CONSTRUCTED */\n", 1);
-		OUT("asn1_MBR_%s,\n", p);
-		OUT("1,\t/* Single element */\n");
-		OUT("&asn1_DEF_%s_specs\t/* Additional specs */\n", p);
-	);
-	OUT("};\n");
-	OUT("\n");
+
+	/*
+	 * Emit asn1_DEF_xxx table.
+	 */
+	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, 1,
+			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -684,7 +628,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 			continue;
 		}
 		elements++;
-		_emit_member_table(arg, v);
+		emit_member_table(arg, v);
 	});
 	OUT("};\n");
 
@@ -716,32 +660,12 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 			check_if_extensible(expr));
 	);
 	OUT("};\n");
-	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
-	INDENTED(
-		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
-		OUT("CHOICE_constraint,\n");
-		OUT("CHOICE_decode_ber,\n");
-		OUT("CHOICE_encode_der,\n");
-		OUT("CHOICE_print,\n");
-		OUT("CHOICE_free,\n");
-		OUT("CHOICE_outmost_tag,\n");
-		if(tags_count) {
-			OUT("asn1_DEF_%s_tags,\n", p);
-			OUT("sizeof(asn1_DEF_%s_tags)\n", p);
-			OUT("\t/sizeof(asn1_DEF_%s_tags[0]), /* %d */\n",
-				p, tags_count);
-		} else {
-			OUT("0,\t/* No explicit tags (pointer) */\n");
-			OUT("0,\t/* No explicit tags (count) */\n");
-		}
-		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
-		OUT("%d,\t/* Whether CONSTRUCTED */\n", 1);
-		OUT("asn1_MBR_%s,\n", p);
-		OUT("%d,\t/* Elements count */\n", elements);
-		OUT("&asn1_DEF_%s_specs\t/* Additional specs */\n", p);
-	);
-	OUT("};\n");
-	OUT("\n");
+
+	/*
+	 * Emit asn1_DEF_xxx table.
+	 */
+	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, elements,
+			ETD_CP_CONSTRUCTED /*either?!*/, ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -829,35 +753,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	 */
 	tags_count = emit_tags_vector(arg, expr, &tags_impl_skip, 0);
 
-	p = MKID(expr->Identifier);
-	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
-	INDENTED(
-		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
-		OUT("%s_constraint,\n", p);
-		OUT("%s_decode_ber,\n", p);
-		OUT("%s_encode_der,\n", p);
-		OUT("%s_print,\n", p);
-		OUT("%s_free,\n", p);
-		OUT("0,\t/* Use generic outmost tag fetcher */\n");
-		if(tags_count) {
-			OUT("asn1_DEF_%s_tags,\n", p);
-			OUT("sizeof(asn1_DEF_%s_tags)\n", p);
-			OUT("\t/sizeof(asn1_DEF_%s_tags[0]), /* %d */\n",
-				p, tags_count);
-		} else {
-			OUT("0,\t/* No explicit tags (pointer) */\n");
-			OUT("0,\t/* No explicit tags (count) */\n");
-		}
-		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
-		OUT("-0,\t/* Unknown yet */\n");
-		if(_expr_elements_count(arg, expr))
-			OUT("0, 0,\t/* Defined elsewhere */\n");
-		else
-			OUT("0, 0,\t/* No members */\n");
-		OUT("0\t/* No specifics */\n");
-	);
-	OUT("};\n");
-	OUT("\n");
+	emit_type_DEF(arg, expr, tags_count, tags_impl_skip, 0,
+			ETD_CP_UNKNOWN, ETD_NO_SPECIFICS);
 
 	REDIR(OT_CODE);
 
@@ -1264,7 +1161,7 @@ emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice
 }
 
 static int
-_expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
+expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 	asn1p_expr_t *topmost_parent;
 	asn1p_expr_t *v;
 	int elements = 0;
@@ -1284,7 +1181,7 @@ _expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 }
 
 static int
-_emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
+emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	static int global_memb_unique;
 	int save_target;
 	arg_t tmp_arg;
@@ -1332,16 +1229,19 @@ _emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		|| arg->expr->expr_type == ASN_CONSTR_SET_OF)) {
 		OUT("(void *)&asn1_DEF_%s_member,\n",
 			MKID(arg->expr->Identifier));
+	} else if(expr->expr_type & ASN_CONSTR_MASK) {
+		OUT("(void *)&asn1_DEF_%s,\n",
+			MKID(expr->Identifier));
 	} else {
 		OUT("(void *)&asn1_DEF_%s,\n",
 			asn1c_type_name(arg, expr, TNF_SAFE));
 	}
 	if(C99_MODE) OUT(".memb_constraints = ");
 	if(expr->constraints) {
-		p = MKID(expr->Identifier);
+		char *id = MKID(expr->Identifier);
 		if(!expr->Identifier)
-			p = asn1c_type_name(arg, expr, TNF_SAFE);
-		OUT("memb_%s_%d_constraint,\n", p,
+			id = asn1c_type_name(arg, expr, TNF_SAFE);
+		OUT("memb_%s_%d_constraint,\n", id,
 			++global_memb_unique);
 	} else {
 		OUT("0,\t/* Defer to actual type */\n");
@@ -1378,4 +1278,87 @@ _emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	REDIR(save_target);
 
 	return 0;
+}
+
+static int
+emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip, int elements_count, enum etd_cp cp, enum etd_spec spec) {
+	char *p;
+
+	p = MKID(expr->Identifier);
+	OUT("asn1_TYPE_descriptor_t asn1_DEF_%s = {\n", p);
+	INDENTED(
+		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
+
+		if(expr->expr_type & ASN_CONSTR_MASK) {
+			p = asn1c_type_name(arg, arg->expr, TNF_SAFE);
+		}
+
+		OUT("%s_constraint,\n", p);
+		OUT("%s_decode_ber,\n", p);
+		OUT("%s_encode_der,\n", p);
+		OUT("%s_print,\n", p);
+		OUT("%s_free,\n", p);
+
+		p = MKID(expr->Identifier);
+
+		if(expr->expr_type == ASN_CONSTR_CHOICE) {
+			OUT("CHOICE_outmost_tag,\n");
+		} else {
+			OUT("0,\t/* Use generic outmost tag fetcher */\n");
+		}
+
+		if(tags_count) {
+			OUT("asn1_DEF_%s_tags,\n", p);
+			OUT("sizeof(asn1_DEF_%s_tags)\n", p);
+			OUT("\t/sizeof(asn1_DEF_%s_tags[0]), /* %d */\n",
+				p, tags_count);
+		} else {
+			OUT("0,\t/* No explicit tags (pointer) */\n");
+			OUT("0,\t/* No explicit tags (count) */\n");
+		}
+
+		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
+		switch(cp) {
+		case ETD_CP_UNKNOWN:
+			OUT("-0,\t/* Unknown yet */\n");
+			break;
+		case ETD_CP_EITHER:
+			OUT("-1,\t/* Primitive or constructed */\n");
+		case ETD_CP_PRIMITIVE:
+			OUT("0,\t/* Primitive */\n");
+			break;
+		case ETD_CP_CONSTRUCTED:
+			OUT("1,\t/* Whether CONSTRUCTED */\n");
+			break;
+		}
+
+		if(elements_count) {
+			OUT("asn1_MBR_%s,\n", p);
+			if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF
+			|| expr->expr_type == ASN_CONSTR_SET_OF) {
+				OUT("%d,\t/* Single element */\n",
+					elements_count);
+				assert(elements_count == 1);
+			} else {
+				OUT("%d,\t/* Elements count */\n",
+					elements_count);
+			}
+		} else {
+			//if(expr->meta_type == AMT_TYPEREF)
+			if(expr_elements_count(arg, expr))
+				OUT("0, 0,\t/* Defined elsewhere */\n");
+			else
+				OUT("0, 0,\t/* No members */\n");
+		}
+
+		switch(spec) {
+		case ETD_NO_SPECIFICS:
+			OUT("0\t/* No specifics */\n");
+			break;
+		case ETD_HAS_SPECIFICS:
+			OUT("&asn1_DEF_%s_specs\t/* Additional specs */\n", p);
+		}
+	);
+	OUT("};\n");
+	OUT("\n");
 }
