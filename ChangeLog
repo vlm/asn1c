@@ -1,4 +1,9 @@
 
+0.8.18:	2004-Aug-12
+
+	* Parser: fixed multiple IMPORTS problem (incorrect assertion).
+	* Parser: constraints extensibility parsing fix.
+
 0.8.17:	2004-Aug-11
 
 	* Improved compiler output: duplicate #includes eliminated.
