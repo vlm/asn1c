@@ -18,6 +18,7 @@ static int asn1f_fix_simple(arg_t *arg);	/* For INTEGER/ENUMERATED */
 static int asn1f_fix_constructed(arg_t *arg);	/* For SEQUENCE/SET/CHOICE */
 static int asn1f_resolve_constraints(arg_t *arg); /* For subtype constraints */
 static int asn1f_check_constraints(arg_t *arg);	/* For subtype constraints */
+static int asn1f_check_duplicate(arg_t *arg);
 
 arg_t a1f_replace_me_with_proper_interface_arg;
 
@@ -78,6 +79,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 
 	/*
 	 * Process each module in the list.
+	 * PHASE I.
 	 */
 	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
 		int ret = asn1f_fix_module__phase_1(&arg);
@@ -88,6 +90,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 		if(ret == -1) fatals++;
 		if(ret == 1) warnings++;
 	}
+	/* PHASE II. */
 	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
 		int ret = asn1f_fix_module__phase_2(&arg);
 		if(ret == -1) fatals++;
@@ -145,10 +148,13 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 
 	/*
 	 * Do various non-recursive transformations.
-	 * Order is not important.
 	 */
 	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
+
+		/* Check whether this type is a duplicate */
+		ret = asn1f_check_duplicate(arg);
+		RET2RVAL(ret, rvalue);
 
 		if(expr->meta_type == AMT_PARAMTYPE)
 			/* Do not process the parametrized type just yet */
@@ -257,7 +263,7 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
 
-		if(arg->expr->meta_type == AMT_PARAMTYPE)
+		if(expr->meta_type == AMT_PARAMTYPE)
 			/* Do not process the parametrized types here */
 			continue;
 
@@ -386,6 +392,46 @@ asn1f_check_constraints(arg_t *arg) {
 	}
 
 	return rvalue;
+}
+
+static int
+asn1f_check_duplicate(arg_t *arg) {
+	arg_t tmparg = *arg;
+
+	/*
+	 * This is a linear scan in search of a similar type.
+	 * The linear scan is just fine for the task, no need to over-optimize.
+	 */
+	TQ_FOR(tmparg.mod, &arg->asn->modules, mod_next) {
+		TQ_FOR(tmparg.expr, &(tmparg.mod->members), next) {
+			assert(tmparg.expr->Identifier);
+			assert(arg->expr->Identifier);
+			if(tmparg.expr == arg->expr) break;
+
+			if(strcmp(tmparg.expr->Identifier,
+				arg->expr->Identifier) == 0) {
+				int diff_files = strcmp(arg->mod->source_file_name, tmparg.mod->source_file_name) ? 1 : 0;
+				FATAL("ASN.1 expression \"%s\" at line %d of module %s\n"
+				"clashes with expression \"%s\" at line %d of module %s"
+				"%s%s%s.\n"
+				"Please rename either instance to resolve the conflict",
+					arg->expr->Identifier,
+					arg->expr->_lineno,
+					arg->mod->Identifier,
+					tmparg.expr->Identifier,
+					tmparg.expr->_lineno,
+					tmparg.mod->Identifier,
+					diff_files ? " (" : "",
+					diff_files ? tmparg.mod->source_file_name : "",
+					diff_files ? ")" : ""
+				);
+				return -1;
+			}
+		}
+		if(tmparg.mod == arg->mod) break;
+	}
+
+	return 0;
 }
 
 /*

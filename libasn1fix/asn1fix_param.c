@@ -83,6 +83,9 @@ asn1f_parametrize(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype) {
 	void *p;
 	int ret;
 
+	DEBUG("asn1f_parametrize(%s <= %s)",
+		expr->Identifier, ptype->Identifier);
+
 	/*
 	 * The algorithm goes like that:
 	 * 1. Replace the expression's type with parametrized type.
@@ -126,6 +129,7 @@ asn1f_parametrize(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype) {
 static int
 asn1f_param_process_recursive(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
 	asn1p_expr_t *child;
+
 
 	TQ_FOR(child, &(expr->members), next) {
 		asn1p_expr_t *ra;
@@ -232,6 +236,11 @@ _process_constraints(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_t *ptype, as
 		DEBUG("_process_constraints(%s), ra=%s",
 			asn1f_printable_reference(ref), ra->Identifier);
 
+		if(ra->expr_type == A1TC_PARAMETRIZED) {
+			DEBUG("Double parametrization");
+		}
+
+		assert(ra->Identifier);
 		str = strdup(ra->Identifier);
 		if(!str) return -1;
 
