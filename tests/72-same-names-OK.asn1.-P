@@ -1,0 +1,694 @@
+
+/*** <<< INCLUDES [Type] >>> ***/
+
+#include <asn_SET_OF.h>
+#include <Type1.h>
+#include <Type2.h>
+#include <constr_SEQUENCE.h>
+#include <constr_SET_OF.h>
+
+/*** <<< DEPS [Type] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Type;
+
+/*** <<< TYPE-DECLS [Type] >>> ***/
+
+
+typedef struct Type {
+	A_SET_OF(struct Member {
+		Type1_t	 t1;
+		Type2_t	 t2;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} ) list;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Type_t;
+
+/*** <<< STAT-DEFS [Type] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Member_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Member, t1),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Type1,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "t1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Member, t2),
+		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Type2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "t2"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Member_2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Member_2_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* t1 at 21 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 }, /* one-name at 37 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* two-name at 43 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Member_2_specs = {
+	sizeof(struct Member),
+	offsetof(struct Member, _asn_ctx),
+	asn_MAP_Member_2_tag2el,
+	3,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_Member_2 = {
+	"",
+	"",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Member_2_tags,
+	sizeof(asn_DEF_Member_2_tags)
+		/sizeof(asn_DEF_Member_2_tags[0]), /* 1 */
+	asn_DEF_Member_2_tags,	/* Same as above */
+	sizeof(asn_DEF_Member_2_tags)
+		/sizeof(asn_DEF_Member_2_tags[0]), /* 1 */
+	asn_MBR_Member_2,
+	2,	/* Elements count */
+	&asn_SPC_Member_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Type_1[] = {
+	{ ATF_NOFLAGS, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Member_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_Type_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_Type_1_specs = {
+	sizeof(struct Type),
+	offsetof(struct Type, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+asn_TYPE_descriptor_t asn_DEF_Type = {
+	"Type",
+	"Type",
+	SET_OF_free,
+	SET_OF_print,
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_decode_xer,
+	SET_OF_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Type_1_tags,
+	sizeof(asn_DEF_Type_1_tags)
+		/sizeof(asn_DEF_Type_1_tags[0]), /* 1 */
+	asn_DEF_Type_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Type_1_tags)
+		/sizeof(asn_DEF_Type_1_tags[0]), /* 1 */
+	asn_MBR_Type_1,
+	1,	/* Single element */
+	&asn_SPC_Type_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Type1] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Type1] >>> ***/
+
+typedef enum one_name_PR {
+	one_name_PR_NOTHING,	/* No components present */
+	one_name_PR_another_name,
+} one_name_PR;
+extern asn_TYPE_descriptor_t asn_DEF_Type1;
+
+/*** <<< TYPE-DECLS [Type1] >>> ***/
+
+
+typedef struct Type1 {
+	struct one_name {
+		one_name_PR present;
+		union {
+			struct another_name {
+				INTEGER_t	 a;
+				INTEGER_t	 b;
+				
+				/* Context for parsing across buffer boundaries */
+				asn_struct_ctx_t _asn_ctx;
+			} another_name;
+		} choice;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} one_name;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Type1_t;
+
+/*** <<< STAT-DEFS [Type1] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_another_name_3[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct another_name, b),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "b"
+		},
+};
+static ber_tlv_tag_t asn_DEF_another_name_3_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_another_name_3_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* a at 27 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* b at 27 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_another_name_3_specs = {
+	sizeof(struct another_name),
+	offsetof(struct another_name, _asn_ctx),
+	asn_MAP_another_name_3_tag2el,
+	2,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_another_name_3 = {
+	"another-name",
+	"another-name",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_another_name_3_tags,
+	sizeof(asn_DEF_another_name_3_tags)
+		/sizeof(asn_DEF_another_name_3_tags[0]), /* 1 */
+	asn_DEF_another_name_3_tags,	/* Same as above */
+	sizeof(asn_DEF_another_name_3_tags)
+		/sizeof(asn_DEF_another_name_3_tags[0]), /* 1 */
+	asn_MBR_another_name_3,
+	2,	/* Elements count */
+	&asn_SPC_another_name_3_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_one_name_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct one_name, choice.another_name),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_another_name_3,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "another-name"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_one_name_2_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 27 */
+};
+static asn_CHOICE_specifics_t asn_SPC_one_name_2_specs = {
+	sizeof(struct one_name),
+	offsetof(struct one_name, _asn_ctx),
+	offsetof(struct one_name, present),
+	sizeof(((struct one_name *)0)->present),
+	asn_MAP_one_name_2_tag2el,
+	1,	/* Count of tags in the map */
+	0	/* Whether extensible */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
+	"one-name",
+	"one-name",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	asn_MBR_one_name_2,
+	1,	/* Elements count */
+	&asn_SPC_one_name_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Type1_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Type1, one_name),
+		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_one_name_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "one-name"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Type1_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Type1_1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 27 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Type1_1_specs = {
+	sizeof(struct Type1),
+	offsetof(struct Type1, _asn_ctx),
+	asn_MAP_Type1_1_tag2el,
+	1,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Type1 = {
+	"Type1",
+	"Type1",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Type1_1_tags,
+	sizeof(asn_DEF_Type1_1_tags)
+		/sizeof(asn_DEF_Type1_1_tags[0]), /* 1 */
+	asn_DEF_Type1_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Type1_1_tags)
+		/sizeof(asn_DEF_Type1_1_tags[0]), /* 1 */
+	asn_MBR_Type1_1,
+	1,	/* Elements count */
+	&asn_SPC_Type1_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Type2] >>> ***/
+
+#include <BIT_STRING.h>
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+#include <constr_SET.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Type2] >>> ***/
+
+typedef enum Type2_PR {
+	Type2_PR_NOTHING,	/* No components present */
+	Type2_PR_one_name,
+	Type2_PR_two_name,
+} Type2_PR;
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum two_name_PR {
+	two_name_PR_another_name,	/* Member another_name is present */
+} two_name_PR;
+extern asn_TYPE_descriptor_t asn_DEF_Type2;
+
+/*** <<< TYPE-DECLS [Type2] >>> ***/
+
+
+typedef struct Type2 {
+	Type2_PR present;
+	union {
+		struct one_name {
+			struct another_name {
+				BIT_STRING_t	 a;
+				INTEGER_t	 b;
+				
+				/* Context for parsing across buffer boundaries */
+				asn_struct_ctx_t _asn_ctx;
+			} another_name;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} one_name;
+		struct two_name {
+			struct another_name {
+				BIT_STRING_t	 a;
+				INTEGER_t	 b;
+				
+				/* Context for parsing across buffer boundaries */
+				asn_struct_ctx_t _asn_ctx;
+			} another_name;
+			
+			/* Presence bitmask: ASN_SET_ISPRESENT(ptwo_name, two_name_PR_x) */
+			unsigned int _presence_map
+				[((1+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} two_name;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Type2_t;
+
+/*** <<< CODE [Type2] >>> ***/
+
+static int
+memb_a_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(st->size > 0) {
+		/* Size in bits */
+		size = 8 * (st->size - 1) - (st->buf[0] & 0x7);
+	} else {
+		size = 0;
+	}
+	
+	if((size == 2)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_a_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(st->size > 0) {
+		/* Size in bits */
+		size = 8 * (st->size - 1) - (st->buf[0] & 0x7);
+	} else {
+		size = 0;
+	}
+	
+	if((size == 2)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< STAT-DEFS [Type2] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_another_name_3[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_BIT_STRING,
+		.memb_constraints = memb_a_3_constraint,
+		.name = "a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct another_name, b),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "b"
+		},
+};
+static ber_tlv_tag_t asn_DEF_another_name_3_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_another_name_3_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* b at 36 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* a at 34 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_another_name_3_specs = {
+	sizeof(struct another_name),
+	offsetof(struct another_name, _asn_ctx),
+	asn_MAP_another_name_3_tag2el,
+	2,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_another_name_3 = {
+	"another-name",
+	"another-name",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_another_name_3_tags,
+	sizeof(asn_DEF_another_name_3_tags)
+		/sizeof(asn_DEF_another_name_3_tags[0]), /* 1 */
+	asn_DEF_another_name_3_tags,	/* Same as above */
+	sizeof(asn_DEF_another_name_3_tags)
+		/sizeof(asn_DEF_another_name_3_tags[0]), /* 1 */
+	asn_MBR_another_name_3,
+	2,	/* Elements count */
+	&asn_SPC_another_name_3_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_one_name_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct one_name, another_name),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_another_name_3,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "another-name"
+		},
+};
+static ber_tlv_tag_t asn_DEF_one_name_2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_one_name_2_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 34 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_one_name_2_specs = {
+	sizeof(struct one_name),
+	offsetof(struct one_name, _asn_ctx),
+	asn_MAP_one_name_2_tag2el,
+	1,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
+	"one-name",
+	"one-name",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_one_name_2_tags,
+	sizeof(asn_DEF_one_name_2_tags)
+		/sizeof(asn_DEF_one_name_2_tags[0]), /* 1 */
+	asn_DEF_one_name_2_tags,	/* Same as above */
+	sizeof(asn_DEF_one_name_2_tags)
+		/sizeof(asn_DEF_one_name_2_tags[0]), /* 1 */
+	asn_MBR_one_name_2,
+	1,	/* Elements count */
+	&asn_SPC_one_name_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_another_name_5[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_BIT_STRING,
+		.memb_constraints = memb_a_5_constraint,
+		.name = "a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct another_name, b),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "b"
+		},
+};
+static ber_tlv_tag_t asn_DEF_another_name_5_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_another_name_5_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* b at 42 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* a at 40 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_another_name_5_specs = {
+	sizeof(struct another_name),
+	offsetof(struct another_name, _asn_ctx),
+	asn_MAP_another_name_5_tag2el,
+	2,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_another_name_5 = {
+	"another-name",
+	"another-name",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_another_name_5_tags,
+	sizeof(asn_DEF_another_name_5_tags)
+		/sizeof(asn_DEF_another_name_5_tags[0]), /* 1 */
+	asn_DEF_another_name_5_tags,	/* Same as above */
+	sizeof(asn_DEF_another_name_5_tags)
+		/sizeof(asn_DEF_another_name_5_tags[0]), /* 1 */
+	asn_MBR_another_name_5,
+	2,	/* Elements count */
+	&asn_SPC_another_name_5_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_two_name_4[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct two_name, another_name),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_another_name_5,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "another-name"
+		},
+};
+static ber_tlv_tag_t asn_DEF_two_name_4_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_two_name_4_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 40 */
+};
+static uint8_t asn_MAP_two_name_4_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7)
+};
+static asn_SET_specifics_t asn_SPC_two_name_4_specs = {
+	sizeof(struct two_name),
+	offsetof(struct two_name, _asn_ctx),
+	offsetof(struct two_name, _presence_map),
+	asn_MAP_two_name_4_tag2el,
+	1,	/* Count of tags in the map */
+	asn_MAP_two_name_4_tag2el,	/* Same as above */
+	1,	/* Count of tags in the CXER map */
+	0,	/* Whether extensible */
+	(unsigned int *)asn_MAP_two_name_4_mmap	/* Mandatory elements map */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_two_name_4 = {
+	"two-name",
+	"two-name",
+	SET_free,
+	SET_print,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_decode_xer,
+	SET_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_two_name_4_tags,
+	sizeof(asn_DEF_two_name_4_tags)
+		/sizeof(asn_DEF_two_name_4_tags[0]), /* 1 */
+	asn_DEF_two_name_4_tags,	/* Same as above */
+	sizeof(asn_DEF_two_name_4_tags)
+		/sizeof(asn_DEF_two_name_4_tags[0]), /* 1 */
+	asn_MBR_two_name_4,
+	1,	/* Elements count */
+	&asn_SPC_two_name_4_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Type2_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Type2, choice.one_name),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_one_name_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "one-name"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Type2, choice.two_name),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_two_name_4,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "two-name"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_Type2_1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* one-name at 37 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* two-name at 43 */
+};
+static asn_CHOICE_specifics_t asn_SPC_Type2_1_specs = {
+	sizeof(struct Type2),
+	offsetof(struct Type2, _asn_ctx),
+	offsetof(struct Type2, present),
+	sizeof(((struct Type2 *)0)->present),
+	asn_MAP_Type2_1_tag2el,
+	2,	/* Count of tags in the map */
+	0	/* Whether extensible */
+};
+asn_TYPE_descriptor_t asn_DEF_Type2 = {
+	"Type2",
+	"Type2",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	asn_MBR_Type2_1,
+	2,	/* Elements count */
+	&asn_SPC_Type2_1_specs	/* Additional specs */
+};
+
