@@ -7,6 +7,7 @@
 #include <der_encoder.c>
 #include <xer_decoder.c>
 #include <xer_support.c>
+#include <xer_encoder.c>
 #include <constraints.c>
 
 static char reconstructed[2][512];
@@ -142,6 +143,64 @@ check_buf(uint8_t *buf, size_t bufsize, double verify, const char *sample, const
 	check_str_repr(val, sample, canonical_sample);
 }
 
+static void
+check_xer(int fuzzy, double orig_value) {
+	asn_enc_rval_t er;
+	asn_dec_rval_t rc;
+	REAL_t st;
+	REAL_t *newst0 = 0;
+	REAL_t *newst1 = 0;
+	double value0, value1;
+	int ret;
+
+	memset(&st, 0, sizeof(st));
+	ret = asn_double2REAL(&st, orig_value);
+	assert(ret == 0);
+
+	reconstr_lens[0] = 0;
+	reconstr_lens[1] = 0;
+	er = xer_encode(&asn_DEF_REAL, &st,
+		XER_F_BASIC, callback, 0);
+	assert(er.encoded == reconstr_lens[0]);
+	er = xer_encode(&asn_DEF_REAL, &st,
+		XER_F_CANONICAL, callback, (void *)1);
+	assert(er.encoded == reconstr_lens[1]);
+	reconstructed[0][reconstr_lens[0]] = 0;
+	reconstructed[1][reconstr_lens[1]] = 0;
+
+	printf("%f vs (%d)[%s] & (%d)%s",
+		orig_value,
+		reconstr_lens[1], reconstructed[1],
+		reconstr_lens[0], reconstructed[0]
+	);
+
+	rc = xer_decode(0, &asn_DEF_REAL, (void **)&newst0,
+		reconstructed[0], reconstr_lens[0]);
+	assert(rc.code == RC_OK);
+	assert(rc.consumed < reconstr_lens[0]);
+
+	rc = xer_decode(0, &asn_DEF_REAL, (void **)&newst1,
+		reconstructed[1], reconstr_lens[1]);
+	assert(rc.code == RC_OK);
+	assert(rc.consumed == reconstr_lens[1]);
+
+	ret = asn_REAL2double(newst0, &value0);
+	assert(ret == 0);
+	ret = asn_REAL2double(newst1, &value1);
+	assert(ret == 0);
+
+	assert(value0 == orig_value
+		|| (isnan(value0) && isnan(orig_value))
+		|| fuzzy);
+	assert(value1 == orig_value
+		|| (isnan(value1) && isnan(orig_value)));
+
+	assert(newst0->size == st.size || fuzzy);
+	assert(newst1->size == st.size);
+	assert(fuzzy || memcmp(newst0->buf, st.buf, st.size) == 0);
+	assert(memcmp(newst1->buf, st.buf, st.size) == 0);
+}
+
 int
 main() {
 	REAL_t rn;
@@ -189,6 +248,17 @@ main() {
 	check_buf(buf_3_14, sizeof(buf_3_14),	3.14, "3.14", "3.14E0");
 	check_buf(buf_mo1, sizeof(buf_mo1),	-3.14, "-3.14", "-3.14E0");
 	check_buf(buf_mo2, sizeof(buf_mo2),	3.14, "3.14", "3.14E0");
+
+
+	check_xer(0, zero/zero);	/* "<NOT-A-NUMBER/>" */
+	check_xer(0, 1.0/zero);		/* "<PLUS-INFINITY/>" */
+	check_xer(0, -1.0/zero);	/* "<MINUS-INFINITY/>" */
+	check_xer(0, 1.0);
+	check_xer(0, -1.0);
+	check_xer(0, 1.5);
+	check_xer(0, 123);
+	check_xer(1, 0.0000000000000000000001);
+	check_xer(1, -0.0000000000000000000001);
 
 	return 0;
 }
