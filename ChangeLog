@@ -4,6 +4,7 @@
 	* Completed the XER XMLValueList encoding and decoding.
 	* Native integer type is now using "long".
 	* Fixed #1150856. Reported by <vvvy@users.sourceforge.net>.
+	* Some WIN32 portability fixes.
 
 0.9.9:	2005-Feb-22
 
