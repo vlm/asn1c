@@ -44,7 +44,7 @@ UTCTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	time_t tloc;
 
 	errno = EPERM;			/* Just an unlikely error code */
-	tloc = asn_UT2time(st, 0);
+	tloc = asn_UT2time(st, 0, 0);
 	if(tloc == -1 && errno != EPERM) {
 		_ASN_ERRLOG("%s: Invalid time format: %s",
 			td->name, strerror(errno));
@@ -68,11 +68,11 @@ UTCTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		int ret;
 
 		errno = EPERM;
-		if(asn_UT2time(st, &tm) == -1 && errno != EPERM)
+		if(asn_UT2time(st, &tm, 1) == -1 && errno != EPERM)
 			return cb("<bad-value>", 11, app_key);
 
 		ret = snprintf(buf, sizeof(buf),
-			"%04d-%02d-%02d %02d:%02d%02d",
+			"%04d-%02d-%02d %02d:%02d%02d (GMT)",
 			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 			tm.tm_hour, tm.tm_min, tm.tm_sec);
 		assert(ret > 0 && ret < (int)sizeof(buf));
@@ -83,7 +83,7 @@ UTCTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 time_t
-asn_UT2time(const UTCTime_t *st, struct tm *_tm) {
+asn_UT2time(const UTCTime_t *st, struct tm *_tm, int as_gmt) {
 	char buf[17+2];	/* "AAMMJJhhmmss+hhmm" = 17, + 2 = 19 */
 	GeneralizedTime_t gt;
 
@@ -106,5 +106,20 @@ asn_UT2time(const UTCTime_t *st, struct tm *_tm) {
 		gt.buf[1] = 0x30;
 	}
 
-	return asn_GT2time(&gt, _tm);
+	return asn_GT2time(&gt, _tm, as_gmt);
 }
+
+UTCTime_t *
+asn_time2UT(UTCTime_t *opt_ut, const struct tm *tm, int force_gmt) {
+	GeneralizedTime_t *gt = (GeneralizedTime_t *)opt_ut;
+
+	gt = asn_time2GT(gt, tm, force_gmt);
+	if(gt == 0) return 0;
+
+	assert(gt->size >= 2);
+	gt->size -= 2;
+	memmove(gt->buf, gt->buf + 2, gt->size + 1);
+
+	return (UTCTime_t *)gt;
+}
+

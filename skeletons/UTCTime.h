@@ -19,8 +19,12 @@ asn_struct_print_f UTCTime_print;
  * Some handy helpers. *
  ***********************/
 
-/* On error returns -1 and errno set to EINVAL */
 struct tm;	/* <time.h> */
-time_t asn_UT2time(const UTCTime_t *, struct tm *_optional_tm4fill);
+
+/* See asn_GT2time() in GeneralizedTime.h */
+time_t asn_UT2time(const UTCTime_t *, struct tm *_optional_tm4fill, int as_gmt);
+
+/* See asn_time2GT() in GeneralizedTime.h */
+UTCTime_t *asn_time2UT(UTCTime_t *__opt_ut, const struct tm *, int force_gmt);
 
 #endif	/* _UTCTime_H_ */
