@@ -1,0 +1,22 @@
+.de Id
+..
+.Id $Id"
+.TH UNBER 1 "\*(Dt" "ASN.1 BER Decoder" "ASN.1 BER Decoder"
+.SH NAME
+unber \- ASN.1 BER Decoder
+.SH SYNOPSIS
+unber [\fB\-t\fR\fIdata-string\fR] [\fB-\fR] \fIinfile\fR...
+.SH DESCRIPTION
+unber takes the BER-encoded files and dumps their internal structure to stdout.
+(The DER and CER formats are both subsets of the BER, and are also supported.)
+A single dash represents the standard input.
+.SH OPTIONS
+.TP
+\fB\-t\fR \fIdata-string\fR
+Interpret the data-string as a sequence of hexadecimal values representing
+the start of BER TLV encoding. Print the human readable explanation.
+.SH SEE ALSO
+.TP
+\&\fIasn1c\fR\|(1)
+.SH AUTHORS
+Lev Walkin <vlm@lionet.info>
