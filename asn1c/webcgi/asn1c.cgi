@@ -17,6 +17,9 @@ $DM = 0750;					# Directory mode for all mkdirs.
 $MaxHistoryItems = 5;				# Number of items in History
 $DynamicHistory = 'yes';			# Full/Short history
 $safeFilename = '^[a-z0-9_-]+[.a-z0-9_-]*$';	# Safe filename
+$ASN1C_Page = 'http://lionet.info/asn1c';
+$HelpEmail = 'asn1c@lionet.info';
+$defaultUserEmail = 'your@email';
 
 $warn = '<CENTER><FONT SIZE=+1><B>';
 $unwarn = '</B></FONT></CENTER>';
@@ -28,15 +31,16 @@ $SandBoxInitFailed = 'User playground initialization failed';
 $myName = $ENV{SCRIPT_NAME};	# URL of this particular script (without args)
 
 $homePath = "<FONT FACE=Courier SIZE=-1>"
-	. "<A HREF=http://lionet.info/>Home</A>"
-	. " &gt;&gt; <A HREF=http://lionet.info/asn1c/>asn1c</A>"
-	. " &gt;&gt; <A HREF=http://lionet.info/asn1c/asn1c.cgi>Free Online ASN.1 Compiler</A>"
+	. "<A HREF=http://lionet.info>Home</A>"
+	. " &gt;&gt; <A HREF=$ASN1C_Page>asn1c</A>"
+	. " &gt;&gt; <A HREF=$ASN1C_Page/asn1c.cgi>Free Online ASN.1 Compiler</A>"
 	. "</FONT><P>";
 
 ###################################################
 # The code below rarely requires any modification #
 ###################################################
 
+my $redirect = '';	# No redirection by default
 my $content = '';	# Default content is empty
 
 use CGI qw/param cookie header upload escapeHTML/;
@@ -140,9 +144,29 @@ sub makeArchive($$) {
 my $EnvironmentSetOK = prepareChrootEnvironment();
 
 #
+# Record user's email.
+#
+$userEmail = cookie('userEmail');
+$userEmail = $defaultUserEmail unless $userEmail;
+$tmpEmail = param('email');
+if(defined($tmpEmail)
+	&& $tmpEmail ne $userEmail) {
+	unless($tmpEmail =~ /^\s*([a-z0-9._+-]+@[a-z0-9.+-]+)\s*$/i) {
+		bark("Invalid email address: "
+			. "<B><FONT COLOR=darkred>$tmpEmail</FONT></B>");
+	}
+	$userEmail = $1;
+	local $ck = cookie(-name=>'userEmail',
+		-value=>$userEmail,
+		-path=>'/', -expires=>'+1d');
+	print "Set-Cookie: " . $ck . "\n";
+}
+
+#
 # Check if full history requested.
 #
 $HistoryShow = cookie('HistoryShow');
+$HistoryShow = '' unless $HistoryShow;
 $tmpHSParam = param('history');	# Control cookie setting
 if (defined($tmpHSParam)
  && $tmpHSParam ne $HistoryShow
@@ -193,15 +217,17 @@ unless($session) {
 		unless(-d $sessionDir);
 
 	local $t = param('time');
-	local $trans = param('trans');
+	local $file = param('file');
 	local $fetch = param('fetch');
 	local $show = param('show');
-	unless($t =~ /^[0-9TZ:+-]{14,}$/ && $trans =~ /$safeFilename/i) {
+	unless(defined($t) && defined($file)
+		&& $t =~ /^[0-9TZ:+-]{14,}$/
+		&& $file =~ /$safeFilename/i) {
 		$fetch = '';
 		$show = '';
 	}
 	if($fetch =~ /$safeFilename/i || $show =~ /^(log|tgz)$/) {
-		local $sandbox = $sessionDir . '/' . $t . '--' . $trans;
+		local $sandbox = $sessionDir . '/' . $t . '--' . $file;
 
 		if($show eq 'tgz') {
 			local $tarball = makeArchive($TMPDIR, $sandbox);
@@ -229,8 +255,36 @@ unless($session) {
 	}
 }
 
+#
+# Check if transaction help is requested.
+#
+$transHelp = param('transHelp');
+if(defined($transHelp)
+&& $transHelp =~ /^([0-9]+)--([0-9TZ:+-]{14,})--([_.a-zA-Z0-9-]+)$/) {
+	open(S, "| sendmail -it") or bark("Cannot perform help request, please email to the address below");
+	print S "From: $userEmail\n";
+	print S "To: $HelpEmail\n";
+	print S "Subject: asn1c help requested for $2--$3\n";
+	print S "\n";
+	print S "User $userEmail requested help with\n$session/$2--$3 ($1)\n";
+	print S "\n-- \nasn1c\n";
+	close(S);
+	open(S, '>> ' . $sessionDir . '/' . $2 . '--' . $3 . '/+HelpReq');
+	print S "$userEmail\n";
+	close(S);
+	$content = '<CENTER>Transaction '
+		. "$1 ($3) is marked for manual processing.<BR>"
+		. "Results will be mailed to "
+		. "<FONT COLOR=darkgreen>$userEmail</FONT> shortly.<BR>"
+		. "<P>This page will <A HREF=$ASN1C_Page/asn1c.cgi>disappear</A> in 5 seconds."
+		. "</CONTENT>";
+	$redirect = "<META HTTP-EQUIV=\"Refresh\"šCONTENT=\"5\">";
+	goto PRINTOUT;
+}
+
 open(LOG, ">> $sessionDir/+logfile") or bark("Sandbox error: $!");
 print LOG isoTime() . "\tIP=$ENV{REMOTE_ADDR}";
+print LOG "\tEMAIL=$userEmail" if($userEmail ne $defaultUserEmail);
 
 @gotSafeNames = ();
 @gotNames = param('file');
@@ -295,10 +349,15 @@ if($#gotSafeNames >= 0) {
 
 	my $inChDir = makeSessionDirName("/", $session) . $transactionDir;
 	my $options = '';
-	$options .= " -Wdebug-lexer" if(param("optDebugL") eq "on");
-	$options .= " -E" if(param("optE") eq "on");
-	$options .= " -EF" if(param("optEF") eq "on");
-	$options .= " -fnative-types" if(param("optNT") eq "on");
+	my $optDebugL = param('optDebugL');
+	my $optE = param('optE');
+	my $optEF = param('optEF');
+	my $optNT = param('optNT');
+	$options .= " -Wdebug-lexer"
+		if(defined($optDebugL) && $optDebugL eq "on");
+	$options .= " -E" if(defined($optE) && $optE eq "on");
+	$options .= " -EF" if(defined($optEF) && $optEF eq "on");
+	$options .= " -fnative-types" if(defined($optNT) && $optNT eq "on");
 	my $CompileASN = "$TMPDIR/bin/asn1c -v | sed -e 's/^/-- /'"
 			. " > $sandbox/+Compiler.Log 2>&1"
 		. "; $SUIDHelper $TMPDIR $inChDir $options @gotSafeNames "
@@ -326,7 +385,7 @@ $form =
 . "DEFINITIONS ::= BEGIN\n"
 . "\n"
 . "  TestType ::= SEQUENCE {\n"
-. "      num INTEGER,\n"
+. "      num [PRIVATE 1] INTEGER,\n"
 . "      str UTF8String (SIZE(1..20)) OPTIONAL\n"
 . "  }\n"
 . "\n"
@@ -342,6 +401,7 @@ $form =
 . "</FONT>"
 . "<P>\n"
 . "<INPUT TYPE=submit VALUE=\"Proceed with ASN.1 compilation\">"
+. " (<A HREF=$ASN1C_Page>What is ASN.1?</A>)"
 . "</FORM>";
 
 #
@@ -381,15 +441,14 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 	for(my $i = 0; $i <= $#Names; $i++) {
 		local $_ = "<A HREF=\"$myName?time="
 			. escapeHTML($origTime)
-			. "&trans=$f"
+			. "&file=$f"
 			. "&fetch=$safeNames[$i]\">$Names[$i]</A>";
 		@markedNames = (@markedNames, $_);
 	}
 
-	open(I, '< ' . $sessionDir . '/' . $trans . '/+ExitCode');
-	local $ec = <I>;
-
-	chop($ec);
+	local $ec = '';
+	open(I, '< ' . $sessionDir . '/' . $trans . '/+ExitCode')
+		and chop($ec = <I>);
 
 	if($ec eq "0") {
 		$results = "<FONT COLOR=darkgreen><B>"
@@ -407,26 +466,38 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. ($allowFetchResults ? '1. ' : '')
 		. "<A HREF=\"$myName/$f-$tNum.Log?time="
 		. escapeHTML($origTime)
-		. "&trans=$f"
+		. "&file=$f"
 		. "&show=log\">"
 		. "Show compiler log</A></NOBR>";
 	$results .= "<BR>\n<NOBR>"
 		. "2. <A HREF=\"$myName/$f-$tNum.tgz?time="
 		. escapeHTML($origTime)
-		. "&trans=$f"
+		. "&file=$f"
 		. "&show=tgz\">"
 		. "Fetch results (.tgz)</A></NOBR>"
 		if $allowFetchResults;
 	if($ec ne "0") {
-		$results .= '<P>'
-			. '<FONT SIZE=-1><A HREF="mailto:asn1c@lionet.info?Subject=asn1c compiler help: '
+		local $eml;
+		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpReq')
+			and chomp($eml = <H>);
+		if(defined($eml)) {
+			$results .= "<P><FONT COLOR=darkred Family=Serif><B>"
+				. "Status: manual help requested<BR>"
+				. " by <FONT COLOR=black>$eml</FONT>,<BR>"
+				. "expect results in a few hours.<B></FONT>";
+		} else {
+			$results .= '<P>'
+			. "<INPUT TYPE=text NAME=email VALUE=\"$userEmail\"><BR>"
+			. "<INPUT TYPE=hidden NAME=transHelp VALUE=\"$tNum--$trans\">"
+			. '<INPUT TYPE=Submit VALUE="Help me fix it!">'
+			. '<!-- <A HREF="mailto:asn1c@lionet.info?Subject=asn1c compiler help: '
 			. "transaction $tNum ("
 			. join(', ', @safeNames)
 			. ") failed with code $ec"
-			. '&body=leave body empty or add more comments">Help me fix it!</A> (See bottom line)'
-			. '</FONT>'
+			. '&body=leave body empty or add more comments">Help me fix it!</A> (See bottom line) -->'
 			;
-		$atLeastOneError = 1;
+			$atLeastOneError = 1;
+		}
 	}
 
 	$trColor = ' BGCOLOR=#f8f8f8';
@@ -438,9 +509,9 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "<TD ALIGN=center><FONT SIZE=-1 FACE=Helvetica>"
 		. join(", ", @markedNames)
 		. "</FONT></TD>"
-		. "<TD><FONT SIZE=-2 FACE=Helvetica>"
+		. "<FORM METHOD=POST ACTION=$myName><TD><FONT SIZE=-2 FACE=Helvetica>"
 			. $results
-			. "</TD>"
+			. "</TD></FORM>"
 		. "</TR>\n";
 	
 	last if(++$CountHistoryItems >= $MaxHistoryItems
@@ -536,6 +607,7 @@ print<<EOM;
 <HEAD>
 <TITLE>Free Online ASN.1 Compiler</TITLE>
 <META NAME="Description" CONTENT="Free Online ASN.1 Compiler">
+$redirect
 <STYLE TYPE="text/css">
 	TD#inputbox {
 		border-right: dashed 1px rgb(200, 200, 200);
@@ -550,7 +622,7 @@ $content
 
 <HR WIDTH=70%>
 <CENTER><ADDRESS><FONT SIZE=-1 FACE=Courier COLOR=#404040>
-<A HREF=http://lionet.info/asn1c>The ASN.1 Compiler</A>
+<A HREF=$ASN1C_Page>The ASN.1 Compiler</A>
 	Copyright &copy; 2003, 2004, 2005
 Lev Walkin &lt;<A HREF=mailto:vlm&#64;lionet.info?Subject=asn1c>vlm&#64;lionet.info</A>&gt;
 </FONT></ADDRESS></CENTER>
