@@ -176,6 +176,8 @@ asn1c_save_streams(arg_t *arg)  {
 		"#define\t_%s_H_\n"
 		"\n", header_id, header_id);
 
+	fprintf(fp_h, "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n");
+
 	fprintf(fp_h, "#include <constr_TYPE.h>\n\n");
 
 	TQ_FOR(ot, &(cs->targets[OT_DEPS]), next)
@@ -195,7 +197,9 @@ asn1c_save_streams(arg_t *arg)  {
 
 	assert(OT_MAX == 5);
 
-	fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
+	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n\n"
+			"#endif\t/* _%s_H_ */\n",
+		header_id);
 
 	fclose(fp_c);
 	fclose(fp_h);
