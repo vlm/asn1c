@@ -1,0 +1,55 @@
+
+GENERAL INFORMATION
+===================
+
+The GSM TAP3 (Transferred Account Procedure, Version 3) decoder.
+Invoking `make` will compile the ASN.1 specifications from the
+../tap3.asn1 file.
+
+THERE IS NO tap3.asn1 FILE THERE YET!
+
+OBTAINING THE TAP3 SPECIFICATION
+================================
+
+To obtain the TAP3 ASN.1 specification, you should go to
+	http://www.gsmworld.com/using/billing/tap3_legal.html
+and agree with their licensing terms by clicking the "I ACCEPT" button.
+
+A .ZIP file with several Microsoft Word .DOC files will download shortly.
+
+You should extract the TAP-0311 ASN.1 module from one of these .DOC files
+and save it as the ../tap3.asn1 file. The ../tap3.asn1 file should start with
+the following line
+	"TAP-0311 DEFINITIONS IMPLICIT TAGS ::="
+and end with the "END" token.
+Be careful not to copy any non-ASN.1 preambles from that .DOC file.
+
+After obtaining the tap3.asn1, type `make` in the directory containing
+this README file.
+
+tap3dump USAGE
+==============
+
+The tap3dump utility may be used to dump the contents of the BER-encoded
+TAP3 data record file:
+
+	./tap3dump -x tapfile.der	# Print as XML (BASIC-XER)
+
+If necessary, a straightforward modification of the
+	../../skeletons/asn-decoder-template.c
+will allow you to build a converter from the XML (XER) TAP3 format
+back into binary (BER).
+
+The full list of recognized command line options may be obtained with
+
+	> ./tap3dump -h
+	Usage: ./tap3dump [options] <data.ber> ...
+	Where options are:
+	  -b <size>    Set the i/o buffer size (default is 8192)
+	  -c           Check ASN.1 constraints after decoding
+	  -d           Enable debugging (-dd is even better)
+	  -n <num>     Process files <num> times
+	  -s <size>    Set the stack usage limit
+	  -p           Print out the decoded contents
+	  -x           Print out as XML
+

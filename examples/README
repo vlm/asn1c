@@ -9,5 +9,6 @@ To compile the files using asn1c, try
 
 	../asn1c/asn1c -P rfc3280-*.asn1
 
-The ./sample.source.PKIX1 directory contains the X.509 Certificate decoder.
-
+1. The ./sample.source.PKIX1 directory contains the X.509 Certificate decoder.
+2. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder. Please
+   read the README file in that directory first.

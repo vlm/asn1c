@@ -14,6 +14,7 @@
 	  (Test case 74) (Severity: low, Security impact: none)
 	* XMLValueList generation fixed for CHOICE type.
 	  (Severity: medium, Security impact: none)
+	* Added the GSM TAP3 decoder into ./examples/sample.source.TAP3
 
 0.9.11:	2005-Mar-04
 
