@@ -278,7 +278,7 @@ static asn1p_value_t *
 %type	<a_constr>		ConstraintSubtypeElement /* 1..2 */
 %type	<a_constr>		SimpleTableConstraint
 %type	<a_constr>		TableConstraint
-%type	<a_constr>		WithComponents
+%type	<a_constr>		InnerTypeConstraint
 %type	<a_constr>		WithComponentsList
 %type	<a_constr>		WithComponentsElement
 %type	<a_constr>		ComponentRelationConstraint
@@ -1668,7 +1668,7 @@ ConstraintSubtypeElement:
 	| TableConstraint {
 		$$ = $1;
 	}
-	| WithComponents {
+	| InnerTypeConstraint {
 		$$ = $1;
 	}
 	| TOK_CONSTRAINED TOK_BY '{'
@@ -1742,8 +1742,11 @@ ContainedSubtype:
 	}
 	;
 
-WithComponents:
-	TOK_WITH TOK_COMPONENTS '{' WithComponentsList '}' {
+InnerTypeConstraint:
+	TOK_WITH TOK_COMPONENT SetOfConstraints {
+		CONSTRAINT_INSERT($$, ACT_CT_WCOMP, $3, 0);
+	}
+	| TOK_WITH TOK_COMPONENTS '{' WithComponentsList '}' {
 		CONSTRAINT_INSERT($$, ACT_CT_WCOMPS, $4, 0);
 	}
 	;
@@ -1762,6 +1765,7 @@ WithComponentsElement:
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
 		$$->type = ACT_EL_EXT;
+		$$->value = asn1p_value_frombuf("...", 3, 0);
 	}
 	| Identifier optConstraints optPresenceConstraint {
 		$$ = asn1p_constraint_new(yylineno);
@@ -1769,6 +1773,7 @@ WithComponentsElement:
 		$$->type = ACT_EL_VALUE;
 		$$->value = asn1p_value_frombuf($1, strlen($1), 0);
 		$$->presence = $3;
+		if($2) asn1p_constraint_insert($$, $2);
 	}
 	;
 
