@@ -14,6 +14,7 @@ enum expectation {
 	EXP_OK,		/* Encoding/decoding must succeed */
 	EXP_BROKEN,	/* Decoding must fail */
 	EXP_RECLESS,	/* Reconstruction is allowed to yield less data */
+	EXP_DIFFERENT,	/* Reconstruction will yield different encoding */
 };
 
 static unsigned char buf[4096];
@@ -115,12 +116,18 @@ process_data(enum expectation expectation, char *fbuf, int size) {
 	assert(buf_offset < sizeof(buf));
 	assert(ret == 0);
 
-	if(expectation == EXP_RECLESS) {
+	switch(expectation) {
+	case EXP_RECLESS:
 		assert(buf_offset > 0 && buf_offset < size);
 		assert(memcmp(buf + 2, fbuf + 2, buf_offset - 2) == 0);
-	} else {
+		break;
+	case EXP_DIFFERENT:
+		assert(buf_offset > 0 && buf_offset < size);
+		break;
+	case EXP_BROKEN:
 		assert(buf_offset == size);
 		assert(memcmp(buf, fbuf, buf_offset) == 0);
+		break;
 	}
 
 	asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
@@ -144,6 +151,8 @@ process(const char *fname) {
 	switch(ext[-1]) {
 	case 'B':	/* The file is intentionally broken */
 		expectation = EXP_BROKEN; break;
+	case 'D':	/* Reconstructing should yield different data */
+		expectation = EXP_DIFFERENT; break;
 	case 'L':	/* Extensions are present */
 		expectation = EXP_RECLESS; break;
 	default:
@@ -174,16 +183,19 @@ main() {
 	DIR *dir;
 	struct dirent *dent;
 	int processed_files = 0;
+	char *str;
 
 	dir = opendir("../data-62");
 	assert(dir);
 
-	while((dent = readdir(dir))) {
-		if(strncmp(dent->d_name, "data-62-", 8))
-			continue;
+	str = getenv("DATA_62_FILE");
+	if(str && strncmp(str, "data-62-", 8) == 0)
+		process(str);
 
-		if(process(dent->d_name))
-			processed_files++;
+	while((dent = readdir(dir))) {
+		if(strncmp(dent->d_name, "data-62-", 8) == 0)
+			if(process(dent->d_name))
+				processed_files++;
 	}
 
 	assert(processed_files);
