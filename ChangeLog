@@ -1,8 +1,10 @@
 
-0.8.12:	2004-Jun-14
+0.8.12:	2004-Jun-17
 
-	* RELATIVE-OID and OBJECT IDENTIFIER decoders are not bound
-	  anymore to an integer type of specific size (unsigned long).
+	* RELATIVE-OID and OBJECT IDENTIFIER encoders/decoders are not bound
+	  anymore to an integer type of specific size (unsigned long). The
+	  size of an integer must be provided explicitly.
+	  See {OBJECT_IDENTIFIER|RELATIVE_OID}_{get|set}_arcs().
 	* SEQUENCE BER decoder fixed again for complex CHOICE case
 	  (Test case 44) (Severity: medium, Security impact: low).
 
