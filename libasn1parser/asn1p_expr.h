@@ -170,7 +170,7 @@ typedef struct asn1p_expr_s {
 			TM_IMPLICIT,
 			TM_EXPLICIT,
 		} tag_mode;
-		asn1_integer_t tag_value;
+		asn1c_integer_t tag_value;
 	} tag;
 
 	struct asn1p_expr_marker_s {

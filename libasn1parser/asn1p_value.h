@@ -29,7 +29,7 @@ typedef struct asn1p_value_s {
 
 	union {
 		asn1p_ref_t	*reference;
-		asn1_integer_t	 v_integer;
+		asn1c_integer_t	 v_integer;
 		double		 v_double;
 		/*
 		 * Binary bits vector.
@@ -59,7 +59,7 @@ asn1p_value_t *asn1p_value_fromref(asn1p_ref_t *ref, int do_copy);
 asn1p_value_t *asn1p_value_frombits(uint8_t *bits, int size_in_bits, int dc);
 asn1p_value_t *asn1p_value_frombuf(char *buffer, int size, int do_copy);
 asn1p_value_t *asn1p_value_fromdouble(double);
-asn1p_value_t *asn1p_value_fromint(asn1_integer_t);
+asn1p_value_t *asn1p_value_fromint(asn1c_integer_t);
 asn1p_value_t *asn1p_value_clone(asn1p_value_t *);
 void asn1p_value_free(asn1p_value_t *);
 

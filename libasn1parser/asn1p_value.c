@@ -99,7 +99,7 @@ asn1p_value_fromdouble(double d) {
 }
 
 asn1p_value_t *
-asn1p_value_fromint(asn1_integer_t i) {
+asn1p_value_fromint(asn1c_integer_t i) {
 	asn1p_value_t *v = calloc(1, sizeof *v);
 	if(v) {
 		v->value.v_integer = i;

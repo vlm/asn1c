@@ -29,7 +29,7 @@
  * type is used by the compiler itself to handle large integer values
  * specified inside ASN.1 grammar.
  */
-typedef	intmax_t asn1_integer_t;
+typedef	intmax_t asn1c_integer_t;
 #ifdef	PRIdMAX
 #define	PRIdASN	PRIdMAX
 #define	PRIuASN	PRIuMAX
