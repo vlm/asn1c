@@ -22,7 +22,6 @@ $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
 	./crfc2asn1.pl $(ASN1_SOURCE_1)
 
 EXTRA_DIST = rfc*.txt				\
-	decoder-template.c			\
 	sample.source.PKIX1/README		\
 	sample.source.PKIX1/config.h		\
 	sample.source.PKIX1/Makefile		\
