@@ -238,10 +238,12 @@ _constraint_value_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_value_t **value
 
 	tmp_expr = asn1f_lookup_symbol(arg, mod, (*value)->value.reference);
 	if(tmp_expr == NULL) {
-		FATAL("Cannot find symbol %s "
+		FATAL("Cannot find symbol %s (%s) "
 			"used in %s subtype constraint at line %d",
 			asn1f_printable_reference((*value)->value.reference),
-			arg->expr->Identifier, arg->expr->_lineno);
+			mod->Identifier,
+			arg->expr->Identifier,
+			arg->expr->_lineno);
 		assert((*value)->type == ATV_REFERENCED);
 		return -1;
 	}
