@@ -57,6 +57,7 @@ typedef struct asn1p_constraint_s {
 	int el_size;	/* Size of the allocated (elements) */
 
 	int _lineno;	/* Position in a source file */
+	int _compile_mark;	/* Marker used by the compiler */
 } asn1p_constraint_t;
 
 /* Human-readable constraint type description */
