@@ -432,7 +432,7 @@ enum_4_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->elements       = asn_DEF_ENUMERATED.elements;
 	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-    /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
 }
 
 static void
@@ -836,7 +836,7 @@ Member_2_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->elements       = asn_DEF_ENUMERATED.elements;
 	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-    /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
 }
 
 static void

@@ -58,8 +58,9 @@ memb_varsets_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	if((size >= 1)) {
-		/* Constraint check succeeded */
-		return 0;
+		/* SEQUENCE validation code is the same as SET */
+		/* Perform validation of the inner elements */
+		return SET_OF_constraint(td, list, app_errlog, app_key);
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: constraint failed (%s:%d)",
@@ -395,8 +396,8 @@ memb_vset_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	if((size >= 1)) {
-		/* Constraint check succeeded */
-		return 0;
+		/* Perform validation of the inner elements */
+		return SET_OF_constraint(td, list, app_errlog, app_key);
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: constraint failed (%s:%d)",
@@ -630,7 +631,7 @@ accept_as_2_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->elements       = asn_DEF_ENUMERATED.elements;
 	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-    /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
 }
 
 static void
