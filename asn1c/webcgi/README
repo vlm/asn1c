@@ -6,8 +6,9 @@ To install, execute the following steps in this directory
 	CGIDIR=/path/where/webserver/CGIs/are/stored
 	make				# Ensure the binary files are built
 	cp asn1c.cgi asn1c-suid-helper $CGIDIR
-	chmod 4555 $CGIDIR/asn1c-suid-helper
+	chgrp www $CGIDIR/asn1c-suid-helper	# Or whatever Web server has
 	chown root $CGIDIR/asn1c-suid-helper
+	chmod 4550 $CGIDIR/asn1c-suid-helper	# Make it setuid
 	# edit the $CGIDIR/asn1c.cgi to set up a few preferences
 	# in the beginning of that Perl script.
 
