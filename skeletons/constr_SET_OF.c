@@ -60,13 +60,13 @@
  * The decoder of the SET OF type.
  */
 ber_dec_rval_t
-SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
+SET_OF_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)sd->specifics;
-	asn1_SET_OF_element_t *element = specs->element;
+	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
+	asn1_TYPE_member_t *element = td->elements;	/* Single one */
 
 	/*
 	 * Parts of the structure being constructed.
@@ -80,7 +80,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 
-	ASN_DEBUG("Decoding %s as SET OF", sd->name);
+	ASN_DEBUG("Decoding %s as SET OF", td->name);
 	
 	/*
 	 * Create the target structure if it is not present already.
@@ -108,11 +108,11 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * perfectly fits our expectations.
 		 */
 
-		rval = ber_check_tags(sd, ctx, ptr, size,
+		rval = ber_check_tags(td, ctx, ptr, size,
 			tag_mode, &ctx->left, 0);
 		if(rval.code != RC_OK) {
 			ASN_DEBUG("%s tagging check failed: %d",
-				sd->name, rval.code);
+				td->name, rval.code);
 			consumed_myself += rval.consumed;
 			RETURN(rval.code);
 		}
@@ -143,7 +143,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 */
 
 		if(ctx->left == 0) {
-			ASN_DEBUG("End of SET OF %s", sd->name);
+			ASN_DEBUG("End of SET OF %s", td->name);
 			/*
 			 * No more things to decode.
 			 * Exit out of here.
@@ -185,9 +185,9 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 			 */
 		    } else {
 			ASN_DEBUG("Unexpected tag %s fixed SET OF %s",
-				ber_tlv_tag_string(tlv_tag), sd->name);
+				ber_tlv_tag_string(tlv_tag), td->name);
 			ASN_DEBUG("%s SET OF has tag %s",
-				sd->name, ber_tlv_tag_string(element->tag));
+				td->name, ber_tlv_tag_string(element->tag));
 			RETURN(RC_FAIL);
 		    }
 		}
@@ -204,7 +204,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 		rval = element->type->ber_decoder(element->type,
 				&ctx->ptr, ptr, LEFT, 0);
 		ASN_DEBUG("In %s SET OF %s code %d consumed %d",
-			sd->name, element->type->name,
+			td->name, element->type->name,
 			rval.code, (int)rval.consumed);
 		switch(rval.code) {
 		case RC_OK:
@@ -305,11 +305,10 @@ static int _el_buf_cmp(const void *ap, const void *bp) {
  * The DER encoder of the SET OF type.
  */
 der_enc_rval_t
-SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
+SET_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)sd->specifics;
-	asn1_SET_OF_element_t *elm = specs->element;
+	asn1_TYPE_member_t *elm = td->elements;
 	asn1_TYPE_descriptor_t *elm_type = elm->type;
 	der_type_encoder_f *der_encoder = elm_type->der_encoder;
 	A_SET_OF(void) *list;
@@ -321,7 +320,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int ret;
 	int edx;
 
-	ASN_DEBUG("Estimating size for SET OF %s", sd->name);
+	ASN_DEBUG("Estimating size for SET OF %s", td->name);
 
 	/*
 	 * Gather the length of the underlying members sequence.
@@ -342,11 +341,11 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	/*
 	 * Encode the TLV for the sequence itself.
 	 */
-	encoding_size = der_write_tags(sd, computed_size, tag_mode, tag,
+	encoding_size = der_write_tags(td, computed_size, tag_mode, tag,
 		cb, app_key);
 	if(encoding_size == -1) {
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 		return erval;
 	}
@@ -365,12 +364,12 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	(void *)encoded_els = MALLOC(list->count * sizeof(encoded_els[0]));
 	if(encoded_els == NULL) {
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 		return erval;
 	}
 
-	ASN_DEBUG("Encoding members of %s SET OF", sd->name);
+	ASN_DEBUG("Encoding members of %s SET OF", td->name);
 
 	/*
 	 * Encode all members.
@@ -391,7 +390,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 				FREEMEM(encoded_els[edx].buf);
 			FREEMEM(encoded_els);
 			erval.encoded = -1;
-			erval.failed_type = sd;
+			erval.failed_type = td;
 			erval.structure_ptr = ptr;
 			return erval;
 		}
@@ -436,7 +435,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		 * encoded size is not equal to the computed size.
 		 */
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 	} else {
 		erval.encoded = computed_size;
@@ -448,8 +447,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 int
 SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
-	asn1_SET_OF_element_t *element = specs->element;
+	asn1_TYPE_member_t *element = td->elements;
 	const A_SET_OF(void) *list;
 	int ret;
 	int i;
@@ -486,8 +484,7 @@ SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 void
 SET_OF_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr) {
-		asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
-		asn1_SET_OF_element_t *element = specs->element;
+		asn1_TYPE_member_t *element = td->elements;
 		A_SET_OF(void) *list;
 		int i;
 
@@ -514,8 +511,8 @@ SET_OF_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 int
 SET_OF_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
-	asn1_SET_OF_element_t *element = specs->element;
+	asn1_TYPE_member_t *element = td->elements;
+	asn_constr_check_f *constr;
 	const A_SET_OF(void) *list;
 	int i;
 
@@ -526,12 +523,30 @@ SET_OF_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 
 	(const void *)list = sptr;
+
+	constr = element->memb_constraints;
+	if(!constr) constr = element->type->check_constraints;
+
+	/*
+	 * Iterate over the members of an array.
+	 * Validate each in turn, until one fails.
+	 */
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
+		int ret;
+
 		if(!memb_ptr) continue;
-		return element->type->check_constraints(element->type, memb_ptr,
-			app_errlog, app_key);
+
+		ret = constr(element->type, memb_ptr, app_errlog, app_key);
+		if(ret) return ret;
 	}
+
+	/*
+	 * Cannot inherit it eralier:
+	 * need to make sure we get the updated version.
+	 */
+	if(!element->memb_constraints)
+		element->memb_constraints = element->type->check_constraints;
 
 	return 0;
 }

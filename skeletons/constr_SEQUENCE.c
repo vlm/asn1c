@@ -103,13 +103,13 @@ _t2e_cmp(const void *ap, const void *bp) {
  * The decoder of the SEQUENCE type.
  */
 ber_dec_rval_t
-SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
+SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)sd->specifics;
-	asn1_SEQUENCE_element_t *elements = specs->elements;
+	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)td->specifics;
+	asn1_TYPE_member_t *elements = td->elements;
 
 	/*
 	 * Parts of the structure being constructed.
@@ -124,7 +124,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 	int edx;			/* SEQUENCE element's index */
 
-	ASN_DEBUG("Decoding %s as SEQUENCE", sd->name);
+	ASN_DEBUG("Decoding %s as SEQUENCE", td->name);
 	
 	/*
 	 * Create the target structure if it is not present already.
@@ -152,11 +152,11 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * perfectly fits our expectations.
 		 */
 
-		rval = ber_check_tags(sd, ctx, ptr, size,
+		rval = ber_check_tags(td, ctx, ptr, size,
 			tag_mode, &ctx->left, 0);
 		if(rval.code != RC_OK) {
 			ASN_DEBUG("%s tagging check failed: %d",
-				sd->name, rval.code);
+				td->name, rval.code);
 			consumed_myself += rval.consumed;
 			RETURN(rval.code);
 		}
@@ -182,7 +182,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * that member:
 		 * 	step = (<member_number> * 2 + <microphase>).
 		 */
-	  for(edx = (ctx->step >> 1); edx < specs->elements_count;
+	  for(edx = (ctx->step >> 1); edx < td->elements_count;
 			edx++, ctx->step = (ctx->step & ~1) + 2) {
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
@@ -198,20 +198,20 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * MICROPHASE 1: Synchronize decoding.
 		 */
 		ASN_DEBUG("In %s SEQUENCE left %d, edx=%d opt=%d ec=%d",
-			sd->name, (int)ctx->left,
-			edx, elements[edx].optional, specs->elements_count);
+			td->name, (int)ctx->left,
+			edx, elements[edx].optional, td->elements_count);
 
 		if(ctx->left == 0	/* No more stuff is expected */
 		&& (
 			/* Explicit OPTIONAL specification reaches the end */
-			(edx + elements[edx].optional == specs->elements_count)
+			(edx + elements[edx].optional == td->elements_count)
 			||
 			/* All extensions are optional */
 			(IN_EXTENSION_GROUP(specs, edx)
-				&& specs->ext_before > specs->elements_count)
+				&& specs->ext_before > td->elements_count)
 		   )
 		) {
-			ASN_DEBUG("End of SEQUENCE %s", sd->name);
+			ASN_DEBUG("End of SEQUENCE %s", td->name);
 			/*
 			 * Found the legitimate end of the structure.
 			 */
@@ -224,7 +224,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 */
 		tag_len = ber_fetch_tag(ptr, LEFT, &tlv_tag);
 		ASN_DEBUG("In %s SEQUENCE for %d %s next tag length %d",
-			sd->name, edx, elements[edx].name, (int)tag_len);
+			td->name, edx, elements[edx].name, (int)tag_len);
 		switch(tag_len) {
 		case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 			/* Fall through */
@@ -236,8 +236,8 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 */
 		use_bsearch = 0;
 		opt_edx_end = edx + elements[edx].optional + 1;
-		if(opt_edx_end > specs->elements_count)
-			opt_edx_end = specs->elements_count;	/* Cap */
+		if(opt_edx_end > td->elements_count)
+			opt_edx_end = td->elements_count;	/* Cap */
 		else if(opt_edx_end - edx > 8) {
 			/* Limit the scope of linear search... */
 			opt_edx_end = edx + 8;
@@ -340,7 +340,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 					BER_TLV_CONSTRUCTED(ptr),
 					(char *)ptr + tag_len, LEFT - tag_len);
 				ASN_DEBUG("Skip length %d in %s",
-					(int)skip, sd->name);
+					(int)skip, td->name);
 				switch(skip) {
 				case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 					/* Fall through */
@@ -359,7 +359,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 */
 		ctx->step |= 1;		/* Confirm entering next microphase */
 	microphase2:
-		ASN_DEBUG("Inside SEQUENCE %s MF2", sd->name);
+		ASN_DEBUG("Inside SEQUENCE %s MF2", td->name);
 		
 		/*
 		 * Compute the position of the member inside a structure,
@@ -385,7 +385,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
 		ASN_DEBUG("In %s SEQUENCE decoded %d %s in %d bytes code %d",
-			sd->name, edx, elements[edx].type->name,
+			td->name, edx, elements[edx].type->name,
 			(int)rval.consumed, rval.code);
 		switch(rval.code) {
 		case RC_OK:
@@ -409,7 +409,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	case 4:	/* only 00's expected */
 
 		ASN_DEBUG("SEQUENCE %s Leftover: %ld, size = %ld",
-			sd->name, (long)ctx->left, (long)size);
+			td->name, (long)ctx->left, (long)size);
 
 		/*
 		 * Skip everything until the end of the SEQUENCE.
@@ -445,12 +445,12 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 				}
 			}
 
-			if(!IN_EXTENSION_GROUP(specs, specs->elements_count)
+			if(!IN_EXTENSION_GROUP(specs, td->elements_count)
 			|| ctx->phase == 4) {
 				ASN_DEBUG("Unexpected continuation "
 					"of a non-extensible type "
 					"%s (SEQUENCE): %s",
-					sd->name,
+					td->name,
 					ber_tlv_tag_string(tlv_tag));
 				RETURN(RC_FAIL);
 			}
@@ -478,23 +478,22 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
  * The DER encoder of the SEQUENCE type.
  */
 der_enc_rval_t
-SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
+SEQUENCE_encode_der(asn1_TYPE_descriptor_t *td,
 	void *ptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)sd->specifics;
 	size_t computed_size = 0;
 	der_enc_rval_t erval;
 	ssize_t ret;
 	int edx;
 
 	ASN_DEBUG("%s %s as SEQUENCE",
-		cb?"Encoding":"Estimating", sd->name);
+		cb?"Encoding":"Estimating", td->name);
 
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */
-	for(edx = 0; edx < specs->elements_count; edx++) {
-		asn1_SEQUENCE_element_t *elm = &specs->elements[edx];
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn1_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		if(elm->optional) {
 			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
@@ -515,11 +514,11 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Encode the TLV for the sequence itself.
 	 */
-	ret = der_write_tags(sd, computed_size, tag_mode, tag, cb, app_key);
+	ret = der_write_tags(td, computed_size, tag_mode, tag, cb, app_key);
 	ASN_DEBUG("Wrote tags: %ld (+%ld)", (long)ret, (long)computed_size);
 	if(ret == -1) {
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 		return erval;
 	}
@@ -530,8 +529,8 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Encode all members.
 	 */
-	for(edx = 0; edx < specs->elements_count; edx++) {
-		asn1_SEQUENCE_element_t *elm = &specs->elements[edx];
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn1_TYPE_member_t *elm = &td->elements[edx];
 		der_enc_rval_t tmperval;
 		void *memb_ptr;
 
@@ -548,7 +547,7 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
 			return tmperval;
 		computed_size -= tmperval.encoded;
 		ASN_DEBUG("Member %d %s of SEQUENCE %s encoded in %d bytes",
-			edx, elm->name, sd->name, tmperval.encoded);
+			edx, elm->name, td->name, tmperval.encoded);
 	}
 
 	if(computed_size != 0) {
@@ -556,7 +555,7 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
 		 * Encoded size is not equal to the computed size.
 		 */
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 	}
 
@@ -566,7 +565,6 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *sd,
 int
 SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)td->specifics;
 	int edx;
 	int ret;
 
@@ -577,8 +575,8 @@ SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	|| cb(" ::= {\n", 7, app_key))
 		return -1;
 
-	for(edx = 0; edx < specs->elements_count; edx++) {
-		asn1_SEQUENCE_element_t *elm = &specs->elements[edx];
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn1_TYPE_member_t *elm = &td->elements[edx];
 		const void *memb_ptr;
 
 		if(elm->optional) {
@@ -614,7 +612,6 @@ SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 void
 SEQUENCE_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
-	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)td->specifics;
 	int edx;
 
 	if(!td || !sptr)
@@ -622,8 +619,8 @@ SEQUENCE_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 
 	ASN_DEBUG("Freeing %s as SEQUENCE", td->name);
 
-	for(edx = 0; edx < specs->elements_count; edx++) {
-		asn1_SEQUENCE_element_t *elm = &specs->elements[edx];
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn1_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		if(elm->optional) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
@@ -643,7 +640,6 @@ SEQUENCE_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 int
 SEQUENCE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_SEQUENCE_specifics_t *specs = (asn1_SEQUENCE_specifics_t *)td->specifics;
 	int edx;
 
 	if(!sptr) {
@@ -655,8 +651,8 @@ SEQUENCE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	/*
 	 * Iterate over structure members and check their validity.
 	 */
-	for(edx = 0; edx < specs->elements_count; edx++) {
-		asn1_SEQUENCE_element_t *elm = &specs->elements[edx];
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn1_TYPE_member_t *elm = &td->elements[edx];
 		const void *memb_ptr;
 
 		if(elm->optional) {
@@ -666,8 +662,20 @@ SEQUENCE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
-		return elm->type->check_constraints(elm->type, memb_ptr,
-			app_errlog, app_key);
+		if(elm->memb_constraints) {
+			int ret = elm->memb_constraints(elm->type, memb_ptr,
+				app_errlog, app_key);
+			if(ret) return ret;
+		} else {
+			int ret = elm->type->check_constraints(elm->type,
+				memb_ptr, app_errlog, app_key);
+			if(ret) return ret;
+			/*
+			 * Cannot inherit it earlier:
+			 * need to make sure we get the updated version.
+			 */
+			elm->memb_constraints = elm->type->check_constraints;
+		}
 	}
 
 	return 0;

@@ -7,22 +7,12 @@
 
 #include <constr_TYPE.h>
 
-typedef struct asn1_SET_OF_element_s {
-	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
-	asn1_TYPE_descriptor_t *type;	/* Member type descriptor */
-} asn1_SET_OF_element_t;
-
 typedef struct asn1_SET_OF_specifics_s {
 	/*
 	 * Target structure description.
 	 */
 	int struct_size;	/* Size of the target structure. */
 	int ctx_offset;		/* Offset of the ber_dec_ctx_t member */
-
-	/*
-	 * Members of the SET OF list.
-	 */
-	asn1_SET_OF_element_t *element;
 } asn1_SET_OF_specifics_t;
 
 /*

@@ -93,13 +93,13 @@ _search4tag(const void *ap, const void *bp) {
  * The decoder of the CHOICE type.
  */
 ber_dec_rval_t
-CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
+CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)sd->specifics;
-	asn1_CHOICE_element_t *elements = specs->elements;
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
+	asn1_TYPE_member_t *elements = td->elements;
 
 	/*
 	 * Parts of the structure being constructed.
@@ -114,7 +114,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 
-	ASN_DEBUG("Decoding %s as CHOICE", sd->name);
+	ASN_DEBUG("Decoding %s as CHOICE", td->name);
 	
 	/*
 	 * Create the target structure if it is not present already.
@@ -142,12 +142,12 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * perfectly fits our expectations.
 		 */
 
-		if(tag_mode || sd->tags_count) {
-			rval = ber_check_tags(sd, ctx, ptr, size,
+		if(tag_mode || td->tags_count) {
+			rval = ber_check_tags(td, ctx, ptr, size,
 				tag_mode, &ctx->left, 0);
 			if(rval.code != RC_OK) {
 				ASN_DEBUG("%s tagging check failed: %d",
-					sd->name, rval.code);
+					td->name, rval.code);
 				consumed_myself += rval.consumed;
 				RETURN(rval.code);
 			}
@@ -172,7 +172,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * Fetch the T from TLV.
 		 */
 		tag_len = ber_fetch_tag(ptr, LEFT, &tlv_tag);
-		ASN_DEBUG("In %s CHOICE tag length %d", sd->name, (int)tag_len);
+		ASN_DEBUG("In %s CHOICE tag length %d", td->name, (int)tag_len);
 		switch(tag_len) {
 		case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 			/* Fall through */
@@ -197,7 +197,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 			} else if(specs->extensible == 0) {
 				ASN_DEBUG("Unexpected tag %s "
 					"in non-extensible CHOICE %s",
-					ber_tlv_tag_string(tlv_tag), sd->name);
+					ber_tlv_tag_string(tlv_tag), td->name);
 				RETURN(RC_FAIL);
 			} else {
 				/* Skip this tag */
@@ -227,7 +227,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * Read in the element.
 		 */
 	    do {
-		asn1_CHOICE_element_t *elm;	/* CHOICE's element */
+		asn1_TYPE_member_t *elm;/* CHOICE's element */
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
 
@@ -252,6 +252,9 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
+		printf("elm->name = %s\n", elm->name);
+		printf("elm->td = %p\n", elm->type);
+		printf("elm->td->name = %s\n", elm->type->name);
 		rval = elm->type->ber_decoder(elm->type,
 				memb_ptr2, ptr, LEFT,
 				elm->tag_mode);
@@ -278,8 +281,8 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		/* Fall through */
 	case 3:
 		ASN_DEBUG("CHOICE %s Leftover: %ld, size = %ld, tm=%d, tc=%d",
-			sd->name, (long)ctx->left, (long)size,
-			tag_mode, sd->tags_count);
+			td->name, (long)ctx->left, (long)size,
+			tag_mode, td->tags_count);
 
 		if(ctx->left > 0) {
 			/*
@@ -290,7 +293,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		}
 
 		if(ctx->left == -1
-		&& !(tag_mode || sd->tags_count)) {
+		&& !(tag_mode || td->tags_count)) {
 			/*
 			 * This is an untagged CHOICE.
 			 * It doesn't contain nothing
@@ -331,7 +334,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 				}
 			} else {
 				ASN_DEBUG("Unexpected continuation in %s",
-					sd->name);
+					td->name);
 				RETURN(RC_FAIL);
 			}
 
@@ -349,19 +352,19 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 }
 
 der_enc_rval_t
-CHOICE_encode_der(asn1_TYPE_descriptor_t *sd,
+CHOICE_encode_der(asn1_TYPE_descriptor_t *td,
 		void *struct_ptr,
 		int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)sd->specifics;
-	asn1_CHOICE_element_t *elm;	/* CHOICE element */
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
+	asn1_TYPE_member_t *elm;	/* CHOICE element */
 	der_enc_rval_t erval;
 	void *memb_ptr;
 	size_t computed_size = 0;
 	int present;
 
 	ASN_DEBUG("%s %s as CHOICE",
-		cb?"Encoding":"Estimating", sd->name);
+		cb?"Encoding":"Estimating", td->name);
 
 	present = _fetch_present_idx(struct_ptr,
 		specs->pres_offset, specs->pres_size);
@@ -370,14 +373,14 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *sd,
 	 * If the structure was not initialized, it cannot be encoded:
 	 * can't deduce what to encode in the choice type.
 	 */
-	if(present <= 0 || present > specs->elements_count) {
-		if(present == 0 && specs->elements_count == 0) {
+	if(present <= 0 || present > td->elements_count) {
+		if(present == 0 && td->elements_count == 0) {
 			/* The CHOICE is empty?! */
 			erval.encoded = 0;
 			return erval;
 		}
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = struct_ptr;
 		return erval;
 	}
@@ -385,7 +388,7 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Seek over the present member of the structure.
 	 */
-	elm = &specs->elements[present-1];
+	elm = &td->elements[present-1];
 	if(elm->optional) {
 		memb_ptr = *(void **)((char *)struct_ptr + elm->memb_offset);
 		if(memb_ptr == 0) {
@@ -401,7 +404,7 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *sd,
 	 * T ::= [2] EXPLICIT CHOICE { ... }
 	 * Then emit the appropriate tags.
 	 */
-	if(tag_mode == 1 || sd->tags_count) {
+	if(tag_mode == 1 || td->tags_count) {
 		/*
 		 * For this, we need to pre-compute the member.
 		 */
@@ -414,11 +417,11 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *sd,
 			return erval;
 
 		/* Encode CHOICE with parent or my own tag */
-		ret = der_write_tags(sd, erval.encoded, tag_mode, tag,
+		ret = der_write_tags(td, erval.encoded, tag_mode, tag,
 			cb, app_key);
 		if(ret == -1) {
 			erval.encoded = -1;
-			erval.failed_type = sd;
+			erval.failed_type = td;
 			erval.structure_ptr = struct_ptr;
 			return erval;
 		}
@@ -454,8 +457,8 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 	 */
 	present = _fetch_present_idx(ptr, specs->pres_offset, specs->pres_size);
 
-	if(present > 0 || present <= specs->elements_count) {
-		asn1_CHOICE_element_t *elm = &specs->elements[present-1];
+	if(present > 0 || present <= td->elements_count) {
+		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
 		if(elm->optional) {
@@ -489,8 +492,8 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	 * Figure out which CHOICE element is encoded.
 	 */
 	present = _fetch_present_idx(sptr, specs->pres_offset,specs->pres_size);
-	if(present > 0 && present <= specs->elements_count) {
-		asn1_CHOICE_element_t *elm = &specs->elements[present-1];
+	if(present > 0 && present <= td->elements_count) {
+		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
 		if(elm->optional) {
@@ -500,8 +503,19 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
-		return elm->type->check_constraints(elm->type, memb_ptr,
+		if(elm->memb_constraints) {
+			return elm->memb_constraints(elm->type, memb_ptr,
 				app_errlog, app_key);
+		} else {
+			int ret = elm->type->check_constraints(elm->type,
+					memb_ptr, app_errlog, app_key);
+			/*
+			 * Cannot inherit it eralier:
+			 * need to make sure we get the updated version.
+			 */
+			elm->memb_constraints = elm->type->check_constraints;
+			return ret;
+		}
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: no CHOICE element given", td->name);
@@ -525,8 +539,8 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	/*
 	 * Free that element.
 	 */
-	if(present > 0 && present <= specs->elements_count) {
-		asn1_CHOICE_element_t *elm = &specs->elements[present-1];
+	if(present > 0 && present <= td->elements_count) {
+		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
 		if(elm->optional) {
@@ -566,8 +580,8 @@ CHOICE_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	/*
 	 * Free that element.
 	 */
-	if(present > 0 && present <= specs->elements_count) {
-		asn1_CHOICE_element_t *elm = &specs->elements[present-1];
+	if(present > 0 && present <= td->elements_count) {
+		asn1_TYPE_member_t *elm = &td->elements[present-1];
 		void *memb_ptr;
 
 		if(elm->optional) {

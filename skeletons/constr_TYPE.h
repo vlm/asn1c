@@ -13,6 +13,7 @@
 #include <constraints.h>
 
 struct asn1_TYPE_descriptor_s;	/* Forward declaration */
+struct asn1_TYPE_member_s;	/* Forward declaration */
 
 /*
  * Free the structure according to its specification.
@@ -43,7 +44,7 @@ typedef int (asn_struct_print_f)(
 typedef ber_tlv_tag_t (asn_outmost_tag_f)(
 		struct asn1_TYPE_descriptor_s *type_descriptor,
 		const void *struct_ptr, int tag_mode, ber_tlv_tag_t tag);
-/* The instance of the above function type */
+/* The instance of the above function type; used internally. */
 asn_outmost_tag_f asn1_TYPE_outmost_tag;
 
 
@@ -77,11 +78,30 @@ typedef struct asn1_TYPE_descriptor_s {
 	int last_tag_form;	/* Acceptable form of the tag (prim, constr) */
 
 	/*
+	 * An ASN.1 production type members (members of SEQUENCE, SET, CHOICE).
+	 */
+	struct asn1_TYPE_member_s *elements;
+	int elements_count;
+
+	/*
 	 * Additional information describing the type, used by appropriate
 	 * functions above.
 	 */
 	void *specifics;
 } asn1_TYPE_descriptor_t;
+
+/*
+ * An element of the constructed type, i.e. SEQUENCE, SET, CHOICE.
+ */
+typedef struct asn1_TYPE_member_s {
+	int optional;			/* Whether the element is optional */
+	int memb_offset;		/* Offset of the element */
+	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
+	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
+	asn1_TYPE_descriptor_t *type;	/* Member type descriptor */
+	asn_constr_check_f *memb_constraints;	/* Constraints validator */
+	char *name;			/* ASN.1 identifier of the element */
+} asn1_TYPE_member_t;
 
 /*
  * BER tag to element number mapping.

@@ -23,6 +23,7 @@ asn1_TYPE_descriptor_t asn1_DEF_GeneralString = {
 	  / sizeof(asn1_DEF_GeneralString_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	-1,	/* Both ways are fine */
+	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
