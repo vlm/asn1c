@@ -1,0 +1,98 @@
+
+/*** <<< INCLUDES [Choice] >>> ***/
+
+#include <INTEGER.h>
+#include <Choice.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Choice] >>> ***/
+
+typedef enum Choice_PR {
+	Choice_PR_NOTHING,	/* No components present */
+	Choice_PR_a,
+	/* Extensions may appear below */
+	Choice_PR_b,
+	Choice_PR_c,
+} Choice_PR;
+
+struct Choice;	/* Forward declaration */
+extern asn_TYPE_descriptor_t asn_DEF_Choice;
+
+/*** <<< TYPE-DECLS [Choice] >>> ***/
+
+
+typedef struct Choice {
+	Choice_PR present;
+	union {
+		INTEGER_t	 a;
+		/*
+		 * This type is extensible,
+		 * possible extensions are below.
+		 */
+		INTEGER_t	 b;
+		struct Choice	*c;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Choice_t;
+
+/*** <<< STAT-DEFS [Choice] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Choice[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.a),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.b),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "b"
+		},
+	{ ATF_POINTER, 0, offsetof(struct Choice, choice.c),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Choice,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "c"
+		},
+};
+static asn_TYPE_tag2member_t asn_DEF_Choice_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a at 15 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* b at 17 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* c at 19 */
+};
+static asn_CHOICE_specifics_t asn_DEF_Choice_specs = {
+	sizeof(struct Choice),
+	offsetof(struct Choice, _asn_ctx),
+	offsetof(struct Choice, present),
+	sizeof(((struct Choice *)0)->present),
+	asn_DEF_Choice_tag2el,
+	3,	/* Count of tags in the map */
+	1	/* Whether extensible */
+};
+asn_TYPE_descriptor_t asn_DEF_Choice = {
+	"Choice",
+	"Choice",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	asn_MBR_Choice,
+	3,	/* Elements count */
+	&asn_DEF_Choice_specs	/* Additional specs */
+};
+
