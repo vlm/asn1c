@@ -237,7 +237,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
-}
+} /* _SEQUENCE_def() */
 
 int
 asn1c_lang_C_type_SET(arg_t *arg) {
@@ -442,7 +442,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
-}
+} /* _SET_def() */
 
 int
 asn1c_lang_C_type_SEx_OF(arg_t *arg) {
@@ -566,7 +566,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
-}
+} /* _SEx_OF_def() */
 
 int
 asn1c_lang_C_type_CHOICE(arg_t *arg) {
@@ -713,7 +713,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	REDIR(OT_TYPE_DECLS);
 
 	return 0;
-}
+} /* _CHOICE_def() */
 
 int
 asn1c_lang_C_type_REFERENCE(arg_t *arg) {
