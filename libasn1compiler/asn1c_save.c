@@ -1,4 +1,5 @@
 #include "asn1c_internal.h"
+#include "asn1c_compat.h"
 
 static int asn1c_dump_streams(arg_t *arg);
 static int asn1c_print_streams(arg_t *arg);
@@ -73,7 +74,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir) {
 				return -1;
 			} else {
 				fprintf(mkf, "\t\\\n\t%s",
-					basename(pg.gl_pathv[i]));
+					a1c_basename(pg.gl_pathv[i]));
 			}
 		}
 
@@ -213,11 +214,12 @@ asn1c_save_streams(arg_t *arg)  {
 
 static int
 asn1c_copy_over(arg_t *arg, char *path) {
-	char *fname = basename(path);
+	char *fname;
 
 	(void)arg;	/* Unused argument */
 
-	if(symlink(path, fname)) {
+	fname = a1c_basename(path);
+	if(!fname || symlink(path, fname)) {
 		if(errno == EEXIST) {
 			struct stat sb1, sb2;
 			if(stat(path, &sb1) == 0
