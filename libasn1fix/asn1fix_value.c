@@ -13,6 +13,9 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	assert(expr->meta_type == AMT_VALUE);
 	assert(expr->value);
 
+	if(expr->value->type != ATV_REFERENCED)
+		return 0;
+
 	DEBUG("%s(=\"%s\", %x)", __func__,
 		asn1f_printable_value(expr->value), expr->expr_type);
 
@@ -26,8 +29,10 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 		return -1;
 	}
 
-	if(asn1f_look_value_in_type(arg, type_expr, expr) == -1)
+	if(asn1f_look_value_in_type(arg, type_expr, expr) == -1) {
+		FATAL("Value not found in type for %s", expr->Identifier);
 		return -1;
+	}
 
 	/*
 	 * 2. Find the terminal value also.
@@ -38,7 +43,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 			expr->Identifier, asn1f_printable_value(expr->value),
 			value_expr->Identifier, value_expr->_lineno);
 	} else {
-		DEBUG("\tTerminal value for %s->%s not found",
+		FATAL("Terminal value for %s->%s not found",
 			expr->Identifier, asn1f_printable_value(expr->value));
 		return -1;
 	}
@@ -53,7 +58,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 			expr->Identifier, asn1f_printable_value(expr->value),
 			val_type_expr->Identifier, val_type_expr->_lineno);
 	} else {
-		DEBUG("\tTerminal type of value %s->%s not found",
+		FATAL("\tTerminal type of value %s->%s not found",
 			expr->Identifier, asn1f_printable_value(expr->value));
 		return -1;
 	}
@@ -94,7 +99,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	 */
 	ret = _asn1f_copy_value(arg, expr, value_expr);
 	if(ret == -1) {
-		DEBUG("\tValue %s cannot be copied from line %d to line %d",
+		FATAL("Value %s cannot be copied from line %d to line %d",
 			asn1f_printable_value(value_expr->value),
 			value_expr->_lineno, expr->_lineno);
 		return -1;
