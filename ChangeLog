@@ -1,4 +1,8 @@
 
+0.8.17:	2004-Aug-10
+
+	* Improved compiler output: duplicate #includes eliminated.
+
 0.8.16:	2004-Jul-22
 
 	* Fixed application-level problem in SET OF/SEQUENCE OF array cleanup.
