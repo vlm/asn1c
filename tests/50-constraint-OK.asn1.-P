@@ -2347,7 +2347,7 @@ Utf8_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	size = UTF8String_length(st);
-	if(size < 0) {
+	if((ssize_t)size < 0) {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: UTF-8: broken encoding (%s:%d)",
 			td->name, __FILE__, __LINE__);
@@ -2482,7 +2482,7 @@ Utf8_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	size = UTF8String_length(st);
-	if(size < 0) {
+	if((ssize_t)size < 0) {
 		_ASN_ERRLOG(app_errlog, app_key,
 			"%s: UTF-8: broken encoding (%s:%d)",
 			td->name, __FILE__, __LINE__);
