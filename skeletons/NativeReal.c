@@ -109,7 +109,7 @@ NativeReal_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	rval.code = RC_OK;
 	rval.consumed += length;
 
-	ASN_DEBUG("Took %ld/%ld bytes to encode %s (%d)",
+	ASN_DEBUG("Took %ld/%ld bytes to encode %s (%f)",
 		(long)rval.consumed, (long)length, td->name, *Dbl);
 
 	return rval;
