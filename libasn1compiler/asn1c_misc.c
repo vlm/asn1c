@@ -4,16 +4,34 @@
 #include <asn1fix_export.h>
 
 /*
+ * Checks that the given string is not a reserved C/C++ keyword.
+ */
+static char *res_kwd[] = {
+	"char", "int", "long",
+	"float", "double",
+	"struct", "typedef", "class" };
+static int
+reserved_keyword(const char *str) {
+	int i;
+	for(i = 0 ; i < sizeof(res_kwd)/sizeof(res_kwd[0]); i++) {
+		if(strcmp(str, res_kwd[i]) == 0)
+			return 1;
+	}
+	return 0;
+}
+
+/*
  * Construct identifier from multiple parts.
  * Convert unsafe characters to underscores.
  */
 char *
-asn1c_make_identifier(int unsafe_only_spaces, char *arg1, ...) {
+asn1c_make_identifier(enum ami_flags_e flags, char *arg1, ...) {
 	static char *storage;
 	static int storage_size;
 	int nodelimiter = 0;
 	va_list ap;
 	char *str;
+	char *nextstr;
 	int size;
 	char *p;
 
@@ -49,8 +67,9 @@ asn1c_make_identifier(int unsafe_only_spaces, char *arg1, ...) {
 	va_start(ap, arg1);
 	str = arg1;
 	p = storage;
-	for(str = arg1; str; str = va_arg(ap, char *)) {
+	for(str = arg1; str; str = nextstr) {
 		int subst_made = 0;
+		nextstr = va_arg(ap, char *);
 
 		if(str[0] == ' ' && str[1] == '\0') {
 			*p++ = ' ';
@@ -62,12 +81,23 @@ asn1c_make_identifier(int unsafe_only_spaces, char *arg1, ...) {
 			*p++ = '_';	/* Delimiter between tokens */
 		nodelimiter = 0;
 
+		/*
+		 * If it is a single argument, check that it does not clash
+		 * with C/C++ language keywords.
+		 */
+		if((flags & AMI_CHECK_RESERVED)
+		&& str == arg1 && !nextstr && reserved_keyword(str)) {
+			*p++ = toupper(*str++);
+			/* Fall through */
+		}
+
 		for(; *str; str++) {
 			if(isalnum(*str)) {
 				*p++ = *str;
 				subst_made = 0;
 			} else if(!subst_made++) {
-				if(unsafe_only_spaces && !isspace(*str)) {
+				if((flags & AMI_MASK_ONLY_SPACES)
+						&& !isspace(*str)) {
 					*p ++ = *str;
 				} else {
 					*p++ = '_';
@@ -87,6 +117,9 @@ char *
 asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	asn1p_expr_t *top_parent;
 	char *typename;
+	enum ami_flags_e ami_flags = (_format & TNF_CHECK)
+		? AMI_CHECK_RESERVED : 0;
+	_format &= ~TNF_CHECK;
 
 	/* Rewind to the topmost parent expression */
 	if((top_parent = expr->parent_expr))
@@ -180,13 +213,19 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	switch(_format) {
 	case TNF_UNMODIFIED:
 	case TNF_INCLUDE:
-		return asn1c_make_identifier(1, typename, 0);
+		assert(ami_flags == 0);	/* (TNF_INCLUDE | TNF_CHECK)?! */
+		ami_flags |= AMI_MASK_ONLY_SPACES;
+		return asn1c_make_identifier(ami_flags, typename, 0);
 	case TNF_SAFE:
-		return asn1c_make_identifier(0, typename, 0);
+		return asn1c_make_identifier(ami_flags, typename, 0);
 	case TNF_CTYPE:
-		return asn1c_make_identifier(0, typename, "t", 0);
+		return asn1c_make_identifier(ami_flags, typename, "t", 0);
 	case TNF_RSAFE:
-		return asn1c_make_identifier(0, "struct", " ", typename, 0);
+		return asn1c_make_identifier(ami_flags, "struct", " ", typename, 0);
+	case TNF_NORCHECK:
+	case TNF_CHECK:
+		assert(_format != TNF_NORCHECK);
+		assert(_format != TNF_CHECK);
 	}
 
 	assert(!"unreachable");

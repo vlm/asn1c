@@ -39,6 +39,10 @@ enum asn1c_flags {
 	 * Do not generate constraint checking code.
 	 */
 	A1C_NO_CONSTRAINTS	= 0x0080,
+	/*
+	 * Generate type_id_PR_member things identifiers of id_PR_member.
+	 */
+	A1C_DOUBLE_IDENTIFIERS	= 0x0100,
 };
 
 /*
