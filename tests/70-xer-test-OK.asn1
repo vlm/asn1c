@@ -19,7 +19,8 @@ BEGIN
 		sequence	Sequence,
 		set		Set,
 		setOf		SetOf,
-		seqOf		SeqOf
+		seqOf		SeqOf,
+		extensibleSet	ExtensibleSet
 	}
 
 	Sequence ::= SEQUENCE {
@@ -32,6 +33,11 @@ BEGIN
 	Set ::= SET {
 		roid		RELATIVE-OID,
 		opaque		OCTET STRING	OPTIONAL
+	}
+
+	ExtensibleSet ::= SET {
+		string	UTF8String OPTIONAL,
+		...
 	}
 
 	SetOf ::= SET OF REAL
