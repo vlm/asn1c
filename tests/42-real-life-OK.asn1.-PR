@@ -93,7 +93,6 @@ asn1_TYPE_descriptor_t asn1_DEF_varsets = {
 	asn1_DEF_varsets_tags,
 	sizeof(asn1_DEF_varsets_tags)
 		/sizeof(asn1_DEF_varsets_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_varsets,
 	1,	/* Single element */
@@ -142,7 +141,6 @@ asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 	asn1_DEF_LogLine_tags,
 	sizeof(asn1_DEF_LogLine_tags)
 		/sizeof(asn1_DEF_LogLine_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_LogLine,
 	2,	/* Elements count */
@@ -235,7 +233,6 @@ asn1_TYPE_descriptor_t asn1_DEF_vparts = {
 	asn1_DEF_vparts_tags,
 	sizeof(asn1_DEF_vparts_tags)
 		/sizeof(asn1_DEF_vparts_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_vparts,
 	1,	/* Single element */
@@ -284,7 +281,6 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
 	asn1_DEF_VariablePartSet_tags,
 	sizeof(asn1_DEF_VariablePartSet_tags)
 		/sizeof(asn1_DEF_VariablePartSet_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_VariablePartSet,
 	2,	/* Elements count */
@@ -405,7 +401,6 @@ asn1_TYPE_descriptor_t asn1_DEF_vset = {
 	asn1_DEF_vset_tags,
 	sizeof(asn1_DEF_vset_tags)
 		/sizeof(asn1_DEF_vset_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_vset,
 	1,	/* Single element */
@@ -455,7 +450,6 @@ asn1_TYPE_descriptor_t asn1_DEF_vrange = {
 	asn1_DEF_vrange_tags,
 	sizeof(asn1_DEF_vrange_tags)
 		/sizeof(asn1_DEF_vrange_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_vrange,
 	2,	/* Elements count */
@@ -501,7 +495,6 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 	CHOICE_outmost_tag,
 	0,	/* No explicit tags (pointer) */
 	0,	/* No explicit tags (count) */
-	0,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_VariablePart,
 	2,	/* Elements count */
@@ -590,7 +583,6 @@ asn1_TYPE_descriptor_t asn1_DEF_email = {
 	asn1_DEF_email_tags,
 	sizeof(asn1_DEF_email_tags)
 		/sizeof(asn1_DEF_email_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_email,
 	1,	/* Single element */
@@ -640,7 +632,6 @@ asn1_TYPE_descriptor_t asn1_DEF_notify = {
 	asn1_DEF_notify_tags,
 	sizeof(asn1_DEF_notify_tags)
 		/sizeof(asn1_DEF_notify_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_notify,
 	2,	/* Elements count */
@@ -689,7 +680,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ActionItem = {
 	asn1_DEF_ActionItem_tags,
 	sizeof(asn1_DEF_ActionItem_tags)
 		/sizeof(asn1_DEF_ActionItem_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_ActionItem,
 	2,	/* Elements count */

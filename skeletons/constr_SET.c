@@ -654,7 +654,6 @@ SET_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 int
 SET_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)td->specifics;
 	int edx;
 
 	if(!sptr) {

@@ -49,8 +49,7 @@ ber_dec_rval_t
 PrimitiveType_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	PrimitiveType_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -92,7 +91,6 @@ asn1_TYPE_descriptor_t asn1_DEF_PrimitiveType = {
 	asn1_DEF_PrimitiveType_tags,
 	sizeof(asn1_DEF_PrimitiveType_tags)
 		/sizeof(asn1_DEF_PrimitiveType_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -154,7 +152,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ConstructedType = {
 	asn1_DEF_ConstructedType_tags,
 	sizeof(asn1_DEF_ConstructedType_tags)
 		/sizeof(asn1_DEF_ConstructedType_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_ConstructedType,
 	1,	/* Elements count */
@@ -212,8 +209,7 @@ ber_dec_rval_t
 T_decode_ber(asn1_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure,
-		bufptr, size, tag_mode);
+	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
 }
 
 der_enc_rval_t
@@ -255,7 +251,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)
 		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */

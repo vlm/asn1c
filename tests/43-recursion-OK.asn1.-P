@@ -66,7 +66,6 @@ asn1_TYPE_descriptor_t asn1_DEF_t_member1 = {
 	asn1_DEF_t_member1_tags,
 	sizeof(asn1_DEF_t_member1_tags)
 		/sizeof(asn1_DEF_t_member1_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_t_member1,
 	1,	/* Single element */
@@ -101,7 +100,6 @@ asn1_TYPE_descriptor_t asn1_DEF_t_member2 = {
 	asn1_DEF_t_member2_tags,
 	sizeof(asn1_DEF_t_member2_tags)
 		/sizeof(asn1_DEF_t_member2_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_t_member2,
 	1,	/* Single element */
@@ -166,7 +164,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Test_structure_1 = {
 	asn1_DEF_Test_structure_1_tags,
 	sizeof(asn1_DEF_Test_structure_1_tags)
 		/sizeof(asn1_DEF_Test_structure_1_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Test_structure_1,
 	4,	/* Elements count */
@@ -244,7 +241,6 @@ asn1_TYPE_descriptor_t asn1_DEF_or = {
 	asn1_DEF_or_tags,
 	sizeof(asn1_DEF_or_tags)
 		/sizeof(asn1_DEF_or_tags[0]), /* 1 */
-	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_or,
 	1,	/* Single element */
@@ -306,7 +302,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Choice_1 = {
 	CHOICE_outmost_tag,
 	0,	/* No explicit tags (pointer) */
 	0,	/* No explicit tags (count) */
-	0,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Choice_1,
 	4,	/* Elements count */

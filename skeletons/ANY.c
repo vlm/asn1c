@@ -15,7 +15,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ANY = {
 	OCTET_STRING_free,
 	0, /* Use generic outmost tag fetcher */
 	0,
-	0,
 	0,	/* No tags may be overridden */
 	-1,	/* Both ways are fine (primitive and constructed) */
 	0, 0,	/* No members */

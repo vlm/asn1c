@@ -1,8 +1,11 @@
 
-0.9.4:	2004-Sep-07
+0.9.4:	2004-Sep-10
 
 	* More support for recursive type definitions.
 	* Explicit support for ANY type decoding.
+	* Refactored tags processing code.
+	* Fixed constraints checking code: non-exploitable buffer overflow.
+	  (Severity: medium, Security impact: low)
 
 0.9.3:	2004-Sep-07
 

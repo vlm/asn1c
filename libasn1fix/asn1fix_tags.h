@@ -6,7 +6,6 @@ enum asn1f_aft_flags_e {
 	AFT_FETCH_OUTMOST	= 0x02,	/* Fetch only outmost tag */
 };
 
-
 /*
  * Allocate and return an array of tags for the given type.
  * Type1 ::= [2] EXPLICIT Type2

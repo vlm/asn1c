@@ -226,8 +226,10 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 		 * Fetch the T from TLV.
 		 */
 		tag_len = ber_fetch_tag(ptr, LEFT, &tlv_tag);
-		ASN_DEBUG("In %s SEQUENCE for %d %s next tag length %d",
-			td->name, edx, elements[edx].name, (int)tag_len);
+		ASN_DEBUG("Current tag in %s SEQUENCE for element %d "
+			"(%s) is %s encoded in %d bytes, left %ld",
+			td->name, edx, elements[edx].name,
+			ber_tlv_tag_string(tlv_tag), (int)tag_len, (long)LEFT);
 		switch(tag_len) {
 		case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 			/* Fall through */

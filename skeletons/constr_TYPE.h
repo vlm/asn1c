@@ -74,7 +74,6 @@ typedef struct asn1_TYPE_descriptor_s {
 	 */
 	ber_tlv_tag_t *tags;	/* At least one tag must be specified */
 	int tags_count;		/* Number of tags which are expected */
-	int tags_impl_skip;	/* Tags to skip in implicit mode */
 	int last_tag_form;	/* Acceptable form of the tag (prim, constr) */
 
 	/*

@@ -89,7 +89,7 @@ typedef struct arg_s {
 		if(code < 0) {					\
 			if(arg->debug)				\
 				arg->debug(code, fmt, ##args);	\
-		} else {					\
+		} else if(arg->eh) {				\
 			arg->eh(code, fmt " in %s", ##args,	\
 				arg->mod->source_file_name);	\
 		}						\

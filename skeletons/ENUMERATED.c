@@ -20,7 +20,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ENUMERATED = {
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_ENUMERATED_tags,
 	sizeof(asn1_DEF_ENUMERATED_tags)/sizeof(asn1_DEF_ENUMERATED_tags[0]),
-	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	0,	/* Primitive */
 	0, 0,	/* No members */
 	0	/* No specifics */

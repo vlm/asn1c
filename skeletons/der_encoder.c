@@ -44,12 +44,12 @@ der_write_tags(asn1_TYPE_descriptor_t *sd,
 	ssize_t *lens;
 	int i;
 
-	ASN_DEBUG("Writing tags (%s, tm=%d, tc=%d, iskip=%d, tag=%s, mtc=%d)",
-		sd->name, tag_mode, sd->tags_count, sd->tags_impl_skip,
+	ASN_DEBUG("Writing tags (%s, tm=%d, tc=%d, tag=%s, mtc=%d)",
+		sd->name, tag_mode, sd->tags_count,
 		ber_tlv_tag_string(tag),
 		tag_mode
 			?(sd->tags_count+1
-				-((tag_mode==-1)?sd->tags_impl_skip:0))
+				-((tag_mode == -1) && sd->tags_count))
 			:sd->tags_count
 	);
 
@@ -67,10 +67,10 @@ der_write_tags(asn1_TYPE_descriptor_t *sd,
 		}
 		tags_count = sd->tags_count
 			+ 1	/* EXPLICIT or IMPLICIT tag is given */
-			- ((tag_mode==-1)?sd->tags_impl_skip:0);
+			- ((tag_mode == -1) && sd->tags_count);
 		/* Copy tags over */
 		tags[0] = tag;
-		stag_offset = -1 + ((tag_mode==-1)?sd->tags_impl_skip:0);
+		stag_offset = -1 + ((tag_mode == -1) && sd->tags_count);
 		for(i = 1; i < tags_count; i++)
 			tags[i] = sd->tags[i + stag_offset];
 	} else {

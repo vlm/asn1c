@@ -53,7 +53,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 	int tagno;
 
 	/*
-	 * So what does all this tags_impl_skip stuff mean?
+	 * So what does all this implicit skip stuff mean?
 	 * Imagine two types,
 	 * 	A ::= [5] IMPLICIT	T
 	 * 	B ::= [2] EXPLICIT	T
@@ -74,30 +74,14 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 	 * it appropriately.
 	 */
 
-	/*
-	 * We have a list of tags that must occur in the stream:
-	 * 	{A,B,C}
-	 * However, it may be indicated that the type is
-	 * implicitly tagged in the caller, so it really boils down to the
-	 *	{I,B,C} or even {I,C}
-	 * This is because the implicit tag at above structure may replace 
-	 * zero or more (or every) tags which follow it. We don't care
-	 * about the precise number, as it is already computed for us
-	 * by the ASN.1 compiler and placed into td->tags_impl_skip.
-	 * So let's suppose the only tag left after implicit tagging is {I}.
-	 * Yet, the table we have is {A,B,C} and td->tags_impl_skip=3.
-	 * We need to check at least one tag in the loop, so the loop range
-	 * is modified so it will be invoked at least one time.
-	 */
 	tagno = ctx->step	/* Continuing where left previously */
-		+ (tag_mode==-1?(td->tags_impl_skip-1):0)
 		+ (tag_mode==1?-1:0)
 		;
 	ASN_DEBUG("ber_check_tags(%s, size=%ld, tm=%d, step=%d, tagno=%d)",
 		td->name, (long)size, tag_mode, ctx->step, tagno);
 	//assert(td->tags_count >= 1); ?May not be the case for CHOICE or ANY.
 
-	if(tagno == td->tags_count) {
+	if(tag_mode == 0 && tagno == td->tags_count) {
 		/*
 		 * This must be the _untagged_ ANY type,
 		 * which outermost tag isn't known in advance.
