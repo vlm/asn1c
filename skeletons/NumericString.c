@@ -54,10 +54,10 @@ NumericString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 				continue;
 			}
 			_ASN_ERRLOG(app_errlog, app_key,
-				"%s: value byte %d (%d) "
+				"%s: value byte %ld (%d) "
 				"not in NumericString alphabet (%s:%d)",
 				td->name,
-				(buf - st->buf) + 1,
+				(long)((buf - st->buf) + 1),
 				*buf,
 				__FILE__, __LINE__);
 			return -1;
