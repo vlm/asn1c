@@ -91,6 +91,8 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
 		} else if(strcmp(optarg, "native-types") == 0) {
 			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
+		} else if(strcmp(optarg, "no-constraints") == 0) {
+			asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
 		} else if(strcmp(optarg, "types88") == 0) {
@@ -309,6 +311,7 @@ usage(const char *av0) {
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
 "  -fknown-extern-type=<name>    Pretend this type is known\n"
 "  -fnative-types        Use \"int\" instead of INTEGER_t whenever possible\n"
+"  -fno-constraints      Do not generate constraint checking code\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
 "  -ftypes88             Use only ASN.1:1988 embedded types\n"
 "\n"
