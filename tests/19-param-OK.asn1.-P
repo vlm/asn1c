@@ -122,7 +122,6 @@ asn1_TYPE_descriptor_t asn1_DEF_toBeSigned = {
 	asn1_DEF_toBeSigned_tags,	/* Same as above */
 	sizeof(asn1_DEF_toBeSigned_tags)
 		/sizeof(asn1_DEF_toBeSigned_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_toBeSigned,
 	3,	/* Elements count */
 	&asn1_DEF_toBeSigned_specs	/* Additional specs */
@@ -183,7 +182,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Certificate = {
 	asn1_DEF_Certificate_tags,	/* Same as above */
 	sizeof(asn1_DEF_Certificate_tags)
 		/sizeof(asn1_DEF_Certificate_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Certificate,
 	3,	/* Elements count */
 	&asn1_DEF_Certificate_specs	/* Additional specs */
@@ -245,7 +243,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Name = {
 	asn1_DEF_Name_tags,	/* Same as above */
 	sizeof(asn1_DEF_Name_tags)
 		/sizeof(asn1_DEF_Name_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Name,
 	1,	/* Single element */
 	&asn1_DEF_Name_specs	/* Additional specs */
@@ -362,7 +359,6 @@ asn1_TYPE_descriptor_t asn1_DEF_RelativeDistinguishedName = {
 	asn1_DEF_RelativeDistinguishedName_tags,	/* Same as above */
 	sizeof(asn1_DEF_RelativeDistinguishedName_tags)
 		/sizeof(asn1_DEF_RelativeDistinguishedName_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_RelativeDistinguishedName,
 	1,	/* Single element */
 	&asn1_DEF_RelativeDistinguishedName_specs	/* Additional specs */

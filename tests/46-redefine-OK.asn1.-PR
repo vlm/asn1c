@@ -10,107 +10,12 @@ typedef OCTET_STRING_t	 PrimitiveType_t;
 
 /*** <<< FUNC-DECLS [PrimitiveType] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_PrimitiveType;
-asn_struct_free_f PrimitiveType_free;
-asn_struct_print_f PrimitiveType_print;
-asn_constr_check_f PrimitiveType_constraint;
-ber_type_decoder_f PrimitiveType_decode_ber;
-der_type_encoder_f PrimitiveType_encode_der;
-xer_type_encoder_f PrimitiveType_encode_xer;
+/* This type is equivalent to OCTET_STRING */
+#define	asn1_DEF_PrimitiveType	asn1_DEF_OCTET_STRING
 
 /*** <<< CODE [PrimitiveType] >>> ***/
 
-int
-PrimitiveType_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
-	td->check_constraints = asn1_DEF_OCTET_STRING.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
-}
-
-/*
- * This type is implemented using OCTET_STRING,
- * so here we adjust the DEF accordingly.
- */
-static void
-PrimitiveType_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->free_struct    = asn1_DEF_OCTET_STRING.free_struct;
-	td->print_struct   = asn1_DEF_OCTET_STRING.print_struct;
-	td->ber_decoder    = asn1_DEF_OCTET_STRING.ber_decoder;
-	td->der_encoder    = asn1_DEF_OCTET_STRING.der_encoder;
-	td->xer_decoder    = asn1_DEF_OCTET_STRING.xer_decoder;
-	td->xer_encoder    = asn1_DEF_OCTET_STRING.xer_encoder;
-	td->last_tag_form  = asn1_DEF_OCTET_STRING.last_tag_form;
-	td->elements       = asn1_DEF_OCTET_STRING.elements;
-	td->elements_count = asn1_DEF_OCTET_STRING.elements_count;
-	td->specifics      = asn1_DEF_OCTET_STRING.specifics;
-}
-
-void
-PrimitiveType_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	PrimitiveType_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-PrimitiveType_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	PrimitiveType_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-ber_dec_rval_t
-PrimitiveType_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
-	PrimitiveType_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-PrimitiveType_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	PrimitiveType_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_enc_rval_t
-PrimitiveType_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	PrimitiveType_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-
-/*** <<< STAT-DEFS [PrimitiveType] >>> ***/
-
-static ber_tlv_tag_t asn1_DEF_PrimitiveType_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
-};
-asn1_TYPE_descriptor_t asn1_DEF_PrimitiveType = {
-	"PrimitiveType",
-	PrimitiveType_free,
-	PrimitiveType_print,
-	PrimitiveType_constraint,
-	PrimitiveType_decode_ber,
-	PrimitiveType_encode_der,
-	0,				/* Not implemented yet */
-	PrimitiveType_encode_xer,
-	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_PrimitiveType_tags,
-	sizeof(asn1_DEF_PrimitiveType_tags)
-		/sizeof(asn1_DEF_PrimitiveType_tags[0]), /* 1 */
-	asn1_DEF_PrimitiveType_tags,	/* Same as above */
-	sizeof(asn1_DEF_PrimitiveType_tags)
-		/sizeof(asn1_DEF_PrimitiveType_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
-	0, 0,	/* No members */
-	0	/* No specifics */
-};
+/* This type is equivalent to OCTET_STRING */
 
 
 /*** <<< INCLUDES [ConstructedType] >>> ***/
@@ -173,7 +78,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ConstructedType = {
 	asn1_DEF_ConstructedType_tags,	/* Same as above */
 	sizeof(asn1_DEF_ConstructedType_tags)
 		/sizeof(asn1_DEF_ConstructedType_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_ConstructedType,
 	1,	/* Elements count */
 	&asn1_DEF_ConstructedType_specs	/* Additional specs */
@@ -204,11 +108,9 @@ xer_type_encoder_f T_encode_xer;
 int
 T_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
+	/* Replace with underlying type checker */
 	td->check_constraints = asn1_DEF_ConstructedType.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
@@ -223,7 +125,6 @@ T_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_ConstructedType.der_encoder;
 	td->xer_decoder    = asn1_DEF_ConstructedType.xer_decoder;
 	td->xer_encoder    = asn1_DEF_ConstructedType.xer_encoder;
-	td->last_tag_form  = asn1_DEF_ConstructedType.last_tag_form;
 	td->elements       = asn1_DEF_ConstructedType.elements;
 	td->elements_count = asn1_DEF_ConstructedType.elements_count;
 	td->specifics      = asn1_DEF_ConstructedType.specifics;
@@ -289,7 +190,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	asn1_DEF_T_tags,	/* Same as above */
 	sizeof(asn1_DEF_T_tags)
 		/sizeof(asn1_DEF_T_tags[0]), /* 2 */
-	-0,	/* Unknown yet */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };

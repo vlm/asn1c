@@ -23,11 +23,9 @@ xer_type_encoder_f T1_encode_xer;
 int
 T1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
+	/* Replace with underlying type checker */
 	td->check_constraints = asn1_DEF_T2.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
@@ -42,7 +40,6 @@ T1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_T2.der_encoder;
 	td->xer_decoder    = asn1_DEF_T2.xer_decoder;
 	td->xer_encoder    = asn1_DEF_T2.xer_encoder;
-	td->last_tag_form  = asn1_DEF_T2.last_tag_form;
 	td->elements       = asn1_DEF_T2.elements;
 	td->elements_count = asn1_DEF_T2.elements_count;
 	td->specifics      = asn1_DEF_T2.specifics;
@@ -118,7 +115,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	asn1_DEF_T1_all_tags,
 	sizeof(asn1_DEF_T1_all_tags)
 		/sizeof(asn1_DEF_T1_all_tags[0]), /* 6 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -148,11 +144,9 @@ xer_type_encoder_f T2_encode_xer;
 int
 T2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
+	/* Replace with underlying type checker */
 	td->check_constraints = asn1_DEF_T3.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
@@ -167,7 +161,6 @@ T2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_T3.der_encoder;
 	td->xer_decoder    = asn1_DEF_T3.xer_decoder;
 	td->xer_encoder    = asn1_DEF_T3.xer_encoder;
-	td->last_tag_form  = asn1_DEF_T3.last_tag_form;
 	td->elements       = asn1_DEF_T3.elements;
 	td->elements_count = asn1_DEF_T3.elements_count;
 	td->specifics      = asn1_DEF_T3.specifics;
@@ -241,7 +234,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	asn1_DEF_T2_all_tags,
 	sizeof(asn1_DEF_T2_all_tags)
 		/sizeof(asn1_DEF_T2_all_tags[0]), /* 5 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -271,11 +263,9 @@ xer_type_encoder_f T3_encode_xer;
 int
 T3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
+	/* Replace with underlying type checker */
 	td->check_constraints = asn1_DEF_T4.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
@@ -290,7 +280,6 @@ T3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_T4.der_encoder;
 	td->xer_decoder    = asn1_DEF_T4.xer_decoder;
 	td->xer_encoder    = asn1_DEF_T4.xer_encoder;
-	td->last_tag_form  = asn1_DEF_T4.last_tag_form;
 	td->elements       = asn1_DEF_T4.elements;
 	td->elements_count = asn1_DEF_T4.elements_count;
 	td->specifics      = asn1_DEF_T4.specifics;
@@ -362,7 +351,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T3 = {
 	asn1_DEF_T3_all_tags,
 	sizeof(asn1_DEF_T3_all_tags)
 		/sizeof(asn1_DEF_T3_all_tags[0]), /* 4 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -392,11 +380,9 @@ xer_type_encoder_f T4_encode_xer;
 int
 T4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
+	/* Replace with underlying type checker */
 	td->check_constraints = asn1_DEF_T5.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
@@ -411,7 +397,6 @@ T4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_T5.der_encoder;
 	td->xer_decoder    = asn1_DEF_T5.xer_decoder;
 	td->xer_encoder    = asn1_DEF_T5.xer_encoder;
-	td->last_tag_form  = asn1_DEF_T5.last_tag_form;
 	td->elements       = asn1_DEF_T5.elements;
 	td->elements_count = asn1_DEF_T5.elements_count;
 	td->specifics      = asn1_DEF_T5.specifics;
@@ -478,7 +463,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T4 = {
 	asn1_DEF_T4_tags,	/* Same as above */
 	sizeof(asn1_DEF_T4_tags)
 		/sizeof(asn1_DEF_T4_tags[0]), /* 3 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -508,11 +492,9 @@ xer_type_encoder_f T5_encode_xer;
 int
 T5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
+	/* Replace with underlying type checker */
 	td->check_constraints = asn1_DEF_T6.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
@@ -527,7 +509,6 @@ T5_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_T6.der_encoder;
 	td->xer_decoder    = asn1_DEF_T6.xer_decoder;
 	td->xer_encoder    = asn1_DEF_T6.xer_encoder;
-	td->last_tag_form  = asn1_DEF_T6.last_tag_form;
 	td->elements       = asn1_DEF_T6.elements;
 	td->elements_count = asn1_DEF_T6.elements_count;
 	td->specifics      = asn1_DEF_T6.specifics;
@@ -593,7 +574,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T5 = {
 	asn1_DEF_T5_tags,	/* Same as above */
 	sizeof(asn1_DEF_T5_tags)
 		/sizeof(asn1_DEF_T5_tags[0]), /* 2 */
-	-0,	/* Unknown yet */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -610,107 +590,12 @@ typedef double	 T6_t;
 
 /*** <<< FUNC-DECLS [T6] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_T6;
-asn_struct_free_f T6_free;
-asn_struct_print_f T6_print;
-asn_constr_check_f T6_constraint;
-ber_type_decoder_f T6_decode_ber;
-der_type_encoder_f T6_encode_der;
-xer_type_encoder_f T6_encode_xer;
+/* This type is equivalent to NativeReal */
+#define	asn1_DEF_T6	asn1_DEF_NativeReal
 
 /*** <<< CODE [T6] >>> ***/
 
-int
-T6_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
-	td->check_constraints = asn1_DEF_NativeReal.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
-}
-
-/*
- * This type is implemented using NativeReal,
- * so here we adjust the DEF accordingly.
- */
-static void
-T6_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
-	td->free_struct    = asn1_DEF_NativeReal.free_struct;
-	td->print_struct   = asn1_DEF_NativeReal.print_struct;
-	td->ber_decoder    = asn1_DEF_NativeReal.ber_decoder;
-	td->der_encoder    = asn1_DEF_NativeReal.der_encoder;
-	td->xer_decoder    = asn1_DEF_NativeReal.xer_decoder;
-	td->xer_encoder    = asn1_DEF_NativeReal.xer_encoder;
-	td->last_tag_form  = asn1_DEF_NativeReal.last_tag_form;
-	td->elements       = asn1_DEF_NativeReal.elements;
-	td->elements_count = asn1_DEF_NativeReal.elements_count;
-	td->specifics      = asn1_DEF_NativeReal.specifics;
-}
-
-void
-T6_free(asn1_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	T6_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-T6_print(asn1_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	T6_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-ber_dec_rval_t
-T6_decode_ber(asn1_TYPE_descriptor_t *td,
-		void **structure, void *bufptr, size_t size, int tag_mode) {
-	T6_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-T6_encode_der(asn1_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T6_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_enc_rval_t
-T6_encode_xer(asn1_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	T6_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-
-/*** <<< STAT-DEFS [T6] >>> ***/
-
-static ber_tlv_tag_t asn1_DEF_T6_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
-};
-asn1_TYPE_descriptor_t asn1_DEF_T6 = {
-	"T6",
-	T6_free,
-	T6_print,
-	T6_constraint,
-	T6_decode_ber,
-	T6_encode_der,
-	0,				/* Not implemented yet */
-	T6_encode_xer,
-	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_T6_tags,
-	sizeof(asn1_DEF_T6_tags)
-		/sizeof(asn1_DEF_T6_tags[0]), /* 1 */
-	asn1_DEF_T6_tags,	/* Same as above */
-	sizeof(asn1_DEF_T6_tags)
-		/sizeof(asn1_DEF_T6_tags[0]), /* 1 */
-	-0,	/* Unknown yet */
-	0, 0,	/* No members */
-	0	/* No specifics */
-};
+/* This type is equivalent to NativeReal */
 
 
 /*** <<< INCLUDES [T] >>> ***/
@@ -737,11 +622,9 @@ xer_type_encoder_f T_encode_xer;
 int
 T_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	
-	/* Make the underlying type checker permanent */
+	/* Replace with underlying type checker */
 	td->check_constraints = asn1_DEF_Ts.check_constraints;
-	return td->check_constraints
-		(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
@@ -756,7 +639,6 @@ T_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn1_DEF_Ts.der_encoder;
 	td->xer_decoder    = asn1_DEF_Ts.xer_decoder;
 	td->xer_encoder    = asn1_DEF_Ts.xer_encoder;
-	td->last_tag_form  = asn1_DEF_Ts.last_tag_form;
 	td->elements       = asn1_DEF_Ts.elements;
 	td->elements_count = asn1_DEF_Ts.elements_count;
 	td->specifics      = asn1_DEF_Ts.specifics;
@@ -823,7 +705,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	asn1_DEF_T_tags,	/* Same as above */
 	sizeof(asn1_DEF_T_tags)
 		/sizeof(asn1_DEF_T_tags[0]), /* 3 */
-	-0,	/* Unknown yet */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };
@@ -909,7 +790,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Ts = {
 	asn1_DEF_Ts_tags,	/* Same as above */
 	sizeof(asn1_DEF_Ts_tags)
 		/sizeof(asn1_DEF_Ts_tags[0]), /* 2 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Ts,
 	3,	/* Elements count */
 	&asn1_DEF_Ts_specs	/* Additional specs */

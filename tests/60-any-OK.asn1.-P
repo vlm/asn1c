@@ -68,7 +68,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	asn1_DEF_T1_tags,	/* Same as above */
 	sizeof(asn1_DEF_T1_tags)
 		/sizeof(asn1_DEF_T1_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_T1,
 	2,	/* Elements count */
 	&asn1_DEF_T1_specs	/* Additional specs */
@@ -145,7 +144,6 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	asn1_DEF_T2_tags,	/* Same as above */
 	sizeof(asn1_DEF_T2_tags)
 		/sizeof(asn1_DEF_T2_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_T2,
 	2,	/* Elements count */
 	&asn1_DEF_T2_specs	/* Additional specs */

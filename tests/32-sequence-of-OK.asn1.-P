@@ -54,7 +54,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Programming = {
 	asn1_DEF_Programming_tags,	/* Same as above */
 	sizeof(asn1_DEF_Programming_tags)
 		/sizeof(asn1_DEF_Programming_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Programming,
 	1,	/* Single element */
 	&asn1_DEF_Programming_specs	/* Additional specs */
@@ -116,7 +115,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Fault = {
 	asn1_DEF_Fault_tags,	/* Same as above */
 	sizeof(asn1_DEF_Fault_tags)
 		/sizeof(asn1_DEF_Fault_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	asn1_MBR_Fault,
 	1,	/* Single element */
 	&asn1_DEF_Fault_specs	/* Additional specs */
@@ -175,7 +173,6 @@ asn1_TYPE_descriptor_t asn1_DEF_Error = {
 	asn1_DEF_Error_tags,	/* Same as above */
 	sizeof(asn1_DEF_Error_tags)
 		/sizeof(asn1_DEF_Error_tags[0]), /* 1 */
-	1,	/* Whether CONSTRUCTED */
 	0, 0,	/* No members */
 	&asn1_DEF_Error_specs	/* Additional specs */
 };
