@@ -698,6 +698,6 @@ asn_dec_rval_t ber_check_tags(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descripto
 
 ssize_t der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode, int last_tag_form, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) { (void)td; (void)slen; (void)tag_mode; (void)last_tag_form; (void)tag; (void)cb; (void)app_key; return -1; }
 
-asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx, void *struct_key, const char *xml_tag, void *buf_ptr, size_t size, int (*otd)(void *struct_key, void *chunk_buf, size_t chunk_size), ssize_t (*br)(void *struct_key, void *chunk_buf, size_t chunk_size, int have_more)) { asn_dec_rval_t rv; (void)opt_codec_ctx; (void)ctx; (void)struct_key; (void)xml_tag; (void)buf_ptr; (void)size; (void)otd; (void)br; return rv; }
+asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx, void *struct_key, const char *xml_tag, const void *buf_ptr, size_t size, int (*otd)(void *struct_key, const void *chunk_buf, size_t chunk_size), ssize_t (*br)(void *struct_key, const void *chunk_buf, size_t chunk_size, int have_more)) { asn_dec_rval_t rv; (void)opt_codec_ctx; (void)ctx; (void)struct_key; (void)xml_tag; (void)buf_ptr; (void)size; (void)otd; (void)br; return rv; }
 
-int xer_is_whitespace(void *b, size_t s) { (void)b; (void)s; return 0; }
+int xer_is_whitespace(const void *b, size_t s) { (void)b; (void)s; return 0; }
