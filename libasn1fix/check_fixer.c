@@ -33,7 +33,7 @@ main(int ac, char **av) {
 	enum asn1p_flags parser_flags = A1P_NOFLAGS;
 	enum asn1f_flags fixer_flags  = A1F_NOFLAGS;
 	const char *filename;
-	int len;
+	size_t len;
 	int ret;
 
 	/*
@@ -75,7 +75,7 @@ main(int ac, char **av) {
 		while((dp = readdir(dir))) {
 			filename = dp->d_name;
 #endif	/* WIN32 */
-			int len = strlen(filename);
+			len = strlen(filename);
 			if(len && strcmp(filename + len - 5, ".asn1") == 0) {
 				ret = check(filename, parser_flags,fixer_flags);
 				if(ret) {
