@@ -14,14 +14,13 @@ check(char *tag, char *name, xer_check_tag_e value) {
 
 static void
 check_next(char *xerbuf, int expected_chunk_size, pxer_chunk_type_e expected_chunk_type) {
-	int stateContext = 0;
 	int xerbuf_len = strlen(xerbuf);
 	pxer_chunk_type_e ch_type;
 	ssize_t ch_size;
 
 	if(expected_chunk_size == -1)
 		expected_chunk_size = xerbuf_len;
-	ch_size = xer_next_token(&stateContext, xerbuf, xerbuf_len, &ch_type);
+	ch_size = xer_next_token(xerbuf, xerbuf_len, &ch_type);
 
 	printf("[%s]:%d\n", xerbuf, xerbuf_len);
 	printf("chunk sizes: %d vs %d, chunk types: %d vs %d\n",
@@ -50,8 +49,8 @@ main() {
 	check("</>", "", XCT_CLOSING);
 
 	check("", "a", XCT_BROKEN);
-	check("<>", "a", XCT_UNEXPECTED);
-	check("</>", "a", XCT_UNEXPECTED);
+	check("<>", "a", XCT_UNKNOWN_OP);
+	check("</>", "a", XCT_UNKNOWN_CL);
 
 	check("a", "a", XCT_BROKEN);
 	check("<a>", "a", XCT_OPENING);
@@ -64,18 +63,17 @@ main() {
 	check("</a/>", "a", XCT_BROKEN);
 	check("<a/>", "a", XCT_BOTH);
 
-	check("<tag>", "a", XCT_UNEXPECTED);
+	check("<tag>", "a", XCT_UNKNOWN_OP);
 	check("<tag>", "tag", XCT_OPENING);
 	check("</tag>", "tag", XCT_CLOSING);
 	check("</tag/>", "tag", XCT_BROKEN);
 	check("<tag/>", "tag", XCT_BOTH);
 
 
-	check("<tag>", "ta", XCT_UNEXPECTED);
-	check("<tag>", "ta", XCT_UNEXPECTED);
-	check("</tag>", "ta", XCT_UNEXPECTED);
+	check("<tag>", "ta", XCT_UNKNOWN_OP);
+	check("</tag>", "ta", XCT_UNKNOWN_CL);
 	check("</tag/>", "ta", XCT_BROKEN);
-	check("<tag/>", "ta", XCT_UNEXPECTED);
+	check("<tag/>", "ta", XCT_UNKNOWN_BO);
 
 	check("<tag attribute=\"value\"/>", "tag", XCT_BOTH);
 
