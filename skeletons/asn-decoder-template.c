@@ -1,9 +1,9 @@
 /*
  * This is a generic BER decoder template for any ASN.1 type.
  * 
- * To compile, please redefine the asn_DEF as shown:
+ * To compile with your own ASN.1 type, please redefine the asn_DEF as shown:
  * 
- *   cc -Dasn_DEF=asn_DEF_MyCustomType -o myTypeDecoder.o -c decoder-template.c
+ * cc -Dasn_DEF=asn_DEF_MyCustomType -o myDecoder.o -c asn-decoder-template.c
  */
 #ifdef	HAVE_CONFIG_H
 #include <config.h>
