@@ -7,7 +7,7 @@
 	* Small refinement of XML DTD generation (`asn1c -X`).
 	* Relaxed XER processing rules to skip extra whitespace
 	  in some more places. It also skips XML comments (although
-	  prohibited by X.693, #8.2.1).
+	  XML comments in XER are prohibited by X.693, #8.2.1).
 	  (Test case 70) (Severity: medium, Security impact: none)
 	  Reported by <Dominique.Nerriec@alcatel.fr>.
 	* Constraints on primitive types being defined are now supported.
