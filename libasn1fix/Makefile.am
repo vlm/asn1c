@@ -1,8 +1,7 @@
 
 AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS =				\
-	-I$(top_srcdir)/libasn1parser	\
-	-I$(top_srcdir)/libasn1cnst
+	-I$(top_srcdir)/libasn1parser
 
 noinst_LTLIBRARIES = libasn1fix.la
 
@@ -32,7 +31,6 @@ libasn1fix_la_SOURCES =					\
 check_PROGRAMS = check_fixer
 
 check_fixer_LDADD = $(noinst_LTLIBRARIES)		\
-	$(top_builddir)/libasn1cnst/libasn1cnst.la	\
 	$(top_builddir)/libasn1parser/libasn1parser.la
 check_fixer_DEPENDENCIES = $(check_fixer_LDADD)
 

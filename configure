@@ -21409,6 +21409,7 @@ fi;
 
 case "$GCC" in
  yes)
+   CFLAGS="$CFLAGS -W"
    CFLAGS="$CFLAGS -Wall"
    CFLAGS="$CFLAGS -Wshadow"
    CFLAGS="$CFLAGS -Wcast-qual"

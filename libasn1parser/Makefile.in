@@ -546,9 +546,9 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-rm -f asn1p_y.h
 	-rm -f asn1p_l.c
 	-rm -f asn1p_y.c
-	-rm -f asn1p_y.h
 clean: clean-am
 
 clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
