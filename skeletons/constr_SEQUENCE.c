@@ -303,6 +303,15 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 			 */
 
 			if(!IN_EXTENSION_GROUP(specs, edx)) {
+				if(elements[edx].tag == (ber_tlv_tag_t)-1
+				&& elements[edx].optional == 0) {
+					/*
+					 * This must be the ANY type.
+					 */
+					ctx->step |= 1;
+					goto microphase2;
+				}
+
 				ASN_DEBUG("Unexpected tag %s",
 					ber_tlv_tag_string(tlv_tag));
 				ASN_DEBUG("Expected tag %s (%s)%s",
@@ -384,9 +393,10 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 				elements[edx].type,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
-		ASN_DEBUG("In %s SEQUENCE decoded %d %s in %d bytes code %d",
+		ASN_DEBUG("In %s SEQUENCE decoded %d %s of %d "
+			"in %d bytes rval.code %d",
 			td->name, edx, elements[edx].type->name,
-			(int)rval.consumed, rval.code);
+			(int)LEFT, (int)rval.consumed, rval.code);
 		switch(rval.code) {
 		case RC_OK:
 			break;
