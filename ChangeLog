@@ -1,4 +1,8 @@
 
+0.9.11:	2005-Feb-28
+
+	* X.693:8.3.4 prohibits anything but SignedNumber; fixed XER codec.
+
 0.9.10:	2005-Feb-25
 
 	* Completed the XER XMLValueList encoding and decoding.
