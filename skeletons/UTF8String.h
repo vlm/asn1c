@@ -25,4 +25,17 @@ asn_constr_check_f UTF8String_constraint;
  */
 ssize_t UTF8String_length(const UTF8String_t *st);
 
+/*
+ * Convert the UTF-8 string into a sequence of wide characters.
+ * Returns the number of characters necessary.
+ * Returned value might be greater than dstlen.
+ * In case of conversion error, 0 is returned.
+ * 
+ * If st points to a valid UTF-8 string, calling
+ * 	UTF8String_to_wcs(st, 0, 0);
+ * is equivalent to
+ * 	UTF8String_length(const UTF8String_t *st);
+ */
+size_t UTF8String_to_wcs(const UTF8String_t *st, uint32_t *dst, size_t dstlen);
+
 #endif	/* _UTF8String_H_ */

@@ -96,51 +96,69 @@ UTF8String_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	return (len < 0) ? -1 : 0;
 }
 
-ssize_t
-UTF8String_length(const UTF8String_t *st) {
+static ssize_t
+UTF8String__process(const UTF8String_t *st, uint32_t *dst, size_t dstlen) {
+	size_t length;
+	uint8_t *buf = st->buf;
+	uint8_t *end = buf + st->size;
 
-	if(st && st->buf) {
-		size_t length;
-		uint8_t *buf = st->buf;
-		uint8_t *end = buf + st->size;
+	for(length = 0; buf < end; length++) {
+		int ch = *buf;
+		uint8_t *cend;
+		int32_t value;
+		int want;
 
-		for(length = 0; buf < end; length++) {
-			int ch = *buf;
-			uint8_t *cend;
-			int32_t value;
-			int want;
-
-			/* Compute the sequence length */
-			want = UTF8String_ht[0][ch >> 4];
-			switch(want) {
-			case -1:
-				/* Second half of the table, long sequence */
-				want = UTF8String_ht[1][ch & 0x0F];
-				if(want != -1) break;
-				/* Fall through */
-			case 0:
-				return U8E_ILLSTART;
-			}
-
-			/* assert(want >= 1 && want <= 6) */
-
-			/* Check character sequence length */
-			if(buf + want > end) return U8E_TRUNC;
-
-			value = ch & (0xff >> (want + 1));
-			cend = buf + want;
-			for(buf++; buf < cend; buf++) {
-				ch = *buf;
-				if(ch < 0x80 || ch > 0xbf) return U8E_NOTCONT;
-				value = (value << 6) | (ch & 0x3F);
-			}
-			if(value < UTF8String_mv[want])
-				return U8E_NOTMIN;
+		/* Compute the sequence length */
+		want = UTF8String_ht[0][ch >> 4];
+		switch(want) {
+		case -1:
+			/* Second half of the table, long sequence */
+			want = UTF8String_ht[1][ch & 0x0F];
+			if(want != -1) break;
+			/* Fall through */
+		case 0:
+			return U8E_ILLSTART;
 		}
 
-		return length;
+		/* assert(want >= 1 && want <= 6) */
+
+		/* Check character sequence length */
+		if(buf + want > end) return U8E_TRUNC;
+
+		value = ch & (0xff >> (want + 1));
+		cend = buf + want;
+		for(buf++; buf < cend; buf++) {
+			ch = *buf;
+			if(ch < 0x80 || ch > 0xbf) return U8E_NOTCONT;
+			value = (value << 6) | (ch & 0x3F);
+		}
+		if(value < UTF8String_mv[want])
+			return U8E_NOTMIN;
+		if(dstlen) *dst++ = value;	/* Record value */
+	}
+
+	if(dstlen) *dst = 0;	/* zero-terminate */
+
+	return length;
+}
+
+
+ssize_t
+UTF8String_length(const UTF8String_t *st) {
+	if(st && st->buf) {
+		return UTF8String__process(st, 0, 0);
 	} else {
 		return U8E_EINVAL;
+	}
+}
+
+size_t
+UTF8String_to_wcs(const UTF8String_t *st, uint32_t *dst, size_t dstlen) {
+	if(st && st->buf) {
+		ssize_t ret = UTF8String__process(st, dst, dstlen);
+		return (ret < 0) ? 0 : ret;
+	} else {
+		return 0;
 	}
 }
 

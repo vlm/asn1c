@@ -12,6 +12,7 @@ typedef OCTET_STRING_t UniversalString_t;  /* Implemented via OCTET STRING */
 extern asn_TYPE_descriptor_t asn_DEF_UniversalString;
 
 asn_struct_print_f UniversalString_print;	/* Human-readable output */
+xer_type_decoder_f UniversalString_decode_xer;
 xer_type_encoder_f UniversalString_encode_xer;
 
 #endif	/* _UniversalString_H_ */

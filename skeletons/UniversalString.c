@@ -1,9 +1,10 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
 #include <UniversalString.h>
+#include <UTF8String.h>
 
 /*
  * UniversalString basic type description.
@@ -18,10 +19,10 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	OCTET_STRING_free,
 	UniversalString_print,      /* Convert into UTF8 and print */
 	asn_generic_no_constraint,
-	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
-	0,				/* Not implemented yet */
-	UniversalString_encode_xer,	/* Convert into UTF8 */
+	OCTET_STRING_decode_ber,
+	OCTET_STRING_encode_der,
+	UniversalString_decode_xer,	/* Convert from UTF-8 */
+	UniversalString_encode_xer,	/* Convert into UTF-8 */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
@@ -91,6 +92,63 @@ UniversalString__dump(const UniversalString_t *st,
 		return -1;
 
 	return wrote;
+}
+
+asn_dec_rval_t
+UniversalString_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr,
+		const char *opt_mname, void *buf_ptr, size_t size) {
+	asn_dec_rval_t rc;
+
+	rc = OCTET_STRING_decode_xer_utf8(opt_codec_ctx, td, sptr, opt_mname,
+		buf_ptr, size);
+	if(rc.code == RC_OK) {
+		/*
+		 * Now we have a whole string in UTF-8 format.
+		 * Convert it into UCS-4.
+		 */
+		uint32_t *wcs;
+		size_t wcs_len;
+		UTF8String_t *st;
+#ifndef	WORDS_BIGENDIAN
+		int little_endian = 1;
+#endif
+
+		assert(*sptr);
+		st = (UTF8String_t *)*sptr;
+		assert(st->buf);
+		wcs_len = UTF8String_to_wcs(st, 0, 0);
+
+		wcs = (uint32_t *)MALLOC(4 * (wcs_len + 1));
+		if(wcs == 0 || UTF8String_to_wcs(st, wcs, wcs_len) != wcs_len) {
+			rc.code = RC_FAIL;
+			rc.consumed = 0;
+			return rc;
+		} else {
+			wcs[wcs_len] = 0;	/* nul-terminate */
+		}
+
+#ifndef	WORDS_BIGENDIAN
+		if(*(char *)&little_endian) {
+			/* Swap byte order in encoding */
+			uint32_t *wc = wcs;
+			uint32_t *wc_end = wcs + wcs_len;
+			for(; wc < wc_end; wc++) {
+				/* *wc = htonl(*wc); */
+				uint32_t wch = *wc;
+				*((uint8_t *)wc + 0) = wch >> 24;
+				*((uint8_t *)wc + 1) = wch >> 16;
+				*((uint8_t *)wc + 2) = wch >> 8;
+				*((uint8_t *)wc + 3) = wch;
+			}
+		}
+#endif	/* WORDS_BIGENDIAN */
+
+		FREEMEM(st->buf);
+		st->buf = (uint8_t *)wcs;
+		st->size = 4 * wcs_len;
+	}
+	return rc;
 }
 
 asn_enc_rval_t
