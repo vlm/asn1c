@@ -369,10 +369,10 @@ print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, be
  */
 static int
 print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
-	asn1_integer_t *arcs = 0;	/* Object identifier arcs */
+	asn1c_integer_t *arcs = 0;	/* Object identifier arcs */
 	unsigned char *vbuf = 0;
 	asn1p_expr_type_e etype = 0;
-	asn1_integer_t collector = 0;
+	asn1c_integer_t collector = 0;
 	int special_format = 0;
 	ssize_t i;
 
@@ -683,5 +683,5 @@ decode_tlv_from_string(const char *datastring) {
 /*
  * Dummy functions.
  */
-ber_dec_rval_t ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx, void *ptr, size_t size, int tag_mode, int last_tag_form, ber_tlv_len_t *last_length, int *opt_tlv_form) { ber_dec_rval_t rv; (void)td; (void)opt_ctx; (void)ptr; (void)size; (void)tag_mode; (void)last_tag_form; (void)last_length; (void)opt_tlv_form; return rv; }
-ssize_t der_write_tags(asn1_TYPE_descriptor_t *td, size_t slen, int tag_mode, int last_tag_form, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) { (void)td; (void)slen; (void)tag_mode; (void)last_tag_form; (void)tag; (void)cb; (void)app_key; return -1; }
+ber_dec_rval_t ber_check_tags(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx, void *ptr, size_t size, int tag_mode, int last_tag_form, ber_tlv_len_t *last_length, int *opt_tlv_form) { ber_dec_rval_t rv; (void)opt_codec_ctx; (void)td; (void)opt_ctx; (void)ptr; (void)size; (void)tag_mode; (void)last_tag_form; (void)last_length; (void)opt_tlv_form; return rv; }
+ssize_t der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode, int last_tag_form, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) { (void)td; (void)slen; (void)tag_mode; (void)last_tag_form; (void)tag; (void)cb; (void)app_key; return -1; }
