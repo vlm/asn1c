@@ -49,6 +49,9 @@
 #ifndef	EX_SOFTWARE
 #define	EX_SOFTWARE 70
 #endif
+#ifndef	EX_OSERR
+#define	EX_OSERR 71
+#endif
 #define	alloca _alloca
 #define	snprintf _snprintf
 #endif	/* WIN32 */
