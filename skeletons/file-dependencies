@@ -6,7 +6,7 @@
 # $Id$
 #
 
-ANY.h ANY.h
+ANY.h ANY.c
 BIT_STRING.h BIT_STRING.c
 BMPString.h BMPString.c
 BOOLEAN.h BOOLEAN.c
