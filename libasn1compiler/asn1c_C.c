@@ -1090,7 +1090,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("sizeof(asn1_DEF_%s_tags)\n", p);
 		OUT("\t/sizeof(asn1_DEF_%s_tags[0]),\n", p);
 		OUT("%d,\t/* Tags to skip */\n", tags_impl_skip);
-		OUT("-0\t/* Unknown yet */\n");
+		OUT("-0,\t/* Unknown yet */\n");
+		OUT("0\t/* No specifics */\n");
 	);
 	OUT("};\n");
 	OUT("\n");
