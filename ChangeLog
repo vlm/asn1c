@@ -1,8 +1,20 @@
 
-0.8.15:	2004-Jul-15
+0.8.15:	2004-Jul-20
 
 	* Fixed parser: memory leak in free_struct code for SET OF/SEQUENCE OF.
 	  (Severity: high, Security impact: medium)
+	* Fixed parser: invalid memory reference in CHECK.
+	  (Test case 48) (Severity: high, Security impact: medium)
+	  When encoding data for certain ASN.1 specifications containing
+	  explicit tags, the tag is always written incorrectly due to
+	  incorrect memory reference. The encoding will almost always produce
+	  unparseable data and might well reference unmapped region so program
+	  would produce segmentation violation. Fortunately, memory is
+	  read, not written, so remote exploits cannot execute arbitrary
+	  code and triggering unmapped memory reference is highly unlikely
+	  even it attacker knows the code (basically, the compiler should place
+	  asn1_DEF_... right before the end of the mapped memory region, which
+	  is extremely rare).
 	* Improved INTEGER type printing.
 
 0.8.14:	2004-Jun-30
