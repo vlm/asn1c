@@ -385,7 +385,8 @@ asn1f_check_constraints(arg_t *arg) {
 				arg->expr->combined_constraints,
 				test_types[i], 0, 0, 0);
 		if(!range && errno == EPERM) {
-			FATAL("This error happened for %s (%d) at line %d",
+			FATAL("This error happened for \"%s\" (meta %d) "
+				"at line %d",
 				arg->expr->Identifier,
 				arg->expr->meta_type,
 				arg->expr->_lineno);

@@ -76,7 +76,7 @@ asn1f_fix_integer(arg_t *arg) {
 			/*
 			 * Resolve the value, once and for all.
 			 */
-			if(asn1f_value_resolve(arg, iv)) {
+			if(asn1f_value_resolve(arg, iv, 0)) {
 				/* This function will emit messages */
 				rvalue = -1;
 				continue;

@@ -3,7 +3,7 @@
 #include "asn1fix_crange.h"
 
 static void _remove_exceptions(arg_t *arg, asn1p_constraint_t *ct);
-static int _constraint_value_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_value_t **value);
+static int constraint_value_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_value_t **value, enum asn1p_constraint_type_e real_ctype);
 
 int
 asn1constraint_pullup(arg_t *arg) {
@@ -120,11 +120,12 @@ asn1constraint_pullup(arg_t *arg) {
 
 int
 asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, asn1p_expr_type_e etype, enum asn1p_constraint_type_e effective_type) {
+	enum asn1p_constraint_type_e real_constraint_type;
 	unsigned int el;
 	int rvalue = 0;
 	int ret;
 
-	DEBUG("%s", arg->expr->Identifier);
+	DEBUG("(\"%s\")", arg->expr->Identifier);
 
 	if(!ct) return 0;
 
@@ -150,12 +151,11 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 		break;
 	}
 
+	real_constraint_type = effective_type ? effective_type : ct->type;
+
 	if(etype != A1TC_INVALID) {
-		enum asn1p_constraint_type_e check_type;
 
-		check_type = effective_type ? effective_type : ct->type;
-
-		ret = asn1constraint_compatible(etype, check_type);
+		ret = asn1constraint_compatible(etype, real_constraint_type);
 		switch(ret) {
 		case -1:	/* If unknown, assume OK. */
 		case  1:
@@ -168,7 +168,7 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 			FATAL("%s at line %d: "
 				"Constraint type %s is not applicable to %s",
 				arg->expr->Identifier, ct->_lineno,
-				asn1p_constraint_type2str(check_type),
+				asn1p_constraint_type2str(real_constraint_type),
 				ASN_EXPR_TYPE2STR(etype)
 			);
 			rvalue = -1;
@@ -184,15 +184,18 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 	 * Resolve all possible references, wherever they occur.
 	 */
 	if(ct->value && ct->value->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, mod, &ct->value);
+		ret = constraint_value_resolve(arg, mod,
+			&ct->value, real_constraint_type);
 		RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_start && ct->range_start->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, mod, &ct->range_start);
+		ret = constraint_value_resolve(arg, mod,
+			&ct->range_start, real_constraint_type);
 		RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_stop && ct->range_stop->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, mod, &ct->range_stop);
+		ret = constraint_value_resolve(arg, mod,
+			&ct->range_stop, real_constraint_type);
 		RET2RVAL(ret, rvalue);
 	}
 
@@ -231,31 +234,26 @@ _remove_exceptions(arg_t *arg, asn1p_constraint_t *ct) {
 
 
 static int
-_constraint_value_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_value_t **value) {
+constraint_value_resolve(arg_t *arg, asn1p_module_t *mod,
+	asn1p_value_t **value, enum asn1p_constraint_type_e real_ctype) {
 	asn1p_expr_t static_expr;
-	asn1p_expr_t *tmp_expr;
 	arg_t tmp_arg;
 	int rvalue = 0;
 	int ret;
 
-	tmp_expr = asn1f_lookup_symbol(arg, mod, (*value)->value.reference);
-	if(tmp_expr == NULL) {
-		FATAL("Cannot find symbol %s (%s) "
-			"used in %s subtype constraint at line %d",
-			asn1f_printable_reference((*value)->value.reference),
-			mod->Identifier,
-			arg->expr->Identifier,
-			arg->expr->_lineno);
-		assert((*value)->type == ATV_REFERENCED);
-		return -1;
-	}
+	(void)mod;
 
-	static_expr = *tmp_expr;
+	DEBUG("(\"%s\", within <%s>)",
+		asn1f_printable_value(*value),
+		asn1p_constraint_type2str(real_ctype));
+
+	static_expr = *arg->expr;
 	static_expr.value = *value;
+	static_expr.meta_type = AMT_VALUE;
 	tmp_arg = *arg;
-	tmp_arg.mod = tmp_expr->module;
+	tmp_arg.mod = arg->expr->module;
 	tmp_arg.expr = &static_expr;
-	ret = asn1f_fix_dereference_values(&tmp_arg);
+	ret = asn1f_value_resolve(&tmp_arg, &static_expr, &real_ctype);
 	RET2RVAL(ret, rvalue);
 	assert(static_expr.value);
 	*value = static_expr.value;

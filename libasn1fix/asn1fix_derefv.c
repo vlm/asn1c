@@ -9,7 +9,7 @@ asn1f_fix_dereference_values(arg_t *arg) {
 	int r_value = 0;
 
 	if(expr->value && expr->meta_type == AMT_VALUE) {
-		if(asn1f_value_resolve(arg, expr)) {
+		if(asn1f_value_resolve(arg, expr, 0)) {
 			/* This function will emit messages */
 			r_value = -1;
 		}
@@ -42,7 +42,7 @@ asn1f_fix_dereference_defaults(arg_t *arg) {
 		tmpexpr.meta_type = AMT_VALUE;
 		tmpexpr.marker.default_value = 0;
 		tmpexpr.value = expr->marker.default_value;
-		if(asn1f_value_resolve(&tmparg, &tmpexpr))
+		if(asn1f_value_resolve(&tmparg, &tmpexpr, 0))
 			r_value = -1;
 		expr->marker.default_value = tmpexpr.value;
 	}
