@@ -21419,7 +21419,6 @@ case "$GCC" in
    CFLAGS="$CFLAGS -Wmissing-prototypes"
    CFLAGS="$CFLAGS -Wmissing-declarations"
    CFLAGS="$CFLAGS -Wredundant-decls"
-   CFLAGS="$CFLAGS -Wnested-externs"
    ;;
 esac
 
