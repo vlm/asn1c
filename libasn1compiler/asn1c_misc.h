@@ -16,8 +16,6 @@ char *asn1c_make_identifier(enum ami_flags_e, char *arg1, ...);
  * Return the type name of the specified expression.
  */
 enum tnfmt {
-	TNF_NORCHECK	= 0x00,
-	TNF_CHECK	= 0x01,
 	TNF_UNMODIFIED	= 0x10,	/* Return unmodified type name */
 	TNF_INCLUDE	= 0x20,	/* Format for #include <> */
 	TNF_CTYPE	= 0x30,	/* Format as normal C-ish type (append "_t") */

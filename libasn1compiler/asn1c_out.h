@@ -16,8 +16,10 @@ typedef struct compiler_streams {
 		OT_IGNORE,	/* Ignore this output */
 		OT_INCLUDES,	/* #include files */
 		OT_DEPS,	/* Dependencies (other than #includes) */
+		OT_FWD_DECLS,	/* Forward declarations */
 		OT_TYPE_DECLS,	/* Type declarations */
 		OT_FUNC_DECLS,	/* Function declarations */
+		OT_POST_INCLUDE,/* #include after type definition */
 		OT_CTABLES,	/* Constraint tables */
 		OT_CODE,	/* Some code */
 		OT_STAT_DEFS,	/* Static definitions */
@@ -32,7 +34,7 @@ typedef struct compiler_streams {
 } compiler_streams_t;
 
 static char *_compiler_stream2str[] __attribute__ ((unused))
-    = { "IGNORE", "INCLUDES", "DEPS", "TYPE-DECLS", "FUNC-DECLS", "CTABLES", "CODE", "STAT-DEFS" };
+    = { "IGNORE", "INCLUDES", "DEPS", "FWD-DECLS", "TYPE-DECLS", "FUNC-DECLS", "POST-INCLUDE", "CTABLES", "CODE", "STAT-DEFS" };
 
 int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 
@@ -86,14 +88,20 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 	OUT_NOINDENT("#include <%s.h>\n", filename);		\
 	REDIR(saved_target);					\
 } while(0)
+#define	GEN_POSTINCLUDE(filename)	do {			\
+	int saved_target = arg->target->target;			\
+	REDIR(OT_POST_INCLUDE);					\
+	OUT_NOINDENT("#include <%s.h>\n", filename);		\
+	REDIR(saved_target);					\
+} while(0)
 
 /* Generate ASN.1 type declaration */
 #define	GEN_DECLARE(expr)	do {				\
 	int saved_target = arg->target->target;			\
-	REDIR(OT_DEPS);						\
+	REDIR(OT_FUNC_DECLS);					\
 	OUT_NOINDENT("extern asn_TYPE_descriptor_t "		\
 			"asn_DEF_%s;\n",			\
-			MKID(expr->Identifier));		\
+			MKID_nc(expr->Identifier));		\
 	REDIR(saved_target);					\
 } while(0)
 

@@ -24,10 +24,8 @@ typedef enum h_PR {
 	h_PR_i,
 	h_PR_j,
 } h_PR;
-extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
-
 
 typedef struct T {
 	NULL_t	 a;
@@ -65,6 +63,10 @@ typedef struct T {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< STAT-DEFS [T] >>> ***/
 

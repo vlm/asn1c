@@ -72,7 +72,9 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 
 	m->len = ret;
 
-	if(arg->target->target == OT_INCLUDES) {
+	if(arg->target->target == OT_INCLUDES
+	|| arg->target->target == OT_FWD_DECLS
+	|| arg->target->target == OT_POST_INCLUDE) {
 		out_chunk_t *v;
 		TQ_FOR(v, &dst->chunks, next) {
 			if(m->len == v->len

@@ -5,7 +5,6 @@
 
 /*** <<< TYPE-DECLS [Int1] >>> ***/
 
-
 typedef INTEGER_t	 Int1_t;
 
 /*** <<< FUNC-DECLS [Int1] >>> ***/
@@ -23,7 +22,6 @@ typedef INTEGER_t	 Int1_t;
 #include <Int1.h>
 
 /*** <<< TYPE-DECLS [Int2] >>> ***/
-
 
 typedef Int1_t	 Int2_t;
 
@@ -161,7 +159,6 @@ asn_TYPE_descriptor_t asn_DEF_Int2 = {
 #include <Int2.h>
 
 /*** <<< TYPE-DECLS [Int3] >>> ***/
-
 
 typedef Int2_t	 Int3_t;
 
@@ -304,7 +301,6 @@ asn_TYPE_descriptor_t asn_DEF_Int3 = {
 
 /*** <<< TYPE-DECLS [Int4] >>> ***/
 
-
 typedef Int3_t	 Int4_t;
 
 /*** <<< FUNC-DECLS [Int4] >>> ***/
@@ -445,7 +441,6 @@ asn_TYPE_descriptor_t asn_DEF_Int4 = {
 #include <Int4.h>
 
 /*** <<< TYPE-DECLS [Int5] >>> ***/
-
 
 typedef Int4_t	 Int5_t;
 
@@ -588,7 +583,6 @@ asn_TYPE_descriptor_t asn_DEF_Int5 = {
 
 /*** <<< TYPE-DECLS [ExtensibleExtensions] >>> ***/
 
-
 typedef INTEGER_t	 ExtensibleExtensions_t;
 
 /*** <<< FUNC-DECLS [ExtensibleExtensions] >>> ***/
@@ -730,7 +724,6 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleExtensions = {
 
 /*** <<< TYPE-DECLS [Str1] >>> ***/
 
-
 typedef IA5String_t	 Str1_t;
 
 /*** <<< FUNC-DECLS [Str1] >>> ***/
@@ -748,7 +741,6 @@ typedef IA5String_t	 Str1_t;
 #include <Str1.h>
 
 /*** <<< TYPE-DECLS [Str2] >>> ***/
-
 
 typedef Str1_t	 Str2_t;
 
@@ -902,7 +894,6 @@ asn_TYPE_descriptor_t asn_DEF_Str2 = {
 #include <Str2.h>
 
 /*** <<< TYPE-DECLS [Str3] >>> ***/
-
 
 typedef Str2_t	 Str3_t;
 
@@ -1068,7 +1059,6 @@ asn_TYPE_descriptor_t asn_DEF_Str3 = {
 
 /*** <<< TYPE-DECLS [Str4] >>> ***/
 
-
 typedef IA5String_t	 Str4_t;
 
 /*** <<< FUNC-DECLS [Str4] >>> ***/
@@ -1218,7 +1208,6 @@ asn_TYPE_descriptor_t asn_DEF_Str4 = {
 #include <IA5String.h>
 
 /*** <<< TYPE-DECLS [PER-Visible] >>> ***/
-
 
 typedef IA5String_t	 PER_Visible_t;
 
@@ -1370,7 +1359,6 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible = {
 
 /*** <<< TYPE-DECLS [PER-Visible-2] >>> ***/
 
-
 typedef PER_Visible_t	 PER_Visible_2_t;
 
 /*** <<< FUNC-DECLS [PER-Visible-2] >>> ***/
@@ -1520,7 +1508,6 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible_2 = {
 #include <PER-Visible.h>
 
 /*** <<< TYPE-DECLS [Not-PER-Visible-1] >>> ***/
-
 
 typedef PER_Visible_t	 Not_PER_Visible_1_t;
 
@@ -1672,7 +1659,6 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_1 = {
 
 /*** <<< TYPE-DECLS [Not-PER-Visible-2] >>> ***/
 
-
 typedef PER_Visible_t	 Not_PER_Visible_2_t;
 
 /*** <<< FUNC-DECLS [Not-PER-Visible-2] >>> ***/
@@ -1823,7 +1809,6 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_2 = {
 
 /*** <<< TYPE-DECLS [Not-PER-Visible-3] >>> ***/
 
-
 typedef PER_Visible_t	 Not_PER_Visible_3_t;
 
 /*** <<< FUNC-DECLS [Not-PER-Visible-3] >>> ***/
@@ -1973,7 +1958,6 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_3 = {
 #include <PER-Visible.h>
 
 /*** <<< TYPE-DECLS [SIZE-but-not-FROM] >>> ***/
-
 
 typedef PER_Visible_t	 SIZE_but_not_FROM_t;
 
@@ -2128,7 +2112,6 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_but_not_FROM = {
 
 /*** <<< TYPE-DECLS [SIZE-and-FROM] >>> ***/
 
-
 typedef PER_Visible_t	 SIZE_and_FROM_t;
 
 /*** <<< FUNC-DECLS [SIZE-and-FROM] >>> ***/
@@ -2282,7 +2265,6 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_and_FROM = {
 
 /*** <<< TYPE-DECLS [Neither-SIZE-nor-FROM] >>> ***/
 
-
 typedef PER_Visible_t	 Neither_SIZE_nor_FROM_t;
 
 /*** <<< FUNC-DECLS [Neither-SIZE-nor-FROM] >>> ***/
@@ -2433,7 +2415,6 @@ asn_TYPE_descriptor_t asn_DEF_Neither_SIZE_nor_FROM = {
 
 /*** <<< TYPE-DECLS [Utf8-4] >>> ***/
 
-
 typedef UTF8String_t	 Utf8_4_t;
 
 /*** <<< FUNC-DECLS [Utf8-4] >>> ***/
@@ -2577,7 +2558,6 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_4 = {
 #include <Utf8-2.h>
 
 /*** <<< TYPE-DECLS [Utf8-3] >>> ***/
-
 
 typedef Utf8_2_t	 Utf8_3_t;
 
@@ -2751,7 +2731,6 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_3 = {
 
 /*** <<< TYPE-DECLS [Utf8-2] >>> ***/
 
-
 typedef Utf8_1_t	 Utf8_2_t;
 
 /*** <<< FUNC-DECLS [Utf8-2] >>> ***/
@@ -2894,7 +2873,6 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_2 = {
 
 /*** <<< TYPE-DECLS [Utf8-1] >>> ***/
 
-
 typedef UTF8String_t	 Utf8_1_t;
 
 /*** <<< FUNC-DECLS [Utf8-1] >>> ***/
@@ -2913,7 +2891,6 @@ typedef UTF8String_t	 Utf8_1_t;
 
 /*** <<< TYPE-DECLS [VisibleIdentifier] >>> ***/
 
-
 typedef Identifier_t	 VisibleIdentifier_t;
 
 /*** <<< FUNC-DECLS [VisibleIdentifier] >>> ***/
@@ -2931,7 +2908,6 @@ typedef Identifier_t	 VisibleIdentifier_t;
 #include <VisibleString.h>
 
 /*** <<< TYPE-DECLS [Identifier] >>> ***/
-
 
 typedef VisibleString_t	 Identifier_t;
 

@@ -1,23 +1,29 @@
 
 /*** <<< INCLUDES [Forest] >>> ***/
 
-#include <Tree.h>
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 
-/*** <<< DEPS [Forest] >>> ***/
+/*** <<< FWD-DECLS [Forest] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Forest;
+struct Tree;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [Forest] >>> ***/
 
-
 typedef struct Forest {
-	A_SET_OF(Tree_t) list;
+	A_SET_OF(struct Tree) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Forest_t;
+
+/*** <<< FUNC-DECLS [Forest] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Forest;
+
+/*** <<< POST-INCLUDE [Forest] >>> ***/
+
+#include <Tree.h>
 
 /*** <<< STAT-DEFS [Forest] >>> ***/
 
@@ -66,12 +72,7 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 #include <INTEGER.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [Tree] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_Tree;
-
 /*** <<< TYPE-DECLS [Tree] >>> ***/
-
 
 typedef struct Tree {
 	INTEGER_t	 height;
@@ -80,6 +81,10 @@ typedef struct Tree {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Tree_t;
+
+/*** <<< FUNC-DECLS [Tree] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Tree;
 
 /*** <<< STAT-DEFS [Tree] >>> ***/
 
@@ -139,7 +144,6 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 
 /*** <<< INCLUDES [Stuff] >>> ***/
 
-#include <Forest.h>
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 #include <BIT_STRING.h>
@@ -164,14 +168,16 @@ typedef enum other_PR {
 	other_PR_a,
 	other_PR_b,
 } other_PR;
-extern asn_TYPE_descriptor_t asn_DEF_Stuff;
+
+/*** <<< FWD-DECLS [Stuff] >>> ***/
+
+struct Forest;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [Stuff] >>> ***/
 
-
 typedef struct Stuff {
 	struct trees {
-		A_SET_OF(Forest_t) list;
+		A_SET_OF(struct Forest) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
@@ -213,6 +219,14 @@ typedef struct Stuff {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Stuff_t;
+
+/*** <<< FUNC-DECLS [Stuff] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Stuff;
+
+/*** <<< POST-INCLUDE [Stuff] >>> ***/
+
+#include <Forest.h>
 
 /*** <<< STAT-DEFS [Stuff] >>> ***/
 

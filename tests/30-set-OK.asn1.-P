@@ -17,10 +17,8 @@ typedef enum T_PR {
 	T_PR_s,	/* Member s is present */
 	T_PR_b,	/* Member b is present */
 } T_PR;
-extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
-
 
 typedef struct T {
 	INTEGER_t	 i;
@@ -38,6 +36,10 @@ typedef struct T {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< STAT-DEFS [T] >>> ***/
 

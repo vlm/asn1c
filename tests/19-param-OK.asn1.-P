@@ -7,12 +7,7 @@
 #include <Name.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [Certificate] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_Certificate;
-
 /*** <<< TYPE-DECLS [Certificate] >>> ***/
-
 
 typedef struct Certificate {
 	struct toBeSigned {
@@ -29,6 +24,10 @@ typedef struct Certificate {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Certificate_t;
+
+/*** <<< FUNC-DECLS [Certificate] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Certificate;
 
 /*** <<< CODE [Certificate] >>> ***/
 
@@ -192,23 +191,29 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 
 /*** <<< INCLUDES [Name] >>> ***/
 
-#include <RelativeDistinguishedName.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 
-/*** <<< DEPS [Name] >>> ***/
+/*** <<< FWD-DECLS [Name] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Name;
+struct RelativeDistinguishedName;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [Name] >>> ***/
 
-
 typedef struct Name {
-	A_SEQUENCE_OF(RelativeDistinguishedName_t) list;
+	A_SEQUENCE_OF(struct RelativeDistinguishedName) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Name_t;
+
+/*** <<< FUNC-DECLS [Name] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Name;
+
+/*** <<< POST-INCLUDE [Name] >>> ***/
+
+#include <RelativeDistinguishedName.h>
 
 /*** <<< STAT-DEFS [Name] >>> ***/
 
@@ -258,12 +263,7 @@ asn_TYPE_descriptor_t asn_DEF_Name = {
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 
-/*** <<< DEPS [RelativeDistinguishedName] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName;
-
 /*** <<< TYPE-DECLS [RelativeDistinguishedName] >>> ***/
-
 
 typedef struct RelativeDistinguishedName {
 	A_SET_OF(IA5String_t) list;
@@ -271,6 +271,10 @@ typedef struct RelativeDistinguishedName {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } RelativeDistinguishedName_t;
+
+/*** <<< FUNC-DECLS [RelativeDistinguishedName] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName;
 
 /*** <<< CTABLES [RelativeDistinguishedName] >>> ***/
 

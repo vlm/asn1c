@@ -2,22 +2,20 @@
 /*** <<< INCLUDES [T] >>> ***/
 
 #include <INTEGER.h>
-#include <T2.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [T] >>> ***/
+/*** <<< FWD-DECLS [T] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_T;
+struct T2;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [T] >>> ***/
-
 
 typedef struct T {
 	INTEGER_t	 Int;
 	struct collection {
-		A_SEQUENCE_OF(T2_t) list;
+		A_SEQUENCE_OF(struct T2) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
@@ -26,6 +24,14 @@ typedef struct T {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
+
+/*** <<< POST-INCLUDE [T] >>> ***/
+
+#include <T2.h>
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
@@ -129,12 +135,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 #include <UTF8String.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [T2] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_T2;
-
 /*** <<< TYPE-DECLS [T2] >>> ***/
-
 
 typedef struct T2 {
 	BOOLEAN_t	 flag;
@@ -143,6 +144,10 @@ typedef struct T2 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T2_t;
+
+/*** <<< FUNC-DECLS [T2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T2;
 
 /*** <<< STAT-DEFS [T2] >>> ***/
 

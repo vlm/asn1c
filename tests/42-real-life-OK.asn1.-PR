@@ -2,22 +2,20 @@
 /*** <<< INCLUDES [LogLine] >>> ***/
 
 #include <IA5String.h>
-#include <VariablePartSet.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [LogLine] >>> ***/
+/*** <<< FWD-DECLS [LogLine] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_LogLine;
+struct VariablePartSet;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [LogLine] >>> ***/
-
 
 typedef struct LogLine {
 	IA5String_t	 line_digest;
 	struct varsets {
-		A_SEQUENCE_OF(VariablePartSet_t) list;
+		A_SEQUENCE_OF(struct VariablePartSet) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
@@ -30,6 +28,14 @@ typedef struct LogLine {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } LogLine_t;
+
+/*** <<< FUNC-DECLS [LogLine] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_LogLine;
+
+/*** <<< POST-INCLUDE [LogLine] >>> ***/
+
+#include <VariablePartSet.h>
 
 /*** <<< CODE [LogLine] >>> ***/
 
@@ -162,21 +168,19 @@ asn_TYPE_descriptor_t asn_DEF_LogLine = {
 /*** <<< INCLUDES [VariablePartSet] >>> ***/
 
 #include <ActionItem.h>
-#include <VariablePart.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [VariablePartSet] >>> ***/
+/*** <<< FWD-DECLS [VariablePartSet] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_VariablePartSet;
+struct VariablePart;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [VariablePartSet] >>> ***/
 
-
 typedef struct VariablePartSet {
 	struct vparts {
-		A_SEQUENCE_OF(VariablePart_t) list;
+		A_SEQUENCE_OF(struct VariablePart) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
@@ -190,6 +194,14 @@ typedef struct VariablePartSet {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } VariablePartSet_t;
+
+/*** <<< FUNC-DECLS [VariablePartSet] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_VariablePartSet;
+
+/*** <<< POST-INCLUDE [VariablePartSet] >>> ***/
+
+#include <VariablePart.h>
 
 /*** <<< CODE [VariablePartSet] >>> ***/
 
@@ -325,10 +337,8 @@ typedef enum VariablePart_PR {
 	VariablePart_PR_vrange,
 	/* Extensions may appear below */
 } VariablePart_PR;
-extern asn_TYPE_descriptor_t asn_DEF_VariablePart;
 
 /*** <<< TYPE-DECLS [VariablePart] >>> ***/
-
 
 typedef struct VariablePart {
 	VariablePart_PR present;
@@ -359,6 +369,10 @@ typedef struct VariablePart {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } VariablePart_t;
+
+/*** <<< FUNC-DECLS [VariablePart] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_VariablePart;
 
 /*** <<< CODE [VariablePart] >>> ***/
 
@@ -557,10 +571,8 @@ typedef enum accept_as {
 	 * Enumeration is extensible
 	 */
 } accept_as_e;
-extern asn_TYPE_descriptor_t asn_DEF_ActionItem;
 
 /*** <<< TYPE-DECLS [ActionItem] >>> ***/
-
 
 typedef struct ActionItem {
 	ENUMERATED_t	 accept_as;
@@ -592,6 +604,7 @@ typedef struct ActionItem {
 /*** <<< FUNC-DECLS [ActionItem] >>> ***/
 
 /* extern asn_TYPE_descriptor_t asn_DEF_accept_as_2;	// (Use -fall-defs-global to expose) */
+extern asn_TYPE_descriptor_t asn_DEF_ActionItem;
 
 /*** <<< CODE [ActionItem] >>> ***/
 

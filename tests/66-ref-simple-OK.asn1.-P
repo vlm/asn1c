@@ -5,19 +5,18 @@
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 
-/*** <<< DEPS [T] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_T;
-
 /*** <<< TYPE-DECLS [T] >>> ***/
 
-
 typedef struct T {
-	A_SET_OF(SimpleType_t) list;
+	A_SET_OF(struct SimpleType) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
@@ -74,7 +73,6 @@ typedef enum SimpleType {
 } SimpleType_e;
 
 /*** <<< TYPE-DECLS [SimpleType] >>> ***/
-
 
 typedef ENUMERATED_t	 SimpleType_t;
 

@@ -15,10 +15,8 @@
  */
 typedef enum class_PR {
 } class_PR;
-extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
-
 
 typedef struct T {
 	INTEGER_t	 Int;
@@ -41,6 +39,10 @@ typedef struct T {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< CODE [T] >>> ***/
 

@@ -5,7 +5,6 @@
 
 /*** <<< TYPE-DECLS [PrimitiveType] >>> ***/
 
-
 typedef OCTET_STRING_t	 PrimitiveType_t;
 
 /*** <<< FUNC-DECLS [PrimitiveType] >>> ***/
@@ -23,12 +22,7 @@ typedef OCTET_STRING_t	 PrimitiveType_t;
 #include <PrimitiveType.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [ConstructedType] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_ConstructedType;
-
 /*** <<< TYPE-DECLS [ConstructedType] >>> ***/
-
 
 typedef struct ConstructedType {
 	PrimitiveType_t	 field;
@@ -36,6 +30,10 @@ typedef struct ConstructedType {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } ConstructedType_t;
+
+/*** <<< FUNC-DECLS [ConstructedType] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ConstructedType;
 
 /*** <<< STAT-DEFS [ConstructedType] >>> ***/
 
@@ -90,7 +88,6 @@ asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 #include <ConstructedType.h>
 
 /*** <<< TYPE-DECLS [T] >>> ***/
-
 
 typedef ConstructedType_t	 T_t;
 

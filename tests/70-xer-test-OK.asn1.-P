@@ -27,10 +27,8 @@ typedef enum PDU_PR {
 	PDU_PR_seqOfZuka,
 	/* Extensions may appear below */
 } PDU_PR;
-extern asn_TYPE_descriptor_t asn_DEF_PDU;
 
 /*** <<< TYPE-DECLS [PDU] >>> ***/
-
 
 typedef struct PDU {
 	PDU_PR present;
@@ -53,6 +51,10 @@ typedef struct PDU {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } PDU_t;
+
+/*** <<< FUNC-DECLS [PDU] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_PDU;
 
 /*** <<< STAT-DEFS [PDU] >>> ***/
 
@@ -165,19 +167,15 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 /*** <<< INCLUDES [Sequence] >>> ***/
 
 #include <INTEGER.h>
-#include <Sequence.h>
 #include <BIT_STRING.h>
 #include <UTF8String.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [Sequence] >>> ***/
-
+/*** <<< FWD-DECLS [Sequence] >>> ***/
 
 struct Sequence;	/* Forward declaration */
-extern asn_TYPE_descriptor_t asn_DEF_Sequence;
 
 /*** <<< TYPE-DECLS [Sequence] >>> ***/
-
 
 typedef struct Sequence {
 	INTEGER_t	 integer;
@@ -188,6 +186,14 @@ typedef struct Sequence {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Sequence_t;
+
+/*** <<< FUNC-DECLS [Sequence] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Sequence;
+
+/*** <<< POST-INCLUDE [Sequence] >>> ***/
+
+#include <Sequence.h>
 
 /*** <<< STAT-DEFS [Sequence] >>> ***/
 
@@ -277,10 +283,8 @@ typedef enum Set_PR {
 	Set_PR_roid,	/* Member roid is present */
 	Set_PR_opaque,	/* Member opaque is present */
 } Set_PR;
-extern asn_TYPE_descriptor_t asn_DEF_Set;
 
 /*** <<< TYPE-DECLS [Set] >>> ***/
-
 
 typedef struct Set {
 	RELATIVE_OID_t	 roid;
@@ -293,6 +297,10 @@ typedef struct Set {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Set_t;
+
+/*** <<< FUNC-DECLS [Set] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Set;
 
 /*** <<< STAT-DEFS [Set] >>> ***/
 
@@ -370,10 +378,8 @@ asn_TYPE_descriptor_t asn_DEF_Set = {
 typedef enum ExtensibleSet_PR {
 	ExtensibleSet_PR_string,	/* Member string is present */
 } ExtensibleSet_PR;
-extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSet;
 
 /*** <<< TYPE-DECLS [ExtensibleSet] >>> ***/
-
 
 typedef struct ExtensibleSet {
 	UTF8String_t	*string	/* OPTIONAL */;
@@ -389,6 +395,10 @@ typedef struct ExtensibleSet {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } ExtensibleSet_t;
+
+/*** <<< FUNC-DECLS [ExtensibleSet] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSet;
 
 /*** <<< STAT-DEFS [ExtensibleSet] >>> ***/
 
@@ -450,12 +460,7 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSet = {
 #include <INTEGER.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [ExtensibleSequence] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence;
-
 /*** <<< TYPE-DECLS [ExtensibleSequence] >>> ***/
-
 
 typedef struct ExtensibleSequence {
 	UTF8String_t	*string	/* OPTIONAL */;
@@ -468,6 +473,10 @@ typedef struct ExtensibleSequence {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } ExtensibleSequence_t;
+
+/*** <<< FUNC-DECLS [ExtensibleSequence] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence;
 
 /*** <<< STAT-DEFS [ExtensibleSequence] >>> ***/
 
@@ -531,12 +540,7 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 
-/*** <<< DEPS [SetOf] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_SetOf;
-
 /*** <<< TYPE-DECLS [SetOf] >>> ***/
-
 
 typedef struct SetOf {
 	A_SET_OF(REAL_t) list;
@@ -544,6 +548,10 @@ typedef struct SetOf {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } SetOf_t;
+
+/*** <<< FUNC-DECLS [SetOf] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SetOf;
 
 /*** <<< STAT-DEFS [SetOf] >>> ***/
 
@@ -593,12 +601,7 @@ asn_TYPE_descriptor_t asn_DEF_SetOf = {
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 
-/*** <<< DEPS [SetOfNULL] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_SetOfNULL;
-
 /*** <<< TYPE-DECLS [SetOfNULL] >>> ***/
-
 
 typedef struct SetOfNULL {
 	A_SET_OF(NULL_t) list;
@@ -606,6 +609,10 @@ typedef struct SetOfNULL {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } SetOfNULL_t;
+
+/*** <<< FUNC-DECLS [SetOfNULL] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SetOfNULL;
 
 /*** <<< STAT-DEFS [SetOfNULL] >>> ***/
 
@@ -661,10 +668,8 @@ typedef enum Member {
 	Member_one	= 0,
 	Member_oneMore	= 1
 } Member_e;
-extern asn_TYPE_descriptor_t asn_DEF_SetOfEnums;
 
 /*** <<< TYPE-DECLS [SetOfEnums] >>> ***/
-
 
 typedef struct SetOfEnums {
 	A_SET_OF(ENUMERATED_t) list;
@@ -676,6 +681,7 @@ typedef struct SetOfEnums {
 /*** <<< FUNC-DECLS [SetOfEnums] >>> ***/
 
 /* extern asn_TYPE_descriptor_t asn_DEF_Member_2;	// (Use -fall-defs-global to expose) */
+extern asn_TYPE_descriptor_t asn_DEF_SetOfEnums;
 
 /*** <<< CODE [SetOfEnums] >>> ***/
 
@@ -837,12 +843,7 @@ asn_TYPE_descriptor_t asn_DEF_SetOfEnums = {
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 
-/*** <<< DEPS [SequenceOf] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_SequenceOf;
-
 /*** <<< TYPE-DECLS [SequenceOf] >>> ***/
-
 
 typedef struct SequenceOf {
 	A_SEQUENCE_OF(INTEGER_t) list;
@@ -850,6 +851,10 @@ typedef struct SequenceOf {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } SequenceOf_t;
+
+/*** <<< FUNC-DECLS [SequenceOf] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SequenceOf;
 
 /*** <<< STAT-DEFS [SequenceOf] >>> ***/
 
@@ -899,12 +904,7 @@ asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 
-/*** <<< DEPS [SeqOfZuka] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_SeqOfZuka;
-
 /*** <<< TYPE-DECLS [SeqOfZuka] >>> ***/
-
 
 typedef struct SeqOfZuka {
 	A_SEQUENCE_OF(NULL_t) list;
@@ -912,6 +912,10 @@ typedef struct SeqOfZuka {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } SeqOfZuka_t;
+
+/*** <<< FUNC-DECLS [SeqOfZuka] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SeqOfZuka;
 
 /*** <<< STAT-DEFS [SeqOfZuka] >>> ***/
 
