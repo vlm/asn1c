@@ -30,6 +30,3 @@ is not tested.
 
 6. XER codec does not support integer (INTEGER, ENUMERATED) values
 outside the signed long range.
-
-7. XER codecs do not handle the identifiers in BIT STRING type.
-
