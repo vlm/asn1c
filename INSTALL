@@ -2,9 +2,13 @@ QUICK START INSTALLATION
 ========================
 
 ./configure	# Configure the build infrastructure for your platform
+
 make		# Build the libraries and the compiler
+
 make check	# Ensure that the code is still behaving well
 		# after compiling on your platform
+		# PLEASE CONTACT ME IF THIS FAILS ON YOUR PLATFORM!
+
 make install	# Install the compiler into standard location
 
 man asn1c	# Display the asn1c manual page
