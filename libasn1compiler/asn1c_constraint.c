@@ -207,6 +207,20 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		return 0;
 	}
 
+
+	if(range->left.type == ARE_MIN
+	&& range->right.type == ARE_MAX) {
+		/*
+		 * The permitted alphabet constraint checker code guarantees
+		 * that either both bounds (left/right) are present, or
+		 * they're absent simultaneously. Thus, this assertion
+		 * legitimately holds true.
+		 */
+		assert(range->el_count == 0);
+		/* The full range is specified. Ignore it. */
+		return 0;
+	}
+
 	range_start = range->left.value;
 	range_stop = range->right.value;
 	assert(range->left.type == ARE_VALUE);
@@ -369,28 +383,28 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 		natural_stop = 0xffffffffUL;
 		break;
 	case ASN_STRING_UniversalString:
-		OUT("const uint32_t *ch = st->buf;\n");
-		OUT("const uint32_t *end = ch + st->size;\n");
+		OUT("const uint8_t *ch = st->buf;\n");
+		OUT("const uint8_t *end = ch + st->size;\n");
 		OUT("\n");
-		OUT("if(st->size % 4) return -1; /* (size%4)! */\n");
-		OUT("for(; ch < end; ch++) {\n");
+		OUT("if(st->size %% 4) return -1; /* (size%%4)! */\n");
+		OUT("for(; ch < end; ch += 4) {\n");
 			INDENT(+1);
-			OUT("uint32_t cv = (((const uint8_t *)ch)[0] << 24)\n");
-			OUT("\t\t| (((const uint8_t *)ch)[1] << 16)\n");
-			OUT("\t\t| (((const uint8_t *)ch)[2] << 8)\n");
-			OUT("\t\t|  ((const uint8_t *)ch)[3];\n");
+			OUT("uint32_t cv = (ch[0] << 24)\n");
+			OUT("\t\t| (ch[1] << 16)\n");
+			OUT("\t\t| (ch[2] << 8)\n");
+			OUT("\t\t|  ch[3];\n");
 			if(!range) OUT("if(cv > 255) return -1;\n");
 		natural_stop = 0xffffffffUL;
 		break;
 	case ASN_STRING_BMPString:
-		OUT("const uint16_t *ch = st->buf;\n");
-		OUT("const uint16_t *end = ch + st->size;\n");
+		OUT("const uint8_t *ch = st->buf;\n");
+		OUT("const uint8_t *end = ch + st->size;\n");
 		OUT("\n");
-		OUT("if(st->size % 2) return -1; /* (size%2)! */\n");
-		OUT("for(; ch < end; ch++) {\n");
+		OUT("if(st->size %% 2) return -1; /* (size%%2)! */\n");
+		OUT("for(; ch < end; ch += 2) {\n");
 			INDENT(+1);
-			OUT("uint16_t cv = (((const uint8_t *)ch)[0] << 8)\n");
-			OUT("\t\t| ((const uint8_t *)ch)[1];\n");
+			OUT("uint16_t cv = (ch[0] << 8)\n");
+			OUT("\t\t| ch[1];\n");
 			if(!range) OUT("if(cv > 255) return -1;\n");
 		natural_stop = 0xffff;
 		break;
