@@ -130,7 +130,7 @@ static asn_TYPE_tag2member_t asn_DEF_PDU_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 5, 0, 0 }, /* extensibleSequence at 24 */
     { (ASN_TAG_CLASS_CONTEXT | (6 << 2)), 6, 0, 0 }, /* setOfNULL at 25 */
     { (ASN_TAG_CLASS_CONTEXT | (7 << 2)), 7, 0, 0 }, /* setOfEnums at 26 */
-    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 }, /* seqOfZuka at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 } /* seqOfZuka at 27 */
 };
 static asn_CHOICE_specifics_t asn_DEF_PDU_specs = {
 	sizeof(struct PDU),
@@ -228,7 +228,7 @@ static asn_TYPE_tag2member_t asn_DEF_Sequence_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* integer at 32 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* sequence at 33 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* bits at 34 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* string at 35 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 } /* string at 35 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_Sequence_specs = {
 	sizeof(struct Sequence),
@@ -317,7 +317,7 @@ static ber_tlv_tag_t asn_DEF_Set_tags[] = {
 };
 static asn_TYPE_tag2member_t asn_DEF_Set_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* roid at 39 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* opaque at 40 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* opaque at 40 */
 };
 static uint8_t asn_DEF_Set_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (0 << 6)
@@ -405,7 +405,7 @@ static ber_tlv_tag_t asn_DEF_ExtensibleSet_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_ExtensibleSet_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 44 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* string at 44 */
 };
 static uint8_t asn_DEF_ExtensibleSet_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
@@ -492,7 +492,7 @@ static ber_tlv_tag_t asn_DEF_ExtensibleSequence_tags[] = {
 };
 static asn_TYPE_tag2member_t asn_DEF_ExtensibleSequence_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 49 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* integer at 51 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* integer at 51 */
 };
 static asn_SEQUENCE_specifics_t asn_DEF_ExtensibleSequence_specs = {
 	sizeof(struct ExtensibleSequence),
@@ -657,6 +657,10 @@ asn_TYPE_descriptor_t asn_DEF_SetOfNULL = {
 
 /*** <<< DEPS [SetOfEnums] >>> ***/
 
+typedef enum SetOfEnums_Member {
+	SetOfEnums_Member_one	= 0,
+	SetOfEnums_Member_two	= 1
+} SetOfEnums_Member_e;
 extern asn_TYPE_descriptor_t asn_DEF_SetOfEnums;
 
 /*** <<< TYPE-DECLS [SetOfEnums] >>> ***/
@@ -669,13 +673,132 @@ typedef struct SetOfEnums {
 	asn_struct_ctx_t _asn_ctx;
 } SetOfEnums_t;
 
+/*** <<< FUNC-DECLS [SetOfEnums] >>> ***/
+
+/* extern asn_TYPE_descriptor_t asn_DEF_SetOfEnums_Member;	// (Use -fall-defs-global to expose) */
+
+/*** <<< CODE [SetOfEnums] >>> ***/
+
+static int
+SetOfEnums_Member_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	return td->check_constraints(td, sptr, app_errlog, app_key);
+}
+
+/*
+ * This type is implemented using ENUMERATED,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+SetOfEnums_Member_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
+	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
+	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
+	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
+	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
+	td->elements       = asn_DEF_ENUMERATED.elements;
+	td->elements_count = asn_DEF_ENUMERATED.elements_count;
+	td->specifics      = asn_DEF_ENUMERATED.specifics;
+}
+
+static void
+SetOfEnums_Member_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	SetOfEnums_Member_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+static int
+SetOfEnums_Member_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	SetOfEnums_Member_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+static asn_dec_rval_t
+SetOfEnums_Member_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
+	SetOfEnums_Member_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+static asn_enc_rval_t
+SetOfEnums_Member_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	SetOfEnums_Member_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+static asn_dec_rval_t
+SetOfEnums_Member_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+	SetOfEnums_Member_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+static asn_enc_rval_t
+SetOfEnums_Member_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	SetOfEnums_Member_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
 /*** <<< STAT-DEFS [SetOfEnums] >>> ***/
+
+static asn_INTEGER_enum_map_t asn_MAP_SetOfEnums_Member_enum2value[] = {
+	{ "one",	0 },
+	{ "two",	1 }
+};
+static asn_INTEGER_enum_map_t asn_MAP_SetOfEnums_Member_value2enum[] = {
+	{ "one",	0 },
+	{ "two",	1 }
+};
+static asn_INTEGER_specifics_t asn_DEF_SetOfEnums_Member_specs = {
+	/* Two name<->value maps sorted differently;
+	 * this may seem like a waste of space,
+	 * but the strings actually share it.
+	 */
+	asn_MAP_SetOfEnums_Member_enum2value,	/* "tag" => N; sorted by tag */
+	asn_MAP_SetOfEnums_Member_value2enum,	/* N => "tag"; sorted by N */
+	2,	/* Number of elements in the maps */
+	0	/* Enumeration is not extensible */
+};
+static ber_tlv_tag_t asn_DEF_SetOfEnums_Member_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_SetOfEnums_Member = {
+	"",
+	"",
+	SetOfEnums_Member_free,
+	SetOfEnums_Member_print,
+	SetOfEnums_Member_constraint,
+	SetOfEnums_Member_decode_ber,
+	SetOfEnums_Member_encode_der,
+	SetOfEnums_Member_decode_xer,
+	SetOfEnums_Member_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_SetOfEnums_Member_tags,
+	sizeof(asn_DEF_SetOfEnums_Member_tags)
+		/sizeof(asn_DEF_SetOfEnums_Member_tags[0]), /* 1 */
+	asn_DEF_SetOfEnums_Member_tags,	/* Same as above */
+	sizeof(asn_DEF_SetOfEnums_Member_tags)
+		/sizeof(asn_DEF_SetOfEnums_Member_tags[0]), /* 1 */
+	0, 0,	/* Defined elsewhere */
+	&asn_DEF_SetOfEnums_Member_specs	/* Additional specs */
+};
 
 static asn_TYPE_member_t asn_MBR_SetOfEnums[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_ENUMERATED,
+		.type = (void *)&asn_DEF_SetOfEnums_Member,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -686,7 +809,7 @@ static ber_tlv_tag_t asn_DEF_SetOfEnums_tags[] = {
 static asn_SET_OF_specifics_t asn_DEF_SetOfEnums_specs = {
 	sizeof(struct SetOfEnums),
 	offsetof(struct SetOfEnums, _asn_ctx),
-	0,	/* XER encoding is XMLDelimitedItemList */
+	1,	/* XER encoding is XMLValueList */
 };
 asn_TYPE_descriptor_t asn_DEF_SetOfEnums = {
 	"SetOfEnums",
@@ -719,6 +842,10 @@ asn_TYPE_descriptor_t asn_DEF_SetOfEnums = {
 
 /*** <<< DEPS [SequenceOf] >>> ***/
 
+typedef enum id {
+	id_one	= 1,
+	id_two	= 2
+} id_e;
 extern asn_TYPE_descriptor_t asn_DEF_SequenceOf;
 
 /*** <<< TYPE-DECLS [SequenceOf] >>> ***/
@@ -731,13 +858,134 @@ typedef struct SequenceOf {
 	asn_struct_ctx_t _asn_ctx;
 } SequenceOf_t;
 
+/*** <<< FUNC-DECLS [SequenceOf] >>> ***/
+
+/* extern asn_TYPE_descriptor_t asn_DEF_id;	// (Use -fall-defs-global to expose) */
+
+/*** <<< CODE [SequenceOf] >>> ***/
+
+static int
+id_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
+	return td->check_constraints(td, sptr, app_errlog, app_key);
+}
+
+/*
+ * This type is implemented using INTEGER,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+id_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_INTEGER.free_struct;
+	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
+	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
+	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
+	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
+	td->elements       = asn_DEF_INTEGER.elements;
+	td->elements_count = asn_DEF_INTEGER.elements_count;
+	td->specifics      = asn_DEF_INTEGER.specifics;
+}
+
+static void
+id_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	id_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+static int
+id_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	id_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+static asn_dec_rval_t
+id_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, void *bufptr, size_t size, int tag_mode) {
+	id_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+static asn_enc_rval_t
+id_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	id_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+static asn_dec_rval_t
+id_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, void *bufptr, size_t size) {
+	id_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+static asn_enc_rval_t
+id_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	id_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
 /*** <<< STAT-DEFS [SequenceOf] >>> ***/
+
+static asn_INTEGER_enum_map_t asn_MAP_id_enum2value[] = {
+	{ "one",	1 },
+	{ "two",	2 }
+	/* This list is extensible */
+};
+static asn_INTEGER_enum_map_t asn_MAP_id_value2enum[] = {
+	{ "one",	1 },
+	{ "two",	2 }
+	/* This list is extensible */
+};
+static asn_INTEGER_specifics_t asn_DEF_id_specs = {
+	/* Two name<->value maps sorted differently;
+	 * this may seem like a waste of space,
+	 * but the strings actually share it.
+	 */
+	asn_MAP_id_enum2value,	/* "tag" => N; sorted by tag */
+	asn_MAP_id_value2enum,	/* N => "tag"; sorted by N */
+	2,	/* Number of elements in the maps */
+	1	/* Enumeration is extensible */
+};
+static ber_tlv_tag_t asn_DEF_id_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_id = {
+	"",
+	"",
+	id_free,
+	id_print,
+	id_constraint,
+	id_decode_ber,
+	id_encode_der,
+	id_decode_xer,
+	id_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_id_tags,
+	sizeof(asn_DEF_id_tags)
+		/sizeof(asn_DEF_id_tags[0]), /* 1 */
+	asn_DEF_id_tags,	/* Same as above */
+	sizeof(asn_DEF_id_tags)
+		/sizeof(asn_DEF_id_tags[0]), /* 1 */
+	0, 0,	/* Defined elsewhere */
+	&asn_DEF_id_specs	/* Additional specs */
+};
 
 static asn_TYPE_member_t asn_MBR_SequenceOf[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = (void *)&asn_DEF_id,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "id"
 		},
