@@ -28,8 +28,8 @@ asn_struct_free_f OCTET_STRING_free;
 
 /*
  * This function clears the previous value of the OCTET STRING (if any)
- * and then allocates a new memory and makes s point to the newly allocated
- * memory. If size = -1, the size of the original string will be determined
+ * and then allocates a new memory and returns a pointer to it.
+ * If size = -1, the size of the original string will be determined
  * using strlen(str).
  * If str equals to NULL, the function will silently clear the
  * current contents of the OCTET STRING.

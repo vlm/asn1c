@@ -150,7 +150,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	 * This is a some sort of a hack.
 	 * The OCTET STRING decoder is being used in BIT STRING mode.
 	 */
-	int is_bit_str = td->specifics?1:0;
+	int is_bit_str = (td->specifics==(void *)-1)?1:0;
 
 	ASN_DEBUG("Decoding %s as %s (%ld)",
 		td->name,
@@ -395,6 +395,8 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	der_enc_rval_t erval;
 	OCTET_STRING_t *st = (OCTET_STRING_t *)ptr;
 	int add_byte = 0;
+	int is_bit_str = (td->specifics == (void *)-1);
+	int is_ANY_type = (td->specifics == (void *)1;
 
 	ASN_DEBUG("%s %s as OCTET STRING",
 		cb?"Estimating":"Encoding", sd->name);
@@ -402,7 +404,7 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	/*
 	 * Canonicalize BIT STRING.
 	 */
-	if(sd->specifics && st->buf) {
+	if(is_bit_str && st->buf) {
 		switch(st->size) {
 		case 0: add_byte = 1; break;
 		case 1: st->buf[0] = 0; break;
@@ -412,12 +414,16 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		}
 	}
 
-	erval.encoded = der_write_tags(sd, st->size + add_byte, tag_mode, tag,
-		cb, app_key);
-	if(erval.encoded == -1) {
-		erval.failed_type = sd;
-		erval.structure_ptr = ptr;
-		return erval;
+	if(is_ANY_type) {
+		erval.encoded = 0;
+	} else {
+		erval.encoded = der_write_tags(sd, st->size + add_byte,
+			tag_mode, tag, cb, app_key);
+		if(erval.encoded == -1) {
+			erval.failed_type = sd;
+			erval.structure_ptr = ptr;
+			return erval;
+		}
 	}
 
 	if(cb) {

@@ -6,6 +6,7 @@
 # $Id$
 #
 
+ANY.h ANY.h
 BIT_STRING.h BIT_STRING.c
 BMPString.h BMPString.c
 BOOLEAN.h BOOLEAN.c
@@ -25,7 +26,7 @@ ObjectDescriptor.h ObjectDescriptor.c GraphicString.h
 PrintableString.h PrintableString.c
 RELATIVE-OID.h RELATIVE-OID.c OBJECT-IDENTIFIER.h
 T61String.h T61String.c
-TeletexString.h TeletexString.c
+TeletexString.h TeletexString.c	
 UTCTime.h UTCTime.c GeneralizedTime.h
 UTF8String.h UTF8String.c
 UniversalString.h UniversalString.c
