@@ -223,6 +223,50 @@ check_speed() {
 	return 0;
 }
 
+static void check_parse(const char *oid_txt, int retval) {
+	int ret;
+	long l[2];
+	char *p;
+
+	ret = OBJECT_IDENTIFIER_parse_arcs(oid_txt, -1, l, 2, &p);
+	printf("[%s] => %d == %d\n", oid_txt, ret, retval);
+	assert(ret == retval);
+	assert(p >= oid_txt);
+}
+
+static void check_xer(int expect_arcs, char *xer) {
+	asn_dec_rval_t rc;
+	RELATIVE_OID_t *st = 0;
+	long arcs[10];
+	int ret;
+	int i;
+
+	printf("[%s] => ", xer); fflush(stdout);
+	rc = asn_DEF_RELATIVE_OID.xer_decoder(0,
+		&asn_DEF_RELATIVE_OID, (void **)&st, "t",
+			xer, strlen(xer));
+	if(expect_arcs == -1) {
+		if(rc.code != RC_OK)
+			return;
+	}
+	assert(rc.code == RC_OK);
+
+	ret = RELATIVE_OID_get_arcs(st, arcs, sizeof(arcs[0]),
+			sizeof(arcs)/sizeof(arcs[0]));
+	assert(ret < 10);
+	if(expect_arcs == -1) {
+		assert(ret == -1);
+		return;
+	}
+	for(i = 0; i < ret; i++) {
+		if(i) printf(".");
+		printf("%ld", arcs[i]);
+		assert(arcs[i] == i + 1);
+	}
+	printf(": %d == %d\n", ret, expect_arcs);
+	assert(ret == expect_arcs);
+}
+
 #define	CHECK_OID(n)	check_OID(buf ## n, sizeof(buf ## n),		\
 		buf ## n ## _check,					\
 		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
@@ -333,6 +377,42 @@ main() {
 	CHECK_REGEN_OID(18);
 	CHECK_REGEN_OID(19);
 	CHECK_REGEN_OID(20);
+
+	check_parse("", 0);
+	check_parse(" ", 0);
+	check_parse(" ", 0);
+	check_parse(".", -1);
+	check_parse(" .", -1);
+	check_parse(" 1", 1);
+	check_parse(" 1.2", 2);
+	check_parse(" 1.", -1);
+	check_parse(" 1. ", -1);
+	check_parse("1. ", -1);
+	check_parse("1.2", 2);
+	check_parse("10.30.234.234", 4);
+	check_parse("10.30.234.234 ", 4);
+	check_parse("10.30.234. 234 ", -1);
+	check_parse("10.30.234.234.", -1);
+	check_parse("1.2000000000.3", 3);
+	check_parse("1.2147483647.3", 3);
+	if(sizeof(long) == 4) {
+		check_parse("1.2147483648.3", -1);	/* overflow on ILP32 */
+		check_parse("1.3000000000.3", -1);
+		check_parse("1.4000000000.3", -1);
+		check_parse("1.5000000000.3", -1);
+		check_parse("1.6000000000.3", -1);
+		check_parse("1.9000000000.3", -1);
+	} else {
+		check_parse("1.2147483648.3", 3);
+	}
+	check_parse("1.900a0000000.3", -1);
+	check_parse("1.900a.3", -1);
+
+	check_xer(0, "<t></t>");
+	check_xer(2, "<t>1.2</t>");
+	check_xer(3, "<t>1.2.3</t>");
+	check_xer(3, "<t> 1.2.3 </t>");
+	check_xer(-1, "<t>1.2.3 1</t>");
 
 	for(i = 0; i < 100000; i++) {
 		int bufA_check[3] = { 2, i, rand() };

@@ -23,7 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
-	0,				/* Not implemented yet */
+	RELATIVE_OID_decode_xer,
 	RELATIVE_OID_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_RELATIVE_OID_tags,
@@ -84,6 +84,50 @@ RELATIVE_OID_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		return -1;
 
 	return (cb(" }", 2, app_key) < 0) ? -1 : 0;
+}
+
+static ssize_t
+RELATIVE_OID__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
+	char *endptr;
+	long s_arcs[6];
+	long *arcs = s_arcs;
+	int arcs_count;
+	int ret;
+
+	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
+		(const char *)chunk_buf, chunk_size,
+		arcs, 6, &endptr);
+	if(arcs_count < 0)
+		return -1;	/* Expecting at least zero arcs */
+	if(arcs_count > 6) {
+		arcs = (long *)MALLOC(arcs_count * sizeof(long));
+		if(!arcs) return -1;
+		ret = OBJECT_IDENTIFIER_parse_arcs(
+			(const char *)chunk_buf, chunk_size,
+			arcs, arcs_count, &endptr);
+		if(ret != arcs_count)
+			return -1;	/* assert?.. */
+	}
+
+	/*
+	 * Convert arcs into BER representation.
+	 */
+	ret = RELATIVE_OID_set_arcs(st, arcs, sizeof(*arcs), arcs_count);
+	if(ret) return -1;
+	if(arcs != s_arcs) FREEMEM(arcs);
+
+	return endptr - (char *)chunk_buf;
+}
+
+asn_dec_rval_t
+RELATIVE_OID_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+
+	return xer_decode_primitive(opt_codec_ctx, td,
+		sptr, sizeof(RELATIVE_OID_t), opt_mname,
+			buf_ptr, size, RELATIVE_OID__xer_body_decode);
 }
 
 asn_enc_rval_t

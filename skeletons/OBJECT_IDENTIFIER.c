@@ -22,7 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OBJECT_IDENTIFIER_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
-	0,				/* Not implemented yet */
+	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
@@ -261,6 +261,49 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 	}
 
 	return wrote_len;
+}
+
+static ssize_t
+OBJECT_IDENTIFIER__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
+	char *endptr;
+	long s_arcs[10];
+	long *arcs = s_arcs;
+	int arcs_count;
+	int ret;
+
+	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
+		(const char *)chunk_buf, chunk_size, arcs, 10, &endptr);
+	if(arcs_count <= 0)
+		return -1;	/* Expecting more than zero arcs */
+	if(arcs_count > 10) {
+		arcs = (long *)MALLOC(arcs_count * sizeof(long));
+		if(!arcs) return -1;
+		ret = OBJECT_IDENTIFIER_parse_arcs(
+			(const char *)chunk_buf, chunk_size,
+			arcs, arcs_count, &endptr);
+		if(ret != arcs_count)
+			return -1;	/* assert?.. */
+	}
+
+	/*
+	 * Convert arcs into BER representation.
+	 */
+	ret = OBJECT_IDENTIFIER_set_arcs(st, arcs, sizeof(*arcs), arcs_count);
+	if(ret) return -1;
+	if(arcs != s_arcs) FREEMEM(arcs);
+
+	return endptr - (char *)chunk_buf;
+}
+
+asn_dec_rval_t
+OBJECT_IDENTIFIER_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+
+	return xer_decode_primitive(opt_codec_ctx, td,
+		sptr, sizeof(OBJECT_IDENTIFIER_t), opt_mname,
+			buf_ptr, size, OBJECT_IDENTIFIER__xer_body_decode);
 }
 
 asn_enc_rval_t
@@ -595,4 +638,88 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 
 	return 0;
 }
+
+
+int
+OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
+	long *arcs, unsigned int arcs_slots, char **oid_text_end) {
+	unsigned int arcs_count = 0;
+	const char *oid_end;
+	long value = 0;
+	enum {
+		ST_SKIPSPACE,
+		ST_WAITDIGITS,	/* Next character is expected to be a digit */
+		ST_DIGITS,
+	} state = ST_SKIPSPACE;
+
+	if(!oid_text || oid_txt_length < -1 || (arcs_slots && !arcs)) {
+		if(oid_text_end) (const char *)*oid_text_end = oid_text;
+		errno = EINVAL;
+		return -1;
+	}
+
+	if(oid_txt_length == -1)
+		oid_txt_length = strlen(oid_text);
+
+	for(oid_end = oid_text + oid_txt_length; oid_text<oid_end; oid_text++) {
+	    switch(*oid_text) {
+	    case 0x09: case 0x0a: case 0x0d: case 0x20:	/* whitespace */
+		if(state == ST_SKIPSPACE) {
+			continue;
+		} else {
+			break;	/* Finish */
+		}
+	    case 0x2e:	/* '.' */
+		if(state != ST_DIGITS
+		|| (oid_text + 1) == oid_end) {
+			state = ST_WAITDIGITS;
+			break;
+		}
+		if(arcs_count < arcs_slots)
+			arcs[arcs_count] = value;
+		arcs_count++;
+		state = ST_WAITDIGITS;
+		continue;
+	    case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
+	    case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+		if(state != ST_DIGITS) {
+			state = ST_DIGITS;
+			value = 0;
+		}
+		if(1) {
+			long new_value = value * 10;
+			if(new_value / 10 != value
+			|| (value = new_value + (*oid_text - 0x30)) < 0) {
+				/* Overflow */
+				state = ST_WAITDIGITS;
+				break;
+			}
+			continue;
+		}
+	    default:
+		/* Unexpected symbols */
+		state = ST_WAITDIGITS;
+		break;
+	    } /* switch() */
+	    break;
+	} /* for() */
+
+
+	if(oid_text_end) (const char *)*oid_text_end = oid_text;
+
+	/* Finalize last arc */
+	switch(state) {
+	case ST_WAITDIGITS:
+		errno = EINVAL;
+		return -1;
+	case ST_DIGITS:
+		if(arcs_count < arcs_slots)
+			arcs[arcs_count] = value;
+		arcs_count++;
+		/* Fall through */
+	default:
+		return arcs_count;
+	}
+}
+
 
