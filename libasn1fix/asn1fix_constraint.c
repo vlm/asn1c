@@ -2,12 +2,14 @@
 #include "asn1fix_constraint.h"
 #include "asn1fix_crange.h"
 
-static void _remove_exceptions(arg_t *arg, asn1p_constraint_t *ct);
-static int constraint_value_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_value_t **value, enum asn1p_constraint_type_e real_ctype);
+static void _remove_extensions(arg_t *arg, asn1p_constraint_t *ct);
+static int constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct);
+static int constraint_value_resolve(arg_t *arg, asn1p_value_t **value, enum asn1p_constraint_type_e real_ctype);
 
 int
 asn1constraint_pullup(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *top_parent;
 	asn1p_constraint_t *ct_parent;
 	asn1p_constraint_t *ct_expr;
 	int ret;
@@ -63,6 +65,17 @@ asn1constraint_pullup(arg_t *arg) {
 	if(!ct_parent && !ct_expr)
 		return 0;	/* No constraints to consider */
 
+	/*
+	 * Resolve constraints, if not already resolved.
+	 */
+	top_parent = asn1f_find_terminal_type(arg, arg->expr);
+	ret = asn1constraint_resolve(arg, ct_expr,
+		top_parent ? top_parent->expr_type : A1TC_INVALID, 0);
+	if(ret) return ret;
+
+	/*
+	 * Copy parent type constraints.
+	 */
 	if(ct_parent) {
 		ct_parent = asn1p_constraint_clone(ct_parent);
 		assert(ct_parent);
@@ -89,7 +102,7 @@ asn1constraint_pullup(arg_t *arg) {
 		/*
 		 * If we have a parent, remove all the extensions (46.4).
 		 */
-		_remove_exceptions(arg, ct_parent);
+		_remove_extensions(arg, ct_parent);
 
 		expr->combined_constraints = ct_parent;
 		if(ct_expr->type == ACT_CA_SET) {
@@ -119,7 +132,7 @@ asn1constraint_pullup(arg_t *arg) {
 }
 
 int
-asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, asn1p_expr_type_e etype, enum asn1p_constraint_type_e effective_type) {
+asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e etype, enum asn1p_constraint_type_e effective_type) {
 	enum asn1p_constraint_type_e real_constraint_type;
 	unsigned int el;
 	int rvalue = 0;
@@ -183,18 +196,23 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 	/*
 	 * Resolve all possible references, wherever they occur.
 	 */
+	if(ct->containedSubtype) {
+		assert(ct->containedSubtype->type == ATV_REFERENCED);
+		ret = constraint_type_resolve(arg, ct);
+		RET2RVAL(ret, rvalue);
+	}
 	if(ct->value && ct->value->type == ATV_REFERENCED) {
-		ret = constraint_value_resolve(arg, mod,
+		ret = constraint_value_resolve(arg,
 			&ct->value, real_constraint_type);
 		RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_start && ct->range_start->type == ATV_REFERENCED) {
-		ret = constraint_value_resolve(arg, mod,
+		ret = constraint_value_resolve(arg,
 			&ct->range_start, real_constraint_type);
 		RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_stop && ct->range_stop->type == ATV_REFERENCED) {
-		ret = constraint_value_resolve(arg, mod,
+		ret = constraint_value_resolve(arg,
 			&ct->range_stop, real_constraint_type);
 		RET2RVAL(ret, rvalue);
 	}
@@ -203,7 +221,7 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 	 * Proceed recursively.
 	 */
 	for(el = 0; el < ct->el_count; el++) {
-		ret = asn1constraint_resolve(arg, mod, ct->elements[el],
+		ret = asn1constraint_resolve(arg, ct->elements[el],
 			etype, effective_type);
 		RET2RVAL(ret, rvalue);
 	}
@@ -212,13 +230,13 @@ asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, 
 }
 
 static void
-_remove_exceptions(arg_t *arg, asn1p_constraint_t *ct) {
+_remove_extensions(arg_t *arg, asn1p_constraint_t *ct) {
 	unsigned int i;
 
 	for(i = 0; i < ct->el_count; i++) {
 		if(ct->elements[i]->type == ACT_EL_EXT)
 			break;
-		_remove_exceptions(arg, ct->elements[i]);
+		_remove_extensions(arg, ct->elements[i]);
 	}
 
 	/* Remove the elements at and after the extensibility mark */
@@ -232,16 +250,71 @@ _remove_exceptions(arg_t *arg, asn1p_constraint_t *ct) {
 		ct->elements[i] = 0;
 }
 
+static int
+constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
+	asn1p_expr_t *rtype;
+	arg_t tmparg;
+	int ret;
+
+	DEBUG("(\"%s\")", asn1f_printable_value(ct->containedSubtype));
+
+	assert(ct->containedSubtype->type == ATV_REFERENCED);
+
+	rtype = asn1f_lookup_symbol(arg, arg->expr->module,
+		ct->containedSubtype->value.reference);
+	if(!rtype) {
+		FATAL("Cannot find type \"%s\" in constraints at line %d",
+			asn1f_printable_value(ct->containedSubtype),
+			ct->_lineno);
+		return -1;
+	}
+
+
+	tmparg = *arg;
+	tmparg.expr = rtype;
+	tmparg.mod = rtype->module;
+	ret = asn1constraint_pullup(&tmparg);
+	if(ret) return ret;
+
+	if(rtype->combined_constraints) {
+		asn1p_constraint_t *ct_expr;
+		ct_expr = asn1p_constraint_clone(rtype->combined_constraints);
+		assert(ct_expr);
+
+		_remove_extensions(arg, ct_expr);
+
+		if(ct_expr->type == ACT_CA_SET) {
+			unsigned int i;
+			for(i = 0; i < ct_expr->el_count; i++) {
+				if(asn1p_constraint_insert(
+					ct, ct_expr->elements[i])) {
+					asn1p_constraint_free(ct_expr);
+					return -1;
+				} else {
+					ct_expr->elements[i] = 0;
+				}
+			}
+			asn1p_constraint_free(ct_expr);
+		} else {
+			ret = asn1p_constraint_insert(ct, ct_expr);
+			assert(ret == 0);
+		}
+
+		ct->type = ACT_CA_SET;
+		asn1p_value_free(ct->containedSubtype);
+		ct->containedSubtype = NULL;
+	}
+
+	return 0;
+}
 
 static int
-constraint_value_resolve(arg_t *arg, asn1p_module_t *mod,
+constraint_value_resolve(arg_t *arg,
 	asn1p_value_t **value, enum asn1p_constraint_type_e real_ctype) {
 	asn1p_expr_t static_expr;
 	arg_t tmp_arg;
 	int rvalue = 0;
 	int ret;
-
-	(void)mod;
 
 	DEBUG("(\"%s\", within <%s>)",
 		asn1f_printable_value(*value),
@@ -260,3 +333,4 @@ constraint_value_resolve(arg_t *arg, asn1p_module_t *mod,
 
 	return rvalue;
 }
+

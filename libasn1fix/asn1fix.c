@@ -381,8 +381,7 @@ asn1f_resolve_constraints(arg_t *arg) {
 
 	DEBUG("(%s)", arg->expr->Identifier);
 
-	ret = asn1constraint_resolve(arg, arg->expr->module,
-		arg->expr->constraints, etype, 0);
+	ret = asn1constraint_resolve(arg, arg->expr->constraints, etype, 0);
 	RET2RVAL(ret, rvalue);
 
 	return rvalue;
