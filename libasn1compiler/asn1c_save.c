@@ -10,6 +10,7 @@ static int asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *);
 static int asn1c_print_streams(arg_t *arg);
 static int asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *);
 static int asn1c_copy_over(arg_t *arg, char *path);
+static int identical_files(const char *fname1, const char *fname2);
 
 int
 asn1c_save_compiled_output(arg_t *arg, const char *datadir) {
@@ -41,7 +42,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir) {
 		return 0;	/* Finished */
 	}
 
-	mkf = asn1c_open_file("Makefile.am", ".sample");
+	mkf = asn1c_open_file("Makefile.am", ".sample", 0);
 	if(mkf == NULL) {
 		perror("Makefile.am.sample");
 		return -1;
@@ -174,7 +175,11 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	compiler_streams_t *cs = expr->data;
 	out_chunk_t *ot;
 	FILE *fp_c, *fp_h;
+	char *tmpname_c, *tmpname_h;
+	char *name_buf;
 	char *header_id;
+	const char *c_retained = "";
+	const char *h_retained = "";
 
 	if(cs == NULL) {
 		fprintf(stderr, "Cannot compile %s at line %d\n",
@@ -182,11 +187,11 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 		return -1;
 	}
 
-	fp_c = asn1c_open_file(expr->Identifier, ".c");
-	fp_h = asn1c_open_file(expr->Identifier, ".h");
+	fp_c = asn1c_open_file(expr->Identifier, ".c", &tmpname_c);
+	fp_h = asn1c_open_file(expr->Identifier, ".h", &tmpname_h);
 	if(fp_c == NULL || fp_h == NULL) {
-		if(fp_c) fclose(fp_c);	/* lacks unlink() */
-		if(fp_h) fclose(fp_h);	/* lacks unlink() */
+		if(fp_c) { unlink(tmpname_c); free(tmpname_c); fclose(fp_c); }
+		if(fp_h) { unlink(tmpname_h); free(tmpname_h); fclose(fp_h); }
 		return -1;
 	}
 
@@ -250,9 +255,68 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 
 	fclose(fp_c);
 	fclose(fp_h);
-	fprintf(stderr, "Compiled %s.c\n", expr->Identifier);
-	fprintf(stderr, "Compiled %s.h\n", expr->Identifier);
+
+	name_buf = alloca(strlen(expr->Identifier) + 3);
+
+	sprintf(name_buf, "%s.c", expr->Identifier);
+	if(identical_files(name_buf, tmpname_c)) {
+		c_retained = " (contents unchanged)";
+		unlink(tmpname_c);
+	} else {
+		if(rename(tmpname_c, name_buf)) {
+			unlink(tmpname_c);
+			perror(tmpname_c);
+			return -1;
+		}
+	}
+
+	sprintf(name_buf, "%s.h", expr->Identifier);
+	if(identical_files(name_buf, tmpname_h)) {
+		h_retained = " (contents unchanged)";
+		unlink(tmpname_h);
+	} else {
+		if(rename(tmpname_h, name_buf)) {
+			unlink(tmpname_h);
+			perror(tmpname_h);
+			return -1;
+		}
+	}
+
+	free(tmpname_c);
+	free(tmpname_h);
+
+	fprintf(stderr, "Compiled %s.c%s\n",
+		expr->Identifier, c_retained);
+	fprintf(stderr, "Compiled %s.h%s\n",
+		expr->Identifier, h_retained);
 	return 0;
+}
+
+static int
+identical_files(const char *fname1, const char *fname2) {
+	char buf[2][8192];
+	FILE *fp1, *fp2;
+	size_t olen, nlen;
+	int retval = 1;	/* Files are identical */
+
+	fp1 = fopen(fname1, "r");
+	if(!fp1) { return 0; }
+	fp2 = fopen(fname2, "r");
+	if(!fp2) { fclose(fp1); return 0; }
+
+	while((olen = fread(buf[0], 1, sizeof(buf[0]), fp1))) {
+		nlen = fread(buf[1], 1, olen, fp2);
+		if(nlen != olen || memcmp(buf[0], buf[1], nlen)) {
+			retval = 0;
+			break;
+		}
+	}
+	nlen = fread(buf[1], 1, 1, fp2);
+	if(nlen) retval = 0;
+
+	fclose(fp1);
+	fclose(fp2);
+	return retval;
 }
 
 /*
@@ -265,9 +329,12 @@ real_copy(const char *src, const char *dst) {
 	size_t len;
 	int retval = 0;
 
-	fpsrc = fopen(src, "rb");
+	if(identical_files(src, dst))
+		return retval;	/* Success, no need to copy for real. */
+
+	fpsrc = fopen(src, "r");
 	if(!fpsrc) { errno = EIO; return -1; }
-	fpdst = fopen(src, "wb");
+	fpdst = asn1c_open_file(dst, "", 0);
 	if(!fpdst) { fclose(fpsrc); errno = EIO; return -1; }
 
 	while(!feof(fpsrc)) {
