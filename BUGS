@@ -29,3 +29,6 @@ decoder is perfectly capable of decoding such sequences.
 5. Encoding or decoding of structures with combined length greater than 16MB
 is not tested.
 
+6. XER decoding does not support integer (INTEGER, ENUMERATED) values
+outside the signed long range.
+
