@@ -102,7 +102,7 @@ SimpleType_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using ENUMERATED,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 SimpleType_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {

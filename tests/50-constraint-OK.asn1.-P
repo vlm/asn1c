@@ -32,7 +32,7 @@ Int1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using INTEGER,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Int1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -164,7 +164,7 @@ Int2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Int1,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Int2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -300,7 +300,7 @@ Int3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Int2,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Int3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -436,7 +436,7 @@ Int4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Int3,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Int4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -572,7 +572,7 @@ Int5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Int4,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Int5_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -708,7 +708,7 @@ ExtensibleExtensions_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using INTEGER,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 ExtensibleExtensions_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -822,7 +822,7 @@ Str1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using IA5String,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Str1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -970,7 +970,7 @@ Str2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Str1,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Str2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -1129,7 +1129,7 @@ Str3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Str2,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Str3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -1274,7 +1274,7 @@ Str4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using IA5String,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Str4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -1419,7 +1419,7 @@ PER_Visible_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using IA5String,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 PER_Visible_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -1564,7 +1564,7 @@ PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using PER_Visible,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 PER_Visible_2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -1709,7 +1709,7 @@ Not_PER_Visible_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using PER_Visible,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Not_PER_Visible_1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -1854,7 +1854,7 @@ Not_PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using PER_Visible,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Not_PER_Visible_2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -1999,7 +1999,7 @@ Not_PER_Visible_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using PER_Visible,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Not_PER_Visible_3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -2147,7 +2147,7 @@ SIZE_but_not_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using PER_Visible,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 SIZE_but_not_FROM_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -2295,7 +2295,7 @@ SIZE_and_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using PER_Visible,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 SIZE_and_FROM_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -2440,7 +2440,7 @@ Neither_SIZE_nor_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using PER_Visible,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Neither_SIZE_nor_FROM_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -2602,7 +2602,7 @@ Utf8_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Utf8_2,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Utf8_3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -2734,7 +2734,7 @@ Utf8_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Utf8_1,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Utf8_2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -2848,7 +2848,7 @@ Utf8_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using UTF8String,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Utf8_1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -3008,7 +3008,7 @@ VisibleIdentifier_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Identifier,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 VisibleIdentifier_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -3168,7 +3168,7 @@ Identifier_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using VisibleString,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 Identifier_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {

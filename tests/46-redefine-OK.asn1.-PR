@@ -32,7 +32,7 @@ PrimitiveType_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using OCTET_STRING,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 PrimitiveType_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -213,7 +213,7 @@ T_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using ConstructedType,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
