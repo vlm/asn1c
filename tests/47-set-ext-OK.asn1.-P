@@ -40,7 +40,7 @@ static asn_TYPE_member_t asn_MBR_T1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "i"
 		},
 };
@@ -128,7 +128,7 @@ static asn_TYPE_member_t asn_MBR_T2[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "i"
 		},
 };
@@ -213,7 +213,7 @@ static asn_TYPE_member_t asn_MBR_T3[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "i"
 		},
 };
@@ -288,7 +288,7 @@ static asn_TYPE_member_t asn_MBR_T4[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "i"
 		},
 };

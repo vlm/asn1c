@@ -44,7 +44,7 @@ static asn_TYPE_member_t asn_MBR_ConstructedType[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_PrimitiveType,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "field"
 		},
 };

@@ -27,14 +27,14 @@ static asn_TYPE_member_t asn_MBR_T1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "i"
 		},
 	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct T1, any),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_ANY,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "any"
 		},
 };
@@ -103,14 +103,14 @@ static asn_TYPE_member_t asn_MBR_T2[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "i"
 		},
 	{ ATF_POINTER, 1, offsetof(struct T2, any),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = (void *)&asn_DEF_ANY,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "any"
 		},
 };

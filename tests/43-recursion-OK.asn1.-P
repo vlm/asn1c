@@ -45,7 +45,7 @@ static asn_TYPE_member_t asn_MBR_t_member1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Test_structure_1,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -85,7 +85,7 @@ static asn_TYPE_member_t asn_MBR_t_member2[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Test_structure_1,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -125,28 +125,28 @@ static asn_TYPE_member_t asn_MBR_Test_structure_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_t_member1,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "t-member1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test_structure_1, t_member2),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_t_member2,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "t-member2"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Test_structure_1, t_member3),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Test_structure_1,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "t-member3"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test_structure_1, t_member4),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "t-member4"
 		},
 };
@@ -241,7 +241,7 @@ static asn_TYPE_member_t asn_MBR_or[] = {
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Choice_1,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -282,28 +282,28 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = (void *)&asn_DEF_Choice_1,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "and"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice_1, choice.or),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_or,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "or"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.not),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = (void *)&asn_DEF_Choice_1,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "not"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice_1, choice.other),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "other"
 		},
 };
@@ -382,7 +382,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_2[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Test_structure_3,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "m1"
 		},
 };
@@ -468,7 +468,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_3[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Test_structure_2,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "m1"
 		},
 };

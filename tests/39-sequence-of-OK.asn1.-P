@@ -34,7 +34,7 @@ static asn_TYPE_member_t asn_MBR_collection[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_T2,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
@@ -74,14 +74,14 @@ static asn_TYPE_member_t asn_MBR_T[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "int"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, collection),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_collection,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "collection"
 		},
 };
@@ -151,14 +151,14 @@ static asn_TYPE_member_t asn_MBR_T2[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_BOOLEAN,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "flag"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T2, str),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_UTF8String,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "str"
 		},
 };
