@@ -85,7 +85,13 @@ asn1c_make_identifier(int unsafe_only_spaces, char *arg1, ...) {
 
 char *
 asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
+	asn1p_expr_t *top_parent;
 	char *typename;
+
+	/* Rewind to the topmost parent expression */
+	if((top_parent = expr->parent_expr))
+		while(top_parent->parent_expr)
+			top_parent = top_parent->parent_expr;
 
 	switch(expr->expr_type) {
 	case A1TC_REFERENCE:
@@ -104,7 +110,9 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 
 			tmp.mod = tmp.expr->module;
 			return asn1c_type_name(&tmp, tmp.expr, _format);
-		} else if(_format == TNF_RSAFE) {
+		}
+
+		if(_format == TNF_RSAFE || _format == TNF_CTYPE) {
 			/*
 			 * The recursion-safe format is requested.
 			 * The problem here is that only constructed types
@@ -115,10 +123,13 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			asn1p_expr_t *terminal;
 			terminal = asn1f_find_terminal_type_ex(
 				arg->asn, arg->mod, arg->expr);
-			if(terminal
-			&& (terminal->expr_type
-				& (ASN_BASIC_MASK | ASN_STRING_MASK)))
-				_format = TNF_CTYPE;
+			if(terminal) {
+				if(terminal->expr_type
+					& (ASN_BASIC_MASK | ASN_STRING_MASK))
+					_format = TNF_CTYPE;
+				if(terminal == top_parent)
+					_format = TNF_RSAFE;
+			}
 		}
 		break;
 #if 0
