@@ -252,9 +252,6 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		printf("elm->name = %s\n", elm->name);
-		printf("elm->td = %p\n", elm->type);
-		printf("elm->td->name = %s\n", elm->type->name);
 		rval = elm->type->ber_decoder(elm->type,
 				memb_ptr2, ptr, LEFT,
 				elm->tag_mode);
