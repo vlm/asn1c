@@ -1076,7 +1076,7 @@ TypeDeclaration:
 	| TOK_ANY 					{
 		$$ = asn1p_expr_new(asn1p_lineno);
 		checkmem($$);
-		$$->expr_type = ASN_CONSTR_ANY;
+		$$->expr_type = ASN_TYPE_ANY;
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_ANY TOK_DEFINED TOK_BY Identifier		{
@@ -1087,10 +1087,9 @@ TypeDeclaration:
 		ret = asn1p_ref_add_component($$->reference,
 			$4, RLT_lowercase);
 		checkmem(ret == 0);
-		$$->expr_type = ASN_CONSTR_ANY;
+		$$->expr_type = ASN_TYPE_ANY;
 		$$->meta_type = AMT_TYPE;
 	}
-	;
 	/*
 	 * A parametrized assignment.
 	 */
