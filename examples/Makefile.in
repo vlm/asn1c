@@ -34,9 +34,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
 host_triplet = @host@
-target_triplet = @target@
 subdir = examples
 DIST_COMMON = README $(dist_bin_SCRIPTS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -164,7 +162,10 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 dist_bin_SCRIPTS = crfc2asn1.pl clyx2asn1.pl
-EXTRA_DIST = *.asn1 rfc*.txt
+ASN1_SOURCE_1 = rfc3280.txt
+ASN1_FILES_1 = rfc3280-PKIX1Explicit88.asn1 rfc3280-PKIX1Implicit88.asn1
+EXTRA_DIST = rfc*.txt
+CLEANFILES = *.asn1
 all: all-am
 
 .SUFFIXES:
@@ -284,6 +285,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-rm -f $(CONFIG_CLEAN_FILES)
@@ -348,6 +350,11 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-info-am
 	ps ps-am uninstall uninstall-am uninstall-dist_binSCRIPTS \
 	uninstall-info-am
 
+
+all: $(ASN1_FILES_1)
+
+$(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
+	./crfc2asn1.pl $(ASN1_SOURCE_1)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
