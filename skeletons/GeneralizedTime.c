@@ -10,7 +10,7 @@
 #endif	/* __NO_ASSERT_H__ */
 
 #ifdef	WIN32
-#define	localtime_r(tlocp, tmp)	(*tmp = localtime(&tlocp))
+#define	localtime_r(tlocp, tmp)	(*tmp = localtime(tlocp))
 #warning PLEASE STOP AND READ!
 #warning localtime_r is implemented via localtime(), which is not thread-safe. You must fix the code to insert appropriate locking if you want to use asn_GT2time() or asn_UT2time().
 #warning PLEASE STOP AND READ!
