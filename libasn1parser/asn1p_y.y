@@ -1088,12 +1088,6 @@ TypeDeclaration:
 	BasicType {
 		$$ = $1;
 	}
-	| BasicString {
-		$$ = asn1p_expr_new(yylineno);
-		checkmem($$);
-		$$->expr_type = $1;
-		$$->meta_type = AMT_TYPE;
-	}
 	| TOK_CHOICE '{' AlternativeTypeLists '}'	{
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
@@ -1429,6 +1423,7 @@ BasicTypeId:
 	| TOK_CHARACTER TOK_STRING { $$ = ASN_BASIC_CHARACTER_STRING; }
 	| TOK_UTCTime { $$ = ASN_BASIC_UTCTime; }
 	| TOK_GeneralizedTime { $$ = ASN_BASIC_GeneralizedTime; }
+	| BasicString { $$ = $1; }
 	;
 
 /*

@@ -3,6 +3,7 @@
 
 	* Added extra const qualifiers into the support code.
 	* More RFC variations supported in crfc2asn1.pl.
+	* Refined string values compatibility. (Test cases 77, 78).
 
 0.9.12:	2005-Mar-10
 
