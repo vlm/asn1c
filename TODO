@@ -16,3 +16,9 @@ MEDIUM:
 MINOR:
 
 1. Parsing of CONSTRAINED BY clauses
+
+2. If the generated target language source file is not different from
+the one already present (except maybe a compiler version in comments), 
+do not update the file. Prevents trashing file dependencies in multifile
+compilation.
+
