@@ -903,7 +903,7 @@ Here is how the buffer can be deserialized into the structure:
 Rectangle_t&nbsp;*
 simple_deserializer(const&nbsp;void&nbsp;*buffer,&nbsp;size_t&nbsp;buf_size)&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;Rectangle_t&nbsp;*rect&nbsp;=&nbsp;0;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Note&nbsp;this&nbsp;0!&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;ber_dec_rval_t&nbsp;rval;
+&nbsp;&nbsp;&nbsp;&nbsp;asn_dec_rval_t&nbsp;rval;
 &nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;rval&nbsp;=&nbsp;asn_DEF_Rectangle-&gt;ber_decoder(0,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,
@@ -1022,7 +1022,7 @@ mode continuation feature);
 <LI>... other codes may be defined as well.
 </LI>
 </UL>
-Together with the return code (.code) the ber_dec_rval_t type contains
+Together with the return code (.code) the asn_dec_rval_t type contains
 the number of bytes which is consumed from the buffer. In the previous
 hypothetical example of two buffers (of 100 and 200 bytes), the first
 call to ber_decode() would return with .code = RC_WMORE and .consumed

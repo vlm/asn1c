@@ -2087,7 +2087,7 @@ simple_deserializer(const void *buffer, size_t buf_size) {
     Rectangle_t *rect = 0;    /* Note this 0! */
 \layout LyX-Code
 
-    ber_dec_rval_t rval;
+    asn_dec_rval_t rval;
 \layout LyX-Code
 
  
@@ -2279,7 +2279,7 @@ RC_FAIL: General failure to decode the buffer;
  other codes may be defined as well.
 \layout Standard
 
-Together with the return code (.code) the ber_dec_rval_t type contains the
+Together with the return code (.code) the asn_dec_rval_t type contains the
  number of bytes which is consumed from the buffer.
  In the previous hypothetical example of two buffers (of 100 and 200 bytes),
  the first call to ber_decode() would return with .code = RC_WMORE and .consumed
@@ -2788,11 +2788,11 @@ The OpenSource ASN.1 Compiler.
 \layout Bibliography
 \bibitem [Dub00]{Dub00}
 
-Olivier Dubuisson -- 
+Olivier Dubuisson --- 
 \emph on 
 ASN.1 Communication between heterogeneous systems
 \emph default 
- -- Morgan Kaufmann Publishers, 2000.
+ --- Morgan Kaufmann Publishers, 2000.
  
 \begin_inset LatexCommand \htmlurl{http://asn1.elibel.tm.fr/en/book/}
 
