@@ -53,6 +53,7 @@ typedef enum asn1p_expr_type {
 	ASN_CONSTR_SEQUENCE_OF,		/* SEQUENCE OF */
 	ASN_CONSTR_SET_OF,		/* SET OF */
 	ASN_CONSTR_ANY,			/* ANY (deprecated) */
+
 	/*
 	 * ASN.1 Basic types
 	 */
@@ -75,20 +76,22 @@ typedef enum asn1p_expr_type {
 	/*
 	 * ASN.1 String types
 	 */
-#define	ASN_STRING_MASK		0x40	/* Every string type */
-	ASN_STRING_BMPString	= ASN_STRING_MASK,
+#define	ASN_STRING_KM_MASK	0x40	/* Known multiplier */
+#define	ASN_STRING_NKM_MASK	0x80	/* Not a known multiplier */
+#define	ASN_STRING_MASK		0xC0	/* Every restricted string type */
+	ASN_STRING_IA5String	= ASN_STRING_KM_MASK,
+	ASN_STRING_PrintableString,
+	ASN_STRING_VisibleString,
+	ASN_STRING_ISO646String,	/* aka VisibleString */
+	ASN_STRING_NumericString,
+	ASN_STRING_UniversalString,
+	ASN_STRING_BMPString,
+	ASN_STRING_UTF8String	= ASN_STRING_NKM_MASK,
 	ASN_STRING_GeneralString,
 	ASN_STRING_GraphicString,
-	ASN_STRING_IA5String,
-	ASN_STRING_ISO646String,
-	ASN_STRING_NumericString,
-	ASN_STRING_PrintableString,
 	ASN_STRING_TeletexString,
 	ASN_STRING_T61String,
-	ASN_STRING_UniversalString,
-	ASN_STRING_UTF8String,
 	ASN_STRING_VideotexString,
-	ASN_STRING_VisibleString,
 	ASN_STRING_ObjectDescriptor,
 	ASN_EXPR_TYPE_MAX
 } asn1p_expr_type_e;
