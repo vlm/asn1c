@@ -51,7 +51,7 @@ typedef struct T {
 		0,	/* Use generic outmost tag fetcher */
 		asn1_DEF_collection_tags,
 		sizeof(asn1_DEF_collection_tags)
-			/sizeof(asn1_DEF_collection_tags[0]),
+			/sizeof(asn1_DEF_collection_tags[0]), /* 1 */
 		1,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_collection_specs	/* Additional specs */
@@ -98,7 +98,7 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)
-		/sizeof(asn1_DEF_T_tags[0]),
+		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_T_specs	/* Additional specs */
@@ -169,7 +169,7 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T2_tags,
 	sizeof(asn1_DEF_T2_tags)
-		/sizeof(asn1_DEF_T2_tags[0]),
+		/sizeof(asn1_DEF_T2_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_T2_specs	/* Additional specs */

@@ -10,9 +10,9 @@
 /*
  * Method of determining the components presence
  */
-enum T1_PR_e {
+typedef enum T1_PR {
 	T1_PR_i,	/* Member i is present */
-};
+} T1_PR;
 extern asn1_TYPE_descriptor_t asn1_DEF_T1;
 
 /*** <<< TYPE-DECLS [T1] >>> ***/
@@ -73,7 +73,7 @@ asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T1_tags,
 	sizeof(asn1_DEF_T1_tags)
-		/sizeof(asn1_DEF_T1_tags[0]),
+		/sizeof(asn1_DEF_T1_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_T1_specs	/* Additional specs */
@@ -91,9 +91,9 @@ asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 /*
  * Method of determining the components presence
  */
-enum T2_PR_e {
+typedef enum T2_PR {
 	T2_PR_i,	/* Member i is present */
-};
+} T2_PR;
 extern asn1_TYPE_descriptor_t asn1_DEF_T2;
 
 /*** <<< TYPE-DECLS [T2] >>> ***/
@@ -154,7 +154,7 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T2_tags,
 	sizeof(asn1_DEF_T2_tags)
-		/sizeof(asn1_DEF_T2_tags[0]),
+		/sizeof(asn1_DEF_T2_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_T2_specs	/* Additional specs */
@@ -172,14 +172,14 @@ typedef enum T3_PR {
 	T3_PR_NOTHING,	/* No components present */
 	T3_PR_i,
 	/* Extensions may appear below */
-} T3_PR_e;
+} T3_PR;
 extern asn1_TYPE_descriptor_t asn1_DEF_T3;
 
 /*** <<< TYPE-DECLS [T3] >>> ***/
 
 
 typedef struct T3 {
-	T3_PR_e present;
+	T3_PR present;
 	union {
 		INTEGER_t	 i;
 		/*
@@ -201,9 +201,6 @@ static asn1_CHOICE_element_t asn1_DEF_T3_elements[] = {
 		(void *)&asn1_DEF_INTEGER,
 		"i"
 		},
-};
-static ber_tlv_tag_t asn1_DEF_T3_tags[] = {
-	
 };
 static asn1_TYPE_tag2member_t asn1_DEF_T3_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 16 */
@@ -227,9 +224,8 @@ asn1_TYPE_descriptor_t asn1_DEF_T3 = {
 	CHOICE_print,
 	CHOICE_free,
 	CHOICE_outmost_tag,
-	asn1_DEF_T3_tags,
-	sizeof(asn1_DEF_T3_tags)
-		/sizeof(asn1_DEF_T3_tags[0]),
+	0,	/* No explicit tags (pointer) */
+	0,	/* No explicit tags (count) */
 	0,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_T3_specs	/* Additional specs */
@@ -247,14 +243,14 @@ typedef enum T4_PR {
 	T4_PR_NOTHING,	/* No components present */
 	T4_PR_i,
 	/* Extensions may appear below */
-} T4_PR_e;
+} T4_PR;
 extern asn1_TYPE_descriptor_t asn1_DEF_T4;
 
 /*** <<< TYPE-DECLS [T4] >>> ***/
 
 
 typedef struct T4 {
-	T4_PR_e present;
+	T4_PR present;
 	union {
 		INTEGER_t	 i;
 		/*
@@ -276,9 +272,6 @@ static asn1_CHOICE_element_t asn1_DEF_T4_elements[] = {
 		(void *)&asn1_DEF_INTEGER,
 		"i"
 		},
-};
-static ber_tlv_tag_t asn1_DEF_T4_tags[] = {
-	
 };
 static asn1_TYPE_tag2member_t asn1_DEF_T4_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* i at 17 */
@@ -302,9 +295,8 @@ asn1_TYPE_descriptor_t asn1_DEF_T4 = {
 	CHOICE_print,
 	CHOICE_free,
 	CHOICE_outmost_tag,
-	asn1_DEF_T4_tags,
-	sizeof(asn1_DEF_T4_tags)
-		/sizeof(asn1_DEF_T4_tags[0]),
+	0,	/* No explicit tags (pointer) */
+	0,	/* No explicit tags (count) */
 	0,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_T4_specs	/* Additional specs */

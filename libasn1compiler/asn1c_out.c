@@ -13,6 +13,16 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	char *buf;
 	int ret;
 
+	switch(arg->target->target) {
+	case OT_IGNORE:
+		return 0;
+	case OT_ASSERT:
+		assert(arg->target->target != OT_ASSERT);
+		return -1;
+	default:
+		break;
+	}
+
 	/*
 	 * Make sure the output has a single LF and only at the end.
 	 */

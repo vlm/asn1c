@@ -13,10 +13,29 @@
 #include <string.h>	/* For memcpy(3) */
 #include <sys/types.h>	/* For size_t */
 #include <stdarg.h>	/* For va_start */
-#include <inttypes.h>	/* C99 Standard specifies this file, for uintXX_t */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
+#if __STDC_VERSION__ < 199901L
+#include <inttypes.h>	/* C99 Standard specifies this file, for uintXX_t */
+#else
+typedef	unsigned char		uint8_t;
+typedef	unsigned short int	uint16_t;
+typedef	unsigned int		uint32_t;
+typedef	int			ssize_t;
+#endif
 
-#ifndef	offsetof
+#ifdef WIN32
+#define	 snprintf(str, size, format, args...)	\
+	_snprintf(str, size, format, ##args)
+#define	 vsnprintf(str, size, format, ap)	\
+	_vsnprintf(str, size, format, ap)
+#define	alloca(size)	_alloca(size)
+#endif
+
+#ifndef	__GNUC__
+#define	__attribute__(ignore)
+#endif
+
+#ifndef	offsetof	/* If not defined by <stddef.h> */
 #define	offsetof(s, m)	((ptrdiff_t)&(((s *)0)->m) - (ptrdiff_t)((s *)0))
 #endif	/* offsetof */
 

@@ -106,7 +106,7 @@ asn1c_print_streams(arg_t *arg)  {
 	asn1p_expr_t *expr = arg->expr;
 	int i;
 
-	for(i = 0; i < OT_MAX; i++) {
+	for(i = 1; i < OT_MAX; i++) {
 		out_chunk_t *ot;
 		if(TQ_FIRST(&cs->targets[i]) == NULL)
 			continue;
@@ -202,7 +202,7 @@ asn1c_save_streams(arg_t *arg)  {
 	TQ_FOR(ot, &(cs->targets[OT_CODE]), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 6);
+	assert(OT_MAX == 7);
 
 	fclose(fp_c);
 	fclose(fp_h);

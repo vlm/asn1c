@@ -55,7 +55,7 @@ typedef struct LogLine {
 		0,	/* Use generic outmost tag fetcher */
 		asn1_DEF_varsets_tags,
 		sizeof(asn1_DEF_varsets_tags)
-			/sizeof(asn1_DEF_varsets_tags[0]),
+			/sizeof(asn1_DEF_varsets_tags[0]), /* 1 */
 		1,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_varsets_specs	/* Additional specs */
@@ -102,7 +102,7 @@ asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_LogLine_tags,
 	sizeof(asn1_DEF_LogLine_tags)
-		/sizeof(asn1_DEF_LogLine_tags[0]),
+		/sizeof(asn1_DEF_LogLine_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_LogLine_specs	/* Additional specs */
@@ -165,7 +165,7 @@ typedef struct VariablePartSet {
 		0,	/* Use generic outmost tag fetcher */
 		asn1_DEF_vparts_tags,
 		sizeof(asn1_DEF_vparts_tags)
-			/sizeof(asn1_DEF_vparts_tags[0]),
+			/sizeof(asn1_DEF_vparts_tags[0]), /* 1 */
 		1,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_vparts_specs	/* Additional specs */
@@ -212,7 +212,7 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_VariablePartSet_tags,
 	sizeof(asn1_DEF_VariablePartSet_tags)
-		/sizeof(asn1_DEF_VariablePartSet_tags[0]),
+		/sizeof(asn1_DEF_VariablePartSet_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_VariablePartSet_specs	/* Additional specs */
@@ -234,14 +234,14 @@ typedef enum VariablePart_PR {
 	VariablePart_PR_vset,
 	VariablePart_PR_vrange,
 	/* Extensions may appear below */
-} VariablePart_PR_e;
+} VariablePart_PR;
 extern asn1_TYPE_descriptor_t asn1_DEF_VariablePart;
 
 /*** <<< TYPE-DECLS [VariablePart] >>> ***/
 
 
 typedef struct VariablePart {
-	VariablePart_PR_e present;
+	VariablePart_PR present;
 	union {
 		struct vset {
 			A_SET_OF(VisibleString_t) list;
@@ -294,7 +294,7 @@ typedef struct VariablePart {
 			0,	/* Use generic outmost tag fetcher */
 			asn1_DEF_vset_tags,
 			sizeof(asn1_DEF_vset_tags)
-				/sizeof(asn1_DEF_vset_tags[0]),
+				/sizeof(asn1_DEF_vset_tags[0]), /* 1 */
 			1,	/* Tags to skip */
 			1,	/* Whether CONSTRUCTED */
 			&asn1_DEF_vset_specs	/* Additional specs */
@@ -341,7 +341,7 @@ typedef struct VariablePart {
 			0,	/* Use generic outmost tag fetcher */
 			asn1_DEF_vrange_tags,
 			sizeof(asn1_DEF_vrange_tags)
-				/sizeof(asn1_DEF_vrange_tags[0]),
+				/sizeof(asn1_DEF_vrange_tags[0]), /* 1 */
 			1,	/* Tags to skip */
 			1,	/* Whether CONSTRUCTED */
 			&asn1_DEF_vrange_specs	/* Additional specs */
@@ -360,9 +360,6 @@ static asn1_CHOICE_element_t asn1_DEF_VariablePart_elements[] = {
 		(void *)&asn1_DEF_vrange,
 		"vrange"
 		},
-};
-static ber_tlv_tag_t asn1_DEF_VariablePart_tags[] = {
-	
 };
 static asn1_TYPE_tag2member_t asn1_DEF_VariablePart_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* vrange at 45 */
@@ -387,9 +384,8 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 	CHOICE_print,
 	CHOICE_free,
 	CHOICE_outmost_tag,
-	asn1_DEF_VariablePart_tags,
-	sizeof(asn1_DEF_VariablePart_tags)
-		/sizeof(asn1_DEF_VariablePart_tags[0]),
+	0,	/* No explicit tags (pointer) */
+	0,	/* No explicit tags (count) */
 	0,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_VariablePart_specs	/* Additional specs */
@@ -471,7 +467,7 @@ typedef struct ActionItem {
 			0,	/* Use generic outmost tag fetcher */
 			asn1_DEF_email_tags,
 			sizeof(asn1_DEF_email_tags)
-				/sizeof(asn1_DEF_email_tags[0]),
+				/sizeof(asn1_DEF_email_tags[0]), /* 1 */
 			1,	/* Tags to skip */
 			1,	/* Whether CONSTRUCTED */
 			&asn1_DEF_email_specs	/* Additional specs */
@@ -518,7 +514,7 @@ typedef struct ActionItem {
 		0,	/* Use generic outmost tag fetcher */
 		asn1_DEF_notify_tags,
 		sizeof(asn1_DEF_notify_tags)
-			/sizeof(asn1_DEF_notify_tags[0]),
+			/sizeof(asn1_DEF_notify_tags[0]), /* 1 */
 		1,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_notify_specs	/* Additional specs */
@@ -565,7 +561,7 @@ asn1_TYPE_descriptor_t asn1_DEF_ActionItem = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_ActionItem_tags,
 	sizeof(asn1_DEF_ActionItem_tags)
-		/sizeof(asn1_DEF_ActionItem_tags[0]),
+		/sizeof(asn1_DEF_ActionItem_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_ActionItem_specs	/* Additional specs */

@@ -33,7 +33,7 @@ asn1_TYPE_descriptor_t asn1_DEF_PrimitiveType = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_PrimitiveType_tags,
 	sizeof(asn1_DEF_PrimitiveType_tags)
-		/sizeof(asn1_DEF_PrimitiveType_tags[0]),
+		/sizeof(asn1_DEF_PrimitiveType_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0	/* No specifics */
@@ -149,7 +149,7 @@ asn1_TYPE_descriptor_t asn1_DEF_ConstructedType = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_ConstructedType_tags,
 	sizeof(asn1_DEF_ConstructedType_tags)
-		/sizeof(asn1_DEF_ConstructedType_tags[0]),
+		/sizeof(asn1_DEF_ConstructedType_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_ConstructedType_specs	/* Additional specs */
@@ -190,7 +190,7 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T_tags,
 	sizeof(asn1_DEF_T_tags)
-		/sizeof(asn1_DEF_T_tags[0]),
+		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	-0,	/* Unknown yet */
 	0	/* No specifics */
