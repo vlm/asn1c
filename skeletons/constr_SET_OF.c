@@ -577,7 +577,8 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				continue;
 			}
 			/* Fall through */
-		case XCT_UNEXPECTED:
+		case XCT_UNKNOWN_OP:
+		case XCT_UNKNOWN_BO:
 
 			ASN_DEBUG("XER/SET OF: tcv=%d, ph=%d", tcv, ctx->phase);
 			if(ctx->phase != 1)
@@ -595,8 +596,6 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				 */
 				ctx->phase = 2;
 				continue;
-			case XCT_UNEXPECTED:
-			case XCT_CLOSING:
 			default:
 				break;	/* Phase out */
 			}

@@ -714,7 +714,8 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				continue;
 			}
 			/* Fall through */
-		case XCT_UNEXPECTED:
+		case XCT_UNKNOWN_OP:
+		case XCT_UNKNOWN_BO:
 
 			ASN_DEBUG("XER/SET: tcv=%d, ph=%d", tcv, ctx->phase);
 			if(ctx->phase != 1)
@@ -735,9 +736,9 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					ctx->step = edx;
 					ctx->phase = 2;
 					break;
-				case XCT_UNEXPECTED:
+				case XCT_UNKNOWN_OP:
+				case XCT_UNKNOWN_BO:
 					continue;
-				case XCT_CLOSING:
 				default:
 					edx = td->elements_count;
 					break;	/* Phase out */
@@ -746,6 +747,16 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			}
 			if(edx != td->elements_count)
 				continue;
+
+			/* It is expected extension */
+			if(specs->extensible) {
+				ASN_DEBUG("Got anticipated extension, "
+					"but NOT IMPLEMENTED YET");
+				/*
+				 * TODO: implement skipping of extensions
+				 */
+			}
+
 			/* Fall through */
 		default:
 			break;
