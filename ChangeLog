@@ -2,8 +2,8 @@
 0.9.12:	2005-Mar-05
 
 	* Fixed a name clash in produced constraint checking code.
-	* #includes are now in single quotes (to solve a specific problem
-	  on certain case-insensitive file systems (Win32).
+	* #includes are now in single quotes (to solve a name
+	  clash with system's <time.h> on a Win32 system). 
 
 0.9.11:	2005-Mar-04
 
