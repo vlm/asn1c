@@ -6,7 +6,7 @@
 #define	ASN_TYPE_REAL_H
 
 #include <asn_application.h>
-#include <ber_codec_prim.h>
+#include <asn_codecs_prim.h>
 
 typedef ASN__PRIMITIVE_TYPE_t REAL_t;
 

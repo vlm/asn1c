@@ -4,7 +4,7 @@
  */
 #include <asn_internal.h>
 #include <RELATIVE-OID.h>
-#include <ber_codec_prim.h>	/* Encoder and decoder of a primitive */
+#include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */
 #include <limits.h>	/* for CHAR_BIT */
 #include <assert.h>
 #include <errno.h>

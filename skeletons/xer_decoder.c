@@ -161,7 +161,7 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 
 #define	XER_GOT_BODY(chunk_buf, chunk_size)	do {		\
 		ssize_t converted_size = body_receiver		\
-			(struct_ptr, chunk_buf, chunk_size,	\
+			(struct_key, chunk_buf, chunk_size,	\
 				(size_t)chunk_size < size);	\
 		if(converted_size == -1) RETURN(RC_FAIL);	\
 		chunk_size = converted_size;			\
@@ -177,13 +177,13 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 asn_dec_rval_t
 xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	asn_struct_ctx_t *ctx,	/* Type decoder context */
-	void *struct_ptr,	/* The structure must be already allocated */
+	void *struct_key,
 	const char *xml_tag,	/* Expected XML tag */
 	void *buf_ptr, size_t size,
 	int (*opt_unexpected_tag_decoder)
-		(void *struct_ptr, void *chunk_buf, size_t chunk_size),
+		(void *struct_key, void *chunk_buf, size_t chunk_size),
 	ssize_t (*body_receiver)
-		(void *struct_ptr, void *chunk_buf, size_t chunk_size,
+		(void *struct_key, void *chunk_buf, size_t chunk_size,
 			int have_more)
 	) {
 
@@ -272,7 +272,7 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 				 * Certain tags in the body may be expected.
 				 */
 				if(opt_unexpected_tag_decoder
-				&& opt_unexpected_tag_decoder(struct_ptr,
+				&& opt_unexpected_tag_decoder(struct_key,
 						buf_ptr, ch_size) == 0) {
 					/* Tag's processed fine */
 					ADVANCE(ch_size);

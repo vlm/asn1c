@@ -4,7 +4,7 @@
  */
 #include <asn_internal.h>
 #include <ENUMERATED.h>
-#include <ber_codec_prim.h>
+#include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */
 
 /*
  * ENUMERATED basic type description.

@@ -41,13 +41,13 @@ typedef asn_dec_rval_t (xer_type_decoder_f)(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	asn_struct_ctx_t *ctx,	/* Type decoder context */
-	void *struct_ptr,	/* The structure must be already allocated */
+	void *struct_key,	/* Treated as opaque pointer */
 	const char *xml_tag,	/* Expected XML tag name */
 	void *buf_ptr, size_t size,
 	int (*opt_unexpected_tag_decoder)
-		(void *struct_ptr, void *chunk_buf, size_t chunk_size),
+		(void *struct_key, void *chunk_buf, size_t chunk_size),
 	ssize_t (*body_receiver)
-		(void *struct_ptr, void *chunk_buf, size_t chunk_size,
+		(void *struct_key, void *chunk_buf, size_t chunk_size,
 			int have_more)
 	);
 
