@@ -18,4 +18,17 @@ BEGIN
 		width	INTEGER
 	}
 
+	-- The following clause tests OPTIONAL.
+	Stuff ::= SET {
+			trees    [0] SET OF Forest OPTIONAL,
+			anything [1] SET OF
+				SEQUENCE {
+					cup-of-coffee	BIT STRING,
+					...
+				} OPTIONAL
+			-- The above OPTIONAL applies to the "anything"
+			-- member of the outer CHOICE,
+			-- not to the SET OF's embedded SEQUENCE!
+		}
+
 END
