@@ -4,7 +4,7 @@
 	* RELATIVE-OID and OBJECT IDENTIFIER decoders are not bound
 	  anymore to an integer type of specific size (unsigned long).
 	* SEQUENCE BER decoder fixed again for complex CHOICE case
-	  (Test case 44).
+	  (Test case 44) (Severity: medium, Security impact: low).
 
 0.8.11:	2004-Jun-05
 
