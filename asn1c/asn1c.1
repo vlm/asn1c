@@ -17,10 +17,10 @@ and accompanying routines to perform data encoding and decoding.
 \-E
 \-F
 \-L
-\-N
 \-P
-.RI "\-S " directory
 \-R
+.RI "\-S " directory
+.RI "\-t " data-string
 .TP
 .B Language Options
 .br
@@ -28,6 +28,10 @@ and accompanying routines to perform data encoding and decoding.
 \-fnative-integers
 \-fno-c99
 \-funnamed-unions
+.TP
+.B Output Options
+.br
+\-print-constraints
 .TP
 .B Warning Options
 .br
@@ -38,7 +42,7 @@ and accompanying routines to perform data encoding and decoding.
 .SH OVERALL OPTIONS
 .TP
 .B \-E
-Stop after the parsing stage. The output is reconstructed ASN.1
+Stop after the parsing stage. The output is a reconstructed ASN.1
 specification code, which is sent to the standard output.
 .TP
 .B \-F
@@ -53,21 +57,20 @@ Generate "-- #line" comments in
 .B -E
 output.
 .TP
-.B \-N
-Do not generate certain type of comments in
-.B -E
-output.
-.TP
 .B \-P
 Dump the compiled output to the standard output instead of creating the
 target language files on disk.
 .TP
-.B \-S directory
-Use the specified directory with ASN.1 skeleton files.
-.TP
 .B \-R
 Restrict the compiler to generate only the ASN.1 tables,
 omitting the usual support code.
+.TP
+.B \-S directory
+Use the specified directory with ASN.1 skeleton files.
+.TP
+.B \-t data-string
+Interpret the data-string as a sequence of hexadecimal values representing
+the start of BER TLV encoding. Print the human readable explanation.
 .SH LANGUAGE OPTIONS
 .TP
 .B \-ftypes88
@@ -82,6 +85,11 @@ Disable use of certain C99 extensions, like designated initializers.
 .TP
 .B \-funnamed-unions
 Enable unnamed unions in structures definitions.
+.SH OUTPUT OPTIONS
+.TP
+.B \-print-constraints
+When -EF are also specified, this option forces the compiler to explain
+its internal understanding of subtype constraints.
 .SH WARNING OPTIONS
 .TP
 .B \-Werror
