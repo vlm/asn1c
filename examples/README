@@ -9,5 +9,5 @@ To compile the files using asn1c, try
 
 	../asn1c/asn1c -P rfc3280-*.asn1
 
-The ./sample.source.PKIX1 directory contains the X.509 certificate decoder.
+The ./sample.source.PKIX1 directory contains the X.509 Certificate decoder.
 
