@@ -277,7 +277,7 @@ if($#gotSafeNames >= 0) {
 $form =
   "<FORM METHOD=POST ACTION=$myName ENCTYPE=\"multipart/form-data\">"
 . "Pick the ASN.1 module file:<BR>\n"
-. "<INPUT TYPE=file NAME=file SIZE=40><BR>\n"
+. "<INPUT TYPE=file NAME=file SIZE=35><BR clear=all>\n"
 . "Alternatively, enter the ASN.1 specification into the area below:<BR>\n"
 . "<TEXTAREA NAME=text ROWS=15 COLS=60>\n"
 . "/*\n"
@@ -303,9 +303,8 @@ $form =
 . "<INPUT TYPE=checkbox NAME=optNT CHECKED=on> Employ native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>\n"
 . "</FONT>"
 . "<P>\n"
-. "<INPUT TYPE=submit VALUE=\"Proceed with ASN.1 compilation\">\n"
-. "</FORM>\n";
-;
+. "<INPUT TYPE=submit VALUE=\"Proceed with ASN.1 compilation\">"
+. "</FORM>";
 
 #
 # Gather previous transactions to generate the history page.
@@ -377,19 +376,27 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "&show=tgz\">"
 		. "Fetch results (.tgz)</A></NOBR>";
 	} else {
-		$results .= '<BR><FONT SIZE=+1><A HREF="mailto:asn1c@lionet.info?Subject=asn1c compiler help: '
+		$results .= '<P>'
+			. '<FONT SIZE=-1><A HREF="mailto:asn1c@lionet.info?Subject=asn1c compiler help: '
 			. "transaction $tNum ("
 			. join(', ', @safeNames)
 			. ") failed with code $ec"
-			. '">Request free help</A></FONT>';
+			. '&body=leave body empty or add more comments">Help me fix it!</A>'
+			. '</FONT>'
+			;
+		$atLeastOneError = 1;
 	}
 
-	$history .= "<TR>"
-		. "<TH BGCOLOR=white ALIGN=center><FONT FACE=Helvetica SIZE=-2>$tNum</FONT></TH>"
-		. "<TD BGCOLOR=white ALIGN=center><FONT SIZE=-1 FACE=Helvetica>"
+	$trColor = ' BGCOLOR=#f8f8f8';
+	$trColor = ' BGCOLOR=#d0ffe0' unless($CountHistoryItems);
+	$tNum = '<I>' . $tNum . '</I>' unless($CountHistoryItems);
+
+	$history .= "<TR $trColor>"
+		. "<TH ALIGN=center><FONT FACE=Helvetica SIZE=-2>$tNum</FONT></TH>"
+		. "<TD ALIGN=center><FONT SIZE=-1 FACE=Helvetica>"
 		. join(", ", @markedNames)
 		. "</FONT></TD>"
-		. "<TD BGCOLOR=white><FONT SIZE=-2 FACE=Helvetica>"
+		. "<TD><FONT SIZE=-2 FACE=Helvetica>"
 			. $results
 			. "</TD>"
 		. "</TR>";
@@ -406,20 +413,39 @@ if($history) {
 	. "<TH><FONT COLOR=#404040 FACE=Courier>Result</FONT></TH>"
 	. "</TR>\n"
 	. $history . "</TABLE></TD></TR></TABLE><BR>\n";
+
+	if($atLeastOneError) {
+		$history .= "<FONT SIZE=-1 COLOR=#404040>"
+			. "<FONT COLOR=darkred><B>Bottom line:</B> ASN.1 compiler was unable to process some of the input files.</FONT><BR>"
+			. "This is typically caused by syntax errors in the input files.\n"
+			. "Such errors are normally fixed by removing or adding a couple of characters in the ASN.1 module.\n"
+			. "<BR><B>Please consider clicking on an appropriate &quot;<I>Help me fix it!</I>&quot; link above.</B>\n"
+			. "An email will be sent to a person who will gladly fix the ASN.1 module for you. (The typical turn-around time is less than 24 hours.)\n"
+			. "<BR>This is <B>free</B>, and highly advisable.\n"
+			. "Your request will help us make a better compiler!\n"
+			. "<BR>Thank you."
+			. "</FONT>";
+	}
+}
+
+unless($history) {
+	$history = "<FONT SIZE=+2 COLOR=#a0a0a0>"
+		. "[compiled results will appear here]</FONT>";
+	$histValign = 'center';
+} else {
+	$histValign = 'top';
 }
 
 $content .=
-  "<TABLE WIDTH=100% BORDER=0 CELLPADDING=5><TR><TD VALIGN=top>\n"
+  "<TABLE WIDTH=100% BORDER=0 CELLSPACING=5 CELLPADDING=5><TR><TD ID=inputbox VALIGN=top ROWSPAN=2 WIDTH=40%>\n"
 . "<H3 ALIGN=center>ASN.1 Input</H3>\n"
-. "$form\n"
-. "</TD><TD WIDTH=50% ALIGN=center VALIGN=top>\n$history"
-	. "<FONT SIZE=-2><B>Privacy Note 1:</B> this page is tailored "
+. "$form"
+. "</TD><TD WIDTH=60% HEIGHT=50% ALIGN=center VALIGN=$histValign>$history \n"
+. "</TD></TR><TR><TD HEIGHT=50% VALIGN=bottom>"
+	. "<FONT SIZE=-1><B>Privacy Note:</B> this page is tailored "
 	. "to your browser using a cryprographically strong cookie. "
-	. "Other users will see different data. "
-	. "However, the page is not secure against malicious users "
-	. "if they are able to intercept your non-SSL Web traffic."
-	. "<BR><B>Privacy Note 2:</B> The author reserves the right to collect any information directly or indirectly supplied by the user of this system. This information may only be used by the author or contributors to enhance the software product. No data is ever given, sold, or otherwise distributed to the third-parties."
-	. "<BR><B>Privacy Note 3:</B> In no event shall the author or contributors be liable for any damages, however caused, even if advised of the possibility of such damage."
+	. "<I>Other users will see their own (different) data.</I> "
+	. "(<A HREF=asn1c-privacy.html>Read more...</A>)"
 	. "</FONT>"
 . "</TD></TR></TABLE>";
 
@@ -441,8 +467,13 @@ if($EnvironmentSetOK != 1 && $TMPDIR ne "/") {
 print<<EOM;
 <HTML>
 <HEAD>
-<META KEYWORDS="ASN.1, asn1c, compiler">
 <TITLE>Free Online ASN.1 Compiler</TITLE>
+<META NAME="Description" CONTENT="Free Online ASN.1 Compiler">
+<STYLE TYPE="text/css">
+	TD#inputbox {
+		border-right: dashed 1px rgb(200, 200, 200);
+	}
+</STYLE>
 </HEAD>
 <BODY BGCOLOR=white>
 
