@@ -129,7 +129,6 @@ process_data(enum expectation expectation, char *fbuf, int size) {
 			|| memcmp(buf, fbuf, buf_offset));
 		break;
 	case EXP_OK:
-		printf("%d %d\n", buf_offset, size);
 		assert(buf_offset == size);
 		assert(memcmp(buf, fbuf, buf_offset) == 0);
 		break;
