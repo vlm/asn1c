@@ -58,7 +58,7 @@ check(int size) {
 	assert(erval.encoded == buf_off);
 	assert(buf_off > size);
 
-	rval = ber_decode(&asn1_DEF_OCTET_STRING, &nos, buf, buf_off);
+	rval = ber_decode(&asn1_DEF_OCTET_STRING, (void **)&nos, buf, buf_off);
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == buf_off);
 
