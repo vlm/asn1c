@@ -1,0 +1,24 @@
+
+ModuleTestConstr {iso(-1) org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	20 }
+DEFINITIONS IMPLICIT TAGS EXTENSIBILITY IMPLIED ::=
+BEGIN
+
+ConstructedType1 ::= SEQUENCE {
+    a	 [1] IMPLICIT INTEGER,
+    b	 [2] IMPLICIT INTEGER,
+    d	 UTF8String,
+    ...!ex1,
+    c	 IA5String
+}
+
+ConstructedType2 ::= SET {
+    a	 [1] IMPLICIT INTEGER,
+    b	 [2] IMPLICIT INTEGER,
+    ...
+}
+
+ex1 INTEGER ::= 1
+
+END

@@ -1,0 +1,293 @@
+
+/*** <<< DEPS [T] >>> ***/
+
+/* Dependencies for T */
+#include <NULL.h>
+
+/* Dependencies for b */
+#include <NULL.h>
+#include <NULL.h>
+
+/* Dependencies for e */
+#include <NULL.h>
+#include <NULL.h>
+
+/* Dependencies for h */
+#include <NULL.h>
+#include <NULL.h>
+
+#include <constr_SEQUENCE.h>
+
+extern asn1_TYPE_descriptor_t asn1_DEF_T;
+
+/*** <<< TYPE-DECLS [T] >>> ***/
+
+
+typedef struct T {
+	NULL_t	 a;
+	struct b {
+		enum {
+			b_PR_NOTHING,	/* No components present */
+			b_PR_c,
+			b_PR_d,
+			b_PR_e,
+			b_PR_h,
+		} present;
+		union {
+			NULL_t	 c;
+			NULL_t	 d;
+			struct e {
+				enum {
+					e_PR_NOTHING,	/* No components present */
+					e_PR_f,
+					e_PR_g,
+				} present;
+				union {
+					NULL_t	 f;
+					NULL_t	 g;
+				} choice;
+				
+				/* Context for parsing across buffer boundaries */
+				ber_dec_ctx_t _ber_dec_ctx;
+			} e;
+			struct h {
+				enum {
+					h_PR_NOTHING,	/* No components present */
+					h_PR_i,
+					h_PR_j,
+				} present;
+				union {
+					NULL_t	 i;
+					NULL_t	 j;
+				} choice;
+				
+				/* Context for parsing across buffer boundaries */
+				ber_dec_ctx_t _ber_dec_ctx;
+			} h;
+		} choice;
+		
+		/* Context for parsing across buffer boundaries */
+		ber_dec_ctx_t _ber_dec_ctx;
+	} b;
+	
+	/* Context for parsing across buffer boundaries */
+	ber_dec_ctx_t _ber_dec_ctx;
+} T_t;
+
+/*** <<< STAT-DEFS [T] >>> ***/
+
+			#include <constr_CHOICE.h>
+			
+			static asn1_CHOICE_element_t asn1_DEF_e_elements[] = {
+				{ offsetof(struct e, choice.f), 0,
+					(ASN_TAG_CLASS_PRIVATE | (7 << 2)),
+					-1,	/* IMPLICIT tag at current level */
+					(void *)&asn1_DEF_NULL,
+					"f"
+					},
+				{ offsetof(struct e, choice.g), 0,
+					(ASN_TAG_CLASS_PRIVATE | (8 << 2)),
+					-1,	/* IMPLICIT tag at current level */
+					(void *)&asn1_DEF_NULL,
+					"g"
+					},
+			};
+			static ber_tlv_tag_t asn1_DEF_e_tags[] = {
+			};
+			static asn1_TYPE_tag2member_t asn1_DEF_e_tag2el[] = {
+			    { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 0, 0, 0 }, /* f at 20 */
+			    { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 1, 0, 0 }, /* g at 21 */
+			};
+			static asn1_CHOICE_specifics_t asn1_DEF_e_specs = {
+				sizeof(struct e),
+				offsetof(struct e, _ber_dec_ctx),
+				offsetof(struct e, present),
+				sizeof(((struct e *)0)->present),
+				asn1_DEF_e_elements,
+				2,	/* Elements count */
+				asn1_DEF_e_tag2el,
+				2,	/* Count of tags in the map */
+				0	/* Whether extensible */
+			};
+			asn1_TYPE_descriptor_t asn1_DEF_e = {
+				"e",
+				CHOICE_constraint,
+				CHOICE_decode_ber,
+				CHOICE_encode_der,
+				CHOICE_print,
+				CHOICE_free,
+				CHOICE_outmost_tag,
+				asn1_DEF_e_tags,
+				sizeof(asn1_DEF_e_tags)
+					/sizeof(asn1_DEF_e_tags[0]),
+				0,	/* Tags to skip */
+				1,	/* Whether CONSTRUCTED */
+				&asn1_DEF_e_specs	/* Additional specs */
+			};
+			
+			#include <constr_CHOICE.h>
+			
+			static asn1_CHOICE_element_t asn1_DEF_h_elements[] = {
+				{ offsetof(struct h, choice.i), 0,
+					(ASN_TAG_CLASS_PRIVATE | (1 << 2)),
+					-1,	/* IMPLICIT tag at current level */
+					(void *)&asn1_DEF_NULL,
+					"i"
+					},
+				{ offsetof(struct h, choice.j), 0,
+					(ASN_TAG_CLASS_PRIVATE | (2 << 2)),
+					-1,	/* IMPLICIT tag at current level */
+					(void *)&asn1_DEF_NULL,
+					"j"
+					},
+			};
+			static ber_tlv_tag_t asn1_DEF_h_tags[] = {
+			};
+			static asn1_TYPE_tag2member_t asn1_DEF_h_tag2el[] = {
+			    { (ASN_TAG_CLASS_PRIVATE | (1 << 2)), 0, 0, 0 }, /* i at 24 */
+			    { (ASN_TAG_CLASS_PRIVATE | (2 << 2)), 1, 0, 0 }, /* j at 25 */
+			};
+			static asn1_CHOICE_specifics_t asn1_DEF_h_specs = {
+				sizeof(struct h),
+				offsetof(struct h, _ber_dec_ctx),
+				offsetof(struct h, present),
+				sizeof(((struct h *)0)->present),
+				asn1_DEF_h_elements,
+				2,	/* Elements count */
+				asn1_DEF_h_tag2el,
+				2,	/* Count of tags in the map */
+				0	/* Whether extensible */
+			};
+			asn1_TYPE_descriptor_t asn1_DEF_h = {
+				"h",
+				CHOICE_constraint,
+				CHOICE_decode_ber,
+				CHOICE_encode_der,
+				CHOICE_print,
+				CHOICE_free,
+				CHOICE_outmost_tag,
+				asn1_DEF_h_tags,
+				sizeof(asn1_DEF_h_tags)
+					/sizeof(asn1_DEF_h_tags[0]),
+				0,	/* Tags to skip */
+				1,	/* Whether CONSTRUCTED */
+				&asn1_DEF_h_specs	/* Additional specs */
+			};
+			
+	#include <constr_CHOICE.h>
+	
+	static asn1_CHOICE_element_t asn1_DEF_b_elements[] = {
+		{ offsetof(struct b, choice.c), 0,
+			(ASN_TAG_CLASS_PRIVATE | (5 << 2)),
+			-1,	/* IMPLICIT tag at current level */
+			(void *)&asn1_DEF_NULL,
+			"c"
+			},
+		{ offsetof(struct b, choice.d), 0,
+			(ASN_TAG_CLASS_PRIVATE | (6 << 2)),
+			-1,	/* IMPLICIT tag at current level */
+			(void *)&asn1_DEF_NULL,
+			"d"
+			},
+		{ offsetof(struct b, choice.e), 0,
+			-1 /* Ambiguous tag (CHOICE?) */,
+			0,
+			(void *)&asn1_DEF_e,
+			"e"
+			},
+		{ offsetof(struct b, choice.h), 0,
+			(ASN_TAG_CLASS_PRIVATE | (9 << 2)),
+			+1,	/* EXPLICIT tag at current level */
+			(void *)&asn1_DEF_h,
+			"h"
+			},
+	};
+	static ber_tlv_tag_t asn1_DEF_b_tags[] = {
+	};
+	static asn1_TYPE_tag2member_t asn1_DEF_b_tag2el[] = {
+	    { (ASN_TAG_CLASS_PRIVATE | (5 << 2)), 0, 0, 0 }, /* c at 17 */
+	    { (ASN_TAG_CLASS_PRIVATE | (6 << 2)), 1, 0, 0 }, /* d at 18 */
+	    { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 2, 0, 0 }, /* f at 20 */
+	    { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 2, 0, 0 }, /* g at 21 */
+	    { (ASN_TAG_CLASS_PRIVATE | (9 << 2)), 3, 0, 0 }, /* h at 24 */
+	};
+	static asn1_CHOICE_specifics_t asn1_DEF_b_specs = {
+		sizeof(struct b),
+		offsetof(struct b, _ber_dec_ctx),
+		offsetof(struct b, present),
+		sizeof(((struct b *)0)->present),
+		asn1_DEF_b_elements,
+		4,	/* Elements count */
+		asn1_DEF_b_tag2el,
+		5,	/* Count of tags in the map */
+		0	/* Whether extensible */
+	};
+	asn1_TYPE_descriptor_t asn1_DEF_b = {
+		"b",
+		CHOICE_constraint,
+		CHOICE_decode_ber,
+		CHOICE_encode_der,
+		CHOICE_print,
+		CHOICE_free,
+		CHOICE_outmost_tag,
+		asn1_DEF_b_tags,
+		sizeof(asn1_DEF_b_tags)
+			/sizeof(asn1_DEF_b_tags[0]),
+		0,	/* Tags to skip */
+		1,	/* Whether CONSTRUCTED */
+		&asn1_DEF_b_specs	/* Additional specs */
+	};
+	
+#include <constr_SEQUENCE.h>
+
+static asn1_SEQUENCE_element_t asn1_DEF_T_elements[] = {
+	{ offsetof(struct T, a), 0,
+		(ASN_TAG_CLASS_PRIVATE | (2 << 2)),
+		-1,	/* IMPLICIT tag at current level */
+		(void *)&asn1_DEF_NULL,
+		"a"
+		},
+	{ offsetof(struct T, b), 0,
+		-1 /* Ambiguous tag (CHOICE?) */,
+		0,
+		(void *)&asn1_DEF_b,
+		"b"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_T_tags[] = {
+	(ASN_TAG_CLASS_PRIVATE | (1 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_T_tag2el[] = {
+    { (ASN_TAG_CLASS_PRIVATE | (2 << 2)), 0, 0, 0 }, /* a at 15 */
+    { (ASN_TAG_CLASS_PRIVATE | (5 << 2)), 1, 0, 0 }, /* c at 17 */
+    { (ASN_TAG_CLASS_PRIVATE | (6 << 2)), 1, 0, 0 }, /* d at 18 */
+    { (ASN_TAG_CLASS_PRIVATE | (7 << 2)), 1, 0, 0 }, /* f at 20 */
+    { (ASN_TAG_CLASS_PRIVATE | (8 << 2)), 1, 0, 0 }, /* g at 21 */
+    { (ASN_TAG_CLASS_PRIVATE | (9 << 2)), 1, 0, 0 }, /* h at 24 */
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_T_specs = {
+	sizeof(struct T),
+	offsetof(struct T, _ber_dec_ctx),
+	asn1_DEF_T_elements,
+	2,	/* Elements count */
+	asn1_DEF_T_tag2el,
+	6,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_T = {
+	"T",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_T_tags,
+	sizeof(asn1_DEF_T_tags)
+		/sizeof(asn1_DEF_T_tags[0]),
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	&asn1_DEF_T_specs	/* Additional specs */
+};
+

@@ -1,0 +1,26 @@
+
+ModuleTestTags1 {iso(-1) org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	21 1 }
+DEFINITIONS EXPLICIT TAGS ::=
+BEGIN
+
+T1 ::= CHOICE {
+    first	 [0] EXPLICIT INTEGER,
+    second	 [1] EXPLICIT INTEGER
+}
+
+END
+
+ModuleTestTags2 {iso(-1) org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	21 2 }
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+T2 ::= SEQUENCE {
+    one	 [0] EXPLICIT T1,
+    two	 [1] IMPLICIT IA5String
+}
+
+END

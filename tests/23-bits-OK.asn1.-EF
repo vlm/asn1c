@@ -1,0 +1,20 @@
+
+ModuleTestBitString {iso(-1) org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	23 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+v28 INTEGER ::= 28
+
+BS1 ::= BIT STRING {
+    first(0),
+    third(2),
+    twenty-eight(28)
+}
+
+one-zero-one BS1 ::= '101'B
+
+one0one BS1 ::= '101'B
+
+END

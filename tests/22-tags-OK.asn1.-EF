@@ -1,0 +1,17 @@
+
+ModuleTestTags3 {iso(-1) org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	22 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+T1 ::= SEQUENCE {
+    a	 [0] IMPLICIT INTEGER,
+    b	 [1] EXPLICIT CHOICE {
+        i	 [0] IMPLICIT INTEGER,    
+        n	 [1] IMPLICIT IA5String
+    },
+    c	 [2] IMPLICIT UTF8String
+}
+
+END
