@@ -65,7 +65,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		if(!(arg->flags & A1C_USE_NATIVE_INTEGERS))
+	case ASN_BASIC_REAL:
+		if(!(arg->flags & A1C_USE_NATIVE_TYPES))
 			produce_st = 1;
 		break;
 	case ASN_BASIC_BIT_STRING:
@@ -90,6 +91,9 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			case ASN_BASIC_INTEGER:
 			case ASN_BASIC_ENUMERATED:
 				OUT("long value;\n");
+				break;
+			case ASN_BASIC_REAL:
+				OUT("double value;\n");
 				break;
 			case ASN_BASIC_BOOLEAN:
 				OUT("int value;\n");
@@ -549,7 +553,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		if(arg->flags & A1C_USE_NATIVE_INTEGERS) {
+		if(arg->flags & A1C_USE_NATIVE_TYPES) {
 			OUT("value = *(const int *)sptr;\n");
 		} else {
 			if(r_value->el_count == 0
@@ -570,6 +574,20 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 			}
 
 			OUT("if(asn1_INTEGER2long(st, &value)) {\n");
+				INDENT(+1);
+				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
+				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
+				OUT("\ttd->name, __FILE__, __LINE__);\n");
+				OUT("return -1;\n");
+				INDENT(-1);
+			OUT("}\n");
+		}
+		break;
+	case ASN_BASIC_REAL:
+		if(arg->flags & A1C_USE_NATIVE_TYPES) {
+			OUT("value = *(const double *)sptr;\n");
+		} else {
+			OUT("if(asn1_REAL2double(st, &value)) {\n");
 				INDENT(+1);
 				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
 				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");

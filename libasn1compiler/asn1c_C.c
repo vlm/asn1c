@@ -78,45 +78,21 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 #define	MKID(id)	asn1c_make_identifier(0, (id), 0)
 
 int
-asn1c_lang_C_type_ENUMERATED(arg_t *arg) {
-	asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *v;
-
+asn1c_lang_C_type_REAL(arg_t *arg) {
 	REDIR(OT_DEPS);
-
-	OUT("typedef enum %s {\n", MKID(expr->Identifier));
-	TQ_FOR(v, &(expr->members), next) {
-		switch(v->expr_type) {
-		case A1TC_UNIVERVAL:
-			OUT("\t%s\t= %lld,\n",
-				asn1c_make_identifier(0,
-					expr->Identifier,
-					v->Identifier, 0),
-				v->value->value.v_integer);
-			break;
-		case A1TC_EXTENSIBLE:
-			OUT("\t/*\n");
-			OUT("\t * Enumeration is extensible\n");
-			OUT("\t */\n");
-			break;
-		default:
-			return -1;
-		}
-	}
-	OUT("} %s_e;\n", MKID(expr->Identifier));
-
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 
-
 int
-asn1c_lang_C_type_INTEGER(arg_t *arg) {
+asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 
 	REDIR(OT_DEPS);
 
-	if(TQ_FIRST(&(expr->members))) {
+	if(expr->expr_type == ASN_BASIC_ENUMERATED
+	|| TQ_FIRST(&(expr->members))
+	) {
 		OUT("typedef enum %s {\n", MKID(expr->Identifier));
 		TQ_FOR(v, &(expr->members), next) {
 			switch(v->expr_type) {
@@ -126,6 +102,11 @@ asn1c_lang_C_type_INTEGER(arg_t *arg) {
 						expr->Identifier,
 						v->Identifier, 0),
 					v->value->value.v_integer);
+				break;
+			case A1TC_EXTENSIBLE:
+				OUT("\t/*\n");
+				OUT("\t * Enumeration is extensible\n");
+				OUT("\t */\n");
 				break;
 			default:
 				return -1;
