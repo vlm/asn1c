@@ -345,7 +345,7 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
 /*
  * Save the single value as an object identifier arc.
  */
-inline int
+int
 OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arcval_size, int prepared_order) {
 	/*
 	 * The following conditions must hold:
