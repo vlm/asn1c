@@ -72,7 +72,7 @@ asn1f_pull_components_of(arg_t *arg) {
 	}
 
 	/* Move the stuff back */
-	TQ_HEAD_COPY(&(expr->members), &list);
+	TQ_MOVE(&(expr->members), &list);
 
 	return r_value;
 }
@@ -133,12 +133,12 @@ asn1f_fix_constr_ext(arg_t *arg) {
 	/*
 	 * Copy the root list and extension list back into the main list.
 	 */
-	TQ_HEAD_COPY(&(expr->members), &root_list);
+	TQ_MOVE(&(expr->members), &root_list);
 	while((v = TQ_REMOVE(&ext_list, next)))
 		TQ_ADD(&(expr->members), v, next);
 
 	if(arg->mod->module_flags & MSF_EXTENSIBILITY_IMPLIED
-	&& ext_count < 1) {
+	&& ext_count == 0) {
 		v = asn1p_expr_new(0);
 		if(v) {
 			v->Identifier = strdup("...");
