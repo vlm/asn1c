@@ -234,9 +234,6 @@ static asn1p_value_t *
 %type	<a_expr>		DefinedTypeRef
 %type	<a_expr>		ValueSetDefinition  /* Val INTEGER ::= {1|2} */
 %type	<a_expr>		ValueDefinition		/* val INTEGER ::= 1*/
-%type	<a_expr>		optValueSetBody
-%type	<a_expr>		ValueSetBody
-%type	<a_expr>		ValueSetElement
 %type	<a_value>		Value
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
@@ -686,12 +683,13 @@ ExportsElement:
 
 
 ValueSetDefinition:
-	TypeRefName DefinedTypeRef TOK_PPEQ '{' optValueSetBody '}' {
+	TypeRefName DefinedTypeRef TOK_PPEQ
+		'{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
 		$$ = $2;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
 		$$->meta_type = AMT_VALUESET;
-		// take care of optValueSetBody 
+		// take care of ValueSet body
 	}
 	;
 
@@ -711,40 +709,12 @@ DefinedTypeRef:
 	}
 	;
 
-optValueSetBody:
-	{ }
-	| ValueSetBody {
-	}
-	;
-
-/*
- * X.680 does not permit ElementSetSpecs starting with ellipsis,
- * i.e. (..., A, B). This is very strange: the ElementSetSpecs is used
- * inside ValueSet, and ValueSets "in the wild" tend to have the first
- * ellipsis.
- */
-ValueSetBody:
-	ValueSetElement {
-	}
-	| ValueSetBody ',' ValueSetElement {
-	}
-	;
-
-ValueSetElement:
-	TOK_ThreeDots {
-	}
-	| ElementSetSpec {
-	}
-	;
-
-
 /*
  * Data Type Reference.
  * === EXAMPLE ===
  * Type3 ::= CHOICE { a Type1,  b Type 2 }
  * === EOF ===
  */
-
 DataTypeReference:
 	/*
 	 * Optionally tagged type definition.
