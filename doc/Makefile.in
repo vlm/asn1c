@@ -13,6 +13,7 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -47,6 +48,9 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
+am__installdirs = "$(DESTDIR)$(docsdir)"
+docsDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(docs_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ADD_CFLAGS = @ADD_CFLAGS@
@@ -156,6 +160,8 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
+docsdir = $(datadir)/doc/asn1c
+docs_DATA = *.pdf *.html
 EXTRA_DIST = *.pdf *.html
 CLEANFILES = *.*~
 all: all-am
@@ -200,6 +206,23 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
+install-docsDATA: $(docs_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(docsdir)" || $(mkdir_p) "$(DESTDIR)$(docsdir)"
+	@list='$(docs_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " $(docsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(docsdir)/$$f'"; \
+	  $(docsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(docsdir)/$$f"; \
+	done
+
+uninstall-docsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(docs_DATA)'; for p in $$list; do \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " rm -f '$(DESTDIR)$(docsdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(docsdir)/$$f"; \
+	done
 tags: TAGS
 TAGS:
 
@@ -236,8 +259,11 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile
+all-am: Makefile $(DATA)
 installdirs:
+	for dir in "$(DESTDIR)$(docsdir)"; do \
+	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
+	done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -281,7 +307,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-docsDATA
 
 install-exec-am:
 
@@ -307,17 +333,17 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am
+uninstall-am: uninstall-docsDATA uninstall-info-am
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	distclean distclean-generic distclean-libtool distdir dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-exec install-exec-am \
-	install-info install-info-am install-man install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
-	uninstall-info-am
+	install-data install-data-am install-docsDATA install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	uninstall uninstall-am uninstall-docsDATA uninstall-info-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
