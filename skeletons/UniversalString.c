@@ -30,7 +30,7 @@ asn1_TYPE_descriptor_t asn1_DEF_UniversalString = {
 int
 UniversalString_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	const UniversalString_t *st = sptr;
+	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	uint32_t *wchar;
 	uint32_t *wend;
 	char scratch[128];			/* Scratchpad buffer */

@@ -32,7 +32,7 @@ asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
 int
 BIT_STRING_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const BIT_STRING_t *st = sptr;
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 
 	if(st && st->buf) {
 		if(st->size) {
@@ -61,7 +61,7 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	static const char *h2c = "0123456789ABCDEF";
 	char scratch[64];
-	const BIT_STRING_t *st = sptr;
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	uint8_t *buf;
 	uint8_t *end;
 	char *p = scratch;

@@ -66,8 +66,9 @@
  */
 static int
 _t2e_cmp(const void *ap, const void *bp) {
-	const asn1_TYPE_tag2member_t *a = ap;
-	const asn1_TYPE_tag2member_t *b = bp;
+	const asn1_TYPE_tag2member_t *a = (const asn1_TYPE_tag2member_t *)ap;
+	const asn1_TYPE_tag2member_t *b = (const asn1_TYPE_tag2member_t *)bp;
+
 	int a_class = BER_TAG_CLASS(a->el_tag);
 	int b_class = BER_TAG_CLASS(b->el_tag);
 
@@ -97,7 +98,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_SET_specifics_t *specs = sd->specifics;
+	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)sd->specifics;
 	asn1_SET_element_t *elements = specs->elements;
 
 	/*
@@ -179,7 +180,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 			ctx->step = (ctx->step & ~1) + 2,
 				edx = (ctx->step >> 1)) {
 		void *memb_ptr;		/* Pointer to the member */
-		void *memb_ptr2;	/* Pointer to that pointer */
+		void **memb_ptr2;	/* Pointer to that pointer */
 		ssize_t tag_len;	/* Length of TLV's T */
 
 		if(ctx->step & 1)
@@ -234,7 +235,8 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 			asn1_TYPE_tag2member_t key;
 
 			key.el_tag = tlv_tag;
-			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
+			(void *)t2m = bsearch(&key,
+					specs->tag2el, specs->tag2el_count,
 					sizeof(specs->tag2el[0]), _t2e_cmp);
 			if(t2m) {
 				/*
@@ -294,7 +296,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 */
 		if(elements[edx].optional) {
 			/* Optional member, hereby, a simple pointer */
-			memb_ptr2 = (char *)st + elements[edx].memb_offset;
+			memb_ptr2 = (void **)((char *)st + elements[edx].memb_offset);
 		} else {
 			/*
 			 * A pointer to a pointer
@@ -307,7 +309,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * Invoke the member fetch routine according to member's type
 		 */
 		rval = elements[edx].type->ber_decoder(
-				(void *)elements[edx].type,
+				elements[edx].type,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
 		switch(rval.code) {
@@ -432,7 +434,7 @@ der_enc_rval_t
 SET_encode_der(asn1_TYPE_descriptor_t *sd,
 	void *ptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_specifics_t *specs = sd->specifics;
+	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)sd->specifics;
 	size_t computed_size = 0;
 	der_enc_rval_t my_erval;
 	int t2m_build_own = (specs->tag2el_count != specs->elements_count);
@@ -445,14 +447,14 @@ SET_encode_der(asn1_TYPE_descriptor_t *sd,
 	 * Use existing, or build our own tags map.
 	 */
 	if(t2m_build_own) {
-		t2m = alloca(specs->elements_count * sizeof(t2m[0]));
-		t2m_count = 0;
+		(void *)t2m = alloca(specs->elements_count * sizeof(t2m[0]));
 		if(!t2m) {	/* There are such platforms */
 			my_erval.encoded = -1;
 			my_erval.failed_type = sd;
 			my_erval.structure_ptr = ptr;
 			return my_erval;
 		}
+		t2m_count = 0;
 	} else {
 		/*
 		 * There is no untagged CHOICE in this SET.
@@ -578,7 +580,7 @@ SET_encode_der(asn1_TYPE_descriptor_t *sd,
 int
 SET_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_specifics_t *specs = td->specifics;
+	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)td->specifics;
 	int edx;
 	int ret;
 
@@ -625,7 +627,7 @@ SET_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 void
 SET_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	asn1_SET_specifics_t *specs = td->specifics;
+	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)td->specifics;
 	int edx;
 
 	if(!td || !ptr)
@@ -654,7 +656,7 @@ SET_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 int
 SET_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_SET_specifics_t *specs = td->specifics;
+	asn1_SET_specifics_t *specs = (asn1_SET_specifics_t *)td->specifics;
 	int edx;
 
 	if(!sptr) {

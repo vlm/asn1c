@@ -57,7 +57,7 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 				while(_ns <= (size_t)(st->size + bufsize));	\
 			ptr = REALLOC(st->buf, _ns);			\
 			if(ptr) {					\
-				st->buf = ptr;				\
+				st->buf = (uint8_t *)ptr;		\
 				ctx->step = _ns;			\
 			} else {					\
 				RETURN(RC_FAIL);			\
@@ -100,7 +100,7 @@ _add_stack_el(struct _stack *st) {
 		nel->want_nulls = 0;
 		nel->bits_chopped = 0;
 	} else {
-		nel = CALLOC(1, sizeof(struct _stack_el));
+		(void *)nel = CALLOC(1, sizeof(struct _stack_el));
 		if(nel == NULL)
 			return NULL;
 	
@@ -119,7 +119,7 @@ _add_stack_el(struct _stack *st) {
 static struct _stack *
 _new_stack() {
 	struct _stack *st;
-	st = CALLOC(1, sizeof(struct _stack));
+	(void *)st = CALLOC(1, sizeof(struct _stack));
 	if(st == NULL)
 		return NULL;
 
@@ -138,7 +138,7 @@ _new_stack() {
 ber_dec_rval_t
 OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **os_structure, void *buf_ptr, size_t size, int tag_mode) {
-	OCTET_STRING_t *st = *os_structure;
+	OCTET_STRING_t *st = (OCTET_STRING_t *)*os_structure;
 	ber_dec_rval_t rval;
 	ber_dec_ctx_t *ctx;
 	ssize_t consumed_myself = 0;
@@ -160,7 +160,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	 * Create the string if does not exist.
 	 */
 	if(st == NULL) {
-		st = *os_structure = CALLOC(1, sizeof(*st));
+		(void *)st = *os_structure = CALLOC(1, sizeof(*st));
 		if(st == NULL)
 			RETURN(RC_FAIL);
 	}
@@ -189,7 +189,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			 */
 			ctx->ptr = _new_stack();
 			if(ctx->ptr) {
-				stck = ctx->ptr;
+				(void *)stck = ctx->ptr;
 				if(ctx->left < 0) {
 					stck->cur_ptr->want_nulls = -ctx->left;
 					stck->cur_ptr->left = -1;
@@ -223,7 +223,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		/*
 		 * Fill the stack with expectations.
 		 */
-		stck = ctx->ptr;
+		(void *)stck = ctx->ptr;
 		sel = stck->cur_ptr;
 	  do {
 		ber_tlv_tag_t tlv_tag;
@@ -307,7 +307,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		NEXT_PHASE(ctx);
 		/* Fall through */
 	case 2:
-		stck = ctx->ptr;
+		(void *)stck = ctx->ptr;
 		sel = stck->cur_ptr;
 		ASN_DEBUG("Phase 2: Need %ld bytes, size=%ld",
 			(long)sel->left, (long)size);
@@ -391,7 +391,7 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	der_enc_rval_t erval;
-	OCTET_STRING_t *st = ptr;
+	OCTET_STRING_t *st = (OCTET_STRING_t *)ptr;
 	int add_byte = 0;
 
 	ASN_DEBUG("%s %s as OCTET STRING",
@@ -458,7 +458,7 @@ int
 OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	static const char *h2c = "0123456789ABCDEF";
-	const OCTET_STRING_t *st = sptr;
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	char scratch[16 * 3 + 4];
 	char *p = scratch;
 	uint8_t *buf;
@@ -495,7 +495,7 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 int
 OCTET_STRING_print_ascii(asn1_TYPE_descriptor_t *td, const void *sptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	const OCTET_STRING_t *st = sptr;
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
@@ -509,8 +509,8 @@ OCTET_STRING_print_ascii(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 void
 OCTET_STRING_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
-	OCTET_STRING_t *st = sptr;
-	struct _stack *stck = st->_ber_dec_ctx.ptr;
+	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
+	struct _stack *stck = (struct _stack *)st->_ber_dec_ctx.ptr;
 
 	if(!td || !st)
 		return;
@@ -569,7 +569,7 @@ OCTET_STRING_fromBuf(OCTET_STRING_t *st, const char *str, int len) {
 	if(buf == NULL) {
 		return -1;
 	} else {
-		st->buf = buf;
+		st->buf = (uint8_t *)buf;
 		st->size = len;
 	}
 
@@ -583,7 +583,7 @@ OCTET_STRING_t *
 OCTET_STRING_new_fromBuf(const char *str, int len) {
 	OCTET_STRING_t *st;
 
-	st = CALLOC(1, sizeof(*st));
+	(void *)st = CALLOC(1, sizeof(*st));
 	if(st && str && OCTET_STRING_fromBuf(st, str, len)) {
 		free(st);
 		st = NULL;

@@ -38,7 +38,7 @@ OBJECT_IDENTIFIER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	der_enc_rval_t erval;
-	OBJECT_IDENTIFIER_t *st = ptr;
+	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)ptr;
 
 	ASN_DEBUG("%s %s as OBJECT IDENTIFIER (tm=%d)",
 		cb?"Encoding":"Estimating", sd->name, tag_mode);
@@ -75,7 +75,7 @@ OBJECT_IDENTIFIER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 int
 OBJECT_IDENTIFIER_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const OBJECT_IDENTIFIER_t *st = sptr;
+	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 
 	if(st && st->buf) {
 		if(st->size < 1) {
@@ -231,7 +231,7 @@ OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
 int
 OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
 	int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	const OBJECT_IDENTIFIER_t *st = sptr;
+	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 	int startn;
 	int add = 0;
 	int i;
@@ -372,7 +372,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 
 	if(isLittleEndian && !prepared_order) {
 		uint8_t *a = (unsigned char *)arcval + arcval_size - 1;
-		uint8_t *aend = arcval;
+		uint8_t *aend = (uint8_t *)arcval;
 		uint8_t *msb = buffer + arcval_size - 1;
 		for(tp = buffer; a >= aend; tp++, a--)
 			if((*tp = *a) && (tp < msb))
@@ -382,7 +382,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 	} else {
 		/* Look for most significant non-zero byte */
 		tend = (unsigned char *)arcval + arcval_size;
-		for(tp = arcval; tp < tend - 1; tp++)
+		for(tp = (uint8_t *)arcval; tp < tend - 1; tp++)
 			if(*tp) break;
 	}
 
@@ -461,7 +461,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 			unsigned char *ps, *pe;
 			/* If more significant bytes are present,
 			 * make them > 255 quick */
-			for(ps = arcs, pe = ps+arc_type_size - 1; ps < pe; ps++)
+			for(ps = (unsigned char *)arcs, pe = ps+arc_type_size - 1; ps < pe; ps++)
 				arc0 |= *ps, arc1 |= *(ps + arc_type_size);
 			arc0 = *((unsigned char *)arcs + arc_type_size - 1);
 			arc1 = *((unsigned char *)arcs +(arc_type_size<< 1)-1);
@@ -499,7 +499,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 	 * 	* the value of the first arc which is in range (0..2)
 	 */
 	size = ((arc_type_size * CHAR_BIT + 6) / 7) * arc_slots;
-	bp = buf = MALLOC(size + 1);
+	bp = buf = (uint8_t *)MALLOC(size + 1);
 	if(!buf) {
 		/* ENOMEM */
 		return -1;
@@ -534,7 +534,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 			uint8_t *a1 = (unsigned char *)arcs + arc_type_size - 1;
 			for(; a1 > aend; fv++, a1--) *fv = *a1;
 		} else {
-			uint8_t *a1 = arcs;
+			uint8_t *a1 = (uint8_t *)arcs;
 			uint8_t *aend = a1 + arc_type_size;
 			for(; a1 < aend; fv++, a1++) *fv = *a1;
 		}

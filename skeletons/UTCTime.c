@@ -40,7 +40,7 @@ asn1_TYPE_descriptor_t asn1_DEF_UTCTime = {
 int
 UTCTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const UTCTime_t *st = sptr;
+	const UTCTime_t *st = (const UTCTime_t *)sptr;
 	time_t tloc;
 
 	errno = EPERM;			/* Just an unlikely error code */
@@ -57,7 +57,7 @@ UTCTime_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 int
 UTCTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	const UTCTime_t *st = sptr;
+	const UTCTime_t *st = (const UTCTime_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */

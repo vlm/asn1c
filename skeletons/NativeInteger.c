@@ -40,7 +40,7 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeInteger = {
 ber_dec_rval_t
 NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **int_ptr, void *buf_ptr, size_t size, int tag_mode) {
-	int *Int = *int_ptr;
+	int *Int = (int *)*int_ptr;
 	ber_dec_rval_t rval;
 	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
@@ -49,7 +49,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	 * If the structure is not there, allocate it.
 	 */
 	if(Int == NULL) {
-		Int = *int_ptr = CALLOC(1, sizeof(*Int));
+		(void *)Int = *int_ptr = CALLOC(1, sizeof(*Int));
 		if(Int == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -89,7 +89,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	{
 		INTEGER_t tmp;
 		long l;
-		tmp.buf = buf_ptr;
+		tmp.buf = (uint8_t *)buf_ptr;
 		tmp.size = length;
 
 		if(asn1_INTEGER2long(&tmp, &l)) {
@@ -165,7 +165,7 @@ NativeInteger_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 int
 NativeInteger_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	const int *Int = sptr;
+	const int *Int = (const int *)sptr;
 	char scratch[32];	/* Enough for 64-bit int */
 	int ret;
 

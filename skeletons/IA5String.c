@@ -29,7 +29,7 @@ asn1_TYPE_descriptor_t asn1_DEF_IA5String = {
 int
 IA5String_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 
 	if(st && st->buf) {
 		uint8_t *buf = st->buf;

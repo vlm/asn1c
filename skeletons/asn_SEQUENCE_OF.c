@@ -9,7 +9,7 @@ typedef A_SEQUENCE_OF(void) asn_sequence;
 
 void
 asn_sequence_del(void *asn_sequence_of_x, int number, int _do_free) {
-	asn_sequence *as = asn_sequence_of_x;
+	asn_sequence *as = (asn_sequence *)asn_sequence_of_x;
 
 	if(as) {
 		void *ptr;

@@ -60,7 +60,7 @@ der_write_tags(asn1_TYPE_descriptor_t *sd,
 		 * and initialize it appropriately.
 		 */
 		int stag_offset;
-		tags = alloca((sd->tags_count + 1) * sizeof(ber_tlv_tag_t));
+		tags = (ber_tlv_tag_t *)alloca((sd->tags_count + 1) * sizeof(ber_tlv_tag_t));
 		if(!tags) {	/* Can fail on !x86 */
 			errno = ENOMEM;
 			return -1;
@@ -82,7 +82,7 @@ der_write_tags(asn1_TYPE_descriptor_t *sd,
 	if(tags_count == 0)
 		return 0;
 
-	lens = alloca(tags_count * sizeof(lens[0]));
+	lens = (ssize_t *)alloca(tags_count * sizeof(lens[0]));
 	if(!lens) {
 		errno = ENOMEM;
 		return -1;

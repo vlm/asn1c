@@ -9,7 +9,7 @@
 ssize_t
 ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
 		ber_tlv_len_t *len_r) {
-	uint8_t *buf = bufptr;
+	uint8_t *buf = (uint8_t *)bufptr;
 	unsigned oct;
 
 	if(size == 0)
@@ -119,7 +119,7 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 ssize_t
 der_tlv_length_serialize(ber_tlv_len_t len, void *bufp, size_t size) {
 	size_t computed_size;	/* Size of len encoding */
-	uint8_t *buf = bufp;
+	uint8_t *buf = (uint8_t *)bufp;
 	uint8_t *end;
 	int i;
 

@@ -66,8 +66,9 @@ static inline void _set_present_idx(void *sptr, int offset, int size, int pres);
  */
 static int
 _search4tag(const void *ap, const void *bp) {
-	const asn1_TYPE_tag2member_t *a = ap;
-	const asn1_TYPE_tag2member_t *b = bp;
+	const asn1_TYPE_tag2member_t *a = (const asn1_TYPE_tag2member_t *)ap;
+	const asn1_TYPE_tag2member_t *b = (const asn1_TYPE_tag2member_t *)bp;
+
 	int a_class = BER_TAG_CLASS(a->el_tag);
 	int b_class = BER_TAG_CLASS(b->el_tag);
 
@@ -97,7 +98,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_CHOICE_specifics_t *specs = sd->specifics;
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)sd->specifics;
 	asn1_CHOICE_element_t *elements = specs->elements;
 
 	/*
@@ -183,7 +184,8 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 			asn1_TYPE_tag2member_t key;
 
 			key.el_tag = tlv_tag;
-			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
+			(void *)t2m = bsearch(&key,
+					specs->tag2el, specs->tag2el_count,
 					sizeof(specs->tag2el[0]), _search4tag);
 			if(t2m) {
 				/*
@@ -227,7 +229,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 	    do {
 		asn1_CHOICE_element_t *elm;	/* CHOICE's element */
 		void *memb_ptr;		/* Pointer to the member */
-		void *memb_ptr2;	/* Pointer to that pointer */
+		void **memb_ptr2;	/* Pointer to that pointer */
 
 		elm = &elements[ctx->step];
 
@@ -238,7 +240,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 */
 		if(elm->optional) {
 			/* Optional member, hereby, a simple pointer */
-			memb_ptr2 = (char *)st + elm->memb_offset;
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 		} else {
 			/*
 			 * A pointer to a pointer
@@ -250,8 +252,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = elm->type->ber_decoder(
-				(void *)elm->type,
+		rval = elm->type->ber_decoder(elm->type,
 				memb_ptr2, ptr, LEFT,
 				elm->tag_mode);
 		switch(rval.code) {
@@ -352,7 +353,7 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *sd,
 		void *struct_ptr,
 		int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_CHOICE_specifics_t *specs = sd->specifics;
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)sd->specifics;
 	asn1_CHOICE_element_t *elm;	/* CHOICE element */
 	der_enc_rval_t erval;
 	void *memb_ptr;
@@ -442,7 +443,7 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *sd,
 
 ber_tlv_tag_t
 CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber_tlv_tag_t tag) {
-	asn1_CHOICE_specifics_t *specs = td->specifics;
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	assert(tag_mode == 0);
@@ -475,7 +476,7 @@ CHOICE_outmost_tag(asn1_TYPE_descriptor_t *td, const void *ptr, int tag_mode, be
 int
 CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_CHOICE_specifics_t *specs = td->specifics;
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	if(!sptr) {
@@ -509,7 +510,7 @@ CHOICE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 int
 CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_CHOICE_specifics_t *specs = td->specifics;
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	if(!sptr) return cb("<absent>", 8, app_key);
@@ -547,7 +548,7 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 void
 CHOICE_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	asn1_CHOICE_specifics_t *specs = td->specifics;
+	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	if(!td || !ptr)

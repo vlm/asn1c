@@ -33,7 +33,7 @@ asn1_TYPE_descriptor_t asn1_DEF_INTEGER = {
 ber_dec_rval_t
 INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 	void **int_structure, void *buf_ptr, size_t size, int tag_mode) {
-	INTEGER_t *st = *int_structure;
+	INTEGER_t *st = (INTEGER_t *)*int_structure;
 	ber_dec_rval_t rval;
 	ber_dec_ctx_t ctx = { 0, 0, 0, 0 };
 	ber_tlv_len_t length;
@@ -42,7 +42,7 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 	 * If the structure is not there, allocate it.
 	 */
 	if(st == NULL) {
-		st = *int_structure = CALLOC(1, sizeof(*st));
+		(void *)st = *int_structure = CALLOC(1, sizeof(*st));
 		if(st == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -74,7 +74,7 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 		return rval;
 	}
 
-	st->buf = MALLOC(length);
+	st->buf = (uint8_t *)MALLOC(length);
 	if(st->buf) {
 		st->size = length;
 	} else {
@@ -103,7 +103,7 @@ INTEGER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	der_enc_rval_t erval;
-	INTEGER_t *st = ptr;
+	INTEGER_t *st = (INTEGER_t *)ptr;
 
 	ASN_DEBUG("%s %s as INTEGER (tm=%d)",
 		cb?"Encoding":"Estimating", sd->name, tag_mode);
@@ -187,7 +187,7 @@ int
 INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	char scratch[32];	/* Enough for 64-bit integer */
-	const INTEGER_t *st = sptr;
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
 	signed long accum;
@@ -249,7 +249,7 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 void
 INTEGER_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	INTEGER_t *st = ptr;
+	INTEGER_t *st = (INTEGER_t *)ptr;
 
 	if(!td || !st)
 		return;

@@ -12,9 +12,9 @@ der_enc_rval_t
 SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = sd->specifics;
+	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)sd->specifics;
 	asn1_SET_OF_element_t *elm = specs->element;
-	A_SEQUENCE_OF(void) *list = ptr;
+	A_SEQUENCE_OF(void) *list;
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
 	der_enc_rval_t erval;
@@ -25,6 +25,7 @@ SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */
+	(void *)list = ptr;
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		erval = elm->type->der_encoder(elm->type, memb_ptr,

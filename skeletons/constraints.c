@@ -35,7 +35,7 @@ struct __fill_errbuf_arg {
 
 static int
 __fill_errbuf(const void *buffer, size_t size, void *app_key) {
-	struct __fill_errbuf_arg *arg = app_key;
+	struct __fill_errbuf_arg *arg = (struct __fill_errbuf_arg *)app_key;
 	size_t avail = arg->errlen - arg->erroff;
 
 	if(avail > size)
@@ -107,7 +107,7 @@ _asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
 	 * More space required to hold the message.
 	 */
 	len = ret + 1;
-	p = alloca(len);
+	p = (char *)alloca(len);
 	if(!p) return;	/* Can fail on !x86. */
 
 	

@@ -65,7 +65,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn1_SET_OF_specifics_t *specs = sd->specifics;
+	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)sd->specifics;
 	asn1_SET_OF_element_t *element = specs->element;
 
 	/*
@@ -201,8 +201,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = element->type->ber_decoder(
-				(void *)element->type,
+		rval = element->type->ber_decoder(element->type,
 				&ctx->ptr, ptr, LEFT, 0);
 		ASN_DEBUG("In %s SET OF %s code %d consumed %d",
 			sd->name, element->type->name,
@@ -210,7 +209,8 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 		switch(rval.code) {
 		case RC_OK:
 			{
-				A_SET_OF(void) *list = st;
+				A_SET_OF(void) *list;
+				(void *)list = st;
 				if(ASN_SET_ADD(list, ctx->ptr) != 0)
 					RETURN(RC_FAIL);
 				else
@@ -269,7 +269,7 @@ struct _el_buffer {
 };
 /* Append bytes to the above structure */
 static int _el_addbytes(const void *buffer, size_t size, void *el_buf_ptr) {
-	struct _el_buffer *el_buf = el_buf_ptr;
+	struct _el_buffer *el_buf = (struct _el_buffer *)el_buf_ptr;
 
 	if(el_buf->length + size > el_buf->size)
 		return -1;
@@ -280,8 +280,8 @@ static int _el_addbytes(const void *buffer, size_t size, void *el_buf_ptr) {
 	return 0;
 }
 static int _el_buf_cmp(const void *ap, const void *bp) {
-	const struct _el_buffer *a = ap;
-	const struct _el_buffer *b = bp;
+	const struct _el_buffer *a = (const struct _el_buffer *)ap;
+	const struct _el_buffer *b = (const struct _el_buffer *)bp;
 	int ret;
 	size_t common_len;
 
@@ -308,11 +308,11 @@ der_enc_rval_t
 SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = sd->specifics;
+	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)sd->specifics;
 	asn1_SET_OF_element_t *elm = specs->element;
 	asn1_TYPE_descriptor_t *elm_type = elm->type;
 	der_type_encoder_f *der_encoder = elm_type->der_encoder;
-	A_SET_OF(void) *list = ptr;
+	A_SET_OF(void) *list;
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
 	struct _el_buffer *encoded_els;
@@ -326,6 +326,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */
+	(void *)list = ptr;
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		erval = der_encoder(elm_type, memb_ptr, 0, elm->tag, 0, 0);
@@ -361,7 +362,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	 * according to their encodings. Build an array of the
 	 * encoded elements.
 	 */
-	encoded_els = MALLOC(list->count * sizeof(encoded_els[0]));
+	(void *)encoded_els = MALLOC(list->count * sizeof(encoded_els[0]));
 	if(encoded_els == NULL) {
 		erval.encoded = -1;
 		erval.failed_type = sd;
@@ -381,7 +382,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		/*
 		 * Prepare space for encoding.
 		 */
-		encoded_el->buf = MALLOC(max_encoded_len);
+		encoded_el->buf = (uint8_t *)MALLOC(max_encoded_len);
 		if(encoded_el->buf) {
 			encoded_el->length = 0;
 			encoded_el->size = max_encoded_len;
@@ -447,9 +448,9 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 int
 SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = td->specifics;
+	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
 	asn1_SET_OF_element_t *element = specs->element;
-	const A_SET_OF(void) *list = sptr;
+	const A_SET_OF(void) *list;
 	int ret;
 	int i;
 
@@ -460,6 +461,7 @@ SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	|| cb(" ::= {\n", 7, app_key))
 		return -1;
 
+	(void *)list = sptr;
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
@@ -484,15 +486,16 @@ SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 void
 SET_OF_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr) {
-		asn1_SET_OF_specifics_t *specs = td->specifics;
+		asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
 		asn1_SET_OF_element_t *element = specs->element;
-		A_SET_OF(void) *list = ptr;
+		A_SET_OF(void) *list;
 		int i;
 
 		/*
 		 * Could not use set_of_empty() because of (*free)
 		 * incompatibility.
 		 */
+		(void *)list = ptr;
 		for(i = 0; i < list->count; i++) {
 			void *memb_ptr = list->array[i];
 			if(memb_ptr)
@@ -511,15 +514,17 @@ SET_OF_free(asn1_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 int
 SET_OF_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = td->specifics;
+	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)td->specifics;
 	asn1_SET_OF_element_t *element = specs->element;
-	const A_SET_OF(void) *list = sptr;
+	const A_SET_OF(void) *list;
 	int i;
 
 	if(!sptr) {
 		_ASN_ERRLOG("%s: value not given", td->name);
 		return -1;
 	}
+
+	(void *)list = sptr;
 
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
