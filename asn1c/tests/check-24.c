@@ -36,7 +36,7 @@ uint8_t buf1[] = {
 static void
 check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T_t t, *tp;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 
 	tp = memset(&t, 0, sizeof(t));
 

@@ -47,7 +47,7 @@ buf2_fill(const void *buffer, size_t size, void *app_key) {
 static void
 check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T1_t t, *tp;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	asn_enc_rval_t erval;
 	int ret;
 	int i;

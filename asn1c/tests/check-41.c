@@ -131,7 +131,7 @@ uint8_t buf2_reconstr[] = {
 
 static void
 check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	int ret;
 
 	tp = memset(tp, 0, sizeof(*tp));
@@ -216,7 +216,7 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 static void
 partial_read(uint8_t *buf, size_t size) {
 	T_t t, *tp;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	size_t i1, i2;
 	uint8_t *buf1 = alloca(size);
 	uint8_t *buf2 = alloca(size);

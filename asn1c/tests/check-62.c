@@ -58,7 +58,7 @@ save_object(T_t *st) {
 
 static T_t *
 load_object(enum expectation expectation, char *fbuf, int size) {
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	T_t *st = 0;
 	int csize;
 

@@ -89,7 +89,7 @@ uint8_t buf1[] = {
 static void
 check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T_t t, *tp;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 
 	tp = memset(&t, 0, sizeof(t));
 
@@ -173,7 +173,7 @@ try_corrupt(uint8_t *buf, int size, int allow_consume) {
 static void
 partial_read(uint8_t *buf, size_t size) {
 	T_t t, *tp;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	size_t i1, i2;
 	uint8_t *tbuf1 = alloca(size);
 	uint8_t *tbuf2 = alloca(size);
