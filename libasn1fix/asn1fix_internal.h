@@ -104,7 +104,10 @@ typedef struct arg_s {
 		int _save_errno = errno;			\
 		if(code < 0) {					\
 			if(arg->debug)				\
-				arg->debug(code, fmt, ##args);	\
+			arg->debug(code, fmt " in %s (%s@%d)",	\
+				##args,				\
+				arg->mod->source_file_name,	\
+				__FILE__, __LINE__);		\
 		} else if(arg->eh) {				\
 			arg->eh(code, fmt " in %s", ##args,	\
 				arg->mod->source_file_name);	\
