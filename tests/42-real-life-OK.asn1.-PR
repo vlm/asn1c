@@ -34,7 +34,7 @@ typedef struct LogLine {
 /*** <<< CODE [LogLine] >>> ***/
 
 static int
-memb_varsets_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_varsets_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	size_t size;
 	
@@ -109,7 +109,7 @@ static asn1_TYPE_member_t asn1_MBR_LogLine[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_varsets,
-		.memb_constraints = memb_varsets_constraint,
+		.memb_constraints = memb_varsets_1_constraint,
 		.name = "varsets"
 		},
 };
@@ -182,7 +182,7 @@ typedef struct VariablePartSet {
 /*** <<< CODE [VariablePartSet] >>> ***/
 
 static int
-memb_vparts_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_vparts_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
 	if(!sptr) {
@@ -242,7 +242,7 @@ static asn1_TYPE_member_t asn1_MBR_VariablePartSet[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_vparts,
-		.memb_constraints = memb_vparts_constraint,
+		.memb_constraints = memb_vparts_2_constraint,
 		.name = "vparts"
 		},
 	{ 0, offsetof(struct VariablePartSet, resolution),
@@ -341,7 +341,7 @@ typedef struct VariablePart {
 /*** <<< CODE [VariablePart] >>> ***/
 
 static int
-memb_vset_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_vset_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	size_t size;
 	
@@ -458,7 +458,7 @@ static asn1_TYPE_member_t asn1_MBR_VariablePart[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_vset,
-		.memb_constraints = memb_vset_constraint,
+		.memb_constraints = memb_vset_3_constraint,
 		.name = "vset"
 		},
 	{ 0, offsetof(struct VariablePart, choice.vrange),

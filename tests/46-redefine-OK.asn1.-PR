@@ -8,7 +8,6 @@
 
 typedef OCTET_STRING_t	 PrimitiveType_t;
 
-
 /*** <<< FUNC-DECLS [PrimitiveType] >>> ***/
 
 extern asn1_TYPE_descriptor_t asn1_DEF_PrimitiveType;
@@ -171,7 +170,6 @@ asn1_TYPE_descriptor_t asn1_DEF_ConstructedType = {
 
 
 typedef ConstructedType_t	 T_t;
-
 
 /*** <<< FUNC-DECLS [T] >>> ***/
 
