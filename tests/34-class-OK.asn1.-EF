@@ -1,0 +1,36 @@
+
+ModuleTestClassSimple {iso(-1) org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	34 }
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+EXTENSION ::= CLASS {
+    &id	 OBJECT IDENTIFIER UNIQUE,
+    &ExtnType	
+} WITH SYNTAX {
+		SYNTAX		&ExtnType
+		IDENTIFIED BY	&id
+	}
+
+
+Ext1 ::= SEQUENCE {
+    extnId	 EXTENSION.&id
+}
+
+EXTENSION-ATTRIBUTE ::= CLASS {
+    &id	 INTEGER (0..256) UNIQUE,
+    &Type	
+} WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+
+terminal-type EXTENSION-ATTRIBUTE ::= { TerminalType IDENTIFIED BY 23}
+
+ExtensionAttribute ::= SEQUENCE {
+    extension-attribute-type	 [0] IMPLICIT EXTENSION-ATTRIBUTE.&id ({ExtensionAttributeTable}),
+    extension-attribute-value	 [1] IMPLICIT EXTENSION-ATTRIBUTE.&Type ({ExtensionAttributeTable}{@extension-attribute-type})
+}
+
+ub-extension-attributes INTEGER ::= 256
+
+END

@@ -58,7 +58,7 @@ typedef struct LogLine {
 		asn1_DEF_varsets_tags,
 		sizeof(asn1_DEF_varsets_tags)
 			/sizeof(asn1_DEF_varsets_tags[0]),
-		0,	/* Tags to skip */
+		1,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_varsets_specs	/* Additional specs */
 	};
@@ -107,7 +107,7 @@ asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 	asn1_DEF_LogLine_tags,
 	sizeof(asn1_DEF_LogLine_tags)
 		/sizeof(asn1_DEF_LogLine_tags[0]),
-	0,	/* Tags to skip */
+	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_LogLine_specs	/* Additional specs */
 };
@@ -172,7 +172,7 @@ typedef struct VariablePartSet {
 		asn1_DEF_vparts_tags,
 		sizeof(asn1_DEF_vparts_tags)
 			/sizeof(asn1_DEF_vparts_tags[0]),
-		0,	/* Tags to skip */
+		1,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_vparts_specs	/* Additional specs */
 	};
@@ -221,7 +221,7 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
 	asn1_DEF_VariablePartSet_tags,
 	sizeof(asn1_DEF_VariablePartSet_tags)
 		/sizeof(asn1_DEF_VariablePartSet_tags[0]),
-	0,	/* Tags to skip */
+	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_VariablePartSet_specs	/* Additional specs */
 };
@@ -306,7 +306,7 @@ typedef struct VariablePart {
 			asn1_DEF_vset_tags,
 			sizeof(asn1_DEF_vset_tags)
 				/sizeof(asn1_DEF_vset_tags[0]),
-			0,	/* Tags to skip */
+			1,	/* Tags to skip */
 			1,	/* Whether CONSTRUCTED */
 			&asn1_DEF_vset_specs	/* Additional specs */
 		};
@@ -355,7 +355,7 @@ typedef struct VariablePart {
 			asn1_DEF_vrange_tags,
 			sizeof(asn1_DEF_vrange_tags)
 				/sizeof(asn1_DEF_vrange_tags[0]),
-			0,	/* Tags to skip */
+			1,	/* Tags to skip */
 			1,	/* Whether CONSTRUCTED */
 			&asn1_DEF_vrange_specs	/* Additional specs */
 		};
@@ -494,7 +494,7 @@ typedef struct ActionItem {
 			asn1_DEF_email_tags,
 			sizeof(asn1_DEF_email_tags)
 				/sizeof(asn1_DEF_email_tags[0]),
-			0,	/* Tags to skip */
+			1,	/* Tags to skip */
 			1,	/* Whether CONSTRUCTED */
 			&asn1_DEF_email_specs	/* Additional specs */
 		};
@@ -543,7 +543,7 @@ typedef struct ActionItem {
 		asn1_DEF_notify_tags,
 		sizeof(asn1_DEF_notify_tags)
 			/sizeof(asn1_DEF_notify_tags[0]),
-		0,	/* Tags to skip */
+		1,	/* Tags to skip */
 		1,	/* Whether CONSTRUCTED */
 		&asn1_DEF_notify_specs	/* Additional specs */
 	};
@@ -592,7 +592,7 @@ asn1_TYPE_descriptor_t asn1_DEF_ActionItem = {
 	asn1_DEF_ActionItem_tags,
 	sizeof(asn1_DEF_ActionItem_tags)
 		/sizeof(asn1_DEF_ActionItem_tags[0]),
-	0,	/* Tags to skip */
+	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
 	&asn1_DEF_ActionItem_specs	/* Additional specs */
 };
