@@ -38,11 +38,12 @@ while(<STDIN>) {
 			print O "\n";
 		}
 	} else {
-		next unless $modules{$_};
-		open(O, '> '.$modules{$_});
+		/^([A-Za-z0-9-]+)(\s*{.*)?$/;
+		next unless $modules{$1};
+		open(O, '> '.$modules{$1});
 		print O;
 		$inmodule = 1;
-		delete $modules{$_};
+		delete $modules{$1};
 	}
 }
 
