@@ -116,11 +116,13 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	v2e = alloca((el_count + 1) * sizeof(*v2e));
 
 	/*
-	 * For all ENUMERATED types and for those INTEGER types which
-	 * have identifiers, print out an enumeration table and a mapping
+	 * For all ENUMERATED types [and for those INTEGER types which
+	 * have identifiers -- prohibited by X.693:8.3.4],
+	 * print out an enumeration table and a mapping
 	 * between identifiers and associated values.
 	 */
-	if(expr->expr_type == ASN_BASIC_ENUMERATED || el_count) {
+	if(expr->expr_type == ASN_BASIC_ENUMERATED
+	|| (0 && el_count /* -- prohibited by X.693:8.3.4 */)) {
 		int eidx = 0;
 
 		REDIR(OT_DEPS);
@@ -561,8 +563,9 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			? "SET" : "SEQUENCE");
 	if(memb->expr_type & ASN_CONSTR_MASK
 	|| ((memb->expr_type == ASN_BASIC_ENUMERATED
-		|| memb->expr_type == ASN_BASIC_INTEGER)
-	    && expr_elements_count(arg, memb))) {
+		|| (0 /* -- prohibited by X.693:8.3.4 */
+			&& memb->expr_type == ASN_BASIC_INTEGER))
+	    	&& expr_elements_count(arg, memb))) {
 		arg_t tmp;
 		asn1p_expr_t tmp_memb;
 		arg->embed++;
@@ -918,7 +921,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	}
 
 	if((expr->expr_type == ASN_BASIC_ENUMERATED)
-	|| (expr->expr_type == ASN_BASIC_INTEGER
+	|| (0 /* -- prohibited by X.693:8.3.4 */
+		&& expr->expr_type == ASN_BASIC_INTEGER
 		&& expr_elements_count(arg, expr)))
 		etd_spec = ETD_HAS_SPECIFICS;
 	else
@@ -1561,7 +1565,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	complex_contents =
 		(expr->expr_type & ASN_CONSTR_MASK)
 		|| expr->expr_type == ASN_BASIC_ENUMERATED
-		|| (expr->expr_type == ASN_BASIC_INTEGER
+		|| (0 /* -- prohibited by X.693:8.3.4 */
+			&& expr->expr_type == ASN_BASIC_INTEGER
 			&& expr_elements_count(arg, expr));
 	if(C99_MODE) OUT(".type = ");
 	if(complex_contents
