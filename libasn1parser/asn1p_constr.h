@@ -35,6 +35,7 @@ typedef struct asn1p_constraint_s {
 		ACT_CA_UNI,		/* UNION (|) */
 		ACT_CA_INT,		/* INTERSECTION (^) */
 		ACT_CA_EXC,		/* EXCEPT */
+		ACT_CA_AEX,		/* ALL EXCEPT */
 	} type;
 
 	enum asn1p_constr_pres_e {

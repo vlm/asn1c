@@ -321,6 +321,11 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 		edge->type = ARE_VALUE;
 		edge->value = (val->type==ATV_TRUE);
 		return 0;
+	case ATV_TUPLE:
+	case ATV_QUADRUPLE:
+		edge->type = ARE_VALUE;
+		edge->value = val->value.v_integer;
+		return 0;
 	case ATV_STRING:
 		if(type != ACT_CT_FROM)
 			return 0;
