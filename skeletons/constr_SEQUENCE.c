@@ -237,9 +237,9 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		opt_edx_end = edx + elements[edx].optional + 1;
 		if(opt_edx_end > specs->elements_count)
 			opt_edx_end = specs->elements_count;	/* Cap */
-		else if(opt_edx_end - edx > 5) {
+		else if(opt_edx_end - edx > 8) {
 			/* Limit the scope of linear search... */
-			opt_edx_end = edx + 5;
+			opt_edx_end = edx + 8;
 			use_bsearch = 1;
 			/* ... and resort to bsearch() */
 		}
