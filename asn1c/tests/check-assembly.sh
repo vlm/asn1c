@@ -33,7 +33,7 @@ set +x
 
 # Create a Makefile for the project.
 cat > Makefile <<EOM
-COMMON_FLAGS= -I. -Wall -g -DEMIT_ASN_DEBUG
+COMMON_FLAGS= -I. -DEMIT_ASN_DEBUG
 CFLAGS=\${COMMON_FLAGS} ${CFLAGS}
 CXXFLAGS=\${COMMON_FLAGS} ${CXXFLAGS}
 SRCS=`echo *.c*`
