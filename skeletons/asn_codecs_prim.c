@@ -245,8 +245,9 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	switch(rc.code) {
 	case RC_OK:
 		if(!s_arg.decoded_something) {
+			char ch;
 			/* Opportunity has come and gone. Where's the result? */
-			if(prim_body_decode(s_arg.struct_key, "", 0) != 0) {
+			if(prim_body_decode(s_arg.struct_key, &ch, 0) != 0) {
 				/*
 				 * This decoder does not like empty stuff.
 				 */
