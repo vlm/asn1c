@@ -123,9 +123,9 @@ check_REGEN(int *arcs, int acount) {
 
 	fprintf(stderr, "Encoding (R) {");
 	for(i = 0; i < acount; i++) {
-		printf(" %u", arcs[i]);
+		fprintf(stderr, " %u", arcs[i]);
 	}
-	printf(" }\n");
+	fprintf(stderr, " }\n");
 
 	ret = RELATIVE_OID_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
 	assert(ret == 0);
@@ -160,9 +160,9 @@ check_REGEN_OID(int *arcs, int acount) {
 
 	fprintf(stderr, "Encoding (O) {");
 	for(i = 0; i < acount; i++) {
-		printf(" %u", arcs[i]);
+		fprintf(stderr, " %u", arcs[i]);
 	}
-	printf(" }\n");
+	fprintf(stderr, " }\n");
 
 	ret = OBJECT_IDENTIFIER_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
 	assert(ret == 0);
