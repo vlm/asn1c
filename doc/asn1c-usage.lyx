@@ -12,7 +12,7 @@
 linkcolor={gray40},
 urlcolor={urlblue},
 pdfauthor={Lev Walkin},
-pdftitle={Using the OpenSource ASN.1 Compiler},
+pdftitle={Using the Open Source ASN.1 Compiler},
 pdfkeywords={ASN.1,asn1c,compiler}
 ]{hyperref}
 %\fancyhf{}
@@ -46,7 +46,7 @@ pdfkeywords={ASN.1,asn1c,compiler}
 
 \layout Title
 
-Using the OpenSource ASN.1 Compiler
+Using the Open Source ASN.1 Compiler
 \layout Author
 
 Lev Walkin <
@@ -2740,6 +2740,11 @@ free_struct
 Examples
 \layout Chapter
 
+
+\begin_inset LatexCommand \label{cha:Step-by-step-examples}
+
+\end_inset 
+
 Step by step examples
 \layout Section
 
@@ -2754,7 +2759,7 @@ Rectangle
  Encoder
 \layout Standard
 
-This chapter will help you to create a simple BER and XER encoder of a 
+This example will help you to create a simple BER and XER encoder of a 
 \begin_inset Quotes sld
 \end_inset 
 
@@ -2976,7 +2981,7 @@ int main(int ac, char **av) {
 
 
 \size small 
-    rectangle = calloc(1, sizeof(Rectangle_t); /* not malloc! */
+    rectangle = calloc(1, sizeof(Rectangle_t)); /* not malloc! */
 \layout LyX-Code
 
 
@@ -3273,6 +3278,11 @@ clearpage{}
 
 \layout Section
 
+
+\begin_inset LatexCommand \label{sec:A-Rectangle-Decoder}
+
+\end_inset 
+
 A 
 \begin_inset Quotes sld
 \end_inset 
@@ -3284,7 +3294,7 @@ Rectangle
  Decoder
 \layout Standard
 
-This chapter will help you to create a simple BER decoder of a simple 
+This example will help you to create a simple BER decoder of a simple 
 \begin_inset Quotes sld
 \end_inset 
 
@@ -3382,7 +3392,7 @@ main.c
 \series default 
 :
 \begin_inset ERT
-status Open
+status Collapsed
 
 \layout Standard
 
@@ -3704,12 +3714,230 @@ Voila! You have just created the BER decoder of a Rectangle type, named
 rdecode
 \series default 
 !
+\layout Chapter
+
+Constraint validation examples
+\layout Standard
+
+This chapter shows how to define ASN.1 constraints and use the generated
+ validation code.
+\layout Section
+
+Adding constraints into 
+\begin_inset Quotes sld
+\end_inset 
+
+Rectangle
+\begin_inset Quotes srd
+\end_inset 
+
+ type
+\layout Standard
+
+This example shows how to add basic constraints to the ASN.1 specification
+ and how to invoke the constraints validation code in your application.
+\layout Enumerate
+
+Create a file named 
+\series bold 
+rectangle.asn1
+\series default 
+ with the following contents:
+\begin_deeper 
+\layout LyX-Code
+
+RectangleModuleWithConstraints DEFINITIONS ::=
+\layout LyX-Code
+
+BEGIN
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+Rectangle ::= SEQUENCE {
+\layout LyX-Code
+
+    height  INTEGER (0..100), -- Value range constraint
+\layout LyX-Code
+
+    width   INTEGER (0..MAX)  -- Makes width non-negative 
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+END
+\end_deeper 
+\layout Enumerate
+
+Compile the file according to procedures shown in the previous chapter.
+\layout Enumerate
+
+Modify the Rectangle type processing routine (you can start with the main()
+ routine shown in the Section 
+\begin_inset LatexCommand \vref{sec:A-Rectangle-Decoder}
+
+\end_inset 
+
+) by placing the following snippet of code 
+\emph on 
+before
+\emph default 
+ encoding and/or 
+\emph on 
+after
+\emph default 
+ decoding the Rectangle type
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+Placing the constraint checking code 
+\emph on 
+before
+\emph default 
+ encoding helps to make sure you know the data is correct and within constraints
+ before sharing the data with anyone else.
+\layout Standard
+
+Placing the constraint checking code 
+\emph on 
+after
+\emph default 
+ decoding, but before any further action depending on the decoded data,
+ helps to make sure the application got the valid contents before making
+ use of it.
+\end_inset 
+
+:
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+clearpage{}
+\end_inset 
+
+
+\begin_deeper 
+\layout LyX-Code
+
+
+\size small 
+int ret;           /* Return value */
+\layout LyX-Code
+
+
+\size small 
+char errbuf[128];  /* Buffer for error message */
+\layout LyX-Code
+
+
+\size small 
+size_t errlen = sizeof(errbuf);  /* Size of the buffer */
+\layout LyX-Code
+
+
+\size small 
+  
+\layout LyX-Code
+
+
+\size small 
+/* ...
+ here may go Rectangle decoding code ...
+ */
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+ret = asn_check_constraints(asn_DEF_Rectangle,
+\layout LyX-Code
+
+
+\size small 
+        rectangle, errbuf, &errlen);
+\layout LyX-Code
+
+
+\size small 
+/* assert(errlen < sizeof(errbuf)); // you may rely on that */
+\layout LyX-Code
+
+
+\size small 
+if(ret) {
+\layout LyX-Code
+
+
+\size small 
+        fprintf(stderr, 
+\begin_inset Quotes sld
+\end_inset 
+
+Constraint validation failed: %s
+\backslash 
+n
+\begin_inset Quotes srd
+\end_inset 
+
+,
+\layout LyX-Code
+
+
+\size small 
+          errbuf   /* errbuf is properly nul-terminated */
+\layout LyX-Code
+
+
+\size small 
+        );
+\layout LyX-Code
+
+
+\size small 
+        /* exit(...); // Replace with appropriate action */
+\layout LyX-Code
+
+
+\size small 
+}
+\layout LyX-Code
+
+
+\size small 
+ 
+\layout LyX-Code
+
+
+\size small 
+/* ...
+ here may go Rectangle encoding code ...
+ */
+\end_deeper 
+\layout Enumerate
+
+Compile the resulting C code as shown in the previous chapters.
+\layout Enumerate
+
+Done.
 \layout Bibliography
 \bibitem [ASN1C]{ASN1C}
 
-The OpenSource ASN.1 Compiler.
+The Open Source ASN.1 Compiler.
  
-\begin_inset LatexCommand \htmlurl{http://lionet.info/asn1c/}
+\begin_inset LatexCommand \htmlurl{http://lionet.info/asn1c}
 
 \end_inset 
 
