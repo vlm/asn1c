@@ -107,7 +107,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 				"len %ld, tag %s",
 				ptr, (long)size,
 				size?*(uint8_t *)ptr:0,
-				(tag_len<size&&tag_len>0)
+				((size_t)tag_len<size&&tag_len>0)
 					?*((uint8_t *)ptr + tag_len):0,
 				(long)tag_len,
 				ber_tlv_tag_string(tlv_tag));

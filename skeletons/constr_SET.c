@@ -201,6 +201,10 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 			/* Fall through */
 		case -1: RETURN(RC_FAIL);
 		}
+		printf("size = %ld, ctx->left = %ld\n",
+			(long)size, (long)ctx->left);
+		printf("tag_len = %ld, LEFT = %d, %ld\n",
+			(long)tag_len, LEFT, (long)tlv_tag);
 
 		if(ctx->left < 0 && ((uint8_t *)ptr)[0] == 0) {
 			if(LEFT < 2) {
