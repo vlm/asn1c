@@ -5,11 +5,18 @@
 
 /*
  * Checks that the given string is not a reserved C/C++ keyword.
+ * ISO/IEC 9899:1999 (C99), A.1.2
  */
 static char *res_kwd[] = {
-	"char", "int", "long",
-	"float", "double",
-	"struct", "typedef", "class" };
+	"const", "auto", "register", "volatile", "restrict", "extern",
+	"static", "inline",
+	"signed", "unsigned",
+	"void", "char", "short", "int", "long", "float", "double",
+	"enum", "union", "struct", "typedef", "class",
+	"switch", "case", "default", "break", "continue",
+	"if", "else", "do", "for", "while", "goto",
+	"sizeof", "return"
+};
 static int
 reserved_keyword(const char *str) {
 	int i;
