@@ -15,7 +15,6 @@
 	} while(0)
 #undef	RETURN
 #define	RETURN(_code)	do {				\
-		fprintf(stderr, "-----%d", __LINE__);		\
 		ber_dec_rval_t rval;			\
 		rval.code = _code;			\
 		rval.consumed = consumed_myself;	\
