@@ -1,10 +1,10 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
 #include <INTEGER.h>
-#include <ber_codec_prim.h>	/* Encoder and decoder of a primitive */
+#include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */
 #include <assert.h>
 #include <errno.h>
 
@@ -22,7 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,
-	0,				/* Not implemented yet */
+	INTEGER_decode_xer,
 	INTEGER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
@@ -176,6 +176,84 @@ INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	return (ret < 0) ? -1 : 0;
 }
 
+/*
+ * Decode the chunk of XML text encoding INTEGER.
+ */
+static ssize_t
+INTEGER__xer_body_decode(INTEGER_t *st, void *chunk_buf, size_t chunk_size) {
+	long sign = 1;
+	long value;
+	char *lstart = (char *)chunk_buf;
+	char *lstop = chunk_buf + chunk_size;
+	enum {
+		ST_SKIPSPACE,
+		ST_WAITDIGITS,
+		ST_DIGITS,
+	} state = ST_SKIPSPACE;
+	/*
+	 * We may receive a tag here. But we aren't ready to deal with it yet.
+	 * So, just use stroul()-like code and serialize the result.
+	 */
+	for(value = 0; lstart < lstop; lstart++) {
+		int lv = *lstart;
+		switch(lv) {
+		case 0x09: case 0x0a: case 0x0d: case 0x20:
+			if(state == ST_SKIPSPACE) continue;
+			break;
+		case 0x2d:	/* '-' */
+			if(state == ST_SKIPSPACE) {
+				sign = -1;
+				state = ST_WAITDIGITS;
+				continue;
+			}
+			break;
+		case 0x2b:	/* '+' */
+			if(state == ST_SKIPSPACE) {
+				state = ST_WAITDIGITS;
+				continue;
+			}
+			break;
+		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
+		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+			if(state != ST_DIGITS) state = ST_DIGITS;
+
+			value = value * 10 + (lv - 0x30);
+			/* Check for two's complement overflow */
+			if(value < 0) {
+				/* Check whether it is a LONG_MIN */
+				if(sign == -1
+				&& value == ~((unsigned long)-1 >> 1)) {
+					sign = 0;
+				} else {
+					/* Overflow */
+					return -1;
+				}
+			}
+			continue;
+		}
+	}
+
+	if(state != ST_DIGITS)
+		return -1;	/* No digits */
+
+	value *= sign;	/* Change sign, if needed */
+
+	if(asn_long2INTEGER(st, value))
+		return -1;
+
+	return lstop - lstart;
+}
+
+asn_dec_rval_t
+INTEGER_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
+		void *buf_ptr, size_t size) {
+
+	return xer_decode_primitive(opt_codec_ctx, td,
+		(ASN__PRIMITIVE_TYPE_t **)sptr, opt_mname,
+		buf_ptr, size, INTEGER__xer_body_decode);
+}
+
 asn_enc_rval_t
 INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
@@ -252,5 +330,50 @@ asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
 		l = (l << 8) | *b;
 
 	*lptr = l;
+	return 0;
+}
+
+int
+asn_long2INTEGER(INTEGER_t *st, long value) {
+	uint8_t *buf, *bp;
+	uint8_t *p;
+	uint8_t *pstart;
+	uint8_t *pend1;
+
+	if(!st) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	buf = MALLOC(sizeof(value));
+	if(!buf) return -1;
+
+	pstart = (uint8_t *)&value;
+	pend1 = pstart + sizeof(value) - 1;
+	/*
+	 * If the contents octet consists of more than one octet,
+	 * then bits of the first octet and bit 8 of the second octet:
+	 * a) shall not all be ones; and
+	 * b) shall not all be zero.
+	 */
+	for(p = pstart; p < pend1; p++) {
+		switch(*p) {
+		case 0x00: if((p[1] & 0x80) == 0)
+				continue;
+			break;
+		case 0xff: if((p[1] & 0x80))
+				continue;
+			break;
+		}
+		break;
+	}
+	/* Copy the integer body */
+	for(pstart = p, bp = buf; p <= pend1;)
+		*bp++ = *p++;
+
+	if(st->buf) FREEMEM(st->buf);
+	st->buf = buf;
+	st->size = p - pstart;
+
 	return 0;
 }
