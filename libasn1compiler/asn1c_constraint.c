@@ -310,7 +310,6 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		/*
 		 * UTF8String type is a special case in many respects.
 		 */
-		assert(range_stop > 255);	/* This one's unobvious */
 		if(got_size) {
 			/*
 			 * Size has been already determined.
@@ -337,9 +336,8 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 			ct->_compile_mark);
 	INDENT(+1);
 	if(utf8_full_alphabet_check) {
-		OUT("if(UTF8String_length((UTF8String_t *)sptr, td->name, \n");
-		OUT("\tapp_errlog, app_key) == -1)\n");
-		OUT("\t\treturn -1; /* Alphabet (sic!) test failed. */\n");
+		OUT("if(UTF8String_length((const UTF8String_t *)sptr) < 0)\n");
+		OUT("\treturn -1; /* Alphabet (sic!) test failed. */\n");
 		OUT("\n");
 	} else {
 		if(use_table) {
@@ -511,8 +509,13 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 		OUT("size = st->size >> 1;\t/* 2 byte per character */\n");
 		break;
 	case ASN_STRING_UTF8String:
-		OUT("size = UTF8String_length(st, td->name, app_errlog, app_key);\n");
-		OUT("if(size == (size_t)-1) return -1;\n");
+		OUT("size = UTF8String_length(st);\n");
+		OUT("if((ssize_t)size < 0) {\n");
+		OUT("\t_ASN_ERRLOG(app_errlog, app_key,\n");
+		OUT("\t\t\"%%s: UTF-8: broken encoding (%%s:%%d)\",\n");
+		OUT("\t\ttd->name, __FILE__, __LINE__);\n");
+		OUT("\treturn -1;\n");
+		OUT("}\n");
 		break;
 	case ASN_CONSTR_SET_OF:
 	case ASN_CONSTR_SEQUENCE_OF:
