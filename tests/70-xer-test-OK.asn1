@@ -22,6 +22,9 @@ BEGIN
 		sequenceOf		SequenceOf,
 		extensibleSet		ExtensibleSet,
 		extensibleSequence	ExtensibleSequence,
+		setOfNULL		SetOfNULL,
+		setOfEnums		SetOfEnums,
+		seqOfZuka		SeqOfZuka,
 		...
 	}
 
@@ -49,6 +52,9 @@ BEGIN
 	}
 
 	SetOf ::= SET OF REAL
+	SetOfNULL ::= SET OF NULL
+	SetOfEnums ::= SET OF ENUMERATED { one, two }
 	SequenceOf ::= SEQUENCE OF id INTEGER
+	SeqOfZuka ::= SEQUENCE OF zuka NULL
 
 END
