@@ -23,12 +23,13 @@ asn1f_printable_value(asn1p_value_t *v) {
 	int ret;
 
 #define	ENSURE(len)	do {						\
-		if(len >= managedptr_len) {				\
+		int __len = (len);					\
+		if(__len >= managedptr_len) {				\
 			if(managedptr)					\
 				free(managedptr);			\
-			managedptr = malloc(len + 1);			\
+			managedptr = malloc(__len + 1);			\
 			if(managedptr) {				\
-				managedptr_len = len;			\
+				managedptr_len = __len;			\
 			} else {					\
 				managedptr_len = 0;			\
 				return "<memory allocation error>";	\
@@ -42,37 +43,8 @@ asn1f_printable_value(asn1p_value_t *v) {
 	switch(v->type) {
 	case ATV_NOVALUE:
 		return "<NO VALUE>";
-	case ATV_REFERENCED:
-		{
-			asn1p_ref_t *ref;
-			char reflen;
-			char *ptr;
-			int i;
-
-			assert(v->value.reference);
-			ref = v->value.reference;
-			reflen = ref->comp_count;	/* Number of dots */
-			for(i = 0; i < ref->comp_count; i++)
-				reflen += strlen(ref->components[i].name);
-			/*
-			 * Make sure we have a buffer of this size.
-			 */
-			ENSURE(reflen);
-
-			/*
-			 * Fill-up the buffer.
-			 */
-			ptr = managedptr;
-			for(i = 0; i < ref->comp_count; i++) {
-				char *nc;
-				if(i) *ptr++ = '.';
-				for(nc = ref->components[i].name; *nc; nc++)
-					*ptr++ = *nc;
-			}
-			*ptr++ = '\0';
-			assert(reflen == (ptr - managedptr));
-			return managedptr;
-		}
+	case ATV_NULL:
+		return "NULL";
 	case ATV_REAL:
 		ret = snprintf(buf, sizeof(buf), "%f", v->value.v_double);
 		if(ret >= (ssize_t)sizeof(buf))
@@ -139,6 +111,55 @@ asn1f_printable_value(asn1p_value_t *v) {
 			*ptr++ = (bits%8)?'B':'H';
 			*ptr++ = 'H';
 			assert((ptr - managedptr) == len);
+			return managedptr;
+		}
+	case ATV_REFERENCED:
+		{
+			asn1p_ref_t *ref;
+			char reflen;
+			char *ptr;
+			int i;
+
+			assert(v->value.reference);
+			ref = v->value.reference;
+			reflen = ref->comp_count;	/* Number of dots */
+			for(i = 0; i < ref->comp_count; i++)
+				reflen += strlen(ref->components[i].name);
+			/*
+			 * Make sure we have a buffer of this size.
+			 */
+			ENSURE(reflen);
+
+			/*
+			 * Fill-up the buffer.
+			 */
+			ptr = managedptr;
+			for(i = 0; i < ref->comp_count; i++) {
+				char *nc;
+				if(i) *ptr++ = '.';
+				for(nc = ref->components[i].name; *nc; nc++)
+					*ptr++ = *nc;
+			}
+			*ptr++ = '\0';
+			assert(reflen == (ptr - managedptr));
+			return managedptr;
+		}
+	case ATV_CHOICE_IDENTIFIER:
+		{
+			char *cid = v->value.choice_identifier.identifier;
+			char const *vptr = asn1f_printable_value(
+					v->value.choice_identifier.value);
+			char *val;
+
+			val = strdup(vptr);
+			if(!val) return "<memory allocation error>";
+
+			ENSURE(strlen(cid) + sizeof(": ") + strlen(val));
+
+			ret = snprintf(managedptr, managedptr_len + 1,
+				"%s: %s", cid, val);
+			assert(ret >= 0 && ret <= managedptr_len);
+			free(val);
 			return managedptr;
 		}
 	}
