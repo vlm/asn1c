@@ -39,7 +39,7 @@ SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	/*
 	 * Encode the TLV for the sequence itself.
 	 */
-	encoding_size = der_write_tags(td, computed_size, tag_mode, tag,
+	encoding_size = der_write_tags(td, computed_size, tag_mode, 1, tag,
 		cb, app_key);
 	if(encoding_size == -1) {
 		erval.encoded = -1;

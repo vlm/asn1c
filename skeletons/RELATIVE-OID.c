@@ -4,6 +4,7 @@
  */
 #include <asn_internal.h>
 #include <RELATIVE-OID.h>
+#include <ber_codec_prim.h>	/* Encoder and decoder of a primitive */
 #include <limits.h>	/* for CHAR_BIT */
 #include <assert.h>
 #include <errno.h>
@@ -16,11 +17,11 @@ static ber_tlv_tag_t asn1_DEF_RELATIVE_OID_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	"RELATIVE-OID",
-	INTEGER_free,
+	ASN__PRIMITIVE_TYPE_free,
 	RELATIVE_OID_print,
 	asn_generic_no_constraint,
-	INTEGER_decode_ber,	/* Implemented in terms of INTEGER type */
-	OBJECT_IDENTIFIER_encode_der,
+	ber_decode_primitive,
+	der_encode_primitive,
 	0,				/* Not implemented yet */
 	RELATIVE_OID_encode_xer,
 	0, /* Use generic outmost tag fetcher */
@@ -30,7 +31,6 @@ asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	asn1_DEF_RELATIVE_OID_tags,	/* Same as above */
 	sizeof(asn1_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn1_DEF_RELATIVE_OID_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -73,16 +73,16 @@ RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	(void)ilevel;	/* Unused argument */
 
 	if(!st || !st->buf)
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	/* Dump preamble */
-	if(cb("{ ", 2, app_key))
+	if(cb("{ ", 2, app_key) < 0)
 		return -1;
 
 	if(RELATIVE_OID__dump_body(st, cb, app_key) < 0)
 		return -1;
 
-	return cb(" }", 2, app_key);
+	return (cb(" }", 2, app_key) < 0) ? -1 : 0;
 }
 
 asn_enc_rval_t

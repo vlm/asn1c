@@ -25,7 +25,6 @@ asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN = {
 	sizeof(asn1_DEF_BOOLEAN_tags) / sizeof(asn1_DEF_BOOLEAN_tags[0]),
 	asn1_DEF_BOOLEAN_tags,	/* Same as above */
 	sizeof(asn1_DEF_BOOLEAN_tags) / sizeof(asn1_DEF_BOOLEAN_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -43,7 +42,7 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 	ber_tlv_len_t lidx;
 
 	if(st == NULL) {
-		(void *)st = *bool_value = CALLOC(1, sizeof(*st));
+		st = (BOOLEAN_t *)(*bool_value = CALLOC(1, sizeof(*st)));
 		if(st == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -57,7 +56,7 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags.
 	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, &length, 0);
+	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, 0, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 
@@ -101,7 +100,7 @@ BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 	asn_enc_rval_t erval;
 	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
 
-	erval.encoded = der_write_tags(td, 1, tag_mode, tag, cb, app_key);
+	erval.encoded = der_write_tags(td, 1, tag_mode, 0, tag, cb, app_key);
 	if(erval.encoded == -1) {
 		erval.failed_type = td;
 		erval.structure_ptr = sptr;
@@ -110,11 +109,10 @@ BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 
 	if(cb) {
 		uint8_t bool_value;
-		ssize_t ret;
 
-		bool_value = *st?0xff:0; /* 0xff mandated by DER */
-		ret = cb(&bool_value, 1, app_key);
-		if(ret == -1) {
+		bool_value = *st ? 0xff : 0; /* 0xff mandated by DER */
+
+		if(cb(&bool_value, 1, app_key) < 0) {
 			erval.encoded = -1;
 			erval.failed_type = td;
 			erval.structure_ptr = sptr;
@@ -154,18 +152,26 @@ int
 BOOLEAN_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+	const char *buf;
+	size_t buflen;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
 	if(st) {
-		if(*st)
-			return cb("TRUE", 4, app_key);
-		else
-			return cb("FALSE", 5, app_key);
+		if(*st) {
+			buf = "TRUE";
+			buflen = 4;
+		} else {
+			buf = "FALSE";
+			buflen = 5;
+		}
 	} else {
-		return cb("<absent>", 8, app_key);
+		buf = "<absent>";
+		buflen = 8;
 	}
+
+	return (cb(buf, buflen, app_key) < 0) ? -1 : 0;
 }
 
 void

@@ -28,7 +28,6 @@ asn1_TYPE_descriptor_t asn1_DEF_UTF8String = {
 	asn1_DEF_UTF8String_tags,
 	sizeof(asn1_DEF_UTF8String_tags)
 	  / sizeof(asn1_DEF_UTF8String_tags[0]),
-	-1,	/* Both ways are fine */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -122,8 +121,8 @@ UTF8String_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	(void)ilevel;	/* Unused argument */
 
 	if(st && st->buf) {
-		return cb(st->buf, st->size, app_key);
+		return (cb(st->buf, st->size, app_key) < 0) ? -1 : 0;
 	} else {
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }

@@ -34,7 +34,6 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeInteger = {
 	sizeof(asn1_DEF_NativeInteger_tags) / sizeof(asn1_DEF_NativeInteger_tags[0]),
 	asn1_DEF_NativeInteger_tags,	/* Same as above */
 	sizeof(asn1_DEF_NativeInteger_tags) / sizeof(asn1_DEF_NativeInteger_tags[0]),
-	0,	/* Always in primitive form */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -53,7 +52,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	 * If the structure is not there, allocate it.
 	 */
 	if(Int == NULL) {
-		(void *)Int = *int_ptr = CALLOC(1, sizeof(*Int));
+		Int = (int *)(*int_ptr = CALLOC(1, sizeof(*Int)));
 		if(Int == NULL) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -67,7 +66,7 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Check tags.
 	 */
-	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, &length, 0);
+	rval = ber_check_tags(td, 0, buf_ptr, size, tag_mode, 0, &length, 0);
 	if(rval.code != RC_OK)
 		return rval;
 
@@ -199,9 +198,9 @@ NativeInteger_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(Int) {
 		ret = snprintf(scratch, sizeof(scratch), "%d", *Int);
 		assert(ret > 0 && ret < (int)sizeof(scratch));
-		return cb(scratch, ret, app_key);
+		return (cb(scratch, ret, app_key) < 0) ? -1 : 0;
 	} else {
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }
 

@@ -46,7 +46,7 @@ ber_decode(asn1_TYPE_descriptor_t *type_descriptor,
  */
 ber_dec_rval_t
 ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx,
-		void *ptr, size_t size, int tag_mode,
+		void *ptr, size_t size, int tag_mode, int last_tag_form,
 		ber_tlv_len_t *last_length, int *opt_tlv_form) {
 	ssize_t consumed_myself = 0;
 	ssize_t tag_len;
@@ -169,10 +169,10 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx,
 				RETURN(RC_FAIL);
 			}
 		} else {
-			if(td->last_tag_form != tlv_constr
-			&& td->last_tag_form != -1) {
+			if(last_tag_form != tlv_constr
+			&& last_tag_form != -1) {
 				ASN_DEBUG("last_tag_form %d != %d",
-					td->last_tag_form, tlv_constr);
+					last_tag_form, tlv_constr);
 				RETURN(RC_FAIL);
 			}
 		}

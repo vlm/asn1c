@@ -148,7 +148,7 @@ CHOICE_decode_ber(asn1_TYPE_descriptor_t *td,
 
 		if(tag_mode || td->tags_count) {
 			rval = ber_check_tags(td, ctx, ptr, size,
-				tag_mode, &ctx->left, 0);
+				tag_mode, -1, &ctx->left, 0);
 			if(rval.code != RC_OK) {
 				ASN_DEBUG("%s tagging check failed: %d",
 					td->name, rval.code);
@@ -425,7 +425,7 @@ CHOICE_encode_der(asn1_TYPE_descriptor_t *td,
 			return erval;
 
 		/* Encode CHOICE with parent or my own tag */
-		ret = der_write_tags(td, erval.encoded, tag_mode, tag,
+		ret = der_write_tags(td, erval.encoded, tag_mode, 1, tag,
 			cb, app_key);
 		if(ret == -1) {
 			erval.encoded = -1;
@@ -597,7 +597,7 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn1_CHOICE_specifics_t *specs = (asn1_CHOICE_specifics_t *)td->specifics;
 	int present;
 
-	if(!sptr) return cb("<absent>", 8, app_key);
+	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	/*
 	 * Figure out which CHOICE element is encoded.
@@ -613,22 +613,22 @@ CHOICE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
-			if(!memb_ptr) return cb("<absent>", 8, app_key);
+			if(!memb_ptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 		} else {
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
 		/* Print member's name and stuff */
 		if(0) {
-			if(cb(elm->name, strlen(elm->name), app_key)
-			|| cb(": ", 2, app_key))
+			if(cb(elm->name, strlen(elm->name), app_key) < 0
+			|| cb(": ", 2, app_key) < 0)
 				return -1;
 		}
 
 		return elm->type->print_struct(elm->type, memb_ptr, ilevel,
 			cb, app_key);
 	} else {
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }
 

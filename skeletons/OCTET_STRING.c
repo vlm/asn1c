@@ -29,7 +29,6 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	asn1_DEF_OCTET_STRING_tags,	/* Same as above */
 	sizeof(asn1_DEF_OCTET_STRING_tags)
 	  / sizeof(asn1_DEF_OCTET_STRING_tags[0]),
-	-1,	/* Both ways are fine (primitive and constructed) */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -161,10 +160,9 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	int tlv_constr;
 	enum type_type_e {
 		_TT_GENERIC	= 0,	/* Just a random OCTET STRING */
-		_TT_BIT_STRING	= -1,	/* BIT STRING type, a special case */
-		_TT_ANY		= 1,	/* ANY type, a special case too */
-	} type_type
-		= (enum type_type_e)(int)td->specifics;	/* An ugly hack */
+		_TT_BIT_STRING	= 1,	/* BIT STRING type, a special case */
+		_TT_ANY		= 2,	/* ANY type, a special case too */
+	} type_type = (enum type_type_e)(int)td->specifics;
 
 	ASN_DEBUG("Decoding %s as %s (frame %ld)",
 		td->name,
@@ -189,7 +187,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		 * Check tags.
 		 */
 		rval = ber_check_tags(td, ctx,
-			buf_ptr, size, tag_mode,
+			buf_ptr, size, tag_mode, -1,
 			&ctx->left, &tlv_constr);
 		if(rval.code != RC_OK) {
 			RETURN(rval.code);
@@ -234,8 +232,9 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		ber_tlv_len_t tlv_len;
 		ber_tlv_tag_t expected_tag;
 		ssize_t tl, ll;
-		ssize_t Left = ((!sel||sel->left==-1||sel->left >= size)
-					?size:sel->left);
+				/* This one works even if (sel->left == -1) */
+		ssize_t Left = ((!sel||(size_t)sel->left >= size)
+					?size:(size_t)sel->left);
 
 
 		ASN_DEBUG("fetch tag(size=%d,L=%d), %sstack, left=%d, want0=%d",
@@ -475,8 +474,8 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	asn_enc_rval_t erval;
 	OCTET_STRING_t *st = (OCTET_STRING_t *)ptr;
 	int add_byte = 0;
-	int is_bit_str = (td->specifics == (void *)-1);
-	int is_ANY_type = (td->specifics == (void *)1);
+	int is_bit_str = (td->specifics == (void *)1);
+	int is_ANY_type = (td->specifics == (void *)2);
 
 	ASN_DEBUG("%s %s as OCTET STRING",
 		cb?"Estimating":"Encoding", td->name);
@@ -498,7 +497,7 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 		erval.encoded = 0;
 	} else {
 		erval.encoded = der_write_tags(td, st->size + add_byte,
-			tag_mode, tag, cb, app_key);
+			tag_mode, 0, tag, cb, app_key);
 		if(erval.encoded == -1) {
 			erval.failed_type = td;
 			erval.structure_ptr = ptr;
@@ -510,7 +509,6 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 		uint8_t zero;
 		uint8_t *buf;
 		int size;
-		ssize_t ret;
 
 		/* BIT STRING-aware handling */
 		if(add_byte) {
@@ -527,8 +525,7 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 		}
 
 		if(size) {
-			ret = cb(buf, size, app_key);
-			if(ret == -1) {
+			if(cb(buf, size, app_key) < 0) {
 				erval.encoded = -1;
 				erval.failed_type = td;
 				erval.structure_ptr = ptr;
@@ -636,11 +633,10 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	uint8_t *buf;
 	uint8_t *end;
 	size_t i;
-	int lvl;
 
 	(void)td;	/* Unused argument */
 
-	if(!st || !st->buf) return cb("<absent>", 8, app_key);
+	if(!st || !st->buf) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	/*
 	 * Dump the contents of the buffer in hexadecimal.
@@ -649,11 +645,9 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	end = buf + st->size;
 	for(i = 0; buf < end; buf++, i++) {
 		if(!(i % 16) && (i || st->size > 16)) {
-			if(cb(scratch, p - scratch, app_key)
-			|| cb("\n", 1, app_key))
+			if(cb(scratch, p - scratch, app_key) < 0)
 				return -1;
-			for(lvl = 0; lvl < ilevel; lvl++)
-				cb(" ", 1, app_key);
+			_i_INDENT(1);
 			p = scratch;
 		}
 		*p++ = h2c[(*buf >> 4) & 0x0F];
@@ -663,7 +657,7 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 	if(p > scratch) {
 		p--;	/* Remove the tail space */
-		if(cb(scratch, p - scratch, app_key))
+		if(cb(scratch, p - scratch, app_key) < 0)
 			return -1;
 	}
 
@@ -679,9 +673,9 @@ OCTET_STRING_print_ascii(asn1_TYPE_descriptor_t *td, const void *sptr,
 	(void)ilevel;	/* Unused argument */
 
 	if(st && st->buf) {
-		return cb(st->buf, st->size, app_key);
+		return (cb(st->buf, st->size, app_key) < 0) ? -1 : 0;
 	} else {
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }
 

@@ -41,7 +41,7 @@ asn_fprint(FILE *stream, asn1_TYPE_descriptor_t *td, const void *struct_ptr) {
 	}
 
 	/* Invoke type-specific printer */
-	if(td->print_struct(td, struct_ptr, 4, _print2fp, stream))
+	if(td->print_struct(td, struct_ptr, 1, _print2fp, stream))
 		return -1;
 
 	/* Terminate the output */

@@ -28,7 +28,6 @@ asn1_TYPE_descriptor_t asn1_DEF_UniversalString = {
 	asn1_DEF_UniversalString_tags,
 	sizeof(asn1_DEF_UniversalString_tags)
 	  / sizeof(asn1_DEF_UniversalString_tags[0]),
-	-1,	/* Both ways are fine */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -120,7 +119,7 @@ UniversalString_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
-	if(!st || !st->buf) return cb("<absent>", 8, app_key);
+	if(!st || !st->buf) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	if(UniversalString__dump(st, cb, app_key) < 0)
 		return -1;

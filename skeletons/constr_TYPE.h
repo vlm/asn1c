@@ -111,8 +111,6 @@ typedef struct asn1_TYPE_descriptor_s {
 	ber_tlv_tag_t *all_tags;/* Every tag for BER/containment */
 	int all_tags_count;	/* Number of tags */
 
-	int last_tag_form;	/* Acceptable form of the tag (prim, constr) */
-
 	/*
 	 * An ASN.1 production type members (members of SEQUENCE, SET, CHOICE).
 	 */
@@ -132,7 +130,7 @@ typedef struct asn1_TYPE_descriptor_s {
   enum asn1_TYPE_flags_e {
 	ATF_NOFLAGS,
 	ATF_POINTER	= 0x01,	/* Represented by the pointer */
-	ATF_OPEN_TYPE	= 0x02,	/* ANY type, without meaningful tag */
+	ATF_OPEN_TYPE	= 0x02	/* ANY type, without meaningful tag */
   };
 typedef struct asn1_TYPE_member_s {
 	enum asn1_TYPE_flags_e flags;	/* Element's presentation flags */

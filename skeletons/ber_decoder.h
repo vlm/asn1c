@@ -21,7 +21,7 @@ struct asn1_TYPE_descriptor_s;	/* Forward declaration */
 enum ber_dec_rval_code_e {
 	RC_OK,		/* Decoded successfully */
 	RC_WMORE,	/* More data expected, call again */
-	RC_FAIL,	/* Failure to decode data */
+	RC_FAIL		/* Failure to decode data */
 };
 typedef struct ber_dec_rval_s {
 	enum ber_dec_rval_code_e code;	/* Result code */
@@ -71,6 +71,7 @@ ber_dec_rval_t ber_check_tags(struct asn1_TYPE_descriptor_s *type_dsc,
 		ber_dec_ctx_t *opt_ctx,	/* saved context */
 		void *ptr, size_t size,
 		int tag_mode,		/* {-1,0,1}: IMPLICIT, no, EXPLICIT */
+		int last_tag_form,	/* {-1,0:1}: any, primitive, constr */
 		ber_tlv_len_t *last_length,
 		int *opt_tlv_form);
 

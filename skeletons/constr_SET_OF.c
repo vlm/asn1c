@@ -114,7 +114,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *td,
 		 */
 
 		rval = ber_check_tags(td, ctx, ptr, size,
-			tag_mode, &ctx->left, 0);
+			tag_mode, 1, &ctx->left, 0);
 		if(rval.code != RC_OK) {
 			ASN_DEBUG("%s tagging check failed: %d",
 				td->name, rval.code);
@@ -346,7 +346,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	/*
 	 * Encode the TLV for the sequence itself.
 	 */
-	encoding_size = der_write_tags(td, computed_size, tag_mode, tag,
+	encoding_size = der_write_tags(td, computed_size, tag_mode, 1, tag,
 		cb, app_key);
 	if(encoding_size == -1) {
 		erval.encoded = -1;
@@ -366,7 +366,8 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	 * according to their encodings. Build an array of the
 	 * encoded elements.
 	 */
-	(void *)encoded_els = MALLOC(list->count * sizeof(encoded_els[0]));
+	encoded_els = (struct _el_buffer *)MALLOC(
+				list->count * sizeof(encoded_els[0]));
 	if(encoded_els == NULL) {
 		erval.encoded = -1;
 		erval.failed_type = td;
@@ -428,7 +429,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 		struct _el_buffer *encoded_el = &encoded_els[edx];
 		/* Report encoded chunks to the application */
 		if(ret == 0
-		&& cb(encoded_el->buf, encoded_el->length, app_key) == -1)
+		&& cb(encoded_el->buf, encoded_el->length, app_key) < 0)
 			ret = -1;
 		FREEMEM(encoded_el->buf);
 	}
@@ -504,11 +505,11 @@ SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	int ret;
 	int i;
 
-	if(!sptr) return cb("<absent>", 8, app_key);
+	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	/* Dump preamble */
-	if(cb(td->name, strlen(td->name), app_key)
-	|| cb(" ::= {\n", 7, app_key))
+	if(cb(td->name, strlen(td->name), app_key) < 0
+	|| cb(" ::= {", 6, app_key) < 0)
 		return -1;
 
 	(const void *)list = sptr;
@@ -516,21 +517,17 @@ SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		const void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
 
-		/* Indentation */
-		for(ret = 0; ret < ilevel; ret++) cb(" ", 1, app_key);
+		_i_INDENT(1);
 
 		ret = element->type->print_struct(element->type, memb_ptr,
-			ilevel + 4, cb, app_key);
-		if(ret) return ret;
-
-		ret = cb("\n", 1, app_key);
+			ilevel + 1, cb, app_key);
 		if(ret) return ret;
 	}
 
-	/* Indentation */
-	for(ret = 0; ret < ilevel - 4; ret++) cb(" ", 1, app_key);
+	ilevel--;
+	_i_INDENT(1);
 
-	return cb("}", 1, app_key);
+	return (cb("}", 1, app_key) < 0) ? -1 : 0;
 }
 
 void

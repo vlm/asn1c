@@ -99,7 +99,7 @@ _asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
 	}
 
 	if(ret < (ssize_t)sizeof(buf)) {
-		cb(buf, ret, key);
+		(void)cb(buf, ret, key);
 		return;
 	}
 
@@ -120,5 +120,5 @@ _asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
 		p = buf;
 	}
 
-	cb(p, ret, key);
+	(void)cb(p, ret, key);
 }

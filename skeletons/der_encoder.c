@@ -34,7 +34,7 @@ der_encode(asn1_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
 ssize_t
 der_write_tags(asn1_TYPE_descriptor_t *sd,
 		size_t struct_length,
-		int tag_mode,
+		int tag_mode, int last_tag_form,
 		ber_tlv_tag_t tag,	/* EXPLICIT or IMPLICIT tag */
 		asn_app_consume_bytes_f *cb,
 		void *app_key) {
@@ -112,10 +112,8 @@ der_write_tags(asn1_TYPE_descriptor_t *sd,
 		ssize_t len;
 		int _constr;
 
-		/* If this one happens to be constructed, do it. */
-		if(i < (tags_count - 1) || sd->last_tag_form == 1)
-			_constr = 1;
-		else	_constr = 0;
+		/* Check if this tag happens to be constructed */
+		_constr = (last_tag_form || i < (tags_count - 1));
 
 		len = der_write_TL(tags[i], lens[i], cb, app_key, _constr);
 		if(len == -1) return -1;
@@ -151,9 +149,8 @@ der_write_TL(ber_tlv_tag_t tag, ber_tlv_len_t len,
 	 */
 	if(cb) {
 		if(constructed) *buf |= 0x20;
-		if(cb(buf, size, app_key) == -1) {
+		if(cb(buf, size, app_key) < 0)
 			return -1;
-		}
 	}
 
 	return size;

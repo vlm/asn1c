@@ -110,7 +110,9 @@ static time_t timegm(struct tm *tm) {
  * GeneralizedTime basic type description.
  */
 static ber_tlv_tag_t asn1_DEF_GeneralizedTime_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (24 << 2))
+	(ASN_TAG_CLASS_UNIVERSAL | (24 << 2)),	/* [UNIVERSAL 24] IMPLICIT ...*/
+	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),  /* [UNIVERSAL 26] IMPLICIT ...*/
+	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
 asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime = {
 	"GeneralizedTime",
@@ -124,11 +126,10 @@ asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime = {
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_GeneralizedTime_tags,
 	sizeof(asn1_DEF_GeneralizedTime_tags)
-	  / sizeof(asn1_DEF_GeneralizedTime_tags[0]),
-	asn1_DEF_GeneralizedTime_tags,	/* Same as above */
+	  / sizeof(asn1_DEF_GeneralizedTime_tags[0]) - 2,
+	asn1_DEF_GeneralizedTime_tags,
 	sizeof(asn1_DEF_GeneralizedTime_tags)
 	  / sizeof(asn1_DEF_GeneralizedTime_tags[0]),
-	-1,	/* Both ways are fine */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -242,16 +243,16 @@ GeneralizedTime_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 		errno = EPERM;
 		if(asn_GT2time(st, &tm, 1) == -1 && errno != EPERM)
-			return cb("<bad-value>", 11, app_key);
+			return (cb("<bad-value>", 11, app_key) < 0) ? -1 : 0;
 
 		ret = snprintf(buf, sizeof(buf),
 			"%04d-%02d-%02d %02d:%02d%02d (GMT)",
 			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 			tm.tm_hour, tm.tm_min, tm.tm_sec);
 		assert(ret > 0 && ret < (int)sizeof(buf));
-		return cb(buf, ret, app_key);
+		return (cb(buf, ret, app_key) < 0) ? -1 : 0;
 	} else {
-		return cb("<absent>", 8, app_key);
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }
 
@@ -493,7 +494,7 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 	}
 
 	/* Pre-allocate a buffer of sufficient yet small length */
-	(void *)buf = MALLOC(buf_size);
+	buf = (char *)MALLOC(buf_size);
 	if(!buf) return 0;
 
 	gmtoff = GMTOFF(*tm);
@@ -536,7 +537,7 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 		if(opt_gt->buf)
 			FREEMEM(opt_gt->buf);
 	} else {
-		(void *)opt_gt = CALLOC(1, sizeof *opt_gt);
+		opt_gt = (GeneralizedTime_t *)CALLOC(1, sizeof *opt_gt);
 		if(!opt_gt) { free(buf); return 0; }
 	}
 
