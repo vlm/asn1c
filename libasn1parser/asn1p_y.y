@@ -1076,21 +1076,23 @@ TypeDeclaration:
 		$$->expr_type = ASN_CONSTR_SET;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE optConstraints TOK_OF TypeDeclaration {
+	| TOK_SEQUENCE optConstraints TOK_OF optTag TypeDeclaration {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
 		$$->meta_type = AMT_TYPE;
-		asn1p_expr_add($$, $4);
+		$5->tag = $4;
+		asn1p_expr_add($$, $5);
 	}
-	| TOK_SET optConstraints TOK_OF TypeDeclaration {
+	| TOK_SET optConstraints TOK_OF optTag TypeDeclaration {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SET_OF;
 		$$->meta_type = AMT_TYPE;
-		asn1p_expr_add($$, $4);
+		$5->tag = $4;
+		asn1p_expr_add($$, $5);
 	}
 	| TOK_ANY 					{
 		$$ = asn1p_expr_new(yylineno);
