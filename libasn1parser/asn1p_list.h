@@ -4,19 +4,25 @@
 #ifndef	ASN1_PARSER_LIST_H
 #define	ASN1_PARSER_LIST_H
 
-#define	TQ_HEAD(type)		\
-	struct {		\
-		type *tq_head;	\
-		type**tq_tail;	\
+#define	TQ_HEAD(type)					\
+	struct {					\
+		type *tq_head;				\
+		type**tq_tail;				\
 	}
 
-#define	TQ_HEAD_COPY(to, from)			\
-	do { (to)->tq_head = (from)->tq_head;	\
-	(to)->tq_tail = (from)->tq_tail; } while(0)
+#define	TQ_MOVE(to, from)	do {			\
+	if(&(TQ_FIRST(from)) == (from)->tq_tail) {	\
+		TQ_INIT(to);				\
+	} else {					\
+		(to)->tq_head = (from)->tq_head;	\
+		(to)->tq_tail = (from)->tq_tail;	\
+	}						\
+	TQ_INIT(from);					\
+	} while(0)
 
-#define	TQ_ENTRY(type)		\
-	struct {		\
-		type *tq_next;	\
+#define	TQ_ENTRY(type)					\
+	struct {					\
+		type *tq_next;				\
 	}
 
 #define TQ_FIRST(headp)		((headp)->tq_head)
