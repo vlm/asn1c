@@ -51,7 +51,10 @@ esac
 
 AC_ARG_ENABLE(autoconf,
   [  --enable-Werror         abort compilation after any C compiler warning],
+	enable_werror=$enableval, enable_werror=no)
+if test x$enable_werror = xyes; then
   ADD_CFLAGS="-Werror -W -Wpointer-arith")
+fi
 AC_SUBST(ADD_CFLAGS)
 
 dnl Add these flags if we're using GCC.
