@@ -12,8 +12,10 @@ $TMPDIR = '/tmp/asn1c-cgi-jail/';
 $SUIDHelper = './asn1c-suid-helper';
 $SkeletonsDir = '/usr/local/share/asn1c';	# Will be needed only once
 $CompilerLocation = '/usr/local/bin/asn1c';	# asn1c binary location
-$MD5ProgramPath = 'md5';
-$DM = 0750;	# Directory mode for all mkdirs.
+$HashProgramPath = 'md5';			# Program to hash the input
+$DM = 0750;					# Directory mode for all mkdirs.
+$MaxHistoryItems = 5;				# Number of items in History
+$DynamicHistory = 'yes';			# Full/Short history
 
 $warn = '<CENTER><FONT SIZE=+1><B>';
 $unwarn = '</B></FONT></CENTER>';
@@ -117,6 +119,21 @@ sub prepareChrootEnvironment() {
 my $EnvironmentSetOK = prepareChrootEnvironment();
 
 #
+# Check if full history requested.
+#
+$HistoryShow = cookie('HistoryShow');
+$tmpHSParam = param('history');	# Control cookie setting
+if (defined($tmpHSParam)
+ && $tmpHSParam ne $HistoryShow
+ && $tmpHSParam =~ /^(full|short)$/) {
+	$HistoryShow = $tmpHSParam;
+	local $ck = cookie(-name=>'HistoryShow',
+		-value=>$HistoryShow,
+		-path=>'/', -expires=>'+1h');
+	print "Set-Cookie: " . $ck . "\n";
+}
+
+#
 # Prepare the session and create the session directory.
 # If session exists, perfom arguments checking and execute historic views.
 #
@@ -132,7 +149,7 @@ unless($session) {
 	}
 	my $pid = open(R, "-|");
 	if($pid == 0) {	# Child
-		open(W, "| $MD5ProgramPath") or die;
+		open(W, "| $HashProgramPath") or die;
 		print W $session;
 		exit(0);
 	}
@@ -143,7 +160,7 @@ unless($session) {
 	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed);
 	my $ck = cookie(-name=>'SessionID', -value=>$session,
 			-path=>'/', -expires=>'+1y');
-	print header(-expires=>'-1d', -cookie=>$ck);
+	print header(-expires=>'-1y', -cookie=>$ck);
 	$HTTPHeaderGenerated = 1;
 } else {
 	$session =~ s/[^a-f0-9]//ig;
@@ -322,7 +339,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 
 	local ($t, $f) = ($1, $2);
 	local $origTime = $t;
-	$t =~ s/T/ /;	# 1999-01-02T13:53:12 => 1999-01-02 13:53:12
+	$t =~ s/T/ /;	# "1999-01-02T13:53:12" => "1999-01-02 13:53:12"
 
 	# Global transaction number
 	local $tNum = 1 + $#transactions - $CountHistoryItems;
@@ -381,7 +398,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 			. "transaction $tNum ("
 			. join(', ', @safeNames)
 			. ") failed with code $ec"
-			. '&body=leave body empty or add more comments">Help me fix it!</A>'
+			. '&body=leave body empty or add more comments">Help me fix it!</A> (See bottom line)'
 			. '</FONT>'
 			;
 		$atLeastOneError = 1;
@@ -399,10 +416,35 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "<TD><FONT SIZE=-2 FACE=Helvetica>"
 			. $results
 			. "</TD>"
-		. "</TR>";
+		. "</TR>\n";
 	
-	last unless(++$CountHistoryItems < 5);
+	last if(++$CountHistoryItems >= $MaxHistoryItems
+		&& $HistoryShow ne 'full');
 }
+
+if($DynamicHistory eq 'yes') {
+	# [Un-]limit number of history items
+	$HistoryItemsHidden = 1 + $#transactions - $CountHistoryItems;
+	if($HistoryItemsHidden > 0) {
+		# Propose to expand the list.
+		local $item = 'item';
+		$HistoryItemsHidden == 1 or $item = 'items';
+		$history .= "<TR BGCOLOR=white><TD COLSPAN=3 ALIGN=center>"
+			. "<FONT SIZE=-1><A HREF=\"$myName?history=full\">"
+			. "Show full history</A> "
+			. "($HistoryItemsHidden hidden $item)"
+			. "</FONT></TD></TR>\n";
+	} elsif($HistoryShow eq "full" && $#transactions >= $MaxHistoryItems) {
+		# Propose to shorten the list.
+		local $item = 'item';
+		$MaxHistoryItems == 1 or $item = 'items';
+		$history .= "<TR BGCOLOR=white><TD COLSPAN=3 ALIGN=center>"
+			. "<FONT SIZE=-1><A HREF=\"$myName?history=short\">"
+			. "Short history</A> ($MaxHistoryItems $item)"
+			. "</FONT></TD></TR>\n";
+	}
+}
+
 if($history) {
 	$history = "<H3>History</H3>"
 	. "<TABLE CELLPADDING=0 CELLSPACING=0 BGCOLOR=#404040 WIDTH=100%><TR><TD>"
@@ -457,7 +499,7 @@ print LOG "\n";	# Finalize logging record
 
 PRINTOUT:
 
-print header(-expires=>'-1d') unless($HTTPHeaderGenerated);
+print header(-expires=>'-1y') unless($HTTPHeaderGenerated);
 
 # If environment has never been set up completely, remove it.
 if($EnvironmentSetOK != 1 && $TMPDIR ne "/") {
@@ -484,7 +526,7 @@ $content
 <HR WIDTH=70%>
 <CENTER><ADDRESS><FONT SIZE=-1 FACE=Courier COLOR=#404040>
 <A HREF=http://lionet.info/asn1c>The ASN.1 Compiler</A>
-	Copyright &copy; 2003, 2004
+	Copyright &copy; 2003, 2004, 2005
 Lev Walkin &lt;<A HREF=mailto:vlm&#64;lionet.info?Subject=asn1c>vlm&#64;lionet.info</A>&gt;
 </FONT></ADDRESS></CENTER>
 </BODY>
