@@ -151,6 +151,8 @@ asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
 		return "INTERSECTION";
 	case ACT_CA_EXC:
 		return "EXCEPT";
+	case ACT_CA_AEX:
+		return "ALL EXCEPT";
 	}
 	return "UNKNOWN";
 }
