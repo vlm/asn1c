@@ -12,15 +12,37 @@
 .SH NAME
 enber \- Convert the unber XML output back into BER
 .SH SYNOPSIS
-enber [\fB-\fR] \fIinfile\fR...
+enber [\fB-n\fR] [\fB-\fR] \fIinfile\fR...
 .SH DESCRIPTION
-enber takes the XML-encoded files produced by \fIunber\fR\|(1) and converts
+enber takes the XML-formatted files produced by \fIunber\fR\|(1) and converts
 them back into the BER format.
 A single dash represents the standard input.
+.SH OPTIONS
+.TP
+\fB\-n\fR
+Disable input validation. By default, enber performs some basic validity checks
+against the XML input. This option disables such checks.
 .SH EXAMPLES
 Decode the BER sequence and immediately encode it back
 .Vb
 \&    unber \fB-p\fR \fIfilename.ber\fR | enber \fB-\fR > \fIreconstructed.ber\fR
+.Ve
+.SH FOOTNOTES
+This program does not attempt to perform full-fledged XML parsing. It is merely
+compatible with \fIunber\fR\|(1)'s output.
+In particular, the XML comments are not supported.
+The following characters after the initial white space indicate
+the start of a comment: "\fB#\fR" (a hash) and "\fB--\fR" (two dashes).
+The whole comment line is ignored completely. Empty lines are ignored as well.
+.P
+The following example demostrates the use of comments:
+.Vb
+\&	<C T="[1]" TL="2" V="2">
+\&		<I T="[1]" TL="2" V="Indefinite">
+\&		-- </I>
+\&		# Do not terminate:
+\&		# the absence of end-of-content octets is intentional!
+\&	</C>
 .Ve
 .SH SEE ALSO
 .TP
