@@ -85,7 +85,7 @@ check_xer(int tofail, char *xmldata, long orig_value) {
 	long value;
 	int ret;
 
-	printf("[%s] vs %ld:\n", xmldata, orig_value);
+	printf("[%s] vs %ld: ", xmldata, orig_value);
 
 	rc = xer_decode(0, &asn_DEF_INTEGER, (void *)&st,
 		xmldata, strlen(xmldata));
@@ -140,6 +140,7 @@ main(int ac, char **av) {
 
 	check_xer(-1, "", 0);
 	check_xer(-1, "<INTEGER></INTEGER>", 0);
+	check_xer(-1, "<INTEGER> </INTEGER>", 0);
 	check_xer(-1, "<INTEGER>-</INTEGER>", 0);
 	check_xer(-1, "<INTEGER>+</INTEGER>", 0);
 	check_xer(-1, "<INTEGER>+-</INTEGER>", 0);
