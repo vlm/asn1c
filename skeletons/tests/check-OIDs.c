@@ -1,10 +1,12 @@
 #include <OBJECT_IDENTIFIER.c>
 #include <RELATIVE-OID.c>
-#include <ber_codec_prim.c>
+#include <asn_codecs_prim.c>
 #include <ber_decoder.c>
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>
 #include <der_encoder.c>
+#include <xer_decoder.c>
+#include <xer_support.c>
 #include <constraints.c>
 
 #include <sys/time.h>
