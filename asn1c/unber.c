@@ -439,6 +439,13 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 			(etype & ASN_STRING_MASK)
 			||
 			(etype == ASN_BASIC_OCTET_STRING)
+			||
+			/*
+			 * AUTOMATIC TAGS or IMPLICIT TAGS in effect,
+			 * Treat this primitive type as OCTET_STRING.
+			 */
+			(BER_TAG_CLASS(tlv_tag) != ASN_TAG_CLASS_UNIVERSAL
+				&& pretty_printing)
 		) && (tlv_len > 0 && tlv_len < 128 * 1024)) {
 			vbuf = malloc(tlv_len + 1);
 			/* Not checking is intentional */
@@ -450,7 +457,8 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 	if(!vbuf) printf(special_format ? " F>" : ">");
 
 	/*
-	 * Print the value in binary or text form.
+	 * Print the value in binary or text form,
+	 * or collect the bytes into vbuf.
 	 */
 	for(i = 0; i < tlv_len; i++) {
 		int ch = fgetc(fp);
@@ -479,7 +487,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 					break;
 				}
 				/* Fall through */
-			case '<': case '>': case '&':
+			case 0x3c: case 0x3e: case 0x26:
 				printf("&#x%02x;", ch);
 			}
 			break;
@@ -559,6 +567,8 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 
 	/*
 	 * If the buffer was not consumed, print it out.
+	 * It might be an OCTET STRING or other primitive type,
+	 * which might actually be printable, but we need to figure it out.
 	 */
 	if(vbuf) {
 		int binary;
@@ -566,13 +576,13 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 		/*
 		 * Check whether the data could be represented as text
 		 */
-		binary = -1 * (tlv_len >> 2); /* Threshold is 25% binary */
+		binary = -1 * (tlv_len >> 3); /* Threshold is 12.5% binary */
 		for(i = 0; i < tlv_len; i++) {
 			switch(vbuf[i]) {
 			case 0x1b: binary = 1; break;
 			case 0x09: case 0x0a: case 0x0d: continue;
 			default:
-				if(vbuf[i] < 0x20 || (vbuf[i] & 0x80))
+				if(vbuf[i] < 0x20 || vbuf[i] >= 0x7f)
 					if(++binary > 0)  /* Way too many */
 						break;
 				continue;
@@ -581,7 +591,11 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 		}
 		printf(">");
 		for(i = 0; i < tlv_len; i++) {
-			if(binary > 0 || vbuf[i] < 0x20 || (vbuf[i] & 0x80))
+			if(binary > 0 || vbuf[i] < 0x20 || vbuf[i] >= 0x7f
+				|| vbuf[i] == 0x26	/* '&' */
+				|| vbuf[i] == 0x3c	/* '<' */
+				|| vbuf[i] == 0x3e	/* '>' */
+			)
 				printf("&#x%02x;", vbuf[i]);
 			else
 				printf("%c", vbuf[i]);
