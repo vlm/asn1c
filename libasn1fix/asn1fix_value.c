@@ -3,7 +3,7 @@
 static int _asn1f_copy_value(arg_t *arg, asn1p_expr_t *to,asn1p_expr_t *from);
 
 int
-asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
+asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, enum asn1p_constraint_type_e *opt_constr_type) {
 	asn1p_expr_t *val_type_expr;
 	asn1p_expr_t *value_expr;
 	asn1p_expr_t *type_expr;
@@ -16,8 +16,12 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	if(expr->value->type != ATV_REFERENCED)
 		return 0;
 
-	DEBUG("(=\"%s\", %x)",
-		asn1f_printable_value(expr->value), expr->expr_type);
+	DEBUG("(=\"%s\", %x%s%s)",
+		asn1f_printable_value(expr->value), expr->expr_type,
+		opt_constr_type ? ", " : "",
+		opt_constr_type
+			? asn1p_constraint_type2str(*opt_constr_type) : ""
+	);
 
 	/*
 	 * 1. Find the terminal type for this assignment.
@@ -39,7 +43,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	 */
 	value_expr = asn1f_find_terminal_value(arg, expr);
 	if(value_expr) {
-		DEBUG("\tTerminal value for %s->%s is %s at line %d",
+		DEBUG("Terminal value for %s->%s is %s at line %d",
 			expr->Identifier, asn1f_printable_value(expr->value),
 			value_expr->Identifier, value_expr->_lineno);
 	} else {
@@ -54,11 +58,11 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	WITH_MODULE(value_expr->module,
 		val_type_expr = asn1f_find_terminal_type(arg, value_expr));
 	if(val_type_expr) {
-		DEBUG("\tTerminal type of value %s->%s is %s at line %d",
+		DEBUG("Terminal type of value %s->%s is %s at line %d",
 			expr->Identifier, asn1f_printable_value(expr->value),
 			val_type_expr->Identifier, val_type_expr->_lineno);
 	} else {
-		FATAL("\tTerminal type of value %s->%s not found",
+		FATAL("Terminal type of value %s->%s not found",
 			expr->Identifier, asn1f_printable_value(expr->value));
 		return -1;
 	}
@@ -67,14 +71,24 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 	 * 4. Check compatibility between the type of the current expression
 	 * and the type of the discovered value.
 	 */
-	ret = asn1f_check_type_compatibility(arg, type_expr, val_type_expr);
+	if(opt_constr_type)
+		ret = asn1constraint_compatible(val_type_expr->expr_type,
+			*opt_constr_type);
+	else
+		ret = asn1f_check_type_compatibility(arg,
+			type_expr, val_type_expr);
 	if(ret == -1) {
 		switch(type_expr->expr_type) {
 		case ASN_BASIC_INTEGER:
 		case ASN_BASIC_ENUMERATED:
-			FATAL("Incompatible type of %s at %d with %s at %d",
-			type_expr->Identifier, type_expr->_lineno,
-			val_type_expr->Identifier, val_type_expr->_lineno);
+			FATAL("Incompatible type of \"%s\" (%s) at line %d "
+			"with \"%s\" (%s) at line %d",
+			type_expr->Identifier,
+				ASN_EXPR_TYPE2STR(type_expr->expr_type),
+				type_expr->_lineno,
+			val_type_expr->Identifier,
+				ASN_EXPR_TYPE2STR(val_type_expr->expr_type),
+				val_type_expr->_lineno);
 			return -1;
 		case ASN_BASIC_OBJECT_IDENTIFIER:
 			/*
@@ -85,9 +99,14 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 		default:
 			break;
 		}
-		WARNING("\tIncompatible type of %s at %d with %s at %d",
-			type_expr->Identifier, type_expr->_lineno,
-			val_type_expr->Identifier, val_type_expr->_lineno);
+		WARNING("Incompatible type of \"%s\" (%s) at line %d "
+			"with \"%s\" (%s) at line %d",
+			type_expr->Identifier,
+				ASN_EXPR_TYPE2STR(type_expr->expr_type),
+				type_expr->_lineno,
+			val_type_expr->Identifier,
+				ASN_EXPR_TYPE2STR(val_type_expr->expr_type),
+				val_type_expr->_lineno);
 		return 1;
 	}
 
@@ -105,7 +124,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr) {
 		return -1;
 	}
 
-	DEBUG("\tFinal value for \"%s\" at line %d is %s",
+	DEBUG("Final value for \"%s\" at line %d is %s",
 		expr->Identifier, expr->_lineno,
 		asn1f_printable_value(expr->value));
 
@@ -162,7 +181,7 @@ asn1f_look_value_in_type(arg_t *arg,
 	identifier = value_expr->value->value.reference->components[0].name;
 
 	child_expr = asn1f_lookup_child(type_expr, identifier);
-	DEBUG("\tLooking into a type %s at line %d for %s at line %d: %s",
+	DEBUG("Looking into a type %s at line %d for %s at line %d: %s",
 		type_expr->Identifier, type_expr->_lineno,
 		identifier, value_expr->_lineno,
 		child_expr
