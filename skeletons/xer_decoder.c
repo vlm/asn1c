@@ -271,7 +271,6 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 			ctx->phase = 2;	/* Phase out */
 			RETURN(RC_OK);
 		case XCT_UNKNOWN_BO:
-			if(!ctx->phase) break;
 			/*
 			 * Certain tags in the body may be expected.
 			 */
@@ -280,6 +279,12 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 					buf_ptr, ch_size) == 0) {
 				/* Tag's processed fine */
 				ADVANCE(ch_size);
+				if(!ctx->phase) {
+					/* We are not expecting
+					 * the closing tag anymore. */
+					ctx->phase = 2;	/* Phase out */
+					RETURN(RC_OK);
+				}
 				continue;
 			}
 			/* Fall through */

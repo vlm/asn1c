@@ -95,7 +95,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 				OUT("double value;\n");
 				break;
 			case ASN_BASIC_BOOLEAN:
-				OUT("int value;\n");
+				OUT("BOOLEAN_t value;\n");
 				break;
 			default:
 				break;
@@ -557,7 +557,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 		if(arg->flags & A1C_USE_NATIVE_TYPES) {
-			OUT("value = *(const int *)sptr;\n");
+			OUT("value = *(const long *)sptr;\n");
 		} else {
 			if(r_value->el_count == 0
 			&& (
@@ -601,7 +601,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 		}
 		break;
 	case ASN_BASIC_BOOLEAN:
-		OUT("value = (*(const int *)sptr) ? 1 : 0;\n");
+		OUT("value = (*(const long *)sptr) ? 1 : 0;\n");
 		break;
 	default:
 		WARNING("%s:%d: Value cannot be determined "

@@ -87,13 +87,15 @@ RELATIVE_OID_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 static ssize_t
-RELATIVE_OID__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
 	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
 	char *endptr;
 	long s_arcs[6];
 	long *arcs = s_arcs;
 	int arcs_count;
 	int ret;
+
+	(void)td;
 
 	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
 		(const char *)chunk_buf, chunk_size,

@@ -264,13 +264,15 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 }
 
 static ssize_t
-OBJECT_IDENTIFIER__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
 	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
 	char *endptr;
 	long s_arcs[10];
 	long *arcs = s_arcs;
 	int arcs_count;
 	int ret;
+
+	(void)td;
 
 	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
 		(const char *)chunk_buf, chunk_size, arcs, 10, &endptr);

@@ -641,7 +641,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
-	asn_SET_OF_specifics_t *specs=(asn_SET_OF_specifics_t *)td->specifics;
+	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *element = td->elements;
 	A_SET_OF(void) *list;
 	const char *mname = specs->as_XMLValueList
@@ -684,6 +684,8 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
 		}
 
+		if(!xcan && specs->as_XMLValueList)
+			_i_ASN_TEXT_INDENT(1, ilevel + 1);
 		tmper = element->type->xer_encoder(element->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) {
@@ -695,7 +697,6 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			const char *name = (*element->name)
 				? element->name : element->type->xml_tag;
 			size_t len = strlen(name);
-			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel + 1);
 			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);
 		}
 

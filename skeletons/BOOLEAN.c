@@ -134,9 +134,11 @@ BOOLEAN_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
  * Decode the chunk of XML text encoding INTEGER.
  */
 static ssize_t
-BOOLEAN__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+BOOLEAN__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
 	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
 	char *p = (char *)chunk_buf;
+
+	(void)td;
 
 	if(chunk_size == 0) return -1;
 

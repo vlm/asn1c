@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -92,11 +93,15 @@ INTEGER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	return der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
 }
 
+static const asn_INTEGER_enum_map_t *INTEGER__map_value2enum(asn_INTEGER_specifics_t *specs, long value);
+static const asn_INTEGER_enum_map_t *INTEGER__map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop);
+
 /*
  * INTEGER specific human-readable output.
  */
 static ssize_t
-INTEGER__dump(const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
+INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key, int plainOrXER) {
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	char scratch[32];	/* Enough for 64-bit integer */
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
@@ -104,10 +109,6 @@ INTEGER__dump(const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 	ssize_t wrote = 0;
 	char *p;
 	int ret;
-
-	if(st->size == 0) {
-		return (cb("0", 1, app_key) < 0) ? -1 : 1;
-	}
 
 	/*
 	 * Advance buf pointer until the start of the value's body.
@@ -126,12 +127,49 @@ INTEGER__dump(const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 
 	/* Simple case: the integer size is small */
 	if((size_t)(buf_end - buf) <= sizeof(accum)) {
-		accum = (*buf & 0x80) ? -1 : 0;
-		for(; buf < buf_end; buf++)
-			accum = (accum << 8) | *buf;
-		ret = snprintf(scratch, sizeof(scratch), "%ld", accum);
-		assert(ret > 0 && ret < (int)sizeof(scratch));
-		return (cb(scratch, ret, app_key) < 0) ? -1 : ret;
+		const asn_INTEGER_enum_map_t *el;
+		size_t scrsize;
+		char *scr;
+
+		if(buf == buf_end) {
+			accum = 0;
+		} else {
+			accum = (*buf & 0x80) ? -1 : 0;
+			for(; buf < buf_end; buf++)
+				accum = (accum << 8) | *buf;
+		}
+
+		el = INTEGER__map_value2enum(specs, accum);
+		if(el) {
+			scrsize = el->enum_len + 32;
+			scr = (char *)alloca(scrsize);
+			if(plainOrXER == 0)
+				ret = snprintf(scr, scrsize,
+					"%ld (%s)", accum, el->enum_name);
+			else
+				ret = snprintf(scr, scrsize,
+					"<%s/>", el->enum_name);
+		} else if(plainOrXER && specs && specs->strict_enumeration) {
+			ASN_DEBUG("ASN.1 forbids dealing with "
+				"unknown value of ENUMERATED type");
+			errno = EPERM;
+			return -1;
+		} else {
+			scrsize = sizeof(scratch);
+			scr = scratch;
+			ret = snprintf(scr, scrsize, "%ld", accum);
+		}
+		assert(ret > 0 && (size_t)ret < scrsize);
+		return (cb(scr, ret, app_key) < 0) ? -1 : ret;
+	} else if(plainOrXER && specs && specs->strict_enumeration) {
+		/*
+		 * Here and earlier, we cannot encode the ENUMERATED values
+		 * if there is no corresponding identifier.
+		 */
+		ASN_DEBUG("ASN.1 forbids dealing with "
+			"unknown value of ENUMERATED type");
+		errno = EPERM;
+		return -1;
 	}
 
 	/* Output in the long xx:yy:zz... format */
@@ -171,22 +209,97 @@ INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(!st && !st->buf)
 		ret = cb("<absent>", 8, app_key);
 	else
-		ret = INTEGER__dump(st, cb, app_key);
+		ret = INTEGER__dump(td, st, cb, app_key, 0);
 
 	return (ret < 0) ? -1 : 0;
+}
+
+struct e2v_key {
+	const char *start;
+	const char *stop;
+	asn_INTEGER_enum_map_t *vemap;
+	unsigned int *evmap;
+};
+static int
+INTEGER__compar_enum2value(const void *kp, const void *am) {
+	const struct e2v_key *key = (const struct e2v_key *)kp;
+	const asn_INTEGER_enum_map_t *el = (const asn_INTEGER_enum_map_t *)am;
+	const char *ptr, *end, *name;
+
+	/* Remap the element (sort by different criterion) */
+	el = key->vemap + key->evmap[el - key->vemap];
+
+	/* Compare strings */
+	for(ptr = key->start, end = key->stop, name = el->enum_name;
+			ptr < end; ptr++, name++) {
+		if(*ptr != *name)
+			return *(const unsigned char *)ptr
+				- *(const unsigned char *)name;
+	}
+	return name[0] ? -1 : 0;
+}
+
+static const asn_INTEGER_enum_map_t *
+INTEGER__map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop) {
+	int count = specs ? specs->map_count : 0;
+	struct e2v_key key;
+	const char *lp;
+
+	if(!count) return NULL;
+
+	/* Guaranteed: assert(lstart < lstop); */
+	/* Figure out the tag name */
+	for(lstart++, lp = lstart; lp < lstop; lp++) {
+		switch(*lp) {
+		case 9: case 10: case 11: case 12: case 13: case 32: /* WSP */
+		case 0x2f: /* '/' */ case 0x3e: /* '>' */
+			break;
+		default:
+			continue;
+		}
+		break;
+	}
+	if(lp == lstop) return NULL;	/* No tag found */
+	lstop = lp;
+
+	key.start = lstart;
+	key.stop = lstop;
+	key.vemap = specs->value2enum;
+	key.evmap = specs->enum2value;
+	return (asn_INTEGER_enum_map_t *)bsearch(&key, specs->value2enum, count,
+		sizeof(specs->value2enum[0]), INTEGER__compar_enum2value);
+}
+
+static int
+INTEGER__compar_value2enum(const void *kp, const void *am) {
+	long a = *(const long *)kp;
+	const asn_INTEGER_enum_map_t *el = (const asn_INTEGER_enum_map_t *)am;
+	long b = el->nat_value;
+	if(a < b) return -1;
+	else if(a == b) return 0;
+	else return 1;
+}
+
+static const asn_INTEGER_enum_map_t *
+INTEGER__map_value2enum(asn_INTEGER_specifics_t *specs, long value) {
+	int count = specs ? specs->map_count : 0;
+	if(!count) return 0;
+	return (asn_INTEGER_enum_map_t *)bsearch(&value, specs->value2enum,
+		count, sizeof(specs->value2enum[0]),
+		INTEGER__compar_value2enum);
 }
 
 /*
  * Decode the chunk of XML text encoding INTEGER.
  */
 static ssize_t
-INTEGER__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, void *chunk_buf, size_t chunk_size) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	long sign = 1;
 	long value;
-	char *lp;
-	char *lstart = (char *)chunk_buf;
-	char *lstop = lstart + chunk_size;
+	const char *lp;
+	const char *lstart = (const char *)chunk_buf;
+	const char *lstop = lstart + chunk_size;
 	enum {
 		ST_SKIPSPACE,
 		ST_WAITDIGITS,
@@ -194,8 +307,8 @@ INTEGER__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
 	} state = ST_SKIPSPACE;
 
 	/*
-	 * We may receive a tag here. But we aren't ready to deal with it yet.
-	 * So, just use stroul()-like code and serialize the result.
+	 * We may have received a tag here. It will be processed inline.
+	 * Use strtoul()-like code and serialize the result.
 	 */
 	for(value = 0, lp = lstart; lp < lstop; lp++) {
 		int lv = *lp;
@@ -242,6 +355,22 @@ INTEGER__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
 			}
 		    }
 			continue;
+		case 0x3c:	/* '<' */
+			if(state == ST_SKIPSPACE) {
+				const asn_INTEGER_enum_map_t *el;
+				el = INTEGER__map_enum2value(
+					(asn_INTEGER_specifics_t *)
+					td->specifics, lstart, lstop);
+				if(el) {
+					ASN_DEBUG("Found \"%s\" => %ld",
+						el->enum_name, el->nat_value);
+					state = ST_DIGITS;
+					value = el->nat_value;
+					break;
+				}
+				ASN_DEBUG("Unknown identifier for INTEGER");
+			}
+			return -1;
 		}
 		break;
 	}
@@ -280,7 +409,7 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	if(!st && !st->buf)
 		_ASN_ENCODE_FAILED;
 
-	er.encoded = INTEGER__dump(st, cb, app_key);
+	er.encoded = INTEGER__dump(td, st, cb, app_key, 1);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
 	return er;

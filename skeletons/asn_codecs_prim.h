@@ -25,8 +25,8 @@ asn_dec_rval_t xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	void **struct_ptr, size_t struct_size,
 	const char *opt_mname,
 	void *buf_ptr, size_t size,
-	ssize_t (*prim_body_decode)(void *struct_ptr,
-		void *chunk_buf, size_t chunk_size)
+	ssize_t (*prim_body_decode)(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, void *chunk_buf, size_t chunk_size)
 	);
 
 #endif	/* ASN_CODECS_PRIM_H */
