@@ -5,7 +5,6 @@
 
 /*** <<< TYPE-DECLS [T1] >>> ***/
 
-
 typedef T2_t	 T1_t;
 
 /*** <<< FUNC-DECLS [T1] >>> ***/
@@ -135,7 +134,6 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 
 /*** <<< TYPE-DECLS [T2] >>> ***/
 
-
 typedef T3_t	 T2_t;
 
 /*** <<< FUNC-DECLS [T2] >>> ***/
@@ -263,7 +261,6 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 
 /*** <<< TYPE-DECLS [T3] >>> ***/
 
-
 typedef T4_t	 T3_t;
 
 /*** <<< FUNC-DECLS [T3] >>> ***/
@@ -389,7 +386,6 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 
 /*** <<< TYPE-DECLS [T4] >>> ***/
 
-
 typedef T5_t	 T4_t;
 
 /*** <<< FUNC-DECLS [T4] >>> ***/
@@ -510,7 +506,6 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 
 /*** <<< TYPE-DECLS [T5] >>> ***/
 
-
 typedef T6_t	 T5_t;
 
 /*** <<< FUNC-DECLS [T5] >>> ***/
@@ -630,7 +625,6 @@ asn_TYPE_descriptor_t asn_DEF_T5 = {
 
 /*** <<< TYPE-DECLS [T6] >>> ***/
 
-
 typedef double	 T6_t;
 
 /*** <<< FUNC-DECLS [T6] >>> ***/
@@ -648,7 +642,6 @@ typedef double	 T6_t;
 #include <Ts.h>
 
 /*** <<< TYPE-DECLS [T] >>> ***/
-
 
 typedef Ts_t	 T_t;
 
@@ -770,12 +763,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 #include <T3.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [Ts] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_Ts;
-
 /*** <<< TYPE-DECLS [Ts] >>> ***/
-
 
 typedef struct Ts {
 	T2_t	 m1;
@@ -785,6 +773,10 @@ typedef struct Ts {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Ts_t;
+
+/*** <<< FUNC-DECLS [Ts] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Ts;
 
 /*** <<< STAT-DEFS [Ts] >>> ***/
 

@@ -1,7 +1,6 @@
 
 /*** <<< INCLUDES [Test-structure-1] >>> ***/
 
-#include <Test-structure-1.h>
 #include <INTEGER.h>
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
@@ -9,14 +8,11 @@
 #include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [Test-structure-1] >>> ***/
-
+/*** <<< FWD-DECLS [Test-structure-1] >>> ***/
 
 struct Test_structure_1;	/* Forward declaration */
-extern asn_TYPE_descriptor_t asn_DEF_Test_structure_1;
 
 /*** <<< TYPE-DECLS [Test-structure-1] >>> ***/
-
 
 typedef struct Test_structure_1 {
 	struct t_member1 {
@@ -37,6 +33,14 @@ typedef struct Test_structure_1 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Test_structure_1_t;
+
+/*** <<< FUNC-DECLS [Test-structure-1] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Test_structure_1;
+
+/*** <<< POST-INCLUDE [Test-structure-1] >>> ***/
+
+#include <Test-structure-1.h>
 
 /*** <<< STAT-DEFS [Test-structure-1] >>> ***/
 
@@ -208,13 +212,11 @@ typedef enum Choice_1_PR {
 	Choice_1_PR_other,
 } Choice_1_PR;
 
-struct Choice_1;	/* Forward declaration */
+/*** <<< FWD-DECLS [Choice-1] >>> ***/
 
 struct Choice_1;	/* Forward declaration */
-extern asn_TYPE_descriptor_t asn_DEF_Choice_1;
 
 /*** <<< TYPE-DECLS [Choice-1] >>> ***/
-
 
 typedef struct Choice_1 {
 	Choice_1_PR present;
@@ -233,6 +235,14 @@ typedef struct Choice_1 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Choice_1_t;
+
+/*** <<< FUNC-DECLS [Choice-1] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice_1;
+
+/*** <<< POST-INCLUDE [Choice-1] >>> ***/
+
+#include <Choice-1.h>
 
 /*** <<< STAT-DEFS [Choice-1] >>> ***/
 
@@ -345,7 +355,6 @@ asn_TYPE_descriptor_t asn_DEF_Choice_1 = {
 
 /*** <<< INCLUDES [Test-structure-2] >>> ***/
 
-#include <Test-structure-3.h>
 #include <constr_SET.h>
 
 /*** <<< DEPS [Test-structure-2] >>> ***/
@@ -358,11 +367,11 @@ typedef enum Test_structure_2_PR {
 	Test_structure_2_PR_m1,	/* Member m1 is present */
 } Test_structure_2_PR;
 
+/*** <<< FWD-DECLS [Test-structure-2] >>> ***/
+
 struct Test_structure_3;	/* Forward declaration */
-extern asn_TYPE_descriptor_t asn_DEF_Test_structure_2;
 
 /*** <<< TYPE-DECLS [Test-structure-2] >>> ***/
-
 
 typedef struct Test_structure_2 {
 	struct Test_structure_3	*m1	/* OPTIONAL */;
@@ -374,6 +383,14 @@ typedef struct Test_structure_2 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Test_structure_2_t;
+
+/*** <<< FUNC-DECLS [Test-structure-2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Test_structure_2;
+
+/*** <<< POST-INCLUDE [Test-structure-2] >>> ***/
+
+#include <Test-structure-3.h>
 
 /*** <<< STAT-DEFS [Test-structure-2] >>> ***/
 
@@ -431,7 +448,6 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_2 = {
 
 /*** <<< INCLUDES [Test-structure-3] >>> ***/
 
-#include <Test-structure-2.h>
 #include <constr_SET.h>
 
 /*** <<< DEPS [Test-structure-3] >>> ***/
@@ -444,11 +460,11 @@ typedef enum Test_structure_3_PR {
 	Test_structure_3_PR_m1,	/* Member m1 is present */
 } Test_structure_3_PR;
 
+/*** <<< FWD-DECLS [Test-structure-3] >>> ***/
+
 struct Test_structure_2;	/* Forward declaration */
-extern asn_TYPE_descriptor_t asn_DEF_Test_structure_3;
 
 /*** <<< TYPE-DECLS [Test-structure-3] >>> ***/
-
 
 typedef struct Test_structure_3 {
 	struct Test_structure_2	*m1	/* OPTIONAL */;
@@ -460,6 +476,14 @@ typedef struct Test_structure_3 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Test_structure_3_t;
+
+/*** <<< FUNC-DECLS [Test-structure-3] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Test_structure_3;
+
+/*** <<< POST-INCLUDE [Test-structure-3] >>> ***/
+
+#include <Test-structure-2.h>
 
 /*** <<< STAT-DEFS [Test-structure-3] >>> ***/
 

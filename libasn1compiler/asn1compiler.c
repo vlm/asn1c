@@ -76,9 +76,6 @@ asn1c_compile_expr(arg_t *arg) {
 	type_cb = asn1_lang_map[expr->meta_type][expr->expr_type].type_cb;
 	if(type_cb) {
 
-		if(arg->target->destination[OT_TYPE_DECLS].indent_level == 0)
-			OUT("\n");
-
 		DEBUG("Compiling %s at line %d",
 			expr->Identifier,
 			expr->_lineno);

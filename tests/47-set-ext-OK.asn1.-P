@@ -13,10 +13,8 @@
 typedef enum T1_PR {
 	T1_PR_i,	/* Member i is present */
 } T1_PR;
-extern asn_TYPE_descriptor_t asn_DEF_T1;
 
 /*** <<< TYPE-DECLS [T1] >>> ***/
-
 
 typedef struct T1 {
 	INTEGER_t	 i;
@@ -32,6 +30,10 @@ typedef struct T1 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T1_t;
+
+/*** <<< FUNC-DECLS [T1] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T1;
 
 /*** <<< STAT-DEFS [T1] >>> ***/
 
@@ -101,10 +103,8 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 typedef enum T2_PR {
 	T2_PR_i,	/* Member i is present */
 } T2_PR;
-extern asn_TYPE_descriptor_t asn_DEF_T2;
 
 /*** <<< TYPE-DECLS [T2] >>> ***/
-
 
 typedef struct T2 {
 	INTEGER_t	 i;
@@ -120,6 +120,10 @@ typedef struct T2 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T2_t;
+
+/*** <<< FUNC-DECLS [T2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T2;
 
 /*** <<< STAT-DEFS [T2] >>> ***/
 
@@ -187,10 +191,8 @@ typedef enum T3_PR {
 	T3_PR_i,
 	/* Extensions may appear below */
 } T3_PR;
-extern asn_TYPE_descriptor_t asn_DEF_T3;
 
 /*** <<< TYPE-DECLS [T3] >>> ***/
-
 
 typedef struct T3 {
 	T3_PR present;
@@ -205,6 +207,10 @@ typedef struct T3 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T3_t;
+
+/*** <<< FUNC-DECLS [T3] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T3;
 
 /*** <<< STAT-DEFS [T3] >>> ***/
 
@@ -262,10 +268,8 @@ typedef enum T4_PR {
 	T4_PR_i,
 	/* Extensions may appear below */
 } T4_PR;
-extern asn_TYPE_descriptor_t asn_DEF_T4;
 
 /*** <<< TYPE-DECLS [T4] >>> ***/
-
 
 typedef struct T4 {
 	T4_PR present;
@@ -280,6 +284,10 @@ typedef struct T4 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T4_t;
+
+/*** <<< FUNC-DECLS [T4] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T4;
 
 /*** <<< STAT-DEFS [T4] >>> ***/
 

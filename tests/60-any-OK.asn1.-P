@@ -5,12 +5,7 @@
 #include <ANY.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [T1] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_T1;
-
 /*** <<< TYPE-DECLS [T1] >>> ***/
-
 
 typedef struct T1 {
 	INTEGER_t	 i;
@@ -19,6 +14,10 @@ typedef struct T1 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T1_t;
+
+/*** <<< FUNC-DECLS [T1] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T1;
 
 /*** <<< STAT-DEFS [T1] >>> ***/
 
@@ -81,12 +80,7 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 #include <ANY.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [T2] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_T2;
-
 /*** <<< TYPE-DECLS [T2] >>> ***/
-
 
 typedef struct T2 {
 	INTEGER_t	 i;
@@ -95,6 +89,10 @@ typedef struct T2 {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } T2_t;
+
+/*** <<< FUNC-DECLS [T2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T2;
 
 /*** <<< STAT-DEFS [T2] >>> ***/
 

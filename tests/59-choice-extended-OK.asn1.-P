@@ -15,11 +15,11 @@ typedef enum Choice_PR {
 	Choice_PR_c,
 } Choice_PR;
 
+/*** <<< FWD-DECLS [Choice] >>> ***/
+
 struct Choice;	/* Forward declaration */
-extern asn_TYPE_descriptor_t asn_DEF_Choice;
 
 /*** <<< TYPE-DECLS [Choice] >>> ***/
-
 
 typedef struct Choice {
 	Choice_PR present;
@@ -36,6 +36,10 @@ typedef struct Choice {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Choice_t;
+
+/*** <<< FUNC-DECLS [Choice] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice;
 
 /*** <<< STAT-DEFS [Choice] >>> ***/
 

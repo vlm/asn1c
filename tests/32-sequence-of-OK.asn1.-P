@@ -1,23 +1,29 @@
 
 /*** <<< INCLUDES [Programming] >>> ***/
 
-#include <Fault.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 
-/*** <<< DEPS [Programming] >>> ***/
+/*** <<< FWD-DECLS [Programming] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Programming;
+struct Fault;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [Programming] >>> ***/
 
-
 typedef struct Programming {
-	A_SEQUENCE_OF(Fault_t) list;
+	A_SEQUENCE_OF(struct Fault) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Programming_t;
+
+/*** <<< FUNC-DECLS [Programming] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Programming;
+
+/*** <<< POST-INCLUDE [Programming] >>> ***/
+
+#include <Fault.h>
 
 /*** <<< STAT-DEFS [Programming] >>> ***/
 
@@ -63,23 +69,29 @@ asn_TYPE_descriptor_t asn_DEF_Programming = {
 
 /*** <<< INCLUDES [Fault] >>> ***/
 
-#include <Error.h>
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 
-/*** <<< DEPS [Fault] >>> ***/
+/*** <<< FWD-DECLS [Fault] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Fault;
+struct Error;	/* Forward declaration */
 
 /*** <<< TYPE-DECLS [Fault] >>> ***/
 
-
 typedef struct Fault {
-	A_SET_OF(Error_t) list;
+	A_SET_OF(struct Error) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Fault_t;
+
+/*** <<< FUNC-DECLS [Fault] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Fault;
+
+/*** <<< POST-INCLUDE [Fault] >>> ***/
+
+#include <Error.h>
 
 /*** <<< STAT-DEFS [Fault] >>> ***/
 
@@ -127,12 +139,7 @@ asn_TYPE_descriptor_t asn_DEF_Fault = {
 
 #include <constr_SEQUENCE.h>
 
-/*** <<< DEPS [Error] >>> ***/
-
-extern asn_TYPE_descriptor_t asn_DEF_Error;
-
 /*** <<< TYPE-DECLS [Error] >>> ***/
-
 
 typedef struct Error {
 	/*
@@ -143,6 +150,10 @@ typedef struct Error {
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Error_t;
+
+/*** <<< FUNC-DECLS [Error] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Error;
 
 /*** <<< STAT-DEFS [Error] >>> ***/
 

@@ -124,9 +124,6 @@ char *
 asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	asn1p_expr_t *top_parent;
 	char *typename;
-	enum ami_flags_e ami_flags = (_format & TNF_CHECK)
-		? AMI_CHECK_RESERVED : 0;
-	_format &= ~TNF_CHECK;
 
 	/* Rewind to the topmost parent expression */
 	if((top_parent = expr->parent_expr))
@@ -152,10 +149,18 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			return asn1c_type_name(&tmp, tmp.expr, _format);
 		}
 
+		if(_format == TNF_RSAFE) {
+			asn1p_expr_t *terminal;
+			terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+			if(terminal && terminal->expr_type & ASN_CONSTR_MASK) {
+				typename = terminal->Identifier;
+			}
+		}
+
 		if(_format == TNF_CTYPE) {
 			/*
 			 * If the component references the type itself,
-			 * switch to a recursion safe type representation
+			 * switch to a recursion-safe type naming
 			 * ("struct foo" instead of "foo_t").
 			 */
 			asn1p_expr_t *terminal;
@@ -220,19 +225,14 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	switch(_format) {
 	case TNF_UNMODIFIED:
 	case TNF_INCLUDE:
-		assert(ami_flags == 0);	/* (TNF_INCLUDE | TNF_CHECK)?! */
-		ami_flags |= AMI_MASK_ONLY_SPACES;
-		return asn1c_make_identifier(ami_flags, typename, 0);
+		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES, typename, 0);
 	case TNF_SAFE:
-		return asn1c_make_identifier(ami_flags, typename, 0);
-	case TNF_CTYPE:
-		return asn1c_make_identifier(ami_flags, typename, "t", 0);
-	case TNF_RSAFE:
-		return asn1c_make_identifier(ami_flags, "struct", " ", typename, 0);
-	case TNF_NORCHECK:
-	case TNF_CHECK:
-		assert(_format != TNF_NORCHECK);
-		assert(_format != TNF_CHECK);
+		return asn1c_make_identifier(0, typename, 0);
+	case TNF_CTYPE:	/* C type */
+		return asn1c_make_identifier(0, typename, "t", 0);
+	case TNF_RSAFE:	/* Recursion-safe type */
+		return asn1c_make_identifier(AMI_CHECK_RESERVED,
+			"struct", " ", typename, 0);
 	}
 
 	assert(!"unreachable");

@@ -1,0 +1,357 @@
+
+/*** <<< INCLUDES [Type] >>> ***/
+
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< FWD-DECLS [Type] >>> ***/
+
+struct Epyt;	/* Forward declaration */
+
+/*** <<< TYPE-DECLS [Type] >>> ***/
+
+typedef struct Type {
+	struct data {
+		A_SEQUENCE_OF(struct Epyt) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} data;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Type_t;
+
+/*** <<< FUNC-DECLS [Type] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Type;
+
+/*** <<< POST-INCLUDE [Type] >>> ***/
+
+#include <Epyt.h>
+
+/*** <<< STAT-DEFS [Type] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_data_2[] = {
+	{ ATF_NOFLAGS, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Epyt,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_data_2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_data_2_specs = {
+	sizeof(struct data),
+	offsetof(struct data, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_data_2 = {
+	"data",
+	"data",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_data_2_tags,
+	sizeof(asn_DEF_data_2_tags)
+		/sizeof(asn_DEF_data_2_tags[0]), /* 1 */
+	asn_DEF_data_2_tags,	/* Same as above */
+	sizeof(asn_DEF_data_2_tags)
+		/sizeof(asn_DEF_data_2_tags[0]), /* 1 */
+	asn_MBR_data_2,
+	1,	/* Single element */
+	&asn_SPC_data_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Type_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Type, data),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_data_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "data"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Type_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Type_1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* data at 16 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Type_1_specs = {
+	sizeof(struct Type),
+	offsetof(struct Type, _asn_ctx),
+	asn_MAP_Type_1_tag2el,
+	1,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Type = {
+	"Type",
+	"Type",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Type_1_tags,
+	sizeof(asn_DEF_Type_1_tags)
+		/sizeof(asn_DEF_Type_1_tags[0]), /* 1 */
+	asn_DEF_Type_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Type_1_tags)
+		/sizeof(asn_DEF_Type_1_tags[0]), /* 1 */
+	asn_MBR_Type_1,
+	1,	/* Elements count */
+	&asn_SPC_Type_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Epyt] >>> ***/
+
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< FWD-DECLS [Epyt] >>> ***/
+
+struct Type;	/* Forward declaration */
+struct Ypet;	/* Forward declaration */
+
+/*** <<< TYPE-DECLS [Epyt] >>> ***/
+
+typedef struct Epyt {
+	struct stype {
+		A_SET_OF(struct Type) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} stype;
+	struct Type	*type	/* OPTIONAL */;
+	struct Ypet	*ypet	/* OPTIONAL */;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Epyt_t;
+
+/*** <<< FUNC-DECLS [Epyt] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Epyt;
+
+/*** <<< POST-INCLUDE [Epyt] >>> ***/
+
+#include <Type.h>
+#include <Ypet.h>
+
+/*** <<< STAT-DEFS [Epyt] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_stype_2[] = {
+	{ ATF_NOFLAGS, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Type,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_stype_2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_stype_2_specs = {
+	sizeof(struct stype),
+	offsetof(struct stype, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_stype_2 = {
+	"stype",
+	"stype",
+	SET_OF_free,
+	SET_OF_print,
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_decode_xer,
+	SET_OF_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_stype_2_tags,
+	sizeof(asn_DEF_stype_2_tags)
+		/sizeof(asn_DEF_stype_2_tags[0]), /* 1 */
+	asn_DEF_stype_2_tags,	/* Same as above */
+	sizeof(asn_DEF_stype_2_tags)
+		/sizeof(asn_DEF_stype_2_tags[0]), /* 1 */
+	asn_MBR_stype_2,
+	1,	/* Single element */
+	&asn_SPC_stype_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Epyt_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Epyt, stype),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_stype_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "stype"
+		},
+	{ ATF_POINTER, 2, offsetof(struct Epyt, type),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Type,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "type"
+		},
+	{ ATF_POINTER, 1, offsetof(struct Epyt, ypet),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Ypet,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "ypet"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Epyt_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Epyt_1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* type at 22 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 1 }, /* stype at 21 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, -1, 0 } /* ypet at 23 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Epyt_1_specs = {
+	sizeof(struct Epyt),
+	offsetof(struct Epyt, _asn_ctx),
+	asn_MAP_Epyt_1_tag2el,
+	3,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Epyt = {
+	"Epyt",
+	"Epyt",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Epyt_1_tags,
+	sizeof(asn_DEF_Epyt_1_tags)
+		/sizeof(asn_DEF_Epyt_1_tags[0]), /* 1 */
+	asn_DEF_Epyt_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Epyt_1_tags)
+		/sizeof(asn_DEF_Epyt_1_tags[0]), /* 1 */
+	asn_MBR_Epyt_1,
+	3,	/* Elements count */
+	&asn_SPC_Epyt_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Ypet] >>> ***/
+
+#include <Epyt.h>
+#include <INTEGER.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [Ypet] >>> ***/
+
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum Ypet_PR {
+	Ypet_PR_epyt,	/* Member epyt is present */
+	Ypet_PR_plain,	/* Member plain is present */
+} Ypet_PR;
+
+/*** <<< TYPE-DECLS [Ypet] >>> ***/
+
+typedef struct Ypet {
+	Epyt_t	 epyt;
+	INTEGER_t	*plain	/* DEFAULT 7 */;
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pYpet, Ypet_PR_x) */
+	unsigned int _presence_map
+		[((2+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Ypet_t;
+
+/*** <<< FUNC-DECLS [Ypet] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Ypet;
+
+/*** <<< STAT-DEFS [Ypet] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, epyt),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_Epyt,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "epyt"
+		},
+	{ ATF_POINTER, 1, offsetof(struct Ypet, plain),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "plain"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Ypet_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Ypet_1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* plain at 28 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* epyt at 27 */
+};
+static uint8_t asn_MAP_Ypet_1_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7) | (0 << 6)
+};
+static asn_SET_specifics_t asn_SPC_Ypet_1_specs = {
+	sizeof(struct Ypet),
+	offsetof(struct Ypet, _asn_ctx),
+	offsetof(struct Ypet, _presence_map),
+	asn_MAP_Ypet_1_tag2el,
+	2,	/* Count of tags in the map */
+	asn_MAP_Ypet_1_tag2el,	/* Same as above */
+	2,	/* Count of tags in the CXER map */
+	0,	/* Whether extensible */
+	(unsigned int *)asn_MAP_Ypet_1_mmap	/* Mandatory elements map */
+};
+asn_TYPE_descriptor_t asn_DEF_Ypet = {
+	"Ypet",
+	"Ypet",
+	SET_free,
+	SET_print,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_decode_xer,
+	SET_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Ypet_1_tags,
+	sizeof(asn_DEF_Ypet_1_tags)
+		/sizeof(asn_DEF_Ypet_1_tags[0]), /* 1 */
+	asn_DEF_Ypet_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Ypet_1_tags)
+		/sizeof(asn_DEF_Ypet_1_tags[0]), /* 1 */
+	asn_MBR_Ypet_1,
+	2,	/* Elements count */
+	&asn_SPC_Ypet_1_specs	/* Additional specs */
+};
+

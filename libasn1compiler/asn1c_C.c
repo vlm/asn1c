@@ -35,6 +35,7 @@ static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
+static int emit_include_dependencies(arg_t *arg);
 static int out_name_chain(arg_t *arg, int check_reserved_keywords);
 
 enum tvm_compat {
@@ -59,16 +60,9 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 	OUT("/* Context for parsing across buffer boundaries */\n");	\
 	OUT("asn_struct_ctx_t _asn_ctx;\n"));
 
+
 #define	DEPENDENCIES	do {						\
-	asn1p_expr_t *__m;						\
-	TQ_FOR(__m, &(expr->members), next) {				\
-		if((!(__m->expr_type & ASN_CONSTR_MASK)			\
-		&& __m->expr_type > ASN_CONSTR_MASK)			\
-		|| __m->meta_type == AMT_TYPEREF) {			\
-			GEN_INCLUDE(asn1c_type_name(arg,		\
-				__m, TNF_INCLUDE));	\
-		}							\
-	}								\
+	emit_include_dependencies(arg);					\
 	if(expr->expr_type == ASN_CONSTR_SET_OF)			\
 		GEN_INCLUDE("asn_SET_OF");				\
 	if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF)			\
@@ -81,7 +75,6 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 
 int
 asn1c_lang_C_type_REAL(arg_t *arg) {
-	REDIR(OT_DEPS);
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 
@@ -245,7 +238,7 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	}
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker.flags?"*":"",
+	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -406,7 +399,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker.flags?"*":"",
+	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -567,7 +560,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 int
 asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *memb;
+	asn1p_expr_t *memb = TQ_FIRST(&expr->members);
 
 	DEPENDENCIES;
 
@@ -578,8 +571,6 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	} else {
 		OUT("typedef struct %s {\n", MKID(expr->Identifier));
 	}
-
-	memb = TQ_FIRST(&expr->members);
 
 	INDENT(+1);
 	OUT("A_%s_OF(",
@@ -611,13 +602,13 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 		arg->embed--;
 		assert(arg->target->target == OT_TYPE_DECLS);
 	} else {
-		OUT("%s", asn1c_type_name(arg, memb, TNF_CTYPE | TNF_CHECK));
+		OUT("%s", asn1c_type_name(arg, memb, TNF_RSAFE));
 	}
 	OUT(") list;\n");
 	INDENT(-1);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker.flags?"*":"",
+	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -752,7 +743,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker.flags?"*":"",
+	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -918,24 +909,23 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		 * refer it using "struct X" convention,
 		 * as it may recursively include the current structure.
 		 */
-		if(expr->marker.flags) {
+		if(expr->marker.flags & (EM_INDIRECT | EM_UNRECURSE)) {
 			asn1p_expr_t *terminal;
 			terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 			if(terminal
 			&& (terminal->expr_type & ASN_CONSTR_MASK)) {
-				REDIR(OT_DEPS);
-			 	tnfmt = TNF_RSAFE;
-				OUT("\n");
+				tnfmt = TNF_RSAFE;
+				REDIR(OT_FWD_DECLS);
 				OUT("%s;\t/* Forward declaration */\n",
-					asn1c_type_name(arg, arg->expr, tnfmt | TNF_CHECK));
+					asn1c_type_name(arg, arg->expr, tnfmt));
 			}
 		}
 
 		REDIR(OT_TYPE_DECLS);
 
-		OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt | TNF_CHECK));
+		OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
 		if(!expr->_anonymous_type) {
-			OUT("%s", expr->marker.flags?"\t*":"\t ");
+			OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
 			OUT("%s", MKID(expr->Identifier));
 			if((expr->marker.flags & EM_DEFAULT) == EM_DEFAULT)
 				OUT("\t/* DEFAULT %s */",
@@ -951,11 +941,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		REDIR(OT_TYPE_DECLS);
 
 		OUT("typedef %s\t",
-			asn1c_type_name(arg, arg->expr, TNF_CTYPE | TNF_CHECK));
+			asn1c_type_name(arg, arg->expr, TNF_CTYPE));
 		OUT("%s%s_t",
-			expr->marker.flags?"*":" ",
-			MKID(expr->Identifier));
-		OUT_DEBUG("\t/* %s:%d */", __FILE__, __LINE__);
+			(expr->marker.flags & EM_INDIRECT)?"*":" ",
+			MKID_nc(expr->Identifier));
 	}
 
 	if((expr->expr_type == ASN_BASIC_ENUMERATED)
@@ -1557,6 +1546,47 @@ expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 }
 
 static int
+emit_include_dependencies(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *memb;
+
+	TQ_FOR(memb, &(expr->members), next) {
+
+		if((memb->meta_type == AMT_TYPEREF
+		&& (memb->marker.flags & EM_INDIRECT))
+		|| expr->expr_type == ASN_CONSTR_SET_OF
+		|| expr->expr_type == ASN_CONSTR_SEQUENCE_OF
+		) {
+			asn1p_expr_t *terminal;
+			terminal = asn1f_find_terminal_type_ex(arg->asn, memb);
+			if(terminal && !terminal->parent_expr
+				&& (terminal->expr_type & ASN_CONSTR_MASK)) {
+				int saved_target = arg->target->target;
+				REDIR(OT_FWD_DECLS);
+				OUT("%s;\t/* Forward declaration */\n",
+					asn1c_type_name(arg, memb, TNF_RSAFE));
+				REDIR(saved_target);
+				memb->marker.flags |= EM_UNRECURSE;
+			}
+		}
+
+		if((!(memb->expr_type & ASN_CONSTR_MASK)
+			&& memb->expr_type > ASN_CONSTR_MASK)
+		|| memb->meta_type == AMT_TYPEREF) {
+			if(memb->marker.flags & EM_UNRECURSE) {
+				GEN_POSTINCLUDE(asn1c_type_name(arg,
+					memb, TNF_INCLUDE));
+			} else {
+				GEN_INCLUDE(asn1c_type_name(arg,
+					memb, TNF_INCLUDE));
+			}
+		}
+	}
+
+	return 0;
+}
+
+static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	int save_target;
 	arg_t tmp_arg;
@@ -1576,7 +1606,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 
 	if(outmost_tag && outmost_tag->tag_value == -1)
 		OUT("ATF_OPEN_TYPE | ");
-	OUT("%s, ", expr->marker.flags?"ATF_POINTER":"ATF_NOFLAGS");
+	OUT("%s, ",
+		(expr->marker.flags & EM_INDIRECT)?"ATF_POINTER":"ATF_NOFLAGS");
 	if((expr->marker.flags & EM_OPTIONAL) == EM_OPTIONAL) {
 		asn1p_expr_t *tv;
 		int opts = 0;
