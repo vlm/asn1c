@@ -5,7 +5,7 @@
 #include "../constraints.c"
 
 static void
-check(char *time_str, time_t sample) {
+check(char *time_str, time_t sample, int as_gmt) {
 	UTCTime_t gt;
 	struct tm tm;
 	time_t tloc;
@@ -13,7 +13,7 @@ check(char *time_str, time_t sample) {
 	gt.buf = time_str;
 	gt.size = strlen(time_str);
 
-	tloc = asn_UT2time(&gt, &tm);
+	tloc = asn_UT2time(&gt, &tm, as_gmt);
 	printf("[%s] -> %ld == %ld\n", time_str, (long)tloc, (long)sample);
 	if(tloc != -1)
 	printf("\t%d-%d-%dT%02d:%02d:%02d %ld\n",
@@ -26,29 +26,44 @@ check(char *time_str, time_t sample) {
 		tm.tm_gmtoff
 	);
 	assert(tloc == sample);
+
+	assert(tloc == -1 || as_gmt == 0 || tm.tm_gmtoff == 0);
+
+	if(as_gmt) check(time_str, sample, as_gmt);
 }
 
 int
 main(int ac, char **av) {
 
-	check("0401250", -1);
-	check("0401250930", -1);	/* "Z" or "(+|-)hhmm" required */
-	check("04012509300", -1);
-	check("040125093000-", -1);
-	check("040125093007-0", -1);
-	check("040125093007-080", -1);
-	check("0401250930.01Z", -1);
+	check("0401250", -1, 0);
+	check("0401250930", -1, 0);	/* "Z" or "(+|-)hhmm" required */
+	check("04012509300", -1, 0);
+	check("040125093000-", -1, 0);
+	check("040125093007-0", -1, 0);
+	check("040125093007-080", -1, 0);
+	check("0401250930.01Z", -1, 0);
 
-	check("040125093007Z", 1075023007);
-	check("040125093007+00", 1075023007);
-	check("040125093007-0800", 1075051807);
+	check("040125093007Z", 1075023007, 0);
+	check("040125093007+00", 1075023007, 0);
+	check("040125093007-0800", 1075051807, 0);
 
 	if(ac > 1) {
 		/* These will be valid only inside PST time zone */
-		check("040125093007", 1075051807);
-		check("040125093000,01", 1075051800);
-		check("040125093000,1234", 1075051800);
+		check("040125093007", 1075051807, 0);
+		check("040125093000,01", 1075051800, 0);
+		check("040125093000,1234", 1075051800, 0);
 	}
 
 	return 0;
+}
+
+
+/*
+ * Dummy function.
+ */
+
+der_enc_rval_t
+OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr, int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
+	der_enc_rval_t erval;
+	return erval;
 }
