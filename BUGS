@@ -11,8 +11,7 @@ by ASN.1. Not a problem as most specifications use very small values anyway.
 NOTE:	This statement does not apply to the target code _produced_
 	by the compiler.
 
-2. ASN Macros are prohibited by the current ASN.1 standard,
-and are not supported.
+2. A MACRO facility is part of obsolete ASN.1 standard, and is not supported.
 
 3. Multiple tags applied at the same level are not supported:
 	BadTags ::= [0] EXPLICIT [2] IMPLICIT OtherType
@@ -29,10 +28,8 @@ decoder is perfectly capable of decoding such sequences.
 5. Encoding or decoding of structures with combined length greater than 16MB
 is not tested.
 
-6. XER decoding does not support integer (INTEGER, ENUMERATED) values
+6. XER codec does not support integer (INTEGER, ENUMERATED) values
 outside the signed long range.
 
-7. XER codecs do not handle the identifiers in ENUMERATED, INTEGER and
-BIT STRING types. The problem is that it is unclear how to forward-compatibly
-handle the future extensions.
+7. XER codecs do not handle the identifiers in BIT STRING type.
 
