@@ -1,5 +1,5 @@
 
-0.9.12:	2005-Mar-09
+0.9.12:	2005-Mar-10
 
 	* Fixed a name clash in produced constraint checking code.
 	* #includes are now in single quotes (to solve a name
@@ -10,6 +10,8 @@
 	  prohibited by X.693, #8.2.1).
 	  (Test case 70) (Severity: medium, Security impact: none)
 	  Reported by <Dominique.Nerriec@alcatel.fr>.
+	* Constraints on primitive types being defined are now supported.
+	  (Test case 74) (Severity: low, Security impact: none)
 
 0.9.11:	2005-Mar-04
 
