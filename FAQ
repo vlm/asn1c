@@ -16,8 +16,8 @@ A:
 Q: I've tried doing ./asn1c/asn1c -P examples/*PKIX*93*, but compiler spits
    several fatal failures and exits.
 A:
-	The PKIX1 specifications uses ASN.1 Information Object Classes,
-	which is arguably one of the most complex ASN.1 concepts.
+	The old (RFC2459) PKIX1 specifications used ASN.1 Information Object
+	Classes, which is arguably one of the most complex ASN.1 concepts.
 
 	The asn1c parser and fixer subsystems currently understand most of
 	IOC syntax, but the compiler can cope with only the very basic
@@ -28,9 +28,11 @@ A:
 	but this milestone isn't yet reached. Please contact me in case
 	you have special requirements, we can work it out.
 
-	P.S. Parser and fixer are now able to grok PKIX1, try this out:
+	However, the asn1c compiler is able to understand the newer PKIX1
+	ASN.1 specs, contained in RFC3280, which obsole RFC2459.
+	Try this one out:
 
-		./asn1c/asn1c -E -F examples/*PKIX*93*
+		./asn1c/asn1c -P examples/rfc3280-*.asn1
 
 -- 
 Lev Walkin
