@@ -44,4 +44,9 @@ int asn1f_check_unique_expr_child(arg_t *arg, asn1p_expr_t *child,
  */
 int asn1f_count_children(asn1p_expr_t *parent);
 
+/*
+ * Check if type is explicitly known.
+ */
+int asn1f_check_known_external_type(const char *);
+
 #endif	/* _ASN1FIX_MISC_H_ */

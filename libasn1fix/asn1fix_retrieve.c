@@ -228,12 +228,17 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **module_r) {
 	}
 	if(ref_tc == NULL) {
 		DEBUG("Module \"%s\" does not contain \"%s\" "
-			"mentioned at line %d",
+			"mentioned at line %d: %s",
 			src_mod->Identifier,
 			identifier,
-			ref->_lineno
+			ref->_lineno,
+			strerror(errno)
 		);
-		errno = ESRCH;
+		if(asn1f_check_known_external_type(identifier) == 0) {
+			errno = EEXIST; /* Exists somewhere */
+		} else {
+			errno = ESRCH;
+		}
 		return NULL;
 	}
 
@@ -312,8 +317,9 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr,
 	 */
 	tc = asn1f_lookup_symbol(arg, ref, &mod);
 	if(tc == NULL) {
-		DEBUG("\tSymbol \"%s\" not found",
-			asn1f_printable_reference(ref));
+		DEBUG("\tSymbol \"%s\" not found: %s",
+			asn1f_printable_reference(ref),
+			strerror(errno));
 		return NULL;
 	}
 

@@ -28,9 +28,19 @@ asn1f_fix_dereference_types(arg_t *arg) {
 	 */
 	type_expr = asn1f_find_terminal_type(arg, expr, 0);
 	if(type_expr == NULL) {
+		const char *type_name;
+
+		if(errno == EEXIST) {
+			/* Ignore missing type
+			 * if known to be defined externally:
+			 * -fknown-extern-type=<name>
+			 */
+			return 0;
+		}
+
+		type_name = asn1f_printable_reference(expr->reference);
 		FATAL("Unknown type \"%s\" referenced by \"%s\" at line %d",
-			asn1f_printable_reference(expr->reference),
-			expr->Identifier, expr->_lineno);
+			type_name, expr->Identifier, expr->_lineno);
 		return -1;
 	}
 
