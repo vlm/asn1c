@@ -17,7 +17,7 @@ ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 
 	val = *(uint8_t *)ptr;
 	tclass = (val >> 6);
-	if((val &= 31) != 31) {
+	if((val &= 0x1F) != 0x1F) {
 		/*
 		 * Simple form: everything encoded in a single octet.
 		 * Tag Class is encoded using two least significant bits.
@@ -31,8 +31,8 @@ ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 	 * The MSB is 0 if it is the last octet of the tag.
 	 */
 	for(val = 0, ((char *)ptr)++, skipped = 2;
-			skipped < size; ((char *)ptr)++, skipped++) {
-		unsigned oct = *(uint8_t *)ptr;
+			skipped <= size; ((char *)ptr)++, skipped++) {
+		unsigned int oct = *(uint8_t *)ptr;
 		if(oct & 0x80) {
 			val = (val << 7) | (oct & 0x7F);
 			/*
@@ -47,7 +47,8 @@ ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 				return -1;
 			}
 		} else {
-			*tag_r = (val << 9) | (oct << 2) | tclass;
+			val = (val << 7) | oct;
+			*tag_r = (val << 2) | tclass;
 			return skipped;
 		}
 	}
@@ -105,7 +106,7 @@ der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 	uint8_t *buf = (uint8_t *)bufp;
 	uint8_t *end;
 	size_t required_size;
-	int i;
+	size_t i;
 
 	if(tval <= 30) {
 		/* Encoded in 1 octet */
@@ -119,8 +120,8 @@ der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 	/*
 	 * Compute the size of the subsequent bytes.
 	 */
-	for(required_size = 1, i = 7; i < 8 * sizeof(tag); i += 7) {
-		if(tag >> i)
+	for(required_size = 1, i = 7; i < 8 * sizeof(tval); i += 7) {
+		if(tval >> i)
 			required_size++;
 		else
 			break;
@@ -133,10 +134,9 @@ der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 	 * Fill in the buffer, space permitting.
 	 */
 	end = buf + required_size - 1;
-	for(i -= 7; buf <= end; i -= 7, buf++) {
+	for(i -= 7; buf < end; i -= 7, buf++)
 		*buf = 0x80 | ((tval >> i) & 0x7F);
-	}
-	*end &= 0x7F;	/* Clear the last high bit */
+	*buf = (tval & 0x7F);	/* Last octet without high bit */
 
 	return required_size + 1;
 }
