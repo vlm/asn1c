@@ -49,7 +49,7 @@ typedef enum specialRealValue {
 } specialRealValue_e;
 static struct specialRealValue_s {
 	char *string;
-	int length;
+	size_t length;
 	double dv;
 } specialRealValue[] = {
 #define	SRV_SET(foo, val)	{ foo, sizeof(foo) - 1, val }
@@ -248,7 +248,8 @@ REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
  * Decode the chunk of XML text encoding REAL.
  */
 static ssize_t
-REAL__xer_body_decode(REAL_t *st, void *chunk_buf, size_t chunk_size) {
+REAL__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+	REAL_t *st = (REAL_t *)sptr;
 	double value;
 	char *xerdata = (char *)chunk_buf;
 	char *endptr = 0;
@@ -280,10 +281,10 @@ REAL__xer_body_decode(REAL_t *st, void *chunk_buf, size_t chunk_size) {
 	/*
 	 * Copy chunk into the nul-terminated string, and run strtod.
 	 */
-	b = MALLOC(chunk_size + 1);
+	b = (char *)MALLOC(chunk_size + 1);
 	if(!b) return -1;
 	memcpy(b, chunk_buf, chunk_size);
-	b[chunk_size] = 0;
+	b[chunk_size] = 0;	/* nul-terminate */
 
 	value = strtod(b, &endptr);
 	free(b);
@@ -301,7 +302,7 @@ REAL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		void *buf_ptr, size_t size) {
 
 	return xer_decode_primitive(opt_codec_ctx, td,
-		(ASN__PRIMITIVE_TYPE_t **)sptr, opt_mname,
+		sptr, sizeof(REAL_t), opt_mname,
 		buf_ptr, size, REAL__xer_body_decode);
 }
 

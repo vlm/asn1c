@@ -180,12 +180,13 @@ INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
  * Decode the chunk of XML text encoding INTEGER.
  */
 static ssize_t
-INTEGER__xer_body_decode(INTEGER_t *st, void *chunk_buf, size_t chunk_size) {
+INTEGER__xer_body_decode(void *sptr, void *chunk_buf, size_t chunk_size) {
+	INTEGER_t *st = (INTEGER_t *)sptr;
 	long sign = 1;
 	long value;
 	char *lp;
 	char *lstart = (char *)chunk_buf;
-	char *lstop = chunk_buf + chunk_size;
+	char *lstop = lstart + chunk_size;
 	enum {
 		ST_SKIPSPACE,
 		ST_WAITDIGITS,
@@ -231,7 +232,8 @@ INTEGER__xer_body_decode(INTEGER_t *st, void *chunk_buf, size_t chunk_size) {
 			if(value < 0) {
 				/* Check whether it is a LONG_MIN */
 				if(sign == -1
-				&& value == ~((unsigned long)-1 >> 1)) {
+				&& (unsigned long)value
+						== ~((unsigned long)-1 >> 1)) {
 					sign = 1;
 				} else {
 					/* Overflow */
@@ -261,7 +263,7 @@ INTEGER_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		void *buf_ptr, size_t size) {
 
 	return xer_decode_primitive(opt_codec_ctx, td,
-		(ASN__PRIMITIVE_TYPE_t **)sptr, opt_mname,
+		sptr, sizeof(INTEGER_t), opt_mname,
 		buf_ptr, size, INTEGER__xer_body_decode);
 }
 
@@ -356,7 +358,7 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 		return -1;
 	}
 
-	buf = MALLOC(sizeof(value));
+	buf = (uint8_t *)MALLOC(sizeof(value));
 	if(!buf) return -1;
 
 	pstart = (uint8_t *)&value;

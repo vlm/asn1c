@@ -19,6 +19,7 @@ asn_struct_free_f  NativeReal_free;
 asn_struct_print_f NativeReal_print;
 ber_type_decoder_f NativeReal_decode_ber;
 der_type_encoder_f NativeReal_encode_der;
+xer_type_decoder_f NativeReal_decode_xer;
 xer_type_encoder_f NativeReal_encode_xer;
 
 #endif	/* ASN_TYPE_NativeReal_H */

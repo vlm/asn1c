@@ -17,16 +17,15 @@ ber_type_decoder_f ber_decode_primitive;
 der_type_encoder_f der_encode_primitive;
 
 /*
- * Specific function to decode simple primitive values
- * (INTEGER, ENUMERATED, REAL, OBJECT IDENTIFIER, etc).
+ * Specific function to decode simple primitive types.
  * Also see xer_decode_general() in xer_decoder.h
  */
 asn_dec_rval_t xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *type_descriptor,
-	ASN__PRIMITIVE_TYPE_t **struct_ptr,
+	void **struct_ptr, size_t struct_size,
 	const char *opt_mname,
 	void *buf_ptr, size_t size,
-	ssize_t (*prim_body_decode)(ASN__PRIMITIVE_TYPE_t *struct_ptr,
+	ssize_t (*prim_body_decode)(void *struct_ptr,
 		void *chunk_buf, size_t chunk_size)
 	);
 

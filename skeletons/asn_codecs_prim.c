@@ -136,8 +136,8 @@ ASN__PRIMITIVE_TYPE_free(asn_TYPE_descriptor_t *td, void *sptr,
  * Local internal type passed around as an argument.
  */
 struct xdp_arg_s {
-	ASN__PRIMITIVE_TYPE_t *sptr;
-	ssize_t (*prim_body_decode)(ASN__PRIMITIVE_TYPE_t *sptr,
+	void *struct_key;
+	ssize_t (*prim_body_decode)(void *struct_key,
 		void *chunk_buf, size_t chunk_size);
 	int decoded_something;
 	int want_more;
@@ -181,7 +181,7 @@ xer_decode__unexpected_tag(void *key, void *chunk_buf, size_t chunk_size) {
 		return -1;
 	}
 
-	decoded = arg->prim_body_decode(arg->sptr, chunk_buf, chunk_size);
+	decoded = arg->prim_body_decode(arg->struct_key, chunk_buf, chunk_size);
 	if(decoded < 0) {
 		return -1;
 	} else {
@@ -218,7 +218,7 @@ xer_decode__body(void *key, void *chunk_buf, size_t chunk_size, int have_more) {
 		return -1;
 	}
 
-	decoded = arg->prim_body_decode(arg->sptr, chunk_buf, chunk_size);
+	decoded = arg->prim_body_decode(arg->struct_key, chunk_buf, chunk_size);
 	if(decoded < 0) {
 		return -1;
 	} else {
@@ -231,10 +231,11 @@ xer_decode__body(void *key, void *chunk_buf, size_t chunk_size, int have_more) {
 asn_dec_rval_t
 xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
-	ASN__PRIMITIVE_TYPE_t **sptr,
+	void **sptr,
+	size_t struct_size,
 	const char *opt_mname,
 	void *buf_ptr, size_t size,
-	ssize_t (*prim_body_decode)(ASN__PRIMITIVE_TYPE_t *sptr,
+	ssize_t (*prim_body_decode)(void *struct_key,
 		void *chunk_buf, size_t chunk_size)
 ) {
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
@@ -246,7 +247,7 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	 * Create the structure if does not exist.
 	 */
 	if(!*sptr) {
-		*sptr = CALLOC(1, sizeof(ASN__PRIMITIVE_TYPE_t));
+		*sptr = CALLOC(1, struct_size);
 		if(!*sptr) {
 			asn_dec_rval_t rval;
 			rval.code = RC_FAIL;
@@ -256,7 +257,7 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	memset(&s_ctx, 0, sizeof(s_ctx));
-	s_arg.sptr = *sptr;
+	s_arg.struct_key = *sptr;
 	s_arg.prim_body_decode = prim_body_decode;
 	s_arg.decoded_something = 0;
 	s_arg.want_more = 0;
