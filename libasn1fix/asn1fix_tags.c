@@ -44,6 +44,8 @@ asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int
 			if(expr->expr_type == ASN_TYPE_ANY
 				&& (flags & AFT_IMAGINARY_ANY))
 				tt.tag_value = -1;
+			else if(expr->expr_type == ASN_CONSTR_CHOICE)
+				return count ? count : -1;
 			else
 				return -1;
 		}

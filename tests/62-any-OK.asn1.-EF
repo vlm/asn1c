@@ -7,7 +7,8 @@ BEGIN
 T ::= CHOICE {
     s1	 T1-ext,
     s2	 T2,
-    s3	 T3
+    s3	 T3,
+    s4	 T4
 }
 
 T1-ext ::= SEQUENCE {
@@ -28,6 +29,10 @@ T2 ::= [16] IMPLICIT SEQUENCE {
 T3 ::= SET {
     m1	 [0] IMPLICIT NumericString,
     m2	 [1] IMPLICIT BOOLEAN
+}
+
+T4 ::= [53] EXPLICIT CHOICE {
+    m1	 [1] IMPLICIT OCTET STRING
 }
 
 END

@@ -14,7 +14,8 @@ BEGIN
 	T ::= CHOICE {
 		s1 T1-ext,
 		s2 T2,
-		s3 T3
+		s3 T3,
+		s4 T4
 	}
 
 	T1-ext ::= SEQUENCE {
@@ -35,6 +36,10 @@ BEGIN
 	T3 ::= SET {
 		m1  [0] NumericString,
 		m2  [1] BOOLEAN
+	}
+
+	T4 ::= [53] CHOICE {
+		m1  [1] IMPLICIT OCTET STRING
 	}
 
 END
