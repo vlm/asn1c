@@ -261,7 +261,7 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 		}
 		if(use_bsearch) {
 			/*
-			 * Resorch to a binary search over
+			 * Resort to a binary search over
 			 * sorted array of tags.
 			 */
 			asn1_TYPE_tag2member_t *t2m;
