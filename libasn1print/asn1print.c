@@ -690,7 +690,10 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 		dont_involve_children = 1;
 	}
 
-	if((expr->expr_type & ASN_CONSTR_MASK)
+	if(expr->expr_type == ASN_CONSTR_CHOICE
+	|| expr->expr_type == ASN_CONSTR_SEQUENCE_OF
+	|| expr->expr_type == ASN_CONSTR_SET_OF
+	|| expr->expr_type == ASN_CONSTR_SET
 	|| expr->expr_type == ASN_BASIC_INTEGER
 	|| expr->expr_type == ASN_BASIC_ENUMERATED) {
 		expr_unordered = 1;
