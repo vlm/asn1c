@@ -14,7 +14,7 @@ BEGIN
 	SIGNED { ToBeSigned } ::= SEQUENCE {
 		toBeSigned	ToBeSigned,
 		algorithm	OBJECT IDENTIFIER,
-		signature	BIT STRING
+		signature	BIT STRING SIZE(0..256)
 	}
 
 	Certificate ::= SIGNED { SEQUENCE {
