@@ -2,9 +2,13 @@ MAJOR:
 
 1. Support for PER encoding. Requires advanced subtype constraints support (#1)
 
-2. Support for Information Object Classes.
+2. Support for XER encoding.
+
+3. Support for Information Object Classes.
    Status: support for parsing IOCs is mostly present. Support for slicing
    the IOCs to produce "views" is not yet designed.
 
-3. Support for XER encoding.
 
+MINOR:
+
+1. Support for ANY, EXTERNAL, EMBEDDED-PDV and CHARACTER STRING types.
