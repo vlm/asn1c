@@ -1,0 +1,33 @@
+
+ModuleTestComponentsOf {iso(-1) org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	55 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+OneType ::= SEQUENCE {
+    one-1	 INTEGER,
+    one-2	 [1] EXPLICIT BOOLEAN,
+    one-3	 SEQUENCE {
+        alpha	 [0] IMPLICIT INTEGER,    
+        beta	 [1] IMPLICIT INTEGER,    
+        ...
+    },
+    one-4	 INTEGER,
+    ...,
+    ignored-in-SecondType	 INTEGER
+}
+
+SecondType ::= SEQUENCE {
+    a	 [0] IMPLICIT IA5String,
+    one-1	 [1] IMPLICIT INTEGER,
+    one-2	 [2] IMPLICIT BOOLEAN,
+    one-3	 [3] IMPLICIT SEQUENCE {
+        alpha	 [0] IMPLICIT INTEGER,    
+        beta	 [1] IMPLICIT INTEGER
+    },
+    one-4	 [4] IMPLICIT INTEGER,
+    b	 [5] IMPLICIT UniversalString
+}
+
+END

@@ -1,0 +1,20 @@
+
+-- SE: Semantic error
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .56
+
+ModuleTestComponentsOfInvalidReference
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 56 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	OneType ::= SEQUENCE {
+		a	IA5String,
+		COMPONENTS OF INTEGER,	-- Error is here
+		b	UniversalString
+	}
+
+END
