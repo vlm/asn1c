@@ -9,7 +9,7 @@
 source=$(echo "$1" | sed -e 's/.*\///')
 testno=`echo "$source" | cut -f2 -d'-' | cut -f1 -d'.'`
 
-args=$(echo "$source" | sed -e 's/\.c$//')
+args=$(echo "$source" | sed -e 's/\.c[c]*$//')
 testdir=test-${args}
 
 OFS=$IFS
@@ -33,15 +33,20 @@ set +x
 
 # Create a Makefile for the project.
 cat > Makefile <<EOM
-CFLAGS=-I. -Wall -g ${CFLAGS} -DEMIT_ASN_DEBUG
-SRCS=`echo *.c`
-OBJS=\${SRCS:.c=.o}
+COMMON_FLAGS= -I. -Wall -g -DEMIT_ASN_DEBUG
+CFLAGS=\${COMMON_FLAGS} ${CFLAGS}
+CXXFLAGS=\${COMMON_FLAGS} ${CXXFLAGS}
+SRCS=`echo *.c*`
+OBJS1=\${SRCS:.c=.o}
+OBJS=\${OBJS1:.cc=.o}
 check-executable: \${OBJS}
 	\${CC} \${CFLAGS} -o check-executable \${OBJS}
 .SUFFIXES:
-.SUFFIXES: .c .o
+.SUFFIXES: .c .cc .o
 .c.o:
 	\${CC} \${CFLAGS} -o \$@ -c \$<
+.cc.o:
+	\${CXX} \${CXXFLAGS} -o \$@ -c \$<
 check: check-executable
 	./check-executable
 clean:
