@@ -25,6 +25,7 @@ BEGIN
 
 	Name ::= SEQUENCE OF RelativeDistinguishedName
 
-	RelativeDistinguishedName ::= SET SIZE (1..MAX) OF IA5String
+	RelativeDistinguishedName ::= SET SIZE (1..MAX) OF
+		IA5String (FROM("A".."Z"|"a".."z"|"0-9"|",-."))
 
 END

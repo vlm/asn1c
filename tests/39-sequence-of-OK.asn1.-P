@@ -29,46 +29,54 @@ typedef struct T {
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-	static asn1_SET_OF_element_t asn1_DEF_collection_elements[] = {
-		{ (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-			(void *)&asn1_DEF_T2 },
-	};
-	static ber_tlv_tag_t asn1_DEF_collection_tags[] = {
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
-	};
-	static asn1_SET_OF_specifics_t asn1_DEF_collection_specs = {
-		sizeof(struct collection),
-		offsetof(struct collection, _ber_dec_ctx),
-		asn1_DEF_collection_elements
-	};
-	asn1_TYPE_descriptor_t asn1_DEF_collection = {
-		"collection",
-		SEQUENCE_OF_constraint,
-		SEQUENCE_OF_decode_ber,
-		SEQUENCE_OF_encode_der,
-		SEQUENCE_OF_print,
-		SEQUENCE_OF_free,
-		0,	/* Use generic outmost tag fetcher */
-		asn1_DEF_collection_tags,
-		sizeof(asn1_DEF_collection_tags)
-			/sizeof(asn1_DEF_collection_tags[0]), /* 1 */
-		1,	/* Tags to skip */
-		1,	/* Whether CONSTRUCTED */
-		&asn1_DEF_collection_specs	/* Additional specs */
-	};
-	
-static asn1_SEQUENCE_element_t asn1_DEF_T_elements[] = {
-	{ offsetof(struct T, int), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
-		0,
-		(void *)&asn1_DEF_INTEGER,
-		"int"
+static asn1_TYPE_member_t asn1_MBR_collection[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_T2,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
 		},
-	{ offsetof(struct T, collection), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-		0,
-		(void *)&asn1_DEF_collection,
-		"collection"
+};
+static ber_tlv_tag_t asn1_DEF_collection_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_collection_specs = {
+	sizeof(struct collection),
+	offsetof(struct collection, _ber_dec_ctx),
+};
+asn1_TYPE_descriptor_t asn1_DEF_collection = {
+	"collection",
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_collection_tags,
+	sizeof(asn1_DEF_collection_tags)
+		/sizeof(asn1_DEF_collection_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_collection,
+	1,	/* Single element */
+	&asn1_DEF_collection_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_T[] = {
+	{ 0, offsetof(struct T, int),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "int"
+		},
+	{ 0, offsetof(struct T, collection),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_collection,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "collection"
 		},
 };
 static ber_tlv_tag_t asn1_DEF_T_tags[] = {
@@ -81,8 +89,6 @@ static asn1_TYPE_tag2member_t asn1_DEF_T_tag2el[] = {
 static asn1_SEQUENCE_specifics_t asn1_DEF_T_specs = {
 	sizeof(struct T),
 	offsetof(struct T, _ber_dec_ctx),
-	asn1_DEF_T_elements,
-	2,	/* Elements count */
 	asn1_DEF_T_tag2el,
 	2,	/* Count of tags in the map */
 	-1,	/* Start extensions */
@@ -101,6 +107,8 @@ asn1_TYPE_descriptor_t asn1_DEF_T = {
 		/sizeof(asn1_DEF_T_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_T,
+	2,	/* Elements count */
 	&asn1_DEF_T_specs	/* Additional specs */
 };
 
@@ -128,18 +136,20 @@ typedef struct T2 {
 
 /*** <<< STAT-DEFS [T2] >>> ***/
 
-static asn1_SEQUENCE_element_t asn1_DEF_T2_elements[] = {
-	{ offsetof(struct T2, flag), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
-		0,
-		(void *)&asn1_DEF_BOOLEAN,
-		"flag"
+static asn1_TYPE_member_t asn1_MBR_T2[] = {
+	{ 0, offsetof(struct T2, flag),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_BOOLEAN,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "flag"
 		},
-	{ offsetof(struct T2, str), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
-		0,
-		(void *)&asn1_DEF_UTF8String,
-		"str"
+	{ 0, offsetof(struct T2, str),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "str"
 		},
 };
 static ber_tlv_tag_t asn1_DEF_T2_tags[] = {
@@ -152,8 +162,6 @@ static asn1_TYPE_tag2member_t asn1_DEF_T2_tag2el[] = {
 static asn1_SEQUENCE_specifics_t asn1_DEF_T2_specs = {
 	sizeof(struct T2),
 	offsetof(struct T2, _ber_dec_ctx),
-	asn1_DEF_T2_elements,
-	2,	/* Elements count */
 	asn1_DEF_T2_tag2el,
 	2,	/* Count of tags in the map */
 	-1,	/* Start extensions */
@@ -172,6 +180,8 @@ asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 		/sizeof(asn1_DEF_T2_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_T2,
+	2,	/* Elements count */
 	&asn1_DEF_T2_specs	/* Additional specs */
 };
 

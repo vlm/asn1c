@@ -21,7 +21,7 @@ BEGIN
 	 */
 	LogLine ::= SEQUENCE {
 		line-digest	IA5String,	-- Log line normal form
-		varsets		SEQUENCE (1..MAX) OF VariablePartSet
+		varsets		SEQUENCE SIZE(1..MAX) OF VariablePartSet
 	}
 
 	/*
@@ -30,7 +30,7 @@ BEGIN
 	 * or a range between two samples.
 	 */
 	VariablePartSet ::= SEQUENCE {
-		vparts		SEQUENCE (0..MAX) OF VariablePart, -- {123,321}
+		vparts		SEQUENCE SIZE(0..MAX) OF VariablePart, -- {123,321}
 		resolution	ActionItem
 	}
 
@@ -39,7 +39,7 @@ BEGIN
 	 */
 	VariablePart ::= CHOICE {
 		-- A set of acceptable values
-		vset	SET (1..MAX) OF VisibleString,
+		vset	SET SIZE(1..MAX) OF VisibleString,
 		-- A range of acceptable values
 		vrange	SEQUENCE {
 			from	VisibleString,
