@@ -27,7 +27,7 @@ $myName = $ENV{SCRIPT_NAME};	# URL of this particular script (without args)
 $homePath = "<FONT FACE=Courier SIZE=-1>"
 	. "<A HREF=http://lionet.info/>Home</A>"
 	. " &gt;&gt; <A HREF=http://lionet.info/asn1c/>asn1c</A>"
-	. " &gt;&gt; <A HREF=http://lionet.info/asn1c/asn1c.cgi>Online ASN.1 Compiler</A>"
+	. " &gt;&gt; <A HREF=http://lionet.info/asn1c/asn1c.cgi>Free Online ASN.1 Compiler</A>"
 	. "</FONT><P>";
 
 ###################################################
@@ -436,7 +436,7 @@ print<<EOM;
 <HTML>
 <HEAD>
 <META KEYWORDS="ASN.1, asn1c, compiler">
-<TITLE>Online ASN.1 Compiler</TITLE>
+<TITLE>Free Online ASN.1 Compiler</TITLE>
 </HEAD>
 <BODY BGCOLOR=white>
 
