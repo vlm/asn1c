@@ -12,8 +12,9 @@ ModuleTestANYSyntax
 BEGIN
 
 	T ::= SEQUENCE {
-		i	INTEGER,
-		any	[1] ANY		-- Converted into [1] EXPLICIT ANY
+		i	INTEGER OPTIONAL,
+		any	[1] ANY,	-- Converted into [1] EXPLICIT ANY
+		...
 	}
 
 END
