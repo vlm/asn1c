@@ -107,11 +107,13 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 		p += 8;
 	}
 
-	er.encoded += p - scratch;
 	if(!xcan && (((buf - st->buf) - 1) % 8) == 0)
 		_i_ASN_TEXT_INDENT(1, ilevel);
+	er.encoded += p - scratch;
+	_ASN_CALLBACK(scratch, p - scratch);
+	p = scratch;
 
-	if(buf < end + 1) {
+	if(buf == end) {
 		int v = *buf;
 		int mbit = st->buf[0];	/* bits to skip from the right */
 		int i;
@@ -121,8 +123,7 @@ BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 		_ASN_CALLBACK(scratch, p - scratch);
 	}
 
-	if(!xcan && ((st->size - 1) % 8) == 0)
-		_i_ASN_TEXT_INDENT(1, ilevel - 1);
+	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
 
 	return er;
 }
