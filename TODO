@@ -16,6 +16,3 @@ which is already completed. Also see #3.2.
 3. MINOR:
 
 3.1 Parsing of CONSTRAINED BY clauses
-
-3.2 Support for ContainedSubtype constraint.
-

@@ -282,7 +282,8 @@ static asn1p_value_t *
 %type	<a_constr>		ComponentRelationConstraint
 %type	<a_constr>		AtNotationList
 %type	<a_ref>			AtNotationElement
-%type	<a_value>		ConstraintValue
+%type	<a_value>		SingleValue
+%type	<a_value>		ContainedSubtype
 %type	<a_ctype>		ConstraintSpec
 %type	<a_ctype>		ConstraintRangeSpec
 %type	<a_wsynt>		optWithSyntax
@@ -1572,20 +1573,26 @@ ConstraintSubtypeElement:
 		ret = asn1p_constraint_insert($$, $2);
 		checkmem(ret == 0);
 	}
-	| ConstraintValue {
+	| SingleValue {
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
 		$$->type = ACT_EL_VALUE;
 		$$->value = $1;
 	}
-	| ConstraintValue ConstraintRangeSpec ConstraintValue {
+	| ContainedSubtype {
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = ACT_EL_TYPE;
+		$$->containedSubtype = $1;
+	}
+	| SingleValue ConstraintRangeSpec SingleValue {
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
 		$$->type = $2;
 		$$->range_start = $1;
 		$$->range_stop = $3;
 	}
-	| TOK_MIN ConstraintRangeSpec ConstraintValue {
+	| TOK_MIN ConstraintRangeSpec SingleValue {
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
 		$$->type = $2;
@@ -1593,7 +1600,7 @@ ConstraintSubtypeElement:
 		$$->range_stop = $3;
 		$$->range_start->type = ATV_MIN;
 	}
-	| ConstraintValue ConstraintRangeSpec TOK_MAX {
+	| SingleValue ConstraintRangeSpec TOK_MAX {
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
 		$$->type = $2;
@@ -1634,7 +1641,7 @@ ConstraintSpec:
 	}
 	;
 
-ConstraintValue:
+SingleValue:
 	TOK_FALSE {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
@@ -1663,7 +1670,10 @@ ConstraintValue:
 		checkmem($$);
 		free($1);
 	}
-	| TypeRefName {
+	;
+
+ContainedSubtype:
+	TypeRefName {
 		asn1p_ref_t *ref;
 		int ret;
 		ref = asn1p_ref_new(yylineno);

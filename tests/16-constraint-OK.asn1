@@ -12,11 +12,15 @@ ModuleTestConstraint
 BEGIN
 
 	-- external reference
-	Type1 ::= IA5String (SIZE(1..10,...))(FROM("a".."z"|"#"))
+	Type0 ::= IA5String (Type6)
+	Type1 ::= IA5String (SIZE(1..ten,...))(FROM("a".."z"|"#",...))
 	Type2 ::= IA5String (SIZE (MIN..4)|FROM ("abc"))
 	Type3 ::= BMPString (SIZE(1))
 	Type4 ::= INTEGER (1..MAX)
 	Type5 ::= BOOLEAN (TRUE|FALSE)
+	Type6 ::= IA5String (Type1)
+
+	ten INTEGER ::= 10
 
 	v1 Type1 ::= "#value wi
 		th ""double quotes"""

@@ -22,6 +22,8 @@ void
 asn1p_constraint_free(asn1p_constraint_t *ct) {
 	if(ct) {
 
+		if(ct->containedSubtype)
+			asn1p_value_free(ct->containedSubtype);
 		if(ct->value)
 			asn1p_value_free(ct->value);
 		if(ct->range_start)
@@ -59,9 +61,10 @@ asn1p_constraint_clone(asn1p_constraint_t *src) {
 
 		clone->type = src->type;
 		clone->presence = src->presence;
-		CLONE(value, asn1p_value_clone);
-		CLONE(range_start, asn1p_value_clone);
-		CLONE(range_stop, asn1p_value_clone);
+		CLONE(containedSubtype,	asn1p_value_clone);
+		CLONE(value,		asn1p_value_clone);
+		CLONE(range_start,	asn1p_value_clone);
+		CLONE(range_stop,	asn1p_value_clone);
 
 		for(i = 0; i < src->el_count; i++) {
 			asn1p_constraint_t *t;
@@ -115,6 +118,8 @@ asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
 	switch(type) {
 	case ACT_INVALID:
 		return "INVALID";
+	case ACT_EL_TYPE:
+		return "ContainedSubtype";
 	case ACT_EL_VALUE:
 		return "SingleValue";
 	case ACT_EL_RANGE:
