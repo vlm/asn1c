@@ -32,7 +32,7 @@ static asn1_language_map_t asn1_lang_C[] __attribute__ ((unused)) = {
 	/*
 	 * ANY type (deprecated)
 	 */
-        { AMT_TYPE, ASN_CONSTR_ANY,	asn1c_lang_C_type_SIMPLE_TYPE },
+        { AMT_TYPE, ASN_TYPE_ANY,	asn1c_lang_C_type_SIMPLE_TYPE },
 	/*
 	 * Basic types
 	 */
