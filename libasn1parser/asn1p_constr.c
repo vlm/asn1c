@@ -55,10 +55,29 @@ asn1p_constraint_clone(asn1p_constraint_t *src) {
 
 	clone = asn1p_constraint_new(src->_lineno);
 	if(clone) {
+		int i;
+
 		clone->type = src->type;
+		clone->presence = src->presence;
 		CLONE(value, asn1p_value_clone);
 		CLONE(range_start, asn1p_value_clone);
 		CLONE(range_stop, asn1p_value_clone);
+
+		for(i = 0; i < src->el_count; i++) {
+			asn1p_constraint_t *t;
+			t = asn1p_constraint_clone(src->elements[i]);
+			if(!t) {
+				asn1p_constraint_free(clone);
+				return NULL;
+			}
+			if(asn1p_constraint_insert(clone, t)) {
+				asn1p_constraint_free(clone);
+				asn1p_constraint_free(t);
+				return NULL;
+			}
+		}
+		assert(clone->el_count == src->el_count);
+		clone->_lineno = src->_lineno;
 	}
 
 	return clone;
