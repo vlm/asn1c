@@ -8,7 +8,8 @@ static int asn1c_compile_expr(arg_t *arg);
 static int asn1c_attach_streams(asn1p_expr_t *expr);
 
 int
-asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags) {
+asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
+		int argc, char **argv) {
 	arg_t arg_s;
 	arg_t *arg = &arg_s;
 	int ret;
@@ -56,7 +57,7 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags) {
 	/*
 	 * Save or print out the compiled result.
 	 */
-	if(asn1c_save_compiled_output(arg, datadir))
+	if(asn1c_save_compiled_output(arg, datadir, argc, argv))
 		return -1;
 
 	return 0;

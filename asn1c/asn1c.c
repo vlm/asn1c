@@ -277,7 +277,8 @@ main(int ac, char **av) {
 	 * Compile the ASN.1 tree into a set of source files
 	 * of another language.
 	 */
-	if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags)) {
+	if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags,
+			ac + optind, av - optind)) {
 		exit(EX_SOFTWARE);
 	}
 
