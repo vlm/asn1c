@@ -20,7 +20,7 @@ $DynamicHistory = 'yes';			# Full/Short history
 $safeFilename = '^[a-z0-9_-]+[.a-z0-9_-]*$';	# Safe filename
 $ASN1C_Page = 'http://lionet.info/asn1c';
 $HelpEmail = 'asn1c@lionet.info';
-$defaultUserEmail = 'your@email';
+$defaultUserEmail = 'your@email-for-reply';
 
 $warn = '<CENTER><FONT SIZE=+1><B>';
 $unwarn = '</B></FONT></CENTER>';
@@ -169,7 +169,7 @@ if(defined($tmpEmail)) {
 	if($userEmail eq $defaultUserEmail) {
 		IssueRedirect();
 		bark("Please enter <FONT COLOR=red>your own</FONT> "
-			. "email address, "
+			. "valid email address, "
 			. "instead of default \"<FONT COLOR=darkred>$defaultUserEmail</FONT>\"");
 	}
 	if($userEmail ne $previousEmail) {
@@ -406,10 +406,12 @@ $form =
   "<FORM METHOD=POST ACTION=$myName ENCTYPE=\"multipart/form-data\">"
 . "Pick the ASN.1 module file:<BR>\n"
 . "<INPUT TYPE=file NAME=file SIZE=35><BR clear=all>\n"
-. "Alternatively, enter the ASN.1 specification into the area below:<BR>\n"
-. "<TEXTAREA NAME=text ROWS=15 COLS=60>\n"
+. "Or enter the ASN.1 module text into the following area:<BR>\n"
+. "<TEXTAREA NAME=text ROWS=16 COLS=60>\n"
 . "/*\n"
-. " * This ASN.1 specification is given for illustrative purposes\n"
+. " * This ASN.1 specification is given for illustrative purposes.\n"
+. " * Your own ASN.1 module must be properly formed too!\n"
+. " * (Make sure it has BEGIN/END statements, etc.)\n"
 . " */\n"
 . "TestModule  { iso org(3) dod(6) internet(1) private(4)\n"
 . "        1 spelio(9363) software(1) asn1c(5) webcgi(2) 1 }\n"
@@ -424,12 +426,13 @@ $form =
 . "</TEXTAREA><BR>\n"
 . "<P>"
 . "<FONT SIZE=-1>"
-. "These options may be enabled to control the compiler's behavior:<BR>\n"
+. "These options may be used to control the compiler's behavior:<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optDebugL> Debug lexer (<I>-Wdebug-lexer</I>)<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optE> Just parse and dump (do not compile) (<I>-E</I>)<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optEF> Parse, perform semantic checks, and dump (<I>-E -F</I>)<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optNT CHECKED=on> Employ native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>\n"
 . "<INPUT TYPE=checkbox NAME=optCN> Prevent name clashes in compiled output (<I>-fcompound-names</I>)<BR>\n"
+. "<I>... the command line ASN.1 compiler, <A HREF=$ASN1C_Page>asn1c</A>, supports many other parameters</I>."
 . "</FONT>"
 . "<P>\n"
 . "<INPUT TYPE=submit VALUE=\"Proceed with ASN.1 compilation\">"
@@ -487,8 +490,11 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		$results = "<FONT COLOR=darkgreen><B>"
 			. "Compiled OK</B></FONT><BR>\n";
 	} else {
-		$results = "<FONT COLOR=darkred>"
-			. "Error during compilation: $ec</FONT><BR>\n";
+		my $why = $ec;
+		$why = "<NOBR>Invalid input file</NOBR>" if $ec == 65;
+		$results = "<FONT COLOR=darkred SIZE=-1>"
+			. "<NOBR>ASN.1 compiler error:</NOBR> "
+			. "$why</FONT><BR>\n";
 	}
 
 	$allowFetchResults = $ec eq "0"
@@ -507,7 +513,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. escapeHTML($origTime)
 		. "&file=$f"
 		. "&show=tgz\">"
-		. "Fetch results (.tgz)</A></NOBR>"
+		. "Fetch compiled C sources (.tgz)</A></NOBR>"
 		if $allowFetchResults;
 	if($ec ne "0") {
 		local ($eml, @resp);
@@ -533,6 +539,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 				. "expect results in a few hours.<B></FONT>";
 		} else {
 			$results .= '<P>'
+			. "<FONT SIZE=-2>To get free help, leave a return address:</FONT><BR>"
 			. "<INPUT TYPE=text NAME=email VALUE=\"$userEmail\"><BR>"
 			. "<INPUT TYPE=hidden NAME=transHelp VALUE=\"$tNum--$trans\">"
 			. '<INPUT TYPE=Submit VALUE="Help me fix it!">'
@@ -603,7 +610,7 @@ if($history) {
 			. "<FONT COLOR=darkred><B>Bottom line:</B> ASN.1 compiler was unable to process some of the input files.</FONT><BR>"
 			. "This is typically caused by syntax errors in the input files.\n"
 			. "Such errors are normally fixed by removing or adding a couple of characters in the ASN.1 module.<BR>\n"
-			. "<BR><B><FONT COLOR=darkred>Please consider clicking on an appropriate &quot;<I>Help me fix it!</I>&quot; link above.</FONT></B><BR>\n"
+			. "<BR><B><FONT COLOR=darkred>Please consider clicking on the appropriate &quot;<I>Help me fix it!</I>&quot; button above.</FONT></B><BR>\n"
 			. "An email will be sent to a person who will gladly fix the ASN.1 module for you. (The typical turn-around time is less than 24 hours.)\n"
 			. "<BR>This is <B>free</B>, and highly advisable.\n"
 			. "Your request will help us make a better compiler!\n"
