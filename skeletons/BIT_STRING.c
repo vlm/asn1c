@@ -78,7 +78,7 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	 * Hexadecimal dump.
 	 */
 	for(buf++; buf < end; buf++) {
-		if(((buf - st->buf) - 1) % 16 == 0) {
+		if(((buf - st->buf) - 1) % 16 == 0 && (st->size > 16)) {
 			int i;
 			/* Indentation */
 			if(cb("\n", 1, app_key)) return -1;
