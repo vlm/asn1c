@@ -137,12 +137,12 @@ check_REGEN(int *arcs, int acount) {
 	assert(alen <= tmp_alen);
 	assert(alen == acount);
 
-	printf("Encoded  (R) {");
+	fprintf(stderr, "Encoded  (R) { ");
 	for(i = 0; i < alen; i++) {
-		printf(" %lu)", tmp_arcs[i]);
+		fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
 		assert(arcs[i] == (int)tmp_arcs[i]);
 	}
-	printf(" }\n");
+	fprintf(stderr, "}\n");
 }
 
 /*
@@ -174,12 +174,12 @@ check_REGEN_OID(int *arcs, int acount) {
 	assert(alen <= tmp_alen);
 	assert(alen == acount);
 
-	printf("Encoded  (O) { ");
+	fprintf(stderr, "Encoded  (O) { ");
 	for(i = 0; i < alen; i++) {
-		printf("%lu ", tmp_arcs[i]); fflush(stdout);
+		fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
 		assert(arcs[i] == (int)tmp_arcs[i]);
 	}
-	printf("}\n");
+	fprintf(stderr, "}\n");
 }
 
 static int
