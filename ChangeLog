@@ -4,6 +4,7 @@
 	* Fixed application-level problem in SET OF/SEQUENCE OF array cleanup.
 	  (Severity: medium, Security impact: low)
 	* Improved asn_GT2time() and added asn_time2{GT,UT}() functions.
+	* BIT STRING pretty-printing.
 
 0.8.15:	2004-Jul-20
 
