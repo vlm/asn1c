@@ -35,9 +35,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
 host_triplet = @host@
-target_triplet = @target@
 check_PROGRAMS = check-ber_tlv_tag$(EXEEXT) check-length$(EXEEXT) \
 	check-OIDs$(EXEEXT) check-GeneralizedTime$(EXEEXT) \
 	check-UTCTime$(EXEEXT) check-INTEGER$(EXEEXT)

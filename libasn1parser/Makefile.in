@@ -36,9 +36,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
 host_triplet = @host@
-target_triplet = @target@
 subdir = libasn1parser
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in asn1p_l.c \
 	asn1p_y.c asn1p_y.h
