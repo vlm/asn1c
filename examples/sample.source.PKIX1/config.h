@@ -7,3 +7,5 @@ extern int opt_debug;
 		fprintf(stderr, " (%s:%d)\n",	\
 			__FILE__, __LINE__);	\
 	} while(0)
+
+#define	asn_DEF	asn_DEF_Certificate	/* for ../decoder-template.c */
