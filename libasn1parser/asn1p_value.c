@@ -110,13 +110,12 @@ asn1p_value_fromint(asn1_integer_t i) {
 
 asn1p_value_t *
 asn1p_value_clone(asn1p_value_t *v) {
-	asn1p_value_t *clone;
+	asn1p_value_t *clone = NULL;
 	if(v) {
 		switch(v->type) {
 		case ATV_NOVALUE:
-			return calloc(1, sizeof(*v));
-		case ATV_REFERENCED:
-			return asn1p_value_fromref(v->value.reference, 1);
+		case ATV_NULL:
+			return calloc(1, sizeof(*clone));
 		case ATV_REAL:
 			return asn1p_value_fromdouble(v->value.v_double);
 		case ATV_INTEGER:
@@ -140,7 +139,24 @@ asn1p_value_clone(asn1p_value_t *v) {
 		case ATV_BITVECTOR:
 			return asn1p_value_frombuf(v->value.binary_vector.bits,
 				v->value.binary_vector.size_in_bits, 1);
+		case ATV_REFERENCED:
+			return asn1p_value_fromref(v->value.reference, 1);
+		case ATV_CHOICE_IDENTIFIER: {
+			char *id = v->value.choice_identifier.identifier;
+			clone = calloc(1, sizeof(*clone));
+			if(!clone) return NULL;
+			clone->type = v->type;
+			id = strdup(id);
+			if(!id) { asn1p_value_free(clone); return NULL; }
+			clone->value.choice_identifier.identifier = id;
+			v = asn1p_value_clone(v->value.choice_identifier.value);
+			if(!v) { asn1p_value_free(clone); return NULL; }
+			clone->value.choice_identifier.value = v;
+			return clone;
+		    }
 		}
+
+		assert(!"UNREACHABLE");
 	}
 	return v;
 }
@@ -150,16 +166,14 @@ asn1p_value_free(asn1p_value_t *v) {
 	if(v) {
 		switch(v->type) {
 		case ATV_NOVALUE:
+		case ATV_NULL:
 			break;
-		case ATV_REFERENCED:
-			asn1p_ref_free(v->value.reference);
-			break;
+		case ATV_REAL:
 		case ATV_INTEGER:
 		case ATV_MIN:
 		case ATV_MAX:
 		case ATV_FALSE:
 		case ATV_TRUE:
-		case ATV_REAL:
 			/* No freeing necessary */
 			break;
 		case ATV_STRING:
@@ -170,6 +184,13 @@ asn1p_value_free(asn1p_value_t *v) {
 		case ATV_BITVECTOR:
 			assert(v->value.binary_vector.bits);
 			free(v->value.binary_vector.bits);
+			break;
+		case ATV_REFERENCED:
+			asn1p_ref_free(v->value.reference);
+			break;
+		case ATV_CHOICE_IDENTIFIER:
+			free(v->value.choice_identifier.identifier);
+			asn1p_value_free(v->value.choice_identifier.value);
 			break;
 		}
 		free(v);

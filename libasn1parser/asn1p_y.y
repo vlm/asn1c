@@ -74,7 +74,7 @@ static asn1p_value_t *
 	asn1p_value_t		*a_value;	/* Number, DefinedValue, etc */
 	struct asn1p_param_s	 a_parg;	/* A parameter argument */
 	asn1p_paramlist_t	*a_plist;	/* A pargs list */
-	enum asn1p_expr_marker_e a_marker;	/* OPTIONAL/DEFAULT */
+	struct asn1p_expr_marker_s a_marker;	/* OPTIONAL/DEFAULT */
 	enum asn1p_constr_pres_e a_pres;	/* PRESENT/ABSENT/OPTIONAL */
 	asn1_integer_t		 a_int;
 	char	*tv_str;
@@ -236,7 +236,7 @@ static asn1p_value_t *
 %type	<a_expr>		optValueSetBody
 %type	<a_expr>		ValueSetBody
 %type	<a_expr>		ValueSetElement
-%type	<a_value>		InlineOrDefinedValue
+%type	<a_value>		Value
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
 %type	<a_expr>		ComponentTypeLists
@@ -1178,6 +1178,16 @@ ComplexTypeReference:
 		checkmem(ret == 0);
 		free($1);
 	}
+	| ObjectClassReference '.' TypeRefName {
+		int ret;
+		$$ = asn1p_ref_new(yylineno);
+		checkmem($$);
+		ret = asn1p_ref_add_component($$, $1, RLT_UNKNOWN);
+		checkmem(ret == 0);
+		ret = asn1p_ref_add_component($$, $3, RLT_UNKNOWN);
+		checkmem(ret == 0);
+		free($1);
+	}
 	| TOK_typereference '.' Identifier {
 		int ret;
 		$$ = asn1p_ref_new(yylineno);
@@ -1258,7 +1268,7 @@ ClassFieldName:
  * === EOF ===
  */
 ValueDefinition:
-	Identifier DefinedTypeRef TOK_PPEQ InlineOrDefinedValue {
+	Identifier DefinedTypeRef TOK_PPEQ Value {
 		$$ = $2;
 		assert($$->Identifier == NULL);
 		$$->Identifier = $1;
@@ -1267,12 +1277,33 @@ ValueDefinition:
 	}
 	;
 
-InlineOrDefinedValue:
-	'{' { asn1p_lexer_hack_push_opaque_state(); }
-		Opaque /* '}' */ {
+Value:
+	Identifier ':' Value {
+		$$ = asn1p_value_fromint(0);
+		checkmem($$);
+		$$->type = ATV_CHOICE_IDENTIFIER;
+		$$->value.choice_identifier.identifier = $1;
+		$$->value.choice_identifier.value = $3;
+	}
+	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
 		$$ = asn1p_value_frombuf($3.buf, $3.len, 0);
 		checkmem($$);
 		$$->type = ATV_UNPARSED;
+	}
+	| TOK_NULL {
+		$$ = asn1p_value_fromint(0);
+		checkmem($$);
+		$$->type = ATV_NULL;
+	}
+	| TOK_FALSE {
+		$$ = asn1p_value_fromint(0);
+		checkmem($$);
+		$$->type = ATV_FALSE;
+	}
+	| TOK_TRUE {
+		$$ = asn1p_value_fromint(0);
+		checkmem($$);
+		$$->type = ATV_TRUE;
 	}
 	| TOK_bstring {
 		$$ = _convert_bitstring2binary($1, 'B');
@@ -1394,11 +1425,11 @@ BasicString:
 	TOK_BMPString { $$ = ASN_STRING_BMPString; }
 	| TOK_GeneralString {
 		$$ = ASN_STRING_GeneralString;
-		fprintf(stderr, "WARNING: GeneralString is not fully supported");
+		fprintf(stderr, "WARNING: GeneralString is not fully supported\n");
 	}
 	| TOK_GraphicString {
 		$$ = ASN_STRING_GraphicString;
-		fprintf(stderr, "WARNING: GraphicString is not fully supported");
+		fprintf(stderr, "WARNING: GraphicString is not fully supported\n");
 	}
 	| TOK_IA5String { $$ = ASN_STRING_IA5String; }
 	| TOK_ISO646String { $$ = ASN_STRING_ISO646String; }
@@ -1406,14 +1437,14 @@ BasicString:
 	| TOK_PrintableString { $$ = ASN_STRING_PrintableString; }
 	| TOK_T61String {
 		$$ = ASN_STRING_T61String;
-		fprintf(stderr, "WARNING: T61String is not fully supported");
+		fprintf(stderr, "WARNING: T61String is not fully supported\n");
 	}
 	| TOK_TeletexString { $$ = ASN_STRING_TeletexString; }
 	| TOK_UniversalString { $$ = ASN_STRING_UniversalString; }
 	| TOK_UTF8String { $$ = ASN_STRING_UTF8String; }
 	| TOK_VideotexString {
 		$$ = ASN_STRING_VideotexString;
-		fprintf(stderr, "WARNING: VideotexString is not fully supported");
+		fprintf(stderr, "WARNING: VideotexString is not fully supported\n");
 	}
 	| TOK_VisibleString { $$ = ASN_STRING_VisibleString; }
 	| TOK_ObjectDescriptor { $$ = ASN_STRING_ObjectDescriptor; }
@@ -1589,7 +1620,6 @@ ConstraintValue:
 		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
 		checkmem($$);
 	}
-
 	| TOK_FALSE {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
@@ -1754,26 +1784,21 @@ ComponentIdList:
  */
 
 optMarker:
-	{ $$ = EM_NOMARK; }
+	{
+		$$.flags = EM_NOMARK;
+		$$.default_value = 0;
+	}
 	| Marker { $$ = $1; }
 	;
 
 Marker:
 	TOK_OPTIONAL {
-		$$ = EM_OPTIONAL;
+		$$.flags = EM_OPTIONAL;
+		$$.default_value = 0;
 	}
-	| TOK_DEFAULT DefaultValue {
-		$$ = EM_DEFAULT;
-		/* FIXME: store DefaultValue somewhere */
-	}
-	;
-
-DefaultValue:
-	ConstraintValue {
-	}
-	| BasicTypeId {
-	}
-	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+	| TOK_DEFAULT Value {
+		$$.flags = EM_DEFAULT;
+		$$.default_value = $2;
 	}
 	;
 

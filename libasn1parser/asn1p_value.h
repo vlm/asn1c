@@ -13,9 +13,9 @@ typedef struct asn1p_value_s {
 	 */
 	enum {
 		ATV_NOVALUE,
-		ATV_REFERENCED,
-		ATV_INTEGER,
-		ATV_REAL,
+		ATV_NULL,	/* A "NULL" value of type NULL. */
+		ATV_REAL,	/* A constant floating-point value */
+		ATV_INTEGER,	/* An integer constant */
 		ATV_MAX,
 		ATV_MIN,
 		ATV_TRUE,
@@ -23,6 +23,8 @@ typedef struct asn1p_value_s {
 		ATV_STRING,
 		ATV_UNPARSED,
 		ATV_BITVECTOR,
+		ATV_REFERENCED,	/* Reference to a value defined elsewhere */
+		ATV_CHOICE_IDENTIFIER,	/* ChoiceIdentifier value */
 	} type;	/* Value type and location */
 
 	union {
@@ -40,6 +42,10 @@ typedef struct asn1p_value_s {
 			uint8_t *bits;
 			int size_in_bits;
 		} binary_vector;
+		struct {
+			char *identifier;
+			struct asn1p_value_s *value;
+		} choice_identifier;
 	} value;
 } asn1p_value_t;
 
