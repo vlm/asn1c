@@ -241,6 +241,7 @@ INTEGER__compar_enum2value(const void *kp, const void *am) {
 
 static const asn_INTEGER_enum_map_t *
 INTEGER__map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop) {
+	asn_INTEGER_enum_map_t *el_found;
 	int count = specs ? specs->map_count : 0;
 	struct e2v_key key;
 	const char *lp;
@@ -266,8 +267,14 @@ INTEGER__map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, cons
 	key.stop = lstop;
 	key.vemap = specs->value2enum;
 	key.evmap = specs->enum2value;
-	return (asn_INTEGER_enum_map_t *)bsearch(&key, specs->value2enum, count,
-		sizeof(specs->value2enum[0]), INTEGER__compar_enum2value);
+	el_found = (asn_INTEGER_enum_map_t *)bsearch(&key,
+		specs->value2enum, count, sizeof(specs->value2enum[0]),
+		INTEGER__compar_enum2value);
+	if(el_found) {
+		/* Remap enum2value into value2enum */
+		el_found = key.vemap + key.evmap[el_found - key.vemap];
+	}
+	return el_found;
 }
 
 static int
