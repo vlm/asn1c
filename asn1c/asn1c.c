@@ -75,8 +75,8 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_ALL_DEFS_GLOBAL;
 		} else if(strcmp(optarg, "bless-SIZE") == 0) {
 			asn1_fixer_flags |= A1F_EXTENDED_SizeConstraint;
-		} else if(strcmp(optarg, "double-identifiers") == 0) {
-			asn1_compiler_flags |= A1C_DOUBLE_IDENTIFIERS;
+		} else if(strcmp(optarg, "compound-names") == 0) {
+			asn1_compiler_flags |= A1C_COMPOUND_NAMES;
 		} else if(strncmp(optarg, "known-extern-type=", 18) == 0) {
 			char *known_type = optarg + 18;
 			ret = asn1f_make_known_external_type(known_type);
@@ -309,6 +309,7 @@ usage(const char *av0) {
 
 "  -fall-defs-global     Don't make the asn1_DEF_'s of structure members \"static\"\n"
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
+"  -fcompound-names      Disambiguate C's struct NAME's inside top-level types\n"
 "  -fknown-extern-type=<name>    Pretend this type is known\n"
 "  -fnative-types        Use \"long\" instead of INTEGER_t whenever possible, etc.\n"
 "  -fno-constraints      Do not generate constraint checking code\n"
