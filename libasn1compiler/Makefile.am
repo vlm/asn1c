@@ -16,14 +16,10 @@ libasn1compiler_la_SOURCES =			\
 	asn1c_compat.c asn1c_compat.h		\
 	asn1c_internal.h
 
-libasn1compiler_la_LIBADD =				\
-	${top_builddir}/libasn1parser/libasn1parser.la	\
-	${top_builddir}/libasn1fix/libasn1fix.la
+TESTS = $(check_PROGRAMS)
 
 check_PROGRAMS = check_compiler
 
-TESTS = ${check_PROGRAMS}
-
-LDADD = ${noinst_LTLIBRARIES} ${libasn1compiler_la_LIBADD}
-DEPENDENCIES = ${LDADD} 
-
+check_compiler_LDADD = $(noinst_LTLIBRARIES)		\
+	$(top_builddir)/libasn1parser/libasn1parser.la	\
+	$(top_builddir)/libasn1fix/libasn1fix.la
