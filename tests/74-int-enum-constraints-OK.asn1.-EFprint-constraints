@@ -1,0 +1,36 @@
+ModuleTestIntegerAndEnumeratedConstraints {iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	74 }
+DEFINITIONS ::=
+BEGIN
+
+Enum ::= ENUMERATED {
+    one(0)
+-- Practical constraints (one):   
+-- PER-visible constraints (one):   
+,
+    two(1)
+-- Practical constraints (two):   
+-- PER-visible constraints (two):   
+
+} (1 | 0)
+-- Combined constraints: (1 | 0)
+-- Practical constraints (Enum): (0..1)  
+-- PER-visible constraints (Enum): (0..1)  
+
+Int ::= INTEGER {
+    v1-0(123)
+-- Practical constraints (v1-0):   
+-- PER-visible constraints (v1-0):   
+
+} (123)
+-- Combined constraints: (123)
+-- Practical constraints (Int): (123)  
+-- PER-visible constraints (Int): (123)  
+
+EnumRef ::= Enum (1)
+-- Combined constraints: (1 | 0)(1)
+-- Practical constraints (Enum): (1)  
+-- PER-visible constraints (Enum): (1)  
+
+END
