@@ -229,16 +229,19 @@ asn1f_fix_constr_tag(arg_t *arg, int fix_top_level) {
 
 	}
 
-	if(ext_tagged && !root_tagged) {
-		FATAL("In %s at line %d: "
-			"extensions are tagged "
-			"but root components are not",
-			expr->Identifier, expr->_lineno);
-		r_value = -1;
-	} else if(!root_tagged && !ext_tagged
-			&& (arg->mod->module_flags & MSF_AUTOMATIC_TAGS)) {
-		/* Make a decision on automatic tagging */
-		expr->auto_tags_OK = 1;
+	if((arg->mod->module_flags & MSF_AUTOMATIC_TAGS)
+	&& !root_tagged) {
+		if(ext_tagged) {
+			/* X.690: 28.4 */
+			FATAL("In %s at line %d: "
+				"extensions are tagged "
+				"but root components are not",
+				expr->Identifier, expr->_lineno);
+			r_value = -1;
+		} else {
+			/* Make a decision on automatic tagging */
+			expr->auto_tags_OK = 1;
+		}
 	}
 
 	return r_value;
@@ -349,13 +352,13 @@ asn1f_check_constr_tags_distinct(arg_t *arg) {
 		 * For SET and CHOICE treat everything as a big set of
 		 * non-mandatory components.
 		 */
-		if(expr->expr_type != ASN_CONSTR_SEQUENCE || v->marker) {
+		if(expr->expr_type != ASN_CONSTR_SEQUENCE || v->marker.flags) {
 			asn1p_expr_t *nv;
 			for(nv = v; (nv = TQ_NEXT(nv, next));) {
 				if(_asn1f_compare_tags(arg, v, nv))
 					r_value = -1;
 				if(expr->expr_type == ASN_CONSTR_SEQUENCE
-				&& !nv->marker) break;
+				&& !nv->marker.flags) break;
 			}
 		}
 	}
@@ -421,8 +424,10 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		) {
 			char *p = (a->expr_type == A1TC_EXTENSIBLE)
 				?"potentially ":"";
-			FATAL("Component \"%s\" at line %d %shas the same tag "
+			FATAL("Processing %s at line %d: component \"%s\" at line %d %shas the same tag "
 				"with component \"%s\" at line %d",
+				arg->expr->Identifier,
+				arg->expr->_lineno,
 				a->Identifier,
 				a->_lineno,
 				p,
@@ -454,7 +459,7 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		a->Identifier, a->expr_type,
 		b->Identifier, b->expr_type);
 
-	if(a->meta_type == AMT_TYPEREF) {
+	if(ra && a->meta_type == AMT_TYPEREF) {
 
 		DEBUG(" %s is a type reference", a->Identifier);
 
@@ -464,7 +469,7 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		return ret;
 	}
 
-	if(a->expr_type == ASN_CONSTR_CHOICE) {
+	if(ra && a->expr_type == ASN_CONSTR_CHOICE) {
 		asn1p_expr_t *v;
 
 		DEBUG(" %s is a choice type (%d)", a->Identifier, a->_mark);
@@ -482,7 +487,7 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		return 0;
 	}
 
-	if(b->expr_type == ASN_CONSTR_CHOICE) {
+	if(rb && b->expr_type == ASN_CONSTR_CHOICE) {
 		return _asn1f_compare_tags(arg, b, a);
 	}
 
