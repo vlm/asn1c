@@ -252,6 +252,7 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 				}
 				printf("'H");
 			}
+			return 0;
 		}
 	case ATV_REFERENCED:
 		return asn1print_ref(val->value.reference, flags);

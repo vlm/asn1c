@@ -1,4 +1,8 @@
 
+0.9.10:	2005-Feb-24
+
+	* Fixes #1150856 (vvvy@users.sourceforge.net).
+
 0.9.9:	2005-Feb-22
 
 	* First release of XER (XML) decoding implementation (somewhat
