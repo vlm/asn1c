@@ -53,8 +53,8 @@ typedef struct asn1p_constraint_s {
 	 * A collection of constraint elements.
 	 */
 	struct asn1p_constraint_s **elements;
-	int el_count;	/* Number of meaningful elements */
-	int el_size;	/* Size of the allocated (elements) */
+	unsigned int el_count;	/* Number of meaningful elements */
+	unsigned int el_size;	/* Size of the allocated (elements) */
 
 	int _lineno;	/* Position in a source file */
 	int _compile_mark;	/* Marker used by the compiler */

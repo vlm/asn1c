@@ -55,7 +55,7 @@ asn1p_constraint_clone(asn1p_constraint_t *src) {
 
 	clone = asn1p_constraint_new(src->_lineno);
 	if(clone) {
-		int i;
+		unsigned int i;
 
 		clone->type = src->type;
 		clone->presence = src->presence;
@@ -92,7 +92,7 @@ asn1p_constraint_insert(asn1p_constraint_t *into, asn1p_constraint_t *what) {
 	 * Make sure there's enough space to add an element.
 	 */
 	if(into->el_count == into->el_size) {
-		int newsize = into->el_size?into->el_size<<2:4;
+		unsigned int newsize = into->el_size?into->el_size<<2:4;
 		void *p;
 		p = realloc(into->elements,
 			newsize * sizeof(into->elements[0]));
