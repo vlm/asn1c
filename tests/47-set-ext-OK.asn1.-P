@@ -36,7 +36,7 @@ typedef struct T1 {
 /*** <<< STAT-DEFS [T1] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_T1[] = {
-	{ 0, offsetof(struct T1, i),
+	{ ATF_NOFLAGS, 0, offsetof(struct T1, i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
@@ -118,7 +118,7 @@ typedef struct T2 {
 /*** <<< STAT-DEFS [T2] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_T2[] = {
-	{ 0, offsetof(struct T2, i),
+	{ ATF_NOFLAGS, 0, offsetof(struct T2, i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
@@ -197,7 +197,7 @@ typedef struct T3 {
 /*** <<< STAT-DEFS [T3] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_T3[] = {
-	{ 0, offsetof(struct T3, choice.i),
+	{ ATF_NOFLAGS, 0, offsetof(struct T3, choice.i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
@@ -269,7 +269,7 @@ typedef struct T4 {
 /*** <<< STAT-DEFS [T4] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_T4[] = {
-	{ 0, offsetof(struct T4, choice.i),
+	{ ATF_NOFLAGS, 0, offsetof(struct T4, choice.i),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,

@@ -22,7 +22,7 @@ typedef struct Forest {
 /*** <<< STAT-DEFS [Forest] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_Forest[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_Tree,
@@ -79,14 +79,14 @@ typedef struct Tree {
 /*** <<< STAT-DEFS [Tree] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_Tree[] = {
-	{ 0, offsetof(struct Tree, height),
+	{ ATF_NOFLAGS, 0, offsetof(struct Tree, height),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "height"
 		},
-	{ 0, offsetof(struct Tree, width),
+	{ ATF_NOFLAGS, 0, offsetof(struct Tree, width),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_INTEGER,
@@ -186,7 +186,7 @@ typedef struct Stuff {
 /*** <<< STAT-DEFS [Stuff] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_trees[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_Forest,
@@ -221,7 +221,7 @@ asn1_TYPE_descriptor_t asn1_DEF_trees = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_anything_member[] = {
-	{ 0, offsetof(struct anything_member, cup_of_coffee),
+	{ ATF_NOFLAGS, 0, offsetof(struct anything_member, cup_of_coffee),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_BIT_STRING,
@@ -263,7 +263,7 @@ asn1_TYPE_descriptor_t asn1_DEF_anything_member = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_anything[] = {
-	{ 0, 0,
+	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_anything_member,
@@ -298,14 +298,14 @@ asn1_TYPE_descriptor_t asn1_DEF_anything = {
 };
 
 static asn1_TYPE_member_t asn1_MBR_Stuff[] = {
-	{ 2, offsetof(struct Stuff, trees),
+	{ ATF_POINTER, 2, offsetof(struct Stuff, trees),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn1_DEF_trees,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "trees"
 		},
-	{ 1, offsetof(struct Stuff, anything),
+	{ ATF_POINTER, 1, offsetof(struct Stuff, anything),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn1_DEF_anything,

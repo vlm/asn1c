@@ -26,6 +26,7 @@ static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
 static int _print_tag(arg_t *arg, struct asn1p_type_tag_s *tag_p);
 static int check_if_extensible(asn1p_expr_t *expr);
+static int expr_better_indirect(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tags_vector(arg_t *arg, asn1p_expr_t *expr, int *tags_impl_skip, int choice_mode);
@@ -149,8 +150,9 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 		if(v->expr_type == A1TC_EXTENSIBLE) {
 			if(comp_mode < 3) comp_mode++;
 		}
-		if(comp_mode == 1 && !v->marker)
-			v->marker = EM_OPTIONAL;
+		if(comp_mode == 1
+		|| expr_better_indirect(arg, v))
+			v->marker |= EM_INDIRECT;
 		EMBED(v);
 	}
 
@@ -289,8 +291,9 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 		if(v->expr_type == A1TC_EXTENSIBLE) {
 			if(comp_mode < 3) comp_mode++;
 		}
-		if(comp_mode == 1 && !v->marker)
-			v->marker = EM_OPTIONAL;
+		if(comp_mode == 1
+		|| expr_better_indirect(arg, v))
+			v->marker |= EM_INDIRECT;
 		EMBED(v);
 	}
 
@@ -345,15 +348,15 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 
 	elements = 0;
 	INDENTED(TQ_FOR(v, &(expr->members), next) {
-		if(v->expr_type != A1TC_EXTENSIBLE) {
-			if(comp_mode == 1)
-				v->marker = EM_OPTIONAL;
-		} else {
+		if(v->expr_type == A1TC_EXTENSIBLE) {
 			if(comp_mode < 3) comp_mode++;
-			continue;
+		} else {
+			if(comp_mode == 1
+			|| expr_better_indirect(arg, v))
+				v->marker |= EM_INDIRECT;
+			elements++;
+			emit_member_table(arg, v);
 		}
-		elements++;
-		emit_member_table(arg, v);
 	});
 	OUT("};\n");
 
@@ -386,7 +389,9 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 			} else if(el) {
 				OUT(" | ");
 			}
-			OUT("(%d << %d)", v->marker?0:1, 7 - (el % 8));
+			OUT("(%d << %d)",
+				v->marker?0:1,
+				7 - (el % 8));
 			if(el && (el % 8) == 0)
 				delimit = 1;
 			el++;
@@ -573,6 +578,8 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 		OUT("%s_PR present;\n", id);
 		OUT("union {\n", id);
 		TQ_FOR(v, &(expr->members), next) {
+			if(expr_better_indirect(arg, v))
+				v->marker |= EM_INDIRECT;
 			EMBED(v);
 		}
 		if(UNNAMED_UNIONS)	OUT("};\n");
@@ -621,15 +628,15 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 
 	elements = 0;
 	INDENTED(TQ_FOR(v, &(expr->members), next) {
-		if(v->expr_type != A1TC_EXTENSIBLE) {
-			if(comp_mode == 1)
-				v->marker = EM_OPTIONAL;
-		} else {
+		if(v->expr_type == A1TC_EXTENSIBLE) {
 			if(comp_mode < 3) comp_mode++;
-			continue;
+		} else {
+			if(comp_mode == 1
+			|| expr_better_indirect(arg, v))
+				v->marker |= EM_INDIRECT;
+			elements++;
+			emit_member_table(arg, v);
 		}
-		elements++;
-		emit_member_table(arg, v);
 	});
 	OUT("};\n");
 
@@ -731,8 +738,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			expr->marker?TNF_RSAFE:TNF_CTYPE));
 		OUT("%s", expr->marker?"*":" ");
 		OUT("%s", MKID(expr->Identifier));
-		if(expr->marker) OUT("\t/* %s */",
-			(expr->marker==EM_OPTIONAL)?"OPTIONAL":"DEFAULT");
+		if((expr->marker & EM_DEFAULT) == EM_DEFAULT)
+			OUT("\t/* DEFAULT */");
+		else if((expr->marker & EM_OPTIONAL) == EM_OPTIONAL)
+			OUT("\t/* OPTIONAL */");
 
 		REDIR(OT_TYPE_DECLS);
 		return 0;
@@ -1195,7 +1204,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	char *p;
 
 	OUT("{ ");
-	if(expr->marker) {
+	OUT("%s, ", expr->marker?"ATF_POINTER":"ATF_NOFLAGS");
+	if((expr->marker & EM_OPTIONAL) == EM_OPTIONAL) {
 		asn1p_expr_t *tv;
 		int opts = 0;
 		for(tv = expr; tv && tv->marker;
@@ -1377,4 +1387,31 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip
 	OUT("\n");
 
 	return 0;
+}
+
+/*
+ * Check if it is better to make this type indirectly accessed via
+ * a pointer.
+ * This may be the case for the following recursive definition:
+ * Type ::= CHOICE { member Type };
+ */
+static int
+expr_better_indirect(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_t *top_parent;
+	asn1p_expr_t *terminal;
+
+	if(expr->expr_type != A1TC_REFERENCE)
+		return 0;
+
+	/* Rewind to the topmost parent expression */
+	if((top_parent = expr->parent_expr)) {
+		while(top_parent->parent_expr)
+			top_parent = top_parent->parent_expr;
+	} else {
+		return 0;
+	}
+
+	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->mod, expr);
+
+	return (terminal == top_parent);
 }

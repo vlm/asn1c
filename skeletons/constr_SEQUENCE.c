@@ -197,14 +197,17 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 		/*
 		 * MICROPHASE 1: Synchronize decoding.
 		 */
-		ASN_DEBUG("In %s SEQUENCE left %d, edx=%d opt=%d ec=%d",
-			td->name, (int)ctx->left,
-			edx, elements[edx].optional, td->elements_count);
+		ASN_DEBUG("In %s SEQUENCE left %d, edx=%d flags=%d"
+				" opt=%d ec=%d",
+			td->name, (int)ctx->left, edx,
+			elements[edx].flags, elements[edx].optional,
+			td->elements_count);
 
 		if(ctx->left == 0	/* No more stuff is expected */
 		&& (
 			/* Explicit OPTIONAL specification reaches the end */
-			(edx + elements[edx].optional == td->elements_count)
+			(edx + elements[edx].optional
+					== td->elements_count)
 			||
 			/* All extensions are optional */
 			(IN_EXTENSION_GROUP(specs, edx)
@@ -304,7 +307,8 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 
 			if(!IN_EXTENSION_GROUP(specs, edx)) {
 				if(elements[edx].tag == (ber_tlv_tag_t)-1
-				&& elements[edx].optional == 0) {
+				/* FIXME: any support */
+				&& (elements[edx].flags & ATF_POINTER) == 0) {
 					/*
 					 * This must be the ANY type.
 					 */
@@ -375,8 +379,8 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *td,
 		 * and also a type of containment (it may be contained
 		 * as pointer or using inline inclusion).
 		 */
-		if(elements[edx].optional) {
-			/* Optional member, hereby, a simple pointer */
+		if(elements[edx].flags & ATF_POINTER) {
+			/* Member is a pointer to another structure */
 			memb_ptr2 = (void **)((char *)st + elements[edx].memb_offset);
 		} else {
 			/*
@@ -505,7 +509,7 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *td,
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn1_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {
@@ -544,7 +548,7 @@ SEQUENCE_encode_der(asn1_TYPE_descriptor_t *td,
 		der_enc_rval_t tmperval;
 		void *memb_ptr;
 
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {
@@ -589,7 +593,7 @@ SEQUENCE_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn1_TYPE_member_t *elm = &td->elements[edx];
 		const void *memb_ptr;
 
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {
@@ -632,7 +636,7 @@ SEQUENCE_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn1_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(memb_ptr)
 				elm->type->free_struct(elm->type, memb_ptr, 0);
@@ -666,7 +670,7 @@ SEQUENCE_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		asn1_TYPE_member_t *elm = &td->elements[edx];
 		const void *memb_ptr;
 
-		if(elm->optional) {
+		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {

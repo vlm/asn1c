@@ -94,7 +94,11 @@ typedef struct asn1_TYPE_descriptor_s {
  * An element of the constructed type, i.e. SEQUENCE, SET, CHOICE.
  */
 typedef struct asn1_TYPE_member_s {
-	int optional;			/* Whether the element is optional */
+	enum asn1_TYPE_flags_e {
+		ATF_NOFLAGS,
+		ATF_POINTER	= 0x01,	/* Represented by the pointer */
+	} flags;			/* Element's presentation flags */
+	int optional;	/* Following optional members, including current */
 	int memb_offset;		/* Offset of the element */
 	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
 	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
