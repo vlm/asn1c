@@ -45,9 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 
+* Sun Sep 26 2004 Lev Walkin <vlm@lionet.info>
+- All manuals are now getting installed, including new ones: unber.1 and enber.1
+
 * Tue Sep 18 2004 Lev Walkin <vlm@lionet.info>
 - First version of asn1c.spec
-
-* Sun Sep 26 2004 Lev Walkin <vlm@lionet.info>
-- All manuals are now getting installed, including new onws: unber.1 and enber.1
 
