@@ -21,4 +21,4 @@ Where
 
 Example:
 	07-int-OK.asn1		# Correct ASN.1 file
-	07-int-OK.asn1.-EFN	# Test of file regeneration with -EFN flags.
+	07-int-OK.asn1.-EF	# Test of file regeneration with -E -F flags.
