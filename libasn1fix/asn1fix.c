@@ -12,7 +12,8 @@ static void _default_error_logger(int _severity, const char *fmt, ...);
 /*
  * Internal check functions.
  */
-static int asn1f_fix_module(arg_t *arg);
+static int asn1f_fix_module__phase_1(arg_t *arg);
+static int asn1f_fix_module__phase_2(arg_t *arg);
 static int asn1f_fix_simple(arg_t *arg);	/* For INTEGER/ENUMERATED */
 static int asn1f_fix_constructed(arg_t *arg);	/* For SEQUENCE/SET/CHOICE */
 static int asn1f_resolve_constraints(arg_t *arg); /* For subtype constraints */
@@ -79,7 +80,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 	 * Process each module in the list.
 	 */
 	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
-		int ret = asn1f_fix_module(&arg);
+		int ret = asn1f_fix_module__phase_1(&arg);
 		/*
 		 * These lines are used for illustration purposes.
 		 * RET2RVAL() is used everywhere else.
@@ -87,6 +88,13 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 		if(ret == -1) fatals++;
 		if(ret == 1) warnings++;
 	}
+	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
+		int ret = asn1f_fix_module__phase_2(&arg);
+		if(ret == -1) fatals++;
+		if(ret == 1) warnings++;
+	}
+
+	memset(&a1f_replace_me_with_proper_interface_arg, 0, sizeof(arg_t));
 
 	memset(&a1f_replace_me_with_proper_interface_arg, 0, sizeof(arg_t));
 
@@ -100,7 +108,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
  * Check the internals of a single module.
  */
 static int
-asn1f_fix_module(arg_t *arg) {
+asn1f_fix_module__phase_1(arg_t *arg) {
 	asn1p_expr_t *expr;
 	int rvalue = 0;
 	int ret;
@@ -239,6 +247,15 @@ asn1f_fix_module(arg_t *arg) {
 		assert(arg->expr == expr);
 	}
 
+	return rvalue;
+}
+
+static int
+asn1f_fix_module__phase_2(arg_t *arg) {
+	asn1p_expr_t *expr;
+	int rvalue = 0;
+	int ret;
+
 	/*
 	 * Check semantic validity of constraints.
 	 */
@@ -257,7 +274,6 @@ asn1f_fix_module(arg_t *arg) {
 
 	return rvalue;
 }
-
 
 static int
 asn1f_fix_simple(arg_t *arg) {
