@@ -3,7 +3,7 @@
 #include <asn1fix_crange.h>
 
 static void _remove_exceptions(arg_t *arg, asn1p_constraint_t *ct);
-static int _constraint_value_resolve(arg_t *arg, asn1p_value_t **value);
+static int _constraint_value_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_value_t **value);
 
 int
 asn1constraint_pullup(arg_t *arg) {
@@ -25,11 +25,10 @@ asn1constraint_pullup(arg_t *arg) {
 
 	if(expr->expr_type == A1TC_REFERENCE) {
 		asn1p_ref_t *ref = expr->reference;
-		asn1p_module_t *mod_rw = arg->mod;
 		asn1p_expr_t *parent_expr;
 
 		assert(ref);
-		parent_expr = asn1f_lookup_symbol(arg, ref, &mod_rw);
+		parent_expr = asn1f_lookup_symbol(arg, expr->module, ref);
 		if(!parent_expr) {
 			if(errno != EEXIST) {
 				DEBUG("\tWhile fetching parent constraints: "
@@ -120,7 +119,7 @@ asn1constraint_pullup(arg_t *arg) {
 }
 
 int
-asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e etype, enum asn1p_constraint_type_e effective_type) {
+asn1constraint_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_constraint_t *ct, asn1p_expr_type_e etype, enum asn1p_constraint_type_e effective_type) {
 	int rvalue = 0;
 	int ret;
 	int el;
@@ -183,15 +182,15 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e ety
 	 * Resolve all possible references, wherever they occur.
 	 */
 	if(ct->value && ct->value->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, &ct->value);
+		ret = _constraint_value_resolve(arg, mod, &ct->value);
 		RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_start && ct->range_start->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, &ct->range_start);
+		ret = _constraint_value_resolve(arg, mod, &ct->range_start);
 		RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_stop && ct->range_stop->type == ATV_REFERENCED) {
-		ret = _constraint_value_resolve(arg, &ct->range_stop);
+		ret = _constraint_value_resolve(arg, mod, &ct->range_stop);
 		RET2RVAL(ret, rvalue);
 	}
 
@@ -199,7 +198,7 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e ety
 	 * Proceed recursively.
 	 */
 	for(el = 0; el < ct->el_count; el++) {
-		ret = asn1constraint_resolve(arg, ct->elements[el],
+		ret = asn1constraint_resolve(arg, mod, ct->elements[el],
 			etype, effective_type);
 		RET2RVAL(ret, rvalue);
 	}
@@ -230,15 +229,14 @@ _remove_exceptions(arg_t *arg, asn1p_constraint_t *ct) {
 
 
 static int
-_constraint_value_resolve(arg_t *arg, asn1p_value_t **value) {
+_constraint_value_resolve(arg_t *arg, asn1p_module_t *mod, asn1p_value_t **value) {
 	asn1p_expr_t static_expr;
 	asn1p_expr_t *tmp_expr;
-	asn1p_module_t *mod_rw = arg->mod;
 	arg_t tmp_arg;
 	int rvalue = 0;
 	int ret;
 
-	tmp_expr = asn1f_lookup_symbol(arg, (*value)->value.reference, &mod_rw);
+	tmp_expr = asn1f_lookup_symbol(arg, mod, (*value)->value.reference);
 	if(tmp_expr == NULL) {
 		FATAL("Cannot find symbol %s "
 			"used in %s subtype constraint at line %d",
@@ -251,7 +249,7 @@ _constraint_value_resolve(arg_t *arg, asn1p_value_t **value) {
 	static_expr = *tmp_expr;
 	static_expr.value = *value;
 	tmp_arg = *arg;
-	tmp_arg.mod = mod_rw;
+	tmp_arg.mod = tmp_expr->module;
 	tmp_arg.expr = &static_expr;
 	ret = asn1f_fix_dereference_values(&tmp_arg);
 	RET2RVAL(ret, rvalue);

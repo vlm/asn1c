@@ -16,7 +16,7 @@ asn1f_fix_bit_string(arg_t *arg) {
 		DEBUG("%s(%s) for line %d", __func__,
 			expr->Identifier, expr->_lineno);
 
-		ttype = asn1f_find_terminal_type(arg, expr, 0);
+		ttype = asn1f_find_terminal_type(arg, expr);
 		if(ttype && ttype->expr_type == ASN_BASIC_BIT_STRING) {
 			ret = asn1f_fix_bit_string_value(arg, ttype);
 			RET2RVAL(ret, r_value);

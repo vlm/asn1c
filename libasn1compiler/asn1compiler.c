@@ -84,6 +84,9 @@ asn1c_compile_expr(arg_t *arg) {
 			expr->_lineno);
 
 		ret = type_cb(arg);
+
+		if(arg->target->destination[OT_TYPE_DECLS].indent_level == 0)
+			OUT(";\n");
 	} else {
 		ret = -1;
 		/*
@@ -112,6 +115,11 @@ asn1c_compile_expr(arg_t *arg) {
 	}
 
 	if(ret == -1) {
+		FATAL("Cannot compile \"%s\" (%x:%x) at line %d",
+			arg->expr->Identifier,
+			arg->expr->expr_type,
+			arg->expr->meta_type,
+			arg->expr->_lineno);
 		OUT("#error Cannot compile \"%s\" (%x/%x) at line %d\n",
 			arg->expr->Identifier,
 			arg->expr->meta_type,

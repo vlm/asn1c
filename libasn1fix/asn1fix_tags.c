@@ -30,14 +30,14 @@ asn1f_fetch_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct as
 		arg.mod = mod;
 		arg.expr = expr;
 
-		expr = asn1f_lookup_symbol(&arg, expr->reference, &mod);
+		expr = asn1f_lookup_symbol(&arg, expr->module, expr->reference);
 		if(expr == NULL) return -1;
 
 		if(expr->_mark & TM_RECURSION)
 			return -1;
 
 		expr->_mark |= TM_RECURSION;
-		ret = asn1f_fetch_tag(asn, mod, expr, tag);
+		ret = asn1f_fetch_tag(asn, expr->module, expr, tag);
 		expr->_mark &= ~TM_RECURSION;
 		return ret;
 	}

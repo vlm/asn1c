@@ -69,6 +69,8 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 			_tmp.default_cb(&_tmp);			\
 		);						\
 		arg->embed--;					\
+		if(ev->expr_type != A1TC_EXTENSIBLE)		\
+			OUT(";\n");				\
 		assert(arg->target->target == OT_TYPE_DECLS);	\
 		REDIR(saved_target);				\
 	} while(0)

@@ -1,6 +1,6 @@
 #include "asn1fix_internal.h"
 
-static asn1p_expr_t *asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, asn1p_module_t **optm, int type_or_value);
+static asn1p_expr_t *asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value);
 static int asn1f_compatible_with_exports(arg_t *arg, asn1p_module_t *mod, const char *name);
 
 
@@ -135,7 +135,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 
 
 asn1p_expr_t *
-asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **module_r) {
+asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	asn1p_expr_t *ref_tc;			/* Referenced tc */
 	asn1p_module_t *src_mod;
 	char *modulename;
@@ -155,7 +155,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **module_r) {
 
 	DEBUG("%s(%s) in %s for line %d", __func__,
 		asn1f_printable_reference(ref),
-		arg->mod->Identifier,
+		mod->Identifier,
 		ref->_lineno);
 
 	if(ref->comp_count == 1) {
@@ -173,7 +173,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **module_r) {
 		 * This is a reference to a CLASS-related stuff.
 		 * Employ a separate function for that.
 		 */
-		extract = asn1f_class_access(arg, ref, module_r);
+		extract = asn1f_class_access(arg, mod, ref);
 		
 		return extract;
 	} else {
@@ -216,7 +216,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **module_r) {
 		}
 	}
 
-	if(src_mod == 0) src_mod = arg->mod;
+	if(src_mod == 0) src_mod = mod;
 
 	/*
 	 * Now we know where to search for a value.
@@ -242,29 +242,22 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_ref_t *ref, asn1p_module_t **module_r) {
 		return NULL;
 	}
 
-	if(module_r)
-		*module_r = src_mod;
-
 	return ref_tc;
 }
 
 
 asn1p_expr_t *
-asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *expr,
-		asn1p_module_t **optm) {
-	return asn1f_find_terminal_thing(arg, expr, optm, 0);
+asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *expr) {
+	return asn1f_find_terminal_thing(arg, expr, 0);
 }
 
 asn1p_expr_t *
-asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *expr,
-		asn1p_module_t **optm) {
-	return asn1f_find_terminal_thing(arg, expr, optm, 1);
+asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *expr) {
+	return asn1f_find_terminal_thing(arg, expr, 1);
 }
 
 static asn1p_expr_t *
-asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr,
-	asn1p_module_t **optm, int type_or_value) {
-	asn1p_module_t *mod;
+asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value) {
 	asn1p_ref_t *ref;
 	asn1p_expr_t *tc;
 
@@ -272,19 +265,15 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr,
 		/* VALUE */
 		assert(expr->meta_type == AMT_VALUE);
 		assert(expr->value);
-		if(expr->value->type != ATV_REFERENCED) {
-			/* Expression is a terminal value itself */
-			if(optm) *optm = arg->mod;
+		/* Expression may be a terminal type itself */
+		if(expr->value->type != ATV_REFERENCED)
 			return expr;
-		}
 		ref = expr->value->value.reference;
 	} else {
 		/* TYPE */
-		if(expr->expr_type != A1TC_REFERENCE) {
-			/* Expression is a terminal type itself */
-			if(optm) *optm = arg->mod;
+		/* Expression may be a terminal type itself */
+		if(expr->expr_type != A1TC_REFERENCE)
 			return expr;
-		}
 		ref = expr->reference;
 	}
 
@@ -300,12 +289,11 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr,
 	 */
 	if(type_or_value) {
 		asn1p_expr_t *val_type_tc;
-		val_type_tc = asn1f_find_terminal_type(arg, expr, 0);
+		val_type_tc = asn1f_find_terminal_type(arg, expr);
 		if(val_type_tc
 		&& asn1f_look_value_in_type(arg, val_type_tc, expr))
 			return NULL;
 		if(expr->value->type != ATV_REFERENCED) {
-			if(optm) *optm = arg->mod;
 			return expr;
 		}
 		assert(ref == expr->value->value.reference);
@@ -315,7 +303,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr,
 	/*
 	 * Lookup inside the default module.
 	 */
-	tc = asn1f_lookup_symbol(arg, ref, &mod);
+	tc = asn1f_lookup_symbol(arg, expr->module, ref);
 	if(tc == NULL) {
 		DEBUG("\tSymbol \"%s\" not found: %s",
 			asn1f_printable_reference(ref),
@@ -334,8 +322,8 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr,
 	}
 
 	tc->_mark |= TM_RECURSION;
-	WITH_MODULE(mod,
-		expr = asn1f_find_terminal_thing(arg, tc, optm, type_or_value));
+	WITH_MODULE(tc->module,
+		expr = asn1f_find_terminal_thing(arg, tc, type_or_value));
 	tc->_mark &= ~TM_RECURSION;
 
 	return expr;

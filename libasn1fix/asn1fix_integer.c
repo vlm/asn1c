@@ -112,7 +112,6 @@ asn1f_fix_integer(arg_t *arg) {
 
 static int
 _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type) {
-	asn1p_module_t *mod = NULL;
 	asn1p_expr_t *next_expr;
 	asn1p_expr_type_e expr_type;
 	int ret;
@@ -144,7 +143,7 @@ _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type)
 	 * Then, it is a reference. For a reference, try to resolve type
 	 * and try again.
 	 */
-	next_expr = asn1f_lookup_symbol(arg, expr->reference, &mod);
+	next_expr = asn1f_lookup_symbol(arg, expr->module, expr->reference);
 	if(next_expr == NULL) {
 		errno = ESRCH;
 		return -1;
@@ -153,7 +152,8 @@ _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type)
 	/*
 	 * If symbol is here, recursively check that it conforms to the type.
 	 */
-	WITH_MODULE(mod, ret = _asn1f_make_sure_type_is(arg, next_expr, type));
+	WITH_MODULE(next_expr->module,
+		ret = _asn1f_make_sure_type_is(arg, next_expr, type));
 
 	return ret;
 }

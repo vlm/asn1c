@@ -23,7 +23,7 @@ asn1f_fix_parametrized_assignment(arg_t *arg) {
 	 */
 	DEBUG("Looking for parametrized type definition \"%s\"",
 		asn1f_printable_reference(expr->reference));
-	ptype = asn1f_lookup_symbol(arg, expr->reference, 0);
+	ptype = asn1f_lookup_symbol(arg, expr->module, expr->reference);
 	if(ptype == NULL) {
 		DEBUG("%s: missing parametrized type declaration",
 			asn1f_printable_reference(expr->reference));
@@ -81,7 +81,7 @@ asn1f_parametrize(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype) {
 	 * with the actual values.
 	 */
 
-	nex = asn1p_expr_clone(ptype);
+	nex = asn1p_expr_clone(ptype, 0);
 	if(nex == NULL) return -1;
 
 	/*
@@ -131,7 +131,7 @@ asn1f_param_process_recursive(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptyp
 		assert(child->meta_type == AMT_TYPEREF);
 		assert(child->expr_type == A1TC_REFERENCE);
 
-		ne = asn1p_expr_clone(ra);
+		ne = asn1p_expr_clone(ra, 0);
 		if(ne == NULL) return -1;
 		assert(ne->Identifier == 0);
 		ne->Identifier = strdup(child->Identifier);
