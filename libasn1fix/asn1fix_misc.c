@@ -60,6 +60,22 @@ asn1f_printable_value(asn1p_value_t *v) {
 	case ATV_MAX: return "MAX";
 	case ATV_FALSE: return "FALSE";
 	case ATV_TRUE: return "TRUE";
+	case ATV_TUPLE:
+		ret = snprintf(buf, sizeof(buf), "{%d, %d}",
+			(int)(v->value.v_integer >> 4),
+			(int)(v->value.v_integer & 0xff));
+		if(ret >= (ssize_t)sizeof(buf))
+			memcpy(buf + sizeof(buf) - 4, "...", 4);
+		return buf;
+	case ATV_QUADRUPLE:
+		ret = snprintf(buf, sizeof(buf), "{%d, %d, %d, %d}",
+			(int)((v->value.v_integer >> 24) & 0xff),
+			(int)((v->value.v_integer >> 16) & 0xff),
+			(int)((v->value.v_integer >>  8) & 0xff),
+			(int)(v->value.v_integer & 0xff));
+		if(ret >= (ssize_t)sizeof(buf))
+			memcpy(buf + sizeof(buf) - 4, "...", 4);
+		return buf;
 	case ATV_STRING:
 	case ATV_UNPARSED:
 		/* Buffer is guaranteed to be null-terminated */
