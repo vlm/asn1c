@@ -1,0 +1,29 @@
+.de Vb
+.sp
+.ft CW
+.nf
+..
+.de Ve
+.ft R
+.fi
+.sp
+..
+.TH ENBER 1 "\*(Dt" "unber counterpart" "unber counterpart"
+.SH NAME
+enber \- Convert the unber XML output back into BER
+.SH SYNOPSIS
+enber [\fB-\fR] \fIinfile\fR...
+.SH DESCRIPTION
+enber takes the XML-encoded files produced by \fIunber\fR\|(1) and converts
+them back into the BER format.
+A single dash represents the standard input.
+.SH EXAMPLES
+Decode the BER sequence and immediately encode it back
+.Vb
+\&    enber \fB-p\fR \fIfilename.ber\fR | unber \fB-\fR > \fIreconstructed.ber\fR
+.Ve
+.SH SEE ALSO
+.TP
+\&\fIunber\fR\|(1), \&\fIasn1c\fR\|(1)
+.SH AUTHORS
+Lev Walkin <vlm@lionet.info>

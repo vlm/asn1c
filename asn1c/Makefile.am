@@ -1,5 +1,5 @@
 
-SUBDIRS = . tests webcgi
+SUBDIRS = . webcgi tests
 
 AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS = \
@@ -16,9 +16,9 @@ asn1c_LDADD =	\
 	$(top_builddir)/libasn1fix/libasn1fix.la	\
 	$(top_builddir)/libasn1compiler/libasn1compiler.la
 
-bin_PROGRAMS = asn1c unber
+bin_PROGRAMS = asn1c unber enber
 
-dist_man1_MANS = asn1c.1 unber.1
+dist_man1_MANS = asn1c.1 unber.1 enber.1
 
 check_SCRIPTS = check-parsing.sh
 TESTS = check-parsing.sh

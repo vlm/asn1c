@@ -1,3 +1,30 @@
+/*-
+ * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * $Id$
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,11 +40,13 @@
 
 #include <asn1parser.h>		/* For static string tables */
 
-#include <asn_types.h>
-#include <ber_tlv_tag.h>
-#include <ber_tlv_length.h>
+#include <asn_application.h>
+#include <constraints.c>
 #include <ber_tlv_tag.c>
 #include <ber_tlv_length.c>
+#include <OBJECT_IDENTIFIER.c>
+#include <RELATIVE-OID.c>
+#include <INTEGER.c>
 
 static void usage(const char *av0);	/* Print the Usage screen and exit */
 static int process(const char *fname);	/* Perform the BER decoding */
@@ -27,7 +56,9 @@ static int decode_tlv_from_string(const char *datastring);
 #define	COPYRIGHT	\
 	"Copyright (c) 2004 Lev Walkin <vlm@lionet.info>\n"
 
-static char *indent_buffer = "    ";
+static int single_type_decoding = 0;	/* -1 enables that */
+static int pretty_printing = 1;		/* -p disables that */
+static char *indent_buffer = "    ";	/* -i controls that */
 
 int
 main(int ac, char **av) {
@@ -37,12 +68,18 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "i:t:v")) != -1)
+	while((ch = getopt(ac, av, "1hi:pt:v")) != -1)
 	switch(ch) {
+	case '1':
+		single_type_decoding = 1;
+		break;
 	case 't':
 		if(decode_tlv_from_string(optarg))
 			exit(EX_DATAERR);
 		exit(0);
+	case 'p':
+		pretty_printing = 0;
+		break;
 	case 'i':
 		i = atoi(optarg);
 		if(i >= 0 && i < 16) {
@@ -58,6 +95,7 @@ main(int ac, char **av) {
 		fprintf(stderr, "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT);
 		exit(0);
 		break;
+	case 'h':
 	default:
 		usage(av[0]);
 	}
@@ -96,9 +134,21 @@ usage(const char *av0) {
 "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT
 "Usage: %s [options] [-] [file ...]\n"
 "Options:\n"
-"  -i <indent>           Amount of spaces for indentation (default is 4)\n"
-"  -t <data-string>      Decode the given tag[/length] sequence\n"
-"                        (e.g. -t \"bf 20\")\n"
+"  -1                 Decode only the first BER structure (otherwise, until EOF)\n"
+"  -i <indent>        Amount of spaces for output indentation (default is 4)\n"
+"  -p                 Do not attempt pretty-printing of known ASN.1 types\n"
+"  -t <data-string>   Decode the given tag[/length] sequence (e.g. -t \"bf20\")\n"
+"\n"
+"The XML opening tag format is as follows:\n"
+"  <tform T=\"tag\" TL=\"tl_len\" V=\"{Indefinite|v_len}\" [A=\"type\"] [F]>\n"
+"Where:\n"
+"  tform    Which form the value is in: constructed (\"C\", \"I\") or primitive (\"P\")\n"
+"  tag      The tag class and value\n"
+"  tl_len   The length of the TL (BER Tag and Length) encoding\n"
+"  v_len    The length of the value (V, encoded by the L), may be \"Indefinite\"\n"
+"  type     Likely name of the underlying ASN.1 type (for [UNIVERSAL n] tags)\n"
+"  [F]      Indicates that the value was reformatted (pretty-printed)\n"
+"See the manual page for details\n"
 	, av0);
 	exit(EX_USAGE);
 }
@@ -135,7 +185,7 @@ process(const char *fname) {
 	 */
 	do {
 		pdc = process_deeper(fname, fp, 0, -1);
-	} while(pdc == PD_FINISHED);	/* Wait until PD_EOF */
+	} while(pdc == PD_FINISHED && !single_type_decoding);
 
 	if(fp != stdin)
 		fclose(fp);
@@ -216,6 +266,11 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 			continue;
 		}
 
+		if(tagbuf[0] == '\0' && tagbuf[1] == '\0') {
+			/* End of content octets */
+			return PD_FINISHED;
+		}
+
 		/* Make sure the T & L decoders took exactly the whole buffer */
 		assert((t_len + l_len) == tblen);
 
@@ -249,6 +304,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 			if(tlv_len == -1)
 				tlv_len = limit;
 
+			printf(">\n");	/* Close the opening tag */
 			pdc = process_deeper(fname, fp, level + 1, tlv_len);
 			if(pdc == PD_FAILED) return pdc;
 		} else {
@@ -269,11 +325,6 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 static void
 print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
 
-	if(fin && tlen == 2 && !constr && !tlv_tag && !tlv_len) {
-		/* end of content octets */
-		return;
-	}
-
 	if(fin && !constr) {
 		printf("</P>\n");
 		return;
@@ -282,19 +333,19 @@ print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, be
 	while(level-- > 0) printf(indent_buffer);  /* Print indent */
 	printf(fin ? "</" : "<");
 
-	printf(constr ? "C" : "P");
+	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
 
 	printf(" T=\"");
 	ber_tlv_tag_fwrite(tlv_tag, stdout);
 	printf("\"");
 
 	if(!fin) {
-		printf(" tL=\"%ld\"", (long)tlen);
+		printf(" TL=\"%ld\"", (long)tlen);
 
 		if(tlv_len == -1)
-			printf(" L=\"Indefinite\"");
+			printf(" V=\"Indefinite\"");
 		else
-			printf(" L=\"%ld\"", (long)tlv_len);
+			printf(" V=\"%ld\"", (long)tlv_len);
 	}
 
 	if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
@@ -304,23 +355,84 @@ print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, be
 		if(str) printf(" A=\"%s\"", str);
 	}
 
-	if(fin || constr)
-		printf(">\n");
-	else
-		printf(">");
+	if(fin) printf(">\n");
 }
 
+/*
+ * Print the value in binary form, or reformat for pretty-printing.
+ */
 static int
 print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
+	asn1_integer_t *arcs = 0;	/* Object identifier arcs */
+	unsigned char *vbuf = 0;
 	asn1p_expr_type_e etype = 0;
-	long collector = 0;
+	asn1_integer_t collector = 0;
+	int special_format = 0;
 	ssize_t i;
 
 	/* Figure out what type is it */
-	if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
+	if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL
+	&& pretty_printing) {
 		ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
 		etype = ASN_UNIVERSAL_TAG2TYPE(tvalue);
 	}
+
+	/*
+	 * Determine how to print the value, either in its native binary form,
+	 * encoded with &xNN characters, or using pretty-printing.
+	 * The basic string types (including "useful types", like UTCTime)
+	 * are excempt from this determination logic, because their alphabets
+	 * are subsets of the XML's native UTF-8 encoding.
+	 */
+	switch(etype) {
+	case ASN_BASIC_BOOLEAN:
+		if(tlv_len == 1)
+			special_format = 1;
+		else
+			etype = 0;
+		break;
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_ENUMERATED:
+		if((size_t)tlv_len <= sizeof(collector))
+			special_format = 1;
+		else
+			etype = 0;
+		break;
+	case ASN_BASIC_OBJECT_IDENTIFIER:
+	case ASN_BASIC_RELATIVE_OID:
+		if(tlv_len > 0 && tlv_len < 128*1024 /* VERY long OID! */) {
+			arcs = malloc(sizeof(*arcs) * (tlv_len + 1));
+			if(arcs) {
+				vbuf = malloc(tlv_len + 1);
+				/* Not checking is intentional */
+			}
+		}
+	case ASN_BASIC_UTCTime:
+	case ASN_BASIC_GeneralizedTime:
+	case ASN_STRING_NumericString:
+	case ASN_STRING_PrintableString:
+	case ASN_STRING_VisibleString:
+	case ASN_STRING_IA5String:
+	case ASN_STRING_UTF8String:
+		break;	/* Directly compatible with UTF-8 */
+	case ASN_STRING_BMPString:
+	case ASN_STRING_UniversalString:
+		break;	/* Not directly compatible with UTF-8 */
+	default:
+		/* Conditionally compatible with UTF-8 */
+		if((
+			(etype & ASN_STRING_MASK)
+			||
+			(etype == ASN_BASIC_OCTET_STRING)
+		) && (tlv_len > 0 && tlv_len < 128 * 1024)) {
+			vbuf = malloc(tlv_len + 1);
+			/* Not checking is intentional */
+		}
+		break;
+	}
+
+	/* If collection vbuf is present, defer printing the F flag. */
+	if(!vbuf) printf(special_format ? " F>" : ">");
 
 	/*
 	 * Print the value in binary or text form.
@@ -330,6 +442,8 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 		if(ch == -1) {
 			fprintf(stderr,
 			"%s: Unexpected end of file (V)\n", fname);
+			if(vbuf) free(vbuf);
+			if(arcs) free(arcs);
 			return -1;
 		}
 		switch(etype) {
@@ -338,6 +452,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 		case ASN_STRING_NumericString:
 		case ASN_STRING_PrintableString:
 		case ASN_STRING_VisibleString:
+		case ASN_STRING_IA5String:
 		case ASN_STRING_UTF8String:
 			switch(ch) {
 			default:
@@ -354,33 +469,112 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 			}
 			break;
 		case ASN_BASIC_BOOLEAN:
-			if(tlv_len == 1) {
-				switch(ch) {
-				case 0: printf("<false/>"); break;
-				case 0xff: printf("<true/>"); break;
-				default: printf("<true value=\"&x%02x\"/>", ch);
-				}
-				break;
+			switch(ch) {
+			case 0: printf("<false/>"); break;
+			case 0xff: printf("<true/>"); break;
+			default: printf("<true value=\"&x%02x\"/>", ch);
 			}
-			/* Fall through */
+			break;
 		case ASN_BASIC_INTEGER:
 		case ASN_BASIC_ENUMERATED:
-			if((size_t)tlv_len <= sizeof(collector)) {
-				if(i) {
-					collector = collector * 256 + ch;
-				} else {
-					collector = (int)(signed char)ch;
-				}
-				if((i+1) == tlv_len)
-					printf("%ld", collector);
-				break;
-			}
-			/* Fall through */
+			if(i)	collector = collector * 256 + ch;
+			else	collector = (int)(signed char)ch;
+			break;
 		default:
-			printf("&x%02x;", ch);
+			if(vbuf) {
+				vbuf[i] = ch;
+			} else {
+				printf("&x%02x;", ch);
+			}
 		}
 	}
 
+	/* Do post-processing */
+	switch(etype) {
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_ENUMERATED:
+		printf("%" PRIdMAX, collector);
+		break;
+	case ASN_BASIC_OBJECT_IDENTIFIER:
+		if(vbuf) {
+			OBJECT_IDENTIFIER_t oid;
+			int arcno;
+
+			oid.buf = vbuf;
+			oid.size = tlv_len;
+
+			arcno = OBJECT_IDENTIFIER_get_arcs(&oid, arcs,
+				sizeof(*arcs), tlv_len + 1);
+			if(arcno >= 0) {
+				assert(arcno <= (tlv_len + 1));
+				printf(" F>");
+				for(i = 0; i < arcno; i++) {
+					if(i) printf(".");
+					printf("%" PRIuASN, arcs[i]);
+				}
+				free(vbuf);
+				vbuf = 0;
+			}
+		}
+		break;
+	case ASN_BASIC_RELATIVE_OID:
+		if(vbuf) {
+			RELATIVE_OID_t oid;
+			int arcno;
+
+			oid.buf = vbuf;
+			oid.size = tlv_len;
+	
+			arcno = RELATIVE_OID_get_arcs(&oid, arcs,
+				sizeof(*arcs), tlv_len);
+			if(arcno >= 0) {
+				assert(arcno <= (tlv_len + 1));
+				printf(" F>");
+				for(i = 0; i < arcno; i++) {
+					if(i) printf(".");
+					printf("%" PRIuASN, arcs[i]);
+				}
+				free(vbuf);
+				vbuf = 0;
+			}
+		}
+		break;
+	default: break;
+	}
+
+	/*
+	 * If the buffer was not consumed, print it out.
+	 */
+	if(vbuf) {
+		int binary;
+
+		/*
+		 * Check whether the data could be represented as text
+		 */
+		binary = -1 * (tlv_len >> 2); /* Threshold is 25% binary */
+		for(i = 0; i < tlv_len; i++) {
+			switch(vbuf[i]) {
+			case 0x1b: binary = 1; break;
+			case 0x09: case 0x0a: case 0x0d: continue;
+			default:
+				if(vbuf[i] < 0x20 || (vbuf[i] & 0x80))
+					if(++binary > 0)  /* Way too many */
+						break;
+				continue;
+			}
+			break;
+		}
+		printf(">");
+		for(i = 0; i < tlv_len; i++) {
+			if(binary > 0 || vbuf[i] < 0x20 || (vbuf[i] & 0x80))
+				printf("&x%02x;", vbuf[i]);
+			else
+				printf("%c", vbuf[i]);
+		}
+		free(vbuf);
+	}
+
+	if(arcs) free(arcs);
 	return 0;
 }
 
@@ -479,3 +673,9 @@ decode_tlv_from_string(const char *datastring) {
 
 	return 0;
 }
+
+/*
+ * Dummy functions.
+ */
+ber_dec_rval_t ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *opt_ctx, void *ptr, size_t size, int tag_mode, ber_tlv_len_t *last_length, int *opt_tlv_form) { ber_dec_rval_t rv; (void)td; (void)opt_ctx; (void)ptr; (void)size; (void)tag_mode; (void)last_length; (void)opt_tlv_form; return rv; }
+ssize_t der_write_tags(asn1_TYPE_descriptor_t *td, size_t slen, int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) { (void)td; (void)slen; (void)tag_mode; (void)tag; (void)cb; (void)app_key; return -1; }
