@@ -266,7 +266,8 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 static enum xer_pbd_rval
 OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
-	char *endptr;
+	const char *chunk_end = (const char *)chunk_buf + chunk_size;
+	const char *endptr;
 	long s_arcs[10];
 	long *arcs = s_arcs;
 	int arcs_count;
@@ -280,6 +281,11 @@ OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const 
 	if(arcs_count <= 0) {
 		/* Expecting more than zero arcs */
 		return XPBD_BROKEN_ENCODING;
+	}
+	if(endptr < chunk_end) {
+		/* We have a tail of unrecognized data. Check its safety. */
+		if(!xer_is_whitespace(endptr, chunk_end - endptr))
+			return XPBD_BROKEN_ENCODING;
 	}
 
 	if((size_t)arcs_count > sizeof(s_arcs)/sizeof(s_arcs[0])) {
@@ -296,10 +302,9 @@ OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const 
 	 * Convert arcs into BER representation.
 	 */
 	ret = OBJECT_IDENTIFIER_set_arcs(st, arcs, sizeof(*arcs), arcs_count);
-	if(ret) return XPBD_BROKEN_ENCODING;
 	if(arcs != s_arcs) FREEMEM(arcs);
 
-	return XPBD_BODY_CONSUMED;
+	return ret ? XPBD_SYSTEM_FAILURE : XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t
@@ -648,7 +653,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 
 int
 OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
-	long *arcs, unsigned int arcs_slots, char **oid_text_end) {
+	long *arcs, unsigned int arcs_slots, const char **oid_text_end) {
 	unsigned int arcs_count = 0;
 	const char *oid_end;
 	long value = 0;
@@ -659,7 +664,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	} state = ST_SKIPSPACE;
 
 	if(!oid_text || oid_txt_length < -1 || (arcs_slots && !arcs)) {
-		if(oid_text_end) *(const char **)oid_text_end = oid_text;
+		if(oid_text_end) *oid_text_end = oid_text;
 		errno = EINVAL;
 		return -1;
 	}
@@ -711,7 +716,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	} /* for() */
 
 
-	if(oid_text_end) *(const char **)oid_text_end = oid_text;
+	if(oid_text_end) *oid_text_end = oid_text;
 
 	/* Finalize last arc */
 	switch(state) {
