@@ -9,6 +9,8 @@
 typedef struct tag2el_s {
 	struct asn1p_type_tag_s el_tag;
 	int el_no;
+	int toff_first;
+	int toff_last;
 	asn1p_expr_t *from_expr;
 } tag2el_t;
 
@@ -1236,9 +1238,33 @@ _fill_tag2el_map(arg_t *arg, tag2el_t **tag2el, int *count, int el_no) {
 	}
 
 	/*
-	 * Sort the map according to canonical order of their tags.
+	 * Sort the map according to canonical order of their tags
+	 * and element numbers.
 	 */
 	qsort(*tag2el, *count, sizeof(**tag2el), _tag2el_cmp);
+
+	/*
+	 * Initialize .toff_{first|last} members.
+	 */
+	if(*count) {
+		struct asn1p_type_tag_s *cur_tag = 0;
+		tag2el_t *cur = *tag2el;
+		tag2el_t *end = cur + *count;
+		int occur, i;
+		for(occur = 0; cur < end; cur++) {
+			if(cur_tag == 0
+			|| cur_tag->tag_value != cur->el_tag.tag_value
+			|| cur_tag->tag_class != cur->el_tag.tag_class) {
+				cur_tag = &cur->el_tag;
+				occur = 0;
+			} else {
+				occur++;
+			}
+			cur->toff_first = -occur;
+			for(i = 0; i >= -occur; i--)
+				cur[i].toff_last = -i;
+		}
+	}
 
 	return 0;
 }
@@ -1315,7 +1341,9 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
 			OUT("    { ");
 			_print_tag(arg, expr, &tag2el[i].el_tag);
 			OUT(", ");
-			OUT("%d ", tag2el[i].el_no);
+			OUT("%d, ", tag2el[i].el_no);
+			OUT("%d, ", tag2el[i].toff_first);
+			OUT("%d ", tag2el[i].toff_last);
 			OUT("}, /* %s at %d */\n",
 				tag2el[i].from_expr->Identifier,
 				tag2el[i].from_expr->_lineno

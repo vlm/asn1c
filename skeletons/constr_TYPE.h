@@ -89,8 +89,9 @@ typedef struct asn1_TYPE_descriptor_s {
 typedef struct asn1_TYPE_tag2member_s {
 	ber_tlv_tag_t el_tag;	/* Outmost tag of the member */
 	int el_no;		/* Index of the associated member, base 0 */
+	int toff_first;		/* First occurence of the el_tag, relative */
+	int toff_last;		/* Last occurence of the el_tag, relatvie */
 } asn1_TYPE_tag2member_t;
-
 
 
 /*
