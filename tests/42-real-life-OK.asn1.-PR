@@ -81,6 +81,7 @@ static asn1_SET_OF_specifics_t asn1_DEF_varsets_specs = {
 	sizeof(struct varsets),
 	offsetof(struct varsets, _ber_dec_ctx),
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_varsets = {
 	"varsets",
 	SEQUENCE_OF_constraint,
@@ -222,6 +223,7 @@ static asn1_SET_OF_specifics_t asn1_DEF_vparts_specs = {
 	sizeof(struct vparts),
 	offsetof(struct vparts, _ber_dec_ctx),
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_vparts = {
 	"vparts",
 	SEQUENCE_OF_constraint,
@@ -391,6 +393,7 @@ static asn1_SET_OF_specifics_t asn1_DEF_vset_specs = {
 	sizeof(struct vset),
 	offsetof(struct vset, _ber_dec_ctx),
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_vset = {
 	"vset",
 	SET_OF_constraint,
@@ -440,6 +443,7 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_vrange_specs = {
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_vrange = {
 	"vrange",
 	SEQUENCE_constraint,
@@ -574,6 +578,7 @@ static asn1_SET_OF_specifics_t asn1_DEF_email_specs = {
 	sizeof(struct email),
 	offsetof(struct email, _ber_dec_ctx),
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_email = {
 	"email",
 	SET_OF_constraint,
@@ -623,6 +628,7 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_notify_specs = {
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_notify = {
 	"notify",
 	SEQUENCE_constraint,

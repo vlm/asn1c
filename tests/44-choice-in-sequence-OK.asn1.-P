@@ -97,6 +97,7 @@ static asn1_CHOICE_specifics_t asn1_DEF_e_specs = {
 	2,	/* Count of tags in the map */
 	0	/* Whether extensible */
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_e = {
 	"e",
 	CHOICE_constraint,
@@ -143,6 +144,7 @@ static asn1_CHOICE_specifics_t asn1_DEF_h_specs = {
 	2,	/* Count of tags in the map */
 	0	/* Whether extensible */
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_h = {
 	"h",
 	CHOICE_constraint,
@@ -206,6 +208,7 @@ static asn1_CHOICE_specifics_t asn1_DEF_b_specs = {
 	5,	/* Count of tags in the map */
 	0	/* Whether extensible */
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_b = {
 	"b",
 	CHOICE_constraint,

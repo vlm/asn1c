@@ -105,6 +105,7 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_toBeSigned_specs = {
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
+static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_toBeSigned = {
 	"toBeSigned",
 	SEQUENCE_constraint,
