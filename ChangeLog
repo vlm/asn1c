@@ -1,4 +1,8 @@
 
+0.9.6:	2004-Sep-19
+
+	* Added CGI for online ASN.1 compilation (asn1c/webcgi).
+
 0.9.5:	2004-Sep-17
 
 	* Fixed CER (common BER) decoder code. See check-25.c/VisibleString

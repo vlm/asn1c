@@ -5,8 +5,9 @@ SUBDIRS = 				\
 	skeletons examples tests	\
 	doc asn1c
 
-EXTRA_DIST = BUGS MANIFEST
-
 docsdir = $(datadir)/doc/asn1c
 
-docs_DATA = INSTALL README FAQ BUGS TODO
+docs_DATA = README FAQ COPYING ChangeLog BUGS TODO
+
+EXTRA_DIST = asn1c.spec.in FAQ BUGS MANIFEST
+CLEANFILES = asn1c.spec
