@@ -121,6 +121,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 				_format = TNF_CTYPE;
 		}
 		break;
+#if 0
 	case ASN_CONSTR_SEQUENCE_OF:
 	case ASN_CONSTR_SET_OF:
 		if(expr->Identifier) {
@@ -135,6 +136,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			typename = child->Identifier;
 		}
 		break;
+#endif
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 		if((arg->flags & A1C_USE_NATIVE_INTEGERS)) {
@@ -151,7 +153,8 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 		}
 		/* Fall through */
 	default:
-		if(expr->expr_type & (ASN_BASIC_MASK | ASN_STRING_MASK)) {
+		if(expr->expr_type
+		& (ASN_CONSTR_MASK | ASN_BASIC_MASK | ASN_STRING_MASK)) {
 			if(_format == TNF_RSAFE)
 				_format = TNF_CTYPE;
 			typename = ASN_EXPR_TYPE2STR(expr->expr_type);
