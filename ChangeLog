@@ -1,7 +1,10 @@
 
-0.9.6:	2004-Sep-19
+0.9.6:	2004-Sep-22
 
-	* Added CGI for online ASN.1 compilation (asn1c/webcgi).
+	* Implemented BASIC-XER encoding support (X.693).
+	* Implemented CGI for online ASN.1 compilation (asn1c/webcgi).
+	* NamedType is now supported for SET OF/SEQUENCE OF type.
+	* Added ASN1C_ENVIRONMENT_VERSION and get_asn1c_environment_version().
 
 0.9.5:	2004-Sep-17
 
