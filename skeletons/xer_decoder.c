@@ -189,7 +189,6 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 
 	asn_dec_rval_t rval;
 	ssize_t consumed_myself = 0;
-	pxer_chunk_type_e ch_type;	/* XER chunk type */
 	int xer_state;			/* XER low level parsing context */
 
 	(void)opt_codec_ctx;
@@ -201,8 +200,9 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	 */
 	if(ctx->phase > 1) RETURN(RC_FAIL);
 	for(xer_state = ctx->step;;) {
-		ssize_t ch_size;	/* Chunk size */
-		xer_check_tag_e tcv;	/* Tag check value */
+		pxer_chunk_type_e ch_type;	/* XER chunk type */
+		ssize_t ch_size;		/* Chunk size */
+		xer_check_tag_e tcv;		/* Tag check value */
 
 		/*
 		 * Get the next part of the XML stream.
@@ -239,51 +239,49 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 		assert(ch_type == PXER_TAG && size);
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
-		if(ctx->phase == 0) {
+		/*
+		 * Phase 0:
+		 * 	Expecting the opening tag
+		 * 	for the type being processed.
+		 * Phase 1:
+		 * 	Waiting for the closing XML tag.
+		 */
+		switch(tcv) {
+		case XCT_BOTH:
+			if(ctx->phase) break;
+			/* Finished decoding of an empty element */
+			XER_GOT_EMPTY();
+			ADVANCE(ch_size);
+			ctx->phase = 2;	/* Phase out */
+			RETURN(RC_OK);
+		case XCT_OPENING:
+			if(ctx->phase) break;
+			ADVANCE(ch_size);
+			ctx->phase = 1;	/* Processing body phase */
+			continue;
+		case XCT_CLOSING:
+			if(!ctx->phase) break;
+			ADVANCE(ch_size);
+			ctx->phase = 2;	/* Phase out */
+			RETURN(RC_OK);
+		case XCT_UNEXPECTED:
+			if(!ctx->phase) break;
 			/*
-			 * Expecting the opening tag
-			 * for the type being processed.
+			 * Certain tags in the body may be expected.
 			 */
-			switch(tcv) {
-			case XCT_BOTH:
-				/* Finished decoding of an empty element */
-				XER_GOT_EMPTY();
+			if(opt_unexpected_tag_decoder
+			&& opt_unexpected_tag_decoder(struct_key,
+					buf_ptr, ch_size) == 0) {
+				/* Tag's processed fine */
 				ADVANCE(ch_size);
-				ctx->phase = 2;	/* Phase out */
-				RETURN(RC_OK);
-			case XCT_OPENING:
-				ADVANCE(ch_size);
-				ctx->phase = 1;	/* Processing body phase */
 				continue;
-			default:
-				break;		/* Unexpected tag */
 			}
-		} else {
-			/*
-			 * Waiting for the closing XML tag.
-			 */
-			switch(tcv) {
-			case XCT_CLOSING:
-				ADVANCE(ch_size);
-				ctx->phase = 2;	/* Phase out */
-				RETURN(RC_OK);
-			case XCT_UNEXPECTED:
-				/*
-				 * Certain tags in the body may be expected.
-				 */
-				if(opt_unexpected_tag_decoder
-				&& opt_unexpected_tag_decoder(struct_key,
-						buf_ptr, ch_size) == 0) {
-					/* Tag's processed fine */
-					ADVANCE(ch_size);
-					continue;
-				}
-				/* Fall through */
-			default:
-				break;
-			}
-			ASN_DEBUG("Unexpected XML tag");
+			/* Fall through */
+		default:
+			break;		/* Unexpected tag */
 		}
+
+		ASN_DEBUG("Unexpected XML tag");
 		break;	/* Dark and mysterious things have just happened */
 	}
 
