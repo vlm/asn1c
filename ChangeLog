@@ -1,6 +1,7 @@
 
-0.9.7.2:	2004-Oct-12
+0.9.8:	2004-Oct-13
 
+	* -X command line option added to asn1c to generate XML DTD.
 	* Empty SEQUENCE and SET clauses are now allowed.
 
 0.9.7.1:	2004-Oct-12

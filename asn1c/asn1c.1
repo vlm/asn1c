@@ -3,18 +3,19 @@
 asn1c \- ASN.1 Compiler
 .SH SYNOPSIS
 asn1c [\fB\-E\fR [\fB-F\fR] | \fB\-P\fR | \fB\-R\fR]
-      [\fB\-S\fR\fIdir\fR]
+      [\fB\-S\fR\fIdir\fR] [\fB-X\fR]
       [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR...] [\fB\-p\fR\fIrint-\fR...]
       \fIinfile\fR...
 .SH DESCRIPTION
 asn1c compiles the ASN.1 specifications into the set of
-target language (C/C++) encoders and decoders for BER, DER,
+target language (C/C++) encoders and decoders for BER, DER, XER,
 and other encoding standards.
 .SH OPTIONS
 .TP
 \fIOverall Options\fR
 \fB\-E \-F \-P \-R\fR
 .BI "\-S " directory
+\fB\-X
 .TP
 \fIWarning Options\fR
 .br
@@ -50,6 +51,9 @@ omitting the usual support code.
 .TP
 \fB\-S\fR \fIdirectory\fR
 Use the specified directory with ASN.1 skeleton files.
+.TP
+.B \-X
+Generate the XML DTD schema for the specified ASN.1 files.
 .SH WARNING OPTIONS
 .TP
 .B \-Werror

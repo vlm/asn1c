@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{Document describes 
 \backslash 
-href{http://lionet.info/soft/asn1c-0.9.6.tar.gz}{asn1c-0.9.6}}
+href{http://lionet.info/asn1c}{asn1c-0.9.8}}
 \layout Standard
 
 \backslash 
@@ -1341,7 +1341,7 @@ collapsed false
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="21" columns="2">
+<lyxtabular version="3" rows="22" columns="2">
 <features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -1452,7 +1452,7 @@ Restrict the compiler to generate only the ASN.1 tables, omit- ting the usual
 \end_inset 
 </cell>
 </row>
-<row topline="true" bottomline="true">
+<row topline="true">
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -1471,6 +1471,24 @@ Restrict the compiler to generate only the ASN.1 tables, omit- ting the usual
 
 \size small 
 Use the specified directory with ASN.1 skeleton files.
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-X
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Generate the XML DTD for the specified ASN.1 modules.
 \end_inset 
 </cell>
 </row>

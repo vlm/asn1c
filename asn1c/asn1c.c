@@ -70,7 +70,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "EFf:hLPp:RS:vW:")) != -1)
+	while((ch = getopt(ac, av, "EFf:hLPp:RS:vW:X")) != -1)
 	switch(ch) {
 	case 'E':
 		print_arg__print_out = 1;
@@ -145,6 +145,11 @@ main(int ac, char **av) {
 			fprintf(stderr, "-W%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
 		}
+		break;
+	case 'X':
+		print_arg__print_out = 1;	/* Implicit -E */
+		print_arg__fix_n_print = 1;	/* Implicit -F */
+		asn1_printer_flags |= APF_PRINT_XML_DTD;
 		break;
 	default:
 		usage(av[0]);
@@ -299,6 +304,7 @@ usage(const char *av0) {
 "  -R                    Restrict output (tables only, no support code)\n"
 "  -S <dir>              Directory with support (skeleton?) files\n"
 "                        (Default is \"%s\")\n"
+"  -X                    Generate and print the XML DTD\n"
 "\n"
 
 "  -Werror               Treat warnings as errors; abort if any warning\n"
