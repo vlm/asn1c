@@ -66,7 +66,7 @@ memb_signature_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [Certificate] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_toBeSigned[] = {
+static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, version),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -89,24 +89,24 @@ static asn_TYPE_member_t asn_MBR_toBeSigned[] = {
 		.name = "issuer"
 		},
 };
-static ber_tlv_tag_t asn_DEF_toBeSigned_tags[] = {
+static ber_tlv_tag_t asn_DEF_toBeSigned_2_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_toBeSigned_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_toBeSigned_2_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* version at 21 */
     { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* signature at 22 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, 0, 0 } /* issuer at 24 */
 };
-static asn_SEQUENCE_specifics_t asn_DEF_toBeSigned_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_toBeSigned_2_specs = {
 	sizeof(struct toBeSigned),
 	offsetof(struct toBeSigned, _asn_ctx),
-	asn_DEF_toBeSigned_tag2el,
+	asn_MAP_toBeSigned_2_tag2el,
 	3,	/* Count of tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_toBeSigned = {
+asn_TYPE_descriptor_t asn_DEF_toBeSigned_2 = {
 	"toBeSigned",
 	"toBeSigned",
 	SEQUENCE_free,
@@ -117,22 +117,22 @@ asn_TYPE_descriptor_t asn_DEF_toBeSigned = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_toBeSigned_tags,
-	sizeof(asn_DEF_toBeSigned_tags)
-		/sizeof(asn_DEF_toBeSigned_tags[0]), /* 1 */
-	asn_DEF_toBeSigned_tags,	/* Same as above */
-	sizeof(asn_DEF_toBeSigned_tags)
-		/sizeof(asn_DEF_toBeSigned_tags[0]), /* 1 */
-	asn_MBR_toBeSigned,
+	asn_DEF_toBeSigned_2_tags,
+	sizeof(asn_DEF_toBeSigned_2_tags)
+		/sizeof(asn_DEF_toBeSigned_2_tags[0]), /* 1 */
+	asn_DEF_toBeSigned_2_tags,	/* Same as above */
+	sizeof(asn_DEF_toBeSigned_2_tags)
+		/sizeof(asn_DEF_toBeSigned_2_tags[0]), /* 1 */
+	asn_MBR_toBeSigned_2,
 	3,	/* Elements count */
-	&asn_DEF_toBeSigned_specs	/* Additional specs */
+	&asn_SPC_toBeSigned_2_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Certificate[] = {
+static asn_TYPE_member_t asn_MBR_Certificate_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, toBeSigned),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_toBeSigned,
+		.type = (void *)&asn_DEF_toBeSigned_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "toBeSigned"
 		},
@@ -151,18 +151,18 @@ static asn_TYPE_member_t asn_MBR_Certificate[] = {
 		.name = "signature"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Certificate_tags[] = {
+static ber_tlv_tag_t asn_DEF_Certificate_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_Certificate_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Certificate_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 2, 0, 0 }, /* signature at 17 */
     { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* algorithm at 16 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* toBeSigned at 21 */
 };
-static asn_SEQUENCE_specifics_t asn_DEF_Certificate_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_Certificate_1_specs = {
 	sizeof(struct Certificate),
 	offsetof(struct Certificate, _asn_ctx),
-	asn_DEF_Certificate_tag2el,
+	asn_MAP_Certificate_1_tag2el,
 	3,	/* Count of tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -178,15 +178,15 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Certificate_tags,
-	sizeof(asn_DEF_Certificate_tags)
-		/sizeof(asn_DEF_Certificate_tags[0]), /* 1 */
-	asn_DEF_Certificate_tags,	/* Same as above */
-	sizeof(asn_DEF_Certificate_tags)
-		/sizeof(asn_DEF_Certificate_tags[0]), /* 1 */
-	asn_MBR_Certificate,
+	asn_DEF_Certificate_1_tags,
+	sizeof(asn_DEF_Certificate_1_tags)
+		/sizeof(asn_DEF_Certificate_1_tags[0]), /* 1 */
+	asn_DEF_Certificate_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Certificate_1_tags)
+		/sizeof(asn_DEF_Certificate_1_tags[0]), /* 1 */
+	asn_MBR_Certificate_1,
 	3,	/* Elements count */
-	&asn_DEF_Certificate_specs	/* Additional specs */
+	&asn_SPC_Certificate_1_specs	/* Additional specs */
 };
 
 
@@ -212,7 +212,7 @@ typedef struct Name {
 
 /*** <<< STAT-DEFS [Name] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Name[] = {
+static asn_TYPE_member_t asn_MBR_Name_1[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
@@ -221,10 +221,10 @@ static asn_TYPE_member_t asn_MBR_Name[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Name_tags[] = {
+static ber_tlv_tag_t asn_DEF_Name_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_DEF_Name_specs = {
+static asn_SET_OF_specifics_t asn_SPC_Name_1_specs = {
 	sizeof(struct Name),
 	offsetof(struct Name, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -240,15 +240,15 @@ asn_TYPE_descriptor_t asn_DEF_Name = {
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Name_tags,
-	sizeof(asn_DEF_Name_tags)
-		/sizeof(asn_DEF_Name_tags[0]), /* 1 */
-	asn_DEF_Name_tags,	/* Same as above */
-	sizeof(asn_DEF_Name_tags)
-		/sizeof(asn_DEF_Name_tags[0]), /* 1 */
-	asn_MBR_Name,
+	asn_DEF_Name_1_tags,
+	sizeof(asn_DEF_Name_1_tags)
+		/sizeof(asn_DEF_Name_1_tags[0]), /* 1 */
+	asn_DEF_Name_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Name_1_tags)
+		/sizeof(asn_DEF_Name_1_tags[0]), /* 1 */
+	asn_MBR_Name_1,
 	1,	/* Single element */
-	&asn_DEF_Name_specs	/* Additional specs */
+	&asn_SPC_Name_1_specs	/* Additional specs */
 };
 
 
@@ -303,7 +303,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 /*** <<< CODE [RelativeDistinguishedName] >>> ***/
 
 static int
-memb_IA5String_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_IA5String_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
@@ -329,19 +329,19 @@ memb_IA5String_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [RelativeDistinguishedName] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_RelativeDistinguishedName[] = {
+static asn_TYPE_member_t asn_MBR_RelativeDistinguishedName_1[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_IA5String,
-		.memb_constraints = memb_IA5String_2_constraint,
+		.memb_constraints = memb_IA5String_1_constraint,
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_RelativeDistinguishedName_tags[] = {
+static ber_tlv_tag_t asn_DEF_RelativeDistinguishedName_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_DEF_RelativeDistinguishedName_specs = {
+static asn_SET_OF_specifics_t asn_SPC_RelativeDistinguishedName_1_specs = {
 	sizeof(struct RelativeDistinguishedName),
 	offsetof(struct RelativeDistinguishedName, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -357,14 +357,14 @@ asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_RelativeDistinguishedName_tags,
-	sizeof(asn_DEF_RelativeDistinguishedName_tags)
-		/sizeof(asn_DEF_RelativeDistinguishedName_tags[0]), /* 1 */
-	asn_DEF_RelativeDistinguishedName_tags,	/* Same as above */
-	sizeof(asn_DEF_RelativeDistinguishedName_tags)
-		/sizeof(asn_DEF_RelativeDistinguishedName_tags[0]), /* 1 */
-	asn_MBR_RelativeDistinguishedName,
+	asn_DEF_RelativeDistinguishedName_1_tags,
+	sizeof(asn_DEF_RelativeDistinguishedName_1_tags)
+		/sizeof(asn_DEF_RelativeDistinguishedName_1_tags[0]), /* 1 */
+	asn_DEF_RelativeDistinguishedName_1_tags,	/* Same as above */
+	sizeof(asn_DEF_RelativeDistinguishedName_1_tags)
+		/sizeof(asn_DEF_RelativeDistinguishedName_1_tags[0]), /* 1 */
+	asn_MBR_RelativeDistinguishedName_1,
 	1,	/* Single element */
-	&asn_DEF_RelativeDistinguishedName_specs	/* Additional specs */
+	&asn_SPC_RelativeDistinguishedName_1_specs	/* Additional specs */
 };
 

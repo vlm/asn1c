@@ -21,7 +21,7 @@ typedef struct Forest {
 
 /*** <<< STAT-DEFS [Forest] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Forest[] = {
+static asn_TYPE_member_t asn_MBR_Forest_1[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
@@ -30,10 +30,10 @@ static asn_TYPE_member_t asn_MBR_Forest[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Forest_tags[] = {
+static ber_tlv_tag_t asn_DEF_Forest_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_DEF_Forest_specs = {
+static asn_SET_OF_specifics_t asn_SPC_Forest_1_specs = {
 	sizeof(struct Forest),
 	offsetof(struct Forest, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -49,15 +49,15 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Forest_tags,
-	sizeof(asn_DEF_Forest_tags)
-		/sizeof(asn_DEF_Forest_tags[0]), /* 1 */
-	asn_DEF_Forest_tags,	/* Same as above */
-	sizeof(asn_DEF_Forest_tags)
-		/sizeof(asn_DEF_Forest_tags[0]), /* 1 */
-	asn_MBR_Forest,
+	asn_DEF_Forest_1_tags,
+	sizeof(asn_DEF_Forest_1_tags)
+		/sizeof(asn_DEF_Forest_1_tags[0]), /* 1 */
+	asn_DEF_Forest_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Forest_1_tags)
+		/sizeof(asn_DEF_Forest_1_tags[0]), /* 1 */
+	asn_MBR_Forest_1,
 	1,	/* Single element */
-	&asn_DEF_Forest_specs	/* Additional specs */
+	&asn_SPC_Forest_1_specs	/* Additional specs */
 };
 
 
@@ -83,7 +83,7 @@ typedef struct Tree {
 
 /*** <<< STAT-DEFS [Tree] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Tree[] = {
+static asn_TYPE_member_t asn_MBR_Tree_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Tree, height),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -99,17 +99,17 @@ static asn_TYPE_member_t asn_MBR_Tree[] = {
 		.name = "width"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Tree_tags[] = {
+static ber_tlv_tag_t asn_DEF_Tree_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_Tree_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Tree_1_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* height at 17 */
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* width at 19 */
 };
-static asn_SEQUENCE_specifics_t asn_DEF_Tree_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_Tree_1_specs = {
 	sizeof(struct Tree),
 	offsetof(struct Tree, _asn_ctx),
-	asn_DEF_Tree_tag2el,
+	asn_MAP_Tree_1_tag2el,
 	2,	/* Count of tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -125,15 +125,15 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Tree_tags,
-	sizeof(asn_DEF_Tree_tags)
-		/sizeof(asn_DEF_Tree_tags[0]), /* 1 */
-	asn_DEF_Tree_tags,	/* Same as above */
-	sizeof(asn_DEF_Tree_tags)
-		/sizeof(asn_DEF_Tree_tags[0]), /* 1 */
-	asn_MBR_Tree,
+	asn_DEF_Tree_1_tags,
+	sizeof(asn_DEF_Tree_1_tags)
+		/sizeof(asn_DEF_Tree_1_tags[0]), /* 1 */
+	asn_DEF_Tree_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Tree_1_tags)
+		/sizeof(asn_DEF_Tree_1_tags[0]), /* 1 */
+	asn_MBR_Tree_1,
 	2,	/* Elements count */
-	&asn_DEF_Tree_specs	/* Additional specs */
+	&asn_SPC_Tree_1_specs	/* Additional specs */
 };
 
 
@@ -177,7 +177,7 @@ typedef struct Stuff {
 		asn_struct_ctx_t _asn_ctx;
 	} *trees;
 	struct anything {
-		A_SET_OF(struct anything_Member {
+		A_SET_OF(struct Member {
 			BIT_STRING_t	 cup_of_coffee;
 			/*
 			 * This type is extensible,
@@ -216,7 +216,7 @@ typedef struct Stuff {
 
 /*** <<< STAT-DEFS [Stuff] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_trees[] = {
+static asn_TYPE_member_t asn_MBR_trees_2[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
@@ -225,17 +225,17 @@ static asn_TYPE_member_t asn_MBR_trees[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_trees_tags[] = {
+static ber_tlv_tag_t asn_DEF_trees_2_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_DEF_trees_specs = {
+static asn_SET_OF_specifics_t asn_SPC_trees_2_specs = {
 	sizeof(struct trees),
 	offsetof(struct trees, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_trees = {
+asn_TYPE_descriptor_t asn_DEF_trees_2 = {
 	"trees",
 	"trees",
 	SET_OF_free,
@@ -246,19 +246,19 @@ asn_TYPE_descriptor_t asn_DEF_trees = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_trees_tags,
-	sizeof(asn_DEF_trees_tags)
-		/sizeof(asn_DEF_trees_tags[0]) - 1, /* 1 */
-	asn_DEF_trees_tags,	/* Same as above */
-	sizeof(asn_DEF_trees_tags)
-		/sizeof(asn_DEF_trees_tags[0]), /* 2 */
-	asn_MBR_trees,
+	asn_DEF_trees_2_tags,
+	sizeof(asn_DEF_trees_2_tags)
+		/sizeof(asn_DEF_trees_2_tags[0]) - 1, /* 1 */
+	asn_DEF_trees_2_tags,	/* Same as above */
+	sizeof(asn_DEF_trees_2_tags)
+		/sizeof(asn_DEF_trees_2_tags[0]), /* 2 */
+	asn_MBR_trees_2,
 	1,	/* Single element */
-	&asn_DEF_trees_specs	/* Additional specs */
+	&asn_SPC_trees_2_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_anything_Member[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct anything_Member, cup_of_coffee),
+static asn_TYPE_member_t asn_MBR_Member_4[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Member, cup_of_coffee),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_BIT_STRING,
@@ -266,22 +266,22 @@ static asn_TYPE_member_t asn_MBR_anything_Member[] = {
 		.name = "cup-of-coffee"
 		},
 };
-static ber_tlv_tag_t asn_DEF_anything_Member_tags[] = {
+static ber_tlv_tag_t asn_DEF_Member_4_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_anything_Member_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Member_4_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* cup-of-coffee at 32 */
 };
-static asn_SEQUENCE_specifics_t asn_DEF_anything_Member_specs = {
-	sizeof(struct anything_Member),
-	offsetof(struct anything_Member, _asn_ctx),
-	asn_DEF_anything_Member_tag2el,
+static asn_SEQUENCE_specifics_t asn_SPC_Member_4_specs = {
+	sizeof(struct Member),
+	offsetof(struct Member, _asn_ctx),
+	asn_MAP_Member_4_tag2el,
 	1,	/* Count of tags in the map */
 	0,	/* Start extensions */
 	2	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_anything_Member = {
+asn_TYPE_descriptor_t asn_DEF_Member_4 = {
 	"",
 	"",
 	SEQUENCE_free,
@@ -292,37 +292,37 @@ asn_TYPE_descriptor_t asn_DEF_anything_Member = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_anything_Member_tags,
-	sizeof(asn_DEF_anything_Member_tags)
-		/sizeof(asn_DEF_anything_Member_tags[0]), /* 1 */
-	asn_DEF_anything_Member_tags,	/* Same as above */
-	sizeof(asn_DEF_anything_Member_tags)
-		/sizeof(asn_DEF_anything_Member_tags[0]), /* 1 */
-	asn_MBR_anything_Member,
+	asn_DEF_Member_4_tags,
+	sizeof(asn_DEF_Member_4_tags)
+		/sizeof(asn_DEF_Member_4_tags[0]), /* 1 */
+	asn_DEF_Member_4_tags,	/* Same as above */
+	sizeof(asn_DEF_Member_4_tags)
+		/sizeof(asn_DEF_Member_4_tags[0]), /* 1 */
+	asn_MBR_Member_4,
 	1,	/* Elements count */
-	&asn_DEF_anything_Member_specs	/* Additional specs */
+	&asn_SPC_Member_4_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_anything[] = {
+static asn_TYPE_member_t asn_MBR_anything_3[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_anything_Member,
+		.type = (void *)&asn_DEF_Member_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_anything_tags[] = {
+static ber_tlv_tag_t asn_DEF_anything_3_tags[] = {
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_DEF_anything_specs = {
+static asn_SET_OF_specifics_t asn_SPC_anything_3_specs = {
 	sizeof(struct anything),
 	offsetof(struct anything, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_anything = {
+asn_TYPE_descriptor_t asn_DEF_anything_3 = {
 	"anything",
 	"anything",
 	SET_OF_free,
@@ -333,18 +333,18 @@ asn_TYPE_descriptor_t asn_DEF_anything = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_anything_tags,
-	sizeof(asn_DEF_anything_tags)
-		/sizeof(asn_DEF_anything_tags[0]) - 1, /* 1 */
-	asn_DEF_anything_tags,	/* Same as above */
-	sizeof(asn_DEF_anything_tags)
-		/sizeof(asn_DEF_anything_tags[0]), /* 2 */
-	asn_MBR_anything,
+	asn_DEF_anything_3_tags,
+	sizeof(asn_DEF_anything_3_tags)
+		/sizeof(asn_DEF_anything_3_tags[0]) - 1, /* 1 */
+	asn_DEF_anything_3_tags,	/* Same as above */
+	sizeof(asn_DEF_anything_3_tags)
+		/sizeof(asn_DEF_anything_3_tags[0]), /* 2 */
+	asn_MBR_anything_3,
 	1,	/* Single element */
-	&asn_DEF_anything_specs	/* Additional specs */
+	&asn_SPC_anything_3_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_other[] = {
+static asn_TYPE_member_t asn_MBR_other_5[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct other, choice.a),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -360,21 +360,21 @@ static asn_TYPE_member_t asn_MBR_other[] = {
 		.name = "b"
 		},
 };
-static asn_TYPE_tag2member_t asn_DEF_other_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_other_5_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a at 26 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 1, 0, 0 } /* b at 28 */
 };
-static asn_CHOICE_specifics_t asn_DEF_other_specs = {
+static asn_CHOICE_specifics_t asn_SPC_other_5_specs = {
 	sizeof(struct other),
 	offsetof(struct other, _asn_ctx),
 	offsetof(struct other, present),
 	sizeof(((struct other *)0)->present),
-	asn_DEF_other_tag2el,
+	asn_MAP_other_5_tag2el,
 	2,	/* Count of tags in the map */
 	0	/* Whether extensible */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_other = {
+asn_TYPE_descriptor_t asn_DEF_other_5 = {
 	"other",
 	"other",
 	CHOICE_free,
@@ -389,61 +389,61 @@ asn_TYPE_descriptor_t asn_DEF_other = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	asn_MBR_other,
+	asn_MBR_other_5,
 	2,	/* Elements count */
-	&asn_DEF_other_specs	/* Additional specs */
+	&asn_SPC_other_5_specs	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Stuff[] = {
+static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct Stuff, trees),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_trees,
+		.type = (void *)&asn_DEF_trees_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "trees"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Stuff, anything),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_anything,
+		.type = (void *)&asn_DEF_anything_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "anything"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Stuff, other),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_other,
+		.type = (void *)&asn_DEF_other_5,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "other"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Stuff_tags[] = {
+static ber_tlv_tag_t asn_DEF_Stuff_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_DEF_Stuff_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Stuff_1_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* a at 26 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything at 34 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 } /* b at 28 */
 };
-static asn_TYPE_tag2member_t asn_DEF_Stuff_tag2el_cxer[] = {
+static asn_TYPE_tag2member_t asn_MAP_Stuff_1_tag2el_cxer[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything at 34 */
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 } /* a at 26 */
 };
-static uint8_t asn_DEF_Stuff_mmap[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_Stuff_1_mmap[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7) | (0 << 6) | (0 << 5)
 };
-static asn_SET_specifics_t asn_DEF_Stuff_specs = {
+static asn_SET_specifics_t asn_SPC_Stuff_1_specs = {
 	sizeof(struct Stuff),
 	offsetof(struct Stuff, _asn_ctx),
 	offsetof(struct Stuff, _presence_map),
-	asn_DEF_Stuff_tag2el,
+	asn_MAP_Stuff_1_tag2el,
 	4,	/* Count of tags in the map */
-	asn_DEF_Stuff_tag2el_cxer,
+	asn_MAP_Stuff_1_tag2el_cxer,
 	3,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_DEF_Stuff_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_Stuff_1_mmap	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	"Stuff",
@@ -456,14 +456,14 @@ asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Stuff_tags,
-	sizeof(asn_DEF_Stuff_tags)
-		/sizeof(asn_DEF_Stuff_tags[0]), /* 1 */
-	asn_DEF_Stuff_tags,	/* Same as above */
-	sizeof(asn_DEF_Stuff_tags)
-		/sizeof(asn_DEF_Stuff_tags[0]), /* 1 */
-	asn_MBR_Stuff,
+	asn_DEF_Stuff_1_tags,
+	sizeof(asn_DEF_Stuff_1_tags)
+		/sizeof(asn_DEF_Stuff_1_tags[0]), /* 1 */
+	asn_DEF_Stuff_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Stuff_1_tags)
+		/sizeof(asn_DEF_Stuff_1_tags[0]), /* 1 */
+	asn_MBR_Stuff_1,
 	3,	/* Elements count */
-	&asn_DEF_Stuff_specs	/* Additional specs */
+	&asn_SPC_Stuff_1_specs	/* Additional specs */
 };
 
