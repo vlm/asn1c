@@ -10,10 +10,10 @@
 /*
  * OCTET STRING basic type description.
  */
-static ber_tlv_tag_t asn1_DEF_OCTET_STRING_tags[] = {
+static ber_tlv_tag_t asn_DEF_OCTET_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
-asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
+asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	"OCTET STRING",
 	OCTET_STRING_free,
 	OCTET_STRING_print,	/* non-ascii stuff, generally */
@@ -23,12 +23,12 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	0,				/* Not implemented yet */
 	OCTET_STRING_encode_xer,
 	0, /* Use generic outmost tag fetcher */
-	asn1_DEF_OCTET_STRING_tags,
-	sizeof(asn1_DEF_OCTET_STRING_tags)
-	  / sizeof(asn1_DEF_OCTET_STRING_tags[0]),
-	asn1_DEF_OCTET_STRING_tags,	/* Same as above */
-	sizeof(asn1_DEF_OCTET_STRING_tags)
-	  / sizeof(asn1_DEF_OCTET_STRING_tags[0]),
+	asn_DEF_OCTET_STRING_tags,
+	sizeof(asn_DEF_OCTET_STRING_tags)
+	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
+	asn_DEF_OCTET_STRING_tags,	/* Same as above */
+	sizeof(asn_DEF_OCTET_STRING_tags)
+	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -151,11 +151,12 @@ _new_stack() {
  * Decode OCTET STRING type.
  */
 ber_dec_rval_t
-OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
+OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
 	void **os_structure, void *buf_ptr, size_t size, int tag_mode) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*os_structure;
 	ber_dec_rval_t rval;
-	ber_dec_ctx_t *ctx;
+	asn_struct_ctx_t *ctx;
 	ssize_t consumed_myself = 0;
 	struct _stack *stck;	/* A stack structure */
 	struct _stack_el *sel = 0;	/* Stack element */
@@ -181,14 +182,14 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 	}
 
 	/* Restore parsing context */
-	ctx = &st->_ber_dec_ctx;
+	ctx = &st->_asn_ctx;
 
 	switch(ctx->phase) {
 	case 0:
 		/*
 		 * Check tags.
 		 */
-		rval = ber_check_tags(td, ctx,
+		rval = ber_check_tags(opt_codec_ctx, td, ctx,
 			buf_ptr, size, tag_mode, -1,
 			&ctx->left, &tlv_constr);
 		if(rval.code != RC_OK) {
@@ -349,13 +350,19 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 			RETURN(RC_FAIL);
 		}
 
+		tlvl = tl + ll;	/* Combined length of T and L encoding */
+		if((tlv_len + tlvl) < 0) {
+			/* tlv_len value is too big */
+			ASN_DEBUG("TLV encoding + length (%ld) is too big",
+				(long)tlv_len);
+			RETURN(RC_FAIL);
+		}
+
 		/*
 		 * Append a new expectation.
 		 */
 		sel = OS__add_stack_el(stck);
 		if(!sel) RETURN(RC_FAIL);
-
-		tlvl = tl + ll;	/* Combined length of T and L encoding */
 
 		sel->tag = tlv_tag;
 
@@ -480,7 +487,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
  * Encode OCTET STRING type using DER.
  */
 asn_enc_rval_t
-OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
+OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
@@ -552,7 +559,7 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 }
 
 asn_enc_rval_t
-OCTET_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	static const char *h2c = "0123456789ABCDEF";
@@ -617,7 +624,7 @@ OCTET_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 asn_enc_rval_t
-OCTET_STRING_encode_xer_ascii(asn1_TYPE_descriptor_t *td, void *sptr,
+OCTET_STRING_encode_xer_ascii(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
@@ -636,7 +643,7 @@ OCTET_STRING_encode_xer_ascii(asn1_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+OCTET_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	static const char *h2c = "0123456789ABCDEF";
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
@@ -677,7 +684,7 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 int
-OCTET_STRING_print_ascii(asn1_TYPE_descriptor_t *td, const void *sptr,
+OCTET_STRING_print_ascii(asn_TYPE_descriptor_t *td, const void *sptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 
@@ -692,9 +699,9 @@ OCTET_STRING_print_ascii(asn1_TYPE_descriptor_t *td, const void *sptr,
 }
 
 void
-OCTET_STRING_free(asn1_TYPE_descriptor_t *td, void *sptr, int contents_only) {
+OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
-	struct _stack *stck = (struct _stack *)st->_ber_dec_ctx.ptr;
+	struct _stack *stck = (struct _stack *)st->_asn_ctx.ptr;
 
 	if(!td || !st)
 		return;
