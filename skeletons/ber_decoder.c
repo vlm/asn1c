@@ -95,8 +95,29 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		;
 	ASN_DEBUG("ber_check_tags(%s, size=%ld, tm=%d, step=%d, tagno=%d)",
 		td->name, (long)size, tag_mode, ctx->step, tagno);
-	//assert(td->tags_count >= 1); ?May not be the case for CHOICE!
-	assert(tagno < td->tags_count);	/* At least one loop */
+	//assert(td->tags_count >= 1); ?May not be the case for CHOICE or ANY.
+
+	if(tagno == td->tags_count) {
+		/*
+		 * This must be the _untagged_ ANY type,
+		 * which outermost tag isn't known in advance.
+		 * Fetch the tag and length separately.
+		 */
+		tag_len = ber_fetch_tag(ptr, size, &tlv_tag);
+		switch(tag_len) {
+		case -1: RETURN(RC_FAIL);
+		case 0: RETURN(RC_WMORE);
+		}
+		tlv_constr = BER_TLV_CONSTRUCTED(ptr);
+		len_len = ber_fetch_length(tlv_constr,
+			(char *)ptr + tag_len, size - tag_len, &tlv_len);
+		switch(len_len) {
+		case -1: RETURN(RC_FAIL);
+		case 0: RETURN(RC_WMORE);
+		}
+	} else {
+		assert(tagno < td->tags_count);	/* At least one loop */
+	}
 	for((void)tagno; tagno < td->tags_count; tagno++, ctx->step++) {
 
 		/*
