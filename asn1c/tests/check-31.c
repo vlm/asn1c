@@ -101,7 +101,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	tp = memset(&t, 0, sizeof(t));
 
 	fprintf(stderr, "Buf %p\n", buf);
-	rval = ber_decode(&asn1_DEF_Forest, (void **)&tp, buf, size);
+	rval = ber_decode(0, &asn_DEF_Forest, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
 
@@ -131,14 +131,14 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	 * Try to re-create the buffer.
 	 */
 	buf_pos = 0;
-	der_encode(&asn1_DEF_Forest, &t,
+	der_encode(&asn_DEF_Forest, &t,
 		bytes_compare, buf1_reconstr);
 	assert(buf_pos == sizeof(buf1_reconstr));
 
-	asn_fprint(stderr, &asn1_DEF_Forest, &t);
-	xer_fprint(stderr, &asn1_DEF_Forest, &t);
+	asn_fprint(stderr, &asn_DEF_Forest, &t);
+	xer_fprint(stderr, &asn_DEF_Forest, &t);
 
-	asn1_DEF_Forest.free_struct(&asn1_DEF_Forest, &t, 1);
+	asn_DEF_Forest.free_struct(&asn_DEF_Forest, &t, 1);
 }
 
 static void

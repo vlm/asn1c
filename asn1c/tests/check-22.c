@@ -55,7 +55,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	tp = memset(&t, 0, sizeof(t));
 
 	fprintf(stderr, "Buf %p\n", buf);
-	rval = ber_decode(&asn1_DEF_T1, (void **)&tp, buf, size);
+	rval = ber_decode(0, &asn_DEF_T1, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
 
@@ -87,7 +87,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	 * Try to re-create using DER encoding.
 	 */
 	buf2_pos = 0;
-	erval = der_encode(&asn1_DEF_T1, tp, buf2_fill, 0);
+	erval = der_encode(&asn_DEF_T1, tp, buf2_fill, 0);
 	assert(erval.encoded != -1);
 	if(erval.encoded != sizeof(buf1)) {
 		printf("%d != %d\n", (int)erval.encoded, (int)sizeof(buf1));
@@ -106,10 +106,10 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	}
 
 	fprintf(stderr, "=== asn_fprint() ===\n");
-	ret = asn_fprint(stderr, &asn1_DEF_T1, tp);
+	ret = asn_fprint(stderr, &asn_DEF_T1, tp);
 	assert(ret == 0);
 	fprintf(stderr, "=== xer_fprint() ===\n");
-	ret = xer_fprint(stderr, &asn1_DEF_T1, tp);
+	ret = xer_fprint(stderr, &asn_DEF_T1, tp);
 	assert(ret == 0);
 	fprintf(stderr, "=== EOF ===\n");
 }

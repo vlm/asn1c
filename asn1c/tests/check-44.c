@@ -35,7 +35,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	tp = memset(&t, 0, sizeof(t));
 
 	fprintf(stderr, "Buf %p\n", buf);
-	rval = ber_decode(&asn1_DEF_T, (void **)&tp, buf, size);
+	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
 

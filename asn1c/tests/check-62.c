@@ -41,7 +41,7 @@ save_object(T_t *st) {
 
 	buf_offset = 0;
 	
-	rval = der_encode(&asn1_DEF_T, st, _buf_writer, 0);
+	rval = der_encode(&asn_DEF_T, st, _buf_writer, 0);
 	if (rval.encoded == -1) {
 		fprintf(stderr,
 			"Cannot encode %s: %s\n",
@@ -69,13 +69,13 @@ load_object(enum expectation expectation, char *fbuf, int size) {
 		int fbuf_left = size;
 		int fbuf_chunk = csize;
 
-		if(st) asn1_DEF_T.free_struct(&asn1_DEF_T, st, 0);
+		if(st) asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
 		st = 0;
 
 		do {
 			fprintf(stderr, "Decoding from %d with %d (left %d)\n",
 				fbuf_offset, fbuf_chunk, fbuf_left);
-			rval = ber_decode(&asn1_DEF_T, (void **)&st,
+			rval = ber_decode(0, &asn_DEF_T, (void **)&st,
 				fbuf + fbuf_offset,
 					fbuf_chunk < fbuf_left 
 						? fbuf_chunk : fbuf_left);
@@ -92,12 +92,12 @@ load_object(enum expectation expectation, char *fbuf, int size) {
 		} else {
 			assert(rval.code != RC_OK);
 			fprintf(stderr, "Failed, but this was expected\n");
-			asn1_DEF_T.free_struct(&asn1_DEF_T, st, 0);
+			asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
 			st = 0;	/* ignore leak for now */
 		}
 	}
 
-	if(st) asn_fprint(stderr, &asn1_DEF_T, st);
+	if(st) asn_fprint(stderr, &asn_DEF_T, st);
 	return st;
 }
 
@@ -122,7 +122,7 @@ process_data(enum expectation expectation, char *fbuf, int size) {
 		assert(memcmp(buf, fbuf, buf_offset) == 0);
 	}
 
-	asn1_DEF_T.free_struct(&asn1_DEF_T, st, 0);
+	asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
 }
 
 /*
