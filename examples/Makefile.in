@@ -173,7 +173,12 @@ ASN1_FILES_1 = \
 	rfc3280-PKIX1Explicit88.asn1	\
 	rfc3280-PKIX1Implicit88.asn1
 
-EXTRA_DIST = rfc*.txt
+EXTRA_DIST = rfc*.txt				\
+	sample.source.PKIX1/x509dump.c		\
+	sample.source.PKIX1/config.h		\
+	sample.source.PKIX1/Makefile		\
+	sample.source.PKIX1/regenerate.Makefile
+
 CLEANFILES = *.asn1
 all: all-am
 
@@ -244,6 +249,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
+	$(mkdir_p) $(distdir)/sample.source.PKIX1
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
