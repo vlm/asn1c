@@ -719,9 +719,10 @@ types for which this constraint is normally prohibited by the standard.
 This is a violation of an ASN.1 standard and compiler may fail to
 produce the meaningful code.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fnative-integers</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-<FONT SIZE="-1">Use native machine's integer types whenever possible, instead
-of the complex ASN.1 INTEGER and ENUMERATED types. </FONT></TD></TR>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fnative-types</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">Use the native machine's data types (int, double) whenever
+possible, instead of the compound ASN.1 INTEGER_t, ENUMERATED_t
+and REAL_t types. </FONT></TD></TR>
 </TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-funnamed-unions</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Enable  unnamed  unions  in the definitions of target language's
@@ -1225,9 +1226,8 @@ not a definitive factor.
 </DD>
 <DT><A NAME="foot379">... this</A><A
  HREF="asn1c-usage.html#tex2html2"><SUP>2.2</SUP></A></DT>
-<DD><I>-fnative-integers</I> compiler option is used to produce basic
-C <I>int</I> types instead of infinite width INTEGER_t structures.
-See <A HREF=#Table1>Table 1</A>.
+<DD><I>-fnative-types</I> compiler option is used to produce basic C <I>int</I>
+types instead of infinite width INTEGER_t structures. See <A HREF=#Table1>Table 1</A>.
 
 </DD>
 <DT><A NAME="foot151">... binary</A><A
@@ -1270,7 +1270,7 @@ which aren't important for the size determination.
 </DL><BR><HR>
 <ADDRESS>
 Lev Walkin
-2004-09-07
+2004-09-17
 </ADDRESS>
 </BODY>
 </HTML>
