@@ -17,7 +17,7 @@ Where
 	OK	file syntax and semantics are absolutely correct
 	SE	file semantics is wrong
 	NP	file syntax is incorrect, file not parseable
-	<cimpiler-flags>	command-line flags for compiler
+	<compiler-flags>	command-line flags for compiler
 
 Example:
 	07-int-OK.asn1		# Correct ASN.1 file
