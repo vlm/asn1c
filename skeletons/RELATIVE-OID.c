@@ -17,6 +17,7 @@ static ber_tlv_tag_t asn_DEF_RELATIVE_OID_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	"RELATIVE-OID",
+	"RELATIVE_OID",
 	ASN__PRIMITIVE_TYPE_free,
 	RELATIVE_OID_print,
 	asn_generic_no_constraint,

@@ -14,12 +14,13 @@ static asn_OCTET_STRING_specifics_t asn_DEF_ANY_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_ANY = {
 	"ANY",
+	"ANY",
 	OCTET_STRING_free,
 	OCTET_STRING_print,
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
-	0,				/* Not implemented yet */
+	OCTET_STRING_decode_xer_hex,
 	ANY_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
@@ -111,7 +112,7 @@ ANY_new_fromType(asn_TYPE_descriptor_t *td, void *sptr) {
 
 int
 ANY_to_type(ANY_t *st, asn_TYPE_descriptor_t *td, void **struct_ptr) {
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	void *newst = 0;
 
 	if(!st || !td || !struct_ptr) {

@@ -107,7 +107,7 @@ _t2e_cmp(const void *ap, const void *bp) {
 /*
  * The decoder of the SEQUENCE type.
  */
-ber_dec_rval_t
+asn_dec_rval_t
 SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
@@ -123,7 +123,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_struct_ctx_t *ctx;	/* Decoder context */
 
 	ber_tlv_tag_t tlv_tag;	/* T from TLV */
-	ber_dec_rval_t rval;	/* Return code from subparsers */
+	asn_dec_rval_t rval;	/* Return code from subparsers */
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 	int edx;			/* SEQUENCE element's index */

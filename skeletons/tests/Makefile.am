@@ -5,10 +5,12 @@ check_PROGRAMS = \
 	check-length		\
 	check-OIDs		\
 	check-GeneralizedTime	\
+	check-OCTET_STRING	\
 	check-UTF8String	\
 	check-UTCTime		\
 	check-INTEGER		\
-	check-REAL
+	check-REAL		\
+	check-XER
 
 LDADD = -lm
 

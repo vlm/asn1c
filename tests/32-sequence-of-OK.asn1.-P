@@ -40,6 +40,7 @@ static asn_SET_OF_specifics_t asn_DEF_Programming_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_Programming = {
 	"Programming",
+	"Programming",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -101,6 +102,7 @@ static asn_SET_OF_specifics_t asn_DEF_Fault_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_Fault = {
 	"Fault",
+	"Fault",
 	SET_OF_free,
 	SET_OF_print,
 	SET_OF_constraint,
@@ -158,6 +160,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_Error_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_Error = {
+	"Error",
 	"Error",
 	SEQUENCE_free,
 	SEQUENCE_print,

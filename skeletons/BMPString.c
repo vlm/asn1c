@@ -14,13 +14,14 @@ static ber_tlv_tag_t asn_DEF_BMPString_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	"BMPString",
+	"BMPString",
 	OCTET_STRING_free,          /* Implemented in terms of OCTET STRING */
 	BMPString_print,
 	asn_generic_no_constraint,  /* No constraint by default */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
 	0,				/* Not implemented yet */
-	BMPString_encode_xer,		/* Conver to UTF8 */
+	BMPString_encode_xer,		/* Convert to UTF8 */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)

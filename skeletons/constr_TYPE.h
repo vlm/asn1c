@@ -8,8 +8,8 @@
  * This structure even contains pointer to these encoding and decoding routines
  * for each defined ASN.1 type.
  */
-#ifndef	_CONSTR_TYPE_H
-#define	_CONSTR_TYPE_H
+#ifndef	_CONSTR_TYPE_H_
+#define	_CONSTR_TYPE_H_
 
 #include <ber_tlv_length.h>
 #include <ber_tlv_tag.h>
@@ -29,58 +29,11 @@ typedef struct asn_struct_ctx_s {
 	void *ptr;		/* Decoder-specific stuff (stack elements) */
 } asn_struct_ctx_t;
 
-/*
- * This structure defines a context that may be passed to every ASN.1 encoder
- * or decoder function.
- * WARNING: if max_stack_size member is set, and you are calling the
- * function pointers of the asn_TYPE_descriptor_t directly,
- * this structure must be ALLOCATED ON THE STACK!
- */
-typedef struct asn_codec_ctx_s {
-	/*
-	 * Limit the decoder routines to use no (much) more stack than a given
-	 * number of bytes. Most of decoders are stack-based, and this
-	 * would protect against stack overflows if the number of nested
-	 * encodings is high.
-	 * The OCTET STRING, BIT STRING and ANY BER decoders are heap-based,
-	 * and are safe from this kind of overflow.
-	 * A value from getrlimit(RLIMIT_STACK) may be used to initialize
-	 * this variable. Be careful in multithreaded environments, as the
-	 * stack size is rather limited.
-	 */
-	size_t  max_stack_size; /* 0 disables stack bounds checking */
-} asn_codec_ctx_t;
-
-/*
- * Type of the return value of the encoding functions (der_encode, xer_encode).
- */
-typedef struct asn_enc_rval_s {
-	/*
-	 * Number of bytes encoded.
-	 * -1 indicates failure to encode the structure.
-	 * In this case, the members below this one are meaningful.
-	 */
-	ssize_t encoded;
-
-	/*
-	 * Members meaningful when (encoded == -1), for post mortem analysis.
-	 */
-
-	/* Type which cannot be encoded */
-	struct asn_TYPE_descriptor_s *failed_type;
-
-	/* Pointer to the structure of that type */
-	void *structure_ptr;
-} asn_enc_rval_t;
-#define	_ASN_ENCODE_FAILED do {					\
-	asn_enc_rval_t __er = { -1, td, sptr };			\
-	return __er;						\
-} while(0)
-
-#include <ber_decoder.h>
-#include <der_encoder.h>
-#include <xer_encoder.h>
-#include <constraints.h>
+#include <ber_decoder.h>	/* Basic Encoding Rules decoder */
+#include <der_encoder.h>	/* Distinguished Encoding Rules encoder */
+#include <xer_decoder.h>	/* Decoder of XER (XML, text) */
+#include <xer_encoder.h>	/* Encoder into XER (XML, text) */
+#include <constraints.h>	/* Subtype constraints support */
 
 /*
  * Free the structure according to its specification.
@@ -119,7 +72,8 @@ asn_outmost_tag_f asn_TYPE_outmost_tag;
  * The definitive description of the destination language's structure.
  */
 typedef struct asn_TYPE_descriptor_s {
-	char *name;	/* A name of the ASN.1 type */
+	char *name;	/* A name of the ASN.1 type. "" in some cases. */
+	char *xml_tag;	/* Name used in XML tag */
 
 	/*
 	 * Generalized functions for dealing with the specific type.
@@ -128,9 +82,9 @@ typedef struct asn_TYPE_descriptor_s {
 	asn_struct_free_f  *free_struct;	/* Free the structure */
 	asn_struct_print_f *print_struct;	/* Human readable output */
 	asn_constr_check_f *check_constraints;	/* Constraints validator */
-	ber_type_decoder_f *ber_decoder;	/* Free-form BER decoder */
+	ber_type_decoder_f *ber_decoder;	/* Generic BER decoder */
 	der_type_encoder_f *der_encoder;	/* Canonical DER encoder */
-	int (*xer_decoder);/* PLACEHOLDER */ /* Free-form XER decoder */
+	xer_type_decoder_f *xer_decoder;	/* Generic XER decoder */
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
 
 	/***********************************************************************

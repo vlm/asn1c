@@ -944,7 +944,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("\n");
 
 	p = MKID(expr->Identifier);
-	OUT("ber_dec_rval_t\n");
+	OUT("asn_dec_rval_t\n");
 	OUT("%s_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n", p);
 	INDENTED(
 	OUT("\tvoid **structure, void *bufptr, size_t size, int tag_mode) {\n");
@@ -1472,6 +1472,9 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	return 0;
 }
 
+/*
+ * Generate "asn_DEF_XXX" type definition.
+ */
 static int
 emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
 	char *p;
@@ -1481,6 +1484,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		OUT("static /* Use -fall-defs-global to expose */\n");
 	OUT("asn_TYPE_descriptor_t asn_DEF_%s = {\n", p);
 	INDENT(+1);
+		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
 		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
 
 		if(expr->expr_type & ASN_CONSTR_MASK) {

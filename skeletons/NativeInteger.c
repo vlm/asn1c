@@ -22,6 +22,7 @@ static ber_tlv_tag_t asn_DEF_NativeInteger_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	"INTEGER",			/* The ASN.1 type is still INTEGER */
+	"INTEGER",
 	NativeInteger_free,
 	NativeInteger_print,
 	asn_generic_no_constraint,
@@ -41,12 +42,12 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 /*
  * Decode INTEGER type.
  */
-ber_dec_rval_t
+asn_dec_rval_t
 NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **int_ptr, void *buf_ptr, size_t size, int tag_mode) {
 	int *Int = (int *)*int_ptr;
-	ber_dec_rval_t rval;
+	asn_dec_rval_t rval;
 	ber_tlv_len_t length;
 
 	/*

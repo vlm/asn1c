@@ -64,6 +64,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_ConstructedType_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 	"ConstructedType",
+	"ConstructedType",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -144,7 +145,7 @@ T_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 T_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	T_inherit_TYPE_descriptor(td);
@@ -175,6 +176,7 @@ static ber_tlv_tag_t asn_DEF_T_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
 	"T",
 	T_free,
 	T_print,

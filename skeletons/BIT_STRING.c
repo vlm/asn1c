@@ -19,12 +19,13 @@ static asn_OCTET_STRING_specifics_t asn_DEF_BIT_STRING_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	"BIT STRING",
+	"BIT_STRING",
 	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
 	BIT_STRING_print,
 	BIT_STRING_constraint,
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
-	0,				/* Not implemented yet */
+	OCTET_STRING_decode_xer_binary,
 	BIT_STRING_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BIT_STRING_tags,

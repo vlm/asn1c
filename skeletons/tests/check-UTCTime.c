@@ -79,7 +79,7 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr, int tag_mode, ber_
 }
 
 asn_enc_rval_t
-OCTET_STRING_encode_xer_ascii(asn_TYPE_descriptor_t *td, void *ptr, int ilevel, enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb, void *app_key) {
+OCTET_STRING_encode_xer_utf8(asn_TYPE_descriptor_t *td, void *ptr, int ilevel, enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
 
 	(void)td;

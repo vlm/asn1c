@@ -25,6 +25,7 @@ static ber_tlv_tag_t asn_DEF_REAL_tags[] = {
 };
 asn_TYPE_descriptor_t asn_DEF_REAL = {
 	"REAL",
+	"REAL",
 	ASN__PRIMITIVE_TYPE_free,
 	REAL_print,
 	asn_generic_no_constraint,

@@ -65,7 +65,7 @@
 /*
  * The decoder of the SET OF type.
  */
-ber_dec_rval_t
+asn_dec_rval_t
 SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, void *ptr, size_t size, int tag_mode) {
 	/*
@@ -81,7 +81,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_struct_ctx_t *ctx;	/* Decoder context */
 
 	ber_tlv_tag_t tlv_tag;	/* T from TLV */
-	ber_dec_rval_t rval;	/* Return code from subparsers */
+	asn_dec_rval_t rval;	/* Return code from subparsers */
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 
@@ -495,7 +495,8 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_TYPE_member_t *element = td->elements;
 	A_SET_OF(void) *list;
 	const char *mname = specs->as_XMLValueList
-		? 0 : ((*element->name) ? element->name : element->type->name);
+		? 0 : ((*element->name)
+			? element->name : element->type->xml_tag);
 	size_t mlen = mname ? strlen(mname) : 0;
 	int xcan = (flags & XER_F_CANONICAL);
 	xer_tmp_enc_t *encs = 0;

@@ -108,6 +108,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_toBeSigned_specs = {
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_toBeSigned = {
 	"toBeSigned",
+	"toBeSigned",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -167,6 +168,7 @@ static asn_SEQUENCE_specifics_t asn_DEF_Certificate_specs = {
 	-1	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_Certificate = {
+	"Certificate",
 	"Certificate",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -228,6 +230,7 @@ static asn_SET_OF_specifics_t asn_DEF_Name_specs = {
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 asn_TYPE_descriptor_t asn_DEF_Name = {
+	"Name",
 	"Name",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
@@ -344,6 +347,7 @@ static asn_SET_OF_specifics_t asn_DEF_RelativeDistinguishedName_specs = {
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName = {
+	"RelativeDistinguishedName",
 	"RelativeDistinguishedName",
 	SET_OF_free,
 	SET_OF_print,

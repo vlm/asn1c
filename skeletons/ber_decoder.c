@@ -14,7 +14,7 @@
 	} while(0)
 #undef	RETURN
 #define	RETURN(_code)	do {						\
-		ber_dec_rval_t rval;					\
+		asn_dec_rval_t rval;					\
 		rval.code = _code;					\
 		if(opt_ctx) opt_ctx->step = step; /* Save context */	\
 		if(_code == RC_OK || opt_ctx)				\
@@ -27,7 +27,7 @@
 /*
  * The BER decoder of any type.
  */
-ber_dec_rval_t
+asn_dec_rval_t
 ber_decode(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *type_descriptor,
 	void **struct_ptr, void *ptr, size_t size) {
@@ -55,7 +55,7 @@ ber_decode(asn_codec_ctx_t *opt_codec_ctx,
 /*
  * Check the set of <TL<TL<TL...>>> tags matches the definition.
  */
-ber_dec_rval_t
+asn_dec_rval_t
 ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 		asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx,
 		void *ptr, size_t size, int tag_mode, int last_tag_form,

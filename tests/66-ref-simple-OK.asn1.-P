@@ -40,6 +40,7 @@ static asn_SET_OF_specifics_t asn_DEF_T_specs = {
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
+	"T",
 	SET_OF_free,
 	SET_OF_print,
 	SET_OF_constraint,
@@ -128,7 +129,7 @@ SimpleType_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
-ber_dec_rval_t
+asn_dec_rval_t
 SimpleType_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, void *bufptr, size_t size, int tag_mode) {
 	SimpleType_inherit_TYPE_descriptor(td);
@@ -158,6 +159,7 @@ static ber_tlv_tag_t asn_DEF_SimpleType_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_SimpleType = {
+	"SimpleType",
 	"SimpleType",
 	SimpleType_free,
 	SimpleType_print,
