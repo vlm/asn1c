@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * 	All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -89,7 +90,8 @@ RELATIVE_OID_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 static enum xer_pbd_rval
 RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
-	char *endptr;
+	const char *chunk_end = (const char *)chunk_buf + chunk_size;
+	const char *endptr;
 	long s_arcs[6];
 	long *arcs = s_arcs;
 	int arcs_count;
@@ -103,6 +105,11 @@ RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void 
 	if(arcs_count < 0) {
 		/* Expecting at least zero arcs */
 		return XPBD_BROKEN_ENCODING;
+	}
+	if(endptr < chunk_end) {
+		/* We have a tail of unrecognized data. Check its safety. */
+		if(!xer_is_whitespace(endptr, chunk_end - endptr))
+			return XPBD_BROKEN_ENCODING;
 	}
 
 	if((size_t)arcs_count > sizeof(s_arcs)/sizeof(s_arcs[0])) {
@@ -119,10 +126,9 @@ RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void 
 	 * Convert arcs into BER representation.
 	 */
 	ret = RELATIVE_OID_set_arcs(st, arcs, sizeof(*arcs), arcs_count);
-	if(ret) return XPBD_BROKEN_ENCODING;
 	if(arcs != s_arcs) FREEMEM(arcs);
 
-	return XPBD_BODY_CONSUMED;
+	return ret ? XPBD_SYSTEM_FAILURE : XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t

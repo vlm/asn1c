@@ -226,7 +226,7 @@ check_speed() {
 static void check_parse(const char *oid_txt, int retval) {
 	int ret;
 	long l[2];
-	char *p;
+	const char *p;
 
 	ret = OBJECT_IDENTIFIER_parse_arcs(oid_txt, -1, l, 2, &p);
 	printf("[%s] => %d == %d\n", oid_txt, ret, retval);
