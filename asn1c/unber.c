@@ -480,14 +480,14 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 				}
 				/* Fall through */
 			case '<': case '>': case '&':
-				printf("&x%02x;", ch);
+				printf("&#x%02x;", ch);
 			}
 			break;
 		case ASN_BASIC_BOOLEAN:
 			switch(ch) {
 			case 0: printf("<false/>"); break;
 			case 0xff: printf("<true/>"); break;
-			default: printf("<true value=\"&x%02x\"/>", ch);
+			default: printf("<true value=\"&#x%02x\"/>", ch);
 			}
 			break;
 		case ASN_BASIC_INTEGER:
@@ -499,7 +499,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 			if(vbuf) {
 				vbuf[i] = ch;
 			} else {
-				printf("&x%02x;", ch);
+				printf("&#x%02x;", ch);
 			}
 		}
 	}
@@ -582,7 +582,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 		printf(">");
 		for(i = 0; i < tlv_len; i++) {
 			if(binary > 0 || vbuf[i] < 0x20 || (vbuf[i] & 0x80))
-				printf("&x%02x;", vbuf[i]);
+				printf("&#x%02x;", vbuf[i]);
 			else
 				printf("%c", vbuf[i]);
 		}
