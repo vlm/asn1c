@@ -2951,7 +2951,7 @@ write_out(const void *buffer, size_t size, void *app_key) {
 
 
 \size small 
-int main(int ac, char *av) {
+int main(int ac, char **av) {
 \layout LyX-Code
 
 
@@ -3120,7 +3120,7 @@ w
 
 
 \size small 
-            rectangle, write_out, stream);
+            rectangle, write_out, fp);
 \layout LyX-Code
 
 
