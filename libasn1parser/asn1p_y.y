@@ -456,12 +456,13 @@ ModuleSpecificationBody:
 #error	MY_IMPORT DEFINED ELSEWHERE!
 #endif
 #define	MY_IMPORT(foo,field)	do {				\
-		if(TQ_FIRST(&($2->foo))) {			\
+		while(TQ_FIRST(&($2->foo))) {			\
 			TQ_ADD(&($$->foo),			\
 				TQ_REMOVE(&($2->foo), field),	\
 				field);				\
-			assert(TQ_FIRST(&($2->foo)) == 0);	\
-		} } while(0)
+		}						\
+		assert(TQ_FIRST(&($2->foo)) == 0);		\
+	} while(0)
 
 		MY_IMPORT(imports, xp_next);
 		MY_IMPORT(exports, xp_next);
