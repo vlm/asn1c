@@ -1,5 +1,5 @@
 
-ModuleTestParam {iso(-1) org(3) dod(6) internet(1) private(4)
+ModuleTestParam {iso org(3) dod(6) internet(1) private(4)
 	enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
 	19 }
 DEFINITIONS ::=
@@ -8,7 +8,7 @@ BEGIN
 SIGNED{ToBeSigned} ::= SEQUENCE {
     toBeSigned	 ToBeSigned,
     algorithm	 OBJECT IDENTIFIER,
-    signature	 BIT STRING
+    signature	 BIT STRING SIZE(0..256)
 }
 
 Certificate ::= SEQUENCE {
@@ -18,7 +18,7 @@ Certificate ::= SEQUENCE {
         issuer	 Name
     },
     algorithm	 OBJECT IDENTIFIER,
-    signature	 BIT STRING
+    signature	 BIT STRING SIZE(0..256)
 }
 
 Name ::= SEQUENCE OF RelativeDistinguishedName

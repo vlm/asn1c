@@ -30,6 +30,40 @@ typedef struct Certificate {
 	ber_dec_ctx_t _ber_dec_ctx;
 } Certificate_t;
 
+/*** <<< CODE [Certificate] >>> ***/
+
+static int
+memb_signature_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const BIT_STRING_t *st = sptr;
+	size_t size;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(st->size > 0) {
+		/* Size in bits */
+		size = 8 * (st->size - 1) - (st->buf[0] & 0x7);
+	} else {
+		size = 0;
+	}
+	
+	if((size <= 256)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
 /*** <<< STAT-DEFS [Certificate] >>> ***/
 
 static asn1_TYPE_member_t asn1_MBR_toBeSigned[] = {
@@ -108,7 +142,7 @@ static asn1_TYPE_member_t asn1_MBR_Certificate[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_BIT_STRING,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = memb_signature_1_constraint,
 		.name = "signature"
 		},
 };
@@ -116,7 +150,7 @@ static ber_tlv_tag_t asn1_DEF_Certificate_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn1_TYPE_tag2member_t asn1_DEF_Certificate_tag2el[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 2, 0, 0 }, /* signature at 18 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 2, 0, 0 }, /* signature at 17 */
     { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* algorithm at 16 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* toBeSigned at 21 */
 };
@@ -255,7 +289,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 /*** <<< CODE [RelativeDistinguishedName] >>> ***/
 
 static int
-memb_IA5String_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_IA5String_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	const IA5String_t *st = sptr;
 	
@@ -286,7 +320,7 @@ static asn1_TYPE_member_t asn1_MBR_RelativeDistinguishedName[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn1_DEF_IA5String,
-		.memb_constraints = memb_IA5String_1_constraint,
+		.memb_constraints = memb_IA5String_2_constraint,
 		.name = ""
 		},
 };
