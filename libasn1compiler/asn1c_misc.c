@@ -99,9 +99,10 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			 * Resolve it and use instead.
 			 */
 			tmp.expr = asn1f_class_access_ex(arg->asn, arg->mod,
-				arg->expr, expr->reference, &tmp.mod);
+				arg->expr, expr->reference);
 			if(tmp.expr) return NULL;
 
+			tmp.mod = tmp.expr->module;
 			return asn1c_type_name(&tmp, tmp.expr, _format);
 		} else if(_format == TNF_RSAFE) {
 			/*
