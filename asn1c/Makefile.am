@@ -18,6 +18,8 @@ asn1c_LDADD =	\
 
 bin_PROGRAMS = asn1c unber enber
 
+noinst_HEADERS = sys-common.h
+
 dist_man1_MANS = asn1c.1 unber.1 enber.1
 
 check_SCRIPTS = check-parsing.sh
