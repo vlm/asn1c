@@ -55,7 +55,7 @@ status Open
 \layout Standard
 
 \backslash 
-extramarks{$Revision$}{}
+extramarks{$Revision$ -- describes asn1c-0.9.3}{}
 \end_inset 
 
 
