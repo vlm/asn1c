@@ -1,22 +1,95 @@
-.de Id
+.de Vb
+.sp
+.ft CW
+.nf
 ..
-.Id $Id"
+.de Ve
+.ft R
+.fi
+.sp
+..
 .TH UNBER 1 "\*(Dt" "ASN.1 BER Decoder" "ASN.1 BER Decoder"
 .SH NAME
 unber \- ASN.1 BER Decoder
 .SH SYNOPSIS
-unber [\fB\-t\fR\fIdata-string\fR] [\fB-\fR] \fIinfile\fR...
+unber [\fB-1\fR] [\fB-i\fRindent] [\fB-p\fR] [\fB\-t\fR\fIdata-string\fR] [\fB-\fR] \fIinfile\fR...
 .SH DESCRIPTION
-unber takes the BER-encoded files and dumps their internal structure to stdout.
-(The DER and CER formats are both subsets of the BER, and are also supported.)
+unber takes the BER-encoded files and dumps their internal structure as human readable text.
 A single dash represents the standard input.
+.sp
+(The DER and CER formats are both subsets of the BER, and are also supported.)
 .SH OPTIONS
+.TP
+\fB\-1\fR
+Do \fInot\fR attempt to read the next BER structure after the first one.
+This may be useful if the input contains garbage past the single BER sequence.
+By default, unber continues decoding until the end of file (input stream).
+.TP
+\fB\-i\fR \fIindent\fR
+Use the specified number of spaces for output indentation. Default is 4 spaces.
+.TP
+\fB\-p\fR
+Do \fInot\fR attempt pretty-printing of known ASN.1 types (strings, INTEGER, BOOLEAN, etc).
 .TP
 \fB\-t\fR \fIdata-string\fR
 Interpret the data-string as a sequence of hexadecimal values representing
 the start of BER TLV encoding. Print the human readable explanation.
+.SH XML FORMAT
+unber dumps the output in the regular XML format which preserves most of the
+information from the underlying binary encoding.
+.P
+The XML opening tag format is as follows:
+.Vb
+\&    <\fItform\fR T="\fItag\fR" TL="\fItl_len\fR" V="{Indefinite|\fIv_len\fR}" [A="\fItype\fR"] [\fIF\fR]>
+.Ve
+Where:
+.TP
+\fItform\fR
+Which form the value is in: primitive ("P") or constructed ("C") or constructed with indefinite length ("I")
+.TP
+\fItag\fR
+The tag class and value
+.TP
+\fItl_len\fR
+The length of the TL (BER Tag and Length) encoding
+.TP
+\fIv_len\fR
+The length of the value (V, encoded by the L), may be "Indefinite"
+.TP
+\fItype\fR
+Likely name of the underlying ASN.1 type (for UNIVERSAL tags)
+.TP
+[\fIF\fR]
+Indicates that the value was reformatted (pretty-printed)
+.P
+Example:
+.Vb
+\&  <I T="[UNIVERSAL 16]" TL="2" V="Indefinite" A="SEQUENCE">
+\&      <P T="[UNIVERSAL 19]" TL="2" V="2" A="PrintableString">US</P>
+\&      <C T="[UNIVERSAL 16]" TL="2" V="11" A="SEQUENCE">
+\&          <P T="[UNIVERSAL 2]" TL="2" V="4" A="INTEGER" F>832970823</P>
+\&      </C T="[UNIVERSAL 16]" A="SEQUENCE">
+\&  </I T="[UNIVERSAL 16]" A="SEQUENCE">
+.Ve
+.SH EXAMPLES
+Decode the given Tag/Length sequence given in hexadecimal form:
+.Vb
+\&    unber  \fB-t\fR "\fIbf 20\fR"
+.Ve
+Decode the given DER file using two-spaces indentation:
+.Vb
+\&    unber  \fB-i\fR \fI2\fR   \fIfilename.der\fR
+.Ve
+Decode the binary stream taken from the standard input:
+.Vb
+\&    cat \fI...\fR | unber \fB-\fR
+.Ve
+Decode the binary stream into the same stream (see \fIenber\fR\|(1)):
+.Vb
+\&    cat \fI...\fR | unber \fB-\fR | enber \fB-\fR > filename.ber\fI\fR
+.Ve
 .SH SEE ALSO
 .TP
-\&\fIasn1c\fR\|(1)
+\&\fIenber\fR\|(1), \&\fIasn1c\fR\|(1)
 .SH AUTHORS
 Lev Walkin <vlm@lionet.info>

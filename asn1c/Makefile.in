@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-SOURCES = asn1c.c unber.c
+SOURCES = asn1c.c enber.c unber.c
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -37,7 +37,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = @host@
-bin_PROGRAMS = asn1c$(EXEEXT) unber$(EXEEXT)
+bin_PROGRAMS = asn1c$(EXEEXT) unber$(EXEEXT) enber$(EXEEXT)
 subdir = asn1c
 DIST_COMMON = README $(dist_man1_MANS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -57,13 +57,17 @@ asn1c_DEPENDENCIES = $(top_builddir)/libasn1parser/libasn1parser.la \
 	$(top_builddir)/libasn1print/libasn1print.la \
 	$(top_builddir)/libasn1fix/libasn1fix.la \
 	$(top_builddir)/libasn1compiler/libasn1compiler.la
+enber_SOURCES = enber.c
+enber_OBJECTS = enber.$(OBJEXT)
+enber_LDADD = $(LDADD)
 unber_SOURCES = unber.c
 unber_OBJECTS = unber.$(OBJEXT)
 unber_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/asn1c.Po ./$(DEPDIR)/unber.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/asn1c.Po ./$(DEPDIR)/enber.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/unber.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
@@ -72,8 +76,8 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = asn1c.c unber.c
-DIST_SOURCES = asn1c.c unber.c
+SOURCES = asn1c.c enber.c unber.c
+DIST_SOURCES = asn1c.c enber.c unber.c
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -196,7 +200,7 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-SUBDIRS = . tests webcgi
+SUBDIRS = . webcgi tests
 AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS = \
 	-I${top_srcdir}/libasn1compiler	\
@@ -212,7 +216,7 @@ asn1c_LDADD = \
 	$(top_builddir)/libasn1fix/libasn1fix.la	\
 	$(top_builddir)/libasn1compiler/libasn1compiler.la
 
-dist_man1_MANS = asn1c.1 unber.1
+dist_man1_MANS = asn1c.1 unber.1 enber.1
 check_SCRIPTS = check-parsing.sh
 TESTS = check-parsing.sh
 EXTRA_DIST = check-parsing.sh
@@ -281,6 +285,9 @@ clean-binPROGRAMS:
 asn1c$(EXEEXT): $(asn1c_OBJECTS) $(asn1c_DEPENDENCIES) 
 	@rm -f asn1c$(EXEEXT)
 	$(LINK) $(asn1c_LDFLAGS) $(asn1c_OBJECTS) $(asn1c_LDADD) $(LIBS)
+enber$(EXEEXT): $(enber_OBJECTS) $(enber_DEPENDENCIES) 
+	@rm -f enber$(EXEEXT)
+	$(LINK) $(enber_LDFLAGS) $(enber_OBJECTS) $(enber_LDADD) $(LIBS)
 unber$(EXEEXT): $(unber_OBJECTS) $(unber_DEPENDENCIES) 
 	@rm -f unber$(EXEEXT)
 	$(LINK) $(unber_LDFLAGS) $(unber_OBJECTS) $(unber_LDADD) $(LIBS)
@@ -292,6 +299,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1c.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/enber.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unber.Po@am__quote@
 
 .c.o:
