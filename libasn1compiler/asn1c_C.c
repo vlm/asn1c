@@ -1911,7 +1911,7 @@ out_name_chain(arg_t *arg, int check_reserved_keywords) {
 
 		out_name_chain(&tmparg, 0);
 
-		OUT("_");	/* a separator between id components */
+		OUT("__");	/* a separator between id components */
 
 		/* Fall through */
 	}
