@@ -40,7 +40,7 @@ check(int size) {
 	ber_dec_rval_t rval;
 	int i;
 
-	os = OCTET_STRING_new_fromBuf(0, size);
+	os = OCTET_STRING_new_fromBuf(&asn_DEF_OCTET_STRING, 0, size);
 	assert(os);
 	assert(os->size == 0);
 
@@ -69,9 +69,9 @@ check(int size) {
 	}
 
 	if(0) {
-	printf("new(%d):", size);
+	fprintf(stderr, "new(%d):", size);
 	for(i = 0; i < (buf_off<10?buf_off:10); i++)
-		printf(" %02x", buf[i]);
+		fprintf(stderr, " %02x", buf[i]);
 	printf("\n");
 	}
 
@@ -90,7 +90,7 @@ main() {
 	int i;
 
 	for(i = 0; i < 66000; i++) {
-		if(i == 4500) i = 64000;
+		if(i == 4500) i = 64000;	/* Jump */
 		check(i);
 	}
 

@@ -133,14 +133,14 @@ typedef struct asn_TYPE_descriptor_s {
 	int (*xer_decoder);/* PLACEHOLDER */ /* Free-form XER decoder */
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
 
-	/*
-	 * Functions used internally. Should not be used by applications.
-	 */
-	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
+	/***********************************************************************
+	 * Internally useful members. Not to be used by applications directly. *
+	 **********************************************************************/
 
 	/*
 	 * Tags that are expected to occur.
 	 */
+	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
 	ber_tlv_tag_t *tags;	/* Effective tags sequence for this type */
 	int tags_count;		/* Number of tags which are expected */
 	ber_tlv_tag_t *all_tags;/* Every tag for BER/containment */

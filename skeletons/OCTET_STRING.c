@@ -4,6 +4,7 @@
  */
 #include <asn_internal.h>
 #include <OCTET_STRING.h>
+#include <BIT_STRING.h>	/* for .bits_unused member */
 #include <assert.h>
 #include <errno.h>
 
@@ -12,6 +13,11 @@
  */
 static ber_tlv_tag_t asn_DEF_OCTET_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
+};
+static asn_OCTET_STRING_specifics_t asn_DEF_OCTET_STRING_specs = {
+	sizeof(OCTET_STRING_t),
+	offsetof(OCTET_STRING_t, _asn_ctx),
+	0
 };
 asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	"OCTET STRING",
@@ -30,7 +36,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	sizeof(asn_DEF_OCTET_STRING_tags)
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_DEF_OCTET_STRING_specs
 };
 
 #undef	_CH_PHASE
@@ -148,12 +154,7 @@ OS__add_stack_el(struct _stack *st) {
 
 static struct _stack *
 _new_stack() {
-	struct _stack *st;
-	(void *)st = CALLOC(1, sizeof(struct _stack));
-	if(st == NULL)
-		return NULL;
-
-	return st;
+	return (struct _stack *)CALLOC(1, sizeof(struct _stack));
 }
 
 /*
@@ -163,31 +164,34 @@ ber_dec_rval_t
 OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **os_structure, void *buf_ptr, size_t size, int tag_mode) {
-	OCTET_STRING_t *st = (OCTET_STRING_t *)*os_structure;
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? td->specifics : &asn_DEF_OCTET_STRING_specs;
+	BIT_STRING_t *st = (BIT_STRING_t *)*os_structure;
 	ber_dec_rval_t rval;
 	asn_struct_ctx_t *ctx;
 	ssize_t consumed_myself = 0;
-	struct _stack *stck;	/* A stack structure */
+	struct _stack *stck;		/* Expectations stack structure */
 	struct _stack_el *sel = 0;	/* Stack element */
 	int tlv_constr;
-	OS_type_e type_type = (OS_type_e)(int)td->specifics;
+	OS_type_e type_variant = (OS_type_e)specs->subvariant;
 
 	ASN_DEBUG("Decoding %s as %s (frame %ld)",
 		td->name,
-		(type_type == _TT_GENERIC) ? "OCTET STRING" : "OS-SpecialCase",
+		(type_variant == _TT_GENERIC) ?
+			"OCTET STRING" : "OS-SpecialCase",
 		(long)size);
 
 	/*
 	 * Create the string if does not exist.
 	 */
 	if(st == NULL) {
-		(void *)st = *os_structure = CALLOC(1, sizeof(*st));
+		(void *)st = *os_structure = CALLOC(1, specs->struct_size);
 		if(st == NULL)
 			RETURN(RC_FAIL);
 	}
 
 	/* Restore parsing context */
-	ctx = &st->_asn_ctx;
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 
 	switch(ctx->phase) {
 	case 0:
@@ -207,10 +211,6 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 			ctx->ptr = _new_stack();
 			if(ctx->ptr) {
 				(void *)stck = ctx->ptr;
-				if(type_type == _TT_BIT_STRING) {
-					/* Number of meaningless tail bits */
-					APPEND("\0", 1);
-				}
 			} else {
 				RETURN(RC_FAIL);
 			}
@@ -219,7 +219,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 			 * Jump into stackless primitive decoding.
 			 */
 			_CH_PHASE(ctx, 3);
-			if(type_type == _TT_ANY && tag_mode != 1)
+			if(type_variant == _TT_ANY && tag_mode != 1)
 				APPEND(buf_ptr, rval.consumed);
 			ADVANCE(rval.consumed);
 			goto phase3;
@@ -296,7 +296,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 
 			ASN_DEBUG("Eat EOC; wn=%d--", sel->want_nulls);
 
-			if(type_type == _TT_ANY
+			if(type_variant == _TT_ANY
 			&& (tag_mode != 1 || sel->cont_level))
 				APPEND("\0\0", 2);
 
@@ -320,7 +320,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		 * Set up expected tags,
 		 * depending on ASN.1 type being decoded.
 		 */
-		switch(type_type) {
+		switch(type_variant) {
 		case _TT_BIT_STRING:
 			/* X.690: 8.6.4.1, NOTE 2 */
 			/* Fall through */
@@ -384,7 +384,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		} else {
 			sel->left = tlv_len;
 		}
-		if(type_type == _TT_ANY
+		if(type_variant == _TT_ANY
 		&& (tag_mode != 1 || sel->cont_level))
 			APPEND(buf_ptr, tlvl);
 		sel->got += tlvl;
@@ -417,16 +417,11 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		len = ((ber_tlv_len_t)size < sel->left)
 				? (ber_tlv_len_t)size : sel->left;
 		if(len > 0) {
-			if(type_type == _TT_BIT_STRING
+			if(type_variant == _TT_BIT_STRING
 			&& sel->bits_chopped == 0) {
-				/*
-				 * Finalize the previous chunk:
-				 * strip down unused bits.
-				 */
-				st->buf[st->size-1] &= 0xff << st->buf[0];
-
+				/* Put the unused-bits-octet away */
+				st->bits_unused = *(uint8_t *)buf_ptr;
 				APPEND(((char *)buf_ptr+1), (len - 1));
-				st->buf[0] = *(uint8_t *)buf_ptr;
 				sel->bits_chopped = 1;
 			} else {
 				APPEND(buf_ptr, len);
@@ -451,12 +446,27 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		/*
 		 * Primitive form, no stack required.
 		 */
+		assert(ctx->left >= 0);
+
 		if(size < (size_t)ctx->left) {
+			if(!size) RETURN(RC_WMORE);
+			if(type_variant == _TT_BIT_STRING && ctx->step == 0) {
+				st->bits_unused = *(uint8_t *)buf_ptr;
+				ctx->left--;
+				ADVANCE(1);
+			}
 			APPEND(buf_ptr, size);
+			assert(ctx->step);
 			ctx->left -= size;
 			ADVANCE(size);
 			RETURN(RC_WMORE);
 		} else {
+			if(type_variant == _TT_BIT_STRING
+			&& ctx->step == 0 && ctx->left) {
+				st->bits_unused = *(uint8_t *)buf_ptr;
+				ctx->left--;
+				ADVANCE(1);
+			}
 			APPEND(buf_ptr, ctx->left);
 			ADVANCE(ctx->left);
 			ctx->left = 0;
@@ -478,14 +488,15 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * BIT STRING-specific processing.
 	 */
-	if(type_type == _TT_BIT_STRING && st->size >= 2) {
+	if(type_variant == _TT_BIT_STRING && st->size) {
 		/* Finalize BIT STRING: zero out unused bits. */
-		st->buf[st->size-1] &= 0xff << st->buf[0];
+		st->buf[st->size-1] &= 0xff << st->bits_unused;
 	}
 
 	ASN_DEBUG("Took %d bytes to encode %s: [%s]:%d",
 		consumed_myself, td->name,
-		(type_type == _TT_GENERIC) ? (char *)st->buf : "", st->size);
+		(type_variant == _TT_GENERIC) ? (char *)st->buf : "<data>",
+		st->size);
 
 
 	RETURN(RC_OK);
@@ -495,79 +506,65 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
  * Encode OCTET STRING type using DER.
  */
 asn_enc_rval_t
-OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
+OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t erval;
-	OCTET_STRING_t *st = (OCTET_STRING_t *)ptr;
-	int add_byte = 0;
-	OS_type_e type_type = (OS_type_e)(int)td->specifics;
+	asn_enc_rval_t er;
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? td->specifics : &asn_DEF_OCTET_STRING_specs;
+	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
+	OS_type_e type_variant = (OS_type_e)specs->subvariant;
+	int fix_last_byte = 0;
 
 	ASN_DEBUG("%s %s as OCTET STRING",
 		cb?"Estimating":"Encoding", td->name);
 
 	/*
-	 * Canonicalize BIT STRING.
+	 * Write tags.
 	 */
-	if(type_type == _TT_BIT_STRING) {
-		switch(st->size) {
-		case 0: add_byte = 1; break;
-		case 1: st->buf[0] = 0; break;
-		default:
-			/* Finalize BIT STRING: zero out unused bits. */
-			st->buf[st->size-1] &= 0xff << st->buf[0];
+	if(type_variant != _TT_ANY || tag_mode == 1) {
+		er.encoded = der_write_tags(td,
+				(type_variant == _TT_BIT_STRING) + st->size,
+			tag_mode, type_variant == _TT_ANY, tag, cb, app_key);
+		if(er.encoded == -1) {
+			er.failed_type = td;
+			er.structure_ptr = sptr;
+			return er;
 		}
+	} else {
+		/* Disallow: [<tag>] IMPLICIT ANY */
+		assert(type_variant != _TT_ANY || tag_mode != -1);
+		er.encoded = 0;
+	}
+
+	if(!cb) {
+		er.encoded += (type_variant == _TT_BIT_STRING) + st->size;
+		return er;
 	}
 
 	/*
-	 * Write tags.
+	 * Prepare to deal with the last octet of BIT STRING.
 	 */
-	if(type_type != _TT_ANY || tag_mode == 1) {
-		erval.encoded = der_write_tags(td, st->size + add_byte,
-			tag_mode, type_type == _TT_ANY, tag, cb, app_key);
-		if(erval.encoded == -1) {
-			erval.failed_type = td;
-			erval.structure_ptr = ptr;
-			return erval;
-		}
-	} else {
-		/* Disallow: [...] IMPLICIT ANY */
-		assert(type_type != _TT_ANY || tag_mode != -1);
-		erval.encoded = 0;
+	if(type_variant == _TT_BIT_STRING) {
+		uint8_t b = st->bits_unused & 0x07;
+		if(b && st->size) fix_last_byte = 1;
+		_ASN_CALLBACK(&b, 1);
+		er.encoded++;
 	}
 
-	if(cb) {
-		uint8_t zero;
-		uint8_t *buf;
-		int size;
+	/* Invoke callback for the main part of the buffer */
+	_ASN_CALLBACK(st->buf, st->size - fix_last_byte);
 
-		/* BIT STRING-aware handling */
-		if(add_byte) {
-			zero = 0;
-			buf = &zero;
-			size = 1;
-		} else if(st->buf) {
-			buf = st->buf;
-			size = st->size;
-		} else {
-			assert(st->size == 0);
-			buf = 0;	/* Not used */
-			size = 0;
-		}
-
-		if(size) {
-			if(cb(buf, size, app_key) < 0) {
-				erval.encoded = -1;
-				erval.failed_type = td;
-				erval.structure_ptr = ptr;
-				return erval;
-			}
-		}
+	/* The last octet should be stripped off the unused bits */
+	if(fix_last_byte) {
+		uint8_t b = st->buf[st->size-1] & (0xff << st->bits_unused);
+		_ASN_CALLBACK(&b, 1);
 	}
 
-	erval.encoded += st->size + add_byte;
-
-	return erval;
+	er.encoded += st->size;
+	return er;
+cb_failed:
+	_ASN_ENCODE_FAILED;
 }
 
 asn_enc_rval_t
@@ -790,7 +787,11 @@ OCTET_STRING_print_ascii(asn_TYPE_descriptor_t *td, const void *sptr,
 void
 OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
-	struct _stack *stck = (struct _stack *)st->_asn_ctx.ptr;
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? td->specifics : &asn_DEF_OCTET_STRING_specs;
+	asn_struct_ctx_t *ctx = (asn_struct_ctx_t *)
+					((char *)st + specs->ctx_offset);
+	struct _stack *stck = ctx->ptr;
 
 	if(!td || !st)
 		return;
@@ -860,10 +861,12 @@ OCTET_STRING_fromBuf(OCTET_STRING_t *st, const char *str, int len) {
 }
 
 OCTET_STRING_t *
-OCTET_STRING_new_fromBuf(const char *str, int len) {
+OCTET_STRING_new_fromBuf(asn_TYPE_descriptor_t *td, const char *str, int len) {
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? td->specifics : &asn_DEF_OCTET_STRING_specs;
 	OCTET_STRING_t *st;
 
-	(void *)st = CALLOC(1, sizeof(*st));
+	st = (OCTET_STRING_t *)CALLOC(1, specs->struct_size);
 	if(st && str && OCTET_STRING_fromBuf(st, str, len)) {
 		free(st);
 		st = NULL;

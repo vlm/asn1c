@@ -5,7 +5,7 @@
 #ifndef ASN_TYPE_ANY_H
 #define ASN_TYPE_ANY_H
 
-#include <OCTET_STRING.h>	/* Implemented via OCTET SRING type */
+#include <OCTET_STRING.h>	/* Implemented via OCTET STRING type */
 
 typedef struct ANY {
 	uint8_t *buf;	/* BER-encoded ANY contents */

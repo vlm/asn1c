@@ -15,6 +15,7 @@
 	* Fixed CHOICE code spin when indefinite length structures appear
 	  in the extensions (Severity: medium, Security impact: medium).
 	  Reported by <siden@ul-gsm.ru>.
+	* BIT STRING now stores the number of unused octets in a separate field.
 
 0.9.6:	2004-Sep-29
 
