@@ -15,6 +15,7 @@ extern asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER;
 asn_struct_print_f OBJECT_IDENTIFIER_print;
 asn_constr_check_f OBJECT_IDENTIFIER_constraint;
 der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
+xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
 
 /**********************************
@@ -22,21 +23,8 @@ xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
  **********************************/
 
 /*
- * Print the specified OBJECT IDENTIFIER arc.
- */
-int OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen,
-	int add, /* Arbitrary offset, required to process the first two arcs */
-	asn_app_consume_bytes_f *cb, void *app_key);
-
-/* Same as above, but returns the number of written digits, instead of 0 */
-ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
-	asn_app_consume_bytes_f *cb, void *app_key);
-
-/*
  * This function fills an (_arcs) array with OBJECT IDENTIFIER arcs
  * up to specified (_arc_slots) elements.
- * The function always returns the real number of arcs, even if there is no
- * sufficient (_arc_slots) provided.
  * 
  * EXAMPLE:
  * 	void print_arcs(OBJECT_IDENTIFIER_t *oid) {
@@ -71,6 +59,9 @@ ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
  * -1/EINVAL:	Invalid arguments (oid is missing)
  * -1/ERANGE:	One or more arcs have value out of array cell type range.
  * >=0:		Number of arcs contained in the OBJECT IDENTIFIER
+ * 
+ * WARNING: The function always returns the real number of arcs,
+ * even if there is no sufficient (_arc_slots) provided.
  */
 int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
 	void *_arcs,			/* i.e., unsigned int arcs[N] */
@@ -91,6 +82,40 @@ int OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *_oid,
 	void *_arcs,			/* i.e., unsigned int arcs[N] */
 	unsigned int _arc_type_size,	/* i.e., sizeof(arcs[0]) */
 	unsigned int _arc_slots		/* i.e., N */);
+
+/*
+ * Print the specified OBJECT IDENTIFIER arc.
+ */
+int OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen,
+	int add, /* Arbitrary offset, required to process the first two arcs */
+	asn_app_consume_bytes_f *cb, void *app_key);
+
+/* Same as above, but returns the number of written digits, instead of 0 */
+ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
+	asn_app_consume_bytes_f *cb, void *app_key);
+
+/*
+ * Parse the OBJECT IDENTIFIER textual representation ("1.3.6.1.4.1.9363").
+ * No arc can exceed the (0..signed_long_max) range (typically, 0..2G if L32).
+ * This function is not specific to OBJECT IDENTIFIER, it may be used to parse
+ * the RELATIVE-OID data, or any other data consisting of dot-separated
+ * series of numeric values.
+ *
+ * If (oid_txt_length == -1), the strlen() will be invoked to determine the
+ * size of the (oid_text) string.
+ * 
+ * After return, the optional (oid_text_end) is set to the character after
+ * the last parsed one. (oid_text_end) is never less than (oid_text).
+ * 
+ * RETURN VALUES:
+ *   -1:	Parse error.
+ * >= 0:	Number of arcs contained in the OBJECT IDENTIFIER.
+ * 
+ * WARNING: The function always returns the real number of arcs,
+ * even if there is no sufficient (_arc_slots) provided.
+ */
+int OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
+	long arcs[], unsigned int arcs_slots, char **oid_text_end);
 
 /*
  * Internal functions.

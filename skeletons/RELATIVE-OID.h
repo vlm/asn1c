@@ -13,6 +13,7 @@ typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t;
 extern asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID;
 
 asn_struct_print_f RELATIVE_OID_print;
+xer_type_decoder_f RELATIVE_OID_decode_xer;
 xer_type_encoder_f RELATIVE_OID_encode_xer;
 
 /**********************************
