@@ -2,17 +2,20 @@
  * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <ANY.h>
 #include <assert.h>
 #include <errno.h>
 
 asn1_TYPE_descriptor_t asn1_DEF_ANY = {
 	"ANY",
+	OCTET_STRING_free,
+	OCTET_STRING_print,
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
-	OCTET_STRING_print,
-	OCTET_STRING_free,
+	0,				/* Not implemented yet */
+	ANY_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
 	-1,	/* Both ways are fine (primitive and constructed) */
@@ -20,6 +23,23 @@ asn1_TYPE_descriptor_t asn1_DEF_ANY = {
 	(void *)1	/* Special indicator that this is an ANY type */
 };
 
+
+asn_enc_rval_t
+ANY_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+
+	(void)ilevel;
+	(void)flags;
+	(void)cb;
+	(void)app_key;
+
+	/*
+	 * XER-encoding of ANY type is not supported.
+	 */
+
+	_ASN_ENCODE_FAILED;
+}
 
 struct _callback_arg {
 	uint8_t *buffer;
@@ -32,7 +52,7 @@ static int ANY__consume_bytes(const void *buffer, size_t size, void *key);
 int
 ANY_fromType(ANY_t *st, asn1_TYPE_descriptor_t *td, void *sptr) {
 	struct _callback_arg arg;
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 
 	if(!st || !td) {
 		errno = EINVAL;
@@ -53,7 +73,7 @@ ANY_fromType(ANY_t *st, asn1_TYPE_descriptor_t *td, void *sptr) {
 		if(arg.buffer) FREEMEM(arg.buffer);
 		return -1;
 	}
-	assert(erval.encoded == arg.offset);
+	assert((size_t)erval.encoded == arg.offset);
 
 	if(st->buf) FREEMEM(st->buf);
 	st->buf = arg.buffer;

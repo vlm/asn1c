@@ -2,6 +2,7 @@
  * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <BOOLEAN.h>
 
 /*
@@ -12,11 +13,13 @@ static ber_tlv_tag_t asn1_DEF_BOOLEAN_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_BOOLEAN = {
 	"BOOLEAN",
+	BOOLEAN_free,
+	BOOLEAN_print,
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,
 	BOOLEAN_encode_der,
-	BOOLEAN_print,
-	BOOLEAN_free,
+	0,				/* Not implemented yet */
+	BOOLEAN_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_BOOLEAN_tags,
 	sizeof(asn1_DEF_BOOLEAN_tags) / sizeof(asn1_DEF_BOOLEAN_tags[0]),
@@ -93,11 +96,11 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 	return rval;
 }
 
-der_enc_rval_t
+asn_enc_rval_t
 BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
 
 	erval.encoded = der_write_tags(td, 1, tag_mode, tag, cb, app_key);
@@ -124,6 +127,29 @@ BOOLEAN_encode_der(asn1_TYPE_descriptor_t *td, void *sptr,
 	erval.encoded += 1;
 
 	return erval;
+}
+
+asn_enc_rval_t
+BOOLEAN_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+	asn_enc_rval_t er;
+
+	(void)ilevel;
+	(void)flags;
+
+	if(!st) _ASN_ENCODE_FAILED;
+
+	if(*st) {
+		_ASN_CALLBACK("<true/>", 7);
+		er.encoded = 7;
+	} else {
+		_ASN_CALLBACK("<false/>", 8);
+		er.encoded = 8;
+	}
+
+	return er;
 }
 
 int

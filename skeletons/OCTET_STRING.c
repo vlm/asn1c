@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <OCTET_STRING.h>
 #include <assert.h>
 #include <errno.h>
@@ -14,11 +15,13 @@ static ber_tlv_tag_t asn1_DEF_OCTET_STRING_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	"OCTET STRING",
+	OCTET_STRING_free,
+	OCTET_STRING_print,	/* non-ascii stuff, generally */
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
-	OCTET_STRING_print,	/* non-ascii stuff, generally */
-	OCTET_STRING_free,
+	0,				/* Not implemented yet */
+	OCTET_STRING_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_OCTET_STRING_tags,
 	sizeof(asn1_DEF_OCTET_STRING_tags)
@@ -440,11 +443,11 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 /*
  * Encode OCTET STRING type using DER.
  */
-der_enc_rval_t
+asn_enc_rval_t
 OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	OCTET_STRING_t *st = (OCTET_STRING_t *)ptr;
 	int add_byte = 0;
 	int is_bit_str = (td->specifics == (void *)-1);
@@ -514,6 +517,84 @@ OCTET_STRING_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+asn_enc_rval_t
+OCTET_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	static const char *h2c = "0123456789ABCDEF";
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	asn_enc_rval_t er;
+	char scratch[16 * 3 + 4];
+	char *p = scratch;
+	uint8_t *buf;
+	uint8_t *end;
+	size_t i;
+
+	if(!st || !st->buf) {
+		er.encoded = -1;
+		er.failed_type = td;
+		er.structure_ptr = sptr;
+		return er;
+	}
+
+	er.encoded = 0;
+
+	/*
+	 * Dump the contents of the buffer in hexadecimal.
+	 */
+	buf = st->buf;
+	end = buf + st->size;
+	if(flags & XER_F_CANONICAL) {
+		char *scend = scratch + (sizeof(scratch) - 2);
+		for(; buf < end; buf++) {
+			if(p >= scend) {
+				_ASN_CALLBACK(scratch, p - scratch);
+				er.encoded += p - scratch;
+				p = scratch;
+			}
+			*p++ = h2c[(*buf >> 4) & 0x0F];
+			*p++ = h2c[*buf & 0x0F];
+		}
+	} else {
+		for(i = 0; buf < end; buf++, i++) {
+			if(!(i % 16) && (i || st->size > 16)) {
+				_ASN_CALLBACK(scratch, p-scratch);
+				er.encoded += (p-scratch);
+				p = scratch;
+				_i_ASN_TEXT_INDENT(1, ilevel);
+			}
+			*p++ = h2c[(*buf >> 4) & 0x0F];
+			*p++ = h2c[*buf & 0x0F];
+			*p++ = 0x20;
+		}
+		if(i) p--;	/* Remove the tail space */
+	}
+
+	_ASN_CALLBACK(scratch, p-scratch);	/* Dump the rest */
+	er.encoded += p - scratch;
+
+	return er;
+}
+
+asn_enc_rval_t
+OCTET_STRING_encode_xer_ascii(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	asn_enc_rval_t er;
+
+	(void)ilevel;	/* Unused argument */
+	(void)flags;	/* Unused argument */
+
+	if(!st || !st->buf)
+		_ASN_ENCODE_FAILED;
+
+	_ASN_CALLBACK(st->buf, st->size);
+	er.encoded = st->size;
+
+	return er;
+}
+
 int
 OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
@@ -524,7 +605,7 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	uint8_t *buf;
 	uint8_t *end;
 	size_t i;
-	int ret;
+	int lvl;
 
 	(void)td;	/* Unused argument */
 
@@ -540,14 +621,15 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 			if(cb(scratch, p - scratch, app_key)
 			|| cb("\n", 1, app_key))
 				return -1;
-			for(ret = 0; ret < ilevel; ret++)
+			for(lvl = 0; lvl < ilevel; lvl++)
 				cb(" ", 1, app_key);
 			p = scratch;
 		}
 		*p++ = h2c[(*buf >> 4) & 0x0F];
 		*p++ = h2c[*buf & 0x0F];
-		*p++ = ' ';
+		*p++ = 0x20;
 	}
+	if(i) p--;	/* Remove the tail space */
 
 	return cb(scratch, p - scratch, app_key);
 }

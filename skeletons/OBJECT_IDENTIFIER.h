@@ -12,9 +12,10 @@ typedef INTEGER_t OBJECT_IDENTIFIER_t; /* Implemented in terms of INTEGER */
 
 extern asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER;
 
-der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
-asn_constr_check_f OBJECT_IDENTIFIER_constraint;
 asn_struct_print_f OBJECT_IDENTIFIER_print;
+asn_constr_check_f OBJECT_IDENTIFIER_constraint;
+der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
+xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
 
 /**********************************
  * Some handy conversion routines *
@@ -25,6 +26,10 @@ asn_struct_print_f OBJECT_IDENTIFIER_print;
  */
 int OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen,
 	int add, /* Arbitrary offset, required to process the first two arcs */
+	asn_app_consume_bytes_f *cb, void *app_key);
+
+/* Same as above, but returns the number of written digits, instead of 0 */
+ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
 	asn_app_consume_bytes_f *cb, void *app_key);
 
 /*

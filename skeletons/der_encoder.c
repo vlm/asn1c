@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <constr_TYPE.h>
 #include <assert.h>
 #include <errno.h>
@@ -12,7 +13,7 @@ static ssize_t der_write_TL(ber_tlv_tag_t tag, ber_tlv_len_t len,
 /*
  * The DER encoder of any type.
  */
-der_enc_rval_t
+asn_enc_rval_t
 der_encode(asn1_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
 	asn_app_consume_bytes_f *consume_bytes, void *app_key) {
 

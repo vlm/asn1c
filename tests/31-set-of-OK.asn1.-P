@@ -36,14 +36,17 @@ static ber_tlv_tag_t asn1_DEF_Forest_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_Forest_specs = {
 	sizeof(struct Forest),
 	offsetof(struct Forest, _ber_dec_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
 };
 asn1_TYPE_descriptor_t asn1_DEF_Forest = {
 	"Forest",
+	SET_OF_free,
+	SET_OF_print,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	SET_OF_print,
-	SET_OF_free,
+	0,				/* Not implemented yet */
+	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Forest_tags,
 	sizeof(asn1_DEF_Forest_tags)
@@ -113,11 +116,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_Tree_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_Tree = {
 	"Tree",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Tree_tags,
 	sizeof(asn1_DEF_Tree_tags)
@@ -205,15 +210,18 @@ static ber_tlv_tag_t asn1_DEF_trees_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_trees_specs = {
 	sizeof(struct trees),
 	offsetof(struct trees, _ber_dec_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_trees = {
 	"trees",
+	SET_OF_free,
+	SET_OF_print,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	SET_OF_print,
-	SET_OF_free,
+	0,				/* Not implemented yet */
+	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_trees_tags,
 	sizeof(asn1_DEF_trees_tags)
@@ -253,11 +261,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_anything_member_specs = {
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_anything_member = {
 	"",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_anything_member_tags,
 	sizeof(asn1_DEF_anything_member_tags)
@@ -287,15 +297,18 @@ static ber_tlv_tag_t asn1_DEF_anything_tags[] = {
 static asn1_SET_OF_specifics_t asn1_DEF_anything_specs = {
 	sizeof(struct anything),
 	offsetof(struct anything, _ber_dec_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
 asn1_TYPE_descriptor_t asn1_DEF_anything = {
 	"anything",
+	SET_OF_free,
+	SET_OF_print,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
-	SET_OF_print,
-	SET_OF_free,
+	0,				/* Not implemented yet */
+	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_anything_tags,
 	sizeof(asn1_DEF_anything_tags)
@@ -346,11 +359,13 @@ static asn1_SET_specifics_t asn1_DEF_Stuff_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_Stuff = {
 	"Stuff",
+	SET_free,
+	SET_print,
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
-	SET_print,
-	SET_free,
+	0,				/* Not implemented yet */
+	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_Stuff_tags,
 	sizeof(asn1_DEF_Stuff_tags)

@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <asn_types.h>	/* for MALLOC/REALLOC/FREEMEM */
 #include <asn_SEQUENCE_OF.h>
 

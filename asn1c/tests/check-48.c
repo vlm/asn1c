@@ -29,7 +29,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 
 static int
 save_object(void *bs, asn1_TYPE_descriptor_t *td) {
-	der_enc_rval_t rval; /* Return value */
+	asn_enc_rval_t rval; /* Return value */
 	int i;
 	
 	rval = der_encode(td, bs, _buf_writer, 0);
@@ -44,6 +44,7 @@ save_object(void *bs, asn1_TYPE_descriptor_t *td) {
 	buf[buf_offset++] = 123;	/* Finalize with garbage */
 
 	asn_fprint(stderr, td, bs);
+	xer_fprint(stderr, td, bs);
 
 	printf("OUT: [");
 	for(i = 0; i < buf_offset; i++)
@@ -63,6 +64,7 @@ load_object(void *bs, asn1_TYPE_descriptor_t *td) {
 	assert(rval.code == RC_OK);
 
 	asn_fprint(stderr, td, bs);
+	xer_fprint(stderr, td, bs);
 
 	return (rval.code == RC_OK)?0:-1;
 }

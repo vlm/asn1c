@@ -31,11 +31,12 @@ typedef struct asn1_CHOICE_specifics_s {
 /*
  * A set specialized functions dealing with the CHOICE type.
  */
+asn_struct_free_f CHOICE_free;
+asn_struct_print_f CHOICE_print;
 asn_constr_check_f CHOICE_constraint;
 ber_type_decoder_f CHOICE_decode_ber;
 der_type_encoder_f CHOICE_encode_der;
+xer_type_encoder_f CHOICE_encode_xer;
 asn_outmost_tag_f CHOICE_outmost_tag;
-asn_struct_print_f CHOICE_print;
-asn_struct_free_f CHOICE_free;
 
 #endif	/* _CONSTR_CHOICE_H_ */

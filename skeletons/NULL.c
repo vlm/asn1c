@@ -2,6 +2,7 @@
  * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <NULL.h>
 #include <BOOLEAN.h>	/* Implemented in terms of BOOLEAN type */
 
@@ -13,11 +14,13 @@ static ber_tlv_tag_t asn1_DEF_NULL_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_NULL = {
 	"NULL",
+	BOOLEAN_free,
+	NULL_print,
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,	/* Implemented in terms of BOOLEAN */
 	NULL_encode_der,	/* Special handling of DER encoding */
-	NULL_print,
-	BOOLEAN_free,
+	0,				/* Not implemented yet */
+	NULL_encode_xer,	/* Special handling of DER encoding */
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_NULL_tags,
 	sizeof(asn1_DEF_NULL_tags) / sizeof(asn1_DEF_NULL_tags[0]),
@@ -28,19 +31,38 @@ asn1_TYPE_descriptor_t asn1_DEF_NULL = {
 	0	/* No specifics */
 };
 
-der_enc_rval_t
-NULL_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
+asn_enc_rval_t
+NULL_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 
-	erval.encoded = der_write_tags(sd, 0, tag_mode, tag, cb, app_key);
+	erval.encoded = der_write_tags(td, 0, tag_mode, tag, cb, app_key);
 	if(erval.encoded == -1) {
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 	}
 
 	return erval;
+}
+
+asn_enc_rval_t
+NULL_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t er;
+
+	(void)td;
+	(void)sptr;
+	(void)ilevel;
+	(void)flags;
+	(void)cb;
+	(void)app_key;
+
+	/* XMLNullValue is empty */
+	er.encoded = 0;
+
+	return er;
 }
 
 int

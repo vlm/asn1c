@@ -9,6 +9,7 @@
  * implementation deals with the standard (machine-specific) representation
  * of them instead of using the platform-independent buffer.
  */
+#include <asn_internal.h>
 #include <NativeReal.h>
 #include <INTEGER.h>
 #include <REAL.h>
@@ -22,11 +23,13 @@ static ber_tlv_tag_t asn1_DEF_NativeReal_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_NativeReal = {
 	"REAL",			/* The ASN.1 type is still REAL */
+	NativeReal_free,
+	NativeReal_print,
 	asn_generic_no_constraint,
 	NativeReal_decode_ber,
 	NativeReal_encode_der,
-	NativeReal_print,
-	NativeReal_free,
+	0,				/* Not implemented yet */
+	NativeReal_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_NativeReal_tags,
 	sizeof(asn1_DEF_NativeReal_tags) / sizeof(asn1_DEF_NativeReal_tags[0]),
@@ -116,12 +119,12 @@ NativeReal_decode_ber(asn1_TYPE_descriptor_t *td,
 /*
  * Encode the NativeReal using the standard REAL type DER encoder.
  */
-der_enc_rval_t
+asn_enc_rval_t
 NativeReal_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	double Dbl = *(const double *)ptr;
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	REAL_t tmp;
 
 	if(asn1_double2REAL(&tmp, Dbl)) {
@@ -140,6 +143,25 @@ NativeReal_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+
+asn_enc_rval_t
+NativeReal_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	const double *Dbl = (const double *)sptr;
+	asn_enc_rval_t er;
+	double d;
+
+	(void)ilevel;
+
+	if(!Dbl) _ASN_ENCODE_FAILED;
+
+	er.encoded = REAL__dump(d, flags & XER_F_CANONICAL, cb, app_key);
+	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+
+	return er;
+}
+
 /*
  * REAL specific human-readable output.
  */
@@ -147,32 +169,13 @@ int
 NativeReal_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const double *Dbl = (const double *)sptr;
-	char scratch[64];
-	int ret;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
-	if(Dbl) {
-		char *p = scratch;
-		int buf_size = sizeof(scratch);
-	    for(;;) {
-		ret = snprintf(p, buf_size, "%f", *Dbl);
-		if(ret >= 0 && ret < buf_size) {
-			ret = cb(p, ret, app_key);
-			if(p != scratch) free(p);
-			return ret;
-		} else {
-			if(p != scratch) free(p);
-		}
-		if(ret < 0) buf_size <<= 2;	/* Old libc. */
-		else buf_size = ret + 1;
-		(void *)p = MALLOC(ret);
-		if(!p) return -1;
-	    }
-	} else {
-		return cb("<absent>", 8, app_key);
-	}
+	if(!Dbl) return cb("<absent>", 8, app_key);
+
+	return (REAL__dump(*Dbl, 0, cb, app_key) < 0) ? -1 : 0;
 }
 
 void

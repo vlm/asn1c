@@ -64,11 +64,13 @@ static asn1_SET_specifics_t asn1_DEF_T1_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	"T1",
+	SET_free,
+	SET_print,
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
-	SET_print,
-	SET_free,
+	0,				/* Not implemented yet */
+	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T1_tags,
 	sizeof(asn1_DEF_T1_tags)
@@ -148,11 +150,13 @@ static asn1_SET_specifics_t asn1_DEF_T2_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	"T2",
+	SET_free,
+	SET_print,
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
-	SET_print,
-	SET_free,
+	0,				/* Not implemented yet */
+	SET_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T2_tags,
 	sizeof(asn1_DEF_T2_tags)
@@ -223,11 +227,13 @@ static asn1_CHOICE_specifics_t asn1_DEF_T3_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T3 = {
 	"T3",
+	CHOICE_free,
+	CHOICE_print,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	CHOICE_print,
-	CHOICE_free,
+	0,				/* Not implemented yet */
+	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -296,11 +302,13 @@ static asn1_CHOICE_specifics_t asn1_DEF_T4_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T4 = {
 	"T4",
+	CHOICE_free,
+	CHOICE_print,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
-	CHOICE_print,
-	CHOICE_free,
+	0,				/* Not implemented yet */
+	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

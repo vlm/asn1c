@@ -14,10 +14,11 @@ typedef struct INTEGER {
 
 extern asn1_TYPE_descriptor_t asn1_DEF_INTEGER;
 
+asn_struct_free_f INTEGER_free;
+asn_struct_print_f INTEGER_print;
 ber_type_decoder_f INTEGER_decode_ber;
 der_type_encoder_f INTEGER_encode_der;
-asn_struct_print_f INTEGER_print;
-asn_struct_free_f INTEGER_free;
+xer_type_encoder_f INTEGER_encode_xer;
 
 /***********************************
  * Some handy conversion routines. *

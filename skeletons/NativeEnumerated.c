@@ -9,6 +9,7 @@
  * implementation deals with the standard (machine-specific) representation
  * of them instead of using the platform-independent buffer.
  */
+#include <asn_internal.h>
 #include <NativeEnumerated.h>
 
 /*
@@ -19,11 +20,13 @@ static ber_tlv_tag_t asn1_DEF_NativeEnumerated_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_NativeEnumerated = {
 	"ENUMERATED",			/* The ASN.1 type is still ENUMERATED */
+	NativeInteger_free,
+	NativeInteger_print,
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
-	NativeInteger_print,
-	NativeInteger_free,
+	0,				/* Not implemented yet */
+	NativeInteger_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_NativeEnumerated_tags,
 	sizeof(asn1_DEF_NativeEnumerated_tags) / sizeof(asn1_DEF_NativeEnumerated_tags[0]),

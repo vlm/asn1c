@@ -44,6 +44,7 @@ constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h
 
 COMMON-FILES:	# This is a special section
 asn_types.h
+asn_internal.h
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
 ber_decoder.h ber_decoder.c
 ber_tlv_length.h ber_tlv_length.c
@@ -51,3 +52,4 @@ ber_tlv_tag.h ber_tlv_tag.c
 constr_TYPE.h constr_TYPE.c
 constraints.h constraints.c
 der_encoder.h der_encoder.c
+xer_encoder.h xer_encoder.c

@@ -2,6 +2,7 @@
  * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <REAL.h>
 #include <INTEGER.h>
 #include <stdlib.h>	/* for strtod(3) */
@@ -29,11 +30,13 @@ static ber_tlv_tag_t asn1_DEF_REAL_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_REAL = {
 	"REAL",
+	INTEGER_free,
+	REAL_print,
 	asn_generic_no_constraint,
 	INTEGER_decode_ber,	/* Implemented in terms of INTEGER type */
 	INTEGER_encode_der,
-	REAL_print,
-	INTEGER_free,
+	0,				/* Not implemented yet */
+	REAL_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_REAL_tags,
 	sizeof(asn1_DEF_REAL_tags) / sizeof(asn1_DEF_REAL_tags[0]),
@@ -44,33 +47,113 @@ asn1_TYPE_descriptor_t asn1_DEF_REAL = {
 	0	/* No specifics */
 };
 
+ssize_t
+REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) {
+	char local_buf[32];
+	char *buf = local_buf;
+	ssize_t buflen = sizeof(local_buf);
+	const char *fmt = canonical?"%15E":"f";
+	ssize_t ret;
+
+	do {
+		ret = snprintf(buf, buflen, fmt, d);
+		if(ret < 0) {
+			buflen <<= 1;
+		} else if(ret >= buflen) {
+			buflen = ret + 1;
+		} else {
+			buflen = ret;
+			break;
+		}
+		if(buf != local_buf) free(buf);
+		(void *)buf = MALLOC(buflen);
+		if(!buf) return -1;
+	} while(1);
+
+	/*
+	 * Transform the "[-]d.dddE+-dd" output into "[-]d.dddE[-]d"
+	 */
+	if(canonical) {
+		char *dot, *E;
+		char *end = buf + buflen;
+
+		dot = (buf[0] == '-') ? (buf + 2) : (buf + 1);
+		if(*dot >= 0x30) {
+			errno = EINVAL;
+			return -1;	/* Not a dot, really */
+		}
+		*dot = '.';		/* Replace possible comma */
+
+		for(E = dot; dot < end; E++) {
+			if(*E == 'E') {
+				char *s = ++E;
+				if(*E == '+') {
+					/* Skip the "+" too */
+					buflen -= 2;
+				} else {
+					buflen -= 1;
+					s++;
+				}
+				E += 2;
+				if(E[-1] != '0' || E > end) {
+					errno = EINVAL;
+					return -1;
+				}
+				for(; E <= end; s++, E++)
+					*s = *E;
+			}
+		}
+		if(E == end) {
+			errno = EINVAL;
+			return -1;		/* No promised E */
+		}
+	}
+
+	ret = cb(buf, buflen, app_key);
+	if(buf != local_buf) free(buf);
+	return (ret < 0) ? -1 : buflen;
+}
+
 int
 REAL_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	const REAL_t *st = (const REAL_t *)sptr;
-	char buf[128];
 	double d;
-	int ret;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
-	if(!st)
+	if(!st || !st->buf)
 		return cb("<absent>", 8, app_key);
 
 	if(asn1_REAL2double(st, &d))
 		return cb("<error>", 7, app_key);
 
-	ret = snprintf(buf, sizeof(buf), "%f", d);
-	if(ret < 0 || ret >= sizeof(buf))
-		return cb("<error>", 7, app_key);
+	return (REAL__dump(d, 0, cb, app_key) < 0) ? -1 : 0;
+}
 
-	return cb(buf, ret, app_key);
+asn_enc_rval_t
+REAL_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	REAL_t *st = (REAL_t *)sptr;
+	asn_enc_rval_t er;
+	double d;
+
+	(void)ilevel;
+
+	if(!st || !st->buf || asn1_REAL2double(st, &d))
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = REAL__dump(d, flags & XER_F_CANONICAL, cb, app_key);
+	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+
+	return er;
 }
 
 int
 asn1_REAL2double(const REAL_t *st, double *dbl_value) {
-	unsigned long octv;
+	unsigned int octv;
 
 	if(!st || !st->buf) {
 		errno = EINVAL;
@@ -158,7 +241,7 @@ asn1_REAL2double(const REAL_t *st, double *dbl_value) {
 	sign = (octv & 0x40);	/* bit 7 */
 	scaleF = (octv & 0x0C) >> 2;	/* bits 4 to 3 */
 
-	if(st->size <= (1 + (octv & 0x03))) {
+	if(st->size <= (int)(1 + (octv & 0x03))) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -166,7 +249,7 @@ asn1_REAL2double(const REAL_t *st, double *dbl_value) {
 	if((octv & 0x03) == 0x11) {
 		/* 8.5.6.4, case d) */
 		elen = st->buf[1];	/* unsigned binary number */
-		if(elen == 0 || st->size <= (2 + elen)) {
+		if(elen == 0 || st->size <= (int)(2 + elen)) {
 			errno = EINVAL;
 			return -1;
 		}

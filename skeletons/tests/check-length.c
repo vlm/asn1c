@@ -36,7 +36,7 @@ static void
 check(int size) {
 	OCTET_STRING_t *os;
 	OCTET_STRING_t *nos = 0;
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	ber_dec_rval_t rval;
 	int i;
 

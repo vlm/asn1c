@@ -12,9 +12,10 @@ typedef OCTET_STRING_t GeneralizedTime_t;  /* Implemented using OCTET STRING */
 
 extern asn1_TYPE_descriptor_t asn1_DEF_GeneralizedTime;
 
+asn_struct_print_f GeneralizedTime_print;
 asn_constr_check_f GeneralizedTime_constraint;
 der_type_encoder_f GeneralizedTime_encode_der;
-asn_struct_print_f GeneralizedTime_print;
+xer_type_encoder_f GeneralizedTime_encode_xer;
 
 /***********************
  * Some handy helpers. *

@@ -10,32 +10,9 @@
 struct asn1_TYPE_descriptor_s;	/* Forward declaration */
 
 /*
- * Type of the return value of the der_encode function.
- */
-typedef struct der_enc_rval_s {
-	/*
-	 * Number of bytes encoded.
-	 * -1 indicates failure to encode the structure.
-	 * In this case, the members below this one are meaningful.
-	 */
-	ssize_t encoded;
-
-	/*
-	 * Members meaningful when (encoded == -1), for post-mortem analysis.
-	 */
-
-	/* Type which cannot be encoded */
-	struct asn1_TYPE_descriptor_s *failed_type;
-
-	/* Pointer to the structure of that type */
-	void *structure_ptr;
-} der_enc_rval_t;
-
-
-/*
  * The DER encoder of any type. May be invoked by the application.
  */
-der_enc_rval_t der_encode(struct asn1_TYPE_descriptor_s *type_descriptor,
+asn_enc_rval_t der_encode(struct asn1_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr,	/* Structure to be encoded */
 		asn_app_consume_bytes_f *consume_bytes_cb,
 		void *app_key		/* Arbitrary callback argument */
@@ -44,7 +21,7 @@ der_enc_rval_t der_encode(struct asn1_TYPE_descriptor_s *type_descriptor,
 /*
  * Type of the generic DER encoder.
  */
-typedef der_enc_rval_t (der_type_encoder_f)(
+typedef asn_enc_rval_t (der_type_encoder_f)(
 		struct asn1_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr,	/* Structure to be encoded */
 		int tag_mode,		/* {-1,0,1}: IMPLICIT, no, EXPLICIT */

@@ -9,6 +9,7 @@
  * implementation deals with the standard (machine-specific) representation
  * of them instead of using the platform-independent buffer.
  */
+#include <asn_internal.h>
 #include <NativeInteger.h>
 #include <INTEGER.h>
 #include <assert.h>
@@ -21,11 +22,13 @@ static ber_tlv_tag_t asn1_DEF_NativeInteger_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_NativeInteger = {
 	"INTEGER",			/* The ASN.1 type is still INTEGER */
+	NativeInteger_free,
+	NativeInteger_print,
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
-	NativeInteger_print,
-	NativeInteger_free,
+	0,				/* Not implemented yet */
+	NativeInteger_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_NativeInteger_tags,
 	sizeof(asn1_DEF_NativeInteger_tags) / sizeof(asn1_DEF_NativeInteger_tags[0]),
@@ -127,17 +130,17 @@ NativeInteger_decode_ber(asn1_TYPE_descriptor_t *td,
 /*
  * Encode the NativeInteger using the standard INTEGER type DER encoder.
  */
-der_enc_rval_t
+asn_enc_rval_t
 NativeInteger_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	unsigned int Int = *(unsigned int *)ptr;	/* Disable sign ext. */
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	INTEGER_t tmp;
 
 #ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
 
-	tmp.buf = &Int;
+	tmp.buf = (uint8_t *)&Int;
 	tmp.size = sizeof(Int);
 
 #else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
@@ -159,6 +162,27 @@ NativeInteger_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		erval.structure_ptr = ptr;
 	}
 	return erval;
+}
+
+asn_enc_rval_t
+NativeInteger_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	char scratch[32];	/* Enough for 64-bit int */
+	asn_enc_rval_t er;
+	const int *Int = (const int *)sptr;
+
+	(void)ilevel;
+	(void)flags;
+
+	if(!Int) _ASN_ENCODE_FAILED;
+
+	er.encoded = snprintf(scratch, sizeof(scratch), "%d", *Int);
+	if(er.encoded <= 0 || (size_t)er.encoded >= sizeof(scratch)
+		|| cb(scratch, er.encoded, app_key) < 0)
+		_ASN_ENCODE_FAILED;
+
+	return er;
 }
 
 /*

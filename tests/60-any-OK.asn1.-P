@@ -54,11 +54,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_T1_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T1 = {
 	"T1",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T1_tags,
 	sizeof(asn1_DEF_T1_tags)
@@ -129,11 +131,13 @@ static asn1_SEQUENCE_specifics_t asn1_DEF_T2_specs = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_T2 = {
 	"T2",
+	SEQUENCE_free,
+	SEQUENCE_print,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
-	SEQUENCE_print,
-	SEQUENCE_free,
+	0,				/* Not implemented yet */
+	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
 	asn1_DEF_T2_tags,
 	sizeof(asn1_DEF_T2_tags)

@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <OBJECT_IDENTIFIER.h>
 #include <limits.h>	/* for CHAR_BIT */
 #include <assert.h>
@@ -15,11 +16,13 @@ static ber_tlv_tag_t asn1_DEF_OBJECT_IDENTIFIER_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
 	"OBJECT IDENTIFIER",
+	INTEGER_free,
+	OBJECT_IDENTIFIER_print,
 	OBJECT_IDENTIFIER_constraint,
 	INTEGER_decode_ber,	/* Implemented in terms of INTEGER type */
 	OBJECT_IDENTIFIER_encode_der,
-	OBJECT_IDENTIFIER_print,
-	INTEGER_free,
+	0,				/* Not implemented yet */
+	OBJECT_IDENTIFIER_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn1_DEF_OBJECT_IDENTIFIER_tags)
@@ -36,11 +39,11 @@ asn1_TYPE_descriptor_t asn1_DEF_OBJECT_IDENTIFIER = {
 /*
  * Encode OBJECT IDENTIFIER type using DER.
  */
-der_enc_rval_t
+asn_enc_rval_t
 OBJECT_IDENTIFIER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	der_enc_rval_t erval;
+	asn_enc_rval_t erval;
 	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)ptr;
 
 	ASN_DEBUG("%s %s as OBJECT IDENTIFIER (tm=%d)",
@@ -57,10 +60,8 @@ OBJECT_IDENTIFIER_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	}
 
 	if(cb && st->buf) {
-		ssize_t ret;
-
-		ret = cb(st->buf, st->size, app_key);
-		if(ret == -1) {
+		int ret = cb(st->buf, st->size, app_key);
+		if(ret < 0) {
 			erval.encoded = -1;
 			erval.failed_type = sd;
 			erval.structure_ptr = ptr;
@@ -215,9 +216,8 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 	return 0;
 }
 
-
-int
-OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
+ssize_t
+OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	char scratch[64];	/* Conservative estimate */
 	unsigned long accum;	/* Bits accumulator */
@@ -228,35 +228,41 @@ OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
 		return -1;
 
 	if(accum) {
+		ssize_t len;
+
 		/* Fill the scratch buffer in reverse. */
 		p = scratch + sizeof(scratch);
 		for(; accum; accum /= 10)
-			*(--p) = (char)(accum % 10) + 0x30;
+			*(--p) = (char)(accum % 10) + 0x30; /* Put a digit */
 
-		return cb(p, sizeof(scratch) - (p - scratch), app_key);
+		len = sizeof(scratch) - (p - scratch);
+		if(cb(p, len, app_key) < 0)
+			return -1;
+		return len;
 	} else {
 		*scratch = 0x30;
-		return cb(scratch, 1, app_key);
+		if(cb(scratch, 1, app_key) < 0)
+			return -1;
+		return 1;
 	}
 }
 
 int
-OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
-	int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
+OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+
+	if(OBJECT_IDENTIFIER__dump_arc(arcbuf, arclen, add, cb, app_key) < 0)
+		return -1;
+
+	return 0;
+}
+
+static ssize_t
+OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
+	ssize_t wrote_len = 0;
 	int startn;
 	int add = 0;
 	int i;
-
-	(void)td;	/* Unused argument */
-	(void)ilevel;	/* Unused argument */
-
-	if(!st || !st->buf)
-		return cb("<absent>", 8, app_key);
-
-	/* Dump preamble */
-	if(cb("{ ", 2, app_key))
-		return -1;
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
@@ -269,29 +275,70 @@ OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
 			 */
 			if(i) {
 				add = -80;
-				if(cb("2", 1, app_key)) return -1;
+				if(cb("2", 1, app_key) < 0) return -1;
 			} else if(b <= 39) {
 				add = 0;
-				if(cb("0", 1, app_key)) return -1;
+				if(cb("0", 1, app_key) < 0) return -1;
 			} else if(b < 79) {
 				add = -40;
-				if(cb("1", 1, app_key)) return -1;
+				if(cb("1", 1, app_key) < 0) return -1;
 			} else {
 				add = -80;
-				if(cb("2", 1, app_key)) return -1;
+				if(cb("2", 1, app_key) < 0) return -1;
 			}
+			wrote_len += 1;
 		}
 
-		if(cb(" ", 1, app_key))	/* Separate arcs */
+		if(cb(".", 1, app_key) < 0)	/* Separate arcs */
 			return -1;
 
-		if(OBJECT_IDENTIFIER_print_arc(&st->buf[startn],
-				i - startn + 1, add,
-				cb, app_key))
-			return -1;
+		add = OBJECT_IDENTIFIER__dump_arc(&st->buf[startn],
+				i - startn + 1, add, cb, app_key);
+		if(add < 0) return -1;
+		wrote_len += 1 + add;
 		startn = i + 1;
 		add = 0;
 	}
+
+	return wrote_len;
+}
+
+asn_enc_rval_t
+OBJECT_IDENTIFIER_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
+	asn_enc_rval_t er;
+
+	(void)ilevel;
+	(void)flags;
+
+	if(!st || !st->buf)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = OBJECT_IDENTIFIER__dump_body(st, cb, app_key);
+	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+
+	return er;
+}
+
+int
+OBJECT_IDENTIFIER_print(asn1_TYPE_descriptor_t *td, const void *sptr,
+	int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
+
+	if(!st || !st->buf)
+		return cb("<absent>", 8, app_key);
+
+	/* Dump preamble */
+	if(cb("{ ", 2, app_key))
+		return -1;
+
+	if(OBJECT_IDENTIFIER__dump_body(st, cb, app_key) < 0)
+		return -1;
 
 	return cb(" }", 2, app_key);
 }

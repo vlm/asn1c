@@ -2,6 +2,7 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#include <asn_internal.h>
 #include <BIT_STRING.h>
 
 /*
@@ -12,11 +13,13 @@ static ber_tlv_tag_t asn1_DEF_BIT_STRING_tags[] = {
 };
 asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
 	"BIT STRING",
+	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
+	BIT_STRING_print,
 	BIT_STRING_constraint,
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
-	BIT_STRING_print,
-	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
+	0,				/* Not implemented yet */
+	BIT_STRING_encode_xer,
 	0, /* Use generic outmost tag fetcher */
 	asn1_DEF_BIT_STRING_tags,
 	sizeof(asn1_DEF_BIT_STRING_tags)
@@ -61,6 +64,66 @@ BIT_STRING_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
+static char *_bit_pattern[16] = {
+	"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
+	"1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"
+};
+
+asn_enc_rval_t
+BIT_STRING_encode_xer(asn1_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t er;
+	char scratch[128];
+	char *p = scratch;
+	char *scend = scratch + (sizeof(scratch) - 10);
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+	uint8_t *buf;
+	uint8_t *end;
+
+	if(!st || !st->buf)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = 0;
+
+	buf = st->buf;
+	end = buf + st->size - 1;	/* Last byte is special */
+
+	/*
+	 * Binary dump
+	 */
+	for(buf++; buf < end; buf++) {
+		int v = *buf;
+		int nline = (flags & XER_F_CANONICAL)
+			?0:((((buf - st->buf) - 1) % 16) == 0);
+		if(p >= scend || nline) {
+			er.encoded += p - scratch;
+			_ASN_CALLBACK(scratch, p - scratch);
+			p = scratch;
+			if(nline) _i_ASN_TEXT_INDENT(1, ilevel);
+		}
+		memcpy(p + 0, _bit_pattern[v >> 4], 4);
+		memcpy(p + 4, _bit_pattern[v & 0x0f], 4);
+		p += 8;
+	}
+
+	er.encoded += p - scratch;
+	_ASN_CALLBACK(scratch, p - scratch);
+
+	if(buf < end + 1) {
+		int v = *buf;
+		int mbit = st->buf[0];	/* bits to skip from the right */
+		int i;
+		for(i = 7; i >= mbit; i--)
+			*p++ = (v & (1 << i)) ? '1' : '0';
+		er.encoded += p - scratch;
+		_ASN_CALLBACK(scratch, p - scratch);
+	}
+
+	return er;
+}
+
+
 /*
  * BIT STRING specific contents printer.
  */
@@ -99,6 +162,7 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		*p++ = h2c[*buf & 0x0F];
 		*p++ = 0x20;
 	}
+	if(p > scratch) p--;	/* Eat the tailing space */
 
 	/* Dump the incomplete 16-bytes row */
 	return cb(scratch, p - scratch, app_key);
