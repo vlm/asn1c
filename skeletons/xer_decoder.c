@@ -290,3 +290,26 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 	RETURN(RC_FAIL);
 }
 
+
+int
+xer_is_whitespace(void *chunk_buf, size_t chunk_size) {
+	char *p = (char *)chunk_buf;
+	char *pend = p + chunk_size;
+
+	for(; p < pend; p++) {
+		switch(*p) {
+		/* X.693, #8.1.4
+		 * HORISONTAL TAB (9)
+		 * LINE FEED (10) 
+		 * CARRIAGE RETURN (13) 
+		 * SPACE (32)
+		 */
+		case 0x09: case 0x0a: case 0x0d: case 0x20:
+			break;
+		default:
+			return 0;
+		}
+	}
+	return 1;       /* All whitespace */
+}
+
