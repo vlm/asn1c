@@ -55,7 +55,7 @@ status Open
 \layout Standard
 
 \backslash 
-extramarks{Document version 0.9}{}
+extramarks{Document revision $Revision$}{}
 \end_inset 
 
 
