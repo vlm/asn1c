@@ -3,8 +3,13 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <constr_SET.h>
-#include <netinet/in.h>	/* for ntohl() */
 #include <assert.h>	/* for assert() */
+
+#ifndef	WIN32
+#include <netinet/in.h>	/* for ntohl() */
+#else
+#include <winsock2.h>	/* for ntohl() */
+#endif
 
 /*
  * Number of bytes left for this structure.
