@@ -830,7 +830,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("/*\n");
 	OUT(" * This type is implemented using %s,\n",
 		asn1c_type_name(arg, expr, TNF_SAFE));
-	OUT(" * so adjust the DEF appropriately.\n");
+	OUT(" * so here we adjust the DEF accordingly.\n");
 	OUT(" */\n");
 	OUT("static void\n");
 	p = MKID(expr->Identifier);
