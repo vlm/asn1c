@@ -1879,7 +1879,6 @@ expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr) {
 
 	/* X.680, 25.5, Table 5 */
 	switch(expr->expr_type) {
-	case ASN_CONSTR_CHOICE:
 	case ASN_BASIC_BOOLEAN:
 	case ASN_BASIC_ENUMERATED:
 	case ASN_BASIC_NULL:
