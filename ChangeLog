@@ -1,5 +1,5 @@
 
-0.9.3:	2004-Sep-03
+0.9.3:	2004-Sep-07
 
 	* Extended constraints support in parametrized types.
 	* Better support for parametrization and constraints handling.
