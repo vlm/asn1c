@@ -51,6 +51,19 @@ ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
 		}
 
 		if(oct == 0) {
+
+			/*
+			 * Here length may be very close or equal to 2G.
+			 * However, the arithmetics used in other decoders
+			 * often add some (small) quantities to the length,
+			 * to check the resulting value against some limits.
+			 * This may result in integer wrap-around.
+			 */
+			if((len + 1024) < 0) {
+				/* Too large length value */
+				return -1;
+			}
+
 			*len_r = len;
 			return skipped;
 		}
