@@ -32,3 +32,9 @@ is not tested.
 6. XER decoding does not support integer (INTEGER, ENUMERATED) values
 outside the signed long range.
 
+7. XER codecs do not handle the identifiers in ENUMERATED, INTEGER and
+BIT STRING types. The problem is that it is unclear how to forward-compatibly
+handle the future extensions.
+
+
+
