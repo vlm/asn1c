@@ -2,9 +2,12 @@
 0.9.6:	2004-Sep-22
 
 	* Implemented BASIC-XER encoding support (X.693).
+	* Implemented unber(1) for generic BER decoding.
 	* Implemented CGI for online ASN.1 compilation (asn1c/webcgi).
+	* The X.509 decoder implemented (./examples/sample.source.PKIX1).
 	* NamedType is now supported for SET OF/SEQUENCE OF type.
 	* Added ASN1C_ENVIRONMENT_VERSION and get_asn1c_environment_version().
+	* Fixed ANY type decoding (Severity: high, Secruity impact: low).
 
 0.9.5:	2004-Sep-17
 
