@@ -1,4 +1,8 @@
 
+0.9.13:	2005-Mar-10
+
+	* Added extra const qualifiers into the support code.
+
 0.9.12:	2005-Mar-10
 
 	* Fixed a name clash in produced constraint checking code.
