@@ -71,7 +71,7 @@ PrintableString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 					"(%s:%d)",
 					td->name,
 					(buf - st->buf) + 1,
-					*buf
+					*buf,
 					__FILE__, __LINE__);
 				return -1;
 			}
