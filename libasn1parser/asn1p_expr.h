@@ -52,13 +52,13 @@ typedef enum asn1p_expr_type {
 	ASN_CONSTR_SET,			/* SET */
 	ASN_CONSTR_SEQUENCE_OF,		/* SEQUENCE OF */
 	ASN_CONSTR_SET_OF,		/* SET OF */
-	ASN_CONSTR_ANY,			/* ANY (deprecated) */
 
 	/*
 	 * ASN.1 Basic types
 	 */
 #define	ASN_BASIC_MASK		0x20	/* Every basic type */
-	ASN_BASIC_BOOLEAN	= ASN_BASIC_MASK,
+	ASN_TYPE_ANY		= ASN_BASIC_MASK,	/* ANY (deprecated) */
+	ASN_BASIC_BOOLEAN,
 	ASN_BASIC_NULL,
 	ASN_BASIC_INTEGER,
 	ASN_BASIC_REAL,
