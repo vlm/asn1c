@@ -1361,4 +1361,6 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, int tags_count, int tags_impl_skip
 	);
 	OUT("};\n");
 	OUT("\n");
+
+	return 0;
 }
