@@ -23,6 +23,7 @@ asn1_TYPE_descriptor_t asn1_DEF_BIT_STRING = {
 	  / sizeof(asn1_DEF_BIT_STRING_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	-1,	/* Both ways are fine */
+	0, 0,	/* No members */
 	(void *)-1	/* Special indicator that this is a BIT STRING */
 };
 

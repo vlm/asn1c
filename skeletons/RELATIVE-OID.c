@@ -26,6 +26,7 @@ asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	    / sizeof(asn1_DEF_RELATIVE_OID_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	0,	/* Always in primitive form */
+	0, 0,	/* No members */
 	0	/* No specifics */
 };
 

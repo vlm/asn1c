@@ -7,18 +7,6 @@
 
 #include <constr_TYPE.h>
 
-/*
- * A single element of the CHOICE type.
- */
-typedef struct asn1_CHOICE_element_s {
-	int memb_offset;		/* Offset of the element */
-	int optional;			/* Whether the element is optional */
-	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
-	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
-	asn1_TYPE_descriptor_t *type;	/* Member type descriptor */
-	char *name;			/* ASN.1 identifier of the element */
-} asn1_CHOICE_element_t;
-
 typedef struct asn1_CHOICE_specifics_s {
 	/*
 	 * Target structure description.
@@ -27,12 +15,6 @@ typedef struct asn1_CHOICE_specifics_s {
 	int ctx_offset;		/* Offset of the ber_dec_ctx_t member */
 	int pres_offset;	/* Identifier of the present member */
 	int pres_size;		/* Size of the identifier (enum) */
-
-	/*
-	 * Members of the CHOICE structure.
-	 */
-	asn1_CHOICE_element_t *elements;
-	int elements_count;
 
 	/*
 	 * Tags to members mapping table.

@@ -9,18 +9,17 @@
  * The DER encoder of the SEQUENCE OF type.
  */
 der_enc_rval_t
-SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
+SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn1_SET_OF_specifics_t *specs = (asn1_SET_OF_specifics_t *)sd->specifics;
-	asn1_SET_OF_element_t *elm = specs->element;
+	asn1_TYPE_member_t *elm = td->elements;
 	A_SEQUENCE_OF(void) *list;
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
 	der_enc_rval_t erval;
 	int edx;
 
-	ASN_DEBUG("Estimating size of SEQUENCE OF %s", sd->name);
+	ASN_DEBUG("Estimating size of SEQUENCE OF %s", td->name);
 
 	/*
 	 * Gather the length of the underlying members sequence.
@@ -39,11 +38,11 @@ SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	/*
 	 * Encode the TLV for the sequence itself.
 	 */
-	encoding_size = der_write_tags(sd, computed_size, tag_mode, tag,
+	encoding_size = der_write_tags(td, computed_size, tag_mode, tag,
 		cb, app_key);
 	if(encoding_size == -1) {
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 		return erval;
 	}
@@ -54,7 +53,7 @@ SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		return erval;
 	}
 
-	ASN_DEBUG("Encoding members of SEQUENCE OF %s", sd->name);
+	ASN_DEBUG("Encoding members of SEQUENCE OF %s", td->name);
 
 	/*
 	 * Encode all members.
@@ -74,7 +73,7 @@ SEQUENCE_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		 * Encoded size is not equal to the computed size.
 		 */
 		erval.encoded = -1;
-		erval.failed_type = sd;
+		erval.failed_type = td;
 		erval.structure_ptr = ptr;
 	} else {
 		erval.encoded = computed_size;
