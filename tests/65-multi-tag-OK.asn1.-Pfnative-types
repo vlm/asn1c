@@ -32,7 +32,7 @@ T1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using T2,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T1_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -157,7 +157,7 @@ T2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using T3,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T2_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -280,7 +280,7 @@ T3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using T4,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T3_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -401,7 +401,7 @@ T4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using T5,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T4_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -517,7 +517,7 @@ T5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using T6,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T5_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -632,7 +632,7 @@ T6_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using NativeReal,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T6_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
@@ -746,7 +746,7 @@ T_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*
  * This type is implemented using Ts,
- * so adjust the DEF appropriately.
+ * so here we adjust the DEF accordingly.
  */
 static void
 T_inherit_TYPE_descriptor(asn1_TYPE_descriptor_t *td) {
