@@ -15,7 +15,7 @@ asn1f_fix_enum(arg_t *arg) {
 	if(expr->expr_type != ASN_BASIC_ENUMERATED)
 		return 0;	/* Just ignore it */
 
-	DEBUG("%s(%s)", __func__, expr->Identifier);
+	DEBUG("(%s)", expr->Identifier);
 
 	/*
 	 * 1. Scan the enumeration values in search for inconsistencies.

@@ -15,8 +15,8 @@ asn1f_fix_parametrized_assignment(arg_t *arg) {
 	assert(expr->expr_type == A1TC_PARAMETRIZED);
 	assert(expr->reference);
 
-	DEBUG("%s(\"%s\" ::= \"%s\" { %s }) for line %d",
-		__func__, expr->Identifier,
+	DEBUG("(\"%s\" ::= \"%s\" { %s }) for line %d",
+		expr->Identifier,
 		asn1f_printable_reference(expr->reference),
 		asn1f_printable_value(expr->value),
 		expr->_lineno);

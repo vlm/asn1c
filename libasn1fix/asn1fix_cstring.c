@@ -17,8 +17,7 @@ asn1f_fix_cstring(arg_t *arg) {
 		int buflen = expr->value->value.string.size;
 		int start = 0;
 
-		DEBUG("%s(%s) for line %d", __func__,
-			expr->Identifier, expr->_lineno);
+		DEBUG("(%s) for line %d", expr->Identifier, expr->_lineno);
 
 		while(_asn1f_cstring_find_line_pattern(buf + start, &cp)) {
 			assert(cp.length);

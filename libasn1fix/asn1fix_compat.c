@@ -13,7 +13,7 @@ asn1f_check_type_compatibility(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 	atype = a->expr_type;
 	btype = b->expr_type;
 
-	DEBUG("%s(%s:%x@%d, %s:%x@%d)", __func__,
+	DEBUG("(%s:%x@%d, %s:%x@%d)",
 		a->Identifier, atype, a->_lineno,
 		b->Identifier, btype, b->_lineno);
 

@@ -152,7 +152,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	 * All other forms are not implemented at this moment.
 	 */
 
-	DEBUG("%s(%s) in %s for line %d", __func__,
+	DEBUG("(%s) in %s for line %d",
 		asn1f_printable_reference(ref),
 		mod->Identifier,
 		ref->_lineno);
@@ -292,8 +292,8 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value) {
 		ref = expr->reference;
 	}
 
-	DEBUG("%s:%s(%s->%s) for line %d",
-		__func__, type_or_value?"VALUE":"TYPE",
+	DEBUG("%s(%s->%s) for line %d",
+		type_or_value?"VALUE":"TYPE",
 		expr->Identifier, asn1f_printable_reference(ref),
 		expr->_lineno);
 
