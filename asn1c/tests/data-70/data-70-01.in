@@ -1,0 +1,6 @@
+<PDU>
+	<sequence>
+		<integer>128</integer>
+		<string>string</string>
+	</sequence>
+</PDU>

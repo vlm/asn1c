@@ -1,0 +1,2 @@
+*-B.*	-	The file is intentionally broken
+*-D.*	-	Reconstructing should yield different data
