@@ -253,7 +253,7 @@ main(int ac, char **av) {
 			 * ./asn1c/asn1c -> ./skeletons
 			 */
 			char *p;
-			int len;
+			size_t len;
 
 			p = a1c_dirname(av[-optind]);
 
