@@ -39,4 +39,8 @@ BEGIN
 	SIZE-and-FROM ::= PER-Visible (SIZE(1..4) ^ FROM("ABCD"))
 	Neither-SIZE-nor-FROM ::= PER-Visible (SIZE(1..4) | FROM("ABCD",...))
 
+	Utf8-3 ::= Utf8-2 (FROM("A".."Z"|"a".."z"))
+	Utf8-2 ::= Utf8-1 (SIZE(1..2))
+	Utf8-1 ::= UTF8String
+
 END

@@ -31,48 +31,86 @@ typedef struct LogLine {
 	ber_dec_ctx_t _ber_dec_ctx;
 } LogLine_t;
 
+/*** <<< CODE [LogLine] >>> ***/
+
+static int
+memb_varsets_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	size_t size;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
+		return -1;
+	}
+	
+	{ /* Determine the number of elements */
+		const A_SEQUENCE_OF(void) *list;
+		(const void *)list = sptr;
+		size = list->count;
+	}
+	
+	if((size >= 1)) {
+		/* Constraint check succeeded */
+		return 1;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed", td->name);
+		return -1;
+	}
+}
+
+
 /*** <<< STAT-DEFS [LogLine] >>> ***/
 
-	static asn1_SET_OF_element_t asn1_DEF_varsets_elements[] = {
-		{ (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-			(void *)&asn1_DEF_VariablePartSet },
-	};
-	static ber_tlv_tag_t asn1_DEF_varsets_tags[] = {
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
-	};
-	static asn1_SET_OF_specifics_t asn1_DEF_varsets_specs = {
-		sizeof(struct varsets),
-		offsetof(struct varsets, _ber_dec_ctx),
-		asn1_DEF_varsets_elements
-	};
-	asn1_TYPE_descriptor_t asn1_DEF_varsets = {
-		"varsets",
-		SEQUENCE_OF_constraint,
-		SEQUENCE_OF_decode_ber,
-		SEQUENCE_OF_encode_der,
-		SEQUENCE_OF_print,
-		SEQUENCE_OF_free,
-		0,	/* Use generic outmost tag fetcher */
-		asn1_DEF_varsets_tags,
-		sizeof(asn1_DEF_varsets_tags)
-			/sizeof(asn1_DEF_varsets_tags[0]), /* 1 */
-		1,	/* Tags to skip */
-		1,	/* Whether CONSTRUCTED */
-		&asn1_DEF_varsets_specs	/* Additional specs */
-	};
-	
-static asn1_SEQUENCE_element_t asn1_DEF_LogLine_elements[] = {
-	{ offsetof(struct LogLine, line_digest), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
-		0,
-		(void *)&asn1_DEF_IA5String,
-		"line-digest"
+static asn1_TYPE_member_t asn1_MBR_varsets[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_VariablePartSet,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
 		},
-	{ offsetof(struct LogLine, varsets), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-		0,
-		(void *)&asn1_DEF_varsets,
-		"varsets"
+};
+static ber_tlv_tag_t asn1_DEF_varsets_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_varsets_specs = {
+	sizeof(struct varsets),
+	offsetof(struct varsets, _ber_dec_ctx),
+};
+asn1_TYPE_descriptor_t asn1_DEF_varsets = {
+	"varsets",
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_varsets_tags,
+	sizeof(asn1_DEF_varsets_tags)
+		/sizeof(asn1_DEF_varsets_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_varsets,
+	1,	/* Single element */
+	&asn1_DEF_varsets_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_LogLine[] = {
+	{ 0, offsetof(struct LogLine, line_digest),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_IA5String,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "line-digest"
+		},
+	{ 0, offsetof(struct LogLine, varsets),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_varsets,
+		.memb_constraints = memb_varsets_constraint,
+		.name = "varsets"
 		},
 };
 static ber_tlv_tag_t asn1_DEF_LogLine_tags[] = {
@@ -85,8 +123,6 @@ static asn1_TYPE_tag2member_t asn1_DEF_LogLine_tag2el[] = {
 static asn1_SEQUENCE_specifics_t asn1_DEF_LogLine_specs = {
 	sizeof(struct LogLine),
 	offsetof(struct LogLine, _ber_dec_ctx),
-	asn1_DEF_LogLine_elements,
-	2,	/* Elements count */
 	asn1_DEF_LogLine_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
@@ -105,6 +141,8 @@ asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 		/sizeof(asn1_DEF_LogLine_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_LogLine,
+	2,	/* Elements count */
 	&asn1_DEF_LogLine_specs	/* Additional specs */
 };
 
@@ -141,48 +179,78 @@ typedef struct VariablePartSet {
 	ber_dec_ctx_t _ber_dec_ctx;
 } VariablePartSet_t;
 
+/*** <<< CODE [VariablePartSet] >>> ***/
+
+static int
+memb_vparts_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->check_constraints
+		(td, sptr, app_errlog, app_key);
+}
+
+
 /*** <<< STAT-DEFS [VariablePartSet] >>> ***/
 
-	static asn1_SET_OF_element_t asn1_DEF_vparts_elements[] = {
-		{ -1 /* Ambiguous tag (CHOICE?) */,
-			(void *)&asn1_DEF_VariablePart },
-	};
-	static ber_tlv_tag_t asn1_DEF_vparts_tags[] = {
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
-	};
-	static asn1_SET_OF_specifics_t asn1_DEF_vparts_specs = {
-		sizeof(struct vparts),
-		offsetof(struct vparts, _ber_dec_ctx),
-		asn1_DEF_vparts_elements
-	};
-	asn1_TYPE_descriptor_t asn1_DEF_vparts = {
-		"vparts",
-		SEQUENCE_OF_constraint,
-		SEQUENCE_OF_decode_ber,
-		SEQUENCE_OF_encode_der,
-		SEQUENCE_OF_print,
-		SEQUENCE_OF_free,
-		0,	/* Use generic outmost tag fetcher */
-		asn1_DEF_vparts_tags,
-		sizeof(asn1_DEF_vparts_tags)
-			/sizeof(asn1_DEF_vparts_tags[0]), /* 1 */
-		1,	/* Tags to skip */
-		1,	/* Whether CONSTRUCTED */
-		&asn1_DEF_vparts_specs	/* Additional specs */
-	};
-	
-static asn1_SEQUENCE_element_t asn1_DEF_VariablePartSet_elements[] = {
-	{ offsetof(struct VariablePartSet, vparts), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-		0,
-		(void *)&asn1_DEF_vparts,
-		"vparts"
+static asn1_TYPE_member_t asn1_MBR_vparts[] = {
+	{ 0, 0,
+		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_VariablePart,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
 		},
-	{ offsetof(struct VariablePartSet, resolution), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-		0,
-		(void *)&asn1_DEF_ActionItem,
-		"resolution"
+};
+static ber_tlv_tag_t asn1_DEF_vparts_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_vparts_specs = {
+	sizeof(struct vparts),
+	offsetof(struct vparts, _ber_dec_ctx),
+};
+asn1_TYPE_descriptor_t asn1_DEF_vparts = {
+	"vparts",
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_vparts_tags,
+	sizeof(asn1_DEF_vparts_tags)
+		/sizeof(asn1_DEF_vparts_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_vparts,
+	1,	/* Single element */
+	&asn1_DEF_vparts_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_VariablePartSet[] = {
+	{ 0, offsetof(struct VariablePartSet, vparts),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_vparts,
+		.memb_constraints = memb_vparts_constraint,
+		.name = "vparts"
+		},
+	{ 0, offsetof(struct VariablePartSet, resolution),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_ActionItem,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "resolution"
 		},
 };
 static ber_tlv_tag_t asn1_DEF_VariablePartSet_tags[] = {
@@ -195,8 +263,6 @@ static asn1_TYPE_tag2member_t asn1_DEF_VariablePartSet_tag2el[] = {
 static asn1_SEQUENCE_specifics_t asn1_DEF_VariablePartSet_specs = {
 	sizeof(struct VariablePartSet),
 	offsetof(struct VariablePartSet, _ber_dec_ctx),
-	asn1_DEF_VariablePartSet_elements,
-	2,	/* Elements count */
 	asn1_DEF_VariablePartSet_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
@@ -215,6 +281,8 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
 		/sizeof(asn1_DEF_VariablePartSet_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_VariablePartSet,
+	2,	/* Elements count */
 	&asn1_DEF_VariablePartSet_specs	/* Additional specs */
 };
 
@@ -270,95 +338,135 @@ typedef struct VariablePart {
 	ber_dec_ctx_t _ber_dec_ctx;
 } VariablePart_t;
 
+/*** <<< CODE [VariablePart] >>> ***/
+
+static int
+memb_vset_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	size_t size;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
+		return -1;
+	}
+	
+	{ /* Determine the number of elements */
+		const A_SET_OF(void) *list;
+		(const void *)list = sptr;
+		size = list->count;
+	}
+	
+	if((size >= 1)) {
+		/* Constraint check succeeded */
+		return 1;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed", td->name);
+		return -1;
+	}
+}
+
+
 /*** <<< STAT-DEFS [VariablePart] >>> ***/
 
-		static asn1_SET_OF_element_t asn1_DEF_vset_elements[] = {
-			{ (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
-				(void *)&asn1_DEF_VisibleString },
-		};
-		static ber_tlv_tag_t asn1_DEF_vset_tags[] = {
-			(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
-		};
-		static asn1_SET_OF_specifics_t asn1_DEF_vset_specs = {
-			sizeof(struct vset),
-			offsetof(struct vset, _ber_dec_ctx),
-			asn1_DEF_vset_elements
-		};
-		asn1_TYPE_descriptor_t asn1_DEF_vset = {
-			"vset",
-			SET_OF_constraint,
-			SET_OF_decode_ber,
-			SET_OF_encode_der,
-			SET_OF_print,
-			SET_OF_free,
-			0,	/* Use generic outmost tag fetcher */
-			asn1_DEF_vset_tags,
-			sizeof(asn1_DEF_vset_tags)
-				/sizeof(asn1_DEF_vset_tags[0]), /* 1 */
-			1,	/* Tags to skip */
-			1,	/* Whether CONSTRUCTED */
-			&asn1_DEF_vset_specs	/* Additional specs */
-		};
-		
-		static asn1_SEQUENCE_element_t asn1_DEF_vrange_elements[] = {
-			{ offsetof(struct vrange, from), 0,
-				(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
-				0,
-				(void *)&asn1_DEF_VisibleString,
-				"from"
-				},
-			{ offsetof(struct vrange, to), 0,
-				(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
-				0,
-				(void *)&asn1_DEF_VisibleString,
-				"to"
-				},
-		};
-		static ber_tlv_tag_t asn1_DEF_vrange_tags[] = {
-			(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
-		};
-		static asn1_TYPE_tag2member_t asn1_DEF_vrange_tag2el[] = {
-		    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0, 0, 1 }, /* from at 45 */
-		    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1, -1, 0 }, /* to at 46 */
-		};
-		static asn1_SEQUENCE_specifics_t asn1_DEF_vrange_specs = {
-			sizeof(struct vrange),
-			offsetof(struct vrange, _ber_dec_ctx),
-			asn1_DEF_vrange_elements,
-			2,	/* Elements count */
-			asn1_DEF_vrange_tag2el,
-			2,	/* Count of tags in the map */
-			1,	/* Start extensions */
-			3	/* Stop extensions */
-		};
-		asn1_TYPE_descriptor_t asn1_DEF_vrange = {
-			"vrange",
-			SEQUENCE_constraint,
-			SEQUENCE_decode_ber,
-			SEQUENCE_encode_der,
-			SEQUENCE_print,
-			SEQUENCE_free,
-			0,	/* Use generic outmost tag fetcher */
-			asn1_DEF_vrange_tags,
-			sizeof(asn1_DEF_vrange_tags)
-				/sizeof(asn1_DEF_vrange_tags[0]), /* 1 */
-			1,	/* Tags to skip */
-			1,	/* Whether CONSTRUCTED */
-			&asn1_DEF_vrange_specs	/* Additional specs */
-		};
-		
-static asn1_CHOICE_element_t asn1_DEF_VariablePart_elements[] = {
-	{ offsetof(struct VariablePart, choice.vset), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
-		0,
-		(void *)&asn1_DEF_vset,
-		"vset"
+static asn1_TYPE_member_t asn1_MBR_vset[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
 		},
-	{ offsetof(struct VariablePart, choice.vrange), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-		0,
-		(void *)&asn1_DEF_vrange,
-		"vrange"
+};
+static ber_tlv_tag_t asn1_DEF_vset_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_vset_specs = {
+	sizeof(struct vset),
+	offsetof(struct vset, _ber_dec_ctx),
+};
+asn1_TYPE_descriptor_t asn1_DEF_vset = {
+	"vset",
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_print,
+	SET_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_vset_tags,
+	sizeof(asn1_DEF_vset_tags)
+		/sizeof(asn1_DEF_vset_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_vset,
+	1,	/* Single element */
+	&asn1_DEF_vset_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_vrange[] = {
+	{ 0, offsetof(struct vrange, from),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "from"
+		},
+	{ 0, offsetof(struct vrange, to),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "to"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_vrange_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_vrange_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0, 0, 1 }, /* from at 45 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1, -1, 0 }, /* to at 46 */
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_vrange_specs = {
+	sizeof(struct vrange),
+	offsetof(struct vrange, _ber_dec_ctx),
+	asn1_DEF_vrange_tag2el,
+	2,	/* Count of tags in the map */
+	1,	/* Start extensions */
+	3	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_vrange = {
+	"vrange",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_vrange_tags,
+	sizeof(asn1_DEF_vrange_tags)
+		/sizeof(asn1_DEF_vrange_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_vrange,
+	2,	/* Elements count */
+	&asn1_DEF_vrange_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_VariablePart[] = {
+	{ 0, offsetof(struct VariablePart, choice.vset),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_vset,
+		.memb_constraints = memb_vset_constraint,
+		.name = "vset"
+		},
+	{ 0, offsetof(struct VariablePart, choice.vrange),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_vrange,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "vrange"
 		},
 };
 static asn1_TYPE_tag2member_t asn1_DEF_VariablePart_tag2el[] = {
@@ -370,8 +478,6 @@ static asn1_CHOICE_specifics_t asn1_DEF_VariablePart_specs = {
 	offsetof(struct VariablePart, _ber_dec_ctx),
 	offsetof(struct VariablePart, present),
 	sizeof(((struct VariablePart *)0)->present),
-	asn1_DEF_VariablePart_elements,
-	2,	/* Elements count */
 	asn1_DEF_VariablePart_tag2el,
 	2,	/* Count of tags in the map */
 	1	/* Whether extensible */
@@ -388,6 +494,8 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 	0,	/* No explicit tags (count) */
 	0,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_VariablePart,
+	2,	/* Elements count */
 	&asn1_DEF_VariablePart_specs	/* Additional specs */
 };
 
@@ -403,14 +511,14 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 
 /*** <<< DEPS [ActionItem] >>> ***/
 
-	typedef enum accept_as {
-		accept_as_unknown	= 0,
-		accept_as_safe	= 1,
-		accept_as_unsafe	= 2,
-		/*
-		 * Enumeration is extensible
-		 */
-	} accept_as_e;
+typedef enum accept_as {
+	accept_as_unknown	= 0,
+	accept_as_safe	= 1,
+	accept_as_unsafe	= 2,
+	/*
+	 * Enumeration is extensible
+	 */
+} accept_as_e;
 extern asn1_TYPE_descriptor_t asn1_DEF_ActionItem;
 
 /*** <<< TYPE-DECLS [ActionItem] >>> ***/
@@ -445,93 +553,103 @@ typedef struct ActionItem {
 
 /*** <<< STAT-DEFS [ActionItem] >>> ***/
 
-		static asn1_SET_OF_element_t asn1_DEF_email_elements[] = {
-			{ (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
-				(void *)&asn1_DEF_VisibleString },
-		};
-		static ber_tlv_tag_t asn1_DEF_email_tags[] = {
-			(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
-		};
-		static asn1_SET_OF_specifics_t asn1_DEF_email_specs = {
-			sizeof(struct email),
-			offsetof(struct email, _ber_dec_ctx),
-			asn1_DEF_email_elements
-		};
-		asn1_TYPE_descriptor_t asn1_DEF_email = {
-			"email",
-			SET_OF_constraint,
-			SET_OF_decode_ber,
-			SET_OF_encode_der,
-			SET_OF_print,
-			SET_OF_free,
-			0,	/* Use generic outmost tag fetcher */
-			asn1_DEF_email_tags,
-			sizeof(asn1_DEF_email_tags)
-				/sizeof(asn1_DEF_email_tags[0]), /* 1 */
-			1,	/* Tags to skip */
-			1,	/* Whether CONSTRUCTED */
-			&asn1_DEF_email_specs	/* Additional specs */
-		};
-		
-	static asn1_SEQUENCE_element_t asn1_DEF_notify_elements[] = {
-		{ offsetof(struct notify, critical), 0,
-			(ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
-			0,
-			(void *)&asn1_DEF_BOOLEAN,
-			"critical"
-			},
-		{ offsetof(struct notify, email), 0,
-			(ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
-			0,
-			(void *)&asn1_DEF_email,
-			"email"
-			},
-	};
-	static ber_tlv_tag_t asn1_DEF_notify_tags[] = {
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
-	};
-	static asn1_TYPE_tag2member_t asn1_DEF_notify_tag2el[] = {
-	    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* critical at 61 */
-	    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 }, /* email at 62 */
-	};
-	static asn1_SEQUENCE_specifics_t asn1_DEF_notify_specs = {
-		sizeof(struct notify),
-		offsetof(struct notify, _ber_dec_ctx),
-		asn1_DEF_notify_elements,
-		2,	/* Elements count */
-		asn1_DEF_notify_tag2el,
-		2,	/* Count of tags in the map */
-		1,	/* Start extensions */
-		3	/* Stop extensions */
-	};
-	asn1_TYPE_descriptor_t asn1_DEF_notify = {
-		"notify",
-		SEQUENCE_constraint,
-		SEQUENCE_decode_ber,
-		SEQUENCE_encode_der,
-		SEQUENCE_print,
-		SEQUENCE_free,
-		0,	/* Use generic outmost tag fetcher */
-		asn1_DEF_notify_tags,
-		sizeof(asn1_DEF_notify_tags)
-			/sizeof(asn1_DEF_notify_tags[0]), /* 1 */
-		1,	/* Tags to skip */
-		1,	/* Whether CONSTRUCTED */
-		&asn1_DEF_notify_specs	/* Additional specs */
-	};
-	
-static asn1_SEQUENCE_element_t asn1_DEF_ActionItem_elements[] = {
-	{ offsetof(struct ActionItem, accept_as), 0,
-		(ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
-		0,
-		(void *)&asn1_DEF_ENUMERATED,
-		"accept-as"
+static asn1_TYPE_member_t asn1_MBR_email[] = {
+	{ 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = ""
 		},
-	{ offsetof(struct ActionItem, notify), 1,
-		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
-		0,
-		(void *)&asn1_DEF_notify,
-		"notify"
+};
+static ber_tlv_tag_t asn1_DEF_email_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn1_SET_OF_specifics_t asn1_DEF_email_specs = {
+	sizeof(struct email),
+	offsetof(struct email, _ber_dec_ctx),
+};
+asn1_TYPE_descriptor_t asn1_DEF_email = {
+	"email",
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_print,
+	SET_OF_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_email_tags,
+	sizeof(asn1_DEF_email_tags)
+		/sizeof(asn1_DEF_email_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_email,
+	1,	/* Single element */
+	&asn1_DEF_email_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_notify[] = {
+	{ 0, offsetof(struct notify, critical),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_BOOLEAN,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "critical"
+		},
+	{ 0, offsetof(struct notify, email),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_email,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "email"
+		},
+};
+static ber_tlv_tag_t asn1_DEF_notify_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn1_TYPE_tag2member_t asn1_DEF_notify_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* critical at 61 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 }, /* email at 62 */
+};
+static asn1_SEQUENCE_specifics_t asn1_DEF_notify_specs = {
+	sizeof(struct notify),
+	offsetof(struct notify, _ber_dec_ctx),
+	asn1_DEF_notify_tag2el,
+	2,	/* Count of tags in the map */
+	1,	/* Start extensions */
+	3	/* Stop extensions */
+};
+asn1_TYPE_descriptor_t asn1_DEF_notify = {
+	"notify",
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_print,
+	SEQUENCE_free,
+	0,	/* Use generic outmost tag fetcher */
+	asn1_DEF_notify_tags,
+	sizeof(asn1_DEF_notify_tags)
+		/sizeof(asn1_DEF_notify_tags[0]), /* 1 */
+	1,	/* Tags to skip */
+	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_notify,
+	2,	/* Elements count */
+	&asn1_DEF_notify_specs	/* Additional specs */
+};
+
+static asn1_TYPE_member_t asn1_MBR_ActionItem[] = {
+	{ 0, offsetof(struct ActionItem, accept_as),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_ENUMERATED,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "accept-as"
+		},
+	{ 1, offsetof(struct ActionItem, notify),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn1_DEF_notify,
+		.memb_constraints = 0,	/* Defer to actual type */
+		.name = "notify"
 		},
 };
 static ber_tlv_tag_t asn1_DEF_ActionItem_tags[] = {
@@ -544,8 +662,6 @@ static asn1_TYPE_tag2member_t asn1_DEF_ActionItem_tag2el[] = {
 static asn1_SEQUENCE_specifics_t asn1_DEF_ActionItem_specs = {
 	sizeof(struct ActionItem),
 	offsetof(struct ActionItem, _ber_dec_ctx),
-	asn1_DEF_ActionItem_elements,
-	2,	/* Elements count */
 	asn1_DEF_ActionItem_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
@@ -564,6 +680,8 @@ asn1_TYPE_descriptor_t asn1_DEF_ActionItem = {
 		/sizeof(asn1_DEF_ActionItem_tags[0]), /* 1 */
 	1,	/* Tags to skip */
 	1,	/* Whether CONSTRUCTED */
+	asn1_MBR_ActionItem,
+	2,	/* Elements count */
 	&asn1_DEF_ActionItem_specs	/* Additional specs */
 };
 
