@@ -655,22 +655,18 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 * Print out the table according to which the parsing is performed.
 	 */
 	if(expr_elements_count(arg, expr)) {
-		int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 
 		p = MKID(expr->Identifier);
 		OUT("static asn_TYPE_member_t asn_MBR_%s[] = {\n", p);
 
 		elements = 0;
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
-			if(v->expr_type == A1TC_EXTENSIBLE) {
-				if(comp_mode < 3) comp_mode++;
-			} else {
-				if(comp_mode == 1
-				|| expr_better_indirect(arg, v))
-					v->marker.flags |= EM_INDIRECT;
-				elements++;
-				emit_member_table(arg, v);
-			}
+			if(v->expr_type == A1TC_EXTENSIBLE)
+				continue;
+			if(expr_better_indirect(arg, v))
+				v->marker.flags |= EM_INDIRECT;
+			elements++;
+			emit_member_table(arg, v);
 		});
 		OUT("};\n");
 	} else {
