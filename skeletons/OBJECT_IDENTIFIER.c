@@ -225,12 +225,17 @@ OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
 			&accum, sizeof(accum)))
 		return -1;
 
-	/* Fill the scratch buffer in reverse. */
-	p = scratch + sizeof(scratch);
-	for(; accum; accum /= 10)
-		*(--p) = (char)(accum % 10) + 0x30;
+	if(accum) {
+		/* Fill the scratch buffer in reverse. */
+		p = scratch + sizeof(scratch);
+		for(; accum; accum /= 10)
+			*(--p) = (char)(accum % 10) + 0x30;
 
-	return cb(p, sizeof(scratch) - (p - scratch), app_key);
+		return cb(p, sizeof(scratch) - (p - scratch), app_key);
+	} else {
+		*scratch = 0x30;
+		return cb(scratch, 1, app_key);
+	}
 }
 
 int
