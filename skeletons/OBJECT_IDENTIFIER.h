@@ -6,7 +6,7 @@
 #define	_OBJECT_IDENTIFIER_H_
 
 #include <asn_application.h>
-#include <ber_codec_prim.h>
+#include <asn_codecs_prim.h>
 
 typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t;
 
