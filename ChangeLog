@@ -1,10 +1,10 @@
 
-0.9:	2004-Aug-19
+0.9:	2004-Aug-20
 
 	* Reworked subtype constraints handling, aiming at PER-applicability.
 	* BOOLEAN and NULL are now implemented in terms of native int type.
 	* Compiler now links in only necessary skeleton files.
-	* -t option added to asn1c to ease BER manual decoding.
+	* -t option added to asn1c to ease manual BER/CER/DER decoding.
 
 0.8.19:	2004-Aug-18
 
