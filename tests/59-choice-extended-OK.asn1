@@ -11,7 +11,7 @@ ModuleTestExtensibleChoice
 	DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 
-	Choice ::= CHOICE {
+	Choice ::= [123] CHOICE {
 		a	INTEGER,
 		...,
 		b	INTEGER,

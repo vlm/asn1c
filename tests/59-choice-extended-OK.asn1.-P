@@ -44,23 +44,26 @@ static asn_TYPE_member_t asn_MBR_Choice[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.b),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_INTEGER,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "b"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice, choice.c),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
-		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_Choice,
-		.memb_constraints = 0,	/* Defer to actual type */
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "c"
 		},
+};
+static ber_tlv_tag_t asn_DEF_Choice_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (123 << 2))
 };
 static asn_TYPE_tag2member_t asn_DEF_Choice_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a at 15 */
@@ -87,10 +90,12 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	CHOICE_outmost_tag,
-	0,	/* No effective tags (pointer) */
-	0,	/* No effective tags (count) */
-	0,	/* No tags (pointer) */
-	0,	/* No tags (count) */
+	asn_DEF_Choice_tags,
+	sizeof(asn_DEF_Choice_tags)
+		/sizeof(asn_DEF_Choice_tags[0]), /* 1 */
+	asn_DEF_Choice_tags,	/* Same as above */
+	sizeof(asn_DEF_Choice_tags)
+		/sizeof(asn_DEF_Choice_tags[0]), /* 1 */
 	asn_MBR_Choice,
 	3,	/* Elements count */
 	&asn_DEF_Choice_specs	/* Additional specs */
