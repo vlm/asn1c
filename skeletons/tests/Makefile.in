@@ -13,7 +13,7 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c check-REAL.c check-UTCTime.c check-ber_tlv_tag.c check-length.c
+SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c check-REAL.c check-UTCTime.c check-UTF8String.c check-ber_tlv_tag.c check-length.c
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -38,8 +38,8 @@ POST_UNINSTALL = :
 host_triplet = @host@
 check_PROGRAMS = check-ber_tlv_tag$(EXEEXT) check-length$(EXEEXT) \
 	check-OIDs$(EXEEXT) check-GeneralizedTime$(EXEEXT) \
-	check-UTCTime$(EXEEXT) check-INTEGER$(EXEEXT) \
-	check-REAL$(EXEEXT)
+	check-UTF8String$(EXEEXT) check-UTCTime$(EXEEXT) \
+	check-INTEGER$(EXEEXT) check-REAL$(EXEEXT)
 subdir = skeletons/tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -69,6 +69,10 @@ check_UTCTime_SOURCES = check-UTCTime.c
 check_UTCTime_OBJECTS = check-UTCTime.$(OBJEXT)
 check_UTCTime_LDADD = $(LDADD)
 check_UTCTime_DEPENDENCIES =
+check_UTF8String_SOURCES = check-UTF8String.c
+check_UTF8String_OBJECTS = check-UTF8String.$(OBJEXT)
+check_UTF8String_LDADD = $(LDADD)
+check_UTF8String_DEPENDENCIES =
 check_ber_tlv_tag_SOURCES = check-ber_tlv_tag.c
 check_ber_tlv_tag_OBJECTS = check-ber_tlv_tag.$(OBJEXT)
 check_ber_tlv_tag_LDADD = $(LDADD)
@@ -85,6 +89,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/check-OIDs.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-REAL.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-UTCTime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/check-UTF8String.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-ber_tlv_tag.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/check-length.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -96,11 +101,11 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-REAL.c check-UTCTime.c check-ber_tlv_tag.c \
-	check-length.c
+	check-REAL.c check-UTCTime.c check-UTF8String.c \
+	check-ber_tlv_tag.c check-length.c
 DIST_SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OIDs.c \
-	check-REAL.c check-UTCTime.c check-ber_tlv_tag.c \
-	check-length.c
+	check-REAL.c check-UTCTime.c check-UTF8String.c \
+	check-ber_tlv_tag.c check-length.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -271,6 +276,9 @@ check-REAL$(EXEEXT): $(check_REAL_OBJECTS) $(check_REAL_DEPENDENCIES)
 check-UTCTime$(EXEEXT): $(check_UTCTime_OBJECTS) $(check_UTCTime_DEPENDENCIES) 
 	@rm -f check-UTCTime$(EXEEXT)
 	$(LINK) $(check_UTCTime_LDFLAGS) $(check_UTCTime_OBJECTS) $(check_UTCTime_LDADD) $(LIBS)
+check-UTF8String$(EXEEXT): $(check_UTF8String_OBJECTS) $(check_UTF8String_DEPENDENCIES) 
+	@rm -f check-UTF8String$(EXEEXT)
+	$(LINK) $(check_UTF8String_LDFLAGS) $(check_UTF8String_OBJECTS) $(check_UTF8String_LDADD) $(LIBS)
 check-ber_tlv_tag$(EXEEXT): $(check_ber_tlv_tag_OBJECTS) $(check_ber_tlv_tag_DEPENDENCIES) 
 	@rm -f check-ber_tlv_tag$(EXEEXT)
 	$(LINK) $(check_ber_tlv_tag_LDFLAGS) $(check_ber_tlv_tag_OBJECTS) $(check_ber_tlv_tag_LDADD) $(LIBS)
@@ -289,6 +297,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-OIDs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-REAL.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-UTCTime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-UTF8String.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-ber_tlv_tag.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-length.Po@am__quote@
 

@@ -5,6 +5,7 @@ check_PROGRAMS = \
 	check-length		\
 	check-OIDs		\
 	check-GeneralizedTime	\
+	check-UTF8String	\
 	check-UTCTime		\
 	check-INTEGER		\
 	check-REAL
