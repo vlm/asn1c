@@ -4,7 +4,7 @@
 #ifndef	ASN1_PARSER_CLASS_H
 #define	ASN1_PARSER_CLASS_H
 
-#include <asn1p_ref.h>
+#include "asn1p_ref.h"
 
 /*
  * WITH SYNTAX free-form chunks.
