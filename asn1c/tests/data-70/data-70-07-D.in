@@ -1,6 +1,7 @@
 <PDU>
 	<set>
-		<opaque></opaque>
+		<opaque><!-- zzz --></opaque>
+	<!-- zzz -->
 		<roid>123.456.789.101112</roid>
 	</set>
 </PDU>
