@@ -1,6 +1,11 @@
 #include "asn1fix_internal.h"
 
-static asn1p_expr_t *asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value);
+enum ftt_what {
+	FTT_TYPE,	/* Find the type of the given expression */
+	FTT_VALUE,	/* Find the value of the given expression */
+};
+
+static asn1p_expr_t *asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what);
 static int asn1f_compatible_with_exports(arg_t *arg, asn1p_module_t *mod, const char *name);
 
 
@@ -290,37 +295,38 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 
 asn1p_expr_t *
 asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *expr) {
-	return asn1f_find_terminal_thing(arg, expr, 0);
+	return asn1f_find_terminal_thing(arg, expr, FTT_TYPE);
 }
 
 asn1p_expr_t *
 asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *expr) {
-	return asn1f_find_terminal_thing(arg, expr, 1);
+	return asn1f_find_terminal_thing(arg, expr, FTT_VALUE);
 }
 
 static asn1p_expr_t *
-asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value) {
+asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	asn1p_ref_t *ref;
 	asn1p_expr_t *tc;
 
-	if(type_or_value) {
-		/* VALUE */
+	switch(what) {
+	case FTT_TYPE:
+		/* Expression may be a terminal type itself */
+		if(expr->expr_type != A1TC_REFERENCE)
+			return expr;
+		ref = expr->reference;
+		break;
+	case FTT_VALUE:
 		assert(expr->meta_type == AMT_VALUE);
 		assert(expr->value);
 		/* Expression may be a terminal type itself */
 		if(expr->value->type != ATV_REFERENCED)
 			return expr;
 		ref = expr->value->value.reference;
-	} else {
-		/* TYPE */
-		/* Expression may be a terminal type itself */
-		if(expr->expr_type != A1TC_REFERENCE)
-			return expr;
-		ref = expr->reference;
+		break;
 	}
 
 	DEBUG("%s(%s->%s) for line %d",
-		type_or_value?"VALUE":"TYPE",
+		(what == FTT_VALUE)?"VALUE":"TYPE",
 		expr->Identifier, asn1f_printable_reference(ref),
 		expr->_lineno);
 
@@ -329,7 +335,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value) {
 	/*
 	 * Lookup inside the type itself (ENUMERATED, INTEGER, etc).
 	 */
-	if(type_or_value) {
+	if(what == FTT_VALUE) {
 		asn1p_expr_t *val_type_tc;
 		val_type_tc = asn1f_find_terminal_type(arg, expr);
 		if(val_type_tc
@@ -365,7 +371,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, int type_or_value) {
 
 	tc->_mark |= TM_RECURSION;
 	WITH_MODULE(tc->module,
-		expr = asn1f_find_terminal_thing(arg, tc, type_or_value));
+		expr = asn1f_find_terminal_thing(arg, tc, what));
 	tc->_mark &= ~TM_RECURSION;
 
 	return expr;
