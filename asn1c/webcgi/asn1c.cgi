@@ -143,7 +143,7 @@ unless($session) {
 	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed);
 	my $ck = cookie(-name=>'SessionID', -value=>$session,
 			-path=>'/', -expires=>'+1y');
-	print header(-expires=>'-1y', -cookie=>$ck);
+	print header(-expires=>'-1d', -cookie=>$ck);
 	$HTTPHeaderGenerated = 1;
 } else {
 	$session =~ s/[^a-f0-9]//ig;
@@ -423,7 +423,7 @@ print LOG "\n";	# Finalize logging record
 
 PRINTOUT:
 
-print header(-expires=>'-1y') unless($HTTPHeaderGenerated);
+print header(-expires=>'-1d') unless($HTTPHeaderGenerated);
 
 # If environment has never been set up completely, remove it.
 if($EnvironmentSetOK != 1 && $TMPDIR ne "/") {
