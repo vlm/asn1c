@@ -197,7 +197,7 @@ asn1f_class_dot_lookup(arg_t *arg, asn1p_expr_t *obj, asn1p_ref_t *ref) {
 
 		ofield = asn1f_lookup_child(obj, comp_name);
 		if(ofield == NULL) {
-			FATAL("Cannot find field \"%s\" in \"%s\" at line %d",
+			DEBUG("Cannot find field \"%s\" in \"%s\" at line %d",
 				ref->components[1].name,
 				obj->Identifier,
 				obj->_lineno);
