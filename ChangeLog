@@ -1,5 +1,5 @@
 
-0.9.9:	2005-Jan-23
+0.9.9:	2005-Feb-14
 
 	* Initial XER (XML) decoding implementation.
 	* ANY allocation routine fixed.
