@@ -1,0 +1,8 @@
+<PDU>
+	<sequence>
+		<integer>231234</integer>
+		<bits>01  01
+			11  01</bits>
+		<string>string</string>
+	</sequence>
+</PDU>
