@@ -6,8 +6,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Using the Open ASN.1 Compiler</TITLE>
-<META NAME="description" CONTENT="Using the Open ASN.1 Compiler">
+<TITLE>Using the OpenSource ASN.1 Compiler</TITLE>
+<META NAME="description" CONTENT="Using the OpenSource ASN.1 Compiler">
 <META NAME="asn1c, ASN.1, free, compiler, BER, DER, PER, XER\">
 
 
@@ -21,13 +21,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <P>
-<H1 ALIGN="CENTER">Using the Open ASN.1 Compiler</H1><DIV>
+<H1 ALIGN="CENTER">Using the OpenSource ASN.1 Compiler</H1><DIV>
 
-<P ALIGN="CENTER"><STRONG>Lev Walkin &lt;vlm@lionet.info&gt;</STRONG></P>
+<P ALIGN="CENTER"><STRONG>Lev Walkin &lt;<A HREF=mailto:vlm@lionet.info?Subject=asn1c>vlm@lionet.info</A>&gt;</STRONG></P>
 </DIV>
+
+<P>
 <!-- MATH
  $Revision$
  -->
+<FONT COLOR=red><B>Download the <A HREF=asn1c-usage.pdf>PDF</A> version</B></FONT>
 
 <P>
 <BR>
@@ -105,7 +108,7 @@ Contents</A>
 <LI><A NAME="tex2html72"
   HREF="asn1c-usage.html#SECTION03320000000000000000">Recognizing compiler output</A>
 <LI><A NAME="tex2html73"
-  HREF="asn1c-usage.html#SECTION03330000000000000000">Invoking the ASN.1 helper code from the application</A>
+  HREF="asn1c-usage.html#SECTION03330000000000000000">Invoking the ASN.1 helper code from an application</A>
 <UL>
 <LI><A NAME="tex2html74"
   HREF="asn1c-usage.html#SECTION03331000000000000000">Decoding BER</A>
@@ -280,11 +283,11 @@ FruitId&nbsp;::=&nbsp;ENUMERATED&nbsp;{&nbsp;apple(1),&nbsp;orange(2)&nbsp;}
 --&nbsp;the&nbsp;enumeration&nbsp;can&nbsp;be&nbsp;performed
 --&nbsp;automatically&nbsp;by&nbsp;the&nbsp;compiler
 ComputerOSType&nbsp;::=&nbsp;ENUMERATED&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;FreeBSD,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;0
-&nbsp;&nbsp;&nbsp;&nbsp;Windows,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;1
-&nbsp;&nbsp;&nbsp;&nbsp;Solaris(5),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;remain&nbsp;5
-&nbsp;&nbsp;&nbsp;&nbsp;Linux,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;6
-&nbsp;&nbsp;&nbsp;&nbsp;MacOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;will&nbsp;be&nbsp;7
+&nbsp;&nbsp;&nbsp;&nbsp;FreeBSD,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;acquires&nbsp;value&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;Windows,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;acquires&nbsp;value&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;Solaris(5),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;remains&nbsp;5
+&nbsp;&nbsp;&nbsp;&nbsp;Linux,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;becomes&nbsp;6
+&nbsp;&nbsp;&nbsp;&nbsp;MacOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;becomes&nbsp;7
 }
 </PRE>
 </BLOCKQUOTE>
@@ -311,7 +314,7 @@ The OBJECT IDENTIFIER is used to represent the unique identifier of
 any object, starting from the very root of the registration tree.
 If your organization needs to uniquely identify something (a router,
 a room, a person, a standard, or whatever), you are encouraged to
-get your own identification subtree at http://www.iana.org/protocols/forms.htm.
+get your own identification subtree at <A HREF=http://www.iana.org/protocols/forms.htm>http://www.iana.org/protocols/forms.htm</A>.
 
 <P>
 For example, the very first ASN.1 module in this document has the
@@ -447,7 +450,7 @@ The SEQUENCE constructed type resembles the C ''struct'' statement.
 <BLOCKQUOTE><PRE>
 Address&nbsp;::=&nbsp;SEQUENCE&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;The&nbsp;apartment&nbsp;number&nbsp;may&nbsp;be&nbsp;omitted
-&nbsp;&nbsp;&nbsp;&nbsp;apartmentNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NumericString&nbsp;OPTIONAL,
+&nbsp;&nbsp;&nbsp;&nbsp;apartmentNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NumericString&nbsp;OPTIONAL,
 &nbsp;&nbsp;&nbsp;&nbsp;streetName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PrintableString,
 &nbsp;&nbsp;&nbsp;&nbsp;cityName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PrintableString,
 &nbsp;&nbsp;&nbsp;&nbsp;stateName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PrintableString,
@@ -560,12 +563,12 @@ Introduction to the ASN.1 Compiler</A>
 The purpose of the ASN.1 compiler, of which this document is part,
 is to convert the ASN.1 specifications to some other target language
 (currently, only C is supported<A NAME="tex2html1"
-  HREF="#foot145"><SUP>2.1</SUP></A>). The compiler reads the specification and emits a series of target
+  HREF="#foot159"><SUP>2.1</SUP></A>). The compiler reads the specification and emits a series of target
 language structures and surrounding maintenance code. For example,
 the C structure which may be created by compiler to represent the
 simple <I>Rectangle</I> specification defined earlier in this document,
 may look like this<A NAME="tex2html2"
-  HREF="#foot404"><SUP>2.2</SUP></A>:
+  HREF="#foot419"><SUP>2.2</SUP></A>:
 
 <P>
 
@@ -579,7 +582,7 @@ typedef&nbsp;struct&nbsp;Rectangle_s&nbsp;{
 This would not be of much value for such a simple specification, so
 the compiler goes further and actually produces the code which fills
 in this structure by parsing the opaque binary<A NAME="tex2html3"
-  HREF="#foot152"><SUP>2.3</SUP></A> data provided in some buffer. It also produces the code that takes
+  HREF="#foot166"><SUP>2.3</SUP></A> data provided in some buffer. It also produces the code that takes
 this structure as an argument and performs structure serialization
 by emitting a series of bytes.
 
@@ -591,8 +594,8 @@ Quick start</A>
 
 <P>
 After building and installing the compiler, the <I>asn1c</I><A NAME="tex2html4"
-  HREF="#foot405"><SUP>3.1</SUP></A> command may be used to compile the ASN.1 specification<A NAME="tex2html5"
-  HREF="#foot406"><SUP>3.2</SUP></A>:
+  HREF="#foot420"><SUP>3.1</SUP></A> command may be used to compile the ASN.1 specification<A NAME="tex2html5"
+  HREF="#foot421"><SUP>3.2</SUP></A>:
 
 <P>
 
@@ -658,7 +661,7 @@ the compiler's behavior.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="409"></A>
+<DIV ALIGN="CENTER"><A NAME="424"></A>
 <TABLE>
 <CAPTION><STRONG><A NAME=Table1>Table 1:</A></STRONG>
 The list of asn1c command line options</CAPTION>
@@ -724,8 +727,8 @@ produce the meaningful code.</FONT></TD></TR>
 </TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fnative-types</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Use the native machine's data types (int, double) whenever
-possible, instead of the compound ASN.1 INTEGER_t, ENUMERATED_t
-and REAL_t types. </FONT></TD></TR>
+possible, instead of the compound INTEGER_t, ENUMERATED_t and REAL_t
+types. </FONT></TD></TR>
 </TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fno-constraints</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 Do not generate ASN.1 subtype constraint checking code. This may make
@@ -736,12 +739,15 @@ a shorter executable.</TD></TR>
 structures.</FONT></TD></TR>
 </TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-ftypes88</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-<FONT SIZE="-1">Use only ASN.1:1988 embedded types.</FONT></TD></TR>
+<FONT SIZE="-1">Pretend to support only ASN.1:1988 embedded types. Certain
+reserved words, such as UniversalString and BMPString, become ordinary
+type references and may be redefined by the specification.</FONT></TD></TR>
 </TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B>Output Options</B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <B>Description</B></TD></TR>
-</TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-print-constraints</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>
+
+-print-constraints</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">When -EF are also specified, this option forces the compiler
 to explain its internal understanding of subtype constraints.</FONT></TD></TR>
 </TBODY><TBODY>
@@ -796,14 +802,14 @@ be possible to compile everything with the single instruction:
 
 <BLOCKQUOTE><PRE>
 cc&nbsp;-o&nbsp;rectangle&nbsp;*.c&nbsp;&nbsp;&nbsp;#&nbsp;It&nbsp;could&nbsp;be&nbsp;<I>that</I>&nbsp;simple<A NAME="tex2html7"
-  HREF="#foot412"><SUP>4.1</SUP></A>
+  HREF="#foot427"><SUP>4.1</SUP></A>
 </PRE>
 </BLOCKQUOTE>
 
 <P>
 
 <H1><A NAME="SECTION03330000000000000000">
-Invoking the ASN.1 helper code from the application</A>
+Invoking the ASN.1 helper code from an application</A>
 </H1>
 
 <P>
@@ -845,7 +851,7 @@ There are several generic functions available:
 <DL>
 <DT><STRONG>ber_decoder</STRONG></DT>
 <DD>This is the generic <I>restartable</I><A NAME="tex2html8"
-  HREF="#foot239"><SUP>4.2</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
+  HREF="#foot253"><SUP>4.2</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
 and/or fill the target structure for you. Please refer to Section
 [<A HREF="#sub:Decoding-BER">Decoding-BER</A>].
 </DD>
@@ -1101,7 +1107,7 @@ DER encoder will essentially do the same thing (i.e., encode the data)
 but no callbacks will be invoked (so the data goes nowhere). It may
 prove useful to determine the size of the structure's encoding before
 actually doing the encoding<A NAME="tex2html9"
-  HREF="#foot315"><SUP>4.3</SUP></A>.
+  HREF="#foot329"><SUP>4.3</SUP></A>.
 
 <P>
 Please look into der_encoder.h for the precise definition of der_encode()
@@ -1284,61 +1290,61 @@ structure pointer set to 0 (NULL), the function will do nothing.
 <H2><A NAME="SECTION04000000000000000000">
 Bibliography</A>
 </H2><DL COMPACT><DD><P></P><DT><A NAME="ASN1C">ASN1C</A>
-<DD>The OpenSource ASN.1 Compiler. http://lionet.info/asn1/
+<DD>The OpenSource ASN.1 Compiler. <A HREF=http://lionet.info/asn1c/>http://lionet.info/asn1c/</A>
 <P></P><DT><A NAME="Dub00">Dub00</A>
 <DD>Olivier Dubuisson - <I>ASN.1 Communication between heterogeneous
-systems</I> - Morgan Kaufmann Publishers, 2000. http://asn1.elibel.tm.fr/en/book/.
+systems</I> - Morgan Kaufmann Publishers, 2000. <A HREF=http://asn1.elibel.tm.fr/en/book/>http://asn1.elibel.tm.fr/en/book/</A>.
 ISBN:0-12-6333361-0.
 <P></P><DT><A NAME="ITU-T_ASN.1">ITU-T/ASN.1</A>
-<DD>ITU-T Study Group 17 - Languages for Telecommunication Systems http://www.itu.int/ITU-T/studygroups/com17/languages/</DL>
+<DD>ITU-T Study Group 17 - Languages for Telecommunication Systems <A HREF=http://www.itu.int/ITU-T/studygroups/com17/languages/>http://www.itu.int/ITU-T/studygroups/com17/languages/</A></DL>
 
 <P>
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot145">... supported</A><A
+<DT><A NAME="foot159">... supported</A><A
  HREF="asn1c-usage.html#tex2html1"><SUP>2.1</SUP></A></DT>
 <DD>C++ is ''supported'' too, as long as an class-based approach is
 not a definitive factor.
 
 </DD>
-<DT><A NAME="foot404">... this</A><A
+<DT><A NAME="foot419">... this</A><A
  HREF="asn1c-usage.html#tex2html2"><SUP>2.2</SUP></A></DT>
 <DD><I>-fnative-types</I> compiler option is used to produce basic C <I>int</I>
 types instead of infinite width INTEGER_t structures. See <A HREF=#Table1>Table 1</A>.
 
 </DD>
-<DT><A NAME="foot152">... binary</A><A
+<DT><A NAME="foot166">... binary</A><A
  HREF="asn1c-usage.html#tex2html3"><SUP>2.3</SUP></A></DT>
 <DD>BER, CER and DER encodings are binary. However, the XER encoding is
 text (XML) based.
 
 </DD>
-<DT><A NAME="foot405">...asn1c</A><A
+<DT><A NAME="foot420">...asn1c</A><A
  HREF="asn1c-usage.html#tex2html4"><SUP>3.1</SUP></A></DT>
 <DD>The 1 symbol in asn<B>1</B>c is a digit, not an ''ell'' letter.
 
 </DD>
-<DT><A NAME="foot406">... specification</A><A
+<DT><A NAME="foot421">... specification</A><A
  HREF="asn1c-usage.html#tex2html5"><SUP>3.2</SUP></A></DT>
 <DD>This is probably <B>not</B> what you want to try out right now -
 read through the rest of this chapter to find out about <B>-P</B>
 and <B>-R</B> options.
 
 </DD>
-<DT><A NAME="foot412">...that&nbsp;simple</A><A
+<DT><A NAME="foot427">...that&nbsp;simple</A><A
  HREF="asn1c-usage.html#tex2html7"><SUP>4.1</SUP></A></DT>
 <DD>Provided that you've also created a .c file with the <I>int main()</I>
 routine.
 
 </DD>
-<DT><A NAME="foot239">...restartable</A><A
+<DT><A NAME="foot253">...restartable</A><A
  HREF="asn1c-usage.html#tex2html8"><SUP>4.2</SUP></A></DT>
 <DD>Restartable means that if the decoder encounters the end of the buffer,
 it will fail, but may later be invoked again with the rest of the
 buffer to continue decoding.
 
 </DD>
-<DT><A NAME="foot315">... encoding</A><A
+<DT><A NAME="foot329">... encoding</A><A
  HREF="asn1c-usage.html#tex2html9"><SUP>4.3</SUP></A></DT>
 <DD>It is actually faster too: the encoder might skip over some computations
 which aren't important for the size determination.
@@ -1347,7 +1353,7 @@ which aren't important for the size determination.
 </DL><BR><HR>
 <ADDRESS>
 Lev Walkin
-2004-09-29
+2004-09-30
 </ADDRESS>
 </BODY>
 </HTML>
