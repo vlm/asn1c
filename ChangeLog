@@ -1,9 +1,10 @@
 
-0.9.9:	2005-Jan-21
+0.9.9:	2005-Jan-23
 
 	* Initial XER (XML) decoding implementation.
 	* ANY allocation routine fixed.
 	  Reported by <mikko.ahonen@elma.net>.
+	* Fixed tag parsing (tags like "[ 0 ]" were not supported).
 
 0.9.8:	2005-Jan-17
 
