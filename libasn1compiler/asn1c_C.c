@@ -139,12 +139,12 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 		}
 		if(comp_mode == 1
 		|| expr_better_indirect(arg, v))
-			v->marker |= EM_INDIRECT;
+			v->marker.flags |= EM_INDIRECT;
 		EMBED(v);
 	}
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker?"*":"",
+	OUT("} %s%s%s", expr->marker.flags?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -281,7 +281,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 		}
 		if(comp_mode == 1
 		|| expr_better_indirect(arg, v))
-			v->marker |= EM_INDIRECT;
+			v->marker.flags |= EM_INDIRECT;
 		EMBED(v);
 	}
 
@@ -295,7 +295,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker?"*":"",
+	OUT("} %s%s%s", expr->marker.flags?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -342,7 +342,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 		} else {
 			if(comp_mode == 1
 			|| expr_better_indirect(arg, v))
-				v->marker |= EM_INDIRECT;
+				v->marker.flags |= EM_INDIRECT;
 			elements++;
 			emit_member_table(arg, v);
 		}
@@ -379,7 +379,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 				OUT(" | ");
 			}
 			OUT("(%d << %d)",
-				v->marker?0:1,
+				v->marker.flags?0:1,
 				7 - (el % 8));
 			if(el && (el % 8) == 0)
 				delimit = 1;
@@ -458,7 +458,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	INDENT(-1);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker?"*":"",
+	OUT("} %s%s%s", expr->marker.flags?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -569,7 +569,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 		OUT("union {\n", id);
 		TQ_FOR(v, &(expr->members), next) {
 			if(expr_better_indirect(arg, v))
-				v->marker |= EM_INDIRECT;
+				v->marker.flags |= EM_INDIRECT;
 			EMBED(v);
 		}
 		if(UNNAMED_UNIONS)	OUT("};\n");
@@ -577,7 +577,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", expr->marker?"*":"",
+	OUT("} %s%s%s", expr->marker.flags?"*":"",
 		expr->_anonymous_type ? "" : MKID(expr->Identifier),
 		arg->embed ? "" : "_t");
 
@@ -624,7 +624,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		} else {
 			if(comp_mode == 1
 			|| expr_better_indirect(arg, v))
-				v->marker |= EM_INDIRECT;
+				v->marker.flags |= EM_INDIRECT;
 			elements++;
 			emit_member_table(arg, v);
 		}
@@ -729,12 +729,13 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		REDIR(OT_TYPE_DECLS);
 
 		OUT("%s\t", asn1c_type_name(arg, arg->expr,
-			expr->marker?TNF_RSAFE:TNF_CTYPE));
-		OUT("%s", expr->marker?"*":" ");
+			expr->marker.flags?TNF_RSAFE:TNF_CTYPE));
+		OUT("%s", expr->marker.flags?"*":" ");
 		OUT("%s", MKID(expr->Identifier));
-		if((expr->marker & EM_DEFAULT) == EM_DEFAULT)
-			OUT("\t/* DEFAULT */");
-		else if((expr->marker & EM_OPTIONAL) == EM_OPTIONAL)
+		if((expr->marker.flags & EM_DEFAULT) == EM_DEFAULT)
+			OUT("\t/* DEFAULT %s */",
+			    asn1f_printable_value(expr->marker.default_value));
+		else if((expr->marker.flags & EM_OPTIONAL) == EM_OPTIONAL)
 			OUT("\t/* OPTIONAL */");
 
 		REDIR(OT_TYPE_DECLS);
@@ -747,7 +748,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	REDIR(OT_TYPE_DECLS);
 
 	OUT("typedef %s\t", asn1c_type_name(arg, arg->expr, TNF_CTYPE));
-	OUT("%s", expr->marker?"*":" ");
+	OUT("%s", expr->marker.flags?"*":" ");
 	OUT("%s_t", MKID(expr->Identifier));
 
 	REDIR(OT_STAT_DEFS);
@@ -1241,11 +1242,11 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 
 	if(outmost_tag && outmost_tag->tag_value == -1)
 		OUT("ATF_OPEN_TYPE | ");
-	OUT("%s, ", expr->marker?"ATF_POINTER":"ATF_NOFLAGS");
-	if((expr->marker & EM_OPTIONAL) == EM_OPTIONAL) {
+	OUT("%s, ", expr->marker.flags?"ATF_POINTER":"ATF_NOFLAGS");
+	if((expr->marker.flags & EM_OPTIONAL) == EM_OPTIONAL) {
 		asn1p_expr_t *tv;
 		int opts = 0;
-		for(tv = expr; tv && tv->marker;
+		for(tv = expr; tv && tv->marker.flags;
 			tv = TQ_NEXT(tv, next), opts++) {
 			if(tv->expr_type == A1TC_EXTENSIBLE)
 				opts--;
