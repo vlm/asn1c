@@ -1,13 +1,18 @@
 
-0.9.8:	2004-Oct-25
+0.9.8:	2004-Oct-26
 
+	* [NEW PLATFORM] Compiled and tested on Linux @ alpha64 (LP64).
+	  Some code needed to be fixed regarding int-long conversions
+	  (mostly inside the test suite), and floating point handling
+	  code needed to be restructured to handle signalling NAN and
+	  other floating point exceptions quietly. Smooth transition!
+	* [NEW PLATFORM] Compiled and tested on Sun Solaris 9 @ sparc.
+	  Improved includes/defines of/for system headers.
 	* Initial XER (XML) decoding implementation.
 	* -X command line option added to asn1c to generate XML DTD.
 	* Empty SEQUENCE and SET clauses are now allowed.
-	* Code compiled and tested on Sun Solaris 9 @ sparc.
-	  Improved includes/defines of/for system headers.
-	* ber_dec_rval_t renamed into asn_dec_rval_t: more generality.
 	* Removed confusion between &xNN; and &#xNN; in enber and unber.
+	* ber_dec_rval_t renamed into asn_dec_rval_t: more generality.
 
 0.9.7.1:	2004-Oct-12
 
@@ -205,8 +210,8 @@
 	* Compiler: fixed recursive ASN.1 types inclusion (Severity: low,
 	  Security impact: none).
 	* Parser: IMPORTS/FROM fixes, now allowing multiple sections.
-	* Code compiled and tested on MacOS X (@ PowerPC). No major portability
-	  issues experienced.
+	* NEW PLATFORM: Compiled and tested on MacOS X (@ PowerPC).
+	  No major portability issues experienced.
 
 0.8.7:	2004-Apr-11	T-version-0-8-7
 
