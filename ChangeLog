@@ -1,5 +1,5 @@
 
-0.9.7:	2004-Oct-04
+0.9.7:	2004-Oct-11
 
 	* Finished CANONICAL-XER implementation by adding SET and SET OF
 	  canonical ordering support.
@@ -10,6 +10,8 @@
 	* Fixed SEQUENCE dealing with premature termination of the
 	  optionals-laden indefinite length structure. The code was previously
 	  refusing to parse such structures.
+	* Fixed explicitly tagged ANY type encoding and decoding
+	  (Severity: medium, Secruity impact: low).
 	* Fixed CHOICE code spin when indefinite length structures appear
 	  in the extensions (Severity: medium, Security impact: medium).
 	  Reported by <siden@ul-gsm.ru>.

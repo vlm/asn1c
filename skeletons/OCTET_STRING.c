@@ -86,6 +86,15 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	} while(0)
 
 /*
+ * Internal variant of the OCTET STRING.
+ */
+typedef enum OS_type {
+	_TT_GENERIC	= 0,	/* Just a random OCTET STRING */
+	_TT_BIT_STRING	= 1,	/* BIT STRING type, a special case */
+	_TT_ANY		= 2,	/* ANY type, a special case too */
+} OS_type_e;
+
+/*
  * The main reason why ASN.1 is still alive is that too much time and effort
  * is necessary for learning it more or less adequately, thus creating a gut
  * necessity to demonstrate that aquired skill everywhere afterwards.
@@ -161,11 +170,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	struct _stack *stck;	/* A stack structure */
 	struct _stack_el *sel = 0;	/* Stack element */
 	int tlv_constr;
-	enum type_type_e {
-		_TT_GENERIC	= 0,	/* Just a random OCTET STRING */
-		_TT_BIT_STRING	= 1,	/* BIT STRING type, a special case */
-		_TT_ANY		= 2,	/* ANY type, a special case too */
-	} type_type = (enum type_type_e)(int)td->specifics;
+	OS_type_e type_type = (OS_type_e)(int)td->specifics;
 
 	ASN_DEBUG("Decoding %s as %s (frame %ld)",
 		td->name,
@@ -214,7 +219,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 			 * Jump into stackless primitive decoding.
 			 */
 			_CH_PHASE(ctx, 3);
-			if(type_type == _TT_ANY)
+			if(type_type == _TT_ANY && tag_mode != 1)
 				APPEND(buf_ptr, rval.consumed);
 			ADVANCE(rval.consumed);
 			goto phase3;
@@ -291,7 +296,9 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 
 			ASN_DEBUG("Eat EOC; wn=%d--", sel->want_nulls);
 
-			if(type_type == _TT_ANY) APPEND("\0\0", 2);
+			if(type_type == _TT_ANY
+			&& (tag_mode != 1 || sel->cont_level))
+				APPEND("\0\0", 2);
 
 			ADVANCE(2);
 			sel->got += 2;
@@ -377,7 +384,9 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		} else {
 			sel->left = tlv_len;
 		}
-		if(type_type == _TT_ANY) APPEND(buf_ptr, tlvl);
+		if(type_type == _TT_ANY
+		&& (tag_mode != 1 || sel->cont_level))
+			APPEND(buf_ptr, tlvl);
 		sel->got += tlvl;
 		ADVANCE(tlvl);
 
@@ -492,8 +501,7 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	asn_enc_rval_t erval;
 	OCTET_STRING_t *st = (OCTET_STRING_t *)ptr;
 	int add_byte = 0;
-	int is_bit_str = (td->specifics == (void *)1);
-	int is_ANY_type = (td->specifics == (void *)2);
+	OS_type_e type_type = (OS_type_e)(int)td->specifics;
 
 	ASN_DEBUG("%s %s as OCTET STRING",
 		cb?"Estimating":"Encoding", td->name);
@@ -501,7 +509,7 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	/*
 	 * Canonicalize BIT STRING.
 	 */
-	if(is_bit_str && st->buf) {
+	if(type_type == _TT_BIT_STRING) {
 		switch(st->size) {
 		case 0: add_byte = 1; break;
 		case 1: st->buf[0] = 0; break;
@@ -511,16 +519,21 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 		}
 	}
 
-	if(is_ANY_type) {
-		erval.encoded = 0;
-	} else {
+	/*
+	 * Write tags.
+	 */
+	if(type_type != _TT_ANY || tag_mode == 1) {
 		erval.encoded = der_write_tags(td, st->size + add_byte,
-			tag_mode, 0, tag, cb, app_key);
+			tag_mode, type_type == _TT_ANY, tag, cb, app_key);
 		if(erval.encoded == -1) {
 			erval.failed_type = td;
 			erval.structure_ptr = ptr;
 			return erval;
 		}
+	} else {
+		/* Disallow: [...] IMPLICIT ANY */
+		assert(type_type != _TT_ANY || tag_mode != -1);
+		erval.encoded = 0;
 	}
 
 	if(cb) {
