@@ -249,7 +249,6 @@ static asn1p_value_t *
 %type	<a_expr>		UniverationElement
 %type	<tv_str>		TypeRefName
 %type	<tv_str>		ObjectClassReference
-%type	<tv_nametag>		TaggedIdentifier
 %type	<tv_str>		Identifier
 %type	<a_parg>		ParameterArgumentName
 %type	<a_plist>		ParameterArgumentList
@@ -740,10 +739,9 @@ DataTypeReference:
 		$$->expr_type = A1TC_TYPEID;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TypeRefName TOK_PPEQ optTag Type {
-		$$ = $4;
+	| TypeRefName TOK_PPEQ Type {
+		$$ = $3;
 		$$->Identifier = $1;
-		$$->tag = $3;
 		assert($$->expr_type);
 		assert($$->meta_type);
 	}
@@ -855,11 +853,10 @@ ComponentTypeLists:
 	;
 
 ComponentType:
-	TaggedIdentifier Type optMarker {
+	Identifier Type optMarker {
 		$$ = $2;
 		assert($$->Identifier == 0);
-		$$->Identifier = $1.name;
-		$$->tag = $1.tag;
+		$$->Identifier = $1;
 		$$->marker = $3;
 	}
 	| TOK_COMPONENTS TOK_OF Type {
@@ -887,11 +884,10 @@ AlternativeTypeLists:
 	;
 
 AlternativeType:
-	TaggedIdentifier Type {
+	Identifier Type {
 		$$ = $2;
 		assert($$->Identifier == 0);
-		$$->Identifier = $1.name;
-		$$->tag = $1.tag;
+		$$->Identifier = $1;
 	}
 	| ExtensionAndException {
 		$$ = $1;
@@ -1031,8 +1027,9 @@ ExtensionAndException:
 	;
 
 Type:
-	TypeDeclaration optConstraints {
-		$$ = $1;
+	optTag TypeDeclaration optConstraints {
+		$$ = $2;
+		$$->tag = $1;
 		/*
 		 * Outer constraint for SEQUENCE OF and SET OF applies
 		 * to the inner type.
@@ -1040,12 +1037,12 @@ Type:
 		if($$->expr_type == ASN_CONSTR_SEQUENCE_OF
 		|| $$->expr_type == ASN_CONSTR_SET_OF) {
 			assert(!TQ_FIRST(&($$->members))->constraints);
-			TQ_FIRST(&($$->members))->constraints = $2;
+			TQ_FIRST(&($$->members))->constraints = $3;
 		} else {
 			if($$->constraints) {
 				assert(!$2);
 			} else {
-				$$->constraints = $2;
+				$$->constraints = $3;
 			}
 		}
 	}
@@ -1937,18 +1934,6 @@ Identifier:
 		$$ = $1;
 	}
 	;
-
-TaggedIdentifier:
-	Identifier {
-		memset(&$$, 0, sizeof($$));
-		$$.name = $1;
-	}
-	| Identifier Tag {
-		$$.name = $1;
-		$$.tag = $2;
-	}
-	;
-
 
 %%
 
