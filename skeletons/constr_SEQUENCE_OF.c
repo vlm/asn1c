@@ -117,6 +117,13 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		tmper = element->type->xer_encoder(element->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
+                if(tmper.encoded == 0 && specs->as_XMLValueList) {
+                        const char *name = (*element->name)
+                                ? element->name : element->type->xml_tag;
+			size_t len = strlen(name);
+			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel + 1);
+			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);
+                }
 
 		if(mname) {
 			_ASN_CALLBACK3("</", 2, mname, mlen, ">", 1);

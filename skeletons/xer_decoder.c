@@ -287,7 +287,7 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 			break;		/* Unexpected tag */
 		}
 
-		ASN_DEBUG("Unexpected XML tag");
+		ASN_DEBUG("Unexpected XML tag (expected \"%s\")", xml_tag);
 		break;	/* Dark and mysterious things have just happened */
 	}
 

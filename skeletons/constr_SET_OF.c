@@ -469,9 +469,8 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 */
 	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *element = td->elements;
-	const char *elm_tag = specs->as_XMLValueList
-		? 0 : ((*element->name)
-		? element->name : element->type->xml_tag);
+	const char *elm_tag = ((*element->name)
+			? element->name : element->type->xml_tag);
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 
 	/*
@@ -578,23 +577,12 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case XCT_UNKNOWN_BO:
 
 			ASN_DEBUG("XER/SET OF: tcv=%d, ph=%d", tcv, ctx->phase);
-			if(ctx->phase != 1)
-				break;	/* Really unexpected */
-
-			/*
-			 * Search which member corresponds to this tag.
-			 */
-			tcv = xer_check_tag(buf_ptr, ch_size, elm_tag);
-			switch(tcv) {
-			case XCT_BOTH:
-			case XCT_OPENING:
+			if(ctx->phase == 1) {
 				/*
-				 * Process this member.
+				 * Process a single possible member.
 				 */
 				ctx->phase = 2;
 				continue;
-			default:
-				break;	/* Phase out */
 			}
 			/* Fall through */
 		default:
@@ -702,6 +690,13 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			td = tmper.failed_type;
 			sptr = tmper.structure_ptr;
 			goto cb_failed;
+		}
+		if(tmper.encoded == 0 && specs->as_XMLValueList) {
+			const char *name = (*element->name)
+				? element->name : element->type->xml_tag;
+			size_t len = strlen(name);
+			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel + 1);
+			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);
 		}
 
 		if(mname) {
