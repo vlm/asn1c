@@ -4,7 +4,6 @@
  */
 #include <asn_internal.h>
 #include <constr_SET.h>
-#include <assert.h>	/* for assert() */
 
 #ifndef	WIN32
 #include <netinet/in.h>	/* for ntohl() */

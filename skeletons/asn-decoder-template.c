@@ -12,9 +12,9 @@
 #include <sys/types.h>
 #include <unistd.h>	/* for getopt */
 #include <string.h>	/* for strerror(3) */
-#include <errno.h>	/* for errno */
-#include <assert.h>	/* for assert(3) */
 #include <sysexits.h>	/* for EX_* exit codes */
+#include <assert.h>	/* for assert(3) */
+#include <errno.h>	/* for errno */
 
 #include <asn_application.h>
 

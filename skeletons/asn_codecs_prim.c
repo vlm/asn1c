@@ -4,7 +4,6 @@
  */
 #include <asn_internal.h>
 #include <asn_codecs_prim.h>
-#include <assert.h>
 #include <errno.h>
 
 /*

@@ -47,4 +47,9 @@ xer_type_encoder_f INTEGER_encode_xer;
 int asn_INTEGER2long(const INTEGER_t *i, long *l);
 int asn_long2INTEGER(INTEGER_t *i, long l);
 
+/*
+ * Convert the integer value into the corresponding enumeration map entry.
+ */
+const asn_INTEGER_enum_map_t *INTEGER_map_value2enum(asn_INTEGER_specifics_t *specs, long value);
+
 #endif	/* _INTEGER_H_ */

@@ -12,7 +12,6 @@
 #include <asn_internal.h>
 #include <NativeReal.h>
 #include <REAL.h>
-#include <assert.h>
 
 /*
  * NativeReal basic type description.

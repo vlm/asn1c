@@ -1,8 +1,10 @@
-
+/*
+ * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Redistribution and modifications are permitted subject to BSD license.
+ */
 #include <asn_application.h>
 #include <asn_internal.h>
 #include <xer_support.h>		/* XER/XML parsing support */
-#include <assert.h>
 
 
 /*
@@ -346,5 +348,3 @@ xer_skip_unknown(xer_check_tag_e tcv, ber_tlv_len_t *depth) {
 		return -1;
 	}
 }
-
-

@@ -7,7 +7,6 @@
 #include <RELATIVE-OID.h>
 #include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */
 #include <limits.h>	/* for CHAR_BIT */
-#include <assert.h>
 #include <errno.h>
 
 /*
