@@ -78,9 +78,15 @@ _t2e_cmp(const void *ap, const void *bp) {
 		ber_tlv_tag_t a_value = BER_TAG_VALUE(a->el_tag);
 		ber_tlv_tag_t b_value = BER_TAG_VALUE(b->el_tag);
 
-		if(a_value == b_value)
+		if(a_value == b_value) {
+			if(a->el_no < b->el_no)
+				return -1;
+			/*
+			 * Important: we do not check
+			 * for a->el_no being greater than b->el_no!
+			 */
 			return 0;
-		else if(a_value < b_value)
+		} else if(a_value < b_value)
 			return -1;
 		else
 			return 1;
@@ -232,9 +238,10 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 		if(opt_edx_end > specs->elements_count)
 			opt_edx_end = specs->elements_count;	/* Cap */
 		else if(opt_edx_end - edx > 5) {
-			/* Limit the scope of linear search */
+			/* Limit the scope of linear search... */
 			opt_edx_end = edx + 5;
 			use_bsearch = 1;
+			/* ... and resort to bsearch() */
 		}
 		for(n = edx; n < opt_edx_end; n++) {
 			if(BER_TAGS_EQUAL(tlv_tag, elements[n].tag)) {
@@ -259,21 +266,29 @@ SEQUENCE_decode_ber(asn1_TYPE_descriptor_t *sd,
 			asn1_TYPE_tag2member_t *t2m;
 			asn1_TYPE_tag2member_t key;
 			key.el_tag = tlv_tag;
+			key.el_no = edx;
 			t2m = bsearch(&key, specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);
-			if(t2m && t2m->el_no >= edx) {
+			if(t2m) {
+				asn1_TYPE_tag2member_t *best = 0;
+				asn1_TYPE_tag2member_t *t2m_f, *t2m_l;
+				int edx_max = edx + elements[edx].optional;
 				/*
 				 * Rewind to the first element with that tag,
 				 * `cause bsearch() does not guarantee order.
 				 */
-				while(t2m > specs->tag2el
-					&& BER_TAGS_EQUAL(tlv_tag,
-						t2m[-1].el_tag)
-					&& t2m[-1].el_no >= edx)
-					t2m++;
-				edx = t2m->el_no;
-				ctx->step = 1 + 2 * edx;
-				goto microphase2;
+				t2m_f = t2m + t2m->toff_first;
+				t2m_l = t2m + t2m->toff_last;
+				for(t2m = t2m_f; t2m <= t2m_l; t2m++) {
+					if(t2m->el_no > edx_max) break;
+					if(t2m->el_no < edx) continue;
+					best = t2m;
+				}
+				if(best) {
+					edx = best->el_no;
+					ctx->step = 1 + 2 * edx;
+					goto microphase2;
+				}
 			}
 			n = opt_edx_end;
 		}
