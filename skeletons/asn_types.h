@@ -66,7 +66,7 @@ typedef	int			ssize_t;
 extern void ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
 #endif	/* __GNUC__ */
-#else	/* EMIT_ASN_DEBUG */
+#else	/* EMIT_ASN_DEBUG != 1 */
 #ifdef	__GNUC__
 #define	ASN_DEBUG(fmt, args...)	((void)0)	/* Emit a no-op operator */
 #else	/* __GNUC__ */
