@@ -2777,7 +2777,7 @@ free_struct
 \layout Part
 
 Examples
-\layout Chapter
+\layout Chapter*
 
 Step-by-step: A 
 \begin_inset Quotes sld
@@ -2864,22 +2864,39 @@ Alternatively, use the Online ASN.1 compiler
 \series bold 
 rectangle.asn1
 \series default 
- file into the Web form and unpacking the produced archive into the target
- directory on your computer.
+ file into the Web form and unpacking the produced archive on your computer.
 \layout Enumerate
 
-By this time, you should have multiple files in the current directory, including
- the Rectangle.c and Rectangle.h files.
+By this time, you should have gotten multiple files in the current directory,
+ including the 
+\series bold 
+Rectangle.c
+\series default 
+ and 
+\series bold 
+Rectangle.h
+\series default 
+.
 \layout Enumerate
 
 Create a main() routine which takes the binary input file, decodes it as
- it were a BER-encoded Rectangle type, and print out the text (XML) representati
-on of the Rectangle type.
+ it were a BER-encoded Rectangle type, and prints out the text (XML) representat
+ion of the Rectangle type.
  Let's name the file 
 \series bold 
 main.c
 \series default 
 :
+\begin_inset ERT
+status Open
+
+\layout Standard
+
+\backslash 
+clearpage{}
+\end_inset 
+
+
 \begin_deeper 
 \layout LyX-Code
 
@@ -3172,14 +3189,18 @@ n
 \end_deeper 
 \layout Enumerate
 
-Compile all files together using C compiler:
+Compile all files together using C compiler (varies by platform):
 \begin_deeper 
 \layout LyX-Code
 
 
 \emph on 
 cc -I.
- -o rdecode *.c
+ -o 
+\series bold 
+rdecode
+\series default 
+ *.c
 \end_deeper 
 \layout Enumerate
 
