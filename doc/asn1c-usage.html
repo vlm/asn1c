@@ -177,7 +177,7 @@ standardized encoding rules (BER, DER, XER).
 
 <P>
 For example, suppose the following ASN.1 module is given<A NAME="tex2html1"
-  HREF="#foot818"><SUP>1.1</SUP></A>:
+  HREF="#foot843"><SUP>1.1</SUP></A>:
 
 <P>
 
@@ -195,7 +195,7 @@ END
 </BLOCKQUOTE>
 The compiler would read this ASN.1 definition and produce the following
 C type<A NAME="tex2html2"
-  HREF="#foot819"><SUP>1.2</SUP></A>:
+  HREF="#foot844"><SUP>1.2</SUP></A>:
 
 <P>
 
@@ -219,8 +219,8 @@ Quick start with asn1c</A>
 
 <P>
 After building and installing the compiler, the <I>asn1c</I><A NAME="tex2html3"
-  HREF="#foot820"><SUP>1.3</SUP></A> command may be used to compile the ASN.1 module<A NAME="tex2html4"
-  HREF="#foot821"><SUP>1.4</SUP></A>:
+  HREF="#foot845"><SUP>1.3</SUP></A> command may be used to compile the ASN.1 module<A NAME="tex2html4"
+  HREF="#foot846"><SUP>1.4</SUP></A>:
 
 <P>
 
@@ -328,7 +328,7 @@ the compiler's behavior.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="826"></A>
+<DIV ALIGN="CENTER"><A NAME="851"></A>
 <TABLE>
 <CAPTION><STRONG><A NAME=Table1>Table 1:</A></STRONG>
 The list of asn1c command line options</CAPTION>
@@ -336,92 +336,101 @@ The list of asn1c command line options</CAPTION>
 <COLGROUP><COL ALIGN=LEFT><COLGROUP><COL ALIGN=JUSTIFY WIDTH="3in">
 <TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP> 
-<B>Overall Options</B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-<B>Description</B></TD></TR>
+<B><FONT SIZE="-1">Overall Options</FONT></B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<B><FONT SIZE="-1">Description</FONT></B></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-E</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-E</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Stop after the parsing stage and print the reconstructed ASN.1
 specification code to the standard output.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-F</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-F</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Used together with -E, instructs the compiler to stop after
 the ASN.1 syntax tree fixing stage and dump the reconstructed ASN.1
 specification to the standard output.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-P</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-P</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Dump the compiled output to the standard output instead of
 cre- ating the target language files on disk.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-R</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-R</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Restrict the compiler to generate only the ASN.1 tables, omit-
 ting the usual support code.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-S <I>&lt;directory&gt;</I></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-S</FONT> <I><FONT SIZE="-1">&lt;directory&gt;</FONT></I></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Use the specified directory with ASN.1 skeleton files.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-X</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-Generate the XML DTD for the specified ASN.1 modules.</TD></TR>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-X</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">Generate the XML DTD for the specified ASN.1 modules.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B>Warning Options</B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-<B>Description</B></TD></TR>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B><FONT SIZE="-1">Warning Options</FONT></B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<B><FONT SIZE="-1">Description</FONT></B></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-Werror</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-Werror</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Treat warnings as errors; abort if any warning is produced.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-Wdebug-lexer</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-Wdebug-lexer</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Enable lexer debugging during the ASN.1 parsing stage.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-Wdebug-fixer</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-Wdebug-fixer</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
  <FONT SIZE="-1">Enable ASN.1 syntax  tree  fixer  debugging  during  the
  fixing stage.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-Wdebug-compiler</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-Wdebug-compiler</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Enable debugging during the actual compile time.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B>Language Options</B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-<B>Description</B></TD></TR>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B><FONT SIZE="-1">Language Options</FONT></B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<B><FONT SIZE="-1">Description</FONT></B></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fall-defs-global</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-Normally the compiler hides the definitions (asn_DEF_xxx) of the
-inner structure elements (members of SEQUENCE, SET and other types).
-This option makes all such definitions global. Enabling this option
-may pollute the namespace by making lots of asn_DEF_xxx structures
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fall-defs-global</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">Normally the compiler hides the definitions (asn_DEF_xxx)
+of the inner structure elements (members of SEQUENCE, SET and other
+types). This option makes all such definitions global. Enabling this
+option may pollute the namespace by making lots of asn_DEF_xxx structures
 globally visible, but will allow you to manipulate (encode and decode)
-the individual members of any complex ASN.1 structure.</TD></TR>
+the individual members of any complex ASN.1 structure.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fbless-SIZE</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fbless-SIZE</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Allow SIZE() constraint for INTEGER, ENUMERATED, and other
 types for which this constraint is normally prohibited by the standard.
 This is a violation of an ASN.1 standard and compiler may fail to
 produce the meaningful code.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fnative-types</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fcompound-names</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">Use complex names for C structures. Using complex names prevents
+name clashes in case the module reuses the same identifiers in multiple
+contexts.</FONT></TD></TR>
+</TBODY><TBODY>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fnative-types</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Use the native machine's data types (int, double) whenever
 possible, instead of the compound INTEGER_t, ENUMERATED_t and REAL_t
 types. </FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-fno-constraints</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-Do not generate ASN.1 subtype constraint checking code. This may make
-a shorter executable.</TD></TR>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fno-constraints</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">Do not generate ASN.1 subtype constraint checking code. This
+may produce a shorter executable.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-funnamed-unions</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fno-include-deps</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">Do not generate courtesy #include lines for non-critical
+dependencies.</FONT></TD></TR>
+</TBODY><TBODY>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-funnamed-unions</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Enable  unnamed  unions  in the definitions of target language's
 structures.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-ftypes88</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-ftypes88</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Pretend to support only ASN.1:1988 embedded types. Certain
 reserved words, such as UniversalString and BMPString, become ordinary
 type references and may be redefined by the specification.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B>Output Options</B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
-<B>Description</B></TD></TR>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><B><FONT SIZE="-1">Output Options</FONT></B></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<B><FONT SIZE="-1">Description</FONT></B></TD></TR>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>
 
--print-constraints</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">-print-constraints</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">When -EF are also specified, this option forces the compiler
 to explain its internal understanding of subtype constraints.</FONT></TD></TR>
 </TBODY><TBODY>
-<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP>-print-lines</TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-print-lines</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Generate &#34;- #line&#34; comments in -E output.</FONT></TD></TR>
 </TBODY>
 </TABLE>
@@ -485,7 +494,7 @@ are of interest:
 <DL>
 <DT><STRONG>ber_decoder</STRONG></DT>
 <DD>This is the generic <I>restartable</I><A NAME="tex2html6"
-  HREF="#foot156"><SUP>2.1</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
+  HREF="#foot181"><SUP>2.1</SUP></A> BER decoder (Basic Encoding Rules). This decoder would create
 and/or fill the target structure for you. Please refer to Section
 sub:Decoding-BER.
 </DD>
@@ -719,7 +728,7 @@ DER encoder will essentially do the same thing (i.e., encode the data)
 but no callbacks will be invoked (so the data goes nowhere). It may
 prove useful to determine the size of the structure's encoding before
 actually doing the encoding<A NAME="tex2html7"
-  HREF="#foot225"><SUP>2.2</SUP></A>.
+  HREF="#foot250"><SUP>2.2</SUP></A>.
 
 <P>
 Please look into der_encoder.h for the precise definition of der_encode()
@@ -1262,7 +1271,7 @@ END
 main() routine shown in the Section <A HREF="#sec:A-Rectangle-Decoder">A Rectangle Decoder</A>)
 by placing the following snippet of code <I>before</I> encoding and/or
 <I>after</I> decoding the Rectangle type<A NAME="tex2html8"
-  HREF="#foot898"><SUP>4.1</SUP></A>:
+  HREF="#foot923"><SUP>4.1</SUP></A>:
 
 <P>
 
@@ -1732,44 +1741,44 @@ ISBN:0-12-6333361-0.
 <P>
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot818">... given</A><A
+<DT><A NAME="foot843">... given</A><A
  HREF="asn1c-usage.html#tex2html1"><SUP>1.1</SUP></A></DT>
 <DD>Please look into Part par:ASN.1-Basics for a quick reference
 on how to understand the ASN.1 notation.
 
 </DD>
-<DT><A NAME="foot819">... type</A><A
+<DT><A NAME="foot844">... type</A><A
  HREF="asn1c-usage.html#tex2html2"><SUP>1.2</SUP></A></DT>
 <DD><I>-fnative-types</I> compiler option is used to produce basic C <I>int</I>
 types instead of infinite width INTEGER_t structures. See <A HREF=#Table1>Table 1</A>.
 
 </DD>
-<DT><A NAME="foot820">...asn1c</A><A
+<DT><A NAME="foot845">...asn1c</A><A
  HREF="asn1c-usage.html#tex2html3"><SUP>1.3</SUP></A></DT>
 <DD>The 1 symbol in asn<B>1</B>c is a digit, not an ''ell'' letter.
 
 </DD>
-<DT><A NAME="foot821">... module</A><A
+<DT><A NAME="foot846">... module</A><A
  HREF="asn1c-usage.html#tex2html4"><SUP>1.4</SUP></A></DT>
 <DD>This is probably <B>not</B> what you want to try out right now -
 read through the rest of this chapter and check the <A HREF=#Table1>Table 1</A>
 to find out about <B>-P</B> and <B>-R</B> options.
 
 </DD>
-<DT><A NAME="foot156">...restartable</A><A
+<DT><A NAME="foot181">...restartable</A><A
  HREF="asn1c-usage.html#tex2html6"><SUP>2.1</SUP></A></DT>
 <DD>Restartable means that if the decoder encounters the end of the buffer,
 it will fail, but may later be invoked again with the rest of the
 buffer to continue decoding.
 
 </DD>
-<DT><A NAME="foot225">... encoding</A><A
+<DT><A NAME="foot250">... encoding</A><A
  HREF="asn1c-usage.html#tex2html7"><SUP>2.2</SUP></A></DT>
 <DD>It is actually faster too: the encoder might skip over some computations
 which aren't important for the size determination.
 
 </DD>
-<DT><A NAME="foot898">... type</A><A
+<DT><A NAME="foot923">... type</A><A
  HREF="asn1c-usage.html#tex2html8"><SUP>4.1</SUP></A></DT>
 <DD>Placing the constraint checking code <I>before</I> encoding helps
 to make sure you know the data is correct and within constraints before
@@ -1784,7 +1793,7 @@ the application got the valid contents before making use of it.
 </DL><BR><HR>
 <ADDRESS>
 Lev Walkin
-2005-02-21
+2005-03-04
 </ADDRESS>
 </BODY>
 </HTML>
