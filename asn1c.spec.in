@@ -15,9 +15,9 @@ Group: Development/Languages
 Summary:	The ASN.1 to C compiler
 
 %description
-The asn1c compiler turns ASN.1 specifications into C language source files.
-The source files would contain BER/CER/DER encoders and decoders for the
-given abstract notation.
+The asn1c compiler turns ASN.1 specifications into C language
+source files containing the BER/CER/DER/XER encoders and decoders
+for the given abstract notation.
 
 %prep
 %setup -q
