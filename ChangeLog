@@ -1,4 +1,9 @@
 
+0.9.6.1:	2004-Oct-01
+
+	* Fixed unber limits controlling logic.
+	* Removed C99'izm from the x509dump, now understood by older compilers.
+
 0.9.6:	2004-Sep-29
 
 	* Added several security firewalls: decoder's stack usage control
