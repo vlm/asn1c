@@ -92,7 +92,7 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 	static asn1cnst_range_t range_ ## foo = {		\
 			{ ARE_VALUE, 0, val1 },			\
 			{ ARE_VALUE, 0, val2 },			\
-			0, 0, 0, 0, 0, 0 };
+			0, 0, 0, 0, 0, 0 }
 
 asn1cnst_range_t *
 asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
