@@ -14,8 +14,15 @@ extern asn_TYPE_descriptor_t asn_DEF_UTF8String;
 asn_struct_print_f UTF8String_print;
 asn_constr_check_f UTF8String_constraint;
 
-/* Returns length of UTF-8 string in characters or -1 if error. */
-ssize_t UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
-	asn_app_consume_bytes_f *app_errlog, void *app_key);
+/*
+ * Returns length of the given UTF-8 string in characters,
+ * or a negative error code:
+ * -1:	UTF-8 sequence truncated 
+ * -2:	Illegal UTF-8 sequence start
+ * -3:	Continuation expectation failed
+ * -4:	Not minimal length encoding
+ * -5:	Invalid arguments
+ */
+ssize_t UTF8String_length(const UTF8String_t *st);
 
 #endif	/* _UTF8String_H_ */

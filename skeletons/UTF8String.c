@@ -47,20 +47,56 @@ static int UTF8String_ht[2][16] = {
 	  4, 4, 4, 4, 4, 4, 4, 4,
 	  5, 5, 5, 5, 6, 6, -1, -1 }
 };
+static int32_t UTF8String_mv[7] = { 0, 0,
+	0x00000080,
+	0x00000800,
+	0x00010000,
+	0x00200000,
+	0x04000000
+};
+
+/* Internal aliases for return codes */
+#define	U8E_TRUNC	-1	/* UTF-8 sequence truncated */
+#define	U8E_ILLSTART	-2	/* Illegal UTF-8 sequence start */
+#define	U8E_NOTCONT	-3	/* Continuation expectation failed */
+#define	U8E_NOTMIN	-4	/* Not minimal length encoding */
+#define	U8E_EINVAL	-5	/* Invalid arguments */
 
 int
 UTF8String_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	ssize_t len;
-	len = UTF8String_length((const UTF8String_t *)sptr, td->name,
-		app_errlog, app_key);
-	if(len > 0) len = 0;
-	return len;
+	ssize_t len = UTF8String_length((const UTF8String_t *)sptr);
+	switch(len) {
+	case U8E_EINVAL:
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given", td->name);
+		break;
+	case U8E_TRUNC:
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: truncated UTF-8 sequence (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		break;
+	case U8E_ILLSTART:
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: UTF-8 illegal start of encoding (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		break;
+	case U8E_NOTCONT:
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: UTF-8 not continuation (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		break;
+	case U8E_NOTMIN:
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: UTF-8 not minimal sequence (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		break;
+	}
+	return (len < 0) ? -1 : 0;
 }
 
 ssize_t
-UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
-		asn_app_consume_bytes_f *app_errlog, void *app_key) {
+UTF8String_length(const UTF8String_t *st) {
 
 	if(st && st->buf) {
 		size_t length;
@@ -69,35 +105,41 @@ UTF8String_length(const UTF8String_t *st, const char *opt_type_name,
 
 		for(length = 0; buf < end; length++) {
 			int ch = *buf;
-			int want = UTF8String_ht[0][ch >> 4];
+			uint8_t *cend;
+			int32_t value;
+			int want;
+
+			/* Compute the sequence length */
+			want = UTF8String_ht[0][ch >> 4];
 			switch(want) {
-			case -1: /* Second half of the table, long sequence */
+			case -1:
+				/* Second half of the table, long sequence */
 				want = UTF8String_ht[1][ch & 0x0F];
-				if(want != -1)
-					break;	/* Fine value */
-			case 0:	/* 10xxxxxx should not appear here */
-				_ASN_ERRLOG(app_errlog, app_key,
-					"%s: UTF-8 expectation failed "
-					"at byte %d (%s:%d)",
-					opt_type_name,
-					(buf - st->buf) + 1,
-					__FILE__, __LINE__);
-				return -1;
+				if(want != -1) break;
+				/* Fall through */
+			case 0:
+				return U8E_ILLSTART;
 			}
-			if(buf + want > end) {
-				_ASN_ERRLOG(app_errlog, app_key,
-					"%s: truncated UTF-8 sequence (%s:%d)",
-					opt_type_name, __FILE__, __LINE__);
-				return -1;
+
+			/* assert(want >= 1 && want <= 6) */
+
+			/* Check character sequence length */
+			if(buf + want > end) return U8E_TRUNC;
+
+			value = ch & (0xff >> (want + 1));
+			cend = buf + want;
+			for(buf++; buf < cend; buf++) {
+				ch = *buf;
+				if(ch < 0x80 || ch > 0xbf) return U8E_NOTCONT;
+				value = (value << 6) | (ch & 0x3F);
 			}
-			buf += want;
+			if(value < UTF8String_mv[want])
+				return U8E_NOTMIN;
 		}
 
 		return length;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", opt_type_name);
-		return -1;
+		return U8E_EINVAL;
 	}
 }
 
