@@ -291,12 +291,21 @@ main() {
 	};
 	int buf19_check[] = { 2, 2, 1, 1 };
 
+	/* { joint-iso-itu-t 2 1 0 1 } */
+	uint8_t buf20[] = {
+		0x06,	/* OBJECT IDENTIFIER */
+		0x04,	/* Length */
+		0x52, 0x01, 0x00, 0x01
+	};
+	int buf20_check[] = { 2, 2, 1, 0, 1 };
+
 
 	CHECK_OID(1);	/* buf1, buf1_check */
 	CHECK_ROID(2);	/* buf2, buf2_check */
 	CHECK_OID(3);	/* buf3, buf3_check */
 	CHECK_OID(4);	/* buf4, buf4_check */
 	CHECK_OID(19);	/* buf19, buf19_check */
+	CHECK_OID(20);	/* buf20, buf20_check */
 
 	CHECK_REGEN(5);	/* Regenerate RELATIVE-OID */
 	CHECK_REGEN(6);
@@ -320,6 +329,8 @@ main() {
 	CHECK_REGEN_OID(16);
 	CHECK_REGEN_OID(17);
 	CHECK_REGEN_OID(18);
+	CHECK_REGEN_OID(19);
+	CHECK_REGEN_OID(20);
 
 	for(i = 0; i < 100000; i++) {
 		int bufA_check[3] = { 2, i, rand() };
