@@ -7,6 +7,11 @@
 #include <constraints.c>
 #include <sys/time.h>
 
+static int errlog(const void *buf, size_t size, void *key) {
+	fwrite(buf, 1, size, stdout);
+	return 0;
+}
+
 static void
 check(int expect_length, char *buf, int buflen) {
 	UTF8String_t st;
@@ -20,7 +25,7 @@ check(int expect_length, char *buf, int buflen) {
 
 	for(ret = 0; ret < buflen; ret++)
 		printf("%c", buf[ret]);
-	ret = UTF8String_length(&st, 0, 0, 0);
+	ret = UTF8String_length(&st, 0, errlog, 0);
 	printf("]: size=%d, expect=%d, got=%d\n",
 		buflen, expect_length, ret);
 	assert(ret == expect_length);
@@ -44,14 +49,14 @@ check_speed() {
 	st.buf = long_test;
 	st.size = sizeof(long_test) - 1;
 
-	ret = UTF8String_length(&st, 0, 0, 0);
+	ret = UTF8String_length(&st, 0, errlog, 0);
 	assert(ret == 40);
 	printf("Now wait a bit...\n");
 
 	gettimeofday(&tv, 0);
 	start = tv.tv_sec + tv.tv_usec / 1000000.0;
 	for(i = 0; i < cycles; i++) {
-		ret += UTF8String_length(&st, 0, 0, 0);
+		ret += UTF8String_length(&st, 0, errlog, 0);
 	}
 	gettimeofday(&tv, 0);
 	stop = tv.tv_sec + tv.tv_usec / 1000000.0;
