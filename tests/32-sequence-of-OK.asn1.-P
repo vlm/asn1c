@@ -7,7 +7,7 @@
 
 /*** <<< DEPS [Programming] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_Programming;
+extern asn_TYPE_descriptor_t asn_DEF_Programming;
 
 /*** <<< TYPE-DECLS [Programming] >>> ***/
 
@@ -16,29 +16,29 @@ typedef struct Programming {
 	A_SEQUENCE_OF(Fault_t) list;
 	
 	/* Context for parsing across buffer boundaries */
-	ber_dec_ctx_t _ber_dec_ctx;
+	asn_struct_ctx_t _asn_ctx;
 } Programming_t;
 
 /*** <<< STAT-DEFS [Programming] >>> ***/
 
-static asn1_TYPE_member_t asn1_MBR_Programming[] = {
+static asn_TYPE_member_t asn_MBR_Programming[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn1_DEF_Fault,
+		.type = (void *)&asn_DEF_Fault,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn1_DEF_Programming_tags[] = {
+static ber_tlv_tag_t asn_DEF_Programming_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_SET_OF_specifics_t asn1_DEF_Programming_specs = {
+static asn_SET_OF_specifics_t asn_DEF_Programming_specs = {
 	sizeof(struct Programming),
-	offsetof(struct Programming, _ber_dec_ctx),
+	offsetof(struct Programming, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
-asn1_TYPE_descriptor_t asn1_DEF_Programming = {
+asn_TYPE_descriptor_t asn_DEF_Programming = {
 	"Programming",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
@@ -48,15 +48,15 @@ asn1_TYPE_descriptor_t asn1_DEF_Programming = {
 	0,				/* Not implemented yet */
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_Programming_tags,
-	sizeof(asn1_DEF_Programming_tags)
-		/sizeof(asn1_DEF_Programming_tags[0]), /* 1 */
-	asn1_DEF_Programming_tags,	/* Same as above */
-	sizeof(asn1_DEF_Programming_tags)
-		/sizeof(asn1_DEF_Programming_tags[0]), /* 1 */
-	asn1_MBR_Programming,
+	asn_DEF_Programming_tags,
+	sizeof(asn_DEF_Programming_tags)
+		/sizeof(asn_DEF_Programming_tags[0]), /* 1 */
+	asn_DEF_Programming_tags,	/* Same as above */
+	sizeof(asn_DEF_Programming_tags)
+		/sizeof(asn_DEF_Programming_tags[0]), /* 1 */
+	asn_MBR_Programming,
 	1,	/* Single element */
-	&asn1_DEF_Programming_specs	/* Additional specs */
+	&asn_DEF_Programming_specs	/* Additional specs */
 };
 
 
@@ -68,7 +68,7 @@ asn1_TYPE_descriptor_t asn1_DEF_Programming = {
 
 /*** <<< DEPS [Fault] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_Fault;
+extern asn_TYPE_descriptor_t asn_DEF_Fault;
 
 /*** <<< TYPE-DECLS [Fault] >>> ***/
 
@@ -77,29 +77,29 @@ typedef struct Fault {
 	A_SET_OF(Error_t) list;
 	
 	/* Context for parsing across buffer boundaries */
-	ber_dec_ctx_t _ber_dec_ctx;
+	asn_struct_ctx_t _asn_ctx;
 } Fault_t;
 
 /*** <<< STAT-DEFS [Fault] >>> ***/
 
-static asn1_TYPE_member_t asn1_MBR_Fault[] = {
+static asn_TYPE_member_t asn_MBR_Fault[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_Error,
+		.type = (void *)&asn_DEF_Error,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn1_DEF_Fault_tags[] = {
+static ber_tlv_tag_t asn_DEF_Fault_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn1_SET_OF_specifics_t asn1_DEF_Fault_specs = {
+static asn_SET_OF_specifics_t asn_DEF_Fault_specs = {
 	sizeof(struct Fault),
-	offsetof(struct Fault, _ber_dec_ctx),
+	offsetof(struct Fault, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
-asn1_TYPE_descriptor_t asn1_DEF_Fault = {
+asn_TYPE_descriptor_t asn_DEF_Fault = {
 	"Fault",
 	SET_OF_free,
 	SET_OF_print,
@@ -109,15 +109,15 @@ asn1_TYPE_descriptor_t asn1_DEF_Fault = {
 	0,				/* Not implemented yet */
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_Fault_tags,
-	sizeof(asn1_DEF_Fault_tags)
-		/sizeof(asn1_DEF_Fault_tags[0]), /* 1 */
-	asn1_DEF_Fault_tags,	/* Same as above */
-	sizeof(asn1_DEF_Fault_tags)
-		/sizeof(asn1_DEF_Fault_tags[0]), /* 1 */
-	asn1_MBR_Fault,
+	asn_DEF_Fault_tags,
+	sizeof(asn_DEF_Fault_tags)
+		/sizeof(asn_DEF_Fault_tags[0]), /* 1 */
+	asn_DEF_Fault_tags,	/* Same as above */
+	sizeof(asn_DEF_Fault_tags)
+		/sizeof(asn_DEF_Fault_tags[0]), /* 1 */
+	asn_MBR_Fault,
 	1,	/* Single element */
-	&asn1_DEF_Fault_specs	/* Additional specs */
+	&asn_DEF_Fault_specs	/* Additional specs */
 };
 
 
@@ -127,7 +127,7 @@ asn1_TYPE_descriptor_t asn1_DEF_Fault = {
 
 /*** <<< DEPS [Error] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_Error;
+extern asn_TYPE_descriptor_t asn_DEF_Error;
 
 /*** <<< TYPE-DECLS [Error] >>> ***/
 
@@ -139,25 +139,25 @@ typedef struct Error {
 	 */
 	
 	/* Context for parsing across buffer boundaries */
-	ber_dec_ctx_t _ber_dec_ctx;
+	asn_struct_ctx_t _asn_ctx;
 } Error_t;
 
 /*** <<< STAT-DEFS [Error] >>> ***/
 
-static ber_tlv_tag_t asn1_DEF_Error_tags[] = {
+static ber_tlv_tag_t asn_DEF_Error_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_TYPE_tag2member_t asn1_DEF_Error_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_Error_tag2el[] = {
 };
-static asn1_SEQUENCE_specifics_t asn1_DEF_Error_specs = {
+static asn_SEQUENCE_specifics_t asn_DEF_Error_specs = {
 	sizeof(struct Error),
-	offsetof(struct Error, _ber_dec_ctx),
-	asn1_DEF_Error_tag2el,
+	offsetof(struct Error, _asn_ctx),
+	asn_DEF_Error_tag2el,
 	0,	/* Count of tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-asn1_TYPE_descriptor_t asn1_DEF_Error = {
+asn_TYPE_descriptor_t asn_DEF_Error = {
 	"Error",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -167,13 +167,13 @@ asn1_TYPE_descriptor_t asn1_DEF_Error = {
 	0,				/* Not implemented yet */
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_Error_tags,
-	sizeof(asn1_DEF_Error_tags)
-		/sizeof(asn1_DEF_Error_tags[0]), /* 1 */
-	asn1_DEF_Error_tags,	/* Same as above */
-	sizeof(asn1_DEF_Error_tags)
-		/sizeof(asn1_DEF_Error_tags[0]), /* 1 */
+	asn_DEF_Error_tags,
+	sizeof(asn_DEF_Error_tags)
+		/sizeof(asn_DEF_Error_tags[0]), /* 1 */
+	asn_DEF_Error_tags,	/* Same as above */
+	sizeof(asn_DEF_Error_tags)
+		/sizeof(asn_DEF_Error_tags[0]), /* 1 */
 	0, 0,	/* No members */
-	&asn1_DEF_Error_specs	/* Additional specs */
+	&asn_DEF_Error_specs	/* Additional specs */
 };
 

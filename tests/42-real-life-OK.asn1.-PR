@@ -9,7 +9,7 @@
 
 /*** <<< DEPS [LogLine] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_LogLine;
+extern asn_TYPE_descriptor_t asn_DEF_LogLine;
 
 /*** <<< TYPE-DECLS [LogLine] >>> ***/
 
@@ -20,7 +20,7 @@ typedef struct LogLine {
 		A_SEQUENCE_OF(VariablePartSet_t) list;
 		
 		/* Context for parsing across buffer boundaries */
-		ber_dec_ctx_t _ber_dec_ctx;
+		asn_struct_ctx_t _asn_ctx;
 	} varsets;
 	/*
 	 * This type is extensible,
@@ -28,13 +28,13 @@ typedef struct LogLine {
 	 */
 	
 	/* Context for parsing across buffer boundaries */
-	ber_dec_ctx_t _ber_dec_ctx;
+	asn_struct_ctx_t _asn_ctx;
 } LogLine_t;
 
 /*** <<< CODE [LogLine] >>> ***/
 
 static int
-memb_varsets_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_varsets_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	size_t size;
 	
@@ -65,25 +65,25 @@ memb_varsets_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [LogLine] >>> ***/
 
-static asn1_TYPE_member_t asn1_MBR_varsets[] = {
+static asn_TYPE_member_t asn_MBR_varsets[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_VariablePartSet,
+		.type = (void *)&asn_DEF_VariablePartSet,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn1_DEF_varsets_tags[] = {
+static ber_tlv_tag_t asn_DEF_varsets_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_SET_OF_specifics_t asn1_DEF_varsets_specs = {
+static asn_SET_OF_specifics_t asn_DEF_varsets_specs = {
 	sizeof(struct varsets),
-	offsetof(struct varsets, _ber_dec_ctx),
+	offsetof(struct varsets, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn1_TYPE_descriptor_t asn1_DEF_varsets = {
+asn_TYPE_descriptor_t asn_DEF_varsets = {
 	"varsets",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
@@ -93,49 +93,49 @@ asn1_TYPE_descriptor_t asn1_DEF_varsets = {
 	0,				/* Not implemented yet */
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_varsets_tags,
-	sizeof(asn1_DEF_varsets_tags)
-		/sizeof(asn1_DEF_varsets_tags[0]), /* 1 */
-	asn1_DEF_varsets_tags,	/* Same as above */
-	sizeof(asn1_DEF_varsets_tags)
-		/sizeof(asn1_DEF_varsets_tags[0]), /* 1 */
-	asn1_MBR_varsets,
+	asn_DEF_varsets_tags,
+	sizeof(asn_DEF_varsets_tags)
+		/sizeof(asn_DEF_varsets_tags[0]), /* 1 */
+	asn_DEF_varsets_tags,	/* Same as above */
+	sizeof(asn_DEF_varsets_tags)
+		/sizeof(asn_DEF_varsets_tags[0]), /* 1 */
+	asn_MBR_varsets,
 	1,	/* Single element */
-	&asn1_DEF_varsets_specs	/* Additional specs */
+	&asn_DEF_varsets_specs	/* Additional specs */
 };
 
-static asn1_TYPE_member_t asn1_MBR_LogLine[] = {
+static asn_TYPE_member_t asn_MBR_LogLine[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, line_digest),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_IA5String,
+		.type = (void *)&asn_DEF_IA5String,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "line-digest"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, varsets),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_varsets,
+		.type = (void *)&asn_DEF_varsets,
 		.memb_constraints = memb_varsets_1_constraint,
 		.name = "varsets"
 		},
 };
-static ber_tlv_tag_t asn1_DEF_LogLine_tags[] = {
+static ber_tlv_tag_t asn_DEF_LogLine_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_TYPE_tag2member_t asn1_DEF_LogLine_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_LogLine_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* varsets at 25 */
     { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 0, 0, 0 }, /* line-digest at 23 */
 };
-static asn1_SEQUENCE_specifics_t asn1_DEF_LogLine_specs = {
+static asn_SEQUENCE_specifics_t asn_DEF_LogLine_specs = {
 	sizeof(struct LogLine),
-	offsetof(struct LogLine, _ber_dec_ctx),
-	asn1_DEF_LogLine_tag2el,
+	offsetof(struct LogLine, _asn_ctx),
+	asn_DEF_LogLine_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
-asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
+asn_TYPE_descriptor_t asn_DEF_LogLine = {
 	"LogLine",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -145,15 +145,15 @@ asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 	0,				/* Not implemented yet */
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_LogLine_tags,
-	sizeof(asn1_DEF_LogLine_tags)
-		/sizeof(asn1_DEF_LogLine_tags[0]), /* 1 */
-	asn1_DEF_LogLine_tags,	/* Same as above */
-	sizeof(asn1_DEF_LogLine_tags)
-		/sizeof(asn1_DEF_LogLine_tags[0]), /* 1 */
-	asn1_MBR_LogLine,
+	asn_DEF_LogLine_tags,
+	sizeof(asn_DEF_LogLine_tags)
+		/sizeof(asn_DEF_LogLine_tags[0]), /* 1 */
+	asn_DEF_LogLine_tags,	/* Same as above */
+	sizeof(asn_DEF_LogLine_tags)
+		/sizeof(asn_DEF_LogLine_tags[0]), /* 1 */
+	asn_MBR_LogLine,
 	2,	/* Elements count */
-	&asn1_DEF_LogLine_specs	/* Additional specs */
+	&asn_DEF_LogLine_specs	/* Additional specs */
 };
 
 
@@ -167,7 +167,7 @@ asn1_TYPE_descriptor_t asn1_DEF_LogLine = {
 
 /*** <<< DEPS [VariablePartSet] >>> ***/
 
-extern asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet;
+extern asn_TYPE_descriptor_t asn_DEF_VariablePartSet;
 
 /*** <<< TYPE-DECLS [VariablePartSet] >>> ***/
 
@@ -177,7 +177,7 @@ typedef struct VariablePartSet {
 		A_SEQUENCE_OF(VariablePart_t) list;
 		
 		/* Context for parsing across buffer boundaries */
-		ber_dec_ctx_t _ber_dec_ctx;
+		asn_struct_ctx_t _asn_ctx;
 	} vparts;
 	ActionItem_t	 resolution;
 	/*
@@ -186,13 +186,13 @@ typedef struct VariablePartSet {
 	 */
 	
 	/* Context for parsing across buffer boundaries */
-	ber_dec_ctx_t _ber_dec_ctx;
+	asn_struct_ctx_t _asn_ctx;
 } VariablePartSet_t;
 
 /*** <<< CODE [VariablePartSet] >>> ***/
 
 static int
-memb_vparts_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_vparts_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	
 	if(!sptr) {
@@ -213,25 +213,25 @@ memb_vparts_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [VariablePartSet] >>> ***/
 
-static asn1_TYPE_member_t asn1_MBR_vparts[] = {
+static asn_TYPE_member_t asn_MBR_vparts[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_VariablePart,
+		.type = (void *)&asn_DEF_VariablePart,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn1_DEF_vparts_tags[] = {
+static ber_tlv_tag_t asn_DEF_vparts_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_SET_OF_specifics_t asn1_DEF_vparts_specs = {
+static asn_SET_OF_specifics_t asn_DEF_vparts_specs = {
 	sizeof(struct vparts),
-	offsetof(struct vparts, _ber_dec_ctx),
+	offsetof(struct vparts, _asn_ctx),
 	1,	/* XER encoding is XMLValueList */
 };
 static /* Use -fall-defs-global to expose */
-asn1_TYPE_descriptor_t asn1_DEF_vparts = {
+asn_TYPE_descriptor_t asn_DEF_vparts = {
 	"vparts",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
@@ -241,49 +241,49 @@ asn1_TYPE_descriptor_t asn1_DEF_vparts = {
 	0,				/* Not implemented yet */
 	SEQUENCE_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_vparts_tags,
-	sizeof(asn1_DEF_vparts_tags)
-		/sizeof(asn1_DEF_vparts_tags[0]), /* 1 */
-	asn1_DEF_vparts_tags,	/* Same as above */
-	sizeof(asn1_DEF_vparts_tags)
-		/sizeof(asn1_DEF_vparts_tags[0]), /* 1 */
-	asn1_MBR_vparts,
+	asn_DEF_vparts_tags,
+	sizeof(asn_DEF_vparts_tags)
+		/sizeof(asn_DEF_vparts_tags[0]), /* 1 */
+	asn_DEF_vparts_tags,	/* Same as above */
+	sizeof(asn_DEF_vparts_tags)
+		/sizeof(asn_DEF_vparts_tags[0]), /* 1 */
+	asn_MBR_vparts,
 	1,	/* Single element */
-	&asn1_DEF_vparts_specs	/* Additional specs */
+	&asn_DEF_vparts_specs	/* Additional specs */
 };
 
-static asn1_TYPE_member_t asn1_MBR_VariablePartSet[] = {
+static asn_TYPE_member_t asn_MBR_VariablePartSet[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, vparts),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_vparts,
+		.type = (void *)&asn_DEF_vparts,
 		.memb_constraints = memb_vparts_2_constraint,
 		.name = "vparts"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, resolution),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_ActionItem,
+		.type = (void *)&asn_DEF_ActionItem,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "resolution"
 		},
 };
-static ber_tlv_tag_t asn1_DEF_VariablePartSet_tags[] = {
+static ber_tlv_tag_t asn_DEF_VariablePartSet_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_TYPE_tag2member_t asn1_DEF_VariablePartSet_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_VariablePartSet_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* vparts at 33 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 }, /* resolution at 35 */
 };
-static asn1_SEQUENCE_specifics_t asn1_DEF_VariablePartSet_specs = {
+static asn_SEQUENCE_specifics_t asn_DEF_VariablePartSet_specs = {
 	sizeof(struct VariablePartSet),
-	offsetof(struct VariablePartSet, _ber_dec_ctx),
-	asn1_DEF_VariablePartSet_tag2el,
+	offsetof(struct VariablePartSet, _asn_ctx),
+	asn_DEF_VariablePartSet_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
-asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
+asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
 	"VariablePartSet",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -293,15 +293,15 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePartSet = {
 	0,				/* Not implemented yet */
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_VariablePartSet_tags,
-	sizeof(asn1_DEF_VariablePartSet_tags)
-		/sizeof(asn1_DEF_VariablePartSet_tags[0]), /* 1 */
-	asn1_DEF_VariablePartSet_tags,	/* Same as above */
-	sizeof(asn1_DEF_VariablePartSet_tags)
-		/sizeof(asn1_DEF_VariablePartSet_tags[0]), /* 1 */
-	asn1_MBR_VariablePartSet,
+	asn_DEF_VariablePartSet_tags,
+	sizeof(asn_DEF_VariablePartSet_tags)
+		/sizeof(asn_DEF_VariablePartSet_tags[0]), /* 1 */
+	asn_DEF_VariablePartSet_tags,	/* Same as above */
+	sizeof(asn_DEF_VariablePartSet_tags)
+		/sizeof(asn_DEF_VariablePartSet_tags[0]), /* 1 */
+	asn_MBR_VariablePartSet,
 	2,	/* Elements count */
-	&asn1_DEF_VariablePartSet_specs	/* Additional specs */
+	&asn_DEF_VariablePartSet_specs	/* Additional specs */
 };
 
 
@@ -321,7 +321,7 @@ typedef enum VariablePart_PR {
 	VariablePart_PR_vrange,
 	/* Extensions may appear below */
 } VariablePart_PR;
-extern asn1_TYPE_descriptor_t asn1_DEF_VariablePart;
+extern asn_TYPE_descriptor_t asn_DEF_VariablePart;
 
 /*** <<< TYPE-DECLS [VariablePart] >>> ***/
 
@@ -333,7 +333,7 @@ typedef struct VariablePart {
 			A_SET_OF(VisibleString_t) list;
 			
 			/* Context for parsing across buffer boundaries */
-			ber_dec_ctx_t _ber_dec_ctx;
+			asn_struct_ctx_t _asn_ctx;
 		} vset;
 		struct vrange {
 			VisibleString_t	 from;
@@ -344,7 +344,7 @@ typedef struct VariablePart {
 			 */
 			
 			/* Context for parsing across buffer boundaries */
-			ber_dec_ctx_t _ber_dec_ctx;
+			asn_struct_ctx_t _asn_ctx;
 		} vrange;
 		/*
 		 * This type is extensible,
@@ -353,13 +353,13 @@ typedef struct VariablePart {
 	} choice;
 	
 	/* Context for parsing across buffer boundaries */
-	ber_dec_ctx_t _ber_dec_ctx;
+	asn_struct_ctx_t _asn_ctx;
 } VariablePart_t;
 
 /*** <<< CODE [VariablePart] >>> ***/
 
 static int
-memb_vset_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
+memb_vset_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	size_t size;
 	
@@ -390,25 +390,25 @@ memb_vset_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [VariablePart] >>> ***/
 
-static asn1_TYPE_member_t asn1_MBR_vset[] = {
+static asn_TYPE_member_t asn_MBR_vset[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_VisibleString,
+		.type = (void *)&asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn1_DEF_vset_tags[] = {
+static ber_tlv_tag_t asn_DEF_vset_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn1_SET_OF_specifics_t asn1_DEF_vset_specs = {
+static asn_SET_OF_specifics_t asn_DEF_vset_specs = {
 	sizeof(struct vset),
-	offsetof(struct vset, _ber_dec_ctx),
+	offsetof(struct vset, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn1_TYPE_descriptor_t asn1_DEF_vset = {
+asn_TYPE_descriptor_t asn_DEF_vset = {
 	"vset",
 	SET_OF_free,
 	SET_OF_print,
@@ -418,50 +418,50 @@ asn1_TYPE_descriptor_t asn1_DEF_vset = {
 	0,				/* Not implemented yet */
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_vset_tags,
-	sizeof(asn1_DEF_vset_tags)
-		/sizeof(asn1_DEF_vset_tags[0]), /* 1 */
-	asn1_DEF_vset_tags,	/* Same as above */
-	sizeof(asn1_DEF_vset_tags)
-		/sizeof(asn1_DEF_vset_tags[0]), /* 1 */
-	asn1_MBR_vset,
+	asn_DEF_vset_tags,
+	sizeof(asn_DEF_vset_tags)
+		/sizeof(asn_DEF_vset_tags[0]), /* 1 */
+	asn_DEF_vset_tags,	/* Same as above */
+	sizeof(asn_DEF_vset_tags)
+		/sizeof(asn_DEF_vset_tags[0]), /* 1 */
+	asn_MBR_vset,
 	1,	/* Single element */
-	&asn1_DEF_vset_specs	/* Additional specs */
+	&asn_DEF_vset_specs	/* Additional specs */
 };
 
-static asn1_TYPE_member_t asn1_MBR_vrange[] = {
+static asn_TYPE_member_t asn_MBR_vrange[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct vrange, from),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_VisibleString,
+		.type = (void *)&asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "from"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct vrange, to),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_VisibleString,
+		.type = (void *)&asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "to"
 		},
 };
-static ber_tlv_tag_t asn1_DEF_vrange_tags[] = {
+static ber_tlv_tag_t asn_DEF_vrange_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_TYPE_tag2member_t asn1_DEF_vrange_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_vrange_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0, 0, 1 }, /* from at 45 */
     { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1, -1, 0 }, /* to at 46 */
 };
-static asn1_SEQUENCE_specifics_t asn1_DEF_vrange_specs = {
+static asn_SEQUENCE_specifics_t asn_DEF_vrange_specs = {
 	sizeof(struct vrange),
-	offsetof(struct vrange, _ber_dec_ctx),
-	asn1_DEF_vrange_tag2el,
+	offsetof(struct vrange, _asn_ctx),
+	asn_DEF_vrange_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn1_TYPE_descriptor_t asn1_DEF_vrange = {
+asn_TYPE_descriptor_t asn_DEF_vrange = {
 	"vrange",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -471,47 +471,47 @@ asn1_TYPE_descriptor_t asn1_DEF_vrange = {
 	0,				/* Not implemented yet */
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_vrange_tags,
-	sizeof(asn1_DEF_vrange_tags)
-		/sizeof(asn1_DEF_vrange_tags[0]), /* 1 */
-	asn1_DEF_vrange_tags,	/* Same as above */
-	sizeof(asn1_DEF_vrange_tags)
-		/sizeof(asn1_DEF_vrange_tags[0]), /* 1 */
-	asn1_MBR_vrange,
+	asn_DEF_vrange_tags,
+	sizeof(asn_DEF_vrange_tags)
+		/sizeof(asn_DEF_vrange_tags[0]), /* 1 */
+	asn_DEF_vrange_tags,	/* Same as above */
+	sizeof(asn_DEF_vrange_tags)
+		/sizeof(asn_DEF_vrange_tags[0]), /* 1 */
+	asn_MBR_vrange,
 	2,	/* Elements count */
-	&asn1_DEF_vrange_specs	/* Additional specs */
+	&asn_DEF_vrange_specs	/* Additional specs */
 };
 
-static asn1_TYPE_member_t asn1_MBR_VariablePart[] = {
+static asn_TYPE_member_t asn_MBR_VariablePart[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vset),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_vset,
+		.type = (void *)&asn_DEF_vset,
 		.memb_constraints = memb_vset_3_constraint,
 		.name = "vset"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vrange),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_vrange,
+		.type = (void *)&asn_DEF_vrange,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "vrange"
 		},
 };
-static asn1_TYPE_tag2member_t asn1_DEF_VariablePart_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_VariablePart_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* vrange at 45 */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 }, /* vset at 42 */
 };
-static asn1_CHOICE_specifics_t asn1_DEF_VariablePart_specs = {
+static asn_CHOICE_specifics_t asn_DEF_VariablePart_specs = {
 	sizeof(struct VariablePart),
-	offsetof(struct VariablePart, _ber_dec_ctx),
+	offsetof(struct VariablePart, _asn_ctx),
 	offsetof(struct VariablePart, present),
 	sizeof(((struct VariablePart *)0)->present),
-	asn1_DEF_VariablePart_tag2el,
+	asn_DEF_VariablePart_tag2el,
 	2,	/* Count of tags in the map */
 	1	/* Whether extensible */
 };
-asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
+asn_TYPE_descriptor_t asn_DEF_VariablePart = {
 	"VariablePart",
 	CHOICE_free,
 	CHOICE_print,
@@ -525,9 +525,9 @@ asn1_TYPE_descriptor_t asn1_DEF_VariablePart = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	asn1_MBR_VariablePart,
+	asn_MBR_VariablePart,
 	2,	/* Elements count */
-	&asn1_DEF_VariablePart_specs	/* Additional specs */
+	&asn_DEF_VariablePart_specs	/* Additional specs */
 };
 
 
@@ -550,7 +550,7 @@ typedef enum accept_as {
 	 * Enumeration is extensible
 	 */
 } accept_as_e;
-extern asn1_TYPE_descriptor_t asn1_DEF_ActionItem;
+extern asn_TYPE_descriptor_t asn_DEF_ActionItem;
 
 /*** <<< TYPE-DECLS [ActionItem] >>> ***/
 
@@ -563,7 +563,7 @@ typedef struct ActionItem {
 			A_SET_OF(VisibleString_t) list;
 			
 			/* Context for parsing across buffer boundaries */
-			ber_dec_ctx_t _ber_dec_ctx;
+			asn_struct_ctx_t _asn_ctx;
 		} email;
 		/*
 		 * This type is extensible,
@@ -571,7 +571,7 @@ typedef struct ActionItem {
 		 */
 		
 		/* Context for parsing across buffer boundaries */
-		ber_dec_ctx_t _ber_dec_ctx;
+		asn_struct_ctx_t _asn_ctx;
 	} *notify;
 	/*
 	 * This type is extensible,
@@ -579,30 +579,30 @@ typedef struct ActionItem {
 	 */
 	
 	/* Context for parsing across buffer boundaries */
-	ber_dec_ctx_t _ber_dec_ctx;
+	asn_struct_ctx_t _asn_ctx;
 } ActionItem_t;
 
 /*** <<< STAT-DEFS [ActionItem] >>> ***/
 
-static asn1_TYPE_member_t asn1_MBR_email[] = {
+static asn_TYPE_member_t asn_MBR_email[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_VisibleString,
+		.type = (void *)&asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn1_DEF_email_tags[] = {
+static ber_tlv_tag_t asn_DEF_email_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn1_SET_OF_specifics_t asn1_DEF_email_specs = {
+static asn_SET_OF_specifics_t asn_DEF_email_specs = {
 	sizeof(struct email),
-	offsetof(struct email, _ber_dec_ctx),
+	offsetof(struct email, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn1_TYPE_descriptor_t asn1_DEF_email = {
+asn_TYPE_descriptor_t asn_DEF_email = {
 	"email",
 	SET_OF_free,
 	SET_OF_print,
@@ -612,50 +612,50 @@ asn1_TYPE_descriptor_t asn1_DEF_email = {
 	0,				/* Not implemented yet */
 	SET_OF_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_email_tags,
-	sizeof(asn1_DEF_email_tags)
-		/sizeof(asn1_DEF_email_tags[0]), /* 1 */
-	asn1_DEF_email_tags,	/* Same as above */
-	sizeof(asn1_DEF_email_tags)
-		/sizeof(asn1_DEF_email_tags[0]), /* 1 */
-	asn1_MBR_email,
+	asn_DEF_email_tags,
+	sizeof(asn_DEF_email_tags)
+		/sizeof(asn_DEF_email_tags[0]), /* 1 */
+	asn_DEF_email_tags,	/* Same as above */
+	sizeof(asn_DEF_email_tags)
+		/sizeof(asn_DEF_email_tags[0]), /* 1 */
+	asn_MBR_email,
 	1,	/* Single element */
-	&asn1_DEF_email_specs	/* Additional specs */
+	&asn_DEF_email_specs	/* Additional specs */
 };
 
-static asn1_TYPE_member_t asn1_MBR_notify[] = {
+static asn_TYPE_member_t asn_MBR_notify[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, critical),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_BOOLEAN,
+		.type = (void *)&asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "critical"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, email),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_email,
+		.type = (void *)&asn_DEF_email,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "email"
 		},
 };
-static ber_tlv_tag_t asn1_DEF_notify_tags[] = {
+static ber_tlv_tag_t asn_DEF_notify_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_TYPE_tag2member_t asn1_DEF_notify_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_notify_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* critical at 61 */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 }, /* email at 62 */
 };
-static asn1_SEQUENCE_specifics_t asn1_DEF_notify_specs = {
+static asn_SEQUENCE_specifics_t asn_DEF_notify_specs = {
 	sizeof(struct notify),
-	offsetof(struct notify, _ber_dec_ctx),
-	asn1_DEF_notify_tag2el,
+	offsetof(struct notify, _asn_ctx),
+	asn_DEF_notify_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn1_TYPE_descriptor_t asn1_DEF_notify = {
+asn_TYPE_descriptor_t asn_DEF_notify = {
 	"notify",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -665,49 +665,49 @@ asn1_TYPE_descriptor_t asn1_DEF_notify = {
 	0,				/* Not implemented yet */
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_notify_tags,
-	sizeof(asn1_DEF_notify_tags)
-		/sizeof(asn1_DEF_notify_tags[0]), /* 1 */
-	asn1_DEF_notify_tags,	/* Same as above */
-	sizeof(asn1_DEF_notify_tags)
-		/sizeof(asn1_DEF_notify_tags[0]), /* 1 */
-	asn1_MBR_notify,
+	asn_DEF_notify_tags,
+	sizeof(asn_DEF_notify_tags)
+		/sizeof(asn_DEF_notify_tags[0]), /* 1 */
+	asn_DEF_notify_tags,	/* Same as above */
+	sizeof(asn_DEF_notify_tags)
+		/sizeof(asn_DEF_notify_tags[0]), /* 1 */
+	asn_MBR_notify,
 	2,	/* Elements count */
-	&asn1_DEF_notify_specs	/* Additional specs */
+	&asn_DEF_notify_specs	/* Additional specs */
 };
 
-static asn1_TYPE_member_t asn1_MBR_ActionItem[] = {
+static asn_TYPE_member_t asn_MBR_ActionItem[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct ActionItem, accept_as),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_ENUMERATED,
+		.type = (void *)&asn_DEF_ENUMERATED,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "accept-as"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ActionItem, notify),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn1_DEF_notify,
+		.type = (void *)&asn_DEF_notify,
 		.memb_constraints = 0,	/* Defer to actual type */
 		.name = "notify"
 		},
 };
-static ber_tlv_tag_t asn1_DEF_ActionItem_tags[] = {
+static ber_tlv_tag_t asn_DEF_ActionItem_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn1_TYPE_tag2member_t asn1_DEF_ActionItem_tag2el[] = {
+static asn_TYPE_tag2member_t asn_DEF_ActionItem_tag2el[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 }, /* accept-as at 55 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* notify at 61 */
 };
-static asn1_SEQUENCE_specifics_t asn1_DEF_ActionItem_specs = {
+static asn_SEQUENCE_specifics_t asn_DEF_ActionItem_specs = {
 	sizeof(struct ActionItem),
-	offsetof(struct ActionItem, _ber_dec_ctx),
-	asn1_DEF_ActionItem_tag2el,
+	offsetof(struct ActionItem, _asn_ctx),
+	asn_DEF_ActionItem_tag2el,
 	2,	/* Count of tags in the map */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
 };
-asn1_TYPE_descriptor_t asn1_DEF_ActionItem = {
+asn_TYPE_descriptor_t asn_DEF_ActionItem = {
 	"ActionItem",
 	SEQUENCE_free,
 	SEQUENCE_print,
@@ -717,14 +717,14 @@ asn1_TYPE_descriptor_t asn1_DEF_ActionItem = {
 	0,				/* Not implemented yet */
 	SEQUENCE_encode_xer,
 	0,	/* Use generic outmost tag fetcher */
-	asn1_DEF_ActionItem_tags,
-	sizeof(asn1_DEF_ActionItem_tags)
-		/sizeof(asn1_DEF_ActionItem_tags[0]), /* 1 */
-	asn1_DEF_ActionItem_tags,	/* Same as above */
-	sizeof(asn1_DEF_ActionItem_tags)
-		/sizeof(asn1_DEF_ActionItem_tags[0]), /* 1 */
-	asn1_MBR_ActionItem,
+	asn_DEF_ActionItem_tags,
+	sizeof(asn_DEF_ActionItem_tags)
+		/sizeof(asn_DEF_ActionItem_tags[0]), /* 1 */
+	asn_DEF_ActionItem_tags,	/* Same as above */
+	sizeof(asn_DEF_ActionItem_tags)
+		/sizeof(asn_DEF_ActionItem_tags[0]), /* 1 */
+	asn_MBR_ActionItem,
 	2,	/* Elements count */
-	&asn1_DEF_ActionItem_specs	/* Additional specs */
+	&asn_DEF_ActionItem_specs	/* Additional specs */
 };
 
