@@ -210,7 +210,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *head, ber_dec_ctx_t *ctx,
 		ADVANCE(tag_len + len_len);
 
 		limit_len -= (tag_len + len_len);
-		if(size > limit_len) {
+		if((ssize_t)size > limit_len) {
 			/*
 			 * Make sure that we won't consume more bytes
 			 * from the large buffer than the inferred limit.

@@ -43,7 +43,7 @@ uint8_t buf2[] = {
 };
 
 static void
-check(int is_ok, uint8_t *buf, int size, int consumed) {
+check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T_t t, *tp;
 	ber_dec_rval_t rval;
 
@@ -102,6 +102,9 @@ try_corrupt(uint8_t *buf, int size) {
 
 int
 main(int ac, char **av) {
+
+	(void)ac;	/* Unused argument */
+	(void)av;	/* Unused argument */
 
 	fprintf(stderr, "Must succeed:\n");
 	check(1, buf1, sizeof(buf1) + 20, sizeof(buf1));

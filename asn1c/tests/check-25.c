@@ -82,7 +82,7 @@ uint8_t buf1[] = {
 };
 
 static void
-check(int is_ok, uint8_t *buf, int size, int consumed) {
+check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 	T_t t, *tp;
 	ber_dec_rval_t rval;
 
@@ -164,10 +164,10 @@ try_corrupt(uint8_t *buf, int size, int allow_consume) {
 }
 
 static void
-partial_read(uint8_t *buf, int size) {
+partial_read(uint8_t *buf, size_t size) {
 	T_t t, *tp;
 	ber_dec_rval_t rval;
-	int i1, i2;
+	size_t i1, i2;
 	uint8_t *buf1 = alloca(size);
 	uint8_t *buf2 = alloca(size);
 	uint8_t *buf3 = alloca(size);
@@ -183,11 +183,11 @@ partial_read(uint8_t *buf, int size) {
 	for(i1 = 0; i1 < size; i1++) {
 		for(i2 = i1; i2 < size; i2++) {
 			uint8_t *chunk1 = buf;
-			int size1 = i1;
+			size_t size1 = i1;
 			uint8_t *chunk2 = buf + size1;
-			int size2 = i2 - i1;
+			size_t size2 = i2 - i1;
 			uint8_t *chunk3 = buf + size1 + size2;
-			int size3 = size - size1 - size2;
+			size_t size3 = size - size1 - size2;
 
 			fprintf(stderr, "\n%d:{%d, %d, %d}...\n",
 				size, size1, size2, size3);
@@ -238,6 +238,9 @@ partial_read(uint8_t *buf, int size) {
 
 int
 main(int ac, char **av) {
+
+	(void)ac;	/* Unused argument */
+	(void)av;	/* Unused argument */
 
 	/* Check that the full buffer may be decoded normally */
 	check(1, buf1, sizeof(buf1), sizeof(buf1) - 3);

@@ -24,7 +24,8 @@ asn1_TYPE_descriptor_t asn1_DEF_RELATIVE_OID = {
 	sizeof(asn1_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn1_DEF_RELATIVE_OID_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
-	0	/* Always in primitive form */
+	0,	/* Always in primitive form */
+	0	/* No specifics */
 };
 
 int
@@ -33,6 +34,9 @@ RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	const RELATIVE_OID_t *st = sptr;
 	int startn;
 	int i;
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
 
 	if(!st || !st->buf)
 		return cb("<absent>", 8, app_key);

@@ -84,6 +84,8 @@ asn1print_oid(asn1p_oid_t *oid, enum asn1print_flags_e flags) {
 	int ac;
 	int accum = 0;
 
+	(void)flags;	/* Unused argument */
+
 	printf("{");
 	for(ac = 0; ac < oid->arcs_count; ac++) {
 		if(accum + strlen(oid->arcs[ac].name?:"") > 50) {
@@ -111,6 +113,8 @@ static int
 asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags_e flags) {
 	int cc;
 
+	(void)flags;	/* Unused argument */
+
 	for(cc = 0; cc < ref->comp_count; cc++) {
 		if(cc) printf(".");
 		printf("%s", ref->components[cc].name);
@@ -122,6 +126,8 @@ asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags_e flags) {
 static int
 asn1print_tag(asn1p_expr_t *tc, enum asn1print_flags_e flags) {
 	struct asn1p_type_tag_s *tag = &tc->tag;
+
+	(void)flags;	/* Unused argument */
 
 	if(tag->tag_class == TC_NOCLASS)
 		return 0;

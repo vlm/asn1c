@@ -24,7 +24,7 @@ ber_fetch_length(int _is_constructed, void *bufptr, size_t size,
 		return 1;
 	} else {
 		ber_tlv_len_t len;
-		ssize_t skipped;
+		size_t skipped;
 
 		if(_is_constructed && oct == 0x80) {
 			*len_r = -1;	/* Indefinite length */
@@ -65,7 +65,7 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 	ber_tlv_len_t vlen;	/* Length of V in TLV */
 	ssize_t tl;		/* Length of L in TLV */
 	ssize_t ll;		/* Length of L in TLV */
-	ssize_t skip;
+	size_t skip;
 
 	/*
 	 * Determine the size of L in TLV.
@@ -118,7 +118,7 @@ ber_skip_length(int _is_constructed, void *ptr, size_t size) {
 
 ssize_t
 der_tlv_length_serialize(ber_tlv_len_t len, void *bufp, size_t size) {
-	ssize_t computed_size;	/* Size of len encoding */
+	size_t computed_size;	/* Size of len encoding */
 	uint8_t *buf = bufp;
 	uint8_t *end;
 	int i;

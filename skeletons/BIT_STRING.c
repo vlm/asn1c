@@ -66,6 +66,8 @@ BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	uint8_t *end;
 	char *p = scratch;
 
+	(void)td;	/* Unused argument */
+
 	if(!st || !st->buf) return cb("<absent>", 8, app_key);
 
 	ilevel += 4;

@@ -28,5 +28,6 @@ asn1_TYPE_descriptor_t asn1_DEF_NativeEnumerated = {
 	asn1_DEF_NativeEnumerated_tags,
 	sizeof(asn1_DEF_NativeEnumerated_tags)/sizeof(asn1_DEF_NativeEnumerated_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
-	0	/* Always in primitive form */
+	0,	/* Always in primitive form */
+	0	/* No specifics */
 };

@@ -10,7 +10,7 @@ ssize_t
 ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 	ber_tlv_tag_t val;
 	ber_tlv_tag_t tclass;
-	ssize_t skipped;
+	size_t skipped;
 
 	if(size == 0)
 		return 0;
@@ -61,7 +61,7 @@ ber_tlv_tag_fwrite(ber_tlv_tag_t tag, FILE *f) {
 	ssize_t ret;
 
 	ret = ber_tlv_tag_snprint(tag, buf, sizeof(buf));
-	if(ret >= sizeof(buf) || ret < 2) {
+	if(ret >= (ssize_t)sizeof(buf) || ret < 2) {
 		errno = EPERM;
 		return -1;
 	}
@@ -103,7 +103,7 @@ der_tlv_tag_serialize(ber_tlv_tag_t tag, void *bufp, size_t size) {
 	ber_tlv_tag_t tval = BER_TAG_VALUE(tag);
 	uint8_t *buf = bufp;
 	uint8_t *end;
-	ssize_t computed_size;
+	size_t computed_size;
 	int i;
 
 	if(tval <= 30) {

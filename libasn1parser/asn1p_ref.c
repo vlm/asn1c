@@ -80,7 +80,8 @@ asn1p_ref_name2lextype(char *name) {
 int
 asn1p_ref_add_component(asn1p_ref_t *ref, char *name, enum asn1p_ref_lex_type_e lex_type) {
 
-	if(!ref || !name || lex_type < RLT_UNKNOWN || lex_type >= RLT_MAX) {
+	if(!ref || !name
+	|| (int)lex_type < RLT_UNKNOWN || lex_type >= RLT_MAX) {
 		errno = EINVAL;
 		return -1;
 	}

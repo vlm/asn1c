@@ -10,7 +10,7 @@
  * (ctx->left) indicates the number of bytes _transferred_ for the structure.
  * (size) contains the number of bytes in the buffer passed.
  */
-#define	LEFT	((size<ctx->left)?size:ctx->left)
+#define	LEFT	((size<(size_t)ctx->left)?size:ctx->left)
 
 /*
  * If the subprocessor function returns with an indication that it wants
@@ -23,7 +23,7 @@
  * if the V processor returns with "want more data" even if the buffer
  * contains way more data than the V processor have seen.
  */
-#define	SIZE_VIOLATION	(ctx->left != -1 && ctx->left <= size)
+#define	SIZE_VIOLATION	(ctx->left != -1 && (size_t)ctx->left <= size)
 
 /*
  * This macro "eats" the part of the buffer which is definitely "consumed",
@@ -178,7 +178,7 @@ SET_OF_decode_ber(asn1_TYPE_descriptor_t *sd,
 		}
 
 		/* Outmost tag may be unknown and cannot be fetched/compared */
-		if(element->tag != -1) {
+		if(element->tag != (ber_tlv_tag_t)-1) {
 		    if(BER_TAGS_EQUAL(tlv_tag, element->tag)) {
 			/*
 			 * The new list member of expected type has arrived.
@@ -334,7 +334,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 		computed_size += erval.encoded;
 
 		/* Compute maximum encoding's size */
-		if(max_encoded_len < erval.encoded)
+		if(max_encoded_len < (size_t)erval.encoded)
 			max_encoded_len = erval.encoded;
 	}
 
@@ -429,7 +429,7 @@ SET_OF_encode_der(asn1_TYPE_descriptor_t *sd, void *ptr,
 	}
 	FREEMEM(encoded_els);
 
-	if(ret || computed_size != encoding_size) {
+	if(ret || computed_size != (size_t)encoding_size) {
 		/*
 		 * Standard callback failed, or
 		 * encoded size is not equal to the computed size.

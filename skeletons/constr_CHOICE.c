@@ -11,7 +11,7 @@
  * (ctx->left) indicates the number of bytes _transferred_ for the structure.
  * (size) contains the number of bytes in the buffer passed.
  */
-#define	LEFT	((size<ctx->left)?size:ctx->left)
+#define	LEFT	((size<(size_t)ctx->left)?size:ctx->left)
 
 /*
  * If the subprocessor function returns with an indication that it wants
@@ -24,7 +24,7 @@
  * if the V processor returns with "want more data" even if the buffer
  * contains way more data than the V processor have seen.
  */
-#define	SIZE_VIOLATION	(ctx->left >= 0 && ctx->left <= size)
+#define	SIZE_VIOLATION	(ctx->left >= 0 && (size_t)ctx->left <= size)
 
 /*
  * This macro "eats" the part of the buffer which is definitely "consumed",

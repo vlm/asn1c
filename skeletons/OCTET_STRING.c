@@ -25,6 +25,7 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 	  / sizeof(asn1_DEF_OCTET_STRING_tags[0]),
 	1,	/* Single UNIVERSAL tag may be implicitly overriden */
 	-1,	/* Both ways are fine (primitive and constructed) */
+	0	/* No specifics */
 };
 
 #define	_CH_PHASE(ctx, inc) do {	\
@@ -48,27 +49,27 @@ asn1_TYPE_descriptor_t asn1_DEF_OCTET_STRING = {
 		return rval;			\
 	} while(0)
 
-#define	APPEND(bufptr, bufsize)	do {			\
-		int _ns = ctx->step;	/* Allocated */	\
-		if(_ns <= (st->size + bufsize)) {	\
-			void *ptr;			\
-			do { _ns = _ns ? _ns<<2 : 16; }	\
-				while(_ns <= (st->size + bufsize));	\
-			ptr = REALLOC(st->buf, _ns);	\
-			if(ptr) {			\
-				st->buf = ptr;		\
-				ctx->step = _ns;	\
-			} else {			\
-				RETURN(RC_FAIL);	\
-			}				\
-		}					\
-		memcpy(st->buf + st->size, bufptr, bufsize);	\
-		st->size += bufsize;			\
-		if(st->size < 0)			\
-			/* Why even care?.. JIC */	\
-			RETURN(RC_FAIL);		\
-		/* Convenient nul-termination */	\
-		st->buf[st->size] = '\0';		\
+#define	APPEND(bufptr, bufsize)	do {					\
+		size_t _ns = ctx->step;	/* Allocated */			\
+		if(_ns <= (size_t)(st->size + bufsize)) {		\
+			void *ptr;					\
+			do { _ns = _ns ? _ns<<2 : 16; }			\
+				while(_ns <= (size_t)(st->size + bufsize));	\
+			ptr = REALLOC(st->buf, _ns);			\
+			if(ptr) {					\
+				st->buf = ptr;				\
+				ctx->step = _ns;			\
+			} else {					\
+				RETURN(RC_FAIL);			\
+			}						\
+		}							\
+		memcpy(st->buf + st->size, bufptr, bufsize);		\
+		st->size += bufsize;					\
+		if(st->size < 0)					\
+			/* Why even care?.. JIC */			\
+			RETURN(RC_FAIL);				\
+		/* Convenient nul-termination */			\
+		st->buf[st->size] = '\0';				\
 	} while(0)
 
 /*
@@ -315,7 +316,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 
 		assert(sel->left >= 0);
 
-		len = (size < sel->left) ? size : sel->left;
+		len = ((ber_tlv_len_t)size < sel->left) ? size : sel->left;
 		if(len > 0) {
 			if(is_bit_str && sel->bits_chopped == 0) {
 				/*
@@ -350,7 +351,7 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 		/*
 		 * Primitive form, no stack required.
 		 */
-		if(size < ctx->left) {
+		if(size < (size_t)ctx->left) {
 			APPEND(buf_ptr, size);
 			ctx->left -= size;
 			ADVANCE(size);
@@ -465,6 +466,8 @@ OCTET_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	size_t i;
 	int ret;
 
+	(void)td;	/* Unused argument */
+
 	if(!st || !st->buf) return cb("<absent>", 8, app_key);
 
 	/*
@@ -493,6 +496,9 @@ int
 OCTET_STRING_print_ascii(asn1_TYPE_descriptor_t *td, const void *sptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
 	const OCTET_STRING_t *st = sptr;
+
+	(void)td;	/* Unused argument */
+	(void)ilevel;	/* Unused argument */
 
 	if(st && st->buf) {
 		return cb(st->buf, st->size, app_key);
