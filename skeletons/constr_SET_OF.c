@@ -461,7 +461,7 @@ SET_OF_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	|| cb(" ::= {\n", 7, app_key))
 		return -1;
 
-	(void *)list = sptr;
+	(const void *)list = sptr;
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
@@ -524,7 +524,7 @@ SET_OF_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 
-	(void *)list = sptr;
+	(const void *)list = sptr;
 
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
