@@ -307,7 +307,7 @@ static asn_TYPE_member_t asn_MBR_anything[] = {
 	{ ATF_NOFLAGS, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_anything_member,
+		.type = (void *)&asn_DEF_anything_Member,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},

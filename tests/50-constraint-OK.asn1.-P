@@ -43,7 +43,7 @@ xer_type_encoder_f Int2_encode_xer;
 int
 Int2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Int1_t *st = sptr;
+	const Int1_t *st = (const Int1_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -181,7 +181,7 @@ xer_type_encoder_f Int3_encode_xer;
 int
 Int3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Int2_t *st = sptr;
+	const Int2_t *st = (const Int2_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -323,7 +323,7 @@ xer_type_encoder_f Int4_encode_xer;
 int
 Int4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Int3_t *st = sptr;
+	const Int3_t *st = (const Int3_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -465,7 +465,7 @@ xer_type_encoder_f Int5_encode_xer;
 int
 Int5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Int4_t *st = sptr;
+	const Int4_t *st = (const Int4_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -607,7 +607,7 @@ xer_type_encoder_f ExtensibleExtensions_encode_xer;
 int
 ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const INTEGER_t *st = sptr;
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -767,7 +767,7 @@ xer_type_encoder_f Str2_encode_xer;
 
 static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -784,7 +784,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 int
 Str2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Str1_t *st = sptr;
+	const Str1_t *st = (const Str1_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -932,7 +932,7 @@ static int permitted_alphabet_table_2[256] = {
 static int check_permitted_alphabet_2(const void *sptr) {
 	int *table = permitted_alphabet_table_2;
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -949,7 +949,7 @@ static int check_permitted_alphabet_2(const void *sptr) {
 int
 Str3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Str2_t *st = sptr;
+	const Str2_t *st = (const Str2_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -1086,7 +1086,7 @@ xer_type_encoder_f Str4_encode_xer;
 
 static int check_permitted_alphabet_3(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -1103,7 +1103,7 @@ static int check_permitted_alphabet_3(const void *sptr) {
 int
 Str4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1237,7 +1237,7 @@ xer_type_encoder_f PER_Visible_encode_xer;
 
 static int check_permitted_alphabet_4(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -1254,7 +1254,7 @@ static int check_permitted_alphabet_4(const void *sptr) {
 int
 PER_Visible_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1388,7 +1388,7 @@ xer_type_encoder_f PER_Visible_2_encode_xer;
 
 static int check_permitted_alphabet_5(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -1405,7 +1405,7 @@ static int check_permitted_alphabet_5(const void *sptr) {
 int
 PER_Visible_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const PER_Visible_t *st = sptr;
+	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1539,7 +1539,7 @@ xer_type_encoder_f Not_PER_Visible_1_encode_xer;
 
 static int check_permitted_alphabet_6(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -1556,7 +1556,7 @@ static int check_permitted_alphabet_6(const void *sptr) {
 int
 Not_PER_Visible_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const PER_Visible_t *st = sptr;
+	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1690,7 +1690,7 @@ xer_type_encoder_f Not_PER_Visible_2_encode_xer;
 
 static int check_permitted_alphabet_7(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -1707,7 +1707,7 @@ static int check_permitted_alphabet_7(const void *sptr) {
 int
 Not_PER_Visible_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const PER_Visible_t *st = sptr;
+	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1841,7 +1841,7 @@ xer_type_encoder_f Not_PER_Visible_3_encode_xer;
 
 static int check_permitted_alphabet_8(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -1858,7 +1858,7 @@ static int check_permitted_alphabet_8(const void *sptr) {
 int
 Not_PER_Visible_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const PER_Visible_t *st = sptr;
+	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -1992,7 +1992,7 @@ xer_type_encoder_f SIZE_but_not_FROM_encode_xer;
 
 static int check_permitted_alphabet_9(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -2009,7 +2009,7 @@ static int check_permitted_alphabet_9(const void *sptr) {
 int
 SIZE_but_not_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const PER_Visible_t *st = sptr;
+	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -2146,7 +2146,7 @@ xer_type_encoder_f SIZE_and_FROM_encode_xer;
 
 static int check_permitted_alphabet_10(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -2163,7 +2163,7 @@ static int check_permitted_alphabet_10(const void *sptr) {
 int
 SIZE_and_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const PER_Visible_t *st = sptr;
+	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -2300,7 +2300,7 @@ xer_type_encoder_f Neither_SIZE_nor_FROM_encode_xer;
 
 static int check_permitted_alphabet_11(const void *sptr) {
 	/* The underlying type is IA5String */
-	const IA5String_t *st = sptr;
+	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -2317,7 +2317,7 @@ static int check_permitted_alphabet_11(const void *sptr) {
 int
 Neither_SIZE_nor_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const PER_Visible_t *st = sptr;
+	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -2462,7 +2462,7 @@ static int check_permitted_alphabet_12(const void *sptr) {
 int
 Utf8_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const UTF8String_t *st = sptr;
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -2608,7 +2608,7 @@ static int permitted_alphabet_table_13[128] = {
 static int check_permitted_alphabet_13(const void *sptr) {
 	int *table = permitted_alphabet_table_13;
 	/* The underlying type is UTF8String */
-	const UTF8String_t *st = sptr;
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -2626,7 +2626,7 @@ static int check_permitted_alphabet_13(const void *sptr) {
 int
 Utf8_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Utf8_2_t *st = sptr;
+	const Utf8_2_t *st = (const Utf8_2_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -2770,7 +2770,7 @@ xer_type_encoder_f Utf8_2_encode_xer;
 int
 Utf8_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const Utf8_1_t *st = sptr;
+	const Utf8_1_t *st = (const Utf8_1_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
@@ -2962,7 +2962,7 @@ static int permitted_alphabet_table_15[256] = {
 static int check_permitted_alphabet_15(const void *sptr) {
 	int *table = permitted_alphabet_table_15;
 	/* The underlying type is VisibleString */
-	const VisibleString_t *st = sptr;
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	const uint8_t *ch = st->buf;
 	const uint8_t *end = ch + st->size;
 	
@@ -2979,7 +2979,7 @@ static int check_permitted_alphabet_15(const void *sptr) {
 int
 Identifier_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const VisibleString_t *st = sptr;
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {

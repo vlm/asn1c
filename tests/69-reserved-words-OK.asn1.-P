@@ -47,7 +47,7 @@ typedef struct T {
 static int
 memb_char_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const OCTET_STRING_t *st = sptr;
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	size_t size;
 	
 	if(!sptr) {
