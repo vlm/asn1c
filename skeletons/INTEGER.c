@@ -66,7 +66,7 @@ INTEGER_decode_ber(asn1_TYPE_descriptor_t *td,
 	/*
 	 * Make sure we have this length.
 	 */
-	buf_ptr += rval.consumed;
+	(char *)buf_ptr += rval.consumed;
 	size -= rval.consumed;
 	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;
@@ -230,7 +230,7 @@ INTEGER_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	/* Output in the long xx:yy:zz... format */
 	/* TODO: replace with generic algorithm (Knuth TAOCP Vol 2, 4.3.1) */
 	for(p = scratch; buf < buf_end; buf++) {
-		static char h2c[16] = "0123456789ABCDEF";
+		static const char *h2c = "0123456789ABCDEF";
 		if((p - scratch) >= (ssize_t)(sizeof(scratch) - 4)) {
 			/* Flush buffer */
 			if(cb(scratch, p - scratch, app_key))

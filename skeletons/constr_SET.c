@@ -37,7 +37,7 @@
  */
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr += num;			\
+		(char *)ptr += num;		\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -128,7 +128,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (st + specs->ctx_offset);
+	ctx = (ber_dec_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -256,7 +256,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 
 				skip = ber_skip_length(
 					BER_TLV_CONSTRUCTED(ptr),
-					ptr + tag_len, LEFT - tag_len);
+					(char *)ptr + tag_len, LEFT - tag_len);
 
 				switch(skip) {
 				case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
@@ -281,7 +281,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 		 * Check for duplications: must not overwrite
 		 * already decoded elements.
 		 */
-		if(ASN_SET_ISPRESENT2(st + specs->pres_offset, edx)) {
+		if(ASN_SET_ISPRESENT2((char *)st + specs->pres_offset, edx)) {
 			ASN_DEBUG("SET %s: Duplicate element %s (%d)",
 				sd->name, elements[edx].name, edx);
 			RETURN(RC_FAIL);
@@ -312,7 +312,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 				elements[edx].tag_mode);
 		switch(rval.code) {
 		case RC_OK:
-			ASN_SET_MKPRESENT(st + specs->pres_offset, edx);
+			ASN_SET_MKPRESENT((char *)st + specs->pres_offset, edx);
 			break;
 		case RC_WMORE: /* More data expected */
 			if(!SIZE_VIOLATION) {
@@ -378,7 +378,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 
 			ll = ber_skip_length(
 				BER_TLV_CONSTRUCTED(ptr),
-				ptr + tl, LEFT - tl);
+				(char *)ptr + tl, LEFT - tl);
 			switch(ll) {
 			case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 				/* Fall through */
@@ -398,7 +398,7 @@ SET_decode_ber(asn1_TYPE_descriptor_t *sd,
 			unsigned int midx, pres, must;
 
 			midx = edx/(8 * sizeof(specs->_mandatory_elements[0]));
-			pres = ((unsigned int *)(st+specs->pres_offset))[midx];
+			pres = ((unsigned int *)((char *)st+specs->pres_offset))[midx];
 			must = ntohl(specs->_mandatory_elements[midx]);
 
 			if((pres & must) == must) {

@@ -59,7 +59,7 @@ BIT_STRING_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 int
 BIT_STRING_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	static char h2c[16] = "0123456789ABCDEF";
+	static const char *h2c = "0123456789ABCDEF";
 	char scratch[64];
 	const BIT_STRING_t *st = sptr;
 	uint8_t *buf;

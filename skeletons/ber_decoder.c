@@ -7,7 +7,7 @@
 
 #define	ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		ptr += num;				\
+		(char *)ptr += num;			\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -162,7 +162,7 @@ ber_check_tags(asn1_TYPE_descriptor_t *td, ber_dec_ctx_t *ctx,
 		 * Fetch and process L from TLV.
 		 */
 		len_len = ber_fetch_length(tlv_constr,
-			ptr + tag_len, size - tag_len, &tlv_len);
+			(char *)ptr + tag_len, size - tag_len, &tlv_len);
 		switch(len_len) {
 		case -1: RETURN(RC_FAIL);
 		case 0: RETURN(RC_WMORE);

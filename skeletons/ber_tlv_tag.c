@@ -30,7 +30,8 @@ ber_fetch_tag(void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 	 * Each octet contains 7 bits of useful information.
 	 * The MSB is 0 if it is the last octet of the tag.
 	 */
-	for(val = 0, ptr++, skipped = 2; skipped < size; ptr++, skipped++) {
+	for(val = 0, ((char *)ptr)++, skipped = 2;
+			skipped < size; ((char *)ptr)++, skipped++) {
 		unsigned oct = *(uint8_t *)ptr;
 		if(oct & 0x80) {
 			val = (val << 7) | (oct & 0x7F);

@@ -60,7 +60,7 @@ BOOLEAN_decode_ber(asn1_TYPE_descriptor_t *td,
 
 	ASN_DEBUG("Boolean length is %d bytes", (int)length);
 
-	buf_ptr += rval.consumed;
+	(char *)buf_ptr += rval.consumed;
 	size -= rval.consumed;
 	if(length > (ber_tlv_len_t)size) {
 		rval.code = RC_WMORE;

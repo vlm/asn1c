@@ -18,14 +18,14 @@ struct asn1_TYPE_descriptor_s;	/* Forward declaration */
  * decoded bytes, hence provide a possibility, to fail with more diagnostics
  * (i.e., print the offending remainder of the buffer).
  */
+enum ber_dec_rval_code_e {
+	RC_OK,		/* Decoded successfully */
+	RC_WMORE,	/* More data expected, call again */
+	RC_FAIL,	/* Failure to decode data */
+};
 typedef struct ber_dec_rval_s {
-	enum {
-		RC_OK,		/* Decoded successfully */
-		RC_WMORE,	/* More data expected, call again */
-		RC_FAIL,	/* Failure to decode data */
-	} code;
-
-	size_t consumed;	/* Number of bytes consumed */
+	enum ber_dec_rval_code_e code;	/* Result code */
+	size_t consumed;		/* Number of bytes consumed */
 } ber_dec_rval_t;
 
 /*

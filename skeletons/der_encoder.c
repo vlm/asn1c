@@ -4,6 +4,7 @@
  */
 #include <constr_TYPE.h>
 #include <assert.h>
+#include <errno.h>
 
 static ssize_t der_write_TL(ber_tlv_tag_t tag, ber_tlv_len_t len,
 	asn_app_consume_bytes_f *cb, void *app_key, int constructed);

@@ -65,7 +65,7 @@ RELATIVE_OID_print(asn1_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 int
 RELATIVE_OID_get_arcs(RELATIVE_OID_t *roid,
 	void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
-	void *arcs_end = arcs + (arc_slots * arc_type_size);
+	void *arcs_end = (char *)arcs + (arc_slots * arc_type_size);
 	int num_arcs = 0;
 	int startn = 0;
 	int i;
@@ -86,7 +86,7 @@ RELATIVE_OID_get_arcs(RELATIVE_OID_t *roid,
 					i - startn + 1, 0,
 					arcs, arc_type_size))
 				return -1;
-			arcs += arc_type_size;
+			(char *)arcs += arc_type_size;
 			num_arcs++;
 		}
 
