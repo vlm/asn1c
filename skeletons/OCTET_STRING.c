@@ -316,7 +316,8 @@ OCTET_STRING_decode_ber(asn1_TYPE_descriptor_t *td,
 
 		assert(sel->left >= 0);
 
-		len = ((ber_tlv_len_t)size < sel->left) ? size : sel->left;
+		len = ((ber_tlv_len_t)size < sel->left)
+				? (ber_tlv_len_t)size : sel->left;
 		if(len > 0) {
 			if(is_bit_str && sel->bits_chopped == 0) {
 				/*
