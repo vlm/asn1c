@@ -311,6 +311,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		ST_SKIPSPACE,
 		ST_WAITDIGITS,
 		ST_DIGITS,
+		ST_EXTRASTUFF,
 	} state = ST_SKIPSPACE;
 
 	/*
@@ -373,18 +374,24 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 						el->enum_name, el->nat_value);
 					state = ST_DIGITS;
 					value = el->nat_value;
-					break;
+					lp = lstop - 1;
+					continue;
 				}
 				ASN_DEBUG("Unknown identifier for INTEGER");
 			}
 			return XPBD_BROKEN_ENCODING;
 		}
+
+		/* Found extra non-numeric stuff */
+		state = ST_EXTRASTUFF;
 		break;
 	}
 
 	if(state != ST_DIGITS) {
-		if(xer_is_whitespace(chunk_buf, chunk_size)) {
-			return XPBD_NOT_BODY_IGNORE;
+		if(xer_is_whitespace(lp, lstop - lp)) {
+			if(state != ST_EXTRASTUFF)
+				return XPBD_NOT_BODY_IGNORE;
+			/* Fall through */
 		} else {
 			ASN_DEBUG("No useful digits in output");
 			return XPBD_BROKEN_ENCODING;	/* No digits */
