@@ -834,7 +834,7 @@ Str2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	size = st->size;
 	
 	if(((size <= 20) || (size >= 25 && size <= 30))
-		 && check_permitted_alphabet_1(sptr)) {
+		 && !check_permitted_alphabet_1(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -977,7 +977,7 @@ Str3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	size = st->size;
 	
 	if(((size >= 10 && size <= 20) || (size >= 25 && size <= 27))
-		 && check_permitted_alphabet_2(sptr)) {
+		 && !check_permitted_alphabet_2(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1106,7 +1106,7 @@ PER_Visible_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(check_permitted_alphabet_3(sptr)) {
+	if(!check_permitted_alphabet_3(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1235,7 +1235,7 @@ PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(check_permitted_alphabet_4(sptr)) {
+	if(!check_permitted_alphabet_4(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1364,7 +1364,7 @@ Not_PER_Visible_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(check_permitted_alphabet_5(sptr)) {
+	if(!check_permitted_alphabet_5(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1722,7 +1722,7 @@ SIZE_but_not_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	size = st->size;
 	
 	if((size >= 1 && size <= 4)
-		 && check_permitted_alphabet_6(sptr)) {
+		 && !check_permitted_alphabet_6(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1854,7 +1854,7 @@ SIZE_and_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	size = st->size;
 	
 	if((size >= 1 && size <= 4)
-		 && check_permitted_alphabet_7(sptr)) {
+		 && !check_permitted_alphabet_7(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1983,7 +1983,7 @@ Neither_SIZE_nor_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(check_permitted_alphabet_8(sptr)) {
+	if(!check_permitted_alphabet_8(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -2129,7 +2129,7 @@ Utf8_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	if(size == (size_t)-1) return -1;
 	
 	if((size >= 1 && size <= 2)
-		 && check_permitted_alphabet_9(sptr)) {
+		 && !check_permitted_alphabet_9(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

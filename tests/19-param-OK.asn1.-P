@@ -266,7 +266,7 @@ memb_IA5String_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	
-	if(check_permitted_alphabet_1(sptr)) {
+	if(!check_permitted_alphabet_1(sptr)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

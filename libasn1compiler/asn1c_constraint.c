@@ -152,7 +152,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		}
 		if(ct->_compile_mark) {
 			if(got_something++) { OUT("\n"); OUT(" && "); }
-			OUT("check_permitted_alphabet_%d(sptr)",
+			OUT("!check_permitted_alphabet_%d(sptr)",
 				ct->_compile_mark);
 		}
 		if(!got_something) {
