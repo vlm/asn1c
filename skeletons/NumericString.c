@@ -48,17 +48,18 @@ NumericString_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 				continue;
 			}
 			_ASN_ERRLOG(app_errlog, app_key,
-				"%s: value byte %d "
-				"not in NumericString alphabet (%d)",
+				"%s: value byte %d (%d) "
+				"not in NumericString alphabet (%s:%d)",
 				td->name,
 				(buf - st->buf) + 1,
-				*buf
-			);
+				*buf,
+				__FILE__, __LINE__);
 			return -1;
 		}
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 

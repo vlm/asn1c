@@ -128,13 +128,15 @@ Int2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn1_INTEGER2long(st, &value)) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value too large", td->name);
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -143,7 +145,8 @@ Int2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -247,13 +250,15 @@ Int3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn1_INTEGER2long(st, &value)) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value too large", td->name);
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -262,7 +267,8 @@ Int3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -365,7 +371,8 @@ Int4_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -479,13 +486,15 @@ Int5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn1_INTEGER2long(st, &value)) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value too large", td->name);
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -494,7 +503,8 @@ Int5_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -597,7 +607,8 @@ ExtensibleExtensions_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -827,7 +838,8 @@ Str2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -839,7 +851,8 @@ Str2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -970,7 +983,8 @@ Str3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -982,7 +996,8 @@ Str3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -1101,7 +1116,8 @@ PER_Visible_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1111,7 +1127,8 @@ PER_Visible_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -1230,7 +1247,8 @@ PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1240,7 +1258,8 @@ PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -1359,7 +1378,8 @@ Not_PER_Visible_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1369,7 +1389,8 @@ Not_PER_Visible_1_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -1472,7 +1493,8 @@ Not_PER_Visible_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1585,7 +1607,8 @@ Not_PER_Visible_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1715,7 +1738,8 @@ SIZE_but_not_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1727,7 +1751,8 @@ SIZE_but_not_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -1847,7 +1872,8 @@ SIZE_and_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1859,7 +1885,8 @@ SIZE_and_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -1978,7 +2005,8 @@ Neither_SIZE_nor_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -1988,7 +2016,8 @@ Neither_SIZE_nor_FROM_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -2121,7 +2150,8 @@ Utf8_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -2134,7 +2164,8 @@ Utf8_3_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }
@@ -2238,7 +2269,8 @@ Utf8_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value not given", td->name);
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
@@ -2250,7 +2282,8 @@ Utf8_2_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,
 		return 0;
 	} else {
 		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: constraint failed", td->name);
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 }

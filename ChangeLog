@@ -7,6 +7,7 @@
 	* -t option added to asn1c to ease manual BER/CER/DER decoding.
 	* Added support COMPONENTS OF construct.
 	* Numerous parser fixes and enhancements.
+	* Better constraint failure reporting.
 
 0.8.19:	2004-Aug-18
 
