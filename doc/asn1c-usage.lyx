@@ -1315,7 +1315,7 @@ collapsed false
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="20" columns="2">
+<lyxtabular version="3" rows="21" columns="2">
 <features>
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -1637,6 +1637,25 @@ Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which
 Use the native machine's data types (int, double) whenever possible, instead
  of the compound ASN.1 INTEGER_t, ENUMERATED_t and REAL_t types.
  
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-fno-constraints
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Do not generate ASN.1 subtype constraint checking code.
+ This may make a shorter executable.
 \end_inset 
 </cell>
 </row>

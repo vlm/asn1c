@@ -22,7 +22,7 @@ and other encoding standards.
 .TP
 \fILanguage Options\fR
 .br
-\fB\-fall-defs-global \-fbless-SIZE \-fnative-types \-funnamed-unions \-ftypes88\fR
+\fB\-fall-defs-global \-fbless-SIZE \-fnative-types \-fno-constraints \-funnamed-unions \-ftypes88\fR
 .TP
 \fIOutput Options\fR
 .br
@@ -81,6 +81,9 @@ an ASN.1 standard and compiler may fail to produce the meaningful code.
 .B \-fnative-types
 Use the native machine's data types (int, double) whenever possible,
 instead of the compound ASN.1 INTEGER_t, ENUMERATED_t and REAL_t types.
+.TP
+.B \-fno-constraints
+Do not generate ASN.1 subtype constraint checking code. This may make a shorter executable.
 .TP
 .B \-funnamed-unions
 Enable unnamed unions in the definitions of target language's structures.
