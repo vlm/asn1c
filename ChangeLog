@@ -3,6 +3,7 @@
 
 	* Fixed parser: memory leak in free_struct code for SET OF/SEQUENCE OF.
 	  (Severity: high, Security impact: medium)
+	* Improved INTEGER type printing.
 
 0.8.14:	2004-Jun-30
 

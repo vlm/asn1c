@@ -5,9 +5,22 @@
 #include "../der_encoder.c"
 #include "../constraints.c"
 
+static char *shared_scratch_start;
+
+static int _print2buf(const void *buf, size_t size, void *key) {
+	(void)key;
+	memcpy(shared_scratch_start, buf, size);
+	shared_scratch_start += size;
+	*shared_scratch_start = '\0';	/* 0-termination */
+	return 0;
+}
+
 static void
 check(uint8_t *buf, int size, long check_long, int check_ret) {
+	char scratch[128];
+	char verify[32];
 	INTEGER_t val;
+	uint8_t *buf_end = buf + size;
 	int ret;
 	long rlong = 123;
 
@@ -17,13 +30,35 @@ check(uint8_t *buf, int size, long check_long, int check_ret) {
 	val.buf = buf;
 	val.size = size;
 
+	printf("Testing: [");
+	for(; buf < buf_end; buf++) {
+		if(buf != val.buf) printf(":");
+		printf("%02x", *buf);
+	}
+	printf("]: ");
 
 	ret = asn1_INTEGER2long(&val, &rlong);
-	printf("Testing (%ld, %d) vs (%ld, %d)\n",
+	printf(" (%ld, %d) vs (%ld, %d)\n",
 		rlong, ret, check_long, check_ret);
 	assert(ret == check_ret);
-	if(ret == -1) return;
 	assert(rlong == check_long);
+
+	shared_scratch_start = scratch;
+	ret = INTEGER_print(&asn1_DEF_INTEGER, &val, 0, _print2buf, scratch);
+	assert(shared_scratch_start < scratch + sizeof(scratch));
+	assert(ret == 0);
+	ret = snprintf(verify, sizeof(verify), "%ld", check_long);
+	assert(ret < sizeof(verify));
+	ret = strcmp(scratch, verify);
+	printf("         [%s] vs [%s]: %d%s\n",
+		scratch, verify, ret,
+		(check_ret == -1)?" (expected to fail)":""
+		);
+	if(check_ret == -1) {
+		assert(strcmp(scratch, verify));
+	} else {
+		assert(strcmp(scratch, verify) == 0);
+	}
 }
 
 int
