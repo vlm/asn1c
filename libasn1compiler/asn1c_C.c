@@ -39,17 +39,11 @@ enum tvm_compat {
 };
 static enum tvm_compat emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tc, int *atc);
 
-enum etd_cp {
-	ETD_CP_UNKNOWN		= -2,
-	ETD_CP_EITHER		= -1,
-	ETD_CP_PRIMITIVE	=  0,
-	ETD_CP_CONSTRUCTED	=  1,
-};
 enum etd_spec {
 	ETD_NO_SPECIFICS,
 	ETD_HAS_SPECIFICS
 };
-static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_cp, enum etd_spec);
+static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec);
 
 #define	C99_MODE	(!(arg->flags & A1C_NO_C99))
 #define	UNNAMED_UNIONS	(arg->flags & A1C_UNNAMED_UNIONS)
@@ -234,7 +228,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	 * Emit asn1_DEF_xxx table.
 	 */
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, elements,
-			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
+			ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -420,7 +414,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	 * Emit asn1_DEF_xxx table.
 	 */
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, elements,
-			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
+			ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -544,7 +538,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	 * Emit asn1_DEF_xxx table.
 	 */
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, 1,
-			ETD_CP_CONSTRUCTED, ETD_HAS_SPECIFICS);
+			ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -695,7 +689,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 * Emit asn1_DEF_xxx table.
 	 */
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, elements,
-			ETD_CP_CONSTRUCTED /*either?!*/, ETD_HAS_SPECIFICS);
+			ETD_HAS_SPECIFICS);
 
 	REDIR(OT_TYPE_DECLS);
 
@@ -779,6 +773,32 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("%s", expr->marker.flags?"*":" ");
 	OUT("%s_t", MKID(expr->Identifier));
 
+	/*
+	 * If this type just blindly refers the other type, alias it.
+	 * 	Type1 ::= Type2
+	 */
+	if((!expr->constraints || (arg->flags & A1C_NO_CONSTRAINTS))
+		&& expr->tag.tag_class == TC_NOCLASS
+		&& !TQ_FIRST(&(expr->members))
+	) {
+		char *type_name;
+		REDIR(OT_FUNC_DECLS);
+		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
+		OUT("/* This type is equivalent to %s */\n", type_name);
+		p = MKID(expr->Identifier);
+		if(HIDE_INNER_DEFS) OUT("/* ");
+		OUT("#define\tasn1_DEF_%s\t", p);
+		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
+		OUT("asn1_DEF_%s\n", type_name);
+		if(HIDE_INNER_DEFS)
+			OUT(" // (Use -fall-defs-global to expose) */");
+		REDIR(OT_CODE);
+		OUT("/* This type is equivalent to %s */\n", type_name);
+		OUT("\n");
+		REDIR(OT_TYPE_DECLS);
+		return 0;
+	}
+
 	REDIR(OT_STAT_DEFS);
 
 	/*
@@ -787,36 +807,33 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	tv_mode = emit_tags_vectors(arg, expr, &tags_count, &all_tags_count);
 
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, 0,
-			ETD_CP_UNKNOWN, ETD_NO_SPECIFICS);
+			ETD_NO_SPECIFICS);
 
 	REDIR(OT_CODE);
 
 	/*
 	 * Constraint checking.
 	 */
-	p = MKID(expr->Identifier);
-	OUT("int\n");
-	OUT("%s_constraint(asn1_TYPE_descriptor_t *td, const void *sptr,\n", p);
-	INDENTED(
-	OUT("\t\tasn_app_consume_bytes_f *app_errlog, void *app_key) {\n");
-	OUT("\n");
-	if(asn1c_emit_constraint_checking_code(arg) == 1) {
-		if(0) {
-		OUT("/* Check the constraints of the underlying type */\n");
-		OUT("return asn1_DEF_%s.check_constraints\n",
-			asn1c_type_name(arg, expr, TNF_SAFE));
-		OUT("\t(td, sptr, app_errlog, app_key);\n");
-		} else {
-		OUT("/* Make the underlying type checker permanent */\n");
-		OUT("td->check_constraints = asn1_DEF_%s.check_constraints;\n",
-			asn1c_type_name(arg, expr, TNF_SAFE));
-		OUT("return td->check_constraints\n");
-		OUT("\t(td, sptr, app_errlog, app_key);\n");
+	if(!(arg->flags & A1C_NO_CONSTRAINTS)) {
+		p = MKID(expr->Identifier);
+		OUT("int\n");
+		OUT("%s_constraint("
+			"asn1_TYPE_descriptor_t *td, const void *sptr,\n", p);
+		INDENT(+1);
+		OUT("\t\tasn_app_consume_bytes_f *app_errlog, void *app_key) {");
+		OUT("\n");
+		if(asn1c_emit_constraint_checking_code(arg) == 1) {
+			OUT("/* Replace with underlying type checker */\n");
+			OUT("td->check_constraints "
+				"= asn1_DEF_%s.check_constraints;\n",
+				asn1c_type_name(arg, expr, TNF_SAFE));
+			OUT("return td->check_constraints"
+				"(td, sptr, app_errlog, app_key);\n");
 		}
+		INDENT(-1);
+		OUT("}\n");
+		OUT("\n");
 	}
-	);
-	OUT("}\n");
-	OUT("\n");
 
 	/*
 	 * Emit suicidal functions.
@@ -853,7 +870,6 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	  OUT("td->all_tags_count = asn1_DEF_%s.all_tags_count;\n",type_name);
 	  OUT("/* End of these lines */\n");
 	}
-	OUT("td->last_tag_form  = asn1_DEF_%s.last_tag_form;\n",  type_name);
 	OUT("td->elements       = asn1_DEF_%s.elements;\n",       type_name);
 	OUT("td->elements_count = asn1_DEF_%s.elements_count;\n", type_name);
 	OUT("td->specifics      = asn1_DEF_%s.specifics;\n",      type_name);
@@ -1343,11 +1359,16 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	if(C99_MODE) OUT(".memb_constraints = ");
 	if(expr->constraints) {
-		char *id = MKID(expr->Identifier);
-		if(expr->_anonymous_type && !strcmp(expr->Identifier, "member"))
-			id = asn1c_type_name(arg, expr, TNF_SAFE);
-		OUT("memb_%s_%d_constraint,\n", id,
-			++global_memb_unique);
+		if(arg->flags & A1C_NO_CONSTRAINTS) {
+			OUT("0,\t/* No check because of -fno-constraints */\n");
+		} else {
+			char *id = MKID(expr->Identifier);
+			if(expr->_anonymous_type
+					&& !strcmp(expr->Identifier, "member"))
+				id = asn1c_type_name(arg, expr, TNF_SAFE);
+			OUT("memb_%s_%d_constraint,\n", id,
+				++global_memb_unique);
+		}
 	} else {
 		OUT("0,\t/* Defer to actual type */\n");
 	}
@@ -1356,7 +1377,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	OUT("},\n");
 	INDENT(-1);
 
-	if(!expr->constraints)
+	if(!expr->constraints || (arg->flags & A1C_NO_CONSTRAINTS))
 		return 0;
 
 	save_target = arg->target->target;
@@ -1373,8 +1394,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	tmp_arg = *arg;
 	tmp_arg.expr = expr;
 	if(asn1c_emit_constraint_checking_code(&tmp_arg) == 1) {
-		OUT("return td->check_constraints\n");
-		OUT("\t(td, sptr, app_errlog, app_key);\n");
+		OUT("return td->check_constraints"
+			"(td, sptr, app_errlog, app_key);\n");
 	}
 	INDENT(-1);
 	OUT("}\n");
@@ -1386,7 +1407,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 }
 
 static int
-emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_cp cp, enum etd_spec spec) {
+emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
 	char *p;
 
 	p = MKID(expr->Identifier);
@@ -1442,20 +1463,6 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		} else {
 			OUT("0,\t/* No tags (pointer) */\n");
 			OUT("0,\t/* No tags (count) */\n");
-		}
-
-		switch(cp) {
-		case ETD_CP_UNKNOWN:
-			OUT("-0,\t/* Unknown yet */\n");
-			break;
-		case ETD_CP_EITHER:
-			OUT("-1,\t/* Primitive or constructed */\n");
-		case ETD_CP_PRIMITIVE:
-			OUT("0,\t/* Primitive */\n");
-			break;
-		case ETD_CP_CONSTRUCTED:
-			OUT("1,\t/* Whether CONSTRUCTED */\n");
-			break;
 		}
 
 		if(elements_count) {

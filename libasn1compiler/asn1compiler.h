@@ -35,6 +35,10 @@ enum asn1c_flags {
 	 * Don't make the asn1_DEF_'s of structure members "static".
 	 */
 	A1C_ALL_DEFS_GLOBAL	= 0x0040,
+	/*
+	 * Do not generate constraint checking code.
+	 */
+	A1C_NO_CONSTRAINTS	= 0x0080,
 };
 
 /*
