@@ -43,6 +43,10 @@ enum asn1c_flags {
 	 * Generate type_id_PR_member things identifiers of id_PR_member.
 	 */
 	A1C_COMPOUND_NAMES	= 0x0100,
+	/*
+	 * Do not generate courtesy #includes for external dependencies.
+	 */
+	A1C_NO_INCLUDE_DEPS	= 0x0200,
 };
 
 /*

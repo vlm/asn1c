@@ -224,21 +224,22 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 
 	fprintf(fp_h, "#include <asn_application.h>\n");
 
-#define	SAVE_STREAM(idx, msg, actdep)	do {				\
-	if(TQ_FIRST(&(cs->destination[idx].chunks)))			\
-		fprintf(fp_h, "\n/* %s */\n", msg);			\
+#define	SAVE_STREAM(fp, idx, msg, actdep)	do {			\
+	if(TQ_FIRST(&(cs->destination[idx].chunks)) && msg)		\
+		fprintf(fp, "\n/* %s */\n", msg);			\
 	TQ_FOR(ot, &(cs->destination[idx].chunks), next) {		\
 		if(actdep) asn1c_activate_dependency(deps, 0, ot->buf);	\
-		fwrite(ot->buf, ot->len, 1, fp_h);			\
+		fwrite(ot->buf, ot->len, 1, fp);			\
 	}								\
 } while(0)
 
-	SAVE_STREAM(OT_INCLUDES, "Including external dependencies", 1);
-	SAVE_STREAM(OT_DEPS, "Dependencies", 0);
-	SAVE_STREAM(OT_FWD_DECLS, "Forward declarations", 0);
-	SAVE_STREAM(OT_TYPE_DECLS, expr->Identifier, 0);
-	SAVE_STREAM(OT_FUNC_DECLS, "Implementation", 0);
-	SAVE_STREAM(OT_POST_INCLUDE, "Referred external types", 1);
+	SAVE_STREAM(fp_h, OT_INCLUDES,	"Including external dependencies", 1);
+	SAVE_STREAM(fp_h, OT_DEPS,	"Dependencies", 0);
+	SAVE_STREAM(fp_h, OT_FWD_DECLS,	"Forward declarations", 0);
+	SAVE_STREAM(fp_h, OT_TYPE_DECLS, expr->Identifier, 0);
+	SAVE_STREAM(fp_h, OT_FUNC_DECLS,"Implementation", 0);
+	if(!(arg->flags & A1C_NO_INCLUDE_DEPS))
+	SAVE_STREAM(fp_h, OT_POST_INCLUDE, "Referred external types", 1);
 
 	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n\n"
 			"#endif\t/* _%s_H_ */\n",
@@ -246,6 +247,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 
 	fprintf(fp_c, "#include <asn_internal.h>\n\n");
 	fprintf(fp_c, "#include <%s.h>\n\n", expr->Identifier);	/* Myself */
+	if(arg->flags & A1C_NO_INCLUDE_DEPS)
+		SAVE_STREAM(fp_c, OT_POST_INCLUDE, 0, 1);
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CODE].chunks), next)
