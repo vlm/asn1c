@@ -31,7 +31,6 @@ typedef enum asn1p_expr_type {
 	A1TC_REFERENCE,		/* Reference to the type defined elsewhere */
 	A1TC_EXPORTVAR,		/* We're exporting this definition */
 	A1TC_UNIVERVAL,		/* A value of an ENUMERATED, INTEGER or BS */
-	A1TC_BOOLBITPOS,	/* A bit position in a BIT STRING */
 	A1TC_BITVECTOR,		/* A plain collection of bits */
 	A1TC_OPAQUE,		/* Opaque data encoded as a bitvector */
 	A1TC_EXTENSIBLE,	/* An extension marker "..." */
@@ -122,7 +121,7 @@ typedef struct asn1p_expr_s {
 	asn1p_expr_type_e expr_type;
 
 	/*
-	 * Referenced type, if defined elsewhere.
+	 * Referenced type, defined elsewhere.
 	 * (If expr_type == A1TC_REFERENCE)
 	 */
 	asn1p_ref_t	*reference;

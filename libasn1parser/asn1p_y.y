@@ -816,6 +816,13 @@ ParameterArgumentName:
 		checkmem(ret == 0);
 		$$.argument = $3;
 	}
+	| TypeRefName ':' TypeRefName {
+		int ret;
+		$$.governor = asn1p_ref_new(yylineno);
+		ret = asn1p_ref_add_component($$.governor, $1, 0);
+		checkmem(ret == 0);
+		$$.argument = $3;
+	}
 	| BasicTypeId ':' Identifier {
 		int ret;
 		$$.governor = asn1p_ref_new(yylineno);
@@ -850,6 +857,17 @@ ActualParameter:
 		$$->meta_type = AMT_VALUE;
 	}
 	;
+
+/*
+	| '{' ActualParameter '}' {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		asn1p_expr_add($$, $2);
+		$$->expr_type = A1TC_PARAMETRIZED;
+		$$->meta_type = AMT_TYPE;
+	}
+	;
+*/
 
 /*
  * A collection of constructed data type members.
@@ -1622,8 +1640,22 @@ ConstraintSpec:
 	;
 
 ConstraintValue:
-	SignedNumber {
+	TOK_FALSE {
+		$$ = asn1p_value_fromint(0);
+		checkmem($$);
+		$$->type = ATV_FALSE;
+	}
+	| TOK_TRUE {
+		$$ = asn1p_value_fromint(1);
+		checkmem($$);
+		$$->type = ATV_TRUE;
+	}
+	| SignedNumber {
 		$$ = $1;
+	}
+	| TOK_cstring {
+		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
+		checkmem($$);
 	}
 	| Identifier {
 		asn1p_ref_t *ref;
@@ -1636,19 +1668,16 @@ ConstraintValue:
 		checkmem($$);
 		free($1);
 	}
-	| TOK_cstring {
-		$$ = asn1p_value_frombuf($1.buf, $1.len, 0);
+	| TypeRefName {
+		asn1p_ref_t *ref;
+		int ret;
+		ref = asn1p_ref_new(yylineno);
+		checkmem(ref);
+		ret = asn1p_ref_add_component(ref, $1, RLT_UNKNOWN);
+		checkmem(ret == 0);
+		$$ = asn1p_value_fromref(ref, 0);
 		checkmem($$);
-	}
-	| TOK_FALSE {
-		$$ = asn1p_value_fromint(0);
-		checkmem($$);
-		$$->type = ATV_FALSE;
-	}
-	| TOK_TRUE {
-		$$ = asn1p_value_fromint(1);
-		checkmem($$);
-		$$->type = ATV_TRUE;
+		free($1);
 	}
 	;
 
