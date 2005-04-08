@@ -111,7 +111,8 @@ asn1p_parse_file(const char *filename, enum asn1p_flags flags) {
 		if(_asn1p_fix_modules(a, filename))
 			return NULL;	/* FIXME: destroy (a) */
 	} else {
-		assert(a == NULL);
+		/* Not always true: assert(a == NULL); */
+		a = NULL;
 	}
 
 	return a;
