@@ -76,6 +76,7 @@ main(int ac, char **av) {
 		}
 		break;
 	case 'p':
+		opt_toxml = 0;	/* Override '-x' */
 		opt_print++;
 		break;
 	case 's':
@@ -88,6 +89,7 @@ main(int ac, char **av) {
 		}
 		break;
 	case 'x':
+		opt_print = 0;	/* Override '-p' */
 		opt_toxml++;
 		break;
 	case 'h':
@@ -101,7 +103,11 @@ main(int ac, char **av) {
 		"  -n <num>     Process files <num> times\n"
 		"  -s <size>    Set the stack usage limit\n"
 		"  -p           Print out the decoded contents\n"
-		"  -x           Print out as XML\n"
+		"  -x           Print out as XML"
+#ifdef	ASN_DECODER_DEFAULT_OUTPUT_XML
+		" (default)"
+#endif
+		"\n"
 		, av[0], (long)suggested_bufsize);
 		exit(EX_USAGE);
 	}
@@ -113,6 +119,10 @@ main(int ac, char **av) {
 		fprintf(stderr, "Error: missing filename\n");
 		exit(EX_USAGE);
 	}
+
+#ifdef	ASN_DECODER_DEFAULT_OUTPUT_XML
+	if(!opt_print) opt_toxml++;
+#endif
 
 	setvbuf(stdout, 0, _IOLBF, 0);
 
