@@ -1,6 +1,4 @@
 ASN_MODULE_SOURCES=	\
-	DateTime.c	\
-	LocalTimeStamp.c	\
 	DataInterChange.c	\
 	TransferBatch.c	\
 	Notification.c	\
@@ -9,401 +7,307 @@ ASN_MODULE_SOURCES=	\
 	BatchControlInfo.c	\
 	AccountingInfo.c	\
 	NetworkInfo.c	\
-	VasInfo.c	\
-	MessageDescriptionInfo.c	\
+	MessageDescriptionInfoList.c	\
 	MobileOriginatedCall.c	\
 	MobileTerminatedCall.c	\
 	SupplServiceEvent.c	\
 	ServiceCentreUsage.c	\
-	ValueAddedService.c	\
 	GprsCall.c	\
 	ContentTransaction.c	\
 	LocationService.c	\
 	AuditControlInfo.c	\
-	ThreeGCamelDestination.c	\
 	AccessPointNameNI.c	\
 	AccessPointNameOI.c	\
-	AccessPointName.c	\
-	AiurRequested.c	\
-	BasicHSCSDParameters.c	\
+	ActualDeliveryTimeStamp.c	\
 	AddressStringDigits.c	\
+	AdvisedCharge.c	\
+	AdvisedChargeCurrency.c	\
+	AdvisedChargeInformation.c	\
 	AgeOfLocation.c	\
 	BasicService.c	\
 	BasicServiceCode.c	\
 	BasicServiceCodeList.c	\
-	BasicServiceUsedList.c	\
 	BasicServiceUsed.c	\
+	BasicServiceUsedList.c	\
 	BearerServiceCode.c	\
-	CalledNumAnalysis.c	\
-	CalledNumAnalysisCode.c	\
-	CalledNumAnalysisList.c	\
-	CallOriginator.c	\
+	CalledNumber.c	\
 	CalledPlace.c	\
+	CalledRegion.c	\
 	CallEventDetailsCount.c	\
 	CallEventStartTimeStamp.c	\
+	CallingNumber.c	\
+	CallOriginator.c	\
 	CallReference.c	\
-	CalledRegion.c	\
-	CallType.c	\
-	CallTypeSubtype.c	\
 	CallTypeGroup.c	\
 	CallTypeLevel1.c	\
 	CallTypeLevel2.c	\
 	CallTypeLevel3.c	\
-	CalledCountryCode.c	\
-	CamelCallReference.c	\
-	CamelCallReferenceNumber.c	\
-	CamelDestination.c	\
-	CamelInitiatedCFIndicator.c	\
-	CamelModification.c	\
-	CamelServerAddress.c	\
-	CamelModificationList.c	\
+	CamelDestinationNumber.c	\
+	CamelInvocationFee.c	\
 	CamelServiceKey.c	\
 	CamelServiceLevel.c	\
 	CamelServiceUsed.c	\
 	CauseForTerm.c	\
 	CellId.c	\
-	ChannelCoding.c	\
-	ChannelCodingsAcceptable.c	\
 	Charge.c	\
-	ChargeDetail.c	\
-	ChargeDetailList.c	\
 	ChargeableSubscriber.c	\
 	ChargeableUnits.c	\
+	ChargeDetail.c	\
+	ChargeDetailList.c	\
+	ChargeDetailTimeStamp.c	\
 	ChargedItem.c	\
+	ChargedPartyEquipment.c	\
+	ChargedPartyHomeIdentification.c	\
+	ChargedPartyHomeIdList.c	\
+	ChargedPartyIdentification.c	\
+	ChargedPartyIdentifier.c	\
+	ChargedPartyIdList.c	\
+	ChargedPartyIdType.c	\
+	ChargedPartyInformation.c	\
+	ChargedPartyLocation.c	\
+	ChargedPartyLocationList.c	\
 	ChargedPartyStatus.c	\
 	ChargedUnits.c	\
 	ChargeInformation.c	\
 	ChargeInformationList.c	\
+	ChargeRefundIndicator.c	\
 	ChargeType.c	\
-	ChargingCharacteristics.c	\
 	ChargingId.c	\
 	ChargingPoint.c	\
 	ChargingTimeStamp.c	\
 	ClirIndicator.c	\
+	Commission.c	\
 	CompletionTimeStamp.c	\
-	ContentProviderIdType.c	\
+	ContentChargingPoint.c	\
+	ContentProvider.c	\
 	ContentProviderIdentifier.c	\
-	CountryCode.c	\
-	CountryCodeTable.c	\
+	ContentProviderIdList.c	\
+	ContentProviderIdType.c	\
+	ContentProviderName.c	\
+	ContentServiceUsed.c	\
+	ContentServiceUsedList.c	\
+	ContentTransactionBasicInfo.c	\
+	ContentTransactionCode.c	\
+	ContentTransactionType.c	\
 	CseInformation.c	\
 	CurrencyConversion.c	\
-	CustomerIdType.c	\
+	CurrencyConversionList.c	\
 	CustomerIdentifier.c	\
+	CustomerIdType.c	\
 	DataVolume.c	\
 	DataVolumeIncoming.c	\
 	DataVolumeOutgoing.c	\
-	DataVolumeReference.c	\
+	DateTime.c	\
 	DateTimeLong.c	\
-	DayCategory.c	\
-	DayCategorySubtype.c	\
 	DefaultCallHandlingIndicator.c	\
 	DepositTimeStamp.c	\
 	Destination.c	\
 	DestinationNetwork.c	\
 	DialledDigits.c	\
+	Discount.c	\
+	DiscountableAmount.c	\
+	DiscountApplied.c	\
 	DiscountCode.c	\
+	DiscountInformation.c	\
+	Discounting.c	\
+	DiscountingList.c	\
 	DiscountRate.c	\
 	DiscountValue.c	\
-	DiscountApplied.c	\
-	DiscountDefinition.c	\
-	Discounting.c	\
-	DiscountInformation.c	\
-	DiscountInformationList.c	\
 	DistanceChargeBandCode.c	\
-	DualServiceCode.c	\
-	DualBearerServiceCode.c	\
-	DualTeleServiceCode.c	\
 	EarliestCallTimeStamp.c	\
-	EquipmentInformation.c	\
+	EquipmentId.c	\
+	EquipmentIdType.c	\
 	Esn.c	\
 	ExchangeRate.c	\
 	ExchangeRateCode.c	\
-	ExchangeRateDefinition.c	\
 	FileAvailableTimeStamp.c	\
 	FileCreationTimeStamp.c	\
 	FileSequenceNumber.c	\
 	FileTypeIndicator.c	\
+	FixedDiscountValue.c	\
 	Fnur.c	\
-	FraudMonitorIndicator.c	\
 	GeographicalLocation.c	\
 	GprsBasicCallInformation.c	\
 	GprsChargeableSubscriber.c	\
 	GprsDestination.c	\
 	GprsLocationInformation.c	\
 	GprsNetworkLocation.c	\
-	GprsServiceUsage.c	\
-	GprsServiceUsageList.c	\
 	GprsServiceUsed.c	\
 	GsmChargeableSubscriber.c	\
-	GsnAddress.c	\
+	GuaranteedBitRate.c	\
 	HomeBid.c	\
+	HomeIdentifier.c	\
+	HomeIdType.c	\
+	HomeLocationDescription.c	\
 	HomeLocationInformation.c	\
 	HorizontalAccuracyDelivered.c	\
 	HorizontalAccuracyRequested.c	\
-	HSCSDInformation.c	\
-	HSCSDParameterModification.c	\
-	HSCSDParameterModificationList.c	\
-	Iac.c	\
-	IacTable.c	\
+	HSCSDIndicator.c	\
 	Imei.c	\
 	ImeiOrEsn.c	\
 	Imsi.c	\
-	InitiatingParty.c	\
+	IMSSignallingContext.c	\
+	InternetServiceProvider.c	\
+	InternetServiceProviderIdList.c	\
+	IspIdentifier.c	\
+	IspIdType.c	\
 	ISPList.c	\
-	IpAddress.c	\
-	IPTextV4Address.c	\
-	IPTextV6Address.c	\
+	NetworkIdType.c	\
+	NetworkIdentifier.c	\
+	Network.c	\
+	NetworkList.c	\
 	LatestCallTimeStamp.c	\
-	Latitude.c	\
-	LocalCurrency.c	\
-	LocationArea.c	\
-	LocationDescription.c	\
-	LocationInformation.c	\
-	Longitude.c	\
 	LCSQosDelivered.c	\
 	LCSQosRequested.c	\
 	LCSRequestTimestamp.c	\
-	LCSSPInformation.c	\
-	LCSSPIdentificationList.c	\
 	LCSSPIdentification.c	\
+	LCSSPIdentificationList.c	\
+	LCSSPInformation.c	\
 	LCSTransactionStatus.c	\
+	LocalCurrency.c	\
+	LocalTimeStamp.c	\
+	LocationArea.c	\
+	LocationDescription.c	\
+	LocationIdentifier.c	\
+	LocationIdType.c	\
+	LocationInformation.c	\
 	LocationServiceUsage.c	\
+	MaximumBitRate.c	\
 	Mdn.c	\
-	MinChargeableSubscriber.c	\
-	MessageDescriptionCode.c	\
 	MessageDescription.c	\
-	MessageDescriptionDefinition.c	\
+	MessageDescriptionCode.c	\
+	MessageDescriptionInformation.c	\
 	MessageStatus.c	\
 	MessageType.c	\
 	Min.c	\
+	MinChargeableSubscriber.c	\
 	MoBasicCallInformation.c	\
-	MobileStationClassMark.c	\
-	ModificationIndicator.c	\
-	ModificationTimestamp.c	\
-	MscId.c	\
 	Msisdn.c	\
 	MtBasicCallInformation.c	\
-	MultiRateIndicator.c	\
+	NetworkAccessIdentifier.c	\
 	NetworkId.c	\
-	NetworkLocation.c	\
 	NetworkInitPDPContext.c	\
-	NetworkType.c	\
-	NonChargedParty.c	\
+	NetworkLocation.c	\
+	NonChargedNumber.c	\
 	NumberOfDecimalPlaces.c	\
-	NumberingPlan.c	\
-	NumberOfChannels.c	\
 	ObjectType.c	\
-	OperatorSpecInformation.c	\
 	OperatorSpecInfoList.c	\
+	OperatorSpecInformation.c	\
+	OrderPlacedTimeStamp.c	\
 	OriginatingNetwork.c	\
 	PacketDataProtocolAddress.c	\
+	PaidIndicator.c	\
 	PartialTypeIndicator.c	\
+	PaymentMethod.c	\
 	PdpAddress.c	\
 	PDPContextStartTimestamp.c	\
-	PdpType.c	\
 	PlmnId.c	\
 	PositioningMethod.c	\
 	PriorityCode.c	\
-	QoSInformation.c	\
-	QoSDelay.c	\
-	QoSGuaranteedBitRateDownlink.c	\
-	QoSGuaranteedBitRateUplink.c	\
-	QoSMeanThroughput.c	\
-	QoSPeakThroughput.c	\
-	QoSPrecedence.c	\
-	QoSReliability.c	\
-	RadioChannelRequested.c	\
-	RadioChannelUsed.c	\
-	QoSAllocRetenPriority.c	\
-	QoSDeliveryOrder.c	\
-	QoSErroneousSDUs.c	\
-	QoSHandlingpriority.c	\
-	QoSMaxBitRate.c	\
-	QoSMaxBitRateUplink.c	\
-	QoSMaxBitRateDownlink.c	\
-	QoSMaxSDUsize.c	\
-	QoSResidualBER.c	\
-	QoSSDUErrorRatio.c	\
-	QoSTrafficClass.c	\
-	QoSTransferDelay.c	\
-	GSMQoSRequested.c	\
-	GSMQoSUsed.c	\
-	QoSRequestedV37.c	\
-	QoSUsedV37.c	\
-	QoSRequestedV38.c	\
-	QoSUsedV38.c	\
-	UMTSQoSInformation.c	\
-	UMTSQoSRequested.c	\
-	UMTSQoSUsed.c	\
-	UserProtocolIndicator.c	\
 	RapFileSequenceNumber.c	\
-	Recipient.c	\
-	RecEntityDefinition.c	\
 	RecEntityCode.c	\
 	RecEntityCodeList.c	\
-	RecEntityType.c	\
 	RecEntityId.c	\
-	RecEntityTable.c	\
+	RecEntityInfoList.c	\
+	RecEntityInformation.c	\
+	RecEntityType.c	\
+	Recipient.c	\
 	ReleaseVersionNumber.c	\
-	RemotePdpAddressList.c	\
+	RequestedDeliveryTimeStamp.c	\
 	ResponseTime.c	\
 	ResponseTimeCategory.c	\
 	ScuBasicInformation.c	\
 	ScuChargeType.c	\
 	ScuTimeStamps.c	\
-	ScuVasChargeableSubscriber.c	\
+	ScuChargeableSubscriber.c	\
 	Sender.c	\
-	ServiceCentreIdentity.c	\
 	ServingBid.c	\
+	ServingLocationDescription.c	\
 	ServingNetwork.c	\
+	ServingPartiesInformation.c	\
 	SimChargeableSubscriber.c	\
 	SimToolkitIndicator.c	\
+	SMSDestinationNumber.c	\
+	SMSOriginator.c	\
 	SpecificationVersionNumber.c	\
-	SpeechVersionRequested.c	\
-	SpeechVersionUsed.c	\
-	SpeechVersion.c	\
 	SsParameters.c	\
-	SupplServiceUsed.c	\
-	SupplServiceUsedList.c	\
 	SupplServiceActionCode.c	\
 	SupplServiceCode.c	\
+	SupplServiceUsed.c	\
 	TapCurrency.c	\
-	Taxation.c	\
-	TaxCode.c	\
 	TapDecimalPlaces.c	\
+	TaxableAmount.c	\
+	Taxation.c	\
+	TaxationList.c	\
+	TaxCode.c	\
 	TaxInformation.c	\
 	TaxInformationList.c	\
-	TaxValue10.c	\
 	TaxRate.c	\
-	TaxableAmount.c	\
-	TaxRateDefinition.c	\
 	TaxType.c	\
+	TaxValue.c	\
 	TeleServiceCode.c	\
 	ThirdPartyInformation.c	\
-	TimeBand.c	\
-	TimeBandSubtype.c	\
-	TotalChargeValue.c	\
+	ThirdPartyNumber.c	\
+	ThreeGcamelDestination.c	\
+	TotalAdvisedCharge.c	\
+	TotalAdvisedChargeRefund.c	\
+	TotalAdvisedChargeValue.c	\
+	TotalAdvisedChargeValueList.c	\
 	TotalCallEventDuration.c	\
-	TotalChargeValueList.c	\
+	TotalCharge.c	\
+	TotalChargeRefund.c	\
+	TotalCommission.c	\
+	TotalCommissionRefund.c	\
+	TotalDataVolume.c	\
+	TotalDiscountRefund.c	\
 	TotalDiscountValue.c	\
+	TotalTaxRefund.c	\
 	TotalTaxValue.c	\
-	TrackedCustomerInformation.c	\
-	TrackedCustomerIdList.c	\
-	TrackedCustomerIdentification.c	\
-	TrackedCustomerHomeIdList.c	\
-	TrackedCustomerHomeId.c	\
-	HomeIdentifier.c	\
-	TrackedCustomerLocList.c	\
-	TrackedCustomerLocation.c	\
+	TotalTransactionDuration.c	\
 	TrackedCustomerEquipment.c	\
-	TrackingCustomerInformation.c	\
-	TrackingCustomerIdList.c	\
-	TrackingCustomerIdentification.c	\
-	TrackingCustomerHomeIdList.c	\
-	TrackingCustomerHomeId.c	\
-	TrackingCustomerLocList.c	\
-	TrackingCustomerLocation.c	\
+	TrackedCustomerHomeId.c	\
+	TrackedCustomerHomeIdList.c	\
+	TrackedCustomerIdentification.c	\
+	TrackedCustomerIdList.c	\
+	TrackedCustomerInformation.c	\
+	TrackedCustomerLocation.c	\
+	TrackedCustomerLocList.c	\
 	TrackingCustomerEquipment.c	\
+	TrackingCustomerHomeId.c	\
+	TrackingCustomerHomeIdList.c	\
+	TrackingCustomerIdentification.c	\
+	TrackingCustomerIdList.c	\
+	TrackingCustomerInformation.c	\
+	TrackingCustomerLocation.c	\
+	TrackingCustomerLocList.c	\
 	TrackingFrequency.c	\
 	TrackingPeriod.c	\
+	TransactionAuthCode.c	\
+	TransactionDescriptionSupp.c	\
+	TransactionDetailDescription.c	\
+	TransactionIdentifier.c	\
+	TransactionShortDescription.c	\
+	TransactionStatus.c	\
 	TransferCutOffTimeStamp.c	\
 	TransparencyIndicator.c	\
-	TypeOfControllingNode.c	\
-	TypeOfNumber.c	\
+	UserProtocolIndicator.c	\
 	UtcTimeOffset.c	\
 	UtcTimeOffsetCode.c	\
-	UtcTimeOffsetDefinition.c	\
 	UtcTimeOffsetInfo.c	\
-	ValueAddedServiceUsedList.c	\
-	ValueAddedServiceUsed.c	\
-	VasCode.c	\
-	VasDefinition.c	\
-	VasDescription.c	\
-	VasShortDescription.c	\
+	UtcTimeOffsetInfoList.c	\
 	VerticalAccuracyDelivered.c	\
 	VerticalAccuracyRequested.c	\
 	AbsoluteAmount.c	\
 	Bid.c	\
 	Code.c	\
-	Currency.c	\
 	AsciiString.c	\
-	Description.c	\
-	TapHexString.c	\
-	PercentageRate.c	\
 	BCDString.c	\
-	OrderPlacementTimeStamp.c	\
-	RequestedDeliveryTimeStamp.c	\
-	ActualDeliveryTimeStamp.c	\
-	TransactionStatus.c	\
-	ContentTransactionBasicInfo.c	\
-	ChargedPartyIdType.c	\
-	LoginName.c	\
-	AccountNumber.c	\
-	EmailAddress.c	\
-	ChargedPartyIdentification.c	\
-	ChargedPartyId.c	\
-	ChargedPartyIdList.c	\
-	HomeIdType.c	\
-	Name.c	\
-	ChargedPartyHomeId.c	\
-	ChargedPartyHomeIdList.c	\
-	LocationIdType.c	\
-	LocationIdentifier.c	\
-	CountryName.c	\
-	CountryAsciCode.c	\
-	TapRegion.c	\
-	Place.c	\
-	ChargedPartyLocation.c	\
-	ChargedPartyLocationList.c	\
-	EquipmentIdType.c	\
-	EquipmentId.c	\
-	ChargedPartyEquipment.c	\
-	ChargedPartyInformation.c	\
-	ProviderIdType.c	\
-	Url.c	\
-	ProviderId.c	\
-	ContentProviderId.c	\
-	ContentProviderIdList.c	\
-	InternetServiceProviderId.c	\
-	InternetServiceProviderIdList.c	\
-	NetworkIdType.c	\
-	NetworkDesc.c	\
-	NetworkIdentifier.c	\
-	NetworkIdGroup.c	\
-	NetworkIdList.c	\
-	ContentProviderName.c	\
-	ServingPartiesInformation.c	\
-	ContentTransactionCode.c	\
-	ContentTransactionType.c	\
-	TransactionDescriptionSupp.c	\
-	TransactionDetailDescription.c	\
-	TransactionShortDescription.c	\
-	TransactionIdentifier.c	\
-	TransactionAuthCode.c	\
-	TotalDataVolume.c	\
-	ChargeRefundIndicator.c	\
-	ContentChargingPoint.c	\
-	PaidIndicator.c	\
-	PaymentMethod.c	\
-	AdvisedChargeCurrency.c	\
-	AdvisedCharge.c	\
-	Commission.c	\
-	AdvisedChargeInformation.c	\
-	ContentServiceUsed.c	\
-	ContentServiceUsedList.c	\
-	TotalTaxRefund.c	\
-	TotalDiscountRefund.c	\
-	TotalChargeRefund.c	\
-	TotalAdvisedCharge.c	\
-	TotalAdvisedChargeRefund.c	\
-	TotalCommission.c	\
-	TotalCommissionRefund.c	\
-	TotalAdvisedChargeValue.c	\
-	TotalAdvisedChargeValueList.c
+	Currency.c	\
+	HexString.c	\
+	NumberString.c	\
+	PercentageRate.c
 
 ASN_MODULE_HEADERS=	\
-	DateTime.h	\
-	LocalTimeStamp.h	\
 	DataInterChange.h	\
 	TransferBatch.h	\
 	Notification.h	\
@@ -412,404 +316,308 @@ ASN_MODULE_HEADERS=	\
 	BatchControlInfo.h	\
 	AccountingInfo.h	\
 	NetworkInfo.h	\
-	VasInfo.h	\
-	MessageDescriptionInfo.h	\
+	MessageDescriptionInfoList.h	\
 	MobileOriginatedCall.h	\
 	MobileTerminatedCall.h	\
 	SupplServiceEvent.h	\
 	ServiceCentreUsage.h	\
-	ValueAddedService.h	\
 	GprsCall.h	\
 	ContentTransaction.h	\
 	LocationService.h	\
 	AuditControlInfo.h	\
-	ThreeGCamelDestination.h	\
 	AccessPointNameNI.h	\
 	AccessPointNameOI.h	\
-	AccessPointName.h	\
-	AiurRequested.h	\
-	BasicHSCSDParameters.h	\
+	ActualDeliveryTimeStamp.h	\
 	AddressStringDigits.h	\
+	AdvisedCharge.h	\
+	AdvisedChargeCurrency.h	\
+	AdvisedChargeInformation.h	\
 	AgeOfLocation.h	\
 	BasicService.h	\
 	BasicServiceCode.h	\
 	BasicServiceCodeList.h	\
-	BasicServiceUsedList.h	\
 	BasicServiceUsed.h	\
+	BasicServiceUsedList.h	\
 	BearerServiceCode.h	\
-	CalledNumAnalysis.h	\
-	CalledNumAnalysisCode.h	\
-	CalledNumAnalysisList.h	\
-	CallOriginator.h	\
+	CalledNumber.h	\
 	CalledPlace.h	\
+	CalledRegion.h	\
 	CallEventDetailsCount.h	\
 	CallEventStartTimeStamp.h	\
+	CallingNumber.h	\
+	CallOriginator.h	\
 	CallReference.h	\
-	CalledRegion.h	\
-	CallType.h	\
-	CallTypeSubtype.h	\
 	CallTypeGroup.h	\
 	CallTypeLevel1.h	\
 	CallTypeLevel2.h	\
 	CallTypeLevel3.h	\
-	CalledCountryCode.h	\
-	CamelCallReference.h	\
-	CamelCallReferenceNumber.h	\
-	CamelDestination.h	\
-	CamelInitiatedCFIndicator.h	\
-	CamelModification.h	\
-	CamelServerAddress.h	\
-	CamelModificationList.h	\
+	CamelDestinationNumber.h	\
+	CamelInvocationFee.h	\
 	CamelServiceKey.h	\
 	CamelServiceLevel.h	\
 	CamelServiceUsed.h	\
 	CauseForTerm.h	\
 	CellId.h	\
-	ChannelCoding.h	\
-	ChannelCodingsAcceptable.h	\
 	Charge.h	\
-	ChargeDetail.h	\
-	ChargeDetailList.h	\
 	ChargeableSubscriber.h	\
 	ChargeableUnits.h	\
+	ChargeDetail.h	\
+	ChargeDetailList.h	\
+	ChargeDetailTimeStamp.h	\
 	ChargedItem.h	\
+	ChargedPartyEquipment.h	\
+	ChargedPartyHomeIdentification.h	\
+	ChargedPartyHomeIdList.h	\
+	ChargedPartyIdentification.h	\
+	ChargedPartyIdentifier.h	\
+	ChargedPartyIdList.h	\
+	ChargedPartyIdType.h	\
+	ChargedPartyInformation.h	\
+	ChargedPartyLocation.h	\
+	ChargedPartyLocationList.h	\
 	ChargedPartyStatus.h	\
 	ChargedUnits.h	\
 	ChargeInformation.h	\
 	ChargeInformationList.h	\
+	ChargeRefundIndicator.h	\
 	ChargeType.h	\
-	ChargingCharacteristics.h	\
 	ChargingId.h	\
 	ChargingPoint.h	\
 	ChargingTimeStamp.h	\
 	ClirIndicator.h	\
+	Commission.h	\
 	CompletionTimeStamp.h	\
-	ContentProviderIdType.h	\
+	ContentChargingPoint.h	\
+	ContentProvider.h	\
 	ContentProviderIdentifier.h	\
-	CountryCode.h	\
-	CountryCodeTable.h	\
+	ContentProviderIdList.h	\
+	ContentProviderIdType.h	\
+	ContentProviderName.h	\
+	ContentServiceUsed.h	\
+	ContentServiceUsedList.h	\
+	ContentTransactionBasicInfo.h	\
+	ContentTransactionCode.h	\
+	ContentTransactionType.h	\
 	CseInformation.h	\
 	CurrencyConversion.h	\
-	CustomerIdType.h	\
+	CurrencyConversionList.h	\
 	CustomerIdentifier.h	\
+	CustomerIdType.h	\
 	DataVolume.h	\
 	DataVolumeIncoming.h	\
 	DataVolumeOutgoing.h	\
-	DataVolumeReference.h	\
+	DateTime.h	\
 	DateTimeLong.h	\
-	DayCategory.h	\
-	DayCategorySubtype.h	\
 	DefaultCallHandlingIndicator.h	\
 	DepositTimeStamp.h	\
 	Destination.h	\
 	DestinationNetwork.h	\
 	DialledDigits.h	\
+	Discount.h	\
+	DiscountableAmount.h	\
+	DiscountApplied.h	\
 	DiscountCode.h	\
+	DiscountInformation.h	\
+	Discounting.h	\
+	DiscountingList.h	\
 	DiscountRate.h	\
 	DiscountValue.h	\
-	DiscountApplied.h	\
-	DiscountDefinition.h	\
-	Discounting.h	\
-	DiscountInformation.h	\
-	DiscountInformationList.h	\
 	DistanceChargeBandCode.h	\
-	DualServiceCode.h	\
-	DualBearerServiceCode.h	\
-	DualTeleServiceCode.h	\
 	EarliestCallTimeStamp.h	\
-	EquipmentInformation.h	\
+	EquipmentId.h	\
+	EquipmentIdType.h	\
 	Esn.h	\
 	ExchangeRate.h	\
 	ExchangeRateCode.h	\
-	ExchangeRateDefinition.h	\
 	FileAvailableTimeStamp.h	\
 	FileCreationTimeStamp.h	\
 	FileSequenceNumber.h	\
 	FileTypeIndicator.h	\
+	FixedDiscountValue.h	\
 	Fnur.h	\
-	FraudMonitorIndicator.h	\
 	GeographicalLocation.h	\
 	GprsBasicCallInformation.h	\
 	GprsChargeableSubscriber.h	\
 	GprsDestination.h	\
 	GprsLocationInformation.h	\
 	GprsNetworkLocation.h	\
-	GprsServiceUsage.h	\
-	GprsServiceUsageList.h	\
 	GprsServiceUsed.h	\
 	GsmChargeableSubscriber.h	\
-	GsnAddress.h	\
+	GuaranteedBitRate.h	\
 	HomeBid.h	\
+	HomeIdentifier.h	\
+	HomeIdType.h	\
+	HomeLocationDescription.h	\
 	HomeLocationInformation.h	\
 	HorizontalAccuracyDelivered.h	\
 	HorizontalAccuracyRequested.h	\
-	HSCSDInformation.h	\
-	HSCSDParameterModification.h	\
-	HSCSDParameterModificationList.h	\
-	Iac.h	\
-	IacTable.h	\
+	HSCSDIndicator.h	\
 	Imei.h	\
 	ImeiOrEsn.h	\
 	Imsi.h	\
-	InitiatingParty.h	\
+	IMSSignallingContext.h	\
+	InternetServiceProvider.h	\
+	InternetServiceProviderIdList.h	\
+	IspIdentifier.h	\
+	IspIdType.h	\
 	ISPList.h	\
-	IpAddress.h	\
-	IPTextV4Address.h	\
-	IPTextV6Address.h	\
+	NetworkIdType.h	\
+	NetworkIdentifier.h	\
+	Network.h	\
+	NetworkList.h	\
 	LatestCallTimeStamp.h	\
-	Latitude.h	\
-	LocalCurrency.h	\
-	LocationArea.h	\
-	LocationDescription.h	\
-	LocationInformation.h	\
-	Longitude.h	\
 	LCSQosDelivered.h	\
 	LCSQosRequested.h	\
 	LCSRequestTimestamp.h	\
-	LCSSPInformation.h	\
-	LCSSPIdentificationList.h	\
 	LCSSPIdentification.h	\
+	LCSSPIdentificationList.h	\
+	LCSSPInformation.h	\
 	LCSTransactionStatus.h	\
+	LocalCurrency.h	\
+	LocalTimeStamp.h	\
+	LocationArea.h	\
+	LocationDescription.h	\
+	LocationIdentifier.h	\
+	LocationIdType.h	\
+	LocationInformation.h	\
 	LocationServiceUsage.h	\
+	MaximumBitRate.h	\
 	Mdn.h	\
-	MinChargeableSubscriber.h	\
-	MessageDescriptionCode.h	\
 	MessageDescription.h	\
-	MessageDescriptionDefinition.h	\
+	MessageDescriptionCode.h	\
+	MessageDescriptionInformation.h	\
 	MessageStatus.h	\
 	MessageType.h	\
 	Min.h	\
+	MinChargeableSubscriber.h	\
 	MoBasicCallInformation.h	\
-	MobileStationClassMark.h	\
-	ModificationIndicator.h	\
-	ModificationTimestamp.h	\
-	MscId.h	\
 	Msisdn.h	\
 	MtBasicCallInformation.h	\
-	MultiRateIndicator.h	\
+	NetworkAccessIdentifier.h	\
 	NetworkId.h	\
-	NetworkLocation.h	\
 	NetworkInitPDPContext.h	\
-	NetworkType.h	\
-	NonChargedParty.h	\
+	NetworkLocation.h	\
+	NonChargedNumber.h	\
 	NumberOfDecimalPlaces.h	\
-	NumberingPlan.h	\
-	NumberOfChannels.h	\
 	ObjectType.h	\
-	OperatorSpecInformation.h	\
 	OperatorSpecInfoList.h	\
+	OperatorSpecInformation.h	\
+	OrderPlacedTimeStamp.h	\
 	OriginatingNetwork.h	\
 	PacketDataProtocolAddress.h	\
+	PaidIndicator.h	\
 	PartialTypeIndicator.h	\
+	PaymentMethod.h	\
 	PdpAddress.h	\
 	PDPContextStartTimestamp.h	\
-	PdpType.h	\
 	PlmnId.h	\
 	PositioningMethod.h	\
 	PriorityCode.h	\
-	QoSInformation.h	\
-	QoSDelay.h	\
-	QoSGuaranteedBitRateDownlink.h	\
-	QoSGuaranteedBitRateUplink.h	\
-	QoSMeanThroughput.h	\
-	QoSPeakThroughput.h	\
-	QoSPrecedence.h	\
-	QoSReliability.h	\
-	RadioChannelRequested.h	\
-	RadioChannelUsed.h	\
-	QoSAllocRetenPriority.h	\
-	QoSDeliveryOrder.h	\
-	QoSErroneousSDUs.h	\
-	QoSHandlingpriority.h	\
-	QoSMaxBitRate.h	\
-	QoSMaxBitRateUplink.h	\
-	QoSMaxBitRateDownlink.h	\
-	QoSMaxSDUsize.h	\
-	QoSResidualBER.h	\
-	QoSSDUErrorRatio.h	\
-	QoSTrafficClass.h	\
-	QoSTransferDelay.h	\
-	GSMQoSRequested.h	\
-	GSMQoSUsed.h	\
-	QoSRequestedV37.h	\
-	QoSUsedV37.h	\
-	QoSRequestedV38.h	\
-	QoSUsedV38.h	\
-	UMTSQoSInformation.h	\
-	UMTSQoSRequested.h	\
-	UMTSQoSUsed.h	\
-	UserProtocolIndicator.h	\
 	RapFileSequenceNumber.h	\
-	Recipient.h	\
-	RecEntityDefinition.h	\
 	RecEntityCode.h	\
 	RecEntityCodeList.h	\
-	RecEntityType.h	\
 	RecEntityId.h	\
-	RecEntityTable.h	\
+	RecEntityInfoList.h	\
+	RecEntityInformation.h	\
+	RecEntityType.h	\
+	Recipient.h	\
 	ReleaseVersionNumber.h	\
-	RemotePdpAddressList.h	\
+	RequestedDeliveryTimeStamp.h	\
 	ResponseTime.h	\
 	ResponseTimeCategory.h	\
 	ScuBasicInformation.h	\
 	ScuChargeType.h	\
 	ScuTimeStamps.h	\
-	ScuVasChargeableSubscriber.h	\
+	ScuChargeableSubscriber.h	\
 	Sender.h	\
-	ServiceCentreIdentity.h	\
 	ServingBid.h	\
+	ServingLocationDescription.h	\
 	ServingNetwork.h	\
+	ServingPartiesInformation.h	\
 	SimChargeableSubscriber.h	\
 	SimToolkitIndicator.h	\
+	SMSDestinationNumber.h	\
+	SMSOriginator.h	\
 	SpecificationVersionNumber.h	\
-	SpeechVersionRequested.h	\
-	SpeechVersionUsed.h	\
-	SpeechVersion.h	\
 	SsParameters.h	\
-	SupplServiceUsed.h	\
-	SupplServiceUsedList.h	\
 	SupplServiceActionCode.h	\
 	SupplServiceCode.h	\
+	SupplServiceUsed.h	\
 	TapCurrency.h	\
-	Taxation.h	\
-	TaxCode.h	\
 	TapDecimalPlaces.h	\
+	TaxableAmount.h	\
+	Taxation.h	\
+	TaxationList.h	\
+	TaxCode.h	\
 	TaxInformation.h	\
 	TaxInformationList.h	\
-	TaxValue10.h	\
 	TaxRate.h	\
-	TaxableAmount.h	\
-	TaxRateDefinition.h	\
 	TaxType.h	\
+	TaxValue.h	\
 	TeleServiceCode.h	\
 	ThirdPartyInformation.h	\
-	TimeBand.h	\
-	TimeBandSubtype.h	\
-	TotalChargeValue.h	\
+	ThirdPartyNumber.h	\
+	ThreeGcamelDestination.h	\
+	TotalAdvisedCharge.h	\
+	TotalAdvisedChargeRefund.h	\
+	TotalAdvisedChargeValue.h	\
+	TotalAdvisedChargeValueList.h	\
 	TotalCallEventDuration.h	\
-	TotalChargeValueList.h	\
+	TotalCharge.h	\
+	TotalChargeRefund.h	\
+	TotalCommission.h	\
+	TotalCommissionRefund.h	\
+	TotalDataVolume.h	\
+	TotalDiscountRefund.h	\
 	TotalDiscountValue.h	\
+	TotalTaxRefund.h	\
 	TotalTaxValue.h	\
-	TrackedCustomerInformation.h	\
-	TrackedCustomerIdList.h	\
-	TrackedCustomerIdentification.h	\
-	TrackedCustomerHomeIdList.h	\
-	TrackedCustomerHomeId.h	\
-	HomeIdentifier.h	\
-	TrackedCustomerLocList.h	\
-	TrackedCustomerLocation.h	\
+	TotalTransactionDuration.h	\
 	TrackedCustomerEquipment.h	\
-	TrackingCustomerInformation.h	\
-	TrackingCustomerIdList.h	\
-	TrackingCustomerIdentification.h	\
-	TrackingCustomerHomeIdList.h	\
-	TrackingCustomerHomeId.h	\
-	TrackingCustomerLocList.h	\
-	TrackingCustomerLocation.h	\
+	TrackedCustomerHomeId.h	\
+	TrackedCustomerHomeIdList.h	\
+	TrackedCustomerIdentification.h	\
+	TrackedCustomerIdList.h	\
+	TrackedCustomerInformation.h	\
+	TrackedCustomerLocation.h	\
+	TrackedCustomerLocList.h	\
 	TrackingCustomerEquipment.h	\
+	TrackingCustomerHomeId.h	\
+	TrackingCustomerHomeIdList.h	\
+	TrackingCustomerIdentification.h	\
+	TrackingCustomerIdList.h	\
+	TrackingCustomerInformation.h	\
+	TrackingCustomerLocation.h	\
+	TrackingCustomerLocList.h	\
 	TrackingFrequency.h	\
 	TrackingPeriod.h	\
+	TransactionAuthCode.h	\
+	TransactionDescriptionSupp.h	\
+	TransactionDetailDescription.h	\
+	TransactionIdentifier.h	\
+	TransactionShortDescription.h	\
+	TransactionStatus.h	\
 	TransferCutOffTimeStamp.h	\
 	TransparencyIndicator.h	\
-	TypeOfControllingNode.h	\
-	TypeOfNumber.h	\
+	UserProtocolIndicator.h	\
 	UtcTimeOffset.h	\
 	UtcTimeOffsetCode.h	\
-	UtcTimeOffsetDefinition.h	\
 	UtcTimeOffsetInfo.h	\
-	ValueAddedServiceUsedList.h	\
-	ValueAddedServiceUsed.h	\
-	VasCode.h	\
-	VasDefinition.h	\
-	VasDescription.h	\
-	VasShortDescription.h	\
+	UtcTimeOffsetInfoList.h	\
 	VerticalAccuracyDelivered.h	\
 	VerticalAccuracyRequested.h	\
 	AbsoluteAmount.h	\
 	Bid.h	\
 	Code.h	\
-	Currency.h	\
 	AsciiString.h	\
-	Description.h	\
-	TapHexString.h	\
-	PercentageRate.h	\
 	BCDString.h	\
-	OrderPlacementTimeStamp.h	\
-	RequestedDeliveryTimeStamp.h	\
-	ActualDeliveryTimeStamp.h	\
-	TransactionStatus.h	\
-	ContentTransactionBasicInfo.h	\
-	ChargedPartyIdType.h	\
-	LoginName.h	\
-	AccountNumber.h	\
-	EmailAddress.h	\
-	ChargedPartyIdentification.h	\
-	ChargedPartyId.h	\
-	ChargedPartyIdList.h	\
-	HomeIdType.h	\
-	Name.h	\
-	ChargedPartyHomeId.h	\
-	ChargedPartyHomeIdList.h	\
-	LocationIdType.h	\
-	LocationIdentifier.h	\
-	CountryName.h	\
-	CountryAsciCode.h	\
-	TapRegion.h	\
-	Place.h	\
-	ChargedPartyLocation.h	\
-	ChargedPartyLocationList.h	\
-	EquipmentIdType.h	\
-	EquipmentId.h	\
-	ChargedPartyEquipment.h	\
-	ChargedPartyInformation.h	\
-	ProviderIdType.h	\
-	Url.h	\
-	ProviderId.h	\
-	ContentProviderId.h	\
-	ContentProviderIdList.h	\
-	InternetServiceProviderId.h	\
-	InternetServiceProviderIdList.h	\
-	NetworkIdType.h	\
-	NetworkDesc.h	\
-	NetworkIdentifier.h	\
-	NetworkIdGroup.h	\
-	NetworkIdList.h	\
-	ContentProviderName.h	\
-	ServingPartiesInformation.h	\
-	ContentTransactionCode.h	\
-	ContentTransactionType.h	\
-	TransactionDescriptionSupp.h	\
-	TransactionDetailDescription.h	\
-	TransactionShortDescription.h	\
-	TransactionIdentifier.h	\
-	TransactionAuthCode.h	\
-	TotalDataVolume.h	\
-	ChargeRefundIndicator.h	\
-	ContentChargingPoint.h	\
-	PaidIndicator.h	\
-	PaymentMethod.h	\
-	AdvisedChargeCurrency.h	\
-	AdvisedCharge.h	\
-	Commission.h	\
-	AdvisedChargeInformation.h	\
-	ContentServiceUsed.h	\
-	ContentServiceUsedList.h	\
-	TotalTaxRefund.h	\
-	TotalDiscountRefund.h	\
-	TotalChargeRefund.h	\
-	TotalAdvisedCharge.h	\
-	TotalAdvisedChargeRefund.h	\
-	TotalCommission.h	\
-	TotalCommissionRefund.h	\
-	TotalAdvisedChargeValue.h	\
-	TotalAdvisedChargeValueList.h
+	Currency.h	\
+	HexString.h	\
+	NumberString.h	\
+	PercentageRate.h
 
 ASN_MODULE_HEADERS+=INTEGER.h
 ASN_MODULE_SOURCES+=INTEGER.c
-ASN_MODULE_HEADERS+=NumericString.h
-ASN_MODULE_SOURCES+=NumericString.c
-ASN_MODULE_HEADERS+=VisibleString.h
-ASN_MODULE_SOURCES+=VisibleString.c
 ASN_MODULE_HEADERS+=asn_SEQUENCE_OF.h
 ASN_MODULE_SOURCES+=asn_SEQUENCE_OF.c
 ASN_MODULE_HEADERS+=asn_SET_OF.h
@@ -879,15 +687,15 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons ../tap310-m.asn
+	../../asn1c/asn1c -S ../../skeletons ../tap3.asn1
 
 
-../tap310-m.asn:
+../tap3.asn1:
 	@echo The ../tap3.asn1 file is not yet present.
 	@echo Please read the README file on how to obtain this file.
 	@exit 42
 
-DataInterChange.c: ../tap310-m.asn regenerate.Makefile
+DataInterChange.c: ../tap3.asn1 regenerate.Makefile
 	./regenerate.Makefile
 	@touch DataInterChange.c
 	make
