@@ -167,15 +167,15 @@ process_line(const char *fname, char *line, int lineno) {
 	char buf[32];
 	char *op;	/* '<' */
 	char *cl;	/* '>' */
-	char *tcl_pos;	/* tag class position */
-	char *tl_pos;
-	char *v_pos;
+	char *tcl_pos;	/* tag class (T=") position */
+	char *tl_pos;	/* tag length (TL=") position */
+	char *v_pos;	/* value length (V=") position */
 	int constr;
 	ber_tlv_tag_t tag_value;
 	ber_tlv_tag_t tag_class;
 	ber_tlv_tag_t tlv_tag;
 	ber_tlv_len_t tlv_len;
-	ber_tlv_len_t tl_len;
+	ber_tlv_len_t opt_tl_len;	/* optional TL length */
 	ssize_t ret;
 	(void)fname;
 
@@ -250,20 +250,20 @@ process_line(const char *fname, char *line, int lineno) {
 	tcl_pos = strstr(op, "T=\"[");
 	tl_pos = strstr(op, "TL=\"");
 	v_pos = strstr(op, "V=\"");
-	if(!tcl_pos || !tl_pos || (!v_pos && constr != 2)) {
+	if(!tcl_pos || (!v_pos && constr != 2)) {
 		fprintf(stderr,
 			"%s: Mandatory attribute %s is not found at line %d\n",
-			fname, (!tcl_pos)?"T":((!v_pos)?"V":"TL"), lineno);
+			fname, (!tcl_pos)?"T":"V", lineno);
 		exit(EX_DATAERR);
 	}
 	errno = 0;
-	tl_len = strtoul(tl_pos + 4, 0, 10);
+	opt_tl_len = tl_pos ? strtoul(tl_pos + 4, 0, 10) : 0;
 	if(constr == 2) {
 		tlv_len = 0;
 	} else {
 		tlv_len = strtoul(v_pos + 3, 0, 10);
 	}
-	if(errno || tl_len < 2 || tlv_len < 0) {
+	if(errno || (opt_tl_len && opt_tl_len < 2) || tlv_len < 0) {
 		fprintf(stderr, "%s: Invalid TL or V value at line %d\n",
 			fname, lineno);
 		exit(EX_DATAERR);
@@ -316,14 +316,14 @@ process_line(const char *fname, char *line, int lineno) {
 			buf + ret, sizeof(buf) - ret);
 		assert(ret >= 2 && (size_t)ret < sizeof(buf));
 	}
-	if(ret != tl_len) {
+	if(opt_tl_len && ret != opt_tl_len) {
 		fprintf(stderr, "%s: Cannot encode TL at line %d "
 			"in the given number of bytes (%ld!=%ld)\n",
-			fname, lineno, (long)ret, (long)tl_len);
+			fname, lineno, (long)ret, (long)opt_tl_len);
 		exit(EX_DATAERR);
 	}
 	if(constr) *buf |= 0x20;	/* Enable "constructed" bit */
-	fwrite(buf, 1, tl_len, stdout);
+	fwrite(buf, 1, ret, stdout);
 
 	if(!constr) {
 	  ber_tlv_len_t len;
