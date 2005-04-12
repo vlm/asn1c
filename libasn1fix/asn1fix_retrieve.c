@@ -56,8 +56,9 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 		/* Conditional debug */
 		if(!(arg->expr->_mark & TM_BROKEN)) {
 			arg->expr->_mark |= TM_BROKEN;
-			FATAL("Cannot find module %s "
-				"mentioned for %s at line %d",
+			FATAL("Cannot find external module \"%s\" "
+				"mentioned for "
+				"\"%s\" at line %d",
 				xp->from, name, arg->expr->_lineno);
 		}
 		/* ENOENT/ETOOMANYREFS */
