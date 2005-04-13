@@ -62,7 +62,11 @@ asn1f_pull_components_of(arg_t *arg) {
 		coft = asn1p_expr_clone(terminal, 1 /* Skip extensions */);
 		if(!coft) return -1;	/* ENOMEM */
 
-		asn1p_expr_free(memb);	/* Don't need it anymore*/
+		if(0) {
+			asn1p_expr_free(memb);	/* Don't need it anymore*/
+		} else {
+			/* Actual removal clashes with constraints... skip. */
+		}
 
 		/*
 		 * Move all components of the cloned structure
