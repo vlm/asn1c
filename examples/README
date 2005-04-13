@@ -12,3 +12,6 @@ To compile the files using asn1c, try
 1. The ./sample.source.PKIX1 directory contains the X.509 Certificate decoder.
 2. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder. Please
    read the README file in that directory first.
+3. The ./sample.source.MHEG5 directory contains the decoder for
+ISO 13522 MHEG-5/ITU-T T.172 (Multimedia Hypermedia Experts Group,
+Multimedia Presentations).
