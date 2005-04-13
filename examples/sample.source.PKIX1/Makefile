@@ -358,14 +358,14 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons ../rfc3280-PKIX1Explicit88.asn1 ../rfc3280-PKIX1Implicit88.asn1
 
 
-Attribute.c: regenerate.Makefile
+Certificate.c: regenerate.Makefile
 	./regenerate.Makefile
-	@touch Attribute.c
+	@touch Certificate.c
 	make
 
 ASN_DECODER_TEMPLATE=../../skeletons/asn-decoder-template.c
 $(TARGET).o: $(ASN_DECODER_TEMPLATE)
-	$(CC) $(CFLAGS) -o $(TARGET).o -c $(ASN_DECODER_TEMPLATE)
+	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_Certificate -o $(TARGET).o -c $(ASN_DECODER_TEMPLATE)
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
