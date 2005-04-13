@@ -139,7 +139,7 @@ asn1p_value_clone(asn1p_value_t *v) {
 			if(clone) clone->type = ATV_UNPARSED;
 			return clone;
 		case ATV_BITVECTOR:
-			return asn1p_value_frombuf(v->value.binary_vector.bits,
+			return asn1p_value_frombits(v->value.binary_vector.bits,
 				v->value.binary_vector.size_in_bits, 1);
 		case ATV_REFERENCED:
 			return asn1p_value_fromref(v->value.reference, 1);
