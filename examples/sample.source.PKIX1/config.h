@@ -8,5 +8,3 @@ extern int opt_debug;
 			__FILE__, __LINE__);	\
 	} while(0)
 
-/* Which type is the PDU; for ../../skeletons/asn-decoder-template.c */
-#define	asn_DEF	asn_DEF_Certificate

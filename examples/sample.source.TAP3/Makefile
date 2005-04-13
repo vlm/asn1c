@@ -702,7 +702,7 @@ DataInterChange.c: ../tap3.asn1 regenerate.Makefile
 
 ASN_DECODER_TEMPLATE=../../skeletons/asn-decoder-template.c
 $(TARGET).o: $(ASN_DECODER_TEMPLATE)
-	$(CC) $(CFLAGS) -o $(TARGET).o -c $(ASN_DECODER_TEMPLATE)
+	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_DataInterChange -o $(TARGET).o -c $(ASN_DECODER_TEMPLATE)
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
