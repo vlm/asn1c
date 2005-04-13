@@ -33,7 +33,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 }
 
 #define	tzset()	_tzset()
-#define	putenv()	_putenv()
+#define	putenv	_putenv
 #define	_EMULATE_TIMEGM
 
 #endif	/* WIN32 */
