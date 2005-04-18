@@ -43,7 +43,7 @@ xer_type_encoder_f OCTET_STRING_encode_xer_utf8;
 int OCTET_STRING_fromBuf(OCTET_STRING_t *s, const char *str, int size);
 
 /* Handy conversion from the C string into the OCTET STRING. */
-#define	OCTET_STRING_fromString(s, str)	OCTET_STRING_fromBuf(s, str, -1);
+#define	OCTET_STRING_fromString(s, str)	OCTET_STRING_fromBuf(s, str, -1)
 
 /*
  * Allocate and fill the new OCTET STRING and return a pointer to the newly
