@@ -13,6 +13,10 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 
 #include <asn_application.h>	/* Application-visible API */
 
+#ifndef	__NO_ASSERT_H__		/* Include assert.h only for internal use. */
+#include <assert.h>		/* for assert() macro */
+#endif
+
 #define	CALLOC(nmemb, size)	calloc(nmemb, size)
 #define	MALLOC(size)		malloc(size)
 #define	REALLOC(oldptr, size)	realloc(oldptr, size)
