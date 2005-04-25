@@ -44,24 +44,26 @@ check_str_repr(double d, const char *sample, const char *canonical_sample) {
 	reconstructed[1][s2] = '\0';
 
 	if(sample) {
-		printf("Checking [%s] against [%s]\n",
-			reconstructed[0], sample);
+		printf("Checking %f->[%s] against [%s]%s\n",
+			d, reconstructed[0], sample,
+			canonical_sample ? " (canonical follows...)" : ""
+		);
 		assert(!strcmp(reconstructed[0], sample));
 	}
 	if(canonical_sample) {
-		printf("Checking [%s] against [%s] (canonical)\n",
-			reconstructed[1], canonical_sample);
+		printf("Checking %f->[%s] against [%s] (canonical)\n",
+			d, reconstructed[1], canonical_sample);
 		assert(!strcmp(reconstructed[1], canonical_sample));
 	}
 }
 
 static void
-check(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sample) {
+check_impl(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sample, int line) {
 	double val;
 	uint8_t *p, *end;
 	int ret;
 
-	printf("double value %.12f [", orig_dbl);
+	printf("Line %d: double value %.12f [", line, orig_dbl);
 	for(p = (uint8_t *)&orig_dbl, end = p + sizeof(double); p < end ; p++)
 		printf("%02x", *p);
 	printf("] (ilogb %d)\n", ilogb(orig_dbl));
@@ -201,6 +203,9 @@ check_xer(int fuzzy, double orig_value) {
 	assert(memcmp(newst1->buf, st.buf, st.size) == 0);
 }
 
+#define	check(rn, d, str1, str2)	\
+	check_impl(rn, d, str1, str2, __LINE__)
+
 int
 main() {
 	REAL_t rn;
@@ -215,8 +220,11 @@ main() {
 	check(&rn, -1.0/zero, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>");
 	check(&rn, 1.0, "1.0", "1.0E0");
 	check(&rn, -1.0, "-1.0", "-1.0E0");
-	check(&rn, 1.5, "1.5", "1.5E0");
 	check(&rn, 0.1, "0.1", "1.0E-1");
+	check(&rn, 0.01, "0.01", "1.0E-2");
+	check(&rn, 0.02, "0.02", "2.0E-2");
+	check(&rn, 0.09, "0.09", "9.0E-2");
+	check(&rn, 1.5, "1.5", "1.5E0");
 	check(&rn, 0.33333, "0.33333", "3.3333E-1");
 	check(&rn, 2, "2.0", "2.0E0");
 	check(&rn, 2.1, "2.1", "2.1E0");
@@ -229,9 +237,14 @@ main() {
 	check(&rn, -3.14159265, "-3.14159265", "-3.14159265E0");
 	check(&rn, 14159265.0, "14159265.0", "1.4159265E7");
 	check(&rn, -123456789123456789.0, "-123456789123456784.0", "-1.234567891234568E17");
-	check(&rn, 0.00000000001, "0.0", "9.999999999999999E-12");
-	check(&rn, 0.00000000002, "0.0", "2.0E-11");
-	check(&rn, 0.00000000009, "0.0", "9.0E-11");
+	check(&rn, 0.00000000001, "0.00000000001", "9.999999999999999E-12");
+	check(&rn, 0.00000000002, "0.00000000002", "2.0E-11");
+	check(&rn, 0.00000000009, "0.00000000009", "9.0E-11");
+	check(&rn, 0.000000000002, "0.000000000002", "2.0E-12");
+	check(&rn, 0.0000000000002, "0.0000000000002", "2.0E-13");
+	check(&rn, 0.00000000000002, "0.00000000000002", "2.0E-14");
+	check(&rn, 0.000000000000002, "0.000000000000002", "2.0E-15");
+	check(&rn, 0.0000000000000002, "0.0", "2.0E-16");
 	check(&rn, 0.0000000000000000000001, "0.0", "1.0E-22");
 	check(&rn, 0.000000000000000000000000000001, "0.0", "1.0E-30"); /* proved 2B a problem */
 	check(&rn,-0.000000000000000000000000000001, "-0.0", "-1.0E-30"); /* proved 2B a problem */

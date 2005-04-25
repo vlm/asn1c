@@ -187,16 +187,24 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		 */
 		char *end = buf + buflen;
 		char *last_zero = end;
+		int stoplooking = 0;
 		char *z;
 		for(z = end - 1; z > buf; z--) {
 			switch(*z) {
-			case 0x030:
-				last_zero = z;
+			case 0x30:
+				if(!stoplooking)
+					last_zero = z;
+				continue;
 			case 0x31: case 0x32: case 0x33: case 0x34:
 			case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+				stoplooking = 1;
 				continue;
 			default:	/* Catch dot and other separators */
-				*z = 0x2e;	/* Replace possible comma */
+				/*
+				 * Replace possible comma (which may even
+				 * be not a comma at all: locale-defined).
+				 */
+				*z = 0x2e;
 				if(last_zero == z + 1) {	/* leave x.0 */
 					last_zero++;
 				}
