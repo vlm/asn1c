@@ -12,6 +12,7 @@
 	* Streamed OCTET STRING decoding of large values: fixed allocation
 	  problem introduced in 0.9.9. (Severity: high; Security impact: medium)
 	  Reported by Yann Grossel <olrick@users.sourceforge.net>.
+	* Fixed BASIC-XER encoding of REAL numbers.
 
 0.9.12:	2005-Mar-10
 
