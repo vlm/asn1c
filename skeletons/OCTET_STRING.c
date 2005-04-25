@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -42,53 +43,56 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 #undef	_CH_PHASE
 #undef	NEXT_PHASE
 #undef	PREV_PHASE
-#define	_CH_PHASE(ctx, inc) do {	\
-		if(ctx->phase == 0)	\
-			ctx->step = 0;	\
-		ctx->phase += inc;	\
+#define	_CH_PHASE(ctx, inc) do {					\
+		if(ctx->phase == 0)					\
+			ctx->context = 0;				\
+		ctx->phase += inc;					\
 	} while(0)
 #define	NEXT_PHASE(ctx)	_CH_PHASE(ctx, +1)
 #define	PREV_PHASE(ctx)	_CH_PHASE(ctx, -1)
 
 #undef	ADVANCE
-#define	ADVANCE(num_bytes)	do {			\
-		size_t num = (num_bytes);		\
-		buf_ptr = ((const char *)buf_ptr) + num;\
-		size -= num;				\
-		consumed_myself += num;			\
+#define	ADVANCE(num_bytes)	do {					\
+		size_t num = (num_bytes);				\
+		buf_ptr = ((const char *)buf_ptr) + num;		\
+		size -= num;						\
+		consumed_myself += num;					\
 	} while(0)
 
 #undef	RETURN
-#define	RETURN(_code)	do {			\
-		rval.code = _code;		\
-		rval.consumed = consumed_myself;\
-		return rval;			\
+#define	RETURN(_code)	do {						\
+		rval.code = _code;					\
+		rval.consumed = consumed_myself;			\
+		return rval;						\
 	} while(0)
 
 #undef	APPEND
 #define	APPEND(bufptr, bufsize)	do {					\
-		size_t _bs = (bufsize);					\
-		size_t _ns = ctx->step;	/* Allocated */			\
-		if(_ns <= (size_t)(st->size + _bs)) {			\
+		size_t _bs = (bufsize);		/* Append size */	\
+		size_t _ns = ctx->context;	/* Allocated now */	\
+		size_t _es = st->size + _bs;	/* Expected size */	\
+		/* int is really a typeof(st->size): */			\
+		if((int)_es < 0) RETURN(RC_FAIL);			\
+		if(_ns <= _es) {					\
 			void *ptr;					\
 			/* Be nice and round to the memory allocator */	\
-			do { _ns = _ns ? _ns<<2 : 16; }			\
-			    while(_ns <= (size_t)(st->size + _bs));	\
+			do { _ns = _ns ? _ns << 1 : 16; }		\
+			    while(_ns <= _es);				\
+			/* int is really a typeof(st->size): */		\
+			if((int)_ns < 0) RETURN(RC_FAIL);		\
 			ptr = REALLOC(st->buf, _ns);			\
 			if(ptr) {					\
 				st->buf = (uint8_t *)ptr;		\
-				ctx->step = _ns;			\
+				ctx->context = _ns;			\
 			} else {					\
 				RETURN(RC_FAIL);			\
 			}						\
+			ASN_DEBUG("Reallocating into %ld", _ns);	\
 		}							\
 		memcpy(st->buf + st->size, bufptr, _bs);		\
-		st->size += _bs;					\
-		if(st->size < 0)					\
-			/* Why even care?.. JIC */			\
-			RETURN(RC_FAIL);				\
 		/* Convenient nul-termination */			\
-		st->buf[st->size] = '\0';				\
+		st->buf[_es] = '\0';					\
+		st->size = _es;						\
 	} while(0)
 
 /*
@@ -455,19 +459,19 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 
 		if(size < (size_t)ctx->left) {
 			if(!size) RETURN(RC_WMORE);
-			if(type_variant == _TT_BIT_STRING && ctx->step == 0) {
+			if(type_variant == _TT_BIT_STRING && !ctx->context) {
 				st->bits_unused = *(const uint8_t *)buf_ptr;
 				ctx->left--;
 				ADVANCE(1);
 			}
 			APPEND(buf_ptr, size);
-			assert(ctx->step);
+			assert(ctx->context > 0);
 			ctx->left -= size;
 			ADVANCE(size);
 			RETURN(RC_WMORE);
 		} else {
 			if(type_variant == _TT_BIT_STRING
-			&& ctx->step == 0 && ctx->left) {
+			&& !ctx->context && ctx->left) {
 				st->bits_unused = *(const uint8_t *)buf_ptr;
 				ctx->left--;
 				ADVANCE(1);

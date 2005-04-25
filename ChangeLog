@@ -1,5 +1,5 @@
 
-0.9.13:	2005-Mar-28
+0.9.13:	2005-Apr-24
 
 	* Added extra const qualifiers into the support code.
 	* More RFC variations supported in crfc2asn1.pl.
@@ -9,6 +9,9 @@
 	* Support for CharsDefn (Quadruple and Tuple, most used in
 	  ASN1-CHARACTER-MODULE) (Test case 80).
 	* Pretty-printing support for WITH COMPONENT[S]. (Test case 82).
+	* Streamed OCTET STRING decoding of large values: fixed allocation
+	  problem introduced in 0.9.9. (Severity: high; Security impact: medium)
+	  Reported by Yann Grossel <olrick@users.sourceforge.net>.
 
 0.9.12:	2005-Mar-10
 
@@ -19,12 +22,12 @@
 	* Relaxed XER processing rules to skip extra whitespace
 	  in some more places. It also skips XML comments (although
 	  XML comments in XER are prohibited by X.693, #8.2.1).
-	  (Test case 70) (Severity: medium, Security impact: none)
+	  (Test case 70) (Severity: medium; Security impact: none)
 	  Reported by <Dominique.Nerriec@alcatel.fr>.
 	* Constraints on primitive types being defined are now supported.
-	  (Test case 74) (Severity: low, Security impact: none)
+	  (Test case 74) (Severity: low; Security impact: none)
 	* XMLValueList generation fixed for CHOICE type.
-	  (Severity: medium, Security impact: none)
+	  (Severity: medium; Security impact: none)
 	* Added the GSM TAP3 decoder into ./examples/sample.source.TAP3
 
 0.9.11:	2005-Mar-04
@@ -75,10 +78,10 @@
 	  identifiers (./tests/68-*-OK.asn1).
 	* ber_dec_rval_t renamed into asn_dec_rval_t: more generality.
 	* Extensions in CHOICE types are properly marked as non-pointers
-	  (Test case 59) (Severity: medium, Security impact: medium)
+	  (Test case 59) (Severity: medium; Security impact: medium)
 	  Reported by <roman.pfender@sdm.de>.
 	* Tagged CHOICE type is now supported again.
-	  (Test case 59) (Severity: low, Security impact: low)
+	  (Test case 59) (Severity: low; Security impact: low)
 	  Reported by <orlinkata@dir.bg>.
 	* Implemented der_encode_to_buffer() procedure.
 
@@ -99,9 +102,9 @@
 	  optionals-laden indefinite length structure. The code was previously
 	  refusing to parse such structures.
 	* Fixed explicitly tagged ANY type encoding and decoding
-	  (Severity: medium, Security impact: low).
+	  (Severity: medium; Security impact: low).
 	* Fixed CHOICE code spin when indefinite length structures appear
-	  in the extensions (Severity: medium, Security impact: medium).
+	  in the extensions (Severity: medium; Security impact: medium).
 	  Reported by <siden@ul-gsm.ru>.
 	* BIT STRING now stores the number of unused octets in a separate field.
 
@@ -117,11 +120,11 @@
 	* Added -fno-constraints option to asn1c, which disabled generation of
 	  ASN.1 subtype constraints checking code.
 	* Added ASN1C_ENVIRONMENT_VERSION and get_asn1c_environment_version().
-	* Fixed ANY type decoding (Severity: high, Security impact: low).
+	* Fixed ANY type decoding (Severity: high; Security impact: low).
 	* Fixed BER decoder restartability problem with certain primitive
 	  types (BOOLEAN, INTEGER, and REAL). The problem occured when the
 	  encoding of such type is split between several bytes.
-	  (Severity: high, Security impact: low)
+	  (Severity: high; Security impact: low)
 	* Support for cross-referencing type definitions (updated ./tests/43-*).
 	* Fixed pretty-printing of the REAL type. Added lots of test cases.
 	* Renamed asn1_* into asn_* in function and type names.
@@ -134,7 +137,7 @@
 	  encoding must be tagged by stripping off the outer tag for each
 	  subsequent containment level. See also X.690: 8.21.5.4 and
 	  the "Spouse" case in A.3.
-	  (Severity: medium, Security impact: low)
+	  (Severity: medium; Security impact: low)
 	* Added converters between any generic type and the ANY type.
 	* Parser fixed: Information Object Class fields may be taged.
 	* Parser fixed: tagged types inside SEQUENCE OF/SET OF support.
@@ -153,7 +156,7 @@
 	* Explicit support for ANY type decoding.
 	* Refactored tags processing code.
 	* Fixed constraints checking code: non-exploitable buffer overflow.
-	  (Severity: medium, Security impact: low)
+	  (Severity: medium; Security impact: low)
 
 0.9.3:	2004-Sep-07
 
@@ -189,7 +192,7 @@
 0.8.19:	2004-Aug-18
 
 	* Fixed BER encoder (problem encoding large tag values)
-	  (Severity: medium, Security impact: low)
+	  (Severity: medium; Security impact: low)
 
 0.8.18:	2004-Aug-12
 
@@ -205,16 +208,16 @@
 0.8.16:	2004-Jul-22
 
 	* Fixed application-level problem in SET OF/SEQUENCE OF array cleanup.
-	  (Severity: medium, Security impact: low)
+	  (Severity: medium; Security impact: low)
 	* Improved asn_GT2time() and added asn_time2{GT,UT}() functions.
 	* BIT STRING pretty-printing.
 
 0.8.15:	2004-Jul-20
 
 	* Fixed parser: memory leak in free_struct code for SET OF/SEQUENCE OF.
-	  (Severity: high, Security impact: medium)
+	  (Severity: high; Security impact: medium)
 	* Fixed parser: invalid memory reference in code constructing tags.
-	  (Test case 48) (Severity: high, Security impact: medium)
+	  (Test case 48) (Severity: high; Security impact: medium)
 	  When encoding data for certain ASN.1 specifications containing
 	  explicit tags, the tag is always written incorrectly due to
 	  incorrect memory reference. The encoding will almost always produce
@@ -231,13 +234,13 @@
 
 	* Fixed compiler: extensibility of CHOICE and SET type has not been
 	  taken into account during table construction.
-	  (Test case 47) (Severity: high, Security impact: low)
+	  (Test case 47) (Severity: high; Security impact: low)
 
 0.8.13:	2004-Jun-29
 
 	* Fixed compiler: the skip values for IMPLICIT tagging were broken
 	  in some complex cases where one type is defined using another.
-	  (Test case 46) (Severity: medium, Security impact: low).
+	  (Test case 46) (Severity: medium; Security impact: low).
 	* Added -fknown-extern-type command line parameter to asn1c.
 	* Removed -N command line flag and underlying functionality
 	  to honor KISS principle.
@@ -249,7 +252,7 @@
 	  size of an integer must be provided explicitly.
 	  See {OBJECT_IDENTIFIER|RELATIVE_OID}_{get|set}_arcs().
 	* SEQUENCE BER decoder fixed again for complex CHOICE case
-	  (Test case 44) (Severity: medium, Security impact: low).
+	  (Test case 44) (Severity: medium; Security impact: low).
 
 0.8.11:	2004-Jun-05
 
@@ -274,7 +277,7 @@
 	* Fixed compiler. If the last member of the SEQUENCE is OPTIONAL
 	  and absent in the encoding, and the type is extensible (...) or
 	  EXTENSIBILITY IMPLIED flag is set, then the structure could not
-	  be correctly decoded. (Severity: high, Security impact: low).
+	  be correctly decoded. (Severity: high; Security impact: low).
 	* Compiler: fixed recursive ASN.1 types inclusion (Severity: low,
 	  Security impact: none).
 	* Parser: IMPORTS/FROM fixes, now allowing multiple sections.
@@ -285,7 +288,7 @@
 
 	* Fixed SEQUENCE BER decoder: if the last member of the SEQUENCE is
 	  OPTIONAL and absent in the encoding, RC_FAIL was returned instead
-	  of RC_OK (Severity: high, Security impact: low).
+	  of RC_OK (Severity: high; Security impact: low).
 	* Added test case to check the above problem.
 	* Added test case to check -fnative-integers mode.
 
@@ -295,7 +298,7 @@
 
 0.8.5:	2004-Mar-28	T-version-0-8-5
 
-	* Fixed ber_tlv_length() computation problem (Severity: blocker,
+	* Fixed ber_tlv_length() computation problem (Severity: high,
 	  Security impact: none).
 	  Reported by <vss@high.net.ru>
 
@@ -307,9 +310,9 @@
 0.8.3:	2004-Mar-14	T-version-0-8-3
 
 	* Fixed SET::BER decoder: restart after reaching a buffer boundary
-	  weas broken (Severity: blocker, Security impact: low).
+	  weas broken (Severity: high; Security impact: low).
 	* Fixed OCTET STRING::BER decoder: restart after reaching a buffer
-	  boundary was broken (Severity: blocker, Security impact: low).
+	  boundary was broken (Severity: high; Security impact: low).
 	  Reported by <vss@high.net.ru>
 	* Added test cases to check decoders restartability.
 	* Slightly more general INTEGER2long decoder.
