@@ -30,7 +30,11 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *asnTypeOfPDU,
 static int opt_check;	/* -c */
 static int opt_print;	/* -p */
 static int opt_stack;	/* -s */
-static int opt_toxml;	/* -x */
+static enum output_method {
+	OUT_NONE,	/* No pretty-printing */
+	OUT_PRINT,	/* -p flag */
+	OUT_XML,	/* -x flag */
+}          opt_ometh;	/* -p or -x */
 
 #define	DEBUG(fmt, args...)	do {		\
 	if(!opt_debug) break;			\
@@ -76,8 +80,7 @@ main(int ac, char **av) {
 		}
 		break;
 	case 'p':
-		opt_toxml = 0;	/* Override '-x' */
-		opt_print++;
+		opt_ometh = OUT_PRINT;
 		break;
 	case 's':
 		opt_stack = atoi(optarg);
@@ -89,8 +92,7 @@ main(int ac, char **av) {
 		}
 		break;
 	case 'x':
-		opt_print = 0;	/* Override '-p' */
-		opt_toxml++;
+		opt_ometh = OUT_XML;
 		break;
 	case 'h':
 	default:
@@ -121,7 +123,7 @@ main(int ac, char **av) {
 	}
 
 #ifdef	ASN_DECODER_DEFAULT_OUTPUT_XML
-	if(!opt_print) opt_toxml++;
+	if(opt_ometh == OUT_NONE) opt_ometh = OUT_XML;
 #endif
 
 	setvbuf(stdout, 0, _IOLBF, 0);
@@ -145,14 +147,20 @@ main(int ac, char **av) {
 			exit(EX_DATAERR);
 		}
 
-		fprintf(stderr, "%s: decoded successfully\n", fname);
-
-		if(opt_print) asn_fprint(stdout, pduType, structure);
-
-		if(opt_toxml
-		&& xer_fprint(stdout, pduType, structure)) {
-			fprintf(stderr, "%s: Cannot convert into XML\n", fname);
-			exit(EX_UNAVAILABLE);
+		switch(opt_ometh) {
+		case OUT_NONE:
+			fprintf(stderr, "%s: decoded successfully\n", fname);
+			break;
+		case OUT_PRINT:	/* -p */
+			asn_fprint(stdout, pduType, structure);
+			break;
+		case OUT_XML:	/* -x */
+			if(xer_fprint(stdout, pduType, structure)) {
+				fprintf(stderr, "%s: Cannot convert into XML\n",
+					fname);
+				exit(EX_UNAVAILABLE);
+			}
+			break;
 		}
 
 		/* Check ASN.1 constraints */
