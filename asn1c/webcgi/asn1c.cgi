@@ -47,6 +47,56 @@ use CGI qw/param cookie header upload escapeHTML/;
 
 $|=1;	# Enable AutoFlush (for older versions of Perl)
 
+my %binaryDecoders = (
+	x509 => { order => 1,
+		type => 'X.509 Certificate',
+		typeExt => 'X.509 Certificate',
+		exe => 'x509dump',
+		cmdopts => '-x',
+		msg => ''
+		},
+
+	tap0311 => { order => 2,
+		type => TAP3,
+		typeExt => 'GSM TAP3-11 data',
+		exe => 'tap3dump-11',
+		cmdopts => '-x',
+		msg => ''
+		},
+
+	tap0310 => { order => 3,
+		type => TAP3,
+		typeExt => 'GSM TAP3-10 data',
+		exe => 'tap3dump-10',
+		cmdopts => '-x',
+		msg => ''
+		},
+
+	tap0309 => { order => 4,
+		type => TAP3,
+		typeExt => 'GSM TAP3-09 data',
+		exe => 'tap3dump-09',
+		cmdopts => '-x',
+		msg => ''
+		},
+
+	mheg5 => { order => 5,
+		type => 'MHEG-5',
+		typeExt => 'ISO MHEG-5 data',
+		exe => 'mheg5dump',
+		cmdopts => '-x',
+		msg => ''
+		},
+
+	ber => { order => 6,
+		type => BER,
+		typeExt => 'BER encoded data',
+		exe => 'unber',
+		cmdopts => '',
+		msg => "<!-- Use 'enber' to convert it back into BER -->\n"
+		}
+);
+
 my $redirect = '';	# No redirection by default
 my $redirect_bottom = '';	# No redirection text by default
 my $content = '';	# Default content is empty
@@ -412,33 +462,54 @@ if($#gotSafeNames >= 0) {
 		. "; ec=\$?; echo \$ec > $sandbox/+ExitCode"
 		. "; exit \$ec";
 
-	my $ec = (256 * $DataERR);	# Simulate EX_DATAERR
 	my $fType = param('fileType');
+	$fType = 'auto' unless $fType;
 
 	# Compile as ASN.1 text
-	if($fType ne 'ber') {
-		$ec = system($CompileASN);
+	if($fType eq 'auto' || $fType eq 'asn1') {
+		my $ec = system($CompileASN);
 		bark("Failed to initiate compilation process: $!")
 			if(!-r $sandbox . '/+ExitCode');
+		if($ec != (256 * $DataERR)) {
+			makeArchive($TMPDIR, $sandbox) unless $ec;
+			goto REGET;	# Issue a clean GET request.
+		}
 	}
 
-	if($ec == (256 * $DataERR) and $fType ne 'asn') {
-		# Unrecognized ASN.1 module format.
-		# Try out BER decoding.
-		my $uec = system("$SUIDHelper $TMPDIR $inChDir unber @gotSafeNames > $TMPDIR/$inChDir/+UNBER.tmp 2>&1");
-		if(($uec == 0 or $fType eq 'ber')
-		and open(U, "> $TMPDIR/$inChDir/+UNBER")) {
-			my $fnames = escapeHTML(join(", ", @gotNames));
-			open(T, "< $TMPDIR/$inChDir/+UNBER.tmp");
-			print U "<!-- BER structure of $fnames; decoded by 'unber' (c) Lev Walkin <vlm\@lionet.info> -->\n";
-			print U while <T>;
+	# Unrecognized ASN.1 module format.
+	# Try out several BER decoders.
+	foreach my $t (sort { $binaryDecoders{$a} cmp $binaryDecoders{$b} }
+			keys %binaryDecoders) {
+		next unless ($fType eq 'auto' or $fType eq $t);
+		my %dec = %{$binaryDecoders{$t}};
+		my $ec = system("$SUIDHelper $TMPDIR $inChDir $dec{exe} $dec{cmdopts} @gotSafeNames > $TMPDIR/$inChDir/+UNBER.tmp 2>&1");
+		next if ($ec != 0 and $t ne $fType
+			and (-s "$TMPDIR/$inChDir/+UNBER.tmp" < 1000));
+		last unless open(U, "> $TMPDIR/$inChDir/+UNBER");
+		my $fnames = escapeHTML(join(", ", @gotNames));
+		print U "<!-- $dec{type} structure of $fnames; "
+			. "decoded by '$dec{exe}' "
+			. "(c) Lev Walkin <vlm\@lionet.info> -->\n"
+			. $dec{msg};
+		open(T, "< $TMPDIR/$inChDir/+UNBER.tmp");
+		print U while <T>;
+		close(U);
+		close(T);
+		open(U, "> $TMPDIR/$inChDir/+UNBER.TYPE");
+		print U $dec{typeExt};
+		close(U);
+		if($ec) {
+			# Indicate unclean exit.
+			open(U, "> $TMPDIR/$inChDir/+UNBER.EXIT");
+			print U $ec;
 			close(U);
-			close(T);
 		}
-		unlink("$TMPDIR/$inChDir/+UNBER.tmp");
-	} else {
-		makeArchive($TMPDIR, $sandbox);
+		last;
 	}
+	unlink("$TMPDIR/$inChDir/+UNBER.tmp");
+
+REGET:
+
 	if($ENV{REQUEST_METHOD} ne 'GET') {
 		print "Status: 303 See Other\n";
 		print "Location: $myName\n";
@@ -461,8 +532,13 @@ $form =
 . "</TD></TR><TD VALIGN=top><FONT COLOR=green>&rArr;</FONT></TD><TD>"
 . "<SELECT NAME=fileType>"
 . "<OPTION VALUE=auto>Autodetect type of file ..."
-. "<OPTION VALUE=asn>ASN.1 text file ..."
+. "<OPTION VALUE=asn1>ASN.1 module text..."
 . "<OPTION VALUE=ber>BER/DER/CER data ..."
+. "<OPTION VALUE=tap0311>GSM TAP3-11 data ..."
+. "<OPTION VALUE=tap0310>GSM TAP3-10 data ..."
+. "<OPTION VALUE=tap0309>GSM TAP3-09 data ..."
+. "<OPTION VALUE=mheg5>ISO MHEG-5 data ..."
+. "<OPTION VALUE=x509>X.509 in DER (not PEM!)..."
 . "</SELECT>"
 . "</TD><TD ALIGN=right>"
 . "<INPUT TYPE=file NAME=file SIZE=13>"
@@ -571,13 +647,26 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 	if($ec eq "0") {
 		$results = "<FONT COLOR=darkgreen><B>"
 			. "Compiled OK</B></FONT><BR>\n";
-	} elsif(-f $sessionDir . '/' . $trans . '/+UNBER') {
-		my $msg = 'This looks like a BER-encoded data';
-		$msg = "Treating input as BER-encoded data" if $ec eq '';
+	} elsif(open(U, $sessionDir . '/' . $trans . '/+UNBER.TYPE')) {
+		my $type = <U>; close(U);
+		my $msg;
+		if($ec eq '') {
+			$msg = 'Treating input as ' . $type;
+		} else {
+			$msg = 'This looks like ' . $type;
+		}
 		$results = "<FONT COLOR=darkgreen><B>$msg</B></FONT><BR>\n";
-		$resText = "Show BER structure";
+		if(-f $sessionDir . '/' . $trans . '/+UNBER.EXIT') {
+			$results = "<FONT COLOR=darkred SIZE=-1>"
+				. "<NOBR>$type:</NOBR> "
+				. "Broken encoding</FONT><BR>\n";
+			$ec = 'broken-input';
+			$resText = "Show $type decoding attempt";
+		} else {
+			$ec = 0;
+			$resText = "Show $type contents";
+		}
 		$resCode = "unber";
-		$ec = 0;
 	} else {
 		my $why = $ec;
 		$why = "<NOBR>Broken input file</NOBR>" if $ec == $DataERR;
@@ -648,7 +737,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 
 	$history .= "<TR $trColor>"
 		. "<TH ALIGN=center ID=num>$tNum"
-		. "<BR><FONT FACE=Serif>[<A ID=modrefs "
+		. "<BR><FONT FACE=serif>[<A ID=modrefs "
 			. "HREF=\"$myName?time="
 			. escapeHTML($origTime)
 			. "&file=$f&remove=$tNum\""
@@ -701,7 +790,7 @@ if($history) {
 			. "<FONT COLOR=darkred><B>Bottom line:</B> ASN.1 compiler was unable to process some of the input.</FONT><BR>"
 			. "This is typically caused by syntax errors in the input files.\n"
 			. "Such errors are normally fixed by removing or adding a couple of characters in the ASN.1 module.<BR>\n"
-			. "<BR><B><FONT COLOR=darkred>Please consider clicking on the appropriate &quot;<I>Help me fix it!</I>&quot; button above.</FONT></B><BR>\n"
+			. "<BR><B><FONT COLOR=darkred>&rArr; Please consider clicking on the appropriate &quot;<I>Help me fix it!</I>&quot; button above.</FONT></B><BR>\n"
 			. "An email will be sent to a live person who will fix the ASN.1 module for you. (The typical turn-around time is less than 24 hours.)\n"
 			. "<BR>This is <B>free</B>, and highly advisable.\n"
 			. "<BR>Your request will help us make a better compiler!\n"
@@ -725,7 +814,7 @@ $content .=
 . "</TD><TD WIDTH=60% HEIGHT=50% ALIGN=center VALIGN=$histValign>$history \n"
 . "</TD></TR><TR><TD HEIGHT=50% VALIGN=bottom>"
 	. "<B>Privacy Note:</B> this page is tailored "
-	. "to your browser using a cryprographically strong cookie. "
+	. "to your browser. "
 	. "<I>Other users will see their own (different) data.</I> "
 	. "(<A HREF=asn1c-privacy.html>Read more...</A>)"
 . "</TD></TR></TABLE>";
