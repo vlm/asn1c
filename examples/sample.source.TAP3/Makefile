@@ -669,7 +669,7 @@ TARGET = tap3dump
 CFLAGS += -I. -DHAVE_CONFIG_H
 OBJS=${ASN_MODULE_SOURCES:.c=.o} $(TARGET).o
 
-all: $(TARGET)
+all: DataInterChange.c $(TARGET)
 
 $(TARGET): ${OBJS}
 	$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
