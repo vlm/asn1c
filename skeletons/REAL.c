@@ -460,20 +460,20 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	end = st->buf + st->size;
 	if(ptr < end) {
 		for(; ptr < end; ptr++)
-			m = scalbn(m, 8) + *ptr;
+			m = ldexp(m, 8) + *ptr;
 	}
 
 	if(0)
-	ASN_DEBUG("m=%.10f, scF=%d, bF=%d, expval=%d, ldexp()=%f, scalbn()=%f",
+	ASN_DEBUG("m=%.10f, scF=%d, bF=%d, expval=%d, ldexp()=%f, ldexp()=%f",
 		m, scaleF, baseF, expval,
 		ldexp(m, expval * baseF + scaleF),
-		scalbn(m, scaleF) * pow(pow(2, baseF), expval)
+		ldexp(m, scaleF) * pow(pow(2, baseF), expval)
 	);
 
 	/*
 	 * (S * N * 2^F) * B^E
 	 * Essentially:
-	m = scalbn(m, scaleF) * pow(pow(2, base), expval);
+	m = ldexp(m, scaleF) * pow(pow(2, base), expval);
 	 */
 	m = ldexp(m, expval * baseF + scaleF);
 	if(finite(m)) {
