@@ -1,4 +1,9 @@
 
+0.9.14:	2005-Apr-29
+
+	* Fixed check-70.-fnative-integers.c test (it was failing
+	  when no test directory was found).
+
 0.9.13:	2005-Apr-24
 
 	* Added extra const qualifiers into the support code.
