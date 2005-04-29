@@ -1881,7 +1881,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=asn1c
- VERSION=0.9.13
+ VERSION=0.9.14
 
 
 cat >>confdefs.h <<_ACEOF
