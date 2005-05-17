@@ -453,28 +453,40 @@ _range_split(asn1cnst_range_t *ra, const asn1cnst_range_t *rb) {
 	 * L: |---...
 	 * R:   |--..
 	 */
-	if(ll < 0) {
+	while(ll < 0) {
 		nr->left = ra->left;
 		nr->right = rb->left;
-		if(nr->right.type == ARE_VALUE)
+		if(nr->right.type == ARE_VALUE) {
+			if(nr->right.value - 1 >= nr->right.value) {
+				/* We've hit the limit here. */
+				break;
+			}
 			nr->right.value--;
+		}
 		_range_insert(range, nr);
 		nr = _range_new();
 		assert(nr);
+		break;
 	}
 
 	/*
 	 * L: ...---|
 	 * R: ..--|
 	 */
-	if(rr > 0) {
+	while(rr > 0) {
 		nr->left = rb->right;
 		nr->right = ra->right;
-		if(nr->left.type == ARE_VALUE)
+		if(nr->left.type == ARE_VALUE) {
+			if(nr->left.value + 1 <= nr->left.value) {
+				/* We've hit the limit here. */
+				break;
+			}
 			nr->left.value++;
+		}
 		_range_insert(range, nr);
 		nr = _range_new();
 		assert(nr);
+		break;
 	}
 
 	/*
@@ -556,6 +568,7 @@ _range_intersection(asn1cnst_range_t *range, const asn1cnst_range_t *with, int s
 			wel = with;
 		} else {
 			wel = with->elements[j];
+			assert(!wel->el_count);	/* non-compound item! */
 		}
 
 		r = _range_split(range->elements[i], wel);
