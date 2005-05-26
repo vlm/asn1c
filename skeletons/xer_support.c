@@ -206,6 +206,8 @@ ssize_t pxml_parse(int *stateContext, const void *xmlbuf, size_t size, pxml_call
 	  case ST_COMMENT_CLO_RT:
 		if(C == RANGLE) {
 			TOKEN_CB_FINAL(PXML_COMMENT, ST_TEXT, 1);
+		} else if(C == CDASH) {
+			/* Maintain current state, still waiting for '>' */
 		} else {
 			state = ST_COMMENT;
 		}
