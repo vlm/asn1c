@@ -160,13 +160,11 @@ extern asn_TYPE_descriptor_t asn_DEF_Error;
 static ber_tlv_tag_t asn_DEF_Error_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Error_1_tag2el[] = {
-};
 static asn_SEQUENCE_specifics_t asn_SPC_Error_1_specs = {
 	sizeof(struct Error),
 	offsetof(struct Error, _asn_ctx),
-	asn_MAP_Error_1_tag2el,
-	0,	/* Count of tags in the map */
+	0,	/* No top level tags */
+	0,	/* No tags in the map */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };

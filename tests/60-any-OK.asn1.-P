@@ -149,3 +149,74 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	&asn_SPC_T2_1_specs	/* Additional specs */
 };
 
+
+/*** <<< INCLUDES [T3] >>> ***/
+
+#include <ANY.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [T3] >>> ***/
+
+typedef struct T3 {
+	ANY_t	 any1;
+	ANY_t	 any2;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} T3_t;
+
+/*** <<< FUNC-DECLS [T3] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T3;
+
+/*** <<< STAT-DEFS [T3] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_T3_1[] = {
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any1),
+		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_ANY,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "any1"
+		},
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any2),
+		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_ANY,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "any2"
+		},
+};
+static ber_tlv_tag_t asn_DEF_T3_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SEQUENCE_specifics_t asn_SPC_T3_1_specs = {
+	sizeof(struct T3),
+	offsetof(struct T3, _asn_ctx),
+	0,	/* No top level tags */
+	0,	/* No tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_T3 = {
+	"T3",
+	"T3",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_T3_1_tags,
+	sizeof(asn_DEF_T3_1_tags)
+		/sizeof(asn_DEF_T3_1_tags[0]), /* 1 */
+	asn_DEF_T3_1_tags,	/* Same as above */
+	sizeof(asn_DEF_T3_1_tags)
+		/sizeof(asn_DEF_T3_1_tags[0]), /* 1 */
+	asn_MBR_T3_1,
+	2,	/* Elements count */
+	&asn_SPC_T3_1_specs	/* Additional specs */
+};
+

@@ -13,4 +13,9 @@ T2 ::= SEQUENCE {
     any	 [0] EXPLICIT ANY OPTIONAL
 }
 
+T3 ::= SEQUENCE {
+    any1	 ANY,
+    any2	 ANY
+}
+
 END

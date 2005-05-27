@@ -21,4 +21,9 @@ BEGIN
 		any	[0] ANY OPTIONAL
 	}
 
+	T3 ::= SEQUENCE {
+		any1	ANY,
+		any2	ANY
+	}
+
 END
