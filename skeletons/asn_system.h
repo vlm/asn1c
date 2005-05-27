@@ -25,6 +25,18 @@
 #define	 vsnprintf	_vsnprintf
 #define	alloca(size)	_alloca(size)
 
+#ifdef _MSC_VER			/* MSVS.Net */
+#define	ssize_t		SSIZE_T
+typedef	char		int8_t;
+typedef	short		int16_t;
+typedef	int		int32_t;
+typedef	unsigned char	uint8_t;
+typedef	unsigned short	uint16_t;
+typedef	unsigned int	uint32_t;
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif	/* _MSC_VER */
+
 #else	/* !WIN32 */
 
 #include <inttypes.h>	/* C99 specifies this file */
