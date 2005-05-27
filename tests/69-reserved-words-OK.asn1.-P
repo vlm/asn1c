@@ -78,8 +78,6 @@ memb_char_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 static ber_tlv_tag_t asn_DEF_class_4_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_class_4_tag2el[] = {
-};
 static uint8_t asn_MAP_class_4_mmap[(0 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	0
 };
