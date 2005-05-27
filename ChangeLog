@@ -3,6 +3,7 @@
 
 	* Compiler now checks 64-bit overflows in constraints range handling
 	  code. No effect on the code produced by the compiler.
+	* Empty tags to element map avoided.
 
 0.9.14:	2005-Apr-29
 
