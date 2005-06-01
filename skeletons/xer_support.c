@@ -19,11 +19,11 @@ typedef enum {
 	ST_TAG_QUOTE_WAIT,
 	ST_TAG_QUOTED_STRING,
 	ST_TAG_UNQUOTED_STRING,
-	ST_COMMENT_WAIT_DASH1,	// "<!--"[1]
-	ST_COMMENT_WAIT_DASH2,	// "<!--"[2]
+	ST_COMMENT_WAIT_DASH1,	/* "<!--"[1] */
+	ST_COMMENT_WAIT_DASH2,	/* "<!--"[2] */
 	ST_COMMENT,
-	ST_COMMENT_CLO_DASH2,	// "-->"[0]
-	ST_COMMENT_CLO_RT	// "-->"[1]
+	ST_COMMENT_CLO_DASH2,	/* "-->"[0] */
+	ST_COMMENT_CLO_RT	/* "-->"[1] */
 } pstate_e;
 
 static pxml_chunk_type_e final_chunk_type[] = {
