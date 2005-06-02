@@ -419,6 +419,7 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		|| ta.tag_value == -1	/* Spread IMAGINARY ANY tag... */
 		|| tb.tag_value == -1	/* ...it is an evil virus, fear it! */
 		) {
+			char tagbuf[2][TAG2STRING_BUFFER_SIZE];
 			char *p = (a->expr_type == A1TC_EXTENSIBLE)
 				?"potentially ":"";
 			FATAL("Processing %s at line %d: component \"%s\" at line %d %shas the same tag "
@@ -430,6 +431,12 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 				p,
 				b->Identifier,
 				b->_lineno
+			);
+			DEBUG("Tags: %s %s  vs.  %s %s",
+				asn1p_tag2string(&ta, tagbuf[0]),
+				a->Identifier,
+				asn1p_tag2string(&tb, tagbuf[1]),
+				b->Identifier
 			);
 			if((arg->mod->module_flags & MSF_EXTENSIBILITY_IMPLIED)
 			&& (a->expr_type == A1TC_EXTENSIBLE)

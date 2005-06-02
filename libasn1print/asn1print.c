@@ -168,27 +168,7 @@ asn1print_tag(asn1p_expr_t *tc, enum asn1print_flags flags) {
 
 	(void)flags;	/* Unused argument */
 
-	if(tag->tag_class == TC_NOCLASS)
-		return 0;
-
-	printf("[");
-	switch(tag->tag_class) {
-	case TC_NOCLASS:
-		assert(tag->tag_class != TC_NOCLASS);
-		break;
-	case TC_UNIVERSAL:	printf("UNIVERSAL ");	break;
-	case TC_PRIVATE:	printf("PRIVATE ");	break;
-	case TC_APPLICATION:	printf("APPLICATION ");	break;
-	case TC_CONTEXT_SPECIFIC:
-		break;
-	}
-	printf("%" PRIdASN "]", tag->tag_value);
-
-	switch(tag->tag_mode) {
-	case TM_DEFAULT: break;
-	case TM_IMPLICIT: printf(" IMPLICIT"); break;
-	case TM_EXPLICIT: printf(" EXPLICIT"); break;
-	}
+	printf("%s", asn1p_tag2string(tag, 0));
 
 	return 0;
 }

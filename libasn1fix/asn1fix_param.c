@@ -60,12 +60,22 @@ asn1f_fix_parametrized_assignment(arg_t *arg) {
 
 #define	SUBSTITUTE(to, from)	do {				\
 		asn1p_expr_t tmp, *__v;				\
+		if((to)->tag.tag_class				\
+		&& (from)->tag.tag_class) {			\
+			FATAL("Layered tagging "		\
+			"in parametrization "			\
+			"is not yet supported, "		\
+			"contact asn1c author for");		\
+			return -1;				\
+		}						\
 		tmp = *(to);					\
 		*(to) = *(from);				\
 		TQ_MOVE(&(to)->members, &(from)->members);	\
 		*(from) = tmp;					\
 		(to)->next = tmp.next;				\
 		(to)->parent_expr = tmp.parent_expr;		\
+		if(tmp.tag.tag_class)				\
+			(to)->tag = tmp.tag;			\
 		memset(&((from)->next), 0,			\
 			sizeof((from)->next));			\
 		memset(&((from)->members), 0,			\

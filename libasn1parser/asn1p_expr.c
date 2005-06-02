@@ -142,3 +142,41 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 	}
 }
 
+
+char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *buf) {
+	static buf_stat[TAG2STRING_BUFFER_SIZE];
+	char *start;
+	char *end;
+
+	if(!buf) buf = buf_stat;
+	start = buf;
+	end = buf + TAG2STRING_BUFFER_SIZE;
+
+	if(tag->tag_class == TC_NOCLASS) {
+		*buf = 0;
+		return buf;
+	}
+
+	strcpy(buf, "[");
+	switch(tag->tag_class) {
+	case TC_NOCLASS:
+		assert(tag->tag_class != TC_NOCLASS);
+		break;
+	case TC_UNIVERSAL:	strcat(buf, "UNIVERSAL ");	break;
+	case TC_PRIVATE:	strcat(buf, "PRIVATE ");	break;
+	case TC_APPLICATION:	strcat(buf, "APPLICATION ");	break;
+	case TC_CONTEXT_SPECIFIC:
+		break;
+	}
+	buf += snprintf(buf + strlen(buf), end - buf,
+		"%" PRIdASN "]", tag->tag_value);
+	assert((buf - end) > sizeof(" IMPLICIT "));
+
+	switch(tag->tag_mode) {
+	case TM_DEFAULT: break;
+	case TM_IMPLICIT: strcat(buf, " IMPLICIT"); break;
+	case TM_EXPLICIT: strcat(buf, " EXPLICIT"); break;
+	}
+
+	return start;
+}
