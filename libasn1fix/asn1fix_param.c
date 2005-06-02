@@ -59,33 +59,53 @@ asn1f_fix_parametrized_assignment(arg_t *arg) {
 }
 
 #define	SUBSTITUTE(to, from)	do {				\
-		asn1p_expr_t tmp, *__v;				\
-		if((to)->tag.tag_class				\
-		&& (from)->tag.tag_class) {			\
-			FATAL("Layered tagging "		\
-			"in parametrization "			\
-			"is not yet supported, "		\
-			"contact asn1c author for");		\
-			return -1;				\
+	asn1p_expr_t tmp, *__v;					\
+	if((to)->tag.tag_class					\
+	&& (from)->tag.tag_class) {				\
+		FATAL("Layered tagging in parametrization "	\
+		"is not yet supported, "			\
+		"contact asn1c author for assistance with");	\
+		return -1;					\
+	}							\
+	/* This code shall not be invoked too early */		\
+	assert((to)->combined_constraints == NULL);		\
+	assert((from)->combined_constraints == NULL);		\
+	/* Copy stuff, and merge some parameters */		\
+	tmp = *(to);						\
+	*(to) = *(from);					\
+	TQ_MOVE(&(to)->members, &(from)->members);		\
+	*(from) = tmp;						\
+	(to)->next = tmp.next;					\
+	(to)->parent_expr = tmp.parent_expr;			\
+	assert((to)->marker.flags == EM_NOMARK);		\
+	(to)->marker = tmp.marker;				\
+	if(tmp.tag.tag_class)					\
+		(to)->tag = tmp.tag;				\
+	if(tmp.constraints) {					\
+		if((to)->constraints) {				\
+			asn1p_constraint_t *ct;			\
+			ct = asn1p_constraint_new(		\
+				(to)->constraints->_lineno);	\
+			ct->type = ACT_CA_SET;			\
+			asn1p_constraint_insert(ct,		\
+				(to)->constraints);		\
+			asn1p_constraint_insert(ct,		\
+				tmp.constraints);		\
+			(to)->constraints = ct;			\
+		} else {					\
+			(to)->constraints = tmp.constraints;	\
 		}						\
-		tmp = *(to);					\
-		*(to) = *(from);				\
-		TQ_MOVE(&(to)->members, &(from)->members);	\
-		*(from) = tmp;					\
-		(to)->next = tmp.next;				\
-		(to)->parent_expr = tmp.parent_expr;		\
-		if(tmp.tag.tag_class)				\
-			(to)->tag = tmp.tag;			\
-		memset(&((from)->next), 0,			\
-			sizeof((from)->next));			\
-		memset(&((from)->members), 0,			\
-			sizeof((from)->members));		\
-		asn1p_expr_free(from);				\
-		TQ_FOR(__v, &((to)->members), next) {		\
-			assert(__v->parent_expr == (from));	\
-			__v->parent_expr = (to);		\
-		}						\
-	} while(0)
+	}							\
+	(from)->constraints = 0;				\
+	(from)->marker.default_value = 0;			\
+	memset(&((from)->next), 0, sizeof((from)->next));	\
+	memset(&((from)->members), 0, sizeof((from)->members));	\
+	asn1p_expr_free(from);					\
+	TQ_FOR(__v, &((to)->members), next) {			\
+		assert(__v->parent_expr == (from));		\
+		__v->parent_expr = (to);			\
+	}							\
+} while(0)
 
 static int
 asn1f_parametrize(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype) {
