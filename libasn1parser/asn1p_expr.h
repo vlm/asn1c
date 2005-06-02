@@ -149,7 +149,7 @@ typedef struct asn1p_expr_s {
 	asn1p_value_t *value;
 
 	/*
-	 * The WITH SYHTAX clause.
+	 * The WITH SYNTAX clause.
 	 */
 	asn1p_wsyntx_t *with_syntax;
 
