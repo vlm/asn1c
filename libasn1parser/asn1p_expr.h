@@ -242,4 +242,7 @@ asn1p_expr_t *asn1p_expr_clone(asn1p_expr_t *, int skip_extensions);
 void asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what);
 void asn1p_expr_free(asn1p_expr_t *expr);
 
+#define	TAG2STRING_BUFFER_SIZE	64	/* buf should be at least this big */
+char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *opt_buf);
+
 #endif	/* ASN1_PARSER_EXPR_H */

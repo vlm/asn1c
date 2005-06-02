@@ -1,8 +1,9 @@
 
-0.9.15: 2005-May-17
+0.9.15: 2005-June-01
 
 	* Compiler now checks 64-bit overflows in constraints range handling
 	  code. No effect on the code produced by the compiler.
+	* Compiler support for tagged parametrized members.
 	* Empty tags to element map avoided.
 
 0.9.14:	2005-Apr-29
