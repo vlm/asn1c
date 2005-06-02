@@ -594,9 +594,11 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		break;
 	}
 
+	/*
+	 * Put the name of the referred type.
+	 */
 	if(tc->reference) {
-		if(!(flags & APF_NOINDENT))
-			printf(" ");
+		printf(" ");
 		asn1print_ref(tc->reference, flags);
 	}
 
