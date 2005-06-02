@@ -315,9 +315,15 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 		OUT("sizeof(struct "); out_name_chain(arg, 1); OUT("),\n");
 		OUT("offsetof(struct "); out_name_chain(arg, 1); OUT(", _asn_ctx),\n");
 
-		OUT("asn_MAP_%s_%d_tag2el,\n",
-			MKID(expr->Identifier), expr->_type_unique_index);
-		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
+		if(tag2el_count) {
+			OUT("asn_MAP_%s_%d_tag2el,\n",
+				MKID(expr->Identifier),
+				expr->_type_unique_index);
+			OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
+		} else {
+			OUT("0,\t/* No top level tags */\n");
+			OUT("0,\t/* No tags in the map */\n");
+		}
 		OUT("%d,\t/* Start extensions */\n",
 			ext_start);
 		OUT("%d\t/* Stop extensions */\n",
@@ -1425,29 +1431,29 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no, fte_e f
 static int
 emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier) {
 	asn1p_expr_t *expr = arg->expr;
+	int i;
+
+	if(!tag2el_count) return 0;	/* No top level tags */
 
 	OUT("static asn_TYPE_tag2member_t asn_MAP_%s_%d_tag2el%s[] = {\n",
 		MKID(expr->Identifier), expr->_type_unique_index,
 		opt_modifier?opt_modifier:"");
-	if(tag2el_count) {
-		int i;
-		for(i = 0; i < tag2el_count; i++) {
-			OUT("    { ");
-			_print_tag(arg, &tag2el[i].el_tag);
-			OUT(", ");
-			OUT("%d, ", tag2el[i].el_no);
-			OUT("%d, ", tag2el[i].toff_first);
-			OUT("%d ", tag2el[i].toff_last);
-			OUT("}%s /* %s at %d */\n",
-				(i + 1 < tag2el_count) ? "," : "",
-				tag2el[i].from_expr->Identifier,
-				tag2el[i].from_expr->_lineno
-			);
-		}
+	for(i = 0; i < tag2el_count; i++) {
+		OUT("    { ");
+		_print_tag(arg, &tag2el[i].el_tag);
+		OUT(", ");
+		OUT("%d, ", tag2el[i].el_no);
+		OUT("%d, ", tag2el[i].toff_first);
+		OUT("%d ", tag2el[i].toff_last);
+		OUT("}%s /* %s at %d */\n",
+			(i + 1 < tag2el_count) ? "," : "",
+			tag2el[i].from_expr->Identifier,
+			tag2el[i].from_expr->_lineno
+		);
 	}
 	OUT("};\n");
 
-	return 0;;
+	return 0;
 }
 
 static enum tvm_compat
