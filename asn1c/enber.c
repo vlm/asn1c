@@ -377,9 +377,9 @@ process_line(const char *fname, char *line, int lineno) {
 	  if(len != tlv_len) {
 		if(no_validation) fprintf(stderr, "Warning: ");
 		fprintf(stderr,
-			"%s: Could not encode value of %d chars "
-			"at line %d in %d bytes\n",
-			fname, len, lineno, tlv_len);
+			"%s: Could not encode value of %ld chars "
+			"at line %d in %ld bytes\n",
+			fname, (long)len, lineno, (long)tlv_len);
 		if(!no_validation) exit(EX_DATAERR);
 	  }
 	}
