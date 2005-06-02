@@ -1,7 +1,7 @@
 1. MAJOR:
 
 1.1 Support for PER encoding. Requires advanced subtype constraints support,
-which is already completed. Also see #3.2.
+which is already completed.
 
 1.2 Support for Information Object Classes.
    Status:	Support for parsing IOCs is mostly present.
