@@ -27,11 +27,16 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, const enum asn1p_constraint_
 	 * 1. Find the terminal type for this assignment.
 	 */
 	type_expr = asn1f_find_terminal_type(arg, expr);
-	DEBUG("terminal type %p", type_expr);
 	if(type_expr == 0) {
-		FATAL("Terminal type for %s at line %d not found",
-			expr->Identifier, expr->_lineno);
-		return -1;
+		if(errno == EEXIST) {
+			DEBUG("External type for %s at line %d",
+				expr->Identifier, expr->_lineno);
+			return 0;
+		} else {
+			FATAL("Terminal type for %s at line %d not found",
+				expr->Identifier, expr->_lineno);
+			return -1;
+		}
 	}
 
 	if(asn1f_look_value_in_type(arg, type_expr, expr) == -1) {
