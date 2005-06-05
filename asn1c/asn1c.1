@@ -23,7 +23,9 @@ and other encoding standards.
 .TP
 \fILanguage Options\fR
 .br
-\fB\-fall-defs-global \-fbless-SIZE \-fnative-types \-fno-constraints \-funnamed-unions \-ftypes88\fR
+\fB\-fall-defs-global \-fbless-SIZE \-fcompound-names
+.BI "\-fknown-extern-type="<name>
+\fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions \-ftypes88\fR
 .TP
 \fIOutput Options\fR
 .br
@@ -80,7 +82,17 @@ structures globally visible, but will allow you to manipulate
 .B \-fbless-SIZE
 Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which this
 constraint is normally prohibited by the standard. This is a violation of
-an ASN.1 standard and compiler may fail to produce the meaningful code.
+an ASN.1 standard and compiler may fail to produce meaningful code.
+.TP
+.B \-fcompound-names
+Using this switch prevents name collisions in the target source code
+by using complex names for target language structures. (Name collisions
+may occur if the ASN.1 module reuses the same identifiers in multiple
+contexts).
+.TP
+.BI "\-fknown-extern-type="<name>
+Pretend the specified type is known. The compiler will assume the target
+language source files for the given type are provided manually.
 .TP
 .B \-fnative-types
 Use the native machine's data types (int, double) whenever possible,
@@ -88,6 +100,10 @@ instead of the compound INTEGER_t, ENUMERATED_t and REAL_t types.
 .TP
 .B \-fno-constraints
 Do not generate ASN.1 subtype constraint checking code. This may make a shorter executable.
+.TP
+.B \-fno-include-deps
+Do not generate courtesy #include lines for non-critical type dependencies.
+Helps prevent namespace collisions.
 .TP
 .B \-funnamed-unions
 Enable unnamed unions in the definitions of target language's structures.

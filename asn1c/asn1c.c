@@ -313,7 +313,7 @@ usage(const char *av0) {
 "  -fall-defs-global     Don't make the asn1_DEF_'s of structure members \"static\"\n"
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
 "  -fcompound-names      Disambiguate C's struct NAME's inside top-level types\n"
-"  -fknown-extern-type=<name>    Pretend this type is known\n"
+"  -fknown-extern-type=<name>    Pretend the specified type is known\n"
 "  -fnative-types        Use \"long\" instead of INTEGER_t whenever possible, etc.\n"
 "  -fno-constraints      Do not generate constraint checking code\n"
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
