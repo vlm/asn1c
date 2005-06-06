@@ -394,7 +394,7 @@ static const short yyrline[] = { 0,
   1876,  1879,  1884,  1906,  1911,  1916,  1922,  1928,  1936,  1944,
   1952,  1959,  1969,  1974,  2004,  2006,  2009,  2016,  2022,  2024,
   2025,  2026,  2029,  2031,  2032,  2035,  2040,  2047,  2054,  2056,
-  2060
+  2061
 };
 #endif
 
@@ -3410,7 +3410,7 @@ case 270:
 	;
     break;}
 case 271:
-#line 2061 "asn1p_y.y"
+#line 2062 "asn1p_y.y"
 {
 		checkmem(yyvsp[0].tv_str);
 		yyval.tv_str = yyvsp[0].tv_str;
@@ -3490,7 +3490,7 @@ yyerrlab:   /* here on detecting error */
 	  count = 0;
 	  /* Start X at -yyn if nec to avoid negative indexes in yycheck.  */
 	  for (x = (yyn < 0 ? -yyn : 0);
-	       x < (ssize_t)(sizeof(yytname) / sizeof(char *)); x++)
+	       x < (sizeof(yytname) / sizeof(char *)); x++)
 	    if (yycheck[x + yyn] == x)
 	      size += strlen(yytname[x]) + 15, count++;
 	  msg = (char *) malloc(size + 15);
@@ -3502,7 +3502,7 @@ yyerrlab:   /* here on detecting error */
 		{
 		  count = 0;
 		  for (x = (yyn < 0 ? -yyn : 0);
-		       x < (ssize_t)(sizeof(yytname) / sizeof(char *)); x++)
+		       x < (sizeof(yytname) / sizeof(char *)); x++)
 		    if (yycheck[x + yyn] == x)
 		      {
 			strcat(msg, count == 0 ? ", expecting `" : " or `");
@@ -3638,7 +3638,7 @@ yyerrhandle:
     }
   return 1;
 }
-#line 2067 "asn1p_y.y"
+#line 2068 "asn1p_y.y"
 
 
 

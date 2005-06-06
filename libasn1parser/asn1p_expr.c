@@ -144,7 +144,7 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 
 
 char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *buf) {
-	static buf_stat[TAG2STRING_BUFFER_SIZE];
+	static char buf_stat[TAG2STRING_BUFFER_SIZE];
 	char *start;
 	char *end;
 
@@ -170,7 +170,7 @@ char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *buf) {
 	}
 	buf += snprintf(buf + strlen(buf), end - buf,
 		"%" PRIdASN "]", tag->tag_value);
-	assert((buf - end) > sizeof(" IMPLICIT "));
+	assert((unsigned int)(buf - end) > sizeof(" IMPLICIT "));
 
 	switch(tag->tag_mode) {
 	case TM_DEFAULT: break;

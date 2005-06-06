@@ -2056,6 +2056,7 @@ optIdentifier:
 	| Identifier {
 		$$ = $1;
 	}
+	;
 
 Identifier:
 	TOK_identifier {

@@ -64,7 +64,8 @@ asn1f_fix_parametrized_assignment(arg_t *arg) {
 	&& (from)->tag.tag_class) {				\
 		FATAL("Layered tagging in parametrization "	\
 		"is not yet supported, "			\
-		"contact asn1c author for assistance with");	\
+		"contact asn1c author for assistance "		\
+		"with line %d", (to)->_lineno);			\
 		return -1;					\
 	}							\
 	/* This code shall not be invoked too early */		\
