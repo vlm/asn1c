@@ -124,10 +124,14 @@
 #include "asn1parser.h"
 
 #define YYPARSE_PARAM	param
+#define YYPARSE_PARAM_TYPE	void **
 #define YYERROR_VERBOSE
 
 int yylex(void);
 int yyerror(const char *msg);
+#ifdef	YYBYACC
+int yyparse(void **param);	/* byacc does not produce a prototype */
+#endif
 void asn1p_lexer_hack_push_opaque_state(void);
 void asn1p_lexer_hack_enable_with_syntax(void);
 void asn1p_lexer_hack_push_encoding_control(void);
@@ -163,7 +167,7 @@ static asn1p_value_t *
 	} while(0)
 
 
-#line 58 "asn1p_y.y"
+#line 62 "asn1p_y.y"
 typedef union {
 	asn1p_t			*a_grammar;
 	asn1p_module_flags_e	 a_module_flags;
@@ -367,34 +371,34 @@ static const short yyrhs[] = {   119,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-   302,   308,   314,   330,   355,   357,   360,   364,   369,   376,
-   384,   389,   393,   402,   404,   412,   416,   424,   428,   431,
-   434,   438,   458,   460,   468,   472,   504,   508,   517,   524,
-   537,   544,   546,   558,   571,   578,   583,   589,   595,   604,
-   610,   616,   623,   629,   637,   641,   644,   651,   657,   663,
-   670,   676,   685,   687,   696,   704,   718,   730,   736,   752,
-   761,   771,   781,   786,   793,   800,   810,   816,   822,   826,
-   849,   851,   853,   859,   865,   872,   879,   884,   890,   896,
-   902,   907,   917,   919,   922,   930,   936,   945,   951,   968,
-   970,   975,   979,   984,   989,   995,   999,  1010,  1019,  1028,
-  1039,  1061,  1065,  1071,  1077,  1083,  1093,  1103,  1109,  1123,
-  1147,  1154,  1168,  1177,  1187,  1197,  1207,  1215,  1236,  1245,
-  1254,  1255,  1257,  1264,  1276,  1286,  1294,  1294,  1299,  1304,
-  1309,  1314,  1318,  1322,  1325,  1328,  1333,  1345,  1362,  1367,
-  1372,  1405,  1415,  1429,  1431,  1432,  1433,  1434,  1435,  1436,
-  1437,  1438,  1439,  1440,  1441,  1442,  1448,  1450,  1451,  1454,
-  1461,  1473,  1475,  1479,  1483,  1484,  1485,  1486,  1487,  1491,
-  1492,  1493,  1494,  1498,  1499,  1506,  1506,  1507,  1507,  1508,
-  1510,  1512,  1517,  1521,  1530,  1534,  1539,  1543,  1549,  1559,
-  1563,  1566,  1569,  1572,  1577,  1586,  1594,  1600,  1606,  1613,
-  1621,  1629,  1638,  1641,  1644,  1645,  1655,  1657,  1658,  1659,
-  1662,  1666,  1671,  1677,  1682,  1685,  1688,  1701,  1715,  1719,
-  1724,  1728,  1733,  1740,  1753,  1755,  1758,  1762,  1765,  1770,
-  1774,  1782,  1797,  1803,  1810,  1823,  1835,  1850,  1854,  1871,
-  1876,  1879,  1884,  1906,  1911,  1916,  1922,  1928,  1936,  1944,
-  1952,  1959,  1969,  1974,  2004,  2006,  2009,  2016,  2022,  2024,
-  2025,  2026,  2029,  2031,  2032,  2035,  2040,  2047,  2054,  2056,
-  2061
+   306,   312,   318,   334,   359,   361,   364,   368,   373,   380,
+   388,   393,   397,   406,   408,   416,   420,   428,   432,   435,
+   438,   442,   462,   464,   472,   476,   508,   512,   521,   528,
+   541,   548,   550,   562,   575,   582,   587,   593,   599,   608,
+   614,   620,   627,   633,   641,   645,   648,   655,   661,   667,
+   674,   680,   689,   691,   700,   708,   722,   734,   740,   756,
+   765,   775,   785,   790,   797,   804,   814,   820,   826,   830,
+   853,   855,   857,   863,   869,   876,   883,   888,   894,   900,
+   906,   911,   921,   923,   926,   934,   940,   949,   955,   972,
+   974,   979,   983,   988,   993,   999,  1003,  1014,  1023,  1032,
+  1043,  1065,  1069,  1075,  1081,  1087,  1097,  1107,  1113,  1127,
+  1151,  1158,  1172,  1181,  1191,  1201,  1211,  1219,  1240,  1249,
+  1258,  1259,  1261,  1268,  1280,  1290,  1298,  1298,  1303,  1308,
+  1313,  1318,  1322,  1326,  1329,  1332,  1337,  1349,  1366,  1371,
+  1376,  1409,  1419,  1433,  1435,  1436,  1437,  1438,  1439,  1440,
+  1441,  1442,  1443,  1444,  1445,  1446,  1452,  1454,  1455,  1458,
+  1465,  1477,  1479,  1483,  1487,  1488,  1489,  1490,  1491,  1495,
+  1496,  1497,  1498,  1502,  1503,  1510,  1510,  1511,  1511,  1512,
+  1514,  1516,  1521,  1525,  1534,  1538,  1543,  1547,  1553,  1563,
+  1567,  1570,  1573,  1576,  1581,  1590,  1598,  1604,  1610,  1617,
+  1625,  1633,  1642,  1645,  1648,  1649,  1659,  1661,  1662,  1663,
+  1666,  1670,  1675,  1681,  1686,  1689,  1692,  1705,  1719,  1723,
+  1728,  1732,  1737,  1744,  1757,  1759,  1762,  1766,  1769,  1774,
+  1778,  1786,  1801,  1807,  1814,  1827,  1839,  1854,  1858,  1875,
+  1880,  1883,  1888,  1910,  1915,  1920,  1926,  1932,  1940,  1948,
+  1956,  1963,  1973,  1978,  2008,  2010,  2013,  2020,  2026,  2028,
+  2029,  2030,  2033,  2035,  2036,  2039,  2044,  2051,  2058,  2060,
+  2065
 };
 #endif
 
@@ -1348,13 +1352,13 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 303 "asn1p_y.y"
+#line 307 "asn1p_y.y"
 {
 		*(void **)param = yyvsp[0].a_grammar;
 	;
     break;}
 case 2:
-#line 309 "asn1p_y.y"
+#line 313 "asn1p_y.y"
 {
 		yyval.a_grammar = asn1p_new();
 		checkmem(yyval.a_grammar);
@@ -1362,14 +1366,14 @@ case 2:
 	;
     break;}
 case 3:
-#line 314 "asn1p_y.y"
+#line 318 "asn1p_y.y"
 {
 		yyval.a_grammar = yyvsp[-1].a_grammar;
 		TQ_ADD(&(yyval.a_grammar->modules), yyvsp[0].a_module, mod_next);
 	;
     break;}
 case 4:
-#line 335 "asn1p_y.y"
+#line 339 "asn1p_y.y"
 {
 
 		if(yyvsp[-1].a_module) {
@@ -1386,27 +1390,27 @@ case 4:
 	;
     break;}
 case 5:
-#line 356 "asn1p_y.y"
+#line 360 "asn1p_y.y"
 { yyval.a_oid = 0; ;
     break;}
 case 6:
-#line 357 "asn1p_y.y"
+#line 361 "asn1p_y.y"
 { yyval.a_oid = yyvsp[0].a_oid; ;
     break;}
 case 7:
-#line 361 "asn1p_y.y"
+#line 365 "asn1p_y.y"
 {
 		yyval.a_oid = yyvsp[-1].a_oid;
 	;
     break;}
 case 8:
-#line 364 "asn1p_y.y"
+#line 368 "asn1p_y.y"
 {
 		yyval.a_oid = 0;
 	;
     break;}
 case 9:
-#line 370 "asn1p_y.y"
+#line 374 "asn1p_y.y"
 {
 		yyval.a_oid = asn1p_oid_new();
 		asn1p_oid_add_arc(yyval.a_oid, &yyvsp[0].a_oid_arc);
@@ -1415,7 +1419,7 @@ case 9:
 	;
     break;}
 case 10:
-#line 376 "asn1p_y.y"
+#line 380 "asn1p_y.y"
 {
 		yyval.a_oid = yyvsp[-1].a_oid;
 		asn1p_oid_add_arc(yyval.a_oid, &yyvsp[0].a_oid_arc);
@@ -1424,74 +1428,74 @@ case 10:
 	;
     break;}
 case 11:
-#line 385 "asn1p_y.y"
+#line 389 "asn1p_y.y"
 {					/* iso */
 		yyval.a_oid_arc.name = yyvsp[0].tv_str;
 		yyval.a_oid_arc.number = -1;
 	;
     break;}
 case 12:
-#line 389 "asn1p_y.y"
+#line 393 "asn1p_y.y"
 {		/* iso(1) */
 		yyval.a_oid_arc.name = yyvsp[-3].tv_str;
 		yyval.a_oid_arc.number = yyvsp[-1].a_int;
 	;
     break;}
 case 13:
-#line 393 "asn1p_y.y"
+#line 397 "asn1p_y.y"
 {					/* 1 */
 		yyval.a_oid_arc.name = 0;
 		yyval.a_oid_arc.number = yyvsp[0].a_int;
 	;
     break;}
 case 14:
-#line 403 "asn1p_y.y"
+#line 407 "asn1p_y.y"
 { yyval.a_module_flags = MSF_NOFLAGS; ;
     break;}
 case 15:
-#line 404 "asn1p_y.y"
+#line 408 "asn1p_y.y"
 {
 		yyval.a_module_flags = yyvsp[0].a_module_flags;
 	;
     break;}
 case 16:
-#line 413 "asn1p_y.y"
+#line 417 "asn1p_y.y"
 {
 		yyval.a_module_flags = yyvsp[0].a_module_flags;
 	;
     break;}
 case 17:
-#line 416 "asn1p_y.y"
+#line 420 "asn1p_y.y"
 {
 		yyval.a_module_flags = yyvsp[-1].a_module_flags | yyvsp[0].a_module_flags;
 	;
     break;}
 case 18:
-#line 425 "asn1p_y.y"
+#line 429 "asn1p_y.y"
 {
 		yyval.a_module_flags = MSF_EXPLICIT_TAGS;
 	;
     break;}
 case 19:
-#line 428 "asn1p_y.y"
+#line 432 "asn1p_y.y"
 {
 		yyval.a_module_flags = MSF_IMPLICIT_TAGS;
 	;
     break;}
 case 20:
-#line 431 "asn1p_y.y"
+#line 435 "asn1p_y.y"
 {
 		yyval.a_module_flags = MSF_AUTOMATIC_TAGS;
 	;
     break;}
 case 21:
-#line 434 "asn1p_y.y"
+#line 438 "asn1p_y.y"
 {
 		yyval.a_module_flags = MSF_EXTENSIBILITY_IMPLIED;
 	;
     break;}
 case 22:
-#line 438 "asn1p_y.y"
+#line 442 "asn1p_y.y"
 {
 		/* X.680Amd1 specifies TAG and XER */
 		if(strcmp(yyvsp[-1].tv_str, "TAG") == 0) {
@@ -1509,23 +1513,23 @@ case 22:
 	;
     break;}
 case 23:
-#line 459 "asn1p_y.y"
+#line 463 "asn1p_y.y"
 { yyval.a_module = 0; ;
     break;}
 case 24:
-#line 460 "asn1p_y.y"
+#line 464 "asn1p_y.y"
 {
 		yyval.a_module = yyvsp[0].a_module;
 	;
     break;}
 case 25:
-#line 469 "asn1p_y.y"
+#line 473 "asn1p_y.y"
 {
 		yyval.a_module = yyvsp[0].a_module;
 	;
     break;}
 case 26:
-#line 472 "asn1p_y.y"
+#line 476 "asn1p_y.y"
 {
 		yyval.a_module = yyvsp[-1].a_module;
 
@@ -1555,13 +1559,13 @@ case 26:
 	;
     break;}
 case 27:
-#line 505 "asn1p_y.y"
+#line 509 "asn1p_y.y"
 {
 		yyval.a_module = yyvsp[0].a_module;
 	;
     break;}
 case 28:
-#line 508 "asn1p_y.y"
+#line 512 "asn1p_y.y"
 {
 		yyval.a_module = asn1p_module_new();
 		checkmem(yyval.a_module);
@@ -1573,7 +1577,7 @@ case 28:
 	;
     break;}
 case 29:
-#line 517 "asn1p_y.y"
+#line 521 "asn1p_y.y"
 {
 		yyval.a_module = asn1p_module_new();
 		checkmem(yyval.a_module);
@@ -1583,7 +1587,7 @@ case 29:
 	;
     break;}
 case 30:
-#line 524 "asn1p_y.y"
+#line 528 "asn1p_y.y"
 {
 		yyval.a_module = asn1p_module_new();
 		checkmem(yyval.a_module);
@@ -1593,7 +1597,7 @@ case 30:
 	;
     break;}
 case 31:
-#line 537 "asn1p_y.y"
+#line 541 "asn1p_y.y"
 {
 		yyval.a_module = asn1p_module_new();
 		checkmem(yyval.a_module);
@@ -1603,11 +1607,11 @@ case 31:
 	;
     break;}
 case 32:
-#line 545 "asn1p_y.y"
+#line 549 "asn1p_y.y"
 { asn1p_lexer_hack_push_encoding_control(); ;
     break;}
 case 33:
-#line 546 "asn1p_y.y"
+#line 550 "asn1p_y.y"
 {
 		fprintf(stderr,
 			"WARNING: ENCODING-CONTROL %s "
@@ -1618,7 +1622,7 @@ case 33:
 	;
     break;}
 case 34:
-#line 558 "asn1p_y.y"
+#line 562 "asn1p_y.y"
 {
 		return yyerror(
 			"Attempt to redefine a standard basic type, "
@@ -1627,19 +1631,19 @@ case 34:
 	;
     break;}
 case 35:
-#line 572 "asn1p_y.y"
+#line 576 "asn1p_y.y"
 {
 		yyval.a_module = yyvsp[-1].a_module;
 	;
     break;}
 case 36:
-#line 578 "asn1p_y.y"
+#line 582 "asn1p_y.y"
 {
 		return yyerror("Empty IMPORTS list");
 	;
     break;}
 case 37:
-#line 584 "asn1p_y.y"
+#line 588 "asn1p_y.y"
 {
 		yyval.a_module = asn1p_module_new();
 		checkmem(yyval.a_module);
@@ -1647,14 +1651,14 @@ case 37:
 	;
     break;}
 case 38:
-#line 589 "asn1p_y.y"
+#line 593 "asn1p_y.y"
 {
 		yyval.a_module = yyvsp[-1].a_module;
 		TQ_ADD(&(yyval.a_module->imports), yyvsp[0].a_xports, xp_next);
 	;
     break;}
 case 39:
-#line 596 "asn1p_y.y"
+#line 600 "asn1p_y.y"
 {
 		yyval.a_xports = yyvsp[-3].a_xports;
 		yyval.a_xports->from = yyvsp[-1].tv_str;
@@ -1663,7 +1667,7 @@ case 39:
 	;
     break;}
 case 40:
-#line 605 "asn1p_y.y"
+#line 609 "asn1p_y.y"
 {
 		yyval.a_xports = asn1p_xports_new();
 		checkmem(yyval.a_xports);
@@ -1671,14 +1675,14 @@ case 40:
 	;
     break;}
 case 41:
-#line 610 "asn1p_y.y"
+#line 614 "asn1p_y.y"
 {
 		yyval.a_xports = yyvsp[-2].a_xports;
 		TQ_ADD(&(yyval.a_xports->members), yyvsp[0].a_expr, next);
 	;
     break;}
 case 42:
-#line 617 "asn1p_y.y"
+#line 621 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1687,7 +1691,7 @@ case 42:
 	;
     break;}
 case 43:
-#line 623 "asn1p_y.y"
+#line 627 "asn1p_y.y"
 {		/* Completely equivalent to above */
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1696,7 +1700,7 @@ case 43:
 	;
     break;}
 case 44:
-#line 629 "asn1p_y.y"
+#line 633 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1705,19 +1709,19 @@ case 44:
 	;
     break;}
 case 45:
-#line 638 "asn1p_y.y"
+#line 642 "asn1p_y.y"
 {
 		yyval.a_xports = yyvsp[-1].a_xports;
 	;
     break;}
 case 46:
-#line 641 "asn1p_y.y"
+#line 645 "asn1p_y.y"
 {
 		yyval.a_xports = 0;
 	;
     break;}
 case 47:
-#line 644 "asn1p_y.y"
+#line 648 "asn1p_y.y"
 {
 		/* Empty EXPORTS clause effectively prohibits export. */
 		yyval.a_xports = asn1p_xports_new();
@@ -1725,7 +1729,7 @@ case 47:
 	;
     break;}
 case 48:
-#line 652 "asn1p_y.y"
+#line 656 "asn1p_y.y"
 {
 		yyval.a_xports = asn1p_xports_new();
 		assert(yyval.a_xports);
@@ -1733,14 +1737,14 @@ case 48:
 	;
     break;}
 case 49:
-#line 657 "asn1p_y.y"
+#line 661 "asn1p_y.y"
 {
 		yyval.a_xports = yyvsp[-2].a_xports;
 		TQ_ADD(&(yyval.a_xports->members), yyvsp[0].a_expr, next);
 	;
     break;}
 case 50:
-#line 664 "asn1p_y.y"
+#line 668 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1749,7 +1753,7 @@ case 50:
 	;
     break;}
 case 51:
-#line 670 "asn1p_y.y"
+#line 674 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1758,7 +1762,7 @@ case 51:
 	;
     break;}
 case 52:
-#line 676 "asn1p_y.y"
+#line 680 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1767,11 +1771,11 @@ case 52:
 	;
     break;}
 case 53:
-#line 687 "asn1p_y.y"
+#line 691 "asn1p_y.y"
 { asn1p_lexer_hack_push_opaque_state(); ;
     break;}
 case 54:
-#line 687 "asn1p_y.y"
+#line 691 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-4].a_expr;
 		assert(yyval.a_expr->Identifier == 0);
@@ -1781,7 +1785,7 @@ case 54:
 	;
     break;}
 case 55:
-#line 697 "asn1p_y.y"
+#line 701 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1791,7 +1795,7 @@ case 55:
 	;
     break;}
 case 56:
-#line 704 "asn1p_y.y"
+#line 708 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1800,7 +1804,7 @@ case 56:
 	;
     break;}
 case 57:
-#line 722 "asn1p_y.y"
+#line 726 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1811,7 +1815,7 @@ case 57:
 	;
     break;}
 case 58:
-#line 730 "asn1p_y.y"
+#line 734 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 		yyval.a_expr->Identifier = yyvsp[-2].tv_str;
@@ -1820,7 +1824,7 @@ case 58:
 	;
     break;}
 case 59:
-#line 736 "asn1p_y.y"
+#line 740 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 		yyval.a_expr->Identifier = yyvsp[-2].tv_str;
@@ -1829,7 +1833,7 @@ case 59:
 	;
     break;}
 case 60:
-#line 752 "asn1p_y.y"
+#line 756 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 		assert(yyval.a_expr->Identifier == 0);
@@ -1839,7 +1843,7 @@ case 60:
 	;
     break;}
 case 61:
-#line 762 "asn1p_y.y"
+#line 766 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_plist = asn1p_paramlist_new(yylineno);
@@ -1851,7 +1855,7 @@ case 61:
 	;
     break;}
 case 62:
-#line 771 "asn1p_y.y"
+#line 775 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_plist = yyvsp[-2].a_plist;
@@ -1862,14 +1866,14 @@ case 62:
 	;
     break;}
 case 63:
-#line 782 "asn1p_y.y"
+#line 786 "asn1p_y.y"
 {
 		yyval.a_parg.governor = NULL;
 		yyval.a_parg.argument = yyvsp[0].tv_str;
 	;
     break;}
 case 64:
-#line 786 "asn1p_y.y"
+#line 790 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_parg.governor = asn1p_ref_new(yylineno);
@@ -1879,7 +1883,7 @@ case 64:
 	;
     break;}
 case 65:
-#line 793 "asn1p_y.y"
+#line 797 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_parg.governor = asn1p_ref_new(yylineno);
@@ -1889,7 +1893,7 @@ case 65:
 	;
     break;}
 case 66:
-#line 800 "asn1p_y.y"
+#line 804 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_parg.governor = asn1p_ref_new(yylineno);
@@ -1900,7 +1904,7 @@ case 66:
 	;
     break;}
 case 67:
-#line 811 "asn1p_y.y"
+#line 815 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1908,20 +1912,20 @@ case 67:
 	;
     break;}
 case 68:
-#line 816 "asn1p_y.y"
+#line 820 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		asn1p_expr_add(yyval.a_expr, yyvsp[0].a_expr);
 	;
     break;}
 case 69:
-#line 823 "asn1p_y.y"
+#line 827 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 	;
     break;}
 case 70:
-#line 826 "asn1p_y.y"
+#line 830 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1931,15 +1935,15 @@ case 70:
 	;
     break;}
 case 71:
-#line 850 "asn1p_y.y"
+#line 854 "asn1p_y.y"
 { yyval.a_expr = asn1p_expr_new(yylineno); ;
     break;}
 case 72:
-#line 851 "asn1p_y.y"
+#line 855 "asn1p_y.y"
 { yyval.a_expr = yyvsp[0].a_expr; ;
     break;}
 case 73:
-#line 854 "asn1p_y.y"
+#line 858 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1947,14 +1951,14 @@ case 73:
 	;
     break;}
 case 74:
-#line 859 "asn1p_y.y"
+#line 863 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		asn1p_expr_add(yyval.a_expr, yyvsp[0].a_expr);
 	;
     break;}
 case 75:
-#line 866 "asn1p_y.y"
+#line 870 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-1].a_expr;
 		assert(yyval.a_expr->Identifier == 0);
@@ -1963,7 +1967,7 @@ case 75:
 	;
     break;}
 case 76:
-#line 872 "asn1p_y.y"
+#line 876 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1973,13 +1977,13 @@ case 76:
 	;
     break;}
 case 77:
-#line 879 "asn1p_y.y"
+#line 883 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 	;
     break;}
 case 78:
-#line 885 "asn1p_y.y"
+#line 889 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -1987,14 +1991,14 @@ case 78:
 	;
     break;}
 case 79:
-#line 890 "asn1p_y.y"
+#line 894 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		asn1p_expr_add(yyval.a_expr, yyvsp[0].a_expr);
 	;
     break;}
 case 80:
-#line 897 "asn1p_y.y"
+#line 901 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 		assert(yyval.a_expr->Identifier == 0);
@@ -2002,13 +2006,13 @@ case 80:
 	;
     break;}
 case 81:
-#line 902 "asn1p_y.y"
+#line 906 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 	;
     break;}
 case 82:
-#line 908 "asn1p_y.y"
+#line 912 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		checkmem(yyval.a_expr);
@@ -2018,15 +2022,15 @@ case 82:
 	;
     break;}
 case 83:
-#line 918 "asn1p_y.y"
+#line 922 "asn1p_y.y"
 { yyval.a_int = 0; ;
     break;}
 case 84:
-#line 919 "asn1p_y.y"
+#line 923 "asn1p_y.y"
 { yyval.a_int = 1; ;
     break;}
 case 85:
-#line 923 "asn1p_y.y"
+#line 927 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2036,14 +2040,14 @@ case 85:
 	;
     break;}
 case 86:
-#line 930 "asn1p_y.y"
+#line 934 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		asn1p_expr_add(yyval.a_expr, yyvsp[0].a_expr);
 	;
     break;}
 case 87:
-#line 937 "asn1p_y.y"
+#line 941 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2054,7 +2058,7 @@ case 87:
 	;
     break;}
 case 88:
-#line 945 "asn1p_y.y"
+#line 949 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		yyval.a_expr->Identifier = yyvsp[-3].a_refcomp.name;
@@ -2063,7 +2067,7 @@ case 88:
 	;
     break;}
 case 89:
-#line 951 "asn1p_y.y"
+#line 955 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_expr = asn1p_expr_new(yylineno);
@@ -2081,47 +2085,47 @@ case 89:
 	;
     break;}
 case 90:
-#line 969 "asn1p_y.y"
+#line 973 "asn1p_y.y"
 { yyval.a_wsynt = 0; ;
     break;}
 case 91:
-#line 970 "asn1p_y.y"
+#line 974 "asn1p_y.y"
 {
 		yyval.a_wsynt = yyvsp[0].a_wsynt;
 	;
     break;}
 case 92:
-#line 977 "asn1p_y.y"
+#line 981 "asn1p_y.y"
 { asn1p_lexer_hack_enable_with_syntax(); ;
     break;}
 case 93:
-#line 979 "asn1p_y.y"
+#line 983 "asn1p_y.y"
 {
 		yyval.a_wsynt = yyvsp[-1].a_wsynt;
 	;
     break;}
 case 94:
-#line 985 "asn1p_y.y"
+#line 989 "asn1p_y.y"
 {
 		yyval.a_wsynt = asn1p_wsyntx_new();
 		TQ_ADD(&(yyval.a_wsynt->chunks), yyvsp[0].a_wchunk, next);
 	;
     break;}
 case 95:
-#line 989 "asn1p_y.y"
+#line 993 "asn1p_y.y"
 {
 		yyval.a_wsynt = yyvsp[-1].a_wsynt;
 		TQ_ADD(&(yyval.a_wsynt->chunks), yyvsp[0].a_wchunk, next);
 	;
     break;}
 case 96:
-#line 996 "asn1p_y.y"
+#line 1000 "asn1p_y.y"
 {
 		yyval.a_wchunk = asn1p_wsyntx_chunk_frombuf(yyvsp[0].tv_opaque.buf, yyvsp[0].tv_opaque.len, 0);
 	;
     break;}
 case 97:
-#line 999 "asn1p_y.y"
+#line 1003 "asn1p_y.y"
 {
 		asn1p_ref_t *ref;
 		int ret;
@@ -2133,7 +2137,7 @@ case 97:
 	;
     break;}
 case 98:
-#line 1011 "asn1p_y.y"
+#line 1015 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2144,7 +2148,7 @@ case 98:
 	;
     break;}
 case 99:
-#line 1019 "asn1p_y.y"
+#line 1023 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2156,7 +2160,7 @@ case 99:
 	;
     break;}
 case 100:
-#line 1028 "asn1p_y.y"
+#line 1032 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2168,7 +2172,7 @@ case 100:
 	;
     break;}
 case 101:
-#line 1040 "asn1p_y.y"
+#line 1044 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-1].a_expr;
 		yyval.a_expr->tag = yyvsp[-2].a_tag;
@@ -2190,13 +2194,13 @@ case 101:
 	;
     break;}
 case 102:
-#line 1062 "asn1p_y.y"
+#line 1066 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[0].a_expr;
 	;
     break;}
 case 103:
-#line 1065 "asn1p_y.y"
+#line 1069 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-1].a_expr;
 		assert(yyval.a_expr->expr_type == A1TC_INVALID);
@@ -2205,7 +2209,7 @@ case 103:
 	;
     break;}
 case 104:
-#line 1071 "asn1p_y.y"
+#line 1075 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-1].a_expr;
 		assert(yyval.a_expr->expr_type == A1TC_INVALID);
@@ -2214,7 +2218,7 @@ case 104:
 	;
     break;}
 case 105:
-#line 1077 "asn1p_y.y"
+#line 1081 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-1].a_expr;
 		assert(yyval.a_expr->expr_type == A1TC_INVALID);
@@ -2223,7 +2227,7 @@ case 105:
 	;
     break;}
 case 106:
-#line 1083 "asn1p_y.y"
+#line 1087 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2236,7 +2240,7 @@ case 106:
 	;
     break;}
 case 107:
-#line 1093 "asn1p_y.y"
+#line 1097 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2249,7 +2253,7 @@ case 107:
 	;
     break;}
 case 108:
-#line 1103 "asn1p_y.y"
+#line 1107 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2258,7 +2262,7 @@ case 108:
 	;
     break;}
 case 109:
-#line 1109 "asn1p_y.y"
+#line 1113 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_expr = asn1p_expr_new(yylineno);
@@ -2272,7 +2276,7 @@ case 109:
 	;
     break;}
 case 110:
-#line 1123 "asn1p_y.y"
+#line 1127 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_expr = yyvsp[-1].a_expr;
@@ -2289,7 +2293,7 @@ case 110:
 	;
     break;}
 case 111:
-#line 1147 "asn1p_y.y"
+#line 1151 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2299,7 +2303,7 @@ case 111:
 	;
     break;}
 case 112:
-#line 1154 "asn1p_y.y"
+#line 1158 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2309,7 +2313,7 @@ case 112:
 	;
     break;}
 case 113:
-#line 1169 "asn1p_y.y"
+#line 1173 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = asn1p_ref_new(yylineno);
@@ -2320,7 +2324,7 @@ case 113:
 	;
     break;}
 case 114:
-#line 1177 "asn1p_y.y"
+#line 1181 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = asn1p_ref_new(yylineno);
@@ -2333,7 +2337,7 @@ case 114:
 	;
     break;}
 case 115:
-#line 1187 "asn1p_y.y"
+#line 1191 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = asn1p_ref_new(yylineno);
@@ -2346,7 +2350,7 @@ case 115:
 	;
     break;}
 case 116:
-#line 1197 "asn1p_y.y"
+#line 1201 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = asn1p_ref_new(yylineno);
@@ -2359,7 +2363,7 @@ case 116:
 	;
     break;}
 case 117:
-#line 1207 "asn1p_y.y"
+#line 1211 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = asn1p_ref_new(yylineno);
@@ -2370,7 +2374,7 @@ case 117:
 	;
     break;}
 case 118:
-#line 1215 "asn1p_y.y"
+#line 1219 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = yyvsp[0].a_ref;
@@ -2392,7 +2396,7 @@ case 118:
 	;
     break;}
 case 119:
-#line 1237 "asn1p_y.y"
+#line 1241 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = asn1p_ref_new(yylineno);
@@ -2403,7 +2407,7 @@ case 119:
 	;
     break;}
 case 120:
-#line 1245 "asn1p_y.y"
+#line 1249 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_ref = yyvsp[-2].a_ref;
@@ -2413,21 +2417,21 @@ case 120:
 	;
     break;}
 case 123:
-#line 1259 "asn1p_y.y"
+#line 1263 "asn1p_y.y"
 {
 		yyval.a_refcomp.lex_type = RLT_AmpUppercase;
 		yyval.a_refcomp.name = yyvsp[0].tv_str;
 	;
     break;}
 case 124:
-#line 1264 "asn1p_y.y"
+#line 1268 "asn1p_y.y"
 {
 		yyval.a_refcomp.lex_type = RLT_Amplowercase;
 		yyval.a_refcomp.name = yyvsp[0].tv_str;
 	;
     break;}
 case 125:
-#line 1277 "asn1p_y.y"
+#line 1281 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		assert(yyval.a_expr->Identifier == NULL);
@@ -2437,7 +2441,7 @@ case 125:
 	;
     break;}
 case 126:
-#line 1287 "asn1p_y.y"
+#line 1291 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(0);
 		checkmem(yyval.a_value);
@@ -2447,11 +2451,11 @@ case 126:
 	;
     break;}
 case 127:
-#line 1294 "asn1p_y.y"
+#line 1298 "asn1p_y.y"
 { asn1p_lexer_hack_push_opaque_state(); ;
     break;}
 case 128:
-#line 1294 "asn1p_y.y"
+#line 1298 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_frombuf(yyvsp[0].tv_opaque.buf, yyvsp[0].tv_opaque.len, 0);
 		checkmem(yyval.a_value);
@@ -2459,7 +2463,7 @@ case 128:
 	;
     break;}
 case 129:
-#line 1299 "asn1p_y.y"
+#line 1303 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(0);
 		checkmem(yyval.a_value);
@@ -2467,7 +2471,7 @@ case 129:
 	;
     break;}
 case 130:
-#line 1304 "asn1p_y.y"
+#line 1308 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(0);
 		checkmem(yyval.a_value);
@@ -2475,7 +2479,7 @@ case 130:
 	;
     break;}
 case 131:
-#line 1309 "asn1p_y.y"
+#line 1313 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(0);
 		checkmem(yyval.a_value);
@@ -2483,39 +2487,39 @@ case 131:
 	;
     break;}
 case 132:
-#line 1314 "asn1p_y.y"
+#line 1318 "asn1p_y.y"
 {
 		yyval.a_value = _convert_bitstring2binary(yyvsp[0].tv_str, 'B');
 		checkmem(yyval.a_value);
 	;
     break;}
 case 133:
-#line 1318 "asn1p_y.y"
+#line 1322 "asn1p_y.y"
 {
 		yyval.a_value = _convert_bitstring2binary(yyvsp[0].tv_str, 'H');
 		checkmem(yyval.a_value);
 	;
     break;}
 case 134:
-#line 1322 "asn1p_y.y"
+#line 1326 "asn1p_y.y"
 {
 		yyval.a_value = yyval.a_value;
 	;
     break;}
 case 135:
-#line 1325 "asn1p_y.y"
+#line 1329 "asn1p_y.y"
 {
 		yyval.a_value = yyvsp[0].a_value;
 	;
     break;}
 case 136:
-#line 1328 "asn1p_y.y"
+#line 1332 "asn1p_y.y"
 {
 		yyval.a_value = yyvsp[0].a_value;
 	;
     break;}
 case 137:
-#line 1334 "asn1p_y.y"
+#line 1338 "asn1p_y.y"
 {
 		asn1p_ref_t *ref;
 		int ret;
@@ -2529,7 +2533,7 @@ case 137:
 	;
     break;}
 case 138:
-#line 1345 "asn1p_y.y"
+#line 1349 "asn1p_y.y"
 {
 		asn1p_ref_t *ref;
 		int ret;
@@ -2546,14 +2550,14 @@ case 138:
 	;
     break;}
 case 139:
-#line 1363 "asn1p_y.y"
+#line 1367 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_frombuf(yyvsp[0].tv_opaque.buf, yyvsp[0].tv_opaque.len, 0);
 		checkmem(yyval.a_value);
 	;
     break;}
 case 140:
-#line 1367 "asn1p_y.y"
+#line 1371 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(yyvsp[0].a_int);
 		checkmem(yyval.a_value);
@@ -2561,7 +2565,7 @@ case 140:
 	;
     break;}
 case 141:
-#line 1372 "asn1p_y.y"
+#line 1376 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(yyvsp[0].a_int);
 		checkmem(yyval.a_value);
@@ -2569,7 +2573,7 @@ case 141:
 	;
     break;}
 case 142:
-#line 1406 "asn1p_y.y"
+#line 1410 "asn1p_y.y"
 {
 		yyval.tv_opaque.len = yyvsp[0].tv_opaque.len + 1;
 		yyval.tv_opaque.buf = malloc(yyval.tv_opaque.len + 1);
@@ -2581,7 +2585,7 @@ case 142:
 	;
     break;}
 case 143:
-#line 1415 "asn1p_y.y"
+#line 1419 "asn1p_y.y"
 {
 		int newsize = yyvsp[-1].tv_opaque.len + yyvsp[0].tv_opaque.len;
 		char *p = malloc(newsize + 1);
@@ -2596,71 +2600,71 @@ case 143:
 	;
     break;}
 case 144:
-#line 1430 "asn1p_y.y"
+#line 1434 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_BOOLEAN; ;
     break;}
 case 145:
-#line 1431 "asn1p_y.y"
+#line 1435 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_NULL; ;
     break;}
 case 146:
-#line 1432 "asn1p_y.y"
+#line 1436 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_REAL; ;
     break;}
 case 147:
-#line 1433 "asn1p_y.y"
+#line 1437 "asn1p_y.y"
 { yyval.a_type = yyvsp[0].a_type; ;
     break;}
 case 148:
-#line 1434 "asn1p_y.y"
+#line 1438 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_OCTET_STRING; ;
     break;}
 case 149:
-#line 1435 "asn1p_y.y"
+#line 1439 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_OBJECT_IDENTIFIER; ;
     break;}
 case 150:
-#line 1436 "asn1p_y.y"
+#line 1440 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_RELATIVE_OID; ;
     break;}
 case 151:
-#line 1437 "asn1p_y.y"
+#line 1441 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_EXTERNAL; ;
     break;}
 case 152:
-#line 1438 "asn1p_y.y"
+#line 1442 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_EMBEDDED_PDV; ;
     break;}
 case 153:
-#line 1439 "asn1p_y.y"
+#line 1443 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_CHARACTER_STRING; ;
     break;}
 case 154:
-#line 1440 "asn1p_y.y"
+#line 1444 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_UTCTime; ;
     break;}
 case 155:
-#line 1441 "asn1p_y.y"
+#line 1445 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_GeneralizedTime; ;
     break;}
 case 156:
-#line 1442 "asn1p_y.y"
+#line 1446 "asn1p_y.y"
 { yyval.a_type = yyvsp[0].a_type; ;
     break;}
 case 157:
-#line 1449 "asn1p_y.y"
+#line 1453 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_INTEGER; ;
     break;}
 case 158:
-#line 1450 "asn1p_y.y"
+#line 1454 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_ENUMERATED; ;
     break;}
 case 159:
-#line 1451 "asn1p_y.y"
+#line 1455 "asn1p_y.y"
 { yyval.a_type = ASN_BASIC_BIT_STRING; ;
     break;}
 case 160:
-#line 1455 "asn1p_y.y"
+#line 1459 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -2669,7 +2673,7 @@ case 160:
 	;
     break;}
 case 161:
-#line 1461 "asn1p_y.y"
+#line 1465 "asn1p_y.y"
 {
 		if(yyvsp[0].a_expr) {
 			yyval.a_expr = yyvsp[0].a_expr;
@@ -2682,91 +2686,91 @@ case 161:
 	;
     break;}
 case 162:
-#line 1474 "asn1p_y.y"
+#line 1478 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_BMPString; ;
     break;}
 case 163:
-#line 1475 "asn1p_y.y"
+#line 1479 "asn1p_y.y"
 {
 		yyval.a_type = ASN_STRING_GeneralString;
 		fprintf(stderr, "WARNING: GeneralString is not fully supported\n");
 	;
     break;}
 case 164:
-#line 1479 "asn1p_y.y"
+#line 1483 "asn1p_y.y"
 {
 		yyval.a_type = ASN_STRING_GraphicString;
 		fprintf(stderr, "WARNING: GraphicString is not fully supported\n");
 	;
     break;}
 case 165:
-#line 1483 "asn1p_y.y"
+#line 1487 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_IA5String; ;
     break;}
 case 166:
-#line 1484 "asn1p_y.y"
+#line 1488 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_ISO646String; ;
     break;}
 case 167:
-#line 1485 "asn1p_y.y"
+#line 1489 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_NumericString; ;
     break;}
 case 168:
-#line 1486 "asn1p_y.y"
+#line 1490 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_PrintableString; ;
     break;}
 case 169:
-#line 1487 "asn1p_y.y"
+#line 1491 "asn1p_y.y"
 {
 		yyval.a_type = ASN_STRING_T61String;
 		fprintf(stderr, "WARNING: T61String is not fully supported\n");
 	;
     break;}
 case 170:
-#line 1491 "asn1p_y.y"
+#line 1495 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_TeletexString; ;
     break;}
 case 171:
-#line 1492 "asn1p_y.y"
+#line 1496 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_UniversalString; ;
     break;}
 case 172:
-#line 1493 "asn1p_y.y"
+#line 1497 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_UTF8String; ;
     break;}
 case 173:
-#line 1494 "asn1p_y.y"
+#line 1498 "asn1p_y.y"
 {
 		yyval.a_type = ASN_STRING_VideotexString;
 		fprintf(stderr, "WARNING: VideotexString is not fully supported\n");
 	;
     break;}
 case 174:
-#line 1498 "asn1p_y.y"
+#line 1502 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_VisibleString; ;
     break;}
 case 175:
-#line 1499 "asn1p_y.y"
+#line 1503 "asn1p_y.y"
 { yyval.a_type = ASN_STRING_ObjectDescriptor; ;
     break;}
 case 181:
-#line 1511 "asn1p_y.y"
+#line 1515 "asn1p_y.y"
 { yyval.a_constr = 0; ;
     break;}
 case 182:
-#line 1512 "asn1p_y.y"
+#line 1516 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 183:
-#line 1518 "asn1p_y.y"
+#line 1522 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CA_SET, yyvsp[0].a_constr, 0);
 	;
     break;}
 case 184:
-#line 1521 "asn1p_y.y"
+#line 1525 "asn1p_y.y"
 {
 		/*
 		 * This is a special case, for compatibility purposes.
@@ -2776,25 +2780,25 @@ case 184:
 	;
     break;}
 case 185:
-#line 1531 "asn1p_y.y"
+#line 1535 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[-1].a_constr;
 	;
     break;}
 case 186:
-#line 1534 "asn1p_y.y"
+#line 1538 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CA_SET, yyvsp[-3].a_constr, yyvsp[-1].a_constr);
 	;
     break;}
 case 187:
-#line 1540 "asn1p_y.y"
+#line 1544 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 188:
-#line 1543 "asn1p_y.y"
+#line 1547 "asn1p_y.y"
 {
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno);
@@ -2803,7 +2807,7 @@ case 188:
 	;
     break;}
 case 189:
-#line 1549 "asn1p_y.y"
+#line 1553 "asn1p_y.y"
 {
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno);
@@ -2814,37 +2818,37 @@ case 189:
 	;
     break;}
 case 190:
-#line 1560 "asn1p_y.y"
+#line 1564 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 191:
-#line 1563 "asn1p_y.y"
+#line 1567 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CA_AEX, yyvsp[0].a_constr, 0);
 	;
     break;}
 case 192:
-#line 1566 "asn1p_y.y"
+#line 1570 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CA_UNI, yyvsp[-2].a_constr, yyvsp[0].a_constr);
 	;
     break;}
 case 193:
-#line 1569 "asn1p_y.y"
+#line 1573 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CA_INT, yyvsp[-2].a_constr, yyvsp[0].a_constr);
 	;
     break;}
 case 194:
-#line 1572 "asn1p_y.y"
+#line 1576 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CA_EXC, yyvsp[-2].a_constr, yyvsp[0].a_constr);
 	;
     break;}
 case 195:
-#line 1578 "asn1p_y.y"
+#line 1582 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_constr = asn1p_constraint_new(yylineno);
@@ -2855,7 +2859,7 @@ case 195:
 	;
     break;}
 case 196:
-#line 1586 "asn1p_y.y"
+#line 1590 "asn1p_y.y"
 {
 		int ret;
 		yyval.a_constr = asn1p_constraint_new(yylineno);
@@ -2866,7 +2870,7 @@ case 196:
 	;
     break;}
 case 197:
-#line 1594 "asn1p_y.y"
+#line 1598 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -2875,7 +2879,7 @@ case 197:
 	;
     break;}
 case 198:
-#line 1600 "asn1p_y.y"
+#line 1604 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -2884,7 +2888,7 @@ case 198:
 	;
     break;}
 case 199:
-#line 1606 "asn1p_y.y"
+#line 1610 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -2894,7 +2898,7 @@ case 199:
 	;
     break;}
 case 200:
-#line 1613 "asn1p_y.y"
+#line 1617 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -2905,7 +2909,7 @@ case 200:
 	;
     break;}
 case 201:
-#line 1621 "asn1p_y.y"
+#line 1625 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -2916,7 +2920,7 @@ case 201:
 	;
     break;}
 case 202:
-#line 1629 "asn1p_y.y"
+#line 1633 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -2928,23 +2932,23 @@ case 202:
 	;
     break;}
 case 203:
-#line 1638 "asn1p_y.y"
+#line 1642 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 204:
-#line 1641 "asn1p_y.y"
+#line 1645 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 205:
-#line 1645 "asn1p_y.y"
+#line 1649 "asn1p_y.y"
 { asn1p_lexer_hack_push_opaque_state(); ;
     break;}
 case 206:
-#line 1645 "asn1p_y.y"
+#line 1649 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -2955,35 +2959,35 @@ case 206:
 	;
     break;}
 case 207:
-#line 1656 "asn1p_y.y"
+#line 1660 "asn1p_y.y"
 { yyval.a_ctype = ACT_EL_RANGE; ;
     break;}
 case 208:
-#line 1657 "asn1p_y.y"
+#line 1661 "asn1p_y.y"
 { yyval.a_ctype = ACT_EL_RLRANGE; ;
     break;}
 case 209:
-#line 1658 "asn1p_y.y"
+#line 1662 "asn1p_y.y"
 { yyval.a_ctype = ACT_EL_LLRANGE; ;
     break;}
 case 210:
-#line 1659 "asn1p_y.y"
+#line 1663 "asn1p_y.y"
 { yyval.a_ctype = ACT_EL_ULRANGE; ;
     break;}
 case 211:
-#line 1663 "asn1p_y.y"
+#line 1667 "asn1p_y.y"
 {
 		yyval.a_ctype = ACT_CT_SIZE;
 	;
     break;}
 case 212:
-#line 1666 "asn1p_y.y"
+#line 1670 "asn1p_y.y"
 {
 		yyval.a_ctype = ACT_CT_FROM;
 	;
     break;}
 case 213:
-#line 1672 "asn1p_y.y"
+#line 1676 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(0);
 		checkmem(yyval.a_value);
@@ -2991,7 +2995,7 @@ case 213:
 	;
     break;}
 case 214:
-#line 1677 "asn1p_y.y"
+#line 1681 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(1);
 		checkmem(yyval.a_value);
@@ -2999,19 +3003,19 @@ case 214:
 	;
     break;}
 case 215:
-#line 1682 "asn1p_y.y"
+#line 1686 "asn1p_y.y"
 {
 		yyval.a_value = yyvsp[0].a_value;
 	;
     break;}
 case 216:
-#line 1685 "asn1p_y.y"
+#line 1689 "asn1p_y.y"
 {
 		yyval.a_value = yyvsp[0].a_value;
 	;
     break;}
 case 217:
-#line 1688 "asn1p_y.y"
+#line 1692 "asn1p_y.y"
 {
 		asn1p_ref_t *ref;
 		int ret;
@@ -3025,7 +3029,7 @@ case 217:
 	;
     break;}
 case 218:
-#line 1702 "asn1p_y.y"
+#line 1706 "asn1p_y.y"
 {
 		asn1p_ref_t *ref;
 		int ret;
@@ -3039,31 +3043,31 @@ case 218:
 	;
     break;}
 case 219:
-#line 1716 "asn1p_y.y"
+#line 1720 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CT_WCOMP, yyvsp[0].a_constr, 0);
 	;
     break;}
 case 220:
-#line 1719 "asn1p_y.y"
+#line 1723 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CT_WCOMPS, yyvsp[-1].a_constr, 0);
 	;
     break;}
 case 221:
-#line 1725 "asn1p_y.y"
+#line 1729 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 222:
-#line 1728 "asn1p_y.y"
+#line 1732 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CT_WCOMPS, yyvsp[-2].a_constr, yyvsp[0].a_constr);
 	;
     break;}
 case 223:
-#line 1734 "asn1p_y.y"
+#line 1738 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -3072,7 +3076,7 @@ case 223:
 	;
     break;}
 case 224:
-#line 1740 "asn1p_y.y"
+#line 1744 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -3083,45 +3087,45 @@ case 224:
 	;
     break;}
 case 225:
-#line 1754 "asn1p_y.y"
+#line 1758 "asn1p_y.y"
 { yyval.a_pres = ACPRES_DEFAULT; ;
     break;}
 case 226:
-#line 1755 "asn1p_y.y"
+#line 1759 "asn1p_y.y"
 { yyval.a_pres = yyvsp[0].a_pres; ;
     break;}
 case 227:
-#line 1759 "asn1p_y.y"
+#line 1763 "asn1p_y.y"
 {
 		yyval.a_pres = ACPRES_PRESENT;
 	;
     break;}
 case 228:
-#line 1762 "asn1p_y.y"
+#line 1766 "asn1p_y.y"
 {
 		yyval.a_pres = ACPRES_ABSENT;
 	;
     break;}
 case 229:
-#line 1765 "asn1p_y.y"
+#line 1769 "asn1p_y.y"
 {
 		yyval.a_pres = ACPRES_OPTIONAL;
 	;
     break;}
 case 230:
-#line 1771 "asn1p_y.y"
+#line 1775 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 231:
-#line 1774 "asn1p_y.y"
+#line 1778 "asn1p_y.y"
 {
 		yyval.a_constr = yyvsp[0].a_constr;
 	;
     break;}
 case 232:
-#line 1783 "asn1p_y.y"
+#line 1787 "asn1p_y.y"
 {
 		asn1p_ref_t *ref = asn1p_ref_new(yylineno);
 		asn1p_constraint_t *ct;
@@ -3136,13 +3140,13 @@ case 232:
 	;
     break;}
 case 233:
-#line 1798 "asn1p_y.y"
+#line 1802 "asn1p_y.y"
 {
 		CONSTRAINT_INSERT(yyval.a_constr, ACT_CA_CRC, yyvsp[-3].a_constr, yyvsp[-1].a_constr);
 	;
     break;}
 case 234:
-#line 1804 "asn1p_y.y"
+#line 1808 "asn1p_y.y"
 {
 		yyval.a_constr = asn1p_constraint_new(yylineno);
 		checkmem(yyval.a_constr);
@@ -3151,7 +3155,7 @@ case 234:
 	;
     break;}
 case 235:
-#line 1810 "asn1p_y.y"
+#line 1814 "asn1p_y.y"
 {
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno);
@@ -3162,7 +3166,7 @@ case 235:
 	;
     break;}
 case 236:
-#line 1824 "asn1p_y.y"
+#line 1828 "asn1p_y.y"
 {
 		char *p = malloc(strlen(yyvsp[0].tv_str) + 2);
 		int ret;
@@ -3176,7 +3180,7 @@ case 236:
 	;
     break;}
 case 237:
-#line 1835 "asn1p_y.y"
+#line 1839 "asn1p_y.y"
 {
 		char *p = malloc(strlen(yyvsp[0].tv_str) + 3);
 		int ret;
@@ -3191,13 +3195,13 @@ case 237:
 	;
     break;}
 case 238:
-#line 1851 "asn1p_y.y"
+#line 1855 "asn1p_y.y"
 {
 		yyval.tv_str = yyvsp[0].tv_str;
 	;
     break;}
 case 239:
-#line 1854 "asn1p_y.y"
+#line 1858 "asn1p_y.y"
 {
 		int l1 = strlen(yyvsp[-2].tv_str);
 		int l3 = strlen(yyvsp[0].tv_str);
@@ -3209,45 +3213,45 @@ case 239:
 	;
     break;}
 case 240:
-#line 1872 "asn1p_y.y"
+#line 1876 "asn1p_y.y"
 {
 		yyval.a_marker.flags = EM_NOMARK;
 		yyval.a_marker.default_value = 0;
 	;
     break;}
 case 241:
-#line 1876 "asn1p_y.y"
+#line 1880 "asn1p_y.y"
 { yyval.a_marker = yyvsp[0].a_marker; ;
     break;}
 case 242:
-#line 1880 "asn1p_y.y"
+#line 1884 "asn1p_y.y"
 {
 		yyval.a_marker.flags = EM_OPTIONAL;
 		yyval.a_marker.default_value = 0;
 	;
     break;}
 case 243:
-#line 1884 "asn1p_y.y"
+#line 1888 "asn1p_y.y"
 {
 		yyval.a_marker.flags = EM_DEFAULT;
 		yyval.a_marker.default_value = yyvsp[0].a_value;
 	;
     break;}
 case 244:
-#line 1907 "asn1p_y.y"
+#line 1911 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
 	;
     break;}
 case 245:
-#line 1911 "asn1p_y.y"
+#line 1915 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-1].a_expr;
 	;
     break;}
 case 246:
-#line 1917 "asn1p_y.y"
+#line 1921 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -3255,14 +3259,14 @@ case 246:
 	;
     break;}
 case 247:
-#line 1922 "asn1p_y.y"
+#line 1926 "asn1p_y.y"
 {
 		yyval.a_expr = yyvsp[-2].a_expr;
 		asn1p_expr_add(yyval.a_expr, yyvsp[0].a_expr);
 	;
     break;}
 case 248:
-#line 1929 "asn1p_y.y"
+#line 1933 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -3272,7 +3276,7 @@ case 248:
 	;
     break;}
 case 249:
-#line 1936 "asn1p_y.y"
+#line 1940 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -3283,7 +3287,7 @@ case 249:
 	;
     break;}
 case 250:
-#line 1944 "asn1p_y.y"
+#line 1948 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -3294,7 +3298,7 @@ case 250:
 	;
     break;}
 case 251:
-#line 1952 "asn1p_y.y"
+#line 1956 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -3304,7 +3308,7 @@ case 251:
 	;
     break;}
 case 252:
-#line 1959 "asn1p_y.y"
+#line 1963 "asn1p_y.y"
 {
 		yyval.a_expr = asn1p_expr_new(yylineno);
 		checkmem(yyval.a_expr);
@@ -3315,102 +3319,102 @@ case 252:
 	;
     break;}
 case 253:
-#line 1970 "asn1p_y.y"
-{
-		yyval.a_value = asn1p_value_fromint(yyvsp[0].a_int);
-		checkmem(yyval.a_value);
-	;
-    break;}
-case 254:
 #line 1974 "asn1p_y.y"
 {
 		yyval.a_value = asn1p_value_fromint(yyvsp[0].a_int);
 		checkmem(yyval.a_value);
 	;
     break;}
+case 254:
+#line 1978 "asn1p_y.y"
+{
+		yyval.a_value = asn1p_value_fromint(yyvsp[0].a_int);
+		checkmem(yyval.a_value);
+	;
+    break;}
 case 255:
-#line 2005 "asn1p_y.y"
+#line 2009 "asn1p_y.y"
 { memset(&yyval.a_tag, 0, sizeof(yyval.a_tag)); ;
     break;}
 case 256:
-#line 2006 "asn1p_y.y"
+#line 2010 "asn1p_y.y"
 { yyval.a_tag = yyvsp[0].a_tag; ;
     break;}
 case 257:
-#line 2010 "asn1p_y.y"
+#line 2014 "asn1p_y.y"
 {
 		yyval.a_tag = yyvsp[-1].a_tag;
 		yyval.a_tag.tag_mode = yyvsp[0].a_tag.tag_mode;
 	;
     break;}
 case 258:
-#line 2017 "asn1p_y.y"
+#line 2021 "asn1p_y.y"
 {
 		yyval.a_tag = yyvsp[-2].a_tag;
 		yyval.a_tag.tag_value = yyvsp[-1].a_int;
 	;
     break;}
 case 259:
-#line 2023 "asn1p_y.y"
+#line 2027 "asn1p_y.y"
 { yyval.a_tag.tag_class = TC_CONTEXT_SPECIFIC; ;
     break;}
 case 260:
-#line 2024 "asn1p_y.y"
+#line 2028 "asn1p_y.y"
 { yyval.a_tag.tag_class = TC_UNIVERSAL; ;
     break;}
 case 261:
-#line 2025 "asn1p_y.y"
+#line 2029 "asn1p_y.y"
 { yyval.a_tag.tag_class = TC_APPLICATION; ;
     break;}
 case 262:
-#line 2026 "asn1p_y.y"
+#line 2030 "asn1p_y.y"
 { yyval.a_tag.tag_class = TC_PRIVATE; ;
     break;}
 case 263:
-#line 2030 "asn1p_y.y"
+#line 2034 "asn1p_y.y"
 { yyval.a_tag.tag_mode = TM_DEFAULT; ;
     break;}
 case 264:
-#line 2031 "asn1p_y.y"
+#line 2035 "asn1p_y.y"
 { yyval.a_tag.tag_mode = TM_IMPLICIT; ;
     break;}
 case 265:
-#line 2032 "asn1p_y.y"
+#line 2036 "asn1p_y.y"
 { yyval.a_tag.tag_mode = TM_EXPLICIT; ;
     break;}
 case 266:
-#line 2036 "asn1p_y.y"
-{
-		checkmem(yyvsp[0].tv_str);
-		yyval.tv_str = yyvsp[0].tv_str;
-	;
-    break;}
-case 267:
 #line 2040 "asn1p_y.y"
 {
 		checkmem(yyvsp[0].tv_str);
 		yyval.tv_str = yyvsp[0].tv_str;
 	;
     break;}
+case 267:
+#line 2044 "asn1p_y.y"
+{
+		checkmem(yyvsp[0].tv_str);
+		yyval.tv_str = yyvsp[0].tv_str;
+	;
+    break;}
 case 268:
-#line 2048 "asn1p_y.y"
+#line 2052 "asn1p_y.y"
 {
 		checkmem(yyvsp[0].tv_str);
 		yyval.tv_str = yyvsp[0].tv_str;
 	;
     break;}
 case 269:
-#line 2055 "asn1p_y.y"
+#line 2059 "asn1p_y.y"
 { yyval.tv_str = 0; ;
     break;}
 case 270:
-#line 2056 "asn1p_y.y"
+#line 2060 "asn1p_y.y"
 {
 		yyval.tv_str = yyvsp[0].tv_str;
 	;
     break;}
 case 271:
-#line 2062 "asn1p_y.y"
+#line 2066 "asn1p_y.y"
 {
 		checkmem(yyvsp[0].tv_str);
 		yyval.tv_str = yyvsp[0].tv_str;
@@ -3490,7 +3494,7 @@ yyerrlab:   /* here on detecting error */
 	  count = 0;
 	  /* Start X at -yyn if nec to avoid negative indexes in yycheck.  */
 	  for (x = (yyn < 0 ? -yyn : 0);
-	       x < (sizeof(yytname) / sizeof(char *)); x++)
+	       x < (int)(sizeof(yytname) / sizeof(char *)); x++)
 	    if (yycheck[x + yyn] == x)
 	      size += strlen(yytname[x]) + 15, count++;
 	  msg = (char *) malloc(size + 15);
@@ -3502,7 +3506,7 @@ yyerrlab:   /* here on detecting error */
 		{
 		  count = 0;
 		  for (x = (yyn < 0 ? -yyn : 0);
-		       x < (sizeof(yytname) / sizeof(char *)); x++)
+		       x < (int)(sizeof(yytname) / sizeof(char *)); x++)
 		    if (yycheck[x + yyn] == x)
 		      {
 			strcat(msg, count == 0 ? ", expecting `" : " or `");
@@ -3638,7 +3642,7 @@ yyerrhandle:
     }
   return 1;
 }
-#line 2068 "asn1p_y.y"
+#line 2072 "asn1p_y.y"
 
 
 
