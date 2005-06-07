@@ -14,7 +14,9 @@
 
 int yylex(void);
 int yyerror(const char *msg);
-int yyparse(void **param);
+#ifdef	YYBYACC
+int yyparse(void **param);	/* byacc does not produce a prototype */
+#endif
 void asn1p_lexer_hack_push_opaque_state(void);
 void asn1p_lexer_hack_enable_with_syntax(void);
 void asn1p_lexer_hack_push_encoding_control(void);
