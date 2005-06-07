@@ -9,10 +9,12 @@
 #include "asn1parser.h"
 
 #define YYPARSE_PARAM	param
+#define YYPARSE_PARAM_TYPE	void **
 #define YYERROR_VERBOSE
 
 int yylex(void);
 int yyerror(const char *msg);
+int yyparse(void **param);
 void asn1p_lexer_hack_push_opaque_state(void);
 void asn1p_lexer_hack_enable_with_syntax(void);
 void asn1p_lexer_hack_push_encoding_control(void);
