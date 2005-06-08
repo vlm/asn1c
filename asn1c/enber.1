@@ -12,7 +12,7 @@
 .SH NAME
 enber \- Convert the unber XML output back into BER
 .SH SYNOPSIS
-enber [\fB-n\fR] [\fB-\fR] \fIinfile\fR...
+enber [\fB-n\fR] [\fB-\fR] [\fIinfile\fR...]
 .SH DESCRIPTION
 enber takes the XML-formatted files produced by \fIunber\fR\|(1) and converts
 them back into the BER format.
@@ -39,9 +39,9 @@ The following example demostrates the use of comments:
 .Vb
 \&	<C T="[1]" TL="2" V="2">
 \&		<I T="[1]" TL="2" V="Indefinite">
-\&		-- </I>
-\&		# Do not terminate:
-\&		# the absence of end-of-content octets is intentional!
+\&		\fB--\fR </I>
+\&		\fB#\fR Do not terminate:
+\&		\fB#\fR the absence of end-of-content octets is intentional!
 \&	</C>
 .Ve
 .SH SEE ALSO

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,7 +38,7 @@
 
 #undef  COPYRIGHT
 #define COPYRIGHT       \
-	"Copyright (c) 2004 Lev Walkin <vlm@lionet.info>\n"
+	"Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>\n"
 
 static void usage(const char *av0);	/* Print the Usage screen and exit */
 static int process(const char *fname);	/* Perform the BER decoding */
@@ -128,10 +128,11 @@ usage(const char *av0) {
 "  -t <data-string>   Decode the given tag[/length] sequence (e.g. -t \"bf20\")\n"
 "\n"
 "The XML opening tag format is as follows:\n"
-"  <tform T=\"tag\" TL=\"tl_len\" V=\"{Indefinite|v_len}\" [A=\"type\"] [F]>\n"
+"  <tform O=\"off\" T=\"tag\" TL=\"tl_len\" V=\"{Indefinite|v_len}\" [A=\"type\"] [F]>\n"
 "Where:\n"
 "  tform    Which form the value is in: constructed (\"C\", \"I\") or primitive (\"P\")\n"
-"  tag      The tag class and value\n"
+"  off      Offset of the encoded element in the unber input stream\n"
+"  tag      The tag class and value in human readable form\n"
 "  tl_len   The length of the TL (BER Tag and Length) encoding\n"
 "  v_len    The length of the value (V, encoded by the L), may be \"Indefinite\"\n"
 "  type     Likely name of the underlying ASN.1 type (for [UNIVERSAL n] tags)\n"
@@ -146,8 +147,8 @@ typedef enum pd_code {
 	PD_FINISHED	= 0,
 	PD_EOF		= 1,
 } pd_code_e;
-static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t limit, ssize_t *decoded, int expect_eoc);
-static void print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t);
+static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ssize_t *frame_size, int expect_eoc);
+static void print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t);
 static int print_V(const char *fname, FILE *fp, ber_tlv_tag_t, ber_tlv_len_t);
 
 /*
@@ -157,7 +158,8 @@ static int
 process(const char *fname) {
 	FILE *fp;
 	pd_code_e pdc;
-	ssize_t decoded = 0;
+	asn1c_integer_t offset = 0;	/* Stream decoding position */
+	ssize_t frame_size = 0;		/* Single frame size */
 
 	if(strcmp(fname, "-")) {
 		fp = fopen(fname, "r");
@@ -173,7 +175,7 @@ process(const char *fname) {
 	 * Fetch out BER-encoded data until EOF or error.
 	 */
 	do {
-		pdc = process_deeper(fname, fp, 0, -1, &decoded, 0);
+		pdc = process_deeper(fname, fp, &offset, 0, -1, &frame_size, 0);
 	} while(pdc == PD_FINISHED && !single_type_decoding);
 
 	if(fp != stdin)
@@ -187,7 +189,7 @@ process(const char *fname) {
 /*
  * Process the TLV recursively.
  */
-static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t limit, ssize_t *decoded, int expect_eoc) {
+static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ssize_t *frame_size, int expect_eoc) {
 	unsigned char tagbuf[32];
 	ssize_t tblen = 0;
 	pd_code_e pdc = PD_FINISHED;
@@ -205,18 +207,21 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 
 		if(limit >= 0 && tblen >= limit) {
 			fprintf(stderr,
-				"%s: Too long TL sequence (%ld >= %ld). "
-					"Dangerous file\n",
-				fname, (long)tblen, (long)limit);
+				"%s: Too long TL sequence (%ld >= %ld)"
+				" at %" PRIdASN ". "
+				"Broken or maliciously constructed file\n",
+				fname, (long)tblen, (long)limit, *offset);
 			return PD_FAILED;
 		}
 
+		/* Get the next byte from the input stream */
 		ch = fgetc(fp);
 		if(ch == -1) {
-			if(tblen) {
+			if(tblen || limit) {
 				fprintf(stderr,
-					"%s: Unexpected end of file (TL)\n",
-					fname);
+					"%s: Unexpected end of file (TL)"
+					" at %" PRIdASN "\n",
+					fname, *offset);
 				return PD_FAILED;
 			} else {
 				return PD_EOF;
@@ -231,8 +236,9 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 		t_len = ber_fetch_tag(tagbuf, tblen, &tlv_tag);
 		switch(t_len) {
 		case -1:
-			fprintf(stderr, "%s: Fatal error deciphering tag\n",
-				fname);
+			fprintf(stderr, "%s: Fatal error decoding tag"
+				" at %" PRIdASN "+%ld\n",
+				fname, *offset, (long)tblen);
 			return PD_FAILED;
 		case 0:
 			/* More data expected */
@@ -247,8 +253,10 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 				tagbuf + t_len, tblen - t_len, &tlv_len);
 		switch(l_len) {
 		case -1:
-			fprintf(stderr, "%s: Fatal error deciphering length\n",
-				fname);
+			fprintf(stderr,
+				"%s: Fatal error decoding value length"
+				" at %" PRIdASN "\n",
+				fname, *offset + t_len);
 			return PD_FAILED;
 		case 0:
 			/* More data expected */
@@ -259,7 +267,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 		assert((t_len + l_len) == tblen);
 
 		if(!expect_eoc || tagbuf[0] || tagbuf[1])
-			print_TL(0, level, constr, tblen, tlv_tag, tlv_len);
+			print_TL(0, *offset, level, constr, tblen, tlv_tag, tlv_len);
 
 		if(limit != -1) {
 			/* If limit is set, account for the TL sequence */
@@ -275,11 +283,12 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 			}
 		}
 
-		*decoded += t_len + l_len;
+		*offset += t_len + l_len;
+		*frame_size += t_len + l_len;
 
 		if(expect_eoc && tagbuf[0] == '\0' && tagbuf[1] == '\0') {
 			/* End of content octets */
-			print_TL(1, level - 1, 1, 2, 0, -1);
+			print_TL(1, *offset, level - 1, 1, 2, 0, -1);
 			return PD_FINISHED;
 		}
 
@@ -292,7 +301,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 			if(tlv_len != -1 && limit != -1) {
 				assert(limit >= tlv_len);
 			}
-			pdc = process_deeper(fname, fp, level + 1,
+			pdc = process_deeper(fname, fp, offset, level + 1,
 				tlv_len == -1 ? limit : tlv_len,
 				&dec, tlv_len == -1);
 			if(pdc == PD_FAILED) return pdc;
@@ -300,7 +309,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 				assert(limit >= dec);
 				limit -= dec;
 			}
-			*decoded += dec;
+			*frame_size += dec;
 			if(tlv_len == -1) {
 				tblen = 0;
 				continue;
@@ -314,10 +323,11 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 				assert(limit >= tlv_len);
 				limit -= tlv_len;
 			}
-			*decoded += tlv_len;
+			*offset += tlv_len;
+			*frame_size += tlv_len;
 		}
 
-		print_TL(1, level, constr, tblen, tlv_tag, tlv_len);
+		print_TL(1, *offset, level, constr, tblen, tlv_tag, tlv_len);
 
 		tblen = 0;
 	} while(1);
@@ -326,7 +336,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, int level, ssize_t 
 }
 
 static void
-print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
+print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
 
 	if(fin && !constr) {
 		printf("</P>\n");
@@ -337,6 +347,10 @@ print_TL(int fin, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, be
 	printf(fin ? "</" : "<");
 
 	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
+
+	/* In case of <P>, <C>, <I>, </I> print out the offset */
+	if(fin == 0 || tlv_len == -1)
+		printf(" O=\"%" PRIdASN "\"", offset);
 
 	printf(" T=\"");
 	ber_tlv_tag_fwrite(tlv_tag, stdout);
@@ -645,7 +659,7 @@ decode_tlv_from_string(const char *datastring) {
 	len = ber_fetch_tag(data, dsize, &tlv_tag);
 	switch(len) {
 	case -1:
-		fprintf(stderr, "TAG: Fatal error deciphering tag\n");
+		fprintf(stderr, "TAG: Fatal error decoding tag\n");
 		return -1;
 	case 0:
 		fprintf(stderr, "TAG: More data expected\n");
@@ -675,7 +689,7 @@ decode_tlv_from_string(const char *datastring) {
 		switch(len) {
 		case -1:
 			fprintf(stderr,
-				"LEN: Fatal error deciphering length\n");
+				"LEN: Fatal error decoding length\n");
 			return -1;
 		case 0:
 			fprintf(stderr, "LEN: More data expected\n");

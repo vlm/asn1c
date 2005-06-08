@@ -179,8 +179,10 @@ process_line(const char *fname, char *line, int lineno) {
 	ssize_t ret;
 	(void)fname;
 
-	/* Find a tag opening angle bracket */
+	/* Skip the whitespace */
 	for(; *line == ' ' || *line == '\t'; line++);
+
+	/* Find a tag opening angle bracket */
 	op = line;
 	switch(*op) {
 	case '<':	/* That's what we want! A tag opening */
@@ -192,7 +194,9 @@ process_line(const char *fname, char *line, int lineno) {
 	case '#':	/* This is a comment */
 			return 0;
 	default:
-		fprintf(stderr, "%s: Missing '<' after whitespace at line %d\n", fname, lineno);
+		fprintf(stderr,
+			"%s: Missing '<' after whitespace at line %d\n",
+			fname, lineno);
 		exit(EX_DATAERR);
 	}
 
