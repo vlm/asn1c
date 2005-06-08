@@ -217,7 +217,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *of
 		/* Get the next byte from the input stream */
 		ch = fgetc(fp);
 		if(ch == -1) {
-			if(tblen || limit) {
+			if(tblen || limit > 0) {
 				fprintf(stderr,
 					"%s: Unexpected end of file (TL)"
 					" at %" PRIdASN "\n",
