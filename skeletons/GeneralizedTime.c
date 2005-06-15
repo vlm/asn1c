@@ -10,13 +10,13 @@
 #include <errno.h>
 
 #if	defined(WIN32)
-#warning PLEASE STOP AND READ!
-#warning	localtime_r is implemented via localtime(), which may be not thread-safe.
-#warning	gmtime_r is implemented via gmtime(), which may be not thread-safe.
-#warning
-#warning	You must fix the code by inserting appropriate locking
-#warning	if you want to use asn_GT2time() or asn_UT2time().
-#warning PLEASE STOP AND READ!
+#pragma message( "PLEASE STOP AND READ!")
+#pragma message( "  localtime_r is implemented via localtime(), which may be not thread-safe.")
+#pragma message( "  gmtime_r is implemented via gmtime(), which may be not thread-safe.")
+#pragma message( "  ")
+#pragma message( "  You must fix the code by inserting appropriate locking")
+#pragma message( "  if you want to use asn_GT2time() or asn_UT2time().")
+#pragma message( "PLEASE STOP AND READ! ")
 
 static struct tm *localtime_r(const time_t *tloc, struct tm *result) {
 	struct tm *tm;
@@ -33,7 +33,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 }
 
 #define	tzset()	_tzset()
-#define	putenv	_putenv
+#define	putenv(c)	_putenv(c)
 #define	_EMULATE_TIMEGM
 
 #endif	/* WIN32 */

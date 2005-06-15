@@ -13,6 +13,14 @@
 #include <errno.h>
 #include <REAL.h>
 
+#ifdef	WIN32
+#include <float.h>
+#define copysign _copysign
+#define isnan _isnan
+#define finite _finite
+#define ilogb _logb
+#endif
+
 #undef	INT_MAX
 #define	INT_MAX	((int)(((unsigned int)-1) >> 1))
 
