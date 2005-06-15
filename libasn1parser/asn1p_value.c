@@ -76,7 +76,7 @@ asn1p_value_frombuf(char *buffer, int size, int do_copy) {
 				}
 				v->value.string.buf = p;
 			} else {
-				v->value.string.buf = buffer;
+				v->value.string.buf = (uint8_t *)buffer;
 			}
 			v->value.string.size = size;
 			v->type = ATV_STRING;
@@ -129,12 +129,12 @@ asn1p_value_clone(asn1p_value_t *v) {
 			if(clone) clone->type = v->type;
 			return clone;
 		case ATV_STRING:
-			clone = asn1p_value_frombuf(v->value.string.buf,
+			clone = asn1p_value_frombuf((char *)v->value.string.buf,
 				v->value.string.size, 1);
 			if(clone) clone->type = v->type;
 			return clone;
 		case ATV_UNPARSED:
-			clone = asn1p_value_frombuf(v->value.string.buf,
+			clone = asn1p_value_frombuf((char *)v->value.string.buf,
 				v->value.string.size, 1);
 			if(clone) clone->type = ATV_UNPARSED;
 			return clone;

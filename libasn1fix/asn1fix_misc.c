@@ -80,7 +80,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 	case ATV_UNPARSED:
 		/* Buffer is guaranteed to be null-terminated */
 		assert(v->value.string.buf[v->value.string.size] == '\0');
-		return v->value.string.buf;
+		return (char *)v->value.string.buf;
 	case ATV_BITVECTOR:
 		{
 			uint8_t *bitvector;

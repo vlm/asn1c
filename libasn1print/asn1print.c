@@ -210,7 +210,7 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 		return 0;
 	case ATV_STRING:
 		{
-			char *p = val->value.string.buf;
+			char *p = (char *)val->value.string.buf;
 			putchar('"');
 			if(strchr(p, '"')) {
 				/* Mask quotes */
@@ -226,7 +226,7 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 		}
 		return 0;
 	case ATV_UNPARSED:
-		fputs(val->value.string.buf, stdout);
+		fputs((char *)val->value.string.buf, stdout);
 		return 0;
 	case ATV_BITVECTOR:
 		{
