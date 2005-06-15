@@ -13,7 +13,7 @@ asn1f_fix_cstring(arg_t *arg) {
 
 	if(expr->value && expr->value->type == ATV_STRING) {
 		struct _cstring_pattern cp;
-		char *buf = expr->value->value.string.buf;
+		char *buf = (char *)expr->value->value.string.buf;
 		int buflen = expr->value->value.string.size;
 		int start = 0;
 
