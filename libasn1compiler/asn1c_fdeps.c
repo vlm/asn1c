@@ -6,7 +6,7 @@ static int asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d);
 
 int
 asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *data) {
-	char *fname;
+	const char *fname;
 	int i;
 
 	if(!deps || !data || !*data)
@@ -16,7 +16,7 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 	if(cur->used_somewhere)
 		return 1;	/* Already activated */
 
-	(const char *)fname = data;
+	fname = data;
 	if(*data == '#') {
 		const char *start = data;
 		const char *end = 0;
@@ -27,9 +27,10 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 			end = strchr(start, '>');
 		}
 		if(end) {
-			fname = alloca((end - start) + 1);
-			memcpy(fname, start, end - start);
-			fname[end-start] = '\0';
+			char *p = alloca((end - start) + 1);
+			memcpy(p, start, end - start);
+			p[end-start] = '\0';
+			fname = p;
 		} else {
 			return 0;
 		}
