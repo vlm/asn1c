@@ -35,6 +35,11 @@ typedef	unsigned short	uint16_t;
 typedef	unsigned int	uint32_t;
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <float.h>
+#define isnan _isnan
+#define finite _finite
+#define copysign _copysign
+#define	ilogb	_logb
 #endif	/* _MSC_VER */
 
 #else	/* !WIN32 */
