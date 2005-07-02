@@ -87,7 +87,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 			} else {					\
 				RETURN(RC_FAIL);			\
 			}						\
-			ASN_DEBUG("Reallocating into %ld", _ns);	\
+			ASN_DEBUG("Reallocating into %ld", (long)_ns);	\
 		}							\
 		memcpy(st->buf + st->size, bufptr, _bs);		\
 		/* Convenient nul-termination */			\
