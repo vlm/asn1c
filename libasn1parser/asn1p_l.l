@@ -23,7 +23,6 @@ void asn1p_lexer_hack_push_encoding_control(void);	/* Used in .y */
 int asn1p_lexer_pedantic_1990 = 0;
 int asn1p_lexer_types_year = 0;
 int asn1p_lexer_constructs_year = 0;
-static int _check_dashes(char *ptr);
 static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 
 /*
@@ -42,17 +41,6 @@ static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 	(!asn1p_lexer_constructs_year			\
 	|| (fyr && fyr <= asn1p_lexer_constructs_year)	\
 	|| (lyr && lyr  > asn1p_lexer_constructs_year))
-
-/*
- * Make sure that the label is compliant with the naming rules.
- */
-#define	CHECK_DASHES	do {				\
-	if(_check_dashes(yytext)) {			\
-		fprintf(stderr,				\
-		"%s: Identifier format invalid: "	\
-		"Improper dash location\n", yytext);	\
-		return -1;				\
-	} } while(0)
 
 /*
  * Append quoted string.
@@ -87,6 +75,7 @@ static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 %pointer
 
 %x dash_comment
+%x idash_comment
 %x cpp_comment
 %x quoted
 %x opaque
@@ -100,16 +89,22 @@ WSP	[\t\r\v\f\n ]
 
 %%
 
-"--"		yy_push_state(dash_comment);
-<dash_comment>{
+-{3,}/[\r\n]	/* Immediately terminated long comment */
+-{3,}/[^-\r\n]	yy_push_state(idash_comment);	/* Incorrect, but acceptable */
+<idash_comment>{
+	-{3,}	yy_pop_state(); /* Acceptable end of comment */
+}
+
+--		yy_push_state(dash_comment);
+<dash_comment,idash_comment>{
 
 	{NL}	yy_pop_state();
 
 	--	yy_pop_state();	/* End of comment */
 	-	/* Eat single dash */
 	[^\r\v\f\n-]+	/* Eat */
-
 }
+
 <INITIAL,cpp_comment>"/*"		yy_push_state(cpp_comment);
 <cpp_comment>{
 	[^*/]	/* Eat */
@@ -355,21 +350,18 @@ VisibleString		return TOK_VisibleString;
 WITH			return TOK_WITH;
 
 
-<INITIAL,with_syntax>&[A-Z][A-Za-z0-9-]*	{
-		CHECK_DASHES;
+<INITIAL,with_syntax>&[A-Z][A-Za-z0-9]*([-][A-Za-z0-9]+)*	{
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_typefieldreference;
 	}
 
-<INITIAL,with_syntax>&[a-z][a-zA-Z0-9-]*	{
-		CHECK_DASHES;
+<INITIAL,with_syntax>&[a-z][a-zA-Z0-9]*([-][a-zA-Z0-9]+)*	{
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_valuefieldreference;
 	}
 
 
-[a-z][a-zA-Z0-9-]*	{
-		CHECK_DASHES;
+[a-z][a-zA-Z0-9]*([-][a-zA-Z0-9]+)*	{
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_identifier;
 	}
@@ -377,8 +369,7 @@ WITH			return TOK_WITH;
 	/*
 	 * objectclassreference
 	 */
-[A-Z][A-Z0-9-]*	{
-		CHECK_DASHES;
+[A-Z][A-Z0-9]*([-][A-Z0-9]+)*	{
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_capitalreference;
 	}
@@ -388,8 +379,7 @@ WITH			return TOK_WITH;
 	 * NOTE: TOK_objectclassreference must be combined
 	 * with this token to produce true typereference.
 	 */
-[A-Z][A-Za-z0-9-]*	{
-		CHECK_DASHES;
+[A-Z][A-Za-z0-9]*([-][A-Za-z0-9]+)*	{
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_typereference;
 	}
@@ -541,38 +531,6 @@ void asn1p_lexer_hack_enable_with_syntax() { yy_push_state(with_syntax); }
 /* Yet another */
 void asn1p_lexer_hack_push_encoding_control() {
 	yy_push_state(encoding_control);
-}
-
-/*
- * Check that a token does not end with dash and does not contain
- * several dashes in succession.
- * "Name", "Type-Id", "T-y-p-e-i-d" are OK
- * "end-", "vustom--value" are INVALID
- */
-static int
-_check_dashes(char *ptr) {
-	int prev_dash = 0;
-
-	assert(*ptr != '-');
-
-	for(;; ptr++) {
-		switch(*ptr) {
-		case '-':
-			if(prev_dash++)	/* No double dashes */
-				return -1;
-			continue;
-		case '\0':
-			if(prev_dash)	/* No dashes at the end */
-				return -1;
-			break;
-		default:
-			prev_dash = 0;
-			continue;
-		}
-		break;
-	}
-
-	return 0;
 }
 
 static asn1c_integer_t
