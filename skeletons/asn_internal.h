@@ -80,4 +80,16 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; };
 		if(cb("    ", 4, app_key) < 0) return -1;		\
 } while(0)
 
+/*
+ * Cope with implicit conversions to/from void.
+ */
+#include <asn_SET_OF.h>
+#include <asn_SEQUENCE_OF.h>
+typedef A_SEQUENCE_OF(void) asn_anonymous_sequence_;
+typedef A_SET_OF(void) asn_anonymous_set_;
+#define	_A_SET_FROM_VOID(ptr)		((asn_anonymous_set_ *)(ptr))
+#define	_A_CSET_FROM_VOID(ptr)		((const asn_anonymous_set_ *)(ptr))
+#define	_A_SEQUENCE_FROM_VOID(ptr)	((asn_anonymous_sequence_ *)(ptr))
+#define	_A_CSEQUENCE_FROM_VOID(ptr)	((const asn_anonymous_sequence_ *)(ptr))
+
 #endif	/* _ASN_INTERNAL_H_ */

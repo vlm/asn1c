@@ -6,14 +6,12 @@
 #include <asn_SET_OF.h>
 #include <errno.h>
 
-typedef A_SET_OF(void) asn_set;
-
 /*
  * Add another element into the set.
  */
 int
 asn_set_add(void *asn_set_of_x, void *ptr) {
-	asn_set *as = (asn_set *)asn_set_of_x;
+	asn_anonymous_set_ *as = _A_SET_FROM_VOID(asn_set_of_x);
 
 	if(as == 0 || ptr == 0) {
 		errno = EINVAL;		/* Invalid arguments */
@@ -43,7 +41,7 @@ asn_set_add(void *asn_set_of_x, void *ptr) {
 
 void
 asn_set_del(void *asn_set_of_x, int number, int _do_free) {
-	asn_set *as = (asn_set *)asn_set_of_x;
+	asn_anonymous_set_ *as = _A_SET_FROM_VOID(asn_set_of_x);
 
 	if(as) {
 		void *ptr;
@@ -71,7 +69,7 @@ asn_set_del(void *asn_set_of_x, int number, int _do_free) {
  */
 void
 asn_set_empty(void *asn_set_of_x) {
-	asn_set *as = (asn_set *)asn_set_of_x;
+	asn_anonymous_set_ *as = _A_SET_FROM_VOID(asn_set_of_x);
 
 	if(as) {
 		if(as->array) {

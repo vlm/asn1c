@@ -93,8 +93,14 @@ NativeReal_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	 */
 	{
 		REAL_t tmp;
+		union {
+			const void *constbuf;
+			void *nonconstbuf;
+		} unconst_buf;
 		double d;
-		(const uint8_t *)tmp.buf = (const uint8_t *)buf_ptr;
+
+		unconst_buf.constbuf = buf_ptr;
+		tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
 		tmp.size = length;
 
 		if(asn_REAL2double(&tmp, &d)) {
