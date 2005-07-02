@@ -28,7 +28,6 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *asnTypeOfPDU,
 
        int opt_debug;	/* -d */
 static int opt_check;	/* -c */
-static int opt_print;	/* -p */
 static int opt_stack;	/* -s */
 static enum output_method {
 	OUT_NONE,	/* No pretty-printing */

@@ -14,7 +14,7 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_TYPE_member_t *elm = td->elements;
-	A_SEQUENCE_OF(void) *list;
+	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(ptr);
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
 	asn_enc_rval_t erval;
@@ -25,7 +25,6 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */
-	(void *)list = ptr;
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		erval = elm->type->der_encoder(elm->type, memb_ptr,
@@ -90,7 +89,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_enc_rval_t er;
         asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *element = td->elements;
-	A_SEQUENCE_OF(void) *list;
+	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
 	const char *mname = specs->as_XMLValueList
 		? 0 : ((*element->name)
 			? element->name : element->type->xml_tag);
@@ -102,7 +101,6 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	er.encoded = 0;
 
-	(void *)list = sptr;
 	for(i = 0; i < list->count; i++) {
 		asn_enc_rval_t tmper;
 

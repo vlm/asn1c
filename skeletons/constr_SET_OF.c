@@ -212,8 +212,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		switch(rval.code) {
 		case RC_OK:
 			{
-				A_SET_OF(void) *list;
-				(void *)list = (void *)st;
+				asn_anonymous_set_ *list = _A_SET_FROM_VOID(st);
 				if(ASN_SET_ADD(list, ctx->ptr) != 0)
 					RETURN(RC_FAIL);
 				else
@@ -314,7 +313,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	asn_TYPE_member_t *elm = td->elements;
 	asn_TYPE_descriptor_t *elm_type = elm->type;
 	der_type_encoder_f *der_encoder = elm_type->der_encoder;
-	A_SET_OF(void) *list;
+	asn_anonymous_set_ *list = _A_SET_FROM_VOID(ptr);
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
 	struct _el_buffer *encoded_els;
@@ -328,7 +327,6 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */
-	(void *)list = ptr;
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		erval = der_encoder(elm_type, memb_ptr, 0, elm->tag, 0, 0);
@@ -516,8 +514,7 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					element->type, &ctx->ptr, elm_tag,
 					buf_ptr, size);
 			if(tmprval.code == RC_OK) {
-				A_SET_OF(void) *list;
-				(void *)list = (void *)st;
+				asn_anonymous_set_ *list = _A_SET_FROM_VOID(st);
 				if(ASN_SET_ADD(list, ctx->ptr) != 0)
 					RETURN(RC_FAIL);
 				ctx->ptr = 0;
@@ -642,7 +639,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_enc_rval_t er;
 	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *element = td->elements;
-	A_SET_OF(void) *list;
+	asn_anonymous_set_ *list = _A_SET_FROM_VOID(sptr);
 	const char *mname = specs->as_XMLValueList
 		? 0 : ((*element->name)
 			? element->name : element->type->xml_tag);
@@ -655,8 +652,6 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int i;
 
 	if(!sptr) _ASN_ENCODE_FAILED;
-
-	(void *)list = sptr;
 
 	if(xcan) {
 		encs = (xer_tmp_enc_t *)MALLOC(list->count * sizeof(encs[0]));
@@ -747,7 +742,7 @@ int
 SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_TYPE_member_t *element = td->elements;
-	const A_SET_OF(void) *list;
+	const asn_anonymous_set_ *list = _A_CSET_FROM_VOID(sptr);
 	int ret;
 	int i;
 
@@ -758,7 +753,6 @@ SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	|| cb(" ::= {", 6, app_key) < 0)
 		return -1;
 
-	(const void *)list = sptr;
 	for(i = 0; i < list->count; i++) {
 		const void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
@@ -780,14 +774,13 @@ void
 SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr) {
 		asn_TYPE_member_t *element = td->elements;
-		A_SET_OF(void) *list;
+		asn_anonymous_set_ *list = _A_SET_FROM_VOID(ptr);
 		int i;
 
 		/*
 		 * Could not use set_of_empty() because of (*free)
 		 * incompatibility.
 		 */
-		(void *)list = ptr;
 		for(i = 0; i < list->count; i++) {
 			void *memb_ptr = list->array[i];
 			if(memb_ptr)
@@ -808,7 +801,7 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	asn_TYPE_member_t *element = td->elements;
 	asn_constr_check_f *constr;
-	const A_SET_OF(void) *list;
+	const asn_anonymous_set_ *list = _A_CSET_FROM_VOID(sptr);
 	int i;
 
 	if(!sptr) {
@@ -817,8 +810,6 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
-
-	(const void *)list = sptr;
 
 	constr = element->memb_constraints;
 	if(!constr) constr = element->type->check_constraints;
