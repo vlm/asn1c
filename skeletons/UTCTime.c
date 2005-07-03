@@ -8,7 +8,7 @@
 #include <time.h>
 #include <errno.h>
 
-#ifndef	__NO_ASN_TABLE__
+#ifndef	__ASN_INTERNAL_TEST_MODE__
 
 /*
  * UTCTime basic type description.
@@ -39,7 +39,7 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	0	/* No specifics */
 };
 
-#endif	/* __NO_ASN_TABLE__ */
+#endif	/* __ASN_INTERNAL_TEST_MODE__ */
 
 /*
  * Check that the time looks like the time.
@@ -62,35 +62,38 @@ UTCTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
+#ifndef	__ASN_INTERNAL_TEST_MODE__
+
 asn_enc_rval_t
 UTCTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	OCTET_STRING_t st;
 
 	if(flags & XER_F_CANONICAL) {
-		char buf[32];
+		asn_enc_rval_t rv;
+		UTCTime_t *ut;
 		struct tm tm;
-		ssize_t ret;
 
 		errno = EPERM;
 		if(asn_UT2time((UTCTime_t *)sptr, &tm, 1) == -1
 				&& errno != EPERM)
 			_ASN_ENCODE_FAILED;
-	
-		ret = snprintf(buf, sizeof(buf), "%02d%02d%02d%02d%02d%02dZ",
-				tm.tm_year % 100, tm.tm_mon + 1, tm.tm_mday,
-				tm.tm_hour, tm.tm_min, tm.tm_sec);
-		assert(ret > 0 && ret < (int)sizeof(buf));
-	
-		st.buf = (uint8_t *)buf;
-		st.size = ret;
-		sptr = &st;
-	}
 
-	return OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
-		cb, app_key);
+		/* Fractions are not allowed in UTCTime */
+		ut = asn_time2GT(0, 0, 1);
+		if(!ut) _ASN_ENCODE_FAILED;
+
+		rv = OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
+			cb, app_key);
+		OCTET_STRING_free(&asn_DEF_UTCTime, ut, 0);
+		return rv;
+	} else {
+		return OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
+			cb, app_key);
+	}
 }
+
+#endif	/* __ASN_INTERNAL_TEST_MODE__ */
 
 int
 UTCTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
@@ -110,7 +113,7 @@ UTCTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 			return (cb("<bad-value>", 11, app_key) < 0) ? -1 : 0;
 
 		ret = snprintf(buf, sizeof(buf),
-			"%04d-%02d-%02d %02d:%02d%02d (GMT)",
+			"%04d-%02d-%02d %02d:%02d:%02d (GMT)",
 			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 			tm.tm_hour, tm.tm_min, tm.tm_sec);
 		assert(ret > 0 && ret < (int)sizeof(buf));
@@ -122,11 +125,11 @@ UTCTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 time_t
 asn_UT2time(const UTCTime_t *st, struct tm *_tm, int as_gmt) {
-	char buf[17+2];	/* "AAMMJJhhmmss+hhmm" = 17, + 2 = 19 */
+	char buf[24];	/* "AAMMJJhhmmss+hhmm" + cushion */
 	GeneralizedTime_t gt;
 
 	if(!st || !st->buf
-	|| st->size < 11 || st->size > ((int)sizeof(buf) - 2)) {
+	|| st->size < 11 || st->size >= ((int)sizeof(buf) - 2)) {
 		errno = EINVAL;
 		return -1;
 	}
