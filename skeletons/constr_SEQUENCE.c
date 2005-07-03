@@ -764,46 +764,54 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case XCT_UNKNOWN_OP:
 		case XCT_UNKNOWN_BO:
 
-			ASN_DEBUG("XER/SEQUENCE: tcv=%d, ph=%d",
-				tcv, ctx->phase);
-			if(ctx->phase != 1
-			|| edx >= td->elements_count)
+			ASN_DEBUG("XER/SEQUENCE: tcv=%d, ph=%d, edx=%d",
+				tcv, ctx->phase, edx);
+			if(ctx->phase != 1) {
 				break;	/* Really unexpected */
-
-			/*
-			 * Search which member corresponds to this tag.
-			 */
-			edx_end = edx + elements[edx].optional + 1;
-			if(edx_end > td->elements_count)
-				edx_end = td->elements_count;
-			for(n = edx; n < edx_end; n++) {
-				elm = &td->elements[n];
-				tcv = xer_check_tag(buf_ptr,ch_size,elm->name);
-				switch(tcv) {
-				case XCT_BOTH:
-				case XCT_OPENING:
-					/*
-					 * Process this member.
-					 */
-					ctx->step = edx = n;
-					ctx->phase = 2;
-					break;
-				case XCT_UNKNOWN_OP:
-				case XCT_UNKNOWN_BO:
-					continue;
-				default:
-					n = edx_end;
-					break;	/* Phase out */
-				}
-				break;
 			}
-			if(n != edx_end)
-				continue;
+
+			if(edx < td->elements_count) {
+				/*
+				 * Search which member corresponds to this tag.
+				 */
+				edx_end = edx + elements[edx].optional + 1;
+				if(edx_end > td->elements_count)
+					edx_end = td->elements_count;
+				for(n = edx; n < edx_end; n++) {
+					elm = &td->elements[n];
+					tcv = xer_check_tag(buf_ptr,
+						ch_size, elm->name);
+					switch(tcv) {
+					case XCT_BOTH:
+					case XCT_OPENING:
+						/*
+						 * Process this member.
+						 */
+						ctx->step = edx = n;
+						ctx->phase = 2;
+						break;
+					case XCT_UNKNOWN_OP:
+					case XCT_UNKNOWN_BO:
+						continue;
+					default:
+						n = edx_end;
+						break;	/* Phase out */
+					}
+					break;
+				}
+				if(n != edx_end)
+					continue;
+			} else {
+				ASN_DEBUG("Out of defined members: %d/%d",
+					edx, td->elements_count);
+			}
 
 			/* It is expected extension */
 			if(IN_EXTENSION_GROUP(specs,
-				edx + elements[edx].optional)) {
-				ASN_DEBUG("Got anticipated extension at %d", edx);
+				edx + (edx < td->elements_count
+					? elements[edx].optional : 0))) {
+				ASN_DEBUG("Got anticipated extension at %d",
+					edx);
 				/*
 				 * Check for (XCT_BOTH or XCT_UNKNOWN_BO)
 				 * By using a mask. Only record a pure
