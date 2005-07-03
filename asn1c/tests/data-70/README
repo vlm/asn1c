@@ -8,3 +8,7 @@ Naming conventions:
 
 *-B.in	-	The file is intentionally broken
 *-D.in	-	Reconstructing should yield different data
+*-E.in  -	CXER reconstruction should yield byte-wise identical data.
+*-X.in  -	CXER reconstruction should yield non-identical data.
+
+Otherwise, a reconstructed buffer should loosely match the original.
