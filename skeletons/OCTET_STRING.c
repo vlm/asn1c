@@ -927,7 +927,11 @@ OS__strtoent(int base, const char *buf, const char *end, int32_t *ret_value) {
 
 	for(p = buf; p < end; p++) {
 		int ch = *p;
-		if((val * base + base) < 0) return -1;	/* Strange huge value */
+
+		/* Strange huge value */
+		if((val * base + base) < 0)
+			return -1;
+
 		switch(ch) {
 		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: /*01234*/
 		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39: /*56789*/
@@ -949,7 +953,7 @@ OS__strtoent(int base, const char *buf, const char *end, int32_t *ret_value) {
 		}
 	}
 
-	/* Do not return value. It's an error we're talking about here. */
+	*ret_value = -1;
 	return (p - buf);
 }
 
