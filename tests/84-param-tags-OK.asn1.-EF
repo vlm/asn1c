@@ -1,0 +1,39 @@
+ModuleTestParametrizationTags1 { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 84 1 }
+DEFINITIONS ::=
+BEGIN
+
+TestType{Parameter} ::= SEQUENCE {
+    common	 Parameter DEFAULT 0
+}
+
+TestChoice ::= CHOICE {
+    type1	 SEQUENCE {
+        common	 INTEGER (1..10) DEFAULT 0
+    },
+    type2	 [0] IMPLICIT SEQUENCE {
+        common	 BOOLEAN DEFAULT 0
+    }
+}
+
+END
+
+ModuleTestParametrizationTagsAuto2 { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 84 2 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+AutoType{Parameter} ::= SEQUENCE {
+    common	 Parameter (0)
+}
+
+AutoChoice ::= CHOICE {
+    type1	 [0] IMPLICIT SEQUENCE {
+        common	 [0] IMPLICIT INTEGER ((0..1))((0))
+    },
+    type2	 [1] IMPLICIT SEQUENCE {
+        common	 [0] IMPLICIT BOOLEAN (0)
+    }
+}
+
+END

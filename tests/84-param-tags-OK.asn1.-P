@@ -1,0 +1,468 @@
+
+/*** <<< INCLUDES [TestChoice] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+#include <BOOLEAN.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [TestChoice] >>> ***/
+
+typedef enum TestChoice_PR {
+	TestChoice_PR_NOTHING,	/* No components present */
+	TestChoice_PR_type1,
+	TestChoice_PR_type2,
+} TestChoice_PR;
+
+/*** <<< TYPE-DECLS [TestChoice] >>> ***/
+
+typedef struct TestChoice {
+	TestChoice_PR present;
+	union {
+		struct type1 {
+			INTEGER_t	*common	/* DEFAULT 0 */;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} type1;
+		struct type2 {
+			BOOLEAN_t	*common	/* DEFAULT 0 */;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} type2;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} TestChoice_t;
+
+/*** <<< FUNC-DECLS [TestChoice] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_TestChoice;
+
+/*** <<< CODE [TestChoice] >>> ***/
+
+static int
+memb_common_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
+	long value;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(asn_INTEGER2long(st, &value)) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((value >= 1 && value <= 10)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< STAT-DEFS [TestChoice] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_type1_2[] = {
+	{ ATF_POINTER, 1, offsetof(struct type1, common),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = memb_common_2_constraint,
+		.name = "common"
+		},
+};
+static ber_tlv_tag_t asn_DEF_type1_2_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_type1_2_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* common at 20 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_type1_2_specs = {
+	sizeof(struct type1),
+	offsetof(struct type1, _asn_ctx),
+	asn_MAP_type1_2_tag2el,
+	1,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_type1_2 = {
+	"type1",
+	"type1",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_type1_2_tags,
+	sizeof(asn_DEF_type1_2_tags)
+		/sizeof(asn_DEF_type1_2_tags[0]), /* 1 */
+	asn_DEF_type1_2_tags,	/* Same as above */
+	sizeof(asn_DEF_type1_2_tags)
+		/sizeof(asn_DEF_type1_2_tags[0]), /* 1 */
+	asn_MBR_type1_2,
+	1,	/* Elements count */
+	&asn_SPC_type1_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_type2_4[] = {
+	{ ATF_POINTER, 1, offsetof(struct type2, common),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_BOOLEAN,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "common"
+		},
+};
+static ber_tlv_tag_t asn_DEF_type2_4_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_type2_4_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 } /* common at 21 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_type2_4_specs = {
+	sizeof(struct type2),
+	offsetof(struct type2, _asn_ctx),
+	asn_MAP_type2_4_tag2el,
+	1,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_type2_4 = {
+	"type2",
+	"type2",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_type2_4_tags,
+	sizeof(asn_DEF_type2_4_tags)
+		/sizeof(asn_DEF_type2_4_tags[0]) - 1, /* 1 */
+	asn_DEF_type2_4_tags,	/* Same as above */
+	sizeof(asn_DEF_type2_4_tags)
+		/sizeof(asn_DEF_type2_4_tags[0]), /* 2 */
+	asn_MBR_type2_4,
+	1,	/* Elements count */
+	&asn_SPC_type2_4_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct TestChoice, choice.type1),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_type1_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "type1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct TestChoice, choice.type2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_type2_4,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "type2"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_TestChoice_1_tag2el[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* type1 at 16 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* type2 at 16 */
+};
+static asn_CHOICE_specifics_t asn_SPC_TestChoice_1_specs = {
+	sizeof(struct TestChoice),
+	offsetof(struct TestChoice, _asn_ctx),
+	offsetof(struct TestChoice, present),
+	sizeof(((struct TestChoice *)0)->present),
+	asn_MAP_TestChoice_1_tag2el,
+	2,	/* Count of tags in the map */
+	0	/* Whether extensible */
+};
+asn_TYPE_descriptor_t asn_DEF_TestChoice = {
+	"TestChoice",
+	"TestChoice",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	asn_MBR_TestChoice_1,
+	2,	/* Elements count */
+	&asn_SPC_TestChoice_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [AutoChoice] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+#include <BOOLEAN.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [AutoChoice] >>> ***/
+
+typedef enum AutoChoice_PR {
+	AutoChoice_PR_NOTHING,	/* No components present */
+	AutoChoice_PR_type1,
+	AutoChoice_PR_type2,
+} AutoChoice_PR;
+
+/*** <<< TYPE-DECLS [AutoChoice] >>> ***/
+
+typedef struct AutoChoice {
+	AutoChoice_PR present;
+	union {
+		struct type1 {
+			INTEGER_t	 common;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} type1;
+		struct type2 {
+			BOOLEAN_t	 common;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} type2;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} AutoChoice_t;
+
+/*** <<< FUNC-DECLS [AutoChoice] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_AutoChoice;
+
+/*** <<< CODE [AutoChoice] >>> ***/
+
+static int
+memb_common_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
+	long value;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(asn_INTEGER2long(st, &value)) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((value == 0)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_common_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	BOOLEAN_t value;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = (*(const long *)sptr) ? 1 : 0;
+	
+	if((value <= 0)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< STAT-DEFS [AutoChoice] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_type1_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct type1, common),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = memb_common_2_constraint,
+		.name = "common"
+		},
+};
+static ber_tlv_tag_t asn_DEF_type1_2_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_type1_2_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common at 37 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_type1_2_specs = {
+	sizeof(struct type1),
+	offsetof(struct type1, _asn_ctx),
+	asn_MAP_type1_2_tag2el,
+	1,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_type1_2 = {
+	"type1",
+	"type1",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_type1_2_tags,
+	sizeof(asn_DEF_type1_2_tags)
+		/sizeof(asn_DEF_type1_2_tags[0]) - 1, /* 1 */
+	asn_DEF_type1_2_tags,	/* Same as above */
+	sizeof(asn_DEF_type1_2_tags)
+		/sizeof(asn_DEF_type1_2_tags[0]), /* 2 */
+	asn_MBR_type1_2,
+	1,	/* Elements count */
+	&asn_SPC_type1_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_type2_4[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct type2, common),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_BOOLEAN,
+		.memb_constraints = memb_common_4_constraint,
+		.name = "common"
+		},
+};
+static ber_tlv_tag_t asn_DEF_type2_4_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_type2_4_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common at 38 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_type2_4_specs = {
+	sizeof(struct type2),
+	offsetof(struct type2, _asn_ctx),
+	asn_MAP_type2_4_tag2el,
+	1,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_type2_4 = {
+	"type2",
+	"type2",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_type2_4_tags,
+	sizeof(asn_DEF_type2_4_tags)
+		/sizeof(asn_DEF_type2_4_tags[0]) - 1, /* 1 */
+	asn_DEF_type2_4_tags,	/* Same as above */
+	sizeof(asn_DEF_type2_4_tags)
+		/sizeof(asn_DEF_type2_4_tags[0]), /* 2 */
+	asn_MBR_type2_4,
+	1,	/* Elements count */
+	&asn_SPC_type2_4_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct AutoChoice, choice.type1),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_type1_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "type1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct AutoChoice, choice.type2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_type2_4,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "type2"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_AutoChoice_1_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* type1 at 34 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* type2 at 34 */
+};
+static asn_CHOICE_specifics_t asn_SPC_AutoChoice_1_specs = {
+	sizeof(struct AutoChoice),
+	offsetof(struct AutoChoice, _asn_ctx),
+	offsetof(struct AutoChoice, present),
+	sizeof(((struct AutoChoice *)0)->present),
+	asn_MAP_AutoChoice_1_tag2el,
+	2,	/* Count of tags in the map */
+	0	/* Whether extensible */
+};
+asn_TYPE_descriptor_t asn_DEF_AutoChoice = {
+	"AutoChoice",
+	"AutoChoice",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	asn_MBR_AutoChoice_1,
+	2,	/* Elements count */
+	&asn_SPC_AutoChoice_1_specs	/* Additional specs */
+};
+

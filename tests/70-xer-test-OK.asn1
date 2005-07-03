@@ -22,6 +22,7 @@ BEGIN
 		sequenceOf		SequenceOf,
 		extensibleSet		ExtensibleSet,
 		extensibleSequence	ExtensibleSequence,
+		extensibleSequence2	ExtensibleSequence2,
 		setOfNULL		SetOfNULL,
 		setOfEnums		SetOfEnums,
 		seqOfZuka		SeqOfZuka,
@@ -47,6 +48,13 @@ BEGIN
 	}
 
 	ExtensibleSequence ::= SEQUENCE {
+		string	UTF8String OPTIONAL,
+		...,
+		integer	INTEGER	OPTIONAL,
+		gtime	GeneralizedTime
+	}
+
+	ExtensibleSequence2 ::= SEQUENCE {
 		string	UTF8String OPTIONAL,
 		...,
 		integer	INTEGER	OPTIONAL

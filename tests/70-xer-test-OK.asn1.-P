@@ -7,6 +7,7 @@
 #include <SequenceOf.h>
 #include <ExtensibleSet.h>
 #include <ExtensibleSequence.h>
+#include <ExtensibleSequence2.h>
 #include <SetOfNULL.h>
 #include <SetOfEnums.h>
 #include <SeqOfZuka.h>
@@ -22,6 +23,7 @@ typedef enum PDU_PR {
 	PDU_PR_sequenceOf,
 	PDU_PR_extensibleSet,
 	PDU_PR_extensibleSequence,
+	PDU_PR_extensibleSequence2,
 	PDU_PR_setOfNULL,
 	PDU_PR_setOfEnums,
 	PDU_PR_seqOfZuka,
@@ -39,6 +41,7 @@ typedef struct PDU {
 		SequenceOf_t	 sequenceOf;
 		ExtensibleSet_t	 extensibleSet;
 		ExtensibleSequence_t	 extensibleSequence;
+		ExtensibleSequence2_t	 extensibleSequence2;
 		SetOfNULL_t	 setOfNULL;
 		SetOfEnums_t	 setOfEnums;
 		SeqOfZuka_t	 seqOfZuka;
@@ -101,22 +104,29 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "extensibleSequence"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfNULL),
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSequence2),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_ExtensibleSequence2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "extensibleSequence2"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfNULL),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (7 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_SetOfNULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "setOfNULL"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfEnums),
-		.tag = (ASN_TAG_CLASS_CONTEXT | (7 << 2)),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (8 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_SetOfEnums,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "setOfEnums"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.seqOfZuka),
-		.tag = (ASN_TAG_CLASS_CONTEXT | (8 << 2)),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (9 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_SeqOfZuka,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
@@ -130,9 +140,10 @@ static asn_TYPE_tag2member_t asn_MAP_PDU_1_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* sequenceOf at 22 */
     { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 4, 0, 0 }, /* extensibleSet at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 5, 0, 0 }, /* extensibleSequence at 24 */
-    { (ASN_TAG_CLASS_CONTEXT | (6 << 2)), 6, 0, 0 }, /* setOfNULL at 25 */
-    { (ASN_TAG_CLASS_CONTEXT | (7 << 2)), 7, 0, 0 }, /* setOfEnums at 26 */
-    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 } /* seqOfZuka at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (6 << 2)), 6, 0, 0 }, /* extensibleSequence2 at 25 */
+    { (ASN_TAG_CLASS_CONTEXT | (7 << 2)), 7, 0, 0 }, /* setOfNULL at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 }, /* setOfEnums at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (9 << 2)), 9, 0, 0 } /* seqOfZuka at 28 */
 };
 static asn_CHOICE_specifics_t asn_SPC_PDU_1_specs = {
 	sizeof(struct PDU),
@@ -140,7 +151,7 @@ static asn_CHOICE_specifics_t asn_SPC_PDU_1_specs = {
 	offsetof(struct PDU, present),
 	sizeof(((struct PDU *)0)->present),
 	asn_MAP_PDU_1_tag2el,
-	9,	/* Count of tags in the map */
+	10,	/* Count of tags in the map */
 	1	/* Whether extensible */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU = {
@@ -159,7 +170,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
 	asn_MBR_PDU_1,
-	9,	/* Elements count */
+	10,	/* Elements count */
 	&asn_SPC_PDU_1_specs	/* Additional specs */
 };
 
@@ -231,10 +242,10 @@ static ber_tlv_tag_t asn_DEF_Sequence_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Sequence_1_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* integer at 32 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* sequence at 33 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* bits at 34 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 } /* string at 35 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* integer at 33 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* sequence at 34 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* bits at 35 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 } /* string at 36 */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Sequence_1_specs = {
 	sizeof(struct Sequence),
@@ -324,8 +335,8 @@ static ber_tlv_tag_t asn_DEF_Set_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Set_1_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* roid at 39 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* opaque at 40 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* roid at 40 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* opaque at 41 */
 };
 static uint8_t asn_MAP_Set_1_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (0 << 6)
@@ -543,8 +554,8 @@ static ber_tlv_tag_t asn_DEF_ExtensibleSet_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_ExtensibleSet_1_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 44 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* enum at 46 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 45 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* enum at 47 */
 };
 static uint8_t asn_MAP_ExtensibleSet_1_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7) | (0 << 6)
@@ -587,6 +598,7 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSet = {
 
 #include <UTF8String.h>
 #include <INTEGER.h>
+#include <GeneralizedTime.h>
 #include <constr_SEQUENCE.h>
 
 /*** <<< TYPE-DECLS [ExtensibleSequence] >>> ***/
@@ -598,6 +610,7 @@ typedef struct ExtensibleSequence {
 	 * possible extensions are below.
 	 */
 	INTEGER_t	*integer	/* OPTIONAL */;
+	GeneralizedTime_t	*gtime;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -610,35 +623,43 @@ extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence;
 /*** <<< STAT-DEFS [ExtensibleSequence] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
-	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence, string),
+	{ ATF_POINTER, 3, offsetof(struct ExtensibleSequence, string),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "string"
 		},
-	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence, integer),
+	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence, integer),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "integer"
 		},
+	{ ATF_POINTER, 0, offsetof(struct ExtensibleSequence, gtime),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_GeneralizedTime,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "gtime"
+		},
 };
 static ber_tlv_tag_t asn_DEF_ExtensibleSequence_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_ExtensibleSequence_1_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 50 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* integer at 52 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 51 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* integer at 53 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* gtime at 54 */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_ExtensibleSequence_1_specs = {
 	sizeof(struct ExtensibleSequence),
 	offsetof(struct ExtensibleSequence, _asn_ctx),
 	asn_MAP_ExtensibleSequence_1_tag2el,
-	2,	/* Count of tags in the map */
+	3,	/* Count of tags in the map */
 	0,	/* Start extensions */
-	3	/* Stop extensions */
+	4	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
 	"ExtensibleSequence",
@@ -658,8 +679,88 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
 	sizeof(asn_DEF_ExtensibleSequence_1_tags)
 		/sizeof(asn_DEF_ExtensibleSequence_1_tags[0]), /* 1 */
 	asn_MBR_ExtensibleSequence_1,
-	2,	/* Elements count */
+	3,	/* Elements count */
 	&asn_SPC_ExtensibleSequence_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [ExtensibleSequence2] >>> ***/
+
+#include <UTF8String.h>
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [ExtensibleSequence2] >>> ***/
+
+typedef struct ExtensibleSequence2 {
+	UTF8String_t	*string	/* OPTIONAL */;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	INTEGER_t	*integer	/* OPTIONAL */;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} ExtensibleSequence2_t;
+
+/*** <<< FUNC-DECLS [ExtensibleSequence2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence2;
+
+/*** <<< STAT-DEFS [ExtensibleSequence2] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_ExtensibleSequence2_1[] = {
+	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence2, string),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "string"
+		},
+	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence2, integer),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "integer"
+		},
+};
+static ber_tlv_tag_t asn_DEF_ExtensibleSequence2_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_ExtensibleSequence2_1_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string at 58 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* integer at 60 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_ExtensibleSequence2_1_specs = {
+	sizeof(struct ExtensibleSequence2),
+	offsetof(struct ExtensibleSequence2, _asn_ctx),
+	asn_MAP_ExtensibleSequence2_1_tag2el,
+	2,	/* Count of tags in the map */
+	0,	/* Start extensions */
+	3	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence2 = {
+	"ExtensibleSequence2",
+	"ExtensibleSequence2",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_ExtensibleSequence2_1_tags,
+	sizeof(asn_DEF_ExtensibleSequence2_1_tags)
+		/sizeof(asn_DEF_ExtensibleSequence2_1_tags[0]), /* 1 */
+	asn_DEF_ExtensibleSequence2_1_tags,	/* Same as above */
+	sizeof(asn_DEF_ExtensibleSequence2_1_tags)
+		/sizeof(asn_DEF_ExtensibleSequence2_1_tags[0]), /* 1 */
+	asn_MBR_ExtensibleSequence2_1,
+	2,	/* Elements count */
+	&asn_SPC_ExtensibleSequence2_1_specs	/* Additional specs */
 };
 
 

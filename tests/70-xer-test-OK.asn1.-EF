@@ -10,9 +10,10 @@ PDU ::= CHOICE {
     sequenceOf	 [3] IMPLICIT SequenceOf,
     extensibleSet	 [4] IMPLICIT ExtensibleSet,
     extensibleSequence	 [5] IMPLICIT ExtensibleSequence,
-    setOfNULL	 [6] IMPLICIT SetOfNULL,
-    setOfEnums	 [7] IMPLICIT SetOfEnums,
-    seqOfZuka	 [8] IMPLICIT SeqOfZuka,
+    extensibleSequence2	 [6] IMPLICIT ExtensibleSequence2,
+    setOfNULL	 [7] IMPLICIT SetOfNULL,
+    setOfEnums	 [8] IMPLICIT SetOfEnums,
+    seqOfZuka	 [9] IMPLICIT SeqOfZuka,
     ...
 }
 
@@ -38,6 +39,13 @@ ExtensibleSet ::= SET {
 }
 
 ExtensibleSequence ::= SEQUENCE {
+    string	 [0] IMPLICIT UTF8String OPTIONAL,
+    ...,
+    integer	 [1] IMPLICIT INTEGER OPTIONAL,
+    gtime	 [2] IMPLICIT GeneralizedTime
+}
+
+ExtensibleSequence2 ::= SEQUENCE {
     string	 [0] IMPLICIT UTF8String OPTIONAL,
     ...,
     integer	 [1] IMPLICIT INTEGER OPTIONAL
