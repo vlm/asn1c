@@ -108,7 +108,7 @@ static time_t timegm(struct tm *tm) {
 #endif	/* _EMULATE_TIMEGM */
 
 
-#ifndef	__NO_ASN_TABLE__
+#ifndef	__ASN_INTERNAL_TEST_MODE__
 
 /*
  * GeneralizedTime basic type description.
@@ -139,7 +139,7 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	0	/* No specifics */
 };
 
-#endif	/* __NO_ASN_TABLE__ */
+#endif	/* __ASN_INTERNAL_TEST_MODE__ */
 
 /*
  * Check that the time looks like the time.
@@ -163,75 +163,69 @@ GeneralizedTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 asn_enc_rval_t
-GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
+GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	GeneralizedTime_t *st = (GeneralizedTime_t *)ptr;
+	GeneralizedTime_t *st = (GeneralizedTime_t *)sptr;
 	asn_enc_rval_t erval;
+	long fv, fb;	/* seconds fraction value and base */
+	struct tm tm;
+	time_t tloc;
 
-	/* If not canonical DER, re-encode into canonical DER. */
-	if(st->size && st->buf[st->size-1] != 0x5a) {
-		struct tm tm;
-		time_t tloc;
+	/*
+	 * Encode as a canonical DER.
+	 */
+	errno = EPERM;
+	tloc = asn_GT2time_frac(st, &fv, &fb, &tm, 1);	/* Recognize time */
+	if(tloc == -1 && errno != EPERM)
+		/* Failed to recognize time. Fail completely. */
+		_ASN_ENCODE_FAILED;
 
-		errno = EPERM;
-		tloc = asn_GT2time(st, &tm, 1);	/* Recognize time */
-		if(tloc == -1 && errno != EPERM) {
-			/* Failed to recognize time. Fail completely. */
-			erval.encoded = -1;
-			erval.failed_type = td;
-			erval.structure_ptr = ptr;
-			return erval;
-		}
-		st = asn_time2GT(0, &tm, 1);	/* Save time canonically */
-		if(!st) {
-			/* Memory allocation failure. */
-			erval.encoded = -1;
-			erval.failed_type = td;
-			erval.structure_ptr = ptr;
-			return erval;
-		}
-	}
+	st = asn_time2GT_frac(0, &tm, fv, fb, 1); /* Save time canonically */
+	if(!st) _ASN_ENCODE_FAILED;	/* Memory allocation failure. */
 
 	erval = OCTET_STRING_encode_der(td, st, tag_mode, tag, cb, app_key);
 
-	if(st != ptr) {
-		FREEMEM(st->buf);
-		FREEMEM(st);
-	}
+	FREEMEM(st->buf);
+	FREEMEM(st);
 
 	return erval;
 }
+
+#ifndef	__ASN_INTERNAL_TEST_MODE__
 
 asn_enc_rval_t
 GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	OCTET_STRING_t st;
 
 	if(flags & XER_F_CANONICAL) {
-		char buf[32];
+		GeneralizedTime_t *gt;
+		asn_enc_rval_t rv;
+		long fv, fb;		/* fractional parts */
 		struct tm tm;
-		ssize_t ret;
 
 		errno = EPERM;
-		if(asn_GT2time((GeneralizedTime_t *)sptr, &tm, 1) == -1
+		if(asn_GT2time_frac((GeneralizedTime_t *)sptr,
+					&fv, &fb, &tm, 1) == -1
 				&& errno != EPERM)
 			_ASN_ENCODE_FAILED;
-	
-		ret = snprintf(buf, sizeof(buf), "%04d%02d%02d%02d%02d%02dZ",
-				tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-				tm.tm_hour, tm.tm_min, tm.tm_sec);
-		assert(ret > 0 && ret < (int)sizeof(buf));
-	
-		st.buf = (uint8_t *)buf;
-		st.size = ret;
-		sptr = &st;
-	}
 
-	return OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
-		cb, app_key);
+		gt = asn_time2GT_frac(0, &tm, fv, fb, 1);
+		if(!gt) _ASN_ENCODE_FAILED;
+	
+		rv = OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
+			cb, app_key);
+		asn_DEF_GeneralizedTime.free_struct(&asn_DEF_GeneralizedTime,
+			gt, 0);
+		return rv;
+	} else {
+		return OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
+			cb, app_key);
+	}
 }
+
+#endif	/* __ASN_INTERNAL_TEST_MODE__ */
 
 int
 GeneralizedTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
@@ -251,7 +245,7 @@ GeneralizedTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 			return (cb("<bad-value>", 11, app_key) < 0) ? -1 : 0;
 
 		ret = snprintf(buf, sizeof(buf),
-			"%04d-%02d-%02d %02d:%02d%02d (GMT)",
+			"%04d-%02d-%02d %02d:%02d:%02d (GMT)",
 			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 			tm.tm_hour, tm.tm_min, tm.tm_sec);
 		assert(ret > 0 && ret < (int)sizeof(buf));
@@ -263,6 +257,11 @@ GeneralizedTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 time_t
 asn_GT2time(const GeneralizedTime_t *st, struct tm *ret_tm, int as_gmt) {
+	return asn_GT2time_frac(st, 0, 0, ret_tm, as_gmt);
+}
+
+time_t
+asn_GT2time_frac(const GeneralizedTime_t *st, long *frac_value, long *frac_base, struct tm *ret_tm, int as_gmt) {
 	struct tm tm_s;
 	uint8_t *buf;
 	uint8_t *end;
@@ -270,6 +269,8 @@ asn_GT2time(const GeneralizedTime_t *st, struct tm *ret_tm, int as_gmt) {
 	int gmtoff_m = 0;
 	int gmtoff = 0;	/* h + m */
 	int offset_specified = 0;
+	long fvalue = 0;
+	long fbase = 1;
 	time_t tloc;
 
 	if(!st || !st->buf) {
@@ -365,13 +366,21 @@ asn_GT2time(const GeneralizedTime_t *st, struct tm *ret_tm, int as_gmt) {
 	 *               ^ ^
 	 */
 	switch(*buf) {
-	case 0x2C: case 0x2E:	/* (.|,) */
-		/* Fractions of seconds are not supported
-		 * by time_t or struct tm. Skip them */
+	case 0x2C: case 0x2E: /* (.|,) */
+		/*
+		 * Process fractions of seconds.
+		 */
 		for(buf++; buf < end; buf++) {
-			switch(*buf) {
+			int v = *buf;
+			switch(v) {
 			case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
 			case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+				if((fbase * 10 / fbase) != 10) {
+					/* Not enough precision, ignore */
+				} else {
+					fbase *= 10;
+					fvalue = fvalue * 10 + (v - 0x30);
+				}
 				continue;
 			default:
 				break;
@@ -479,15 +488,29 @@ local_finish:
 		}
 	}
 
+	/* Fractions of seconds */
+	if(frac_value) *frac_value = fvalue;
+	if(frac_base) *frac_base = fbase;
+
 	return tloc;
 }
 
-
 GeneralizedTime_t *
 asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
+	return asn_time2GT_frac(opt_gt, tm, 0, 0, force_gmt);
+}
+
+GeneralizedTime_t *
+asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, long frac_value, long frac_base, int force_gmt) {
 	struct tm tm_s;
 	long gmtoff;
-	const unsigned int buf_size = 24; /* 4+2+2 +2+2+2 +4 + cushion */
+	const unsigned int buf_size =
+		4 + 2 + 2	/* yyyymmdd */
+		+ 2 + 2 + 2	/* hhmmss */
+		+ 1 + 6		/* .ffffff */
+		+ 1 + 4		/* +hhmm */
+		+ 1		/* '\0' */
+		;
 	char *buf;
 	char *p;
 	int size;
@@ -524,17 +547,48 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 		tm->tm_min,
 		tm->tm_sec
 	);
-	assert(size == 14);
+	if(size != 14) {
+		/* Could be assert(size == 14); */
+		FREEMEM(buf);
+		errno = EINVAL;
+		return 0;
+	}
 
 	p = buf + size;
+
+	/*
+	 * Deal with fractions.
+	 */
+	if(frac_base >= 10 && frac_value > 0) {
+		char *end = p + 1 + 6;	/* '.' + maximum 6 digits */
+		char *z;
+		*p++ = '.';
+		do {
+			int digit;
+			frac_base /= 10;
+			digit = frac_value / frac_base;
+			frac_value %= frac_base;
+			*p++ = digit + 0x30;
+		} while(frac_base >= 10 && frac_value > 0 && p < end);
+		for(z = p - 1; *z == 0x30; --z);	/* Strip zeroes */
+		p = z + (*z != '.');
+		size = p - buf;
+	}
+
 	if(force_gmt) {
 		*p++ = 0x5a;	/* "Z" */
 		*p++ = 0;
 		size++;
 	} else {
-		int ret = snprintf(p, buf_size - size, "%+03ld%02ld",
-			gmtoff / 3600, gmtoff % 3600);
-		assert(ret >= 5 && ret <= 7);
+		int ret;
+		gmtoff %= 86400;
+		ret = snprintf(p, buf_size - size, "%+03ld%02ld",
+			gmtoff / 3600, labs(gmtoff % 3600));
+		if(ret != 5) {
+			FREEMEM(buf);
+			errno = EINVAL;
+			return 0;
+		}
 		size += ret;
 	}
 

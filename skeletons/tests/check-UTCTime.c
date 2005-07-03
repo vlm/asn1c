@@ -1,6 +1,5 @@
-#define	__NO_ASN_TABLE__
+#define	__ASN_INTERNAL_TEST_MODE__
 #include <GeneralizedTime.c>
-#define	__NO_ASN_TABLE__
 #include <UTCTime.c>
 #include <constraints.c>
 
@@ -10,7 +9,7 @@ check(char *time_str, time_t sample, int as_gmt) {
 	struct tm tm;
 	time_t tloc;
 
-	gt.buf = time_str;
+	gt.buf = (uint8_t *)time_str;
 	gt.size = strlen(time_str);
 
 	tloc = asn_UT2time(&gt, &tm, as_gmt);
