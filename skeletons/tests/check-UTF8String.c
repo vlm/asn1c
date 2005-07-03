@@ -43,7 +43,7 @@ check_speed() {
 	int ret;
 	int i;
 
-	st.buf = long_test;
+	st.buf = (uint8_t *)long_test;
 	st.size = sizeof(long_test) - 1;
 
 	ret = UTF8String_length(&st);
