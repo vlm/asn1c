@@ -18,6 +18,8 @@
 
 enum expectation {
 	EXP_OK,		/* Encoding/decoding must succeed */
+	EXP_CXER_EXACT,	/* Encoding/decoding using CXER must be exact */
+	EXP_CXER_DIFF,	/* Encoding/decoding using CXER must be different */
 	EXP_BROKEN,	/* Decoding must fail */
 	EXP_DIFFERENT,	/* Reconstruction will yield different encoding */
 };
@@ -44,6 +46,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 enum der_or_xer {
 	AS_DER,
 	AS_XER,
+	AS_CXER,
 };
 
 static void
@@ -62,6 +65,10 @@ save_object_as(PDU_t *st, enum der_or_xer how) {
 		break;
 	case AS_XER:
 		rval = xer_encode(&asn_DEF_PDU, st, XER_F_BASIC,
+			_buf_writer, 0);
+		break;
+	case AS_CXER:
+		rval = xer_encode(&asn_DEF_PDU, st, XER_F_CANONICAL,
 			_buf_writer, 0);
 		break;
 	}
@@ -197,7 +204,10 @@ process_XER_data(enum expectation expectation, char *fbuf, int size) {
 	st = load_object_from(expectation, buf, buf_offset, AS_DER);
 	assert(st);
 
-	save_object_as(st, AS_XER);
+	save_object_as(st,
+			(expectation == EXP_CXER_EXACT
+			|| expectation == EXP_CXER_DIFF)
+			? AS_CXER : AS_XER);
 	fprintf(stderr, "=== original ===\n");
 	fwrite(fbuf, 1, size, stderr);
 	fprintf(stderr, "=== re-encoded ===\n");
@@ -210,6 +220,16 @@ process_XER_data(enum expectation expectation, char *fbuf, int size) {
 		break;
 	case EXP_BROKEN:
 		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		break;
+	case EXP_CXER_EXACT:
+		buf[buf_offset++] = '\n';
+		assert(size == buf_offset);
+		assert(memcmp(fbuf, buf, size) == 0);
+		break;
+	case EXP_CXER_DIFF:
+		buf[buf_offset++] = '\n';
+		assert(size != buf_offset
+			|| memcmp(fbuf, buf, size));
 		break;
 	case EXP_OK:
 		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
@@ -239,6 +259,10 @@ process(const char *fname) {
 		expectation = EXP_BROKEN; break;
 	case 'D':	/* Reconstructing should yield different data */
 		expectation = EXP_DIFFERENT; break;
+	case 'E':	/* Byte to byte exact reconstruction */
+		expectation = EXP_CXER_EXACT; break;
+	case 'X':	/* Should fail byte-to-byte comparison */
+		expectation = EXP_CXER_DIFF; break;
 	default:
 		expectation = EXP_OK; break;
 	}
@@ -271,8 +295,10 @@ main() {
 
 	/* Process a specific test file */
 	str = getenv("DATA_70_FILE");
-	if(str && strncmp(str, "data-70-", 8) == 0)
+	if(str && strncmp(str, "data-70-", 8) == 0) {
 		process(str);
+		return 0;
+	}
 
 	dir = opendir("../data-70");
 	assert(dir);
