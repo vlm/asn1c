@@ -1,0 +1,7 @@
+<PDU>
+	<extensibleSequence>
+		<integer>0</integer>
+		<extension> in improper place </extension>
+		<string>one <nul/> two</string>
+	</extensibleSequence>
+</PDU>
