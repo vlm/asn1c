@@ -1,34 +1,34 @@
 #define	__ASN_INTERNAL_TEST_MODE__
 #include <GeneralizedTime.c>
 #include <constraints.c>
+#include <math.h>	/* for pow(3) */
 
 static void
 recognize(char *time_str, time_t expect, int as_gmt) {
 	GeneralizedTime_t gt;
 	struct tm tm;
 	time_t tloc;
-	long fv, fb;
+	int fv, fp;
 
 	gt.buf = (uint8_t *)time_str;
 	gt.size = strlen(time_str);
 
-	tloc = asn_GT2time_frac(&gt, &fv, &fb, &tm, as_gmt);
+	tloc = asn_GT2time_frac(&gt, &fv, &fp, &tm, as_gmt);
 	printf("%s: [%s] -> %ld == %ld\n",
 		as_gmt?"GMT":"ofs", time_str, (long)tloc, (long)expect);
 
 	if(tloc != -1) {
-		printf("\t%04d-%02d-%02dT%02d:%02d:%02d(.%ld/%ld)%+03ld%02ld\n",
+		printf("\t%04d-%02d-%02dT%02d:%02d:%02d.%f(%d/%d)%+03ld%02ld\n",
 		tm.tm_year + 1900,
 		tm.tm_mon + 1,
 		tm.tm_mday,
 		tm.tm_hour,
 		tm.tm_min,
 		tm.tm_sec,
-		fv, fb,
+		(double)fv * pow(0.1, fp), fv, fp,
 		(GMTOFF(tm) / 3600),
 		labs(GMTOFF(tm) % 3600)
 		);
-		assert(fb < 100 || (fb % 100) == 0);
 	}
 	assert(tloc == expect);
 
@@ -62,7 +62,7 @@ encode(time_t tloc, const char *expect, int force_gmt) {
 
 static void
 recode(char *time_str, const char *expect) {
-	long frac_value, frac_base;
+	int frac_value, frac_digits;
 	GeneralizedTime_t gt;
 	struct tm tm;
 	time_t tloc;
@@ -70,14 +70,15 @@ recode(char *time_str, const char *expect) {
 	gt.buf = (uint8_t *)time_str;
 	gt.size = strlen(time_str);
 
-	tloc = asn_GT2time_frac(&gt, &frac_value, &frac_base, &tm, 1);
+	tloc = asn_GT2time_frac(&gt, &frac_value, &frac_digits, &tm, 1);
 	assert(tloc != -1);
 
 	gt.buf = 0;
-	asn_time2GT_frac(&gt, &tm, frac_value, frac_base, 1);
+	asn_time2GT_frac(&gt, &tm, frac_value, frac_digits, 1);
 	assert(gt.buf);
 
-	printf("[%s] => [%s] == [%s]\n", time_str, gt.buf, expect);
+	printf("[%s] => [%s] == [%s] (%d, %d)\n",
+		time_str, gt.buf, expect, frac_value, frac_digits);
 
 	assert(strcmp((char *)gt.buf, expect) == 0);
 	FREEMEM(gt.buf);
@@ -87,6 +88,8 @@ static void
 check_fractions() {
 	GeneralizedTime_t *gt = 0;
 	struct tm tm;
+	int fv, fd;
+	time_t tloc;
 
 	memset(&tm, 0, sizeof tm);
 	tm.tm_year = 70;
@@ -117,51 +120,61 @@ check_fractions() {
 	printf("[%s]\n", gt->buf);
 	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
 
+	/* Normalization should happen prior to calling the _frac() */
+	gt = asn_time2GT_frac(gt, &tm, 55, 2, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000.55Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, 5, 2, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000.05Z") == 0);
+
 	/* Normalization should happen prior calling the _frac() */
-	gt = asn_time2GT_frac(gt, &tm, 55, 10, 1);
+	gt = asn_time2GT_frac(gt, &tm, 900, 2, 1);
 	assert(gt);
 	printf("[%s]\n", gt->buf);
 	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
 
-	gt = asn_time2GT_frac(gt, &tm, 10, 20, 1);
+	gt = asn_time2GT_frac(gt, &tm, 90, 2, 1);
 	assert(gt);
 	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+	assert(strcmp((char *)gt->buf, "19700101000000.9Z") == 0);
 
-	gt = asn_time2GT_frac(gt, &tm, 10000000, 20000000, 1);
-	assert(gt);
-	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000.5Z") == 0);
+	tloc = asn_GT2time_prec(gt, &fv, 0, 0, 1);
+	assert(tloc == 0);
+	assert(fv == 0);
 
-	gt = asn_time2GT_frac(gt, &tm, -10, 20, 1);
-	assert(gt);
-	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+	tloc = asn_GT2time_prec(gt, &fv, 1, 0, 1);
+	assert(tloc == 0);
+	assert(fv == 9);
 
-	gt = asn_time2GT_frac(gt, &tm, 98, 99, 1);
-	assert(gt);
-	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+	tloc = asn_GT2time_prec(gt, &fv, 2, 0, 1);
+	assert(tloc == 0);
+	assert(fv == 90);
 
-	gt = asn_time2GT_frac(gt, &tm, 988, 999, 1);
-	assert(gt);
-	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+	tloc = asn_GT2time_frac(gt, &fv, &fd, 0, 1);
+	assert(tloc == 0);
+	assert(fv == 9);
+	assert(fd == 1);
 
-	gt = asn_time2GT_frac(gt, &tm, 90, 91, 1);
-	assert(gt);
-	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+	gt->buf[gt->size-1] = '0';
+	gt->buf[gt->size++] = 'Z';
+	gt->buf[gt->size] = '\0';
 
-	gt = asn_time2GT_frac(gt, &tm, 89, 91, 1);
-	assert(gt);
-	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+	tloc = asn_GT2time_frac(gt, &fv, &fd, 0, 1);
+	assert(tloc == 0);
+	assert(fd == 2);
+	assert(fv == 90);
 
-	gt = asn_time2GT_frac(gt, &tm, 89000000, 91000000, 1);
-	assert(gt);
-	printf("[%s]\n", gt->buf);
-	assert(strcmp((char *)gt->buf, "19700101000000.978021Z") == 0);
+	tloc = asn_GT2time_prec(gt, &fv, 1, 0, 1);
+	assert(tloc == 0);
+	assert(fv == 9);
+
+	tloc = asn_GT2time_prec(gt, &fv, 100, 0, 1);
+	assert(tloc == 0);
+	assert(fv == 0);
 
 	FREEMEM(gt->buf);
 	FREEMEM(gt);
@@ -225,6 +238,13 @@ main(int ac, char **av) {
 	recode("20050702123312.1234567+01", "20050702113312.123456Z");
 	recode("20050702123312.12345678+01", "20050702113312.123456Z");
 	recode("20050702123312.123456789+01", "20050702113312.123456Z");
+	recode("20050702123312.2000000000+01", "20050702113312.2Z");
+	recode("20050702123312.3000000000+01", "20050702113312.3Z");
+	recode("20050702123312.4000000000+01", "20050702113312.4Z");
+	recode("20050702123312.5000000000+01", "20050702113312.5Z");
+	recode("20050702123312.5000000001+01", "20050702113312.5Z");
+	recode("20050702123312.5000010001+01", "20050702113312.500001Z");
+	recode("20050702123312.5000001001+01", "20050702113312.5Z");
 	recode("20050702123312.000001+01", "20050702113312.000001Z");
 	recode("20050702123312.0000001Z", "20050702123312Z");
 	recode("20050702123312.0080010+1056", "20050702013712.008001Z");

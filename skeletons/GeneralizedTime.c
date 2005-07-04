@@ -168,7 +168,7 @@ GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	GeneralizedTime_t *st = (GeneralizedTime_t *)sptr;
 	asn_enc_rval_t erval;
-	long fv, fb;	/* seconds fraction value and base */
+	int fv, fd;	/* seconds fraction value and number of digits */
 	struct tm tm;
 	time_t tloc;
 
@@ -176,12 +176,12 @@ GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	 * Encode as a canonical DER.
 	 */
 	errno = EPERM;
-	tloc = asn_GT2time_frac(st, &fv, &fb, &tm, 1);	/* Recognize time */
+	tloc = asn_GT2time_frac(st, &fv, &fd, &tm, 1);	/* Recognize time */
 	if(tloc == -1 && errno != EPERM)
 		/* Failed to recognize time. Fail completely. */
 		_ASN_ENCODE_FAILED;
 
-	st = asn_time2GT_frac(0, &tm, fv, fb, 1); /* Save time canonically */
+	st = asn_time2GT_frac(0, &tm, fv, fd, 1); /* Save time canonically */
 	if(!st) _ASN_ENCODE_FAILED;	/* Memory allocation failure. */
 
 	erval = OCTET_STRING_encode_der(td, st, tag_mode, tag, cb, app_key);
@@ -202,16 +202,16 @@ GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	if(flags & XER_F_CANONICAL) {
 		GeneralizedTime_t *gt;
 		asn_enc_rval_t rv;
-		long fv, fb;		/* fractional parts */
+		int fv, fd;		/* fractional parts */
 		struct tm tm;
 
 		errno = EPERM;
 		if(asn_GT2time_frac((GeneralizedTime_t *)sptr,
-					&fv, &fb, &tm, 1) == -1
+					&fv, &fd, &tm, 1) == -1
 				&& errno != EPERM)
 			_ASN_ENCODE_FAILED;
 
-		gt = asn_time2GT_frac(0, &tm, fv, fb, 1);
+		gt = asn_time2GT_frac(0, &tm, fv, fd, 1);
 		if(!gt) _ASN_ENCODE_FAILED;
 	
 		rv = OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
@@ -261,7 +261,37 @@ asn_GT2time(const GeneralizedTime_t *st, struct tm *ret_tm, int as_gmt) {
 }
 
 time_t
-asn_GT2time_frac(const GeneralizedTime_t *st, long *frac_value, long *frac_base, struct tm *ret_tm, int as_gmt) {
+asn_GT2time_prec(const GeneralizedTime_t *st, int *frac_value, int frac_digits, struct tm *ret_tm, int as_gmt) {
+	time_t tloc;
+	int fv, fd = 0;
+
+	if(frac_value)
+		tloc = asn_GT2time_frac(st, &fv, &fd, ret_tm, as_gmt);
+	else
+		return asn_GT2time_frac(st, 0, 0, ret_tm, as_gmt);
+	if(fd == 0 || frac_digits <= 0) {
+		*frac_value = 0;
+	} else {
+		while(fd > frac_digits)
+			fv /= 10, fd--;
+		while(fd < frac_digits) {
+			int new_fv = fv * 10;
+			if(new_fv / 10 != fv) {
+				/* Too long precision request */
+				fv = 0;
+				break;
+			}
+			fv = new_fv, fd++;
+		}
+
+		*frac_value = fv;
+	}
+
+	return tloc;
+}
+
+time_t
+asn_GT2time_frac(const GeneralizedTime_t *st, int *frac_value, int *frac_digits, struct tm *ret_tm, int as_gmt) {
 	struct tm tm_s;
 	uint8_t *buf;
 	uint8_t *end;
@@ -269,8 +299,8 @@ asn_GT2time_frac(const GeneralizedTime_t *st, long *frac_value, long *frac_base,
 	int gmtoff_m = 0;
 	int gmtoff = 0;	/* h + m */
 	int offset_specified = 0;
-	long fvalue = 0;
-	long fbase = 1;
+	int fvalue = 0;
+	int fdigits = 0;
 	time_t tloc;
 
 	if(!st || !st->buf) {
@@ -372,14 +402,16 @@ asn_GT2time_frac(const GeneralizedTime_t *st, long *frac_value, long *frac_base,
 		 */
 		for(buf++; buf < end; buf++) {
 			int v = *buf;
+			int new_fvalue;
 			switch(v) {
 			case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
 			case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
-				if((fbase * 10 / fbase) != 10) {
+				new_fvalue = fvalue * 10 + (v - 0x30);
+				if(new_fvalue / 10 != fvalue) {
 					/* Not enough precision, ignore */
 				} else {
-					fbase *= 10;
-					fvalue = fvalue * 10 + (v - 0x30);
+					fvalue = new_fvalue;
+					fdigits++;
 				}
 				continue;
 			default:
@@ -490,7 +522,7 @@ local_finish:
 
 	/* Fractions of seconds */
 	if(frac_value) *frac_value = fvalue;
-	if(frac_base) *frac_base = fbase;
+	if(frac_digits) *frac_digits = fdigits;
 
 	return tloc;
 }
@@ -501,7 +533,7 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 }
 
 GeneralizedTime_t *
-asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, long frac_value, long frac_base, int force_gmt) {
+asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value, int frac_digits, int force_gmt) {
 	struct tm tm_s;
 	long gmtoff;
 	const unsigned int buf_size =
@@ -559,23 +591,28 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, long frac_value
 	/*
 	 * Deal with fractions.
 	 */
-	if(frac_base >= 10
-	&& frac_value > 0
-	&& (frac_value/frac_base) == 0
-	) {
+	if(frac_value > 0 && frac_digits > 0) {
 		char *end = p + 1 + 6;	/* '.' + maximum 6 digits */
 		char *z = p;
+		long fbase;
 		*z++ = '.';
-		frac_value %= frac_base;
+
+		/* Place bounds on precision */
+		while(frac_digits-- > 6)
+			frac_value /= 10;
+
+		/* emulate fbase = pow(10, frac_digits) */
+		for(fbase = 1; frac_digits--;)
+			fbase *= 10;
+
 		do {
-			int digit;
-			frac_base /= 10;
-			digit = frac_value / frac_base;
+			int digit = frac_value / fbase;
 			if(digit > 9) { z = 0; break; }
-			frac_value %= frac_base;
 			*z++ = digit + 0x30;
-		} while(frac_base >= 10 && frac_value > 0 && z < end);
-		if(z && (frac_base == 1 || frac_base >= 10)) {
+			frac_value %= fbase;
+			fbase /= 10;
+		} while(fbase > 0 && frac_value > 0 && z < end);
+		if(z) {
 			for(--z; *z == 0x30; --z);	/* Strip zeroes */
 			p = z + (*z != '.');
 			size = p - buf;
