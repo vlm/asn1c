@@ -1,5 +1,5 @@
 
-0.9.16: 2005-July-02
+0.9.16: 2005-July-03
 
 	* GeneralizedTime API now supports fractions of seconds.
 	  Thanks to Bent Nicolaisen <BN@JAI.com> for support.
