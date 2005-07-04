@@ -34,7 +34,16 @@ time_t asn_GT2time(const GeneralizedTime_t *, struct tm *_optional_tm4fill,
 
 /* A version of the above function also returning the fractions of seconds */
 time_t asn_GT2time_frac(const GeneralizedTime_t *,
-	long *frac_value, long *frac_base,		/* (value/base) */
+	int *frac_value, int *frac_digits,	/* (value / (10 ^ digits)) */
+	struct tm *_optional_tm4fill, int as_gmt);
+
+/*
+ * Another version returning fractions with defined precision
+ * For example, parsing of the time ending with ".1" seconds
+ * with frac_digits=3 (msec) would yield frac_value = 100.
+ */
+time_t asn_GT2time_prec(const GeneralizedTime_t *,
+	int *frac_value, int frac_digits,
 	struct tm *_optional_tm4fill, int as_gmt);
 
 /*
@@ -47,6 +56,6 @@ time_t asn_GT2time_frac(const GeneralizedTime_t *,
 GeneralizedTime_t *asn_time2GT(GeneralizedTime_t *_optional_gt,
 	const struct tm *, int force_gmt);
 GeneralizedTime_t *asn_time2GT_frac(GeneralizedTime_t *_optional_gt,
-	const struct tm *, long frac_value, long frac_base, int force_gmt);
+	const struct tm *, int frac_value, int frac_digits, int force_gmt);
 
 #endif	/* _GeneralizedTime_H_ */
