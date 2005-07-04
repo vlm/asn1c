@@ -4,7 +4,7 @@
 	* GeneralizedTime API now supports fractions of seconds.
 	  Thanks to Bent Nicolaisen <BN@JAI.com> for support.
 	* ASN.1 parser has been tweaked to allow parsing something like
-	  "SEQUENCE--- comment ---", which is ambiguous for many reasons.
+	  "SEQUENCE----comment----", which is ambiguous for many reasons.
 	* XER decoder better handles not-yet-defined future extensions.
 
 0.9.15: 2005-July-02
