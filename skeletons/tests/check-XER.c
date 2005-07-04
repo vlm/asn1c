@@ -24,9 +24,9 @@ check_next(char *xerbuf, int expected_chunk_size, pxer_chunk_type_e expected_chu
 	ch_size = xer_next_token(&state, xerbuf, xerbuf_len, &ch_type);
 
 	printf("[%s]:%d\n", xerbuf, xerbuf_len);
-	printf("chunk sizes: %d vs %d, chunk types: %d vs %d\n",
-		ch_size, expected_chunk_size,
-		ch_type, expected_chunk_type
+	printf("chunk sizes: %ld vs %ld, chunk types: %d vs %ld\n",
+		(long)ch_size, (long)expected_chunk_size,
+		ch_type, (long)expected_chunk_type
 	);
 
 	if(expected_chunk_type == -1) {
