@@ -524,14 +524,9 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 		break;
 	case ASN_CONSTR_SET_OF:
 	case ASN_CONSTR_SEQUENCE_OF:
-		OUT("{ /* Determine the number of elements */\n");
-			INDENT(+1);
-			OUT("const A_%s_OF(void) *list;\n",
-				etype==ASN_CONSTR_SET_OF?"SET":"SEQUENCE");
-			OUT("(const void *)list = sptr;\n");
-			OUT("size = list->count;\n");
-			INDENT(-1);
-		OUT("}\n");
+		OUT("/* Determine the number of elements */\n");
+		OUT("size = _A_C%s_FROM_VOID(sptr)->count;\n",
+			etype==ASN_CONSTR_SET_OF?"SET":"SEQUENCE");
 		break;
 	case ASN_BASIC_OCTET_STRING:
 		OUT("size = st->size;\n");
