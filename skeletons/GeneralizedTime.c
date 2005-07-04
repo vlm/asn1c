@@ -561,7 +561,7 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, long frac_value
 	 */
 	if(frac_base >= 10
 	&& frac_value > 0
-	&& (frac_value/(frac_base/10)) < 10	/* 98/99 */
+	&& (frac_value/frac_base) == 0
 	) {
 		char *end = p + 1 + 6;	/* '.' + maximum 6 digits */
 		char *z = p;
@@ -571,12 +571,15 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, long frac_value
 			int digit;
 			frac_base /= 10;
 			digit = frac_value / frac_base;
+			if(digit > 9) { z = 0; break; }
 			frac_value %= frac_base;
 			*z++ = digit + 0x30;
 		} while(frac_base >= 10 && frac_value > 0 && z < end);
-		for(--z; *z == 0x30; --z);	/* Strip zeroes */
-		p = z + (*z != '.');
-		size = p - buf;
+		if(z && (frac_base == 1 || frac_base >= 10)) {
+			for(--z; *z == 0x30; --z);	/* Strip zeroes */
+			p = z + (*z != '.');
+			size = p - buf;
+		}
 	}
 
 	if(force_gmt) {
