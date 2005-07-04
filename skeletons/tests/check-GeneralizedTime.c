@@ -133,6 +133,21 @@ check_fractions() {
 	printf("[%s]\n", gt->buf);
 	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
 
+	gt = asn_time2GT_frac(gt, &tm, 98, 99, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, 90, 91, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, 89, 91, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000.9Z") == 0);
+
 	FREEMEM(gt->buf);
 	FREEMEM(gt);
 }

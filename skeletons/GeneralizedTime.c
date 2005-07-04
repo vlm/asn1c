@@ -561,8 +561,7 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, long frac_value
 	 */
 	if(frac_base >= 10
 	&& frac_value > 0
-	/* 1001 ms? should ignore or adjust seconds */
-	&& (frac_value/frac_base) == 0
+	&& (frac_value/(frac_base/10)) < 10	/* 98/99 */
 	) {
 		char *end = p + 1 + 6;	/* '.' + maximum 6 digits */
 		char *z = p;
