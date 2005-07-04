@@ -83,10 +83,66 @@ recode(char *time_str, const char *expect) {
 	FREEMEM(gt.buf);
 }
 
+static void
+check_fractions() {
+	GeneralizedTime_t *gt = 0;
+	struct tm tm;
+
+	memset(&tm, 0, sizeof tm);
+	tm.tm_year = 70;
+	tm.tm_mday = 1;
+
+	gt = asn_time2GT_frac(gt, &tm, -1, -1, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, 0, 0, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, 0, -1, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, -1, 0, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, 10, 0, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	/* Normalization should happen prior calling the _frac() */
+	gt = asn_time2GT_frac(gt, &tm, 55, 10, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, 10, 20, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000.5Z") == 0);
+
+	gt = asn_time2GT_frac(gt, &tm, -10, 20, 1);
+	assert(gt);
+	printf("[%s]\n", gt->buf);
+	assert(strcmp((char *)gt->buf, "19700101000000Z") == 0);
+
+	FREEMEM(gt->buf);
+	FREEMEM(gt);
+}
+
 int
 main(int ac, char **av) {
 
 	(void)av;
+
+	check_fractions();
 
 	recognize("200401250", -1, 0);
 	recognize("2004012509300", -1, 0);
