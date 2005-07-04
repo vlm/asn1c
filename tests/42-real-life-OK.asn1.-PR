@@ -51,11 +51,8 @@ memb_varsets_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	{ /* Determine the number of elements */
-		const A_SEQUENCE_OF(void) *list;
-		(const void *)list = sptr;
-		size = list->count;
-	}
+	/* Determine the number of elements */
+	size = _A_CSEQUENCE_FROM_VOID(sptr)->count;
 	
 	if((size >= 1)) {
 		/* Perform validation of the inner elements */
@@ -388,11 +385,8 @@ memb_vset_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	{ /* Determine the number of elements */
-		const A_SET_OF(void) *list;
-		(const void *)list = sptr;
-		size = list->count;
-	}
+	/* Determine the number of elements */
+	size = _A_CSET_FROM_VOID(sptr)->count;
 	
 	if((size >= 1)) {
 		/* Perform validation of the inner elements */
