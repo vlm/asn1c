@@ -58,7 +58,7 @@ xer_type_encoder_f SET_encode_xer;
  * It is very simple bitfield test, despite its visual complexity.
  */
 #define	ASN_SET_ISPRESENT(set_ptr, PR_x)				\
-	ASN_SET_ISPRESENT2(&((set_ptr)->_presence_map))
+	ASN_SET_ISPRESENT2(&((set_ptr)->_presence_map), PR_x)
 #define	ASN_SET_ISPRESENT2(map_ptr, PR_x)				\
 	(((unsigned int *)(map_ptr))					\
 		[(PR_x)	/ (8 * sizeof(unsigned int))]			\
