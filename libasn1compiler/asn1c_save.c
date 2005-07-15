@@ -227,9 +227,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 		"#define\t_%s_H_\n"
 		"\n", header_id, header_id);
 
-	fprintf(fp_h, "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n");
-
-	fprintf(fp_h, "#include <asn_application.h>\n");
+	fprintf(fp_h, "\n#include <asn_application.h>\n");
 
 #define	SAVE_STREAM(fp, idx, msg, actdep)	do {			\
 	if(TQ_FIRST(&(cs->destination[idx].chunks)) && *msg)		\
@@ -241,6 +239,9 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 } while(0)
 
 	SAVE_STREAM(fp_h, OT_INCLUDES,	"Including external dependencies", 1);
+
+	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
+
 	SAVE_STREAM(fp_h, OT_DEPS,	"Dependencies", 0);
 	SAVE_STREAM(fp_h, OT_FWD_DECLS,	"Forward declarations", 0);
 	SAVE_STREAM(fp_h, OT_TYPE_DECLS, expr->Identifier, 0);
