@@ -1051,7 +1051,7 @@ the file <B>main.c</B>:
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,&nbsp;''Specify&nbsp;filename&nbsp;for&nbsp;BER&nbsp;output&#92;n'');</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;char&nbsp;*filename&nbsp;=&nbsp;av[1];</FONT>
-&nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FILE&nbsp;*fp&nbsp;=&nbsp;fopen(filename,&nbsp;''w'');&nbsp;&nbsp;&nbsp;/*&nbsp;for&nbsp;BER&nbsp;output&nbsp;*/</FONT>
+&nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FILE&nbsp;*fp&nbsp;=&nbsp;fopen(filename,&nbsp;''wb'');&nbsp;&nbsp;&nbsp;/*&nbsp;for&nbsp;BER&nbsp;output&nbsp;*/</FONT>
 &nbsp;
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(!fp)&nbsp;{</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(filename);</FONT>
