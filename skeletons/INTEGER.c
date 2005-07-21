@@ -309,7 +309,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		ST_SKIPSPACE,
 		ST_WAITDIGITS,
 		ST_DIGITS,
-		ST_EXTRASTUFF,
+		ST_EXTRASTUFF
 	} state = ST_SKIPSPACE;
 
 	/*

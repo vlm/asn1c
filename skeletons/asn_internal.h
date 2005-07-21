@@ -39,11 +39,7 @@ void ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
 #endif	/* __GNUC__ */
 #else	/* EMIT_ASN_DEBUG != 1 */
-#ifdef	__GNUC__
-#define	ASN_DEBUG(fmt, args...)	((void)0)	/* Emit a no-op operator */
-#else	/* __GNUC__ */
-static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; };
-#endif	/* __GNUC__ */
+static inline void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 #endif	/* EMIT_ASN_DEBUG */
 #endif	/* ASN_DEBUG */
 
