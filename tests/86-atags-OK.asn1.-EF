@@ -1,0 +1,28 @@
+ModuleAutoTags { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 86 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+A ::= SEQUENCE {
+    a	 [0] IMPLICIT INTEGER
+}
+
+B ::= SEQUENCE {
+    a	 [0] IMPLICIT INTEGER
+}
+
+C ::= SEQUENCE {
+    a	 [0] IMPLICIT INTEGER
+}
+
+D ::= SEQUENCE {
+    a	 [0] EXPLICIT INTEGER
+}
+
+E ::= SEQUENCE {
+    a	 [0] EXPLICIT CHOICE {
+        b	 [0] IMPLICIT INTEGER
+    }
+}
+
+END
