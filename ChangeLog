@@ -1,5 +1,10 @@
 
-0.9.16: 2005-July-04
+0.9.17:	2005-July-20
+
+	* Tagging mode is implicitly IMPLICIT if AUTOMATIC TAGS is used, #30.6.
+	  (Test cases 55, 86).
+
+0.9.16:	2005-July-04
 
 	* GeneralizedTime API now supports fractions of seconds.
 	  Thanks to Bent Nicolaisen <BN@JAI.com> for support.

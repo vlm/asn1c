@@ -252,7 +252,8 @@ asn1f_fix_constr_tag(arg_t *arg, int fix_top_level) {
 static int
 _asn1f_fix_type_tag(arg_t *arg, asn1p_expr_t *expr) {
 	int must_explicit = _asn1f_check_if_tag_must_be_explicit(arg, expr);
-	int module_impl_tags = (arg->mod->module_flags & MSF_IMPLICIT_TAGS);
+	int module_impl_tags = (arg->mod->module_flags
+				& (MSF_IMPLICIT_TAGS | MSF_AUTOMATIC_TAGS));
 	int r_value = 0;
 
 	if(expr->tag.tag_mode == TM_DEFAULT) {

@@ -5,7 +5,7 @@ BEGIN
 
 OneType ::= SEQUENCE {
     one-1	 INTEGER,
-    one-2	 [1] EXPLICIT BOOLEAN,
+    one-2	 [1] IMPLICIT BOOLEAN,
     one-3	 SEQUENCE {
         alpha	 [0] IMPLICIT INTEGER,    
         beta	 [1] IMPLICIT INTEGER,    
