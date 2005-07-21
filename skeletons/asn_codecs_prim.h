@@ -24,7 +24,7 @@ enum xer_pbd_rval {
 	XPBD_DECODER_LIMIT,	/* Hit some decoder limitation or deficiency */
 	XPBD_BROKEN_ENCODING,	/* Encoding of a primitive body is broken */
 	XPBD_NOT_BODY_IGNORE,	/* Not a body format, but safe to ignore */
-	XPBD_BODY_CONSUMED,	/* Body is recognized and consumed */
+	XPBD_BODY_CONSUMED	/* Body is recognized and consumed */
 };
 typedef enum xer_pbd_rval (xer_primitive_body_decoder_f)
 	(asn_TYPE_descriptor_t *td, void *struct_ptr,
