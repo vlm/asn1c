@@ -101,7 +101,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 typedef enum OS_type {
 	_TT_GENERIC	= 0,	/* Just a random OCTET STRING */
 	_TT_BIT_STRING	= 1,	/* BIT STRING type, a special case */
-	_TT_ANY		= 2,	/* ANY type, a special case too */
+	_TT_ANY		= 2	/* ANY type, a special case too */
 } OS_type_e;
 
 /*

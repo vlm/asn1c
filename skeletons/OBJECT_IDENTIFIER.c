@@ -659,7 +659,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	enum {
 		ST_SKIPSPACE,
 		ST_WAITDIGITS,	/* Next character is expected to be a digit */
-		ST_DIGITS,
+		ST_DIGITS
 	} state = ST_SKIPSPACE;
 
 	if(!oid_text || oid_txt_length < -1 || (arcs_slots && !arcs)) {

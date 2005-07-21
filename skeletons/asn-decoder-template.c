@@ -32,7 +32,7 @@ static int opt_stack;	/* -s */
 static enum output_method {
 	OUT_NONE,	/* No pretty-printing */
 	OUT_PRINT,	/* -p flag */
-	OUT_XML,	/* -x flag */
+	OUT_XML		/* -x flag */
 }          opt_ometh;	/* -p or -x */
 
 #define	DEBUG(fmt, args...)	do {		\
