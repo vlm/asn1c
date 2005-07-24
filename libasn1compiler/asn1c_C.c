@@ -1865,6 +1865,11 @@ expr_better_indirect(arg_t *arg, asn1p_expr_t *expr) {
 	if(expr->expr_type != A1TC_REFERENCE)
 		return 0;
 
+	/* -findirect-choice compiles members of CHOICE as indirect pointers */
+	if((arg->flags & A1C_INDIRECT_CHOICE)
+	 && arg->expr->expr_type == ASN_CONSTR_CHOICE)
+		return 1;
+
 	/* Rewind to the topmost parent expression */
 	if((top_parent = expr->parent_expr)) {
 		while(top_parent->parent_expr)

@@ -23,7 +23,7 @@ and other encoding standards.
 .TP
 \fILanguage Options\fR
 .br
-\fB\-fall-defs-global \-fbless-SIZE \-fcompound-names
+\fB\-fall-defs-global \-fbless-SIZE \-fcompound-names \-findirect-choice
 .BI "\-fknown-extern-type="<name>
 \fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions \-ftypes88\fR
 .TP
@@ -90,9 +90,16 @@ by using complex names for target language structures. (Name collisions
 may occur if the ASN.1 module reuses the same identifiers in multiple
 contexts).
 .TP
+.B \-findirect-choice
+When generating code for a CHOICE type, compile the CHOICE members as indirect
+pointers instead of declaring them inline. Consider using this option
+together with
+.B \-fno-include-deps
+to prevent circular references.
+.TP
 .BI "\-fknown-extern-type="<name>
 Pretend the specified type is known. The compiler will assume the target
-language source files for the given type are provided manually.
+language source files for the given type have been provided manually.
 .TP
 .B \-fnative-types
 Use the native machine's data types (int, double) whenever possible,

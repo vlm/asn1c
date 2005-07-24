@@ -47,6 +47,10 @@ enum asn1c_flags {
 	 * Do not generate courtesy #includes for external dependencies.
 	 */
 	A1C_NO_INCLUDE_DEPS	= 0x0200,
+	/*
+	 * Compile members of CHOICE as indirect pointers.
+	 */
+	A1C_INDIRECT_CHOICE	= 0x0400,
 };
 
 /*

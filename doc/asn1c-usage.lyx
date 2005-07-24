@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{This document describes 
 \backslash 
-href{http://lionet.info/asn1c}{asn1c-0.9.11}}
+href{http://lionet.info/asn1c}{asn1c-0.9.17}}
 \layout Standard
 
 \backslash 
@@ -169,7 +169,7 @@ END
 The compiler would read this ASN.1 definition and produce the following C
  type
 \begin_inset Foot
-collapsed true
+collapsed false
 
 \layout Standard
 
@@ -182,8 +182,8 @@ collapsed true
 int
 \emph default 
  types instead of infinite width INTEGER_t structures.
- See Table 
-\begin_inset LatexCommand \vref{cap:asn1c-cmdopts}
+ See Section 
+\begin_inset LatexCommand \vref{sec:Command-line-options}
 
 \end_inset 
 
@@ -240,7 +240,7 @@ ell
 \emph default 
  command may be used to compile the ASN.1 module
 \begin_inset Foot
-collapsed true
+collapsed false
 
 \layout Standard
 
@@ -249,8 +249,8 @@ This is probably
 not
 \series default 
  what you want to try out right now -- read through the rest of this chapter
- and check the Table 
-\begin_inset LatexCommand \vref{cap:asn1c-cmdopts}
+ and check the Section 
+\begin_inset LatexCommand \vref{sec:Command-line-options}
 
 \end_inset 
 
@@ -438,28 +438,20 @@ int main()
  routine.
 \layout Section
 
-Command line options
-\layout Standard
 
-The Table 
-\begin_inset LatexCommand \vref{cap:asn1c-cmdopts}
+\begin_inset LatexCommand \label{sec:Command-line-options}
 
 \end_inset 
 
- summarizes various options affecting the compiler's behavior.
+Command line options
 \layout Standard
 
-
-\begin_inset Float table
-placement h
-wide false
-collapsed false
-
+The following table summarizes the asn1c command line options.
 \layout Standard
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="24" columns="2">
+<lyxtabular version="3" rows="26" columns="2">
 <features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -716,7 +708,7 @@ Enable lexer debugging during the ASN.1 parsing stage.
 \end_inset 
 </cell>
 </row>
-<row topline="true" bottomline="true">
+<row topline="true" bottomline="true" newpage="true">
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -844,6 +836,54 @@ Use complex names for C structures.
 
 \layout Standard
 
+-findirect-choice
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+When generating code for a CHOICE type, compile the CHOICE members as indirect
+ pointers instead of declaring them inline.
+ Consider using this option together with 
+\series bold 
+-fno-include-deps
+\series default 
+ to prevent circular references.
+ 
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-fknown-extern-type=
+\emph on 
+<name>
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Pretend the specified type is known.
+ The compiler will assume the target language source files for the given
+ type have been provided manually.
+ 
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
 
 \size small 
 -fnative-types
@@ -953,7 +993,7 @@ Pretend to support only ASN.1:1988 embedded types.
 \end_inset 
 </cell>
 </row>
-<row topline="true" newpage="true">
+<row topline="true">
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -1024,17 +1064,6 @@ Generate "-- #line" comments in -E output.
 </row>
 </lyxtabular>
 
-\end_inset 
-
-
-\layout Caption
-
-
-\begin_inset LatexCommand \label{cap:asn1c-cmdopts}
-
-\end_inset 
-
-The list of asn1c command line options
 \end_inset 
 
 
