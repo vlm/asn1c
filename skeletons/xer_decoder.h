@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /*
@@ -94,5 +98,9 @@ int xer_is_whitespace(const void *chunk_buf, size_t chunk_size);
  * Skip the series of anticipated extensions.
  */
 int xer_skip_unknown(xer_check_tag_e tcv, ber_tlv_len_t *depth);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _XER_DECODER_H_ */

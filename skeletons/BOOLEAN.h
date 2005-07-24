@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * The underlying integer may contain various values, but everything
  * non-zero is capped to 0xff by the DER encoder. The BER decoder may
@@ -22,5 +26,9 @@ ber_type_decoder_f BOOLEAN_decode_ber;
 der_type_encoder_f BOOLEAN_encode_der;
 xer_type_decoder_f BOOLEAN_decode_xer;
 xer_type_encoder_f BOOLEAN_encode_xer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _BOOLEAN_H_ */

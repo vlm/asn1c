@@ -7,6 +7,10 @@
 
 #include <asn_system.h>		/* Platform-dependent types */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct asn_TYPE_descriptor_s;		/* Forward declaration */
 
 /*
@@ -50,5 +54,9 @@ asn_constr_check_f asn_generic_unknown_constraint; /* Not fully supported */
 
 void _asn_i_log_error(asn_app_consume_bytes_f *, void *key,
 	const char *fmt, ...) __attribute__ ((format(printf, 3, 4)));
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _ASN1_CONSTRAINTS_VALIDATOR_H_ */

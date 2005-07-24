@@ -5,6 +5,10 @@
 #ifndef	_BER_TLV_LENGTH_H_
 #define	_BER_TLV_LENGTH_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef ssize_t ber_tlv_len_t;
 
 /*
@@ -39,5 +43,9 @@ ssize_t ber_skip_length(
  * against the supplied buffer's size.
  */
 size_t der_tlv_length_serialize(ber_tlv_len_t len, void *bufptr, size_t size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _BER_TLV_LENGTH_H_ */

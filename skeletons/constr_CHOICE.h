@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct asn_CHOICE_specifics_s {
 	/*
 	 * Target structure description.
@@ -39,5 +43,9 @@ der_type_encoder_f CHOICE_encode_der;
 xer_type_decoder_f CHOICE_decode_xer;
 xer_type_encoder_f CHOICE_encode_xer;
 asn_outmost_tag_f CHOICE_outmost_tag;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _CONSTR_CHOICE_H_ */

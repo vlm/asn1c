@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef struct asn_SET_specifics_s {
 	/*
@@ -70,5 +74,9 @@ xer_type_encoder_f SET_encode_xer;
 		[(PR_x)	/ (8 * sizeof(unsigned int))]			\
 		|= (1 << ((8 * sizeof(unsigned int)) - 1		\
 		- ((PR_x) % (8 * sizeof(unsigned int))))))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _CONSTR_SET_H_ */

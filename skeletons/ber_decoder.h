@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct asn_TYPE_descriptor_s;	/* Forward declaration */
 struct asn_codec_ctx_s;		/* Forward declaration */
 
@@ -51,5 +55,9 @@ asn_dec_rval_t ber_check_tags(
 		ber_tlv_len_t *last_length,
 		int *opt_tlv_form	/* optional tag form */
 	);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _BER_DECODER_H_ */

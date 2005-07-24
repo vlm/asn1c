@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct OCTET_STRING {
 	uint8_t *buf;	/* Buffer with consecutive OCTET_STRING bits */
 	int size;	/* Size of the buffer */
@@ -66,5 +70,9 @@ typedef struct asn_OCTET_STRING_specifics_s {
 
 	int subvariant;		/* {0,1,2} for O-S, BIT STRING or ANY */
 } asn_OCTET_STRING_specifics_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _OCTET_STRING_H_ */

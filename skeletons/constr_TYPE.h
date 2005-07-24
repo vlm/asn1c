@@ -14,6 +14,10 @@
 #include <ber_tlv_length.h>
 #include <ber_tlv_tag.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct asn_TYPE_descriptor_s;	/* Forward declaration */
 struct asn_TYPE_member_s;	/* Forward declaration */
 
@@ -156,5 +160,9 @@ typedef struct asn_TYPE_tag2member_s {
 int asn_fprint(FILE *stream,		/* Destination stream descriptor */
 	asn_TYPE_descriptor_t *td,	/* ASN.1 type descriptor */
 	const void *struct_ptr);	/* Structure to be printed */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _CONSTR_TYPE_H_ */

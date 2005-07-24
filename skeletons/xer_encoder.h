@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /* Flags used by the xer_encode() and (*xer_type_encoder_f), defined below */
@@ -47,5 +51,9 @@ typedef asn_enc_rval_t (xer_type_encoder_f)(
 		asn_app_consume_bytes_f *consume_bytes_cb,	/* Callback */
 		void *app_key		/* Arbitrary callback argument */
 	);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _XER_ENCODER_H_ */

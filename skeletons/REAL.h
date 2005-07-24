@@ -8,6 +8,10 @@
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef ASN__PRIMITIVE_TYPE_t REAL_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_REAL;
@@ -30,5 +34,9 @@ ssize_t REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *a
  */
 int asn_REAL2double(const REAL_t *real_ptr, double *d);
 int asn_double2REAL(REAL_t *real_ptr, double d);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* ASN_TYPE_REAL_H */

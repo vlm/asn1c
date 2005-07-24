@@ -5,6 +5,10 @@
 #ifndef	_ASN_CODECS_H_
 #define	_ASN_CODECS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /*
@@ -51,7 +55,10 @@ typedef struct asn_enc_rval_s {
 	void *structure_ptr;
 } asn_enc_rval_t;
 #define	_ASN_ENCODE_FAILED do {					\
-	asn_enc_rval_t tmp_error = { -1, td, sptr };		\
+	asn_enc_rval_t tmp_error;				\
+	tmp_error.encoded = -1;					\
+	tmp_error.failed_type = td;				\
+	tmp_error.structure_ptr = sptr;				\
 	return tmp_error;					\
 } while(0)
 
@@ -72,5 +79,9 @@ typedef struct asn_dec_rval_s {
 	enum asn_dec_rval_code_e code;	/* Result code */
 	size_t consumed;		/* Number of bytes consumed */
 } asn_dec_rval_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _ASN_CODECS_H_ */

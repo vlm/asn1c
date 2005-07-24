@@ -1,8 +1,11 @@
 
-0.9.17:	2005-July-20
+0.9.17:	2005-July-24
 
 	* Tagging mode is implicitly IMPLICIT if AUTOMATIC TAGS is used, #30.6.
 	  (Test cases 55, 86).
+	* Started to use extern "C" {} in skeleton headers.
+	* Introduced -finline-choice command line option to fix
+	  yet another class of circular references.
 
 0.9.16:	2005-July-04
 
