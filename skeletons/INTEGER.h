@@ -8,6 +8,10 @@
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef ASN__PRIMITIVE_TYPE_t INTEGER_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_INTEGER;
@@ -51,5 +55,9 @@ int asn_long2INTEGER(INTEGER_t *i, long l);
  * Convert the integer value into the corresponding enumeration map entry.
  */
 const asn_INTEGER_enum_map_t *INTEGER_map_value2enum(asn_INTEGER_specifics_t *specs, long value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _INTEGER_H_ */

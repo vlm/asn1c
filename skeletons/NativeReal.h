@@ -13,6 +13,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern asn_TYPE_descriptor_t asn_DEF_NativeReal;
 
 asn_struct_free_f  NativeReal_free;
@@ -21,5 +25,9 @@ ber_type_decoder_f NativeReal_decode_ber;
 der_type_encoder_f NativeReal_encode_der;
 xer_type_decoder_f NativeReal_decode_xer;
 xer_type_encoder_f NativeReal_encode_xer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* ASN_TYPE_NativeReal_H */

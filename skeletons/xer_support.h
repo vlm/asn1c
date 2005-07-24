@@ -8,6 +8,10 @@
 
 #include <asn_system.h>		/* Platform-specific types */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Types of data transferred to the application.
  */
@@ -43,5 +47,9 @@ typedef int (pxml_callback_f)(pxml_chunk_type_e _type,
  */
 ssize_t pxml_parse(int *_stateContext, const void *_buf, size_t _size,
 	pxml_callback_f *cb, void *_key);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _XER_SUPPORT_H_ */

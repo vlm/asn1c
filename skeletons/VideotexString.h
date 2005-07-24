@@ -7,8 +7,16 @@
 
 #include <OCTET_STRING.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef OCTET_STRING_t VideotexString_t;  /* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_VideotexString;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _VideotexString_H_ */

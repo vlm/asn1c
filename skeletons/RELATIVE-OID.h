@@ -7,6 +7,10 @@
 
 #include <OBJECT_IDENTIFIER.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Implemented via OBJECT IDENTIFIER */
 typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t;
 
@@ -27,5 +31,9 @@ int RELATIVE_OID_get_arcs(RELATIVE_OID_t *_roid,
 /* See OBJECT_IDENTIFIER_set_arcs() function in OBJECT_IDENTIFIER.h */
 int RELATIVE_OID_set_arcs(RELATIVE_OID_t *_roid,
 	void *arcs, unsigned int arc_type_size, unsigned int arcs_slots);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _RELATIVE_OID_H_ */

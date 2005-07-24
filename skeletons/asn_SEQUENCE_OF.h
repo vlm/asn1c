@@ -7,6 +7,10 @@
 
 #include <asn_SET_OF.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * SEQUENCE OF is the same as SET OF with a tiny difference:
  * the delete operation preserves the initial order of elements
@@ -40,5 +44,9 @@ void asn_sequence_del(void *asn_sequence_of_x, int number, int _do_free);
 typedef A_SEQUENCE_OF(void) asn_anonymous_sequence_;
 #define _A_SEQUENCE_FROM_VOID(ptr)	((asn_anonymous_sequence_ *)(ptr))
 #define _A_CSEQUENCE_FROM_VOID(ptr) 	((const asn_anonymous_sequence_ *)(ptr))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* ASN_SEQUENCE_OF_H */

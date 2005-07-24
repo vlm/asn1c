@@ -8,8 +8,16 @@
 #include <asn_application.h>
 #include <VisibleString.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef VisibleString_t ISO646String_t;	/* Implemented using VisibleString */
 
 extern asn_TYPE_descriptor_t asn_DEF_ISO646String;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _ISO646String_H_ */

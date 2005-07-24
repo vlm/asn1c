@@ -7,8 +7,16 @@
 
 #include <INTEGER.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef INTEGER_t ENUMERATED_t;		/* Implemented via INTEGER */
 
 extern asn_TYPE_descriptor_t asn_DEF_ENUMERATED;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _ENUMERATED_H_ */

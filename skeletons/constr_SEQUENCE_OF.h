@@ -8,6 +8,10 @@
 #include <asn_application.h>
 #include <constr_SET_OF.h>		/* Implemented using SET OF */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * A set specialized functions dealing with the SEQUENCE OF type.
  * Generally implemented using SET OF.
@@ -19,5 +23,9 @@
 #define	SEQUENCE_OF_decode_xer	SET_OF_decode_xer
 der_type_encoder_f SEQUENCE_OF_encode_der;
 xer_type_encoder_f SEQUENCE_OF_encode_xer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _CONSTR_SET_OF_H_ */

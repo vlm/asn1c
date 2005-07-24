@@ -7,6 +7,10 @@
 
 #include <OCTET_STRING.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef OCTET_STRING_t UTF8String_t;	/* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_UTF8String;
@@ -37,5 +41,9 @@ ssize_t UTF8String_length(const UTF8String_t *st);
  * 	UTF8String_length(const UTF8String_t *st);
  */
 size_t UTF8String_to_wcs(const UTF8String_t *st, uint32_t *dst, size_t dstlen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _UTF8String_H_ */

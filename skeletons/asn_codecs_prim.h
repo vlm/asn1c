@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct ASN__PRIMITIVE_TYPE_s {
 	uint8_t *buf;	/* Buffer with consecutive primitive encoding bytes */
 	int size;	/* Size of the buffer */
@@ -41,5 +45,9 @@ asn_dec_rval_t xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	const void *buf_ptr, size_t size,
 	xer_primitive_body_decoder_f *prim_body_decoder
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* ASN_CODECS_PRIM_H */

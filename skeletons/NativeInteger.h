@@ -15,6 +15,10 @@
 #include <asn_application.h>
 #include <INTEGER.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern asn_TYPE_descriptor_t asn_DEF_NativeInteger;
 
 asn_struct_free_f  NativeInteger_free;
@@ -23,5 +27,9 @@ ber_type_decoder_f NativeInteger_decode_ber;
 der_type_encoder_f NativeInteger_encode_der;
 xer_type_decoder_f NativeInteger_decode_xer;
 xer_type_encoder_f NativeInteger_encode_xer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _NativeInteger_H_ */

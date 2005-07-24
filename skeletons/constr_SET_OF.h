@@ -7,6 +7,10 @@
 
 #include <asn_application.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct asn_SET_OF_specifics_s {
 	/*
 	 * Target structure description.
@@ -28,5 +32,9 @@ ber_type_decoder_f SET_OF_decode_ber;
 der_type_encoder_f SET_OF_encode_der;
 xer_type_decoder_f SET_OF_decode_xer;
 xer_type_encoder_f SET_OF_encode_xer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _CONSTR_SET_OF_H_ */

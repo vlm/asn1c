@@ -7,6 +7,10 @@
 
 #include <OCTET_STRING.h>	/* Some help from OCTET STRING */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct BIT_STRING_s {
 	uint8_t *buf;	/* BIT STRING body */
 	int size;	/* Size of the above buffer */
@@ -21,5 +25,9 @@ extern asn_TYPE_descriptor_t asn_DEF_BIT_STRING;
 asn_struct_print_f BIT_STRING_print;	/* Human-readable output */
 asn_constr_check_f BIT_STRING_constraint;
 xer_type_encoder_f BIT_STRING_encode_xer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _BIT_STRING_H_ */

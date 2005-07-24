@@ -9,6 +9,10 @@
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER;
@@ -127,5 +131,9 @@ int OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen,
 	signed int add, void *value, unsigned int value_size);
 int OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf,
 	void *arcval, unsigned int arcval_size, int _prepared_order);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _OBJECT_IDENTIFIER_H_ */
