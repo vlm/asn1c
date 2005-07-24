@@ -400,6 +400,19 @@ produce the meaningful code.</FONT></TD></TR>
 name clashes in case the module reuses the same identifiers in multiple
 contexts.</FONT></TD></TR>
 </TBODY><TBODY>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-findirect-choice</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">When generating code for a CHOICE type, compile 
+the CHOICE members as indirect pointers instead of 
+declaring them inline. Consider using this option
+together with <B>-fno-include-deps</B> to prevent circular references.
+</FONT></TD></TR>
+</TBODY><TBODY>
+<TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fknown-extern-type=<I>&lt;name&gt;</I></FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
+<FONT SIZE="-1">Pretend the specified type is known. The compiler will 
+assume the target language source files for the given 
+type have been provided manually.
+</FONT></TD></TR>
+</TBODY><TBODY>
 <TR><TD VALIGN=BASELINE ALIGN=LEFT NOWRAP><FONT SIZE="-1">-fnative-types</FONT></TD><TD VALIGN=BASELINE ALIGN=LEFT WIDTH="216">
 <FONT SIZE="-1">Use the native machine's data types (int, double) whenever
 possible, instead of the compound INTEGER_t, ENUMERATED_t and REAL_t
