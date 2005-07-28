@@ -8,14 +8,18 @@
 #ifndef	_ASN_INTERNAL_H_
 #define	_ASN_INTERNAL_H_
 
-#define	ASN1C_ENVIRONMENT_VERSION	98	/* Compile-time version */
-int get_asn1c_environment_version(void);	/* Run-time version */
-
 #include <asn_application.h>	/* Application-visible API */
 
 #ifndef	__NO_ASSERT_H__		/* Include assert.h only for internal use. */
 #include <assert.h>		/* for assert() macro */
 #endif
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+#define	ASN1C_ENVIRONMENT_VERSION	98	/* Compile-time version */
+int get_asn1c_environment_version(void);	/* Run-time version */
 
 #define	CALLOC(nmemb, size)	calloc(nmemb, size)
 #define	MALLOC(size)		malloc(size)
@@ -75,5 +79,9 @@ static inline void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 	for(__i = 0; __i < ilevel; __i++)				\
 		if(cb("    ", 4, app_key) < 0) return -1;		\
 } while(0)
+
+#ifdef	__cplusplus
+}
+#endif
 
 #endif	/* _ASN_INTERNAL_H_ */
