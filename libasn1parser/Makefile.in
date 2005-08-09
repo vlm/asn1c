@@ -514,6 +514,8 @@ uninstall-am: uninstall-info-am
 	uninstall-info-am
 
 
+asn1p_expr.h: asn1p_expr_str.h
+
 asn1p_expr_str.h: expr-h.pl asn1p_expr.h
 	./expr-h.pl asn1p_expr.h > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
