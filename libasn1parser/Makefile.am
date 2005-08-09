@@ -22,6 +22,8 @@ libasn1parser_la_SOURCES =		\
 	asn1p_ref.c asn1p_ref.h		\
 	asn1p_list.h
 
+asn1p_expr.h: asn1p_expr_str.h
+
 asn1p_expr_str.h: expr-h.pl asn1p_expr.h
 	./expr-h.pl asn1p_expr.h > $@
 
