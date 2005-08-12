@@ -1,4 +1,8 @@
 
+0.9.17:	2005-Aug-11
+
+	* ...
+
 0.9.17:	2005-Aug-07
 
 	* Tagging mode is implicitly IMPLICIT if AUTOMATIC TAGS is used, #30.6.
