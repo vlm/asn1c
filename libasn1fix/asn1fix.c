@@ -118,7 +118,7 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 	TQ_FOR(omod, &arg->asn->modules, mod_next) {
 		int sameNames;
 		if(omod == arg->mod) break;
-		sameNames = strcmp(omod->Identifier, arg->mod->Identifier)?0:1;
+		sameNames = strcmp(omod->ModuleName, arg->mod->ModuleName)?0:1;
 		if(omod->module_oid && arg->mod->module_oid) {
 			/* Compare only the OID. */
 			if(asn1p_oid_compare(omod->module_oid,
@@ -126,18 +126,18 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 				FATAL("ASN.1 module %s in %s "
 					"has the same OBJECT IDENTIFIER"
 					" as module %s",
-					omod->Identifier,
+					omod->ModuleName,
 					omod->source_file_name,
-					arg->mod->Identifier
+					arg->mod->ModuleName
 				);
 				RET2RVAL(-1, rvalue);
 			} else if(sameNames) {
-				WARNING("ASN.1 module %s is defined more than once, with different OIDs", omod->Identifier);
+				WARNING("ASN.1 module %s is defined more than once, with different OIDs", omod->ModuleName);
 				RET2RVAL(1, rvalue);
 			}
 		} else if(sameNames) {
 			FATAL("ASN.1 module %s is defined more than once",
-				omod->Identifier);
+				omod->ModuleName);
 			RET2RVAL(-1, rvalue);
 		}
 	}
@@ -150,7 +150,7 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 		break;
 	default:
 		FATAL("Module %s defined with ambiguous global tagging mode",
-			arg->mod->Identifier);
+			arg->mod->ModuleName);
 		RET2RVAL(-1, rvalue);
 	}
 
@@ -162,7 +162,7 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 		break;
 	case MSF_unk_INSTRUCTIONS:
 		WARNING("Module %s defined with unrecognized "
-			"encoding reference", arg->mod->Identifier);
+			"encoding reference", arg->mod->ModuleName);
 		RET2RVAL(1, rvalue);
 		/* Fall through */
 	case MSF_TAG_INSTRUCTIONS:
@@ -170,7 +170,7 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 		break;
 	default:
 		FATAL("Module %s defined with ambiguous encoding reference",
-			arg->mod->Identifier);
+			arg->mod->ModuleName);
 		RET2RVAL(-1, rvalue);
 	}
 
@@ -452,10 +452,10 @@ asn1f_check_duplicate(arg_t *arg) {
 				"Please rename either instance to resolve the conflict",
 					arg->expr->Identifier,
 					arg->expr->_lineno,
-					arg->mod->Identifier,
+					arg->mod->ModuleName,
 					tmparg.expr->Identifier,
 					tmparg.expr->_lineno,
-					tmparg.mod->Identifier,
+					tmparg.mod->ModuleName,
 					diff_files ? " (" : "",
 					diff_files ? tmparg.mod->source_file_name : "",
 					diff_files ? ")" : ""

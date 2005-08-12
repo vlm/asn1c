@@ -51,7 +51,7 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 	 * Okay, right now we have a module name and, hopefully, an OID.
 	 * Search the arg->asn for the specified module.
 	 */
-	mod = asn1f_lookup_module(arg, xp->from, xp->from_oid);
+	mod = asn1f_lookup_module(arg, xp->fromModuleName, xp->identifier.oid);
 	if(mod == NULL) {
 		/* Conditional debug */
 		if(!(arg->expr->_mark & TM_BROKEN)) {
@@ -59,7 +59,7 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 			FATAL("Cannot find external module \"%s\" "
 				"mentioned for "
 				"\"%s\" at line %d",
-				xp->from, name, arg->expr->_lineno);
+				xp->fromModuleName, name, arg->expr->_lineno);
 		}
 		/* ENOENT/ETOOMANYREFS */
 		return NULL;
@@ -97,7 +97,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 		 * somewhere in the IMPORTS section AND OID is given.
 		 */
 		TQ_FOR(xp, &(arg->mod->imports), xp_next) {
-			if(strcmp(module_name, xp->from))
+			if(strcmp(module_name, xp->fromModuleName))
 				continue;
 			if(oid) {
 				FATAL("Ambiguous reference: "
@@ -111,7 +111,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 			 * Yes, there is a renaming.
 			 * Make lookup use OID instead.
 			 */
-			oid = xp->from_oid;
+			oid = xp->identifier.oid;
 		}
 	}
 
@@ -134,7 +134,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 			}
 		}
 	
-		if(strcmp(module_name, mod->Identifier) == 0)
+		if(strcmp(module_name, mod->ModuleName) == 0)
 			return mod;
 	}
 
@@ -167,7 +167,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 
 	DEBUG("(%s) in %s for line %d",
 		asn1f_printable_reference(ref),
-		mod->Identifier,
+		mod->ModuleName,
 		ref->_lineno);
 
 	if(ref->comp_count == 1) {
@@ -251,16 +251,16 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 			if(modulename) {
 				FATAL("Module %s referred by %s in module %s "
 					"does not contain the requested symbol",
-				imports_from->Identifier,
+				imports_from->ModuleName,
 				asn1f_printable_reference(ref),
-				mod->Identifier);
+				mod->ModuleName);
 			} else {
 				FATAL("Module %s referred in IMPORTS section "
 				"for %s of module %s does not contain "
 				"the requested symbol",
-				imports_from->Identifier,
+				imports_from->ModuleName,
 				asn1f_printable_reference(ref),
-				mod->Identifier);
+				mod->ModuleName);
 			}
 		}
 		return expr;
@@ -277,7 +277,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	if(ref_tc == NULL) {
 		DEBUG("Module \"%s\" does not contain \"%s\" "
 			"mentioned at line %d: %s",
-			mod->Identifier,
+			mod->ModuleName,
 			identifier,
 			ref->_lineno,
 			strerror(errno)
@@ -406,7 +406,7 @@ asn1f_compatible_with_exports(arg_t *arg, asn1p_module_t *mod, const char *name)
 		arg->expr->_mark |= TM_BROKEN;
 		FATAL("EXPORTS section of module %s in %s "
 			"does not mention %s at line %d",
-			mod->Identifier, mod->source_file_name, name,
+			mod->ModuleName, mod->source_file_name, name,
 			arg->expr->_lineno);
 	}
 

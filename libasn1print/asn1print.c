@@ -65,9 +65,9 @@ asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) 
 	if(flags & APF_PRINT_XML_DTD)
 		printf("<!-- ASN.1 module\n");
 
-	printf("%s ", mod->Identifier);
+	printf("%s ", mod->ModuleName);
 	if(mod->module_oid) {
-		asn1print_oid(strlen(mod->Identifier), mod->module_oid, flags);
+		asn1print_oid(strlen(mod->ModuleName), mod->module_oid, flags);
 		printf("\n");
 	}
 

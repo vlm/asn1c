@@ -36,9 +36,9 @@ typedef struct asn1p_module_s {
 	char *source_file_name;
 
 	/*
-	 * Human-readable module identifier.
+	 * Human-readable module reference.
 	 */
-	char *Identifier;		/* Module name */
+	char *ModuleName;
 
 	/*
 	 * Unique module identifier, OID.

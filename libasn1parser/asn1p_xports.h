@@ -17,8 +17,11 @@ typedef struct asn1p_xports_s {
 	/*
 	 * Module name and optional OID, occur after FROM.
 	 */
-	char *from;		/* Name of the module */
-	asn1p_oid_t *from_oid;	/* Optional OID of the module */
+	char *fromModuleName;		/* Name of the module */
+	struct AssignedIdentifier {
+		asn1p_oid_t *oid;	/* Optional OID of the module */
+		asn1p_value_t *value;	/* DefinedValue */
+	} identifier;
 
 	/*
 	 * Number of entities to import.
