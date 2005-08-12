@@ -37,7 +37,7 @@ static asn1p_value_t *
 		return yyerror("Memory failure");			\
 	} while(0)
 
-#define	CONSTRAINT_INSERT(root, lloc, constr_type, arg1, arg2) do {	\
+#define	CONSTRAINT_INSERT(root, constr_type, arg1, arg2) do {		\
 		if(arg1->type != constr_type) {				\
 			int __ret;					\
 			root = asn1p_constraint_new(yylineno);		\
@@ -1538,14 +1538,14 @@ optConstraints:
 
 Constraints:
 	SetOfConstraints {
-		CONSTRAINT_INSERT($$, @1, ACT_CA_SET, $1, 0);
+		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
 	}
 	| TOK_SIZE '('  ElementSetSpecs ')' {
 		/*
 		 * This is a special case, for compatibility purposes.
 		 * It goes without parentheses.
 		 */
-		CONSTRAINT_INSERT($$, @1, ACT_CT_SIZE, $3, 0);
+		CONSTRAINT_INSERT($$, ACT_CT_SIZE, $3, 0);
 	}
 	;
 
@@ -1554,7 +1554,7 @@ SetOfConstraints:
 		$$ = $2;
 	}
 	| SetOfConstraints '(' ElementSetSpecs ')' {
-		CONSTRAINT_INSERT($$, @1, ACT_CA_SET, $1, $3);
+		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $3);
 	}
 	;
 
@@ -1566,15 +1566,15 @@ ElementSetSpecs:
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno);
 		ct->type = ACT_EL_EXT;
-		CONSTRAINT_INSERT($$, @1, ACT_CA_CSV, $1, ct);
+		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
 	}
 	| ElementSetSpec ',' TOK_ThreeDots ',' ElementSetSpec {
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno);
 		ct->type = ACT_EL_EXT;
-		CONSTRAINT_INSERT($$, @1, ACT_CA_CSV, $1, ct);
+		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
 		ct = $$;
-		CONSTRAINT_INSERT($$, @1, ACT_CA_CSV, ct, $5);
+		CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $5);
 	}
 	;
 
@@ -1583,16 +1583,16 @@ ElementSetSpec:
 		$$ = $1;
 	}
 	| TOK_ALL TOK_EXCEPT ConstraintSubtypeElement {
-		CONSTRAINT_INSERT($$, @1, ACT_CA_AEX, $3, 0);
+		CONSTRAINT_INSERT($$, ACT_CA_AEX, $3, 0);
 	}
 	| ElementSetSpec Union ConstraintSubtypeElement {
-		CONSTRAINT_INSERT($$, @1, ACT_CA_UNI, $1, $3);
+		CONSTRAINT_INSERT($$, ACT_CA_UNI, $1, $3);
 	}
 	| ElementSetSpec Intersection ConstraintSubtypeElement {
-		CONSTRAINT_INSERT($$, @1, ACT_CA_INT, $1, $3);
+		CONSTRAINT_INSERT($$, ACT_CA_INT, $1, $3);
 	}
 	| ConstraintSubtypeElement Except ConstraintSubtypeElement {
-		CONSTRAINT_INSERT($$, @1, ACT_CA_EXC, $1, $3);
+		CONSTRAINT_INSERT($$, ACT_CA_EXC, $1, $3);
 	}
 	;
 
@@ -1736,10 +1736,10 @@ ContainedSubtype:
 
 InnerTypeConstraint:
 	TOK_WITH TOK_COMPONENT SetOfConstraints {
-		CONSTRAINT_INSERT($$, @1, ACT_CT_WCOMP, $3, 0);
+		CONSTRAINT_INSERT($$, ACT_CT_WCOMP, $3, 0);
 	}
 	| TOK_WITH TOK_COMPONENTS '{' WithComponentsList '}' {
-		CONSTRAINT_INSERT($$, @1, ACT_CT_WCOMPS, $4, 0);
+		CONSTRAINT_INSERT($$, ACT_CT_WCOMPS, $4, 0);
 	}
 	;
 
@@ -1748,7 +1748,7 @@ WithComponentsList:
 		$$ = $1;
 	}
 	| WithComponentsList ',' WithComponentsElement {
-		CONSTRAINT_INSERT($$, @1, ACT_CT_WCOMPS, $1, $3);
+		CONSTRAINT_INSERT($$, ACT_CT_WCOMPS, $1, $3);
 	}
 	;
 
@@ -1812,13 +1812,13 @@ SimpleTableConstraint:
 		checkmem($$);
 		ct->type = ACT_EL_VALUE;
 		ct->value = asn1p_value_fromref(ref, 0);
-		CONSTRAINT_INSERT($$, @1, ACT_CA_CRC, ct, 0);
+		CONSTRAINT_INSERT($$, ACT_CA_CRC, ct, 0);
 	}
 	;
 
 ComponentRelationConstraint:
 	SimpleTableConstraint '{' AtNotationList '}' {
-		CONSTRAINT_INSERT($$, @1, ACT_CA_CRC, $1, $3);
+		CONSTRAINT_INSERT($$, ACT_CA_CRC, $1, $3);
 	}
 	;
 
@@ -1835,7 +1835,7 @@ AtNotationList:
 		checkmem(ct);
 		ct->type = ACT_EL_VALUE;
 		ct->value = asn1p_value_fromref($3, 0);
-		CONSTRAINT_INSERT($$, @1, ACT_CA_CSV, $1, ct);
+		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
 	}
 	;
 
