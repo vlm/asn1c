@@ -446,7 +446,7 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 					"improper use of "
 					"EXTENSIBILITY IMPLIED flag "
 					"of module %s",
-					arg->mod->Identifier);
+					arg->mod->ModuleName);
 			}
 			return -1;
 		} else {

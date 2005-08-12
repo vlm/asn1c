@@ -208,7 +208,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	" * From ASN.1 module \"%s\"\n"
 	" * \tfound in \"%s\"\n"
 	" */\n\n",
-		arg->mod->Identifier,
+		arg->mod->ModuleName,
 		arg->mod->source_file_name
 	);
 	fprintf(fp_h,
@@ -217,7 +217,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	" * From ASN.1 module \"%s\"\n"
 	" * \tfound in \"%s\"\n"
 	" */\n\n",
-		arg->mod->Identifier,
+		arg->mod->ModuleName,
 		arg->mod->source_file_name
 	);
 

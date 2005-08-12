@@ -7,6 +7,7 @@ typedef union {
 	asn1p_constraint_t	*a_constr;	/* Constraint */
 	enum asn1p_constraint_type_e	a_ctype;/* Constraint type */
 	asn1p_xports_t		*a_xports;	/* IMports/EXports */
+	struct AssignedIdentifier a_aid;	/* Assigned Identifier */
 	asn1p_oid_t		*a_oid;		/* Object Identifier */
 	asn1p_oid_arc_t		 a_oid_arc;	/* Single OID's arc */
 	struct asn1p_type_tag_s	 a_tag;		/* A tag */
