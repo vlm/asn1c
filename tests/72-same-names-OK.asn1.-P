@@ -322,6 +322,9 @@ typedef enum Type2_PR {
 	Type2_PR_one_name,
 	Type2_PR_two_name,
 } Type2_PR;
+typedef enum a {
+	a_one	= 0
+} a_e;
 
 /*
  * Method of determining the components presence
@@ -329,6 +332,9 @@ typedef enum Type2_PR {
 typedef enum two_name_PR {
 	two_name_PR_another_name,	/* Member another_name is present */
 } two_name_PR;
+typedef enum a {
+	a_one	= 0
+} a_e;
 
 /*** <<< TYPE-DECLS [Type2] >>> ***/
 

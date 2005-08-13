@@ -214,6 +214,44 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 }
 
 int
+asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *v;
+	int el_count = expr_elements_count(arg, expr);
+	int eidx = 0;
+
+	if(el_count) {
+		REDIR(OT_DEPS);
+		OUT("typedef enum ");
+			out_name_chain(arg, 1);
+		OUT(" {\n");
+		TQ_FOR(v, &(expr->members), next) {
+			switch(v->expr_type) {
+			case A1TC_UNIVERVAL:
+				OUT("\t");
+				out_name_chain(arg, 0);
+				OUT("_%s", MKID(v->Identifier));
+				OUT("\t= %" PRIdASN "%s\n",
+					v->value->value.v_integer,
+					(eidx+1 < el_count) ? "," : "");
+				eidx++;
+				break;
+			default:
+				OUT("/* Unexpected BIT STRING element: %s */\n",
+				v->Identifier);
+				break;
+			}
+		}
+		OUT("} ");
+			out_name_chain(arg, 0);
+		OUT("_e;\n");
+		assert(eidx == el_count);
+	}
+
+	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
+}
+
+int
 asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
@@ -1914,7 +1952,8 @@ out_name_chain(arg_t *arg, int check_reserved_keywords) {
 	if(arg->flags & A1C_COMPOUND_NAMES
 	&& ((expr->expr_type & ASN_CONSTR_MASK)
 	   || expr->expr_type == ASN_BASIC_ENUMERATED
-	   || (expr->expr_type == ASN_BASIC_INTEGER
+	   || ((expr->expr_type == ASN_BASIC_INTEGER
+	   	|| expr->expr_type == ASN_BASIC_BIT_STRING)
 		&& expr_elements_count(arg, expr))
 	   )
 	&& expr->parent_expr

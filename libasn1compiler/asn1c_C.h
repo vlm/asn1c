@@ -12,6 +12,7 @@ int asn1c_lang_C_type_SEx_OF(arg_t *);	/* SET OF or  SEQUENCE OF */
 int asn1c_lang_C_type_CHOICE(arg_t *);
 
 int asn1c_lang_C_type_common_INTEGER(arg_t *);
+int asn1c_lang_C_type_BIT_STRING(arg_t *);
 int asn1c_lang_C_type_REAL(arg_t *);
 int asn1c_lang_C_type_SIMPLE_TYPE(arg_t *);
 
@@ -41,7 +42,7 @@ static asn1_language_map_t asn1_lang_C[] __attribute__ ((unused)) = {
 	{ AMT_TYPE, ASN_BASIC_INTEGER,	asn1c_lang_C_type_common_INTEGER },
 	{ AMT_TYPE, ASN_BASIC_REAL,	asn1c_lang_C_type_REAL },
 	{ AMT_TYPE, ASN_BASIC_ENUMERATED,  asn1c_lang_C_type_common_INTEGER },
-	{ AMT_TYPE, ASN_BASIC_BIT_STRING,	asn1c_lang_C_type_SIMPLE_TYPE },
+	{ AMT_TYPE, ASN_BASIC_BIT_STRING,	asn1c_lang_C_type_BIT_STRING },
 	{ AMT_TYPE, ASN_BASIC_OCTET_STRING,	asn1c_lang_C_type_SIMPLE_TYPE },
 	{ AMT_TYPE, ASN_BASIC_OBJECT_IDENTIFIER,asn1c_lang_C_type_SIMPLE_TYPE },
 	{ AMT_TYPE, ASN_BASIC_RELATIVE_OID,	asn1c_lang_C_type_SIMPLE_TYPE },
