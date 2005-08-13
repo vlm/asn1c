@@ -105,19 +105,16 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	int el_count = expr_elements_count(arg, expr);
 	struct value2enum *v2e;
 	int map_is_extensible = (expr->expr_type == ASN_BASIC_INTEGER);
+	int eidx;
 
 	v2e = alloca((el_count + 1) * sizeof(*v2e));
 
 	/*
-	 * For all ENUMERATED types [and for those INTEGER types which
-	 * have identifiers -- prohibited by X.693:8.3.4],
-	 * print out an enumeration table and a mapping
-	 * between identifiers and associated values.
+	 * For all ENUMERATED types and for those INTEGER types which
+	 * have identifiers, print out an enumeration table.
 	 */
-	if(expr->expr_type == ASN_BASIC_ENUMERATED
-	|| (0 && el_count /* -- prohibited by X.693:8.3.4 */)) {
-		int eidx = 0;
-
+	if(expr->expr_type == ASN_BASIC_ENUMERATED || el_count) {
+		eidx = 0;
 		REDIR(OT_DEPS);
 		OUT("typedef enum ");
 			out_name_chain(arg, 1);
@@ -149,6 +146,14 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 			out_name_chain(arg, 0);
 		OUT("_e;\n");
 		assert(eidx == el_count);
+	}
+
+	/*
+	 * For all ENUMERATED types print out a mapping table
+	 * between identifiers and associated values.
+	 * This is prohibited for INTEGER types by by X.693:8.3.4.
+	 */
+	if(expr->expr_type == ASN_BASIC_ENUMERATED) {
 
 		/*
 		 * Generate a enumerationName<->value map for XER codec.
