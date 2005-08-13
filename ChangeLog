@@ -4,6 +4,7 @@
 	* The obsolete X.208 syntax is handled gracefully now (compound types'
 	  member names are invented on the fly). (Test case 87).
 	* Generating enumeration tables for INTEGER types (Test case 88).
+	* Generating enumeration tables for BIT STRING types (Test case 89).
 
 0.9.17:	2005-Aug-07
 
