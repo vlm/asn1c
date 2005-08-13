@@ -29,8 +29,8 @@ extern int asn1p_lineno;
  */
 static struct AssignedIdentifier *saved_aid;
 
-static asn1p_value_t *
-	_convert_bitstring2binary(char *str, int base);
+static asn1p_value_t *_convert_bitstring2binary(char *str, int base);
+static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 
 #define	checkmem(ptr)	do {						\
 		if(!(ptr))						\
@@ -901,6 +901,11 @@ ComponentType:
 	| ExtensionAndException {
 		$$ = $1;
 	}
+	| Type optMarker {
+		$$ = $1;
+		$$->marker = $2;
+		_fixup_anonymous_identifier($$);
+	}
 	;
 
 AlternativeTypeLists:
@@ -923,6 +928,10 @@ AlternativeType:
 	}
 	| ExtensionAndException {
 		$$ = $1;
+	}
+	| Type {
+		$$ = $1;
+		_fixup_anonymous_identifier($$);
 	}
 	;
 
@@ -2182,6 +2191,48 @@ _convert_bitstring2binary(char *str, int base) {
 	}
 
 	return val;
+}
+
+/*
+ * For unnamed types (used in old X.208 compliant modules)
+ * generate some sort of interim names, to not to force human being to fix
+ * the specification's compliance to modern ASN.1 standards.
+ */
+static void
+_fixup_anonymous_identifier(asn1p_expr_t *expr) {
+	char *p;
+	assert(expr->Identifier == 0);
+
+	/*
+	 * Try to figure out the type name
+	 * without going too much into details
+	 */
+	expr->Identifier = ASN_EXPR_TYPE2STR(expr->expr_type);
+	if(expr->reference && expr->reference->comp_count > 0)
+		expr->Identifier = expr->reference->components[0].name;
+
+	fprintf(stderr,
+		"WARNING: Line %d: expected lower-case member identifier, "
+		"found an unnamed %s.\n"
+		"WARNING: Obsolete X.208 syntax detected, "
+		"please give the member a name.\n",
+		yylineno, expr->Identifier ? expr->Identifier : "type");
+
+	if(!expr->Identifier)
+		expr->Identifier = "unnamed";
+	expr->Identifier = strdup(expr->Identifier);
+	assert(expr->Identifier);
+	/* Make a lowercase identifier from the type name */
+	for(p = expr->Identifier; *p; p++) {
+		switch(*p) {
+		case 'A' ... 'Z': *p += 32; break;
+		case ' ': *p = '_'; break;
+		case '-': *p = '_'; break;
+		}
+	}
+	fprintf(stderr, "NOTE: Assigning temporary identifier \"%s\". "
+			"Name clash may occur later.\n",
+		expr->Identifier);
 }
 
 extern char *asn1p_text;

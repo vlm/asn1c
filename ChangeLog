@@ -1,7 +1,8 @@
 
-0.9.17:	2005-Aug-11
+0.9.17:	2005-Aug-13
 
-	* ...
+	* The obsolete X.208 syntax is handled gracefully now (compound types'
+	  member names are invented on the fly). (Test case 87).
 
 0.9.17:	2005-Aug-07
 
