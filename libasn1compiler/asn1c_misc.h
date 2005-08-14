@@ -24,4 +24,19 @@ enum tnfmt {
 };
 char *asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format);
 
+/*
+ * Check whether the specified INTEGER or ENUMERATED type can be represented
+ * using the generic 'long' type.
+ * Return values:
+ * 	FL_NOTFIT:	No, it cannot be represented using long.
+ * 	FL_FITSOK:	It can be represented using long.
+ * 	FL_FORCED:	Probably can't, but -fnative-types is in force.
+ */
+enum asn1c_fitslong_e {
+	FL_NOTFIT,
+	FL_FITSOK,
+	FL_FORCED,
+};
+enum asn1c_fitslong_e asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr);
+
 #endif	/* _ASN1_COMPILER_MISC_H_ */

@@ -62,6 +62,9 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
+		if(asn1c_type_fits_long(arg, arg->expr) == FL_NOTFIT)
+			produce_st = 1;
+		break;
 	case ASN_BASIC_REAL:
 		if(!(arg->flags & A1C_USE_NATIVE_TYPES))
 			produce_st = 1;
@@ -556,7 +559,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		if(arg->flags & A1C_USE_NATIVE_TYPES) {
+		if(asn1c_type_fits_long(arg, arg->expr) != FL_NOTFIT) {
 			OUT("value = *(const long *)sptr;\n");
 		} else {
 			if(r_value->el_count == 0

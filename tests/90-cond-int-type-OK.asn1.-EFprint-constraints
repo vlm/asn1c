@@ -1,0 +1,80 @@
+ModuleConditionalIntegerType { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 90 }
+DEFINITIONS ::=
+BEGIN
+
+CN-IntegerUnlimited ::= INTEGER
+-- Practical constraints (CN-IntegerUnlimited): (MIN..MAX)  
+-- PER-visible constraints (CN-IntegerUnlimited): (MIN..MAX)  
+
+CN-IntegerMinMax ::= INTEGER (MIN..MAX)
+-- Combined constraints: (MIN..MAX)
+-- Practical constraints (CN-IntegerMinMax): (MIN..MAX)  
+-- PER-visible constraints (CN-IntegerMinMax): (MIN..MAX)  
+
+CN-IntegerMinLow ::= INTEGER (MIN..1)
+-- Combined constraints: (MIN..1)
+-- Practical constraints (CN-IntegerMinLow): (MIN..1)  
+-- PER-visible constraints (CN-IntegerMinLow): (MIN..1)  
+
+NO-IntegerMinHigh ::= INTEGER (MIN..5000000000)
+-- Combined constraints: (MIN..5000000000)
+-- Practical constraints (NO-IntegerMinHigh): (MIN..5000000000)  
+-- PER-visible constraints (NO-IntegerMinHigh): (MIN..5000000000)  
+
+NO-IntegerLowHigh ::= INTEGER (1..5000000000)
+-- Combined constraints: (1..5000000000)
+-- Practical constraints (NO-IntegerLowHigh): (1..5000000000)  
+-- PER-visible constraints (NO-IntegerLowHigh): (1..5000000000)  
+
+CN-IntegerLowMax ::= INTEGER (1..MAX)
+-- Combined constraints: (1..MAX)
+-- Practical constraints (CN-IntegerLowMax): (1..MAX)  
+-- PER-visible constraints (CN-IntegerLowMax): (1..MAX)  
+
+NO-IntegerHighMax ::= INTEGER (5000000000..MAX)
+-- Combined constraints: (5000000000..MAX)
+-- Practical constraints (NO-IntegerHighMax): (5000000000..MAX)  
+-- PER-visible constraints (NO-IntegerHighMax): (5000000000..MAX)  
+
+NO-IntegerLowestMax ::= INTEGER (-5000000000..MAX)
+-- Combined constraints: (-5000000000..MAX)
+-- Practical constraints (NO-IntegerLowestMax): (-5000000000..MAX)  
+-- PER-visible constraints (NO-IntegerLowestMax): (-5000000000..MAX)  
+
+NO-IntegerOutRange ::= INTEGER (5000000000..5000000001)
+-- Combined constraints: (5000000000..5000000001)
+-- Practical constraints (NO-IntegerOutRange): (5000000000..5000000001)  
+-- PER-visible constraints (NO-IntegerOutRange): (5000000000..5000000001)  
+
+NO-IntegerOutValue ::= INTEGER (5000000000)
+-- Combined constraints: (5000000000)
+-- Practical constraints (NO-IntegerOutValue): (5000000000)  
+-- PER-visible constraints (NO-IntegerOutValue): (5000000000)  
+
+OK-IntegerInRange1 ::= INTEGER (-100..100)
+-- Combined constraints: (-100..100)
+-- Practical constraints (OK-IntegerInRange1): (-100..100)  
+-- PER-visible constraints (OK-IntegerInRange1): (-100..100)  
+
+OK-IntegerInRange2 ::= INTEGER (-100 | 100)
+-- Combined constraints: (-100 | 100)
+-- Practical constraints (OK-IntegerInRange2): (-100 | 100)  
+-- PER-visible constraints (OK-IntegerInRange2): (-100 | 100)  
+
+OK-IntegerInRange3 ::= INTEGER (-2147483648..2147483647)
+-- Combined constraints: (-2147483648..2147483647)
+-- Practical constraints (OK-IntegerInRange3): (-2147483648..2147483647)  
+-- PER-visible constraints (OK-IntegerInRange3): (-2147483648..2147483647)  
+
+OK-IntegerInRange4 ::= INTEGER (-2147483648 | 2147483647)
+-- Combined constraints: (-2147483648 | 2147483647)
+-- Practical constraints (OK-IntegerInRange4): (-2147483648 | 2147483647)  
+-- PER-visible constraints (OK-IntegerInRange4): (-2147483648 | 2147483647)  
+
+OK-IntegerInRange5 ::= INTEGER (-2147483648 | 2147483647,...)
+-- Combined constraints: (-2147483648 | 2147483647,...)
+-- Practical constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
+-- PER-visible constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
+
+END
