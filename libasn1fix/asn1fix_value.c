@@ -80,7 +80,7 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, const enum asn1p_constraint_
 	 */
 	if(opt_constr_type)
 		ret = asn1constraint_compatible(val_type_expr->expr_type,
-			*opt_constr_type);
+			*opt_constr_type, 0 /* must not matter here */);
 	else
 		ret = asn1f_check_type_compatibility(arg,
 			type_expr, val_type_expr);

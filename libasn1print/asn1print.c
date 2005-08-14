@@ -445,8 +445,8 @@ asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_
 	int as_char = (type==ACT_CT_FROM);
 	int i;
 
-	range = asn1constraint_compute_PER_range(expr_type, ct, type,
-			0, 0, strict_PER_visible);
+	range = asn1constraint_compute_PER_range(expr_type, ct, type, 0, 0,
+			strict_PER_visible ? CPR_strict_PER_visibility : 0);
 	if(!range) return -1;
 
 	if(range->incompatible

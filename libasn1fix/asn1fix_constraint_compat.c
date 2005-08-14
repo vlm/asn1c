@@ -7,7 +7,7 @@
  */
 int
 asn1constraint_compatible(asn1p_expr_type_e expr_type,
-	enum asn1p_constraint_type_e constr_type) {
+	enum asn1p_constraint_type_e constr_type, int fbless_SIZE) {
 
 	/*
 	 * X.680-0207, Table 9.
@@ -49,6 +49,11 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 		return 0;
 	case ACT_CT_SIZE:
 		switch(expr_type) {
+		case ASN_BASIC_INTEGER:
+		case ASN_BASIC_ENUMERATED:
+			if(fbless_SIZE)
+				return 1;
+			break;
 		case ASN_BASIC_BIT_STRING:
 		case ASN_BASIC_OCTET_STRING:
 		case ASN_BASIC_CHARACTER_STRING:

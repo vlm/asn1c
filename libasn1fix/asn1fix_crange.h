@@ -38,12 +38,17 @@ typedef struct asn1cnst_range_s {
  * 	ENOMEM:	Memory allocation failure.
  * 	EPERM:	Invalid constraint reference.
  */
+enum cpr_flags {
+	CPR_noflags			= 0x00,
+	CPR_strict_PER_visibility	= 0x01,
+	CPR_simulate_fbless_SIZE	= 0x02,
+};
 asn1cnst_range_t *asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type,
 	const asn1p_constraint_t *ct,
 	enum asn1p_constraint_type_e required_type,
 	const asn1cnst_range_t *minmax,
 	int *expectation_met,
-	int strict_PER_visibility);
+	enum cpr_flags);
 void asn1constraint_range_free(asn1cnst_range_t *);
 
 /*
@@ -51,7 +56,7 @@ void asn1constraint_range_free(asn1cnst_range_t *);
  * with the given expression type.
  */
 int asn1constraint_compatible(asn1p_expr_type_e expr_type,
-	enum asn1p_constraint_type_e constr_type);
+	enum asn1p_constraint_type_e constr_type, int fbless_SIZE);
 
 /*
  * Fetch a default alphabet for this type.

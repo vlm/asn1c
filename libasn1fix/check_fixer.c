@@ -76,15 +76,15 @@ main(int ac, char **av) {
 			filename = dp->d_name;
 #endif	/* WIN32 */
 			len = strlen(filename);
-			if(len && strcmp(filename + len - 5, ".asn1") == 0) {
-				ret = check(filename, parser_flags,fixer_flags);
-				if(ret) {
-					fprintf(stderr, "FAILED: %s\n",
-						filename);
-					failed++;
-				}
-				completed++;
+			if(len <= 5 || strcmp(filename + len - 5, ".asn1"))
+				continue;
+			ret = check(filename, parser_flags, fixer_flags);
+			if(ret) {
+				fprintf(stderr, "FAILED: %s\n",
+					filename);
+				failed++;
 			}
+			completed++;
 #ifdef	WIN32
 		} while(_findnext(dir, &c_file) == 0);
 		_findclose(dir);
@@ -151,6 +151,10 @@ check(const char *fname,
 		fprintf(stderr, "%s: Invalid file name format\n", fname);
 		return -1;
 	}
+
+	/* Flag modifiers */
+	if(strstr(fname, "-blessSize-"))
+		fixer_flags |= A1F_EXTENDED_SizeConstraint;
 
 	fprintf(stderr, "[=> %s]\n", fname);
 
