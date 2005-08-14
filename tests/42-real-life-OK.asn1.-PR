@@ -339,7 +339,7 @@ typedef enum VariablePart_PR {
 
 typedef struct VariablePart {
 	VariablePart_PR present;
-	union {
+	union VariablePart_u {
 		struct vset {
 			A_SET_OF(VisibleString_t) list;
 			

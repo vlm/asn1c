@@ -18,7 +18,7 @@ typedef enum TestChoice_PR {
 
 typedef struct TestChoice {
 	TestChoice_PR present;
-	union {
+	union TestChoice_u {
 		struct type1 {
 			long	*common	/* DEFAULT 0 */;
 			
@@ -233,7 +233,7 @@ typedef enum AutoChoice_PR {
 
 typedef struct AutoChoice {
 	AutoChoice_PR present;
-	union {
+	union AutoChoice_u {
 		struct type1 {
 			long	 common;
 			

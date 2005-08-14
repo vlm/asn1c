@@ -19,7 +19,7 @@ typedef enum bs {
 
 typedef struct T {
 	T_PR present;
-	union {
+	union T_u {
 		BIT_STRING_t	 bs;
 	} choice;
 	

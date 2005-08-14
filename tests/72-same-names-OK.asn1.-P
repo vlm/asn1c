@@ -141,7 +141,7 @@ typedef enum one_name_PR {
 typedef struct Type1 {
 	struct one_name {
 		one_name_PR present;
-		union {
+		union Type1__one_name_u {
 			struct another_name {
 				INTEGER_t	 a;
 				INTEGER_t	 b;
@@ -340,7 +340,7 @@ typedef enum a {
 
 typedef struct Type2 {
 	Type2_PR present;
-	union {
+	union Type2_u {
 		struct one_name {
 			struct another_name {
 				BIT_STRING_t	 a;

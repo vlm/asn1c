@@ -34,7 +34,7 @@ typedef enum PDU_PR {
 
 typedef struct PDU {
 	PDU_PR present;
-	union {
+	union PDU_u {
 		Sequence_t	 sequence;
 		Set_t	 set;
 		SetOf_t	 setOf;

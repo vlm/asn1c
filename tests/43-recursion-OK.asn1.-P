@@ -220,7 +220,7 @@ struct Choice_1;
 
 typedef struct Choice_1 {
 	Choice_1_PR present;
-	union {
+	union Choice_1_u {
 		struct Choice_1	*and;
 		struct or {
 			A_SET_OF(struct Choice_1) list;

@@ -31,12 +31,12 @@ typedef struct T {
 	NULL_t	 a;
 	struct b {
 		b_PR present;
-		union {
+		union T__b_u {
 			NULL_t	 c;
 			NULL_t	 d;
 			struct e {
 				e_PR present;
-				union {
+				union T__b__e_u {
 					NULL_t	 f;
 					NULL_t	 g;
 				} choice;
@@ -46,7 +46,7 @@ typedef struct T {
 			} e;
 			struct h {
 				h_PR present;
-				union {
+				union T__b__h_u {
 					NULL_t	 i;
 					NULL_t	 j;
 				} choice;

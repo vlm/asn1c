@@ -7,6 +7,7 @@
 	* Generating enumeration tables for BIT STRING types (Test case 89).
 	* Conditional INTEGER/ENUMERATED representation: long vs. INTEGER_t
 	  type is chosen based on PER visible constraints (Test cases 90, 91).
+	* Union structures for CHOICE type are not anonymous anymore.
 
 0.9.17:	2005-Aug-07
 

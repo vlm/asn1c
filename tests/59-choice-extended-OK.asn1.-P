@@ -23,7 +23,7 @@ struct Choice;
 
 typedef struct Choice {
 	Choice_PR present;
-	union {
+	union Choice_u {
 		INTEGER_t	 a;
 		/*
 		 * This type is extensible,

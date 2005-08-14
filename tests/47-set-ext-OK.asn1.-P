@@ -196,7 +196,7 @@ typedef enum T3_PR {
 
 typedef struct T3 {
 	T3_PR present;
-	union {
+	union T3_u {
 		INTEGER_t	 i;
 		/*
 		 * This type is extensible,
@@ -273,7 +273,7 @@ typedef enum T4_PR {
 
 typedef struct T4 {
 	T4_PR present;
-	union {
+	union T4_u {
 		INTEGER_t	 i;
 		/*
 		 * This type is extensible,
