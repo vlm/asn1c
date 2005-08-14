@@ -14,19 +14,19 @@ BEGIN
 	CN-IntegerUnlimited	::= INTEGER
 	CN-IntegerMinMax	::= INTEGER (MIN..MAX)
 	CN-IntegerMinLow	::= INTEGER (MIN..1)
-	NO-IntegerMinHigh	::= INTEGER (MIN..5000000000)
-	NO-IntegerLowHigh	::= INTEGER (1..5000000000)
+	NO-IntegerMinHigh	::= INTEGER (MIN..3000000000)
+	NO-IntegerLowHigh	::= INTEGER (1..3000000000)
 	CN-IntegerLowMax	::= INTEGER (1..MAX)
-	NO-IntegerHighMax	::= INTEGER (5000000000..MAX)
-	NO-IntegerLowestMax	::= INTEGER (-5000000000..MAX)
-	NO-IntegerOutRange	::= INTEGER (5000000000..5000000001)
-	NO-IntegerOutValue	::= INTEGER (5000000000)
+	NO-IntegerHighMax	::= INTEGER (3000000000..MAX)
+	NO-IntegerLowestMax	::= INTEGER (-3000000000..MAX)
+	NO-IntegerOutRange	::= INTEGER (3000000000..3000000001)
+	NO-IntegerOutValue	::= INTEGER (3000000000)
 	OK-IntegerInRange1	::= INTEGER (-100..100)
 	OK-IntegerInRange2	::= INTEGER (-100|100)
 	OK-IntegerInRange3	::= INTEGER (-2147483648..2147483647)
 	OK-IntegerInRange4	::= INTEGER (-2147483648|2147483647)
 	OK-IntegerInRange5	::= INTEGER (-2147483648|2147483647,...)
 	CN-IntegerEnumerated1	::= INTEGER { a(1), b(2) }
-	NO-IntegerEnumerated2	::= INTEGER { a(1), b(5000000000) }
+	NO-IntegerEnumerated2	::= INTEGER { a(1), b(3000000000) }
 
 END
