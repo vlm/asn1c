@@ -1,7 +1,7 @@
 
 /*** <<< INCLUDES [TestChoice] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 #include <BOOLEAN.h>
 #include <constr_CHOICE.h>
@@ -20,7 +20,7 @@ typedef struct TestChoice {
 	TestChoice_PR present;
 	union {
 		struct type1 {
-			INTEGER_t	*common	/* DEFAULT 0 */;
+			long	*common	/* DEFAULT 0 */;
 			
 			/* Context for parsing across buffer boundaries */
 			asn_struct_ctx_t _asn_ctx;
@@ -46,7 +46,6 @@ extern asn_TYPE_descriptor_t asn_DEF_TestChoice;
 static int
 memb_common_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -56,12 +55,7 @@ memb_common_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value >= 1 && value <= 10)) {
 		/* Constraint check succeeded */
@@ -81,7 +75,7 @@ static asn_TYPE_member_t asn_MBR_type1_2[] = {
 	{ ATF_POINTER, 1, offsetof(struct type1, common),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = (void *)&asn_DEF_NativeInteger,
 		.memb_constraints = memb_common_2_constraint,
 		.name = "common"
 		},
@@ -222,7 +216,7 @@ asn_TYPE_descriptor_t asn_DEF_TestChoice = {
 
 /*** <<< INCLUDES [AutoChoice] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 #include <BOOLEAN.h>
 #include <constr_CHOICE.h>
@@ -241,7 +235,7 @@ typedef struct AutoChoice {
 	AutoChoice_PR present;
 	union {
 		struct type1 {
-			INTEGER_t	 common;
+			long	 common;
 			
 			/* Context for parsing across buffer boundaries */
 			asn_struct_ctx_t _asn_ctx;
@@ -267,7 +261,6 @@ extern asn_TYPE_descriptor_t asn_DEF_AutoChoice;
 static int
 memb_common_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -277,12 +270,7 @@ memb_common_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value == 0)) {
 		/* Constraint check succeeded */
@@ -327,7 +315,7 @@ static asn_TYPE_member_t asn_MBR_type1_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct type1, common),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = (void *)&asn_DEF_NativeInteger,
 		.memb_constraints = memb_common_2_constraint,
 		.name = "common"
 		},
