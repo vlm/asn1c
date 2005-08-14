@@ -168,15 +168,13 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e ety
 
 	if(etype != A1TC_INVALID) {
 
-		ret = asn1constraint_compatible(etype, real_constraint_type);
+		ret = asn1constraint_compatible(etype, real_constraint_type,
+				arg->flags & A1F_EXTENDED_SizeConstraint);
 		switch(ret) {
 		case -1:	/* If unknown, assume OK. */
 		case  1:
 			break;
 		case 0:
-			if(effective_type == ACT_CT_SIZE
-			&& (arg->flags & A1F_EXTENDED_SizeConstraint))
-				break;
 		default:
 			FATAL("%s at line %d: "
 				"Constraint type %s is not applicable to %s",

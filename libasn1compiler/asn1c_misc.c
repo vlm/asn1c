@@ -285,12 +285,33 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 			return FL_NOTFIT;
 	}
 
+	if(!expr->combined_constraints) 
+		return (arg->flags & A1C_USE_NATIVE_TYPES)
+			? FL_FORCED : FL_NOTFIT;
+
 	/*
-	 * Second, pull up the PER visible range of the INTEGER.
+	 * Second, if -fbless-SIZE is given, the (SIZE()) constraint may be
+	 * applied (non-standard! but we can deal with this) to the type.
+	 * Check the range.
 	 */
-	if(expr->combined_constraints)
-		range = asn1constraint_compute_PER_range(expr->expr_type,
-			expr->combined_constraints, ACT_EL_RANGE, 0, 0, 0);
+	range = asn1constraint_compute_PER_range(expr->expr_type,
+		expr->combined_constraints, ACT_CT_SIZE, 0, 0,
+		CPR_simulate_fbless_SIZE);
+	if(range) {
+		if(!range->incompatible) {
+			right = range->right;
+			/* Use 4 instead of sizeof(long) is justified! */
+			if(right.type == ARE_VALUE && right.value <= 4)
+				return FL_FITSOK;
+		}
+		asn1constraint_range_free(range);
+	}
+
+	/*
+	 * Third, pull up the PER visible range of the INTEGER.
+	 */
+	range = asn1constraint_compute_PER_range(expr->expr_type,
+		expr->combined_constraints, ACT_EL_RANGE, 0, 0, 0);
 	if(!range
 	|| range->empty_constraint
 	|| range->extensible

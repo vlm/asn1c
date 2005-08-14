@@ -1,12 +1,12 @@
 
-0.9.18:	2005-Aug-13
+0.9.18:	2005-Aug-14
 
 	* The obsolete X.208 syntax is handled gracefully now (compound types'
 	  member names are invented on the fly). (Test case 87).
 	* Generating enumeration tables for INTEGER types (Test case 88).
 	* Generating enumeration tables for BIT STRING types (Test case 89).
 	* Conditional INTEGER/ENUMERATED representation: long vs. INTEGER_t
-	  type is chosen based on PER visible constraints (Test case 90).
+	  type is chosen based on PER visible constraints (Test cases 90, 91).
 
 0.9.17:	2005-Aug-07
 

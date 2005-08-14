@@ -414,7 +414,8 @@ asn1f_check_constraints(arg_t *arg) {
 		range = asn1constraint_compute_PER_range(
 				etype,
 				arg->expr->combined_constraints,
-				test_types[i], 0, 0, 0);
+				test_types[i], 0, 0,
+				CPR_noflags /* ignore -fbless-SIZE */);
 		if(!range && errno == EPERM) {
 			FATAL("This error happened for \"%s\" (meta %d) "
 				"at line %d",
