@@ -1,11 +1,11 @@
 
 /*** <<< INCLUDES [OK-Integer1] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [OK-Integer1] >>> ***/
 
-typedef INTEGER_t	 OK_Integer1_t;
+typedef long	 OK_Integer1_t;
 
 /*** <<< FUNC-DECLS [OK-Integer1] >>> ***/
 
@@ -23,7 +23,6 @@ xer_type_encoder_f OK_Integer1_encode_xer;
 int
 OK_Integer1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -38,25 +37,25 @@ OK_Integer1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 OK_Integer1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
 }
 
 void
@@ -133,11 +132,11 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
 
 /*** <<< INCLUDES [OK-Integer2] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [OK-Integer2] >>> ***/
 
-typedef INTEGER_t	 OK_Integer2_t;
+typedef long	 OK_Integer2_t;
 
 /*** <<< FUNC-DECLS [OK-Integer2] >>> ***/
 
@@ -155,7 +154,6 @@ xer_type_encoder_f OK_Integer2_encode_xer;
 int
 OK_Integer2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -170,25 +168,25 @@ OK_Integer2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 OK_Integer2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
 }
 
 void
@@ -265,11 +263,11 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
 
 /*** <<< INCLUDES [OK-Integer3] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [OK-Integer3] >>> ***/
 
-typedef INTEGER_t	 OK_Integer3_t;
+typedef long	 OK_Integer3_t;
 
 /*** <<< FUNC-DECLS [OK-Integer3] >>> ***/
 
@@ -287,7 +285,6 @@ xer_type_encoder_f OK_Integer3_encode_xer;
 int
 OK_Integer3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -302,25 +299,25 @@ OK_Integer3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 OK_Integer3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
 }
 
 void
@@ -397,11 +394,11 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
 
 /*** <<< INCLUDES [OK-Integer4] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [OK-Integer4] >>> ***/
 
-typedef INTEGER_t	 OK_Integer4_t;
+typedef long	 OK_Integer4_t;
 
 /*** <<< FUNC-DECLS [OK-Integer4] >>> ***/
 
@@ -419,7 +416,6 @@ xer_type_encoder_f OK_Integer4_encode_xer;
 int
 OK_Integer4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -434,25 +430,25 @@ OK_Integer4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 OK_Integer4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
 }
 
 void
