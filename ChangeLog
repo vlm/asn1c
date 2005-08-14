@@ -5,6 +5,8 @@
 	  member names are invented on the fly). (Test case 87).
 	* Generating enumeration tables for INTEGER types (Test case 88).
 	* Generating enumeration tables for BIT STRING types (Test case 89).
+	* Conditional INTEGER/ENUMERATED representation: long vs. INTEGER_t
+	  type is chosen based on PER visible constraints (Test case 90).
 
 0.9.17:	2005-Aug-07
 

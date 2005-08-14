@@ -218,29 +218,26 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int el_count = expr_elements_count(arg, expr);
-	int eidx = 0;
 
 	if(el_count) {
+		int eidx = 0;
 		REDIR(OT_DEPS);
 		OUT("typedef enum ");
 			out_name_chain(arg, 1);
 		OUT(" {\n");
 		TQ_FOR(v, &(expr->members), next) {
-			switch(v->expr_type) {
-			case A1TC_UNIVERVAL:
-				OUT("\t");
-				out_name_chain(arg, 0);
-				OUT("_%s", MKID(v->Identifier));
-				OUT("\t= %" PRIdASN "%s\n",
-					v->value->value.v_integer,
-					(eidx+1 < el_count) ? "," : "");
-				eidx++;
-				break;
-			default:
+			eidx++;
+			if(v->expr_type != A1TC_UNIVERVAL) {
 				OUT("/* Unexpected BIT STRING element: %s */\n",
 				v->Identifier);
-				break;
+				continue;
 			}
+			OUT("\t");
+			out_name_chain(arg, 0);
+			OUT("_%s", MKID(v->Identifier));
+			OUT("\t= %" PRIdASN "%s\n",
+				v->value->value.v_integer,
+				(eidx < el_count) ? "," : "");
 		}
 		OUT("} ");
 			out_name_chain(arg, 0);
