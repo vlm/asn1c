@@ -203,7 +203,7 @@ typedef struct Stuff {
 	 */
 	struct other {
 		other_PR present;
-		union {
+		union Stuff__other_u {
 			INTEGER_t	 a;
 			INTEGER_t	 b;
 		} choice;
