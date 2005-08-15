@@ -45,6 +45,7 @@ static int process(const char *fname);	/* Perform the BER decoding */
 static int decode_tlv_from_string(const char *datastring);
 
 static int single_type_decoding = 0;	/* -1 enables that */
+static int minimalistic = 0;		/* -m enables that */
 static int pretty_printing = 1;		/* -p disables that */
 static char *indent_buffer = "    ";	/* -i controls that */
 
@@ -56,7 +57,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "1hi:pt:v")) != -1)
+	while((ch = getopt(ac, av, "1hi:mpt:v")) != -1)
 	switch(ch) {
 	case '1':
 		single_type_decoding = 1;
@@ -65,6 +66,9 @@ main(int ac, char **av) {
 		if(decode_tlv_from_string(optarg))
 			exit(EX_DATAERR);
 		exit(0);
+	case 'm':
+		minimalistic = 1;
+		break;
 	case 'p':
 		pretty_printing = 0;
 		break;
@@ -124,6 +128,7 @@ usage(const char *av0) {
 "Options:\n"
 "  -1                 Decode only the first BER structure (otherwise, until EOF)\n"
 "  -i <indent>        Amount of spaces for output indentation (default is 4)\n"
+"  -m                 Minimalistic mode: print as little as possible\n"
 "  -p                 Do not attempt pretty-printing of known ASN.1 types\n"
 "  -t <data-string>   Decode the given tag[/length] sequence (e.g. -t \"bf20\")\n"
 "\n"
@@ -363,13 +368,14 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
 
 	/* Print out the offset of this boundary, even if closing tag */
-	printf(" O=\"%" PRIdASN "\"", offset);
+	if(!minimalistic)
+		printf(" O=\"%" PRIdASN "\"", offset);
 
 	printf(" T=\"");
 	ber_tlv_tag_fwrite(tlv_tag, stdout);
 	printf("\"");
 
-	if(!fin || tlv_len == -1)
+	if(!fin || (tlv_len == -1 && !minimalistic))
 		printf(" TL=\"%ld\"", (long)tlen);
 	if(!fin) {
 		if(tlv_len == -1)
@@ -378,7 +384,8 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 			printf(" V=\"%ld\"", (long)tlv_len);
 	}
 
-	if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
+	if(!minimalistic
+	&& BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
 		const char *str;
 		ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
 		str = ASN_UNIVERSAL_TAG2STR(tvalue);
@@ -386,7 +393,7 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 	}
 
 	if(fin) {
-		if(constr)
+		if(constr && !minimalistic)
 			printf(" L=\"%ld\"", (long)effective_size);
 		printf(">\n");
 	}
