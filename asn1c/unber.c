@@ -295,8 +295,6 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 		*offset += t_len + l_len;
 		*frame_size += t_len + l_len;
 		effective_size += t_len + l_len;
-		printf("LES %d + %d + %d\n",
-			(int)local_esize, (int)t_len, (int)l_len);
 		local_esize += t_len + l_len;
 
 		if(expect_eoc && tagbuf[0] == '\0' && tagbuf[1] == '\0') {
