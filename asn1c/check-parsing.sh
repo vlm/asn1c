@@ -2,6 +2,7 @@
 
 tmpfile=".check-parsing.$$.tmp"
 
+# Test diff(1) capabilities
 diff -a . . 2>/dev/null && diffArgs="-a"		# Assume text files
 diff -u . . 2>/dev/null && diffArgs="$diffArgs -u"	# Unified diff output
 

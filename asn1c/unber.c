@@ -147,8 +147,8 @@ typedef enum pd_code {
 	PD_FINISHED	= 0,
 	PD_EOF		= 1,
 } pd_code_e;
-static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ssize_t *frame_size, int expect_eoc);
-static void print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t);
+static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ber_tlv_len_t *frame_size, ber_tlv_len_t effective_size, int expect_eoc);
+static void print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t, ber_tlv_len_t effective_frame_size);
 static int print_V(const char *fname, FILE *fp, ber_tlv_tag_t, ber_tlv_len_t);
 
 /*
@@ -158,8 +158,8 @@ static int
 process(const char *fname) {
 	FILE *fp;
 	pd_code_e pdc;
-	asn1c_integer_t offset = 0;	/* Stream decoding position */
-	ssize_t frame_size = 0;		/* Single frame size */
+	asn1c_integer_t offset = 0;		/* Stream decoding position */
+	ber_tlv_len_t frame_size = 0;		/* Single frame size */
 
 	if(strcmp(fname, "-")) {
 		fp = fopen(fname, "r");
@@ -175,7 +175,8 @@ process(const char *fname) {
 	 * Fetch out BER-encoded data until EOF or error.
 	 */
 	do {
-		pdc = process_deeper(fname, fp, &offset, 0, -1, &frame_size, 0);
+		pdc = process_deeper(fname, fp, &offset,
+				     0, -1, &frame_size, 0, 0);
 	} while(pdc == PD_FINISHED && !single_type_decoding);
 
 	if(fp != stdin)
@@ -189,12 +190,14 @@ process(const char *fname) {
 /*
  * Process the TLV recursively.
  */
-static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ssize_t *frame_size, int expect_eoc) {
+static pd_code_e
+process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ber_tlv_len_t *frame_size, ber_tlv_len_t effective_size, int expect_eoc) {
 	unsigned char tagbuf[32];
 	ssize_t tblen = 0;
 	pd_code_e pdc = PD_FINISHED;
 	ber_tlv_tag_t tlv_tag;
 	ber_tlv_len_t tlv_len;
+	ber_tlv_len_t local_esize = effective_size;
 	ssize_t t_len;
 	ssize_t l_len;
 
@@ -217,7 +220,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *of
 		/* Get the next byte from the input stream */
 		ch = fgetc(fp);
 		if(ch == -1) {
-			if(tblen || limit > 0) {
+			if(limit > 0 || expect_eoc) {
 				fprintf(stderr,
 					"%s: Unexpected end of file (TL)"
 					" at %" PRIdASN "\n",
@@ -267,7 +270,8 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *of
 		assert((t_len + l_len) == tblen);
 
 		if(!expect_eoc || tagbuf[0] || tagbuf[1])
-			print_TL(0, *offset, level, constr, tblen, tlv_tag, tlv_len);
+			print_TL(0, *offset, level, constr, tblen,
+				 tlv_tag, tlv_len, effective_size);
 
 		if(limit != -1) {
 			/* If limit is set, account for the TL sequence */
@@ -285,15 +289,17 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *of
 
 		*offset += t_len + l_len;
 		*frame_size += t_len + l_len;
+		effective_size += t_len + l_len;
+		local_esize += t_len + l_len;
 
 		if(expect_eoc && tagbuf[0] == '\0' && tagbuf[1] == '\0') {
 			/* End of content octets */
-			print_TL(1, *offset, level - 1, 1, 2, 0, -1);
+			print_TL(1, *offset - 2, level - 1, 1, 2, 0, -1, effective_size);
 			return PD_FINISHED;
 		}
 
 		if(constr) {
-			ssize_t dec = 0;
+			ber_tlv_len_t dec = 0;
 			/*
 			 * This is a constructed type. Process recursively.
 			 */
@@ -303,15 +309,19 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *of
 			}
 			pdc = process_deeper(fname, fp, offset, level + 1,
 				tlv_len == -1 ? limit : tlv_len,
-				&dec, tlv_len == -1);
+				&dec, t_len + l_len, tlv_len == -1);
 			if(pdc == PD_FAILED) return pdc;
 			if(limit != -1) {
 				assert(limit >= dec);
 				limit -= dec;
 			}
 			*frame_size += dec;
+			effective_size += dec;
+			local_esize += dec;
 			if(tlv_len == -1) {
 				tblen = 0;
+				if(pdc == PD_FINISHED && limit < 0)
+					return pdc;
 				continue;
 			}
 		} else {
@@ -325,9 +335,13 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *of
 			}
 			*offset += tlv_len;
 			*frame_size += tlv_len;
+			effective_size += tlv_len;
+			local_esize += tlv_len;
 		}
 
-		print_TL(1, *offset, level, constr, tblen, tlv_tag, tlv_len);
+		print_TL(1, *offset, level, constr, tblen,
+			 tlv_tag, tlv_len, local_esize);
+		local_esize = 0;
 
 		tblen = 0;
 	} while(1);
@@ -336,7 +350,7 @@ static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *of
 }
 
 static void
-print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
+print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len, ber_tlv_len_t effective_size) {
 
 	if(fin && !constr) {
 		printf("</P>\n");
@@ -348,9 +362,8 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 
 	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
 
-	/* In case of <P>, <C>, <I>, </I> print out the offset */
-	if(fin == 0 || tlv_len == -1)
-		printf(" O=\"%" PRIdASN "\"", offset);
+	/* Print out the offset of this boundary, even if closing tag */
+	printf(" O=\"%" PRIdASN "\"", offset);
 
 	printf(" T=\"");
 	ber_tlv_tag_fwrite(tlv_tag, stdout);
@@ -372,7 +385,11 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 		if(str) printf(" A=\"%s\"", str);
 	}
 
-	if(fin) printf(">\n");
+	if(fin) {
+		if(constr)
+			printf(" L=\"%ld\"", (long)effective_size);
+		printf(">\n");
+	}
 }
 
 /*
