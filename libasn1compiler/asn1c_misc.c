@@ -261,8 +261,8 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
  * standard will give it an unsigned type.
  * It is defined here as a constant expression.
  */
-#define	LEFTMIN		2147483647
-#define	RIGHTMAX	(-LEFTMIN-1)
+#define	RIGHTMAX	2147483647	/* of 32-bit integer type */
+#define	LEFTMIN		(-RIGHTMAX-1)	/* of 32-bit integer type */
 
 	/* Descend to the terminal type */
 	expr = asn1f_find_terminal_type_ex(arg->asn, expr);
