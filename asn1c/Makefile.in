@@ -220,10 +220,10 @@ asn1c_LDADD = \
 
 noinst_HEADERS = sys-common.h
 dist_man1_MANS = asn1c.1 unber.1 enber.1
-check_SCRIPTS = check-parsing.sh
-TESTS = check-parsing.sh
-EXTRA_DIST = check-parsing.sh
-CLEANFILES = .check-parsing.*.tmp
+check_SCRIPTS = check-xxber.sh check-parsing.sh
+TESTS = $(check_SCRIPTS)
+EXTRA_DIST = $(check_SCRIPTS)
+CLEANFILES = .check-xxber.*.tmp .check-parsing.*.tmp
 all: all-recursive
 
 .SUFFIXES:

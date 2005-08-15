@@ -8,6 +8,9 @@
 	* Conditional INTEGER/ENUMERATED representation: long vs. INTEGER_t
 	  type is chosen based on PER visible constraints (Test cases 90, 91).
 	* Union structures for CHOICE type are not anonymous anymore.
+	* Made unber(1) program more verbose: effective structure length is
+	  now displayed as L="<n>" at the closing tag. (Test check-xxber.sh).
+	* Fixed unber(1)'s -1 switch for indefinite encoding length.
 
 0.9.17:	2005-Aug-07
 
