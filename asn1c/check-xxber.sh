@@ -15,7 +15,7 @@ cat<<EOM > $ORIG
 </C O="14" T="[UNIVERSAL 16]" A="SEQUENCE" L="8">
 EOM
 
-./enber < $ORIG - | ./unber -p -i 0 - > $TEST 2>&1
+./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
 diff $diffArgs $ORIG $TEST >/dev/null 2>&1
 diffExitCode=$?
 
@@ -28,7 +28,7 @@ fi
 echo '</I O="14" T="[UNIVERSAL 0]" TL="2" L="16">' >> $ORIG
 
 # Try trancoding again
-./enber < $ORIG - | ./unber -p -i 0 - > $TEST 2>&1
+./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
 
 diff $diffArgs $ORIG $TEST
 diffExitCode=$?

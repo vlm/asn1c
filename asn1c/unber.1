@@ -12,7 +12,7 @@
 .SH NAME
 unber \- ASN.1 BER Decoder
 .SH SYNOPSIS
-unber [\fB-1\fR] [\fB-i\fRindent] [\fB-p\fR] [\fB\-t\fR\fIdata-string\fR] [\fB-\fR] [\fIinfile\fR...]
+unber [\fB-1\fR] [\fB-i\fRindent] [\fB-m\fR] [\fB-p\fR] [\fB\-t\fR\fIdata-string\fR] [\fB-\fR] [\fIinfile\fR...]
 .SH DESCRIPTION
 unber takes the BER-encoded files and dumps their internal structure as human readable text.
 A single dash represents the standard input.
@@ -27,6 +27,9 @@ By default, unber continues decoding until the end of file (input stream).
 .TP
 \fB\-i\fR \fIindent\fR
 Use the specified number of spaces for output indentation. Default is 4 spaces.
+.TP
+\fB\-m\fR
+Generate minimum amount of output while still preserving BER encoding information.
 .TP
 \fB\-p\fR
 Do \fInot\fR attempt pretty-printing of known ASN.1 types (OBJECT IDENTIFIER, INTEGER, BOOLEAN, etc). By default, some ASN.1 types are converted into
