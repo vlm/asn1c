@@ -19,7 +19,7 @@ EOM
 diff $diffArgs $ORIG $TEST >/dev/null 2>&1
 diffExitCode=$?
 
-if [ $diffExitCode == "0" ]; then
+if [ "$diffExitCode" = "0" ]; then
 	echo "FAILED: $0: expected failure, got success"
 	exit 42;
 fi
