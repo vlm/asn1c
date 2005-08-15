@@ -135,7 +135,7 @@ main(int ac, char **av) {
 	CHECK(buf8, 0x7F7E7D7C, 0);
 	CHECK(buf9, 0x7F7E7D7C, 0);
 	CHECK(buf10, 0x7F7E7D7C, 0);
-	CHECK(buf11, -2147483648, 0);	/* 0x80000000 */
+	CHECK(buf11, -2147483647-1, 0);	/* 0x80000000 */
 	CHECK(buf12, -32768, 0);
 	CHECK(buf13, -128, 0);
 
@@ -164,7 +164,7 @@ main(int ac, char **av) {
 	check_xer(0, "<INTEGER>1234</INTEGER>", 1234);
 	check_xer(-1, "<INTEGER>1234 5678</INTEGER>", 0);
 	check_xer(0, "<INTEGER>-2147483647</INTEGER>", -2147483647);
-	check_xer(0, "<INTEGER>-2147483648</INTEGER>", -2147483648);
+	check_xer(0, "<INTEGER>-2147483648</INTEGER>", -2147483647-1);
 	check_xer(0, "<INTEGER>+2147483647</INTEGER>", 2147483647);
 	check_xer(0, "<INTEGER>2147483647</INTEGER>", 2147483647);
 	if(sizeof(long) == 4) {
