@@ -202,11 +202,11 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 	pd_code_e pdc = PD_FINISHED;
 	ber_tlv_tag_t tlv_tag;
 	ber_tlv_len_t tlv_len;
-	ber_tlv_len_t local_esize = effective_size;
 	ssize_t t_len;
 	ssize_t l_len;
 
 	do {
+		ber_tlv_len_t local_esize = 0;
 		int constr;
 		int ch;
 
@@ -295,6 +295,8 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 		*offset += t_len + l_len;
 		*frame_size += t_len + l_len;
 		effective_size += t_len + l_len;
+		printf("LES %d + %d + %d\n",
+			(int)local_esize, (int)t_len, (int)l_len);
 		local_esize += t_len + l_len;
 
 		if(expect_eoc && tagbuf[0] == '\0' && tagbuf[1] == '\0') {
@@ -346,7 +348,6 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 
 		print_TL(1, *offset, level, constr, tblen,
 			 tlv_tag, tlv_len, local_esize);
-		local_esize = 0;
 
 		tblen = 0;
 	} while(1);

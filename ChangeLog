@@ -11,6 +11,7 @@
 	* Made unber(1) program more verbose: effective structure length is
 	  now displayed as L="<n>" at the closing tag. (Test check-xxber.sh).
 	* Fixed unber(1)'s -1 switch for indefinite encoding length.
+	* New command line option for unber(1): -m to enable minimalistic mode.
 
 0.9.17:	2005-Aug-07
 
