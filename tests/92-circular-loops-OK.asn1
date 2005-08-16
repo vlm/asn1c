@@ -1,0 +1,49 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .92
+
+ModuleCircularReferences
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 92 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	Everything ::= SEQUENCE {
+		ch1	Choice1,
+		ch2	Choice2,
+		set	Set
+	}
+
+	-- This type refers to the type directly containing itself.
+	Choice1 ::= CHOICE {
+		something Everything,
+		...,
+		some2	Everything
+	}
+
+	Choice2 ::= CHOICE {
+		...,
+		some3	Everything
+	}
+
+	Set ::= SET OF SEQUENCE {
+			int	INTEGER,
+			set	Set,
+			seq	Sequence,
+			set2	Set OPTIONAL,
+			...,
+			set3	Set
+		}
+
+	Sequence ::= SEQUENCE {
+			a	INTEGER,
+			seq	Sequence OPTIONAL,
+			...,
+			b	INTEGER,
+			set	Set OPTIONAL
+		}
+
+END
