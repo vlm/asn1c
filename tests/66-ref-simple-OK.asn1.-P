@@ -21,7 +21,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T;
 /*** <<< STAT-DEFS [T] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_T_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_SimpleType,

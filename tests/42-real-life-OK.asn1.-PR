@@ -69,7 +69,7 @@ memb_varsets_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [LogLine] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_varsets_3[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VariablePartSet,
@@ -225,7 +225,7 @@ memb_vparts_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [VariablePartSet] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_vparts_2[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VariablePart,
@@ -403,7 +403,7 @@ memb_vset_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [VariablePart] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_vset_2[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VisibleString,
@@ -719,7 +719,7 @@ asn_TYPE_descriptor_t asn_DEF_accept_as_2 = {
 };
 
 static asn_TYPE_member_t asn_MBR_email_9[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_VisibleString,

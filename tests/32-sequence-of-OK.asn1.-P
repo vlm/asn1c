@@ -28,7 +28,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Programming;
 /*** <<< STAT-DEFS [Programming] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_Programming_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_Fault,
@@ -96,7 +96,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Fault;
 /*** <<< STAT-DEFS [Fault] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_Fault_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Error,

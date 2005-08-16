@@ -45,7 +45,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Test_structure_1;
 /*** <<< STAT-DEFS [Test-structure-1] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_t_member1_2[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Test_structure_1,
@@ -85,7 +85,7 @@ asn_TYPE_descriptor_t asn_DEF_t_member1_2 = {
 };
 
 static asn_TYPE_member_t asn_MBR_t_member2_4[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Test_structure_1,
@@ -196,7 +196,6 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_1 = {
 
 /*** <<< INCLUDES [Choice-1] >>> ***/
 
-#include <Choice-1.h>
 #include <INTEGER.h>
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
@@ -247,7 +246,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Choice_1;
 /*** <<< STAT-DEFS [Choice-1] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_or_3[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Choice_1,

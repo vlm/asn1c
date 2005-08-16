@@ -2,7 +2,6 @@
 /*** <<< INCLUDES [Choice] >>> ***/
 
 #include <INTEGER.h>
-#include <Choice.h>
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [Choice] >>> ***/
@@ -40,6 +39,10 @@ typedef struct Choice {
 /*** <<< FUNC-DECLS [Choice] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Choice;
+
+/*** <<< POST-INCLUDE [Choice] >>> ***/
+
+#include <Choice.h>
 
 /*** <<< STAT-DEFS [Choice] >>> ***/
 

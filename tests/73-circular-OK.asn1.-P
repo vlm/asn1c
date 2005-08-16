@@ -34,7 +34,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Type;
 /*** <<< STAT-DEFS [Type] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_data_2[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_EpytRef,
@@ -276,7 +276,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Epyt;
 /*** <<< STAT-DEFS [Epyt] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_stype_2[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Type,
@@ -510,7 +510,7 @@ memb_patest2_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [Ypet] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_senums_4[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_EnumType,
