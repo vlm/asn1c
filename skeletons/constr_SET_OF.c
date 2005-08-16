@@ -71,7 +71,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Bring closer parts of structure description.
 	 */
 	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
-	asn_TYPE_member_t *element = td->elements;	/* Single one */
+	asn_TYPE_member_t *elm = td->elements;	/* Single one */
 
 	/*
 	 * Parts of the structure being constructed.
@@ -181,8 +181,8 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		/* Outmost tag may be unknown and cannot be fetched/compared */
-		if(element->tag != (ber_tlv_tag_t)-1) {
-		    if(BER_TAGS_EQUAL(tlv_tag, element->tag)) {
+		if(elm->tag != (ber_tlv_tag_t)-1) {
+		    if(BER_TAGS_EQUAL(tlv_tag, elm->tag)) {
 			/*
 			 * The new list member of expected type has arrived.
 			 */
@@ -190,7 +190,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			ASN_DEBUG("Unexpected tag %s fixed SET OF %s",
 				ber_tlv_tag_string(tlv_tag), td->name);
 			ASN_DEBUG("%s SET OF has tag %s",
-				td->name, ber_tlv_tag_string(element->tag));
+				td->name, ber_tlv_tag_string(elm->tag));
 			RETURN(RC_FAIL);
 		    }
 		}
@@ -204,10 +204,10 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = element->type->ber_decoder(opt_codec_ctx,
-				element->type, &ctx->ptr, ptr, LEFT, 0);
+		rval = elm->type->ber_decoder(opt_codec_ctx,
+				elm->type, &ctx->ptr, ptr, LEFT, 0);
 		ASN_DEBUG("In %s SET OF %s code %d consumed %d",
-			td->name, element->type->name,
+			td->name, elm->type->name,
 			rval.code, (int)rval.consumed);
 		switch(rval.code) {
 		case RC_OK:
@@ -317,6 +317,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
 	struct _el_buffer *encoded_els;
+	ssize_t eels_count = 0;
 	size_t max_encoded_len = 1;
 	asn_enc_rval_t erval;
 	int ret;
@@ -329,6 +330,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	 */
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
+		if(!memb_ptr) continue;
 		erval = der_encoder(elm_type, memb_ptr, 0, elm->tag, 0, 0);
 		if(erval.encoded == -1)
 			return erval;
@@ -378,7 +380,9 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	 */
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
-		struct _el_buffer *encoded_el = &encoded_els[edx];
+		struct _el_buffer *encoded_el = &encoded_els[eels_count];
+
+		if(!memb_ptr) continue;
 
 		/*
 		 * Prepare space for encoding.
@@ -409,19 +413,20 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 			return erval;
 		}
 		encoding_size += erval.encoded;
+		eels_count++;
 	}
 
 	/*
 	 * Sort the encoded elements according to their encoding.
 	 */
-	qsort(encoded_els, list->count, sizeof(encoded_els[0]), _el_buf_cmp);
+	qsort(encoded_els, eels_count, sizeof(encoded_els[0]), _el_buf_cmp);
 
 	/*
 	 * Report encoded elements to the application.
 	 * Dispose of temporary sorted members table.
 	 */
 	ret = 0;
-	for(edx = 0; edx < list->count; edx++) {
+	for(edx = 0; edx < eels_count; edx++) {
 		struct _el_buffer *encoded_el = &encoded_els[edx];
 		/* Report encoded chunks to the application */
 		if(ret == 0
@@ -638,11 +643,10 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
 	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
-	asn_TYPE_member_t *element = td->elements;
+	asn_TYPE_member_t *elm = td->elements;
 	asn_anonymous_set_ *list = _A_SET_FROM_VOID(sptr);
 	const char *mname = specs->as_XMLValueList
-		? 0 : ((*element->name)
-			? element->name : element->type->xml_tag);
+		? 0 : ((*elm->name) ? elm->name : elm->type->xml_tag);
 	size_t mlen = mname ? strlen(mname) : 0;
 	int xcan = (flags & XER_F_CANONICAL);
 	xer_tmp_enc_t *encs = 0;
@@ -680,7 +684,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		if(!xcan && specs->as_XMLValueList)
 			_i_ASN_TEXT_INDENT(1, ilevel + 1);
-		tmper = element->type->xer_encoder(element->type, memb_ptr,
+		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) {
 			td = tmper.failed_type;
@@ -688,8 +692,8 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			goto cb_failed;
 		}
 		if(tmper.encoded == 0 && specs->as_XMLValueList) {
-			const char *name = (*element->name)
-				? element->name : element->type->xml_tag;
+			const char *name = (*elm->name)
+				? elm->name : elm->type->xml_tag;
 			size_t len = strlen(name);
 			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);
 		}
@@ -741,7 +745,7 @@ cleanup:
 int
 SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_TYPE_member_t *element = td->elements;
+	asn_TYPE_member_t *elm = td->elements;
 	const asn_anonymous_set_ *list = _A_CSET_FROM_VOID(sptr);
 	int ret;
 	int i;
@@ -759,7 +763,7 @@ SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 		_i_INDENT(1);
 
-		ret = element->type->print_struct(element->type, memb_ptr,
+		ret = elm->type->print_struct(elm->type, memb_ptr,
 			ilevel + 1, cb, app_key);
 		if(ret) return ret;
 	}
@@ -773,7 +777,7 @@ SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 void
 SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr) {
-		asn_TYPE_member_t *element = td->elements;
+		asn_TYPE_member_t *elm = td->elements;
 		asn_anonymous_set_ *list = _A_SET_FROM_VOID(ptr);
 		int i;
 
@@ -784,7 +788,7 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		for(i = 0; i < list->count; i++) {
 			void *memb_ptr = list->array[i];
 			if(memb_ptr)
-			element->type->free_struct(element->type, memb_ptr, 0);
+			elm->type->free_struct(elm->type, memb_ptr, 0);
 		}
 		list->count = 0;	/* No meaningful elements left */
 
@@ -799,7 +803,7 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 int
 SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_consume_bytes_f *app_errlog, void *app_key) {
-	asn_TYPE_member_t *element = td->elements;
+	asn_TYPE_member_t *elm = td->elements;
 	asn_constr_check_f *constr;
 	const asn_anonymous_set_ *list = _A_CSET_FROM_VOID(sptr);
 	int i;
@@ -811,8 +815,8 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 
-	constr = element->memb_constraints;
-	if(!constr) constr = element->type->check_constraints;
+	constr = elm->memb_constraints;
+	if(!constr) constr = elm->type->check_constraints;
 
 	/*
 	 * Iterate over the members of an array.
@@ -824,7 +828,7 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 		if(!memb_ptr) continue;
 
-		ret = constr(element->type, memb_ptr, app_errlog, app_key);
+		ret = constr(elm->type, memb_ptr, app_errlog, app_key);
 		if(ret) return ret;
 	}
 
@@ -832,8 +836,8 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	 * Cannot inherit it eralier:
 	 * need to make sure we get the updated version.
 	 */
-	if(!element->memb_constraints)
-		element->memb_constraints = element->type->check_constraints;
+	if(!elm->memb_constraints)
+		elm->memb_constraints = elm->type->check_constraints;
 
 	return 0;
 }

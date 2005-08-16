@@ -1,4 +1,9 @@
 
+0.9.19:	2005-Aug-16
+
+	* asn1c's -findirect-choice flag generates less dependent code.
+	* Test cases 73 & 92 keep track of various circular references.
+
 0.9.18:	2005-Aug-14
 
 	* The obsolete X.208 syntax is handled gracefully now (compound types'

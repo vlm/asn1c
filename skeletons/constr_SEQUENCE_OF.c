@@ -27,6 +27,7 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	 */
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
+		if(!memb_ptr) continue;
 		erval = elm->type->der_encoder(elm->type, memb_ptr,
 			0, elm->tag,
 			0, 0);
@@ -60,6 +61,7 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	 */
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
+		if(!memb_ptr) continue;
 		erval = elm->type->der_encoder(elm->type, memb_ptr,
 			0, elm->tag,
 			cb, app_key);
@@ -88,11 +90,10 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
         asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
-	asn_TYPE_member_t *element = td->elements;
+	asn_TYPE_member_t *elm = td->elements;
 	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
 	const char *mname = specs->as_XMLValueList
-		? 0 : ((*element->name)
-			? element->name : element->type->xml_tag);
+		? 0 : ((*elm->name) ? elm->name : elm->type->xml_tag);
 	unsigned int mlen = mname ? strlen(mname) : 0;
 	int xcan = (flags & XER_F_CANONICAL);
 	int i;
@@ -103,7 +104,6 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	for(i = 0; i < list->count; i++) {
 		asn_enc_rval_t tmper;
-
 		void *memb_ptr = list->array[i];
 		if(!memb_ptr) continue;
 
@@ -112,12 +112,12 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
 		}
 
-		tmper = element->type->xer_encoder(element->type, memb_ptr,
+		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
                 if(tmper.encoded == 0 && specs->as_XMLValueList) {
-                        const char *name = (*element->name)
-                                ? element->name : element->type->xml_tag;
+                        const char *name = (*elm->name)
+                                ? elm->name : elm->type->xml_tag;
 			size_t len = strlen(name);
 			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel + 1);
 			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);
