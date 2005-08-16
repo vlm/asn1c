@@ -36,7 +36,7 @@ static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
 static int _print_tag(arg_t *arg, struct asn1p_type_tag_s *tag_p);
 static int check_if_extensible(asn1p_expr_t *expr);
-static int expr_better_indirect(arg_t *arg, asn1p_expr_t *expr);
+static int expr_break_recursion(arg_t *arg, asn1p_expr_t *expr);
 static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
@@ -271,11 +271,9 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	}
 
 	TQ_FOR(v, &(expr->members), next) {
-		if(v->expr_type == A1TC_EXTENSIBLE) {
+		if(v->expr_type == A1TC_EXTENSIBLE)
 			if(comp_mode < 3) comp_mode++;
-		}
-		if(comp_mode == 1
-		|| expr_better_indirect(arg, v))
+		if(comp_mode == 1)
 			v->marker.flags |= EM_INDIRECT;
 		EMBED(v);
 	}
@@ -336,8 +334,10 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 					ext_stop = elements - 1;
 				continue;
 			}
-			elements++;
+			if(comp_mode == 1)
+				v->marker.flags |= EM_INDIRECT;
 			emit_member_table(arg, v);
+			elements++;
 		});
 		OUT("};\n");
 	} else {
@@ -434,8 +434,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 		if(v->expr_type == A1TC_EXTENSIBLE) {
 			if(comp_mode < 3) comp_mode++;
 		}
-		if(comp_mode == 1
-		|| expr_better_indirect(arg, v))
+		if(comp_mode == 1)
 			v->marker.flags |= EM_INDIRECT;
 		EMBED(v);
 	}
@@ -509,11 +508,10 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				if(comp_mode < 3) comp_mode++;
 			} else {
-				if(comp_mode == 1
-				|| expr_better_indirect(arg, v))
+				if(comp_mode == 1)
 					v->marker.flags |= EM_INDIRECT;
-				elements++;
 				emit_member_table(arg, v);
+				elements++;
 			}
 		});
 		OUT("};\n");
@@ -627,6 +625,13 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	OUT("A_%s_OF(",
 		(arg->expr->expr_type == ASN_CONSTR_SET_OF)
 			? "SET" : "SEQUENCE");
+
+	/*
+	 * README README
+	 * The implementation of the A_SET_OF() macro is already indirect.
+	 */
+	memb->marker.flags |= EM_INDIRECT;
+
 	if(memb->expr_type & ASN_CONSTR_MASK
 	|| ((memb->expr_type == ASN_BASIC_ENUMERATED
 		|| (0 /* -- prohibited by X.693:8.3.4 */
@@ -638,6 +643,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			tmp = *arg;
 			tmp.expr = &tmp_memb;
 			tmp_memb = *memb;
+			tmp_memb.marker.flags &= ~EM_INDIRECT;
 			tmp_memb._anonymous_type = 1;
 			if(tmp_memb.Identifier == 0) {
 				tmp_memb.Identifier = "Member";
@@ -657,6 +663,9 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			(memb->marker.flags & EM_UNRECURSE)
 				? TNF_RSAFE : TNF_CTYPE));
 	}
+	/* README README (above) */
+	if(0 && (memb->marker.flags & EM_INDIRECT))
+		OUT(" *");
 	OUT(") list;\n");
 	INDENT(-1);
 
@@ -791,8 +800,6 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 		}
 		OUT("{\n");
 		TQ_FOR(v, &(expr->members), next) {
-			if(expr_better_indirect(arg, v))
-				v->marker.flags |= EM_INDIRECT;
 			EMBED(v);
 		}
 		if(UNNAMED_UNIONS)	OUT("};\n");
@@ -847,10 +854,8 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE)
 				continue;
-			if(expr_better_indirect(arg, v))
-				v->marker.flags |= EM_INDIRECT;
-			elements++;
 			emit_member_table(arg, v);
+			elements++;
 		});
 		OUT("};\n");
 	} else {
@@ -1614,21 +1619,20 @@ emit_include_dependencies(arg_t *arg) {
 
 	TQ_FOR(memb, &(expr->members), next) {
 
-		if((memb->meta_type == AMT_TYPEREF
-		&& (memb->marker.flags & EM_INDIRECT))
-		|| expr->expr_type == ASN_CONSTR_SET_OF
-		|| expr->expr_type == ASN_CONSTR_SEQUENCE_OF
-		) {
+		/* Avoid recursive definitions. */
+		expr_break_recursion(arg, memb);
+
+		if(memb->marker.flags & (EM_INDIRECT | EM_UNRECURSE)) {
 			asn1p_expr_t *terminal;
 			terminal = asn1f_find_terminal_type_ex(arg->asn, memb);
-			if(terminal && !terminal->parent_expr
-				&& (terminal->expr_type & ASN_CONSTR_MASK)) {
+			if(terminal
+			&& !terminal->parent_expr
+			&& (terminal->expr_type & ASN_CONSTR_MASK)) {
 				int saved_target = arg->target->target;
 				REDIR(OT_FWD_DECLS);
 				OUT("%s;\n",
 					asn1c_type_name(arg, memb, TNF_RSAFE));
 				REDIR(saved_target);
-				memb->marker.flags |= EM_UNRECURSE;
 			}
 		}
 
@@ -1642,6 +1646,66 @@ emit_include_dependencies(arg_t *arg) {
 				GEN_INCLUDE(asn1c_type_name(arg,
 					memb, TNF_INCLUDE));
 			}
+		}
+	}
+
+	return 0;
+}
+
+/*
+ * Check if it is better to make this type indirectly accessed via
+ * a pointer.
+ * This may be the case for the following recursive definition:
+ * Type ::= CHOICE { member Type };
+ */
+static int
+expr_break_recursion(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_t *top_parent;
+	asn1p_expr_t *terminal;
+
+	if(expr->marker.flags & EM_UNRECURSE)
+		return 1;	/* Already broken */
+
+	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+
+	/* -findirect-choice compiles members of CHOICE as indirect pointers */
+	if((arg->flags & A1C_INDIRECT_CHOICE)
+	 && arg->expr->expr_type == ASN_CONSTR_CHOICE
+	 && terminal
+	 && (terminal->expr_type & ASN_CONSTR_MASK)
+	) {
+		/* Break cross-reference */
+		expr->marker.flags |= EM_INDIRECT | EM_UNRECURSE;
+		return 1;
+	}
+
+	if((expr->marker.flags & EM_INDIRECT)
+	|| arg->expr->expr_type == ASN_CONSTR_SET_OF
+	|| arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF) {
+		if(terminal
+		&& !terminal->parent_expr
+		&& (terminal->expr_type & ASN_CONSTR_MASK)) {
+			expr->marker.flags |= EM_UNRECURSE;
+
+			if(arg->expr->expr_type == ASN_CONSTR_SET_OF
+			|| arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF) {
+				/* Don't put EM_INDIRECT even if recursion */
+				return 1;
+			}
+
+			/* Fall through */
+		}
+	}
+
+	/* Look for recursive back-references */
+	top_parent = expr->parent_expr;
+	if(top_parent) {
+		while(top_parent->parent_expr)
+			top_parent = top_parent->parent_expr;
+		if(top_parent == terminal) {
+			/* Explicitly break the recursion */
+			expr->marker.flags |= EM_INDIRECT | EM_UNRECURSE;
+			return 1;
 		}
 	}
 
@@ -1899,38 +1963,6 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	OUT("\n");
 
 	return 0;
-}
-
-/*
- * Check if it is better to make this type indirectly accessed via
- * a pointer.
- * This may be the case for the following recursive definition:
- * Type ::= CHOICE { member Type };
- */
-static int
-expr_better_indirect(arg_t *arg, asn1p_expr_t *expr) {
-	asn1p_expr_t *top_parent;
-	asn1p_expr_t *terminal;
-
-	if(expr->expr_type != A1TC_REFERENCE)
-		return 0;
-
-	/* -findirect-choice compiles members of CHOICE as indirect pointers */
-	if((arg->flags & A1C_INDIRECT_CHOICE)
-	 && arg->expr->expr_type == ASN_CONSTR_CHOICE)
-		return 1;
-
-	/* Rewind to the topmost parent expression */
-	if((top_parent = expr->parent_expr)) {
-		while(top_parent->parent_expr)
-			top_parent = top_parent->parent_expr;
-	} else {
-		return 0;
-	}
-
-	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
-
-	return (terminal == top_parent);
 }
 
 static int

@@ -19,7 +19,8 @@
 extern "C" {
 #endif
 
-#define	ASN1C_ENVIRONMENT_VERSION	98	/* Compile-time version */
+/* Environment version might be used to avoid running with the old library */
+#define	ASN1C_ENVIRONMENT_VERSION	919	/* Compile-time version */
 int get_asn1c_environment_version(void);	/* Run-time version */
 
 #define	CALLOC(nmemb, size)	calloc(nmemb, size)
