@@ -1,5 +1,6 @@
 /*
- * This is a generic BER decoder template for any ASN.1 type.
+ * Generic BER decoder template for any defined ASN.1 type.
+ * Copyright (c) 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * 
  * To compile with your own ASN.1 type, please redefine the asn_DEF as shown:
  * 
