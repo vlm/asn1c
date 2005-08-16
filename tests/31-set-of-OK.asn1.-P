@@ -28,7 +28,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Forest;
 /*** <<< STAT-DEFS [Forest] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_Forest_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Tree,
@@ -231,7 +231,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Stuff;
 /*** <<< STAT-DEFS [Stuff] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_trees_2[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Forest,
@@ -318,7 +318,7 @@ asn_TYPE_descriptor_t asn_DEF_Member_5 = {
 };
 
 static asn_TYPE_member_t asn_MBR_anything_4[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Member_5,

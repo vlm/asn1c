@@ -786,7 +786,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SetOf;
 /*** <<< STAT-DEFS [SetOf] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_SetOf_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (9 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_REAL,
@@ -847,7 +847,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SetOfNULL;
 /*** <<< STAT-DEFS [SetOfNULL] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_SetOfNULL_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_NULL,
@@ -1028,7 +1028,7 @@ asn_TYPE_descriptor_t asn_DEF_Member_2 = {
 };
 
 static asn_TYPE_member_t asn_MBR_SetOfEnums_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Member_2,
@@ -1089,7 +1089,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SequenceOf;
 /*** <<< STAT-DEFS [SequenceOf] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_SequenceOf_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_INTEGER,
@@ -1150,7 +1150,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SeqOfZuka;
 /*** <<< STAT-DEFS [SeqOfZuka] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_SeqOfZuka_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_NULL,

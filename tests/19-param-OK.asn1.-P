@@ -218,7 +218,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Name;
 /*** <<< STAT-DEFS [Name] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_Name_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_RelativeDistinguishedName,
@@ -334,7 +334,7 @@ memb_IA5String_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [RelativeDistinguishedName] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_RelativeDistinguishedName_1[] = {
-	{ ATF_NOFLAGS, 0, 0,
+	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_IA5String,
