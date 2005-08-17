@@ -26,6 +26,9 @@
 #define	alloca(size)	_alloca(size)
 
 #ifdef _MSC_VER			/* MSVS.Net */
+#ifndef __cplusplus
+#define inline __inline
+#endif
 #define	ssize_t		SSIZE_T
 typedef	char		int8_t;
 typedef	short		int16_t;
