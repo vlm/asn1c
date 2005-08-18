@@ -17,6 +17,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		int argc, char **argv) {
 	asn1c_fdeps_t *deps = 0;
 	asn1c_fdeps_t *dlist;
+	asn1p_module_t *mod;
 	FILE *mkf;
 	int i;
 
@@ -26,8 +27,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			"from %s\n", datadir);
 	}
 
-	TQ_FOR(arg->mod, &(arg->asn->modules), mod_next) {
-		TQ_FOR(arg->expr, &(arg->mod->members), next) {
+	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
 				if(asn1c_dump_streams(arg, deps))
@@ -51,8 +52,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	}
 
 	fprintf(mkf, "ASN_MODULE_SOURCES=");
-	TQ_FOR(arg->mod, &(arg->asn->modules), mod_next) {
-		TQ_FOR(arg->expr, &(arg->mod->members), next) {
+	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
 				fprintf(mkf, "\t\\\n\t%s.c",
@@ -61,8 +62,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		}
 	}
 	fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
-	TQ_FOR(arg->mod, &(arg->asn->modules), mod_next) {
-		TQ_FOR(arg->expr, &(arg->mod->members), next) {
+	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
 				fprintf(mkf, "\t\\\n\t%s.h",
@@ -208,8 +209,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	" * From ASN.1 module \"%s\"\n"
 	" * \tfound in \"%s\"\n"
 	" */\n\n",
-		arg->mod->ModuleName,
-		arg->mod->source_file_name
+		expr->module->ModuleName,
+		expr->module->source_file_name
 	);
 	fprintf(fp_h,
 	"/*\n"
@@ -217,8 +218,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	" * From ASN.1 module \"%s\"\n"
 	" * \tfound in \"%s\"\n"
 	" */\n\n",
-		arg->mod->ModuleName,
-		arg->mod->source_file_name
+		expr->module->ModuleName,
+		expr->module->source_file_name
 	);
 
 	header_id = asn1c_make_identifier(0, expr->Identifier, NULL);

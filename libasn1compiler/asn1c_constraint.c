@@ -609,13 +609,13 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 	default:
 		WARNING("%s:%d: Value cannot be determined "
 			"for constraint check for %s",
-			arg->mod->source_file_name,
+			arg->expr->module->source_file_name,
 			arg->expr->_lineno,
 			arg->expr->Identifier
 		);
 		OUT_NOINDENT(
 			"#error %s:%d: Value of %s cannot be determined\n",
-			arg->mod->source_file_name,
+			arg->expr->module->source_file_name,
 			arg->expr->_lineno,
 			arg->expr->Identifier
 		);

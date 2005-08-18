@@ -18,7 +18,6 @@ char const *asn1f_printable_value(asn1p_value_t *value);
  */
 asn1p_expr_t *asn1f_lookup_symbol_ex(
 		asn1p_t *asn,
-		asn1p_module_t *mod,
 		asn1p_expr_t *expr,
 		asn1p_ref_t *ref);
 

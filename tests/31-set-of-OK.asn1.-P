@@ -423,7 +423,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "anything"
 		},
-	{ ATF_POINTER, 0, offsetof(struct Stuff, other),
+	{ ATF_POINTER, 1, offsetof(struct Stuff, other),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_other_9,

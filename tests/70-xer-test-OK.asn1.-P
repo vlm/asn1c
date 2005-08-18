@@ -542,7 +542,7 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSet_1[] = {
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "string"
 		},
-	{ ATF_POINTER, 0, offsetof(struct ExtensibleSet, Enum),
+	{ ATF_POINTER, 1, offsetof(struct ExtensibleSet, Enum),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_enum_4,
@@ -637,7 +637,7 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "integer"
 		},
-	{ ATF_POINTER, 0, offsetof(struct ExtensibleSequence, gtime),
+	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence, gtime),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_GeneralizedTime,

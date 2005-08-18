@@ -379,7 +379,6 @@ asn_TYPE_descriptor_t asn_DEF_Epyt = {
 
 /*** <<< INCLUDES [Ypet] >>> ***/
 
-#include <Epyt.h>
 #include <INTEGER.h>
 #include <IA5String.h>
 #include <EnumType.h>
@@ -401,10 +400,14 @@ typedef enum Ypet_PR {
 	Ypet_PR_patest2,	/* Member patest2 is present */
 } Ypet_PR;
 
+/*** <<< FWD-DECLS [Ypet] >>> ***/
+
+struct Epyt;
+
 /*** <<< TYPE-DECLS [Ypet] >>> ***/
 
 typedef struct Ypet {
-	Epyt_t	 epyt;
+	struct Epyt	*epyt;
 	INTEGER_t	*plain	/* DEFAULT 7 */;
 	struct senums {
 		A_SET_OF(EnumType_t) list;
@@ -426,6 +429,10 @@ typedef struct Ypet {
 /*** <<< FUNC-DECLS [Ypet] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Ypet;
+
+/*** <<< POST-INCLUDE [Ypet] >>> ***/
+
+#include <Epyt.h>
 
 /*** <<< CTABLES [Ypet] >>> ***/
 
@@ -550,7 +557,7 @@ asn_TYPE_descriptor_t asn_DEF_senums_4 = {
 };
 
 static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, epyt),
+	{ ATF_POINTER, 0, offsetof(struct Ypet, epyt),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = (void *)&asn_DEF_Epyt,

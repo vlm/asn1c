@@ -174,11 +174,12 @@ typedef struct asn1p_expr_s {
 
 	struct asn1p_expr_marker_s {
 		enum asn1p_expr_marker_e {
-			EM_NOMARK,
-			EM_INDIRECT	= 0x01,	/* 0001: Represent as pointer */
-			EM_OPTIONAL	= 0x03,	/* 0011: Optional member */
-			EM_DEFAULT	= 0x07,	/* 0111: default_value */
-			EM_UNRECURSE	= 0x08, /* 1000: Use safe naming */
+		  EM_NOMARK,
+		  EM_INDIRECT	= 0x01,	/* 00001 Represent as pointer */
+		  EM_OMITABLE	= 0x03,	/* 00011 May be absent in encoding */
+		  EM_OPTIONAL	= 0x07,	/* 00111 Optional member */
+		  EM_DEFAULT	= 0x0F,	/* 01111 default_value */
+		  EM_UNRECURSE	= 0x10,	/* 10000 Use safe naming */
 		} flags;
 		asn1p_value_t *default_value;	/* For EM_DEFAULT case */
 	} marker;
