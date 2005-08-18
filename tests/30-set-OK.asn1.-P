@@ -58,7 +58,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "s"
 		},
-	{ ATF_POINTER, 0, offsetof(struct T, b),
+	{ ATF_POINTER, 1, offsetof(struct T, b),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = (void *)&asn_DEF_BOOLEAN,

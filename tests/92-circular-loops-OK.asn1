@@ -14,7 +14,14 @@ BEGIN
 	Everything ::= SEQUENCE {
 		ch1	Choice1,
 		ch2	Choice2,
-		set	Set
+		ch3	Choice3,
+		set	Set,
+		a	Alpha,
+		b	Beta,
+		g	Gamma,
+		ot	OneTwo,
+		tt	TwoThree,
+		to	ThreeOne
 	}
 
 	-- This type refers to the type directly containing itself.
@@ -25,9 +32,18 @@ BEGIN
 	}
 
 	Choice2 ::= CHOICE {
+		typeref	TypeRef,
 		...,
 		some3	Everything
 	}
+
+	Choice3 ::= CHOICE {
+			a SEQUENCE {
+				aa Everything
+			},
+			b  Everything,
+			c SEQUENCE OF Choice3
+		}
 
 	Set ::= SET OF SEQUENCE {
 			int	INTEGER,
@@ -45,5 +61,30 @@ BEGIN
 			b	INTEGER,
 			set	Set OPTIONAL
 		}
+
+	TypeRef ::= Sequence
+
+	Alpha ::= SEQUENCE {
+			a Beta,
+			b SEQUENCE {
+				b Beta OPTIONAL
+			}
+		}
+
+	Beta ::= SEQUENCE {
+			b Alpha OPTIONAL,
+			g Gamma OPTIONAL
+		}
+
+	Gamma ::= SEQUENCE {
+			o TwoThree,
+			a Alpha,	-- expected inline
+			b Beta		-- expected inline
+		}
+
+	-- This is a true superdependency.
+	OneTwo ::= SET { m12 TwoThree }
+	TwoThree ::= SET { m23 ThreeOne }
+	ThreeOne ::= SET { m31 OneTwo, g Gamma }
 
 END

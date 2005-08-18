@@ -7,7 +7,6 @@ extern arg_t a1f_replace_me_with_proper_interface_arg;
 asn1p_expr_t *
 asn1f_lookup_symbol_ex(
 		asn1p_t *asn,
-		asn1p_module_t *mod,
 		asn1p_expr_t *expr,
 		asn1p_ref_t *ref) {
 	arg_t arg;
@@ -15,13 +14,13 @@ asn1f_lookup_symbol_ex(
 	memset(&arg, 0, sizeof(arg));
 
 	arg.asn = asn;
-	arg.mod = mod;
+	arg.mod = expr->module;
 	arg.expr = expr;
 	arg.eh = a1f_replace_me_with_proper_interface_arg.eh;
 	arg.debug = a1f_replace_me_with_proper_interface_arg.debug;
 
 
-	return asn1f_lookup_symbol(&arg, mod, ref);
+	return asn1f_lookup_symbol(&arg, expr->module, ref);
 }
 
 asn1p_expr_t *

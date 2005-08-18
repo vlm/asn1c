@@ -42,6 +42,9 @@ static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
 static int emit_include_dependencies(arg_t *arg);
+static asn1p_expr_t *terminal_structable(arg_t *arg, asn1p_expr_t *expr);
+static int expr_defined_recursively(arg_t *arg, asn1p_expr_t *expr);
+static int asn1c_recurse(arg_t *arg, asn1p_expr_t *expr, int (*callback)(arg_t *arg, void *key), void *key);
 
 enum tvm_compat {
 	_TVM_SAME	= 0,	/* tags and all_tags are same */
@@ -274,7 +277,7 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 		if(v->expr_type == A1TC_EXTENSIBLE)
 			if(comp_mode < 3) comp_mode++;
 		if(comp_mode == 1)
-			v->marker.flags |= EM_INDIRECT;
+			v->marker.flags |= EM_OMITABLE;
 		EMBED(v);
 	}
 
@@ -335,7 +338,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 				continue;
 			}
 			if(comp_mode == 1)
-				v->marker.flags |= EM_INDIRECT;
+				v->marker.flags |= EM_OMITABLE;
 			emit_member_table(arg, v);
 			elements++;
 		});
@@ -435,7 +438,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 			if(comp_mode < 3) comp_mode++;
 		}
 		if(comp_mode == 1)
-			v->marker.flags |= EM_INDIRECT;
+			v->marker.flags |= EM_OMITABLE;
 		EMBED(v);
 	}
 
@@ -509,7 +512,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 				if(comp_mode < 3) comp_mode++;
 			} else {
 				if(comp_mode == 1)
-					v->marker.flags |= EM_INDIRECT;
+					v->marker.flags |= EM_OMITABLE;
 				emit_member_table(arg, v);
 				elements++;
 			}
@@ -552,7 +555,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 				OUT(" | ");
 			}
 			OUT("(%d << %d)",
-				v->marker.flags?0:1,
+				(v->marker.flags & EM_OMITABLE) != EM_OMITABLE,
 				7 - (el % 8));
 			if(el && (el % 8) == 0)
 				delimit = 1;
@@ -943,7 +946,6 @@ asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 
 		tmp = *arg;
 		tmp.asn = arg->asn;
-		tmp.mod = extract->module;
 		tmp.expr = extract;
 
 		ret = arg->default_cb(&tmp);
@@ -975,10 +977,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		 * as it may recursively include the current structure.
 		 */
 		if(expr->marker.flags & (EM_INDIRECT | EM_UNRECURSE)) {
-			asn1p_expr_t *terminal;
-			terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
-			if(terminal
-			&& (terminal->expr_type & ASN_CONSTR_MASK)) {
+			if(terminal_structable(arg, expr)) {
 				tnfmt = TNF_RSAFE;
 				REDIR(OT_FWD_DECLS);
 				OUT("%s;\n",
@@ -1462,10 +1461,9 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no, fte_e f
 	if(arg->expr->expr_type == A1TC_REFERENCE) {
 		arg_t tmp = *arg;
 		asn1p_expr_t *expr;
-		expr = asn1f_lookup_symbol_ex(tmp.asn, tmp.mod, tmp.expr,
+		expr = asn1f_lookup_symbol_ex(tmp.asn, tmp.expr,
 			arg->expr->reference);
 		if(expr) {
-			tmp.mod = expr->module;
 			tmp.expr = expr;
 			return _add_tag2el_member(&tmp, tag2el, count, el_no, flags);
 		} else {
@@ -1613,106 +1611,6 @@ expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 }
 
 static int
-emit_include_dependencies(arg_t *arg) {
-	asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *memb;
-
-	TQ_FOR(memb, &(expr->members), next) {
-
-		/* Avoid recursive definitions. */
-		expr_break_recursion(arg, memb);
-
-		if(memb->marker.flags & (EM_INDIRECT | EM_UNRECURSE)) {
-			asn1p_expr_t *terminal;
-			terminal = asn1f_find_terminal_type_ex(arg->asn, memb);
-			if(terminal
-			&& !terminal->parent_expr
-			&& (terminal->expr_type & ASN_CONSTR_MASK)) {
-				int saved_target = arg->target->target;
-				REDIR(OT_FWD_DECLS);
-				OUT("%s;\n",
-					asn1c_type_name(arg, memb, TNF_RSAFE));
-				REDIR(saved_target);
-			}
-		}
-
-		if((!(memb->expr_type & ASN_CONSTR_MASK)
-			&& memb->expr_type > ASN_CONSTR_MASK)
-		|| memb->meta_type == AMT_TYPEREF) {
-			if(memb->marker.flags & EM_UNRECURSE) {
-				GEN_POSTINCLUDE(asn1c_type_name(arg,
-					memb, TNF_INCLUDE));
-			} else {
-				GEN_INCLUDE(asn1c_type_name(arg,
-					memb, TNF_INCLUDE));
-			}
-		}
-	}
-
-	return 0;
-}
-
-/*
- * Check if it is better to make this type indirectly accessed via
- * a pointer.
- * This may be the case for the following recursive definition:
- * Type ::= CHOICE { member Type };
- */
-static int
-expr_break_recursion(arg_t *arg, asn1p_expr_t *expr) {
-	asn1p_expr_t *top_parent;
-	asn1p_expr_t *terminal;
-
-	if(expr->marker.flags & EM_UNRECURSE)
-		return 1;	/* Already broken */
-
-	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
-
-	/* -findirect-choice compiles members of CHOICE as indirect pointers */
-	if((arg->flags & A1C_INDIRECT_CHOICE)
-	 && arg->expr->expr_type == ASN_CONSTR_CHOICE
-	 && terminal
-	 && (terminal->expr_type & ASN_CONSTR_MASK)
-	) {
-		/* Break cross-reference */
-		expr->marker.flags |= EM_INDIRECT | EM_UNRECURSE;
-		return 1;
-	}
-
-	if((expr->marker.flags & EM_INDIRECT)
-	|| arg->expr->expr_type == ASN_CONSTR_SET_OF
-	|| arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF) {
-		if(terminal
-		&& !terminal->parent_expr
-		&& (terminal->expr_type & ASN_CONSTR_MASK)) {
-			expr->marker.flags |= EM_UNRECURSE;
-
-			if(arg->expr->expr_type == ASN_CONSTR_SET_OF
-			|| arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF) {
-				/* Don't put EM_INDIRECT even if recursion */
-				return 1;
-			}
-
-			/* Fall through */
-		}
-	}
-
-	/* Look for recursive back-references */
-	top_parent = expr->parent_expr;
-	if(top_parent) {
-		while(top_parent->parent_expr)
-			top_parent = top_parent->parent_expr;
-		if(top_parent == terminal) {
-			/* Explicitly break the recursion */
-			expr->marker.flags |= EM_INDIRECT | EM_UNRECURSE;
-			return 1;
-		}
-	}
-
-	return 0;
-}
-
-static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	int save_target;
 	arg_t tmp_arg;
@@ -1734,10 +1632,11 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("ATF_OPEN_TYPE | ");
 	OUT("%s, ",
 		(expr->marker.flags & EM_INDIRECT)?"ATF_POINTER":"ATF_NOFLAGS");
-	if((expr->marker.flags & EM_OPTIONAL) == EM_OPTIONAL) {
+	if((expr->marker.flags & EM_OMITABLE) == EM_OMITABLE) {
 		asn1p_expr_t *tv;
 		int opts = 0;
-		for(tv = expr; tv && tv->marker.flags;
+		for(tv = expr;
+			tv && (tv->marker.flags & EM_OMITABLE) == EM_OMITABLE;
 			tv = TQ_NEXT(tv, next), opts++) {
 			if(tv->expr_type == A1TC_EXTENSIBLE)
 				opts--;
@@ -2017,4 +1916,179 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 	OUT("%s", id);
 
 	return 0;
+}
+
+static int
+emit_include_dependencies(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *memb;
+
+	/* Avoid recursive definitions. */
+	TQ_FOR(memb, &(expr->members), next) {
+		expr_break_recursion(arg, memb);
+	}
+
+	TQ_FOR(memb, &(expr->members), next) {
+
+		if(memb->marker.flags & (EM_INDIRECT | EM_UNRECURSE)) {
+			if(terminal_structable(arg, memb)) {
+				int saved_target = arg->target->target;
+				REDIR(OT_FWD_DECLS);
+				OUT("%s;\n",
+					asn1c_type_name(arg, memb, TNF_RSAFE));
+				REDIR(saved_target);
+			}
+		}
+
+		if((!(memb->expr_type & ASN_CONSTR_MASK)
+			&& memb->expr_type > ASN_CONSTR_MASK)
+		|| memb->meta_type == AMT_TYPEREF) {
+			if(memb->marker.flags & EM_UNRECURSE) {
+				GEN_POSTINCLUDE(asn1c_type_name(arg,
+					memb, TNF_INCLUDE));
+			} else {
+				GEN_INCLUDE(asn1c_type_name(arg,
+					memb, TNF_INCLUDE));
+			}
+		}
+	}
+
+	return 0;
+}
+
+/*
+ * Check if it is better to make this type indirectly accessed via
+ * a pointer.
+ * This may be the case for the following recursive definition:
+ * Type ::= CHOICE { member Type };
+ */
+static int
+expr_break_recursion(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_t *terminal;
+	int ret;
+
+	if(expr->marker.flags & EM_UNRECURSE)
+		return 1;	/* Already broken */
+
+	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+
+	/* -findirect-choice compiles members of CHOICE as indirect pointers */
+	if((arg->flags & A1C_INDIRECT_CHOICE)
+	 && arg->expr->expr_type == ASN_CONSTR_CHOICE
+	 && terminal
+	 && (terminal->expr_type & ASN_CONSTR_MASK)
+	) {
+		/* Break cross-reference */
+		expr->marker.flags |= EM_INDIRECT | EM_UNRECURSE;
+		return 1;
+	}
+
+	if((expr->marker.flags & EM_INDIRECT)
+	|| arg->expr->expr_type == ASN_CONSTR_SET_OF
+	|| arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF) {
+		if(terminal_structable(arg, expr)) {
+			expr->marker.flags |= EM_UNRECURSE;
+
+			if(arg->expr->expr_type == ASN_CONSTR_SET_OF
+			|| arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF) {
+				/* Don't put EM_INDIRECT even if recursion */
+				return 1;
+			}
+
+			/* Fall through */
+		}
+	}
+
+	/* Look for recursive back-references */
+	ret = expr_defined_recursively(arg, expr);
+	switch(ret) {
+	case 2: /* Explicitly break the recursion */
+	case 1: /* Use safer typing */
+		expr->marker.flags |= EM_INDIRECT;
+		expr->marker.flags |= EM_UNRECURSE;
+		break;
+	}
+
+	return 0;
+}
+
+/*
+ * Check if the type can be represented using simple `struct TYPE`.
+ */
+static asn1p_expr_t *
+terminal_structable(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_t *terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+	if(terminal
+	&& !terminal->parent_expr
+	&& (terminal->expr_type & ASN_CONSTR_MASK)) {
+		return terminal;
+	}
+	return 0;
+}
+
+static int
+asn1c_recurse(arg_t *arg, asn1p_expr_t *expr, int (*callback)(arg_t *arg, void *key), void *key) {
+	arg_t tmp = *arg;
+	int maxret = 0;
+	int ret;
+
+	if(expr->_mark) return 0;
+	expr->_mark |= TM_RECURSION;
+
+	/* Invoke callback for every type going into recursion */
+	tmp.expr = expr;
+	maxret = callback(&tmp, key);
+	if(maxret <= 1) {
+		/*
+		 * Recursively invoke myself and the callbacks.
+		 */
+		TQ_FOR(tmp.expr, &(expr->members), next) {
+			ret = asn1c_recurse(&tmp, tmp.expr, callback, key);
+			if(ret > maxret)
+				maxret = ret;
+			if(maxret > 1) break;
+		}
+	}
+
+	expr->_mark &= ~TM_RECURSION;
+	return maxret;
+}
+
+static int
+check_is_refer_to(arg_t *arg, void *key) {
+	asn1p_expr_t *terminal = terminal_structable(arg, arg->expr);
+	if(terminal == key) {
+		if(arg->expr->marker.flags & EM_INDIRECT)
+			return 1; /* This is almost safe indirection */
+		return 2;
+	} else if(terminal) {
+		/* This might be N-step circular loop. Dive into it. */
+		return asn1c_recurse(arg, terminal, check_is_refer_to, key);
+	}
+	return 0;
+}
+
+/*
+ * Check if the possibly inner expression defined recursively.
+ */
+static int
+expr_defined_recursively(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_t *terminal;
+	asn1p_expr_t *topmost;
+
+	/* If expression is top-level, there's no way it can be recursive. */
+	if(expr->parent_expr == 0) return 0;
+	if(expr->expr_type != A1TC_REFERENCE)
+		return 0;	/* Basic types are never recursive */
+
+	terminal = terminal_structable(arg, expr);
+	if(!terminal) return 0;	/* Terminal cannot be indirected */
+
+	/* Search for the parent container for the given expression */
+	topmost = expr;
+	while(topmost->parent_expr)
+		topmost = topmost->parent_expr;
+
+	/* Look inside the terminal type if it mentions the parent expression */
+	return asn1c_recurse(arg, terminal, check_is_refer_to, topmost);
 }

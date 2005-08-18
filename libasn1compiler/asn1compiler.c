@@ -12,6 +12,7 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 		int argc, char **argv) {
 	arg_t arg_s;
 	arg_t *arg = &arg_s;
+	asn1p_module_t *mod;
 	int ret;
 
 	/*
@@ -29,8 +30,8 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 	/*
 	 * Compile each individual top level structure.
 	 */
-	TQ_FOR(arg->mod, &(asn->modules), mod_next) {
-		TQ_FOR(arg->expr, &(arg->mod->members), next) {
+	TQ_FOR(mod, &(asn->modules), mod_next) {
+		TQ_FOR(arg->expr, &(mod->members), next) {
 			compiler_streams_t *cs = NULL;
 
 			if(asn1c_attach_streams(arg->expr))

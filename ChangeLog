@@ -1,7 +1,9 @@
 
-0.9.19:	2005-Aug-16
+0.9.19:	2005-Aug-18
 
-	* asn1c's -findirect-choice flag generates less dependent code.
+	* A proper solution to circular references. No kludge flags
+	  should be necessary anymore to produce reference-free code:
+	  recursive dependencies are resolved automatically.
 	* Test cases 73 & 92 keep track of various circular references.
 
 0.9.18:	2005-Aug-14
