@@ -25,6 +25,8 @@ int asn1p_lexer_types_year = 0;
 int asn1p_lexer_constructs_year = 0;
 static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 
+int asn1p_as_pointer;
+
 /*
  * Check that the type is defined in the year of the standard choosen.
  */
@@ -100,15 +102,27 @@ WSP	[\t\r\v\f\n ]
 
 	{NL}	yy_pop_state();
 
+	"<asn1c:"[^\r\v\f\n>-]{1,80}">"	{
+			if(strcmp(yytext, "<asn1c:pointer>") == 0)
+				asn1p_as_pointer = 1;
+			/* Eat modifier */
+		}
+	"<"	/* Eat stand-alone left angle brace */
+
 	--	yy_pop_state();	/* End of comment */
 	-	/* Eat single dash */
-	[^\r\v\f\n-]+	/* Eat */
+	[^\r\v\f\n<-]+	/* Eat */
 }
 
 <INITIAL,cpp_comment>"/*"		yy_push_state(cpp_comment);
 <cpp_comment>{
-	[^*/]	/* Eat */
+	[^*/<]	/* Eat */
 	"*/"	yy_pop_state();
+	"<asn1c:"[^\r\v\f\n>-]{1,80}">"	{
+			if(strcmp(yytext, "<asn1c:pointer>") == 0)
+				asn1p_as_pointer = 1;
+			/* Eat modifier */
+		}
 	.	/* Eat */
 }
 

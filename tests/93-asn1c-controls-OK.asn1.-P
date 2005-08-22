@@ -1,0 +1,328 @@
+
+/*** <<< INCLUDES [Sequence] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [Sequence] >>> ***/
+
+typedef struct Sequence {
+	INTEGER_t	 ainl;
+	INTEGER_t	*aptr;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Sequence_t;
+
+/*** <<< FUNC-DECLS [Sequence] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Sequence;
+
+/*** <<< STAT-DEFS [Sequence] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, ainl),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "ainl"
+		},
+	{ ATF_POINTER, 0, offsetof(struct Sequence, aptr),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "aptr"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Sequence_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Sequence_1_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl at 15 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr at 17 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Sequence_1_specs = {
+	sizeof(struct Sequence),
+	offsetof(struct Sequence, _asn_ctx),
+	asn_MAP_Sequence_1_tag2el,
+	2,	/* Count of tags in the map */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Sequence = {
+	"Sequence",
+	"Sequence",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Sequence_1_tags,
+	sizeof(asn_DEF_Sequence_1_tags)
+		/sizeof(asn_DEF_Sequence_1_tags[0]), /* 1 */
+	asn_DEF_Sequence_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Sequence_1_tags)
+		/sizeof(asn_DEF_Sequence_1_tags[0]), /* 1 */
+	asn_MBR_Sequence_1,
+	2,	/* Elements count */
+	&asn_SPC_Sequence_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Set] >>> ***/
+
+#include <Sequence.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [Set] >>> ***/
+
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum Set_PR {
+	Set_PR_ainl,	/* Member ainl is present */
+	Set_PR_aptr,	/* Member aptr is present */
+} Set_PR;
+
+/*** <<< FWD-DECLS [Set] >>> ***/
+
+struct Sequence;
+
+/*** <<< TYPE-DECLS [Set] >>> ***/
+
+typedef struct Set {
+	Sequence_t	 ainl;
+	struct Sequence	*aptr;
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pSet, Set_PR_x) */
+	unsigned int _presence_map
+		[((2+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Set_t;
+
+/*** <<< FUNC-DECLS [Set] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Set;
+
+/*** <<< POST-INCLUDE [Set] >>> ***/
+
+#include <Sequence.h>
+
+/*** <<< STAT-DEFS [Set] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Set_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Set, ainl),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Sequence,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "ainl"
+		},
+	{ ATF_POINTER, 0, offsetof(struct Set, aptr),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Sequence,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "aptr"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Set_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Set_1_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl at 20 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr at 22 */
+};
+static uint8_t asn_MAP_Set_1_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7) | (1 << 6)
+};
+static asn_SET_specifics_t asn_SPC_Set_1_specs = {
+	sizeof(struct Set),
+	offsetof(struct Set, _asn_ctx),
+	offsetof(struct Set, _presence_map),
+	asn_MAP_Set_1_tag2el,
+	2,	/* Count of tags in the map */
+	asn_MAP_Set_1_tag2el,	/* Same as above */
+	2,	/* Count of tags in the CXER map */
+	0,	/* Whether extensible */
+	(unsigned int *)asn_MAP_Set_1_mmap	/* Mandatory elements map */
+};
+asn_TYPE_descriptor_t asn_DEF_Set = {
+	"Set",
+	"Set",
+	SET_free,
+	SET_print,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_decode_xer,
+	SET_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Set_1_tags,
+	sizeof(asn_DEF_Set_1_tags)
+		/sizeof(asn_DEF_Set_1_tags[0]), /* 1 */
+	asn_DEF_Set_1_tags,	/* Same as above */
+	sizeof(asn_DEF_Set_1_tags)
+		/sizeof(asn_DEF_Set_1_tags[0]), /* 1 */
+	asn_MBR_Set_1,
+	2,	/* Elements count */
+	&asn_SPC_Set_1_specs	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Choice] >>> ***/
+
+#include <Sequence.h>
+#include <INTEGER.h>
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Choice] >>> ***/
+
+typedef enum Choice_PR {
+	Choice_PR_NOTHING,	/* No components present */
+	Choice_PR_setof,
+	Choice_PR_aptr,
+	Choice_PR_ainl,
+} Choice_PR;
+
+/*** <<< FWD-DECLS [Choice] >>> ***/
+
+struct Sequence;
+
+/*** <<< TYPE-DECLS [Choice] >>> ***/
+
+typedef struct Choice {
+	Choice_PR present;
+	union Choice_u {
+		struct setof {
+			A_SET_OF(INTEGER_t) list;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} *setof;
+		struct Sequence	*aptr;
+		Sequence_t	 ainl;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Choice_t;
+
+/*** <<< FUNC-DECLS [Choice] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice;
+
+/*** <<< POST-INCLUDE [Choice] >>> ***/
+
+#include <Sequence.h>
+
+/*** <<< STAT-DEFS [Choice] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_setof_2[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = (void *)&asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_setof_2_tags[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_setof_2_specs = {
+	sizeof(struct setof),
+	offsetof(struct setof, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_setof_2 = {
+	"setof",
+	"setof",
+	SET_OF_free,
+	SET_OF_print,
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_decode_xer,
+	SET_OF_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_setof_2_tags,
+	sizeof(asn_DEF_setof_2_tags)
+		/sizeof(asn_DEF_setof_2_tags[0]) - 1, /* 1 */
+	asn_DEF_setof_2_tags,	/* Same as above */
+	sizeof(asn_DEF_setof_2_tags)
+		/sizeof(asn_DEF_setof_2_tags[0]), /* 2 */
+	asn_MBR_setof_2,
+	1,	/* Single element */
+	&asn_SPC_setof_2_specs	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Choice_1[] = {
+	{ ATF_POINTER, 0, offsetof(struct Choice, choice.setof),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_setof_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "setof"
+		},
+	{ ATF_POINTER, 0, offsetof(struct Choice, choice.aptr),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Sequence,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "aptr"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.ainl),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = (void *)&asn_DEF_Sequence,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "ainl"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_Choice_1_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* setof at 25 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* aptr at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* ainl at 28 */
+};
+static asn_CHOICE_specifics_t asn_SPC_Choice_1_specs = {
+	sizeof(struct Choice),
+	offsetof(struct Choice, _asn_ctx),
+	offsetof(struct Choice, present),
+	sizeof(((struct Choice *)0)->present),
+	asn_MAP_Choice_1_tag2el,
+	3,	/* Count of tags in the map */
+	0	/* Whether extensible */
+};
+asn_TYPE_descriptor_t asn_DEF_Choice = {
+	"Choice",
+	"Choice",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	asn_MBR_Choice_1,
+	3,	/* Elements count */
+	&asn_SPC_Choice_1_specs	/* Additional specs */
+};
+
