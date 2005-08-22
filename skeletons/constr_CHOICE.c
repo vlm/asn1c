@@ -353,8 +353,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-CHOICE_encode_der(asn_TYPE_descriptor_t *td,
-		void *struct_ptr,
+CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 		int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
@@ -367,7 +366,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td,
 	ASN_DEBUG("%s %s as CHOICE",
 		cb?"Encoding":"Estimating", td->name);
 
-	present = _fetch_present_idx(struct_ptr,
+	present = _fetch_present_idx(sptr,
 		specs->pres_offset, specs->pres_size);
 
 	/*
@@ -380,10 +379,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td,
 			erval.encoded = 0;
 			return erval;
 		}
-		erval.encoded = -1;
-		erval.failed_type = td;
-		erval.structure_ptr = struct_ptr;
-		return erval;
+		_ASN_ENCODE_FAILED;
 	}
 
 	/*
@@ -391,20 +387,17 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td,
 	 */
 	elm = &td->elements[present-1];
 	if(elm->flags & ATF_POINTER) {
-		memb_ptr = *(void **)((char *)struct_ptr + elm->memb_offset);
+		memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 		if(memb_ptr == 0) {
 			if(elm->optional) {
 				erval.encoded = 0;
-			} else {
-				/* Mandatory element absent */
-				erval.encoded = -1;
-				erval.failed_type = td;
-				erval.structure_ptr = struct_ptr;
+				return erval;
 			}
-			return erval;
+			/* Mandatory element absent */
+			_ASN_ENCODE_FAILED;
 		}
 	} else {
-		memb_ptr = (void *)((char *)struct_ptr + elm->memb_offset);
+		memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 	}
 
 	/*
@@ -427,12 +420,8 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td,
 		/* Encode CHOICE with parent or my own tag */
 		ret = der_write_tags(td, erval.encoded, tag_mode, 1, tag,
 			cb, app_key);
-		if(ret == -1) {
-			erval.encoded = -1;
-			erval.failed_type = td;
-			erval.structure_ptr = struct_ptr;
-			return erval;
-		}
+		if(ret == -1)
+			_ASN_ENCODE_FAILED;
 		computed_size += ret;
 	}
 

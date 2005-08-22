@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -477,6 +478,9 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) {
+				if(!elm->optional)
+					/* Mandatory elements missing */
+					_ASN_ENCODE_FAILED;
 				if(t2m_build_own) {
 					t2m[t2m_count].el_no = edx;
 					t2m[t2m_count].el_tag = 0;
@@ -827,7 +831,12 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;	/* OPTIONAL element? */
+			if(!memb_ptr) {
+				if(elm->optional)
+					continue;
+				/* Mandatory element missing */
+				_ASN_ENCODE_FAILED;
+			}
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
@@ -872,7 +881,11 @@ SET_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			if(!memb_ptr) {
+				if(elm->optional) continue;
+				/* Print <absent> line */
+				/* Fall through */
+			}
 		} else {
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
