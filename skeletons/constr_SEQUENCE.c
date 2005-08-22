@@ -506,7 +506,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
  */
 asn_enc_rval_t
 SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
-	void *ptr, int tag_mode, ber_tlv_tag_t tag,
+	void *sptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	size_t computed_size = 0;
 	asn_enc_rval_t erval;
@@ -523,10 +523,14 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+			if(!memb_ptr) {
+				if(elm->optional) continue;
+				/* Mandatory element is missing */
+				_ASN_ENCODE_FAILED;
+			}
 		} else {
-			memb_ptr = (void *)((char *)ptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
 		erval = elm->type->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
@@ -543,12 +547,8 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	 */
 	ret = der_write_tags(td, computed_size, tag_mode, 1, tag, cb, app_key);
 	ASN_DEBUG("Wrote tags: %ld (+%ld)", (long)ret, (long)computed_size);
-	if(ret == -1) {
-		erval.encoded = -1;
-		erval.failed_type = td;
-		erval.structure_ptr = ptr;
-		return erval;
-	}
+	if(ret == -1)
+		_ASN_ENCODE_FAILED;
 	erval.encoded = computed_size + ret;
 
 	if(!cb) return erval;
@@ -562,10 +562,10 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {
-			memb_ptr = (void *)((char *)ptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
 		tmperval = elm->type->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
@@ -577,14 +577,11 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 			edx, elm->name, td->name, (long)tmperval.encoded);
 	}
 
-	if(computed_size != 0) {
+	if(computed_size != 0)
 		/*
 		 * Encoded size is not equal to the computed size.
 		 */
-		erval.encoded = -1;
-		erval.failed_type = td;
-		erval.structure_ptr = ptr;
-	}
+		_ASN_ENCODE_FAILED;
 
 	return erval;
 }
@@ -862,7 +859,12 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;	/* OPTIONAL element? */
+			if(!memb_ptr) {
+				if(elm->optional)
+					continue;
+				/* Mandatory element is missing */
+				_ASN_ENCODE_FAILED;
+			}
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
@@ -905,7 +907,11 @@ SEQUENCE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			if(!memb_ptr) {
+				if(elm->optional) continue;
+				/* Print <absent> line */
+				/* Fall through */
+			}
 		} else {
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
@@ -978,7 +984,14 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			if(!memb_ptr) {
+				if(elm->optional)
+					continue;
+				_ASN_ERRLOG(app_errlog, app_key,
+				"%s: mandatory element %s absent (%s:%d)",
+				td->name, elm->name, __FILE__, __LINE__);
+				return -1;
+			}
 		} else {
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
