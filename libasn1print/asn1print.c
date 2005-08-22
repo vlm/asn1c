@@ -623,11 +623,15 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 					== EM_OPTIONAL) {
 				printf(" OPTIONAL");
 			}
-			if(TQ_NEXT(se, next)) {
+			if(TQ_NEXT(se, next))
 				printf(",");
-				if(!(flags & APF_NOINDENT))
-					INDENT("\n");
-			}
+			/* Reconstruct modifier information */
+			if((se->marker.flags & EM_OMITABLE)
+				!= EM_OMITABLE
+			&& se->marker.flags & EM_INDIRECT)
+				printf("\t/* <asn1c:pointer> */");
+			if(TQ_NEXT(se, next) && !(flags & APF_NOINDENT))
+				INDENT("\n");
 		}
 
 		if(put_braces && TQ_FIRST(&tc->members)) {

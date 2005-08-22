@@ -24,6 +24,13 @@ void asn1p_lexer_hack_push_encoding_control(void);
 extern int asn1p_lineno;
 
 /*
+ * Process modifiers as <asn1c:pointer>
+ */
+extern int asn1p_as_pointer;
+static asn1p_expr_t *asn1p_last_type;
+static void apply_nonstd_mods(void);
+
+/*
  * This temporary variable is used to solve the shortcomings of 1-lookahead
  * parser.
  */
@@ -231,6 +238,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_expr>		ExportsElement
 %type	<a_expr>		ExtensionAndException
 %type	<a_expr>		TypeDeclaration
+%type	<a_expr>		TypeDeclarationSet
 %type	<a_ref>			ComplexTypeReference
 %type	<a_ref>			ComplexTypeReferenceAmpList
 %type	<a_refcomp>		ComplexTypeReferenceElement
@@ -1086,26 +1094,32 @@ Type:
 				$$->constraints = $3;
 			}
 		}
+		asn1p_last_type = $$;
 	}
 	;
 
 TypeDeclaration:
+	{apply_nonstd_mods();} TypeDeclarationSet {
+		$$ = $2;
+	}
+
+TypeDeclarationSet:
 	BasicType {
 		$$ = $1;
 	}
-	| TOK_CHOICE '{' AlternativeTypeLists '}'	{
+	| TOK_CHOICE '{' AlternativeTypeLists {apply_nonstd_mods();} '}' {
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_CHOICE;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE '{' optComponentTypeLists '}'	{
+	| TOK_SEQUENCE '{' optComponentTypeLists {apply_nonstd_mods();} '}' {
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_SEQUENCE;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SET '{' optComponentTypeLists '}'		{
+	| TOK_SET '{' optComponentTypeLists {apply_nonstd_mods();} '}' {
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_SET;
@@ -2233,6 +2247,22 @@ _fixup_anonymous_identifier(asn1p_expr_t *expr) {
 	fprintf(stderr, "NOTE: Assigning temporary identifier \"%s\". "
 			"Name clash may occur later.\n",
 		expr->Identifier);
+}
+
+static void
+apply_nonstd_mods() {
+	if(!asn1p_as_pointer) return;
+	asn1p_as_pointer = 0;
+
+	if(asn1p_last_type) {
+		asn1p_last_type->marker.flags |= EM_INDIRECT;
+		fprintf(stderr, "INFO: Modifier <asn1c:pointer> "
+			"applied to \"%s\" at line %d\n",
+			asn1p_last_type->Identifier
+				?  asn1p_last_type->Identifier : "<anonymous>",
+			asn1p_last_type->_lineno);
+		asn1p_last_type = 0;
+	}
 }
 
 extern char *asn1p_text;
