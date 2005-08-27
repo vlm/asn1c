@@ -26,6 +26,7 @@ BEGIN
 	OK-IntegerInRange3	::= INTEGER (-2147483648..2147483647)
 	OK-IntegerInRange4	::= INTEGER (-2147483648|2147483647)
 	OK-IntegerInRange5	::= INTEGER (-2147483648|2147483647,...)
+	NO-IntegerInRange6	::= INTEGER (0..4294967295)
 	CN-IntegerEnumerated1	::= INTEGER { a(1), b(2) }
 	NO-IntegerEnumerated2	::= INTEGER { a(1), b(3000000000) }
 

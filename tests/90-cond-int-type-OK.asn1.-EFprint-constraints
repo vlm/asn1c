@@ -77,6 +77,11 @@ OK-IntegerInRange5 ::= INTEGER (-2147483648 | 2147483647,...)
 -- Practical constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
 -- PER-visible constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
 
+NO-IntegerInRange6 ::= INTEGER (0..4294967295)
+-- Combined constraints: (0..4294967295)
+-- Practical constraints (NO-IntegerInRange6): (0..4294967295)  
+-- PER-visible constraints (NO-IntegerInRange6): (0..4294967295)  
+
 CN-IntegerEnumerated1 ::= INTEGER {
     a(1)
 -- Practical constraints (a):   
