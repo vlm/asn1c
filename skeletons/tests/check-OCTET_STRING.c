@@ -51,6 +51,36 @@ check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 	}
 }
 
+static char buf[1024];
+
+static int
+write_buf(const void *buffer, size_t size, void *key) {
+	size_t *off = key;
+	assert(*off + size < sizeof(buf));
+	memcpy(buf + *off, buffer, size);
+	*off += size;
+	return 0;
+}
+
+static void
+encode(char *orig, char *encoded) {
+	OCTET_STRING_t os;
+	size_t written = 0;
+	asn_enc_rval_t er;
+
+	memset(&os, 0, sizeof(os));
+
+	OCTET_STRING_fromString(&os, orig);
+
+	er = OCTET_STRING_encode_xer_utf8(&asn_DEF_OCTET_STRING, &os,
+			0, 0, write_buf, &written);
+	assert(er.encoded >= 0);
+	buf[er.encoded] = '\0';
+	printf("Orig: [%s], encoded: [%s], check [%s]\n",
+		orig, buf, encoded);
+	assert(strcmp(buf, encoded) == 0);
+}
+
 int
 main() {
 
@@ -103,6 +133,12 @@ main() {
 	check(UTF8, "z", "<z>a<ff/>b</z>", "a\014b");
 	check(UTF8, "z", "<z>a<soh/>b</z>", "a\001b");
 	check(UTF8, "z", "<z>a<bel/></z>", "a\007");
+
+	encode("", "");
+	encode("a", "a");
+	encode("a\nb", "a\nb");
+	encode("a\bc", "a<bs/>c");
+	encode("ab\01c\ndef\r\n", "ab<soh/>c\ndef\r\n");
 
 	return 0;
 }
