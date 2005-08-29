@@ -488,7 +488,7 @@ structure:
 <BLOCKQUOTE><PRE>
 Rectangle_t&nbsp;*rect&nbsp;=&nbsp;...;
 &nbsp;
-asn_DEF_Rectangle-&gt;free_struct(&amp;asn_DEF_Rectangle,
+asn_DEF_Rectangle.free_struct(&amp;asn_DEF_Rectangle,
 &nbsp;&nbsp;&nbsp;&nbsp;rect,&nbsp;0);
 </PRE>
 </BLOCKQUOTE>
@@ -603,7 +603,7 @@ simple_deserializer(const&nbsp;void&nbsp;*buffer,&nbsp;size_t&nbsp;buf_size)&nbs
 &nbsp;&nbsp;&nbsp;&nbsp;Rectangle_t&nbsp;*rect&nbsp;=&nbsp;0;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Note&nbsp;this&nbsp;0!&nbsp;*/
 &nbsp;&nbsp;&nbsp;&nbsp;asn_dec_rval_t&nbsp;rval;
 &nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;rval&nbsp;=&nbsp;<B>asn_DEF_Rectangle-&gt;ber_decoder</B>(0,
+&nbsp;&nbsp;&nbsp;&nbsp;rval&nbsp;=&nbsp;<B>asn_DEF_Rectangle.ber_decoder</B>(0,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void&nbsp;**)&amp;rect,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer,&nbsp;buf_size,
@@ -613,7 +613,7 @@ simple_deserializer(const&nbsp;void&nbsp;*buffer,&nbsp;size_t&nbsp;buf_size)&nbs
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;rect;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Decoding&nbsp;succeeded&nbsp;*/
 &nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Free&nbsp;partially&nbsp;decoded&nbsp;rect&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn_DEF_Rectangle.free_struct(
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect,&nbsp;0);
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;
 &nbsp;&nbsp;&nbsp;&nbsp;}
@@ -645,7 +645,7 @@ rval&nbsp;=&nbsp;ber_decode(0,&nbsp;&amp;asn_DEF_Rectangle,&nbsp;(void&nbsp;**)&
 &nbsp;&nbsp;&nbsp;&nbsp;buffer,&nbsp;buf_size);
 </PRE>
 </BLOCKQUOTE>
-Note that the initial (asn_DEF_Rectangle-&gt;ber_decoder) reference
+Note that the initial (asn_DEF_Rectangle.ber_decoder) reference
 is gone, and also the last argument (0) is no longer necessary.
 
 <P>
@@ -815,7 +815,7 @@ XML_to_Rectangle(const&nbsp;void&nbsp;*buffer,&nbsp;size_t&nbsp;buf_size)&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;rect;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Decoding&nbsp;succeeded&nbsp;*/
 &nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Free&nbsp;partially&nbsp;decoded&nbsp;rect&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn_DEF_Rectangle-&gt;free_struct(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asn_DEF_Rectangle.free_struct(
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect,&nbsp;0);
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;
 &nbsp;&nbsp;&nbsp;&nbsp;}
@@ -946,7 +946,7 @@ struct&nbsp;my_figure&nbsp;{
 &nbsp;*&nbsp;Freeing&nbsp;the&nbsp;Rectangle_t
 &nbsp;*&nbsp;without&nbsp;freeing&nbsp;the&nbsp;mf-&gt;rect&nbsp;area
 &nbsp;*/
-asn_DEF_Rectangle-&gt;free_struct(
+asn_DEF_Rectangle.free_struct(
 &nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,&nbsp;&amp;mf-&gt;rect,&nbsp;<B>1</B>&nbsp;<B>/*&nbsp;!free&nbsp;*/</B>);
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;
@@ -956,7 +956,7 @@ Rectangle_t&nbsp;*rect&nbsp;=&nbsp;<B>...</B>;
 &nbsp;*&nbsp;Freeing&nbsp;the&nbsp;Rectangle_t
 &nbsp;*&nbsp;and&nbsp;freeing&nbsp;the&nbsp;rect&nbsp;pointer
 &nbsp;*/
-asn_DEF_Rectangle-&gt;free_struct(
+asn_DEF_Rectangle.free_struct(
 &nbsp;&nbsp;&nbsp;&nbsp;&amp;asn_DEF_Rectangle,&nbsp;rect,&nbsp;<B>0</B>&nbsp;<B>/*&nbsp;free&nbsp;the&nbsp;pointer&nbsp;too&nbsp;*/</B>);
 </PRE>
 </BLOCKQUOTE>
@@ -1295,7 +1295,7 @@ by placing the following snippet of code <I>before</I> encoding and/or
 &nbsp;<FONT SIZE="-1">&nbsp;</FONT>
 <FONT SIZE="-1">/*&nbsp;...&nbsp;here&nbsp;may&nbsp;go&nbsp;Rectangle&nbsp;decoding&nbsp;code&nbsp;...&nbsp;*/</FONT>
 &nbsp;
-<FONT SIZE="-1">ret&nbsp;=&nbsp;asn_check_constraints(asn_DEF_Rectangle,</FONT>
+<FONT SIZE="-1">ret&nbsp;=&nbsp;asn_check_constraints(&amp;asn_DEF_Rectangle,</FONT>
 &nbsp;<FONT SIZE="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rectangle,&nbsp;errbuf,&nbsp;&amp;errlen);</FONT>
 <FONT SIZE="-1">/*&nbsp;assert(errlen&nbsp;&lt;&nbsp;sizeof(errbuf));&nbsp;//&nbsp;you&nbsp;may&nbsp;rely&nbsp;on&nbsp;that&nbsp;*/</FONT>
 <FONT SIZE="-1">if(ret)&nbsp;{</FONT>

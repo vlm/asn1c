@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{This document describes 
 \backslash 
-href{http://lionet.info/asn1c}{asn1c-0.9.17}}
+href{http://lionet.info/asn1c}{asn1c-0.9.18}}
 \layout Standard
 
 \backslash 
@@ -1104,7 +1104,7 @@ Rectangle_t *rect = ...;
  
 \layout LyX-Code
 
-asn_DEF_Rectangle->free_struct(&asn_DEF_Rectangle,
+asn_DEF_Rectangle.free_struct(&asn_DEF_Rectangle,
 \layout LyX-Code
 
     rect, 0);
@@ -1303,7 +1303,7 @@ simple_deserializer(const void *buffer, size_t buf_size) {
 
     rval = 
 \series bold 
-asn_DEF_Rectangle->ber_decoder
+asn_DEF_Rectangle.ber_decoder
 \series default 
 (0,
 \layout LyX-Code
@@ -1339,7 +1339,7 @@ asn_DEF_Rectangle->ber_decoder
         /* Free partially decoded rect */
 \layout LyX-Code
 
-        asn_DEF_Rectangle->free_struct(
+        asn_DEF_Rectangle.free_struct(
 \layout LyX-Code
 
             &asn_DEF_Rectangle, rect, 0);
@@ -1395,7 +1395,7 @@ rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect,
     buffer, buf_size);
 \layout Standard
 
-Note that the initial (asn_DEF_Rectangle->ber_decoder) reference is gone,
+Note that the initial (asn_DEF_Rectangle.ber_decoder) reference is gone,
  and also the last argument (0) is no longer necessary.
 \layout Standard
 
@@ -1737,7 +1737,7 @@ XML_to_Rectangle(const void *buffer, size_t buf_size) {
         /* Free partially decoded rect */
 \layout LyX-Code
 
-        asn_DEF_Rectangle->free_struct(
+        asn_DEF_Rectangle.free_struct(
 \layout LyX-Code
 
             &asn_DEF_Rectangle, rect, 0);
@@ -1920,7 +1920,7 @@ struct my_figure {
  */
 \layout LyX-Code
 
-asn_DEF_Rectangle->free_struct(
+asn_DEF_Rectangle.free_struct(
 \layout LyX-Code
 
     &asn_DEF_Rectangle, &mf->rect, 
@@ -1965,7 +1965,7 @@ Rectangle_t *rect =
  */
 \layout LyX-Code
 
-asn_DEF_Rectangle->free_struct(
+asn_DEF_Rectangle.free_struct(
 \layout LyX-Code
 
     &asn_DEF_Rectangle, rect, 
@@ -3109,7 +3109,7 @@ size_t errlen = sizeof(errbuf);  /* Size of the buffer */
 
 
 \size small 
-ret = asn_check_constraints(asn_DEF_Rectangle,
+ret = asn_check_constraints(&asn_DEF_Rectangle,
 \layout LyX-Code
 
 
