@@ -24,14 +24,14 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, ainl),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "ainl"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Sequence, aptr),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "aptr"
 		},
@@ -122,14 +122,14 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Set, ainl),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_Sequence,
+		.type = &asn_DEF_Sequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "ainl"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Set, aptr),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_Sequence,
+		.type = &asn_DEF_Sequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "aptr"
 		},
@@ -232,7 +232,7 @@ static asn_TYPE_member_t asn_MBR_setof_2[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -273,21 +273,21 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 	{ ATF_POINTER, 0, offsetof(struct Choice, choice.setof),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_setof_2,
+		.type = &asn_DEF_setof_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "setof"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice, choice.aptr),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_Sequence,
+		.type = &asn_DEF_Sequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "aptr"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.ainl),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_Sequence,
+		.type = &asn_DEF_Sequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "ainl"
 		},

@@ -72,7 +72,7 @@ static asn_TYPE_member_t asn_MBR_varsets_3[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_VariablePartSet,
+		.type = &asn_DEF_VariablePartSet,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -112,14 +112,14 @@ static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, line_digest),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_IA5String,
+		.type = &asn_DEF_IA5String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "line-digest"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, varsets),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_varsets_3,
+		.type = &asn_DEF_varsets_3,
 		.memb_constraints = memb_varsets_1_constraint,
 		.name = "varsets"
 		},
@@ -228,7 +228,7 @@ static asn_TYPE_member_t asn_MBR_vparts_2[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_VariablePart,
+		.type = &asn_DEF_VariablePart,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -268,14 +268,14 @@ static asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, vparts),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_vparts_2,
+		.type = &asn_DEF_vparts_2,
 		.memb_constraints = memb_vparts_1_constraint,
 		.name = "vparts"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, resolution),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_ActionItem,
+		.type = &asn_DEF_ActionItem,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "resolution"
 		},
@@ -406,7 +406,7 @@ static asn_TYPE_member_t asn_MBR_vset_2[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_VisibleString,
+		.type = &asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -446,14 +446,14 @@ static asn_TYPE_member_t asn_MBR_vrange_4[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct vrange, from),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_VisibleString,
+		.type = &asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "from"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct vrange, to),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_VisibleString,
+		.type = &asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "to"
 		},
@@ -500,14 +500,14 @@ static asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vset),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_vset_2,
+		.type = &asn_DEF_vset_2,
 		.memb_constraints = memb_vset_1_constraint,
 		.name = "vset"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vrange),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_vrange_4,
+		.type = &asn_DEF_vrange_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "vrange"
 		},
@@ -722,7 +722,7 @@ static asn_TYPE_member_t asn_MBR_email_9[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_VisibleString,
+		.type = &asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -762,14 +762,14 @@ static asn_TYPE_member_t asn_MBR_notify_7[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, critical),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_BOOLEAN,
+		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "critical"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, email),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_email_9,
+		.type = &asn_DEF_email_9,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "email"
 		},
@@ -816,14 +816,14 @@ static asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct ActionItem, accept_as),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_accept_as_2,
+		.type = &asn_DEF_accept_as_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "accept-as"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ActionItem, notify),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_notify_7,
+		.type = &asn_DEF_notify_7,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "notify"
 		},

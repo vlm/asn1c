@@ -31,7 +31,7 @@ static asn_TYPE_member_t asn_MBR_Forest_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Tree,
+		.type = &asn_DEF_Tree,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -92,14 +92,14 @@ static asn_TYPE_member_t asn_MBR_Tree_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Tree, height),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "height"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Tree, width),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "width"
 		},
@@ -234,7 +234,7 @@ static asn_TYPE_member_t asn_MBR_trees_2[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Forest,
+		.type = &asn_DEF_Forest,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -275,7 +275,7 @@ static asn_TYPE_member_t asn_MBR_Member_5[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Member, cup_of_coffee),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_BIT_STRING,
+		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "cup-of-coffee"
 		},
@@ -321,7 +321,7 @@ static asn_TYPE_member_t asn_MBR_anything_4[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Member_5,
+		.type = &asn_DEF_Member_5,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -362,14 +362,14 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct other, choice.a),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct other, choice.b),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "b"
 		},
@@ -412,21 +412,21 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct Stuff, trees),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_trees_2,
+		.type = &asn_DEF_trees_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "trees"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Stuff, anything),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_anything_4,
+		.type = &asn_DEF_anything_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "anything"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Stuff, other),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_other_9,
+		.type = &asn_DEF_other_9,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "other"
 		},

@@ -32,14 +32,14 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Member, t1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Type1,
+		.type = &asn_DEF_Type1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "t1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Member, t2),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Type2,
+		.type = &asn_DEF_Type2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "t2"
 		},
@@ -87,7 +87,7 @@ static asn_TYPE_member_t asn_MBR_Type_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Member_2,
+		.type = &asn_DEF_Member_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -169,14 +169,14 @@ static asn_TYPE_member_t asn_MBR_another_name_3[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, b),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "b"
 		},
@@ -223,7 +223,7 @@ static asn_TYPE_member_t asn_MBR_one_name_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct one_name, choice.another_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_another_name_3,
+		.type = &asn_DEF_another_name_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "another-name"
 		},
@@ -265,7 +265,7 @@ static asn_TYPE_member_t asn_MBR_Type1_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Type1, one_name),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_one_name_2,
+		.type = &asn_DEF_one_name_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "one-name"
 		},
@@ -450,14 +450,14 @@ static asn_TYPE_member_t asn_MBR_another_name_3[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_BIT_STRING,
+		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = memb_a_3_constraint,
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, b),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "b"
 		},
@@ -504,7 +504,7 @@ static asn_TYPE_member_t asn_MBR_one_name_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct one_name, another_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_another_name_3,
+		.type = &asn_DEF_another_name_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "another-name"
 		},
@@ -550,14 +550,14 @@ static asn_TYPE_member_t asn_MBR_another_name_8[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_BIT_STRING,
+		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = memb_a_8_constraint,
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, b),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "b"
 		},
@@ -604,7 +604,7 @@ static asn_TYPE_member_t asn_MBR_two_name_7[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct two_name, another_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_another_name_8,
+		.type = &asn_DEF_another_name_8,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "another-name"
 		},
@@ -656,14 +656,14 @@ static asn_TYPE_member_t asn_MBR_Type2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Type2, choice.one_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_one_name_2,
+		.type = &asn_DEF_one_name_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "one-name"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Type2, choice.two_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_two_name_7,
+		.type = &asn_DEF_two_name_7,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "two-name"
 		},

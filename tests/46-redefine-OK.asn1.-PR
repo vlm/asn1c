@@ -141,7 +141,7 @@ static asn_TYPE_member_t asn_MBR_ConstructedType_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct ConstructedType, field),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_PrimitiveType,
+		.type = &asn_DEF_PrimitiveType,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "field"
 		},

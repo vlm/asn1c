@@ -39,7 +39,7 @@ static asn_TYPE_member_t asn_MBR_collection_3[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_T2,
+		.type = &asn_DEF_T2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -79,14 +79,14 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Int),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "int"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, collection),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_collection_3,
+		.type = &asn_DEF_collection_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "collection"
 		},
@@ -155,14 +155,14 @@ static asn_TYPE_member_t asn_MBR_T2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T2, flag),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_BOOLEAN,
+		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "flag"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T2, str),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_UTF8String,
+		.type = &asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "str"
 		},

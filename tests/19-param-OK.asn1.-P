@@ -69,21 +69,21 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, version),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "version"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, signature),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_OBJECT_IDENTIFIER,
+		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "signature"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, issuer),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Name,
+		.type = &asn_DEF_Name,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "issuer"
 		},
@@ -131,21 +131,21 @@ static asn_TYPE_member_t asn_MBR_Certificate_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, toBeSigned),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_toBeSigned_2,
+		.type = &asn_DEF_toBeSigned_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "toBeSigned"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, algorithm),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_OBJECT_IDENTIFIER,
+		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "algorithm"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, signature),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_BIT_STRING,
+		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = memb_signature_1_constraint,
 		.name = "signature"
 		},
@@ -221,7 +221,7 @@ static asn_TYPE_member_t asn_MBR_Name_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_RelativeDistinguishedName,
+		.type = &asn_DEF_RelativeDistinguishedName,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -337,7 +337,7 @@ static asn_TYPE_member_t asn_MBR_RelativeDistinguishedName_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_IA5String,
+		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_IA5String_1_constraint,
 		.name = ""
 		},

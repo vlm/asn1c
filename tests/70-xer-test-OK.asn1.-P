@@ -65,70 +65,70 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.sequence),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_Sequence,
+		.type = &asn_DEF_Sequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "sequence"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.set),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_Set,
+		.type = &asn_DEF_Set,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "set"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOf),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_SetOf,
+		.type = &asn_DEF_SetOf,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "setOf"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.sequenceOf),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_SequenceOf,
+		.type = &asn_DEF_SequenceOf,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "sequenceOf"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSet),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_ExtensibleSet,
+		.type = &asn_DEF_ExtensibleSet,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "extensibleSet"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSequence),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_ExtensibleSequence,
+		.type = &asn_DEF_ExtensibleSequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "extensibleSequence"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSequence2),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (6 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_ExtensibleSequence2,
+		.type = &asn_DEF_ExtensibleSequence2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "extensibleSequence2"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfNULL),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (7 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_SetOfNULL,
+		.type = &asn_DEF_SetOfNULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "setOfNULL"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfEnums),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (8 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_SetOfEnums,
+		.type = &asn_DEF_SetOfEnums,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "setOfEnums"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.seqOfZuka),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (9 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_SeqOfZuka,
+		.type = &asn_DEF_SeqOfZuka,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "seqOfZuka"
 		},
@@ -212,28 +212,28 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, integer),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "integer"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Sequence, sequence),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_Sequence,
+		.type = &asn_DEF_Sequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "sequence"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Sequence, bits),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_BIT_STRING,
+		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "bits"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, string),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_UTF8String,
+		.type = &asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "string"
 		},
@@ -319,14 +319,14 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Set, roid),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_RELATIVE_OID,
+		.type = &asn_DEF_RELATIVE_OID,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "roid"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Set, opaque),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_OCTET_STRING,
+		.type = &asn_DEF_OCTET_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "opaque"
 		},
@@ -538,14 +538,14 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSet_1[] = {
 	{ ATF_POINTER, 2, offsetof(struct ExtensibleSet, string),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_UTF8String,
+		.type = &asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "string"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ExtensibleSet, Enum),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_enum_4,
+		.type = &asn_DEF_enum_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "enum"
 		},
@@ -626,21 +626,21 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct ExtensibleSequence, string),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_UTF8String,
+		.type = &asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "string"
 		},
 	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence, integer),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "integer"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence, gtime),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_GeneralizedTime,
+		.type = &asn_DEF_GeneralizedTime,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "gtime"
 		},
@@ -714,14 +714,14 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSequence2_1[] = {
 	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence2, string),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_UTF8String,
+		.type = &asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "string"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence2, integer),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "integer"
 		},
@@ -789,7 +789,7 @@ static asn_TYPE_member_t asn_MBR_SetOf_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (9 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_REAL,
+		.type = &asn_DEF_REAL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -850,7 +850,7 @@ static asn_TYPE_member_t asn_MBR_SetOfNULL_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -1031,7 +1031,7 @@ static asn_TYPE_member_t asn_MBR_SetOfEnums_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Member_2,
+		.type = &asn_DEF_Member_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -1092,7 +1092,7 @@ static asn_TYPE_member_t asn_MBR_SequenceOf_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "id"
 		},
@@ -1153,7 +1153,7 @@ static asn_TYPE_member_t asn_MBR_SeqOfZuka_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "zuka"
 		},

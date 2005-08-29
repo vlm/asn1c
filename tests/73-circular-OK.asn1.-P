@@ -37,7 +37,7 @@ static asn_TYPE_member_t asn_MBR_data_2[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_EpytRef,
+		.type = &asn_DEF_EpytRef,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -77,7 +77,7 @@ static asn_TYPE_member_t asn_MBR_Type_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Type, data),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_data_2,
+		.type = &asn_DEF_data_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "data"
 		},
@@ -279,7 +279,7 @@ static asn_TYPE_member_t asn_MBR_stype_2[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Type,
+		.type = &asn_DEF_Type,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -319,21 +319,21 @@ static asn_TYPE_member_t asn_MBR_Epyt_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Epyt, stype),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_stype_2,
+		.type = &asn_DEF_stype_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "stype"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Epyt, type),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Type,
+		.type = &asn_DEF_Type,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "type"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Epyt, ypet),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Ypet,
+		.type = &asn_DEF_Ypet,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "ypet"
 		},
@@ -520,7 +520,7 @@ static asn_TYPE_member_t asn_MBR_senums_4[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_EnumType,
+		.type = &asn_DEF_EnumType,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = ""
 		},
@@ -560,35 +560,35 @@ static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 	{ ATF_POINTER, 0, offsetof(struct Ypet, epyt),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_Epyt,
+		.type = &asn_DEF_Epyt,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "epyt"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Ypet, plain),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "plain"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, senums),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_senums_4,
+		.type = &asn_DEF_senums_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "senums"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, patest1),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
-		.type = (void *)&asn_DEF_IA5String,
+		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_patest1_1_constraint,
 		.name = "patest1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, patest2),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
-		.type = (void *)&asn_DEF_IA5String,
+		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_patest2_1_constraint,
 		.name = "patest2"
 		},
