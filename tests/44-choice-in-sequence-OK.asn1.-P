@@ -74,14 +74,14 @@ static asn_TYPE_member_t asn_MBR_e_6[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct e, choice.f),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (7 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "f"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct e, choice.g),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (8 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "g"
 		},
@@ -124,14 +124,14 @@ static asn_TYPE_member_t asn_MBR_h_9[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct h, choice.i),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "i"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct h, choice.j),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "j"
 		},
@@ -174,28 +174,28 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.c),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "c"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.d),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (6 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "d"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.e),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_e_6,
+		.type = &asn_DEF_e_6,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "e"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.h),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (9 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
-		.type = (void *)&asn_DEF_h_9,
+		.type = &asn_DEF_h_9,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "h"
 		},
@@ -241,14 +241,14 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, a),
 		.tag = (ASN_TAG_CLASS_PRIVATE | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NULL,
+		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, b),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_b_3,
+		.type = &asn_DEF_b_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "b"
 		},

@@ -1686,7 +1686,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 			&& expr->expr_type == ASN_BASIC_INTEGER
 			&& expr_elements_count(arg, expr));
 	if(C99_MODE) OUT(".type = ");
-	OUT("(void *)&asn_DEF_");
+	OUT("&asn_DEF_");
 	if(complex_contents) {
 		OUT("%s", MKID(expr->Identifier));
 		if(!(arg->flags & A1C_ALL_DEFS_GLOBAL))

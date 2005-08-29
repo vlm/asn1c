@@ -118,28 +118,28 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Int),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_INTEGER,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "int"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Char),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_OCTET_STRING,
+		.type = &asn_DEF_OCTET_STRING,
 		.memb_constraints = memb_char_1_constraint,
 		.name = "char"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Class),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_class_4,
+		.type = &asn_DEF_class_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "class"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Double),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (9 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_REAL,
+		.type = &asn_DEF_REAL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "double"
 		},

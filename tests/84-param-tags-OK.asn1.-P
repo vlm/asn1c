@@ -75,7 +75,7 @@ static asn_TYPE_member_t asn_MBR_type1_2[] = {
 	{ ATF_POINTER, 1, offsetof(struct type1, common),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_NativeInteger,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = memb_common_2_constraint,
 		.name = "common"
 		},
@@ -121,7 +121,7 @@ static asn_TYPE_member_t asn_MBR_type2_4[] = {
 	{ ATF_POINTER, 1, offsetof(struct type2, common),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_BOOLEAN,
+		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "common"
 		},
@@ -168,14 +168,14 @@ static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct TestChoice, choice.type1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = (void *)&asn_DEF_type1_2,
+		.type = &asn_DEF_type1_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "type1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestChoice, choice.type2),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_type2_4,
+		.type = &asn_DEF_type2_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "type2"
 		},
@@ -315,7 +315,7 @@ static asn_TYPE_member_t asn_MBR_type1_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct type1, common),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_NativeInteger,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = memb_common_2_constraint,
 		.name = "common"
 		},
@@ -362,7 +362,7 @@ static asn_TYPE_member_t asn_MBR_type2_4[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct type2, common),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_BOOLEAN,
+		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = memb_common_4_constraint,
 		.name = "common"
 		},
@@ -409,14 +409,14 @@ static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct AutoChoice, choice.type1),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_type1_2,
+		.type = &asn_DEF_type1_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "type1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct AutoChoice, choice.type2),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = (void *)&asn_DEF_type2_4,
+		.type = &asn_DEF_type2_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.name = "type2"
 		},
