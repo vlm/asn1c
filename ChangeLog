@@ -1,12 +1,12 @@
 
-0.9.19:	2005-Aug-18
+0.9.19:	2005-Sep-04
 
 	* A proper solution to circular references. No kludge flags
 	  should be necessary anymore to produce reference-free code:
 	  recursive dependencies are resolved automatically.
 	* Test cases 73 & 92 keep track of various circular references.
-	* Introduced asn1c-specific modifier to allow finer control over the
-	  generated code ("<asn1c:pointer>" in comments), (Test case 93).
+	* Introduced compiler directives to allow finer control over the
+	  generated code ("--<ASN1C...>--" in comments), (Test case 93).
 
 0.9.18:	2005-Aug-14
 

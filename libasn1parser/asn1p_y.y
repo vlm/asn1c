@@ -24,11 +24,9 @@ void asn1p_lexer_hack_push_encoding_control(void);
 extern int asn1p_lineno;
 
 /*
- * Process modifiers as <asn1c:pointer>
+ * Process directives as <ASN1C:RepresentAsPointer>
  */
 extern int asn1p_as_pointer;
-static asn1p_expr_t *asn1p_last_type;
-static void apply_nonstd_mods(void);
 
 /*
  * This temporary variable is used to solve the shortcomings of 1-lookahead
@@ -313,6 +311,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_int>			optUnique
 %type	<a_pres>		optPresenceConstraint PresenceConstraint
 %type	<tv_str>		ComponentIdList
+%type	<a_int>			NSTD_IndirectMarker
 
 
 %%
@@ -897,7 +896,14 @@ ComponentType:
 		$$ = $2;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
+		$3.flags |= $$->marker.flags;
 		$$->marker = $3;
+	}
+	| Type optMarker {
+		$$ = $1;
+		$2.flags |= $$->marker.flags;
+		$$->marker = $2;
+		_fixup_anonymous_identifier($$);
 	}
 	| TOK_COMPONENTS TOK_OF Type {
 		$$ = asn1p_expr_new(yylineno);
@@ -908,11 +914,6 @@ ComponentType:
 	}
 	| ExtensionAndException {
 		$$ = $1;
-	}
-	| Type optMarker {
-		$$ = $1;
-		$$->marker = $2;
-		_fixup_anonymous_identifier($$);
 	}
 	;
 
@@ -1094,32 +1095,52 @@ Type:
 				$$->constraints = $3;
 			}
 		}
-		asn1p_last_type = $$;
+	}
+	;
+
+NSTD_IndirectMarker:
+	{
+		$$ = asn1p_as_pointer ? EM_INDIRECT : 0;
+		asn1p_as_pointer = 0;
 	}
 	;
 
 TypeDeclaration:
-	{apply_nonstd_mods();} TypeDeclarationSet {
+	NSTD_IndirectMarker TypeDeclarationSet {
 		$$ = $2;
+		$$->marker.flags |= $1;
+
+		if(($$->marker.flags & EM_INDIRECT)
+		&& ($$->marker.flags & EM_OPTIONAL) != EM_OPTIONAL) {
+			fprintf(stderr,
+				"INFO: Directive <ASN1C:RepresentAsPointer> "
+				"applied to %s at line %d\n",
+				ASN_EXPR_TYPE2STR($$->expr_type)
+					?  ASN_EXPR_TYPE2STR($$->expr_type)
+					: "member",
+				$$->_lineno
+			);
+		}
 	}
+	;
 
 TypeDeclarationSet:
 	BasicType {
 		$$ = $1;
 	}
-	| TOK_CHOICE '{' AlternativeTypeLists {apply_nonstd_mods();} '}' {
+	| TOK_CHOICE '{' AlternativeTypeLists '}' {
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_CHOICE;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE '{' optComponentTypeLists {apply_nonstd_mods();} '}' {
+	| TOK_SEQUENCE '{' optComponentTypeLists '}' {
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_SEQUENCE;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SET '{' optComponentTypeLists {apply_nonstd_mods();} '}' {
+	| TOK_SET '{' optComponentTypeLists '}' {
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
 		$$->expr_type = ASN_CONSTR_SET;
@@ -2247,22 +2268,6 @@ _fixup_anonymous_identifier(asn1p_expr_t *expr) {
 	fprintf(stderr, "NOTE: Assigning temporary identifier \"%s\". "
 			"Name clash may occur later.\n",
 		expr->Identifier);
-}
-
-static void
-apply_nonstd_mods() {
-	if(!asn1p_as_pointer) return;
-	asn1p_as_pointer = 0;
-
-	if(asn1p_last_type) {
-		asn1p_last_type->marker.flags |= EM_INDIRECT;
-		fprintf(stderr, "INFO: Modifier <asn1c:pointer> "
-			"applied to \"%s\" at line %d\n",
-			asn1p_last_type->Identifier
-				?  asn1p_last_type->Identifier : "<anonymous>",
-			asn1p_last_type->_lineno);
-		asn1p_last_type = 0;
-	}
 }
 
 extern char *asn1p_text;

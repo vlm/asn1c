@@ -5,17 +5,21 @@ BEGIN
 
 Sequence ::= SEQUENCE {
     ainl	 [0] IMPLICIT INTEGER,
-    aptr	 [1] IMPLICIT INTEGER	/* <asn1c:pointer> */
+    --<ASN1C.RepresentAsPointer>--
+    aptr	 [1] IMPLICIT INTEGER
 }
 
 Set ::= SET {
     ainl	 [0] IMPLICIT Sequence,
-    aptr	 [1] IMPLICIT Sequence	/* <asn1c:pointer> */
+    --<ASN1C.RepresentAsPointer>--
+    aptr	 [1] IMPLICIT Sequence
 }
 
 Choice ::= CHOICE {
-    setof	 [0] IMPLICIT SET OF INTEGER,	/* <asn1c:pointer> */
-    aptr	 [1] IMPLICIT Sequence,	/* <asn1c:pointer> */
+    --<ASN1C.RepresentAsPointer>--
+    setof	 [0] IMPLICIT SET OF INTEGER,
+    --<ASN1C.RepresentAsPointer>--
+    aptr	 [1] IMPLICIT Sequence,
     ainl	 [2] IMPLICIT Sequence
 }
 

@@ -41,7 +41,7 @@ static ber_tlv_tag_t asn_DEF_Sequence_1_tags[] = {
 };
 static asn_TYPE_tag2member_t asn_MAP_Sequence_1_tag2el[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl at 15 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr at 17 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr at 18 */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Sequence_1_specs = {
 	sizeof(struct Sequence),
@@ -138,8 +138,8 @@ static ber_tlv_tag_t asn_DEF_Set_1_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Set_1_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl at 20 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr at 22 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl at 21 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr at 24 */
 };
 static uint8_t asn_MAP_Set_1_mmap[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (1 << 6)
@@ -293,9 +293,9 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_Choice_1_tag2el[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* setof at 25 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* aptr at 26 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* ainl at 28 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* setof at 28 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* aptr at 30 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* ainl at 32 */
 };
 static asn_CHOICE_specifics_t asn_SPC_Choice_1_specs = {
 	sizeof(struct Choice),
