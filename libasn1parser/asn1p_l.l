@@ -97,32 +97,22 @@ WSP	[\t\r\v\f\n ]
 	-{3,}	yy_pop_state(); /* Acceptable end of comment */
 }
 
+--<[ \t]*ASN1C.RepresentAsPointer[ \t]*>--	asn1p_as_pointer = 1;
+
 --		yy_push_state(dash_comment);
 <dash_comment,idash_comment>{
 
 	{NL}	yy_pop_state();
 
-	"<asn1c:"[^\r\v\f\n>-]{1,80}">"	{
-			if(strcmp(yytext, "<asn1c:pointer>") == 0)
-				asn1p_as_pointer = 1;
-			/* Eat modifier */
-		}
-	"<"	/* Eat stand-alone left angle brace */
-
 	--	yy_pop_state();	/* End of comment */
 	-	/* Eat single dash */
-	[^\r\v\f\n<-]+	/* Eat */
+	[^\r\v\f\n-]+	/* Eat */
 }
 
 <INITIAL,cpp_comment>"/*"		yy_push_state(cpp_comment);
 <cpp_comment>{
 	[^*/<]	/* Eat */
 	"*/"	yy_pop_state();
-	"<asn1c:"[^\r\v\f\n>-]{1,80}">"	{
-			if(strcmp(yytext, "<asn1c:pointer>") == 0)
-				asn1p_as_pointer = 1;
-			/* Eat modifier */
-		}
 	.	/* Eat */
 }
 

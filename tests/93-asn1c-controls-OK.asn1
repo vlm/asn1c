@@ -13,17 +13,21 @@ BEGIN
 
 	Sequence ::= SEQUENCE {
 		ainl INTEGER,
-		aptr INTEGER	/* <asn1c:pointer> */
+		--<ASN1C.RepresentAsPointer>--
+		aptr INTEGER
 	}
 
 	Set ::= SET {
 		ainl Sequence,
-		aptr Sequence	-- <asn1c:pointer>
+		--<ASN1C.RepresentAsPointer>--
+		aptr Sequence
 	}
 
 	Choice ::= CHOICE {
-		setof SET OF INTEGER, -- <asn1c:pointer>
-		aptr Sequence,	-- <asn1c:pointer>
+		--<ASN1C.RepresentAsPointer>--
+		setof SET OF INTEGER,
+		--<ASN1C.RepresentAsPointer>--
+		aptr Sequence,
 		ainl Sequence
 	}
 
