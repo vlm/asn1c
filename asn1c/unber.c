@@ -47,6 +47,7 @@ static int decode_tlv_from_string(const char *datastring);
 static int single_type_decoding = 0;	/* -1 enables that */
 static int minimalistic = 0;		/* -m enables that */
 static int pretty_printing = 1;		/* -p disables that */
+static int skip_bytes = 0;		/* -s controls that */
 static char *indent_buffer = "    ";	/* -i controls that */
 
 int
@@ -57,20 +58,10 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "1hi:mpt:v")) != -1)
+	while((ch = getopt(ac, av, "1hi:mps:t:v")) != -1)
 	switch(ch) {
 	case '1':
 		single_type_decoding = 1;
-		break;
-	case 't':
-		if(decode_tlv_from_string(optarg))
-			exit(EX_DATAERR);
-		exit(0);
-	case 'm':
-		minimalistic = 1;
-		break;
-	case 'p':
-		pretty_printing = 0;
 		break;
 	case 'i':
 		i = atoi(optarg);
@@ -83,6 +74,24 @@ main(int ac, char **av) {
 			exit(EX_USAGE);
 		}
 		break;
+	case 'm':
+		minimalistic = 1;
+		break;
+	case 'p':
+		pretty_printing = 0;
+		break;
+	case 's':
+		skip_bytes = atoi(optarg);
+		if(skip_bytes < 0) {
+			fprintf(stderr, "-s %s: positive value expected\n",
+				optarg);
+			exit(EX_USAGE);
+		}
+		break;
+	case 't':
+		if(decode_tlv_from_string(optarg))
+			exit(EX_DATAERR);
+		exit(0);
 	case 'v':
 		fprintf(stderr, "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT);
 		exit(0);
@@ -126,11 +135,12 @@ usage(const char *av0) {
 "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT
 "Usage: %s [options] [-] [file ...]\n"
 "Options:\n"
-"  -1                 Decode only the first BER structure (otherwise, until EOF)\n"
-"  -i <indent>        Amount of spaces for output indentation (default is 4)\n"
-"  -m                 Minimalistic mode: print as little as possible\n"
-"  -p                 Do not attempt pretty-printing of known ASN.1 types\n"
-"  -t <data-string>   Decode the given tag[/length] sequence (e.g. -t \"bf20\")\n"
+"  -1                Decode only the first BER structure (otherwise, until EOF)\n"
+"  -i <indent>       Amount of spaces for output indentation (default is 4)\n"
+"  -m                Minimalistic mode: print as little as possible\n"
+"  -p                Do not attempt pretty-printing of known ASN.1 types\n"
+"  -s <skip>         Ignore first <skip> bytes of input\n"
+"  -t <hex-string>   Decode the given tag[/length] sequence (e.g. -t \"bf20\")\n"
 "\n"
 "The XML opening tag format is as follows:\n"
 "  <tform O=\"off\" T=\"tag\" TL=\"tl_len\" V=\"{Indefinite|v_len}\" [A=\"type\"] [F]>\n"
@@ -177,6 +187,21 @@ process(const char *fname) {
 	}
 
 	/*
+	 * Skip the requested amount of bytes.
+	 */
+	for(; offset < skip_bytes; offset++) {
+		if(fgetc(fp) == -1) {
+			fprintf(stderr,
+				"%s: input source (%" PRIdASN " bytes) "
+				"has less data than \"-s %d\" switch "
+				"wants to skip\n",
+				fname, offset, skip_bytes);
+			if(fp != stdin) fclose(fp);
+			return -1;
+		}
+	}
+
+	/*
 	 * Fetch out BER-encoded data until EOF or error.
 	 */
 	do {
@@ -205,7 +230,7 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 	ssize_t t_len;
 	ssize_t l_len;
 
-	do {
+	for(;;) {
 		ber_tlv_len_t local_esize = 0;
 		int constr;
 		int ch;
@@ -348,7 +373,11 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 			 tlv_tag, tlv_len, local_esize);
 
 		tblen = 0;
-	} while(1);
+
+		/* Report success for a single top level TLV */
+		if(level == 0 && limit == -1 && !expect_eoc)
+			break;
+	} /* for(;;) */
 
 	return pdc;
 }

@@ -12,7 +12,7 @@
 .SH NAME
 unber \- ASN.1 BER Decoder
 .SH SYNOPSIS
-unber [\fB-1\fR] [\fB-i\fRindent] [\fB-m\fR] [\fB-p\fR] [\fB\-t\fR\fIdata-string\fR] [\fB-\fR] [\fIinfile\fR...]
+unber [\fB-1\fR] [\fB-i\fRindent] [\fB-m\fR] [\fB-p\fR] [\fB\-s\fR\fIskip\fR] [\fB\-t\fR\fIhex-string\fR] [\fB-\fR] [\fIinfile\fR...]
 .SH DESCRIPTION
 unber takes the BER-encoded files and dumps their internal structure as human readable text.
 A single dash represents the standard input.
@@ -32,11 +32,15 @@ Use the specified number of spaces for output indentation. Default is 4 spaces.
 Generate minimum amount of output while still preserving BER encoding information.
 .TP
 \fB\-p\fR
-Do \fInot\fR attempt pretty-printing of known ASN.1 types (OBJECT IDENTIFIER, INTEGER, BOOLEAN, etc). By default, some ASN.1 types are converted into
+Do \fInot\fR attempt pretty-printing of known ASN.1 types (BOOLEAN, INTEGER, OBJECT IDENTIFIER, etc). By default, some ASN.1 types are converted into
 the text representation. This option is required for \&\fIenber\fR\|(1).
 .TP
-\fB\-t\fR \fIdata-string\fR
-Interpret the data-string as a sequence of hexadecimal values representing
+\fB\-s\fR \fIskip\fR
+Ignore the first \fIskip\fR bytes in the input stream; useful for stripping off
+lower level protocol framing data.
+.TP
+\fB\-t\fR \fIhex-string\fR
+Interpret the hex-string as a sequence of hexadecimal values representing
 the start of BER TLV encoding. Print the human readable explanation.
 .SH XML FORMAT
 unber dumps the output in the regular XML format which preserves most of the
