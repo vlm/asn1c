@@ -544,21 +544,18 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	OUT(" = {\n");
 	INDENTED(
 	if(elements) {
-		int delimit = 0;
 		int el = 0;
 		TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE) continue;
-			if(delimit) {
-				OUT(",\n");
-				delimit = 0;
-			} else if(el) {
-				OUT(" | ");
+			if(el) {
+				if((el % 8) == 0)
+					OUT(",\n");
+				else
+					OUT(" | ");
 			}
 			OUT("(%d << %d)",
 				(v->marker.flags & EM_OMITABLE) != EM_OMITABLE,
 				7 - (el % 8));
-			if(el && (el % 8) == 0)
-				delimit = 1;
 			el++;
 		}
 	} else {

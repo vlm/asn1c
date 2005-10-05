@@ -1,0 +1,181 @@
+
+/*** <<< INCLUDES [TestSet] >>> ***/
+
+#include <VisibleString.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [TestSet] >>> ***/
+
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum TestSet_PR {
+	TestSet_PR_m0,	/* Member m0 is present */
+	TestSet_PR_m1,	/* Member m1 is present */
+	TestSet_PR_m2,	/* Member m2 is present */
+	TestSet_PR_m3,	/* Member m3 is present */
+	TestSet_PR_m4,	/* Member m4 is present */
+	TestSet_PR_m5,	/* Member m5 is present */
+	TestSet_PR_m6,	/* Member m6 is present */
+	TestSet_PR_m7,	/* Member m7 is present */
+	TestSet_PR_m8,	/* Member m8 is present */
+	TestSet_PR_m9,	/* Member m9 is present */
+} TestSet_PR;
+
+/*** <<< TYPE-DECLS [TestSet] >>> ***/
+
+typedef struct TestSet {
+	VisibleString_t	 m0;
+	VisibleString_t	*m1	/* OPTIONAL */;
+	VisibleString_t	 m2;
+	VisibleString_t	 m3;
+	VisibleString_t	*m4	/* OPTIONAL */;
+	VisibleString_t	 m5;
+	VisibleString_t	 m6;
+	VisibleString_t	 m7;
+	VisibleString_t	*m8	/* OPTIONAL */;
+	VisibleString_t	 m9;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pTestSet, TestSet_PR_x) */
+	unsigned int _presence_map
+		[((10+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} TestSet_t;
+
+/*** <<< FUNC-DECLS [TestSet] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_TestSet;
+
+/*** <<< STAT-DEFS [TestSet] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m0),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m0"
+		},
+	{ ATF_POINTER, 1, offsetof(struct TestSet, m1),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m2"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m3),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m3"
+		},
+	{ ATF_POINTER, 1, offsetof(struct TestSet, m4),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m4"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m5),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m5"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m6),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m6"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m7),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (7 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m7"
+		},
+	{ ATF_POINTER, 1, offsetof(struct TestSet, m8),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (8 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m8"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m9),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (9 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.name = "m9"
+		},
+};
+static ber_tlv_tag_t asn_DEF_TestSet_1_tags[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_TestSet_1_tag2el[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* m0 at 15 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* m1 at 16 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* m2 at 17 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* m3 at 18 */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 4, 0, 0 }, /* m4 at 19 */
+    { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 5, 0, 0 }, /* m5 at 20 */
+    { (ASN_TAG_CLASS_CONTEXT | (6 << 2)), 6, 0, 0 }, /* m6 at 21 */
+    { (ASN_TAG_CLASS_CONTEXT | (7 << 2)), 7, 0, 0 }, /* m7 at 22 */
+    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 }, /* m8 at 23 */
+    { (ASN_TAG_CLASS_CONTEXT | (9 << 2)), 9, 0, 0 } /* m9 at 24 */
+};
+static uint8_t asn_MAP_TestSet_1_mmap[(10 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(1 << 7) | (0 << 6) | (1 << 5) | (1 << 4) | (0 << 3) | (1 << 2) | (1 << 1) | (1 << 0),
+	(0 << 7) | (1 << 6)
+};
+static asn_SET_specifics_t asn_SPC_TestSet_1_specs = {
+	sizeof(struct TestSet),
+	offsetof(struct TestSet, _asn_ctx),
+	offsetof(struct TestSet, _presence_map),
+	asn_MAP_TestSet_1_tag2el,
+	10,	/* Count of tags in the map */
+	asn_MAP_TestSet_1_tag2el,	/* Same as above */
+	10,	/* Count of tags in the CXER map */
+	1,	/* Whether extensible */
+	(unsigned int *)asn_MAP_TestSet_1_mmap	/* Mandatory elements map */
+};
+asn_TYPE_descriptor_t asn_DEF_TestSet = {
+	"TestSet",
+	"TestSet",
+	SET_free,
+	SET_print,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_decode_xer,
+	SET_encode_xer,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_TestSet_1_tags,
+	sizeof(asn_DEF_TestSet_1_tags)
+		/sizeof(asn_DEF_TestSet_1_tags[0]), /* 1 */
+	asn_DEF_TestSet_1_tags,	/* Same as above */
+	sizeof(asn_DEF_TestSet_1_tags)
+		/sizeof(asn_DEF_TestSet_1_tags[0]), /* 1 */
+	asn_MBR_TestSet_1,
+	10,	/* Elements count */
+	&asn_SPC_TestSet_1_specs	/* Additional specs */
+};
+
