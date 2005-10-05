@@ -353,7 +353,7 @@ real_copy(const char *src, const char *dst) {
 
 	while(!feof(fpsrc)) {
 		len = fread(buf, 1, sizeof(buf), fpsrc);
-		if(fwrite(buf, 1, len, fpsrc) != len) {
+		if(fwrite(buf, 1, len, fpdst) != len) {
 			errno = EIO;
 			retval = -1;
 			break;
