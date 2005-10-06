@@ -1,5 +1,5 @@
 
-0.9.19:	2005-Oct-05
+0.9.19:	2005-Oct-06
 
 	* A proper solution to circular references. No kludge flags
 	  should be necessary anymore to produce reference-free code:
@@ -10,6 +10,7 @@
 	* New feature for unber(1): -s <skip> bytes.
 	* Mandatory elements map for SET was not getting generated properly.
 	  (Test case 94) (Severity: high; Security impact: low)
+	* asn1c: new command line option: -fskeletons-copy.
 
 0.9.18:	2005-Aug-14
 

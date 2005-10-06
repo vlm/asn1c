@@ -93,6 +93,8 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_NO_INCLUDE_DEPS;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
+		} else if(strcmp(optarg, "skeletons-copy") == 0) {
+			asn1_compiler_flags |= A1C_SKELETONS_COPY;
 		} else if(strcmp(optarg, "types88") == 0) {
 			asn1_parser_flags |= A1P_TYPES_RESTRICT_TO_1988;
 		} else {
@@ -321,6 +323,7 @@ usage(const char *av0) {
 "  -fno-constraints      Do not generate constraint checking code\n"
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
+"  -fskeletons-copy      Force copying the support files\n"
 "  -ftypes88             Pretend to support only ASN.1:1988 embedded types\n"
 "\n"
 

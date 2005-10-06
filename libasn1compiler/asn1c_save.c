@@ -280,6 +280,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 		if(rename(tmpname_c, name_buf)) {
 			unlink(tmpname_c);
 			perror(tmpname_c);
+			free(tmpname_c);
+			free(tmpname_h);
 			return -1;
 		}
 	}
@@ -292,6 +294,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 		if(rename(tmpname_h, name_buf)) {
 			unlink(tmpname_h);
 			perror(tmpname_h);
+			free(tmpname_c);
+			free(tmpname_h);
 			return -1;
 		}
 	}
@@ -308,10 +312,19 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 
 static int
 identical_files(const char *fname1, const char *fname2) {
-	char buf[2][8192];
+	char buf[2][4096];
 	FILE *fp1, *fp2;
 	size_t olen, nlen;
 	int retval = 1;	/* Files are identical */
+
+#ifndef	WIN32
+	struct stat sb;
+
+	if(lstat(fname1, &sb) || !S_ISREG(sb.st_mode)
+	|| lstat(fname2, &sb) || !S_ISREG(sb.st_mode)) {
+		return 0;	/* Files are not identical */
+	}
+#endif
 
 	fp1 = fopen(fname1, "r");
 	if(!fp1) { return 0; }
@@ -338,7 +351,8 @@ identical_files(const char *fname1, const char *fname2) {
  */
 static int
 real_copy(const char *src, const char *dst) {
-	unsigned char buf[8192];
+	unsigned char buf[4096];
+	char *tmpname;
 	FILE *fpsrc, *fpdst;
 	size_t len;
 	int retval = 0;
@@ -348,36 +362,45 @@ real_copy(const char *src, const char *dst) {
 
 	fpsrc = fopen(src, "r");
 	if(!fpsrc) { errno = EIO; return -1; }
-	fpdst = asn1c_open_file(dst, "", 0);
+	fpdst = asn1c_open_file(dst, "", &tmpname);
 	if(!fpdst) { fclose(fpsrc); errno = EIO; return -1; }
 
 	while(!feof(fpsrc)) {
 		len = fread(buf, 1, sizeof(buf), fpsrc);
 		if(fwrite(buf, 1, len, fpdst) != len) {
+			perror(tmpname);
 			errno = EIO;
 			retval = -1;
 			break;
 		}
 	}
-
 	fclose(fpsrc);
 	fclose(fpdst);
+
+	/* Check if copied correctly, and rename into a permanent name */
+	if(retval) {
+		unlink(tmpname);
+	} else if(rename(tmpname, dst)) {
+		unlink(tmpname);
+		perror(tmpname);
+		retval = -1;
+	}
+	free(tmpname);
 	return retval;
 }
 
 static int
 asn1c_copy_over(arg_t *arg, char *path) {
 	char *fname;
-
-	(void)arg;	/* Unused argument */
+#ifdef	WIN32
+	int use_real_copy = 1;
+#else
+	int use_real_copy = (arg->flags & A1C_SKELETONS_COPY);
+#endif
 
 	fname = a1c_basename(path);
 	if(!fname
-#ifdef	WIN32
-		|| real_copy(path, fname)
-#else
-		|| (1 ? symlink(path, fname) : real_copy(path, fname))
-#endif
+	|| (use_real_copy ? real_copy(path, fname) : symlink(path, fname))
 	) {
 		if(errno == EEXIST) {
 			struct stat sb1, sb2;
@@ -402,13 +425,15 @@ asn1c_copy_over(arg_t *arg, char *path) {
 			/* Ignore this */
 			return 0;
 		} else {
-			fprintf(stderr, "Symlink %s -> %s failed: %s\n",
+			fprintf(stderr, "%s %s -> %s failed: %s\n",
+				use_real_copy ? "Copy" : "Symlink",
 				path, fname, strerror(errno));
 			return -1;
 		}
 	}
 
-	fprintf(stderr, "Symlinked %s\t-> %s\n", path, fname);
+	fprintf(stderr, "%s %s\t-> %s\n",
+		use_real_copy ? "Copied" : "Symlinked", path, fname);
 
 	return 1;
 }

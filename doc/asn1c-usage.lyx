@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{This document describes 
 \backslash 
-href{http://lionet.info/asn1c}{asn1c-0.9.18}}
+href{http://lionet.info/asn1c}{asn1c-0.9.19}}
 \layout Standard
 
 \backslash 
@@ -451,7 +451,7 @@ The following table summarizes the asn1c command line options.
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="26" columns="2">
+<lyxtabular version="3" rows="27" columns="2">
 <features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -836,6 +836,8 @@ Use complex names for C structures.
 
 \layout Standard
 
+
+\size small 
 -findirect-choice
 \end_inset 
 </cell>
@@ -844,6 +846,8 @@ Use complex names for C structures.
 
 \layout Standard
 
+
+\size small 
 When generating code for a CHOICE type, compile the CHOICE members as indirect
  pointers instead of declaring them inline.
  Consider using this option together with 
@@ -861,6 +865,8 @@ When generating code for a CHOICE type, compile the CHOICE members as indirect
 
 \layout Standard
 
+
+\size small 
 -fknown-extern-type=
 \emph on 
 <name>
@@ -871,6 +877,8 @@ When generating code for a CHOICE type, compile the CHOICE members as indirect
 
 \layout Standard
 
+
+\size small 
 Pretend the specified type is known.
  The compiler will assume the target language source files for the given
  type have been provided manually.
@@ -966,6 +974,28 @@ Do not generate courtesy #include lines for non-critical dependencies.
 
 \size small 
 Enable  unnamed  unions  in the definitions of target language's structures.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+-fskeletons-copy
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Copy support files rather than symlink them.
 \end_inset 
 </cell>
 </row>

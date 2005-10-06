@@ -51,6 +51,11 @@ enum asn1c_flags {
 	 * Compile members of CHOICE as indirect pointers.
 	 */
 	A1C_INDIRECT_CHOICE	= 0x0400,
+	/*
+	 * -fskeletons-copy
+	 * Copy support files rather than symlink them.
+	 */
+	A1C_SKELETONS_COPY	= 0x0800,
 };
 
 /*
