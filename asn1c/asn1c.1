@@ -25,7 +25,7 @@ and other encoding standards.
 .br
 \fB\-fall-defs-global \-fbless-SIZE \-fcompound-names \-findirect-choice
 .BI "\-fknown-extern-type="<name>
-\fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions \-ftypes88\fR
+\fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions \-fskeletons-copy \-ftypes88\fR
 .TP
 \fIOutput Options\fR
 .br
@@ -114,6 +114,9 @@ Helps prevent namespace collisions.
 .TP
 .B \-funnamed-unions
 Enable unnamed unions in the definitions of target language's structures.
+.TP
+.B \-fskeletons-copy
+Copy support files (skeletons) rather than symlink them.
 .TP
 .B \-ftypes88
 Pretend to support only ASN.1:1988 embedded types. Certain reserved words,

@@ -80,12 +80,19 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	if(fp == NULL) {
 		if(created) unlink(fname);
 		close(fd);
+		return NULL;
 	}
 
 	/* Return the temporary file name */
 	if(opt_tmpname) {
 		*opt_tmpname = strdup(fname);
-		assert(*opt_tmpname);
+		if(*opt_tmpname) {
+			/* Successfull */
+		} else {
+			if(created) unlink(fname);
+			fclose(fp);
+			return NULL;
+		}
 	}
 
 	return fp;
