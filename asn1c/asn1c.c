@@ -177,8 +177,10 @@ main(int ac, char **av) {
 		ac -= optind;
 		av += optind;
 	} else {
-		fprintf(stderr, "%s: No input files specified\n",
-			a1c_basename(av[0]));
+		char *bin_name = a1c_basename(av[0]);
+		fprintf(stderr, "%s: No input files specified. "
+			"Try '%s -h' for more information\n",
+			bin_name, bin_name);
 		exit(1);
 	}
 
