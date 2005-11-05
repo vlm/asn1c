@@ -134,13 +134,15 @@ asn1f_parametrize(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype) {
 	 * Cleanup the new expression so there is no ptype-related
 	 * stuff hanging around.
 	 */
-	p = strdup(expr->Identifier);
-	if(p) {
-		free(nex->Identifier);
-		nex->Identifier = p;
-	} else {
-		asn1p_expr_free(nex);
-		return -1;
+	if(expr->Identifier) {
+		p = strdup(expr->Identifier);
+		if(p) {
+			free(nex->Identifier);
+			nex->Identifier = p;
+		} else {
+			asn1p_expr_free(nex);
+			return -1;
+		}
 	}
 	asn1p_paramlist_free(nex->params);
 	nex->params = NULL;
