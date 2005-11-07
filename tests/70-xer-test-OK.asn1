@@ -18,13 +18,16 @@ BEGIN
 	PDU ::= CHOICE {
 		sequence		Sequence,
 		set			Set,
-		setOf			SetOf,
 		sequenceOf		SequenceOf,
 		extensibleSet		ExtensibleSet,
 		extensibleSequence	ExtensibleSequence,
 		extensibleSequence2	ExtensibleSequence2,
 		setOfNULL		SetOfNULL,
+		setOfREAL		SetOfREAL,
 		setOfEnums		SetOfEnums,
+		namedSetOfNULL		NamedSetOfNULL,
+		namedSetOfREAL		NamedSetOfREAL,
+		namedSetOfEnums		NamedSetOfEnums,
 		seqOfZuka		SeqOfZuka,
 		...
 	}
@@ -60,9 +63,12 @@ BEGIN
 		integer	INTEGER	OPTIONAL
 	}
 
-	SetOf ::= SET OF REAL
 	SetOfNULL ::= SET OF NULL
+	SetOfREAL ::= SET OF REAL
 	SetOfEnums ::= SET OF ENUMERATED { one, oneMore }
+	NamedSetOfNULL ::= SET OF y NULL
+	NamedSetOfREAL ::= SET OF name REAL
+	NamedSetOfEnums ::= SET OF name ENUMERATED { one, oneMore }
 	SequenceOf ::= SEQUENCE OF id INTEGER { one(1), two(2) }
 	SeqOfZuka ::= SEQUENCE OF zuka NULL
 

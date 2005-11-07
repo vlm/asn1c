@@ -43,7 +43,7 @@ COMMON_FLAGS= -I. -DEMIT_ASN_DEBUG
 CFLAGS=\${COMMON_FLAGS} ${CFLAGS}
 CXXFLAGS=\${COMMON_FLAGS} ${CXXFLAGS}
 
-CC=${CC}
+CC ?= ${CC}
 
 all: check-executable
 check-executable: compiled-module *.c*
