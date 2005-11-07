@@ -6,14 +6,19 @@ BEGIN
 PDU ::= CHOICE {
     sequence	 [0] IMPLICIT Sequence,
     set	 [1] IMPLICIT Set,
-    setOf	 [2] IMPLICIT SetOf,
-    sequenceOf	 [3] IMPLICIT SequenceOf,
-    extensibleSet	 [4] IMPLICIT ExtensibleSet,
-    extensibleSequence	 [5] IMPLICIT ExtensibleSequence,
-    extensibleSequence2	 [6] IMPLICIT ExtensibleSequence2,
-    setOfNULL	 [7] IMPLICIT SetOfNULL,
+    sequenceOf	 [2] IMPLICIT SequenceOf,
+    extensibleSet	 [3] IMPLICIT ExtensibleSet,
+    extensibleSequence	 [4] IMPLICIT ExtensibleSequence,
+    extensibleSequence2	 [5] IMPLICIT ExtensibleSequence2,
+    setOfNULL	 [6] IMPLICIT SetOfNULL,
+    setOfREAL	 [7] IMPLICIT SetOfREAL,
     setOfEnums	 [8] IMPLICIT SetOfEnums,
-    seqOfZuka	 [9] IMPLICIT SeqOfZuka,
+    namedSetOfNULL	 [9] IMPLICIT NamedSetOfNULL,
+    namedSetOfREAL	 [10] IMPLICIT NamedSetOfREAL,
+    namedSetOfEnums	 [11] IMPLICIT NamedSetOfEnums,
+    seqOfZuka	 [12] IMPLICIT SeqOfZuka,
+    setOfChoice	 [13] IMPLICIT SetOfChoice,
+    namedSetOfChoice	 [14] IMPLICIT NamedSetOfChoice,
     ...
 }
 
@@ -51,11 +56,20 @@ ExtensibleSequence2 ::= SEQUENCE {
     integer	 [1] IMPLICIT INTEGER OPTIONAL
 }
 
-SetOf ::= SET OF REAL
-
 SetOfNULL ::= SET OF NULL
 
+SetOfREAL ::= SET OF REAL
+
 SetOfEnums ::= SET OF ENUMERATED {
+        one(0),    
+        oneMore(1)
+    }
+
+NamedSetOfNULL ::= SET OF    y	 NULL
+
+NamedSetOfREAL ::= SET OF    name	 REAL
+
+NamedSetOfEnums ::= SET OF    name	 ENUMERATED {
         one(0),    
         oneMore(1)
     }
@@ -66,5 +80,14 @@ SequenceOf ::= SEQUENCE OF    id	 INTEGER {
     }
 
 SeqOfZuka ::= SEQUENCE OF    zuka	 NULL
+
+SetOfChoice ::= SET OF SimpleChoice
+
+NamedSetOfChoice ::= SET OF    whatever	 SimpleChoice
+
+SimpleChoice ::= CHOICE {
+    a	 [0] IMPLICIT NULL,
+    b	 [1] IMPLICIT INTEGER
+}
 
 END

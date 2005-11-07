@@ -29,6 +29,8 @@ BEGIN
 		namedSetOfREAL		NamedSetOfREAL,
 		namedSetOfEnums		NamedSetOfEnums,
 		seqOfZuka		SeqOfZuka,
+		setOfChoice		SetOfChoice,
+		namedSetOfChoice	NamedSetOfChoice,
 		...
 	}
 
@@ -71,5 +73,9 @@ BEGIN
 	NamedSetOfEnums ::= SET OF name ENUMERATED { one, oneMore }
 	SequenceOf ::= SEQUENCE OF id INTEGER { one(1), two(2) }
 	SeqOfZuka ::= SEQUENCE OF zuka NULL
+	SetOfChoice ::= SET OF SimpleChoice
+	NamedSetOfChoice ::= SET OF whatever SimpleChoice
+
+	SimpleChoice ::= CHOICE { a NULL, b INTEGER }
 
 END
