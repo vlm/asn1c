@@ -734,11 +734,12 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 		OUT("offsetof(struct ");
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(", _asn_ctx),\n");
-
-		if(expr_as_xmlvaluelist(arg, v))
-			OUT("1,\t/* XER encoding is XMLValueList */\n");
-		else
-			OUT("0,\t/* XER encoding is XMLDelimitedItemList */\n");
+		{
+		int as_xvl = expr_as_xmlvaluelist(arg, v);
+		OUT("%d,\t/* XER encoding is %s */\n",
+			as_xvl,
+			as_xvl ? "XMLValueList" : "XMLDelimitedItemList");
+		}
 	);
 	OUT("};\n");
 
@@ -1866,12 +1867,16 @@ expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr) {
 	expr = asn1f_find_terminal_type_ex(arg->asn, expr);
 	if(!expr) return 0;
 
-	/* X.680, 25.5, Table 5 */
+	/*
+	 * X.680, 25.5, Table 5
+	 */
 	switch(expr->expr_type) {
 	case ASN_BASIC_BOOLEAN:
 	case ASN_BASIC_ENUMERATED:
 	case ASN_BASIC_NULL:
 		return 1;
+	case ASN_CONSTR_CHOICE:
+		return 2;
 	default:
 		return 0;
 	}

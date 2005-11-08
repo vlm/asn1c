@@ -471,8 +471,7 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 */
 	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *element = td->elements;
-	const char *elm_tag = ((*element->name)
-			? element->name : element->type->xml_tag);
+	const char *elm_tag;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 
 	/*
@@ -490,6 +489,14 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	if(st == 0) {
 		st = *struct_ptr = CALLOC(1, specs->struct_size);
 		if(st == 0) RETURN(RC_FAIL);
+	}
+
+	/* Which tag is expected for the downstream */
+	if(specs->as_XMLValueList) {
+		elm_tag = (specs->as_XMLValueList == 1) ? 0 : "";
+	} else {
+		elm_tag = (*element->name)
+				? element->name : element->type->xml_tag;
 	}
 
 	/*
@@ -515,6 +522,7 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			asn_dec_rval_t tmprval;
 
 			/* Invoke the inner type decoder, m.b. multiple times */
+			ASN_DEBUG("XER/SET OF element [%s]", elm_tag);
 			tmprval = element->type->xer_decoder(opt_codec_ctx,
 					element->type, &ctx->ptr, elm_tag,
 					buf_ptr, size);
@@ -553,7 +561,8 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
-		ASN_DEBUG("XER/SET OF: tcv = %d, ph=%d", tcv, ctx->phase);
+		ASN_DEBUG("XER/SET OF: tcv = %d, ph=%d t=%s",
+			tcv, ctx->phase, xml_tag);
 		switch(tcv) {
 		case XCT_CLOSING:
 			if(ctx->phase == 0) break;
@@ -682,18 +691,18 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
 		}
 
-		if(!xcan && specs->as_XMLValueList)
+		if(!xcan && specs->as_XMLValueList == 1)
 			_i_ASN_TEXT_INDENT(1, ilevel + 1);
 		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
-				ilevel + 1, flags, cb, app_key);
+				ilevel + (specs->as_XMLValueList != 2),
+				flags, cb, app_key);
 		if(tmper.encoded == -1) {
 			td = tmper.failed_type;
 			sptr = tmper.structure_ptr;
 			goto cb_failed;
 		}
 		if(tmper.encoded == 0 && specs->as_XMLValueList) {
-			const char *name = (*elm->name)
-				? elm->name : elm->type->xml_tag;
+			const char *name = elm->type->xml_tag;
 			size_t len = strlen(name);
 			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);
 		}

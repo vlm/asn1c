@@ -549,6 +549,8 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!cb) {
 		er.encoded += (type_variant == _TT_BIT_STRING) + st->size;
+		er.structure_ptr = 0;
+		er.failed_type = 0;
 		return er;
 	}
 
@@ -572,6 +574,8 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	er.encoded += st->size;
+	er.structure_ptr = 0;
+	er.failed_type = 0;
 	return er;
 cb_failed:
 	_ASN_ENCODE_FAILED;

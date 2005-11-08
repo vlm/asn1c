@@ -124,6 +124,10 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
 		}
 	}
 
+	/* Sometimes we don't care about the tag */
+	if(!need_tag || !*need_tag)
+		return (xer_check_tag_e)(XCT__UNK__MASK | ct);
+
 	/*
 	 * Determine the tag name.
 	 */

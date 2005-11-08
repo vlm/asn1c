@@ -1590,7 +1590,7 @@ static ber_tlv_tag_t asn_DEF_SetOfChoice_1_tags[] = {
 static asn_SET_OF_specifics_t asn_SPC_SetOfChoice_1_specs = {
 	sizeof(struct SetOfChoice),
 	offsetof(struct SetOfChoice, _asn_ctx),
-	0,	/* XER encoding is XMLDelimitedItemList */
+	2,	/* XER encoding is XMLValueList */
 };
 asn_TYPE_descriptor_t asn_DEF_SetOfChoice = {
 	"SetOfChoice",
@@ -1658,7 +1658,7 @@ static ber_tlv_tag_t asn_DEF_NamedSetOfChoice_1_tags[] = {
 static asn_SET_OF_specifics_t asn_SPC_NamedSetOfChoice_1_specs = {
 	sizeof(struct NamedSetOfChoice),
 	offsetof(struct NamedSetOfChoice, _asn_ctx),
-	0,	/* XER encoding is XMLDelimitedItemList */
+	2,	/* XER encoding is XMLValueList */
 };
 asn_TYPE_descriptor_t asn_DEF_NamedSetOfChoice = {
 	"NamedSetOfChoice",

@@ -239,7 +239,7 @@ static ber_tlv_tag_t asn_DEF_vparts_2_tags[] = {
 static asn_SET_OF_specifics_t asn_SPC_vparts_2_specs = {
 	sizeof(struct vparts),
 	offsetof(struct vparts, _asn_ctx),
-	0,	/* XER encoding is XMLDelimitedItemList */
+	2,	/* XER encoding is XMLValueList */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vparts_2 = {

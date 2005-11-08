@@ -1,5 +1,5 @@
 /*
- * Generic BER decoder template for any defined ASN.1 type.
+ * Generic decoder template for a selected ASN.1 type.
  * Copyright (c) 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * 
  * To compile with your own ASN.1 type, please redefine the asn_DEF as shown:
@@ -21,21 +21,32 @@
 #include <asn_application.h>
 
 extern asn_TYPE_descriptor_t asn_DEF;	/* ASN.1 type to be decoded */
+static asn_TYPE_descriptor_t *pduType = &asn_DEF;
 
 /*
  * Open file and parse its contens.
  */
 static void *data_decode_from_file(asn_TYPE_descriptor_t *asnTypeOfPDU,
 	const char *fname, ssize_t suggested_bufsize);
+static int write_out(const void *buffer, size_t size, void *key);
 
        int opt_debug;	/* -d */
 static int opt_check;	/* -c */
 static int opt_stack;	/* -s */
-static enum output_method {
-	OUT_NONE,	/* No pretty-printing */
-	OUT_PRINT,	/* -p flag */
-	OUT_XML		/* -x flag */
-}          opt_ometh;	/* -p or -x */
+
+/* Input data format selector */
+static enum input_format {
+	INP_BER,	/* -iber: BER input */
+	INP_XER		/* -ixer: XER input */
+} iform;	/* -i<format> */
+
+/* Output data format selector */
+static enum output_format {
+	OUT_XER,	/* -oxer: XER (XML) output */
+	OUT_DER,	/* -oder: DER output */
+	OUT_TEXT,	/* -otext: semi-structured text */
+	OUT_NULL	/* -onull: No pretty-printing */
+} oform;	/* -o<format> */
 
 #define	DEBUG(fmt, args...)	do {		\
 	if(!opt_debug) break;			\
@@ -46,7 +57,6 @@ static enum output_method {
 int
 main(int ac, char **av) {
 	ssize_t suggested_bufsize = 8192;  /* close or equal to stdio buffer */
-	asn_TYPE_descriptor_t *pduType = &asn_DEF;
 	int number_of_iterations = 1;
 	int num;
 	int ch;
@@ -54,8 +64,22 @@ main(int ac, char **av) {
 	/*
 	 * Pocess the command-line argments.
 	 */
-	while((ch = getopt(ac, av, "b:cdn:hps:x")) != -1)
+	while((ch = getopt(ac, av, "i:o:b:cdn:hs:")) != -1)
 	switch(ch) {
+	case 'i':
+		if(optarg[0] == 'b') { iform = INP_BER; break; }
+		if(optarg[0] == 'x') { iform = INP_XER; break; }
+		fprintf(stderr, "-i<format>: '%s': improper format selector",
+			optarg);
+		exit(EX_UNAVAILABLE);
+	case 'o':
+		if(optarg[0] == 'd') { oform = OUT_DER; break; }
+		if(optarg[0] == 'x') { oform = OUT_XER; break; }
+		if(optarg[0] == 't') { oform = OUT_TEXT; break; }
+		if(optarg[0] == 'n') { oform = OUT_NULL; break; }
+		fprintf(stderr, "-o<format>: '%s': improper format selector",
+			optarg);
+		exit(EX_UNAVAILABLE);
 	case 'b':
 		suggested_bufsize = atoi(optarg);
 		if(suggested_bufsize < 1
@@ -80,9 +104,6 @@ main(int ac, char **av) {
 			exit(EX_UNAVAILABLE);
 		}
 		break;
-	case 'p':
-		opt_ometh = OUT_PRINT;
-		break;
 	case 's':
 		opt_stack = atoi(optarg);
 		if(opt_stack <= 0) {
@@ -92,25 +113,22 @@ main(int ac, char **av) {
 			exit(EX_UNAVAILABLE);
 		}
 		break;
-	case 'x':
-		opt_ometh = OUT_XML;
-		break;
 	case 'h':
 	default:
 		fprintf(stderr,
 		"Usage: %s [options] <data.ber> ...\n"
 		"Where options are:\n"
+		"  -iber   (I)  Input is in BER (Basic Encoding Rules)\n"
+		"  -ixer        Input is in XER (XML Encoding Rules)\n"
+		"  -oder        Output in DER (Distinguished Encoding Rules)\n"
+		"  -oxer   (O)  Output in XER (XML Encoding Rules)\n"
+		"  -otext       Output in plain semi-structured text (dump)\n"
+		"  -onull       Verify (decode) input, but do not output\n"
 		"  -b <size>    Set the i/o buffer size (default is %ld)\n"
 		"  -c           Check ASN.1 constraints after decoding\n"
 		"  -d           Enable debugging (-dd is even better)\n"
 		"  -n <num>     Process files <num> times\n"
 		"  -s <size>    Set the stack usage limit\n"
-		"  -p           Print out the decoded contents\n"
-		"  -x           Print out as XML"
-#ifdef	ASN_DECODER_DEFAULT_OUTPUT_XML
-		" (default)"
-#endif
-		"\n"
 		, av[0], (long)suggested_bufsize);
 		exit(EX_USAGE);
 	}
@@ -119,13 +137,11 @@ main(int ac, char **av) {
 	av += optind;
 
 	if(ac < 1) {
-		fprintf(stderr, "Error: missing filename\n");
+		fprintf(stderr, "%s: No input files specified. "
+				"Try '-h' for more information\n",
+				av[-optind]);
 		exit(EX_USAGE);
 	}
-
-#ifdef	ASN_DECODER_DEFAULT_OUTPUT_XML
-	if(opt_ometh == OUT_NONE) opt_ometh = OUT_XML;
-#endif
 
 	setvbuf(stdout, 0, _IOLBF, 0);
 
@@ -137,6 +153,7 @@ main(int ac, char **av) {
 	  for(ac_i = 0; ac_i < ac; ac_i++) {
 		char *fname = av[ac_i];
 		void *structure;
+		asn_enc_rval_t erv;
 
 		/*
 		 * Decode the encoded structure from file.
@@ -146,22 +163,6 @@ main(int ac, char **av) {
 		if(!structure) {
 			/* Error message is already printed */
 			exit(EX_DATAERR);
-		}
-
-		switch(opt_ometh) {
-		case OUT_NONE:
-			fprintf(stderr, "%s: decoded successfully\n", fname);
-			break;
-		case OUT_PRINT:	/* -p */
-			asn_fprint(stdout, pduType, structure);
-			break;
-		case OUT_XML:	/* -x */
-			if(xer_fprint(stdout, pduType, structure)) {
-				fprintf(stderr, "%s: Cannot convert into XML\n",
-					fname);
-				exit(EX_UNAVAILABLE);
-			}
-			break;
 		}
 
 		/* Check ASN.1 constraints */
@@ -176,6 +177,30 @@ main(int ac, char **av) {
 			}
 		}
 
+		switch(oform) {
+		case OUT_NULL:
+			fprintf(stderr, "%s: decoded successfully\n", fname);
+			break;
+		case OUT_TEXT:	/* -otext */
+			asn_fprint(stdout, pduType, structure);
+			break;
+		case OUT_XER:	/* -oxer */
+			if(xer_fprint(stdout, pduType, structure)) {
+				fprintf(stderr, "%s: Cannot convert into XML\n",
+					fname);
+				exit(EX_UNAVAILABLE);
+			}
+			break;
+		case OUT_DER:
+			erv = der_encode(pduType, structure, write_out, stdout);
+			if(erv.encoded < 0) {
+				fprintf(stderr, "%s: Cannot convert into DER\n",
+					fname);
+				exit(EX_UNAVAILABLE);
+			}
+			break;
+		}
+
 		pduType->free_struct(pduType, structure, 0);
 	  }
 	}
@@ -183,6 +208,10 @@ main(int ac, char **av) {
 	return 0;
 }
 
+/* Dump the buffer */
+static int write_out(const void *buffer, size_t size, void *key) {
+	return (fwrite(buffer, 1, size, key) == size) ? 0 : -1;
+}
 
 static char *buffer;
 static size_t buf_offset;	/* Offset from the start */
@@ -194,7 +223,7 @@ static off_t buf_shifted;	/* Number of bytes ever shifted */
 #define	bufend	(buffer + buf_offset + buf_len)
 
 /*
- * Ensure that the buffer contains at least this amoount of free space.
+ * Ensure that the buffer contains at least this amount of free space.
  */
 static void buf_extend(size_t bySize) {
 
@@ -231,6 +260,7 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 	static asn_codec_ctx_t s_codec_ctx;
 	asn_codec_ctx_t *opt_codec_ctx = 0;
 	void *structure = 0;
+	asn_dec_rval_t rval;
 	size_t rd;
 	FILE *fp;
 
@@ -239,9 +269,14 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 		opt_codec_ctx = &s_codec_ctx;
 	}
 
-	DEBUG("Processing file %s", fname);
-
-	fp = fopen(fname, "r");
+	if(strcmp(fname, "-")) {
+		DEBUG("Processing file %s", fname);
+		fp = fopen(fname, "r");
+	} else {
+		DEBUG("Processing standard input");
+		fname = "stdin";
+		fp = stdin;
+	}
 
 	if(!fp) {
 		fprintf(stderr, "%s: %s\n", fname, strerror(errno));
@@ -262,9 +297,13 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 	buf_offset = 0;
 	buf_len = 0;
 
+	/* Pretend immediate EOF */
+	rval.code = RC_WMORE;
+	rval.consumed = 0;
+
 	while((rd = fread(fbuf, 1, fbuf_size, fp)) || !feof(fp)) {
-		asn_dec_rval_t rval;
-		int using_local_buf;
+		char  *i_bptr;
+		size_t i_size;
 
 		/*
 		 * Copy the data over, or use the original buffer.
@@ -275,26 +314,27 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 			memcpy(bufend, fbuf, rd);
 			buf_len += rd;
 
-			rval = ber_decode(opt_codec_ctx, pduType,
-				(void **)&structure, bufptr, buf_len);
-			DEBUG("ber_decode(%ld) consumed %ld, code %d",
-				(long)buf_len, (long)rval.consumed, rval.code);
-
-			/*
-			 * Adjust position inside the source buffer.
-			 */
-			assert(rval.consumed <= buf_len);
-			buf_offset += rval.consumed;
-			buf_len -= rval.consumed;
+			i_bptr = bufptr;
+			i_size = buf_len;
 		} else {
-			using_local_buf = 1;
+			i_bptr = fbuf;
+			i_size = rd;
+		}
 
-			/* Feed the chunk of data into a decoder routine */
+		switch(iform) {
+		case INP_BER:
 			rval = ber_decode(opt_codec_ctx, pduType,
-				(void **)&structure, fbuf, rd);
-			DEBUG("ber_decode(%ld) consumed %ld, code %d",
-				(long)rd, (long)rval.consumed, rval.code);
+				(void **)&structure, i_bptr, i_size);
+			break;
+		case INP_XER:
+			rval = xer_decode(opt_codec_ctx, pduType,
+				(void **)&structure, i_bptr, i_size);
+			break;
+		}
+		DEBUG("decode(%ld) consumed %ld, code %d",
+			(long)buf_len, (long)rval.consumed, rval.code);
 
+		if(buf_len == 0) {
 			/*
 			 * Switch the remainder into the intermediate buffer.
 			 */
@@ -310,10 +350,16 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 		switch(rval.code) {
 		case RC_OK:
 			DEBUG("RC_OK, finishing up");
-			fclose(fp);
+			if(fp != stdin) fclose(fp);
 			return structure;
 		case RC_WMORE:
 			DEBUG("RC_WMORE, continuing...");
+			/*
+			 * Adjust position inside the source buffer.
+			 */
+			buf_offset += rval.consumed;
+			buf_len -= rval.consumed;
+			rval.consumed = 0;
 			continue;
 		case RC_FAIL:
 			break;
@@ -327,8 +373,11 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 	pduType->free_struct(pduType, structure, 0);
 
 	fprintf(stderr, "%s: "
-		"Decode failed past %lld byte\n",
-		fname, (long long)(buf_shifted + buf_offset));
+		"Decode failed past byte %ld: %s\n",
+		fname, (long)(buf_shifted + buf_offset + rval.consumed),
+		(rval.code == RC_WMORE)
+			? "Unexpected end of input"
+			: "Input processing error");
 
 	return 0;
 }

@@ -261,7 +261,7 @@ static ber_tlv_tag_t asn_DEF_or_3_tags[] = {
 static asn_SET_OF_specifics_t asn_SPC_or_3_specs = {
 	sizeof(struct or),
 	offsetof(struct or, _asn_ctx),
-	0,	/* XER encoding is XMLDelimitedItemList */
+	2,	/* XER encoding is XMLValueList */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_or_3 = {

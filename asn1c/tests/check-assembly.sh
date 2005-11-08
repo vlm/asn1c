@@ -64,7 +64,7 @@ check-succeeded: check-executable
 check: check-succeeded
 
 clean:
-	@rm -f *.o
+	@rm -f *.o check-executable
 EOM
 
 # Perform building and checking
