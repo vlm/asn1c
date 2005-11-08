@@ -46,8 +46,8 @@ main() {
 	check("</", "", XCT_BROKEN);
 	check("/>", "", XCT_BROKEN);
 
-	check("<>", "", XCT_OPENING);
-	check("</>", "", XCT_CLOSING);
+	check("<>", "", XCT_UNKNOWN_OP);
+	check("</>", "", XCT_UNKNOWN_CL);
 
 	check("", "a", XCT_BROKEN);
 	check("<>", "a", XCT_UNKNOWN_OP);

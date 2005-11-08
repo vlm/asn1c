@@ -472,7 +472,7 @@ static ber_tlv_tag_t asn_DEF_c_5_tags[] = {
 static asn_SET_OF_specifics_t asn_SPC_c_5_specs = {
 	sizeof(struct c),
 	offsetof(struct c, _asn_ctx),
-	0,	/* XER encoding is XMLDelimitedItemList */
+	2,	/* XER encoding is XMLValueList */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_c_5 = {

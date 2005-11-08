@@ -51,6 +51,8 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	computed_size += encoding_size;
 	if(!cb) {
 		erval.encoded = computed_size;
+		erval.structure_ptr = 0;
+		erval.failed_type = 0;
 		return erval;
 	}
 
@@ -79,6 +81,8 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 		erval.structure_ptr = ptr;
 	} else {
 		erval.encoded = computed_size;
+		erval.structure_ptr = 0;
+		erval.failed_type = 0;
 	}
 
 	return erval;
@@ -116,8 +120,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
                 if(tmper.encoded == 0 && specs->as_XMLValueList) {
-                        const char *name = (*elm->name)
-                                ? elm->name : elm->type->xml_tag;
+                        const char *name = elm->type->xml_tag;
 			size_t len = strlen(name);
 			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel + 1);
 			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);

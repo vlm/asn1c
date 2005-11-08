@@ -572,7 +572,8 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Restore parsing context.
 	 */
 	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
-
+	if(ctx->phase == 0 && !*xml_tag)
+		ctx->phase = 1;	/* Skip the outer tag checking phase */
 
 	/*
 	 * Phases of XER/XML processing:
@@ -625,6 +626,12 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			/* Fall through */
 		}
 
+		/* No need to wait for closing tag; special mode. */
+		if(ctx->phase == 3 && !*xml_tag) {
+			ctx->phase = 5;	/* Phase out */
+			RETURN(RC_OK);
+		}
+
 		/*
 		 * Get the next part of the XML stream.
 		 */
@@ -644,6 +651,12 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
+		ASN_DEBUG("XER/CHOICE checked [%c%c%c%c] vs [%s], tcv=%d",
+			ch_size>0?((uint8_t *)buf_ptr)[0]:'?',
+			ch_size>1?((uint8_t *)buf_ptr)[1]:'?',
+			ch_size>2?((uint8_t *)buf_ptr)[2]:'?',
+			ch_size>3?((uint8_t *)buf_ptr)[3]:'?',
+		xml_tag, tcv);
 
 		/* Skip the extensions section */
 		if(ctx->phase == 4) {
@@ -739,7 +752,8 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			break;
 		}
 
-		ASN_DEBUG("Unexpected XML tag in CHOICE");
+		ASN_DEBUG("Unexpected XML tag in CHOICE (ph=%d, tag=%s)",
+			ctx->phase, xml_tag);
 		break;
 	}
 
