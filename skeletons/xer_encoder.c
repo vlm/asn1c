@@ -32,6 +32,8 @@ xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 
 	er.encoded = 4 + xcan + (2 * mlen) + tmper.encoded;
 
+	er.structure_ptr = 0;
+	er.failed_type = 0;
 	return er;
 cb_failed:
 	_ASN_ENCODE_FAILED;
