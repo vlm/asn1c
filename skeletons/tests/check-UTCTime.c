@@ -74,6 +74,7 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr, int tag_mode, ber_
 	(void)cb;
 	(void)app_key;
 
+	memset(&erval, 0, sizeof(erval));
 	return erval;
 }
 
@@ -88,5 +89,6 @@ OCTET_STRING_encode_xer_utf8(asn_TYPE_descriptor_t *td, void *ptr, int ilevel, e
 	(void)cb;
 	(void)app_key;
 
+	memset(&erval, 0, sizeof(erval));
 	return erval;
 }

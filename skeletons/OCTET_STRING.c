@@ -639,6 +639,8 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		}
 	}
 
+	er.structure_ptr = 0;
+	er.failed_type = 0;
 	return er;
 cb_failed:
 	_ASN_ENCODE_FAILED;
@@ -779,6 +781,8 @@ OCTET_STRING_encode_xer_utf8(asn_TYPE_descriptor_t *td, void *sptr,
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = encoded_len;
+	er.structure_ptr = 0;
+	er.failed_type = 0;
 	return er;
 }
 
