@@ -446,8 +446,8 @@ CHOICE_outmost_tag(asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	int present;
 
-	assert(tag_mode == 0);
-	assert(tag == 0);
+	assert(tag_mode == 0); (void)tag_mode;
+	assert(tag == 0); (void)tag;
 
 	/*
 	 * Figure out which CHOICE element is encoded.
@@ -652,10 +652,10 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
 		ASN_DEBUG("XER/CHOICE checked [%c%c%c%c] vs [%s], tcv=%d",
-			ch_size>0?((uint8_t *)buf_ptr)[0]:'?',
-			ch_size>1?((uint8_t *)buf_ptr)[1]:'?',
-			ch_size>2?((uint8_t *)buf_ptr)[2]:'?',
-			ch_size>3?((uint8_t *)buf_ptr)[3]:'?',
+			ch_size>0?((const uint8_t *)buf_ptr)[0]:'?',
+			ch_size>1?((const uint8_t *)buf_ptr)[1]:'?',
+			ch_size>2?((const uint8_t *)buf_ptr)[2]:'?',
+			ch_size>3?((const uint8_t *)buf_ptr)[3]:'?',
 		xml_tag, tcv);
 
 		/* Skip the extensions section */
