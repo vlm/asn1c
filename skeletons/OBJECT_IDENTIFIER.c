@@ -332,6 +332,8 @@ OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = OBJECT_IDENTIFIER__dump_body(st, cb, app_key);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
+	er.structure_ptr = 0;
+	er.failed_type = 0;
 	return er;
 }
 
