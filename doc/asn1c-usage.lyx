@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{This document describes 
 \backslash 
-href{http://lionet.info/asn1c}{asn1c-0.9.19}}
+href{http://lionet.info/asn1c}{asn1c-0.9.20}}
 \layout Standard
 
 \backslash 
@@ -451,7 +451,7 @@ The following table summarizes the asn1c command line options.
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="27" columns="2">
+<lyxtabular version="3" rows="26" columns="2">
 <features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -977,7 +977,7 @@ Enable  unnamed  unions  in the definitions of target language's structures.
 \end_inset 
 </cell>
 </row>
-<row topline="true">
+<row topline="true" bottomline="true">
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -996,30 +996,6 @@ Enable  unnamed  unions  in the definitions of target language's structures.
 
 \size small 
 Copy support files rather than symlink them.
-\end_inset 
-</cell>
-</row>
-<row topline="true" bottomline="true">
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\layout Standard
-
-
-\size small 
--ftypes88
-\end_inset 
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\layout Standard
-
-
-\size small 
-Pretend to support only ASN.1:1988 embedded types.
- Certain reserved words, such as UniversalString and BMPString, become ordinary
- type references and may be redefined by the specification.
 \end_inset 
 </cell>
 </row>
