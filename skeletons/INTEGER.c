@@ -24,11 +24,13 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	INTEGER_encode_der,
 	INTEGER_decode_xer,
 	INTEGER_encode_xer,
+	INTEGER_decode_uper,	/* Unaligned PER decoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
 	asn_DEF_INTEGER_tags,	/* Same as above */
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -430,9 +432,102 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = INTEGER__dump(td, st, cb, app_key, 1);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
-	er.structure_ptr = 0;
-	er.failed_type = 0;
-	return er;
+	_ASN_ENCODED_OK(er);
+}
+
+asn_dec_rval_t
+INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rval = { RC_OK, 0 };
+	INTEGER_t *st = (INTEGER_t *)*sptr;
+	asn_per_constraint_t *ct;
+	int repeat;
+
+	(void)opt_codec_ctx;
+
+	if(!st) {
+		st = (INTEGER_t *)(*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) _ASN_DECODE_FAILED;
+	}
+
+	if(!constraints) constraints = td->per_constraints;
+	ct = constraints ? &constraints->value : 0;
+
+	if(ct && ct->flags & APC_EXTENSIBLE) {
+		int inext = per_get_few_bits(pd, 1);
+		if(inext < 0) _ASN_DECODE_FAILED;
+		if(inext) ct = 0;
+	}
+
+	FREEMEM(st->buf);
+	if(ct) {
+		if(ct->flags & APC_SEMI_CONSTRAINED) {
+			st->buf = (uint8_t *)CALLOC(1, 2);
+			if(!st->buf) _ASN_DECODE_FAILED;
+			st->size = 1;
+		} else if(ct->flags & APC_CONSTRAINED && ct->range_bits >= 0) {
+			size_t size = (ct->range_bits + 7) >> 3;
+			st->buf = (uint8_t *)MALLOC(1 + size + 1);
+			if(!st->buf) _ASN_DECODE_FAILED;
+			st->size = size;
+		} else {
+			st->size = 0;
+		}
+	} else {
+		st->size = 0;
+	}
+
+	/* X.691, #12.2.2 */
+	if(ct && ct->flags != APC_UNCONSTRAINED) {
+		/* #10.5.6 */
+		ASN_DEBUG("Integer with range %d bits", ct->range_bits);
+		if(ct->range_bits >= 0) {
+			long value = per_get_few_bits(pd, ct->range_bits);
+			if(value < 0) _ASN_DECODE_FAILED;
+			ASN_DEBUG("Got value %ld + low %ld",
+				value, ct->lower_bound);
+			value += ct->lower_bound;
+			if(asn_long2INTEGER(st, value))
+				_ASN_DECODE_FAILED;
+			return rval;
+		}
+	} else {
+		ASN_DEBUG("Decoding unconstrained integer %s", td->name);
+	}
+
+	/* X.691, #12.2.3, #12.2.4 */
+	do {
+		ssize_t len;
+		void *p;
+		int ret;
+
+		/* Get the PER length */
+		len = uper_get_length(pd, -1, &repeat);
+		if(len < 0) _ASN_DECODE_FAILED;
+
+		p = REALLOC(st->buf, st->size + len + 1);
+		if(!p) _ASN_DECODE_FAILED;
+		st->buf = (uint8_t *)p;
+
+		ret = per_get_many_bits(pd, &st->buf[st->size], 0, 8 * len);
+		if(ret < 0) _ASN_DECODE_FAILED;
+		st->size += len;
+	} while(repeat);
+	st->buf[st->size] = 0;	/* JIC */
+
+	/* #12.2.3 */
+	if(ct && ct->lower_bound) {
+		/*
+		 * TODO: replace by in-place arithmetics.
+		 */
+		long value;
+		if(asn_INTEGER2long(st, &value))
+			_ASN_DECODE_FAILED;
+		if(asn_long2INTEGER(st, value + ct->lower_bound))
+			_ASN_DECODE_FAILED;
+	}
+
+	return rval;
 }
 
 int

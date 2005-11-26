@@ -36,8 +36,12 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	b = buf + buf_offset;
 	bend = b + size;
 	fprintf(stderr, "=> [");
-	for(; b < bend; b++)
-		fprintf(stderr, "%c", *b);
+	for(; b < bend; b++) {
+		if(*b >= 32 && *b < 127 && *b != '%')
+			fprintf(stderr, "%c", *b);
+		else
+			fprintf(stderr, "%%02x", *b);
+	}
 	fprintf(stderr, "]:%ld\n", (long)size);
 	buf_offset += size;
 	return 0;

@@ -1,0 +1,284 @@
+
+/*** <<< INCLUDES [Choice] >>> ***/
+
+#include <RELATIVE-OID.h>
+#include <BIT_STRING.h>
+#include <BOOLEAN.h>
+#include <NULL.h>
+#include <INTEGER.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Choice] >>> ***/
+
+typedef enum Choice_PR {
+	Choice_PR_NOTHING,	/* No components present */
+	Choice_PR_roid,
+	Choice_PR_bitstr,
+	Choice_PR_ch,
+	/* Extensions may appear below */
+	Choice_PR_bool,
+} Choice_PR;
+typedef enum ch_PR {
+	ch_PR_NOTHING,	/* No components present */
+	ch_PR_null,
+	ch_PR_int,
+} ch_PR;
+
+/*** <<< TYPE-DECLS [Choice] >>> ***/
+
+typedef struct Choice {
+	Choice_PR present;
+	union Choice_u {
+		RELATIVE_OID_t	 roid;
+		BIT_STRING_t	 bitstr;
+		struct ch {
+			ch_PR present;
+			union Choice__ch_u {
+				NULL_t	 null;
+				INTEGER_t	 Int;
+			} choice;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} ch;
+		/*
+		 * This type is extensible,
+		 * possible extensions are below.
+		 */
+		BOOLEAN_t	 bool;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Choice_t;
+
+/*** <<< FUNC-DECLS [Choice] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice;
+
+/*** <<< STAT-DEFS [Choice] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_ch_4[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct ch, choice.null),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NULL,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "null"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct ch, choice.Int),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "int"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_ch_tag2el_4[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* int at 20 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 0, 0, 0 } /* null at 18 */
+};
+static asn_CHOICE_specifics_t asn_SPC_ch_specs_4 = {
+	sizeof(struct ch),
+	offsetof(struct ch, _asn_ctx),
+	offsetof(struct ch, present),
+	sizeof(((struct ch *)0)->present),
+	asn_MAP_ch_tag2el_4,
+	2,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_ch_4 = {
+	"ch",
+	"ch",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
+	asn_MBR_ch_4,
+	2,	/* Elements count */
+	&asn_SPC_ch_specs_4	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Choice_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.roid),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (13 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_RELATIVE_OID,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "roid"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.bitstr),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_BIT_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "bitstr"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.ch),
+		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag_mode = 0,
+		.type = &asn_DEF_ch_4,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "ch"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.bool),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_BOOLEAN,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "bool"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_Choice_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 3, 0, 0 }, /* bool at 22 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 2, 0, 0 }, /* int at 20 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 1, 0, 0 }, /* bitstr at 16 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 2, 0, 0 }, /* null at 18 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (13 << 2)), 0, 0, 0 } /* roid at 15 */
+};
+static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
+	sizeof(struct Choice),
+	offsetof(struct Choice, _asn_ctx),
+	offsetof(struct Choice, present),
+	sizeof(((struct Choice *)0)->present),
+	asn_MAP_Choice_tag2el_1,
+	5,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = 3	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_Choice = {
+	"Choice",
+	"Choice",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
+	asn_MBR_Choice_1,
+	4,	/* Elements count */
+	&asn_SPC_Choice_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Choice2] >>> ***/
+
+#include <BIT_STRING.h>
+#include <RELATIVE-OID.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Choice2] >>> ***/
+
+typedef enum Choice2_PR {
+	Choice2_PR_NOTHING,	/* No components present */
+	Choice2_PR_bitstr,
+	Choice2_PR_roid,
+} Choice2_PR;
+
+/*** <<< TYPE-DECLS [Choice2] >>> ***/
+
+typedef struct Choice2 {
+	Choice2_PR present;
+	union Choice2_u {
+		BIT_STRING_t	 bitstr;
+		RELATIVE_OID_t	 roid;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Choice2_t;
+
+/*** <<< FUNC-DECLS [Choice2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice2;
+
+/*** <<< STAT-DEFS [Choice2] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.bitstr),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_BIT_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "bitstr"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.roid),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_RELATIVE_OID,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "roid"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_Choice2_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* bitstr at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* roid at 27 */
+};
+static asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
+	sizeof(struct Choice2),
+	offsetof(struct Choice2, _asn_ctx),
+	offsetof(struct Choice2, present),
+	sizeof(((struct Choice2 *)0)->present),
+	asn_MAP_Choice2_tag2el_1,
+	2,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_Choice2 = {
+	"Choice2",
+	"Choice2",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
+	asn_MBR_Choice2_1,
+	2,	/* Elements count */
+	&asn_SPC_Choice2_specs_1	/* Additional specs */
+};
+

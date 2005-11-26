@@ -1,7 +1,5 @@
 #include "asn1fix_internal.h"
 
-#define	AFT_MAGIC_ANY	1	/* _fetch_tag() flag */
-
 static int _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v);
 static int _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b);
 static int _asn1f_fix_type_tag(arg_t *arg, asn1p_expr_t *expr);
@@ -337,6 +335,7 @@ asn1f_check_constr_tags_distinct(arg_t *arg) {
 	case ASN_CONSTR_SEQUENCE:
 	case ASN_CONSTR_SET:
 	case ASN_CONSTR_CHOICE:
+		DEBUG("Checking tags of members of constructed types");
 		break;
 	default:
 		return 0;
@@ -353,6 +352,8 @@ asn1f_check_constr_tags_distinct(arg_t *arg) {
 		if(expr->expr_type != ASN_CONSTR_SEQUENCE || v->marker.flags) {
 			asn1p_expr_t *nv;
 			for(nv = v; (nv = TQ_NEXT(nv, next));) {
+				DEBUG("S/C comparing tags %s s. %s",
+					v->Identifier, nv->Identifier);
 				if(_asn1f_compare_tags(arg, v, nv))
 					r_value = -1;
 				if(expr->expr_type == ASN_CONSTR_SEQUENCE
@@ -404,12 +405,15 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 	int ra, rb;
 	int ret;
 
-	ra = asn1f_fetch_outmost_tag(arg->asn, arg->mod, a, &ta, AFT_MAGIC_ANY);
-	rb = asn1f_fetch_outmost_tag(arg->asn, arg->mod, b, &tb, AFT_MAGIC_ANY);
+	ra = asn1f_fetch_outmost_tag(arg->asn, arg->mod, a,
+			&ta, AFT_IMAGINARY_ANY);
+	rb = asn1f_fetch_outmost_tag(arg->asn, arg->mod, b,
+			&tb, AFT_IMAGINARY_ANY);
 
 	/*
 	 * If both tags are explicitly or implicitly given, use them.
 	 */
+	DEBUG("Fetching outmost tags: %d, %d", ra, rb);
 	if(ra == 0 && rb == 0) {
 		/*
 		 * Simple case: fetched both tags.

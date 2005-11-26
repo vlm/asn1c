@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_ASN_CODECS_H_
@@ -61,6 +62,11 @@ typedef struct asn_enc_rval_s {
 	tmp_error.structure_ptr = sptr;				\
 	return tmp_error;					\
 } while(0)
+#define	_ASN_ENCODED_OK(rval) do {				\
+	rval.structure_ptr = 0;					\
+	rval.failed_type = 0;					\
+	return rval;						\
+} while(0)
 
 /*
  * Type of the return value of the decoding functions (ber_decode, xer_decode)
@@ -79,6 +85,12 @@ typedef struct asn_dec_rval_s {
 	enum asn_dec_rval_code_e code;	/* Result code */
 	size_t consumed;		/* Number of bytes consumed */
 } asn_dec_rval_t;
+#define	_ASN_DECODE_FAILED do {					\
+	asn_dec_rval_t tmp_error;				\
+	tmp_error.code = RC_FAIL;				\
+	tmp_error.consumed = 0;					\
+	return tmp_error;					\
+} while(0)
 
 #ifdef __cplusplus
 }

@@ -23,6 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	OCTET_STRING_encode_der,
 	UniversalString_decode_xer,	/* Convert from UTF-8 */
 	UniversalString_encode_xer,	/* Convert into UTF-8 */
+	0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
@@ -30,6 +31,7 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
 	  / sizeof(asn_DEF_UniversalString_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -167,7 +169,7 @@ UniversalString_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = UniversalString__dump(st, cb, app_key);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
-	return er;
+	_ASN_ENCODED_OK(er);
 }
 
 int

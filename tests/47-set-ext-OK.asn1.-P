@@ -43,28 +43,30 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "i"
 		},
 };
-static ber_tlv_tag_t asn_DEF_T1_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_T1_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T1_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 14 */
 };
-static uint8_t asn_MAP_T1_1_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_T1_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
 };
-static asn_SET_specifics_t asn_SPC_T1_1_specs = {
+static asn_SET_specifics_t asn_SPC_T1_specs_1 = {
 	sizeof(struct T1),
 	offsetof(struct T1, _asn_ctx),
 	offsetof(struct T1, _presence_map),
-	asn_MAP_T1_1_tag2el,
+	asn_MAP_T1_tag2el_1,
 	1,	/* Count of tags in the map */
-	asn_MAP_T1_1_tag2el,	/* Same as above */
+	asn_MAP_T1_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_MAP_T1_1_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_T1_mmap_1	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
@@ -76,16 +78,18 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T1_1_tags,
-	sizeof(asn_DEF_T1_1_tags)
-		/sizeof(asn_DEF_T1_1_tags[0]), /* 1 */
-	asn_DEF_T1_1_tags,	/* Same as above */
-	sizeof(asn_DEF_T1_1_tags)
-		/sizeof(asn_DEF_T1_1_tags[0]), /* 1 */
+	asn_DEF_T1_tags_1,
+	sizeof(asn_DEF_T1_tags_1)
+		/sizeof(asn_DEF_T1_tags_1[0]), /* 1 */
+	asn_DEF_T1_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T1_tags_1)
+		/sizeof(asn_DEF_T1_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_T1_1,
 	1,	/* Elements count */
-	&asn_SPC_T1_1_specs	/* Additional specs */
+	&asn_SPC_T1_specs_1	/* Additional specs */
 };
 
 
@@ -133,28 +137,30 @@ static asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "i"
 		},
 };
-static ber_tlv_tag_t asn_DEF_T2_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_T2_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T2_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 15 */
 };
-static uint8_t asn_MAP_T2_1_mmap[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_T2_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
 };
-static asn_SET_specifics_t asn_SPC_T2_1_specs = {
+static asn_SET_specifics_t asn_SPC_T2_specs_1 = {
 	sizeof(struct T2),
 	offsetof(struct T2, _asn_ctx),
 	offsetof(struct T2, _presence_map),
-	asn_MAP_T2_1_tag2el,
+	asn_MAP_T2_tag2el_1,
 	1,	/* Count of tags in the map */
-	asn_MAP_T2_1_tag2el,	/* Same as above */
+	asn_MAP_T2_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_MAP_T2_1_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_T2_mmap_1	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_T2 = {
 	"T2",
@@ -166,16 +172,18 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T2_1_tags,
-	sizeof(asn_DEF_T2_1_tags)
-		/sizeof(asn_DEF_T2_1_tags[0]), /* 1 */
-	asn_DEF_T2_1_tags,	/* Same as above */
-	sizeof(asn_DEF_T2_1_tags)
-		/sizeof(asn_DEF_T2_1_tags[0]), /* 1 */
+	asn_DEF_T2_tags_1,
+	sizeof(asn_DEF_T2_tags_1)
+		/sizeof(asn_DEF_T2_tags_1[0]), /* 1 */
+	asn_DEF_T2_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T2_tags_1)
+		/sizeof(asn_DEF_T2_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_T2_1,
 	1,	/* Elements count */
-	&asn_SPC_T2_1_specs	/* Additional specs */
+	&asn_SPC_T2_specs_1	/* Additional specs */
 };
 
 
@@ -220,20 +228,23 @@ static asn_TYPE_member_t asn_MBR_T3_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "i"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_T3_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T3_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 16 */
 };
-static asn_CHOICE_specifics_t asn_SPC_T3_1_specs = {
+static asn_CHOICE_specifics_t asn_SPC_T3_specs_1 = {
 	sizeof(struct T3),
 	offsetof(struct T3, _asn_ctx),
 	offsetof(struct T3, present),
 	sizeof(((struct T3 *)0)->present),
-	asn_MAP_T3_1_tag2el,
+	asn_MAP_T3_tag2el_1,
 	1,	/* Count of tags in the map */
-	1	/* Whether extensible */
+	.canonical_order = 0,
+	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T3 = {
 	"T3",
@@ -245,14 +256,16 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
 	asn_MBR_T3_1,
 	1,	/* Elements count */
-	&asn_SPC_T3_1_specs	/* Additional specs */
+	&asn_SPC_T3_specs_1	/* Additional specs */
 };
 
 
@@ -297,20 +310,23 @@ static asn_TYPE_member_t asn_MBR_T4_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "i"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_T4_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_T4_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* i at 17 */
 };
-static asn_CHOICE_specifics_t asn_SPC_T4_1_specs = {
+static asn_CHOICE_specifics_t asn_SPC_T4_specs_1 = {
 	sizeof(struct T4),
 	offsetof(struct T4, _asn_ctx),
 	offsetof(struct T4, present),
 	sizeof(((struct T4 *)0)->present),
-	asn_MAP_T4_1_tag2el,
+	asn_MAP_T4_tag2el_1,
 	1,	/* Count of tags in the map */
-	1	/* Whether extensible */
+	.canonical_order = 0,
+	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T4 = {
 	"T4",
@@ -322,13 +338,15 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
 	asn_MBR_T4_1,
 	1,	/* Elements count */
-	&asn_SPC_T4_1_specs	/* Additional specs */
+	&asn_SPC_T4_specs_1	/* Additional specs */
 };
 

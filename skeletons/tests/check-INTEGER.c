@@ -6,6 +6,7 @@
 #include <der_encoder.c>
 #include <xer_decoder.c>
 #include <xer_support.c>
+#include <per_support.c>
 #include <constraints.c>
 
 static char *shared_scratch_start;

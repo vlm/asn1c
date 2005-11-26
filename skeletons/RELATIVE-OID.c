@@ -25,6 +25,7 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	der_encode_primitive,
 	RELATIVE_OID_decode_xer,
 	RELATIVE_OID_encode_xer,
+	0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_RELATIVE_OID_tags,
 	sizeof(asn_DEF_RELATIVE_OID_tags)
@@ -32,6 +33,7 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	asn_DEF_RELATIVE_OID_tags,	/* Same as above */
 	sizeof(asn_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn_DEF_RELATIVE_OID_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -156,9 +158,7 @@ RELATIVE_OID_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = RELATIVE_OID__dump_body(st, cb, app_key);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
-	er.structure_ptr = 0;
-	er.failed_type = 0;
-	return er;
+	_ASN_ENCODED_OK(er);
 }
 
 int

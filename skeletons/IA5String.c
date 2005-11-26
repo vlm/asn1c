@@ -22,6 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_IA5String = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
+	0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_IA5String_tags,
 	sizeof(asn_DEF_IA5String_tags)
@@ -29,6 +30,7 @@ asn_TYPE_descriptor_t asn_DEF_IA5String = {
 	asn_DEF_IA5String_tags,
 	sizeof(asn_DEF_IA5String_tags)
 	  / sizeof(asn_DEF_IA5String_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

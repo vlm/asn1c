@@ -28,7 +28,7 @@ typedef struct asn_INTEGER_specifics_s {
 	asn_INTEGER_enum_map_t *value2enum;	/* N -> "tag"; sorted by N */
 	unsigned int *enum2value;		/* "tag" => N; sorted by tag */
 	int map_count;				/* Elements in either map */
-	int extensible;				/* This map is extensible */
+	int extension;				/* This map is extensible */
 	int strict_enumeration;			/* Enumeration set is fixed */
 } asn_INTEGER_specifics_t;
 
@@ -37,6 +37,7 @@ ber_type_decoder_f INTEGER_decode_ber;
 der_type_encoder_f INTEGER_encode_der;
 xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
+per_type_decoder_f INTEGER_decode_uper;
 
 /***********************************
  * Some handy conversion routines. *

@@ -1,0 +1,30 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .95
+
+ModuleCHOICE-PER-Ordering
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 95 }
+	DEFINITIONS ::=
+BEGIN
+
+	Choice ::= CHOICE {
+		roid	RELATIVE-OID,
+		bitstr	BIT STRING,
+		ch	CHOICE {
+				null	NULL,
+				int	INTEGER
+			},
+		...,
+		bool	BOOLEAN
+	}
+
+	Choice2 ::= CHOICE {
+		bitstr	[0] BIT STRING,
+		roid	[1] RELATIVE-OID
+	}
+
+END

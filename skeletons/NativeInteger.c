@@ -28,11 +28,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
+	NativeInteger_decode_uper,	/* Unaligned PER decoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
 	asn_DEF_NativeInteger_tags,	/* Same as above */
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -108,18 +110,6 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		}
 
 		*native = l;
-
-		/*
-		 * Note that native integer size might be other than long.
-		 * This expression hopefully will be optimized away
-		 * by compiler.
-		 */
-		if(sizeof(*native) != sizeof(long) && ((long)*native != l)) {
-			*native = 0;	/* Safe value */
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
 	}
 
 	rval.code = RC_OK;
@@ -176,38 +166,25 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 	asn_dec_rval_t rval;
-	INTEGER_t *st = 0;
+	INTEGER_t st;
 	void *st_ptr = (void *)&st;
 	long *native = (long *)*sptr;
 
 	if(!native) {
-		*sptr = CALLOC(1, sizeof(int));
-		native = (long *)*sptr;
-		if(!native) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
+		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
+		if(!native) _ASN_DECODE_FAILED;
 	}
 
-	rval = INTEGER_decode_xer(opt_codec_ctx, td, (void **)st_ptr, 
+	memset(&st, 0, sizeof(st));
+	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr, 
 		opt_mname, buf_ptr, size);
 	if(rval.code == RC_OK) {
 		long l;
-		if(asn_INTEGER2long(st, &l)) {
+		if(asn_INTEGER2long(&st, &l)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
 		} else {
 			*native = l;
-
-			/* Native type might be shorter than long */
-			if(sizeof(*native) != sizeof(long)
-					&& ((long)*native != l)) {
-				*native = 0;	/* Safe value */
-				rval.code = RC_FAIL;
-				rval.consumed = 0;
-				return rval;
-			}
 		}
 	} else {
 		/*
@@ -217,7 +194,7 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		 */
 		rval.consumed = 0;
 	}
-	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, st, 0);
+	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, &st, 1);
 	return rval;
 }
 
@@ -240,7 +217,39 @@ NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		|| cb(scratch, er.encoded, app_key) < 0)
 		_ASN_ENCODE_FAILED;
 
-	return er;
+	_ASN_ENCODED_OK(er);
+}
+
+asn_dec_rval_t
+NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+
+	asn_dec_rval_t rval;
+	long *native = (long *)*sptr;
+	INTEGER_t tmpint;
+	void *tmpintptr = &tmpint;
+
+	(void)opt_codec_ctx;
+	ASN_DEBUG("Decoding NativeInteger %s (UPER)", td->name);
+
+	if(!native) {
+		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
+		if(!native) _ASN_DECODE_FAILED;
+	}
+
+	memset(&tmpint, 0, sizeof tmpint);
+	rval = INTEGER_decode_uper(opt_codec_ctx, td, constraints,
+				   &tmpintptr, pd);
+	if(rval.code == RC_OK)
+		if(asn_INTEGER2long(&tmpint, native))
+			rval.code = RC_FAIL;
+		else
+			ASN_DEBUG("NativeInteger %s got value %ld",
+				td->name, *native);
+	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, &tmpint, 1);
+
+	return rval;
 }
 
 /*

@@ -19,6 +19,9 @@ static asn_OCTET_STRING_specifics_t asn_DEF_OCTET_STRING_specs = {
 	offsetof(OCTET_STRING_t, _asn_ctx),
 	0
 };
+static asn_per_constraint_t asn_DEF_OCTET_STRING_constraint = {
+	APC_SEMI_CONSTRAINED, -1, 0, 0, 0
+};
 asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	"OCTET STRING",		/* Canonical name */
 	"OCTET_STRING",		/* XML tag name */
@@ -29,6 +32,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,
+	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OCTET_STRING_tags,
 	sizeof(asn_DEF_OCTET_STRING_tags)
@@ -36,6 +40,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	asn_DEF_OCTET_STRING_tags,	/* Same as above */
 	sizeof(asn_DEF_OCTET_STRING_tags)
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	&asn_DEF_OCTET_STRING_specs
 };
@@ -61,9 +66,10 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 
 #undef	RETURN
 #define	RETURN(_code)	do {						\
-		rval.code = _code;					\
-		rval.consumed = consumed_myself;			\
-		return rval;						\
+		asn_dec_rval_t tmprval;					\
+		tmprval.code = _code;					\
+		tmprval.consumed = consumed_myself;			\
+		return tmprval;						\
 	} while(0)
 
 #undef	APPEND
@@ -167,11 +173,11 @@ _new_stack() {
 asn_dec_rval_t
 OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
-	void **os_structure, const void *buf_ptr, size_t size, int tag_mode) {
+	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
 	asn_OCTET_STRING_specifics_t *specs = td->specifics
 				? (asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_DEF_OCTET_STRING_specs;
-	BIT_STRING_t *st = (BIT_STRING_t *)*os_structure;
+	BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
 	asn_dec_rval_t rval;
 	asn_struct_ctx_t *ctx;
 	ssize_t consumed_myself = 0;
@@ -190,10 +196,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	 * Create the string if does not exist.
 	 */
 	if(st == NULL) {
-		*os_structure = CALLOC(1, specs->struct_size);
-		st = (BIT_STRING_t *)*os_structure;
-		if(st == NULL)
-			RETURN(RC_FAIL);
+		st = (BIT_STRING_t *)(*sptr = CALLOC(1, specs->struct_size));
+		if(st == NULL) RETURN(RC_FAIL);
 	}
 
 	/* Restore parsing context */
@@ -549,9 +553,7 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!cb) {
 		er.encoded += (type_variant == _TT_BIT_STRING) + st->size;
-		er.structure_ptr = 0;
-		er.failed_type = 0;
-		return er;
+		_ASN_ENCODED_OK(er);
 	}
 
 	/*
@@ -574,9 +576,7 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	er.encoded += st->size;
-	er.structure_ptr = 0;
-	er.failed_type = 0;
-	return er;
+	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }
@@ -639,9 +639,7 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		}
 	}
 
-	er.structure_ptr = 0;
-	er.failed_type = 0;
-	return er;
+	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }
@@ -781,9 +779,7 @@ OCTET_STRING_encode_xer_utf8(asn_TYPE_descriptor_t *td, void *sptr,
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = encoded_len;
-	er.structure_ptr = 0;
-	er.failed_type = 0;
-	return er;
+	_ASN_ENCODED_OK(er);
 }
 
 /*
@@ -1200,6 +1196,99 @@ OCTET_STRING_decode_xer_utf8(asn_codec_ctx_t *opt_codec_ctx,
 		OCTET_STRING__convert_entrefs);
 }
 
+asn_dec_rval_t
+OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+	void **sptr, asn_per_data_t *pd) {
+
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+		? (asn_OCTET_STRING_specifics_t *)td->specifics
+		: &asn_DEF_OCTET_STRING_specs;
+	asn_per_constraint_t *ct = constraints ? &constraints->size
+				: (td->per_constraints
+					? &td->per_constraints->size
+					: &asn_DEF_OCTET_STRING_constraint);
+	asn_dec_rval_t rval = { RC_OK, 0 };
+	BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
+	ssize_t consumed_myself = 0;
+	int repeat;
+	int unit_bits = (specs->subvariant != 1) * 7 + 1;
+
+	(void)opt_codec_ctx;
+
+	/*
+	 * Allocate the string.
+	 */
+	if(!st) {
+		st = (BIT_STRING_t *)(*sptr = CALLOC(1, specs->struct_size));
+		if(!st) RETURN(RC_FAIL);
+	}
+
+	if(ct->flags & APC_EXTENSIBLE) {
+		int inext = per_get_few_bits(pd, 1);
+		if(inext < 0) RETURN(RC_FAIL);
+		if(inext) ct = &asn_DEF_OCTET_STRING_constraint;
+		consumed_myself = 0;
+	}
+
+	if(ct->effective_bits >= 0
+	&& (!st->buf || st->size < ct->upper_bound)) {
+		FREEMEM(st->buf);
+		if(unit_bits == 1) {
+			st->size = (ct->upper_bound + 7) >> 3;
+		} else {
+			st->size = ct->upper_bound;
+		}
+		st->buf = (uint8_t *)MALLOC(st->size + 1);
+		if(!st->buf) { st->size = 0; RETURN(RC_FAIL); }
+	}
+
+	/* X.691, #16.5: zero-length encoding */
+	/* X.691, #16.6: short fixed length encoding (up to 2 octets) */
+	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
+	if(ct->effective_bits == 0) {
+		int ret = per_get_many_bits(pd, st->buf, 0,
+					    unit_bits * ct->upper_bound);
+		if(ret < 0) RETURN(RC_FAIL);
+		consumed_myself += unit_bits * ct->upper_bound;
+		st->buf[st->size] = 0;
+		if(unit_bits == 1 && (ct->upper_bound & 0x7))
+			st->bits_unused = 8 - (ct->upper_bound & 0x7);
+		RETURN(RC_OK);
+	}
+
+	st->size = 0;
+	do {
+		ssize_t len_bytes;
+		ssize_t len_bits;
+		void *p;
+		int ret;
+
+		/* Get the PER length */
+		len_bits = uper_get_length(pd, ct->effective_bits, &repeat);
+		if(len_bits < 0) RETURN(RC_FAIL);
+
+		if(unit_bits == 1) {
+			len_bytes = (len_bits + 7) >> 3;
+			if(len_bits & 0x7)
+				st->bits_unused = 8 - (len_bits & 0x7);
+			/* len_bits be multiple of 16K if repeat is set */
+		} else {
+			len_bytes = len_bits;
+			len_bits = len_bytes << 3;
+		}
+		p = REALLOC(st->buf, st->size + len_bytes + 1);
+		if(!p) RETURN(RC_FAIL);
+		st->buf = (uint8_t *)p;
+
+		ret = per_get_many_bits(pd, &st->buf[st->size], 0, len_bits);
+		if(ret < 0) RETURN(RC_FAIL);
+		st->size += len_bytes;
+	} while(repeat);
+	st->buf[st->size] = 0;	/* nul-terminate */
+
+	return rval;
+}
 
 int
 OCTET_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,

@@ -52,6 +52,8 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.b),
@@ -59,6 +61,8 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "b"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice, choice.c),
@@ -66,25 +70,28 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Choice,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "c"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Choice_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Choice_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (123 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Choice_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Choice_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a at 15 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* b at 17 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* c at 19 */
 };
-static asn_CHOICE_specifics_t asn_SPC_Choice_1_specs = {
+static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	sizeof(struct Choice),
 	offsetof(struct Choice, _asn_ctx),
 	offsetof(struct Choice, present),
 	sizeof(((struct Choice *)0)->present),
-	asn_MAP_Choice_1_tag2el,
+	asn_MAP_Choice_tag2el_1,
 	3,	/* Count of tags in the map */
-	1	/* Whether extensible */
+	.canonical_order = 0,
+	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice = {
 	"Choice",
@@ -96,15 +103,17 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	CHOICE_outmost_tag,
-	asn_DEF_Choice_1_tags,
-	sizeof(asn_DEF_Choice_1_tags)
-		/sizeof(asn_DEF_Choice_1_tags[0]), /* 1 */
-	asn_DEF_Choice_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Choice_1_tags)
-		/sizeof(asn_DEF_Choice_1_tags[0]), /* 1 */
+	asn_DEF_Choice_tags_1,
+	sizeof(asn_DEF_Choice_tags_1)
+		/sizeof(asn_DEF_Choice_tags_1[0]), /* 1 */
+	asn_DEF_Choice_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Choice_tags_1)
+		/sizeof(asn_DEF_Choice_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Choice_1,
 	3,	/* Elements count */
-	&asn_SPC_Choice_1_specs	/* Additional specs */
+	&asn_SPC_Choice_specs_1	/* Additional specs */
 };
 

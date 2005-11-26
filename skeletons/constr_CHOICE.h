@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_CONSTR_CHOICE_H_
@@ -26,10 +27,13 @@ typedef struct asn_CHOICE_specifics_s {
 	asn_TYPE_tag2member_t *tag2el;
 	int tag2el_count;
 
+	/* Canonical ordering of CHOICE elements, for PER */
+	int *canonical_order;
+
 	/*
 	 * Extensions-related stuff.
 	 */
-	int extensible;			/* Whether CHOICE is extensible */
+	int ext_start;		/* First member of extensions, or -1 */
 } asn_CHOICE_specifics_t;
 
 /*
@@ -42,6 +46,7 @@ ber_type_decoder_f CHOICE_decode_ber;
 der_type_encoder_f CHOICE_encode_der;
 xer_type_decoder_f CHOICE_decode_xer;
 xer_type_encoder_f CHOICE_encode_xer;
+per_type_decoder_f CHOICE_decode_uper;
 asn_outmost_tag_f CHOICE_outmost_tag;
 
 #ifdef __cplusplus

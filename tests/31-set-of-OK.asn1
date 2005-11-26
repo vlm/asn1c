@@ -37,4 +37,6 @@ BEGIN
 			-- not to the SET OF's embedded SEQUENCE!
 		}
 
+	SSS ::= SEQUENCE OF SET OF SEQUENCE OF BIT STRING
+
 END

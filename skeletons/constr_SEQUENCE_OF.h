@@ -21,6 +21,7 @@ extern "C" {
 #define	SEQUENCE_OF_constraint	SET_OF_constraint
 #define	SEQUENCE_OF_decode_ber	SET_OF_decode_ber
 #define	SEQUENCE_OF_decode_xer	SET_OF_decode_xer
+#define	SEQUENCE_OF_decode_uper	SET_OF_decode_uper
 der_type_encoder_f SEQUENCE_OF_encode_der;
 xer_type_encoder_f SEQUENCE_OF_encode_xer;
 

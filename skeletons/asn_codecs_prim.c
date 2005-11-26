@@ -119,9 +119,7 @@ der_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	erval.encoded += st->size;
-	erval.structure_ptr = 0;
-	erval.failed_type = 0;
-	return erval;
+	_ASN_ENCODED_OK(erval);
 }
 
 void

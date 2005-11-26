@@ -18,6 +18,9 @@
 	if((flags & AFT_FETCH_OUTMOST)) return count;			\
 } while(0)
 
+/* X.691, #22.2 */
+static int asn1f_fetch_minimal_choice_root_tag(arg_t *arg, struct asn1p_type_tag_s *tag, enum asn1f_aft_flags_e flags);
+
 static int
 asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int skip, enum asn1f_aft_flags_e flags) {
 	asn1p_expr_t *expr = arg->expr;
@@ -44,9 +47,13 @@ asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int
 			if(expr->expr_type == ASN_TYPE_ANY
 				&& (flags & AFT_IMAGINARY_ANY))
 				tt.tag_value = -1;
-			else if(expr->expr_type == ASN_CONSTR_CHOICE)
-				return count ? count : -1;
-			else
+			else if(expr->expr_type != ASN_CONSTR_CHOICE)
+				return -1;
+			else if(count) return count;
+			else if((flags & AFT_CANON_CHOICE) == 0)
+				return -1;
+			else if(asn1f_fetch_minimal_choice_root_tag(arg,
+					&tt, flags))
 				return -1;
 		}
 		ADD_TAG(skip, tt);
@@ -55,6 +62,7 @@ asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int
 
 	if(expr->meta_type == AMT_TYPEREF) {
 		asn1p_expr_t *nexpr;
+		DEBUG("Following the reference %s", expr->Identifier);
 		nexpr = asn1f_lookup_symbol(arg, expr->module, expr->reference);
 		if(nexpr == NULL) {
 			if(errno != EEXIST)	/* -fknown-extern-type */
@@ -87,18 +95,52 @@ asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int
 		return count;
 	}
 
+	DEBUG("No tags discovered for type %d", expr->expr_type);
+
 	return -1;
 }
 
+static int
+asn1f_fetch_minimal_choice_root_tag(arg_t *arg, struct asn1p_type_tag_s *tag, enum asn1f_aft_flags_e flags) {
+	struct asn1p_type_tag_s min_tag;
+	asn1p_expr_t *v;
+
+	memset(&min_tag, 0, sizeof(min_tag));
+	min_tag.tag_class = TC_PRIVATE + 1;
+
+	TQ_FOR(v, &(arg->expr->members), next) {
+		arg_t tmparg = *arg;
+		struct asn1p_type_tag_s *tags = 0;
+		int count;
+
+		if(v->expr_type == A1TC_EXTENSIBLE)
+			break;	/* Search only within extension root */
+
+		tmparg.expr = v;
+		count  = asn1f_fetch_tags_impl(&tmparg, &tags, 0, 0, flags);
+		if(count <= 0) continue;
+
+		if(tags[0].tag_class < min_tag.tag_class)
+			min_tag = tags[0];
+		else if(tags[0].tag_class == min_tag.tag_class
+			&& tags[0].tag_value < min_tag.tag_value)
+				min_tag = tags[0];
+		free(tags);
+	}
+
+	if(min_tag.tag_class == TC_PRIVATE + 1)
+		return -1;
+	else
+		*tag = min_tag;
+	return 0;
+}
 
 int
-asn1f_fetch_outmost_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, int _aft_imaginary_any) {
+asn1f_fetch_outmost_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, enum asn1f_aft_flags_e flags) {
 	struct asn1p_type_tag_s *tags;
-	enum asn1f_aft_flags_e flags;
 	int count;
 
-	flags = AFT_FETCH_OUTMOST;
-	flags |= AFT_IMAGINARY_ANY * _aft_imaginary_any;
+	flags |= AFT_FETCH_OUTMOST;
 
 	count = asn1f_fetch_tags(asn, mod, expr, &tags, flags);
 	if(count <= 0) return count;

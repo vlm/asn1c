@@ -30,6 +30,7 @@ xer_type_decoder_f OCTET_STRING_decode_xer_binary;	/* 01010111010 */
 xer_type_decoder_f OCTET_STRING_decode_xer_utf8;	/* ASCII/UTF-8 */
 xer_type_encoder_f OCTET_STRING_encode_xer;
 xer_type_encoder_f OCTET_STRING_encode_xer_utf8;
+per_type_decoder_f OCTET_STRING_decode_uper;
 
 /******************************
  * Handy conversion routines. *

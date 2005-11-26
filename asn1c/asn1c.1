@@ -4,7 +4,7 @@ asn1c \- ASN.1 Compiler
 .SH SYNOPSIS
 asn1c [\fB\-E\fR [\fB-F\fR] | \fB\-P\fR | \fB\-R\fR]
       [\fB\-S\fR\fIdir\fR] [\fB-X\fR]
-      [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR...] [\fB\-p\fR\fIrint-\fR...]
+      [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR] [\fB\-gen-\fR\fIoption\fR] [\fB\-print-\fR\fIoption\fR]
       \fIinfile\fR...
 .SH DESCRIPTION
 asn1c compiles the ASN.1 specifications into the set of
@@ -25,7 +25,11 @@ and other encoding standards.
 .br
 \fB\-fall-defs-global \-fbless-SIZE \-fcompound-names \-findirect-choice
 .BI "\-fknown-extern-type="<name>
-\fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions \-fskeletons-copy \-ftypes88\fR
+\fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions \-fskeletons-copy
+.TP
+\fICodecs Generation Options\fR
+.br
+.B \-gen-PER
 .TP
 \fIOutput Options\fR
 .br
@@ -117,11 +121,10 @@ Enable unnamed unions in the definitions of target language's structures.
 .TP
 .B \-fskeletons-copy
 Copy support files (skeletons) rather than symlink them.
+.SH CODECS GENERATION OPTIONS
 .TP
-.B \-ftypes88
-Pretend to support only ASN.1:1988 embedded types. Certain reserved words,
-such as UniversalString and BMPString, become ordinary type references
-and may be redefined by the specification.
+.B \-gen-PER
+Generate Packed Encoding Rules (PER) support code.
 .SH OUTPUT OPTIONS
 .TP
 .B \-print-constraints

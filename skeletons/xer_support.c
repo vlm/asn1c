@@ -4,11 +4,7 @@
  * 	All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#include <errno.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-
+#include <asn_system.h>
 #include <xer_support.h>
 
 /* Parser states */
