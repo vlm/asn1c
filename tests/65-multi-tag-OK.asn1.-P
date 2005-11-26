@@ -40,6 +40,9 @@ T1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T2.der_encoder;
 	td->xer_decoder    = asn_DEF_T2.xer_decoder;
 	td->xer_encoder    = asn_DEF_T2.xer_encoder;
+	td->uper_decoder   = asn_DEF_T2.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_T2.per_constraints;
 	td->elements       = asn_DEF_T2.elements;
 	td->elements_count = asn_DEF_T2.elements_count;
 	td->specifics      = asn_DEF_T2.specifics;
@@ -92,13 +95,13 @@ T1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T1] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T1_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T1_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
 };
-static ber_tlv_tag_t asn_DEF_T1_1_all_tags[] = {
+static ber_tlv_tag_t asn_DEF_T1_all_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
@@ -116,13 +119,15 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	T1_encode_der,
 	T1_decode_xer,
 	T1_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T1_1_tags,
-	sizeof(asn_DEF_T1_1_tags)
-		/sizeof(asn_DEF_T1_1_tags[0]), /* 4 */
-	asn_DEF_T1_1_all_tags,
-	sizeof(asn_DEF_T1_1_all_tags)
-		/sizeof(asn_DEF_T1_1_all_tags[0]), /* 6 */
+	asn_DEF_T1_tags_1,
+	sizeof(asn_DEF_T1_tags_1)
+		/sizeof(asn_DEF_T1_tags_1[0]), /* 4 */
+	asn_DEF_T1_all_tags_1,
+	sizeof(asn_DEF_T1_all_tags_1)
+		/sizeof(asn_DEF_T1_all_tags_1[0]), /* 6 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -169,6 +174,9 @@ T2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T3.der_encoder;
 	td->xer_decoder    = asn_DEF_T3.xer_decoder;
 	td->xer_encoder    = asn_DEF_T3.xer_encoder;
+	td->uper_decoder   = asn_DEF_T3.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_T3.per_constraints;
 	td->elements       = asn_DEF_T3.elements;
 	td->elements_count = asn_DEF_T3.elements_count;
 	td->specifics      = asn_DEF_T3.specifics;
@@ -221,12 +229,12 @@ T2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T2] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T2_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T2_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
 };
-static ber_tlv_tag_t asn_DEF_T2_1_all_tags[] = {
+static ber_tlv_tag_t asn_DEF_T2_all_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (5 << 2)),
@@ -243,13 +251,15 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	T2_encode_der,
 	T2_decode_xer,
 	T2_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T2_1_tags,
-	sizeof(asn_DEF_T2_1_tags)
-		/sizeof(asn_DEF_T2_1_tags[0]), /* 3 */
-	asn_DEF_T2_1_all_tags,
-	sizeof(asn_DEF_T2_1_all_tags)
-		/sizeof(asn_DEF_T2_1_all_tags[0]), /* 5 */
+	asn_DEF_T2_tags_1,
+	sizeof(asn_DEF_T2_tags_1)
+		/sizeof(asn_DEF_T2_tags_1[0]), /* 3 */
+	asn_DEF_T2_all_tags_1,
+	sizeof(asn_DEF_T2_all_tags_1)
+		/sizeof(asn_DEF_T2_all_tags_1[0]), /* 5 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -296,6 +306,9 @@ T3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T4.der_encoder;
 	td->xer_decoder    = asn_DEF_T4.xer_decoder;
 	td->xer_encoder    = asn_DEF_T4.xer_encoder;
+	td->uper_decoder   = asn_DEF_T4.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_T4.per_constraints;
 	td->elements       = asn_DEF_T4.elements;
 	td->elements_count = asn_DEF_T4.elements_count;
 	td->specifics      = asn_DEF_T4.specifics;
@@ -348,11 +361,11 @@ T3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T3] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T3_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T3_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2))
 };
-static ber_tlv_tag_t asn_DEF_T3_1_all_tags[] = {
+static ber_tlv_tag_t asn_DEF_T3_all_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
@@ -368,13 +381,15 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	T3_encode_der,
 	T3_decode_xer,
 	T3_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T3_1_tags,
-	sizeof(asn_DEF_T3_1_tags)
-		/sizeof(asn_DEF_T3_1_tags[0]), /* 2 */
-	asn_DEF_T3_1_all_tags,
-	sizeof(asn_DEF_T3_1_all_tags)
-		/sizeof(asn_DEF_T3_1_all_tags[0]), /* 4 */
+	asn_DEF_T3_tags_1,
+	sizeof(asn_DEF_T3_tags_1)
+		/sizeof(asn_DEF_T3_tags_1[0]), /* 2 */
+	asn_DEF_T3_all_tags_1,
+	sizeof(asn_DEF_T3_all_tags_1)
+		/sizeof(asn_DEF_T3_all_tags_1[0]), /* 4 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -421,6 +436,9 @@ T4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T5.der_encoder;
 	td->xer_decoder    = asn_DEF_T5.xer_decoder;
 	td->xer_encoder    = asn_DEF_T5.xer_encoder;
+	td->uper_decoder   = asn_DEF_T5.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_T5.per_constraints;
 	td->elements       = asn_DEF_T5.elements;
 	td->elements_count = asn_DEF_T5.elements_count;
 	td->specifics      = asn_DEF_T5.specifics;
@@ -473,7 +491,7 @@ T4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T4] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T4_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T4_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
@@ -488,13 +506,15 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	T4_encode_der,
 	T4_decode_xer,
 	T4_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T4_1_tags,
-	sizeof(asn_DEF_T4_1_tags)
-		/sizeof(asn_DEF_T4_1_tags[0]) - 1, /* 2 */
-	asn_DEF_T4_1_tags,	/* Same as above */
-	sizeof(asn_DEF_T4_1_tags)
-		/sizeof(asn_DEF_T4_1_tags[0]), /* 3 */
+	asn_DEF_T4_tags_1,
+	sizeof(asn_DEF_T4_tags_1)
+		/sizeof(asn_DEF_T4_tags_1[0]) - 1, /* 2 */
+	asn_DEF_T4_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T4_tags_1)
+		/sizeof(asn_DEF_T4_tags_1[0]), /* 3 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -541,6 +561,9 @@ T5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T6.der_encoder;
 	td->xer_decoder    = asn_DEF_T6.xer_decoder;
 	td->xer_encoder    = asn_DEF_T6.xer_encoder;
+	td->uper_decoder   = asn_DEF_T6.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_T6.per_constraints;
 	td->elements       = asn_DEF_T6.elements;
 	td->elements_count = asn_DEF_T6.elements_count;
 	td->specifics      = asn_DEF_T6.specifics;
@@ -593,7 +616,7 @@ T5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T5] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T5_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T5_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (6 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
@@ -607,13 +630,15 @@ asn_TYPE_descriptor_t asn_DEF_T5 = {
 	T5_encode_der,
 	T5_decode_xer,
 	T5_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T5_1_tags,
-	sizeof(asn_DEF_T5_1_tags)
-		/sizeof(asn_DEF_T5_1_tags[0]) - 1, /* 1 */
-	asn_DEF_T5_1_tags,	/* Same as above */
-	sizeof(asn_DEF_T5_1_tags)
-		/sizeof(asn_DEF_T5_1_tags[0]), /* 2 */
+	asn_DEF_T5_tags_1,
+	sizeof(asn_DEF_T5_tags_1)
+		/sizeof(asn_DEF_T5_tags_1[0]) - 1, /* 1 */
+	asn_DEF_T5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T5_tags_1)
+		/sizeof(asn_DEF_T5_tags_1[0]), /* 2 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -660,6 +685,9 @@ T6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_REAL.der_encoder;
 	td->xer_decoder    = asn_DEF_REAL.xer_decoder;
 	td->xer_encoder    = asn_DEF_REAL.xer_encoder;
+	td->uper_decoder   = asn_DEF_REAL.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_REAL.per_constraints;
 	td->elements       = asn_DEF_REAL.elements;
 	td->elements_count = asn_DEF_REAL.elements_count;
 	td->specifics      = asn_DEF_REAL.specifics;
@@ -712,7 +740,7 @@ T6_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T6] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T6_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T6_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_T6 = {
@@ -725,13 +753,15 @@ asn_TYPE_descriptor_t asn_DEF_T6 = {
 	T6_encode_der,
 	T6_decode_xer,
 	T6_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T6_1_tags,
-	sizeof(asn_DEF_T6_1_tags)
-		/sizeof(asn_DEF_T6_1_tags[0]), /* 1 */
-	asn_DEF_T6_1_tags,	/* Same as above */
-	sizeof(asn_DEF_T6_1_tags)
-		/sizeof(asn_DEF_T6_1_tags[0]), /* 1 */
+	asn_DEF_T6_tags_1,
+	sizeof(asn_DEF_T6_tags_1)
+		/sizeof(asn_DEF_T6_tags_1[0]), /* 1 */
+	asn_DEF_T6_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T6_tags_1)
+		/sizeof(asn_DEF_T6_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -778,6 +808,9 @@ T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_Ts.der_encoder;
 	td->xer_decoder    = asn_DEF_Ts.xer_decoder;
 	td->xer_encoder    = asn_DEF_Ts.xer_encoder;
+	td->uper_decoder   = asn_DEF_Ts.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_Ts.per_constraints;
 	td->elements       = asn_DEF_Ts.elements;
 	td->elements_count = asn_DEF_Ts.elements_count;
 	td->specifics      = asn_DEF_Ts.specifics;
@@ -830,7 +863,7 @@ T_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (123 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
@@ -845,13 +878,15 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_encode_der,
 	T_decode_xer,
 	T_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T_1_tags,
-	sizeof(asn_DEF_T_1_tags)
-		/sizeof(asn_DEF_T_1_tags[0]) - 2, /* 1 */
-	asn_DEF_T_1_tags,	/* Same as above */
-	sizeof(asn_DEF_T_1_tags)
-		/sizeof(asn_DEF_T_1_tags[0]), /* 3 */
+	asn_DEF_T_tags_1,
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]) - 2, /* 1 */
+	asn_DEF_T_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]), /* 3 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };
@@ -886,6 +921,8 @@ static asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_T2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "m1"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Ts, m2),
@@ -893,6 +930,8 @@ static asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_T3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "m2"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Ts, m3),
@@ -900,23 +939,26 @@ static asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_T3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "m3"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Ts_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Ts_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (123 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Ts_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Ts_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* m1 at 24 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* m2 at 25 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 } /* m3 at 27 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Ts_1_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_Ts_specs_1 = {
 	sizeof(struct Ts),
 	offsetof(struct Ts, _asn_ctx),
-	asn_MAP_Ts_1_tag2el,
+	asn_MAP_Ts_tag2el_1,
 	3,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
@@ -930,15 +972,17 @@ asn_TYPE_descriptor_t asn_DEF_Ts = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Ts_1_tags,
-	sizeof(asn_DEF_Ts_1_tags)
-		/sizeof(asn_DEF_Ts_1_tags[0]) - 1, /* 1 */
-	asn_DEF_Ts_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Ts_1_tags)
-		/sizeof(asn_DEF_Ts_1_tags[0]), /* 2 */
+	asn_DEF_Ts_tags_1,
+	sizeof(asn_DEF_Ts_tags_1)
+		/sizeof(asn_DEF_Ts_tags_1[0]) - 1, /* 1 */
+	asn_DEF_Ts_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Ts_tags_1)
+		/sizeof(asn_DEF_Ts_tags_1[0]), /* 2 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Ts_1,
 	3,	/* Elements count */
-	&asn_SPC_Ts_1_specs	/* Additional specs */
+	&asn_SPC_Ts_specs_1	/* Additional specs */
 };
 

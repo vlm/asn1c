@@ -33,13 +33,15 @@ static asn_TYPE_member_t asn_MBR_Forest_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Tree,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Forest_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Forest_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_Forest_1_specs = {
+static asn_SET_OF_specifics_t asn_SPC_Forest_specs_1 = {
 	sizeof(struct Forest),
 	offsetof(struct Forest, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -54,16 +56,18 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Forest_1_tags,
-	sizeof(asn_DEF_Forest_1_tags)
-		/sizeof(asn_DEF_Forest_1_tags[0]), /* 1 */
-	asn_DEF_Forest_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Forest_1_tags)
-		/sizeof(asn_DEF_Forest_1_tags[0]), /* 1 */
+	asn_DEF_Forest_tags_1,
+	sizeof(asn_DEF_Forest_tags_1)
+		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
+	asn_DEF_Forest_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Forest_tags_1)
+		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Forest_1,
 	1,	/* Single element */
-	&asn_SPC_Forest_1_specs	/* Additional specs */
+	&asn_SPC_Forest_specs_1	/* Additional specs */
 };
 
 
@@ -94,6 +98,8 @@ static asn_TYPE_member_t asn_MBR_Tree_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "height"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Tree, width),
@@ -101,21 +107,24 @@ static asn_TYPE_member_t asn_MBR_Tree_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "width"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Tree_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Tree_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Tree_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Tree_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* height at 17 */
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* width at 19 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Tree_1_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
 	sizeof(struct Tree),
 	offsetof(struct Tree, _asn_ctx),
-	asn_MAP_Tree_1_tag2el,
+	asn_MAP_Tree_tag2el_1,
 	2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
@@ -129,16 +138,18 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Tree_1_tags,
-	sizeof(asn_DEF_Tree_1_tags)
-		/sizeof(asn_DEF_Tree_1_tags[0]), /* 1 */
-	asn_DEF_Tree_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Tree_1_tags)
-		/sizeof(asn_DEF_Tree_1_tags[0]), /* 1 */
+	asn_DEF_Tree_tags_1,
+	sizeof(asn_DEF_Tree_tags_1)
+		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
+	asn_DEF_Tree_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Tree_tags_1)
+		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Tree_1,
 	2,	/* Elements count */
-	&asn_SPC_Tree_1_specs	/* Additional specs */
+	&asn_SPC_Tree_specs_1	/* Additional specs */
 };
 
 
@@ -236,14 +247,16 @@ static asn_TYPE_member_t asn_MBR_trees_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Forest,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_trees_2_tags[] = {
+static ber_tlv_tag_t asn_DEF_trees_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_trees_2_specs = {
+static asn_SET_OF_specifics_t asn_SPC_trees_specs_2 = {
 	sizeof(struct trees),
 	offsetof(struct trees, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -259,16 +272,18 @@ asn_TYPE_descriptor_t asn_DEF_trees_2 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_trees_2_tags,
-	sizeof(asn_DEF_trees_2_tags)
-		/sizeof(asn_DEF_trees_2_tags[0]) - 1, /* 1 */
-	asn_DEF_trees_2_tags,	/* Same as above */
-	sizeof(asn_DEF_trees_2_tags)
-		/sizeof(asn_DEF_trees_2_tags[0]), /* 2 */
+	asn_DEF_trees_tags_2,
+	sizeof(asn_DEF_trees_tags_2)
+		/sizeof(asn_DEF_trees_tags_2[0]) - 1, /* 1 */
+	asn_DEF_trees_tags_2,	/* Same as above */
+	sizeof(asn_DEF_trees_tags_2)
+		/sizeof(asn_DEF_trees_tags_2[0]), /* 2 */
+	0,	/* No PER visible constraints */
 	asn_MBR_trees_2,
 	1,	/* Single element */
-	&asn_SPC_trees_2_specs	/* Additional specs */
+	&asn_SPC_trees_specs_2	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_Member_5[] = {
@@ -277,27 +292,30 @@ static asn_TYPE_member_t asn_MBR_Member_5[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "cup-of-coffee"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Member_5_tags[] = {
+static ber_tlv_tag_t asn_DEF_Member_tags_5[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Member_5_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Member_tag2el_5[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* cup-of-coffee at 32 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Member_5_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_5 = {
 	sizeof(struct Member),
 	offsetof(struct Member, _asn_ctx),
-	asn_MAP_Member_5_tag2el,
+	asn_MAP_Member_tag2el_5,
 	1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
 	0,	/* Start extensions */
 	2	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_Member_5 = {
-	"",
-	"",
+	"SEQUENCE",
+	"SEQUENCE",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -305,16 +323,18 @@ asn_TYPE_descriptor_t asn_DEF_Member_5 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Member_5_tags,
-	sizeof(asn_DEF_Member_5_tags)
-		/sizeof(asn_DEF_Member_5_tags[0]), /* 1 */
-	asn_DEF_Member_5_tags,	/* Same as above */
-	sizeof(asn_DEF_Member_5_tags)
-		/sizeof(asn_DEF_Member_5_tags[0]), /* 1 */
+	asn_DEF_Member_tags_5,
+	sizeof(asn_DEF_Member_tags_5)
+		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
+	asn_DEF_Member_tags_5,	/* Same as above */
+	sizeof(asn_DEF_Member_tags_5)
+		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Member_5,
 	1,	/* Elements count */
-	&asn_SPC_Member_5_specs	/* Additional specs */
+	&asn_SPC_Member_specs_5	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_anything_4[] = {
@@ -323,14 +343,16 @@ static asn_TYPE_member_t asn_MBR_anything_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Member_5,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_anything_4_tags[] = {
+static ber_tlv_tag_t asn_DEF_anything_tags_4[] = {
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_anything_4_specs = {
+static asn_SET_OF_specifics_t asn_SPC_anything_specs_4 = {
 	sizeof(struct anything),
 	offsetof(struct anything, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -346,16 +368,18 @@ asn_TYPE_descriptor_t asn_DEF_anything_4 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_anything_4_tags,
-	sizeof(asn_DEF_anything_4_tags)
-		/sizeof(asn_DEF_anything_4_tags[0]) - 1, /* 1 */
-	asn_DEF_anything_4_tags,	/* Same as above */
-	sizeof(asn_DEF_anything_4_tags)
-		/sizeof(asn_DEF_anything_4_tags[0]), /* 2 */
+	asn_DEF_anything_tags_4,
+	sizeof(asn_DEF_anything_tags_4)
+		/sizeof(asn_DEF_anything_tags_4[0]) - 1, /* 1 */
+	asn_DEF_anything_tags_4,	/* Same as above */
+	sizeof(asn_DEF_anything_tags_4)
+		/sizeof(asn_DEF_anything_tags_4[0]), /* 2 */
+	0,	/* No PER visible constraints */
 	asn_MBR_anything_4,
 	1,	/* Single element */
-	&asn_SPC_anything_4_specs	/* Additional specs */
+	&asn_SPC_anything_specs_4	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_other_9[] = {
@@ -364,6 +388,8 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct other, choice.b),
@@ -371,21 +397,24 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "b"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_other_9_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_other_tag2el_9[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a at 26 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 1, 0, 0 } /* b at 28 */
 };
-static asn_CHOICE_specifics_t asn_SPC_other_9_specs = {
+static asn_CHOICE_specifics_t asn_SPC_other_specs_9 = {
 	sizeof(struct other),
 	offsetof(struct other, _asn_ctx),
 	offsetof(struct other, present),
 	sizeof(((struct other *)0)->present),
-	asn_MAP_other_9_tag2el,
+	asn_MAP_other_tag2el_9,
 	2,	/* Count of tags in the map */
-	0	/* Whether extensible */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_other_9 = {
@@ -398,14 +427,16 @@ asn_TYPE_descriptor_t asn_DEF_other_9 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
 	asn_MBR_other_9,
 	2,	/* Elements count */
-	&asn_SPC_other_9_specs	/* Additional specs */
+	&asn_SPC_other_specs_9	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
@@ -414,6 +445,8 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_trees_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "trees"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Stuff, anything),
@@ -421,6 +454,8 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_anything_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "anything"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Stuff, other),
@@ -428,36 +463,38 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_other_9,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "other"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Stuff_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Stuff_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Stuff_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_Stuff_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* a at 26 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything at 34 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 } /* b at 28 */
 };
-static asn_TYPE_tag2member_t asn_MAP_Stuff_1_tag2el_cxer[] = {
+static asn_TYPE_tag2member_t asn_MAP_Stuff_tag2el_cxer_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees at 23 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything at 34 */
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 } /* a at 26 */
 };
-static uint8_t asn_MAP_Stuff_1_mmap[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static uint8_t asn_MAP_Stuff_mmap_1[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7) | (0 << 6) | (0 << 5)
 };
-static asn_SET_specifics_t asn_SPC_Stuff_1_specs = {
+static asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
 	sizeof(struct Stuff),
 	offsetof(struct Stuff, _asn_ctx),
 	offsetof(struct Stuff, _presence_map),
-	asn_MAP_Stuff_1_tag2el,
+	asn_MAP_Stuff_tag2el_1,
 	4,	/* Count of tags in the map */
-	asn_MAP_Stuff_1_tag2el_cxer,
+	asn_MAP_Stuff_tag2el_cxer_1,
 	3,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_MAP_Stuff_1_mmap	/* Mandatory elements map */
+	(unsigned int *)asn_MAP_Stuff_mmap_1	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	"Stuff",
@@ -469,15 +506,182 @@ asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Stuff_1_tags,
-	sizeof(asn_DEF_Stuff_1_tags)
-		/sizeof(asn_DEF_Stuff_1_tags[0]), /* 1 */
-	asn_DEF_Stuff_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Stuff_1_tags)
-		/sizeof(asn_DEF_Stuff_1_tags[0]), /* 1 */
+	asn_DEF_Stuff_tags_1,
+	sizeof(asn_DEF_Stuff_tags_1)
+		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
+	asn_DEF_Stuff_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Stuff_tags_1)
+		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Stuff_1,
 	3,	/* Elements count */
-	&asn_SPC_Stuff_1_specs	/* Additional specs */
+	&asn_SPC_Stuff_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [SSS] >>> ***/
+
+#include <asn_SEQUENCE_OF.h>
+#include <asn_SET_OF.h>
+#include <BIT_STRING.h>
+#include <constr_SEQUENCE_OF.h>
+#include <constr_SET_OF.h>
+
+/*** <<< TYPE-DECLS [SSS] >>> ***/
+
+typedef struct SSS {
+	A_SEQUENCE_OF(struct Member {
+		A_SET_OF(struct Member {
+			A_SEQUENCE_OF(BIT_STRING_t) list;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} ) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} ) list;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SSS_t;
+
+/*** <<< FUNC-DECLS [SSS] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SSS;
+
+/*** <<< STAT-DEFS [SSS] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Member_3[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_BIT_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_Member_tags_3[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_Member_specs_3 = {
+	sizeof(struct Member),
+	offsetof(struct Member, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_Member_3 = {
+	"SEQUENCE OF",
+	"SEQUENCE_OF",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Member_tags_3,
+	sizeof(asn_DEF_Member_tags_3)
+		/sizeof(asn_DEF_Member_tags_3[0]), /* 1 */
+	asn_DEF_Member_tags_3,	/* Same as above */
+	sizeof(asn_DEF_Member_tags_3)
+		/sizeof(asn_DEF_Member_tags_3[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_Member_3,
+	1,	/* Single element */
+	&asn_SPC_Member_specs_3	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Member_2[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Member_3,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_Member_tags_2[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_Member_specs_2 = {
+	sizeof(struct Member),
+	offsetof(struct Member, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_Member_2 = {
+	"SET OF",
+	"SET_OF",
+	SET_OF_free,
+	SET_OF_print,
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_decode_xer,
+	SET_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Member_tags_2,
+	sizeof(asn_DEF_Member_tags_2)
+		/sizeof(asn_DEF_Member_tags_2[0]), /* 1 */
+	asn_DEF_Member_tags_2,	/* Same as above */
+	sizeof(asn_DEF_Member_tags_2)
+		/sizeof(asn_DEF_Member_tags_2[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_Member_2,
+	1,	/* Single element */
+	&asn_SPC_Member_specs_2	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_SSS_1[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Member_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_SSS_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_SSS_specs_1 = {
+	sizeof(struct SSS),
+	offsetof(struct SSS, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+asn_TYPE_descriptor_t asn_DEF_SSS = {
+	"SSS",
+	"SSS",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_SSS_tags_1,
+	sizeof(asn_DEF_SSS_tags_1)
+		/sizeof(asn_DEF_SSS_tags_1[0]), /* 1 */
+	asn_DEF_SSS_tags_1,	/* Same as above */
+	sizeof(asn_DEF_SSS_tags_1)
+		/sizeof(asn_DEF_SSS_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_SSS_1,
+	1,	/* Single element */
+	&asn_SPC_SSS_specs_1	/* Additional specs */
 };
 

@@ -62,7 +62,7 @@ main(int ac, char **av) {
 	/*
 	 * Process command-line options.
 	 */
-	while((ch = getopt(ac, av, "EFf:hLPp:RS:vW:X")) != -1)
+	while((ch = getopt(ac, av, "EFf:g:hLPp:RS:vW:X")) != -1)
 	switch(ch) {
 	case 'E':
 		print_arg__print_out = 1;
@@ -95,10 +95,16 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
 		} else if(strcmp(optarg, "skeletons-copy") == 0) {
 			asn1_compiler_flags |= A1C_SKELETONS_COPY;
-		} else if(strcmp(optarg, "types88") == 0) {
-			asn1_parser_flags |= A1P_TYPES_RESTRICT_TO_1988;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
+			exit(EX_USAGE);
+		}
+		break;
+	case 'g':
+		if(strcmp(optarg, "en-PER") == 0) {
+			asn1_compiler_flags |= A1C_GEN_PER;
+		} else {
+			fprintf(stderr, "-g%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
 		}
 		break;
@@ -109,7 +115,15 @@ main(int ac, char **av) {
 		asn1_compiler_flags &= ~A1C_NO_C99;
 		break;
 	case 'p':
-		if(strcmp(optarg, "rint-constraints") == 0) {
+		if(strncmp(optarg, "du=", 3) == 0) {
+			char *pduname = optarg + 3;
+			if(strcmp(pduname, "auto")) {
+				fprintf(stderr, "-pdu=%s: expected -pdu=auto\n",
+					pduname);
+				exit(EX_USAGE);
+			}
+			asn1_compiler_flags |= A1C_PDU_AUTO;
+		} else if(strcmp(optarg, "rint-constraints") == 0) {
 			asn1_printer_flags |= APF_DEBUG_CONSTRAINTS;
 		} else if(strcmp(optarg, "rint-lines") == 0) {
 			asn1_printer_flags |= APF_LINE_COMMENTS;
@@ -250,7 +264,8 @@ main(int ac, char **av) {
 	/*
 	 * Make sure the skeleton directory is out there.
 	 */
-	if(skeletons_dir == NULL) {
+	if((asn1_compiler_flags & A1C_OMIT_SUPPORT_CODE) == 0
+	&& skeletons_dir == NULL) {
 		struct stat sb;
 		skeletons_dir = DATADIR;
 		if((av[-optind][0] == '.' || av[-optind][1] == '/')
@@ -326,7 +341,10 @@ usage(const char *av0) {
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
 "  -fskeletons-copy      Force copying the support files\n"
-"  -ftypes88             Pretend to support only ASN.1:1988 embedded types\n"
+"\n"
+
+"  -gen-PER              Generate PER support code\n"
+"  -pdu=auto             Generate PDU table (discover PDUs automatically)\n"
 "\n"
 
 "  -print-constraints    Explain subtype constraints (debug)\n"

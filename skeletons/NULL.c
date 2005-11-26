@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -23,11 +23,13 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	NULL_encode_der,	/* Special handling of DER encoding */
 	NULL_decode_xer,
 	NULL_encode_xer,
+	NULL_decode_uper,	/* Unaligned PER decoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
 	asn_DEF_NULL_tags,	/* Same as above */
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -44,7 +46,7 @@ NULL_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 		erval.structure_ptr = ptr;
 	}
 
-	return erval;
+	_ASN_ENCODED_OK(erval);
 }
 
 asn_enc_rval_t
@@ -62,8 +64,7 @@ NULL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	/* XMLNullValue is empty */
 	er.encoded = 0;
-
-	return er;
+	_ASN_ENCODED_OK(er);
 }
 
 
@@ -100,4 +101,32 @@ NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	} else {
 		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
+}
+
+asn_dec_rval_t
+NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+
+	(void)opt_codec_ctx;
+	(void)td;
+	(void)constraints;
+	(void)pd;
+
+	if(!*sptr) {
+		*sptr = MALLOC(sizeof(NULL_t));
+		if(*sptr) {
+			*(NULL_t *)*sptr = 0;
+		} else {
+			_ASN_DECODE_FAILED;
+		}
+	}
+
+	/*
+	 * NULL type does not have content octets.
+	 */
+
+	rv.code = RC_OK;
+	rv.consumed = 0;
+	return rv;
 }

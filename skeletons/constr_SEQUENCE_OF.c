@@ -51,9 +51,7 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	computed_size += encoding_size;
 	if(!cb) {
 		erval.encoded = computed_size;
-		erval.structure_ptr = 0;
-		erval.failed_type = 0;
-		return erval;
+		_ASN_ENCODED_OK(erval);
 	}
 
 	ASN_DEBUG("Encoding members of SEQUENCE OF %s", td->name);
@@ -136,7 +134,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
 
-	return er;
+	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }

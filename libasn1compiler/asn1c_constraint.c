@@ -4,7 +4,7 @@
 #include "asn1c_out.h"
 
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
-#include <asn1fix_export.h>	/* other exportable stuff from libasn1fix */
+#include <asn1fix_export.h>	/* other exportables from libasn1fix */
 
 static int asn1c_emit_constraint_tables(arg_t *arg, int got_size);
 static int emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range);

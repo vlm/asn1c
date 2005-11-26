@@ -56,6 +56,16 @@ enum asn1c_flags {
 	 * Copy support files rather than symlink them.
 	 */
 	A1C_SKELETONS_COPY	= 0x0800,
+	/*
+	 * -gen-PER
+	 * Generate PER support code
+	 */
+	A1C_GEN_PER		= 0x1000,
+	/*
+	 * -pdu=auto
+	 * Generate PDU table
+	 */
+	A1C_PDU_AUTO		= 0x2000
 };
 
 /*

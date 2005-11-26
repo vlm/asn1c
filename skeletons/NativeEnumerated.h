@@ -21,6 +21,7 @@ extern "C" {
 extern asn_TYPE_descriptor_t asn_DEF_NativeEnumerated;
 
 xer_type_encoder_f NativeEnumerated_encode_xer;
+per_type_decoder_f NativeEnumerated_decode_uper;
 
 #ifdef __cplusplus
 }

@@ -370,6 +370,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 		return NULL;
 	}
 
+	tc->_type_referenced = 1;
 	tc->_mark |= TM_RECURSION;
 	WITH_MODULE(tc->module,
 		expr = asn1f_find_terminal_thing(arg, tc, what));

@@ -66,7 +66,12 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 	asn1c_fdeps_t *cur;
 	char buf[4096];
 	FILE *f;
-	int hit_COMMON_FILES = 0;
+	enum {
+		SS_DYNAMIC,		/* Dynamic list of dependencies */
+		SS_CODEC_PER,		/* Use contents only if -gen-PER */
+		SS_COMMON_FILES,	/* Section for dependencies */
+		SS_IGNORE		/* Ignore contents of this section */
+	} special_section = SS_DYNAMIC;
 
 	(void)arg;
 
@@ -91,17 +96,27 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 		for(p = strtok(buf, " \t\r\n"); p;
 				p = strtok(NULL, " \t\r\n")) {
 			asn1c_fdeps_t *d;
+
 			/*
-			 * If hit "COMMON-FILES:", treat everything else
-			 * as a huge dependency.
+			 * Special "prefix" section.
 			 */
-			if(strcmp(p, "COMMON-FILES:") == 0) {
-				hit_COMMON_FILES = 1;
+			if(strchr(p, ':')) {
+				special_section = SS_IGNORE;
+				if(strcmp(p, "COMMON-FILES:") == 0) {
+					special_section = SS_COMMON_FILES;
+				} else if((arg->flags & A1C_GEN_PER)
+					  && strcmp(p, "CODEC-PER:") == 0) {
+					special_section = SS_CODEC_PER;
+				}
 				break;
 			}
+
+			if(special_section == SS_IGNORE)
+				continue;
+
 			d = asn1c_new_dep(p);
 			assert(d);
-			d->used_somewhere = hit_COMMON_FILES;
+			d->used_somewhere = special_section;
 
 			if(asn1c_dep_add(cur, d) == 1)
 				cur = d;

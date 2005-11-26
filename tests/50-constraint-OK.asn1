@@ -16,7 +16,7 @@ BEGIN
 	Int1 ::= INTEGER
 	Int2 ::= Int1 (0..MAX)		-- X.680-0207::41.4.4
 	Int3 ::= Int2 (MIN..ten)	-- Means (0..10)
-	Int4 ::= Int3 (5..MAX,...,1..4)	-- Means (5..10,...,1..4)
+	Int4 ::= Int3 (5..MAX,...,1..4)	-- Means (1..10,...)
 	Int5 ::= Int4 (MIN..5)		-- Means (5)
 	-- Int6 ::= INTEGER (Int5) -- -- Not yet supported
 
@@ -51,6 +51,23 @@ BEGIN
 	Utf8-1 ::= UTF8String
 
 	VisibleIdentifier ::= Identifier
+
+	Sequence ::= SEQUENCE {
+		int1-c	Int1	(-2..MAX) DEFAULT 3,
+		int4	[2] Int4,
+		int4-c	Int4	(MIN..7),
+		bool	BOOLEAN	DEFAULT 1,
+		enum-c	ENUMERATED { one(1), two(2), ..., three(3) },
+		...,
+		int5-c	Int5 (5) OPTIONAL,
+		...,
+		null	NULL OPTIONAL
+	}
+
+	SequenceOf ::= SEQUENCE (SIZE(1..2)) OF Sequence
+
+	Enum0	::= ENUMERATED { one, two }
+	Enum1	::= ENUMERATED { one, two }	(one)
 
 END
 

@@ -3,6 +3,7 @@
 #include <BIT_STRING.c>
 #include <xer_decoder.c>
 #include <xer_support.c>
+#include <per_support.c>
 #include <ber_decoder.c>
 #include <ber_tlv_length.c>
 #include <ber_tlv_tag.c>

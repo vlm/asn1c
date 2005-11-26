@@ -53,6 +53,9 @@ OK_Integer1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
 	td->elements_count = asn_DEF_NativeInteger.elements_count;
 	td->specifics      = asn_DEF_NativeInteger.specifics;
@@ -105,7 +108,7 @@ OK_Integer1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-Integer1] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_Integer1_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_OK_Integer1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
@@ -118,13 +121,15 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
 	OK_Integer1_encode_der,
 	OK_Integer1_decode_xer,
 	OK_Integer1_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_OK_Integer1_1_tags,
-	sizeof(asn_DEF_OK_Integer1_1_tags)
-		/sizeof(asn_DEF_OK_Integer1_1_tags[0]), /* 1 */
-	asn_DEF_OK_Integer1_1_tags,	/* Same as above */
-	sizeof(asn_DEF_OK_Integer1_1_tags)
-		/sizeof(asn_DEF_OK_Integer1_1_tags[0]), /* 1 */
+	asn_DEF_OK_Integer1_tags_1,
+	sizeof(asn_DEF_OK_Integer1_tags_1)
+		/sizeof(asn_DEF_OK_Integer1_tags_1[0]), /* 1 */
+	asn_DEF_OK_Integer1_tags_1,	/* Same as above */
+	sizeof(asn_DEF_OK_Integer1_tags_1)
+		/sizeof(asn_DEF_OK_Integer1_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -184,6 +189,9 @@ OK_Integer2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
 	td->elements_count = asn_DEF_NativeInteger.elements_count;
 	td->specifics      = asn_DEF_NativeInteger.specifics;
@@ -236,7 +244,7 @@ OK_Integer2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-Integer2] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_Integer2_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_OK_Integer2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
@@ -249,13 +257,15 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
 	OK_Integer2_encode_der,
 	OK_Integer2_decode_xer,
 	OK_Integer2_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_OK_Integer2_1_tags,
-	sizeof(asn_DEF_OK_Integer2_1_tags)
-		/sizeof(asn_DEF_OK_Integer2_1_tags[0]), /* 1 */
-	asn_DEF_OK_Integer2_1_tags,	/* Same as above */
-	sizeof(asn_DEF_OK_Integer2_1_tags)
-		/sizeof(asn_DEF_OK_Integer2_1_tags[0]), /* 1 */
+	asn_DEF_OK_Integer2_tags_1,
+	sizeof(asn_DEF_OK_Integer2_tags_1)
+		/sizeof(asn_DEF_OK_Integer2_tags_1[0]), /* 1 */
+	asn_DEF_OK_Integer2_tags_1,	/* Same as above */
+	sizeof(asn_DEF_OK_Integer2_tags_1)
+		/sizeof(asn_DEF_OK_Integer2_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -315,6 +325,9 @@ OK_Integer3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
 	td->elements_count = asn_DEF_NativeInteger.elements_count;
 	td->specifics      = asn_DEF_NativeInteger.specifics;
@@ -367,7 +380,7 @@ OK_Integer3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-Integer3] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_Integer3_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_OK_Integer3_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
@@ -380,13 +393,15 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
 	OK_Integer3_encode_der,
 	OK_Integer3_decode_xer,
 	OK_Integer3_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_OK_Integer3_1_tags,
-	sizeof(asn_DEF_OK_Integer3_1_tags)
-		/sizeof(asn_DEF_OK_Integer3_1_tags[0]), /* 1 */
-	asn_DEF_OK_Integer3_1_tags,	/* Same as above */
-	sizeof(asn_DEF_OK_Integer3_1_tags)
-		/sizeof(asn_DEF_OK_Integer3_1_tags[0]), /* 1 */
+	asn_DEF_OK_Integer3_tags_1,
+	sizeof(asn_DEF_OK_Integer3_tags_1)
+		/sizeof(asn_DEF_OK_Integer3_tags_1[0]), /* 1 */
+	asn_DEF_OK_Integer3_tags_1,	/* Same as above */
+	sizeof(asn_DEF_OK_Integer3_tags_1)
+		/sizeof(asn_DEF_OK_Integer3_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -446,6 +461,9 @@ OK_Integer4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
 	td->elements_count = asn_DEF_NativeInteger.elements_count;
 	td->specifics      = asn_DEF_NativeInteger.specifics;
@@ -498,7 +516,7 @@ OK_Integer4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-Integer4] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_Integer4_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_OK_Integer4_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
@@ -511,13 +529,15 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
 	OK_Integer4_encode_der,
 	OK_Integer4_decode_xer,
 	OK_Integer4_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_OK_Integer4_1_tags,
-	sizeof(asn_DEF_OK_Integer4_1_tags)
-		/sizeof(asn_DEF_OK_Integer4_1_tags[0]), /* 1 */
-	asn_DEF_OK_Integer4_1_tags,	/* Same as above */
-	sizeof(asn_DEF_OK_Integer4_1_tags)
-		/sizeof(asn_DEF_OK_Integer4_1_tags[0]), /* 1 */
+	asn_DEF_OK_Integer4_tags_1,
+	sizeof(asn_DEF_OK_Integer4_tags_1)
+		/sizeof(asn_DEF_OK_Integer4_tags_1[0]), /* 1 */
+	asn_DEF_OK_Integer4_tags_1,	/* Same as above */
+	sizeof(asn_DEF_OK_Integer4_tags_1)
+		/sizeof(asn_DEF_OK_Integer4_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -578,6 +598,9 @@ NO_Integer5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
+	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
 	td->elements_count = asn_DEF_INTEGER.elements_count;
 	td->specifics      = asn_DEF_INTEGER.specifics;
@@ -630,7 +653,7 @@ NO_Integer5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-Integer5] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_NO_Integer5_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_NO_Integer5_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_Integer5 = {
@@ -643,13 +666,15 @@ asn_TYPE_descriptor_t asn_DEF_NO_Integer5 = {
 	NO_Integer5_encode_der,
 	NO_Integer5_decode_xer,
 	NO_Integer5_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_NO_Integer5_1_tags,
-	sizeof(asn_DEF_NO_Integer5_1_tags)
-		/sizeof(asn_DEF_NO_Integer5_1_tags[0]), /* 1 */
-	asn_DEF_NO_Integer5_1_tags,	/* Same as above */
-	sizeof(asn_DEF_NO_Integer5_1_tags)
-		/sizeof(asn_DEF_NO_Integer5_1_tags[0]), /* 1 */
+	asn_DEF_NO_Integer5_tags_1,
+	sizeof(asn_DEF_NO_Integer5_tags_1)
+		/sizeof(asn_DEF_NO_Integer5_tags_1[0]), /* 1 */
+	asn_DEF_NO_Integer5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_NO_Integer5_tags_1)
+		/sizeof(asn_DEF_NO_Integer5_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

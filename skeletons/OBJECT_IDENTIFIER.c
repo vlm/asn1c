@@ -23,6 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	der_encode_primitive,
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
+	0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
@@ -30,6 +31,7 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	asn_DEF_OBJECT_IDENTIFIER_tags,	/* Same as above */
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -332,9 +334,7 @@ OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = OBJECT_IDENTIFIER__dump_body(st, cb, app_key);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
-	er.structure_ptr = 0;
-	er.failed_type = 0;
-	return er;
+	_ASN_ENCODED_OK(er);
 }
 
 int

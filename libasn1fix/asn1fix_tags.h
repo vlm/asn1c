@@ -5,6 +5,7 @@ enum asn1f_aft_flags_e {
 	AFT_IMAGINARY_ANY	= 0x01,	/* Treat ANY tag as [IMAGINARY ANY] */
 	AFT_FETCH_OUTMOST	= 0x02,	/* Fetch only outmost tag */
 	AFT_FULL_COLLECT	= 0x04,	/* Collect all tags */
+	AFT_CANON_CHOICE	= 0x08,	/* Fetch the minimal CHOICE root tag */
 };
 
 /*
@@ -24,6 +25,6 @@ int asn1f_fetch_tags(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr,
  * Type3 ::= SEQUENCE { ... }
  * Will yield [2] for Type1.
  */
-int asn1f_fetch_outmost_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, int _aft_imaginary_any);
+int asn1f_fetch_outmost_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, enum asn1f_aft_flags_e);
 
 #endif	/* _ASN1FIX_TAGS_H_ */

@@ -40,6 +40,9 @@ PrimitiveType_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_OCTET_STRING.der_encoder;
 	td->xer_decoder    = asn_DEF_OCTET_STRING.xer_decoder;
 	td->xer_encoder    = asn_DEF_OCTET_STRING.xer_encoder;
+	td->uper_decoder   = asn_DEF_OCTET_STRING.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_OCTET_STRING.per_constraints;
 	td->elements       = asn_DEF_OCTET_STRING.elements;
 	td->elements_count = asn_DEF_OCTET_STRING.elements_count;
 	td->specifics      = asn_DEF_OCTET_STRING.specifics;
@@ -92,7 +95,7 @@ PrimitiveType_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [PrimitiveType] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_PrimitiveType_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_PrimitiveType_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_PrimitiveType = {
@@ -105,13 +108,15 @@ asn_TYPE_descriptor_t asn_DEF_PrimitiveType = {
 	PrimitiveType_encode_der,
 	PrimitiveType_decode_xer,
 	PrimitiveType_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_PrimitiveType_1_tags,
-	sizeof(asn_DEF_PrimitiveType_1_tags)
-		/sizeof(asn_DEF_PrimitiveType_1_tags[0]), /* 1 */
-	asn_DEF_PrimitiveType_1_tags,	/* Same as above */
-	sizeof(asn_DEF_PrimitiveType_1_tags)
-		/sizeof(asn_DEF_PrimitiveType_1_tags[0]), /* 1 */
+	asn_DEF_PrimitiveType_tags_1,
+	sizeof(asn_DEF_PrimitiveType_tags_1)
+		/sizeof(asn_DEF_PrimitiveType_tags_1[0]), /* 1 */
+	asn_DEF_PrimitiveType_tags_1,	/* Same as above */
+	sizeof(asn_DEF_PrimitiveType_tags_1)
+		/sizeof(asn_DEF_PrimitiveType_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -143,20 +148,23 @@ static asn_TYPE_member_t asn_MBR_ConstructedType_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_PrimitiveType,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = "field"
 		},
 };
-static ber_tlv_tag_t asn_DEF_ConstructedType_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_ConstructedType_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_ConstructedType_1_tag2el[] = {
+static asn_TYPE_tag2member_t asn_MAP_ConstructedType_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 0, 0, 0 } /* field at 18 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_ConstructedType_1_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_ConstructedType_specs_1 = {
 	sizeof(struct ConstructedType),
 	offsetof(struct ConstructedType, _asn_ctx),
-	asn_MAP_ConstructedType_1_tag2el,
+	asn_MAP_ConstructedType_tag2el_1,
 	1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
@@ -170,16 +178,18 @@ asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_ConstructedType_1_tags,
-	sizeof(asn_DEF_ConstructedType_1_tags)
-		/sizeof(asn_DEF_ConstructedType_1_tags[0]), /* 1 */
-	asn_DEF_ConstructedType_1_tags,	/* Same as above */
-	sizeof(asn_DEF_ConstructedType_1_tags)
-		/sizeof(asn_DEF_ConstructedType_1_tags[0]), /* 1 */
+	asn_DEF_ConstructedType_tags_1,
+	sizeof(asn_DEF_ConstructedType_tags_1)
+		/sizeof(asn_DEF_ConstructedType_tags_1[0]), /* 1 */
+	asn_DEF_ConstructedType_tags_1,	/* Same as above */
+	sizeof(asn_DEF_ConstructedType_tags_1)
+		/sizeof(asn_DEF_ConstructedType_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_ConstructedType_1,
 	1,	/* Elements count */
-	&asn_SPC_ConstructedType_1_specs	/* Additional specs */
+	&asn_SPC_ConstructedType_specs_1	/* Additional specs */
 };
 
 
@@ -224,6 +234,9 @@ T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_ConstructedType.der_encoder;
 	td->xer_decoder    = asn_DEF_ConstructedType.xer_decoder;
 	td->xer_encoder    = asn_DEF_ConstructedType.xer_encoder;
+	td->uper_decoder   = asn_DEF_ConstructedType.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_ConstructedType.per_constraints;
 	td->elements       = asn_DEF_ConstructedType.elements;
 	td->elements_count = asn_DEF_ConstructedType.elements_count;
 	td->specifics      = asn_DEF_ConstructedType.specifics;
@@ -276,7 +289,7 @@ T_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
@@ -290,13 +303,15 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_encode_der,
 	T_decode_xer,
 	T_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_T_1_tags,
-	sizeof(asn_DEF_T_1_tags)
-		/sizeof(asn_DEF_T_1_tags[0]) - 1, /* 1 */
-	asn_DEF_T_1_tags,	/* Same as above */
-	sizeof(asn_DEF_T_1_tags)
-		/sizeof(asn_DEF_T_1_tags[0]), /* 2 */
+	asn_DEF_T_tags_1,
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]) - 1, /* 1 */
+	asn_DEF_T_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]), /* 2 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };

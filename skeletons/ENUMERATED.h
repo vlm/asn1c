@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_ENUMERATED_H_
@@ -14,6 +14,8 @@ extern "C" {
 typedef INTEGER_t ENUMERATED_t;		/* Implemented via INTEGER */
 
 extern asn_TYPE_descriptor_t asn_DEF_ENUMERATED;
+
+per_type_decoder_f ENUMERATED_decode_uper;
 
 #ifdef __cplusplus
 }

@@ -7,7 +7,8 @@
 #include "asn1c_constraint.h"
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
-#include <asn1fix_export.h>	/* Stuff exported by libasn1fix */
+#include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
+#include <asn1fix_export.h>	/* other exportables from libasn1fix */
 
 typedef struct tag2el_s {
 	struct asn1p_type_tag_s el_tag;
@@ -35,16 +36,22 @@ static int asn1c_lang_C_type_SET_def(arg_t *arg);
 static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
 static int _print_tag(arg_t *arg, struct asn1p_type_tag_s *tag_p);
-static int check_if_extensible(asn1p_expr_t *expr);
+static int compute_extensions_start(asn1p_expr_t *expr);
 static int expr_break_recursion(arg_t *arg, asn1p_expr_t *expr);
 static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
+static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, char *type);
+static int emit_single_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr);
+static int emit_members_PER_constraints(arg_t *arg);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
 static int emit_include_dependencies(arg_t *arg);
 static asn1p_expr_t *terminal_structable(arg_t *arg, asn1p_expr_t *expr);
 static int expr_defined_recursively(arg_t *arg, asn1p_expr_t *expr);
 static int asn1c_recurse(arg_t *arg, asn1p_expr_t *expr, int (*callback)(arg_t *arg, void *key), void *key);
+static asn1p_expr_type_e expr_get_type(arg_t *arg, asn1p_expr_t *expr);
+static int try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out);
+static int *compute_canonical_members_order(arg_t *arg, int el_count);
 
 enum tvm_compat {
 	_TVM_SAME	= 0,	/* tags and all_tags are same */
@@ -78,8 +85,9 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 } while(0)
 
 /* MKID_safe() without checking for reserved keywords */
-#define	MKID(id)	asn1c_make_identifier(0, (id), 0)
-#define	MKID_safe(id)	asn1c_make_identifier(AMI_CHECK_RESERVED, (id), 0)
+#define	MKID(id)	((id)?asn1c_make_identifier(0, (id), 0):"Member")
+#define	MKID_safe(id)	((id)?asn1c_make_identifier(AMI_CHECK_RESERVED,	\
+				(id), 0):"Member")
 
 int
 asn1c_lang_C_type_REAL(arg_t *arg) {
@@ -112,7 +120,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	asn1p_expr_t *v;
 	int el_count = expr_elements_count(arg, expr);
 	struct value2enum *v2e;
-	int map_is_extensible = (expr->expr_type == ASN_BASIC_INTEGER);
+	int map_extensions = (expr->expr_type == ASN_BASIC_INTEGER);
 	int eidx;
 
 	v2e = alloca((el_count + 1) * sizeof(*v2e));
@@ -144,7 +152,8 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 				OUT("\t/*\n");
 				OUT("\t * Enumeration is extensible\n");
 				OUT("\t */\n");
-				map_is_extensible = 1;
+				if(!map_extensions)
+					map_extensions = eidx + 1;
 				break;
 			default:
 				return -1;
@@ -168,7 +177,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		 */
 		REDIR(OT_STAT_DEFS);
 
-		OUT("static asn_INTEGER_enum_map_t asn_MAP_%s_%d_value2enum[] = {\n",
+		OUT("static asn_INTEGER_enum_map_t asn_MAP_%s_value2enum_%d[] = {\n",
 			MKID(expr->Identifier), expr->_type_unique_index);
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byValue);
 		for(eidx = 0; eidx < el_count; eidx++) {
@@ -178,11 +187,11 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 				(long)strlen(v2e[eidx].name), v2e[eidx].name,
 				(eidx + 1 < el_count) ? "," : "");
 		}
-		if(map_is_extensible)
+		if(map_extensions)
 			OUT("\t/* This list is extensible */\n");
 		OUT("};\n");
 
-		OUT("static unsigned int asn_MAP_%s_%d_enum2value[] = {\n",
+		OUT("static unsigned int asn_MAP_%s_enum2value_%d[] = {\n",
 			MKID(expr->Identifier), expr->_type_unique_index);
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byName);
 		for(eidx = 0; eidx < el_count; eidx++) {
@@ -191,25 +200,29 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 				(eidx + 1 < el_count) ? "," : "",
 				v2e[eidx].name, v2e[eidx].value);
 		}
-		if(map_is_extensible)
+		if(map_extensions)
 			OUT("\t/* This list is extensible */\n");
 		OUT("};\n");
 
-		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_%d_specs = {\n",
+		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr->Identifier), expr->_type_unique_index);
 		INDENT(+1);
-		OUT("asn_MAP_%s_%d_value2enum,\t"
+		OUT("asn_MAP_%s_value2enum_%d,\t"
 			"/* \"tag\" => N; sorted by tag */\n",
 			MKID(expr->Identifier),
 			expr->_type_unique_index);
-		OUT("asn_MAP_%s_%d_enum2value,\t"
+		OUT("asn_MAP_%s_enum2value_%d,\t"
 			"/* N => \"tag\"; sorted by N */\n",
 			MKID(expr->Identifier),
 			expr->_type_unique_index);
 		OUT("%d,\t/* Number of elements in the maps */\n",
 			el_count);
-		OUT("%d,\t/* Enumeration is %sextensible */\n",
-			map_is_extensible, map_is_extensible ? "": "not ");
+		if(map_extensions) {
+			OUT("%d,\t/* Extensions before this member */\n",
+				map_extensions);
+		} else {
+			OUT("0,\t/* Enumeration is not extensible */\n");
+		}
 		if(expr->expr_type == ASN_BASIC_ENUMERATED)
 			OUT("1\t/* Strict enumeration */\n");
 		else
@@ -277,7 +290,8 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 		if(v->expr_type == A1TC_EXTENSIBLE)
 			if(comp_mode < 3) comp_mode++;
 		if(comp_mode == 1)
-			v->marker.flags |= EM_OMITABLE;
+			v->marker.flags |= EM_OMITABLE | EM_INDIRECT;
+		try_inline_default(arg, v, 1);
 		EMBED(v);
 	}
 
@@ -304,6 +318,8 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	int tags_count;
 	int all_tags_count;
 	enum tvm_compat tv_mode;
+	int roms_count;		/* Root optional members */
+	int aoms_count;		/* Additions optional members */
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -320,15 +336,19 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	REDIR(OT_STAT_DEFS);
 
 	/*
-	 * Print out the table according to which the parsing is performed.
+	 * Print out the table according to which parsing is performed.
 	 */
 	if(expr_elements_count(arg, expr)) {
 		int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 
+		if(emit_members_PER_constraints(arg))
+			return -1;
 		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr->Identifier), expr->_type_unique_index);
 
 		elements = 0;
+		roms_count = 0;
+		aoms_count = 0;
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				if((++comp_mode) == 1)
@@ -337,14 +357,62 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 					ext_stop = elements - 1;
 				continue;
 			}
-			if(comp_mode == 1)
-				v->marker.flags |= EM_OMITABLE;
+			if(v->marker.flags & EM_OMITABLE)
+			    comp_mode == 1 ? ++aoms_count : ++roms_count;
 			emit_member_table(arg, v);
 			elements++;
 		});
 		OUT("};\n");
+
+		if((roms_count + aoms_count) && (arg->flags & A1C_GEN_PER)) {
+			int elm = 0;
+			int comma = 0;
+			comp_mode = 0;
+			OUT("static int asn_MAP_%s_oms_%d[] = {",
+				MKID(expr->Identifier),
+				expr->_type_unique_index);
+			TQ_FOR(v, &(expr->members), next) {
+				if(v->expr_type == A1TC_EXTENSIBLE) {
+					++comp_mode;
+					continue;
+				}
+				if((v->marker.flags & EM_OMITABLE)
+				&& comp_mode != 1) {
+					if(!comma) comma++;
+					else OUT(",");
+					OUT(" %d", elm);
+				}
+				++elm;
+			}
+			elm = 0;
+			comp_mode = 0;
+			TQ_FOR(v, &(expr->members), next) {
+				if(v->expr_type == A1TC_EXTENSIBLE) {
+					++comp_mode;
+					continue;
+				}
+				if((v->marker.flags & EM_OMITABLE)
+				&& comp_mode == 1) {
+					if(!comma) comma++;
+					else OUT(",");
+					OUT(" %d", elm);
+				}
+				++elm;
+			}
+			OUT(" };\n");
+			if(roms_count > 65536)
+				FATAL("Too many optional elements in %s "
+					"at line %d!",
+					arg->expr->Identifier,
+					arg->expr->_lineno);
+		} else {
+			roms_count = 0;
+			aoms_count = 0;
+		}
 	} else {
 		elements = 0;
+		roms_count = 0;
+		aoms_count = 0;
 	}
 
 	/*
@@ -357,26 +425,35 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
-	OUT("static asn_SEQUENCE_specifics_t asn_SPC_%s_%d_specs = {\n",
+	OUT("static asn_SEQUENCE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr->Identifier), expr->_type_unique_index);
-	INDENTED(
-		OUT("sizeof(struct "); out_name_chain(arg, ONC_avoid_keywords); OUT("),\n");
-		OUT("offsetof(struct "); out_name_chain(arg, ONC_avoid_keywords); OUT(", _asn_ctx),\n");
+	INDENT(+1);
+	OUT("sizeof(struct ");
+		out_name_chain(arg, ONC_avoid_keywords); OUT("),\n");
+	OUT("offsetof(struct ");
+		out_name_chain(arg, ONC_avoid_keywords); OUT(", _asn_ctx),\n");
 
-		if(tag2el_count) {
-			OUT("asn_MAP_%s_%d_tag2el,\n",
-				MKID(expr->Identifier),
-				expr->_type_unique_index);
-			OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
-		} else {
-			OUT("0,\t/* No top level tags */\n");
-			OUT("0,\t/* No tags in the map */\n");
-		}
-		OUT("%d,\t/* Start extensions */\n",
+	if(tag2el_count) {
+		OUT("asn_MAP_%s_tag2el_%d,\n",
+			MKID(expr->Identifier),
+			expr->_type_unique_index);
+		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
+	} else {
+		OUT("0,\t/* No top level tags */\n");
+		OUT("0,\t/* No tags in the map */\n");
+	}
+	if(roms_count + aoms_count) {
+		OUT("asn_MAP_%s_oms_%d,\t/* Optional members */\n",
+			MKID(expr->Identifier), expr->_type_unique_index);
+		OUT("%d, %d,\t/* Root/Additions */\n", roms_count, aoms_count);
+	} else {
+		OUT("0, 0, 0,\t/* Optional elements (not needed) */\n");
+	}
+	OUT("%d,\t/* Start extensions */\n",
 			ext_start);
-		OUT("%d\t/* Stop extensions */\n",
+	OUT("%d\t/* Stop extensions */\n",
 			(ext_stop<ext_start)?elements+1:ext_stop, ext_stop);
-	);
+	INDENT(-1);
 	OUT("};\n");
 
 	/*
@@ -430,15 +507,16 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(" {\n");
 	} else {
-		OUT("typedef struct %s {\n", MKID_safe(expr->Identifier));
+		OUT("typedef struct %s {\n",
+			MKID_safe(expr->Identifier));
 	}
 
 	TQ_FOR(v, &(expr->members), next) {
-		if(v->expr_type == A1TC_EXTENSIBLE) {
+		if(v->expr_type == A1TC_EXTENSIBLE)
 			if(comp_mode < 3) comp_mode++;
-		}
 		if(comp_mode == 1)
-			v->marker.flags |= EM_OMITABLE;
+			v->marker.flags |= EM_OMITABLE | EM_INDIRECT;
+		try_inline_default(arg, v, 1);
 		EMBED(v);
 	}
 
@@ -498,11 +576,13 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	REDIR(OT_STAT_DEFS);
 
 	/*
-	 * Print out the table according to which the parsing is performed.
+	 * Print out the table according to which parsing is performed.
 	 */
 	if(expr_elements_count(arg, expr)) {
 		int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 
+		if(emit_members_PER_constraints(arg))
+			return -1;
 		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr->Identifier), expr->_type_unique_index);
 	
@@ -511,8 +591,6 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				if(comp_mode < 3) comp_mode++;
 			} else {
-				if(comp_mode == 1)
-					v->marker.flags |= EM_OMITABLE;
 				emit_member_table(arg, v);
 				elements++;
 			}
@@ -537,7 +615,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	/*
 	 * Emit a map of mandatory elements.
 	 */
-	OUT("static uint8_t asn_MAP_%s_%d_mmap",
+	OUT("static uint8_t asn_MAP_%s_mmap_%d",
 		MKID(expr->Identifier), expr->_type_unique_index);
 	p = MKID_safe(expr->Identifier);
 	OUT("[(%d + (8 * sizeof(unsigned int)) - 1) / 8]", elements);
@@ -565,7 +643,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	OUT("\n");
 	OUT("};\n");
 
-	OUT("static asn_SET_specifics_t asn_SPC_%s_%d_specs = {\n",
+	OUT("static asn_SET_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr->Identifier), expr->_type_unique_index);
 	INDENTED(
 		OUT("sizeof(struct ");
@@ -578,19 +656,19 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(", _presence_map),\n");
 		p = MKID(expr->Identifier);
-		OUT("asn_MAP_%s_%d_tag2el,\n", p, expr->_type_unique_index);
+		OUT("asn_MAP_%s_tag2el_%d,\n", p, expr->_type_unique_index);
 		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
 		if(tag2el_cxer)
-			OUT("asn_MAP_%s_%d_tag2el_cxer,\n",
+			OUT("asn_MAP_%s_tag2el_cxer_%d,\n",
 				p, expr->_type_unique_index);
 		else
-			OUT("asn_MAP_%s_%d_tag2el,\t/* Same as above */\n",
+			OUT("asn_MAP_%s_tag2el_%d,\t/* Same as above */\n",
 				p, expr->_type_unique_index);
 		OUT("%d,\t/* Count of tags in the CXER map */\n",
 			tag2el_cxer_count);
 		OUT("%d,\t/* Whether extensible */\n",
-			check_if_extensible(expr));
-		OUT("(unsigned int *)asn_MAP_%s_%d_mmap\t/* Mandatory elements map */\n",
+			compute_extensions_start(expr) == -1 ? 0 : 1);
+		OUT("(unsigned int *)asn_MAP_%s_mmap_%d\t/* Mandatory elements map */\n",
 			p, expr->_type_unique_index);
 	);
 	OUT("};\n");
@@ -690,7 +768,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	enum tvm_compat tv_mode;
 
 	/*
-	 * Print out the table according to which the parsing is performed.
+	 * Print out the table according to which parsing is performed.
 	 */
 	if(seq_of) {
 		GEN_INCLUDE("constr_SEQUENCE_OF");
@@ -703,8 +781,10 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	REDIR(OT_STAT_DEFS);
 
 	/*
-	 * Print out the table according to which the parsing is performed.
+	 * Print out the table according to which parsing is performed.
 	 */
+	if(emit_members_PER_constraints(arg))
+		return -1;
 	OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 		MKID(expr->Identifier), expr->_type_unique_index);
 	INDENT(+1);
@@ -725,7 +805,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	 */
 	tv_mode = emit_tags_vectors(arg, expr, &tags_count, &all_tags_count);
 
-	OUT("static asn_SET_OF_specifics_t asn_SPC_%s_%d_specs = {\n",
+	OUT("static asn_SET_OF_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr->Identifier), expr->_type_unique_index);
 	INDENTED(
 		OUT("sizeof(struct ");
@@ -828,6 +908,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	int tags_count;
 	int all_tags_count;
 	enum tvm_compat tv_mode;
+	int *cmap = 0;
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -844,10 +925,12 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	REDIR(OT_STAT_DEFS);
 
 	/*
-	 * Print out the table according to which the parsing is performed.
+	 * Print out the table according to which parsing is performed.
 	 */
 	if(expr_elements_count(arg, expr)) {
 
+		if(emit_members_PER_constraints(arg))
+			return -1;
 		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr->Identifier), expr->_type_unique_index);
 
@@ -863,6 +946,22 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		elements = 0;
 	}
 
+	/* Create a canonical elements map */
+	if(elements && (arg->flags & A1C_GEN_PER)) {
+		int i;
+		cmap = compute_canonical_members_order(arg, elements);
+		if(cmap) {
+			OUT("static int asn_MAP_%s_cmap_%d[] = {",
+				MKID(expr->Identifier),
+				expr->_type_unique_index);
+			for(i = 0; i < elements; i++) {
+				if(i) OUT(",");
+				OUT(" %d", cmap[i]);
+			}
+			OUT(" };\n");
+			free(cmap);
+		}
+	}
 
 	if(arg->embed) {
 		/*
@@ -880,7 +979,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
-	OUT("static asn_CHOICE_specifics_t asn_SPC_%s_%d_specs = {\n",
+	OUT("static asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr->Identifier), expr->_type_unique_index);
 	INDENTED(
 		OUT("sizeof(struct ");
@@ -895,11 +994,16 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		OUT("sizeof(((struct ");
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(" *)0)->present),\n");
-		OUT("asn_MAP_%s_%d_tag2el,\n",
+		OUT("asn_MAP_%s_tag2el_%d,\n",
 			MKID(expr->Identifier), expr->_type_unique_index);
 		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
-		OUT("%d\t/* Whether extensible */\n",
-			check_if_extensible(expr));
+		if(C99_MODE) OUT(".canonical_order = ");
+		if(cmap) OUT("asn_MAP_%s_cmap_%d,\t/* Canonically sorted */\n",
+			MKID(expr->Identifier), expr->_type_unique_index);
+		else OUT("0,\n");
+		if(C99_MODE) OUT(".ext_start = ");
+		OUT("%d\t/* Extensions start */\n",
+			compute_extensions_start(expr));
 	);
 	OUT("};\n");
 
@@ -989,11 +1093,13 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		if(!expr->_anonymous_type) {
 			OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
 			OUT("%s", MKID_safe(expr->Identifier));
-			if((expr->marker.flags & EM_DEFAULT) == EM_DEFAULT)
+			if((expr->marker.flags & (EM_DEFAULT & ~EM_INDIRECT))
+					== (EM_DEFAULT & ~EM_INDIRECT))
 				OUT("\t/* DEFAULT %s */",
 					asn1f_printable_value(
 						expr->marker.default_value));
-			else if((expr->marker.flags & EM_OPTIONAL) == EM_OPTIONAL)
+			else if((expr->marker.flags & EM_OPTIONAL)
+					== EM_OPTIONAL)
 				OUT("\t/* OPTIONAL */");
 		}
 
@@ -1113,6 +1219,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->der_encoder    = asn_DEF_%s.der_encoder;\n",    type_name);
 	OUT("td->xer_decoder    = asn_DEF_%s.xer_decoder;\n",    type_name);
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
+	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
 	if(!terminal && !tags_count) {
 	  OUT("/* The next four lines are here because of -fknown-extern-type */\n");
 	  OUT("td->tags           = asn_DEF_%s.tags;\n",         type_name);
@@ -1121,6 +1228,9 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	  OUT("td->all_tags_count = asn_DEF_%s.all_tags_count;\n",type_name);
 	  OUT("/* End of these lines */\n");
 	}
+	OUT("if(!td->per_constraints)\n");
+		OUT("\ttd->per_constraints = asn_DEF_%s.per_constraints;\n",
+			type_name);
 	OUT("td->elements       = asn_DEF_%s.elements;\n",       type_name);
 	OUT("td->elements_count = asn_DEF_%s.elements_count;\n", type_name);
 	if(etd_spec != ETD_NO_SPECIFICS) {
@@ -1230,6 +1340,23 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("}\n");
 	OUT("\n");
 
+  if(arg->flags & A1C_GEN_PER) {
+	p = MKID(expr->Identifier);
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_dec_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tasn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+  }
+
 	REDIR(OT_FUNC_DECLS);
 
 	p = MKID(expr->Identifier);
@@ -1246,6 +1373,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("der_type_encoder_f %s_encode_der;\n", p);
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
+		if(arg->flags & A1C_GEN_PER)
+		OUT("per_type_decoder_f %s_decode_uper;\n", p);
 	}
 
 	REDIR(OT_TYPE_DECLS);
@@ -1264,12 +1393,16 @@ asn1c_lang_C_type_EXTENSIBLE(arg_t *arg) {
 	return 0;
 }
 
-static int check_if_extensible(asn1p_expr_t *expr) {
+static int
+compute_extensions_start(asn1p_expr_t *expr) {
 	asn1p_expr_t *v;
+	int eidx = 0;
 	TQ_FOR(v, &(expr->members), next) {
-		if(v->expr_type == A1TC_EXTENSIBLE) return 1;
+		if(v->expr_type == A1TC_EXTENSIBLE)
+			return eidx;
+		eidx++;
 	}
-	return 0;
+	return -1;
 }
 
 static int
@@ -1414,7 +1547,7 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no, fte_e f
 	assert(el_no >= 0);
 
 	ret = asn1f_fetch_outmost_tag(arg->asn, arg->expr->module,
-			arg->expr, &tag, 1);
+			arg->expr, &tag, AFT_IMAGINARY_ANY);
 	if(ret == 0) {
 		tag2el_t *te;
 		int new_count = (*count) + 1;
@@ -1486,9 +1619,9 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *
 
 	if(!tag2el_count) return 0;	/* No top level tags */
 
-	OUT("static asn_TYPE_tag2member_t asn_MAP_%s_%d_tag2el%s[] = {\n",
-		MKID(expr->Identifier), expr->_type_unique_index,
-		opt_modifier?opt_modifier:"");
+	OUT("static asn_TYPE_tag2member_t asn_MAP_%s_tag2el%s_%d[] = {\n",
+		MKID(expr->Identifier), opt_modifier?opt_modifier:"",
+		expr->_type_unique_index);
 	for(i = 0; i < tag2el_count; i++) {
 		OUT("    { ");
 		_print_tag(arg, &tag2el[i].el_tag);
@@ -1551,9 +1684,9 @@ emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_ta
 	}
 
 #define	EMIT_TAGS_TABLE(name, tags, tags_count)	do {			\
-		OUT("static ber_tlv_tag_t asn_DEF_%s_%d%s_tags[] = {\n",\
-			MKID(expr->Identifier),				\
-			expr->_type_unique_index, name);		\
+		OUT("static ber_tlv_tag_t asn_DEF_%s%s_tags_%d[] = {\n",\
+			MKID(expr->Identifier), name,			\
+			expr->_type_unique_index);			\
 		INDENT(+1);						\
 		/* Print the array of collected tags */			\
 		for(i = 0; i < tags_count; i++) {			\
@@ -1608,6 +1741,246 @@ expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 	return elements;
 }
 
+static asn1p_expr_type_e
+expr_get_type(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_t *terminal;
+	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+	if(terminal) return terminal->expr_type;
+	return A1TC_INVALID;
+}
+
+static int
+emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, char *type) {
+	if(!range || range->incompatible || range->not_PER_visible) {
+		OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
+		return 0;
+	}
+
+	if(range->left.type == ARE_VALUE) {
+		if(range->right.type == ARE_VALUE) {
+			asn1c_integer_t cover = 1;
+			asn1c_integer_t r = 1 + range->right.value
+					      - range->left.value;
+			int rbits, ebits;
+
+			if(range->empty_constraint)
+				r = 0;
+
+			/* Compute real constraint */
+			for(rbits = 0; rbits < (8 * sizeof(r)); rbits++) {
+				if(r <= cover)
+					break;
+				cover *= 2;	/* Can't do shifting */
+				if(cover < 0) {
+					FATAL("Constraint at line %d too wide "
+						"for %d-bits integer type",
+						arg->expr->_lineno,
+						sizeof(r) * 8);
+					rbits = sizeof(r);
+					break;
+				}
+			}
+
+			if(1) {
+				/* X.691, #10.9.4.1 */
+				for(ebits = 0; ebits <= 16; ebits++)
+					if(r <= 1 << ebits) break;
+				if(ebits == 17
+				|| range->right.value >= 65536)
+					ebits = -1;
+			} else {
+				/* X.691, #10.5.7.1 */
+				for(ebits = 0; ebits <= 8; ebits++)
+					if(r <= 1 << ebits) break;
+				if(ebits == 9) {
+					if(r <= 65536)
+						ebits = 16;
+					else
+						ebits = -1;
+				}
+			}
+			OUT("{ APC_CONSTRAINED%s,%s% d, % d, ",
+				range->extensible
+					? " | APC_EXTENSIBLE" : "",
+				range->extensible ? " " : "\t", rbits, ebits);
+		} else {
+			if(range->extensible) {
+				OUT("{ APC_SEMI_CONSTRAINED | APC_EXTENSIBLE, "
+					"-1, ");
+			} else {
+				OUT("{ APC_SEMI_CONSTRAINED,\t-1, -1, ");
+			}
+		}
+		OUT("% " PRIdASN ", % " PRIdASN " }",
+			range->left.value, range->right.value);
+	} else {
+		OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
+	}
+
+	/*
+	 * Print some courtesy debug information.
+	 */
+	if(range->left.type == ARE_VALUE
+	|| range->right.type == ARE_VALUE) {
+		OUT("\t/* ");
+		if(type) OUT("(%s", type);
+		OUT("(");
+		if(range->left.type == ARE_VALUE)
+			OUT("%" PRIdASN, range->left.value);
+		else
+			OUT("MIN");
+		OUT("..");
+		if(range->right.type == ARE_VALUE)
+			OUT("%" PRIdASN, range->right.value);
+		else
+			OUT("MAX");
+		if(range->extensible) OUT(",...");
+		if(type) OUT(")");
+		OUT(") */");
+	}
+
+	return 0;
+}
+
+static int
+emit_single_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr) {
+	asn1cnst_range_t *range;
+	asn1p_expr_type_e etype;
+
+	etype = expr_get_type(arg, expr);
+
+	INDENT(+1);
+
+	/*
+	 * ENUMERATED and CHOICE are special.
+	 */
+	if(etype == ASN_BASIC_ENUMERATED
+	|| etype == ASN_CONSTR_CHOICE) {
+		asn1cnst_range_t tmprng;
+		asn1p_expr_t *v;
+		int extensible = 0;
+		int eidx = -1;
+
+		expr = asn1f_find_terminal_type_ex(arg->asn, expr);
+		assert(expr);
+
+		TQ_FOR(v, &(expr->members), next) {
+			if(v->expr_type == A1TC_EXTENSIBLE) {
+				extensible++;
+				break;
+			}
+			eidx++;
+		}
+
+		memset(&tmprng, 0, sizeof (tmprng));
+		tmprng.extensible = extensible;
+		if(eidx < 0) tmprng.empty_constraint = 1;
+		tmprng.left.type = ARE_VALUE;
+		tmprng.left.value = 0;
+		tmprng.right.type = ARE_VALUE;
+		tmprng.right.value = eidx < 0 ? 0 : eidx;
+		if(emit_single_member_PER_constraint(arg, &tmprng, 0))
+			return -1;
+	} else {
+		range = asn1constraint_compute_PER_range(etype,
+				expr->combined_constraints, ACT_EL_RANGE,
+				0, 0, 0);
+		if(emit_single_member_PER_constraint(arg, range, 0))
+			return -1;
+		asn1constraint_range_free(range);
+	}
+	OUT(",\n");
+
+	range = asn1constraint_compute_PER_range(etype,
+			expr->combined_constraints, ACT_CT_SIZE, 0, 0, 0);
+	if(emit_single_member_PER_constraint(arg, range, "SIZE"))
+		return -1;
+	asn1constraint_range_free(range);
+	OUT("\n");
+
+	INDENT(-1);
+
+	return 0;
+}
+
+static int
+emit_members_PER_constraints(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *v;
+
+	if(!(arg->flags & A1C_GEN_PER))
+		return 0;
+
+	TQ_FOR(v, &(expr->members), next) {
+		if(v->constraints
+		|| v->expr_type == ASN_BASIC_ENUMERATED
+		|| v->expr_type == ASN_CONSTR_CHOICE) {
+			OUT("static asn_per_constraints_t "
+				"asn_PER_memb_%s_constr_%d = {\n",
+				MKID(v->Identifier), v->_type_unique_index);
+			if(emit_single_member_PER_constraints(arg, v))
+				return -1;
+			OUT("};\n");
+		}
+	}
+
+	return 0;
+}
+
+static int
+try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
+	int save_target = arg->target->target;
+	asn1p_expr_type_e etype = expr_get_type(arg, expr);
+	int fits_long = 0;
+
+	switch(etype) {
+	case ASN_BASIC_BOOLEAN:
+		fits_long = 1;
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_ENUMERATED:
+		if(expr->marker.default_value == NULL
+		|| expr->marker.default_value->type != ATV_INTEGER)
+			break;
+		if(!fits_long)
+			fits_long = asn1c_type_fits_long(arg, expr)!=FL_NOTFIT;
+		if(fits_long && !expr->marker.default_value->value.v_integer)
+			expr->marker.flags &= ~EM_INDIRECT;
+		if(!out) return 1;
+		REDIR(OT_STAT_DEFS);
+		OUT("static int asn_DFL_%d_set_%" PRIdASN "(void **sptr) {\n",
+			expr->_type_unique_index,
+			expr->marker.default_value->value.v_integer);
+		INDENT(+1);
+		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
+		OUT("\n");
+		OUT("if(!st) {\n");
+		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
+		OUT("\tif(!st) return -1;\n");
+		OUT("}\n");
+		OUT("\n");
+		OUT("/* Install default value %" PRIdASN " */\n",
+			expr->marker.default_value->value.v_integer);
+		if(fits_long) {
+			OUT("*st = %" PRIdASN ";\n",
+				expr->marker.default_value->value.v_integer);
+			OUT("return 0;\n");
+		} else {
+			OUT("return asn_long2INTEGER(st, %" PRIdASN ");\n",
+				expr->marker.default_value->value.v_integer);
+		}
+		INDENT(-1);
+		OUT("}\n");
+		REDIR(save_target);
+		return 1;
+	case ASN_BASIC_NULL:
+		//expr->marker.flags &= ~EM_INDIRECT;
+		return 0;
+	default:
+		break;
+	}
+	return 0;
+}
+
 static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	int save_target;
@@ -1618,7 +1991,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	char *p;
 
 	if(asn1f_fetch_outmost_tag(arg->asn,
-			expr->module, expr, &outmost_tag_s, 1)) {
+			expr->module, expr, &outmost_tag_s,
+			AFT_IMAGINARY_ANY)) {
 		outmost_tag = 0;
 	} else {
 		outmost_tag = &outmost_tag_s;
@@ -1702,20 +2076,41 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 			if(expr->_anonymous_type
 					&& !strcmp(expr->Identifier, "Member"))
 				id = asn1c_type_name(arg, expr, TNF_SAFE);
-			OUT("memb_%s_%d_constraint,\n", id,
+			OUT("memb_%s_constraint_%d,\n", id,
 				arg->expr->_type_unique_index);
 		}
 	} else {
 		OUT("0,\t/* Defer constraints checking to the member type */\n");
 	}
-	if(C99_MODE) OUT(".name = ");
-	if(1) {
-		if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member"))
-			OUT("\"\"\n");
-		else
-			OUT("\"%s\"\n", expr->Identifier);
+	if(C99_MODE) OUT(".per_constraints = ");
+	if(arg->flags & A1C_GEN_PER) {
+		if(expr->constraints
+		|| expr->expr_type == ASN_BASIC_ENUMERATED
+		|| expr->expr_type == ASN_CONSTR_CHOICE) {
+			OUT("&asn_PER_memb_%s_constr_%d,\n",
+				MKID(expr->Identifier),
+				expr->_type_unique_index);
+		} else {
+			OUT("0,\t/* No PER visible constraints */\n");
+		}
 	} else {
-		OUT("\"%s\"\n", expr->_anonymous_type ? "" : expr->Identifier);
+		OUT("0,\t/* PER is not compiled, use -gen-PER */\n");
+	}
+	if(C99_MODE) OUT(".default_value = ");
+	if(try_inline_default(arg, expr, 0)) {
+		OUT("asn_DFL_%d_set_%" PRIdASN
+				",\t/* DEFAULT %" PRIdASN " */\n",
+			expr->_type_unique_index,
+			expr->marker.default_value->value.v_integer,
+			expr->marker.default_value->value.v_integer);
+	} else {
+		OUT("0,\n");
+	}
+	if(C99_MODE) OUT(".name = ");
+	if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member")) {
+		OUT("\"\"\n");
+	} else {
+		OUT("\"%s\"\n", expr->Identifier);
 	}
 	OUT("},\n");
 	INDENT(-1);
@@ -1731,7 +2126,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	else
 		p = MKID(expr->Identifier);
 	OUT("static int\n");
-	OUT("memb_%s_%d_constraint(asn_TYPE_descriptor_t *td, const void *sptr,\n", p, arg->expr->_type_unique_index);
+	OUT("memb_%s_constraint_%d(asn_TYPE_descriptor_t *td, const void *sptr,\n", p, arg->expr->_type_unique_index);
 	INDENT(+1);
 	OUT("\t\tasn_app_consume_bytes_f *app_errlog, void *app_key) {\n");
 	tmp_arg = *arg;
@@ -1755,21 +2150,41 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 static int
 emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
 	int using_type_name = 0;
-	char *p;
+	char *p = MKID(expr->Identifier);
+
+	if((arg->flags & A1C_GEN_PER)
+	&& (expr->constraints
+		|| expr->expr_type == ASN_BASIC_ENUMERATED
+		|| expr->expr_type == ASN_CONSTR_CHOICE)
+	) {
+		OUT("static asn_per_constraints_t asn_PER_%s_constr_%d = {\n",
+			p, expr->_type_unique_index);
+		if(emit_single_member_PER_constraints(arg, expr))
+			return -1;
+		OUT("};\n");
+	}
 
 	if(HIDE_INNER_DEFS)
 		OUT("static /* Use -fall-defs-global to expose */\n");
-	OUT("asn_TYPE_descriptor_t asn_DEF_%s", MKID(expr->Identifier));
+	OUT("asn_TYPE_descriptor_t asn_DEF_%s", p);
 	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
 	OUT(" = {\n");
-	p = MKID(expr->Identifier);
 	INDENT(+1);
-		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
-		OUT("\"%s\",\n", expr->_anonymous_type?"":expr->Identifier);
+
+		if(expr->_anonymous_type) {
+			p = ASN_EXPR_TYPE2STR(expr->expr_type);
+			OUT("\"%s\",\n", p?p:"");
+			OUT("\"%s\",\n", MKID(p?p:""));
+		} else {
+			OUT("\"%s\",\n", expr->Identifier);
+			OUT("\"%s\",\n", expr->Identifier);
+		}
 
 		if(expr->expr_type & ASN_CONSTR_MASK) {
 			using_type_name = 1;
 			p = asn1c_type_name(arg, arg->expr, TNF_SAFE);
+		} else {
+			p = MKID(expr->Identifier);
 		}
 
 #define FUNCREF(foo)	do {				\
@@ -1786,6 +2201,10 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		FUNCREF(encode_der);
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);
+		if(arg->flags & A1C_GEN_PER)
+			FUNCREF(decode_uper);
+		else
+			OUT("0,\t/* No PER decoder, -gen-PER to enable */\n");
 
 		if(expr->expr_type == ASN_CONSTR_CHOICE) {
 			OUT("CHOICE_outmost_tag,\n");
@@ -1795,11 +2214,11 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 		p = MKID(expr->Identifier);
 		if(tags_count) {
-			OUT("asn_DEF_%s_%d_tags,\n",
+			OUT("asn_DEF_%s_tags_%d,\n",
 				p, expr->_type_unique_index);
-			OUT("sizeof(asn_DEF_%s_%d_tags)\n",
+			OUT("sizeof(asn_DEF_%s_tags_%d)\n",
 				p, expr->_type_unique_index);
-			OUT("\t/sizeof(asn_DEF_%s_%d_tags[0])",
+			OUT("\t/sizeof(asn_DEF_%s_tags_%d[0])",
 				p, expr->_type_unique_index);
 			if(tv_mode == _TVM_SUBSET
 			&& tags_count != all_tags_count)
@@ -1811,22 +2230,35 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		}
 
 		if(all_tags_count && tv_mode == _TVM_DIFFERENT) {
-			OUT("asn_DEF_%s_%d_all_tags,\n",
+			OUT("asn_DEF_%s_all_tags_%d,\n",
 				p, expr->_type_unique_index);
-			OUT("sizeof(asn_DEF_%s_%d_all_tags)\n",
+			OUT("sizeof(asn_DEF_%s_all_tags_%d)\n",
 				p, expr->_type_unique_index);
-			OUT("\t/sizeof(asn_DEF_%s_%d_all_tags[0]), /* %d */\n",
+			OUT("\t/sizeof(asn_DEF_%s_all_tags_%d[0]), /* %d */\n",
 				p, expr->_type_unique_index, all_tags_count);
 		} else if(all_tags_count) {
-			OUT("asn_DEF_%s_%d_tags,\t/* Same as above */\n",
+			OUT("asn_DEF_%s_tags_%d,\t/* Same as above */\n",
 				p, expr->_type_unique_index);
-			OUT("sizeof(asn_DEF_%s_%d_tags)\n",
+			OUT("sizeof(asn_DEF_%s_tags_%d)\n",
 				p, expr->_type_unique_index);
-			OUT("\t/sizeof(asn_DEF_%s_%d_tags[0]), /* %d */\n",
+			OUT("\t/sizeof(asn_DEF_%s_tags_%d[0]), /* %d */\n",
 				p, expr->_type_unique_index, all_tags_count);
 		} else {
 			OUT("0,\t/* No tags (pointer) */\n");
 			OUT("0,\t/* No tags (count) */\n");
+		}
+
+		if(arg->flags & A1C_GEN_PER) {
+			if(expr->constraints
+			|| expr->expr_type == ASN_BASIC_ENUMERATED
+			|| expr->expr_type == ASN_CONSTR_CHOICE) {
+				OUT("&asn_PER_%s_constr_%d,\n",
+					p, expr->_type_unique_index);
+			} else {
+				OUT("0,\t/* No PER visible constraints */\n");
+			}
+		} else {
+			OUT("0,\t/* No PER visible constraints */\n");
 		}
 
 		if(elements_count) {
@@ -1852,7 +2284,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			OUT("0\t/* No specifics */\n");
 			break;
 		case ETD_HAS_SPECIFICS:
-			OUT("&asn_SPC_%s_%d_specs\t/* Additional specs */\n",
+			OUT("&asn_SPC_%s_specs_%d\t/* Additional specs */\n",
 				p, expr->_type_unique_index);
 		}
 	INDENT(-1);
@@ -1864,13 +2296,10 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 static int
 expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr) {
-	expr = asn1f_find_terminal_type_ex(arg->asn, expr);
-	if(!expr) return 0;
-
 	/*
 	 * X.680, 25.5, Table 5
 	 */
-	switch(expr->expr_type) {
+	switch(expr_get_type(arg, expr)) {
 	case ASN_BASIC_BOOLEAN:
 	case ASN_BASIC_ENUMERATED:
 	case ASN_BASIC_NULL:
@@ -1966,19 +2395,15 @@ emit_include_dependencies(arg_t *arg) {
  */
 static int
 expr_break_recursion(arg_t *arg, asn1p_expr_t *expr) {
-	asn1p_expr_t *terminal;
 	int ret;
 
 	if(expr->marker.flags & EM_UNRECURSE)
 		return 1;	/* Already broken */
 
-	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
-
 	/* -findirect-choice compiles members of CHOICE as indirect pointers */
 	if((arg->flags & A1C_INDIRECT_CHOICE)
 	 && arg->expr->expr_type == ASN_CONSTR_CHOICE
-	 && terminal
-	 && (terminal->expr_type & ASN_CONSTR_MASK)
+	 && (expr_get_type(arg, expr) & ASN_CONSTR_MASK)
 	) {
 		/* Break cross-reference */
 		expr->marker.flags |= EM_INDIRECT | EM_UNRECURSE;
@@ -2093,4 +2518,84 @@ expr_defined_recursively(arg_t *arg, asn1p_expr_t *expr) {
 
 	/* Look inside the terminal type if it mentions the parent expression */
 	return asn1c_recurse(arg, terminal, check_is_refer_to, topmost);
+}
+
+struct canonical_map_element {
+	int eidx;
+	asn1p_expr_t *expr;
+};
+static int compar_cameo(const void *ap, const void *bp);
+static arg_t *cameo_arg;
+static int *
+compute_canonical_members_order(arg_t *arg, int el_count) {
+	struct canonical_map_element *cmap;
+	int *rmap;
+	asn1p_expr_t *v;
+	int eidx = 0;
+	int ext_start = -1;
+	int nextmax = -1;
+	int already_sorted = 1;
+
+	cmap = calloc(el_count, sizeof *cmap);
+	assert(cmap);
+
+	TQ_FOR(v, &(arg->expr->members), next) {
+		if(v->expr_type != A1TC_EXTENSIBLE) {
+			cmap[eidx].eidx = eidx;
+			cmap[eidx].expr = v;
+			eidx++;
+		} else if(ext_start == -1)
+			ext_start = eidx;
+	}
+
+	cameo_arg = arg;
+	if(ext_start == -1) {
+		/* Sort the whole thing */
+		qsort(cmap, el_count, sizeof(*cmap), compar_cameo);
+	} else {
+		/* Sort root and extensions independently */
+		qsort(cmap, ext_start, sizeof(*cmap), compar_cameo);
+		qsort(cmap + ext_start, el_count - ext_start,
+			sizeof(*cmap), compar_cameo);
+	}
+
+	/* move data back to a simpler map */
+	rmap = calloc(el_count, sizeof *rmap);
+	assert(rmap);
+	for(eidx = 0; eidx < el_count; eidx++) {
+		rmap[eidx] = cmap[eidx].eidx;
+		if(rmap[eidx] <= nextmax)
+			already_sorted = 0;
+		else
+			nextmax = rmap[eidx];
+	}
+	free(cmap);
+
+	if(already_sorted) { free(rmap); rmap = 0; }
+	return rmap;
+}
+static int compar_cameo(const void *ap, const void *bp) {
+	const struct canonical_map_element *a = (const void *)ap;
+	const struct canonical_map_element *b = (const void *)bp;
+	struct asn1p_type_tag_s atag, btag;
+	arg_t *arg = cameo_arg;
+
+	if(asn1f_fetch_outmost_tag(arg->asn, a->expr->module, a->expr,
+			&atag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE))
+		return 1;
+
+	if(asn1f_fetch_outmost_tag(arg->asn, b->expr->module, b->expr,
+			&btag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE))
+		return -1;
+
+	if(atag.tag_class < btag.tag_class)
+		return -1;
+	if(atag.tag_class > btag.tag_class)
+		return 1;
+	if(atag.tag_value < btag.tag_value)
+		return -1;
+	if(atag.tag_value > btag.tag_value)
+		return 1;
+	return 0;
+
 }

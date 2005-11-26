@@ -10,7 +10,8 @@ check_PROGRAMS = \
 	check-UTCTime		\
 	check-INTEGER		\
 	check-REAL		\
-	check-XER
+	check-XER		\
+	check-PER
 
 LDADD = -lm
 

@@ -27,6 +27,7 @@ ber_type_decoder_f NativeInteger_decode_ber;
 der_type_encoder_f NativeInteger_encode_der;
 xer_type_decoder_f NativeInteger_decode_xer;
 xer_type_encoder_f NativeInteger_encode_xer;
+per_type_decoder_f NativeInteger_decode_uper;
 
 #ifdef __cplusplus
 }

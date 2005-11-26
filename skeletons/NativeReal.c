@@ -29,11 +29,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	NativeReal_encode_der,
 	NativeReal_decode_xer,
 	NativeReal_encode_xer,
+	0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
 	asn_DEF_NativeReal_tags,	/* Same as above */
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -206,7 +208,7 @@ NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = REAL__dump(*Dbl, flags & XER_F_CANONICAL, cb, app_key);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
-	return er;
+	_ASN_ENCODED_OK(er);
 }
 
 /*

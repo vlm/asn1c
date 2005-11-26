@@ -27,6 +27,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_decode_xer_binary,
 	BIT_STRING_encode_xer,
+	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BIT_STRING_tags,
 	sizeof(asn_DEF_BIT_STRING_tags)
@@ -34,6 +35,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	asn_DEF_BIT_STRING_tags,	/* Same as above */
 	sizeof(asn_DEF_BIT_STRING_tags)
 	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	&asn_DEF_BIT_STRING_specs
 };
@@ -124,9 +126,7 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
 
-	er.structure_ptr = 0;
-	er.failed_type = 0;
-	return er;
+	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }

@@ -1,6 +1,4 @@
-
-Here are the canonical encoder/decoder algorithms that work with the tables
-constructed by the compiler. The compiler itself does not generate code,
-it just creates those tables and then copies (links) over these files
-which contain generic algorithms.
-
+This directory contains encoder/decoder code for various encoding rules
+(PER, DER, BER, XER) that work with the tables constructed by the compiler.
+The compiler itself does not generate much code. It creates parsing tables
+and then copies (links) over these files which contain generic codecs.

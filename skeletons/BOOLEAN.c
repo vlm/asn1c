@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -22,11 +22,13 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	BOOLEAN_encode_der,
 	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
+	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BOOLEAN_tags,
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
 	asn_DEF_BOOLEAN_tags,	/* Same as above */
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -126,7 +128,7 @@ BOOLEAN_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 
 	erval.encoded += 1;
 
-	return erval;
+	_ASN_ENCODED_OK(erval);
 }
 
 
@@ -196,7 +198,7 @@ BOOLEAN_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		er.encoded = 8;
 	}
 
-	return er;
+	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }
@@ -232,5 +234,35 @@ BOOLEAN_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr && !contents_only) {
 		FREEMEM(ptr);
 	}
+}
+
+asn_dec_rval_t
+BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+	BOOLEAN_t *st = (BOOLEAN_t *)*sptr;
+
+	(void)opt_codec_ctx;
+	(void)constraints;
+
+	if(!st) {
+		st = (BOOLEAN_t *)(*sptr = MALLOC(sizeof(*st)));
+		if(!st) _ASN_DECODE_FAILED;
+	}
+
+	/*
+	 * Extract a single bit
+	 */
+	switch(per_get_few_bits(pd, 1)) {
+	case 1: *st = 1; break;
+	case 0: *st = 0; break;
+	case -1: default: _ASN_DECODE_FAILED;
+	}
+
+	ASN_DEBUG("%s decoded as %s", td->name, *st ? "TRUE" : "FALSE");
+
+	rv.code = RC_OK;
+	rv.consumed = 1;
+	return rv;
 }
 

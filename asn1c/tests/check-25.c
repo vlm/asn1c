@@ -102,8 +102,8 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 		assert(rval.code == RC_OK);
 		assert(rval.consumed == consumed);
 
-		assert(strcmp(t.e->buf, "xyz") == 0);
-		assert(strcmp(t.f->buf, "love_it") == 0);
+		assert(strcmp((char *)t.e->buf, "xyz") == 0);
+		assert(strcmp((char *)t.f->buf, "love_it") == 0);
 
 		assert(t.g->size == 2);
 		assert(t.g->bits_unused == 2);

@@ -23,6 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	OCTET_STRING_encode_der,
 	BMPString_decode_xer,		/* Convert from UTF-8 */
 	BMPString_encode_xer,		/* Convert to UTF-8 */
+	0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
@@ -30,6 +31,7 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
 	  / sizeof(asn_DEF_BMPString_tags[0]),
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -156,7 +158,7 @@ BMPString_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded = BMPString__dump(st, cb, app_key);
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
-	return er;
+	_ASN_ENCODED_OK(er);
 }
 
 int

@@ -33,13 +33,15 @@ static asn_TYPE_member_t asn_MBR_Programming_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Fault,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Programming_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Programming_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_Programming_1_specs = {
+static asn_SET_OF_specifics_t asn_SPC_Programming_specs_1 = {
 	sizeof(struct Programming),
 	offsetof(struct Programming, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -54,16 +56,18 @@ asn_TYPE_descriptor_t asn_DEF_Programming = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Programming_1_tags,
-	sizeof(asn_DEF_Programming_1_tags)
-		/sizeof(asn_DEF_Programming_1_tags[0]), /* 1 */
-	asn_DEF_Programming_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Programming_1_tags)
-		/sizeof(asn_DEF_Programming_1_tags[0]), /* 1 */
+	asn_DEF_Programming_tags_1,
+	sizeof(asn_DEF_Programming_tags_1)
+		/sizeof(asn_DEF_Programming_tags_1[0]), /* 1 */
+	asn_DEF_Programming_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Programming_tags_1)
+		/sizeof(asn_DEF_Programming_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Programming_1,
 	1,	/* Single element */
-	&asn_SPC_Programming_1_specs	/* Additional specs */
+	&asn_SPC_Programming_specs_1	/* Additional specs */
 };
 
 
@@ -101,13 +105,15 @@ static asn_TYPE_member_t asn_MBR_Fault_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Error,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Fault_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Fault_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_Fault_1_specs = {
+static asn_SET_OF_specifics_t asn_SPC_Fault_specs_1 = {
 	sizeof(struct Fault),
 	offsetof(struct Fault, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -122,16 +128,18 @@ asn_TYPE_descriptor_t asn_DEF_Fault = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Fault_1_tags,
-	sizeof(asn_DEF_Fault_1_tags)
-		/sizeof(asn_DEF_Fault_1_tags[0]), /* 1 */
-	asn_DEF_Fault_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Fault_1_tags)
-		/sizeof(asn_DEF_Fault_1_tags[0]), /* 1 */
+	asn_DEF_Fault_tags_1,
+	sizeof(asn_DEF_Fault_tags_1)
+		/sizeof(asn_DEF_Fault_tags_1[0]), /* 1 */
+	asn_DEF_Fault_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Fault_tags_1)
+		/sizeof(asn_DEF_Fault_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	asn_MBR_Fault_1,
 	1,	/* Single element */
-	&asn_SPC_Fault_1_specs	/* Additional specs */
+	&asn_SPC_Fault_specs_1	/* Additional specs */
 };
 
 
@@ -157,14 +165,15 @@ extern asn_TYPE_descriptor_t asn_DEF_Error;
 
 /*** <<< STAT-DEFS [Error] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_Error_1_tags[] = {
+static ber_tlv_tag_t asn_DEF_Error_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Error_1_specs = {
+static asn_SEQUENCE_specifics_t asn_SPC_Error_specs_1 = {
 	sizeof(struct Error),
 	offsetof(struct Error, _asn_ctx),
 	0,	/* No top level tags */
 	0,	/* No tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
@@ -178,14 +187,16 @@ asn_TYPE_descriptor_t asn_DEF_Error = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Error_1_tags,
-	sizeof(asn_DEF_Error_1_tags)
-		/sizeof(asn_DEF_Error_1_tags[0]), /* 1 */
-	asn_DEF_Error_1_tags,	/* Same as above */
-	sizeof(asn_DEF_Error_1_tags)
-		/sizeof(asn_DEF_Error_1_tags[0]), /* 1 */
+	asn_DEF_Error_tags_1,
+	sizeof(asn_DEF_Error_tags_1)
+		/sizeof(asn_DEF_Error_tags_1[0]), /* 1 */
+	asn_DEF_Error_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Error_tags_1)
+		/sizeof(asn_DEF_Error_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	&asn_SPC_Error_1_specs	/* Additional specs */
+	&asn_SPC_Error_specs_1	/* Additional specs */
 };
 

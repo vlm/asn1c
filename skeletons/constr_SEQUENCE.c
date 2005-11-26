@@ -551,7 +551,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		_ASN_ENCODE_FAILED;
 	erval.encoded = computed_size + ret;
 
-	if(!cb) return erval;
+	if(!cb) _ASN_ENCODED_OK(erval);
 
 	/*
 	 * Encode all members.
@@ -583,7 +583,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		 */
 		_ASN_ENCODE_FAILED;
 
-	return erval;
+	_ASN_ENCODED_OK(erval);
 }
 
 
@@ -883,7 +883,7 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
 
-	return er;
+	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }
@@ -1014,3 +1014,135 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 	return 0;
 }
+
+asn_dec_rval_t
+SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+	void *st = *sptr;	/* Target structure. */
+	int extpresent = 0;	/* Extension additions are present */
+	uint8_t *opres;		/* Presence of optional root members */
+	asn_per_data_t opmd;
+	asn_dec_rval_t rv;
+	int edx;
+
+	(void)constraints;
+
+	if(!st) {
+		st = *sptr = CALLOC(1, specs->struct_size);
+		if(!st) _ASN_DECODE_FAILED;
+	}
+
+	ASN_DEBUG("Decoding %s as SEQUENCE (UPER)", td->name);
+
+	/* Handle extensions */
+	if(specs->ext_before >= 0) {
+		extpresent = per_get_few_bits(pd, 1);
+		if(extpresent < 0) _ASN_DECODE_FAILED;
+	}
+
+	/* Prepare a place and read-in the presence bitmap */
+	if(specs->roms_count) {
+		opres = (uint8_t *)MALLOC(((specs->roms_count + 7) >> 3) + 1);
+		if(!opres) _ASN_DECODE_FAILED;
+		/* Get the presence map */
+		if(per_get_many_bits(pd, opres, 0, specs->roms_count)) {
+			FREEMEM(opres);
+			_ASN_DECODE_FAILED;
+		}
+		opmd.buffer = opres;
+		opmd.nboff = 0;
+		opmd.nbits = specs->roms_count;
+		ASN_DEBUG("Read in presence bitmap for %s of %d bits (%x..)",
+			td->name, specs->roms_count, *opres);
+	} else {
+		opres = 0;
+		memset(&opmd, 0, sizeof opmd);
+	}
+
+	/*
+	 * Get the sequence ROOT elements.
+	 */
+	for(edx = 0; edx < ((specs->ext_before < 0)
+			? td->elements_count : specs->ext_before + 1); edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
+
+		/* Fetch the pointer to this member */
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+		} else {
+			memb_ptr = (char *)st + elm->memb_offset;
+			memb_ptr2 = &memb_ptr;
+		}
+
+		/* Deal with optionality */
+		if(elm->optional) {
+			int present = per_get_few_bits(&opmd, 1);
+			ASN_DEBUG("Member %s->%s is optional, p=%d (%d->%d)",
+				td->name, elm->name, present,
+				(int)opmd.nboff, (int)opmd.nbits);
+			if(present == 0) {
+				/* This element is not present */
+				if(elm->default_value) {
+					/* Fill-in DEFAULT */
+					if(elm->default_value(memb_ptr2)) {
+						FREEMEM(opres);
+						_ASN_DECODE_FAILED;
+					}
+				}
+				/* The member is just not present */
+				continue;
+			}
+			/* Fall through */
+		}
+
+		/* Fetch the member from the stream */
+		ASN_DEBUG("Decoding member %s in %s", elm->name, td->name);
+		rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
+			elm->per_constraints, memb_ptr2, pd);
+		if(rv.code != RC_OK) {
+			ASN_DEBUG("Failed decode %s in %s",
+				elm->name, td->name);
+			FREEMEM(opres);
+			return rv;
+		}
+	}
+
+	/*
+	 * Deal with extensions.
+	 */
+	if(extpresent) {
+		ASN_DEBUG("Extensibility for %s: NOT IMPLEMENTED", td->name);
+		_ASN_DECODE_FAILED;
+	} else {
+		for(edx = specs->roms_count; edx < specs->roms_count
+				+ specs->aoms_count; edx++) {
+			asn_TYPE_member_t *elm = &td->elements[edx];
+			void *memb_ptr;		/* Pointer to the member */
+			void **memb_ptr2;	/* Pointer to that pointer */
+
+			if(!elm->default_value) continue;
+
+			/* Fetch the pointer to this member */
+			if(elm->flags & ATF_POINTER) {
+				memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+			} else {
+				memb_ptr = (char *)st + elm->memb_offset;
+				memb_ptr2 = &memb_ptr;
+			}
+
+			/* Set default value */
+			if(elm->default_value(memb_ptr2)) {
+				FREEMEM(opres);
+				_ASN_DECODE_FAILED;
+			}
+		}
+	}
+
+	rv.consumed = 0;
+	rv.code = RC_OK;
+	return rv;
+}
+

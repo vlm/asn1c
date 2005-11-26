@@ -21,8 +21,10 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	ANY_encode_xer,
+	0,
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
+	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	&asn_DEF_ANY_specs,
 };
