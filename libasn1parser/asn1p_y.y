@@ -575,9 +575,8 @@ ModuleSpecificationElement:
 	 */
 	| BasicString {
 		return yyerror(
-			"Attempt to redefine a standard basic type, "
-			"use -ftypesXY to switch back "
-			"to older version of ASN.1 standard");
+			"Attempt to redefine a standard basic string type, "
+			"please comment out or remove this type redefinition.");
 	}
 	;
 
@@ -1944,7 +1943,7 @@ optMarker:
 
 Marker:
 	TOK_OPTIONAL {
-		$$.flags = EM_OPTIONAL;
+		$$.flags = EM_OPTIONAL | EM_INDIRECT;
 		$$.default_value = 0;
 	}
 	| TOK_DEFAULT Value {

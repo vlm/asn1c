@@ -176,7 +176,7 @@ typedef struct asn1p_expr_s {
 		enum asn1p_expr_marker_e {
 		  EM_NOMARK,
 		  EM_INDIRECT	= 0x01,	/* 00001 Represent as pointer */
-		  EM_OMITABLE	= 0x03,	/* 00011 May be absent in encoding */
+		  EM_OMITABLE	= 0x02,	/* 00010 May be absent in encoding */
 		  EM_OPTIONAL	= 0x07,	/* 00111 Optional member */
 		  EM_DEFAULT	= 0x0F,	/* 01111 default_value */
 		  EM_UNRECURSE	= 0x10,	/* 10000 Use safe naming */
@@ -225,6 +225,7 @@ typedef struct asn1p_expr_s {
 	 */
 	int _anonymous_type;	/* This type is unnamed */
 	int _type_unique_index;	/* A per top-level-type unique index */
+	int _type_referenced;	/* This type is referenced from another place */
 
 	/*
 	 * Opaque data may be attached to this structure,
