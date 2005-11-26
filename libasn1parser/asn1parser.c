@@ -139,22 +139,6 @@ _asn1p_set_flags(enum asn1p_flags flags) {
 	}
 
 	/*
-	 * Restrict embedded types to ASN.1:1988 version of standard.
-	 */
-	if(flags & A1P_TYPES_RESTRICT_TO_1988) {
-		flags &= ~A1P_TYPES_RESTRICT_TO_1988;
-		asn1p_lexer_types_year = 1988;
-	}
-
-	/*
-	 * Restrict embedded types to ASN.1:1988 version of standard.
-	 */
-	if(flags & A1P_TYPES_RESTRICT_TO_1988) {
-		flags &= ~A1P_TYPES_RESTRICT_TO_1988;
-		asn1p_lexer_types_year = 1988;
-	}
-
-	/*
 	 * Check that we haven't missed an unknown flag.
 	 */
 	if(flags) {

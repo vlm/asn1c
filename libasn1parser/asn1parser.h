@@ -57,15 +57,7 @@ enum asn1p_flags {
 	/*
 	 * Enable verbose debugging output from lexer.
 	 */
-	A1P_LEXER_DEBUG			= 0x0001,
-	/*
-	 * Embedded types restricted to ASN.1:1988
-	 */
-	A1P_TYPES_RESTRICT_TO_1988	= 0x0010,
-	/*
-	 * Embedded constructs (concepts) restricted to ASN.1:1990
-	 */
-	A1P_CONSTRUCTS_RESTRICT_TO_1990	= 0x0020,
+	A1P_LEXER_DEBUG			= 0x0001
 };
 
 /*
