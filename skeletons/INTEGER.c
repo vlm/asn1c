@@ -206,7 +206,7 @@ INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	(void)td;
 	(void)ilevel;
 
-	if(!st && !st->buf)
+	if(!st || !st->buf)
 		ret = cb("<absent>", 8, app_key);
 	else
 		ret = INTEGER__dump(td, st, cb, app_key, 0);
@@ -426,7 +426,7 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	(void)ilevel;
 	(void)flags;
 	
-	if(!st && !st->buf)
+	if(!st || !st->buf)
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = INTEGER__dump(td, st, cb, app_key, 1);
