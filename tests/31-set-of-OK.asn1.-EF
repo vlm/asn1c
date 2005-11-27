@@ -23,6 +23,4 @@ Stuff ::= SET {
     }
 }
 
-SSS ::= SEQUENCE OF SET OF SEQUENCE OF BIT STRING
-
 END
