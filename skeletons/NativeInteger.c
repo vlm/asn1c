@@ -241,12 +241,13 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	memset(&tmpint, 0, sizeof tmpint);
 	rval = INTEGER_decode_uper(opt_codec_ctx, td, constraints,
 				   &tmpintptr, pd);
-	if(rval.code == RC_OK)
+	if(rval.code == RC_OK) {
 		if(asn_INTEGER2long(&tmpint, native))
 			rval.code = RC_FAIL;
 		else
 			ASN_DEBUG("NativeInteger %s got value %ld",
 				td->name, *native);
+	}
 	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, &tmpint, 1);
 
 	return rval;
