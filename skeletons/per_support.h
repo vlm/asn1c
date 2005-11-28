@@ -21,7 +21,7 @@ typedef struct asn_per_data_s {
 } asn_per_data_t;
 
 /*
- * Extract a small number of bits (<= 24) from the specified PER data pointer.
+ * Extract a small number of bits (<= 31) from the specified PER data pointer.
  * This function returns -1 if the specified number of bits could not be
  * extracted due to EOD or other conditions.
  */

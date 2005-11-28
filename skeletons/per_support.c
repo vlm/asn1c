@@ -6,7 +6,7 @@
 #include <per_support.h>
 
 /*
- * Extract a small number of bits (<= 24) from the specified PER data pointer.
+ * Extract a small number of bits (<= 31) from the specified PER data pointer.
  */
 int32_t
 per_get_few_bits(asn_per_data_t *pd, int nbits) {
@@ -16,8 +16,6 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 
 	if(nbits < 0 || pd->nboff + nbits > pd->nbits)
 		return -1;
-	if(nbits == 0)
-		return 0;
 
 	/*
 	 * Normalize position indicator.
@@ -34,7 +32,7 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	 * Extract specified number of bits.
 	 */
 	if(off <= 8)
-		accum = (buf[0]) >> (8 - off);
+		accum = nbits ? (buf[0]) >> (8 - off) : 0;
 	else if(off <= 16)
 		accum = ((buf[0] << 8) + buf[1]) >> (16 - off);
 	else if(off <= 24)
@@ -42,12 +40,18 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	else if(off <= 31)
 		accum = ((buf[0] << 24) + (buf[1] << 16)
 			+ (buf[2] << 8) + (buf[3])) >> (32 - off);
-	else {
+	else if(nbits <= 31) {
+		asn_per_data_t tpd = *pd;
+		/* Here are we with our 31-bits limit plus 1..7 bits offset. */
+		tpd.nboff -= nbits;
+		accum  = per_get_few_bits(&tpd, nbits - 24) << 24;
+		accum |= per_get_few_bits(&tpd, 24);
+	} else {
 		pd->nboff -= nbits;	/* Oops, revert back */
 		return -1;
 	}
 
-	return (accum & ((1 << nbits) - 1));
+	return (accum & (((uint32_t)1 << nbits) - 1));
 }
 
 /*
