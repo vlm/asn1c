@@ -14,22 +14,27 @@ main() {
 
 	z = per_get_few_bits(&pos, 32);
 	assert(z == -1);
+	assert(pos.nbits == sizeof(buf) * 8);
 
 	z = per_get_few_bits(&pos, 0);
 	assert(z == 0);
 	assert(pos.nboff == 0);
+	assert(pos.nbits == sizeof(buf) * 8);
 
 	z = per_get_few_bits(&pos, 1);
 	assert(z == 1);
 	assert(pos.nboff == 1);
+	assert(pos.nbits == sizeof(buf) * 8);
 
 	z = per_get_few_bits(&pos, 2);
 	assert(z == 1);
 	assert(pos.nboff == 3);
+	assert(pos.nbits == sizeof(buf) * 8);
 
 	z = per_get_few_bits(&pos, 2);
 	assert(z == 2);
 	assert(pos.nboff == 5);
+	assert(pos.nbits == sizeof(buf) * 8);
 
 	z = per_get_few_bits(&pos, 3);
 	assert(z == 7);
@@ -60,6 +65,20 @@ main() {
 	pos.nbits = sizeof(buf) * 8;
 	z = per_get_few_bits(&pos, 24);
 	assert(z == 14443711);
+
+	/* Get full 31-bit range */
+	pos.buffer = buf;
+	pos.nboff = 7;
+	pos.nbits = sizeof(buf) * 8;
+	z = per_get_few_bits(&pos, 31);
+	assert(z == 1179384747);
+
+	/* Get a bit shifted range */
+	pos.buffer = buf;
+	pos.nboff = 6;
+	pos.nbits = sizeof(buf) * 8;
+	z = per_get_few_bits(&pos, 31);
+	assert(z == 1663434197);
 
 	pos.buffer = buf;
 	pos.nboff = 0;
