@@ -335,7 +335,6 @@ asn1f_check_constr_tags_distinct(arg_t *arg) {
 	case ASN_CONSTR_SEQUENCE:
 	case ASN_CONSTR_SET:
 	case ASN_CONSTR_CHOICE:
-		DEBUG("Checking tags of members of constructed types");
 		break;
 	default:
 		return 0;
