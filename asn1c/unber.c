@@ -322,9 +322,10 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 		effective_size += t_len + l_len;
 		local_esize += t_len + l_len;
 
-		if(expect_eoc && tagbuf[0] == '\0' && tagbuf[1] == '\0') {
+		if(expect_eoc && !tagbuf[0] && !tagbuf[1]) {
 			/* End of content octets */
-			print_TL(1, *offset - 2, level - 1, 1, 2, 0, -1, effective_size);
+			print_TL(1, *offset - 2, level - 1, 1, 2, 0, -1,
+					effective_size);
 			return PD_FINISHED;
 		}
 
@@ -350,7 +351,8 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, 
 			local_esize += dec;
 			if(tlv_len == -1) {
 				tblen = 0;
-				if(pdc == PD_FINISHED && limit < 0)
+				if(pdc == PD_FINISHED
+					&& limit < 0 && !expect_eoc)
 					return pdc;
 				continue;
 			}

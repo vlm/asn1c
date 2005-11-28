@@ -19,6 +19,8 @@ cat<<EOM > $ORIG
 <P O="24" T="[UNIVERSAL 2]" TL="2" V="4" A="INTEGER">&#x31;&#xa6;&#x20;&#x47;</P>
 </C O="30" T="[UNIVERSAL 16]" A="SEQUENCE" L="8">
 </C O="30" T="[UNIVERSAL 16]" A="SEQUENCE" L="24">
+<I O="30" T="[UNIVERSAL 16]" TL="2" V="Indefinite" A="SEQUENCE">
+</I O="32" T="[UNIVERSAL 0]" TL="2" L="4">
 EOM
 
 ./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
@@ -31,7 +33,7 @@ if [ "$diffExitCode" = "0" ]; then
 fi
 
 # Append necessary terminator
-echo '</I O="30" T="[UNIVERSAL 0]" TL="2" L="32">' >> $ORIG
+echo '</I O="34" T="[UNIVERSAL 0]" TL="2" L="36">' >> $ORIG
 
 # Try trancoding again
 ./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
