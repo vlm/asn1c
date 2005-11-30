@@ -1143,6 +1143,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	rv.consumed = 0;
 	rv.code = RC_OK;
+	FREEMEM(opres);
 	return rv;
 }
 
