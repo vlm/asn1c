@@ -49,7 +49,7 @@ $|=1;	# Enable AutoFlush (for older versions of Perl)
 
 my %binaryDecoders = (
 	x509 => { order => 1,
-		shorder => 11,
+		shorder => 6,
 		type => 'X.509 Certificate',
 		typeExt => 'X.509 Certificate',
 		description => 'X.509 in DER (not PEM!)',
@@ -88,58 +88,8 @@ my %binaryDecoders = (
 		msg => ''
 		},
 
-	rrcDLCCCH => { order => 5,
+	mheg5 => { order => 5,
 		shorder => 5,
-		type => 'RRC DL-CCCH-Message',
-		typeExt => 'RRC DL-CCCH-Message frame',
-		description => '3GPP RRC DL-CCCH-Message',
-		exe => 'rrc-dump',
-		cmdopts => '-p DL-CCCH-Message',
-		msg => ''
-		},
-
-	rrcULCCCH => { order => 6,
-		shorder => 6,
-		type => 'RRC UL-CCCH-Message',
-		typeExt => 'RRC UL-CCCH-Message frame',
-		description => '3GPP RRC UL-CCCH-Message',
-		exe => 'rrc-dump',
-		cmdopts => '-p UL-CCCH-Message',
-		msg => ''
-		},
-
-	rrcDLDCCH => { order => 7,
-		shorder => 7,
-		type => 'RRC DL-DCCH-Message',
-		typeExt => 'RRC DL-DCCH-Message frame',
-		description => '3GPP RRC DL-DCCH-Message',
-		exe => 'rrc-dump',
-		cmdopts => '-p DL-DCCH-Message',
-		msg => ''
-		},
-
-	rrcULDCCH => { order => 8,
-		shorder => 8,
-		type => 'RRC UL-DCCH-Message',
-		typeExt => 'RRC UL-DCCH-Message frame',
-		description => '3GPP RRC UL-DCCH-Message',
-		exe => 'rrc-dump',
-		cmdopts => '-p UL-DCCH-Message',
-		msg => ''
-		},
-
-	rrcPCCH => { order => 9,
-		shorder => 9,
-		type => 'RRC PCCH-Message',
-		typeExt => 'RRC PCCH-Message frame',
-		description => '3GPP RRC PCCH-Message',
-		exe => 'rrc-dump',
-		cmdopts => '-p PCCH-Message',
-		msg => ''
-		},
-
-	mheg5 => { order => 10,
-		shorder => 10,
 		type => 'MHEG-5',
 		typeExt => 'ISO MHEG-5 data',
 		description => 'ISO MHEG-5 stream file',
@@ -148,7 +98,7 @@ my %binaryDecoders = (
 		msg => ''
 		},
 
-	ber => { order => 11,
+	ber => { order => 6,
 		shorder => 1,
 		type => BER,
 		typeExt => 'BER encoded data',
@@ -156,6 +106,56 @@ my %binaryDecoders = (
 		exe => 'unber',
 		cmdopts => '',
 		msg => "<!-- Use 'enber' to convert it back into BER -->\n"
+		},
+
+	rrcDLCCCH => { order => -1,	# Not automatic
+		shorder => 7,
+		type => 'RRC DL-CCCH-Message',
+		typeExt => 'RRC DL-CCCH-Message frame',
+		description => '3GPP RRC DL-CCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p DL-CCCH-Message -oxer',
+		msg => ''
+		},
+
+	rrcULCCCH => { order => -1,
+		shorder => 8,
+		type => 'RRC UL-CCCH-Message',
+		typeExt => 'RRC UL-CCCH-Message frame',
+		description => '3GPP RRC UL-CCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p UL-CCCH-Message -oxer',
+		msg => ''
+		},
+
+	rrcDLDCCH => { order => -1,
+		shorder => 9,
+		type => 'RRC DL-DCCH-Message -oxer',
+		typeExt => 'RRC DL-DCCH-Message frame',
+		description => '3GPP RRC DL-DCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p DL-DCCH-Message -oxer',
+		msg => ''
+		},
+
+	rrcULDCCH => { order => -1,
+		shorder => 10,
+		type => 'RRC UL-DCCH-Message',
+		typeExt => 'RRC UL-DCCH-Message frame',
+		description => '3GPP RRC UL-DCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p UL-DCCH-Message -oxer',
+		msg => ''
+		},
+
+	rrcPCCH => { order => -1,
+		shorder => 11,
+		type => 'RRC PCCH-Message',
+		typeExt => 'RRC PCCH-Message frame',
+		description => '3GPP RRC PCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p PCCH-Message -oxer',
+		msg => ''
 		}
 
 );
@@ -550,13 +550,16 @@ if($#gotSafeNames >= 0) {
 	# Try out several BER decoders.
 	foreach my $t (sort { $binaryDecoders{$a}{order}
 			<=> $binaryDecoders{$b}{order} } keys %binaryDecoders) {
-		next unless ($fType eq 'auto' or $fType eq $t);
 		my %dec = %{$binaryDecoders{$t}};
+		next unless ($fType eq 'auto' or $fType eq $t);
+		next if($fType eq 'auto' and $dec{order} < 0);
 		$options = $dec{cmdopts};
 		$options .= "-m"
 			if($dec{type} eq 'BER' && $optMin eq "on");
-		$options =~ s/-x/-p/g
-			if($dec{type} ne 'BER' && $optNoXER eq "on");
+		if($dec{type} ne 'BER' && $optNoXER eq "on") {
+			$options =~ s/-x/-p/g;		# Old way
+			$options =~ s/-oxer/-otext/g;	# New way
+		}
 		my $ec = system("$SUIDHelper $TMPDIR $inChDir $dec{exe} $options @gotSafeNames > $TMPDIR/$inChDir/+UNBER.tmp 2>&1");
 		next if ($ec != 0 and $t ne $fType
 			and (-s "$TMPDIR/$inChDir/+UNBER.tmp" < 1000));
@@ -603,6 +606,7 @@ if(-f $sessionDir . '/lastText') {
 $form = << "EOM";
 <SCRIPT>
 function fileTypeChanged(s) {
+	if(s.value == "no") return false;
 	var options_asn = document.getElementById("options-asn");
 	var options_bin = document.getElementById("options-bin");
 	if(s.value == "auto" || s.value == "asn1") {
@@ -625,6 +629,7 @@ function fileTypeChanged(s) {
 	default:
 		pr.value = "Proceed with binary data decoding"; break;
 	} 
+	return true;
 }
 function formSubmit() {
 	if(document.form.file.value == ""
@@ -640,16 +645,26 @@ function formSubmit() {
 <FORM METHOD=POST NAME=form ACTION=$myName ENCTYPE="multipart/form-data">
 <DIV STYLE="width: 100%;">
 <DIV ID=arrow>&rArr;</DIV><DIV ID=aarr>Pick the ASN.1 module text or binary encoded data file:<BR>
-<SELECT NAME=fileType onchange="fileTypeChanged(this);">
+<SELECT NAME=fileType onchange="return fileTypeChanged(this);">
 <OPTION VALUE=auto>Autodetect file type...
 <OPTION VALUE=asn1>ASN.1 specification text ...
 EOM
 
+my $notauto = 0;
 foreach my $t (sort { $binaryDecoders{$a}{shorder}
 		<=> $binaryDecoders{$b}{shorder} } keys %binaryDecoders) {
 	my %dec = %{$binaryDecoders{$t}};
 	my $description = $dec{description};
-	$form .= "<OPTION VALUE=$t>$description ...\n";
+	if(!$notauto && $dec{order} < 0) {
+		$notauto = 1;
+		$form .= "<OPTION ID=noauto VALUE=no DISABLED=\"disabled\">";
+		$form .= "--- not autodetectable: ---";
+		$form .= "\n";
+		next;
+	}
+	$form .= "<OPTION VALUE=$t>$description";
+	$form .= " ..." if $dec{order} > 0;
+	$form .= "\n";
 }
 
 $form .= << "EOM";
@@ -1000,6 +1015,7 @@ $redirect
                 font-size: 7pt;
                 font-family: sans-serif;
 		padding-left: 1em;
+		padding-bottom: 5px;
 		margin-left: 1em;
 	}
 	DIV.options#options-bin {
@@ -1022,6 +1038,7 @@ $redirect
 	DIV#aarr {
 		display: block;
 		margin-left: 1em;
+		padding-bottom: 5px;
 		padding-left: 2pt;
 	}
 
