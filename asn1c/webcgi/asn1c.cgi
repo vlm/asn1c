@@ -35,8 +35,8 @@ $myName = $ENV{SCRIPT_NAME};	# URL of this particular script (without args)
 
 $homePath = "<FONT FACE=Courier SIZE=-1>"
 	. "<A HREF=http://lionet.info>Home</A>"
-	. " &gt;&gt; <A HREF=$ASN1C_Page>asn1c</A>"
-	. " &gt;&gt; <A HREF=$ASN1C_Page/asn1c.cgi>Free Online ASN.1 Compiler</A>"
+	. " &rarr; <A HREF=$ASN1C_Page>ASN.1</A>"
+	. " &rarr; Online ASN.1 Compiler"
 	. "</FONT><P>";
 
 ###################################################
@@ -49,52 +49,115 @@ $|=1;	# Enable AutoFlush (for older versions of Perl)
 
 my %binaryDecoders = (
 	x509 => { order => 1,
+		shorder => 11,
 		type => 'X.509 Certificate',
 		typeExt => 'X.509 Certificate',
+		description => 'X.509 in DER (not PEM!)',
 		exe => 'x509dump',
 		cmdopts => '-x',
 		msg => ''
 		},
 
 	tap0311 => { order => 2,
+		shorder => 4,
 		type => TAP3,
 		typeExt => 'GSM TAP3-11 data',
+		description => 'GSM TAP3-11 binary file',
 		exe => 'tap3dump-11',
 		cmdopts => '-x',
 		msg => ''
 		},
 
 	tap0310 => { order => 3,
+		shorder => 3,
 		type => TAP3,
 		typeExt => 'GSM TAP3-10 data',
+		description => 'GSM TAP3-10 binary file',
 		exe => 'tap3dump-10',
 		cmdopts => '-x',
 		msg => ''
 		},
 
 	tap0309 => { order => 4,
+		shorder => 2,
 		type => TAP3,
 		typeExt => 'GSM TAP3-09 data',
+		description => 'GSM TAP3-09 binary file',
 		exe => 'tap3dump-09',
 		cmdopts => '-x',
 		msg => ''
 		},
 
-	mheg5 => { order => 5,
+	rrcDLCCCH => { order => 5,
+		shorder => 5,
+		type => 'RRC DL-CCCH-Message',
+		typeExt => 'RRC DL-CCCH-Message frame',
+		description => '3GPP RRC DL-CCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p DL-CCCH-Message',
+		msg => ''
+		},
+
+	rrcULCCCH => { order => 6,
+		shorder => 6,
+		type => 'RRC UL-CCCH-Message',
+		typeExt => 'RRC UL-CCCH-Message frame',
+		description => '3GPP RRC UL-CCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p UL-CCCH-Message',
+		msg => ''
+		},
+
+	rrcDLDCCH => { order => 7,
+		shorder => 7,
+		type => 'RRC DL-DCCH-Message',
+		typeExt => 'RRC DL-DCCH-Message frame',
+		description => '3GPP RRC DL-DCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p DL-DCCH-Message',
+		msg => ''
+		},
+
+	rrcULDCCH => { order => 8,
+		shorder => 8,
+		type => 'RRC UL-DCCH-Message',
+		typeExt => 'RRC UL-DCCH-Message frame',
+		description => '3GPP RRC UL-DCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p UL-DCCH-Message',
+		msg => ''
+		},
+
+	rrcPCCH => { order => 9,
+		shorder => 9,
+		type => 'RRC PCCH-Message',
+		typeExt => 'RRC PCCH-Message frame',
+		description => '3GPP RRC PCCH-Message',
+		exe => 'rrc-dump',
+		cmdopts => '-p PCCH-Message',
+		msg => ''
+		},
+
+	mheg5 => { order => 10,
+		shorder => 10,
 		type => 'MHEG-5',
 		typeExt => 'ISO MHEG-5 data',
+		description => 'ISO MHEG-5 stream file',
 		exe => 'mheg5dump',
 		cmdopts => '-x',
 		msg => ''
 		},
 
-	ber => { order => 6,
+	ber => { order => 11,
+		shorder => 1,
 		type => BER,
 		typeExt => 'BER encoded data',
+		description => 'BER/DER/CER binary file',
 		exe => 'unber',
 		cmdopts => '',
 		msg => "<!-- Use 'enber' to convert it back into BER -->\n"
 		}
+
 );
 
 my $redirect = '';	# No redirection by default
@@ -193,10 +256,15 @@ sub makeArchive($$) {
 			. "for i in ./*.[ch]; do if [ -L \$i ]; then"
 			. " cp $TMPDIR/skeletons/\$i \$i.-;"
 			. " mv \$i.- \$i;"
-			. " fi done && tar --dereference --ignore-failed-read --owner nobody --group nobody -zcf +tmp." . $$ . " *.[ch] Makefile* +Compiler.Log *.asn *.asn1"
-			. " && rm -f ./*.[ch] ./Makefile*"
-			. " && mv ./+tmp." . $$ . " $archName"
-			. " || rm -f ./+tmp." . $$);
+			. " fi done"
+			. " && find . -name '*.[ch]' -print0"
+			.	" > ./+tmp." . $$ . ".files"
+			. " && tar --dereference --ignore-failed-read --owner nobody --group nobody -zcf +tmp." . $$ . ".arch --null --files-from +tmp." . $$ . ".files Makefile* +Compiler.Log *.asn *.asn1 *.ber *.cer *.der *.bin *.dat *.mhg *.txt"
+			. " && (cat ./+tmp.". $$ .".files | xargs -0 rm -f)"
+			. " && rm -f ./Makefile* ./+tmp.". $$ .".files"
+			. " && mv ./+tmp." . $$ . ".arch $archName"
+			. " || rm -f ./+tmp." . $$ . ".*"
+		);
 		undef unless -f $archName;
 	}
 
@@ -408,7 +476,7 @@ foreach my $fname (@gotNames) {
 		print LOG "\n";
 		bark("Too strange filename: \"$fname\"");
 	}
-	$_ .= '.asn1' unless(/asn[1]{0,1}$/i);
+	$_ .= '.asn1' unless(/[.](asn[1]?|[bcd]er|bin|dat|mhg|txt)$/i);
 	@gotSafeNames = (@gotSafeNames, $_);
 	print LOG "\t" . $_;
 }
@@ -449,6 +517,8 @@ if($#gotSafeNames >= 0) {
 	my $optEF = param('optEF');
 	my $optNT = param('optNT');
 	my $optCN = param('optCN');
+	my $optMin = param('optMin');
+	my $optNoXER = param('optNoXER');
 	$options .= " -Wdebug-lexer"
 		if(defined($optDebugL) && $optDebugL eq "on");
 	$options .= " -E" if(defined($optE) && $optE eq "on");
@@ -478,17 +548,22 @@ if($#gotSafeNames >= 0) {
 
 	# Unrecognized ASN.1 module format.
 	# Try out several BER decoders.
-	foreach my $t (sort { $binaryDecoders{$a} cmp $binaryDecoders{$b} }
-			keys %binaryDecoders) {
+	foreach my $t (sort { $binaryDecoders{$a}{order}
+			<=> $binaryDecoders{$b}{order} } keys %binaryDecoders) {
 		next unless ($fType eq 'auto' or $fType eq $t);
 		my %dec = %{$binaryDecoders{$t}};
-		my $ec = system("$SUIDHelper $TMPDIR $inChDir $dec{exe} $dec{cmdopts} @gotSafeNames > $TMPDIR/$inChDir/+UNBER.tmp 2>&1");
+		$options = $dec{cmdopts};
+		$options .= "-m"
+			if($dec{type} eq 'BER' && $optMin eq "on");
+		$options =~ s/-x/-p/g
+			if($dec{type} ne 'BER' && $optNoXER eq "on");
+		my $ec = system("$SUIDHelper $TMPDIR $inChDir $dec{exe} $options @gotSafeNames > $TMPDIR/$inChDir/+UNBER.tmp 2>&1");
 		next if ($ec != 0 and $t ne $fType
 			and (-s "$TMPDIR/$inChDir/+UNBER.tmp" < 1000));
 		last unless open(U, "> $TMPDIR/$inChDir/+UNBER");
 		my $fnames = escapeHTML(join(", ", @gotNames));
 		print U "<!-- $dec{type} structure of $fnames; "
-			. "decoded by '$dec{exe}' "
+			. "decoded by '$dec{exe} $options' "
 			. "(c) Lev Walkin <vlm\@lionet.info> -->\n"
 			. $dec{msg};
 		open(T, "< $TMPDIR/$inChDir/+UNBER.tmp");
@@ -521,40 +596,80 @@ if(-f $sessionDir . '/lastText') {
 	if(param('resetText')) {
 		unlink $sessionDir . '/lastText';
 	} else {
-		$rtt = "<BR>&nbsp;&nbsp;[<A HREF=$myName?resetText=ok>refill with sample ASN.1 module text</A>]";
+		$rtt = "<BR>[<A HREF=$myName?resetText=ok>refill with sample ASN.1 module text</A>]";
 	}
 }
 
-$form =
-  "<FORM METHOD=POST ACTION=$myName ENCTYPE=\"multipart/form-data\">"
-. "<TABLE BORDER=0><TR><TD>&nbsp;</TD><TD COLSPAN=2>"
-. "Pick the ASN.1 module or binary encoded data file:\n"
-. "</TD></TR><TD VALIGN=top><FONT COLOR=green>&rArr;</FONT></TD><TD>"
-. "<SELECT NAME=fileType>"
-. "<OPTION VALUE=auto>Autodetect type of file ..."
-. "<OPTION VALUE=asn1>ASN.1 module text..."
-. "<OPTION VALUE=ber>BER/DER/CER data ..."
-. "<OPTION VALUE=tap0311>GSM TAP3-11 data ..."
-. "<OPTION VALUE=tap0310>GSM TAP3-10 data ..."
-. "<OPTION VALUE=tap0309>GSM TAP3-09 data ..."
-. "<OPTION VALUE=mheg5>ISO MHEG-5 data ..."
-. "<OPTION VALUE=x509>X.509 in DER (not PEM!)..."
-. "</SELECT>"
-. "</TD><TD ALIGN=right>"
-. "<INPUT TYPE=file NAME=file SIZE=13>"
-. "</TD></TR><TR><TD>&nbsp;</TD><TD COLSPAN=2>"
-. "Or paste the ASN.1 text into the following area:$rtt\n"
-. "</TD></TR><TD VALIGN=top><FONT COLOR=green>&rArr;</FONT></TD><TD COLSPAN=2>"
-. "<TEXTAREA NAME=text ROWS=16 COLS=60>\n"
-;
+$form = << "EOM";
+<SCRIPT>
+function fileTypeChanged(s) {
+	var options_asn = document.getElementById("options-asn");
+	var options_bin = document.getElementById("options-bin");
+	if(s.value == "auto" || s.value == "asn1") {
+		options_bin.style.position = "fixed";
+		options_bin.style.visibility = "hidden";
+		options_asn.style.position = "relative";
+		options_asn.style.visibility = "visible";
+	} else {
+		options_asn.style.visibility = "hidden";
+		options_asn.style.position = "fixed";
+		options_bin.style.position = "relative";
+		options_bin.style.visibility = "visible";
+	}
+	var pr = document.getElementById("proceed");
+	switch(s.value) {
+	case "auto":
+		pr.value = "Compile ASN.1 module or decode the input"; break;
+	case "asn1":
+		pr.value = "Proceed with ASN.1 compilation"; break;
+	default:
+		pr.value = "Proceed with binary data decoding"; break;
+	} 
+}
+function formSubmit() {
+	if(document.form.file.value == ""
+	&& document.form.fileType.value != "auto"
+	&& document.form.fileType.value != "asn1") {
+		alert("Please select a file to decode");
+		return false;
+	}
+	return true;
+}
+</SCRIPT>
+
+<FORM METHOD=POST NAME=form ACTION=$myName ENCTYPE="multipart/form-data">
+<DIV STYLE="width: 100%;">
+<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr>Pick the ASN.1 module text or binary encoded data file:<BR>
+<SELECT NAME=fileType onchange="fileTypeChanged(this);">
+<OPTION VALUE=auto>Autodetect file type...
+<OPTION VALUE=asn1>ASN.1 specification text ...
+EOM
+
+foreach my $t (sort { $binaryDecoders{$a}{shorder}
+		<=> $binaryDecoders{$b}{shorder} } keys %binaryDecoders) {
+	my %dec = %{$binaryDecoders{$t}};
+	my $description = $dec{description};
+	$form .= "<OPTION VALUE=$t>$description ...\n";
+}
+
+$form .= << "EOM";
+</SELECT>&nbsp;&nbsp;<INPUT TYPE=file NAME=file SIZE=13>
+</DIV>
+
+<DIV ID="options-asn" STYLE="visibility: visible;">
+<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr>Or paste the ASN.1 text into the area below:$rtt
+<BR>
+<TEXTAREA NAME=text ROWS=16 COLS=60 STYLE="font-family: courier; font-size: 11px;">
+EOM
+
 if(open(T, '< ' . $sessionDir . '/lastText')) {
 	$form .= escapeHTML($_) while <T>;
 	close(T);
 } else {
 	$form .= ""
 	. "/*\n"
-	. " * This ASN.1 specification is given for illustrative purposes.\n"
-	. " * Your own ASN.1 module must be properly formed too!\n"
+	. " * This ASN.1 specification is given as an example.\n"
+	. " * Your own ASN.1 module must be properly formed as well!\n"
 	. " * (Make sure it has BEGIN/END statements, etc.)\n"
 	. " */\n"
 	. "TestModule DEFINITIONS ::= \n"
@@ -569,21 +684,37 @@ if(open(T, '< ' . $sessionDir . '/lastText')) {
 	;
 }
 
-$form .= "</TEXTAREA>\n"
-. "</TD></TR><TD COLSPAN=3 ID=extrasmall"
-. " STYLE=\"border-left: dashed 1px rgb(200, 200, 200);\">\n"
-. "These options may be used to control the compiler's behavior:<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optDebugL> Debug lexer (<I>-Wdebug-lexer</I>)<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optE> Just parse and dump (do not verify) (<I>-E</I>)<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optEF> Parse, verify validity, and dump (<I>-E -F</I>)<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optNT CHECKED=on> Use native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>\n"
-. "<INPUT TYPE=checkbox NAME=optCN> Prevent name clashes in compiled output (<I>-fcompound-names</I>)<BR>\n"
-. "<I>... the command line ASN.1 compiler, <A HREF=$ASN1C_Page>asn1c</A>, supports many other parameters</I>."
-. "</FONT>"
-. "</TD></TR><TD VALIGN=top><FONT COLOR=green>&rArr;</FONT></TD><TD COLSPAN=2>"
-. "<INPUT TYPE=submit VALUE=\"Proceed with ASN.1 compilation\">"
-. " (<A HREF=$ASN1C_Page>What is ASN.1?</A>)"
-. "</FORM></TD></TR></TABLE>";
+$form .= << "EOM";
+</TEXTAREA>
+</DIV>
+
+<DIV CLASS=options>
+<DIV ID=optsbar-lite CLASS=optsbar>
+These options may be used to control the compiler's behavior:<BR>
+<INPUT TYPE=checkbox NAME=optDebugL> Debug lexer (<I>-Wdebug-lexer</I>)<BR>
+<INPUT TYPE=checkbox NAME=optE> Just parse and dump (do not verify) (<I>-E</I>)<BR>
+<INPUT TYPE=checkbox NAME=optEF> Parse, verify validity, and dump (<I>-E -F</I>)<BR>
+<INPUT TYPE=checkbox NAME=optNT CHECKED=on> Use native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>
+<INPUT TYPE=checkbox NAME=optCN> Prevent name clashes in compiled output (<I>-fcompound-names</I>)<BR>
+<I>... the command line ASN.1 compiler, <A HREF="$ASN1C_Page">asn1c</A>, supports many other parameters</I>.
+</DIV>
+</DIV>
+</DIV> <!-- options-asn -->
+
+<DIV ID=options-bin CLASS=options>
+<DIV CLASS=optsbar>
+<INPUT TYPE=checkbox NAME=optMin> Generate terser output while still preserving BER encoding information (BER decoder specific, <I>-m</I>)<BR>
+<INPUT TYPE=checkbox NAME=optNoXER> Generate simple text dump instead of XER (no effect on BER decoder)<BR>
+</DIV>
+</DIV> <!-- options-bin -->
+
+<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr><INPUT TYPE=submit ID=proceed VALUE="Proceed with ASN.1 compilation" onClick="return formSubmit();">
+(<A HREF=$ASN1C_Page>What is ASN.1?</A>)
+</DIV>
+</DIV>
+</FORM>
+EOM
+;
 
 #
 # Gather previous transactions to generate the history page.
@@ -834,7 +965,7 @@ if($EnvironmentSetOK != 1 && $TMPDIR ne "/") {
 	system("rm -rf $TMPDIR/ >/dev/null 2>&1");
 }
 
-print<<EOM;
+print<<"EOM";
 <HTML>
 <HEAD>
 <TITLE>Free Online ASN.1 Compiler</TITLE>
@@ -857,10 +988,43 @@ $redirect
 	TD#inputbox {
 		border-right: dashed 1px rgb(200, 200, 200);
 	}
-	TD#extrasmall {
-                font-size: 8pt;
+	DIV {
+		font-size: 10pt;
                 font-family: sans-serif;
 	}
+	DIV#extrasmall {
+                font-size: 7pt;
+                font-family: sans-serif;
+	}
+	DIV.options {
+                font-size: 7pt;
+                font-family: sans-serif;
+		padding-left: 1em;
+		margin-left: 1em;
+	}
+	DIV.options#options-bin {
+		visibility: hidden;
+		position: fixed;
+	}
+	DIV.optsbar#optsbar-lite { font-size: 7pt; }
+	DIV.optsbar {
+                font-size: 8pt;
+                font-family: sans-serif;
+		padding: 4pt;
+		border-left: dashed 1px rgb(200, 200, 200);
+	}
+
+	DIV#arrow {
+		float: left;
+		color: rgb(160,160,160);
+	}
+
+	DIV#aarr {
+		display: block;
+		margin-left: 1em;
+		padding-left: 2pt;
+	}
+
 	A#modrefs {
 		color: #606060;
 		text-decoration: none;
