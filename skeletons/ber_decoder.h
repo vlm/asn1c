@@ -46,8 +46,8 @@ typedef asn_dec_rval_t (ber_type_decoder_f)(
  * head->last_tag_form is non-zero.
  */
 asn_dec_rval_t ber_check_tags(
-		struct asn_codec_ctx_s *opt_codec_ctx,	/* optional context */
-		struct asn_TYPE_descriptor_s *type_dsc,
+		struct asn_codec_ctx_s *opt_codec_ctx,	/* codec options */
+		struct asn_TYPE_descriptor_s *type_descriptor,
 		asn_struct_ctx_t *opt_ctx,	/* saved decoding context */
 		const void *ptr, size_t size,
 		int tag_mode,		/* {-1,0,1}: IMPLICIT, no, EXPLICIT */

@@ -15,9 +15,9 @@ extern "C" {
  * This structure describes a position inside a PER bit stream.
  */
 typedef struct asn_per_data_s {
-	uint8_t *buffer;	/* Pointer to the octet stream */
-	size_t   nboff;		/* Bit offset to the meaningful bit */
-	size_t   nbits;		/* Number of bits in the stream */
+ const uint8_t *buffer;	/* Pointer to the octet stream */
+        size_t  nboff;	/* Bit offset to the meaningful bit */
+        size_t  nbits;	/* Number of bits in the stream */
 } asn_per_data_t;
 
 /*

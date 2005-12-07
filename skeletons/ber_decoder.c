@@ -33,11 +33,18 @@ ber_decode(asn_codec_ctx_t *opt_codec_ctx,
 	asn_codec_ctx_t s_codec_ctx;
 
 	/*
-	 * Satisfy the requirement that the codec context
+	 * Stack checker requires that the codec context
 	 * must be allocated on the stack.
 	 */
-	if(opt_codec_ctx && opt_codec_ctx->max_stack_size) {
-		s_codec_ctx = *opt_codec_ctx;
+	if(opt_codec_ctx) {
+		if(opt_codec_ctx->max_stack_size) {
+			s_codec_ctx = *opt_codec_ctx;
+			opt_codec_ctx = &s_codec_ctx;
+		}
+	} else {
+		/* If context is not given, be security-conscious anyway */
+		memset(&s_codec_ctx, 0, sizeof(s_codec_ctx));
+		s_codec_ctx.max_stack_size = _ASN_DEFAULT_STACK_MAX;
 		opt_codec_ctx = &s_codec_ctx;
 	}
 
@@ -73,17 +80,8 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Make sure we didn't exceed the maximum stack size.
 	 */
-	if(opt_codec_ctx && opt_codec_ctx->max_stack_size) {
-		ptrdiff_t usedstack = ((char *)opt_codec_ctx - (char *)&size);
-		/* double negative is required to avoid int wrap-around */
-		if(usedstack > 0) usedstack = -usedstack;
-		ASN_DEBUG("Current stack size %ld", -(long)usedstack);
-		if(usedstack < -(ptrdiff_t)opt_codec_ctx->max_stack_size) {
-			ASN_DEBUG("Stack limit %ld reached",
-				(long)opt_codec_ctx->max_stack_size);
-			RETURN(RC_FAIL);
-		}
-	}
+	if(_ASN_STACK_OVERFLOW_CHECK(opt_codec_ctx))
+		RETURN(RC_FAIL);
 
 	/*
 	 * So what does all this implicit skip stuff mean?

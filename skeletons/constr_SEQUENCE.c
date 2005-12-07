@@ -703,7 +703,8 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
-		ASN_DEBUG("XER/SEQUENCE: tcv = %d, ph=%d", tcv, ctx->phase);
+		ASN_DEBUG("XER/SEQUENCE: tcv = %d, ph=%d [%s]",
+			tcv, ctx->phase, xml_tag);
 
 		/* Skip the extensions section */
 		if(ctx->phase == 3) {
@@ -829,7 +830,13 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			break;
 		}
 
-		ASN_DEBUG("Unexpected XML tag in SEQUENCE");
+		ASN_DEBUG("Unexpected XML tag in SEQUENCE [%c%c%c%c%c%c]",
+			size>0?((const char *)buf_ptr)[0]:'.',
+			size>1?((const char *)buf_ptr)[1]:'.',
+			size>2?((const char *)buf_ptr)[2]:'.',
+			size>3?((const char *)buf_ptr)[3]:'.',
+			size>4?((const char *)buf_ptr)[4]:'.',
+			size>5?((const char *)buf_ptr)[5]:'.');
 		break;
 	}
 
@@ -1027,6 +1034,9 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	int edx;
 
 	(void)constraints;
+
+	if(_ASN_STACK_OVERFLOW_CHECK(opt_codec_ctx))
+		_ASN_DECODE_FAILED;
 
 	if(!st) {
 		st = *sptr = CALLOC(1, specs->struct_size);
