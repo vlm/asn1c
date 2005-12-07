@@ -12,7 +12,7 @@ int32_t
 per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	size_t off;	/* Next after last bit offset */
 	uint32_t accum;
-	uint8_t *buf;
+	const uint8_t *buf;
 
 	if(nbits < 0 || pd->nboff + nbits > pd->nbits)
 		return -1;

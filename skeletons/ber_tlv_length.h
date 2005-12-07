@@ -31,7 +31,6 @@ ssize_t ber_fetch_length(int _is_constructed, const void *bufptr, size_t size,
  * RETURN VALUES:
  * 	Standard {-1,0,>0} convention.
  */
-struct asn_codec_ctx_s;	/* Forward declaration */
 ssize_t ber_skip_length(
 	struct asn_codec_ctx_s *opt_codec_ctx,	/* optional context */
 	int _is_constructed, const void *bufptr, size_t size);

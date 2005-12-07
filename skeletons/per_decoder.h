@@ -12,6 +12,18 @@
 extern "C" {
 #endif
 
+struct asn_TYPE_descriptor_s;	/* Forward declaration */
+
+/*
+ * Unaligned PER decoder of any ASN.1 type. May be invoked by the application.
+ */
+asn_dec_rval_t uper_decode(struct asn_codec_ctx_s *opt_codec_ctx,
+	struct asn_TYPE_descriptor_s *type_descriptor,	/* Type to decode */
+	void **struct_ptr,	/* Pointer to a target structure's pointer */
+	const void *buffer,	/* Data to be decoded */
+	size_t size		/* Size of data buffer */
+	);
+
 
 /*
  * Pre-computed PER constraints.
@@ -23,7 +35,6 @@ extern "C" {
 	APC_EXTENSIBLE		= 0x4	/* May have extension */
   };
 typedef struct asn_per_constraint_s {
-
 	enum asn_per_constraint_flags flags;
 	int  range_bits;		/* Full number of bits in the range */
 	int  effective_bits;		/* Effective bits */
@@ -34,9 +45,6 @@ typedef struct asn_per_constraints_s {
 	asn_per_constraint_t value;
 	asn_per_constraint_t size;
 } asn_per_constraints_t;
-
-
-struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /*
  * Type of the type-specific PER decoder function.

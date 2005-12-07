@@ -864,6 +864,9 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	int repeat = 0;
 	ssize_t nelems;
 
+	if(_ASN_STACK_OVERFLOW_CHECK(opt_codec_ctx))
+		_ASN_DECODE_FAILED;
+
 	/*
 	 * Create the target structure if it is not present already.
 	 */
