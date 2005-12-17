@@ -1399,8 +1399,8 @@ OCTET_STRING_fromBuf(OCTET_STRING_t *st, const char *str, int len) {
 	 * Clear the OCTET STRING.
 	 */
 	if(str == NULL) {
-		if(st->buf)
-			FREEMEM(st->buf);
+		FREEMEM(st->buf);
+		st->buf = 0;
 		st->size = 0;
 		return 0;
 	}
@@ -1411,15 +1411,14 @@ OCTET_STRING_fromBuf(OCTET_STRING_t *st, const char *str, int len) {
 
 	/* Allocate and fill the memory */
 	buf = MALLOC(len + 1);
-	if(buf == NULL) {
+	if(buf == NULL)
 		return -1;
-	} else {
-		st->buf = (uint8_t *)buf;
-		st->size = len;
-	}
 
 	memcpy(buf, str, len);
-	st->buf[st->size] = '\0';	/* Couldn't use memcpy(len+1)! */
+	((uint8_t *)buf)[len] = '\0';	/* Couldn't use memcpy(len+1)! */
+	FREEMEM(st->buf);
+	st->buf = (uint8_t *)buf;
+	st->size = len;
 
 	return 0;
 }
