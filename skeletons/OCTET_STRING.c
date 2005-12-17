@@ -1267,7 +1267,10 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 		/* Get the PER length */
 		len_bits = uper_get_length(pd, ct->effective_bits, &repeat);
 		if(len_bits < 0) RETURN(RC_FAIL);
+		len_bits += ct->lower_bound;
 
+		ASN_DEBUG("Got per length eb %ld, len %ld",
+			ct->effective_bits, (long)len_bits);
 		if(unit_bits == 1) {
 			len_bytes = (len_bits + 7) >> 3;
 			if(len_bits & 0x7)
