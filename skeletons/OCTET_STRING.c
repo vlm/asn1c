@@ -20,7 +20,7 @@ static asn_OCTET_STRING_specifics_t asn_DEF_OCTET_STRING_specs = {
 	0
 };
 static asn_per_constraint_t asn_DEF_OCTET_STRING_constraint = {
-	APC_SEMI_CONSTRAINED, -1, 0, 0, 0
+	APC_SEMI_CONSTRAINED, -1, -1, 0, 0
 };
 asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	"OCTET STRING",		/* Canonical name */
@@ -1223,6 +1223,10 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 		st = (BIT_STRING_t *)(*sptr = CALLOC(1, specs->struct_size));
 		if(!st) RETURN(RC_FAIL);
 	}
+
+	ASN_DEBUG("PER Decoding %s %ld .. %ld bits %d",
+		ct->flags & APC_EXTENSIBLE ? "extensible" : "fixed",
+		ct->lower_bound, ct->upper_bound, ct->effective_bits);
 
 	if(ct->flags & APC_EXTENSIBLE) {
 		int inext = per_get_few_bits(pd, 1);
