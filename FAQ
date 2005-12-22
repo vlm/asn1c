@@ -12,7 +12,8 @@
 
 2.Q: How to build a simplest BER (XER) encoder or decoder?
 2.A:
-	Please see "Examples" section of ./doc/asn1c-usage.pdf
+	Please check the "Quick Start Guide" on ./doc/asn1c-quick.pdf
+	Please check the "Examples" section of ./doc/asn1c-usage.pdf
 
 	Also, try the following to build the X.509v3 parser:
 
