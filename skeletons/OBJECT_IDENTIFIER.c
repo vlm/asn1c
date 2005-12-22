@@ -420,7 +420,7 @@ OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
  * Save the single value as an object identifier arc.
  */
 int
-OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arcval_size, int prepared_order) {
+OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, const void *arcval, unsigned int arcval_size, int prepared_order) {
 	/*
 	 * The following conditions must hold:
 	 * assert(arcval);
@@ -433,7 +433,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 	unsigned LE = 1;
 	unsigned isLittleEndian = *(char *)&LE;
 #endif
-	uint8_t *tp, *tend;
+	const uint8_t *tend, *tp;
 	unsigned int cache;
 	uint8_t *bp = arcbuf;
 	int bits;
@@ -445,18 +445,19 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 #endif
 
 	if(isLittleEndian && !prepared_order) {
-		uint8_t *a = (unsigned char *)arcval + arcval_size - 1;
-		uint8_t *aend = (uint8_t *)arcval;
+		const uint8_t *a = (const unsigned char *)arcval + arcval_size - 1;
+		const uint8_t *aend = (const uint8_t *)arcval;
 		uint8_t *msb = buffer + arcval_size - 1;
-		for(tp = buffer; a >= aend; tp++, a--)
-			if((*tp = *a) && (tp < msb))
-				msb = tp;
+		uint8_t *tb;
+		for(tb = buffer; a >= aend; tb++, a--)
+			if((*tb = *a) && (tb < msb))
+				msb = tb;
 		tend = &buffer[arcval_size];
 		tp = msb;	/* Most significant non-zero byte */
 	} else {
 		/* Look for most significant non-zero byte */
-		tend = (unsigned char *)arcval + arcval_size;
-		for(tp = (uint8_t *)arcval; tp < tend - 1; tp++)
+		tend = (const unsigned char *)arcval + arcval_size;
+		for(tp = (const uint8_t *)arcval; tp < tend - 1; tp++)
 			if(*tp) break;
 	}
 
@@ -491,7 +492,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, void *arcval, unsigned int arc
 }
 
 int
-OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
+OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, const void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
 	uint8_t *buf;
 	uint8_t *bp;
 	unsigned LE = 1;	/* Little endian (x86) */
@@ -508,37 +509,37 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 
 	switch(arc_type_size) {
 	case sizeof(char):
-		arc0 = ((unsigned char *)arcs)[0];
-		arc1 = ((unsigned char *)arcs)[1];
+		arc0 = ((const unsigned char *)arcs)[0];
+		arc1 = ((const unsigned char *)arcs)[1];
 		break;
 	case sizeof(short):
-		arc0 = ((unsigned short *)arcs)[0];
-		arc1 = ((unsigned short *)arcs)[1];
+		arc0 = ((const unsigned short *)arcs)[0];
+		arc1 = ((const unsigned short *)arcs)[1];
 		break;
 	case sizeof(int):
-		arc0 = ((unsigned int *)arcs)[0];
-		arc1 = ((unsigned int *)arcs)[1];
+		arc0 = ((const unsigned int *)arcs)[0];
+		arc1 = ((const unsigned int *)arcs)[1];
 		break;
 	default:
 		arc1 = arc0 = 0;
 		if(isLittleEndian) {	/* Little endian (x86) */
-			unsigned char *ps, *pe;
+			const unsigned char *ps, *pe;
 			/* If more significant bytes are present,
 			 * make them > 255 quick */
-			for(ps = (unsigned char *)arcs + 1, pe = ps+arc_type_size;
+			for(ps = (const unsigned char *)arcs + 1, pe = ps+arc_type_size;
 					ps < pe; ps++)
 				arc0 |= *ps, arc1 |= *(ps + arc_type_size);
 			arc0 <<= CHAR_BIT, arc1 <<= CHAR_BIT;
-			arc0 = *((unsigned char *)arcs + 0);
-			arc1 = *((unsigned char *)arcs + arc_type_size);
+			arc0 = *((const unsigned char *)arcs + 0);
+			arc1 = *((const unsigned char *)arcs + arc_type_size);
 		} else {
-			unsigned char *ps, *pe;
+			const unsigned char *ps, *pe;
 			/* If more significant bytes are present,
 			 * make them > 255 quick */
-			for(ps = (unsigned char *)arcs, pe = ps+arc_type_size - 1; ps < pe; ps++)
+			for(ps = (const unsigned char *)arcs, pe = ps+arc_type_size - 1; ps < pe; ps++)
 				arc0 |= *ps, arc1 |= *(ps + arc_type_size);
-			arc0 = *((unsigned char *)arcs + arc_type_size - 1);
-			arc1 = *((unsigned char *)arcs +(arc_type_size<< 1)-1);
+			arc0 = *((const unsigned char *)arcs + arc_type_size - 1);
+			arc1 = *((const unsigned char *)arcs +(arc_type_size<< 1)-1);
 		}
 	}
 
@@ -602,14 +603,14 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 		 */
 		/* Copy the second (1'st) arcs[1] into the first_value */
 		*fv++ = 0;
-		arcs = ((char *)arcs) + arc_type_size;
+		arcs = ((const char *)arcs) + arc_type_size;
 		if(isLittleEndian) {
-			uint8_t *aend = (unsigned char *)arcs - 1;
-			uint8_t *a1 = (unsigned char *)arcs + arc_type_size - 1;
+			const uint8_t *aend = (const unsigned char *)arcs - 1;
+			const uint8_t *a1 = (const unsigned char *)arcs + arc_type_size - 1;
 			for(; a1 > aend; fv++, a1--) *fv = *a1;
 		} else {
-			uint8_t *a1 = (uint8_t *)arcs;
-			uint8_t *aend = a1 + arc_type_size;
+			const uint8_t *a1 = (const uint8_t *)arcs;
+			const uint8_t *aend = a1 + arc_type_size;
 			for(; a1 < aend; fv++, a1++) *fv = *a1;
 		}
 		/* Increase the first_value by arc0 */
@@ -631,9 +632,9 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs, unsigned int ar
 	/*
 	 * Save the rest of arcs.
 	 */
-	for(arcs = ((char *)arcs) + arc_type_size, i = 2;
+	for(arcs = ((const char *)arcs) + arc_type_size, i = 2;
 		i < arc_slots;
-			i++, arcs = ((char *)arcs) + arc_type_size) {
+			i++, arcs = ((const char *)arcs) + arc_type_size) {
 		bp += OBJECT_IDENTIFIER_set_single_arc(bp,
 			arcs, arc_type_size, 0);
 	}

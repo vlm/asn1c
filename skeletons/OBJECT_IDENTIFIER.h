@@ -84,7 +84,7 @@ int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
  * 0:		The object was initialized with new arcs.
  */
 int OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *_oid,
-	void *_arcs,			/* i.e., unsigned int arcs[N] */
+	const void *_arcs,		/* i.e., unsigned int arcs[N] */
 	unsigned int _arc_type_size,	/* i.e., sizeof(arcs[0]) */
 	unsigned int _arc_slots		/* i.e., N */);
 
@@ -130,7 +130,7 @@ int OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 int OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen,
 	signed int add, void *value, unsigned int value_size);
 int OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf,
-	void *arcval, unsigned int arcval_size, int _prepared_order);
+	const void *arcval, unsigned int arcval_size, int _prepared_order);
 
 #ifdef __cplusplus
 }
