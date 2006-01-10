@@ -326,7 +326,7 @@ asn_GT2time_frac(const GeneralizedTime_t *st, int *frac_value, int *frac_digits,
 #undef	B2T
 #define	B2F(var)	do {					\
 		unsigned ch = *buf;				\
-		if(ch < 0x30 && ch > 0x39) {			\
+		if(ch < 0x30 || ch > 0x39) {			\
 			errno = EINVAL;				\
 			return -1;				\
 		} else {					\
