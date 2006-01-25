@@ -38,7 +38,8 @@ ANY_t *ANY_new_fromType(asn_TYPE_descriptor_t *td, void *struct_ptr);
 int ANY_to_type(ANY_t *, asn_TYPE_descriptor_t *td, void **struct_ptr);
 
 #define	ANY_fromBuf(s, buf, size)	OCTET_STRING_fromBuf((s), (buf), (size))
-#define	ANY_new_fromBuf(buf, size)	OCTET_STRING_new_fromBuf((buf), (size))
+#define	ANY_new_fromBuf(buf, size)	OCTET_STRING_new_fromBuf(	\
+						&asn_DEF_ANY, (buf), (size))
 
 #ifdef __cplusplus
 }
