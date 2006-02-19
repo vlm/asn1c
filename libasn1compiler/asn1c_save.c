@@ -249,17 +249,16 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps) {
 	SAVE_STREAM(fp_h, OT_INCLUDES,	"Including external dependencies", 1);
 
 	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
-
 	SAVE_STREAM(fp_h, OT_DEPS,	"Dependencies", 0);
 	SAVE_STREAM(fp_h, OT_FWD_DECLS,	"Forward declarations", 0);
 	SAVE_STREAM(fp_h, OT_TYPE_DECLS, expr->Identifier, 0);
 	SAVE_STREAM(fp_h, OT_FUNC_DECLS,"Implementation", 0);
-	if(!(arg->flags & A1C_NO_INCLUDE_DEPS))
-	SAVE_STREAM(fp_h, OT_POST_INCLUDE, "Referred external types", 1);
-
 	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n\n"
 			"#endif\t/* _%s_H_ */\n",
 		header_id);
+
+	if(!(arg->flags & A1C_NO_INCLUDE_DEPS))
+	SAVE_STREAM(fp_h, OT_POST_INCLUDE, "Referred external types", 1);
 
 	fprintf(fp_c, "#include <asn_internal.h>\n\n");
 	fprintf(fp_c, "#include \"%s.h\"\n\n", expr->Identifier);
