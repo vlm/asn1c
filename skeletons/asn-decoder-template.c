@@ -151,14 +151,14 @@ main(int ac, char **av) {
 		fprintf(stderr, "Where options are:\n");
 		if(pduType->uper_decoder)
 		fprintf(stderr,
-		"  -iper   (I)  Input is in Unaligned PER (Packed Encoding Rules)\n");
+		"  -iper        Input is in Unaligned PER (Packed Encoding Rules) (DEFAULT)\n");
 		fprintf(stderr,
-		"  -iber   %s  Input is in BER (Basic Encoding Rules)\n",
-			iform == INP_PER ? "   " : "(I)");
+		"  -iber        Input is in BER (Basic Encoding Rules)%s\n",
+			iform == INP_PER ? "" : " (DEFAULT)");
 		fprintf(stderr,
 		"  -ixer        Input is in XER (XML Encoding Rules)\n"
 		"  -oder        Output in DER (Distinguished Encoding Rules)\n"
-		"  -oxer   (O)  Output in XER (XML Encoding Rules)\n"
+		"  -oxer        Output in XER (XML Encoding Rules) (DEFAULT)\n"
 		"  -otext       Output in plain semi-structured text (dump)\n"
 		"  -onull       Verify (decode) input, but do not output\n");
 #ifdef	ASN_PDU_COLLECTION
