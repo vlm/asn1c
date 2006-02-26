@@ -355,7 +355,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	}
 	computed_size += encoding_size;
 
-	if(!cb) {
+	if(!cb | list->count == 0) {
 		erval.encoded = computed_size;
 		_ASN_ENCODED_OK(erval);
 	}
