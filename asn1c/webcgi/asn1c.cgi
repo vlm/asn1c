@@ -610,13 +610,17 @@ function fileTypeChanged(s) {
 	var options_asn = document.getElementById("options-asn");
 	var options_bin = document.getElementById("options-bin");
 	if(s.value == "auto" || s.value == "asn1") {
+		options_bin.style.display = "none";
 		options_bin.style.position = "fixed";
 		options_bin.style.visibility = "hidden";
+		options_asn.style.display = "block";
 		options_asn.style.position = "relative";
 		options_asn.style.visibility = "visible";
 	} else {
 		options_asn.style.visibility = "hidden";
 		options_asn.style.position = "fixed";
+		options_asn.style.display = "none";
+		options_bin.style.display = "block";
 		options_bin.style.position = "relative";
 		options_bin.style.visibility = "visible";
 	}
