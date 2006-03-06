@@ -178,11 +178,23 @@ check(const char *fname,
 			"yet parsing was successfull!\n", fname);
 		r_value = -1;
 	}
+	if(!asn) return r_value;
+
+	if(r_value == 0) {
+		asn1p_t *std_asn;
+		std_asn = asn1p_parse_file("../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
+		if(std_asn) {
+			asn1p_module_t *mod;
+			while((mod = TQ_REMOVE(&(std_asn->modules), mod_next)))
+				TQ_ADD(&(asn->modules), mod, mod_next);
+			asn1p_free(std_asn);
+		}
+	}
 
 	/*
 	 * Perform semantical checks and fixes.
 	 */
-	if(asn && r_value == 0) {
+	if(r_value == 0) {
 		int ret;
 
 		if(expected_fix_code)
@@ -214,14 +226,15 @@ check(const char *fname,
 	 * Check validity of some values, if grammar has special
 	 * instructions for that.
 	 */
-	if(asn && r_value == 0) {
+	if(r_value == 0) {
 		if(post_fix_check(asn))
 			r_value = -1;
 	}
 
 	/*
-	 * TODO: destroy the asn.
+	 * Destroy the asn.
 	 */
+	asn1p_free(asn);
 
 	return r_value;
 }

@@ -41,9 +41,10 @@ typedef struct asn1p_oid_s {
 } asn1p_oid_t;
 
 /*
- * OID constructor.
+ * OID constructors.
  */
 asn1p_oid_t *asn1p_oid_new(void);
+asn1p_oid_t *asn1p_oid_construct(asn1p_oid_arc_t *, int narcs);
 
 /*
  * Add another arc using given one as a template
