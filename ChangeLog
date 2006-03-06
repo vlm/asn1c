@@ -1,11 +1,11 @@
 
-0.9.20:	2005-Nov-27
+0.9.20:	2006-Mar-06
 
 	* SET OF CHOICE, SEQUENCE OF CHOICE and a certain named S/O types
 	  are represented differently in XER. THIS IS AN ICOMPATIBLE CHANGE.
 	  (Test case 70) (Severity: low; Security impact: low)
 	* asn1c: Removed -ftypes88 command line option.
-	* PER implementation has begun
+	* Started PER implementation. Somewhat experimental!
 
 0.9.19:	2005-Oct-06
 
