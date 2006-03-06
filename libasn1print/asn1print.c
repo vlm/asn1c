@@ -62,6 +62,9 @@ static int
 asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) {
 	asn1p_expr_t *tc;
 
+	if(mod->_tags & MT_STANDARD_MODULE)
+		return 0;	/* Ignore modules imported from skeletons */
+
 	if(flags & APF_PRINT_XML_DTD)
 		printf("<!-- ASN.1 module\n");
 
