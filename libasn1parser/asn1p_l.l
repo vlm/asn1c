@@ -240,9 +240,6 @@ WSP	[\t\r\v\f\n ]
 	}
 
 ABSENT			return TOK_ABSENT;
-	/*
-ABSTRACT-SYNTAX		return TOK_ABSTRACT_SYNTAX;
-	*/
 ALL			return TOK_ALL;
 ANY			{
 				/* Appeared in 1990, removed in 1997 */
@@ -334,7 +331,6 @@ T61String		return TOK_T61String;
 TAGS			return TOK_TAGS;
 TeletexString		return TOK_TeletexString;
 TRUE			return TOK_TRUE;
-TYPE-IDENTIFIER		return TOK_TYPE_IDENTIFIER;
 UNION			return TOK_UNION;
 UNIQUE			return TOK_UNIQUE;
 UNIVERSAL		return TOK_UNIVERSAL;
