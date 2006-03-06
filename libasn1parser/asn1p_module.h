@@ -71,6 +71,12 @@ typedef struct asn1p_module_s {
 	TQ_ENTRY(struct asn1p_module_s)
 		mod_next;
 
+	/*
+	 * Internally useful properties.
+	 */
+	enum {
+	  MT_STANDARD_MODULE = 0x01,	/* Module came from standard-modules */
+	} _tags;
 } asn1p_module_t;
 
 /*

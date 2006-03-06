@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005
+ * Copyright (c) 2003, 2004, 2005, 2006
  * 	Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,11 +38,19 @@
 
 #include <asn1c_compat.h>	/* Portable basename(3) and dirname(3) */
 
+#ifdef	WIN32
+#include <io.h>
+#include <direct.h>
+#else
+#include <dirent.h>
+#endif
+
 #undef  COPYRIGHT
 #define COPYRIGHT       \
 	"Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>\n"
 
 static void usage(const char *av0);	/* Print the Usage screen and exit */
+static int importStandardModules(asn1p_t *asn, const char *skeletons_dir);
 
 int
 main(int ac, char **av) {
@@ -83,9 +91,7 @@ main(int ac, char **av) {
 			char *known_type = optarg + 18;
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
-		} else if(
-			strcmp(optarg, "native-integers") == 0 /* Legacy */
-			|| strcmp(optarg, "native-types") == 0) {
+		} else if(strcmp(optarg, "native-types") == 0) {
 			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
 		} else if(strcmp(optarg, "no-constraints") == 0) {
 			asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
@@ -199,6 +205,39 @@ main(int ac, char **av) {
 	}
 
 	/*
+	 * Make sure the skeleton directory is out there.
+	 */
+	if(skeletons_dir == NULL) {
+		struct stat sb;
+		skeletons_dir = DATADIR;
+		if((av[-optind][0] == '.' || av[-optind][1] == '/')
+		&& stat(skeletons_dir, &sb)) {
+			/*
+			 * The default skeletons directory does not exist,
+			 * compute it from my file name:
+			 * ./asn1c/asn1c -> ./skeletons
+			 */
+			char *p;
+			size_t len;
+
+			p = a1c_dirname(av[-optind]);
+
+			len = strlen(p) + sizeof("/../skeletons");
+			skeletons_dir = malloc(len);
+			assert(skeletons_dir);
+			snprintf(skeletons_dir, len, "%s/../skeletons", p);
+			if(stat(skeletons_dir, &sb)) {
+				fprintf(stderr,
+					"WARNING: skeletons are neither in "
+					"\"%s\" nor in \"%s\"!\n",
+					DATADIR, skeletons_dir);
+				if(warnings_as_errors)
+					exit(EX_OSFILE);
+			}
+		}
+	}
+
+	/*
 	 * Iterate over input files and parse each.
 	 * All syntax trees from all files will be bundled together.
 	 */
@@ -222,8 +261,11 @@ main(int ac, char **av) {
 		} else {
 			asn = new_asn;
 		}
-
 	}
+
+	/* These are mostly notes for the human readers */
+	assert(asn);
+	assert(skeletons_dir);
 
 	/*
 	 * Dump the parsed ASN.1 tree if -E specified and -F is NOT given.
@@ -234,6 +276,13 @@ main(int ac, char **av) {
 		return 0;
 	}
 
+	/*
+	 * Read in the files from skeletons/standard-modules
+	 */
+	if(importStandardModules(asn, skeletons_dir)) {
+		if(warnings_as_errors)
+			exit(EX_DATAERR);
+	}
 
 	/*
 	 * Process the ASN.1 specification: perform semantic checks,
@@ -262,39 +311,6 @@ main(int ac, char **av) {
 	}
 
 	/*
-	 * Make sure the skeleton directory is out there.
-	 */
-	if((asn1_compiler_flags & A1C_OMIT_SUPPORT_CODE) == 0
-	&& skeletons_dir == NULL) {
-		struct stat sb;
-		skeletons_dir = DATADIR;
-		if((av[-optind][0] == '.' || av[-optind][1] == '/')
-		&& stat(skeletons_dir, &sb)) {
-			/*
-			 * The default skeletons directory does not exist,
-			 * compute it from my file name:
-			 * ./asn1c/asn1c -> ./skeletons
-			 */
-			char *p;
-			size_t len;
-
-			p = a1c_dirname(av[-optind]);
-
-			len = strlen(p) + sizeof("/../skeletons");
-			skeletons_dir = alloca(len);
-			snprintf(skeletons_dir, len, "%s/../skeletons", p);
-			if(stat(skeletons_dir, &sb)) {
-				fprintf(stderr,
-					"WARNING: skeletons are neither in "
-					"\"%s\" nor in \"%s\"!\n",
-					DATADIR, skeletons_dir);
-				if(warnings_as_errors)
-					exit(EX_SOFTWARE);
-			}
-		}
-	}
-
-	/*
 	 * Compile the ASN.1 tree into a set of source files
 	 * of another language.
 	 */
@@ -304,6 +320,101 @@ main(int ac, char **av) {
 	}
 
 	return 0;
+}
+
+/*
+ * Parse and import *.asn1 from skeletons/standard-modules
+ */
+static int
+importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
+	asn1p_t *new_asn;
+	asn1p_module_t *mod;
+	const char *filename;
+	char *target_dir;
+	int target_dir_len;
+	int len;
+#ifdef	WIN32
+	intptr_t dir;
+	struct _finddata_t c_file;
+	char *pattern;
+#else
+	struct dirent *dp;
+	DIR *dir;
+#endif
+	int ret = 0;
+
+	/* Notes for the human reader */
+	assert(asn);
+	assert(skeletons_dir);
+
+	/*
+	 * Figure out the standard-modules directory.
+	 */
+	target_dir_len = strlen(skeletons_dir)
+				+ sizeof("/standard-modules") - 1;
+	target_dir = malloc(target_dir_len + 1);
+	assert(target_dir);
+	snprintf(target_dir, target_dir_len + 1, "%s/standard-modules",
+		skeletons_dir);
+
+#ifdef	WIN32
+	len = target_dir_len + sizeof("/*.asn1"));
+	pattern = malloc(len);
+	assert(pattern);
+	snprintf(pattern, len, "%s/*.asn1", target_dir);
+	dir = _findfirst(pattern, &c_file);
+	if(dir != -1L) {
+#else
+	dir = opendir(target_dir);
+	if(!dir) {
+#endif
+		fprintf(stderr,
+			"WARNING: Cannot find standard modules in %s\n",
+			target_dir);
+		return -1;
+	}
+
+#ifdef	WIN32
+	do {
+		filename = c_file.name;
+#else
+	while((dp = readdir(dir))) {
+		char *fullname;
+		filename = dp->d_name;
+		len = strlen(filename);
+		if(len <= 5 || strcmp(filename + len - 5, ".asn1"))
+			continue;
+		len = target_dir_len + 1 + len + 1;
+		fullname = malloc(len);
+		if(!fullname) continue;	/* Just skip it, no big deal */
+		snprintf(fullname, len, "%s/%s", target_dir, filename);
+		filename = fullname;
+#endif
+
+		new_asn = asn1p_parse_file(filename, A1P_NOFLAGS);
+		if(new_asn == NULL) {
+			fprintf(stderr, "WARNING: Cannot parse standard module \"%s\"\n", filename);
+			ret = -1;
+			continue;
+		}
+
+		/* Import these modules and mark them as "standard" */
+		while((mod = TQ_REMOVE(&(new_asn->modules), mod_next))) {
+			mod->_tags |= MT_STANDARD_MODULE;
+			TQ_ADD(&(asn->modules), mod, mod_next);
+		}
+		asn1p_free(new_asn);
+
+#ifdef	WIN32
+	} while(_findnext(dir, &c_file) == 0);
+	_findclose(dir);
+#else
+		free(fullname);
+	} /* while(readdir()) */
+	closedir(dir);
+#endif
+
+	return ret;
 }
 
 /*

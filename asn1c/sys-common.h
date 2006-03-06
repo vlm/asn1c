@@ -61,6 +61,9 @@
 #ifndef	EX_OSERR
 #define	EX_OSERR 71
 #endif
+#ifndef	EX_OSFILE
+#define	EX_OSFILE 72
+#endif
 #define	alloca _alloca
 #define	snprintf _snprintf
 #endif	/* WIN32 */
