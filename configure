@@ -22484,7 +22484,7 @@ done
           ac_config_headers="$ac_config_headers config.h"
 
 
-                                                                                                                                            ac_config_files="$ac_config_files skeletons/tests/Makefile libasn1compiler/Makefile libasn1parser/Makefile libasn1print/Makefile asn1c/webcgi/Makefile asn1c/tests/Makefile libasn1fix/Makefile skeletons/Makefile examples/Makefile tests/Makefile asn1c/Makefile doc/Makefile asn1c.spec Makefile"
+                                                                                                                                                      ac_config_files="$ac_config_files skeletons/standard-modules/Makefile skeletons/tests/Makefile libasn1compiler/Makefile libasn1parser/Makefile libasn1print/Makefile asn1c/webcgi/Makefile asn1c/tests/Makefile libasn1fix/Makefile skeletons/Makefile examples/Makefile tests/Makefile asn1c/Makefile doc/Makefile asn1c.spec Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -23069,6 +23069,7 @@ for ac_config_target in $ac_config_targets
 do
   case "$ac_config_target" in
   # Handling of arguments.
+  "skeletons/standard-modules/Makefile" ) CONFIG_FILES="$CONFIG_FILES skeletons/standard-modules/Makefile" ;;
   "skeletons/tests/Makefile" ) CONFIG_FILES="$CONFIG_FILES skeletons/tests/Makefile" ;;
   "libasn1compiler/Makefile" ) CONFIG_FILES="$CONFIG_FILES libasn1compiler/Makefile" ;;
   "libasn1parser/Makefile" ) CONFIG_FILES="$CONFIG_FILES libasn1parser/Makefile" ;;
