@@ -5,6 +5,26 @@
 #include "asn1parser.h"
 
 asn1p_oid_t *
+asn1p_oid_construct(asn1p_oid_arc_t *arc, int narcs) {
+	asn1p_oid_t *oid;
+
+	if(narcs <= 0)
+		return NULL;
+
+	oid = asn1p_oid_new();
+	if(oid) {
+		for(; narcs--; arc++) {
+			if(asn1p_oid_add_arc(oid, arc)) {
+				asn1p_oid_free(oid);
+				return NULL;
+			}
+		}
+	}
+
+	return oid;
+}
+
+asn1p_oid_t *
 asn1p_oid_new() {
 	return calloc(1, sizeof(asn1p_oid_t));
 }

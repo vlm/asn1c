@@ -217,6 +217,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 			return NULL;
 		}
 	} else {
+		/* Search inside the IMPORTS section of the current module */
 		imports_from = asn1f_lookup_in_imports(arg, mod, identifier);
 		if(imports_from == NULL && errno != ESRCH) {
 			/*
@@ -231,6 +232,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	/*
 	 * The symbol is being imported from another module.
 	 */
+  importing:
 	if(imports_from) {
 		asn1p_ref_t tmpref = *ref;
 		asn1p_expr_t *expr;
@@ -274,23 +276,52 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 		if(strcmp(ref_tc->Identifier, identifier) == 0)
 			break;
 	}
-	if(ref_tc == NULL) {
-		DEBUG("Module \"%s\" does not contain \"%s\" "
-			"mentioned at line %d: %s",
-			mod->ModuleName,
-			identifier,
-			ref->_lineno,
-			strerror(errno)
-		);
-		if(asn1f_check_known_external_type(identifier) == 0) {
-			errno = EEXIST; /* Exists somewhere */
-		} else {
-			errno = ESRCH;
+	if(ref_tc)
+		return ref_tc;
+
+	{
+		/* Search inside standard module */
+		static asn1p_oid_t *uioc_oid;
+		if(!uioc_oid) {
+			asn1p_oid_arc_t arcs[] = {
+				{ 1, "iso" },
+				{ 3, "org" },
+				{ 6, "dod" },
+				{ 1, "internet" },
+				{ 4, "private" },
+				{ 1, "enterprise" },
+				{ 9363, "spelio" },
+				{ 1, "software" },
+				{ 5, "asn1c" },
+				{ 3, "standard-modules" },
+				{ 0, "auto-imported" },
+				{ 1, 0 }
+			};
+			uioc_oid = asn1p_oid_construct(arcs,
+				sizeof(arcs)/sizeof(arcs[0]));
 		}
-		return NULL;
+		if(!imports_from && mod->module_oid
+		&& asn1p_oid_compare(mod->module_oid, uioc_oid)) {
+			imports_from = asn1f_lookup_module(arg,
+				"ASN1C-UsefulInformationObjectClasses",
+				uioc_oid);
+			if(imports_from) goto importing;
+		}
 	}
 
-	return ref_tc;
+	DEBUG("Module \"%s\" does not contain \"%s\" "
+		"mentioned at line %d: %s",
+		mod->ModuleName,
+		identifier,
+		ref->_lineno,
+		strerror(errno));
+
+	if(asn1f_check_known_external_type(identifier) == 0) {
+		errno = EEXIST; /* Exists somewhere */
+	} else {
+		errno = ESRCH;
+	}
+	return NULL;
 }
 
 
