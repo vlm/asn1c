@@ -88,20 +88,21 @@ AC_CHECK_FUNCS(mergesort)
 
 AM_CONFIG_HEADER(config.h)
 
-AC_OUTPUT(			\
-skeletons/tests/Makefile	\
-libasn1compiler/Makefile	\
-libasn1parser/Makefile		\
-libasn1print/Makefile		\
-asn1c/webcgi/Makefile		\
-asn1c/tests/Makefile		\
-libasn1fix/Makefile		\
-skeletons/Makefile		\
-examples/Makefile		\
-tests/Makefile			\
-asn1c/Makefile			\
-doc/Makefile			\
-asn1c.spec			\
-Makefile			\
+AC_OUTPUT(				\
+skeletons/standard-modules/Makefile	\
+skeletons/tests/Makefile		\
+libasn1compiler/Makefile		\
+libasn1parser/Makefile			\
+libasn1print/Makefile			\
+asn1c/webcgi/Makefile			\
+asn1c/tests/Makefile			\
+libasn1fix/Makefile			\
+skeletons/Makefile			\
+examples/Makefile			\
+tests/Makefile				\
+asn1c/Makefile				\
+doc/Makefile				\
+asn1c.spec				\
+Makefile				\
 )
 
