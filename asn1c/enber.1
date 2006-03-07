@@ -29,10 +29,9 @@ Decode a BER sequence and immediately encode it back
 .SH FOOTNOTES
 This program does not attempt to perform full-fledged XML parsing. It is merely
 compatible with \fIunber\fR\|(1)'s output.
-In particular, XML comments are not supported.
-The following characters after the initial white space indicate
-the start of a comment: "\fB#\fR" (a hash) and "\fB--\fR" (two dashes).
-The whole comment line is ignored completely. Empty lines are ignored as well.
+In particular, XML style comments are not supported.
+A hash "\fB#\fR" or two dashes "\fB--\fR" following a whitespace is treated as a beginning of a comment line, which is ignored completely.
+Empty lines are ignored as well.
 .P
 The following example demostrates the use of comments:
 .Vb
