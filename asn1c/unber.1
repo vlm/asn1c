@@ -53,7 +53,7 @@ The XML opening tag format is as follows:
 Where:
 .TP
 \fBtform\fR
-Which form the value is in: primitive ("P") or constructed ("C") or constructed with indefinite length ("I")
+Encoding form the value is in: primitive ("P") or constructed ("C") or constructed with indefinite length ("I")
 .TP
 \fBoff\fR
 Offset of the encoded element in the unber input stream.
@@ -71,7 +71,7 @@ The length of the value (V, encoded by the L), may be "Indefinite".
 Likely name of the underlying ASN.1 type (for UNIVERSAL tags).
 .TP
 [\fBF\fR]
-Indicates that the value was reformatted (pretty-printed). This may only appear in the output as long \fB-p\fR command line option is \fInot\fR specified.
+Indicates that the value was reformatted (pretty-printed). This will never appear in the output produced using \fB-p\fR command line option.
 .P
 Sample XML output:
 .Vb
