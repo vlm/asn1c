@@ -439,30 +439,45 @@ asn1f_check_duplicate(arg_t *arg) {
 	 * The linear scan is just fine for the task, no need to over-optimize.
 	 */
 	TQ_FOR(tmparg.mod, &arg->asn->modules, mod_next) {
+		int critical = 1;	/* FATAL */
+
+		if((arg->mod->_tags & MT_STANDARD_MODULE)
+		!= (tmparg.mod->_tags & MT_STANDARD_MODULE)) {
+			/* Ignore clashes with standard module */
+			critical = 0;	/* WARNING */
+		}
+
 		TQ_FOR(tmparg.expr, &(tmparg.mod->members), next) {
+			int diff_files;	/* different files */
+
 			assert(tmparg.expr->Identifier);
 			assert(arg->expr->Identifier);
+
 			if(tmparg.expr == arg->expr) break;
 
 			if(strcmp(tmparg.expr->Identifier,
-				arg->expr->Identifier) == 0) {
-				int diff_files = strcmp(arg->mod->source_file_name, tmparg.mod->source_file_name) ? 1 : 0;
-				FATAL("ASN.1 expression \"%s\" at line %d of module %s\n"
-				"clashes with expression \"%s\" at line %d of module %s"
-				"%s%s%s.\n"
-				"Please rename either instance to resolve the conflict",
-					arg->expr->Identifier,
-					arg->expr->_lineno,
-					arg->mod->ModuleName,
-					tmparg.expr->Identifier,
-					tmparg.expr->_lineno,
-					tmparg.mod->ModuleName,
-					diff_files ? " (" : "",
-					diff_files ? tmparg.mod->source_file_name : "",
-					diff_files ? ")" : ""
-				);
+				  arg->expr->Identifier))
+				continue;
+
+			diff_files = strcmp(arg->mod->source_file_name,
+					tmparg.mod->source_file_name) ? 1 : 0;
+
+			LOG(critical,
+			"ASN.1 expression \"%s\" at line %d of module %s\n"
+			"clashes with expression \"%s\" at line %d of module %s"
+			"%s%s%s.\n"
+			"Please rename either instance to resolve the conflict",
+				arg->expr->Identifier,
+				arg->expr->_lineno,
+				arg->mod->ModuleName,
+				tmparg.expr->Identifier,
+				tmparg.expr->_lineno,
+				tmparg.mod->ModuleName,
+				diff_files ? " (" : "",
+				diff_files ? tmparg.mod->source_file_name : "",
+				diff_files ? ")" : "");
+			if(critical)
 				return -1;
-			}
 		}
 		if(tmparg.mod == arg->mod) break;
 	}
