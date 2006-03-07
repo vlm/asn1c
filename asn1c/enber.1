@@ -14,16 +14,15 @@ enber \- Convert the unber XML output back into BER
 .SH SYNOPSIS
 enber [\fB-n\fR] [\fB-\fR] [\fIinfile\fR...]
 .SH DESCRIPTION
-enber takes the XML-formatted files produced by \fIunber\fR\|(1) and converts
-them back into the BER format.
-A single dash represents the standard input.
+enber convers the XML-formatted files produced by \fIunber\fR\|(1) back into the BER format.
+A single dash denotes the standard input.
 .SH OPTIONS
 .TP
 \fB\-n\fR
 Disable input validation. By default, enber performs some basic validity checks
-against the XML input. This option disables such checks.
+against the XML input.
 .SH EXAMPLES
-Decode the BER sequence and immediately encode it back
+Decode a BER sequence and immediately encode it back
 .Vb
 \&    unber \fB-p\fR \fIfilename.ber\fR | enber \fB-\fR > \fIreconstructed.ber\fR
 .Ve
