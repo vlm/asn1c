@@ -105,9 +105,9 @@ The constructed XML output is not necessarily well-formed.
 When indefinite length encoding is being used, the BER sequence, which is not
 terminated with the end-of-content octets, will cause the terminating \fB</I>\fR
 XML tag to disappear.
-Thus, the invalid BER framing directly causes invalid XML output.
+Thus, invalid BER framing directly causes invalid XML output.
 .P
-The \&\fIenber\fR\|(1) utility understands this convention correctly.
+The \&\fIenber\fR\|(1) utility understands such XML correctly.
 .SH SEE ALSO
 .TP
 \&\fIenber\fR\|(1), \&\fIasn1c\fR\|(1)
