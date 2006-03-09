@@ -1000,16 +1000,6 @@ ClassField:
 		$$->marker = $3;
 	}
 
-	/* VariableTypeValueSetFieldSpec ::= valuesetfieldreference FieldName ValueOptionalitySpec ? */
-	| TOK_typefieldreference FieldName optMarker {
-		$$ = asn1p_expr_new(yylineno);
-		$$->Identifier = $1;
-		$$->meta_type = AMT_OBJECTFIELD;
-		$$->expr_type = A1TC_CLASSFIELD_VTVSFS;
-		$$->reference = $2;
-		$$->marker = $3;
-	}
-
 	/*  ObjectFieldSpec ::= objectfieldreference DefinedObjectClass ObjectOptionalitySpec ? */
 	| TOK_valuefieldreference DefinedObjectClass optMarker {
 		$$ = asn1p_expr_new(yylineno);
@@ -1021,14 +1011,13 @@ ClassField:
 		$$->marker = $3;
 	}
 
-	/*  ObjectSetFieldSpec ::= objectsetfieldreference DefinedObjectClass ObjectOptionalitySpec ? */
-	| TOK_typefieldreference DefinedObjectClass optMarker {
+	/* VariableTypeValueSetFieldSpec ::= valuesetfieldreference FieldName ValueOptionalitySpec ? */
+	| TOK_typefieldreference FieldName optMarker {
 		$$ = asn1p_expr_new(yylineno);
-		checkmem($$);
 		$$->Identifier = $1;
-		$$->reference = $2;
 		$$->meta_type = AMT_OBJECTFIELD;
-		$$->expr_type = A1TC_CLASSFIELD_OSFS;
+		$$->expr_type = A1TC_CLASSFIELD_VTVSFS;
+		$$->reference = $2;
 		$$->marker = $3;
 	}
 
@@ -1043,20 +1032,16 @@ ClassField:
 		$$->marker = $3;
 	}
 
-	/*
-	DefinedObjectClass:
-		TOK_capitalreference {
-			$$ = asn1p_ref_new(yylineno);
-			asn1p_ref_add_component($$, $1, RLT_CAPITALS);
-		}
-		| TypeRefName '.' TOK_capitalreference {
-			$$ = asn1p_ref_new(yylineno);
-			asn1p_ref_add_component($$, $1, RLT_AmpUppercase);
-			asn1p_ref_add_component($$, $3, RLT_CAPITALS);
-		}
-		;
-	*/
-
+	/*  ObjectSetFieldSpec ::= objectsetfieldreference DefinedObjectClass ObjectOptionalitySpec ? */
+	| TOK_typefieldreference DefinedObjectClass optMarker {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->Identifier = $1;
+		$$->reference = $2;
+		$$->meta_type = AMT_OBJECTFIELD;
+		$$->expr_type = A1TC_CLASSFIELD_OSFS;
+		$$->marker = $3;
+	}
 	;
 
 optWithSyntax:
@@ -1409,11 +1394,13 @@ DefinedObjectClass:
 		$$ = asn1p_ref_new(yylineno);
 		asn1p_ref_add_component($$, $1, RLT_CAPITALS);
 	}
+/*
 	| TypeRefName '.' TOK_capitalreference {
 		$$ = asn1p_ref_new(yylineno);
 		asn1p_ref_add_component($$, $1, RLT_AmpUppercase);
 		asn1p_ref_add_component($$, $3, RLT_CAPITALS);
 	}
+*/
 	;
 
 
