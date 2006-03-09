@@ -1,7 +1,8 @@
 
-0.9.21:	2006-Mar-06
+0.9.21:	2006-Mar-09
 
 	* skeletons/standard-modules directory is now used for standard types.
+	* Refactored system for parsing Information Object Classes.
 
 0.9.20:	2006-Mar-06
 
