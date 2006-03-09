@@ -96,18 +96,12 @@ asn1c_compile_expr(arg_t *arg) {
 		switch(expr->meta_type) {
 		case AMT_PARAMTYPE:
 		case AMT_OBJECT:
-		case AMT_OBJECTSET:
+		case AMT_OBJECTCLASS:
+		case AMT_OBJECTFIELD:
 		case AMT_VALUE:
 		case AMT_VALUESET:
 			ret = 0;
 			break;
-		default:
-			break;
-		}
-
-		switch(expr->expr_type) {
-		case A1TC_TYPEID:
-			ret = 0;	/* TYPE-IDENTIFIER is a CLASS */
 		default:
 			break;
 		}

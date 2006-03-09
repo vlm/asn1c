@@ -242,9 +242,11 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_refcomp>		ComplexTypeReferenceElement
 %type	<a_refcomp>		ClassFieldIdentifier
 %type	<a_refcomp>		ClassFieldName
-%type	<a_expr>		ClassFieldList
+%type	<a_expr>		FieldSpec
+%type	<a_ref>			FieldName
+%type	<a_ref>			DefinedObjectClass
 %type	<a_expr>		ClassField
-%type	<a_expr>		ClassDeclaration
+%type	<a_expr>		ObjectClass
 %type	<a_expr>		Type
 %type	<a_expr>		DataTypeReference	/* Type1 ::= Type2 */
 %type	<a_expr>		DefinedTypeRef
@@ -747,25 +749,17 @@ DataTypeReference:
 	/*
 	 * Optionally tagged type definition.
 	 */
-	TypeRefName TOK_PPEQ optTag TOK_TYPE_IDENTIFIER {
-		$$ = asn1p_expr_new(yylineno);
-		checkmem($$);
-		$$->Identifier = $1;
-		$$->tag = $3;
-		$$->expr_type = A1TC_TYPEID;
-		$$->meta_type = AMT_TYPE;
-	}
-	| TypeRefName TOK_PPEQ Type {
+	TypeRefName TOK_PPEQ Type {
 		$$ = $3;
 		$$->Identifier = $1;
 		assert($$->expr_type);
 		assert($$->meta_type);
 	}
-	| TypeRefName TOK_PPEQ ClassDeclaration {
+	| TypeRefName TOK_PPEQ ObjectClass {
 		$$ = $3;
 		$$->Identifier = $1;
 		assert($$->expr_type == A1TC_CLASSDEF);
-		assert($$->meta_type == AMT_OBJECT);
+		assert($$->meta_type == AMT_OBJECTCLASS);
 	}
 	/*
 	 * Parametrized <Type> declaration:
@@ -943,13 +937,13 @@ AlternativeType:
 	}
 	;
 
-ClassDeclaration:
-	TOK_CLASS '{' ClassFieldList '}' optWithSyntax {
+ObjectClass:
+	TOK_CLASS '{' FieldSpec '}' optWithSyntax {
 		$$ = $3;
 		checkmem($$);
 		$$->with_syntax = $5;
 		assert($$->expr_type == A1TC_CLASSDEF);
-		assert($$->meta_type == AMT_OBJECT);
+		assert($$->meta_type == AMT_OBJECTCLASS);
 	}
 	;
 
@@ -958,50 +952,111 @@ optUnique:
 	| TOK_UNIQUE { $$ = 1; }
 	;
 
-ClassFieldList:
+FieldSpec:
 	ClassField {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->expr_type = A1TC_CLASSDEF;
-		$$->meta_type = AMT_OBJECT;
+		$$->meta_type = AMT_OBJECTCLASS;
 		asn1p_expr_add($$, $1);
 	}
-	| ClassFieldList ',' ClassField {
+	| FieldSpec ',' ClassField {
 		$$ = $1;
 		asn1p_expr_add($$, $3);
 	}
 	;
 
+	/* X.681 */
 ClassField:
-	ClassFieldIdentifier optMarker {
+
+	/* TypeFieldSpec ::= typefieldreference TypeOptionalitySpec? */
+	TOK_typefieldreference optMarker {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
-		$$->Identifier = $1.name;
-		$$->expr_type = A1TC_CLASSFIELD;
+		$$->Identifier = $1;
 		$$->meta_type = AMT_OBJECTFIELD;
+		$$->expr_type = A1TC_CLASSFIELD_TFS;	/* TypeFieldSpec */
 		$$->marker = $2;
 	}
-	| ClassFieldIdentifier Type optUnique optMarker {
-		$$ = $2;
-		$$->Identifier = $1.name;
-		$$->marker = $4;
+
+	/* FixedTypeValueFieldSpec ::= valuefieldreference Type UNIQUE ? ValueOptionalitySpec ? */
+	| TOK_valuefieldreference Type optUnique optMarker {
+		$$ = asn1p_expr_new(yylineno);
+		$$->Identifier = $1;
+		$$->meta_type = AMT_OBJECTFIELD;
+		$$->expr_type = A1TC_CLASSFIELD_FTVFS;	/* FixedTypeValueFieldSpec */
 		$$->unique = $3;
+		$$->marker = $4;
+		asn1p_expr_add($$, $2);
 	}
-	| ClassFieldIdentifier ClassFieldIdentifier optUnique optMarker {
-		int ret;
+
+	/* VariableTypeValueFieldSpec ::= valuefieldreference FieldName ValueOptionalitySpec ? */
+	| TOK_valuefieldreference FieldName optMarker {
+		$$ = asn1p_expr_new(yylineno);
+		$$->Identifier = $1;
+		$$->meta_type = AMT_OBJECTFIELD;
+		$$->expr_type = A1TC_CLASSFIELD_VTVFS;
+		$$->reference = $2;
+		$$->marker = $3;
+	}
+
+	/* VariableTypeValueSetFieldSpec ::= valuesetfieldreference FieldName ValueOptionalitySpec ? */
+	| TOK_typefieldreference FieldName optMarker {
+		$$ = asn1p_expr_new(yylineno);
+		$$->Identifier = $1;
+		$$->meta_type = AMT_OBJECTFIELD;
+		$$->expr_type = A1TC_CLASSFIELD_VTVSFS;
+		$$->reference = $2;
+		$$->marker = $3;
+	}
+
+	/*  ObjectFieldSpec ::= objectfieldreference DefinedObjectClass ObjectOptionalitySpec ? */
+	| TOK_valuefieldreference DefinedObjectClass optMarker {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
-		$$->Identifier = $1.name;
-		$$->reference = asn1p_ref_new(yylineno);
-		checkmem($$->reference);
-		ret = asn1p_ref_add_component($$->reference,
-				$2.name, $2.lex_type);
-		checkmem(ret == 0);
-		$$->expr_type = A1TC_CLASSFIELD;
+		$$->Identifier = $1;
+		$$->reference = $2;
 		$$->meta_type = AMT_OBJECTFIELD;
-		$$->marker = $4;
-		$$->unique = $3;
+		$$->expr_type = A1TC_CLASSFIELD_OFS;
+		$$->marker = $3;
 	}
+
+	/*  ObjectSetFieldSpec ::= objectsetfieldreference DefinedObjectClass ObjectOptionalitySpec ? */
+	| TOK_typefieldreference DefinedObjectClass optMarker {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->Identifier = $1;
+		$$->reference = $2;
+		$$->meta_type = AMT_OBJECTFIELD;
+		$$->expr_type = A1TC_CLASSFIELD_OSFS;
+		$$->marker = $3;
+	}
+
+	/* FixedTypeValueSetFieldSpec ::= valuesetfieldreference Type ValueSetOptionalitySpec ? */
+	| TOK_typefieldreference Type optMarker {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->Identifier = $1;
+		$$->meta_type = AMT_OBJECTFIELD;
+		$$->expr_type = A1TC_CLASSFIELD_FTVSFS;
+		asn1p_expr_add($$, $2);
+		$$->marker = $3;
+	}
+
+	/*
+	DefinedObjectClass:
+		TOK_capitalreference {
+			$$ = asn1p_ref_new(yylineno);
+			asn1p_ref_add_component($$, $1, RLT_CAPITALS);
+		}
+		| TypeRefName '.' TOK_capitalreference {
+			$$ = asn1p_ref_new(yylineno);
+			asn1p_ref_add_component($$, $1, RLT_AmpUppercase);
+			asn1p_ref_add_component($$, $3, RLT_CAPITALS);
+		}
+		;
+	*/
+
 	;
 
 optWithSyntax:
@@ -1329,6 +1384,35 @@ ClassFieldName:
 	| TOK_valuefieldreference {
 		$$.lex_type = RLT_Amplowercase;
 		$$.name = $1;
+	}
+	;
+
+
+FieldName:
+	/* "&Type1" */
+	TOK_typefieldreference {
+		$$ = asn1p_ref_new(yylineno);
+		asn1p_ref_add_component($$, $1, RLT_AmpUppercase);
+	}
+	| FieldName '.' TOK_typefieldreference {
+		$$ = $$;
+		asn1p_ref_add_component($$, $3, RLT_AmpUppercase);
+	}
+	| FieldName '.' TOK_valuefieldreference {
+		$$ = $$;
+		asn1p_ref_add_component($$, $3, RLT_Amplowercase);
+	}
+	;
+
+DefinedObjectClass:
+	TOK_capitalreference {
+		$$ = asn1p_ref_new(yylineno);
+		asn1p_ref_add_component($$, $1, RLT_CAPITALS);
+	}
+	| TypeRefName '.' TOK_capitalreference {
+		$$ = asn1p_ref_new(yylineno);
+		asn1p_ref_add_component($$, $1, RLT_AmpUppercase);
+		asn1p_ref_add_component($$, $3, RLT_CAPITALS);
 	}
 	;
 

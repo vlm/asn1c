@@ -433,6 +433,7 @@ asn1f_check_constraints(arg_t *arg) {
 static int
 asn1f_check_duplicate(arg_t *arg) {
 	arg_t tmparg = *arg;
+	int rvalue = 0;
 
 	/*
 	 * This is a linear scan in search of a similar type.
@@ -478,11 +479,12 @@ asn1f_check_duplicate(arg_t *arg) {
 				diff_files ? ")" : "");
 			if(critical)
 				return -1;
+			RET2RVAL(1, rvalue);
 		}
 		if(tmparg.mod == arg->mod) break;
 	}
 
-	return 0;
+	return rvalue;
 }
 
 static int
