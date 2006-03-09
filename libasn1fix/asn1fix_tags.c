@@ -25,6 +25,9 @@ static int
 asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int skip, enum asn1f_aft_flags_e flags) {
 	asn1p_expr_t *expr = arg->expr;
 
+	DEBUG("Fetching tag from %s: meta %d, type %s", expr->Identifier,
+		expr->meta_type, expr->expr_type);
+
 	/* If this type is tagged, add this tag first */
 	if(expr->tag.tag_class != TC_NOCLASS)
 		ADD_TAG(skip, expr->tag);

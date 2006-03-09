@@ -18,7 +18,7 @@ Ext1 ::= SEQUENCE {
 
 EXTENSION-ATTRIBUTE ::= CLASS {
     &id	 INTEGER (0..256) UNIQUE,
-    &Type	
+    &Type	 ANY
 } WITH SYNTAX {&Type IDENTIFIED BY &id}
 
 
@@ -26,7 +26,7 @@ terminal-type EXTENSION-ATTRIBUTE ::= {TerminalType IDENTIFIED BY 23}
 
 ExtensionAttribute ::= SEQUENCE {
     extension-attribute-type	 [0] IMPLICIT EXTENSION-ATTRIBUTE.&id ({ExtensionAttributeTable}),
-    extension-attribute-value	 [1] IMPLICIT EXTENSION-ATTRIBUTE.&Type ({ExtensionAttributeTable}{@extension-attribute-type})
+    extension-attribute-value	 [1] EXPLICIT EXTENSION-ATTRIBUTE.&Type ({ExtensionAttributeTable}{@extension-attribute-type})
 }
 
 ub-extension-attributes INTEGER ::= 256

@@ -185,8 +185,10 @@ check(const char *fname,
 		std_asn = asn1p_parse_file("../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
 		if(std_asn) {
 			asn1p_module_t *mod;
-			while((mod = TQ_REMOVE(&(std_asn->modules), mod_next)))
+			while((mod = TQ_REMOVE(&(std_asn->modules), mod_next))) {
+				mod->_tags |= MT_STANDARD_MODULE;
 				TQ_ADD(&(asn->modules), mod, mod_next);
+			}
 			asn1p_free(std_asn);
 		}
 	}

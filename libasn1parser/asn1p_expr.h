@@ -14,8 +14,8 @@ typedef enum asn1p_expr_meta {
 	AMT_PARAMTYPE,		/* Type3{Parameter} ::= SET { ... } */
 	AMT_VALUE,		/* value1 Type1 ::= 1 */
 	AMT_VALUESET,		/* ValueSet Type1 ::= { value1 } */
-	AMT_OBJECT,		/* FUNCTION ::= CLASS {...} */
-	AMT_OBJECTSET,		/* Functions FUNCTION ::= {...} */
+	AMT_OBJECT,		/* object CLASS ::= {...} */
+	AMT_OBJECTCLASS,	/* FUNCTION ::= CLASS {...} */
 	AMT_OBJECTFIELD,	/* ... */
 	AMT_EXPR_META_MAX
 } asn1p_expr_meta_e;
@@ -38,14 +38,24 @@ typedef enum asn1p_expr_type {
 	A1TC_PARAMETRIZED,	/* A parametrized type declaration */
 	A1TC_VALUESET,		/* Value set definition */
 	A1TC_CLASSDEF,		/* Information Object Class */
-	A1TC_CLASSFIELD,	/* Information Object Class field */
 	A1TC_INSTANCE,		/* Instance of Object Class */
-	A1TC_TYPEID,		/* Type identifier */
+
+	/*
+	 * ASN.1 Class field types
+	 */
+#define	ASN_CLASSFIELD_MASK	0x10	/* Every class field type */
+	A1TC_CLASSFIELD_TFS	= ASN_CLASSFIELD_MASK,	/* TypeFieldSpec */
+	A1TC_CLASSFIELD_FTVFS,		/* FixedTypeValueFieldSpec */
+	A1TC_CLASSFIELD_VTVFS,		/* VariableTypeValueFieldSpec */
+	A1TC_CLASSFIELD_FTVSFS,		/* FixedTypeValueSetFieldSpec */
+	A1TC_CLASSFIELD_VTVSFS,		/* VariableTypeValueSetFieldSpec */
+	A1TC_CLASSFIELD_OFS,		/* ObjectFieldSpec */
+	A1TC_CLASSFIELD_OSFS,		/* ObjectSetFieldSpec */
 
 	/*
 	 * ASN.1 Constructed types
 	 */
-#define	ASN_CONSTR_MASK		0x10	/* Every constructed type */
+#define	ASN_CONSTR_MASK		0x20	/* Every constructed type */
 	ASN_CONSTR_SEQUENCE	= ASN_CONSTR_MASK,	/* SEQUENCE */
 	ASN_CONSTR_CHOICE,		/* CHOICE */
 	ASN_CONSTR_SET,			/* SET */
@@ -55,7 +65,7 @@ typedef enum asn1p_expr_type {
 	/*
 	 * ASN.1 Basic types
 	 */
-#define	ASN_BASIC_MASK		0x20	/* Every basic type */
+#define	ASN_BASIC_MASK		0x40	/* Every basic type */
 	ASN_TYPE_ANY		= ASN_BASIC_MASK,	/* ANY (deprecated) */
 	ASN_BASIC_BOOLEAN,
 	ASN_BASIC_NULL,
@@ -75,9 +85,9 @@ typedef enum asn1p_expr_type {
 	/*
 	 * ASN.1 String types
 	 */
-#define	ASN_STRING_KM_MASK	0x40	/* Known multiplier */
-#define	ASN_STRING_NKM_MASK	0x80	/* Not a known multiplier */
-#define	ASN_STRING_MASK		0xC0	/* Every restricted string type */
+#define	ASN_STRING_KM_MASK	0x100	/* Known multiplier */
+#define	ASN_STRING_NKM_MASK	0x200	/* Not a known multiplier */
+#define	ASN_STRING_MASK		0x300	/* Every restricted string type */
 	ASN_STRING_IA5String	= ASN_STRING_KM_MASK,
 	ASN_STRING_PrintableString,
 	ASN_STRING_VisibleString,

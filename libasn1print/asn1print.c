@@ -562,7 +562,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	case A1TC_CLASSDEF:
 		printf(" CLASS");
 		break;
-	case A1TC_CLASSFIELD:
+	case A1TC_CLASSFIELD_TFS ... A1TC_CLASSFIELD_OSFS:
 		/* Nothing to print here */
 		break;
 	case ASN_CONSTR_SET_OF:
@@ -604,10 +604,12 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	|| (tc->expr_type & ASN_CONSTR_MASK)
 	|| tc->meta_type == AMT_VALUESET
 	|| tc->meta_type == AMT_OBJECT
-	|| tc->meta_type == AMT_OBJECTSET
+	|| tc->meta_type == AMT_OBJECTCLASS
+	|| tc->meta_type == AMT_OBJECTFIELD
 	) {
 		asn1p_expr_t *se;	/* SubExpression */
-		int put_braces = !SEQ_OF; /* Don't need 'em, if SET OF... */
+		int put_braces = (!SEQ_OF) /* Don't need 'em, if SET OF... */
+			&& (tc->meta_type != AMT_OBJECTFIELD);
 
 		if(put_braces) {
 			if(flags & APF_NOINDENT) {
