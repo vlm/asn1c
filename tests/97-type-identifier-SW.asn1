@@ -22,7 +22,7 @@ BEGIN
 	TYPE-IDENTIFIER ::= CLASS {
 		&id2	OBJECT IDENTIFIER UNIQUE,
 		&Type
-	}
+	} WITH SYNTAX { [ &Type -- comment --] IDENTIFIED BY &id2 }
 
 END
 

@@ -1,0 +1,29 @@
+ModuleTypeIdentifier1 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 97 1 }
+DEFINITIONS ::=
+BEGIN
+
+T1 ::= SEQUENCE {
+    id	 TYPE-IDENTIFIER.&id2,
+    type	 TYPE-IDENTIFIER.&Type
+}
+
+TYPE-IDENTIFIER ::= CLASS {
+    &id2	 OBJECT IDENTIFIER UNIQUE,
+    &Type	 ANY
+} WITH SYNTAX { [ &Type ] IDENTIFIED BY &id2 }
+
+
+END
+
+ModuleTypeIdentifier2 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 97 2 }
+DEFINITIONS ::=
+BEGIN
+
+T2 ::= SEQUENCE {
+    id	 TYPE-IDENTIFIER.&id,
+    type	 TYPE-IDENTIFIER.&Type
+}
+
+END
