@@ -99,7 +99,7 @@ WSP	[\t\r\v\f\n ]
 
 --<[ \t]*ASN1C.RepresentAsPointer[ \t]*>--	asn1p_as_pointer = 1;
 
---		yy_push_state(dash_comment);
+<INITIAL,with_syntax>--		yy_push_state(dash_comment);
 <dash_comment,idash_comment>{
 
 	{NL}	yy_pop_state();
@@ -109,7 +109,7 @@ WSP	[\t\r\v\f\n ]
 	[^\r\v\f\n-]+	/* Eat */
 }
 
-<INITIAL,cpp_comment>"/*"		yy_push_state(cpp_comment);
+<INITIAL,cpp_comment,with_syntax>"/*"		yy_push_state(cpp_comment);
 <cpp_comment>{
 	[^*/<]	/* Eat */
 	"*/"	yy_pop_state();
@@ -391,11 +391,24 @@ WITH			return TOK_WITH;
 
 <with_syntax>{
 
-	[^&{} \t\r\v\f\n]+	{
-			asn1p_lval.tv_opaque.buf = strdup(yytext);
-			asn1p_lval.tv_opaque.len = yyleng;
-			return TOK_opaque;
+	[A-Z][A-Za-z0-9]*([-][A-Za-z0-9]+)*	{
+				asn1p_lval.tv_str = strdup(yytext);
+				return TOK_Literal;
 			}
+
+	","		{
+				asn1p_lval.tv_str = strdup(yytext);
+				return TOK_Literal;
+			}
+
+	"{"		{
+				yy_push_state(with_syntax);
+				asn1p_lval.tv_str = strdup(yytext);
+				return TOK_Literal;
+			}
+
+	"["		return '[';
+	"]"		return ']';
 
 	{WSP}+		{
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
@@ -405,7 +418,12 @@ WITH			return TOK_WITH;
 
 	"}"		{
 				yy_pop_state();
-				return '}';
+				if(YYSTATE == with_syntax) {
+					asn1p_lval.tv_str = strdup(yytext);
+					return TOK_Literal;
+				} else {
+					return '}';
+				}
 			}
 
 }
