@@ -131,6 +131,8 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 		while(top_parent->parent_expr)
 			top_parent = top_parent->parent_expr;
 
+	DEBUG("asn1c_type_name(%s: 0x%x)", expr->Identifier, expr->expr_type);
+
 	switch(expr->expr_type) {
 	case A1TC_REFERENCE:
 		typename = expr->reference->components[
@@ -144,7 +146,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			 */
 			tmp.expr = asn1f_class_access_ex(arg->asn,
 				arg->expr->module, arg->expr, expr->reference);
-			if(tmp.expr) return NULL;
+			if(!tmp.expr) return NULL;
 
 			return asn1c_type_name(&tmp, tmp.expr, _format);
 		}
