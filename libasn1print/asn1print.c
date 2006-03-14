@@ -412,15 +412,21 @@ static int
 asn1print_with_syntax(asn1p_wsyntx_t *wx, enum asn1print_flags flags) {
 	if(wx) {
 		asn1p_wsyntx_chunk_t *wc;
-		printf(" WITH SYNTAX {");
 		TQ_FOR(wc, &(wx->chunks), next) {
-			if(wc->ref) {
-				asn1print_ref(wc->ref, flags);
-			} else {
-				fwrite(wc->buf, 1, wc->len, stdout);
-			}
+		  switch(wc->type) {
+		  case WC_LITERAL:
+			printf("%s", wc->content.token);
+			break;
+		  case WC_REFERENCE:
+			asn1print_ref(wc->content.ref, flags);
+			break;
+		  case WC_OPTIONALGROUP:
+			printf("[");
+			asn1print_with_syntax(wc->content.syntax,flags);
+			printf("]");
+			break;
+		  }
 		}
-		printf("}\n");
 	}
 
 	return 0;
@@ -651,8 +657,11 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		}
 	}
 
-	if(tc->with_syntax)
+	if(tc->with_syntax) {
+		printf(" WITH SYNTAX {");
 		asn1print_with_syntax(tc->with_syntax, flags);
+		printf("}\n");
+	}
 
 	if(!SEQ_OF && tc->constraints) {
 		printf(" ");

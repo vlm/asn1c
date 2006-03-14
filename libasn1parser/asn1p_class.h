@@ -10,15 +10,21 @@
  * WITH SYNTAX free-form chunks.
  */
 typedef struct asn1p_wsyntx_chunk_s {
+	enum {
+		WC_LITERAL,
+		WC_REFERENCE,
+		WC_OPTIONALGROUP
+	} type;
 	/*
-	 * It could be the union, but the story is:
-	 * if ref is here, the ref is used.
-	 * Otherwise, buf/len is used.
+	 * WC_LITERAL -> {buf, len}
+	 * WC_REFERENCE -> {ref}
+	 * WC_OPTIONALGROUP -> {syntax}
 	 */
-	asn1p_ref_t *ref;
-
-	char	*buf;
-	int	 len;
+	union {
+		char	*token;
+		asn1p_ref_t *ref;
+		struct asn1p_wsyntx_s *syntax;
+	} content;
 
 	TQ_ENTRY(struct asn1p_wsyntx_chunk_s) next;
 } asn1p_wsyntx_chunk_t;
@@ -47,7 +53,8 @@ asn1p_wsyntx_t *asn1p_wsyntx_clone(asn1p_wsyntx_t *);
  * 	-1:	Failure to add component (refer to errno)
  */
 asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromref(asn1p_ref_t *ref, int do_copy);
-asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_frombuf(char *buf, int len, int do_copy);
+asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_frombuf(char *buf, int len, int _copy);
+asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromsyntax(asn1p_wsyntx_t *syntax);
 
 
 #endif	/* ASN1_PARSER_CLASS_H */

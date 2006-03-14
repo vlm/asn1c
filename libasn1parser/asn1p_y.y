@@ -120,6 +120,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %token	<tv_str>	TOK_capitalreference		/* "CLASS1" */
 %token	<tv_str>	TOK_typefieldreference		/* "&Pork" */
 %token	<tv_str>	TOK_valuefieldreference		/* "&id" */
+%token	<tv_str>	TOK_Literal			/* "BY" */
 
 /*
  * Token types representing ASN.1 standard keywords.
@@ -307,8 +308,8 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_value>		RestrictedCharacterStringValue
 %type	<a_wsynt>		optWithSyntax
 %type	<a_wsynt>		WithSyntax
-%type	<a_wsynt>		WithSyntaxFormat
-%type	<a_wchunk>		WithSyntaxFormatToken
+%type	<a_wsynt>		WithSyntaxList
+%type	<a_wchunk>		WithSyntaxToken
 %type	<a_marker>		optMarker Marker
 %type	<a_int>			optUnique
 %type	<a_pres>		optPresenceConstraint PresenceConstraint
@@ -1054,26 +1055,29 @@ optWithSyntax:
 WithSyntax:
 	TOK_WITH TOK_SYNTAX '{'
 		{ asn1p_lexer_hack_enable_with_syntax(); }
-		WithSyntaxFormat
+		WithSyntaxList
 		'}' {
 		$$ = $5;
 	}
 	;
 
-WithSyntaxFormat:
-	WithSyntaxFormatToken {
+WithSyntaxList:
+	WithSyntaxToken {
 		$$ = asn1p_wsyntx_new();
 		TQ_ADD(&($$->chunks), $1, next);
 	}
-	| WithSyntaxFormat WithSyntaxFormatToken {
+	| WithSyntaxList WithSyntaxToken {
 		$$ = $1;
 		TQ_ADD(&($$->chunks), $2, next);
 	}
 	;
 
-WithSyntaxFormatToken:
+WithSyntaxToken:
 	TOK_opaque {
 		$$ = asn1p_wsyntx_chunk_frombuf($1.buf, $1.len, 0);
+	}
+	| TOK_Literal {
+		$$ = asn1p_wsyntx_chunk_frombuf($1, strlen($1), 0);
 	}
 	| ClassFieldIdentifier {
 		asn1p_ref_t *ref;
@@ -1083,6 +1087,9 @@ WithSyntaxFormatToken:
 		ret = asn1p_ref_add_component(ref, $1.name, $1.lex_type);
 		checkmem(ret == 0);
 		$$ = asn1p_wsyntx_chunk_fromref(ref, 0);
+	}
+	| '[' WithSyntaxList ']' {
+		$$ = asn1p_wsyntx_chunk_fromsyntax($2);
 	}
 	;
 
@@ -2340,15 +2347,13 @@ _fixup_anonymous_identifier(asn1p_expr_t *expr) {
 		expr->Identifier);
 }
 
-extern char *asn1p_text;
-
 int
 yyerror(const char *msg) {
+	extern char *asn1p_text;
 	fprintf(stderr,
 		"ASN.1 grammar parse error "
 		"near line %d (token \"%s\"): %s\n",
 		yylineno, asn1p_text, msg);
 	return -1;
 }
-
 
