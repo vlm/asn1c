@@ -39,8 +39,7 @@ POST_UNINSTALL = :
 host_triplet = @host@
 check_PROGRAMS = check_fixer$(EXEEXT)
 subdir = libasn1fix
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	asn1fix_cws_l.c asn1fix_cws_y.c asn1fix_cws_y.h
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -56,7 +55,7 @@ am_libasn1fix_la_OBJECTS = asn1fix.lo asn1fix_misc.lo asn1fix_value.lo \
 	asn1fix_integer.lo asn1fix_crange.lo asn1fix_dereft.lo \
 	asn1fix_derefv.lo asn1fix_export.lo asn1fix_param.lo \
 	asn1fix_class.lo asn1fix_tags.lo asn1fix_enum.lo \
-	asn1fix_cws_y.lo asn1fix_cws_l.lo asn1fix_constraint_compat.lo
+	asn1fix_cws.lo asn1fix_constraint_compat.lo
 libasn1fix_la_OBJECTS = $(am_libasn1fix_la_OBJECTS)
 check_fixer_SOURCES = check_fixer.c
 check_fixer_OBJECTS = check_fixer.$(OBJEXT)
@@ -73,8 +72,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/asn1fix_constraint_compat.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1fix_crange.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1fix_cstring.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/asn1fix_cws_l.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/asn1fix_cws_y.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/asn1fix_cws.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1fix_dereft.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1fix_derefv.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/asn1fix_enum.Plo \
@@ -94,11 +92,6 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-LEXCOMPILE = $(LEX) $(LFLAGS) $(AM_LFLAGS)
-LTLEXCOMPILE = $(LIBTOOL) --mode=compile $(LEX) $(LFLAGS) $(AM_LFLAGS)
-YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
-LTYACCCOMPILE = $(LIBTOOL) --mode=compile $(YACC) $(YFLAGS) \
-	$(AM_YFLAGS)
 SOURCES = $(libasn1fix_la_SOURCES) check_fixer.c
 DIST_SOURCES = $(libasn1fix_la_SOURCES) check_fixer.c
 ETAGS = etags
@@ -217,8 +210,6 @@ AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/libasn1parser
 
-AM_YFLAGS = -p asn1fix_cws_ -d
-AM_LFLAGS = -sp -Cem -Pasn1fix_cws_ -olex.yy.c
 noinst_LTLIBRARIES = libasn1fix.la
 libasn1fix_la_LDFLAGS = -all-static
 libasn1fix_la_SOURCES = \
@@ -241,7 +232,7 @@ libasn1fix_la_SOURCES = \
 	asn1fix_class.c asn1fix_class.h			\
 	asn1fix_tags.c asn1fix_tags.h			\
 	asn1fix_enum.c asn1fix_enum.h			\
-	asn1fix_cws_y.y asn1fix_cws_l.l			\
+	asn1fix_cws.c asn1fix_cws.h			\
 	asn1fix_constraint_compat.c
 
 check_fixer_LDADD = $(noinst_LTLIBRARIES)		\
@@ -253,7 +244,7 @@ TESTS = ${top_srcdir}/tests/*.asn1
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .l .lo .o .obj .y
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -292,11 +283,6 @@ clean-noinstLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-asn1fix_cws_y.h: asn1fix_cws_y.c
-	@if test ! -f $@; then \
-	  rm -f asn1fix_cws_y.c; \
-	  $(MAKE) asn1fix_cws_y.c; \
-	else :; fi
 libasn1fix.la: $(libasn1fix_la_OBJECTS) $(libasn1fix_la_DEPENDENCIES) 
 	$(LINK)  $(libasn1fix_la_LDFLAGS) $(libasn1fix_la_OBJECTS) $(libasn1fix_la_LIBADD) $(LIBS)
 
@@ -325,8 +311,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_constraint_compat.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_crange.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_cstring.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_cws_l.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_cws_y.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_cws.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_dereft.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_derefv.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_enum.Plo@am__quote@
@@ -362,31 +347,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
-
-.l.c:
-	$(LEXCOMPILE) $<
-	sed '/^#/ s|$(LEX_OUTPUT_ROOT)\.c|$@|' $(LEX_OUTPUT_ROOT).c >$@
-	rm -f $(LEX_OUTPUT_ROOT).c
-
-.y.c:
-	$(YACCCOMPILE) $<
-	if test -f y.tab.h; then \
-	  to=`echo "$*_H" | sed \
-                -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/' \
-                -e 's/[^ABCDEFGHIJKLMNOPQRSTUVWXYZ]/_/g'`; \
-	  sed "/^#/ s/Y_TAB_H/$$to/g" y.tab.h >$*.ht; \
-	  rm -f y.tab.h; \
-	  if cmp -s $*.ht $*.h; then \
-	    rm -f $*.ht ;\
-	  else \
-	    mv $*.ht $*.h; \
-	  fi; \
-	fi
-	if test -f y.output; then \
-	  mv y.output $*.output; \
-	fi
-	sed '/^#/ s|y\.tab\.c|$@|' y.tab.c >$@t && mv $@t $@
-	rm -f y.tab.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -576,9 +536,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f asn1fix_cws_y.c
-	-rm -f asn1fix_cws_y.h
-	-rm -f asn1fix_cws_l.c
 clean: clean-am
 
 clean-am: clean-checkPROGRAMS clean-generic clean-libtool \

@@ -3,9 +3,6 @@ AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS =				\
 	-I$(top_srcdir)/libasn1parser
 
-AM_YFLAGS = -p asn1fix_cws_ -d
-AM_LFLAGS = -sp -Cem -Pasn1fix_cws_ -olex.yy.c
-
 noinst_LTLIBRARIES = libasn1fix.la
 
 libasn1fix_la_LDFLAGS = -all-static
@@ -29,7 +26,6 @@ libasn1fix_la_SOURCES =					\
 	asn1fix_class.c asn1fix_class.h			\
 	asn1fix_tags.c asn1fix_tags.h			\
 	asn1fix_enum.c asn1fix_enum.h			\
-	asn1fix_cws_y.y asn1fix_cws_l.l			\
 	asn1fix_cws.c asn1fix_cws.h			\
 	asn1fix_constraint_compat.c
 
