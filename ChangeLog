@@ -1,8 +1,10 @@
 
-0.9.21:	2006-Mar-09
+0.9.21:	2006-Mar-14
 
 	* skeletons/standard-modules directory is now used for standard types.
 	* Refactored system for parsing Information Object Classes.
+	* Fixed class field access problem (Test case 98)
+	  (Severity: medim; Security impact: none)
 
 0.9.20:	2006-Mar-06
 
@@ -476,6 +478,7 @@ SEVERITY.
 SECURITY IMPACT.
     This term applies to the amount of potential damage a bug exploitation
     could cause.
+	none:	No malicious exploitation is possible.
 	low:	The local exploitation is unlikely; the remote exploitation
 		is impossible.
 	medium:	The remote exploitation is possible when a particular ASN.1
