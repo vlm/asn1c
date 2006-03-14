@@ -1,0 +1,43 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .97
+
+ModuleTypeIdentifier1
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 97 1 }
+	DEFINITIONS ::=
+BEGIN
+
+	/*
+	 * TYPE-IDENTIFIER is resolved to a clause below.
+	 */
+	T1 ::= SEQUENCE {
+		id	TYPE-IDENTIFIER.&id2,
+		type	TYPE-IDENTIFIER.&Type
+	}
+
+	TYPE-IDENTIFIER ::= CLASS {
+		&id2	OBJECT IDENTIFIER UNIQUE,
+		&Type
+	}
+
+END
+
+ModuleTypeIdentifier2
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 97 2 }
+	DEFINITIONS ::=
+BEGIN
+
+	/*
+	 * TYPE-IDENTIFIER is resolved to a default TYPE-IDENTIFIER class.
+	 */
+	T2 ::= SEQUENCE {
+		id	TYPE-IDENTIFIER.&id,
+		type	TYPE-IDENTIFIER.&Type
+	}
+
+END
