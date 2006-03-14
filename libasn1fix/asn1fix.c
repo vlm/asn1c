@@ -223,6 +223,11 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 		RET2RVAL(ret, rvalue);
 
 		/*
+		 * Parse WITH SYNTAX in CLASSes.
+		 */
+		ret = asn1f_parse_class_with_syntax(arg);
+
+		/*
 		 * Resolve references in constraints.
 		 */
 		ret = asn1f_recurse_expr(arg, asn1f_resolve_constraints);
