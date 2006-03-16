@@ -6,6 +6,22 @@
 
 #include "asn1p_ref.h"
 
+struct asn1p_expr_s;	/* Forward declaration */
+
+typedef struct asn1p_ioc_row_s {
+	struct asn1p_ioc_cell_s {
+		struct asn1p_expr_s *field;	/* may never be NULL */
+		struct asn1p_expr_s *value;	/* may be left uninitialized */
+	} *column;
+	int columns;
+	int max_identifier_length;
+} asn1p_ioc_row_t;
+
+asn1p_ioc_row_t *asn1p_ioc_row_new(struct asn1p_expr_s *oclass);
+void asn1p_ioc_row_delete(asn1p_ioc_row_t *);
+struct asn1p_ioc_cell_s *asn1p_ioc_row_cell_fetch(asn1p_ioc_row_t *,
+		const char *fieldname);
+
 /*
  * WITH SYNTAX free-form chunks.
  */
@@ -13,18 +29,17 @@ typedef struct asn1p_wsyntx_chunk_s {
 	enum {
 		WC_LITERAL,
 		WC_WHITESPACE,
-		WC_REFERENCE,
+		WC_FIELD,
 		WC_OPTIONALGROUP
 	} type;
 	/*
 	 * WC_LITERAL -> {token}
 	 * WC_WHITESPACE -> {token}
-	 * WC_REFERENCE -> {ref}
+	 * WC_FIELD -> {token}
 	 * WC_OPTIONALGROUP -> {syntax}
 	 */
 	union {
-		char	*token;
-		asn1p_ref_t *ref;
+		char *token;
 		struct asn1p_wsyntx_s *syntax;
 	} content;
 
@@ -54,7 +69,6 @@ asn1p_wsyntx_t *asn1p_wsyntx_clone(asn1p_wsyntx_t *);
  * 	 0:	Component has been added
  * 	-1:	Failure to add component (refer to errno)
  */
-asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromref(asn1p_ref_t *ref, int do_copy);
 asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_frombuf(char *buf, int len, int _copy);
 asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromsyntax(asn1p_wsyntx_t *syntax);
 

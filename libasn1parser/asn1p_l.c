@@ -1763,21 +1763,21 @@ int yy_flex_debug = 1;
 
 static yyconst short int yy_rule_linenum[137] =
     {   0,
-       94,   95,   97,  100,  102,  105,  107,  108,  109,  112,
-      114,  115,  116,  128,  135,  142,  148,  157,  165,  173,
-      174,  176,  195,  201,  202,  203,  204,  205,  208,  214,
-      221,  228,  235,  242,  243,  244,  252,  253,  254,  255,
-      256,  261,  262,  263,  264,  265,  266,  267,  268,  269,
-      270,  271,  280,  281,  282,  283,  284,  285,  286,  287,
-      288,  289,  290,  291,  292,  293,  294,  295,  296,  297,
-      298,  299,  300,  301,  302,  303,  304,  305,  306,  307,
-      308,  309,  310,  311,  312,  313,  314,  315,  316,  317,
-      318,  319,  320,  321,  322,  323,  324,  325,  326,  327,
+       95,   96,   98,  101,  103,  106,  108,  109,  110,  113,
+      115,  116,  117,  129,  136,  143,  149,  158,  166,  174,
+      175,  177,  196,  202,  203,  204,  205,  206,  209,  215,
+      222,  229,  236,  243,  244,  245,  253,  254,  255,  256,
+      257,  262,  263,  264,  265,  266,  267,  268,  269,  270,
+      271,  272,  281,  282,  283,  284,  285,  286,  287,  288,
+      289,  290,  291,  292,  293,  294,  295,  296,  297,  298,
+      299,  300,  301,  302,  303,  304,  305,  306,  307,  308,
+      309,  310,  311,  312,  313,  314,  315,  316,  317,  318,
+      319,  320,  321,  322,  323,  324,  325,  326,  327,  328,
 
-      328,  329,  330,  331,  332,  333,  334,  335,  336,  337,
-      342,  343,  348,  349,  350,  353,  358,  364,  372,  382,
-      387,  389,  390,  394,  399,  404,  410,  411,  413,  419,
-      432,  435,  460,  504,  506,  517
+      329,  330,  331,  332,  333,  334,  335,  336,  337,  338,
+      343,  344,  349,  350,  351,  354,  359,  365,  373,  383,
+      388,  390,  391,  395,  400,  405,  411,  412,  414,  420,
+      433,  436,  461,  505,  507,  518
     } ;
 
 static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;
@@ -1821,9 +1821,10 @@ void asn1p_lexer_hack_push_encoding_control(void);	/* Used in .y */
 int asn1p_lexer_pedantic_1990 = 0;
 int asn1p_lexer_types_year = 0;
 int asn1p_lexer_constructs_year = 0;
-static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 
 int asn1p_as_pointer;
+
+static asn1c_integer_t _lex_atoi(const char *ptr);
 
 /*
  * Check that the type is defined in the year of the standard choosen.
@@ -1883,7 +1884,7 @@ int asn1p_as_pointer;
 
 /* Newline */
 /* White-space */
-#line 1887 "asn1p_l.c"
+#line 1888 "asn1p_l.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -2034,10 +2035,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 92 "asn1p_l.l"
+#line 93 "asn1p_l.l"
 
 
-#line 2041 "asn1p_l.c"
+#line 2042 "asn1p_l.c"
 
 	if ( yy_init )
 		{
@@ -2148,7 +2149,7 @@ case 1:
 yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 94 "asn1p_l.l"
+#line 95 "asn1p_l.l"
 /* Immediately terminated long comment */
 	YY_BREAK
 case 2:
@@ -2156,67 +2157,67 @@ case 2:
 yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 95 "asn1p_l.l"
+#line 96 "asn1p_l.l"
 yy_push_state(idash_comment);	/* Incorrect, but acceptable */
 	YY_BREAK
 
 case 3:
 YY_RULE_SETUP
-#line 97 "asn1p_l.l"
+#line 98 "asn1p_l.l"
 yy_pop_state(); /* Acceptable end of comment */
 	YY_BREAK
 
 case 4:
 YY_RULE_SETUP
-#line 100 "asn1p_l.l"
+#line 101 "asn1p_l.l"
 asn1p_as_pointer = 1;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 102 "asn1p_l.l"
+#line 103 "asn1p_l.l"
 yy_push_state(dash_comment);
 	YY_BREAK
 
 case 6:
 YY_RULE_SETUP
-#line 105 "asn1p_l.l"
+#line 106 "asn1p_l.l"
 yy_pop_state();
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 107 "asn1p_l.l"
+#line 108 "asn1p_l.l"
 yy_pop_state();	/* End of comment */
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 108 "asn1p_l.l"
+#line 109 "asn1p_l.l"
 /* Eat single dash */
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 109 "asn1p_l.l"
+#line 110 "asn1p_l.l"
 /* Eat */
 	YY_BREAK
 
 case 10:
 YY_RULE_SETUP
-#line 112 "asn1p_l.l"
+#line 113 "asn1p_l.l"
 yy_push_state(cpp_comment);
 	YY_BREAK
 
 case 11:
 YY_RULE_SETUP
-#line 114 "asn1p_l.l"
+#line 115 "asn1p_l.l"
 /* Eat */
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 115 "asn1p_l.l"
+#line 116 "asn1p_l.l"
 yy_pop_state();
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 116 "asn1p_l.l"
+#line 117 "asn1p_l.l"
 /* Eat */
 	YY_BREAK
 
@@ -2229,7 +2230,7 @@ YY_RULE_SETUP
 
 case 14:
 YY_RULE_SETUP
-#line 128 "asn1p_l.l"
+#line 129 "asn1p_l.l"
 {
 			yy_push_state(opaque);
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
@@ -2239,7 +2240,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 135 "asn1p_l.l"
+#line 136 "asn1p_l.l"
 {
 			yy_pop_state();
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
@@ -2249,7 +2250,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 142 "asn1p_l.l"
+#line 143 "asn1p_l.l"
 {
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
 			asn1p_lval.tv_opaque.len = yyleng;
@@ -2258,7 +2259,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 148 "asn1p_l.l"
+#line 149 "asn1p_l.l"
 {
 			fprintf(stderr,
 				"ASN.1 Parser syncronization failure: "
@@ -2270,7 +2271,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 157 "asn1p_l.l"
+#line 158 "asn1p_l.l"
 {
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
 			asn1p_lval.tv_opaque.len = yyleng;
@@ -2280,7 +2281,7 @@ YY_RULE_SETUP
 
 case 19:
 YY_RULE_SETUP
-#line 165 "asn1p_l.l"
+#line 166 "asn1p_l.l"
 {
 			asn1p_lval.tv_opaque.buf = 0;
 			asn1p_lval.tv_opaque.len = 0;
@@ -2291,17 +2292,17 @@ YY_RULE_SETUP
 
 case 20:
 YY_RULE_SETUP
-#line 173 "asn1p_l.l"
+#line 174 "asn1p_l.l"
 { QAPPEND(yytext, yyleng-1); }	/* Add a single quote */
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 174 "asn1p_l.l"
+#line 175 "asn1p_l.l"
 { QAPPEND(yytext, yyleng); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 176 "asn1p_l.l"
+#line 177 "asn1p_l.l"
 {
 			yy_pop_state();
 			/* Do not append last quote:
@@ -2322,7 +2323,7 @@ YY_RULE_SETUP
 
 case 23:
 YY_RULE_SETUP
-#line 195 "asn1p_l.l"
+#line 196 "asn1p_l.l"
 {
 			const char *s = "ENCODING-CONTROL";
 			const char *p = s + sizeof("ENCODING-CONTROL") - 2;
@@ -2332,33 +2333,33 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 201 "asn1p_l.l"
+#line 202 "asn1p_l.l"
 unput('D'); unput('N'); unput('E'); yy_pop_state();
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 202 "asn1p_l.l"
+#line 203 "asn1p_l.l"
 
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 203 "asn1p_l.l"
+#line 204 "asn1p_l.l"
 
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 204 "asn1p_l.l"
+#line 205 "asn1p_l.l"
 /* Eat everything else */
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 205 "asn1p_l.l"
+#line 206 "asn1p_l.l"
 
 	YY_BREAK
 
 case 29:
 YY_RULE_SETUP
-#line 208 "asn1p_l.l"
+#line 209 "asn1p_l.l"
 {
 		/* " \t\r\n" weren't allowed in ASN.1:1990. */
 		asn1p_lval.tv_str = yytext;
@@ -2367,7 +2368,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 214 "asn1p_l.l"
+#line 215 "asn1p_l.l"
 {
 		/* " \t\r\n" weren't allowed in ASN.1:1990. */
 		asn1p_lval.tv_str = strdup(yytext);
@@ -2376,9 +2377,9 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 221 "asn1p_l.l"
+#line 222 "asn1p_l.l"
 {
-		asn1p_lval.a_int = asn1p_atoi(yytext);
+		asn1p_lval.a_int = _lex_atoi(yytext);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number_negative;
@@ -2386,9 +2387,9 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 228 "asn1p_l.l"
+#line 229 "asn1p_l.l"
 {
-		asn1p_lval.a_int = asn1p_atoi(yytext);
+		asn1p_lval.a_int = _lex_atoi(yytext);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number;
@@ -2396,9 +2397,9 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 235 "asn1p_l.l"
+#line 236 "asn1p_l.l"
 {
-		asn1p_lval.a_int = asn1p_atoi(yytext);
+		asn1p_lval.a_int = _lex_atoi(yytext);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number;
@@ -2406,17 +2407,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 242 "asn1p_l.l"
+#line 243 "asn1p_l.l"
 return TOK_ABSENT;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 243 "asn1p_l.l"
+#line 244 "asn1p_l.l"
 return TOK_ALL;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 244 "asn1p_l.l"
+#line 245 "asn1p_l.l"
 {
 				/* Appeared in 1990, removed in 1997 */
 				if(TYPE_LIFETIME(1990, 1997))
@@ -2428,27 +2429,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 252 "asn1p_l.l"
+#line 253 "asn1p_l.l"
 return TOK_APPLICATION;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 253 "asn1p_l.l"
+#line 254 "asn1p_l.l"
 return TOK_AUTOMATIC;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 254 "asn1p_l.l"
+#line 255 "asn1p_l.l"
 return TOK_BEGIN;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 255 "asn1p_l.l"
+#line 256 "asn1p_l.l"
 return TOK_BIT;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 256 "asn1p_l.l"
+#line 257 "asn1p_l.l"
 {
 				if(TYPE_LIFETIME(1994, 0))
 					return TOK_BMPString;
@@ -2457,57 +2458,57 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 261 "asn1p_l.l"
+#line 262 "asn1p_l.l"
 return TOK_BOOLEAN;
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 262 "asn1p_l.l"
+#line 263 "asn1p_l.l"
 return TOK_BY;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 263 "asn1p_l.l"
+#line 264 "asn1p_l.l"
 return TOK_CHARACTER;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 264 "asn1p_l.l"
+#line 265 "asn1p_l.l"
 return TOK_CHOICE;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 265 "asn1p_l.l"
+#line 266 "asn1p_l.l"
 return TOK_CLASS;
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 266 "asn1p_l.l"
+#line 267 "asn1p_l.l"
 return TOK_COMPONENT;
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 267 "asn1p_l.l"
+#line 268 "asn1p_l.l"
 return TOK_COMPONENTS;
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 268 "asn1p_l.l"
+#line 269 "asn1p_l.l"
 return TOK_CONSTRAINED;
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 269 "asn1p_l.l"
+#line 270 "asn1p_l.l"
 return TOK_CONTAINING;
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 270 "asn1p_l.l"
+#line 271 "asn1p_l.l"
 return TOK_DEFAULT;
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 271 "asn1p_l.l"
+#line 272 "asn1p_l.l"
 {
 				/* Appeared in 1990, removed in 1997 */
 				if(TYPE_LIFETIME(1990, 1997))
@@ -2520,292 +2521,292 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 280 "asn1p_l.l"
+#line 281 "asn1p_l.l"
 return TOK_DEFINITIONS;
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 281 "asn1p_l.l"
+#line 282 "asn1p_l.l"
 return TOK_EMBEDDED;
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 282 "asn1p_l.l"
+#line 283 "asn1p_l.l"
 return TOK_ENCODED;
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 283 "asn1p_l.l"
+#line 284 "asn1p_l.l"
 return TOK_ENCODING_CONTROL;
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 284 "asn1p_l.l"
+#line 285 "asn1p_l.l"
 return TOK_END;
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 285 "asn1p_l.l"
+#line 286 "asn1p_l.l"
 return TOK_ENUMERATED;
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 286 "asn1p_l.l"
+#line 287 "asn1p_l.l"
 return TOK_EXCEPT;
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 287 "asn1p_l.l"
+#line 288 "asn1p_l.l"
 return TOK_EXPLICIT;
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 288 "asn1p_l.l"
+#line 289 "asn1p_l.l"
 return TOK_EXPORTS;
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 289 "asn1p_l.l"
+#line 290 "asn1p_l.l"
 return TOK_EXTENSIBILITY;
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 290 "asn1p_l.l"
+#line 291 "asn1p_l.l"
 return TOK_EXTERNAL;
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 291 "asn1p_l.l"
+#line 292 "asn1p_l.l"
 return TOK_FALSE;
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 292 "asn1p_l.l"
+#line 293 "asn1p_l.l"
 return TOK_FROM;
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 293 "asn1p_l.l"
+#line 294 "asn1p_l.l"
 return TOK_GeneralizedTime;
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 294 "asn1p_l.l"
+#line 295 "asn1p_l.l"
 return TOK_GeneralString;
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 295 "asn1p_l.l"
+#line 296 "asn1p_l.l"
 return TOK_GraphicString;
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 296 "asn1p_l.l"
+#line 297 "asn1p_l.l"
 return TOK_IA5String;
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 297 "asn1p_l.l"
+#line 298 "asn1p_l.l"
 return TOK_IDENTIFIER;
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 298 "asn1p_l.l"
+#line 299 "asn1p_l.l"
 return TOK_IMPLICIT;
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 299 "asn1p_l.l"
+#line 300 "asn1p_l.l"
 return TOK_IMPLIED;
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 300 "asn1p_l.l"
+#line 301 "asn1p_l.l"
 return TOK_IMPORTS;
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 301 "asn1p_l.l"
+#line 302 "asn1p_l.l"
 return TOK_INCLUDES;
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 302 "asn1p_l.l"
+#line 303 "asn1p_l.l"
 return TOK_INSTANCE;
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 303 "asn1p_l.l"
+#line 304 "asn1p_l.l"
 return TOK_INSTRUCTIONS;
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 304 "asn1p_l.l"
+#line 305 "asn1p_l.l"
 return TOK_INTEGER;
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 305 "asn1p_l.l"
+#line 306 "asn1p_l.l"
 return TOK_INTERSECTION;
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 306 "asn1p_l.l"
+#line 307 "asn1p_l.l"
 return TOK_ISO646String;
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 307 "asn1p_l.l"
+#line 308 "asn1p_l.l"
 return TOK_MAX;
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 308 "asn1p_l.l"
+#line 309 "asn1p_l.l"
 return TOK_MIN;
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 309 "asn1p_l.l"
+#line 310 "asn1p_l.l"
 return TOK_MINUS_INFINITY;
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 310 "asn1p_l.l"
+#line 311 "asn1p_l.l"
 return TOK_NULL;
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 311 "asn1p_l.l"
+#line 312 "asn1p_l.l"
 return TOK_NumericString;
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 312 "asn1p_l.l"
+#line 313 "asn1p_l.l"
 return TOK_OBJECT;
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 313 "asn1p_l.l"
+#line 314 "asn1p_l.l"
 return TOK_ObjectDescriptor;
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 314 "asn1p_l.l"
+#line 315 "asn1p_l.l"
 return TOK_OCTET;
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 315 "asn1p_l.l"
+#line 316 "asn1p_l.l"
 return TOK_OF;
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 316 "asn1p_l.l"
+#line 317 "asn1p_l.l"
 return TOK_OPTIONAL;
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 317 "asn1p_l.l"
+#line 318 "asn1p_l.l"
 return TOK_PATTERN;
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 318 "asn1p_l.l"
+#line 319 "asn1p_l.l"
 return TOK_PDV;
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 319 "asn1p_l.l"
+#line 320 "asn1p_l.l"
 return TOK_PLUS_INFINITY;
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 320 "asn1p_l.l"
+#line 321 "asn1p_l.l"
 return TOK_PRESENT;
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 321 "asn1p_l.l"
+#line 322 "asn1p_l.l"
 return TOK_PrintableString;
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 322 "asn1p_l.l"
+#line 323 "asn1p_l.l"
 return TOK_PRIVATE;
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 323 "asn1p_l.l"
+#line 324 "asn1p_l.l"
 return TOK_REAL;
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 324 "asn1p_l.l"
+#line 325 "asn1p_l.l"
 return TOK_RELATIVE_OID;
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 325 "asn1p_l.l"
+#line 326 "asn1p_l.l"
 return TOK_SEQUENCE;
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 326 "asn1p_l.l"
+#line 327 "asn1p_l.l"
 return TOK_SET;
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 327 "asn1p_l.l"
+#line 328 "asn1p_l.l"
 return TOK_SIZE;
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 328 "asn1p_l.l"
+#line 329 "asn1p_l.l"
 return TOK_STRING;
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 329 "asn1p_l.l"
+#line 330 "asn1p_l.l"
 return TOK_SYNTAX;
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 330 "asn1p_l.l"
+#line 331 "asn1p_l.l"
 return TOK_T61String;
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 331 "asn1p_l.l"
+#line 332 "asn1p_l.l"
 return TOK_TAGS;
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 332 "asn1p_l.l"
+#line 333 "asn1p_l.l"
 return TOK_TeletexString;
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 333 "asn1p_l.l"
+#line 334 "asn1p_l.l"
 return TOK_TRUE;
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 334 "asn1p_l.l"
+#line 335 "asn1p_l.l"
 return TOK_UNION;
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 335 "asn1p_l.l"
+#line 336 "asn1p_l.l"
 return TOK_UNIQUE;
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 336 "asn1p_l.l"
+#line 337 "asn1p_l.l"
 return TOK_UNIVERSAL;
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 337 "asn1p_l.l"
+#line 338 "asn1p_l.l"
 {
 				if(TYPE_LIFETIME(1994, 0))
 					return TOK_UniversalString;
@@ -2814,12 +2815,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 342 "asn1p_l.l"
+#line 343 "asn1p_l.l"
 return TOK_UTCTime;
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 343 "asn1p_l.l"
+#line 344 "asn1p_l.l"
 {
 				if(TYPE_LIFETIME(1994, 0))
 					return TOK_UTF8String;
@@ -2828,22 +2829,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 348 "asn1p_l.l"
+#line 349 "asn1p_l.l"
 return TOK_VideotexString;
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 349 "asn1p_l.l"
+#line 350 "asn1p_l.l"
 return TOK_VisibleString;
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 350 "asn1p_l.l"
+#line 351 "asn1p_l.l"
 return TOK_WITH;
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 353 "asn1p_l.l"
+#line 354 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_typefieldreference;
@@ -2851,7 +2852,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 358 "asn1p_l.l"
+#line 359 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_valuefieldreference;
@@ -2859,7 +2860,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 364 "asn1p_l.l"
+#line 365 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_identifier;
@@ -2870,7 +2871,7 @@ YY_RULE_SETUP
 	 */
 case 119:
 YY_RULE_SETUP
-#line 372 "asn1p_l.l"
+#line 373 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_capitalreference;
@@ -2883,7 +2884,7 @@ YY_RULE_SETUP
 	 */
 case 120:
 YY_RULE_SETUP
-#line 382 "asn1p_l.l"
+#line 383 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_typereference;
@@ -2891,23 +2892,23 @@ YY_RULE_SETUP
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 387 "asn1p_l.l"
+#line 388 "asn1p_l.l"
 return TOK_PPEQ;
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 389 "asn1p_l.l"
+#line 390 "asn1p_l.l"
 return TOK_ThreeDots;
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 390 "asn1p_l.l"
+#line 391 "asn1p_l.l"
 return TOK_TwoDots;
 	YY_BREAK
 
 case 124:
 YY_RULE_SETUP
-#line 394 "asn1p_l.l"
+#line 395 "asn1p_l.l"
 {
 				asn1p_lval.tv_str = strdup(yytext);
 				return TOK_Literal;
@@ -2915,7 +2916,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 399 "asn1p_l.l"
+#line 400 "asn1p_l.l"
 {
 				asn1p_lval.tv_str = strdup(yytext);
 				return TOK_Literal;
@@ -2923,7 +2924,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 404 "asn1p_l.l"
+#line 405 "asn1p_l.l"
 {
 				yy_push_state(with_syntax);
 				asn1p_lval.tv_str = strdup(yytext);
@@ -2932,17 +2933,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 410 "asn1p_l.l"
+#line 411 "asn1p_l.l"
 return '[';
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 411 "asn1p_l.l"
+#line 412 "asn1p_l.l"
 return ']';
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 413 "asn1p_l.l"
+#line 414 "asn1p_l.l"
 {
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
 			asn1p_lval.tv_opaque.len = yyleng;
@@ -2951,7 +2952,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 419 "asn1p_l.l"
+#line 420 "asn1p_l.l"
 {
 				yy_pop_state();
 				if(YYSTATE == with_syntax) {
@@ -2965,21 +2966,21 @@ YY_RULE_SETUP
 
 case 131:
 YY_RULE_SETUP
-#line 432 "asn1p_l.l"
+#line 433 "asn1p_l.l"
 /* Ignore whitespace */
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 435 "asn1p_l.l"
+#line 436 "asn1p_l.l"
 {
 		asn1c_integer_t v1 = -1, v2 = -1;
 		char *p;
 		for(p = yytext; *p; p++)
 			if(*p >= '0' && *p <= '9')
-			{ v1 = asn1p_atoi(p); break; }
+			{ v1 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;	/* Skip digits */
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v2 = asn1p_atoi(p); break; }
+			{ v2 = _lex_atoi(p); break; }
 		if(v1 < 0 || v1 > 7) {
 			fprintf(stderr, "%s at line %d: X.680:2003, #37.14 "
 				"mandates 0..7 range for Tuple's TableColumn\n",
@@ -2998,22 +2999,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 460 "asn1p_l.l"
+#line 461 "asn1p_l.l"
 {
 		asn1c_integer_t v1 = -1, v2 = -1, v3 = -1, v4 = -1;
 		char *p;
 		for(p = yytext; *p; p++)
 			if(*p >= '0' && *p <= '9')
-			{ v1 = asn1p_atoi(p); break; }
+			{ v1 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;	/* Skip digits */
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v2 = asn1p_atoi(p); break; }
+			{ v2 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v3 = asn1p_atoi(p); break; }
+			{ v3 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v4 = asn1p_atoi(p); break; }
+			{ v4 = _lex_atoi(p); break; }
 		if(v1 < 0 || v1 > 127) {
 			fprintf(stderr, "%s at line %d: X.680:2003, #37.12 "
 				"mandates 0..127 range for Quadruple's Group\n",
@@ -3044,12 +3045,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 504 "asn1p_l.l"
+#line 505 "asn1p_l.l"
 return yytext[0];
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 506 "asn1p_l.l"
+#line 507 "asn1p_l.l"
 {
 		if(TYPE_LIFETIME(1994, 0))
 			fprintf(stderr, "ERROR: ");
@@ -3063,7 +3064,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 517 "asn1p_l.l"
+#line 518 "asn1p_l.l"
 {
 		fprintf(stderr,
 			"Unexpected token at line %d: \"%s\"\n",
@@ -3085,7 +3086,7 @@ case YY_STATE_EOF(quoted):
 case YY_STATE_EOF(opaque):
 case YY_STATE_EOF(encoding_control):
 case YY_STATE_EOF(with_syntax):
-#line 530 "asn1p_l.l"
+#line 531 "asn1p_l.l"
 {
 		while(YYSTATE != INITIAL)
 			yy_pop_state();
@@ -3094,10 +3095,10 @@ case YY_STATE_EOF(with_syntax):
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 537 "asn1p_l.l"
+#line 538 "asn1p_l.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 3101 "asn1p_l.c"
+#line 3102 "asn1p_l.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -3979,7 +3980,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 537 "asn1p_l.l"
+#line 538 "asn1p_l.l"
 
 
 /*
@@ -3998,30 +3999,14 @@ void asn1p_lexer_hack_push_encoding_control() {
 }
 
 static asn1c_integer_t
-asn1p_atoi(char *ptr) {
+_lex_atoi(const char *ptr) {
 	asn1c_integer_t value;
-	errno = 0;	/* Clear the error code */
-
-	if(sizeof(value) <= sizeof(int)) {
-		value = strtol(ptr, 0, 10);
-	} else {
-#ifdef	HAVE_STRTOIMAX
-		value = strtoimax(ptr, 0, 10);
-#elif	HAVE_STRTOLL
-		value = strtoll(ptr, 0, 10);
-#else
-		value = strtol(ptr, 0, 10);
-#endif
-	}
-
-	if(errno == ERANGE) {
+	if(asn1p_atoi(ptr, &value)) {
 		fprintf(stderr,
 			"Value \"%s\" at line %d is too large "
 			"for this compiler! Please contact the asn1c author.\n",
 			ptr, yylineno);
-		errno = ERANGE;	/* Restore potentially clobbered errno */
+		errno = ERANGE;
 	}
-
 	return value;
 }
-

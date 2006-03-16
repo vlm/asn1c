@@ -106,7 +106,7 @@ asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags) 
 
 	TQ_FOR(tc, &(mod->members), next) {
 		asn1print_expr(asn, mod, tc, flags, 0);
-		if(flags & APF_DEBUG_CONSTRAINTS)
+		if(flags & APF_PRINT_CONSTRAINTS)
 			printf("\n");
 		else
 			printf("\n\n");
@@ -416,10 +416,8 @@ asn1print_with_syntax(asn1p_wsyntx_t *wx, enum asn1print_flags flags) {
 		  switch(wc->type) {
 		  case WC_LITERAL:
 		  case WC_WHITESPACE:
+		  case WC_FIELD:
 			printf("%s", wc->content.token);
-			break;
-		  case WC_REFERENCE:
-			asn1print_ref(wc->content.ref, flags);
 			break;
 		  case WC_OPTIONALGROUP:
 			printf("[");
@@ -690,7 +688,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	/*
 	 * The following section exists entirely for debugging.
 	 */
-	if(flags & APF_DEBUG_CONSTRAINTS
+	if(flags & APF_PRINT_CONSTRAINTS
 	&& tc->expr_type != A1TC_EXTENSIBLE) {
 		asn1p_expr_t *top_parent;
 
@@ -712,6 +710,41 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		}
 		printf("\n");
 	}
+
+	if(flags & APF_PRINT_CLASS_MATRIX
+	&& tc->expr_type == A1TC_CLASSDEF) do {
+		int r, col, maxidlen;
+		if(tc->object_class_matrix.rows == 0) {
+			printf("\n-- Class matrix is empty");
+			break;
+		}
+		printf("\n-- Class matrix has %d entr%s:\n",
+				tc->object_class_matrix.rows,
+				tc->object_class_matrix.rows==1 ? "y" : "ies");
+		maxidlen = tc->object_class_matrix.max_identifier_length;
+		for(r = -1; r < tc->object_class_matrix.rows; r++) {
+			struct asn1p_ioc_row_s *row;
+			row = tc->object_class_matrix.row[r<0?0:r];
+			if(r < 0) printf("--    %s", r > 9 ? " " : "");
+			else printf("-- [%*d]", r > 9 ? 2 : 1, r+1);
+			for(col = 0; col < row->columns; col++) {
+				struct asn1p_ioc_cell_s *cell;
+				cell = &row->column[col];
+				if(r < 0) {
+					printf("[%*s]", maxidlen,
+						cell->field->Identifier);
+					continue;
+				}
+				if(!cell->value) {
+					printf(" %*s ", maxidlen, "<no entry>");
+					continue;
+				}
+				printf(" %*s ", maxidlen,
+					cell->value->Identifier);
+			}
+			printf("\n");
+		}
+	} while(0);
 
 	return 0;
 }

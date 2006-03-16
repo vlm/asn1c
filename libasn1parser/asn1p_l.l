@@ -23,9 +23,10 @@ void asn1p_lexer_hack_push_encoding_control(void);	/* Used in .y */
 int asn1p_lexer_pedantic_1990 = 0;
 int asn1p_lexer_types_year = 0;
 int asn1p_lexer_constructs_year = 0;
-static asn1c_integer_t asn1p_atoi(char *ptr); /* errno is either 0 or ERANGE */
 
 int asn1p_as_pointer;
+
+static asn1c_integer_t _lex_atoi(const char *ptr);
 
 /*
  * Check that the type is defined in the year of the standard choosen.
@@ -219,21 +220,21 @@ WSP	[\t\r\v\f\n ]
 
 
 -[1-9][0-9]*	{
-		asn1p_lval.a_int = asn1p_atoi(yytext);
+		asn1p_lval.a_int = _lex_atoi(yytext);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number_negative;
 	}
 
 [1-9][0-9]*	{
-		asn1p_lval.a_int = asn1p_atoi(yytext);
+		asn1p_lval.a_int = _lex_atoi(yytext);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number;
 	}
 
 "0"	{
-		asn1p_lval.a_int = asn1p_atoi(yytext);
+		asn1p_lval.a_int = _lex_atoi(yytext);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number;
@@ -437,10 +438,10 @@ WITH			return TOK_WITH;
 		char *p;
 		for(p = yytext; *p; p++)
 			if(*p >= '0' && *p <= '9')
-			{ v1 = asn1p_atoi(p); break; }
+			{ v1 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;	/* Skip digits */
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v2 = asn1p_atoi(p); break; }
+			{ v2 = _lex_atoi(p); break; }
 		if(v1 < 0 || v1 > 7) {
 			fprintf(stderr, "%s at line %d: X.680:2003, #37.14 "
 				"mandates 0..7 range for Tuple's TableColumn\n",
@@ -462,16 +463,16 @@ WITH			return TOK_WITH;
 		char *p;
 		for(p = yytext; *p; p++)
 			if(*p >= '0' && *p <= '9')
-			{ v1 = asn1p_atoi(p); break; }
+			{ v1 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;	/* Skip digits */
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v2 = asn1p_atoi(p); break; }
+			{ v2 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v3 = asn1p_atoi(p); break; }
+			{ v3 = _lex_atoi(p); break; }
 		while(*p >= '0' && *p <= '9') p++;
 		for(; *p; p++) if(*p >= '0' && *p <= '9')
-			{ v4 = asn1p_atoi(p); break; }
+			{ v4 = _lex_atoi(p); break; }
 		if(v1 < 0 || v1 > 127) {
 			fprintf(stderr, "%s at line %d: X.680:2003, #37.12 "
 				"mandates 0..127 range for Quadruple's Group\n",
@@ -552,30 +553,14 @@ void asn1p_lexer_hack_push_encoding_control() {
 }
 
 static asn1c_integer_t
-asn1p_atoi(char *ptr) {
+_lex_atoi(const char *ptr) {
 	asn1c_integer_t value;
-	errno = 0;	/* Clear the error code */
-
-	if(sizeof(value) <= sizeof(int)) {
-		value = strtol(ptr, 0, 10);
-	} else {
-#ifdef	HAVE_STRTOIMAX
-		value = strtoimax(ptr, 0, 10);
-#elif	HAVE_STRTOLL
-		value = strtoll(ptr, 0, 10);
-#else
-		value = strtol(ptr, 0, 10);
-#endif
-	}
-
-	if(errno == ERANGE) {
+	if(asn1p_atoi(ptr, &value)) {
 		fprintf(stderr,
 			"Value \"%s\" at line %d is too large "
 			"for this compiler! Please contact the asn1c author.\n",
 			ptr, yylineno);
-		errno = ERANGE;	/* Restore potentially clobbered errno */
+		errno = ERANGE;
 	}
-
 	return value;
 }
-

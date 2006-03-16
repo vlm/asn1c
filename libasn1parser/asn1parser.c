@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <assert.h>
@@ -184,3 +185,21 @@ _asn1p_fix_modules(asn1p_t *a, const char *fname) {
 }
 
 
+int
+asn1p_atoi(const char *ptr, asn1c_integer_t *value) {
+	errno = 0;	/* Clear the error code */
+
+	if(sizeof(*value) <= sizeof(int)) {
+		*value = strtol(ptr, 0, 10);
+	} else {
+#ifdef	HAVE_STRTOIMAX
+		*value = strtoimax(ptr, 0, 10);
+#elif	HAVE_STRTOLL
+		*value = strtoll(ptr, 0, 10);
+#else
+		*value = strtol(ptr, 0, 10);
+#endif
+	}
+
+	return errno == 0 ? 0 : -1;
+}

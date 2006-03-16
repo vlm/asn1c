@@ -11,6 +11,7 @@ EXTENSION ::= CLASS {
 		IDENTIFIED BY	&id
 	}
 
+-- Class matrix is empty
 
 Ext1 ::= SEQUENCE {
     extnId	 EXTENSION.&id
@@ -20,6 +21,10 @@ EXTENSION-ATTRIBUTE ::= CLASS {
     &id	 INTEGER (0..256) UNIQUE,
     &Type	 ANY
 } WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+-- Class matrix has 1 entry:
+--    [         &id][       &Type]
+-- [1]           23  TerminalType 
 
 
 terminal-type EXTENSION-ATTRIBUTE ::= {TerminalType IDENTIFIED BY 23}

@@ -129,8 +129,10 @@ main(int ac, char **av) {
 				exit(EX_USAGE);
 			}
 			asn1_compiler_flags |= A1C_PDU_AUTO;
+		} else if(strcmp(optarg, "rint-class-matrix") == 0) {
+			asn1_printer_flags |= APF_PRINT_CLASS_MATRIX;
 		} else if(strcmp(optarg, "rint-constraints") == 0) {
-			asn1_printer_flags |= APF_DEBUG_CONSTRAINTS;
+			asn1_printer_flags |= APF_PRINT_CONSTRAINTS;
 		} else if(strcmp(optarg, "rint-lines") == 0) {
 			asn1_printer_flags |= APF_LINE_COMMENTS;
 		} else {
@@ -459,6 +461,7 @@ usage(const char *av0) {
 "\n"
 
 "  -print-constraints    Explain subtype constraints (debug)\n"
+"  -print-class-matrix   Print out the collected object class matrix (debug)\n"
 "  -print-lines          Generate \"-- #line\" comments in -E output\n"
 
 	,
