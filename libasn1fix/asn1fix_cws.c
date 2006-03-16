@@ -35,7 +35,8 @@ asn1f_parse_class_object(arg_t *arg) {
 		expr->Identifier, eclass->Identifier, expr->_lineno);
 
 	if(!eclass->with_syntax) {
-		DEBUG("Can't process classes without WITH SYNTAX just yet");
+		DEBUG("Can't process classes without %s just yet",
+			"WITH SYNTAX");
 		return 0;
 	}
 
@@ -101,9 +102,11 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 		case WC_WHITESPACE: break;	/* Ignore whitespace */
 		case WC_FIELD: {
 			struct asn1p_ioc_cell_s *cell;
-			uint8_t *p;
-			SKIPSPACES;
 			int lbraces = 0;
+			uint8_t *p;
+
+			SKIPSPACES;
+
 			p = buf;
 			if(p < bend && *p == '{')
 				lbraces = 1, p++;
