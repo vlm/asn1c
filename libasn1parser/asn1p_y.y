@@ -107,6 +107,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
  * Token types returned by scanner.
  */
 %token			TOK_PPEQ	/* "::=", Pseudo Pascal EQuality */
+%token	<tv_opaque>	TOK_whitespace	/* A span of whitespace */
 %token	<tv_opaque>	TOK_opaque	/* opaque data (driven from .y) */
 %token	<tv_str>	TOK_bstring
 %token	<tv_opaque>	TOK_cstring
@@ -1073,8 +1074,9 @@ WithSyntaxList:
 	;
 
 WithSyntaxToken:
-	TOK_opaque {
+	TOK_whitespace {
 		$$ = asn1p_wsyntx_chunk_frombuf($1.buf, $1.len, 0);
+		$$->type = WC_WHITESPACE;
 	}
 	| TOK_Literal {
 		$$ = asn1p_wsyntx_chunk_frombuf($1, strlen($1), 0);

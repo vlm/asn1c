@@ -19,7 +19,9 @@ void
 asn1p_wsyntx_chunk_free(asn1p_wsyntx_chunk_t *wc) {
 	if(wc) {
 		switch(wc->type) {
-		case WC_LITERAL: free(wc->content.token); break;
+		case WC_LITERAL:
+		case WC_WHITESPACE:
+			free(wc->content.token); break;
 		case WC_REFERENCE: asn1p_ref_free(wc->content.ref); break;
 		case WC_OPTIONALGROUP:
 			asn1p_wsyntx_free(wc->content.syntax);
@@ -35,8 +37,10 @@ asn1p_wsyntx_chunk_clone(asn1p_wsyntx_chunk_t *wc) {
 
 	nc = asn1p_wsyntx_chunk_new();
 	if(nc) {
+		nc->type = wc->type;
 		switch(wc->type) {
 		case WC_LITERAL:
+		case WC_WHITESPACE:
 			nc->content.token = malloc(strlen(wc->content.token)+1);
 			strcpy(nc->content.token, wc->content.token);
 			break;
