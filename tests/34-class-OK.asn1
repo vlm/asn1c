@@ -14,7 +14,7 @@ BEGIN
 	-- First CLASS
 
 	EXTENSION ::= CLASS {
-		&id [PRIVATE 0] OBJECT IDENTIFIER UNIQUE,
+		&id [PRIVATE 0] INTEGER UNIQUE,
 		&ExtnType
 	} WITH SYNTAX {
 		SYNTAX		&ExtnType
@@ -34,6 +34,8 @@ BEGIN
 	} WITH SYNTAX {&Type IDENTIFIED BY &id}
 
 	terminal-type EXTENSION-ATTRIBUTE ::= {TerminalType IDENTIFIED BY 23}
+
+	TerminalType ::= INTEGER { terminal(0) }
 
 	-- Advanced CLASS extraction
 

@@ -242,8 +242,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_ref>			ComplexTypeReference
 %type	<a_ref>			ComplexTypeReferenceAmpList
 %type	<a_refcomp>		ComplexTypeReferenceElement
-%type	<a_refcomp>		ClassFieldIdentifier
-%type	<a_refcomp>		ClassFieldName
+%type	<a_refcomp>		PrimitiveFieldReference
 %type	<a_expr>		FieldSpec
 %type	<a_ref>			FieldName
 %type	<a_ref>			DefinedObjectClass
@@ -1081,14 +1080,9 @@ WithSyntaxToken:
 	| TOK_Literal {
 		$$ = asn1p_wsyntx_chunk_frombuf($1, strlen($1), 0);
 	}
-	| ClassFieldIdentifier {
-		asn1p_ref_t *ref;
-		int ret;
-		ref = asn1p_ref_new(yylineno);
-		checkmem(ref);
-		ret = asn1p_ref_add_component(ref, $1.name, $1.lex_type);
-		checkmem(ret == 0);
-		$$ = asn1p_wsyntx_chunk_fromref(ref, 0);
+	| PrimitiveFieldReference {
+		$$ = asn1p_wsyntx_chunk_frombuf($1.name, strlen($1.name), 0);
+		$$->type = WC_FIELD;
 	}
 	| '[' WithSyntaxList ']' {
 		$$ = asn1p_wsyntx_chunk_fromsyntax($2);
@@ -1365,10 +1359,9 @@ ComplexTypeReferenceAmpList:
 	}
 	;
 
-ComplexTypeReferenceElement:	ClassFieldName;
-ClassFieldIdentifier:		ClassFieldName;
+ComplexTypeReferenceElement:	PrimitiveFieldReference;
 
-ClassFieldName:
+PrimitiveFieldReference:
 	/* "&Type1" */
 	TOK_typefieldreference {
 		$$.lex_type = RLT_AmpUppercase;

@@ -3,10 +3,11 @@
 
 enum asn1print_flags {
 	APF_NOFLAGS,
-	APF_LINE_COMMENTS	= 0x01, /* Include line comments */
-	APF_DEBUG_CONSTRAINTS	= 0x02,	/* Explain constraints */
+	APF_NOINDENT		= 0x01,	/* Disable indentation */
+	APF_LINE_COMMENTS	= 0x02, /* Include line comments */
 	APF_PRINT_XML_DTD	= 0x04,	/* Generate XML DTD */
-	APF_NOINDENT		= 0x08,	/* Disable indentation */
+	APF_PRINT_CONSTRAINTS	= 0x08,	/* Explain constraints */
+	APF_PRINT_CLASS_MATRIX	= 0x10,	/* Dump class matrix */
 };
 
 /*

@@ -2,9 +2,9 @@
 0.9.21:	2006-Mar-14
 
 	* skeletons/standard-modules directory is now used for standard types.
-	* Refactored system for parsing Information Object Classes.
 	* Fixed class field access problem (Test case 98)
 	  (Severity: medim; Security impact: none)
+	* Refactored system for parsing Information Object Classes.
 
 0.9.20:	2006-Mar-06
 

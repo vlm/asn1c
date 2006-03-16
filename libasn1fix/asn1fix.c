@@ -188,8 +188,9 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 			/* Do not process the parametrized type just yet */
 			continue;
 
-		DEBUG("=== Now processing \"%s\" at line %d ===",
-			expr->Identifier, expr->_lineno);
+		DEBUG("=== Now processing \"%s\" (%d/0x%x) at line %d ===",
+			expr->Identifier, expr->meta_type, expr->expr_type,
+			expr->_lineno);
 		assert(expr->meta_type != AMT_INVALID);
 
 		/*
@@ -223,9 +224,10 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 		RET2RVAL(ret, rvalue);
 
 		/*
-		 * Parse WITH SYNTAX in CLASSes.
+		 * Parse class objects and fill up the object class with data.
 		 */
-		ret = asn1f_parse_class_with_syntax(arg);
+		ret = asn1f_parse_class_object(arg);
+		RET2RVAL(ret, rvalue);
 
 		/*
 		 * Resolve references in constraints.
@@ -292,6 +294,9 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 	asn1p_expr_t *expr;
 	int rvalue = 0;
 	int ret;
+
+	TQ_FOR(expr, &(arg->mod->members), next) {
+	}
 
 	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
