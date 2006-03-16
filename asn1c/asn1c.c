@@ -360,7 +360,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 		skeletons_dir);
 
 #ifdef	WIN32
-	len = target_dir_len + sizeof("/*.asn1"));
+	len = target_dir_len + sizeof("/*.asn1");
 	pattern = malloc(len);
 	assert(pattern);
 	snprintf(pattern, len, "%s/*.asn1", target_dir);
