@@ -261,7 +261,6 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_expr>		ComponentType
 %type	<a_expr>		AlternativeTypeLists
 %type	<a_expr>		AlternativeType
-//%type	<a_expr>		optUniverationDefinition
 %type	<a_expr>		UniverationDefinition
 %type	<a_expr>		UniverationList
 %type	<a_expr>		UniverationElement
@@ -283,7 +282,6 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_type>		BasicTypeId_UniverationCompatible
 %type	<a_type>		BasicString
 %type	<tv_opaque>		Opaque
-//%type	<tv_opaque>		StringValue
 %type	<a_tag>			Tag 		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_tag>			TagClass TagTypeValue TagPlicit
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
@@ -720,7 +718,7 @@ ValueSetDefinition:
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
 		$$->meta_type = AMT_VALUESET;
-		// take care of ValueSet body
+		/* take care of ValueSet body */
 	}
 	;
 
