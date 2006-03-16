@@ -38,6 +38,19 @@ asn1f_fix_dereference_defaults(arg_t *arg) {
 			break;
 		}
 
+
+		if(expr->expr_type == A1TC_CLASSFIELD_FTVFS) {
+			asn1p_expr_t *child = TQ_FIRST(&expr->members);
+			int ret;
+			assert(child);
+			assert(child->marker.default_value == 0);
+			tmparg.expr = child;
+			child->marker.default_value=expr->marker.default_value;
+			ret = asn1f_fix_dereference_defaults(&tmparg);
+			expr->marker.default_value = child->marker.default_value;
+			if(ret == 0) return 0;	/* Finished */
+		}
+
 		tmparg.expr = &tmpexpr;
 		tmpexpr.meta_type = AMT_VALUE;
 		tmpexpr.marker.default_value = 0;

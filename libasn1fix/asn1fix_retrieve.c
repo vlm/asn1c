@@ -248,7 +248,8 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 		}
 
 		expr = asn1f_lookup_symbol(arg, imports_from, &tmpref);
-		if(!expr && !(arg->expr->_mark & TM_BROKEN)) {
+		if(!expr && !(arg->expr->_mark & TM_BROKEN)
+		&& !(imports_from->_tags & MT_STANDARD_MODULE)) {
 			arg->expr->_mark |= TM_BROKEN;
 			if(modulename) {
 				FATAL("Module %s referred by %s in module %s "
