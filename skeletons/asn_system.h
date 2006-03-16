@@ -58,6 +58,12 @@ typedef	unsigned int	uint32_t;
 #if	defined(sun)
 #include <alloca.h>	/* For alloca(3) */
 #include <ieeefp.h>	/* for finite(3) */
+#elif	defined(__hpux)
+#ifdef	__GNUC__
+#include <alloca.h>	/* For alloca(3) */
+#else	/* !__GNUC__ */
+#define inline
+#endif	/* __GNUC__ */
 #else
 #include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
 #endif	/* defined(sun) */
