@@ -138,11 +138,9 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 				chunk->content.token,
 				buf, p - buf);
 			ret = _asn1f_assign_cell_value(arg, row, cell, buf, p);
-			if(ret) {
-				if(newpos) *newpos = buf;
-				return ret;
-			}
+			if(ret) return ret;
 			buf = p;
+			if(newpos) *newpos = buf;
 		    } break;
 		case WC_OPTIONALGROUP: {
 			uint8_t *np = 0;
@@ -152,6 +150,7 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 			if(newpos) *newpos = np;
 			if(ret && np != buf)
 				return ret;
+			buf = np;
 		    } break;
 		}
 	}
