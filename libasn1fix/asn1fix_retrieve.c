@@ -301,8 +301,8 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 			uioc_oid = asn1p_oid_construct(arcs,
 				sizeof(arcs)/sizeof(arcs[0]));
 		}
-		if(!imports_from && mod->module_oid
-		&& asn1p_oid_compare(mod->module_oid, uioc_oid)) {
+		if(!imports_from && (!mod->module_oid
+		|| asn1p_oid_compare(mod->module_oid, uioc_oid))) {
 			imports_from = asn1f_lookup_module(arg,
 				"ASN1C-UsefulInformationObjectClasses",
 				uioc_oid);
