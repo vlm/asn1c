@@ -12,11 +12,13 @@
 typedef struct asn1p_wsyntx_chunk_s {
 	enum {
 		WC_LITERAL,
+		WC_WHITESPACE,
 		WC_REFERENCE,
 		WC_OPTIONALGROUP
 	} type;
 	/*
-	 * WC_LITERAL -> {buf, len}
+	 * WC_LITERAL -> {token}
+	 * WC_WHITESPACE -> {token}
 	 * WC_REFERENCE -> {ref}
 	 * WC_OPTIONALGROUP -> {syntax}
 	 */

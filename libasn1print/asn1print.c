@@ -415,6 +415,7 @@ asn1print_with_syntax(asn1p_wsyntx_t *wx, enum asn1print_flags flags) {
 		TQ_FOR(wc, &(wx->chunks), next) {
 		  switch(wc->type) {
 		  case WC_LITERAL:
+		  case WC_WHITESPACE:
 			printf("%s", wc->content.token);
 			break;
 		  case WC_REFERENCE:

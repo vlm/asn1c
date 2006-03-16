@@ -413,7 +413,7 @@ WITH			return TOK_WITH;
 	{WSP}+		{
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
 			asn1p_lval.tv_opaque.len = yyleng;
-			return TOK_opaque;
+			return TOK_whitespace;
 			}
 
 	"}"		{

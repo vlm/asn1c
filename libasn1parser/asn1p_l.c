@@ -2946,7 +2946,7 @@ YY_RULE_SETUP
 {
 			asn1p_lval.tv_opaque.buf = strdup(yytext);
 			asn1p_lval.tv_opaque.len = yyleng;
-			return TOK_opaque;
+			return TOK_whitespace;
 			}
 	YY_BREAK
 case 130:
