@@ -39,7 +39,8 @@ ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
 	asn_dec_rval_t rval;
 	ENUMERATED_t *st = (ENUMERATED_t *)*sptr;
-	long value, *vptr = &value;
+	long value;
+	void *vptr = &value;
 
 	if(!st) {
 		st = (ENUMERATED_t *)(*sptr = CALLOC(1, sizeof(*st)));
