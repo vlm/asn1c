@@ -332,6 +332,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 	asn1p_t *new_asn;
 	asn1p_module_t *mod;
 	const char *filename;
+	char *fullname;
 	char *target_dir;
 	int target_dir_len;
 	int len;
@@ -365,7 +366,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 	assert(pattern);
 	snprintf(pattern, len, "%s/*.asn1", target_dir);
 	dir = _findfirst(pattern, &c_file);
-	if(dir != -1L) {
+	if(dir == -1L) {
 #else
 	dir = opendir(target_dir);
 	if(!dir) {
@@ -381,8 +382,8 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 		filename = c_file.name;
 #else
 	while((dp = readdir(dir))) {
-		char *fullname;
 		filename = dp->d_name;
+#endif
 		len = strlen(filename);
 		if(len <= 5 || strcmp(filename + len - 5, ".asn1"))
 			continue;
@@ -391,7 +392,6 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 		if(!fullname) continue;	/* Just skip it, no big deal */
 		snprintf(fullname, len, "%s/%s", target_dir, filename);
 		filename = fullname;
-#endif
 
 		new_asn = asn1p_parse_file(filename, A1P_NOFLAGS);
 		if(new_asn == NULL) {
