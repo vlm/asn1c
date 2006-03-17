@@ -194,7 +194,7 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		 */
 		rval.consumed = 0;
 	}
-	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, &st, 1);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &st);
 	return rval;
 }
 
@@ -248,7 +248,7 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 			ASN_DEBUG("NativeInteger %s got value %ld",
 				td->name, *native);
 	}
-	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, &tmpint, 1);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 
 	return rval;
 }

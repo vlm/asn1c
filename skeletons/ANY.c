@@ -133,7 +133,7 @@ ANY_to_type(ANY_t *st, asn_TYPE_descriptor_t *td, void **struct_ptr) {
 		return 0;
 	} else {
 		/* Remove possibly partially decoded data. */
-		td->free_struct(td, newst, 0);
+		ASN_STRUCT_FREE(*td, newst);
 		return -1;
 	}
 }

@@ -958,10 +958,10 @@ SEQUENCE_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(memb_ptr)
-				elm->type->free_struct(elm->type, memb_ptr, 0);
+				ASN_STRUCT_FREE(*elm->type, memb_ptr);
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
-			elm->type->free_struct(elm->type, memb_ptr, 1);
+			ASN_STRUCT_FREE_CONTENTS_ONLY(*elm->type, memb_ptr);
 		}
 	}
 
