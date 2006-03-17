@@ -317,7 +317,7 @@ main(int ac, char **av) {
 	 * of another language.
 	 */
 	if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags,
-			ac + optind, av - optind)) {
+			ac + optind, optind - 1, av - optind)) {
 		exit(EX_SOFTWARE);
 	}
 
