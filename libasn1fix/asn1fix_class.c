@@ -25,6 +25,25 @@ asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 		errno = ESRCH;
 		return NULL;
 	}
+	if(ioclass->expr_type == A1TC_REFERENCE) {
+		ioclass = asn1f_lookup_symbol(arg,
+				ioclass->module, ioclass->reference);
+		if(ioclass == NULL) {
+			errno = ESRCH;
+			return NULL;
+		}
+	}
+	if(ioclass->expr_type != A1TC_CLASSDEF) {
+		if(!(ioclass->_mark & TM_BROKEN)) {
+			ioclass->_mark |= TM_BROKEN;
+			FATAL("Class field %s lookup at line %d in something that is not a class: %s at line %d",
+				asn1f_printable_reference(ref), ref->_lineno,
+				ioclass->Identifier,
+				ioclass->_lineno);
+		}
+		errno = EINVAL;
+		return NULL;
+	}
 
 	classfield = asn1f_lookup_child(ioclass, ref->components[1].name);
 	if(classfield == NULL) {
