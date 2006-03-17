@@ -244,7 +244,7 @@ main(int ac, char **av) {
 			break;
 		}
 
-		pduType->free_struct(pduType, structure, 0);
+		ASN_STRUCT_FREE(*pduType, structure);
 	  }
 	}
 
@@ -425,7 +425,7 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 	fclose(fp);
 
 	/* Clean up partially decoded structure */
-	pduType->free_struct(pduType, structure, 0);
+	ASN_STRUCT_FREE(*pduType, structure);
 
 	fprintf(stderr, "%s: "
 		"Decode failed past byte %ld: %s\n",

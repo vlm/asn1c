@@ -152,7 +152,7 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	}
 
 	/* Free possibly allocated members of the temporary structure */
-	asn_DEF_REAL.free_struct(&asn_DEF_REAL, &tmp, 1);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
 
 	return erval;
 }
@@ -190,7 +190,7 @@ NativeReal_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	} else {
 		rval.consumed = 0;
 	}
-	asn_DEF_REAL.free_struct(&asn_DEF_REAL, st, 0);
+	ASN_STRUCT_FREE(asn_DEF_REAL, st);
 	return rval;
 }
 

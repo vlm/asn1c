@@ -798,7 +798,7 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		for(i = 0; i < list->count; i++) {
 			void *memb_ptr = list->array[i];
 			if(memb_ptr)
-			elm->type->free_struct(elm->type, memb_ptr, 0);
+			ASN_STRUCT_FREE(*elm->type, memb_ptr);
 		}
 		list->count = 0;	/* No meaningful elements left */
 
@@ -925,7 +925,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				ASN_DEBUG("Failed decoding %s of %s (SET OF)",
 					elm->type->name, td->name);
 			}
-			if(ptr) elm->type->free_struct(elm->type, ptr, 0);
+			if(ptr) ASN_STRUCT_FREE(*elm->type, ptr);
 			_ASN_DECODE_FAILED;
 		}
 
