@@ -72,6 +72,6 @@ enum asn1c_flags {
  * Compile the ASN.1 specification.
  */
 int asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags,
-	int argc, char **argv);
+	int argc, int optc, char **argv);
 
 #endif	/* ASN1_COMPILER_H */
