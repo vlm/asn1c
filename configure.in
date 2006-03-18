@@ -36,17 +36,19 @@ AC_PROG_YACC
 AM_PROG_LEX
 AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)	dnl for Solaris
 
-dnl *** Building mingw32 with cygwin compiler ***
 case "$host_os" in
 cygwin*)
-	dnl CFLAGS="$CFLAGS -DWIN32"
 	case "$target" in
 	*mingw*)
 		CC="$CC -mno-cygwin"
 	esac
 	;;
-mingw* | p32*)
-	dnl CFLAGS="$CFLAGS -DWIN32"
+esac
+
+dnl Decide on path separator: \ or /
+case "$target" in
+cygwin* | mingw* | p32*)
+	CFLAGS="$CFLAGS -DPSBSLASH"
 	;;
 esac
 
