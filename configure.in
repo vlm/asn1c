@@ -45,13 +45,6 @@ cygwin)
 	;;
 esac
 
-dnl Decide on path separator: \ or /
-case "$target_os" in
-cygwin | mingw)
-	CFLAGS="$CFLAGS -DPSBSLASH"
-	;;
-esac
-
 AC_ARG_ENABLE(Werror,
   [  --enable-Werror         abort compilation after any C compiler warning],
 	enable_werror=$enableval, enable_werror=no)
