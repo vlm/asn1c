@@ -3,7 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
- * Please read the NativeInteger.h for the explanation wrt. differences between
+ * Read the NativeInteger.h for the explanation wrt. differences between
  * INTEGER and NativeInteger.
  * Basically, both are decoders and encoders of ASN.1 INTEGER type, but this
  * implementation deals with the standard (machine-specific) representation

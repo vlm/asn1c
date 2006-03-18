@@ -3,7 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
- * Please read the NativeReal.h for the explanation wrt. differences between
+ * Read the NativeReal.h for the explanation wrt. differences between
  * REAL and NativeReal.
  * Basically, both are decoders and encoders of ASN.1 REAL type, but this
  * implementation deals with the standard (machine-specific) representation

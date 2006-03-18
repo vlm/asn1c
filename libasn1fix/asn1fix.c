@@ -477,7 +477,8 @@ asn1f_check_duplicate(arg_t *arg) {
 			"ASN.1 expression \"%s\" at line %d of module %s\n"
 			"clashes with expression \"%s\" at line %d of module %s"
 			"%s%s%s.\n"
-			"Please rename either instance to resolve the conflict",
+			"Rename or remove either instance "
+				"to resolve the conflict",
 				arg->expr->Identifier,
 				arg->expr->_lineno,
 				arg->mod->ModuleName,
