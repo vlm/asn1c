@@ -37,7 +37,7 @@ AM_PROG_LEX
 AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)	dnl for Solaris
 
 case "$host_os" in
-cygwin*)
+cygwin)
 	case "$target" in
 	*mingw*)
 		CC="$CC -mno-cygwin"
@@ -46,8 +46,8 @@ cygwin*)
 esac
 
 dnl Decide on path separator: \ or /
-case "$target" in
-cygwin* | mingw* | p32*)
+case "$target_os" in
+cygwin | mingw)
 	CFLAGS="$CFLAGS -DPSBSLASH"
 	;;
 esac
