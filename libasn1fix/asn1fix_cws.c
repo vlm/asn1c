@@ -188,7 +188,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 		if(isdigit(*p)) {
 			asn1c_integer_t value;
 			if(asn1p_atoi(p, &value)) {
-				FATAL("Value %s at line %d is too large for this compiler! Please contact the asn1c author.\n", p, arg->expr->_lineno);
+				FATAL("Value %s at line %d is too large for this compiler! Contact the asn1c author.\n", p, arg->expr->_lineno);
 				return -1;
 			}
 			expr = asn1p_expr_new(arg->expr->_lineno);
@@ -197,7 +197,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 			expr->expr_type = ASN_BASIC_INTEGER;
 			expr->value = asn1p_value_fromint(value);
 		} else {
-			WARNING("asn1c is not yet able to parse arbitrary direct values; please convert %s at line %d to a reference.", p, arg->expr->_lineno);
+			WARNING("asn1c is not yet able to parse arbitrary direct values; try converting %s at line %d to a reference.", p, arg->expr->_lineno);
 			free(p);
 			return 1;
 		}

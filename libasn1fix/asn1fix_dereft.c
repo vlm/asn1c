@@ -29,6 +29,7 @@ asn1f_fix_dereference_types(arg_t *arg) {
 	type_expr = asn1f_find_terminal_type(arg, expr);
 	if(type_expr == NULL) {
 		const char *type_name;
+		asn1p_expr_t *idexpr;
 
 		if(errno == EEXIST) {
 			/* Ignore missing type
@@ -39,8 +40,11 @@ asn1f_fix_dereference_types(arg_t *arg) {
 		}
 
 		type_name = asn1f_printable_reference(expr->reference);
+		/* Avoid NULL in case of unnamed T ::= SEQUENCE OF ... */
+		for(idexpr = expr; !idexpr->Identifier && idexpr->parent_expr;
+			idexpr = idexpr->parent_expr);
 		FATAL("Unknown type \"%s\" referenced by \"%s\" at line %d",
-			type_name, expr->Identifier, expr->_lineno);
+			type_name, idexpr->Identifier, expr->_lineno);
 		return -1;
 	}
 

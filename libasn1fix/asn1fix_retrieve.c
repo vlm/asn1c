@@ -58,7 +58,8 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 			arg->expr->_mark |= TM_BROKEN;
 			FATAL("Cannot find external module \"%s\" "
 				"mentioned for "
-				"\"%s\" at line %d",
+				"\"%s\" at line %d. "
+				"Obtain this module and instruct compiler to process it too.",
 				xp->fromModuleName, name, arg->expr->_lineno);
 		}
 		/* ENOENT/ETOOMANYREFS */
@@ -144,10 +145,8 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 	return NULL;
 }
 
-
-
-asn1p_expr_t *
-asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
+static asn1p_expr_t *
+asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref, int recursion_depth) {
 	asn1p_expr_t *ref_tc;			/* Referenced tc */
 	asn1p_module_t *imports_from;
 	char *modulename;
@@ -169,6 +168,15 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 		asn1f_printable_reference(ref),
 		mod->ModuleName,
 		ref->_lineno);
+
+	if(recursion_depth++ > 30 /* Arbitrary constant */) {
+		FATAL("Excessive circular referencing detected in module %s for %s at line %d",
+			mod->ModuleName,
+			asn1f_printable_reference(ref),
+			ref->_lineno);
+		errno = ETOOMANYREFS;
+		return NULL;
+	}
 
 	if(ref->comp_count == 1) {
 		modulename = NULL;
@@ -247,7 +255,7 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 			assert(tmpref.comp_count > 0);
 		}
 
-		expr = asn1f_lookup_symbol(arg, imports_from, &tmpref);
+		expr = asn1f_lookup_symbol_impl(arg, imports_from, &tmpref, recursion_depth);
 		if(!expr && !(arg->expr->_mark & TM_BROKEN)
 		&& !(imports_from->_tags & MT_STANDARD_MODULE)) {
 			arg->expr->_mark |= TM_BROKEN;
@@ -325,6 +333,11 @@ asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 	return NULL;
 }
 
+
+asn1p_expr_t *
+asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
+	return asn1f_lookup_symbol_impl(arg, mod, ref, 0);
+}
 
 asn1p_expr_t *
 asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *expr) {
