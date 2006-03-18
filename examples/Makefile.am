@@ -26,3 +26,4 @@ CLEANFILES = $(ASN1_FILES_1)
 clean-local:
 	cd sample.source.PKIX1 && make distclean
 	cd sample.source.TAP3 && make distclean
+	cd sample.source.MHEG5 && make distclean
