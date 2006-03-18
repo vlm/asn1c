@@ -21431,7 +21431,7 @@ echo "${ECHO_T}no" >&6
 fi
 
 case "$host_os" in
-cygwin*)
+cygwin)
 	case "$target" in
 	*mingw*)
 		CC="$CC -mno-cygwin"
@@ -21439,8 +21439,8 @@ cygwin*)
 	;;
 esac
 
-case "$target" in
-cygwin* | mingw* | p32*)
+case "$target_os" in
+cygwin | mingw)
 	CFLAGS="$CFLAGS -DPSBSLASH"
 	;;
 esac
