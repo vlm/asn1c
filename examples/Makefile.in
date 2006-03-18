@@ -371,6 +371,7 @@ $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
 clean-local:
 	cd sample.source.PKIX1 && make distclean
 	cd sample.source.TAP3 && make distclean
+	cd sample.source.MHEG5 && make distclean
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
