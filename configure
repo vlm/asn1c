@@ -21439,12 +21439,6 @@ cygwin)
 	;;
 esac
 
-case "$target_os" in
-cygwin | mingw)
-	CFLAGS="$CFLAGS -DPSBSLASH"
-	;;
-esac
-
 # Check whether --enable-Werror or --disable-Werror was given.
 if test "${enable_Werror+set}" = set; then
   enableval="$enable_Werror"
