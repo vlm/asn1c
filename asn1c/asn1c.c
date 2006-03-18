@@ -31,6 +31,10 @@
  */
 #include "sys-common.h"
 
+#undef  COPYRIGHT
+#define COPYRIGHT       \
+	"Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>\n"
+
 #include <asn1parser.h>		/* Parse the ASN.1 file and build a tree */
 #include <asn1fix.h>		/* Fix the ASN.1 tree */
 #include <asn1print.h>		/* Print the ASN.1 tree */
@@ -44,10 +48,6 @@
 #else
 #include <dirent.h>
 #endif
-
-#undef  COPYRIGHT
-#define COPYRIGHT       \
-	"Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>\n"
 
 static void usage(const char *av0);	/* Print the Usage screen and exit */
 static int importStandardModules(asn1p_t *asn, const char *skeletons_dir);
