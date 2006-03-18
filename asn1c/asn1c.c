@@ -460,8 +460,8 @@ usage(const char *av0) {
 "  -pdu=auto             Generate PDU table (discover PDUs automatically)\n"
 "\n"
 
-"  -print-constraints    Explain subtype constraints (debug)\n"
 "  -print-class-matrix   Print out the collected object class matrix (debug)\n"
+"  -print-constraints    Explain subtype constraints (debug)\n"
 "  -print-lines          Generate \"-- #line\" comments in -E output\n"
 
 	,
