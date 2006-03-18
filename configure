@@ -21432,13 +21432,17 @@ fi
 
 case "$host_os" in
 cygwin*)
-		case "$target" in
+	case "$target" in
 	*mingw*)
 		CC="$CC -mno-cygwin"
 	esac
 	;;
-mingw* | p32*)
-		;;
+esac
+
+case "$target" in
+cygwin* | mingw* | p32*)
+	CFLAGS="$CFLAGS -DPSBSLASH"
+	;;
 esac
 
 # Check whether --enable-Werror or --disable-Werror was given.
