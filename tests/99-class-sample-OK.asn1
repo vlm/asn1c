@@ -18,6 +18,10 @@ BEGIN
 		&Type	OPTIONAL
 	} WITH SYNTAX { [TYPE &Type] [WITH CODE &code] IDENTIFIED BY &id }
 
+	SampleClassObjectSet SAMPLE-CLASS ::= {
+	  request-Whatever | respond-Stuff | request-Status | request-Salt
+	}
+
 	request-Whatever SAMPLE-CLASS
 		::= { IDENTIFIED BY request-whatever }
 
@@ -34,7 +38,6 @@ BEGIN
 	request-salt RELATIVE-OID ::= { 1 1 1 }
 	request-whatever RELATIVE-OID ::= { 1 1 5 }
 	response-stuff RELATIVE-OID ::= { 2 0 1 }
-
 
 	SampleType ::= SEQUENCE { ... }
 	Salt ::= SET { ... }
