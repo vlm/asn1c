@@ -13,7 +13,7 @@ typedef enum T_PR {
 typedef enum bs {
 	bs_a	= 1,
 	bs_b	= 2
-} bs_e;
+} e_bs;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
 

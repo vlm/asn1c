@@ -158,9 +158,9 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 				return -1;
 			}
 		}
-		OUT("} ");
+		OUT("} e_");
 			out_name_chain(arg, ONC_noflags);
-		OUT("_e;\n");
+		OUT(";\n");
 		assert(eidx == el_count);
 	}
 
@@ -259,9 +259,9 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 				v->value->value.v_integer,
 				(eidx < el_count) ? "," : "");
 		}
-		OUT("} ");
+		OUT("} e_");
 			out_name_chain(arg, ONC_noflags);
-		OUT("_e;\n");
+		OUT(";\n");
 		assert(eidx == el_count);
 	}
 

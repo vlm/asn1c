@@ -74,7 +74,7 @@ typedef enum SimpleType {
 	SimpleType_one	= 0,
 	SimpleType_two	= 1,
 	SimpleType_three	= 2
-} SimpleType_e;
+} e_SimpleType;
 
 /*** <<< TYPE-DECLS [SimpleType] >>> ***/
 

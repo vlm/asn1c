@@ -6,6 +6,7 @@
 	  (Severity: medim; Security impact: none)
 	* Refactored Information Object Classes parsing.
 	* Refactored Parameterization support.
+	* [typedef enum foo {}] foo_e; is now e_foo, see #1287989
 
 0.9.20:	2006-Mar-06
 

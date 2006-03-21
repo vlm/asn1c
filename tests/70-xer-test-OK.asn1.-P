@@ -499,7 +499,7 @@ typedef enum ExtensibleSet_PR {
 typedef enum Enum {
 	enum_b	= 0,
 	enum_a	= 1
-} enum_e;
+} e_enum;
 
 /*** <<< TYPE-DECLS [ExtensibleSet] >>> ***/
 
@@ -1037,7 +1037,7 @@ asn_TYPE_descriptor_t asn_DEF_SetOfREAL = {
 typedef enum Member {
 	Member_one	= 0,
 	Member_oneMore	= 1
-} Member_e;
+} e_Member;
 
 /*** <<< TYPE-DECLS [SetOfEnums] >>> ***/
 
@@ -1357,7 +1357,7 @@ asn_TYPE_descriptor_t asn_DEF_NamedSetOfREAL = {
 typedef enum name {
 	name_one	= 0,
 	name_oneMore	= 1
-} name_e;
+} e_name;
 
 /*** <<< TYPE-DECLS [NamedSetOfEnums] >>> ***/
 

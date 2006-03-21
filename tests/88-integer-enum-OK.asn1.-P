@@ -8,7 +8,7 @@
 typedef enum T {
 	T_a	= 1,
 	T_b	= 2
-} T_e;
+} e_T;
 
 /*** <<< TYPE-DECLS [T] >>> ***/
 
