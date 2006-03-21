@@ -251,7 +251,8 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_expr>		Type
 %type	<a_expr>		DataTypeReference	/* Type1 ::= Type2 */
 %type	<a_expr>		DefinedType
-%type	<a_expr>		ValueSetDefinition  /* Val INTEGER ::= {1|2} */
+%type	<a_constr>		ValueSet		/* {a|b|c}*/
+%type	<a_expr>		ValueSetTypeAssignment  /* Val INTEGER ::= {1|2} */
 %type	<a_expr>		ValueDefinition		/* val INTEGER ::= 1*/
 %type	<a_value>		Value
 %type	<a_value>		SimpleValue
@@ -554,7 +555,7 @@ ModuleSpecificationElement:
 	 * EvenNumbers INTEGER ::= { 2 | 4 | 6 | 8 }
 	 * === EOF ===
 	 */
-	| ValueSetDefinition {
+	| ValueSetTypeAssignment {
 		$$ = asn1p_module_new();
 		checkmem($$);
 		assert($1->expr_type != A1TC_INVALID);
@@ -712,14 +713,15 @@ ExportsElement:
 	;
 
 
-ValueSetDefinition:
-	TypeRefName DefinedType TOK_PPEQ
-		'{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+ValueSet: '{' ElementSetSpecs '}' { $$ = $2; }
+
+ValueSetTypeAssignment:
+	TypeRefName DefinedType TOK_PPEQ ValueSet {
 		$$ = $2;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
 		$$->meta_type = AMT_VALUESET;
-		/* take care of ValueSet body */
+		$$->constraints = $4;
 	}
 	;
 

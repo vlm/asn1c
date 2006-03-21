@@ -607,7 +607,6 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	 */
 	if(TQ_FIRST(&(tc->members))
 	|| (tc->expr_type & ASN_CONSTR_MASK)
-	|| tc->meta_type == AMT_VALUESET
 	|| tc->meta_type == AMT_OBJECT
 	|| tc->meta_type == AMT_OBJECTCLASS
 	|| tc->meta_type == AMT_OBJECTFIELD
@@ -675,7 +674,11 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 
 	if(!SEQ_OF && tc->constraints) {
 		printf(" ");
+		if(tc->meta_type == AMT_VALUESET)
+			printf("{");
 		asn1print_constraint(tc->constraints, flags);
+		if(tc->meta_type == AMT_VALUESET)
+			printf("}");
 	}
 
 	if(tc->unique) {
