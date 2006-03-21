@@ -6,6 +6,9 @@
 
 #include "asn1parser.h"
 
+static asn1p_expr_t *asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*)(asn1p_expr_t *, void *), void *);
+static asn1p_value_t *value_resolver(asn1p_value_t *, void *arg);
+
 /*
  * Construct a new empty types collection.
  */
@@ -16,6 +19,7 @@ asn1p_expr_new(int _lineno) {
 	expr = calloc(1, sizeof *expr);
 	if(expr) {
 		TQ_INIT(&(expr->members));
+		expr->spec_index = -1;
 		expr->_lineno = _lineno;
 	}
 
@@ -24,21 +28,62 @@ asn1p_expr_new(int _lineno) {
 
 asn1p_expr_t *
 asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
-	asn1p_expr_t *clone;
+	return asn1p_expr_clone_impl(expr, skip_extensions, 0, 0);
+}
+
+asn1p_expr_t *
+asn1p_expr_clone_with_resolver(asn1p_expr_t *expr, asn1p_expr_t *(*r)(asn1p_expr_t *, void *), void *rarg) {
+	return asn1p_expr_clone_impl(expr, 0, r, rarg);
+}
+
+static asn1p_expr_t *
+asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*r)(asn1p_expr_t *, void *), void *rarg) {
+	asn1p_value_t *(*vr)(asn1p_value_t *, void *) = 0;
+	asn1p_expr_t *clone = 0;
 	asn1p_expr_t *tcmemb;	/* Child of tc */
 	int hit_ext = 0;
 
-	clone = asn1p_expr_new(expr->_lineno);
-	if(clone == NULL) return NULL;
-
 #define	CLCOPY(field)	do { clone->field = expr->field; } while(0)
-#define	CLCLONE(field, func)	do { if(expr->field) {		\
-			clone->field = func(expr->field);	\
-			if(clone->field == NULL) {		\
-				asn1p_expr_free(clone);		\
-				return NULL;			\
-			}					\
+#define	CLCLONE(field, func)	do { if(expr->field) {			\
+			clone->field = func(expr->field);		\
+			if(clone->field == NULL) {			\
+				asn1p_expr_free(clone);			\
+				return NULL;				\
+			}						\
 		} } while(0)
+#define	CLVRCLONE(field, func)	do { if(expr->field) {			\
+			clone->field = func(expr->field, vr, rarg);	\
+			if(clone->field == NULL) {			\
+				asn1p_expr_free(clone);			\
+				return NULL;				\
+			}						\
+		} } while(0)
+
+	if(r) {
+		vr = value_resolver;
+		clone = r(expr, rarg);
+		if(clone) {
+			/* Merge constraints */
+			if(expr->constraints) {
+				asn1p_constraint_t *tmpct = asn1p_constraint_clone_with_resolver(expr->constraints, vr, rarg);
+				if(clone->constraints) {
+					if(asn1p_constraint_insert(clone->constraints, tmpct)) {
+						asn1p_constraint_free(tmpct);
+						asn1p_expr_free(clone);
+						return NULL;
+					}
+				} else {
+					clone->constraints = tmpct;
+				}
+			}
+			assert(expr->combined_constraints == 0);
+			return clone;
+		} else if(errno != ESRCH) {
+			return NULL;	/* Hard error */
+		}
+	}
+	if(!clone) clone = asn1p_expr_new(expr->_lineno);
+	if(!clone) return NULL;
 
 	/*
 	 * Copy simple fields.
@@ -58,10 +103,10 @@ asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
 	 */
 	CLCLONE(Identifier, strdup);
 	CLCLONE(reference, asn1p_ref_clone);
-	CLCLONE(constraints, asn1p_constraint_clone);
-	CLCLONE(combined_constraints, asn1p_constraint_clone);
-	CLCLONE(params, asn1p_paramlist_clone);
-	CLCLONE(value, asn1p_value_clone);
+	CLVRCLONE(constraints, asn1p_constraint_clone_with_resolver);
+	CLVRCLONE(combined_constraints, asn1p_constraint_clone_with_resolver);
+	CLCLONE(lhs_params, asn1p_paramlist_clone);
+	CLVRCLONE(value, asn1p_value_clone_with_resolver);
 	CLCLONE(marker.default_value, asn1p_value_clone);
 	CLCLONE(with_syntax, asn1p_wsyntx_clone);
 
@@ -78,7 +123,7 @@ asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
 		}
 		if(hit_ext == 1) continue;	/* Skip between ...'s */
 
-		cmemb = asn1p_expr_clone(tcmemb, skip_extensions);
+		cmemb = asn1p_expr_clone_impl(tcmemb, skip_extensions, r, rarg);
 		if(cmemb == NULL) {
 			asn1p_expr_free(clone);
 			return NULL;
@@ -87,6 +132,48 @@ asn1p_expr_clone(asn1p_expr_t *expr, int skip_extensions) {
 	}
 
 	return clone;
+}
+
+
+static asn1p_value_t *
+value_resolver(asn1p_value_t *value, void *rarg) {
+	asn1p_value_t *cval;
+	asn1p_expr_t *tmpexpr;
+	asn1p_expr_t *target;
+	asn1p_ref_t *ref;
+	struct {
+		asn1p_expr_t *(*expr_resolve)(asn1p_expr_t *, void *arg);
+	} *varg = rarg;
+
+	if(!value || value->type != ATV_REFERENCED) {
+		errno = ESRCH;
+		return NULL;
+	}
+
+	ref = value->value.reference;
+	tmpexpr = asn1p_expr_new(ref->_lineno);
+	tmpexpr->meta_type = AMT_TYPEREF;
+	tmpexpr->expr_type = A1TC_REFERENCE;
+	tmpexpr->reference = ref;
+	target = varg->expr_resolve(tmpexpr, rarg);
+	tmpexpr->reference = 0;
+	asn1p_expr_free(tmpexpr);
+
+	if(!target)
+		return NULL;	/* errno's are compatible */
+
+	if(!target->value) {
+		fprintf(stderr,
+		"FATAL: Parameterization did not resolve value reference "
+		"at line %d", ref->_lineno);
+		asn1p_expr_free(target);
+		errno = EPERM;
+		return NULL;
+	}
+
+	cval = asn1p_value_clone(target->value);
+	asn1p_expr_free(target);
+	return cval;
 }
 
 /*
@@ -125,8 +212,8 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 			asn1p_constraint_free(expr->constraints);
 		if(expr->combined_constraints)
 			asn1p_constraint_free(expr->combined_constraints);
-		if(expr->params)
-			asn1p_paramlist_free(expr->params);
+		if(expr->lhs_params)
+			asn1p_paramlist_free(expr->lhs_params);
 		if(expr->value)
 			asn1p_value_free(expr->value);
 		if(expr->marker.default_value)

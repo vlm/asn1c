@@ -270,8 +270,8 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<tv_str>		optIdentifier
 %type	<a_parg>		ParameterArgumentName
 %type	<a_plist>		ParameterArgumentList
-%type	<a_expr>		ActualParameter
-%type	<a_expr>		ActualParameterList
+%type	<a_expr>		Specialization
+%type	<a_expr>		Specializations
 %type	<a_aid>			AssignedIdentifier	/* OID/DefinedValue */
 %type	<a_oid>			ObjectIdentifier	/* OID */
 %type	<a_oid>			optObjectIdentifier	/* Optional OID */
@@ -774,8 +774,7 @@ DataTypeReference:
 		$$ = $6;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
-		$$->params = $3;
-		$$->meta_type = AMT_PARAMTYPE;
+		$$->lhs_params = $3;
 	}
 	;
 
@@ -828,33 +827,37 @@ ParameterArgumentName:
 	}
 	;
 
-ActualParameterList:
-	ActualParameter {
+Specializations:
+	Specialization {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		asn1p_expr_add($$, $1);
 	}
-	| ActualParameterList ',' ActualParameter {
+	| Specializations ',' Specialization {
 		$$ = $1;
 		asn1p_expr_add($$, $3);
 	}
 	;
 
-ActualParameter:
+Specialization:
 	Type {
 		$$ = $1;
 	}
 	| Identifier {
+		asn1p_ref_t *ref;
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_REFERENCE;
 		$$->meta_type = AMT_VALUE;
+		ref = asn1p_ref_new(yylineno);
+		asn1p_ref_add_component(ref, $1, RLT_lowercase);
+		$$->value = asn1p_value_fromref(ref, 0);
 	}
 	;
 
 /*
-	| '{' ActualParameter '}' {
+	| '{' Specialization '}' {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		asn1p_expr_add($$, $2);
@@ -1224,23 +1227,6 @@ TypeDeclarationSet:
 		$$->meta_type = AMT_TYPE;
 	}
 	/*
-	 * A parametrized assignment.
-	 */
-	| TypeRefName '{' ActualParameterList '}' {
-		int ret;
-		$$ = $3;
-		assert($$->expr_type == 0);
-		assert($$->meta_type == 0);
-		assert($$->reference == 0);
-		$$->reference = asn1p_ref_new(yylineno);
-		checkmem($$->reference);
-		ret = asn1p_ref_add_component($$->reference, $1, RLT_UNKNOWN);
-		checkmem(ret == 0);
-		free($1);
-		$$->expr_type = A1TC_PARAMETRIZED;
-		$$->meta_type = AMT_TYPE;
-	}
-	/*
 	 * A DefinedType reference.
 	 * "CLASS1.&id.&id2"
 	 * or
@@ -1254,6 +1240,17 @@ TypeDeclarationSet:
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->reference = $1;
+		$$->expr_type = A1TC_REFERENCE;
+		$$->meta_type = AMT_TYPEREF;
+	}
+	/*
+	 * A parametrized assignment.
+	 */
+	| ComplexTypeReference '{' Specializations '}' {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->reference = $1;
+		$$->rhs_pspecs = $3;
 		$$->expr_type = A1TC_REFERENCE;
 		$$->meta_type = AMT_TYPEREF;
 	}

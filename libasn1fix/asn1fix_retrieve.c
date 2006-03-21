@@ -146,7 +146,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 }
 
 static asn1p_expr_t *
-asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref, int recursion_depth) {
+asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref, int recursion_depth) {
 	asn1p_expr_t *ref_tc;			/* Referenced tc */
 	asn1p_module_t *imports_from;
 	char *modulename;
@@ -193,7 +193,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref, int 
 		 * This is a reference to a CLASS-related stuff.
 		 * Employ a separate function for that.
 		 */
-		extract = asn1f_class_access(arg, mod, ref);
+		extract = asn1f_class_access(arg, mod, rhs_pspecs, ref);
 		
 		return extract;
 	} else {
@@ -255,7 +255,8 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref, int 
 			assert(tmpref.comp_count > 0);
 		}
 
-		expr = asn1f_lookup_symbol_impl(arg, imports_from, &tmpref, recursion_depth);
+		expr = asn1f_lookup_symbol_impl(arg, imports_from,
+				rhs_pspecs, &tmpref, recursion_depth);
 		if(!expr && !(arg->expr->_mark & TM_BROKEN)
 		&& !(imports_from->_tags & MT_STANDARD_MODULE)) {
 			arg->expr->_mark |= TM_BROKEN;
@@ -285,9 +286,38 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref, int 
 		if(strcmp(ref_tc->Identifier, identifier) == 0)
 			break;
 	}
-	if(ref_tc)
-		return ref_tc;
+	if(ref_tc) {
+		if(rhs_pspecs && !ref_tc->lhs_params) {
+			FATAL("Parameterized type %s expected "
+				"for %s at line %d",
+				ref_tc->Identifier,
+				asn1f_printable_reference(ref),
+				ref->_lineno);
+			errno = EPERM;
+			return NULL;
+		}
+		if(!rhs_pspecs && ref_tc->lhs_params) {
+			FATAL("Type %s expects specialization "
+				"from %s at line %d",
+				ref_tc->Identifier,
+				asn1f_printable_reference(ref),
+				ref->_lineno);
+			errno = EPERM;
+			return NULL;
+		}
+		if(rhs_pspecs && ref_tc->lhs_params) {
+			/* Specialize the target */
+			ref_tc = asn1f_parameterization_fork(arg,
+				ref_tc, rhs_pspecs);
+		}
 
+		return ref_tc;
+	}
+
+	/*
+	 * Not found in the current module.
+	 * Search in our default standard module.
+	 */
 	{
 		/* Search inside standard module */
 		static asn1p_oid_t *uioc_oid;
@@ -335,8 +365,9 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref, int 
 
 
 asn1p_expr_t *
-asn1f_lookup_symbol(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
-	return asn1f_lookup_symbol_impl(arg, mod, ref, 0);
+asn1f_lookup_symbol(arg_t *arg,
+	asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref) {
+	return asn1f_lookup_symbol_impl(arg, mod, rhs_pspecs, ref, 0);
 }
 
 asn1p_expr_t *
@@ -397,7 +428,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	/*
 	 * Lookup inside the default module and its IMPORTS section.
 	 */
-	tc = asn1f_lookup_symbol(arg, expr->module, ref);
+	tc = asn1f_lookup_symbol(arg, expr->module, expr->rhs_pspecs, ref);
 	if(tc == NULL) {
 		DEBUG("\tSymbol \"%s\" not found: %s",
 			asn1f_printable_reference(ref),

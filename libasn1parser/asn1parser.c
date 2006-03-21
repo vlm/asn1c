@@ -165,6 +165,15 @@ _asn1p_apply_module2expr(asn1p_expr_t *expr, asn1p_module_t *mod) {
 	TQ_FOR(e, &(expr->members), next) {
 		_asn1p_apply_module2expr(e, mod);
 	}
+
+	/*
+	 * Do to parameterization.
+	 */
+	if(expr->rhs_pspecs) {
+		TQ_FOR(e, &(expr->rhs_pspecs->members), next) {
+			_asn1p_apply_module2expr(e, mod);
+		}
+	}
 }
 
 static int

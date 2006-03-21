@@ -1,7 +1,7 @@
 #include "asn1fix_internal.h"
 
 asn1p_expr_t *
-asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
+asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref) {
 	asn1p_expr_t *ioclass;
 	asn1p_expr_t *classfield;
 	asn1p_expr_t *expr;
@@ -20,14 +20,16 @@ asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_ref_t *ref) {
 
 	tmpref = *ref;
 	tmpref.comp_count = 1;
-	ioclass = asn1f_lookup_symbol(arg, mod, &tmpref);
+	ioclass = asn1f_lookup_symbol(arg, mod, rhs_pspecs, &tmpref);
 	if(ioclass == NULL) {
 		errno = ESRCH;
 		return NULL;
 	}
 	if(ioclass->expr_type == A1TC_REFERENCE) {
 		ioclass = asn1f_lookup_symbol(arg,
-				ioclass->module, ioclass->reference);
+				ioclass->module,
+				ioclass->rhs_pspecs,
+				ioclass->reference);
 		if(ioclass == NULL) {
 			errno = ESRCH;
 			return NULL;

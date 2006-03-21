@@ -52,17 +52,20 @@ typedef struct asn1p_value_s {
 } asn1p_value_t;
 
 /*
- * Constructors and destructor for value.
+ * Destructor and constructors for value.
  * If ref, bits or buffer are omitted, the corresponding function returns
  * (asn1p_value_t *)0 with errno = EINVAL.
  * Allocated value (where applicable) is guaranteed to be NUL-terminated.
  */
+void asn1p_value_free(asn1p_value_t *);
 asn1p_value_t *asn1p_value_fromref(asn1p_ref_t *ref, int do_copy);
 asn1p_value_t *asn1p_value_frombits(uint8_t *bits, int size_in_bits, int dc);
 asn1p_value_t *asn1p_value_frombuf(char *buffer, int size, int do_copy);
 asn1p_value_t *asn1p_value_fromdouble(double);
 asn1p_value_t *asn1p_value_fromint(asn1c_integer_t);
 asn1p_value_t *asn1p_value_clone(asn1p_value_t *);
-void asn1p_value_free(asn1p_value_t *);
+asn1p_value_t *asn1p_value_clone_with_resolver(asn1p_value_t *,
+		asn1p_value_t *(*resolver)(asn1p_value_t *, void *rarg),
+		void *rarg);
 
 #endif	/* ASN1_PARSER_VALUE_H */

@@ -30,7 +30,7 @@ asn1constraint_pullup(arg_t *arg) {
 		asn1p_expr_t *parent_expr;
 
 		assert(ref);
-		parent_expr = asn1f_lookup_symbol(arg, expr->module, ref);
+		parent_expr = asn1f_lookup_symbol(arg, expr->module, expr->rhs_pspecs, ref);
 		if(!parent_expr) {
 			if(errno != EEXIST) {
 				DEBUG("\tWhile fetching parent constraints: "
@@ -259,6 +259,7 @@ constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 	assert(ct->containedSubtype->type == ATV_REFERENCED);
 
 	rtype = asn1f_lookup_symbol(arg, arg->expr->module,
+		arg->expr->rhs_pspecs,
 		ct->containedSubtype->value.reference);
 	if(!rtype) {
 		FATAL("Cannot find type \"%s\" in constraints at line %d",

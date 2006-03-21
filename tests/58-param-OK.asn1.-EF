@@ -8,10 +8,7 @@ DirectoryString{INTEGER:maxSize} ::= CHOICE {
     utf8String	 UTF8String (SIZE(1..maxSize))
 }
 
-DS1 ::= CHOICE {
-    teletexString	 TeletexString (SIZE(1..128)),
-    utf8String	 UTF8String (SIZE(1..128))
-}
+DS1 ::= DirectoryString{ub-name}
 
 ub-name INTEGER ::= 128
 

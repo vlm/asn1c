@@ -76,10 +76,14 @@ void asn1p_constraint_free(asn1p_constraint_t *);
  * Clone the constraint and all its children.
  */
 asn1p_constraint_t *asn1p_constraint_clone(asn1p_constraint_t *source_to_clone);
+asn1p_constraint_t *asn1p_constraint_clone_with_resolver(
+	asn1p_constraint_t *source_to_clone,
+	asn1p_value_t *(*resolver)(asn1p_value_t *, void *), void *);
 
 /*
  * Insert additional element into the element array of a (to) constraint.
  */
 int asn1p_constraint_insert(asn1p_constraint_t *into, asn1p_constraint_t *what);
+int asn1p_constraint_prepend(asn1p_constraint_t *before, asn1p_constraint_t *what);
 
 #endif	/* ASN1_PARSER_CONSTRAINT_H */

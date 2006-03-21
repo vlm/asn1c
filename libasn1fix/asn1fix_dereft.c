@@ -6,9 +6,6 @@ asn1f_fix_dereference_types(arg_t *arg) {
 	asn1p_expr_t *type_expr;
 	int r_value = 0;
 
-	if(expr->expr_type == A1TC_PARAMETRIZED)
-		return asn1f_fix_parametrized_assignment(arg);
-
 	if(expr->expr_type != A1TC_REFERENCE
 	|| expr->meta_type != AMT_TYPEREF) {
 		//assert(expr->reference == 0);

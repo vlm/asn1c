@@ -15,6 +15,7 @@ static int asn1f_resolve_constraints(arg_t *arg); /* For subtype constraints */
 static int asn1f_check_constraints(arg_t *arg);	/* For subtype constraints */
 static int asn1f_check_duplicate(arg_t *arg);
 static int asn1f_apply_unique_index(arg_t *arg);
+static int phase_1_1(arg_t *arg, int prm2);
 
 arg_t a1f_replace_me_with_proper_interface_arg;
 
@@ -179,71 +180,21 @@ asn1f_fix_module__phase_1(arg_t *arg) {
 	 */
 	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
-
-		/* Check whether this type is a duplicate */
-		ret = asn1f_check_duplicate(arg);
+		ret = phase_1_1(arg, 0);
 		RET2RVAL(ret, rvalue);
-
-		if(expr->meta_type == AMT_PARAMTYPE)
-			/* Do not process the parametrized type just yet */
-			continue;
-
-		DEBUG("=== Now processing \"%s\" (%d/0x%x) at line %d ===",
-			expr->Identifier, expr->meta_type, expr->expr_type,
-			expr->_lineno);
-		assert(expr->meta_type != AMT_INVALID);
-
-		/*
-		 * 2.1 Pre-process simple types (ENUMERATED, INTEGER, etc).
-		 */
-		ret = asn1f_recurse_expr(arg, asn1f_fix_simple);
-		RET2RVAL(ret, rvalue);
-
-		/*
-		 * 2.5.4
-		 */
-		ret = asn1f_recurse_expr(arg, asn1f_fix_dereference_types);
-		RET2RVAL(ret, rvalue);
-
-		/*
-		 * Fix tagging of top-level types.
-		 */
-		ret = asn1f_fix_constr_tag(arg, 1);
-		RET2RVAL(ret, rvalue);
-
-		/*
-		 * 2.[234] Process SEQUENCE/SET/CHOICE types.
-		 */
-		ret = asn1f_recurse_expr(arg, asn1f_fix_constructed);
-		RET2RVAL(ret, rvalue);
-
-		/*
-		 * 2.5.5
-		 */
-		ret = asn1f_recurse_expr(arg, asn1f_fix_dereference_values);
-		RET2RVAL(ret, rvalue);
-
-		/*
-		 * Parse class objects and fill up the object class with data.
-		 */
-		ret = asn1f_parse_class_object(arg);
-		RET2RVAL(ret, rvalue);
-
-		/*
-		 * Resolve references in constraints.
-		 */
-		ret = asn1f_recurse_expr(arg, asn1f_resolve_constraints);
-		RET2RVAL(ret, rvalue);
-
-		/*
-		 * 6. INTEGER value processed at 2.5.4.
-		 */
-
 		/*
 		 * Make sure everybody's behaving well.
 		 */
 		assert(arg->expr == expr);
 	}
+	TQ_FOR(expr, &(arg->mod->members), next) {
+		arg->expr = expr;
+		ret = phase_1_1(arg, 1);
+		RET2RVAL(ret, rvalue);
+		assert(arg->expr == expr);
+	}
+
+
 
 	/*
 	 * 5. Automatic tagging
@@ -296,14 +247,7 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 	int ret;
 
 	TQ_FOR(expr, &(arg->mod->members), next) {
-	}
-
-	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
-
-		if(expr->meta_type == AMT_PARAMTYPE)
-			/* Do not process the parametrized types here */
-			continue;
 
 		/*
 		 * Dereference DEFAULT values.
@@ -326,6 +270,88 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 
 		assert(arg->expr == expr);
 	}
+
+	return rvalue;
+}
+
+static int
+phase_1_1(arg_t *arg, int prm2) {
+	asn1p_expr_t *expr = arg->expr;
+	int rvalue = 0;
+	int ret;
+
+	if(expr->lhs_params && expr->spec_index == -1) {
+		int i;
+		if(!prm2)
+			/* Do not process the parameterized type just yet */
+			return 0;
+		for(i = 0; i < expr->specializations.pspecs_count; i++) {
+			arg->expr = expr->specializations.pspec[i].my_clone;
+			ret = phase_1_1(arg, 0);
+			RET2RVAL(ret, rvalue);
+		}
+		arg->expr = expr;	/* revert */
+		return rvalue;
+	} else if(prm2) {
+		return 0;	/* Already done! */
+	}
+
+	/* Check whether this type is a duplicate */
+	if(!expr->lhs_params) {
+		ret = asn1f_check_duplicate(arg);
+		RET2RVAL(ret, rvalue);
+	}
+
+	DEBUG("=== Now processing \"%s\" (%d/0x%x) at line %d ===",
+		expr->Identifier, expr->meta_type, expr->expr_type,
+		expr->_lineno);
+	assert(expr->meta_type != AMT_INVALID);
+
+	/*
+	 * 2.1 Pre-process simple types (ENUMERATED, INTEGER, etc).
+	 */
+	ret = asn1f_recurse_expr(arg, asn1f_fix_simple);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * 2.5.4
+	 */
+	ret = asn1f_recurse_expr(arg, asn1f_fix_dereference_types);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * Fix tagging of top-level types.
+	 */
+	ret = asn1f_fix_constr_tag(arg, 1);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * 2.[234] Process SEQUENCE/SET/CHOICE types.
+	 */
+	ret = asn1f_recurse_expr(arg, asn1f_fix_constructed);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * 2.5.5
+	 */
+	ret = asn1f_recurse_expr(arg, asn1f_fix_dereference_values);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * Parse class objects and fill up the object class with data.
+	 */
+	ret = asn1f_parse_class_object(arg);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * Resolve references in constraints.
+	 */
+	ret = asn1f_recurse_expr(arg, asn1f_resolve_constraints);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * 6. INTEGER value processed at 2.5.4.
+	 */
 
 	return rvalue;
 }

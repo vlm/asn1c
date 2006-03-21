@@ -1,10 +1,11 @@
 
-0.9.21:	2006-Mar-14
+0.9.21:	2006-Mar-20
 
 	* skeletons/standard-modules directory is now used for standard types.
 	* Fixed class field access problem (Test case 98)
 	  (Severity: medim; Security impact: none)
 	* Refactored Information Object Classes parsing.
+	* Refactored Parameterization support.
 
 0.9.20:	2006-Mar-06
 

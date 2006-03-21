@@ -11,7 +11,6 @@ typedef enum asn1p_expr_meta {
 	AMT_INVALID,
 	AMT_TYPE,		/* Type1 ::= INTEGER */
 	AMT_TYPEREF,		/* Type2 ::= Type1 */
-	AMT_PARAMTYPE,		/* Type3{Parameter} ::= SET { ... } */
 	AMT_VALUE,		/* value1 Type1 ::= 1 */
 	AMT_VALUESET,		/* ValueSet Type1 ::= { value1 } */
 	AMT_OBJECT,		/* object CLASS ::= {...} */
@@ -35,7 +34,6 @@ typedef enum asn1p_expr_type {
 	A1TC_OPAQUE,		/* Opaque data encoded as a bitvector */
 	A1TC_EXTENSIBLE,	/* An extension marker "..." */
 	A1TC_COMPONENTS_OF,	/* COMPONENTS OF clause */
-	A1TC_PARAMETRIZED,	/* A parametrized type declaration */
 	A1TC_VALUESET,		/* Value set definition */
 	A1TC_CLASSDEF,		/* Information Object Class */
 	A1TC_INSTANCE,		/* Instance of Object Class */
@@ -148,10 +146,27 @@ typedef struct asn1p_expr_s {
 	asn1p_constraint_t *combined_constraints;
 
 	/*
-	 * A list of parameters for parametrized type declaration
-	 * (AMT_PARAMTYPE).
+	 * Left hand side parameters for parametrized type declaration
+	 * Type{Param1, Param2} ::= SEQUENCE { a Param1, b Param2 }
 	 */
-	asn1p_paramlist_t *params;
+	asn1p_paramlist_t *lhs_params;
+	/*
+	 * Right hand type specialization.
+	 * Type2 ::= Type{Param1}
+	 */
+	struct asn1p_expr_s *rhs_pspecs;	/* ->members */
+	/*
+	 * If lhs_params is defined, this structure represents all possible
+	 * specializations of the parent expression.
+	 */
+	struct {
+		struct asn1p_pspec_s {
+			struct asn1p_expr_s *rhs_pspecs;
+			struct asn1p_expr_s *my_clone;
+		} *pspec;
+		int pspecs_count;	/* Number of specializations */
+	} specializations;
+	int spec_index;	/* -1, or 0-based specialization index in the parent */
 
 	/*
 	 * The actual value (DefinedValue or inlined value).
@@ -258,6 +273,9 @@ typedef struct asn1p_expr_s {
  */
 asn1p_expr_t *asn1p_expr_new(int _lineno);
 asn1p_expr_t *asn1p_expr_clone(asn1p_expr_t *, int skip_extensions);
+asn1p_expr_t *asn1p_expr_clone_with_resolver(asn1p_expr_t *,
+	asn1p_expr_t *(*resolver)(asn1p_expr_t *to_resolve, void *resolver_arg),
+	void *resolver_arg);
 void asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what);
 void asn1p_expr_free(asn1p_expr_t *expr);
 

@@ -471,7 +471,8 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 
 		DEBUG(" %s is a type reference", a->Identifier);
 
-		a = asn1f_lookup_symbol(arg, a->module, a->reference);
+		a = asn1f_lookup_symbol(arg,
+			a->module, a->rhs_pspecs, a->reference);
 		if(!a) return 0;	/* Already FATAL()'ed somewhere else */
 		WITH_MODULE(a->module, ret = _asn1f_compare_tags(arg, a, b));
 		return ret;
