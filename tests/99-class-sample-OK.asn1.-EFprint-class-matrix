@@ -21,6 +21,8 @@ SAMPLE-CLASS ::= CLASS {
 -- [4]     request-salt        <no entry>              Salt 
 
 
+SampleClassObjectSet SAMPLE-CLASS ::= {{ IDENTIFIED BY request-whatever } | { WITH CODE 1 IDENTIFIED BY response-stuff } | { TYPE SampleType WITH CODE 2 IDENTIFIED BY request-id } | { TYPE Salt IDENTIFIED BY request-salt }}
+
 request-Whatever SAMPLE-CLASS ::= { IDENTIFIED BY request-whatever }
 
 respond-Stuff SAMPLE-CLASS ::= { WITH CODE 1 IDENTIFIED BY response-stuff }
