@@ -352,7 +352,7 @@ typedef enum Type2_PR {
 } Type2_PR;
 typedef enum a {
 	a_one	= 0
-} a_e;
+} e_a;
 
 /*
  * Method of determining the components presence
@@ -362,7 +362,7 @@ typedef enum two_name_PR {
 } two_name_PR;
 typedef enum a {
 	a_one	= 0
-} a_e;
+} e_a;
 
 /*** <<< TYPE-DECLS [Type2] >>> ***/
 

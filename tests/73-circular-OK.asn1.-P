@@ -703,7 +703,7 @@ asn_TYPE_descriptor_t asn_DEF_Ypet = {
 typedef enum EnumType {
 	EnumType_one	= 0,
 	EnumType_two	= 1
-} EnumType_e;
+} e_EnumType;
 
 /*** <<< TYPE-DECLS [EnumType] >>> ***/
 

@@ -3744,7 +3744,7 @@ typedef enum enum_c {
 	 * Enumeration is extensible
 	 */
 	enum_c_three	= 3
-} enum_c_e;
+} e_enum_c;
 
 /*** <<< TYPE-DECLS [Sequence] >>> ***/
 
@@ -4234,7 +4234,7 @@ asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
 typedef enum Enum0 {
 	Enum0_one	= 0,
 	Enum0_two	= 1
-} Enum0_e;
+} e_Enum0;
 
 /*** <<< TYPE-DECLS [Enum0] >>> ***/
 
@@ -4391,7 +4391,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum0 = {
 typedef enum Enum1 {
 	Enum1_one	= 0,
 	Enum1_two	= 1
-} Enum1_e;
+} e_Enum1;
 
 /*** <<< TYPE-DECLS [Enum1] >>> ***/
 

@@ -2288,7 +2288,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 typedef enum CN_IntegerEnumerated1 {
 	CN_IntegerEnumerated1_a	= 1,
 	CN_IntegerEnumerated1_b	= 2
-} CN_IntegerEnumerated1_e;
+} e_CN_IntegerEnumerated1;
 
 /*** <<< TYPE-DECLS [CN-IntegerEnumerated1] >>> ***/
 
@@ -2418,7 +2418,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerEnumerated1 = {
 typedef enum NO_IntegerEnumerated2 {
 	NO_IntegerEnumerated2_a	= 1,
 	NO_IntegerEnumerated2_b	= 3000000000
-} NO_IntegerEnumerated2_e;
+} e_NO_IntegerEnumerated2;
 
 /*** <<< TYPE-DECLS [NO-IntegerEnumerated2] >>> ***/
 
