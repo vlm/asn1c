@@ -10,7 +10,7 @@ enum ami_flags_e {
   AMI_MASK_ONLY_SPACES	= 1,	/* Mask only spaces, everything else's safe */
   AMI_CHECK_RESERVED	= 2,	/* Check against reserved keywords */
 };
-char *asn1c_make_identifier(enum ami_flags_e, char *arg1, ...);
+char *asn1c_make_identifier(enum ami_flags_e, asn1p_expr_t *expr, ...);
 
 /*
  * Return the type name of the specified expression.

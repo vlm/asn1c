@@ -9,15 +9,11 @@ SIGNED{ToBeSigned} ::= SEQUENCE {
     signature	 BIT STRING SIZE(0..256)
 }
 
-Certificate ::= SEQUENCE {
-    toBeSigned	 SEQUENCE {
+Certificate ::= SIGNED{ SEQUENCE {
         version	 INTEGER,    
         signature	 OBJECT IDENTIFIER,    
         issuer	 Name
-    },
-    algorithm	 OBJECT IDENTIFIER,
-    signature	 BIT STRING SIZE(0..256)
-}
+    }}
 
 Name ::= SEQUENCE OF RelativeDistinguishedName
 

@@ -33,27 +33,40 @@ reserved_keyword(const char *str) {
  * Convert unsafe characters to underscores.
  */
 char *
-asn1c_make_identifier(enum ami_flags_e flags, char *arg1, ...) {
+asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	static char *storage;
 	static int storage_size;
 	int nodelimiter = 0;
 	va_list ap;
 	char *str;
 	char *nextstr;
+	char *first = 0;
+	char *second = 0;
 	size_t size;
 	char *p;
 
-	if(arg1 == NULL)
-		return NULL;
+	if(expr) {
+		/*
+		 * Estimate the necessary storage size
+		 */
+		if(expr->Identifier == NULL)
+			return "Member";
+		size = strlen(expr->Identifier);
+		if(expr->spec_index != -1) {
+			static char buf[32];
+			second = buf;
+			size += 1 + snprintf(buf, sizeof buf, "%dP%d",
+				expr->_lineno, expr->spec_index);
+		}
+	} else {
+		size = -1;
+	}
 
-	/*
-	 * Estimate the necessary storage size
-	 */
-	size = strlen(arg1);
-	va_start(ap, arg1);
+	va_start(ap, expr);
 	while((str = va_arg(ap, char *)))
 		size += 1 + strlen(str);
 	va_end(ap);
+	if(size == -1) return NULL;
 
 	/*
 	 * Make sure we have this amount of storage.
@@ -72,12 +85,23 @@ asn1c_make_identifier(enum ami_flags_e flags, char *arg1, ...) {
 	/*
 	 * Fill-in the storage.
 	 */
-	va_start(ap, arg1);
-	str = arg1;
+	va_start(ap, expr);
 	p = storage;
-	for(str = arg1; str; str = nextstr) {
+	nextstr = "";
+	for(p = storage, str = 0; str || nextstr; str = nextstr) {
 		int subst_made = 0;
-		nextstr = va_arg(ap, char *);
+		nextstr = second ? second : va_arg(ap, char *);
+
+		if(str == 0) {
+			if(expr) {
+				str = expr->Identifier;
+				first = str;
+				second = 0;
+			} else {
+				first = nextstr;
+				continue;
+			}
+		}
 
 		if(str[0] == ' ' && str[1] == '\0') {
 			*p++ = ' ';
@@ -85,7 +109,7 @@ asn1c_make_identifier(enum ami_flags_e flags, char *arg1, ...) {
 			continue;
 		}
 
-		if(str != arg1 && !nodelimiter)
+		if(str != first && !nodelimiter)
 			*p++ = '_';	/* Delimiter between tokens */
 		nodelimiter = 0;
 
@@ -94,7 +118,7 @@ asn1c_make_identifier(enum ami_flags_e flags, char *arg1, ...) {
 		 * with C/C++ language keywords.
 		 */
 		if((flags & AMI_CHECK_RESERVED)
-		&& str == arg1 && !nextstr && reserved_keyword(str)) {
+		&& str == first && !nextstr && reserved_keyword(str)) {
 			*p++ = toupper(*str++);
 			/* Fall through */
 		}
@@ -123,7 +147,9 @@ asn1c_make_identifier(enum ami_flags_e flags, char *arg1, ...) {
 
 char *
 asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
+	asn1p_expr_t *exprid = 0;
 	asn1p_expr_t *top_parent;
+	asn1p_expr_t *terminal;
 	char *typename;
 
 	/* Rewind to the topmost parent expression */
@@ -145,15 +171,15 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			 * Resolve it and use instead.
 			 */
 			tmp.expr = asn1f_class_access_ex(arg->asn,
-				arg->expr->module, arg->expr, expr->reference);
+				arg->expr->module, arg->expr, expr->rhs_pspecs, expr->reference);
 			if(!tmp.expr) return NULL;
 
 			return asn1c_type_name(&tmp, tmp.expr, _format);
 		}
 
+		terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+
 		if(_format == TNF_RSAFE) {
-			asn1p_expr_t *terminal;
-			terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 			if(terminal && terminal->expr_type & ASN_CONSTR_MASK) {
 				typename = terminal->Identifier;
 			}
@@ -165,29 +191,17 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			 * switch to a recursion-safe type naming
 			 * ("struct foo" instead of "foo_t").
 			 */
-			asn1p_expr_t *terminal;
-			terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 			if(terminal && terminal == top_parent) {
 				_format = TNF_RSAFE;
 			}
 		}
-		break;
-#if 0
-	case ASN_CONSTR_SEQUENCE_OF:
-	case ASN_CONSTR_SET_OF:
-		if(expr->Identifier) {
-			typename = expr->Identifier;
-		} else {
-			asn1p_expr_t *child;
-			child = TQ_FIRST(&(expr->members));
-			typename = asn1c_type_name(arg, child, _format);
-			if(typename)
-				return typename;
-			_format = TNF_SAFE;
-			typename = child->Identifier;
+
+		if(terminal && terminal->spec_index != -1) {
+			exprid = terminal;
+			typename = 0;
 		}
+
 		break;
-#endif
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 	case ASN_BASIC_REAL:
@@ -229,13 +243,15 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	switch(_format) {
 	case TNF_UNMODIFIED:
 	case TNF_INCLUDE:
-		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES, typename, 0);
+		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES,
+			0, exprid ? exprid->Identifier : typename, 0);
 	case TNF_SAFE:
-		return asn1c_make_identifier(0, typename, 0);
+		return asn1c_make_identifier(0, exprid, typename, 0);
 	case TNF_CTYPE:	/* C type */
-		return asn1c_make_identifier(0, typename, "t", 0);
+		return asn1c_make_identifier(0, exprid,
+				exprid?"t":typename, exprid?0:"t", 0);
 	case TNF_RSAFE:	/* Recursion-safe type */
-		return asn1c_make_identifier(AMI_CHECK_RESERVED,
+		return asn1c_make_identifier(AMI_CHECK_RESERVED, 0,
 			"struct", " ", typename, 0);
 	}
 

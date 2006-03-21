@@ -8,12 +8,8 @@ TestType{Parameter} ::= SEQUENCE {
 }
 
 TestChoice ::= CHOICE {
-    type1	 SEQUENCE {
-        common	 INTEGER (1..10) DEFAULT 0
-    },
-    type2	 [0] IMPLICIT SEQUENCE {
-        common	 BOOLEAN DEFAULT 0
-    }
+    type1	 TestType{ INTEGER (1..10)},
+    type2	 [0] IMPLICIT TestType{ BOOLEAN}
 }
 
 END
@@ -28,12 +24,8 @@ AutoType{Parameter} ::= SEQUENCE {
 }
 
 AutoChoice ::= CHOICE {
-    type1	 [0] IMPLICIT SEQUENCE {
-        common	 [0] IMPLICIT INTEGER ((0..1))((0))
-    },
-    type2	 [1] IMPLICIT SEQUENCE {
-        common	 [0] IMPLICIT BOOLEAN (0)
-    }
+    type1	 [0] IMPLICIT AutoType{ INTEGER (0..1)},
+    type2	 [1] IMPLICIT AutoType{ BOOLEAN}
 }
 
 END

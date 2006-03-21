@@ -110,6 +110,13 @@ asn1p_value_fromint(asn1c_integer_t i) {
 
 asn1p_value_t *
 asn1p_value_clone(asn1p_value_t *v) {
+	return asn1p_value_clone_with_resolver(v, 0, 0);
+}
+
+asn1p_value_t *
+asn1p_value_clone_with_resolver(asn1p_value_t *v,
+		asn1p_value_t *(*resolver)(asn1p_value_t *, void *rarg),
+		void *rarg) {
 	asn1p_value_t *clone = NULL;
 	if(v) {
 		switch(v->type) {
@@ -142,6 +149,11 @@ asn1p_value_clone(asn1p_value_t *v) {
 			return asn1p_value_frombits(v->value.binary_vector.bits,
 				v->value.binary_vector.size_in_bits, 1);
 		case ATV_REFERENCED:
+			if(resolver) {
+				clone = resolver(v, rarg);
+				if(clone) return clone;
+				else if(errno != ESRCH) return NULL;
+			}
 			return asn1p_value_fromref(v->value.reference, 1);
 		case ATV_CHOICE_IDENTIFIER: {
 			char *id = v->value.choice_identifier.identifier;

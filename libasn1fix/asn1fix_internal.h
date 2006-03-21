@@ -62,7 +62,7 @@ typedef struct arg_s {
 #include "asn1fix_constr.h"		/* Constructed types */
 #include "asn1fix_class.h"		/* CLASS support */
 #include "asn1fix_cws.h"		/* CLASS WITH SYNTAX support */
-#include "asn1fix_param.h"		/* Parametrization */
+#include "asn1fix_param.h"		/* Parameterization */
 #include "asn1fix_retrieve.h"		/* Data retrieval */
 #include "asn1fix_enum.h"		/* Process ENUMERATED */
 #include "asn1fix_integer.h"		/* Process INTEGER */

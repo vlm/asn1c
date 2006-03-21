@@ -525,11 +525,13 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			INDENT("--<ASN1C.RepresentAsPointer>--\n");
 	}
 
-	if(tc->Identifier)
+	if(tc->Identifier
+	&& (!(tc->meta_type == AMT_VALUE && tc->expr_type == A1TC_REFERENCE)
+	 || level == 0))
 		INDENT("%s", tc->Identifier);
 
-	if(tc->params) {
-		asn1print_params(tc->params, flags);
+	if(tc->lhs_params) {
+		asn1print_params(tc->lhs_params, flags);
 	}
 
 	if(tc->meta_type != AMT_VALUE
@@ -559,8 +561,6 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		SEQ_OF = 1; /* Equivalent to SET OF for printint purposes */
 		printf("    COMPONENTS OF");
 		break;
-	case A1TC_PARAMETRIZED:
-		flags |= APF_NOINDENT;
 	case A1TC_REFERENCE:
 	case A1TC_UNIVERVAL:
 		break;
@@ -662,6 +662,16 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		printf("}\n");
 	}
 
+	/* Right hand specialization */
+	if(tc->rhs_pspecs) {
+		asn1p_expr_t *se;
+		printf("{");
+		TQ_FOR(se, &(tc->rhs_pspecs->members), next) {
+			asn1print_expr(asn, mod, se, flags, level + 1);
+		}
+		printf("}");
+	}
+
 	if(!SEQ_OF && tc->constraints) {
 		printf(" ");
 		asn1print_constraint(tc->constraints, flags);
@@ -680,7 +690,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 				printf(")");
 			}
 		} else {
-			printf(" ::= ");
+			if(level == 0) printf(" ::= ");
 			asn1print_value(tc->value, flags);
 		}
 	}
@@ -741,6 +751,28 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 				}
 				printf(" %*s ", maxidlen,
 					cell->value->Identifier);
+			}
+			printf("\n");
+		}
+	} while(0);
+
+	if(flags & APF_PRINT_CLASS_MATRIX
+	&& tc->lhs_params) do {
+		int i;
+		if(tc->specializations.pspecs_count == 0) {
+			printf("\n-- No specializations found\n");
+			break;
+		}
+		printf("\n-- Specializations list has %d entr%s:\n",
+			tc->specializations.pspecs_count,
+			tc->specializations.pspecs_count == 1 ? "y" : "ies");
+		for(i = 0; i < tc->specializations.pspecs_count; i++) {
+			asn1p_expr_t *se;
+			struct asn1p_pspec_s *pspec;
+			pspec = &tc->specializations.pspec[i];
+			printf("-- ");
+			TQ_FOR(se, &(pspec->rhs_pspecs->members), next) {
+				asn1print_expr(asn, mod, se, flags, level+1);
 			}
 			printf("\n");
 		}

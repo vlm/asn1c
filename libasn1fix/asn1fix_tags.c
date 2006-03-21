@@ -66,7 +66,7 @@ asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int
 	if(expr->meta_type == AMT_TYPEREF) {
 		asn1p_expr_t *nexpr;
 		DEBUG("Following the reference %s", expr->Identifier);
-		nexpr = asn1f_lookup_symbol(arg, expr->module, expr->reference);
+		nexpr = asn1f_lookup_symbol(arg, expr->module, expr->rhs_pspecs, expr->reference);
 		if(nexpr == NULL) {
 			if(errno != EEXIST)	/* -fknown-extern-type */
 				return -1;

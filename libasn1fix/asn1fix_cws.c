@@ -206,7 +206,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 		asn1p_ref_add_component(ref, p, RLT_UNKNOWN);
 		assert(ref);
 	
-		expr = asn1f_lookup_symbol(arg, arg->mod, ref);
+		expr = asn1f_lookup_symbol(arg, arg->mod, arg->expr->rhs_pspecs, ref);
 		if(!expr) {
 			FATAL("Cannot find %s referenced by %s at line %d",
 				p, arg->expr->Identifier,

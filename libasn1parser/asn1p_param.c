@@ -61,6 +61,8 @@ asn1p_paramlist_add_param(asn1p_paramlist_t *pl, asn1p_ref_t *gov, char *arg) {
 		if(p) {
 			pl->params = p;
 			pl->params_size = newsize;
+			memset(&pl->params[pl->params_count], 0,
+				sizeof(pl->params[0]));
 		} else {
 			return -1;
 		}
@@ -69,9 +71,8 @@ asn1p_paramlist_add_param(asn1p_paramlist_t *pl, asn1p_ref_t *gov, char *arg) {
 
 	if(gov) {
 		pl->params[pl->params_count].governor = asn1p_ref_clone(gov);
-		if(pl->params[pl->params_count].governor == NULL) {
+		if(pl->params[pl->params_count].governor == NULL)
 			return -1;
-		}
 	} else {
 		pl->params[pl->params_count].governor = 0;
 	}
@@ -103,6 +104,7 @@ asn1p_paramlist_clone(asn1p_paramlist_t *pl) {
 				newpl = NULL;
 				break;
 			}
+			newpl->params[i].into_expr = pl->params[i].into_expr;
 		}
 	}
 

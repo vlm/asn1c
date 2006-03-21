@@ -1,306 +1,217 @@
 #include "asn1fix_internal.h"
 
-static int asn1f_parametrize(arg_t *arg, asn1p_expr_t *ex, asn1p_expr_t *ptype);
-static int asn1f_param_process_recursive(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
-static int asn1f_param_process_constraints(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
+typedef struct resolver_arg {
+	asn1p_expr_t	  *(*resolver)(asn1p_expr_t *, void *arg);
+	arg_t		  *arg;
+	asn1p_expr_t	  *original_expr;
+	asn1p_paramlist_t *lhs_params;
+	asn1p_expr_t	  *rhs_pspecs;
+} resolver_arg_t;
 
-static asn1p_expr_t *_referenced_argument(asn1p_ref_t *ref, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
-static int _process_constraints(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_t *ptype, asn1p_expr_t *actargs);
+static asn1p_expr_t *resolve_expr(asn1p_expr_t *, void *resolver_arg);
+static int compare_specializations(arg_t *, asn1p_expr_t *a, asn1p_expr_t *b);
+static asn1p_expr_t *find_target_specialization_byref(resolver_arg_t *rarg, asn1p_ref_t *ref);
+static asn1p_expr_t *find_target_specialization_bystr(resolver_arg_t *rarg, char *str);
 
-int
-asn1f_fix_parametrized_assignment(arg_t *arg) {
-	asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *ptype;
-
-	assert(expr->expr_type == A1TC_PARAMETRIZED);
-	assert(expr->reference);
-
-	DEBUG("(\"%s\" ::= \"%s\" { %s }) for line %d",
-		expr->Identifier,
-		asn1f_printable_reference(expr->reference),
-		asn1f_printable_value(expr->value),
-		expr->_lineno);
-
-	/*
-	 * Find the corresponding parametrized type definition.
-	 */
-	DEBUG("Looking for parametrized type definition \"%s\"",
-		asn1f_printable_reference(expr->reference));
-	ptype = asn1f_lookup_symbol(arg, expr->module, expr->reference);
-	if(ptype == NULL) {
-		DEBUG("%s: missing parametrized type declaration",
-			asn1f_printable_reference(expr->reference));
-		return -1;
-	}
-
-	/*
-	 * Check that the number of arguments which are expected by
-	 * the parametrized type declaration is consistent with the
-	 * number of arguments supplied by the parametrized assignment.
-	 */
-	if(asn1f_count_children(expr) != ptype->params->params_count) {
-		FATAL("Number of actual arguments %d in %s at line %d "
-			"is not equal to number of expected arguments "
-			"%d in %s at line %d",
-			asn1f_count_children(expr),
-			asn1f_printable_reference(expr->reference),
-			expr->_lineno,
-			ptype->params->params_count,
-			ptype->Identifier,
-			ptype->_lineno
-		);
-		return -1;
-	}
-
-	/*
-	 * Perform an expansion of a parametrized assignment.
-	 */
-	return asn1f_parametrize(arg, expr, ptype);
-}
-
-#define	SUBSTITUTE(to, from)	do {				\
-	asn1p_expr_t tmp, *__v;					\
-	if((to)->tag.tag_class					\
-	&& (from)->tag.tag_class) {				\
-		FATAL("Layered tagging in parametrization "	\
-		"is not yet supported, "			\
-		"contact asn1c author for assistance "		\
-		"with line %d", (to)->_lineno);			\
-		return -1;					\
-	}							\
-	/* This code shall not be invoked too early */		\
-	assert((to)->combined_constraints == NULL);		\
-	assert((from)->combined_constraints == NULL);		\
-	/* Copy stuff, and merge some parameters */		\
-	tmp = *(to);						\
-	*(to) = *(from);					\
-	TQ_MOVE(&(to)->members, &(from)->members);		\
-	*(from) = tmp;						\
-	(to)->next = tmp.next;					\
-	(to)->parent_expr = tmp.parent_expr;			\
-	assert((to)->marker.flags == EM_NOMARK);		\
-	(to)->marker = tmp.marker;				\
-	if(tmp.tag.tag_class)					\
-		(to)->tag = tmp.tag;				\
-	if(tmp.constraints) {					\
-		if((to)->constraints) {				\
-			asn1p_constraint_t *ct;			\
-			ct = asn1p_constraint_new(		\
-				(to)->constraints->_lineno);	\
-			ct->type = ACT_CA_SET;			\
-			asn1p_constraint_insert(ct,		\
-				(to)->constraints);		\
-			asn1p_constraint_insert(ct,		\
-				tmp.constraints);		\
-			(to)->constraints = ct;			\
-		} else {					\
-			(to)->constraints = tmp.constraints;	\
-		}						\
-	}							\
-	(from)->constraints = 0;				\
-	(from)->marker.default_value = 0;			\
-	memset(&((from)->next), 0, sizeof((from)->next));	\
-	memset(&((from)->members), 0, sizeof((from)->members));	\
-	asn1p_expr_free(from);					\
-	TQ_FOR(__v, &((to)->members), next) {			\
-		assert(__v->parent_expr == (from));		\
-		__v->parent_expr = (to);			\
-	}							\
-} while(0)
-
-static int
-asn1f_parametrize(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype) {
-	asn1p_expr_t *nex;
+asn1p_expr_t *
+asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_pspecs) {
+	resolver_arg_t rarg;	/* resolver argument */
+	asn1p_expr_t *exc;	/* expr clone */
+	asn1p_expr_t *rpc;	/* rhs_pspecs clone */
+	asn1p_expr_t *target;
 	void *p;
-	int ret;
+	struct asn1p_pspec_s *pspec;
+	int npspecs;
+	int i;
 
-	DEBUG("asn1f_parametrize(%s <= %s)",
-		expr->Identifier, ptype->Identifier);
+	assert(rhs_pspecs);
+	assert(expr->lhs_params);
+	assert(expr->parent_expr == 0);
 
-	/*
-	 * The algorithm goes like that:
-	 * 1. Replace the expression's type with parametrized type.
-	 * 2. For every child in the parametrized type, import it
-	 * as a child of the expression, replacing all occurences of
-	 * symbols which are defined as parametrized type arguments
-	 * with the actual values.
-	 * 3. Don't forget to parametrize the subtype constraints.
-	 */
-
-	nex = asn1p_expr_clone(ptype, 0);
-	if(nex == NULL) return -1;
+	DEBUG("Forking parameterization at %d for %s (%d alr)",
+		rhs_pspecs->_lineno, expr->Identifier,
+		expr->specializations.pspecs_count);
 
 	/*
-	 * Cleanup the new expression so there is no ptype-related
-	 * stuff hanging around.
+	 * Find if this exact specialization has been used already.
 	 */
-	if(expr->Identifier) {
-		p = strdup(expr->Identifier);
-		if(p) {
-			free(nex->Identifier);
-			nex->Identifier = p;
-		} else {
-			asn1p_expr_free(nex);
-			return -1;
+	for(npspecs = 0;
+		npspecs < expr->specializations.pspecs_count;
+			npspecs++) {
+		if(compare_specializations(arg, rhs_pspecs,
+			expr->specializations.pspec[npspecs].rhs_pspecs) == 0) {
+			DEBUG("Reused parameterization for %s",
+				expr->Identifier);
+			return expr->specializations.pspec[npspecs].my_clone;
 		}
 	}
-	asn1p_paramlist_free(nex->params);
-	nex->params = NULL;
-	nex->meta_type = expr->meta_type;
 
-	ret = asn1f_param_process_recursive(arg, nex, ptype, expr);
-	if(ret != 0) {
-		asn1p_expr_free(nex);
-		return ret;
+	rarg.resolver = resolve_expr;
+	rarg.arg = arg;
+	rarg.original_expr = expr;
+	rarg.lhs_params = expr->lhs_params;
+	rarg.rhs_pspecs = rhs_pspecs;
+	exc = asn1p_expr_clone_with_resolver(expr, resolve_expr, &rarg);
+	rpc = asn1p_expr_clone(rhs_pspecs, 0);
+	assert(exc && rpc);
+
+	/*
+	 * Create a new specialization.
+	 */
+	npspecs = expr->specializations.pspecs_count;
+	p = realloc(expr->specializations.pspec,
+			(npspecs + 1) * sizeof(expr->specializations.pspec[0]));
+	assert(p);
+	expr->specializations.pspec = p;
+	pspec = &expr->specializations.pspec[npspecs];
+	memset(pspec, 0, sizeof *pspec);
+
+	pspec->rhs_pspecs = rpc;
+	pspec->my_clone = exc;
+	exc->spec_index = npspecs;
+
+	/* Update LHS->RHS specialization in target */
+	target = TQ_FIRST(&rpc->members);
+	for(i = 0; i < exc->lhs_params->params_count;
+			i++, target = TQ_NEXT(target, next)) {
+		if(!target) { target = (void *)0xdeadbeef; break; }
+
+		assert(exc->lhs_params->params[i].into_expr == 0);
+		exc->lhs_params->params[i].into_expr = target;
+	}
+	if(target) {
+		asn1p_expr_free(exc);
+		asn1p_expr_free(rpc);
+		FATAL("Parameterization of %s failed: "
+			"parameters number mismatch", expr->Identifier);
+		errno = EPERM;
+		return NULL;
 	}
 
-	SUBSTITUTE(expr, nex);
+	DEBUG("Forked new parameterization for %s", expr->Identifier);
 
-	return ret;
+	/* Commit */
+	expr->specializations.pspecs_count = npspecs + 1;
+	return exc;
 }
 
 static int
-asn1f_param_process_recursive(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
-	asn1p_expr_t *child;
+compare_specializations(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
+	asn1p_expr_t *ac = TQ_FIRST(&a->members);
+	asn1p_expr_t *bc = TQ_FIRST(&b->members);
 
+	for(;ac && bc; ac = TQ_NEXT(ac, next), bc = TQ_NEXT(bc, next)) {
+	  retry:
+		if(ac == bc) continue;
+		if(ac->meta_type != bc->meta_type) break;
+		if(ac->expr_type != bc->expr_type) break;
 
-	TQ_FOR(child, &(expr->members), next) {
-		asn1p_expr_t *ra;
-		asn1p_expr_t *ne;	/* new expression (clone) */
+		if(!ac->reference && !bc->reference)
+			continue;
 
-		if(asn1f_param_process_constraints(arg, child, ptype, actargs))
-			return -1;
-
-		ra = _referenced_argument(child->reference, ptype, actargs);
-		if(ra) {
-			DEBUG("Substituting parameter for %s %s at line %d",
-				child->Identifier,
-				asn1f_printable_reference(child->reference),
-				child->_lineno
-			);
-	
-			assert(child->meta_type == AMT_TYPEREF);
-			assert(child->expr_type == A1TC_REFERENCE);
-	
-			ne = asn1p_expr_clone(ra, 0);
-			if(ne == NULL) return -1;
-			assert(ne->Identifier == 0);
-			ne->Identifier = strdup(child->Identifier);
-			if(ne->Identifier == 0) {
-				asn1p_expr_free(ne);
-				return -1;
-			}
-			SUBSTITUTE(child, ne);
+		if(ac->reference) {
+			ac = asn1f_lookup_symbol(arg,
+				ac->module, ac->rhs_pspecs, ac->reference);
+			if(!ac) break;
 		}
+		if(bc->reference) {
+			bc = asn1f_lookup_symbol(arg,
+				bc->module, bc->rhs_pspecs, bc->reference);
+			if(!bc) break;
+		}
+	  goto retry;
 	}
+
+	if(ac || bc)
+		/* Specializations do not match: different size option sets */
+		return -1;
 
 	return 0;
 }
 
-/*
- * Check that the given ref looks like an argument of a parametrized type.
- */
 static asn1p_expr_t *
-_referenced_argument(asn1p_ref_t *ref, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
-	asn1p_expr_t *aa;
-	int i;
+resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
+	resolver_arg_t *rarg = resolver_arg;
+	arg_t *arg = rarg->arg;
+	asn1p_expr_t *expr;
+	asn1p_expr_t *nex;
 
-	if(ref == NULL || ref->comp_count != 1)
+	DEBUG("Resolving %s (meta %d)",
+		expr_to_resolve->Identifier, expr_to_resolve->meta_type);
+
+	if(expr_to_resolve->meta_type == AMT_TYPEREF) {
+		expr = find_target_specialization_byref(rarg,
+				expr_to_resolve->reference);
+		if(!expr) return NULL;
+	} else if(expr_to_resolve->meta_type == AMT_VALUE) {
+		assert(expr_to_resolve->value);
+		expr = find_target_specialization_bystr(rarg,
+				expr_to_resolve->Identifier);
+		if(!expr) return NULL;
+	} else {
+		errno = ESRCH;
 		return NULL;
+	}
 
-	aa = TQ_FIRST(&(actargs->members));
-	for(i = 0; i < ptype->params->params_count;
-				i++, aa = TQ_NEXT(aa, next)) {
-		if(strcmp(ref->components[0].name,
-			ptype->params->params[i].argument) == 0)
-			return aa;
+	DEBUG("Found target %s", expr->Identifier);
+	if(expr->meta_type == AMT_TYPE
+	|| expr->meta_type == AMT_VALUE) {
+		DEBUG("Target is a simple type %s",
+			ASN_EXPR_TYPE2STR(expr->expr_type));
+		nex = asn1p_expr_clone(expr, 0);
+		free(nex->Identifier);
+		nex->Identifier = expr_to_resolve->Identifier
+			? strdup(expr_to_resolve->Identifier) : 0;
+		return nex;
+	} else {
+		FATAL("Feature not implemented for %s",
+			rarg->original_expr->Identifier);
+		errno = EPERM;
+		return NULL;
 	}
 
 	return NULL;
 }
 
-/*
- * Search for parameters inside constraints.
- */
-static int
-asn1f_param_process_constraints(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
-	asn1p_constraint_t *cts;
-	int ret;
+static asn1p_expr_t *
+find_target_specialization_byref(resolver_arg_t *rarg, asn1p_ref_t *ref) {
+	char *refstr;
 
-	if(!expr->constraints) return 0;
-
-	cts = asn1p_constraint_clone(expr->constraints);
-	assert(cts);
-
-	ret = _process_constraints(arg, cts, ptype, actargs);
-	if(ret == 1) {
-		asn1p_constraint_free(expr->constraints);
-		expr->constraints = cts;
-		ret = 0;
-	} else {
-		asn1p_constraint_free(cts);
+	if(!ref || ref->comp_count != 1) {
+		errno = ESRCH;
+		return NULL;
 	}
 
-	return ret;
+	refstr = ref->components[0].name;	/* T */
+
+	return find_target_specialization_bystr(rarg, refstr);
 }
 
-static int
-_process_constraints(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_t *ptype, asn1p_expr_t *actargs) {
-	asn1p_value_t *values[3];
-	int rvalue = 0;
-	size_t i;
+static asn1p_expr_t *
+find_target_specialization_bystr(resolver_arg_t *rarg, char *refstr) {
+	arg_t *arg = rarg->arg;
+	asn1p_expr_t *target;
+	int i;
 
-	values[0] = ct->value;
-	values[1] = ct->range_start;
-	values[2] = ct->range_stop;
+	target = TQ_FIRST(&rarg->rhs_pspecs->members);
+	for(i = 0; i < rarg->lhs_params->params_count;
+			i++, target = TQ_NEXT(target, next)) {
+		struct asn1p_param_s *param = &rarg->lhs_params->params[i];
+		if(!target) break;
 
-	for(i = 0; i < sizeof(values)/sizeof(values[0]); i++) {
-		asn1p_value_t *v = values[i];
-		asn1p_expr_t *ra;
-		asn1p_ref_t *ref;
-		char *str;
+		if(strcmp(param->argument, refstr))
+			continue;
 
-		if(!v || v->type != ATV_REFERENCED) continue;
-
-		ref = v->value.reference;
-		ra = _referenced_argument(ref, ptype, actargs);
-		if(!ra) continue;
-
-		DEBUG("_process_constraints(%s), ra=%s",
-			asn1f_printable_reference(ref), ra->Identifier);
-
-		if(ra->expr_type == A1TC_PARAMETRIZED) {
-			DEBUG("Double %s", "parametrization");
-		}
-
-		assert(ra->Identifier);
-		str = strdup(ra->Identifier);
-		if(!str) return -1;
-
-		assert(ref->comp_count == 1);
-		ref = asn1p_ref_new(ref->_lineno);
-		if(!ref) { free(str); return -1; }
-
-		if(asn1p_ref_add_component(ref, str, 0)) {
-			free(str);
-			return -1;
-		}
-
-		asn1p_ref_free(v->value.reference);
-		v->value.reference = ref;
-		rvalue = 1;
+		return target;
+	}
+	if(i != rarg->lhs_params->params_count) {
+		FATAL("Parameterization of %s failed: "
+			"parameters number mismatch",
+				rarg->original_expr->Identifier);
+		errno = EPERM;
+		return NULL;
 	}
 
-	/* Process the rest of constraints recursively */
-	for(i = 0; i < ct->el_count; i++) {
-		int ret = _process_constraints(arg, ct->elements[i],
-			ptype, actargs);
-		if(ret == -1)
-			rvalue = -1;
-		else if(ret == 1 && rvalue != -1)
-			rvalue = 1;
-	}
-
-	return rvalue;
+	errno = ESRCH;
+	return NULL;
 }
-

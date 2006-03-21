@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <assert.h>
 
@@ -45,14 +46,20 @@ asn1p_constraint_free(asn1p_constraint_t *ct) {
 
 asn1p_constraint_t *
 asn1p_constraint_clone(asn1p_constraint_t *src) {
+	return asn1p_constraint_clone_with_resolver(src, 0, 0);
+}
+
+asn1p_constraint_t *
+asn1p_constraint_clone_with_resolver(asn1p_constraint_t *src,
+		asn1p_value_t *(*vr)(asn1p_value_t *, void *varg), void *varg) {
 	asn1p_constraint_t *clone;
 
-#define	CLONE(field, func)	do { if(src->field) {		\
-			clone->field = func(src->field);	\
-			if(clone->field == NULL) {		\
-				asn1p_constraint_free(clone);	\
-				return NULL;			\
-			}					\
+#define	CLONE(field, func)	do { if(src->field) {			\
+			clone->field = func(src->field, vr, varg);	\
+			if(clone->field == NULL) {			\
+				asn1p_constraint_free(clone);		\
+				return NULL;				\
+			}						\
 		} } while(0)
 
 	clone = asn1p_constraint_new(src->_lineno);
@@ -61,14 +68,14 @@ asn1p_constraint_clone(asn1p_constraint_t *src) {
 
 		clone->type = src->type;
 		clone->presence = src->presence;
-		CLONE(containedSubtype,	asn1p_value_clone);
-		CLONE(value,		asn1p_value_clone);
-		CLONE(range_start,	asn1p_value_clone);
-		CLONE(range_stop,	asn1p_value_clone);
+		CLONE(containedSubtype,	asn1p_value_clone_with_resolver);
+		CLONE(value,		asn1p_value_clone_with_resolver);
+		CLONE(range_start,	asn1p_value_clone_with_resolver);
+		CLONE(range_stop,	asn1p_value_clone_with_resolver);
 
 		for(i = 0; i < src->el_count; i++) {
 			asn1p_constraint_t *t;
-			t = asn1p_constraint_clone(src->elements[i]);
+			t = asn1p_constraint_clone_with_resolver(src->elements[i], vr, varg);
 			if(!t) {
 				asn1p_constraint_free(clone);
 				return NULL;
@@ -86,28 +93,51 @@ asn1p_constraint_clone(asn1p_constraint_t *src) {
 	return clone;
 }
 
+/*
+ * Make sure there's enough space to add an element.
+ */
+static int
+asn1p_constraint_make_memory(asn1p_constraint_t *ct) {
+	if(ct->el_count == ct->el_size) {
+		unsigned int newsize = ct->el_size ? ct->el_size << 2 : 4;
+		void *p;
+		p = realloc(ct->elements, newsize * sizeof(ct->elements[0]));
+		if(p) {
+			ct->elements = p;
+			ct->el_size = newsize;
+		} else {
+			return -1;
+		}
+	}
+	return 0;
+}
+
 int
 asn1p_constraint_insert(asn1p_constraint_t *into, asn1p_constraint_t *what) {
 	assert(into);
 	assert(what);
 
-	/*
-	 * Make sure there's enough space to add an element.
-	 */
-	if(into->el_count == into->el_size) {
-		unsigned int newsize = into->el_size?into->el_size<<2:4;
-		void *p;
-		p = realloc(into->elements,
-			newsize * sizeof(into->elements[0]));
-		if(p) {
-			into->elements = p;
-			into->el_size = newsize;
-		} else {
-			return -1;
-		}
-	}
+	if(asn1p_constraint_make_memory(into))
+		return -1;
 
 	into->elements[into->el_count++] = what;
+
+	return 0;
+}
+
+int
+asn1p_constraint_prepend(asn1p_constraint_t *before, asn1p_constraint_t *what) {
+	assert(before);
+	assert(what);
+
+	if(asn1p_constraint_make_memory(before))
+		return -1;
+
+	memmove(&before->elements[1], &before->elements[0],
+		before->el_count * sizeof(before->elements[0]));
+
+	before->elements[0] = what;
+	before->el_count++;
 
 	return 0;
 }

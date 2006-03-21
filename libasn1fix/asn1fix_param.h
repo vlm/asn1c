@@ -1,6 +1,6 @@
-#ifndef	_ASN1FIX_PARAMETRIZATION_H_
-#define	_ASN1FIX_PARAMETRIZATION_H_
+#ifndef	_ASN1FIX_PARAMETERIZATION_H_
+#define	_ASN1FIX_PARAMETERIZATION_H_
 
-int asn1f_fix_parametrized_assignment(arg_t *arg);
+asn1p_expr_t *asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_pspecs);
 
-#endif	/* _ASN1FIX_PARAMETRIZATION_H_ */
+#endif	/* _ASN1FIX_PARAMETERIZATION_H_ */

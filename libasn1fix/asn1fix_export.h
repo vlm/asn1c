@@ -25,7 +25,7 @@ asn1p_expr_t *asn1f_lookup_symbol_ex(
  *  Exportable version of an asn1f_class_access().
  */
 asn1p_expr_t *asn1f_class_access_ex(asn1p_t *asn, asn1p_module_t *mod,
-	asn1p_expr_t *expr, asn1p_ref_t *);
+	asn1p_expr_t *expr, asn1p_expr_t *rhs_rspecs, asn1p_ref_t *);
 
 /*
  * Exportable version of asn1f_find_terminal_type().

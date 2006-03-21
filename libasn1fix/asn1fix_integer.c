@@ -143,7 +143,8 @@ _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type)
 	 * Then, it is a reference. For a reference, try to resolve type
 	 * and try again.
 	 */
-	next_expr = asn1f_lookup_symbol(arg, expr->module, expr->reference);
+	next_expr = asn1f_lookup_symbol(arg, expr->module,
+			expr->rhs_pspecs, expr->reference);
 	if(next_expr == NULL) {
 		errno = ESRCH;
 		return -1;

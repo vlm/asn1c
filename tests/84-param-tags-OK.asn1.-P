@@ -1,50 +1,34 @@
 
-/*** <<< INCLUDES [TestChoice] >>> ***/
+/*** <<< INCLUDES [TestType] >>> ***/
 
 #include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 #include <BOOLEAN.h>
-#include <constr_CHOICE.h>
 
-/*** <<< DEPS [TestChoice] >>> ***/
+/*** <<< TYPE-DECLS [TestType] >>> ***/
 
-typedef enum TestChoice_PR {
-	TestChoice_PR_NOTHING,	/* No components present */
-	TestChoice_PR_type1,
-	TestChoice_PR_type2,
-} TestChoice_PR;
-
-/*** <<< TYPE-DECLS [TestChoice] >>> ***/
-
-typedef struct TestChoice {
-	TestChoice_PR present;
-	union TestChoice_u {
-		struct type1 {
-			long	 common	/* DEFAULT 0 */;
-			
-			/* Context for parsing across buffer boundaries */
-			asn_struct_ctx_t _asn_ctx;
-		} type1;
-		struct type2 {
-			BOOLEAN_t	 common	/* DEFAULT 0 */;
-			
-			/* Context for parsing across buffer boundaries */
-			asn_struct_ctx_t _asn_ctx;
-		} type2;
-	} choice;
+typedef struct TestType_16P0 {
+	long	 common;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} TestChoice_t;
+} TestType_16P0_t;
+typedef struct TestType_16P1 {
+	BOOLEAN_t	 common;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} TestType_16P1_t;
 
-/*** <<< FUNC-DECLS [TestChoice] >>> ***/
+/*** <<< FUNC-DECLS [TestType] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_TestChoice;
+extern asn_TYPE_descriptor_t asn_DEF_TestType_16P0;
+extern asn_TYPE_descriptor_t asn_DEF_TestType_16P1;
 
-/*** <<< CODE [TestChoice] >>> ***/
+/*** <<< CODE [TestType] >>> ***/
 
 static int
-memb_common_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	long value;
 	
@@ -69,50 +53,37 @@ memb_common_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 
-/*** <<< STAT-DEFS [TestChoice] >>> ***/
+/*** <<< STAT-DEFS [TestType] >>> ***/
 
-static int asn_DFL_3_set_0(void **sptr) {
-	long *st = *sptr;
-	
-	if(!st) {
-		st = (*sptr = CALLOC(1, sizeof(*st)));
-		if(!st) return -1;
-	}
-	
-	/* Install default value 0 */
-	*st = 0;
-	return 0;
-}
-static asn_TYPE_member_t asn_MBR_type1_2[] = {
-	{ ATF_NOFLAGS, 1, offsetof(struct type1, common),
+static asn_TYPE_member_t asn_MBR_TestType_16P0_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct TestType_16P0, common),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
-		.memb_constraints = memb_common_constraint_2,
+		.memb_constraints = memb_common_constraint_1,
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
-		.default_value = asn_DFL_3_set_0,	/* DEFAULT 0 */
+		.default_value = 0,
 		.name = "common"
 		},
 };
-static ber_tlv_tag_t asn_DEF_type1_tags_2[] = {
+static ber_tlv_tag_t asn_DEF_TestType_16P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_type1_tag2el_2[] = {
+static asn_TYPE_tag2member_t asn_MAP_TestType_16P0_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* common at 20 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_type1_specs_2 = {
-	sizeof(struct type1),
-	offsetof(struct type1, _asn_ctx),
-	asn_MAP_type1_tag2el_2,
+static asn_SEQUENCE_specifics_t asn_SPC_TestType_16P0_specs_1 = {
+	sizeof(struct TestType_16P0),
+	offsetof(struct TestType_16P0, _asn_ctx),
+	asn_MAP_TestType_16P0_tag2el_1,
 	1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_type1_2 = {
-	"type1",
-	"type1",
+asn_TYPE_descriptor_t asn_DEF_TestType_16P0 = {
+	"TestType",
+	"TestType",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -122,61 +93,47 @@ asn_TYPE_descriptor_t asn_DEF_type1_2 = {
 	SEQUENCE_encode_xer,
 	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_type1_tags_2,
-	sizeof(asn_DEF_type1_tags_2)
-		/sizeof(asn_DEF_type1_tags_2[0]), /* 1 */
-	asn_DEF_type1_tags_2,	/* Same as above */
-	sizeof(asn_DEF_type1_tags_2)
-		/sizeof(asn_DEF_type1_tags_2[0]), /* 1 */
+	asn_DEF_TestType_16P0_tags_1,
+	sizeof(asn_DEF_TestType_16P0_tags_1)
+		/sizeof(asn_DEF_TestType_16P0_tags_1[0]), /* 1 */
+	asn_DEF_TestType_16P0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_TestType_16P0_tags_1)
+		/sizeof(asn_DEF_TestType_16P0_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
-	asn_MBR_type1_2,
+	asn_MBR_TestType_16P0_1,
 	1,	/* Elements count */
-	&asn_SPC_type1_specs_2	/* Additional specs */
+	&asn_SPC_TestType_16P0_specs_1	/* Additional specs */
 };
 
-static int asn_DFL_5_set_0(void **sptr) {
-	BOOLEAN_t *st = *sptr;
-	
-	if(!st) {
-		st = (*sptr = CALLOC(1, sizeof(*st)));
-		if(!st) return -1;
-	}
-	
-	/* Install default value 0 */
-	*st = 0;
-	return 0;
-}
-static asn_TYPE_member_t asn_MBR_type2_4[] = {
-	{ ATF_NOFLAGS, 1, offsetof(struct type2, common),
+static asn_TYPE_member_t asn_MBR_TestType_16P1_3[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct TestType_16P1, common),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
-		.default_value = asn_DFL_5_set_0,	/* DEFAULT 0 */
+		.default_value = 0,
 		.name = "common"
 		},
 };
-static ber_tlv_tag_t asn_DEF_type2_tags_4[] = {
-	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+static ber_tlv_tag_t asn_DEF_TestType_16P1_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_type2_tag2el_4[] = {
+static asn_TYPE_tag2member_t asn_MAP_TestType_16P1_tag2el_3[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 } /* common at 21 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_type2_specs_4 = {
-	sizeof(struct type2),
-	offsetof(struct type2, _asn_ctx),
-	asn_MAP_type2_tag2el_4,
+static asn_SEQUENCE_specifics_t asn_SPC_TestType_16P1_specs_3 = {
+	sizeof(struct TestType_16P1),
+	offsetof(struct TestType_16P1, _asn_ctx),
+	asn_MAP_TestType_16P1_tag2el_3,
 	1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_type2_4 = {
-	"type2",
-	"type2",
+asn_TYPE_descriptor_t asn_DEF_TestType_16P1 = {
+	"TestType",
+	"TestType",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -186,23 +143,56 @@ asn_TYPE_descriptor_t asn_DEF_type2_4 = {
 	SEQUENCE_encode_xer,
 	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_type2_tags_4,
-	sizeof(asn_DEF_type2_tags_4)
-		/sizeof(asn_DEF_type2_tags_4[0]) - 1, /* 1 */
-	asn_DEF_type2_tags_4,	/* Same as above */
-	sizeof(asn_DEF_type2_tags_4)
-		/sizeof(asn_DEF_type2_tags_4[0]), /* 2 */
+	asn_DEF_TestType_16P1_tags_3,
+	sizeof(asn_DEF_TestType_16P1_tags_3)
+		/sizeof(asn_DEF_TestType_16P1_tags_3[0]), /* 1 */
+	asn_DEF_TestType_16P1_tags_3,	/* Same as above */
+	sizeof(asn_DEF_TestType_16P1_tags_3)
+		/sizeof(asn_DEF_TestType_16P1_tags_3[0]), /* 1 */
 	0,	/* No PER visible constraints */
-	asn_MBR_type2_4,
+	asn_MBR_TestType_16P1_3,
 	1,	/* Elements count */
-	&asn_SPC_type2_specs_4	/* Additional specs */
+	&asn_SPC_TestType_16P1_specs_3	/* Additional specs */
 };
+
+
+/*** <<< INCLUDES [TestChoice] >>> ***/
+
+#include <TestType.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [TestChoice] >>> ***/
+
+typedef enum TestChoice_PR {
+	TestChoice_PR_NOTHING,	/* No components present */
+	TestChoice_PR_type1,
+	TestChoice_PR_type2,
+} TestChoice_PR;
+
+/*** <<< TYPE-DECLS [TestChoice] >>> ***/
+
+typedef struct TestChoice {
+	TestChoice_PR present;
+	union TestChoice_u {
+		TestType_16P0_t	 type1;
+		TestType_16P1_t	 type2;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} TestChoice_t;
+
+/*** <<< FUNC-DECLS [TestChoice] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_TestChoice;
+
+/*** <<< STAT-DEFS [TestChoice] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct TestChoice, choice.type1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_type1_2,
+		.type = &asn_DEF_TestType_16P0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
@@ -211,7 +201,7 @@ static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct TestChoice, choice.type2),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_type2_4,
+		.type = &asn_DEF_TestType_16P1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
@@ -219,8 +209,8 @@ static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_TestChoice_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* type1 at 16 */
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* type2 at 16 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* type1 at 20 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* type2 at 21 */
 };
 static asn_CHOICE_specifics_t asn_SPC_TestChoice_specs_1 = {
 	sizeof(struct TestChoice),
@@ -255,52 +245,36 @@ asn_TYPE_descriptor_t asn_DEF_TestChoice = {
 };
 
 
-/*** <<< INCLUDES [AutoChoice] >>> ***/
+/*** <<< INCLUDES [AutoType] >>> ***/
 
 #include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 #include <BOOLEAN.h>
-#include <constr_CHOICE.h>
 
-/*** <<< DEPS [AutoChoice] >>> ***/
+/*** <<< TYPE-DECLS [AutoType] >>> ***/
 
-typedef enum AutoChoice_PR {
-	AutoChoice_PR_NOTHING,	/* No components present */
-	AutoChoice_PR_type1,
-	AutoChoice_PR_type2,
-} AutoChoice_PR;
-
-/*** <<< TYPE-DECLS [AutoChoice] >>> ***/
-
-typedef struct AutoChoice {
-	AutoChoice_PR present;
-	union AutoChoice_u {
-		struct type1 {
-			long	 common;
-			
-			/* Context for parsing across buffer boundaries */
-			asn_struct_ctx_t _asn_ctx;
-		} type1;
-		struct type2 {
-			BOOLEAN_t	 common;
-			
-			/* Context for parsing across buffer boundaries */
-			asn_struct_ctx_t _asn_ctx;
-		} type2;
-	} choice;
+typedef struct AutoType_34P0 {
+	long	 common;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} AutoChoice_t;
+} AutoType_34P0_t;
+typedef struct AutoType_34P1 {
+	BOOLEAN_t	 common;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} AutoType_34P1_t;
 
-/*** <<< FUNC-DECLS [AutoChoice] >>> ***/
+/*** <<< FUNC-DECLS [AutoType] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_AutoChoice;
+extern asn_TYPE_descriptor_t asn_DEF_AutoType_34P0;
+extern asn_TYPE_descriptor_t asn_DEF_AutoType_34P1;
 
-/*** <<< CODE [AutoChoice] >>> ***/
+/*** <<< CODE [AutoType] >>> ***/
 
 static int
-memb_common_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	long value;
 	
@@ -325,7 +299,7 @@ memb_common_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_common_constraint_4(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_common_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	BOOLEAN_t value;
 	
@@ -350,39 +324,37 @@ memb_common_constraint_4(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 
-/*** <<< STAT-DEFS [AutoChoice] >>> ***/
+/*** <<< STAT-DEFS [AutoType] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_type1_2[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct type1, common),
+static asn_TYPE_member_t asn_MBR_AutoType_34P0_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct AutoType_34P0, common),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
-		.memb_constraints = memb_common_constraint_2,
+		.memb_constraints = memb_common_constraint_1,
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "common"
 		},
 };
-static ber_tlv_tag_t asn_DEF_type1_tags_2[] = {
-	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+static ber_tlv_tag_t asn_DEF_AutoType_34P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_type1_tag2el_2[] = {
+static asn_TYPE_tag2member_t asn_MAP_AutoType_34P0_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common at 37 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_type1_specs_2 = {
-	sizeof(struct type1),
-	offsetof(struct type1, _asn_ctx),
-	asn_MAP_type1_tag2el_2,
+static asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P0_specs_1 = {
+	sizeof(struct AutoType_34P0),
+	offsetof(struct AutoType_34P0, _asn_ctx),
+	asn_MAP_AutoType_34P0_tag2el_1,
 	1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_type1_2 = {
-	"type1",
-	"type1",
+asn_TYPE_descriptor_t asn_DEF_AutoType_34P0 = {
+	"AutoType",
+	"AutoType",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -392,49 +364,47 @@ asn_TYPE_descriptor_t asn_DEF_type1_2 = {
 	SEQUENCE_encode_xer,
 	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_type1_tags_2,
-	sizeof(asn_DEF_type1_tags_2)
-		/sizeof(asn_DEF_type1_tags_2[0]) - 1, /* 1 */
-	asn_DEF_type1_tags_2,	/* Same as above */
-	sizeof(asn_DEF_type1_tags_2)
-		/sizeof(asn_DEF_type1_tags_2[0]), /* 2 */
+	asn_DEF_AutoType_34P0_tags_1,
+	sizeof(asn_DEF_AutoType_34P0_tags_1)
+		/sizeof(asn_DEF_AutoType_34P0_tags_1[0]), /* 1 */
+	asn_DEF_AutoType_34P0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_AutoType_34P0_tags_1)
+		/sizeof(asn_DEF_AutoType_34P0_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
-	asn_MBR_type1_2,
+	asn_MBR_AutoType_34P0_1,
 	1,	/* Elements count */
-	&asn_SPC_type1_specs_2	/* Additional specs */
+	&asn_SPC_AutoType_34P0_specs_1	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_type2_4[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct type2, common),
+static asn_TYPE_member_t asn_MBR_AutoType_34P1_3[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct AutoType_34P1, common),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_BOOLEAN,
-		.memb_constraints = memb_common_constraint_4,
+		.memb_constraints = memb_common_constraint_3,
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "common"
 		},
 };
-static ber_tlv_tag_t asn_DEF_type2_tags_4[] = {
-	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+static ber_tlv_tag_t asn_DEF_AutoType_34P1_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_type2_tag2el_4[] = {
+static asn_TYPE_tag2member_t asn_MAP_AutoType_34P1_tag2el_3[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common at 38 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_type2_specs_4 = {
-	sizeof(struct type2),
-	offsetof(struct type2, _asn_ctx),
-	asn_MAP_type2_tag2el_4,
+static asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P1_specs_3 = {
+	sizeof(struct AutoType_34P1),
+	offsetof(struct AutoType_34P1, _asn_ctx),
+	asn_MAP_AutoType_34P1_tag2el_3,
 	1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_type2_4 = {
-	"type2",
-	"type2",
+asn_TYPE_descriptor_t asn_DEF_AutoType_34P1 = {
+	"AutoType",
+	"AutoType",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -444,23 +414,56 @@ asn_TYPE_descriptor_t asn_DEF_type2_4 = {
 	SEQUENCE_encode_xer,
 	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_type2_tags_4,
-	sizeof(asn_DEF_type2_tags_4)
-		/sizeof(asn_DEF_type2_tags_4[0]) - 1, /* 1 */
-	asn_DEF_type2_tags_4,	/* Same as above */
-	sizeof(asn_DEF_type2_tags_4)
-		/sizeof(asn_DEF_type2_tags_4[0]), /* 2 */
+	asn_DEF_AutoType_34P1_tags_3,
+	sizeof(asn_DEF_AutoType_34P1_tags_3)
+		/sizeof(asn_DEF_AutoType_34P1_tags_3[0]), /* 1 */
+	asn_DEF_AutoType_34P1_tags_3,	/* Same as above */
+	sizeof(asn_DEF_AutoType_34P1_tags_3)
+		/sizeof(asn_DEF_AutoType_34P1_tags_3[0]), /* 1 */
 	0,	/* No PER visible constraints */
-	asn_MBR_type2_4,
+	asn_MBR_AutoType_34P1_3,
 	1,	/* Elements count */
-	&asn_SPC_type2_specs_4	/* Additional specs */
+	&asn_SPC_AutoType_34P1_specs_3	/* Additional specs */
 };
+
+
+/*** <<< INCLUDES [AutoChoice] >>> ***/
+
+#include <AutoType.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [AutoChoice] >>> ***/
+
+typedef enum AutoChoice_PR {
+	AutoChoice_PR_NOTHING,	/* No components present */
+	AutoChoice_PR_type1,
+	AutoChoice_PR_type2,
+} AutoChoice_PR;
+
+/*** <<< TYPE-DECLS [AutoChoice] >>> ***/
+
+typedef struct AutoChoice {
+	AutoChoice_PR present;
+	union AutoChoice_u {
+		AutoType_34P0_t	 type1;
+		AutoType_34P1_t	 type2;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} AutoChoice_t;
+
+/*** <<< FUNC-DECLS [AutoChoice] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_AutoChoice;
+
+/*** <<< STAT-DEFS [AutoChoice] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct AutoChoice, choice.type1),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_type1_2,
+		.type = &asn_DEF_AutoType_34P0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
@@ -469,7 +472,7 @@ static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct AutoChoice, choice.type2),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_type2_4,
+		.type = &asn_DEF_AutoType_34P1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
@@ -477,8 +480,8 @@ static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_AutoChoice_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* type1 at 34 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* type2 at 34 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* type1 at 37 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* type2 at 38 */
 };
 static asn_CHOICE_specifics_t asn_SPC_AutoChoice_specs_1 = {
 	sizeof(struct AutoChoice),

@@ -1,5 +1,5 @@
 
-/*** <<< INCLUDES [Certificate] >>> ***/
+/*** <<< INCLUDES [SIGNED] >>> ***/
 
 #include <OBJECT_IDENTIFIER.h>
 #include <BIT_STRING.h>
@@ -7,9 +7,9 @@
 #include <Name.h>
 #include <constr_SEQUENCE.h>
 
-/*** <<< TYPE-DECLS [Certificate] >>> ***/
+/*** <<< TYPE-DECLS [SIGNED] >>> ***/
 
-typedef struct Certificate {
+typedef struct SIGNED_15P0 {
 	struct toBeSigned {
 		INTEGER_t	 version;
 		OBJECT_IDENTIFIER_t	 signature;
@@ -23,13 +23,13 @@ typedef struct Certificate {
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} Certificate_t;
+} SIGNED_15P0_t;
 
-/*** <<< FUNC-DECLS [Certificate] >>> ***/
+/*** <<< FUNC-DECLS [SIGNED] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Certificate;
+extern asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0;
 
-/*** <<< CODE [Certificate] >>> ***/
+/*** <<< CODE [SIGNED] >>> ***/
 
 static int
 memb_signature_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
@@ -63,7 +63,7 @@ memb_signature_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 
-/*** <<< STAT-DEFS [Certificate] >>> ***/
+/*** <<< STAT-DEFS [SIGNED] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, version),
@@ -136,8 +136,8 @@ asn_TYPE_descriptor_t asn_DEF_toBeSigned_2 = {
 	&asn_SPC_toBeSigned_specs_2	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Certificate_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, toBeSigned),
+static asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SIGNED_15P0, toBeSigned),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_toBeSigned_2,
@@ -146,7 +146,7 @@ static asn_TYPE_member_t asn_MBR_Certificate_1[] = {
 		.default_value = 0,
 		.name = "toBeSigned"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, algorithm),
+	{ ATF_NOFLAGS, 0, offsetof(struct SIGNED_15P0, algorithm),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
@@ -155,7 +155,7 @@ static asn_TYPE_member_t asn_MBR_Certificate_1[] = {
 		.default_value = 0,
 		.name = "algorithm"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct Certificate, signature),
+	{ ATF_NOFLAGS, 0, offsetof(struct SIGNED_15P0, signature),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
@@ -165,26 +165,26 @@ static asn_TYPE_member_t asn_MBR_Certificate_1[] = {
 		.name = "signature"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Certificate_tags_1[] = {
+static ber_tlv_tag_t asn_DEF_SIGNED_15P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Certificate_tag2el_1[] = {
+static asn_TYPE_tag2member_t asn_MAP_SIGNED_15P0_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 2, 0, 0 }, /* signature at 17 */
     { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 1, 0, 0 }, /* algorithm at 16 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* toBeSigned at 21 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Certificate_specs_1 = {
-	sizeof(struct Certificate),
-	offsetof(struct Certificate, _asn_ctx),
-	asn_MAP_Certificate_tag2el_1,
+static asn_SEQUENCE_specifics_t asn_SPC_SIGNED_15P0_specs_1 = {
+	sizeof(struct SIGNED_15P0),
+	offsetof(struct SIGNED_15P0, _asn_ctx),
+	asn_MAP_SIGNED_15P0_tag2el_1,
 	3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-asn_TYPE_descriptor_t asn_DEF_Certificate = {
-	"Certificate",
-	"Certificate",
+asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0 = {
+	"SIGNED",
+	"SIGNED",
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_constraint,
@@ -194,6 +194,130 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 	SEQUENCE_encode_xer,
 	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_SIGNED_15P0_tags_1,
+	sizeof(asn_DEF_SIGNED_15P0_tags_1)
+		/sizeof(asn_DEF_SIGNED_15P0_tags_1[0]), /* 1 */
+	asn_DEF_SIGNED_15P0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_SIGNED_15P0_tags_1)
+		/sizeof(asn_DEF_SIGNED_15P0_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_SIGNED_15P0_1,
+	3,	/* Elements count */
+	&asn_SPC_SIGNED_15P0_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Certificate] >>> ***/
+
+#include <SIGNED.h>
+
+/*** <<< TYPE-DECLS [Certificate] >>> ***/
+
+typedef SIGNED_15P0_t	 Certificate_t;
+
+/*** <<< FUNC-DECLS [Certificate] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Certificate;
+asn_struct_free_f Certificate_free;
+asn_struct_print_f Certificate_print;
+asn_constr_check_f Certificate_constraint;
+ber_type_decoder_f Certificate_decode_ber;
+der_type_encoder_f Certificate_encode_der;
+xer_type_decoder_f Certificate_decode_xer;
+xer_type_encoder_f Certificate_encode_xer;
+
+/*** <<< CODE [Certificate] >>> ***/
+
+int
+Certificate_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_SIGNED_15P0.check_constraints;
+	return td->check_constraints(td, sptr, app_errlog, app_key);
+}
+
+/*
+ * This type is implemented using SIGNED_15P0,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Certificate_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_SIGNED_15P0.free_struct;
+	td->print_struct   = asn_DEF_SIGNED_15P0.print_struct;
+	td->ber_decoder    = asn_DEF_SIGNED_15P0.ber_decoder;
+	td->der_encoder    = asn_DEF_SIGNED_15P0.der_encoder;
+	td->xer_decoder    = asn_DEF_SIGNED_15P0.xer_decoder;
+	td->xer_encoder    = asn_DEF_SIGNED_15P0.xer_encoder;
+	td->uper_decoder   = asn_DEF_SIGNED_15P0.uper_decoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_SIGNED_15P0.per_constraints;
+	td->elements       = asn_DEF_SIGNED_15P0.elements;
+	td->elements_count = asn_DEF_SIGNED_15P0.elements_count;
+	td->specifics      = asn_DEF_SIGNED_15P0.specifics;
+}
+
+void
+Certificate_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Certificate_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Certificate_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Certificate_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Certificate_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Certificate_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Certificate_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Certificate_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Certificate_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Certificate_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Certificate_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Certificate_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Certificate] >>> ***/
+
+static ber_tlv_tag_t asn_DEF_Certificate_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Certificate = {
+	"Certificate",
+	"Certificate",
+	Certificate_free,
+	Certificate_print,
+	Certificate_constraint,
+	Certificate_decode_ber,
+	Certificate_encode_der,
+	Certificate_decode_xer,
+	Certificate_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Certificate_tags_1,
 	sizeof(asn_DEF_Certificate_tags_1)
 		/sizeof(asn_DEF_Certificate_tags_1[0]), /* 1 */
@@ -201,9 +325,8 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 	sizeof(asn_DEF_Certificate_tags_1)
 		/sizeof(asn_DEF_Certificate_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
-	asn_MBR_Certificate_1,
-	3,	/* Elements count */
-	&asn_SPC_Certificate_specs_1	/* Additional specs */
+	0, 0,	/* Defined elsewhere */
+	0	/* No specifics */
 };
 
 

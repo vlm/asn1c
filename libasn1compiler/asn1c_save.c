@@ -215,7 +215,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int argc, int optc, char **a
 	generate_preamble(arg, fp_c, argc, optc, argv);
 	generate_preamble(arg, fp_h, argc, optc, argv);
 
-	header_id = asn1c_make_identifier(0, expr->Identifier, NULL);
+	header_id = asn1c_make_identifier(0, expr, NULL);
 	fprintf(fp_h,
 		"#ifndef\t_%s_H_\n"
 		"#define\t_%s_H_\n"
@@ -477,8 +477,7 @@ generate_pdu_collection_file(arg_t *arg) {
 				continue;
 			fprintf(fp, "extern struct asn_TYPE_descriptor_s "
 				"asn_DEF_%s;\n",
-				asn1c_make_identifier(0, arg->expr->Identifier,
-					NULL));
+				asn1c_make_identifier(0, arg->expr, NULL));
 		}
 	}
 
@@ -496,8 +495,7 @@ generate_pdu_collection_file(arg_t *arg) {
 				arg->expr->module->ModuleName,
 				arg->expr->module->source_file_name);
 			fprintf(fp, "\t&asn_DEF_%s,\t\n",
-				asn1c_make_identifier(0, arg->expr->Identifier,
-					NULL));
+				asn1c_make_identifier(0, arg->expr, NULL));
 		}
 	}
 

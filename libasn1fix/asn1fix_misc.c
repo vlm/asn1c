@@ -196,6 +196,17 @@ asn1f_recurse_expr(arg_t *arg, int (*callback)(arg_t *arg)) {
 
 	assert(expr);
 
+	if(expr->lhs_params && expr->spec_index == -1) {
+		int i;
+		for(i = 0; i < expr->specializations.pspecs_count; i++) {
+			arg->expr = expr->specializations.pspec[i].my_clone;
+			ret = asn1f_recurse_expr(arg, callback);
+			RET2RVAL(ret, rvalue);
+		}
+		arg->expr = expr;       /* revert */
+		return rvalue;
+	}
+
 	/*
 	 * Invoke the callback at this very level.
 	 */

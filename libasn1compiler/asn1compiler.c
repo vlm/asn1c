@@ -43,7 +43,7 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 
 			ret = asn1c_compile_expr(arg);
 			if(ret) {
-				FATAL("Cannot compile %s (%x:%x) at line %d",
+				FATAL("Cannot compile \"%s\" (%x:%x) at line %d",
 					arg->expr->Identifier,
 					arg->expr->expr_type,
 					arg->expr->meta_type,
@@ -82,10 +82,26 @@ asn1c_compile_expr(arg_t *arg) {
 			expr->Identifier,
 			expr->_lineno);
 
-		ret = type_cb(arg);
-
-		if(arg->target->destination[OT_TYPE_DECLS].indent_level == 0)
-			OUT(";\n");
+		if(expr->lhs_params && expr->spec_index == -1) {
+			int i;
+			ret = 0;
+			DEBUG("Parameterized type %s at line %d: %s (%d)",
+				expr->Identifier, expr->_lineno,
+				expr->specializations.pspecs_count
+				? "compiling" : "unused, skipping");
+			for(i = 0; i<expr->specializations.pspecs_count; i++) {
+				arg->expr = expr->specializations
+						.pspec[i].my_clone;
+				ret = asn1c_compile_expr(arg);
+				if(ret) break;
+			}
+			arg->expr = expr;	/* Restore */
+		} else {
+			ret = type_cb(arg);
+			if(arg->target->destination[OT_TYPE_DECLS]
+					.indent_level == 0)
+				OUT(";\n");
+		}
 	} else {
 		ret = -1;
 		/*
@@ -94,7 +110,6 @@ asn1c_compile_expr(arg_t *arg) {
 		 * certain expressions need not to be compiled at all.
 		 */
 		switch(expr->meta_type) {
-		case AMT_PARAMTYPE:
 		case AMT_OBJECT:
 		case AMT_OBJECTCLASS:
 		case AMT_OBJECTFIELD:
