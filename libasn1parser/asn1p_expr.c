@@ -176,16 +176,31 @@ value_resolver(asn1p_value_t *value, void *rarg) {
 	if(!target)
 		return NULL;	/* errno's are compatible */
 
-	if(!target->value) {
-		fprintf(stderr,
-		"FATAL: Parameterization did not resolve value reference "
-		"at line %d", ref->_lineno);
-		asn1p_expr_free(target);
+	if(target->meta_type == AMT_VALUE) {
+		if(!target->value) {
+			fprintf(stderr,
+			"FATAL: Parameterization did not resolve "
+			"value reference at line %d\n", ref->_lineno);
+			asn1p_expr_free(target);
+			errno = EPERM;
+			return NULL;
+		}
+		cval = asn1p_value_clone(target->value);
+	} else if(target->meta_type == AMT_VALUESET) {
+		if(!target->constraints) {
+			fprintf(stderr,
+			"FATAL: Parameterization did not resolve "
+			"value set reference at line %d\n", ref->_lineno);
+			asn1p_expr_free(target);
+			errno = EPERM;
+			return NULL;
+		}
+		cval = asn1p_value_fromconstr(target->constraints, 1);
+	} else {
 		errno = EPERM;
-		return NULL;
+		cval = NULL;
 	}
 
-	cval = asn1p_value_clone(target->value);
 	asn1p_expr_free(target);
 	return cval;
 }

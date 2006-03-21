@@ -160,6 +160,8 @@ asn1f_printable_value(asn1p_value_t *v) {
 			assert(reflen == (size_t)(ptr - managedptr));
 			return managedptr;
 		}
+	case ATV_VALUESET:
+		return "<ValueSet>";
 	case ATV_CHOICE_IDENTIFIER:
 		{
 			char *cid = v->value.choice_identifier.identifier;

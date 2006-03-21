@@ -272,8 +272,8 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<tv_str>		optIdentifier
 %type	<a_parg>		ParameterArgumentName
 %type	<a_plist>		ParameterArgumentList
-%type	<a_expr>		Specialization
-%type	<a_expr>		Specializations
+%type	<a_expr>		ActualParameter
+%type	<a_expr>		ActualParameterList
 %type	<a_aid>			AssignedIdentifier	/* OID/DefinedValue */
 %type	<a_oid>			ObjectIdentifier	/* OID */
 %type	<a_oid>			optObjectIdentifier	/* Optional OID */
@@ -747,9 +747,9 @@ DefinedType:
 		$$->meta_type = AMT_TYPEREF;
 	}
 	/*
-	 * A parametrized assignment.
+	 * A parameterized assignment.
 	 */
-	| ComplexTypeReference '{' Specializations '}' {
+	| ComplexTypeReference '{' ActualParameterList '}' {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->reference = $1;
@@ -782,7 +782,7 @@ DataTypeReference:
 		assert($$->meta_type == AMT_OBJECTCLASS);
 	}
 	/*
-	 * Parametrized <Type> declaration:
+	 * Parameterized <Type> declaration:
 	 * === EXAMPLE ===
 	 *   SIGNED { ToBeSigned } ::= SEQUENCE {
 	 *      toBeSigned  ToBeSigned,
@@ -793,7 +793,12 @@ DataTypeReference:
 	 */
 	| TypeRefName '{' ParameterArgumentList '}' TOK_PPEQ Type {
 		$$ = $6;
-		assert($$->Identifier == 0);
+		$$->Identifier = $1;
+		$$->lhs_params = $3;
+	}
+	/* Parameterized CLASS declaration */
+	| TypeRefName '{' ParameterArgumentList '}' TOK_PPEQ ObjectClass {
+		$$ = $6;
 		$$->Identifier = $1;
 		$$->lhs_params = $3;
 	}
@@ -846,21 +851,29 @@ ParameterArgumentName:
 		checkmem(ret == 0);
 		$$.argument = $3;
 	}
+	| BasicTypeId ':' TypeRefName {
+		int ret;
+		$$.governor = asn1p_ref_new(yylineno);
+		ret = asn1p_ref_add_component($$.governor,
+			ASN_EXPR_TYPE2STR($1), 1);
+		checkmem(ret == 0);
+		$$.argument = $3;
+	}
 	;
 
-Specializations:
-	Specialization {
+ActualParameterList:
+	ActualParameter {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		asn1p_expr_add($$, $1);
 	}
-	| Specializations ',' Specialization {
+	| ActualParameterList ',' ActualParameter {
 		$$ = $1;
 		asn1p_expr_add($$, $3);
 	}
 	;
 
-Specialization:
+ActualParameter:
 	Type {
 		$$ = $1;
 	}
@@ -883,10 +896,16 @@ Specialization:
 		asn1p_ref_add_component(ref, $1, RLT_lowercase);
 		$$->value = asn1p_value_fromref(ref, 0);
 	}
+	| ValueSet {
+		$$ = asn1p_expr_new(yylineno);
+		$$->expr_type = A1TC_VALUESET;
+		$$->meta_type = AMT_VALUESET;
+		$$->constraints = $1;
+	}
 	;
 
 /*
-	| '{' Specialization '}' {
+	| '{' ActualParameter '}' {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		asn1p_expr_add($$, $2);
@@ -1255,7 +1274,6 @@ TypeDeclarationSet:
 		$$->expr_type = ASN_TYPE_ANY;
 		$$->meta_type = AMT_TYPE;
 	}
-
 	| TOK_INSTANCE TOK_OF ComplexTypeReference {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
@@ -1674,7 +1692,11 @@ SetOfConstraints:
 	;
 
 ElementSetSpecs:
-	ElementSetSpec {
+	TOK_ThreeDots  {
+		$$ = asn1p_constraint_new(yylineno);
+		$$->type = ACT_EL_EXT;
+	}
+	| ElementSetSpec {
 		$$ = $1;
 	}
 	| ElementSetSpec ',' TOK_ThreeDots {

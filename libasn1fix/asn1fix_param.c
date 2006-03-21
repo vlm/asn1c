@@ -133,9 +133,11 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 		return NULL;
 	}
 
-	DEBUG("Found target %s", expr->Identifier);
+	DEBUG("Found target %s (%d/%x)",
+		expr->Identifier, expr->meta_type, expr->expr_type);
 	if(expr->meta_type == AMT_TYPE
-	|| expr->meta_type == AMT_VALUE) {
+	|| expr->meta_type == AMT_VALUE
+	|| expr->meta_type == AMT_VALUESET) {
 		DEBUG("Target is a simple type %s",
 			ASN_EXPR_TYPE2STR(expr->expr_type));
 		nex = asn1p_expr_clone(expr, 0);
@@ -144,8 +146,10 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 			? strdup(expr_to_resolve->Identifier) : 0;
 		return nex;
 	} else {
-		FATAL("Feature not implemented for %s",
-			rarg->original_expr->Identifier);
+		FATAL("Feature not implemented for %s (%d/%x), "
+			"please contact the asn1c author",
+			rarg->original_expr->Identifier,
+			expr->meta_type, expr->expr_type);
 		errno = EPERM;
 		return NULL;
 	}
