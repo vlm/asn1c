@@ -259,6 +259,8 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 		}
 	case ATV_REFERENCED:
 		return asn1print_ref(val->value.reference, flags);
+	case ATV_VALUESET:
+		return asn1print_constraint(val->value.constraint, flags);
 	case ATV_CHOICE_IDENTIFIER:
 		printf("%s: ", val->value.choice_identifier.identifier);
 		return asn1print_value(val->value.choice_identifier.value, flags);
@@ -280,7 +282,7 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 
 	switch(ct->type) {
 	case ACT_EL_TYPE:
-		asn1print_value(ct->value, flags);
+		asn1print_value(ct->containedSubtype, flags);
 		break;
 	case ACT_EL_VALUE:
 		asn1print_value(ct->value, flags);
@@ -583,6 +585,8 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		}
 		printf(" OF");
 		break;
+	case A1TC_VALUESET:
+		break;
 	default:
 		{
 			char *p = ASN_EXPR_TYPE2STR(tc->expr_type);
@@ -599,7 +603,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		asn1print_ref(tc->reference, flags);
 	}
 
-	if(tc->meta_type == AMT_VALUESET)
+	if(tc->meta_type == AMT_VALUESET && level == 0)
 		printf(" ::=");
 
 	/*

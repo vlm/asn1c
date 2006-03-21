@@ -30,6 +30,30 @@ asn1p_value_fromref(asn1p_ref_t *ref, int do_copy) {
 }
 
 asn1p_value_t *
+asn1p_value_fromconstr(asn1p_constraint_t *ct, int do_copy) {
+	if(ct) {
+		asn1p_value_t *v = calloc(1, sizeof *v);
+		if(v) {
+			if(do_copy) {
+				v->value.constraint
+					= asn1p_constraint_clone(ct);
+				if(v->value.constraint == NULL) {
+					free(v);
+					return NULL;
+				}
+			} else {
+				v->value.constraint = ct;
+			}
+			v->type = ATV_VALUESET;
+		}
+		return v;
+	} else {
+		errno = EINVAL;
+		return NULL;
+	}
+}
+
+asn1p_value_t *
 asn1p_value_frombits(uint8_t *bits, int size_in_bits, int do_copy) {
 	if(bits) {
 		asn1p_value_t *v = calloc(1, sizeof *v);
@@ -155,6 +179,13 @@ asn1p_value_clone_with_resolver(asn1p_value_t *v,
 				else if(errno != ESRCH) return NULL;
 			}
 			return asn1p_value_fromref(v->value.reference, 1);
+		case ATV_VALUESET:
+			if(resolver) {
+				clone = resolver(v, rarg);
+				if(clone) return clone;
+				else if(errno != ESRCH) return NULL;
+			}
+			return asn1p_value_fromconstr(v->value.constraint, 1);
 		case ATV_CHOICE_IDENTIFIER: {
 			char *id = v->value.choice_identifier.identifier;
 			clone = calloc(1, sizeof(*clone));
@@ -203,6 +234,9 @@ asn1p_value_free(asn1p_value_t *v) {
 			break;
 		case ATV_REFERENCED:
 			asn1p_ref_free(v->value.reference);
+			break;
+		case ATV_VALUESET:
+			asn1p_constraint_free(v->value.constraint);
 			break;
 		case ATV_CHOICE_IDENTIFIER:
 			free(v->value.choice_identifier.identifier);

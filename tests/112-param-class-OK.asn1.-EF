@@ -1,0 +1,17 @@
+ModuleParameterizationClass { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 112 }
+DEFINITIONS ::=
+BEGIN
+
+PCLASS{Type, INTEGER:value, INTEGER:ValueSet} ::= CLASS {
+    &valueField1	 Type,
+    &valueField2	 INTEGER DEFAULT value,
+    &valueField3	 INTEGER (ValueSet),
+    &ValueSetField	 INTEGER DEFAULT {ValueSet}
+} WITH SYNTAX {
+		&valueField1, &valueField2, &valueField3, &ValueSetField }
+
+
+SCLASS ::= PCLASS{ REAL, 111,  {1 | 2 | 3}}
+
+END
