@@ -490,6 +490,9 @@ asn1f_check_duplicate(arg_t *arg) {
 			assert(tmparg.expr->Identifier);
 			assert(arg->expr->Identifier);
 
+			if(arg->expr->spec_index != -1)
+				continue;
+
 			if(tmparg.expr == arg->expr) break;
 
 			if(strcmp(tmparg.expr->Identifier,

@@ -11,8 +11,6 @@ typedef struct asn1p_paramlist_s {
 		/* Translated from */
 		asn1p_ref_t	*governor;
 		char		*argument;
-		/* Translated into */
-		struct asn1p_expr_s	*into_expr;
 	} *params;
 	int params_count;
 	int params_size;

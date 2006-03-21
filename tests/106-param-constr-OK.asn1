@@ -11,10 +11,12 @@ ModuleParametrizationWithConstraints
 	DEFINITIONS ::=
 BEGIN
 
-	Narrow {Type} ::= SEQUENCE {
-		narrower	Type (2..5)
+	Narrow {Type, INTEGER:value} ::= SEQUENCE {
+		narrow1	Type (1..5)	DEFAULT value,
+		narrow2	[0] Type (2..5),
+		narrow3	[1] Type (3..5)	OPTIONAL
 	}
 
-	NarrowInteger ::= Narrow {INTEGER (0..10)}
+	NarrowInteger ::= Narrow {INTEGER (0..10), 3}
 
 END

@@ -250,10 +250,11 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_expr>		ObjectClass
 %type	<a_expr>		Type
 %type	<a_expr>		DataTypeReference	/* Type1 ::= Type2 */
-%type	<a_expr>		DefinedTypeRef
+%type	<a_expr>		DefinedType
 %type	<a_expr>		ValueSetDefinition  /* Val INTEGER ::= {1|2} */
 %type	<a_expr>		ValueDefinition		/* val INTEGER ::= 1*/
 %type	<a_value>		Value
+%type	<a_value>		SimpleValue
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
 %type	<a_expr>		optComponentTypeLists
@@ -712,7 +713,7 @@ ExportsElement:
 
 
 ValueSetDefinition:
-	TypeRefName DefinedTypeRef TOK_PPEQ
+	TypeRefName DefinedType TOK_PPEQ
 		'{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
 		$$ = $2;
 		assert($$->Identifier == 0);
@@ -722,19 +723,37 @@ ValueSetDefinition:
 	}
 	;
 
-DefinedTypeRef:
-	ComplexTypeReference {
+DefinedType:
+	BasicType {
+		$$ = $1;
+	}
+	/*
+	 * A DefinedType reference.
+	 * "CLASS1.&id.&id2"
+	 * or
+	 * "Module.Type"
+	 * or
+	 * "Module.identifier"
+	 * or
+	 * "Type"
+	 */
+	| ComplexTypeReference {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
 		$$->reference = $1;
 		$$->expr_type = A1TC_REFERENCE;
 		$$->meta_type = AMT_TYPEREF;
 	}
-	| BasicTypeId {
+	/*
+	 * A parametrized assignment.
+	 */
+	| ComplexTypeReference '{' Specializations '}' {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
-		$$->expr_type = $1;
-		$$->meta_type = AMT_TYPE;
+		$$->reference = $1;
+		$$->rhs_pspecs = $3;
+		$$->expr_type = A1TC_REFERENCE;
+		$$->meta_type = AMT_TYPEREF;
 	}
 	;
 
@@ -842,6 +861,14 @@ Specializations:
 Specialization:
 	Type {
 		$$ = $1;
+	}
+	| SimpleValue {
+		$$ = asn1p_expr_new(yylineno);
+		checkmem($$);
+		$$->Identifier = "?";
+		$$->expr_type = A1TC_REFERENCE;
+		$$->meta_type = AMT_VALUE;
+		$$->value = $1;
 	}
 	| Identifier {
 		asn1p_ref_t *ref;
@@ -1168,7 +1195,7 @@ TypeDeclaration:
 	;
 
 TypeDeclarationSet:
-	BasicType {
+	DefinedType {
 		$$ = $1;
 	}
 	| TOK_CHOICE '{' AlternativeTypeLists '}' {
@@ -1226,34 +1253,7 @@ TypeDeclarationSet:
 		$$->expr_type = ASN_TYPE_ANY;
 		$$->meta_type = AMT_TYPE;
 	}
-	/*
-	 * A DefinedType reference.
-	 * "CLASS1.&id.&id2"
-	 * or
-	 * "Module.Type"
-	 * or
-	 * "Module.identifier"
-	 * or
-	 * "Type"
-	 */
-	| ComplexTypeReference {
-		$$ = asn1p_expr_new(yylineno);
-		checkmem($$);
-		$$->reference = $1;
-		$$->expr_type = A1TC_REFERENCE;
-		$$->meta_type = AMT_TYPEREF;
-	}
-	/*
-	 * A parametrized assignment.
-	 */
-	| ComplexTypeReference '{' Specializations '}' {
-		$$ = asn1p_expr_new(yylineno);
-		checkmem($$);
-		$$->reference = $1;
-		$$->rhs_pspecs = $3;
-		$$->expr_type = A1TC_REFERENCE;
-		$$->meta_type = AMT_TYPEREF;
-	}
+
 	| TOK_INSTANCE TOK_OF ComplexTypeReference {
 		$$ = asn1p_expr_new(yylineno);
 		checkmem($$);
@@ -1407,7 +1407,7 @@ DefinedObjectClass:
  * === EOF ===
  */
 ValueDefinition:
-	Identifier DefinedTypeRef TOK_PPEQ Value {
+	Identifier DefinedType TOK_PPEQ Value {
 		$$ = $2;
 		assert($$->Identifier == NULL);
 		$$->Identifier = $1;
@@ -1417,7 +1417,9 @@ ValueDefinition:
 	;
 
 Value:
-	Identifier ':' Value {
+	SimpleValue
+	| DefinedValue
+	| Identifier ':' Value {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
 		$$->type = ATV_CHOICE_IDENTIFIER;
@@ -1434,7 +1436,10 @@ Value:
 		checkmem($$);
 		$$->type = ATV_NULL;
 	}
-	| TOK_FALSE {
+	;
+
+SimpleValue:
+	TOK_FALSE {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
 		$$->type = ATV_FALSE;
@@ -1456,9 +1461,6 @@ Value:
 		$$ = $$;
 	}
 	| SignedNumber {
-		$$ = $1;
-	}
-	| DefinedValue {
 		$$ = $1;
 	}
 	;

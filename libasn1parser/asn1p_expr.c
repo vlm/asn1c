@@ -75,8 +75,22 @@ asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*r
 				} else {
 					clone->constraints = tmpct;
 				}
+				assert(expr->combined_constraints == 0);
 			}
-			assert(expr->combined_constraints == 0);
+			/* Merge defaults */
+			CLCOPY(marker.flags);
+			CLVRCLONE(marker.default_value,
+				asn1p_value_clone_with_resolver);
+			if(clone->tag.tag_class == TC_NOCLASS) {
+				CLCOPY(tag);
+			} else if(expr->tag.tag_class != TC_NOCLASS) {
+				fprintf(stderr, "asn1c does not support "
+					"nested tagging in parameterization, "
+					"necessary at line %d\n",
+					expr->_lineno);
+				asn1p_expr_free(clone);
+				return NULL;
+			}
 			return clone;
 		} else if(errno != ESRCH) {
 			return NULL;	/* Hard error */
@@ -107,7 +121,7 @@ asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*r
 	CLVRCLONE(combined_constraints, asn1p_constraint_clone_with_resolver);
 	CLCLONE(lhs_params, asn1p_paramlist_clone);
 	CLVRCLONE(value, asn1p_value_clone_with_resolver);
-	CLCLONE(marker.default_value, asn1p_value_clone);
+	CLVRCLONE(marker.default_value, asn1p_value_clone_with_resolver);
 	CLCLONE(with_syntax, asn1p_wsyntx_clone);
 
 	/*
