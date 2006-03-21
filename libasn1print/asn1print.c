@@ -668,6 +668,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		printf("{");
 		TQ_FOR(se, &(tc->rhs_pspecs->members), next) {
 			asn1print_expr(asn, mod, se, flags, level + 1);
+			if(TQ_NEXT(se, next)) printf(", ");
 		}
 		printf("}");
 	}

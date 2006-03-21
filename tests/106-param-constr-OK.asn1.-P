@@ -6,21 +6,48 @@
 
 /*** <<< TYPE-DECLS [Narrow] >>> ***/
 
-typedef struct Narrow_16P0 {
-	long	 narrower;
+typedef struct Narrow_15P0 {
+	long	*narrow1	/* DEFAULT 3 */;
+	long	 narrow2;
+	long	*narrow3	/* OPTIONAL */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} Narrow_16P0_t;
+} Narrow_15P0_t;
 
 /*** <<< FUNC-DECLS [Narrow] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Narrow_16P0;
+extern asn_TYPE_descriptor_t asn_DEF_Narrow_15P0;
 
 /*** <<< CODE [Narrow] >>> ***/
 
 static int
-memb_narrower_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_narrow1_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 1 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_narrow2_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	long value;
 	
@@ -44,36 +71,93 @@ memb_narrower_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 }
 
+static int
+memb_narrow3_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 3 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_ERRLOG(app_errlog, app_key,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
 
 /*** <<< STAT-DEFS [Narrow] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Narrow_16P0_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct Narrow_16P0, narrower),
+static int asn_DFL_2_set_3(void **sptr) {
+	long *st = *sptr;
+	
+	if(!st) {
+		st = (*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) return -1;
+	}
+	
+	/* Install default value 3 */
+	*st = 3;
+	return 0;
+}
+static asn_TYPE_member_t asn_MBR_Narrow_15P0_1[] = {
+	{ ATF_POINTER, 1, offsetof(struct Narrow_15P0, narrow1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
-		.memb_constraints = memb_narrower_constraint_1,
+		.memb_constraints = memb_narrow1_constraint_1,
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = asn_DFL_2_set_3,	/* DEFAULT 3 */
+		.name = "narrow1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Narrow_15P0, narrow2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_NativeInteger,
+		.memb_constraints = memb_narrow2_constraint_1,
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
-		.name = "narrower"
+		.name = "narrow2"
+		},
+	{ ATF_POINTER, 1, offsetof(struct Narrow_15P0, narrow3),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_NativeInteger,
+		.memb_constraints = memb_narrow3_constraint_1,
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "narrow3"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Narrow_16P0_tags_1[] = {
+static ber_tlv_tag_t asn_DEF_Narrow_15P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Narrow_16P0_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* narrower at 18 */
+static asn_TYPE_tag2member_t asn_MAP_Narrow_15P0_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* narrow1 at 20 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 }, /* narrow2 at 20 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 2, 0, 0 } /* narrow3 at 20 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Narrow_16P0_specs_1 = {
-	sizeof(struct Narrow_16P0),
-	offsetof(struct Narrow_16P0, _asn_ctx),
-	asn_MAP_Narrow_16P0_tag2el_1,
-	1,	/* Count of tags in the map */
+static asn_SEQUENCE_specifics_t asn_SPC_Narrow_15P0_specs_1 = {
+	sizeof(struct Narrow_15P0),
+	offsetof(struct Narrow_15P0, _asn_ctx),
+	asn_MAP_Narrow_15P0_tag2el_1,
+	3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-asn_TYPE_descriptor_t asn_DEF_Narrow_16P0 = {
+asn_TYPE_descriptor_t asn_DEF_Narrow_15P0 = {
 	"Narrow",
 	"Narrow",
 	SEQUENCE_free,
@@ -85,16 +169,16 @@ asn_TYPE_descriptor_t asn_DEF_Narrow_16P0 = {
 	SEQUENCE_encode_xer,
 	0,	/* No PER decoder, -gen-PER to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Narrow_16P0_tags_1,
-	sizeof(asn_DEF_Narrow_16P0_tags_1)
-		/sizeof(asn_DEF_Narrow_16P0_tags_1[0]), /* 1 */
-	asn_DEF_Narrow_16P0_tags_1,	/* Same as above */
-	sizeof(asn_DEF_Narrow_16P0_tags_1)
-		/sizeof(asn_DEF_Narrow_16P0_tags_1[0]), /* 1 */
+	asn_DEF_Narrow_15P0_tags_1,
+	sizeof(asn_DEF_Narrow_15P0_tags_1)
+		/sizeof(asn_DEF_Narrow_15P0_tags_1[0]), /* 1 */
+	asn_DEF_Narrow_15P0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Narrow_15P0_tags_1)
+		/sizeof(asn_DEF_Narrow_15P0_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
-	asn_MBR_Narrow_16P0_1,
-	1,	/* Elements count */
-	&asn_SPC_Narrow_16P0_specs_1	/* Additional specs */
+	asn_MBR_Narrow_15P0_1,
+	3,	/* Elements count */
+	&asn_SPC_Narrow_15P0_specs_1	/* Additional specs */
 };
 
 
@@ -104,7 +188,7 @@ asn_TYPE_descriptor_t asn_DEF_Narrow_16P0 = {
 
 /*** <<< TYPE-DECLS [NarrowInteger] >>> ***/
 
-typedef Narrow_16P0_t	 NarrowInteger_t;
+typedef Narrow_15P0_t	 NarrowInteger_t;
 
 /*** <<< FUNC-DECLS [NarrowInteger] >>> ***/
 
@@ -123,28 +207,28 @@ int
 NarrowInteger_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_consume_bytes_f *app_errlog, void *app_key) {
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_Narrow_16P0.check_constraints;
+	td->check_constraints = asn_DEF_Narrow_15P0.check_constraints;
 	return td->check_constraints(td, sptr, app_errlog, app_key);
 }
 
 /*
- * This type is implemented using Narrow_16P0,
+ * This type is implemented using Narrow_15P0,
  * so here we adjust the DEF accordingly.
  */
 static void
 NarrowInteger_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_Narrow_16P0.free_struct;
-	td->print_struct   = asn_DEF_Narrow_16P0.print_struct;
-	td->ber_decoder    = asn_DEF_Narrow_16P0.ber_decoder;
-	td->der_encoder    = asn_DEF_Narrow_16P0.der_encoder;
-	td->xer_decoder    = asn_DEF_Narrow_16P0.xer_decoder;
-	td->xer_encoder    = asn_DEF_Narrow_16P0.xer_encoder;
-	td->uper_decoder   = asn_DEF_Narrow_16P0.uper_decoder;
+	td->free_struct    = asn_DEF_Narrow_15P0.free_struct;
+	td->print_struct   = asn_DEF_Narrow_15P0.print_struct;
+	td->ber_decoder    = asn_DEF_Narrow_15P0.ber_decoder;
+	td->der_encoder    = asn_DEF_Narrow_15P0.der_encoder;
+	td->xer_decoder    = asn_DEF_Narrow_15P0.xer_decoder;
+	td->xer_encoder    = asn_DEF_Narrow_15P0.xer_encoder;
+	td->uper_decoder   = asn_DEF_Narrow_15P0.uper_decoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_Narrow_16P0.per_constraints;
-	td->elements       = asn_DEF_Narrow_16P0.elements;
-	td->elements_count = asn_DEF_Narrow_16P0.elements_count;
-	td->specifics      = asn_DEF_Narrow_16P0.specifics;
+		td->per_constraints = asn_DEF_Narrow_15P0.per_constraints;
+	td->elements       = asn_DEF_Narrow_15P0.elements;
+	td->elements_count = asn_DEF_Narrow_15P0.elements_count;
+	td->specifics      = asn_DEF_Narrow_15P0.specifics;
 }
 
 void

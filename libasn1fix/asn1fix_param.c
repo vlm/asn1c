@@ -18,11 +18,9 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	resolver_arg_t rarg;	/* resolver argument */
 	asn1p_expr_t *exc;	/* expr clone */
 	asn1p_expr_t *rpc;	/* rhs_pspecs clone */
-	asn1p_expr_t *target;
 	void *p;
 	struct asn1p_pspec_s *pspec;
 	int npspecs;
-	int i;
 
 	assert(rhs_pspecs);
 	assert(expr->lhs_params);
@@ -69,24 +67,6 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	pspec->rhs_pspecs = rpc;
 	pspec->my_clone = exc;
 	exc->spec_index = npspecs;
-
-	/* Update LHS->RHS specialization in target */
-	target = TQ_FIRST(&rpc->members);
-	for(i = 0; i < exc->lhs_params->params_count;
-			i++, target = TQ_NEXT(target, next)) {
-		if(!target) { target = (void *)0xdeadbeef; break; }
-
-		assert(exc->lhs_params->params[i].into_expr == 0);
-		exc->lhs_params->params[i].into_expr = target;
-	}
-	if(target) {
-		asn1p_expr_free(exc);
-		asn1p_expr_free(rpc);
-		FATAL("Parameterization of %s failed: "
-			"parameters number mismatch", expr->Identifier);
-		errno = EPERM;
-		return NULL;
-	}
 
 	DEBUG("Forked new parameterization for %s", expr->Identifier);
 

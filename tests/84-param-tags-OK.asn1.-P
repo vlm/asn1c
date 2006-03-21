@@ -8,13 +8,13 @@
 /*** <<< TYPE-DECLS [TestType] >>> ***/
 
 typedef struct TestType_16P0 {
-	long	 common;
+	long	 common	/* DEFAULT 0 */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } TestType_16P0_t;
 typedef struct TestType_16P1 {
-	BOOLEAN_t	 common;
+	BOOLEAN_t	 common	/* DEFAULT 0 */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -55,14 +55,26 @@ memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [TestType] >>> ***/
 
+static int asn_DFL_2_set_0(void **sptr) {
+	long *st = *sptr;
+	
+	if(!st) {
+		st = (*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) return -1;
+	}
+	
+	/* Install default value 0 */
+	*st = 0;
+	return 0;
+}
 static asn_TYPE_member_t asn_MBR_TestType_16P0_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct TestType_16P0, common),
+	{ ATF_NOFLAGS, 1, offsetof(struct TestType_16P0, common),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = memb_common_constraint_1,
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
-		.default_value = 0,
+		.default_value = asn_DFL_2_set_0,	/* DEFAULT 0 */
 		.name = "common"
 		},
 };
@@ -105,14 +117,26 @@ asn_TYPE_descriptor_t asn_DEF_TestType_16P0 = {
 	&asn_SPC_TestType_16P0_specs_1	/* Additional specs */
 };
 
+static int asn_DFL_4_set_0(void **sptr) {
+	BOOLEAN_t *st = *sptr;
+	
+	if(!st) {
+		st = (*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) return -1;
+	}
+	
+	/* Install default value 0 */
+	*st = 0;
+	return 0;
+}
 static asn_TYPE_member_t asn_MBR_TestType_16P1_3[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct TestType_16P1, common),
+	{ ATF_NOFLAGS, 1, offsetof(struct TestType_16P1, common),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
-		.default_value = 0,
+		.default_value = asn_DFL_4_set_0,	/* DEFAULT 0 */
 		.name = "common"
 		},
 };
