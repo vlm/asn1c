@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -177,7 +178,7 @@ process(const char *fname) {
 	ber_tlv_len_t frame_size = 0;		/* Single frame size */
 
 	if(strcmp(fname, "-")) {
-		fp = fopen(fname, "r");
+		fp = fopen(fname, "rb");
 		if(!fp) {
 			perror(fname);
 			return -1;
