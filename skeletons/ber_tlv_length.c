@@ -160,7 +160,7 @@ der_tlv_length_serialize(ber_tlv_len_t len, void *bufp, size_t size) {
 			break;
 	}
 
-	if(size < required_size)
+	if(size <= required_size)
 		return required_size + 1;
 
 	*buf++ = (uint8_t)(0x80 | required_size);  /* Length of the encoding */
