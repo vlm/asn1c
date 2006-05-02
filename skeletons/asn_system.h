@@ -21,9 +21,10 @@
 
 #ifdef	WIN32
 
+#include <malloc.h>
+#include <stdint.h>
 #define	 snprintf	_snprintf
 #define	 vsnprintf	_vsnprintf
-#define	alloca(size)	_alloca(size)
 
 #ifdef _MSC_VER			/* MSVS.Net */
 #ifndef __cplusplus
@@ -47,6 +48,10 @@ typedef	unsigned int	uint32_t;
 
 #else	/* !WIN32 */
 
+#if defined(__vxworks)
+#include <types/vxTypes.h>
+#else	/* !defined(__vxworks) */
+
 #include <inttypes.h>	/* C99 specifies this file */
 /*
  * 1. Earlier FreeBSD version didn't have <stdint.h>,
@@ -68,6 +73,8 @@ typedef	unsigned int	uint32_t;
 #include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
 #endif	/* defined(sun) */
 #endif
+
+#endif	/* defined(__vxworks) */
 
 #endif	/* WIN32 */
 
