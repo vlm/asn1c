@@ -43,7 +43,7 @@ while(<>) {
 		my $rfcid = '';
 		$rfcid = $1 . '-' if($ARGV =~ /([a-z0-9]+)/i);
 
-		if(/^[ \t]+([A-Z][A-Za-z0-9-]*).*DEFINITIONS.*::=/) {
+		if(/^[ \t]*([A-Z][A-Za-z0-9-]*).*DEFINITIONS.*::=/) {
 			$modName = $1;
 			$currentFname = $rfcid . $modName . ".asn1";
 			$inasn = 1;
