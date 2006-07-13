@@ -101,18 +101,25 @@ main() {
 	ret = ber_fetch_length(0, buf1, sizeof(buf1), &tlv_len);
 	printf("ret=%ld, len=%ld\n", (long)ret, (long)tlv_len);
 	assert(ret == sizeof(buf1));
+	assert(tlv_len == 0x01020304);
 
 	ret = ber_fetch_length(0, buf2, sizeof(buf2), &tlv_len);
 	printf("ret=%ld, len=%ld\n", (long)ret, (long)tlv_len);
 	assert(ret == sizeof(buf2));
+	assert(tlv_len == 0x7fff0304);
 
-	if(sizeof(tlv_len) == 4) {
+	/*
+	 * Here although tlv_len is not greater than 2^31,
+	 * we ought to hit an embedded length exploitation preventive check.
+	 */
+	if(sizeof(tlv_len) <= 4) {
 		ret = ber_fetch_length(0, buf3, sizeof(buf3), &tlv_len);
 		printf("ret=%ld\n", (long)ret);
 		assert(ret == -1);
-	} else if(sizeof(tlv_len) == 8) {
+	}
+	if(sizeof(tlv_len) <= 8) {
 		ret = ber_fetch_length(0, buf4, sizeof(buf4), &tlv_len);
-		printf("ret=%ld\n", (long)ret);
+		printf("ret=%lld\n", (long long)ret);
 		assert(ret == -1);
 	}
 
