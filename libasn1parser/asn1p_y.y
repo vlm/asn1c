@@ -713,7 +713,7 @@ ExportsElement:
 	;
 
 
-ValueSet: '{' ElementSetSpecs '}' { $$ = $2; }
+ValueSet: '{' ElementSetSpecs '}' { $$ = $2; };
 
 ValueSetTypeAssignment:
 	TypeRefName DefinedType TOK_PPEQ ValueSet {
@@ -1894,7 +1894,7 @@ WithComponentsElement:
 		$$ = asn1p_constraint_new(yylineno);
 		checkmem($$);
 		$$->type = ACT_EL_EXT;
-		$$->value = asn1p_value_frombuf("...", 3, 0);
+		$$->value = asn1p_value_frombuf("...", 3, 1);
 	}
 	| Identifier optConstraints optPresenceConstraint {
 		$$ = asn1p_constraint_new(yylineno);
