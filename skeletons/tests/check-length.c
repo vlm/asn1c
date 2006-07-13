@@ -112,9 +112,11 @@ main() {
 	 * Here although tlv_len is not greater than 2^31,
 	 * we ought to hit an embedded length exploitation preventive check.
 	 */
+	printf("sizeof(tlv_len) = %d\n", (int)sizeof(tlv_len));
 	if(sizeof(tlv_len) <= 4) {
 		ret = ber_fetch_length(0, buf3, sizeof(buf3), &tlv_len);
 		printf("ret=%ld\n", (long)ret);
+		printf("len=0x%x\n", (long)tlv_len);
 		assert(ret == -1);
 	}
 	if(sizeof(tlv_len) <= 8) {
