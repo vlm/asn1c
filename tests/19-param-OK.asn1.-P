@@ -38,7 +38,7 @@ memb_signature_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -55,7 +55,7 @@ memb_signature_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -457,7 +457,7 @@ memb_IA5String_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -468,7 +468,7 @@ memb_IA5String_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
