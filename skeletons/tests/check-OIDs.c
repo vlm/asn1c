@@ -121,11 +121,13 @@ check_REGEN(int *arcs, int acount) {
 	int ret;
 	int i;
 
-	fprintf(stderr, "Encoding (R) {");
-	for(i = 0; i < acount; i++) {
-		fprintf(stderr, " %u", arcs[i]);
+	if(0) {
+		fprintf(stderr, "Encoding (R) {");
+		for(i = 0; i < acount; i++) {
+			fprintf(stderr, " %u", arcs[i]);
+		}
+		fprintf(stderr, " }\n");
 	}
-	fprintf(stderr, " }\n");
 
 	ret = RELATIVE_OID_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
 	assert(ret == 0);
@@ -137,12 +139,15 @@ check_REGEN(int *arcs, int acount) {
 	assert(alen <= tmp_alen);
 	assert(alen == acount);
 
-	fprintf(stderr, "Encoded  (R) { ");
-	for(i = 0; i < alen; i++) {
-		fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
-		assert(arcs[i] == (int)tmp_arcs[i]);
+	if(0) {
+		fprintf(stderr, "Encoded  (R) { ");
+		for(i = 0; i < alen; i++) {
+			fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
+			assert(arcs[i] == (int)tmp_arcs[i]);
+		}
+		fprintf(stderr, "}\n");
 	}
-	fprintf(stderr, "}\n");
+
 }
 
 /*
@@ -158,11 +163,13 @@ check_REGEN_OID(int *arcs, int acount) {
 	int ret;
 	int i;
 
-	fprintf(stderr, "Encoding (O) {");
-	for(i = 0; i < acount; i++) {
-		fprintf(stderr, " %u", arcs[i]);
+	if(0) {
+		fprintf(stderr, "Encoding (O) {");
+		for(i = 0; i < acount; i++) {
+			fprintf(stderr, " %u", arcs[i]);
+		}
+		fprintf(stderr, " }\n");
 	}
-	fprintf(stderr, " }\n");
 
 	ret = OBJECT_IDENTIFIER_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
 	assert(ret == 0);
@@ -174,14 +181,15 @@ check_REGEN_OID(int *arcs, int acount) {
 	assert(alen <= tmp_alen);
 	assert(alen == acount);
 
-	fprintf(stderr, "Encoded  (O) { ");
-	for(i = 0; i < alen; i++) {
-		fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
-		assert(arcs[i] == (int)tmp_arcs[i]);
+	if(0) {
+		fprintf(stderr, "Encoded  (O) { ");
+		for(i = 0; i < alen; i++) {
+			fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
+			assert(arcs[i] == (int)tmp_arcs[i]);
+		}
+		fprintf(stderr, "}\n");
 	}
-	fprintf(stderr, "}\n");
 }
-
 static int
 check_speed() {
 	uint8_t buf[] = { 0x80 | 7, 0x80 | 2, 0x80 | 3, 0x80 | 4, 13 };
