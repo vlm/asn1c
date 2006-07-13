@@ -16,7 +16,7 @@
 #pragma message( "  ")
 #pragma message( "  You must fix the code by inserting appropriate locking")
 #pragma message( "  if you want to use asn_GT2time() or asn_UT2time().")
-#pragma message( "PLEASE STOP AND READ! ")
+#pragma message( "PLEASE STOP AND READ!")
 
 static struct tm *localtime_r(const time_t *tloc, struct tm *result) {
 	struct tm *tm;
@@ -38,7 +38,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 
 #endif	/* WIN32 */
 
-#if	defined(sun)
+#if	defined(sun) || defined(_sun_) || defined(__solaris__)
 #define	_EMULATE_TIMEGM
 #endif
 
@@ -62,6 +62,15 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 #define	GMTOFF(tm)	(-timezone)
 #endif	/* HAVE_TM_GMTOFF */
 
+#if	(defined(_EMULATE_TIMEGM) || !defined(HAVE_TM_GMTOFF))
+#warning "PLEASE STOP AND READ!"
+#warning "  timegm() is implemented via getenv(\"TZ\")/setenv(\"TZ\"), which may be not thread-safe."
+#warning "  "
+#warning "  You must fix the code by inserting appropriate locking"
+#warning "  if you want to use asn_GT2time() or asn_UT2time()."
+#warning "PLEASE STOP AND READ!"
+#endif	/* _EMULATE_TIMEGM */
+
 /*
  * Override our GMTOFF decision for other known platforms.
  */
@@ -84,25 +93,40 @@ static long GMTOFF(struct tm a){
 
 #endif	/* __CYGWIN__ */
 
+#define	ATZVARS do {							\
+	char tzoldbuf[64];						\
+	char *tzold
+#define	ATZSAVETZ do {							\
+	tzold = getenv("TZ");						\
+	if(tzold) {							\
+		size_t tzlen = strlen(tzold);				\
+		if(tzlen < sizeof(tzoldbuf))				\
+			tzold = memcpy(tzoldbuf, tzold, tzlen + 1);	\
+		else							\
+			tzold = strdup(tzold);	/* Ignore error */	\
+		setenv("TZ", "UTC", 1);					\
+	}								\
+	tzset();							\
+} while(0)
+#define	ATZOLDTZ do {							\
+	if (tzold) {							\
+		setenv("TZ", tzold, 1);					\
+		*tzoldbuf = 0;						\
+		if(tzold != tzoldbuf)					\
+			free(tzold);					\
+	} else {							\
+		unsetenv("TZ");						\
+	}								\
+	tzset();							\
+} while(0); } while(0);
+
 #ifdef	_EMULATE_TIMEGM
 static time_t timegm(struct tm *tm) {
 	time_t tloc;
-	char *tz;
-	char *buf;
-
-	tz = getenv("TZ");
-	putenv("TZ=UTC");
-	tzset();
+	ATZVARS;
+	ATZSAVETZ;
 	tloc = mktime(tm);
-	if (tz) {
-		int bufsize = strlen(tz) + 4;
-		buf = alloca(bufsize);
-		snprintf(buf, bufsize, "TZ=%s", tz);
-	} else {
-		buf = "TZ=";
-	}
-	putenv(buf);
-	tzset();
+	ATZOLDTZ;
 	return tloc;
 }
 #endif	/* _EMULATE_TIMEGM */
@@ -567,8 +591,8 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value,
 		tm = &tm_s;
 #ifdef	HAVE_TM_GMTOFF
 		assert(!GMTOFF(tm_s));	/* Will fix itself */
-#else
-		gmtoff = 0;		/* Intervention required */
+#else	/* !HAVE_TM_GMTOFF */
+		gmtoff = 0;
 #endif
 	}
 
