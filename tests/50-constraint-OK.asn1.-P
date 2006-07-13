@@ -22,10 +22,10 @@ xer_type_encoder_f Int1_encode_xer;
 
 int
 Int1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_INTEGER.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -145,7 +145,7 @@ xer_type_encoder_f Int2_encode_xer;
 
 int
 Int2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int1_t *st = (const Int1_t *)sptr;
 	long value;
 	
@@ -287,7 +287,7 @@ xer_type_encoder_f Int3_encode_xer;
 
 int
 Int3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int2_t *st = (const Int2_t *)sptr;
 	long value;
 	
@@ -433,7 +433,7 @@ xer_type_encoder_f Int4_encode_xer;
 
 int
 Int4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int3_t *st = (const Int3_t *)sptr;
 	long value;
 	
@@ -579,7 +579,7 @@ xer_type_encoder_f Int5_encode_xer;
 
 int
 Int5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int4_t *st = (const Int4_t *)sptr;
 	long value;
 	
@@ -725,7 +725,7 @@ xer_type_encoder_f ExtensibleExtensions_encode_xer;
 
 int
 ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -871,10 +871,10 @@ xer_type_encoder_f Str1_encode_xer;
 
 int
 Str1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_IA5String.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -1010,7 +1010,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Str2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Str1_t *st = (const Str1_t *)sptr;
 	size_t size;
 	
@@ -1179,7 +1179,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Str3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Str2_t *st = (const Str2_t *)sptr;
 	size_t size;
 	
@@ -1337,7 +1337,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Str4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
@@ -1492,7 +1492,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 PER_Visible_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
@@ -1647,7 +1647,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 PER_Visible_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
@@ -1802,7 +1802,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Not_PER_Visible_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
@@ -1957,7 +1957,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Not_PER_Visible_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
@@ -2112,7 +2112,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Not_PER_Visible_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
@@ -2267,7 +2267,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 SIZE_but_not_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	size_t size;
 	
@@ -2425,7 +2425,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 SIZE_and_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	size_t size;
 	
@@ -2583,7 +2583,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Neither_SIZE_nor_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PER_Visible_t *st = (const PER_Visible_t *)sptr;
 	
 	if(!sptr) {
@@ -2732,7 +2732,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Utf8_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	
 	if(!sptr) {
@@ -2900,7 +2900,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Utf8_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Utf8_2_t *st = (const Utf8_2_t *)sptr;
 	size_t size;
 	
@@ -3048,7 +3048,7 @@ xer_type_encoder_f Utf8_2_encode_xer;
 
 int
 Utf8_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Utf8_1_t *st = (const Utf8_1_t *)sptr;
 	size_t size;
 	
@@ -3195,10 +3195,10 @@ xer_type_encoder_f Utf8_1_encode_xer;
 
 int
 Utf8_1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_UTF8String.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -3346,7 +3346,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 VisibleIdentifier_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Identifier_t *st = (const Identifier_t *)sptr;
 	size_t size;
 	
@@ -3514,10 +3514,10 @@ extern asn_TYPE_descriptor_t asn_DEF_Sequence;
 
 static int
 enum_c_6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -3586,7 +3586,7 @@ enum_c_6_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 static int
 memb_int1_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int1_t *st = (const Int1_t *)sptr;
 	long value;
 	
@@ -3617,7 +3617,7 @@ memb_int1_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 static int
 memb_int4_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int4_t *st = (const Int4_t *)sptr;
 	long value;
 	
@@ -3648,7 +3648,7 @@ memb_int4_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 static int
 memb_int5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int5_t *st = (const Int5_t *)sptr;
 	long value;
 	
@@ -3962,10 +3962,10 @@ xer_type_encoder_f Enum0_encode_xer;
 
 int
 Enum0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -4107,7 +4107,7 @@ xer_type_encoder_f Enum1_encode_xer;
 
 int
 Enum1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -4290,7 +4290,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 
 int
 Identifier_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	size_t size;
 	

@@ -168,6 +168,7 @@ NativeReal_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		const void *buf_ptr, size_t size) {
 	asn_dec_rval_t rval;
 	REAL_t *st = 0;
+	REAL_t **stp = &st;
 	double *Dbl = (double *)*sptr;
 
 	if(!Dbl) {
@@ -180,7 +181,7 @@ NativeReal_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		}
 	}
 
-	rval = REAL_decode_xer(opt_codec_ctx, td, (void **)&st, opt_mname,
+	rval = REAL_decode_xer(opt_codec_ctx, td, (void **)stp, opt_mname,
 		buf_ptr, size);
 	if(rval.code == RC_OK) {
 		if(asn_REAL2double(st, Dbl)) {

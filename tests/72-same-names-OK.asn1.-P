@@ -411,7 +411,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Type2;
 
 static int
 memb_a_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	size_t size;
 	
@@ -442,7 +442,7 @@ memb_a_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
 
 static int
 memb_a_constraint_8(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	size_t size;
 	

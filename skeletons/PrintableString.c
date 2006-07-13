@@ -60,7 +60,7 @@ static int _PrintableString_alphabet[256] = {
 
 int
 PrintableString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_consume_bytes_f *app_errlog, void *app_key) {
+		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 
 	if(st && st->buf) {
@@ -73,7 +73,7 @@ PrintableString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		 */
 		for(; buf < end; buf++) {
 			if(!_PrintableString_alphabet[*buf]) {
-				_ASN_ERRLOG(app_errlog, app_key,
+				_ASN_CTFAIL(app_key, td,
 					"%s: value byte %ld (%d) "
 					"not in PrintableString alphabet "
 					"(%s:%d)",
@@ -85,7 +85,7 @@ PrintableString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			}
 		}
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

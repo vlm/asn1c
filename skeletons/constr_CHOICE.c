@@ -475,12 +475,12 @@ CHOICE_outmost_tag(asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber
 
 int
 CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_consume_bytes_f *app_errlog, void *app_key) {
+		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	int present;
 
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -499,7 +499,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			if(!memb_ptr) {
 				if(elm->optional)
 					return 0;
-				_ASN_ERRLOG(app_errlog, app_key,
+				_ASN_CTFAIL(app_key, td,
 					"%s: mandatory CHOICE element %s absent (%s:%d)",
 					td->name, elm->name, __FILE__, __LINE__);
 				return -1;
@@ -510,10 +510,10 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 		if(elm->memb_constraints) {
 			return elm->memb_constraints(elm->type, memb_ptr,
-				app_errlog, app_key);
+				ctfailcb, app_key);
 		} else {
 			int ret = elm->type->check_constraints(elm->type,
-					memb_ptr, app_errlog, app_key);
+					memb_ptr, ctfailcb, app_key);
 			/*
 			 * Cannot inherit it eralier:
 			 * need to make sure we get the updated version.
@@ -522,7 +522,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			return ret;
 		}
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td,
 			"%s: no CHOICE element given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

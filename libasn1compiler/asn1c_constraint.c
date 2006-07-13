@@ -111,7 +111,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	 */
 	OUT("if(!sptr) {\n");
 		INDENT(+1);
-		OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
+		OUT("_ASN_CTFAIL(app_key, td, sptr,\n");
 		OUT("\t\"%%s: value not given (%%s:%%d)\",\n");
 		OUT("\ttd->name, __FILE__, __LINE__);\n");
 		OUT("return -1;\n");
@@ -177,7 +177,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		case ASN_CONSTR_SEQUENCE_OF:
 		case ASN_CONSTR_SET_OF:
 			OUT("/* Perform validation of the inner elements */\n");
-			OUT("return td->check_constraints(td, sptr, app_errlog, app_key);\n");
+			OUT("return td->check_constraints(td, sptr, ctfailcb, app_key);\n");
 			break;
 		default:
 			OUT("/* Constraint check succeeded */\n");
@@ -186,7 +186,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		INDENT(-1);
 	OUT("} else {\n");
 		INDENT(+1);
-			OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
+			OUT("_ASN_CTFAIL(app_key, td, sptr,\n");
 			OUT("\t\"%%s: constraint failed (%%s:%%d)\",\n");
 			OUT("\ttd->name, __FILE__, __LINE__);\n");
 			OUT("return -1;\n");
@@ -519,7 +519,7 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 	case ASN_STRING_UTF8String:
 		OUT("size = UTF8String_length(st);\n");
 		OUT("if((ssize_t)size < 0) {\n");
-		OUT("\t_ASN_ERRLOG(app_errlog, app_key,\n");
+		OUT("\t_ASN_CTFAIL(app_key, td, sptr,\n");
 		OUT("\t\t\"%%s: UTF-8: broken encoding (%%s:%%d)\",\n");
 		OUT("\t\ttd->name, __FILE__, __LINE__);\n");
 		OUT("\treturn -1;\n");
@@ -581,7 +581,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 
 			OUT("if(asn_INTEGER2long(st, &value)) {\n");
 				INDENT(+1);
-				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
+				OUT("_ASN_CTFAIL(app_key, td, sptr,\n");
 				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
 				OUT("\ttd->name, __FILE__, __LINE__);\n");
 				OUT("return -1;\n");
@@ -595,7 +595,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 		} else {
 			OUT("if(asn_REAL2double(st, &value)) {\n");
 				INDENT(+1);
-				OUT("_ASN_ERRLOG(app_errlog, app_key,\n");
+				OUT("_ASN_CTFAIL(app_key, td, sptr,\n");
 				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
 				OUT("\ttd->name, __FILE__, __LINE__);\n");
 				OUT("return -1;\n");

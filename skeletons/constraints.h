@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_ASN1_CONSTRAINTS_VALIDATOR_H_
@@ -20,6 +20,10 @@ struct asn_TYPE_descriptor_s;		/* Forward declaration */
  * they could be passed as NULL's. If constraints validation fails,
  * errlen will contain the actual number of bytes taken from the errbuf
  * to encode an error message (properly 0-terminated).
+ * 
+ * RETURN VALUES:
+ * This function returns 0 in case all ASN.1 constraints are met
+ * and -1 if one or more constraints were failed.
  */
 int
 asn_check_constraints(struct asn_TYPE_descriptor_s *type_descriptor,
@@ -28,6 +32,7 @@ asn_check_constraints(struct asn_TYPE_descriptor_s *type_descriptor,
 	size_t *errlen		/* Length of the error description */
 	);
 
+
 /*
  * Generic type for constraint checking callback,
  * associated with every type descriptor.
@@ -35,8 +40,8 @@ asn_check_constraints(struct asn_TYPE_descriptor_s *type_descriptor,
 typedef int (asn_constr_check_f)(
 	struct asn_TYPE_descriptor_s *type_descriptor,
 	const void *struct_ptr,
-	asn_app_consume_bytes_f *optional_app_errlog,	/* Log the error */
-	void *optional_app_key		/* Opaque key passed to app_errlog */
+	asn_app_constraint_failed_f *optional_callback,	/* Log the error */
+	void *optional_app_key		/* Opaque key passed to a callback */
 	);
 
 /*******************************
@@ -49,11 +54,7 @@ asn_constr_check_f asn_generic_unknown_constraint; /* Not fully supported */
 /*
  * Invoke the callback with a complete error message.
  */
-/* Preprocessor may not support variable args macros, so act strangely */
-#define	_ASN_ERRLOG	if(app_errlog) _asn_i_log_error
-
-void _asn_i_log_error(asn_app_consume_bytes_f *, void *key,
-	const char *fmt, ...) __attribute__ ((format(printf, 3, 4)));
+#define	_ASN_CTFAIL	if(ctfailcb) ctfailcb
 
 #ifdef __cplusplus
 }

@@ -938,11 +938,11 @@ SET_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 int
 SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_consume_bytes_f *app_errlog, void *app_key) {
+		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	int edx;
 
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -960,7 +960,7 @@ SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			if(!memb_ptr) {
 				if(elm->optional)
 					continue;
-				_ASN_ERRLOG(app_errlog, app_key,
+				_ASN_CTFAIL(app_key, td,
 				"%s: mandatory element %s absent (%s:%d)",
 				td->name, elm->name, __FILE__, __LINE__);
 				return -1;
@@ -971,11 +971,11 @@ SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 		if(elm->memb_constraints) {
 			int ret = elm->memb_constraints(elm->type, memb_ptr,
-				app_errlog, app_key);
+				ctfailcb, app_key);
 			if(ret) return ret;
 		} else {
 			int ret = elm->type->check_constraints(elm->type,
-				memb_ptr, app_errlog, app_key);
+				memb_ptr, ctfailcb, app_key);
 			if(ret) return ret;
 			/*
 			 * Cannot inherit it earlier:
