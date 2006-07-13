@@ -22,10 +22,10 @@ xer_type_encoder_f CN_IntegerUnlimited_encode_xer;
 
 int
 CN_IntegerUnlimited_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -145,7 +145,7 @@ xer_type_encoder_f CN_IntegerMinMax_encode_xer;
 
 int
 CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -161,7 +161,7 @@ CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -281,7 +281,7 @@ xer_type_encoder_f CN_IntegerMinLow_encode_xer;
 
 int
 CN_IntegerMinLow_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -421,7 +421,7 @@ xer_type_encoder_f NO_IntegerMinHigh_encode_xer;
 
 int
 NO_IntegerMinHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -567,7 +567,7 @@ xer_type_encoder_f NO_IntegerLowHigh_encode_xer;
 
 int
 NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -713,7 +713,7 @@ xer_type_encoder_f CN_IntegerLowMax_encode_xer;
 
 int
 CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -853,7 +853,7 @@ xer_type_encoder_f NO_IntegerHighMax_encode_xer;
 
 int
 NO_IntegerHighMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -999,7 +999,7 @@ xer_type_encoder_f NO_IntegerLowestMax_encode_xer;
 
 int
 NO_IntegerLowestMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -1145,7 +1145,7 @@ xer_type_encoder_f NO_IntegerOutRange_encode_xer;
 
 int
 NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -1291,7 +1291,7 @@ xer_type_encoder_f NO_IntegerOutValue_encode_xer;
 
 int
 NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -1437,7 +1437,7 @@ xer_type_encoder_f OK_IntegerInRange1_encode_xer;
 
 int
 OK_IntegerInRange1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -1577,7 +1577,7 @@ xer_type_encoder_f OK_IntegerInRange2_encode_xer;
 
 int
 OK_IntegerInRange2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -1717,7 +1717,7 @@ xer_type_encoder_f OK_IntegerInRange3_encode_xer;
 
 int
 OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -1857,7 +1857,7 @@ xer_type_encoder_f OK_IntegerInRange4_encode_xer;
 
 int
 OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -1997,7 +1997,7 @@ xer_type_encoder_f OK_IntegerInRange5_encode_xer;
 
 int
 OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
 	if(!sptr) {
@@ -2137,7 +2137,7 @@ xer_type_encoder_f NO_IntegerInRange6_encode_xer;
 
 int
 NO_IntegerInRange6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -2290,10 +2290,10 @@ xer_type_encoder_f CN_IntegerEnumerated1_encode_xer;
 
 int
 CN_IntegerEnumerated1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -2420,10 +2420,10 @@ xer_type_encoder_f NO_IntegerEnumerated2_encode_xer;
 
 int
 NO_IntegerEnumerated2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_INTEGER.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*

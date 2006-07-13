@@ -1176,7 +1176,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
 		OUT("_constraint(asn_TYPE_descriptor_t *td, const void *sptr,\n");
 		INDENT(+1);
-		OUT("\t\tasn_app_consume_bytes_f *app_errlog, void *app_key) {");
+		OUT("\t\tasn_app_constraint_failed_f *ctfailcb, void *app_key) {");
 		OUT("\n");
 		if(asn1c_emit_constraint_checking_code(arg) == 1) {
 			OUT("/* Replace with underlying type checker */\n");
@@ -1184,7 +1184,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 				"= asn_DEF_%s.check_constraints;\n",
 				asn1c_type_name(arg, expr, TNF_SAFE));
 			OUT("return td->check_constraints"
-				"(td, sptr, app_errlog, app_key);\n");
+				"(td, sptr, ctfailcb, app_key);\n");
 		}
 		INDENT(-1);
 		OUT("}\n");
@@ -2127,12 +2127,12 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	OUT("static int\n");
 	OUT("memb_%s_constraint_%d(asn_TYPE_descriptor_t *td, const void *sptr,\n", p, arg->expr->_type_unique_index);
 	INDENT(+1);
-	OUT("\t\tasn_app_consume_bytes_f *app_errlog, void *app_key) {\n");
+	OUT("\t\tasn_app_constraint_failed_f *ctfailcb, void *app_key) {\n");
 	tmp_arg = *arg;
 	tmp_arg.expr = expr;
 	if(asn1c_emit_constraint_checking_code(&tmp_arg) == 1) {
 		OUT("return td->check_constraints"
-			"(td, sptr, app_errlog, app_key);\n");
+			"(td, sptr, ctfailcb, app_key);\n");
 	}
 	INDENT(-1);
 	OUT("}\n");

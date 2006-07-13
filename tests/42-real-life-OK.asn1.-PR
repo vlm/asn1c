@@ -41,7 +41,7 @@ extern asn_TYPE_descriptor_t asn_DEF_LogLine;
 
 static int
 memb_varsets_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
 	if(!sptr) {
@@ -215,7 +215,7 @@ extern asn_TYPE_descriptor_t asn_DEF_VariablePartSet;
 
 static int
 memb_vparts_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
 		_ASN_ERRLOG(app_errlog, app_key,
@@ -229,7 +229,7 @@ memb_vparts_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 
@@ -397,7 +397,7 @@ extern asn_TYPE_descriptor_t asn_DEF_VariablePart;
 
 static int
 memb_vset_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
 	if(!sptr) {
@@ -644,10 +644,10 @@ extern asn_TYPE_descriptor_t asn_DEF_ActionItem;
 
 static int
 accept_as_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*

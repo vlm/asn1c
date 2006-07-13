@@ -39,19 +39,19 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 
 int
 OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_consume_bytes_f *app_errlog, void *app_key) {
+		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 
 	if(st && st->buf) {
 		if(st->size < 1) {
-			_ASN_ERRLOG(app_errlog, app_key,
+			_ASN_CTFAIL(app_key, td,
 				"%s: at least one numerical value "
 				"expected (%s:%d)",
 				td->name, __FILE__, __LINE__);
 			return -1;
 		}
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

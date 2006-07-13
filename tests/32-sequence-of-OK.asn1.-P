@@ -200,3 +200,287 @@ asn_TYPE_descriptor_t asn_DEF_Error = {
 	&asn_SPC_Error_specs_1	/* Additional specs */
 };
 
+
+/*** <<< INCLUDES [SeqWithMandatory] >>> ***/
+
+#include <UTF8String.h>
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< FWD-DECLS [SeqWithMandatory] >>> ***/
+
+struct Error;
+
+/*** <<< TYPE-DECLS [SeqWithMandatory] >>> ***/
+
+typedef struct SeqWithMandatory {
+	UTF8String_t	 someString;
+	struct seqOfMan {
+		A_SEQUENCE_OF(struct Error) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} seqOfMan;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SeqWithMandatory_t;
+
+/*** <<< FUNC-DECLS [SeqWithMandatory] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SeqWithMandatory;
+
+/*** <<< POST-INCLUDE [SeqWithMandatory] >>> ***/
+
+#include <Error.h>
+
+/*** <<< STAT-DEFS [SeqWithMandatory] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_seqOfMan_3[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Error,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_seqOfMan_tags_3[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_seqOfMan_specs_3 = {
+	sizeof(struct seqOfMan),
+	offsetof(struct seqOfMan, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_seqOfMan_3 = {
+	"seqOfMan",
+	"seqOfMan",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_seqOfMan_tags_3,
+	sizeof(asn_DEF_seqOfMan_tags_3)
+		/sizeof(asn_DEF_seqOfMan_tags_3[0]), /* 2 */
+	asn_DEF_seqOfMan_tags_3,	/* Same as above */
+	sizeof(asn_DEF_seqOfMan_tags_3)
+		/sizeof(asn_DEF_seqOfMan_tags_3[0]), /* 2 */
+	0,	/* No PER visible constraints */
+	asn_MBR_seqOfMan_3,
+	1,	/* Single element */
+	&asn_SPC_seqOfMan_specs_3	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_SeqWithMandatory_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithMandatory, someString),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "someString"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithMandatory, seqOfMan),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_seqOfMan_3,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "seqOfMan"
+		},
+};
+static ber_tlv_tag_t asn_DEF_SeqWithMandatory_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_SeqWithMandatory_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString at 25 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfMan at 27 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_SeqWithMandatory_specs_1 = {
+	sizeof(struct SeqWithMandatory),
+	offsetof(struct SeqWithMandatory, _asn_ctx),
+	asn_MAP_SeqWithMandatory_tag2el_1,
+	2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_SeqWithMandatory = {
+	"SeqWithMandatory",
+	"SeqWithMandatory",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_SeqWithMandatory_tags_1,
+	sizeof(asn_DEF_SeqWithMandatory_tags_1)
+		/sizeof(asn_DEF_SeqWithMandatory_tags_1[0]), /* 1 */
+	asn_DEF_SeqWithMandatory_tags_1,	/* Same as above */
+	sizeof(asn_DEF_SeqWithMandatory_tags_1)
+		/sizeof(asn_DEF_SeqWithMandatory_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_SeqWithMandatory_1,
+	2,	/* Elements count */
+	&asn_SPC_SeqWithMandatory_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [SeqWithOptional] >>> ***/
+
+#include <UTF8String.h>
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< FWD-DECLS [SeqWithOptional] >>> ***/
+
+struct Error;
+
+/*** <<< TYPE-DECLS [SeqWithOptional] >>> ***/
+
+typedef struct SeqWithOptional {
+	UTF8String_t	 someString;
+	struct seqOfOpt {
+		A_SEQUENCE_OF(struct Error) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} *seqOfOpt;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SeqWithOptional_t;
+
+/*** <<< FUNC-DECLS [SeqWithOptional] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SeqWithOptional;
+
+/*** <<< POST-INCLUDE [SeqWithOptional] >>> ***/
+
+#include <Error.h>
+
+/*** <<< STAT-DEFS [SeqWithOptional] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_seqOfOpt_3[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Error,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_seqOfOpt_tags_3[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_seqOfOpt_specs_3 = {
+	sizeof(struct seqOfOpt),
+	offsetof(struct seqOfOpt, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_seqOfOpt_3 = {
+	"seqOfOpt",
+	"seqOfOpt",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_seqOfOpt_tags_3,
+	sizeof(asn_DEF_seqOfOpt_tags_3)
+		/sizeof(asn_DEF_seqOfOpt_tags_3[0]), /* 2 */
+	asn_DEF_seqOfOpt_tags_3,	/* Same as above */
+	sizeof(asn_DEF_seqOfOpt_tags_3)
+		/sizeof(asn_DEF_seqOfOpt_tags_3[0]), /* 2 */
+	0,	/* No PER visible constraints */
+	asn_MBR_seqOfOpt_3,
+	1,	/* Single element */
+	&asn_SPC_seqOfOpt_specs_3	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_SeqWithOptional_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithOptional, someString),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "someString"
+		},
+	{ ATF_POINTER, 1, offsetof(struct SeqWithOptional, seqOfOpt),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_seqOfOpt_3,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "seqOfOpt"
+		},
+};
+static ber_tlv_tag_t asn_DEF_SeqWithOptional_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_SeqWithOptional_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString at 30 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfOpt at 31 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_SeqWithOptional_specs_1 = {
+	sizeof(struct SeqWithOptional),
+	offsetof(struct SeqWithOptional, _asn_ctx),
+	asn_MAP_SeqWithOptional_tag2el_1,
+	2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_SeqWithOptional = {
+	"SeqWithOptional",
+	"SeqWithOptional",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0,	/* No PER decoder, -gen-PER to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_SeqWithOptional_tags_1,
+	sizeof(asn_DEF_SeqWithOptional_tags_1)
+		/sizeof(asn_DEF_SeqWithOptional_tags_1[0]), /* 1 */
+	asn_DEF_SeqWithOptional_tags_1,	/* Same as above */
+	sizeof(asn_DEF_SeqWithOptional_tags_1)
+		/sizeof(asn_DEF_SeqWithOptional_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_SeqWithOptional_1,
+	2,	/* Elements count */
+	&asn_SPC_SeqWithOptional_specs_1	/* Additional specs */
+};
+

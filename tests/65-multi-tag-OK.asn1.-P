@@ -22,10 +22,10 @@ xer_type_encoder_f T1_encode_xer;
 
 int
 T1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_T2.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -156,10 +156,10 @@ xer_type_encoder_f T2_encode_xer;
 
 int
 T2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_T3.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -288,10 +288,10 @@ xer_type_encoder_f T3_encode_xer;
 
 int
 T3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_T4.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -418,10 +418,10 @@ xer_type_encoder_f T4_encode_xer;
 
 int
 T4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_T5.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -543,10 +543,10 @@ xer_type_encoder_f T5_encode_xer;
 
 int
 T5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_T6.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -667,10 +667,10 @@ xer_type_encoder_f T6_encode_xer;
 
 int
 T6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_REAL.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -790,10 +790,10 @@ xer_type_encoder_f T_encode_xer;
 
 int
 T_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_Ts.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*

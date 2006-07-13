@@ -9,7 +9,7 @@
 #ifndef	_ASN_INTERNAL_H_
 #define	_ASN_INTERNAL_H_
 
-#include <asn_application.h>	/* Application-visible API */
+#include "asn_application.h"	/* Application-visible API */
 
 #ifndef	__NO_ASSERT_H__		/* Include assert.h only for internal use. */
 #include <assert.h>		/* for assert() macro */

@@ -13,4 +13,14 @@ Error ::= SEQUENCE {
 
 maxSize INTEGER ::= 10
 
+SeqWithMandatory ::= SEQUENCE {
+    someString	 UTF8String,
+    seqOfMan	 [0] EXPLICIT SEQUENCE OF Error
+}
+
+SeqWithOptional ::= SEQUENCE {
+    someString	 UTF8String,
+    seqOfOpt	 [0] EXPLICIT SEQUENCE OF Error OPTIONAL
+}
+
 END

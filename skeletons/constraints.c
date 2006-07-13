@@ -1,9 +1,9 @@
-#include <asn_internal.h>
-#include <constraints.h>
+#include "asn_internal.h"
+#include "constraints.h"
 
 int
 asn_generic_no_constraint(asn_TYPE_descriptor_t *type_descriptor,
-	const void *struct_ptr, asn_app_consume_bytes_f *cb, void *key) {
+	const void *struct_ptr, asn_app_constraint_failed_f *cb, void *key) {
 
 	(void)type_descriptor;	/* Unused argument */
 	(void)struct_ptr;	/* Unused argument */
@@ -16,7 +16,7 @@ asn_generic_no_constraint(asn_TYPE_descriptor_t *type_descriptor,
 
 int
 asn_generic_unknown_constraint(asn_TYPE_descriptor_t *type_descriptor,
-	const void *struct_ptr, asn_app_consume_bytes_f *cb, void *key) {
+	const void *struct_ptr, asn_app_constraint_failed_f *cb, void *key) {
 
 	(void)type_descriptor;	/* Unused argument */
 	(void)struct_ptr;	/* Unused argument */
@@ -27,98 +27,67 @@ asn_generic_unknown_constraint(asn_TYPE_descriptor_t *type_descriptor,
 	return 0;
 }
 
-struct __fill_errbuf_arg {
-	char  *errbuf;
+struct errbufDesc {
+	asn_TYPE_descriptor_t *failed_type;
+	const void *failed_struct_ptr;
+	char *errbuf;
 	size_t errlen;
-	size_t erroff;
 };
 
-static int
-__fill_errbuf(const void *buffer, size_t size, void *app_key) {
-	struct __fill_errbuf_arg *arg = (struct __fill_errbuf_arg *)app_key;
-	size_t avail = arg->errlen - arg->erroff;
+static void
+_asn_i_ctfailcb(void *key, asn_TYPE_descriptor_t *td, const void *sptr, const char *fmt, ...) {
+	struct errbufDesc *arg = key;
+	va_list ap;
+	ssize_t vlen;
+	ssize_t maxlen;
 
-	if(avail > size)
-		avail = size + 1;
+	arg->failed_type = td;
+	arg->failed_struct_ptr = sptr;
 
-	switch(avail) {
-	default:
-		memcpy(arg->errbuf + arg->erroff, buffer, avail - 1);
-		arg->erroff += avail - 1;
-	case 1:
-		arg->errbuf[arg->erroff] = '\0';
-	case 0:
-		return 0;
+	maxlen = arg->errlen;
+	if(maxlen <= 0)
+		return;
+
+	va_start(ap, fmt);
+	vlen = vsnprintf(arg->errbuf, maxlen, fmt, ap);
+	va_end(ap);
+	if(vlen >= maxlen) {
+		arg->errbuf[maxlen-1] = '\0';	/* Ensuring libc correctness */
+		arg->errlen = maxlen - 1;	/* Not counting termination */
+		return;
+	} else if(vlen >= 0) {
+		arg->errbuf[vlen] = '\0';	/* Ensuring libc correctness */
+		arg->errlen = vlen;		/* Not counting termination */
+	} else {
+		/*
+		 * The libc on this system is broken.
+		 */
+		vlen = sizeof("<broken vsnprintf>") - 1;
+		maxlen--;
+		arg->errlen = vlen < maxlen ? vlen : maxlen;
+		memcpy(arg->errbuf, "<broken vsnprintf>", arg->errlen);
+		arg->errbuf[arg->errlen] = 0;
 	}
 
+	return;
 }
 
 int
 asn_check_constraints(asn_TYPE_descriptor_t *type_descriptor,
-	const void *struct_ptr, char *errbuf, size_t *errlen) {
+		const void *struct_ptr, char *errbuf, size_t *errlen) {
+	struct errbufDesc arg;
+	int ret;
 
-	if(errlen) {
-		struct __fill_errbuf_arg arg;
-		int ret;
+	arg.failed_type = 0;
+	arg.failed_struct_ptr = 0;
+	arg.errbuf = errbuf;
+	arg.errlen = errlen ? *errlen : 0;
 
-		arg.errbuf = errbuf;
-		arg.errlen = *errlen;
-		arg.erroff = 0;
-	
-		ret = type_descriptor->check_constraints(type_descriptor,
-			struct_ptr, __fill_errbuf, &arg);
-	
-		if(ret == -1)
-			*errlen = arg.erroff;
+	ret = type_descriptor->check_constraints(type_descriptor,
+		struct_ptr, _asn_i_ctfailcb, &arg);
+	if(ret == -1 && errlen)
+		*errlen = arg.errlen;
 
-		return ret;
-	} else {
-		return type_descriptor->check_constraints(type_descriptor,
-			struct_ptr, 0, 0);
-	}
+	return ret;
 }
 
-void
-_asn_i_log_error(asn_app_consume_bytes_f *cb, void *key, const char *fmt, ...) {
-	char buf[64];
-	char *p;
-	va_list ap;
-	ssize_t ret;
-	size_t len;
-
-	va_start(ap, fmt);
-	ret = vsnprintf(buf, sizeof(buf), fmt, ap);
-	va_end(ap);
-	if(ret < 0) {
-		/*
-		 * The libc on this system is broken.
-		 */
-		ret = sizeof("<broken vsnprintf>") - 1;
-		memcpy(buf, "<broken vsnprintf>", ret + 1);
-		/* Fall through */
-	}
-
-	if(ret < (ssize_t)sizeof(buf)) {
-		(void)cb(buf, ret, key);
-		return;
-	}
-
-	/*
-	 * More space required to hold the message.
-	 */
-	len = ret + 1;
-	p = (char *)alloca(len);
-	if(!p) return;	/* Can fail on !x86. */
-
-	
-	va_start(ap, fmt);
-	ret = vsnprintf(p, len, fmt, ap);
-	va_end(ap);
-	if(ret < 0 || ret >= (ssize_t)len) {
-		ret = sizeof("<broken vsnprintf>") - 1;
-		memcpy(buf, "<broken vsnprintf>", ret + 1);
-		p = buf;
-	}
-
-	(void)cb(p, ret, key);
-}

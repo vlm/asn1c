@@ -48,14 +48,14 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
  */
 int
 UTCTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_consume_bytes_f *app_errlog, void *app_key) {
+		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UTCTime_t *st = (const UTCTime_t *)sptr;
 	time_t tloc;
 
 	errno = EPERM;			/* Just an unlikely error code */
 	tloc = asn_UT2time(st, 0, 0);
 	if(tloc == -1 && errno != EPERM) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td,
 			"%s: Invalid time format: %s (%s:%d)",
 			td->name, strerror(errno), __FILE__, __LINE__);
 		return -1;

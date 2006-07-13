@@ -812,14 +812,14 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 int
 SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_consume_bytes_f *app_errlog, void *app_key) {
+		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	asn_TYPE_member_t *elm = td->elements;
 	asn_constr_check_f *constr;
 	const asn_anonymous_set_ *list = _A_CSET_FROM_VOID(sptr);
 	int i;
 
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -838,7 +838,7 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 		if(!memb_ptr) continue;
 
-		ret = constr(elm->type, memb_ptr, app_errlog, app_key);
+		ret = constr(elm->type, memb_ptr, ctfailcb, app_key);
 		if(ret) return ret;
 	}
 

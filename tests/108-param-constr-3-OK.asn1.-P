@@ -22,7 +22,7 @@ xer_type_encoder_f MinMax_16P0_encode_xer;
 
 int
 MinMax_16P0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
@@ -168,7 +168,7 @@ xer_type_encoder_f ThreePlus_encode_xer;
 
 int
 ThreePlus_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const MinMax_16P0_t *st = (const MinMax_16P0_t *)sptr;
 	long value;
 	

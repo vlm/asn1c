@@ -227,10 +227,10 @@ xer_type_encoder_f SignedREAL_encode_xer;
 
 int
 SignedREAL_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_SIGNED_16P0.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -350,10 +350,10 @@ xer_type_encoder_f SignedSET_encode_xer;
 
 int
 SignedSET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_consume_bytes_f *app_errlog, void *app_key) {
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
 	td->check_constraints = asn_DEF_SIGNED_16P1.check_constraints;
-	return td->check_constraints(td, sptr, app_errlog, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
