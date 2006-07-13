@@ -149,7 +149,7 @@ CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -287,14 +287,14 @@ CN_IntegerMinLow_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -304,7 +304,7 @@ CN_IntegerMinLow_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -433,14 +433,14 @@ NO_IntegerMinHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -450,7 +450,7 @@ NO_IntegerMinHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -579,14 +579,14 @@ NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -596,7 +596,7 @@ NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -725,14 +725,14 @@ CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -742,7 +742,7 @@ CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -871,14 +871,14 @@ NO_IntegerHighMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -888,7 +888,7 @@ NO_IntegerHighMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1017,14 +1017,14 @@ NO_IntegerLowestMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1034,7 +1034,7 @@ NO_IntegerLowestMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1163,14 +1163,14 @@ NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1180,7 +1180,7 @@ NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1309,14 +1309,14 @@ NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1326,7 +1326,7 @@ NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1454,7 +1454,7 @@ OK_IntegerInRange1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1466,7 +1466,7 @@ OK_IntegerInRange1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1594,7 +1594,7 @@ OK_IntegerInRange2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1606,7 +1606,7 @@ OK_IntegerInRange2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1734,7 +1734,7 @@ OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1746,7 +1746,7 @@ OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1874,7 +1874,7 @@ OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1886,7 +1886,7 @@ OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -2015,14 +2015,14 @@ OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -2032,7 +2032,7 @@ OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -2161,14 +2161,14 @@ NO_IntegerInRange6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	long value;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
 	}
 	
 	if(asn_INTEGER2long(st, &value)) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -2178,7 +2178,7 @@ NO_IntegerInRange6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

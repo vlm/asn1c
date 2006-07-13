@@ -45,7 +45,7 @@ memb_varsets_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -56,9 +56,9 @@ memb_varsets_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	if((size >= 1)) {
 		/* Perform validation of the inner elements */
-		return td->check_constraints(td, sptr, app_errlog, app_key);
+		return td->check_constraints(td, sptr, ctfailcb, app_key);
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -218,7 +218,7 @@ memb_vparts_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -401,7 +401,7 @@ memb_vset_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -412,9 +412,9 @@ memb_vset_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	if((size >= 1)) {
 		/* Perform validation of the inner elements */
-		return td->check_constraints(td, sptr, app_errlog, app_key);
+		return td->check_constraints(td, sptr, ctfailcb, app_key);
 	} else {
-		_ASN_ERRLOG(app_errlog, app_key,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
