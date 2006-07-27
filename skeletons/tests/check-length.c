@@ -39,6 +39,7 @@ static void
 check(int size) {
 	OCTET_STRING_t *os;
 	OCTET_STRING_t *nos = 0;
+	OCTET_STRING_t **nosp = &nos;
 	asn_enc_rval_t erval;
 	asn_dec_rval_t rval;
 	int i;
@@ -61,7 +62,7 @@ check(int size) {
 	assert(erval.encoded == buf_off);
 	assert(buf_off > size);
 
-	rval = ber_decode(0, &asn_DEF_OCTET_STRING, (void **)&nos, buf, buf_off);
+	rval = ber_decode(0, &asn_DEF_OCTET_STRING, (void **)nosp, buf, buf_off);
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == buf_off);
 
@@ -116,7 +117,7 @@ main() {
 	if(sizeof(tlv_len) <= 4) {
 		ret = ber_fetch_length(0, buf3, sizeof(buf3), &tlv_len);
 		printf("ret=%ld\n", (long)ret);
-		printf("len=0x%x\n", (long)tlv_len);
+		printf("len=0x%x\n", (int)tlv_len);
 		assert(ret == -1);
 	}
 	if(sizeof(tlv_len) <= 8) {
