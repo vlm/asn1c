@@ -12,7 +12,7 @@ for ref in ../tests/*.asn1.-*; do
 	src=`echo "$ref" | sed -e 's/\.-[-a-zA-Z0-9=]*$//'`
 	flags=`echo "$ref" | sed -e 's/.*\.-//'`
 	echo "Checking $src against $ref"
-	./asn1c "-$flags" "$src" > "$tmpfile" || ec=$?
+	./asn1c -S../skeletons "-$flags" "$src" > "$tmpfile" || ec=$?
 	if [ $? = 0 ]; then
 		diff $diffArgs "$ref" "$tmpfile" || ec=$?
 	fi
