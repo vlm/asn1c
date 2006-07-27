@@ -117,7 +117,7 @@ main() {
 	if(sizeof(tlv_len) <= 4) {
 		ret = ber_fetch_length(0, buf3, sizeof(buf3), &tlv_len);
 		printf("ret=%ld\n", (long)ret);
-		printf("len=0x%x\n", (int)tlv_len);
+		printf("len=0x%x\n", (unsigned int)tlv_len);
 		assert(ret == -1);
 	}
 	if(sizeof(tlv_len) <= 8) {
