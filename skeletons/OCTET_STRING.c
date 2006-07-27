@@ -996,7 +996,7 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf, 
 		if(len == 1 /* "&" */) goto want_more;
 		if(p[1] == 0x23 /* '#' */) {
 			const char *pval;	/* Pointer to start of digits */
-			int32_t val;		/* Entity reference value */
+			int32_t val = 0;	/* Entity reference value */
 			int base;
 
 			if(len == 2 /* "&#" */) goto want_more;
