@@ -19,6 +19,7 @@ check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 	int verlen = verify ? strlen(verify) : 0;
 	asn_TYPE_descriptor_t *td = &asn_DEF_OCTET_STRING;
 	OCTET_STRING_t *st = 0;
+	OCTET_STRING_t **stp = &st;
 	asn_dec_rval_t rc;
 	xer_type_decoder_f *decoder = 0;
 
@@ -35,7 +36,7 @@ check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 		break;
 	}
 
-	rc = decoder(0, td, (void **)&st, tagname, xmlbuf, xmllen);
+	rc = decoder(0, td, (void **)stp, tagname, xmlbuf, xmllen);
 	printf("[%s] => [%s]:%d vs [%s]:%d, code %d\n",
 		xmlbuf,
 		st ? (const char *)st->buf : "", st ? st->size : 0,

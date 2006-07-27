@@ -245,13 +245,14 @@ static void check_parse(const char *oid_txt, int retval) {
 static void check_xer(int expect_arcs, char *xer) {
 	asn_dec_rval_t rc;
 	RELATIVE_OID_t *st = 0;
+	RELATIVE_OID_t **stp = &st;
 	long arcs[10];
 	int ret;
 	int i;
 
 	printf("[%s] => ", xer); fflush(stdout);
 	rc = asn_DEF_RELATIVE_OID.xer_decoder(0,
-		&asn_DEF_RELATIVE_OID, (void **)&st, "t",
+		&asn_DEF_RELATIVE_OID, (void **)stp, "t",
 			xer, strlen(xer));
 	if(expect_arcs == -1) {
 		if(rc.code != RC_OK)

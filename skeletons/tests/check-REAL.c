@@ -152,6 +152,8 @@ check_xer(int fuzzy, double orig_value) {
 	REAL_t st;
 	REAL_t *newst0 = 0;
 	REAL_t *newst1 = 0;
+	REAL_t **newst0p = &newst0;
+	REAL_t **newst1p = &newst1;
 	double value0, value1;
 	int ret;
 
@@ -176,12 +178,12 @@ check_xer(int fuzzy, double orig_value) {
 		reconstr_lens[0], reconstructed[0]
 	);
 
-	rc = xer_decode(0, &asn_DEF_REAL, (void **)&newst0,
+	rc = xer_decode(0, &asn_DEF_REAL, (void **)newst0p,
 		reconstructed[0], reconstr_lens[0]);
 	assert(rc.code == RC_OK);
 	assert(rc.consumed < reconstr_lens[0]);
 
-	rc = xer_decode(0, &asn_DEF_REAL, (void **)&newst1,
+	rc = xer_decode(0, &asn_DEF_REAL, (void **)newst1p,
 		reconstructed[1], reconstr_lens[1]);
 	assert(rc.code == RC_OK);
 	assert(rc.consumed == reconstr_lens[1]);
