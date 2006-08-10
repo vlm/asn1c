@@ -69,9 +69,9 @@ xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
  * even if there is no sufficient (_arc_slots) provided.
  */
 int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
-	void *_arcs,			/* i.e., unsigned int arcs[N] */
-	unsigned int _arc_type_size,	/* i.e., sizeof(arcs[0]) */
-	unsigned int _arc_slots		/* i.e., N */);
+	void *_arcs,			/* e.g., unsigned int arcs[N] */
+	unsigned int _arc_type_size,	/* e.g., sizeof(arcs[0]) */
+	unsigned int _arc_slots		/* e.g., N */);
 
 /*
  * This functions initializes the OBJECT IDENTIFIER object with
@@ -84,9 +84,9 @@ int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
  * 0:		The object was initialized with new arcs.
  */
 int OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *_oid,
-	const void *_arcs,		/* i.e., unsigned int arcs[N] */
-	unsigned int _arc_type_size,	/* i.e., sizeof(arcs[0]) */
-	unsigned int _arc_slots		/* i.e., N */);
+	const void *_arcs,		/* e.g., unsigned int arcs[N] */
+	unsigned int _arc_type_size,	/* e.g., sizeof(arcs[0]) */
+	unsigned int _arc_slots		/* e.g., N */);
 
 /*
  * Print the specified OBJECT IDENTIFIER arc.
