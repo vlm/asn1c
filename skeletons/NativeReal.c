@@ -29,7 +29,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	NativeReal_encode_der,
 	NativeReal_decode_xer,
 	NativeReal_encode_xer,
-	0,
+	0, 0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),

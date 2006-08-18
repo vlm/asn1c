@@ -52,20 +52,19 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
  */
 asn_enc_rval_t
 der_encode_to_buffer(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
-	void *buffer, size_t *buffer_size) {
+	void *buffer, size_t buffer_size) {
 	enc_to_buf_arg arg;
 	asn_enc_rval_t ec;
 
 	arg.buffer = buffer;
-	arg.left = *buffer_size;
+	arg.left = buffer_size;
 
 	ec = type_descriptor->der_encoder(type_descriptor,
 		struct_ptr,	/* Pointer to the destination structure */
 		0, 0, encode_to_buffer_cb, &arg);
 	if(ec.encoded != -1) {
-		assert(ec.encoded == (ssize_t)(*buffer_size - arg.left));
+		assert(ec.encoded == (ssize_t)(buffer_size - arg.left));
 		/* Return the encoded contents size */
-		*buffer_size = ec.encoded;
 	}
 	return ec;
 }

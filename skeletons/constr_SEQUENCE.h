@@ -51,6 +51,7 @@ der_type_encoder_f SEQUENCE_encode_der;
 xer_type_decoder_f SEQUENCE_decode_xer;
 xer_type_encoder_f SEQUENCE_encode_xer;
 per_type_decoder_f SEQUENCE_decode_uper;
+per_type_encoder_f SEQUENCE_encode_uper;
 
 #ifdef __cplusplus
 }

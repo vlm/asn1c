@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -1097,7 +1097,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				/* This element is not present */
 				if(elm->default_value) {
 					/* Fill-in DEFAULT */
-					if(elm->default_value(memb_ptr2)) {
+					if(elm->default_value(1, memb_ptr2)) {
 						FREEMEM(opres);
 						_ASN_DECODE_FAILED;
 					}
@@ -1137,14 +1137,15 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			/* Fetch the pointer to this member */
 			if(elm->flags & ATF_POINTER) {
-				memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+				memb_ptr2 = (void **)((char *)st
+						+ elm->memb_offset);
 			} else {
 				memb_ptr = (char *)st + elm->memb_offset;
 				memb_ptr2 = &memb_ptr;
 			}
 
 			/* Set default value */
-			if(elm->default_value(memb_ptr2)) {
+			if(elm->default_value(1, memb_ptr2)) {
 				FREEMEM(opres);
 				_ASN_DECODE_FAILED;
 			}
@@ -1155,5 +1156,94 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	rv.code = RC_OK;
 	FREEMEM(opres);
 	return rv;
+}
+
+asn_enc_rval_t
+SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	asn_SEQUENCE_specifics_t *specs
+		= (asn_SEQUENCE_specifics_t *)td->specifics;
+	asn_enc_rval_t er;
+	int edx;
+	int i;
+
+	(void)constraints;
+
+	if(!sptr)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = 0;
+
+	ASN_DEBUG("Encoding %s as SEQUENCE (UPER)", td->name);
+	if(specs->ext_before >= 0)
+		_ASN_ENCODE_FAILED;	/* We don't encode extensions yet */
+
+	/* Encode a presence bitmap */
+	for(i = 0; i < specs->roms_count; i++) {
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
+		edx = specs->oms[i];
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		int present;
+
+		/* Fetch the pointer to this member */
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			present = (*memb_ptr2 != 0);
+		} else {
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr;
+			present = 1;
+		}
+
+		/* Eliminate default values */
+		if(present && elm->default_value
+		&& elm->default_value(0, memb_ptr2) == 1)
+			present = 0;
+
+		ASN_DEBUG("Element %s %s %s->%s is %s",
+			elm->flags & ATF_POINTER ? "ptr" : "inline",
+			elm->default_value ? "def" : "wtv",
+			td->name, elm->name, present ? "present" : "absent");
+		if(per_put_few_bits(po, present, 1))
+			_ASN_ENCODE_FAILED;
+	}
+
+	/*
+	 * Get the sequence ROOT elements.
+	 */
+	for(edx = 0; edx < ((specs->ext_before < 0)
+			? td->elements_count : specs->ext_before + 1); edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
+
+		/* Fetch the pointer to this member */
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) {
+				ASN_DEBUG("Element %s %d not present",
+					elm->name, edx);
+				if(elm->optional)
+					continue;
+				/* Mandatory element is missing */
+				_ASN_ENCODE_FAILED;
+			}
+		} else {
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr;
+		}
+
+		/* Eliminate default values */
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
+			continue;
+
+		er = elm->type->uper_encoder(elm->type, elm->per_constraints,
+			*memb_ptr2, po);
+		if(er.encoded == -1)
+			return er;
+	}
+
+	_ASN_ENCODED_OK(er);
 }
 

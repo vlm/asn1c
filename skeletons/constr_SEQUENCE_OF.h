@@ -24,6 +24,7 @@ extern "C" {
 #define	SEQUENCE_OF_decode_uper	SET_OF_decode_uper
 der_type_encoder_f SEQUENCE_OF_encode_der;
 xer_type_encoder_f SEQUENCE_OF_encode_xer;
+per_type_encoder_f SEQUENCE_OF_encode_uper;
 
 #ifdef __cplusplus
 }

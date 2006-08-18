@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -40,6 +40,7 @@ typedef struct asn_struct_ctx_s {
 #include <xer_decoder.h>	/* Decoder of XER (XML, text) */
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */
+#include <per_encoder.h>	/* Packet Encoding Rules encoder */
 #include <constraints.h>	/* Subtype constraints support */
 
 /*
@@ -97,6 +98,7 @@ typedef struct asn_TYPE_descriptor_s {
 	xer_type_decoder_f *xer_decoder;	/* Generic XER decoder */
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
 	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
+	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
 
 	/***********************************************************************
 	 * Internally useful members. Not to be used by applications directly. *
@@ -144,7 +146,7 @@ typedef struct asn_TYPE_member_s {
 	asn_TYPE_descriptor_t *type;	/* Member type descriptor */
 	asn_constr_check_f *memb_constraints;	/* Constraints validator */
 	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
-	int (*default_value)(void **sptr);	/* DEFAULT <value> */
+	int (*default_value)(int setval, void **sptr);	/* DEFAULT <value> */
 	char *name;			/* ASN.1 identifier of the element */
 } asn_TYPE_member_t;
 

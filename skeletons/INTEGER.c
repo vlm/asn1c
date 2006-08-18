@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -25,6 +25,7 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	INTEGER_decode_xer,
 	INTEGER_encode_xer,
 	INTEGER_decode_uper,	/* Unaligned PER decoder */
+	INTEGER_encode_uper,	/* Unaligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
@@ -528,6 +529,78 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	}
 
 	return rval;
+}
+
+asn_enc_rval_t
+INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	asn_enc_rval_t er;
+	INTEGER_t *st = (INTEGER_t *)sptr;
+	const uint8_t *buf;
+	const uint8_t *end;
+	asn_per_constraint_t *ct;
+	long value = 0;
+
+	if(!st || st->size == 0) _ASN_ENCODE_FAILED;
+
+	if(!constraints) constraints = td->per_constraints;
+	ct = constraints ? &constraints->value : 0;
+
+	er.encoded = 0;
+
+	if(ct) {
+		int inext = 0;
+		if(asn_INTEGER2long(st, &value))
+			_ASN_ENCODE_FAILED;
+		/* Check proper range */
+		if(ct->flags & APC_SEMI_CONSTRAINED) {
+			if(value < ct->lower_bound)
+				inext = 1;
+		} else if(ct->range_bits >= 0) {
+			if(value < ct->lower_bound
+			|| value > ct->upper_bound)
+				inext = 1;
+		}
+		ASN_DEBUG("Value %ld (%02x/%d) lb %ld ub %ld %s",
+			value, st->buf[0], st->size,
+			ct->lower_bound, ct->upper_bound,
+			inext ? "ext" : "fix");
+		if(ct->flags & APC_EXTENSIBLE) {
+			if(per_put_few_bits(po, inext, 1))
+				_ASN_ENCODE_FAILED;
+			if(inext) ct = 0;
+		} else if(inext) {
+			_ASN_ENCODE_FAILED;
+		}
+	}
+
+
+	/* X.691, #12.2.2 */
+	if(ct && ct->range_bits >= 0) {
+		/* #10.5.6 */
+		ASN_DEBUG("Encoding integer with range %d bits",
+			ct->range_bits);
+		if(per_put_few_bits(po, value - ct->lower_bound,
+				ct->range_bits))
+			_ASN_ENCODE_FAILED;
+		_ASN_ENCODED_OK(er);
+	}
+
+	if(ct && ct->lower_bound) {
+		ASN_DEBUG("Adjust lower bound to %ld", ct->lower_bound);
+		/* TODO: adjust lower bound */
+		_ASN_ENCODE_FAILED;
+	}
+
+	for(buf = st->buf, end = st->buf + st->size; buf < end;) {
+		ssize_t mayEncode = uper_put_length(po, end - buf);
+		if(mayEncode < 0)
+			_ASN_ENCODE_FAILED;
+		if(per_put_many_bits(po, buf, 8 * mayEncode))
+			_ASN_ENCODE_FAILED;
+	}
+
+	_ASN_ENCODED_OK(er);
 }
 
 int

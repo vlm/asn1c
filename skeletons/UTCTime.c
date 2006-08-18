@@ -28,7 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_decode_xer_utf8,
 	UTCTime_encode_xer,
-	0,
+	0, 0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UTCTime_tags,
 	sizeof(asn_DEF_UTCTime_tags)

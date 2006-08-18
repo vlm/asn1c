@@ -23,6 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
+	BOOLEAN_encode_uper,	/* Unaligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BOOLEAN_tags,
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
@@ -266,3 +267,18 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	return rv;
 }
 
+
+asn_enc_rval_t
+BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+	asn_enc_rval_t er;
+
+	(void)constraints;
+
+	if(!st) _ASN_ENCODE_FAILED;
+
+	per_put_few_bits(po, *st ? 1 : 0, 1);
+
+	_ASN_ENCODED_OK(er);
+}
