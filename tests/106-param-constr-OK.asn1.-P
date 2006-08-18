@@ -99,17 +99,23 @@ memb_narrow3_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [Narrow] >>> ***/
 
-static int asn_DFL_2_set_3(void **sptr) {
+static int asn_DFL_2_set_3(int set_value, void **sptr) {
 	long *st = *sptr;
 	
 	if(!st) {
+		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	/* Install default value 3 */
-	*st = 3;
-	return 0;
+	if(set_value) {
+		/* Install default value 3 */
+		*st = 3;
+		return 0;
+	} else {
+		/* Test default value 3 */
+		return (*st == 3);
+	}
 }
 static asn_TYPE_member_t asn_MBR_Narrow_15P0_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Narrow_15P0, narrow1),
@@ -167,7 +173,7 @@ asn_TYPE_descriptor_t asn_DEF_Narrow_15P0 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Narrow_15P0_tags_1,
 	sizeof(asn_DEF_Narrow_15P0_tags_1)
@@ -224,6 +230,7 @@ NarrowInteger_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_Narrow_15P0.xer_decoder;
 	td->xer_encoder    = asn_DEF_Narrow_15P0.xer_encoder;
 	td->uper_decoder   = asn_DEF_Narrow_15P0.uper_decoder;
+	td->uper_encoder   = asn_DEF_Narrow_15P0.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Narrow_15P0.per_constraints;
 	td->elements       = asn_DEF_Narrow_15P0.elements;
@@ -291,7 +298,7 @@ asn_TYPE_descriptor_t asn_DEF_NarrowInteger = {
 	NarrowInteger_encode_der,
 	NarrowInteger_decode_xer,
 	NarrowInteger_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NarrowInteger_tags_1,
 	sizeof(asn_DEF_NarrowInteger_tags_1)

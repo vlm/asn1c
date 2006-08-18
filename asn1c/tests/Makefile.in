@@ -60,8 +60,6 @@ CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CONFIGURE_DEPENDS = @CONFIGURE_DEPENDS@
-CPLUSPLUS_FOUND_FALSE = @CPLUSPLUS_FOUND_FALSE@
-CPLUSPLUS_FOUND_TRUE = @CPLUSPLUS_FOUND_TRUE@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -158,8 +156,7 @@ target_vendor = @target_vendor@
 AM_CFLAGS = @ADD_CFLAGS@
 check_SCRIPTS = check-assembly.sh
 TESTS_ENVIRONMENT = CC="${CC}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
-@CPLUSPLUS_FOUND_FALSE@TESTS = check-*.c
-@CPLUSPLUS_FOUND_TRUE@TESTS = check-*.c check-*.cc	## Include C++ test filed (.cc)
+TESTS = check-*.c
 EXTRA_DIST = \
 	$(check_SCRIPTS)	\
 	check-*.c*		\

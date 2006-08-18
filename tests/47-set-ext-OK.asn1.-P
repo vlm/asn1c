@@ -78,7 +78,7 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
@@ -172,7 +172,7 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags_1,
 	sizeof(asn_DEF_T2_tags_1)
@@ -198,6 +198,7 @@ typedef enum T3_PR {
 	T3_PR_NOTHING,	/* No components present */
 	T3_PR_i,
 	/* Extensions may appear below */
+	
 } T3_PR;
 
 /*** <<< TYPE-DECLS [T3] >>> ***/
@@ -256,7 +257,7 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -280,6 +281,7 @@ typedef enum T4_PR {
 	T4_PR_NOTHING,	/* No components present */
 	T4_PR_i,
 	/* Extensions may appear below */
+	
 } T4_PR;
 
 /*** <<< TYPE-DECLS [T4] >>> ***/
@@ -338,7 +340,7 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

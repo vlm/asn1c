@@ -8,7 +8,7 @@
 
 typedef enum T_PR {
 	T_PR_NOTHING,	/* No components present */
-	T_PR_bs,
+	T_PR_bs
 } T_PR;
 typedef enum T__bs {
 	T__bs_a	= 1,
@@ -67,7 +67,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

@@ -41,6 +41,7 @@ CN_IntegerUnlimited_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -108,7 +109,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerUnlimited = {
 	CN_IntegerUnlimited_encode_der,
 	CN_IntegerUnlimited_decode_xer,
 	CN_IntegerUnlimited_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerUnlimited_tags_1,
 	sizeof(asn_DEF_CN_IntegerUnlimited_tags_1)
@@ -177,6 +178,7 @@ CN_IntegerMinMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -244,7 +246,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinMax = {
 	CN_IntegerMinMax_encode_der,
 	CN_IntegerMinMax_decode_xer,
 	CN_IntegerMinMax_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerMinMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinMax_tags_1)
@@ -317,6 +319,7 @@ CN_IntegerMinLow_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -384,7 +387,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinLow = {
 	CN_IntegerMinLow_encode_der,
 	CN_IntegerMinLow_decode_xer,
 	CN_IntegerMinLow_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerMinLow_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinLow_tags_1)
@@ -463,6 +466,7 @@ NO_IntegerMinHigh_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -530,7 +534,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
 	NO_IntegerMinHigh_encode_der,
 	NO_IntegerMinHigh_decode_xer,
 	NO_IntegerMinHigh_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerMinHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerMinHigh_tags_1)
@@ -609,6 +613,7 @@ NO_IntegerLowHigh_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -676,7 +681,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 	NO_IntegerLowHigh_encode_der,
 	NO_IntegerLowHigh_decode_xer,
 	NO_IntegerLowHigh_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerLowHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowHigh_tags_1)
@@ -749,6 +754,7 @@ CN_IntegerLowMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -816,7 +822,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
 	CN_IntegerLowMax_encode_der,
 	CN_IntegerLowMax_decode_xer,
 	CN_IntegerLowMax_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerLowMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerLowMax_tags_1)
@@ -895,6 +901,7 @@ NO_IntegerHighMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -962,7 +969,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerHighMax = {
 	NO_IntegerHighMax_encode_der,
 	NO_IntegerHighMax_decode_xer,
 	NO_IntegerHighMax_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerHighMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerHighMax_tags_1)
@@ -1041,6 +1048,7 @@ NO_IntegerLowestMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -1108,7 +1116,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
 	NO_IntegerLowestMax_encode_der,
 	NO_IntegerLowestMax_decode_xer,
 	NO_IntegerLowestMax_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerLowestMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowestMax_tags_1)
@@ -1187,6 +1195,7 @@ NO_IntegerOutRange_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -1254,7 +1263,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
 	NO_IntegerOutRange_encode_der,
 	NO_IntegerOutRange_decode_xer,
 	NO_IntegerOutRange_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerOutRange_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutRange_tags_1)
@@ -1333,6 +1342,7 @@ NO_IntegerOutValue_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -1400,7 +1410,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
 	NO_IntegerOutValue_encode_der,
 	NO_IntegerOutValue_decode_xer,
 	NO_IntegerOutValue_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerOutValue_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutValue_tags_1)
@@ -1473,6 +1483,7 @@ OK_IntegerInRange1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -1540,7 +1551,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange1 = {
 	OK_IntegerInRange1_encode_der,
 	OK_IntegerInRange1_decode_xer,
 	OK_IntegerInRange1_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange1_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange1_tags_1)
@@ -1613,6 +1624,7 @@ OK_IntegerInRange2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -1680,7 +1692,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange2 = {
 	OK_IntegerInRange2_encode_der,
 	OK_IntegerInRange2_decode_xer,
 	OK_IntegerInRange2_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange2_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange2_tags_1)
@@ -1753,6 +1765,7 @@ OK_IntegerInRange3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -1820,7 +1833,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange3 = {
 	OK_IntegerInRange3_encode_der,
 	OK_IntegerInRange3_decode_xer,
 	OK_IntegerInRange3_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange3_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange3_tags_1)
@@ -1893,6 +1906,7 @@ OK_IntegerInRange4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -1960,7 +1974,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange4 = {
 	OK_IntegerInRange4_encode_der,
 	OK_IntegerInRange4_decode_xer,
 	OK_IntegerInRange4_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange4_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange4_tags_1)
@@ -2033,6 +2047,7 @@ OK_IntegerInRange5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -2100,7 +2115,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
 	OK_IntegerInRange5_encode_der,
 	OK_IntegerInRange5_decode_xer,
 	OK_IntegerInRange5_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange5_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange5_tags_1)
@@ -2179,6 +2194,7 @@ NO_IntegerInRange6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -2246,7 +2262,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 	NO_IntegerInRange6_encode_der,
 	NO_IntegerInRange6_decode_xer,
 	NO_IntegerInRange6_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerInRange6_tags_1,
 	sizeof(asn_DEF_NO_IntegerInRange6_tags_1)
@@ -2309,6 +2325,7 @@ CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -2376,7 +2393,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerEnumerated1 = {
 	CN_IntegerEnumerated1_encode_der,
 	CN_IntegerEnumerated1_decode_xer,
 	CN_IntegerEnumerated1_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerEnumerated1_tags_1,
 	sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1)
@@ -2439,6 +2456,7 @@ NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
+	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -2506,7 +2524,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerEnumerated2 = {
 	NO_IntegerEnumerated2_encode_der,
 	NO_IntegerEnumerated2_decode_xer,
 	NO_IntegerEnumerated2_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerEnumerated2_tags_1,
 	sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1)
