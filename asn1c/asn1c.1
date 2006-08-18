@@ -23,7 +23,7 @@ and other encoding standards.
 .TP
 \fILanguage Options\fR
 .br
-\fB\-fall-defs-global \-fbless-SIZE \-fcompound-names \-findirect-choice
+\fB\-fbless-SIZE \-fcompound-names \-findirect-choice
 .BI "\-fknown-extern-type="<name>
 \fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions \-fskeletons-copy
 .TP
@@ -74,15 +74,7 @@ Enable ASN.1 syntax tree fixer debugging during the fixing stage.
 .B \-Wdebug-compiler
 Enable debugging during the actual compile time.
 .SH LANGUAGE OPTIONS
-.TP
-.B \-fall-defs-global
-Normally the compiler hides the definitions (asn1_DEF_xxx) of the inner
-structure elements (members of SEQUENCE, SET and other types). This option
-makes all such definitions global.
-Using this option may pollute the namespace by making lots of asn1_DEF_xxx
-structures globally visible, but will allow you to manipulate
-(encode and decode) the individual members of any complex ASN.1 structure.
-.TP
+ .TP
 .B \-fbless-SIZE
 Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which this
 constraint is normally prohibited by the standard. This is a violation of

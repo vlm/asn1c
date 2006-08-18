@@ -444,7 +444,6 @@ usage(const char *av0) {
 "  -Wdebug-compiler      --//-- compiler\n"
 "\n"
 
-"  -fall-defs-global     Don't make the asn1_DEF_'s of structure members \"static\"\n"
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
 "  -fcompound-names      Disambiguate C's struct NAME's inside top-level types\n"
 "  -findirect-choice     Compile members of CHOICE as indirect pointers\n"
