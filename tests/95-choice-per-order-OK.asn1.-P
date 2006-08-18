@@ -16,12 +16,12 @@ typedef enum Choice_PR {
 	Choice_PR_bitstr,
 	Choice_PR_ch,
 	/* Extensions may appear below */
-	Choice_PR_bool,
+	Choice_PR_bool
 } Choice_PR;
 typedef enum ch_PR {
 	ch_PR_NOTHING,	/* No components present */
 	ch_PR_null,
-	ch_PR_int,
+	ch_PR_int
 } ch_PR;
 
 /*** <<< TYPE-DECLS [Choice] >>> ***/
@@ -103,7 +103,7 @@ asn_TYPE_descriptor_t asn_DEF_ch_4 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -180,7 +180,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -204,7 +204,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 typedef enum Choice2_PR {
 	Choice2_PR_NOTHING,	/* No components present */
 	Choice2_PR_bitstr,
-	Choice2_PR_roid,
+	Choice2_PR_roid
 } Choice2_PR;
 
 /*** <<< TYPE-DECLS [Choice2] >>> ***/
@@ -270,7 +270,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

@@ -63,7 +63,7 @@ asn_TYPE_descriptor_t asn_DEF_data_2 = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_data_tags_2,
 	sizeof(asn_DEF_data_tags_2)
@@ -113,7 +113,7 @@ asn_TYPE_descriptor_t asn_DEF_Type = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Type_tags_1,
 	sizeof(asn_DEF_Type_tags_1)
@@ -170,6 +170,7 @@ EpytRef_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_Epyt.xer_decoder;
 	td->xer_encoder    = asn_DEF_Epyt.xer_encoder;
 	td->uper_decoder   = asn_DEF_Epyt.uper_decoder;
+	td->uper_encoder   = asn_DEF_Epyt.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Epyt.per_constraints;
 	td->elements       = asn_DEF_Epyt.elements;
@@ -237,7 +238,7 @@ asn_TYPE_descriptor_t asn_DEF_EpytRef = {
 	EpytRef_encode_der,
 	EpytRef_decode_xer,
 	EpytRef_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_EpytRef_tags_1,
 	sizeof(asn_DEF_EpytRef_tags_1)
@@ -319,7 +320,7 @@ asn_TYPE_descriptor_t asn_DEF_stype_2 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_stype_tags_2,
 	sizeof(asn_DEF_stype_tags_2)
@@ -389,7 +390,7 @@ asn_TYPE_descriptor_t asn_DEF_Epyt = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Epyt_tags_1,
 	sizeof(asn_DEF_Epyt_tags_1)
@@ -543,16 +544,25 @@ memb_patest2_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [Ypet] >>> ***/
 
-static int asn_DFL_3_set_7(void **sptr) {
+static int asn_DFL_3_set_7(int set_value, void **sptr) {
 	INTEGER_t *st = *sptr;
 	
 	if(!st) {
+		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	/* Install default value 7 */
-	return asn_long2INTEGER(st, 7);
+	if(set_value) {
+		/* Install default value 7 */
+		return asn_long2INTEGER(st, 7);
+	} else {
+		/* Test default value 7 */
+		long value;
+		if(asn_INTEGER2long(st, &value))
+			return -1;
+		return (value == 7);
+	}
 }
 static asn_TYPE_member_t asn_MBR_senums_4[] = {
 	{ ATF_POINTER, 0, 0,
@@ -584,7 +594,7 @@ asn_TYPE_descriptor_t asn_DEF_senums_4 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_senums_tags_4,
 	sizeof(asn_DEF_senums_tags_4)
@@ -679,7 +689,7 @@ asn_TYPE_descriptor_t asn_DEF_Ypet = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Ypet_tags_1,
 	sizeof(asn_DEF_Ypet_tags_1)
@@ -743,6 +753,7 @@ EnumType_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
+	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -825,7 +836,7 @@ asn_TYPE_descriptor_t asn_DEF_EnumType = {
 	EnumType_encode_der,
 	EnumType_decode_xer,
 	EnumType_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_EnumType_tags_1,
 	sizeof(asn_DEF_EnumType_tags_1)

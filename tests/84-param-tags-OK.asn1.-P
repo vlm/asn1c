@@ -55,17 +55,23 @@ memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [TestType] >>> ***/
 
-static int asn_DFL_2_set_0(void **sptr) {
+static int asn_DFL_2_set_0(int set_value, void **sptr) {
 	long *st = *sptr;
 	
 	if(!st) {
+		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	/* Install default value 0 */
-	*st = 0;
-	return 0;
+	if(set_value) {
+		/* Install default value 0 */
+		*st = 0;
+		return 0;
+	} else {
+		/* Test default value 0 */
+		return (*st == 0);
+	}
 }
 static asn_TYPE_member_t asn_MBR_TestType_16P0_1[] = {
 	{ ATF_NOFLAGS, 1, offsetof(struct TestType_16P0, common),
@@ -103,7 +109,7 @@ asn_TYPE_descriptor_t asn_DEF_TestType_16P0 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TestType_16P0_tags_1,
 	sizeof(asn_DEF_TestType_16P0_tags_1)
@@ -117,17 +123,23 @@ asn_TYPE_descriptor_t asn_DEF_TestType_16P0 = {
 	&asn_SPC_TestType_16P0_specs_1	/* Additional specs */
 };
 
-static int asn_DFL_4_set_0(void **sptr) {
+static int asn_DFL_4_set_0(int set_value, void **sptr) {
 	BOOLEAN_t *st = *sptr;
 	
 	if(!st) {
+		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	/* Install default value 0 */
-	*st = 0;
-	return 0;
+	if(set_value) {
+		/* Install default value 0 */
+		*st = 0;
+		return 0;
+	} else {
+		/* Test default value 0 */
+		return (*st == 0);
+	}
 }
 static asn_TYPE_member_t asn_MBR_TestType_16P1_3[] = {
 	{ ATF_NOFLAGS, 1, offsetof(struct TestType_16P1, common),
@@ -165,7 +177,7 @@ asn_TYPE_descriptor_t asn_DEF_TestType_16P1 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TestType_16P1_tags_3,
 	sizeof(asn_DEF_TestType_16P1_tags_3)
@@ -190,7 +202,7 @@ asn_TYPE_descriptor_t asn_DEF_TestType_16P1 = {
 typedef enum TestChoice_PR {
 	TestChoice_PR_NOTHING,	/* No components present */
 	TestChoice_PR_type1,
-	TestChoice_PR_type2,
+	TestChoice_PR_type2
 } TestChoice_PR;
 
 /*** <<< TYPE-DECLS [TestChoice] >>> ***/
@@ -256,7 +268,7 @@ asn_TYPE_descriptor_t asn_DEF_TestChoice = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -386,7 +398,7 @@ asn_TYPE_descriptor_t asn_DEF_AutoType_34P0 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_AutoType_34P0_tags_1,
 	sizeof(asn_DEF_AutoType_34P0_tags_1)
@@ -436,7 +448,7 @@ asn_TYPE_descriptor_t asn_DEF_AutoType_34P1 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_AutoType_34P1_tags_3,
 	sizeof(asn_DEF_AutoType_34P1_tags_3)
@@ -461,7 +473,7 @@ asn_TYPE_descriptor_t asn_DEF_AutoType_34P1 = {
 typedef enum AutoChoice_PR {
 	AutoChoice_PR_NOTHING,	/* No components present */
 	AutoChoice_PR_type1,
-	AutoChoice_PR_type2,
+	AutoChoice_PR_type2
 } AutoChoice_PR;
 
 /*** <<< TYPE-DECLS [AutoChoice] >>> ***/
@@ -527,7 +539,7 @@ asn_TYPE_descriptor_t asn_DEF_AutoChoice = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0,	/* No PER decoder, -gen-PER to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
