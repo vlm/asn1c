@@ -278,7 +278,7 @@ typedef union {
 	} tv_nametag;
 } yystype;
 /* Line 1281 of /usr/local/share/bison/yacc.c.  */
-#line 282 "y.tab.h"
+#line 282 "asn1p_y.h"
 # define YYSTYPE yystype
 #endif
 

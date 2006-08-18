@@ -69,7 +69,7 @@ asn1p_wsyntx_t *asn1p_wsyntx_clone(asn1p_wsyntx_t *);
  * 	 0:	Component has been added
  * 	-1:	Failure to add component (refer to errno)
  */
-asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_frombuf(char *buf, int len, int _copy);
+asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromstring(char *token, int _copy);
 asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromsyntax(asn1p_wsyntx_t *syntax);
 
 

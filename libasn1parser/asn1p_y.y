@@ -1123,14 +1123,14 @@ WithSyntaxList:
 
 WithSyntaxToken:
 	TOK_whitespace {
-		$$ = asn1p_wsyntx_chunk_frombuf($1.buf, $1.len, 0);
+		$$ = asn1p_wsyntx_chunk_fromstring($1.buf, 0);
 		$$->type = WC_WHITESPACE;
 	}
 	| TOK_Literal {
-		$$ = asn1p_wsyntx_chunk_frombuf($1, strlen($1), 0);
+		$$ = asn1p_wsyntx_chunk_fromstring($1, 0);
 	}
 	| PrimitiveFieldReference {
-		$$ = asn1p_wsyntx_chunk_frombuf($1.name, strlen($1.name), 0);
+		$$ = asn1p_wsyntx_chunk_fromstring($1.name, 0);
 		$$->type = WC_FIELD;
 	}
 	| '[' WithSyntaxList ']' {

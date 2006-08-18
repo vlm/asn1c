@@ -154,19 +154,19 @@ asn1p_wsyntx_clone(asn1p_wsyntx_t *wx) {
 }
 
 asn1p_wsyntx_chunk_t *
-asn1p_wsyntx_chunk_frombuf(char *buf, int len, int do_copy) {
+asn1p_wsyntx_chunk_fromstring(char *token, int do_copy) {
 	asn1p_wsyntx_chunk_t *wc;
 
 	if(do_copy) {
 		static asn1p_wsyntx_chunk_t tmp;
 		tmp.type = WC_LITERAL;
-		tmp.content.token = buf;
+		tmp.content.token = token;
 		wc = asn1p_wsyntx_chunk_clone(&tmp);
 	} else {
 		wc = asn1p_wsyntx_chunk_new();
 		if(wc) {
 			wc->type = WC_LITERAL;
-			wc->content.token = buf;
+			wc->content.token = token;
 		}
 	}
 

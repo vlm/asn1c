@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2005, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_PER_SUPPORT_H_
@@ -12,6 +12,26 @@ extern "C" {
 #endif
 
 /*
+ * Pre-computed PER constraints.
+ */
+typedef struct asn_per_constraint_s {
+	enum asn_per_constraint_flags {
+		APC_UNCONSTRAINED	= 0x0,	/* No PER visible constraints */
+		APC_SEMI_CONSTRAINED	= 0x1,	/* Constrained at "lb" */
+		APC_CONSTRAINED		= 0x2,	/* Fully constrained */
+		APC_EXTENSIBLE		= 0x4	/* May have extension */
+	} flags;
+	int  range_bits;		/* Full number of bits in the range */
+	int  effective_bits;		/* Effective bits */
+	long lower_bound;		/* "lb" value */
+	long upper_bound;		/* "ub" value */
+} asn_per_constraint_t;
+typedef struct asn_per_constraints_s {
+	asn_per_constraint_t value;
+	asn_per_constraint_t size;
+} asn_per_constraints_t;
+
+/*
  * This structure describes a position inside an incoming PER bit stream.
  */
 typedef struct asn_per_data_s {
@@ -19,6 +39,33 @@ typedef struct asn_per_data_s {
         size_t  nboff;	/* Bit offset to the meaningful bit */
         size_t  nbits;	/* Number of bits in the stream */
 } asn_per_data_t;
+
+/*
+ * Extract a small number of bits (<= 31) from the specified PER data pointer.
+ * This function returns -1 if the specified number of bits could not be
+ * extracted due to EOD or other conditions.
+ */
+int32_t per_get_few_bits(asn_per_data_t *per_data, int get_nbits);
+
+/*
+ * Extract a large number of bits from the specified PER data pointer.
+ * This function returns -1 if the specified number of bits could not be
+ * extracted due to EOD or other conditions.
+ */
+int per_get_many_bits(asn_per_data_t *pd, uint8_t *dst, int right_align,
+			int get_nbits);
+
+/*
+ * Get the length "n" from the Unaligned PER stream.
+ */
+ssize_t uper_get_length(asn_per_data_t *pd,
+			int effective_bound_bits,
+			int *repeat);
+
+/*
+ * Get the normally small non-negative whole number.
+ */
+ssize_t uper_get_nsnnwn(asn_per_data_t *pd);
 
 /*
  * This structure supports forming PER output.
@@ -32,33 +79,11 @@ typedef struct asn_per_outp_s {
 	void *op_key;
 } asn_per_outp_t;
 
-/*
- * Extract a small number of bits (<= 31) from the specified PER data pointer.
- * This function returns -1 if the specified number of bits could not be
- * extracted due to EOD or other conditions.
- */
-int32_t per_get_few_bits(asn_per_data_t *per_data, int get_nbits);
-
 /* Output a small number of bits (<= 31) */
 int per_put_few_bits(asn_per_outp_t *per_data, uint32_t bits, int obits);
 
-/*
- * Extract a large number of bits from the specified PER data pointer.
- * This function returns -1 if the specified number of bits could not be
- * extracted due to EOD or other conditions.
- */
-int per_get_many_bits(asn_per_data_t *pd, uint8_t *dst, int right_align,
-			int get_nbits);
-
 /* Output a large number of bits */
 int per_put_many_bits(asn_per_outp_t *po, const uint8_t *src, int put_nbits);
-
-/*
- * Get the length "n" from the Unaligned PER stream.
- */
-ssize_t uper_get_length(asn_per_data_t *pd,
-			int effective_bound_bits,
-			int *repeat);
 
 /*
  * Put the length "n" to the Unaligned PER stream.
@@ -66,11 +91,6 @@ ssize_t uper_get_length(asn_per_data_t *pd,
  * in the next units saving iteration.
  */
 ssize_t uper_put_length(asn_per_outp_t *po, size_t whole_length);
-
-/*
- * Get the normally small non-negative whole number.
- */
-ssize_t uper_get_nsnnwn(asn_per_data_t *pd);
 
 /*
  * Put the normally small non-negative whole number.

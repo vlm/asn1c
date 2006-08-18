@@ -1784,7 +1784,8 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, char *typ
 			asn1c_integer_t cover = 1;
 			asn1c_integer_t r = 1 + range->right.value
 					      - range->left.value;
-			int rbits, ebits;
+			size_t rbits;	/* Value range bits */
+			ssize_t ebits;	/* Value effective range bits */
 
 			if(range->empty_constraint)
 				r = 0;

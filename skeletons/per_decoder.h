@@ -26,27 +26,6 @@ asn_dec_rval_t uper_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 
 
 /*
- * Pre-computed PER constraints.
- */
-  enum asn_per_constraint_flags {
-	APC_UNCONSTRAINED	= 0x0,	/* No PER visible constraints */
-	APC_SEMI_CONSTRAINED	= 0x1,	/* Constrained at "lb" */
-	APC_CONSTRAINED		= 0x2,	/* Fully constrained */
-	APC_EXTENSIBLE		= 0x4	/* May have extension */
-  };
-typedef struct asn_per_constraint_s {
-	enum asn_per_constraint_flags flags;
-	int  range_bits;		/* Full number of bits in the range */
-	int  effective_bits;		/* Effective bits */
-	long lower_bound;		/* "lb" value */
-	long upper_bound;		/* "ub" value */
-} asn_per_constraint_t;
-typedef struct asn_per_constraints_s {
-	asn_per_constraint_t value;
-	asn_per_constraint_t size;
-} asn_per_constraints_t;
-
-/*
  * Type of the type-specific PER decoder function.
  */
 typedef asn_dec_rval_t (per_type_decoder_f)(asn_codec_ctx_t *opt_codec_ctx,

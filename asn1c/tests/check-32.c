@@ -18,7 +18,6 @@ main(int ac, char **av) {
 	asn_enc_rval_t erv;
 	asn_dec_rval_t drv;
 	char buf[128];
-	size_t bufsize = sizeof(buf);
 
 	(void)ac;	/* Unused argument */
 	(void)av;	/* Unused argument */
@@ -44,35 +43,36 @@ main(int ac, char **av) {
 	 * Encode the sequence.
 	 */
 	erv = der_encode_to_buffer(&asn_DEF_SeqWithMandatory,
-			&swm, buf, &bufsize);
-	assert(erv.encoded == bufsize);
+			&swm, buf, sizeof buf);
+	assert(erv.encoded > 0);
+	buf[erv.encoded] = '\0';
 
 	/*
 	 * Try to decode it using a compatible type.
 	 */
 	drv = ber_decode(0, &asn_DEF_SeqWithOptional, (void **)&swo,
-			buf, bufsize);
+			buf, erv.encoded);
 	assert(drv.code == RC_OK);
-	assert(drv.consumed == bufsize);
+	assert(drv.consumed == erv.encoded);
 	assert(swo->seqOfOpt != 0);
 
 	xer_fprint(stderr, &asn_DEF_SeqWithOptional, swo);
 	swo->seqOfOpt = 0;
 
-	bufsize = sizeof(buf);
 	erv = der_encode_to_buffer(&asn_DEF_SeqWithOptional,
-			swo, buf, &bufsize);
-	assert(erv.encoded == bufsize);
+			swo, buf, sizeof buf);
+	assert(erv.encoded > 0);
+	buf[erv.encoded] = '\0';
 
 	swo = 0;
 	drv = ber_decode(0, &asn_DEF_SeqWithMandatory, (void **)&swo,
-			buf, bufsize);
+			buf, erv.encoded);
 	assert(drv.code != RC_OK);
 	swo = 0;
 	drv = ber_decode(0, &asn_DEF_SeqWithOptional, (void **)&swo,
-			buf, bufsize);
+			buf, erv.encoded);
 	assert(drv.code == RC_OK);
-	assert(drv.consumed == bufsize);
+	assert(drv.consumed == erv.encoded);
 	assert(swo->seqOfOpt == 0);
 
 	xer_fprint(stderr, &asn_DEF_SeqWithOptional, swo);
