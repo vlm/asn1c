@@ -2785,7 +2785,7 @@ yyreduce:
   case 109:
 #line 1125 "asn1p_y.y"
     {
-		yyval.a_wchunk = asn1p_wsyntx_chunk_frombuf(yyvsp[0].tv_opaque.buf, yyvsp[0].tv_opaque.len, 0);
+		yyval.a_wchunk = asn1p_wsyntx_chunk_fromstring(yyvsp[0].tv_opaque.buf, 0);
 		yyval.a_wchunk->type = WC_WHITESPACE;
 	}
     break;
@@ -2793,14 +2793,14 @@ yyreduce:
   case 110:
 #line 1129 "asn1p_y.y"
     {
-		yyval.a_wchunk = asn1p_wsyntx_chunk_frombuf(yyvsp[0].tv_str, strlen(yyvsp[0].tv_str), 0);
+		yyval.a_wchunk = asn1p_wsyntx_chunk_fromstring(yyvsp[0].tv_str, 0);
 	}
     break;
 
   case 111:
 #line 1132 "asn1p_y.y"
     {
-		yyval.a_wchunk = asn1p_wsyntx_chunk_frombuf(yyvsp[0].a_refcomp.name, strlen(yyvsp[0].a_refcomp.name), 0);
+		yyval.a_wchunk = asn1p_wsyntx_chunk_fromstring(yyvsp[0].a_refcomp.name, 0);
 		yyval.a_wchunk->type = WC_FIELD;
 	}
     break;

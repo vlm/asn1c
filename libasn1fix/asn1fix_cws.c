@@ -169,6 +169,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 		uint8_t *buf, const uint8_t *bend) {
 	asn1p_expr_t *expr;
 	asn1p_ref_t *ref;
+	int idLength;
 	char *p;
 
 	if((bend - buf) <= 0) {
@@ -220,8 +221,9 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 
 	cell->value = expr;
 
-	if(row->max_identifier_length < strlen(expr->Identifier))
-		row->max_identifier_length = strlen(expr->Identifier);
+	idLength = strlen(expr->Identifier);
+	if(row->max_identifier_length < idLength)
+		row->max_identifier_length = idLength;
 
 	return 0;
 }

@@ -20,7 +20,7 @@ static char *res_kwd[] = {
 };
 static int
 reserved_keyword(const char *str) {
-	int i;
+	size_t i;
 	for(i = 0 ; i < sizeof(res_kwd)/sizeof(res_kwd[0]); i++) {
 		if(strcmp(str, res_kwd[i]) == 0)
 			return 1;
@@ -42,7 +42,7 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	char *nextstr;
 	char *first = 0;
 	char *second = 0;
-	size_t size;
+	ssize_t size;
 	char *p;
 
 	if(expr) {

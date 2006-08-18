@@ -32,7 +32,7 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	fname = alloca(len);
 	ret = snprintf(fname, len, "%s%s%s", name, ext,
 		opt_tmpname ? ".XXXXXX" : "");
-	assert(ret > 0 && ret < len);
+	assert(ret > 0 && ret < (ssize_t)len);
 
 	if(opt_tmpname) {
 		/*

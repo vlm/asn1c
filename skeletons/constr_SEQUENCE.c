@@ -1180,11 +1180,13 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 
 	/* Encode a presence bitmap */
 	for(i = 0; i < specs->roms_count; i++) {
+		asn_TYPE_member_t *elm;
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
-		edx = specs->oms[i];
-		asn_TYPE_member_t *elm = &td->elements[edx];
 		int present;
+
+		edx = specs->oms[i];
+		elm = &td->elements[edx];
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
