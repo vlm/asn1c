@@ -847,14 +847,15 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 		out_name_chain(arg, ONC_noflags);
 	OUT("_PR {\n");
 	INDENTED(
-		int firstTime = 1;
+		int skipComma = 1;
 		out_name_chain(arg, ONC_noflags);
 		OUT("_PR_NOTHING,\t/* No components present */\n");
 		TQ_FOR(v, &(expr->members), next) {
-			if(firstTime) firstTime = 0;
+			if(skipComma) skipComma = 0;
 			else OUT(",\n");
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				OUT("/* Extensions may appear below */\n");
+				skipComma = 1;
 				continue;
 			}
 			out_name_chain(arg, ONC_noflags);
