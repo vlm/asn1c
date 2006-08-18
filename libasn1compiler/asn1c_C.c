@@ -847,18 +847,21 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 		out_name_chain(arg, ONC_noflags);
 	OUT("_PR {\n");
 	INDENTED(
+		int firstTime = 1;
 		out_name_chain(arg, ONC_noflags);
 		OUT("_PR_NOTHING,\t/* No components present */\n");
 		TQ_FOR(v, &(expr->members), next) {
+			if(firstTime) firstTime = 0;
+			else OUT(",\n");
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				OUT("/* Extensions may appear below */\n");
 				continue;
 			}
 			out_name_chain(arg, ONC_noflags);
-			OUT("_PR_");
 			id = MKID(v);
-			OUT("%s,\n", id, id);
+			OUT("_PR_%s", id);
 		}
+		OUT("\n");
 	);
 	OUT("} "); out_name_chain(arg, ONC_noflags); OUT("_PR;\n");
 
@@ -1219,6 +1222,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->xer_decoder    = asn_DEF_%s.xer_decoder;\n",    type_name);
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
 	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
+	OUT("td->uper_encoder   = asn_DEF_%s.uper_encoder;\n",   type_name);
 	if(!terminal && !tags_count) {
 	  OUT("/* The next four lines are here because of -fknown-extern-type */\n");
 	  OUT("td->tags           = asn_DEF_%s.tags;\n",         type_name);
@@ -1341,6 +1345,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
   if(arg->flags & A1C_GEN_PER) {
 	p = MKID(expr);
+
 	if(HIDE_INNER_DEFS) OUT("static ");
 	OUT("asn_dec_rval_t\n");
 	OUT("%s", p);
@@ -1351,6 +1356,22 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
 		p, expr->_type_unique_index);
 	OUT("return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_enc_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_encode_uper(asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tasn_per_constraints_t *constraints,\n");
+	OUT("\tvoid *structure, asn_per_outp_t *per_out) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->uper_encoder(td, constraints, structure, per_out);\n");
 	);
 	OUT("}\n");
 	OUT("\n");
@@ -1372,8 +1393,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("der_type_encoder_f %s_encode_der;\n", p);
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
-		if(arg->flags & A1C_GEN_PER)
+		if(arg->flags & A1C_GEN_PER) {
 		OUT("per_type_decoder_f %s_decode_uper;\n", p);
+		OUT("per_type_encoder_f %s_encode_uper;\n", p);
+		}
 	}
 
 	REDIR(OT_TYPE_DECLS);
@@ -1946,17 +1969,20 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 			expr->marker.flags &= ~EM_INDIRECT;
 		if(!out) return 1;
 		REDIR(OT_STAT_DEFS);
-		OUT("static int asn_DFL_%d_set_%" PRIdASN "(void **sptr) {\n",
+		OUT("static int asn_DFL_%d_set_%" PRIdASN "(int set_value, void **sptr) {\n",
 			expr->_type_unique_index,
 			expr->marker.default_value->value.v_integer);
 		INDENT(+1);
 		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
 		OUT("\n");
 		OUT("if(!st) {\n");
+		OUT("\tif(!set_value) return -1;\t/* Not a default value */\n");
 		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
 		OUT("\tif(!st) return -1;\n");
 		OUT("}\n");
 		OUT("\n");
+		OUT("if(set_value) {\n");
+		INDENT(+1);
 		OUT("/* Install default value %" PRIdASN " */\n",
 			expr->marker.default_value->value.v_integer);
 		if(fits_long) {
@@ -1967,6 +1993,23 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 			OUT("return asn_long2INTEGER(st, %" PRIdASN ");\n",
 				expr->marker.default_value->value.v_integer);
 		}
+		INDENT(-1);
+		OUT("} else {\n");
+		INDENT(+1);
+		OUT("/* Test default value %" PRIdASN " */\n",
+			expr->marker.default_value->value.v_integer);
+		if(fits_long) {
+			OUT("return (*st == %" PRIdASN ");\n",
+				expr->marker.default_value->value.v_integer);
+		} else {
+			OUT("long value;\n");
+			OUT("if(asn_INTEGER2long(st, &value))\n");
+			OUT("\treturn -1;\n");
+			OUT("return (value == %" PRIdASN ");\n",
+				expr->marker.default_value->value.v_integer);
+		}
+		INDENT(-1);
+		OUT("}\n");
 		INDENT(-1);
 		OUT("}\n");
 		REDIR(save_target);
@@ -2202,10 +2245,13 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		FUNCREF(encode_der);
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);
-		if(arg->flags & A1C_GEN_PER)
+		if(arg->flags & A1C_GEN_PER) {
 			FUNCREF(decode_uper);
-		else
-			OUT("0,\t/* No PER decoder, -gen-PER to enable */\n");
+			FUNCREF(encode_uper);
+		} else {
+			OUT("0, 0,\t/* No PER support, "
+				"use \"-gen-PER\" to enable */\n");
+		}
 
 		if(expr->expr_type == ASN_CONSTR_CHOICE) {
 			OUT("CHOICE_outmost_tag,\n");
