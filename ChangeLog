@@ -1,5 +1,5 @@
 
-0.9.21:	2006-Mar-20
+0.9.21:	2006-Aug-17
 
 	* skeletons/standard-modules directory is now used for standard types.
 	* Fixed class field access problem (Test case 98)
@@ -8,6 +8,7 @@
 	* Refactored Parameterization support.
 	* [typedef enum foo {}] foo_e; is now e_foo, see #1287989
 	* Refactored ValueSetTypeAssignment parsing.
+	* First release of PER encoder (does not encode SETs yet).
 
 0.9.20:	2006-Mar-06
 
