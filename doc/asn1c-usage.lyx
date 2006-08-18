@@ -71,7 +71,7 @@ status Open
 \backslash 
 lhead{This document describes 
 \backslash 
-href{http://lionet.info/asn1c}{asn1c-0.9.20}}
+href{http://lionet.info/asn1c}{asn1c-0.9.21}}
 \layout Standard
 
 \backslash 
@@ -451,7 +451,7 @@ The following table summarizes the asn1c command line options.
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="26" columns="2">
+<lyxtabular version="3" rows="29" columns="2">
 <features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -1008,6 +1008,76 @@ Copy support files rather than symlink them.
 
 \series bold 
 \size small 
+Codecs Generation Options
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+\size small 
+Description
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+-gen-PER
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Generate Packed Encoding Rules (PER) support code.
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+-pdu=
+\emph on 
+auto
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size small 
+Generate PDU tables by discovering Protocol Data Units automatically.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\series bold 
+\size small 
 Output Options
 \end_inset 
 </cell>
@@ -1155,7 +1225,7 @@ Restartable means that if the decoder encounters the end of the buffer,
 \emph default 
 BER decoder (Basic Encoding Rules).
  This decoder would create and/or fill the target structure for you.
- Please refer to Section 
+ See Section 
 \begin_inset LatexCommand \vref{sub:Decoding-BER}
 
 \end_inset 
@@ -1166,8 +1236,21 @@ BER decoder (Basic Encoding Rules).
 der_encoder This is the generic DER encoder (Distinguished Encoding Rules).
  This encoder will take the target structure and encode it into a series
  of bytes.
- Please refer to Section 
+ See Section 
 \begin_inset LatexCommand \vref{sub:Encoding-DER}
+
+\end_inset 
+
+.
+ NOTE: DER encoding is a subset of BER.
+ Any BER decoder should be able to handle DER input.
+\layout Description
+
+xer_decoder This is the generic XER decoder.
+ It takes both BASIC-XER or CANONICAL-XER encodings and deserializes the
+ data into a local, machine-dependent representation.
+ See Section 
+\begin_inset LatexCommand \vref{sub:Decoding-XER}
 
 \end_inset 
 
@@ -1177,7 +1260,7 @@ der_encoder This is the generic DER encoder (Distinguished Encoding Rules).
 xer_encoder This is the XER encoder (XML Encoding Rules).
  This encoder will take the target structure and represent it as an XML
  (text) document using either BASIC-XER or CANONICAL-XER encoding rules.
- Please refer to Section 
+ See Section 
 \begin_inset LatexCommand \vref{sub:Encoding-XER}
 
 \end_inset 
@@ -1185,20 +1268,17 @@ xer_encoder This is the XER encoder (XML Encoding Rules).
 .
 \layout Description
 
-xer_decoder This is the generic XER decoder.
- It takes both BASIC-XER or CANONICAL-XER encodings and deserializes the
- data into a local, machine-dependent representation.
- Please refer to Section 
-\begin_inset LatexCommand \vref{sub:Decoding-XER}
+uper_decoder This is the Unaligned PER decoder.
+\layout Description
 
-\end_inset 
-
-.
+uper_encoder This is the Unaligned Basic PER encoder.
+ This encoder will take the target structure and encode it into a series
+ of bytes.
 \layout Description
 
 check_constraints Check that the contents of the target structure are semantical
 ly valid and constrained to appropriate implicit or explicit subtype constraints.
- Please refer to Section 
+ See Section 
 \begin_inset LatexCommand \vref{sub:Validating-the-target}
 
 \end_inset 
@@ -1210,7 +1290,7 @@ print_struct This function convert the contents of the passed target structure
  into human readable form.
  This form is not formal and cannot be converted back into the structure,
  but it may turn out to be useful for debugging or quick-n-dirty printing.
- Please refer to Section 
+ See Section 
 \begin_inset LatexCommand \vref{sub:Printing-the-target}
 
 \end_inset 
@@ -1219,7 +1299,7 @@ print_struct This function convert the contents of the passed target structure
 \layout Description
 
 free_struct This is a generic disposal which frees the target structure.
- Please refer to Section 
+ See Section 
 \begin_inset LatexCommand \vref{sub:Freeing-the-target}
 
 \end_inset 
@@ -1854,7 +1934,7 @@ Freeing the target structure
 
 Freeing the structure is slightly more complex than it may seem to.
  When the ASN.1 structure is freed, all the members of the structure and
- their submembers etc etc are recursively freed too.
+ their submembers are recursively freed as well.
  But it might not be feasible to free the structure itself.
  Consider the following case:
 \layout LyX-Code
@@ -1991,6 +2071,22 @@ free_struct
 \emph default 
  function with the target structure pointer set to 0 (NULL), the function
  will do nothing.
+\layout Standard
+
+For the programmer's convenience, the following macros are available:
+\layout LyX-Code
+
+ASN_STRUCT_FREE(asn_DEF, ptr);
+\layout LyX-Code
+
+ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr);
+\layout Standard
+
+These macros bear the same semantics as the 
+\emph on 
+free_struct
+\emph default 
+ function invocation, discussed above.
 \layout Chapter
 
 
@@ -2012,7 +2108,7 @@ Rectangle
  Encoder
 \layout Standard
 
-This example will help you to create a simple BER and XER encoder of a 
+This example will help you create a simple BER and XER encoder of a 
 \begin_inset Quotes sld
 \end_inset 
 
