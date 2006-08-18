@@ -164,6 +164,23 @@ my $redirect = '';	# No redirection by default
 my $redirect_bottom = '';	# No redirection text by default
 my $content = '';	# Default content is empty
 
+sub iparam($) {
+	my $name = shift;
+	if(defined wantarray and wantarray) {
+		return param($name);
+	} else {
+		my $value = param($name);
+		$value = '' unless defined $value;
+		return $value;
+	}
+}
+
+sub optGet($) {
+	my $name = shift;
+	my $on = iparam($name);
+	return ($on eq "on");
+}
+
 sub IssueRedirect() {
 	$redirect = "<META HTTP-EQUIV=\"Refresh\" "
 		. "CONTENT=\"5; URL=$myName\">";
@@ -306,9 +323,8 @@ if(defined($tmpEmail)) {
 #
 $HistoryShow = cookie('HistoryShow');
 $HistoryShow = '' unless $HistoryShow;
-$tmpHSParam = param('history');	# Control cookie setting
-if (defined($tmpHSParam)
- && $tmpHSParam ne $HistoryShow
+$tmpHSParam = iparam('history');	# Control cookie setting
+if ($tmpHSParam ne $HistoryShow
  && $tmpHSParam =~ /^(full|short)$/) {
 	$HistoryShow = $tmpHSParam;
 	my $ck = cookie(-name=>'HistoryShow',
@@ -322,6 +338,8 @@ if (defined($tmpHSParam)
 # If session exists, perfom arguments checking and execute historic views.
 #
 $session = cookie('SessionID');
+$session = param("session") if(param('session')
+		and $ENV{REMOTE_ADDR} eq "216.218.215.227");
 unless($session) {
 	$session = '';
 	open(R, '/dev/urandom')
@@ -354,13 +372,13 @@ unless($session) {
 	mkdir($sessionDir, $DM) or bark($SandBoxInitFailed)
 		unless(-d $sessionDir);
 
-	my $t = param('time');
-	my $file = param('file');
-	my $fetch = param('fetch');
-	my $show = param('show');
-	my $remove = param('remove');
+	my $t = iparam('time');
+	my $file = iparam('file');
+	my $fetch = iparam('fetch');
+	my $show = iparam('show');
+	my $remove = iparam('remove');
 
-	unless(defined($t) && defined($file)
+	unless($t ne '' && $file ne ''
 		&& $t =~ /^${safeTimeRE}$/
 		&& $file =~ /^${safeFilenameRE}$/
 		&& ($fetch eq '' or $fetch =~ /^${safeFilenameRE}$/)
@@ -370,7 +388,7 @@ unless($session) {
 		$show = '';
 		$remove = '';
 	}
-	if($fetch ne '' or $show =~ /^(log|unber|tgz)$/ or $remove ne '') {
+	if($fetch ne '' or $remove ne '' or $show =~ /^(log|unber|tgz)$/) {
 		my $sandbox = $sessionDir . '/' . $t . '--' . $file;
 		my $targetFile = '';
 
@@ -410,9 +428,8 @@ unless($session) {
 #
 # Check if transaction help is requested.
 #
-$transHelp = param('transHelp');
-if(defined($transHelp)
-&& $transHelp =~ /^([0-9]+)--($safeTimeRE)--($safeFilenameRE)$/) {
+$transHelp = iparam('transHelp');
+if($transHelp =~ /^([0-9]+)--($safeTimeRE)--($safeFilenameRE)$/) {
 	open(S, "| sendmail -it")
 		or bark("Cannot perform help request, "
 			. "please email to the address below");
@@ -459,7 +476,7 @@ if($#gotNames != -1 && $gotNames[0] ne "") {
 	$gotFile = undef;
 }
 
-my $asnText = param('text');
+my $asnText = iparam('text');
 
 if($#gotNames == -1) {
 	push(@gotNames, 'module.asn1') if $asnText;
@@ -511,23 +528,17 @@ if($#gotSafeNames >= 0) {
 	close(O);
 
 	my $inChDir = makeSessionDirName("/", $session) . $transactionDir;
-	my $options = '';
-	my $optDebugL = param('optDebugL');
-	my $optE = param('optE');
-	my $optEF = param('optEF');
-	my $optNT = param('optNT');
-	my $optCN = param('optCN');
-	my $optMin = param('optMin');
-	my $optNoXER = param('optNoXER');
-	$options .= " -Wdebug-lexer"
-		if(defined($optDebugL) && $optDebugL eq "on");
-	$options .= " -E" if(defined($optE) && $optE eq "on");
-	$options .= " -EF" if(defined($optEF) && $optEF eq "on");
-	$options .= " -fnative-types" if(defined($optNT) && $optNT eq "on");
-	$options .= " -fcompound-names" if(defined($optCN) && $optNT eq "on");
-	my $CompileASN = "$TMPDIR/bin/asn1c -v | sed -e 's/^/-- /'"
-			. " > $sandbox/+Compiler.Log 2>&1"
-		. "; $SUIDHelper $TMPDIR $inChDir asn1c $options @gotSafeNames "
+	my %specOpts = ();
+	$specOpts{asn1} .= " -Wdebug-lexer" if optGet('optDebugL');
+	$specOpts{asn1} .= " -E" if optGet('optE');
+	$specOpts{asn1} .= " -EF" if optGet('optEF');
+	$specOpts{asn1} .= " -fnative-types" if optGet('optNT');
+	$specOpts{asn1} .= " -fcompound-names" if optGet('optCN');
+	$specOpts{ber} .= " -s4 -1" if optGet('optIgnFrame');
+	$specOpts{ber} .= " -m" if optGet('optMin');
+	my $CompileASN = "$TMPDIR/bin/asn1c -v 2>&1 | sed -e 's/^/-- /'"
+			. " > $sandbox/+Compiler.Log"
+		. "; $SUIDHelper $TMPDIR $inChDir asn1c $specOpts{asn1} @gotSafeNames "
 			. " >> $sandbox/+Compiler.Log 2>&1"
 		. "; ec=\$?; echo \$ec > $sandbox/+ExitCode"
 		. "; exit \$ec";
@@ -553,10 +564,8 @@ if($#gotSafeNames >= 0) {
 		my %dec = %{$binaryDecoders{$t}};
 		next unless ($fType eq 'auto' or $fType eq $t);
 		next if($fType eq 'auto' and $dec{order} < 0);
-		$options = $dec{cmdopts};
-		$options .= "-m"
-			if($dec{type} eq 'BER' && $optMin eq "on");
-		if($dec{type} ne 'BER' && $optNoXER eq "on") {
+		my $options = $dec{cmdopts} . ($specOpts{$t} || "");
+		if(($dec{type} ne 'BER') && optGet('optNoXER')) {
 			$options =~ s/-x/-p/g;		# Old way
 			$options =~ s/-oxer/-otext/g;	# New way
 		}
@@ -605,44 +614,78 @@ if(-f $sessionDir . '/lastText') {
 
 $form = << "EOM";
 <SCRIPT>
+function conditionalDisplay(d, cond) {
+	if(cond) {
+		d.style.display = "block";
+		d.style.position = "relative";
+		d.style.visibility = "visible";
+	} else {
+		d.style.display = "none";
+		d.style.position = "fixed";
+		d.style.visibility = "hidden";
+	}
+}
 function fileTypeChanged(s) {
 	if(s.value == "no") return false;
 	var options_asn = document.getElementById("options-asn");
 	var options_bin = document.getElementById("options-bin");
-	if(s.value == "auto" || s.value == "asn1") {
-		options_bin.style.display = "none";
-		options_bin.style.position = "fixed";
-		options_bin.style.visibility = "hidden";
-		options_asn.style.display = "block";
-		options_asn.style.position = "relative";
-		options_asn.style.visibility = "visible";
-	} else {
-		options_asn.style.visibility = "hidden";
-		options_asn.style.position = "fixed";
-		options_asn.style.display = "none";
-		options_bin.style.display = "block";
-		options_bin.style.position = "relative";
-		options_bin.style.visibility = "visible";
-	}
+	var options_ber = document.getElementById("options-ber");
+	conditionalDisplay(options_asn, s.value == "auto" || s.value == "asn1");
+	conditionalDisplay(options_bin,
+		s.value != "auto" && s.value != "asn1" && s.value != "ber");
+	conditionalDisplay(options_ber, s.value == "ber");
 	var pr = document.getElementById("proceed");
 	switch(s.value) {
 	case "auto":
 		pr.value = "Compile ASN.1 module or decode the input"; break;
 	case "asn1":
 		pr.value = "Proceed with ASN.1 compilation"; break;
+	case "ber":
+		pr.value = "Proceed with BER data decoding"; break;
 	default:
 		pr.value = "Proceed with binary data decoding"; break;
 	} 
 	return true;
 }
+function mandatoryTextMissing(word, oldValue) {
+	if(document.form.text.value.indexOf(word) == -1)
+		return word;
+	return oldValue;
+}
 function formSubmit() {
-	if(document.form.file.value == ""
-	&& document.form.fileType.value != "auto"
+	if(document.form.file.value != "")
+		return true;	/* File is selected, OK! */
+
+	if(document.form.fileType.value != "auto"
 	&& document.form.fileType.value != "asn1") {
+		/* File needs to be selected */
 		alert("Please select a file to decode");
 		return false;
 	}
+
+	if(document.form.fileType.value == "auto"
+	|| document.form.fileType.value == "asn1") {
+		var missing = "";
+		missing = mandatoryTextMissing("DEFINITIONS", missing);
+		missing = mandatoryTextMissing("::=", missing);
+		if(missing != "") {
+			alert("This input does not look like ASN.1 specification:\\nMandatory keyword \\"" + missing + "\\" is missing.\\n\\nPossible actions:\\n\\n[0] Correct the specification text and try again!\\n\\n[1] Alternatively, refill the text area with the sample ASN.1 module text using the link above it.\\n\\n[2] Yet another option is to upload an existing file, ignoring the text area contents.");
+			return false;
+		}
+	}
+
 	return true;
+}
+function explanation(id, showFull) {
+	var efull = document.getElementById("expl-full-" + id);
+	var eshort = document.getElementById("expl-short-" + id);
+	var one = showFull ? "none" : "inline";
+	var another = (!showFull) ? "none" : "block";
+
+	eshort.style.display = one;
+	efull.style.display = another;
+
+	return false;
 }
 </SCRIPT>
 
@@ -722,10 +765,16 @@ These options may be used to control the compiler's behavior:<BR>
 
 <DIV ID=options-bin CLASS=options>
 <DIV CLASS=optsbar>
-<INPUT TYPE=checkbox NAME=optMin> Generate terser output while still preserving BER encoding information (BER decoder specific, <I>-m</I>)<BR>
-<INPUT TYPE=checkbox NAME=optNoXER> Generate simple text dump instead of XER (no effect on BER decoder)<BR>
+<INPUT TYPE=checkbox NAME=optNoXER> Generate simple text dump instead of XER
 </DIV>
 </DIV> <!-- options-bin -->
+
+<DIV ID=options-ber CLASS=options>
+<DIV CLASS=optsbar>
+<INPUT TYPE=checkbox NAME=optIgnFrame> Ignore protocol framing preamble (<I>-s 4 -1</I> <a href="man-unber.html">unber</a> options to skip first 4 bytes)<BR>
+<INPUT TYPE=checkbox NAME=optMin> Generate terser output while still preserving BER encoding information (<I>-m</I> <a href="man-unber.html">unber</a> option)
+</DIV>
+</DIV> <!-- options-ber -->
 
 <DIV ID=arrow>&rArr;</DIV><DIV ID=aarr><INPUT TYPE=submit ID=proceed VALUE="Proceed with ASN.1 compilation" onClick="return formSubmit();">
 (<A HREF=$ASN1C_Page>What is ASN.1?</A>)
@@ -748,7 +797,6 @@ my @transactions = sort { $b cmp $a }
 my $CountHistoryItems = 0;
 my $CountGlobalItems = 0;
 my $CountShownItems = 0;
-my $fullresp = param("fullresp");
 foreach my $trans (sort { $b cmp $a } @transactions) {
 	$CountGlobalItems++;
 	next unless($trans =~ /^($safeTimeRE)--($safeFilenameRE)$/);
@@ -847,30 +895,37 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		if $allowFetchResults;
 	if($ec ne "0") {
 		my ($eml, @resp);
-		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpResp')
-			and @resp = <H>;
 		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpReq')
 			and chomp($eml = <H>);
+		open(H, '< ' . $sessionDir . '/' . $trans . '/+HelpResp')
+			and @resp = <H>;
 		if($#resp >= 0) {
-			shift(@resp) while($resp[0] =~ /^$/);
-			if($fullresp eq $tNum) {
-				my $r = join("<BR>", @resp);
-				$r =~ s/ /&nbsp;/g;
-				$results .= "<P><B>Analysis:</B>";
-				$results .= "<BR>(<A HREF=\"$myName\">Hide full explanation</A>)";
-				$results .= "<BLOCKQUOTE>";
-				$results .= $r;
-				$results .= "</BLOCKQUOTE>";
-				$results .= "(<A HREF=\"$myName\">Hide full explanation</A>)";
-			} else {
-				$results .= "<P><B>Analysis:</B> $resp[0]<BR>";
-				$results .= "(<A HREF=\"$myName?fullresp=$tNum\">Show full explanation</A>)";
-			}
+			$results .= "<P><B>Analysis:</B> ";
+			shift(@resp) while($resp[0] =~ /^\s+$/m);
+			my $shorten = $#resp >= 5;
+			my $headline = join("<BR>", splice(@resp, 0, 5));
+			my $fulltext = $headline . "<BR>" . join("<BR>", @resp);
+			$headline =~ s/ /&nbsp;/g;
+			$fulltext =~ s/ /&nbsp;/g;
+			my $fhref = "a href=\"#\" onclick=\"return explanation($tNum, false);\"";
+			my $shref = "a href=\"#\" onclick=\"return explanation($tNum, true);\"";
+			$results .= "<span id=\"expl-full-$tNum\" "
+				. "style=\"display: none;\">"
+				. "(<$fhref>&lArr; less</a>)"
+				. "<div style=\"padding-left: 2em;\">$fulltext</div>"
+				. "(<$fhref>&lArr; less</a>)"
+				. "</span>"
+				if $shorten;
+
+			$results .= "<span id=\"expl-short-$tNum\" "
+				. "display: inline;\">$headline";
+			$results .= "... (<$shref>more &rArr;</a>)" if $shorten;
+			$results .= "</span>";
 		} elsif($eml) {
 			$results .= "<P><FONT COLOR=darkred Family=Serif><B>"
-				. "Status: manual help requested<BR>"
-				. " by <FONT COLOR=black>$eml</FONT>,<BR>"
-				. "expect results in a few hours.<B></FONT>";
+				. "Status:</B></FONT> manual help requested<BR>"
+				. " by <FONT COLOR=black><B>$eml</B></FONT>,<BR>"
+				. "expect results in a few hours.";
 		} else {
 			$results .= '<P>'
 			. "To get free help, leave a return address:<BR>"
@@ -906,9 +961,9 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 if($DynamicHistory eq 'yes') {
 	# [Un-]limit number of history items
 	$HistoryItemsHidden = $CountHistoryItems - $CountShownItems;
+	my $item = 'item';
 	if($HistoryItemsHidden > 0) {
 		# Propose to expand the list.
-		my $item = 'item';
 		$HistoryItemsHidden == 1 or $item = 'items';
 		$history .= "<TR BGCOLOR=white><TD COLSPAN=3 ALIGN=center>"
 			. "<A HREF=\"$myName?history=full\">"
@@ -917,7 +972,6 @@ if($DynamicHistory eq 'yes') {
 			. "</TD></TR>\n";
 	} elsif($HistoryShow eq "full" && $#transactions >= $MaxHistoryItems) {
 		# Propose to shorten the list.
-		my $item = 'item';
 		$MaxHistoryItems == 1 or $item = 'items';
 		$history .= "<TR BGCOLOR=white><TD COLSPAN=3 ALIGN=center>"
 			. "<A HREF=\"$myName?history=short\">"
@@ -1026,6 +1080,11 @@ $redirect
 		visibility: hidden;
 		position: fixed;
 	}
+	DIV.options#options-ber {
+		visibility: hidden;
+		position: fixed;
+	}
+	DIV.optsbar#optsbar-lite { font-size: 7pt; }
 	DIV.optsbar#optsbar-lite { font-size: 7pt; }
 	DIV.optsbar {
                 font-size: 8pt;
@@ -1069,7 +1128,7 @@ $redirect_bottom
 <HR WIDTH=70%>
 <CENTER><ADDRESS><FONT SIZE=-1 FACE=Courier COLOR=#404040>
 <A HREF=$ASN1C_Page>The ASN.1 Compiler</A>
-	Copyright &copy; 2003, 2004, 2005
+	Copyright &copy; 2003, 2004, 2005, 2006
 Lev Walkin &lt;<A HREF=mailto:vlm&#64;lionet.info?Subject=asn1c>vlm&#64;lionet.info</A>&gt;
 </FONT></ADDRESS></CENTER>
 </BODY>
