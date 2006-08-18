@@ -4,7 +4,8 @@ asn1c \- ASN.1 Compiler
 .SH SYNOPSIS
 asn1c [\fB\-E\fR [\fB-F\fR] | \fB\-P\fR | \fB\-R\fR]
       [\fB\-S\fR\fIdir\fR] [\fB-X\fR]
-      [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR] [\fB\-gen-\fR\fIoption\fR] [\fB\-print-\fR\fIoption\fR]
+      [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR] [\fB\-gen-\fR\fIoption\fR] [\fB\-pdu=\fR\fIoption\fR]
+      [\fB\-print-\fR\fIoption\fR]
       \fIinfile\fR...
 .SH DESCRIPTION
 asn1c compiles ASN.1 specifications into a set of
@@ -29,7 +30,7 @@ and other encoding standards.
 .TP
 \fICodecs Generation Options\fR
 .br
-.B \-gen-PER
+.B \-gen-PER \-pdu=auto
 .TP
 \fIOutput Options\fR
 .br
@@ -117,6 +118,9 @@ Copy support files (skeletons) rather than symlink them.
 .TP
 .B \-gen-PER
 Generate Packed Encoding Rules (PER) support code.
+.TP
+.B \-pdu=auto
+Generate PDU tables by discovering Protocol Data Units automatically.
 .SH OUTPUT OPTIONS
 .TP
 .B \-print-constraints
