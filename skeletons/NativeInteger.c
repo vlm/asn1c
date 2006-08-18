@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
@@ -29,6 +30,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
+	NativeInteger_encode_uper,	/* Unaligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
@@ -251,6 +253,27 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 
 	return rval;
+}
+
+asn_enc_rval_t
+NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	asn_enc_rval_t er;
+	long native;
+	INTEGER_t tmpint;
+
+	if(!sptr) _ASN_ENCODE_FAILED;
+
+	native = *(long *)sptr;
+
+	ASN_DEBUG("Encoding NativeInteger %s %ld (UPER)", td->name, native);
+
+	memset(&tmpint, 0, sizeof(tmpint));
+	if(asn_long2INTEGER(&tmpint, native))
+		_ASN_ENCODE_FAILED;
+	er = INTEGER_encode_uper(td, constraints, &tmpint, po);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+	return er;
 }
 
 /*

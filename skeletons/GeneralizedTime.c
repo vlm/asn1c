@@ -152,7 +152,7 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	GeneralizedTime_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	GeneralizedTime_encode_xer,
-	0,
+	0, 0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_GeneralizedTime_tags,
 	sizeof(asn_DEF_GeneralizedTime_tags)

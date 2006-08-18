@@ -60,6 +60,7 @@ xer_decoder.h xer_decoder.c	# XER decoding support
 xer_encoder.h xer_encoder.c	# XER encoding support
 per_support.h per_support.c	# PER parsing
 per_decoder.h per_decoder.c	# PER decoding support
+per_encoder.h per_encoder.c	# PER encoding support
 #asn-decoder-template.c		# Template for quick decoder creation
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION

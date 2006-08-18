@@ -22,7 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_VisibleString = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
-	0,
+	0, 0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_VisibleString_tags,
 	sizeof(asn_DEF_VisibleString_tags)

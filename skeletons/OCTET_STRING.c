@@ -33,6 +33,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
+	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OCTET_STRING_tags,
 	sizeof(asn_DEF_OCTET_STRING_tags)
@@ -1295,6 +1296,103 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	st->buf[st->size] = 0;	/* nul-terminate */
 
 	return rval;
+}
+
+asn_enc_rval_t
+OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
+        asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+		? (asn_OCTET_STRING_specifics_t *)td->specifics
+		: &asn_DEF_OCTET_STRING_specs;
+	asn_per_constraint_t *ct = constraints ? &constraints->size
+				: (td->per_constraints
+					? &td->per_constraints->size
+					: &asn_DEF_OCTET_STRING_constraint);
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+	int unit_bits = (specs->subvariant != 1) * 7 + 1;
+	asn_enc_rval_t er;
+	int ct_extensible = ct->flags & APC_EXTENSIBLE;
+	int inext = 0;		/* Lies not within extension root */
+	int sizeinunits = st->size;
+	const uint8_t *buf;
+	int ret;
+
+	if(!st || !st->buf)
+		_ASN_ENCODE_FAILED;
+
+	if(unit_bits == 1) {
+		ASN_DEBUG("BIT STRING of %d bytes, %d bits unused",
+				sizeinunits, st->bits_unused);
+		sizeinunits = sizeinunits * 8 - (st->bits_unused & 0x07);
+	}
+
+	ASN_DEBUG("Encoding %s into %d units",
+		td->name, sizeinunits);
+
+	/* Figure out wheter size lies within PER visible consrtaint */
+
+	if(ct->effective_bits >= 0) {
+		if(sizeinunits < ct->lower_bound
+		|| sizeinunits > ct->upper_bound) {
+			if(ct_extensible) {
+				ct = &asn_DEF_OCTET_STRING_constraint;
+				inext = 1;
+			} else
+				_ASN_ENCODE_FAILED;
+		}
+	} else {
+		inext = 0;
+	}
+
+	if(ct_extensible) {
+		/* Declare whether length is [not] within extension root */
+		if(per_put_few_bits(po, inext, 1))
+			_ASN_ENCODE_FAILED;
+	}
+
+	/* X.691, #16.5: zero-length encoding */
+	/* X.691, #16.6: short fixed length encoding (up to 2 octets) */
+	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
+	if(ct->effective_bits >= 0) {
+		ASN_DEBUG("Encoding %d bytes (%ld), length in %d bits",
+				st->size, sizeinunits - ct->lower_bound,
+				ct->effective_bits);
+		ret = per_put_few_bits(po, sizeinunits - ct->lower_bound,
+				ct->effective_bits);
+		if(ret) _ASN_ENCODE_FAILED;
+		ret = per_put_many_bits(po, st->buf, sizeinunits);
+		if(ret) _ASN_ENCODE_FAILED;
+		_ASN_ENCODED_OK(er);
+	}
+
+	ASN_DEBUG("Encoding %d bytes", st->size);
+
+	if(sizeinunits == 0) {
+		if(uper_put_length(po, 0))
+			_ASN_ENCODE_FAILED;
+		_ASN_ENCODED_OK(er);
+	}
+
+	buf = st->buf;
+	while(sizeinunits) {
+		ssize_t maySave = uper_put_length(po, sizeinunits);
+		if(maySave < 0) _ASN_ENCODE_FAILED;
+
+		ASN_DEBUG("Encoding %d of %d", maySave, sizeinunits);
+
+		ret = per_put_many_bits(po, buf, maySave);
+		if(ret) _ASN_ENCODE_FAILED;
+
+		if(unit_bits == 1)
+			buf += maySave >> 3;
+		else
+			buf += maySave;
+		sizeinunits -= maySave;
+		assert(!(maySave & 0x07) || !sizeinunits);
+	}
+
+	_ASN_ENCODED_OK(er);
 }
 
 int

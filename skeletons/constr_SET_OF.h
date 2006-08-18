@@ -33,6 +33,7 @@ der_type_encoder_f SET_OF_encode_der;
 xer_type_decoder_f SET_OF_decode_xer;
 xer_type_encoder_f SET_OF_encode_xer;
 per_type_decoder_f SET_OF_decode_uper;
+per_type_encoder_f SET_OF_encode_uper;
 
 #ifdef __cplusplus
 }

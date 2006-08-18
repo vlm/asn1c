@@ -1,5 +1,5 @@
-/*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+/*
+ * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -362,6 +362,8 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	void *memb_ptr;
 	size_t computed_size = 0;
 	int present;
+
+	if(!sptr) _ASN_ENCODE_FAILED;
 
 	ASN_DEBUG("%s %s as CHOICE",
 		cb?"Encoding":"Estimating", td->name);
@@ -890,6 +892,82 @@ CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ASN_DEBUG("Failed to decode %s in %s (CHOICE)",
 			elm->name, td->name);
 	return rv;
+}
+   
+asn_enc_rval_t
+CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elm;	/* CHOICE's element */
+	asn_per_constraint_t *ct;
+	void *memb_ptr;
+	int present;
+
+	if(!sptr) _ASN_ENCODE_FAILED;
+
+	ASN_DEBUG("Encoding %s as CHOICE", td->name);
+
+	if(constraints) ct = &constraints->value;
+	else if(td->per_constraints) ct = &td->per_constraints->value;
+	else ct = 0;
+
+	present = _fetch_present_idx(sptr,
+		specs->pres_offset, specs->pres_size);
+
+	/*
+	 * If the structure was not initialized properly, it cannot be encoded:
+	 * can't deduce what to encode in the choice type.
+	 */
+	if(present <= 0 || present > td->elements_count)
+		_ASN_ENCODE_FAILED;
+	else
+		present--;
+
+	/* Adjust if canonical order is different from natural order */
+	if(specs->canonical_order)
+		present = specs->canonical_order[present];
+
+	ASN_DEBUG("Encoding %s CHOICE element %d", td->name, present);
+
+	if(ct && ct->range_bits >= 0) {
+		if(present < ct->lower_bound
+		|| present > ct->upper_bound) {
+			if(ct->flags & APC_EXTENSIBLE) {
+				if(per_put_few_bits(po, 1, 1))
+					_ASN_ENCODE_FAILED;
+			} else {
+				_ASN_ENCODE_FAILED;
+			}
+			ct = 0;
+		}
+	}
+	if(ct && ct->flags & APC_EXTENSIBLE)
+		if(per_put_few_bits(po, 0, 1))
+			_ASN_ENCODE_FAILED;
+
+	if(ct && ct->range_bits >= 0) {
+		if(per_put_few_bits(po, present, ct->range_bits))
+			_ASN_ENCODE_FAILED;
+	} else {
+		if(specs->ext_start == -1)
+			_ASN_ENCODE_FAILED;
+		if(uper_put_nsnnwn(po, present - specs->ext_start))
+			_ASN_ENCODE_FAILED;
+		ASN_DEBUG("NOT IMPLEMENTED YET");
+		_ASN_ENCODE_FAILED;
+	}
+
+	elm = &td->elements[present];
+	if(elm->flags & ATF_POINTER) {
+		/* Member is a pointer to another structure */
+		memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+		if(!memb_ptr) _ASN_ENCODE_FAILED;
+	} else {
+		memb_ptr = (char *)sptr + elm->memb_offset;
+	}
+
+	return elm->type->uper_encoder(elm->type, elm->per_constraints,
+			memb_ptr, po);
 }
    
 

@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
@@ -22,6 +23,7 @@ extern asn_TYPE_descriptor_t asn_DEF_NativeEnumerated;
 
 xer_type_encoder_f NativeEnumerated_encode_xer;
 per_type_decoder_f NativeEnumerated_decode_uper;
+per_type_encoder_f NativeEnumerated_encode_uper;
 
 #ifdef __cplusplus
 }

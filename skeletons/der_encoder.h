@@ -27,7 +27,7 @@ asn_enc_rval_t der_encode_to_buffer(
 		struct asn_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr,	/* Structure to be encoded */
 		void *buffer,		/* Pre-allocated buffer */
-		size_t *buffer_size	/* Initial buffer size (max) */
+		size_t buffer_size	/* Initial buffer size (maximum) */
 	);
 
 /*

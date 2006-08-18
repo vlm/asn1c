@@ -42,7 +42,7 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	der_encode_primitive,
 	REAL_decode_xer,
 	REAL_encode_xer,
-	0,
+	0, 0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_REAL_tags,
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),

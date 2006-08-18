@@ -24,6 +24,7 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	NULL_decode_xer,
 	NULL_encode_xer,
 	NULL_decode_uper,	/* Unaligned PER decoder */
+	NULL_encode_uper,	/* Unaligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
@@ -129,4 +130,18 @@ NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	rv.code = RC_OK;
 	rv.consumed = 0;
 	return rv;
+}
+
+asn_enc_rval_t
+NULL_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+		void *sptr, asn_per_outp_t *po) {
+	asn_enc_rval_t er;
+
+	(void)td;
+	(void)constraints;
+	(void)sptr;
+	(void)po;
+
+	er.encoded = 0;
+	_ASN_ENCODED_OK(er);
 }

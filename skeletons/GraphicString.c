@@ -22,7 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_GraphicString = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,	/* Can't expect it to be ASCII/UTF8 */
-	0,
+	0, 0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_GraphicString_tags,
 	sizeof(asn_DEF_GraphicString_tags)

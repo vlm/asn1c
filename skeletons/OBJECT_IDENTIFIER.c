@@ -23,7 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	der_encode_primitive,
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
-	0,
+	0, 0,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
@@ -425,6 +425,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, const void *arcval, unsigned i
 	 * The following conditions must hold:
 	 * assert(arcval);
 	 * assert(arcval_size > 0);
+	 * assert(arcval_size <= 16);
 	 * assert(arcbuf);
 	 */
 #ifdef	WORDS_BIGENDIAN
@@ -437,12 +438,7 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, const void *arcval, unsigned i
 	unsigned int cache;
 	uint8_t *bp = arcbuf;
 	int bits;
-#ifdef	__GNUC__
-	uint8_t buffer[arcval_size];
-#else
-	uint8_t *buffer = alloca(arcval_size);
-	if(!buffer) { errno = ENOMEM; return -1; }
-#endif
+	uint8_t buffer[16];
 
 	if(isLittleEndian && !prepared_order) {
 		const uint8_t *a = (const unsigned char *)arcval + arcval_size - 1;
@@ -502,7 +498,9 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, const void *arcs, unsigned 
 	unsigned size;
 	unsigned i;
 
-	if(!oid || !arcs || arc_type_size < 1 || arc_slots < 2) {
+	if(!oid || !arcs || arc_type_size < 1
+	|| arc_type_size > 16
+	|| arc_slots < 2) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -586,17 +584,8 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, const void *arcs, unsigned 
 	 */
 	{
 		uint8_t *tp;
-#ifdef	__GNUC__
-		uint8_t first_value[1 + arc_type_size];	/* of two arcs */
+		uint8_t first_value[1 + 16];	/* of two arcs */
 		uint8_t *fv = first_value;
-#else
-		uint8_t *first_value = alloca(1 + arc_type_size);
-		uint8_t *fv = first_value;
-		if(!first_value) {
-			errno = ENOMEM;
-			return -1;
-		}
-#endif
 
 		/*
 		 * Simulate first_value = arc0 * 40 + arc1;
