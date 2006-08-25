@@ -702,7 +702,7 @@ DataInterChange.c: ../tap3.asn1 regenerate.Makefile
 
 ASN_CONVERTER=../../skeletons/converter-sample.c
 $(TARGET).o: $(ASN_CONVERTER)
-	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_DataInterChange -o $(TARGET).o -c $(ASN_CONVERTER)
+	$(CC) $(CFLAGS) -DPDU=DataInterChange -o $(TARGET).o -c $(ASN_CONVERTER)
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
