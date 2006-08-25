@@ -5,7 +5,7 @@ GENERAL INFORMATION
 The X.509 (PKIX1) certificate decoder. Invoking `make` will compile the ASN.1
 specifications from the rfc3280.txt in the above directory.
 
-The ../../skeletons/asn-decoder-template.c will supply the missing
+The ../../skeletons/converter-sample.c will supply the missing
 "int main()" routine which drives the decoding process.
 
 x509dump USAGE
@@ -24,18 +24,9 @@ may be used to convert between PEM and DER.
 After convertsion, the x509dump utility may be used to dump the contents
 of the DER-encoded X.509 certificate:
 
-	./x509dump -x certificate.der	# Print as XML (BASIC-XER)
+	./x509dump certificate.der	# Print as XML (BASIC-XER)
 
 The full list of recognized command line options may be obtained with
 
 	> ./x509dump -h
-	Usage: ./x509dump [options] <data.ber> ...
-	Where options are:
-	  -b <size>    Set the i/o buffer size (default is 8192)
-	  -c           Check ASN.1 constraints after decoding
-	  -d           Enable debugging (-dd is even better)
-	  -n <num>     Process files <num> times
-	  -s <size>    Set the stack usage limit
-	  -p           Print out the decoded contents
-	  -x           Print out as XML
 

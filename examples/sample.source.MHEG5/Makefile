@@ -470,9 +470,9 @@ InterchangedObject.c: ../ISO13522-MHEG-5.asn regenerate.Makefile
 	@touch InterchangedObject.c
 	make
 
-ASN_DECODER_TEMPLATE=../../skeletons/asn-decoder-template.c
-$(TARGET).o: $(ASN_DECODER_TEMPLATE)
-	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_InterchangedObject -o $(TARGET).o -c $(ASN_DECODER_TEMPLATE)
+ASN_CONVERTER=../../skeletons/converter-sample.c
+$(TARGET).o: $(ASN_CONVERTER)
+	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_InterchangedObject -o $(TARGET).o -c $(ASN_CONVERTER)
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)

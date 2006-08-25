@@ -334,6 +334,8 @@ ASN_MODULE_HEADERS+=per_support.h
 ASN_MODULE_SOURCES+=per_support.c
 ASN_MODULE_HEADERS+=per_decoder.h
 ASN_MODULE_SOURCES+=per_decoder.c
+ASN_MODULE_HEADERS+=per_encoder.h
+ASN_MODULE_SOURCES+=per_encoder.c
 
 
 lib_LTLIBRARIES=libsomething.la
@@ -371,9 +373,9 @@ Certificate.c: regenerate.Makefile
 	@touch Certificate.c
 	make
 
-ASN_DECODER_TEMPLATE=../../skeletons/asn-decoder-template.c
-$(TARGET).o: $(ASN_DECODER_TEMPLATE)
-	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_Certificate -o $(TARGET).o -c $(ASN_DECODER_TEMPLATE)
+ASN_CONVERTER=../../skeletons/converter-sample.c
+$(TARGET).o: $(ASN_CONVERTER)
+	$(CC) $(CFLAGS) -Dasn_DEF=asn_DEF_Certificate -o $(TARGET).o -c $(ASN_CONVERTER)
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)

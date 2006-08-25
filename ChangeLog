@@ -9,6 +9,7 @@
 	* [typedef enum foo {}] foo_e; is now e_foo, see #1287989
 	* Refactored ValueSetTypeAssignment parsing.
 	* First release of PER encoder (does not encode SETs yet).
+	* asn-decoder-template.c renamed into converter-sample.c
 
 0.9.20:	2006-Mar-06
 
