@@ -52,7 +52,8 @@ static enum input_format {
 /* Output data format selector */
 static enum output_format {
 	OUT_XER,	/* -oxer: XER (XML) output */
-	OUT_DER,	/* -oder: DER output */
+	OUT_DER,	/* -oder: DER (BER) output */
+	OUT_PER,	/* -oper: Unaligned PER output */
 	OUT_TEXT,	/* -otext: semi-structured text */
 	OUT_NULL	/* -onull: No pretty-printing */
 } oform;	/* -o<format> */
@@ -91,15 +92,17 @@ main(int ac, char **av) {
 		if(optarg[0] == 'x') { iform = INP_XER; break; }
 		if(pduType->uper_decoder
 		&& optarg[0] == 'p') { iform = INP_PER; break; }
-		fprintf(stderr, "-i<format>: '%s': improper format selector",
+		fprintf(stderr, "-i<format>: '%s': improper format selector\n",
 			optarg);
 		exit(EX_UNAVAILABLE);
 	case 'o':
 		if(optarg[0] == 'd') { oform = OUT_DER; break; }
+		if(pduType->uper_encoder
+		&& optarg[0] == 'p') { oform = OUT_PER; break; }
 		if(optarg[0] == 'x') { oform = OUT_XER; break; }
 		if(optarg[0] == 't') { oform = OUT_TEXT; break; }
 		if(optarg[0] == 'n') { oform = OUT_NULL; break; }
-		fprintf(stderr, "-o<format>: '%s': improper format selector",
+		fprintf(stderr, "-o<format>: '%s': improper format selector\n",
 			optarg);
 		exit(EX_UNAVAILABLE);
 	case 'p':
@@ -161,7 +164,11 @@ main(int ac, char **av) {
 		"  -iber        Input is in BER (Basic Encoding Rules)%s\n",
 			iform == INP_PER ? "" : " (DEFAULT)");
 		fprintf(stderr,
-		"  -ixer        Input is in XER (XML Encoding Rules)\n"
+		"  -ixer        Input is in XER (XML Encoding Rules)\n");
+		if(pduType->uper_encoder)
+		fprintf(stderr,
+		"  -oper        Output in Unaligned PER (Packed Encoding Rules)\n");
+		fprintf(stderr,
 		"  -oder        Output in DER (Distinguished Encoding Rules)\n"
 		"  -oxer        Output in XER (XML Encoding Rules) (DEFAULT)\n"
 		"  -otext       Output in plain semi-structured text (dump)\n"
@@ -243,6 +250,14 @@ main(int ac, char **av) {
 			erv = der_encode(pduType, structure, write_out, stdout);
 			if(erv.encoded < 0) {
 				fprintf(stderr, "%s: Cannot convert into DER\n",
+					fname);
+				exit(EX_UNAVAILABLE);
+			}
+			break;
+		case OUT_PER:
+			erv = uper_encode(pduType, structure, write_out, stdout);
+			if(erv.encoded < 0) {
+				fprintf(stderr, "%s: Cannot convert into Unaligned PER\n",
 					fname);
 				exit(EX_UNAVAILABLE);
 			}
