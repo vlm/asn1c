@@ -13,6 +13,9 @@ THERE IS NO ISO13522-MHEG-5.asn FILE THERE YET!
 OBTAINING THE MHEG-5 SPECIFICATION
 ==================================
 
+Due to licensing restrictions, asn1c can not include the MHEG-5 ASN.1 module
+in its distribution.
+
 To obtain the MHEG-5 ASN.1 specification, you should go to
 	http://www.itu.int/ITU-T/asn1/database/itu-t/t/t172
 and select the latest "Text" version of the corresponding ASN.1 module.
@@ -26,23 +29,9 @@ mheg5dump USAGE
 The mheg5dump utility may be used to dump the contents of the BER-encoded
 MHEG-5 data record file:
 
-	./mheg5dump -x tapfile.der	# Print as XML (BASIC-XER)
-
-If necessary, a straightforward modification of the
-	../../skeletons/asn-decoder-template.c
-will allow you to build a converter from the XML (XER) MHEG-5 format
-back into binary (BER).
+	./mheg5dump tapfile.der		# Print MHEG-5 stream as XML (BASIC-XER)
 
 The full list of recognized command line options may be obtained with
 
-	> ./mheg5dump -h
-	Usage: ./mheg5dump [options] <data.ber> ...
-	Where options are:
-	  -b <size>    Set the i/o buffer size (default is 8192)
-	  -c           Check ASN.1 constraints after decoding
-	  -d           Enable debugging (-dd is even better)
-	  -n <num>     Process files <num> times
-	  -s <size>    Set the stack usage limit
-	  -p           Print out the decoded contents
-	  -x           Print out as XML
+	./mheg5dump -h
 

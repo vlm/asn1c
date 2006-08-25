@@ -11,6 +11,9 @@ THERE IS NO tap3.asn1 FILE THERE YET!
 OBTAINING THE TAP3 SPECIFICATION
 ================================
 
+Due to licensing restrictions, asn1c can not include the TAP3 ASN.1 module
+in its distribution.
+
 To obtain the TAP3 ASN.1 specification, you should go to
 	http://www.gsmworld.com/using/billing/tap3_legal.html
 and agree with their licensing terms by clicking the "I ACCEPT" button.
@@ -33,23 +36,9 @@ tap3dump USAGE
 The tap3dump utility may be used to dump the contents of the BER-encoded
 TAP3 data record file:
 
-	./tap3dump -x tapfile.der	# Print as XML (BASIC-XER)
-
-If necessary, a straightforward modification of the
-	../../skeletons/asn-decoder-template.c
-will allow you to build a converter from the XML (XER) TAP3 format
-back into binary (BER).
+	./tap3dump tapfile.ber	# Print as XML (BASIC-XER)
 
 The full list of recognized command line options may be obtained with
 
 	> ./tap3dump -h
-	Usage: ./tap3dump [options] <data.ber> ...
-	Where options are:
-	  -b <size>    Set the i/o buffer size (default is 8192)
-	  -c           Check ASN.1 constraints after decoding
-	  -d           Enable debugging (-dd is even better)
-	  -n <num>     Process files <num> times
-	  -s <size>    Set the stack usage limit
-	  -p           Print out the decoded contents
-	  -x           Print out as XML
 
