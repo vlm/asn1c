@@ -246,12 +246,12 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(" {\n");
 		TQ_FOR(v, &(expr->members), next) {
-			eidx++;
 			if(v->expr_type != A1TC_UNIVERVAL) {
 				OUT("/* Unexpected BIT STRING element: %s */\n",
 				v->Identifier);
 				continue;
 			}
+			eidx++;
 			OUT("\t");
 			out_name_chain(arg, ONC_noflags);
 			OUT("_%s", MKID(v));
