@@ -1,5 +1,5 @@
 
-0.9.21:	2006-Aug-17
+0.9.21:	2006-Aug-27
 
 	* skeletons/standard-modules directory is now used for standard types.
 	* Fixed class field access problem (Test case 98)
