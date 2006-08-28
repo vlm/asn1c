@@ -119,7 +119,7 @@ asn1f_fix_enum(arg_t *arg) {
 		 * 1.4 Check that all identifiers before the current one
 		 * differs from it.
 		 */
-		ret = asn1f_check_unique_expr_child(arg, ev, NULL);
+		ret = asn1f_check_unique_expr_child(arg, ev, 0, "identifier");
 		RET2RVAL(ret, rvalue);
 	}
 

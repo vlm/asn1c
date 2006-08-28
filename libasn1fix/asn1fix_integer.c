@@ -92,12 +92,13 @@ asn1f_fix_integer(arg_t *arg) {
 		/*
 		 * Check that all identifiers are distinct.
 		 */
-		ret = asn1f_check_unique_expr_child(arg, iv, NULL);
+		ret = asn1f_check_unique_expr_child(arg, iv, 0, "identifier");
 		RET2RVAL(ret, rvalue);
 		/*
 		 * Check that all values are distinct.
 		 */
-		ret = asn1f_check_unique_expr_child(arg, iv, _compare_value);
+		ret = asn1f_check_unique_expr_child(arg, iv,
+				_compare_value, "value");
 		RET2RVAL(ret, rvalue);
 	}
 
