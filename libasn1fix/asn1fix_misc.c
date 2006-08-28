@@ -294,8 +294,7 @@ asn1f_check_unique_expr_child(arg_t *arg, asn1p_expr_t *child,
 			msg = opt_compare
 				?"Expressions clash"
 				:"Identifiers name clash";
-			arg->eh(1,
-				"%s: "
+			FATAL("%s: "
 				"\"%s\" at line %d has similar %s with "
 				"\"%s\" at line %d",
 				msg,
