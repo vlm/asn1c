@@ -55,6 +55,25 @@ asn1f_fix_bit_string_type(arg_t *arg) {
 				"is not an identifier", v->_lineno);
 			return -1;
 		}
+
+		/* 21.1 */
+		if(v->value == NULL) {
+			FATAL("BIT STRING NamedBit value at line %d "
+				"must be explicitly specified in braces",
+				v->_lineno);
+			return -1;
+		} else if(v->value->type == ATV_REFERENCED) {
+			/* Resolve the value */
+			if(asn1f_value_resolve(arg, v, 0))
+				return -1;
+		}
+		if(v->value->type != ATV_INTEGER
+		|| v->value->value.v_integer < 0) {
+			FATAL("BIT STRING NamedBit value at line %d: "
+				"non-negative integer value expected",
+				v->_lineno);
+			return -1;
+		}
 	}
 
 	return r_value;
