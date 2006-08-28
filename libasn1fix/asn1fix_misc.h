@@ -11,12 +11,9 @@
 int asn1f_recurse_expr(arg_t *arg, int (*f)(arg_t *arg));
 
 /*
- * Check that every child of a given expr has unique name or does not have any.
- * If opt_compare == NULL, the default comparison of the argument's
- * names (identifiers) will be performed.
+ * Check that every child of a given expr has unique identifier.
  */
-int asn1f_check_unique_expr(arg_t *arg,
-		int (*opt_compare)(asn1p_expr_t *a, asn1p_expr_t *b));
+int asn1f_check_unique_expr(arg_t *arg);
 
 /*
  * Check that every preceeding child of the given expr is not
@@ -25,7 +22,8 @@ int asn1f_check_unique_expr(arg_t *arg,
  * names (identifiers) will be performed.
  */
 int asn1f_check_unique_expr_child(arg_t *arg, asn1p_expr_t *child,
-		int (*opt_compare)(asn1p_expr_t *a, asn1p_expr_t *b));
+		int (*opt_compare)(asn1p_expr_t *a, asn1p_expr_t *b),
+		const char *opt_property_name);
 
 /*
  * Return number of children.

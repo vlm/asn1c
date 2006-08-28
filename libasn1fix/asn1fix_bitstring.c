@@ -32,6 +32,10 @@ asn1f_fix_bit_string(arg_t *arg) {
 	return r_value;
 }
 
+static int _compare_value(asn1p_expr_t *expr1, asn1p_expr_t *expr2) {
+	return expr2->value->value.v_integer - expr1->value->value.v_integer;
+}
+
 static int
 asn1f_fix_bit_string_type(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -40,10 +44,6 @@ asn1f_fix_bit_string_type(arg_t *arg) {
 	int ret;
 
 	TQ_FOR(v, &(expr->members), next) {
-		/* Check identifier uniqueness as per 21.4 */
-		ret = asn1f_check_unique_expr_child(arg, v, 0);
-		RET2RVAL(ret, r_value);
-
 		if(v->expr_type == A1TC_EXTENSIBLE) {
 			FATAL("Extension marker (...) is not allowed "
 				"as a BIT STRING NamedBit at line %d ",
@@ -74,6 +74,14 @@ asn1f_fix_bit_string_type(arg_t *arg) {
 				v->_lineno);
 			return -1;
 		}
+
+		/* Check value uniqueness as per 21.4 */
+		ret = asn1f_check_unique_expr_child(arg, v,
+				_compare_value, "value");
+		RET2RVAL(ret, r_value);
+		/* Check identifier uniqueness as per 21.5 */
+		ret = asn1f_check_unique_expr_child(arg, v, 0, "identifier");
+		RET2RVAL(ret, r_value);
 	}
 
 	return r_value;

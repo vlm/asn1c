@@ -385,7 +385,7 @@ asn1f_fix_constructed(arg_t *arg) {
 	}
 
 	/* Check identifier distinctness */
-	ret = asn1f_check_unique_expr(arg, NULL);
+	ret = asn1f_check_unique_expr(arg);
 	RET2RVAL(ret, rvalue);
 
 	/* Fix extensibility */

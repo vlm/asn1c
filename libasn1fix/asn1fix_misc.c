@@ -236,15 +236,14 @@ asn1f_recurse_expr(arg_t *arg, int (*callback)(arg_t *arg)) {
  * Check that every child of a given expr has unique name or does not have any.
  */
 int
-asn1f_check_unique_expr(arg_t *arg,
-		int (*opt_compare)(asn1p_expr_t *a, asn1p_expr_t *b)) {
+asn1f_check_unique_expr(arg_t *arg) {
 	asn1p_expr_t *expr;
 	int rvalue = 0;
 
 	TQ_FOR(expr, &(arg->expr->members), next) {
 		if(expr->Identifier) {
 			int ret = asn1f_check_unique_expr_child(arg, expr,
-				opt_compare);
+				0, "identifier");
 			if(ret) rvalue = -1;
 		} else {
 			/*
@@ -263,9 +262,11 @@ asn1f_check_unique_expr(arg_t *arg,
  */
 int
 asn1f_check_unique_expr_child(arg_t *arg, asn1p_expr_t *child,
-		int (*opt_compare)(asn1p_expr_t *a, asn1p_expr_t *b)) {
+		int (*opt_compare)(asn1p_expr_t *a, asn1p_expr_t *b),
+		const char *opt_property_name) {
 	asn1p_expr_t *expr;
-	int rvalue = 0;
+
+	if(!opt_property_name) opt_property_name = "property";
 
 	assert(child);
 	assert(opt_compare || child->Identifier);
@@ -290,26 +291,20 @@ asn1f_check_unique_expr_child(arg_t *arg, asn1p_expr_t *child,
 		}
 
 		if(ret == 0) {
-			char *msg;
-			msg = opt_compare
-				?"Expressions clash"
-				:"Identifiers name clash";
-			FATAL("%s: "
+			FATAL("Clash detected: "
 				"\"%s\" at line %d has similar %s with "
 				"\"%s\" at line %d",
-				msg,
 				expr->Identifier,
 				expr->_lineno,
-				opt_compare?"property":"name",
+				opt_property_name,
 				child->Identifier,
 				child->_lineno
 			);
-
-			rvalue = -1;
+			return -1;
 		}
 	}
 
-	return rvalue;
+	return 0;
 }
 
 int
