@@ -38,20 +38,17 @@ asn1f_fix_integer(arg_t *arg) {
 		 * Found "...", check correctness.
 		 */
 		if(iv->expr_type == A1TC_EXTENSIBLE) {
-			arg->eh(1,
-				"INTEGER %s at line %d: "
+			FATAL("INTEGER %s at line %d: "
 				"Extension marker is not allowed",
 				expr->Identifier,
-				iv->_lineno
-			);
+				iv->_lineno);
 			rvalue = -1;
 			continue;
 		}
 
 		if(iv->Identifier == NULL
 		|| iv->expr_type != A1TC_UNIVERVAL) {
-			arg->eh(1,
-				"INTEGER %s at line %d: "
+			FATAL("INTEGER %s at line %d: "
 				"Unsupported enumeration element %s",
 				expr->Identifier,
 				iv->_lineno,
@@ -62,8 +59,7 @@ asn1f_fix_integer(arg_t *arg) {
 		}
 
 		if(iv->value == NULL) {
-			arg->eh(1,
-				"INTEGER %s at line %d: "
+			FATAL("INTEGER %s at line %d: "
 				"Value for the identifier %s "
 				"must be set explicitly",
 				expr->Identifier,
@@ -84,8 +80,7 @@ asn1f_fix_integer(arg_t *arg) {
 		}
 
 		if(iv->value->type != ATV_INTEGER) {
-			arg->eh(1,
-				"INTEGER %s at line %d: "
+			FATAL("INTEGER %s at line %d: "
 				"Value for the identifier %s "
 				"is not compatible with INTEGER type",
 				expr->Identifier,

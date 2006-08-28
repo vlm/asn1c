@@ -36,17 +36,28 @@ static int
 asn1f_fix_bit_string_type(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
+	int r_value = 0;
+	int ret;
 
 	TQ_FOR(v, &(expr->members), next) {
+		/* Check identifier uniqueness as per 21.4 */
+		ret = asn1f_check_unique_expr_child(arg, v, 0);
+		RET2RVAL(ret, r_value);
+
+		if(v->expr_type == A1TC_EXTENSIBLE) {
+			FATAL("Extension marker (...) is not allowed "
+				"as a BIT STRING NamedBit at line %d ",
+				v->_lineno);
+			return -1;
+		}
 		if(v->expr_type != A1TC_UNIVERVAL) {
 			FATAL("BIT STRING value at line %d "
-				"is not an identifier",
-				v->_lineno);
+				"is not an identifier", v->_lineno);
 			return -1;
 		}
 	}
 
-	return 0;
+	return r_value;
 }
 
 static int

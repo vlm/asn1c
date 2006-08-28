@@ -34,8 +34,7 @@ asn1f_fix_enum(arg_t *arg) {
 		 */
 		if(ev->expr_type == A1TC_EXTENSIBLE) {
 			if(ext_marker) {
-				arg->eh(1,
-				"Enumeration %s at line %d: "
+				FATAL("Enumeration %s at line %d: "
 				"Second extension marker is not allowed",
 				expr->Identifier,
 				ev->_lineno);
