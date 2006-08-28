@@ -1,6 +1,7 @@
 #include "asn1fix_internal.h"
 
-int asn1f_fix_bit_string_value(arg_t *arg, asn1p_expr_t *ttype);
+static int asn1f_fix_bit_string_type(arg_t *arg);
+static int asn1f_fix_bit_string_value(arg_t *arg, asn1p_expr_t *ttype);
 static void asn1f_BS_remove_trailing_zero_bits(asn1p_value_t *value);
 static int asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype);
 
@@ -22,10 +23,33 @@ asn1f_fix_bit_string(arg_t *arg) {
 		}
 	}
 
+	if(expr->meta_type == AMT_TYPE
+	&& expr->expr_type == ASN_BASIC_BIT_STRING) {
+		ret = asn1f_fix_bit_string_type(arg);
+		RET2RVAL(ret, r_value);
+	}
+
 	return r_value;
 }
 
-int
+static int
+asn1f_fix_bit_string_type(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *v;
+
+	TQ_FOR(v, &(expr->members), next) {
+		if(v->expr_type != A1TC_UNIVERVAL) {
+			FATAL("BIT STRING value at line %d "
+				"is not an identifier",
+				v->_lineno);
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+static int
 asn1f_fix_bit_string_value(arg_t *arg, asn1p_expr_t *ttype) {
 	asn1p_expr_t *expr = arg->expr;
 	int r_value = 0;
