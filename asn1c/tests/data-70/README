@@ -1,8 +1,8 @@
 Mode of operation:
 
-	Each of the *.in files is XER-decoded, then converted into DER,
-	then decoded from DER and encoded into XER again, and compared
-	to the original encoding.
+	Each of the *.in files is XER-decoded, then converted into DER or PER,
+	then decoded back from DER (PER), then encoded into XER again,
+	and finally compared to the original encoding.
 
 Naming conventions:
 
