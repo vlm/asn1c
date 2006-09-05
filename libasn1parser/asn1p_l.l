@@ -27,6 +27,7 @@ int asn1p_lexer_constructs_year = 0;
 int asn1p_as_pointer;
 
 static asn1c_integer_t _lex_atoi(const char *ptr);
+static double          _lex_atod(const char *ptr);
 
 /*
  * Check that the type is defined in the year of the standard choosen.
@@ -238,6 +239,13 @@ WSP	[\t\r\v\f\n ]
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number;
+	}
+
+[-+]?[0-9]+[.]?([eE][-+]?)?[0-9]+ {
+		asn1p_lval.a_dbl = _lex_atod(yytext);
+		if(errno == ERANGE)
+			return -1;
+		return TOK_realnumber;
 	}
 
 ABSENT			return TOK_ABSENT;
@@ -564,3 +572,19 @@ _lex_atoi(const char *ptr) {
 	}
 	return value;
 }
+
+static double
+_lex_atod(const char *ptr) {
+	double value;
+	errno = 0;
+	value = strtod(ptr, 0);
+	if(errno) {
+		fprintf(stderr,
+			"Value \"%s\" at line %d is outside of `double` range "
+			"in this compiler! Please contact the asn1c author.\n",
+			ptr, yylineno);
+		errno = ERANGE;
+	}
+	return value;
+}
+
