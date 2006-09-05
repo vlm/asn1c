@@ -9,6 +9,9 @@ int
 asn1constraint_compatible(asn1p_expr_type_e expr_type,
 	enum asn1p_constraint_type_e constr_type, int fbless_SIZE) {
 
+	if(expr_type == ASN_BASIC_REAL)
+		return -1;	/* Not yet supported */
+
 	/*
 	 * X.680-0207, Table 9.
 	 */

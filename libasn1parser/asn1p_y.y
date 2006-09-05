@@ -92,6 +92,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 	struct asn1p_expr_marker_s a_marker;	/* OPTIONAL/DEFAULT */
 	enum asn1p_constr_pres_e a_pres;	/* PRESENT/ABSENT/OPTIONAL */
 	asn1c_integer_t		 a_int;
+	double			 a_dbl;
 	char	*tv_str;
 	struct {
 		char *buf;
@@ -114,9 +115,10 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %token	<tv_str>	TOK_hstring
 %token	<tv_str>	TOK_identifier
 %token	<a_int>		TOK_number
+%token	<a_int>		TOK_number_negative
+%token	<a_dbl>		TOK_realnumber
 %token	<a_int>		TOK_tuple
 %token	<a_int>		TOK_quadruple
-%token	<a_int>		TOK_number_negative
 %token	<tv_str>	TOK_typereference
 %token	<tv_str>	TOK_capitalreference		/* "CLASS1" */
 %token	<tv_str>	TOK_typefieldreference		/* "&Pork" */
@@ -258,6 +260,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_value>		SimpleValue
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
+%type	<a_value>		RealValue
 %type	<a_expr>		optComponentTypeLists
 %type	<a_expr>		ComponentTypeLists
 %type	<a_expr>		ComponentType
@@ -1838,12 +1841,8 @@ SingleValue:
 		checkmem($$);
 		$$->type = ATV_TRUE;
 	}
-	| SignedNumber {
-		$$ = $1;
-	}
-	| RestrictedCharacterStringValue {
-		$$ = $1;
-	}
+	| RealValue
+	| RestrictedCharacterStringValue
 	| Identifier {
 		asn1p_ref_t *ref;
 		int ret;
@@ -2132,6 +2131,14 @@ SignedNumber:
 	}
 	| TOK_number_negative {
 		$$ = asn1p_value_fromint($1);
+		checkmem($$);
+	}
+	;
+
+RealValue:
+	SignedNumber
+	| TOK_realnumber {
+		$$ = asn1p_value_fromdouble($1);
 		checkmem($$);
 	}
 	;
