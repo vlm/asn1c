@@ -598,6 +598,7 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 			_ASN_ENCODE_FAILED;
 		if(per_put_many_bits(po, buf, 8 * mayEncode))
 			_ASN_ENCODE_FAILED;
+		buf += mayEncode;
 	}
 
 	_ASN_ENCODED_OK(er);
