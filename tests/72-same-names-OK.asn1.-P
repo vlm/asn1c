@@ -424,7 +424,7 @@ memb_a_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(st->size > 0) {
 		/* Size in bits */
-		size = 8 * (st->size - 1) - (st->buf[0] & 0x7);
+		size = 8 * st->size - (st->bits_unused & 0x07);
 	} else {
 		size = 0;
 	}
@@ -455,7 +455,7 @@ memb_a_constraint_8(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	if(st->size > 0) {
 		/* Size in bits */
-		size = 8 * (st->size - 1) - (st->buf[0] & 0x7);
+		size = 8 * st->size - (st->bits_unused & 0x07);
 	} else {
 		size = 0;
 	}
