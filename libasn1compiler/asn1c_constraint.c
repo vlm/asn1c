@@ -505,7 +505,7 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 	case ASN_BASIC_BIT_STRING:
 		OUT("if(st->size > 0) {\n");
 		OUT("\t/* Size in bits */\n");
-		OUT("\tsize = 8 * (st->size - 1) - (st->buf[0] & 0x7);\n");
+		OUT("\tsize = 8 * st->size - (st->bits_unused & 0x07);\n");
 		OUT("} else {\n");
 		OUT("\tsize = 0;\n");
 		OUT("}\n");
