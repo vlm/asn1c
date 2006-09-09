@@ -67,8 +67,6 @@ CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CONFIGURE_DEPENDS = @CONFIGURE_DEPENDS@
-CPLUSPLUS_FOUND_FALSE = @CPLUSPLUS_FOUND_FALSE@
-CPLUSPLUS_FOUND_TRUE = @CPLUSPLUS_FOUND_TRUE@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -169,6 +167,10 @@ ASN1_SOURCE_1 = rfc3280.txt
 ASN1_FILES_1 = \
 	rfc3280-PKIX1Explicit88.asn1	\
 	rfc3280-PKIX1Implicit88.asn1
+
+ASN1_SOURCE_2 = rfc3525.txt
+ASN1_FILES_2 = \
+	rfc3525-MEDIA-GATEWAY-CONTROL.asn1
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.PKIX1/README			\
@@ -367,10 +369,13 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-info-am
 	uninstall-dist_binSCRIPTS uninstall-info-am
 
 
-all: $(ASN1_FILES_1)
+all: $(ASN1_FILES_1) $(ASN1_FILES_2)
 
 $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
 	./crfc2asn1.pl $(ASN1_SOURCE_1)
+
+$(ASN1_FILES_2): crfc2asn1.pl $(ASN1_SOURCE_2)
+	./crfc2asn1.pl $(ASN1_SOURCE_2)
 
 clean-local:
 	cd sample.source.PKIX1 && make distclean

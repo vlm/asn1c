@@ -6,10 +6,17 @@ ASN1_FILES_1 =				\
 	rfc3280-PKIX1Explicit88.asn1	\
 	rfc3280-PKIX1Implicit88.asn1
 
-all: $(ASN1_FILES_1)
+ASN1_SOURCE_2 = rfc3525.txt
+ASN1_FILES_2 =				\
+	rfc3525-MEDIA-GATEWAY-CONTROL.asn1
+
+all: $(ASN1_FILES_1) $(ASN1_FILES_2)
 
 $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
 	./crfc2asn1.pl $(ASN1_SOURCE_1)
+
+$(ASN1_FILES_2): crfc2asn1.pl $(ASN1_SOURCE_2)
+	./crfc2asn1.pl $(ASN1_SOURCE_2)
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.PKIX1/README			\

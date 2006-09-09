@@ -1,5 +1,5 @@
 
-0.9.21:	2006-Aug-27
+0.9.21:	2006-Sep-08
 
 	* skeletons/standard-modules directory is now used for standard types.
 	* Fixed class field access problem (Test case 98)
@@ -10,6 +10,7 @@
 	* Refactored ValueSetTypeAssignment parsing.
 	* First release of PER encoder (does not encode SETs yet).
 	* asn-decoder-template.c renamed into converter-sample.c
+	* MEGACO (Media Gateway Control Protocol) decoder sample added.
 
 0.9.20:	2006-Mar-06
 
