@@ -29,7 +29,8 @@ EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.*/README			\
 	$(srcdir)/sample.source.*/config.h			\
 	$(srcdir)/sample.source.*/Makefile			\
-	$(srcdir)/sample.source.*/regenerate.Makefile
+	$(srcdir)/sample.source.*/regenerate.Makefile		\
+	$(srcdir)/sample.source.*/sample-*
 
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 
