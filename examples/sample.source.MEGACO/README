@@ -1,0 +1,20 @@
+
+GENERAL INFORMATION
+===================
+
+The MEGACO (Media Gateway Control Protocol) PDU decoder.
+Invoking `make` will compile the ASN.1 specifications from the rfc3525.txt
+in the above directory.
+
+The ../../skeletons/converter-sample.c will supply the missing
+"int main()" routine which drives the decoding process.
+
+megacoDump USAGE
+==============
+
+	./megacoDump MegacoMessage.ber	# Print as XML (BASIC-XER)
+
+The full list of recognized command line options may be obtained with
+
+	> ./megacoDump -h
+

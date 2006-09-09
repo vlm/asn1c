@@ -1,5 +1,5 @@
 
-This directory contains a examples of ASN.1 converters.
+This directory contains a few examples.
 
 1. The ./sample.source.PKIX1 directory contains the X.509 Certificate decoder.
 
@@ -10,8 +10,13 @@ This directory contains a examples of ASN.1 converters.
    ISO 13522 MHEG-5/ITU-T T.172 (Multimedia Hypermedia Experts Group,
    Multimedia Presentations). Read the README file in that directory.
 
+3. The ./sample.source.MEGACO directory contains the decoder for
+   Media Gateway Control Protocol data units as specified in rfc3525.txt.
+
 The crfc2asn1.pl script can be used to extract ASN.1 data from RFC texts.
-For instance, it is used to extract X.509 ASN.1 modules from PKIX1 RFCs.
+For instance, it is used to extract X.509 ASN.1 modules from PKIX1 RFC
+and MEGACO ASN.1 module from rfc3525.txt.
+
 To regenerate the .asn1 files from the original RFC texts, do `rm *.asn1; make`.
 
 The clyx2asn1.pl script can be used to extract ASN.1 data from LyX editor files.
