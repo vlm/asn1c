@@ -26,32 +26,12 @@ $(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
 	./crfc2asn1.pl $(ASN1_SOURCE_3)
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
-	$(srcdir)/sample.source.PKIX1/README			\
-	$(srcdir)/sample.source.PKIX1/config.h			\
-	$(srcdir)/sample.source.PKIX1/Makefile			\
-	$(srcdir)/sample.source.PKIX1/regenerate.Makefile	\
-	$(srcdir)/sample.source.TAP3/README			\
-	$(srcdir)/sample.source.TAP3/config.h			\
-	$(srcdir)/sample.source.TAP3/Makefile			\
-	$(srcdir)/sample.source.TAP3/regenerate.Makefile	\
-	$(srcdir)/sample.source.MHEG5/README			\
-	$(srcdir)/sample.source.MHEG5/config.h			\
-	$(srcdir)/sample.source.MHEG5/Makefile			\
-	$(srcdir)/sample.source.MHEG5/regenerate.Makefile	\
-	$(srcdir)/sample.source.MEGACO/README			\
-	$(srcdir)/sample.source.MEGACO/config.h			\
-	$(srcdir)/sample.source.MEGACO/Makefile			\
-	$(srcdir)/sample.source.MEGACO/regenerate.Makefile	\
-	$(srcdir)/sample.source.LDAP3/README			\
-	$(srcdir)/sample.source.LDAP3/config.h			\
-	$(srcdir)/sample.source.LDAP3/Makefile			\
-	$(srcdir)/sample.source.LDAP3/regenerate.Makefile
+	$(srcdir)/sample.source.*/README			\
+	$(srcdir)/sample.source.*/config.h			\
+	$(srcdir)/sample.source.*/Makefile			\
+	$(srcdir)/sample.source.*/regenerate.Makefile
 
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 
 clean-local:
-	cd sample.source.PKIX1 && make distclean
-	cd sample.source.TAP3 && make distclean
-	cd sample.source.MHEG5 && make distclean
-	cd sample.source.MEGACO && make distclean
-	cd sample.source.LDAP3 && make distclean
+	for dir in sample.source.*; do (cd $$dir && make distclean); done
