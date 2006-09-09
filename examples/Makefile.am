@@ -10,13 +10,20 @@ ASN1_SOURCE_2 = rfc3525.txt
 ASN1_FILES_2 =				\
 	rfc3525-MEDIA-GATEWAY-CONTROL.asn1
 
-all: $(ASN1_FILES_1) $(ASN1_FILES_2)
+ASN1_SOURCE_3 = rfc4511.txt
+ASN1_FILES_3 =				\
+	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1.asn1
+
+all: $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN_FILES_3)
 
 $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
 	./crfc2asn1.pl $(ASN1_SOURCE_1)
 
 $(ASN1_FILES_2): crfc2asn1.pl $(ASN1_SOURCE_2)
 	./crfc2asn1.pl $(ASN1_SOURCE_2)
+
+$(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
+	./crfc2asn1.pl $(ASN1_SOURCE_3)
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.PKIX1/README			\
