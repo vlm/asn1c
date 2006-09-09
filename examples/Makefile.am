@@ -38,6 +38,10 @@ EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.MHEG5/config.h			\
 	$(srcdir)/sample.source.MHEG5/Makefile			\
 	$(srcdir)/sample.source.MHEG5/regenerate.Makefile	\
+	$(srcdir)/sample.source.MEGACO/README			\
+	$(srcdir)/sample.source.MEGACO/config.h			\
+	$(srcdir)/sample.source.MEGACO/Makefile			\
+	$(srcdir)/sample.source.MEGACO/regenerate.Makefile	\
 	$(srcdir)/sample.source.LDAP3/README			\
 	$(srcdir)/sample.source.LDAP3/config.h			\
 	$(srcdir)/sample.source.LDAP3/Makefile			\
@@ -49,4 +53,5 @@ clean-local:
 	cd sample.source.PKIX1 && make distclean
 	cd sample.source.TAP3 && make distclean
 	cd sample.source.MHEG5 && make distclean
+	cd sample.source.MEGACO && make distclean
 	cd sample.source.LDAP3 && make distclean
