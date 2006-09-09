@@ -12,7 +12,7 @@ ASN1_FILES_2 =				\
 
 ASN1_SOURCE_3 = rfc4511.txt
 ASN1_FILES_3 =				\
-	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1.asn1
+	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1
 
 all: $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN_FILES_3)
 
@@ -33,11 +33,20 @@ EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.TAP3/README			\
 	$(srcdir)/sample.source.TAP3/config.h			\
 	$(srcdir)/sample.source.TAP3/Makefile			\
-	$(srcdir)/sample.source.TAP3/regenerate.Makefile
+	$(srcdir)/sample.source.TAP3/regenerate.Makefile	\
+	$(srcdir)/sample.source.MHEG5/README			\
+	$(srcdir)/sample.source.MHEG5/config.h			\
+	$(srcdir)/sample.source.MHEG5/Makefile			\
+	$(srcdir)/sample.source.MHEG5/regenerate.Makefile	\
+	$(srcdir)/sample.source.LDAP3/README			\
+	$(srcdir)/sample.source.LDAP3/config.h			\
+	$(srcdir)/sample.source.LDAP3/Makefile			\
+	$(srcdir)/sample.source.LDAP3/regenerate.Makefile
 
-CLEANFILES = $(ASN1_FILES_1)
+CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 
 clean-local:
 	cd sample.source.PKIX1 && make distclean
 	cd sample.source.TAP3 && make distclean
 	cd sample.source.MHEG5 && make distclean
+	cd sample.source.LDAP3 && make distclean

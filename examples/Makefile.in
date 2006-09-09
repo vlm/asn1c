@@ -174,7 +174,7 @@ ASN1_FILES_2 = \
 
 ASN1_SOURCE_3 = rfc4511.txt
 ASN1_FILES_3 = \
-	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1.asn1
+	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.PKIX1/README			\
@@ -184,9 +184,21 @@ EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.source.TAP3/README			\
 	$(srcdir)/sample.source.TAP3/config.h			\
 	$(srcdir)/sample.source.TAP3/Makefile			\
-	$(srcdir)/sample.source.TAP3/regenerate.Makefile
+	$(srcdir)/sample.source.TAP3/regenerate.Makefile	\
+	$(srcdir)/sample.source.MHEG5/README			\
+	$(srcdir)/sample.source.MHEG5/config.h			\
+	$(srcdir)/sample.source.MHEG5/Makefile			\
+	$(srcdir)/sample.source.MHEG5/regenerate.Makefile	\
+	$(srcdir)/sample.source.MEGACO/README			\
+	$(srcdir)/sample.source.MEGACO/config.h			\
+	$(srcdir)/sample.source.MEGACO/Makefile			\
+	$(srcdir)/sample.source.MEGACO/regenerate.Makefile	\
+	$(srcdir)/sample.source.LDAP3/README			\
+	$(srcdir)/sample.source.LDAP3/config.h			\
+	$(srcdir)/sample.source.LDAP3/Makefile			\
+	$(srcdir)/sample.source.LDAP3/regenerate.Makefile
 
-CLEANFILES = $(ASN1_FILES_1)
+CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 all: all-am
 
 .SUFFIXES:
@@ -256,7 +268,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/$(srcdir) $(distdir)/$(srcdir)/sample.source.PKIX1 $(distdir)/$(srcdir)/sample.source.TAP3
+	$(mkdir_p) $(distdir)/$(srcdir) $(distdir)/$(srcdir)/sample.source.LDAP3 $(distdir)/$(srcdir)/sample.source.MEGACO $(distdir)/$(srcdir)/sample.source.MHEG5 $(distdir)/$(srcdir)/sample.source.PKIX1 $(distdir)/$(srcdir)/sample.source.TAP3
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -388,6 +400,8 @@ clean-local:
 	cd sample.source.PKIX1 && make distclean
 	cd sample.source.TAP3 && make distclean
 	cd sample.source.MHEG5 && make distclean
+	cd sample.source.MEGACO && make distclean
+	cd sample.source.LDAP3 && make distclean
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
