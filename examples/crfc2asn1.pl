@@ -31,7 +31,7 @@ while(<>) {
 	if($inasn == 0) {
 		#
 		# The least correct way to find the start of ASN
-		# definition.
+		# definition. That is, to ask a user.
 		#
 		if(/^[ \t]*END[ \t]*(--.*)?$/) {
 			print STDERR
@@ -68,8 +68,19 @@ while(<>) {
 				}
 			}
 			next unless $inasn;
+		} elsif(/^\s*DEFINITIONS\s*$/
+		&& $prevLine =~ /^\s*([A-Z][A-Za-z0-9-]*)\s*{[0-9a-z)( -]+}\s*$/) {
+			$_ = $prevLine . $prevComments . $_;
+			$modName = $1;
+			$currentFname = $rfcid . $modName. ".asn1";
+			$inasn = 1;
 		} else {
-			$prevLine = $_;
+			if(/^[ \t]*--/) {
+				$prevComments .= $_;
+			} else {
+				$prevComments = '';
+				$prevLine = $_;
+			}
 			next;
 		}
 
