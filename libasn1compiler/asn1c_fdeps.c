@@ -13,7 +13,7 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 		return 0;
 	if(!cur) cur = deps;
 
-	if(cur->usage != FDEP_NOTUSED)
+	if(cur->usage > FDEP_NOTUSED)
 		return 1;	/* Already activated */
 
 	fname = data;
@@ -66,7 +66,7 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 	asn1c_fdeps_t *deps;
 	asn1c_fdeps_t *cur;
 	FILE *f;
-	enum fdep_usage special_section = FDEP_REFERRED;
+	enum fdep_usage special_section = FDEP_NOTUSED;
 
 	(void)arg;
 
@@ -112,7 +112,6 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 				continue;
 
 			d = asn1c_new_dep(p);
-			assert(d);
 			d->usage = special_section;
 
 			if(asn1c_dep_add(cur, d) == 1)
