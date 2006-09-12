@@ -56,7 +56,7 @@ asn1p_parse_buffer(const char *buffer, int size /* = -1 */, enum asn1p_flags fla
 		if(_asn1p_fix_modules(a, "-"))
 			return NULL;	/* FIXME: destroy (a) */
 	} else if(a) {
-		asn1p_free(a);
+		asn1p_delete(a);
 		a = NULL;
 	}
 
@@ -113,7 +113,7 @@ asn1p_parse_file(const char *filename, enum asn1p_flags flags) {
 		if(_asn1p_fix_modules(a, filename))
 			return NULL;	/* FIXME: destroy (a) */
 	} else if(a) {
-		asn1p_free(a);
+		asn1p_delete(a);
 		a = NULL;
 	}
 
