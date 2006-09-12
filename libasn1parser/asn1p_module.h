@@ -93,7 +93,7 @@ typedef struct asn1p_s {
 } asn1p_t;
 
 asn1p_t *asn1p_new(void);
-void asn1p_free(asn1p_t *asn);
+void asn1p_delete(asn1p_t *asn);
 
 
 #endif	/* ASN1_PARSER_MODULE_H */

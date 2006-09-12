@@ -52,7 +52,7 @@ asn1p_new() {
 
 
 void
-asn1p_free(asn1p_t *asn) {
+asn1p_delete(asn1p_t *asn) {
 	if(asn) {
 		asn1p_module_t *mod;
 		while((mod = TQ_REMOVE(&(asn->modules), mod_next)))
