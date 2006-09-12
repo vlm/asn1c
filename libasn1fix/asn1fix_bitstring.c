@@ -229,14 +229,14 @@ asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype)
 			arg->expr->Identifier,
 			arg->expr->_lineno
 		);
-		asn1p_free(asn);
+		asn1p_delete(asn);
 		return -1;
 	}
 
 	bits = aI + 1;	/* Number of bits is more than a last bit position */
 	bitbuf = calloc(1, 1 + ((bits + 7) / 8));
 	if(bitbuf == NULL) {
-		asn1p_free(asn);
+		asn1p_delete(asn);
 		return -1;
 	}
 
@@ -281,7 +281,7 @@ asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype)
 		bitbuf[set_bit_pos>>3] |= 1 << (7-(set_bit_pos % 8));
 	}
 
-	asn1p_free(asn);
+	asn1p_delete(asn);
 	free(value->value.string.buf);
 	value->type = ATV_BITVECTOR;
 	value->value.binary_vector.bits = bitbuf;
