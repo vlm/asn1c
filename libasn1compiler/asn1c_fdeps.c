@@ -13,7 +13,7 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 		return 0;
 	if(!cur) cur = deps;
 
-	if(cur->used_somewhere)
+	if(cur->usage != FDEP_NOTUSED)
 		return 1;	/* Already activated */
 
 	fname = data;
@@ -37,7 +37,7 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 	}
 
 	if(cur->filename && strcmp(cur->filename, fname) == 0) {
-		cur->used_somewhere = 1;
+		cur->usage = FDEP_REFERRED;
 
 		/* Activate subdependencies */
 		for(i = 0; i < cur->el_count; i++) {
@@ -62,16 +62,11 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 
 asn1c_fdeps_t *
 asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
+	char buf[4096];
 	asn1c_fdeps_t *deps;
 	asn1c_fdeps_t *cur;
-	char buf[4096];
 	FILE *f;
-	enum {
-		SS_DYNAMIC,		/* Dynamic list of dependencies */
-		SS_CODEC_PER,		/* Use contents only if -gen-PER */
-		SS_COMMON_FILES,	/* Section for dependencies */
-		SS_IGNORE		/* Ignore contents of this section */
-	} special_section = SS_DYNAMIC;
+	enum fdep_usage special_section = FDEP_REFERRED;
 
 	(void)arg;
 
@@ -101,22 +96,24 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 			 * Special "prefix" section.
 			 */
 			if(strchr(p, ':')) {
-				special_section = SS_IGNORE;
+				special_section = FDEP_IGNORE;
 				if(strcmp(p, "COMMON-FILES:") == 0) {
-					special_section = SS_COMMON_FILES;
+					special_section = FDEP_COMMON_FILES;
+				} else if(strcmp(p, "CONVERTER:") == 0) {
+					special_section = FDEP_CONVERTER;
 				} else if((arg->flags & A1C_GEN_PER)
 					  && strcmp(p, "CODEC-PER:") == 0) {
-					special_section = SS_CODEC_PER;
+					special_section = FDEP_CODEC_PER;
 				}
 				break;
 			}
 
-			if(special_section == SS_IGNORE)
+			if(special_section == FDEP_IGNORE)
 				continue;
 
 			d = asn1c_new_dep(p);
 			assert(d);
-			d->used_somewhere = special_section;
+			d->usage = special_section;
 
 			if(asn1c_dep_add(cur, d) == 1)
 				cur = d;
@@ -178,8 +175,9 @@ asn1c_deps_makelist(asn1c_fdeps_t *deps) {
 
 	dlist = asn1c_new_dep(0);
 
-	if(deps->filename && deps->used_somewhere) {
+	if(deps->filename && deps->usage != FDEP_NOTUSED) {
 		d = asn1c_new_dep(deps->filename);
+		d->usage = deps->usage;
 		asn1c_dep_add(dlist, d);
 	}
 

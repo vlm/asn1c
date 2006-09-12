@@ -4,7 +4,14 @@
 typedef struct asn1c_fdeps_s {
 	char *filename;		/* Or 0, if root. */
 
-	int used_somewhere;	/* Somefile refers to it */
+	enum fdep_usage {
+	  FDEP_IGNORE       = -1,	/* Ignore contents of the section */
+	  FDEP_NOTUSED      =  0,
+	  FDEP_REFERRED     =  1,	/* Dynamic list of dependencies */
+	  FDEP_CONVERTER    =  2,	/* Name of the int main() file */
+	  FDEP_COMMON_FILES =  3,	/* Section for mandatory dependencies */
+	  FDEP_CODEC_PER    =  4,	/* Use contents only if -gen-PER */
+	} usage;		/* Some file refers to it */
 
 	struct asn1c_fdeps_s **elements;
 	int el_size;
