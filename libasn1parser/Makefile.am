@@ -1,7 +1,7 @@
 
 AM_CFLAGS = @ADD_CFLAGS@
 AM_YFLAGS = -p asn1p_ -d 
-AM_LFLAGS = -sp -Cem -Pasn1p_ -olex.yy.c
+AM_LFLAGS = -s -p -Cem -Pasn1p_ -olex.yy.c
 
 noinst_LTLIBRARIES = libasn1parser.la
 
