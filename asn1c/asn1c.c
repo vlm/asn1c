@@ -259,7 +259,7 @@ main(int ac, char **av) {
 			asn1p_module_t *mod;
 			while((mod = TQ_REMOVE(&(new_asn->modules), mod_next)))
 				TQ_ADD(&(asn->modules), mod, mod_next);
-			asn1p_free(new_asn);
+			asn1p_delete(new_asn);
 		} else {
 			asn = new_asn;
 		}
@@ -405,7 +405,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 			mod->_tags |= MT_STANDARD_MODULE;
 			TQ_ADD(&(asn->modules), mod, mod_next);
 		}
-		asn1p_free(new_asn);
+		asn1p_delete(new_asn);
 
 #ifdef	WIN32
 	} while(_findnext(dir, &c_file) == 0);
