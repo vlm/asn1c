@@ -90,6 +90,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		*dir_end++ = '/';
 
 		for(i = 0; i < dlist->el_count; i++) {
+			char *what_class;	/* MODULE or CONVERTER */
+			char *what_kind;	/* HEADERS or SOURCES */
 			char *fname = dlist->elements[i]->filename;
 			char *dotH;
 
@@ -101,17 +103,26 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 				fclose(mkf);
 				return -1;
 			}
-			dotH = strrchr(fname, 'h');
-			if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1]) {
-				fprintf(mkf, "ASN_MODULE_HEADERS+=%s\n", fname);
-			} else {
-				fprintf(mkf, "ASN_MODULE_SOURCES+=%s\n", fname);
+
+			/* MODULE data versus CONVERTER data */
+			switch(dlist->elements[i]->usage) {
+			case FDEP_CONVERTER: what_class = "CONVERTER"; break;
+			default: what_class= "MODULE"; break;
 			}
+
+			/* HEADERS versus SOURCES */
+			dotH = strrchr(fname, 'h');
+			if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1])
+				what_kind = "HEADERS";
+			else
+				what_kind = "SOURCES";
+			fprintf(mkf, "ASN_%s_%s+=%s\n",
+				what_class, what_kind, fname);
 		}
 	}
 
 	if(arg->flags & A1C_PDU_AUTO) {
-		fprintf(mkf, "ASN_MODULE_SOURCES+=pdu_collection.c\n");
+		fprintf(mkf, "ASN_CONVERTER_SOURCES+=pdu_collection.c\n");
 		if(generate_pdu_collection_file(arg))
 			return -1;
 	}
@@ -125,7 +136,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		"# Remove the lines below to convert it into a pure .am file\n"
 		"TARGET = progname\n"
 		"CFLAGS += -I.\n"
-		"OBJS=${ASN_MODULE_SOURCES:.c=.o} $(TARGET).o\n"
+		"OBJS=${ASN_MODULE_SOURCES:.c=.o}"
+		  " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
 		"\nall: $(TARGET)\n"
 		"\n$(TARGET): ${OBJS}"
 		"\n\t$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)\n"

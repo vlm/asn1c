@@ -61,6 +61,8 @@ xer_encoder.h xer_encoder.c	# XER encoding support
 per_support.h per_support.c	# PER parsing
 per_decoder.h per_decoder.c	# PER decoding support
 per_encoder.h per_encoder.c	# PER encoding support
-#converter-sample.c		# A sample of transcoder
+
+CONVERTER:			# THIS IS A SPECIAL SECTION
+converter-sample.c		# A default name for sample transcoder
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION
