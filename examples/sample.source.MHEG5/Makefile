@@ -186,7 +186,8 @@ ASN_MODULE_SOURCES=	\
 	GenericBoolean.c	\
 	GenericOctetString.c	\
 	Colour.c	\
-	XYPosition.c
+	XYPosition.c	\
+	OctetString.c
 
 ASN_MODULE_HEADERS=	\
 	InterchangedObject.h	\
@@ -376,16 +377,63 @@ ASN_MODULE_HEADERS=	\
 	GenericBoolean.h	\
 	GenericOctetString.h	\
 	Colour.h	\
-	XYPosition.h
+	XYPosition.h	\
+	OctetString.h
 
+ASN_MODULE_HEADERS+=ANY.h
+ASN_MODULE_SOURCES+=ANY.c
+ASN_MODULE_HEADERS+=BMPString.h
+ASN_MODULE_SOURCES+=BMPString.c
+ASN_MODULE_HEADERS+=UTF8String.h
 ASN_MODULE_HEADERS+=BOOLEAN.h
 ASN_MODULE_SOURCES+=BOOLEAN.c
 ASN_MODULE_HEADERS+=ENUMERATED.h
 ASN_MODULE_SOURCES+=ENUMERATED.c
 ASN_MODULE_HEADERS+=INTEGER.h
+ASN_MODULE_HEADERS+=NativeEnumerated.h
+ASN_MODULE_HEADERS+=GeneralString.h
+ASN_MODULE_SOURCES+=GeneralString.c
+ASN_MODULE_HEADERS+=GeneralizedTime.h
+ASN_MODULE_SOURCES+=GeneralizedTime.c
+ASN_MODULE_HEADERS+=GraphicString.h
+ASN_MODULE_SOURCES+=GraphicString.c
+ASN_MODULE_HEADERS+=IA5String.h
+ASN_MODULE_SOURCES+=IA5String.c
 ASN_MODULE_SOURCES+=INTEGER.c
+ASN_MODULE_HEADERS+=ISO646String.h
+ASN_MODULE_SOURCES+=ISO646String.c
 ASN_MODULE_HEADERS+=NULL.h
 ASN_MODULE_SOURCES+=NULL.c
+ASN_MODULE_SOURCES+=NativeEnumerated.c
+ASN_MODULE_HEADERS+=NativeInteger.h
+ASN_MODULE_SOURCES+=NativeInteger.c
+ASN_MODULE_HEADERS+=NativeReal.h
+ASN_MODULE_SOURCES+=NativeReal.c
+ASN_MODULE_HEADERS+=REAL.h
+ASN_MODULE_HEADERS+=NumericString.h
+ASN_MODULE_SOURCES+=NumericString.c
+ASN_MODULE_HEADERS+=OBJECT_IDENTIFIER.h
+ASN_MODULE_SOURCES+=OBJECT_IDENTIFIER.c
+ASN_MODULE_HEADERS+=ObjectDescriptor.h
+ASN_MODULE_SOURCES+=ObjectDescriptor.c
+ASN_MODULE_HEADERS+=PrintableString.h
+ASN_MODULE_SOURCES+=PrintableString.c
+ASN_MODULE_SOURCES+=REAL.c
+ASN_MODULE_HEADERS+=RELATIVE-OID.h
+ASN_MODULE_SOURCES+=RELATIVE-OID.c
+ASN_MODULE_HEADERS+=T61String.h
+ASN_MODULE_SOURCES+=T61String.c
+ASN_MODULE_HEADERS+=TeletexString.h
+ASN_MODULE_SOURCES+=TeletexString.c
+ASN_MODULE_HEADERS+=UTCTime.h
+ASN_MODULE_SOURCES+=UTCTime.c
+ASN_MODULE_SOURCES+=UTF8String.c
+ASN_MODULE_HEADERS+=UniversalString.h
+ASN_MODULE_SOURCES+=UniversalString.c
+ASN_MODULE_HEADERS+=VideotexString.h
+ASN_MODULE_SOURCES+=VideotexString.c
+ASN_MODULE_HEADERS+=VisibleString.h
+ASN_MODULE_SOURCES+=VisibleString.c
 ASN_MODULE_HEADERS+=asn_SEQUENCE_OF.h
 ASN_MODULE_SOURCES+=asn_SEQUENCE_OF.c
 ASN_MODULE_HEADERS+=asn_SET_OF.h
@@ -428,6 +476,13 @@ ASN_MODULE_HEADERS+=xer_decoder.h
 ASN_MODULE_SOURCES+=xer_decoder.c
 ASN_MODULE_HEADERS+=xer_encoder.h
 ASN_MODULE_SOURCES+=xer_encoder.c
+ASN_MODULE_HEADERS+=per_support.h
+ASN_MODULE_SOURCES+=per_support.c
+ASN_MODULE_HEADERS+=per_decoder.h
+ASN_MODULE_SOURCES+=per_decoder.c
+ASN_MODULE_HEADERS+=per_encoder.h
+ASN_MODULE_SOURCES+=per_encoder.c
+ASN_CONVERTER_SOURCES+=converter-sample.c
 
 
 lib_LTLIBRARIES=libsomething.la
@@ -436,8 +491,8 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = mheg5dump
-CFLAGS += -I. -DHAVE_CONFIG_H
-OBJS=${ASN_MODULE_SOURCES:.c=.o} $(TARGET).o
+CFLAGS += -I. -DHAVE_CONFIG_H -DPDU=InterchangedObject
+OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: InterchangedObject.c $(TARGET)
 
@@ -460,20 +515,16 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../ISO13522-MHEG-5.asn
 
 
-../ISO13522-MHEG-5.asn:
-	@echo The ../ISO13522-MHEG-5.asn file is not yet present.
-	@echo Please read the README file on how to obtain this file.
-	@exit 42
-
-InterchangedObject.c: ../ISO13522-MHEG-5.asn regenerate.Makefile
-	./regenerate.Makefile
+InterchangedObject.c: ../sample.source.regen
+	ASN1CMDOPTS="-fcompound-names" \
+	ASN1MODULES="../ISO13522-MHEG-5.asn" \
+	ASN1PDU=InterchangedObject \
+	PROGNAME=mheg5dump \
+	../sample.source.regen
 	@touch InterchangedObject.c
 	make
 
-ASN_CONVERTER=../../skeletons/converter-sample.c
-$(TARGET).o: $(ASN_CONVERTER)
-	$(CC) $(CFLAGS) -DPDU=InterchangedObject -o $(TARGET).o -c $(ASN_CONVERTER)
-
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
+	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)
 	rm -f Makefile.am.sample

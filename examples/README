@@ -2,7 +2,7 @@
 This directory contains a few examples.
 
 1. The ./sample.source.PKIX1 directory contains the X.509 Certificate decoder,
-   as specified in rfc3280.txt.
+   as specified in rfc3280.txt. Just type `make` in there to compile.
 
 2. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder.
    Before trying to compile, read the README file in that directory.
