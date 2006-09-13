@@ -136,7 +136,7 @@ process(const char *fname) {
 			if((collector_size - collector_offset) <= len
 			|| !collector) {
 				collector_size <<= 1;
-				collector = realloc(collector, collector_size);
+				collector = REALLOC(collector, collector_size);
 				if(!collector) {
 					perror("realloc()");
 					exit(EX_OSERR);

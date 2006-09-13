@@ -49,7 +49,7 @@ static int single_type_decoding = 0;	/* -1 enables that */
 static int minimalistic = 0;		/* -m enables that */
 static int pretty_printing = 1;		/* -p disables that */
 static int skip_bytes = 0;		/* -s controls that */
-static char *indent_buffer = "    ";	/* -i controls that */
+static char indent_bytes[16] = "    ";	/* -i controls that */
 
 int
 main(int ac, char **av) {
@@ -66,10 +66,9 @@ main(int ac, char **av) {
 		break;
 	case 'i':
 		i = atoi(optarg);
-		if(i >= 0 && i < 16) {
-			indent_buffer = alloca(i + 1);
-			memset(indent_buffer, ' ', i);
-			indent_buffer[i] = '\0';
+		if(i >= 0 && i < (int)sizeof(indent_bytes)) {
+			memset(indent_bytes, ' ', i);
+			indent_bytes[i] = '\0';
 		} else {
 			fprintf(stderr, "-i %s: Invalid indent value\n",optarg);
 			exit(EX_USAGE);
@@ -393,7 +392,7 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 		return;
 	}
 
-	while(level-- > 0) printf(indent_buffer);  /* Print indent */
+	while(level-- > 0) printf(indent_bytes);  /* Print indent */
 	printf(fin ? "</" : "<");
 
 	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
@@ -473,9 +472,9 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 	case ASN_BASIC_OBJECT_IDENTIFIER:
 	case ASN_BASIC_RELATIVE_OID:
 		if(tlv_len > 0 && tlv_len < 128*1024 /* VERY long OID! */) {
-			arcs = malloc(sizeof(*arcs) * (tlv_len + 1));
+			arcs = MALLOC(sizeof(*arcs) * (tlv_len + 1));
 			if(arcs) {
-				vbuf = malloc(tlv_len + 1);
+				vbuf = MALLOC(tlv_len + 1);
 				/* Not checking is intentional */
 			}
 		}
@@ -504,7 +503,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 			(BER_TAG_CLASS(tlv_tag) != ASN_TAG_CLASS_UNIVERSAL
 				&& pretty_printing)
 		) && (tlv_len > 0 && tlv_len < 128 * 1024)) {
-			vbuf = malloc(tlv_len + 1);
+			vbuf = MALLOC(tlv_len + 1);
 			/* Not checking is intentional */
 		}
 		break;
@@ -522,8 +521,8 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 		if(ch == -1) {
 			fprintf(stderr,
 			"%s: Unexpected end of file (V)\n", fname);
-			if(vbuf) free(vbuf);
-			if(arcs) free(arcs);
+			if(vbuf) FREEMEM(vbuf);
+			if(arcs) FREEMEM(arcs);
 			return -1;
 		}
 		switch(etype) {
@@ -592,7 +591,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 					if(i) printf(".");
 					printf("%" PRIuASN, arcs[i]);
 				}
-				free(vbuf);
+				FREEMEM(vbuf);
 				vbuf = 0;
 			}
 		}
@@ -614,7 +613,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 					if(i) printf(".");
 					printf("%" PRIuASN, arcs[i]);
 				}
-				free(vbuf);
+				FREEMEM(vbuf);
 				vbuf = 0;
 			}
 		}
@@ -657,10 +656,10 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_le
 			else
 				printf("%c", vbuf[i]);
 		}
-		free(vbuf);
+		FREEMEM(vbuf);
 	}
 
-	if(arcs) free(arcs);
+	if(arcs) FREEMEM(arcs);
 	return 0;
 }
 
@@ -676,7 +675,7 @@ decode_tlv_from_string(const char *datastring) {
 	int half;
 
 	dsize = strlen(datastring) + 1;
-	dp = data = calloc(1, dsize);
+	dp = data = CALLOC(1, dsize);
 	assert(data);
 
 	for(half = 0, p = datastring; *p; p++) {
