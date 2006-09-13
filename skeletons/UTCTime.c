@@ -5,8 +5,13 @@
 #include <asn_internal.h>
 #include <UTCTime.h>
 #include <GeneralizedTime.h>
-#include <time.h>
 #include <errno.h>
+
+#ifdef	__CYGWIN__
+#include "/usr/include/time.h"
+#else
+#include <time.h>
+#endif	/* __CYGWIN__ */
 
 #ifndef	__ASN_INTERNAL_TEST_MODE__
 

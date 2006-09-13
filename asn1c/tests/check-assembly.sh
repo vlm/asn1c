@@ -54,6 +54,7 @@ check-executable: compiled-module *.c*
 compiled-module: ${asn_module} ../../asn1c
 	../../asn1c -S ../../../skeletons -Wdebug-compiler	\\
 		${AFLAGS} ${asn_module}
+	rm -f converter-sample.c
 	@touch compiled-module
 
 check-succeeded: check-executable
