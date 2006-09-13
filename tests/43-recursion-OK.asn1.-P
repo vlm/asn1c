@@ -40,7 +40,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Test_structure_1;
 
 /*** <<< POST-INCLUDE [Test-structure-1] >>> ***/
 
-#include <Test-structure-1.h>
+#include "Test-structure-1.h"
 
 /*** <<< STAT-DEFS [Test-structure-1] >>> ***/
 
@@ -260,7 +260,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Choice_1;
 
 /*** <<< POST-INCLUDE [Choice-1] >>> ***/
 
-#include <Choice-1.h>
+#include "Choice-1.h"
 
 /*** <<< STAT-DEFS [Choice-1] >>> ***/
 
@@ -423,7 +423,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Test_structure_2;
 
 /*** <<< POST-INCLUDE [Test-structure-2] >>> ***/
 
-#include <Test-structure-3.h>
+#include "Test-structure-3.h"
 
 /*** <<< STAT-DEFS [Test-structure-2] >>> ***/
 
@@ -520,7 +520,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Test_structure_3;
 
 /*** <<< POST-INCLUDE [Test-structure-3] >>> ***/
 
-#include <Test-structure-2.h>
+#include "Test-structure-2.h"
 
 /*** <<< STAT-DEFS [Test-structure-3] >>> ***/
 

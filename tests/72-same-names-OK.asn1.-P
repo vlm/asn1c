@@ -2,8 +2,8 @@
 /*** <<< INCLUDES [Type] >>> ***/
 
 #include <asn_SET_OF.h>
-#include <Type1.h>
-#include <Type2.h>
+#include "Type1.h"
+#include "Type2.h"
 #include <constr_SEQUENCE.h>
 #include <constr_SET_OF.h>
 

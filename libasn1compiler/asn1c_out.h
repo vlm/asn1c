@@ -82,18 +82,19 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 	} while(0)
 
 /* Generate #include line */
+#define	GEN_INCLUDE_STD(typename)	GEN_INCLUDE("<" typename ".h>")
 #define	GEN_INCLUDE(filename)	do {				\
 	int saved_target = arg->target->target;			\
 	if(!filename) break;					\
 	REDIR(OT_INCLUDES);					\
-	OUT_NOINDENT("#include <%s.h>\n", filename);		\
+	OUT_NOINDENT("#include %s\n", filename);		\
 	REDIR(saved_target);					\
 } while(0)
 #define	GEN_POSTINCLUDE(filename)	do {			\
 	int saved_target = arg->target->target;			\
 	if(!filename) break;					\
 	REDIR(OT_POST_INCLUDE);					\
-	OUT_NOINDENT("#include <%s.h>\n", filename);		\
+	OUT_NOINDENT("#include %s\n", filename);		\
 	REDIR(saved_target);					\
 } while(0)
 

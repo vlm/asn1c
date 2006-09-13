@@ -79,9 +79,9 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 #define	DEPENDENCIES	do {						\
 	emit_include_dependencies(arg);					\
 	if(expr->expr_type == ASN_CONSTR_SET_OF)			\
-		GEN_INCLUDE("asn_SET_OF");				\
+		GEN_INCLUDE_STD("asn_SET_OF");				\
 	if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF)			\
-		GEN_INCLUDE("asn_SEQUENCE_OF");				\
+		GEN_INCLUDE_STD("asn_SEQUENCE_OF");			\
 } while(0)
 
 /* MKID_safe() without checking for reserved keywords */
@@ -328,7 +328,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 		return -1;
 	}
 
-	GEN_INCLUDE("constr_SEQUENCE");
+	GEN_INCLUDE_STD("constr_SEQUENCE");
 	if(!arg->embed)
 		GEN_DECLARE(expr);	/* asn_DEF_xxx */
 
@@ -568,7 +568,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 		tag2el_cxer = 0;
 	}
 
-	GEN_INCLUDE("constr_SET");
+	GEN_INCLUDE_STD("constr_SET");
 	if(!arg->embed)
 		GEN_DECLARE(expr);	/* asn_DEF_xxx */
 
@@ -770,9 +770,9 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	 * Print out the table according to which parsing is performed.
 	 */
 	if(seq_of) {
-		GEN_INCLUDE("constr_SEQUENCE_OF");
+		GEN_INCLUDE_STD("constr_SEQUENCE_OF");
 	} else {
-		GEN_INCLUDE("constr_SET_OF");
+		GEN_INCLUDE_STD("constr_SET_OF");
 	}
 	if(!arg->embed)
 		GEN_DECLARE(expr);	/* asn_DEF_xxx */
@@ -921,7 +921,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		return -1;
 	}
 
-	GEN_INCLUDE("constr_CHOICE");
+	GEN_INCLUDE_STD("constr_CHOICE");
 	if(!arg->embed)
 		GEN_DECLARE(expr);	/* asn_DEF_xxx */
 

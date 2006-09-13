@@ -23,7 +23,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Forest;
 
 /*** <<< POST-INCLUDE [Forest] >>> ***/
 
-#include <Tree.h>
+#include "Tree.h"
 
 /*** <<< STAT-DEFS [Forest] >>> ***/
 
@@ -237,7 +237,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Stuff;
 
 /*** <<< POST-INCLUDE [Stuff] >>> ***/
 
-#include <Forest.h>
+#include "Forest.h"
 
 /*** <<< STAT-DEFS [Stuff] >>> ***/
 

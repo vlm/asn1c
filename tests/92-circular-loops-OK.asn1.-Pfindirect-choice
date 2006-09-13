@@ -1,13 +1,13 @@
 
 /*** <<< INCLUDES [Everything] >>> ***/
 
-#include <Set.h>
-#include <Alpha.h>
-#include <Beta.h>
-#include <Gamma.h>
-#include <OneTwo.h>
-#include <TwoThree.h>
-#include <ThreeOne.h>
+#include "Set.h"
+#include "Alpha.h"
+#include "Beta.h"
+#include "Gamma.h"
+#include "OneTwo.h"
+#include "TwoThree.h"
+#include "ThreeOne.h"
 #include <constr_SEQUENCE.h>
 
 /*** <<< FWD-DECLS [Everything] >>> ***/
@@ -40,9 +40,9 @@ extern asn_TYPE_descriptor_t asn_DEF_Everything;
 
 /*** <<< POST-INCLUDE [Everything] >>> ***/
 
-#include <Choice1.h>
-#include <Choice2.h>
-#include <Choice3.h>
+#include "Choice1.h"
+#include "Choice2.h"
+#include "Choice3.h"
 
 /*** <<< STAT-DEFS [Everything] >>> ***/
 
@@ -227,7 +227,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Choice1;
 
 /*** <<< POST-INCLUDE [Choice1] >>> ***/
 
-#include <Everything.h>
+#include "Everything.h"
 
 /*** <<< STAT-DEFS [Choice1] >>> ***/
 
@@ -329,8 +329,8 @@ extern asn_TYPE_descriptor_t asn_DEF_Choice2;
 
 /*** <<< POST-INCLUDE [Choice2] >>> ***/
 
-#include <TypeRef.h>
-#include <Everything.h>
+#include "TypeRef.h"
+#include "Everything.h"
 
 /*** <<< STAT-DEFS [Choice2] >>> ***/
 
@@ -442,8 +442,8 @@ extern asn_TYPE_descriptor_t asn_DEF_Choice3;
 
 /*** <<< POST-INCLUDE [Choice3] >>> ***/
 
-#include <Everything.h>
-#include <Choice3.h>
+#include "Everything.h"
+#include "Choice3.h"
 
 /*** <<< STAT-DEFS [Choice3] >>> ***/
 
@@ -651,8 +651,8 @@ extern asn_TYPE_descriptor_t asn_DEF_Set;
 
 /*** <<< POST-INCLUDE [Set] >>> ***/
 
-#include <Set.h>
-#include <Sequence.h>
+#include "Set.h"
+#include "Sequence.h"
 
 /*** <<< STAT-DEFS [Set] >>> ***/
 
@@ -823,8 +823,8 @@ extern asn_TYPE_descriptor_t asn_DEF_Sequence;
 
 /*** <<< POST-INCLUDE [Sequence] >>> ***/
 
-#include <Sequence.h>
-#include <Set.h>
+#include "Sequence.h"
+#include "Set.h"
 
 /*** <<< STAT-DEFS [Sequence] >>> ***/
 
@@ -911,7 +911,7 @@ asn_TYPE_descriptor_t asn_DEF_Sequence = {
 
 /*** <<< INCLUDES [TypeRef] >>> ***/
 
-#include <Sequence.h>
+#include "Sequence.h"
 
 /*** <<< TYPE-DECLS [TypeRef] >>> ***/
 
@@ -1062,7 +1062,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Alpha;
 
 /*** <<< POST-INCLUDE [Alpha] >>> ***/
 
-#include <Beta.h>
+#include "Beta.h"
 
 /*** <<< STAT-DEFS [Alpha] >>> ***/
 
@@ -1204,8 +1204,8 @@ extern asn_TYPE_descriptor_t asn_DEF_Beta;
 
 /*** <<< POST-INCLUDE [Beta] >>> ***/
 
-#include <Alpha.h>
-#include <Gamma.h>
+#include "Alpha.h"
+#include "Gamma.h"
 
 /*** <<< STAT-DEFS [Beta] >>> ***/
 
@@ -1297,9 +1297,9 @@ extern asn_TYPE_descriptor_t asn_DEF_Gamma;
 
 /*** <<< POST-INCLUDE [Gamma] >>> ***/
 
-#include <TwoThree.h>
-#include <Alpha.h>
-#include <Beta.h>
+#include "TwoThree.h"
+#include "Alpha.h"
+#include "Beta.h"
 
 /*** <<< STAT-DEFS [Gamma] >>> ***/
 
@@ -1411,7 +1411,7 @@ extern asn_TYPE_descriptor_t asn_DEF_OneTwo;
 
 /*** <<< POST-INCLUDE [OneTwo] >>> ***/
 
-#include <TwoThree.h>
+#include "TwoThree.h"
 
 /*** <<< STAT-DEFS [OneTwo] >>> ***/
 
@@ -1508,7 +1508,7 @@ extern asn_TYPE_descriptor_t asn_DEF_TwoThree;
 
 /*** <<< POST-INCLUDE [TwoThree] >>> ***/
 
-#include <ThreeOne.h>
+#include "ThreeOne.h"
 
 /*** <<< STAT-DEFS [TwoThree] >>> ***/
 
@@ -1608,8 +1608,8 @@ extern asn_TYPE_descriptor_t asn_DEF_ThreeOne;
 
 /*** <<< POST-INCLUDE [ThreeOne] >>> ***/
 
-#include <OneTwo.h>
-#include <Gamma.h>
+#include "OneTwo.h"
+#include "Gamma.h"
 
 /*** <<< STAT-DEFS [ThreeOne] >>> ***/
 

@@ -125,7 +125,7 @@ asn_TYPE_descriptor_t asn_DEF_PrimitiveType = {
 
 /*** <<< INCLUDES [ConstructedType] >>> ***/
 
-#include <PrimitiveType.h>
+#include "PrimitiveType.h"
 #include <constr_SEQUENCE.h>
 
 /*** <<< TYPE-DECLS [ConstructedType] >>> ***/
@@ -196,7 +196,7 @@ asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 
 /*** <<< INCLUDES [T] >>> ***/
 
-#include <ConstructedType.h>
+#include "ConstructedType.h"
 
 /*** <<< TYPE-DECLS [T] >>> ***/
 

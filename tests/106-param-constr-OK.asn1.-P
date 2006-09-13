@@ -190,7 +190,7 @@ asn_TYPE_descriptor_t asn_DEF_Narrow_15P0 = {
 
 /*** <<< INCLUDES [NarrowInteger] >>> ***/
 
-#include <Narrow.h>
+#include "Narrow.h"
 
 /*** <<< TYPE-DECLS [NarrowInteger] >>> ***/
 

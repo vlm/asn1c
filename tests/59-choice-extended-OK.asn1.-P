@@ -42,7 +42,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Choice;
 
 /*** <<< POST-INCLUDE [Choice] >>> ***/
 
-#include <Choice.h>
+#include "Choice.h"
 
 /*** <<< STAT-DEFS [Choice] >>> ***/
 

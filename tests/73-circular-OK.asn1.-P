@@ -29,7 +29,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Type;
 
 /*** <<< POST-INCLUDE [Type] >>> ***/
 
-#include <EpytRef.h>
+#include "EpytRef.h"
 
 /*** <<< STAT-DEFS [Type] >>> ***/
 
@@ -130,7 +130,7 @@ asn_TYPE_descriptor_t asn_DEF_Type = {
 
 /*** <<< INCLUDES [EpytRef] >>> ***/
 
-#include <Epyt.h>
+#include "Epyt.h"
 
 /*** <<< TYPE-DECLS [EpytRef] >>> ***/
 
@@ -285,8 +285,8 @@ extern asn_TYPE_descriptor_t asn_DEF_Epyt;
 
 /*** <<< POST-INCLUDE [Epyt] >>> ***/
 
-#include <Type.h>
-#include <Ypet.h>
+#include "Type.h"
+#include "Ypet.h"
 
 /*** <<< STAT-DEFS [Epyt] >>> ***/
 
@@ -409,7 +409,7 @@ asn_TYPE_descriptor_t asn_DEF_Epyt = {
 
 #include <INTEGER.h>
 #include <IA5String.h>
-#include <EnumType.h>
+#include "EnumType.h"
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
 #include <constr_SET.h>
@@ -460,7 +460,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Ypet;
 
 /*** <<< POST-INCLUDE [Ypet] >>> ***/
 
-#include <Epyt.h>
+#include "Epyt.h"
 
 /*** <<< CTABLES [Ypet] >>> ***/
 

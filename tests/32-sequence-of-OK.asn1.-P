@@ -23,7 +23,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Programming;
 
 /*** <<< POST-INCLUDE [Programming] >>> ***/
 
-#include <Fault.h>
+#include "Fault.h"
 
 /*** <<< STAT-DEFS [Programming] >>> ***/
 
@@ -95,7 +95,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Fault;
 
 /*** <<< POST-INCLUDE [Fault] >>> ***/
 
-#include <Error.h>
+#include "Error.h"
 
 /*** <<< STAT-DEFS [Fault] >>> ***/
 
@@ -233,7 +233,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SeqWithMandatory;
 
 /*** <<< POST-INCLUDE [SeqWithMandatory] >>> ***/
 
-#include <Error.h>
+#include "Error.h"
 
 /*** <<< STAT-DEFS [SeqWithMandatory] >>> ***/
 
@@ -375,7 +375,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SeqWithOptional;
 
 /*** <<< POST-INCLUDE [SeqWithOptional] >>> ***/
 
-#include <Error.h>
+#include "Error.h"
 
 /*** <<< STAT-DEFS [SeqWithOptional] >>> ***/
 
