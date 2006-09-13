@@ -293,7 +293,7 @@ static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 
 	if(DynamicBuffer.allocated
 	>= (DynamicBuffer.offset + DynamicBuffer.length + bySize)) {
-		/* No buffer reallocation is necessary */
+		DEBUG("\tNo buffer reallocation is necessary");
 	} else if(bySize <= DynamicBuffer.offset) {
 		DEBUG("\tContents shifted by %ld", DynamicBuffer.offset);
 
@@ -316,7 +316,7 @@ static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 		DynamicBuffer.offset = 0;
 		DynamicBuffer.allocated = newsize;
 		DynamicBuffer.nreallocs++;
-		DEBUG("\tBuffer reallocated to %ld, %d time",
+		DEBUG("\tBuffer reallocated to %ld (%d time)",
 			newsize, DynamicBuffer.nreallocs);
 	}
 
@@ -385,7 +385,7 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 			/* Append the new data into the intermediate buffer */
 			add_bytes_to_buffer(fbuf, rd);
 			i_bptr = DynamicBuffer.data + DynamicBuffer.offset;
-			i_size = DynamicBuffer.allocated;
+			i_size = DynamicBuffer.length;
 		} else {
 			i_bptr = fbuf;
 			i_size = rd;
@@ -428,11 +428,6 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 			if(fp != stdin) fclose(fp);
 			return structure;
 		case RC_WMORE:
-			DEBUG("RC_WMORE, continuing %ld with %ld..%ld..%ld",
-				(long)rval.consumed,
-				(long)DynamicBuffer.offset,
-				(long)DynamicBuffer.length,
-				(long)DynamicBuffer.allocated);
 			/*
 			 * Adjust position inside the source buffer.
 			 */
@@ -440,6 +435,11 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 				DynamicBuffer.offset += rval.consumed;
 				DynamicBuffer.length -= rval.consumed;
 			}
+			DEBUG("RC_WMORE, continuing %ld with %ld..%ld..%ld",
+				(long)rval.consumed,
+				(long)DynamicBuffer.offset,
+				(long)DynamicBuffer.length,
+				(long)DynamicBuffer.allocated);
 			rval.consumed = 0;
 			continue;
 		case RC_FAIL:
