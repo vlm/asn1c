@@ -177,7 +177,7 @@ ASN1_FILES_3 = \
 	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
-	$(srcdir)/sample.source.regen				\
+	$(srcdir)/sample.regen.makefile				\
 	$(srcdir)/sample.source.*/README			\
 	$(srcdir)/sample.source.*/config.h			\
 	$(srcdir)/sample.source.*/Makefile			\
