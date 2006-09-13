@@ -189,7 +189,7 @@ check(const char *fname,
 				mod->_tags |= MT_STANDARD_MODULE;
 				TQ_ADD(&(asn->modules), mod, mod_next);
 			}
-			asn1p_free(std_asn);
+			asn1p_delete(std_asn);
 		}
 	}
 
@@ -236,7 +236,7 @@ check(const char *fname,
 	/*
 	 * Destroy the asn.
 	 */
-	asn1p_free(asn);
+	asn1p_delete(asn);
 
 	return r_value;
 }
