@@ -1,0 +1,50 @@
+#!/bin/sh
+
+if [ -z "$ASN1PDU"	\
+ -o  -z "$ASN1MODULES"	\
+ -o  -z "$PROGNAME"	\
+ ]; then
+	echo "ASN1PDU=\"$ASN1PDU\""
+	echo "ASN1MODULES=\"$ASN1MODULES\""
+	echo "PROGNAME=\"$PROGNAME\""
+	echo "ASN1PDU, ASN1MODULES, and PROGNAME must be set"
+	exit
+fi
+
+../../asn1c/asn1c -S ../../skeletons ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
+
+if [ ! -f Makefile.am.sample ]; then
+	echo "Makefile.am.sample is missing"
+	exit 1
+fi
+
+set -x
+cat Makefile.am.sample						\
+	| sed -e "s/^CFLAGS.*/CFLAGS += -I. -DHAVE_CONFIG_H -DPDU=${ASN1PDU}/" \
+	| sed -e "s/^all: /all: ${ASN1PDU}.c /"			\
+	| sed -e "s/progname/${PROGNAME}/"			\
+	> Makefile.$$
+
+(	echo
+	echo "${ASN1PDU}.c: $0"
+	echo "	ASN1CMDOPTS=\"${ASN1CMDOPTS}\" \\"
+	echo "	ASN1MODULES=\"${ASN1MODULES}\" \\"
+	echo "	ASN1PDU=${ASN1PDU} \\"
+	echo "	PROGNAME=${PROGNAME} \\"
+	echo "	$0"
+	echo "	@touch ${ASN1PDU}.c"
+	echo "	make"
+	echo
+	echo "distclean: clean"
+	echo '	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)'
+	echo '	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)'
+	echo "	rm -f Makefile.am.sample"
+) >> Makefile.$$
+
+rm Makefile.am.sample || exit $?
+
+mv Makefile.$$ Makefile
+
+set +x
+echo
+echo "Makefile generation finished"

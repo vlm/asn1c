@@ -26,7 +26,7 @@ $(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
 	./crfc2asn1.pl $(ASN1_SOURCE_3)
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
-	$(srcdir)/sample.regen.makefile				\
+	$(srcdir)/sample.makefile.regen				\
 	$(srcdir)/sample.source.*/README			\
 	$(srcdir)/sample.source.*/config.h			\
 	$(srcdir)/sample.source.*/Makefile			\

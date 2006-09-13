@@ -309,12 +309,12 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
 
 
-MegacoMessage.c: ../sample.regen.makefile
+MegacoMessage.c: ../sample.makefile.regen
 	ASN1CMDOPTS="-fcompound-names" \
 	ASN1MODULES="../rfc3525-MEDIA-GATEWAY-CONTROL.asn1" \
 	ASN1PDU=MegacoMessage \
 	PROGNAME=megacoDump \
-	../sample.regen.makefile
+	../sample.makefile.regen
 	@touch MegacoMessage.c
 	make
 
