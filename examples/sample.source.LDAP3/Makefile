@@ -187,12 +187,12 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1
 
 
-LDAPMessage.c: ../sample.regen.makefile
+LDAPMessage.c: ../sample.makefile.regen
 	ASN1CMDOPTS="-fcompound-names" \
 	ASN1MODULES="../rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1" \
 	ASN1PDU=LDAPMessage \
 	PROGNAME=ldap3dump \
-	../sample.regen.makefile
+	../sample.makefile.regen
 	@touch LDAPMessage.c
 	make
 

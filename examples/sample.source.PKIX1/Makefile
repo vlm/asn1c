@@ -369,12 +369,12 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons ../rfc3280-PKIX1Explicit88.asn1 ../rfc3280-PKIX1Implicit88.asn1
 
 
-Certificate.c: ../sample.regen.makefile
+Certificate.c: ../sample.makefile.regen
 	ASN1CMDOPTS="" \
 	ASN1MODULES="../rfc3280-*.asn1" \
 	ASN1PDU=Certificate \
 	PROGNAME=x509dump \
-	../sample.regen.makefile
+	../sample.makefile.regen
 	@touch Certificate.c
 	make
 

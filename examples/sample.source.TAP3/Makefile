@@ -703,12 +703,12 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons ../tap3.asn1
 
 
-DataInterChange.c: ../sample.regen.makefile
+DataInterChange.c: ../sample.makefile.regen
 	ASN1CMDOPTS="" \
 	ASN1MODULES="../tap3.asn1" \
 	ASN1PDU=DataInterChange \
 	PROGNAME=tap3dump \
-	../sample.regen.makefile
+	../sample.makefile.regen
 	@touch DataInterChange.c
 	make
 

@@ -477,12 +477,12 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../ISO13522-MHEG-5.asn
 
 
-InterchangedObject.c: ../sample.regen.makefile
+InterchangedObject.c: ../sample.makefile.regen
 	ASN1CMDOPTS="-fcompound-names" \
 	ASN1MODULES="../ISO13522-MHEG-5.asn" \
 	ASN1PDU=InterchangedObject \
 	PROGNAME=mheg5dump \
-	../sample.regen.makefile
+	../sample.makefile.regen
 	@touch InterchangedObject.c
 	make
 
