@@ -271,57 +271,58 @@ main(int ac, char **av) {
 	return 0;
 }
 
-/* Dump the buffer */
-static int write_out(const void *buffer, size_t size, void *key) {
-	FILE *fp = (FILE *)key;
-	return (fwrite(buffer, 1, size, fp) == size) ? 0 : -1;
-}
-
-static char  *buffer;
-static size_t buf_len;		/* Length of meaningful contents */
-static size_t buf_size;		/* Allocated memory */
-static size_t buf_offset;	/* Offset from the start */
-static off_t  buf_shifted;	/* Number of bytes ever shifted */
-static int    buf_nreallocs;	/* Number of reallocations */
-
-#define	bufptr	(buffer + buf_offset)
-#define	bufend	(buffer + buf_offset + buf_len)
+static struct dynamic_buffer {
+	char  *data;		/* Pointer to the data bytes */
+	size_t offset;		/* Offset from the start */
+	size_t length;		/* Length of meaningful contents */
+	size_t allocated;	/* Allocated memory for data */
+	int    nreallocs;	/* Number of data reallocations */
+	off_t  bytes_shifted;	/* Number of bytes ever shifted */
+} DynamicBuffer;
 
 /*
  * Ensure that the buffer contains at least this amount of free space.
  */
-static void buf_extend(const void *data2add, size_t bySize) {
+static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 
-	DEBUG("buf_extend(%ld) { o=%ld l=%ld s=%ld }",
-		(long)bySize, (long)buf_offset, (long)buf_len, (long)buf_size);
+	DEBUG("add_bytes(%ld) { o=%ld l=%ld s=%ld }",
+		(long)bySize,
+		(long)DynamicBuffer.offset,
+		(long)DynamicBuffer.length,
+		(long)DynamicBuffer.allocated);
 
-	if(buf_size >= (buf_offset + buf_len + bySize)) {
-		/* Nothing to do */
-	} else if(bySize <= buf_offset) {
-		DEBUG("\tContents shifted by %ld", (long)buf_offset);
+	if(DynamicBuffer.allocated
+	>= (DynamicBuffer.offset + DynamicBuffer.length + bySize)) {
+		/* No buffer reallocation is necessary */
+	} else if(bySize <= DynamicBuffer.offset) {
+		DEBUG("\tContents shifted by %ld", DynamicBuffer.offset);
 
 		/* Shift the buffer contents */
-		memmove(buffer, buffer + buf_offset, buf_len);
-		buf_shifted += buf_offset;
-		buf_offset = 0;
+		memmove(DynamicBuffer.data,
+		        DynamicBuffer.data + DynamicBuffer.offset,
+			DynamicBuffer.length);
+		DynamicBuffer.bytes_shifted += DynamicBuffer.offset;
+		DynamicBuffer.offset = 0;
 	} else {
-		size_t newsize = (buf_size << 2) + bySize;
-		void *p = malloc(newsize);
+		size_t newsize = (DynamicBuffer.allocated << 2) + bySize;
+		void *p = MALLOC(newsize);
 		if(!p) {
-			perror("realloc()");
+			perror("malloc()");
 			exit(EX_OSERR);
 		}
-		memcpy(p, buffer, buf_len);
-		free(buffer);
-		buffer = (char *)p;
-		buf_size = newsize;
-		buf_offset = 0;
+		memcpy(p, DynamicBuffer.data, DynamicBuffer.length);
+		FREEMEM(DynamicBuffer.data);
+		DynamicBuffer.data = (char *)p;
+		DynamicBuffer.offset = 0;
+		DynamicBuffer.allocated = newsize;
+		DynamicBuffer.nreallocs++;
 		DEBUG("\tBuffer reallocated to %ld, %d time",
-			(long)newsize, ++buf_nreallocs);
+			newsize, DynamicBuffer.nreallocs);
 	}
 
-	memcpy(buffer + buf_offset + buf_len, data2add, bySize);
-	buf_len += bySize;
+	memcpy(DynamicBuffer.data + DynamicBuffer.offset + DynamicBuffer.length,
+		data2add, bySize);
+	DynamicBuffer.length += bySize;
 }
 
 static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *fname, ssize_t suggested_bufsize) {
@@ -355,7 +356,7 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 
 	/* prepare the file buffer */
 	if(fbuf_size != suggested_bufsize) {
-		fbuf = (char *)realloc(fbuf, suggested_bufsize);
+		fbuf = (char *)REALLOC(fbuf, suggested_bufsize);
 		if(!fbuf) {
 			perror("realloc()");
 			exit(EX_OSERR);
@@ -363,11 +364,11 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 		fbuf_size = suggested_bufsize;
 	}
 
-	buf_nreallocs = 0;
-	buf_shifted = 0;
-	buf_offset = 0;
-	buf_size = 0;
-	buf_len = 0;
+	DynamicBuffer.offset = 0;
+	DynamicBuffer.length = 0;
+	DynamicBuffer.allocated = 0;
+	DynamicBuffer.bytes_shifted = 0;
+	DynamicBuffer.nreallocs = 0;
 
 	/* Pretend immediate EOF */
 	rval.code = RC_WMORE;
@@ -380,11 +381,11 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 		/*
 		 * Copy the data over, or use the original buffer.
 		 */
-		if(buf_size) {
+		if(DynamicBuffer.allocated) {
 			/* Append the new data into the intermediate buffer */
-			buf_extend(fbuf, rd);
-			i_bptr = bufptr;
-			i_size = buf_len;
+			add_bytes_to_buffer(fbuf, rd);
+			i_bptr = DynamicBuffer.data + DynamicBuffer.offset;
+			i_size = DynamicBuffer.allocated;
 		} else {
 			i_bptr = fbuf;
 			i_size = rd;
@@ -405,15 +406,16 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 			break;
 		}
 		DEBUG("decode(%ld) consumed %ld (%ld), code %d",
-			(long)buf_len, (long)rval.consumed, (long)i_size,
+			(long)DynamicBuffer.length,
+			(long)rval.consumed, (long)i_size,
 			rval.code);
 
-		if(buf_size == 0) {
+		if(DynamicBuffer.allocated == 0) {
 			/*
-			 * Switch the remainder into the intermediate buffer.
+			 * Flush the remainder into the intermediate buffer.
 			 */
 			if(rval.code != RC_FAIL && rval.consumed < rd) {
-				buf_extend(fbuf + rval.consumed,
+				add_bytes_to_buffer(fbuf + rval.consumed,
 					     rd - rval.consumed);
 				rval.consumed = 0;
 			}
@@ -427,13 +429,17 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 			return structure;
 		case RC_WMORE:
 			DEBUG("RC_WMORE, continuing %ld with %ld..%ld..%ld",
-				(long)rval.consumed, (long)buf_offset,
-				(long)buf_len, (long)buf_size);
+				(long)rval.consumed,
+				(long)DynamicBuffer.offset,
+				(long)DynamicBuffer.length,
+				(long)DynamicBuffer.allocated);
 			/*
 			 * Adjust position inside the source buffer.
 			 */
-			buf_offset += rval.consumed;
-			buf_len -= rval.consumed;
+			if(DynamicBuffer.allocated) {
+				DynamicBuffer.offset += rval.consumed;
+				DynamicBuffer.length -= rval.consumed;
+			}
 			rval.consumed = 0;
 			continue;
 		case RC_FAIL:
@@ -449,7 +455,8 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 
 	fprintf(stderr, "%s: "
 		"Decode failed past byte %ld: %s\n",
-		fname, (long)(buf_shifted + buf_offset + rval.consumed),
+		fname, (long)(DynamicBuffer.bytes_shifted
+			+ DynamicBuffer.offset + rval.consumed),
 		(rval.code == RC_WMORE)
 			? "Unexpected end of input"
 			: "Input processing error");
@@ -457,3 +464,8 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 	return 0;
 }
 
+/* Dump the buffer out to the specified FILE */
+static int write_out(const void *buffer, size_t size, void *key) {
+	FILE *fp = (FILE *)key;
+	return (fwrite(buffer, 1, size, fp) == size) ? 0 : -1;
+}

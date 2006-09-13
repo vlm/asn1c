@@ -1537,7 +1537,7 @@ OCTET_STRING_new_fromBuf(asn_TYPE_descriptor_t *td, const char *str, int len) {
 
 	st = (OCTET_STRING_t *)CALLOC(1, specs->struct_size);
 	if(st && str && OCTET_STRING_fromBuf(st, str, len)) {
-		free(st);
+		FREEMEM(st);
 		st = NULL;
 	}
 

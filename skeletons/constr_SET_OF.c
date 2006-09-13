@@ -747,7 +747,7 @@ cleanup:
 			if(encs[encs_count].buffer)
 				FREEMEM(encs[encs_count].buffer);
 		}
-		free(encs);
+		FREEMEM(encs);
 	}
 	_ASN_ENCODED_OK(er);
 }
