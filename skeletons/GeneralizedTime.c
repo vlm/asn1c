@@ -118,7 +118,7 @@ static long GMTOFF(struct tm a){
 		setenv("TZ", tzold, 1);					\
 		*tzoldbuf = 0;						\
 		if(tzold != tzoldbuf)					\
-			free(tzold);					\
+			FREEMEM(tzold);					\
 	} else {							\
 		unsetenv("TZ");						\
 	}								\
@@ -671,7 +671,7 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value,
 			FREEMEM(opt_gt->buf);
 	} else {
 		opt_gt = (GeneralizedTime_t *)CALLOC(1, sizeof *opt_gt);
-		if(!opt_gt) { free(buf); return 0; }
+		if(!opt_gt) { FREEMEM(buf); return 0; }
 	}
 
 	opt_gt->buf = (unsigned char *)buf;

@@ -77,7 +77,7 @@ asn_set_empty(void *asn_set_of_x) {
 				while(as->count--)
 					as->free(as->array[as->count]);
 			}
-			free(as->array);
+			FREEMEM(as->array);
 			as->array = 0;
 		}
 		as->count = 0;

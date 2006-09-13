@@ -119,7 +119,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 			buflen = ret;
 			break;
 		}
-		if(buf != local_buf) free(buf);
+		if(buf != local_buf) FREEMEM(buf);
 		buf = (char *)MALLOC(buflen);
 		if(!buf) return -1;
 	} while(1);
@@ -219,7 +219,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 	}
 
 	ret = cb(buf, buflen, app_key);
-	if(buf != local_buf) free(buf);
+	if(buf != local_buf) FREEMEM(buf);
 	return (ret < 0) ? -1 : buflen;
 }
 
@@ -322,7 +322,7 @@ REAL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_b
 	b[chunk_size] = 0;	/* nul-terminate */
 
 	value = strtod(b, &endptr);
-	free(b);
+	FREEMEM(b);
 	if(endptr == b) return XPBD_BROKEN_ENCODING;
 
 	if(asn_double2REAL(st, value))
