@@ -35,7 +35,7 @@ extern asn_TYPE_descriptor_t asn_DEF_LogLine;
 
 /*** <<< POST-INCLUDE [LogLine] >>> ***/
 
-#include <VariablePartSet.h>
+#include "VariablePartSet.h"
 
 /*** <<< CODE [LogLine] >>> ***/
 
@@ -175,7 +175,7 @@ asn_TYPE_descriptor_t asn_DEF_LogLine = {
 
 /*** <<< INCLUDES [VariablePartSet] >>> ***/
 
-#include <ActionItem.h>
+#include "ActionItem.h"
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 #include <constr_SEQUENCE.h>
@@ -209,7 +209,7 @@ extern asn_TYPE_descriptor_t asn_DEF_VariablePartSet;
 
 /*** <<< POST-INCLUDE [VariablePartSet] >>> ***/
 
-#include <VariablePart.h>
+#include "VariablePart.h"
 
 /*** <<< CODE [VariablePartSet] >>> ***/
 

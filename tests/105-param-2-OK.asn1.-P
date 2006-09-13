@@ -206,7 +206,7 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_16P1 = {
 
 /*** <<< INCLUDES [SignedREAL] >>> ***/
 
-#include <SIGNED.h>
+#include "SIGNED.h"
 
 /*** <<< TYPE-DECLS [SignedREAL] >>> ***/
 
@@ -330,7 +330,7 @@ asn_TYPE_descriptor_t asn_DEF_SignedREAL = {
 
 /*** <<< INCLUDES [SignedSET] >>> ***/
 
-#include <SIGNED.h>
+#include "SIGNED.h"
 
 /*** <<< TYPE-DECLS [SignedSET] >>> ***/
 

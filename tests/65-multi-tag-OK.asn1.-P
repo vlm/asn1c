@@ -1,7 +1,7 @@
 
 /*** <<< INCLUDES [T1] >>> ***/
 
-#include <T2.h>
+#include "T2.h"
 
 /*** <<< TYPE-DECLS [T1] >>> ***/
 
@@ -136,7 +136,7 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 
 /*** <<< INCLUDES [T2] >>> ***/
 
-#include <T3.h>
+#include "T3.h"
 
 /*** <<< TYPE-DECLS [T2] >>> ***/
 
@@ -269,7 +269,7 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 
 /*** <<< INCLUDES [T3] >>> ***/
 
-#include <T4.h>
+#include "T4.h"
 
 /*** <<< TYPE-DECLS [T3] >>> ***/
 
@@ -400,7 +400,7 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 
 /*** <<< INCLUDES [T4] >>> ***/
 
-#include <T5.h>
+#include "T5.h"
 
 /*** <<< TYPE-DECLS [T4] >>> ***/
 
@@ -526,7 +526,7 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 
 /*** <<< INCLUDES [T5] >>> ***/
 
-#include <T6.h>
+#include "T6.h"
 
 /*** <<< TYPE-DECLS [T5] >>> ***/
 
@@ -775,7 +775,7 @@ asn_TYPE_descriptor_t asn_DEF_T6 = {
 
 /*** <<< INCLUDES [T] >>> ***/
 
-#include <Ts.h>
+#include "Ts.h"
 
 /*** <<< TYPE-DECLS [T] >>> ***/
 
@@ -901,8 +901,8 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 
 /*** <<< INCLUDES [Ts] >>> ***/
 
-#include <T2.h>
-#include <T3.h>
+#include "T2.h"
+#include "T3.h"
 #include <constr_SEQUENCE.h>
 
 /*** <<< TYPE-DECLS [Ts] >>> ***/

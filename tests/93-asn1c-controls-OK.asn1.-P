@@ -83,7 +83,7 @@ asn_TYPE_descriptor_t asn_DEF_Sequence = {
 
 /*** <<< INCLUDES [Set] >>> ***/
 
-#include <Sequence.h>
+#include "Sequence.h"
 #include <constr_SET.h>
 
 /*** <<< DEPS [Set] >>> ***/
@@ -121,7 +121,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Set;
 
 /*** <<< POST-INCLUDE [Set] >>> ***/
 
-#include <Sequence.h>
+#include "Sequence.h"
 
 /*** <<< STAT-DEFS [Set] >>> ***/
 
@@ -193,7 +193,7 @@ asn_TYPE_descriptor_t asn_DEF_Set = {
 
 /*** <<< INCLUDES [Choice] >>> ***/
 
-#include <Sequence.h>
+#include "Sequence.h"
 #include <INTEGER.h>
 #include <asn_SET_OF.h>
 #include <constr_SET_OF.h>
@@ -237,7 +237,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Choice;
 
 /*** <<< POST-INCLUDE [Choice] >>> ***/
 
-#include <Sequence.h>
+#include "Sequence.h"
 
 /*** <<< STAT-DEFS [Choice] >>> ***/
 

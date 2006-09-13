@@ -304,7 +304,7 @@ asn_TYPE_descriptor_t asn_DEF_Flag_16P1 = {
 
 /*** <<< INCLUDES [IntegerColorFlag] >>> ***/
 
-#include <Flag.h>
+#include "Flag.h"
 
 /*** <<< TYPE-DECLS [IntegerColorFlag] >>> ***/
 
@@ -428,7 +428,7 @@ asn_TYPE_descriptor_t asn_DEF_IntegerColorFlag = {
 
 /*** <<< INCLUDES [EnumeratedColorFlag] >>> ***/
 
-#include <Flag.h>
+#include "Flag.h"
 
 /*** <<< TYPE-DECLS [EnumeratedColorFlag] >>> ***/
 

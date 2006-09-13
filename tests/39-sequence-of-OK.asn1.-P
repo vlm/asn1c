@@ -31,7 +31,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< POST-INCLUDE [T] >>> ***/
 
-#include <T2.h>
+#include "T2.h"
 
 /*** <<< STAT-DEFS [T] >>> ***/
 

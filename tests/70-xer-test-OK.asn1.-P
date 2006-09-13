@@ -1,21 +1,21 @@
 
 /*** <<< INCLUDES [PDU] >>> ***/
 
-#include <Sequence.h>
-#include <Set.h>
-#include <SequenceOf.h>
-#include <ExtensibleSet.h>
-#include <ExtensibleSequence.h>
-#include <ExtensibleSequence2.h>
-#include <SetOfNULL.h>
-#include <SetOfREAL.h>
-#include <SetOfEnums.h>
-#include <NamedSetOfNULL.h>
-#include <NamedSetOfREAL.h>
-#include <NamedSetOfEnums.h>
-#include <SeqOfZuka.h>
-#include <SetOfChoice.h>
-#include <NamedSetOfChoice.h>
+#include "Sequence.h"
+#include "Set.h"
+#include "SequenceOf.h"
+#include "ExtensibleSet.h"
+#include "ExtensibleSequence.h"
+#include "ExtensibleSequence2.h"
+#include "SetOfNULL.h"
+#include "SetOfREAL.h"
+#include "SetOfEnums.h"
+#include "NamedSetOfNULL.h"
+#include "NamedSetOfREAL.h"
+#include "NamedSetOfEnums.h"
+#include "SeqOfZuka.h"
+#include "SetOfChoice.h"
+#include "NamedSetOfChoice.h"
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [PDU] >>> ***/
@@ -293,7 +293,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Sequence;
 
 /*** <<< POST-INCLUDE [Sequence] >>> ***/
 
-#include <Sequence.h>
+#include "Sequence.h"
 
 /*** <<< STAT-DEFS [Sequence] >>> ***/
 
@@ -1694,7 +1694,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SetOfChoice;
 
 /*** <<< POST-INCLUDE [SetOfChoice] >>> ***/
 
-#include <SimpleChoice.h>
+#include "SimpleChoice.h"
 
 /*** <<< STAT-DEFS [SetOfChoice] >>> ***/
 
@@ -1766,7 +1766,7 @@ extern asn_TYPE_descriptor_t asn_DEF_NamedSetOfChoice;
 
 /*** <<< POST-INCLUDE [NamedSetOfChoice] >>> ***/
 
-#include <SimpleChoice.h>
+#include "SimpleChoice.h"
 
 /*** <<< STAT-DEFS [NamedSetOfChoice] >>> ***/
 

@@ -109,7 +109,7 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 			continue;
 		}
 
-		if(str != first && !nodelimiter)
+		if(str != first && !nodelimiter && !(flags & AMI_NODELIMITER))
 			*p++ = '_';	/* Delimiter between tokens */
 		nodelimiter = 0;
 
@@ -150,6 +150,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	asn1p_expr_t *exprid = 0;
 	asn1p_expr_t *top_parent;
 	asn1p_expr_t *terminal;
+	int stdname = 0;
 	char *typename;
 
 	/* Rewind to the topmost parent expression */
@@ -215,16 +216,25 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 					return "double";
 				else
 					return "long";
-			default: break;
+			default:
+				typename = 0;
+				switch(expr->expr_type) {
+				case ASN_BASIC_INTEGER:
+					typename = "NativeInteger"; break;
+				case ASN_BASIC_ENUMERATED:
+					typename = "NativeEnumerated"; break;
+				case ASN_BASIC_REAL:
+					typename = "NativeReal"; break;
+				default:
+					break;
+				}
+				break;
 			}
-			switch(expr->expr_type) {
-			case ASN_BASIC_INTEGER:
-				return "NativeInteger";
-			case ASN_BASIC_ENUMERATED:
-				return "NativeEnumerated";
-			case ASN_BASIC_REAL:
-				return "NativeReal";
-			default: break;
+			if(typename) {
+				if(_format != TNF_INCLUDE)
+					return typename;
+				stdname = 1;
+				break;
 			}
 		}
 		/* Fall through */
@@ -233,6 +243,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 		& (ASN_CONSTR_MASK | ASN_BASIC_MASK | ASN_STRING_MASK)) {
 			if(_format == TNF_RSAFE)
 				_format = TNF_CTYPE;
+			stdname = 1;
 			typename = ASN_EXPR_TYPE2STR(expr->expr_type);
 		} else {
 			_format = TNF_RSAFE;
@@ -242,9 +253,14 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 
 	switch(_format) {
 	case TNF_UNMODIFIED:
-	case TNF_INCLUDE:
 		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES,
 			0, exprid ? exprid->Identifier : typename, 0);
+	case TNF_INCLUDE:
+		return asn1c_make_identifier(
+			AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
+			0, stdname ? "<" : "\"",
+			exprid ? exprid->Identifier : typename,
+			stdname ? ".h>" : ".h\"", 0);
 	case TNF_SAFE:
 		return asn1c_make_identifier(0, exprid, typename, 0);
 	case TNF_CTYPE:	/* C type */

@@ -194,7 +194,7 @@ asn_TYPE_descriptor_t asn_DEF_TestType_16P1 = {
 
 /*** <<< INCLUDES [TestChoice] >>> ***/
 
-#include <TestType.h>
+#include "TestType.h"
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [TestChoice] >>> ***/
@@ -465,7 +465,7 @@ asn_TYPE_descriptor_t asn_DEF_AutoType_34P1 = {
 
 /*** <<< INCLUDES [AutoChoice] >>> ***/
 
-#include <AutoType.h>
+#include "AutoType.h"
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [AutoChoice] >>> ***/

@@ -125,7 +125,7 @@ asn_TYPE_descriptor_t asn_DEF_Int1 = {
 
 /*** <<< INCLUDES [Int2] >>> ***/
 
-#include <Int1.h>
+#include "Int1.h"
 
 /*** <<< TYPE-DECLS [Int2] >>> ***/
 
@@ -268,7 +268,7 @@ asn_TYPE_descriptor_t asn_DEF_Int2 = {
 
 /*** <<< INCLUDES [Int3] >>> ***/
 
-#include <Int2.h>
+#include "Int2.h"
 
 /*** <<< TYPE-DECLS [Int3] >>> ***/
 
@@ -415,7 +415,7 @@ asn_TYPE_descriptor_t asn_DEF_Int3 = {
 
 /*** <<< INCLUDES [Int4] >>> ***/
 
-#include <Int3.h>
+#include "Int3.h"
 
 /*** <<< TYPE-DECLS [Int4] >>> ***/
 
@@ -562,7 +562,7 @@ asn_TYPE_descriptor_t asn_DEF_Int4 = {
 
 /*** <<< INCLUDES [Int5] >>> ***/
 
-#include <Int4.h>
+#include "Int4.h"
 
 /*** <<< TYPE-DECLS [Int5] >>> ***/
 
@@ -980,7 +980,7 @@ asn_TYPE_descriptor_t asn_DEF_Str1 = {
 
 /*** <<< INCLUDES [Str2] >>> ***/
 
-#include <Str1.h>
+#include "Str1.h"
 
 /*** <<< TYPE-DECLS [Str2] >>> ***/
 
@@ -1139,7 +1139,7 @@ asn_TYPE_descriptor_t asn_DEF_Str2 = {
 
 /*** <<< INCLUDES [Str3] >>> ***/
 
-#include <Str2.h>
+#include "Str2.h"
 
 /*** <<< TYPE-DECLS [Str3] >>> ***/
 
@@ -1621,7 +1621,7 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible = {
 
 /*** <<< INCLUDES [PER-Visible-2] >>> ***/
 
-#include <PER-Visible.h>
+#include "PER-Visible.h"
 
 /*** <<< TYPE-DECLS [PER-Visible-2] >>> ***/
 
@@ -1777,7 +1777,7 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible_2 = {
 
 /*** <<< INCLUDES [Not-PER-Visible-1] >>> ***/
 
-#include <PER-Visible.h>
+#include "PER-Visible.h"
 
 /*** <<< TYPE-DECLS [Not-PER-Visible-1] >>> ***/
 
@@ -1933,7 +1933,7 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_1 = {
 
 /*** <<< INCLUDES [Not-PER-Visible-2] >>> ***/
 
-#include <PER-Visible.h>
+#include "PER-Visible.h"
 
 /*** <<< TYPE-DECLS [Not-PER-Visible-2] >>> ***/
 
@@ -2089,7 +2089,7 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_2 = {
 
 /*** <<< INCLUDES [Not-PER-Visible-3] >>> ***/
 
-#include <PER-Visible.h>
+#include "PER-Visible.h"
 
 /*** <<< TYPE-DECLS [Not-PER-Visible-3] >>> ***/
 
@@ -2245,7 +2245,7 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_3 = {
 
 /*** <<< INCLUDES [SIZE-but-not-FROM] >>> ***/
 
-#include <PER-Visible.h>
+#include "PER-Visible.h"
 
 /*** <<< TYPE-DECLS [SIZE-but-not-FROM] >>> ***/
 
@@ -2404,7 +2404,7 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_but_not_FROM = {
 
 /*** <<< INCLUDES [SIZE-and-FROM] >>> ***/
 
-#include <PER-Visible.h>
+#include "PER-Visible.h"
 
 /*** <<< TYPE-DECLS [SIZE-and-FROM] >>> ***/
 
@@ -2563,7 +2563,7 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_and_FROM = {
 
 /*** <<< INCLUDES [Neither-SIZE-nor-FROM] >>> ***/
 
-#include <PER-Visible.h>
+#include "PER-Visible.h"
 
 /*** <<< TYPE-DECLS [Neither-SIZE-nor-FROM] >>> ***/
 
@@ -2869,7 +2869,7 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_4 = {
 
 /*** <<< INCLUDES [Utf8-3] >>> ***/
 
-#include <Utf8-2.h>
+#include "Utf8-2.h"
 
 /*** <<< TYPE-DECLS [Utf8-3] >>> ***/
 
@@ -3047,7 +3047,7 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_3 = {
 
 /*** <<< INCLUDES [Utf8-2] >>> ***/
 
-#include <Utf8-1.h>
+#include "Utf8-1.h"
 
 /*** <<< TYPE-DECLS [Utf8-2] >>> ***/
 
@@ -3319,7 +3319,7 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_1 = {
 
 /*** <<< INCLUDES [VisibleIdentifier] >>> ***/
 
-#include <Identifier.h>
+#include "Identifier.h"
 
 /*** <<< TYPE-DECLS [VisibleIdentifier] >>> ***/
 
@@ -3490,12 +3490,12 @@ asn_TYPE_descriptor_t asn_DEF_VisibleIdentifier = {
 
 /*** <<< INCLUDES [Sequence] >>> ***/
 
-#include <Int1.h>
-#include <Int4.h>
+#include "Int1.h"
+#include "Int4.h"
 #include <BOOLEAN.h>
 #include <ENUMERATED.h>
 #include <NULL.h>
-#include <Int5.h>
+#include "Int5.h"
 #include <constr_SEQUENCE.h>
 
 /*** <<< DEPS [Sequence] >>> ***/
@@ -3923,7 +3923,7 @@ extern asn_TYPE_descriptor_t asn_DEF_SequenceOf;
 
 /*** <<< POST-INCLUDE [SequenceOf] >>> ***/
 
-#include <Sequence.h>
+#include "Sequence.h"
 
 /*** <<< STAT-DEFS [SequenceOf] >>> ***/
 

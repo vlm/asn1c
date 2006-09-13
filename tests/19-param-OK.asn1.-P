@@ -4,7 +4,7 @@
 #include <OBJECT_IDENTIFIER.h>
 #include <BIT_STRING.h>
 #include <INTEGER.h>
-#include <Name.h>
+#include "Name.h"
 #include <constr_SEQUENCE.h>
 
 /*** <<< TYPE-DECLS [SIGNED] >>> ***/
@@ -209,7 +209,7 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0 = {
 
 /*** <<< INCLUDES [Certificate] >>> ***/
 
-#include <SIGNED.h>
+#include "SIGNED.h"
 
 /*** <<< TYPE-DECLS [Certificate] >>> ***/
 
@@ -355,7 +355,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Name;
 
 /*** <<< POST-INCLUDE [Name] >>> ***/
 
-#include <RelativeDistinguishedName.h>
+#include "RelativeDistinguishedName.h"
 
 /*** <<< STAT-DEFS [Name] >>> ***/
 
