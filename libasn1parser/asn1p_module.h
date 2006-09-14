@@ -51,14 +51,14 @@ typedef struct asn1p_module_s {
 	asn1p_module_flags_e module_flags;	/* AUTOMATIC TAGS? */
 
 	/*
-	 * List of everything that this module IMPORTS.
-	 */
-	TQ_HEAD(struct asn1p_xports_s)	imports;
-
-	/*
 	 * List of everything that this module EXPORTS.
 	 */
 	TQ_HEAD(struct asn1p_xports_s)	exports;
+
+	/*
+	 * List of everything that this module IMPORTS.
+	 */
+	TQ_HEAD(struct asn1p_xports_s)	imports;
 
 	/*
 	 * List of everything that this module defines itself.

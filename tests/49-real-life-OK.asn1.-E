@@ -3,4 +3,6 @@ ModuleSetChoiceExtensibility { iso org(3) dod(6) internet(1) private(4)
 DEFINITIONS ::=
 BEGIN
 
+Z ::= INTEGER
+
 END

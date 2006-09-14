@@ -61,6 +61,19 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 		}							\
 	} while(0)
 
+#ifdef	AL_IMPORT
+#error	AL_IMPORT DEFINED ELSEWHERE!
+#endif
+#define	AL_IMPORT(to,where,from,field)	do {				\
+		if(!(from)) break;					\
+		while(TQ_FIRST(&((from)->where))) {			\
+			TQ_ADD(&((to)->where),				\
+				TQ_REMOVE(&((from)->where), field),	\
+				field);					\
+		}							\
+		assert(TQ_FIRST(&((from)->where)) == 0);		\
+	} while(0)
+
 %}
 
 
@@ -223,13 +236,16 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
  * Types defined herein.
  */
 %type	<a_grammar>		ModuleList
-%type	<a_module>		ModuleSpecification
-%type	<a_module>		ModuleSpecificationBody
-%type	<a_module>		ModuleSpecificationElement
-%type	<a_module>		optModuleSpecificationBody	/* Optional */
-%type	<a_module_flags>	optModuleSpecificationFlags
-%type	<a_module_flags>	ModuleSpecificationFlags	/* Set of FL */
-%type	<a_module_flags>	ModuleSpecificationFlag		/* Single FL */
+%type	<a_module>		ModuleDefinition
+%type	<a_module>		ModuleBody
+%type	<a_module>		AssignmentList
+%type	<a_module>		Assignment
+%type	<a_module>		optModuleBody	/* Optional */
+%type	<a_module_flags>	optModuleDefinitionFlags
+%type	<a_module_flags>	ModuleDefinitionFlags	/* Set of FL */
+%type	<a_module_flags>	ModuleDefinitionFlag		/* Single FL */
+%type	<a_module>		optImports
+%type	<a_module>		optExports
 %type	<a_module>		ImportsDefinition
 %type	<a_module>		ImportsBundleSet
 %type	<a_xports>		ImportsBundle
@@ -330,12 +346,12 @@ ParsedGrammar:
 	;
 
 ModuleList:
-	ModuleSpecification {
+	ModuleDefinition {
 		$$ = asn1p_new();
 		checkmem($$);
 		TQ_ADD(&($$->modules), $1, mod_next);
 	}
-	| ModuleList ModuleSpecification {
+	| ModuleList ModuleDefinition {
 		$$ = $1;
 		TQ_ADD(&($$->modules), $2, mod_next);
 	}
@@ -351,11 +367,11 @@ ModuleList:
  * === EOF ===
  */
 
-ModuleSpecification:
+ModuleDefinition:
 	TypeRefName optObjectIdentifier TOK_DEFINITIONS
-		optModuleSpecificationFlags
+		optModuleDefinitionFlags
 		TOK_PPEQ TOK_BEGIN
-		optModuleSpecificationBody
+		optModuleBody
 		TOK_END {
 
 		if($7) {
@@ -423,9 +439,9 @@ ObjectIdentifierElement:
 /*
  * Optional module flags.
  */
-optModuleSpecificationFlags:
+optModuleDefinitionFlags:
 	{ $$ = MSF_NOFLAGS; }
-	| ModuleSpecificationFlags {
+	| ModuleDefinitionFlags {
 		$$ = $1;
 	}
 	;
@@ -433,11 +449,11 @@ optModuleSpecificationFlags:
 /*
  * Module flags.
  */
-ModuleSpecificationFlags:
-	ModuleSpecificationFlag {
+ModuleDefinitionFlags:
+	ModuleDefinitionFlag {
 		$$ = $1;
 	}
-	| ModuleSpecificationFlags ModuleSpecificationFlag {
+	| ModuleDefinitionFlags ModuleDefinitionFlag {
 		$$ = $1 | $2;
 	}
 	;
@@ -445,7 +461,7 @@ ModuleSpecificationFlags:
 /*
  * Single module flag.
  */
-ModuleSpecificationFlag:
+ModuleDefinitionFlag:
 	TOK_EXPLICIT TOK_TAGS {
 		$$ = MSF_EXPLICIT_TAGS;
 	}
@@ -479,9 +495,9 @@ ModuleSpecificationFlag:
 /*
  * Optional module body.
  */
-optModuleSpecificationBody:
+optModuleBody:
 	{ $$ = 0; }
-	| ModuleSpecificationBody {
+	| ModuleBody {
 		$$ = $1;
 	}
 	;
@@ -489,56 +505,36 @@ optModuleSpecificationBody:
 /*
  * ASN.1 Module body.
  */
-ModuleSpecificationBody:
-	ModuleSpecificationElement {
-		$$ = $1;
-	}
-	| ModuleSpecificationBody ModuleSpecificationElement {
-		$$ = $1;
-
-		/* Behave well when one of them is skipped. */
-		if(!($1)) {
-			if($2) $$ = $2;
-			break;
-		}
-
-#ifdef	MY_IMPORT
-#error	MY_IMPORT DEFINED ELSEWHERE!
-#endif
-#define	MY_IMPORT(foo,field)	do {				\
-		while(TQ_FIRST(&($2->foo))) {			\
-			TQ_ADD(&($$->foo),			\
-				TQ_REMOVE(&($2->foo), field),	\
-				field);				\
-		}						\
-		assert(TQ_FIRST(&($2->foo)) == 0);		\
-	} while(0)
-
-		MY_IMPORT(imports, xp_next);
-		MY_IMPORT(exports, xp_next);
-		MY_IMPORT(members, next);
-#undef	MY_IMPORT
-
+ModuleBody:
+	optExports optImports AssignmentList {
+		$$ = asn1p_module_new();
+		AL_IMPORT($$, exports, $1, xp_next);
+		AL_IMPORT($$, imports, $2, xp_next);
+		AL_IMPORT($$, members, $3, next);
 	}
 	;
+
+AssignmentList:
+	Assignment {
+		$$ = $1;
+	}
+	| AssignmentList Assignment {
+		if($1) {
+			$$ = $1;
+		} else {
+			$$ = $2;
+			break;
+		}
+		AL_IMPORT($$, members, $2, next);
+	}
+	;
+
 
 /*
  * One of the elements of ASN.1 module specification.
  */
-ModuleSpecificationElement:
-	ImportsDefinition {
-		$$ = $1;
-	}
-	| ExportsDefinition {
-		$$ = asn1p_module_new();
-		checkmem($$);
-		if($1) {
-			TQ_ADD(&($$->exports), $1, xp_next);
-		} else {
-			/* "EXPORTS ALL;" ? */
-		}
-	}
-	| DataTypeReference {
+Assignment:
+	DataTypeReference {
 		$$ = asn1p_module_new();
 		checkmem($$);
 		assert($1->expr_type != A1TC_INVALID);
@@ -591,6 +587,10 @@ ModuleSpecificationElement:
  * IMPORTS Type1, value FROM Module { iso standard(0) } ;
  * === EOF ===
  */
+optImports:
+	{ $$ = 0; }
+	| ImportsDefinition;
+
 ImportsDefinition:
 	TOK_IMPORTS ImportsBundleSet ';' {
 		if(!saved_aid && 0)
@@ -665,6 +665,20 @@ ImportsElement:
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_REFERENCE;
+	}
+	;
+
+
+optExports:
+	{ $$ = 0; }
+	| ExportsDefinition {
+		$$ = asn1p_module_new();
+		checkmem($$);
+		if($1) {
+			TQ_ADD(&($$->exports), $1, xp_next);
+		} else {
+			/* "EXPORTS ALL;" */
+		}
 	}
 	;
 

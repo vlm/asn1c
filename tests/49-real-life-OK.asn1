@@ -19,4 +19,6 @@ BEGIN
 	IMPORTS TypeB FROM ModuleB
         	TypeC FROM ModuleC ;
 
+	Z ::= INTEGER	-- Can't specify only EXPORTS & IMPOTS
+
 END
