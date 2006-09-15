@@ -297,6 +297,20 @@ INTEGER_map_value2enum(asn_INTEGER_specifics_t *specs, long value) {
 		INTEGER__compar_value2enum);
 }
 
+static int
+INTEGER_st_prealloc(INTEGER_t *st, int min_size) {
+	void *p = MALLOC(min_size + 1);
+	if(p) {
+		void *b = st->buf;
+		st->size = 0;
+		st->buf = p;
+		FREEMEM(b);
+		return 0;
+	} else {
+		return -1;
+	}
+}
+
 /*
  * Decode the chunk of XML text encoding INTEGER.
  */
@@ -310,10 +324,18 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 	const char *lstop = lstart + chunk_size;
 	enum {
 		ST_SKIPSPACE,
+		ST_SKIPSPHEX,
 		ST_WAITDIGITS,
 		ST_DIGITS,
+		ST_HEXDIGIT1,
+		ST_HEXDIGIT2,
+		ST_HEXCOLON,
 		ST_EXTRASTUFF
 	} state = ST_SKIPSPACE;
+
+	if(chunk_size)
+		ASN_DEBUG("INTEGER body %d 0x%2x..0x%2x",
+			chunk_size, *lstart, lstop[-1]);
 
 	/*
 	 * We may have received a tag here. It will be processed inline.
@@ -323,7 +345,19 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		int lv = *lp;
 		switch(lv) {
 		case 0x09: case 0x0a: case 0x0d: case 0x20:
-			if(state == ST_SKIPSPACE) continue;
+			switch(state) {
+			case ST_SKIPSPACE:
+			case ST_SKIPSPHEX:
+				continue;
+			case ST_HEXCOLON:
+				if(xer_is_whitespace(lp, lstop - lp)) {
+					lp = lstop - 1;
+					continue;
+				}
+				break;
+			default:
+				break;
+			}
 			break;
 		case 0x2d:	/* '-' */
 			if(state == ST_SKIPSPACE) {
@@ -340,7 +374,24 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 			break;
 		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
 		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
-			if(state != ST_DIGITS) state = ST_DIGITS;
+			switch(state) {
+			case ST_DIGITS: break;
+			case ST_SKIPSPHEX:	/* Fall through */
+			case ST_HEXDIGIT1:
+				value = (lv - 0x30) << 4;
+				state = ST_HEXDIGIT2;
+				continue;
+			case ST_HEXDIGIT2:
+				value += (lv - 0x30);
+				state = ST_HEXCOLON;
+				st->buf[st->size++] = value;
+				continue;
+			case ST_HEXCOLON:
+				return XPBD_BROKEN_ENCODING;
+			default:
+				state = ST_DIGITS;
+				break;
+			}
 
 		    {
 			long new_value = value * 10;
@@ -381,22 +432,86 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 				ASN_DEBUG("Unknown identifier for INTEGER");
 			}
 			return XPBD_BROKEN_ENCODING;
+		case 0x3a:	/* ':' */
+			if(state == ST_HEXCOLON) {
+				/* This colon is expected */
+				state = ST_HEXDIGIT1;
+				continue;
+			} else if(state == ST_DIGITS) {
+				/* The colon here means that we have
+				 * decoded the first two hexadecimal
+				 * places as a decimal value.
+				 * Switch decoding mode. */
+				ASN_DEBUG("INTEGER re-evaluate as hex form");
+				if(INTEGER_st_prealloc(st, (chunk_size/3) + 1))
+					return XPBD_SYSTEM_FAILURE;
+				state = ST_SKIPSPHEX;
+				lp = lstart - 1;
+				continue;
+			} else {
+				ASN_DEBUG("state %d at %d", state, lp - lstart);
+				break;
+			}
+		/* [A-Fa-f] */
+		case 0x41:case 0x42:case 0x43:case 0x44:case 0x45:case 0x46:
+		case 0x61:case 0x62:case 0x63:case 0x64:case 0x65:case 0x66:
+			switch(state) {
+			case ST_SKIPSPHEX:
+			case ST_SKIPSPACE: /* Fall through */
+			case ST_HEXDIGIT1:
+				value = lv - ((lv < 0x61) ? 0x41 : 0x61);
+				value += 10;
+				value <<= 4;
+				state = ST_HEXDIGIT2;
+				continue;
+			case ST_HEXDIGIT2:
+				value += lv - ((lv < 0x61) ? 0x41 : 0x61);
+				value += 10;
+				st->buf[st->size++] = value;
+				state = ST_HEXCOLON;
+				continue;
+			case ST_DIGITS:
+				ASN_DEBUG("INTEGER re-evaluate as hex form");
+				if(INTEGER_st_prealloc(st, (chunk_size/3) + 1))
+					return XPBD_SYSTEM_FAILURE;
+				state = ST_SKIPSPHEX;
+				lp = lstart - 1;
+				continue;
+			default:
+				break;
+			}
+			break;
 		}
 
 		/* Found extra non-numeric stuff */
+		ASN_DEBUG("Found non-numeric 0x%2x at %d",
+			lv, lp - lstart);
 		state = ST_EXTRASTUFF;
 		break;
 	}
 
-	if(state != ST_DIGITS) {
+	switch(state) {
+	case ST_DIGITS:
+		/* Everything is cool */
+		break;
+	case ST_HEXCOLON:
+		st->buf[st->size] = 0;	/* Just in case termination */
+		return XPBD_BODY_CONSUMED;
+	case ST_HEXDIGIT1:
+	case ST_HEXDIGIT2:
+	case ST_SKIPSPHEX:
+		return XPBD_BROKEN_ENCODING;
+	default:
 		if(xer_is_whitespace(lp, lstop - lp)) {
 			if(state != ST_EXTRASTUFF)
 				return XPBD_NOT_BODY_IGNORE;
-			/* Fall through */
+			break;
 		} else {
-			ASN_DEBUG("No useful digits in output");
+			ASN_DEBUG("INTEGER: No useful digits (state %d)",
+				state);
 			return XPBD_BROKEN_ENCODING;	/* No digits */
 		}
+		break;
 	}
 
 	value *= sign;	/* Change sign, if needed */

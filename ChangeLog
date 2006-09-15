@@ -3,14 +3,14 @@
 
 	* skeletons/standard-modules directory is now used for standard types.
 	* Fixed class field access problem (Test case 98)
-	  (Severity: medim; Security impact: none)
+	  (Severity: medium; Security impact: none)
 	* Refactored Information Object Classes parsing.
 	* Refactored Parameterization support.
 	* [typedef enum foo {}] foo_e; is now e_foo, see #1287989
 	* Refactored ValueSetTypeAssignment parsing.
-	* First release of PER encoder (does not encode SETs yet).
 	* asn-decoder-template.c renamed into converter-sample.c
 	* MEGACO (Media Gateway Control Protocol) decoder sample added.
+	* First release of PER encoder (does not encode SETs yet).
 
 0.9.20:	2006-Mar-06
 

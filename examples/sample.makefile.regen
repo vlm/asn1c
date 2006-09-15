@@ -35,6 +35,19 @@ cat Makefile.am.sample						\
 	echo "	@touch ${ASN1PDU}.c"
 	echo "	make"
 	echo
+	echo 'check: ${TARGET}'
+	echo "	@if test -f ./sample-${ASN1PDU}-1.[db]er ; then \\"
+	echo "	for f in ./sample-${ASN1PDU}-*.[db]er; do \\"
+	echo '	echo "Recoding $$f into XER and back..."; \'
+	echo '	./${TARGET} -iber -oxer $$f > ./.tmp.1.$$ || exit 2; \'
+	echo '	./${TARGET} -ixer -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \'
+	echo '	diff ./.tmp.1.$$ ./.tmp.2.$$ || exit 2; \'
+	echo '	rm -f ./.tmp.[12].$$; \'
+	echo '	done; fi'
+	echo '	@echo ================'
+	echo '	@echo All tests passed'
+	echo '	@echo ================'
+	echo
 	echo "distclean: clean"
 	echo '	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)'
 	echo '	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)'
