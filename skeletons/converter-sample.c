@@ -35,8 +35,10 @@ extern asn_TYPE_descriptor_t *asn_pdu_collection[];
  * Open file and parse its contens.
  */
 static void *data_decode_from_file(asn_TYPE_descriptor_t *asnTypeOfPDU,
-	const char *fname, ssize_t suggested_bufsize);
+	FILE *f, const char *filename, ssize_t suggested_bufsize);
 static int write_out(const void *buffer, size_t size, void *key);
+static FILE *argument_to_file(char *av[], int idx);
+static char *argument_to_name(char *av[], int idx);
 
        int opt_debug;	/* -d */
 static int opt_check;	/* -c */
@@ -71,7 +73,7 @@ DEBUG(const char *fmt, ...) {
 }
 
 int
-main(int ac, char **av) {
+main(int ac, char *av[]) {
 	static asn_TYPE_descriptor_t *pduType = &PDU_Type;
 	ssize_t suggested_bufsize = 8192;  /* close or equal to stdio buffer */
 	int number_of_iterations = 1;
@@ -206,15 +208,17 @@ main(int ac, char **av) {
 	   * Process all files in turn.
 	   */
 	  for(ac_i = 0; ac_i < ac; ac_i++) {
-		char *fname = av[ac_i];
-		void *structure;
 		asn_enc_rval_t erv;
+		void *structure;	/* Decoded structure */
+		FILE *file = argument_to_file(av, ac_i);
+		char *name = argument_to_name(av, ac_i);
 
 		/*
 		 * Decode the encoded structure from file.
 		 */
 		structure = data_decode_from_file(pduType,
-				fname, suggested_bufsize);
+				file, name, suggested_bufsize);
+		if(file && file != stdin) fclose(file);
 		if(!structure) {
 			/* Error message is already printed */
 			exit(EX_DATAERR);
@@ -227,14 +231,14 @@ main(int ac, char **av) {
 			if(asn_check_constraints(pduType, structure,
 				errbuf, &errlen)) {
 				fprintf(stderr, "%s: ASN.1 constraint "
-					"check failed: %s\n", fname, errbuf);
+					"check failed: %s\n", name, errbuf);
 				exit(EX_DATAERR);
 			}
 		}
 
 		switch(oform) {
 		case OUT_NULL:
-			fprintf(stderr, "%s: decoded successfully\n", fname);
+			fprintf(stderr, "%s: decoded successfully\n", name);
 			break;
 		case OUT_TEXT:	/* -otext */
 			asn_fprint(stdout, pduType, structure);
@@ -242,7 +246,7 @@ main(int ac, char **av) {
 		case OUT_XER:	/* -oxer */
 			if(xer_fprint(stdout, pduType, structure)) {
 				fprintf(stderr, "%s: Cannot convert into XML\n",
-					fname);
+					name);
 				exit(EX_UNAVAILABLE);
 			}
 			break;
@@ -250,7 +254,7 @@ main(int ac, char **av) {
 			erv = der_encode(pduType, structure, write_out, stdout);
 			if(erv.encoded < 0) {
 				fprintf(stderr, "%s: Cannot convert into DER\n",
-					fname);
+					name);
 				exit(EX_UNAVAILABLE);
 			}
 			break;
@@ -258,7 +262,7 @@ main(int ac, char **av) {
 			erv = uper_encode(pduType, structure, write_out, stdout);
 			if(erv.encoded < 0) {
 				fprintf(stderr, "%s: Cannot convert into Unaligned PER\n",
-					fname);
+					name);
 				exit(EX_UNAVAILABLE);
 			}
 			break;
@@ -325,7 +329,8 @@ static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 	DynamicBuffer.length += bySize;
 }
 
-static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *fname, ssize_t suggested_bufsize) {
+static void *
+data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *filename, ssize_t suggested_bufsize) {
 	static char *fbuf;
 	static ssize_t fbuf_size;
 	static asn_codec_ctx_t s_codec_ctx;
@@ -333,26 +338,18 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 	void *structure = 0;
 	asn_dec_rval_t rval;
 	size_t rd;
-	FILE *fp;
+
+	if(!file) {
+		fprintf(stderr, "%s: %s\n", filename, strerror(errno));
+		return 0;
+	}
 
 	if(opt_stack) {
 		s_codec_ctx.max_stack_size = opt_stack;
 		opt_codec_ctx = &s_codec_ctx;
 	}
 
-	if(strcmp(fname, "-")) {
-		DEBUG("Processing file %s", fname);
-		fp = fopen(fname, "r");
-	} else {
-		DEBUG("Processing %s", "standard input");
-		fname = "stdin";
-		fp = stdin;
-	}
-
-	if(!fp) {
-		fprintf(stderr, "%s: %s\n", fname, strerror(errno));
-		return 0;
-	}
+	DEBUG("Processing %s", filename);
 
 	/* prepare the file buffer */
 	if(fbuf_size != suggested_bufsize) {
@@ -374,7 +371,7 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 	rval.code = RC_WMORE;
 	rval.consumed = 0;
 
-	while((rd = fread(fbuf, 1, fbuf_size, fp)) || !feof(fp)) {
+	while((rd = fread(fbuf, 1, fbuf_size, file)) || !feof(file)) {
 		char  *i_bptr;
 		size_t i_size;
 
@@ -425,7 +422,6 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 		case RC_OK:
 			DEBUG("RC_OK, finishing up with %ld",
 				(long)rval.consumed);
-			if(fp != stdin) fclose(fp);
 			return structure;
 		case RC_WMORE:
 			/*
@@ -448,14 +444,12 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 		break;
 	}
 
-	fclose(fp);
-
 	/* Clean up partially decoded structure */
 	ASN_STRUCT_FREE(*pduType, structure);
 
 	fprintf(stderr, "%s: "
 		"Decode failed past byte %ld: %s\n",
-		fname, (long)(DynamicBuffer.bytes_shifted
+		filename, (long)(DynamicBuffer.bytes_shifted
 			+ DynamicBuffer.offset + rval.consumed),
 		(rval.code == RC_WMORE)
 			? "Unexpected end of input"
@@ -468,4 +462,28 @@ static void *data_decode_from_file(asn_TYPE_descriptor_t *pduType, const char *f
 static int write_out(const void *buffer, size_t size, void *key) {
 	FILE *fp = (FILE *)key;
 	return (fwrite(buffer, 1, size, fp) == size) ? 0 : -1;
+}
+
+static int argument_is_stdin(char *av[], int idx) {
+	if(strcmp(av[idx], "-")) {
+		return 0;	/* Certainly not <stdin> */
+	} else {
+		/* This might be <stdin>, unless `./program -- -` */
+		if(strcmp(av[-1], "--"))
+			return 1;
+		else
+			return 0;
+	}
+}
+
+static FILE *argument_to_file(char *av[], int idx) {
+	return argument_is_stdin(av, idx)
+		? stdin
+		: fopen(av[idx], "r");
+}
+
+static char *argument_to_name(char *av[], int idx) {
+	return argument_is_stdin(av, idx)
+		? "standard input"
+		: av[idx];
 }
