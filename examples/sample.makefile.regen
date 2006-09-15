@@ -4,10 +4,11 @@ if [ -z "$ASN1PDU"	\
  -o  -z "$ASN1MODULES"	\
  -o  -z "$PROGNAME"	\
  ]; then
-	echo "ASN1PDU=\"$ASN1PDU\""
+	echo "ASN1CMDOPTS=\"$ASN1CMDOPTS\""
 	echo "ASN1MODULES=\"$ASN1MODULES\""
+	echo "ASN1PDU=\"$ASN1PDU\""
 	echo "PROGNAME=\"$PROGNAME\""
-	echo "ASN1PDU, ASN1MODULES, and PROGNAME must be set"
+	echo "ASN1PDU, ASN1MODULES, and PROGNAME are mandatory"
 	exit
 fi
 
@@ -17,6 +18,8 @@ if [ ! -f Makefile.am.sample ]; then
 	echo "Makefile.am.sample is missing"
 	exit 1
 fi
+
+ASN1PDU=`echo "$ASN1PDU" | tr - _`
 
 set -x
 cat Makefile.am.sample						\
