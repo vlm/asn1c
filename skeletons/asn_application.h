@@ -36,8 +36,7 @@ typedef int (asn_app_consume_bytes_f)(const void *buffer, size_t size,
 typedef void (asn_app_constraint_failed_f)(void *application_specific_key,
 	struct asn_TYPE_descriptor_s *type_descriptor_which_failed,
 	const void *structure_which_failed_ptr,
-	const char *error_message_format, ...)
-	__attribute__((format(printf, 4, 5)));
+	const char *error_message_format, ...) GCC_PRINTFLIKE(4, 5);
 
 #ifdef __cplusplus
 }

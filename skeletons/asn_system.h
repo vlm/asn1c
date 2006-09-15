@@ -78,8 +78,14 @@ typedef	unsigned int	uint32_t;
 
 #endif	/* WIN32 */
 
-#ifndef	__GNUC__
-#define	__attribute__(ignore)
+#if	__GNUC__ >= 3
+#ifndef	GCC_PRINTFLIKE
+#define	GCC_PRINTFLIKE(fmt,var)	__attribute__((format(printf,fmt,var)))
+#endif
+#else
+#ifndef	GCC_PRINTFLIKE
+#define	GCC_PRINTFLIKE(fmt,var)	/* nothing */
+#endif
 #endif
 
 #ifndef	offsetof	/* If not defined by <stddef.h> */
