@@ -712,6 +712,19 @@ DataInterChange.c: ../sample.makefile.regen
 	@touch DataInterChange.c
 	make
 
+check: ${TARGET}
+	@if test -f ./sample-DataInterChange-1.[db]er ; then \
+	for f in ./sample-DataInterChange-*.[db]er; do \
+	echo "Recoding $$f into XER and back..."; \
+	./${TARGET} -iber -oxer $$f > ./.tmp.1.$$ || exit 2; \
+	./${TARGET} -ixer -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
+	diff ./.tmp.1.$$ ./.tmp.2.$$ || exit 2; \
+	rm -f ./.tmp.[12].$$; \
+	done; fi
+	@echo ================
+	@echo All tests passed
+	@echo ================
+
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)
