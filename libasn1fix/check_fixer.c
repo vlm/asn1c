@@ -236,7 +236,9 @@ check(const char *fname,
 	/*
 	 * Destroy the asn.
 	 */
+#ifdef	CLEAN_EVERYTHING
 	asn1p_delete(asn);
+#endif
 
 	return r_value;
 }
