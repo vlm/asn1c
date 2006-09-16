@@ -5,16 +5,13 @@ GENERAL INFORMATION
 The X.509 (PKIX1) certificate decoder. Invoking `make` will compile the ASN.1
 specifications from the rfc3280.txt in the above directory.
 
-The ../../skeletons/converter-sample.c will supply the missing
-"int main()" routine which drives the decoding process.
-
 x509dump USAGE
 ==============
 
-To use the code, you'll have to prepare an X.509 certificate in DER encoding.
-The typical X.509 certificate will have a PEM form (DER encoded data wrapped
-in base64, wrapped in PEM "BEGIN" and "END" sections). The openssl x509 utility
-may be used to convert between PEM and DER.
+To use the x509dump, you'll have to prepare an X.509 certificate
+in DER encoding. The typical X.509 certificate will have a PEM format
+(DER encoded data wrapped in base64, wrapped in PEM "BEGIN" and "END" sections).
+The openssl x509 utility may be used to convert between PEM and DER.
 
 	EXAMPLE: Convert 'certificate.pem' into 'certificate.der':
 
