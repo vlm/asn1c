@@ -6,8 +6,9 @@ The LDAPv3 (Lightweight Directory Access Protocol) PDU decoder.
 Invoking `make` will compile the ASN.1 specifications from the rfc4211.txt
 in the above directory.
 
-The ../../skeletons/converter-sample.c will supply the missing
-"int main()" routine which drives the decoding process.
+This LDAP decoder has been successfully tested against the PROTOS c06-ldapv3
+security test suite:
+http://www.ee.oulu.fi/research/ouspg/protos/testing/c06/ldapv3/index.html
 
 ldap3dump USAGE
 ==============
