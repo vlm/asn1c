@@ -5,10 +5,8 @@ GENERAL INFORMATION
 The ISO MHEG-5 (Multimedia Hypermedia Experts Group,
 Multimedia Presentations) decoder.
 
-Invoking `make` will compile the ASN.1 specifications from the
-../ISO13522-MHEG-5.asn file.
-
-THERE IS NO ISO13522-MHEG-5.asn FILE THERE YET!
+Invoking `make` will first attempt compile the ASN.1 specifications from the
+../ISO13522-MHEG-5.asn file. THERE IS NO ISO13522-MHEG-5.asn FILE THERE YET!
 
 OBTAINING THE MHEG-5 SPECIFICATION
 ==================================
@@ -29,7 +27,7 @@ mheg5dump USAGE
 The mheg5dump utility may be used to dump the contents of the BER-encoded
 MHEG-5 data record file:
 
-	./mheg5dump tapfile.der		# Print MHEG-5 stream as XML (BASIC-XER)
+	./mheg5dump tapfile.ber		# Print MHEG-5 stream as XML (BASIC-XER)
 
 The full list of recognized command line options may be obtained with
 
