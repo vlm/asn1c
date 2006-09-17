@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2006 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -103,6 +104,7 @@ UTF8String__process(const UTF8String_t *st, uint32_t *dst, size_t dstlen) {
 	size_t length;
 	uint8_t *buf = st->buf;
 	uint8_t *end = buf + st->size;
+	uint32_t *dstend = dst + dstlen;
 
 	for(length = 0; buf < end; length++) {
 		int ch = *buf;
@@ -127,7 +129,7 @@ UTF8String__process(const UTF8String_t *st, uint32_t *dst, size_t dstlen) {
 		/* Check character sequence length */
 		if(buf + want > end) return U8E_TRUNC;
 
-		value = ch & (0xff >> (want + 1));
+		value = ch & (0xff >> want);
 		cend = buf + want;
 		for(buf++; buf < cend; buf++) {
 			ch = *buf;
@@ -136,10 +138,11 @@ UTF8String__process(const UTF8String_t *st, uint32_t *dst, size_t dstlen) {
 		}
 		if(value < UTF8String_mv[want])
 			return U8E_NOTMIN;
-		if(dstlen) *dst++ = value;	/* Record value */
+		if(dst < dstend)
+			*dst++ = value;	/* Record value */
 	}
 
-	if(dstlen) *dst = 0;	/* zero-terminate */
+	if(dst < dstend) *dst = 0;	/* zero-terminate */
 
 	return length;
 }
