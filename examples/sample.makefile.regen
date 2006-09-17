@@ -1,4 +1,15 @@
 #!/bin/sh
+#
+# This script attempts to compile the given ASN.1 specification and then
+# transforms the resulting Makefile.am.sample tailored to that specification
+# into a customized Makefile.
+#
+# The information which is necessary for this script is passed from the
+# Makefile which is going to be replaced with an updated Makefile.
+# This is called "boot-strapping" and is frequently the source of inside jokes.
+#
+# $Id$
+#
 
 if test -z "$ASN1PDU"	\
  -o  -z "$ASN1MODULES"	\
@@ -12,7 +23,7 @@ if test -z "$ASN1PDU"	\
 	exit
 fi
 
-ASN1PDU=`echo "$ASN1PDU" | tr - _`
+ASN1DEFPDU=`echo "$ASN1PDU" | tr - _`
 
 ../../asn1c/asn1c -S ../../skeletons ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
 
@@ -21,33 +32,36 @@ if test ! -f Makefile.am.sample ; then
 	exit 1
 fi
 
-EXTRA_CFLAGS=""
-
-if test -f config.h ; then
-	EXTRA_CFLAGS="$EXTRA_CFLAGS -DHAVE_CONFIG_H"
-fi
+CFLAGS=""
 
 FIXEDPDU=`echo "[$ASN1CMDOPTS]" | sed -e "s/.*-pdu=auto.*//"`
 if test ! "$FIXEDPDU" ; then
-	EXTRA_CFLAGS="$EXTRA_CFLAGS -DASN_PDU_COLLECTION"
+	CFLAGS="$CFLAGS -DASN_PDU_COLLECTION"
+fi
+
+if test -f config.h ; then
+	CFLAGS="$CFLAGS -DHAVE_CONFIG_H"
 fi
 
 set -x
 cat Makefile.am.sample						\
-	| sed -e "s/^CFLAGS.*/CFLAGS += -I. $EXTRA_CFLAGS -DPDU=${ASN1PDU}/" \
+	| sed -e "s/^CFLAGS.*/CFLAGS +=$CFLAGS -DPDU=${ASN1DEFPDU} -I./" \
 	| sed -e "s/^all: /all: ${ASN1PDU}.c /"			\
 	| sed -e "s/progname/${PROGNAME}/"			\
 	> Makefile.$$
 
 (	echo
 	echo "${ASN1PDU}.c: $0"
+	echo "	make regen-makefile"
+	echo "	@touch ${ASN1PDU}.c"
+	echo "	make"
+	echo
+	echo "regen-makefile:"
 	echo "	ASN1CMDOPTS=\"${ASN1CMDOPTS}\" \\"
 	echo "	ASN1MODULES=\"${ASN1MODULES}\" \\"
 	echo "	ASN1PDU=${ASN1PDU} \\"
 	echo "	PROGNAME=${PROGNAME} \\"
 	echo "	$0"
-	echo "	@touch ${ASN1PDU}.c"
-	echo "	make"
 	echo
 	echo 'check: ${TARGET}'
 	echo "	@if test -f ./sample-${ASN1PDU}-1.[db]er ; then \\"
