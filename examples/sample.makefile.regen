@@ -63,7 +63,8 @@ cat Makefile.am.sample						\
 	echo '	@echo ================'
 	echo
 	echo "distclean: clean"
-	echo '	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)'
+	echo '	rm -f $(ASN_MODULE_SOURCES)'
+	echo '	rm -f $(ASN_MODULE_HEADERS)'
 	echo '	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)'
 	echo "	rm -f Makefile.am.sample"
 ) >> Makefile.$$
