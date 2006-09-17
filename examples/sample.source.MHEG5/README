@@ -27,7 +27,7 @@ mheg5dump USAGE
 The mheg5dump utility may be used to dump the contents of the BER-encoded
 MHEG-5 data record file:
 
-	./mheg5dump tapfile.ber		# Print MHEG-5 stream as XML (BASIC-XER)
+	./mheg5dump mhegscene.ber	# Print MHEG-5 stream as XML (BASIC-XER)
 
 The full list of recognized command line options may be obtained with
 
