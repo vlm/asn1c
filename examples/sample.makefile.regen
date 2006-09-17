@@ -27,7 +27,7 @@ if test -f config.h ; then
 	EXTRA_CFLAGS="$EXTRA_CFLAGS -DHAVE_CONFIG_H"
 fi
 
-FIXEDPDU=`echo "[$ASN1PDU]" | sed -e "s/.*-pdu=auto.*//"`
+FIXEDPDU=`echo "[$ASN1CMDOPTS]" | sed -e "s/.*-pdu=auto.*//"`
 if test ! "$FIXEDPDU" ; then
 	EXTRA_CFLAGS="$EXTRA_CFLAGS -DASN_PDU_COLLECTION"
 fi
