@@ -24,4 +24,10 @@ Choice2 ::= [2] EXPLICIT CHOICE {
 
 Choice3 ::= [3] EXPLICIT Choice2
 
+Choice4 ::= [4] IMPLICIT Choice2
+
+Choice5 ::= Choice2
+
+Choice6 ::= Choice1
+
 END

@@ -2193,8 +2193,11 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
  */
 static int
 emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
+	asn1p_expr_t *terminal;
 	int using_type_name = 0;
 	char *p = MKID(expr);
+
+	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 
 	if((arg->flags & A1C_GEN_PER)
 	&& (expr->constraints
@@ -2255,7 +2258,8 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 				"use \"-gen-PER\" to enable */\n");
 		}
 
-		if(expr->expr_type == ASN_CONSTR_CHOICE) {
+		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {
+		//if(expr->expr_type == ASN_CONSTR_CHOICE) {
 			OUT("CHOICE_outmost_tag,\n");
 		} else {
 			OUT("0,\t/* Use generic outmost tag fetcher */\n");

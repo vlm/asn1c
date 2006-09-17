@@ -1,0 +1,819 @@
+
+/*** <<< INCLUDES [T] >>> ***/
+
+#include <INTEGER.h>
+#include <OCTET_STRING.h>
+#include "Choice1.h"
+#include "Choice2.h"
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [T] >>> ***/
+
+typedef enum T_PR {
+	T_PR_NOTHING,	/* No components present */
+	T_PR_t_a,
+	T_PR_t_b,
+	T_PR_t_c,
+	T_PR_t_d
+} T_PR;
+
+/*** <<< TYPE-DECLS [T] >>> ***/
+
+typedef struct T {
+	T_PR present;
+	union T_u {
+		INTEGER_t	 t_a;
+		OCTET_STRING_t	 t_b;
+		Choice1_t	 t_c;
+		Choice2_t	 t_d;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
+
+/*** <<< STAT-DEFS [T] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_T_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.t_a),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "t-a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.t_b),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_OCTET_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "t-b"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.t_c),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_Choice1,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "t-c"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.t_d),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_Choice2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "t-d"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* t-a at 15 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 1, 0, 0 }, /* t-b at 16 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 2, 0, 0 }, /* t-c at 17 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 } /* t-d at 19 */
+};
+static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
+	sizeof(struct T),
+	offsetof(struct T, _asn_ctx),
+	offsetof(struct T, present),
+	sizeof(((struct T *)0)->present),
+	asn_MAP_T_tag2el_1,
+	4,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
+	"T",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
+	asn_MBR_T_1,
+	4,	/* Elements count */
+	&asn_SPC_T_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Choice1] >>> ***/
+
+#include <OCTET_STRING.h>
+#include <INTEGER.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Choice1] >>> ***/
+
+typedef enum Choice1_PR {
+	Choice1_PR_NOTHING,	/* No components present */
+	Choice1_PR_c_a,
+	Choice1_PR_c_b
+} Choice1_PR;
+
+/*** <<< TYPE-DECLS [Choice1] >>> ***/
+
+typedef struct Choice1 {
+	Choice1_PR present;
+	union Choice1_u {
+		OCTET_STRING_t	 c_a;
+		INTEGER_t	 c_b;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Choice1_t;
+
+/*** <<< FUNC-DECLS [Choice1] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice1;
+
+/*** <<< STAT-DEFS [Choice1] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Choice1_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice1, choice.c_a),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_OCTET_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "c-a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice1, choice.c_b),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "c-b"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_Choice1_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* c-b at 24 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 0, 0, 0 } /* c-a at 22 */
+};
+static asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
+	sizeof(struct Choice1),
+	offsetof(struct Choice1, _asn_ctx),
+	offsetof(struct Choice1, present),
+	sizeof(((struct Choice1 *)0)->present),
+	asn_MAP_Choice1_tag2el_1,
+	2,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_Choice1 = {
+	"Choice1",
+	"Choice1",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
+	asn_MBR_Choice1_1,
+	2,	/* Elements count */
+	&asn_SPC_Choice1_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Choice2] >>> ***/
+
+#include <OCTET_STRING.h>
+#include <INTEGER.h>
+#include "Choice1.h"
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Choice2] >>> ***/
+
+typedef enum Choice2_PR {
+	Choice2_PR_NOTHING,	/* No components present */
+	Choice2_PR_c_a,
+	Choice2_PR_c_b,
+	Choice2_PR_c_d,
+	Choice2_PR_c_e
+} Choice2_PR;
+
+/*** <<< TYPE-DECLS [Choice2] >>> ***/
+
+typedef struct Choice2 {
+	Choice2_PR present;
+	union Choice2_u {
+		OCTET_STRING_t	 c_a;
+		INTEGER_t	 c_b;
+		Choice1_t	 c_d;
+		Choice1_t	 c_e;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Choice2_t;
+
+/*** <<< FUNC-DECLS [Choice2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice2;
+
+/*** <<< STAT-DEFS [Choice2] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.c_a),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_OCTET_STRING,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "c-a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.c_b),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "c-b"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.c_d),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_Choice1,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "c-d"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.c_e),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_Choice1,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "c-e"
+		},
+};
+static ber_tlv_tag_t asn_DEF_Choice2_tags_1[] = {
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Choice2_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* c-b at 28 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 0, 0, 0 }, /* c-a at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* c-d at 29 */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 3, 0, 0 } /* c-e at 31 */
+};
+static asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
+	sizeof(struct Choice2),
+	offsetof(struct Choice2, _asn_ctx),
+	offsetof(struct Choice2, present),
+	sizeof(((struct Choice2 *)0)->present),
+	asn_MAP_Choice2_tag2el_1,
+	4,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_Choice2 = {
+	"Choice2",
+	"Choice2",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	asn_DEF_Choice2_tags_1,
+	sizeof(asn_DEF_Choice2_tags_1)
+		/sizeof(asn_DEF_Choice2_tags_1[0]), /* 1 */
+	asn_DEF_Choice2_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Choice2_tags_1)
+		/sizeof(asn_DEF_Choice2_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_Choice2_1,
+	4,	/* Elements count */
+	&asn_SPC_Choice2_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Choice3] >>> ***/
+
+#include "Choice2.h"
+
+/*** <<< TYPE-DECLS [Choice3] >>> ***/
+
+typedef Choice2_t	 Choice3_t;
+
+/*** <<< FUNC-DECLS [Choice3] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice3;
+asn_struct_free_f Choice3_free;
+asn_struct_print_f Choice3_print;
+asn_constr_check_f Choice3_constraint;
+ber_type_decoder_f Choice3_decode_ber;
+der_type_encoder_f Choice3_encode_der;
+xer_type_decoder_f Choice3_decode_xer;
+xer_type_encoder_f Choice3_encode_xer;
+
+/*** <<< CODE [Choice3] >>> ***/
+
+int
+Choice3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_Choice2.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using Choice2,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Choice3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_Choice2.free_struct;
+	td->print_struct   = asn_DEF_Choice2.print_struct;
+	td->ber_decoder    = asn_DEF_Choice2.ber_decoder;
+	td->der_encoder    = asn_DEF_Choice2.der_encoder;
+	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
+	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
+	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
+	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_Choice2.per_constraints;
+	td->elements       = asn_DEF_Choice2.elements;
+	td->elements_count = asn_DEF_Choice2.elements_count;
+	td->specifics      = asn_DEF_Choice2.specifics;
+}
+
+void
+Choice3_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Choice3_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Choice3_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice3_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice3_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Choice3_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Choice3_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice3_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice3_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Choice3_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Choice3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice3_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Choice3] >>> ***/
+
+static ber_tlv_tag_t asn_DEF_Choice3_tags_1[] = {
+	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Choice3 = {
+	"Choice3",
+	"Choice3",
+	Choice3_free,
+	Choice3_print,
+	Choice3_constraint,
+	Choice3_decode_ber,
+	Choice3_encode_der,
+	Choice3_decode_xer,
+	Choice3_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	asn_DEF_Choice3_tags_1,
+	sizeof(asn_DEF_Choice3_tags_1)
+		/sizeof(asn_DEF_Choice3_tags_1[0]), /* 2 */
+	asn_DEF_Choice3_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Choice3_tags_1)
+		/sizeof(asn_DEF_Choice3_tags_1[0]), /* 2 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [Choice4] >>> ***/
+
+#include "Choice2.h"
+
+/*** <<< TYPE-DECLS [Choice4] >>> ***/
+
+typedef Choice2_t	 Choice4_t;
+
+/*** <<< FUNC-DECLS [Choice4] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice4;
+asn_struct_free_f Choice4_free;
+asn_struct_print_f Choice4_print;
+asn_constr_check_f Choice4_constraint;
+ber_type_decoder_f Choice4_decode_ber;
+der_type_encoder_f Choice4_encode_der;
+xer_type_decoder_f Choice4_decode_xer;
+xer_type_encoder_f Choice4_encode_xer;
+
+/*** <<< CODE [Choice4] >>> ***/
+
+int
+Choice4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_Choice2.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using Choice2,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Choice4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_Choice2.free_struct;
+	td->print_struct   = asn_DEF_Choice2.print_struct;
+	td->ber_decoder    = asn_DEF_Choice2.ber_decoder;
+	td->der_encoder    = asn_DEF_Choice2.der_encoder;
+	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
+	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
+	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
+	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_Choice2.per_constraints;
+	td->elements       = asn_DEF_Choice2.elements;
+	td->elements_count = asn_DEF_Choice2.elements_count;
+	td->specifics      = asn_DEF_Choice2.specifics;
+}
+
+void
+Choice4_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Choice4_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Choice4_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice4_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice4_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Choice4_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Choice4_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice4_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice4_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Choice4_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Choice4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice4_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Choice4] >>> ***/
+
+static ber_tlv_tag_t asn_DEF_Choice4_tags_1[] = {
+	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Choice4 = {
+	"Choice4",
+	"Choice4",
+	Choice4_free,
+	Choice4_print,
+	Choice4_constraint,
+	Choice4_decode_ber,
+	Choice4_encode_der,
+	Choice4_decode_xer,
+	Choice4_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	asn_DEF_Choice4_tags_1,
+	sizeof(asn_DEF_Choice4_tags_1)
+		/sizeof(asn_DEF_Choice4_tags_1[0]) - 1, /* 1 */
+	asn_DEF_Choice4_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Choice4_tags_1)
+		/sizeof(asn_DEF_Choice4_tags_1[0]), /* 2 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [Choice5] >>> ***/
+
+#include "Choice2.h"
+
+/*** <<< TYPE-DECLS [Choice5] >>> ***/
+
+typedef Choice2_t	 Choice5_t;
+
+/*** <<< FUNC-DECLS [Choice5] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice5;
+asn_struct_free_f Choice5_free;
+asn_struct_print_f Choice5_print;
+asn_constr_check_f Choice5_constraint;
+ber_type_decoder_f Choice5_decode_ber;
+der_type_encoder_f Choice5_encode_der;
+xer_type_decoder_f Choice5_decode_xer;
+xer_type_encoder_f Choice5_encode_xer;
+
+/*** <<< CODE [Choice5] >>> ***/
+
+int
+Choice5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_Choice2.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using Choice2,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Choice5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_Choice2.free_struct;
+	td->print_struct   = asn_DEF_Choice2.print_struct;
+	td->ber_decoder    = asn_DEF_Choice2.ber_decoder;
+	td->der_encoder    = asn_DEF_Choice2.der_encoder;
+	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
+	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
+	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
+	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_Choice2.per_constraints;
+	td->elements       = asn_DEF_Choice2.elements;
+	td->elements_count = asn_DEF_Choice2.elements_count;
+	td->specifics      = asn_DEF_Choice2.specifics;
+}
+
+void
+Choice5_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Choice5_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Choice5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice5_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Choice5_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Choice5_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice5_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Choice5_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Choice5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice5_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Choice5] >>> ***/
+
+static ber_tlv_tag_t asn_DEF_Choice5_tags_1[] = {
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Choice5 = {
+	"Choice5",
+	"Choice5",
+	Choice5_free,
+	Choice5_print,
+	Choice5_constraint,
+	Choice5_decode_ber,
+	Choice5_encode_der,
+	Choice5_decode_xer,
+	Choice5_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	asn_DEF_Choice5_tags_1,
+	sizeof(asn_DEF_Choice5_tags_1)
+		/sizeof(asn_DEF_Choice5_tags_1[0]), /* 1 */
+	asn_DEF_Choice5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Choice5_tags_1)
+		/sizeof(asn_DEF_Choice5_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [Choice6] >>> ***/
+
+#include "Choice1.h"
+
+/*** <<< TYPE-DECLS [Choice6] >>> ***/
+
+typedef Choice1_t	 Choice6_t;
+
+/*** <<< FUNC-DECLS [Choice6] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Choice6;
+asn_struct_free_f Choice6_free;
+asn_struct_print_f Choice6_print;
+asn_constr_check_f Choice6_constraint;
+ber_type_decoder_f Choice6_decode_ber;
+der_type_encoder_f Choice6_encode_der;
+xer_type_decoder_f Choice6_decode_xer;
+xer_type_encoder_f Choice6_encode_xer;
+
+/*** <<< CODE [Choice6] >>> ***/
+
+int
+Choice6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_Choice1.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using Choice1,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Choice6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_Choice1.free_struct;
+	td->print_struct   = asn_DEF_Choice1.print_struct;
+	td->ber_decoder    = asn_DEF_Choice1.ber_decoder;
+	td->der_encoder    = asn_DEF_Choice1.der_encoder;
+	td->xer_decoder    = asn_DEF_Choice1.xer_decoder;
+	td->xer_encoder    = asn_DEF_Choice1.xer_encoder;
+	td->uper_decoder   = asn_DEF_Choice1.uper_decoder;
+	td->uper_encoder   = asn_DEF_Choice1.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_Choice1.per_constraints;
+	td->elements       = asn_DEF_Choice1.elements;
+	td->elements_count = asn_DEF_Choice1.elements_count;
+	td->specifics      = asn_DEF_Choice1.specifics;
+}
+
+void
+Choice6_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Choice6_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Choice6_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice6_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice6_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Choice6_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Choice6_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice6_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Choice6_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Choice6_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Choice6_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Choice6_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Choice6] >>> ***/
+
+asn_TYPE_descriptor_t asn_DEF_Choice6 = {
+	"Choice6",
+	"Choice6",
+	Choice6_free,
+	Choice6_print,
+	Choice6_constraint,
+	Choice6_decode_ber,
+	Choice6_encode_der,
+	Choice6_decode_xer,
+	Choice6_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	0	/* No specifics */
+};
+

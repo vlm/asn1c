@@ -31,5 +31,8 @@ BEGIN
 	}
 
 	Choice3 ::= [3] EXPLICIT Choice2		-- tags [3] [2]
+	Choice4 ::= [4] IMPLICIT Choice2		-- tags [4]
+	Choice5 ::= Choice2				-- tags [2]
+	Choice6 ::= Choice1				-- tags
 
 END
