@@ -5,6 +5,7 @@
 asn_dec_rval_t
 uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sptr, const void *buffer, size_t size, int skip_bits) {
 	asn_codec_ctx_t s_codec_ctx;
+	asn_dec_rval_t rval;
 	asn_per_data_t pd;
 
 	if(skip_bits < 0 || skip_bits > 7 || (skip_bits > 0 && !size))
@@ -36,6 +37,14 @@ uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sp
 	 */
 	if(!td->uper_decoder)
 		_ASN_DECODE_FAILED;	/* PER is not compiled in */
-	return td->uper_decoder(opt_codec_ctx, td, 0, sptr, &pd);
+	rval = td->uper_decoder(opt_codec_ctx, td, 0, sptr, &pd);
+	if(rval.code == RC_FAIL) {
+		rval.consumed = 0;
+	} else {
+		/* Return the number of consumed bits */
+		rval.consumed = ((pd.buffer - (const uint8_t *)buffer) << 3)
+					+ pd.nboff - skip_bits;
+	}
+	return rval;
 }
 
