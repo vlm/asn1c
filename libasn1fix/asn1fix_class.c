@@ -65,7 +65,7 @@ asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, as
 		if(TQ_FIRST(&classfield->members)) {
 			/* Already have something */
 		} else {
-			expr = asn1p_expr_new(classfield->_lineno);
+			expr = asn1p_expr_new(classfield->_lineno, mod);
 			expr->expr_type = ASN_TYPE_ANY;
 			expr->meta_type = AMT_TYPE;
 			asn1p_expr_add(classfield, expr);

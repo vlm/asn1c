@@ -12,8 +12,8 @@ asn1p_module_new() {
 
 	mod = calloc(1, sizeof *mod);
 	if(mod) {
-		TQ_INIT(&(mod->imports));
 		TQ_INIT(&(mod->exports));
+		TQ_INIT(&(mod->imports));
 		TQ_INIT(&(mod->members));
 	}
 	return mod;

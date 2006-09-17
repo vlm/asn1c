@@ -271,7 +271,7 @@ typedef struct asn1p_expr_s {
 /*
  * Constructor and destructor.
  */
-asn1p_expr_t *asn1p_expr_new(int _lineno);
+asn1p_expr_t *asn1p_expr_new(int _lineno, struct asn1p_module_s *);
 asn1p_expr_t *asn1p_expr_clone(asn1p_expr_t *, int skip_extensions);
 asn1p_expr_t *asn1p_expr_clone_with_resolver(asn1p_expr_t *,
 	asn1p_expr_t *(*resolver)(asn1p_expr_t *to_resolve, void *resolver_arg),

@@ -23,8 +23,6 @@ if test -z "$ASN1PDU"	\
 	exit
 fi
 
-ASN1DEFPDU=`echo "$ASN1PDU" | tr - _`
-
 ../../asn1c/asn1c -S ../../skeletons ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
 
 if test ! -f Makefile.am.sample ; then
@@ -32,20 +30,15 @@ if test ! -f Makefile.am.sample ; then
 	exit 1
 fi
 
-CFLAGS=""
-
+ASN1DEFPDU=`echo "$ASN1PDU" | tr - _`
+CFLAGS="-DPDU=${ASN1DEFPDU}"
 if test -f config.h ; then
-	CFLAGS="$CFLAGS -DHAVE_CONFIG_H"
-fi
-
-FIXEDPDU=`echo "[$ASN1CMDOPTS]" | sed -e "s/.*-pdu=auto.*//"`
-if test ! "$FIXEDPDU" ; then
-	CFLAGS="$CFLAGS -DASN_PDU_COLLECTION"
+	CFLAGS="-DHAVE_CONFIG_H $CFLAGS"
 fi
 
 set -x
 cat Makefile.am.sample						\
-	| sed -e "s/^CFLAGS.*/CFLAGS +=$CFLAGS -DPDU=${ASN1DEFPDU} -I./" \
+	| sed -e "s/^CFLAGS += /CFLAGS += ${CFLAGS} /"		\
 	| sed -e "s/^all: /all: ${ASN1PDU}.c /"			\
 	| sed -e "s/progname/${PROGNAME}/"			\
 	> Makefile.$$

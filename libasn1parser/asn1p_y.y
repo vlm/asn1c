@@ -37,6 +37,9 @@ static struct AssignedIdentifier *saved_aid;
 static asn1p_value_t *_convert_bitstring2binary(char *str, int base);
 static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 
+static asn1p_module_t *currentModule;
+#define	NEW_EXPR()	(asn1p_expr_new(yylineno, currentModule))
+
 #define	checkmem(ptr)	do {						\
 		if(!(ptr))						\
 		return yyerror("Memory failure");			\
@@ -255,6 +258,7 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_expr>		ImportsElement
 %type	<a_expr>		ExportsElement
 %type	<a_expr>		ExtensionAndException
+%type	<a_expr>		Type
 %type	<a_expr>		TypeDeclaration
 %type	<a_expr>		TypeDeclarationSet
 %type	<a_ref>			ComplexTypeReference
@@ -266,7 +270,6 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_ref>			DefinedObjectClass
 %type	<a_expr>		ClassField
 %type	<a_expr>		ObjectClass
-%type	<a_expr>		Type
 %type	<a_expr>		DataTypeReference	/* Type1 ::= Type2 */
 %type	<a_expr>		DefinedType
 %type	<a_constr>		ValueSet		/* {a|b|c}*/
@@ -307,13 +310,17 @@ static void _fixup_anonymous_identifier(asn1p_expr_t *expr);
 %type	<a_tag>			TagClass TagTypeValue TagPlicit
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_constr>		optConstraints
-%type	<a_constr>		Constraints
+%type	<a_constr>		Constraint
+%type	<a_constr>		SubtypeConstraint
+%type	<a_constr>		GeneralConstraint
 %type	<a_constr>		SetOfConstraints
 %type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */
 %type	<a_constr>		ElementSetSpec		/* 1..2,...,3 */
 %type	<a_constr>		ConstraintSubtypeElement /* 1..2 */
 %type	<a_constr>		SimpleTableConstraint
+%type	<a_constr>		UserDefinedConstraint
 %type	<a_constr>		TableConstraint
+%type	<a_constr>		ContentsConstraint
 %type	<a_constr>		InnerTypeConstraint
 %type	<a_constr>		WithComponentsList
 %type	<a_constr>		WithComponentsElement
@@ -368,23 +375,27 @@ ModuleList:
  */
 
 ModuleDefinition:
-	TypeRefName optObjectIdentifier TOK_DEFINITIONS
+	TypeRefName { currentModule = asn1p_module_new(); }
+	optObjectIdentifier TOK_DEFINITIONS
 		optModuleDefinitionFlags
 		TOK_PPEQ TOK_BEGIN
 		optModuleBody
 		TOK_END {
 
-		if($7) {
-			$$ = $7;
+		$$ = currentModule;
+
+		if($8) {
+			asn1p_module_t tmp = *($$);
+			*($$) = *($8);
+			*($8) = tmp;
+			asn1p_module_free($8);
 		} else {
 			/* There's a chance that a module is just plain empty */
-			$$ = asn1p_module_new();
 		}
-		checkmem($$);
 
 		$$->ModuleName = $1;
-		$$->module_oid = $2;
-		$$->module_flags = $4;
+		$$->module_oid = $3;
+		$$->module_flags = $5;
 	}
 	;
 
@@ -649,19 +660,19 @@ ImportsList:
 
 ImportsElement:
 	TypeRefName {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_REFERENCE;
 	}
 	| TypeRefName '{' '}' {		/* Completely equivalent to above */
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_REFERENCE;
 	}
 	| Identifier {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_REFERENCE;
@@ -710,19 +721,19 @@ ExportsBody:
 
 ExportsElement:
 	TypeRefName {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_EXPORTVAR;
 	}
 	| TypeRefName '{' '}' {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_EXPORTVAR;
 	}
 	| Identifier {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_EXPORTVAR;
@@ -757,7 +768,7 @@ DefinedType:
 	 * "Type"
 	 */
 	| ComplexTypeReference {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->reference = $1;
 		$$->expr_type = A1TC_REFERENCE;
@@ -767,7 +778,7 @@ DefinedType:
 	 * A parameterized assignment.
 	 */
 	| ComplexTypeReference '{' ActualParameterList '}' {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->reference = $1;
 		$$->rhs_pspecs = $3;
@@ -880,7 +891,7 @@ ParameterArgumentName:
 
 ActualParameterList:
 	ActualParameter {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		asn1p_expr_add($$, $1);
 	}
@@ -895,7 +906,7 @@ ActualParameter:
 		$$ = $1;
 	}
 	| SimpleValue {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = "?";
 		$$->expr_type = A1TC_REFERENCE;
@@ -904,7 +915,7 @@ ActualParameter:
 	}
 	| Identifier {
 		asn1p_ref_t *ref;
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->expr_type = A1TC_REFERENCE;
@@ -914,7 +925,7 @@ ActualParameter:
 		$$->value = asn1p_value_fromref(ref, 0);
 	}
 	| ValueSet {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		$$->expr_type = A1TC_VALUESET;
 		$$->meta_type = AMT_VALUESET;
 		$$->constraints = $1;
@@ -923,7 +934,7 @@ ActualParameter:
 
 /*
 	| '{' ActualParameter '}' {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		asn1p_expr_add($$, $2);
 		$$->expr_type = A1TC_PARAMETRIZED;
@@ -936,12 +947,12 @@ ActualParameter:
  * A collection of constructed data type members.
  */
 optComponentTypeLists:
-	{ $$ = asn1p_expr_new(yylineno); }
+	{ $$ = NEW_EXPR(); }
 	| ComponentTypeLists { $$ = $1; };
 
 ComponentTypeLists:
 	ComponentType {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		asn1p_expr_add($$, $1);
 	}
@@ -966,7 +977,7 @@ ComponentType:
 		_fixup_anonymous_identifier($$);
 	}
 	| TOK_COMPONENTS TOK_OF Type {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->meta_type = $3->meta_type;
 		$$->expr_type = A1TC_COMPONENTS_OF;
@@ -979,7 +990,7 @@ ComponentType:
 
 AlternativeTypeLists:
 	AlternativeType {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		asn1p_expr_add($$, $1);
 	}
@@ -1021,7 +1032,7 @@ optUnique:
 
 FieldSpec:
 	ClassField {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->expr_type = A1TC_CLASSDEF;
 		$$->meta_type = AMT_OBJECTCLASS;
@@ -1038,7 +1049,7 @@ ClassField:
 
 	/* TypeFieldSpec ::= typefieldreference TypeOptionalitySpec? */
 	TOK_typefieldreference optMarker {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->meta_type = AMT_OBJECTFIELD;
@@ -1048,7 +1059,7 @@ ClassField:
 
 	/* FixedTypeValueFieldSpec ::= valuefieldreference Type UNIQUE ? ValueOptionalitySpec ? */
 	| TOK_valuefieldreference Type optUnique optMarker {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		$$->Identifier = $1;
 		$$->meta_type = AMT_OBJECTFIELD;
 		$$->expr_type = A1TC_CLASSFIELD_FTVFS;	/* FixedTypeValueFieldSpec */
@@ -1059,7 +1070,7 @@ ClassField:
 
 	/* VariableTypeValueFieldSpec ::= valuefieldreference FieldName ValueOptionalitySpec ? */
 	| TOK_valuefieldreference FieldName optMarker {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		$$->Identifier = $1;
 		$$->meta_type = AMT_OBJECTFIELD;
 		$$->expr_type = A1TC_CLASSFIELD_VTVFS;
@@ -1069,7 +1080,7 @@ ClassField:
 
 	/*  ObjectFieldSpec ::= objectfieldreference DefinedObjectClass ObjectOptionalitySpec ? */
 	| TOK_valuefieldreference DefinedObjectClass optMarker {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->reference = $2;
@@ -1080,7 +1091,7 @@ ClassField:
 
 	/* VariableTypeValueSetFieldSpec ::= valuesetfieldreference FieldName ValueOptionalitySpec ? */
 	| TOK_typefieldreference FieldName optMarker {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		$$->Identifier = $1;
 		$$->meta_type = AMT_OBJECTFIELD;
 		$$->expr_type = A1TC_CLASSFIELD_VTVSFS;
@@ -1090,7 +1101,7 @@ ClassField:
 
 	/* FixedTypeValueSetFieldSpec ::= valuesetfieldreference Type ValueSetOptionalitySpec ? */
 	| TOK_typefieldreference Type optMarker {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->meta_type = AMT_OBJECTFIELD;
@@ -1101,7 +1112,7 @@ ClassField:
 
 	/*  ObjectSetFieldSpec ::= objectsetfieldreference DefinedObjectClass ObjectOptionalitySpec ? */
 	| TOK_typefieldreference DefinedObjectClass optMarker {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
 		$$->reference = $2;
@@ -1157,7 +1168,7 @@ WithSyntaxToken:
 
 ExtensionAndException:
 	TOK_ThreeDots {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		checkmem($$->Identifier);
@@ -1165,7 +1176,7 @@ ExtensionAndException:
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_ThreeDots '!' DefinedValue {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		checkmem($$->Identifier);
@@ -1174,7 +1185,7 @@ ExtensionAndException:
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_ThreeDots '!' SignedNumber {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		$$->value = $3;
@@ -1255,7 +1266,7 @@ TypeDeclarationSet:
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_SEQUENCE optConstraints TOK_OF optIdentifier optTag TypeDeclaration {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SEQUENCE_OF;
@@ -1265,7 +1276,7 @@ TypeDeclarationSet:
 		asn1p_expr_add($$, $6);
 	}
 	| TOK_SET optConstraints TOK_OF optIdentifier optTag TypeDeclaration {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
 		$$->expr_type = ASN_CONSTR_SET_OF;
@@ -1275,14 +1286,14 @@ TypeDeclarationSet:
 		asn1p_expr_add($$, $6);
 	}
 	| TOK_ANY 					{
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->expr_type = ASN_TYPE_ANY;
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_ANY TOK_DEFINED TOK_BY Identifier		{
 		int ret;
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->reference = asn1p_ref_new(yylineno);
 		ret = asn1p_ref_add_component($$->reference,
@@ -1292,7 +1303,7 @@ TypeDeclarationSet:
 		$$->meta_type = AMT_TYPE;
 	}
 	| TOK_INSTANCE TOK_OF ComplexTypeReference {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->reference = $3;
 		$$->expr_type = A1TC_INSTANCE;
@@ -1625,7 +1636,7 @@ BasicTypeId_UniverationCompatible:
 
 BasicType:
 	BasicTypeId {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->expr_type = $1;
 		$$->meta_type = AMT_TYPE;
@@ -1634,7 +1645,7 @@ BasicType:
 		if($2) {
 			$$ = $2;
 		} else {
-			$$ = asn1p_expr_new(yylineno);
+			$$ = NEW_EXPR();
 			checkmem($$);
 		}
 		$$->expr_type = $1;
@@ -1681,12 +1692,19 @@ Except:		      TOK_EXCEPT;
 
 optConstraints:
 	{ $$ = 0; }
-	| Constraints {
+	| Constraint {
 		$$ = $1;
 	}
 	;
 
-Constraints:
+Constraint:
+	SubtypeConstraint
+	| '(' GeneralConstraint ')' {
+		$$ = $2;
+	}
+	;
+
+SubtypeConstraint:
 	SetOfConstraints {
 		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
 	}
@@ -1811,28 +1829,9 @@ ConstraintSubtypeElement:
 		$$->range_start->type = ATV_MIN;
 		$$->range_stop->type = ATV_MAX;
 	}
-	| TableConstraint {
-		$$ = $1;
-	}
 	| InnerTypeConstraint {
 		$$ = $1;
 	}
-	| TOK_CONSTRAINED TOK_BY '{'
-		{ asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
-		$$ = asn1p_constraint_new(yylineno);
-		checkmem($$);
-		$$->type = ACT_CT_CTDBY;
-		$$->value = asn1p_value_frombuf($5.buf, $5.len, 0);
-		checkmem($$->value);
-		$$->value->type = ATV_UNPARSED;
-	}
-	;
-
-ConstraintRangeSpec:
-	TOK_TwoDots		{ $$ = ACT_EL_RANGE; }
-	| TOK_TwoDots '<'	{ $$ = ACT_EL_RLRANGE; }
-	| '<' TOK_TwoDots	{ $$ = ACT_EL_LLRANGE; }
-	| '<' TOK_TwoDots '<'	{ $$ = ACT_EL_ULRANGE; }
 	;
 
 ConstraintSpec:
@@ -1939,6 +1938,40 @@ PresenceConstraint:
 	}
 	;
 
+
+/* X.682 */
+GeneralConstraint:
+	UserDefinedConstraint
+	| TableConstraint
+	| ContentsConstraint
+	;
+
+UserDefinedConstraint:
+	TOK_CONSTRAINED TOK_BY '{'
+		{ asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = ACT_CT_CTDBY;
+		$$->value = asn1p_value_frombuf($5.buf, $5.len, 0);
+		checkmem($$->value);
+		$$->value->type = ATV_UNPARSED;
+	}
+	;
+
+ContentsConstraint:
+	TOK_CONTAINING Type {
+		$$ = asn1p_constraint_new(yylineno);
+		$$->type = ACT_CT_CTNG;
+		$$->value = asn1p_value_fromtype($2);
+	}
+	;
+
+ConstraintRangeSpec:
+	TOK_TwoDots		{ $$ = ACT_EL_RANGE; }
+	| TOK_TwoDots '<'	{ $$ = ACT_EL_RLRANGE; }
+	| '<' TOK_TwoDots	{ $$ = ACT_EL_LLRANGE; }
+	| '<' TOK_TwoDots '<'	{ $$ = ACT_EL_ULRANGE; }
+	;
 TableConstraint:
 	SimpleTableConstraint {
 		$$ = $1;
@@ -2077,7 +2110,7 @@ optUniverationDefinition:
 
 UniverationDefinition:
 	'{' '}' {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 	}
 	| '{' UniverationList '}' {
@@ -2087,7 +2120,7 @@ UniverationDefinition:
 
 UniverationList:
 	UniverationElement {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		asn1p_expr_add($$, $1);
 	}
@@ -2099,14 +2132,14 @@ UniverationList:
 
 UniverationElement:
 	Identifier {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
 		$$->Identifier = $1;
 	}
 	| Identifier '(' SignedNumber ')' {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
@@ -2114,7 +2147,7 @@ UniverationElement:
 		$$->value = $3;
 	}
 	| Identifier '(' DefinedValue ')' {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
@@ -2122,14 +2155,14 @@ UniverationElement:
 		$$->value = $3;
 	}
 	| SignedNumber {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->expr_type = A1TC_UNIVERVAL;
 		$$->meta_type = AMT_VALUE;
 		$$->value = $1;
 	}
 	| TOK_ThreeDots {
-		$$ = asn1p_expr_new(yylineno);
+		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = strdup("...");
 		checkmem($$->Identifier);

@@ -87,6 +87,14 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 		return 0;
 	case ACT_CT_CTDBY:
 		return 1;
+	case ACT_CT_CTNG:	/* X.682, #11 */
+		switch(expr_type) {
+		case ASN_BASIC_OCTET_STRING:
+		case ASN_BASIC_BIT_STRING:
+			return 1;
+		default:
+			return 0;
+		}
 	case ACT_CA_SET:
 	case ACT_CA_CRC:
 	case ACT_CA_CSV:
