@@ -163,7 +163,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = ldap3dump
-CFLAGS += -I. -DHAVE_CONFIG_H -DPDU=LDAPMessage
+CFLAGS += -I.  -DHAVE_CONFIG_H -DPDU=LDAPMessage
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: LDAPMessage.c $(TARGET)
