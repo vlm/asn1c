@@ -135,7 +135,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		"# This file may be used as an input for make(3)\n"
 		"# Remove the lines below to convert it into a pure .am file\n"
 		"TARGET = progname\n"
-		"CFLAGS += -I.\n"
+		"CFLAGS +=%s -I.\n"
 		"OBJS=${ASN_MODULE_SOURCES:.c=.o}"
 		  " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
 		"\nall: $(TARGET)\n"
@@ -150,6 +150,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		"\n\trm -f $(OBJS)\n"
 		"\nregen: regenerate-from-asn1-source\n"
 		"\nregenerate-from-asn1-source:\n\t"
+		, (arg->flags & A1C_PDU_AUTO) ? " -DASN_PDU_COLLECTION" : ""
 	);
 
 	for(i = 0; i < argc; i++)

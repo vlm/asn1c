@@ -150,45 +150,14 @@ _asn1p_set_flags(enum asn1p_flags flags) {
 	return 0;
 }
 
-/*
- * Perform last touches.
- */
-static void
-_asn1p_apply_module2expr(asn1p_expr_t *expr, asn1p_module_t *mod) {
-	asn1p_expr_t *e;
-
-	expr->module = mod;	/* This is a useful thing */
-
-	/*
-	 * Do it to children also.
-	 */
-	TQ_FOR(e, &(expr->members), next) {
-		_asn1p_apply_module2expr(e, mod);
-	}
-
-	/*
-	 * Do to parameterization.
-	 */
-	if(expr->rhs_pspecs) {
-		TQ_FOR(e, &(expr->rhs_pspecs->members), next) {
-			_asn1p_apply_module2expr(e, mod);
-		}
-	}
-}
-
 static int
 _asn1p_fix_modules(asn1p_t *a, const char *fname) {
 	asn1p_module_t *mod;
 	TQ_FOR(mod, &(a->modules), mod_next) {
-		asn1p_expr_t *expr;
-
 		mod->source_file_name = strdup(fname);
 		if(mod->source_file_name == NULL)
 			return -1;
-
-		TQ_FOR(expr, &(mod->members), next) {
-			_asn1p_apply_module2expr(expr, mod);
-		}
+		mod->asn1p = a;
 	}
 	return 0;
 }

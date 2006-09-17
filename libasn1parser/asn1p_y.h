@@ -245,7 +245,7 @@
 
 
 #ifndef YYSTYPE
-#line 85 "asn1p_y.y"
+#line 88 "asn1p_y.y"
 typedef union {
 	asn1p_t			*a_grammar;
 	asn1p_module_flags_e	 a_module_flags;

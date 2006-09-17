@@ -26,11 +26,12 @@ typedef struct asn1p_constraint_s {
 		ACT_CT_WCOMP,		/* WITH COMPONENT */
 		ACT_CT_WCOMPS,		/* WITH COMPONENTS */
 		ACT_CT_CTDBY,		/* CONSTRAINED BY */
+		ACT_CT_CTNG,		/* CONTAINING Type */
 		/*
 		 * Arrays of constraints.
 		 */
 		ACT_CA_SET,		/* A set of constraints: (c1)(c2) */
-		ACT_CA_CRC,		/* Comp. relation c-t: ({a})({@b}) */
+		ACT_CA_CRC,		/* Comp. relation c-t: ({a}{@b}) */
 		ACT_CA_CSV,		/* Comma-separated constraints array */
 		ACT_CA_UNI,		/* UNION (|) */
 		ACT_CA_INT,		/* INTERSECTION (^) */

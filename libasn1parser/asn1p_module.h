@@ -4,6 +4,18 @@
 #ifndef	ASN1_PARSER_MODULE_H
 #define	ASN1_PARSER_MODULE_H
 
+struct asn1p_module_s;
+
+/*
+ * A simple container for several modules.
+ */
+typedef struct asn1p_s {
+	TQ_HEAD(struct asn1p_module_s)	modules;
+} asn1p_t;
+
+asn1p_t *asn1p_new(void);
+void asn1p_delete(asn1p_t *asn);
+
 /*
  * Flags specific to a module.
  */
@@ -71,6 +83,9 @@ typedef struct asn1p_module_s {
 	TQ_ENTRY(struct asn1p_module_s)
 		mod_next;
 
+	/* All modules */
+	asn1p_t *asn1p;
+
 	/*
 	 * Internally useful properties.
 	 */
@@ -84,16 +99,5 @@ typedef struct asn1p_module_s {
  */
 asn1p_module_t *asn1p_module_new(void);
 void asn1p_module_free(asn1p_module_t *mod);
-
-/*
- * No more than a container for several modules.
- */
-typedef struct asn1p_s {
-	TQ_HEAD(struct asn1p_module_s)	modules;
-} asn1p_t;
-
-asn1p_t *asn1p_new(void);
-void asn1p_delete(asn1p_t *asn);
-
 
 #endif	/* ASN1_PARSER_MODULE_H */

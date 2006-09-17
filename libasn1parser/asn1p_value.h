@@ -5,6 +5,7 @@
 #define	ASN1_PARSER_VALUE_H
 
 struct asn1p_constraint_s;	/* Forward declaration */
+struct asn1p_expr_s;
 
 /*
  * A wrapper around various kinds of values.
@@ -15,6 +16,7 @@ typedef struct asn1p_value_s {
 	 */
 	enum {
 		ATV_NOVALUE,
+		ATV_TYPE,	/* A type (as in CONTAINING Type) */
 		ATV_NULL,	/* A "NULL" value of type NULL. */
 		ATV_REAL,	/* A constant floating-point value */
 		ATV_INTEGER,	/* An integer constant */
@@ -34,6 +36,7 @@ typedef struct asn1p_value_s {
 
 	union {
 		struct asn1p_constraint_s *constraint;	/* ValueSet */
+		struct asn1p_expr_s	*v_type;	/* Type */
 		asn1p_ref_t	*reference;
 		asn1c_integer_t	 v_integer;
 		double		 v_double;
@@ -68,6 +71,7 @@ asn1p_value_t *asn1p_value_frombits(uint8_t *bits, int size_in_bits, int dc);
 asn1p_value_t *asn1p_value_frombuf(char *buffer, int size, int do_copy);
 asn1p_value_t *asn1p_value_fromdouble(double);
 asn1p_value_t *asn1p_value_fromint(asn1c_integer_t);
+asn1p_value_t *asn1p_value_fromtype(struct asn1p_expr_s *);
 asn1p_value_t *asn1p_value_clone(asn1p_value_t *);
 asn1p_value_t *asn1p_value_clone_with_resolver(asn1p_value_t *,
 		asn1p_value_t *(*resolver)(asn1p_value_t *, void *rarg),

@@ -192,7 +192,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 				FATAL("Value %s at line %d is too large for this compiler! Contact the asn1c author.\n", p, arg->expr->_lineno);
 				return -1;
 			}
-			expr = asn1p_expr_new(arg->expr->_lineno);
+			expr = asn1p_expr_new(arg->expr->_lineno, arg->expr->module);
 			expr->Identifier = p;
 			expr->meta_type = AMT_VALUE; 
 			expr->expr_type = ASN_BASIC_INTEGER;

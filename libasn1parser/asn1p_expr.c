@@ -13,13 +13,14 @@ static asn1p_value_t *value_resolver(asn1p_value_t *, void *arg);
  * Construct a new empty types collection.
  */
 asn1p_expr_t *
-asn1p_expr_new(int _lineno) {
+asn1p_expr_new(int _lineno, asn1p_module_t *mod) {
 	asn1p_expr_t *expr;
 
 	expr = calloc(1, sizeof *expr);
 	if(expr) {
 		TQ_INIT(&(expr->members));
 		expr->spec_index = -1;
+		expr->module = mod;
 		expr->_lineno = _lineno;
 	}
 
@@ -96,7 +97,7 @@ asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*r
 			return NULL;	/* Hard error */
 		}
 	}
-	if(!clone) clone = asn1p_expr_new(expr->_lineno);
+	if(!clone) clone = asn1p_expr_new(expr->_lineno, expr->module);
 	if(!clone) return NULL;
 
 	/*
@@ -106,7 +107,6 @@ asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*r
 	CLCOPY(expr_type);
 	CLCOPY(tag);
 	CLCOPY(marker.flags);		/* OPTIONAL/DEFAULT */
-	CLCOPY(module);
 	CLCOPY(_mark);
 
 	clone->data = 0;	/* Do not clone this */
@@ -165,7 +165,7 @@ value_resolver(asn1p_value_t *value, void *rarg) {
 	}
 
 	ref = value->value.reference;
-	tmpexpr = asn1p_expr_new(ref->_lineno);
+	tmpexpr = asn1p_expr_new(ref->_lineno, 0);
 	tmpexpr->meta_type = AMT_TYPEREF;
 	tmpexpr->expr_type = A1TC_REFERENCE;
 	tmpexpr->reference = ref;

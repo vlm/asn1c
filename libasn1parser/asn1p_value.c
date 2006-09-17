@@ -133,6 +133,16 @@ asn1p_value_fromint(asn1c_integer_t i) {
 }
 
 asn1p_value_t *
+asn1p_value_fromtype(asn1p_expr_t *expr) {
+	asn1p_value_t *v = calloc(1, sizeof *v);
+	if(v) {
+		v->value.v_type = expr;
+		v->type = ATV_TYPE;
+	}
+	return v;
+}
+
+asn1p_value_t *
 asn1p_value_clone(asn1p_value_t *v) {
 	return asn1p_value_clone_with_resolver(v, 0, 0);
 }
@@ -149,6 +159,8 @@ asn1p_value_clone_with_resolver(asn1p_value_t *v,
 			return calloc(1, sizeof(*clone));
 		case ATV_REAL:
 			return asn1p_value_fromdouble(v->value.v_double);
+		case ATV_TYPE:
+			return asn1p_value_fromtype(v->value.v_type);
 		case ATV_INTEGER:
 		case ATV_MIN:
 		case ATV_MAX:
@@ -212,6 +224,9 @@ asn1p_value_free(asn1p_value_t *v) {
 		switch(v->type) {
 		case ATV_NOVALUE:
 		case ATV_NULL:
+			break;
+		case ATV_TYPE:
+			asn1p_expr_free(v->value.v_type);
 			break;
 		case ATV_REAL:
 		case ATV_INTEGER:
