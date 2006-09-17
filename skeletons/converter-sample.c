@@ -431,14 +431,12 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 			rval = uper_decode(opt_codec_ctx, pduType,
 				(void **)&structure, i_bptr, i_size, 0);
 			ecbits = rval.consumed % 8;	/* Extra bits */
-			DEBUG("PER unused %d bits (consumed %ld, %d)",
-				ecbits, (long)rval.consumed);
 			rval.consumed /= 8; /* Convert to value in bytes! */
 			break;
 		}
-		DEBUG("decode(%ld) consumed %ld (%ld), code %d",
+		DEBUG("decode(%ld) consumed %ld+%d (%ld), code %d",
 			(long)DynamicBuffer.length,
-			(long)rval.consumed, (long)i_size,
+			(long)rval.consumed, ecbits, (long)i_size,
 			rval.code);
 
 		if(DynamicBuffer.allocated == 0) {
