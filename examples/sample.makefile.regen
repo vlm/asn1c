@@ -65,6 +65,23 @@ cat Makefile.am.sample						\
 	echo '	diff ./.tmp.1.$$ ./.tmp.2.$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[12].$$; \'
 	echo '	done; fi'
+	echo "	@if test -f ./sample-${ASN1PDU}-1.xer ; then \\"
+	echo "	for f in ./sample-${ASN1PDU}-*.xer; do \\"
+	echo '	echo "Recoding $$f into DER and back..."; \'
+	echo '	./${TARGET} -ixer -oder $$f > ./.tmp.1.$$ || exit 2; \'
+	echo '	./${TARGET} -iber -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \'
+	echo '	diff $$f ./.tmp.2.$$ || exit 2; \'
+	echo '	rm -f ./.tmp.[12].$$; \'
+	echo '	done; fi'
+	echo "	@if test -f ./sample-${ASN1PDU}-1.per ; then \\"
+	echo "	for f in ./sample-${ASN1PDU}-*.per; do \\"
+	echo '	echo "Recoding $$f into DER into XER and back..."; \'
+	echo '	./${TARGET} -iper -oder $$f > ./.tmp.1.$$ || exit 2; \'
+	echo '	./${TARGET} -ider -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \'
+	echo '	./${TARGET} -ixer -oper ./.tmp.2.$$ > ./.tmp.1.$$ || exit 2; \'
+	echo '	diff $$f ./.tmp.1.$$ || exit 2; \'
+	echo '	rm -f ./.tmp.[12].$$; \'
+	echo '	done; fi'
 	echo '	@echo ================'
 	echo '	@echo All tests passed'
 	echo '	@echo ================'
