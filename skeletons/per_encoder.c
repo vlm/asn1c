@@ -21,10 +21,20 @@ uper_encode(asn_TYPE_descriptor_t *td, void *sptr, asn_app_consume_bytes_f *cb, 
 	po.nbits = 8 * sizeof(po.tmpspace);
 	po.outper = cb;
 	po.op_key = app_key;
+	po.flushed_bytes = 0;
 
 	er = td->uper_encoder(td, 0, sptr, &po);
-	if(er.encoded != -1 && _uper_encode_flush_outp(&po))
-		_ASN_ENCODE_FAILED;
+	if(er.encoded != -1) {
+		size_t bits_to_flush;
+
+		bits_to_flush = ((po.buffer - po.tmpspace) << 3) + po.nboff;
+
+		/* Set number of bits encoded to a firm value */
+		er.encoded = (po.flushed_bytes << 3) + bits_to_flush;
+
+		if(_uper_encode_flush_outp(&po))
+			_ASN_ENCODE_FAILED;
+	}
 
 	return er;
 }
@@ -52,7 +62,6 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
 asn_enc_rval_t
 uper_encode_to_buffer(asn_TYPE_descriptor_t *td, void *sptr, void *buffer, size_t buffer_size) {
 	enc_to_buf_arg key;
-	asn_enc_rval_t er;
 
 	/*
 	 * Invoke type-specific encoder.
@@ -65,10 +74,7 @@ uper_encode_to_buffer(asn_TYPE_descriptor_t *td, void *sptr, void *buffer, size_
 
 	ASN_DEBUG("Encoding \"%s\" using UNALIGNED PER", td->name);
 
-	er = uper_encode(td, sptr, encode_to_buffer_cb, &key);
-	if(er.encoded != -1)
-		er.encoded = buffer_size - key.left;
-	return er;
+	return uper_encode(td, sptr, encode_to_buffer_cb, &key);
 }
 
 static int

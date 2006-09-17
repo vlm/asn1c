@@ -35,7 +35,7 @@ extern asn_TYPE_descriptor_t *asn_pdu_collection[];
  * Open file and parse its contens.
  */
 static void *data_decode_from_file(asn_TYPE_descriptor_t *asnTypeOfPDU,
-	FILE *f, const char *filename, ssize_t suggested_bufsize);
+	FILE *file, const char *name, ssize_t suggested_bufsize, int first_pdu);
 static int write_out(const void *buffer, size_t size, void *key);
 static FILE *argument_to_file(char *av[], int idx);
 static char *argument_to_name(char *av[], int idx);
@@ -43,6 +43,7 @@ static char *argument_to_name(char *av[], int idx);
        int opt_debug;	/* -d */
 static int opt_check;	/* -c */
 static int opt_stack;	/* -s */
+static int opt_onepdu;	/* -1 */
 
 /* Input data format selector */
 static enum input_format {
@@ -107,21 +108,9 @@ main(int ac, char *av[]) {
 		fprintf(stderr, "-o<format>: '%s': improper format selector\n",
 			optarg);
 		exit(EX_UNAVAILABLE);
-	case 'p':
-#ifdef	ASN_PDU_COLLECTION
-		{
-			asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
-			if(optarg[0] < 'A' || optarg[0] > 'Z') {
-				fprintf(stderr, "Available PDU types:\n");
-				for(; *pdu; pdu++) printf("%s\n", (*pdu)->name);
-				exit(0);
-			}
-			while(*pdu && strcmp((*pdu)->name, optarg)) pdu++;
-			if(*pdu) { pduType = *pdu; break; }
-		}
-#endif	/* ASN_PDU_COLLECTION */
-		fprintf(stderr, "-p %s: Unrecognized PDU\n", optarg);
-		exit(EX_UNAVAILABLE);
+	case '1':
+		opt_onepdu = 1;
+		break;
 	case 'b':
 		suggested_bufsize = atoi(optarg);
 		if(suggested_bufsize < 1
@@ -146,6 +135,21 @@ main(int ac, char *av[]) {
 			exit(EX_UNAVAILABLE);
 		}
 		break;
+	case 'p':
+#ifdef	ASN_PDU_COLLECTION
+		{
+			asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
+			if(optarg[0] < 'A' || optarg[0] > 'Z') {
+				fprintf(stderr, "Available PDU types:\n");
+				for(; *pdu; pdu++) printf("%s\n", (*pdu)->name);
+				exit(0);
+			}
+			while(*pdu && strcmp((*pdu)->name, optarg)) pdu++;
+			if(*pdu) { pduType = *pdu; break; }
+		}
+#endif	/* ASN_PDU_COLLECTION */
+		fprintf(stderr, "-p %s: Unrecognized PDU\n", optarg);
+		exit(EX_UNAVAILABLE);
 	case 's':
 		opt_stack = atoi(optarg);
 		if(opt_stack < 0) {
@@ -208,20 +212,26 @@ main(int ac, char *av[]) {
 	   * Process all files in turn.
 	   */
 	  for(ac_i = 0; ac_i < ac; ac_i++) {
-		asn_enc_rval_t erv;
-		void *structure;	/* Decoded structure */
-		FILE *file = argument_to_file(av, ac_i);
-		char *name = argument_to_name(av, ac_i);
+	    asn_enc_rval_t erv;
+	    void *structure;	/* Decoded structure */
+	    FILE *file = argument_to_file(av, ac_i);
+	    char *name = argument_to_name(av, ac_i);
+	    int first_pdu;
 
+	    for(first_pdu = 1; first_pdu || !opt_onepdu; first_pdu = 0) {
 		/*
 		 * Decode the encoded structure from file.
 		 */
 		structure = data_decode_from_file(pduType,
-				file, name, suggested_bufsize);
-		if(file && file != stdin) fclose(file);
+				file, name, suggested_bufsize, first_pdu);
 		if(!structure) {
-			/* Error message is already printed */
-			exit(EX_DATAERR);
+			if(errno) {
+				/* Error message is already printed */
+				exit(EX_DATAERR);
+			} else {
+				/* EOF */
+				break;
+			}
 		}
 
 		/* Check ASN.1 constraints */
@@ -257,6 +267,7 @@ main(int ac, char *av[]) {
 					name);
 				exit(EX_UNAVAILABLE);
 			}
+			DEBUG("Encoded in %ld bytes of DER", (long)erv.encoded);
 			break;
 		case OUT_PER:
 			erv = uper_encode(pduType, structure, write_out, stdout);
@@ -265,10 +276,15 @@ main(int ac, char *av[]) {
 					name);
 				exit(EX_UNAVAILABLE);
 			}
+			DEBUG("Encoded in %ld bits of UPER", (long)erv.encoded);
 			break;
 		}
 
 		ASN_STRUCT_FREE(*pduType, structure);
+	    }
+
+	    if(file && file != stdin)
+		fclose(file);
 	  }
 	}
 
@@ -279,6 +295,7 @@ static struct dynamic_buffer {
 	char  *data;		/* Pointer to the data bytes */
 	size_t offset;		/* Offset from the start */
 	size_t length;		/* Length of meaningful contents */
+	size_t unbit;		/* Unused bits in the last byte */
 	size_t allocated;	/* Allocated memory for data */
 	int    nreallocs;	/* Number of data reallocations */
 	off_t  bytes_shifted;	/* Number of bytes ever shifted */
@@ -332,17 +349,20 @@ static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 }
 
 static void *
-data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *filename, ssize_t suggested_bufsize) {
+data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *name, ssize_t suggested_bufsize, int on_first_pdu) {
 	static char *fbuf;
 	static ssize_t fbuf_size;
 	static asn_codec_ctx_t s_codec_ctx;
 	asn_codec_ctx_t *opt_codec_ctx = 0;
 	void *structure = 0;
 	asn_dec_rval_t rval;
+	size_t old_offset;	
+	size_t new_offset;
 	size_t rd;
 
 	if(!file) {
-		fprintf(stderr, "%s: %s\n", filename, strerror(errno));
+		fprintf(stderr, "%s: %s\n", name, strerror(errno));
+		errno = EINVAL;
 		return 0;
 	}
 
@@ -351,7 +371,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *fi
 		opt_codec_ctx = &s_codec_ctx;
 	}
 
-	DEBUG("Processing %s", filename);
+	DEBUG("Processing %s", name);
 
 	/* prepare the file buffer */
 	if(fbuf_size != suggested_bufsize) {
@@ -363,17 +383,23 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *fi
 		fbuf_size = suggested_bufsize;
 	}
 
-	DynamicBuffer.offset = 0;
-	DynamicBuffer.length = 0;
-	DynamicBuffer.allocated = 0;
-	DynamicBuffer.bytes_shifted = 0;
-	DynamicBuffer.nreallocs = 0;
+	if(on_first_pdu) {
+		DynamicBuffer.offset = 0;
+		DynamicBuffer.length = 0;
+		DynamicBuffer.unbit = 0;
+		DynamicBuffer.allocated = 0;
+		DynamicBuffer.bytes_shifted = 0;
+		DynamicBuffer.nreallocs = 0;
+	}
+
+	old_offset = DynamicBuffer.bytes_shifted + DynamicBuffer.offset;
 
 	/* Pretend immediate EOF */
 	rval.code = RC_WMORE;
 	rval.consumed = 0;
 
 	while((rd = fread(fbuf, 1, fbuf_size, file)) || !feof(file)) {
+		int    ecbits = 0;	/* Extra consumed bits in case of PER */
 		char  *i_bptr;
 		size_t i_size;
 
@@ -390,6 +416,8 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *fi
 			i_size = rd;
 		}
 
+		DEBUG("Decoding %ld bytes", (long)i_size);
+
 		switch(iform) {
 		case INP_BER:
 			rval = ber_decode(opt_codec_ctx, pduType,
@@ -401,7 +429,11 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *fi
 			break;
 		case INP_PER:
 			rval = uper_decode(opt_codec_ctx, pduType,
-				(void **)&structure, i_bptr, i_size);
+				(void **)&structure, i_bptr, i_size, 0);
+			ecbits = rval.consumed % 8;	/* Extra bits */
+			DEBUG("PER unused %d bits (consumed %ld, %d)",
+				ecbits, (long)rval.consumed);
+			rval.consumed /= 8; /* Convert to value in bytes! */
 			break;
 		}
 		DEBUG("decode(%ld) consumed %ld (%ld), code %d",
@@ -411,13 +443,24 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *fi
 
 		if(DynamicBuffer.allocated == 0) {
 			/*
-			 * Flush the remainder into the intermediate buffer.
+			 * Flush remainder into the intermediate buffer.
 			 */
 			if(rval.code != RC_FAIL && rval.consumed < rd) {
+				DEBUG("Saving %d bytes", rd - rval.consumed);
 				add_bytes_to_buffer(fbuf + rval.consumed,
 					     rd - rval.consumed);
 				rval.consumed = 0;
 			}
+		}
+
+		/*
+		 * Adjust position inside the source buffer.
+		 */
+		if(DynamicBuffer.allocated) {
+			DynamicBuffer.offset += rval.consumed;
+			DynamicBuffer.length -= rval.consumed;
+		} else {
+			DynamicBuffer.bytes_shifted += rval.consumed;
 		}
 
 		switch(rval.code) {
@@ -426,19 +469,11 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *fi
 				(long)rval.consumed);
 			return structure;
 		case RC_WMORE:
-			/*
-			 * Adjust position inside the source buffer.
-			 */
-			if(DynamicBuffer.allocated) {
-				DynamicBuffer.offset += rval.consumed;
-				DynamicBuffer.length -= rval.consumed;
-			}
 			DEBUG("RC_WMORE, continuing %ld with %ld..%ld..%ld",
 				(long)rval.consumed,
 				(long)DynamicBuffer.offset,
 				(long)DynamicBuffer.length,
 				(long)DynamicBuffer.allocated);
-			rval.consumed = 0;
 			continue;
 		case RC_FAIL:
 			break;
@@ -449,13 +484,24 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *fi
 	/* Clean up partially decoded structure */
 	ASN_STRUCT_FREE(*pduType, structure);
 
-	fprintf(stderr, "%s: "
-		"Decode failed past byte %ld: %s\n",
-		filename, (long)(DynamicBuffer.bytes_shifted
-			+ DynamicBuffer.offset + rval.consumed),
-		(rval.code == RC_WMORE)
-			? "Unexpected end of input"
-			: "Input processing error");
+	new_offset = DynamicBuffer.bytes_shifted + DynamicBuffer.offset;
+
+	/*
+	 * Print a message and return failure only if not EOF,
+	 * unless this is our first PDU (empty file).
+	 */
+	if(on_first_pdu || new_offset != old_offset) {
+		fprintf(stderr, "%s: "
+			"Decode failed past byte %ld: %s\n",
+			name, (long)new_offset,
+			(rval.code == RC_WMORE)
+				? "Unexpected end of input"
+				: "Input processing error");
+		errno = (rval.code == RC_WMORE) ? ENOMSG : EBADMSG;
+	} else {
+		/* Got EOF after a few successful PDU */	
+		errno = 0;
+	}
 
 	return 0;
 }
