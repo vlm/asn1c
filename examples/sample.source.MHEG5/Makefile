@@ -453,7 +453,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = mheg5dump
-CFLAGS += -I.  -DHAVE_CONFIG_H -DPDU=InterchangedObject
+CFLAGS += -DHAVE_CONFIG_H -DPDU=InterchangedObject -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: InterchangedObject.c $(TARGET)
@@ -478,13 +478,16 @@ regenerate-from-asn1-source:
 
 
 InterchangedObject.c: ../sample.makefile.regen
+	make regen-makefile
+	@touch InterchangedObject.c
+	make
+
+regen-makefile:
 	ASN1CMDOPTS="-fcompound-names" \
 	ASN1MODULES="../ISO13522-MHEG-5.asn" \
 	ASN1PDU=InterchangedObject \
 	PROGNAME=mheg5dump \
 	../sample.makefile.regen
-	@touch InterchangedObject.c
-	make
 
 check: ${TARGET}
 	@if test -f ./sample-InterchangedObject-1.[db]er ; then \

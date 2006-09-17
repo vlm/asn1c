@@ -285,7 +285,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = megacoDump
-CFLAGS += -I.  -DHAVE_CONFIG_H -DPDU=MegacoMessage
+CFLAGS += -DHAVE_CONFIG_H -DPDU=MegacoMessage -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: MegacoMessage.c $(TARGET)
@@ -310,13 +310,16 @@ regenerate-from-asn1-source:
 
 
 MegacoMessage.c: ../sample.makefile.regen
+	make regen-makefile
+	@touch MegacoMessage.c
+	make
+
+regen-makefile:
 	ASN1CMDOPTS="-fcompound-names" \
 	ASN1MODULES="../rfc3525-MEDIA-GATEWAY-CONTROL.asn1" \
 	ASN1PDU=MegacoMessage \
 	PROGNAME=megacoDump \
 	../sample.makefile.regen
-	@touch MegacoMessage.c
-	make
 
 check: ${TARGET}
 	@if test -f ./sample-MegacoMessage-1.[db]er ; then \

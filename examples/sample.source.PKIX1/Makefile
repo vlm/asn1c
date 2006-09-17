@@ -345,7 +345,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = x509dump
-CFLAGS += -I.  -DHAVE_CONFIG_H -DPDU=Certificate
+CFLAGS += -DHAVE_CONFIG_H -DPDU=Certificate -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: Certificate.c $(TARGET)
@@ -370,13 +370,16 @@ regenerate-from-asn1-source:
 
 
 Certificate.c: ../sample.makefile.regen
+	make regen-makefile
+	@touch Certificate.c
+	make
+
+regen-makefile:
 	ASN1CMDOPTS="" \
 	ASN1MODULES="../rfc3280-*.asn1" \
 	ASN1PDU=Certificate \
 	PROGNAME=x509dump \
 	../sample.makefile.regen
-	@touch Certificate.c
-	make
 
 check: ${TARGET}
 	@if test -f ./sample-Certificate-1.[db]er ; then \
