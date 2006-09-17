@@ -1,0 +1,97 @@
+<InterchangedObject>
+    <scene>
+        <rootClass>
+            <external-reference>
+                <group-identifier>smth</group-identifier>
+                <object-number>0</object-number>
+            </external-reference>
+        </rootClass>
+        <items>
+                <octet-string-variable>
+                    <rootClass>
+                        <internal-reference>14</internal-reference>
+                    </rootClass>
+                    <original-value>
+                        <octetstring>ldskfjlsfd</octetstring>
+                    </original-value>
+                </octet-string-variable>
+            
+                <integer-variable>
+                    <rootClass>
+                        <internal-reference>22</internal-reference>
+                    </rootClass>
+                    <original-value>
+                        <integer>3</integer>
+                    </original-value>
+                </integer-variable>
+            
+                <boolean-variable>
+                    <rootClass>
+                        <internal-reference>39</internal-reference>
+                    </rootClass>
+                    <original-value>
+                        <boolean><false/></boolean>
+                    </original-value>
+                </boolean-variable>
+            
+                <integer-variable>
+                    <rootClass>
+                        <internal-reference>42</internal-reference>
+                    </rootClass>
+                    <original-value>
+                        <integer>0</integer>
+                    </original-value>
+                </integer-variable>
+            
+                <resident-program>
+                    <rootClass>
+                        <internal-reference>45</internal-reference>
+                    </rootClass>
+                    <initially-active><false/></initially-active>
+                    <name>xxx</name>
+                </resident-program>
+            
+                <token-group>
+                    <rootClass>
+                        <internal-reference>113</internal-reference>
+                    </rootClass>
+                    <token-group-items>
+                        <TokenGroupItem>
+                            <a-visible>
+                                <external-reference>
+                                    <group-identifier>a</group-identifier>
+                                    <object-number>5</object-number>
+                                </external-reference>
+                            </a-visible>
+                            <action-slots>
+                                    <action-class>
+                                            <set-variable>
+                                                <target>
+                                                    <direct-reference>
+                                                        <internal-reference>103</internal-reference>
+                                                    </direct-reference>
+                                                </target>
+                                                <new-variable-value>
+                                                    <new-generic-integer>
+                                                        <indirect-reference>
+                                                            <internal-reference>31</internal-reference>
+                                                        </indirect-reference>
+                                                    </new-generic-integer>
+                                                </new-variable-value>
+                                            </set-variable>
+                                        
+                                    </action-class>
+                                
+                            </action-slots>
+                        </TokenGroupItem>
+                    </token-group-items>
+                </token-group>
+            
+        </items>
+        <input-event-register>3</input-event-register>
+        <scene-coordinate-system>
+            <x-scene>100</x-scene>
+            <y-scene>100</y-scene>
+        </scene-coordinate-system>
+    </scene>
+</InterchangedObject>
