@@ -4,10 +4,7 @@ This directory contains a few examples.
 1. The ./sample.source.PKIX1 directory contains the X.509 Certificate decoder,
    as specified in rfc3280.txt. Just type `make` in there to compile.
 
-2. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder.
-   Before trying to compile, read the README file in that directory.
-
-3. The ./sample.source.MHEG5 directory contains the decoder for
+2. The ./sample.source.MHEG5 directory contains the decoder for
    ISO 13522 MHEG-5/ITU-T T.172 (Multimedia Hypermedia Experts Group,
    Multimedia Presentations). Read the README file in that directory.
 
@@ -18,12 +15,18 @@ This directory contains a few examples.
    Lightweight Directory Access Protocol version 3 PDU as specified in
    rfc4211.txt.
 
+5. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder.
+   Before trying to compile, read the README file in that directory.
+
+6. The ./sample.source.RRC directory contains the 3GPP Radio Resource Control
+   decoder. Before trying to compile, read the README file in that directory.
+
+The clyx2asn1.pl script can be used to extract ASN.1 data from LyX editor files.
+
 The crfc2asn1.pl script can be used to extract ASN.1 data from RFC texts.
 For instance, it is used to extract X.509, MEGACO, and LDAPv3 ASN.1 modules
 from the corresponding RFC texts (rfc3280.txt, rfc3525.txt, rfc4211.txt).
 
 To regenerate the .asn1 files from the original RFC texts, execute
 `make clean; make` in the current directory.
-
-The clyx2asn1.pl script can be used to extract ASN.1 data from LyX editor files.
 
