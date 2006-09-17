@@ -616,7 +616,8 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					elm->type, memb_ptr2, elm->name,
 					buf_ptr, size);
 			XER_ADVANCE(tmprval.consumed);
-			ASN_DEBUG("XER/CHOICE: itdf: code=%d", tmprval.code);
+			ASN_DEBUG("XER/CHOICE: itdf: [%s] code=%d",
+				elm->type->name, tmprval.code);
 			if(tmprval.code != RC_OK)
 				RETURN(tmprval.code);
 			assert(_fetch_present_idx(st,
@@ -754,8 +755,13 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			break;
 		}
 
-		ASN_DEBUG("Unexpected XML tag in CHOICE (ph=%d, tag=%s)",
-			ctx->phase, xml_tag);
+		ASN_DEBUG("Unexpected XML tag [%c%c%c%c] in CHOICE [%s]"
+			" (ph=%d, tag=%s)",
+			ch_size>0?((const uint8_t *)buf_ptr)[0]:'?',
+			ch_size>1?((const uint8_t *)buf_ptr)[1]:'?',
+			ch_size>2?((const uint8_t *)buf_ptr)[2]:'?',
+			ch_size>3?((const uint8_t *)buf_ptr)[3]:'?',
+			td->name, ctx->phase, xml_tag);
 		break;
 	}
 
