@@ -111,7 +111,7 @@ BMPString_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		if(1) {
 			/* Swap byte order and trim encoding to 2 bytes */
 			uint32_t *wc = wcs;
-			uint32_t *wc_end = wcs + wcs_len + 1;
+			uint32_t *wc_end = wcs + wcs_len;
 			uint16_t *dstwc = (uint16_t *)wcs;
 			for(; wc < wc_end; wc++, dstwc++) {
 				uint32_t wch = *wc;
@@ -131,6 +131,7 @@ BMPString_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 				rc.consumed = 0;
 				return rc;
 			} else {
+				dstwc[2 * wcs_len] = 0;
 				wcs = (uint32_t *)dstwc;
 			}
 		}
