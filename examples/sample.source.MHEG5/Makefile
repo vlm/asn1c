@@ -500,6 +500,7 @@ check: ${TARGET}
 	@echo ================
 
 distclean: clean
-	rm -f $(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
+	rm -f $(ASN_MODULE_SOURCES)
+	rm -f $(ASN_MODULE_HEADERS)
 	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)
 	rm -f Makefile.am.sample
