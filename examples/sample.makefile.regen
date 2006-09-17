@@ -34,13 +34,13 @@ fi
 
 CFLAGS=""
 
+if test -f config.h ; then
+	CFLAGS="$CFLAGS -DHAVE_CONFIG_H"
+fi
+
 FIXEDPDU=`echo "[$ASN1CMDOPTS]" | sed -e "s/.*-pdu=auto.*//"`
 if test ! "$FIXEDPDU" ; then
 	CFLAGS="$CFLAGS -DASN_PDU_COLLECTION"
-fi
-
-if test -f config.h ; then
-	CFLAGS="$CFLAGS -DHAVE_CONFIG_H"
 fi
 
 set -x

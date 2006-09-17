@@ -679,7 +679,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = tap3dump
-CFLAGS += -I.  -DHAVE_CONFIG_H -DPDU=DataInterChange
+CFLAGS += -DHAVE_CONFIG_H -DPDU=DataInterChange -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: DataInterChange.c $(TARGET)
@@ -704,13 +704,16 @@ regenerate-from-asn1-source:
 
 
 DataInterChange.c: ../sample.makefile.regen
+	make regen-makefile
+	@touch DataInterChange.c
+	make
+
+regen-makefile:
 	ASN1CMDOPTS="" \
 	ASN1MODULES="../tap3.asn1" \
 	ASN1PDU=DataInterChange \
 	PROGNAME=tap3dump \
 	../sample.makefile.regen
-	@touch DataInterChange.c
-	make
 
 check: ${TARGET}
 	@if test -f ./sample-DataInterChange-1.[db]er ; then \

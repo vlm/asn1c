@@ -4740,10 +4740,10 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = rrc-dump
-CFLAGS += -I.  -DHAVE_CONFIG_H -DASN_PDU_COLLECTION -DPDU=DL_DCCH_Message
+CFLAGS += -DHAVE_CONFIG_H -DASN_PDU_COLLECTION -DPDU=DL_DCCH_Message -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
-all: DL_DCCH_Message.c $(TARGET)
+all: DL-DCCH-Message.c $(TARGET)
 
 $(TARGET): ${OBJS}
 	$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
@@ -4764,18 +4764,21 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names -pdu=auto -gen-PER ../rrc.asn1
 
 
-DL_DCCH_Message.c: ../sample.makefile.regen
-	ASN1CMDOPTS="-fcompound-names -pdu=auto -gen-PER" \
-	ASN1MODULES="../rrc.asn1" \
-	ASN1PDU=DL_DCCH_Message \
-	PROGNAME=rrc-dump \
-	../sample.makefile.regen
-	@touch DL_DCCH_Message.c
+DL-DCCH-Message.c: ../sample.makefile.regen
+	make regen-makefile
+	@touch DL-DCCH-Message.c
 	make
 
+regen-makefile:
+	ASN1CMDOPTS="-fcompound-names -pdu=auto -gen-PER" \
+	ASN1MODULES="../rrc.asn1" \
+	ASN1PDU=DL-DCCH-Message \
+	PROGNAME=rrc-dump \
+	../sample.makefile.regen
+
 check: ${TARGET}
-	@if test -f ./sample-DL_DCCH_Message-1.[db]er ; then \
-	for f in ./sample-DL_DCCH_Message-*.[db]er; do \
+	@if test -f ./sample-DL-DCCH-Message-1.[db]er ; then \
+	for f in ./sample-DL-DCCH-Message-*.[db]er; do \
 	echo "Recoding $$f into XER and back..."; \
 	./${TARGET} -iber -oxer $$f > ./.tmp.1.$$ || exit 2; \
 	./${TARGET} -ixer -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
