@@ -210,6 +210,7 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 			po->tmpspace[0] = po->buffer[0];
 		po->buffer = po->tmpspace;
 		po->nbits = 8 * sizeof(po->tmpspace);
+		po->flushed_bytes += complete_bytes;
 	}
 
 	/*

@@ -493,27 +493,27 @@ check: ${TARGET}
 	@if test -f ./sample-InterchangedObject-1.[db]er ; then \
 	for f in ./sample-InterchangedObject-*.[db]er; do \
 	echo "Recoding $$f into XER and back..."; \
-	./${TARGET} -iber -oxer $$f > ./.tmp.1.$$ || exit 2; \
-	./${TARGET} -ixer -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
-	diff ./.tmp.1.$$ ./.tmp.2.$$ || exit 2; \
-	rm -f ./.tmp.[12].$$; \
+	./${TARGET} -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
+	rm -f ./.tmp.[12].$$$$; \
 	done; fi
 	@if test -f ./sample-InterchangedObject-1.xer ; then \
 	for f in ./sample-InterchangedObject-*.xer; do \
 	echo "Recoding $$f into DER and back..."; \
-	./${TARGET} -ixer -oder $$f > ./.tmp.1.$$ || exit 2; \
-	./${TARGET} -iber -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
-	diff $$f ./.tmp.2.$$ || exit 2; \
-	rm -f ./.tmp.[12].$$; \
+	./${TARGET} -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	diff $$f ./.tmp.2.$$$$ || exit 2; \
+	rm -f ./.tmp.[12].$$$$; \
 	done; fi
 	@if test -f ./sample-InterchangedObject-1.per ; then \
 	for f in ./sample-InterchangedObject-*.per; do \
 	echo "Recoding $$f into DER into XER and back..."; \
-	./${TARGET} -iper -oder $$f > ./.tmp.1.$$ || exit 2; \
-	./${TARGET} -ider -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
-	./${TARGET} -ixer -oper ./.tmp.2.$$ > ./.tmp.1.$$ || exit 2; \
-	diff $$f ./.tmp.1.$$ || exit 2; \
-	rm -f ./.tmp.[12].$$; \
+	./${TARGET} -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
+	diff $$f ./.tmp.1.$$$$ || exit 2; \
+	rm -f ./.tmp.[12].$$$$; \
 	done; fi
 	@echo ================
 	@echo All tests passed

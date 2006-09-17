@@ -76,7 +76,8 @@ typedef struct asn_per_outp_s {
 	size_t nbits;		/* Number of bits left in (tmpspace) */
 	uint8_t tmpspace[32];	/* Preliminary storage to hold data */
 	int (*outper)(const void *data, size_t size, void *op_key);
-	void *op_key;
+	void *op_key;		/* Key for (outper) data callback */
+	size_t flushed_bytes;	/* Bytes already flushed through (outper) */
 } asn_per_outp_t;
 
 /* Output a small number of bits (<= 31) */

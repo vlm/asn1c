@@ -21,7 +21,8 @@ asn_dec_rval_t uper_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,	/* Type to decode */
 	void **struct_ptr,	/* Pointer to a target structure's pointer */
 	const void *buffer,	/* Data to be decoded */
-	size_t size		/* Size of data buffer */
+	size_t size,		/* Size of data buffer */
+	int skip_bits		/* Number of unused leading bits, 0..7 */
 	);
 
 

@@ -3,9 +3,12 @@
 #include <per_decoder.h>
 
 asn_dec_rval_t
-uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sptr, const void *buffer, size_t size) {
+uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sptr, const void *buffer, size_t size, int skip_bits) {
 	asn_codec_ctx_t s_codec_ctx;
 	asn_per_data_t pd;
+
+	if(skip_bits < 0 || skip_bits > 7 || (skip_bits > 0 && !size))
+		_ASN_DECODE_FAILED;
 
 	/*
 	 * Stack checker requires that the codec context
@@ -25,7 +28,7 @@ uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sp
 
 	/* Fill in the position indicator */
 	pd.buffer = (const uint8_t *)buffer;
-	pd.nboff = 0;
+	pd.nboff = skip_bits;
 	pd.nbits = 8 * size; 	/* 8 is CHAR_BIT from <limits.h> */
 
 	/*
