@@ -314,7 +314,9 @@ static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 			perror("malloc()");
 			exit(EX_OSERR);
 		}
-		memcpy(p, DynamicBuffer.data, DynamicBuffer.length);
+		memcpy(p,
+			DynamicBuffer.data + DynamicBuffer.offset,
+			DynamicBuffer.length);
 		FREEMEM(DynamicBuffer.data);
 		DynamicBuffer.data = (char *)p;
 		DynamicBuffer.offset = 0;
