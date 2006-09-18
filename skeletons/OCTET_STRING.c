@@ -1328,8 +1328,11 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		sizeinunits = sizeinunits * 8 - (st->bits_unused & 0x07);
 	}
 
-	ASN_DEBUG("Encoding %s into %d units of %d bits",
-		td->name, sizeinunits, unit_bits);
+	ASN_DEBUG("Encoding %s into %d units of %d bits"
+		" (%d..%d, effective %d)%s",
+		td->name, sizeinunits, unit_bits,
+		ct->lower_bound, ct->upper_bound,
+		ct->effective_bits, ct_extensible ? " EXT" : "");
 
 	/* Figure out wheter size lies within PER visible consrtaint */
 

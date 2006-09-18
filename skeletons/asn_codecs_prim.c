@@ -22,11 +22,7 @@ ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	 */
 	if(st == NULL) {
 		st = (ASN__PRIMITIVE_TYPE_t *)CALLOC(1, sizeof(*st));
-		if(st == NULL) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
+		if(st == NULL) _ASN_DECODE_FAILED;
 		*sptr = (void *)st;
 	}
 
@@ -59,17 +55,13 @@ ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	if(sizeof(st->size) != sizeof(length)
 			&& (ber_tlv_len_t)st->size != length) {
 		st->size = 0;
-		rval.code = RC_FAIL;
-		rval.consumed = 0;
-		return rval;
+		_ASN_DECODE_FAILED;
 	}
 
 	st->buf = (uint8_t *)MALLOC(length + 1);
 	if(!st->buf) {
 		st->size = 0;
-		rval.code = RC_FAIL;
-		rval.consumed = 0;
-		return rval;
+		_ASN_DECODE_FAILED;
 	}
 
 	memcpy(st->buf, buf_ptr, length);
@@ -249,12 +241,7 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	 */
 	if(!*sptr) {
 		*sptr = CALLOC(1, struct_size);
-		if(!*sptr) {
-			asn_dec_rval_t rval;
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
+		if(!*sptr) _ASN_DECODE_FAILED;
 	}
 
 	memset(&s_ctx, 0, sizeof(s_ctx));
@@ -284,8 +271,7 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 				/*
 				 * This decoder does not like empty stuff.
 				 */
-				rc.code = RC_FAIL;
-				rc.consumed = 0;
+				_ASN_DECODE_FAILED;
 			}
 		}
 		break;
@@ -300,6 +286,8 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 		rc.consumed = 0;
 		if(s_arg.want_more)
 			rc.code = RC_WMORE;
+		else
+			_ASN_DECODE_FAILED;
 		break;
 	}
 	return rc;

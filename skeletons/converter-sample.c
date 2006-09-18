@@ -665,8 +665,10 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 	 * Print a message and return failure only if not EOF,
 	 * unless this is our first PDU (empty file).
 	 */
-	if((on_first_pdu || new_offset != old_offset || DynamicBuffer.length)
-	&& (iform != INP_XER || on_first_pdu)) {
+	if(on_first_pdu
+	|| DynamicBuffer.length
+	|| new_offset - old_offset > ((iform == INP_XER)?sizeof("\r\n")-1:0)
+	) {
 		DEBUG("ofp %d, no=%ld, oo=%ld, dbl=%ld",
 			on_first_pdu, (long)new_offset, (long)old_offset,
 			(long)DynamicBuffer.length);
