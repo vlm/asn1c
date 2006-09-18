@@ -18,6 +18,9 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	if(nbits < 0 || pd->nboff + nbits > pd->nbits)
 		return -1;
 
+	ASN_DEBUG("[PER get %d bits from %p+%d bits]",
+		nbits, pd->buffer, pd->nboff);
+
 	/*
 	 * Normalize position indicator.
 	 */
@@ -189,6 +192,9 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	uint8_t *buf;
 
 	if(obits <= 0 || obits >= 32) return obits ? -1 : 0;
+
+	ASN_DEBUG("[PER put %d bits to %p+%d bits]",
+			obits, po->buffer, po->nboff);
 
 	/*
 	 * Normalize position indicator.

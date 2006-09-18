@@ -96,13 +96,13 @@ NativeEnumerated_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 	if(ct->flags & APC_EXTENSIBLE) {
 		int inext = per_get_few_bits(pd, 1);
-		if(inext < 0) _ASN_DECODE_FAILED;
+		if(inext < 0) _ASN_DECODE_STARVED;
 		if(inext) ct = 0;
 	}
 
 	if(ct && ct->range_bits >= 0) {
 		value = per_get_few_bits(pd, ct->range_bits);
-		if(value < 0) _ASN_DECODE_FAILED;
+		if(value < 0) _ASN_DECODE_STARVED;
 		if(value >= (specs->extension
 			? specs->extension - 1 : specs->map_count))
 			_ASN_DECODE_FAILED;
@@ -113,7 +113,7 @@ NativeEnumerated_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 		 * X.691, #10.6: normally small non-negative whole number;
 		 */
 		value = uper_get_nsnnwn(pd);
-		if(value < 0) _ASN_DECODE_FAILED;
+		if(value < 0) _ASN_DECODE_STARVED;
 		value += specs->extension - 1;
 		if(value >= specs->map_count)
 			_ASN_DECODE_FAILED;

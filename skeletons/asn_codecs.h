@@ -93,6 +93,12 @@ typedef struct asn_dec_rval_s {
 	tmp_error.consumed = 0;					\
 	return tmp_error;					\
 } while(0)
+#define	_ASN_DECODE_STARVED do {				\
+	asn_dec_rval_t tmp_error;				\
+	tmp_error.code = RC_WMORE;				\
+	tmp_error.consumed = 0;					\
+	return tmp_error;					\
+} while(0)
 
 #ifdef __cplusplus
 }

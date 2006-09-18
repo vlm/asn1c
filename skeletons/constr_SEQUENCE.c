@@ -1048,7 +1048,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/* Handle extensions */
 	if(specs->ext_before >= 0) {
 		extpresent = per_get_few_bits(pd, 1);
-		if(extpresent < 0) _ASN_DECODE_FAILED;
+		if(extpresent < 0) _ASN_DECODE_STARVED;
 	}
 
 	/* Prepare a place and read-in the presence bitmap */
@@ -1058,7 +1058,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/* Get the presence map */
 		if(per_get_many_bits(pd, opres, 0, specs->roms_count)) {
 			FREEMEM(opres);
-			_ASN_DECODE_FAILED;
+			_ASN_DECODE_STARVED;
 		}
 		opmd.buffer = opres;
 		opmd.nboff = 0;
