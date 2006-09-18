@@ -57,8 +57,8 @@ cat Makefile.am.sample						\
 	echo "	$0"
 	echo
 	echo 'check: ${TARGET}'
-	echo "	@if test -f ./sample-${ASN1PDU}-1.[db]er ; then \\"
-	echo "	for f in ./sample-${ASN1PDU}-*.[db]er; do \\"
+	echo "	@if test -f sample-${ASN1PDU}-1.[db]er ; then \\"
+	echo "	for f in sample-${ASN1PDU}-*.[db]er; do \\"
 	echo '	echo "Recoding $$f into XER and back..."; \'
 	echo '	./${TARGET} -iber -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \'
 	echo '	./${TARGET} -iber -oxer -b 17 $$f > ./.tmp.1.$$$$ || exit 2; \'
@@ -69,8 +69,8 @@ cat Makefile.am.sample						\
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	done; fi'
-	echo "	@if test -f ./sample-${ASN1PDU}-1.xer ; then \\"
-	echo "	for f in ./sample-${ASN1PDU}-*.xer; do \\"
+	echo "	@if test -f sample-${ASN1PDU}-1.xer ; then \\"
+	echo "	for f in sample-${ASN1PDU}-*.xer; do \\"
 	echo '	echo "Recoding $$f into DER and back..."; \'
 	echo '	./${TARGET} -ixer -oder -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \'
 	echo '	./${TARGET} -ixer -oder -b 17 $$f > ./.tmp.1.$$$$ || exit 2; \'
@@ -81,8 +81,8 @@ cat Makefile.am.sample						\
 	echo '	diff $$f ./.tmp.2.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	done; fi'
-	echo "	@if test -f ./sample-${ASN1PDU}-1.per ; then \\"
-	echo "	for f in ./sample-${ASN1PDU}-[1-9].per; do \\"
+	echo "	@if test -f sample-${ASN1PDU}-1.per ; then \\"
+	echo "	for f in sample-${ASN1PDU}-[1-9].per; do \\"
 	echo '	echo "Recoding $$f into DER into XER and back..."; \'
 	echo '	./${TARGET} -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \'
 	echo '	./${TARGET} -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \'
@@ -97,19 +97,20 @@ cat Makefile.am.sample						\
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[1234].$$$$; \'
 	echo '	done; fi'
-	echo "	@if test -f ./sample-${ASN1PDU}-1-padded.per ; then \\"
-	echo "	for f in ./sample-${ASN1PDU}-[1-9]-padded.per; do \\"
+	echo "	@if test -f sample-${ASN1PDU}-1-padded.per ; then \\"
+	echo "	for f in sample-*-[1-9]-padded.per; do \\"
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \'
 	echo '	echo "Recoding byte-padded $$f into DER into XER and back..."; \'
-	echo '	./${TARGET} -per-padded -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -per-padded -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \'
-	echo '	./${TARGET} -per-padded -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \'
-	echo '	./${TARGET} -per-padded -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \'
+	echo '	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \'
+	echo '	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \'
+	echo '	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \'
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \'
 	echo '	diff ./.tmp.2.$$$$ ./.tmp.3.$$$$ || exit 2; \'
 	echo '	diff ./.tmp.3.$$$$ ./.tmp.4.$$$$ || exit 2; \'
-	echo '	./${TARGET} -per-padded -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \'
-	echo '	./${TARGET} -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${TARGET} -per-padded -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${TARGET} -p $$pdu -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \'
+	echo '	./${TARGET} -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \'
 	echo '	diff $$f ./.tmp.1.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[1234].$$$$; \'
 	echo '	done; fi'

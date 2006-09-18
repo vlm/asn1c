@@ -4777,8 +4777,8 @@ regen-makefile:
 	../sample.makefile.regen
 
 check: ${TARGET}
-	@if test -f ./sample-DL-DCCH-Message-1.[db]er ; then \
-	for f in ./sample-DL-DCCH-Message-*.[db]er; do \
+	@if test -f sample-DL-DCCH-Message-1.[db]er ; then \
+	for f in sample-DL-DCCH-Message-*.[db]er; do \
 	echo "Recoding $$f into XER and back..."; \
 	./${TARGET} -iber -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -iber -oxer -b 17 $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -4789,8 +4789,8 @@ check: ${TARGET}
 	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
 	rm -f ./.tmp.[12].$$$$; \
 	done; fi
-	@if test -f ./sample-DL-DCCH-Message-1.xer ; then \
-	for f in ./sample-DL-DCCH-Message-*.xer; do \
+	@if test -f sample-DL-DCCH-Message-1.xer ; then \
+	for f in sample-DL-DCCH-Message-*.xer; do \
 	echo "Recoding $$f into DER and back..."; \
 	./${TARGET} -ixer -oder -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -ixer -oder -b 17 $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -4801,8 +4801,8 @@ check: ${TARGET}
 	diff $$f ./.tmp.2.$$$$ || exit 2; \
 	rm -f ./.tmp.[12].$$$$; \
 	done; fi
-	@if test -f ./sample-DL-DCCH-Message-1.per ; then \
-	for f in ./sample-DL-DCCH-Message-[1-9].per; do \
+	@if test -f sample-DL-DCCH-Message-1.per ; then \
+	for f in sample-DL-DCCH-Message-[1-9].per; do \
 	echo "Recoding $$f into DER into XER and back..."; \
 	./${TARGET} -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \
@@ -4817,20 +4817,28 @@ check: ${TARGET}
 	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 2; \
 	rm -f ./.tmp.[1234].$$$$; \
 	done; fi
-	@if test -f ./sample-DL-DCCH-Message-1-padded.per ; then \
-	for f in ./sample-DL-DCCH-Message-[1-9]-padded.per; do \
+	@if test -f sample-DL-DCCH-Message-1-padded.per ; then \
+	for f in sample-*-[1-9]-padded.per; do \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
 	echo "Recoding byte-padded $$f into DER into XER and back..."; \
-	./${TARGET} -per-padded -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
-	./${TARGET} -per-padded -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \
-	./${TARGET} -per-padded -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \
-	./${TARGET} -per-padded -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \
-	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 1; \
+	echo "./${TARGET} -per-padded -p $$pdu -iper -oxer -b 1 $$f > ./.tmp.1.$$$$"; \
+	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
+	echo "./${TARGET} -per-padded -p $$pdu -iper -oxer -b 17 $$f > ./.tmp.2.$$$$"; \
+	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \
+	echo "./${TARGET} -per-padded -p $$pdu -iper -oxer -b 33 $$f > ./.tmp.3.$$$$"; \
+	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \
+	echo "./${TARGET} -per-padded -p $$pdu -iper -oxer -b 980 $$f > ./.tmp.4.$$$$"; \
+	./${TARGET} -per-padded -p $$pdu -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
 	diff ./.tmp.2.$$$$ ./.tmp.3.$$$$ || exit 2; \
-	diff ./.tmp.3.$$$$ ./.tmp.4.$$$$ || exit 3; \
-	./${TARGET} -per-padded -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
-	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
-	./${TARGET} -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
-	diff $$f ./.tmp.1.$$$$ || exit 4; \
+	diff ./.tmp.3.$$$$ ./.tmp.4.$$$$ || exit 2; \
+	echo "./${TARGET} -per-padded -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$"; \
+	./${TARGET} -per-padded -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	echo "./${TARGET} -p $$pdu -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$"; \
+	./${TARGET} -p $$pdu -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	echo "./${TARGET} -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$"; \
+	./${TARGET} -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
+	diff $$f ./.tmp.1.$$$$ || exit 2; \
 	rm -f ./.tmp.[1234].$$$$; \
 	done; fi
 	@echo ================
