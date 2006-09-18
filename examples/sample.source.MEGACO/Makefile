@@ -309,7 +309,7 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
 
 
-MegacoMessage.c: ../sample.makefile.regen
+MegacoMessage.c: ../sample.makefile.regen ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
 	make regen-makefile
 	@touch MegacoMessage.c
 	make
@@ -322,31 +322,45 @@ regen-makefile:
 	../sample.makefile.regen
 
 check: ${TARGET}
-	@if test -f ./sample-MegacoMessage-1.[db]er ; then \
-	for f in ./sample-MegacoMessage-*.[db]er; do \
-	echo "Recoding $$f into XER and back..."; \
-	./${TARGET} -iber -oxer $$f > ./.tmp.1.$$ || exit 2; \
-	./${TARGET} -ixer -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
-	diff ./.tmp.1.$$ ./.tmp.2.$$ || exit 2; \
-	rm -f ./.tmp.[12].$$; \
-	done; fi
-	@if test -f ./sample-MegacoMessage-1.xer ; then \
-	for f in ./sample-MegacoMessage-*.xer; do \
-	echo "Recoding $$f into DER and back..."; \
-	./${TARGET} -ixer -oder $$f > ./.tmp.1.$$ || exit 2; \
-	./${TARGET} -iber -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
-	diff $$f ./.tmp.2.$$ || exit 2; \
-	rm -f ./.tmp.[12].$$; \
-	done; fi
-	@if test -f ./sample-MegacoMessage-1.per ; then \
-	for f in ./sample-MegacoMessage-*.per; do \
-	echo "Recoding $$f into DER into XER and back..."; \
-	./${TARGET} -iper -oder $$f > ./.tmp.1.$$ || exit 2; \
-	./${TARGET} -ider -oxer ./.tmp.1.$$ > ./.tmp.2.$$ || exit 2; \
-	./${TARGET} -ixer -oper ./.tmp.2.$$ > ./.tmp.1.$$ || exit 2; \
-	diff $$f ./.tmp.1.$$ || exit 2; \
-	rm -f ./.tmp.[12].$$; \
-	done; fi
+	@if test -f sample-MegacoMessage-1.[db]er ; then \
+	for f in sample-MegacoMessage-*.[db]er; do \
+	for b in 1 17 33 980 8192; do \
+	echo "Recoding $$f into XER and back ($$b)..."; \
+	./${TARGET} -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -b $$b -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
+	rm -f ./.tmp.[12].$$$$; \
+	done; done; fi
+	@if test -f sample-MegacoMessage-1.xer ; then \
+	for f in sample-MegacoMessage-*.xer; do \
+	for b in 1 17 33 980 8192; do \
+	echo "Recoding $$f into DER and back ($$b)..."; \
+	./${TARGET} -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	diff $$f ./.tmp.2.$$$$ || exit 2; \
+	rm -f ./.tmp.[12].$$$$; \
+	done; done; fi
+	@if test -f sample-MegacoMessage-1.per ; then \
+	for f in sample-MegacoMessage-[1-9].per; do \
+	for b in 1 17 33 980 8192; do \
+	echo "Recoding $$f into DER into XER and back ($$b)..."; \
+	./${TARGET} -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 2; \
+	rm -f ./.tmp.[123].$$$$; \
+	done; done; fi
+	@if test -f sample-MegacoMessage-1-padded.per ; then \
+	for f in sample-*-[1-9]-padded.per; do \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	for b in 1 17 33 980 8192; do \
+	echo "Recoding byte-padded $$f into DER into XER and back ($$b)..."; \
+	./${TARGET} -b $$b -per-padded -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -b $$b -p $$pdu -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -b $$b -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
+	diff $$f ./.tmp.1.$$$$ || exit 2; \
+	rm -f ./.tmp.[12].$$$$; \
+	done; done; fi
 	@echo ================
 	@echo All tests passed
 	@echo ================
