@@ -477,7 +477,7 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../ISO13522-MHEG-5.asn
 
 
-InterchangedObject.c: ../sample.makefile.regen
+InterchangedObject.c: ../sample.makefile.regen ../ISO13522-MHEG-5.asn
 	make regen-makefile
 	@touch InterchangedObject.c
 	make
@@ -493,6 +493,10 @@ check: ${TARGET}
 	@if test -f ./sample-InterchangedObject-1.[db]er ; then \
 	for f in ./sample-InterchangedObject-*.[db]er; do \
 	echo "Recoding $$f into XER and back..."; \
+	./${TARGET} -iber -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iber -oxer -b 17 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iber -oxer -b 33 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iber -oxer -b 980 $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
 	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
@@ -501,19 +505,46 @@ check: ${TARGET}
 	@if test -f ./sample-InterchangedObject-1.xer ; then \
 	for f in ./sample-InterchangedObject-*.xer; do \
 	echo "Recoding $$f into DER and back..."; \
+	./${TARGET} -ixer -oder -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -ixer -oder -b 17 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -ixer -oder -b 33 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -ixer -oder -b 980 $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
 	diff $$f ./.tmp.2.$$$$ || exit 2; \
 	rm -f ./.tmp.[12].$$$$; \
 	done; fi
 	@if test -f ./sample-InterchangedObject-1.per ; then \
-	for f in ./sample-InterchangedObject-*.per; do \
+	for f in ./sample-InterchangedObject-[1-9].per; do \
 	echo "Recoding $$f into DER into XER and back..."; \
+	./${TARGET} -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \
+	./${TARGET} -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
+	diff ./.tmp.2.$$$$ ./.tmp.3.$$$$ || exit 2; \
+	diff ./.tmp.3.$$$$ ./.tmp.4.$$$$ || exit 2; \
 	./${TARGET} -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 2; \
+	rm -f ./.tmp.[1234].$$$$; \
+	done; fi
+	@if test -f ./sample-InterchangedObject-1-padded.per ; then \
+	for f in ./sample-InterchangedObject-[1-9]-padded.per; do \
+	echo "Recoding byte-padded $$f into DER into XER and back..."; \
+	./${TARGET} -per-padded -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -per-padded -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -per-padded -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \
+	./${TARGET} -per-padded -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
+	diff ./.tmp.2.$$$$ ./.tmp.3.$$$$ || exit 2; \
+	diff ./.tmp.3.$$$$ ./.tmp.4.$$$$ || exit 2; \
+	./${TARGET} -per-padded -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
 	./${TARGET} -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
 	diff $$f ./.tmp.1.$$$$ || exit 2; \
-	rm -f ./.tmp.[12].$$$$; \
+	rm -f ./.tmp.[1234].$$$$; \
 	done; fi
 	@echo ================
 	@echo All tests passed
