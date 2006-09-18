@@ -264,16 +264,18 @@ main(int ac, char *av[]) {
 			break;
 		case OUT_XER:	/* -oxer */
 			if(xer_fprint(stdout, pduType, structure)) {
-				fprintf(stderr, "%s: Cannot convert into XML\n",
-					name);
+				fprintf(stderr,
+					"%s: Cannot convert %s into XML\n",
+					name, pduType->name);
 				exit(EX_UNAVAILABLE);
 			}
 			break;
 		case OUT_DER:
 			erv = der_encode(pduType, structure, write_out, stdout);
 			if(erv.encoded < 0) {
-				fprintf(stderr, "%s: Cannot convert into DER\n",
-					name);
+				fprintf(stderr,
+					"%s: Cannot convert %s into DER\n",
+					name, pduType->name);
 				exit(EX_UNAVAILABLE);
 			}
 			DEBUG("Encoded in %ld bytes of DER", (long)erv.encoded);
@@ -281,8 +283,9 @@ main(int ac, char *av[]) {
 		case OUT_PER:
 			erv = uper_encode(pduType, structure, write_out, stdout);
 			if(erv.encoded < 0) {
-				fprintf(stderr, "%s: Cannot convert into Unaligned PER\n",
-					name);
+				fprintf(stderr,
+				"%s: Cannot convert %s into Unaligned PER\n",
+					name, pduType->name);
 				exit(EX_UNAVAILABLE);
 			}
 			DEBUG("Encoded in %ld bits of UPER", (long)erv.encoded);
