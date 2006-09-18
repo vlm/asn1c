@@ -678,6 +678,12 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 			(rval.code == RC_WMORE)
 				? "Unexpected end of input"
 				: "Input processing error");
+#ifndef	ENOMSG
+#define	ENOMSG EINVAL
+#endif
+#ifndef	EBADMSG
+#define	EBADMSG EINVAL
+#endif
 		errno = (rval.code == RC_WMORE) ? ENOMSG : EBADMSG;
 	} else {
 		/* Got EOF after a few successful PDUs */
