@@ -54,7 +54,6 @@ my %binaryDecoders = (
 		typeExt => 'X.509 Certificate',
 		description => 'X.509 in DER (not PEM!)',
 		exe => 'x509dump',
-		cmdopts => '-x',
 		msg => ''
 		},
 
@@ -64,7 +63,6 @@ my %binaryDecoders = (
 		typeExt => 'GSM TAP3-11 data',
 		description => 'GSM TAP3-11 binary file',
 		exe => 'tap3dump-11',
-		cmdopts => '-x',
 		msg => ''
 		},
 
@@ -74,7 +72,6 @@ my %binaryDecoders = (
 		typeExt => 'GSM TAP3-10 data',
 		description => 'GSM TAP3-10 binary file',
 		exe => 'tap3dump-10',
-		cmdopts => '-x',
 		msg => ''
 		},
 
@@ -84,21 +81,37 @@ my %binaryDecoders = (
 		typeExt => 'GSM TAP3-09 data',
 		description => 'GSM TAP3-09 binary file',
 		exe => 'tap3dump-09',
-		cmdopts => '-x',
 		msg => ''
 		},
 
-	mheg5 => { order => 5,
+	ldap3 => { order => 5,
 		shorder => 5,
+		type => 'LDAPv3',
+		typeExt => 'IETF LDAPv3 message',
+		description => 'IETF LDAPv3 message',
+		exe => 'ldap3dump',
+		msg => ''
+		},
+
+	megaco => { order => 6,
+		shorder => 6,
+		type => 'MEGACO',
+		typeExt => 'MEGACO (H.248.1) data',
+		description => 'MEGACO (H.248.1) message',
+		exe => 'megacoDump',
+		msg => ''
+		},
+
+	mheg5 => { order => 7,
+		shorder => 7,
 		type => 'MHEG-5',
 		typeExt => 'ISO MHEG-5 data',
 		description => 'ISO MHEG-5 stream file',
 		exe => 'mheg5dump',
-		cmdopts => '-x',
 		msg => ''
 		},
 
-	ber => { order => 6,
+	ber => { order => 8,
 		shorder => 1,
 		type => BER,
 		typeExt => 'BER encoded data',
@@ -109,52 +122,52 @@ my %binaryDecoders = (
 		},
 
 	rrcDLCCCH => { order => -1,	# Not automatic
-		shorder => 7,
+		shorder => 9,
 		type => 'RRC DL-CCCH-Message',
 		typeExt => 'RRC DL-CCCH-Message frame',
 		description => '3GPP RRC DL-CCCH-Message',
 		exe => 'rrc-dump',
-		cmdopts => '-p DL-CCCH-Message -oxer',
+		cmdopts => '-p DL-CCCH-Message',
 		msg => ''
 		},
 
 	rrcULCCCH => { order => -1,
-		shorder => 8,
+		shorder => 10,
 		type => 'RRC UL-CCCH-Message',
 		typeExt => 'RRC UL-CCCH-Message frame',
 		description => '3GPP RRC UL-CCCH-Message',
 		exe => 'rrc-dump',
-		cmdopts => '-p UL-CCCH-Message -oxer',
+		cmdopts => '-p UL-CCCH-Message',
 		msg => ''
 		},
 
 	rrcDLDCCH => { order => -1,
-		shorder => 9,
-		type => 'RRC DL-DCCH-Message -oxer',
+		shorder => 11,
+		type => 'RRC DL-DCCH-Message',
 		typeExt => 'RRC DL-DCCH-Message frame',
 		description => '3GPP RRC DL-DCCH-Message',
 		exe => 'rrc-dump',
-		cmdopts => '-p DL-DCCH-Message -oxer',
+		cmdopts => '-p DL-DCCH-Message',
 		msg => ''
 		},
 
 	rrcULDCCH => { order => -1,
-		shorder => 10,
+		shorder => 12,
 		type => 'RRC UL-DCCH-Message',
 		typeExt => 'RRC UL-DCCH-Message frame',
 		description => '3GPP RRC UL-DCCH-Message',
 		exe => 'rrc-dump',
-		cmdopts => '-p UL-DCCH-Message -oxer',
+		cmdopts => '-p UL-DCCH-Message',
 		msg => ''
 		},
 
 	rrcPCCH => { order => -1,
-		shorder => 11,
+		shorder => 13,
 		type => 'RRC PCCH-Message',
 		typeExt => 'RRC PCCH-Message frame',
 		description => '3GPP RRC PCCH-Message',
 		exe => 'rrc-dump',
-		cmdopts => '-p PCCH-Message -oxer',
+		cmdopts => '-p PCCH-Message',
 		msg => ''
 		}
 
@@ -565,9 +578,9 @@ if($#gotSafeNames >= 0) {
 		next unless ($fType eq 'auto' or $fType eq $t);
 		next if($fType eq 'auto' and $dec{order} < 0);
 		my $options = $dec{cmdopts} . ($specOpts{$t} || "");
-		if(($dec{type} ne 'BER') && optGet('optNoXER')) {
-			$options =~ s/-x/-p/g;		# Old way
-			$options =~ s/-oxer/-otext/g;	# New way
+		if(($dec{type} ne 'BER')) {
+			$options .= ' -otext' if optGet('optText');
+			$options .= ' -1' if optGet('optOnly1');
 		}
 		my $ec = system("$SUIDHelper $TMPDIR $inChDir $dec{exe} $options @gotSafeNames > $TMPDIR/$inChDir/+UNBER.tmp 2>&1");
 		next if ($ec != 0 and $t ne $fType
@@ -691,7 +704,7 @@ function explanation(id, showFull) {
 
 <FORM METHOD=POST NAME=form ACTION=$myName ENCTYPE="multipart/form-data">
 <DIV STYLE="width: 100%;">
-<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr>Pick the ASN.1 module text or binary encoded data file:<BR>
+<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr><b>Pick</b> the ASN.1 module text or binary encoded data file:<BR>
 <SELECT NAME=fileType onchange="return fileTypeChanged(this);">
 <OPTION VALUE=auto>Autodetect file type...
 <OPTION VALUE=asn1>ASN.1 specification text ...
@@ -705,7 +718,7 @@ foreach my $t (sort { $binaryDecoders{$a}{shorder}
 	if(!$notauto && $dec{order} < 0) {
 		$notauto = 1;
 		$form .= "<OPTION ID=noauto VALUE=no DISABLED=\"disabled\">";
-		$form .= "--- not autodetectable: ---";
+		$form .= "--- not autodetectable (PER): ---";
 		$form .= "\n";
 		next;
 	}
@@ -719,7 +732,7 @@ $form .= << "EOM";
 </DIV>
 
 <DIV ID="options-asn" STYLE="visibility: visible;">
-<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr>Or paste the ASN.1 text into the area below:$rtt
+<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr><b>Or paste</b> the ASN.1 text into the area below:$rtt
 <BR>
 <TEXTAREA NAME=text ROWS=16 COLS=60 STYLE="font-family: courier; font-size: 11px;">
 EOM
@@ -765,7 +778,8 @@ These options may be used to control the compiler's behavior:<BR>
 
 <DIV ID=options-bin CLASS=options>
 <DIV CLASS=optsbar>
-<INPUT TYPE=checkbox NAME=optNoXER> Generate simple text dump instead of XER
+<INPUT TYPE=checkbox NAME=optOnly1> Process only the first PDU in file<br>
+<INPUT TYPE=checkbox NAME=optText> Generate simple text dump instead of XML (XER)<br>
 </DIV>
 </DIV> <!-- options-bin -->
 
