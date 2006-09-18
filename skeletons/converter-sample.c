@@ -40,10 +40,11 @@ static int write_out(const void *buffer, size_t size, void *key);
 static FILE *argument_to_file(char *av[], int idx);
 static char *argument_to_name(char *av[], int idx);
 
-       int opt_debug;	/* -d */
-static int opt_check;	/* -c */
-static int opt_stack;	/* -s */
-static int opt_onepdu;	/* -1 */
+       int opt_debug;	/* -d (or -dd) */
+static int opt_check;	/* -c (constraints checking) */
+static int opt_stack;	/* -s (maximum stack size) */
+static int opt_ippad;	/* -per-padded (PER input is byte-padded) */
+static int opt_onepdu;	/* -1 (decode single PDU) */
 
 /* Input data format selector */
 static enum input_format {
@@ -88,7 +89,7 @@ main(int ac, char *av[]) {
 	/*
 	 * Pocess the command-line argments.
 	 */
-	while((ch = getopt(ac, av, "i:o:b:cdn:p:hs:")) != -1)
+	while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:")) != -1)
 	switch(ch) {
 	case 'i':
 		if(optarg[0] == 'b') { iform = INP_BER; break; }
@@ -136,19 +137,24 @@ main(int ac, char *av[]) {
 		}
 		break;
 	case 'p':
+		if(strcmp(optarg, "er-padded") == 0) {
+			opt_ippad = 1;
+			break;
+		}
 #ifdef	ASN_PDU_COLLECTION
-		{
+		if(strcmp(optarg, "list") == 0) {
 			asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
-			if(optarg[0] < 'A' || optarg[0] > 'Z') {
-				fprintf(stderr, "Available PDU types:\n");
-				for(; *pdu; pdu++) printf("%s\n", (*pdu)->name);
-				exit(0);
-			}
+			fprintf(stderr, "Available PDU types:\n");
+			for(; *pdu; pdu++) printf("%s\n", (*pdu)->name);
+			exit(0);
+		} else if(optarg[0] >= 'A' && optarg[0] <= 'Z') {
+			asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
 			while(*pdu && strcmp((*pdu)->name, optarg)) pdu++;
 			if(*pdu) { pduType = *pdu; break; }
+			fprintf(stderr, "-p %s: Unrecognized PDU\n", optarg);
 		}
 #endif	/* ASN_PDU_COLLECTION */
-		fprintf(stderr, "-p %s: Unrecognized PDU\n", optarg);
+		fprintf(stderr, "-p %s: Unrecognized option\n", optarg);
 		exit(EX_UNAVAILABLE);
 	case 's':
 		opt_stack = atoi(optarg);
@@ -179,6 +185,9 @@ main(int ac, char *av[]) {
 		"  -oxer        Output in XER (XML Encoding Rules) (DEFAULT)\n"
 		"  -otext       Output in plain semi-structured text (dump)\n"
 		"  -onull       Verify (decode) input, but do not output\n");
+		if(pduType->uper_decoder)
+		fprintf(stderr,
+		"  -per-padded  Assume PER PDUs are byte-padded (-iper)\n");
 #ifdef	ASN_PDU_COLLECTION
 		fprintf(stderr,
 		"  -p <PDU>     Specify PDU type to decode\n"
@@ -292,30 +301,164 @@ main(int ac, char *av[]) {
 }
 
 static struct dynamic_buffer {
-	char  *data;		/* Pointer to the data bytes */
+	uint8_t *data;		/* Pointer to the data bytes */
 	size_t offset;		/* Offset from the start */
 	size_t length;		/* Length of meaningful contents */
-	size_t unbit;		/* Unused bits in the last byte */
+	size_t unbits;		/* Unused bits in the last byte */
 	size_t allocated;	/* Allocated memory for data */
 	int    nreallocs;	/* Number of data reallocations */
 	off_t  bytes_shifted;	/* Number of bytes ever shifted */
 } DynamicBuffer;
 
+static void
+buffer_dump() {
+	uint8_t *p = DynamicBuffer.data + DynamicBuffer.offset;
+	uint8_t *e = p + DynamicBuffer.length - (DynamicBuffer.unbits ? 1 : 0);
+	if(!opt_debug) return;
+	DEBUG("Buffer: { d=%p, o=%ld, l=%ld, u=%ld, a=%ld, s=%ld }",
+		DynamicBuffer.data,
+		(long)DynamicBuffer.offset,
+		(long)DynamicBuffer.length,
+		(long)DynamicBuffer.unbits,
+		(long)DynamicBuffer.allocated,
+		(long)DynamicBuffer.bytes_shifted);
+	for(; p < e; p++) {
+		fprintf(stderr, " %c%c%c%c%c%c%c%c",
+			((*p >> 7) & 1) ? '1' : '0',
+			((*p >> 6) & 1) ? '1' : '0',
+			((*p >> 5) & 1) ? '1' : '0',
+			((*p >> 4) & 1) ? '1' : '0',
+			((*p >> 3) & 1) ? '1' : '0',
+			((*p >> 2) & 1) ? '1' : '0',
+			((*p >> 1) & 1) ? '1' : '0',
+			((*p >> 0) & 1) ? '1' : '0');
+	}
+	if(DynamicBuffer.unbits) {
+		int shift;
+		fprintf(stderr, " ");
+		for(shift = 7; shift >= DynamicBuffer.unbits; shift--)
+			fprintf(stderr, "%c", ((*p >> shift) & 1) ? '1' : '0');
+		fprintf(stderr, " %d:%d\n",
+			DynamicBuffer.length - 1, 8 - DynamicBuffer.unbits);
+	} else {
+		fprintf(stderr, " %d\n", DynamicBuffer.length);
+	}
+}
+
+/*
+ * Move the buffer content left N bits, possibly joining it with
+ * preceeding content.
+ */
+static void
+buffer_shift_left(size_t offset, int bits) {
+	uint8_t *ptr = DynamicBuffer.data + DynamicBuffer.offset + offset;
+	uint8_t *end = DynamicBuffer.data + DynamicBuffer.offset
+			+ DynamicBuffer.length - 1;
+	
+	if(!bits) return;
+
+	DEBUG("Shifting left %d bits off %ld (o=%ld, u=%ld, l=%ld)",
+		bits, (long)offset,
+		(long)DynamicBuffer.offset,
+		(long)DynamicBuffer.unbits,
+		(long)DynamicBuffer.length);
+
+	if(offset) {
+		int right;
+		right = ptr[0] >> (8 - bits);
+
+		DEBUG("oleft: %c%c%c%c%c%c%c%c",
+			((ptr[-1] >> 7) & 1) ? '1' : '0',
+			((ptr[-1] >> 6) & 1) ? '1' : '0',
+			((ptr[-1] >> 5) & 1) ? '1' : '0',
+			((ptr[-1] >> 4) & 1) ? '1' : '0',
+			((ptr[-1] >> 3) & 1) ? '1' : '0',
+			((ptr[-1] >> 2) & 1) ? '1' : '0',
+			((ptr[-1] >> 1) & 1) ? '1' : '0',
+			((ptr[-1] >> 0) & 1) ? '1' : '0');
+
+		DEBUG("oriht: %c%c%c%c%c%c%c%c",
+			((ptr[0] >> 7) & 1) ? '1' : '0',
+			((ptr[0] >> 6) & 1) ? '1' : '0',
+			((ptr[0] >> 5) & 1) ? '1' : '0',
+			((ptr[0] >> 4) & 1) ? '1' : '0',
+			((ptr[0] >> 3) & 1) ? '1' : '0',
+			((ptr[0] >> 2) & 1) ? '1' : '0',
+			((ptr[0] >> 1) & 1) ? '1' : '0',
+			((ptr[0] >> 0) & 1) ? '1' : '0');
+
+		DEBUG("mriht: %c%c%c%c%c%c%c%c",
+			((right >> 7) & 1) ? '1' : '0',
+			((right >> 6) & 1) ? '1' : '0',
+			((right >> 5) & 1) ? '1' : '0',
+			((right >> 4) & 1) ? '1' : '0',
+			((right >> 3) & 1) ? '1' : '0',
+			((right >> 2) & 1) ? '1' : '0',
+			((right >> 1) & 1) ? '1' : '0',
+			((right >> 0) & 1) ? '1' : '0');
+
+		ptr[-1] = (ptr[-1] & (0xff << bits)) | right;
+
+		DEBUG("after: %c%c%c%c%c%c%c%c",
+			((ptr[-1] >> 7) & 1) ? '1' : '0',
+			((ptr[-1] >> 6) & 1) ? '1' : '0',
+			((ptr[-1] >> 5) & 1) ? '1' : '0',
+			((ptr[-1] >> 4) & 1) ? '1' : '0',
+			((ptr[-1] >> 3) & 1) ? '1' : '0',
+			((ptr[-1] >> 2) & 1) ? '1' : '0',
+			((ptr[-1] >> 1) & 1) ? '1' : '0',
+			((ptr[-1] >> 0) & 1) ? '1' : '0');
+	}
+
+	buffer_dump();
+
+	for(; ptr < end; ptr++) {
+		int right = ptr[1] >> (8 - bits);
+		*ptr = (*ptr << bits) | right;
+	}
+	*ptr <<= bits;
+
+	DEBUG("Unbits [%d=>", (int)DynamicBuffer.unbits);
+	if(DynamicBuffer.unbits == 0) {
+		DynamicBuffer.unbits += bits;
+	} else {
+		DynamicBuffer.unbits += bits;
+		if(DynamicBuffer.unbits > 7) {
+			DynamicBuffer.unbits -= 8;
+			DynamicBuffer.length--;
+			DynamicBuffer.bytes_shifted++;
+		}
+	}
+	DEBUG("Unbits =>%d]", (int)DynamicBuffer.unbits);
+
+	buffer_dump();
+
+	DEBUG("Shifted. Now (o=%ld, u=%ld l=%ld)",
+		(long)DynamicBuffer.offset,
+		(long)DynamicBuffer.unbits,
+		(long)DynamicBuffer.length);
+	
+
+}
+
 /*
  * Ensure that the buffer contains at least this amount of free space.
  */
-static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
+static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
 
-	DEBUG("add_bytes(%ld) { o=%ld l=%ld s=%ld }",
-		(long)bySize,
+	if(bytes == 0) return;
+
+	DEBUG("=> add_bytes(%ld) { o=%ld l=%ld u=%ld, s=%ld }",
+		(long)bytes,
 		(long)DynamicBuffer.offset,
 		(long)DynamicBuffer.length,
+		(long)DynamicBuffer.unbits,
 		(long)DynamicBuffer.allocated);
 
 	if(DynamicBuffer.allocated
-	>= (DynamicBuffer.offset + DynamicBuffer.length + bySize)) {
+	>= (DynamicBuffer.offset + DynamicBuffer.length + bytes)) {
 		DEBUG("\tNo buffer reallocation is necessary");
-	} else if(bySize <= DynamicBuffer.offset) {
+	} else if(bytes <= DynamicBuffer.offset) {
 		DEBUG("\tContents shifted by %ld", DynamicBuffer.offset);
 
 		/* Shift the buffer contents */
@@ -325,7 +468,7 @@ static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 		DynamicBuffer.bytes_shifted += DynamicBuffer.offset;
 		DynamicBuffer.offset = 0;
 	} else {
-		size_t newsize = (DynamicBuffer.allocated << 2) + bySize;
+		size_t newsize = (DynamicBuffer.allocated << 2) + bytes;
 		void *p = MALLOC(newsize);
 		if(!p) {
 			perror("malloc()");
@@ -343,14 +486,27 @@ static void add_bytes_to_buffer(const void *data2add, size_t bySize) {
 			newsize, DynamicBuffer.nreallocs);
 	}
 
-	memcpy(DynamicBuffer.data + DynamicBuffer.offset + DynamicBuffer.length,
-		data2add, bySize);
-	DynamicBuffer.length += bySize;
+	memcpy(DynamicBuffer.data
+		+ DynamicBuffer.offset + DynamicBuffer.length,
+		data2add, bytes);
+	DynamicBuffer.length += bytes;
+	if(DynamicBuffer.unbits) {
+		int bits = DynamicBuffer.unbits;
+		DynamicBuffer.unbits = 0;
+		buffer_shift_left(DynamicBuffer.length - bytes, bits);
+	}
+
+	DEBUG("<= add_bytes(%ld) { o=%ld l=%ld u=%ld, s=%ld }",
+		(long)bytes,
+		(long)DynamicBuffer.offset,
+		(long)DynamicBuffer.length,
+		(long)DynamicBuffer.unbits,
+		(long)DynamicBuffer.allocated);
 }
 
 static void *
 data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *name, ssize_t suggested_bufsize, int on_first_pdu) {
-	static char *fbuf;
+	static uint8_t *fbuf;
 	static ssize_t fbuf_size;
 	static asn_codec_ctx_t s_codec_ctx;
 	asn_codec_ctx_t *opt_codec_ctx = 0;
@@ -358,6 +514,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 	asn_dec_rval_t rval;
 	size_t old_offset;	
 	size_t new_offset;
+	int tolerate_eof;
 	size_t rd;
 
 	if(!file) {
@@ -386,7 +543,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 	if(on_first_pdu) {
 		DynamicBuffer.offset = 0;
 		DynamicBuffer.length = 0;
-		DynamicBuffer.unbit = 0;
+		DynamicBuffer.unbits = 0;
 		DynamicBuffer.allocated = 0;
 		DynamicBuffer.bytes_shifted = 0;
 		DynamicBuffer.nreallocs = 0;
@@ -398,7 +555,11 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 	rval.code = RC_WMORE;
 	rval.consumed = 0;
 
-	while((rd = fread(fbuf, 1, fbuf_size, file)) || !feof(file)) {
+	for(tolerate_eof = 1;	/* Allow EOF first time buffer is non-empty */
+	    (rd = fread(fbuf, 1, fbuf_size, file))
+		|| feof(file) == 0
+		|| (tolerate_eof && DynamicBuffer.length)
+	    ;) {
 		int    ecbits = 0;	/* Extra consumed bits in case of PER */
 		char  *i_bptr;
 		size_t i_size;
@@ -407,7 +568,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 		 * Copy the data over, or use the original buffer.
 		 */
 		if(DynamicBuffer.allocated) {
-			/* Append the new data into the intermediate buffer */
+			/* Append new data into the existing dynamic buffer */
 			add_bytes_to_buffer(fbuf, rd);
 			i_bptr = DynamicBuffer.data + DynamicBuffer.offset;
 			i_size = DynamicBuffer.length;
@@ -429,12 +590,18 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 			break;
 		case INP_PER:
 			rval = uper_decode(opt_codec_ctx, pduType,
-				(void **)&structure, i_bptr, i_size, 0);
+				(void **)&structure, i_bptr, i_size, 0,
+				DynamicBuffer.unbits);
 			ecbits = rval.consumed % 8;	/* Extra bits */
 			rval.consumed /= 8; /* Convert to value in bytes! */
+			/* Check if input is byte-padded at the end */
+			if(opt_ippad && ecbits && rval.code == RC_OK) {
+				rval.consumed++;
+				ecbits = 0;
+			}
 			break;
 		}
-		DEBUG("decode(%ld) consumed %ld+%d (%ld), code %d",
+		DEBUG("decode(%ld) consumed %ld+%db (%ld), code %d",
 			(long)DynamicBuffer.length,
 			(long)rval.consumed, ecbits, (long)i_size,
 			rval.code);
@@ -444,10 +611,12 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 			 * Flush remainder into the intermediate buffer.
 			 */
 			if(rval.code != RC_FAIL && rval.consumed < rd) {
-				DEBUG("Saving %d bytes", rd - rval.consumed);
 				add_bytes_to_buffer(fbuf + rval.consumed,
-					     rd - rval.consumed);
+					rd - rval.consumed);
+				buffer_shift_left(0, ecbits);
+				DynamicBuffer.bytes_shifted = rval.consumed;
 				rval.consumed = 0;
+				ecbits = 0;
 			}
 		}
 
@@ -463,15 +632,20 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 
 		switch(rval.code) {
 		case RC_OK:
-			DEBUG("RC_OK, finishing up with %ld",
-				(long)rval.consumed);
+			if(ecbits) buffer_shift_left(0, ecbits);
+			DEBUG("RC_OK, finishing up with %ld+%d",
+				(long)rval.consumed, ecbits);
 			return structure;
 		case RC_WMORE:
-			DEBUG("RC_WMORE, continuing %ld with %ld..%ld..%ld",
+			DEBUG("RC_WMORE, continuing read=%ld, cons=%ld "
+				" with %ld..%ld-%ld..%ld",
+				(long)rd,
 				(long)rval.consumed,
 				(long)DynamicBuffer.offset,
 				(long)DynamicBuffer.length,
+				(long)DynamicBuffer.unbits,
 				(long)DynamicBuffer.allocated);
+			if(!rd) tolerate_eof--;
 			continue;
 		case RC_FAIL:
 			break;
@@ -488,7 +662,11 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 	 * Print a message and return failure only if not EOF,
 	 * unless this is our first PDU (empty file).
 	 */
-	if(on_first_pdu || new_offset != old_offset) {
+	if((on_first_pdu || new_offset != old_offset || DynamicBuffer.length)
+	&& (iform != INP_XER || on_first_pdu)) {
+		DEBUG("ofp %d, no=%ld, oo=%ld, dbl=%ld",
+			on_first_pdu, (long)new_offset, (long)old_offset,
+			(long)DynamicBuffer.length);
 		fprintf(stderr, "%s: "
 			"Decode failed past byte %ld: %s\n",
 			name, (long)new_offset,
@@ -497,7 +675,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 				: "Input processing error");
 		errno = (rval.code == RC_WMORE) ? ENOMSG : EBADMSG;
 	} else {
-		/* Got EOF after a few successful PDU */	
+		/* Got EOF after a few successful PDUs */
 		errno = 0;
 	}
 
