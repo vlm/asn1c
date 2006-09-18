@@ -3,12 +3,14 @@
 #include <per_decoder.h>
 
 asn_dec_rval_t
-uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sptr, const void *buffer, size_t size, int skip_bits) {
+uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sptr, const void *buffer, size_t size, int skip_bits, int unused_bits) {
 	asn_codec_ctx_t s_codec_ctx;
 	asn_dec_rval_t rval;
 	asn_per_data_t pd;
 
-	if(skip_bits < 0 || skip_bits > 7 || (skip_bits > 0 && !size))
+	if(skip_bits < 0 || skip_bits > 7
+	|| unused_bits < 0 || unused_bits > 7
+	|| (unused_bits > 0 && !size))
 		_ASN_DECODE_FAILED;
 
 	/*
@@ -30,7 +32,9 @@ uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sp
 	/* Fill in the position indicator */
 	pd.buffer = (const uint8_t *)buffer;
 	pd.nboff = skip_bits;
-	pd.nbits = 8 * size; 	/* 8 is CHAR_BIT from <limits.h> */
+	pd.nbits = 8 * size - unused_bits; /* 8 is CHAR_BIT from <limits.h> */
+	if(pd.nboff > pd.nbits)
+		_ASN_DECODE_FAILED;
 
 	/*
 	 * Invoke type-specific decoder.
@@ -38,12 +42,13 @@ uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sp
 	if(!td->uper_decoder)
 		_ASN_DECODE_FAILED;	/* PER is not compiled in */
 	rval = td->uper_decoder(opt_codec_ctx, td, 0, sptr, &pd);
-	if(rval.code == RC_FAIL) {
-		rval.consumed = 0;
-	} else {
+	if(rval.code == RC_OK) {
 		/* Return the number of consumed bits */
 		rval.consumed = ((pd.buffer - (const uint8_t *)buffer) << 3)
 					+ pd.nboff - skip_bits;
+	} else {
+		/* PER codec is not a restartable */
+		rval.consumed = 0;
 	}
 	return rval;
 }

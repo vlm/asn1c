@@ -571,7 +571,7 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	if(ct && ct->flags & APC_EXTENSIBLE) {
 		int inext = per_get_few_bits(pd, 1);
-		if(inext < 0) _ASN_DECODE_FAILED;
+		if(inext < 0) _ASN_DECODE_STARVED;
 		if(inext) ct = 0;
 	}
 
@@ -599,7 +599,7 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ASN_DEBUG("Integer with range %d bits", ct->range_bits);
 		if(ct->range_bits >= 0) {
 			long value = per_get_few_bits(pd, ct->range_bits);
-			if(value < 0) _ASN_DECODE_FAILED;
+			if(value < 0) _ASN_DECODE_STARVED;
 			ASN_DEBUG("Got value %ld + low %ld",
 				value, ct->lower_bound);
 			value += ct->lower_bound;
@@ -619,14 +619,14 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Get the PER length */
 		len = uper_get_length(pd, -1, &repeat);
-		if(len < 0) _ASN_DECODE_FAILED;
+		if(len < 0) _ASN_DECODE_STARVED;
 
 		p = REALLOC(st->buf, st->size + len + 1);
 		if(!p) _ASN_DECODE_FAILED;
 		st->buf = (uint8_t *)p;
 
 		ret = per_get_many_bits(pd, &st->buf[st->size], 0, 8 * len);
-		if(ret < 0) _ASN_DECODE_FAILED;
+		if(ret < 0) _ASN_DECODE_STARVED;
 		st->size += len;
 	} while(repeat);
 	st->buf[st->size] = 0;	/* JIC */

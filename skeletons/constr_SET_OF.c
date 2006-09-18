@@ -883,7 +883,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	if(ct && ct->flags & APC_EXTENSIBLE) {
 		int value = per_get_few_bits(pd, 1);
-		if(value < 0) _ASN_DECODE_FAILED;
+		if(value < 0) _ASN_DECODE_STARVED;
 		if(value) ct = 0;	/* Not restricted! */
 	}
 
@@ -892,7 +892,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		nelems = per_get_few_bits(pd, ct->effective_bits);
 		ASN_DEBUG("Preparing to fetch %ld+%ld elements from %s",
 			(long)nelems, ct->lower_bound, td->name);
-		if(nelems < 0)  _ASN_DECODE_FAILED;
+		if(nelems < 0)  _ASN_DECODE_STARVED;
 		nelems += ct->lower_bound;
 	} else {
 		nelems = -1;
@@ -905,7 +905,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				ct ? ct->effective_bits : -1, &repeat);
 			ASN_DEBUG("Got to decode %d elements (eff %d)",
 				(int)nelems, (int)ct ? ct->effective_bits : -1);
-			if(nelems < 0) _ASN_DECODE_FAILED;
+			if(nelems < 0) _ASN_DECODE_STARVED;
 		}
 
 		for(i = 0; i < nelems; i++) {
@@ -921,12 +921,13 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				ASN_DEBUG("Failed to add element into %s",
 					td->name);
 				/* Fall through */
+				rv.code == RC_FAIL;
 			} else {
 				ASN_DEBUG("Failed decoding %s of %s (SET OF)",
 					elm->type->name, td->name);
 			}
 			if(ptr) ASN_STRUCT_FREE(*elm->type, ptr);
-			_ASN_DECODE_FAILED;
+			return rv;
 		}
 
 		nelems = -1;	/* Allow uper_get_length() */

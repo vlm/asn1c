@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -1231,7 +1231,7 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 	if(ct->flags & APC_EXTENSIBLE) {
 		int inext = per_get_few_bits(pd, 1);
-		if(inext < 0) RETURN(RC_FAIL);
+		if(inext < 0) RETURN(RC_WMORE);
 		if(inext) ct = &asn_DEF_OCTET_STRING_constraint;
 		consumed_myself = 0;
 	}
@@ -1254,7 +1254,7 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	if(ct->effective_bits == 0) {
 		int ret = per_get_many_bits(pd, st->buf, 0,
 					    unit_bits * ct->upper_bound);
-		if(ret < 0) RETURN(RC_FAIL);
+		if(ret < 0) RETURN(RC_WMORE);
 		consumed_myself += unit_bits * ct->upper_bound;
 		st->buf[st->size] = 0;
 		if(unit_bits == 1 && (ct->upper_bound & 0x7))
@@ -1271,11 +1271,12 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 		/* Get the PER length */
 		len_bits = uper_get_length(pd, ct->effective_bits, &repeat);
-		if(len_bits < 0) RETURN(RC_FAIL);
+		if(len_bits < 0) RETURN(RC_WMORE);
 		len_bits += ct->lower_bound;
 
-		ASN_DEBUG("Got per length eb %ld, len %ld",
-			(long)ct->effective_bits, (long)len_bits);
+		ASN_DEBUG("Got PER length eb %ld, len %ld, %s (%s)",
+			(long)ct->effective_bits, (long)len_bits,
+			repeat ? "repeat" : "once", td->name);
 		if(unit_bits == 1) {
 			len_bytes = (len_bits + 7) >> 3;
 			if(len_bits & 0x7)
@@ -1290,7 +1291,7 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 		st->buf = (uint8_t *)p;
 
 		ret = per_get_many_bits(pd, &st->buf[st->size], 0, len_bits);
-		if(ret < 0) RETURN(RC_FAIL);
+		if(ret < 0) RETURN(RC_WMORE);
 		st->size += len_bytes;
 	} while(repeat);
 	st->buf[st->size] = 0;	/* nul-terminate */
@@ -1327,8 +1328,8 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		sizeinunits = sizeinunits * 8 - (st->bits_unused & 0x07);
 	}
 
-	ASN_DEBUG("Encoding %s into %d units",
-		td->name, sizeinunits);
+	ASN_DEBUG("Encoding %s into %d units of %d bits",
+		td->name, sizeinunits, unit_bits);
 
 	/* Figure out wheter size lies within PER visible consrtaint */
 
@@ -1361,7 +1362,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		ret = per_put_few_bits(po, sizeinunits - ct->lower_bound,
 				ct->effective_bits);
 		if(ret) _ASN_ENCODE_FAILED;
-		ret = per_put_many_bits(po, st->buf, sizeinunits);
+		ret = per_put_many_bits(po, st->buf, sizeinunits * unit_bits);
 		if(ret) _ASN_ENCODE_FAILED;
 		_ASN_ENCODED_OK(er);
 	}
@@ -1381,7 +1382,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 
 		ASN_DEBUG("Encoding %d of %d", maySave, sizeinunits);
 
-		ret = per_put_many_bits(po, buf, maySave);
+		ret = per_put_many_bits(po, buf, maySave * unit_bits);
 		if(ret) _ASN_ENCODE_FAILED;
 
 		if(unit_bits == 1)
