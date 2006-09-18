@@ -4764,7 +4764,7 @@ regenerate-from-asn1-source:
 	../../asn1c/asn1c -S ../../skeletons -fcompound-names -pdu=auto -gen-PER ../rrc.asn1
 
 
-DL-DCCH-Message.c: ../sample.makefile.regen
+DL-DCCH-Message.c: ../sample.makefile.regen ../rrc.asn1
 	make regen-makefile
 	@touch DL-DCCH-Message.c
 	make
@@ -4802,13 +4802,36 @@ check: ${TARGET}
 	rm -f ./.tmp.[12].$$$$; \
 	done; fi
 	@if test -f ./sample-DL-DCCH-Message-1.per ; then \
-	for f in ./sample-DL-DCCH-Message-*.per; do \
+	for f in ./sample-DL-DCCH-Message-[1-9].per; do \
 	echo "Recoding $$f into DER into XER and back..."; \
+	./${TARGET} -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \
+	./${TARGET} -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
+	diff ./.tmp.2.$$$$ ./.tmp.3.$$$$ || exit 2; \
+	diff ./.tmp.3.$$$$ ./.tmp.4.$$$$ || exit 2; \
 	./${TARGET} -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 2; \
+	rm -f ./.tmp.[1234].$$$$; \
+	done; fi
+	@if test -f ./sample-DL-DCCH-Message-1-padded.per ; then \
+	for f in ./sample-DL-DCCH-Message-[1-9]-padded.per; do \
+	echo "Recoding byte-padded $$f into DER into XER and back..."; \
+	./${TARGET} -per-padded -iper -oxer -b 1 $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -per-padded -iper -oxer -b 17 $$f > ./.tmp.2.$$$$ || exit 2; \
+	./${TARGET} -per-padded -iper -oxer -b 33 $$f > ./.tmp.3.$$$$ || exit 2; \
+	./${TARGET} -per-padded -iper -oxer -b 980 $$f > ./.tmp.4.$$$$ || exit 2; \
+	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 1; \
+	diff ./.tmp.2.$$$$ ./.tmp.3.$$$$ || exit 2; \
+	diff ./.tmp.3.$$$$ ./.tmp.4.$$$$ || exit 3; \
+	./${TARGET} -per-padded -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
 	./${TARGET} -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
-	diff $$f ./.tmp.1.$$$$ || exit 2; \
-	rm -f ./.tmp.[12].$$$$; \
+	diff $$f ./.tmp.1.$$$$ || exit 4; \
+	rm -f ./.tmp.[1234].$$$$; \
 	done; fi
 	@echo ================
 	@echo All tests passed
