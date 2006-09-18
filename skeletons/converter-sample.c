@@ -194,6 +194,7 @@ main(int ac, char *av[]) {
 		"  -p list      List available PDUs\n");
 #endif	/* ASN_PDU_COLLECTION */
 		fprintf(stderr,
+		"  -1           Decode only the first PDU in file\n"
 		"  -b <size>    Set the i/o buffer size (default is %ld)\n"
 		"  -c           Check ASN.1 constraints after decoding\n"
 		"  -d           Enable debugging (-dd is even better)\n"
