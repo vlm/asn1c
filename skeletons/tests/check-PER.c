@@ -128,13 +128,14 @@ static int Ignore(const void *data, size_t size, void *op_key) {
 static void
 check_per_encoding() {
 	asn_per_outp_t po;
+	int ret;
+
 	po.buffer = po.tmpspace;
 	po.nboff = 0;
 	po.nbits = 0;
 	po.outper = Ignore;
 	po.op_key = 0;
 	po.tmpspace[0] = 0xff;
-	int ret;
 
 	ret = per_put_few_bits(&po, 0, 0);
 	assert(ret == 0);
