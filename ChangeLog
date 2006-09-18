@@ -1,5 +1,5 @@
 
-0.9.21:	2006-Sep-08
+0.9.21:	2006-Sep-17
 
 	* skeletons/standard-modules directory is now used for standard types.
 	* Fixed class field access problem (Test case 98)
@@ -11,6 +11,9 @@
 	* asn-decoder-template.c renamed into converter-sample.c
 	* MEGACO (Media Gateway Control Protocol) decoder sample added.
 	* First release of PER encoder (does not encode SETs yet).
+	* Added a sample LDAP decoder (./examples/sample.source.LDAP3).
+	* Added a sample 3GPP RRC decoder (./examples/sample.source.RRC).
+	* Added a sample MEGACO (H.248.1) decoder (sample.source.MEGACO).
 
 0.9.20:	2006-Mar-06
 
