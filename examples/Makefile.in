@@ -177,11 +177,13 @@ ASN1_FILES_3 = \
 	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
-	$(srcdir)/sample.makefile.regen				\
-	$(srcdir)/sample.source.*/README			\
-	$(srcdir)/sample.source.*/config.h			\
-	$(srcdir)/sample.source.*/Makefile			\
-	$(srcdir)/sample.source.*/sample-*
+	$(srcdir)/sample.source.LDAP3				\
+	$(srcdir)/sample.source.MEGACO				\
+	$(srcdir)/sample.source.MHEG5				\
+	$(srcdir)/sample.source.RRC				\
+	$(srcdir)/sample.source.TAP3				\
+	$(srcdir)/sample.source.PKIX1				\
+	$(srcdir)/sample.makefile.regen
 
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 all: all-am
@@ -253,7 +255,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/$(srcdir) $(distdir)/$(srcdir)/sample.source.*
+	$(mkdir_p) $(distdir)/$(srcdir)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -280,6 +282,9 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	$(MAKE) $(AM_MAKEFLAGS) \
+	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
+	  dist-hook
 check-am: all-am
 check: check-am
 all-am: Makefile $(SCRIPTS)
@@ -359,9 +364,9 @@ ps-am:
 uninstall-am: uninstall-dist_binSCRIPTS uninstall-info-am
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	clean-local distclean distclean-generic distclean-libtool \
-	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-data install-data-am \
+	clean-local dist-hook distclean distclean-generic \
+	distclean-libtool distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am \
 	install-dist_binSCRIPTS install-exec install-exec-am \
 	install-info install-info-am install-man install-strip \
 	installcheck installcheck-am installdirs maintainer-clean \
@@ -380,6 +385,9 @@ $(ASN1_FILES_2): crfc2asn1.pl $(ASN1_SOURCE_2)
 
 $(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
 	./crfc2asn1.pl $(ASN1_SOURCE_3)
+
+dist-hook:
+	rm -rf `find $(distdir) -name CVS -or -name .cvsignore`
 
 clean-local:
 	for dir in sample.source.*; do (cd $$dir && make distclean); done

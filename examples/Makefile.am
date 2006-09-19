@@ -26,11 +26,16 @@ $(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
 	./crfc2asn1.pl $(ASN1_SOURCE_3)
 
 EXTRA_DIST = $(srcdir)/rfc*.txt					\
-	$(srcdir)/sample.makefile.regen				\
-	$(srcdir)/sample.source.*/README			\
-	$(srcdir)/sample.source.*/config.h			\
-	$(srcdir)/sample.source.*/Makefile			\
-	$(srcdir)/sample.source.*/sample-*
+	$(srcdir)/sample.source.LDAP3				\
+	$(srcdir)/sample.source.MEGACO				\
+	$(srcdir)/sample.source.MHEG5				\
+	$(srcdir)/sample.source.RRC				\
+	$(srcdir)/sample.source.TAP3				\
+	$(srcdir)/sample.source.PKIX1				\
+	$(srcdir)/sample.makefile.regen
+
+dist-hook:
+	rm -rf `find $(distdir) -name CVS -or -name .cvsignore`
 
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 
