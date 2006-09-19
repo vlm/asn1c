@@ -4,7 +4,7 @@
 
 Name: @PACKAGE@
 Version: @VERSION@
-Release: 1
+Release: 2
 Copyright: Lev Walkin <vlm@lionet.info>
 Source: %{name}-%{version}.tar.gz
 Url: http://asn1c.sourceforge.net/
@@ -16,7 +16,7 @@ Summary:	The ASN.1 to C compiler
 
 %description
 The asn1c compiler turns ASN.1 specifications into C language
-source files containing the BER/CER/DER/XER encoders and decoders
+source files containing the BER/CER/DER/PER/XER encoders and decoders
 for the given abstract notation.
 
 %prep
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1
 
 %changelog
+
+* Sun Sep 18 2006 Lev Walkin <vlm@lionet.info>
+- Mentioned PER support
 
 * Sun Sep 26 2004 Lev Walkin <vlm@lionet.info>
 - All manuals are now getting installed, including new ones: unber.1 and enber.1
