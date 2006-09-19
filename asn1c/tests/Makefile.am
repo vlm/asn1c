@@ -10,9 +10,11 @@ TESTS = check-*.c
 EXTRA_DIST =			\
 	$(check_SCRIPTS)	\
 	check-*.c*		\
-	data-*/Makefile		\
-	data-*/README		\
-	data-*/*.*
+	data-62			\
+	data-70
+
+dist-hook:
+	rm -rf `find $(distdir) -name CVS -or -name .cvsignore`
 
 clean:
 	rm -rf test-*
