@@ -2,6 +2,7 @@
 SUBDIRS = standard-modules tests
 
 dist_pkgdata_DATA =				\
+		$(srcdir)/README		\
 		$(srcdir)/*.[ch]		\
 		$(srcdir)/file-dependencies
 
