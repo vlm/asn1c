@@ -36,6 +36,8 @@ EXTRA_DIST = $(srcdir)/rfc*.txt					\
 
 dist-hook:
 	rm -rf `find $(distdir) -name CVS -or -name .cvsignore`
+	rm -rf `find $(distdir) -name "*.core" -or -name ".tmp.*"`
+	rm -rf `find $(distdir) -name "*.[ch].??????"`
 
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 
