@@ -108,8 +108,8 @@ Using the ASN.1 Compiler
 Introduction to the ASN.1 Compiler
 \layout Standard
 
-The purpose of the ASN.1 compiler, of which this document is part, is to
- convert the specifications in ASN.1 notation into some other language.
+The purpose of the ASN.1 compiler is to convert the specifications in ASN.1
+ notation into some other language.
  At this moment, only C and C++ target languages are supported, the latter
  is in upward compatibility mode.
 \layout Standard
@@ -451,7 +451,7 @@ The following table summarizes the asn1c command line options.
 
 
 \begin_inset  Tabular
-<lyxtabular version="3" rows="29" columns="2">
+<lyxtabular version="3" rows="28" columns="2">
 <features islongtable="true">
 <column alignment="left" valignment="top" leftline="true" width="0">
 <column alignment="block" valignment="top" leftline="true" rightline="true" width="3in">
@@ -751,33 +751,6 @@ Language Options
 \series bold 
 \size small 
 Description
-\end_inset 
-</cell>
-</row>
-<row topline="true">
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\layout Standard
-
-
-\size small 
--fall-defs-global
-\end_inset 
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\layout Standard
-
-
-\size small 
-Normally the compiler hides the definitions (asn_DEF_xxx) of the inner structure
- elements (members of SEQUENCE, SET and other types).
- This option makes all such definitions global.
- Enabling this option may pollute the namespace by making lots of asn_DEF_xxx
- structures globally visible, but will allow you to manipulate (encode and
- decode) the individual members of any complex ASN.1 structure.
 \end_inset 
 </cell>
 </row>
