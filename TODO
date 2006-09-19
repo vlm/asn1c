@@ -1,8 +1,6 @@
 1. MAJOR:
 
-1.1 Support for PER encoding. PER decoding is already supported.
-
-1.2 Support for Information Object Classes.
+1.1 Support for Information Object Classes.
    Status:	Support for parsing IOCs is mostly present.
 		Support for slicing the IOCs to produce "views"
 		is not yet designed.
