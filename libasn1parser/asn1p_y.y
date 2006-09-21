@@ -226,7 +226,7 @@ static asn1p_module_t *currentModule;
 %token			TOK_VisibleString
 %token			TOK_WITH
 
-%left			TOK_EXCEPT
+%nonassoc		TOK_EXCEPT
 %left			'^' TOK_INTERSECTION
 %left			'|' TOK_UNION
 
@@ -316,6 +316,9 @@ static asn1p_module_t *currentModule;
 %type	<a_constr>		SetOfConstraints
 %type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */
 %type	<a_constr>		ElementSetSpec		/* 1..2,...,3 */
+%type	<a_constr>		Unions
+%type	<a_constr>		Intersections
+%type	<a_constr>		IntersectionElements
 %type	<a_constr>		ConstraintSubtypeElement /* 1..2 */
 %type	<a_constr>		SimpleTableConstraint
 %type	<a_constr>		UserDefinedConstraint
@@ -1686,9 +1689,8 @@ BasicString:
 /*
  * Data type constraints.
  */
-Union:		'|' | TOK_UNION;
-Intersection:	'^' | TOK_INTERSECTION;
-Except:		      TOK_EXCEPT;
+UnionMark:		'|' | TOK_UNION;
+IntersectionMark:	'^' | TOK_INTERSECTION;
 
 optConstraints:
 	{ $$ = 0; }
@@ -1751,19 +1753,30 @@ ElementSetSpecs:
 	;
 
 ElementSetSpec:
-	ConstraintSubtypeElement {
-		$$ = $1;
-	}
+	Unions
 	| TOK_ALL TOK_EXCEPT ConstraintSubtypeElement {
 		CONSTRAINT_INSERT($$, ACT_CA_AEX, $3, 0);
 	}
-	| ElementSetSpec Union ConstraintSubtypeElement {
+	;
+
+Unions:
+	Intersections
+	| Unions UnionMark Intersections {
 		CONSTRAINT_INSERT($$, ACT_CA_UNI, $1, $3);
 	}
-	| ElementSetSpec Intersection ConstraintSubtypeElement {
+	;
+
+Intersections:
+	IntersectionElements
+	|  Intersections IntersectionMark IntersectionElements {
 		CONSTRAINT_INSERT($$, ACT_CA_INT, $1, $3);
 	}
-	| ConstraintSubtypeElement Except ConstraintSubtypeElement {
+	;
+
+
+IntersectionElements:
+	ConstraintSubtypeElement
+	| ConstraintSubtypeElement TOK_EXCEPT ConstraintSubtypeElement {
 		CONSTRAINT_INSERT($$, ACT_CA_EXC, $1, $3);
 	}
 	;
