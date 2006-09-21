@@ -8,4 +8,9 @@ C ::= IA5String (SIZE(10) ^ FROM("A".."D") | SIZE(20) ^ FROM("D".."F"))
 -- Practical constraints (C): (MIN..MAX) (SIZE(10 | 20)) (FROM("A".."F"))
 -- PER-visible constraints (C): (MIN..MAX) (SIZE(10 | 20)) (FROM("A".."F"))
 
+P ::= IA5String (FROM("AB") ^ SIZE(1..2) | FROM("DE") ^ SIZE(3) | FROM("AXE") ^ SIZE(1..5))
+-- Combined constraints: (FROM("AB") ^ SIZE(1..2) | FROM("DE") ^ SIZE(3) | FROM("AXE") ^ SIZE(1..5))
+-- Practical constraints (P): (MIN..MAX) (SIZE(1..5)) (FROM("A".."B" | "D".."E" | "X"))
+-- PER-visible constraints (P): (MIN..MAX) (SIZE(1..5)) (FROM("A".."B" | "D".."E" | "X"))
+
 END

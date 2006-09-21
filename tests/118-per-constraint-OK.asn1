@@ -11,6 +11,11 @@ ModuleConstraintPrecedence
 	DEFINITIONS ::=
 BEGIN
 
-	C ::= IA5String (SIZE(10) ^ FROM("A".."D") | SIZE(20) ^ FROM("D".."F"))
+	C ::= IA5String (SIZE(10) ^ FROM("A".."D")
+			| SIZE(20) ^ FROM("D".."F"))
+
+	P ::= IA5String (FROM("AB") ^ SIZE(1..2)
+			 | FROM("DE") ^ SIZE(3)
+			 | FROM("AXE") ^ SIZE(1..5))
 
 END
