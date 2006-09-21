@@ -31,7 +31,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	etype = _find_terminal_type(arg);
 
 	r_value=asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
-	r_size = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+	r_size =asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE, 0,0,0);
 	if(r_value) {
 		if(r_value->incompatible
 		|| r_value->empty_constraint
@@ -133,7 +133,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	INDENT(+1);
 
 	/*
-	 * Here is an if() {} else {} constaint checking code.
+	 * Here is an if() {} else {} consrtaint checking code.
 	 */
 	OUT("\n");
 	OUT("if(");
@@ -251,7 +251,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 	if(range->el_count == 0) {
 		/*
 		 * It's better to have a short if() check
-		 * than waste 4k of table space
+		 * than waste 1k of table space
 		 */
 		use_table = 0;
 	}
@@ -265,6 +265,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 	}
 
 	if(use_table) {
+		int cardinal = 0;
 		int i, n = 0;
 		int untl;
 		memset(table, 0, sizeof(table));
@@ -289,10 +290,11 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		OUT("static int permitted_alphabet_table_%d[%d] = {\n",
 			arg->expr->_type_unique_index, max_table_size);
 		for(n = 0; n < untl; n++) {
-			OUT("%d,", table[n]?1:0);
+			cardinal += table[n] ? 1 : 0;
+			OUT("%2d,", table[n]);
 			if(!((n+1) % 16)) {
 				int c;
-				if(!n) {
+				if(!n || (n-15) + range_start >= 0x80) {
 					OUT("\n");
 					continue;
 				}
@@ -313,6 +315,21 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 			}
 		}
 		OUT("};\n");
+
+		if((arg->flags & A1C_GEN_PER)) {
+		    int c;
+		    OUT("static int permitted_alphabet_code2value_%d[%d] = {\n",
+			arg->expr->_type_unique_index, cardinal);
+		    for(n = c = 0; c < max_table_size; c++) {
+			if(table[c]) {
+				OUT("%d,", c);
+				if(!((++n) % 16)) OUT("\n");
+			}
+		    }
+		    OUT("};\n");
+		    OUT("\n");
+		}
+
 		OUT("\n");
 	} else if(etype == ASN_STRING_UTF8String) {
 		/*

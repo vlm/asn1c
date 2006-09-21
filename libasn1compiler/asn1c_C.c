@@ -1905,6 +1905,13 @@ emit_single_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr) {
 		tmprng.right.value = eidx < 0 ? 0 : eidx;
 		if(emit_single_member_PER_constraint(arg, &tmprng, 0))
 			return -1;
+	} else if(etype & ASN_STRING_KM_MASK) {
+		range = asn1constraint_compute_PER_range(etype,
+				expr->combined_constraints, ACT_CT_FROM,
+				0, 0, 0);
+		if(emit_single_member_PER_constraint(arg, range, 0))
+			return -1;
+		asn1constraint_range_free(range);
 	} else {
 		range = asn1constraint_compute_PER_range(etype,
 				expr->combined_constraints, ACT_EL_RANGE,
