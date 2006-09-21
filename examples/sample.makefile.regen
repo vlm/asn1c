@@ -23,7 +23,13 @@ if test -z "$ASN1PDU"	\
 	exit
 fi
 
-../../asn1c/asn1c -S ../../skeletons ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
+if test -x ../../asn1c/asn1c ; then
+  echo "Compiling ${ASN1MODULES} using local compiler"
+  ../../asn1c/asn1c -S ../../skeletons ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
+else
+  echo "Compiling ${ASN1MODULES} using system compiler"
+  asn1c ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
+fi
 
 if test ! -f Makefile.am.sample ; then
 	echo "Makefile.am.sample is missing"
@@ -42,6 +48,7 @@ cat Makefile.am.sample						\
 	| sed -e "s/^all: /all: ${ASN1PDU}.c /"			\
 	| sed -e "s/progname/${PROGNAME}/"			\
 	> Makefile.$$
+set +x
 
 (	echo
 	echo "${ASN1PDU}.c: $0 ${ASN1MODULES}"
@@ -107,10 +114,10 @@ cat Makefile.am.sample						\
 	echo "	rm -f Makefile.am.sample"
 ) >> Makefile.$$
 
+set -x
+mv Makefile.$$ Makefile || exit $?
 rm Makefile.am.sample || exit $?
-
-mv Makefile.$$ Makefile
-
 set +x
+
 echo
 echo "Makefile generation finished"
