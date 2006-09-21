@@ -1277,7 +1277,7 @@ static ber_tlv_tag_t asn_DEF_Str2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_Str2_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 7,  7,  0,  127 }	/* (0..127) */,
 	{ APC_CONSTRAINED,	 5,  5,  0,  30 }	/* (SIZE(0..30)) */
 };
 asn_TYPE_descriptor_t asn_DEF_Str2 = {
@@ -1329,14 +1329,17 @@ per_type_encoder_f Str3_encode_uper;
 /*** <<< CTABLES [Str3] >>> ***/
 
 static int permitted_alphabet_table_1[256] = {
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,	/*  ABC             */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,	/*     def          */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  ABC             */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*     def          */
 };
+static int permitted_alphabet_code2value_1[6] = {
+65,66,67,100,101,102,};
+
 
 static int check_permitted_alphabet_1(const void *sptr) {
 	int *table = permitted_alphabet_table_1;
@@ -1469,7 +1472,7 @@ static ber_tlv_tag_t asn_DEF_Str3_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_Str3_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 6,  6,  65,  102 }	/* (65..102) */,
 	{ APC_CONSTRAINED,	 5,  5,  10,  27 }	/* (SIZE(10..27)) */
 };
 asn_TYPE_descriptor_t asn_DEF_Str3 = {
@@ -1647,7 +1650,7 @@ static ber_tlv_tag_t asn_DEF_Str4_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_Str4_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 7,  7,  0,  127 }	/* (0..127) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */
 };
 asn_TYPE_descriptor_t asn_DEF_Str4 = {
@@ -1825,7 +1828,7 @@ static ber_tlv_tag_t asn_DEF_PER_Visible_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_PER_Visible_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 3,  3,  65,  70 }	/* (65..70) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */
 };
 asn_TYPE_descriptor_t asn_DEF_PER_Visible = {
@@ -2003,7 +2006,7 @@ static ber_tlv_tag_t asn_DEF_PER_Visible_2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_PER_Visible_2_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 1,  1,  69,  70 }	/* (69..70) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */
 };
 asn_TYPE_descriptor_t asn_DEF_PER_Visible_2 = {
@@ -2181,7 +2184,7 @@ static ber_tlv_tag_t asn_DEF_Not_PER_Visible_1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_Not_PER_Visible_1_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 3,  3,  65,  70 }	/* (65..70) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */
 };
 asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_1 = {
@@ -2899,7 +2902,7 @@ static ber_tlv_tag_t asn_DEF_SIZE_and_FROM_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_SIZE_and_FROM_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 2,  2,  65,  68 }	/* (65..68) */,
 	{ APC_CONSTRAINED,	 2,  2,  1,  4 }	/* (SIZE(1..4)) */
 };
 asn_TYPE_descriptor_t asn_DEF_SIZE_and_FROM = {
@@ -3077,7 +3080,7 @@ static ber_tlv_tag_t asn_DEF_Neither_SIZE_nor_FROM_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2))
 };
 static asn_per_constraints_t asn_PER_Neither_SIZE_nor_FROM_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 3,  3,  65,  70 }	/* (65..70) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */
 };
 asn_TYPE_descriptor_t asn_DEF_Neither_SIZE_nor_FROM = {
@@ -3301,15 +3304,21 @@ per_type_encoder_f Utf8_3_encode_uper;
 /*** <<< CTABLES [Utf8-3] >>> ***/
 
 static int permitted_alphabet_table_1[128] = {
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  ABCDEFGHIJKLMNO */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* PQRSTUVWXYZ      */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  abcdefghijklmno */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* pqrstuvwxyz      */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,	/*  ABCDEFGHIJKLMNO */
+16,17,18,19,20,21,22,23,24,25,26, 0, 0, 0, 0, 0,	/* PQRSTUVWXYZ      */
+ 0,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,	/*  abcdefghijklmno */
+42,43,44,45,46,47,48,49,50,51,52, 0, 0, 0, 0, 0,	/* pqrstuvwxyz      */
 };
+static int permitted_alphabet_code2value_1[52] = {
+65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,
+81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,
+103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,
+119,120,121,122,};
+
 
 static int check_permitted_alphabet_1(const void *sptr) {
 	int *table = permitted_alphabet_table_1;
@@ -3813,15 +3822,22 @@ per_type_encoder_f VisibleIdentifier_encode_uper;
 /*** <<< CTABLES [VisibleIdentifier] >>> ***/
 
 static int permitted_alphabet_table_1[256] = {
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,	/*     $            */
-1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,	/* 0123456789       */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  ABCDEFGHIJKLMNO */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,	/* PQRSTUVWXYZ    _ */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  abcdefghijklmno */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* pqrstuvwxyz      */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*     $            */
+ 2, 3, 4, 5, 6, 7, 8, 9,10,11, 0, 0, 0, 0, 0, 0,	/* 0123456789       */
+ 0,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,	/*  ABCDEFGHIJKLMNO */
+27,28,29,30,31,32,33,34,35,36,37, 0, 0, 0, 0,38,	/* PQRSTUVWXYZ    _ */
+ 0,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,	/*  abcdefghijklmno */
+54,55,56,57,58,59,60,61,62,63,64, 0, 0, 0, 0, 0,	/* pqrstuvwxyz      */
 };
+static int permitted_alphabet_code2value_1[64] = {
+36,48,49,50,51,52,53,54,55,56,57,65,66,67,68,69,
+70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,
+86,87,88,89,90,95,97,98,99,100,101,102,103,104,105,106,
+107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,
+};
+
 
 static int check_permitted_alphabet_1(const void *sptr) {
 	int *table = permitted_alphabet_table_1;
@@ -4882,15 +4898,22 @@ per_type_encoder_f Identifier_encode_uper;
 /*** <<< CTABLES [Identifier] >>> ***/
 
 static int permitted_alphabet_table_1[256] = {
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,	/*                  */
-0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,	/*     $            */
-1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,	/* 0123456789       */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  ABCDEFGHIJKLMNO */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,	/* PQRSTUVWXYZ    _ */
-0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,	/*  abcdefghijklmno */
-1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,	/* pqrstuvwxyz      */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*     $            */
+ 2, 3, 4, 5, 6, 7, 8, 9,10,11, 0, 0, 0, 0, 0, 0,	/* 0123456789       */
+ 0,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,	/*  ABCDEFGHIJKLMNO */
+27,28,29,30,31,32,33,34,35,36,37, 0, 0, 0, 0,38,	/* PQRSTUVWXYZ    _ */
+ 0,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,	/*  abcdefghijklmno */
+54,55,56,57,58,59,60,61,62,63,64, 0, 0, 0, 0, 0,	/* pqrstuvwxyz      */
 };
+static int permitted_alphabet_code2value_1[64] = {
+36,48,49,50,51,52,53,54,55,56,57,65,66,67,68,69,
+70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,
+86,87,88,89,90,95,97,98,99,100,101,102,103,104,105,106,
+107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,
+};
+
 
 static int check_permitted_alphabet_1(const void *sptr) {
 	int *table = permitted_alphabet_table_1;
@@ -5023,7 +5046,7 @@ static ber_tlv_tag_t asn_DEF_Identifier_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2))
 };
 static asn_per_constraints_t asn_PER_Identifier_constr_1 = {
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 7,  7,  36,  122 }	/* (36..122) */,
 	{ APC_CONSTRAINED,	 5,  5,  1,  32 }	/* (SIZE(1..32)) */
 };
 asn_TYPE_descriptor_t asn_DEF_Identifier = {
