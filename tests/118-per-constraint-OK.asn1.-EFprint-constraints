@@ -1,0 +1,11 @@
+ModuleConstraintPrecedence { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 118 }
+DEFINITIONS ::=
+BEGIN
+
+C ::= IA5String (SIZE(10) ^ FROM("A".."D") | SIZE(20) ^ FROM("D".."F"))
+-- Combined constraints: (SIZE(10) ^ FROM("A".."D") | SIZE(20) ^ FROM("D".."F"))
+-- Practical constraints (C): (MIN..MAX) (SIZE(10 | 20)) (FROM("A".."F"))
+-- PER-visible constraints (C): (MIN..MAX) (SIZE(10 | 20)) (FROM("A".."F"))
+
+END
