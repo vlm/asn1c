@@ -2,7 +2,7 @@
 #include "asn1fix_constraint.h"
 #include "asn1fix_crange.h"
 
-static void _remove_extensions(arg_t *arg, asn1p_constraint_t *ct);
+static void _remove_extensions(arg_t *arg, asn1p_constraint_t *ct, int flast);
 static int constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct);
 static int constraint_value_resolve(arg_t *arg, asn1p_value_t **value, enum asn1p_constraint_type_e real_ctype);
 
@@ -102,7 +102,7 @@ asn1constraint_pullup(arg_t *arg) {
 		/*
 		 * If we have a parent, remove all the extensions (46.4).
 		 */
-		_remove_extensions(arg, ct_parent);
+		_remove_extensions(arg, ct_parent, 0);
 
 		expr->combined_constraints = ct_parent;
 		if(ct_expr->type == ACT_CA_SET) {
@@ -125,6 +125,7 @@ asn1constraint_pullup(arg_t *arg) {
 				ct_expr);
 		}
 	} else {
+		_remove_extensions(arg, ct_expr, 1);
 		expr->combined_constraints = ct_expr;
 	}
 
@@ -227,13 +228,18 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e ety
 }
 
 static void
-_remove_extensions(arg_t *arg, asn1p_constraint_t *ct) {
+_remove_extensions(arg_t *arg, asn1p_constraint_t *ct, int forgive_last) {
 	unsigned int i;
+
+	if(!ct) return;
 
 	for(i = 0; i < ct->el_count; i++) {
 		if(ct->elements[i]->type == ACT_EL_EXT)
 			break;
-		_remove_extensions(arg, ct->elements[i]);
+		if(forgive_last && ct->type == ACT_CA_SET
+			&& i + 1 == ct->el_count)
+			return;
+		_remove_extensions(arg, ct->elements[i], 0);
 	}
 
 	/* Remove the elements at and after the extensibility mark */
@@ -288,7 +294,7 @@ constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 	ct_expr = asn1p_constraint_clone(ct_expr);
 	assert(ct_expr);
 
-	_remove_extensions(arg, ct_expr);
+	_remove_extensions(arg, ct_expr, 0);
 
 	if(ct_expr->type == ACT_CA_SET) {
 		unsigned int i;
