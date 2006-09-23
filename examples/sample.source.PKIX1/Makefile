@@ -366,7 +366,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons ../rfc3280-PKIX1Explicit88.asn1 ../rfc3280-PKIX1Implicit88.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=Certificate ../rfc3280-PKIX1Explicit88.asn1 ../rfc3280-PKIX1Implicit88.asn1
 
 
 Certificate.c: ../sample.makefile.regen ../rfc3280-*.asn1

@@ -306,7 +306,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=MegacoMessage -fcompound-names ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
 
 
 MegacoMessage.c: ../sample.makefile.regen ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1

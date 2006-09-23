@@ -40,7 +40,7 @@ fi
 
 EXTRA_CFLAGS=""
 if test -f config.h ; then
-	EXTRA_CFLAGS="-DHAVE_CONFIG_H $EXTRA_CFLAGS"
+	EXTRA_CFLAGS="-DHAVE_CONFIG_H"
 fi
 
 set -x
