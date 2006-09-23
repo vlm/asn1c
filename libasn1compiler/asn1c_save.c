@@ -11,8 +11,12 @@ static int asn1c_print_streams(arg_t *arg);
 static int asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
 static int asn1c_copy_over(arg_t *arg, char *path);
 static int identical_files(const char *fname1, const char *fname2);
+static int need_to_generate_pdu_collection(arg_t *arg);
 static int generate_pdu_collection_file(arg_t *arg);
 static int generate_preamble(arg_t *, FILE *, int optc, char **argv);
+static int include_type_to_pdu_collection(arg_t *arg);
+static void pdu_collection_print_unused_types(arg_t *arg);
+static const char *generate_pdu_C_definition(void);
 
 int
 asn1c_save_compiled_output(arg_t *arg, const char *datadir,
@@ -121,7 +125,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		}
 	}
 
-	if(arg->flags & A1C_PDU_AUTO) {
+	if(need_to_generate_pdu_collection(arg)) {
 		fprintf(mkf, "ASN_CONVERTER_SOURCES+=pdu_collection.c\n");
 		if(generate_pdu_collection_file(arg))
 			return -1;
@@ -135,7 +139,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		"# This file may be used as an input for make(3)\n"
 		"# Remove the lines below to convert it into a pure .am file\n"
 		"TARGET = progname\n"
-		"CFLAGS +=%s -I.\n"
+		"CFLAGS +=%s%s -I.\n"
 		"OBJS=${ASN_MODULE_SOURCES:.c=.o}"
 		  " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
 		"\nall: $(TARGET)\n"
@@ -150,7 +154,10 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		"\n\trm -f $(OBJS)\n"
 		"\nregen: regenerate-from-asn1-source\n"
 		"\nregenerate-from-asn1-source:\n\t"
-		, (arg->flags & A1C_PDU_AUTO) ? " -DASN_PDU_COLLECTION" : ""
+		, (arg->flags & A1C_PDU_TYPE)
+			? generate_pdu_C_definition() : ""
+		, need_to_generate_pdu_collection(arg)
+			? " -DASN_PDU_COLLECTION" : ""
 	);
 
 	for(i = 0; i < argc; i++)
@@ -483,9 +490,7 @@ generate_pdu_collection_file(arg_t *arg) {
 
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
-			if(arg->expr->_type_referenced
-			|| !asn1_lang_map[arg->expr->meta_type]
-				[arg->expr->expr_type].type_cb)
+			if(!include_type_to_pdu_collection(arg))
 				continue;
 			fprintf(fp, "extern struct asn_TYPE_descriptor_s "
 				"asn_DEF_%s;\n",
@@ -498,9 +503,7 @@ generate_pdu_collection_file(arg_t *arg) {
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		int mod_printed = 0;
 		TQ_FOR(arg->expr, &(mod->members), next) {
-			if(arg->expr->_type_referenced
-			|| !asn1_lang_map[arg->expr->meta_type]
-				[arg->expr->expr_type].type_cb)
+			if(!include_type_to_pdu_collection(arg))
 				continue;
 			if(!mod_printed++)
 			fprintf(fp, "\t/* From module %s in %s */\n",
@@ -513,9 +516,92 @@ generate_pdu_collection_file(arg_t *arg) {
 
 	fprintf(fp, "\t0\n};\n\n");
 
+	pdu_collection_print_unused_types(arg);
+
 	fclose(fp);
 	fprintf(stderr, "Generated pdu_collection.c\n");
 
 	return 0;
 }
 
+static struct PDUType {
+	char *typename;
+	int used;
+} *pduType;
+static int pduTypes;
+
+static const char *
+generate_pdu_C_definition(void) {
+	const char *src;
+	char *def;
+	char *dst;
+	if(pduTypes == 0) return "";
+	def = malloc(strlen(pduType[0].typename) + 20);
+	strcpy(def, " -DPDU=");
+	for(src = pduType[0].typename, dst = def + 7; *src; src++, dst++)
+		if((*dst = *src) == '-')
+			*dst = '_';
+	*dst = 0;
+	return def;
+}
+
+void
+asn1c__add_pdu_type(const char *ctypename) {
+	char *typename = strdup(ctypename);
+	assert(typename && *typename);
+
+	pduType = realloc(pduType, sizeof(pduType[0]) * (pduTypes + 1));
+	assert(pduType);
+	pduType[pduTypes].used = 0;
+	pduType[pduTypes].typename = typename;
+	pduTypes++;
+}
+
+static int
+asn1c__pdu_type_lookup(const char *typename) {
+	int i;
+	for(i = 0; i < pduTypes; i++) {
+		struct PDUType *pt = &pduType[i];
+		if(strcmp(pt->typename, typename) == 0) {
+			pt->used++;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int
+need_to_generate_pdu_collection(arg_t *arg) {
+	if(arg->flags & (A1C_PDU_ALL|A1C_PDU_AUTO))
+		return 1;
+	if(arg->flags & A1C_PDU_TYPE)
+		return (pduTypes > 1) ? 1 : 0;
+	return 0;
+}
+
+static void
+pdu_collection_print_unused_types(arg_t *arg) {
+	int i;
+	for(i = 0; i < pduTypes; i++) {
+		struct PDUType *pt = &pduType[i];
+		if(!pt->used) {
+			WARNING("Missing type specified in -pdu=%s",
+				pt->typename);
+		}
+	}
+}
+
+static int
+include_type_to_pdu_collection(arg_t *arg) {
+	if(!asn1_lang_map[arg->expr->meta_type]
+		[arg->expr->expr_type].type_cb)
+		return 0;
+
+	if((arg->flags & A1C_PDU_ALL)
+	|| ((arg->flags & A1C_PDU_AUTO) && !arg->expr->_type_referenced)
+	|| asn1c__pdu_type_lookup(arg->expr->Identifier)) {
+		return 1;
+	}
+
+	return 0;
+}

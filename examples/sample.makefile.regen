@@ -23,12 +23,14 @@ if test -z "$ASN1PDU"	\
 	exit
 fi
 
+CMDOPTS="-pdu=${ASN1PDU} ${ASN1CMDOPTS} ${ASN1MODULES}"
+
 if test -x ../../asn1c/asn1c ; then
   echo "Compiling ${ASN1MODULES} using local compiler"
-  ../../asn1c/asn1c -S ../../skeletons ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
+  ../../asn1c/asn1c -S ../../skeletons ${CMDOPTS} || exit $?
 else
   echo "Compiling ${ASN1MODULES} using system compiler"
-  asn1c ${ASN1CMDOPTS} ${ASN1MODULES} || exit $?
+  asn1c ${CMDOPTS} || exit $?
 fi
 
 if test ! -f Makefile.am.sample ; then
@@ -36,15 +38,14 @@ if test ! -f Makefile.am.sample ; then
 	exit 1
 fi
 
-ASN1DEFPDU=`echo "$ASN1PDU" | tr - _`
-CFLAGS="-DPDU=${ASN1DEFPDU}"
+EXTRA_CFLAGS=""
 if test -f config.h ; then
-	CFLAGS="-DHAVE_CONFIG_H $CFLAGS"
+	EXTRA_CFLAGS="-DHAVE_CONFIG_H $EXTRA_CFLAGS"
 fi
 
 set -x
 cat Makefile.am.sample						\
-	| sed -e "s/^CFLAGS += /CFLAGS += ${CFLAGS} /"		\
+	| sed -e "s/^CFLAGS += /CFLAGS += ${EXTRA_CFLAGS} /"	\
 	| sed -e "s/^all: /all: ${ASN1PDU}.c /"			\
 	| sed -e "s/progname/${PROGNAME}/"			\
 	> Makefile.$$

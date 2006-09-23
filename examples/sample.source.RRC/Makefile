@@ -4740,7 +4740,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = rrc-dump
-CFLAGS += -DHAVE_CONFIG_H -DPDU=DL_DCCH_Message -DASN_PDU_COLLECTION -I.
+CFLAGS += -DHAVE_CONFIG_H  -DPDU=DL_DCCH_Message -DASN_PDU_COLLECTION -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: DL-DCCH-Message.c $(TARGET)
@@ -4761,7 +4761,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -fcompound-names -pdu=auto -gen-PER ../rrc.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=DL-DCCH-Message -pdu=auto -fcompound-names -gen-PER ../rrc.asn1
 
 
 DL-DCCH-Message.c: ../sample.makefile.regen ../rrc.asn1
@@ -4770,7 +4770,7 @@ DL-DCCH-Message.c: ../sample.makefile.regen ../rrc.asn1
 	make
 
 regen-makefile:
-	ASN1CMDOPTS="-fcompound-names -pdu=auto -gen-PER" \
+	ASN1CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
 	ASN1MODULES="../rrc.asn1" \
 	ASN1PDU=DL-DCCH-Message \
 	PROGNAME=rrc-dump \

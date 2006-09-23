@@ -1,4 +1,8 @@
 
+0.9.22:	2006-Sep-22
+
+	* Added -pdu=all and -pdu=<type> switches to asn1c.
+
 0.9.21:	2006-Sep-17
 
 	* skeletons/standard-modules directory is now used for standard types.

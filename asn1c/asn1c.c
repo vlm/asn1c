@@ -123,12 +123,19 @@ main(int ac, char **av) {
 	case 'p':
 		if(strncmp(optarg, "du=", 3) == 0) {
 			char *pduname = optarg + 3;
-			if(strcmp(pduname, "auto")) {
-				fprintf(stderr, "-pdu=%s: expected -pdu=auto\n",
+			if(strcmp(pduname, "all") == 0) {
+				asn1_compiler_flags |= A1C_PDU_ALL;
+			} else if(strcmp(pduname, "auto") == 0) {
+				asn1_compiler_flags |= A1C_PDU_AUTO;
+			} else if(pduname[0] >= 'A' && pduname[0] <= 'Z') {
+				asn1c__add_pdu_type(pduname);
+				asn1_compiler_flags |= A1C_PDU_TYPE;
+			} else {
+				fprintf(stderr, "-pdu=%s"
+					": expected -pdu={all|auto|Type}\n",
 					pduname);
 				exit(EX_USAGE);
 			}
-			asn1_compiler_flags |= A1C_PDU_AUTO;
 		} else if(strcmp(optarg, "rint-class-matrix") == 0) {
 			asn1_printer_flags |= APF_PRINT_CLASS_MATRIX;
 		} else if(strcmp(optarg, "rint-constraints") == 0) {
@@ -456,7 +463,7 @@ usage(const char *av0) {
 "\n"
 
 "  -gen-PER              Generate PER support code\n"
-"  -pdu=auto             Generate PDU table (discover PDUs automatically)\n"
+"  -pdu={all|auto|Type}  Generate PDU table (discover PDUs automatically)\n"
 "\n"
 
 "  -print-class-matrix   Print out the collected object class matrix (debug)\n"

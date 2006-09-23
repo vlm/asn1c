@@ -4,7 +4,7 @@ asn1c \- ASN.1 Compiler
 .SH SYNOPSIS
 asn1c [\fB\-E\fR [\fB-F\fR] | \fB\-P\fR | \fB\-R\fR]
       [\fB\-S\fR\fIdir\fR] [\fB-X\fR]
-      [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR] [\fB\-gen-\fR\fIoption\fR] [\fB\-pdu=\fR\fIoption\fR]
+      [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR] [\fB\-gen-\fR\fIoption\fR] [\fB\-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}\fR]
       [\fB\-print-\fR\fIoption\fR]
       \fIinfile\fR...
 .SH DESCRIPTION
@@ -30,7 +30,7 @@ and other encoding rules.
 .TP
 \fICodecs Generation Options\fR
 .br
-.B \-gen-PER \-pdu=auto
+.B \-gen-PER \-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}
 .TP
 \fIOutput Options\fR
 .br
@@ -75,7 +75,7 @@ Enable ASN.1 syntax tree fixer debugging during the fixing stage.
 .B \-Wdebug-compiler
 Enable debugging during the actual compile time.
 .SH LANGUAGE OPTIONS
- .TP
+.TP
 .B \-fbless-SIZE
 Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which this
 constraint is normally prohibited by the standard. This is a violation of
@@ -119,8 +119,13 @@ Copy support files (skeletons) rather than symlink them.
 .B \-gen-PER
 Generate Packed Encoding Rules (PER) support code.
 .TP
-.B \-pdu=auto
-Generate PDU tables by discovering Protocol Data Units automatically.
+.B \-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}
+Create a PDU table for specified types, or discover Protocol Data Units
+automatically. In case of -pdu=\fBall\fR, all ASN.1 types defined in
+all modules will form a PDU table. In case of -pdu=\fBauto\fR, all types
+not referenced by any other type will form a PDU table.
+If \fIType\fR is an ASN.1 type identifier, it is added to a PDU table.
+The last form may be specified multiple times to add any number of PDUs.
 .SH OUTPUT OPTIONS
 .TP
 .B \-print-constraints
