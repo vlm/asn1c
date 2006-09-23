@@ -62,10 +62,12 @@ enum asn1c_flags {
 	 */
 	A1C_GEN_PER		= 0x1000,
 	/*
-	 * -pdu=auto
+	 * -pdu={all|auto|Type}
 	 * Generate PDU table
 	 */
-	A1C_PDU_AUTO		= 0x2000
+	A1C_PDU_ALL		= 0x2000,
+	A1C_PDU_AUTO		= 0x4000,
+	A1C_PDU_TYPE		= 0x8000
 };
 
 /*
@@ -73,5 +75,7 @@ enum asn1c_flags {
  */
 int asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags,
 	int argc, int optc, char **argv);
+
+void asn1c__add_pdu_type(const char *typename);
 
 #endif	/* ASN1_COMPILER_H */

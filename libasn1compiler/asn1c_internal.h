@@ -51,7 +51,6 @@ typedef struct arg_s {
 	struct compiler_streams *target;
 
 	asn1p_t		*asn;
-	//asn1p_module_t	*mod;
 	asn1p_expr_t	*expr;
 
 	int embed;
