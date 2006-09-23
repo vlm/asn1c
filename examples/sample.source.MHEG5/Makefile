@@ -474,7 +474,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -fcompound-names ../ISO13522-MHEG-5.asn
+	../../asn1c/asn1c -S ../../skeletons -pdu=InterchangedObject -fcompound-names ../ISO13522-MHEG-5.asn
 
 
 InterchangedObject.c: ../sample.makefile.regen ../ISO13522-MHEG-5.asn
