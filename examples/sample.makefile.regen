@@ -38,9 +38,9 @@ if test ! -f Makefile.am.sample ; then
 	exit 1
 fi
 
-EXTRA_CFLAGS=""
+EXTRA_CFLAGS="-DJUNKTEST"
 if test -f config.h ; then
-	EXTRA_CFLAGS="-DHAVE_CONFIG_H"
+	EXTRA_CFLAGS="-DHAVE_CONFIG_H ${EXTRA_CFLAGS}"
 fi
 
 set -x
@@ -64,7 +64,12 @@ set +x
 	echo "	PROGNAME=${PROGNAME} \\"
 	echo "	$0"
 	echo
-	echo 'check: ${TARGET}'
+	echo 'check: ${TARGET} check-ber check-xer check-per'
+	echo '	@echo ================'
+	echo '	@echo All tests passed'
+	echo '	@echo ================'
+	echo
+	echo 'check-ber:'
 	echo "	@if test -f sample-${ASN1PDU}-1.[db]er ; then \\"
 	echo "	for f in sample-${ASN1PDU}-*.[db]er; do \\"
 	echo '	for b in 1 17 33 980 8192; do \'
@@ -73,7 +78,12 @@ set +x
 	echo '	./${TARGET} -b $$b -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \'
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
+	echo '	echo "Test junking $$f (please wait)..."; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -iber -onull $$f || exit 2; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -iber -onull $$f || exit 2; \'
 	echo '	done; done; fi'
+	echo
+	echo 'check-xer:'
 	echo "	@if test -f sample-${ASN1PDU}-1.xer ; then \\"
 	echo "	for f in sample-${ASN1PDU}-*.xer; do \\"
 	echo '	for b in 1 17 33 980 8192; do \'
@@ -82,7 +92,12 @@ set +x
 	echo '	./${TARGET} -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \'
 	echo '	diff $$f ./.tmp.2.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
+	echo '	echo "Test junking $$f (please wait)..."; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -ixer -onull $$f || exit 2; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -ixer -onull $$f || exit 2; \'
 	echo '	done; done; fi'
+	echo
+	echo 'check-per:'
 	echo "	@if test -f sample-${ASN1PDU}-1.per ; then \\"
 	echo "	for f in sample-${ASN1PDU}-[1-9].per; do \\"
 	echo '	for b in 1 17 33 980 8192; do \'
@@ -92,6 +107,9 @@ set +x
 	echo '	./${TARGET} -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 2; \'
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[123].$$$$; \'
+	echo '	echo "Test junking $$f (please wait)..."; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 2; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 2; \'
 	echo '	done; done; fi'
 	echo "	@if test -f sample-${ASN1PDU}-1-padded.per ; then \\"
 	echo "	for f in sample-*-[1-9]-padded.per; do \\"
@@ -103,10 +121,10 @@ set +x
 	echo '	./${TARGET} -b $$b -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \'
 	echo '	diff $$f ./.tmp.1.$$$$ || exit 2; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
+	echo '	echo "Test junking $$f (please wait)..."; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -per-padded -iper -onull $$f || exit 2; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -per-padded -iper -onull $$f || exit 2; \'
 	echo '	done; done; fi'
-	echo '	@echo ================'
-	echo '	@echo All tests passed'
-	echo '	@echo ================'
 	echo
 	echo "distclean: clean"
 	echo '	rm -f $(ASN_MODULE_SOURCES)'
