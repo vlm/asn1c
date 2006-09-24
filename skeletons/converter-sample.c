@@ -62,6 +62,15 @@ static enum output_format {
 	OUT_NULL	/* -onull: No pretty-printing */
 } oform;	/* -o<format> */
 
+#ifdef	JUNKTEST		/* Enable -J <probability> */
+#define	JUNKOPT	"J:"
+static double opt_jprob;	/* Junk bit probability */
+static int    junk_failures;
+static void   junk_bytes_with_probability(uint8_t *, size_t, double prob);
+#else
+#define	JUNKOPT
+#endif
+
 /* Debug output function */
 static inline void
 DEBUG(const char *fmt, ...) {
@@ -89,7 +98,7 @@ main(int ac, char *av[]) {
 	/*
 	 * Pocess the command-line argments.
 	 */
-	while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:")) != -1)
+	while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:" JUNKOPT)) != -1)
 	switch(ch) {
 	case 'i':
 		if(optarg[0] == 'b') { iform = INP_BER; break; }
@@ -165,6 +174,17 @@ main(int ac, char *av[]) {
 			exit(EX_UNAVAILABLE);
 		}
 		break;
+#ifdef	JUNKTEST
+	case 'J':
+		opt_jprob = strtod(optarg, 0);
+		if(opt_jprob <= 0.0 || opt_jprob > 1.0) {
+			fprintf(stderr,
+				"-J %s: Probability range 0..1 expected \n",
+				optarg);
+			exit(EX_UNAVAILABLE);
+		}
+		break;
+#endif	/* JUNKTEST */
 	case 'h':
 	default:
 		fprintf(stderr, "Usage: %s [options] <data.ber> ...\n", av[0]);
@@ -200,6 +220,9 @@ main(int ac, char *av[]) {
 		"  -d           Enable debugging (-dd is even better)\n"
 		"  -n <num>     Process files <num> times\n"
 		"  -s <size>    Set the stack usage limit (default is %d)\n"
+#ifdef	JUNKTEST
+		"  -J <prob>    Set random junk test bit garbaging probability\n"
+#endif
 		, (long)suggested_bufsize, _ASN_DEFAULT_STACK_MAX);
 		exit(EX_USAGE);
 	}
@@ -258,6 +281,9 @@ main(int ac, char *av[]) {
 
 		switch(oform) {
 		case OUT_NULL:
+#ifdef	JUNKTEST
+		    if(opt_jprob == 0.0)
+#endif
 			fprintf(stderr, "%s: decoded successfully\n", name);
 			break;
 		case OUT_TEXT:	/* -otext */
@@ -301,6 +327,13 @@ main(int ac, char *av[]) {
 	  }
 	}
 
+#ifdef	JUNKTEST
+	if(opt_jprob > 0.0) {
+		fprintf(stderr, "Junked %f OK (%d/%d)\n",
+			opt_jprob, junk_failures, number_of_iterations);
+	}
+#endif	/* JUNKTEST */
+
 	return 0;
 }
 
@@ -338,12 +371,13 @@ buffer_dump() {
 			((*p >> 0) & 1) ? '1' : '0');
 	}
 	if(DynamicBuffer.unbits) {
-		int shift;
+		unsigned int shift;
 		fprintf(stderr, " ");
 		for(shift = 7; shift >= DynamicBuffer.unbits; shift--)
 			fprintf(stderr, "%c", ((*p >> shift) & 1) ? '1' : '0');
-		fprintf(stderr, " %d:%d\n",
-			DynamicBuffer.length - 1, 8 - DynamicBuffer.unbits);
+		fprintf(stderr, " %ld:%ld\n",
+			(long)DynamicBuffer.length - 1,
+			(long)8 - DynamicBuffer.unbits);
 	} else {
 		fprintf(stderr, " %d\n", DynamicBuffer.length);
 	}
@@ -482,7 +516,7 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
 			DynamicBuffer.data + DynamicBuffer.offset,
 			DynamicBuffer.length);
 		FREEMEM(DynamicBuffer.data);
-		DynamicBuffer.data = (char *)p;
+		DynamicBuffer.data = (uint8_t *)p;
 		DynamicBuffer.offset = 0;
 		DynamicBuffer.allocated = newsize;
 		DynamicBuffer.nreallocs++;
@@ -536,7 +570,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 
 	/* prepare the file buffer */
 	if(fbuf_size != suggested_bufsize) {
-		fbuf = (char *)REALLOC(fbuf, suggested_bufsize);
+		fbuf = (uint8_t *)REALLOC(fbuf, suggested_bufsize);
 		if(!fbuf) {
 			perror("realloc()");
 			exit(EX_OSERR);
@@ -564,9 +598,9 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 		|| feof(file) == 0
 		|| (tolerate_eof && DynamicBuffer.length)
 	    ;) {
-		int    ecbits = 0;	/* Extra consumed bits in case of PER */
-		char  *i_bptr;
-		size_t i_size;
+		int      ecbits = 0;	/* Extra consumed bits in case of PER */
+		uint8_t *i_bptr;
+		size_t   i_size;
 
 		/*
 		 * Copy the data over, or use the original buffer.
@@ -583,6 +617,10 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 
 		DEBUG("Decoding %ld bytes", (long)i_size);
 
+#ifdef	JUNKTEST
+		junk_bytes_with_probability(i_bptr, i_size, opt_jprob);
+#endif
+
 		switch(iform) {
 		case INP_BER:
 			rval = ber_decode(opt_codec_ctx, pduType,
@@ -596,12 +634,28 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 			rval = uper_decode(opt_codec_ctx, pduType,
 				(void **)&structure, i_bptr, i_size, 0,
 				DynamicBuffer.unbits);
-			ecbits = rval.consumed % 8;	/* Extra bits */
-			rval.consumed /= 8; /* Convert to value in bytes! */
-			/* Check if input is byte-padded at the end */
-			if(opt_ippad && ecbits && rval.code == RC_OK) {
-				rval.consumed++;
-				ecbits = 0;
+			/* PER requires returns number of bits, but a catch! */
+			switch(rval.code) {
+			case RC_OK:
+				/* Check if input is byte-padded at the end */
+				if(opt_ippad && (rval.consumed % 8)) {
+					rval.consumed /= 8;
+					rval.consumed++;
+					ecbits = 0;
+					break;
+				}
+				/* Fall through */
+			case RC_FAIL:
+				ecbits = rval.consumed % 8;	/* Extra bits */
+				rval.consumed /= 8; /* Convert into bytes! */
+				break;
+			case RC_WMORE:
+				/* PER does not support restartability */
+				ASN_STRUCT_FREE(*pduType, structure);
+				structure = 0;
+				rval.consumed = 0;
+				/* Continue accumulating data */
+				break;
 			}
 			break;
 		}
@@ -657,7 +711,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 		break;
 	}
 
-	/* Clean up partially decoded structure */
+	DEBUG("Clean up partially decoded structure");
 	ASN_STRUCT_FREE(*pduType, structure);
 
 	new_offset = DynamicBuffer.bytes_shifted + DynamicBuffer.offset;
@@ -670,6 +724,17 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 	|| DynamicBuffer.length
 	|| new_offset - old_offset > ((iform == INP_XER)?sizeof("\r\n")-1:0)
 	) {
+
+#ifdef	JUNKTEST
+		/*
+		 * Nothing's wrong with being unable to decode junk.
+		 * Simulate EOF.
+		 */
+		junk_failures++;
+		errno = 0;
+		return 0;
+#endif
+
 		DEBUG("ofp %d, no=%ld, oo=%ld, dbl=%ld",
 			on_first_pdu, (long)new_offset, (long)old_offset,
 			(long)DynamicBuffer.length);
@@ -723,3 +788,39 @@ static char *argument_to_name(char *av[], int idx) {
 		? "standard input"
 		: av[idx];
 }
+
+#ifdef	JUNKTEST
+/*
+ * Fill bytes with some garbage with specified probability (more or less).
+ */
+static void
+junk_bytes_with_probability(uint8_t *buf, size_t size, double prob) {
+	static int junkmode;
+	uint8_t *ptr;
+	uint8_t *end;
+	if(opt_jprob <= 0.0) return;
+	for(ptr = buf, end = ptr + size; ptr < end; ptr++) {
+		int byte = *ptr;
+		if(junkmode++ & 1) {
+			if((((double)random() / RAND_MAX) < prob))
+				byte = random() & 0xff;
+		} else {
+#define	BPROB(b)	((((double)random() / RAND_MAX) < prob) ? b : 0)
+			byte ^= BPROB(0x80);
+			byte ^= BPROB(0x40);
+			byte ^= BPROB(0x20);
+			byte ^= BPROB(0x10);
+			byte ^= BPROB(0x08);
+			byte ^= BPROB(0x04);
+			byte ^= BPROB(0x02);
+			byte ^= BPROB(0x01);
+		}
+		if(byte != *ptr) {
+			DEBUG("Junk buf[%d] %02x -> %02x",
+				ptr - buf, *ptr, byte);
+			*ptr = byte;
+		}
+	}
+}
+#endif	/* JUNKTEST */
+

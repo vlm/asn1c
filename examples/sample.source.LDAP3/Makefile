@@ -163,7 +163,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = ldap3dump
-CFLAGS += -DHAVE_CONFIG_H -DPDU=LDAPMessage -I.
+CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -DPDU=LDAPMessage -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: LDAPMessage.c $(TARGET)
@@ -199,7 +199,12 @@ regen-makefile:
 	PROGNAME=ldap3dump \
 	../sample.makefile.regen
 
-check: ${TARGET}
+check: ${TARGET} check-ber check-xer check-per
+	@echo ================
+	@echo All tests passed
+	@echo ================
+
+check-ber:
 	@if test -f sample-LDAPMessage-1.[db]er ; then \
 	for f in sample-LDAPMessage-*.[db]er; do \
 	for b in 1 17 33 980 8192; do \
@@ -208,7 +213,12 @@ check: ${TARGET}
 	./${TARGET} -b $$b -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
 	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 2; \
 	rm -f ./.tmp.[12].$$$$; \
+	echo "Test junking $$f (please wait)..."; \
+	./${TARGET} -J0.0001 -n 1000 -b $$b -iber -onull $$f || exit 2; \
+	./${TARGET} -J0.001 -n 1000 -b $$b -iber -onull $$f || exit 2; \
 	done; done; fi
+
+check-xer:
 	@if test -f sample-LDAPMessage-1.xer ; then \
 	for f in sample-LDAPMessage-*.xer; do \
 	for b in 1 17 33 980 8192; do \
@@ -217,7 +227,12 @@ check: ${TARGET}
 	./${TARGET} -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
 	diff $$f ./.tmp.2.$$$$ || exit 2; \
 	rm -f ./.tmp.[12].$$$$; \
+	echo "Test junking $$f (please wait)..."; \
+	./${TARGET} -J0.0001 -n 1000 -b $$b -ixer -onull $$f || exit 2; \
+	./${TARGET} -J0.001 -n 1000 -b $$b -ixer -onull $$f || exit 2; \
 	done; done; fi
+
+check-per:
 	@if test -f sample-LDAPMessage-1.per ; then \
 	for f in sample-LDAPMessage-[1-9].per; do \
 	for b in 1 17 33 980 8192; do \
@@ -227,6 +242,9 @@ check: ${TARGET}
 	./${TARGET} -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 2; \
 	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 2; \
 	rm -f ./.tmp.[123].$$$$; \
+	echo "Test junking $$f (please wait)..."; \
+	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 2; \
+	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 2; \
 	done; done; fi
 	@if test -f sample-LDAPMessage-1-padded.per ; then \
 	for f in sample-*-[1-9]-padded.per; do \
@@ -238,10 +256,10 @@ check: ${TARGET}
 	./${TARGET} -b $$b -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
 	diff $$f ./.tmp.1.$$$$ || exit 2; \
 	rm -f ./.tmp.[12].$$$$; \
+	echo "Test junking $$f (please wait)..."; \
+	./${TARGET} -J0.0001 -n 1000 -b $$b -per-padded -iper -onull $$f || exit 2; \
+	./${TARGET} -J0.001 -n 1000 -b $$b -per-padded -iper -onull $$f || exit 2; \
 	done; done; fi
-	@echo ================
-	@echo All tests passed
-	@echo ================
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES)
