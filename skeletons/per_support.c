@@ -193,8 +193,8 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 
 	if(obits <= 0 || obits >= 32) return obits ? -1 : 0;
 
-	ASN_DEBUG("[PER put %d bits to %p+%d bits]",
-			obits, po->buffer, po->nboff);
+	ASN_DEBUG("[PER put %d bits %x to %p+%d bits]",
+			obits, bits, po->buffer, po->nboff);
 
 	/*
 	 * Normalize position indicator.
@@ -210,7 +210,9 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	 */
 	if(po->nboff + obits > po->nbits) {
 		int complete_bytes = (po->buffer - po->tmpspace);
-		if(po->outper(po->buffer, complete_bytes, po->op_key) < 0)
+		ASN_DEBUG("[PER output %d complete + %d]",
+			complete_bytes, po->flushed_bytes);
+		if(po->outper(po->tmpspace, complete_bytes, po->op_key) < 0)
 			return -1;
 		if(po->nboff)
 			po->tmpspace[0] = po->buffer[0];
