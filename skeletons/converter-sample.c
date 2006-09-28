@@ -730,9 +730,11 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 		 * Nothing's wrong with being unable to decode junk.
 		 * Simulate EOF.
 		 */
-		junk_failures++;
-		errno = 0;
-		return 0;
+		if(opt_jprob != 0.0) {
+			junk_failures++;
+			errno = 0;
+			return 0;
+		}
 #endif
 
 		DEBUG("ofp %d, no=%ld, oo=%ld, dbl=%ld",
