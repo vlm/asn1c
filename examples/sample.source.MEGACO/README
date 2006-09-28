@@ -6,12 +6,12 @@ The MEGACO (Media Gateway Control Protocol) PDU decoder.
 Invoking `make` will compile the ASN.1 specifications from the rfc3525.txt
 in the above directory.
 
-megacoDump USAGE
-==============
+megaco-dump USAGE
+=================
 
-	./megacoDump MegacoMessage.ber	# Print as XML (BASIC-XER)
+	./megaco-dump MegacoMessage.ber	# Print as XML (BASIC-XER)
 
 The full list of recognized command line options may be obtained with
 
-	> ./megacoDump -h
+	> ./megaco-dump -h
 
