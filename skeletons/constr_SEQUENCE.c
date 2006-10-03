@@ -346,7 +346,8 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			 * or an extension (...),
 			 * or an end of the indefinite-length structure.
 			 */
-			if(!IN_EXTENSION_GROUP(specs, edx)) {
+			if(!IN_EXTENSION_GROUP(specs,
+				edx + elements[edx].optional)) {
 				ASN_DEBUG("Unexpected tag %s (at %d)",
 					ber_tlv_tag_string(tlv_tag), edx);
 				ASN_DEBUG("Expected tag %s (%s)%s",
@@ -358,7 +359,10 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			} else {
 				/* Skip this tag */
 				ssize_t skip;
+				edx += elements[edx].optional;
 
+				ASN_DEBUG("Skipping unexpected %s (at %d)",
+					ber_tlv_tag_string(tlv_tag), edx);
 				skip = ber_skip_length(opt_codec_ctx,
 					BER_TLV_CONSTRUCTED(ptr),
 					(const char *)ptr + tag_len,
