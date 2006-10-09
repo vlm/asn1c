@@ -436,6 +436,10 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 				b->Identifier,
 				b->_lineno
 			);
+			FATAL("Consider adding AUTOMATIC TAGS "
+				"after module %s DEFINITIONS, "
+				"or manually tag components",
+				arg->expr->module->ModuleName);
 			DEBUG("Tags: %s %s  vs.  %s %s",
 				asn1p_tag2string(&ta, tagbuf[0]),
 				a->Identifier,

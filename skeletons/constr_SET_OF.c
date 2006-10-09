@@ -921,7 +921,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				ASN_DEBUG("Failed to add element into %s",
 					td->name);
 				/* Fall through */
-				rv.code == RC_FAIL;
+				rv.code = RC_FAIL;
 			} else {
 				ASN_DEBUG("Failed decoding %s of %s (SET OF)",
 					elm->type->name, td->name);

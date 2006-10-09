@@ -165,7 +165,8 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)	\
 	check-*.c*		\
 	data-62			\
-	data-70
+	data-70			\
+	data-119
 
 all: all-am
 

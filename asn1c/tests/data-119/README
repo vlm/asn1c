@@ -1,14 +1,13 @@
 Mode of operation:
 
-	Each of the *.in files is XER-decoded, then converted into DER,
-	then decoded back from DER, then encoded into XER again,
+	Each of the *.in files is XER-decoded, then converted into PER,
+	then decoded back from PER, then encoded into XER again,
 	and finally compared to the original encoding.
 
 Naming conventions:
 
 *-B.in	-	The file is intentionally broken
-*-D.in	-	Reconstructing should yield different data
+*-P.in	-	Is not PER compatible, PER encoding must fail.
 *-E.in  -	CXER reconstruction should yield byte-wise identical data.
-*-X.in  -	CXER reconstruction should yield non-identical data.
 
 Otherwise, a reconstructed buffer should loosely match the original.

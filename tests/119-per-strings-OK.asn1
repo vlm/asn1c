@@ -1,0 +1,38 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .119
+
+ModulePERStrings
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 119 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	PDU ::= SEQUENCE {
+		many	SEQUENCE OF PDU			OPTIONAL,
+		ia5	IA5String			OPTIONAL,
+		ia5-c	IA5String (FROM("A".."Z"))	OPTIONAL,
+		ia5-ce	IA5String (FROM("A".."Z",...))	OPTIONAL,
+		ia5-ir	IA5String (FROM("A".."B"|"X".."Z")) OPTIONAL,
+		vs	VisibleString			OPTIONAL,
+		vs-c	VisibleString (FROM("A".."Z"))	OPTIONAL,
+		vs-ce	VisibleString (FROM("A".."Z",...)) OPTIONAL,
+		vs-ir	VisibleString (FROM("A".."B"|"X".."Z")) OPTIONAL,
+		pr	PrintableString			OPTIONAL,
+		pr-c	PrintableString (FROM("A".."Z")) OPTIONAL,
+		pr-ir	PrintableString (FROM("A".."B"|"X".."Z")) OPTIONAL,
+		ns	NumericString			OPTIONAL,
+		ns-c	NumericString (FROM("5".."9"))	OPTIONAL,
+		ns-ce	NumericString (FROM("5".."9",...)) OPTIONAL,
+		ns-ir	NumericString (FROM("1"|"9")) OPTIONAL,
+		ut-c	UTF8String (SIZE(6))		OPTIONAL,
+		ut-ce	UTF8String (SIZE(6,...))	OPTIONAL,
+		ut-ir	UTF8String (FROM("A"|"Z"))	OPTIONAL,
+		real	REAL				OPTIONAL,
+		oid	OBJECT IDENTIFIER		OPTIONAL
+	}
+
+END

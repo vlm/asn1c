@@ -316,7 +316,8 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		}
 		OUT("};\n");
 
-		if((arg->flags & A1C_GEN_PER)) {
+		if((arg->flags & A1C_GEN_PER)
+		&& (etype & ASN_STRING_KM_MASK)) {
 		    int c;
 		    OUT("static int permitted_alphabet_code2value_%d[%d] = {\n",
 			arg->expr->_type_unique_index, cardinal);
@@ -328,6 +329,8 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		    }
 		    OUT("};\n");
 		    OUT("\n");
+		    DEBUG("code2value map gen for %s", arg->expr->Identifier);
+		    arg->expr->_mark |= TM_PERFROMCT;
 		}
 
 		OUT("\n");

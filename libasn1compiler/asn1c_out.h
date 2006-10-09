@@ -22,6 +22,7 @@ typedef struct compiler_streams {
 		OT_POST_INCLUDE,/* #include after type definition */
 		OT_CTABLES,	/* Constraint tables */
 		OT_CODE,	/* Some code */
+		OT_CTDEFS,	/* Constraint definitions */
 		OT_STAT_DEFS,	/* Static definitions */
 		OT_MAX
 	} target;
@@ -34,7 +35,7 @@ typedef struct compiler_streams {
 } compiler_streams_t;
 
 static char *_compiler_stream2str[] __attribute__ ((unused))
-    = { "IGNORE", "INCLUDES", "DEPS", "FWD-DECLS", "TYPE-DECLS", "FUNC-DECLS", "POST-INCLUDE", "CTABLES", "CODE", "STAT-DEFS" };
+    = { "IGNORE", "INCLUDES", "DEPS", "FWD-DECLS", "TYPE-DECLS", "FUNC-DECLS", "POST-INCLUDE", "CTABLES", "CODE", "CTDEFS", "STAT-DEFS" };
 
 int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 

@@ -1,9 +1,30 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2006 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
 #include <PrintableString.h>
+
+/*
+ * ASN.1:1984 (X.409)
+ */
+static int _PrintableString_alphabet[256] = {
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 0, 5, 6, 7, 8, 9,	/* .      '() +,-./ */
+10,11,12,13,14,15,16,17,18,19,20, 0, 0,21, 0,22,	/* 0123456789:  = ? */
+ 0,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,	/*  ABCDEFGHIJKLMNO */
+38,39,40,41,42,43,44,45,46,47,48, 0, 0, 0, 0, 0,	/* PQRSTUVWXYZ      */
+ 0,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,	/*  abcdefghijklmno */
+64,65,66,67,68,69,70,71,72,73,74, 0, 0, 0, 0, 0,	/* pqrstuvwxyz      */
+};
+static int _PrintableString_code2value[74] = { 
+32,39,40,41,43,44,45,46,47,48,49,50,51,52,53,54,
+55,56,57,58,61,63,65,66,67,68,69,70,71,72,73,74,
+75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,
+97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,
+113,114,115,116,117,118,119,120,121,122};
 
 /*
  * PrintableString basic type description.
@@ -11,6 +32,20 @@
 static ber_tlv_tag_t asn_DEF_PrintableString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (19 << 2)),	/* [UNIVERSAL 19] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
+};
+static int asn_DEF_PrintableString_v2c(unsigned int value) {
+	return _PrintableString_alphabet[value > 255 ? 0 : value] - 1;
+}
+static int asn_DEF_PrintableString_c2v(unsigned int code) {
+	if(code < 74)
+		return _PrintableString_code2value[code];
+	return -1;
+}
+static asn_per_constraints_t asn_DEF_PrintableString_constraints = {
+	{ APC_CONSTRAINED, 4, 4, 0x20, 0x39 },	/* Value */
+	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
+	asn_DEF_PrintableString_v2c,
+	asn_DEF_PrintableString_c2v
 };
 asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	"PrintableString",
@@ -22,7 +57,8 @@ asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_PrintableString_tags,
 	sizeof(asn_DEF_PrintableString_tags)
@@ -30,33 +66,11 @@ asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	asn_DEF_PrintableString_tags,
 	sizeof(asn_DEF_PrintableString_tags)
 	  / sizeof(asn_DEF_PrintableString_tags[0]),
-	0,	/* No PER visible constraints */
+	&asn_DEF_PrintableString_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
-
-/*
- * ASN.1:1984 (X.409)
- */
-static int _PrintableString_alphabet[256] = {
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 	/*               ' */
-0x41, 0x42, 0x00, 0x43, 0x44, 0x45, 0x46, 0x47, 	/* ( )   + , - . / */
-0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 	/* 0 1 2 3 4 5 6 7 */
-0x3d, 0x3e, 0x48, 0x00, 0x00, 0x49, 0x00, 0x4a, 	/* 8 9 :     =   ? */
-0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 	/*   A B C D E F G */
-0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 	/* H I J K L M N O */
-0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 	/* P Q R S T U V W */
-0x18, 0x19, 0x1a, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* X Y Z           */
-0x00, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 	/*   a b c d e f g */
-0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 	/* h i j k l m n o */
-0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 	/* p q r s t u v w */
-0x32, 0x33, 0x34, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* x y z           */
-};
 
 int
 PrintableString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

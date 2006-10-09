@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -12,6 +12,31 @@ static ber_tlv_tag_t asn_DEF_NumericString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (18 << 2)),	/* [UNIVERSAL 18] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
+static int asn_DEF_NumericString_v2c(unsigned int value) {
+	switch(value) {
+	case 0x20: return 0;
+	case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
+	case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+		return value - (0x30 - 1);
+	}
+	return -1;
+}
+static int asn_DEF_NumericString_c2v(unsigned int code) {
+	if(code > 0) {
+		if(code <= 10)
+			return code + (0x30 - 1);
+		else
+			return -1;
+	} else {
+		return 0x20;
+	}
+}
+static asn_per_constraints_t asn_DEF_NumericString_constraints = {
+	{ APC_CONSTRAINED, 4, 4, 0x20, 0x39 },	/* Value */
+	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
+	asn_DEF_NumericString_v2c,
+	asn_DEF_NumericString_c2v
+};
 asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	"NumericString",
 	"NumericString",
@@ -22,7 +47,8 @@ asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)
@@ -30,7 +56,7 @@ asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)
 	  / sizeof(asn_DEF_NumericString_tags[0]),
-	0,	/* No PER visible constraints */
+	&asn_DEF_NumericString_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

@@ -5,6 +5,7 @@
  */
 #include <asn_internal.h>
 #include <RELATIVE-OID.h>
+#include <OCTET_STRING.h>
 #include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */
 #include <limits.h>	/* for CHAR_BIT */
 #include <errno.h>
@@ -25,7 +26,8 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	der_encode_primitive,
 	RELATIVE_OID_decode_xer,
 	RELATIVE_OID_encode_xer,
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_RELATIVE_OID_tags,
 	sizeof(asn_DEF_RELATIVE_OID_tags)
