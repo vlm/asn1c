@@ -1893,10 +1893,12 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	asn1cnst_range_t *range;
 	asn1p_expr_type_e etype;
 
+	etype = expr_get_type(arg, expr);
+
 	if((arg->flags & A1C_GEN_PER)
 	&& (expr->constraints
-		|| expr->expr_type == ASN_BASIC_ENUMERATED
-		|| expr->expr_type == ASN_CONSTR_CHOICE)
+		|| etype == ASN_BASIC_ENUMERATED
+		|| etype == ASN_CONSTR_CHOICE)
 	) {
 		/* Fall through */
 	} else {
@@ -1908,8 +1910,6 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	OUT("static asn_per_constraints_t "
 		"asn_PER_%s_%s_constr_%d = {\n",
 		pfx, MKID(expr), expr->_type_unique_index);
-
-	etype = expr_get_type(arg, expr);
 
 	INDENT(+1);
 
@@ -2193,9 +2193,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	if(C99_MODE) OUT(".per_constraints = ");
 	if(arg->flags & A1C_GEN_PER) {
-		if(expr->constraints
-		|| expr->expr_type == ASN_BASIC_ENUMERATED
-		|| expr->expr_type == ASN_CONSTR_CHOICE) {
+		if(expr->constraints) {
 			OUT("&asn_PER_memb_%s_constr_%d,\n",
 				MKID(expr),
 				expr->_type_unique_index);
