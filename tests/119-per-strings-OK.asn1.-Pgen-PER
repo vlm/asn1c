@@ -1,0 +1,1053 @@
+
+/*** <<< INCLUDES [PDU] >>> ***/
+
+#include <IA5String.h>
+#include <VisibleString.h>
+#include <PrintableString.h>
+#include <NumericString.h>
+#include <UTF8String.h>
+#include <REAL.h>
+#include <OBJECT_IDENTIFIER.h>
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE_OF.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< FWD-DECLS [PDU] >>> ***/
+
+struct PDU;
+
+/*** <<< TYPE-DECLS [PDU] >>> ***/
+
+typedef struct PDU {
+	struct many {
+		A_SEQUENCE_OF(struct PDU) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} *many;
+	IA5String_t	*ia5	/* OPTIONAL */;
+	IA5String_t	*ia5_c	/* OPTIONAL */;
+	IA5String_t	*ia5_ce	/* OPTIONAL */;
+	IA5String_t	*ia5_ir	/* OPTIONAL */;
+	VisibleString_t	*vs	/* OPTIONAL */;
+	VisibleString_t	*vs_c	/* OPTIONAL */;
+	VisibleString_t	*vs_ce	/* OPTIONAL */;
+	VisibleString_t	*vs_ir	/* OPTIONAL */;
+	PrintableString_t	*pr	/* OPTIONAL */;
+	PrintableString_t	*pr_c	/* OPTIONAL */;
+	PrintableString_t	*pr_ir	/* OPTIONAL */;
+	NumericString_t	*ns	/* OPTIONAL */;
+	NumericString_t	*ns_c	/* OPTIONAL */;
+	NumericString_t	*ns_ce	/* OPTIONAL */;
+	NumericString_t	*ns_ir	/* OPTIONAL */;
+	UTF8String_t	*ut_c	/* OPTIONAL */;
+	UTF8String_t	*ut_ce	/* OPTIONAL */;
+	UTF8String_t	*ut_ir	/* OPTIONAL */;
+	REAL_t	*real	/* OPTIONAL */;
+	OBJECT_IDENTIFIER_t	*oid	/* OPTIONAL */;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} PDU_t;
+
+/*** <<< FUNC-DECLS [PDU] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_PDU;
+
+/*** <<< POST-INCLUDE [PDU] >>> ***/
+
+#include "PDU.h"
+
+/*** <<< CTABLES [PDU] >>> ***/
+
+static int check_permitted_alphabet_5(const void *sptr) {
+	/* The underlying type is IA5String */
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 65 && cv <= 90)) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_6(const void *sptr) {
+	/* The underlying type is IA5String */
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 65 && cv <= 90)) return -1;
+	}
+	return 0;
+}
+
+static int permitted_alphabet_table_7[256] = {
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
+ 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
+};
+static int permitted_alphabet_code2value_7[5] = {
+65,66,88,89,90,};
+
+
+static int check_permitted_alphabet_7(const void *sptr) {
+	int *table = permitted_alphabet_table_7;
+	/* The underlying type is IA5String */
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!table[cv]) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_9(const void *sptr) {
+	/* The underlying type is VisibleString */
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 65 && cv <= 90)) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_10(const void *sptr) {
+	/* The underlying type is VisibleString */
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 65 && cv <= 90)) return -1;
+	}
+	return 0;
+}
+
+static int permitted_alphabet_table_11[256] = {
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
+ 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
+};
+static int permitted_alphabet_code2value_11[5] = {
+65,66,88,89,90,};
+
+
+static int check_permitted_alphabet_11(const void *sptr) {
+	int *table = permitted_alphabet_table_11;
+	/* The underlying type is VisibleString */
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!table[cv]) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_13(const void *sptr) {
+	/* The underlying type is PrintableString */
+	const PrintableString_t *st = (const PrintableString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 65 && cv <= 90)) return -1;
+	}
+	return 0;
+}
+
+static int permitted_alphabet_table_14[256] = {
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
+ 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
+};
+static int permitted_alphabet_code2value_14[5] = {
+65,66,88,89,90,};
+
+
+static int check_permitted_alphabet_14(const void *sptr) {
+	int *table = permitted_alphabet_table_14;
+	/* The underlying type is PrintableString */
+	const PrintableString_t *st = (const PrintableString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!table[cv]) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_16(const void *sptr) {
+	/* The underlying type is NumericString */
+	const NumericString_t *st = (const NumericString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 53 && cv <= 57)) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_17(const void *sptr) {
+	/* The underlying type is NumericString */
+	const NumericString_t *st = (const NumericString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv >= 53 && cv <= 57)) return -1;
+	}
+	return 0;
+}
+
+static int permitted_alphabet_table_18[256] = {
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0,	/*  1       9       */
+};
+static int permitted_alphabet_code2value_18[2] = {
+49,57,};
+
+
+static int check_permitted_alphabet_18(const void *sptr) {
+	int *table = permitted_alphabet_table_18;
+	/* The underlying type is NumericString */
+	const NumericString_t *st = (const NumericString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!table[cv]) return -1;
+	}
+	return 0;
+}
+
+static int permitted_alphabet_table_21[128] = {
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
+ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  A               */
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,	/*           Z      */
+};
+
+static int check_permitted_alphabet_21(const void *sptr) {
+	int *table = permitted_alphabet_table_21;
+	/* The underlying type is UTF8String */
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(cv >= 0x80) return -1;
+		if(!table[cv]) return -1;
+	}
+	return 0;
+}
+
+
+/*** <<< CODE [PDU] >>> ***/
+
+static int
+memb_ia5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_5(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_ia5_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_6(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_ia5_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_7(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int asn_PER_MAP_ia5_ir_7_v2c(unsigned int value) {
+	if(value >= sizeof(permitted_alphabet_table_7)/sizeof(permitted_alphabet_table_7[0]))
+		return -1;
+	return permitted_alphabet_table_7[value] - 1;
+}
+static int asn_PER_MAP_ia5_ir_7_c2v(unsigned int code) {
+	if(code >= sizeof(permitted_alphabet_code2value_7)/sizeof(permitted_alphabet_code2value_7[0]))
+		return -1;
+	return permitted_alphabet_code2value_7[code];
+}
+static int
+memb_vs_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_9(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_vs_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_10(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_vs_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const VisibleString_t *st = (const VisibleString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_11(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int asn_PER_MAP_vs_ir_11_v2c(unsigned int value) {
+	if(value >= sizeof(permitted_alphabet_table_11)/sizeof(permitted_alphabet_table_11[0]))
+		return -1;
+	return permitted_alphabet_table_11[value] - 1;
+}
+static int asn_PER_MAP_vs_ir_11_c2v(unsigned int code) {
+	if(code >= sizeof(permitted_alphabet_code2value_11)/sizeof(permitted_alphabet_code2value_11[0]))
+		return -1;
+	return permitted_alphabet_code2value_11[code];
+}
+static int
+memb_pr_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const PrintableString_t *st = (const PrintableString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_13(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_pr_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const PrintableString_t *st = (const PrintableString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_14(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int asn_PER_MAP_pr_ir_14_v2c(unsigned int value) {
+	if(value >= sizeof(permitted_alphabet_table_14)/sizeof(permitted_alphabet_table_14[0]))
+		return -1;
+	return permitted_alphabet_table_14[value] - 1;
+}
+static int asn_PER_MAP_pr_ir_14_c2v(unsigned int code) {
+	if(code >= sizeof(permitted_alphabet_code2value_14)/sizeof(permitted_alphabet_code2value_14[0]))
+		return -1;
+	return permitted_alphabet_code2value_14[code];
+}
+static int
+memb_ns_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const NumericString_t *st = (const NumericString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_16(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_ns_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const NumericString_t *st = (const NumericString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_17(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_ns_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const NumericString_t *st = (const NumericString_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_18(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int asn_PER_MAP_ns_ir_18_v2c(unsigned int value) {
+	if(value >= sizeof(permitted_alphabet_table_18)/sizeof(permitted_alphabet_table_18[0]))
+		return -1;
+	return permitted_alphabet_table_18[value] - 1;
+}
+static int asn_PER_MAP_ns_ir_18_c2v(unsigned int code) {
+	if(code >= sizeof(permitted_alphabet_code2value_18)/sizeof(permitted_alphabet_code2value_18[0]))
+		return -1;
+	return permitted_alphabet_code2value_18[code];
+}
+static int
+memb_ut_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = UTF8String_length(st);
+	if((ssize_t)size < 0) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: UTF-8: broken encoding (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((size == 6)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_ut_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = UTF8String_length(st);
+	if((ssize_t)size < 0) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: UTF-8: broken encoding (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((size == 6)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_ut_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(!check_permitted_alphabet_21(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< CTDEFS [PDU] >>> ***/
+
+static asn_per_constraints_t asn_PER_memb_ia5_c_constr_5 = {
+	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	0, 0	/* No PER character map necessary */
+};
+static asn_per_constraints_t asn_PER_memb_ia5_ce_constr_6 = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	0, 0	/* No PER character map necessary */
+};
+static asn_per_constraints_t asn_PER_memb_ia5_ir_constr_7 = {
+	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	asn_PER_MAP_ia5_ir_7_v2c,	/* Value to PER code map */
+	asn_PER_MAP_ia5_ir_7_c2v	/* PER code to value map */
+};
+static asn_per_constraints_t asn_PER_memb_vs_c_constr_9 = {
+	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	0, 0	/* No PER character map necessary */
+};
+static asn_per_constraints_t asn_PER_memb_vs_ce_constr_10 = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	0, 0	/* No PER character map necessary */
+};
+static asn_per_constraints_t asn_PER_memb_vs_ir_constr_11 = {
+	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	asn_PER_MAP_vs_ir_11_v2c,	/* Value to PER code map */
+	asn_PER_MAP_vs_ir_11_c2v	/* PER code to value map */
+};
+static asn_per_constraints_t asn_PER_memb_pr_c_constr_13 = {
+	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	0, 0	/* No PER character map necessary */
+};
+static asn_per_constraints_t asn_PER_memb_pr_ir_constr_14 = {
+	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	asn_PER_MAP_pr_ir_14_v2c,	/* Value to PER code map */
+	asn_PER_MAP_pr_ir_14_c2v	/* PER code to value map */
+};
+static asn_per_constraints_t asn_PER_memb_ns_c_constr_16 = {
+	{ APC_CONSTRAINED,	 3,  3,  53,  57 }	/* (53..57) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	0, 0	/* No PER character map necessary */
+};
+static asn_per_constraints_t asn_PER_memb_ns_ce_constr_17 = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	0, 0	/* No PER character map necessary */
+};
+static asn_per_constraints_t asn_PER_memb_ns_ir_constr_18 = {
+	{ APC_CONSTRAINED,	 1,  1,  49,  57 }	/* (49..57) */,
+	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
+	asn_PER_MAP_ns_ir_18_v2c,	/* Value to PER code map */
+	asn_PER_MAP_ns_ir_18_c2v	/* PER code to value map */
+};
+static asn_per_constraints_t asn_PER_memb_ut_c_constr_19 = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+static asn_per_constraints_t asn_PER_memb_ut_ce_constr_20 = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+static asn_per_constraints_t asn_PER_memb_ut_ir_constr_21 = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [PDU] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_many_2[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_PDU,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static ber_tlv_tag_t asn_DEF_many_tags_2[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_many_specs_2 = {
+	sizeof(struct many),
+	offsetof(struct many, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_many_2 = {
+	"many",
+	"many",
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+	SEQUENCE_OF_decode_uper,
+	SEQUENCE_OF_encode_uper,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_many_tags_2,
+	sizeof(asn_DEF_many_tags_2)
+		/sizeof(asn_DEF_many_tags_2[0]) - 1, /* 1 */
+	asn_DEF_many_tags_2,	/* Same as above */
+	sizeof(asn_DEF_many_tags_2)
+		/sizeof(asn_DEF_many_tags_2[0]), /* 2 */
+	0,	/* No PER visible constraints */
+	asn_MBR_many_2,
+	1,	/* Single element */
+	&asn_SPC_many_specs_2	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_PDU_1[] = {
+	{ ATF_POINTER, 21, offsetof(struct PDU, many),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_many_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "many"
+		},
+	{ ATF_POINTER, 20, offsetof(struct PDU, ia5),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "ia5"
+		},
+	{ ATF_POINTER, 19, offsetof(struct PDU, ia5_c),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = memb_ia5_c_constraint_1,
+		.per_constraints = &asn_PER_memb_ia5_c_constr_5,
+		.default_value = 0,
+		.name = "ia5-c"
+		},
+	{ ATF_POINTER, 18, offsetof(struct PDU, ia5_ce),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = memb_ia5_ce_constraint_1,
+		.per_constraints = &asn_PER_memb_ia5_ce_constr_6,
+		.default_value = 0,
+		.name = "ia5-ce"
+		},
+	{ ATF_POINTER, 17, offsetof(struct PDU, ia5_ir),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = memb_ia5_ir_constraint_1,
+		.per_constraints = &asn_PER_memb_ia5_ir_constr_7,
+		.default_value = 0,
+		.name = "ia5-ir"
+		},
+	{ ATF_POINTER, 16, offsetof(struct PDU, vs),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "vs"
+		},
+	{ ATF_POINTER, 15, offsetof(struct PDU, vs_c),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (6 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = memb_vs_c_constraint_1,
+		.per_constraints = &asn_PER_memb_vs_c_constr_9,
+		.default_value = 0,
+		.name = "vs-c"
+		},
+	{ ATF_POINTER, 14, offsetof(struct PDU, vs_ce),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (7 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = memb_vs_ce_constraint_1,
+		.per_constraints = &asn_PER_memb_vs_ce_constr_10,
+		.default_value = 0,
+		.name = "vs-ce"
+		},
+	{ ATF_POINTER, 13, offsetof(struct PDU, vs_ir),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (8 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_VisibleString,
+		.memb_constraints = memb_vs_ir_constraint_1,
+		.per_constraints = &asn_PER_memb_vs_ir_constr_11,
+		.default_value = 0,
+		.name = "vs-ir"
+		},
+	{ ATF_POINTER, 12, offsetof(struct PDU, pr),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (9 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_PrintableString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "pr"
+		},
+	{ ATF_POINTER, 11, offsetof(struct PDU, pr_c),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (10 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_PrintableString,
+		.memb_constraints = memb_pr_c_constraint_1,
+		.per_constraints = &asn_PER_memb_pr_c_constr_13,
+		.default_value = 0,
+		.name = "pr-c"
+		},
+	{ ATF_POINTER, 10, offsetof(struct PDU, pr_ir),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (11 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_PrintableString,
+		.memb_constraints = memb_pr_ir_constraint_1,
+		.per_constraints = &asn_PER_memb_pr_ir_constr_14,
+		.default_value = 0,
+		.name = "pr-ir"
+		},
+	{ ATF_POINTER, 9, offsetof(struct PDU, ns),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (12 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_NumericString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "ns"
+		},
+	{ ATF_POINTER, 8, offsetof(struct PDU, ns_c),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (13 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_NumericString,
+		.memb_constraints = memb_ns_c_constraint_1,
+		.per_constraints = &asn_PER_memb_ns_c_constr_16,
+		.default_value = 0,
+		.name = "ns-c"
+		},
+	{ ATF_POINTER, 7, offsetof(struct PDU, ns_ce),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (14 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_NumericString,
+		.memb_constraints = memb_ns_ce_constraint_1,
+		.per_constraints = &asn_PER_memb_ns_ce_constr_17,
+		.default_value = 0,
+		.name = "ns-ce"
+		},
+	{ ATF_POINTER, 6, offsetof(struct PDU, ns_ir),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (15 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_NumericString,
+		.memb_constraints = memb_ns_ir_constraint_1,
+		.per_constraints = &asn_PER_memb_ns_ir_constr_18,
+		.default_value = 0,
+		.name = "ns-ir"
+		},
+	{ ATF_POINTER, 5, offsetof(struct PDU, ut_c),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (16 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_UTF8String,
+		.memb_constraints = memb_ut_c_constraint_1,
+		.per_constraints = &asn_PER_memb_ut_c_constr_19,
+		.default_value = 0,
+		.name = "ut-c"
+		},
+	{ ATF_POINTER, 4, offsetof(struct PDU, ut_ce),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (17 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_UTF8String,
+		.memb_constraints = memb_ut_ce_constraint_1,
+		.per_constraints = &asn_PER_memb_ut_ce_constr_20,
+		.default_value = 0,
+		.name = "ut-ce"
+		},
+	{ ATF_POINTER, 3, offsetof(struct PDU, ut_ir),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (18 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_UTF8String,
+		.memb_constraints = memb_ut_ir_constraint_1,
+		.per_constraints = &asn_PER_memb_ut_ir_constr_21,
+		.default_value = 0,
+		.name = "ut-ir"
+		},
+	{ ATF_POINTER, 2, offsetof(struct PDU, real),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (19 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_REAL,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "real"
+		},
+	{ ATF_POINTER, 1, offsetof(struct PDU, oid),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (20 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_OBJECT_IDENTIFIER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "oid"
+		},
+};
+static int asn_MAP_PDU_oms_1[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+static ber_tlv_tag_t asn_DEF_PDU_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* many at 15 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ia5 at 16 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* ia5-c at 17 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* ia5-ce at 18 */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 4, 0, 0 }, /* ia5-ir at 19 */
+    { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 5, 0, 0 }, /* vs at 20 */
+    { (ASN_TAG_CLASS_CONTEXT | (6 << 2)), 6, 0, 0 }, /* vs-c at 21 */
+    { (ASN_TAG_CLASS_CONTEXT | (7 << 2)), 7, 0, 0 }, /* vs-ce at 22 */
+    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 }, /* vs-ir at 23 */
+    { (ASN_TAG_CLASS_CONTEXT | (9 << 2)), 9, 0, 0 }, /* pr at 24 */
+    { (ASN_TAG_CLASS_CONTEXT | (10 << 2)), 10, 0, 0 }, /* pr-c at 25 */
+    { (ASN_TAG_CLASS_CONTEXT | (11 << 2)), 11, 0, 0 }, /* pr-ir at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (12 << 2)), 12, 0, 0 }, /* ns at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (13 << 2)), 13, 0, 0 }, /* ns-c at 28 */
+    { (ASN_TAG_CLASS_CONTEXT | (14 << 2)), 14, 0, 0 }, /* ns-ce at 29 */
+    { (ASN_TAG_CLASS_CONTEXT | (15 << 2)), 15, 0, 0 }, /* ns-ir at 30 */
+    { (ASN_TAG_CLASS_CONTEXT | (16 << 2)), 16, 0, 0 }, /* ut-c at 31 */
+    { (ASN_TAG_CLASS_CONTEXT | (17 << 2)), 17, 0, 0 }, /* ut-ce at 32 */
+    { (ASN_TAG_CLASS_CONTEXT | (18 << 2)), 18, 0, 0 }, /* ut-ir at 33 */
+    { (ASN_TAG_CLASS_CONTEXT | (19 << 2)), 19, 0, 0 }, /* real at 34 */
+    { (ASN_TAG_CLASS_CONTEXT | (20 << 2)), 20, 0, 0 } /* oid at 35 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
+	sizeof(struct PDU),
+	offsetof(struct PDU, _asn_ctx),
+	asn_MAP_PDU_tag2el_1,
+	21,	/* Count of tags in the map */
+	asn_MAP_PDU_oms_1,	/* Optional members */
+	21, 0,	/* Root/Additions */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_PDU = {
+	"PDU",
+	"PDU",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	SEQUENCE_decode_uper,
+	SEQUENCE_encode_uper,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_PDU_tags_1,
+	sizeof(asn_DEF_PDU_tags_1)
+		/sizeof(asn_DEF_PDU_tags_1[0]), /* 1 */
+	asn_DEF_PDU_tags_1,	/* Same as above */
+	sizeof(asn_DEF_PDU_tags_1)
+		/sizeof(asn_DEF_PDU_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_PDU_1,
+	21,	/* Elements count */
+	&asn_SPC_PDU_specs_1	/* Additional specs */
+};
+

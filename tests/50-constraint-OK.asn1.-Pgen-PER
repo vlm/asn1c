@@ -4456,7 +4456,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_enum_c_6,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.per_constraints = &asn_PER_memb_enum_c_constr_6,
+		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "enum-c"
 		},

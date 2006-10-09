@@ -1,0 +1,30 @@
+ModulePERStrings { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 119 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+PDU ::= SEQUENCE {
+    many	 [0] IMPLICIT SEQUENCE OF PDU OPTIONAL,
+    ia5	 [1] IMPLICIT IA5String OPTIONAL,
+    ia5-c	 [2] IMPLICIT IA5String (FROM("A".."Z")) OPTIONAL,
+    ia5-ce	 [3] IMPLICIT IA5String (FROM("A".."Z",...)) OPTIONAL,
+    ia5-ir	 [4] IMPLICIT IA5String (FROM("A".."B" | "X".."Z")) OPTIONAL,
+    vs	 [5] IMPLICIT VisibleString OPTIONAL,
+    vs-c	 [6] IMPLICIT VisibleString (FROM("A".."Z")) OPTIONAL,
+    vs-ce	 [7] IMPLICIT VisibleString (FROM("A".."Z",...)) OPTIONAL,
+    vs-ir	 [8] IMPLICIT VisibleString (FROM("A".."B" | "X".."Z")) OPTIONAL,
+    pr	 [9] IMPLICIT PrintableString OPTIONAL,
+    pr-c	 [10] IMPLICIT PrintableString (FROM("A".."Z")) OPTIONAL,
+    pr-ir	 [11] IMPLICIT PrintableString (FROM("A".."B" | "X".."Z")) OPTIONAL,
+    ns	 [12] IMPLICIT NumericString OPTIONAL,
+    ns-c	 [13] IMPLICIT NumericString (FROM("5".."9")) OPTIONAL,
+    ns-ce	 [14] IMPLICIT NumericString (FROM("5".."9",...)) OPTIONAL,
+    ns-ir	 [15] IMPLICIT NumericString (FROM("1" | "9")) OPTIONAL,
+    ut-c	 [16] IMPLICIT UTF8String (SIZE(6)) OPTIONAL,
+    ut-ce	 [17] IMPLICIT UTF8String (SIZE(6,...)) OPTIONAL,
+    ut-ir	 [18] IMPLICIT UTF8String (FROM("A" | "Z")) OPTIONAL,
+    real	 [19] IMPLICIT REAL OPTIONAL,
+    oid	 [20] IMPLICIT OBJECT IDENTIFIER OPTIONAL
+}
+
+END

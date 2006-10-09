@@ -154,7 +154,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_ch_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.per_constraints = &asn_PER_memb_ch_constr_4,
+		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "ch"
 		},
