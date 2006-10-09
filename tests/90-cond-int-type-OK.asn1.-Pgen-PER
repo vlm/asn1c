@@ -269,7 +269,7 @@ CN_IntegerMinMax_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [CN-IntegerMinMax] >>> ***/
 
-static asn_per_constraints_t asn_PER_CN_IntegerMinMax_constr_1 = {
+static asn_per_constraints_t asn_PER_type_CN_IntegerMinMax_constr_1 = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -299,7 +299,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinMax = {
 	asn_DEF_CN_IntegerMinMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerMinMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinMax_tags_1[0]), /* 1 */
-	&asn_PER_CN_IntegerMinMax_constr_1,
+	&asn_PER_type_CN_IntegerMinMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -442,7 +442,7 @@ CN_IntegerMinLow_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [CN-IntegerMinLow] >>> ***/
 
-static asn_per_constraints_t asn_PER_CN_IntegerMinLow_constr_1 = {
+static asn_per_constraints_t asn_PER_type_CN_IntegerMinLow_constr_1 = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 }	/* (MIN..1) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -472,7 +472,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinLow = {
 	asn_DEF_CN_IntegerMinLow_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerMinLow_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinLow_tags_1[0]), /* 1 */
-	&asn_PER_CN_IntegerMinLow_constr_1,
+	&asn_PER_type_CN_IntegerMinLow_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -615,7 +615,7 @@ NO_IntegerMinHigh_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [NO-IntegerMinHigh] >>> ***/
 
-static asn_per_constraints_t asn_PER_NO_IntegerMinHigh_constr_1 = {
+static asn_per_constraints_t asn_PER_type_NO_IntegerMinHigh_constr_1 = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 }	/* (MIN..3000000000) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -645,7 +645,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
 	asn_DEF_NO_IntegerMinHigh_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerMinHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerMinHigh_tags_1[0]), /* 1 */
-	&asn_PER_NO_IntegerMinHigh_constr_1,
+	&asn_PER_type_NO_IntegerMinHigh_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -788,7 +788,7 @@ NO_IntegerLowHigh_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [NO-IntegerLowHigh] >>> ***/
 
-static asn_per_constraints_t asn_PER_NO_IntegerLowHigh_constr_1 = {
+static asn_per_constraints_t asn_PER_type_NO_IntegerLowHigh_constr_1 = {
 	{ APC_CONSTRAINED,	 32, -1,  1,  3000000000 }	/* (1..3000000000) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -818,7 +818,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 	asn_DEF_NO_IntegerLowHigh_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerLowHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowHigh_tags_1[0]), /* 1 */
-	&asn_PER_NO_IntegerLowHigh_constr_1,
+	&asn_PER_type_NO_IntegerLowHigh_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -961,7 +961,7 @@ CN_IntegerLowMax_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [CN-IntegerLowMax] >>> ***/
 
-static asn_per_constraints_t asn_PER_CN_IntegerLowMax_constr_1 = {
+static asn_per_constraints_t asn_PER_type_CN_IntegerLowMax_constr_1 = {
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  1,  0 }	/* (1..MAX) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -991,7 +991,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
 	asn_DEF_CN_IntegerLowMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerLowMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerLowMax_tags_1[0]), /* 1 */
-	&asn_PER_CN_IntegerLowMax_constr_1,
+	&asn_PER_type_CN_IntegerLowMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1134,7 +1134,7 @@ NO_IntegerHighMax_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [NO-IntegerHighMax] >>> ***/
 
-static asn_per_constraints_t asn_PER_NO_IntegerHighMax_constr_1 = {
+static asn_per_constraints_t asn_PER_type_NO_IntegerHighMax_constr_1 = {
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  3000000000,  0 }	/* (3000000000..MAX) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -1164,7 +1164,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerHighMax = {
 	asn_DEF_NO_IntegerHighMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerHighMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerHighMax_tags_1[0]), /* 1 */
-	&asn_PER_NO_IntegerHighMax_constr_1,
+	&asn_PER_type_NO_IntegerHighMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1307,7 +1307,7 @@ NO_IntegerLowestMax_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [NO-IntegerLowestMax] >>> ***/
 
-static asn_per_constraints_t asn_PER_NO_IntegerLowestMax_constr_1 = {
+static asn_per_constraints_t asn_PER_type_NO_IntegerLowestMax_constr_1 = {
 	{ APC_SEMI_CONSTRAINED,	-1, -1, -3000000000,  0 }	/* (-3000000000..MAX) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -1337,7 +1337,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
 	asn_DEF_NO_IntegerLowestMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerLowestMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowestMax_tags_1[0]), /* 1 */
-	&asn_PER_NO_IntegerLowestMax_constr_1,
+	&asn_PER_type_NO_IntegerLowestMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1480,7 +1480,7 @@ NO_IntegerOutRange_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [NO-IntegerOutRange] >>> ***/
 
-static asn_per_constraints_t asn_PER_NO_IntegerOutRange_constr_1 = {
+static asn_per_constraints_t asn_PER_type_NO_IntegerOutRange_constr_1 = {
 	{ APC_CONSTRAINED,	 1, -1,  3000000000,  3000000001 }	/* (3000000000..3000000001) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -1510,7 +1510,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
 	asn_DEF_NO_IntegerOutRange_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerOutRange_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutRange_tags_1[0]), /* 1 */
-	&asn_PER_NO_IntegerOutRange_constr_1,
+	&asn_PER_type_NO_IntegerOutRange_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1653,7 +1653,7 @@ NO_IntegerOutValue_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [NO-IntegerOutValue] >>> ***/
 
-static asn_per_constraints_t asn_PER_NO_IntegerOutValue_constr_1 = {
+static asn_per_constraints_t asn_PER_type_NO_IntegerOutValue_constr_1 = {
 	{ APC_CONSTRAINED,	 0, -1,  3000000000,  3000000000 }	/* (3000000000..3000000000) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -1683,7 +1683,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
 	asn_DEF_NO_IntegerOutValue_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerOutValue_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutValue_tags_1[0]), /* 1 */
-	&asn_PER_NO_IntegerOutValue_constr_1,
+	&asn_PER_type_NO_IntegerOutValue_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1820,7 +1820,7 @@ OK_IntegerInRange1_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [OK-IntegerInRange1] >>> ***/
 
-static asn_per_constraints_t asn_PER_OK_IntegerInRange1_constr_1 = {
+static asn_per_constraints_t asn_PER_type_OK_IntegerInRange1_constr_1 = {
 	{ APC_CONSTRAINED,	 8,  8, -100,  100 }	/* (-100..100) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -1850,7 +1850,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange1 = {
 	asn_DEF_OK_IntegerInRange1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange1_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange1_tags_1[0]), /* 1 */
-	&asn_PER_OK_IntegerInRange1_constr_1,
+	&asn_PER_type_OK_IntegerInRange1_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1987,7 +1987,7 @@ OK_IntegerInRange2_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [OK-IntegerInRange2] >>> ***/
 
-static asn_per_constraints_t asn_PER_OK_IntegerInRange2_constr_1 = {
+static asn_per_constraints_t asn_PER_type_OK_IntegerInRange2_constr_1 = {
 	{ APC_CONSTRAINED,	 8,  8, -100,  100 }	/* (-100..100) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -2017,7 +2017,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange2 = {
 	asn_DEF_OK_IntegerInRange2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange2_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange2_tags_1[0]), /* 1 */
-	&asn_PER_OK_IntegerInRange2_constr_1,
+	&asn_PER_type_OK_IntegerInRange2_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2154,7 +2154,7 @@ OK_IntegerInRange3_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [OK-IntegerInRange3] >>> ***/
 
-static asn_per_constraints_t asn_PER_OK_IntegerInRange3_constr_1 = {
+static asn_per_constraints_t asn_PER_type_OK_IntegerInRange3_constr_1 = {
 	{ APC_CONSTRAINED,	 32, -1, -2147483648,  2147483647 }	/* (-2147483648..2147483647) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -2184,7 +2184,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange3 = {
 	asn_DEF_OK_IntegerInRange3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange3_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange3_tags_1[0]), /* 1 */
-	&asn_PER_OK_IntegerInRange3_constr_1,
+	&asn_PER_type_OK_IntegerInRange3_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2321,7 +2321,7 @@ OK_IntegerInRange4_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [OK-IntegerInRange4] >>> ***/
 
-static asn_per_constraints_t asn_PER_OK_IntegerInRange4_constr_1 = {
+static asn_per_constraints_t asn_PER_type_OK_IntegerInRange4_constr_1 = {
 	{ APC_CONSTRAINED,	 32, -1, -2147483648,  2147483647 }	/* (-2147483648..2147483647) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -2351,7 +2351,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange4 = {
 	asn_DEF_OK_IntegerInRange4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange4_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange4_tags_1[0]), /* 1 */
-	&asn_PER_OK_IntegerInRange4_constr_1,
+	&asn_PER_type_OK_IntegerInRange4_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2494,7 +2494,7 @@ OK_IntegerInRange5_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [OK-IntegerInRange5] >>> ***/
 
-static asn_per_constraints_t asn_PER_OK_IntegerInRange5_constr_1 = {
+static asn_per_constraints_t asn_PER_type_OK_IntegerInRange5_constr_1 = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  32, -1, -2147483648,  2147483647 }	/* (-2147483648..2147483647,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -2524,7 +2524,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
 	asn_DEF_OK_IntegerInRange5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange5_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange5_tags_1[0]), /* 1 */
-	&asn_PER_OK_IntegerInRange5_constr_1,
+	&asn_PER_type_OK_IntegerInRange5_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -2667,7 +2667,7 @@ NO_IntegerInRange6_encode_uper(asn_TYPE_descriptor_t *td,
 
 /*** <<< CTDEFS [NO-IntegerInRange6] >>> ***/
 
-static asn_per_constraints_t asn_PER_NO_IntegerInRange6_constr_1 = {
+static asn_per_constraints_t asn_PER_type_NO_IntegerInRange6_constr_1 = {
 	{ APC_CONSTRAINED,	 32, -1,  0,  4294967295 }	/* (0..4294967295) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -2697,7 +2697,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 	asn_DEF_NO_IntegerInRange6_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerInRange6_tags_1)
 		/sizeof(asn_DEF_NO_IntegerInRange6_tags_1[0]), /* 1 */
-	&asn_PER_NO_IntegerInRange6_constr_1,
+	&asn_PER_type_NO_IntegerInRange6_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

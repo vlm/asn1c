@@ -41,7 +41,7 @@ static int expr_break_recursion(arg_t *arg, asn1p_expr_t *expr);
 static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, char *type);
-static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr);
+static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
 static int emit_include_dependencies(arg_t *arg);
@@ -1888,7 +1888,7 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 }
 
 static int
-emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr) {
+emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	int save_target = arg->target->target;
 	asn1cnst_range_t *range;
 	asn1p_expr_type_e etype;
@@ -1906,8 +1906,8 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr) {
 	REDIR(OT_CTDEFS);
 
 	OUT("static asn_per_constraints_t "
-		"asn_PER_%s_constr_%d = {\n",
-		MKID(expr), expr->_type_unique_index);
+		"asn_PER_%s_%s_constr_%d = {\n",
+		pfx, MKID(expr), expr->_type_unique_index);
 
 	etype = expr_get_type(arg, expr);
 
@@ -2196,7 +2196,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		if(expr->constraints
 		|| expr->expr_type == ASN_BASIC_ENUMERATED
 		|| expr->expr_type == ASN_CONSTR_CHOICE) {
-			OUT("&asn_PER_%s_constr_%d,\n",
+			OUT("&asn_PER_memb_%s_constr_%d,\n",
 				MKID(expr),
 				expr->_type_unique_index);
 		} else {
@@ -2249,7 +2249,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	OUT("}\n");
 	OUT("\n");
 
-	if(emit_member_PER_constraints(arg, expr))
+	if(emit_member_PER_constraints(arg, expr, "memb"))
 		return -1;
 
 	REDIR(save_target);
@@ -2268,7 +2268,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 
-	if(emit_member_PER_constraints(arg, expr))
+	if(emit_member_PER_constraints(arg, expr, "type"))
 		return -1;
 
 	if(HIDE_INNER_DEFS)
@@ -2365,7 +2365,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			if(expr->constraints
 			|| expr->expr_type == ASN_BASIC_ENUMERATED
 			|| expr->expr_type == ASN_CONSTR_CHOICE) {
-				OUT("&asn_PER_%s_constr_%d,\n",
+				OUT("&asn_PER_type_%s_constr_%d,\n",
 					p, expr->_type_unique_index);
 			} else {
 				OUT("0,\t/* No PER visible constraints */\n");
