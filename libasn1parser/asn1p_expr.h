@@ -247,9 +247,10 @@ typedef struct asn1p_expr_s {
 	 * Here are some predefined ones.
 	 */
 	enum {
-		TM_NOMARK,
-		TM_RECURSION,	/* Used to break recursion */
-		TM_BROKEN,	/* A warning was already issued */
+	  TM_NOMARK	= 0,
+	  TM_RECURSION	= (1<<0), /* Used to break recursion */
+	  TM_BROKEN	= (1<<1), /* A warning was already issued */
+	  TM_PERFROMCT	= (1<<2), /* PER FROM() constraint tables emitted */
 	} _mark;
 
 	/*

@@ -23,6 +23,11 @@ static ber_tlv_tag_t asn_DEF_UTCTime_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),  /* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
+static asn_per_constraints_t asn_DEF_UTCTime_constraints = {
+        { APC_CONSTRAINED, 7, 7, 0x20, 0x7e },  /* Value */
+        { APC_SEMI_CONSTRAINED, -1, -1, 0, 0 }, /* Size */
+        0, 0
+};
 asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	"UTCTime",
 	"UTCTime",
@@ -33,7 +38,8 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_decode_xer_utf8,
 	UTCTime_encode_xer,
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UTCTime_tags,
 	sizeof(asn_DEF_UTCTime_tags)
@@ -41,7 +47,7 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	asn_DEF_UTCTime_tags,
 	sizeof(asn_DEF_UTCTime_tags)
 	  / sizeof(asn_DEF_UTCTime_tags[0]),
-	0,	/* No PER visible constraints */
+	&asn_DEF_UTCTime_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

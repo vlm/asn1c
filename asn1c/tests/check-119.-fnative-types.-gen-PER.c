@@ -12,6 +12,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <assert.h>
+#include <ctype.h>
 #include <errno.h>
 
 #include <PDU.h>
@@ -22,6 +23,7 @@ enum expectation {
 	EXP_CXER_DIFF,	/* Encoding/decoding using CXER must be different */
 	EXP_BROKEN,	/* Decoding must fail */
 	EXP_DIFFERENT,	/* Reconstruction will yield different encoding */
+	EXP_PER_NOCOMP,	/* Not PER compatible */
 };
 
 static unsigned char buf[4096];
@@ -47,14 +49,15 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	return 0;
 }
 
-enum der_or_xer {
+enum enctype {
+	AS_PER,
 	AS_DER,
 	AS_XER,
 	AS_CXER,
 };
 
 static void
-save_object_as(PDU_t *st, enum der_or_xer how) {
+save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 	asn_enc_rval_t rval; /* Return value */
 
 	buf_offset = 0;
@@ -63,6 +66,15 @@ save_object_as(PDU_t *st, enum der_or_xer how) {
 	 * Save object using specified method.
 	 */
 	switch(how) {
+	case AS_PER:
+		rval = uper_encode(&asn_DEF_PDU, st,
+			_buf_writer, 0);
+		if(exp == EXP_PER_NOCOMP)
+			assert(rval.encoded == -1);
+		else
+			assert(rval.encoded > 0);
+		fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
+		return;
 	case AS_DER:
 		rval = der_encode(&asn_DEF_PDU, st,
 			_buf_writer, 0);
@@ -76,6 +88,7 @@ save_object_as(PDU_t *st, enum der_or_xer how) {
 			_buf_writer, 0);
 		break;
 	}
+
 	if (rval.encoded == -1) {
 		fprintf(stderr,
 			"Cannot encode %s: %s\n",
@@ -88,17 +101,10 @@ save_object_as(PDU_t *st, enum der_or_xer how) {
 }
 
 static PDU_t *
-load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or_xer how) {
+load_object_from(const char *fname, enum expectation expectation, char *fbuf, int size, enum enctype how) {
 	asn_dec_rval_t rval;
-	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
-		asn_TYPE_descriptor_t *, void **, const void *, size_t);
 	PDU_t *st = 0;
 	int csize = 1;
-
-	if(how == AS_DER)
-		zer_decode = ber_decode;
-	else
-		zer_decode = xer_decode;
 
 	if(getenv("INITIAL_CHUNK_SIZE"))
 		csize = atoi(getenv("INITIAL_CHUNK_SIZE"));
@@ -109,8 +115,9 @@ load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or
 		int fbuf_left = size;
 		int fbuf_chunk = csize;
 
-		fprintf(stderr, "LOADING OBJECT OF SIZE %d, chunks %d\n",
-			size, csize);
+		fprintf(stderr, "LOADING OBJECT OF SIZE %d FROM [%s] as %s,"
+			" chunks %d\n",
+			size, fname, how==AS_PER?"PER":"XER", csize);
 
 		if(st) asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
 		st = 0;
@@ -126,10 +133,32 @@ load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or
 				asn_fprint(stderr, &asn_DEF_PDU, st);
 				fprintf(stderr, "=== end ===\n");
 			}
-			rval = zer_decode(0, &asn_DEF_PDU, (void **)&st,
-				fbuf + fbuf_offset,
+			switch(how) {
+			case AS_XER:
+				rval = xer_decode(0, &asn_DEF_PDU, (void **)&st,
+					fbuf + fbuf_offset,
 					fbuf_chunk < fbuf_left 
 					? fbuf_chunk : fbuf_left);
+				break;
+			case AS_PER:
+				rval = uper_decode(0, &asn_DEF_PDU,
+					(void **)&st, fbuf + fbuf_offset,
+					fbuf_chunk < fbuf_left 
+					? fbuf_chunk : fbuf_left, 0, 0);
+				if(rval.code == RC_WMORE) {
+					rval.consumed = 0; /* Not restartable */
+					ASN_STRUCT_FREE(asn_DEF_PDU, st);
+					st = 0;
+					fprintf(stderr, "-> PER wants more\n");
+				} else {
+					fprintf(stderr, "-> PER ret %d/%d\n",
+						rval.code, rval.consumed);
+					/* uper_decode() returns _bits_ */
+					rval.consumed += 7;
+					rval.consumed /= 8;
+				}
+				break;
+			}
 			fbuf_offset += rval.consumed;
 			fbuf_left -= rval.consumed;
 			if(rval.code == RC_WMORE)
@@ -140,7 +169,9 @@ load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or
 
 		if(expectation != EXP_BROKEN) {
 			assert(rval.code == RC_OK);
-			if(how == AS_DER) {
+			if(how == AS_PER) {
+				fprintf(stderr, "[left %d, off %d, size %d]\n",
+					fbuf_left, fbuf_offset, size);
 				assert(fbuf_offset == size);
 			} else {
 				assert(fbuf_offset - size < 2
@@ -196,19 +227,22 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-process_XER_data(enum expectation expectation, char *fbuf, int size) {
+process_XER_data(const char *fname, enum expectation expectation, char *fbuf, int size) {
 	PDU_t *st;
 	int ret;
 
-	st = load_object_from(expectation, fbuf, size, AS_XER);
+	st = load_object_from(fname, expectation, fbuf, size, AS_XER);
 	if(!st) return;
 
 	/* Save and re-load as DER */
-	save_object_as(st, AS_DER);
-	st = load_object_from(expectation, buf, buf_offset, AS_DER);
+	save_object_as(st, expectation, AS_PER);
+	if(expectation == EXP_PER_NOCOMP)
+		return;	/* Already checked */
+	st = load_object_from("buffer", expectation, buf, buf_offset, AS_PER);
 	assert(st);
 
 	save_object_as(st,
+			expectation,
 			(expectation == EXP_CXER_EXACT
 			|| expectation == EXP_CXER_DIFF)
 			? AS_CXER : AS_XER);
@@ -236,6 +270,7 @@ process_XER_data(enum expectation expectation, char *fbuf, int size) {
 			|| memcmp(fbuf, buf, size));
 		break;
 	case EXP_OK:
+	case EXP_PER_NOCOMP:
 		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
 		break;
 	}
@@ -267,16 +302,18 @@ process(const char *fname) {
 		expectation = EXP_CXER_EXACT; break;
 	case 'X':	/* Should fail byte-to-byte comparison */
 		expectation = EXP_CXER_DIFF; break;
+	case 'P':	/* Incompatible with PER */
+		expectation = EXP_PER_NOCOMP; break;
 	default:
 		expectation = EXP_OK; break;
 	}
 
 	fprintf(stderr, "\nProcessing file [../%s]\n", fname);
 
-	ret = chdir("../data-70");
+	ret = chdir("../data-119");
 	assert(ret == 0);
 	fp = fopen(fname, "r");
-	ret = chdir("../test-check-70");
+	ret = chdir("../test-check-119.-gen-PER");
 	assert(ret == 0);
 	assert(fp);
 
@@ -285,7 +322,9 @@ process(const char *fname) {
 
 	assert(rd < sizeof(fbuf));	/* expect small files */
 
-	process_XER_data(expectation, fbuf, rd);
+	process_XER_data(fname, expectation, fbuf, rd);
+
+	fprintf(stderr, "Finished [%s]\n", fname);
 
 	return 1;
 }
@@ -298,20 +337,20 @@ main() {
 	char *str;
 
 	/* Process a specific test file */
-	str = getenv("DATA_70_FILE");
-	if(str && strncmp(str, "data-70-", 8) == 0) {
+	str = getenv("DATA_119_FILE");
+	if(str && strncmp(str, "data-119-", 9) == 0) {
 		process(str);
 		return 0;
 	}
 
-	dir = opendir("../data-70");
+	dir = opendir("../data-119");
 	assert(dir);
 
 	/*
 	 * Process each file in that directory.
 	 */
 	while((dent = readdir(dir))) {
-		if(strncmp(dent->d_name, "data-70-", 8) == 0)
+		if(strncmp(dent->d_name, "data-119-", 9) == 0)
 			if(process(dent->d_name))
 				processed_files++;
 	}

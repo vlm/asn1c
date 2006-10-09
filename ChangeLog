@@ -1,7 +1,12 @@
 
-0.9.22:	2006-Sep-22
+0.9.22:	2006-Oct-08
 
 	* Added -pdu=all and -pdu=<type> switches to asn1c.
+	* Added PER support for most known-multiplier string types:
+	  IA5String, VisibleString, PrintableString;
+	  useful types: GeneralizedTime, UTCTime, ObjectDescriptor;
+	  as well as REAL and OBJECT IDENTIFIER.
+	  TODO: SET, UniversalString and BMPString.
 
 0.9.21:	2006-Sep-17
 

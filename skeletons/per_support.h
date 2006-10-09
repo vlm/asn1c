@@ -29,6 +29,8 @@ typedef struct asn_per_constraint_s {
 typedef struct asn_per_constraints_s {
 	asn_per_constraint_t value;
 	asn_per_constraint_t size;
+	int (*value2code)(unsigned int value);
+	int (*code2value)(unsigned int code);
 } asn_per_constraints_t;
 
 /*

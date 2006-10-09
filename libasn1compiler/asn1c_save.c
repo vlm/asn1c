@@ -273,10 +273,12 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CODE].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
+	TQ_FOR(ot, &(cs->destination[OT_CTDEFS].chunks), next)
+		fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
 		fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 10);	/* Protection from reckless changes */
+	assert(OT_MAX == 11);	/* Protection from reckless changes */
 
 	fclose(fp_c);
 	fclose(fp_h);

@@ -4,6 +4,7 @@
  */
 #include <asn_internal.h>
 #include <OBJECT_IDENTIFIER.h>
+#include <OCTET_STRING.h>
 #include <limits.h>	/* for CHAR_BIT */
 #include <errno.h>
 
@@ -23,7 +24,8 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	der_encode_primitive,
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)

@@ -1,0 +1,9 @@
+<PDU>
+	<ia5-ir>BAZ</ia5-ir>
+	<vs-ir>BAZ</vs-ir>
+	<pr-ir>BAZ</pr-ir>
+	<ns-ir>19</ns-ir>
+	<ut-c>Do not respect SIZE constraint</ut-c>
+	<ut-ce>Do not respect SIZE constraint</ut-ce>
+	<ut-ir>ABCabc</ut-ir>
+</PDU>

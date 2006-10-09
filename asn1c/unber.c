@@ -768,4 +768,8 @@ ssize_t der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode, int
 
 asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx, void *struct_key, const char *xml_tag, const void *buf_ptr, size_t size, int (*otd)(void *struct_key, const void *chunk_buf, size_t chunk_size), ssize_t (*br)(void *struct_key, const void *chunk_buf, size_t chunk_size, int have_more)) { asn_dec_rval_t rv = { 0, 0 }; (void)opt_codec_ctx; (void)ctx; (void)struct_key; (void)xml_tag; (void)buf_ptr; (void)size; (void)otd; (void)br; return rv; }
 
+asn_dec_rval_t OCTET_STRING_decode_uper(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts, void **sptr, asn_per_data_t *pd) { asn_dec_rval_t rv = { 0, 0 }; (void)ctx; (void)td; (void)cts; (void)sptr; (void)pd; return rv; }
+
+asn_enc_rval_t OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts, void *sptr, asn_per_outp_t *po) { asn_enc_rval_t er = { 0, 0, 0 }; (void)td; (void)cts; (void)sptr; (void)po; return er; }
+
 int xer_is_whitespace(const void *b, size_t s) { (void)b; (void)s; return 0; }

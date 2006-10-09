@@ -19,6 +19,8 @@ extern asn_TYPE_descriptor_t asn_DEF_REAL;
 asn_struct_print_f REAL_print;
 xer_type_decoder_f REAL_decode_xer;
 xer_type_encoder_f REAL_encode_xer;
+per_type_decoder_f REAL_decode_uper;
+per_type_encoder_f REAL_encode_uper;
 
 /***********************************
  * Some handy conversion routines. *
