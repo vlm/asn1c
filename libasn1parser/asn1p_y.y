@@ -250,6 +250,7 @@ static asn1p_module_t *currentModule;
 %type	<a_module>		optImports
 %type	<a_module>		optExports
 %type	<a_module>		ImportsDefinition
+%type	<a_module>		optImportsBundleSet
 %type	<a_module>		ImportsBundleSet
 %type	<a_xports>		ImportsBundle
 %type	<a_xports>		ImportsList
@@ -606,7 +607,7 @@ optImports:
 	| ImportsDefinition;
 
 ImportsDefinition:
-	TOK_IMPORTS ImportsBundleSet ';' {
+	TOK_IMPORTS optImportsBundleSet ';' {
 		if(!saved_aid && 0)
 			return yyerror("Unterminated IMPORTS FROM, "
 					"expected semicolon ';'");
@@ -620,6 +621,10 @@ ImportsDefinition:
 		return yyerror("Empty IMPORTS list");
 	}
 	;
+
+optImportsBundleSet:
+	{ $$ = asn1p_module_new(); }
+	| ImportsBundleSet;
 
 ImportsBundleSet:
 	ImportsBundle {
