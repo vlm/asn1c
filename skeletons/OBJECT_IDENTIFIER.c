@@ -65,7 +65,7 @@ OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 int
 OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbufp, unsigned int rvsize) {
-	unsigned LE __attribute__ ((unused)) = 1; /* Little endian (x86) */
+	unsigned LE GCC_NOTUSED = 1; /* Little endian (x86) */
 	uint8_t *arcend = arcbuf + arclen;	/* End of arc */
 	unsigned int cache = 0;	/* No more than 14 significant bits */
 	unsigned char *rvbuf = (unsigned char *)rvbufp;
