@@ -66,7 +66,7 @@ UTCTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	errno = EPERM;			/* Just an unlikely error code */
 	tloc = asn_UT2time(st, 0, 0);
 	if(tloc == -1 && errno != EPERM) {
-		_ASN_CTFAIL(app_key, td,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: Invalid time format: %s (%s:%d)",
 			td->name, strerror(errno), __FILE__, __LINE__);
 		return -1;

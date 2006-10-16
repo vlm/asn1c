@@ -482,7 +482,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	int present;
 
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -501,7 +501,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			if(!memb_ptr) {
 				if(elm->optional)
 					return 0;
-				_ASN_CTFAIL(app_key, td,
+				_ASN_CTFAIL(app_key, td, sptr,
 					"%s: mandatory CHOICE element %s absent (%s:%d)",
 					td->name, elm->name, __FILE__, __LINE__);
 				return -1;
@@ -524,7 +524,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			return ret;
 		}
 	} else {
-		_ASN_CTFAIL(app_key, td,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: no CHOICE element given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
