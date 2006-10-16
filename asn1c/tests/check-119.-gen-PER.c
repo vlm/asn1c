@@ -310,11 +310,8 @@ process(const char *fname) {
 
 	fprintf(stderr, "\nProcessing file [../%s]\n", fname);
 
-	ret = chdir("../data-119");
-	assert(ret == 0);
-	fp = fopen(fname, "r");
-	ret = chdir("../test-check-119.-gen-PER");
-	assert(ret == 0);
+	snprintf(fbuf, sizeof(fbuf), "../data-119/%s", fname);
+	fp = fopen(fbuf, "r");
 	assert(fp);
 
 	rd = fread(fbuf, 1, sizeof(fbuf), fp);
