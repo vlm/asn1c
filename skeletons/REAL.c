@@ -18,7 +18,7 @@
 #define	INT_MAX	((int)(((unsigned int)-1) >> 1))
 
 #if	!(defined(NAN) || defined(INFINITY))
-static volatile double real_zero __attribute__ ((unused)) = 0.0;
+static volatile double real_zero GCC_NOTUSED = 0.0;
 #endif
 #ifndef	NAN
 #define	NAN	(real_zero/real_zero)
@@ -521,8 +521,8 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 	uint8_t buf[16];	/* More than enough for 8-byte dbl_value */
 	uint8_t dscr[sizeof(dbl_value)];	/* double value scratch pad */
 	/* Assertion guards: won't even compile, if unexpected double size */
-	char assertion_buffer1[9 - sizeof(dbl_value)] __attribute__((unused));
-	char assertion_buffer2[sizeof(dbl_value) - 7] __attribute__((unused));
+	char assertion_buffer1[9 - sizeof(dbl_value)] GCC_NOTUSED;
+	char assertion_buffer2[sizeof(dbl_value) - 7] GCC_NOTUSED;
 	uint8_t *ptr = buf;
 	uint8_t *mstop;		/* Last byte of mantissa */
 	unsigned int mval;	/* Value of the last byte of mantissa */
