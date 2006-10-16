@@ -51,13 +51,13 @@ BIT_STRING_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 	if(st && st->buf) {
 		if(st->size == 1 && st->bits_unused) {
-			_ASN_CTFAIL(app_key, td,
+			_ASN_CTFAIL(app_key, td, sptr,
 				"%s: invalid padding byte (%s:%d)",
 				td->name, __FILE__, __LINE__);
 			return -1;
 		}
 	} else {
-		_ASN_CTFAIL(app_key, td,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

@@ -81,7 +81,7 @@ NumericString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
 				continue;
 			}
-			_ASN_CTFAIL(app_key, td,
+			_ASN_CTFAIL(app_key, td, sptr,
 				"%s: value byte %ld (%d) "
 				"not in NumericString alphabet (%s:%d)",
 				td->name,
@@ -91,7 +91,7 @@ NumericString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			return -1;
 		}
 	} else {
-		_ASN_CTFAIL(app_key, td,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

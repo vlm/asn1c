@@ -819,7 +819,7 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	int i;
 
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td,
+		_ASN_CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
