@@ -595,7 +595,7 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	uint8_t *end;
 	size_t i;
 
-	if(!st || !st->buf)
+	if(!st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = 0;
@@ -751,7 +751,7 @@ OCTET_STRING_encode_xer_utf8(asn_TYPE_descriptor_t *td, void *sptr,
 	(void)ilevel;	/* Unused argument */
 	(void)flags;	/* Unused argument */
 
-	if(!st || !st->buf)
+	if(!st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
 
 	buf = st->buf;
@@ -1433,7 +1433,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	int squeeze = 0;
 	int ret;
 
-	if(!st || !st->buf)
+	if(!st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
 
 	if(unit_bits == 1) {
@@ -1544,7 +1544,8 @@ OCTET_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 	(void)td;	/* Unused argument */
 
-	if(!st || !st->buf) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
+	if(!st || (!st->buf && st->size))
+		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	/*
 	 * Dump the contents of the buffer in hexadecimal.
@@ -1580,7 +1581,7 @@ OCTET_STRING_print_utf8(asn_TYPE_descriptor_t *td, const void *sptr,
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
-	if(st && st->buf) {
+	if(st && (st->buf || !st->size)) {
 		return (cb(st->buf, st->size, app_key) < 0) ? -1 : 0;
 	} else {
 		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
@@ -1604,6 +1605,7 @@ OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 
 	if(st->buf) {
 		FREEMEM(st->buf);
+		st->buf = 0;
 	}
 
 	/*
