@@ -95,6 +95,10 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 		default:
 			return 0;
 		}
+	case ACT_CT_PATTERN:
+		if(expr_type & ASN_STRING_MASK)
+			return 1;
+		return 0;
 	case ACT_CA_SET:
 	case ACT_CA_CRC:
 	case ACT_CA_CSV:
