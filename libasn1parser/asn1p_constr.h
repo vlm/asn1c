@@ -27,6 +27,7 @@ typedef struct asn1p_constraint_s {
 		ACT_CT_WCOMPS,		/* WITH COMPONENTS */
 		ACT_CT_CTDBY,		/* CONSTRAINED BY */
 		ACT_CT_CTNG,		/* CONTAINING Type */
+		ACT_CT_PATTERN,		/* PATTERN Value */
 		/*
 		 * Arrays of constraints.
 		 */

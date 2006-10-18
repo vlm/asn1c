@@ -325,6 +325,7 @@ static asn1p_module_t *currentModule;
 %type	<a_constr>		UserDefinedConstraint
 %type	<a_constr>		TableConstraint
 %type	<a_constr>		ContentsConstraint
+%type	<a_constr>		PatternConstraint
 %type	<a_constr>		InnerTypeConstraint
 %type	<a_constr>		WithComponentsList
 %type	<a_constr>		WithComponentsElement
@@ -1849,6 +1850,25 @@ ConstraintSubtypeElement:
 	}
 	| InnerTypeConstraint {
 		$$ = $1;
+	}
+	| PatternConstraint {
+		$$ = $1;
+	}
+	;
+
+PatternConstraint:
+	TOK_PATTERN TOK_cstring {
+		$$ = asn1p_constraint_new(yylineno);
+		$$->type = ACT_CT_PATTERN;
+		$$->value = asn1p_value_frombuf($2.buf, $2.len, 0);
+	}
+	| TOK_PATTERN Identifier {
+		asn1p_ref_t *ref;
+		$$ = asn1p_constraint_new(yylineno);
+		$$->type = ACT_CT_PATTERN;
+		ref = asn1p_ref_new(yylineno);
+		asn1p_ref_add_component(ref, $2, RLT_lowercase);
+		$$->value = asn1p_value_fromref(ref, 0);
 	}
 	;
 

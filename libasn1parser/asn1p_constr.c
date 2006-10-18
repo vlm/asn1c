@@ -171,6 +171,8 @@ asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
 		return "UserDefinedConstraint";
 	case ACT_CT_CTNG:
 		return "ContentsConstraint";
+	case ACT_CT_PATTERN:
+		return "PatternConstraint";
 	case ACT_CA_SET:
 		return "SET";
 	case ACT_CA_CRC:

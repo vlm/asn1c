@@ -368,6 +368,11 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 			flags, 1);
 		printf(")");
 		break;
+	case ACT_CT_PATTERN:
+		printf("(PATTERN ");
+		asn1print_value(ct->value, flags);
+		printf(")");
+		break;
 	case ACT_CA_SET: symno++;
 	case ACT_CA_CRC: symno++;
 	case ACT_CA_CSV: symno++;
