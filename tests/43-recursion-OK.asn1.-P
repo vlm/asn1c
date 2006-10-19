@@ -321,7 +321,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice_1, choice.or),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
-		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.tag_mode = 0,
 		.type = &asn_DEF_or_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */

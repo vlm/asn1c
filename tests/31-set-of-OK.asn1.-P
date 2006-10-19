@@ -442,7 +442,7 @@ asn_TYPE_descriptor_t asn_DEF_other_9 = {
 static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct Stuff, trees),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
-		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.tag_mode = 0,
 		.type = &asn_DEF_trees_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
@@ -451,7 +451,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		},
 	{ ATF_POINTER, 2, offsetof(struct Stuff, anything),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
-		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.tag_mode = 0,
 		.type = &asn_DEF_anything_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */

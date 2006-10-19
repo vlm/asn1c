@@ -294,7 +294,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithMandatory_1[] = {
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithMandatory, seqOfMan),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
-		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.tag_mode = 0,
 		.type = &asn_DEF_seqOfMan_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
@@ -436,7 +436,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithOptional_1[] = {
 		},
 	{ ATF_POINTER, 1, offsetof(struct SeqWithOptional, seqOfOpt),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
-		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.tag_mode = 0,
 		.type = &asn_DEF_seqOfOpt_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */

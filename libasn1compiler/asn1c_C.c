@@ -2151,7 +2151,9 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 
 	OUT(",\n");
 	if(C99_MODE) OUT(".tag_mode = ");
-	if(expr->tag.tag_class) {
+	if((!(expr->expr_type &  ASN_CONSTR_MASK)
+	   || expr->expr_type == ASN_CONSTR_CHOICE)
+	&& expr->tag.tag_class) {
 		if(expr->tag.tag_mode == TM_IMPLICIT)
 		OUT("-1,\t/* IMPLICIT tag at current level */\n");
 		else

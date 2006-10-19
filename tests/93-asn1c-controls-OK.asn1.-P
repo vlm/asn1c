@@ -289,7 +289,7 @@ asn_TYPE_descriptor_t asn_DEF_setof_2 = {
 static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 	{ ATF_POINTER, 0, offsetof(struct Choice, choice.setof),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
-		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.tag_mode = 0,
 		.type = &asn_DEF_setof_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
