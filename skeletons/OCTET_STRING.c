@@ -1424,7 +1424,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraint_t *ct = pc ? &pc->size
 					: &asn_DEF_OCTET_STRING_constraint;
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
-	asn_enc_rval_t er;
+	asn_enc_rval_t er = { 0, 0 };
 	int ct_extensible = ct->flags & APC_EXTENSIBLE;
 	int inext = 0;		/* Lies not within extension root */
 	int unit_bits = (specs->subvariant != 1) * 7 + 1;
@@ -1509,7 +1509,8 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		ssize_t maySave = uper_put_length(po, sizeinunits);
 		if(maySave < 0) _ASN_ENCODE_FAILED;
 
-		ASN_DEBUG("Encoding %d of %d", maySave, sizeinunits);
+		ASN_DEBUG("Encoding %ld of %ld",
+			(long)maySave, (long)sizeinunits);
 
 		if(squeeze) {
 			ret = OCTET_STRING_per_put_squeezed(po, buf,
