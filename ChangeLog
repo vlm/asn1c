@@ -10,6 +10,8 @@
 	* Multiple enhancements by Daniele Varrazzo <daniele.varrazzo@gmail.com>
 	* Fixed explicit tagging of an in-lined constructed type.
 	  (Severity: low; Security impact: none).
+	* Memory leak fixed in SET OF / SEQUENCE OF when wrong encoding
+	  is encountered. (Severity: medium; Security impact: low)
 
 0.9.21:	2006-Sep-17
 
