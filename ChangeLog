@@ -1,5 +1,5 @@
 
-0.9.22:	2006-Oct-16
+0.9.22:	2006-Oct-18
 
 	* Added -pdu=all and -pdu=<type> switches to asn1c.
 	* Added PER support for most known-multiplier string types:
@@ -8,6 +8,8 @@
 	  as well as REAL and OBJECT IDENTIFIER.
 	  TODO: SET, UniversalString and BMPString.
 	* Multiple enhancements by Daniele Varrazzo <daniele.varrazzo@gmail.com>
+	* Fixed explicit tagging of an in-lined constructed type.
+	  (Severity: low; Security impact: none).
 
 0.9.21:	2006-Sep-17
 
