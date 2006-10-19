@@ -334,8 +334,8 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 	} state = ST_SKIPSPACE;
 
 	if(chunk_size)
-		ASN_DEBUG("INTEGER body %d 0x%2x..0x%2x",
-			chunk_size, *lstart, lstop[-1]);
+		ASN_DEBUG("INTEGER body %ld 0x%2x..0x%2x",
+			(long)chunk_size, *lstart, lstop[-1]);
 
 	/*
 	 * We may have received a tag here. It will be processed inline.
