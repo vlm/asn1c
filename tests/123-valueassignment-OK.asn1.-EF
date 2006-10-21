@@ -1,0 +1,8 @@
+ModuleValueAssignmentConstrained { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 123 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+zzz OCTET STRING (SIZE(1)) ::= '0001'B
+
+END
