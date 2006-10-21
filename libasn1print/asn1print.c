@@ -354,24 +354,21 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 		}
 		break;
 	case ACT_CT_CTDBY:
-		printf("(CONSTRAINED BY ");
+		printf("CONSTRAINED BY ");
 		assert(ct->value->type == ATV_UNPARSED);
 		fwrite(ct->value->value.string.buf,
 			1, ct->value->value.string.size, stdout);
-		printf(")");
 		break;
 	case ACT_CT_CTNG:
-		printf("(CONTAINING ");
+		printf("CONTAINING ");
 		asn1print_expr(ct->value->value.v_type->module->asn1p,
 			ct->value->value.v_type->module,
 			ct->value->value.v_type,
 			flags, 1);
-		printf(")");
 		break;
 	case ACT_CT_PATTERN:
-		printf("(PATTERN ");
+		printf("PATTERN ");
 		asn1print_value(ct->value, flags);
-		printf(")");
 		break;
 	case ACT_CA_SET: symno++;
 	case ACT_CA_CRC: symno++;
@@ -383,7 +380,6 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 			char *symtable[] = { " EXCEPT ", " ^ ", " | ", ",",
 					"", "(" };
 			unsigned int i;
-			if(ct->type == ACT_CA_CRC) fputs("(", stdout);
 			for(i = 0; i < ct->el_count; i++) {
 				if(i) fputs(symtable[symno], stdout);
 				if(ct->type == ACT_CA_CRC) fputs("{", stdout);
@@ -393,7 +389,6 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 				&& ct->type == ACT_CA_SET)
 					fputs(")", stdout);
 			}
-			if(ct->type == ACT_CA_CRC) fputs(")", stdout);
 		}
 		break;
 	case ACT_CA_AEX:
