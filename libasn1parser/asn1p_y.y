@@ -275,7 +275,7 @@ static asn1p_module_t *currentModule;
 %type	<a_expr>		DefinedType
 %type	<a_constr>		ValueSet		/* {a|b|c}*/
 %type	<a_expr>		ValueSetTypeAssignment  /* Val INTEGER ::= {1|2} */
-%type	<a_expr>		ValueDefinition		/* val INTEGER ::= 1*/
+%type	<a_expr>		ValueAssignment		/* val INTEGER ::= 1*/
 %type	<a_value>		Value
 %type	<a_value>		SimpleValue
 %type	<a_value>		DefinedValue
@@ -557,7 +557,7 @@ Assignment:
 		assert($1->meta_type != AMT_INVALID);
 		TQ_ADD(&($$->members), $1, next);
 	}
-	| ValueDefinition {
+	| ValueAssignment {
 		$$ = asn1p_module_new();
 		checkmem($$);
 		assert($1->expr_type != A1TC_INVALID);
@@ -1463,8 +1463,8 @@ DefinedObjectClass:
  * value INTEGER ::= 1
  * === EOF ===
  */
-ValueDefinition:
-	Identifier DefinedType TOK_PPEQ Value {
+ValueAssignment:
+	Identifier Type TOK_PPEQ Value {
 		$$ = $2;
 		assert($$->Identifier == NULL);
 		$$->Identifier = $1;
@@ -1707,9 +1707,6 @@ optConstraints:
 
 Constraint:
 	SubtypeConstraint
-	| '(' GeneralConstraint ')' {
-		$$ = $2;
-	}
 	;
 
 SubtypeConstraint:
@@ -1755,6 +1752,9 @@ ElementSetSpecs:
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
 		ct = $$;
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $5);
+	}
+	| GeneralConstraint {
+		$$ = $1;
 	}
 	;
 
