@@ -2,33 +2,21 @@
 GENERAL INFORMATION
 ===================
 
-The 3GPP TS 25.331 RRC (Radio Resource Control) PER decoder.
+The 3GPP TS 25.331 version 7.1.0 RRC (Radio Resource Control) PER decoder.
 Invoking `make` will compile the ASN.1 specifications from the
 ../rrc.asn1 file.
-
-THERE IS NO rrc.asn1 FILE THERE YET!
 
 OBTAINING THE RRC SPECIFICATION
 ================================
 
-Due to licensing restrictions, asn1c can not include the RRC ASN.1 module
-in its distribution.
-
-To obtain the RRC ASN.1 specification, you should go to
+To obtain a different version of RRC ASN.1 specification, you should go to
 	http://www.3gpp.org/ftp/Specs/html-info/25331.htm
-and download any version of RRC specification (preferably 7.1.0, 2006-06).
+and download any version of RRC specification you like.
 
 A .ZIP file with a Microsoft Word .DOC files will download shortly.
 
-You should extract the ASN.1 modules from the chapter 11 of that .DOC file,
-and save it as the ../rrc.asn1 file. The ../rrc.asn1 file should start with
-the following line
-	"Class-definitions DEFINITIONS AUTOMATIC TAGS ::="
-and end with the "END" token.
+You should extract the ASN.1 modules from the chapter 11 of that .DOC file.
 Be careful not to copy any preambles, chapter titles and other non-ASN.1 text.
-
-After obtaining the rrc.asn1, type `make` in the directory containing
-this README file.
 
 rrc-dump USAGE
 ==============
