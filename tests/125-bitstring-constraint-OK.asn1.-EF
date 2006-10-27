@@ -1,0 +1,12 @@
+ModuleBitStringConstraint { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 125 }
+DEFINITIONS ::=
+BEGIN
+
+T ::= BIT STRING {
+    flag1(0),
+    flag2(1),
+    flag3(2)
+} ('000'B | '001'B | '010'B | '011'B)
+
+END
