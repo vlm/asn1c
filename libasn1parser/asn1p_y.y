@@ -281,6 +281,7 @@ static asn1p_module_t *currentModule;
 %type	<a_value>		DefinedValue
 %type	<a_value>		SignedNumber
 %type	<a_value>		RealValue
+%type	<a_value>		BitStringValue
 %type	<a_expr>		optComponentTypeLists
 %type	<a_expr>		ComponentTypeLists
 %type	<a_expr>		ComponentType
@@ -1566,32 +1567,6 @@ RestrictedCharacterStringValue:
 		checkmem($$);
 		$$->type = ATV_QUADRUPLE;
 	}
-	/*
-	| '{' TOK_number ',' TOK_number '}' {
-		asn1c_integer_t v = ($2 << 4) + $4;
-		if($2 > 7) return yyerror("X.680:2003, #37.14 "
-				"mandates 0..7 range for Tuple's TableColumn");
-		if($4 > 15) return yyerror("X.680:2003, #37.14 "
-				"mandates 0..15 range for Tuple's TableRow");
-		$$ = asn1p_value_fromint(v);
-		checkmem($$);
-		$$->type = ATV_TUPLE;
-	}
-	| '{' TOK_number ',' TOK_number ',' TOK_number ',' TOK_number '}' {
-		asn1c_integer_t v = ($2 << 24) | ($4 << 16) | ($6 << 8) | $8;
-		if($2 > 127) return yyerror("X.680:2003, #37.12 "
-				"mandates 0..127 range for Quadruple's Group");
-		if($4 > 255) return yyerror("X.680:2003, #37.12 "
-				"mandates 0..255 range for Quadruple's Plane");
-		if($6 > 255) return yyerror("X.680:2003, #37.12 "
-				"mandates 0..255 range for Quadruple's Row");
-		if($8 > 255) return yyerror("X.680:2003, #37.12 "
-				"mandates 0..255 range for Quadruple's Cell");
-		$$ = asn1p_value_fromint(v);
-		checkmem($$);
-		$$->type = ATV_QUADRUPLE;
-	}
-	*/
 	;
 
 Opaque:
@@ -1894,6 +1869,7 @@ SingleValue:
 	}
 	| RealValue
 	| RestrictedCharacterStringValue
+	| BitStringValue
 	| Identifier {
 		asn1p_ref_t *ref;
 		int ret;
@@ -1904,6 +1880,17 @@ SingleValue:
 		$$ = asn1p_value_fromref(ref, 0);
 		checkmem($$);
 		free($1);
+	}
+	;
+
+BitStringValue:
+	TOK_bstring {
+		$$ = _convert_bitstring2binary($1, 'B');
+		checkmem($$);
+	}
+	| TOK_hstring {
+		$$ = _convert_bitstring2binary($1, 'H');
+		checkmem($$);
 	}
 	;
 
