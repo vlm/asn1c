@@ -232,6 +232,20 @@ sub isoTime() {
 	$cachedTime = "$tm[5]-$tm[4]-$tm[3]T$tm[2]:$tm[1]:$tm[0]";
 }
 
+sub humanFriendlySize($) {
+	my $size = shift;
+	if($size > (1024 * 1024)) {
+		$size >>= 20;
+		$size .= " Mb";
+	} elsif($size > 1024) {
+		$size >>= 10;
+		$size .= " Kb";
+	} elsif($size > 0) {
+		$size .= " bytes";
+	}
+	return $size;
+}
+
 # Create the necessary environment for chrooting into.
 sub prepareChrootEnvironment() {
 	return 1 if(-d $TMPDIR);	# Envuronment already exists
@@ -432,8 +446,9 @@ unless($session) {
 		if($targetFile ne '') {
 			open(I, '< ' . $targetFile)
 				or bark("Invalid or outdated request $!");
-			printf "Content-Type: text/plain\n\n";
-			print while <I>;
+			printf "Content-Type: text/plain\r\n\r\n";
+			# Do not slurp 'cause of potentially huge size
+			while(<I>) { s/\n/\r\n/g; print; }
 			exit(0);
 		}
 	}
@@ -859,6 +874,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 
 	my $resCode = "log";
 	my $resText = "Show compiler log";
+	my $decodedSize = 0;
 
 	if($ec eq "0") {
 		$results = "<FONT COLOR=darkgreen><B>"
@@ -872,6 +888,8 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 			$msg = 'This looks like ' . $type;
 		}
 		$results = "<FONT COLOR=darkgreen><B>$msg</B></FONT><BR>\n";
+		$decodedSize = humanFriendlySize(
+			-s $sessionDir . '/' . $trans . '/+UNBER');
 		if(-f $sessionDir . '/' . $trans . '/+UNBER.EXIT') {
 			$results = "<FONT COLOR=darkred SIZE=-1>"
 				. "<NOBR>$type:</NOBR> "
@@ -891,8 +909,10 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 			. "$why</FONT><BR>\n";
 	}
 
+	$archiveSize = humanFriendlySize(
+		-s $sessionDir . '/' . $trans . '/+Archive.tgz');
 	$allowFetchResults = $ec eq "0"
-		&& (-f $sessionDir . '/' . $trans . '/+Archive.tgz'
+		&& ($archiveSize
 		|| -f $sessionDir . '/' . $trans . '/Makefile.am.sample');
 
 	$results .= "<NOBR>"
@@ -902,6 +922,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "&file=$f"
 		. "&show=$resCode\">"
 		. "$resText</A>"
+		. ($decodedSize ? " ($decodedSize)" : '')
 		. ($ec ? ' &larr;' : '')
 		. "</NOBR>";
 	$results .= "<BR>\n<NOBR>"
@@ -909,7 +930,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. escapeHTML($origTime)
 		. "&file=$f"
 		. "&show=tgz\">"
-		. "Fetch compiled C sources (.tgz)</A> &larr;</NOBR>"
+		. "Fetch compiled C sources ($archiveSize .tgz)</A> &larr;</NOBR>"
 		if $allowFetchResults;
 	if($ec ne "0") {
 		my ($eml, @resp);
