@@ -12,6 +12,7 @@ $TMPDIR = '/tmp/asn1c-cgi-jail/';
 $SUIDHelper = './asn1c-suid-helper';
 $SkeletonsDir = '/usr/local/share/asn1c';	# Will be needed only once
 $CompilerLocation = '/usr/local/bin/asn1c';	# asn1c binary location
+$GNUTar = '/usr/local/bin/gtar';		# GNU tar utility
 $HelpDBFile = $TMPDIR . '/var/db/Help-DB';	# Help requests database
 $HashProgramPath = 'md5';			# Program to hash the input
 $DM = 0750;					# Directory mode for all mkdirs
@@ -289,7 +290,7 @@ sub makeArchive($$) {
 			. " fi done"
 			. " && find . -name '*.[ch]' -print0"
 			.	" > ./+tmp." . $$ . ".files"
-			. " && tar --dereference --ignore-failed-read --owner nobody --group nobody -zcf +tmp." . $$ . ".arch --null --files-from +tmp." . $$ . ".files Makefile* +Compiler.Log *.asn *.asn1 *.ber *.cer *.der *.bin *.dat *.mhg *.txt"
+			. " && $GNUTar --dereference --ignore-failed-read --owner nobody --group nobody -zcf +tmp." . $$ . ".arch --null --files-from +tmp." . $$ . ".files Makefile* +Compiler.Log *.asn *.asn1 *.ber *.cer *.der *.bin *.dat *.mhg *.txt 2>/dev/null"
 			. " && (cat ./+tmp.". $$ .".files | xargs -0 rm -f)"
 			. " && rm -f ./Makefile* ./+tmp.". $$ .".files"
 			. " && mv ./+tmp." . $$ . ".arch $archName"
@@ -547,6 +548,7 @@ if($#gotSafeNames >= 0) {
 	$specOpts{asn1} .= " -EF" if optGet('optEF');
 	$specOpts{asn1} .= " -fnative-types" if optGet('optNT');
 	$specOpts{asn1} .= " -fcompound-names" if optGet('optCN');
+	$specOpts{asn1} .= " -gen-PER" if optGet('optPER');
 	$specOpts{ber} .= " -s4 -1" if optGet('optIgnFrame');
 	$specOpts{ber} .= " -m" if optGet('optMin');
 	my $CompileASN = "$TMPDIR/bin/asn1c -v 2>&1 | sed -e 's/^/-- /'"
@@ -631,11 +633,9 @@ function conditionalDisplay(d, cond) {
 	if(cond) {
 		d.style.display = "block";
 		d.style.position = "relative";
-		d.style.visibility = "visible";
 	} else {
 		d.style.display = "none";
 		d.style.position = "fixed";
-		d.style.visibility = "hidden";
 	}
 }
 function fileTypeChanged(s) {
@@ -704,7 +704,7 @@ function explanation(id, showFull) {
 
 <FORM METHOD=POST NAME=form ACTION=$myName ENCTYPE="multipart/form-data">
 <DIV STYLE="width: 100%;">
-<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr><b>Pick</b> the ASN.1 module text or binary encoded data file:<BR>
+<DIV class=arrow>&rArr;</DIV><DIV class=aarr><b>Pick</b> the ASN.1 module text or binary encoded data file:<BR>
 <SELECT NAME=fileType onchange="return fileTypeChanged(this);">
 <OPTION VALUE=auto>Autodetect file type...
 <OPTION VALUE=asn1>ASN.1 specification text ...
@@ -717,7 +717,7 @@ foreach my $t (sort { $binaryDecoders{$a}{shorder}
 	my $description = $dec{description};
 	if(!$notauto && $dec{order} < 0) {
 		$notauto = 1;
-		$form .= "<OPTION ID=noauto VALUE=no DISABLED=\"disabled\">";
+		$form .= "<OPTION VALUE=no DISABLED=\"disabled\">";
 		$form .= "--- not autodetectable (PER): ---";
 		$form .= "\n";
 		next;
@@ -731,8 +731,8 @@ $form .= << "EOM";
 </SELECT>&nbsp;&nbsp;<INPUT TYPE=file NAME=file SIZE=13>
 </DIV>
 
-<DIV ID="options-asn" STYLE="visibility: visible;">
-<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr><b>Or paste</b> the ASN.1 text into the area below:$rtt
+<DIV ID="options-asn">
+<DIV class=arrow>&rArr;</DIV><DIV class=aarr><b>Or paste</b> the ASN.1 text into the area below:$rtt
 <BR>
 <TEXTAREA NAME=text ROWS=16 COLS=60 STYLE="font-family: courier; font-size: 11px;">
 EOM
@@ -759,17 +759,21 @@ if(open(T, '< ' . $sessionDir . '/lastText')) {
 	;
 }
 
+my $freeSpace = `df -hn $TMPDIR | awk '{print \$4}' | tail -1`;
+chomp $freeSpace;
+
 $form .= << "EOM";
 </TEXTAREA>
 </DIV>
 
-<DIV CLASS=options>
+<DIV class=options>
 <DIV ID=optsbar-lite CLASS=optsbar>
 These options may be used to control the compiler's behavior:<BR>
 <INPUT TYPE=checkbox NAME=optDebugL> Debug lexer (<I>-Wdebug-lexer</I>)<BR>
 <INPUT TYPE=checkbox NAME=optE> Just parse and dump (do not verify) (<I>-E</I>)<BR>
 <INPUT TYPE=checkbox NAME=optEF> Parse, verify validity, and dump (<I>-E -F</I>)<BR>
 <INPUT TYPE=checkbox NAME=optNT CHECKED=on> Use native machine types (e.g. <b>double</b> instead of <b>REAL_t</b>) (<I>-fnative-types</I>)<BR>
+<INPUT TYPE=checkbox NAME=optPER> Generate PER support (<I>-gen-PER</I>), default is BER, DER and XER<BR>
 <INPUT TYPE=checkbox NAME=optCN> Prevent name clashes in compiled output (<I>-fcompound-names</I>)<BR>
 <I>... the command line ASN.1 compiler, <A HREF="$ASN1C_Page">asn1c</A>, supports many other parameters</I>.
 </DIV>
@@ -790,8 +794,8 @@ These options may be used to control the compiler's behavior:<BR>
 </DIV>
 </DIV> <!-- options-ber -->
 
-<DIV ID=arrow>&rArr;</DIV><DIV ID=aarr><INPUT TYPE=submit ID=proceed VALUE="Proceed with ASN.1 compilation" onClick="return formSubmit();">
-(<A HREF=$ASN1C_Page>What is ASN.1?</A>)
+<DIV class=arrow>&rArr;</DIV><DIV class=aarr><INPUT TYPE=submit ID=proceed VALUE="Proceed with ASN.1 compilation" onClick="return formSubmit();">
+<span class="extrasmall">(Available disk space: $freeSpace)</span>
 </DIV>
 </DIV>
 </FORM>
@@ -843,7 +847,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		local $_ = "<A HREF=\"$myName?time="
 			. escapeHTML($origTime)
 			. "&file=$f"
-			. "&fetch=$safeNames[$i]\" ID=modrefs>"
+			. "&fetch=$safeNames[$i]\" class=modrefs>"
 			. escapeHTML($Names[$i])
 			. "</A>";
 		@markedNames = (@markedNames, $_);
@@ -955,8 +959,8 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 	$trColor = ' BGCOLOR=#d0ffe0' if $CountHistoryItems == 1;
 
 	$history .= "<TR $trColor>"
-		. "<TH ALIGN=center ID=num>$tNum"
-		. "<BR><FONT FACE=serif>[<A ID=modrefs "
+		. "<TH ALIGN=center CLASS=num>$tNum"
+		. "<BR><FONT FACE=serif>[<A class=modrefs "
 			. "HREF=\"$myName?time="
 			. escapeHTML($origTime)
 			. "&file=$f&remove=$tNum\""
@@ -965,7 +969,7 @@ foreach my $trans (sort { $b cmp $a } @transactions) {
 		. "<TD ALIGN=center>"
 		. join(", ", @markedNames)
 		. "</TD></TD>"
-		. "<FORM METHOD=POST ACTION=$myName><TD ID=extrasmall>"
+		. "<FORM METHOD=POST ACTION=$myName><TD class=extrasmall>"
 			. $results
 			. "</TD></FORM>"
 		. "</TR>"
@@ -1026,7 +1030,7 @@ unless($history) {
 }
 
 $content .=
-  "<TABLE WIDTH=100% BORDER=0 CELLSPACING=5 CELLPADDING=5><TR><TD ID=inputbox VALIGN=top ROWSPAN=2 WIDTH=40%>\n"
+  "<TABLE WIDTH=100% BORDER=0 CELLSPACING=5 CELLPADDING=5><TR><TD class=inputbox VALIGN=top ROWSPAN=2 WIDTH=40%>\n"
 . "<H3 ALIGN=center>ASN.1 Input</H3>\n"
 . "$form"
 . "</TD><TD WIDTH=60% HEIGHT=50% ALIGN=center VALIGN=$histValign>$history \n"
@@ -1064,7 +1068,7 @@ $redirect
 		color: #404040;
 		font-family: monospace;
 	}
-	TH#num {
+	TH.num {
 		font-size: 8pt;
 		font-family: sans-serif;
 	}
@@ -1072,14 +1076,14 @@ $redirect
                 font-size: 10pt;
                 font-family: sans-serif;
 	}
-	TD#inputbox {
+	TD.inputbox {
 		border-right: dashed 1px rgb(200, 200, 200);
 	}
 	DIV {
 		font-size: 10pt;
                 font-family: sans-serif;
 	}
-	DIV#extrasmall {
+	.extrasmall {
                 font-size: 7pt;
                 font-family: sans-serif;
 	}
@@ -1091,11 +1095,11 @@ $redirect
 		margin-left: 1em;
 	}
 	DIV.options#options-bin {
-		visibility: hidden;
+		display: none;
 		position: fixed;
 	}
 	DIV.options#options-ber {
-		visibility: hidden;
+		display: none;
 		position: fixed;
 	}
 	DIV.optsbar#optsbar-lite { font-size: 7pt; }
@@ -1107,26 +1111,26 @@ $redirect
 		border-left: dashed 1px rgb(200, 200, 200);
 	}
 
-	DIV#arrow {
+	DIV.arrow {
 		float: left;
 		color: rgb(160,160,160);
 	}
 
-	DIV#aarr {
+	DIV.aarr {
 		display: block;
 		margin-left: 1em;
 		padding-bottom: 5px;
 		padding-left: 2pt;
 	}
 
-	A#modrefs {
+	A.modrefs {
 		color: #606060;
 		text-decoration: none;
 	}
-	A:hover#modrefs {
+	A:hover.modrefs {
 		text-decoration: underline;
 	}
-	A:visited#modrefs {
+	A:visited.modrefs {
 		color: #b06060;
 	}
 </STYLE>
