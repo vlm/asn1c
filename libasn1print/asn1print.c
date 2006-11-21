@@ -849,6 +849,8 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 
 	if(TQ_FIRST(&expr->members)) {
 		int extensible = 0;
+		if(expr->expr_type == ASN_BASIC_BIT_STRING)
+			dont_involve_children = 1;
 		printf(" (");
 		TQ_FOR(se, &(expr->members), next) {
 			if(se->expr_type == A1TC_EXTENSIBLE) {
@@ -869,6 +871,8 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 				if(expr_unordered)
 					printf("*");
 				else if(se->marker.flags)
+					printf("?");
+				else if(expr->expr_type == ASN_BASIC_BIT_STRING)
 					printf("?");
 			}
 			if(TQ_NEXT(se, next)
