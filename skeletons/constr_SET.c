@@ -6,12 +6,6 @@
 #include <asn_internal.h>
 #include <constr_SET.h>
 
-#ifndef	WIN32
-#include <netinet/in.h>	/* for ntohl() */
-#else
-#include <winsock2.h>	/* for ntohl() */
-#endif
-
 /* Check that all the mandatory members are present */
 static int _SET_is_populated(asn_TYPE_descriptor_t *td, void *st);
 
@@ -411,7 +405,7 @@ _SET_is_populated(asn_TYPE_descriptor_t *td, void *st) {
 
 		midx = edx/(8 * sizeof(specs->_mandatory_elements[0]));
 		pres = ((unsigned int *)((char *)st+specs->pres_offset))[midx];
-		must = ntohl(specs->_mandatory_elements[midx]);
+		must = sys_ntohl(specs->_mandatory_elements[midx]);
 
 		if((pres & must) == must) {
 			/*

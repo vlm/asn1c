@@ -26,6 +26,12 @@
 #define	 snprintf	_snprintf
 #define	 vsnprintf	_vsnprintf
 
+/* To avoid linking with ws2_32.lib, here's the definition of ntohl() */
+#define sys_ntohl(l)	((((l) << 24)  & 0xff000000)
+			| (((l) << 16) & 0xff0000)
+			| (((l) << 8)  & 0xff00)
+			| ((l) & 0xff))
+
 #ifdef _MSC_VER			/* MSVS.Net */
 #ifndef __cplusplus
 #define inline __inline
@@ -73,6 +79,9 @@ typedef	unsigned int	uint32_t;
 #include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
 #endif	/* defined(sun) */
 #endif
+
+#include <netinet/in.h> /* for ntohl() */
+#define	sys_ntohl(foo)	ntohl(foo)
 
 #endif	/* defined(__vxworks) */
 
