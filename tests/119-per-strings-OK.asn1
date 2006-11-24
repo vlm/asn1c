@@ -31,6 +31,16 @@ BEGIN
 		ut-c	UTF8String (SIZE(6))		OPTIONAL,
 		ut-ce	UTF8String (SIZE(6,...))	OPTIONAL,
 		ut-ir	UTF8String (FROM("A"|"Z"))	OPTIONAL,
+		bm	BMPString			OPTIONAL,
+		bm-c	BMPString (FROM("A".."Z"))	OPTIONAL,
+		bm-cs	BMPString (SIZE(6))	OPTIONAL,
+		bm-ce	BMPString (FROM("A".."Z",...))	OPTIONAL,
+		bm-ir	BMPString (FROM("A".."B"|"X".."Z"))	OPTIONAL,
+		us	UniversalString			OPTIONAL,
+		us-c	UniversalString (FROM("A".."Z"))	OPTIONAL,
+		us-cs	UniversalString (SIZE(6))	OPTIONAL,
+		us-ce	UniversalString (FROM("A".."Z",...))	OPTIONAL,
+		us-ir	UniversalString (FROM("A".."B"|"X".."Z")) OPTIONAL,
 		real	REAL				OPTIONAL,
 		oid	OBJECT IDENTIFIER		OPTIONAL
 	}

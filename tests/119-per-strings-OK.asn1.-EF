@@ -23,8 +23,18 @@ PDU ::= SEQUENCE {
     ut-c	 [16] IMPLICIT UTF8String (SIZE(6)) OPTIONAL,
     ut-ce	 [17] IMPLICIT UTF8String (SIZE(6,...)) OPTIONAL,
     ut-ir	 [18] IMPLICIT UTF8String (FROM("A" | "Z")) OPTIONAL,
-    real	 [19] IMPLICIT REAL OPTIONAL,
-    oid	 [20] IMPLICIT OBJECT IDENTIFIER OPTIONAL
+    bm	 [19] IMPLICIT BMPString OPTIONAL,
+    bm-c	 [20] IMPLICIT BMPString (FROM("A".."Z")) OPTIONAL,
+    bm-cs	 [21] IMPLICIT BMPString (SIZE(6)) OPTIONAL,
+    bm-ce	 [22] IMPLICIT BMPString (FROM("A".."Z",...)) OPTIONAL,
+    bm-ir	 [23] IMPLICIT BMPString (FROM("A".."B" | "X".."Z")) OPTIONAL,
+    us	 [24] IMPLICIT UniversalString OPTIONAL,
+    us-c	 [25] IMPLICIT UniversalString (FROM("A".."Z")) OPTIONAL,
+    us-cs	 [26] IMPLICIT UniversalString (SIZE(6)) OPTIONAL,
+    us-ce	 [27] IMPLICIT UniversalString (FROM("A".."Z",...)) OPTIONAL,
+    us-ir	 [28] IMPLICIT UniversalString (FROM("A".."B" | "X".."Z")) OPTIONAL,
+    real	 [29] IMPLICIT REAL OPTIONAL,
+    oid	 [30] IMPLICIT OBJECT IDENTIFIER OPTIONAL
 }
 
 END

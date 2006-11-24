@@ -13,6 +13,16 @@ static ber_tlv_tag_t asn_DEF_UniversalString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (28 << 2)),	/* [UNIVERSAL 28] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
+static asn_OCTET_STRING_specifics_t asn_DEF_UniversalString_specs = {
+	sizeof(UniversalString_t),
+	offsetof(UniversalString_t, _asn_ctx),
+	ASN_OSUBV_U32	/* 32-bits character */
+};
+static asn_per_constraints_t asn_DEF_UniversalString_constraints = {
+	{ APC_CONSTRAINED, 32, 32, 0, 2147483647 },
+	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
+	0, 0
+};
 asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	"UniversalString",
 	"UniversalString",
@@ -23,7 +33,8 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	OCTET_STRING_encode_der,
 	UniversalString_decode_xer,	/* Convert from UTF-8 */
 	UniversalString_encode_xer,	/* Convert into UTF-8 */
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
@@ -31,9 +42,9 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
 	  / sizeof(asn_DEF_UniversalString_tags[0]),
-	0,	/* No PER visible constraints */
+	&asn_DEF_UniversalString_constraints,
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_DEF_UniversalString_specs
 };
 
 

@@ -13,6 +13,16 @@ static ber_tlv_tag_t asn_DEF_BMPString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (30 << 2)),	/* [UNIVERSAL 30] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
+static asn_OCTET_STRING_specifics_t asn_DEF_BMPString_specs = {
+	sizeof(BMPString_t),
+	offsetof(BMPString_t, _asn_ctx),
+	ASN_OSUBV_U16	/* 16-bits character */
+};
+static asn_per_constraints_t asn_DEF_BMPString_constraints = {
+	{ APC_CONSTRAINED, 16, 16, 0, 65535 },
+	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
+	0, 0
+};
 asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	"BMPString",
 	"BMPString",
@@ -23,7 +33,8 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	OCTET_STRING_encode_der,
 	BMPString_decode_xer,		/* Convert from UTF-8 */
 	BMPString_encode_xer,		/* Convert to UTF-8 */
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
@@ -31,9 +42,9 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
 	  / sizeof(asn_DEF_BMPString_tags[0]),
-	0,	/* No PER visible constraints */
+	&asn_DEF_BMPString_constraints,
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_DEF_BMPString_specs
 };
 
 /*
@@ -131,7 +142,7 @@ BMPString_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 				rc.consumed = 0;
 				return rc;
 			} else {
-				dstwc[2 * wcs_len] = 0;
+				dstwc[wcs_len] = 0;	/* nul-terminate */
 				wcs = (uint32_t *)dstwc;
 			}
 		}

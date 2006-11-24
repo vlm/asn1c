@@ -15,7 +15,7 @@ static ber_tlv_tag_t asn_DEF_BIT_STRING_tags[] = {
 static asn_OCTET_STRING_specifics_t asn_DEF_BIT_STRING_specs = {
 	sizeof(BIT_STRING_t),
 	offsetof(BIT_STRING_t, _asn_ctx),
-	1,	/* Special indicator that this is a BIT STRING type */
+	ASN_OSUBV_BIT
 };
 asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	"BIT STRING",
