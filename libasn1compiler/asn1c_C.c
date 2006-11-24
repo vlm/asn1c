@@ -1825,14 +1825,16 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 				}
 			}
 
-			if(1) {
+			if(alphabetsize) {
+				ebits = rbits;
+			} else {
 				/* X.691, #10.9.4.1 */
 				for(ebits = 0; ebits <= 16; ebits++)
 					if(r <= 1 << ebits) break;
 				if(ebits == 17
 				|| range->right.value >= 65536)
 					ebits = -1;
-			} else {
+			if(0) {
 				/* X.691, #10.5.7.1 */
 				for(ebits = 0; ebits <= 8; ebits++)
 					if(r <= 1 << ebits) break;
@@ -1843,11 +1845,25 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 						ebits = -1;
 				}
 			}
+			}
 
 			OUT("{ APC_CONSTRAINED%s,%s% d, % d, ",
 				range->extensible
 					? " | APC_EXTENSIBLE" : "",
 				range->extensible ? " " : "\t", rbits, ebits);
+
+			if(alphabetsize) {
+				asn1c_integer_t lv = range->left.value;
+				asn1c_integer_t rv = range->right.value;
+				int gcmt = 0;
+				if(lv > 0x7fffffff) { lv = 0x7fffffff; gcmt++; }
+				if(rv > 0x7fffffff) { rv = 0x7fffffff; gcmt++; }
+				if(gcmt) {
+					OUT("% " PRIdASN ", % " PRIdASN " }",
+						lv, rv);
+					goto pcmt;
+				}
+			}
 		} else {
 			if(range->extensible) {
 				OUT("{ APC_SEMI_CONSTRAINED | APC_EXTENSIBLE, "
@@ -1861,6 +1877,8 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 	} else {
 		OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
 	}
+
+  pcmt:
 
 	/*
 	 * Print some courtesy debug information.
@@ -1948,8 +1966,30 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 				expr->combined_constraints, ACT_CT_FROM,
 				0, 0, 0);
 		DEBUG("Emitting FROM constraint for %s", expr->Identifier);
+
+		if((range->left.type == ARE_MIN && range->right.type == ARE_MAX)
+		|| range->not_PER_visible) {
+			switch(etype) {
+			case ASN_STRING_BMPString:
+				range->left.type = ARE_VALUE;
+				range->left.value = 0;
+				range->right.type = ARE_VALUE;
+				range->right.value = 65535;
+				range->not_PER_visible = 0;
+				range->extensible = 0;
+				break;
+			case ASN_STRING_UniversalString:
+				OUT("{ APC_CONSTRAINED,\t32, 32,"
+					" 0, 2147483647 }"
+					" /* special case 1 */\n");
+				goto avoid;
+			default:
+				break;
+			}
+		}
 		if(emit_single_member_PER_constraint(arg, range, 1, 0))
 			return -1;
+		avoid:
 		asn1constraint_range_free(range);
 	} else {
 		range = asn1constraint_compute_PER_range(etype,

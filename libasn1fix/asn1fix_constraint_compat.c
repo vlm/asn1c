@@ -128,7 +128,7 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 	DECL_notPV(utf8,	0x00, 0x7fffffff);	/* Not PER-visible */
 	DECL(bmp,	0x00, 65533);	/* 64K-2 cells */
 	DECL(uint7,	0x00, 0x7f);
-	DECL(uint31,	0x00, 0x7fffffff);
+	DECL(uint32,	0x00, 0xffffffff);
 	DECL(Space,	0x20, 0x20);
 	DECL(ApostropheAndParens, 0x27, 0x29);
 	DECL(PlusTillColon, 0x2b, 0x3a);
@@ -213,7 +213,7 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 		assert(range_utf8.not_PER_visible);
 		return &range_utf8;
 	case ASN_STRING_UniversalString:
-		return &range_uint31;
+		return &range_uint32;
 	case ASN_BASIC_UTCTime:
 		/* Permitted alphabet constraint is not applicable */
 		assert(range_UTCTime.not_PER_visible);

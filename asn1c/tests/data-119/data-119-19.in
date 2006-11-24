@@ -1,0 +1,10 @@
+<PDU>
+	<many>
+		<PDU><us>kadabra</us></PDU>
+		<PDU><us-c>AAAAZZZZ</us-c></PDU>
+		<PDU><us-cs>шесть!</us-cs></PDU>
+		<PDU><us-ce>ABC</us-ce></PDU>
+		<PDU><us-ce>ABCabc (extensibility in play)</us-ce></PDU>
+		<PDU><us-ir>ABXZ</us-ir></PDU>
+	</many>
+</PDU>

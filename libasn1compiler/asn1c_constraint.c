@@ -72,7 +72,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	case ASN_BASIC_BIT_STRING:
 	case ASN_BASIC_OCTET_STRING:
 		produce_st = 1;
-			break;
+		break;
 	default:
 		if(etype & ASN_STRING_MASK)
 			produce_st = 1;
@@ -221,7 +221,6 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		asn1constraint_range_free(range);
 		return 0;
 	}
-
 
 	if(range->left.type == ARE_MIN
 	&& range->right.type == ARE_MAX) {
