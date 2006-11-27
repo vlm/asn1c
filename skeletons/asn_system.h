@@ -27,9 +27,9 @@
 #define	 vsnprintf	_vsnprintf
 
 /* To avoid linking with ws2_32.lib, here's the definition of ntohl() */
-#define sys_ntohl(l)	((((l) << 24)  & 0xff000000)
-			| (((l) << 16) & 0xff0000)
-			| (((l) << 8)  & 0xff00)
+#define sys_ntohl(l)	((((l) << 24)  & 0xff000000)	\
+			| (((l) << 16) & 0xff0000)	\
+			| (((l) << 8)  & 0xff00)	\
 			| ((l) & 0xff))
 
 #ifdef _MSC_VER			/* MSVS.Net */
