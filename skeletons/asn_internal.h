@@ -70,6 +70,7 @@ static inline void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 	int __nl = ((nl) != 0);						\
 	int __i;							\
 	if(__nl) _ASN_CALLBACK("\n", 1);				\
+	if(__level < 0) __level = 0;					\
 	for(__i = 0; __i < __level; __i++)				\
 		_ASN_CALLBACK("    ", 4);				\
 	er.encoded += __nl + 4 * __level;				\
