@@ -808,15 +808,15 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 		asn_set_empty(list);	/* Remove (list->array) */
 
-		if(!contents_only) {
-			FREEMEM(ptr);
-		}
-
 		specs = (asn_SET_OF_specifics_t *)td->specifics;
 		ctx = (asn_struct_ctx_t *)((char *)ptr + specs->ctx_offset);
 		if(ctx->ptr) {
 			ASN_STRUCT_FREE(*elm->type, ctx->ptr);
 			ctx->ptr = 0;
+		}
+
+		if(!contents_only) {
+			FREEMEM(ptr);
 		}
 	}
 }
