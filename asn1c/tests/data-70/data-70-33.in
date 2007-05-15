@@ -1,7 +1,5 @@
 <PDU>
 	<extensibleSet>
-		<enum>
- <a/>
- </enum>
+		<enum> <a/> </enum>
 	</extensibleSet>
 </PDU>
