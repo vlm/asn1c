@@ -387,7 +387,7 @@ $(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
 	./crfc2asn1.pl $(ASN1_SOURCE_3)
 
 dist-hook:
-	rm -rf `find $(distdir) -name CVS -or -name .cvsignore`
+	rm -rf `find $(distdir) -name .svn`
 	rm -rf `find $(distdir) -name "*.core" -or -name ".tmp.*"`
 	rm -rf `find $(distdir) -name "*.[ch].??????"`
 

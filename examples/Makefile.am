@@ -35,7 +35,7 @@ EXTRA_DIST = $(srcdir)/rfc*.txt					\
 	$(srcdir)/sample.makefile.regen
 
 dist-hook:
-	rm -rf `find $(distdir) -name CVS -or -name .cvsignore`
+	rm -rf `find $(distdir) -name .svn`
 	rm -rf `find $(distdir) -name "*.core" -or -name ".tmp.*"`
 	rm -rf `find $(distdir) -name "*.[ch].??????"`
 
