@@ -15,7 +15,7 @@ EXTRA_DIST =			\
 	data-119
 
 dist-hook:
-	rm -rf `find $(distdir) -name CVS -or -name .cvsignore`
+	rm -rf `find $(distdir) -name .svn`
 
 clean:
 	rm -rf test-*
