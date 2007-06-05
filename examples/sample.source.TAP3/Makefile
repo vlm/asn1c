@@ -700,7 +700,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=DataInterChange ../tap3.asn1
+	asn1c -pdu=DataInterChange ../tap3.asn1
 
 
 DataInterChange.c: ../sample.makefile.regen ../tap3.asn1
