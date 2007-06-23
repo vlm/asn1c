@@ -453,16 +453,16 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		return -1;
 	}
 
-	if((octv & 0x03) == 0x11) {
-		/* 8.5.6.4, case d) */
+	elen = (octv & 0x03);	/* bits 2 to 1; 8.5.6.4 */
+	if(elen == 0x03) {	/* bits 2 to 1 = 11; 8.5.6.4, case d) */
 		elen = st->buf[1];	/* unsigned binary number */
 		if(elen == 0 || st->size <= (int)(2 + elen)) {
 			errno = EINVAL;
 			return -1;
 		}
+		/* FIXME: verify constraints of case d) */
 		ptr = &st->buf[2];
 	} else {
-		elen = (octv & 0x03);
 		ptr = &st->buf[1];
 	}
 
