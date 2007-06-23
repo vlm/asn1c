@@ -1078,7 +1078,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Get the sequence ROOT elements.
 	 */
 	for(edx = 0; edx < ((specs->ext_before < 0)
-			? td->elements_count : specs->ext_before + 1); edx++) {
+			? td->elements_count : specs->ext_before - 1); edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
@@ -1219,7 +1219,7 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 	 * Get the sequence ROOT elements.
 	 */
 	for(edx = 0; edx < ((specs->ext_before < 0)
-			? td->elements_count : specs->ext_before + 1); edx++) {
+			? td->elements_count : specs->ext_before - 1); edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
