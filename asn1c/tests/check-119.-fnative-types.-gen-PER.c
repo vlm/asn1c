@@ -1,8 +1,8 @@
 /*
  * Mode of operation:
- * Each of the *.in files is XER-decoded, then converted into DER,
- * then decoded from DER and encoded into XER again. The resulting
- * stream is compared with the corresponding .out file.
+ * Each of the *.in files is XER-decoded, then converted into PER,
+ * then decoded back from PER, then encoded into XER again,
+ * and finally compared to the original encoding.
  */
 #undef	NDEBUG
 #include <stdio.h>
