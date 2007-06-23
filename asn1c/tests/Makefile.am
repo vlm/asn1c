@@ -12,7 +12,8 @@ EXTRA_DIST =			\
 	check-*.c*		\
 	data-62			\
 	data-70			\
-	data-119
+	data-119		\
+	data-126
 
 dist-hook:
 	rm -rf `find $(distdir) -name .svn`
