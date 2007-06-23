@@ -234,7 +234,7 @@ process_XER_data(const char *fname, enum expectation expectation, char *fbuf, in
 	st = load_object_from(fname, expectation, fbuf, size, AS_XER);
 	if(!st) return;
 
-	/* Save and re-load as DER */
+	/* Save and re-load as PER */
 	save_object_as(st, expectation, AS_PER);
 	if(expectation == EXP_PER_NOCOMP)
 		return;	/* Already checked */
