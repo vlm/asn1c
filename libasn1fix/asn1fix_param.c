@@ -50,8 +50,9 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	rarg.lhs_params = expr->lhs_params;
 	rarg.rhs_pspecs = rhs_pspecs;
 	exc = asn1p_expr_clone_with_resolver(expr, resolve_expr, &rarg);
+	if(!exc) return NULL;
 	rpc = asn1p_expr_clone(rhs_pspecs, 0);
-	assert(exc && rpc);
+	assert(rpc);
 
 	/*
 	 * Create a new specialization.
@@ -137,6 +138,7 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 		expr->Identifier, expr->meta_type, expr->expr_type);
 	if(expr->meta_type == AMT_TYPE
 	|| expr->meta_type == AMT_VALUE
+	|| expr->meta_type == AMT_TYPEREF
 	|| expr->meta_type == AMT_VALUESET) {
 		DEBUG("Target is a simple type %s",
 			ASN_EXPR_TYPE2STR(expr->expr_type));

@@ -24,15 +24,16 @@
 
 #ifdef	WIN32
 #include <io.h>
+#include <malloc.h>
+#include <fcntl.h>
 #define	open	_open
 #define	close	_close
-#define	alloca		_alloca
 #define	snprintf	_snprintf
 #define	vsnprintf	_vsnprintf
 #else
-#include <fcntl.h>		/* for open(2) */
 #include <glob.h>		/* for glob(3) */
 #endif
+#include <fcntl.h>		/* for open(2) */
 
 #ifdef	HAVE_SYS_PARAM_H
 #include <sys/param.h>	/* For MAXPATHLEN */
