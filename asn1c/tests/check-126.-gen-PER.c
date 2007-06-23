@@ -213,6 +213,35 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
+compare_with_data_out(const char *fname, char *buf, int size) {
+	char outName[256];
+	char fbuf[1024];
+	size_t rd;
+	FILE *f;
+
+	sprintf(outName, "../data-126/%s", fname);
+	strcpy(outName + strlen(outName) - 3, ".out");
+
+	fprintf(stderr, "Comparing PER output with [%s]\n", outName);
+
+	f = fopen(outName, "r");
+	if(f) {
+		assert(f);
+		rd = fread(fbuf, 1, sizeof(fbuf), f);
+		assert(rd);
+		fclose(f);
+
+		assert(rd == size);
+		assert(memcmp(fbuf, buf, rd) == 0);
+		fprintf(stderr, "XER->PER recoding .in->.out match.\n");
+	} else if(getenv("REGENERATE")) {
+		f = fopen(outName, "w");
+		fwrite(buf, 1, size, f);
+		fclose(f);
+	}
+}
+
+static void
 process_XER_data(const char *fname, char *fbuf, int size) {
 	PDU_t *st;
 	int ret;
@@ -220,8 +249,9 @@ process_XER_data(const char *fname, char *fbuf, int size) {
 	st = load_object_from(fname, fbuf, size, AS_XER);
 	if(!st) return;
 
-	/* Save and re-load as DER */
+	/* Save and re-load as PER */
 	save_object_as(st, AS_PER);
+	compare_with_data_out(fname, buf, buf_offset);
 	st = load_object_from("buffer", buf, buf_offset, AS_PER);
 	assert(st);
 
