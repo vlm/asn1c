@@ -309,8 +309,8 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int elements;	/* Number of elements */
-	int ext_start = -1;
-	int ext_stop = -1;
+	int ext_start = -2;
+	int ext_stop = -2;
 	tag2el_t *tag2el = NULL;
 	int tag2el_count = 0;
 	int tags_count;
@@ -446,9 +446,9 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 		OUT("0, 0, 0,\t/* Optional elements (not needed) */\n");
 	}
 	OUT("%d,\t/* Start extensions */\n",
-			ext_start);
+			ext_start<0 ? -1 : ext_start);
 	OUT("%d\t/* Stop extensions */\n",
-			(ext_stop<ext_start)?elements+1:ext_stop, ext_stop);
+			(ext_stop<ext_start)?elements+1:(ext_stop<0?-1:ext_stop));
 	INDENT(-1);
 	OUT("};\n");
 
