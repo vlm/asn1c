@@ -1,0 +1,6 @@
+Mode of operation:
+
+	Each of the *.in files is XER-decoded, then converted into PER,
+	then compared with the .out file, then decoded back into XER
+	and compared to the original .in file content.
+
