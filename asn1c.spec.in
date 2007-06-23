@@ -46,7 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 
 * Sun Sep 18 2006 Lev Walkin <vlm@lionet.info>
-- Mentioned PER support
+- Added PER support into description
 
 * Sun Sep 26 2004 Lev Walkin <vlm@lionet.info>
 - All manuals are now getting installed, including new ones: unber.1 and enber.1
