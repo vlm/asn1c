@@ -1,5 +1,5 @@
 
-0.9.22:	2006-Nov-24
+0.9.22:	2007-Jun-23
 
 	* Added -pdu=all and -pdu=<type> switches to asn1c.
 	* Added PER support for most known-multiplier string types:
@@ -12,6 +12,8 @@
 	  (Severity: low; Security impact: none).
 	* Memory leak fixed in SET OF / SEQUENCE OF when wrong encoding
 	  is encountered. (Severity: medium; Security impact: low)
+	* Fixed extensibility handling of second SEQUENCE production.
+	  (Severity: low; Security impact: none)
 
 0.9.21:	2006-Sep-17
 
