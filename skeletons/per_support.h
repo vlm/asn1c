@@ -96,6 +96,12 @@ int per_put_many_bits(asn_per_outp_t *po, const uint8_t *src, int put_nbits);
 ssize_t uper_put_length(asn_per_outp_t *po, size_t whole_length);
 
 /*
+ * Put the normally small length "n" to the Unaligned PER stream.
+ * Returns 0 or -1.
+ */
+int uper_put_nslength(asn_per_outp_t *po, size_t length);
+
+/*
  * Put the normally small non-negative whole number.
  */
 int uper_put_nsnnwn(asn_per_outp_t *po, int n);

@@ -318,3 +318,26 @@ uper_put_length(asn_per_outp_t *po, size_t length) {
 			? -1 : (ssize_t)(length << 14);
 }
 
+
+/*
+ * Put the normally small length "n" into the stream.
+ * This procedure used to encode length of extensions bit-maps
+ * for SET and SEQUENCE types.
+ */
+int
+uper_put_nslength(asn_per_outp_t *po, size_t length) {
+
+	if(length <= 64) {
+		/* #10.9.3.4 */
+		if(length == 0) return -1;
+		return per_put_few_bits(po, length-1, 7) ? -1 : 0;
+	} else {
+		if(uper_put_length(po, length) != length) {
+			/* This might happen in case of >16K extensions */
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
