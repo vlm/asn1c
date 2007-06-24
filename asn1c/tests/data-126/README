@@ -4,3 +4,7 @@ Mode of operation:
 	then compared with the .out file, then decoded back into XER
 	and compared to the original .in file content.
 
+Naming conventions:
+
+*-P.in  -       PER decoding of .out file must fail.
+
