@@ -1071,44 +1071,60 @@ uper_ugot_refill(asn_per_data_t *pd) {
 
 	/* Advance our position to where pd is */
 	consumed = (pd->buffer - oldpd->buffer) << 3;
-	ASN_DEBUG("Refilling [consumed: %d bits from %d (%d->%d)] now [%d (%d->%d)]",
+	ASN_DEBUG("REFILLING [consumed: %d bits from %d (%d->%d)] now [%d (%d->%d)] uncl %d",
 		consumed,
 		oldpd->nbits - oldpd->nboff, oldpd->nboff, oldpd->nbits,
-		pd->nbits - pd->nboff, pd->nboff, pd->nbits);
+		pd->nbits - pd->nboff, pd->nboff, pd->nbits, arg->unclaimed);
 	oldpd->nbits -= consumed;
 	oldpd->buffer = pd->buffer;
 	oldpd->nboff = pd->nboff;
+	oldpd->nboff = pd->nbits;
 
 	if(arg->unclaimed) {
 		/* Refill the container */
-		if(per_get_few_bits(oldpd, 0))
+		if(per_get_few_bits(oldpd, 1))
 			return -1;
-		assert(0);
+		if(oldpd->nboff == 0) {
+			assert(0);
+			return -1;
+		}
+		pd->buffer = oldpd->buffer;
+		pd->nboff = oldpd->nboff - 1;
+		pd->nbits = oldpd->nbits;
+		ASN_DEBUG("====================");
+		return 0;
 	}
 
 	if(!arg->repeat) {
 		ASN_DEBUG("Want more but refill doesn't have it");
-		assert(0);
 		return -1;
 	}
 
 	next_chunk_bytes = uper_get_length(oldpd, -1, &arg->repeat);
-	ASN_DEBUG("Open type length %d bytes, old %d (%d->%d)",
-		next_chunk_bytes, oldpd->nbits - oldpd->nboff, oldpd->nboff, oldpd->nbits);
+	ASN_DEBUG("Open type LENGTH %d bytes, old %d (%d->%d) repeat %d",
+		next_chunk_bytes, oldpd->nbits - oldpd->nboff, oldpd->nboff, oldpd->nbits, arg->repeat);
 	if(next_chunk_bytes < 0) return -1;
-	if(next_chunk_bytes == 0 || !arg->repeat)
+	assert(next_chunk_bytes || !arg->repeat);
+	if(next_chunk_bytes == 0)
 		pd->refill = 0;	/* No more refills, naturally */
 	pd->buffer = oldpd->buffer;
 	pd->nboff = oldpd->nboff;
 	pd->nbits = oldpd->nbits;
 	next_chunk_bits = next_chunk_bytes << 3;
 	avail = pd->nbits - pd->nboff;
+	ASN_DEBUG("now at %d bits, want %d",
+		((((int)pd->buffer ) & 0x7) << 3) + pd->nboff,
+		next_chunk_bits);
+	ASN_DEBUG("avail = %d", avail);
 	if(avail >= next_chunk_bits) {
 		pd->nbits = pd->nboff + next_chunk_bits;
 		arg->unclaimed = 0;
 	} else {
 		arg->unclaimed = next_chunk_bits - avail;
+		ASN_DEBUG("Parent has %d, require %d, will claim %d", avail, next_chunk_bits, arg->unclaimed);
 	}
+	ASN_DEBUG("now at %d bits",
+		((((int)pd->buffer ) & 0x7) << 3) + pd->nboff);
 	return 0;
 }
 
@@ -1131,18 +1147,47 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	rv = td->uper_decoder(opt_codec_ctx, td, constraints, sptr, pd);
 
+	ASN_DEBUG("Open type unconsumed unclaimed=%d, repeat=%d, nbdiff=%d (%d->%d, old=%d (%d->%d))",
+		arg.unclaimed, arg.repeat,
+		pd->nbits - pd->nboff, pd->nboff, pd->nbits,
+		arg.oldpd.nbits - arg.oldpd.nboff, arg.oldpd.nboff, arg.oldpd.nbits);
+	ASN_DEBUG("now at %d bits",
+		((((int)pd->buffer ) & 0x7) << 3) + pd->nboff);
+
+	padding = pd->nbits - pd->nboff;
+	if(padding > 7) {
+		ASN_DEBUG("Too large padding in open type %p (%d->%d) %d",
+			pd->buffer, pd->nboff, pd->nbits, padding);
+		rv.code = RC_FAIL;
+		return rv;
+	}
+
+	ASN_DEBUG("nboff = %d, nbits %d, padding = %d, plus %d/%p", pd->nboff, pd->nbits, padding, pd->buffer - arg.oldpd.buffer, arg.oldpd.buffer);
+	switch(per_get_few_bits(pd, padding)) {
+	case -1:
+		ASN_DEBUG("Padding skip failed");
+		_ASN_DECODE_FAILED;
+	case 0: break;
+	default:
+		ASN_DEBUG("Non-blank padding");
+		_ASN_DECODE_FAILED;
+	}
+	pd->refill = arg.oldpd.refill;
+	pd->refill_key = arg.oldpd.refill_key;
+
 	/* Skip data not consumed by the decoder */
 	while(arg.unclaimed) {
 		int toget = 24;
-		if(arg.unclaimed < toget) {
+		if(arg.unclaimed < toget)
 			toget = arg.unclaimed;
-			arg.unclaimed = 0;
-		} else {
-			arg.unclaimed -= toget;
-		}
+		arg.unclaimed -= toget;
 		switch(per_get_few_bits(pd, toget)) {
-		case -1: _ASN_DECODE_STARVED;
-		case 0: continue;
+		case -1:
+			ASN_DEBUG("Claim of %d failed", toget);
+			_ASN_DECODE_STARVED;
+		case 0:
+			ASN_DEBUG("Got claim of %d", toget);
+			continue;
 		default:
 			/* Padding must be blank */
 			ASN_DEBUG("Non-blank unconsumed padding");
@@ -1150,24 +1195,14 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 	}
 
+	ASN_DEBUG("now at %d bits",
+		((((int)pd->buffer ) & 0x7) << 3) + pd->nboff);
+
 	if(arg.repeat) {
 		ASN_DEBUG("Not consumed the whole thing");
 		rv.code = RC_FAIL;
 		return rv;
 	}
-
-	padding = pd->nbits - pd->nboff;
-	if(padding > 7) {
-		ASN_DEBUG("Too large padding in open type %d", padding);
-		rv.code = RC_FAIL;
-		return rv;
-	}
-
-	ASN_DEBUG("nboff = %d, nbits %d, padding = %d, plus %d/%p", pd->nboff, pd->nbits, padding, pd->buffer - arg.oldpd.buffer, arg.oldpd.buffer);
-	pd->nboff += padding;
-	assert((ssize_t)pd->nboff <= (ssize_t)pd->nbits);
-	pd->refill = arg.oldpd.refill;
-	pd->refill_key = arg.oldpd.refill_key;
 
 	return rv;
 }

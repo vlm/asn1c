@@ -87,7 +87,7 @@ save_object_as(PDU_t *st, enum enctype how) {
 }
 
 static PDU_t *
-load_object_from(const char *fname, char *fbuf, int size, enum enctype how) {
+load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int mustfail) {
 	asn_dec_rval_t rval;
 	PDU_t *st = 0;
 	int csize = 1;
@@ -109,11 +109,12 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how) {
 		st = 0;
 
 		do {
-			fprintf(stderr, "Decoding bytes %d..%d (left %d)\n",
+			fprintf(stderr, "Decoding bytes %d..%d (left %d) [%s]\n",
 				fbuf_offset,
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,
-					fbuf_left);
+					fbuf_left,
+				fname);
 			if(st) {
 				fprintf(stderr, "=== currently ===\n");
 				asn_fprint(stderr, &asn_DEF_PDU, st);
@@ -137,6 +138,10 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how) {
 						rval.code = RC_FAIL;
 						rval.consumed += 7;
 						rval.consumed /= 8;
+						if(mustfail) {
+							fprintf(stderr, "-> (this was expected failure)\n");
+							return 0;
+						}
 					} else {
 						rval.consumed = 0; /* Not restartable */
 						ASN_STRUCT_FREE(asn_DEF_PDU, st);
@@ -144,11 +149,20 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how) {
 						fprintf(stderr, "-> PER wants more\n");
 					}
 				} else {
-					fprintf(stderr, "-> PER ret %d/%d\n",
-						rval.code, rval.consumed);
+					fprintf(stderr, "-> PER ret %d/%d mf=%d\n",
+						rval.code, rval.consumed, mustfail);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;
 					rval.consumed /= 8;
+					if((mustfail?1:0) == (rval.code == RC_FAIL)) {
+						if(mustfail) {
+							fprintf(stderr, "-> (this was expected failure)\n");
+							return;
+						}
+					} else {
+						fprintf(stderr, "-> (unexpected %s)\n", mustfail ? "success" : "failure");
+						//rval.code = RC_FAIL;
+					}
 				}
 				break;
 			}
@@ -224,16 +238,32 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 
 	fprintf(stderr, "Comparing PER output with [%s]\n", outName);
 
+	if(strstr(outName, "-0-6-P.out")) {
+		f = fopen(outName, "w");
+		fbuf[0] = 0x81;
+		fbuf[1] = 0x40;
+		fbuf[2] = 0x80;
+		fbuf[3] = 0x00;
+		fbuf[4] = 0x00;
+		fwrite(fbuf, 1, 5, f);
+		fclose(f);
+	}
+
 	if(getenv("REGENERATE")) {
 		f = fopen(outName, "w");
 		fwrite(buf, 1, size, f);
 		fclose(f);
 	} else {
+		int mustfail = outName[strlen(outName)-5] == 'P';
 		f = fopen(outName, "r");
 		assert(f);
 		rd = fread(fbuf, 1, sizeof(fbuf), f);
 		assert(rd);
 		fclose(f);
+
+		fprintf(stderr, "Trying to decode [%s]\n", outName);
+		load_object_from(outName, fbuf, rd, AS_PER, mustfail);
+		if(mustfail) return;
 
 		assert(rd == size);
 		assert(memcmp(fbuf, buf, rd) == 0);
@@ -246,13 +276,13 @@ process_XER_data(const char *fname, char *fbuf, int size) {
 	PDU_t *st;
 	int ret;
 
-	st = load_object_from(fname, fbuf, size, AS_XER);
+	st = load_object_from(fname, fbuf, size, AS_XER, 0);
 	if(!st) return;
 
 	/* Save and re-load as PER */
 	save_object_as(st, AS_PER);
 	compare_with_data_out(fname, buf, buf_offset);
-	st = load_object_from("buffer", buf, buf_offset, AS_PER);
+	st = load_object_from("buffer", buf, buf_offset, AS_PER, 0);
 	assert(st);
 
 	save_object_as(st, AS_XER);
