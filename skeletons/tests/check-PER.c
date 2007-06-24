@@ -7,6 +7,7 @@ check_per_decoding() {
 	uint8_t tmpbuf[10];
 	int32_t z;
 	asn_per_data_t pos;
+	memset(&pos, 0, sizeof(pos));
 
 	pos.buffer = buf;
 	pos.nboff = 0;
