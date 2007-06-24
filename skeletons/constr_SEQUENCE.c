@@ -1170,9 +1170,11 @@ uper_put_open_type(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints
 	void *buf;
 	ssize_t size;
 
+	ASN_DEBUG("Encoding as open type %s", td->name);
 	size = uper_encode_to_new_buffer(td, constraints, sptr, &buf);
 	if(size <= 0) return -1;
 
+	ASN_DEBUG("Putting %s of length %d", td->name, size);
 	while(size) {
 		ssize_t maySave = uper_put_length(po, size);
 		if(maySave < 0) break;
@@ -1194,7 +1196,8 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 		asn_per_outp_t *po1, asn_per_outp_t *po2) {
 	asn_SEQUENCE_specifics_t *specs
 		= (asn_SEQUENCE_specifics_t *)td->specifics;
-	int num = 0;
+	int exts_present = 0;
+	int exts_count = 0;
 	int edx;
 
 	if(specs->ext_before < 0)
@@ -1207,8 +1210,10 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 		void **memb_ptr2;	/* Pointer to that pointer */
 		int present;
 
-		if(!IN_EXTENSION_GROUP(specs, edx))
+		if(!IN_EXTENSION_GROUP(specs, edx)) {
+			ASN_DEBUG("%d is not extension", edx);
 			continue;
+		}
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
@@ -1221,7 +1226,8 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 		}
 
 		ASN_DEBUG("checking ext %d is present => %d", edx, present);
-		num += present;
+		exts_count++;
+		exts_present += present;
 
 		/* Encode as presence marker */
 		if(po1 && per_put_few_bits(po1, present, 1))
@@ -1233,7 +1239,7 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 
 	}
 
-	return num;
+	return exts_present ? exts_count : 0;
 }
 
 asn_enc_rval_t
