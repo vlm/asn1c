@@ -7,6 +7,7 @@
 	  useful types: GeneralizedTime, UTCTime, ObjectDescriptor;
 	  as well as REAL and OBJECT IDENTIFIER.
 	  TODO: SET type.
+	* Added PER support for extensions in SEQUENCE.
 	* Multiple enhancements by Daniele Varrazzo <daniele.varrazzo@gmail.com>
 	* Fixed explicit tagging of an in-lined constructed type.
 	  (Severity: low; Security impact: none).
