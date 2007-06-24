@@ -12,14 +12,33 @@
 int32_t
 per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	size_t off;	/* Next after last bit offset */
+	ssize_t nleft;
 	uint32_t accum;
 	const uint8_t *buf;
 
-	if(nbits < 0 || pd->nboff + nbits > pd->nbits)
+	if(nbits < 0)
 		return -1;
 
-	ASN_DEBUG("[PER get %d bits from %p+%d bits]",
-		nbits, pd->buffer, pd->nboff);
+	nleft = pd->nbits - pd->nboff;
+	if(nbits > nleft) {
+		int32_t tailv, vhead;
+		if(!pd->refill || nbits > 31) return -1;
+		/* Accumulate unused bytes before refill */
+		ASN_DEBUG("Obtain the rest %d bits", nleft);
+		tailv = per_get_few_bits(pd, nleft);
+		if(tailv < 0) return -1;
+		/* Refill (replace pd contents with new data) */
+		if(pd->refill(pd))
+			return -1;
+		nbits -= nleft;
+		vhead = per_get_few_bits(pd, nbits);
+		/* Combine the rest of previous pd with the head of new one */
+		tailv = (tailv << nbits) | vhead;  /* Could == -1 */
+		return tailv;
+	}
+
+	ASN_DEBUG("[PER get %d bits from %p+%d bits, %d available]",
+		nbits, pd->buffer, pd->nboff, nleft);
 
 	/*
 	 * Normalize position indicator.
@@ -127,6 +146,29 @@ uper_get_length(asn_per_data_t *pd, int ebits, int *repeat) {
 		return -1;
 	*repeat = 1;
 	return (16384 * value);
+}
+
+/*
+ * Get the normally small length "n".
+ * This procedure used to decode length of extensions bit-maps
+ * for SET and SEQUENCE types.
+ */
+ssize_t
+uper_get_nslength(asn_per_data_t *pd) {
+	ssize_t length;
+
+	if(per_get_few_bits(pd, 1) == 0) {
+		ASN_DEBUG("l=?");
+		length = per_get_few_bits(pd, 6);
+		ASN_DEBUG("l=%d", length);
+		if(length < 0) return -1;
+		return length + 1;
+	} else {
+		int repeat;
+		length = uper_get_length(pd, -1, &repeat);
+		if(length >= 0 && !repeat) return length;
+		return -1; /* Error, or do not support >16K extensions */
+	}
 }
 
 /*

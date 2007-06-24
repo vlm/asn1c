@@ -40,6 +40,8 @@ typedef struct asn_per_data_s {
  const uint8_t *buffer;	/* Pointer to the octet stream */
         size_t  nboff;	/* Bit offset to the meaningful bit */
         size_t  nbits;	/* Number of bits in the stream */
+        int (*refill)(struct asn_per_data_s *);
+	void *refill_key;
 } asn_per_data_t;
 
 /*
@@ -63,6 +65,11 @@ int per_get_many_bits(asn_per_data_t *pd, uint8_t *dst, int right_align,
 ssize_t uper_get_length(asn_per_data_t *pd,
 			int effective_bound_bits,
 			int *repeat);
+
+/*
+ * Get the normally small length "n".
+ */
+ssize_t uper_get_nslength(asn_per_data_t *pd);
 
 /*
  * Get the normally small non-negative whole number.
