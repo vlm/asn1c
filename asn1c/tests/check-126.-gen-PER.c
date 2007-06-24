@@ -224,8 +224,12 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 
 	fprintf(stderr, "Comparing PER output with [%s]\n", outName);
 
-	f = fopen(outName, "r");
-	if(f) {
+	if(getenv("REGENERATE")) {
+		f = fopen(outName, "w");
+		fwrite(buf, 1, size, f);
+		fclose(f);
+	} else {
+		f = fopen(outName, "r");
 		assert(f);
 		rd = fread(fbuf, 1, sizeof(fbuf), f);
 		assert(rd);
@@ -234,10 +238,6 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 		assert(rd == size);
 		assert(memcmp(fbuf, buf, rd) == 0);
 		fprintf(stderr, "XER->PER recoding .in->.out match.\n");
-	} else if(getenv("REGENERATE")) {
-		f = fopen(outName, "w");
-		fwrite(buf, 1, size, f);
-		fclose(f);
 	}
 }
 
