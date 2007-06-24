@@ -238,14 +238,30 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 
 	fprintf(stderr, "Comparing PER output with [%s]\n", outName);
 
-	if(strstr(outName, "-0-6-P.out")) {
+	if(strstr(outName, "-06-P.out")) {
+		f = fopen(outName, "w");
+		fbuf[0] = 0x81;
+		fbuf[1] = 0x40;
+		fbuf[2] = 0x00;
+		fwrite(fbuf, 1, 3, f);
+		fclose(f);
+	}
+
+	if(strstr(outName, "-07-P.out")) {
+		f = fopen(outName, "w");
+		fbuf[0] = 0x81;
+		fbuf[1] = 0x40;
+		fbuf[2] = 0x40;
+		fwrite(fbuf, 1, 3, f);
+		fclose(f);
+	}
+
+	if(strstr(outName, "-08-P.out")) {
 		f = fopen(outName, "w");
 		fbuf[0] = 0x81;
 		fbuf[1] = 0x40;
 		fbuf[2] = 0x80;
-		fbuf[3] = 0x00;
-		fbuf[4] = 0x00;
-		fwrite(fbuf, 1, 5, f);
+		fwrite(fbuf, 1, 3, f);
 		fclose(f);
 	}
 

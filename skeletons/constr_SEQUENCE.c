@@ -1249,6 +1249,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	}
 
 	/* Prepare a place and read-in the presence bitmap */
+	memset(&opmd, 0, sizeof(opmd));
 	if(specs->roms_count) {
 		opres = (uint8_t *)MALLOC(((specs->roms_count + 7) >> 3) + 1);
 		if(!opres) _ASN_DECODE_FAILED;
@@ -1258,13 +1259,11 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			_ASN_DECODE_STARVED;
 		}
 		opmd.buffer = opres;
-		opmd.nboff = 0;
 		opmd.nbits = specs->roms_count;
 		ASN_DEBUG("Read in presence bitmap for %s of %d bits (%x..)",
 			td->name, specs->roms_count, *opres);
 	} else {
 		opres = 0;
-		memset(&opmd, 0, sizeof opmd);
 	}
 
 	/*
@@ -1342,8 +1341,8 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		if(per_get_many_bits(pd, epres, 0, bmlength))
 			_ASN_DECODE_STARVED;
 
+		memset(&epmd, 0, sizeof(epmd));
 		epmd.buffer = epres;
-		epmd.nboff = 0;
 		epmd.nbits = bmlength;
 		ASN_DEBUG("Read in extensions bitmap for %s of %d bits (%x..)",
 			td->name, bmlength, *epres);
