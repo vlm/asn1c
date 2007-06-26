@@ -37,11 +37,12 @@ typedef struct asn_per_constraints_s {
  * This structure describes a position inside an incoming PER bit stream.
  */
 typedef struct asn_per_data_s {
- const uint8_t *buffer;	/* Pointer to the octet stream */
-        size_t  nboff;	/* Bit offset to the meaningful bit */
-        size_t  nbits;	/* Number of bits in the stream */
-        int (*refill)(struct asn_per_data_s *);
-	void *refill_key;
+  const uint8_t *buffer;  /* Pointer to the octet stream */
+         size_t  nboff;   /* Bit offset to the meaningful bit */
+         size_t  nbits;   /* Number of bits in the stream */
+         size_t  moved;   /* Number of bits moved through this bit stream */
+  int (*refill)(struct asn_per_data_s *);
+  void *refill_key;
 } asn_per_data_t;
 
 /*
@@ -50,6 +51,9 @@ typedef struct asn_per_data_s {
  * extracted due to EOD or other conditions.
  */
 int32_t per_get_few_bits(asn_per_data_t *per_data, int get_nbits);
+
+/* Undo the immediately preceeding "get_few_bits" operation */
+void per_get_undo(asn_per_data_t *per_data, int get_nbits);
 
 /*
  * Extract a large number of bits from the specified PER data pointer.
