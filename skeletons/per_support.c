@@ -8,8 +8,8 @@
 
 void
 per_get_undo(asn_per_data_t *pd, int nbits) {
-	if(pd->nboff < nbits) {
-		assert(pd->nboff < nbits);
+	if((ssize_t)pd->nboff < nbits) {
+		assert((ssize_t)pd->nboff < nbits);
 	} else {
 		pd->nboff -= nbits;
 		pd->moved -= nbits;
@@ -389,7 +389,7 @@ uper_put_nslength(asn_per_outp_t *po, size_t length) {
 		if(length == 0) return -1;
 		return per_put_few_bits(po, length-1, 7) ? -1 : 0;
 	} else {
-		if(uper_put_length(po, length) != length) {
+		if(uper_put_length(po, length) != (ssize_t)length) {
 			/* This might happen in case of >16K extensions */
 			return -1;
 		}
