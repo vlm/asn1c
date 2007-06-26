@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2006, 2007 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_PER_ENCODER_H_
@@ -42,7 +42,7 @@ asn_enc_rval_t uper_encode_to_buffer(
  * A variant of uper_encode_to_buffer() which allocates buffer itself.
  * Returns the number of bytes in the buffer or -1 in case of failure.
  * WARNING: This function produces a "Production of the complete encoding",
- * with length of at least one octet. Contrast this to precise bit-preserving
+ * with length of at least one octet. Contrast this to precise bit-packing
  * encoding of uper_encode() and uper_encode_to_buffer().
  */
 ssize_t uper_encode_to_new_buffer(
