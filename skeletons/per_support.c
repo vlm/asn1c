@@ -34,7 +34,7 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		int32_t tailv, vhead;
 		if(!pd->refill || nbits > 31) return -1;
 		/* Accumulate unused bytes before refill */
-		ASN_DEBUG("Obtain the rest %d bits", nleft);
+		ASN_DEBUG("Obtain the rest %d bits (want %d)", nleft, nbits);
 		tailv = per_get_few_bits(pd, nleft);
 		if(tailv < 0) return -1;
 		/* Refill (replace pd contents with new data) */
@@ -46,9 +46,6 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		tailv = (tailv << nbits) | vhead;  /* Could == -1 */
 		return tailv;
 	}
-
-	ASN_DEBUG("[PER get %d bits from (%d@%d+%d)]",
-		nbits, pd->moved, pd->nboff, nleft);
 
 	/*
 	 * Normalize position indicator.
@@ -89,7 +86,12 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		return -1;
 	}
 
-	return (accum & (((uint32_t)1 << nbits) - 1));
+	accum &= (((uint32_t)1 << nbits) - 1);
+
+	ASN_DEBUG("[PER got %d bits from (%d@%d+%d) => 0x%x]",
+		nbits, pd->moved, pd->nboff, nleft, accum);
+
+	return accum;
 }
 
 /*
@@ -172,12 +174,13 @@ ssize_t
 uper_get_nslength(asn_per_data_t *pd) {
 	ssize_t length;
 
+	ASN_DEBUG("Getting normally small length");
+
 	if(per_get_few_bits(pd, 1) == 0) {
-		ASN_DEBUG("l=?");
-		length = per_get_few_bits(pd, 6);
+		length = per_get_few_bits(pd, 6) + 1;
+		if(length <= 0) return -1;
 		ASN_DEBUG("l=%d", length);
-		if(length < 0) return -1;
-		return length + 1;
+		return length;
 	} else {
 		int repeat;
 		length = uper_get_length(pd, -1, &repeat);

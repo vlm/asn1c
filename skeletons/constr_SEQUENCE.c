@@ -1092,7 +1092,7 @@ uper_ugot_refill(asn_per_data_t *pd) {
 		pd->buffer = oldpd->buffer;
 		pd->nboff = oldpd->nboff - 1;
 		pd->nbits = oldpd->nbits;
-		ASN_DEBUG("Return from unclaimed");
+		ASN_DEBUG("Return from UNCLAIMED");
 		return 0;
 	}
 
@@ -1133,7 +1133,7 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	_ASN_STACK_OVERFLOW_CHECK(opt_codec_ctx);
 
-	ASN_DEBUG("Getting open type from %d bits (%d+%d), %p", pd->nbits - pd->nboff, pd->nboff, pd->nbits, pd->buffer);
+	ASN_DEBUG("Getting open type off %d (%d+%d), %p", pd->moved, pd->nboff, pd->nbits, pd->buffer);
 	arg.oldpd = *pd;
 	arg.unclaimed = 0;
 	arg.ot_moved = 0;
@@ -1149,22 +1149,32 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		td->name, pd->moved, arg.oldpd.moved,
 		arg.unclaimed, arg.repeat);
 
+	ASN_DEBUG("OT1 moved %d, estimated %d uncl=%d",
+		arg.oldpd.moved,
+		arg.oldpd.nboff + ((((int)arg.oldpd.buffer) & 0x7) << 3),
+		arg.unclaimed
+	);
+
 	padding = pd->moved % 8;
 	if(padding) {
+		int32_t pvalue;
 		if(padding > 7) {
 			ASN_DEBUG("Too large padding %d in open type",
 				padding);
 			rv.code = RC_FAIL;
 			return rv;
 		}
+		padding = 8 - padding;
 		ASN_DEBUG("Getting padding of %d bits", padding);
-		switch(per_get_few_bits(pd, padding)) {
+		pvalue = per_get_few_bits(pd, padding);
+		switch(pvalue) {
 		case -1:
 			ASN_DEBUG("Padding skip failed");
-			_ASN_DECODE_FAILED;
+			_ASN_DECODE_STARVED;
 		case 0: break;
 		default:
-			ASN_DEBUG("Non-blank padding");
+			ASN_DEBUG("Non-blank padding (%d bits 0x%02x)",
+				padding, pvalue);
 			_ASN_DECODE_FAILED;
 		}
 	}
@@ -1173,15 +1183,15 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		if(1) _ASN_DECODE_FAILED;
 		arg.unclaimed += pd->nbits - pd->nboff;
 	}
-	arg.oldpd.nbits -= pd->moved - arg.ot_moved;
-	arg.oldpd.moved += pd->moved - arg.ot_moved;
-	pd->nboff = arg.oldpd.nboff;
-	pd->nbits = arg.oldpd.nbits;
-	pd->moved = arg.oldpd.moved;
+
+	/* Adjust pd back so it points to original data */
+	pd->nbits = arg.oldpd.nbits - (pd->moved - arg.ot_moved);
+	pd->moved = arg.oldpd.moved + (pd->moved - arg.ot_moved);
 	pd->refill = arg.oldpd.refill;
 	pd->refill_key = arg.oldpd.refill_key;
 
 	/* Skip data not consumed by the decoder */
+	if(arg.unclaimed) ASN_DEBUG("Getting unclaimed %d", arg.unclaimed);
 	while(arg.unclaimed) {
 		size_t toget = 24;
 		if(arg.unclaimed < toget)
@@ -1200,6 +1210,8 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			_ASN_DECODE_FAILED;
 		}
 	}
+
+	assert(pd->moved == pd->nboff + ((((int)pd->buffer) & 0x7) << 3));
 
 	if(arg.repeat) {
 		ASN_DEBUG("Not consumed the whole thing");
@@ -1411,6 +1423,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/* Skip over overflow extensions which aren't present
 		 * in this system's version of the protocol */
 		for(;;) {
+			ASN_DEBUG("Getting overflow extensions");
 			switch(per_get_few_bits(&epmd, 1)) {
 			case -1: break;
 			case 0: continue;
@@ -1579,6 +1592,8 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
+
+		ASN_DEBUG("About to encode %s", elm->type->name);
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {

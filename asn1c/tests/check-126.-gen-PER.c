@@ -104,7 +104,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 		st = 0;
 
 		do {
-			fprintf(stderr, "Decoding bytes %d..%d (left %d) [%s]\n",
+			fprintf(stderr, "\nDecoding bytes %d..%d (left %d) [%s]\n",
 				fbuf_offset,
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,

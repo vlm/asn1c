@@ -16,15 +16,16 @@ BEGIN
 		str-o	IA5String	OPTIONAL,
 		str-m	IA5String,
 		singl	Singleton,
-		pdu-2	PDU-2
+		pdu-2	PDU-2	OPTIONAL
 	}
 
 	Singleton ::= SEQUENCE {
-		mandatory IA5String DEFAULT "z"
+		opt-z	IA5String DEFAULT "z"
 	}
 
 	PDU-2 ::= CHOICE {
-		str-p2 IA5String
+		str-p2 IA5String,
+		...
 	}
 
 END
