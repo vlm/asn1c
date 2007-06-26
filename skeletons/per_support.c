@@ -47,8 +47,8 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		return tailv;
 	}
 
-	ASN_DEBUG("[PER get %d bits from %p+%d bits, %d available]",
-		nbits, pd->buffer, pd->nboff, nleft);
+	ASN_DEBUG("[PER get %d bits from (%d@%d+%d)]",
+		nbits, pd->moved, pd->nboff, nleft);
 
 	/*
 	 * Normalize position indicator.

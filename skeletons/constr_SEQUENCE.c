@@ -1092,7 +1092,7 @@ uper_ugot_refill(asn_per_data_t *pd) {
 		pd->buffer = oldpd->buffer;
 		pd->nboff = oldpd->nboff - 1;
 		pd->nbits = oldpd->nbits;
-		ASN_DEBUG("====================");
+		ASN_DEBUG("Return from unclaimed");
 		return 0;
 	}
 
@@ -1145,10 +1145,9 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	rv = td->uper_decoder(opt_codec_ctx, td, constraints, sptr, pd);
 
-	ASN_DEBUG("Open type %s consumed %d off of %d unclaimed=%d, repeat=%d, nbdiff=%d (%d->%d, old=%d (%d->%d))",
-		td->name, pd->moved, arg.oldpd.moved, arg.unclaimed, arg.repeat,
-		pd->nbits - pd->nboff, pd->nboff, pd->nbits,
-		arg.oldpd.nbits - arg.oldpd.nboff, arg.oldpd.nboff, arg.oldpd.nbits);
+	ASN_DEBUG("Open type %s consumed %d off of %d unclaimed=%d, repeat=%d",
+		td->name, pd->moved, arg.oldpd.moved,
+		arg.unclaimed, arg.repeat);
 
 	padding = pd->moved % 8;
 	if(padding) {
@@ -1170,12 +1169,9 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 	}
 	if(pd->nbits != pd->nboff) {
-		ASN_DEBUG("Open type container overhead of %d off %d bits!", pd->nbits - pd->nboff, arg.oldpd.moved + pd->moved);
-		if(0) _ASN_DECODE_FAILED;
-		/* Ignore unwanted overheads */
-		arg.oldpd.moved += pd->nbits - pd->nboff;
-		//pd->moved += pd->nbits - pd->nboff;
-		pd->nboff = pd->nbits;
+		ASN_DEBUG("Open type container overhead of %d bits!", pd->nbits - pd->nboff);
+		if(1) _ASN_DECODE_FAILED;
+		arg.unclaimed += pd->nbits - pd->nboff;
 	}
 	arg.oldpd.nbits -= pd->moved - arg.ot_moved;
 	arg.oldpd.moved += pd->moved - arg.ot_moved;
