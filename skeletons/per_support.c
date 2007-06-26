@@ -6,13 +6,23 @@
 #include <asn_internal.h>
 #include <per_support.h>
 
+void
+per_get_undo(asn_per_data_t *pd, int nbits) {
+	if(pd->nboff < nbits) {
+		assert(pd->nboff < nbits);
+	} else {
+		pd->nboff -= nbits;
+		pd->moved -= nbits;
+	}
+}
+
 /*
  * Extract a small number of bits (<= 31) from the specified PER data pointer.
  */
 int32_t
 per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	size_t off;	/* Next after last bit offset */
-	ssize_t nleft;
+	ssize_t nleft;	/* Number of bits left in this stream */
 	uint32_t accum;
 	const uint8_t *buf;
 
@@ -48,7 +58,9 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		pd->nbits  -= (pd->nboff & ~0x07);
 		pd->nboff  &= 0x07;
 	}
-	off = (pd->nboff += nbits);
+	pd->moved += nbits;
+	pd->nboff += nbits;
+	off = pd->nboff;
 	buf = pd->buffer;
 
 	/*
@@ -66,11 +78,14 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	else if(nbits <= 31) {
 		asn_per_data_t tpd = *pd;
 		/* Here are we with our 31-bits limit plus 1..7 bits offset. */
-		tpd.nboff -= nbits;
+		per_get_undo(&tpd, nbits);
+		/* The number of available bits in the stream allow
+		 * for the following operations to take place without
+		 * invoking the ->refill() function */
 		accum  = per_get_few_bits(&tpd, nbits - 24) << 24;
 		accum |= per_get_few_bits(&tpd, 24);
 	} else {
-		pd->nboff -= nbits;	/* Oops, revert back */
+		per_get_undo(pd, nbits);
 		return -1;
 	}
 

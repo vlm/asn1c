@@ -1078,7 +1078,6 @@ uper_ugot_refill(asn_per_data_t *pd) {
 	oldpd->nbits -= consumed;
 	oldpd->buffer = pd->buffer;
 	oldpd->nboff = pd->nboff;
-	oldpd->nboff = pd->nbits;
 
 	if(arg->unclaimed) {
 		/* Refill the container */
@@ -1091,6 +1090,7 @@ uper_ugot_refill(asn_per_data_t *pd) {
 		pd->buffer = oldpd->buffer;
 		pd->nboff = oldpd->nboff - 1;
 		pd->nbits = oldpd->nbits;
+		pd->moved = oldpd->moved - 1;
 		ASN_DEBUG("====================");
 		return 0;
 	}
@@ -1110,12 +1110,12 @@ uper_ugot_refill(asn_per_data_t *pd) {
 	pd->buffer = oldpd->buffer;
 	pd->nboff = oldpd->nboff;
 	pd->nbits = oldpd->nbits;
+	pd->moved = oldpd->moved;
 	next_chunk_bits = next_chunk_bytes << 3;
 	avail = pd->nbits - pd->nboff;
-	ASN_DEBUG("now at %d bits, want %d",
+	ASN_DEBUG("now at %d bits, want %d, avail %d",
 		((((int)pd->buffer ) & 0x7) << 3) + pd->nboff,
-		next_chunk_bits);
-	ASN_DEBUG("avail = %d", avail);
+		next_chunk_bits, avail);
 	if(avail >= next_chunk_bits) {
 		pd->nbits = pd->nboff + next_chunk_bits;
 		arg->unclaimed = 0;
