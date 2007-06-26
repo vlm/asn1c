@@ -134,7 +134,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 					? fbuf_chunk : fbuf_left, 0, 0);
 				if(rval.code == RC_WMORE) {
 					if(fbuf_chunk == fbuf_left) {
-						fprintf(stderr, "-> PER decode error (%d bits of %d bytes) \n", rval.consumed, size);
+						fprintf(stderr, "-> PER decode error (%d bits of %d bytes (c=%d,l=%d)) \n", rval.consumed, size, fbuf_chunk, fbuf_left);
 						rval.code = RC_FAIL;
 						rval.consumed += 7;
 						rval.consumed /= 8;
@@ -161,7 +161,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 						}
 					} else {
 						fprintf(stderr, "-> (unexpected %s)\n", mustfail ? "success" : "failure");
-						//rval.code = RC_FAIL;
+						rval.code = RC_FAIL;
 					}
 				}
 				break;
