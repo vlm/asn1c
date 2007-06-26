@@ -43,7 +43,6 @@ enum enctype {
 	AS_PER,
 	AS_DER,
 	AS_XER,
-	AS_CXER,
 };
 
 static void
@@ -67,10 +66,6 @@ save_object_as(PDU_t *st, enum enctype how) {
 		break;
 	case AS_XER:
 		rval = xer_encode(&asn_DEF_PDU, st, XER_F_BASIC,
-			_buf_writer, 0);
-		break;
-	case AS_CXER:
-		rval = xer_encode(&asn_DEF_PDU, st, XER_F_CANONICAL,
 			_buf_writer, 0);
 		break;
 	}
@@ -127,6 +122,9 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 					fbuf_chunk < fbuf_left 
 					? fbuf_chunk : fbuf_left);
 				break;
+			case AS_DER:
+				assert(0);
+				break;
 			case AS_PER:
 				rval = uper_decode(0, &asn_DEF_PDU,
 					(void **)&st, fbuf + fbuf_offset,
@@ -157,7 +155,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 					if((mustfail?1:0) == (rval.code == RC_FAIL)) {
 						if(mustfail) {
 							fprintf(stderr, "-> (this was expected failure)\n");
-							return;
+							return 0;
 						}
 					} else {
 						fprintf(stderr, "-> (unexpected %s)\n", mustfail ? "success" : "failure");
@@ -281,7 +279,7 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 		load_object_from(outName, fbuf, rd, AS_PER, mustfail);
 		if(mustfail) return;
 
-		assert(rd == size);
+		assert(rd == (size_t)size);
 		assert(memcmp(fbuf, buf, rd) == 0);
 		fprintf(stderr, "XER->PER recoding .in->.out match.\n");
 	}
@@ -290,7 +288,6 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 static void
 process_XER_data(const char *fname, char *fbuf, int size) {
 	PDU_t *st;
-	int ret;
 
 	st = load_object_from(fname, fbuf, size, AS_XER, 0);
 	if(!st) return;
@@ -320,7 +317,6 @@ static int
 process(const char *fname) {
 	char fbuf[4096];
 	char *ext = strrchr(fname, '.');
-	int ret;
 	int rd;
 	FILE *fp;
 
@@ -336,7 +332,7 @@ process(const char *fname) {
 	rd = fread(fbuf, 1, sizeof(fbuf), fp);
 	fclose(fp);
 
-	assert(rd < sizeof(fbuf));	/* expect small files */
+	assert((size_t)rd < sizeof(fbuf));	/* expect small files */
 
 	process_XER_data(fname, fbuf, rd);
 
