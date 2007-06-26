@@ -6,5 +6,6 @@ Mode of operation:
 
 Naming conventions:
 
+*-C.in  -       Comparison of .out might fail, but decoding succeeds
 *-P.in  -       PER decoding of .out file must fail.
 
