@@ -2,7 +2,13 @@
 /*** <<< INCLUDES [PDU] >>> ***/
 
 #include <IA5String.h>
+#include "Singleton.h"
 #include <constr_SEQUENCE.h>
+
+/*** <<< FWD-DECLS [PDU] >>> ***/
+
+struct PDU_2;
+struct Singleton;
 
 /*** <<< TYPE-DECLS [PDU] >>> ***/
 
@@ -13,6 +19,8 @@ typedef struct PDU {
 	 */
 	IA5String_t	*str_o	/* OPTIONAL */;
 	IA5String_t	*str_m;
+	struct Singleton	*singl;
+	struct PDU_2	*pdu_2	/* OPTIONAL */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -22,10 +30,14 @@ typedef struct PDU {
 
 extern asn_TYPE_descriptor_t asn_DEF_PDU;
 
+/*** <<< POST-INCLUDE [PDU] >>> ***/
+
+#include "PDU-2.h"
+
 /*** <<< STAT-DEFS [PDU] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_PDU_1[] = {
-	{ ATF_POINTER, 2, offsetof(struct PDU, str_o),
+	{ ATF_POINTER, 4, offsetof(struct PDU, str_o),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
@@ -34,7 +46,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.default_value = 0,
 		.name = "str-o"
 		},
-	{ ATF_POINTER, 1, offsetof(struct PDU, str_m),
+	{ ATF_POINTER, 3, offsetof(struct PDU, str_m),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
@@ -43,24 +55,44 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.default_value = 0,
 		.name = "str-m"
 		},
+	{ ATF_POINTER, 2, offsetof(struct PDU, singl),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_Singleton,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "singl"
+		},
+	{ ATF_POINTER, 1, offsetof(struct PDU, pdu_2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_PDU_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "pdu-2"
+		},
 };
-static int asn_MAP_PDU_oms_1[] = { 0, 1 };
+static int asn_MAP_PDU_oms_1[] = { 0, 1, 2, 3 };
 static ber_tlv_tag_t asn_DEF_PDU_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* str-o at 16 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* str-m at 17 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* str-m at 17 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* singl at 18 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 } /* pdu-2 at 19 */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 	sizeof(struct PDU),
 	offsetof(struct PDU, _asn_ctx),
 	asn_MAP_PDU_tag2el_1,
-	2,	/* Count of tags in the map */
+	4,	/* Count of tags in the map */
 	asn_MAP_PDU_oms_1,	/* Optional members */
-	0, 2,	/* Root/Additions */
+	0, 4,	/* Root/Additions */
 	-1,	/* Start extensions */
-	3	/* Stop extensions */
+	5	/* Stop extensions */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",
@@ -83,7 +115,173 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 		/sizeof(asn_DEF_PDU_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
 	asn_MBR_PDU_1,
-	2,	/* Elements count */
+	4,	/* Elements count */
 	&asn_SPC_PDU_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Singleton] >>> ***/
+
+#include <IA5String.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [Singleton] >>> ***/
+
+typedef struct Singleton {
+	IA5String_t	*opt_z	/* DEFAULT z */;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Singleton_t;
+
+/*** <<< FUNC-DECLS [Singleton] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Singleton;
+
+/*** <<< STAT-DEFS [Singleton] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Singleton_1[] = {
+	{ ATF_POINTER, 1, offsetof(struct Singleton, opt_z),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "opt-z"
+		},
+};
+static int asn_MAP_Singleton_oms_1[] = { 0 };
+static ber_tlv_tag_t asn_DEF_Singleton_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_Singleton_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* opt-z at 23 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
+	sizeof(struct Singleton),
+	offsetof(struct Singleton, _asn_ctx),
+	asn_MAP_Singleton_tag2el_1,
+	1,	/* Count of tags in the map */
+	asn_MAP_Singleton_oms_1,	/* Optional members */
+	1, 0,	/* Root/Additions */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Singleton = {
+	"Singleton",
+	"Singleton",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	SEQUENCE_decode_uper,
+	SEQUENCE_encode_uper,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Singleton_tags_1,
+	sizeof(asn_DEF_Singleton_tags_1)
+		/sizeof(asn_DEF_Singleton_tags_1[0]), /* 1 */
+	asn_DEF_Singleton_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Singleton_tags_1)
+		/sizeof(asn_DEF_Singleton_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_Singleton_1,
+	1,	/* Elements count */
+	&asn_SPC_Singleton_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [PDU-2] >>> ***/
+
+#include <IA5String.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [PDU-2] >>> ***/
+
+typedef enum PDU_2_PR {
+	PDU_2_PR_NOTHING,	/* No components present */
+	PDU_2_PR_str_p2,
+	/* Extensions may appear below */
+	
+} PDU_2_PR;
+
+/*** <<< TYPE-DECLS [PDU-2] >>> ***/
+
+typedef struct PDU_2 {
+	PDU_2_PR present;
+	union PDU_2_u {
+		IA5String_t	 str_p2;
+		/*
+		 * This type is extensible,
+		 * possible extensions are below.
+		 */
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} PDU_2_t;
+
+/*** <<< FUNC-DECLS [PDU-2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_PDU_2;
+
+/*** <<< CTDEFS [PDU-2] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 = {
+	{ APC_CONSTRAINED | APC_EXTENSIBLE,  0,  0,  0,  0 }	/* (0..0,...) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [PDU-2] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.str_p2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "str-p2"
+		},
+};
+static asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* str-p2 at 27 */
+};
+static asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
+	sizeof(struct PDU_2),
+	offsetof(struct PDU_2, _asn_ctx),
+	offsetof(struct PDU_2, present),
+	sizeof(((struct PDU_2 *)0)->present),
+	asn_MAP_PDU_2_tag2el_1,
+	1,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = 1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
+	"PDU-2",
+	"PDU-2",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	CHOICE_decode_uper,
+	CHOICE_encode_uper,
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	&asn_PER_type_PDU_2_constr_1,
+	asn_MBR_PDU_2_1,
+	1,	/* Elements count */
+	&asn_SPC_PDU_2_specs_1	/* Additional specs */
 };
 
