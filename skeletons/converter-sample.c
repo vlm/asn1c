@@ -15,7 +15,6 @@
 #include <unistd.h>	/* for getopt(3) */
 #include <string.h>	/* for strerror(3) */
 #include <sysexits.h>	/* for EX_* exit codes */
-#include <assert.h>	/* for assert(3) */
 #include <errno.h>	/* for errno */
 
 #include <asn_application.h>
@@ -43,7 +42,7 @@ static char *argument_to_name(char *av[], int idx);
        int opt_debug;	/* -d (or -dd) */
 static int opt_check;	/* -c (constraints checking) */
 static int opt_stack;	/* -s (maximum stack size) */
-static int opt_ippad;	/* -per-padded (PER input is byte-padded) */
+static int opt_nopad;	/* -per-nopad (PER input is not padded) */
 static int opt_onepdu;	/* -1 (decode single PDU) */
 
 /* Input data format selector */
@@ -146,8 +145,8 @@ main(int ac, char *av[]) {
 		}
 		break;
 	case 'p':
-		if(strcmp(optarg, "er-padded") == 0) {
-			opt_ippad = 1;
+		if(strcmp(optarg, "er-nopad") == 0) {
+			opt_nopad = 1;
 			break;
 		}
 #ifdef	ASN_PDU_COLLECTION
@@ -207,7 +206,7 @@ main(int ac, char *av[]) {
 		"  -onull       Verify (decode) input, but do not output\n");
 		if(pduType->uper_decoder)
 		fprintf(stderr,
-		"  -per-padded  Assume PER PDUs are byte-padded (-iper)\n");
+		"  -per-nopad   Assume PER PDUs are not padded (-iper)\n");
 #ifdef	ASN_PDU_COLLECTION
 		fprintf(stderr,
 		"  -p <PDU>     Specify PDU type to decode\n"
@@ -631,23 +630,24 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 				(void **)&structure, i_bptr, i_size);
 			break;
 		case INP_PER:
+			if(opt_nopad)
 			rval = uper_decode(opt_codec_ctx, pduType,
 				(void **)&structure, i_bptr, i_size, 0,
 				DynamicBuffer.unbits);
-			/* PER requires returns number of bits, but a catch! */
+			else
+			rval = uper_decode_complete(opt_codec_ctx, pduType,
+				(void **)&structure, i_bptr, i_size);
 			switch(rval.code) {
 			case RC_OK:
-				/* Check if input is byte-padded at the end */
-				if(opt_ippad && (rval.consumed % 8)) {
-					rval.consumed /= 8;
-					rval.consumed++;
-					ecbits = 0;
-					break;
-				}
 				/* Fall through */
 			case RC_FAIL:
-				ecbits = rval.consumed % 8;	/* Extra bits */
-				rval.consumed /= 8; /* Convert into bytes! */
+				if(opt_nopad) {
+					/* uper_decode() returns bits! */
+					/* Extra bits */
+					ecbits = rval.consumed % 8;
+					/* Convert into bytes! */
+					rval.consumed /= 8;
+				}
 				break;
 			case RC_WMORE:
 				/* PER does not support restartability */
