@@ -4823,19 +4823,19 @@ check-per:
 	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 2; \
 	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 2; \
 	done; done; fi
-	@if test -f sample-DL-DCCH-Message-1-padded.per ; then \
-	for f in sample-*-[1-9]-padded.per; do \
+	@if test -f sample-DL-DCCH-Message-1-nopad.per ; then \
+	for f in sample-*-[1-9]-nopad.per; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
-	echo "Recoding byte-padded $$f into DER into XER and back ($$b)..."; \
-	./${TARGET} -b $$b -per-padded -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	echo "Recoding unpadded $$f into DER into XER and back ($$b)..."; \
+	./${TARGET} -b $$b -per-nopad -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
 	./${TARGET} -b $$b -p $$pdu -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 2; \
 	./${TARGET} -b $$b -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 2; \
 	diff $$f ./.tmp.1.$$$$ || exit 2; \
 	rm -f ./.tmp.[12].$$$$; \
 	echo "Test junking $$f (please wait)..."; \
-	./${TARGET} -J0.0001 -n 1000 -b $$b -per-padded -iper -onull $$f || exit 2; \
-	./${TARGET} -J0.001 -n 1000 -b $$b -per-padded -iper -onull $$f || exit 2; \
+	./${TARGET} -J0.0001 -n 1000 -b $$b -per-nopad -iper -onull $$f || exit 2; \
+	./${TARGET} -J0.001 -n 1000 -b $$b -per-nopad -iper -onull $$f || exit 2; \
 	done; done; fi
 
 distclean: clean
