@@ -242,7 +242,7 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 	mustfail = lastChar == 'P';
 	compare = lastChar != 'C';
 
-	if(compare && getenv("REGENERATE")) {
+	if((compare && !mustfail) && getenv("REGENERATE")) {
 		f = fopen(outName, "w");
 		fwrite(buf, 1, size, f);
 		fclose(f);
