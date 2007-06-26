@@ -1210,10 +1210,33 @@ uper_get_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	return rv;
 }
 
+asn_dec_rval_t
+uper_sot_suck(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+
+	(void)opt_codec_ctx;
+	(void)td;
+	(void)constraints;
+	(void)sptr;
+
+	while(per_get_few_bits(pd, 24) >= 0);
+
+	rv.code = RC_OK;
+	rv.consumed = pd->moved;
+
+	return rv;
+}
+
 static int
 uper_skip_open_type(asn_codec_ctx_t *opt_codec_ctx, asn_per_data_t *pd) {
+	asn_TYPE_descriptor_t s_td;
 	asn_dec_rval_t rv;
-	rv = uper_get_open_type(opt_codec_ctx, 0, 0, 0, pd);
+
+	s_td.name = "<unknown extension>";
+	s_td.uper_decoder = uper_sot_suck;
+
+	rv = uper_get_open_type(opt_codec_ctx, &s_td, 0, 0, pd);
 	if(rv.code != RC_OK)
 		return -1;
 	else
@@ -1387,11 +1410,17 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Skip over overflow extensions which aren't present
 		 * in this system's version of the protocol */
-		while(per_get_few_bits(&epmd, 1) >= 0) {
-			if(uper_skip_open_type(opt_codec_ctx, pd)) {
-				FREEMEM(epres);
-				_ASN_DECODE_STARVED;
+		for(;;) {
+			switch(per_get_few_bits(&epmd, 1)) {
+			case -1: break;
+			case 0: continue;
+			default:
+				if(uper_skip_open_type(opt_codec_ctx, pd)) {
+					FREEMEM(epres);
+					_ASN_DECODE_STARVED;
+				}
 			}
+			break;
 		}
 
 		FREEMEM(epres);
@@ -1445,7 +1474,7 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 		int present;
 
 		if(!IN_EXTENSION_GROUP(specs, edx)) {
-			ASN_DEBUG("%d is not extension", edx);
+			ASN_DEBUG("%s (@%d) is not extension", elm->type->name, edx);
 			continue;
 		}
 
@@ -1459,7 +1488,8 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 			present = 1;
 		}
 
-		ASN_DEBUG("checking ext %d is present => %d", edx, present);
+		ASN_DEBUG("checking %s (@%d) present => %d",
+			elm->type->name, edx, present);
 		exts_count++;
 		exts_present += present;
 
