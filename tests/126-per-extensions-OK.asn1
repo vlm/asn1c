@@ -14,7 +14,17 @@ BEGIN
 	PDU ::= SEQUENCE {
 		...,
 		str-o	IA5String	OPTIONAL,
-		str-m	IA5String
+		str-m	IA5String,
+		singl	Singleton,
+		pdu-2	PDU-2
+	}
+
+	Singleton ::= SEQUENCE {
+		mandatory IA5String DEFAULT "z"
+	}
+
+	PDU-2 ::= CHOICE {
+		str-p2 IA5String
 	}
 
 END
