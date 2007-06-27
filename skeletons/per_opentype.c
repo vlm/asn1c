@@ -133,6 +133,7 @@ uper_open_type_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 	}
 
+	if(0)	/* Special debugging assert */
 	assert(pd->moved == pd->nboff + ((((int)pd->buffer) & 0x7) << 3));
 
 	if(arg.repeat) {
