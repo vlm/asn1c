@@ -140,6 +140,32 @@ extern asn_TYPE_descriptor_t asn_DEF_Singleton;
 
 /*** <<< STAT-DEFS [Singleton] >>> ***/
 
+static int asn_DFL_2_set(int set_value, void **sptr) {
+	static uint8_t defv[] = "z";
+	IA5String_t *st = *sptr;
+	
+	if(!st) {
+		if(!set_value) return -1;	/* Not a default value */
+		st = (*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) return -1;
+	}
+	
+	if(set_value) {
+		uint8_t *ptr = MALLOC(sizeof(defv));
+		if(!ptr) return -1;
+		memcpy(ptr, &defv, sizeof(defv));
+		FREEMEM(st->buf);
+		st->buf = ptr;
+		st->size = sizeof(defv) - 1;
+		return 0;
+	} else {
+		if(st->size != (sizeof(defv) - 1)
+		|| memcmp(st->buf, &defv, sizeof(defv) - 1))
+			return 0;
+		return 1;
+	}
+	
+}
 static asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Singleton, opt_z),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
@@ -147,7 +173,7 @@ static asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* No PER visible constraints */
-		.default_value = 0,
+		.default_value = asn_DFL_2_set,	/* DEFAULT "z" */
 		.name = "opt-z"
 		},
 };
