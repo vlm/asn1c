@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2005, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_PER_SUPPORT_H_
