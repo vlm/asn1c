@@ -1613,11 +1613,8 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 		}
 
 		/* Eliminate default values */
-		ASN_DEBUG("Defv %p mptr %p\n", elm->default_value, memb_ptr2);
-		ASN_DEBUG("Do not encode default: %s\n", (*(char **)(*memb_ptr2)));
-		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1) {
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
 			continue;
-		}
 
 		er = elm->type->uper_encoder(elm->type, elm->per_constraints,
 			*memb_ptr2, po);
