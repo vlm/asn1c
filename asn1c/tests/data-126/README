@@ -8,4 +8,5 @@ Naming conventions:
 
 *-C.in  -       Comparison of .out might fail, but decoding succeeds
 *-P.in  -       PER decoding of .out file must fail.
+*-X.in	-	Final XER comparison must fail.
 
