@@ -1337,6 +1337,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 						FREEMEM(opres);
 						_ASN_DECODE_FAILED;
 					}
+					ASN_DEBUG("Filled-in default");
 				}
 				/* The member is just not present */
 				continue;
@@ -1612,8 +1613,11 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 		}
 
 		/* Eliminate default values */
-		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
+		ASN_DEBUG("Defv %p mptr %p\n", elm->default_value, memb_ptr2);
+		ASN_DEBUG("Do not encode default: %s\n", (*(char **)(*memb_ptr2)));
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1) {
 			continue;
+		}
 
 		er = elm->type->uper_encoder(elm->type, elm->per_constraints,
 			*memb_ptr2, po);

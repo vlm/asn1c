@@ -2057,6 +2057,35 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 }
 
 static int
+safe_string(const uint8_t *buf, int size) {
+	const uint8_t *end = buf + size;
+	for(; buf < end; buf++) {
+		int ch = *buf;
+		if((ch < 0x20 || ch > 0x7e) || ch == '"')
+			return 0;
+	}
+	return 1;
+}
+
+static void
+emit_default_value(arg_t *arg, asn1p_value_t *v) {
+
+	OUT("static uint8_t defv[] = ");
+	assert(v->type == ATV_STRING);
+
+	if(safe_string(v->value.string.buf, v->value.string.size)) {
+		OUT("\"%s\";\n", v->value.string.buf);
+	} else {
+		uint8_t *b = v->value.string.buf;
+		uint8_t *e = v->value.string.size + b;
+		OUT("{ ");
+		for(;b < e; b++)
+			OUT("0x%02x, ", *b);
+		OUT("0 };\n");
+	}
+}
+
+static int
 try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 	int save_target = arg->target->target;
 	asn1p_expr_type_e etype = expr_get_type(arg, expr);
@@ -2074,7 +2103,14 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 			fits_long = asn1c_type_fits_long(arg, expr)!=FL_NOTFIT;
 		if(fits_long && !expr->marker.default_value->value.v_integer)
 			expr->marker.flags &= ~EM_INDIRECT;
-		if(!out) return 1;
+		if(!out) {
+			OUT("asn_DFL_%d_set_%" PRIdASN
+				",\t/* DEFAULT %" PRIdASN " */\n",
+				expr->_type_unique_index,
+				expr->marker.default_value->value.v_integer,
+				expr->marker.default_value->value.v_integer);
+			return 1;
+		}
 		REDIR(OT_STAT_DEFS);
 		OUT("static int asn_DFL_%d_set_%" PRIdASN "(int set_value, void **sptr) {\n",
 			expr->_type_unique_index,
@@ -2125,7 +2161,52 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		//expr->marker.flags &= ~EM_INDIRECT;
 		return 0;
 	default:
-		break;
+	  if(etype & ASN_STRING_KM_MASK) {
+		if(expr->marker.default_value == NULL
+		|| expr->marker.default_value->type != ATV_STRING)
+			break;
+		if(!out) {
+			OUT("asn_DFL_%d_set,\t/* DEFAULT \"%s\" */\n",
+				expr->_type_unique_index,
+				expr->marker.default_value->value.string.buf);
+			return 1;
+		}
+		REDIR(OT_STAT_DEFS);
+		OUT("static int asn_DFL_%d_set(int set_value, void **sptr) {\n", expr->_type_unique_index);
+		INDENT(+1);
+		emit_default_value(arg, expr->marker.default_value);
+		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
+		OUT("\n");
+		OUT("if(!st) {\n");
+		OUT("\tif(!set_value) return -1;\t/* Not a default value */\n");
+		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
+		OUT("\tif(!st) return -1;\n");
+		OUT("}\n");
+		OUT("\n");
+		OUT("if(set_value) {\n");
+		INDENT(+1);
+			OUT("uint8_t *ptr = MALLOC(sizeof(defv));\n");
+			OUT("if(!ptr) return -1;\n");
+			OUT("memcpy(ptr, &defv, sizeof(defv));\n");
+			OUT("FREEMEM(st->buf);\n");
+			OUT("st->buf = ptr;\n");
+			OUT("st->size = sizeof(defv) - 1;\n");
+			OUT("return 0;\n");
+		INDENT(-1);
+		OUT("} else {\n");
+		INDENT(+1);
+			OUT("if(st->size != (sizeof(defv) - 1)\n");
+			OUT("|| memcmp(st->buf, &defv, sizeof(defv) - 1))\n");
+			OUT("\treturn 0;\n");
+			OUT("return 1;\n");
+		INDENT(-1);
+		OUT("}\n"); OUT("\n");
+		INDENT(-1);
+		OUT("}\n");
+		REDIR(save_target);
+		return 1;
+	  }
+	  break;
 	}
 	return 0;
 }
@@ -2247,11 +2328,6 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	if(C99_MODE) OUT(".default_value = ");
 	if(try_inline_default(arg, expr, 0)) {
-		OUT("asn_DFL_%d_set_%" PRIdASN
-				",\t/* DEFAULT %" PRIdASN " */\n",
-			expr->_type_unique_index,
-			expr->marker.default_value->value.v_integer,
-			expr->marker.default_value->value.v_integer);
 	} else {
 		OUT("0,\n");
 	}

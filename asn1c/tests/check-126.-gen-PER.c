@@ -288,7 +288,10 @@ process_XER_data(const char *fname, char *fbuf, int size) {
 	fwrite(buf, 1, buf_offset, stderr);
 	fprintf(stderr, "=== end ===\n");
 
-	assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
+	if(fname[strlen(fname) - 4] == 'X')
+		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+	else
+		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
 
 	asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
 }
