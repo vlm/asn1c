@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003, 2004, 2005, 2007 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -35,10 +35,17 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 #ifndef	ASN_DEBUG	/* If debugging code is not defined elsewhere... */
 #if	EMIT_ASN_DEBUG == 1	/* And it was asked to emit this code... */
 #ifdef	__GNUC__
-#define	ASN_DEBUG(fmt, args...)	do {		\
-		fprintf(stderr, fmt, ##args);	\
-		fprintf(stderr, " (%s:%d)\n",	\
-			__FILE__, __LINE__);	\
+#ifdef	ASN_THREAD_SAFE
+#define	asn_debug_indent	0
+#endif
+int asn_debug_indent;
+#endif
+#define	ASN_DEBUG(fmt, args...)	do {			\
+		int adi = asn_debug_indent;		\
+		while(adi--) fprintf(stderr, " ");	\
+		fprintf(stderr, fmt, ##args);		\
+		fprintf(stderr, " (%s:%d)\n",		\
+			__FILE__, __LINE__);		\
 	} while(0)
 #else	/* !__GNUC__ */
 void ASN_DEBUG_f(const char *fmt, ...);
