@@ -4730,6 +4730,8 @@ ASN_MODULE_HEADERS+=per_decoder.h
 ASN_MODULE_SOURCES+=per_decoder.c
 ASN_MODULE_HEADERS+=per_encoder.h
 ASN_MODULE_SOURCES+=per_encoder.c
+ASN_MODULE_HEADERS+=per_opentype.h
+ASN_MODULE_SOURCES+=per_opentype.c
 ASN_CONVERTER_SOURCES+=converter-sample.c
 ASN_CONVERTER_SOURCES+=pdu_collection.c
 
