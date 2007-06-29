@@ -225,6 +225,7 @@ ASN_MODULE_SOURCES+=per_encoder.c
 ASN_MODULE_HEADERS+=per_opentype.h
 ASN_MODULE_SOURCES+=per_opentype.c
 ASN_CONVERTER_SOURCES+=converter-sample.c
+ASN_CONVERTER_SOURCES+=pdu_collection.c
 
 
 lib_LTLIBRARIES=libsomething.la
@@ -233,7 +234,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = ulp-dump
-CFLAGS += -DASN_CONVERTER_TITLE="OMA UserPlane Location Protocol decoder" -DHAVE_CONFIG_H -DJUNKTEST -DPDU=ULP_PDU -I.
+CFLAGS += -DASN_CONVERTER_TITLE="OMA UserPlane Location Protocol decoder" -DHAVE_CONFIG_H -DJUNKTEST -DPDU=ULP_PDU -DASN_PDU_COLLECTION -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: ULP-PDU.c $(TARGET)
@@ -254,7 +255,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=ULP-PDU -fcompound-names -gen-PER ../ulp.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=ULP-PDU -pdu=auto -fcompound-names -gen-PER ../ulp.asn1
 
 
 ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
@@ -264,7 +265,7 @@ ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
 
 regen-makefile:
 	TITLE="OMA UserPlane Location Protocol decoder" \
-	ASN1CMDOPTS="-fcompound-names -gen-PER" \
+	ASN1CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
 	ASN1MODULES="../ulp.asn1" \
 	ASN1PDU=ULP-PDU \
 	PROGNAME=ulp-dump \
