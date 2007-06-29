@@ -24,8 +24,10 @@ BEGIN
 	}
 
 	PDU-2 ::= CHOICE {
-		str-p2 IA5String,
-		...
+		main [3] INTEGER,
+		...,
+		ext1 [1] INTEGER,
+		ext0 [0] INTEGER
 	}
 
 END
