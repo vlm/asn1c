@@ -18,6 +18,8 @@ static int uper_ugot_refill(asn_per_data_t *pd);
 static int per_skip_bits(asn_per_data_t *pd, int skip_nbits);
 static asn_dec_rval_t uper_sot_suck(asn_codec_ctx_t *, asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd);
 
+int asn_debug_indent;
+
 /*
  * Encode an "open type field".
  * #10.1, #10.2
@@ -61,10 +63,11 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	size_t bufLen = 0;
 	size_t bufSize = 0;
 	asn_per_data_t spd;
+	size_t padding;
 
 	_ASN_STACK_OVERFLOW_CHECK(ctx);
 
-	ASN_DEBUG("Getting open type %s from %s", td->name,
+	ASN_DEBUG("Getting open type %s from %s...", td->name,
 		per_data_string(pd));
 
 	do {
@@ -90,13 +93,29 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 		bufLen += chunk_bytes;
 	} while(repeat);
 
+	ASN_DEBUG("Getting open type %s encoded in %d bytes", td->name,
+		bufLen);
+
 	memset(&spd, 0, sizeof(spd));
 	spd.buffer = buf;
 	spd.nbits = bufLen << 3;
 
+	asn_debug_indent += 4;
 	rv = td->uper_decoder(ctx, td, constraints, sptr, &spd);
+	asn_debug_indent -= 4;
 
 	FREEMEM(buf);
+
+	/* Check padding validity */
+	padding = spd.nbits - spd.nboff;
+	if(padding >= 8) {
+		ASN_DEBUG("Too large padding %d in open type", padding);
+		_ASN_DECODE_FAILED;
+	} else if(per_get_few_bits(&spd, padding)) {
+		/* Can't be "no more data", then it's non-zero padding */
+		ASN_DEBUG("Non-zero padding");
+		_ASN_DECODE_FAILED;
+	}
 
 	return rv;
 }
@@ -121,9 +140,9 @@ uper_open_type_get_complex(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	pd->nbits = pd->nboff;	/* 0 good bits at this point, will refill */
 	pd->moved = 0;	/* This now counts the open type size in bits */
 
-	/*asn_debug_indent += 4;*/
+	asn_debug_indent += 4;
 	rv = td->uper_decoder(ctx, td, constraints, sptr, pd);
-	/*asn_debug_indent -= 4;*/
+	asn_debug_indent -= 4;
 
 #define	UPDRESTOREPD	do {						\
 	/* buffer and nboff are valid, preserve them. */		\
