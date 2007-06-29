@@ -81,6 +81,9 @@ ssize_t uper_get_nslength(asn_per_data_t *pd);
  */
 ssize_t uper_get_nsnnwn(asn_per_data_t *pd);
 
+/* Non-thread-safe debugging function, don't use it */
+char *per_data_string(asn_per_data_t *pd);
+
 /*
  * This structure supports forming PER output.
  */
