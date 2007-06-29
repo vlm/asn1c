@@ -1,5 +1,6 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004, 2007 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
@@ -102,6 +103,11 @@ typedef	unsigned int	uint32_t;
 #define	GCC_NOTUSED
 #endif
 #endif
+
+/* Figure out if thread safety is requested */
+#if	!defined(ASN_THREAD_SAFE) && (defined(THREAD_SAFE) || define(_REENTRANT))
+#define	ASN_THREAD_SAFE
+#endif	/* Thread safety */
 
 #ifndef	offsetof	/* If not defined by <stddef.h> */
 #define	offsetof(s, m)	((ptrdiff_t)&(((s *)0)->m) - (ptrdiff_t)((s *)0))
