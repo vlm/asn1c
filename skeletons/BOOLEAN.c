@@ -257,7 +257,7 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	switch(per_get_few_bits(pd, 1)) {
 	case 1: *st = 1; break;
 	case 0: *st = 0; break;
-	case -1: default: _ASN_DECODE_FAILED;
+	case -1: default: _ASN_DECODE_STARVED;
 	}
 
 	ASN_DEBUG("%s decoded as %s", td->name, *st ? "TRUE" : "FALSE");
