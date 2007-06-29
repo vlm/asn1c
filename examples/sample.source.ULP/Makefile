@@ -255,7 +255,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=ULP-PDU -pdu=auto -fcompound-names -gen-PER ../ulp.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=ULP-PDU -pdu=SUPLINIT -fcompound-names -gen-PER ../ulp.asn1
 
 
 ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
@@ -265,7 +265,7 @@ ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
 
 regen-makefile:
 	TITLE="OMA UserPlane Location Protocol decoder" \
-	ASN1CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
+	ASN1CMDOPTS="-pdu=SUPLINIT -fcompound-names -gen-PER" \
 	ASN1MODULES="../ulp.asn1" \
 	ASN1PDU=ULP-PDU \
 	PROGNAME=ulp-dump \
