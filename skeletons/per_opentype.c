@@ -183,7 +183,7 @@ uper_open_type_get_complex(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 		case 0: break;
 		default:
 			ASN_DEBUG("Non-blank padding (%d bits 0x%02x)",
-				padding, pvalue);
+				padding, (int)pvalue);
 			UPDRESTOREPD;
 			_ASN_DECODE_FAILED;
 		}

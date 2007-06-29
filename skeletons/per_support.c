@@ -108,7 +108,7 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		pd->moved,
 		(((int)pd->buffer) & 0xf),
 		pd->nboff, pd->nbits, pd->nbits - pd->nboff,
-		accum);
+		(int)accum);
 
 	return accum;
 }
@@ -273,7 +273,7 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	if(obits <= 0 || obits >= 32) return obits ? -1 : 0;
 
 	ASN_DEBUG("[PER put %d bits %x to %p+%d bits]",
-			obits, bits, po->buffer, po->nboff);
+			obits, (int)bits, po->buffer, po->nboff);
 
 	/*
 	 * Normalize position indicator.
@@ -310,7 +310,8 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	/* Clear data of debris before meaningful bits */
 	bits &= (((uint32_t)1 << obits) - 1);
 
-	ASN_DEBUG("[PER out %d %u/%x (t=%d,o=%d) %x&%x=%x]", obits, bits, bits,
+	ASN_DEBUG("[PER out %d %u/%x (t=%d,o=%d) %x&%x=%x]", obits,
+		(int)bits, (int)bits,
 		po->nboff - obits, off, buf[0], omsk&0xff, buf[0] & omsk);
 
 	if(off <= 8)	/* Completely within 1 byte */
@@ -339,7 +340,7 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	}
 
 	ASN_DEBUG("[PER out %u/%x => %02x buf+%d]",
-		bits, bits, buf[0], po->buffer - po->tmpspace);
+		(int)bits, (int)bits, buf[0], po->buffer - po->tmpspace);
 
 	return 0;
 }
