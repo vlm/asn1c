@@ -37,9 +37,9 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 #ifdef	__GNUC__
 #ifdef	ASN_THREAD_SAFE
 #define	asn_debug_indent	0
-#endif
+#else	/* !ASN_THREAD_SAFE */
 int asn_debug_indent;
-#endif
+#endif	/* ASN_THREAD_SAFE */
 #define	ASN_DEBUG(fmt, args...)	do {			\
 		int adi = asn_debug_indent;		\
 		while(adi--) fprintf(stderr, " ");	\

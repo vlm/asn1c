@@ -105,7 +105,7 @@ typedef	unsigned int	uint32_t;
 #endif
 
 /* Figure out if thread safety is requested */
-#if	!defined(ASN_THREAD_SAFE) && (defined(THREAD_SAFE) || define(_REENTRANT))
+#if !defined(ASN_THREAD_SAFE) && (defined(THREAD_SAFE) || defined(_REENTRANT))
 #define	ASN_THREAD_SAFE
 #endif	/* Thread safety */
 
