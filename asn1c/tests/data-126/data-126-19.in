@@ -1,0 +1,7 @@
+<PDU>
+	<str-m>some long string spanning multiple bytes</str-m>
+	<singl><opt-z>zzz-zzz-zzz-zzz</opt-z></singl>
+	<pdu-2>
+		<main>42</main>
+	</pdu-2>
+</PDU>
