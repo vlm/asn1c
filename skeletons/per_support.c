@@ -7,6 +7,20 @@
 #include <asn_internal.h>
 #include <per_support.h>
 
+char *
+per_data_string(asn_per_data_t *pd) {
+	static char buf[2][32];
+	static int n;
+	n = (n+1) % 2;
+	snprintf(buf[n], sizeof(buf),
+		"{m=%d span %+d[%d..%d] (%d)}",
+		pd->moved,
+		(((int)pd->buffer) & 0xf),
+		pd->nboff, pd->nbits,
+		pd->nbits - pd->nboff);
+	return buf[n];
+}
+
 void
 per_get_undo(asn_per_data_t *pd, int nbits) {
 	if((ssize_t)pd->nboff < nbits) {
@@ -89,8 +103,12 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 
 	accum &= (((uint32_t)1 << nbits) - 1);
 
-	ASN_DEBUG("[PER got %d bits from (%d@%d+%d) => 0x%x]",
-		nbits, pd->moved, pd->nboff, nleft, accum);
+	ASN_DEBUG("  [PER got %2d<=%2d bits => span %d %+d[%d..%d] (%d) => 0x%x]",
+		nbits, nleft,
+		pd->moved,
+		(((int)pd->buffer) & 0xf),
+		pd->nboff, pd->nbits, pd->nbits - pd->nboff,
+		accum);
 
 	return accum;
 }
