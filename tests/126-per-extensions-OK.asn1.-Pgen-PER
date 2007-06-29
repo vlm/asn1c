@@ -222,16 +222,17 @@ asn_TYPE_descriptor_t asn_DEF_Singleton = {
 
 /*** <<< INCLUDES [PDU-2] >>> ***/
 
-#include <IA5String.h>
+#include <INTEGER.h>
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [PDU-2] >>> ***/
 
 typedef enum PDU_2_PR {
 	PDU_2_PR_NOTHING,	/* No components present */
-	PDU_2_PR_str_p2,
+	PDU_2_PR_main,
 	/* Extensions may appear below */
-	
+	PDU_2_PR_ext1,
+	PDU_2_PR_ext0
 } PDU_2_PR;
 
 /*** <<< TYPE-DECLS [PDU-2] >>> ***/
@@ -239,11 +240,13 @@ typedef enum PDU_2_PR {
 typedef struct PDU_2 {
 	PDU_2_PR present;
 	union PDU_2_u {
-		IA5String_t	 str_p2;
+		INTEGER_t	 main;
 		/*
 		 * This type is extensible,
 		 * possible extensions are below.
 		 */
+		INTEGER_t	 ext1;
+		INTEGER_t	 ext0;
 	} choice;
 	
 	/* Context for parsing across buffer boundaries */
@@ -265,18 +268,39 @@ static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 = {
 /*** <<< STAT-DEFS [PDU-2] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.str_p2),
-		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.main),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_IA5String,
+		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
-		.name = "str-p2"
+		.name = "main"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.ext1),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "ext1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.ext0),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "ext0"
 		},
 };
+static int asn_MAP_PDU_2_cmap_1[] = { 0, 2, 1 };
 static asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* str-p2 at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* ext0 at 31 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ext1 at 29 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 0, 0, 0 } /* main at 27 */
 };
 static asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 	sizeof(struct PDU_2),
@@ -284,8 +308,8 @@ static asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 	offsetof(struct PDU_2, present),
 	sizeof(((struct PDU_2 *)0)->present),
 	asn_MAP_PDU_2_tag2el_1,
-	1,	/* Count of tags in the map */
-	.canonical_order = 0,
+	3,	/* Count of tags in the map */
+	.canonical_order = asn_MAP_PDU_2_cmap_1,	/* Canonically sorted */
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
@@ -307,7 +331,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	0,	/* No tags (count) */
 	&asn_PER_type_PDU_2_constr_1,
 	asn_MBR_PDU_2_1,
-	1,	/* Elements count */
+	3,	/* Elements count */
 	&asn_SPC_PDU_2_specs_1	/* Additional specs */
 };
 
