@@ -103,17 +103,24 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	rv = td->uper_decoder(ctx, td, constraints, sptr, &spd);
 	asn_debug_indent -= 4;
 
-	FREEMEM(buf);
-
-	/* Check padding validity */
-	padding = spd.nbits - spd.nboff;
-	if(padding >= 8) {
-		ASN_DEBUG("Too large padding %d in open type", padding);
-		_ASN_DECODE_FAILED;
-	} else if(per_get_few_bits(&spd, padding)) {
-		/* Can't be "no more data", then it's non-zero padding */
-		ASN_DEBUG("Non-zero padding");
-		_ASN_DECODE_FAILED;
+	if(rv.code == RC_OK) {
+		/* Check padding validity */
+		padding = spd.nbits - spd.nboff;
+		if(padding < 8 && per_get_few_bits(&spd, padding) == 0) {
+			/* Everything is cool */
+			FREEMEM(buf);
+			return rv;
+		}
+		FREEMEM(buf);
+		if(padding >= 8) {
+			ASN_DEBUG("Too large padding %d in open type", padding);
+			_ASN_DECODE_FAILED;
+		} else {
+			ASN_DEBUG("Non-zero padding");
+			_ASN_DECODE_FAILED;
+		}
+	} else {
+		FREEMEM(buf);
 	}
 
 	return rv;
