@@ -67,8 +67,7 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 
 	_ASN_STACK_OVERFLOW_CHECK(ctx);
 
-	ASN_DEBUG("Getting open type %s from %s...", td->name,
-		per_data_string(pd));
+	ASN_DEBUG("Getting open type %s...", td->name);
 
 	do {
 		chunk_bytes = uper_get_length(pd, -1, &repeat);
