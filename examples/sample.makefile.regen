@@ -39,9 +39,8 @@ if test ! -f Makefile.am.sample ; then
 fi
 
 EXTRA_CFLAGS="-DJUNKTEST"
-if test -f config.h ; then
-	EXTRA_CFLAGS="-DHAVE_CONFIG_H ${EXTRA_CFLAGS}"
-fi
+test -f config.h && EXTRA_CFLAGS="-DHAVE_CONFIG_H ${EXTRA_CFLAGS}"
+test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAGS}"
 
 set -x
 cat Makefile.am.sample						\
@@ -58,6 +57,7 @@ set +x
 	echo "	make"
 	echo
 	echo "regen-makefile:"
+	test -n "$TITLE" && echo "	TITLE=\"$TITLE\" \\"
 	echo "	ASN1CMDOPTS=\"${ASN1CMDOPTS}\" \\"
 	echo "	ASN1MODULES=\"${ASN1MODULES}\" \\"
 	echo "	ASN1PDU=${ASN1PDU} \\"

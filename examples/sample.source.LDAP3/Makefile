@@ -154,6 +154,8 @@ ASN_MODULE_HEADERS+=per_decoder.h
 ASN_MODULE_SOURCES+=per_decoder.c
 ASN_MODULE_HEADERS+=per_encoder.h
 ASN_MODULE_SOURCES+=per_encoder.c
+ASN_MODULE_HEADERS+=per_opentype.h
+ASN_MODULE_SOURCES+=per_opentype.c
 ASN_CONVERTER_SOURCES+=converter-sample.c
 
 
@@ -163,7 +165,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = ldap3dump
-CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -DPDU=LDAPMessage -I.
+CFLAGS += -DASN_CONVERTER_TITLE="Lightweight Directory Access Protocol V3 decoder" -DHAVE_CONFIG_H -DJUNKTEST -DPDU=LDAPMessage -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: LDAPMessage.c $(TARGET)
@@ -193,6 +195,7 @@ LDAPMessage.c: ../sample.makefile.regen ../rfc4511-Lightweight-Directory-Access-
 	make
 
 regen-makefile:
+	TITLE="Lightweight Directory Access Protocol V3 decoder" \
 	ASN1CMDOPTS="-fcompound-names" \
 	ASN1MODULES="../rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1" \
 	ASN1PDU=LDAPMessage \

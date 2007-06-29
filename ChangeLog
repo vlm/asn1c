@@ -1,5 +1,5 @@
 
-0.9.22:	2007-Jun-26
+0.9.22:	2007-Jun-29
 
 	* Added -pdu=all and -pdu=<type> switches to asn1c.
 	* Added PER support for most known-multiplier string types:
@@ -16,6 +16,7 @@
 	* Fixed extensibility handling of second SEQUENCE production.
 	  (Severity: low; Security impact: none)
 	* Added DEFAULT handling for known multiplier string.
+	* Added a sample OMA ULP decoder (./examples/sample.source.ULP).
 
 0.9.21:	2006-Sep-17
 

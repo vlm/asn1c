@@ -1,218 +1,162 @@
 ASN_MODULE_SOURCES=	\
-	MegacoMessage.c	\
-	AuthenticationHeader.c	\
-	SecurityParmIndex.c	\
-	SequenceNum.c	\
-	AuthData.c	\
-	Message.c	\
-	MId.c	\
-	DomainName.c	\
-	IP4Address.c	\
-	IP6Address.c	\
-	PathName.c	\
-	Transaction.c	\
-	TransactionId.c	\
-	TransactionRequest.c	\
-	TransactionPending.c	\
-	TransactionReply.c	\
-	TransactionResponseAck.c	\
-	TransactionAck.c	\
-	ErrorDescriptor.c	\
-	ErrorCode.c	\
-	ErrorText.c	\
-	ContextID.c	\
-	ActionRequest.c	\
-	ActionReply.c	\
-	ContextRequest.c	\
-	ContextAttrAuditRequest.c	\
-	CommandRequest.c	\
-	Command.c	\
-	CommandReply.c	\
-	TopologyRequest.c	\
-	AmmRequest.c	\
-	AmmDescriptor.c	\
-	AmmsReply.c	\
-	SubtractRequest.c	\
-	AuditRequest.c	\
-	AuditReply.c	\
-	AuditResult.c	\
-	TerminationAudit.c	\
-	AuditReturnParameter.c	\
-	AuditDescriptor.c	\
-	NotifyRequest.c	\
-	NotifyReply.c	\
-	ObservedEventsDescriptor.c	\
-	ObservedEvent.c	\
-	EventName.c	\
-	EventParameter.c	\
-	ServiceChangeRequest.c	\
-	ServiceChangeReply.c	\
-	ServiceChangeResult.c	\
-	WildcardField.c	\
-	TerminationID.c	\
-	TerminationIDList.c	\
-	MediaDescriptor.c	\
-	StreamDescriptor.c	\
-	StreamParms.c	\
-	LocalControlDescriptor.c	\
-	StreamMode.c	\
-	PropertyParm.c	\
-	Name.c	\
-	PkgdName.c	\
-	Relation.c	\
-	LocalRemoteDescriptor.c	\
-	PropertyGroup.c	\
-	TerminationStateDescriptor.c	\
-	EventBufferControl.c	\
-	ServiceState.c	\
-	MuxDescriptor.c	\
-	MuxType.c	\
-	StreamID.c	\
-	EventsDescriptor.c	\
-	RequestedEvent.c	\
-	RequestedActions.c	\
-	EventDM.c	\
-	SecondEventsDescriptor.c	\
-	SecondRequestedEvent.c	\
-	SecondRequestedActions.c	\
-	EventBufferDescriptor.c	\
-	EventSpec.c	\
-	SignalsDescriptor.c	\
-	SignalRequest.c	\
-	SeqSigList.c	\
-	Signal.c	\
-	SignalType.c	\
-	SignalName.c	\
-	NotifyCompletion.c	\
-	SigParameter.c	\
-	RequestID.c	\
-	ModemDescriptor.c	\
-	ModemType.c	\
-	DigitMapDescriptor.c	\
-	DigitMapName.c	\
-	DigitMapValue.c	\
-	ServiceChangeParm.c	\
-	ServiceChangeAddress.c	\
-	ServiceChangeResParm.c	\
-	ServiceChangeMethod.c	\
-	ServiceChangeProfile.c	\
-	PackagesDescriptor.c	\
-	PackagesItem.c	\
-	StatisticsDescriptor.c	\
-	StatisticsParameter.c	\
-	NonStandardData.c	\
-	NonStandardIdentifier.c	\
-	H221NonStandard.c	\
-	TimeNotation.c	\
-	Value.c
+	ULP-PDU.c	\
+	UlpMessage.c	\
+	SUPLINIT.c	\
+	Notification.c	\
+	NotificationType.c	\
+	EncodingType.c	\
+	FormatIndicator.c	\
+	SLPMode.c	\
+	MAC.c	\
+	KeyIdentity.c	\
+	SUPLSTART.c	\
+	SETCapabilities.c	\
+	PosTechnology.c	\
+	PrefMethod.c	\
+	PosProtocol.c	\
+	SUPLRESPONSE.c	\
+	SETAuthKey.c	\
+	KeyIdentity4.c	\
+	SUPLPOSINIT.c	\
+	RequestedAssistData.c	\
+	NavigationModel.c	\
+	SatelliteInfo.c	\
+	SatelliteInfoElement.c	\
+	SUPLPOS.c	\
+	PosPayLoad.c	\
+	SUPLEND.c	\
+	SUPLAUTHREQ.c	\
+	SETNonce.c	\
+	KeyIdentity2.c	\
+	SUPLAUTHRESP.c	\
+	SPCAuthKey.c	\
+	KeyIdentity3.c	\
+	Version.c	\
+	SessionID.c	\
+	SetSessionID.c	\
+	SETId.c	\
+	SlpSessionID.c	\
+	IPAddress.c	\
+	SLPAddress.c	\
+	FQDN.c	\
+	Ver.c	\
+	LocationId.c	\
+	Status.c	\
+	CellInfo.c	\
+	Position.c	\
+	PositionEstimate.c	\
+	AltitudeInfo.c	\
+	CdmaCellInformation.c	\
+	GsmCellInformation.c	\
+	WcdmaCellInformation.c	\
+	FrequencyInfo.c	\
+	FrequencyInfoFDD.c	\
+	FrequencyInfoTDD.c	\
+	UARFCN.c	\
+	NMR.c	\
+	NMRelement.c	\
+	MeasuredResultsList.c	\
+	MeasuredResults.c	\
+	CellMeasuredResultsList.c	\
+	UTRA-CarrierRSSI.c	\
+	CellMeasuredResults.c	\
+	CellParametersID.c	\
+	TGSN.c	\
+	PrimaryCCPCH-RSCP.c	\
+	TimeslotISCP.c	\
+	TimeslotISCP-List.c	\
+	PrimaryCPICH-Info.c	\
+	CPICH-Ec-N0.c	\
+	CPICH-RSCP.c	\
+	Pathloss.c	\
+	StatusCode.c	\
+	QoP.c	\
+	Velocity.c	\
+	Horvel.c	\
+	Horandvervel.c	\
+	Horveluncert.c	\
+	Horandveruncert.c	\
+	PosMethod.c
 
 ASN_MODULE_HEADERS=	\
-	MegacoMessage.h	\
-	AuthenticationHeader.h	\
-	SecurityParmIndex.h	\
-	SequenceNum.h	\
-	AuthData.h	\
-	Message.h	\
-	MId.h	\
-	DomainName.h	\
-	IP4Address.h	\
-	IP6Address.h	\
-	PathName.h	\
-	Transaction.h	\
-	TransactionId.h	\
-	TransactionRequest.h	\
-	TransactionPending.h	\
-	TransactionReply.h	\
-	TransactionResponseAck.h	\
-	TransactionAck.h	\
-	ErrorDescriptor.h	\
-	ErrorCode.h	\
-	ErrorText.h	\
-	ContextID.h	\
-	ActionRequest.h	\
-	ActionReply.h	\
-	ContextRequest.h	\
-	ContextAttrAuditRequest.h	\
-	CommandRequest.h	\
-	Command.h	\
-	CommandReply.h	\
-	TopologyRequest.h	\
-	AmmRequest.h	\
-	AmmDescriptor.h	\
-	AmmsReply.h	\
-	SubtractRequest.h	\
-	AuditRequest.h	\
-	AuditReply.h	\
-	AuditResult.h	\
-	TerminationAudit.h	\
-	AuditReturnParameter.h	\
-	AuditDescriptor.h	\
-	NotifyRequest.h	\
-	NotifyReply.h	\
-	ObservedEventsDescriptor.h	\
-	ObservedEvent.h	\
-	EventName.h	\
-	EventParameter.h	\
-	ServiceChangeRequest.h	\
-	ServiceChangeReply.h	\
-	ServiceChangeResult.h	\
-	WildcardField.h	\
-	TerminationID.h	\
-	TerminationIDList.h	\
-	MediaDescriptor.h	\
-	StreamDescriptor.h	\
-	StreamParms.h	\
-	LocalControlDescriptor.h	\
-	StreamMode.h	\
-	PropertyParm.h	\
-	Name.h	\
-	PkgdName.h	\
-	Relation.h	\
-	LocalRemoteDescriptor.h	\
-	PropertyGroup.h	\
-	TerminationStateDescriptor.h	\
-	EventBufferControl.h	\
-	ServiceState.h	\
-	MuxDescriptor.h	\
-	MuxType.h	\
-	StreamID.h	\
-	EventsDescriptor.h	\
-	RequestedEvent.h	\
-	RequestedActions.h	\
-	EventDM.h	\
-	SecondEventsDescriptor.h	\
-	SecondRequestedEvent.h	\
-	SecondRequestedActions.h	\
-	EventBufferDescriptor.h	\
-	EventSpec.h	\
-	SignalsDescriptor.h	\
-	SignalRequest.h	\
-	SeqSigList.h	\
-	Signal.h	\
-	SignalType.h	\
-	SignalName.h	\
-	NotifyCompletion.h	\
-	SigParameter.h	\
-	RequestID.h	\
-	ModemDescriptor.h	\
-	ModemType.h	\
-	DigitMapDescriptor.h	\
-	DigitMapName.h	\
-	DigitMapValue.h	\
-	ServiceChangeParm.h	\
-	ServiceChangeAddress.h	\
-	ServiceChangeResParm.h	\
-	ServiceChangeMethod.h	\
-	ServiceChangeProfile.h	\
-	PackagesDescriptor.h	\
-	PackagesItem.h	\
-	StatisticsDescriptor.h	\
-	StatisticsParameter.h	\
-	NonStandardData.h	\
-	NonStandardIdentifier.h	\
-	H221NonStandard.h	\
-	TimeNotation.h	\
-	Value.h
+	ULP-PDU.h	\
+	UlpMessage.h	\
+	SUPLINIT.h	\
+	Notification.h	\
+	NotificationType.h	\
+	EncodingType.h	\
+	FormatIndicator.h	\
+	SLPMode.h	\
+	MAC.h	\
+	KeyIdentity.h	\
+	SUPLSTART.h	\
+	SETCapabilities.h	\
+	PosTechnology.h	\
+	PrefMethod.h	\
+	PosProtocol.h	\
+	SUPLRESPONSE.h	\
+	SETAuthKey.h	\
+	KeyIdentity4.h	\
+	SUPLPOSINIT.h	\
+	RequestedAssistData.h	\
+	NavigationModel.h	\
+	SatelliteInfo.h	\
+	SatelliteInfoElement.h	\
+	SUPLPOS.h	\
+	PosPayLoad.h	\
+	SUPLEND.h	\
+	SUPLAUTHREQ.h	\
+	SETNonce.h	\
+	KeyIdentity2.h	\
+	SUPLAUTHRESP.h	\
+	SPCAuthKey.h	\
+	KeyIdentity3.h	\
+	Version.h	\
+	SessionID.h	\
+	SetSessionID.h	\
+	SETId.h	\
+	SlpSessionID.h	\
+	IPAddress.h	\
+	SLPAddress.h	\
+	FQDN.h	\
+	Ver.h	\
+	LocationId.h	\
+	Status.h	\
+	CellInfo.h	\
+	Position.h	\
+	PositionEstimate.h	\
+	AltitudeInfo.h	\
+	CdmaCellInformation.h	\
+	GsmCellInformation.h	\
+	WcdmaCellInformation.h	\
+	FrequencyInfo.h	\
+	FrequencyInfoFDD.h	\
+	FrequencyInfoTDD.h	\
+	UARFCN.h	\
+	NMR.h	\
+	NMRelement.h	\
+	MeasuredResultsList.h	\
+	MeasuredResults.h	\
+	CellMeasuredResultsList.h	\
+	UTRA-CarrierRSSI.h	\
+	CellMeasuredResults.h	\
+	CellParametersID.h	\
+	TGSN.h	\
+	PrimaryCCPCH-RSCP.h	\
+	TimeslotISCP.h	\
+	TimeslotISCP-List.h	\
+	PrimaryCPICH-Info.h	\
+	CPICH-Ec-N0.h	\
+	CPICH-RSCP.h	\
+	Pathloss.h	\
+	StatusCode.h	\
+	QoP.h	\
+	Velocity.h	\
+	Horvel.h	\
+	Horandvervel.h	\
+	Horveluncert.h	\
+	Horandveruncert.h	\
+	PosMethod.h
 
 ASN_MODULE_HEADERS+=BOOLEAN.h
 ASN_MODULE_SOURCES+=BOOLEAN.c
@@ -220,16 +164,18 @@ ASN_MODULE_HEADERS+=ENUMERATED.h
 ASN_MODULE_SOURCES+=ENUMERATED.c
 ASN_MODULE_HEADERS+=INTEGER.h
 ASN_MODULE_HEADERS+=NativeEnumerated.h
+ASN_MODULE_HEADERS+=GeneralizedTime.h
+ASN_MODULE_SOURCES+=GeneralizedTime.c
 ASN_MODULE_HEADERS+=IA5String.h
 ASN_MODULE_SOURCES+=IA5String.c
 ASN_MODULE_SOURCES+=INTEGER.c
-ASN_MODULE_HEADERS+=NULL.h
-ASN_MODULE_SOURCES+=NULL.c
 ASN_MODULE_SOURCES+=NativeEnumerated.c
 ASN_MODULE_HEADERS+=NativeInteger.h
 ASN_MODULE_SOURCES+=NativeInteger.c
-ASN_MODULE_HEADERS+=OBJECT_IDENTIFIER.h
-ASN_MODULE_SOURCES+=OBJECT_IDENTIFIER.c
+ASN_MODULE_HEADERS+=UTCTime.h
+ASN_MODULE_SOURCES+=UTCTime.c
+ASN_MODULE_HEADERS+=VisibleString.h
+ASN_MODULE_SOURCES+=VisibleString.c
 ASN_MODULE_HEADERS+=asn_SEQUENCE_OF.h
 ASN_MODULE_SOURCES+=asn_SEQUENCE_OF.c
 ASN_MODULE_HEADERS+=asn_SET_OF.h
@@ -286,11 +232,11 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
-TARGET = megaco-dump
-CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -DPDU=MegacoMessage -I.
+TARGET = ulp-dump
+CFLAGS += -DASN_CONVERTER_TITLE="OMA UserPlane Location Protocol decoder" -DHAVE_CONFIG_H -DJUNKTEST -DPDU=ULP_PDU -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
-all: MegacoMessage.c $(TARGET)
+all: ULP-PDU.c $(TARGET)
 
 $(TARGET): ${OBJS}
 	$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
@@ -308,19 +254,20 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=MegacoMessage -fcompound-names ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=ULP-PDU -fcompound-names -gen-PER ../ulp.asn1
 
 
-MegacoMessage.c: ../sample.makefile.regen ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
+ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
 	make regen-makefile
-	@touch MegacoMessage.c
+	@touch ULP-PDU.c
 	make
 
 regen-makefile:
-	ASN1CMDOPTS="-fcompound-names" \
-	ASN1MODULES="../rfc3525-MEDIA-GATEWAY-CONTROL.asn1" \
-	ASN1PDU=MegacoMessage \
-	PROGNAME=megaco-dump \
+	TITLE="OMA UserPlane Location Protocol decoder" \
+	ASN1CMDOPTS="-fcompound-names -gen-PER" \
+	ASN1MODULES="../ulp.asn1" \
+	ASN1PDU=ULP-PDU \
+	PROGNAME=ulp-dump \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-per
@@ -329,8 +276,8 @@ check: ${TARGET} check-ber check-xer check-per
 	@echo ================
 
 check-ber:
-	@if test -f sample-MegacoMessage-1.[db]er ; then \
-	for f in sample-MegacoMessage-*.[db]er; do \
+	@if test -f sample-ULP-PDU-1.[db]er ; then \
+	for f in sample-ULP-PDU-*.[db]er; do \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f into XER and back ($$b)..."; \
 	./${TARGET} -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -343,8 +290,8 @@ check-ber:
 	done; done; fi
 
 check-xer:
-	@if test -f sample-MegacoMessage-1.xer ; then \
-	for f in sample-MegacoMessage-*.xer; do \
+	@if test -f sample-ULP-PDU-1.xer ; then \
+	for f in sample-ULP-PDU-*.xer; do \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f into DER and back ($$b)..."; \
 	./${TARGET} -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -357,8 +304,8 @@ check-xer:
 	done; done; fi
 
 check-per:
-	@if test -f sample-MegacoMessage-1-nopad.per ; then \
-	for f in sample-MegacoMessage-[1-9]-nopad.per; do \
+	@if test -f sample-ULP-PDU-1-nopad.per ; then \
+	for f in sample-ULP-PDU-[1-9]-nopad.per; do \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding non-padded $$f into DER into XER and back ($$b)..."; \
 	./${TARGET} -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -370,7 +317,7 @@ check-per:
 	./${TARGET} -J0.0001 -n 1000 -b $$b -per-nopad -iper -onull $$f || exit 6; \
 	./${TARGET} -J0.001 -n 1000 -b $$b -per-nopad -iper -onull $$f || exit 7; \
 	done; done; fi
-	@if test -f sample-MegacoMessage-1.per ; then \
+	@if test -f sample-ULP-PDU-1.per ; then \
 	for f in sample-*-[1-9].per; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \

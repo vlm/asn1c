@@ -618,8 +618,6 @@ ASN_MODULE_HEADERS=	\
 
 ASN_MODULE_HEADERS+=INTEGER.h
 ASN_MODULE_HEADERS+=NativeEnumerated.h
-ASN_MODULE_HEADERS+=IA5String.h
-ASN_MODULE_SOURCES+=IA5String.c
 ASN_MODULE_SOURCES+=INTEGER.c
 ASN_MODULE_SOURCES+=NativeEnumerated.c
 ASN_MODULE_HEADERS+=NativeInteger.h
@@ -670,6 +668,8 @@ ASN_MODULE_HEADERS+=per_decoder.h
 ASN_MODULE_SOURCES+=per_decoder.c
 ASN_MODULE_HEADERS+=per_encoder.h
 ASN_MODULE_SOURCES+=per_encoder.c
+ASN_MODULE_HEADERS+=per_opentype.h
+ASN_MODULE_SOURCES+=per_opentype.c
 ASN_CONVERTER_SOURCES+=converter-sample.c
 
 
@@ -679,7 +679,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = tap3dump
-CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -DPDU=DataInterChange -I.
+CFLAGS += -DASN_CONVERTER_TITLE="GSM TAP3 (Transferred Account Procedure, Version 3) decoder" -DHAVE_CONFIG_H -DJUNKTEST -DPDU=DataInterChange -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: DataInterChange.c $(TARGET)
@@ -709,6 +709,7 @@ DataInterChange.c: ../sample.makefile.regen ../tap3.asn1
 	make
 
 regen-makefile:
+	TITLE="GSM TAP3 (Transferred Account Procedure, Version 3) decoder" \
 	ASN1CMDOPTS="" \
 	ASN1MODULES="../tap3.asn1" \
 	ASN1PDU=DataInterChange \
