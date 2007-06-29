@@ -121,6 +121,8 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 		}
 	} else {
 		FREEMEM(buf);
+		/* rv.code could be RC_WMORE, nonsense in this context */
+		rv.code = RC_FAIL; /* Noone would give us more */
 	}
 
 	return rv;
