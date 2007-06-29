@@ -1,6 +1,7 @@
 /*
  * Generic converter template for a selected ASN.1 type.
- * Copyright (c) 2005, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * All rights reserved.
  * 
  * To compile with your own ASN.1 type, please redefine the PDU as shown:
  * 
@@ -186,6 +187,11 @@ main(int ac, char *av[]) {
 #endif	/* JUNKTEST */
 	case 'h':
 	default:
+#ifdef	ASN_CONVERTER_TITLE
+#define	_AXS(x)	#x
+#define	_ASX(x)	_AXS(x)
+		fprintf(stderr, "%s\n", _ASX(ASN_CONVERTER_TITLE));
+#endif
 		fprintf(stderr, "Usage: %s [options] <data.ber> ...\n", av[0]);
 		fprintf(stderr, "Where options are:\n");
 		if(pduType->uper_decoder)
