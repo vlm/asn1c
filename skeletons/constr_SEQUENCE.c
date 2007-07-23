@@ -1360,11 +1360,15 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 	 * Encode the sequence ROOT elements.
 	 */
 	ASN_DEBUG("ext_after = %d, ec = %d, eb = %d", specs->ext_after, td->elements_count, specs->ext_before);
-	for(edx = 0; edx < ((specs->ext_before < 0)
-			? td->elements_count : specs->ext_after); edx++) {
+	for(edx = 0; edx < ((specs->ext_after < 0)
+		? td->elements_count : specs->ext_before - 1); edx++) {
+
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
+
+		if(IN_EXTENSION_GROUP(specs, edx))
+			continue;
 
 		ASN_DEBUG("About to encode %s", elm->type->name);
 
@@ -1388,6 +1392,7 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
 			continue;
 
+		ASN_DEBUG("Encoding %s->%s", td->name, elm->name);
 		er = elm->type->uper_encoder(elm->type, elm->per_constraints,
 			*memb_ptr2, po);
 		if(er.encoded == -1)
