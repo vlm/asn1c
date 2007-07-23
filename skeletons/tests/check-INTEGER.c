@@ -1,13 +1,7 @@
-#include <INTEGER.c>
-#include <asn_codecs_prim.c>
-#include <ber_decoder.c>
-#include <ber_tlv_length.c>
-#include <ber_tlv_tag.c>
-#include <der_encoder.c>
-#include <xer_decoder.c>
-#include <xer_support.c>
-#include <per_support.c>
-#include <constraints.c>
+#include <stdio.h>
+#include <assert.h>
+
+#include <INTEGER.h>
 
 static char *shared_scratch_start;
 

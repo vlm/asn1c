@@ -1,5 +1,7 @@
-#include <per_support.c>
+#include <stdio.h>
 #include <assert.h>
+
+#include <per_support.h>
 
 static void
 check_per_decoding() {

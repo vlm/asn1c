@@ -1,16 +1,11 @@
-#include <ber_decoder.c>
-#include <ber_tlv_length.c>
-#include <ber_tlv_tag.c>
-#include <der_encoder.c>
-#include <xer_decoder.c>
-#include <xer_support.c>
-#include <per_support.c>
-#include <constraints.c>
-#undef	ADVANCE
-#undef	RETURN
-#undef	LEFT
-#include <OCTET_STRING.c>
+#include <stdio.h>
+#include <assert.h>
 
+#include <asn_internal.h>
+#include <ber_decoder.h>
+#include <OCTET_STRING.h>
+#include <ber_tlv_length.h>
+#include <ber_tlv_tag.h>
 
 uint8_t *buf;
 size_t buf_size;

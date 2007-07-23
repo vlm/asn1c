@@ -13,6 +13,7 @@ check_PROGRAMS = \
 	check-XER		\
 	check-PER
 
+AM_LDFLAGS = $(top_srcdir)/skeletons/libasn1cskeletons.la
 LDADD = -lm
 
 TESTS = $(check_PROGRAMS)

@@ -1,7 +1,9 @@
-#define	__ASN_INTERNAL_TEST_MODE__
+#include <stdio.h>
+#include <assert.h>
+#include <time.h>
+
 #include <GeneralizedTime.c>
-#include <UTCTime.c>
-#include <constraints.c>
+#include <UTCTime.h>
 
 static void
 check(char *time_str, time_t sample, int as_gmt) {
@@ -58,37 +60,3 @@ main(int ac, char **av) {
 	return 0;
 }
 
-
-/*
- * Dummy function.
- */
-
-asn_enc_rval_t
-OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *ptr, int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t erval;
-
-	(void)td;
-	(void)ptr;
-	(void)tag_mode;
-	(void)tag;
-	(void)cb;
-	(void)app_key;
-
-	memset(&erval, 0, sizeof(erval));
-	return erval;
-}
-
-asn_enc_rval_t
-OCTET_STRING_encode_xer_utf8(asn_TYPE_descriptor_t *td, void *ptr, int ilevel, enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t erval;
-
-	(void)td;
-	(void)ptr;
-	(void)ilevel;
-	(void)flags;
-	(void)cb;
-	(void)app_key;
-
-	memset(&erval, 0, sizeof(erval));
-	return erval;
-}

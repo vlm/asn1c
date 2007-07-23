@@ -1,14 +1,8 @@
-#include <UTF8String.c>
-#include <OCTET_STRING.c>
-#include <ber_decoder.c>
-#include <ber_tlv_length.c>
-#include <ber_tlv_tag.c>
-#include <der_encoder.c>
-#include <xer_decoder.c>
-#include <xer_support.c>
-#include <per_support.c>
-#include <constraints.c>
+#include <stdio.h>
+#include <assert.h>
 #include <sys/time.h>
+
+#include <UTF8String.h>
 
 static void
 check(int expect_length, char *buf, int buflen) {

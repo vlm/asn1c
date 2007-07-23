@@ -1,6 +1,8 @@
-#include <xer_decoder.c>
-#include <xer_support.c>
+#include <stdio.h>
 #include <assert.h>
+
+#include <asn_internal.h>
+#include <xer_decoder.h>
 
 static void
 check(char *tag, char *name, xer_check_tag_e value) {
