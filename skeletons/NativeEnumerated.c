@@ -179,7 +179,7 @@ NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
 	if(ct->flags & APC_EXTENSIBLE) {
 		if(per_put_few_bits(po, inext, 1))
 			_ASN_ENCODE_FAILED;
-		ct = 0;
+		if(inext) ct = 0;
 	} else if(inext) {
 		_ASN_ENCODE_FAILED;
 	}
