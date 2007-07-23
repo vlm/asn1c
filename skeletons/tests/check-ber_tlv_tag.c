@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
-#include <ber_tlv_tag.c>
+#include <asn_internal.h>
+#include <ber_tlv_tag.h>
 
 struct tag_control_s {
 	int taglen;

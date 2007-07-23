@@ -1,15 +1,11 @@
-#define	EMIT_ASN_DEBUG	1
-#include <OCTET_STRING.c>
-#include <BIT_STRING.c>
-#include <xer_decoder.c>
-#include <xer_support.c>
-#include <per_support.c>
-#include <ber_decoder.c>
-#include <ber_tlv_length.c>
-#include <ber_tlv_tag.c>
-#include <der_encoder.c>
-#include <constraints.c>
+#include <stdio.h>
+#include <assert.h>
+#include <time.h>
 #include <sys/time.h>
+
+#define	EMIT_ASN_DEBUG	1
+#include <OCTET_STRING.h>
+#include <BIT_STRING.h>
 
 enum encoding_type { HEX, BINARY, UTF8 };
 
