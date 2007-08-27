@@ -1,11 +1,10 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #
 # $Id$
 # $Author$
 #
-# Simple tool that fetches the ASN.1 specifications from the
-# given set of RFC files.
+# Simple tool to fetch the ASN.1 specifications from the given set of RFC files.
 #
 
 
