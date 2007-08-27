@@ -77,6 +77,10 @@ AC_CHECK_TYPE(intmax_t, int64_t)
 
 AC_CHECK_FUNCS(strtoimax strtoll)
 AC_CHECK_FUNCS(mergesort)
+AC_CHECK_FUNCS(mkstemps)
+
+dnl For mingw
+AC_CHECK_LIB(iberty, getopt)
 
 AM_CONFIG_HEADER(config.h)
 

@@ -13,6 +13,11 @@
 #endif
 #endif
 
+#ifdef	HAVE_MKSTEMPS
+#undef	mkstemp
+#define	mkstemp(foo)	mkstemps(foo, 0)
+#endif
+
 FILE *
 asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	int created = 1;

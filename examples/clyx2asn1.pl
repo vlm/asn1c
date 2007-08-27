@@ -1,10 +1,10 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #
 # $Id$
 # $Author$
 #
-# Simple tool that extracts known ASN.1 modules from the stream of LyX data.
+# Simple tool to extract known ASN.1 modules from the stream of LyX data.
 #
 
 if($#ARGV == -1) {
