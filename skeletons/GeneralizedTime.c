@@ -105,10 +105,13 @@ static long GMTOFF(struct tm a){
 	tzold = getenv("TZ");						\
 	if(tzold) {							\
 		size_t tzlen = strlen(tzold);				\
-		if(tzlen < sizeof(tzoldbuf))				\
+		if(tzlen < sizeof(tzoldbuf)) {				\
 			tzold = memcpy(tzoldbuf, tzold, tzlen + 1);	\
-		else							\
-			tzold = strdup(tzold);	/* Ignore error */	\
+		} else {						\
+			char *dupptr = tzold;
+			tzold = MALLOC(tzlen + 1);			\
+			if(tzold) memcpy(tzold, dupptr, tzlen + 1);	\
+		}							\
 		setenv("TZ", "UTC", 1);					\
 	}								\
 	tzset();							\
