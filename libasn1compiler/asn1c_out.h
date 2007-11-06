@@ -108,4 +108,21 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 	REDIR(saved_target);					\
 } while(0)
 
+/*
+ * Format LONG_MIN according to C90 rules.
+ */
+#define OINT(iv)	do {					\
+	if(iv == (-2147483647L - 1))				\
+		OUT("(-2147483647L - 1)");			\
+	else							\
+		OUT("%" PRIdASN, iv);				\
+} while(0)
+
+#define OINTS(iv)	do {					\
+	if(iv == (-2147483647L - 1))				\
+		OUT("(-2147483647L - 1)");			\
+	else							\
+		OUT("% " PRIdASN, iv);				\
+} while(0)
+
 #endif	/* _ASN1_COMPILED_OUTPUT_H_ */
