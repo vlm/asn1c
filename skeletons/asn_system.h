@@ -17,6 +17,7 @@
 #include <stdlib.h>	/* For *alloc(3) */
 #include <string.h>	/* For memcpy(3) */
 #include <sys/types.h>	/* For size_t */
+#include <limits.h>	/* For LONG_MAX */
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
 

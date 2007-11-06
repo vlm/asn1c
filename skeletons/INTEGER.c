@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -794,6 +794,63 @@ asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
 		l = (l << 8) | *b;
 
 	*lptr = l;
+	return 0;
+}
+
+int
+asn_INTEGER2ulong(const INTEGER_t *iptr, unsigned long *lptr) {
+	uint8_t *b, *end;
+	unsigned long l;
+	size_t size;
+
+	if(!iptr || !iptr->buf || !lptr) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	b = iptr->buf;
+	size = iptr->size;
+	end = b + size;
+
+	/* If all extra leading bytes are zeroes, ignore them */
+	for(; size > sizeof(unsigned long); b++, size--) {
+		if(*b) {
+			/* Value won't fit unsigned long */
+			errno = ERANGE;
+			return -1;
+		}
+	}
+
+	/* Conversion engine */
+	for(l = 0; b < end; b++)
+		l = (l << 8) | *b;
+
+	*lptr = l;
+	return 0;
+}
+
+int
+asn_ulong2INTEGER(INTEGER_t *st, unsigned long value) {
+	uint8_t *buf;
+	uint8_t *end;
+	uint8_t *b;
+	int shr;
+
+	if(value <= LONG_MAX)
+		return asn_long2INTEGER(st, value);
+
+	buf = (uint8_t *)MALLOC(1 + sizeof(value));
+	if(!buf) return -1;
+
+	end = buf + (sizeof(value) + 1);
+	buf[0] = 0;
+	for(b = buf, shr = (sizeof(long)-1)*8; b < end; shr -= 8)
+		*(++b) = value >> shr;
+
+	if(st->buf) FREEMEM(st->buf);
+	st->buf = buf;
+	st->size = 1 + sizeof(value);
+
 	return 0;
 }
 

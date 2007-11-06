@@ -75,6 +75,74 @@ check(uint8_t *buf, int size, long check_long, int check_ret) {
 }
 
 static void
+check_unsigned(uint8_t *buf, int size, unsigned long check_long, int check_ret) {
+	char scratch[128];
+	char verify[32];
+	INTEGER_t val;
+	uint8_t *buf_end = buf + size;
+	int ret;
+	unsigned long rlong = 123;
+
+	assert(buf);
+	assert(size >= 0);
+
+	val.buf = buf;
+	val.size = size;
+
+	printf("Testing: [");
+	for(; buf < buf_end; buf++) {
+		if(buf != val.buf) printf(":");
+		printf("%02x", *buf);
+	}
+	printf("]: ");
+
+	ret = asn_INTEGER2ulong(&val, &rlong);
+	printf(" (%lu, %d) vs (%lu, %d)\n",
+		rlong, ret, check_long, check_ret);
+	assert(ret == check_ret);
+	printf("%lu %lu\n", rlong, check_long);
+	assert(rlong == check_long);
+
+	if(check_ret == 0) {
+		INTEGER_t val2;
+		unsigned long rlong2;
+		val2.buf = 0;
+		val2.size = 0;
+		ret = asn_ulong2INTEGER(&val2, rlong);
+		assert(ret == 0);
+		assert(val2.buf);
+		if(val2.size > val.size) {
+			/* At least as compact */
+			printf("val2.size=%d, val.size=%d\n",
+				(int)val2.size, (int)val.size);
+			assert(val2.size <= val.size);
+		}
+		ret = asn_INTEGER2ulong(&val, &rlong2);
+		assert(ret == 0);
+		assert(rlong == rlong2);
+	}
+
+	return 0;
+
+	shared_scratch_start = scratch;
+	ret = INTEGER_print(&asn_DEF_INTEGER, &val, 0, _print2buf, scratch);
+	assert(shared_scratch_start < scratch + sizeof(scratch));
+	assert(ret == 0);
+	ret = snprintf(verify, sizeof(verify), "%ld", check_long);
+	assert(ret < sizeof(verify));
+	ret = strcmp(scratch, verify);
+	printf("         [%s] vs [%s]: %d%s\n",
+		scratch, verify, ret,
+		(check_ret == -1)?" (expected to fail)":""
+		);
+	if(check_ret == -1) {
+		assert(strcmp(scratch, verify));
+	} else {
+		assert(strcmp(scratch, verify) == 0);
+	}
+}
+
+static void
 check_xer(int tofail, char *xmldata, long orig_value) {
 	INTEGER_t *st = 0;
 	asn_dec_rval_t rc;
@@ -117,6 +185,11 @@ main(int ac, char **av) {
 	uint8_t buf11[] = { 0x80, 0, 0, 0 };
 	uint8_t buf12[] = { 0x80, 0 };
 	uint8_t buf13[] = { 0x80 };
+	uint8_t buf14[] = { 0x00, 0x80, 0x00, 0x00 };
+	uint8_t buf15[] = { 0x00, 0x80, 0x00, 0x00, 0x00 };
+	uint8_t buf16[] = { 0x00, 0xff, 0xff, 0x00, 0x00 };
+
+#define	UCHECK(buf, val, ret)	check_unsigned(buf, sizeof(buf), val, ret)
 
 #define	CHECK(buf, val, ret)	check(buf, sizeof(buf), val, ret)
 
@@ -130,9 +203,13 @@ main(int ac, char **av) {
 	CHECK(buf8, 0x7F7E7D7C, 0);
 	CHECK(buf9, 0x7F7E7D7C, 0);
 	CHECK(buf10, 0x7F7E7D7C, 0);
+	UCHECK(buf10, 0x7F7E7D7C, 0);
 	CHECK(buf11, -2147483647-1, 0);	/* 0x80000000 */
 	CHECK(buf12, -32768, 0);
 	CHECK(buf13, -128, 0);
+	UCHECK(buf14, 0x800000, 0);
+	UCHECK(buf15, 0x80000000, 0);
+	UCHECK(buf16, 0xffff0000, 0);
 
 	check_xer(-1, "", 0);
 	check_xer(-1, "<INTEGER></INTEGER>", 0);
