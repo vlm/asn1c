@@ -598,8 +598,18 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/* #10.5.6 */
 		ASN_DEBUG("Integer with range %d bits", ct->range_bits);
 		if(ct->range_bits >= 0) {
-			long value = per_get_few_bits(pd, ct->range_bits);
-			if(value < 0) _ASN_DECODE_STARVED;
+			long value;
+			if(ct->range_bits == 32) {
+				long lhalf;
+				value = per_get_few_bits(pd, 16);
+				if(value < 0) _ASN_DECODE_STARVED;
+				lhalf = per_get_few_bits(pd, 16);
+				if(lhalf < 0) _ASN_DECODE_STARVED;
+				value = (value << 16) | lhalf;
+			} else {
+				value = per_get_few_bits(pd, ct->range_bits);
+				if(value < 0) _ASN_DECODE_STARVED;
+			}
 			ASN_DEBUG("Got value %ld + low %ld",
 				value, ct->lower_bound);
 			value += ct->lower_bound;
@@ -695,9 +705,17 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 		/* #10.5.6 */
 		ASN_DEBUG("Encoding integer with range %d bits",
 			ct->range_bits);
-		if(per_put_few_bits(po, value - ct->lower_bound,
+		if(ct->range_bits == 32) {
+			/* TODO: extend to >32 bits */
+			long v = value - ct->lower_bound;
+			if(per_put_few_bits(po, v >> 1, 31)
+			|| per_put_few_bits(po, v, 1))
+				_ASN_ENCODE_FAILED;
+		} else {
+			if(per_put_few_bits(po, value - ct->lower_bound,
 				ct->range_bits))
-			_ASN_ENCODE_FAILED;
+				_ASN_ENCODE_FAILED;
+		}
 		_ASN_ENCODED_OK(er);
 	}
 
