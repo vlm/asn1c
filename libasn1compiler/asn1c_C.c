@@ -1859,8 +1859,7 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 				if(lv > 0x7fffffff) { lv = 0x7fffffff; gcmt++; }
 				if(rv > 0x7fffffff) { rv = 0x7fffffff; gcmt++; }
 				if(gcmt) {
-					OUT("% " PRIdASN ", % " PRIdASN " }",
-						lv, rv);
+					OINTS(lv); OUT(", "); OINTS(rv); OUT(" }");
 					goto pcmt;
 				}
 			}
@@ -1872,8 +1871,8 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 				OUT("{ APC_SEMI_CONSTRAINED,\t-1, -1, ");
 			}
 		}
-		OUT("% " PRIdASN ", % " PRIdASN " }",
-			range->left.value, range->right.value);
+		OINTS(range->left.value); OUT(", ");
+		OINTS(range->right.value); OUT(" }");
 	} else {
 		OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
 	}
@@ -2129,12 +2128,14 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		OUT("/* Install default value %" PRIdASN " */\n",
 			expr->marker.default_value->value.v_integer);
 		if(fits_long) {
-			OUT("*st = %" PRIdASN ";\n",
-				expr->marker.default_value->value.v_integer);
+			OUT("*st = ");
+			OINT(expr->marker.default_value->value.v_integer);
+			OUT(";\n");
 			OUT("return 0;\n");
 		} else {
-			OUT("return asn_long2INTEGER(st, %" PRIdASN ");\n",
-				expr->marker.default_value->value.v_integer);
+			OUT("return asn_long2INTEGER(st, ");
+			OINT(expr->marker.default_value->value.v_integer);
+			OUT(");\n");
 		}
 		INDENT(-1);
 		OUT("} else {\n");

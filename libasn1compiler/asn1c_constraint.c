@@ -495,20 +495,20 @@ emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varn
 		}
 
 		if(ignore_left) {
-			OUT("%s <= %" PRIdASN, varname,
-				r->right.value);
+			OUT("%s <= ", varname);
+			OINT(r->right.value);
 		} else if(ignore_right) {
-			OUT("%s >= %" PRIdASN, varname,
-				r->left.value);
+			OUT("%s >= ", varname);
+			OINT(r->left.value);
 		} else if(r->left.value == r->right.value) {
-			OUT("%s == %" PRIdASN, varname,
-				r->right.value);
+			OUT("%s == ", varname);
+			OINT(r->right.value);
 		} else {
-			OUT("%s >= %" PRIdASN " && %s <= %" PRIdASN,
-				varname,
-				r->left.value,
-				varname,
-				r->right.value);
+			OUT("%s >= ", varname);
+			OINT(r->left.value);
+			OUT(" && ");
+			OUT("%s <= ", varname);
+			OINT(r->right.value);
 		}
 		if(r != range) OUT(")");
 		generated_something = 1;

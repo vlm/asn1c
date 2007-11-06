@@ -2060,7 +2060,7 @@ OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	value = *(const long *)sptr;
 	
-	if((value >= -2147483648 && value <= 2147483647)) {
+	if((value >= (-2147483647L - 1) && value <= 2147483647)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -2155,7 +2155,7 @@ OK_IntegerInRange3_encode_uper(asn_TYPE_descriptor_t *td,
 /*** <<< CTDEFS [OK-IntegerInRange3] >>> ***/
 
 static asn_per_constraints_t asn_PER_type_OK_IntegerInRange3_constr_1 = {
-	{ APC_CONSTRAINED,	 32, -1, -2147483648,  2147483647 }	/* (-2147483648..2147483647) */,
+	{ APC_CONSTRAINED,	 32, -1, (-2147483647L - 1),  2147483647 }	/* (-2147483648..2147483647) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
@@ -2227,7 +2227,7 @@ OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	value = *(const long *)sptr;
 	
-	if(((value == -2147483648) || (value == 2147483647))) {
+	if(((value == (-2147483647L - 1)) || (value == 2147483647))) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -2322,7 +2322,7 @@ OK_IntegerInRange4_encode_uper(asn_TYPE_descriptor_t *td,
 /*** <<< CTDEFS [OK-IntegerInRange4] >>> ***/
 
 static asn_per_constraints_t asn_PER_type_OK_IntegerInRange4_constr_1 = {
-	{ APC_CONSTRAINED,	 32, -1, -2147483648,  2147483647 }	/* (-2147483648..2147483647) */,
+	{ APC_CONSTRAINED,	 32, -1, (-2147483647L - 1),  2147483647 }	/* (-2147483648..2147483647) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
@@ -2400,7 +2400,7 @@ OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(((value == -2147483648) || (value == 2147483647))) {
+	if(((value == (-2147483647L - 1)) || (value == 2147483647))) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -2495,7 +2495,7 @@ OK_IntegerInRange5_encode_uper(asn_TYPE_descriptor_t *td,
 /*** <<< CTDEFS [OK-IntegerInRange5] >>> ***/
 
 static asn_per_constraints_t asn_PER_type_OK_IntegerInRange5_constr_1 = {
-	{ APC_CONSTRAINED | APC_EXTENSIBLE,  32, -1, -2147483648,  2147483647 }	/* (-2147483648..2147483647,...) */,
+	{ APC_CONSTRAINED | APC_EXTENSIBLE,  32, -1, (-2147483647L - 1),  2147483647 }	/* (-2147483648..2147483647,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
