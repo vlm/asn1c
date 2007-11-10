@@ -576,6 +576,8 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	}
 
 	FREEMEM(st->buf);
+	st->buf = 0;
+	st->size = 0;
 	if(ct) {
 		if(ct->flags & APC_SEMI_CONSTRAINED) {
 			st->buf = (uint8_t *)CALLOC(1, 2);
@@ -586,11 +588,7 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			st->buf = (uint8_t *)MALLOC(1 + size + 1);
 			if(!st->buf) _ASN_DECODE_FAILED;
 			st->size = size;
-		} else {
-			st->size = 0;
 		}
-	} else {
-		st->size = 0;
 	}
 
 	/* X.691, #12.2.2 */
