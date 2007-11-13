@@ -6,6 +6,14 @@
 #include <errno.h>
 #include <sysexits.h>
 
+#ifdef	WIN32
+#define setuid(s)
+#define getuid()
+#define setgid(s)
+#define getgid()
+#define chroot(p) (-1)
+#endif
+
 /*
  * This program chroots into a given directory,
  * then executes the asn1c command with strict arguments checking.
