@@ -384,7 +384,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 			case ST_HEXDIGIT2:
 				value += (lv - 0x30);
 				state = ST_HEXCOLON;
-				st->buf[st->size++] = value;
+				st->buf[st->size++] = (uint8_t)value;
 				continue;
 			case ST_HEXCOLON:
 				return XPBD_BROKEN_ENCODING;
@@ -467,7 +467,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 			case ST_HEXDIGIT2:
 				value += lv - ((lv < 0x61) ? 0x41 : 0x61);
 				value += 10;
-				st->buf[st->size++] = value;
+				st->buf[st->size++] = (uint8_t)value;
 				state = ST_HEXCOLON;
 				continue;
 			case ST_DIGITS:
@@ -843,7 +843,7 @@ asn_ulong2INTEGER(INTEGER_t *st, unsigned long value) {
 	end = buf + (sizeof(value) + 1);
 	buf[0] = 0;
 	for(b = buf, shr = (sizeof(long)-1)*8; b < end; shr -= 8)
-		*(++b) = value >> shr;
+		*(++b) = (uint8_t)(value >> shr);
 
 	if(st->buf) FREEMEM(st->buf);
 	st->buf = buf;
