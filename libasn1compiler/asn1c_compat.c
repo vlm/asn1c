@@ -7,7 +7,7 @@
 
 #ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
 #ifdef	WIN32
-#define	DEFFILEMODE	0
+#define	DEFFILEMODE	(S_IREAD|S_IWRITE)
 #else
 #define	DEFFILEMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
 #endif
