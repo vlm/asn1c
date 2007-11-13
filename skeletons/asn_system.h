@@ -24,7 +24,6 @@
 #ifdef	WIN32
 
 #include <malloc.h>
-#include <stdint.h>
 #define	 snprintf	_snprintf
 #define	 vsnprintf	_vsnprintf
 
@@ -52,6 +51,8 @@ typedef	unsigned int	uint32_t;
 #define finite _finite
 #define copysign _copysign
 #define	ilogb	_logb
+#else	/* !_MSC_VER */
+#include <stdint.h>
 #endif	/* _MSC_VER */
 
 #else	/* !WIN32 */
