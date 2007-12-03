@@ -80,7 +80,7 @@ AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
 
 dnl For mingw
-AC_CHECK_LIB(iberty, getopt)
+AC_SEARCH_LIBS(getopt, iberty)
 
 AM_CONFIG_HEADER(config.h)
 
