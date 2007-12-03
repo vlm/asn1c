@@ -30,6 +30,8 @@ typedef struct asn_INTEGER_specifics_s {
 	int map_count;				/* Elements in either map */
 	int extension;				/* This map is extensible */
 	int strict_enumeration;			/* Enumeration set is fixed */
+	int field_width;			/* Size of native integer */
+	int field_unsigned;			/* Signed=0, unsigned=1 */
 } asn_INTEGER_specifics_t;
 
 asn_struct_print_f INTEGER_print;

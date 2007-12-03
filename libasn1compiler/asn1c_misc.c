@@ -215,6 +215,8 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			case TNF_RSAFE:
 				if(expr->expr_type == ASN_BASIC_REAL)
 					return "double";
+				else if(asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN)
+					return "unsigned long";
 				else
 					return "long";
 			default:
@@ -278,7 +280,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 
 /*
  * Check whether the specified INTEGER or ENUMERATED type can be represented
- * using the generic 'long' type.
+ * using the generic 'long' or 'unsigned long' type.
  */
 enum asn1c_fitslong_e
 asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
@@ -339,7 +341,7 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 			right = range->right;
 			/* Use 4 instead of sizeof(long) is justified! */
 			if(right.type == ARE_VALUE && right.value <= 4)
-				return FL_FITSOK;
+				return FL_FITS_SIGNED;
 		}
 		asn1constraint_range_free(range);
 	}
@@ -364,6 +366,15 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	right = range->right;
 	asn1constraint_range_free(range);
 
+	/* Special case for unsigned */
+	if(left.type == ARE_VALUE
+		&& left.value >= 0
+	&& right.type == ARE_VALUE
+		&& right.value > 2147483647
+		&& right.value <= 4294967295UL)
+		return FL_FITS_UNSIGN;
+		
+
 	/* If some fixed value is outside of target range, not fit */
 	if(left.type == ARE_VALUE
 			&& (left.value < LEFTMIN || left.value > RIGHTMAX))
@@ -378,6 +389,6 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 			? FL_FORCED : FL_NOTFIT;
 	}
 
-	return FL_FITSOK;
+	return FL_FITS_SIGNED;
 }
 

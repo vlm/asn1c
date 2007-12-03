@@ -12,6 +12,7 @@ static int emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, as
 static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
 static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop);
+static int native_long_sign(asn1cnst_range_t *r);	/* -1, 0, 1 */
 
 int
 asn1c_emit_constraint_checking_code(arg_t *arg) {
@@ -91,7 +92,11 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			switch(etype) {
 			case ASN_BASIC_INTEGER:
 			case ASN_BASIC_ENUMERATED:
-				OUT("long value;\n");
+				if(native_long_sign(r_value) >= 0) {
+					OUT("unsigned long value;\n");
+				} else {
+					OUT("long value;\n");
+				}
 				break;
 			case ASN_BASIC_REAL:
 				OUT("double value;\n");
@@ -131,6 +136,19 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		(asn1c_emit_constraint_tables(arg, r_size?1:0) == 1);
 	REDIR(OT_CODE);
 	INDENT(+1);
+
+	/*
+	 * Optimization for unsigned longs.
+	 */
+	if(!r_size && r_value
+		&& (etype == ASN_BASIC_INTEGER
+		|| etype == ASN_BASIC_ENUMERATED)
+	&& native_long_sign(r_value) == 0) {
+		OUT("\n");
+		OUT("/* Constraint check succeeded */\n");
+		OUT("return 0;\n");
+		return 0;
+	}
 
 	/*
 	 * Here is an if() {} else {} consrtaint checking code.
@@ -578,9 +596,15 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		if(asn1c_type_fits_long(arg, arg->expr) != FL_NOTFIT) {
+		if(asn1c_type_fits_long(arg, arg->expr) == FL_FITS_UNSIGN) {
+			OUT("value = *(const unsigned long *)sptr;\n");
+		} else if(asn1c_type_fits_long(arg, arg->expr) != FL_NOTFIT) {
 			OUT("value = *(const long *)sptr;\n");
 		} else {
+			/*
+			 * In some cases we can explore our knowledge of
+			 * underlying INTEGER_t->buf format.
+			 */
 			if(r_value->el_count == 0
 			&& (
 				/* Speed-up common case: (0..MAX) */
@@ -598,14 +622,26 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 				break;
 			}
 
-			OUT("if(asn_INTEGER2long(st, &value)) {\n");
+			if(native_long_sign(r_value) >= 0) {
+				/* Special case for treating unsigned longs */
+				OUT("if(asn_INTEGER2ulong(st, &value)) {\n");
 				INDENT(+1);
 				OUT("_ASN_CTFAIL(app_key, td, sptr,\n");
 				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
 				OUT("\ttd->name, __FILE__, __LINE__);\n");
 				OUT("return -1;\n");
 				INDENT(-1);
-			OUT("}\n");
+				OUT("}\n");
+			} else {
+				OUT("if(asn_INTEGER2long(st, &value)) {\n");
+				INDENT(+1);
+				OUT("_ASN_CTFAIL(app_key, td, sptr,\n");
+				OUT("\t\"%%s: value too large (%%s:%%d)\",\n");
+				OUT("\ttd->name, __FILE__, __LINE__);\n");
+				OUT("return -1;\n");
+				INDENT(-1);
+				OUT("}\n");
+			}
 		}
 		break;
 	case ASN_BASIC_REAL:
@@ -652,3 +688,20 @@ _find_terminal_type(arg_t *arg) {
 	return A1TC_INVALID;
 }
 
+static int
+native_long_sign(asn1cnst_range_t *r) {
+	if(r->left.type == ARE_VALUE
+	&& r->left.value >= 0
+	&& r->right.type == ARE_VALUE
+	&& r->right.value > 2147483647UL
+	&& r->right.value <= 4294967295UL) {
+		if(r->el_count == 0
+		&& r->left.value == 0
+		&& r->right.value == 4294967295UL)
+			return 0;
+		else
+			return 1;
+	} else {
+		return -1;
+	}
+}

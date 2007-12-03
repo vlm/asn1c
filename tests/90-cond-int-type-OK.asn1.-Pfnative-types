@@ -550,11 +550,11 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
 
 /*** <<< INCLUDES [NO-IntegerLowHigh] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [NO-IntegerLowHigh] >>> ***/
 
-typedef INTEGER_t	 NO_IntegerLowHigh_t;
+typedef unsigned long	 NO_IntegerLowHigh_t;
 
 /*** <<< FUNC-DECLS [NO-IntegerLowHigh] >>> ***/
 
@@ -572,8 +572,7 @@ xer_type_encoder_f NO_IntegerLowHigh_encode_xer;
 int
 NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	unsigned long value;
 	
 	if(!sptr) {
 		_ASN_CTFAIL(app_key, td, sptr,
@@ -582,12 +581,7 @@ NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const unsigned long *)sptr;
 	
 	if((value >= 1 && value <= 3000000000)) {
 		/* Constraint check succeeded */
@@ -601,24 +595,24 @@ NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 NO_IntegerLowHigh_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
 }
 
 void
@@ -668,6 +662,11 @@ NO_IntegerLowHigh_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerLowHigh] >>> ***/
 
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
+	0,	0,	0,	0,	0,
+	0,	/* Native long size */
+	1	/* Unsigned representation */
+};
 static ber_tlv_tag_t asn_DEF_NO_IntegerLowHigh_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
@@ -691,7 +690,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 		/sizeof(asn_DEF_NO_IntegerLowHigh_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_SPC_NO_IntegerLowHigh_specs_1	/* Additional specs */
 };
 
 
@@ -1132,11 +1131,11 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
 
 /*** <<< INCLUDES [NO-IntegerOutRange] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [NO-IntegerOutRange] >>> ***/
 
-typedef INTEGER_t	 NO_IntegerOutRange_t;
+typedef unsigned long	 NO_IntegerOutRange_t;
 
 /*** <<< FUNC-DECLS [NO-IntegerOutRange] >>> ***/
 
@@ -1154,8 +1153,7 @@ xer_type_encoder_f NO_IntegerOutRange_encode_xer;
 int
 NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	unsigned long value;
 	
 	if(!sptr) {
 		_ASN_CTFAIL(app_key, td, sptr,
@@ -1164,12 +1162,7 @@ NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const unsigned long *)sptr;
 	
 	if((value >= 3000000000 && value <= 3000000001)) {
 		/* Constraint check succeeded */
@@ -1183,24 +1176,24 @@ NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 NO_IntegerOutRange_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
 }
 
 void
@@ -1250,6 +1243,11 @@ NO_IntegerOutRange_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerOutRange] >>> ***/
 
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
+	0,	0,	0,	0,	0,
+	0,	/* Native long size */
+	1	/* Unsigned representation */
+};
 static ber_tlv_tag_t asn_DEF_NO_IntegerOutRange_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
@@ -1273,17 +1271,17 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
 		/sizeof(asn_DEF_NO_IntegerOutRange_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_SPC_NO_IntegerOutRange_specs_1	/* Additional specs */
 };
 
 
 /*** <<< INCLUDES [NO-IntegerOutValue] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [NO-IntegerOutValue] >>> ***/
 
-typedef INTEGER_t	 NO_IntegerOutValue_t;
+typedef unsigned long	 NO_IntegerOutValue_t;
 
 /*** <<< FUNC-DECLS [NO-IntegerOutValue] >>> ***/
 
@@ -1301,8 +1299,7 @@ xer_type_encoder_f NO_IntegerOutValue_encode_xer;
 int
 NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	unsigned long value;
 	
 	if(!sptr) {
 		_ASN_CTFAIL(app_key, td, sptr,
@@ -1311,12 +1308,7 @@ NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const unsigned long *)sptr;
 	
 	if((value == 3000000000)) {
 		/* Constraint check succeeded */
@@ -1330,24 +1322,24 @@ NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 NO_IntegerOutValue_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
 }
 
 void
@@ -1397,6 +1389,11 @@ NO_IntegerOutValue_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerOutValue] >>> ***/
 
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
+	0,	0,	0,	0,	0,
+	0,	/* Native long size */
+	1	/* Unsigned representation */
+};
 static ber_tlv_tag_t asn_DEF_NO_IntegerOutValue_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
@@ -1420,7 +1417,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
 		/sizeof(asn_DEF_NO_IntegerOutValue_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_SPC_NO_IntegerOutValue_specs_1	/* Additional specs */
 };
 
 
@@ -2131,11 +2128,11 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
 
 /*** <<< INCLUDES [NO-IntegerInRange6] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [NO-IntegerInRange6] >>> ***/
 
-typedef INTEGER_t	 NO_IntegerInRange6_t;
+typedef unsigned long	 NO_IntegerInRange6_t;
 
 /*** <<< FUNC-DECLS [NO-IntegerInRange6] >>> ***/
 
@@ -2153,8 +2150,7 @@ xer_type_encoder_f NO_IntegerInRange6_encode_xer;
 int
 NO_IntegerInRange6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	unsigned long value;
 	
 	if(!sptr) {
 		_ASN_CTFAIL(app_key, td, sptr,
@@ -2163,43 +2159,31 @@ NO_IntegerInRange6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const unsigned long *)sptr;
 	
-	if((value >= 0 && value <= 4294967295)) {
-		/* Constraint check succeeded */
-		return 0;
-	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: constraint failed (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	/* Constraint check succeeded */
+	return 0;
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 NO_IntegerInRange6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
 }
 
 void
@@ -2249,6 +2233,11 @@ NO_IntegerInRange6_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerInRange6] >>> ***/
 
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
+	0,	0,	0,	0,	0,
+	0,	/* Native long size */
+	1	/* Unsigned representation */
+};
 static ber_tlv_tag_t asn_DEF_NO_IntegerInRange6_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
@@ -2272,7 +2261,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 		/sizeof(asn_DEF_NO_IntegerInRange6_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_SPC_NO_IntegerInRange6_specs_1	/* Additional specs */
 };
 
 

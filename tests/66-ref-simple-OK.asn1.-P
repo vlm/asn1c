@@ -184,7 +184,9 @@ static asn_INTEGER_specifics_t asn_SPC_SimpleType_specs_1 = {
 	asn_MAP_SimpleType_enum2value_1,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
 	0,	/* Enumeration is not extensible */
-	1	/* Strict enumeration */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
 };
 static ber_tlv_tag_t asn_DEF_SimpleType_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))

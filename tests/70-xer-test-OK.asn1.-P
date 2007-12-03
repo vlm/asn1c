@@ -616,7 +616,9 @@ static asn_INTEGER_specifics_t asn_SPC_enum_specs_4 = {
 	asn_MAP_enum_enum2value_4,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
 	0,	/* Enumeration is not extensible */
-	1	/* Strict enumeration */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
 };
 static ber_tlv_tag_t asn_DEF_enum_tags_4[] = {
 	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
@@ -1146,7 +1148,9 @@ static asn_INTEGER_specifics_t asn_SPC_Member_specs_2 = {
 	asn_MAP_Member_enum2value_2,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
 	0,	/* Enumeration is not extensible */
-	1	/* Strict enumeration */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
 };
 static ber_tlv_tag_t asn_DEF_Member_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
@@ -1467,7 +1471,9 @@ static asn_INTEGER_specifics_t asn_SPC_name_specs_2 = {
 	asn_MAP_name_enum2value_2,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
 	0,	/* Enumeration is not extensible */
-	1	/* Strict enumeration */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
 };
 static ber_tlv_tag_t asn_DEF_name_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))

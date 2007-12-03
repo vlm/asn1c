@@ -158,7 +158,9 @@ INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_by
 		} else {
 			scrsize = sizeof(scratch);
 			scr = scratch;
-			ret = snprintf(scr, scrsize, "%ld", accum);
+			ret = snprintf(scr, scrsize,
+				(specs && specs->field_unsigned)
+				?"%lu":"%ld", accum);
 		}
 		assert(ret > 0 && (size_t)ret < scrsize);
 		return (cb(scr, ret, app_key) < 0) ? -1 : ret;
@@ -554,6 +556,7 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 asn_dec_rval_t
 INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_dec_rval_t rval = { RC_OK, 0 };
 	INTEGER_t *st = (INTEGER_t *)*sptr;
 	asn_per_constraint_t *ct;
@@ -611,7 +614,9 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			ASN_DEBUG("Got value %ld + low %ld",
 				value, ct->lower_bound);
 			value += ct->lower_bound;
-			if(asn_long2INTEGER(st, value))
+			if((specs && specs->field_unsigned)
+				? asn_ulong2INTEGER(st, value)
+				: asn_long2INTEGER(st, value))
 				_ASN_DECODE_FAILED;
 			return rval;
 		}
@@ -657,6 +662,7 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 asn_enc_rval_t
 INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	const uint8_t *buf;
@@ -673,21 +679,41 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 
 	if(ct) {
 		int inext = 0;
-		if(asn_INTEGER2long(st, &value))
-			_ASN_ENCODE_FAILED;
-		/* Check proper range */
-		if(ct->flags & APC_SEMI_CONSTRAINED) {
-			if(value < ct->lower_bound)
-				inext = 1;
-		} else if(ct->range_bits >= 0) {
-			if(value < ct->lower_bound
-			|| value > ct->upper_bound)
-				inext = 1;
+		if(specs && specs->field_unsigned) {
+			unsigned long uval;
+			if(asn_INTEGER2ulong(st, &uval))
+				_ASN_ENCODE_FAILED;
+			/* Check proper range */
+			if(ct->flags & APC_SEMI_CONSTRAINED) {
+				if(uval < (unsigned long)ct->lower_bound)
+					inext = 1;
+			} else if(ct->range_bits >= 0) {
+				if(uval < (unsigned long)ct->lower_bound
+				|| uval > (unsigned long)ct->upper_bound)
+					inext = 1;
+			}
+			ASN_DEBUG("Value %lu (%02x/%d) lb %lu ub %lu %s",
+				uval, st->buf[0], st->size,
+				ct->lower_bound, ct->upper_bound,
+				inext ? "ext" : "fix");
+			value = uval;
+		} else {
+			if(asn_INTEGER2long(st, &value))
+				_ASN_ENCODE_FAILED;
+			/* Check proper range */
+			if(ct->flags & APC_SEMI_CONSTRAINED) {
+				if(value < ct->lower_bound)
+					inext = 1;
+			} else if(ct->range_bits >= 0) {
+				if(value < ct->lower_bound
+				|| value > ct->upper_bound)
+					inext = 1;
+			}
+			ASN_DEBUG("Value %ld (%02x/%d) lb %ld ub %ld %s",
+				value, st->buf[0], st->size,
+				ct->lower_bound, ct->upper_bound,
+				inext ? "ext" : "fix");
 		}
-		ASN_DEBUG("Value %ld (%02x/%d) lb %ld ub %ld %s",
-			value, st->buf[0], st->size,
-			ct->lower_bound, ct->upper_bound,
-			inext ? "ext" : "fix");
 		if(ct->flags & APC_EXTENSIBLE) {
 			if(per_put_few_bits(po, inext, 1))
 				_ASN_ENCODE_FAILED;
