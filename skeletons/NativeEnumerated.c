@@ -196,7 +196,7 @@ NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
 	/*
 	 * X.691, #10.6: normally small non-negative whole number;
 	 */
-	ASN_DEBUG("value = %d, ext = %d, inext = %d, res = %d",
+	ASN_DEBUG("value = %ld, ext = %d, inext = %d, res = %ld",
 		value, specs->extension, inext,
 		value - (inext ? (specs->extension - 1) : 0));
 	if(uper_put_nsnnwn(po, value - (inext ? (specs->extension - 1) : 0)))

@@ -736,7 +736,9 @@ static asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
 	asn_MAP_accept_as_enum2value_2,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
 	4,	/* Extensions before this member */
-	1	/* Strict enumeration */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
 };
 static ber_tlv_tag_t asn_DEF_accept_as_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))

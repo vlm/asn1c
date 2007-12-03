@@ -222,9 +222,28 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 			OUT("0,\t/* Enumeration is not extensible */\n");
 		}
 		if(expr->expr_type == ASN_BASIC_ENUMERATED)
-			OUT("1\t/* Strict enumeration */\n");
+			OUT("1,\t/* Strict enumeration */\n");
 		else
-			OUT("0\n");
+			OUT("0,\n");
+		OUT("0,\t/* Native long size */\n");
+		OUT("0\n");
+		INDENT(-1);
+		OUT("};\n");
+	}
+
+	if(expr->expr_type == ASN_BASIC_INTEGER
+	&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN) {
+		REDIR(OT_STAT_DEFS);
+		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
+			MKID(expr), expr->_type_unique_index);
+		INDENT(+1);
+		OUT("0,\t");
+		OUT("0,\t");
+		OUT("0,\t");
+		OUT("0,\t");
+		OUT("0,\n");
+		OUT("0,\t/* Native long size */\n");
+		OUT("1\t/* Unsigned representation */\n");
 		INDENT(-1);
 		OUT("};\n");
 	}
@@ -1112,7 +1131,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	if((expr->expr_type == ASN_BASIC_ENUMERATED)
 	|| (0 /* -- prohibited by X.693:8.3.4 */
 		&& expr->expr_type == ASN_BASIC_INTEGER
-		&& expr_elements_count(arg, expr)))
+		&& expr_elements_count(arg, expr))
+	|| (expr->expr_type == ASN_BASIC_INTEGER
+		&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN)
+	)
 		etd_spec = ETD_HAS_SPECIFICS;
 	else
 		etd_spec = ETD_NO_SPECIFICS;
@@ -2289,7 +2311,9 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		|| expr->expr_type == ASN_BASIC_ENUMERATED
 		|| (0 /* -- prohibited by X.693:8.3.4 */
 			&& expr->expr_type == ASN_BASIC_INTEGER
-			&& expr_elements_count(arg, expr));
+			&& expr_elements_count(arg, expr))
+		|| (expr->expr_type == ASN_BASIC_INTEGER
+			&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN);
 	if(C99_MODE) OUT(".type = ");
 	OUT("&asn_DEF_");
 	if(complex_contents) {
