@@ -17,6 +17,7 @@
 	  (Severity: low; Security impact: none)
 	* Added DEFAULT handling for known multiplier string.
 	* Added a sample OMA ULP decoder (./examples/sample.source.ULP).
+	* Added full-width 32-bit integer encoding support in PER.
 
 0.9.21:	2006-Sep-17
 
