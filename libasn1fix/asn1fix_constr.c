@@ -427,7 +427,7 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 			char *p = (a->expr_type == A1TC_EXTENSIBLE)
 				?"potentially ":"";
 			FATAL("Processing %s at line %d: component \"%s\" at line %d %shas the same tag "
-				"with component \"%s\" at line %d",
+				"as component \"%s\" at line %d",
 				arg->expr->Identifier,
 				arg->expr->_lineno,
 				a->Identifier,
