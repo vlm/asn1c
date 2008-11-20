@@ -868,8 +868,8 @@ asn_ulong2INTEGER(INTEGER_t *st, unsigned long value) {
 
 	end = buf + (sizeof(value) + 1);
 	buf[0] = 0;
-	for(b = buf, shr = (sizeof(long)-1)*8; b < end; shr -= 8)
-		*(++b) = (uint8_t)(value >> shr);
+	for(b = buf + 1, shr = (sizeof(long)-1)*8; b < end; shr -= 8, b++)
+		*b = (uint8_t)(value >> shr);
 
 	if(st->buf) FREEMEM(st->buf);
 	st->buf = buf;

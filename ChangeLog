@@ -1,5 +1,5 @@
 
-0.9.22:	2007-Jun-29
+0.9.22:	2008-Nov-19
 
 	* Added -pdu=all and -pdu=<type> switches to asn1c.
 	* Added PER support for most known-multiplier string types:
@@ -18,6 +18,9 @@
 	* Added DEFAULT handling for known multiplier string.
 	* Added a sample OMA ULP decoder (./examples/sample.source.ULP).
 	* Added full-width 32-bit integer encoding support in PER.
+	* Fixed 1-byte OOB write issue with non-standard and Windows
+	  memory allocators (Severity: low; Security impact: medium).
+	  Reported by Sheng Yu.
 
 0.9.21:	2006-Sep-17
 
