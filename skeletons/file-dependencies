@@ -53,6 +53,7 @@ ber_tlv_length.h ber_tlv_length.c	# BER TLV L (length)
 ber_tlv_tag.h ber_tlv_tag.c	# BER TLV T (tag)
 ber_decoder.h ber_decoder.c	# BER decoder support code
 der_encoder.h der_encoder.c	# DER encoder support code
+mder_encoder.h mder_encoder.c   # MDER encoder support code
 constr_TYPE.h constr_TYPE.c	# Description of a type
 constraints.h constraints.c	# Subtype constraints support
 xer_support.h xer_support.c	# XML parsing
