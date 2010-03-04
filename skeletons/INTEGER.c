@@ -22,6 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,
+	INTEGER_encode_mder,
 	INTEGER_decode_xer,
 	INTEGER_encode_xer,
 	INTEGER_decode_uper,	/* Unaligned PER decoder */
@@ -35,6 +36,20 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
+
+
+/*
+ * Encode INTEGER type using MDER.
+ */
+asn_enc_rval_t
+INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+	int tag_mode, ber_tlv_tag_t tag,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+
+	asn_enc_rval_t r;
+	ASN_DEBUG("Implement Integer");
+	return r;
+}
 
 /*
  * Encode INTEGER type using DER.

@@ -37,6 +37,7 @@ typedef struct asn_struct_ctx_s {
 
 #include <ber_decoder.h>	/* Basic Encoding Rules decoder */
 #include <der_encoder.h>	/* Distinguished Encoding Rules encoder */
+#include <mder_encoder.h>	/* Medical Device Encoding Rules encoder */
 #include <xer_decoder.h>	/* Decoder of XER (XML, text) */
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */
@@ -95,6 +96,7 @@ typedef struct asn_TYPE_descriptor_s {
 	asn_constr_check_f *check_constraints;	/* Constraints validator */
 	ber_type_decoder_f *ber_decoder;	/* Generic BER decoder */
 	der_type_encoder_f *der_encoder;	/* Canonical DER encoder */
+	mder_type_encoder_f *mder_encoder;	/* MDER encoder */
 	xer_type_decoder_f *xer_decoder;	/* Generic XER decoder */
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
 	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */

@@ -1238,9 +1238,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->print_struct   = asn_DEF_%s.print_struct;\n",   type_name);
 	OUT("td->ber_decoder    = asn_DEF_%s.ber_decoder;\n",    type_name);
 	OUT("td->der_encoder    = asn_DEF_%s.der_encoder;\n",    type_name);
-	OUT("/*Sancane comment: Next code is generated in asn1c_C.c 1241*/\n");
 	OUT("/*td->mder_decoder   = asn_DEF_%s.mder_decoder;*/\n",   type_name);
-	OUT("/*td->mder_encoder   = asn_DEF_%s.mder_encoder;*/\n",   type_name);
+	OUT("td->mder_encoder   = asn_DEF_%s.mder_encoder;\n",   type_name);
 	OUT("td->xer_decoder    = asn_DEF_%s.xer_decoder;\n",    type_name);
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
 	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
@@ -1336,6 +1335,22 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 	p = MKID(expr);
 	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_enc_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_encode_mder(asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tvoid *structure, int tag_mode, ber_tlv_tag_t tag,\n");
+	OUT("\tasn_app_consume_bytes_f *cb, void *app_key) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->mder_encoder(td, structure, tag_mode, tag, cb, app_key);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
 	OUT("asn_dec_rval_t\n");
 	OUT("%s", p);
 	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
@@ -1414,7 +1429,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("ber_type_decoder_f %s_decode_ber;\n", p);
 		OUT("der_type_encoder_f %s_encode_der;\n", p);
 		OUT("/*mder_type_decoder_f %s_decode_mder;*/\n", p);
-		OUT("/*mder_type_encoder_f %s_encode_mder;*/\n", p);
+		OUT("mder_type_encoder_f %s_encode_mder;\n", p);
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
 		if(arg->flags & A1C_GEN_PER) {
@@ -2455,7 +2470,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		FUNCREF(decode_ber);
 		FUNCREF(encode_der);
 		/* FUNCREF(decode_mder); */
-		/* FUNCREF(encode_mder); */
+		FUNCREF(encode_mder);
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);
 		if(arg->flags & A1C_GEN_PER) {

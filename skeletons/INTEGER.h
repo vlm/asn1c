@@ -37,6 +37,7 @@ typedef struct asn_INTEGER_specifics_s {
 asn_struct_print_f INTEGER_print;
 ber_type_decoder_f INTEGER_decode_ber;
 der_type_encoder_f INTEGER_encode_der;
+mder_type_encoder_f INTEGER_encode_mder;
 xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
 per_type_decoder_f INTEGER_decode_uper;
