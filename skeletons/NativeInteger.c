@@ -27,6 +27,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
+	NativeInteger_encode_mder,
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
@@ -126,6 +127,27 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	return rval;
 }
 
+#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+#define	_PREPARE_INTEGER_T(tmp,native) do {				\									\
+	tmp.buf = (uint8_t *)&native;					\
+	tmp.size = sizeof(native);					\
+} while(0)
+#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
+#define	_PREPARE_INTEGER_T(tmp,native) do {				\
+	/* set where should've been */					\
+	uint8_t buf[sizeof(native)];					\
+	uint8_t *p;							\
+									\
+	/* Prepare a fake INTEGER */					\
+	for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)	\
+		*p = (uint8_t)native;					\
+									\
+	tmp.buf = buf;							\
+	tmp.size = sizeof(buf);						\
+} while(0)
+#endif	/* WORDS_BIGENDIAN */
+
+
 /*
  * Encode the NativeInteger using the standard INTEGER type DER encoder.
  */
@@ -137,25 +159,39 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 	asn_enc_rval_t erval;
 	INTEGER_t tmp;
 
-#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+	_PREPARE_INTEGER_T(tmp, native);
 
-	tmp.buf = (uint8_t *)&native;
-	tmp.size = sizeof(native);
-
-#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
-	uint8_t buf[sizeof(native)];
-	uint8_t *p;
-
-	/* Prepare a fake INTEGER */
-	for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)
-		*p = (uint8_t)native;
-
-	tmp.buf = buf;
-	tmp.size = sizeof(buf);
-#endif	/* WORDS_BIGENDIAN */
-	
 	/* Encode fake INTEGER */
 	erval = INTEGER_encode_der(sd, &tmp, tag_mode, tag, cb, app_key);
+	if(erval.encoded == -1) {
+		assert(erval.structure_ptr == &tmp);
+		erval.structure_ptr = ptr;
+	}
+	return erval;
+}
+
+/*
+ * Encode the NativeInteger using MDER encoder.
+ */
+asn_enc_rval_t
+NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
+	int tag_mode, ber_tlv_tag_t tag,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	unsigned long native = *(unsigned long *)ptr;	/* Disable sign ext. */
+	asn_enc_rval_t erval;
+	INTEGER_t tmp;
+	int i;
+
+	printf("name: %s\n", sd->name);
+	printf("xml_tag: %s\n", sd->xml_tag);
+	_PREPARE_INTEGER_T(tmp,native);
+	printf("INTEGER len %d\n", tmp.size);
+	for (i=0; i<tmp.size; i++)
+		printf ("%hx ", tmp.buf[i]);
+	printf("\n");
+
+	/* Encode fake INTEGER */
+	erval = INTEGER_encode_mder(sd, &tmp, tag_mode, tag, cb, app_key);
 	if(erval.encoded == -1) {
 		assert(erval.structure_ptr == &tmp);
 		erval.structure_ptr = ptr;

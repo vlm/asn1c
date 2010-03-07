@@ -1,5 +1,6 @@
 /*-
  * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -79,7 +80,7 @@ typedef ber_tlv_tag_t (asn_outmost_tag_f)(
 /* The instance of the above function type; used internally. */
 asn_outmost_tag_f asn_TYPE_outmost_tag;
 
-
+
 /*
  * The definitive description of the destination language's structure.
  */

@@ -47,7 +47,7 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 
 	asn_enc_rval_t r;
-	ASN_DEBUG("Implement Integer");
+	printf("Implement MDER Integer\n");
 	return r;
 }
 

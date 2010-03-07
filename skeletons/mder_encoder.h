@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2010 Santiago Carot-Nemesio <sancane_at_gmail_dot_com>. 
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
