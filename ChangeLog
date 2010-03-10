@@ -1,4 +1,10 @@
 
+0.9.23:	2010-Mar-10
+
+	* GeneralizedTime fix for working with time offsets which are not
+	  representable in whole hours. (Severity: low; Security impact: low)
+	  Thanks to IP Fabrics, Inc.
+
 0.9.22:	2008-Nov-19
 
 	* Added -pdu=all and -pdu=<type> switches to asn1c.
