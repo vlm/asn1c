@@ -666,7 +666,7 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value,
 		int ret;
 		gmtoff %= 86400;
 		ret = snprintf(p, buf_size - size, "%+03ld%02ld",
-			gmtoff / 3600, labs(gmtoff % 3600));
+			gmtoff / 3600, labs(gmtoff % 3600) / 60);
 		if(ret != 5) {
 			FREEMEM(buf);
 			errno = EINVAL;
