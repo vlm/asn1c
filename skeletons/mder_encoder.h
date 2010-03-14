@@ -7,6 +7,7 @@
 #define	_MDER_ENCODER_H_
 
 #include <asn_application.h>
+#include <mder_support.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,7 +17,6 @@ struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /*
  * The MDER encoder of any type. May be invoked by the application.
- * The ber_decode() function (ber_decoder.h) is an opposite of der_encode().
  */
 asn_enc_rval_t mder_encode(struct asn_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr,	/* Structure to be encoded */

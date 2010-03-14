@@ -184,6 +184,7 @@ NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
 
 	printf("name: %s\n", sd->name);
 	printf("xml_tag: %s\n", sd->xml_tag);
+	printf("specific %p\n", sd->specifics);
 	_PREPARE_INTEGER_T(tmp,native);
 	printf("INTEGER len %d\n", tmp.size);
 	for (i=0; i<tmp.size; i++)

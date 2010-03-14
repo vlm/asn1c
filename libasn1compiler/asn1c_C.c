@@ -42,6 +42,7 @@ static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, char *type);
 static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
+static int emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
 static int emit_include_dependencies(arg_t *arg);
@@ -2418,19 +2419,66 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	return 0;
 }
 
+static int
+emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
+	asn1cnst_range_t *r_value;
+	asn1p_expr_type_e etype;
+	asn1p_constraint_t *ct;
+	char *p = MKID(expr);
+
+	etype = expr_get_type(arg, expr);
+	switch (etype) {
+	case ASN_BASIC_INTEGER:
+		OUT("static mder_restricted_int "
+			"asn_MDER_%s_%s_constr_%d = ",
+		pfx, p, expr->_type_unique_index);
+		ct = expr->combined_constraints;
+		r_value=asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
+		if (!r_value) {
+			OUT("INVALID;\n");
+			return 1;
+		} else if (r_value->left.value == 0) {
+			/* Unsigned Integer */
+			if (r_value->right.value == 255)
+				OUT("INT_U8;\n");
+			else if (r_value->right.value == 65535)
+				OUT("INT_U16;\n");
+			else if (r_value->right.value == 4294967295UL)
+				OUT("INT_U32;\n");
+			else
+				OUT("INVALID;\n");
+			return 1;
+		}
+		/* Check signed integer */
+		if ((r_value->left.value == -128) && (r_value->right.value == 127))
+			OUT("INT_I8;\n");
+		else if ((r_value->left.value == -32768) && (r_value->right.value == 32767))
+			OUT("INT_I16;\n");
+		else if ((r_value->left.value == (-2147483647L - 1)) && (r_value->right.value == 2147483647L))
+			OUT("INT_I32;\n");
+		else
+			OUT("INVALID;\n");
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 /*
  * Generate "asn_DEF_XXX" type definition.
  */
 static int
 emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
 	asn1p_expr_t *terminal;
-	int using_type_name = 0;
+	int using_type_name = 0, mder_constr;
 	char *p = MKID(expr);
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 
 	if(emit_member_PER_constraints(arg, expr, "type"))
 		return -1;
+
+	mder_constr = emit_member_MDER_constraints(arg, expr, "type");
 
 	if(HIDE_INNER_DEFS)
 		OUT("static /* Use -fall-defs-global to expose */\n");
@@ -2563,6 +2611,16 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			OUT("&asn_SPC_%s_specs_%d\t/* Additional specs */\n",
 				p, expr->_type_unique_index);
 		}
+
+		/* MDER Contraints */
+		if (mder_constr) {
+			OUT("/* Include next field in asn_TYPE_descriptor_t */\n");
+			OUT("/* &asn_MDER_type_%s_constr_%d */\t/* type: asn_mder_contraints_t*/\n",
+			p, expr->_type_unique_index);
+		} else {
+			OUT("0\t/* No MDER restricted type */\n");
+		}
+
 	INDENT(-1);
 	OUT("};\n");
 	OUT("\n");
@@ -2875,3 +2933,4 @@ static int compar_cameo(const void *ap, const void *bp) {
 	return 0;
 
 }
+
