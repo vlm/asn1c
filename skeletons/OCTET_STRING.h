@@ -1,4 +1,5 @@
 /*-
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -25,6 +26,7 @@ asn_struct_print_f OCTET_STRING_print;
 asn_struct_print_f OCTET_STRING_print_utf8;
 ber_type_decoder_f OCTET_STRING_decode_ber;
 der_type_encoder_f OCTET_STRING_encode_der;
+mder_type_encoder_f OCTET_STRING_encode_mder;
 xer_type_decoder_f OCTET_STRING_decode_xer_hex;		/* Hexadecimal */
 xer_type_decoder_f OCTET_STRING_decode_xer_binary;	/* 01010111010 */
 xer_type_decoder_f OCTET_STRING_decode_xer_utf8;	/* ASCII/UTF-8 */

@@ -1,4 +1,5 @@
 /*-
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * Copyright (c) 2004, 2007 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -26,6 +27,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
+	NativeInteger_encode_mder,
 	NativeInteger_decode_xer,
 	NativeEnumerated_encode_xer,
 	NativeEnumerated_decode_uper,

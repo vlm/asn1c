@@ -1,4 +1,5 @@
 /*-
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
@@ -32,6 +33,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
+	OCTET_STRING_encode_mder,
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
@@ -573,6 +575,15 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	er.encoded += st->size;
 	_ASN_ENCODED_OK(er);
 cb_failed:
+	_ASN_ENCODE_FAILED;
+}
+
+asn_enc_rval_t
+OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+			int tag_mode, ber_tlv_tag_t tag,
+			asn_app_consume_bytes_f *cb, void *app_key)
+{
+	ASN_DEBUG("TODO: implement this");
 	_ASN_ENCODE_FAILED;
 }
 

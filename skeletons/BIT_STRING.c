@@ -1,4 +1,5 @@
 /*-
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -25,6 +26,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	BIT_STRING_constraint,
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
+	OCTET_STRING_encode_mder,
 	OCTET_STRING_decode_xer_binary,
 	BIT_STRING_encode_xer,
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
