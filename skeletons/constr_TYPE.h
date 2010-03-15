@@ -39,6 +39,7 @@ typedef struct asn_struct_ctx_s {
 #include <ber_decoder.h>	/* Basic Encoding Rules decoder */
 #include <der_encoder.h>	/* Distinguished Encoding Rules encoder */
 #include <mder_encoder.h>	/* Medical Device Encoding Rules encoder */
+// #include <mder_decoder.h>	/* Medical Device Encoding Rules decoder */
 #include <xer_decoder.h>	/* Decoder of XER (XML, text) */
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */

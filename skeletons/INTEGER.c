@@ -46,16 +46,10 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
-	int size, shift, i;
+	int size, shift;
 	asn_enc_rval_t r;
 
 	GET_INT_SIZE(*(mder_restricted_int *)td->mder_constraints, size);
-	printf("integer size = %d\n", size);
-
-	printf("INTEGER len %d\n", st->size);
-	for (i=0; i<st->size; i++)
-		printf ("%hx ", st->buf[i]);
-	printf("\n");
 
 	printf("Implement MDER Integer\n");
 
@@ -73,10 +67,6 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 end:
-	printf("INTEGER len %d\n", st->size);
-	for (i=0; i<st->size; i++)
-		printf ("%hx ", st->buf[i]);
-	printf("\n");
 	return mder_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
 }
 

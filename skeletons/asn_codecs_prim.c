@@ -139,7 +139,7 @@ mder_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
 		assert(st->buf || st->size == 0);
 	}
 
-	erval.encoded += st->size;
+	erval.encoded = st->size;
 	_ASN_ENCODED_OK(erval);
 }
 
