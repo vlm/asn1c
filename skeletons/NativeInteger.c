@@ -182,14 +182,14 @@ NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
 	INTEGER_t tmp;
 	int i;
 
-	printf("name: %s\n", sd->name);
-	printf("xml_tag: %s\n", sd->xml_tag);
-	printf("specific %p\n", sd->specifics);
+// 	printf("name: %s\n", sd->name);
+// 	printf("xml_tag: %s\n", sd->xml_tag);
+// 	printf("specific %p\n", sd->specifics);
 	_PREPARE_INTEGER_T(tmp,native);
-	printf("INTEGER len %d\n", tmp.size);
-	for (i=0; i<tmp.size; i++)
-		printf ("%hx ", tmp.buf[i]);
-	printf("\n");
+// 	printf("INTEGER len %d\n", tmp.size);
+// 	for (i=0; i<tmp.size; i++)
+// 		printf ("%hx ", tmp.buf[i]);
+// 	printf("\n");
 
 	/* Encode fake INTEGER */
 	erval = INTEGER_encode_mder(sd, &tmp, tag_mode, tag, cb, app_key);

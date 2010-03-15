@@ -118,7 +118,6 @@ typedef struct asn_TYPE_descriptor_s {
 
 	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
 
-	/* asn_mder_constraints_t *mder_constraints; /* MDER constraints */
 	/*
 	 * An ASN.1 production type members (members of SEQUENCE, SET, CHOICE).
 	 */
@@ -130,6 +129,9 @@ typedef struct asn_TYPE_descriptor_s {
 	 * functions above.
 	 */
 	void *specifics;
+
+	/* mder constraints */
+	asn_mder_contraints_t mder_constraints; /* MDER compiled constraints */
 } asn_TYPE_descriptor_t;
 
 /*

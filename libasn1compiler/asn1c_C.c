@@ -2429,6 +2429,7 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	etype = expr_get_type(arg, expr);
 	switch (etype) {
 	case ASN_BASIC_INTEGER:
+		OUT("\n");
 		OUT("static mder_restricted_int "
 			"asn_MDER_%s_%s_constr_%d = ",
 		pfx, p, expr->_type_unique_index);
@@ -2605,17 +2606,17 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 		switch(spec) {
 		case ETD_NO_SPECIFICS:
-			OUT("0\t/* No specifics */\n");
+			OUT("0, \t/* No specifics */\n");
 			break;
 		case ETD_HAS_SPECIFICS:
-			OUT("&asn_SPC_%s_specs_%d\t/* Additional specs */\n",
+			OUT("&asn_SPC_%s_specs_%d,\t/* Additional specs */\n",
 				p, expr->_type_unique_index);
 		}
 
 		/* MDER Contraints */
 		if (mder_constr) {
 			OUT("/* Include next field in asn_TYPE_descriptor_t */\n");
-			OUT("/* &asn_MDER_type_%s_constr_%d */\t/* type: asn_mder_contraints_t*/\n",
+			OUT("&asn_MDER_type_%s_constr_%d\t/* type: asn_mder_contraints_t */\n",
 			p, expr->_type_unique_index);
 		} else {
 			OUT("0\t/* No MDER restricted type */\n");

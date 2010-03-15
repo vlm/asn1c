@@ -15,7 +15,7 @@ extern "C" {
  * value range of the integer.
  */
 typedef enum {
-	INVALID,
+	INT_INVALID,
 	INT_U8,
 	INT_I8,
 	INT_U16,
@@ -51,7 +51,7 @@ typedef enum {
  * value range of the bit string.
  */
 typedef enum {
-	INVALID,
+	BITS_INVALID,
 	BITS_8 = 1,
 	BITS_16 = 2,
 	BITS_32 = 4
@@ -60,7 +60,7 @@ typedef enum {
 /*
  * Pre-computed MDER Subtype constrint info (if is restricted type).
  */
-typedef void *asn_mder_contraints_t;
+typedef void* asn_mder_contraints_t;
 
 #ifdef __cplusplus
 }
