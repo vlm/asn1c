@@ -2436,7 +2436,8 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		ct = expr->combined_constraints;
 		r_value=asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
 		if (!r_value) {
-			OUT("INVALID;\n");
+			OUT("INT_INVALID;\n");
+			OUT("\n");
 			return 1;
 		} else if (r_value->left.value == 0) {
 			/* Unsigned Integer */
@@ -2447,7 +2448,8 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 			else if (r_value->right.value == 4294967295UL)
 				OUT("INT_U32;\n");
 			else
-				OUT("INVALID;\n");
+				OUT("INT_INVALID;\n");
+			OUT("\n");
 			return 1;
 		}
 		/* Check signed integer */
@@ -2458,7 +2460,8 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		else if ((r_value->left.value == (-2147483647L - 1)) && (r_value->right.value == 2147483647L))
 			OUT("INT_I32;\n");
 		else
-			OUT("INVALID;\n");
+			OUT("INT_INVALID;\n");
+		OUT("\n");
 		return 1;
 	default:
 		return 0;

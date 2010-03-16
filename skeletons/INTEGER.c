@@ -48,12 +48,15 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
+	mder_restricted_int *rint;
 	int size, shift;
 	asn_enc_rval_t r;
 
-	GET_INT_SIZE(*(mder_restricted_int *)td->mder_constraints, size);
+	rint = (mder_restricted_int *)td->mder_constraints;
+	if (*rint == INT_INVALID)
+		_ASN_ENCODE_FAILED;
 
-	printf("Implement MDER Integer\n");
+	GET_INT_SIZE(*rint, size);
 
 	if (!st->buf)
 		goto end;
