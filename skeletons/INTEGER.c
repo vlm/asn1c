@@ -1,5 +1,6 @@
 /*-
  * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -34,7 +35,8 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	0,	/* No specifics */
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
 

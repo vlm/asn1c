@@ -132,7 +132,7 @@ typedef struct asn_TYPE_descriptor_s {
 	void *specifics;
 
 	/* mder constraints */
-	asn_mder_contraints_t mder_constraints; /* MDER compiled constraints */
+	asn_mder_contraints_t mder_constraints;
 } asn_TYPE_descriptor_t;
 
 /*

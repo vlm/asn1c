@@ -1,5 +1,6 @@
 /*-
  * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
  * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
@@ -47,7 +48,8 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	&asn_DEF_OCTET_STRING_specs
+	&asn_DEF_OCTET_STRING_specs,
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
 #undef	_CH_PHASE

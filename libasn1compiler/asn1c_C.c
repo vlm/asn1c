@@ -2614,13 +2614,11 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		}
 
 		/* MDER Contraints */
-		if (mder_constr) {
-			OUT("/* Include next field in asn_TYPE_descriptor_t */\n");
-			OUT("&asn_MDER_type_%s_constr_%d\t/* type: asn_mder_contraints_t */\n",
-			p, expr->_type_unique_index);
-		} else {
+		if (mder_constr)
+			OUT("&asn_MDER_type_%s_constr_%d\n",
+				p, expr->_type_unique_index);
+		else
 			OUT("0\t/* No MDER restricted type */\n");
-		}
 
 	INDENT(-1);
 	OUT("};\n");

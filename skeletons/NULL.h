@@ -1,5 +1,6 @@
 /*-
  * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	ASN_TYPE_NULL_H
@@ -21,6 +22,7 @@ extern asn_TYPE_descriptor_t asn_DEF_NULL;
 
 asn_struct_print_f NULL_print;
 der_type_encoder_f NULL_encode_der;
+mder_type_encoder_f NULL_encode_mder;
 xer_type_decoder_f NULL_decode_xer;
 xer_type_encoder_f NULL_encode_xer;
 per_type_decoder_f NULL_decode_uper;

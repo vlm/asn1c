@@ -1,5 +1,6 @@
 /*-
  * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
