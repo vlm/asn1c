@@ -55,7 +55,7 @@ typedef enum {
 	BITS_8 = 1,
 	BITS_16 = 2,
 	BITS_32 = 4
-} mder_restrincted_bits;
+} mder_restricted_bits;
 
 /*
  * Pre-computed MDER Subtype constrint info (if is restricted type).

@@ -2432,13 +2432,12 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		OUT("\n");
 		OUT("static mder_restricted_int "
 			"asn_MDER_%s_%s_constr_%d = ",
-		pfx, p, expr->_type_unique_index);
+			pfx, p, expr->_type_unique_index);
 		ct = expr->combined_constraints;
 		r_value=asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
 		if (!r_value) {
 			OUT("INT_INVALID;\n");
-			OUT("\n");
-			return 1;
+			break;
 		} else if (r_value->left.value == 0) {
 			/* Unsigned Integer */
 			if (r_value->right.value == 255)
@@ -2449,8 +2448,7 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 				OUT("INT_U32;\n");
 			else
 				OUT("INT_INVALID;\n");
-			OUT("\n");
-			return 1;
+			break;
 		}
 		/* Check signed integer */
 		if ((r_value->left.value == -128) && (r_value->right.value == 127))
@@ -2461,11 +2459,30 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 			OUT("INT_I32;\n");
 		else
 			OUT("INT_INVALID;\n");
+		break;
+	case ASN_BASIC_BIT_STRING:
 		OUT("\n");
-		return 1;
+		OUT("static mder_restricted_bits "
+			"asn_MDER_%s_%s_constr_%d = ",
+			pfx, p, expr->_type_unique_index);
+		ct = expr->combined_constraints;
+		r_value=asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+		if (!r_value)
+			OUT("INT_INVALID;\n");
+		else if (r_value->left.value == 8)
+			OUT("BITS_8;\n");
+		else if (r_value->left.value == 16)
+			OUT("BITS_16;\n");
+		else if (r_value->left.value == 32)
+			OUT("BITS_32;\n");
+		else
+			OUT("BITS_INVALID;\n");
+		break;
 	default:
 		return 0;
 	}
+	OUT("\n");
+	return 1;
 }
 
 /*
