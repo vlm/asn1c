@@ -23,6 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,
+	INTEGER_decode_mder,
 	INTEGER_encode_mder,
 	INTEGER_decode_xer,
 	INTEGER_encode_xer,
@@ -39,6 +40,14 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
+
+asn_dec_rval_t
+INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
+	ASN_DEBUG("TODO: implement INTEGER_decode_mder");
+	_ASN_DECODE_FAILED;
+}
 
 /*
  * Encode INTEGER type using MDER.

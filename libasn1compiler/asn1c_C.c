@@ -1355,6 +1355,21 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("asn_dec_rval_t\n");
 	OUT("%s", p);
 	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_decode_mder(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tvoid **structure, const void *bufptr, size_t size, int tag_mode) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->mder_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_dec_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
 	OUT("_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
 	INDENTED(
 	OUT("\tvoid **structure, const char *opt_mname, const void *bufptr, size_t size) {\n");
@@ -1429,7 +1444,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("asn_constr_check_f %s_constraint;\n", p);
 		OUT("ber_type_decoder_f %s_decode_ber;\n", p);
 		OUT("der_type_encoder_f %s_encode_der;\n", p);
-		OUT("/*mder_type_decoder_f %s_decode_mder;*/\n", p);
+		OUT("mder_type_decoder_f %s_decode_mder;\n", p);
 		OUT("mder_type_encoder_f %s_encode_mder;\n", p);
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
@@ -2538,7 +2553,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		FUNCREF(constraint);
 		FUNCREF(decode_ber);
 		FUNCREF(encode_der);
-		/* FUNCREF(decode_mder); */
+		FUNCREF(decode_mder);
 		FUNCREF(encode_mder);
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);

@@ -28,6 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
+	NativeInteger_decode_mder,
 	NativeInteger_encode_mder,
 	NativeInteger_decode_xer,
 	NativeEnumerated_encode_xer,

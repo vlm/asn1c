@@ -28,6 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
+	NativeInteger_decode_mder,
 	NativeInteger_encode_mder,
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
@@ -192,6 +193,17 @@ NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
 		erval.structure_ptr = ptr;
 	}
 	return erval;
+}
+
+/*
+ * Decode INTEGER type.
+ */
+asn_dec_rval_t
+NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **nint_ptr, const void *buf_ptr, size_t size, int tag_mode) {
+	ASN_DEBUG("TODO: implement NativeInteger_decode_mder");
+	_ASN_DECODE_FAILED;
 }
 
 /*

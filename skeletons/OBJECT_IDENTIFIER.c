@@ -22,6 +22,8 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OBJECT_IDENTIFIER_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
+	0, /* TODO insert mder encoder */
+	0, /* TODO insert mder decoder */
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
 	OCTET_STRING_decode_uper,

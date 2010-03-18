@@ -55,6 +55,7 @@ ber_decoder.h ber_decoder.c	# BER decoder support code
 der_encoder.h der_encoder.c	# DER encoder support code
 mder_support.h			# MDER restricted types
 mder_encoder.h mder_encoder.c   # MDER encoder support code
+mder_decoder.h mder_decoder.c   # MDER decoder support code
 constr_TYPE.h constr_TYPE.c	# Description of a type
 constraints.h constraints.c	# Subtype constraints support
 xer_support.h xer_support.c	# XML parsing

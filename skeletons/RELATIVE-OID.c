@@ -24,6 +24,8 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
+	0, /* TODO insert mder encoder */
+	0, /* TODO insert mder decoder */
 	RELATIVE_OID_decode_xer,
 	RELATIVE_OID_encode_xer,
 	OCTET_STRING_decode_uper,

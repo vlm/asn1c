@@ -26,6 +26,7 @@ asn_struct_print_f OCTET_STRING_print;
 asn_struct_print_f OCTET_STRING_print_utf8;
 ber_type_decoder_f OCTET_STRING_decode_ber;
 der_type_encoder_f OCTET_STRING_encode_der;
+mder_type_decoder_f OCTET_STRING_decode_mder;
 mder_type_encoder_f OCTET_STRING_encode_mder;
 xer_type_decoder_f OCTET_STRING_decode_xer_hex;		/* Hexadecimal */
 xer_type_decoder_f OCTET_STRING_decode_xer_binary;	/* 01010111010 */
