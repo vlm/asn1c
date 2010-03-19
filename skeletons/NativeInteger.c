@@ -131,7 +131,8 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 }
 
 #ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
-#define	_PREPARE_INTEGER_T(tmp,native) do {				\									\
+#define	_PREPARE_INTEGER_T(tmp,native) do {				\
+									\
 	tmp.buf = (uint8_t *)&native;					\
 	tmp.size = sizeof(native);					\
 } while(0)
@@ -202,8 +203,54 @@ asn_dec_rval_t
 NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **nint_ptr, const void *buf_ptr, size_t size, int tag_mode) {
-	ASN_DEBUG("TODO: implement NativeInteger_decode_mder");
-	_ASN_DECODE_FAILED;
+
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+	long *native = (long *)*nint_ptr;
+	asn_dec_rval_t rval;
+	mder_restricted_int *rint;
+	int length, unsig;
+	INTEGER_t tmp;
+	union {
+		const void *constbuf;
+		void *nonconstbuf;
+	} unconst_buf;
+	long l;
+
+	rint = (mder_restricted_int *)td->mder_constraints;
+	if (*rint == INT_INVALID) {
+		rval.code = RC_FAIL;
+		rval.consumed = 0;
+		return rval;
+	}
+
+	GET_INT_SIZE(*rint, length);
+	GET_INT_UNSIGNED(*rint, unsig);
+
+	if(!native) {
+		native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
+		if(native == NULL) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	unconst_buf.constbuf = buf_ptr;
+	tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
+	tmp.size = length;
+
+	if((unsig) ? asn_INTEGER2ulong(&tmp, &l) : asn_INTEGER2long(&tmp, &l)) {
+		rval.code = RC_FAIL;
+		rval.consumed = 0;
+		return rval;
+	}
+
+	*native = l;
+
+	rval.code = RC_OK;
+	rval.consumed = length;
+
+	return rval;
 }
 
 /*
@@ -225,7 +272,7 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	memset(&st, 0, sizeof(st));
-	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr, 
+	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr,
 		opt_mname, buf_ptr, size);
 	if(rval.code == RC_OK) {
 		long l;

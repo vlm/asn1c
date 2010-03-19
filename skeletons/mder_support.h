@@ -46,6 +46,21 @@ typedef enum {
 	}				\
 } while (0)
 
+#define GET_INT_UNSIGNED(_int,_unsign) do {	\
+	switch (_int) {				\
+	case INT_U8:				\
+	case INT_U16:				\
+	case INT_U32:				\
+		_unsign = 1;			\
+		break;				\
+	case INT_I8:				\
+	case INT_I16:				\
+	case INT_I32:				\
+	default:				\
+		_unsign = 0;			\
+	}					\
+} while (0)
+
 /*
  * Size constraints shall be used for all BIT STRING data types to define the
  * value range of the bit string.

@@ -1239,7 +1239,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->print_struct   = asn_DEF_%s.print_struct;\n",   type_name);
 	OUT("td->ber_decoder    = asn_DEF_%s.ber_decoder;\n",    type_name);
 	OUT("td->der_encoder    = asn_DEF_%s.der_encoder;\n",    type_name);
-	OUT("/*td->mder_decoder   = asn_DEF_%s.mder_decoder;*/\n",   type_name);
+	OUT("td->mder_decoder   = asn_DEF_%s.mder_decoder;\n",   type_name);
 	OUT("td->mder_encoder   = asn_DEF_%s.mder_encoder;\n",   type_name);
 	OUT("td->xer_decoder    = asn_DEF_%s.xer_decoder;\n",    type_name);
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
