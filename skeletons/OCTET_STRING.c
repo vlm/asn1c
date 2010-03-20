@@ -594,6 +594,27 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 			int tag_mode, ber_tlv_tag_t tag,
 			asn_app_consume_bytes_f *cb, void *app_key)
 {
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	mder_octet_str *oct;
+	asn_enc_rval_t er;
+	ssize_t size = 0;
+
+	if(!st || (!st->buf && st->size))
+		_ASN_ENCODE_FAILED;
+
+	oct = (mder_octet_str *)td->mder_constraints;
+	if (*oct == VARIABLE_OCTET_STRING) {
+		/* TO DO: Encode length */
+		size = 2;
+		_ASN_ENCODE_FAILED;
+	}
+	size += st->size;
+	if (cb)
+		/* Invoke callback for the main part of the buffer */
+		_ASN_CALLBACK(st->buf, size);
+
+	er.encoded = size;
+	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }
