@@ -595,14 +595,13 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 			asn_app_consume_bytes_f *cb, void *app_key)
 {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
-	mder_octet_str *oct;
+	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
 	asn_enc_rval_t er;
 	ssize_t size = 0;
 
-	if(!st || (!st->buf && st->size))
+	if (!oct || !st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
-
-	oct = (mder_octet_str *)td->mder_constraints;
+ 
 	if (*oct == VARIABLE_OCTET_STRING) {
 		/* TO DO: Encode length */
 		size = 2;
