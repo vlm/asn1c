@@ -21,7 +21,7 @@ asn_enc_rval_t mder_encode(struct asn_TYPE_descriptor_s *type_descriptor,
 }
 
 /*
-* Argument type and callback necessary for der_encode_to_buffer().
+* Argument type and callback necessary for mder_encode_to_buffer().
 */
 typedef struct enc_to_buf_arg {
 	void *buffer;

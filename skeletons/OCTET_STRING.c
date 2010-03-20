@@ -594,7 +594,29 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 			int tag_mode, ber_tlv_tag_t tag,
 			asn_app_consume_bytes_f *cb, void *app_key)
 {
-	ASN_DEBUG("TODO: implement OCTET_STRING_encode_mder");
+	asn_enc_rval_t er;
+	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
+	mder_restricted_bits *rbits;
+	ssize_t size;
+
+	rbits = (mder_restricted_bits *)td->mder_constraints;
+	if (!rbits)
+		/* OCTET STRING */
+		size = st->size;
+	else if (*rbits != INT_INVALID)
+		/* Restricted BIT STRING */
+		size = (ssize_t) *rbits;
+	else
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = size;
+
+	if (cb)
+		/* Invoke callback for the main part of the buffer */
+		_ASN_CALLBACK(st->buf, size);
+
+	_ASN_ENCODED_OK(er);
+cb_failed:
 	_ASN_ENCODE_FAILED;
 }
 

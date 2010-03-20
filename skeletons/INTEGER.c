@@ -67,20 +67,19 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 
 	GET_INT_SIZE(*rint, size);
 
-	if (!st->buf)
-		goto end;
-	shift = st->size - size;
-	if(shift) {
-		uint8_t *nb = st->buf;
-		uint8_t *end, *buf = st->buf + shift;
-		st->size -= shift;	/* New size, minus bad bytes */
-		end = nb + st->size;
+	if (st->buf) {
+		shift = st->size - size;
+		if(shift) {
+			uint8_t *nb = st->buf;
+			uint8_t *end, *buf = st->buf + shift;
+			st->size -= shift;	/* New size, minus bad bytes */
+			end = nb + st->size;
 
-		for(; nb < end; nb++, buf++)
-			*nb = *buf;
+			for(; nb < end; nb++, buf++)
+				*nb = *buf;
+		}
 	}
 
-end:
 	return mder_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
 }
 
