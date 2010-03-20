@@ -28,7 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_decode_mder,
-	OCTET_STRING_encode_mder,
+	BIT_STRING_encode_mder,
 	OCTET_STRING_decode_xer_binary,
 	BIT_STRING_encode_xer,
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
@@ -76,6 +76,31 @@ static char *_bit_pattern[16] = {
 	"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
 	"1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"
 };
+
+asn_enc_rval_t
+BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+			int tag_mode, ber_tlv_tag_t tag,
+			asn_app_consume_bytes_f *cb, void *app_key)
+{
+	asn_enc_rval_t er;
+	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
+	mder_restricted_bit_str *rbs;
+	ssize_t size;
+
+	rbs = (mder_restricted_bit_str *)td->mder_constraints;
+	if (*rbs == INT_INVALID)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = (ssize_t) *rbs;
+
+	if (cb)
+		/* Invoke callback for the main part of the buffer */
+		_ASN_CALLBACK(st->buf, (ssize_t) *rbs);
+
+	_ASN_ENCODED_OK(er);
+cb_failed:
+	_ASN_ENCODE_FAILED;
+}
 
 asn_enc_rval_t
 BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,

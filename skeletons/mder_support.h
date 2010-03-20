@@ -70,7 +70,12 @@ typedef enum {
 	BITS_8 = 1,
 	BITS_16 = 2,
 	BITS_32 = 4
-} mder_restricted_bits;
+} mder_restricted_bit_str;
+
+typedef enum {
+	FIXED_OCTET_STRING,
+	VARIABLE_OCTET_STRING
+} mder_octet_str;
 
 /*
  * Pre-computed MDER Subtype constrint info (if is restricted type).

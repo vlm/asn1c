@@ -2448,12 +2448,13 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		OUT("static mder_restricted_int "
 			"asn_MDER_%s_%s_constr_%d = ",
 			pfx, p, expr->_type_unique_index);
-		ct = expr->combined_constraints;
-		r_value=asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
-		if (!r_value) {
+		if (!expr->constraints) {
 			OUT("INT_INVALID;\n");
 			break;
-		} else if (r_value->left.value == 0) {
+		}
+		ct = expr->combined_constraints;
+		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
+		if (r_value->left.value == 0) {
 			/* Unsigned Integer */
 			if (r_value->right.value == 255)
 				OUT("INT_U8;\n");
@@ -2477,14 +2478,16 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		break;
 	case ASN_BASIC_BIT_STRING:
 		OUT("\n");
-		OUT("static mder_restricted_bits "
+		OUT("static mder_restricted_bit_str "
 			"asn_MDER_%s_%s_constr_%d = ",
 			pfx, p, expr->_type_unique_index);
+		if (!expr->constraints) {
+			OUT("BITS_INVALID;\n");
+			break;
+		}
 		ct = expr->combined_constraints;
-		r_value=asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
-		if (!r_value)
-			OUT("INT_INVALID;\n");
-		else if (r_value->left.value == 8)
+		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+		if (r_value->left.value == 8)
 			OUT("BITS_8;\n");
 		else if (r_value->left.value == 16)
 			OUT("BITS_16;\n");
@@ -2492,6 +2495,19 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 			OUT("BITS_32;\n");
 		else
 			OUT("BITS_INVALID;\n");
+		break;
+	case ASN_BASIC_OCTET_STRING:
+		OUT("\n");
+		OUT("static mder_octet_str "
+			"asn_MDER_%s_%s_constr_%d = ",
+			pfx, p, expr->_type_unique_index);
+		if (!expr->constraints) {
+			OUT("VARIABLE_OCTET_STRING;\n");
+			break;
+		}
+		ct = expr->combined_constraints;
+		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+		OUT("FIXED_OCTET_STRING;\n");
 		break;
 	default:
 		return 0;
