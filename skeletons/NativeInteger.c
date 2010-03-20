@@ -204,27 +204,12 @@ NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **nint_ptr, const void *buf_ptr, size_t size, int tag_mode) {
 
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	long *native = (long *)*nint_ptr;
 	asn_dec_rval_t rval;
 	mder_restricted_int *rint;
-	int length, unsig;
-	INTEGER_t tmp;
-	union {
-		const void *constbuf;
-		void *nonconstbuf;
-	} unconst_buf;
+	INTEGER_t *tmp = NULL;
 	long l;
-
-	rint = (mder_restricted_int *)td->mder_constraints;
-	if (*rint == INT_INVALID) {
-		rval.code = RC_FAIL;
-		rval.consumed = 0;
-		return rval;
-	}
-
-	GET_INT_SIZE(*rint, length);
-	GET_INT_UNSIGNED(*rint, unsig);
+	int unsig;
 
 	if(!native) {
 		native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
@@ -235,20 +220,25 @@ NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		}
 	}
 
-	unconst_buf.constbuf = buf_ptr;
-	tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
-	tmp.size = length;
+	rval = INTEGER_decode_mder(opt_codec_ctx, td, (void **)&tmp,
+				   buf_ptr, size, tag_mode);
+	GET_INT_UNSIGNED(*rint, unsig);
 
-	if((unsig) ? asn_INTEGER2ulong(&tmp, &l) : asn_INTEGER2long(&tmp, &l)) {
+	if (rval.code != RC_OK){
+		return rval;
+	}
+
+	rint = (mder_restricted_int *)td->mder_constraints;
+	GET_INT_UNSIGNED(*rint, unsig);
+
+	if((unsig) ? asn_INTEGER2ulong(tmp, &l) : asn_INTEGER2long(tmp, &l)) {
 		rval.code = RC_FAIL;
 		rval.consumed = 0;
 		return rval;
 	}
 
+	free(tmp);
 	*native = l;
-
-	rval.code = RC_OK;
-	rval.consumed = length;
 
 	return rval;
 }
