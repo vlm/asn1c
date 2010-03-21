@@ -505,7 +505,6 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	RETURN(RC_OK);
 }
 
-
 /*
  * The DER encoder of the SEQUENCE type.
  */
@@ -591,6 +590,31 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	_ASN_ENCODED_OK(erval);
 }
 
+/*
+ * The decoder of the SEQUENCE type.
+ */
+asn_dec_rval_t
+SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
+	asn_dec_rval_t rval;
+
+	printf("TODO: Implement MDER SEQUENCE encoder");
+	_ASN_DECODE_FAILED;
+}
+
+/*
+ * The MDER encoder of the SEQUENCE type.
+ */
+asn_enc_rval_t
+SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
+	void *sptr, int tag_mode, ber_tlv_tag_t tag,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t rval;
+
+	printf("TODO: Implement MDER SEQUENCE encoder");
+	_ASN_ENCODE_FAILED;
+}
 
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
