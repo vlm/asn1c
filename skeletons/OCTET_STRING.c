@@ -597,22 +597,20 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
 	asn_enc_rval_t er;
-	ssize_t size = 0;
 
 	if (!oct || !st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
- 
+
+	er.encoded = 0;
 	if (*oct == VARIABLE_OCTET_STRING) {
-		/* TO DO: Encode length */
-		size = 2;
-		_ASN_ENCODE_FAILED;
+		MDER_OUTPUT_INT_U16_LENGTH(st->size);
+		er.encoded += 2;
 	}
-	size += st->size;
 	if (cb)
 		/* Invoke callback for the main part of the buffer */
-		_ASN_CALLBACK(st->buf, size);
+		_ASN_CALLBACK(st->buf, st->size);
 
-	er.encoded = size;
+	er.encoded += st->size;
 	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;

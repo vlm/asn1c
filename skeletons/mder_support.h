@@ -82,6 +82,28 @@ typedef enum {
  */
 typedef void* asn_mder_contraints_t;
 
+#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+#define MDER_OUTPUT_INT_U16_LENGTH(len) do	{		\
+	if ((len < 0) || (len > 65535))				\
+		goto cb_failed;					\
+        if (cb) {						\
+		uint16_t aux = (uint16_t)len;			\
+		_ASN_CALLBACK((uint8_t *)&aux, 2);		\
+        }							\
+} while (0)
+#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
+#define MDER_OUTPUT_INT_U16_LENGTH(len) do	{		\
+	if ((len < 0) || (len > 65535))				\
+		goto cb_failed;					\
+	if (cb) {						\
+		uint8_t lbuf[2]; /* length for variable O-S */	\
+		lbuf[0] = (len >> 8) & 0xff;			\
+		lbuf[1] = len & 0xff;				\
+		_ASN_CALLBACK(lbuf, 2);				\
+        }							\
+} while (0)
+#endif
+
 #ifdef __cplusplus
 }
 #endif
