@@ -211,6 +211,14 @@ NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	long l;
 	int unsig;
 
+	rint = (mder_restricted_int *)td->mder_constraints;
+	if (!rint || *rint == INT_INVALID) {
+		rval.code = RC_FAIL;
+		rval.consumed = 0;
+		return rval;
+	}
+
+
 	if(!native) {
 		native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
 		if(native == NULL) {
@@ -222,13 +230,11 @@ NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 	rval = INTEGER_decode_mder(opt_codec_ctx, td, (void **)&tmp,
 				   buf_ptr, size, tag_mode);
-	GET_INT_UNSIGNED(*rint, unsig);
 
 	if (rval.code != RC_OK){
 		return rval;
 	}
 
-	rint = (mder_restricted_int *)td->mder_constraints;
 	GET_INT_UNSIGNED(*rint, unsig);
 
 	if((unsig) ? asn_INTEGER2ulong(tmp, &l) : asn_INTEGER2long(tmp, &l)) {

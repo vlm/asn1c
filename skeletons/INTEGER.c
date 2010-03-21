@@ -56,7 +56,7 @@ INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	} unconst_buf;
 
 	rint = (mder_restricted_int *)td->mder_constraints;
-	if (*rint == INT_INVALID) {
+	if (!rint || *rint == INT_INVALID) {
 		rval.code = RC_FAIL;
 		rval.consumed = 0;
 		return rval;
@@ -96,7 +96,7 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_enc_rval_t r;
 
 	rint = (mder_restricted_int *)td->mder_constraints;
-	if (*rint == INT_INVALID)
+	if (!rint || *rint == INT_INVALID)
 		_ASN_ENCODE_FAILED;
 
 	GET_INT_SIZE(*rint, size);

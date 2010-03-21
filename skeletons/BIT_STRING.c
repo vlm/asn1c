@@ -84,11 +84,11 @@ BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 {
 	asn_enc_rval_t er;
 	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
-	mder_restricted_bit_str *rbs = (mder_restricted_bit_str *)td->mder_constraints;;
+	mder_restricted_bit_str *rbs = (mder_restricted_bit_str *)td->mder_constraints;
 
 	if (!rbs || !st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
- 
+
 	if (!rbs || (*rbs == INT_INVALID))
 		_ASN_ENCODE_FAILED;
 
