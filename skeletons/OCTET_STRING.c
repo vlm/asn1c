@@ -146,7 +146,7 @@ OS__add_stack_el(struct _stack *st) {
 		nel = (struct _stack_el *)CALLOC(1, sizeof(struct _stack_el));
 		if(nel == NULL)
 			return NULL;
-	
+
 		if(st->tail) {
 			/* Increase a subcontainment depth */
 			nel->cont_level = st->tail->cont_level + 1;
@@ -585,8 +585,44 @@ asn_dec_rval_t
 OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
-	ASN_DEBUG("TODO: implement OCTET_STRING_decode_mder");
-	_ASN_DECODE_FAILED;
+
+	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
+	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
+	asn_dec_rval_t rval;
+	char *data;
+
+	if (!oct)
+		_ASN_DECODE_FAILED;
+
+	/*
+	 * Create the string if does not exist.
+	 */
+	if(st == NULL) {
+		st = (OCTET_STRING_t *)(*sptr = CALLOC(1, sizeof(OCTET_STRING_t)));
+		if(st == NULL)
+			_ASN_DECODE_FAILED;
+	}
+
+	if (oct->type == VARIABLE_OCTET_STRING) {
+		st->size = 0;
+		st->size = ((uint8_t *)buf_ptr)[0];
+		st->size = (st->size << 8) | ((uint8_t *)buf_ptr)[1];
+		rval.consumed = 2;
+		data = (char *)buf_ptr + 2;
+	} else {
+		st->size = oct->size;
+		rval.consumed = 0;
+		data = (char *)buf_ptr;
+	}
+	if (size < (st->size + rval.consumed))
+		_ASN_DECODE_FAILED;
+
+	if (OCTET_STRING_fromBuf(st, data, st->size) != 0)
+		_ASN_DECODE_FAILED;
+
+	rval.code = RC_OK;
+	rval.consumed += st->size;
+	return rval;
 }
 
 asn_enc_rval_t
@@ -602,7 +638,7 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = 0;
-	if (*oct == VARIABLE_OCTET_STRING) {
+	if (oct->type == VARIABLE_OCTET_STRING) {
 		MDER_OUTPUT_INT_U16_LENGTH(st->size);
 		er.encoded += 2;
 	}
@@ -768,7 +804,7 @@ OCTET_STRING__handle_control_chars(void *struct_ptr, const void *chunk_buf, size
 			return 0;
 		}
 	}
-	
+
 	return -1;	/* No, it's not */
 }
 

@@ -75,6 +75,11 @@ typedef enum {
 typedef enum {
 	FIXED_OCTET_STRING,
 	VARIABLE_OCTET_STRING
+} mder_octet_str_types;
+
+typedef struct{
+	mder_octet_str_types type;
+	int size;
 } mder_octet_str;
 
 /*

@@ -599,7 +599,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 
 		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
-	
+
 		elements = 0;
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
@@ -2502,12 +2502,12 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 			"asn_MDER_%s_%s_constr_%d = ",
 			pfx, p, expr->_type_unique_index);
 		if (!expr->constraints) {
-			OUT("VARIABLE_OCTET_STRING;\n");
+			OUT("{ VARIABLE_OCTET_STRING, 0 };\n");
 			break;
 		}
 		ct = expr->combined_constraints;
 		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
-		OUT("FIXED_OCTET_STRING;\n");
+		OUT("{ FIXED_OCTET_STRING, %d };\n", r_value->left.value);
 		break;
 	default:
 		return 0;
