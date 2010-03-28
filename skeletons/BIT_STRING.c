@@ -27,7 +27,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	BIT_STRING_constraint,
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_decode_mder,
+	BIT_STRING_decode_mder,
 	BIT_STRING_encode_mder,
 	OCTET_STRING_decode_xer_binary,
 	BIT_STRING_encode_xer,
@@ -77,6 +77,37 @@ static char *_bit_pattern[16] = {
 	"1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"
 };
 
+asn_dec_rval_t
+BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
+
+	asn_dec_rval_t rval;
+	BIT_STRING_t *bs = (BIT_STRING_t *)*sptr;
+	mder_restricted_bit_str *rbs = (mder_restricted_bit_str *)td->mder_constraints;
+
+	if (!rbs || *rbs == INT_INVALID)
+		_ASN_DECODE_FAILED;
+
+	if(bs == NULL) {
+		bs = (BIT_STRING_t *)(*sptr = CALLOC(1, sizeof(BIT_STRING_t)));
+		if(bs == NULL)
+			_ASN_DECODE_FAILED;
+	}
+
+	bs->size = *rbs;
+	if (bs->buf)
+		free(bs->buf);
+	bs->buf = CALLOC(1, bs->size);
+	if (!memcpy(bs->buf, buf_ptr, bs->size))
+		_ASN_DECODE_FAILED;
+
+	rval.code = RC_OK;
+	rval.consumed = bs->size;
+
+	return rval;
+}
+
 asn_enc_rval_t
 BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 			int tag_mode, ber_tlv_tag_t tag,
@@ -89,7 +120,7 @@ BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	if (!rbs || !st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
 
-	if (!rbs || (*rbs == INT_INVALID))
+	if (*rbs == INT_INVALID)
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = (ssize_t) *rbs;

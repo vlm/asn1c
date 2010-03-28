@@ -28,6 +28,7 @@ extern asn_TYPE_descriptor_t asn_DEF_BIT_STRING;
 asn_struct_print_f BIT_STRING_print;	/* Human-readable output */
 asn_constr_check_f BIT_STRING_constraint;
 mder_type_encoder_f BIT_STRING_encode_mder;
+mder_type_decoder_f BIT_STRING_decode_mder;
 xer_type_encoder_f BIT_STRING_encode_xer;
 
 #ifdef __cplusplus
