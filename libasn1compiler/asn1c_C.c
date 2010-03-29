@@ -2428,6 +2428,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 
 	if(emit_member_PER_constraints(arg, expr, "memb"))
 		return -1;
+	//TODO Insert mder constraints here
 
 	REDIR(save_target);
 
@@ -2499,15 +2500,20 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	case ASN_BASIC_OCTET_STRING:
 		OUT("\n");
 		OUT("static mder_octet_str "
-			"asn_MDER_%s_%s_constr_%d = ",
+			"asn_MDER_%s_%s_constr_%d = {\n",
 			pfx, p, expr->_type_unique_index);
+		INDENT(+1);
 		if (!expr->constraints) {
-			OUT("{ VARIABLE_OCTET_STRING, 0 };\n");
-			break;
+			OUT("VARIABLE_OCTET_STRING,\n");
+			OUT("0\n");
+		} else {
+			ct = expr->combined_constraints;
+			r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+			OUT("FIXED_OCTET_STRING,\n");
+			OUT("%d\n", r_value->left.value);
 		}
-		ct = expr->combined_constraints;
-		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
-		OUT("{ FIXED_OCTET_STRING, %d };\n", r_value->left.value);
+		INDENT(-1);
+		OUT("};\n");
 		break;
 	default:
 		return 0;
