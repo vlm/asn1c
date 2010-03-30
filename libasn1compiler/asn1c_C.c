@@ -2271,6 +2271,21 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 }
 
 static int
+has_mder_constraints(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_type_e etype;
+
+	etype = expr_get_type(arg, expr);
+	switch (etype) {
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_BIT_STRING:
+	case ASN_BASIC_OCTET_STRING:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	int save_target;
 	arg_t tmp_arg;
@@ -2394,12 +2409,26 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	if(C99_MODE) OUT(".name = ");
 	if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member")) {
-		OUT("\"\"\n");
+		OUT("\"\",\n");
 	} else {
-		OUT("\"%s\"\n", expr->Identifier);
+		OUT("\"%s\",\n", expr->Identifier);
 	}
-	OUT("},\n");
+	if(C99_MODE) OUT(".mder_constraints = ");
+	if(has_mder_constraints(arg, expr)/*TODO: check if there are mder constraints*/) {
+		OUT("&asn_MDER_memb_%s_constr_%d\n", MKID(expr),
+						expr->_type_unique_index);
+	} else {
+		OUT("0\t/* No mder constraints */\n", expr->Identifier);
+	}
 	INDENT(-1);
+	OUT("},\n");
+
+	save_target = arg->target->target;
+	REDIR(OT_CODE);
+
+	emit_member_MDER_constraints(arg, expr, "memb");
+
+	REDIR(save_target);
 
 	if(!expr->constraints || (arg->flags & A1C_NO_CONSTRAINTS))
 		return 0;
@@ -2428,7 +2457,6 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 
 	if(emit_member_PER_constraints(arg, expr, "memb"))
 		return -1;
-	//TODO Insert mder constraints here
 
 	REDIR(save_target);
 
@@ -2449,7 +2477,7 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		OUT("static mder_restricted_int "
 			"asn_MDER_%s_%s_constr_%d = ",
 			pfx, p, expr->_type_unique_index);
-		if (!expr->constraints) {
+		if (!expr->combined_constraints) {
 			OUT("INT_INVALID;\n");
 			break;
 		}
@@ -2482,7 +2510,7 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		OUT("static mder_restricted_bit_str "
 			"asn_MDER_%s_%s_constr_%d = ",
 			pfx, p, expr->_type_unique_index);
-		if (!expr->constraints) {
+		if (!expr->combined_constraints) {
 			OUT("BITS_INVALID;\n");
 			break;
 		}
@@ -2503,7 +2531,7 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 			"asn_MDER_%s_%s_constr_%d = {\n",
 			pfx, p, expr->_type_unique_index);
 		INDENT(+1);
-		if (!expr->constraints) {
+		if (!expr->combined_constraints) {
 			OUT("VARIABLE_OCTET_STRING,\n");
 			OUT("0\n");
 		} else {

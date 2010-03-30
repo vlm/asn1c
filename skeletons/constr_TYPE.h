@@ -156,6 +156,7 @@ typedef struct asn_TYPE_member_s {
 	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
 	int (*default_value)(int setval, void **sptr);	/* DEFAULT <value> */
 	char *name;			/* ASN.1 identifier of the element */
+	asn_mder_contraints_t mder_constraints; /* mder constraints */
 } asn_TYPE_member_t;
 
 /*
