@@ -130,7 +130,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	int edx;			/* SEQUENCE element's index */
 
 	ASN_DEBUG("Decoding %s as SEQUENCE", td->name);
-	
+
 	/*
 	 * Create the target structure if it is not present already.
 	 */
@@ -145,7 +145,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Restore parsing context.
 	 */
 	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
-	
+
 	/*
 	 * Start to parse where left previously
 	 */
@@ -389,7 +389,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ctx->step |= 1;		/* Confirm entering next microphase */
 	microphase2:
 		ASN_DEBUG("Inside SEQUENCE %s MF2", td->name);
-		
+
 		/*
 		 * Compute the position of the member inside a structure,
 		 * and also a type of containment (it may be contained
@@ -431,7 +431,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case RC_FAIL: /* Fatal error */
 			RETURN(RC_FAIL);
 		} /* switch(rval) */
-		
+
 		ADVANCE(rval.consumed);
 	  }	/* for(all structure members) */
 
@@ -501,7 +501,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		PHASE_OUT(ctx);
 	}
-	
+
 	RETURN(RC_OK);
 }
 
@@ -610,10 +610,40 @@ asn_enc_rval_t
 SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 	void *sptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t rval;
 
-	printf("TODO: Implement MDER SEQUENCE encoder");
-	_ASN_ENCODE_FAILED;
+	size_t computed_size = 0;
+	asn_enc_rval_t erval;
+	ssize_t ret;
+	int edx;
+
+	erval.encoded = 0;
+
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		asn_enc_rval_t tmperval;
+		void *memb_ptr;
+		asn_mder_contraints_t prev_const;
+
+		if(elm->optional)
+			_ASN_ENCODE_FAILED;
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+		} else {
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+		}
+
+		prev_const = elm->type->mder_constraints;
+		elm->type->mder_constraints = elm->mder_constraints;
+		tmperval = elm->type->mder_encoder(elm->type, memb_ptr,
+			elm->tag_mode, elm->tag,
+			cb, app_key);
+		elm->type->mder_constraints = prev_const;
+		if(tmperval.encoded == -1)
+			return tmperval;
+		erval.encoded +=tmperval.encoded;
+	}
+
+	_ASN_ENCODED_OK(erval);
 }
 
 #undef	XER_ADVANCE
