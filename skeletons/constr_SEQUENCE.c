@@ -627,9 +627,10 @@ SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 		if(elm->optional)
 			_ASN_ENCODE_FAILED;
 
-		if (elm->flags & ATF_POINTER)
+		if (elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-		else
+			if(!memb_ptr) continue;
+		} else
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 
 		if (elm->mder_constraints) {

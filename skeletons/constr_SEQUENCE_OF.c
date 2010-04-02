@@ -94,8 +94,59 @@ asn_enc_rval_t
 SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_TYPE_member_t *elm = td->elements;
+	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
 	asn_enc_rval_t er;
-	printf("TODO: Implement SEQUENCE_OF encoder\n");
+	size_t computed_size = 0;
+	ssize_t encoding_size = 0;
+	int edx;
+
+	/*
+	 * Gather the length of the underlying members sequence.
+	 */
+	for(edx = 0; edx < list->count; edx++) {
+		void *memb_ptr = list->array[edx];
+		if(!memb_ptr) continue;
+		er = elm->type->mder_encoder(elm->type, memb_ptr,
+			0, elm->tag,
+			0, 0);
+		if(er.encoded == -1)
+			return er;
+		computed_size += er.encoded;
+	}
+
+	if(!cb) {
+		er.encoded = computed_size + 4; /* +4 count and length*/
+		_ASN_ENCODED_OK(er);
+	}
+
+	/* Encode count of elements */
+	MDER_OUTPUT_INT_U16_LENGTH(list->count);
+
+	/* Encode octets length */
+	MDER_OUTPUT_INT_U16_LENGTH(computed_size);
+
+	/*
+	 * Encode all members.
+	 */
+	for(edx = 0; edx < list->count; edx++) {
+		void *memb_ptr = list->array[edx];
+		if(!memb_ptr) continue;
+		er = elm->type->mder_encoder(elm->type, memb_ptr,
+			0, elm->tag,
+			cb, app_key);
+		if(er.encoded == -1)
+			return er;
+		encoding_size += er.encoded;
+	}
+
+	if(computed_size != (size_t)encoding_size)
+		goto cb_failed;
+
+	er.encoded = computed_size + 4; /* +4 count and length*/
+	_ASN_ENCODED_OK(er);
+
+cb_failed:
 	_ASN_ENCODE_FAILED;
 }
 
