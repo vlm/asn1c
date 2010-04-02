@@ -622,25 +622,33 @@ SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		asn_enc_rval_t tmperval;
 		void *memb_ptr;
-		asn_mder_contraints_t prev_const;
+		asn_mder_contraints_t prev_constr;
 
 		if(elm->optional)
 			_ASN_ENCODE_FAILED;
-		if(elm->flags & ATF_POINTER) {
+
+		if (elm->flags & ATF_POINTER)
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-		} else {
+		else
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+
+		if (elm->mder_constraints) {
+			/* Member constraints prevail */
+			prev_constr = elm->type->mder_constraints;
+			elm->type->mder_constraints = elm->mder_constraints;
 		}
 
-		prev_const = elm->type->mder_constraints;
-		elm->type->mder_constraints = elm->mder_constraints;
 		tmperval = elm->type->mder_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
 			cb, app_key);
-		elm->type->mder_constraints = prev_const;
+
+		if (elm->mder_constraints)
+			/* Restore contraints for basic type */
+			elm->type->mder_constraints = prev_constr;
+
 		if(tmperval.encoded == -1)
 			return tmperval;
-		erval.encoded +=tmperval.encoded;
+		erval.encoded += tmperval.encoded;
 	}
 
 	_ASN_ENCODED_OK(erval);

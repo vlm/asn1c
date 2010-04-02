@@ -2270,6 +2270,7 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 	return 0;
 }
 
+/*
 static int
 has_mder_constraints(arg_t *arg, asn1p_expr_t *expr) {
 	asn1p_expr_type_e etype;
@@ -2284,6 +2285,7 @@ has_mder_constraints(arg_t *arg, asn1p_expr_t *expr) {
 		return 0;
 	}
 }
+*/
 
 static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
@@ -2414,19 +2416,17 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("\"%s\",\n", expr->Identifier);
 	}
 	if(C99_MODE) OUT(".mder_constraints = ");
-	if(has_mder_constraints(arg, expr)/*TODO: check if there are mder constraints*/) {
+	if(expr->constraints)
 		OUT("&asn_MDER_memb_%s_constr_%d\n", MKID(expr),
 						expr->_type_unique_index);
-	} else {
-		OUT("0\t/* No mder constraints */\n", expr->Identifier);
-	}
+	else
+		OUT("0\t/* No MDER visible constraints */\n");
+
 	INDENT(-1);
 	OUT("},\n");
 
 	save_target = arg->target->target;
 	REDIR(OT_CODE);
-
-	emit_member_MDER_constraints(arg, expr, "memb");
 
 	REDIR(save_target);
 
@@ -2457,6 +2457,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 
 	if(emit_member_PER_constraints(arg, expr, "memb"))
 		return -1;
+
+	emit_member_MDER_constraints(arg, expr, "memb");
 
 	REDIR(save_target);
 
