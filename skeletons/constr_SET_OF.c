@@ -454,6 +454,17 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	_ASN_ENCODED_OK(erval);
 }
 
+/*
+ * MDER Decode SET OF type.
+ */
+asn_dec_rval_t
+SET_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **nint_ptr, const void *buf_ptr, size_t size, int tag_mode) {
+	printf("TODO: Implement decode of SET_OF\n");
+	_ASN_DECODE_FAILED;
+}
+
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\

@@ -2270,23 +2270,6 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 	return 0;
 }
 
-/*
-static int
-has_mder_constraints(arg_t *arg, asn1p_expr_t *expr) {
-	asn1p_expr_type_e etype;
-
-	etype = expr_get_type(arg, expr);
-	switch (etype) {
-	case ASN_BASIC_INTEGER:
-	case ASN_BASIC_BIT_STRING:
-	case ASN_BASIC_OCTET_STRING:
-		return 1;
-	default:
-		return 0;
-	}
-}
-*/
-
 static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	int save_target;

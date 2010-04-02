@@ -87,6 +87,18 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+/*
+ * The DER encoder of the SEQUENCE OF type.
+ */
+asn_enc_rval_t
+SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+	int tag_mode, ber_tlv_tag_t tag,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t er;
+	printf("TODO: Implement SEQUENCE_OF encoder\n");
+	_ASN_ENCODE_FAILED;
+}
+
 asn_enc_rval_t
 SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
