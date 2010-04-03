@@ -1345,7 +1345,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("\tasn_app_consume_bytes_f *cb, void *app_key) {\n");
 	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
 		p, expr->_type_unique_index);
-	OUT("return td->mder_encoder(td, structure, 0, cb, app_key);\n");
+	OUT("return td->mder_encoder(td, structure, constr, cb, app_key);\n");
 	);
 	OUT("}\n");
 	OUT("\n");

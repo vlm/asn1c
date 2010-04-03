@@ -83,7 +83,7 @@ typedef struct{
 } mder_octet_str;
 
 /*
- * Pre-computed MDER Subtype constrint info (if is restricted type).
+ * Pre-computed MDER Subtype constraint info.
  */
 typedef void* asn_mder_contraints_t;
 
