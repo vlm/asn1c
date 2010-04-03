@@ -87,23 +87,26 @@ typedef struct{
  */
 typedef void* asn_mder_contraints_t;
 
-#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
-#define MDER_OUTPUT_INT_U16_LENGTH(len) do	{		\
-	if ((len < 0) || (len > 65535))				\
+#define CHECK_UINT16(_len) do	{				\
+	if (((_len) < 0) || ((_len) > 65535))			\
 		goto cb_failed;					\
+} while (0)
+
+#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+#define MDER_OUTPUT_INT_U16_LENGTH(_len) do	{		\
+	CHECK_UINT16(_len);					\
         if (cb) {						\
-		uint16_t aux = (uint16_t)len;			\
+		uint16_t aux = (uint16_t)(_len);		\
 		_ASN_CALLBACK((uint8_t *)&aux, 2);		\
         }							\
 } while (0)
 #else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
-#define MDER_OUTPUT_INT_U16_LENGTH(len) do	{		\
-	if ((len < 0) || (len > 65535))				\
-		goto cb_failed;					\
+#define MDER_OUTPUT_INT_U16_LENGTH(_len) do	{		\
+	CHECK_UINT16(_len);					\
 	if (cb) {						\
 		uint8_t lbuf[2]; /* length for variable O-S */	\
-		lbuf[0] = (len >> 8) & 0xff;			\
-		lbuf[1] = len & 0xff;				\
+		lbuf[0] = ((_len) >> 8) & 0xff;			\
+		lbuf[1] = (_len) & 0xff;			\
 		_ASN_CALLBACK(lbuf, 2);				\
         }							\
 } while (0)
