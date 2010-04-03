@@ -608,7 +608,7 @@ SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_enc_rval_t
 SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
-	void *sptr, int tag_mode, ber_tlv_tag_t tag,
+	void *sptr, asn_mder_contraints_t constr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 
 	size_t computed_size = 0;
@@ -622,7 +622,6 @@ SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		asn_enc_rval_t tmperval;
 		void *memb_ptr;
-		asn_mder_contraints_t prev_constr;
 
 		if(elm->optional)
 			_ASN_ENCODE_FAILED;
@@ -633,19 +632,9 @@ SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 		} else
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 
-		if (elm->mder_constraints) {
-			/* Member constraints prevail */
-			prev_constr = elm->type->mder_constraints;
-			elm->type->mder_constraints = elm->mder_constraints;
-		}
-
 		tmperval = elm->type->mder_encoder(elm->type, memb_ptr,
-			elm->tag_mode, elm->tag,
+			elm->mder_constraints,
 			cb, app_key);
-
-		if (elm->mder_constraints)
-			/* Restore contraints for basic type */
-			elm->type->mder_constraints = prev_constr;
 
 		if(tmperval.encoded == -1)
 			return tmperval;
