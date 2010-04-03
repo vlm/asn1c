@@ -88,11 +88,11 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 }
 
 /*
- * The DER encoder of the SEQUENCE OF type.
+ * The MDER encoder of the SEQUENCE OF type.
  */
 asn_enc_rval_t
 SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-	int tag_mode, ber_tlv_tag_t tag,
+	asn_mder_contraints_t constr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_TYPE_member_t *elm = td->elements;
 	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
@@ -108,7 +108,7 @@ SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		void *memb_ptr = list->array[edx];
 		if(!memb_ptr) continue;
 		er = elm->type->mder_encoder(elm->type, memb_ptr,
-			0, elm->tag,
+			elm->mder_constraints,
 			0, 0);
 		if(er.encoded == -1)
 			return er;
@@ -133,7 +133,7 @@ SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		void *memb_ptr = list->array[edx];
 		if(!memb_ptr) continue;
 		er = elm->type->mder_encoder(elm->type, memb_ptr,
-			0, elm->tag,
+			elm->mder_constraints,
 			cb, app_key);
 		if(er.encoded == -1)
 			return er;
