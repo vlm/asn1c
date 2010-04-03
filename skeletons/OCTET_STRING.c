@@ -627,12 +627,19 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 asn_enc_rval_t
 OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-			int tag_mode, ber_tlv_tag_t tag,
+			asn_mder_contraints_t constr,
 			asn_app_consume_bytes_f *cb, void *app_key)
 {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
-	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
+	mder_octet_str *oct;
 	asn_enc_rval_t er;
+
+	ASN_DEBUG("%s %s as OCTET STRING",
+		cb?"Estimating":"Encoding", td->name);
+
+	/* specifics constraints prevail */
+	oct = (constr) ? (mder_octet_str *)constr :
+		(mder_octet_str *)td->mder_constraints;
 
 	if (!oct || !st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;

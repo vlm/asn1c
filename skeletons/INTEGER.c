@@ -95,6 +95,9 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	int size, shift;
 	asn_enc_rval_t r;
 
+	ASN_DEBUG("%s %s as INTEGER",
+		cb?"Encoding":"Estimating", td->name);
+
 	/* specifics constraints prevail */
 	rint = (constr) ? (mder_restricted_int *)constr :
 		(mder_restricted_int *)td->mder_constraints;

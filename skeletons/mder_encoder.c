@@ -53,7 +53,7 @@ asn_enc_rval_t mder_encode_to_buffer(
 
 	ec = type_descriptor->mder_encoder(type_descriptor,
 		struct_ptr,	/* Pointer to the destination structure */
-		0, 0, encode_to_buffer_cb, &arg);
+		0, encode_to_buffer_cb, &arg);
 	if(ec.encoded != -1) {
 		assert(ec.encoded == (ssize_t)(buffer_size - arg.left));
 		/* Return the encoded contents size */
