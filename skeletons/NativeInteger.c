@@ -179,7 +179,7 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
  */
 asn_enc_rval_t
 NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
-	int tag_mode, ber_tlv_tag_t tag,
+	asn_mder_contraints_t constr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	unsigned long native = *(unsigned long *)ptr;	/* Disable sign ext. */
 	asn_enc_rval_t erval;
@@ -188,7 +188,7 @@ NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
 	_PREPARE_INTEGER_T(tmp,native);
 
 	/* Encode fake INTEGER */
-	erval = INTEGER_encode_mder(sd, &tmp, tag_mode, tag, cb, app_key);
+	erval = INTEGER_encode_mder(sd, &tmp, constr, cb, app_key);
 	if(erval.encoded == -1) {
 		assert(erval.structure_ptr == &tmp);
 		erval.structure_ptr = ptr;

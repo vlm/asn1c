@@ -122,13 +122,13 @@ der_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
 */
 asn_enc_rval_t
 mder_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
-		     int tag_mode, ber_tlv_tag_t tag,
+		     asn_mder_contraints_t constr,
 		     asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
 	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)sptr;
 
-	ASN_DEBUG("%s %s as a primitive type (tm=%d)",
-			cb?"Encoding":"Estimating", td->name, tag_mode);
+	ASN_DEBUG("%s %s as a primitive type ",
+			cb?"Encoding":"Estimating", td->name);
 
 
 	if(cb && st->buf) {

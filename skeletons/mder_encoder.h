@@ -37,9 +37,8 @@ asn_enc_rval_t mder_encode_to_buffer(
  */
 typedef asn_enc_rval_t (mder_type_encoder_f)(
 		struct asn_TYPE_descriptor_s *type_descriptor,
-		void *struct_ptr,	/* Structure to be encoded */
-		int tag_mode,		/* {-1,0,1}: IMPLICIT, no, EXPLICIT */
-		ber_tlv_tag_t tag,
+		void *struct_ptr,		/* Structure to be encoded */
+		asn_mder_contraints_t constr,	/* Specific constraints */
 		asn_app_consume_bytes_f *consume_bytes_cb,	/* Callback */
 		void *app_key		/* Arbitrary callback argument */
 	);

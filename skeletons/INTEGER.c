@@ -88,14 +88,17 @@ INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_enc_rval_t
 INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-	int tag_mode, ber_tlv_tag_t tag,
+	asn_mder_contraints_t constr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	mder_restricted_int *rint;
 	int size, shift;
 	asn_enc_rval_t r;
 
-	rint = (mder_restricted_int *)td->mder_constraints;
+	/* specifics constraints prevail */
+	rint = (constr) ? (mder_restricted_int *)constr :
+		(mder_restricted_int *)td->mder_constraints;
+
 	if (!rint || *rint == INT_INVALID)
 		_ASN_ENCODE_FAILED;
 
@@ -114,7 +117,7 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		}
 	}
 
-	return mder_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
+	return mder_encode_primitive(td, sptr, constr, cb, app_key);
 }
 
 /*

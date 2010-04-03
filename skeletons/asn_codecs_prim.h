@@ -19,7 +19,6 @@ typedef struct ASN__PRIMITIVE_TYPE_s {
 asn_struct_free_f ASN__PRIMITIVE_TYPE_free;
 ber_type_decoder_f ber_decode_primitive;
 der_type_encoder_f der_encode_primitive;
-
 mder_type_encoder_f mder_encode_primitive;
 
 /*

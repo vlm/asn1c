@@ -16,7 +16,7 @@ asn_enc_rval_t mder_encode(struct asn_TYPE_descriptor_s *type_descriptor,
 	 */
 	return type_descriptor->mder_encoder(type_descriptor,
 		struct_ptr,	/* Pointer to the destination structure */
-		0, 0,
+		0,		/* No specifics constraints */
 		consume_bytes_cb, app_key);
 }
 
