@@ -1,4 +1,6 @@
 /*-
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>
  * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
@@ -44,6 +46,8 @@ asn_struct_print_f CHOICE_print;
 asn_constr_check_f CHOICE_constraint;
 ber_type_decoder_f CHOICE_decode_ber;
 der_type_encoder_f CHOICE_encode_der;
+mder_type_decoder_f CHOICE_decode_mder;
+mder_type_encoder_f CHOICE_encode_mder;
 xer_type_decoder_f CHOICE_decode_xer;
 xer_type_encoder_f CHOICE_encode_xer;
 per_type_decoder_f CHOICE_decode_uper;

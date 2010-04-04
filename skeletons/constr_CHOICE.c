@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>
  * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
@@ -442,6 +444,31 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	erval.encoded += computed_size;
 
 	return erval;
+}
+
+/*
+ * The MDER decoder of the CHOICE OF type.
+ */
+asn_dec_rval_t
+CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
+	asn_dec_rval_t rval;
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+
+	printf("TODO: Decode CHOICE\n");
+	RETURN(RC_FAIL);
+}
+/*
+ * The MDER encoder of the CHOICE type.
+ */
+asn_enc_rval_t
+CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+	asn_mder_contraints_t constr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+
+	printf("TODO: Encode CHOICE\n");
+	_ASN_ENCODE_FAILED;
 }
 
 ber_tlv_tag_t
