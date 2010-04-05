@@ -511,7 +511,7 @@ CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		_ASN_ENCODED_OK(erval);
 	}
 
-	/* Encode count of elements */
+	/* Encode element's tag */
 	MDER_OUTPUT_INT_U16_LENGTH(1);
 
 	/* Encode octets length */

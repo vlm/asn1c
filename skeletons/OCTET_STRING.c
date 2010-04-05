@@ -641,14 +641,14 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	oct = (constr) ? (mder_octet_str *)constr :
 		(mder_octet_str *)td->mder_constraints;
 
-	if (!oct || !st || (!st->buf && st->size))
+	if (!st || (!st->buf && st->size))
 		_ASN_ENCODE_FAILED;
 
-	if ((oct->type == FIXED_OCTET_STRING) && (st->size != oct->size))
+	if (oct && (oct->type == FIXED_OCTET_STRING) && (st->size != oct->size))
 		_ASN_ENCODE_FAILED;
 
 	er.encoded = 0;
-	if (oct->type == VARIABLE_OCTET_STRING) {
+	if ((!oct) || (oct && (oct->type == VARIABLE_OCTET_STRING))) {
 		MDER_OUTPUT_INT_U16_LENGTH(st->size);
 		er.encoded += 2;
 	}
