@@ -102,6 +102,9 @@ SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	ssize_t encoding_size = 0;
 	int edx;
 
+	ASN_DEBUG("%s %s as SEQUENCE OF",
+		cb?"Encoding":"Estimating", td->name);
+
 	/*
 	 * Gather the length of the underlying members sequence.
 	 */

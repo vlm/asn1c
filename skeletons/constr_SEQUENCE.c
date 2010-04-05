@@ -617,6 +617,9 @@ SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 	ssize_t ret;
 	int edx;
 
+	ASN_DEBUG("%s %s as SEQUENCE",
+		cb?"Encoding":"Estimating", td->name);
+
 	erval.encoded = 0;
 
 	for(edx = 0; edx < td->elements_count; edx++) {

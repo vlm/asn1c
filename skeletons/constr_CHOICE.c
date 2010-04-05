@@ -466,8 +466,70 @@ asn_enc_rval_t
 CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_mder_contraints_t constr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elm;	/* CHOICE element */
+	asn_enc_rval_t erval;
+	void *memb_ptr;
+	int present;
 
-	printf("TODO: Encode CHOICE\n");
+	if(!sptr) _ASN_ENCODE_FAILED;
+
+	ASN_DEBUG("%s %s as CHOICE",
+		cb?"Encoding":"Estimating", td->name);
+
+	present = _fetch_present_idx(sptr,
+		specs->pres_offset, specs->pres_size);
+
+	/*
+	 * If the structure was not initialized, it cannot be encoded:
+	 * can't deduce what to encode in the choice type.
+	 */
+	if(present <= 0 || present > td->elements_count)
+		_ASN_ENCODE_FAILED;
+
+	/*
+	 * Seek over the present member of the structure.
+	 */
+	elm = &td->elements[present-1];
+	if(elm->flags & ATF_POINTER) {
+		memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+		if(memb_ptr == 0)
+			/* All elements are mandatory in MDER */
+			_ASN_ENCODE_FAILED;
+	} else
+		memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+
+	/* we need to pre-compute the member size */
+	erval = elm->type->mder_encoder(elm->type, memb_ptr,
+		elm->mder_constraints, 0, 0);
+
+	if(erval.encoded == -1)
+		return erval;
+
+	if(!cb) {
+		erval.encoded += 4; /* +4 tag and length*/
+		_ASN_ENCODED_OK(erval);
+	}
+
+	/* Encode count of elements */
+	MDER_OUTPUT_INT_U16_LENGTH(1);
+
+	/* Encode octets length */
+	MDER_OUTPUT_INT_U16_LENGTH(erval.encoded);
+
+	/*
+	 * Encode the single underlying member.
+	 */
+	erval = elm->type->mder_encoder(elm->type, memb_ptr,
+		elm->mder_constraints, cb, app_key);
+	if(erval.encoded == -1)
+		return erval;
+
+	erval.encoded += 4;
+	printf("Encoded CHOICE member in %ld bytes",
+		(long)erval.encoded);
+	return erval;
+cb_failed:
 	_ASN_ENCODE_FAILED;
 }
 
