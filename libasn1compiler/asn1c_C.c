@@ -45,6 +45,7 @@ static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const cha
 static int emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
+static int emit_MDER_tag2member_table(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
 static int emit_include_dependencies(arg_t *arg);
 static asn1p_expr_t *terminal_structable(arg_t *arg, asn1p_expr_t *expr);
 static int expr_defined_recursively(arg_t *arg, asn1p_expr_t *expr);
@@ -925,6 +926,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	int all_tags_count;
 	enum tvm_compat tv_mode;
 	int *cmap = 0;
+	int genMder;
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -993,6 +995,11 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
+	/*
+	 * Generate choice_ids for MDER coder/decoder
+	 */
+	genMder = emit_MDER_tag2member_table(arg, tag2el, tag2el_count);
+
 	OUT("static asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
@@ -1016,8 +1023,14 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 			MKID(expr), expr->_type_unique_index);
 		else OUT("0,\n");
 		if(C99_MODE) OUT(".ext_start = ");
-		OUT("%d\t/* Extensions start */\n",
+		OUT("%d,\t/* Extensions start */\n",
 			compute_extensions_start(expr));
+		if(C99_MODE) OUT(".sorted_tags = ");
+		if(genMder)
+			OUT("asn_MDER_tag2member_%s_table%d\n",
+				MKID(expr), expr->_type_unique_index);
+		else
+			OUT("0\t/* Invalid definition of choice type for MDER */\n");
 	);
 	OUT("};\n");
 
@@ -1717,6 +1730,68 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *
 	return 0;
 }
 
+static int
+emit_MDER_tag2member_table(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
+	asn1p_expr_t *expr = arg->expr;
+	uint16_t *stags;
+	int type, i;
+
+	if(!tag2el_count)
+		return 0;	/* No top level tags */
+
+	type = tag2el[0].el_tag.tag_mode; /* All tags should be equal to that */
+	if (type == TM_IMPLICIT)
+		return 0;
+
+	for(i = 1; i < tag2el_count; i++)
+		if (type != tag2el[i].el_tag.tag_mode)
+			return 0; /* Tags shall be explicit or implicit in MDER, not mixed */
+
+	stags = calloc(tag2el_count, sizeof(asn1c_integer_t));
+	if (!stags)
+		return 0;
+
+	for(i = 0; i < tag2el_count; i++) {
+		if (type != TM_EXPLICIT) {
+			/* Implicit tag */
+			if (((tag2el[i].el_no + 1) < 0) || ((tag2el[i].el_no + 1) > 65535)) {
+				/* Tag can't be encoded in an uint16_t */
+				free(stags);
+				return 0;
+			}
+			stags[tag2el[i].el_no] = (uint16_t)tag2el[i].el_no + 1;
+			continue;
+		}
+		/* Explicit tag */
+		if ((tag2el[i].el_tag.tag_value < 0) || (tag2el[i].el_tag.tag_value > 65535)) {
+			/* Tag can't be encoded in an uint16_t*/
+			free(stags);
+			return 0;
+		}
+		stags[tag2el[i].el_no] = (uint16_t)tag2el[i].el_tag.tag_value;
+	}
+
+	/* Check if value of tags are assigned sequentially */
+	if (type == TM_EXPLICIT)
+		for (i = 0; i < (tag2el_count - 1); i++)
+			if (stags[i] >= tag2el[i+1].el_tag.tag_value) {
+				/* Tags are not assigned sequentially */
+				free(stags);
+				return 0;
+			}
+	OUT("/* MDER Tags are %s */\n", (type == TM_EXPLICIT) ? "explicit" : "implicit");
+	OUT("static uint16_t asn_MDER_tag2member_%s_table%d[] = {",
+		MKID(expr), expr->_type_unique_index);
+
+	for(i = 0; i < tag2el_count; i++) {
+		OUT("%d%s", stags[i],
+			(i + 1 < tag2el_count) ? "," : "");
+	}
+	OUT("};\n");
+
+	free(stags);
+	return 1;
+}
 static enum tvm_compat
 emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_tags_count_r) {
 	struct asn1p_type_tag_s *tags = 0;	/* Effective tags */

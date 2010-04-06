@@ -36,6 +36,7 @@ typedef struct asn_CHOICE_specifics_s {
 	 * Extensions-related stuff.
 	 */
 	int ext_start;		/* First member of extensions, or -1 */
+	uint16_t *sorted_tags;	/* Tags used by MDER encoder and decoder */
 } asn_CHOICE_specifics_t;
 
 /*
