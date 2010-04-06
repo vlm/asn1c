@@ -2586,22 +2586,15 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 			OUT("BITS_INVALID;\n");
 		break;
 	case ASN_BASIC_OCTET_STRING:
+		if (!expr->combined_constraints)
+			return 0;
 		OUT("\n");
 		OUT("static mder_octet_str "
-			"asn_MDER_%s_%s_constr_%d = {\n",
+			"asn_MDER_%s_%s_constr_%d = ",
 			pfx, p, expr->_type_unique_index);
-		INDENT(+1);
-		if (!expr->combined_constraints) {
-			OUT("VARIABLE_OCTET_STRING,\n");
-			OUT("0\n");
-		} else {
-			ct = expr->combined_constraints;
-			r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
-			OUT("FIXED_OCTET_STRING,\n");
-			OUT("%d\n", r_value->left.value);
-		}
-		INDENT(-1);
-		OUT("};\n");
+		ct = expr->combined_constraints;
+		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+		OUT("%d;\n", r_value->left.value);
 		break;
 	default:
 		return 0;

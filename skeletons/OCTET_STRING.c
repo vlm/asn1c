@@ -591,8 +591,6 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	asn_dec_rval_t rval;
 	char *data;
 
-	if (!oct)
-		_ASN_DECODE_FAILED;
 
 	/*
 	 * Create the string if does not exist.
@@ -603,14 +601,14 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 			_ASN_DECODE_FAILED;
 	}
 
-	if (oct->type == VARIABLE_OCTET_STRING) {
+	if (!oct) {
 		st->size = 0;
 		st->size = ((uint8_t *)buf_ptr)[0];
 		st->size = (st->size << 8) | ((uint8_t *)buf_ptr)[1];
 		rval.consumed = 2;
 		data = (char *)buf_ptr + 2;
 	} else {
-		st->size = oct->size;
+		st->size = *oct;
 		rval.consumed = 0;
 		data = (char *)buf_ptr;
 	}
@@ -641,22 +639,26 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	oct = (constr) ? (mder_octet_str *)constr :
 		(mder_octet_str *)td->mder_constraints;
 
-	if (!st || (!st->buf && st->size))
+	if (!(st && st->buf))
 		_ASN_ENCODE_FAILED;
 
-	if (oct && (oct->type == FIXED_OCTET_STRING) && (st->size != oct->size))
+	if (oct && (st->size != *oct))
 		_ASN_ENCODE_FAILED;
 
-	er.encoded = 0;
-	if ((!oct) || (oct && (oct->type == VARIABLE_OCTET_STRING))) {
-		MDER_OUTPUT_INT_U16_LENGTH(st->size);
+	er.encoded = st->size;
+	if (!oct)
+		/* Variable Octet String */
 		er.encoded += 2;
-	}
-	if (cb)
-		/* Invoke callback for the main part of the buffer */
-		_ASN_CALLBACK(st->buf, st->size);
 
-	er.encoded += st->size;
+	if(!cb)
+		_ASN_ENCODED_OK(er);
+
+	if (!oct)
+		MDER_OUTPUT_INT_U16_LENGTH(st->size);
+
+	/* Invoke callback for the main part of the buffer */
+	_ASN_CALLBACK(st->buf, st->size);
+
 	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;

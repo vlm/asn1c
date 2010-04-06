@@ -77,10 +77,7 @@ typedef enum {
 	VARIABLE_OCTET_STRING
 } mder_octet_str_types;
 
-typedef struct{
-	mder_octet_str_types type;
-	int size;
-} mder_octet_str;
+typedef uint16_t mder_octet_str;
 
 /*
  * Pre-computed MDER Subtype constraint info.
