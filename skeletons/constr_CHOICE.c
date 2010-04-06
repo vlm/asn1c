@@ -472,7 +472,7 @@ CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	void *memb_ptr;
 	int present;
 
-	if(!sptr) _ASN_ENCODE_FAILED;
+	if (!(sptr && specs->sorted_tags)) _ASN_ENCODE_FAILED;
 
 	ASN_DEBUG("%s %s as CHOICE",
 		cb?"Encoding":"Estimating", td->name);
@@ -512,7 +512,7 @@ CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	/* Encode element's tag */
-	MDER_OUTPUT_INT_U16_LENGTH(1);
+	MDER_OUTPUT_INT_U16_LENGTH(specs->sorted_tags[present-1]);
 
 	/* Encode octets length */
 	MDER_OUTPUT_INT_U16_LENGTH(erval.encoded);
@@ -526,8 +526,6 @@ CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		return erval;
 
 	erval.encoded += 4;
-	printf("Encoded CHOICE member in %ld bytes",
-		(long)erval.encoded);
 	return erval;
 cb_failed:
 	_ASN_ENCODE_FAILED;
