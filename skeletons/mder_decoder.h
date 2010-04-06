@@ -8,6 +8,7 @@
 #define	_MDER_DECODER_H_
 
 #include <asn_application.h>
+#include <mder_support.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,7 +36,7 @@ typedef asn_dec_rval_t (mder_type_decoder_f)(
 		struct asn_codec_ctx_s *opt_codec_ctx,
 		struct asn_TYPE_descriptor_s *type_descriptor,
 		void **struct_ptr, const void *buf_ptr, size_t size,
-		int tag_mode);
+		asn_mder_contraints_t constr);
 
 #ifdef __cplusplus
 }

@@ -596,12 +596,60 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
  */
 asn_dec_rval_t
 SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
-	asn_dec_rval_t rval;
+	asn_TYPE_descriptor_t *td, void **sptr,
+	const void *ptr, size_t size, asn_mder_contraints_t constr) {
 
-	printf("TODO: Implement MDER SEQUENCE encoder");
-	_ASN_DECODE_FAILED;
+	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elements = td->elements;
+
+	void *st = *sptr;	/* Target structure. */
+	asn_dec_rval_t rval;	/* Return code */
+
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int edx;			/* SEQUENCE element's index */
+
+	ASN_DEBUG("Decoding %s as SEQUENCE", td->name);
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(st == 0) {
+		st = *sptr = CALLOC(1, specs->struct_size);
+		if(st == 0) {
+			RETURN(RC_FAIL);
+		}
+	}
+
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;
+		void **memb_ptr2;
+
+		if(elm->optional)
+			_ASN_DECODE_FAILED;
+
+		if(elm->flags & ATF_POINTER) {
+			/* Member is a pointer to another structure */
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+		} else {
+			/*
+			 * A pointer to a pointer
+			 * holding the start of the structure
+			 */
+			memb_ptr = (char *)st + elm->memb_offset;
+			memb_ptr2 = &memb_ptr;
+		}
+
+		rval = elm->type->mder_decoder(opt_codec_ctx, elm->type,
+				memb_ptr2, ptr, size, elm->mder_constraints);
+		if (rval.code != RC_OK)
+			RETURN(RC_FAIL);
+
+		ptr = ((const char *)ptr) + rval.consumed;
+		size -= rval.consumed;
+		consumed_myself += rval.consumed;
+	}
+	RETURN(RC_OK);
 }
 
 /*

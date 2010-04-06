@@ -583,8 +583,8 @@ cb_failed:
 
 asn_dec_rval_t
 OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
+	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+	size_t size, asn_mder_contraints_t constr) {
 
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
 	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
@@ -602,6 +602,8 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	if (!oct) {
+		if (size < 2)
+			_ASN_DECODE_FAILED;
 		st->size = 0;
 		st->size = ((uint8_t *)buf_ptr)[0];
 		st->size = (st->size << 8) | ((uint8_t *)buf_ptr)[1];

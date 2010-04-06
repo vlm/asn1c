@@ -201,8 +201,8 @@ NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
  */
 asn_dec_rval_t
 NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	void **nint_ptr, const void *buf_ptr, size_t size, int tag_mode) {
+	asn_TYPE_descriptor_t *td, void **nint_ptr,
+	const void *buf_ptr, size_t size, asn_mder_contraints_t constr) {
 
 	long *native = (long *)*nint_ptr;
 	asn_dec_rval_t rval;
@@ -211,7 +211,8 @@ NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	long l;
 	int unsig;
 
-	rint = (mder_restricted_int *)td->mder_constraints;
+	rint = (constr) ? (mder_restricted_int *)constr :
+		(mder_restricted_int *)td->mder_constraints;
 	if (!rint || *rint == INT_INVALID) {
 		rval.code = RC_FAIL;
 		rval.consumed = 0;
@@ -229,7 +230,7 @@ NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	rval = INTEGER_decode_mder(opt_codec_ctx, td, (void **)&tmp,
-				   buf_ptr, size, tag_mode);
+				   buf_ptr, size, constr);
 
 	if (rval.code != RC_OK){
 		return rval;

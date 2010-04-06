@@ -1370,10 +1370,11 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
 	OUT("_decode_mder(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
 	INDENTED(
-	OUT("\tvoid **structure, const void *bufptr, size_t size, int tag_mode) {\n");
+	OUT("\tvoid **structure, const void *bufptr, size_t size,\n");
+	OUT("\tasn_mder_contraints_t constr) {\n");
 	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
 		p, expr->_type_unique_index);
-	OUT("return td->mder_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);\n");
+	OUT("return td->mder_decoder(opt_codec_ctx, td, structure, bufptr, size, constr);\n");
 	);
 	OUT("}\n");
 	OUT("\n");
