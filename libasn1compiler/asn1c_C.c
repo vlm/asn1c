@@ -1,4 +1,11 @@
 /*
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
+ * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Redistribution and modifications are permitted subject to BSD license.
+ */
+
+/*
  * Don't look into this file. First, because it's a mess, and second, because
  * it's a brain of the compiler, and you don't wanna mess with brains do you? ;)
  */

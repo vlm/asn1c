@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.

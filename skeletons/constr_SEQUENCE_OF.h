@@ -1,4 +1,5 @@
 /*-
+ * Copyright (c) 2010 Jose Antonio Santos Cadenas <santoscadenas@gmail.com>
  * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
  * Copyright (c) 2003, 2005 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.

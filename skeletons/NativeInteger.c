@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -111,7 +112,7 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		tmp.size = length;
 
 		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&tmp, &l)
+			? asn_INTEGER2ulong(&tmp, (unsigned long *)&l)
 			: asn_INTEGER2long(&tmp, &l)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -238,7 +239,8 @@ NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 	GET_INT_UNSIGNED(*rint, unsig);
 
-	if((unsig) ? asn_INTEGER2ulong(tmp, &l) : asn_INTEGER2long(tmp, &l)) {
+	if((unsig) ? asn_INTEGER2ulong(tmp, (unsigned long *)&l) :
+						asn_INTEGER2long(tmp, &l)) {
 		rval.code = RC_FAIL;
 		rval.consumed = 0;
 		return rval;
@@ -274,7 +276,7 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	if(rval.code == RC_OK) {
 		long l;
 		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&st, &l)
+			? asn_INTEGER2ulong(&st, (unsigned long *)&l)
 			: asn_INTEGER2long(&st, &l)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -342,7 +344,7 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 				   &tmpintptr, pd);
 	if(rval.code == RC_OK) {
 		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&tmpint, native)
+			? asn_INTEGER2ulong(&tmpint, (unsigned long *)native)
 			: asn_INTEGER2long(&tmpint, native))
 			rval.code = RC_FAIL;
 		else

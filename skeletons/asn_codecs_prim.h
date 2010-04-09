@@ -1,5 +1,6 @@
 /*-
  * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	ASN_CODECS_PRIM_H

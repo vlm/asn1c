@@ -1,4 +1,5 @@
 /*-
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
  * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
@@ -600,7 +601,6 @@ SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	const void *ptr, size_t size, asn_mder_contraints_t constr) {
 
 	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
-	asn_TYPE_member_t *elements = td->elements;
 
 	void *st = *sptr;	/* Target structure. */
 	asn_dec_rval_t rval;	/* Return code */
@@ -660,9 +660,7 @@ SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 	void *sptr, asn_mder_contraints_t constr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 
-	size_t computed_size = 0;
 	asn_enc_rval_t erval;
-	ssize_t ret;
 	int edx;
 
 	ASN_DEBUG("%s %s as SEQUENCE",

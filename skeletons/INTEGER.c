@@ -1,6 +1,7 @@
 /*-
  * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
  * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -96,7 +97,6 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	mder_restricted_int *rint;
 	int size, shift;
-	asn_enc_rval_t r;
 
 	ASN_DEBUG("%s %s as INTEGER",
 		cb?"Encoding":"Estimating", td->name);
