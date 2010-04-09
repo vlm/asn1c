@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
- * Copyright (c) 2003, 2005 Lev Walkin <vlm@lionet.info>. 
+ * Copyright (c) 2003, 2005 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -22,11 +22,11 @@ extern "C" {
 #define	SEQUENCE_OF_print	SET_OF_print
 #define	SEQUENCE_OF_constraint	SET_OF_constraint
 #define	SEQUENCE_OF_decode_ber	SET_OF_decode_ber
-#define	SEQUENCE_OF_decode_mder	SET_OF_decode_mder
 #define	SEQUENCE_OF_decode_xer	SET_OF_decode_xer
 #define	SEQUENCE_OF_decode_uper	SET_OF_decode_uper
 der_type_encoder_f SEQUENCE_OF_encode_der;
 mder_type_encoder_f SEQUENCE_OF_encode_mder;
+mder_type_decoder_f SEQUENCE_OF_decode_mder;
 xer_type_encoder_f SEQUENCE_OF_encode_xer;
 per_type_encoder_f SEQUENCE_OF_encode_uper;
 

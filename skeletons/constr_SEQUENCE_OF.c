@@ -8,6 +8,19 @@
 #include <constr_SEQUENCE_OF.h>
 #include <asn_SEQUENCE_OF.h>
 
+#undef	ADVANCE
+#define ADVANCE(n_bytes) do { 			\
+	ptr = ((const char *)ptr) + n_bytes;	\
+	consumed_myself += n_bytes;		\
+	size -= n_bytes;			\
+}while(0)
+
+#undef	RETURN
+#define	RETURN(_code)	do {			\
+		rval.code = _code;		\
+		rval.consumed = consumed_myself;\
+		return rval;			\
+} while(0)
 /*
  * The DER encoder of the SEQUENCE OF type.
  */
@@ -86,6 +99,46 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	}
 
 	return erval;
+}
+
+asn_dec_rval_t
+SEQUENCE_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr,
+	const void *ptr, size_t size, asn_mder_contraints_t constr) {
+
+	asn_TYPE_member_t *elm = td->elements;
+	asn_anonymous_sequence_ *list = *((asn_anonymous_sequence_ **)sptr);
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int edx, rec_size;
+	asn_dec_rval_t rval;	/* Return code */
+
+	if (size < 4)
+		_ASN_DECODE_FAILED;
+	MDER_INPUT_INT_U16(list->count, ptr);
+	ADVANCE(2);
+	MDER_INPUT_INT_U16(rec_size, ptr);
+	ADVANCE(2);
+
+	if (rec_size > size)
+		_ASN_DECODE_FAILED;
+
+	/* Allocate memory for the return type*/
+	if (list->array)
+		free(list->array);
+	list->size = rec_size * sizeof(*list->array);
+	list->array = CALLOC(rec_size, sizeof(*list->array));
+	if (!list->array)
+		RETURN(RC_FAIL);
+
+	for(edx = 0; edx < list->count; edx++) {
+		rval = elm->type->mder_decoder(opt_codec_ctx, elm->type,
+					&list->array[edx], ptr, size, constr);
+		if (rval.code != RC_OK)
+			RETURN(RC_FAIL);
+		ADVANCE(rval.consumed);
+	}
+
+	RETURN(RC_OK);
 }
 
 /*

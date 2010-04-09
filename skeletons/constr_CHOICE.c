@@ -136,7 +136,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Restore parsing context.
 	 */
 	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
-	
+
 	/*
 	 * Start to parse where left previously
 	 */
@@ -275,7 +275,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		case RC_FAIL: /* Fatal error */
 			RETURN(rval.code);
 		} /* switch(rval) */
-		
+
 		ADVANCE(rval.consumed);
 	  } while(0);
 
@@ -351,7 +351,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/* No meaningful work here */
 		break;
 	}
-	
+
 	RETURN(RC_OK);
 }
 
@@ -451,8 +451,9 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
  */
 asn_dec_rval_t
 CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
+	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+	size_t size, asn_mder_contraints_t constr) {
+
 	asn_dec_rval_t rval;
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 
@@ -991,7 +992,7 @@ CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			elm->name, td->name, rv.code);
 	return rv;
 }
-   
+
 asn_enc_rval_t
 CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
@@ -1071,7 +1072,7 @@ CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 		_ASN_ENCODED_OK(rval);
 	}
 }
-   
+
 
 int
 CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,

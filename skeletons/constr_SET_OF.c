@@ -86,7 +86,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 
 	ASN_DEBUG("Decoding %s as SET OF", td->name);
-	
+
 	/*
 	 * Create the target structure if it is not present already.
 	 */
@@ -101,7 +101,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 * Restore parsing context.
 	 */
 	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
-	
+
 	/*
 	 * Start to parse where left previously
 	 */
@@ -201,7 +201,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 */
 		ctx->step |= 1;		/* Confirm entering next microphase */
 	microphase2:
-		
+
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
@@ -231,7 +231,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			ctx->ptr = 0;
 			RETURN(RC_FAIL);
 		} /* switch(rval) */
-		
+
 		ADVANCE(rval.consumed);
 	  }	/* for(all list members) */
 
@@ -260,7 +260,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		PHASE_OUT(ctx);
 	}
-	
+
 	RETURN(RC_OK);
 }
 
@@ -459,8 +459,9 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
  */
 asn_dec_rval_t
 SET_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	void **nint_ptr, const void *buf_ptr, size_t size, int tag_mode) {
+	asn_TYPE_descriptor_t *td, void **nint_ptr, const void *buf_ptr,
+	size_t size, asn_mder_contraints_t constr) {
+
 	printf("TODO: Implement decode of SET_OF\n");
 	_ASN_DECODE_FAILED;
 }
@@ -895,7 +896,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	if(!st) {
 		st = *sptr = CALLOC(1, specs->struct_size);
 		if(!st) _ASN_DECODE_FAILED;
-	}                                                                       
+	}
 	list = _A_SET_FROM_VOID(st);
 
 	/* Figure out which constraints to use */
