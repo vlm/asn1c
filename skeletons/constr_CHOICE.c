@@ -43,6 +43,14 @@
 		consumed_myself += num;		\
 	} while(0)
 
+#undef	ADVANCE_MDER
+#define	ADVANCE_MDER(num_bytes)	do {		\
+		size_t num = num_bytes;		\
+		ptr = ((const char *)ptr) + num;\
+		size -= num;			\
+		consumed_myself += num;		\
+	} while(0)
+
 /*
  * Switch to the next phase of parsing.
  */
@@ -451,14 +459,56 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
  */
 asn_dec_rval_t
 CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+	asn_TYPE_descriptor_t *td, void **sptr, const void *ptr,
 	size_t size, asn_mder_contraints_t constr) {
 
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	asn_dec_rval_t rval;
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int *presentp, present_tag, i;
+	uint16_t comp_size;
+	asn_TYPE_member_t *elm;	/* CHOICE element */
+	void *memb_ptr;
 
-	printf("TODO: Decode CHOICE\n");
-	RETURN(RC_FAIL);
+	if (!*sptr) {
+		/* Alloc memory for the target structure */
+		*sptr = CALLOC(1, specs->struct_size);
+		if (!*sptr)
+			RETURN(RC_FAIL);
+	}
+
+	if(size < 4)
+		RETURN(RC_FAIL);
+	MDER_INPUT_INT_U16(present_tag, ptr);
+	ADVANCE_MDER(2);
+
+	presentp = (int *)((*(const char **)sptr) + specs->pres_offset);
+	for (i = 0; i < td->elements_count; i++) {
+		if (specs->sorted_tags[i] == present_tag) {
+			*presentp = i + 1;
+			break;
+		}
+	}
+	if(*presentp <= 0 || *presentp > td->elements_count)
+		RETURN(RC_FAIL);
+
+	MDER_INPUT_INT_U16(comp_size, ptr);
+	ADVANCE_MDER(2);
+	if (comp_size > size)
+		_ASN_DECODE_FAILED;
+
+	elm = &td->elements[*presentp - 1];
+	if(elm->flags & ATF_POINTER) {
+		memb_ptr = *(void **)(*(char **)sptr + elm->memb_offset);
+		if(memb_ptr == 0)
+			/* All elements are mandatory in MDER */
+			_ASN_DECODE_FAILED;
+	} else
+		memb_ptr = (void *)(*(char **)sptr + elm->memb_offset);
+	rval = elm->type->mder_decoder(opt_codec_ctx, elm->type, &memb_ptr, ptr,
+				       size, elm->mder_constraints);
+	consumed_myself += rval.consumed;
+	RETURN(rval.code);
 }
 /*
  * The MDER encoder of the CHOICE type.
