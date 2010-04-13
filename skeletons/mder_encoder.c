@@ -60,3 +60,11 @@ asn_enc_rval_t mder_encode_to_buffer(
 	}
 	return ec;
 }
+
+asn_enc_rval_t
+NON_SUP_encode_mder(struct asn_TYPE_descriptor_s *td, void *sptr,
+		    asn_mder_contraints_t constr,
+		    asn_app_consume_bytes_f *consume_bytes_cb, void *app_key) {
+
+	_ASN_ENCODE_FAILED;
+}

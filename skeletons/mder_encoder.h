@@ -44,6 +44,8 @@ typedef asn_enc_rval_t (mder_type_encoder_f)(
 		void *app_key		/* Arbitrary callback argument */
 	);
 
+mder_type_encoder_f NON_SUP_encode_mder;
+
 #ifdef __cplusplus
 }
 #endif

@@ -27,7 +27,7 @@ PrintableString.h PrintableString.c
 REAL.h REAL.c INTEGER.h
 RELATIVE-OID.h RELATIVE-OID.c OBJECT_IDENTIFIER.h
 T61String.h T61String.c
-TeletexString.h TeletexString.c	
+TeletexString.h TeletexString.c
 UTCTime.h UTCTime.c GeneralizedTime.h
 UTF8String.h UTF8String.c
 UniversalString.h UniversalString.c UTF8String.h

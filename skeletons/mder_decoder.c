@@ -40,3 +40,12 @@ mder_decode(asn_codec_ctx_t *opt_codec_ctx,
 		0		/* Default tag mode is 0 */
 		);
 }
+
+asn_dec_rval_t
+NON_SUP_decode_mder(struct asn_codec_ctx_s *opt_codec_ctx,
+		struct asn_TYPE_descriptor_s *td,
+		void **struct_ptr, const void *buf_ptr, size_t size,
+		asn_mder_contraints_t constr) {
+
+	_ASN_DECODE_FAILED;
+}

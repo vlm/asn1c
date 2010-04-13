@@ -38,6 +38,8 @@ typedef asn_dec_rval_t (mder_type_decoder_f)(
 		void **struct_ptr, const void *buf_ptr, size_t size,
 		asn_mder_contraints_t constr);
 
+mder_type_decoder_f NON_SUP_decode_mder;
+
 #ifdef __cplusplus
 }
 #endif
