@@ -22,8 +22,8 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OBJECT_IDENTIFIER_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
-	0, /* TODO insert mder encoder */
-	0, /* TODO insert mder decoder */
+	OBJECT_IDENTIFIER_encode_mder,
+	OBJECT_IDENTIFIER_decode_mder,
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
 	OCTET_STRING_decode_uper,
@@ -92,7 +92,7 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 			 * type, there is still possible to fit it when there
 			 * are few unused high bits in the arc value
 			 * representaion.
-			 * 
+			 *
 			 * Moreover, there is a possibility that the
 			 * number could actually fit the arc space, given
 			 * that add is negative, but we don't handle
@@ -728,4 +728,19 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	}
 }
 
+asn_enc_rval_t
+OBJECT_IDENTIFIER_encode_mder(struct asn_TYPE_descriptor_s *td, void *sptr,
+		    asn_mder_contraints_t constr,
+		    asn_app_consume_bytes_f *consume_bytes_cb, void *app_key) {
 
+	_ASN_ENCODE_FAILED;
+}
+
+asn_dec_rval_t
+OBJECT_IDENTIFIER_decode_mder(struct asn_codec_ctx_s *opt_codec_ctx,
+		struct asn_TYPE_descriptor_s *td,
+		void **struct_ptr, const void *buf_ptr, size_t size,
+		asn_mder_contraints_t constr) {
+
+	_ASN_DECODE_FAILED;
+}

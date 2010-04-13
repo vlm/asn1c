@@ -8,6 +8,8 @@
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
+#include <mder_decoder.h>
+#include <mder_encoder.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,6 +24,8 @@ asn_constr_check_f OBJECT_IDENTIFIER_constraint;
 der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
 xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
+mder_type_decoder_f OBJECT_IDENTIFIER_decode_mder;
+mder_type_encoder_f OBJECT_IDENTIFIER_encode_mder;
 
 /**********************************
  * Some handy conversion routines *
@@ -30,7 +34,7 @@ xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
 /*
  * This function fills an (_arcs) array with OBJECT IDENTIFIER arcs
  * up to specified (_arc_slots) elements.
- * 
+ *
  * EXAMPLE:
  * 	void print_arcs(OBJECT_IDENTIFIER_t *oid) {
  * 		unsigned long fixed_arcs[10];	// Try with fixed space first
@@ -39,7 +43,7 @@ xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
  * 		int arc_slots = sizeof(fixed_arcs)/sizeof(fixed_arcs[0]); // 10
  * 		int count;	// Real number of arcs.
  * 		int i;
- * 
+ *
  * 		count = OBJECT_IDENTIFIER_get_arcs(oid, arcs,
  * 			arc_type_size, arc_slots);
  * 		// If necessary, reallocate arcs array and try again.
@@ -51,20 +55,20 @@ xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
  * 				arc_type_size, arc_slots);
  * 			assert(count == arc_slots);
  * 		}
- * 
+ *
  * 		// Print the contents of the arcs array.
  * 		for(i = 0; i < count; i++)
  * 			printf("%d\n", arcs[i]);
- * 
+ *
  * 		// Avoid memory leak.
  * 		if(arcs != fixed_arcs) free(arcs);
  * 	}
- * 
+ *
  * RETURN VALUES:
  * -1/EINVAL:	Invalid arguments (oid is missing)
  * -1/ERANGE:	One or more arcs have value out of array cell type range.
  * >=0:		Number of arcs contained in the OBJECT IDENTIFIER
- * 
+ *
  * WARNING: The function always returns the real number of arcs,
  * even if there is no sufficient (_arc_slots) provided.
  */
@@ -108,14 +112,14 @@ ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
  *
  * If (oid_txt_length == -1), the strlen() will be invoked to determine the
  * size of the (oid_text) string.
- * 
+ *
  * After return, the optional (opt_oid_text_end) is set to the character after
  * the last parsed one. (opt_oid_text_end) is never less than (oid_text).
- * 
+ *
  * RETURN VALUES:
  *   -1:	Parse error.
  * >= 0:	Number of arcs contained in the OBJECT IDENTIFIER.
- * 
+ *
  * WARNING: The function always returns the real number of arcs,
  * even if there is no sufficient (_arc_slots) provided.
  * This is useful for (_arc_slots) value estimation.
