@@ -20,6 +20,8 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,
 	BOOLEAN_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
@@ -96,7 +98,7 @@ BOOLEAN_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	ASN_DEBUG("Took %ld/%ld bytes to encode %s, value=%d",
 		(long)rval.consumed, (long)length,
 		td->name, *st);
-	
+
 	return rval;
 }
 

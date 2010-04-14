@@ -21,7 +21,8 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,	/* Implemented in terms of BOOLEAN */
 	NULL_encode_der,	/* Special handling of DER encoding */
-	NULL_encode_mder,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	NULL_decode_xer,
 	NULL_encode_xer,
 	NULL_decode_uper,	/* Unaligned PER decoder */
@@ -36,15 +37,6 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	0,	/* No specifics */
 	0	/* MDER contraints (defined by asn1c compiler) */
 };
-
-asn_enc_rval_t
-NULL_encode_mder(asn_TYPE_descriptor_t *td, void *ptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-
-	printf("TODO: Encode MDER NULL");
-	_ASN_ENCODE_FAILED;
-}
 
 asn_enc_rval_t
 NULL_encode_der(asn_TYPE_descriptor_t *td, void *ptr,

@@ -163,6 +163,8 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	GeneralizedTime_constraint, /* Check validity of time */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	GeneralizedTime_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	OCTET_STRING_decode_xer_utf8,
 	GeneralizedTime_encode_xer,
 	OCTET_STRING_decode_uper,
@@ -253,7 +255,7 @@ GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		gt = asn_time2GT_frac(0, &tm, fv, fd, 1);
 		if(!gt) _ASN_ENCODE_FAILED;
-	
+
 		rv = OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
 			cb, app_key);
 		ASN_STRUCT_FREE(asn_DEF_GeneralizedTime, gt);

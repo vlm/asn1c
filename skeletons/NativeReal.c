@@ -28,6 +28,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	asn_generic_no_constraint,
 	NativeReal_decode_ber,
 	NativeReal_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	NativeReal_decode_xer,
 	NativeReal_encode_xer,
 	NativeReal_decode_uper,
@@ -145,7 +147,7 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 		erval.structure_ptr = ptr;
 		return erval;
 	}
-	
+
 	/* Encode a fake REAL */
 	erval = der_encode_primitive(td, &tmp, tag_mode, tag, cb, app_key);
 	if(erval.encoded == -1) {
@@ -216,7 +218,7 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
 
 	if(asn_double2REAL(&tmp, Dbl))
 		_ASN_ENCODE_FAILED;
-	
+
 	/* Encode a DER REAL */
 	erval = OCTET_STRING_encode_uper(td, NULL, &tmp, po);
 	if(erval.encoded == -1)
