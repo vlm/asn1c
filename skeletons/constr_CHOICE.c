@@ -482,7 +482,7 @@ CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	MDER_INPUT_INT_U16(present_tag, ptr);
 	ADVANCE_MDER(2);
 
-	presentp = (int *)((*(const char **)sptr) + specs->pres_offset);
+	presentp = (int *)((*(char **)sptr) + specs->pres_offset);
 	for (i = 0; i < td->elements_count; i++) {
 		if (specs->sorted_tags[i] == present_tag) {
 			*presentp = i + 1;

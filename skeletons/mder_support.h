@@ -110,10 +110,10 @@ typedef void* asn_mder_contraints_t;
 } while (0)
 #endif
 
-#define MDER_INPUT_INT_U16(_int, _buf) do {		\
-	_int = 0;					\
-	_int = ((uint8_t *)_buf)[0];			\
-	_int = (_int << 8) | ((uint8_t *)_buf)[1];	\
+#define MDER_INPUT_INT_U16(_int, _buf) do {			\
+	_int = 0;						\
+	_int = ((const uint8_t *)_buf)[0];			\
+	_int = (_int << 8) | ((const uint8_t *)_buf)[1];	\
 }while (0)
 
 #ifdef __cplusplus
