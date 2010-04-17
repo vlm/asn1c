@@ -73,11 +73,6 @@ typedef enum {
 	BITS_32 = 4
 } mder_restricted_bit_str;
 
-typedef enum {
-	FIXED_OCTET_STRING,
-	VARIABLE_OCTET_STRING
-} mder_octet_str_types;
-
 typedef uint16_t mder_octet_str;
 
 /*
