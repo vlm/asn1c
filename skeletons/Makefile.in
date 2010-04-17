@@ -61,7 +61,8 @@ am_libasn1cskeletons_la_OBJECTS = ANY.lo BIT_STRING.lo BMPString.lo \
 	constr_CHOICE.lo constr_SEQUENCE.lo constr_SEQUENCE_OF.lo \
 	constr_SET.lo constr_SET_OF.lo constr_TYPE.lo constraints.lo \
 	der_encoder.lo per_decoder.lo per_encoder.lo per_opentype.lo \
-	per_support.lo xer_decoder.lo xer_encoder.lo xer_support.lo
+	per_support.lo xer_decoder.lo xer_encoder.lo xer_support.lo \
+	mder_decoder.lo mder_encoder.lo
 libasn1cskeletons_la_OBJECTS = $(am_libasn1cskeletons_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp

@@ -73,6 +73,9 @@ typedef enum {
 	BITS_32 = 4
 } mder_restricted_bit_str;
 
+/*
+ * Pre-computed O-S contraints if they are present
+ */
 typedef uint16_t mder_octet_str;
 
 /*
