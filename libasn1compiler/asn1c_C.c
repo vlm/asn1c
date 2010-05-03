@@ -1748,6 +1748,8 @@ emit_MDER_tag2member_table(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
 		return 0;	/* No top level tags */
 
 	type = tag2el[0].el_tag.tag_mode; /* All tags should be equal to that */
+	if (type == TM_IMPLICIT)
+		return 0;
 
 	for(i = 1; i < tag2el_count; i++)
 		if (type != tag2el[i].el_tag.tag_mode)
@@ -1758,7 +1760,7 @@ emit_MDER_tag2member_table(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
 		return 0;
 
 	for(i = 0; i < tag2el_count; i++) {
-		if (type == TM_DEFAULT) {
+		if (type != TM_EXPLICIT) {
 			/* Implicit tag */
 			if (((tag2el[i].el_no + 1) < 0) || ((tag2el[i].el_no + 1) > 65535)) {
 				/* Tag can't be encoded in an uint16_t */
