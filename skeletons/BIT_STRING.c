@@ -99,8 +99,11 @@ BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	bs->size = *rbs;
-	if (bs->size > size)
-		_ASN_DECODE_FAILED;
+	if (bs->size > size) {
+		rval.code = RC_WMORE;
+		rval.consumed = 0;
+		return rval;
+	}
 	if (bs->buf)
 		free(bs->buf);
 	bs->buf = CALLOC(1, bs->size);

@@ -602,8 +602,11 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	if (!oct) {
-		if (size < 2)
-			_ASN_DECODE_FAILED;
+		if (size < 2) {
+			rval.code = RC_WMORE;
+			rval.consumed = 0;
+			return rval;
+		}
 		st->size = 0;
 		st->size = ((const uint8_t *)buf_ptr)[0];
 		st->size = (st->size << 8) | ((const uint8_t *)buf_ptr)[1];
@@ -614,8 +617,11 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		rval.consumed = 0;
 		data = (const char *)buf_ptr;
 	}
-	if (size < (st->size + rval.consumed))
-		_ASN_DECODE_FAILED;
+	if (size < (st->size + rval.consumed)) {
+		rval.code = RC_WMORE;
+		rval.consumed = 0;
+		return rval;
+	}
 
 	if (OCTET_STRING_fromBuf(st, data, st->size) != 0)
 		_ASN_DECODE_FAILED;

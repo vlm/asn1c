@@ -75,8 +75,11 @@ INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		}
 	}
 
-	if(length > size)
-		_ASN_DECODE_FAILED;
+	if(length > size) {
+		rval.code = RC_WMORE;
+		rval.consumed = 0;
+		return rval;
+	}
 	unconst_buf.constbuf = buf_ptr;
 	integer->buf = (uint8_t *)unconst_buf.nonconstbuf;
 	integer->size = length;

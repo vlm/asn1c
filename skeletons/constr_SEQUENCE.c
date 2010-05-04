@@ -604,6 +604,7 @@ SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 	void *st = *sptr;	/* Target structure. */
 	asn_dec_rval_t rval;	/* Return code */
+	asn_struct_ctx_t *ctx;
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 	int edx;			/* SEQUENCE element's index */
@@ -620,7 +621,14 @@ SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		}
 	}
 
-	for(edx = 0; edx < td->elements_count; edx++) {
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+	if (!ctx)
+		_ASN_DECODE_FAILED;
+
+	for(edx = ctx->context; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		void **memb_ptr2;
@@ -642,12 +650,15 @@ SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 		rval = elm->type->mder_decoder(opt_codec_ctx, elm->type,
 				memb_ptr2, ptr, size, elm->mder_constraints);
+
+		consumed_myself += rval.consumed;
+		ctx->context = edx;
+
 		if (rval.code != RC_OK)
-			RETURN(RC_FAIL);
+			RETURN(rval.code);
 
 		ptr = ((const char *)ptr) + rval.consumed;
 		size -= rval.consumed;
-		consumed_myself += rval.consumed;
 	}
 	RETURN(RC_OK);
 }

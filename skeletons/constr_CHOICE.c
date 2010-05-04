@@ -469,6 +469,7 @@ CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	uint16_t comp_size;
 	asn_TYPE_member_t *elm;	/* CHOICE element */
 	void *memb_ptr;
+	asn_struct_ctx_t *ctx;
 
 	if (!*sptr) {
 		/* Alloc memory for the target structure */
@@ -477,8 +478,18 @@ CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 			RETURN(RC_FAIL);
 	}
 
-	if(size < 4)
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)*sptr + specs->ctx_offset);
+	if (!ctx)
 		RETURN(RC_FAIL);
+	if (ctx->phase > 0)
+		goto phase1;
+
+	if (size < 2) {
+		RETURN(RC_WMORE);
+	}
 	MDER_INPUT_INT_U16(present_tag, ptr);
 	ADVANCE_MDER(2);
 
@@ -492,12 +503,20 @@ CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	if(*presentp <= 0 || *presentp > td->elements_count)
 		RETURN(RC_FAIL);
 
+	ctx->ptr = presentp;
+	ctx->phase = 1;
+phase1:
+	if (ctx->phase > 1)
+		goto phase2;
+	if (size < 2) {
+		RETURN(RC_WMORE);
+	}
 	MDER_INPUT_INT_U16(comp_size, ptr);
 	ADVANCE_MDER(2);
-	if (comp_size > size)
-		_ASN_DECODE_FAILED;
+	ctx->phase = 2;
 
-	elm = &td->elements[*presentp - 1];
+phase2:
+	elm = &td->elements[*(int *)ctx->ptr - 1];
 	if(elm->flags & ATF_POINTER) {
 		memb_ptr = *(void **)(*(char **)sptr + elm->memb_offset);
 		if(memb_ptr == 0)

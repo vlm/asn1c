@@ -112,31 +112,52 @@ SEQUENCE_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
 	int edx, rec_size;
 	asn_dec_rval_t rval;	/* Return code */
+	asn_struct_ctx_t *ctx;
+	asn_SET_OF_specifics_t *specs;
 
-	if (size < 4)
+	specs = (asn_SET_OF_specifics_t *)td->specifics;
+
+	if (!list) {
+		list = *sptr = CALLOC(1, specs->struct_size);
+		if(list == 0) {
+			RETURN(RC_FAIL);
+		}
+	}
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)list + specs->ctx_offset);
+	if (!ctx)
 		_ASN_DECODE_FAILED;
+
+	if (ctx->phase == 1)
+		goto phase1;
+	if (size < 4) {
+		RETURN(RC_WMORE);
+	}
 	MDER_INPUT_INT_U16(list->count, ptr);
 	ADVANCE(2);
 	MDER_INPUT_INT_U16(rec_size, ptr);
 	ADVANCE(2);
 
-	if (rec_size > size)
-		_ASN_DECODE_FAILED;
-
 	/* Allocate memory for the return type*/
 	if (list->array)
 		free(list->array);
-	list->size = rec_size * sizeof(*list->array);
+	list->size = list->count * sizeof(*list->array);
 	list->array = CALLOC(rec_size, sizeof(*list->array));
 	if (!list->array)
 		RETURN(RC_FAIL);
+	ctx->phase = 1;
 
-	for(edx = 0; edx < list->count; edx++) {
+phase1:
+
+	for(edx = ctx->context; edx < list->count; edx++) {
 		rval = elm->type->mder_decoder(opt_codec_ctx, elm->type,
 					&list->array[edx], ptr, size, constr);
-		if (rval.code != RC_OK)
-			RETURN(RC_FAIL);
 		ADVANCE(rval.consumed);
+		ctx->context = edx;
+		if (rval.code != RC_OK)
+			RETURN(rval.code);
 	}
 
 	RETURN(RC_OK);
