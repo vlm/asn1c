@@ -647,7 +647,10 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	oct = (constr) ? (mder_octet_str *)constr :
 		(mder_octet_str *)td->mder_constraints;
 
-	if (!(st && st->buf))
+	if (!st)
+		_ASN_ENCODE_FAILED;
+
+	if ((st->size > 0) && !st->buf)
 		_ASN_ENCODE_FAILED;
 
 	if (oct && (st->size != *oct))
