@@ -99,7 +99,7 @@ BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	bs->size = *rbs;
-	if (bs->size > size) {
+	if ((size_t)bs->size > size) {
 		rval.code = RC_WMORE;
 		rval.consumed = 0;
 		return rval;
