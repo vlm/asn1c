@@ -172,10 +172,8 @@ SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_TYPE_member_t *elm = td->elements;
 	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
+	int edx, computed_size = 0, encoding_size = 0;
 	asn_enc_rval_t er;
-	size_t computed_size = 0;
-	ssize_t encoding_size = 0;
-	int edx;
 
 	ASN_DEBUG("%s %s as SEQUENCE OF",
 		cb?"Encoding":"Estimating", td->name);
@@ -219,7 +217,7 @@ SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		encoding_size += er.encoded;
 	}
 
-	if(computed_size != (size_t)encoding_size)
+	if(computed_size != encoding_size)
 		goto cb_failed;
 
 	er.encoded = computed_size + 4; /* +4 count and length*/
