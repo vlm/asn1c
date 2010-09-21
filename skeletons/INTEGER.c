@@ -50,7 +50,7 @@ INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	INTEGER_t *integer = (INTEGER_t *)*sptr;
 	asn_dec_rval_t rval;
 	mder_restricted_int *rint;
-	int length;
+	unsigned int length;
 	union {
 		const void *constbuf;
 		void *nonconstbuf;
