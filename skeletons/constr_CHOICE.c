@@ -540,7 +540,7 @@ CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_TYPE_member_t *elm;	/* CHOICE element */
 	asn_enc_rval_t erval;
 	void *memb_ptr;
-	int present;
+	int present, tag;
 
 	if (!(sptr && specs->sorted_tags)) _ASN_ENCODE_FAILED;
 
@@ -582,7 +582,8 @@ CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	/* Encode element's tag */
-	MDER_OUTPUT_INT_U16_LENGTH(specs->sorted_tags[present-1]);
+	tag = specs->sorted_tags[present-1];
+	MDER_OUTPUT_INT_U16_LENGTH(tag);
 
 	/* Encode octets length */
 	MDER_OUTPUT_INT_U16_LENGTH(erval.encoded);

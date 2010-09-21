@@ -91,7 +91,7 @@ typedef void* asn_mder_contraints_t;
 #ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
 #define MDER_OUTPUT_INT_U16_LENGTH(_len) do	{		\
 	CHECK_UINT16(_len);					\
-        if (cb) {						\
+	if (cb) {						\
 		uint16_t aux = (uint16_t)(_len);		\
 		_ASN_CALLBACK((uint8_t *)&aux, 2);		\
         }							\
