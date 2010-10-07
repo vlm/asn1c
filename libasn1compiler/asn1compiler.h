@@ -67,7 +67,12 @@ enum asn1c_flags {
 	 */
 	A1C_PDU_ALL		= 0x2000,
 	A1C_PDU_AUTO		= 0x4000,
-	A1C_PDU_TYPE		= 0x8000
+	A1C_PDU_TYPE		= 0x8000,
+	/*
+	 * -fincludes-quoted
+	 * Avoid generating #include <foo>, generate "foo" instead.
+	 */
+	A1C_INCLUDES_QUOTED	= 0x10000
 };
 
 /*

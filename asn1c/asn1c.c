@@ -97,6 +97,8 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
 		} else if(strcmp(optarg, "no-include-deps") == 0) {
 			asn1_compiler_flags |= A1C_NO_INCLUDE_DEPS;
+		} else if(strcmp(optarg, "includes-quoted") == 0) {
+			asn1_compiler_flags |= A1C_INCLUDES_QUOTED;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
 		} else if(strcmp(optarg, "skeletons-copy") == 0) {
@@ -454,6 +456,7 @@ usage(const char *av0) {
 "  -fbless-SIZE          Allow SIZE() constraint for INTEGER etc (non-std.)\n"
 "  -fcompound-names      Disambiguate C's struct NAME's inside top-level types\n"
 "  -findirect-choice     Compile members of CHOICE as indirect pointers\n"
+"  -fincludes-quoted     Generate #includes in \"double\" instead of <angle> quotes\n"
 "  -fknown-extern-type=<name>    Pretend the specified type is known\n"
 "  -fnative-types        Use \"long\" instead of INTEGER_t whenever possible, etc.\n"
 "  -fno-constraints      Do not generate constraint checking code\n"

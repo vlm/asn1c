@@ -1,9 +1,11 @@
 
-0.9.23:	2010-Mar-10
+0.9.23:	2010-Oct-07
 
 	* GeneralizedTime fix for working with time offsets which are not
 	  representable in whole hours. (Severity: low; Security impact: low)
 	  Thanks to IP Fabrics, Inc.
+	* Added -fincludes-quoted to asn1c to generate #includes in "double"
+	  instead of <angle> quotes.
 
 0.9.22:	2008-Nov-19
 
