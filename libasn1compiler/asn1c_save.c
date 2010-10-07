@@ -6,6 +6,11 @@
 #include "asn1c_save.h"
 #include "asn1c_out.h"
 
+#define	HINCLUDE(s)						\
+	((arg->flags & A1C_INCLUDES_QUOTED)			\
+		? fprintf(fp_h, "#include \"%s\"\n", s)		\
+		: fprintf(fp_h, "#include <%s>\n", s))		\
+
 static int asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
 static int asn1c_print_streams(arg_t *arg);
 static int asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
@@ -240,7 +245,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		"#define\t_%s_H_\n"
 		"\n", header_id, header_id);
 
-	fprintf(fp_h, "\n#include <asn_application.h>\n");
+	fprintf(fp_h, "\n");
+	HINCLUDE("asn_application.h");
 
 #define	SAVE_STREAM(fp, idx, msg, actdep)	do {			\
 	if(TQ_FIRST(&(cs->destination[idx].chunks)) && *msg)		\
@@ -265,7 +271,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 
 	fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
 
-	fprintf(fp_c, "#include <asn_internal.h>\n\n");
+	HINCLUDE("asn_internal.h");
 	fprintf(fp_c, "#include \"%s.h\"\n\n", expr->Identifier);
 	if(arg->flags & A1C_NO_INCLUDE_DEPS)
 		SAVE_STREAM(fp_c, OT_POST_INCLUDE, "", 1);

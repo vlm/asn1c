@@ -25,6 +25,9 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 		if(start) {
 			start++;
 			end = strchr(start, '>');
+		} else if((start = strchr(data, '\"'))) {
+			start++;
+			end = strchr(start, '\"');
 		}
 		if(end) {
 			char *p = alloca((end - start) + 1);
