@@ -22,7 +22,6 @@ noinst_HEADERS = sys-common.h
 
 dist_man1_MANS = asn1c.1 unber.1 enber.1
 
-check_SCRIPTS = check-xxber.sh check-parsing.sh
+dist_check_SCRIPTS = check-xxber.sh check-parsing.sh
 TESTS = $(check_SCRIPTS)
-EXTRA_DIST = $(check_SCRIPTS)
 CLEANFILES = .check-xxber.*.tmp .check-parsing.*.tmp

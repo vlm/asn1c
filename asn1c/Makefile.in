@@ -40,8 +40,8 @@ host_triplet = @host@
 target_triplet = @target@
 bin_PROGRAMS = asn1c$(EXEEXT) unber$(EXEEXT) enber$(EXEEXT)
 subdir = asn1c
-DIST_COMMON = README $(dist_man1_MANS) $(noinst_HEADERS) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = README $(dist_check_SCRIPTS) $(dist_man1_MANS) \
+	$(noinst_HEADERS) $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -224,9 +224,8 @@ asn1c_LDADD = \
 
 noinst_HEADERS = sys-common.h
 dist_man1_MANS = asn1c.1 unber.1 enber.1
-check_SCRIPTS = check-xxber.sh check-parsing.sh
+dist_check_SCRIPTS = check-xxber.sh check-parsing.sh
 TESTS = $(check_SCRIPTS)
-EXTRA_DIST = $(check_SCRIPTS)
 CLEANFILES = .check-xxber.*.tmp .check-parsing.*.tmp
 all: all-recursive
 
@@ -633,7 +632,7 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-	$(MAKE) $(AM_MAKEFLAGS) $(check_SCRIPTS)
+	$(MAKE) $(AM_MAKEFLAGS) $(dist_check_SCRIPTS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-recursive
 all-am: Makefile $(PROGRAMS) $(MANS) $(HEADERS)

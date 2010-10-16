@@ -40,7 +40,8 @@ host_triplet = @host@
 target_triplet = @target@
 noinst_PROGRAMS = asn1c-suid-helper$(EXEEXT)
 subdir = asn1c/webcgi
-DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = README $(dist_noinst_SCRIPTS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -52,7 +53,7 @@ PROGRAMS = $(noinst_PROGRAMS)
 asn1c_suid_helper_SOURCES = asn1c-suid-helper.c
 asn1c_suid_helper_OBJECTS = asn1c-suid-helper.$(OBJEXT)
 asn1c_suid_helper_LDADD = $(LDADD)
-SCRIPTS = $(noinst_SCRIPTS)
+SCRIPTS = $(dist_noinst_SCRIPTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -184,8 +185,7 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-noinst_SCRIPTS = asn1c.cgi
-EXTRA_DIST = asn1c.cgi
+dist_noinst_SCRIPTS = asn1c.cgi
 all: all-am
 
 .SUFFIXES:
