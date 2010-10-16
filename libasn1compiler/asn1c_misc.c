@@ -261,9 +261,11 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	case TNF_INCLUDE:
 		return asn1c_make_identifier(
 			AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
-			0, stdname ? "<" : "\"",
+			0, ((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
+				? "\"" : "<"),
 			exprid ? exprid->Identifier : typename,
-			stdname ? ".h>" : ".h\"", 0);
+			((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
+				? ".h\"" : ".h>"), 0);
 	case TNF_SAFE:
 		return asn1c_make_identifier(0, exprid, typename, 0);
 	case TNF_CTYPE:	/* C type */
