@@ -31,6 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	UniversalString_decode_xer,	/* Convert from UTF-8 */
 	UniversalString_encode_xer,	/* Convert into UTF-8 */
 	OCTET_STRING_decode_uper,

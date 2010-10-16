@@ -28,6 +28,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	asn_generic_no_constraint,
 	NativeReal_decode_ber,
 	NativeReal_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	NativeReal_decode_xer,
 	NativeReal_encode_xer,
 	NativeReal_decode_uper,

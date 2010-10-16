@@ -24,6 +24,8 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
+	RELATIVE_OID_decode_mder,
+	RELATIVE_OID_encode_mder,
 	RELATIVE_OID_decode_xer,
 	RELATIVE_OID_encode_xer,
 	OCTET_STRING_decode_uper,
@@ -240,3 +242,19 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	return 0;
 }
 
+asn_enc_rval_t
+RELATIVE_OID_encode_mder(struct asn_TYPE_descriptor_s *td, void *sptr,
+		    asn_mder_contraints_t constr,
+		    asn_app_consume_bytes_f *consume_bytes_cb, void *app_key) {
+
+	_ASN_ENCODE_FAILED;
+}
+
+asn_dec_rval_t
+RELATIVE_OID_decode_mder(struct asn_codec_ctx_s *opt_codec_ctx,
+		struct asn_TYPE_descriptor_s *td,
+		void **struct_ptr, const void *buf_ptr, size_t size,
+		asn_mder_contraints_t constr) {
+
+	_ASN_DECODE_FAILED;
+}

@@ -163,6 +163,8 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	GeneralizedTime_constraint, /* Check validity of time */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	GeneralizedTime_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	OCTET_STRING_decode_xer_utf8,
 	GeneralizedTime_encode_xer,
 	OCTET_STRING_decode_uper,

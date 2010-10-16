@@ -1,5 +1,7 @@
 /*-
  * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -591,6 +593,118 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	_ASN_ENCODED_OK(erval);
 }
 
+/*
+ * The decoder of the SEQUENCE type.
+ */
+asn_dec_rval_t
+SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr,
+	const void *ptr, size_t size, asn_mder_contraints_t constr) {
+
+	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+
+	void *st = *sptr;	/* Target structure. */
+	asn_dec_rval_t rval;	/* Return code */
+	asn_struct_ctx_t *ctx;
+
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int edx;			/* SEQUENCE element's index */
+
+	ASN_DEBUG("Decoding %s as SEQUENCE", td->name);
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(st == 0) {
+		st = *sptr = CALLOC(1, specs->struct_size);
+		if(st == 0) {
+			RETURN(RC_FAIL);
+		}
+	}
+
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+	if (!ctx)
+		_ASN_DECODE_FAILED;
+
+	for(edx = ctx->context; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;
+		void **memb_ptr2;
+
+		if(elm->optional)
+			_ASN_DECODE_FAILED;
+
+		if(elm->flags & ATF_POINTER) {
+			/* Member is a pointer to another structure */
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+		} else {
+			/*
+			 * A pointer to a pointer
+			 * holding the start of the structure
+			 */
+			memb_ptr = (char *)st + elm->memb_offset;
+			memb_ptr2 = &memb_ptr;
+		}
+
+		rval = elm->type->mder_decoder(opt_codec_ctx, elm->type,
+				memb_ptr2, ptr, size, elm->mder_constraints);
+
+		consumed_myself += rval.consumed;
+		ctx->context = edx;
+
+		if (rval.code != RC_OK)
+			RETURN(rval.code);
+
+		ptr = ((const char *)ptr) + rval.consumed;
+		size -= rval.consumed;
+	}
+	RETURN(RC_OK);
+}
+
+/*
+ * The MDER encoder of the SEQUENCE type.
+ */
+asn_enc_rval_t
+SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
+	void *sptr, asn_mder_contraints_t constr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+
+	asn_enc_rval_t erval;
+	int edx;
+
+	ASN_DEBUG("%s %s as SEQUENCE",
+		cb?"Encoding":"Estimating", td->name);
+
+	erval.encoded = 0;
+
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		asn_enc_rval_t tmperval;
+		void *memb_ptr;
+
+		if(elm->optional)
+			_ASN_ENCODE_FAILED;
+
+		if (elm->flags & ATF_POINTER) {
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+			if(!memb_ptr) continue;
+		} else
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+
+		tmperval = elm->type->mder_encoder(elm->type, memb_ptr,
+			elm->mder_constraints,
+			cb, app_key);
+
+		if(tmperval.encoded == -1)
+			return tmperval;
+		erval.encoded += tmperval.encoded;
+	}
+
+	_ASN_ENCODED_OK(erval);
+}
 
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\

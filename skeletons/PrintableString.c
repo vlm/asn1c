@@ -19,7 +19,7 @@ static int _PrintableString_alphabet[256] = {
  0,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,	/*  abcdefghijklmno */
 64,65,66,67,68,69,70,71,72,73,74, 0, 0, 0, 0, 0,	/* pqrstuvwxyz      */
 };
-static int _PrintableString_code2value[74] = { 
+static int _PrintableString_code2value[74] = {
 32,39,40,41,43,44,45,46,47,48,49,50,51,52,53,54,
 55,56,57,58,61,63,65,66,67,68,69,70,71,72,73,74,
 75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,
@@ -55,6 +55,8 @@ asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	PrintableString_constraint,
 	OCTET_STRING_decode_ber,      /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
 	OCTET_STRING_decode_uper,

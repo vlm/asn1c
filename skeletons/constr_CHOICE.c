@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -38,6 +40,14 @@
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
+		consumed_myself += num;		\
+	} while(0)
+
+#undef	ADVANCE_MDER
+#define	ADVANCE_MDER(num_bytes)	do {		\
+		size_t num = num_bytes;		\
+		ptr = ((const char *)ptr) + num;\
+		size -= num;			\
 		consumed_myself += num;		\
 	} while(0)
 
@@ -442,6 +452,154 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	erval.encoded += computed_size;
 
 	return erval;
+}
+
+/*
+ * The MDER decoder of the CHOICE OF type.
+ */
+asn_dec_rval_t
+CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const void *ptr,
+	size_t size, asn_mder_contraints_t constr) {
+
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_dec_rval_t rval;
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	int *presentp, present_tag, i;
+	uint16_t comp_size;
+	asn_TYPE_member_t *elm;	/* CHOICE element */
+	void *memb_ptr;
+	asn_struct_ctx_t *ctx;
+
+	if (!*sptr) {
+		/* Alloc memory for the target structure */
+		*sptr = CALLOC(1, specs->struct_size);
+		if (!*sptr)
+			RETURN(RC_FAIL);
+	}
+
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)*sptr + specs->ctx_offset);
+	if (!ctx)
+		RETURN(RC_FAIL);
+	if (ctx->phase > 0)
+		goto phase1;
+
+	if (size < 2) {
+		RETURN(RC_WMORE);
+	}
+	MDER_INPUT_INT_U16(present_tag, ptr);
+	ADVANCE_MDER(2);
+
+	presentp = (int *)((*(char **)sptr) + specs->pres_offset);
+	for (i = 0; i < td->elements_count; i++) {
+		if (specs->sorted_tags[i] == present_tag) {
+			*presentp = i + 1;
+			break;
+		}
+	}
+	if(*presentp <= 0 || *presentp > td->elements_count)
+		RETURN(RC_FAIL);
+
+	ctx->ptr = presentp;
+	ctx->phase = 1;
+phase1:
+	if (ctx->phase > 1)
+		goto phase2;
+	if (size < 2) {
+		RETURN(RC_WMORE);
+	}
+	MDER_INPUT_INT_U16(comp_size, ptr);
+	ADVANCE_MDER(2);
+	ctx->phase = 2;
+
+phase2:
+	elm = &td->elements[*(int *)ctx->ptr - 1];
+	if(elm->flags & ATF_POINTER) {
+		memb_ptr = *(void **)(*(char **)sptr + elm->memb_offset);
+		if(memb_ptr == 0)
+			/* All elements are mandatory in MDER */
+			_ASN_DECODE_FAILED;
+	} else
+		memb_ptr = (void *)(*(char **)sptr + elm->memb_offset);
+	rval = elm->type->mder_decoder(opt_codec_ctx, elm->type, &memb_ptr, ptr,
+				       size, elm->mder_constraints);
+	consumed_myself += rval.consumed;
+	RETURN(rval.code);
+}
+/*
+ * The MDER encoder of the CHOICE type.
+ */
+asn_enc_rval_t
+CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+	asn_mder_contraints_t constr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elm;	/* CHOICE element */
+	asn_enc_rval_t erval;
+	void *memb_ptr;
+	int present, tag;
+
+	if (!(sptr && specs->sorted_tags)) _ASN_ENCODE_FAILED;
+
+	ASN_DEBUG("%s %s as CHOICE",
+		cb?"Encoding":"Estimating", td->name);
+
+	present = _fetch_present_idx(sptr,
+		specs->pres_offset, specs->pres_size);
+
+	/*
+	 * If the structure was not initialized, it cannot be encoded:
+	 * can't deduce what to encode in the choice type.
+	 */
+	if(present <= 0 || present > td->elements_count)
+		_ASN_ENCODE_FAILED;
+
+	/*
+	 * Seek over the present member of the structure.
+	 */
+	elm = &td->elements[present-1];
+	if(elm->flags & ATF_POINTER) {
+		memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+		if(memb_ptr == 0)
+			/* All elements are mandatory in MDER */
+			_ASN_ENCODE_FAILED;
+	} else
+		memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+
+	/* we need to pre-compute the member size */
+	erval = elm->type->mder_encoder(elm->type, memb_ptr,
+		elm->mder_constraints, 0, 0);
+
+	if(erval.encoded == -1)
+		return erval;
+
+	if(!cb) {
+		erval.encoded += 4; /* +4 tag and length*/
+		_ASN_ENCODED_OK(erval);
+	}
+
+	/* Encode element's tag */
+	tag = specs->sorted_tags[present-1];
+	MDER_OUTPUT_INT_U16_LENGTH(tag);
+
+	/* Encode octets length */
+	MDER_OUTPUT_INT_U16_LENGTH(erval.encoded);
+
+	/*
+	 * Encode the single underlying member.
+	 */
+	erval = elm->type->mder_encoder(elm->type, memb_ptr,
+		elm->mder_constraints, cb, app_key);
+	if(erval.encoded == -1)
+		return erval;
+
+	erval.encoded += 4;
+	return erval;
+cb_failed:
+	_ASN_ENCODE_FAILED;
 }
 
 ber_tlv_tag_t

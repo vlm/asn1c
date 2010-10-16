@@ -22,6 +22,8 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,		/* Implemented in terms of INTEGER */
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	INTEGER_decode_xer,	/* This is temporary! */
 	INTEGER_encode_xer,
 	ENUMERATED_decode_uper,	/* Unaligned PER decoder */

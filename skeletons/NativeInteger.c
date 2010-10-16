@@ -27,6 +27,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
+	NativeInteger_decode_mder,
+	NativeInteger_encode_mder,
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
@@ -38,7 +40,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	0,	/* No specifics */
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
 /*
@@ -126,6 +129,27 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	return rval;
 }
 
+#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+#define	_PREPARE_INTEGER_T(tmp,native) do {				\
+	tmp.buf = (uint8_t *)&native;					\
+	tmp.size = sizeof(native);					\
+} while(0)
+#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
+#define	_PREPARE_INTEGER_T(tmp,native) do {				\
+	/* set where should've been */					\
+	uint8_t buf[sizeof(native)];					\
+	uint8_t *p;							\
+									\
+	/* Prepare a fake INTEGER */					\
+	for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)	\
+		*p = (uint8_t)native;					\
+									\
+	tmp.buf = buf;							\
+	tmp.size = sizeof(buf);						\
+} while(0)
+#endif	/* WORDS_BIGENDIAN */
+
+
 /*
  * Encode the NativeInteger using the standard INTEGER type DER encoder.
  */
@@ -137,23 +161,8 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 	asn_enc_rval_t erval;
 	INTEGER_t tmp;
 
-#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+	_PREPARE_INTEGER_T(tmp, native);
 
-	tmp.buf = (uint8_t *)&native;
-	tmp.size = sizeof(native);
-
-#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
-	uint8_t buf[sizeof(native)];
-	uint8_t *p;
-
-	/* Prepare a fake INTEGER */
-	for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)
-		*p = (uint8_t)native;
-
-	tmp.buf = buf;
-	tmp.size = sizeof(buf);
-#endif	/* WORDS_BIGENDIAN */
-	
 	/* Encode fake INTEGER */
 	erval = INTEGER_encode_der(sd, &tmp, tag_mode, tag, cb, app_key);
 	if(erval.encoded == -1) {
@@ -161,6 +170,83 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 		erval.structure_ptr = ptr;
 	}
 	return erval;
+}
+
+/*
+ * Encode the NativeInteger using MDER encoder.
+ */
+asn_enc_rval_t
+NativeInteger_encode_mder(asn_TYPE_descriptor_t *sd, void *ptr,
+	asn_mder_contraints_t constr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	unsigned long native = *(unsigned long *)ptr;	/* Disable sign ext. */
+	asn_enc_rval_t erval;
+	INTEGER_t tmp;
+
+	_PREPARE_INTEGER_T(tmp,native);
+
+	/* Encode fake INTEGER */
+	erval = INTEGER_encode_mder(sd, &tmp, constr, cb, app_key);
+	if(erval.encoded == -1) {
+		assert(erval.structure_ptr == &tmp);
+		erval.structure_ptr = ptr;
+	}
+	return erval;
+}
+
+/*
+ * Decode INTEGER type.
+ */
+asn_dec_rval_t
+NativeInteger_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **nint_ptr,
+	const void *buf_ptr, size_t size, asn_mder_contraints_t constr) {
+
+	long *native = (long *)*nint_ptr;
+	asn_dec_rval_t rval;
+	mder_restricted_int *rint;
+	INTEGER_t *tmp = NULL;
+	long l;
+	int unsig;
+
+	rint = (constr) ? (mder_restricted_int *)constr :
+		(mder_restricted_int *)td->mder_constraints;
+	if (!rint || *rint == INT_INVALID) {
+		rval.code = RC_FAIL;
+		rval.consumed = 0;
+		return rval;
+	}
+
+
+	if(!native) {
+		native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
+		if(native == NULL) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	rval = INTEGER_decode_mder(opt_codec_ctx, td, (void **)&tmp,
+				   buf_ptr, size, constr);
+
+	if (rval.code != RC_OK){
+		return rval;
+	}
+
+	GET_INT_UNSIGNED(*rint, unsig);
+
+	if((unsig) ? asn_INTEGER2ulong(tmp, (unsigned long *)&l) :
+						asn_INTEGER2long(tmp, &l)) {
+		rval.code = RC_FAIL;
+		rval.consumed = 0;
+		return rval;
+	}
+
+	free(tmp);
+	*native = l;
+
+	return rval;
 }
 
 /*
@@ -182,7 +268,7 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	memset(&st, 0, sizeof(st));
-	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr, 
+	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr,
 		opt_mname, buf_ptr, size);
 	if(rval.code == RC_OK) {
 		long l;

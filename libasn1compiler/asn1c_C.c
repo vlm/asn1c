@@ -1,4 +1,12 @@
 /*
+ * Copyright (c) 2003 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
+ * All rights reserved.
+ * Redistribution and modifications are permitted subject to BSD license.
+ */
+
+/*
  * Don't look into this file. First, because it's a mess, and second, because
  * it's a brain of the compiler, and you don't wanna mess with brains do you? ;)
  */
@@ -42,8 +50,10 @@ static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, char *type);
 static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
+static int emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
+static int emit_MDER_tag2member_table(arg_t *arg, tag2el_t *tag2el, int tag2el_count);
 static int emit_include_dependencies(arg_t *arg);
 static asn1p_expr_t *terminal_structable(arg_t *arg, asn1p_expr_t *expr);
 static int expr_defined_recursively(arg_t *arg, asn1p_expr_t *expr);
@@ -924,6 +934,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	int all_tags_count;
 	enum tvm_compat tv_mode;
 	int *cmap = 0;
+	int genMder;
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -992,6 +1003,11 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
+	/*
+	 * Generate choice_ids for MDER coder/decoder
+	 */
+	genMder = emit_MDER_tag2member_table(arg, tag2el, tag2el_count);
+
 	OUT("static asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
@@ -1015,8 +1031,14 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 			MKID(expr), expr->_type_unique_index);
 		else OUT("0,\n");
 		if(C99_MODE) OUT(".ext_start = ");
-		OUT("%d\t/* Extensions start */\n",
+		OUT("%d,\t/* Extensions start */\n",
 			compute_extensions_start(expr));
+		if(C99_MODE) OUT(".sorted_tags = ");
+		if(genMder)
+			OUT("asn_MDER_tag2member_%s_table%d\n",
+				MKID(expr), expr->_type_unique_index);
+		else
+			OUT("0\t/* Invalid definition of choice type for MDER */\n");
 	);
 	OUT("};\n");
 
@@ -1238,6 +1260,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->print_struct   = asn_DEF_%s.print_struct;\n",   type_name);
 	OUT("td->ber_decoder    = asn_DEF_%s.ber_decoder;\n",    type_name);
 	OUT("td->der_encoder    = asn_DEF_%s.der_encoder;\n",    type_name);
+	OUT("td->mder_decoder   = asn_DEF_%s.mder_decoder;\n",   type_name);
+	OUT("td->mder_encoder   = asn_DEF_%s.mder_encoder;\n",   type_name);
 	OUT("td->xer_decoder    = asn_DEF_%s.xer_decoder;\n",    type_name);
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
 	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
@@ -1333,6 +1357,38 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 	p = MKID(expr);
 	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_enc_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_encode_mder(asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tvoid *structure, asn_mder_contraints_t constr,\n");
+	OUT("\tasn_app_consume_bytes_f *cb, void *app_key) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->mder_encoder(td, structure, constr, cb, app_key);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_dec_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_decode_mder(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tvoid **structure, const void *bufptr, size_t size,\n");
+	OUT("\tasn_mder_contraints_t constr) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->mder_decoder(opt_codec_ctx, td, structure, bufptr, size, constr);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
 	OUT("asn_dec_rval_t\n");
 	OUT("%s", p);
 	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
@@ -1410,6 +1466,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("asn_constr_check_f %s_constraint;\n", p);
 		OUT("ber_type_decoder_f %s_decode_ber;\n", p);
 		OUT("der_type_encoder_f %s_encode_der;\n", p);
+		OUT("mder_type_decoder_f %s_decode_mder;\n", p);
+		OUT("mder_type_encoder_f %s_encode_mder;\n", p);
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
 		if(arg->flags & A1C_GEN_PER) {
@@ -1681,6 +1739,68 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *
 	return 0;
 }
 
+static int
+emit_MDER_tag2member_table(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
+	asn1p_expr_t *expr = arg->expr;
+	uint16_t *stags;
+	int type, i;
+
+	if(!tag2el_count)
+		return 0;	/* No top level tags */
+
+	type = tag2el[0].el_tag.tag_mode; /* All tags should be equal to that */
+	if (type == TM_IMPLICIT)
+		return 0;
+
+	for(i = 1; i < tag2el_count; i++)
+		if (type != tag2el[i].el_tag.tag_mode)
+			return 0; /* Tags shall be explicit or implicit in MDER, not mixed */
+
+	stags = calloc(tag2el_count, sizeof(asn1c_integer_t));
+	if (!stags)
+		return 0;
+
+	for(i = 0; i < tag2el_count; i++) {
+		if (type != TM_EXPLICIT) {
+			/* Implicit tag */
+			if (((tag2el[i].el_no + 1) < 0) || ((tag2el[i].el_no + 1) > 65535)) {
+				/* Tag can't be encoded in an uint16_t */
+				free(stags);
+				return 0;
+			}
+			stags[tag2el[i].el_no] = (uint16_t)tag2el[i].el_no + 1;
+			continue;
+		}
+		/* Explicit tag */
+		if ((tag2el[i].el_tag.tag_value < 0) || (tag2el[i].el_tag.tag_value > 65535)) {
+			/* Tag can't be encoded in an uint16_t*/
+			free(stags);
+			return 0;
+		}
+		stags[tag2el[i].el_no] = (uint16_t)tag2el[i].el_tag.tag_value;
+	}
+
+	/* Check if value of tags are assigned sequentially */
+	if (type == TM_EXPLICIT)
+		for (i = 0; i < (tag2el_count - 1); i++)
+			if (stags[i] >= tag2el[i+1].el_tag.tag_value) {
+				/* Tags are not assigned sequentially */
+				free(stags);
+				return 0;
+			}
+	OUT("/* MDER Tags are %s */\n", (type == TM_EXPLICIT) ? "explicit" : "implicit");
+	OUT("static uint16_t asn_MDER_tag2member_%s_table%d[] = {",
+		MKID(expr), expr->_type_unique_index);
+
+	for(i = 0; i < tag2el_count; i++) {
+		OUT("%d%s", stags[i],
+			(i + 1 < tag2el_count) ? "," : "");
+	}
+	OUT("};\n");
+
+	free(stags);
+	return 1;
+}
 static enum tvm_compat
 emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_tags_count_r) {
 	struct asn1p_type_tag_s *tags = 0;	/* Effective tags */
@@ -2358,12 +2478,24 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	}
 	if(C99_MODE) OUT(".name = ");
 	if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member")) {
-		OUT("\"\"\n");
+		OUT("\"\",\n");
 	} else {
-		OUT("\"%s\"\n", expr->Identifier);
+		OUT("\"%s\",\n", expr->Identifier);
 	}
-	OUT("},\n");
+	if(C99_MODE) OUT(".mder_constraints = ");
+	if(expr->constraints)
+		OUT("&asn_MDER_memb_%s_constr_%d\n", MKID(expr),
+						expr->_type_unique_index);
+	else
+		OUT("0\t/* No MDER visible constraints */\n");
+
 	INDENT(-1);
+	OUT("},\n");
+
+	save_target = arg->target->target;
+	REDIR(OT_CODE);
+
+	REDIR(save_target);
 
 	if(!expr->constraints || (arg->flags & A1C_NO_CONSTRAINTS))
 		return 0;
@@ -2393,9 +2525,91 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	if(emit_member_PER_constraints(arg, expr, "memb"))
 		return -1;
 
+	emit_member_MDER_constraints(arg, expr, "memb");
+
 	REDIR(save_target);
 
 	return 0;
+}
+
+static int
+emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
+	asn1cnst_range_t *r_value;
+	asn1p_expr_type_e etype;
+	asn1p_constraint_t *ct;
+	char *p = MKID(expr);
+
+	etype = expr_get_type(arg, expr);
+	switch (etype) {
+	case ASN_BASIC_INTEGER:
+		OUT("\n");
+		OUT("static mder_restricted_int "
+			"asn_MDER_%s_%s_constr_%d = ",
+			pfx, p, expr->_type_unique_index);
+		if (!expr->combined_constraints) {
+			OUT("INT_INVALID;\n");
+			break;
+		}
+		ct = expr->combined_constraints;
+		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
+		if (r_value->left.value == 0) {
+			/* Unsigned Integer */
+			if (r_value->right.value == 255)
+				OUT("INT_U8;\n");
+			else if (r_value->right.value == 65535)
+				OUT("INT_U16;\n");
+			else if (r_value->right.value == 4294967295UL)
+				OUT("INT_U32;\n");
+			else
+				OUT("INT_INVALID;\n");
+			break;
+		}
+		/* Check signed integer */
+		if ((r_value->left.value == -128) && (r_value->right.value == 127))
+			OUT("INT_I8;\n");
+		else if ((r_value->left.value == -32768) && (r_value->right.value == 32767))
+			OUT("INT_I16;\n");
+		else if ((r_value->left.value == (-2147483647L - 1)) && (r_value->right.value == 2147483647L))
+			OUT("INT_I32;\n");
+		else
+			OUT("INT_INVALID;\n");
+		break;
+	case ASN_BASIC_BIT_STRING:
+		OUT("\n");
+		OUT("static mder_restricted_bit_str "
+			"asn_MDER_%s_%s_constr_%d = ",
+			pfx, p, expr->_type_unique_index);
+		if (!expr->combined_constraints) {
+			OUT("BITS_INVALID;\n");
+			break;
+		}
+		ct = expr->combined_constraints;
+		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+		if (r_value->left.value == 8)
+			OUT("BITS_8;\n");
+		else if (r_value->left.value == 16)
+			OUT("BITS_16;\n");
+		else if (r_value->left.value == 32)
+			OUT("BITS_32;\n");
+		else
+			OUT("BITS_INVALID;\n");
+		break;
+	case ASN_BASIC_OCTET_STRING:
+		if (!expr->combined_constraints)
+			return 0;
+		OUT("\n");
+		OUT("static mder_octet_str "
+			"asn_MDER_%s_%s_constr_%d = ",
+			pfx, p, expr->_type_unique_index);
+		ct = expr->combined_constraints;
+		r_value = asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE,0,0,0);
+		OUT("%d;\n", r_value->left.value);
+		break;
+	default:
+		return 0;
+	}
+	OUT("\n");
+	return 1;
 }
 
 /*
@@ -2404,13 +2618,15 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 static int
 emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
 	asn1p_expr_t *terminal;
-	int using_type_name = 0;
+	int using_type_name = 0, mder_constr;
 	char *p = MKID(expr);
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 
 	if(emit_member_PER_constraints(arg, expr, "type"))
 		return -1;
+
+	mder_constr = emit_member_MDER_constraints(arg, expr, "type");
 
 	if(HIDE_INNER_DEFS)
 		OUT("static /* Use -fall-defs-global to expose */\n");
@@ -2449,6 +2665,8 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		FUNCREF(constraint);
 		FUNCREF(decode_ber);
 		FUNCREF(encode_der);
+		FUNCREF(decode_mder);
+		FUNCREF(encode_mder);
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);
 		if(arg->flags & A1C_GEN_PER) {
@@ -2535,12 +2753,20 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 		switch(spec) {
 		case ETD_NO_SPECIFICS:
-			OUT("0\t/* No specifics */\n");
+			OUT("0, \t/* No specifics */\n");
 			break;
 		case ETD_HAS_SPECIFICS:
-			OUT("&asn_SPC_%s_specs_%d\t/* Additional specs */\n",
+			OUT("&asn_SPC_%s_specs_%d,\t/* Additional specs */\n",
 				p, expr->_type_unique_index);
 		}
+
+		/* MDER Contraints */
+		if (mder_constr)
+			OUT("&asn_MDER_type_%s_constr_%d\n",
+				p, expr->_type_unique_index);
+		else
+			OUT("0\t/* No MDER restricted type */\n");
+
 	INDENT(-1);
 	OUT("};\n");
 	OUT("\n");
@@ -2853,3 +3079,4 @@ static int compar_cameo(const void *ap, const void *bp) {
 	return 0;
 
 }
+

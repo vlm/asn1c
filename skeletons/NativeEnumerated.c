@@ -26,6 +26,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	NativeInteger_decode_xer,
 	NativeEnumerated_encode_xer,
 	NativeEnumerated_decode_uper,
@@ -37,7 +39,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	0,	/* No specifics */
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
 asn_enc_rval_t

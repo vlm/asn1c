@@ -20,6 +20,8 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,
 	BOOLEAN_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */

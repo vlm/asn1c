@@ -64,5 +64,7 @@ libasn1cskeletons_la_SOURCES = 				\
 	per_support.c per_support.h			\
 	xer_decoder.c xer_decoder.h			\
 	xer_encoder.c xer_encoder.h			\
-	xer_support.c xer_support.h
+	xer_support.c xer_support.h			\
+	mder_encoder.c mder_encoder.h			\
+	mder_decoder.c mder_decoder.h
 

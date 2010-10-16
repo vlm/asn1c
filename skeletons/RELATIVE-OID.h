@@ -6,6 +6,8 @@
 #define	_RELATIVE_OID_H_
 
 #include <OBJECT_IDENTIFIER.h>
+#include <mder_decoder.h>
+#include <mder_encoder.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,6 +21,8 @@ extern asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID;
 asn_struct_print_f RELATIVE_OID_print;
 xer_type_decoder_f RELATIVE_OID_decode_xer;
 xer_type_encoder_f RELATIVE_OID_encode_xer;
+mder_type_decoder_f RELATIVE_OID_decode_mder;
+mder_type_encoder_f RELATIVE_OID_encode_mder;
 
 /**********************************
  * Some handy conversion routines *
