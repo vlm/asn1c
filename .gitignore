@@ -1,0 +1,84 @@
+*.o
+*.la
+*.lo
+*.libs
+*.deps
+
+# /
+/autom4te.cache
+/config.h
+/config.log
+/config.cache
+/config.status
+/configure.lineno
+/local-configure.sh
+/libtool
+/stamp-h*
+/asn1c-*.tar.gz
+/asn1c.spec
+/Makefile
+
+# /asn1c/
+/asn1c/Makefile
+/asn1c/asn1c
+/asn1c/unber
+/asn1c/enber
+
+# /asn1c/tests/
+/asn1c/tests/Makefile
+/asn1c/tests/test-*
+
+# /asn1c/webcgi/
+/asn1c/webcgi/Makefile
+/asn1c/webcgi/asn1c-suid-helper
+
+# /doc/
+/doc/Makefile
+
+# /examples/
+/examples/Makefile
+/examples/*.asn1
+
+# /examples/*/
+/examples/*/*.c
+/examples/*/*.h
+/examples/*/*dump
+/examples/*/.tmp.*
+
+# /libasn1compiler/
+/libasn1compiler/Makefile
+/libasn1compiler/check_compiler
+
+# /libasn1fix/
+/libasn1fix/Makefile
+/libasn1fix/check_fixer
+
+# /libasn1parser/
+/libasn1parser/Makefile
+/libasn1parser/check_parser
+
+# /libasn1print/
+/libasn1print/Makefile
+
+# /skeletons/
+/skeletons/Makefile
+
+# /skeletons/standard-modules/
+/skeletons/standard-modules/Makefile
+
+# /skeletons/tests/
+/skeletons/tests/Makefile
+/skeletons/tests/check-OCTET_STRING
+/skeletons/tests/check-UTCTime
+/skeletons/tests/check-length
+/skeletons/tests/check-REAL
+/skeletons/tests/check-GeneralizedTime
+/skeletons/tests/check-UTF8String
+/skeletons/tests/check-PER
+/skeletons/tests/check-ber_tlv_tag
+/skeletons/tests/check-INTEGER
+/skeletons/tests/check-OIDs
+/skeletons/tests/check-XER
+
+# /tests/
+/tests/Makefile
