@@ -87,7 +87,7 @@ BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	rbs = (constr) ? (mder_restricted_bit_str *)constr :
 		(mder_restricted_bit_str *)td->mder_constraints;
 
-	if (!rbs || *rbs == INT_INVALID)
+	if (!rbs || *rbs == BITS_INVALID)
 		_ASN_DECODE_FAILED;
 
 	if(bs == NULL) {
