@@ -14,4 +14,5 @@ EXTRA_DIST =			\
 	data-119		\
 	data-126
 
-CLEANFILES = test-*
+clean-local:
+	rm -rf test-*
