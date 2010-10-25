@@ -570,6 +570,24 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	_ASN_ENCODED_OK(er);
 }
 
+asn_dec_rval_t
+SET_decode_mder(struct asn_codec_ctx_s *opt_codec_ctx,
+	struct asn_TYPE_descriptor_s *td,
+	void **struct_ptr, const void *buf_ptr, size_t size,
+	asn_mder_contraints_t constr) {
+
+        _ASN_DECODE_FAILED;
+}
+
+asn_enc_rval_t
+SET_encode_mder(struct asn_TYPE_descriptor_s *td, void *sptr,
+	asn_mder_contraints_t constr,
+	asn_app_consume_bytes_f *consume_bytes_cb, void *app_key) {
+
+	_ASN_ENCODE_FAILED;
+}
+
+
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\

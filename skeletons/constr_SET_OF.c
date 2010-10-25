@@ -462,8 +462,17 @@ SET_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **nint_ptr, const void *buf_ptr,
 	size_t size, asn_mder_contraints_t constr) {
 
-	printf("TODO: Implement decode of SET_OF\n");
+	ASN_DEBUG("TODO: Implement decode of SET_OF");
 	_ASN_DECODE_FAILED;
+}
+
+asn_enc_rval_t
+SET_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+	int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t er;
+
+	_ASN_ENCODE_FAILED;
 }
 
 #undef	XER_ADVANCE
