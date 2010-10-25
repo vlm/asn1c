@@ -179,7 +179,6 @@ EXTRA_DIST = \
 	data-119		\
 	data-126
 
-CLEANFILES = test-*
 all: all-am
 
 .SUFFIXES:
@@ -329,9 +328,6 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	$(MAKE) $(AM_MAKEFLAGS) \
-	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
-	  dist-hook
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(dist_check_SCRIPTS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
@@ -355,7 +351,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -365,7 +360,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libtool clean-local mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
@@ -410,7 +405,7 @@ ps-am:
 uninstall-am: uninstall-info-am
 
 .PHONY: all all-am check check-TESTS check-am clean clean-generic \
-	clean-libtool dist-hook distclean distclean-generic \
+	clean-libtool clean-local distclean distclean-generic \
 	distclean-libtool distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-exec \
 	install-exec-am install-info install-info-am install-man \
@@ -420,8 +415,8 @@ uninstall-am: uninstall-info-am
 	uninstall uninstall-am uninstall-info-am
 
 
-dist-hook:
-	rm -rf `find $(distdir) -name .svn`
+clean-local:
+	rm -rf test-*
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

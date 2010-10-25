@@ -14,7 +14,5 @@ EXTRA_DIST =			\
 	data-119		\
 	data-126
 
-dist-hook:
-	rm -rf `find $(distdir) -name .svn`
-
-CLEANFILES = test-*
+clean-local:
+	rm -rf test-*
