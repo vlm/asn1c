@@ -106,7 +106,9 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	if(rv.code == RC_OK) {
 		/* Check padding validity */
 		padding = spd.nbits - spd.nboff;
-		if(padding < 8 && per_get_few_bits(&spd, padding) == 0) {
+                if (((rv.consumed == 0 && padding == 8)	/* X.691#10.1.3 */
+			|| padding < 8) &&
+                    per_get_few_bits(&spd, padding) == 0) {
 			/* Everything is cool */
 			FREEMEM(buf);
 			return rv;
