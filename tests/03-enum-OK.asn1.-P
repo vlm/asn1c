@@ -1,0 +1,798 @@
+
+/*** <<< INCLUDES [Enum1] >>> ***/
+
+#include <ENUMERATED.h>
+
+/*** <<< DEPS [Enum1] >>> ***/
+
+typedef enum Enum1 {
+	Enum1_red	= 0,
+	Enum1_green	= 1,
+	Enum1_blue	= 4,
+	Enum1_alpha	= 5
+	/*
+	 * Enumeration is extensible
+	 */
+} e_Enum1;
+
+/*** <<< TYPE-DECLS [Enum1] >>> ***/
+
+typedef ENUMERATED_t	 Enum1_t;
+
+/*** <<< FUNC-DECLS [Enum1] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Enum1;
+asn_struct_free_f Enum1_free;
+asn_struct_print_f Enum1_print;
+asn_constr_check_f Enum1_constraint;
+ber_type_decoder_f Enum1_decode_ber;
+der_type_encoder_f Enum1_encode_der;
+xer_type_decoder_f Enum1_decode_xer;
+xer_type_encoder_f Enum1_encode_xer;
+
+/*** <<< CODE [Enum1] >>> ***/
+
+int
+Enum1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using ENUMERATED,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
+	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
+	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
+	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
+	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
+	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
+	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
+	td->elements       = asn_DEF_ENUMERATED.elements;
+	td->elements_count = asn_DEF_ENUMERATED.elements_count;
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+}
+
+void
+Enum1_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Enum1_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum1_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Enum1_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum1_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Enum1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Enum1] >>> ***/
+
+static asn_INTEGER_enum_map_t asn_MAP_Enum1_value2enum_1[] = {
+	{ 0,	3,	"red" },
+	{ 1,	5,	"green" },
+	{ 4,	4,	"blue" },
+	{ 5,	5,	"alpha" }
+	/* This list is extensible */
+};
+static unsigned int asn_MAP_Enum1_enum2value_1[] = {
+	3,	/* alpha(5) */
+	2,	/* blue(4) */
+	1,	/* green(1) */
+	0	/* red(0) */
+	/* This list is extensible */
+};
+static asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
+	asn_MAP_Enum1_value2enum_1,	/* "tag" => N; sorted by tag */
+	asn_MAP_Enum1_enum2value_1,	/* N => "tag"; sorted by N */
+	4,	/* Number of elements in the maps */
+	5,	/* Extensions before this member */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
+};
+static ber_tlv_tag_t asn_DEF_Enum1_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Enum1 = {
+	"Enum1",
+	"Enum1",
+	Enum1_free,
+	Enum1_print,
+	Enum1_constraint,
+	Enum1_decode_ber,
+	Enum1_encode_der,
+	Enum1_decode_xer,
+	Enum1_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Enum1_tags_1,
+	sizeof(asn_DEF_Enum1_tags_1)
+		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
+	asn_DEF_Enum1_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Enum1_tags_1)
+		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_Enum1_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Enum2] >>> ***/
+
+#include <ENUMERATED.h>
+
+/*** <<< DEPS [Enum2] >>> ***/
+
+typedef enum Enum2 {
+	Enum2_red	= 0,
+	Enum2_green	= 1,
+	Enum2_blue	= 45,
+	Enum2_orange	= 23,
+	Enum2_alpha	= 46,
+	/*
+	 * Enumeration is extensible
+	 */
+	Enum2_beta	= 12,
+	Enum2_gamma	= 103
+} e_Enum2;
+
+/*** <<< TYPE-DECLS [Enum2] >>> ***/
+
+typedef ENUMERATED_t	 Enum2_t;
+
+/*** <<< FUNC-DECLS [Enum2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Enum2;
+asn_struct_free_f Enum2_free;
+asn_struct_print_f Enum2_print;
+asn_constr_check_f Enum2_constraint;
+ber_type_decoder_f Enum2_decode_ber;
+der_type_encoder_f Enum2_encode_der;
+xer_type_decoder_f Enum2_decode_xer;
+xer_type_encoder_f Enum2_encode_xer;
+
+/*** <<< CODE [Enum2] >>> ***/
+
+int
+Enum2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using ENUMERATED,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Enum2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
+	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
+	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
+	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
+	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
+	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
+	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
+	td->elements       = asn_DEF_ENUMERATED.elements;
+	td->elements_count = asn_DEF_ENUMERATED.elements_count;
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+}
+
+void
+Enum2_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Enum2_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Enum2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum2_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Enum2_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Enum2_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum2_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum2_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Enum2_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Enum2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum2_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Enum2] >>> ***/
+
+static asn_INTEGER_enum_map_t asn_MAP_Enum2_value2enum_1[] = {
+	{ 0,	3,	"red" },
+	{ 1,	5,	"green" },
+	{ 12,	4,	"beta" },
+	{ 23,	6,	"orange" },
+	{ 45,	4,	"blue" },
+	{ 46,	5,	"alpha" },
+	{ 103,	5,	"gamma" }
+	/* This list is extensible */
+};
+static unsigned int asn_MAP_Enum2_enum2value_1[] = {
+	5,	/* alpha(46) */
+	2,	/* beta(12) */
+	4,	/* blue(45) */
+	6,	/* gamma(103) */
+	1,	/* green(1) */
+	3,	/* orange(23) */
+	0	/* red(0) */
+	/* This list is extensible */
+};
+static asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
+	asn_MAP_Enum2_value2enum_1,	/* "tag" => N; sorted by tag */
+	asn_MAP_Enum2_enum2value_1,	/* N => "tag"; sorted by N */
+	7,	/* Number of elements in the maps */
+	6,	/* Extensions before this member */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
+};
+static ber_tlv_tag_t asn_DEF_Enum2_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Enum2 = {
+	"Enum2",
+	"Enum2",
+	Enum2_free,
+	Enum2_print,
+	Enum2_constraint,
+	Enum2_decode_ber,
+	Enum2_encode_der,
+	Enum2_decode_xer,
+	Enum2_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Enum2_tags_1,
+	sizeof(asn_DEF_Enum2_tags_1)
+		/sizeof(asn_DEF_Enum2_tags_1[0]), /* 1 */
+	asn_DEF_Enum2_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Enum2_tags_1)
+		/sizeof(asn_DEF_Enum2_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_Enum2_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Enum3] >>> ***/
+
+#include <ENUMERATED.h>
+
+/*** <<< DEPS [Enum3] >>> ***/
+
+typedef enum Enum3 {
+	Enum3_a	= 0,
+	Enum3_b	= 3,
+	/*
+	 * Enumeration is extensible
+	 */
+	Enum3_c	= 1
+} e_Enum3;
+
+/*** <<< TYPE-DECLS [Enum3] >>> ***/
+
+typedef ENUMERATED_t	 Enum3_t;
+
+/*** <<< FUNC-DECLS [Enum3] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Enum3;
+asn_struct_free_f Enum3_free;
+asn_struct_print_f Enum3_print;
+asn_constr_check_f Enum3_constraint;
+ber_type_decoder_f Enum3_decode_ber;
+der_type_encoder_f Enum3_encode_der;
+xer_type_decoder_f Enum3_decode_xer;
+xer_type_encoder_f Enum3_encode_xer;
+
+/*** <<< CODE [Enum3] >>> ***/
+
+int
+Enum3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using ENUMERATED,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Enum3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
+	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
+	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
+	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
+	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
+	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
+	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
+	td->elements       = asn_DEF_ENUMERATED.elements;
+	td->elements_count = asn_DEF_ENUMERATED.elements_count;
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+}
+
+void
+Enum3_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Enum3_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Enum3_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum3_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum3_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Enum3_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Enum3_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum3_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum3_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Enum3_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Enum3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum3_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Enum3] >>> ***/
+
+static asn_INTEGER_enum_map_t asn_MAP_Enum3_value2enum_1[] = {
+	{ 0,	1,	"a" },
+	{ 1,	1,	"c" },
+	{ 3,	1,	"b" }
+	/* This list is extensible */
+};
+static unsigned int asn_MAP_Enum3_enum2value_1[] = {
+	0,	/* a(0) */
+	2,	/* b(3) */
+	1	/* c(1) */
+	/* This list is extensible */
+};
+static asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
+	asn_MAP_Enum3_value2enum_1,	/* "tag" => N; sorted by tag */
+	asn_MAP_Enum3_enum2value_1,	/* N => "tag"; sorted by N */
+	3,	/* Number of elements in the maps */
+	3,	/* Extensions before this member */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
+};
+static ber_tlv_tag_t asn_DEF_Enum3_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Enum3 = {
+	"Enum3",
+	"Enum3",
+	Enum3_free,
+	Enum3_print,
+	Enum3_constraint,
+	Enum3_decode_ber,
+	Enum3_encode_der,
+	Enum3_decode_xer,
+	Enum3_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Enum3_tags_1,
+	sizeof(asn_DEF_Enum3_tags_1)
+		/sizeof(asn_DEF_Enum3_tags_1[0]), /* 1 */
+	asn_DEF_Enum3_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Enum3_tags_1)
+		/sizeof(asn_DEF_Enum3_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_Enum3_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Enum4] >>> ***/
+
+#include <ENUMERATED.h>
+
+/*** <<< DEPS [Enum4] >>> ***/
+
+typedef enum Enum4 {
+	Enum4_a	= 0,
+	Enum4_b	= 1,
+	/*
+	 * Enumeration is extensible
+	 */
+	Enum4_c	= 3,
+	Enum4_d	= 4
+} e_Enum4;
+
+/*** <<< TYPE-DECLS [Enum4] >>> ***/
+
+typedef ENUMERATED_t	 Enum4_t;
+
+/*** <<< FUNC-DECLS [Enum4] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Enum4;
+asn_struct_free_f Enum4_free;
+asn_struct_print_f Enum4_print;
+asn_constr_check_f Enum4_constraint;
+ber_type_decoder_f Enum4_decode_ber;
+der_type_encoder_f Enum4_encode_der;
+xer_type_decoder_f Enum4_decode_xer;
+xer_type_encoder_f Enum4_encode_xer;
+
+/*** <<< CODE [Enum4] >>> ***/
+
+int
+Enum4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using ENUMERATED,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Enum4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
+	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
+	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
+	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
+	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
+	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
+	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
+	td->elements       = asn_DEF_ENUMERATED.elements;
+	td->elements_count = asn_DEF_ENUMERATED.elements_count;
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+}
+
+void
+Enum4_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Enum4_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Enum4_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum4_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum4_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Enum4_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Enum4_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum4_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum4_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Enum4_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Enum4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum4_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Enum4] >>> ***/
+
+static asn_INTEGER_enum_map_t asn_MAP_Enum4_value2enum_1[] = {
+	{ 0,	1,	"a" },
+	{ 1,	1,	"b" },
+	{ 3,	1,	"c" },
+	{ 4,	1,	"d" }
+	/* This list is extensible */
+};
+static unsigned int asn_MAP_Enum4_enum2value_1[] = {
+	0,	/* a(0) */
+	1,	/* b(1) */
+	2,	/* c(3) */
+	3	/* d(4) */
+	/* This list is extensible */
+};
+static asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
+	asn_MAP_Enum4_value2enum_1,	/* "tag" => N; sorted by tag */
+	asn_MAP_Enum4_enum2value_1,	/* N => "tag"; sorted by N */
+	4,	/* Number of elements in the maps */
+	3,	/* Extensions before this member */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
+};
+static ber_tlv_tag_t asn_DEF_Enum4_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Enum4 = {
+	"Enum4",
+	"Enum4",
+	Enum4_free,
+	Enum4_print,
+	Enum4_constraint,
+	Enum4_decode_ber,
+	Enum4_encode_der,
+	Enum4_decode_xer,
+	Enum4_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Enum4_tags_1,
+	sizeof(asn_DEF_Enum4_tags_1)
+		/sizeof(asn_DEF_Enum4_tags_1[0]), /* 1 */
+	asn_DEF_Enum4_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Enum4_tags_1)
+		/sizeof(asn_DEF_Enum4_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_Enum4_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Enum5] >>> ***/
+
+#include <ENUMERATED.h>
+
+/*** <<< DEPS [Enum5] >>> ***/
+
+typedef enum Enum5 {
+	Enum5_a	= 0,
+	Enum5_z	= 25,
+	/*
+	 * Enumeration is extensible
+	 */
+	Enum5_d	= 26
+} e_Enum5;
+
+/*** <<< TYPE-DECLS [Enum5] >>> ***/
+
+typedef ENUMERATED_t	 Enum5_t;
+
+/*** <<< FUNC-DECLS [Enum5] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Enum5;
+asn_struct_free_f Enum5_free;
+asn_struct_print_f Enum5_print;
+asn_constr_check_f Enum5_constraint;
+ber_type_decoder_f Enum5_decode_ber;
+der_type_encoder_f Enum5_encode_der;
+xer_type_decoder_f Enum5_decode_xer;
+xer_type_encoder_f Enum5_encode_xer;
+
+/*** <<< CODE [Enum5] >>> ***/
+
+int
+Enum5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	/* Replace with underlying type checker */
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using ENUMERATED,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+Enum5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
+	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
+	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
+	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
+	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
+	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
+	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
+	td->elements       = asn_DEF_ENUMERATED.elements;
+	td->elements_count = asn_DEF_ENUMERATED.elements_count;
+     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+}
+
+void
+Enum5_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	Enum5_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+Enum5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum5_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	Enum5_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+Enum5_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum5_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+Enum5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	Enum5_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+Enum5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	Enum5_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Enum5] >>> ***/
+
+static asn_INTEGER_enum_map_t asn_MAP_Enum5_value2enum_1[] = {
+	{ 0,	1,	"a" },
+	{ 25,	1,	"z" },
+	{ 26,	1,	"d" }
+	/* This list is extensible */
+};
+static unsigned int asn_MAP_Enum5_enum2value_1[] = {
+	0,	/* a(0) */
+	2,	/* d(26) */
+	1	/* z(25) */
+	/* This list is extensible */
+};
+static asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
+	asn_MAP_Enum5_value2enum_1,	/* "tag" => N; sorted by tag */
+	asn_MAP_Enum5_enum2value_1,	/* N => "tag"; sorted by N */
+	3,	/* Number of elements in the maps */
+	3,	/* Extensions before this member */
+	1,	/* Strict enumeration */
+	0,	/* Native long size */
+	0
+};
+static ber_tlv_tag_t asn_DEF_Enum5_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Enum5 = {
+	"Enum5",
+	"Enum5",
+	Enum5_free,
+	Enum5_print,
+	Enum5_constraint,
+	Enum5_decode_ber,
+	Enum5_encode_der,
+	Enum5_decode_xer,
+	Enum5_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Enum5_tags_1,
+	sizeof(asn_DEF_Enum5_tags_1)
+		/sizeof(asn_DEF_Enum5_tags_1[0]), /* 1 */
+	asn_DEF_Enum5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Enum5_tags_1)
+		/sizeof(asn_DEF_Enum5_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_Enum5_specs_1	/* Additional specs */
+};
+

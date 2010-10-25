@@ -7,6 +7,7 @@
 	* Added -fincludes-quoted to asn1c to generate #includes in "double"
 	  instead of <angle> quotes.
 	* PER encoding correctness fix. Reported by Grzegorz Aksamit.
+	* ENUMERATED extension values check relaxed. Reported by Gabriel Burca.
 
 0.9.22:	2008-Nov-19
 

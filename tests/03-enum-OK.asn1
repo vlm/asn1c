@@ -19,4 +19,19 @@ BEGIN
 		... -- extensible --
 		}
 
+	Enum2 ::= ENUMERATED
+		{ red,	-- will be 0 --
+		green,	-- will be 1 --
+		blue(45),
+		orange(23),	-- Does not have to be ordered --
+		alpha,
+		..., -- extensible --
+		beta(12),	-- May be less than the max value in the root --
+		gamma(103)	-- Must be ordered --
+		}
+
+	Enum3 ::= ENUMERATED { a, b(3), ..., c(1) }
+	Enum4 ::= ENUMERATED { a, b, ..., c(3), d }
+	Enum5 ::= ENUMERATED { a, z(25), ..., d }
+
 END
