@@ -307,7 +307,7 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	 */
 	buf = po->buffer;
 	omsk = ~((1 << (8 - po->nboff)) - 1);
-	off = (po->nboff += obits);
+	off = (po->nboff + obits);
 
 	/* Clear data of debris before meaningful bits */
 	bits &= (((uint32_t)1 << obits) - 1);
@@ -317,18 +317,22 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 		po->nboff - obits, off, buf[0], omsk&0xff, buf[0] & omsk);
 
 	if(off <= 8)	/* Completely within 1 byte */
+		po->nboff = off,
 		bits <<= (8 - off),
 		buf[0] = (buf[0] & omsk) | bits;
 	else if(off <= 16)
+		po->nboff = off,
 		bits <<= (16 - off),
 		buf[0] = (buf[0] & omsk) | (bits >> 8),
 		buf[1] = bits;
 	else if(off <= 24)
+		po->nboff = off,
 		bits <<= (24 - off),
 		buf[0] = (buf[0] & omsk) | (bits >> 16),
 		buf[1] = bits >> 8,
 		buf[2] = bits;
 	else if(off <= 31)
+		po->nboff = off,
 		bits <<= (32 - off),
 		buf[0] = (buf[0] & omsk) | (bits >> 24),
 		buf[1] = bits >> 16,
@@ -336,7 +340,7 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 		buf[3] = bits;
 	else {
 		ASN_DEBUG("->[PER out split %d]", obits);
-		per_put_few_bits(po, bits >> 8, 24);
+		per_put_few_bits(po, bits >> (obits - 24), 24);
 		per_put_few_bits(po, bits, obits - 24);
 		ASN_DEBUG("<-[PER out split %d]", obits);
 	}

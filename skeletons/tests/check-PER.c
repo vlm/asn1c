@@ -213,12 +213,82 @@ check_per_encoding() {
 	assert(po.tmpspace[5] == 0xff);
 	assert(po.tmpspace[6] == 0xfe);
 
+}
 
+static void
+check_per_encoding_sweep_with(uint8_t buf[], int already_bits, int add_bits) {
+	size_t buf_size = 8;
+	asn_per_data_t pos;
+	asn_per_outp_t out;
+	int32_t d_already;
+	int32_t d_add;
+	int32_t d_left;
+	int left_bits;
+	int i;
+
+	memset(&pos, 0, sizeof(pos));
+	pos.buffer = buf;
+	pos.nboff = 0;
+	pos.nbits = buf_size * 8;
+
+	memset(&out, 0, sizeof(out));
+	out.buffer = out.tmpspace;
+	out.nbits = 8 * sizeof(out.tmpspace);
+	assert(sizeof(out.tmpspace) >= buf_size);
+	memcpy(out.buffer, buf, buf_size);
+
+	d_already = per_get_few_bits(&pos, already_bits);
+	d_add = per_get_few_bits(&pos, add_bits);
+
+	per_put_few_bits(&out, d_already, already_bits);
+	per_put_few_bits(&out, d_add, add_bits);
+	if(out.nboff % 8) {
+		left_bits = 8 - (out.nboff % 8);
+		d_left = per_get_few_bits(&pos, left_bits);
+	} else {
+		left_bits = 0;
+		d_left = 0;
+	}
+	per_put_few_bits(&out, d_left, left_bits);
+	assert(0 == (out.nboff % 8));
+
+	if(0 != memcmp(out.tmpspace, buf, buf_size)) {
+		printf("IN: ");
+		for(i = 0; i < buf_size; i++)
+			printf(" %02x", buf[i]);
+		printf("\nOUT:");
+		for(i = 0; i < buf_size; i++)
+			printf(" %02x", out.tmpspace[i]);
+		printf(" (out{nboff=%d,left=%d,%02x})\n", (int)out.nboff, left_bits, (int)d_left);
+		assert(0 == memcmp(out.tmpspace, buf, buf_size));
+	}
+}
+
+static void
+check_per_encoding_sweep() {
+	uint8_t buf[3][8] = {
+		{ 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA },
+		{ 0xB7, 0x19, 0x2F, 0xEE, 0xAD, 0x11, 0xAA, 0x55 },
+		{ 0xEE, 0xAD, 0x11, 0xAA, 0x55, 0xB7, 0x19, 0x2F }
+	};
+	int already_bits;
+	int add_bits;
+	int buf_idx;
+
+	for(buf_idx = 0; buf_idx < 3; buf_idx++) {
+	 for(already_bits = 0; already_bits < 24; already_bits++) {
+	  for(add_bits = 0; add_bits <= 31; add_bits++) {
+	   /*fprintf(stderr, "PER %d += %d\n", already_bits, add_bits);*/
+	   check_per_encoding_sweep_with(buf[buf_idx], already_bits, add_bits);
+	  }
+	 }
+	}
 }
 
 int
 main() {
 	check_per_decoding();
 	check_per_encoding();
+	check_per_encoding_sweep();
 	return 0;
 }
