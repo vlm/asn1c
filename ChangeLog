@@ -6,7 +6,8 @@
 	  Thanks to IP Fabrics, Inc.
 	* Added -fincludes-quoted to asn1c to generate #includes in "double"
 	  instead of <angle> quotes.
-	* PER encoding correctness fix. Reported by Grzegorz Aksamit.
+	* PER encoding correctness fix. (Severity: high; Security impact: low)
+	  Reported by Grzegorz Aksamit.
 	* ENUMERATED extension values check relaxed. Reported by Gabriel Burca.
 
 0.9.22:	2008-Nov-19
