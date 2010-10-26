@@ -314,7 +314,7 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 
 	ASN_DEBUG("[PER out %d %u/%x (t=%d,o=%d) %x&%x=%x]", obits,
 		(int)bits, (int)bits,
-		po->nboff - obits, off, buf[0], omsk&0xff, buf[0] & omsk);
+		po->nboff, off, buf[0], omsk&0xff, buf[0] & omsk);
 
 	if(off <= 8)	/* Completely within 1 byte */
 		po->nboff = off,

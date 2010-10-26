@@ -38,6 +38,8 @@ uper_open_type_put(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints
 
 	for(bptr = buf, toGo = size; toGo;) {
 		ssize_t maySave = uper_put_length(po, toGo);
+		ASN_DEBUG("Prepending length %d to %s and allowing to save %d",
+			(int)size, td->name, (int)maySave);
 		if(maySave < 0) break;
 		if(per_put_many_bits(po, bptr, maySave * 8)) break;
 		bptr = (char *)bptr + maySave;
@@ -106,8 +108,9 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	if(rv.code == RC_OK) {
 		/* Check padding validity */
 		padding = spd.nbits - spd.nboff;
-                if (((rv.consumed == 0 && padding == 8)	/* X.691#10.1.3 */
-			|| padding < 8) &&
+                if ((padding < 8 ||
+		/* X.691#10.1.3 */
+		(spd.nboff == 0 && spd.nbits == 8 && spd.buffer == buf)) &&
                     per_get_few_bits(&spd, padding) == 0) {
 			/* Everything is cool */
 			FREEMEM(buf);
