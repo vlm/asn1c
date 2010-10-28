@@ -2612,6 +2612,26 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	return 1;
 }
 
+static int
+is_valid_mder_type(arg_t *arg, asn1p_expr_t *expr)
+{
+	asn1p_expr_type_e etype;
+
+	etype = expr_get_type(arg, expr);
+	switch (etype) {
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_BIT_STRING:
+	case ASN_BASIC_OCTET_STRING:
+	case ASN_CONSTR_SEQUENCE:
+	case ASN_CONSTR_SEQUENCE_OF:
+	case ASN_CONSTR_CHOICE:
+	case ASN_TYPE_ANY:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 /*
  * Generate "asn_DEF_XXX" type definition.
  */
@@ -2660,13 +2680,20 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	OUT("_" #foo ",\n");				\
 } while(0)
 
+#define MDER_FUNCREF(foo)	do {			\
+	if(is_valid_mder_type(arg, expr))		\
+		FUNCREF(foo);				\
+	else						\
+		OUT("NON_SUP_" #foo ",\n");		\
+} while(0)
+
 		FUNCREF(free);
 		FUNCREF(print);
 		FUNCREF(constraint);
 		FUNCREF(decode_ber);
 		FUNCREF(encode_der);
-		FUNCREF(decode_mder);
-		FUNCREF(encode_mder);
+		MDER_FUNCREF(decode_mder);
+		MDER_FUNCREF(encode_mder);
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);
 		if(arg->flags & A1C_GEN_PER) {
