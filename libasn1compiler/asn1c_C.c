@@ -2355,6 +2355,26 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 }
 
 static int
+is_valid_mder_type(arg_t *arg, asn1p_expr_t *expr)
+{
+	asn1p_expr_type_e etype;
+
+	etype = expr_get_type(arg, expr);
+	switch (etype) {
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_BIT_STRING:
+	case ASN_BASIC_OCTET_STRING:
+	case ASN_CONSTR_SEQUENCE:
+	case ASN_CONSTR_SEQUENCE_OF:
+	case ASN_CONSTR_CHOICE:
+	case ASN_TYPE_ANY:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	int save_target;
 	arg_t tmp_arg;
@@ -2483,7 +2503,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("\"%s\",\n", expr->Identifier);
 	}
 	if(C99_MODE) OUT(".mder_constraints = ");
-	if(expr->constraints)
+	if(expr->constraints && is_valid_mder_type(arg, expr))
 		OUT("&asn_MDER_memb_%s_constr_%d\n", MKID(expr),
 						expr->_type_unique_index);
 	else
@@ -2610,26 +2630,6 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	}
 	OUT("\n");
 	return 1;
-}
-
-static int
-is_valid_mder_type(arg_t *arg, asn1p_expr_t *expr)
-{
-	asn1p_expr_type_e etype;
-
-	etype = expr_get_type(arg, expr);
-	switch (etype) {
-	case ASN_BASIC_INTEGER:
-	case ASN_BASIC_BIT_STRING:
-	case ASN_BASIC_OCTET_STRING:
-	case ASN_CONSTR_SEQUENCE:
-	case ASN_CONSTR_SEQUENCE_OF:
-	case ASN_CONSTR_CHOICE:
-	case ASN_TYPE_ANY:
-		return 1;
-	default:
-		return 0;
-	}
 }
 
 /*
