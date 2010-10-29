@@ -50,8 +50,6 @@ asn_struct_print_f SET_print;
 asn_constr_check_f SET_constraint;
 ber_type_decoder_f SET_decode_ber;
 der_type_encoder_f SET_encode_der;
-mder_type_decoder_f SET_decode_mder;
-mder_type_encoder_f SET_encode_mder;
 xer_type_decoder_f SET_decode_xer;
 xer_type_encoder_f SET_encode_xer;
 per_type_decoder_f SET_decode_uper;
