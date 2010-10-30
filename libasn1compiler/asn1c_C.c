@@ -2125,17 +2125,33 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		if(fits_long && !expr->marker.default_value->value.v_integer)
 			expr->marker.flags &= ~EM_INDIRECT;
 		if(!out) {
+		  if( expr->marker.default_value->value.v_integer >0) {
 			OUT("asn_DFL_%d_set_%" PRIdASN
 				",\t/* DEFAULT %" PRIdASN " */\n",
 				expr->_type_unique_index,
 				expr->marker.default_value->value.v_integer,
 				expr->marker.default_value->value.v_integer);
-			return 1;
+		  }else {
+			OUT("asn_DFL_%d_set_minus_%" PRIdASN
+				",\t/* DEFAULT %" PRIdASN " */\n",
+				expr->_type_unique_index,
+				expr->marker.default_value->value.v_integer *-1,
+				expr->marker.default_value->value.v_integer);
+		}
+	         return 1;
+
 		}
 		REDIR(OT_STAT_DEFS);
-		OUT("static int asn_DFL_%d_set_%" PRIdASN "(int set_value, void **sptr) {\n",
+		if (  expr->marker.default_value->value.v_integer >0){
+		  
+		  OUT("static int asn_DFL_%d_set_%" PRIdASN "(int set_value, void **sptr) {\n",
 			expr->_type_unique_index,
 			expr->marker.default_value->value.v_integer);
+		} else {
+		  OUT("static int asn_DFL_%d_set_minus_%" PRIdASN "(int set_value, void **sptr) {\n",
+		      expr->_type_unique_index,
+		      expr->marker.default_value->value.v_integer *-1);
+		}
 		INDENT(+1);
 		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
 		OUT("\n");
