@@ -47,6 +47,11 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			}
 		}
 	}
+       if(need_to_generate_pdu_collection(arg)) {
+	  if(generate_pdu_collection_file(arg))
+	     return -1;
+	}
+
 
 	/*
 	 * Dump out the Makefile template and the rest of the support code.
@@ -132,8 +137,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 
 	if(need_to_generate_pdu_collection(arg)) {
 		fprintf(mkf, "ASN_CONVERTER_SOURCES+=pdu_collection.c\n");
-		if(generate_pdu_collection_file(arg))
-			return -1;
+		//PDU File already generated
 	}
 
 	fprintf(mkf, "\n\n"
