@@ -1227,7 +1227,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		asn1c_type_name(arg, expr, TNF_SAFE));
 	OUT(" * so here we adjust the DEF accordingly.\n");
 	OUT(" */\n");
-	OUT("static void\n");
+	if(HIDE_INNER_DEFS) OUT("static");
+	OUT("void\n");
 	OUT("%s_%d_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENT(+1);
