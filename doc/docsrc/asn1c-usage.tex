@@ -1,13 +1,19 @@
-%% LyX 1.6.7 created this file.  For more info, see http://www.lyx.org/.
-%% Do not edit unless you really know what you are doing.
-\documentclass[english]{book}
-\usepackage{mathptmx}
-\usepackage[T1]{fontenc}
-\usepackage[latin1]{inputenc}
+\documentclass[english,oneside,12pt]{book}
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+
+\usepackage[hmargin={1in,1in},vmargin={2in,2in}]{geometry}
+
+\defaultfontfeatures{Mapping=tex-text}
+\setmainfont{Myriad Pro}
+\setsansfont{Myriad Pro}
+\setmonofont{Consolas}
+
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\usepackage{array}
 \usepackage{longtable}
+\usepackage{booktabs}
 \usepackage{varioref}
 \usepackage{url}
 
@@ -34,14 +40,15 @@
 \lhead{\firstxmark}
 \rfoot{\lastxmark}
 \usepackage{color}
-\definecolor{gray40}{gray}{.4}
+\definecolor{linkred}{rgb}{0.8235,0.0863,0.1843}
 \definecolor{urlblue}{rgb}{0,0,.6}
 \usepackage[colorlinks=true,
-linkcolor={gray40},
+linkcolor={linkred},
 urlcolor={urlblue},
 pdfauthor={Lev Walkin},
 pdftitle={Using the Open Source ASN.1 Compiler},
-pdfkeywords={ASN.1,asn1c,compiler}
+pdfkeywords={ASN.1,asn1c,compiler},
+xetex
 ]{hyperref}
 %\fancyhf{}
 %\fancyhead[LE,RO]{\thepage}
@@ -81,15 +88,14 @@ and C++ target languages are supported, the latter is in upward compatibility
 mode.
 
 The compiler reads the specification and emits a series of target
-language structures (C's structs, unions, enums) describing the corresponding
+language structures (C structs, unions, enums) describing the corresponding
 ASN.1 types. The compiler also creates the code which allows automatic
 serialization and deserialization of these structures using several
-standardized encoding rules (BER, DER, XER).
+standardized encoding rules (BER, DER, XER, PER).
 
 For example, suppose the following ASN.1 module is given%
-\footnote{Please look into Part \vref{par:ASN.1-Basics} for a quick reference
-on how to understand the ASN.1 notation.%
-}:
+\footnote{Part \vref{par:ASN.1-Basics} provides a quick reference
+on the ASN.1 notation.}:
 \begin{lyxcode}
 RectangleTest~DEFINITIONS~::=
 
@@ -133,10 +139,9 @@ API).
 \section{Quick start with asn1c}
 
 After building and installing the compiler, the \emph{asn1c}%
-\footnote{The 1 symbol in asn\textbf{1}c is a digit, not an ''ell'' letter.%
+\footnote{The 1 symbol in asn\textbf{1}c is a digit, not an ``ell'' letter.%
 } command may be used to compile the ASN.1 module%
-\footnote{This is probably \textbf{not} what you want to try out right now --
-read through the rest of this chapter and check the Section \vref{sec:Command-line-options}
+\footnote{This is probably \textbf{not} what you want to try out right now. Read through the rest of this chapter and check the Section \vref{sec:Command-line-options}
 to find out about \textbf{-P} and \textbf{-R} options.%
 }:
 \begin{lyxcode}
@@ -150,7 +155,7 @@ asn1c~\emph{<module1.asn1>~<module2.asn1>~...}
 The compiler \textbf{-E} and \textbf{-EF} options are used for testing
 the parser and the semantic fixer, respectively. These options will
 instruct the compiler to dump out the parsed (and fixed, if \textbf{-F}
-is involved) ASN.1 specification as it was \textquotedbl{}understood\textquotedbl{}
+is involved) ASN.1 specification as it was ``understood''
 by the compiler. It might be useful to check whether a particular
 syntactic construction is properly supported by the compiler.
 \begin{lyxcode}
@@ -190,9 +195,9 @@ It is your responsibility to create .c file with the \emph{int main()}
 routine.
 
 In other words, after compiling the Rectangle module, you have the
-following set of files: \{ Makefile.am.sample, Rectangle.c, Rectangle.h,
-\textbf{\ldots{}} \}, where \textbf{''\ldots{}''} stands for the
-set of additional ''helper'' files created by the compiler. If you
+following set of files: \{~Makefile.am.sample, Rectangle.c, Rectangle.h,
+\textbf{\ldots{}} \}, where ``\textbf{\ldots{}}'' stands for the
+set of additional ``helper'' files created by the compiler. If you
 add a simple file with the \emph{int main()} routine, it would even
 be possible to compile everything with the single instruction:
 \begin{lyxcode}
@@ -206,94 +211,71 @@ Refer to the Chapter \vref{cha:Step-by-step-examples} for a sample
 
 The following table summarizes the asn1c command line options.
 
-\begin{longtable}{|l|p{3in}|}
-\hline 
+\renewcommand{\arraystretch}{1.33}
+\begin{longtable}{lp{4in}}
+\toprule
 \textbf{\small Overall Options} & \textbf{\small Description}\tabularnewline
-\hline
-\hline 
+\midrule
 {\small -E} & {\small Stop after the parsing stage and print the reconstructed ASN.1
 specification code to the standard output.}\tabularnewline
-\hline 
 {\small -F} & {\small Used together with -E, instructs the compiler to stop after
 the ASN.1 syntax tree fixing stage and dump the reconstructed ASN.1
 specification to the standard output.}\tabularnewline
-\hline 
 {\small -P} & {\small Dump the compiled output to the standard output instead of
-cre- ating the target language files on disk.}\tabularnewline
-\hline 
-{\small -R} & {\small Restrict the compiler to generate only the ASN.1 tables, omit-
-ting the usual support code.}\tabularnewline
-\hline 
+creating the target language files on disk.}\tabularnewline
+{\small -R} & {\small Restrict the compiler to generate only the ASN.1 tables, omitting the usual support code.}\tabularnewline
 {\small -S }\emph{\small <directory>} & {\small Use the specified directory with ASN.1 skeleton files.}\tabularnewline
-\hline 
 {\small -X} & {\small Generate the XML DTD for the specified ASN.1 modules.}\tabularnewline
-\hline
-\hline 
+\midrule\tabularnewline
 \textbf{\small Warning Options} & \textbf{\small Description}\tabularnewline
-\hline 
+\midrule
 {\small -Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\tabularnewline
-\hline 
 {\small -Wdebug-lexer} & {\small Enable lexer debugging during the ASN.1 parsing stage.}\tabularnewline
-\hline 
-{\small -Wdebug-fixer} & {\small{} Enable ASN.1 syntax  tree  fixer  debugging  during  the
+{\small -Wdebug-fixer} & {\small Enable ASN.1 syntax  tree  fixer  debugging  during  the
  fixing stage.}\tabularnewline
-\hline 
 {\small -Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\tabularnewline
-\hline
-\newpage
-\hline 
+\midrule\tabularnewline
 \textbf{\small Language Options} & \textbf{\small Description}\tabularnewline
-\hline 
+\midrule
 {\small -fbless-SIZE} & {\small Allow SIZE() constraint for INTEGER, ENUMERATED, and other
 types for which this constraint is normally prohibited by the standard.
 This is a violation of an ASN.1 standard and compiler may fail to
 produce the meaningful code.}\tabularnewline
-\hline 
 {\small -fcompound-names} & {\small Use complex names for C structures. Using complex names prevents
 name clashes in case the module reuses the same identifiers in multiple
 contexts.}\tabularnewline
-\hline 
 {\small -findirect-choice} & {\small When generating code for a CHOICE type, compile the CHOICE
 members as indirect pointers instead of declaring them inline. Consider
 using this option together with }\textbf{\small -fno-include-deps}{\small{}
 to prevent circular references. }\tabularnewline
-\hline 
 {\small -fknown-extern-type=}\emph{\small <name>} & {\small Pretend the specified type is known. The compiler will assume
 the target language source files for the given type have been provided
 manually. }\tabularnewline
-\hline 
 {\small -fnative-types} & {\small Use the native machine's data types (int, double) whenever
 possible, instead of the compound INTEGER\_t, ENUMERATED\_t and REAL\_t
 types. }\tabularnewline
-\hline 
 {\small -fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
 may produce a shorter executable.}\tabularnewline
-\hline 
 {\small -fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical
 dependencies.}\tabularnewline
-\hline 
 {\small -funnamed-unions} & {\small Enable  unnamed  unions  in the definitions of target language's
 structures.}\tabularnewline
-\hline 
 {\small -fskeletons-copy} & {\small Copy support files rather than symlink them.}\tabularnewline
-\hline
-\hline 
+\midrule\tabularnewline
 \textbf{\small Codecs Generation Options} & \textbf{\small Description}\tabularnewline
-\hline 
+\midrule
 {\small -gen-PER} & {\small Generate Packed Encoding Rules (PER) support code.}\tabularnewline
-\hline 
 {\small -pdu=}\emph{\small auto} & {\small Generate PDU tables by discovering Protocol Data Units automatically.}\tabularnewline
-\hline
-\hline 
+\midrule\tabularnewline
 \textbf{\small Output Options} & \textbf{\small Description}\tabularnewline
-\hline 
+\midrule
 {\small -print-constraints} & {\small When -EF are also specified, this option forces the compiler
 to explain its internal understanding of subtype constraints.}\tabularnewline
-\hline 
-{\small -print-lines} & {\small Generate \textquotedbl{}-- \#line\textquotedbl{} comments
+{\small -print-lines} & {\small Generate ``-{}- \#line'' comments
 in -E output.}\tabularnewline
-\hline
+\bottomrule
 \end{longtable}
+\renewcommand{\arraystretch}{1}
 
 
 \chapter{Using the ASN.1 Compiler}
@@ -318,9 +300,7 @@ Rectangle\_t~{*}rect~=~...;
 
 ~
 
-asn\_DEF\_Rectangle.free\_struct(\&asn\_DEF\_Rectangle,
-
-~~~~rect,~0);
+asn\_DEF\_Rectangle.free\_struct(\&asn\_DEF\_Rectangle, rect,~0);
 \end{lyxcode}
 This code defines a \emph{rect} pointer which points to the Rectangle\_t
 structure which needs to be freed. The second line invokes the generic
@@ -433,9 +413,7 @@ simple\_deserializer(const~void~{*}buffer,~size\_t~buf\_size)~\{
 
 ~~~~~~~~/{*}~Free~partially~decoded~rect~{*}/
 
-~~~~~~~~asn\_DEF\_Rectangle.free\_struct(
-
-~~~~~~~~~~~~\&asn\_DEF\_Rectangle,~rect,~0);
+~~~~~~~~asn\_DEF\_Rectangle.free\_struct(\&asn\_DEF\_Rectangle,~rect,~0);
 
 ~~~~~~~~return~0;
 
@@ -485,7 +463,7 @@ call to ber\_decode() would return with .code = RC\_WMORE and .consumed
 valid, even if the decoder succeeds or fails with any other return
 code.
 
-Please look into ber\_decoder.h for the precise definition of ber\_decode()
+Look into ber\_decoder.h for the precise definition of ber\_decode()
 and related types.
 
 
@@ -537,9 +515,7 @@ simple\_serializer(FILE~{*}ostream,~Rectangle\_t~{*}rect)~\{
 
 ~~~~~~~~fprintf(stderr,~''Cannot~encode~\%s:~\%s\textbackslash{}n'',
 
-~~~~~~~~~~~~er.\textbf{failed\_type}->name,
-
-~~~~~~~~~~~~strerror(errno));
+~~~~~~~~~~~~er.\textbf{failed\_type}->name, strerror(errno));
 
 ~~~~~~~~return~-1;
 
@@ -569,7 +545,7 @@ actually doing the encoding%
 which aren't important for the size determination.%
 }.
 
-Please look into der\_encoder.h for the precise definition of der\_encode()
+Look into der\_encoder.h for the precise definition of der\_encode()
 and related types.
 
 
@@ -618,7 +594,7 @@ print\_as\_XML(FILE~{*}ostream,~Rectangle\_t~{*}rect)~\{
 
 \}
 \end{lyxcode}
-Please look into xer\_encoder.h for the precise definition of xer\_encode()
+Look into xer\_encoder.h for the precise definition of xer\_encode()
 and related types.
 
 See Section \ref{sub:Printing-the-target} for the example of stdio-based
@@ -652,9 +628,7 @@ XML\_to\_Rectangle(const~void~{*}buffer,~size\_t~buf\_size)~\{
 
 ~~~~~~~~/{*}~Free~partially~decoded~rect~{*}/
 
-~~~~~~~~asn\_DEF\_Rectangle.free\_struct(
-
-~~~~~~~~~~~~\&asn\_DEF\_Rectangle,~rect,~0);
+~~~~~~~~asn\_DEF\_Rectangle.free\_struct(\&asn\_DEF\_Rectangle,~rect,~0);
 
 ~~~~~~~~return~0;
 
@@ -667,7 +641,7 @@ The decoder takes both BASIC-XER and CANONICAL-XER encodings.
 The decoder shares its data consumption properties with BER decoder;
 please read the Section \vref{sub:Decoding-BER} to know more.
 
-Please look into xer\_decoder.h for the precise definition of xer\_decode()
+Look into xer\_decoder.h for the precise definition of xer\_decode()
 and related types.
 
 
@@ -689,7 +663,7 @@ The asn\_check\_constraints() function checks the type for various
 implicit and explicit constraints. It is recommended to use asn\_check\_constraints()
 function after each decoding and before each encoding.
 
-Please look into constraints.h for the precise definition of asn\_check\_constraints()
+Look into constraints.h for the precise definition of asn\_check\_constraints()
 and related types.
 
 
@@ -701,7 +675,7 @@ function, which is a simpler wrapper of the former:
 \begin{lyxcode}
 asn\_fprint(stdout,~\&asn\_DEF\_Rectangle,~rect);
 \end{lyxcode}
-Please look into constr\_TYPE.h for the precise definition of asn\_fprint()
+Look into constr\_TYPE.h for the precise definition of asn\_fprint()
 and related types.
 
 Another practical alternative to this custom format printing would
@@ -805,10 +779,10 @@ invocation, discussed above.
 \chapter{\label{cha:Step-by-step-examples}Step by step examples}
 
 
-\section{A ''Rectangle'' Encoder}
+\section{A ``Rectangle'' Encoder}
 
 This example will help you create a simple BER and XER encoder of
-a ''Rectangle'' type used throughout this document.
+a ``Rectangle'' type used throughout this document.
 \begin{enumerate}
 \item Create a file named \textbf{rectangle.asn1} with the following contents:
 
@@ -987,10 +961,10 @@ type, named \textbf{rencode}!
 \clearpage{}
 
 
-\section{\label{sec:A-Rectangle-Decoder}A ''Rectangle'' Decoder}
+\section{\label{sec:A-Rectangle-Decoder}A ``Rectangle'' Decoder}
 
 This example will help you to create a simple BER decoder of a simple
-''Rectangle'' type used throughout this document.
+``Rectangle'' type used throughout this document.
 \begin{enumerate}
 \item Create a file named \textbf{rectangle.asn1} with the following contents:
 
@@ -1143,7 +1117,7 @@ This chapter shows how to define ASN.1 constraints and use the generated
 validation code.
 
 
-\section{Adding constraints into ''Rectangle'' type}
+\section{Adding constraints into ``Rectangle'' type}
 
 This example shows how to add basic constraints to the ASN.1 specification
 and how to invoke the constraints validation code in your application.
@@ -1222,7 +1196,7 @@ the application got the valid contents before making use of it.%
 \item Try to test the constraints checking code by assigning integer value
 101 to the \textbf{.height} member of the Rectangle structure, or
 a negative value to the \textbf{.width} member. In either case, the
-program should print ''Constraint validation failed'' message, followed
+program should print ``Constraint validation failed'' message, followed
 by the short explanation why validation did not succeed.
 \item Done.
 \end{enumerate}
@@ -1271,7 +1245,7 @@ that entity is going to send or receive the \emph{encoded data} is
 outside the scope of ASN.1. For example, this data structure may be
 encoded according to some encoding rules and sent to the destination
 using the TCP protocol. The ASN.1 specifies several ways of encoding
-(or ''serializing'', or ''marshaling'') the data: BER, PER, XER
+(or ``serializing'', or ``marshaling'') the data: BER, PER, XER
 and others, including CER and DER derivatives from BER.
 
 The complete specification must be wrapped in a module, which looks
@@ -1306,9 +1280,9 @@ Rectangle~::=~SEQUENCE~\{
 END
 \end{lyxcode}
 The module header consists of module name (RectangleModule1), the
-module object identifier (\{...\}), a keyword ''DEFINITIONS'', a
-set of module flags (AUTOMATIC TAGS) and ''::= BEGIN''. The module
-ends with an ''END'' statement.
+module object identifier (\{...\}), a keyword ``DEFINITIONS'', a
+set of module flags (AUTOMATIC TAGS) and ``::= BEGIN''. The module
+ends with an ``END'' statement.
 
 
 \section{Some of the ASN.1 Basic Types}
@@ -1444,33 +1418,33 @@ This is the character string which encodes the full Unicode range
 \subsection{The NumericString type}
 
 This type represents the character string with the alphabet consisting
-of numbers (''0'' to ''9'') and a space.
+of numbers (``0'' to ``9'') and a space.
 
 
 \subsection{The PrintableString type}
 
-The character string with the following alphabet: space, ''\textbf{'}''
-(single quote), ''\textbf{(}'', ''\textbf{)}'', ''\textbf{+}'',
-''\textbf{,}'' (comma), ''\textbf{-}'', ''\textbf{.}'', ''\textbf{/}'',
-digits (''0'' to ''9''), ''\textbf{:}'', ''\textbf{=}'', ''\textbf{?}'',
-upper-case and lower-case letters (''A'' to ''Z'' and ''a''
-to ''z'').
+The character string with the following alphabet: space, ``\textbf{'}''
+(single quote), ``\textbf{(}'', ``\textbf{)}'', ``\textbf{+}'',
+``\textbf{,}'' (comma), ``\textbf{-}'', ``\textbf{.}'', ``\textbf{/}'',
+digits (``0'' to ``9''), ``\textbf{:}'', ``\textbf{=}'', ``\textbf{?}'',
+upper-case and lower-case letters (``A'' to ``Z'' and ``a''
+to ``z'').
 
 
 \subsection{The VisibleString type}
 
 The character string with the alphabet which is more or less a subset
-of ASCII between the space and the ''\textbf{\textasciitilde{}}''
+of ASCII between the space and the ``\textbf{\textasciitilde{}}''
 symbol (tilde).
 
 Alternatively, the alphabet may be described as the PrintableString
-alphabet presented earlier, plus the following characters: ''\textbf{!}'',
-''\textbf{''}'', ''\textbf{\#}'', ''\textbf{\$}'', ''\textbf{\%}'',
-''\textbf{\&}'', ''\textbf{{*}}'', ''\textbf{;}'', ''\textbf{<}'',
-''\textbf{>}'', ''\textbf{{[}}'', ''\textbf{\textbackslash{}}'',
-''\textbf{{]}}'', ''\textbf{\textasciicircum{}}'', ''\textbf{\_}'',
-''\textbf{`}'' (single left quote), ''\textbf{\{}'', ''\textbf{|}'',
-''\textbf{\}}'', ''\textbf{\textasciitilde{}}''.
+alphabet presented earlier, plus the following characters: ``\textbf{!}'',
+``\textbf{``}'', ``\textbf{\#}'', ``\textbf{\$}'', ``\textbf{\%}'',
+``\textbf{\&}'', ``\textbf{{*}}'', ``\textbf{;}'', ``\textbf{<}'',
+``\textbf{>}'', ``\textbf{{[}}'', ``\textbf{\textbackslash{}}'',
+``\textbf{{]}}'', ``\textbf{\textasciicircum{}}'', ``\textbf{\_}'',
+``\textbf{`}`` (single left quote), ``\textbf{\{}'', ``\textbf{|}'',
+``\textbf{\}}'', ``\textbf{\textasciitilde{}}''.
 
 
 \section{ASN.1 Constructed Types}
@@ -1479,7 +1453,7 @@ alphabet presented earlier, plus the following characters: ''\textbf{!}'',
 \subsection{The SEQUENCE type}
 
 This is an ordered collection of other simple or constructed types.
-The SEQUENCE constructed type resembles the C ''struct'' statement.
+The SEQUENCE constructed type resembles the C ``struct'' statement.
 \begin{lyxcode}
 Address~::=~SEQUENCE~\{
 
@@ -1513,10 +1487,10 @@ necessarily corresponding to the order of specification.
 This type is just a choice between the subtypes specified in it. The
 CHOICE type contains at most one of the subtypes specified, and it
 is always implicitly known which choice is being decoded or encoded.
-This one resembles the C ''union'' statement.
+This one resembles the C ``union'' statement.
 
 The following type defines a response code, which may be either an
-integer code or a boolean ''true''/''false'' code.
+integer code or a boolean ``true''/``false'' code.
 \begin{lyxcode}
 ResponseCode~::=~CHOICE~\{
 
@@ -1578,10 +1552,10 @@ FruitBag~::=~SET~OF~ENUMERATED~\{~apple,~orange~\}\end{lyxcode}
 \bibitem[AONL]{AONL}Online ASN.1 Compiler. \url{http://lionet.info/asn1c/asn1c.cgi}
 
 \bibitem[Dub00]{Dub00}Olivier Dubuisson --- \emph{ASN.1 Communication
-between heterogeneous systems} --- Morgan Kaufmann Publishers, 2000.
+between heterogeneous systems}~---~Morgan Kaufmann Publishers, 2000.
 \url{http://asn1.elibel.tm.fr/en/book/}. ISBN:0-12-6333361-0.
 
-\bibitem[ITU-T/ASN.1]{ITU-T/ASN.1}ITU-T Study Group 17 -- Languages
+\bibitem[ITU-T/ASN.1]{ITU-T/ASN.1}ITU-T Study Group 17 --- Languages
 for Telecommunication Systems \url{http://www.itu.int/ITU-T/studygroups/com17/languages/}
 \end{thebibliography}
 
