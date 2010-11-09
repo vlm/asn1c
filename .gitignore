@@ -42,6 +42,7 @@ doc/docsrc/*.dvi
 doc/docsrc/*.log
 doc/docsrc/*.out
 doc/docsrc/*.toc
+doc/docsrc/*.xdv
 
 # /examples/
 /examples/Makefile

@@ -160,6 +160,8 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+XELATEX_FLAGS = -halt-on-error -file-line-error
+XELATEX = xelatex
 EXTRA_DIST = $(srcdir)/*.tex
 CLEANFILES = *.*~ *.aux *.dvi *.log *.out *.toc
 all: all-am
@@ -331,10 +333,9 @@ uninstall-am:
 
 
 regen:
-	pdflatex --output-format=dvi asn1c-usage
-	pdflatex --output-format=dvi asn1c-usage
-	pdflatex --output-format=dvi asn1c-usage
-	dvipdf asn1c-usage
+	$(XELATEX) $(XELATEX_FLAGS) -no-pdf asn1c-usage
+	$(XELATEX) $(XELATEX_FLAGS) -no-pdf asn1c-usage
+	$(XELATEX) $(XELATEX_FLAGS) asn1c-usage
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
