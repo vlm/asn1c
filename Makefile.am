@@ -1,4 +1,6 @@
 
+ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = 				\
 	libasn1parser libasn1fix	\
 	libasn1print libasn1compiler	\

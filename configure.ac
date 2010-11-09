@@ -1,27 +1,9 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_INIT(libasn1parser/asn1p_y.y)
-AC_CANONICAL_BUILD
-AC_CANONICAL_TARGET
-AC_PREREQ(2.53)
-AM_INIT_AUTOMAKE(asn1c, 0.9.22)
-
-AM_MAINTAINER_MODE
+AC_INIT([asn1c], [0.9.23], [vlm@lionet.info])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AC_CONFIG_HEADER([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 
 AM_PROG_LIBTOOL
-
-dnl *** Autoconf support ***
-AC_ARG_ENABLE(autoconf,
-  [  --disable-autoconf      disable automatic generation of configure script ],
-  enable_autoconf=$enableval, enable_autoconf=yes
-)
-AC_PATH_PROG(AUTOCONF, autoconf, @echo autoconf not available)
-AC_PATH_PROG(AUTOHEADER, autoheader, @echo autoheader not available)
-if test -z "$AUTOCONF"; then enable_autoconf=no ; fi
-if test -z "$AUTOHEADER"; then enable_autoconf=no ; fi
-if test x$enable_autoconf = xyes; then
-  CONFIGURE_DEPENDS="configure.in aclocal.m4"
-fi
-AC_SUBST(CONFIGURE_DEPENDS)
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -82,8 +64,6 @@ AC_CHECK_FUNCS(strtoimax strtoll)
 AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
 
-AM_CONFIG_HEADER(config.h)
-
 AC_OUTPUT(				\
 skeletons/standard-modules/Makefile	\
 skeletons/tests/Makefile		\
@@ -93,6 +73,7 @@ libasn1print/Makefile			\
 asn1c/webcgi/Makefile			\
 asn1c/tests/Makefile			\
 libasn1fix/Makefile			\
+doc/docsrc/Makefile			\
 skeletons/Makefile			\
 examples/Makefile			\
 tests/Makefile				\

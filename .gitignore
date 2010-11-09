@@ -34,11 +34,14 @@
 
 # /doc/
 /doc/Makefile
-doc/*.aux
-doc/*.dvi
-doc/*.log
-doc/*.out
-doc/*.toc
+
+# /doc/docsrc
+/doc/docsrc/Makefile
+doc/docsrc/*.aux
+doc/docsrc/*.dvi
+doc/docsrc/*.log
+doc/docsrc/*.out
+doc/docsrc/*.toc
 
 # /examples/
 /examples/Makefile
