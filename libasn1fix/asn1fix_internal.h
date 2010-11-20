@@ -23,7 +23,7 @@
 #include <asn1parser.h>		/* Our lovely ASN.1 parser module */
 #include "asn1fix.h"
 
-#ifdef	WIN32
+#ifdef	_WIN32
 #define	EX_NOINPUT	66
 #define	EX_DATAERR	65
 #define	snprintf	_snprintf

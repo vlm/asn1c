@@ -14,7 +14,7 @@
 #include <time.h>
 #endif	/* __CYGWIN__ */
 
-#if	defined(WIN32)
+#if	defined(_WIN32)
 #pragma message( "PLEASE STOP AND READ!")
 #pragma message( "  localtime_r is implemented via localtime(), which may be not thread-safe.")
 #pragma message( "  gmtime_r is implemented via gmtime(), which may be not thread-safe.")
@@ -41,7 +41,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 #define	putenv(c)	_putenv(c)
 #define	_EMULATE_TIMEGM
 
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 
 #if	defined(sun) || defined(_sun_) || defined(__solaris__)
 #define	_EMULATE_TIMEGM

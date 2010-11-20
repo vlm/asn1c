@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <sysexits.h>
 
-#ifdef	WIN32
+#ifdef	_WIN32
 #define setuid(s)
 #define getuid()
 #define setgid(s)

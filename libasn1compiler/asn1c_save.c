@@ -356,7 +356,7 @@ identical_files(const char *fname1, const char *fname2) {
 	size_t olen, nlen;
 	int retval = 1;	/* Files are identical */
 
-#ifndef	WIN32
+#ifndef	_WIN32
 	struct stat sb;
 
 	if(lstat(fname1, &sb) || !S_ISREG(sb.st_mode)
@@ -431,7 +431,7 @@ real_copy(const char *src, const char *dst) {
 static int
 asn1c_copy_over(arg_t *arg, char *path) {
 	char *fname;
-#ifdef	WIN32
+#ifdef	_WIN32
 	int use_real_copy = 1;
 #else
 	int use_real_copy = (arg->flags & A1C_SKELETONS_COPY);

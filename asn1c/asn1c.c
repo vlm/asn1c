@@ -42,7 +42,7 @@
 
 #include <asn1c_compat.h>	/* Portable basename(3) and dirname(3) */
 
-#ifdef	WIN32
+#ifdef	_WIN32
 #include <io.h>
 #include <direct.h>
 #else
@@ -345,7 +345,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 	char *target_dir;
 	int target_dir_len;
 	int len;
-#ifdef	WIN32
+#ifdef	_WIN32
 	intptr_t dir;
 	struct _finddata_t c_file;
 	char *pattern;
@@ -369,7 +369,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 	snprintf(target_dir, target_dir_len + 1, "%s/standard-modules",
 		skeletons_dir);
 
-#ifdef	WIN32
+#ifdef	_WIN32
 	len = target_dir_len + sizeof("/*.asn1");
 	pattern = malloc(len);
 	assert(pattern);
@@ -386,7 +386,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 		return -1;
 	}
 
-#ifdef	WIN32
+#ifdef	_WIN32
 	do {
 		filename = c_file.name;
 #else
@@ -416,7 +416,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 		}
 		asn1p_delete(new_asn);
 
-#ifdef	WIN32
+#ifdef	_WIN32
 	} while(_findnext(dir, &c_file) == 0);
 	_findclose(dir);
 #else

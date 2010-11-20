@@ -1,7 +1,7 @@
 #undef	NDEBUG
 #include "asn1fix_internal.h"
 
-#ifdef	WIN32
+#ifdef	_WIN32
 #include <io.h>
 #include <direct.h>
 #define	chdir _chdir
@@ -21,7 +21,7 @@ static int post_fix_check_element(asn1p_module_t *mod, asn1p_expr_t *expr);
 
 int
 main(int ac, char **av) {
-#ifdef	WIN32
+#ifdef	_WIN32
 	intptr_t dir;
 	struct _finddata_t c_file;
 #else
@@ -53,13 +53,13 @@ main(int ac, char **av) {
 		fprintf(stderr, "Testing in ./tests...\n");
 		ret = chdir("../tests");
 		assert(ret == 0);
-#ifdef	WIN32
+#ifdef	_WIN32
 		dir = _findfirst("*.asn1", &c_file);
 		assert(dir != -1L);
 #else
 		dir = opendir(".");
 		assert(dir);
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 	} else {
 		dir = 0;
 	}
@@ -68,13 +68,13 @@ main(int ac, char **av) {
 	 * Scan every *.asn1 file and try to parse and fix it.
 	 */
 	if(dir) {
-#ifdef	WIN32
+#ifdef	_WIN32
 		do {
 			filename = c_file.name;
 #else
 		while((dp = readdir(dir))) {
 			filename = dp->d_name;
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 			len = strlen(filename);
 			if(len <= 5 || strcmp(filename + len - 5, ".asn1"))
 				continue;
@@ -85,13 +85,13 @@ main(int ac, char **av) {
 				failed++;
 			}
 			completed++;
-#ifdef	WIN32
+#ifdef	_WIN32
 		} while(_findnext(dir, &c_file) == 0);
 		_findclose(dir);
 #else
 		}
 		closedir(dir);
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 
 
 		fprintf(stderr,

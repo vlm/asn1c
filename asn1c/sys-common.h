@@ -46,9 +46,9 @@
 #include <sys/stat.h>		/* for stat(2) */
 #endif
 
-#ifndef	WIN32
+#ifndef	_WIN32
 #include <sysexits.h>		/* for EX_USAGE & others */
-#else	/* WIN32 */
+#else	/* _WIN32 */
 #ifndef	EX_USAGE
 #define	EX_USAGE 64
 #endif
@@ -66,5 +66,5 @@
 #endif
 #define	alloca _alloca
 #define	snprintf _snprintf
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 

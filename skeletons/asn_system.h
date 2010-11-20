@@ -21,7 +21,7 @@
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
 
-#ifdef	WIN32
+#ifdef	_WIN32
 
 #include <malloc.h>
 #define	 snprintf	_snprintf
@@ -46,7 +46,7 @@ typedef	unsigned char	uint8_t;
 typedef	unsigned short	uint16_t;
 typedef	unsigned int	uint32_t;
 #endif	/* ASSUMESTDTYPES */
-#define WIN32_LEAN_AND_MEAN
+#define _WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <float.h>
 #define isnan _isnan
@@ -57,7 +57,7 @@ typedef	unsigned int	uint32_t;
 #include <stdint.h>
 #endif	/* _MSC_VER */
 
-#else	/* !WIN32 */
+#else	/* !_WIN32 */
 
 #if defined(__vxworks)
 #include <types/vxTypes.h>
@@ -90,7 +90,7 @@ typedef	unsigned int	uint32_t;
 
 #endif	/* defined(__vxworks) */
 
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 
 #if	__GNUC__ >= 3
 #ifndef	GCC_PRINTFLIKE

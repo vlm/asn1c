@@ -22,7 +22,7 @@
 #include <unistd.h>		/* for unlink(2) */
 #endif
 
-#ifdef	WIN32
+#ifdef	_WIN32
 #include <io.h>
 #include <malloc.h>
 #include <fcntl.h>

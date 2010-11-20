@@ -6,7 +6,7 @@
 #endif
 
 #ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
-#ifdef	WIN32
+#ifdef	_WIN32
 #define	DEFFILEMODE	(S_IREAD|S_IWRITE)
 #else
 #define	DEFFILEMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
@@ -21,7 +21,7 @@
 FILE *
 asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	int created = 1;
-#ifndef	WIN32
+#ifndef	_WIN32
 	struct stat sb;
 #endif
 	char *fname;
@@ -44,7 +44,7 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 		 * Create temporary file.
 		 */
 		fd = mkstemp(fname);
-#ifndef	WIN32
+#ifndef	_WIN32
 		(void)fchmod(fd, DEFFILEMODE);
 #endif
 	} else {
@@ -62,7 +62,7 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 		return NULL;
 	}
 
-#ifndef	WIN32
+#ifndef	_WIN32
 	/*
 	 * Check sanity.
 	 */
@@ -76,7 +76,7 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	(void)ftruncate(fd, 0);
 #else
 	_chsize(fd, 0);
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 
 	/*
 	 * Convert file descriptor into file pointer.
