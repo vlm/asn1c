@@ -1159,3 +1159,57 @@ int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	return oid_at_len == oid_full_len;
 }
 
+int OBJECT_IDENTIFIER_eq1(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, const RELATIVE_OID_t *_roid2) {
+	assert(_oid1 && _oid2base && _roid2);
+	if(_oid1->size != _oid2base->size + _roid2->size)
+		return 0;
+	
+	if (!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
+		return 0;
+	/* works even when _roid2->size == 0 */
+	return !memcmp(_oid1->buf + _oid2base->size, _roid2->buf, _roid2->size);
+}
+
+int OBJECT_IDENTIFIER_1eq1(const OBJECT_IDENTIFIER_t *_oid1base,
+	const RELATIVE_OID_t *_roid1, const OBJECT_IDENTIFIER_t *_oid2base,
+	const RELATIVE_OID_t *_roid2) {
+	size_t min_size;
+	int onelessthantwo;
+	size_t diff21_size;
+	assert(_oid1base && _roid1 && _oid2base && _roid2);
+	if(_oid1base->size + _roid1->size != _oid2base->size + _roid2->size)
+		return 0;
+	
+	if (_oid1base->size < _oid2base->size) {
+		diff21_size = _oid2base->size - _oid1base->size;
+		return !memcmp(_oid1base->buf, _oid2base->buf, _oid1base->size) &&
+			!memcmp(_roid1->buf, _oid2base->buf + _oid1base->size, diff21_size) &&
+			!memcmp(_roid1->buf + diff21_size, _roid2->buf, _roid2->size);
+	} else {
+		diff21_size = _oid1base->size - _oid2base->size;
+		return !memcmp(_oid1base->buf, _oid2base->buf, _oid2base->size) &&
+			!memcmp(_oid1base->buf + _oid2base->size, _roid2->buf, diff21_size) &&
+			!memcmp(_roid1->buf, _roid2->buf + diff21_size, _roid1->size);
+	}
+
+	if(_oid1base->size < _oid2base->size) {
+		min_size = _oid1base->size;
+		onelessthantwo = 1;
+	} else {
+		min_size = _oid2base->size;
+		onelessthantwo = 0;
+	}
+
+	if (!!memcmp(_oid1base->buf, _oid2base->buf, min_size))
+		return 0;
+	if(onelessthantwo) {
+		if (!!memcmp(_roid1->buf, _oid2base->buf + min_size, _oid2base->size - min_size))
+			return 0;
+	} else {
+		if (!!memcmp(_roid2->buf, _oid1base->buf + min_size, _oid1base->size - min_size))
+			return 0;
+	}
+		
+	return -1;
+}

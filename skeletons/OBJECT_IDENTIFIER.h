@@ -141,6 +141,10 @@ int OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf,
 
 /* OID utility functions contributed by Sean Leonard of SeanTek(R). */
 
+/*
+ * Constructor utilities to make new OBJECT_IDENTIFIERs.
+ */
+
 int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
 	const OBJECT_IDENTIFIER_t *_oidbase, ...);
 
@@ -153,15 +157,23 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
 	const char *oid_text, ssize_t oid_text_length);
 
-
-int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
-	const OBJECT_IDENTIFIER_t *_oid2base, ...);
+/*
+ * General-purpose functions to compare an OID with arbitrary
+ * RELATIVE-OIDs afterwards. cmp returns >0, 0, <0 depending
+ * on value (like strcmp or memcmp); eq returns zero (false) if unequal,
+ * and nonzero (true) if equal. eq is faster than cmp.
+ */
 
 int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, ...);
 
 int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, ...);
+
+/*
+ * Fast, inline functions to compare two OIDs
+ * without arbitrary RELATIVE-OIDs afterwards.
+ */
 
 static inline int OBJECT_IDENTIFIER_cmp0(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2) {
@@ -182,6 +194,13 @@ static inline int OBJECT_IDENTIFIER_eq0(const OBJECT_IDENTIFIER_t *_oid1,
 	else if(_oid1->size != _oid2->size) return 0;
 	else return !memcmp(_oid1->buf, _oid2->buf, _oid1->size);
 }
+
+/*
+ * Specialized functions to compare when a RELATIVE-OID
+ * is present on one or both sides. Slightly faster than the general
+ * algorithm. Unlike the prior functions, these functions assume
+ * (assert) that all arguments are non-null.
+ */
 
 int OBJECT_IDENTIFIER_eq1(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, const RELATIVE_OID_t *_roid2);

@@ -216,7 +216,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421033A12AAF0F300161BA4</string>
+						<string>1421034C12AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>14F5215612AADE3A0074757C</string>
@@ -231,7 +231,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421033B12AAF0F300161BA4</string>
+						<string>1421034D12AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>1421031112AAEEF000161BA4</string>
@@ -271,7 +271,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421033C12AAF0F300161BA4</string>
+						<string>1421034E12AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>142102EE12AAEE2900161BA4</string>
@@ -311,7 +311,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421033D12AAF0F300161BA4</string>
+						<string>1421034F12AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>142102F212AAEE2900161BA4</string>
@@ -351,7 +351,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421033E12AAF0F300161BA4</string>
+						<string>1421035012AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>142102E412AAEE2900161BA4</string>
@@ -377,46 +377,6 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
-				<string>142102E612AAEE2900161BA4</string>
-				<key>PBXProjectModuleLabel</key>
-				<string>asn1p_value.h</string>
-				<key>PBXSplitModuleInNavigatorKey</key>
-				<dict>
-					<key>Split0</key>
-					<dict>
-						<key>PBXProjectModuleGUID</key>
-						<string>142102E712AAEE2900161BA4</string>
-						<key>PBXProjectModuleLabel</key>
-						<string>asn1p_value.h</string>
-						<key>_historyCapacity</key>
-						<integer>0</integer>
-						<key>bookmark</key>
-						<string>1421033F12AAF0F300161BA4</string>
-						<key>history</key>
-						<array>
-							<string>142102E812AAEE2900161BA4</string>
-						</array>
-					</dict>
-					<key>SplitCount</key>
-					<string>1</string>
-				</dict>
-				<key>StatusBarVisibility</key>
-				<true/>
-			</dict>
-			<key>Geometry</key>
-			<dict>
-				<key>Frame</key>
-				<string>{{0, 20}, {658, 946}}</string>
-				<key>PBXModuleWindowStatusBarHidden2</key>
-				<false/>
-				<key>RubberWindowFrame</key>
-				<string>15 186 658 987 0 0 1920 1178 </string>
-			</dict>
-		</dict>
-		<dict>
-			<key>Content</key>
-			<dict>
-				<key>PBXProjectModuleGUID</key>
 				<string>14F5211C12AADA250074757C</string>
 				<key>PBXProjectModuleLabel</key>
 				<string>asn1p_expr.h</string>
@@ -431,7 +391,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421034012AAF0F300161BA4</string>
+						<string>1421035112AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>142102EA12AAEE2900161BA4</string>
@@ -471,7 +431,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421034112AAF0F300161BA4</string>
+						<string>1421035212AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>142102F412AAEE2900161BA4</string>
@@ -511,7 +471,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421034212AAF0F300161BA4</string>
+						<string>1421035312AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>14F5215C12AADE3A0074757C</string>
@@ -551,7 +511,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421034312AAF0F300161BA4</string>
+						<string>1421035412AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>14F5215D12AADE3A0074757C</string>
@@ -591,7 +551,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1421034412AAF0F300161BA4</string>
+						<string>1421035512AAF23D00161BA4</string>
 						<key>history</key>
 						<array>
 							<string>14F5216012AADE3A0074757C</string>
@@ -752,7 +712,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>1421033912AAF0F300161BA4</string>
+										<string>1421034B12AAF23D00161BA4</string>
 										<key>history</key>
 										<array>
 											<string>14A89FF812A32FBA006C9829</string>
@@ -1003,14 +963,15 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1421034512AAF0F300161BA4</string>
+		<string>1421030312AAEE2900161BA4</string>
 		<string>1421030412AAEE2900161BA4</string>
+		<string>1C78EAAD065D492600B07095</string>
+		<string>1CD10A99069EF8BA00B06720</string>
 		<string>14F5212412AADA250074757C</string>
 		<string>14F5211012AADA250074757C</string>
 		<string>14F5211812AADA250074757C</string>
 		<string>14F5212012AADA250074757C</string>
 		<string>14F5211C12AADA250074757C</string>
-		<string>142102E612AAEE2900161BA4</string>
 		<string>14B1B16D12A31587000B9425</string>
 		<string>14F5211412AADA250074757C</string>
 		<string>1C530D57069F1CE1000CFCEE</string>
@@ -1018,9 +979,6 @@
 		<string>142102EC12AAEE2900161BA4</string>
 		<string>14F5210D12AADA250074757C</string>
 		<string>/Users/Sean/asn1c/trunk/asn1c.xcodeproj</string>
-		<string>1421030312AAEE2900161BA4</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>1C78EAAD065D492600B07095</string>
 	</array>
 	<key>WindowString</key>
 	<string>868 181 958 913 0 0 1920 1178 </string>
@@ -1241,7 +1199,7 @@
 			<key>WindowToolGUID</key>
 			<string>1CD10A99069EF8BA00B06720</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
@@ -1398,7 +1356,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>
