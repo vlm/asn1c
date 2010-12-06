@@ -140,13 +140,13 @@ int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
 	const OBJECT_IDENTIFIER_t *_oidbase, ...);
 
 OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromIdentifiers(
-	asn_TYPE_descriptor_t *td, const OBJECT_IDENTIFIER_t *_oidbase, ...);
+	const OBJECT_IDENTIFIER_t *_oidbase, ...);
 
 int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	const char *oid_text, ssize_t oid_text_length);
 
 OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
-	asn_TYPE_descriptor_t *td, const char *oid_text, ssize_t oid_text_length);
+	const char *oid_text, ssize_t oid_text_length);
 
 
 int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,

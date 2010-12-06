@@ -744,8 +744,9 @@ int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
 	va_start(roids, _oidbase);
 	oid_full_len = _oidbase->size;
 	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
-		if ((oid_full_len + roid->size) < oid_full_len) {
+		if ((oid_full_len + roid->size) < oid_full_len) { /* overflow */
 			errno = ERANGE;
+			va_end(roids);
 			return -1;
 		}
 		oid_full_len += roid->size;
@@ -773,27 +774,105 @@ int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
 }
 
 OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromIdentifiers(
-	asn_TYPE_descriptor_t *td, const OBJECT_IDENTIFIER_t *_oidbase, ...) {
-	/* TODO: Implement. */
-	assert(0);
-	return NULL;
+	const OBJECT_IDENTIFIER_t *_oidbase, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	OBJECT_IDENTIFIER_t *st;
+
+	if(!_oidbase) {
+		errno = EINVAL;
+		return NULL;
+	}
+	
+	st = (OBJECT_IDENTIFIER_t*)CALLOC(1, sizeof(*st));
+	if (!st) {
+		/* ENOMEM */
+		return NULL;
+	}
+	
+	va_start(roids, _oidbase);
+	oid_full_len = _oidbase->size;
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		if ((oid_full_len + roid->size) < oid_full_len) { /* overflow */
+			FREEMEM(st);
+			errno = ERANGE;
+			va_end(roids);
+			return NULL;
+		}
+		oid_full_len += roid->size;
+	}
+	va_end(roids);
+	
+	st->buf = (uint8_t*)MALLOC(oid_full_len);
+	if (!st->buf) {
+		FREEMEM(st);
+		/* ENOMEM */
+		return NULL;
+	}
+	
+	st->size = oid_full_len;
+	memcpy(st->buf, _oidbase->buf, _oidbase->size);
+	oid_at_len = _oidbase->size;
+	va_start(roids, _oidbase);
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		memcpy(st->buf + oid_at_len, roid->buf, roid->size);
+		oid_at_len += roid->size;
+	}
+	assert(oid_at_len == oid_full_len);
+	va_end(roids);
+	
+	return st;
 }
 
-int OBJECT_IDENTIFIER_fromText(OBJECT_IDENTIFIER_t *_oid,
+int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	const char *oid_text, ssize_t oid_text_length) {
-	/* TODO: Implement. */
+	/* int res; */
+	size_t oid_text_len = oid_text_length < 0 ? strlen(oid_text) :
+		(size_t)oid_text_length;
+	size_t i;
+
+	if (!_oid || !oid_text) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	_oid->buf = (uint8_t*)MALLOC(oid_text_len);
+	_oid->size = 0; /* in progress */
+	if (!_oid->buf) {
+		/* ENOMEM */
+		return -1;
+	}
+	
+	for (i = 0; i < oid_text_len; i++) {
+		if (!((oid_text[i] >= '0' && oid_text[i] <= '9') || oid_text[i] == '.')) {
+			assert((oid_text[i] >= '0' && oid_text[i] <= '9') || oid_text[i] == '.');
+			errno = EINVAL;
+			return -1;
+		}
+	}
+	
+	/* TODO: convert oid_text from base10 to base2 (base128) */
 	assert(0);
 	return -1;
 }
 
-OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromText(
-	asn_TYPE_descriptor_t *td, const char *oid_text, ssize_t oid_text_length) {
-	/* TODO: Implement. */
+OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
+	const char *oid_text, ssize_t oid_text_length) {
 	OBJECT_IDENTIFIER_t *oid;
 	int result;
-	assert(0);
-	result = OBJECT_IDENTIFIER_fromText(oid, oid_text, oid_text_length);
-	return oid;
+	
+	oid = (OBJECT_IDENTIFIER_t*)CALLOC(1, sizeof(*oid));
+	if (!oid) {
+		/* ENOMEM */
+		return NULL;
+	}
+	result = OBJECT_IDENTIFIER_fromDotNotation(oid, oid_text, oid_text_length);
+	if (result == 0) return oid;
+	else {
+		FREEMEM(oid);
+		return NULL;
+	}
 }
 
 
@@ -806,8 +885,43 @@ int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
 
 int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, ...) {
-	/* TODO: Implement. */
-	assert(0);
-	return 0;
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	
+	if (!_oid1) return _oid2base ? 0 : 1;
+	else if (!_oid2base) return 0;
+	else if (_oid2base->size > _oid1->size) return 0;
+	
+	va_start(roids, _oid2base);
+	oid_full_len = _oid2base->size;
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		if ((oid_full_len + roid->size) < oid_full_len) { /* overflow */
+			errno = ERANGE;
+			va_end(roids);
+			return 0;
+		}
+		oid_full_len += roid->size;
+	}
+	va_end(roids);
+	
+	if (oid_full_len != _oid1->size) return 0;
+	
+	/** oid2base->size <= oid1->size, always */
+	if (!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
+		return 0;
+	oid_at_len = _oid2base->size;
+	va_start(roids, _oid2base);
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for (int i = 0; i < roid->size; i++, oid_at_len++) {
+			if (_oid1->buf[oid_at_len] != roid->buf[i]) {
+				va_end(roids);
+				return 0;
+			}
+		}
+	}
+	va_end(roids);
+	assert(oid_at_len == oid_full_len);
+	return 1;
 }
 
