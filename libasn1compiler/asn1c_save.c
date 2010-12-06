@@ -23,6 +23,13 @@ static int include_type_to_pdu_collection(arg_t *arg);
 static void pdu_collection_print_unused_types(arg_t *arg);
 static const char *generate_pdu_C_definition(void);
 
+static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv);
+static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv);
+static int asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps,
+	int optc, char **argv);
+
 int
 asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		int argc, int optc, char **argv) {
@@ -38,12 +45,36 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			"from %s\n", datadir);
 	}
 
+	if(!(arg->flags & A1C_PRINT_COMPILED)) {
+		TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+			TQ_FOR(arg->expr, &(mod->members), next) {
+				if(arg->expr->meta_type == AMT_VALUE) {
+					if(asn1c_create_module_files(arg, mod, optc, argv))
+						return -1;
+					break;
+				}
+			}
+		}
+	}
+
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
 				if(asn1c_dump_streams(arg, deps, optc, argv))
 					return -1;
+			}
+		}
+	}
+
+	if(!(arg->flags & A1C_PRINT_COMPILED)) {
+		TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+			TQ_FOR(arg->expr, &(mod->members), next) {
+				if(arg->expr->meta_type == AMT_VALUE) {
+					if(asn1c_finish_module_files(arg, mod, optc, argv))
+						return -1;
+					break;
+				}
 			}
 		}
 	}
@@ -62,6 +93,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		return -1;
 	}
 
+/* TODO: add module files to sources */
 	fprintf(mkf, "ASN_MODULE_SOURCES=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
@@ -227,6 +259,9 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 			expr->Identifier, expr->_lineno);
 		return -1;
 	}
+	
+	if (expr->meta_type == AMT_VALUE)
+		return asn1c_save_value_streams(arg, deps, optc, argv);
 
 	fp_c = asn1c_open_file(expr->Identifier, ".c", &tmpname_c);
 	fp_h = asn1c_open_file(expr->Identifier, ".h", &tmpname_h);
@@ -613,3 +648,93 @@ include_type_to_pdu_collection(arg_t *arg) {
 
 	return 0;
 }
+
+
+
+static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv) {
+	FILE *fp_c, *fp_h;
+	char *header_id;
+	
+	fp_c = asn1c_open_file(mod->ModuleName, ".c", NULL);
+	fp_h = asn1c_open_file(mod->ModuleName, ".h", NULL);
+	
+	if(fp_c == NULL || fp_h == NULL) {
+		if(fp_c) { fclose(fp_c); }
+		if(fp_h) { fclose(fp_h); }
+		return -1;
+	}
+	
+	generate_preamble(arg, fp_c, optc, argv);
+	generate_preamble(arg, fp_h, optc, argv);
+	
+	header_id = asn1c_make_identifier(0, NULL, mod->ModuleName, NULL);
+	fprintf(fp_h,
+		"#ifndef\t_%s_H_\n"
+		"#define\t_%s_H_\n"
+		"\n\n", header_id, header_id);
+	
+	HINCLUDE("asn_application.h");
+	
+	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
+	
+	fprintf(fp_c, "#include \"%s.h\"\n", mod->ModuleName);
+	
+	fclose(fp_c);
+	fclose(fp_h);
+	
+	return 0;
+}
+
+static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv) {
+	FILE *fp_h; /* no need for fp_c */
+	char *header_id;
+	
+	fp_h = asn1c_append_file(mod->ModuleName, ".h");
+	
+	if(fp_h == NULL) {
+		if(fp_h) { fclose(fp_h); }
+		return -1;
+	}
+	
+	header_id = asn1c_make_identifier(0, NULL, mod->ModuleName, NULL);
+
+	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n");
+
+	fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
+	HINCLUDE("asn_internal.h");
+	
+	fclose(fp_h);
+
+	return 0;
+}
+
+static int
+asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_module_t *mod = expr->module;
+	compiler_streams_t *cs = expr->data;
+	out_chunk_t *ot;
+	FILE *fp_c, *fp_h;
+
+	assert(expr && mod && expr->meta_type == AMT_VALUE);
+	
+	fp_c = asn1c_append_file(mod->ModuleName, ".c");
+	fp_h = asn1c_append_file(mod->ModuleName, ".h");
+	
+	if(fp_c == NULL || fp_h == NULL) {
+		if(fp_c) { fclose(fp_c); }
+		if(fp_h) { fclose(fp_h); }
+		return -1;
+	}
+	
+	SAVE_STREAM(fp_h, OT_FUNC_DECLS, "", 0);
+	
+	SAVE_STREAM(fp_c, OT_STAT_DEFS, "", 0);
+
+	fclose(fp_c);
+	fclose(fp_h);
+	return 0;
+}
+

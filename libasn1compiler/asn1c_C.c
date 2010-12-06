@@ -2913,19 +2913,19 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	}
 	
 	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
 	asn1c_print_oid(arg, expr->value->value.oid);
 	OUT("extern const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(";\n");	
 
 	REDIR(OT_STAT_DEFS);
+	OUT("\n");
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = ");
 	/* TODO: replace with actual BER encoding */
-	OUT("{0x01, 0x02, 0x03, 0x04}");
-	OUT(";\n");
-	OUT("\n");
+	OUT("{0x01, 0x02, 0x03, 0x04};\n");
 
 	asn1c_print_oid(arg, expr->value->value.oid);
 	OUT("const OBJECT_IDENTIFIER_t ");
@@ -2960,19 +2960,19 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	}
 	
 	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
 	asn1c_print_oid(arg, expr->value->value.oid);
 	OUT("extern const RELATIVE_OID_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(";\n");	
 
 	REDIR(OT_STAT_DEFS);
+	OUT("\n");
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = ");
 	/* TODO: replace with actual BER encoding */
-	OUT("{0x01, 0x02, 0x03, 0x04}");
-	OUT(";\n");
-	OUT("\n");
+	OUT("{0x01, 0x02, 0x03, 0x04};\n");
 
 	asn1c_print_oid(arg, expr->value->value.oid);
 	OUT("const RELATIVE_OID_t ");
