@@ -143,6 +143,25 @@ asn1p_value_fromtype(asn1p_expr_t *expr) {
 }
 
 asn1p_value_t *
+asn1p_value_fromoid(asn1p_oid_t *oid) {
+	asn1p_value_t *v = calloc(1, sizeof *v);
+	if(v) {
+		v->value.oid = asn1p_oid_construct(oid->arcs, oid->arcs_count);
+		v->type = ATV_OBJECT_IDENTIFIER;
+	}
+	return v;
+}
+
+void
+asn1p_value_fromoid2(asn1p_value_t *v, asn1p_oid_t *oid) {
+	if(v) {
+		v->value.oid = asn1p_oid_construct(oid->arcs, oid->arcs_count);
+		v->type = ATV_OBJECT_IDENTIFIER;
+	}
+}
+
+
+asn1p_value_t *
 asn1p_value_clone(asn1p_value_t *v) {
 	return asn1p_value_clone_with_resolver(v, 0, 0);
 }
@@ -256,6 +275,9 @@ asn1p_value_free(asn1p_value_t *v) {
 		case ATV_CHOICE_IDENTIFIER:
 			free(v->value.choice_identifier.identifier);
 			asn1p_value_free(v->value.choice_identifier.value);
+			break;
+		case ATV_OBJECT_IDENTIFIER:
+			asn1p_oid_free(v->value.oid);
 			break;
 		}
 		free(v);

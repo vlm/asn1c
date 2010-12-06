@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		14006B3E12A33FF900EB6F41 /* asn1c_C.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = asn1c_C.c; sourceTree = "<group>"; };
 		1473FDD912A3363B004E9FB4 /* asn1c */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = asn1c; path = asn1c/asn1c; sourceTree = "<group>"; };
 		14E9B47D12A3161100CAFAC4 /* asn1p_class.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1p_class.Plo; sourceTree = "<group>"; };
 		14E9B47E12A3161100CAFAC4 /* asn1p_constr.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1p_constr.Plo; sourceTree = "<group>"; };
@@ -384,7 +385,6 @@
 		14E9B60112A3163C00CAFAC4 /* asn1c_out.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1c_out.Plo; sourceTree = "<group>"; };
 		14E9B60212A3163C00CAFAC4 /* asn1c_save.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1c_save.Plo; sourceTree = "<group>"; };
 		14E9B60312A3163C00CAFAC4 /* asn1compiler.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1compiler.Plo; sourceTree = "<group>"; };
-		14E9B60412A3163C00CAFAC4 /* asn1c_C.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = asn1c_C.c; sourceTree = "<group>"; };
 		14E9B60512A3163C00CAFAC4 /* asn1c_C.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1c_C.h; sourceTree = "<group>"; };
 		14E9B60612A3163C00CAFAC4 /* asn1c_compat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = asn1c_compat.c; sourceTree = "<group>"; };
 		14E9B60712A3163C00CAFAC4 /* asn1c_compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1c_compat.h; sourceTree = "<group>"; };
@@ -919,7 +919,7 @@
 			isa = PBXGroup;
 			children = (
 				14E9B5FA12A3163C00CAFAC4 /* .deps */,
-				14E9B60412A3163C00CAFAC4 /* asn1c_C.c */,
+				14006B3E12A33FF900EB6F41 /* asn1c_C.c */,
 				14E9B60512A3163C00CAFAC4 /* asn1c_C.h */,
 				14E9B60612A3163C00CAFAC4 /* asn1c_compat.c */,
 				14E9B60712A3163C00CAFAC4 /* asn1c_compat.h */,

@@ -2853,3 +2853,21 @@ static int compar_cameo(const void *ap, const void *bp) {
 	return 0;
 
 }
+
+/*** Emitting ASN.1 Values ***/
+
+int
+asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	OUT(" Hello World! OID\n");
+	out_name_chain(arg, ONC_avoid_keywords);
+	return 0;
+}
+
+int
+asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	OUT(" Hello World! RELATIVE-OID\n");
+	out_name_chain(arg, ONC_avoid_keywords);
+	return 0;
+}

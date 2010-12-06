@@ -16,6 +16,10 @@ int asn1c_lang_C_type_BIT_STRING(arg_t *);
 int asn1c_lang_C_type_REAL(arg_t *);
 int asn1c_lang_C_type_SIMPLE_TYPE(arg_t *);
 
+int asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *);
+int asn1c_lang_C_value_RELATIVE_OID(arg_t *);
+
+
 static asn1_language_map_t asn1_lang_C[] __attribute__ ((unused)) = {
 	{ AMT_TYPE, A1TC_REFERENCE,	asn1c_lang_C_type_REFERENCE },
 	{ AMT_TYPEREF, A1TC_REFERENCE,	asn1c_lang_C_type_REFERENCE },
@@ -66,6 +70,11 @@ static asn1_language_map_t asn1_lang_C[] __attribute__ ((unused)) = {
 	{ AMT_TYPE, ASN_STRING_VideotexString,asn1c_lang_C_type_SIMPLE_TYPE },
 	{ AMT_TYPE, ASN_STRING_VisibleString, asn1c_lang_C_type_SIMPLE_TYPE },
 	{ AMT_TYPE, ASN_STRING_ObjectDescriptor,asn1c_lang_C_type_SIMPLE_TYPE },
+	/*
+	 * Values
+	 */
+	{ AMT_VALUE, ASN_BASIC_OBJECT_IDENTIFIER, asn1c_lang_C_value_OBJECT_IDENTIFIER },
+	{ AMT_VALUE, ASN_BASIC_RELATIVE_OID, asn1c_lang_C_value_RELATIVE_OID },
 	{ 0, 0, 0 }
 };
 

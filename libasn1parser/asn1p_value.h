@@ -32,6 +32,7 @@ typedef struct asn1p_value_s {
 		ATV_VALUESET,	/* { 1 | 2 | 3 } */
 		ATV_REFERENCED,	/* Reference to a value defined elsewhere */
 		ATV_CHOICE_IDENTIFIER,	/* ChoiceIdentifier value */
+		ATV_OBJECT_IDENTIFIER
 	} type;	/* Value type and location */
 
 	union {
@@ -55,6 +56,7 @@ typedef struct asn1p_value_s {
 			char *identifier;
 			struct asn1p_value_s *value;
 		} choice_identifier;
+		asn1p_oid_t *oid;
 	} value;
 } asn1p_value_t;
 

@@ -269,6 +269,8 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 	case ATV_CHOICE_IDENTIFIER:
 		printf("%s: ", val->value.choice_identifier.identifier);
 		return asn1print_value(val->value.choice_identifier.value, flags);
+	case ATV_OBJECT_IDENTIFIER:
+		return asn1print_oid(21, val->value.oid, flags);
 	}
 
 	assert(val->type || !"Unknown");

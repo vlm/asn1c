@@ -1482,6 +1482,15 @@ ValueAssignment:
 Value:
 	SimpleValue
 	| DefinedValue
+	| ObjectIdentifier {
+		$$ = asn1p_value_fromint(0);
+		checkmem($$);
+		printf("!!! Value pointer: %p and OID pointer: %p\n", ($$), ($1));
+		/* $$->value.oid = asn1p_oid_construct(($1)); */
+		$$->type = ATV_NULL;
+		$$->type = ATV_OBJECT_IDENTIFIER;
+		$$->value.oid = asn1p_oid_construct(($1)->arcs, ($1)->arcs_count);
+	}
 	| Identifier ':' Value {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
