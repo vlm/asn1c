@@ -12,7 +12,7 @@
  * Object identifier arc (one number in the hierarchy).
  */
 typedef struct asn1p_oid_arc_s {
-	asn1c_integer_t number;	/* -1 if not yet defined */
+	char *number;	/* 0 if not yet defined */
 	char *name;	/* 0 if not defined */
 } asn1p_oid_arc_t;
 
@@ -21,7 +21,7 @@ typedef struct asn1p_oid_arc_s {
  * Arc constructor.
  */
 asn1p_oid_arc_t *asn1p_oid_arc_new(
-	const char *optName, asn1c_integer_t optNumber /* = -1 */);
+	const char *optName, const char *optNumber /* = NULL */);
 /*
  * Arc destructor.
  */

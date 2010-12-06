@@ -140,6 +140,7 @@ static asn1p_module_t *currentModule;
 %token	<tv_str>	TOK_typefieldreference		/* "&Pork" */
 %token	<tv_str>	TOK_valuefieldreference		/* "&id" */
 %token	<tv_str>	TOK_Literal			/* "BY" */
+%token  <tv_str>  TOK_arcnumber
 
 /*
  * Token types representing ASN.1 standard keywords.
@@ -429,25 +430,29 @@ ObjectIdentifierBody:
 		asn1p_oid_add_arc($$, &$1);
 		if($1.name)
 			free($1.name);
+		if($1.number)
+			free($1.number);
 	}
 	| ObjectIdentifierBody ObjectIdentifierElement {
 		$$ = $1;
 		asn1p_oid_add_arc($$, &$2);
 		if($2.name)
 			free($2.name);
+		if ($2.number)
+			free($2.number);
 	}
 	;
 
 ObjectIdentifierElement:
 	Identifier {					/* iso */
 		$$.name = $1;
-		$$.number = -1;
+		$$.number = 0;
 	}
-	| Identifier '(' TOK_number ')' {		/* iso(1) */
+	| Identifier '(' TOK_arcnumber ')' {		/* iso(1) */
 		$$.name = $1;
 		$$.number = $3;
 	}
-	| TOK_number {					/* 1 */
+	| TOK_arcnumber {					/* 1 */
 		$$.name = 0;
 		$$.number = $1;
 	}

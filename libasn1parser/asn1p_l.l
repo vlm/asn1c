@@ -228,10 +228,20 @@ WSP	[\t\r\v\f\n ]
 	}
 
 [1-9][0-9]*	{
+		asn1p_lval.tv_str = strdup(yytext);
+		return TOK_arcnumber;
+	}
+
+[1-9][0-9]*	{
 		asn1p_lval.a_int = _lex_atoi(yytext);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number;
+	}
+
+"0"	{
+		asn1p_lval.tv_str = strdup(yytext);
+		return TOK_arcnumber;
 	}
 
 "0"	{
