@@ -309,7 +309,6 @@
 		14E9B5AF12A3163B00CAFAC4 /* asn1print.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1print.Plo; sourceTree = "<group>"; };
 		14E9B5B012A3163B00CAFAC4 /* asn1print.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = asn1print.c; sourceTree = "<group>"; };
 		14E9B5B112A3163B00CAFAC4 /* asn1print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1print.h; sourceTree = "<group>"; };
-		14E9B5B212A3163B00CAFAC4 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		14E9B5B312A3163B00CAFAC4 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		14E9B5B412A3163B00CAFAC4 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		14E9B5B512A3163C00CAFAC4 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
@@ -821,7 +820,6 @@
 				14E9B5AE12A3163B00CAFAC4 /* .deps */,
 				14E9B5B012A3163B00CAFAC4 /* asn1print.c */,
 				14E9B5B112A3163B00CAFAC4 /* asn1print.h */,
-				14E9B5B212A3163B00CAFAC4 /* Makefile */,
 				14E9B5B312A3163B00CAFAC4 /* Makefile.am */,
 				14E9B5B412A3163B00CAFAC4 /* Makefile.in */,
 				14E9B5B512A3163C00CAFAC4 /* README */,
