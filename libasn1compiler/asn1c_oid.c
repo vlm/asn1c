@@ -274,6 +274,80 @@ static int OBJECT_IDENTIFIER_fromDotNotation(INTERNAL_OBJECT_IDENTIFIER_t *_oid,
 	return 0;
 }
 
+static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
+	asn1p_expr_t *expr = arg->expr;
+	size_t oid_arcs_len = 0, oid_arcs_one, oid_arcs_one_end;
+	int i;
+
+	/* Compute result. */
+	for(i = 0; i < oid->arcs_count; i++) {
+		if (oid->arcs[i].number) {
+			oid_arcs_one = strlen(oid->arcs[i].number);
+			oid_arcs_len += 1 + oid_arcs_one;
+		} else if (oid->arcs[i].name) {
+			/* Handle symbols. */
+			char *sym = oid->arcs[i].name;
+			asn1p_expr_t *v; /* value definition */
+			asn1p_xports_t *imp; /* import definition */
+			
+			oid_arcs_one = 0;
+			if (i == 0 && !is_roid) {
+				if (!strcmp(sym, "itu-t")) oid_arcs_one = 1; /* 0 */
+				else if (!strcmp(sym, "iso")) oid_arcs_one = 1; /* 1 */
+				else if (!strcmp(sym, "joint-iso-itu-t")) oid_arcs_one = 1; /* 2 */
+				else {
+					/* Treat as OBJECT IDENTIFIER symbol. */
+					
+					/* First scan local members. */
+					TQ_FOR(v, &(expr->module->members), next) {
+						if (!strcmp(v->Identifier, sym)) {
+							if (v->expr_type != ASN_BASIC_OBJECT_IDENTIFIER ||
+								v->value->type != ATV_OBJECT_IDENTIFIER) {
+								/* TODO: Output that this is a type mismatch error. */
+								errno = EINVAL;
+								return 0;
+							}
+							oid_arcs_one = get_len_of_oid(arg, v->value->value.oid, 0) + 1;
+							break;
+						}
+					}
+					
+					/* Then, scan all imports. */
+					if (oid_arcs_one == 0) {
+						TQ_FOR(imp, &(expr->module->imports), xp_next) {
+							assert(imp->xports_type == XPT_IMPORTS);
+							
+							TQ_FOR(v, &(imp->members), next) {
+								if (!strcmp(v->Identifier, sym)) {
+									assert(0); /* TODO: Complete! */
+									/* oid_arcs_one = 33 */
+								}
+							}
+						}
+						
+						if (oid_arcs_one == 0) {
+							/* TODO: Output no match for symbol! */
+							errno = EINVAL;
+							return 0;
+						}
+					}
+				}
+			} else {
+				/* Treat as RELATIVE-OID symbol. */
+				assert(0);
+				return 0;
+			}
+			
+			oid_arcs_len += 1 + oid_arcs_one;
+		} else {
+			assert(oid->arcs[i].name || oid->arcs[i].number);
+			errno = EINVAL;
+			return 0;
+		}
+	}
+
+	return oid_arcs_len;
+}
 
 /*
  * Actual public function exposed to other asn1c modules.
@@ -303,23 +377,13 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 	}
 	
 	/* Compute result. */
-	for(i = 0; i < oid->arcs_count; i++) {
-		if (oid->arcs[i].number) {
-			oid_arcs_one = strlen(oid->arcs[i].number);
-			oid_arcs_len += 1 + oid_arcs_one;
-		} else if (oid->arcs[i].name) {
-			/* TODO: Handle symbols. */
-			*ber = (uint8_t*)malloc(4);
-			memset(*ber, 0, 4);
-			*ber_len = 4;
-			return 0;
-		} else {
-			assert(oid->arcs[i].name || oid->arcs[i].number);
-			errno = EINVAL;
-			return -1;
-		}
+	errno = 0;
+	oid_arcs_len = get_len_of_oid(arg, oid, is_roid);
+	if (!oid_arcs_len) {
+		assert(errno != 0);
+		return -1;
 	}
-	
+
 	bcd = (char*)malloc(oid_arcs_len);
 	oid_arcs_one = 0;
 	oid_arcs_one_end = 0;
@@ -337,8 +401,13 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 			oid_arcs_one_end = 0; /* safety. */
 		} else if (oid->arcs[i].name) {
 			/* TODO: Handle symbols. */
-			assert(0);
-			return -1;
+			*ber = (uint8_t*)malloc(4);
+			(*ber)[0] = 0;
+			(*ber)[1] = 1;
+			(*ber)[2] = 2;
+			(*ber)[3] = 3;
+			*ber_len = 4;
+			return 0;
 		} else {
 			assert(oid->arcs[i].name || oid->arcs[i].number);
 			errno = EINVAL;
