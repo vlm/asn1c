@@ -727,7 +727,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	}
 }
 
-
+/* Contributed by Sean Leonard of SeanTek(R). */
 /***** 2010-11-23 additions *****/
 
 int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
@@ -865,21 +865,18 @@ static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
 	assert(bcd && bcd_len && ber);
 	/* optimized cases (common and fast--but the algorithm below
 	 works for them too) */
-	if (bcd_len == 1) {
+	if(bcd_len == 1) {
 		*ber = (uint8_t)*bcd;
 		return 1;
-	}
-	else if (bcd_len == 2) {
+	} else if(bcd_len == 2) {
 		*ber = (uint8_t)bcd[0] * 10 + (uint8_t)bcd[1];
 		return 1;
-	}
-	else if (bcd_len == 3 && bcd[0] == 1 &&
+	} else if(bcd_len == 3 && bcd[0] == 1 &&
 		(bcd[1] < 2 || (bcd[1] == 2 && bcd[2] < 8))) {
 		*ber = 100 + (uint8_t)bcd[1] * 10 + (uint8_t)bcd[2];
 		assert(*ber < 0x80);
 		return 1;
-	}
-	else {
+	} else {
 		size_t k = 0;
 		char * const bcd_end = bcd + bcd_len;
 		char * const bcd_last = bcd_end - 1;
@@ -893,12 +890,12 @@ static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
 
 		memset(ber, 0, ber_len);
 	
-		while (bcd != bcd_end) {
+		while(bcd != bcd_end) {
 			lsb = (uint8_t)*bcd_last & 0x1;
 			/* put lsb into ber[x] at the correct bit position */
-			if (k == BitsUsed) {
+			if(k == BitsUsed) {
 				assert(ber_point > ber);
-				if (ber_point <= ber) {
+				if(ber_point <= ber) {
 					return 0; /* oh no, went too far! */
 				}
 				k = 0;
@@ -906,26 +903,24 @@ static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
 			}
 			*ber_point |= lsb << k++;
 
-			for (bcd_i = bcd_last; bcd_i > bcd; bcd_i--) {
-				if ((*(bcd_i - 1)) & 0x1) {
+			for(bcd_i = bcd_last; bcd_i > bcd; bcd_i--) {
+				if((*(bcd_i - 1)) & 0x1) {
 					*bcd_i = ((*bcd_i >> 1) | 0x08) - 0x3;
-				}
-				else {
+				} else {
 					*bcd_i >>= 1;
 				}
 			}
 			assert(bcd_i == bcd);
 			*bcd >>= 1;
-			if (!*bcd) bcd++;
+			if(!*bcd) bcd++;
 		}
 	
 		/* Shift ber contents down to ber, if necessary */
-		if (ber_point == ber) {
-			while (ber < ber_last) *ber++ |= 0x80;
-		}
-		else {
+		if(ber_point == ber) {
+			while(ber < ber_last) *ber++ |= 0x80;
+		} else {
 			ber_len = (ber_end - ber_point);
-			while (ber_point < ber_last) *ber++ = *ber_point++ | 0x80;
+			while(ber_point < ber_last) *ber++ = *ber_point++ | 0x80;
 			*ber = *ber_point; /* shift but do not add 0x80 continuation */
 		}
 		return ber_len;
@@ -935,25 +930,24 @@ static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
 static size_t perform_bcd2ber(char *scratch, size_t scratch_len, uint8_t *ber) {
 	size_t res = 0, i = 2, base = 2;
 	assert(scratch && ber);
-	if (scratch_len < 3) {
+	if(scratch_len < 3) {
 		errno = ERANGE;
 		return 0;
-	}
-	if (((unsigned char)scratch[0]) > 2 || scratch[1] != (char)-1 ||
+	} else if(((unsigned char)scratch[0]) > 2 || scratch[1] != (char)-1 ||
 		scratch[2] == (char)-1) {
 		errno = EINVAL;
 		return 0;
 	}
 
 	/* first handle "2.16" combine by adding 40 or 80, then encoding */
-	while (i < scratch_len && scratch[i] != (char)-1) i++;
+	while(i < scratch_len && scratch[i] != (char)-1) i++;
 	scratch[1] = 0;
-	if (scratch[0] != 0) {
+	if(scratch[0] != 0) {
 		size_t j = i-2;
 		int carry;
 		scratch[j] += scratch[0] == 1 ? 4 : 8;
-		for (carry = scratch[j] >= 10; carry && j >= base;
-		carry = scratch[j] >= 10) {
+		for(carry = scratch[j] >= 10; carry && j >= base;
+			carry = scratch[j] >= 10) {
 			scratch[j--] -= 10;
 			scratch[j] += 1;
 		}
@@ -962,22 +956,22 @@ static size_t perform_bcd2ber(char *scratch, size_t scratch_len, uint8_t *ber) {
 	}
 	
 	res = reverse_double_dabble(scratch + base, i - base, ber);
-	if (!res) {
+	if(!res) {
 		assert(0);
 		return 0;
 	}
 	ber += res;
 
 	/* next iterate over all other arcs */
-	while (i < scratch_len) {
+	while(i < scratch_len) {
 		assert(scratch[i] == (char)-1);
 		base = ++i;
-		while (i < scratch_len && scratch[i] != (char)-1) i++;
+		while(i < scratch_len && scratch[i] != (char)-1) i++;
 		assert(base != i);
 		if (base != i) {
 			size_t onesize;
 			onesize = reverse_double_dabble(scratch + base, i - base, ber);
-			if (!onesize) {
+			if(!onesize) {
 				assert(0);
 				return 0;
 			}
@@ -997,12 +991,12 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	size_t oid_buf_len;
 	char *scratch; /* text in BCD format, with -1 (0xFF) as sentinel values */
 
-	if (!_oid || !oid_text) {
+	if(!_oid || !oid_text) {
 		errno = EINVAL;
 		return -1;
 	}
 
-	if (oid_text_len > (((SIZE_MAX - (295 - 1)) / 14) / 10)) {
+	if(oid_text_len > (((SIZE_MAX - (295 - 1)) / 14) / 10)) {
 		errno = ERANGE; // it's going to overflow!
 		return 0;
 	}
@@ -1017,29 +1011,29 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	base = oid_text[0] < '2' ? 2 : 1;
 	assert(oid_text[0] == '0' || oid_text[0] == '1' || oid_text[0] == '2');
 
-	while (i < oid_text_len && oid_text[i] != '.') i++;
+	while(i < oid_text_len && oid_text[i] != '.') i++;
 
 	oid_buf_len = compute_reverse_length(i - base, oid_text[2] - '0');
 
-	while (i < oid_text_len) {
+	while(i < oid_text_len) {
 		assert(oid_text[i] == '.');
 		base = ++i;
-		while (i < oid_text_len && oid_text[i] != '.') i++;
+		while(i < oid_text_len && oid_text[i] != '.') i++;
 		assert(base != i);
-		if (base != i) {
+		if(base != i) {
 			oid_buf_len += compute_reverse_length(i - base, oid_text[base] - '0');
 		}
 	}
 
 	_oid->buf = (uint8_t*)MALLOC(oid_buf_len);
 	_oid->size = 0; /* in progress */
-	if (!_oid->buf) {
+	if(!_oid->buf) {
 		/* ENOMEM */
 		return -1;
 	}
 	
 	scratch = (char *)MALLOC(oid_text_len + 1);
-	if (!scratch) {
+	if(!scratch) {
 		/* ENOMEM */
 		FREEMEM(_oid->buf);
 		_oid->buf = NULL;
@@ -1047,12 +1041,11 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	}
 	scratch[oid_text_len] = '\0';
 
-	for (i = 0; i < oid_text_len; i++) {
-		if (!((oid_text[i] >= '0' && oid_text[i] <= '9'))) {
-			if (oid_text[i] == '.') {
+	for(i = 0; i < oid_text_len; i++) {
+		if(!((oid_text[i] >= '0' && oid_text[i] <= '9'))) {
+			if(oid_text[i] == '.') {
 				scratch[i] = (char)-1;
-			}
-			else {
+			} else {
 				assert((oid_text[i] >= '0' && oid_text[i] <= '9') || oid_text[i] == '.');
 				FREEMEM(_oid->buf);
 				_oid->buf = NULL;
@@ -1060,8 +1053,7 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 				errno = EINVAL;
 				return -1;
 			}
-		}
-		else {
+		} else {
 			scratch[i] = oid_text[i] - '0';
 		}
 	}
@@ -1070,7 +1062,7 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	_oid->size = perform_bcd2ber(scratch, oid_text_len, _oid->buf);
 	assert(_oid->size <= oid_buf_len);
 	FREEMEM(scratch);
-	if (!_oid->size) {
+	if(!_oid->size) {
 		FREEMEM(_oid->buf);
 		_oid->buf = NULL;
 		return -1;
@@ -1084,12 +1076,12 @@ OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
 	int result;
 	
 	oid = (OBJECT_IDENTIFIER_t*)CALLOC(1, sizeof(*oid));
-	if (!oid) {
+	if(!oid) {
 		/* ENOMEM */
 		return NULL;
 	}
 	result = OBJECT_IDENTIFIER_fromDotNotation(oid, oid_text, oid_text_length);
-	if (result == 0) return oid;
+	if(result == 0) return oid;
 	else {
 		FREEMEM(oid);
 		return NULL;
@@ -1105,28 +1097,28 @@ int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
 	int memcmp_result;
 	int i;
 	
-	if (!_oid1) return _oid2base ? -1 : 0;
-	else if (!_oid2base) return 1;
-	else if (_oid1->size < _oid2base->size) {
+	if(!_oid1) return _oid2base ? -1 : 0;
+	else if(!_oid2base) return 1;
+	else if(_oid1->size < _oid2base->size) {
 		memcmp_result = memcmp(_oid1->buf, _oid2base->buf, _oid1->size);
-		if (memcmp_result != 0) return memcmp_result;
+		if(memcmp_result != 0) return memcmp_result;
 		else return -1; 
 	}
 	
 	memcmp_result = memcmp(_oid1->buf, _oid2base->buf, _oid2base->size);
-	if (memcmp_result != 0) return memcmp_result;
+	if(memcmp_result != 0) return memcmp_result;
 	
 	oid_full_len = _oid1->size;
 	oid_at_len = _oid2base->size;
 	va_start(roids, _oid2base);
-	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
-		for (i = 0; i < roid->size; i++, oid_at_len++) {
-			if (oid_at_len >= oid_full_len) {
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len) {
 				va_end(roids);
 				return -1;
 			}
 			memcmp_result = _oid1->buf[oid_at_len] - roid->buf[i];
-			if (memcmp_result != 0) {
+			if(memcmp_result != 0) {
 				va_end(roids);
 				return memcmp_result;
 			}
@@ -1144,19 +1136,19 @@ int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	size_t oid_full_len, oid_at_len;
 	int i;
 	
-	if (!_oid1) return _oid2base ? 0 : 1;
-	else if (!_oid2base) return 0;
-	else if (_oid2base->size > _oid1->size) return 0;
+	if(!_oid1) return _oid2base ? 0 : 1;
+	else if(!_oid2base) return 0;
+	else if(_oid2base->size > _oid1->size) return 0;
 
 	oid_full_len = _oid1->size;
 
-	if (!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
+	if(!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
 		return 0;
 	oid_at_len = _oid2base->size;
 	va_start(roids, _oid2base);
-	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
-		for (i = 0; i < roid->size; i++, oid_at_len++) {
-			if (oid_at_len >= oid_full_len ||
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len ||
 				_oid1->buf[oid_at_len] != roid->buf[i]) {
 				va_end(roids);
 				return 0;
