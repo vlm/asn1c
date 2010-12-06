@@ -2856,11 +2856,78 @@ static int compar_cameo(const void *ap, const void *bp) {
 
 /*** Emitting ASN.1 Values ***/
 
+/* This function from asn1print.c, minus the flags */
+static void
+asn1c_print_oid(arg_t *arg, asn1p_oid_t *oid) {
+	size_t accum = 3;
+	int ac;
+
+	OUT("/* {");
+	for(ac = 0; ac < oid->arcs_count; ac++) {
+		const char *arcname = oid->arcs[ac].name;
+		const char *arcnumber = oid->arcs[ac].number;
+
+		if(accum + strlen(arcname ? arcname : "") > 72) {
+			OUT("\n   ");
+			accum = 3;
+		} else if (ac != 0) {
+			accum += OUT(" ");
+		}
+
+		if(arcname) {
+			accum += OUT("%s", arcname);
+			if(arcnumber) {
+				accum += OUT("(%s)",
+					arcnumber);
+			}
+		} else {
+			accum += OUT("%s", arcnumber);
+		}
+	}
+	OUT("} */\n");
+}
+
 int
 asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
-	OUT(" Hello World! OID\n");
+	
+	assert(expr->value);
+	if (!expr->value)
+		return 0;
+	
+	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
+		expr->value->value.oid);
+	if (expr->value->type != ATV_OBJECT_IDENTIFIER ||
+		!expr->value->value.oid) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	REDIR(OT_FUNC_DECLS);
+	asn1c_print_oid(arg, expr->value->value.oid);
+	OUT("extern const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+	
+	REDIR(OT_STAT_DEFS);
+	OUT("static const uint8_t DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = ");
+	/* TODO: replace with actual BER encoding */
+	OUT("{0x01, 0x02, 0x03, 0x04}");
+	OUT(";\n");
+	OUT("\n");
+	
+	asn1c_print_oid(arg, expr->value->value.oid);
+	OUT("const OBJECT_IDENTIFIER_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = {(uint8_t*)DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(", sizeof ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("};\n");
+	OUT("\n");
+
 	return 0;
 }
 
