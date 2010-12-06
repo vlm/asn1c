@@ -2962,13 +2962,13 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = {(uint8_t*)DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(", sizeof DEF_");
+	OUT(", sizeof(DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	/* added by other code--
-	OUT("};\n");
+	OUT(")};\n");
 	OUT("\n");
 	*/
-	OUT("}");
+	OUT(")}");
 
 	return 0;
 }

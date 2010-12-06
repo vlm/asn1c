@@ -384,13 +384,39 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 				
 				/* Then, scan all imports. */
 				if (oid_arcs_one == 0) {
+					asn1p_module_t *ref_mod;
+					asn1p_expr_t *ref_expr;
 					TQ_FOR(imp, &(expr->module->imports), xp_next) {
 						assert(imp->xports_type == XPT_IMPORTS);
 						
 						TQ_FOR(v, &(imp->members), next) {
 							if (!strcmp(v->Identifier, sym)) {
-								assert(0); /* TODO: Complete! */
-								/* oid_arcs_one = 33 */
+								assert(v->meta_type == AMT_INVALID);
+								assert(v->expr_type == A1TC_REFERENCE);
+								assert(imp->identifier.oid);
+								
+								TQ_FOR(ref_mod, &(arg->asn->modules), mod_next) {
+									if (!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
+										TQ_FOR(ref_expr, &(ref_mod->members), next) {
+											if (!strcmp(ref_expr->Identifier, sym)) {
+												asn1p_expr_t *stack_expr = arg->expr;
+												if (ref_expr->expr_type != ASN_BASIC_RELATIVE_OID ||
+													ref_expr->value->type != ATV_OBJECT_IDENTIFIER) {
+													/* TODO: Output that this is a type mismatch error. */
+													errno = EINVAL;
+													return 0;
+												}
+
+												assert(oid != ref_expr->value->value.oid);
+												arg->expr = ref_expr;
+												oid_arcs_one = get_len_of_oid(arg, ref_expr->value->value.oid, 1);
+												arg->expr = stack_expr;
+												break;
+											}
+										}
+										break;
+									}
+								}
 							}
 						}
 					}
@@ -472,13 +498,39 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 
 					/* Then, scan all imports. */
 					if(sub_arc_len_1 == 0) {
+						asn1p_module_t *ref_mod;
+						asn1p_expr_t *ref_expr;
+						
 						TQ_FOR(imp, &(expr->module->imports), xp_next) {
 							assert(imp->xports_type == XPT_IMPORTS);
 							
 							TQ_FOR(v, &(imp->members), next) {
-								if(!strcmp(v->Identifier, sym)) {
-									assert(0); /* TODO: Complete! */
-									/* oid_arcs_one = 33 */
+								if (!strcmp(v->Identifier, sym)) {
+									assert(v->meta_type == AMT_INVALID);
+									assert(v->expr_type == A1TC_REFERENCE);
+									assert(imp->identifier.oid);
+									
+									TQ_FOR(ref_mod, &(arg->asn->modules), mod_next) {
+										if (!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
+											TQ_FOR(ref_expr, &(ref_mod->members), next) {
+												if (!strcmp(ref_expr->Identifier, sym)) {
+													asn1p_expr_t *stack_expr = arg->expr;
+													assert(ref_expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER &&
+														ref_expr->value->type == ATV_OBJECT_IDENTIFIER);
+
+													assert(oid != ref_expr->value->value.oid);
+													/* recurse to fill the byte ranges. */
+													arg->expr = ref_expr;
+													sub_arc_len_1 = get_bcd_of_oid(arg,
+														ref_expr->value->value.oid, 0, bcd + oid_arcs_one);
+													arg->expr = stack_expr;
+													oid_arcs_one += sub_arc_len_1;
+													break;
+												}
+											}
+											break;
+										}
+									}
 								}
 							}
 						}
@@ -511,14 +563,40 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 				}
 
 				/* Then, scan all imports. */
-				if (sub_arc_len_1 == 0) {
+				if(sub_arc_len_1 == 0) {
+					asn1p_module_t *ref_mod;
+					asn1p_expr_t *ref_expr;
+					
 					TQ_FOR(imp, &(expr->module->imports), xp_next) {
 						assert(imp->xports_type == XPT_IMPORTS);
 						
 						TQ_FOR(v, &(imp->members), next) {
 							if (!strcmp(v->Identifier, sym)) {
-								assert(0); /* TODO: Complete! */
-								/* oid_arcs_one = 33 */
+								assert(v->meta_type == AMT_INVALID);
+								assert(v->expr_type == A1TC_REFERENCE);
+								assert(imp->identifier.oid);
+								
+								TQ_FOR(ref_mod, &(arg->asn->modules), mod_next) {
+									if (!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
+										TQ_FOR(ref_expr, &(ref_mod->members), next) {
+											if (!strcmp(ref_expr->Identifier, sym)) {
+												asn1p_expr_t *stack_expr = arg->expr;
+												assert(ref_expr->expr_type == ASN_BASIC_RELATIVE_OID &&
+													ref_expr->value->type == ATV_OBJECT_IDENTIFIER);
+
+												assert(oid != ref_expr->value->value.oid);
+												/* recurse to fill the byte ranges. */
+												arg->expr = ref_expr;
+												sub_arc_len_1 = get_bcd_of_oid(arg,
+													ref_expr->value->value.oid, 1, bcd + oid_arcs_one);
+												arg->expr = stack_expr;
+												oid_arcs_one += sub_arc_len_1;
+												break;
+											}
+										}
+										break;
+									}
+								}
 							}
 						}
 					}
