@@ -39,7 +39,7 @@ int RELATIVE_OID_cmp(const RELATIVE_OID_t *_roid1,
 int RELATIVE_OID_eq(const RELATIVE_OID_t *_roid1,
 	const RELATIVE_OID_t *_roid2base, ...);
 
-inline int RELATIVE_OID_cmp0(const RELATIVE_OID_t *_roid1,
+static inline int RELATIVE_OID_cmp0(const RELATIVE_OID_t *_roid1,
 	const RELATIVE_OID_t *_roid2) {
 	if (!_roid1) return _roid2 ? -1 : 0;
 	else if (!_roid2) return 1;
@@ -51,7 +51,7 @@ inline int RELATIVE_OID_cmp0(const RELATIVE_OID_t *_roid1,
 	}
 }
 
-inline int RELATIVE_OID_eq0(const RELATIVE_OID_t *_roid1,
+static inline int RELATIVE_OID_eq0(const RELATIVE_OID_t *_roid1,
 	const RELATIVE_OID_t *_roid2) {
 	if (!_roid1) return _roid2 ? 0 : 1;
 	else if (!_roid2) return 0;
