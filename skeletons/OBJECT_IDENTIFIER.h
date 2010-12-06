@@ -13,7 +13,11 @@
 extern "C" {
 #endif
 
-typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t;
+/* typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t; */
+typedef struct OBJECT_IDENTIFIER {
+	uint8_t *buf; /* Buffer with consecutive primitive encoding types */
+	int size; /* Size of the buffer */
+} OBJECT_IDENTIFIER_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER;
 
@@ -100,7 +104,7 @@ ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
 	asn_app_consume_bytes_f *cb, void *app_key);
 
 /*
- * Parse the OBJECT IDENTIFIER textual representation ("1.3.6.1.4.1.9363").
+ * Parse the OBJECT IDENTIFIER dot notation ("1.3.6.1.4.1.9363").
  * No arc can exceed the (0..signed_long_max) range (typically, 0..2G if L32).
  * This function is not specific to OBJECT IDENTIFIER, it may be used to parse
  * the RELATIVE-OID data, or any other data consisting of dot-separated
@@ -131,6 +135,45 @@ int OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen,
 	signed int add, void *value, unsigned int value_size);
 int OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf,
 	const void *arcval, unsigned int arcval_size, int _prepared_order);
+
+int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
+	const OBJECT_IDENTIFIER_t *_oidbase, ...);
+
+OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromIdentifiers(
+	asn_TYPE_descriptor_t *td, const OBJECT_IDENTIFIER_t *_oidbase, ...);
+
+int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
+	const char *oid_text, ssize_t oid_text_length);
+
+OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
+	asn_TYPE_descriptor_t *td, const char *oid_text, ssize_t oid_text_length);
+
+
+int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, ...);
+
+int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, ...);
+
+inline int OBJECT_IDENTIFIER_cmp0(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2) {
+	if (!_oid1) return _oid2 ? -1 : 0;
+	else if (!_oid2) return 1;
+	else {
+		ssize_t min_size = _oid1->size < _oid2->size ? _oid1->size : _oid2->size;
+		int memcmp_result = memcmp(_oid1->buf, _oid2->buf, min_size);
+		if (memcmp_result != 0) return memcmp_result;
+		else return (unsigned int)_oid1->size - (unsigned int)_oid2->size;
+	}
+}
+
+inline int OBJECT_IDENTIFIER_eq0(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2) {
+	if (!_oid1) return _oid2 ? 0 : 1;
+	else if (!_oid2) return 0;
+	else if (_oid1->size != _oid2->size) return 0;
+	else return !memcmp(_oid1->buf, _oid2->buf, _oid1->size);
+}
 
 #ifdef __cplusplus
 }

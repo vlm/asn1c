@@ -5,6 +5,7 @@
 #include <asn_internal.h>
 #include <OBJECT_IDENTIFIER.h>
 #include <OCTET_STRING.h>
+#include <RELATIVE-OID.h>
 #include <limits.h>	/* for CHAR_BIT */
 #include <errno.h>
 
@@ -726,4 +727,87 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	}
 }
 
+
+/***** 2010-11-23 additions *****/
+
+int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
+	const OBJECT_IDENTIFIER_t *_oidbase, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+
+	if(!_oid || !_oidbase) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	va_start(roids, _oidbase);
+	oid_full_len = _oidbase->size;
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		if ((oid_full_len + roid->size) < oid_full_len) {
+			errno = ERANGE;
+			return -1;
+		}
+		oid_full_len += roid->size;
+	}
+	va_end(roids);
+	
+	_oid->buf = (uint8_t*)MALLOC(oid_full_len);
+	if (!_oid->buf) {
+		/* ENOMEM */
+		return -1;
+	}
+	
+	_oid->size = oid_full_len;
+	memcpy(_oid->buf, _oidbase->buf, _oidbase->size);
+	oid_at_len = _oidbase->size;
+	va_start(roids, _oidbase);
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		memcpy(_oid->buf + oid_at_len, roid->buf, roid->size);
+		oid_at_len += roid->size;
+	}
+	assert(oid_at_len == oid_full_len);
+	va_end(roids);
+	
+	return 0;
+}
+
+OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromIdentifiers(
+	asn_TYPE_descriptor_t *td, const OBJECT_IDENTIFIER_t *_oidbase, ...) {
+	/* TODO: Implement. */
+	assert(0);
+	return NULL;
+}
+
+int OBJECT_IDENTIFIER_fromText(OBJECT_IDENTIFIER_t *_oid,
+	const char *oid_text, ssize_t oid_text_length) {
+	/* TODO: Implement. */
+	assert(0);
+	return -1;
+}
+
+OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromText(
+	asn_TYPE_descriptor_t *td, const char *oid_text, ssize_t oid_text_length) {
+	/* TODO: Implement. */
+	OBJECT_IDENTIFIER_t *oid;
+	int result;
+	assert(0);
+	result = OBJECT_IDENTIFIER_fromText(oid, oid_text, oid_text_length);
+	return oid;
+}
+
+
+int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, ...) {
+	/* TODO: Implement. */
+	assert(0);
+	return -1;
+}
+
+int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, ...) {
+	/* TODO: Implement. */
+	assert(0);
+	return 0;
+}
 
