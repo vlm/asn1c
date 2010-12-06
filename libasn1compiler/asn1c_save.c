@@ -5,6 +5,7 @@
 #include "asn1c_misc.h"
 #include "asn1c_save.h"
 #include "asn1c_out.h"
+#include "asn1c_oid.c"
 
 #define	HINCLUDE(s)						\
 	((arg->flags & A1C_INCLUDES_QUOTED)			\
@@ -651,11 +652,81 @@ include_type_to_pdu_collection(arg_t *arg) {
 
 /* Value output code contributed by Sean Leonard of SeanTek(R). */
 
+
+static void
+asn1c_file_out_oid(asn1p_module_t *mod, FILE *fp) {
+	size_t accum = 3;
+	int ac;
+	asn1p_oid_t *oid = mod->module_oid;
+
+	fprintf(fp, "/* {");
+	for(ac = 0; ac < oid->arcs_count; ac++) {
+		const char *arcname = oid->arcs[ac].name;
+		const char *arcnumber = oid->arcs[ac].number;
+
+		if(accum + strlen(arcname ? arcname : "") > 72) {
+			fprintf(fp, "\n   ");
+			accum = 3;
+		} else if (ac != 0) {
+			accum += fprintf(fp, " ");
+		}
+
+		if(arcname) {
+			accum += fprintf(fp, "%s", arcname);
+			if(arcnumber) {
+				accum += fprintf(fp, "(%s)", arcnumber);
+			}
+		} else {
+			accum += fprintf(fp, "%s", arcnumber);
+		}
+	}
+	fprintf(fp, "} */\n");
+}
+
+static int
+asn1c_file_out_ber(arg_t *arg, asn1p_module_t *mod, FILE *fp) {
+	uint8_t *ber = NULL;
+	size_t ber_len = 0;
+	size_t ber_i;
+	int res;
+	arg_t temp_arg = {arg->flags, arg->logger_cb, arg->default_cb};
+	asn1p_expr_t temp_expr = {mod->ModuleName, AMT_VALUE, ASN_BASIC_OBJECT_IDENTIFIER};
+	asn1p_value_t temp_value = {ATV_OBJECT_IDENTIFIER};
+
+	temp_arg.expr = &temp_expr;
+	temp_arg.asn = arg->asn;
+	/* target and embed set to 0 on purpose */
+	
+	temp_expr.value = &temp_value;
+	temp_expr.module = mod;
+
+	temp_value.value.oid = mod->module_oid;
+
+	res = asn1c_oid_ber_encode(&temp_arg, &ber, &ber_len);
+	if(res)
+		return res;
+	
+	if (!ber_len) {
+		free(ber);
+		return 0;
+	}
+	
+	fprintf(fp, "0x%02X", ber[0]);
+	for (ber_i = 1; ber_i < ber_len; ber_i++) {
+		fprintf(fp, ", 0x%02X", ber[ber_i]);
+	}
+
+	free(ber);
+	return 0;
+}
+
+
 static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	int optc, char **argv) {
 	FILE *fp_c, *fp_h;
-	char *header_id;
+	char *header_id; /* for file name */
 	asn1p_expr_t *expr;
+	const char *mod_symbol_id; /* for C */
 	unsigned char has_values[ASN_EXPR_TYPE_MAX] = {0};
 	size_t i;
 	
@@ -696,10 +767,33 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 		}
 	}
 
-	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
+	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n");
 	
-	fprintf(fp_c, "#include \"%s.h\"\n", mod->ModuleName);
+	fprintf(fp_c, "#include \"%s.h\"\n\n", mod->ModuleName);
 	
+	
+	/* Compare with MKID and out_name_chain */
+	mod_symbol_id = asn1c_make_identifier(AMI_NODELIMITER,
+		NULL, mod->ModuleName, NULL);
+
+	asn1c_file_out_oid(mod, fp_h);
+
+	fprintf(fp_h, "extern const OBJECT_IDENTIFIER_t %s;\n", mod_symbol_id);
+	
+	fprintf(fp_c, "static const uint8_t DEF_%s[] = {", mod_symbol_id);
+	if (asn1c_file_out_ber(arg, mod, fp_c)) {
+		fclose(fp_c);
+		fclose(fp_h);
+		return -1;
+	}
+	fprintf(fp_c, "};\n");
+	
+	asn1c_file_out_oid(mod, fp_c);
+	
+	fprintf(fp_c, "const OBJECT_IDENTIFIER_t %s = {(uint8_t*)DEF_%s, sizeof(DEF_%s)}",
+		mod_symbol_id, mod_symbol_id, mod_symbol_id);
+	fprintf(fp_c, ";\n");
+
 	fclose(fp_c);
 	fclose(fp_h);
 	
