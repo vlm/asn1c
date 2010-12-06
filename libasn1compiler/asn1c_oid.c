@@ -387,6 +387,11 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 	return oid_arcs_len;
 }
 
+static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bcd) {
+	assert(0);
+	return 0;
+}
+
 /*
  * Actual public function exposed to other asn1c modules.
  */
@@ -438,14 +443,107 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 			oid_arcs_one = oid_arcs_one_end + 1;
 			oid_arcs_one_end = 0; /* safety. */
 		} else if (oid->arcs[i].name) {
-			/* TODO: Handle symbols. */
-			*ber = (uint8_t*)malloc(4);
-			(*ber)[0] = 0;
-			(*ber)[1] = 1;
-			(*ber)[2] = 2;
-			(*ber)[3] = 3;
-			*ber_len = 4;
-			return 0;
+			/* Handle symbols. */
+			char *sym = oid->arcs[i].name;
+			asn1p_expr_t *v; /* value definition */
+			asn1p_xports_t *imp; /* import definition */
+			
+			if (i == 0 && !is_roid) {
+				if (!strcmp(sym, "itu-t")) {
+					bcd[0] = 0;
+					bcd[1] = (char)-1;
+					oid_arcs_one = 2;
+				} else if (!strcmp(sym, "iso")) {
+					bcd[0] = 1;
+					bcd[1] = (char)-1;
+					oid_arcs_one = 2;
+				}	else if (!strcmp(sym, "joint-iso-itu-t")) {
+					bcd[0] = 2;
+					bcd[1] = (char)-1;
+					oid_arcs_one = 2;
+				} else {
+					/* Treat as OBJECT IDENTIFIER symbol. */
+					size_t sub_arc_len_1 = 0; /* this is the length of the sub-arc, plus 1 for final (char)-1 terminator */
+
+					/* First scan local members. */
+					TQ_FOR(v, &(expr->module->members), next) {
+						if (!strcmp(v->Identifier, sym)) {
+							assert(v->expr_type == ASN_BASIC_OBJECT_IDENTIFIER &&
+								v->value->type == ATV_OBJECT_IDENTIFIER);
+
+							/* Infinite recursion check (this checks self-references only, not buried cycles!). */
+							assert(oid != v->value->value.oid);
+							/* recurse to fill the byte ranges. */
+							sub_arc_len_1 = get_bcd_of_oid(arg, v->value->value.oid,
+								is_roid, bcd + oid_arcs_one);
+							oid_arcs_one += sub_arc_len_1;
+							assert(0);
+							break;
+						}
+					}
+
+					/* Then, scan all imports. */
+					if (sub_arc_len_1 == 0) {
+						TQ_FOR(imp, &(expr->module->imports), xp_next) {
+							assert(imp->xports_type == XPT_IMPORTS);
+							
+							TQ_FOR(v, &(imp->members), next) {
+								if (!strcmp(v->Identifier, sym)) {
+									assert(0); /* TODO: Complete! */
+									/* oid_arcs_one = 33 */
+								}
+							}
+						}
+						
+						if (sub_arc_len_1 == 0) {
+							/* TODO: Output no match for symbol! */
+							errno = EINVAL;
+							return 0;
+						}
+					}
+				}
+			} else {
+				/* Treat as RELATIVE-OID symbol. */
+				size_t sub_arc_len_1 = 0;
+
+				/* First scan local members. */
+				TQ_FOR(v, &(expr->module->members), next) {
+					if (!strcmp(v->Identifier, sym)) {
+						assert(v->expr_type == ASN_BASIC_RELATIVE_OID &&
+							v->value->type == ATV_OBJECT_IDENTIFIER);
+
+						/* Infinite recursion check (this checks self-references only, not buried cycles!). */
+						assert(oid != v->value->value.oid);
+						/* recurse to fill the byte ranges. */
+						sub_arc_len_1 = get_bcd_of_oid(arg, v->value->value.oid,
+							is_roid, bcd + oid_arcs_one);
+						oid_arcs_one += sub_arc_len_1;
+						break;
+					}
+				}
+
+				/* Then, scan all imports. */
+				if (sub_arc_len_1 == 0) {
+					TQ_FOR(imp, &(expr->module->imports), xp_next) {
+						assert(imp->xports_type == XPT_IMPORTS);
+						
+						TQ_FOR(v, &(imp->members), next) {
+							if (!strcmp(v->Identifier, sym)) {
+								assert(0); /* TODO: Complete! */
+								/* oid_arcs_one = 33 */
+							}
+						}
+					}
+					
+					if (sub_arc_len_1 == 0) {
+						/* TODO: Output no match for symbol! */
+						errno = EINVAL;
+						return 0;
+					}
+				}
+			}
+			
+			oid_arcs_one_end = 0; /* safety. */
 		} else {
 			assert(oid->arcs[i].name || oid->arcs[i].number);
 			errno = EINVAL;

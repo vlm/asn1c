@@ -210,51 +210,35 @@
 					<key>Split0</key>
 					<dict>
 						<key>PBXProjectModuleGUID</key>
-						<string>140865F212A62BD500F7CD13</string>
-						<key>PBXProjectModuleLabel</key>
-						<string>asn1c_oid.c</string>
-						<key>_historyCapacity</key>
-						<integer>0</integer>
-						<key>bookmark</key>
-						<string>14B7F0E912A785770077937D</string>
-						<key>history</key>
-						<array>
-							<string>140865F312A62BD500F7CD13</string>
-							<string>1408662412A62F6300F7CD13</string>
-						</array>
-					</dict>
-					<key>Split1</key>
-					<dict>
-						<key>PBXProjectModuleGUID</key>
 						<string>14B7EFE212A6C40E0077937D</string>
 						<key>PBXProjectModuleLabel</key>
 						<string>asn1c_oid.c</string>
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0EA12A785770077937D</string>
+						<string>14B7F14A12A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7EFE312A6C40E0077937D</string>
 						</array>
 					</dict>
-					<key>Split2</key>
+					<key>Split1</key>
 					<dict>
 						<key>PBXProjectModuleGUID</key>
-						<string>14B7EFE512A6C40E0077937D</string>
+						<string>14B7F13A12A791B00077937D</string>
 						<key>PBXProjectModuleLabel</key>
 						<string>asn1c_oid.c</string>
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0EB12A785770077937D</string>
+						<string>14B7F14B12A791B00077937D</string>
 						<key>history</key>
 						<array>
-							<string>14B7F01712A6C49A0077937D</string>
+							<string>14B7F13B12A791B00077937D</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
-					<string>3</string>
+					<string>2</string>
 				</dict>
 				<key>StatusBarVisibility</key>
 				<true/>
@@ -266,7 +250,7 @@
 				<key>PBXModuleWindowStatusBarHidden2</key>
 				<false/>
 				<key>RubberWindowFrame</key>
-				<string>121 203 983 975 0 0 1920 1178 </string>
+				<string>563 191 983 975 0 0 1920 1178 </string>
 			</dict>
 		</dict>
 		<dict>
@@ -287,7 +271,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0EC12A785770077937D</string>
+						<string>14B7F14C12A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>1408662C12A62F6300F7CD13</string>
@@ -327,7 +311,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0ED12A785770077937D</string>
+						<string>14B7F14D12A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7F0BB12A7841D0077937D</string>
@@ -367,7 +351,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0EE12A785770077937D</string>
+						<string>14B7F14E12A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7F08F12A77E3B0077937D</string>
@@ -407,7 +391,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0EF12A785770077937D</string>
+						<string>14B7F14F12A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7F09712A77FD20077937D</string>
@@ -447,7 +431,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F012A785770077937D</string>
+						<string>14B7F15012A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7F09E12A77FD20077937D</string>
@@ -487,7 +471,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F112A785770077937D</string>
+						<string>14B7F15212A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>1408662612A62F6300F7CD13</string>
@@ -527,7 +511,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F212A785770077937D</string>
+						<string>14B7F15312A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7EFF812A6C40E0077937D</string>
@@ -567,7 +551,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F312A785770077937D</string>
+						<string>14B7F15512A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7EFF212A6C40E0077937D</string>
@@ -607,7 +591,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F412A785770077937D</string>
+						<string>14B7F15712A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7EFED12A6C40E0077937D</string>
@@ -647,7 +631,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F512A785770077937D</string>
+						<string>14B7F15912A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>14B7EFE912A6C40E0077937D</string>
@@ -687,7 +671,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F612A785770077937D</string>
+						<string>14B7F15A12A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>1408662912A62F6300F7CD13</string>
@@ -727,7 +711,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>14B7F0F712A785770077937D</string>
+						<string>14B7F15C12A791B00077937D</string>
 						<key>history</key>
 						<array>
 							<string>1408662812A62F6300F7CD13</string>
@@ -887,7 +871,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>14B7F0E812A785770077937D</string>
+										<string>14B7F14912A791B00077937D</string>
 										<key>history</key>
 										<array>
 											<string>14A89FF812A32FBA006C9829</string>
@@ -1131,10 +1115,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>14B7F0F812A785770077937D</string>
 		<string>14B7F02512A6C49A0077937D</string>
 		<string>14B7EFBE12A6B7360077937D</string>
-		<string>14B1B16D12A31587000B9425</string>
+		<string>1CD10A99069EF8BA00B06720</string>
 		<string>140865FB12A62BD500F7CD13</string>
 		<string>140865B912A6231100F7CD13</string>
 		<string>140865C312A6231100F7CD13</string>
@@ -1147,11 +1130,11 @@
 		<string>14B7F09912A77FD20077937D</string>
 		<string>1C530D57069F1CE1000CFCEE</string>
 		<string>14B7F09312A77FD20077937D</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>/Users/Sean/asn1c/trunk/asn1c.xcodeproj</string>
 		<string>14B7F02412A6C49A0077937D</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>140865C612A6231100F7CD13</string>
+		<string>14B1B16D12A31587000B9425</string>
+		<string>1C78EAAD065D492600B07095</string>
 		<string>140865F112A62BD500F7CD13</string>
 	</array>
 	<key>WindowString</key>
@@ -1247,7 +1230,7 @@
 			<key>WindowToolGUID</key>
 			<string>14B1B16D12A31587000B9425</string>
 			<key>WindowToolIsVisible</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
@@ -1373,7 +1356,7 @@
 			<key>WindowToolGUID</key>
 			<string>1CD10A99069EF8BA00B06720</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
