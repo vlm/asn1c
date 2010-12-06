@@ -27,6 +27,9 @@ der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
 xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
 
+struct RELATIVE_OID;
+typedef struct RELATIVE_OID RELATIVE_OID_t;
+
 /**********************************
  * Some handy conversion routines *
  **********************************/
@@ -136,6 +139,8 @@ int OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen,
 int OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf,
 	const void *arcval, unsigned int arcval_size, int _prepared_order);
 
+/* OID utility functions contributed by Sean Leonard of SeanTek(R). */
+
 int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
 	const OBJECT_IDENTIFIER_t *_oidbase, ...);
 
@@ -160,23 +165,30 @@ int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 
 static inline int OBJECT_IDENTIFIER_cmp0(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2) {
-	if (!_oid1) return _oid2 ? -1 : 0;
-	else if (!_oid2) return 1;
+	if(!_oid1) return _oid2 ? -1 : 0;
+	else if(!_oid2) return 1;
 	else {
 		ssize_t min_size = _oid1->size < _oid2->size ? _oid1->size : _oid2->size;
 		int memcmp_result = memcmp(_oid1->buf, _oid2->buf, min_size);
-		if (memcmp_result != 0) return memcmp_result;
+		if(memcmp_result != 0) return memcmp_result;
 		else return (unsigned int)_oid1->size - (unsigned int)_oid2->size;
 	}
 }
 
 static inline int OBJECT_IDENTIFIER_eq0(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2) {
-	if (!_oid1) return !_oid2;
-	else if (!_oid2) return 0;
-	else if (_oid1->size != _oid2->size) return 0;
+	if(!_oid1) return !_oid2;
+	else if(!_oid2) return 0;
+	else if(_oid1->size != _oid2->size) return 0;
 	else return !memcmp(_oid1->buf, _oid2->buf, _oid1->size);
 }
+
+int OBJECT_IDENTIFIER_eq1(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, const RELATIVE_OID_t *_roid2);
+
+int OBJECT_IDENTIFIER_1eq1(const OBJECT_IDENTIFIER_t *_oid1base,
+	const RELATIVE_OID_t *_roid1, const OBJECT_IDENTIFIER_t *_oid2base,
+	const RELATIVE_OID_t *_roid2);
 
 #ifdef __cplusplus
 }

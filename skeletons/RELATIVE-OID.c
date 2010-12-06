@@ -240,6 +240,8 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	return 0;
 }
 
+/* Contributed by Sean Leonard of SeanTek(R). */
+/***** 2010-11-23 additions *****/
 
 int RELATIVE_OID_cmp(const RELATIVE_OID_t *_roid1,
 	const RELATIVE_OID_t *_roid2base, ...) {
@@ -249,28 +251,28 @@ int RELATIVE_OID_cmp(const RELATIVE_OID_t *_roid1,
 	int memcmp_result;
 	int i;
 	
-	if (!_roid1) return _roid2base ? -1 : 0;
-	else if (!_roid2base) return 1;
-	else if (_roid1->size < _roid2base->size) {
+	if(!_roid1) return _roid2base ? -1 : 0;
+	else if(!_roid2base) return 1;
+	else if(_roid1->size < _roid2base->size) {
 		memcmp_result = memcmp(_roid1->buf, _roid2base->buf, _roid1->size);
-		if (memcmp_result != 0) return memcmp_result;
+		if(memcmp_result != 0) return memcmp_result;
 		else return -1; 
 	}
 	
 	memcmp_result = memcmp(_roid1->buf, _roid2base->buf, _roid2base->size);
-	if (memcmp_result != 0) return memcmp_result;
+	if(memcmp_result != 0) return memcmp_result;
 	
 	oid_full_len = _roid1->size;
 	oid_at_len = _roid2base->size;
 	va_start(roids, _roid2base);
-	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
-		for (i = 0; i < roid->size; i++, oid_at_len++) {
-			if (oid_at_len >= oid_full_len) {
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len) {
 				va_end(roids);
 				return -1;
 			}
 			memcmp_result = _roid1->buf[oid_at_len] - roid->buf[i];
-			if (memcmp_result != 0) {
+			if(memcmp_result != 0) {
 				va_end(roids);
 				return memcmp_result;
 			}
@@ -288,19 +290,19 @@ int RELATIVE_OID_eq(const RELATIVE_OID_t *_roid1,
 	size_t oid_full_len, oid_at_len;
 	int i;
 	
-	if (!_roid1) return _roid2base ? 0 : 1;
-	else if (!_roid2base) return 0;
-	else if (_roid2base->size > _roid1->size) return 0;
+	if(!_roid1) return _roid2base ? 0 : 1;
+	else if(!_roid2base) return 0;
+	else if(_roid2base->size > _roid1->size) return 0;
 	
 	oid_full_len = _roid1->size;
 	
-	if (!!memcmp(_roid1->buf, _roid2base->buf, _roid2base->size))
+	if(!!memcmp(_roid1->buf, _roid2base->buf, _roid2base->size))
 		return 0;
 	oid_at_len = _roid2base->size;
 	va_start(roids, _roid2base);
-	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
-		for (i = 0; i < roid->size; i++, oid_at_len++) {
-			if (oid_at_len >= oid_full_len ||
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len ||
 				_roid1->buf[oid_at_len] != roid->buf[i]) {
 				va_end(roids);
 				return 0;
