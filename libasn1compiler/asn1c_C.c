@@ -2420,7 +2420,16 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	INDENT(+1);
 
 		if(expr->_anonymous_type) {
-			p = ASN_EXPR_TYPE2STR(expr->expr_type);
+			/* warning: comparison is always false due to limited range of data type */
+			/* p = ASN_EXPR_TYPE2STR(expr->expr_type); */
+			ssize_t test_me = (ssize_t)expr->expr_type;
+			assert(test_me >= 0);
+			if(test_me < 0 || expr->expr_type >=
+				sizeof(asn1p_expr_type2str) / sizeof(asn1p_expr_type2str[0])) {
+				p = NULL;
+			} else {
+				p = asn1p_expr_type2str[expr->expr_type];
+			}
 			OUT("\"%s\",\n", p?p:"");
 			OUT("\"%s\",\n",
 				p ? asn1c_make_identifier(AMI_CHECK_RESERVED,
