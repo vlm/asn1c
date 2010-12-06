@@ -7,6 +7,7 @@
 #include "asn1c_constraint.h"
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
+#include "asn1c_oid.h"
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
 
@@ -2867,9 +2868,10 @@ static int compar_cameo(const void *ap, const void *bp) {
 
 /* This function from asn1print.c, minus the flags */
 static void
-asn1c_print_oid(arg_t *arg, asn1p_oid_t *oid) {
+asn1c_print_oid(arg_t *arg) {
 	size_t accum = 3;
 	int ac;
+	asn1p_oid_t *oid = arg->expr->value->value.oid;
 
 	OUT("/* {");
 	for(ac = 0; ac < oid->arcs_count; ac++) {
@@ -2896,6 +2898,31 @@ asn1c_print_oid(arg_t *arg, asn1p_oid_t *oid) {
 	OUT("} */\n");
 }
 
+static int
+asn1c_print_ber(arg_t *arg) {
+	uint8_t *ber = NULL;
+	size_t ber_len = 0;
+	size_t ber_i;
+	int res;
+	
+	res = asn1c_oid_ber_encode(arg, &ber, &ber_len);
+	if(res)
+		return res;
+	
+	if (!ber_len) {
+		free(ber);
+		return 0;
+	}
+	
+	OUT("%02x", ber[0]);
+	for (ber_i = 1; ber_i < ber_len; ber_i++) {
+		OUT(", %02x", ber[ber_i]);
+	}
+
+	free(ber);
+	return 0;
+}
+
 int
 asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -2906,6 +2933,8 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	
 	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
 		expr->value->value.oid);
+	assert(expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER);
+
 	if (expr->value->type != ATV_OBJECT_IDENTIFIER ||
 		!expr->value->value.oid) {
 		errno = EINVAL;
@@ -2914,7 +2943,7 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	
 	REDIR(OT_FUNC_DECLS);
 	OUT("\n");
-	asn1c_print_oid(arg, expr->value->value.oid);
+	asn1c_print_oid(arg);
 	OUT("extern const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(";\n");	
@@ -2923,11 +2952,11 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	OUT("\n");
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(" = ");
-	/* TODO: replace with actual BER encoding */
-	OUT("{0x01, 0x02, 0x03, 0x04};\n");
+	OUT(" = {");
+	asn1c_print_ber(arg);
+	OUT("};\n");
 
-	asn1c_print_oid(arg, expr->value->value.oid);
+	asn1c_print_oid(arg);
 	OUT("const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = {(uint8_t*)DEF_");
@@ -2946,13 +2975,15 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 int
 asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
-	
+
 	assert(expr->value);
 	if (!expr->value)
 		return 0;
 	
 	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
 		expr->value->value.oid);
+	assert(expr->expr_type == ASN_BASIC_RELATIVE_OID);
+
 	if (expr->value->type != ATV_OBJECT_IDENTIFIER ||
 		!expr->value->value.oid) {
 		errno = EINVAL;
@@ -2961,7 +2992,7 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	
 	REDIR(OT_FUNC_DECLS);
 	OUT("\n");
-	asn1c_print_oid(arg, expr->value->value.oid);
+	asn1c_print_oid(arg);
 	OUT("extern const RELATIVE_OID_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(";\n");	
@@ -2970,11 +3001,11 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	OUT("\n");
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(" = ");
-	/* TODO: replace with actual BER encoding */
-	OUT("{0x01, 0x02, 0x03, 0x04};\n");
+	OUT(" = {");
+	asn1c_print_ber(arg);
+	OUT("};\n");
 
-	asn1c_print_oid(arg, expr->value->value.oid);
+	asn1c_print_oid(arg);
 	OUT("const RELATIVE_OID_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = {(uint8_t*)DEF_");

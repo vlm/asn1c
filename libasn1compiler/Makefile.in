@@ -49,7 +49,7 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libasn1compiler_la_LIBADD =
 am_libasn1compiler_la_OBJECTS = asn1compiler.lo asn1c_misc.lo \
-	asn1c_out.lo asn1c_lang.lo asn1c_save.lo asn1c_C.lo \
+	asn1c_out.lo asn1c_lang.lo asn1c_save.lo asn1c_oid.lo asn1c_C.lo \
 	asn1c_constraint.lo asn1c_compat.lo asn1c_fdeps.lo
 libasn1compiler_la_OBJECTS = $(am_libasn1compiler_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -196,6 +196,7 @@ libasn1compiler_la_SOURCES = \
 	asn1c_out.c asn1c_out.h			\
 	asn1c_lang.c asn1c_lang.h		\
 	asn1c_save.c asn1c_save.h		\
+	asn1c_oid.c asn1c_oid.h			\
 	asn1c_C.c asn1c_C.h			\
 	asn1c_constraint.c asn1c_constraint.h	\
 	asn1c_compat.c asn1c_compat.h		\

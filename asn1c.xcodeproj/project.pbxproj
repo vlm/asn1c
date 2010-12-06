@@ -8,6 +8,8 @@
 
 /* Begin PBXFileReference section */
 		14006B3E12A33FF900EB6F41 /* asn1c_C.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = asn1c_C.c; sourceTree = "<group>"; };
+		1408658A12A61F0400F7CD13 /* asn1c_oid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = asn1c_oid.c; sourceTree = "<group>"; };
+		1408658B12A61F0400F7CD13 /* asn1c_oid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1c_oid.h; sourceTree = "<group>"; };
 		1473FDD912A3363B004E9FB4 /* asn1c */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = asn1c; path = asn1c/asn1c; sourceTree = "<group>"; };
 		14E9B47D12A3161100CAFAC4 /* asn1p_class.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1p_class.Plo; sourceTree = "<group>"; };
 		14E9B47E12A3161100CAFAC4 /* asn1p_constr.Plo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1p_constr.Plo; sourceTree = "<group>"; };
@@ -918,6 +920,8 @@
 		14E9B5F912A3163C00CAFAC4 /* libasn1compiler */ = {
 			isa = PBXGroup;
 			children = (
+				1408658A12A61F0400F7CD13 /* asn1c_oid.c */,
+				1408658B12A61F0400F7CD13 /* asn1c_oid.h */,
 				14E9B5FA12A3163C00CAFAC4 /* .deps */,
 				14006B3E12A33FF900EB6F41 /* asn1c_C.c */,
 				14E9B60512A3163C00CAFAC4 /* asn1c_C.h */,

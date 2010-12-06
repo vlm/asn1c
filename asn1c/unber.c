@@ -392,7 +392,7 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 		return;
 	}
 
-	while(level-- > 0) printf(indent_bytes);  /* Print indent */
+	while(level-- > 0) fputs(indent_bytes, stdout);  /* Print indent */
 	printf(fin ? "</" : "<");
 
 	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
