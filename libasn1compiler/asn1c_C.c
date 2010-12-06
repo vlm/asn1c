@@ -2902,13 +2902,13 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 		errno = EINVAL;
 		return -1;
 	}
-
+	
 	REDIR(OT_FUNC_DECLS);
 	asn1c_print_oid(arg, expr->value->value.oid);
 	OUT("extern const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(";\n");	
-	
+
 	REDIR(OT_STAT_DEFS);
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
@@ -2917,16 +2917,19 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	OUT("{0x01, 0x02, 0x03, 0x04}");
 	OUT(";\n");
 	OUT("\n");
-	
+
 	asn1c_print_oid(arg, expr->value->value.oid);
 	OUT("const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = {(uint8_t*)DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(", sizeof ");
+	OUT(", sizeof DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
+	/* added by other code--
 	OUT("};\n");
 	OUT("\n");
+	*/
+	OUT("}");
 
 	return 0;
 }
@@ -2934,7 +2937,42 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 int
 asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
-	OUT(" Hello World! RELATIVE-OID\n");
+	
+	assert(expr->value);
+	if (!expr->value)
+		return 0;
+	
+	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
+		expr->value->value.oid);
+	if (expr->value->type != ATV_OBJECT_IDENTIFIER ||
+		!expr->value->value.oid) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	REDIR(OT_FUNC_DECLS);
+	asn1c_print_oid(arg, expr->value->value.oid);
+	OUT("extern const RELATIVE_OID_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+
+	REDIR(OT_STAT_DEFS);
+	OUT("static const uint8_t DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = ");
+	/* TODO: replace with actual BER encoding */
+	OUT("{0x01, 0x02, 0x03, 0x04}");
+	OUT(";\n");
+	OUT("\n");
+
+	asn1c_print_oid(arg, expr->value->value.oid);
+	OUT("const RELATIVE_OID_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = {(uint8_t*)DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(", sizeof DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("}");
+
 	return 0;
 }

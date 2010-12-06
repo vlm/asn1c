@@ -216,10 +216,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C36E12A3855D00EAA3B5</string>
+						<string>1483C3AF12A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
-							<string>1483C32712A37B6C00EAA3B5</string>
+							<string>1483C38612A385E900EAA3B5</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -235,7 +235,7 @@
 				<key>PBXModuleWindowStatusBarHidden2</key>
 				<false/>
 				<key>RubberWindowFrame</key>
-				<string>823 178 658 987 0 0 1920 1178 </string>
+				<string>487 176 658 987 0 0 1920 1178 </string>
 			</dict>
 		</dict>
 		<dict>
@@ -256,7 +256,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C36F12A3855D00EAA3B5</string>
+						<string>1483C3B012A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C32912A37B6C00EAA3B5</string>
@@ -296,7 +296,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37012A3855D00EAA3B5</string>
+						<string>1483C3B112A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C32D12A37B6C00EAA3B5</string>
@@ -336,7 +336,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37112A3855D00EAA3B5</string>
+						<string>1483C3B212A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C33112A37B6C00EAA3B5</string>
@@ -376,7 +376,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37212A3855D00EAA3B5</string>
+						<string>1483C3B312A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C33512A37B6C00EAA3B5</string>
@@ -416,7 +416,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37312A3855D00EAA3B5</string>
+						<string>1483C3B412A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C33912A37B6C00EAA3B5</string>
@@ -456,7 +456,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37412A3855D00EAA3B5</string>
+						<string>1483C3B512A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C33D12A37B6C00EAA3B5</string>
@@ -496,7 +496,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37512A3855D00EAA3B5</string>
+						<string>1483C3B612A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C2FA12A3715300EAA3B5</string>
@@ -536,7 +536,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37612A3855D00EAA3B5</string>
+						<string>1483C3B712A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>149E9A0112A36FA0006EBD15</string>
@@ -576,7 +576,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37712A3855D00EAA3B5</string>
+						<string>1483C3B812A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C30112A374BB00EAA3B5</string>
@@ -616,7 +616,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37812A3855D00EAA3B5</string>
+						<string>1483C3B912A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C34812A37B6C00EAA3B5</string>
@@ -656,7 +656,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37912A3855D00EAA3B5</string>
+						<string>1483C3BA12A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C34B12A37B6C00EAA3B5</string>
@@ -697,7 +697,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37A12A3855D00EAA3B5</string>
+						<string>1483C3BB12A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C2FE12A372A200EAA3B5</string>
@@ -737,7 +737,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37B12A3855D00EAA3B5</string>
+						<string>1483C3BC12A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>1483C2FD12A3729E00EAA3B5</string>
@@ -777,7 +777,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>1483C37C12A3855D00EAA3B5</string>
+						<string>1483C3BD12A3885100EAA3B5</string>
 						<key>history</key>
 						<array>
 							<string>149E9A0412A36FA0006EBD15</string>
@@ -934,7 +934,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>1483C36D12A3855D00EAA3B5</string>
+										<string>1483C3AE12A3885100EAA3B5</string>
 										<key>history</key>
 										<array>
 											<string>14A89FF812A32FBA006C9829</string>
@@ -1159,7 +1159,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1483C37E12A3855D00EAA3B5</string>
 		<string>1483C37F12A3855D00EAA3B5</string>
 		<string>1483C38012A3855D00EAA3B5</string>
 		<string>14006BCC12A35EF700EB6F41</string>
@@ -1361,10 +1360,10 @@
 									<key>Frame</key>
 									<string>{{150, 0}, {1026, 375}}</string>
 									<key>RubberWindowFrame</key>
-									<string>744 304 1176 749 0 0 1920 1178 </string>
+									<string>729 237 1176 749 0 0 1920 1178 </string>
 								</dict>
 								<key>RubberWindowFrame</key>
-								<string>744 304 1176 749 0 0 1920 1178 </string>
+								<string>729 237 1176 749 0 0 1920 1178 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXDebugSessionModule</string>
@@ -1398,7 +1397,7 @@
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
 			<key>WindowString</key>
-			<string>744 304 1176 749 0 0 1920 1178 </string>
+			<string>729 237 1176 749 0 0 1920 1178 </string>
 			<key>WindowToolGUID</key>
 			<string>1CD10A99069EF8BA00B06720</string>
 			<key>WindowToolIsVisible</key>
