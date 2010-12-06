@@ -152,6 +152,9 @@ OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
 int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, ...);
 
+int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, ...);
+
 int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, ...);
 
