@@ -300,10 +300,16 @@ process_line(const char *fname, char *line, int lineno) {
 		}
 		break;
 	}
-	errno = 0;
-	if(!*tcl_pos
-	|| ((long)(tag_value = strtoul(tcl_pos, 0, 10))) < 0
-	|| errno) {
+
+	if(!*tcl_pos) {
+		errno = EINVAL;
+		tag_value = 0;
+	} else {
+		errno = 0;
+		tag_value = (ber_tlv_tag_t)strtoul(tcl_pos, 0, 10);
+	}
+
+	if (errno) {
 		fprintf(stderr, "%s: Invalid tag value (%c) at line %d\n",
 			fname, *tcl_pos, lineno);
 		exit(EX_DATAERR);

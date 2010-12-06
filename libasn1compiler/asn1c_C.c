@@ -7,6 +7,7 @@
 #include "asn1c_constraint.h"
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
+#include "asn1c_oid.h"
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
 
@@ -2420,7 +2421,16 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	INDENT(+1);
 
 		if(expr->_anonymous_type) {
-			p = ASN_EXPR_TYPE2STR(expr->expr_type);
+			/* warning: comparison is always false due to limited range of data type */
+			/* p = ASN_EXPR_TYPE2STR(expr->expr_type); */
+			ssize_t test_me = (ssize_t)expr->expr_type;
+			assert(test_me >= 0);
+			if(test_me < 0 || expr->expr_type >=
+				sizeof(asn1p_expr_type2str) / sizeof(asn1p_expr_type2str[0])) {
+				p = NULL;
+			} else {
+				p = asn1p_expr_type2str[expr->expr_type];
+			}
 			OUT("\"%s\",\n", p?p:"");
 			OUT("\"%s\",\n",
 				p ? asn1c_make_identifier(AMI_CHECK_RESERVED,
@@ -2852,4 +2862,159 @@ static int compar_cameo(const void *ap, const void *bp) {
 		return 1;
 	return 0;
 
+}
+
+/*** Emitting ASN.1 Values ***/
+
+/* This function from asn1print.c, minus the flags */
+static void
+asn1c_print_oid(arg_t *arg) {
+	size_t accum = 3;
+	int ac;
+	asn1p_oid_t *oid = arg->expr->value->value.oid;
+
+	OUT("/* {");
+	for(ac = 0; ac < oid->arcs_count; ac++) {
+		const char *arcname = oid->arcs[ac].name;
+		const char *arcnumber = oid->arcs[ac].number;
+
+		if(accum + strlen(arcname ? arcname : "") > 72) {
+			OUT("\n   ");
+			accum = 3;
+		} else if(ac != 0) {
+			accum += OUT(" ");
+		}
+
+		if(arcname) {
+			accum += OUT("%s", arcname);
+			if(arcnumber) {
+				accum += OUT("(%s)",
+					arcnumber);
+			}
+		} else {
+			accum += OUT("%s", arcnumber);
+		}
+	}
+	OUT("} */\n");
+}
+
+static int
+asn1c_print_ber(arg_t *arg) {
+	uint8_t *ber = NULL;
+	size_t ber_len = 0;
+	size_t ber_i;
+	int res;
+	
+	res = asn1c_oid_ber_encode(arg, &ber, &ber_len);
+	if(res)
+		return res;
+	
+	if(!ber_len) {
+		free(ber);
+		return 0;
+	}
+	
+	OUT("0x%02X", ber[0]);
+	for(ber_i = 1; ber_i < ber_len; ber_i++) {
+		OUT(", 0x%02X", ber[ber_i]);
+	}
+
+	free(ber);
+	return 0;
+}
+
+int
+asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	
+	assert(expr->value);
+	if(!expr->value)
+		return 0;
+	
+	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
+		expr->value->value.oid);
+	assert(expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER);
+
+	if(expr->value->type != ATV_OBJECT_IDENTIFIER ||
+		!expr->value->value.oid) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
+	asn1c_print_oid(arg);
+	OUT("extern const OBJECT_IDENTIFIER_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+
+	REDIR(OT_STAT_DEFS);
+	OUT("\n");
+	OUT("static const uint8_t DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("[] = {");
+	if(asn1c_print_ber(arg))
+		return -1;
+	OUT("};\n");
+
+	asn1c_print_oid(arg);
+	OUT("const OBJECT_IDENTIFIER_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = {(uint8_t*)DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(", sizeof(DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	/* added by other code--
+	OUT(")};\n");
+	OUT("\n");
+	*/
+	OUT(")}");
+
+	return 0;
+}
+
+int
+asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+
+	assert(expr->value);
+	if(!expr->value)
+		return 0;
+	
+	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
+		expr->value->value.oid);
+	assert(expr->expr_type == ASN_BASIC_RELATIVE_OID);
+
+	if(expr->value->type != ATV_OBJECT_IDENTIFIER ||
+		!expr->value->value.oid) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
+	asn1c_print_oid(arg);
+	OUT("extern const RELATIVE_OID_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+
+	REDIR(OT_STAT_DEFS);
+	OUT("\n");
+	OUT("static const uint8_t DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("[] = {");
+	if(asn1c_print_ber(arg))
+		return -1;
+	OUT("};\n");
+
+	asn1c_print_oid(arg);
+	OUT("const RELATIVE_OID_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = {(uint8_t*)DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(", sizeof DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("}");
+
+	return 0;
 }

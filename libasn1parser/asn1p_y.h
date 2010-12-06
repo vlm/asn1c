@@ -1,7 +1,9 @@
-/* A Bison parser, made from asn1p_y.y, by GNU bison 1.75.  */
+/* A Bison parser, made by GNU Bison 2.3.  */
 
-/* Skeleton parser for Yacc-like parsing with Bison,
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Skeleton interface for Bison's Yacc-like parsers in C
+
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,16 +17,21 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  */
 
-/* As a special exception, when this file is copied by Bison into a
-   Bison output file, you may use that output file without restriction.
-   This special exception was added by the Free Software Foundation
-   in version 1.24 of Bison.  */
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
 
-#ifndef BISON_ASN_P_Y_H
-# define BISON_ASN_P_Y_H
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -137,6 +144,7 @@
      TOK_ThreeDots = 360
    };
 #endif
+/* Tokens.  */
 #define TOK_PPEQ 258
 #define TOK_whitespace 259
 #define TOK_opaque 260
@@ -244,9 +252,10 @@
 
 
 
-#ifndef YYSTYPE
-#line 88 "asn1p_y.y"
-typedef union {
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+typedef union YYSTYPE
+#line 89 "asn1p_y.y"
+{
 	asn1p_t			*a_grammar;
 	asn1p_module_flags_e	 a_module_flags;
 	asn1p_module_t		*a_module;
@@ -269,6 +278,10 @@ typedef union {
 	struct asn1p_expr_marker_s a_marker;	/* OPTIONAL/DEFAULT */
 	enum asn1p_constr_pres_e a_pres;	/* PRESENT/ABSENT/OPTIONAL */
 	asn1c_integer_t		 a_int;
+	struct {
+		asn1c_integer_t a_int;
+		char *ascii_int; /* recorded as ASCII base-10 number */
+	} tv_int;
 	double			 a_dbl;
 	char	*tv_str;
 	struct {
@@ -279,14 +292,14 @@ typedef union {
 		char *name;
 		struct asn1p_type_tag_s tag;
 	} tv_nametag;
-} yystype;
-/* Line 1281 of /usr/local/share/bison/yacc.c.  */
-#line 285 "asn1p_y.h"
-# define YYSTYPE yystype
+}
+/* Line 1529 of yacc.c.  */
+#line 298 "asn1p_y.h"
+	YYSTYPE;
+# define yystype YYSTYPE /* obsolescent; will be withdrawn */
+# define YYSTYPE_IS_DECLARED 1
+# define YYSTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYSTYPE asn1p_lval;
-
-
-#endif /* not BISON_ASN_P_Y_H */
 
