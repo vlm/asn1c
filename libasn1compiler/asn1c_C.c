@@ -2952,7 +2952,7 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	OUT("\n");
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(" = {");
+	OUT("[] = {");
 	if (asn1c_print_ber(arg))
 		return -1;
 	OUT("};\n");
@@ -3002,7 +3002,7 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	OUT("\n");
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(" = {");
+	OUT("[] = {");
 	if (asn1c_print_ber(arg))
 		return -1;
 	OUT("};\n");

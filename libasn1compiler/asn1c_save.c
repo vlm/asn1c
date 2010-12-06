@@ -649,12 +649,14 @@ include_type_to_pdu_collection(arg_t *arg) {
 	return 0;
 }
 
-
+/* Value output code contributed by Sean Leonard of SeanTek(R). */
 
 static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	int optc, char **argv) {
 	FILE *fp_c, *fp_h;
 	char *header_id;
+	asn1p_expr_t *expr;
+	int has_oid = 0, has_roid = 0;
 	
 	fp_c = asn1c_open_file(mod->ModuleName, ".c", NULL);
 	fp_h = asn1c_open_file(mod->ModuleName, ".h", NULL);
@@ -676,6 +678,28 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	
 	HINCLUDE("asn_application.h");
 	
+	TQ_FOR(expr, &(mod->members), next) {
+		if (expr->meta_type == AMT_VALUE) {
+			if(expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER) {
+				has_oid = 1;
+				if (has_roid) break;
+			} else if(expr->expr_type == ASN_BASIC_RELATIVE_OID) {
+				has_roid = 1;
+				if (has_oid) break;
+			}
+		}
+	}
+
+	/* Compare with GEN_INCLUDE in asn1c_out.h/asn1c_C.c */
+	if (has_oid) {
+		HINCLUDE(asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_NODELIMITER, NULL,
+			ASN_EXPR_TYPE2STR(ASN_BASIC_OBJECT_IDENTIFIER), ".h", NULL));
+	}
+	if (has_roid) {
+		HINCLUDE(asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_NODELIMITER, NULL,
+			ASN_EXPR_TYPE2STR(ASN_BASIC_RELATIVE_OID), ".h", NULL));
+	}
+
 	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
 	
 	fprintf(fp_c, "#include \"%s.h\"\n", mod->ModuleName);
