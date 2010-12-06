@@ -423,12 +423,8 @@ ObjectIdentifier:
 	'{' ObjectIdentifierBody '}' {
 		$$ = $2;
 	}
-/* TODO: Remove this. Per X.208-1988 through X.680-2007, OIDs must
-   have at least one element. */
-	| '{' '}' {
-printf("found a possible empty body with %p\n", &($$));
-		$$ = 0;
-	}
+/* Per X.208-1988 through X.680-2007, OIDs must
+   have at least one element. They cannot be empty. */
 	;
 
 ObjectIdentifierBody:
@@ -457,16 +453,14 @@ ObjectIdentifierElement:
 	}
 	| Identifier '(' TOK_number ')' {		/* iso(1) */
 		{
-			struct {asn1c_integer_t a; char *b;} *pid = &($3);
-			printf("ObjectIdentifierElement: %s( %i %s)\n", ($1), (int)($3), pid->b);
+			struct {asn1c_integer_t a; char *b;} *pid = (void*)&($3);
 			$$.name = $1;
 			$$.number = pid->b;
 		}
 	}
 	| TOK_number {					/* 1 */
 		{
-			struct {asn1c_integer_t a; char *b;} *pid = &($1);
-			printf("ObjectIdentifierElement: %i %s\n", (int)($1), pid->b);
+			struct {asn1c_integer_t a; char *b;} *pid = (void*)&($1);
 			$$.name = 0;
 			$$.number = pid->b;
 		}
@@ -1497,18 +1491,12 @@ ValueAssignment:
 Value:
 	SimpleValue
 	| DefinedValue
-	/* OID values cannot be empty! */
-	| '{' ObjectIdentifierBody '}' {
+	| ObjectIdentifier {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
-		printf("!!! Value pointer: %p and OID pointer: %p\n", ($$), ($2));
-		/* $$->value.oid = asn1p_oid_construct(($1)); */
-		$$->type = ATV_NULL;
 		$$->type = ATV_OBJECT_IDENTIFIER;
-		assert($2);
-		if (($2)) {
-			$$->value.oid = asn1p_oid_construct(($2)->arcs, ($2)->arcs_count);
-		}
+		assert($1); /* remember that OIDs cannot be empty */
+		$$->value.oid = asn1p_oid_construct(($1)->arcs, ($1)->arcs_count);
 	}
 	| Identifier ':' Value {
 		$$ = asn1p_value_fromint(0);

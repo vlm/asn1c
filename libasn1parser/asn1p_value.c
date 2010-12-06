@@ -175,7 +175,9 @@ asn1p_value_clone_with_resolver(asn1p_value_t *v,
 		switch(v->type) {
 		case ATV_NOVALUE:
 		case ATV_NULL:
-			return calloc(1, sizeof(*clone));
+			clone = (asn1p_value_t*)calloc(1, sizeof(*clone));
+			if(clone) clone->type = v->type;
+			return clone;
 		case ATV_REAL:
 			return asn1p_value_fromdouble(v->value.v_double);
 		case ATV_TYPE:
@@ -229,7 +231,13 @@ asn1p_value_clone_with_resolver(asn1p_value_t *v,
 			if(!v) { asn1p_value_free(clone); return NULL; }
 			clone->value.choice_identifier.value = v;
 			return clone;
-		    }
+				}
+		case ATV_OBJECT_IDENTIFIER:
+			return asn1p_value_fromoid(v->value.oid);
+		case ATV_EMPTY:
+			clone = (asn1p_value_t*)calloc(1, sizeof(*clone));
+			if(clone) clone->type = v->type;
+			return clone;
 		}
 
 		assert(!"UNREACHABLE");
@@ -278,6 +286,8 @@ asn1p_value_free(asn1p_value_t *v) {
 			break;
 		case ATV_OBJECT_IDENTIFIER:
 			asn1p_oid_free(v->value.oid);
+			break;
+		case ATV_EMPTY:
 			break;
 		}
 		free(v);
