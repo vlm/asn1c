@@ -1008,7 +1008,9 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 
 	/* This algorithm should get an optimal minimum "worst-case" number
 	 for the buffer length. It gets the reverse length of all arcs,
-	 with special handling for the first two arcs (2.10 seen as 999)
+	 with special handling for the first two arcs (2.10 seen as 999).
+	 If the simple approach is desired and memory consumption is not an issue,
+	 use oid_buf_len = oid_text_len - 1;.
 	*/
 	i = 2;
 	base = oid_text[0] < '2' ? 2 : 1;
