@@ -6,6 +6,8 @@
 #include "asn1c_save.h"
 #include "asn1c_out.h"
 
+#include "asn1c_C.h" /* needed for _module OID output */
+
 #define	HINCLUDE(s)						\
 	((arg->flags & A1C_INCLUDES_QUOTED)			\
 		? fprintf(fp_h, "#include \"%s\"\n", s)		\
@@ -649,6 +651,27 @@ include_type_to_pdu_collection(arg_t *arg) {
 	return 0;
 }
 
+static int
+asn1c_attach_streams(asn1p_expr_t *expr) {
+	compiler_streams_t *cs;
+	int i;
+
+	if(expr->data)
+		return 0;	/* Already attached? */
+
+	expr->data = calloc(1, sizeof(compiler_streams_t));
+	if(expr->data == NULL)
+		return -1;
+
+	cs = expr->data;
+	for(i = 0; i < OT_MAX; i++) {
+		TQ_INIT(&(cs->destination[i].chunks));
+	}
+
+	return 0;
+}
+
+
 /* Value output code contributed by Sean Leonard of SeanTek(R). */
 
 static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
@@ -658,7 +681,7 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	asn1p_expr_t *expr;
 	unsigned char has_values[ASN_EXPR_TYPE_MAX] = {0};
 	size_t i;
-	
+
 	fp_c = asn1c_open_file(mod->ModuleName, ".c", NULL);
 	fp_h = asn1c_open_file(mod->ModuleName, ".h", NULL);
 	
@@ -699,6 +722,39 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
 	
 	fprintf(fp_c, "#include \"%s.h\"\n", mod->ModuleName);
+	
+	{
+		int res;
+		compiler_streams_t *cs;
+		out_chunk_t *ot;
+		asn1p_expr_t *stack_expr = arg->expr;
+		compiler_streams_t *stack_target = arg->target;
+		asn1p_expr_t temp_mod_expr = {mod->ModuleName,
+			AMT_VALUE, ASN_BASIC_OBJECT_IDENTIFIER};
+		asn1p_value_t temp_mod_value = {ATV_OBJECT_IDENTIFIER};
+		temp_mod_value.value.oid = mod->module_oid;
+		temp_mod_expr.value = &temp_mod_value;
+		temp_mod_expr.module = mod;
+		
+		arg->expr = &temp_mod_expr;
+		if (asn1c_attach_streams(&temp_mod_expr))
+			return -1;
+		
+		cs = arg->expr->data;
+
+		res = asn1c_lang_C_value_OBJECT_IDENTIFIER_module(arg);
+		assert(res == 0);
+
+		/* Compare with SAVE_STREAM */
+		TQ_FOR(ot, &(cs->destination[OT_FUNC_DECLS].chunks), next)
+			fwrite(ot->buf, ot->len, 1, fp_h);
+
+		TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
+			fwrite(ot->buf, ot->len, 1, fp_c);
+
+		arg->expr = stack_expr;
+		arg->target = stack_target;
+	}
 	
 	fclose(fp_c);
 	fclose(fp_h);

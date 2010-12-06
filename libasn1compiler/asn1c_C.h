@@ -16,6 +16,8 @@ int asn1c_lang_C_type_BIT_STRING(arg_t *);
 int asn1c_lang_C_type_REAL(arg_t *);
 int asn1c_lang_C_type_SIMPLE_TYPE(arg_t *);
 
+int asn1c_lang_C_value_OBJECT_IDENTIFIER_module(arg_t *);
+
 int asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *);
 int asn1c_lang_C_value_RELATIVE_OID(arg_t *);
 
