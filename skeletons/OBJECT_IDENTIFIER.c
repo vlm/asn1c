@@ -878,9 +878,41 @@ OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
 
 int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, ...) {
-	/* TODO: Implement. */
-	assert(0);
-	return -1;
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	int memcmp_result;
+	
+	if (!_oid1) return _oid2base ? -1 : 0;
+	else if (!_oid2base) return 1;
+	else if (_oid1->size < _oid2base->size) {
+		memcmp_result = memcmp(_oid1->buf, _oid2base->buf, _oid1->size);
+		if (memcmp_result != 0) return memcmp_result;
+		else return -1; 
+	}
+	
+	memcmp_result = memcmp(_oid1->buf, _oid2base->buf, _oid2base->size);
+	if (memcmp_result != 0) return memcmp_result;
+	
+	oid_full_len = _oid1->size;
+	oid_at_len = _oid2base->size;
+	va_start(roids, _oid2base);
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for (int i = 0; i < roid->size; i++, oid_at_len++) {
+			if (oid_at_len >= oid_full_len) {
+				va_end(roids);
+				return -1;
+			}
+			memcmp_result = _oid1->buf[oid_at_len] - roid->buf[i];
+			if (memcmp_result != 0) {
+				va_end(roids);
+				return memcmp_result;
+			}
+		}
+	}
+	va_end(roids);
+	assert(oid_at_len <= oid_full_len);
+	return oid_at_len < oid_full_len;
 }
 
 int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
@@ -895,7 +927,6 @@ int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	
 	oid_full_len = _oid1->size;
 	
-	/** oid2base->size <= oid1->size, always */
 	if (!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
 		return 0;
 	oid_at_len = _oid2base->size;
