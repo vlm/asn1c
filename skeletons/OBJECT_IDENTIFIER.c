@@ -875,7 +875,7 @@ static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
 		*ber = 0;
 		return 1;
 	}
-	
+
 	memset(ber, 0, ber_len);
 	
 	while (bcd != bcd_end) {
@@ -919,7 +919,58 @@ static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
 }
 
 static size_t perform_bcd2ber(char *scratch, size_t scratch_len, uint8_t *ber) {
-	return 0;
+	size_t res = 0, i = 2, base = 2;
+	assert(scratch && ber);
+	if (scratch_len < 3) {
+		errno = ERANGE;
+		return 0;
+	}
+	if (((unsigned char)scratch[0]) > 2 || scratch[1] != (char)-1 ||
+		scratch[2] == (char)-1) {
+		errno = EINVAL;
+		return 0;
+	}
+	
+	/* first handle "2.16" combine by adding 40 or 80, then encoding */
+	while (i < scratch_len && scratch[i] != (char)-1) i++;
+	scratch[1] = 0;
+	if (scratch[0] != 0) {
+		size_t j = i-2;
+		scratch[j] += scratch[0] == 1 ? 4 : 8;
+		for (int carry = scratch[j] >= 10; carry && j >= base;
+		carry = scratch[j] >= 10) {
+			scratch[j--] -= 10;
+			scratch[j] += 1;
+		}
+		assert(j >= base || base - j == 1);
+		if (j < base) base = j;
+	}
+	
+	res = reverse_double_dabble(scratch + base, i - base, ber);
+	if (!res) {
+		assert(0);
+		return 0;
+	}
+	ber += res;
+
+	/* next iterate over all other arcs */
+	while (i < scratch_len) {
+		assert(scratch[i] == (char)-1);
+		base = ++i;
+		while (i < scratch_len && scratch[i] != (char)-1) i++;
+		assert(base != i);
+		if (base != i) {
+			size_t onesize;
+			onesize = reverse_double_dabble(scratch + base, i - base, ber);
+			if (!onesize) {
+				assert(0);
+				return 0;
+			}
+			res += onesize;
+			ber += onesize;
+		}
+	}
+	return res;
 }
 
 int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
@@ -941,6 +992,12 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 		return 0;
 	}
 
+	/* This algorithm should get an optimal minimum "worst-case" number
+	 for the buffer length. It views
+	  0.0.0.0.0.0 as
+		99999999999
+		(so .x -> 99)
+	*/
 	oid_buf_len = compute_reverse_length(oid_text_len, '9');
 
 	_oid->buf = (uint8_t*)MALLOC(oid_buf_len);
@@ -978,7 +1035,7 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 		}
 	}
 
-	/* TODO: convert oid_text from base10 to base2 (base128) */
+	/* convert oid_text from base10 to base2 (base128) */
 	_oid->size = perform_bcd2ber(scratch, oid_text_len, _oid->buf);
 	FREEMEM(scratch);
 	return 0;
