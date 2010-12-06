@@ -840,18 +840,19 @@ OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromIdentifiers(
 		bytes = tenths * 14 / 295, where 14/295 is the closest rational
 		approximation to the log blob.
 */
-static inline size_t compute_reverse_length(size_t text_len, char text_sig_digit) {
+static inline size_t compute_reverse_length(size_t text_len, char bcd_sig_digit) {
 	size_t tenths;
 	
 	assert(text_len <= (((SIZE_MAX - (295 - 1)) / 14) / 10));
+	assert(bcd_sig_digit >= 0 && bcd_sig_digit < 10);
 
-	switch (text_sig_digit - '0') {
+	switch (bcd_sig_digit) {
 	case 1: tenths = 4; break;
 	case 2: tenths = 5; break;
 	case 3: case 4: tenths = 7; break;
 	case 5: tenths = 8; break;
 	case 6: tenths = 9; break;
-	default: tenths = 10; /* 7 - 9 */
+	default: tenths = 10; /* 7 - 9 and special case 0 */
 	}
 	tenths += (text_len - 1) * 10;
 	
@@ -859,61 +860,74 @@ static inline size_t compute_reverse_length(size_t text_len, char text_sig_digit
 }
 
 static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
-	size_t ber_len = compute_reverse_length(bcd_len, bcd[0] + '0');
-	size_t k = 0;
-	char * const bcd_end = bcd + bcd_len;
-	char * const bcd_last = bcd_end - 1;
-	char *bcd_i;
-	uint8_t *ber_end = ber + ber_len;
-	uint8_t *ber_point = ber_end - 1;
-	uint8_t * const ber_last = ber_point;
-	uint8_t lsb; /* least significant bit */
-	static const size_t BitsUsed = 7; // OIDs are in base128. 
-	assert(bcd && ber);
-	
-	if (bcd_len == 1 && *bcd == 0) {
-		*ber = 0;
+	size_t ber_len = compute_reverse_length(bcd_len, bcd[0]);
+
+	assert(bcd && bcd_len && ber);
+	/* optimized cases (common and fast--but the algorithm below
+	 works for them too) */
+	if (bcd_len == 1) {
+		*ber = (uint8_t)*bcd;
 		return 1;
 	}
-
-	memset(ber, 0, ber_len);
-	
-	while (bcd != bcd_end) {
-		lsb = (uint8_t)*bcd_last & 0x1;
-		/* put lsb into ber[x] at the correct bit position */
-		if (k == BitsUsed) {
-			assert(ber_point > ber);
-			if (ber_point <= ber) {
-				return 0; /* oh no, went too far! */
-			}
-			k = 0;
-			ber_point--;
-		}
-		*ber_point |= lsb << k++;
-
-		for (bcd_i = bcd_last; bcd_i > bcd; bcd_i--) {
-			if ((*(bcd_i - 1)) & 0x1) {
-				*bcd_i = ((*bcd_i >> 1) | 0x08) - 0x3;
-			}
-			else {
-				*bcd_i >>= 1;
-			}
-		}
-		assert(bcd_i == bcd);
-		*bcd >>= 1;
-		if (!*bcd) bcd++;
+	else if (bcd_len == 2) {
+		*ber = (uint8_t)bcd[0] * 10 + (uint8_t)bcd[1];
+		return 1;
 	}
-	
-	/* Shift ber contents down to ber, if necessary */
-	if (ber_point == ber) {
-		uint8_t *ber_last = ber_end - 1;
-		while (ber < ber_last) *ber++ |= 0x80;
-		return ber_len;
+	else if (bcd_len == 3 && bcd[0] == 1 &&
+		(bcd[1] < 2 || bcd[1] == 2 && bcd[2] < 8)) {
+		*ber = 100 + (uint8_t)bcd[1] * 10 + (uint8_t)bcd[2];
+		assert(*ber < 0x80);
+		return 1;
 	}
 	else {
-		ber_len = (ber_end - ber_point);
-		while (ber_point < ber_last) *ber++ = *ber_point++ | 0x80;
-		*ber = *ber_point; /* shift but do not add 0x80 continuation */
+		size_t k = 0;
+		char * const bcd_end = bcd + bcd_len;
+		char * const bcd_last = bcd_end - 1;
+		char *bcd_i;
+		uint8_t *ber_end = ber + ber_len;
+		uint8_t *ber_point = ber_end - 1;
+		uint8_t * const ber_last = ber_point;
+		uint8_t lsb; /* least significant bit */
+		static const size_t BitsUsed = 7; // OIDs are in base128. 
+		assert(bcd_len >= 3);
+
+		memset(ber, 0, ber_len);
+	
+		while (bcd != bcd_end) {
+			lsb = (uint8_t)*bcd_last & 0x1;
+			/* put lsb into ber[x] at the correct bit position */
+			if (k == BitsUsed) {
+				assert(ber_point > ber);
+				if (ber_point <= ber) {
+					return 0; /* oh no, went too far! */
+				}
+				k = 0;
+				ber_point--;
+			}
+			*ber_point |= lsb << k++;
+
+			for (bcd_i = bcd_last; bcd_i > bcd; bcd_i--) {
+				if ((*(bcd_i - 1)) & 0x1) {
+					*bcd_i = ((*bcd_i >> 1) | 0x08) - 0x3;
+				}
+				else {
+					*bcd_i >>= 1;
+				}
+			}
+			assert(bcd_i == bcd);
+			*bcd >>= 1;
+			if (!*bcd) bcd++;
+		}
+	
+		/* Shift ber contents down to ber, if necessary */
+		if (ber_point == ber) {
+			while (ber < ber_last) *ber++ |= 0x80;
+		}
+		else {
+			ber_len = (ber_end - ber_point);
+			while (ber_point < ber_last) *ber++ = *ber_point++ | 0x80;
+			*ber = *ber_point; /* shift but do not add 0x80 continuation */
+		}
 		return ber_len;
 	}
 }
@@ -930,7 +944,7 @@ static size_t perform_bcd2ber(char *scratch, size_t scratch_len, uint8_t *ber) {
 		errno = EINVAL;
 		return 0;
 	}
-	
+
 	/* first handle "2.16" combine by adding 40 or 80, then encoding */
 	while (i < scratch_len && scratch[i] != (char)-1) i++;
 	scratch[1] = 0;
@@ -978,7 +992,7 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	/* int res; */
 	size_t oid_text_len = oid_text_length < 0 ? strlen(oid_text) :
 		(size_t)oid_text_length;
-	size_t i;
+	size_t base, i;
 	size_t oid_buf_len;
 	char *scratch; /* text in BCD format, with -1 (0xFF) as sentinel values */
 
@@ -993,12 +1007,26 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	}
 
 	/* This algorithm should get an optimal minimum "worst-case" number
-	 for the buffer length. It views
-	  0.0.0.0.0.0 as
-		99999999999
-		(so .x -> 99)
+	 for the buffer length. It gets the reverse length of all arcs,
+	 with special handling for the first two arcs (2.10 seen as 999)
 	*/
-	oid_buf_len = compute_reverse_length(oid_text_len, '9');
+	i = 2;
+	base = oid_text[0] < '2' ? 2 : 1;
+	assert(oid_text[0] == '0' || oid_text[0] == '1' || oid_text[0] == '2');
+
+	while (i < oid_text_len & oid_text[i] != '.') i++;
+
+	oid_buf_len = compute_reverse_length(i - base, oid_text[2] - '0');
+
+	while (i < oid_text_len) {
+		assert(oid_text[i] == '.');
+		base = ++i;
+		while (i < oid_text_len & oid_text[i] != '.') i++;
+		assert(base != i);
+		if (base != i) {
+			oid_buf_len += compute_reverse_length(i - base, oid_text[base] - '0');
+		}
+	}
 
 	_oid->buf = (uint8_t*)MALLOC(oid_buf_len);
 	_oid->size = 0; /* in progress */
@@ -1037,7 +1065,13 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 
 	/* convert oid_text from base10 to base2 (base128) */
 	_oid->size = perform_bcd2ber(scratch, oid_text_len, _oid->buf);
+	assert(_oid->size <= oid_buf_len);
 	FREEMEM(scratch);
+	if (!_oid->size) {
+		FREEMEM(_oid->buf);
+		_oid->buf = NULL;
+		return -1;
+	}
 	return 0;
 }
 
