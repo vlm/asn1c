@@ -147,7 +147,7 @@ static size_t perform_bcd2ber(int is_roid, char *scratch, size_t scratch_len, ui
 				scratch[j] += 1;
 			}
 			assert(j >= base || base - j == 1);
-			if (j < base) base = j;
+			if(j < base) base = j;
 		}
 		
 		res = reverse_double_dabble(scratch + base, i - base, ber);
@@ -166,7 +166,7 @@ static size_t perform_bcd2ber(int is_roid, char *scratch, size_t scratch_len, ui
 	while(i < scratch_len) {
 		while(i < scratch_len && scratch[i] != (char)-1) i++;
 		assert(base != i);
-		if (base != i) {
+		if(base != i) {
 			size_t onesize;
 			onesize = reverse_double_dabble(scratch + base, i - base, ber);
 			if(!onesize) {
@@ -189,27 +189,27 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 
 	/* Compute result. */
 	for(i = 0; i < oid->arcs_count; i++) {
-		if (oid->arcs[i].number) {
+		if(oid->arcs[i].number) {
 			oid_arcs_one = strlen(oid->arcs[i].number);
 			oid_arcs_len += 1 + oid_arcs_one;
-		} else if (oid->arcs[i].name) {
+		} else if(oid->arcs[i].name) {
 			/* Handle symbols. */
 			char *sym = oid->arcs[i].name;
 			asn1p_expr_t *v; /* value definition */
 			asn1p_xports_t *imp; /* import definition */
 			
 			oid_arcs_one = 0;
-			if (i == 0 && !is_roid) {
-				if (!strcmp(sym, "itu-t")) oid_arcs_one = 2; /* 0 */
-				else if (!strcmp(sym, "iso")) oid_arcs_one = 2; /* 1 */
-				else if (!strcmp(sym, "joint-iso-itu-t")) oid_arcs_one = 2; /* 2 */
+			if(i == 0 && !is_roid) {
+				if(!strcmp(sym, "itu-t")) oid_arcs_one = 2; /* 0 */
+				else if(!strcmp(sym, "iso")) oid_arcs_one = 2; /* 1 */
+				else if(!strcmp(sym, "joint-iso-itu-t")) oid_arcs_one = 2; /* 2 */
 				else {
 					/* Treat as OBJECT IDENTIFIER symbol. */
 					
 					/* First scan local members. */
 					TQ_FOR(v, &(expr->module->members), next) {
-						if (!strcmp(v->Identifier, sym)) {
-							if (v->expr_type != ASN_BASIC_OBJECT_IDENTIFIER ||
+						if(!strcmp(v->Identifier, sym)) {
+							if(v->expr_type != ASN_BASIC_OBJECT_IDENTIFIER ||
 								v->value->type != ATV_OBJECT_IDENTIFIER) {
 								/* TODO: Output that this is a type mismatch error. */
 								errno = EINVAL;
@@ -224,7 +224,7 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 					}
 					
 					/* Then, scan all imports. */
-					if (oid_arcs_one == 0) {
+					if(oid_arcs_one == 0) {
 						asn1p_module_t *ref_mod;
 						asn1p_expr_t *ref_expr;
 						
@@ -232,17 +232,17 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 							assert(imp->xports_type == XPT_IMPORTS);
 							
 							TQ_FOR(v, &(imp->members), next) {
-								if (!strcmp(v->Identifier, sym)) {
+								if(!strcmp(v->Identifier, sym)) {
 									assert(v->meta_type == AMT_INVALID);
 									assert(v->expr_type == A1TC_REFERENCE);
 									assert(imp->identifier.oid);
 									
 									TQ_FOR(ref_mod, &(arg->asn->modules), mod_next) {
-										if (!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
+										if(!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
 											TQ_FOR(ref_expr, &(ref_mod->members), next) {
-												if (!strcmp(ref_expr->Identifier, sym)) {
+												if(!strcmp(ref_expr->Identifier, sym)) {
 													asn1p_expr_t *stack_expr = arg->expr;
-													if (ref_expr->expr_type != ASN_BASIC_OBJECT_IDENTIFIER ||
+													if(ref_expr->expr_type != ASN_BASIC_OBJECT_IDENTIFIER ||
 														ref_expr->value->type != ATV_OBJECT_IDENTIFIER) {
 														/* TODO: Output that this is a type mismatch error. */
 														errno = EINVAL;
@@ -263,7 +263,7 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 							}
 						}
 						
-						if (oid_arcs_one == 0) {
+						if(oid_arcs_one == 0) {
 							/* TODO: Output no match for symbol! */
 							errno = EINVAL;
 							return 0;
@@ -275,8 +275,8 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 
 				/* First scan local members. */
 				TQ_FOR(v, &(expr->module->members), next) {
-					if (!strcmp(v->Identifier, sym)) {
-						if (v->expr_type != ASN_BASIC_RELATIVE_OID ||
+					if(!strcmp(v->Identifier, sym)) {
+						if(v->expr_type != ASN_BASIC_RELATIVE_OID ||
 							v->value->type != ATV_OBJECT_IDENTIFIER) {
 							/* TODO: Output that this is a type mismatch error. */
 							errno = EINVAL;
@@ -291,24 +291,24 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 				}
 				
 				/* Then, scan all imports. */
-				if (oid_arcs_one == 0) {
+				if(oid_arcs_one == 0) {
 					asn1p_module_t *ref_mod;
 					asn1p_expr_t *ref_expr;
 					TQ_FOR(imp, &(expr->module->imports), xp_next) {
 						assert(imp->xports_type == XPT_IMPORTS);
 						
 						TQ_FOR(v, &(imp->members), next) {
-							if (!strcmp(v->Identifier, sym)) {
+							if(!strcmp(v->Identifier, sym)) {
 								assert(v->meta_type == AMT_INVALID);
 								assert(v->expr_type == A1TC_REFERENCE);
 								assert(imp->identifier.oid);
 								
 								TQ_FOR(ref_mod, &(arg->asn->modules), mod_next) {
-									if (!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
+									if(!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
 										TQ_FOR(ref_expr, &(ref_mod->members), next) {
-											if (!strcmp(ref_expr->Identifier, sym)) {
+											if(!strcmp(ref_expr->Identifier, sym)) {
 												asn1p_expr_t *stack_expr = arg->expr;
-												if (ref_expr->expr_type != ASN_BASIC_RELATIVE_OID ||
+												if(ref_expr->expr_type != ASN_BASIC_RELATIVE_OID ||
 													ref_expr->value->type != ATV_OBJECT_IDENTIFIER) {
 													/* TODO: Output that this is a type mismatch error. */
 													errno = EINVAL;
@@ -329,7 +329,7 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 						}
 					}
 					
-					if (oid_arcs_one == 0) {
+					if(oid_arcs_one == 0) {
 						/* TODO: Output no match for symbol! */
 						errno = EINVAL;
 						return 0;
@@ -354,11 +354,11 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 	int i;
 
 	for(i = 0; i < oid->arcs_count; i++) {
-		if (oid->arcs[i].number) {
+		if(oid->arcs[i].number) {
 			const size_t arc_len = strlen(oid->arcs[i].number);
 			size_t j;
 			oid_arcs_one_end = oid_arcs_one + arc_len;
-			for (j = 0; j < arc_len; j++) {
+			for(j = 0; j < arc_len; j++) {
 				bcd[oid_arcs_one + j] = oid->arcs[i].number[j] - '0';
 			}
 			assert(oid_arcs_one_end == oid_arcs_one + j);
@@ -372,7 +372,7 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 			asn1p_xports_t *imp; /* import definition */
 			
 			if(i == 0 && !is_roid) {
-				if (!strcmp(sym, "itu-t")) {
+				if(!strcmp(sym, "itu-t")) {
 					bcd[0] = 0;
 					bcd[1] = (char)-1;
 					oid_arcs_one = 2;
@@ -413,15 +413,15 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 							assert(imp->xports_type == XPT_IMPORTS);
 							
 							TQ_FOR(v, &(imp->members), next) {
-								if (!strcmp(v->Identifier, sym)) {
+								if(!strcmp(v->Identifier, sym)) {
 									assert(v->meta_type == AMT_INVALID);
 									assert(v->expr_type == A1TC_REFERENCE);
 									assert(imp->identifier.oid);
 									
 									TQ_FOR(ref_mod, &(arg->asn->modules), mod_next) {
-										if (!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
+										if(!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
 											TQ_FOR(ref_expr, &(ref_mod->members), next) {
-												if (!strcmp(ref_expr->Identifier, sym)) {
+												if(!strcmp(ref_expr->Identifier, sym)) {
 													asn1p_expr_t *stack_expr = arg->expr;
 													assert(ref_expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER &&
 														ref_expr->value->type == ATV_OBJECT_IDENTIFIER);
@@ -443,7 +443,7 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 							}
 						}
 						
-						if (sub_arc_len_1 == 0) {
+						if(sub_arc_len_1 == 0) {
 							/* TODO: Output no match for symbol! */
 							errno = EINVAL;
 							return 0;
@@ -456,7 +456,7 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 
 				/* First scan local members. */
 				TQ_FOR(v, &(expr->module->members), next) {
-					if (!strcmp(v->Identifier, sym)) {
+					if(!strcmp(v->Identifier, sym)) {
 						assert(v->expr_type == ASN_BASIC_RELATIVE_OID &&
 							v->value->type == ATV_OBJECT_IDENTIFIER);
 
@@ -479,15 +479,15 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 						assert(imp->xports_type == XPT_IMPORTS);
 						
 						TQ_FOR(v, &(imp->members), next) {
-							if (!strcmp(v->Identifier, sym)) {
+							if(!strcmp(v->Identifier, sym)) {
 								assert(v->meta_type == AMT_INVALID);
 								assert(v->expr_type == A1TC_REFERENCE);
 								assert(imp->identifier.oid);
 								
 								TQ_FOR(ref_mod, &(arg->asn->modules), mod_next) {
-									if (!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
+									if(!asn1p_oid_compare(ref_mod->module_oid, imp->identifier.oid)) {
 										TQ_FOR(ref_expr, &(ref_mod->members), next) {
-											if (!strcmp(ref_expr->Identifier, sym)) {
+											if(!strcmp(ref_expr->Identifier, sym)) {
 												asn1p_expr_t *stack_expr = arg->expr;
 												assert(ref_expr->expr_type == ASN_BASIC_RELATIVE_OID &&
 													ref_expr->value->type == ATV_OBJECT_IDENTIFIER);
@@ -509,7 +509,7 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 						}
 					}
 					
-					if (sub_arc_len_1 == 0) {
+					if(sub_arc_len_1 == 0) {
 						/* TODO: Output no match for symbol! */
 						errno = EINVAL;
 						return 0;

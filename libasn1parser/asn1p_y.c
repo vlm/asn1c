@@ -2339,7 +2339,7 @@ yyreduce:
 		asn1p_oid_add_arc((yyval.a_oid), &(yyvsp[(2) - (2)].a_oid_arc));
 		if((yyvsp[(2) - (2)].a_oid_arc).name)
 			free((yyvsp[(2) - (2)].a_oid_arc).name);
-		if ((yyvsp[(2) - (2)].a_oid_arc).number)
+		if((yyvsp[(2) - (2)].a_oid_arc).number)
 			free((yyvsp[(2) - (2)].a_oid_arc).number);
 	}
     break;

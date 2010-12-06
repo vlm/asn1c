@@ -69,7 +69,7 @@ asn1p_oid_arc_new(const char *optName, const char *optNumber /* = NULL */) {
 	if(arc) {
 		if(optName)
 			arc->name = strdup(optName);
-		if (optNumber)
+		if(optNumber)
 			arc->number = strdup(optNumber);
 	}
 
@@ -81,7 +81,7 @@ asn1p_oid_arc_free(asn1p_oid_arc_t *arc) {
 	if(arc) {
 		if(arc->name)
 			free(arc->name);
-		if (arc->number)
+		if(arc->number)
 			free(arc->number);
 		free(arc);
 	}

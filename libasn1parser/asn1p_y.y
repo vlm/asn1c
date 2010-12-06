@@ -441,7 +441,7 @@ ObjectIdentifierBody:
 		asn1p_oid_add_arc($$, &$2);
 		if($2.name)
 			free($2.name);
-		if ($2.number)
+		if($2.number)
 			free($2.number);
 	}
 	;

@@ -2881,7 +2881,7 @@ asn1c_print_oid(arg_t *arg) {
 		if(accum + strlen(arcname ? arcname : "") > 72) {
 			OUT("\n   ");
 			accum = 3;
-		} else if (ac != 0) {
+		} else if(ac != 0) {
 			accum += OUT(" ");
 		}
 
@@ -2909,13 +2909,13 @@ asn1c_print_ber(arg_t *arg) {
 	if(res)
 		return res;
 	
-	if (!ber_len) {
+	if(!ber_len) {
 		free(ber);
 		return 0;
 	}
 	
 	OUT("0x%02X", ber[0]);
-	for (ber_i = 1; ber_i < ber_len; ber_i++) {
+	for(ber_i = 1; ber_i < ber_len; ber_i++) {
 		OUT(", 0x%02X", ber[ber_i]);
 	}
 
@@ -2928,14 +2928,14 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	
 	assert(expr->value);
-	if (!expr->value)
+	if(!expr->value)
 		return 0;
 	
 	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
 		expr->value->value.oid);
 	assert(expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER);
 
-	if (expr->value->type != ATV_OBJECT_IDENTIFIER ||
+	if(expr->value->type != ATV_OBJECT_IDENTIFIER ||
 		!expr->value->value.oid) {
 		errno = EINVAL;
 		return -1;
@@ -2953,7 +2953,7 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT("[] = {");
-	if (asn1c_print_ber(arg))
+	if(asn1c_print_ber(arg))
 		return -1;
 	OUT("};\n");
 
@@ -2978,14 +2978,14 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 
 	assert(expr->value);
-	if (!expr->value)
+	if(!expr->value)
 		return 0;
 	
 	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
 		expr->value->value.oid);
 	assert(expr->expr_type == ASN_BASIC_RELATIVE_OID);
 
-	if (expr->value->type != ATV_OBJECT_IDENTIFIER ||
+	if(expr->value->type != ATV_OBJECT_IDENTIFIER ||
 		!expr->value->value.oid) {
 		errno = EINVAL;
 		return -1;
@@ -3003,7 +3003,7 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT("[] = {");
-	if (asn1c_print_ber(arg))
+	if(asn1c_print_ber(arg))
 		return -1;
 	OUT("};\n");
 

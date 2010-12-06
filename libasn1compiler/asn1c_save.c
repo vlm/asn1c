@@ -261,7 +261,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		return -1;
 	}
 	
-	if (expr->meta_type == AMT_VALUE)
+	if(expr->meta_type == AMT_VALUE)
 		return asn1c_save_value_streams(arg, deps, optc, argv);
 
 	fp_c = asn1c_open_file(expr->Identifier, ".c", &tmpname_c);
@@ -667,7 +667,7 @@ asn1c_file_out_oid(asn1p_module_t *mod, FILE *fp) {
 		if(accum + strlen(arcname ? arcname : "") > 72) {
 			fprintf(fp, "\n   ");
 			accum = 3;
-		} else if (ac != 0) {
+		} else if(ac != 0) {
 			accum += fprintf(fp, " ");
 		}
 
@@ -706,7 +706,7 @@ asn1c_file_out_ber(arg_t *arg, asn1p_module_t *mod, FILE *fp) {
 	if(res)
 		return res;
 	
-	if (!ber_len) {
+	if(!ber_len) {
 		free(ber);
 		return 0;
 	}
@@ -751,7 +751,7 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	HINCLUDE("asn_application.h");
 	
 	TQ_FOR(expr, &(mod->members), next) {
-		if (expr->meta_type == AMT_VALUE) {
+		if(expr->meta_type == AMT_VALUE) {
 			if(expr->expr_type < ASN_EXPR_TYPE_MAX)
 				has_values[expr->expr_type] = 1;
 		}
@@ -759,7 +759,7 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 
 	/* Compare with GEN_INCLUDE in asn1c_out.h/asn1c_C.c */
 	for (i = 0; i < ASN_EXPR_TYPE_MAX; i++) {
-		if (has_values[i]) {
+		if(has_values[i]) {
 			char *identifier_file_name = asn1c_make_identifier(
 				AMI_MASK_ONLY_SPACES | AMI_NODELIMITER, NULL,
 				ASN_EXPR_TYPE2STR(i), ".h", NULL);
@@ -781,7 +781,7 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	fprintf(fp_h, "extern const OBJECT_IDENTIFIER_t %s;\n", mod_symbol_id);
 	
 	fprintf(fp_c, "static const uint8_t DEF_%s[] = {", mod_symbol_id);
-	if (asn1c_file_out_ber(arg, mod, fp_c)) {
+	if(asn1c_file_out_ber(arg, mod, fp_c)) {
 		fclose(fp_c);
 		fclose(fp_h);
 		return -1;
