@@ -893,19 +893,7 @@ int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	else if (!_oid2base) return 0;
 	else if (_oid2base->size > _oid1->size) return 0;
 	
-	va_start(roids, _oid2base);
-	oid_full_len = _oid2base->size;
-	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
-		if ((oid_full_len + roid->size) < oid_full_len) { /* overflow */
-			errno = ERANGE;
-			va_end(roids);
-			return 0;
-		}
-		oid_full_len += roid->size;
-	}
-	va_end(roids);
-	
-	if (oid_full_len != _oid1->size) return 0;
+	oid_full_len = _oid1->size;
 	
 	/** oid2base->size <= oid1->size, always */
 	if (!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
@@ -914,14 +902,14 @@ int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	va_start(roids, _oid2base);
 	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
 		for (int i = 0; i < roid->size; i++, oid_at_len++) {
-			if (_oid1->buf[oid_at_len] != roid->buf[i]) {
+			if (oid_at_len >= oid_full_len ||
+				_oid1->buf[oid_at_len] != roid->buf[i]) {
 				va_end(roids);
 				return 0;
 			}
 		}
 	}
 	va_end(roids);
-	assert(oid_at_len == oid_full_len);
-	return 1;
+	return oid_at_len == oid_full_len;
 }
 

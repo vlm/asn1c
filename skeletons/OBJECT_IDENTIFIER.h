@@ -155,7 +155,7 @@ int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
 int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2base, ...);
 
-inline int OBJECT_IDENTIFIER_cmp0(const OBJECT_IDENTIFIER_t *_oid1,
+static inline int OBJECT_IDENTIFIER_cmp0(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2) {
 	if (!_oid1) return _oid2 ? -1 : 0;
 	else if (!_oid2) return 1;
@@ -167,9 +167,9 @@ inline int OBJECT_IDENTIFIER_cmp0(const OBJECT_IDENTIFIER_t *_oid1,
 	}
 }
 
-inline int OBJECT_IDENTIFIER_eq0(const OBJECT_IDENTIFIER_t *_oid1,
+static inline int OBJECT_IDENTIFIER_eq0(const OBJECT_IDENTIFIER_t *_oid1,
 	const OBJECT_IDENTIFIER_t *_oid2) {
-	if (!_oid1) return _oid2 ? 0 : 1;
+	if (!_oid1) return !_oid2;
 	else if (!_oid2) return 0;
 	else if (_oid1->size != _oid2->size) return 0;
 	else return !memcmp(_oid1->buf, _oid2->buf, _oid1->size);
