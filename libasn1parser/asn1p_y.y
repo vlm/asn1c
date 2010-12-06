@@ -11,6 +11,7 @@
 #define YYPARSE_PARAM	param
 #define YYPARSE_PARAM_TYPE	void **
 #define YYERROR_VERBOSE
+#define YYDEBUG 1
 
 int yylex(void);
 int yyerror(const char *msg);
@@ -108,6 +109,10 @@ static asn1p_module_t *currentModule;
 	struct asn1p_expr_marker_s a_marker;	/* OPTIONAL/DEFAULT */
 	enum asn1p_constr_pres_e a_pres;	/* PRESENT/ABSENT/OPTIONAL */
 	asn1c_integer_t		 a_int;
+	struct {
+		asn1c_integer_t a_int;
+		char *ascii_int; /* recorded as ASCII base-10 number */
+	} tv_int;
 	double			 a_dbl;
 	char	*tv_str;
 	struct {
@@ -140,7 +145,6 @@ static asn1p_module_t *currentModule;
 %token	<tv_str>	TOK_typefieldreference		/* "&Pork" */
 %token	<tv_str>	TOK_valuefieldreference		/* "&id" */
 %token	<tv_str>	TOK_Literal			/* "BY" */
-%token  <tv_str>  TOK_arcnumber
 
 /*
  * Token types representing ASN.1 standard keywords.
@@ -419,7 +423,10 @@ ObjectIdentifier:
 	'{' ObjectIdentifierBody '}' {
 		$$ = $2;
 	}
+/* TODO: Remove this. Per X.208-1988 through X.680-2007, OIDs must
+   have at least one element. */
 	| '{' '}' {
+printf("found a possible empty body with %p\n", &($$));
 		$$ = 0;
 	}
 	;
@@ -448,13 +455,21 @@ ObjectIdentifierElement:
 		$$.name = $1;
 		$$.number = 0;
 	}
-	| Identifier '(' TOK_arcnumber ')' {		/* iso(1) */
-		$$.name = $1;
-		$$.number = $3;
+	| Identifier '(' TOK_number ')' {		/* iso(1) */
+		{
+			struct {asn1c_integer_t a; char *b;} *pid = &($3);
+			printf("ObjectIdentifierElement: %s( %i %s)\n", ($1), (int)($3), pid->b);
+			$$.name = $1;
+			$$.number = pid->b;
+		}
 	}
-	| TOK_arcnumber {					/* 1 */
-		$$.name = 0;
-		$$.number = $1;
+	| TOK_number {					/* 1 */
+		{
+			struct {asn1c_integer_t a; char *b;} *pid = &($1);
+			printf("ObjectIdentifierElement: %i %s\n", (int)($1), pid->b);
+			$$.name = 0;
+			$$.number = pid->b;
+		}
 	}
 	;
 	
@@ -1482,14 +1497,18 @@ ValueAssignment:
 Value:
 	SimpleValue
 	| DefinedValue
-	| ObjectIdentifier {
+	/* OID values cannot be empty! */
+	| '{' ObjectIdentifierBody '}' {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
-		printf("!!! Value pointer: %p and OID pointer: %p\n", ($$), ($1));
+		printf("!!! Value pointer: %p and OID pointer: %p\n", ($$), ($2));
 		/* $$->value.oid = asn1p_oid_construct(($1)); */
 		$$->type = ATV_NULL;
 		$$->type = ATV_OBJECT_IDENTIFIER;
-		$$->value.oid = asn1p_oid_construct(($1)->arcs, ($1)->arcs_count);
+		assert($2);
+		if (($2)) {
+			$$->value.oid = asn1p_oid_construct(($2)->arcs, ($2)->arcs_count);
+		}
 	}
 	| Identifier ':' Value {
 		$$ = asn1p_value_fromint(0);
@@ -1528,6 +1547,10 @@ SimpleValue:
 	| TOK_hstring {
 		$$ = _convert_bitstring2binary($1, 'H');
 		checkmem($$);
+	}
+	| '{' '}' {
+		$$ = asn1p_value_fromint(0);
+		$$->type = ATV_EMPTY;
 	}
 	| RestrictedCharacterStringValue {
 		$$ = $$;

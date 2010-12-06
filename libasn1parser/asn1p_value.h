@@ -32,7 +32,8 @@ typedef struct asn1p_value_s {
 		ATV_VALUESET,	/* { 1 | 2 | 3 } */
 		ATV_REFERENCED,	/* Reference to a value defined elsewhere */
 		ATV_CHOICE_IDENTIFIER,	/* ChoiceIdentifier value */
-		ATV_OBJECT_IDENTIFIER
+		ATV_OBJECT_IDENTIFIER,
+		ATV_EMPTY /* {} specifically for BIT STRING, SEQUENCE [OF], SET [OF] */
 	} type;	/* Value type and location */
 
 	union {
