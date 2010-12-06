@@ -2914,9 +2914,9 @@ asn1c_print_ber(arg_t *arg) {
 		return 0;
 	}
 	
-	OUT("%02x", ber[0]);
+	OUT("0x%02x", ber[0]);
 	for (ber_i = 1; ber_i < ber_len; ber_i++) {
-		OUT(", %02x", ber[ber_i]);
+		OUT(", 0x%02x", ber[ber_i]);
 	}
 
 	free(ber);
@@ -2953,7 +2953,8 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = {");
-	asn1c_print_ber(arg);
+	if (asn1c_print_ber(arg))
+		return -1;
 	OUT("};\n");
 
 	asn1c_print_oid(arg);
@@ -3002,7 +3003,8 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(" = {");
-	asn1c_print_ber(arg);
+	if (asn1c_print_ber(arg))
+		return -1;
 	OUT("};\n");
 
 	asn1c_print_oid(arg);
