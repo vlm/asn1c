@@ -2914,9 +2914,9 @@ asn1c_print_ber(arg_t *arg) {
 		return 0;
 	}
 	
-	OUT("0x%02x", ber[0]);
+	OUT("0x%02X", ber[0]);
 	for (ber_i = 1; ber_i < ber_len; ber_i++) {
-		OUT(", 0x%02x", ber[ber_i]);
+		OUT(", 0x%02X", ber[ber_i]);
 	}
 
 	free(ber);

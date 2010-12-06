@@ -276,7 +276,7 @@ static int OBJECT_IDENTIFIER_fromDotNotation(INTERNAL_OBJECT_IDENTIFIER_t *_oid,
 
 static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 	asn1p_expr_t *expr = arg->expr;
-	size_t oid_arcs_len = 0, oid_arcs_one, oid_arcs_one_end;
+	size_t oid_arcs_len = 0, oid_arcs_one;
 	int i;
 
 	/* Compute result. */
@@ -292,9 +292,9 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 			
 			oid_arcs_one = 0;
 			if (i == 0 && !is_roid) {
-				if (!strcmp(sym, "itu-t")) oid_arcs_one = 1; /* 0 */
-				else if (!strcmp(sym, "iso")) oid_arcs_one = 1; /* 1 */
-				else if (!strcmp(sym, "joint-iso-itu-t")) oid_arcs_one = 1; /* 2 */
+				if (!strcmp(sym, "itu-t")) oid_arcs_one = 2; /* 0 */
+				else if (!strcmp(sym, "iso")) oid_arcs_one = 2; /* 1 */
+				else if (!strcmp(sym, "joint-iso-itu-t")) oid_arcs_one = 2; /* 2 */
 				else {
 					/* Treat as OBJECT IDENTIFIER symbol. */
 					
@@ -310,7 +310,7 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 							
 							/* Infinite recursion check (this checks self-references only, not buried cycles!). */
 							assert(oid != v->value->value.oid);
-							oid_arcs_one = get_len_of_oid(arg, v->value->value.oid, 0) + 1;
+							oid_arcs_one = get_len_of_oid(arg, v->value->value.oid, 0);
 							break;
 						}
 					}
@@ -350,7 +350,7 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 						
 						/* Infinite recursion check (this checks self-references only, not buried cycles!). */
 						assert(oid != v->value->value.oid);
-						oid_arcs_one = get_len_of_oid(arg, v->value->value.oid, 0) + 1;
+						oid_arcs_one = get_len_of_oid(arg, v->value->value.oid, 1);
 						break;
 					}
 				}
@@ -376,7 +376,7 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 				}
 			}
 			
-			oid_arcs_len += 1 + oid_arcs_one;
+			oid_arcs_len += oid_arcs_one;
 		} else {
 			assert(oid->arcs[i].name || oid->arcs[i].number);
 			errno = EINVAL;
@@ -388,48 +388,10 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 }
 
 static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bcd) {
-	assert(0);
-	return 0;
-}
-
-/*
- * Actual public function exposed to other asn1c modules.
- */
-int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 	asn1p_expr_t *expr = arg->expr;
-	asn1p_oid_t *oid = expr->value->value.oid;
-	int is_roid;
-	size_t oid_arcs_len = 0, oid_arcs_one, oid_arcs_one_end;
+	size_t oid_arcs_one = 0, oid_arcs_one_end = 0;
 	int i;
-	char *bcd = NULL;
 
-	if(expr->expr_type != ASN_BASIC_OBJECT_IDENTIFIER) {
-		if(expr->expr_type == ASN_BASIC_RELATIVE_OID) {
-			is_roid = 1;
-		} else {
-			errno = EINVAL;
-			return -1;
-		}
-	}	else {
-		is_roid = 0;
-	}
-
-	if(!ber || !ber_len || !oid) {
-		errno = EINVAL;
-		return -1;
-	}
-	
-	/* Compute result. */
-	errno = 0;
-	oid_arcs_len = get_len_of_oid(arg, oid, is_roid);
-	if (!oid_arcs_len) {
-		assert(errno != 0);
-		return -1;
-	}
-
-	bcd = (char*)malloc(oid_arcs_len);
-	oid_arcs_one = 0;
-	oid_arcs_one_end = 0;
 	for(i = 0; i < oid->arcs_count; i++) {
 		if (oid->arcs[i].number) {
 			const size_t arc_len = strlen(oid->arcs[i].number);
@@ -442,22 +404,22 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 			bcd[oid_arcs_one_end] = (char)-1;
 			oid_arcs_one = oid_arcs_one_end + 1;
 			oid_arcs_one_end = 0; /* safety. */
-		} else if (oid->arcs[i].name) {
+		} else if(oid->arcs[i].name) {
 			/* Handle symbols. */
 			char *sym = oid->arcs[i].name;
 			asn1p_expr_t *v; /* value definition */
 			asn1p_xports_t *imp; /* import definition */
 			
-			if (i == 0 && !is_roid) {
+			if(i == 0 && !is_roid) {
 				if (!strcmp(sym, "itu-t")) {
 					bcd[0] = 0;
 					bcd[1] = (char)-1;
 					oid_arcs_one = 2;
-				} else if (!strcmp(sym, "iso")) {
+				} else if(!strcmp(sym, "iso")) {
 					bcd[0] = 1;
 					bcd[1] = (char)-1;
 					oid_arcs_one = 2;
-				}	else if (!strcmp(sym, "joint-iso-itu-t")) {
+				}	else if(!strcmp(sym, "joint-iso-itu-t")) {
 					bcd[0] = 2;
 					bcd[1] = (char)-1;
 					oid_arcs_one = 2;
@@ -467,7 +429,7 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 
 					/* First scan local members. */
 					TQ_FOR(v, &(expr->module->members), next) {
-						if (!strcmp(v->Identifier, sym)) {
+						if(!strcmp(v->Identifier, sym)) {
 							assert(v->expr_type == ASN_BASIC_OBJECT_IDENTIFIER &&
 								v->value->type == ATV_OBJECT_IDENTIFIER);
 
@@ -475,20 +437,19 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 							assert(oid != v->value->value.oid);
 							/* recurse to fill the byte ranges. */
 							sub_arc_len_1 = get_bcd_of_oid(arg, v->value->value.oid,
-								is_roid, bcd + oid_arcs_one);
+								0, bcd + oid_arcs_one);
 							oid_arcs_one += sub_arc_len_1;
-							assert(0);
 							break;
 						}
 					}
 
 					/* Then, scan all imports. */
-					if (sub_arc_len_1 == 0) {
+					if(sub_arc_len_1 == 0) {
 						TQ_FOR(imp, &(expr->module->imports), xp_next) {
 							assert(imp->xports_type == XPT_IMPORTS);
 							
 							TQ_FOR(v, &(imp->members), next) {
-								if (!strcmp(v->Identifier, sym)) {
+								if(!strcmp(v->Identifier, sym)) {
 									assert(0); /* TODO: Complete! */
 									/* oid_arcs_one = 33 */
 								}
@@ -516,7 +477,7 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 						assert(oid != v->value->value.oid);
 						/* recurse to fill the byte ranges. */
 						sub_arc_len_1 = get_bcd_of_oid(arg, v->value->value.oid,
-							is_roid, bcd + oid_arcs_one);
+							1, bcd + oid_arcs_one);
 						oid_arcs_one += sub_arc_len_1;
 						break;
 					}
@@ -547,9 +508,62 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 		} else {
 			assert(oid->arcs[i].name || oid->arcs[i].number);
 			errno = EINVAL;
-			return -1;
+			return 0;
 		}
 	}
+
+	return oid_arcs_one;
+}
+
+static char *MyBCDHere;
+
+/*
+ * Actual public function exposed to other asn1c modules.
+ */
+int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_oid_t *oid = expr->value->value.oid;
+	int is_roid;
+	size_t oid_arcs_len = 0;
+	size_t oid_arcs_written;
+	char *bcd = NULL;
+
+	if(expr->expr_type != ASN_BASIC_OBJECT_IDENTIFIER) {
+		if(expr->expr_type == ASN_BASIC_RELATIVE_OID) {
+			is_roid = 1;
+		} else {
+			errno = EINVAL;
+			return -1;
+		}
+	}	else {
+		is_roid = 0;
+	}
+
+	if(!ber || !ber_len || !oid) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	/* Compute result. */
+	errno = 0;
+	oid_arcs_len = get_len_of_oid(arg, oid, is_roid);
+	if(!oid_arcs_len) {
+		assert(errno != 0);
+		return -1;
+	}
+	
+	bcd = (char*)malloc(oid_arcs_len);
+	if(!bcd) return -1;
+
+	errno = 0;
+	oid_arcs_written = get_bcd_of_oid(arg, oid, is_roid, bcd);
+	char writtenandlen[512];
+	MyBCDHere = bcd;
+	sprintf(writtenandlen, "written = %u | len = %u",
+		(unsigned int)oid_arcs_written, (unsigned int)oid_arcs_len);
+	assert(oid_arcs_written == oid_arcs_len);
+	assert(oid_arcs_written);
+	assert(bcd[oid_arcs_written - 1] == (char)-1);
 
 	/* Use the non-optimized, simplified estimate. */
 	*ber = (uint8_t*)malloc(oid_arcs_len - 1);
