@@ -307,6 +307,9 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 								errno = EINVAL;
 								return 0;
 							}
+							
+							/* Infinite recursion check (this checks self-references only, not buried cycles!). */
+							assert(oid != v->value->value.oid);
 							oid_arcs_one = get_len_of_oid(arg, v->value->value.oid, 0) + 1;
 							break;
 						}
@@ -334,8 +337,43 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 				}
 			} else {
 				/* Treat as RELATIVE-OID symbol. */
-				assert(0);
-				return 0;
+
+				/* First scan local members. */
+				TQ_FOR(v, &(expr->module->members), next) {
+					if (!strcmp(v->Identifier, sym)) {
+						if (v->expr_type != ASN_BASIC_RELATIVE_OID ||
+							v->value->type != ATV_OBJECT_IDENTIFIER) {
+							/* TODO: Output that this is a type mismatch error. */
+							errno = EINVAL;
+							return 0;
+						}
+						
+						/* Infinite recursion check (this checks self-references only, not buried cycles!). */
+						assert(oid != v->value->value.oid);
+						oid_arcs_one = get_len_of_oid(arg, v->value->value.oid, 0) + 1;
+						break;
+					}
+				}
+				
+				/* Then, scan all imports. */
+				if (oid_arcs_one == 0) {
+					TQ_FOR(imp, &(expr->module->imports), xp_next) {
+						assert(imp->xports_type == XPT_IMPORTS);
+						
+						TQ_FOR(v, &(imp->members), next) {
+							if (!strcmp(v->Identifier, sym)) {
+								assert(0); /* TODO: Complete! */
+								/* oid_arcs_one = 33 */
+							}
+						}
+					}
+					
+					if (oid_arcs_one == 0) {
+						/* TODO: Output no match for symbol! */
+						errno = EINVAL;
+						return 0;
+					}
+				}
 			}
 			
 			oid_arcs_len += 1 + oid_arcs_one;
