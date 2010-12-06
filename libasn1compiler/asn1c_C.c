@@ -2923,9 +2923,8 @@ asn1c_print_ber(arg_t *arg) {
 	return 0;
 }
 
-static int asn1c_OBJECT_IDENTIFIER_internal(arg_t *arg,
-	unsigned int h_target_id, unsigned int c_target_id) {
-
+int
+asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	
 	assert(expr->value);
@@ -2942,14 +2941,14 @@ static int asn1c_OBJECT_IDENTIFIER_internal(arg_t *arg,
 		return -1;
 	}
 	
-	REDIR(h_target_id);
+	REDIR(OT_FUNC_DECLS);
 	OUT("\n");
 	asn1c_print_oid(arg);
 	OUT("extern const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(";\n");	
 
-	REDIR(c_target_id);
+	REDIR(OT_STAT_DEFS);
 	OUT("\n");
 	OUT("static const uint8_t DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
@@ -2972,17 +2971,6 @@ static int asn1c_OBJECT_IDENTIFIER_internal(arg_t *arg,
 	OUT(")}");
 
 	return 0;
-}
-
-int asn1c_lang_C_value_OBJECT_IDENTIFIER_module(arg_t *arg) {
-	return asn1c_OBJECT_IDENTIFIER_internal(arg,
-		OT_FUNC_DECLS, OT_STAT_DEFS);	
-}
-
-int
-asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
-	return asn1c_OBJECT_IDENTIFIER_internal(arg,
-		OT_FUNC_DECLS, OT_STAT_DEFS);
 }
 
 int
