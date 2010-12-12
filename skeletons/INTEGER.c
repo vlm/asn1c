@@ -542,7 +542,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 				lp = lstart - 1;
 				continue;
 			} else {
-				ASN_DEBUG("state %d at %d", state, lp - lstart);
+				ASN_DEBUG("state %d at %ld", state, (long)(lp - lstart));
 				break;
 			}
 		/* [A-Fa-f] */
@@ -577,8 +577,8 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		}
 
 		/* Found extra non-numeric stuff */
-		ASN_DEBUG("Found non-numeric 0x%2x at %d",
-			lv, lp - lstart);
+		ASN_DEBUG("Found non-numeric 0x%2x at %ld",
+			lv, (long)(lp - lstart));
 		state = ST_EXTRASTUFF;
 		break;
 	}

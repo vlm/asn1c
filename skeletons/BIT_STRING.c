@@ -4,7 +4,6 @@
  */
 #include <asn_internal.h>
 #include <BIT_STRING.h>
-#include <asn_internal.h>
 
 /*
  * BIT STRING basic type description.
