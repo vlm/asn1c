@@ -2375,6 +2375,22 @@ is_valid_mder_type(arg_t *arg, asn1p_expr_t *expr)
 }
 
 static int
+valid_mder_constraints(arg_t *arg, asn1p_expr_t *expr)
+{
+	asn1p_expr_type_e etype;
+
+	etype = expr_get_type(arg, expr);
+	switch (etype) {
+	case ASN_BASIC_INTEGER:
+	case ASN_BASIC_BIT_STRING:
+	case ASN_BASIC_OCTET_STRING:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+static int
 emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	int save_target;
 	arg_t tmp_arg;
@@ -2503,7 +2519,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("\"%s\",\n", expr->Identifier);
 	}
 	if(C99_MODE) OUT(".mder_constraints = ");
-	if(expr->constraints && is_valid_mder_type(arg, expr))
+	if(expr->constraints && valid_mder_constraints(arg, expr))
 		OUT("&asn_MDER_memb_%s_constr_%d\n", MKID(expr),
 						expr->_type_unique_index);
 	else
