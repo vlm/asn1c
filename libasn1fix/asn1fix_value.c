@@ -103,11 +103,16 @@ asn1f_value_resolve(arg_t *arg, asn1p_expr_t *expr, const enum asn1p_constraint_
 				val_type_expr->_lineno);
 			return -1;
 		case ASN_BASIC_OBJECT_IDENTIFIER:
+		case ASN_BASIC_RELATIVE_OID:
 			/*
-			 * Ignore this for now.
-			 * We can't deal with OIDs inheritance properly yet.
+			 * All OBJECT IDENTIFIERs and RELATIVE-OIDs are compatible with
+			 * (and mappable between) each other, X.680 (2002) B.4.1.
+			 * Additionally, the value-outputting code handles references
+			 * properly. This saves space and enables == equivalance in
+			 * the compiled code.
 			 */
-			return 0;
+			if (type_expr->expr_type == val_type_expr->expr_type)
+				return 0;
 		}
 		WARNING("Possibly incompatible type of \"%s\" (%s) at line %d "
 			"with \"%s\" (%s) at line %d",

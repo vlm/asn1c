@@ -50,10 +50,11 @@ asn1f_check_type_compatibility(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 			a->Identifier, b->Identifier);
 		return -1;	/* Fairly obviously */
 	}
-
+	
+	assert(atype == btype); /* Just clarifying the intent */
 	switch(atype) {
 	case ASN_BASIC_INTEGER:
-		/* All integers are compatible, X.680, B.4.5 */
+		/* All integers are compatible, X.680 (2002) B.4.5 */
 		return 0;
 	case ASN_BASIC_ENUMERATED:
 		/*
