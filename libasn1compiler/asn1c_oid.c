@@ -204,11 +204,24 @@ static size_t get_len_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid) {
 				else if(!strcmp(sym, "iso")) oid_arcs_one = 2; /* 1 */
 				else if(!strcmp(sym, "joint-iso-itu-t")) oid_arcs_one = 2; /* 2 */
 				else {
+					asn1p_expr_t ref_v = {NULL}; /* used for moving to v->next only */
 					/* Treat as OBJECT IDENTIFIER symbol. */
 					
 					/* First scan local members. */
 					TQ_FOR(v, &(expr->module->members), next) {
 						if(!strcmp(v->Identifier, sym)) {
+							if(v->expr_type == ASN_BASIC_OBJECT_IDENTIFIER &&
+								v->value->type == ATV_REFERENCED) {
+								asn1p_ref_t *ref = v->value->value.reference;
+								assert(ref);
+								assert(ref->comp_count == 1 && ref->components);
+								assert(ref->components[0].name);
+								ref_v.Identifier = sym;
+								sym = ref->components[0].name;
+								TQ_NEXT(&ref_v, next) = TQ_FIRST(&(expr->module->members));
+								v = &ref_v;
+								continue;
+							}
 							if(v->expr_type != ASN_BASIC_OBJECT_IDENTIFIER ||
 								v->value->type != ATV_OBJECT_IDENTIFIER) {
 								/* TODO: Output that this is a type mismatch error. */
@@ -385,12 +398,25 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 					bcd[1] = (char)-1;
 					oid_arcs_one = 2;
 				} else {
+					asn1p_expr_t ref_v = {NULL}; /* used for moving to v->next only */
 					/* Treat as OBJECT IDENTIFIER symbol. */
 					size_t sub_arc_len_1 = 0; /* this is the length of the sub-arc, plus 1 for final (char)-1 terminator */
 
 					/* First scan local members. */
 					TQ_FOR(v, &(expr->module->members), next) {
 						if(!strcmp(v->Identifier, sym)) {
+							if(v->expr_type == ASN_BASIC_OBJECT_IDENTIFIER &&
+								v->value->type == ATV_REFERENCED) {
+								asn1p_ref_t *ref = v->value->value.reference;
+								assert(ref);
+								assert(ref->comp_count == 1 && ref->components);
+								assert(ref->components[0].name);
+								ref_v.Identifier = sym;
+								sym = ref->components[0].name;
+								TQ_NEXT(&ref_v, next) = TQ_FIRST(&(expr->module->members));
+								v = &ref_v;
+								continue;
+							}
 							assert(v->expr_type == ASN_BASIC_OBJECT_IDENTIFIER &&
 								v->value->type == ATV_OBJECT_IDENTIFIER);
 
