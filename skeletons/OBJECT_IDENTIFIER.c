@@ -1191,3 +1191,82 @@ int OBJECT_IDENTIFIER_1eq1(const OBJECT_IDENTIFIER_t *_oid1base,
 			!memcmp(_roid1->buf, _roid2->buf + diff21_size, _roid1->size);
 	}
 }
+
+size_t OBJECT_IDENTIFIER_common(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0, ...) {
+	va_list oids;
+	const OBJECT_IDENTIFIER_t *oid;
+	size_t res;
+	
+	va_start(oids, _oid0);
+	while(NULL != (oid = va_arg(oids, OBJECT_IDENTIFIER_t*))) {
+		res = OBJECT_IDENTIFIER_common1(min_arcs, _oid0, oid);
+		if (res == 0) {
+			va_end(oids);
+			return res;
+		}
+	}
+	va_end(oids);
+	return res;
+}
+
+size_t OBJECT_IDENTIFIER_common1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1) {
+	size_t arcs_count = 1, arcs_len = 0, min_of_two_len, i;
+	if (!_oid0 || !_oid1 || !_oid0->buf || !_oid1->buf ||
+		_oid0->size < 0 || _oid1->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	
+	min_of_two_len = _oid0->size > _oid1->size ? _oid1->size : _oid0->size;
+	
+	if (min_arcs == 1) min_arcs++;
+
+	for(i = 0; i < min_of_two_len; i++) {
+		if (_oid0->buf[i] != _oid1->buf[i]) break;
+		else if (!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+	
+	if (min_arcs > arcs_count) {
+		errno = ERANGE;
+		return 0;
+	}
+	
+	assert(_oid0->size >= (int)arcs_len);
+	_oid0->size = (int)arcs_len;
+	return arcs_count == 1 ? 0 : arcs_count;
+}
+
+size_t OBJECT_IDENTIFIER_common2(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1, const OBJECT_IDENTIFIER_t *_oid2) {
+	size_t res;
+	res = OBJECT_IDENTIFIER_common1(min_arcs, _oid0, _oid1);
+	if (res == 0) return res; /* can be success or failure -- we don't check _oid2 in either case */
+	
+	return OBJECT_IDENTIFIER_common1(min_arcs, _oid0, _oid2);
+}
+
+
+size_t OBJECT_IDENTIFIER_get_arcs_count(const OBJECT_IDENTIFIER_t *_oid) {
+	size_t arcs_count = 1;
+	int i;
+	
+	if(!_oid || !_oid->buf || _oid->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	
+	if(_oid->size > 0) {
+		/* The last byte must terminate the arc, with high-bit not set. */
+		assert(!(_oid->buf[_oid->size-1] & 0x80));
+	}
+	
+	for(i = 0; i < _oid->size; i++) {
+		if (!(_oid->buf[i] & 0x80)) arcs_count++;
+	}
+
+	return arcs_count == 1 ? 0 : arcs_count;
+}
