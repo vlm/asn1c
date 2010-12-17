@@ -63,6 +63,31 @@ static inline int RELATIVE_OID_eq0(const RELATIVE_OID_t *_roid1,
 	else return !memcmp(_roid1->buf, _roid2->buf, _roid1->size);
 }
 
+/*
+ * Constructor utilities to make new RELATIVE_OIDs from the differential
+ * between a base OID and a full OID.
+ * base OID: 1 2 3 
+ * full OID: 1 2 3 4 5
+ * new ROID:       4 5
+ * The intended use case is when serializing out protocol elements
+ * where there is a base OID and a series of relative OIDs that combine
+ * with the base, as in X.680 (2002) E.2.19.1.
+ * If there is no commonality, an error is returned and (in the case of _fromDiff)
+ * _roid is not modified.
+ */
+
+int RELATIVE_OID_fromDiff(RELATIVE_OID_t *_roid, const OBJECT_IDENTIFIER_t *_oidbase,
+	const OBJECT_IDENTIFIER_t *_fulloid);
+
+RELATIVE_OID_t *RELATIVE_OID_new_fromDiff(const OBJECT_IDENTIFIER_t *_oidbase,
+	const OBJECT_IDENTIFIER_t *_fulloid);
+
+/*
+ * See OBJECT_IDENTIFIER_get_arcs_count. Unlike that function, this function
+ * does not treat the first BER encoded group as 2 arcs.
+ */
+size_t RELATIVE_OID_get_arcs_count(const RELATIVE_OID_t *_roid);
+
 #ifdef __cplusplus
 }
 #endif

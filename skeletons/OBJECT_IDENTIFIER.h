@@ -209,6 +209,37 @@ int OBJECT_IDENTIFIER_1eq1(const OBJECT_IDENTIFIER_t *_oid1base,
 	const RELATIVE_OID_t *_roid1, const OBJECT_IDENTIFIER_t *_oid2base,
 	const RELATIVE_OID_t *_roid2);
 
+/*
+ * Useful functions to find the greatest common arc.
+ * In all cases, _oid0->size is reduced to the length of the common arc,
+ * but the buf is not reallocated.
+ * min_arcs is the minimum number of arcs that must be common in order
+ * for there to be a success. Due to BER encoding rules, min_arcs = 1 has
+ * the same behavior as min_arcs = 2.
+ * The return value is the number of arcs that are common.
+ * On failure, 0 is returned, and errno is set.
+ */
+
+size_t OBJECT_IDENTIFIER_common(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0, ...);
+size_t OBJECT_IDENTIFIER_common1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1);
+size_t OBJECT_IDENTIFIER_common2(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1, const OBJECT_IDENTIFIER_t *_oid2);
+
+size_t OBJECT_IDENTIFIER_common1r(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1base, ...);
+size_t OBJECT_IDENTIFIER_common1r1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1base, const RELATIVE_OID_t *_roid1);
+
+/*
+ * Similar to get_arcs, but without the attempt to actually allocate or write
+ * any arcs.
+ * This function is fast and returns the number of arcs in the OID.
+ * The first BER encoded group is treated as 2 arcs, per X.680.
+ * In cases of failure, 0 is returned and errno is set.
+ */
+size_t OBJECT_IDENTIFIER_get_arcs_count(const OBJECT_IDENTIFIER_t *_oid);
+
 #ifdef __cplusplus
 }
 #endif
