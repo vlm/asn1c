@@ -576,8 +576,6 @@ static size_t get_bcd_of_oid(arg_t *arg, asn1p_oid_t *oid, int is_roid, char *bc
 	return oid_arcs_one;
 }
 
-static char *MyBCDHere;
-
 /*
  * Actual public function exposed to other asn1c modules.
  */
@@ -618,10 +616,6 @@ int asn1c_oid_ber_encode(arg_t *arg, uint8_t **ber, size_t *ber_len) {
 
 	errno = 0;
 	oid_arcs_written = get_bcd_of_oid(arg, oid, is_roid, bcd);
-	char writtenandlen[512];
-	MyBCDHere = bcd;
-	sprintf(writtenandlen, "written = %u | len = %u",
-		(unsigned int)oid_arcs_written, (unsigned int)oid_arcs_len);
 	assert(oid_arcs_written == oid_arcs_len);
 	assert(oid_arcs_written);
 	assert(bcd[oid_arcs_written - 1] == (char)-1);
