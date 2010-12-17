@@ -1212,7 +1212,7 @@ size_t OBJECT_IDENTIFIER_common(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0, ...
 size_t OBJECT_IDENTIFIER_common1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
 	const OBJECT_IDENTIFIER_t *_oid1) {
 	size_t arcs_count = 1, arcs_len = 0, min_of_two_len, i;
-	if (!_oid0 || !_oid1 || !_oid0->buf || !_oid1->buf ||
+	if(!_oid0 || !_oid1 || !_oid0->buf || !_oid1->buf ||
 		_oid0->size < 0 || _oid1->size < 0) {
 		errno = EINVAL;
 		return 0;
@@ -1220,11 +1220,11 @@ size_t OBJECT_IDENTIFIER_common1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
 	
 	min_of_two_len = _oid0->size > _oid1->size ? _oid1->size : _oid0->size;
 	
-	if (min_arcs == 1) min_arcs++;
+	if(min_arcs == 1) min_arcs++;
 
 	for(i = 0; i < min_of_two_len; i++) {
-		if (_oid0->buf[i] != _oid1->buf[i]) break;
-		else if (!(_oid0->buf[i] & 0x80)) {
+		if(_oid0->buf[i] != _oid1->buf[i]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
 			arcs_count++;
 			arcs_len = i + 1;
 		}
@@ -1249,6 +1249,75 @@ size_t OBJECT_IDENTIFIER_common2(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
 	return OBJECT_IDENTIFIER_common1(min_arcs, _oid0, _oid2);
 }
 
+size_t OBJECT_IDENTIFIER_common1r(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1base, ...) {
+	size_t arcs_count = 1, arcs_len= 0, min_of_two_len, len0, len1, i, j;
+	va_list roids;
+	const RELATIVE_OID_t *roid;
+	
+	if (!_oid0 || !_oid1base || !_oid0->buf || !_oid1base->buf ||
+		_oid0->size < 0 || _oid1base->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	len1 = _oid1base->size;
+	len0 = _oid0->size;
+
+	if (len1 < len0) {
+		min_of_two_len = len1;
+		va_start(roids, _oid1base);
+		while(NULL != (roid = va_arg(roids, RELATIVE_OID_t*))) {
+			assert(roid->buf);
+			len1 += roid->size;
+			if (len1 >= len0) {
+				min_of_two_len = len0;
+				break;
+			}
+		}
+		va_end(roids);
+	} else min_of_two_len = len0;
+	
+	for(i = 0; i < min_of_two_len && i < _oid1base->size; i++) {
+		if(_oid0->buf[i] != _oid1base->buf[i]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+
+	va_start(roids, _oid1base);
+	roid = va_arg(roids, RELATIVE_OID_t*);
+	for(j = 0; i < min_of_two_len; i++, j++) {
+		if (j == roid->size) {
+			roid = va_arg(roids, RELATIVE_OID_t*);
+			assert(roid != NULL); /* guaranteed not to happen per above def'n of min_of_two_len */
+			j = 0;
+		}
+		/* obtain byte from oid1base or. */
+		if(_oid0->buf[i] != roid->buf[j]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+	va_end(roids);
+	
+	if(min_arcs > arcs_count) {
+		errno = ERANGE;
+		return 0;
+	}
+	
+	assert(_oid0->size >= (int)arcs_len);
+	_oid0->size = (int)arcs_len;
+	return arcs_count == 1 ? 0 : arcs_count;
+}
+
+
+size_t OBJECT_IDENTIFIER_common1r1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1base, const RELATIVE_OID_t *_roid1) {
+	return OBJECT_IDENTIFIER_common1r(min_arcs, _oid0, _oid1base, _roid1, NULL);
+}
 
 size_t OBJECT_IDENTIFIER_get_arcs_count(const OBJECT_IDENTIFIER_t *_oid) {
 	size_t arcs_count = 1;
