@@ -7,17 +7,25 @@
 #include <asn_internal.h>
 #include <errno.h>
 
-asn_enc_rval_t mder_encode(struct asn_TYPE_descriptor_s *type_descriptor,
-		void *struct_ptr, asn_app_consume_bytes_f *consume_bytes_cb,
-		void *app_key)
-{
+static asn_enc_rval_t
+mder_encode_internal(asn_TYPE_descriptor_t *td, void *sptr,
+				asn_app_consume_bytes_f *cb, void *app_key) {
+	if(!td || !td->mder_encoder)
+		_ASN_ENCODE_FAILED;	/* MDER is not compiled in */
+
 	/*
 	 * Invoke type-specific encoder.
 	 */
-	return type_descriptor->mder_encoder(type_descriptor,
-		struct_ptr,	/* Pointer to the destination structure */
+	return td->mder_encoder(td,
+		sptr,	/* Pointer to the destination structure */
 		0,		/* No specifics constraints */
-		consume_bytes_cb, app_key);
+		cb, app_key);
+}
+
+asn_enc_rval_t
+mder_encode(struct asn_TYPE_descriptor_s *td, void *sptr,
+				asn_app_consume_bytes_f *cb, void *app_key) {
+	return mder_encode_internal(td, sptr, cb, app_key);
 }
 
 /*
@@ -28,7 +36,8 @@ typedef struct enc_to_buf_arg {
 	size_t left;
 } enc_to_buf_arg;
 
-static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
+static int
+encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
 	enc_to_buf_arg *arg = (enc_to_buf_arg *)key;
 
 	if(arg->left < size)
@@ -41,30 +50,24 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
 	return 0;
 }
 
-asn_enc_rval_t mder_encode_to_buffer(
-		struct asn_TYPE_descriptor_s *type_descriptor, void *struct_ptr,
-		void *buffer, size_t buffer_size)
+asn_enc_rval_t
+mder_encode_to_buffer(struct asn_TYPE_descriptor_s *td, void *sptr,
+					void *buffer, size_t buffer_size)
 {
 	enc_to_buf_arg arg;
-	asn_enc_rval_t ec;
 
 	arg.buffer = buffer;
 	arg.left = buffer_size;
 
-	ec = type_descriptor->mder_encoder(type_descriptor,
-		struct_ptr,	/* Pointer to the destination structure */
-		0, encode_to_buffer_cb, &arg);
-	if(ec.encoded != -1) {
-		assert(ec.encoded == (ssize_t)(buffer_size - arg.left));
-		/* Return the encoded contents size */
-	}
-	return ec;
+	return mder_encode_internal(td,
+		sptr,	// Pointer to the destination structure
+		encode_to_buffer_cb, &arg);
 }
 
 asn_enc_rval_t
 NON_SUP_encode_mder(struct asn_TYPE_descriptor_s *td, void *sptr,
-		    asn_mder_contraints_t constr,
-		    asn_app_consume_bytes_f *consume_bytes_cb, void *app_key) {
-
+						asn_mder_contraints_t constr,
+						asn_app_consume_bytes_f *cb,
+						void *app_key) {
 	_ASN_ENCODE_FAILED;
 }
