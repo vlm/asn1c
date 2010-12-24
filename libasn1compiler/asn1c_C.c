@@ -934,7 +934,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	int all_tags_count;
 	enum tvm_compat tv_mode;
 	int *cmap = 0;
-	int genMder;
+	int genMder = 0;
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -1006,7 +1006,8 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	/*
 	 * Generate choice_ids for MDER coder/decoder
 	 */
-	genMder = emit_MDER_tag2member_table(arg, tag2el, tag2el_count);
+	if (arg->flags & A1C_GEN_MDER)
+		genMder = emit_MDER_tag2member_table(arg, tag2el, tag2el_count);
 
 	OUT("static asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
@@ -1038,7 +1039,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 			OUT("asn_MDER_tag2member_%s_table%d\n",
 				MKID(expr), expr->_type_unique_index);
 		else
-			OUT("0\t/* Invalid definition of choice type for MDER */\n");
+			OUT("0\t/* No MDER supported */\n");
 	);
 	OUT("};\n");
 
@@ -1355,7 +1356,9 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("}\n");
 	OUT("\n");
 
+  if(arg->flags & A1C_GEN_MDER) {
 	p = MKID(expr);
+
 	if(HIDE_INNER_DEFS) OUT("static ");
 	OUT("asn_enc_rval_t\n");
 	OUT("%s", p);
@@ -1386,6 +1389,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	);
 	OUT("}\n");
 	OUT("\n");
+  }
 
 	p = MKID(expr);
 	if(HIDE_INNER_DEFS) OUT("static ");
@@ -1466,8 +1470,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("asn_constr_check_f %s_constraint;\n", p);
 		OUT("ber_type_decoder_f %s_decode_ber;\n", p);
 		OUT("der_type_encoder_f %s_encode_der;\n", p);
+		if(arg->flags & A1C_GEN_MDER) {
 		OUT("mder_type_decoder_f %s_decode_mder;\n", p);
 		OUT("mder_type_encoder_f %s_encode_mder;\n", p);
+		}
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
 		if(arg->flags & A1C_GEN_PER) {
@@ -2519,11 +2525,16 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("\"%s\",\n", expr->Identifier);
 	}
 	if(C99_MODE) OUT(".mder_constraints = ");
-	if(expr->constraints && valid_mder_constraints(arg, expr))
-		OUT("&asn_MDER_memb_%s_constr_%d\n", MKID(expr),
-						expr->_type_unique_index);
-	else
-		OUT("0\t/* No MDER visible constraints */\n");
+	if(arg->flags & A1C_GEN_MDER) {
+		if(expr->constraints && valid_mder_constraints(arg, expr)) {
+			OUT("&asn_MDER_memb_%s_constr_%d\n", MKID(expr),
+							expr->_type_unique_index);
+		} else {
+			OUT("0\t/* No MDER visible constraints */\n");
+		}
+	} else {
+		OUT("0,\t/* MDER is not compiled, use -gen-MDER */\n");
+	}
 
 	INDENT(-1);
 	OUT("},\n");
@@ -2574,6 +2585,9 @@ emit_member_MDER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	asn1p_expr_type_e etype;
 	asn1p_constraint_t *ct;
 	char *p = MKID(expr);
+
+	if (!(arg->flags & A1C_GEN_MDER))
+		return 0;
 
 	etype = expr_get_type(arg, expr);
 	switch (etype) {
@@ -2708,8 +2722,13 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		FUNCREF(constraint);
 		FUNCREF(decode_ber);
 		FUNCREF(encode_der);
-		MDER_FUNCREF(decode_mder);
-		MDER_FUNCREF(encode_mder);
+		if(arg->flags & A1C_GEN_MDER) {
+			MDER_FUNCREF(decode_mder);
+			MDER_FUNCREF(encode_mder);
+		} else {
+			OUT("0, 0,\t/* No MDER support, "
+				"use \"-gen-MDER\" to enable */\n");
+		}
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);
 		if(arg->flags & A1C_GEN_PER) {
@@ -2803,12 +2822,12 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 				p, expr->_type_unique_index);
 		}
 
-		/* MDER Contraints */
-		if (mder_constr)
+		if(mder_constr) {
 			OUT("&asn_MDER_type_%s_constr_%d\n",
-				p, expr->_type_unique_index);
-		else
-			OUT("0\t/* No MDER restricted type */\n");
+						p, expr->_type_unique_index);
+		} else {
+			OUT("0,\t/* No MDER visible constraints */\n");
+		}
 
 	INDENT(-1);
 	OUT("};\n");
