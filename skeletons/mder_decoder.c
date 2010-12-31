@@ -39,7 +39,7 @@ mder_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	return td->mder_decoder(opt_codec_ctx, td,
 		sptr,	/* Pointer to the destination structure */
 		buffer, size,	/* Buffer and its size */
-		0		/* Default tag mode is 0 */
+		0		/* No specifics constraints */
 		);
 }
 
