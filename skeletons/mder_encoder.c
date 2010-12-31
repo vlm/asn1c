@@ -17,7 +17,7 @@ mder_encode_internal(asn_TYPE_descriptor_t *td, void *sptr,
 	 * Invoke type-specific encoder.
 	 */
 	return td->mder_encoder(td,
-		sptr,	/* Pointer to the destination structure */
+		sptr,		/* Pointer to the destination structure */
 		0,		/* No specifics constraints */
 		cb, app_key);
 }
@@ -60,7 +60,7 @@ mder_encode_to_buffer(struct asn_TYPE_descriptor_s *td, void *sptr,
 	arg.left = buffer_size;
 
 	return mder_encode_internal(td,
-		sptr,	// Pointer to the destination structure
+		sptr,	/* Pointer to the destination structure */
 		encode_to_buffer_cb, &arg);
 }
 
