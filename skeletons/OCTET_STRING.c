@@ -609,9 +609,7 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 			rval.consumed = 0;
 			return rval;
 		}
-		st->size = 0;
-		st->size = ((const uint8_t *)buf_ptr)[0];
-		st->size = (st->size << 8) | ((const uint8_t *)buf_ptr)[1];
+		MDER_INPUT_INT_U16(st->size, buf_ptr);
 		rval.consumed = 2;
 		data = (const char *)buf_ptr + 2;
 	} else {
