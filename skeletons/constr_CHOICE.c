@@ -459,9 +459,8 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
  */
 asn_dec_rval_t
 CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const void *ptr,
-	size_t size, asn_mder_contraints_t constr) {
-
+		asn_TYPE_descriptor_t *td, void **sptr, const void *ptr,
+		size_t size, asn_mder_contraints_t constr) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	asn_dec_rval_t rval;
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
@@ -484,12 +483,14 @@ CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	ctx = (asn_struct_ctx_t *)((char *)*sptr + specs->ctx_offset);
 	if (!ctx)
 		RETURN(RC_FAIL);
+
 	if (ctx->phase > 0)
 		goto phase1;
 
 	if (size < 2) {
 		RETURN(RC_WMORE);
 	}
+
 	MDER_INPUT_INT_U16(present_tag, ptr);
 	ADVANCE_MDER(2);
 
@@ -500,17 +501,21 @@ CHOICE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 			break;
 		}
 	}
+
 	if(*presentp <= 0 || *presentp > td->elements_count)
 		RETURN(RC_FAIL);
 
 	ctx->ptr = presentp;
 	ctx->phase = 1;
+
 phase1:
 	if (ctx->phase > 1)
 		goto phase2;
+
 	if (size < 2) {
 		RETURN(RC_WMORE);
 	}
+
 	MDER_INPUT_INT_U16(comp_size, ptr);
 	ADVANCE_MDER(2);
 	ctx->phase = 2;
@@ -524,25 +529,28 @@ phase2:
 			_ASN_DECODE_FAILED;
 	} else
 		memb_ptr = (void *)(*(char **)sptr + elm->memb_offset);
+
 	rval = elm->type->mder_decoder(opt_codec_ctx, elm->type, &memb_ptr, ptr,
-				       size, elm->mder_constraints);
+						size, elm->mder_constraints);
 	consumed_myself += rval.consumed;
 	RETURN(rval.code);
 }
+
 /*
  * The MDER encoder of the CHOICE type.
  */
 asn_enc_rval_t
 CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-	asn_mder_contraints_t constr,
-	asn_app_consume_bytes_f *cb, void *app_key) {
+		asn_mder_contraints_t constr,
+		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elm;	/* CHOICE element */
 	asn_enc_rval_t erval;
 	void *memb_ptr;
 	int present, tag;
 
-	if (!(sptr && specs->sorted_tags)) _ASN_ENCODE_FAILED;
+	if (!(sptr && specs->sorted_tags))
+		_ASN_ENCODE_FAILED;
 
 	ASN_DEBUG("%s %s as CHOICE",
 		cb?"Encoding":"Estimating", td->name);
@@ -598,6 +606,7 @@ CHOICE_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 
 	erval.encoded += 4;
 	return erval;
+
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }

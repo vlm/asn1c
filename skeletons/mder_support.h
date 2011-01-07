@@ -112,7 +112,7 @@ typedef void* asn_mder_contraints_t;
 	_int = 0;						\
 	_int = ((const uint8_t *)_buf)[0];			\
 	_int = (_int << 8) | ((const uint8_t *)_buf)[1];	\
-}while (0)
+} while (0)
 
 #ifdef __cplusplus
 }
