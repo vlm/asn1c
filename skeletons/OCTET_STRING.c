@@ -587,10 +587,13 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	size_t size, asn_mder_contraints_t constr) {
 
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
-	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
+	mder_octet_str *oct;
 	asn_dec_rval_t rval;
 	const char *data;
 
+	/* specifics constraints prevail */
+	oct = (constr) ? (mder_octet_str *)constr :
+		(mder_octet_str *)td->mder_constraints;
 
 	/*
 	 * Create the string if does not exist.
@@ -617,6 +620,7 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		rval.consumed = 0;
 		data = (const char *)buf_ptr;
 	}
+
 	if (size < (st->size + rval.consumed)) {
 		rval.code = RC_WMORE;
 		rval.consumed = 0;
