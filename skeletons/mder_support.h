@@ -108,11 +108,16 @@ typedef void* asn_mder_contraints_t;
 } while (0)
 #endif
 
+#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
 #define MDER_INPUT_INT_U16(_int, _buf) do {			\
-	_int = 0;						\
-	_int = ((const uint8_t *)_buf)[0];			\
-	_int = (_int << 8) | ((const uint8_t *)_buf)[1];	\
+	_int = *(uint16_t *) (_buf);				\
 } while (0)
+#else
+#define MDER_INPUT_INT_U16(_int, _buf) do {			\
+	_int = ((const uint8_t *) (_buf))[0];			\
+	_int = (_int << 8) | ((const uint8_t *) (_buf))[1];	\
+} while (0)
+#endif
 
 #ifdef __cplusplus
 }
