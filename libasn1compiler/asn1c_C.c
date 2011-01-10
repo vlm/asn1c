@@ -1752,60 +1752,52 @@ emit_MDER_tag2member_table(arg_t *arg, tag2el_t *tag2el, int tag2el_count) {
 	int type, i;
 
 	if(!tag2el_count)
-		return 0;	/* No top level tags */
-
-	type = tag2el[0].el_tag.tag_mode; /* All tags should be equal to that */
-	if (type == TM_IMPLICIT)
-		return 0;
-
-	for(i = 1; i < tag2el_count; i++)
-		if (type != tag2el[i].el_tag.tag_mode)
-			return 0; /* Tags shall be explicit or implicit in MDER, not mixed */
+		return 0; /* No top level tags */
 
 	stags = calloc(tag2el_count, sizeof(asn1c_integer_t));
 	if (!stags)
 		return 0;
 
+	type = tag2el[0].el_tag.tag_mode;
 	for(i = 0; i < tag2el_count; i++) {
-		if (type != TM_EXPLICIT) {
-			/* Implicit tag */
-			if (((tag2el[i].el_no + 1) < 0) || ((tag2el[i].el_no + 1) > 65535)) {
-				/* Tag can't be encoded in an uint16_t */
-				free(stags);
-				return 0;
-			}
+		if (type == TM_EXPLICIT) {
+			if (tag2el[i].el_tag.tag_mode != TM_EXPLICIT)
+				goto fail; /* Tags can't be mixed */
+
+			if ((tag2el[i].el_tag.tag_value < 0) ||
+					(tag2el[i].el_tag.tag_value > 65535))
+				goto fail; /* Can't be encoded in an uint16_t*/
+
+			stags[tag2el[i].el_no] =
+					(uint16_t)tag2el[i].el_tag.tag_value;
+		} else {
+			/* Implicit tags */
+			if (tag2el[i].el_tag.tag_mode == TM_EXPLICIT)
+				goto fail; /* Tags can't be mixed */
+
+			if (((tag2el[i].el_no + 1) < 0) ||
+						((tag2el[i].el_no + 1) > 65535))
+				goto fail; /* Can't be encoded in an uint16_t */
+
 			stags[tag2el[i].el_no] = (uint16_t)tag2el[i].el_no + 1;
-			continue;
 		}
-		/* Explicit tag */
-		if ((tag2el[i].el_tag.tag_value < 0) || (tag2el[i].el_tag.tag_value > 65535)) {
-			/* Tag can't be encoded in an uint16_t*/
-			free(stags);
-			return 0;
-		}
-		stags[tag2el[i].el_no] = (uint16_t)tag2el[i].el_tag.tag_value;
 	}
 
-	/* Check if value of tags are assigned sequentially */
-	if (type == TM_EXPLICIT)
-		for (i = 0; i < (tag2el_count - 1); i++)
-			if (stags[i] >= tag2el[i+1].el_tag.tag_value) {
-				/* Tags are not assigned sequentially */
-				free(stags);
-				return 0;
-			}
-	OUT("/* MDER Tags are %s */\n", (type == TM_EXPLICIT) ? "explicit" : "implicit");
+	OUT("/* MDER %s Tags */\n", (type == TM_EXPLICIT) ?
+						"explicit" : "implicit");
 	OUT("static uint16_t asn_MDER_tag2member_%s_table%d[] = {",
 		MKID(expr), expr->_type_unique_index);
 
-	for(i = 0; i < tag2el_count; i++) {
-		OUT("%d%s", stags[i],
-			(i + 1 < tag2el_count) ? "," : "");
-	}
-	OUT("};\n");
+	for(i = 0; i < tag2el_count; i++)
+		OUT("%d%s", stags[i], (i + 1 < tag2el_count) ? "," : "");
 
+	OUT("};\n");
 	free(stags);
 	return 1;
+
+fail:
+	free(stags);
+	return 0;
 }
 static enum tvm_compat
 emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_tags_count_r) {
