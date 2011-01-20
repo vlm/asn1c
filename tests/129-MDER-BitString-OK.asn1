@@ -1,0 +1,41 @@
+
+-- OK: Everything is fine
+
+-- Check restrictions for Bit String types using MDER
+
+ModuleBitStringMDER DEFINITIONS ::=
+BEGIN
+
+	-- Bit string lengths are constrained to 8-, 16-, or 32-bit lengths.
+
+	State ::= BIT STRING {
+		open(0),
+		close(1)
+	} (SIZE(8))
+
+	PowerStatus ::= BIT STRING {
+		onMains(0),
+		onBattery(1),
+		chargingFull(8),
+		chargingTrickle(9),
+		chargingOff(10)
+	} (SIZE(16))
+
+	SystemType ::= BIT STRING {
+		sys-type-manager(0),
+		sys-type-agent(8)
+	} (SIZE(32))
+
+
+	-- Invalid MDER Bit String definitions
+
+	BadExample1 ::= BIT STRING {
+		member1(0),
+		member2(1)
+	} (SIZE(5))
+
+	BadExample2 ::= BIT STRING {
+		member1(0),
+		member2(1)
+	}
+END
