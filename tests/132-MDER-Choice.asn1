@@ -1,0 +1,49 @@
+
+-- OK: Everything is fine
+
+-- Check restrictions for CHOICE types using MDER
+
+ModuleChoiceMDER DEFINITIONS ::=
+BEGIN
+	-- Explicit Tags
+	T1 ::= CHOICE {
+		a[0] INTEGER(0..255),
+		b[3] INTEGER(0..255),
+		c[7] OCTET STRING
+	}
+
+	-- Implicit Tags
+	T2 ::= CHOICE {
+		a	INTEGER(0..255),
+		b	OCTET STRING
+	}
+
+	-- Tags are explicit or implicit, not mixed
+	T3 ::= CHOICE {
+		a INTEGER(0..255),
+		b[4] INTEGER(0..255),
+		c[5] OCTET STRING
+	}
+
+	T4 ::= CHOICE {
+		a[5] INTEGER(0..255),
+		b[3] INTEGER(0..255),
+		c[6] T2,
+		d[4] OCTET STRING
+	}
+
+	T5 ::= CHOICE {
+		a[1] INTEGER(0..255),
+		b[2] T3,
+		c[3] OCTET STRING
+	}
+
+	T6 ::= SET {
+		a	INTEGER(0..255),
+		b	OCTET STRING
+	}
+
+	T7 ::= SET (SIZE (8)) OF INTEGER(0..255)
+
+	T8 ::= BOOLEAN
+END
