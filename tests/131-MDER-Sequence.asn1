@@ -1,0 +1,39 @@
+
+-- OK: Everything is fine
+
+-- Check restrictions for SEQUENCE types using MDER
+
+-- ModuleSequenceMDER DEFINITIONS AUTOMATIC TAGS ::=
+ModuleSequenceMDER DEFINITIONS ::=
+BEGIN
+
+	IdentType ::= SEQUENCE {
+		id		INTEGER (0..255),
+		name		OCTET STRING,
+		instance	INT-U16,
+		oid		OCTET STRING (SIZE(4))
+	}
+
+
+	-- Medical Device Encoding Rules for SEQUENCE types
+	-- may not use OPTIONAL, DEFAULT or automatic tagging.
+
+	T1 ::= SEQUENCE {
+		a		INTEGER (0..255),
+		b		INT-U16 OPTIONAL,
+		c		OCTET STRING
+	}
+
+	T2 ::= SEQUENCE {
+		a		INTEGER (0..255),
+		b		INT-U16 DEFAULT 3
+	}
+
+	T3 ::= SEQUENCE {
+		a		OCTET STRING,
+		b		T2
+	}
+
+	-- 16-bit unsigned integer
+        INT-U16 ::= INTEGER (0..65535)
+END
