@@ -1,0 +1,42 @@
+
+-- OK: Everything is fine
+
+-- Check SEQUENCE OF types using MDER
+
+ModuleSequenceOfMDER DEFINITIONS ::=
+BEGIN
+
+	T1 ::= SEQUENCE OF INT-U16
+
+	T2 ::= SEQUENCE OF T3
+
+	T3 ::= CHOICE {
+		a[1] INTEGER(0..255),
+		b[2] INTEGER(0..255),
+		c[3] OCTET STRING
+	}
+
+	T4 ::= SEQUENCE OF T5
+
+	T5 ::= SEQUENCE {
+		a	INTEGER (0..255),
+		b	INT-U16 OPTIONAL,
+		c	OCTET STRING,
+		d	T1
+	}
+
+	T6 ::= SEQUENCE OF T7
+
+	T7 ::= SEQUENCE {
+		a	INTEGER (0..255),
+		b	INT-U16,
+		c	OCTET STRING,
+		d	CHOICE {
+				b[2] INTEGER(0..255),
+				c[3] OCTET STRING
+			}
+	}
+
+	-- 16-bit unsigned integer
+        INT-U16 ::= INTEGER (0..65535)
+END
