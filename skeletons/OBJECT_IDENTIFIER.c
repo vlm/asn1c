@@ -1,11 +1,11 @@
 /*-
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2010-2011 Sean Leonard of SeanTek <dev+asn1c@seantek.com>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
 #include <OBJECT_IDENTIFIER.h>
 #include <OCTET_STRING.h>
-#include <RELATIVE-OID.h>
 #include <limits.h>	/* for CHAR_BIT */
 #include <errno.h>
 

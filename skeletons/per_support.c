@@ -15,7 +15,7 @@ per_data_string(asn_per_data_t *pd) {
 	snprintf(buf[n], sizeof(buf),
 		"{m=%ld span %+d[%d..%d] (%d)}",
 		(long)pd->moved,
-		(((int)pd->buffer) & 0xf),
+		(int)(((size_t)pd->buffer) & 0xf),
 		(int)pd->nboff, (int)pd->nbits,
 		(int)(pd->nbits - pd->nboff));
 	return buf[n];
@@ -107,7 +107,7 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	ASN_DEBUG("  [PER got %2d<=%2d bits => span %d %+d[%d..%d]:%02x (%d) => 0x%x]",
 		(int)nbits, (int)nleft,
 		(int)pd->moved,
-		(((int)pd->buffer) & 0xf),
+		(int)(((size_t)pd->buffer) & 0xf),
 		(int)pd->nboff, (int)pd->nbits,
 		pd->buffer[0],
 		(int)(pd->nbits - pd->nboff),
