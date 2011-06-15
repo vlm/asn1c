@@ -28,8 +28,12 @@ der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
 xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
 
-struct RELATIVE_OID;
-typedef struct RELATIVE_OID RELATIVE_OID_t;
+/* Implemented with the same layout as ASN__PRIMITIVE_TYPE_t */
+/* typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t; */
+typedef struct RELATIVE_OID {
+	uint8_t *buf; /* Buffer with consecutive primitive encoding types */
+	int size; /* Size of the buffer */
+} RELATIVE_OID_t;
 
 /**********************************
  * Some handy conversion routines *

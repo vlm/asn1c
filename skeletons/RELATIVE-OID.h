@@ -13,12 +13,8 @@
 extern "C" {
 #endif
 
-/* Implemented with the same layout as ASN__PRIMITIVE_TYPE_t */
-/* typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t; */
-struct RELATIVE_OID {
-	uint8_t *buf; /* Buffer with consecutive primitive encoding types */
-	int size; /* Size of the buffer */
-};
+/* struct RELATIVE_OID is declared in OBJECT_IDENTIFIER.h
+   because it is used in OBJECT_IDENTIFIER functions */
 
 extern asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID;
 

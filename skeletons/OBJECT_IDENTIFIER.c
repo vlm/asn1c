@@ -1195,7 +1195,7 @@ int OBJECT_IDENTIFIER_1eq1(const OBJECT_IDENTIFIER_t *_oid1base,
 size_t OBJECT_IDENTIFIER_common(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0, ...) {
 	va_list oids;
 	const OBJECT_IDENTIFIER_t *oid;
-	size_t res;
+	size_t res = 0;
 	
 	va_start(oids, _oid0);
 	while(NULL != (oid = va_arg(oids, OBJECT_IDENTIFIER_t*))) {
