@@ -1491,13 +1491,13 @@ ValueAssignment:
 Value:
 	SimpleValue
 	| DefinedValue
-	| ObjectIdentifier {
+/*	| ObjectIdentifier {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
 		$$->type = ATV_OBJECT_IDENTIFIER;
-		assert($1); /* remember that OIDs cannot be empty */
+		assert($1); /* remember that OIDs cannot be empty * /
 		$$->value.oid = asn1p_oid_construct(($1)->arcs, ($1)->arcs_count);
-	}
+	} */
 	| Identifier ':' Value {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
@@ -1536,10 +1536,10 @@ SimpleValue:
 		$$ = _convert_bitstring2binary($1, 'H');
 		checkmem($$);
 	}
-	| '{' '}' {
+/*	| '{' '}' {
 		$$ = asn1p_value_fromint(0);
 		$$->type = ATV_EMPTY;
-	}
+	} */
 	| RestrictedCharacterStringValue {
 		$$ = $$;
 	}

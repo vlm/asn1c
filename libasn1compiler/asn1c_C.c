@@ -2922,7 +2922,10 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	assert(expr->value);
 	if(!expr->value)
 		return 0;
-	
+
+	REDIR(OT_INCLUDES);
+	OUT("OBJECT_IDENTIFIER.h");
+
 	if(expr->value->type == ATV_REFERENCED) {
 		asn1p_ref_t *ref = expr->value->value.reference;
 		assert(ref);
@@ -2995,7 +2998,10 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	assert(expr->value);
 	if(!expr->value)
 		return 0;
-	
+
+	REDIR(OT_INCLUDES);
+	OUT("RELATIVE-OID.h");
+
 	if(expr->value->type == ATV_REFERENCED) {
 		asn1p_ref_t *ref = expr->value->value.reference;
 		assert(ref);

@@ -50,10 +50,10 @@ libasn1fix_la_LIBADD =
 am_libasn1fix_la_OBJECTS = asn1fix.lo asn1fix_misc.lo asn1fix_value.lo \
 	asn1fix_compat.lo asn1fix_constr.lo asn1fix_cstring.lo \
 	asn1fix_retrieve.lo asn1fix_bitstring.lo asn1fix_constraint.lo \
-	asn1fix_integer.lo asn1fix_crange.lo asn1fix_dereft.lo \
-	asn1fix_derefv.lo asn1fix_export.lo asn1fix_param.lo \
-	asn1fix_class.lo asn1fix_tags.lo asn1fix_enum.lo \
-	asn1fix_cws.lo asn1fix_constraint_compat.lo
+	asn1fix_integer.lo asn1fix_oid.lo asn1fix_crange.lo \
+	asn1fix_dereft.lo asn1fix_derefv.lo asn1fix_export.lo \
+	asn1fix_param.lo asn1fix_class.lo asn1fix_tags.lo \
+	asn1fix_enum.lo asn1fix_cws.lo asn1fix_constraint_compat.lo
 libasn1fix_la_OBJECTS = $(am_libasn1fix_la_OBJECTS)
 libasn1fix_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -209,6 +209,7 @@ libasn1fix_la_SOURCES = \
 	asn1fix_bitstring.c asn1fix_bitstring.h		\
 	asn1fix_constraint.c asn1fix_constraint.h	\
 	asn1fix_integer.c asn1fix_integer.h		\
+	asn1fix_oid.c asn1fix_oid.h \
 	asn1fix_crange.c asn1fix_crange.h		\
 	asn1fix_dereft.c asn1fix_dereft.h		\
 	asn1fix_derefv.c asn1fix_derefv.h		\
@@ -303,6 +304,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_export.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_integer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_misc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_oid.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_param.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_retrieve.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_tags.Plo@am__quote@

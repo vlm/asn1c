@@ -18,6 +18,7 @@ libasn1fix_la_SOURCES =					\
 	asn1fix_bitstring.c asn1fix_bitstring.h		\
 	asn1fix_constraint.c asn1fix_constraint.h	\
 	asn1fix_integer.c asn1fix_integer.h		\
+	asn1fix_oid.c asn1fix_oid.h \
 	asn1fix_crange.c asn1fix_crange.h		\
 	asn1fix_dereft.c asn1fix_dereft.h		\
 	asn1fix_derefv.c asn1fix_derefv.h		\

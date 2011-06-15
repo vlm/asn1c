@@ -824,7 +824,13 @@ static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
 	return 0;
 }
 
-static int
+extern compiler_streams_t *s_cs;
+extern asn1p_module_t *s_mod;
+
+compiler_streams_t *s_cs;
+asn1p_module_t *s_mod;
+
+/*static*/ int
 asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_module_t *mod = expr->module;
@@ -833,6 +839,10 @@ asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv)
 	FILE *fp_c, *fp_h;
 
 	assert(expr && mod && expr->meta_type == AMT_VALUE);
+	
+	/* TEST ONLY!!! */
+	s_cs = cs;
+	s_mod = mod;
 	
 	fp_c = asn1c_append_file(mod->ModuleName, ".c");
 	fp_h = asn1c_append_file(mod->ModuleName, ".h");
@@ -843,6 +853,17 @@ asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv)
 		return -1;
 	}
 	
+	/* SAVE_STREAM(fp_h, OT_INCLUDES, "Including external dependencies", 1); */
+	/* if(TQ_FIRST(&(cs->destination[OT_INCLUDES].chunks)) && 1)
+		fprintf(fp_h, "\n/ * %s * /\n", "Including external dependencies"); */
+/*	TQ_FOR(ot, &(cs->destination[OT_INCLUDES].chunks), next) { */
+	for((ot) = TQ_FIRST(&(cs->destination[OT_INCLUDES].chunks));
+		(ot); (ot) = ot->next.tq_next) {
+
+		/* if(1) */ asn1c_activate_dependency(deps, 0, ot->buf);
+		/* fwrite(ot->buf, ot->len, 1, fp_h); */
+	}
+
 	SAVE_STREAM(fp_h, OT_FUNC_DECLS, "", 0);
 	
 	SAVE_STREAM(fp_c, OT_STAT_DEFS, "", 0);
