@@ -280,5 +280,7 @@ BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 
 	per_put_few_bits(po, *st ? 1 : 0, 1);
 
+	er.encoded = 0;
+
 	_ASN_ENCODED_OK(er);
 }
