@@ -114,6 +114,12 @@ Enable unnamed unions in the definitions of target language's structures.
 .TP
 .B \-fskeletons-copy
 Copy support files (skeletons) rather than symlink them.
+.TP
+.B \-fmodule-oids
+Emit module OIDs in <ModuleName>.h and <ModuleName>.c, triggering a dependency
+on OBJECT_IDENTIFIER.h. Otherwise, the module OIDs are not emitted.
+Standard OID and RELATIVE-OID values will always be
+emitted (when present in the modules).
 .SH CODECS GENERATION OPTIONS
 .TP
 .B \-gen-PER

@@ -1,3 +1,17 @@
+0.9.25: 2011-Jun-17
+  * ASN.1 values are left as unparsed (ATV_UNPARSED) in the asn1parser stage,
+	  and are parsed in the asn1fix stage.
+	* Made module OID emission optional with a new command-line switch:
+	   -fmodule-oids
+	  When this switch is present, module OIDs get emitted in ModuleName.h
+	  and .c, triggering a dependency on OBJECT_IDENTIFIER.h. Otherwise, the
+	  module OIDs are not emitted. Standard OID and RELATIVE-OID values will
+	  always be emitted (when present in the modules).
+	* Added proper dependency checking so that when elements.
+	* Various tests that are executed during make check have been cleaned up.
+	* Improved BOOLEAN.c so that er.encoded is initialized.
+	* Cleaned up more code in the skeletons.
+
 0.9.24: 2010-Dec-04
 
 	* There is now a general framework for outputting ASN.1 values

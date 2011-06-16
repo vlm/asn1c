@@ -1,4 +1,4 @@
-AC_INIT([asn1c], [0.9.24], [vlm@lionet.info])
+AC_INIT([asn1c], [0.9.25], [vlm@lionet.info])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])

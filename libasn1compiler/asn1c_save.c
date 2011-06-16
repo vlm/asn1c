@@ -39,6 +39,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	asn1p_module_t *mod;
 	FILE *mkf;	/* Makefile.am.sample */
 	int i;
+	asn1p_module_t **used_modules;
 
 	deps = asn1c_read_file_dependencies(arg, datadir);
 	if(!deps && datadir) {
@@ -94,19 +95,64 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		return -1;
 	}
 
-/* TODO: add module files to sources */
+	/*
+	 * Add module files to the sources when any values are present,
+	 * or when A1C_MODULE_OIDS is present.
+	 */
+	used_modules = (asn1p_module_t**)calloc(10, sizeof(*used_modules));
+	if(!used_modules)
+		return -1; /* out of memory */
+
+	/* WARNING: 'i' may be used uninitialized in this function */
+
 	fprintf(mkf, "ASN_MODULE_SOURCES=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		if(arg->flags & A1C_MODULE_OIDS) {
+			/* emit module oid header, and add to the list */
+			fprintf(mkf, "\t\\\n\t%s.c", mod->ModuleName);
+
+			used_modules = (asn1p_module_t**)realloc(used_modules,
+				sizeof(*used_modules) * (i + 1));
+			if(!used_modules)
+				return -1; /* out of memory */
+			used_modules[i] = arg->expr->module;
+			used_modules[i+1] = NULL;
+		}
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				fprintf(mkf, "\t\\\n\t%s.c",
-				arg->expr->Identifier);
+				if(arg->expr->meta_type == AMT_VALUE) {
+					for(i = 0; used_modules[i] && used_modules[i] != arg->expr->module; i++);
+					if(!used_modules[i]) {
+						/*
+						 * we found a new module, so emit it
+						 * but note that if A1C_MODULE_OIDS is present, the expectation
+						 * is that we've already got all the items down.
+						 */
+						assert(!(arg->flags & A1C_MODULE_OIDS));
+						fprintf(mkf, "\t\\\n\t%s.c", arg->expr->module->ModuleName);
+
+						used_modules = (asn1p_module_t**)realloc(used_modules,
+							sizeof(*used_modules) * (i + 1));
+						if(!used_modules)
+							return -1; /* out of memory */
+						used_modules[i] = arg->expr->module;
+						used_modules[i+1] = NULL;
+					}
+				} else {
+					fprintf(mkf, "\t\\\n\t%s.c",
+					arg->expr->Identifier);
+				}
 			}
 		}
 	}
+
+	/* reset the list without reallocating */
+	used_modules[0] = NULL;
+	
 	fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		/* TODO: finish implementation */
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
@@ -728,8 +774,22 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	asn1p_expr_t *expr;
 	const char *mod_symbol_id; /* for C */
 	unsigned char has_values[ASN_EXPR_TYPE_MAX] = {0};
+	char has_a_value = 0;
 	size_t i;
-	
+
+	TQ_FOR(expr, &(mod->members), next) {
+		if(expr->meta_type == AMT_VALUE && expr->expr_type < ASN_EXPR_TYPE_MAX) {
+				has_values[expr->expr_type] = 1;
+				has_a_value = 1;
+		}
+	}
+
+	/* implies has_a_value without needing to check for it */
+	if(arg->flags & A1C_MODULE_OIDS)
+		has_values[ASN_BASIC_OBJECT_IDENTIFIER] = 1;
+	else if(!has_a_value)
+		return 0;
+
 	fp_c = asn1c_open_file(mod->ModuleName, ".c", NULL);
 	fp_h = asn1c_open_file(mod->ModuleName, ".h", NULL);
 	
@@ -749,16 +809,9 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 		"\n\n", header_id, header_id);
 	
 	HINCLUDE("asn_application.h");
-	
-	TQ_FOR(expr, &(mod->members), next) {
-		if(expr->meta_type == AMT_VALUE) {
-			if(expr->expr_type < ASN_EXPR_TYPE_MAX)
-				has_values[expr->expr_type] = 1;
-		}
-	}
 
 	/* Compare with GEN_INCLUDE in asn1c_out.h/asn1c_C.c */
-	for (i = 0; i < ASN_EXPR_TYPE_MAX; i++) {
+	for(i = 0; i < ASN_EXPR_TYPE_MAX; i++) {
 		if(has_values[i]) {
 			char *identifier_file_name = asn1c_make_identifier(
 				AMI_MASK_ONLY_SPACES | AMI_NODELIMITER, NULL,
@@ -775,27 +828,29 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	/* fprintf(fp_c, "%s", "#ifdef __GNUC__\n"
 		"#pragma GCC diagnostic warning \"-Wno-cast-qual\"\n#endif\n\n"); */
 	
-	/* Compare with MKID and out_name_chain */
-	mod_symbol_id = asn1c_make_identifier(AMI_NODELIMITER,
-		NULL, mod->ModuleName, NULL);
+	if(arg->flags & A1C_MODULE_OIDS) {
+		/* Compare with MKID and out_name_chain */
+		mod_symbol_id = asn1c_make_identifier(AMI_NODELIMITER,
+			NULL, mod->ModuleName, NULL);
 
-	asn1c_file_out_oid(mod, fp_h);
+		asn1c_file_out_oid(mod, fp_h);
 
-	fprintf(fp_h, "extern const OBJECT_IDENTIFIER_t %s;\n", mod_symbol_id);
-	
-	fprintf(fp_c, "static const uint8_t DEF_%s[] = {", mod_symbol_id);
-	if(asn1c_file_out_ber(arg, mod, fp_c)) {
-		fclose(fp_c);
-		fclose(fp_h);
-		return -1;
+		fprintf(fp_h, "extern const OBJECT_IDENTIFIER_t %s;\n", mod_symbol_id);
+
+		fprintf(fp_c, "static const uint8_t DEF_%s[] = {", mod_symbol_id);
+		if(asn1c_file_out_ber(arg, mod, fp_c)) {
+			fclose(fp_c);
+			fclose(fp_h);
+			return -1;
+		}
+		fprintf(fp_c, "};\n");
+
+		asn1c_file_out_oid(mod, fp_c);
+
+		fprintf(fp_c, "const OBJECT_IDENTIFIER_t %s = {(uint8_t*)(size_t)DEF_%s, sizeof(DEF_%s)}",
+			mod_symbol_id, mod_symbol_id, mod_symbol_id);
+		fprintf(fp_c, ";\n");
 	}
-	fprintf(fp_c, "};\n");
-	
-	asn1c_file_out_oid(mod, fp_c);
-	
-	fprintf(fp_c, "const OBJECT_IDENTIFIER_t %s = {(uint8_t*)(size_t)DEF_%s, sizeof(DEF_%s)}",
-		mod_symbol_id, mod_symbol_id, mod_symbol_id);
-	fprintf(fp_c, ";\n");
 
 	fclose(fp_c);
 	fclose(fp_h);
@@ -807,7 +862,21 @@ static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
 	int optc, char **argv) {
 	FILE *fp_c, *fp_h;
 	char *header_id;
+	asn1p_expr_t *expr;
+	char has_a_value = 0;
 	
+	/* don't finish the module files if there are no values */
+	if(!(arg->flags & A1C_MODULE_OIDS)) {
+		TQ_FOR(expr, &(mod->members), next) {
+			if(expr->meta_type == AMT_VALUE && expr->expr_type < ASN_EXPR_TYPE_MAX) {
+					has_a_value = 1;
+					break;
+			}
+		}
+		if(!has_a_value)
+			return 0;
+	}
+
 	fp_h = asn1c_append_file(mod->ModuleName, ".h");
 	fp_c = asn1c_append_file(mod->ModuleName, ".c");
 	

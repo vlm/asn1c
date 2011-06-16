@@ -33,7 +33,7 @@
 
 #undef  COPYRIGHT
 #define COPYRIGHT       \
-	"Copyright (c) 2003-2010 Lev Walkin <vlm@lionet.info>,\n" \
+	"Copyright (c) 2003-2011 Lev Walkin <vlm@lionet.info>,\n" \
 	"Sean Leonard <dev+asn1c@seantek.com>, and other contributors\n"
 
 #include <asn1parser.h>		/* Parse the ASN.1 file and build a tree */
@@ -100,6 +100,8 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_NO_INCLUDE_DEPS;
 		} else if(strcmp(optarg, "includes-quoted") == 0) {
 			asn1_compiler_flags |= A1C_INCLUDES_QUOTED;
+		} else if(strcmp(optarg, "module-oids") == 0) {
+			asn1_compiler_flags |= A1C_MODULE_OIDS;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
 		} else if(strcmp(optarg, "skeletons-copy") == 0) {
@@ -464,6 +466,7 @@ usage(const char *av0) {
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
 "  -fskeletons-copy      Force copying the support files\n"
+"  -fmodule-oids         Emit module OIDs\n"
 "\n"
 
 "  -gen-PER              Generate PER support code\n"

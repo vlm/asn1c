@@ -72,7 +72,14 @@ enum asn1c_flags {
 	 * -fincludes-quoted
 	 * Avoid generating #include <foo>, generate "foo" instead.
 	 */
-	A1C_INCLUDES_QUOTED	= 0x10000
+	A1C_INCLUDES_QUOTED	= 0x10000,
+	/*
+	 * -fmodule-oids
+	 * Emit module OID values in ModuleName.h and ModuleName.c.
+	 * By specifying this flag, OBJECT_IDENTIFIER.h and .c will almost
+	 * certainly be included.
+	 */
+	A1C_MODULE_OIDS = 0x20000
 };
 
 /*
