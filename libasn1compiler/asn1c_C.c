@@ -2978,7 +2978,7 @@ asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
 	asn1c_print_oid(arg);
 	OUT("const OBJECT_IDENTIFIER_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(" = {(uint8_t*)DEF_");
+	OUT(" = {(uint8_t*)(size_t)DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(", sizeof(DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
@@ -3054,7 +3054,7 @@ asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
 	asn1c_print_oid(arg);
 	OUT("const RELATIVE_OID_t ");
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(" = {(uint8_t*)DEF_");
+	OUT(" = {(uint8_t*)(size_t)DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);
 	OUT(", sizeof DEF_");
 	out_name_chain(arg, ONC_avoid_keywords);

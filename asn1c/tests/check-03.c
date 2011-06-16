@@ -43,7 +43,7 @@ check_xer(e_Enum2 eval, char *xer_string) {
 	xer_encode(&asn_DEF_Enum2, e, XER_F_CANONICAL, buf_writer, 0);
 	buf[buf_offset] = 0;
 	sprintf(buf2, "<Enum2>%s</Enum2>", xer_string);
-	printf("%ld -> %s == %s\n", eval, buf, buf2);
+	printf("%d -> %s == %s\n", eval, buf, buf2);
 	assert(0 == strcmp(buf, buf2));
 }
 

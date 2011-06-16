@@ -771,6 +771,9 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	
 	fprintf(fp_c, "#include \"%s.h\"\n\n", mod->ModuleName);
 	
+	/* not all gcc variations (such as on OS X 10.6) support diagnostic push */
+	/* fprintf(fp_c, "%s", "#ifdef __GNUC__\n"
+		"#pragma GCC diagnostic warning \"-Wno-cast-qual\"\n#endif\n\n"); */
 	
 	/* Compare with MKID and out_name_chain */
 	mod_symbol_id = asn1c_make_identifier(AMI_NODELIMITER,
@@ -790,7 +793,7 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	
 	asn1c_file_out_oid(mod, fp_c);
 	
-	fprintf(fp_c, "const OBJECT_IDENTIFIER_t %s = {(uint8_t*)DEF_%s, sizeof(DEF_%s)}",
+	fprintf(fp_c, "const OBJECT_IDENTIFIER_t %s = {(uint8_t*)(size_t)DEF_%s, sizeof(DEF_%s)}",
 		mod_symbol_id, mod_symbol_id, mod_symbol_id);
 	fprintf(fp_c, ";\n");
 
@@ -802,13 +805,15 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 
 static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
 	int optc, char **argv) {
-	FILE *fp_h; /* no need for fp_c */
+	FILE *fp_c, *fp_h;
 	char *header_id;
 	
 	fp_h = asn1c_append_file(mod->ModuleName, ".h");
+	fp_c = asn1c_append_file(mod->ModuleName, ".c");
 	
-	if(fp_h == NULL) {
+	if(fp_h == NULL || fp_c == NULL) {
 		if(fp_h) { fclose(fp_h); }
+		if(fp_c) { fclose(fp_c); }
 		return -1;
 	}
 	
@@ -819,7 +824,11 @@ static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
 	fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
 	HINCLUDE("asn_internal.h");
 	
+	/* not all compilers support diagnostic pop */
+	/* fputs("\n#ifdef __GNUC__\n#pragma GCC diagnostic pop\n#endif", fp_c); */
+	
 	fclose(fp_h);
+	fclose(fp_c);
 
 	return 0;
 }
