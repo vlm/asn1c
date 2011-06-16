@@ -13,6 +13,7 @@
 #include <dirent.h>
 #include <assert.h>
 #include <errno.h>
+#include <ctype.h>
 
 #include <PDU.h>
 
@@ -198,14 +199,13 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 static void
 process_XER_data(enum expectation expectation, char *fbuf, int size) {
 	PDU_t *st;
-	int ret;
 
 	st = load_object_from(expectation, fbuf, size, AS_XER);
 	if(!st) return;
 
 	/* Save and re-load as DER */
 	save_object_as(st, AS_DER);
-	st = load_object_from(expectation, buf, buf_offset, AS_DER);
+	st = load_object_from(expectation, (char*)buf, buf_offset, AS_DER);
 	assert(st);
 
 	save_object_as(st,
@@ -220,10 +220,10 @@ process_XER_data(enum expectation expectation, char *fbuf, int size) {
 
 	switch(expectation) {
 	case EXP_DIFFERENT:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	case EXP_BROKEN:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	case EXP_CXER_EXACT:
 		buf[buf_offset++] = '\n';
@@ -236,7 +236,7 @@ process_XER_data(enum expectation expectation, char *fbuf, int size) {
 			|| memcmp(fbuf, buf, size));
 		break;
 	case EXP_OK:
-		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	}
 

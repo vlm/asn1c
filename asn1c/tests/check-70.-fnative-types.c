@@ -194,7 +194,7 @@ process_XER_data(enum expectation expectation, char *fbuf, int size) {
 
 	/* Save and re-load as DER */
 	save_object_as(st, AS_DER);
-	st = load_object_from(expectation, buf, buf_offset, AS_DER);
+	st = load_object_from(expectation, (char*)buf, buf_offset, AS_DER);
 	assert(st);
 
 	save_object_as(st, AS_XER);
@@ -206,13 +206,13 @@ process_XER_data(enum expectation expectation, char *fbuf, int size) {
 
 	switch(expectation) {
 	case EXP_DIFFERENT:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	case EXP_BROKEN:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	case EXP_OK:
-		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	}
 
