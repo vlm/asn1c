@@ -102,7 +102,7 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 
 static PDU_t *
 load_object_from(const char *fname, enum expectation expectation, char *fbuf, int size, enum enctype how) {
-	asn_dec_rval_t rval;
+	asn_dec_rval_t rval = { RC_OK, 0 };
 	PDU_t *st = 0;
 	int csize = 1;
 
@@ -151,13 +151,18 @@ load_object_from(const char *fname, enum expectation expectation, char *fbuf, in
 					st = 0;
 					fprintf(stderr, "-> PER wants more\n");
 				} else {
-					fprintf(stderr, "-> PER ret %d/%d\n",
-						rval.code, rval.consumed);
+					/* unsigned long long works for size_t in most cases;
+					   more portable than %zu (gcc) or %Iu (msvc) */
+					fprintf(stderr, "-> PER ret %d/%llu\n",
+						rval.code, (unsigned long long)rval.consumed);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;
 					rval.consumed /= 8;
 				}
 				break;
+			case AS_DER:
+			case AS_CXER:
+				break; /* intentionally not handled */
 			}
 			fbuf_offset += rval.consumed;
 			fbuf_left -= rval.consumed;
@@ -229,7 +234,6 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 static void
 process_XER_data(const char *fname, enum expectation expectation, char *fbuf, int size) {
 	PDU_t *st;
-	int ret;
 
 	st = load_object_from(fname, expectation, fbuf, size, AS_XER);
 	if(!st) return;
@@ -238,7 +242,7 @@ process_XER_data(const char *fname, enum expectation expectation, char *fbuf, in
 	save_object_as(st, expectation, AS_PER);
 	if(expectation == EXP_PER_NOCOMP)
 		return;	/* Already checked */
-	st = load_object_from("buffer", expectation, buf, buf_offset, AS_PER);
+	st = load_object_from("buffer", expectation, (char*)buf, buf_offset, AS_PER);
 	assert(st);
 
 	save_object_as(st,
@@ -254,10 +258,10 @@ process_XER_data(const char *fname, enum expectation expectation, char *fbuf, in
 
 	switch(expectation) {
 	case EXP_DIFFERENT:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	case EXP_BROKEN:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	case EXP_CXER_EXACT:
 		buf[buf_offset++] = '\n';
@@ -271,7 +275,7 @@ process_XER_data(const char *fname, enum expectation expectation, char *fbuf, in
 		break;
 	case EXP_OK:
 	case EXP_PER_NOCOMP:
-		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 		break;
 	}
 
@@ -286,7 +290,6 @@ process(const char *fname) {
 	char fbuf[4096];
 	char *ext = strrchr(fname, '.');
 	enum expectation expectation;
-	int ret;
 	int rd;
 	FILE *fp;
 
