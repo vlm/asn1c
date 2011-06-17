@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>.
- * Copyright (c) 2010 Sean Leonard of SeanTek(R).
+ * Copyright (c) 2010, 2011 Sean Leonard of SeanTek(R) <dev+asn1c@seantek.com>.
  *  All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
