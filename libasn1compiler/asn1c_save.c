@@ -939,6 +939,12 @@ static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
 	fclose(fp_h);
 	fclose(fp_c);
 
+	/* the module files do not record whether they were retained at this time */
+	fprintf(stderr, "Compiled %s.c\n",
+		mod->ModuleName);
+	fprintf(stderr, "Compiled %s.h\n",
+		mod->ModuleName);
+
 	return 0;
 }
 

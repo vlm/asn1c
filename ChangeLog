@@ -11,6 +11,10 @@
 	* Various tests that are executed during make check have been cleaned up.
 	* Improved BOOLEAN.c so that er.encoded is initialized.
 	* Cleaned up more code in the skeletons.
+	* Added emission of headers for values of type references (e.g.,
+	  foo Int1 ::= 30) and values of raw INTEGERs. The definitions of these
+	  values are not yet emitted; "TODO: implement" comments appear in the
+	  corresponding source files.
 
 0.9.24: 2010-Dec-04
 

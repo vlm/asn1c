@@ -60,7 +60,7 @@
 		14E9B4AB12A3163A00CAFAC4 /* asn1c.Po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = asn1c.Po; sourceTree = "<group>"; };
 		14E9B4AC12A3163A00CAFAC4 /* enber.Po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = enber.Po; sourceTree = "<group>"; };
 		14E9B4AD12A3163A00CAFAC4 /* unber.Po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = unber.Po; sourceTree = "<group>"; };
-		14E9B4AE12A3163A00CAFAC4 /* asn1c.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = asn1c.1; sourceTree = "<group>"; };
+		14E9B4AE12A3163A00CAFAC4 /* asn1c.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = asn1c.1; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.man; };
 		14E9B4AF12A3163A00CAFAC4 /* asn1c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = asn1c.c; sourceTree = "<group>"; };
 		14E9B4B012A3163A00CAFAC4 /* check-parsing.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "check-parsing.sh"; sourceTree = "<group>"; };
 		14E9B4B112A3163A00CAFAC4 /* check-xxber.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "check-xxber.sh"; sourceTree = "<group>"; };
