@@ -4,6 +4,10 @@
 *.libs
 *.deps
 
+# Xcode
+*.mode1v3
+*.pbxuser
+
 # /
 /autom4te.cache
 /config.h
@@ -31,6 +35,9 @@
 # /asn1c/webcgi/
 /asn1c/webcgi/Makefile
 /asn1c/webcgi/asn1c-suid-helper
+
+# /build/ (for Xcode)
+/build/
 
 # /doc/
 /doc/Makefile

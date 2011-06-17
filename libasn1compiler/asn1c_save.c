@@ -95,6 +95,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 
 	fprintf(mkf, "ASN_MODULE_SOURCES=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		if(mod->_tags & MT_STANDARD_MODULE)
+			continue;
+
 		if(arg->flags & A1C_MODULE_OIDS) {
 			/* emit module oid header, and mark as emitted */
 			fprintf(mkf, "\t\\\n\t%s.c", mod->ModuleName);
@@ -129,6 +132,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	
 	fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		if(mod->_tags & MT_STANDARD_MODULE)
+			continue;
+
 		if(arg->flags & A1C_MODULE_OIDS) {
 			fprintf(mkf, "\t\\\n\t%s.h", mod->ModuleName);
 
@@ -772,6 +778,9 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 	size_t i;
 	char **referenced_names;
 
+	if(mod->_tags & MT_STANDARD_MODULE)
+		return 0;
+
 	TQ_FOR(expr, &(mod->members), next) {
 		if(expr->meta_type == AMT_VALUE && expr->expr_type < ASN_EXPR_TYPE_MAX) {
 				has_values[expr->expr_type] = 1;
@@ -904,7 +913,10 @@ static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
 	char *header_id;
 	asn1p_expr_t *expr;
 	char has_a_value = 0;
-	
+
+	if(mod->_tags & MT_STANDARD_MODULE)
+		return 0;
+
 	/* don't finish the module files if there are no values */
 	if(!(arg->flags & A1C_MODULE_OIDS)) {
 		TQ_FOR(expr, &(mod->members), next) {
@@ -948,13 +960,7 @@ static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
 	return 0;
 }
 
-extern compiler_streams_t *s_cs;
-extern asn1p_module_t *s_mod;
-
-compiler_streams_t *s_cs;
-asn1p_module_t *s_mod;
-
-/*static*/ int
+static int
 asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_module_t *mod = expr->module;
@@ -963,11 +969,10 @@ asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv)
 	FILE *fp_c, *fp_h;
 
 	assert(expr && mod && expr->meta_type == AMT_VALUE);
-	
-	/* TEST ONLY!!! */
-	s_cs = cs;
-	s_mod = mod;
-	
+
+	if(mod->_tags & MT_STANDARD_MODULE)
+		return 0;
+
 	fp_c = asn1c_append_file(mod->ModuleName, ".c");
 	fp_h = asn1c_append_file(mod->ModuleName, ".h");
 	
