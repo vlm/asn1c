@@ -19,7 +19,7 @@ static int asn1c_copy_over(arg_t *arg, char *path);
 static int identical_files(const char *fname1, const char *fname2);
 static int need_to_generate_pdu_collection(arg_t *arg);
 static int generate_pdu_collection_file(arg_t *arg);
-static int generate_preamble(arg_t *, FILE *, int optc, char **argv);
+static int generate_preamble(asn1p_module_t *, FILE *, int optc, char **argv);
 static int include_type_to_pdu_collection(arg_t *arg);
 static void pdu_collection_print_unused_types(arg_t *arg);
 static const char *generate_pdu_C_definition(void);
@@ -39,7 +39,10 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	asn1p_module_t *mod;
 	FILE *mkf;	/* Makefile.am.sample */
 	int i;
-	asn1p_module_t **used_modules;
+	enum {
+		MODULE_OMITTED,
+		MODULE_EMITTED
+	} module_emitted = MODULE_OMITTED;
 
 	deps = asn1c_read_file_dependencies(arg, datadir);
 	if(!deps && datadir) {
@@ -49,13 +52,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 
 	if(!(arg->flags & A1C_PRINT_COMPILED)) {
 		TQ_FOR(mod, &(arg->asn->modules), mod_next) {
-			TQ_FOR(arg->expr, &(mod->members), next) {
-				if(arg->expr->meta_type == AMT_VALUE) {
-					if(asn1c_create_module_files(arg, mod, optc, argv))
-						return -1;
-					break;
-				}
-			}
+			if(asn1c_create_module_files(arg, mod, optc, argv))
+				return -1;
 		}
 	}
 
@@ -71,13 +69,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 
 	if(!(arg->flags & A1C_PRINT_COMPILED)) {
 		TQ_FOR(mod, &(arg->asn->modules), mod_next) {
-			TQ_FOR(arg->expr, &(mod->members), next) {
-				if(arg->expr->meta_type == AMT_VALUE) {
-					if(asn1c_finish_module_files(arg, mod, optc, argv))
-						return -1;
-					break;
-				}
-			}
+			if(asn1c_finish_module_files(arg, mod, optc, argv))
+				return -1;
 		}
 	}
 
@@ -99,45 +92,32 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	 * Add module files to the sources when any values are present,
 	 * or when A1C_MODULE_OIDS is present.
 	 */
-	used_modules = (asn1p_module_t**)calloc(10, sizeof(*used_modules));
-	if(!used_modules)
-		return -1; /* out of memory */
-
-	/* WARNING: 'i' may be used uninitialized in this function */
 
 	fprintf(mkf, "ASN_MODULE_SOURCES=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		if(arg->flags & A1C_MODULE_OIDS) {
-			/* emit module oid header, and add to the list */
+			/* emit module oid header, and mark as emitted */
 			fprintf(mkf, "\t\\\n\t%s.c", mod->ModuleName);
 
-			used_modules = (asn1p_module_t**)realloc(used_modules,
-				sizeof(*used_modules) * (i + 1));
-			if(!used_modules)
-				return -1; /* out of memory */
-			used_modules[i] = arg->expr->module;
-			used_modules[i+1] = NULL;
+			module_emitted = MODULE_EMITTED;
+		} else {
+			module_emitted = MODULE_OMITTED;
 		}
+
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
 				if(arg->expr->meta_type == AMT_VALUE) {
-					for(i = 0; used_modules[i] && used_modules[i] != arg->expr->module; i++);
-					if(!used_modules[i]) {
+					assert(mod == arg->expr->module);
+					if(module_emitted == MODULE_OMITTED) {
 						/*
 						 * we found a new module, so emit it
 						 * but note that if A1C_MODULE_OIDS is present, the expectation
-						 * is that we've already got all the items down.
+						 * is that we've already emitted this module
 						 */
 						assert(!(arg->flags & A1C_MODULE_OIDS));
-						fprintf(mkf, "\t\\\n\t%s.c", arg->expr->module->ModuleName);
-
-						used_modules = (asn1p_module_t**)realloc(used_modules,
-							sizeof(*used_modules) * (i + 1));
-						if(!used_modules)
-							return -1; /* out of memory */
-						used_modules[i] = arg->expr->module;
-						used_modules[i+1] = NULL;
+						fprintf(mkf, "\t\\\n\t%s.c", mod->ModuleName);
+						module_emitted = MODULE_EMITTED;
 					}
 				} else {
 					fprintf(mkf, "\t\\\n\t%s.c",
@@ -146,18 +126,31 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			}
 		}
 	}
-
-	/* reset the list without reallocating */
-	used_modules[0] = NULL;
 	
 	fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
-		/* TODO: finish implementation */
+		if(arg->flags & A1C_MODULE_OIDS) {
+			fprintf(mkf, "\t\\\n\t%s.h", mod->ModuleName);
+
+			module_emitted = MODULE_EMITTED;
+		} else {
+			module_emitted = MODULE_OMITTED;
+		}
+
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				fprintf(mkf, "\t\\\n\t%s.h",
-				arg->expr->Identifier);
+				if(arg->expr->meta_type == AMT_VALUE) {
+					assert(mod == arg->expr->module);
+					if(module_emitted == MODULE_OMITTED) {
+						assert(!(arg->flags & A1C_MODULE_OIDS));
+						fprintf(mkf, "\t\\\n\t%s.h", mod->ModuleName);
+						module_emitted = MODULE_EMITTED;
+					}
+				} else {
+					fprintf(mkf, "\t\\\n\t%s.h",
+					arg->expr->Identifier);
+				}
 			}
 		}
 	}
@@ -318,8 +311,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		return -1;
 	}
 
-	generate_preamble(arg, fp_c, optc, argv);
-	generate_preamble(arg, fp_h, optc, argv);
+	generate_preamble(expr->module, fp_c, optc, argv);
+	generate_preamble(expr->module, fp_h, optc, argv);
 
 	header_id = asn1c_make_identifier(0, expr, NULL);
 	fprintf(fp_h,
@@ -412,14 +405,15 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 }
 
 static int
-generate_preamble(arg_t *arg, FILE *fp, int optc, char **argv) {
+generate_preamble(asn1p_module_t *mod, FILE *fp, int optc, char **argv) {
+	assert(mod);
 	fprintf(fp,
 	"/*\n"
 	" * Generated by asn1c-" VERSION " (http://lionet.info/asn1c)\n"
 	" * From ASN.1 module \"%s\"\n"
 	" * \tfound in \"%s\"\n",
-		arg->expr->module->ModuleName,
-		arg->expr->module->source_file_name);
+		mod->ModuleName,
+		mod->source_file_name);
 	if(optc > 1) {
 		int i;
 		fprintf(fp, " * \t`asn1c ");
@@ -798,10 +792,10 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 		if(fp_h) { fclose(fp_h); }
 		return -1;
 	}
-	
-	generate_preamble(arg, fp_c, optc, argv);
-	generate_preamble(arg, fp_h, optc, argv);
-	
+
+	generate_preamble(mod, fp_c, optc, argv);
+	generate_preamble(mod, fp_h, optc, argv);
+
 	header_id = asn1c_make_identifier(0, NULL, mod->ModuleName, NULL);
 	fprintf(fp_h,
 		"#ifndef\t_%s_H_\n"
