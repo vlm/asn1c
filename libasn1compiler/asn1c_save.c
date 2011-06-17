@@ -830,15 +830,24 @@ static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
 			refname = expr->reference->components[0].name;
 			for(i = 0; referenced_names[i] && !!strcmp(referenced_names[i], refname); i++);
 			if(!referenced_names[i]) {
+				/* First, emit Including external dependencies */
+				if(i == 0)
+					fprintf(fp_h, "\n/* Including external dependencies */\n");
+
 				/* TODO: confirm that this is the right way to create the name */
 				identifier_file_name = asn1c_make_identifier(
 					AMI_MASK_ONLY_SPACES | AMI_NODELIMITER, NULL,
 					refname, ".h", NULL);
 				assert(identifier_file_name);
-				HINCLUDE(identifier_file_name);
+
+				/*
+				 * Do not use HINCLUDE(identifier_file_name);
+				 * instead, use quotation marks all the time (because these types are local).
+				 */
+				fprintf(fp_h, "#include \"%s\"\n", identifier_file_name);
 
 				/* add to list of already-emitted names */
-				referenced_names = realloc(referenced_names, sizeof(*referenced_names) * (i+1));
+				referenced_names = realloc(referenced_names, sizeof(*referenced_names) * (i+2));
 				if(!referenced_names)
 					return -1; /* out of memory */
 

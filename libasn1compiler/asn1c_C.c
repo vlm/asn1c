@@ -2937,12 +2937,10 @@ asn1c_lang_C_value_REFERENCE(arg_t *arg) {
 	OUT("/* TODO: implement */\n");
 	OUT("/* const %s_t ", refname);
 	out_name_chain(arg, ONC_avoid_keywords);
-	OUT(" = { ? }; */");
-	/* TODO: figure out how to deal with this--added by other code--
-	OUT(")};\n");
-	OUT("\n");
-	*/
+	OUT(" = { ? }; */\n");
 
+	/* suppress output of ; */
+	arg->target->destination[OT_TYPE_DECLS].indent_level = 1;
 	return 0;
 }
 
