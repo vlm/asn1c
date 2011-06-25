@@ -403,21 +403,31 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 
 		errno = EINVAL;
 		return -1;
-	case 0x00: {	/* X.690: 8.5.6 */
+	case 0x00: {	/* X.690: 8.5.7 */
 		/*
 		 * Decimal. NR{1,2,3} format.
 		 */
 		double d;
 
-		assert(st->buf[st->size - 1] == 0); /* Security, vashu mat' */
+		if(octv == 0 || octv & 0x3C == 0) {
+			/* Remaining values of bits 6 to 1 are Reserved. */
+			errno = EINVAL;
+			return -1;
+		}
 
-		d = strtod((char *)st->buf, 0);
+		if(st->buf[st->size]) {
+			/* By contract, an input buffer should be null-terminated */
+			errno = EINVAL;
+			return -1;
+		}
+
+		d = strtod((char *)&st->buf[1], 0);
 		if(finite(d)) {
 			*dbl_value = d;
 			return 0;
 		} else {
 			errno = ERANGE;
-			return 0;
+			return -1;
 		}
 	  }
 	}

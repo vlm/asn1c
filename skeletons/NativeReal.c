@@ -107,10 +107,39 @@ NativeReal_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
 		tmp.size = length;
 
-		if(asn_REAL2double(&tmp, &d)) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
+		if(length < (ber_tlv_len_t)size) {
+			int ret;
+			uint8_t saved_byte = tmp.buf[tmp.size];
+			tmp.buf[tmp.size] = '\0';
+			ret = asn_REAL2double(&tmp, &d);
+			tmp.buf[tmp.size] = saved_byte;
+			if(ret) {
+				rval.code = RC_FAIL;
+				rval.consumed = 0;
+				return rval;
+			}
+		} else if(length < 48 /* Enough for longish %f value. */) {
+			tmp.buf = alloca(length + 1);
+			tmp.size = length;
+			memcpy(tmp.buf, buf_ptr, length);
+			tmp.buf[tmp.size] = '\0';
+			if(asn_REAL2double(&tmp, &d)) {
+				rval.code = RC_FAIL;
+				rval.consumed = 0;
+				return rval;
+			}
+		} else {
+			/* This should probably never happen: impractically long value */
+			tmp.buf = CALLOC(1, length + 1);
+			tmp.size = length;
+			if(tmp.buf) memcpy(tmp.buf, buf_ptr, length);
+			if(!tmp.buf || asn_REAL2double(&tmp, &d)) {
+				FREEMEM(tmp.buf);
+				rval.code = RC_FAIL;
+				rval.consumed = 0;
+				return rval;
+			}
+			FREEMEM(tmp.buf);
 		}
 
 		*Dbl = d;
