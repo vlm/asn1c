@@ -26,7 +26,7 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
 	OCTET_STRING_decode_uper,
-	OCTET_STRING_encode_uper,
+	OBJECT_IDENTIFIER_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
@@ -290,41 +290,40 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 	return wrote_len;
 }
 
-asn_enc_rval_t
-OBJECT_IDENTIFIER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t erval;
-	OBJECT_IDENTIFIER_t *oid = (OBJECT_IDENTIFIER_t *)sptr;
+static int
+OBJECT_IDENTIFIER__check_valid(asn_TYPE_descriptor_t *td, OBJECT_IDENTIFIER_t *oid) {
 	uint8_t *bufat = oid->buf, *buflast;
 
 	if(oid->size <= 0 || !oid->buf) {
 		ASN_DEBUG("%s cannot encode an empty OID value", td->name);
-		erval.encoded = -1;
-		erval.failed_type = td;
-		erval.structure_ptr = sptr;
-		errno = EINVAL; /* bonus */
-		return erval;
+		return 0;
 	} else if(oid->buf[oid->size - 1] & 0x80) {
 		ASN_DEBUG("%s cannot encode an OID value that ends in the series-continuation octet 0x%02X",
 			td->name, (unsigned int)oid->buf[oid->size - 1]);
-		erval.encoded = -1;
-		erval.failed_type = td;
-		erval.structure_ptr = sptr;
-		errno = EINVAL; /* bonus */
-		return erval;
+		return 0;
 	}
 
 	for(buflast = oid->buf + oid->size - 1; bufat != buflast; bufat++) {
 		if(!(bufat[0] & 0x80) && bufat[1] == 0x80) {
 			ASN_DEBUG("%s cannot encode an OID subidentifier at position %i that leads with octet 0x80",
 				td->name, (int)(bufat - oid->buf));
-			erval.encoded = -1;
-			erval.failed_type = td;
-			erval.structure_ptr = sptr;
-			errno = EINVAL; /* bonus */
-			return erval;
+			return 0;
 		}
+	}
+	return 1;
+}
+
+asn_enc_rval_t
+OBJECT_IDENTIFIER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
+	int tag_mode, ber_tlv_tag_t tag,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	if (!OBJECT_IDENTIFIER__check_valid(td, (OBJECT_IDENTIFIER_t *)sptr)) {
+		asn_enc_rval_t erval;
+		erval.encoded = -1;
+		erval.failed_type = td;
+		erval.structure_ptr = sptr;
+		errno = EINVAL; /* bonus */
+		return erval;
 	}
 
 	return der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
@@ -401,6 +400,21 @@ OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
 	_ASN_ENCODED_OK(er);
+}
+
+asn_enc_rval_t
+OBJECT_IDENTIFIER_encode_uper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	if (!OBJECT_IDENTIFIER__check_valid(td, (OBJECT_IDENTIFIER_t *)sptr)) {
+		asn_enc_rval_t erval;
+		erval.encoded = -1;
+		erval.failed_type = td;
+		erval.structure_ptr = sptr;
+		errno = EINVAL; /* bonus */
+		return erval;
+	}
+
+	return OCTET_STRING_encode_uper(td, constraints, sptr, po);
 }
 
 int
