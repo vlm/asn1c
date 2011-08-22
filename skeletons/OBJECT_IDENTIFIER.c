@@ -188,8 +188,10 @@ OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
 	char *p;		/* Position in the scratch buffer */
 
 	if(OBJECT_IDENTIFIER_get_single_arc(arcbuf, arclen, add,
-			&accum, sizeof(accum)))
+			&accum, sizeof(accum))) {
+		if(cb("<INVALID ERANGE>", 16, app_key) < 0) return -1;
 		return -1;
+	}
 
 	if(accum) {
 		ssize_t len;
@@ -227,16 +229,27 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 	int startn;
 	int add = 0;
 	int i;
+	
+	if(st->size <= 0) {
+		if(cb("<INVALID 0-LENGTH>", 18, app_key) < 0) return -1;
+		errno = EINVAL;
+		return -1;
+	} else if(st->buf[st->size - 1] & 0x80) {
+		if(cb("<INVALID & 0x80>", 16, app_key) < 0) return -1;
+		errno = EINVAL;
+		return -1;
+	}
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
 		if((b & 0x80)) { /* Continuation expected */
+			assert(i + 1 != st->size);
 			if(startn == i && b == 0x80) {
 				/* prohibited, and possible attack per Kaminsky et. al., "PKI Layer Cake" (2010) */
 				if(startn != 0) {
 					if(cb(".", 1, app_key) < 0) return -1;
 				}
-				if(cb("<INVALID>", 9, app_key) < 0) return -1;
+				if(cb("<INVALID 0x80>", 14, app_key) < 0) return -1;
 				errno = EINVAL;
 				return -1;
 			}
