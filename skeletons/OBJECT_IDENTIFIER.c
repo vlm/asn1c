@@ -230,8 +230,18 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
-		if((b & 0x80))			/* Continuation expected */
+		if((b & 0x80)) { /* Continuation expected */
+			if(startn == i && b == 0x80) {
+				/* prohibited, and possible attack per Kaminsky et. al., "PKI Layer Cake" (2010) */
+				if(startn != 0) {
+					if(cb(".", 1, app_key) < 0) return -1;
+				}
+				if(cb("<INVALID>", 9, app_key) < 0) return -1;
+				errno = EINVAL;
+				return -1;
+			}
 			continue;
+		}
 
 		if(startn == 0) {
 			/*
