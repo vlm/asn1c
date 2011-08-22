@@ -990,6 +990,7 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	size_t base, i;
 	size_t oid_buf_len;
 	char *scratch; /* text in BCD format, with -1 (0xFF) as sentinel values */
+	int allocated_buf = 0;
 
 	if(!_oid || !oid_text) {
 		errno = EINVAL;
@@ -998,7 +999,12 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 
 	if(oid_text_len > (((SIZE_MAX - (295 - 1)) / 14) / 10)) {
 		errno = ERANGE; // it's going to overflow!
-		return 0;
+		return -1;
+	}
+	/* min length is "1.2" = 3 chars */
+	if(oid_text_len < 3 || oid_text[1] != '.' || !(oid_text[0] >= '0' && oid_text[0] <= '2')) {
+		errno = EINVAL;
+		return -1;
 	}
 
 	/* This algorithm should get an optimal minimum "worst-case" number
@@ -1009,9 +1015,12 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	*/
 	i = 2;
 	base = oid_text[0] < '2' ? 2 : 1;
-	assert(oid_text[0] == '0' || oid_text[0] == '1' || oid_text[0] == '2');
 
 	while(i < oid_text_len && oid_text[i] != '.') i++;
+	if(base == i || oid_text[base] == '0' && i - base > 1) {
+		errno = EINVAL;
+		return -1;
+	}
 
 	oid_buf_len = compute_reverse_length(i - base, oid_text[2] - '0');
 
@@ -1019,26 +1028,34 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 		assert(oid_text[i] == '.');
 		base = ++i;
 		while(i < oid_text_len && oid_text[i] != '.') i++;
-		assert(base != i);
-		if(base != i) {
-			oid_buf_len += compute_reverse_length(i - base, oid_text[base] - '0');
+		/* leading and trailing dots, .. in the middle, and leading zeroes are prohibited */
+		if(base == i || oid_text[base] == '0' && i - base > 1) {
+			errno = EINVAL;
+			return -1;
 		}
+		oid_buf_len += compute_reverse_length(i - base, oid_text[base] - '0');
 	}
 
-	_oid->buf = (uint8_t*)MALLOC(oid_buf_len);
-	_oid->size = 0; /* in progress */
-	if(!_oid->buf) {
-		/* ENOMEM */
-		return -1;
-	}
-	
 	scratch = (char *)MALLOC(oid_text_len + 1);
 	if(!scratch) {
 		/* ENOMEM */
-		FREEMEM(_oid->buf);
-		_oid->buf = NULL;
 		return -1;
 	}
+
+	if(!_oid->buf) {
+		_oid->buf = (uint8_t*)MALLOC(oid_buf_len);
+		_oid->size = 0; /* in progress */
+		if(!_oid->buf) {
+			/* ENOMEM */
+			FREEMEM(scratch);
+			return -1;
+		}
+		allocated_buf = 1;
+	} else if(_oid->size < oid_buf_len) {
+		errno = ERANGE;
+		return -1;
+	}
+	
 	scratch[oid_text_len] = '\0';
 
 	for(i = 0; i < oid_text_len; i++) {
@@ -1047,8 +1064,10 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 				scratch[i] = (char)-1;
 			} else {
 				assert((oid_text[i] >= '0' && oid_text[i] <= '9') || oid_text[i] == '.');
-				FREEMEM(_oid->buf);
-				_oid->buf = NULL;
+				if(allocated_buf) {
+					FREEMEM(_oid->buf);
+					_oid->buf = NULL;
+				}
 				FREEMEM(scratch);
 				errno = EINVAL;
 				return -1;
@@ -1063,8 +1082,10 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	assert(_oid->size <= oid_buf_len);
 	FREEMEM(scratch);
 	if(!_oid->size) {
-		FREEMEM(_oid->buf);
-		_oid->buf = NULL;
+		if(allocated_buf) {
+			FREEMEM(_oid->buf);
+			_oid->buf = NULL;
+		}
 		return -1;
 	}
 	return 0;

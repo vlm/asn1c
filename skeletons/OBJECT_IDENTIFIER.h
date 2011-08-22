@@ -156,6 +156,16 @@ int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
 OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromIdentifiers(
 	const OBJECT_IDENTIFIER_t *_oidbase, ...);
 
+/*
+ * Converts an OID from dot notation to BER encoding (native asn1c format),
+ * in the provided _oid struct. The implementation uses the reverse double dabble
+ * algorithm, ensuring that it can handle infinite-length OIDs per X.680/X.690.
+ * If _oid->buf is NULL, it will be allocated with MALLOC. Otherwise (if not NULL),
+ * _oid->size must be at least as large as the largest possible output BER-encoded OID.
+ * The dot notation OID in oid_text must be strictly valid; this function
+ * performs validity checks, so invalid character sequences such as ".1.2.3..4.z.5.006."
+ * will fail.
+ */
 int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 	const char *oid_text, ssize_t oid_text_length);
 
