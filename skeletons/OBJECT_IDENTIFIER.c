@@ -46,12 +46,27 @@ OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 
 	if(st && st->buf) {
+		uint8_t *bufat = st->buf, *buflast;
 		if(st->size < 1) {
 			_ASN_CTFAIL(app_key, td, sptr,
 				"%s: at least one numerical value "
 				"expected (%s:%d)",
 				td->name, __FILE__, __LINE__);
 			return -1;
+		} else if(st->buf[st->size - 1] & 0x80) {
+			_ASN_CTFAIL(app_key, td, sptr,
+				"%s: OID value must not end in the series-continuation octet 0x%02X (%s:%d)",
+				td->name, (unsigned int)st->buf[st->size - 1], __FILE__, __LINE__);
+			return -1;
+		}
+
+		for(buflast = st->buf + st->size - 1; bufat != buflast; bufat++) {
+			if(!(bufat[0] & 0x80) && bufat[1] == 0x80) {
+				_ASN_CTFAIL(app_key, td, sptr,
+					"%s: OID subidentifier at position %i must not lead with octet 0x80 (%s:%d)",
+					td->name, (int)(bufat - st->buf), __FILE__, __LINE__);
+				return -1;
+			}
 		}
 	} else {
 		_ASN_CTFAIL(app_key, td, sptr,
