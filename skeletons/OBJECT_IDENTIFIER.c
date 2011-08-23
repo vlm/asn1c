@@ -1144,6 +1144,7 @@ int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
 		}
 		allocated_buf = 1;
 	} else if(_oid->size < oid_buf_len) {
+		FREEMEM(scratch);
 		errno = ERANGE;
 		return -1;
 	}
