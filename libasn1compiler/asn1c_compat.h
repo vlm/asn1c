@@ -10,6 +10,8 @@
 FILE *asn1c_open_file(const char *base_part, const char *extension,
 	char **opt_tmpname);
 
+FILE *asn1c_append_file(const char *base_part, const char *extension);
+
 /*
  * Obtain base name and directory name of a path.
  * Some systems have them in <libgen.h> as dirname(3) and basename(3).

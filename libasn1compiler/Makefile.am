@@ -14,7 +14,8 @@ libasn1compiler_la_SOURCES =			\
 	asn1c_out.c asn1c_out.h			\
 	asn1c_lang.c asn1c_lang.h		\
 	asn1c_save.c asn1c_save.h		\
-	asn1c_C.c asn1c_C.h			\
+	asn1c_oid.c asn1c_oid.h     \
+	asn1c_C.c asn1c_C.h         \
 	asn1c_constraint.c asn1c_constraint.h	\
 	asn1c_compat.c asn1c_compat.h		\
 	asn1c_fdeps.c asn1c_fdeps.h		\

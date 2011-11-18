@@ -137,12 +137,12 @@ asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
 
 		if(arcname) {
 			accum += printf("%s", arcname);
-			if(oid->arcs[ac].number >= 0) {
-				accum += printf("(%" PRIdASN ")",
+			if(oid->arcs[ac].number) {
+				accum += printf("(%s)",
 					oid->arcs[ac].number);
 			}
 		} else {
-			accum += printf("%" PRIdASN, oid->arcs[ac].number);
+			accum += printf("%s", oid->arcs[ac].number);
 		}
 	}
 	printf(" }");
@@ -269,6 +269,11 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 	case ATV_CHOICE_IDENTIFIER:
 		printf("%s: ", val->value.choice_identifier.identifier);
 		return asn1print_value(val->value.choice_identifier.value, flags);
+	case ATV_OBJECT_IDENTIFIER:
+		return asn1print_oid(21, val->value.oid, flags);
+	case ATV_EMPTY:
+		printf("{}");
+		return 0;
 	}
 
 	assert(val->type || !"Unknown");

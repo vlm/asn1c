@@ -123,22 +123,22 @@ uint8_t buf2_reconstr[] = {
 };
 
 static void
-check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
+check(T_t *tp, uint8_t *checkbuf, int size, size_t consumed) {
 	asn_dec_rval_t rval;
 
 	tp = memset(tp, 0, sizeof(*tp));
 
-	fprintf(stderr, "Buf %p (%d)\n", buf, (int)size);
-	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
+	fprintf(stderr, "Buf %p (%d)\n", checkbuf, (int)size);
+	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, checkbuf, size);
 	fprintf(stderr, "Returned code %d, consumed %d\n",
 		(int)rval.code, (int)rval.consumed);
 
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == consumed);
 
-	assert(strcmp(tp->a.buf, "=<&>") == 0);
-	assert(strcmp(tp->b.choice.b1.buf, "z") == 0
-		&& strcmp(tp->b.choice.b2.buf, "z") == 0);
+	assert(strcmp((char*)tp->a.buf, "=<&>") == 0);
+	assert(strcmp((char*)tp->b.choice.b1.buf, "z") == 0
+		&& strcmp((char*)tp->b.choice.b2.buf, "z") == 0);
 
 	asn_fprint(stderr, &asn_DEF_T, tp);
 	xer_fprint(stderr, &asn_DEF_T, tp);
@@ -181,7 +181,7 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 	erval = der_encode(&asn_DEF_T, tp, buf_fill, 0);
 	assert(erval.encoded != -1);
 	if(erval.encoded != cmp_buf_size) {
-		printf("%d != %d\n", erval.encoded, cmp_buf_size);
+		printf("%lld != %d\n", (long long)erval.encoded, cmp_buf_size);
 	}
 	assert(erval.encoded == cmp_buf_size);
 	for(i = 0; i < cmp_buf_size; i++) {
@@ -198,70 +198,70 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 }
 
 static void
-partial_read(uint8_t *buf, size_t size) {
+partial_read(uint8_t *mybuf, size_t size) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
 	size_t i1, i2;
-	uint8_t *buf1 = alloca(size);
-	uint8_t *buf2 = alloca(size);
-	uint8_t *buf3 = alloca(size);
+	uint8_t *partialbuf1 = alloca(size);
+	uint8_t *partialbuf2 = alloca(size);
+	uint8_t *partialbuf3 = alloca(size);
 
 	fprintf(stderr, "\nPartial read sequence...\n");
 
 	/*
 	 * Divide the space (size) into three blocks in various combinations:
 	 *   |<----->i1<----->i2<----->|
-	 *   ^ buf		     ^ buf+size
+	 *   ^ mybuf		     ^ mybuf+size
 	 * Try to read block by block.
 	 */
 	for(i1 = 0; i1 < size; i1++) {
 		for(i2 = i1; i2 < size; i2++) {
-			uint8_t *chunk1 = buf;
+			uint8_t *chunk1 = mybuf;
 			size_t size1 = i1;
-			uint8_t *chunk2 = buf + size1;
+			uint8_t *chunk2 = mybuf + size1;
 			size_t size2 = i2 - i1;
-			uint8_t *chunk3 = buf + size1 + size2;
+			uint8_t *chunk3 = mybuf + size1 + size2;
 			size_t size3 = size - size1 - size2;
 
 			fprintf(stderr, "\n%d:{%d, %d, %d}...\n",
 				(int)size, (int)size1, (int)size2, (int)size3);
 
-			memset(buf1, 0, size);
-			memset(buf2, 0, size);
-			memset(buf3, 0, size);
-			memcpy(buf1, chunk1, size1);
-			memcpy(buf2, chunk2, size2);
-			memcpy(buf3, chunk3, size3);
+			memset(partialbuf1, 0, size);
+			memset(partialbuf2, 0, size);
+			memset(partialbuf3, 0, size);
+			memcpy(partialbuf1, chunk1, size1);
+			memcpy(partialbuf2, chunk2, size2);
+			memcpy(partialbuf3, chunk3, size3);
 
 			tp = memset(&t, 0, sizeof(t));
 
 			fprintf(stderr, "=> Chunk 1 (%d):\n", (int)size1);
 			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
-				buf1, size1);
+				partialbuf1, size1);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size1);
 			if(rval.consumed < size1) {
 				int leftover = size1 - rval.consumed;
-				memcpy(buf2, buf1 + rval.consumed, leftover);
-				memcpy(buf2 + leftover, chunk2, size2);
+				memcpy(partialbuf2, partialbuf1 + rval.consumed, leftover);
+				memcpy(partialbuf2 + leftover, chunk2, size2);
 				size2 += leftover;
 			}
 
 			fprintf(stderr, "=> Chunk 2 (%d):\n", (int)size2);
 			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
-				buf2, size2);
+				partialbuf2, size2);
 			assert(rval.code == RC_WMORE);
 			assert(rval.consumed <= size2);
 			if(rval.consumed < size2) {
 				int leftover = size2 - rval.consumed;
-				memcpy(buf3, buf2 + rval.consumed, leftover);
-				memcpy(buf3 + leftover, chunk3, size3);
+				memcpy(partialbuf3, partialbuf2 + rval.consumed, leftover);
+				memcpy(partialbuf3 + leftover, chunk3, size3);
 				size3 += leftover;
 			}
 
 			fprintf(stderr, "=> Chunk 3 (%d):\n", (int)size3);
 			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
-				buf3, size3);
+				partialbuf3, size3);
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
@@ -283,13 +283,13 @@ xer_cb(const void *buffer, size_t size, void *key) {
 }
 
 static void
-check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
+check_xer(uint8_t *mybuf, uint8_t size, char *xer_sample) {
 	T_t *tp = 0;
 	asn_dec_rval_t rval;
 	asn_enc_rval_t er;
 	int xer_sample_len = strlen(xer_sample);
 
-	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
+	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, mybuf, size);
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == size);
 	assert(tp);
@@ -298,8 +298,8 @@ check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
 	er = xer_encode(&asn_DEF_T, tp, XER_F_CANONICAL, xer_cb, 0);
 	assert(xer_off);
 	xer_buf[xer_off] = 0;
-	printf("[%s] (%d/%d) vs [%s] (%d)\n",
-		xer_buf, er.encoded, xer_off, xer_sample, xer_sample_len);
+	printf("[%s] (%lld/%d) vs [%s] (%d)\n",
+		xer_buf, (long long)er.encoded, xer_off, xer_sample, xer_sample_len);
 	assert(er.encoded == xer_off);
 	assert(xer_off == xer_sample_len);
 	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);

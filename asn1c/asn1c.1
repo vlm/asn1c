@@ -94,6 +94,13 @@ together with
 .B \-fno-include-deps
 to prevent circular references.
 .TP
+.B \-fincludes-quoted
+Generate #include directives using "double" instead of <angle> quotes.
+Only 'system'
+#include directives are affected (such as asn_application.h).
+#include directives for external dependencies are not affected; they are always
+emitted in double quotes.
+.TP
 .BI "\-fknown-extern-type="<name>
 Pretend the specified type is known. The compiler will assume the target
 language source files for the given type have been provided manually.
@@ -114,6 +121,12 @@ Enable unnamed unions in the definitions of target language's structures.
 .TP
 .B \-fskeletons-copy
 Copy support files (skeletons) rather than symlink them.
+.TP
+.B \-fmodule-oids
+Emit module OIDs in <ModuleName>.h and <ModuleName>.c, triggering a dependency
+on OBJECT_IDENTIFIER.h. Otherwise, the module OIDs are not emitted.
+Standard OID and RELATIVE-OID values will always be
+emitted (when present in the modules).
 .SH CODECS GENERATION OPTIONS
 .TP
 .B \-gen-PER
@@ -139,3 +152,5 @@ Generate "-- #line" comments in \fB-E\fR output.
 \&\fIunber\fR\|(1), \&\fIenber\fR\|(1)
 .SH AUTHORS
 Lev Walkin <vlm@lionet.info>
+.PP
+Sean Leonard of SeanTek(R) <dev+asn1c@seantek.com>

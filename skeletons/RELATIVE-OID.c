@@ -240,3 +240,270 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	return 0;
 }
 
+/* Contributed by Sean Leonard of SeanTek(R). */
+/***** 2010-11-23 additions *****/
+
+int RELATIVE_OID_cmp(const RELATIVE_OID_t *_roid1,
+	const RELATIVE_OID_t *_roid2base, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	int memcmp_result;
+	int i;
+	
+	if(!_roid1) return _roid2base ? -1 : 0;
+	else if(!_roid2base) return 1;
+	else if(_roid1->size < _roid2base->size) {
+		memcmp_result = memcmp(_roid1->buf, _roid2base->buf, _roid1->size);
+		if(memcmp_result != 0) return memcmp_result;
+		else return -1; 
+	}
+	
+	memcmp_result = memcmp(_roid1->buf, _roid2base->buf, _roid2base->size);
+	if(memcmp_result != 0) return memcmp_result;
+	
+	oid_full_len = _roid1->size;
+	oid_at_len = _roid2base->size;
+	va_start(roids, _roid2base);
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len) {
+				va_end(roids);
+				return -1;
+			}
+			memcmp_result = _roid1->buf[oid_at_len] - roid->buf[i];
+			if(memcmp_result != 0) {
+				va_end(roids);
+				return memcmp_result;
+			}
+		}
+	}
+	va_end(roids);
+	assert(oid_at_len <= oid_full_len);
+	return oid_at_len < oid_full_len;
+}
+
+int RELATIVE_OID_eq(const RELATIVE_OID_t *_roid1,
+	const RELATIVE_OID_t *_roid2base, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	int i;
+	
+	if(!_roid1) return _roid2base ? 0 : 1;
+	else if(!_roid2base) return 0;
+	else if(_roid2base->size > _roid1->size) return 0;
+	
+	oid_full_len = _roid1->size;
+	
+	if(!!memcmp(_roid1->buf, _roid2base->buf, _roid2base->size))
+		return 0;
+	oid_at_len = _roid2base->size;
+	va_start(roids, _roid2base);
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len ||
+				_roid1->buf[oid_at_len] != roid->buf[i]) {
+				va_end(roids);
+				return 0;
+			}
+		}
+	}
+	va_end(roids);
+	return oid_at_len == oid_full_len;
+}
+
+int RELATIVE_OID_fromOIDDiff(RELATIVE_OID_t *_roid, const OBJECT_IDENTIFIER_t *_oidbase,
+	const OBJECT_IDENTIFIER_t *_fulloid) {
+	size_t arcs_count = 1, arcs_len = 0, i;
+	if(!_roid || !_oidbase || !_fulloid || !_oidbase->buf || !_fulloid->buf ||
+		_oidbase->size < 0 || _fulloid->size < 0) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	if(_oidbase->size == 0 || _oidbase->size > _fulloid->size) {
+		errno = ERANGE;
+		return -1;
+	}
+	
+	for(i = 0; i < _oidbase->size; i++) {
+		if(_oidbase->buf[i] != _fulloid->buf[i]) break;
+		else if(!(_oidbase->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+	
+	if(arcs_count < 2) {
+		errno = ERANGE;
+		return -1;
+	}
+
+	assert(_fulloid->size >= arcs_len);
+	_roid->size = _fulloid->size - arcs_len; /* can be 0 length, on purpose */
+	_roid->buf = (uint8_t*)MALLOC(_roid->size);
+	if(!_roid->buf) {
+		/* ENOMEM */
+		_roid->size = 0;
+		return -1;
+	}
+	
+	memcpy(_roid->buf, _fulloid->buf + arcs_len, _roid->size);
+	if(_roid->size > 0) {
+		assert(!(_roid->buf[_roid->size - 1] & 0x80));
+	}
+	
+	return 0;
+}
+
+RELATIVE_OID_t *RELATIVE_OID_new_fromOIDDiff(const OBJECT_IDENTIFIER_t *_oidbase,
+	const OBJECT_IDENTIFIER_t *_fulloid) {
+	RELATIVE_OID_t *roid;
+	int result;
+	
+	roid = (RELATIVE_OID_t*)CALLOC(1, sizeof(*roid));
+	if(!roid) {
+		/* ENOMEM */
+		return NULL;
+	}
+	result = RELATIVE_OID_fromOIDDiff(roid, _oidbase, _fulloid);
+	if(result == 0) return roid;
+	else {
+		FREEMEM(roid);
+		return NULL;
+	}
+}
+
+int RELATIVE_OID_fromArcsCountDiff(RELATIVE_OID_t *_roid, size_t base_arcs_count,
+	const OBJECT_IDENTIFIER_t *_fulloid) {
+	size_t arcs_count = 1, arcs_len = 0, i;
+	if(!_fulloid || !_fulloid->buf) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	if(base_arcs_count < 2) {
+		errno = ERANGE;
+		return -1;
+	}
+	
+	for(i = 0; i < _fulloid->size; i++) {
+		if(!(_fulloid->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+			if (arcs_count == base_arcs_count) break;
+		}
+	}
+	if(i == _fulloid->size) {
+		errno = ERANGE;
+		return -1;
+	}
+	
+	assert(_fulloid->size >= arcs_len);
+	_roid->size = _fulloid->size - arcs_len; /* can be 0 length, on purpose */
+	_roid->buf = (uint8_t*)MALLOC(_roid->size);
+	if(!_roid->buf) {
+		/* ENOMEM */
+		_roid->size = 0;
+		return -1;
+	}
+	
+	memcpy(_roid->buf, _fulloid->buf + arcs_len, _roid->size);
+	if(_roid->size > 0) {
+		assert(!(_roid->buf[_roid->size - 1] & 0x80));
+	}
+	
+	return 0;
+}
+
+RELATIVE_OID_t *RELATIVE_OID_new_fromArcsCountDiff(size_t base_arcs_count,
+	const OBJECT_IDENTIFIER_t *_fulloid) {
+	RELATIVE_OID_t *roid;
+	int result;
+	
+	roid = (RELATIVE_OID_t*)CALLOC(1, sizeof(*roid));
+	if(!roid) {
+		/* ENOMEM */
+		return NULL;
+	}
+	result = RELATIVE_OID_fromArcsCountDiff(roid, base_arcs_count, _fulloid);
+	if(result == 0) return roid;
+	else {
+		FREEMEM(roid);
+		return NULL;
+	}
+}
+
+int RELATIVE_OID_fromSizeDiff(RELATIVE_OID_t *_roid, size_t base_size,
+	const OBJECT_IDENTIFIER_t *_fulloid) {
+	if(!_fulloid || !_fulloid->buf) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	if(_fulloid->size < base_size || base_size == 0) {
+		errno = ERANGE;
+		return -1;
+	}
+	
+	if(_fulloid->buf[base_size-1] & 0x80) {
+		/* base size must be arc-aligned */
+		errno = EINVAL;
+		return -1;
+	}
+
+	_roid->size = _fulloid->size - base_size; /* can be 0 length, on purpose */
+	_roid->buf = (uint8_t*)MALLOC(_roid->size);
+	if(!_roid->buf) {
+		/* ENOMEM */
+		_roid->size = 0;
+		return -1;
+	}
+	
+	memcpy(_roid->buf, _fulloid->buf + base_size, _roid->size);
+	if(_roid->size > 0) {
+		assert(!(_roid->buf[_roid->size - 1] & 0x80));
+	}
+	
+	return 0;
+}
+
+RELATIVE_OID_t *RELATIVE_OID_new_fromSizeDiff(size_t base_size,
+	const OBJECT_IDENTIFIER_t *_fulloid) {
+	RELATIVE_OID_t *roid;
+	int result;
+	
+	roid = (RELATIVE_OID_t*)CALLOC(1, sizeof(*roid));
+	if(!roid) {
+		/* ENOMEM */
+		return NULL;
+	}
+	result = RELATIVE_OID_fromSizeDiff(roid, base_size, _fulloid);
+	if(result == 0) return roid;
+	else {
+		FREEMEM(roid);
+		return NULL;
+	}
+}
+
+size_t RELATIVE_OID_get_arcs_count(const RELATIVE_OID_t *_roid) {
+	size_t arcs_count = 0;
+	int i;
+	
+	if(!_roid || !_roid->buf || _roid->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	
+	if(_roid->size > 0) {
+		/* The last byte must terminate the arc, with high-bit not set. */
+		assert(!(_roid->buf[_roid->size-1] & 0x80));
+	}
+	
+	for(i = 0; i < _roid->size; i++) {
+		if(!(_roid->buf[i] & 0x80)) arcs_count++;
+	}
+
+	return arcs_count;
+}

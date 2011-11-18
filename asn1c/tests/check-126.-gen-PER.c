@@ -83,7 +83,7 @@ save_object_as(PDU_t *st, enum enctype how) {
 
 static PDU_t *
 load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int mustfail) {
-	asn_dec_rval_t rval;
+	asn_dec_rval_t rval = { RC_OK, 0 };
 	PDU_t *st = 0;
 	int csize = 1;
 
@@ -132,7 +132,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 					? fbuf_chunk : fbuf_left, 0, 0);
 				if(rval.code == RC_WMORE) {
 					if(fbuf_chunk == fbuf_left) {
-						fprintf(stderr, "-> PER decode error (%d bits of %d bytes (c=%d,l=%d)) \n", rval.consumed, size, fbuf_chunk, fbuf_left);
+						fprintf(stderr, "-> PER decode error (%llu bits of %d bytes (c=%d,l=%d)) \n", (unsigned long long)rval.consumed, size, fbuf_chunk, fbuf_left);
 						rval.code = RC_FAIL;
 						rval.consumed += 7;
 						rval.consumed /= 8;
@@ -147,8 +147,8 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 						fprintf(stderr, "-> PER wants more\n");
 					}
 				} else {
-					fprintf(stderr, "-> PER ret %d/%d mf=%d\n",
-						rval.code, rval.consumed, mustfail);
+					fprintf(stderr, "-> PER ret %d/%llu mf=%d\n",
+						rval.code, (unsigned long long)rval.consumed, mustfail);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;
 					rval.consumed /= 8;
@@ -225,7 +225,7 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-compare_with_data_out(const char *fname, char *buf, int size) {
+compare_with_data_out(const char *fname, char *mybuf, int size) {
 	char outName[256];
 	char fbuf[1024];
 	size_t rd;
@@ -244,7 +244,7 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 
 	if((compare && !mustfail) && getenv("REGENERATE")) {
 		f = fopen(outName, "w");
-		fwrite(buf, 1, size, f);
+		fwrite(mybuf, 1, size, f);
 		fclose(f);
 	} else {
 		f = fopen(outName, "r");
@@ -259,10 +259,10 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 
 		if(compare) {
 			assert(rd == (size_t)size);
-			assert(memcmp(fbuf, buf, rd) == 0);
+			assert(memcmp(fbuf, mybuf, rd) == 0);
 			fprintf(stderr, "XER->PER recoding .in->.out match.\n");
 		} else {
-			assert(rd != (size_t)size || memcmp(fbuf, buf, rd));
+			assert(rd != (size_t)size || memcmp(fbuf, mybuf, rd));
 			fprintf(stderr, "XER->PER recoding .in->.out diverge.\n");
 		}
 	}
@@ -277,8 +277,8 @@ process_XER_data(const char *fname, char *fbuf, int size) {
 
 	/* Save and re-load as PER */
 	save_object_as(st, AS_PER);
-	compare_with_data_out(fname, buf, buf_offset);
-	st = load_object_from("buffer", buf, buf_offset, AS_PER, 0);
+	compare_with_data_out(fname, (char*)buf, buf_offset);
+	st = load_object_from("buffer", (char*)buf, buf_offset, AS_PER, 0);
 	assert(st);
 
 	save_object_as(st, AS_XER);
@@ -289,9 +289,9 @@ process_XER_data(const char *fname, char *fbuf, int size) {
 	fprintf(stderr, "=== end ===\n");
 
 	if(fname[strlen(fname) - 4] == 'X')
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 	else
-		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(xer_encoding_equal(fbuf, size, (char*)buf, buf_offset));
 
 	asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
 }

@@ -1,3 +1,43 @@
+0.9.25: 2011-Jun-17
+  * ASN.1 values are left as unparsed (ATV_UNPARSED) in the asn1parser stage,
+	  and are parsed in the asn1fix stage.
+	* Made module OID emission optional with a new command-line switch:
+	   -fmodule-oids
+	  When this switch is present, module OIDs get emitted in ModuleName.h
+	  and .c, triggering a dependency on OBJECT_IDENTIFIER.h. Otherwise, the
+	  module OIDs are not emitted. Standard OID and RELATIVE-OID values will
+	  always be emitted (when present in the modules).
+	* Added proper dependency checking so that when elements.
+	* Various tests that are executed during make check have been cleaned up.
+	* Improved BOOLEAN.c so that er.encoded is initialized.
+	* Cleaned up more code in the skeletons.
+	* Added emission of headers for values of type references (e.g.,
+	  foo Int1 ::= 30) and values of raw INTEGERs. The definitions of these
+	  values are not yet emitted; "TODO: implement" comments appear in the
+	  corresponding source files.
+	* Prevented emission of ModuleName sources for ASN.1 values when the modules
+	  are standard modules (marked internally with MT_STANDARD_MODULE).
+
+0.9.24: 2010-Dec-04
+
+	* There is now a general framework for outputting ASN.1 values
+	  into C.
+	* OBJECT IDENTIFIER and RELATIVE-OID values are now compiled.
+	  Within the values, references (symbols) of other OBJECT
+	  IDENTIFIERs and RELATIVE-OIDs can be used within the same
+	  module or imported with the IMPORTS statement.
+	* OBJECT IDENTIFIER and RELATIVE-OID values are output in
+	  BER encoding. The algorithm handles infinite length OID data,
+	  subject to memory constraints. (I.e., it can handle 128-bit
+	  UUIDs and much, much longer.)
+	* When values are output, they are output to "ModuleName.h"
+	  and "ModuleName.c".
+	* General utility functions for OBJECT IDENTIFIER and
+	  RELATIVE-OID manipulation are provided in the skeletons.
+	  These functions can be used to construct new OIDs from dot notation
+	  and compare arbitrary combinations of OBJECT IDENTIFIERs and
+	  RELATIVE-OIDs using -cmp-style comparisons (<, ==, >) or straight
+	  equal/not equal comparisons.
 
 0.9.23:	2010-Oct-24
 

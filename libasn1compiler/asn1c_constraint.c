@@ -507,8 +507,9 @@ emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varn
 				|| (natural_stop != -1
 					&& r->right.value >= natural_stop);
 		if(ignore_left && ignore_right) {
-			OUT("1 /* Constraint matches natural range of %s */",
-				varname);
+			/* comma operator used to block "warning: unused variable" */
+			OUT("(void)%s, 1 /* Constraint matches natural range of %s */",
+				varname, varname);
 			continue;
 		}
 

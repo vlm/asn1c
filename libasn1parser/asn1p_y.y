@@ -11,6 +11,7 @@
 #define YYPARSE_PARAM	param
 #define YYPARSE_PARAM_TYPE	void **
 #define YYERROR_VERBOSE
+#define YYDEBUG 1
 
 int yylex(void);
 int yyerror(const char *msg);
@@ -108,6 +109,10 @@ static asn1p_module_t *currentModule;
 	struct asn1p_expr_marker_s a_marker;	/* OPTIONAL/DEFAULT */
 	enum asn1p_constr_pres_e a_pres;	/* PRESENT/ABSENT/OPTIONAL */
 	asn1c_integer_t		 a_int;
+	struct {
+		asn1c_integer_t a_int;
+		char *ascii_int; /* recorded as ASCII base-10 number */
+	} tv_int;
 	double			 a_dbl;
 	char	*tv_str;
 	struct {
@@ -418,9 +423,8 @@ ObjectIdentifier:
 	'{' ObjectIdentifierBody '}' {
 		$$ = $2;
 	}
-	| '{' '}' {
-		$$ = 0;
-	}
+/* Per X.208-1988 through X.680-2007, OIDs must
+   have at least one element. They cannot be empty. */
 	;
 
 ObjectIdentifierBody:
@@ -429,27 +433,37 @@ ObjectIdentifierBody:
 		asn1p_oid_add_arc($$, &$1);
 		if($1.name)
 			free($1.name);
+		if($1.number)
+			free($1.number);
 	}
 	| ObjectIdentifierBody ObjectIdentifierElement {
 		$$ = $1;
 		asn1p_oid_add_arc($$, &$2);
 		if($2.name)
 			free($2.name);
+		if($2.number)
+			free($2.number);
 	}
 	;
 
 ObjectIdentifierElement:
 	Identifier {					/* iso */
 		$$.name = $1;
-		$$.number = -1;
+		$$.number = 0;
 	}
 	| Identifier '(' TOK_number ')' {		/* iso(1) */
-		$$.name = $1;
-		$$.number = $3;
+		{
+			struct {asn1c_integer_t a; char *b;} *pid = (void*)&($3);
+			$$.name = $1;
+			$$.number = pid->b;
+		}
 	}
 	| TOK_number {					/* 1 */
-		$$.name = 0;
-		$$.number = $1;
+		{
+			struct {asn1c_integer_t a; char *b;} *pid = (void*)&($1);
+			$$.name = 0;
+			$$.number = pid->b;
+		}
 	}
 	;
 	
@@ -1477,6 +1491,13 @@ ValueAssignment:
 Value:
 	SimpleValue
 	| DefinedValue
+/*	| ObjectIdentifier {
+		$$ = asn1p_value_fromint(0);
+		checkmem($$);
+		$$->type = ATV_OBJECT_IDENTIFIER;
+		assert($1); /* remember that OIDs cannot be empty * /
+		$$->value.oid = asn1p_oid_construct(($1)->arcs, ($1)->arcs_count);
+	} */
 	| Identifier ':' Value {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
@@ -1515,6 +1536,10 @@ SimpleValue:
 		$$ = _convert_bitstring2binary($1, 'H');
 		checkmem($$);
 	}
+/*	| '{' '}' {
+		$$ = asn1p_value_fromint(0);
+		$$->type = ATV_EMPTY;
+	} */
 	| RestrictedCharacterStringValue {
 		$$ = $$;
 	}

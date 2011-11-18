@@ -7,6 +7,7 @@
 #include "asn1c_constraint.h"
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
+#include "asn1c_oid.h"
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
 
@@ -2421,6 +2422,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 		if(expr->_anonymous_type) {
 			p = ASN_EXPR_TYPE2STR(expr->expr_type);
+
 			OUT("\"%s\",\n", p?p:"");
 			OUT("\"%s\",\n",
 				p ? asn1c_make_identifier(AMI_CHECK_RESERVED,
@@ -2852,4 +2854,281 @@ static int compar_cameo(const void *ap, const void *bp) {
 		return 1;
 	return 0;
 
+}
+
+/*** Emitting ASN.1 Values ***/
+
+/* Helper for value references */
+static int emit_value_reference(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_ref_t *ref = expr->value->value.reference;
+	assert(arg->expr == expr);
+	assert(expr->value->type == ATV_REFERENCED);
+	assert(ref);
+	if(ref->comp_count != 1) {
+		errno = EINVAL;
+		return -1;
+	}
+	assert(ref->components);
+	assert(ref->components[0].lex_type == RLT_lowercase);
+	assert(ref->components[0].name);
+	
+	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
+	OUT("#define ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" %s", asn1c_make_identifier(AMI_CHECK_RESERVED, NULL, ref->components[0].name, NULL));
+	OUT("\n");
+
+	/* suppress output of ; */
+	arg->target->destination[OT_TYPE_DECLS].indent_level = 1;
+	return 0;	
+}
+
+/* Deal with references */
+
+int
+asn1c_lang_C_value_REFERENCE(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	char *refname;
+
+	assert(expr->value);
+	if(!expr->value)
+		return 0;
+	/* sanity check */
+	assert(expr->expr_type == A1TC_REFERENCE);
+	if(expr->expr_type != A1TC_REFERENCE || !expr->reference ||
+		!expr->reference->components || expr->reference->comp_size <= 0)
+		return -1;
+
+	assert(expr->reference->components[0].name);
+
+	REDIR(OT_INCLUDES);
+	
+	OUT("%s.h", expr->reference->components[0].name);
+	
+	refname = expr->reference->components[0].name;
+
+/* TODO: figure out how to output value data by referenced type. */
+	
+	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
+	OUT("extern const %s_t ", refname);
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+
+	REDIR(OT_STAT_DEFS);
+/* TODO: output raw value data */
+
+	OUT("/* TODO: implement */\n");
+	OUT("/* const %s_t ", refname);
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = { ? }; */\n");
+
+	/* suppress output of ; */
+	arg->target->destination[OT_TYPE_DECLS].indent_level = 1;
+	return 0;
+}
+
+int
+asn1c_lang_C_value_INTEGER(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+
+	assert(expr->value);
+	if(!expr->value)
+		return 0;
+	/* sanity check */
+	assert(expr->expr_type == ASN_BASIC_INTEGER);
+
+	REDIR(OT_INCLUDES);
+	OUT("INTEGER.h");
+
+	if(expr->value->type == ATV_REFERENCED)
+		return emit_value_reference(arg, expr);
+
+/* TODO: figure out how to output value data for integers. */
+	
+	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
+	OUT("extern const INTEGER_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+
+	REDIR(OT_STAT_DEFS);
+/* TODO: output raw value data. For integers, it depends on whether
+   the command-line indicates native integers. */
+
+	OUT("/* TODO: implement */\n");
+	OUT("/* const INTEGER_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = { ? }; */\n");
+
+	/* suppress output of ; */
+	arg->target->destination[OT_TYPE_DECLS].indent_level = 1;
+	return 0;
+}
+
+
+/* This function from asn1print.c, minus the flags */
+static void
+asn1c_print_oid(arg_t *arg) {
+	size_t accum = 3;
+	int ac;
+	asn1p_oid_t *oid = arg->expr->value->value.oid;
+
+	OUT("/* {");
+	for(ac = 0; ac < oid->arcs_count; ac++) {
+		const char *arcname = oid->arcs[ac].name;
+		const char *arcnumber = oid->arcs[ac].number;
+
+		if(accum + strlen(arcname ? arcname : "") > 72) {
+			OUT("\n   ");
+			accum = 3;
+		} else if(ac != 0) {
+			accum += OUT(" ");
+		}
+
+		if(arcname) {
+			accum += OUT("%s", arcname);
+			if(arcnumber) {
+				accum += OUT("(%s)",
+					arcnumber);
+			}
+		} else {
+			accum += OUT("%s", arcnumber);
+		}
+	}
+	OUT("} */\n");
+}
+
+static int
+asn1c_print_ber(arg_t *arg) {
+	uint8_t *ber = NULL;
+	size_t ber_len = 0;
+	size_t ber_i;
+	int res;
+	
+	res = asn1c_oid_ber_encode(arg, &ber, &ber_len);
+	if(res)
+		return res;
+	
+	if(!ber_len) {
+		free(ber);
+		return 0;
+	}
+	
+	OUT("0x%02X", ber[0]);
+	for(ber_i = 1; ber_i < ber_len; ber_i++) {
+		OUT(", 0x%02X", ber[ber_i]);
+	}
+
+	free(ber);
+	return 0;
+}
+
+int
+asn1c_lang_C_value_OBJECT_IDENTIFIER(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	
+	assert(expr->value);
+	if(!expr->value)
+		return 0;
+
+	REDIR(OT_INCLUDES);
+	OUT("OBJECT_IDENTIFIER.h");
+
+	if(expr->value->type == ATV_REFERENCED)
+		return emit_value_reference(arg, expr);
+	
+	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
+		expr->value->value.oid);
+	assert(expr->expr_type == ASN_BASIC_OBJECT_IDENTIFIER);
+
+	if(expr->value->type != ATV_OBJECT_IDENTIFIER ||
+		!expr->value->value.oid) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
+	asn1c_print_oid(arg);
+	OUT("extern const OBJECT_IDENTIFIER_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+
+	REDIR(OT_STAT_DEFS);
+	OUT("\n");
+	OUT("static const uint8_t DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("[] = {");
+	if(asn1c_print_ber(arg))
+		return -1;
+	OUT("};\n");
+
+	asn1c_print_oid(arg);
+	OUT("const OBJECT_IDENTIFIER_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = {(uint8_t*)(size_t)DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(", sizeof(DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	/* added by other code--
+	OUT(")};\n");
+	OUT("\n");
+	*/
+	OUT(")}");
+
+	return 0;
+}
+
+int
+asn1c_lang_C_value_RELATIVE_OID(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+
+	assert(expr->value);
+	if(!expr->value)
+		return 0;
+
+	REDIR(OT_INCLUDES);
+	OUT("RELATIVE-OID.h");
+
+	if(expr->value->type == ATV_REFERENCED)
+		return emit_value_reference(arg, expr);
+
+	assert(expr->value->type == ATV_OBJECT_IDENTIFIER &&
+		expr->value->value.oid);
+	assert(expr->expr_type == ASN_BASIC_RELATIVE_OID);
+
+	if(expr->value->type != ATV_OBJECT_IDENTIFIER ||
+		!expr->value->value.oid) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	REDIR(OT_FUNC_DECLS);
+	OUT("\n");
+	asn1c_print_oid(arg);
+	OUT("extern const RELATIVE_OID_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(";\n");	
+
+	REDIR(OT_STAT_DEFS);
+	OUT("\n");
+	OUT("static const uint8_t DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("[] = {");
+	if(asn1c_print_ber(arg))
+		return -1;
+	OUT("};\n");
+
+	asn1c_print_oid(arg);
+	OUT("const RELATIVE_OID_t ");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(" = {(uint8_t*)(size_t)DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT(", sizeof DEF_");
+	out_name_chain(arg, ONC_avoid_keywords);
+	OUT("}");
+
+	return 0;
 }

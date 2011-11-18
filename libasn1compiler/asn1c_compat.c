@@ -103,6 +103,67 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	return fp;
 }
 
+FILE *
+asn1c_append_file(const char *name, const char *ext) {
+	int created = 1;
+#ifndef	WIN32
+	struct stat sb;
+#endif
+	char *fname;
+	size_t len;
+	FILE *fp;
+	int ret;
+	int fd;
+
+	/*
+	 * Compute filenames.
+	 */
+	len = strlen(name) + strlen(ext) + sizeof(".XXXXXX");
+	fname = alloca(len);
+	ret = snprintf(fname, len, "%s%s%s", name, ext, "");
+	assert(ret > 0 && ret < (ssize_t)len);
+
+	if (1) {
+		/*
+		 * Append to the file.
+		 */
+		fd = open(fname, O_CREAT | O_APPEND | O_WRONLY, DEFFILEMODE);
+		if(fd == -1 && errno == EEXIST) {
+			fd = open(fname, O_APPEND | O_WRONLY, DEFFILEMODE);
+			created = 0;
+		}
+	}
+	if(fd == -1) {
+		perror(fname);
+		return NULL;
+	}
+
+#ifndef	WIN32
+	/*
+	 * Check sanity.
+	 */
+	if(fstat(fd, &sb) || !S_ISREG(sb.st_mode)) {
+		fprintf(stderr, "%s: Not a regular file\n", fname);
+		if(created) unlink(fname);
+		close(fd);
+		return NULL;
+	}
+
+#endif	/* WIN32 */
+
+	/*
+	 * Convert file descriptor into file pointer.
+	 */
+	fp = fdopen(fd, "a");
+	if(fp == NULL) {
+		if(created) unlink(fname);
+		close(fd);
+		return NULL;
+	}
+
+	return fp;
+}
+
 
 char *
 a1c_basename(const char *path) {

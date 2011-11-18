@@ -5,6 +5,7 @@
 #include "asn1c_misc.h"
 #include "asn1c_save.h"
 #include "asn1c_out.h"
+#include "asn1c_oid.c"
 
 #define	HINCLUDE(s)						\
 	((arg->flags & A1C_INCLUDES_QUOTED)			\
@@ -18,10 +19,17 @@ static int asn1c_copy_over(arg_t *arg, char *path);
 static int identical_files(const char *fname1, const char *fname2);
 static int need_to_generate_pdu_collection(arg_t *arg);
 static int generate_pdu_collection_file(arg_t *arg);
-static int generate_preamble(arg_t *, FILE *, int optc, char **argv);
+static int generate_preamble(asn1p_module_t *, FILE *, int optc, char **argv);
 static int include_type_to_pdu_collection(arg_t *arg);
 static void pdu_collection_print_unused_types(arg_t *arg);
 static const char *generate_pdu_C_definition(void);
+
+static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv);
+static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv);
+static int asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps,
+	int optc, char **argv);
 
 int
 asn1c_save_compiled_output(arg_t *arg, const char *datadir,
@@ -31,11 +39,22 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	asn1p_module_t *mod;
 	FILE *mkf;	/* Makefile.am.sample */
 	int i;
+	enum {
+		MODULE_OMITTED,
+		MODULE_EMITTED
+	} module_emitted = MODULE_OMITTED;
 
 	deps = asn1c_read_file_dependencies(arg, datadir);
 	if(!deps && datadir) {
 		WARNING("Cannot read file-dependencies information "
 			"from %s\n", datadir);
+	}
+
+	if(!(arg->flags & A1C_PRINT_COMPILED)) {
+		TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+			if(asn1c_create_module_files(arg, mod, optc, argv))
+				return -1;
+		}
 	}
 
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
@@ -45,6 +64,13 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 				if(asn1c_dump_streams(arg, deps, optc, argv))
 					return -1;
 			}
+		}
+	}
+
+	if(!(arg->flags & A1C_PRINT_COMPILED)) {
+		TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+			if(asn1c_finish_module_files(arg, mod, optc, argv))
+				return -1;
 		}
 	}
 
@@ -62,23 +88,75 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		return -1;
 	}
 
+	/*
+	 * Add module files to the sources when any values are present,
+	 * or when A1C_MODULE_OIDS is present.
+	 */
+
 	fprintf(mkf, "ASN_MODULE_SOURCES=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		if(mod->_tags & MT_STANDARD_MODULE)
+			continue;
+
+		if(arg->flags & A1C_MODULE_OIDS) {
+			/* emit module oid header, and mark as emitted */
+			fprintf(mkf, "\t\\\n\t%s.c", mod->ModuleName);
+
+			module_emitted = MODULE_EMITTED;
+		} else {
+			module_emitted = MODULE_OMITTED;
+		}
+
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				fprintf(mkf, "\t\\\n\t%s.c",
-				arg->expr->Identifier);
+				if(arg->expr->meta_type == AMT_VALUE) {
+					assert(mod == arg->expr->module);
+					if(module_emitted == MODULE_OMITTED) {
+						/*
+						 * we found a new module, so emit it
+						 * but note that if A1C_MODULE_OIDS is present, the expectation
+						 * is that we've already emitted this module
+						 */
+						assert(!(arg->flags & A1C_MODULE_OIDS));
+						fprintf(mkf, "\t\\\n\t%s.c", mod->ModuleName);
+						module_emitted = MODULE_EMITTED;
+					}
+				} else {
+					fprintf(mkf, "\t\\\n\t%s.c",
+					arg->expr->Identifier);
+				}
 			}
 		}
 	}
+	
 	fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+		if(mod->_tags & MT_STANDARD_MODULE)
+			continue;
+
+		if(arg->flags & A1C_MODULE_OIDS) {
+			fprintf(mkf, "\t\\\n\t%s.h", mod->ModuleName);
+
+			module_emitted = MODULE_EMITTED;
+		} else {
+			module_emitted = MODULE_OMITTED;
+		}
+
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				fprintf(mkf, "\t\\\n\t%s.h",
-				arg->expr->Identifier);
+				if(arg->expr->meta_type == AMT_VALUE) {
+					assert(mod == arg->expr->module);
+					if(module_emitted == MODULE_OMITTED) {
+						assert(!(arg->flags & A1C_MODULE_OIDS));
+						fprintf(mkf, "\t\\\n\t%s.h", mod->ModuleName);
+						module_emitted = MODULE_EMITTED;
+					}
+				} else {
+					fprintf(mkf, "\t\\\n\t%s.h",
+					arg->expr->Identifier);
+				}
 			}
 		}
 	}
@@ -227,6 +305,9 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 			expr->Identifier, expr->_lineno);
 		return -1;
 	}
+	
+	if(expr->meta_type == AMT_VALUE)
+		return asn1c_save_value_streams(arg, deps, optc, argv);
 
 	fp_c = asn1c_open_file(expr->Identifier, ".c", &tmpname_c);
 	fp_h = asn1c_open_file(expr->Identifier, ".h", &tmpname_h);
@@ -236,8 +317,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		return -1;
 	}
 
-	generate_preamble(arg, fp_c, optc, argv);
-	generate_preamble(arg, fp_h, optc, argv);
+	generate_preamble(expr->module, fp_c, optc, argv);
+	generate_preamble(expr->module, fp_h, optc, argv);
 
 	header_id = asn1c_make_identifier(0, expr, NULL);
 	fprintf(fp_h,
@@ -330,14 +411,15 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 }
 
 static int
-generate_preamble(arg_t *arg, FILE *fp, int optc, char **argv) {
+generate_preamble(asn1p_module_t *mod, FILE *fp, int optc, char **argv) {
+	assert(mod);
 	fprintf(fp,
 	"/*\n"
-	" * Generated by asn1c-" VERSION " (http://lionet.info/asn1c)\n"
+	" * Generated by asn1c-" VERSION " <http://lionet.info/asn1c/>\n"
 	" * From ASN.1 module \"%s\"\n"
 	" * \tfound in \"%s\"\n",
-		arg->expr->module->ModuleName,
-		arg->expr->module->source_file_name);
+		mod->ModuleName,
+		mod->source_file_name);
 	if(optc > 1) {
 		int i;
 		fprintf(fp, " * \t`asn1c ");
@@ -613,3 +695,310 @@ include_type_to_pdu_collection(arg_t *arg) {
 
 	return 0;
 }
+
+/* Value output code contributed by Sean Leonard of SeanTek(R). */
+
+
+static void
+asn1c_file_out_oid(asn1p_module_t *mod, FILE *fp) {
+	size_t accum = 3;
+	int ac;
+	asn1p_oid_t *oid = mod->module_oid;
+
+	fprintf(fp, "/* {");
+	for(ac = 0; ac < oid->arcs_count; ac++) {
+		const char *arcname = oid->arcs[ac].name;
+		const char *arcnumber = oid->arcs[ac].number;
+
+		if(accum + strlen(arcname ? arcname : "") > 72) {
+			fprintf(fp, "\n   ");
+			accum = 3;
+		} else if(ac != 0) {
+			accum += fprintf(fp, " ");
+		}
+
+		if(arcname) {
+			accum += fprintf(fp, "%s", arcname);
+			if(arcnumber) {
+				accum += fprintf(fp, "(%s)", arcnumber);
+			}
+		} else {
+			accum += fprintf(fp, "%s", arcnumber);
+		}
+	}
+	fprintf(fp, "} */\n");
+}
+
+static int
+asn1c_file_out_ber(arg_t *arg, asn1p_module_t *mod, FILE *fp) {
+	uint8_t *ber = NULL;
+	size_t ber_len = 0;
+	size_t ber_i;
+	int res;
+	arg_t temp_arg = {arg->flags, arg->logger_cb, arg->default_cb};
+	asn1p_expr_t temp_expr = {mod->ModuleName, AMT_VALUE, ASN_BASIC_OBJECT_IDENTIFIER};
+	asn1p_value_t temp_value = {ATV_OBJECT_IDENTIFIER};
+
+	temp_arg.expr = &temp_expr;
+	temp_arg.asn = arg->asn;
+	/* target and embed set to 0 on purpose */
+	
+	temp_expr.value = &temp_value;
+	temp_expr.module = mod;
+
+	temp_value.value.oid = mod->module_oid;
+
+	res = asn1c_oid_ber_encode(&temp_arg, &ber, &ber_len);
+	if(res)
+		return res;
+	
+	if(!ber_len) {
+		free(ber);
+		return 0;
+	}
+	
+	fprintf(fp, "0x%02X", ber[0]);
+	for (ber_i = 1; ber_i < ber_len; ber_i++) {
+		fprintf(fp, ", 0x%02X", ber[ber_i]);
+	}
+
+	free(ber);
+	return 0;
+}
+
+
+static int asn1c_create_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv) {
+	FILE *fp_c, *fp_h;
+	char *header_id; /* for file name */
+	asn1p_expr_t *expr;
+	const char *mod_symbol_id; /* for C */
+	unsigned char has_values[ASN_EXPR_TYPE_MAX] = {0};
+	char has_a_value = 0;
+	size_t i;
+	char **referenced_names;
+
+	if(mod->_tags & MT_STANDARD_MODULE)
+		return 0;
+
+	TQ_FOR(expr, &(mod->members), next) {
+		if(expr->meta_type == AMT_VALUE && expr->expr_type < ASN_EXPR_TYPE_MAX) {
+				has_values[expr->expr_type] = 1;
+				has_a_value = 1;
+		}
+	}
+
+	/* implies has_a_value without needing to check for it */
+	if(arg->flags & A1C_MODULE_OIDS)
+		has_values[ASN_BASIC_OBJECT_IDENTIFIER] = 1;
+	else if(!has_a_value)
+		return 0;
+
+	fp_c = asn1c_open_file(mod->ModuleName, ".c", NULL);
+	fp_h = asn1c_open_file(mod->ModuleName, ".h", NULL);
+	
+	if(fp_c == NULL || fp_h == NULL) {
+		if(fp_c) { fclose(fp_c); }
+		if(fp_h) { fclose(fp_h); }
+		return -1;
+	}
+
+	generate_preamble(mod, fp_c, optc, argv);
+	generate_preamble(mod, fp_h, optc, argv);
+
+	header_id = asn1c_make_identifier(0, NULL, mod->ModuleName, NULL);
+	fprintf(fp_h,
+		"#ifndef\t_%s_H_\n"
+		"#define\t_%s_H_\n"
+		"\n\n", header_id, header_id);
+	
+	HINCLUDE("asn_application.h");
+
+	/* Compare with GEN_INCLUDE in asn1c_out.h/asn1c_C.c */
+	for(i = 0; i < ASN_EXPR_TYPE_MAX; i++) {
+		if(has_values[i]) {
+			char *identifier_file_name = asn1c_make_identifier(
+				AMI_MASK_ONLY_SPACES | AMI_NODELIMITER, NULL,
+				ASN_EXPR_TYPE2STR(i), ".h", NULL);
+
+			/* the identifier file name may not exist, such as for A1TC_REFERENCE */
+			if(identifier_file_name) {
+				HINCLUDE(identifier_file_name);
+			}
+		}
+	}
+
+	/* include any referenced types */
+	referenced_names = calloc(10, sizeof(*referenced_names));
+	i = 0;
+	TQ_FOR(expr, &(mod->members), next) {
+		if(expr->meta_type == AMT_VALUE && expr->expr_type == A1TC_REFERENCE) {
+			char *refname, *identifier_file_name;
+			assert(expr->reference && expr->reference->comp_count == 1);
+			assert(expr->reference->components && expr->reference->components[0].name);
+			refname = expr->reference->components[0].name;
+			for(i = 0; referenced_names[i] && !!strcmp(referenced_names[i], refname); i++);
+			if(!referenced_names[i]) {
+				/* First, emit Including external dependencies */
+				if(i == 0)
+					fprintf(fp_h, "\n/* Including external dependencies */\n");
+
+				/* TODO: confirm that this is the right way to create the name */
+				identifier_file_name = asn1c_make_identifier(
+					AMI_MASK_ONLY_SPACES | AMI_NODELIMITER, NULL,
+					refname, ".h", NULL);
+				assert(identifier_file_name);
+
+				/*
+				 * Do not use HINCLUDE(identifier_file_name);
+				 * instead, use quotation marks all the time (because these types are local).
+				 */
+				fprintf(fp_h, "#include \"%s\"\n", identifier_file_name);
+
+				/* add to list of already-emitted names */
+				referenced_names = realloc(referenced_names, sizeof(*referenced_names) * (i+2));
+				if(!referenced_names)
+					return -1; /* out of memory */
+
+				referenced_names[i++] = refname;
+				referenced_names[i] = NULL;
+			}
+		}
+	}
+
+	free(referenced_names);
+	referenced_names = NULL; /* safety */
+
+	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n");
+	
+	fprintf(fp_c, "#include \"%s.h\"\n\n", mod->ModuleName);
+	
+	/* not all gcc variations (such as on OS X 10.6) support diagnostic push */
+	/* fprintf(fp_c, "%s", "#ifdef __GNUC__\n"
+		"#pragma GCC diagnostic warning \"-Wno-cast-qual\"\n#endif\n\n"); */
+	
+	if(arg->flags & A1C_MODULE_OIDS) {
+		/* Compare with MKID and out_name_chain */
+		mod_symbol_id = asn1c_make_identifier(AMI_NODELIMITER,
+			NULL, mod->ModuleName, NULL);
+
+		asn1c_file_out_oid(mod, fp_h);
+
+		fprintf(fp_h, "extern const OBJECT_IDENTIFIER_t %s;\n", mod_symbol_id);
+
+		fprintf(fp_c, "static const uint8_t DEF_%s[] = {", mod_symbol_id);
+		if(asn1c_file_out_ber(arg, mod, fp_c)) {
+			fclose(fp_c);
+			fclose(fp_h);
+			return -1;
+		}
+		fprintf(fp_c, "};\n");
+
+		asn1c_file_out_oid(mod, fp_c);
+
+		fprintf(fp_c, "const OBJECT_IDENTIFIER_t %s = {(uint8_t*)(size_t)DEF_%s, sizeof(DEF_%s)}",
+			mod_symbol_id, mod_symbol_id, mod_symbol_id);
+		fprintf(fp_c, ";\n");
+	}
+
+	fclose(fp_c);
+	fclose(fp_h);
+	
+	return 0;
+}
+
+static int asn1c_finish_module_files(arg_t *arg, asn1p_module_t *mod,
+	int optc, char **argv) {
+	FILE *fp_c, *fp_h;
+	char *header_id;
+	asn1p_expr_t *expr;
+	char has_a_value = 0;
+
+	if(mod->_tags & MT_STANDARD_MODULE)
+		return 0;
+
+	/* don't finish the module files if there are no values */
+	if(!(arg->flags & A1C_MODULE_OIDS)) {
+		TQ_FOR(expr, &(mod->members), next) {
+			if(expr->meta_type == AMT_VALUE && expr->expr_type < ASN_EXPR_TYPE_MAX) {
+					has_a_value = 1;
+					break;
+			}
+		}
+		if(!has_a_value)
+			return 0;
+	}
+
+	fp_h = asn1c_append_file(mod->ModuleName, ".h");
+	fp_c = asn1c_append_file(mod->ModuleName, ".c");
+	
+	if(fp_h == NULL || fp_c == NULL) {
+		if(fp_h) { fclose(fp_h); }
+		if(fp_c) { fclose(fp_c); }
+		return -1;
+	}
+	
+	header_id = asn1c_make_identifier(0, NULL, mod->ModuleName, NULL);
+
+	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n");
+
+	fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
+	HINCLUDE("asn_internal.h");
+	
+	/* not all compilers support diagnostic pop */
+	/* fputs("\n#ifdef __GNUC__\n#pragma GCC diagnostic pop\n#endif", fp_c); */
+	
+	fclose(fp_h);
+	fclose(fp_c);
+
+	/* the module files do not record whether they were retained at this time */
+	fprintf(stderr, "Compiled %s.c\n",
+		mod->ModuleName);
+	fprintf(stderr, "Compiled %s.h\n",
+		mod->ModuleName);
+
+	return 0;
+}
+
+static int
+asn1c_save_value_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_module_t *mod = expr->module;
+	compiler_streams_t *cs = expr->data;
+	out_chunk_t *ot;
+	FILE *fp_c, *fp_h;
+
+	assert(expr && mod && expr->meta_type == AMT_VALUE);
+
+	if(mod->_tags & MT_STANDARD_MODULE)
+		return 0;
+
+	fp_c = asn1c_append_file(mod->ModuleName, ".c");
+	fp_h = asn1c_append_file(mod->ModuleName, ".h");
+	
+	if(fp_c == NULL || fp_h == NULL) {
+		if(fp_c) { fclose(fp_c); }
+		if(fp_h) { fclose(fp_h); }
+		return -1;
+	}
+	
+	/* SAVE_STREAM(fp_h, OT_INCLUDES, "Including external dependencies", 1); */
+	/* if(TQ_FIRST(&(cs->destination[OT_INCLUDES].chunks)) && 1)
+		fprintf(fp_h, "\n/ * %s * /\n", "Including external dependencies"); */
+/*	TQ_FOR(ot, &(cs->destination[OT_INCLUDES].chunks), next) { */
+	for((ot) = TQ_FIRST(&(cs->destination[OT_INCLUDES].chunks));
+		(ot); (ot) = ot->next.tq_next) {
+
+		/* if(1) */ asn1c_activate_dependency(deps, 0, ot->buf);
+		/* fwrite(ot->buf, ot->len, 1, fp_h); */
+	}
+
+	SAVE_STREAM(fp_h, OT_FUNC_DECLS, "", 0);
+	
+	SAVE_STREAM(fp_c, OT_STAT_DEFS, "", 0);
+
+	fclose(fp_c);
+	fclose(fp_h);
+	return 0;
+}
+

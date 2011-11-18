@@ -66,6 +66,7 @@ typedef struct arg_s {
 #include "asn1fix_retrieve.h"		/* Data retrieval */
 #include "asn1fix_enum.h"		/* Process ENUMERATED */
 #include "asn1fix_integer.h"		/* Process INTEGER */
+#include "asn1fix_oid.h"		/* Process OBJECT IDENTIFIER and RELATIVE-OID */
 #include "asn1fix_bitstring.h"		/* Process BIT STRING */
 #include "asn1fix_dereft.h"		/* Dereference types */
 #include "asn1fix_derefv.h"		/* Dereference values */

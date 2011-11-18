@@ -1,5 +1,6 @@
 /*-
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2010-2011 Sean Leonard of SeanTek <dev+asn1c@seantek.com>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -21,11 +22,11 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OBJECT_IDENTIFIER_print,
 	OBJECT_IDENTIFIER_constraint,
 	ber_decode_primitive,
-	der_encode_primitive,
+	OBJECT_IDENTIFIER_encode_der,
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
 	OCTET_STRING_decode_uper,
-	OCTET_STRING_encode_uper,
+	OBJECT_IDENTIFIER_encode_uper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
@@ -45,12 +46,27 @@ OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 
 	if(st && st->buf) {
+		uint8_t *bufat = st->buf, *buflast;
 		if(st->size < 1) {
 			_ASN_CTFAIL(app_key, td, sptr,
 				"%s: at least one numerical value "
 				"expected (%s:%d)",
 				td->name, __FILE__, __LINE__);
 			return -1;
+		} else if(st->buf[st->size - 1] & 0x80) {
+			_ASN_CTFAIL(app_key, td, sptr,
+				"%s: OID value must not end in the series-continuation octet 0x%02X (%s:%d)",
+				td->name, (unsigned int)st->buf[st->size - 1], __FILE__, __LINE__);
+			return -1;
+		}
+
+		for(buflast = st->buf + st->size - 1; bufat != buflast; bufat++) {
+			if(!(bufat[0] & 0x80) && bufat[1] == 0x80) {
+				_ASN_CTFAIL(app_key, td, sptr,
+					"%s: OID subidentifier at position %i must not lead with octet 0x80 (%s:%d)",
+					td->name, (int)(bufat - st->buf), __FILE__, __LINE__);
+				return -1;
+			}
 		}
 	} else {
 		_ASN_CTFAIL(app_key, td, sptr,
@@ -187,8 +203,10 @@ OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
 	char *p;		/* Position in the scratch buffer */
 
 	if(OBJECT_IDENTIFIER_get_single_arc(arcbuf, arclen, add,
-			&accum, sizeof(accum)))
+			&accum, sizeof(accum))) {
+		if(cb("<INVALID ERANGE>", 16, app_key) < 0) return -1;
 		return -1;
+	}
 
 	if(accum) {
 		ssize_t len;
@@ -226,11 +244,32 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 	int startn;
 	int add = 0;
 	int i;
+	
+	if(st->size <= 0) {
+		if(cb("<INVALID 0-LENGTH>", 18, app_key) < 0) return -1;
+		errno = EINVAL;
+		return -1;
+	} else if(st->buf[st->size - 1] & 0x80) {
+		if(cb("<INVALID & 0x80>", 16, app_key) < 0) return -1;
+		errno = EINVAL;
+		return -1;
+	}
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
-		if((b & 0x80))			/* Continuation expected */
+		if((b & 0x80)) { /* Continuation expected */
+			assert(i + 1 != st->size);
+			if(startn == i && b == 0x80) {
+				/* prohibited, and possible attack per Kaminsky et. al., "PKI Layer Cake" (2010) */
+				if(startn != 0) {
+					if(cb(".", 1, app_key) < 0) return -1;
+				}
+				if(cb("<INVALID 0x80>", 14, app_key) < 0) return -1;
+				errno = EINVAL;
+				return -1;
+			}
 			continue;
+		}
 
 		if(startn == 0) {
 			/*
@@ -264,6 +303,45 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 	}
 
 	return wrote_len;
+}
+
+static int
+OBJECT_IDENTIFIER__check_valid(asn_TYPE_descriptor_t *td, OBJECT_IDENTIFIER_t *oid) {
+	uint8_t *bufat = oid->buf, *buflast;
+
+	if(oid->size <= 0 || !oid->buf) {
+		ASN_DEBUG("%s cannot encode an empty OID value", td->name);
+		return 0;
+	} else if(oid->buf[oid->size - 1] & 0x80) {
+		ASN_DEBUG("%s cannot encode an OID value that ends in the series-continuation octet 0x%02X",
+			td->name, (unsigned int)oid->buf[oid->size - 1]);
+		return 0;
+	}
+
+	for(buflast = oid->buf + oid->size - 1; bufat != buflast; bufat++) {
+		if(!(bufat[0] & 0x80) && bufat[1] == 0x80) {
+			ASN_DEBUG("%s cannot encode an OID subidentifier at position %i that leads with octet 0x80",
+				td->name, (int)(bufat - oid->buf));
+			return 0;
+		}
+	}
+	return 1;
+}
+
+asn_enc_rval_t
+OBJECT_IDENTIFIER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
+	int tag_mode, ber_tlv_tag_t tag,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	if (!OBJECT_IDENTIFIER__check_valid(td, (OBJECT_IDENTIFIER_t *)sptr)) {
+		asn_enc_rval_t erval;
+		erval.encoded = -1;
+		erval.failed_type = td;
+		erval.structure_ptr = sptr;
+		errno = EINVAL; /* bonus */
+		return erval;
+	}
+
+	return der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
 }
 
 static enum xer_pbd_rval
@@ -337,6 +415,21 @@ OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	if(er.encoded < 0) _ASN_ENCODE_FAILED;
 
 	_ASN_ENCODED_OK(er);
+}
+
+asn_enc_rval_t
+OBJECT_IDENTIFIER_encode_uper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	if (!OBJECT_IDENTIFIER__check_valid(td, (OBJECT_IDENTIFIER_t *)sptr)) {
+		asn_enc_rval_t erval;
+		erval.encoded = -1;
+		erval.failed_type = td;
+		erval.structure_ptr = sptr;
+		errno = EINVAL; /* bonus */
+		return erval;
+	}
+
+	return OCTET_STRING_encode_uper(td, constraints, sptr, po);
 }
 
 int
@@ -726,4 +819,673 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	}
 }
 
+/* Contributed by Sean Leonard of SeanTek(R). */
+/***** 2010-11-23 additions *****/
 
+int OBJECT_IDENTIFIER_fromIdentifiers(OBJECT_IDENTIFIER_t *_oid,
+	const OBJECT_IDENTIFIER_t *_oidbase, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+
+	if(!_oid || !_oidbase) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	va_start(roids, _oidbase);
+	oid_full_len = _oidbase->size;
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		if ((oid_full_len + roid->size) < oid_full_len) { /* overflow */
+			errno = ERANGE;
+			va_end(roids);
+			return -1;
+		}
+		oid_full_len += roid->size;
+	}
+	va_end(roids);
+	
+	_oid->buf = (uint8_t*)MALLOC(oid_full_len);
+	if (!_oid->buf) {
+		/* ENOMEM */
+		return -1;
+	}
+	
+	_oid->size = oid_full_len;
+	memcpy(_oid->buf, _oidbase->buf, _oidbase->size);
+	oid_at_len = _oidbase->size;
+	va_start(roids, _oidbase);
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		memcpy(_oid->buf + oid_at_len, roid->buf, roid->size);
+		oid_at_len += roid->size;
+	}
+	assert(oid_at_len == oid_full_len);
+	va_end(roids);
+	
+	return 0;
+}
+
+OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromIdentifiers(
+	const OBJECT_IDENTIFIER_t *_oidbase, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	OBJECT_IDENTIFIER_t *st;
+
+	if(!_oidbase) {
+		errno = EINVAL;
+		return NULL;
+	}
+	
+	st = (OBJECT_IDENTIFIER_t*)CALLOC(1, sizeof(*st));
+	if (!st) {
+		/* ENOMEM */
+		return NULL;
+	}
+	
+	va_start(roids, _oidbase);
+	oid_full_len = _oidbase->size;
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		if ((oid_full_len + roid->size) < oid_full_len) { /* overflow */
+			FREEMEM(st);
+			errno = ERANGE;
+			va_end(roids);
+			return NULL;
+		}
+		oid_full_len += roid->size;
+	}
+	va_end(roids);
+	
+	st->buf = (uint8_t*)MALLOC(oid_full_len);
+	if (!st->buf) {
+		FREEMEM(st);
+		/* ENOMEM */
+		return NULL;
+	}
+	
+	st->size = oid_full_len;
+	memcpy(st->buf, _oidbase->buf, _oidbase->size);
+	oid_at_len = _oidbase->size;
+	va_start(roids, _oidbase);
+	while (NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		memcpy(st->buf + oid_at_len, roid->buf, roid->size);
+		oid_at_len += roid->size;
+	}
+	assert(oid_at_len == oid_full_len);
+	va_end(roids);
+	
+	return st;
+}
+
+/* This function computes the following approximation:
+   Given x decimal digits (in base 10), where the most
+	 significant digit is d0, return the maximum number of bytes/octets
+	 to allocate (in base 128, 7 bits used per byte).
+	 The solution is:
+	  bits = digits * log2(10);
+	  bytes (7 bits used) = digits * log2(10) / 7 =
+		 digits * log128(10) = digits * ln 10 / ln 128
+		ln 10 / ln 128 ~= 0.47
+		taking text_sig_digit into consideration, use:
+		tenths = ((# of digits - 1) * 10 + d0mapped)
+		digits = tenths / 10
+		bytes = tenths * 14 / 295, where 14/295 is the closest rational
+		approximation to the log blob.
+*/
+static inline size_t compute_reverse_length(size_t text_len, char bcd_sig_digit) {
+	size_t tenths;
+	
+	assert(text_len <= (((SIZE_MAX - (295 - 1)) / 14) / 10));
+	assert(bcd_sig_digit >= 0 && bcd_sig_digit < 10);
+
+	switch (bcd_sig_digit) {
+	case 1: tenths = 4; break;
+	case 2: tenths = 5; break;
+	case 3: case 4: tenths = 7; break;
+	case 5: tenths = 8; break;
+	case 6: tenths = 9; break;
+	default: tenths = 10; /* 7 - 9 and special case 0 */
+	}
+	tenths += (text_len - 1) * 10;
+	
+	return (tenths * 14 + 295 - 1) / 295;
+}
+
+static size_t reverse_double_dabble(char *bcd, size_t bcd_len, uint8_t *ber) {
+	size_t ber_len = compute_reverse_length(bcd_len, bcd[0]);
+
+	assert(bcd && bcd_len && ber);
+	/* optimized cases (common and fast--but the algorithm below
+	 works for them too) */
+	if(bcd_len == 1) {
+		*ber = (uint8_t)*bcd;
+		return 1;
+	} else if(bcd_len == 2) {
+		*ber = (uint8_t)bcd[0] * 10 + (uint8_t)bcd[1];
+		return 1;
+	} else if(bcd_len == 3 && bcd[0] == 1 &&
+		(bcd[1] < 2 || (bcd[1] == 2 && bcd[2] < 8))) {
+		*ber = 100 + (uint8_t)bcd[1] * 10 + (uint8_t)bcd[2];
+		assert(*ber < 0x80);
+		return 1;
+	} else {
+		size_t k = 0;
+		char * const bcd_end = bcd + bcd_len;
+		char * const bcd_last = bcd_end - 1;
+		char *bcd_i;
+		uint8_t *ber_end = ber + ber_len;
+		uint8_t *ber_point = ber_end - 1;
+		uint8_t * const ber_last = ber_point;
+		uint8_t lsb; /* least significant bit */
+		static const size_t BitsUsed = 7; // OIDs are in base128. 
+		assert(bcd_len >= 3);
+
+		memset(ber, 0, ber_len);
+	
+		while(bcd != bcd_end) {
+			lsb = (uint8_t)*bcd_last & 0x1;
+			/* put lsb into ber[x] at the correct bit position */
+			if(k == BitsUsed) {
+				assert(ber_point > ber);
+				if(ber_point <= ber) {
+					return 0; /* oh no, went too far! */
+				}
+				k = 0;
+				ber_point--;
+			}
+			*ber_point |= lsb << k++;
+
+			for(bcd_i = bcd_last; bcd_i > bcd; bcd_i--) {
+				if((*(bcd_i - 1)) & 0x1) {
+					*bcd_i = ((*bcd_i >> 1) | 0x08) - 0x3;
+				} else {
+					*bcd_i >>= 1;
+				}
+			}
+			assert(bcd_i == bcd);
+			*bcd >>= 1;
+			if(!*bcd) bcd++;
+		}
+	
+		/* Shift ber contents down to ber, if necessary */
+		if(ber_point == ber) {
+			while(ber < ber_last) *ber++ |= 0x80;
+		} else {
+			ber_len = (ber_end - ber_point);
+			while(ber_point < ber_last) *ber++ = *ber_point++ | 0x80;
+			*ber = *ber_point; /* shift but do not add 0x80 continuation */
+		}
+		return ber_len;
+	}
+}
+
+static size_t perform_bcd2ber(char *scratch, size_t scratch_len, uint8_t *ber) {
+	size_t res = 0, i = 2, base = 2;
+	assert(scratch && ber);
+	if(scratch_len < 3) {
+		errno = ERANGE;
+		return 0;
+	} else if(((unsigned char)scratch[0]) > 2 || scratch[1] != (char)-1 ||
+		scratch[2] == (char)-1) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	/* first handle "2.16" combine by adding 40 or 80, then encoding */
+	while(i < scratch_len && scratch[i] != (char)-1) i++;
+	scratch[1] = 0;
+	if(scratch[0] != 0) {
+		size_t j = i-2;
+		int carry;
+		scratch[j] += scratch[0] == 1 ? 4 : 8;
+		for(carry = scratch[j] >= 10; carry && j >= base;
+			carry = scratch[j] >= 10) {
+			scratch[j--] -= 10;
+			scratch[j] += 1;
+		}
+		assert(j >= base || base - j == 1);
+		if (j < base) base = j;
+	}
+	
+	res = reverse_double_dabble(scratch + base, i - base, ber);
+	if(!res) {
+		assert(0);
+		return 0;
+	}
+	ber += res;
+
+	/* next iterate over all other arcs */
+	while(i < scratch_len) {
+		assert(scratch[i] == (char)-1);
+		base = ++i;
+		while(i < scratch_len && scratch[i] != (char)-1) i++;
+		assert(base != i);
+		if (base != i) {
+			size_t onesize;
+			onesize = reverse_double_dabble(scratch + base, i - base, ber);
+			if(!onesize) {
+				assert(0);
+				return 0;
+			}
+			res += onesize;
+			ber += onesize;
+		}
+	}
+	return res;
+}
+
+int OBJECT_IDENTIFIER_fromDotNotation(OBJECT_IDENTIFIER_t *_oid,
+	const char *oid_text, ssize_t oid_text_length) {
+	/* int res; */
+	size_t oid_text_len = oid_text_length < 0 ? strlen(oid_text) :
+		(size_t)oid_text_length;
+	size_t base, i;
+	size_t oid_buf_len;
+	char *scratch; /* text in BCD format, with -1 (0xFF) as sentinel values */
+	int allocated_buf = 0;
+
+	if(!_oid || !oid_text) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	if(oid_text_len > (((SIZE_MAX - (295 - 1)) / 14) / 10)) {
+		errno = ERANGE; // it's going to overflow!
+		return -1;
+	}
+	/* min length is "1.2" = 3 chars */
+	if(oid_text_len < 3 || oid_text[1] != '.' || !(oid_text[0] >= '0' && oid_text[0] <= '2')) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	/* This algorithm should get an optimal minimum "worst-case" number
+	 for the buffer length. It gets the reverse length of all arcs,
+	 with special handling for the first two arcs (2.10 seen as 999).
+	 If the simple approach is desired and memory consumption is not an issue,
+	 use oid_buf_len = oid_text_len - 1;.
+	*/
+	i = 2;
+	base = oid_text[0] < '2' ? 2 : 1;
+
+	while(i < oid_text_len && oid_text[i] != '.') i++;
+	if(base == i || oid_text[base] == '0' && i - base > 1) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	oid_buf_len = compute_reverse_length(i - base, oid_text[2] - '0');
+
+	while(i < oid_text_len) {
+		assert(oid_text[i] == '.');
+		base = ++i;
+		while(i < oid_text_len && oid_text[i] != '.') i++;
+		/* leading and trailing dots, .. in the middle, and leading zeroes are prohibited */
+		if(base == i || oid_text[base] == '0' && i - base > 1) {
+			errno = EINVAL;
+			return -1;
+		}
+		oid_buf_len += compute_reverse_length(i - base, oid_text[base] - '0');
+	}
+
+	scratch = (char *)MALLOC(oid_text_len + 1);
+	if(!scratch) {
+		/* ENOMEM */
+		return -1;
+	}
+
+	if(!_oid->buf) {
+		_oid->buf = (uint8_t*)MALLOC(oid_buf_len);
+		_oid->size = 0; /* in progress */
+		if(!_oid->buf) {
+			/* ENOMEM */
+			FREEMEM(scratch);
+			return -1;
+		}
+		allocated_buf = 1;
+	} else if(_oid->size < oid_buf_len) {
+		FREEMEM(scratch);
+		errno = ERANGE;
+		return -1;
+	}
+	
+	scratch[oid_text_len] = '\0';
+
+	for(i = 0; i < oid_text_len; i++) {
+		if(!((oid_text[i] >= '0' && oid_text[i] <= '9'))) {
+			if(oid_text[i] == '.') {
+				scratch[i] = (char)-1;
+			} else {
+				assert((oid_text[i] >= '0' && oid_text[i] <= '9') || oid_text[i] == '.');
+				if(allocated_buf) {
+					FREEMEM(_oid->buf);
+					_oid->buf = NULL;
+				}
+				FREEMEM(scratch);
+				errno = EINVAL;
+				return -1;
+			}
+		} else {
+			scratch[i] = oid_text[i] - '0';
+		}
+	}
+
+	/* convert oid_text from base10 to base2 (base128) */
+	_oid->size = perform_bcd2ber(scratch, oid_text_len, _oid->buf);
+	assert(_oid->size <= oid_buf_len);
+	FREEMEM(scratch);
+	if(!_oid->size) {
+		if(allocated_buf) {
+			FREEMEM(_oid->buf);
+			_oid->buf = NULL;
+		}
+		return -1;
+	}
+	return 0;
+}
+
+OBJECT_IDENTIFIER_t *OBJECT_IDENTIFIER_new_fromDotNotation(
+	const char *oid_text, ssize_t oid_text_length) {
+	OBJECT_IDENTIFIER_t *oid;
+	int result;
+	
+	oid = (OBJECT_IDENTIFIER_t*)CALLOC(1, sizeof(*oid));
+	if(!oid) {
+		/* ENOMEM */
+		return NULL;
+	}
+	result = OBJECT_IDENTIFIER_fromDotNotation(oid, oid_text, oid_text_length);
+	if(result == 0) return oid;
+	else {
+		FREEMEM(oid);
+		return NULL;
+	}
+}
+
+
+int OBJECT_IDENTIFIER_cmp(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	int memcmp_result;
+	int i;
+	
+	if(!_oid1) return _oid2base ? -1 : 0;
+	else if(!_oid2base) return 1;
+	else if(_oid1->size < _oid2base->size) {
+		memcmp_result = memcmp(_oid1->buf, _oid2base->buf, _oid1->size);
+		if(memcmp_result != 0) return memcmp_result;
+		else return -1; 
+	}
+	
+	memcmp_result = memcmp(_oid1->buf, _oid2base->buf, _oid2base->size);
+	if(memcmp_result != 0) return memcmp_result;
+	
+	oid_full_len = _oid1->size;
+	oid_at_len = _oid2base->size;
+	va_start(roids, _oid2base);
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len) {
+				va_end(roids);
+				return -1;
+			}
+			memcmp_result = _oid1->buf[oid_at_len] - roid->buf[i];
+			if(memcmp_result != 0) {
+				va_end(roids);
+				return memcmp_result;
+			}
+		}
+	}
+	va_end(roids);
+	assert(oid_at_len <= oid_full_len);
+	return oid_at_len < oid_full_len;
+}
+
+int OBJECT_IDENTIFIER_eq(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, ...) {
+	va_list roids;
+	RELATIVE_OID_t *roid;
+	size_t oid_full_len, oid_at_len;
+	int i;
+	
+	if(!_oid1) return _oid2base ? 0 : 1;
+	else if(!_oid2base) return 0;
+	else if(_oid2base->size > _oid1->size) return 0;
+
+	oid_full_len = _oid1->size;
+
+	if(!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
+		return 0;
+	oid_at_len = _oid2base->size;
+	va_start(roids, _oid2base);
+	while(NULL != (roid = va_arg(roids, RELATIVE_OID_t *))) {
+		for(i = 0; i < roid->size; i++, oid_at_len++) {
+			if(oid_at_len >= oid_full_len ||
+				_oid1->buf[oid_at_len] != roid->buf[i]) {
+				va_end(roids);
+				return 0;
+			}
+		}
+	}
+	va_end(roids);
+	return oid_at_len == oid_full_len;
+}
+
+int OBJECT_IDENTIFIER_eq1(const OBJECT_IDENTIFIER_t *_oid1,
+	const OBJECT_IDENTIFIER_t *_oid2base, const RELATIVE_OID_t *_roid2) {
+	assert(_oid1 && _oid2base && _roid2);
+	if(_oid1->size != _oid2base->size + _roid2->size)
+		return 0;
+	
+	if (!!memcmp(_oid1->buf, _oid2base->buf, _oid2base->size))
+		return 0;
+	/* works even when _roid2->size == 0 */
+	return !memcmp(_oid1->buf + _oid2base->size, _roid2->buf, _roid2->size);
+}
+
+int OBJECT_IDENTIFIER_1eq1(const OBJECT_IDENTIFIER_t *_oid1base,
+	const RELATIVE_OID_t *_roid1, const OBJECT_IDENTIFIER_t *_oid2base,
+	const RELATIVE_OID_t *_roid2) {
+	size_t diff21_size;
+	assert(_oid1base && _roid1 && _oid2base && _roid2);
+	if(_oid1base->size + _roid1->size != _oid2base->size + _roid2->size)
+		return 0;
+	
+	if (_oid1base->size < _oid2base->size) {
+		diff21_size = _oid2base->size - _oid1base->size;
+		return !memcmp(_oid1base->buf, _oid2base->buf, _oid1base->size) &&
+			!memcmp(_roid1->buf, _oid2base->buf + _oid1base->size, diff21_size) &&
+			!memcmp(_roid1->buf + diff21_size, _roid2->buf, _roid2->size);
+	} else {
+		diff21_size = _oid1base->size - _oid2base->size;
+		return !memcmp(_oid1base->buf, _oid2base->buf, _oid2base->size) &&
+			!memcmp(_oid1base->buf + _oid2base->size, _roid2->buf, diff21_size) &&
+			!memcmp(_roid1->buf, _roid2->buf + diff21_size, _roid1->size);
+	}
+}
+
+size_t OBJECT_IDENTIFIER_common(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0, ...) {
+	va_list oids;
+	const OBJECT_IDENTIFIER_t *oid;
+	size_t res = 0;
+	
+	va_start(oids, _oid0);
+	while(NULL != (oid = va_arg(oids, OBJECT_IDENTIFIER_t*))) {
+		res = OBJECT_IDENTIFIER_common1(min_arcs, _oid0, oid);
+		if (res == 0) {
+			va_end(oids);
+			return res;
+		}
+	}
+	va_end(oids);
+	return res;
+}
+
+size_t OBJECT_IDENTIFIER_common1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1) {
+	size_t arcs_count = 1, arcs_len = 0, min_of_two_len, i;
+	if(!_oid0 || !_oid1 || !_oid0->buf || !_oid1->buf ||
+		_oid0->size < 0 || _oid1->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	
+	min_of_two_len = _oid0->size > _oid1->size ? _oid1->size : _oid0->size;
+	
+	if(min_arcs == 1) min_arcs++;
+
+	for(i = 0; i < min_of_two_len; i++) {
+		if(_oid0->buf[i] != _oid1->buf[i]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+	
+	if (min_arcs > arcs_count) {
+		errno = ERANGE;
+		return 0;
+	}
+	
+	assert(_oid0->size >= (int)arcs_len);
+	_oid0->size = (int)arcs_len;
+	return arcs_count == 1 ? 0 : arcs_count;
+}
+
+size_t OBJECT_IDENTIFIER_common2(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1, const OBJECT_IDENTIFIER_t *_oid2) {
+	size_t res;
+	res = OBJECT_IDENTIFIER_common1(min_arcs, _oid0, _oid1);
+	if (res == 0) return res; /* can be success or failure -- we don't check _oid2 in either case */
+	
+	return OBJECT_IDENTIFIER_common1(min_arcs, _oid0, _oid2);
+}
+
+size_t OBJECT_IDENTIFIER_common1r(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1base, ...) {
+	size_t arcs_count = 1, arcs_len= 0, min_of_two_len, len0, len1, i, j;
+	va_list roids;
+	const RELATIVE_OID_t *roid;
+	
+	if (!_oid0 || !_oid1base || !_oid0->buf || !_oid1base->buf ||
+		_oid0->size < 0 || _oid1base->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	len1 = _oid1base->size;
+	len0 = _oid0->size;
+
+	if (len1 < len0) {
+		min_of_two_len = len1;
+		va_start(roids, _oid1base);
+		while(NULL != (roid = va_arg(roids, RELATIVE_OID_t*))) {
+			assert(roid->buf);
+			len1 += roid->size;
+			if (len1 >= len0) {
+				min_of_two_len = len0;
+				break;
+			}
+		}
+		va_end(roids);
+	} else min_of_two_len = len0;
+	
+	for(i = 0; i < min_of_two_len && i < _oid1base->size; i++) {
+		if(_oid0->buf[i] != _oid1base->buf[i]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+
+	va_start(roids, _oid1base);
+	roid = va_arg(roids, RELATIVE_OID_t*);
+	for(j = 0; i < min_of_two_len; i++, j++) {
+		if (j == roid->size) {
+			roid = va_arg(roids, RELATIVE_OID_t*);
+			assert(roid != NULL); /* guaranteed not to happen per above def'n of min_of_two_len */
+			j = 0;
+		}
+		/* obtain byte from oid1base or. */
+		if(_oid0->buf[i] != roid->buf[j]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+	va_end(roids);
+	
+	if(min_arcs > arcs_count) {
+		errno = ERANGE;
+		return 0;
+	}
+	
+	assert(_oid0->size >= (int)arcs_len);
+	_oid0->size = (int)arcs_len;
+	return arcs_count == 1 ? 0 : arcs_count;
+}
+
+
+size_t OBJECT_IDENTIFIER_common1r1(size_t min_arcs, OBJECT_IDENTIFIER_t *_oid0,
+	const OBJECT_IDENTIFIER_t *_oid1base, const RELATIVE_OID_t *_roid1) {
+	size_t arcs_count = 1, arcs_len= 0, min_of_two_len, len0, len1, i, j;
+	
+	if (!_oid0 || !_oid1base || !_oid0->buf || !_oid1base->buf || !_roid1 ||
+		!_roid1->buf || _oid0->size < 0 || _oid1base->size < 0 || _roid1->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	len1 = _oid1base->size + _roid1->size;
+	len0 = _oid0->size;
+	
+	min_of_two_len = len0 > len1 ? len1 : len0;
+
+	for(i = 0; i < min_of_two_len && i < _oid1base->size; i++) {
+		if(_oid0->buf[i] != _oid1base->buf[i]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+
+	for(j = 0; i < min_of_two_len; i++, j++) {
+		if(_oid0->buf[i] != _roid1->buf[j]) break;
+		else if(!(_oid0->buf[i] & 0x80)) {
+			arcs_count++;
+			arcs_len = i + 1;
+		}
+	}
+	
+	if(min_arcs > arcs_count) {
+		errno = ERANGE;
+		return 0;
+	}
+	
+	assert(_oid0->size >= (int)arcs_len);
+	_oid0->size = (int)arcs_len;
+	return arcs_count == 1 ? 0 : arcs_count;
+}
+
+size_t OBJECT_IDENTIFIER_get_arcs_count(const OBJECT_IDENTIFIER_t *_oid) {
+	size_t arcs_count = 1;
+	int i;
+	
+	if(!_oid || !_oid->buf || _oid->size < 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	
+	if(_oid->size > 0) {
+		/* The last byte must terminate the arc, with high-bit not set. */
+		assert(!(_oid->buf[_oid->size-1] & 0x80));
+	}
+	
+	for(i = 0; i < _oid->size; i++) {
+		if (!(_oid->buf[i] & 0x80)) arcs_count++;
+	}
+
+	return arcs_count == 1 ? 0 : arcs_count;
+}

@@ -61,7 +61,7 @@ check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
 	assert(rval.consumed == consumed);
 
 	assert(tp->choice.seq.string.size == 16);
-	assert(strcmp(tp->choice.seq.string.buf, "zzzzzzzzzzzzzzzz") == 0);
+	assert(strcmp((char*)tp->choice.seq.string.buf, "zzzzzzzzzzzzzzzz") == 0);
 	assert(tp->choice.seq.alpha == NULL);
 	assert(tp->choice.seq.beta);
 	assert(*tp->choice.seq.beta == 0x4b4b4b4b);
@@ -104,7 +104,7 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 	erval = der_encode(&asn_DEF_T, tp, buf_fill, 0);
 	assert(erval.encoded != -1);
 	if(erval.encoded != cmp_buf_size) {
-		printf("%d != %d\n", erval.encoded, cmp_buf_size);
+		printf("%lld != %d\n", (long long)erval.encoded, cmp_buf_size);
 	}
 	assert(erval.encoded == cmp_buf_size);
 	for(i = 0; i < cmp_buf_size; i++) {

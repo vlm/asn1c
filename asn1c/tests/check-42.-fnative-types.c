@@ -100,7 +100,7 @@ check_serialize() {
 	memset(&vps, 0, sizeof(vps));
 	memset(&vp, 0, sizeof(vp));
 	memset(&vpart, 0, sizeof(vpart));
-	vpart.buf = "123";
+	vpart.buf = (uint8_t*)"123";
 	vpart.size = 3;
 
 	vp.present = VariablePart_PR_vset;
@@ -108,7 +108,7 @@ check_serialize() {
 	vps.resolution.accept_as = accept_as_unknown;
 	ASN_SEQUENCE_ADD(&vps.vparts, &vp);
 	ASN_SEQUENCE_ADD(&ll.varsets, &vps);
-	ll.line_digest.buf = "zzz\007";
+	ll.line_digest.buf = (uint8_t*)"zzz\007";
 	ll.line_digest.size = 4;
 
 	asn_fprint(stderr, &asn_DEF_LogLine, &ll);
@@ -116,7 +116,7 @@ check_serialize() {
 	buf = alloca(buf_size);
 	erval = der_encode(&asn_DEF_LogLine, &ll, buf_fill, 0);
 	assert(erval.encoded > 1);
-	fprintf(stderr, "Encoded in %d bytes\n", erval.encoded);
+	fprintf(stderr, "Encoded in %lld bytes\n", (long long)erval.encoded);
 	fprintf(stderr, "\n");
 	for(i = 0; i < buf_pos; i++) {
 		fprintf(stderr, "%d ", buf[i]);

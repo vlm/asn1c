@@ -214,8 +214,13 @@ typedef unsigned int flex_uint32_t;
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
+typedef size_t yy_size_t;
+#endif
+
 /* %if-not-reentrant */
-extern int asn1p_leng;
+extern yy_size_t asn1p_leng;
 /* %endif */
 
 /* %if-c-only */
@@ -259,11 +264,6 @@ extern FILE *asn1p_in, *asn1p_out;
 
 #define unput(c) yyunput( c, (yytext_ptr)  )
 
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
-#endif
-
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
@@ -286,7 +286,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	yy_size_t yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -370,8 +370,8 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 
 /* yy_hold_char holds the character lost when asn1p_text is formed. */
 static char yy_hold_char;
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-int asn1p_leng;
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+yy_size_t asn1p_leng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
@@ -402,7 +402,7 @@ static void asn1p__init_buffer (YY_BUFFER_STATE b,FILE *file  );
 
 YY_BUFFER_STATE asn1p__scan_buffer (char *base,yy_size_t size  );
 YY_BUFFER_STATE asn1p__scan_string (yyconst char *yy_str  );
-YY_BUFFER_STATE asn1p__scan_bytes (yyconst char *bytes,int len  );
+YY_BUFFER_STATE asn1p__scan_bytes (yyconst char *bytes,yy_size_t len  );
 
 /* %endif */
 
@@ -1971,18 +1971,18 @@ static yyconst flex_int16_t yy_rule_linenum[138] =
        96,   97,   99,  102,  104,  107,  109,  110,  111,  114,
       116,  117,  118,  130,  137,  144,  150,  159,  167,  175,
       176,  178,  197,  203,  204,  205,  206,  207,  210,  216,
-      223,  230,  237,  244,  251,  252,  253,  261,  262,  263,
-      264,  265,  270,  271,  272,  273,  274,  275,  276,  277,
-      278,  279,  280,  289,  290,  291,  292,  293,  294,  295,
-      296,  297,  298,  299,  300,  301,  302,  303,  304,  305,
-      306,  307,  308,  309,  310,  311,  312,  313,  314,  315,
-      316,  317,  318,  319,  320,  321,  322,  323,  324,  325,
-      326,  327,  328,  329,  330,  331,  332,  333,  334,  335,
+      223,  230,  240,  248,  255,  256,  257,  265,  266,  267,
+      268,  269,  274,  275,  276,  277,  278,  279,  280,  281,
+      282,  283,  284,  293,  294,  295,  296,  297,  298,  299,
+      300,  301,  302,  303,  304,  305,  306,  307,  308,  309,
+      310,  311,  312,  313,  314,  315,  316,  317,  318,  319,
+      320,  321,  322,  323,  324,  325,  326,  327,  328,  329,
+      330,  331,  332,  333,  334,  335,  336,  337,  338,  339,
 
-      336,  337,  338,  339,  340,  341,  342,  343,  344,  345,
-      346,  351,  352,  357,  358,  359,  362,  367,  373,  381,
-      391,  396,  398,  399,  403,  408,  413,  419,  420,  422,
-      428,  441,  444,  469,  513,  515,  526
+      340,  341,  342,  343,  344,  345,  346,  347,  348,  349,
+      350,  355,  356,  361,  362,  363,  366,  371,  377,  385,
+      395,  400,  402,  403,  407,  412,  417,  423,  424,  426,
+      432,  445,  448,  473,  517,  519,  530
     } ;
 
 static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;
@@ -2140,7 +2140,7 @@ FILE *asn1p_get_out (void );
 
 void asn1p_set_out  (FILE * out_str  );
 
-int asn1p_get_leng (void );
+yy_size_t asn1p_get_leng (void );
 
 char *asn1p_get_text (void );
 
@@ -2233,7 +2233,7 @@ static int input (void );
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
 		{ \
 		int c = '*'; \
-		int n; \
+		yy_size_t n; \
 		for ( n = 0; n < max_size && \
 			     (c = getc( asn1p_in )) != EOF && c != '\n'; ++n ) \
 			buf[n] = (char) c; \
@@ -2424,6 +2424,7 @@ yy_find_action:
 /* %% [10.0] code to find the action number goes here */
 		yy_current_state = *--(yy_state_ptr);
 		(yy_lp) = yy_accept[yy_current_state];
+goto find_rule; /* Shut up GCC warning -Wall */
 find_rule: /* we branch to this label when backing up */
 		for ( ; ; ) /* until we find what rule we matched */
 			{
@@ -2730,17 +2731,21 @@ case 32:
 YY_RULE_SETUP
 #line 230 "asn1p_l.l"
 {
-		asn1p_lval.a_int = _lex_atoi(asn1p_text);
+		asn1p_lval.tv_int.a_int = _lex_atoi(asn1p_text);
+		asn1p_lval.tv_int.ascii_int = strdup(asn1p_text);
+		/* 
 		if(errno == ERANGE)
 			return -1;
+		*/
 		return TOK_number;
 	}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 237 "asn1p_l.l"
+#line 240 "asn1p_l.l"
 {
-		asn1p_lval.a_int = _lex_atoi(asn1p_text);
+		asn1p_lval.tv_int.a_int = _lex_atoi(asn1p_text);
+		asn1p_lval.tv_int.ascii_int = strdup(asn1p_text);
 		if(errno == ERANGE)
 			return -1;
 		return TOK_number;
@@ -2748,7 +2753,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 244 "asn1p_l.l"
+#line 248 "asn1p_l.l"
 {
 		asn1p_lval.a_dbl = _lex_atod(asn1p_text);
 		if(errno == ERANGE)
@@ -2758,17 +2763,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 251 "asn1p_l.l"
+#line 255 "asn1p_l.l"
 return TOK_ABSENT;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 252 "asn1p_l.l"
+#line 256 "asn1p_l.l"
 return TOK_ALL;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 253 "asn1p_l.l"
+#line 257 "asn1p_l.l"
 {
 				/* Appeared in 1990, removed in 1997 */
 				if(TYPE_LIFETIME(1990, 1997))
@@ -2780,27 +2785,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 261 "asn1p_l.l"
+#line 265 "asn1p_l.l"
 return TOK_APPLICATION;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 262 "asn1p_l.l"
+#line 266 "asn1p_l.l"
 return TOK_AUTOMATIC;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 263 "asn1p_l.l"
+#line 267 "asn1p_l.l"
 return TOK_BEGIN;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 264 "asn1p_l.l"
+#line 268 "asn1p_l.l"
 return TOK_BIT;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 265 "asn1p_l.l"
+#line 269 "asn1p_l.l"
 {
 				if(TYPE_LIFETIME(1994, 0))
 					return TOK_BMPString;
@@ -2809,57 +2814,57 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 270 "asn1p_l.l"
+#line 274 "asn1p_l.l"
 return TOK_BOOLEAN;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 271 "asn1p_l.l"
+#line 275 "asn1p_l.l"
 return TOK_BY;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 272 "asn1p_l.l"
+#line 276 "asn1p_l.l"
 return TOK_CHARACTER;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 273 "asn1p_l.l"
+#line 277 "asn1p_l.l"
 return TOK_CHOICE;
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 274 "asn1p_l.l"
+#line 278 "asn1p_l.l"
 return TOK_CLASS;
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 275 "asn1p_l.l"
+#line 279 "asn1p_l.l"
 return TOK_COMPONENT;
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 276 "asn1p_l.l"
+#line 280 "asn1p_l.l"
 return TOK_COMPONENTS;
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 277 "asn1p_l.l"
+#line 281 "asn1p_l.l"
 return TOK_CONSTRAINED;
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 278 "asn1p_l.l"
+#line 282 "asn1p_l.l"
 return TOK_CONTAINING;
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 279 "asn1p_l.l"
+#line 283 "asn1p_l.l"
 return TOK_DEFAULT;
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 280 "asn1p_l.l"
+#line 284 "asn1p_l.l"
 {
 				/* Appeared in 1990, removed in 1997 */
 				if(TYPE_LIFETIME(1990, 1997))
@@ -2872,292 +2877,292 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 289 "asn1p_l.l"
+#line 293 "asn1p_l.l"
 return TOK_DEFINITIONS;
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 290 "asn1p_l.l"
+#line 294 "asn1p_l.l"
 return TOK_EMBEDDED;
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 291 "asn1p_l.l"
+#line 295 "asn1p_l.l"
 return TOK_ENCODED;
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 292 "asn1p_l.l"
+#line 296 "asn1p_l.l"
 return TOK_ENCODING_CONTROL;
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 293 "asn1p_l.l"
+#line 297 "asn1p_l.l"
 return TOK_END;
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 294 "asn1p_l.l"
+#line 298 "asn1p_l.l"
 return TOK_ENUMERATED;
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 295 "asn1p_l.l"
+#line 299 "asn1p_l.l"
 return TOK_EXCEPT;
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 296 "asn1p_l.l"
+#line 300 "asn1p_l.l"
 return TOK_EXPLICIT;
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 297 "asn1p_l.l"
+#line 301 "asn1p_l.l"
 return TOK_EXPORTS;
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 298 "asn1p_l.l"
+#line 302 "asn1p_l.l"
 return TOK_EXTENSIBILITY;
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 299 "asn1p_l.l"
+#line 303 "asn1p_l.l"
 return TOK_EXTERNAL;
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 300 "asn1p_l.l"
+#line 304 "asn1p_l.l"
 return TOK_FALSE;
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 301 "asn1p_l.l"
+#line 305 "asn1p_l.l"
 return TOK_FROM;
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 302 "asn1p_l.l"
+#line 306 "asn1p_l.l"
 return TOK_GeneralizedTime;
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 303 "asn1p_l.l"
+#line 307 "asn1p_l.l"
 return TOK_GeneralString;
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 304 "asn1p_l.l"
+#line 308 "asn1p_l.l"
 return TOK_GraphicString;
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 305 "asn1p_l.l"
+#line 309 "asn1p_l.l"
 return TOK_IA5String;
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 306 "asn1p_l.l"
+#line 310 "asn1p_l.l"
 return TOK_IDENTIFIER;
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 307 "asn1p_l.l"
+#line 311 "asn1p_l.l"
 return TOK_IMPLICIT;
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 308 "asn1p_l.l"
+#line 312 "asn1p_l.l"
 return TOK_IMPLIED;
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 309 "asn1p_l.l"
+#line 313 "asn1p_l.l"
 return TOK_IMPORTS;
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 310 "asn1p_l.l"
+#line 314 "asn1p_l.l"
 return TOK_INCLUDES;
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 311 "asn1p_l.l"
+#line 315 "asn1p_l.l"
 return TOK_INSTANCE;
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 312 "asn1p_l.l"
+#line 316 "asn1p_l.l"
 return TOK_INSTRUCTIONS;
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 313 "asn1p_l.l"
+#line 317 "asn1p_l.l"
 return TOK_INTEGER;
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 314 "asn1p_l.l"
+#line 318 "asn1p_l.l"
 return TOK_INTERSECTION;
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 315 "asn1p_l.l"
+#line 319 "asn1p_l.l"
 return TOK_ISO646String;
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 316 "asn1p_l.l"
+#line 320 "asn1p_l.l"
 return TOK_MAX;
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 317 "asn1p_l.l"
+#line 321 "asn1p_l.l"
 return TOK_MIN;
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 318 "asn1p_l.l"
+#line 322 "asn1p_l.l"
 return TOK_MINUS_INFINITY;
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 319 "asn1p_l.l"
+#line 323 "asn1p_l.l"
 return TOK_NULL;
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 320 "asn1p_l.l"
+#line 324 "asn1p_l.l"
 return TOK_NumericString;
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 321 "asn1p_l.l"
+#line 325 "asn1p_l.l"
 return TOK_OBJECT;
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 322 "asn1p_l.l"
+#line 326 "asn1p_l.l"
 return TOK_ObjectDescriptor;
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 323 "asn1p_l.l"
+#line 327 "asn1p_l.l"
 return TOK_OCTET;
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 324 "asn1p_l.l"
+#line 328 "asn1p_l.l"
 return TOK_OF;
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 325 "asn1p_l.l"
+#line 329 "asn1p_l.l"
 return TOK_OPTIONAL;
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 326 "asn1p_l.l"
+#line 330 "asn1p_l.l"
 return TOK_PATTERN;
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 327 "asn1p_l.l"
+#line 331 "asn1p_l.l"
 return TOK_PDV;
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 328 "asn1p_l.l"
+#line 332 "asn1p_l.l"
 return TOK_PLUS_INFINITY;
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 329 "asn1p_l.l"
+#line 333 "asn1p_l.l"
 return TOK_PRESENT;
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 330 "asn1p_l.l"
+#line 334 "asn1p_l.l"
 return TOK_PrintableString;
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 331 "asn1p_l.l"
+#line 335 "asn1p_l.l"
 return TOK_PRIVATE;
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 332 "asn1p_l.l"
+#line 336 "asn1p_l.l"
 return TOK_REAL;
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 333 "asn1p_l.l"
+#line 337 "asn1p_l.l"
 return TOK_RELATIVE_OID;
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 334 "asn1p_l.l"
+#line 338 "asn1p_l.l"
 return TOK_SEQUENCE;
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 335 "asn1p_l.l"
+#line 339 "asn1p_l.l"
 return TOK_SET;
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 336 "asn1p_l.l"
+#line 340 "asn1p_l.l"
 return TOK_SIZE;
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 337 "asn1p_l.l"
+#line 341 "asn1p_l.l"
 return TOK_STRING;
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 338 "asn1p_l.l"
+#line 342 "asn1p_l.l"
 return TOK_SYNTAX;
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 339 "asn1p_l.l"
+#line 343 "asn1p_l.l"
 return TOK_T61String;
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 340 "asn1p_l.l"
+#line 344 "asn1p_l.l"
 return TOK_TAGS;
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 341 "asn1p_l.l"
+#line 345 "asn1p_l.l"
 return TOK_TeletexString;
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 342 "asn1p_l.l"
+#line 346 "asn1p_l.l"
 return TOK_TRUE;
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 343 "asn1p_l.l"
+#line 347 "asn1p_l.l"
 return TOK_UNION;
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 344 "asn1p_l.l"
+#line 348 "asn1p_l.l"
 return TOK_UNIQUE;
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 345 "asn1p_l.l"
+#line 349 "asn1p_l.l"
 return TOK_UNIVERSAL;
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 346 "asn1p_l.l"
+#line 350 "asn1p_l.l"
 {
 				if(TYPE_LIFETIME(1994, 0))
 					return TOK_UniversalString;
@@ -3166,12 +3171,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 351 "asn1p_l.l"
+#line 355 "asn1p_l.l"
 return TOK_UTCTime;
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 352 "asn1p_l.l"
+#line 356 "asn1p_l.l"
 {
 				if(TYPE_LIFETIME(1994, 0))
 					return TOK_UTF8String;
@@ -3180,22 +3185,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 357 "asn1p_l.l"
+#line 361 "asn1p_l.l"
 return TOK_VideotexString;
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 358 "asn1p_l.l"
+#line 362 "asn1p_l.l"
 return TOK_VisibleString;
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 359 "asn1p_l.l"
+#line 363 "asn1p_l.l"
 return TOK_WITH;
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 362 "asn1p_l.l"
+#line 366 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(asn1p_text);
 		return TOK_typefieldreference;
@@ -3203,7 +3208,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 367 "asn1p_l.l"
+#line 371 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(asn1p_text);
 		return TOK_valuefieldreference;
@@ -3211,7 +3216,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 373 "asn1p_l.l"
+#line 377 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(asn1p_text);
 		return TOK_identifier;
@@ -3222,7 +3227,7 @@ YY_RULE_SETUP
 	 */
 case 120:
 YY_RULE_SETUP
-#line 381 "asn1p_l.l"
+#line 385 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(asn1p_text);
 		return TOK_capitalreference;
@@ -3235,7 +3240,7 @@ YY_RULE_SETUP
 	 */
 case 121:
 YY_RULE_SETUP
-#line 391 "asn1p_l.l"
+#line 395 "asn1p_l.l"
 {
 		asn1p_lval.tv_str = strdup(asn1p_text);
 		return TOK_typereference;
@@ -3243,23 +3248,23 @@ YY_RULE_SETUP
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 396 "asn1p_l.l"
+#line 400 "asn1p_l.l"
 return TOK_PPEQ;
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 398 "asn1p_l.l"
+#line 402 "asn1p_l.l"
 return TOK_ThreeDots;
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 399 "asn1p_l.l"
+#line 403 "asn1p_l.l"
 return TOK_TwoDots;
 	YY_BREAK
 
 case 125:
 YY_RULE_SETUP
-#line 403 "asn1p_l.l"
+#line 407 "asn1p_l.l"
 {
 				asn1p_lval.tv_str = strdup(asn1p_text);
 				return TOK_Literal;
@@ -3267,7 +3272,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 408 "asn1p_l.l"
+#line 412 "asn1p_l.l"
 {
 				asn1p_lval.tv_str = strdup(asn1p_text);
 				return TOK_Literal;
@@ -3275,7 +3280,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 413 "asn1p_l.l"
+#line 417 "asn1p_l.l"
 {
 				yy_push_state(with_syntax);
 				asn1p_lval.tv_str = strdup(asn1p_text);
@@ -3284,18 +3289,18 @@ YY_RULE_SETUP
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 419 "asn1p_l.l"
+#line 423 "asn1p_l.l"
 return '[';
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 420 "asn1p_l.l"
+#line 424 "asn1p_l.l"
 return ']';
 	YY_BREAK
 case 130:
 /* rule 130 can match eol */
 YY_RULE_SETUP
-#line 422 "asn1p_l.l"
+#line 426 "asn1p_l.l"
 {
 			asn1p_lval.tv_opaque.buf = strdup(asn1p_text);
 			asn1p_lval.tv_opaque.len = asn1p_leng;
@@ -3304,7 +3309,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 428 "asn1p_l.l"
+#line 432 "asn1p_l.l"
 {
 				yy_pop_state();
 				if(YYSTATE == with_syntax) {
@@ -3319,13 +3324,13 @@ YY_RULE_SETUP
 case 132:
 /* rule 132 can match eol */
 YY_RULE_SETUP
-#line 441 "asn1p_l.l"
+#line 445 "asn1p_l.l"
 /* Ignore whitespace */
 	YY_BREAK
 case 133:
 /* rule 133 can match eol */
 YY_RULE_SETUP
-#line 444 "asn1p_l.l"
+#line 448 "asn1p_l.l"
 {
 		asn1c_integer_t v1 = -1, v2 = -1;
 		char *p;
@@ -3354,7 +3359,7 @@ YY_RULE_SETUP
 case 134:
 /* rule 134 can match eol */
 YY_RULE_SETUP
-#line 469 "asn1p_l.l"
+#line 473 "asn1p_l.l"
 {
 		asn1c_integer_t v1 = -1, v2 = -1, v3 = -1, v4 = -1;
 		char *p;
@@ -3400,13 +3405,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 513 "asn1p_l.l"
+#line 517 "asn1p_l.l"
 return asn1p_text[0];
 	YY_BREAK
 case 136:
 /* rule 136 can match eol */
 YY_RULE_SETUP
-#line 515 "asn1p_l.l"
+#line 519 "asn1p_l.l"
 {
 		if(TYPE_LIFETIME(1994, 0))
 			fprintf(stderr, "ERROR: ");
@@ -3420,7 +3425,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 526 "asn1p_l.l"
+#line 530 "asn1p_l.l"
 {
 		fprintf(stderr,
 			"Unexpected token at line %d: \"%s\"\n",
@@ -3442,7 +3447,7 @@ case YY_STATE_EOF(quoted):
 case YY_STATE_EOF(opaque):
 case YY_STATE_EOF(encoding_control):
 case YY_STATE_EOF(with_syntax):
-#line 539 "asn1p_l.l"
+#line 543 "asn1p_l.l"
 {
 		while(YYSTATE != INITIAL)
 			yy_pop_state();
@@ -3451,10 +3456,10 @@ case YY_STATE_EOF(with_syntax):
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 546 "asn1p_l.l"
+#line 550 "asn1p_l.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 3458 "asn1p_l.c"
+#line 3463 "asn1p_l.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -3651,7 +3656,7 @@ static int yy_get_next_buffer (void)
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
@@ -3667,7 +3672,7 @@ static int yy_get_next_buffer (void)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			(yy_n_chars), (size_t) num_to_read );
+			(yy_n_chars), num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars);
 		}
@@ -3790,7 +3795,7 @@ static int yy_get_next_buffer (void)
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		register int number_to_move = (yy_n_chars) + 2;
+		register yy_size_t number_to_move = (yy_n_chars) + 2;
 		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 		register char *source =
@@ -3852,7 +3857,7 @@ static int yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			int offset = (yy_c_buf_p) - (yytext_ptr);
+			yy_size_t offset = (yy_c_buf_p) - (yytext_ptr);
 			++(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer(  ) )
@@ -3876,7 +3881,7 @@ static int yy_get_next_buffer (void)
 				case EOB_ACT_END_OF_FILE:
 					{
 					if ( asn1p_wrap( ) )
-						return EOF;
+						return 0;
 
 					if ( ! (yy_did_buffer_switch_on_eof) )
 						YY_NEW_FILE;
@@ -4189,7 +4194,7 @@ static void asn1p_ensure_buffer_stack (void)
 /* %if-c++-only */
 /* %endif */
 {
-	int num_to_alloc;
+	yy_size_t num_to_alloc;
     
 	if (!(yy_buffer_stack)) {
 
@@ -4292,12 +4297,11 @@ YY_BUFFER_STATE asn1p__scan_string (yyconst char * yystr )
  * 
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE asn1p__scan_bytes  (yyconst char * yybytes, int  _yybytes_len )
+YY_BUFFER_STATE asn1p__scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )
 {
 	YY_BUFFER_STATE b;
 	char *buf;
-	yy_size_t n;
-	int i;
+	yy_size_t n, i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -4437,7 +4441,7 @@ FILE *asn1p_get_out  (void)
 /** Get the length of the current token.
  * 
  */
-int asn1p_get_leng  (void)
+yy_size_t asn1p_get_leng  (void)
 {
         return asn1p_leng;
 }
@@ -4625,7 +4629,7 @@ void asn1p_free (void * ptr )
 
 /* %ok-for-header */
 
-#line 546 "asn1p_l.l"
+#line 550 "asn1p_l.l"
 
 
 

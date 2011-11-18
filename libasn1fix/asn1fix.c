@@ -366,6 +366,9 @@ asn1f_fix_simple(arg_t *arg) {
 
 	ret = asn1f_fix_integer(arg);
 	RET2RVAL(ret, rvalue);
+	
+	ret = asn1f_fix_oid(arg);
+	RET2RVAL(ret, rvalue);
 
 	return rvalue;
 }
