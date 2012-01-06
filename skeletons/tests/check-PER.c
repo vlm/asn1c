@@ -215,6 +215,44 @@ check_per_encoding() {
 
 }
 
+/*
+ * Add N bits after P bits. Should result in N+P bits added.
+ */
+static void
+check_per_encoding_auto() {
+    int prior, next;
+    int ret, i;
+
+    for(prior = 0; prior <= 31; prior++) {
+      for(next = 0; next <= 31; next++) {
+        asn_per_outp_t po;
+        po.buffer = po.tmpspace;
+        po.nboff = 0;
+        po.nbits = 0;
+        po.outper = Ignore;
+        po.op_key = 0;
+        po.tmpspace[0] = 0xff;
+
+        ret = per_put_few_bits(&po, -1, prior);
+        assert(ret == 0);
+
+		fprintf(stderr, " (out{nboff=%d,nbits=%d,buf_offset=%d})\n", (int)po.nboff, (int)po.nbits, (int)(po.buffer - po.tmpspace));
+
+        ret = per_put_few_bits(&po, -1, next);
+        assert(ret == 0);
+
+		fprintf(stderr, " (out{nboff=%d,nbits=%d,buf_offset=%d})\n", (int)po.nboff, (int)po.nbits, (int)(po.buffer - po.tmpspace));
+
+		fprintf(stderr, "Putting %d + %d bits (%d/%d), got %d bytes and %d bits\n",
+            prior, next, (prior + next) / 8, (prior + next) % 8,
+            (int)(po.buffer - po.tmpspace), (int)po.nboff);
+        assert((po.buffer - po.tmpspace) * 8 + po.nboff == prior + next);
+        for(i = 0; i < (po.buffer - po.tmpspace); i++)
+            assert(po.tmpspace[0] == (unsigned char)-1);
+      }
+    }
+}
+
 static void
 check_per_encoding_sweep_with(uint8_t buf[], int already_bits, int add_bits) {
 	size_t buf_size = 8;
@@ -289,6 +327,7 @@ int
 main() {
 	check_per_decoding();
 	check_per_encoding();
+	check_per_encoding_auto();
 	check_per_encoding_sweep();
 	return 0;
 }
