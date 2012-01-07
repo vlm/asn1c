@@ -22,33 +22,40 @@ callback(const void *buffer, size_t size, void *app_key) {
 	return 0;
 }
 
+static char *
+d2s(double d, int canonical, const char *str) {
+	ssize_t s;
+
+	reconstr_lens[canonical] = 0;
+	s = REAL__dump(d, canonical, callback, (void *)(ptrdiff_t)canonical);
+	assert(s < sizeof(reconstructed[canonical]));
+	assert(s == reconstr_lens[canonical]);
+	reconstructed[canonical][s] = '\0';	// ASCIIZ
+	return reconstructed[canonical];
+}
+
+/*
+ * Verify that a string representation of a given floating point value
+ * is as given in the (sample) and (canonical_sample) arguments.
+ */
 static void
 check_str_repr(double d, const char *sample, const char *canonical_sample) {
-	ssize_t s1, s2;
+	char *s0, *s1;
 
-	reconstr_lens[1] = reconstr_lens[0] = 0;
-
-	s1 = REAL__dump(d, 0, callback, 0);
-	assert(s1 < sizeof(reconstructed[0]));
-	assert(s1 == reconstr_lens[0]);
-	reconstructed[0][s1] = '\0';
-
-	s2 = REAL__dump(d, 1, callback, (void *)1);
-	assert(s2 < sizeof(reconstructed[1]));
-	assert(s2 == reconstr_lens[1]);
-	reconstructed[1][s2] = '\0';
+	s0 = d2s(d, 0, sample);
+	s1 = d2s(d, 1, canonical_sample);
 
 	if(sample) {
 		printf("Checking %f->[%s] against [%s]%s\n",
-			d, reconstructed[0], sample,
+			d, s0, sample,
 			canonical_sample ? " (canonical follows...)" : ""
 		);
-		assert(!strcmp(reconstructed[0], sample));
+		assert(!strcmp(s0, sample));
 	}
 	if(canonical_sample) {
 		printf("Checking %f->[%s] against [%s] (canonical)\n",
-			d, reconstructed[1], canonical_sample);
-		assert(!strcmp(reconstructed[1], canonical_sample));
+			d, s1, canonical_sample);
+		assert(!strcmp(s1, canonical_sample));
 	}
 }
 
