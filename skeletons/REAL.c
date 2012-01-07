@@ -137,6 +137,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 
 		dot = (buf[0] == 0x2d /* '-' */) ? (buf + 2) : (buf + 1);
 		if(*dot >= 0x30) {
+			if(buf != local_buf) FREEMEM(buf);
 			errno = EINVAL;
 			return -1;	/* Not a dot, really */
 		}
@@ -157,6 +158,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 				}
 				expptr++;
 				if(expptr > end) {
+					if(buf != local_buf) FREEMEM(buf);
 					errno = EINVAL;
 					return -1;
 				}
@@ -182,6 +184,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 			}
 		}
 		if(E == end) {
+			if(buf != local_buf) FREEMEM(buf);
 			errno = EINVAL;
 			return -1;		/* No promised E */
 		}
