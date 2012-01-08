@@ -577,14 +577,14 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 			st->buf[1] = 0;
 			st->size = 1;
 		} else {
-			if(copysign(1.0, dbl_value) < 0.0) {
-				st->buf[0] = 0x80 | 0x40;
-				st->buf[1] = 0;
-				st->size = 2;
-			} else {
+			if(copysign(1.0, dbl_value) >= 0.0) {
 				/* no content octets: positive zero */
 				st->buf[0] = 0;	/* JIC */
 				st->size = 0;
+			} else {
+				/* Negative zero. #8.5.3, 8.5.9 */
+				st->buf[0] = 0x43;
+				st->size = 1;
 			}
 		}
 		return 0;
