@@ -382,6 +382,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		/* "SpecialRealValue" */
 
 		/* Be liberal in what you accept...
+		 * http://en.wikipedia.org/wiki/Robustness_principle
 		if(st->size != 1) ...
 		*/
 
@@ -392,10 +393,6 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		case 0x41:	/* 01000001: MINUS-INFINITY */
 			*dbl_value = - INFINITY;
 			return 0;
-			/*
-			 * The following cases are defined by
-			 * X.690 Amendment 1 (10/03)
-			 */
 		case 0x42:	/* 01000010: NOT-A-NUMBER */
 			*dbl_value = NAN;
 			return 0;
