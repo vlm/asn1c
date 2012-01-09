@@ -1,5 +1,5 @@
 
-0.9.23:	2010-Oct-24
+0.9.23:	2011-Jan-09
 
 	* GeneralizedTime fix for working with time offsets which are not
 	  representable in whole hours. (Severity: low; Security impact: low)
