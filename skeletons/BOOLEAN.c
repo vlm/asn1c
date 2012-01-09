@@ -272,7 +272,7 @@ asn_enc_rval_t
 BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
 	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
-	asn_enc_rval_t er;
+	asn_enc_rval_t er = { 0, 0, 0 };
 
 	(void)constraints;
 
