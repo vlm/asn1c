@@ -172,9 +172,7 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	 */
 	rn.buf = inbuf;
 	rn.size = insize;
-printf("%03d %f === %s %s\n", lineno, d, sample, canonical_sample);
 	asn_REAL2double(&rn, &val);
-printf("%03d %f/%f %s %s\n", lineno, val, d, sample, canonical_sample);
 	if(isnan(val)) assert(isnan(d));
 	if(isnan(d)) assert(isnan(val));
 	if(!isnan(val) && !isnan(d)) {
@@ -188,15 +186,6 @@ printf("%03d %f/%f %s %s\n", lineno, val, d, sample, canonical_sample);
 	memset(&rn, 0, sizeof(rn));
 	ret = asn_double2REAL(&rn, d);
 	assert(ret == 0);
-	uint8_t *p, *end;
-	printf("received as:   [");
-	for(p = rn.buf, end = p + rn.size; p < end; p++)
-		printf("%02x", *p);
-	printf("]\n");
-	printf("received as:   [");
-	for(p = outbuf, end = p + outsize; p < end; p++)
-		printf("%02x", *p);
-	printf("]\n");
 	if(rn.size != outsize) {
 		printf("Encoded %f into %d expected %ld\n",
 			d, (int)rn.size, outsize);
@@ -248,6 +237,103 @@ check_ber_buffer_oneway(double d, const char *sample, const char *canonical_samp
 	check_str_representation(val, sample, canonical_sample, lineno);
 }
 
+/*
+ * 8.5.7 Verify binary encoding, two-way.
+ */
+static void
+check_ber_857_encoding(int base, int sign, int scaling_factor, int exponent, int mantissa) {
+	uint8_t buf[100];
+	uint8_t *b = buf;
+	int explen, mantlen;
+	REAL_t rn;
+	static REAL_t rn_check;
+	double d;
+	double verify;
+	int baseF = 0;
+	int ret;
+
+#define	BIT(b)	(1<<(b - 1))
+
+	switch(base) {
+	case 0: baseF = 1; break;
+	case 1: baseF = 3; break;
+	case 2: baseF = 4; break;
+	default: assert(base >= 0 && base <= 2);
+	}
+
+	if(exponent >= -128 && exponent <= 127) {
+		explen = 1;
+	} else {
+		assert(exponent > -60000 && exponent < 60000);
+		explen = 2;
+	}
+
+	if(mantissa == 0) {
+		mantlen = 0;
+	} else if(mantissa >= 0 && mantissa <= 255) {
+		mantlen = 1;
+	} else if(mantissa >= 0 && mantissa <= 65535) {
+		mantlen = 2;
+	} else {
+		assert(mantissa >= 0 && mantissa <= 256 * 65536);
+		mantlen = 3;
+	}
+
+	*b = BIT(8) | (sign ? BIT(7) : 0);
+	*b |= (base & 0x03) << 4;	/* 8.5.7.2 */
+	*b |= (scaling_factor & 0x03) << 2;	/* 8.5.7.3 */
+	*b |= ((explen - 1) & 0x03);	/* 8.5.7.4 */
+	b++;
+	switch(explen) {
+	case 2: *b++ = (int8_t)(exponent >> 8);
+	case 1: *b++ = (int8_t)exponent;
+	}
+	switch(mantlen) {
+	case 3: *b++ = (mantissa >> 16) & 0xff;
+	case 2: *b++ = (mantissa >> 8) & 0xff;
+	case 1: *b++ = (mantissa & 0xff);
+	}
+
+	verify = (sign ? -1.0 : 1.0) * ldexp(mantissa, exponent * baseF + scaling_factor);
+
+	/* Verify than encoding of this double value round-trips */
+	if(!isinf(verify)) {
+		d = verify;
+		verify = 0.0;
+		ret = asn_double2REAL(&rn_check, d);
+		assert(ret == 0);
+		ret = asn_REAL2double(&rn_check, &verify);
+		assert(ret == 0);
+		assert(d == verify);
+
+		/* Verify with a slight non-friendly offset. Not too easy. */
+		d = verify - 0.13;
+		verify = 0.0;
+		ret = asn_double2REAL(&rn_check, d);
+		assert(ret == 0);
+		ret = asn_REAL2double(&rn_check, &verify);
+		assert(ret == 0);
+		assert(ret == 0);
+		assert(d == verify);
+	}
+
+	verify = (sign ? -1.0 : 1.0) * ldexp(mantissa, exponent * baseF + scaling_factor);
+
+	rn.buf = buf;
+	rn.size = b - buf;
+	ret = asn_REAL2double(&rn, &d);
+	if(!isinf(verify) && (ret != 0 || d != verify)) {
+		printf("Converting B=%d, S=%d, F=%d, E=%d/%d, M=%d/%d\n", (1 << baseF), sign, scaling_factor, exponent, explen, mantissa, mantlen);
+		printf("Verify: %e\n", verify);
+		uint8_t *p;
+		printf("received as:   [");
+		for(p = buf; p < b; p++) printf("%02x", *p);
+		printf("]\n");
+		assert(ret == 0);
+		printf("Converted: %e\n", d);
+		assert(d == verify);
+	}
+}
 
 static void
 check_ber_encoding() {
@@ -481,6 +567,23 @@ check_ber_encoding() {
 	  uint8_t b_m05[] = { 0xC0, 0x00, 0x05 };
 	  CHECK_BER_STRICT(-5.0, "-5.0", "-5.0E0", b_m05_nr3, b_m05); }
   } /* for(comma symbol) */
+ }
+
+  /* Scan through the range of bits, construct the valid base-2 numbers, and
+   * try two-way conversion with them */
+ {
+  int base, sign, scaling_factor, exponent, mantissa;
+  for(base = 0; base <= 2; base++) {
+    for(sign = 0; sign <= 1; sign++) {
+      for(scaling_factor = 0; scaling_factor <= 3; scaling_factor++) {
+        for(exponent = -1000; exponent < 1000; exponent += (exponent > -990 && exponent < 990) ? 100 : 1) {
+          for(mantissa = 0; mantissa < 66000; mantissa += (mantissa > 300 && mantissa < 65400) ? 100 : 1) {
+            check_ber_857_encoding(base, sign, scaling_factor, exponent, mantissa);
+          }
+	}
+      }
+    }
+  }
  }
 
 	{
