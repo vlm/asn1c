@@ -39,22 +39,22 @@ d2s(double d, int canonical, const char *str) {
  * is as given in the (sample) and (canonical_sample) arguments.
  */
 static void
-check_str_representation(double d, const char *sample, const char *canonical_sample) {
+check_str_representation(double d, const char *sample, const char *canonical_sample, int lineno) {
 	char *s0, *s1;
 
 	s0 = d2s(d, 0, sample);
 	s1 = d2s(d, 1, canonical_sample);
 
 	if(sample) {
-		printf("Checking %f->[\"%s\"] against [\"%s\"]%s\n",
-			d, s0, sample,
+		printf("%03d: Checking %f->[\"%s\"] against [\"%s\"]%s\n",
+			lineno, d, s0, sample,
 			canonical_sample ? " (canonical follows...)" : ""
 		);
 		assert(!strcmp(s0, sample));
 	}
 	if(canonical_sample) {
-		printf("Checking %f->[\"%s\"] against [\"%s\"] (canonical)\n",
-			d, s1, canonical_sample);
+		printf("%03d: Checking %f->[\"%s\"] against [\"%s\"] (canonical)\n",
+			lineno, d, s1, canonical_sample);
 		assert(!strcmp(s1, canonical_sample));
 	}
 }
@@ -63,12 +63,12 @@ check_str_representation(double d, const char *sample, const char *canonical_sam
 	check_impl(rn, d, str1, str2, __LINE__)
 
 static void
-check_impl(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sample, int line) {
+check_impl(REAL_t *rn, double orig_dbl, const char *sample, const char *canonical_sample, int lineno) {
 	double val;
 	uint8_t *p, *end;
 	int ret;
 
-	printf("Line %d: double value %.12f [", line, orig_dbl);
+	printf("Line %d: double value %.12f [", lineno, orig_dbl);
 	for(p = (uint8_t *)&orig_dbl, end = p + sizeof(double); p < end ; p++)
 		printf("%02x", *p);
 	printf("] (ilogb %d)\n", ilogb(orig_dbl));
@@ -99,7 +99,7 @@ check_impl(REAL_t *rn, double orig_dbl, const char *sample, const char *canonica
 	assert((isnan(orig_dbl) && isnan(val)) || val == orig_dbl);
 	printf("OK\n");
 
-	check_str_representation(val, sample, canonical_sample);
+	check_str_representation(val, sample, canonical_sample, lineno);
 }
 static void
 check_xer(int fuzzy, double orig_value) {
@@ -162,7 +162,7 @@ check_xer(int fuzzy, double orig_value) {
 }
 
 static void
-check_ber_buffer_twoway(double d, const char *sample, const char *canonical_sample, uint8_t *inbuf, size_t insize, uint8_t *outbuf, size_t outsize) {
+check_ber_buffer_twoway(double d, const char *sample, const char *canonical_sample, uint8_t *inbuf, size_t insize, uint8_t *outbuf, size_t outsize, int lineno) {
 	REAL_t rn;
 	double val;
 	int ret;
@@ -172,13 +172,15 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	 */
 	rn.buf = inbuf;
 	rn.size = insize;
+printf("%03d %f === %s %s\n", lineno, d, sample, canonical_sample);
 	asn_REAL2double(&rn, &val);
+printf("%03d %f/%f %s %s\n", lineno, val, d, sample, canonical_sample);
 	if(isnan(val)) assert(isnan(d));
 	if(isnan(d)) assert(isnan(val));
 	if(!isnan(val) && !isnan(d)) {
-        assert(copysign(1.0, d) == copysign(1.0, val));
-        assert(d == val);
-    }
+		assert(copysign(1.0, d) == copysign(1.0, val));
+		assert(d == val);
+	}
 
 	/*
 	 * Encode value and check that it matches our expected buffer.
@@ -186,7 +188,7 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	memset(&rn, 0, sizeof(rn));
 	ret = asn_double2REAL(&rn, d);
 	assert(ret == 0);
-    uint8_t *p, *end;
+	uint8_t *p, *end;
 	printf("received as:   [");
 	for(p = rn.buf, end = p + rn.size; p < end; p++)
 		printf("%02x", *p);
@@ -202,11 +204,11 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	}
 	assert(memcmp(rn.buf, outbuf, rn.size) == 0);
 
-	check_str_representation(d, sample, canonical_sample);
+	check_str_representation(d, sample, canonical_sample, lineno);
 }
 
 static void
-check_ber_buffer_oneway(double d, const char *sample, const char *canonical_sample, uint8_t *buf, size_t bufsize) {
+check_ber_buffer_oneway(double d, const char *sample, const char *canonical_sample, uint8_t *buf, size_t bufsize, int lineno) {
 	REAL_t rn;
 	double val;
 	uint8_t *p, *end;
@@ -243,7 +245,7 @@ check_ber_buffer_oneway(double d, const char *sample, const char *canonical_samp
 
 	assert(val == d);
 
-	check_str_representation(val, sample, canonical_sample);
+	check_str_representation(val, sample, canonical_sample, lineno);
 }
 
 
@@ -251,11 +253,12 @@ static void
 check_ber_encoding() {
 	static const double zero = 0.0;
 
-#define CHECK_BER_STRICT(v, nocan, can, inbuf, outbuf)	\
-	check_ber_buffer_twoway(v, nocan, can, inbuf, sizeof(inbuf), outbuf, sizeof(outbuf))
+#define CHECK_BER_STRICT(v, nocan, can, inbuf, outbuf)			\
+	check_ber_buffer_twoway(v, nocan, can, inbuf, sizeof(inbuf),	\
+				outbuf, sizeof(outbuf), __LINE__)
 
 #define CHECK_BER_NONSTRICT(v, nocan, can, buf)	\
-	check_ber_buffer_oneway(v, nocan, can, buf, sizeof(buf))
+	check_ber_buffer_oneway(v, nocan, can, buf, sizeof(buf), __LINE__)
 
 	/*
 	 * X.690 8.4 Encoding of an enumerated value.
@@ -264,13 +267,11 @@ check_ber_encoding() {
 	/* 8.5.2 If the real value is the value plus zero,
 	 * there shall be no contents octet in the encoding */
 	{ uint8_t b_0[] = {};
-	  CHECK_BER_STRICT(0, "0", "0", b_0, b_0);
-    }
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0, b_0); }
 
 	/* 8.5.3 When -0 is to be encoded, there shall be only one contents octet */
 	{ uint8_t b_m0[] = { 0x43 };
-	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0, b_m0);
-    }
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0, b_m0); }
 
     /* Old way of encoding -0.0: 8.5.6 a) */
 	{ uint8_t b_m0[] = { 0x43 };
@@ -281,8 +282,7 @@ check_ber_encoding() {
 	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_856a, b_m0);
 	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_856a_1, b_m0);
 	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_856a_2, b_m0);
-	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_856a_3, b_m0);
-    }
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_856a_3, b_m0); }
 
 	/* 8.5.6 c) => 8.5.9 SpecialRealValue */
 	{ uint8_t b_pinf[] = { 0x40 };
@@ -290,8 +290,198 @@ check_ber_encoding() {
 	  uint8_t b_nan[]  = { 0x42 };
 	  CHECK_BER_STRICT(1.0/zero, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>", b_pinf, b_pinf);
 	  CHECK_BER_STRICT(-1.0/zero, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>", b_minf, b_minf);
-	  CHECK_BER_STRICT(zero/zero, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>", b_nan, b_nan);
-    }
+	  CHECK_BER_STRICT(zero/zero, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>", b_nan, b_nan); }
+
+	/* 8.5.6 b) => 8.5.8 Decimal encoding is used; NR1 form */
+	{ uint8_t b_0_nr1[] = { 0x01, '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr1, b_0); }
+	{ uint8_t b_0_nr1[] = { 0x01, '0', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr1, b_0); }
+	{ uint8_t b_0_nr1[] = { 0x01, ' ', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr1, b_0); }
+	{ uint8_t b_p0_nr1[] = { 0x01, '+', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_p0_nr1, b_0); }
+	{ uint8_t b_p0_nr1[] = { 0x01, ' ', '+', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_p0_nr1, b_0); }
+	{ uint8_t b_m0_nr1[] = { 0x01, '-', '0' };
+	  uint8_t b_m0[] = { 0x43 };
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_nr1, b_m0); }
+	{ uint8_t b_m0_nr1[] = { 0x01, ' ', '-', '0' };
+	  uint8_t b_m0[] = { 0x43 };
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_nr1, b_m0); }
+
+	{ uint8_t b_1_nr1[] = { 0x01, '1' };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_1_nr1, b_1); }
+	{ uint8_t b_1_nr1[] = { 0x01, '0', '1' };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_1_nr1, b_1); }
+	{ uint8_t b_1_nr1[] = { 0x01, ' ', '1' };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_1_nr1, b_1); }
+	{ uint8_t b_p1_nr1[] = { 0x01, '+', '1' };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_p1_nr1, b_1); }
+	{ uint8_t b_p1_nr1[] = { 0x01, ' ', '+', '1' };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_p1_nr1, b_1); }
+	{ uint8_t b_m1_nr1[] = { 0x01, '-', '1' };
+	  uint8_t b_m1[] = { 0xC0, 0x00, 0x01 };
+	  CHECK_BER_STRICT(-1.0, "-1.0", "-1.0E0", b_m1_nr1, b_m1); }
+	{ uint8_t b_m1_nr1[] = { 0x01, ' ', '-', '1' };
+	  uint8_t b_m1[] = { 0xC0, 0x00, 0x01 };
+	  CHECK_BER_STRICT(-1.0, "-1.0", "-1.0E0", b_m1_nr1, b_m1); }
+
+ {
+  uint8_t comma_symbol[] = { '.', ',' };
+  int csi;
+  for(csi = 0; csi < 2; csi++) {
+	uint8_t CS = comma_symbol[csi];
+
+	/* 8.5.6 b) => 8.5.8 Decimal encoding is used; NR2 form */
+	{ uint8_t b_0_nr2[] = { 0x02, '0', CS, '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr2, b_0); }
+	{ uint8_t b_0_nr2[] = { 0x02, '0', '0', CS, '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr2, b_0); }
+	{ uint8_t b_0_nr2[] = { 0x02, ' ', '0', CS, '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr2, b_0); }
+	{ uint8_t b_p0_nr2[] = { 0x02, '+', '0', CS, '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_p0_nr2, b_0); }
+	{ uint8_t b_p0_nr2[] = { 0x02, ' ', '+', '0', CS, '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_p0_nr2, b_0); }
+	{ uint8_t b_m0_nr2[] = { 0x02, '-', '0', CS, '0' };
+	  uint8_t b_m0[] = { 0x43 };
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_nr2, b_m0); }
+	{ uint8_t b_m0_nr2[] = { 0x02, ' ', '-', '0', CS, '0' };
+	  uint8_t b_m0[] = { 0x43 };
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_nr2, b_m0); }
+
+	/* 8.5.6 b) => 8.5.8 NR2 "1." */
+	{ uint8_t b_1_nr2[] = { 0x02, '1', CS };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_1_nr2, b_1); }
+	{ uint8_t b_1_nr2[] = { 0x02, '0', '1', CS };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_1_nr2, b_1); }
+	{ uint8_t b_1_nr2[] = { 0x02, ' ', '1', CS };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_1_nr2, b_1); }
+	{ uint8_t b_p1_nr2[] = { 0x02, '+', '1', CS };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_p1_nr2, b_1); }
+	{ uint8_t b_p1_nr2[] = { 0x02, ' ', '+', '1', CS };
+	  uint8_t b_1[] = { 0x80, 0x00, 0x01 };
+	  CHECK_BER_STRICT(1.0, "1.0", "1.0E0", b_p1_nr2, b_1); }
+	{ uint8_t b_m1_nr2[] = { 0x02, '-', '1', CS };
+	  uint8_t b_m1[] = { 0xC0, 0x00, 0x01 };
+	  CHECK_BER_STRICT(-1.0, "-1.0", "-1.0E0", b_m1_nr2, b_m1); }
+	{ uint8_t b_m1_nr2[] = { 0x02, ' ', '-', '1', CS };
+	  uint8_t b_m1[] = { 0xC0, 0x00, 0x01 };
+	  CHECK_BER_STRICT(-1.0, "-1.0", "-1.0E0", b_m1_nr2, b_m1); }
+
+	/* 8.5.6 b) => 8.5.8 NR2 ".5" */
+	{ uint8_t b_05_nr2[] = { 0x02, CS, '5' };
+	  uint8_t b_05[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_05_nr2, b_05); }
+	{ uint8_t b_05_nr2[] = { 0x02, '0', CS, '5' };
+	  uint8_t b_05[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_05_nr2, b_05); }
+	{ uint8_t b_05_nr2[] = { 0x02, ' ', CS, '5' };
+	  uint8_t b_05[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_05_nr2, b_05); }
+	{ uint8_t b_p1_nr2[] = { 0x02, '+', CS, '5' };
+	  uint8_t b_05[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_p1_nr2, b_05); }
+	{ uint8_t b_p1_nr2[] = { 0x02, ' ', '+', CS, '5' };
+	  uint8_t b_05[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_p1_nr2, b_05); }
+	{ uint8_t b_m05_nr2[] = { 0x02, '-', CS, '5' };
+	  uint8_t b_m05[] = { 0xC0, 0xff, 0x01 };
+	  CHECK_BER_STRICT(-0.5, "-0.5", "-5.0E-1", b_m05_nr2, b_m05); }
+	{ uint8_t b_m05_nr2[] = { 0x02, ' ', '-', CS, '5' };
+	  uint8_t b_m05[] = { 0xC0, 0xff, 0x01 };
+	  CHECK_BER_STRICT(-0.5, "-0.5", "-5.0E-1", b_m05_nr2, b_m05); }
+
+	/* 8.5.6 b) => 8.5.8 Decimal encoding is used; NR3 form */
+	{ uint8_t b_0_nr3[] = { 0x03, '0', CS, '0', 'e', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr3, b_0); }
+	{ uint8_t b_0_nr3[] = { 0x03, '0', '0', CS, '0', 'E', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr3, b_0); }
+	{ uint8_t b_0_nr3[] = { 0x03, ' ', '0', CS, '0', 'e', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_0_nr3, b_0); }
+	{ uint8_t b_p0_nr3[] = { 0x03, '+', '0', CS, '0', 'E', '+', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_p0_nr3, b_0); }
+	{ uint8_t b_p0_nr3[] = { 0x03, ' ', '+', '0', CS, '0', 'e', '+', '0' };
+	  uint8_t b_0[] = { };
+	  CHECK_BER_STRICT(0.0, "0", "0", b_p0_nr3, b_0); }
+	{ uint8_t b_m0_nr3[] = { 0x03, '-', '0', CS, '0', 'E', '-', '0' };
+	  uint8_t b_m0[] = { 0x43 };
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_nr3, b_m0); }
+	{ uint8_t b_m0_nr3[] = { 0x03, ' ', '-', '0', CS, '0', 'e', '-', '0' };
+	  uint8_t b_m0[] = { 0x43 };
+	  CHECK_BER_STRICT(-0.0, "-0", "-0", b_m0_nr3, b_m0); }
+
+	/* 8.5.6 b) => 8.5.8 NR3 "5.e-1" */
+	{ uint8_t b_5_nr3[] = { 0x03, '5', CS, 'e', '-', '1' };
+	  uint8_t b_5[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_5_nr3, b_5); }
+	{ uint8_t b_5_nr3[] = { 0x03, '0', '5', CS, 'E', '-', '1' };
+	  uint8_t b_5[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_5_nr3, b_5); }
+	{ uint8_t b_5_nr3[] = { 0x03, ' ', '5', CS, 'e', '-', '1' };
+	  uint8_t b_5[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_5_nr3, b_5); }
+	{ uint8_t b_p5_nr3[] = { 0x03, '+', '5', CS, 'E', '-', '1' };
+	  uint8_t b_5[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_p5_nr3, b_5); }
+	{ uint8_t b_p5_nr3[] = { 0x03, ' ', '+', '5', CS, 'e', '-', '1' };
+	  uint8_t b_5[] = { 0x80, 0xff, 0x01 };
+	  CHECK_BER_STRICT(0.5, "0.5", "5.0E-1", b_p5_nr3, b_5); }
+	{ uint8_t b_m5_nr3[] = { 0x03, '-', '5', CS, 'E', '-', '1' };
+	  uint8_t b_m5[] = { 0xC0, 0xff, 0x01 };
+	  CHECK_BER_STRICT(-0.5, "-0.5", "-5.0E-1", b_m5_nr3, b_m5); }
+	{ uint8_t b_m5_nr3[] = { 0x03, ' ', '-', '5', CS, 'e', '-', '1' };
+	  uint8_t b_m5[] = { 0xC0, 0xff, 0x01 };
+	  CHECK_BER_STRICT(-0.5, "-0.5", "-5.0E-1", b_m5_nr3, b_m5); }
+
+	/* 8.5.6 b) => 8.5.8 NR3 ".5e1" */
+	{ uint8_t b_05_nr3[] = { 0x03, CS, '5', 'e', '+', '1' };
+	  uint8_t b_05[] = { 0x80, 0x00, 0x05 };
+	  CHECK_BER_STRICT(5.0, "5.0", "5.0E0", b_05_nr3, b_05); }
+	{ uint8_t b_05_nr3[] = { 0x03, '0', CS, '5', 'E', '+', '1'};
+	  uint8_t b_05[] = { 0x80, 0x00, 0x05 };
+	  CHECK_BER_STRICT(5.0, "5.0", "5.0E0", b_05_nr3, b_05); }
+	{ uint8_t b_05_nr3[] = { 0x03, ' ', CS, '5', 'e', '1'};
+	  uint8_t b_05[] = { 0x80, 0x00, 0x05 };
+	  CHECK_BER_STRICT(5.0, "5.0", "5.0E0", b_05_nr3, b_05); }
+	{ uint8_t b_p1_nr3[] = { 0x03, '+', CS, '5', 'E', '1' };
+	  uint8_t b_05[] = { 0x80, 0x00, 0x05 };
+	  CHECK_BER_STRICT(5.0, "5.0", "5.0E0", b_p1_nr3, b_05); }
+	{ uint8_t b_p1_nr3[] = { 0x03, ' ', '+', CS, '5', 'e', '+', '1' };
+	  uint8_t b_05[] = { 0x80, 0x00, 0x05 };
+	  CHECK_BER_STRICT(5.0, "5.0", "5.0E0", b_p1_nr3, b_05); }
+	{ uint8_t b_m05_nr3[] = { 0x03, '-', CS, '5', 'E', '+', '1' };
+	  uint8_t b_m05[] = { 0xC0, 0x00, 0x05 };
+	  CHECK_BER_STRICT(-5.0, "-5.0", "-5.0E0", b_m05_nr3, b_m05); }
+	{ uint8_t b_m05_nr3[] = { 0x03, ' ', '-', CS, '5', 'e', '1' };
+	  uint8_t b_m05[] = { 0xC0, 0x00, 0x05 };
+	  CHECK_BER_STRICT(-5.0, "-5.0", "-5.0E0", b_m05_nr3, b_m05); }
+  } /* for(comma symbol) */
+ }
 
 	{
 	uint8_t b_1_0[] =

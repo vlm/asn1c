@@ -378,7 +378,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	octv = st->buf[0];	/* unsigned byte */
 
 	switch(octv & 0xC0) {
-	case 0x40:	/* X.690: 8.5.8 */
+	case 0x40:	/* X.690: 8.5.6 a) => 8.5.9 */
 		/* "SpecialRealValue" */
 
 		/* Be liberal in what you accept...
@@ -405,23 +405,59 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		return -1;
 	case 0x00: {	/* X.690: 8.5.7 */
 		/*
-		 * Decimal. NR{1,2,3} format.
+		 * Decimal. NR{1,2,3} format from ISO 6093.
+		 * NR1: [ ]*[+-]?[0-9]+
+		 * NR2: [ ]*[+-]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)
+		 * NR3: [ ]*[+-]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)[Ee][+-]?[0-9]+
 		 */
 		double d;
+		char *buf;
+		char *endptr;
+		int used_malloc = 0;
 
-		if(octv == 0 || octv & 0x3C == 0) {
+		if(octv == 0 || (octv & 0x3C)) {
 			/* Remaining values of bits 6 to 1 are Reserved. */
 			errno = EINVAL;
 			return -1;
 		}
 
-		if(st->buf[st->size]) {
-			/* By contract, an input buffer should be null-terminated */
+
+		/* 1. By contract, an input buffer should be null-terminated.
+		 * OCTET STRING decoder ensures that, as is asn_double2REAL().
+		 * 2. ISO 6093 specifies COMMA as a possible decimal separator.
+		 * However, strtod() can't always deal with COMMA.
+		 * So her we fix both by reallocating, copying and fixing.
+		 */
+		if(st->buf[st->size] || memchr(st->buf, ',', st->size)) {
+			uint8_t *p, *end;
+			char *b;
+			if(st->size > 100) {
+				/* Avoid malicious stack overflow in alloca() */
+				buf = (char *)MALLOC(st->size);
+				if(!buf) return -1;
+				used_malloc = 1;
+			} else {
+				buf = alloca(st->size);
+			}
+			b = buf;
+			/* Copy without the first byte and with 0-termination */
+			for(p = st->buf + 1, end = st->buf + st->size;
+					p < end; b++, p++)
+				*b = (*p == ',') ? '.' : *p;
+			*b = '\0';
+		} else {
+			buf = (char *)&st->buf[1];
+		}
+
+		endptr = buf;
+		d = strtod(buf, &endptr);
+		if(*endptr != '\0') {
+			/* Format is not consistent with ISO 6093 */
+			if(used_malloc) FREEMEM(buf);
 			errno = EINVAL;
 			return -1;
 		}
-
-		d = strtod((char *)&st->buf[1], 0);
+		if(used_malloc) FREEMEM(buf);
 		if(finite(d)) {
 			*dbl_value = d;
 			return 0;
@@ -486,13 +522,11 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 
 	/* Okay, the exponent is here. Now, what about mantissa? */
 	end = st->buf + st->size;
-	if(ptr < end) {
-		for(; ptr < end; ptr++)
-			m = ldexp(m, 8) + *ptr;
-	}
+	for(; ptr < end; ptr++)
+		m = ldexp(m, 8) + *ptr;
 
 	if(0)
-	ASN_DEBUG("m=%.10f, scF=%d, bF=%d, expval=%d, ldexp()=%f, ldexp()=%f",
+	ASN_DEBUG("m=%.10f, scF=%d, bF=%d, expval=%d, ldexp()=%f, ldexp()=%f\n",
 		m, scaleF, baseF, expval,
 		ldexp(m, expval * baseF + scaleF),
 		ldexp(m, scaleF) * pow(pow(2, baseF), expval)
