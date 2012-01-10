@@ -278,7 +278,8 @@ BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 
 	if(!st) _ASN_ENCODE_FAILED;
 
-	per_put_few_bits(po, *st ? 1 : 0, 1);
+	if(per_put_few_bits(po, *st ? 1 : 0, 1))
+		_ASN_ENCODE_FAILED;
 
 	_ASN_ENCODED_OK(er);
 }
