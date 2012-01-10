@@ -674,7 +674,7 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 			accum = mval << ishift;
 		}
 
-		/* Adjust mantissa appropriately. */
+		/* Adjust exponent appropriately. */
 		expval += shift_count;
 	}
 
