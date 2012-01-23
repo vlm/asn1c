@@ -3,6 +3,7 @@
 *.lo
 *.libs
 *.deps
+*.core
 
 # /
 /autom4te.cache
