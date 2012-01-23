@@ -691,7 +691,8 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 			value = 0;
 		}
 		if(1) {
-			long new_value = value * 10;
+			long volatile new_value = value * 10;
+			/* GCC 4.x is being too smart without volatile */
 			if(new_value / 10 != value
 			|| (value = new_value + (*oid_text - 0x30)) < 0) {
 				/* Overflow */

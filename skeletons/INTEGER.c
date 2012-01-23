@@ -396,7 +396,9 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 			}
 
 		    {
-			long new_value = value * 10;
+			long volatile new_value = value * 10;
+			/* GCC 4.x optimizes (new_value) without `volatile'
+			 * so the following check does not detect overflow. */
 
 			if(new_value / 10 != value)
 				/* Overflow */

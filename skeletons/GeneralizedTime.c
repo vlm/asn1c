@@ -314,7 +314,8 @@ asn_GT2time_prec(const GeneralizedTime_t *st, int *frac_value, int frac_digits, 
 		while(fd > frac_digits)
 			fv /= 10, fd--;
 		while(fd < frac_digits) {
-			int new_fv = fv * 10;
+			int volatile new_fv = fv * 10;
+			/* GCC 4.x is being too smart without volatile */
 			if(new_fv / 10 != fv) {
 				/* Too long precision request */
 				fv = 0;
@@ -441,7 +442,8 @@ asn_GT2time_frac(const GeneralizedTime_t *st, int *frac_value, int *frac_digits,
 		 */
 		for(buf++; buf < end; buf++) {
 			int v = *buf;
-			int new_fvalue;
+			int volatile new_fvalue;
+			/* GCC 4.x is being too smart without volatile */
 			switch(v) {
 			case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
 			case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
