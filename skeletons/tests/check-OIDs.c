@@ -400,13 +400,16 @@ main() {
 	check_parse("1.2147483647.3", 3);
 	if(sizeof(long) == 4) {
 		check_parse("1.2147483648.3", -1);	/* overflow on ILP32 */
+		check_parse("1.2147483649.3", -1);	/* overflow on ILP32 */
 		check_parse("1.3000000000.3", -1);
 		check_parse("1.4000000000.3", -1);
 		check_parse("1.5000000000.3", -1);
 		check_parse("1.6000000000.3", -1);
 		check_parse("1.9000000000.3", -1);
-	} else {
+	} else if(sizeof(long) == 8) {
 		check_parse("1.2147483648.3", 3);
+		check_parse("1.9223372036854775807.3", 3);
+		check_parse("1.9223372036854775808.3", -1);
 	}
 	check_parse("1.900a0000000.3", -1);
 	check_parse("1.900a.3", -1);
