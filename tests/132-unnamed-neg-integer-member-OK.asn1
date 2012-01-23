@@ -1,0 +1,13 @@
+
+-- OK: Everything is fine
+-- This tests for ability to set an unnamed default to an negative default int
+-- 
+
+IntegerDefault DEFINITIONS::=
+BEGIN
+
+	IntegerContainer ::= SEQUENCE {
+		myInteger INTEGER DEFAULT -1
+	 }
+
+END
