@@ -339,6 +339,9 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		ASN_DEBUG("INTEGER body %ld 0x%2x..0x%2x",
 			(long)chunk_size, *lstart, lstop[-1]);
 
+	if(INTEGER_st_prealloc(st, (chunk_size/3) + 1))
+		return XPBD_SYSTEM_FAILURE;
+
 	/*
 	 * We may have received a tag here. It will be processed inline.
 	 * Use strtoul()-like code and serialize the result.
@@ -396,7 +399,9 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 			}
 
 		    {
-			long new_value = value * 10;
+			long volatile new_value = value * 10;
+			/* GCC 4.x optimizes (new_value) without `volatile'
+			 * so the following check does not detect overflow. */
 
 			if(new_value / 10 != value)
 				/* Overflow */
@@ -445,8 +450,6 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 				 * places as a decimal value.
 				 * Switch decoding mode. */
 				ASN_DEBUG("INTEGER re-evaluate as hex form");
-				if(INTEGER_st_prealloc(st, (chunk_size/3) + 1))
-					return XPBD_SYSTEM_FAILURE;
 				state = ST_SKIPSPHEX;
 				lp = lstart - 1;
 				continue;
@@ -474,8 +477,6 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 				continue;
 			case ST_DIGITS:
 				ASN_DEBUG("INTEGER re-evaluate as hex form");
-				if(INTEGER_st_prealloc(st, (chunk_size/3) + 1))
-					return XPBD_SYSTEM_FAILURE;
 				state = ST_SKIPSPHEX;
 				lp = lstart - 1;
 				continue;

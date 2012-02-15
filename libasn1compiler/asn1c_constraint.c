@@ -14,6 +14,16 @@ static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
 static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop);
 static int native_long_sign(asn1cnst_range_t *r);	/* -1, 0, 1 */
 
+static int
+ulong_optimization(asn1p_expr_type_e etype, asn1cnst_range_t *r_size,
+						asn1cnst_range_t *r_value)
+{
+	return (!r_size && r_value
+		&& (etype == ASN_BASIC_INTEGER
+		|| etype == ASN_BASIC_ENUMERATED)
+		&& native_long_sign(r_value) == 0);
+}
+
 int
 asn1c_emit_constraint_checking_code(arg_t *arg) {
 	asn1cnst_range_t *r_size;
@@ -24,6 +34,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	int got_something = 0;
 	int alphabet_table_compiled;
 	int produce_st = 0;
+	int ulong_optimize = 0;
 
 	ct = expr->combined_constraints;
 	if(ct == NULL)
@@ -93,7 +104,10 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			case ASN_BASIC_INTEGER:
 			case ASN_BASIC_ENUMERATED:
 				if(native_long_sign(r_value) >= 0) {
-					OUT("unsigned long value;\n");
+					ulong_optimize = ulong_optimization(etype, r_size, r_value);
+					if(!ulong_optimize) {
+						OUT("unsigned long value;\n");
+					}
 				} else {
 					OUT("long value;\n");
 				}
@@ -124,7 +138,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	OUT("}\n");
 	OUT("\n");
 
-	if(r_value)
+	if((r_value) && (!ulong_optimize))
 		emit_value_determination_code(arg, etype, r_value);
 	if(r_size)
 		emit_size_determination_code(arg, etype);
@@ -140,10 +154,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	/*
 	 * Optimization for unsigned longs.
 	 */
-	if(!r_size && r_value
-		&& (etype == ASN_BASIC_INTEGER
-		|| etype == ASN_BASIC_ENUMERATED)
-	&& native_long_sign(r_value) == 0) {
+	if(ulong_optimize) {
 		OUT("\n");
 		OUT("/* Constraint check succeeded */\n");
 		OUT("return 0;\n");
