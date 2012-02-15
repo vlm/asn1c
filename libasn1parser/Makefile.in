@@ -33,8 +33,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = libasn1parser
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in asn1p_l.c \
-	asn1p_y.c asn1p_y.h
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -67,13 +66,6 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-LEXCOMPILE = $(LEX) $(LFLAGS) $(AM_LFLAGS)
-LTLEXCOMPILE = $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(LEX) $(LFLAGS) $(AM_LFLAGS)
-YLWRAP = $(top_srcdir)/ylwrap
-YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
-LTYACCCOMPILE = $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(YACC) $(YFLAGS) $(AM_YFLAGS)
 SOURCES = $(libasn1parser_la_SOURCES)
 DIST_SOURCES = $(libasn1parser_la_SOURCES)
 ETAGS = etags
@@ -200,7 +192,7 @@ noinst_LTLIBRARIES = libasn1parser.la
 libasn1parser_la_LDFLAGS = -all-static
 libasn1parser_la_SOURCES = \
 	asn1parser.c asn1parser.h	\
-	asn1p_y.y asn1p_l.l		\
+	asn1p_y.c asn1cp_y.h asn1p_l.c	\
 	asn1p_module.c asn1p_module.h	\
 	asn1p_oid.c asn1p_oid.h		\
 	asn1p_value.c asn1p_value.h	\
@@ -218,7 +210,7 @@ EXTRA_DIST = expr-h.pl
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .l .lo .o .obj .y
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -257,11 +249,6 @@ clean-noinstLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-asn1p_y.h: asn1p_y.c
-	@if test ! -f $@; then \
-	  rm -f asn1p_y.c; \
-	  $(MAKE) $(AM_MAKEFLAGS) asn1p_y.c; \
-	else :; fi
 libasn1parser.la: $(libasn1parser_la_OBJECTS) $(libasn1parser_la_DEPENDENCIES) 
 	$(libasn1parser_la_LINK)  $(libasn1parser_la_OBJECTS) $(libasn1parser_la_LIBADD) $(LIBS)
 
@@ -304,12 +291,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
-
-.l.c:
-	$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
-
-.y.c:
-	$(am__skipyacc) $(SHELL) $(YLWRAP) $< y.tab.c $@ y.tab.h $*.h y.output $*.output -- $(YACCCOMPILE)
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -419,9 +400,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f asn1p_l.c
-	-rm -f asn1p_y.c
-	-rm -f asn1p_y.h
 clean: clean-am
 
 clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
