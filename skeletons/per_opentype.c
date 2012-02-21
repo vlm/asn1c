@@ -18,8 +18,6 @@ static int uper_ugot_refill(asn_per_data_t *pd);
 static int per_skip_bits(asn_per_data_t *pd, int skip_nbits);
 static asn_dec_rval_t uper_sot_suck(asn_codec_ctx_t *, asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd);
 
-int asn_debug_indent;
-
 /*
  * Encode an "open type field".
  * #10.1, #10.2
@@ -101,9 +99,9 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	spd.buffer = buf;
 	spd.nbits = bufLen << 3;
 
-	asn_debug_indent += 4;
+	ASN_DEBUG_INDENT_ADD(+4);
 	rv = td->uper_decoder(ctx, td, constraints, sptr, &spd);
-	asn_debug_indent -= 4;
+	ASN_DEBUG_INDENT_ADD(-4);
 
 	if(rv.code == RC_OK) {
 		/* Check padding validity */
@@ -153,9 +151,9 @@ uper_open_type_get_complex(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	pd->nbits = pd->nboff;	/* 0 good bits at this point, will refill */
 	pd->moved = 0;	/* This now counts the open type size in bits */
 
-	asn_debug_indent += 4;
+	ASN_DEBUG_INDENT_ADD(+4);
 	rv = td->uper_decoder(ctx, td, constraints, sptr, pd);
-	asn_debug_indent -= 4;
+	ASN_DEBUG_INDENT_ADD(-4);
 
 #define	UPDRESTOREPD	do {						\
 	/* buffer and nboff are valid, preserve them. */		\
