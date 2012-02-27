@@ -40,7 +40,7 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 #define ASN_DEBUG_INDENT_ADD(i) do{}while(0)
 #else	/* !ASN_THREAD_SAFE */
 int asn_debug_indent;
-#define ASN_DEBUG_INDENT_ADD(i) do { asn_debug_indent += increment; } while(0)
+#define ASN_DEBUG_INDENT_ADD(i) do { asn_debug_indent += i; } while(0)
 #endif	/* ASN_THREAD_SAFE */
 #define	ASN_DEBUG(fmt, args...)	do {			\
 		int adi = asn_debug_indent;		\
