@@ -7,16 +7,6 @@
 #include <constr_TYPE.h>
 #include <per_opentype.h>
 
-/* Thread safety requires sacrifice in output indentation. */
-#ifndef ASN_DEBUG_INDENT_ADD
-#ifdef  ASN_THREAD_SAFE
-#define ASN_DEBUG_INDENT_ADD(i) do{}while(0)
-#else   /* !ASN_THREAD_SAFE */
-int asn_debug_indent;
-#define ASN_DEBUG_INDENT_ADD(i) do { asn_debug_indent += i; } while(0)
-#endif  /* ASN_THREAD_SAFE */
-#endif  /* ASN_DEBUG_INDENT_ADD */
-
 typedef struct uper_ugot_key {
 	asn_per_data_t oldpd;	/* Old per data source */
 	size_t unclaimed;
