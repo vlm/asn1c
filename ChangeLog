@@ -1,5 +1,5 @@
 
-0.9.23:	2011-Jan-09
+0.9.23:	2012-Sep-01
 
 	* GeneralizedTime fix for working with time offsets which are not
 	  representable in whole hours. (Severity: low; Security impact: low)
@@ -9,7 +9,8 @@
 	* PER encoding correctness fix. (Severity: high; Security impact: low)
 	  Reported by Grzegorz Aksamit.
 	* ENUMERATED extension values check relaxed. Reported by Gabriel Burca.
-	* Fixed decimal decoding of REAL values in -fnative-types mode (Severity: medium; Security impact: medium)
+	* Fixed decimal decoding of REAL values in -fnative-types mode
+	  (Severity: medium; Security impact: medium)
 
 0.9.22:	2008-Nov-19
 
