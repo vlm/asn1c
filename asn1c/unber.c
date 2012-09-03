@@ -27,12 +27,15 @@
  */
 #include "sys-common.h"
 
+#define	ASN_DISABLE_PER_SUPPORT	1
+
 #include <asn1parser.h>		/* For static string tables */
 
 #include <asn_application.h>
 #include <constraints.c>
 #include <ber_tlv_tag.c>
 #include <ber_tlv_length.c>
+#include <INTEGER.c>
 #include <OBJECT_IDENTIFIER.c>
 #include <RELATIVE-OID.c>
 #include <asn_codecs_prim.c>
@@ -392,7 +395,7 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, b
 		return;
 	}
 
-	while(level-- > 0) printf(indent_bytes);  /* Print indent */
+	while(level-- > 0) fputs(indent_bytes, stdout);  /* Print indent */
 	printf(fin ? "</" : "<");
 
 	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");

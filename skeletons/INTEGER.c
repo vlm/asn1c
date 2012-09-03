@@ -24,8 +24,13 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	INTEGER_encode_der,
 	INTEGER_decode_xer,
 	INTEGER_encode_xer,
+#ifdef	ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	INTEGER_decode_uper,	/* Unaligned PER decoder */
 	INTEGER_encode_uper,	/* Unaligned PER encoder */
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
@@ -557,6 +562,8 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	_ASN_ENCODED_OK(er);
 }
 
+#ifndef	ASN_DISABLE_PER_SUPPORT
+
 asn_dec_rval_t
 INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
@@ -764,6 +771,8 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 
 	_ASN_ENCODED_OK(er);
 }
+
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 
 int
 asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
