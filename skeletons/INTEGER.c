@@ -320,7 +320,8 @@ static enum xer_pbd_rval
 INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	long sign = 1;
-	long value;
+	long dec_value;
+    long hex_value;
 	const char *lp;
 	const char *lstart = (const char *)chunk_buf;
 	const char *lstop = lstart + chunk_size;
@@ -334,6 +335,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		ST_HEXCOLON,
 		ST_EXTRASTUFF
 	} state = ST_SKIPSPACE;
+    const char *value_start = 0; /* INVARIANT: value always !0 in ST_DIGITS */
 
 	if(chunk_size)
 		ASN_DEBUG("INTEGER body %ld 0x%2x..0x%2x",
@@ -346,7 +348,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 	 * We may have received a tag here. It will be processed inline.
 	 * Use strtoul()-like code and serialize the result.
 	 */
-	for(value = 0, lp = lstart; lp < lstop; lp++) {
+	for(lp = lstart; lp < lstop; lp++) {
 		int lv = *lp;
 		switch(lv) {
 		case 0x09: case 0x0a: case 0x0d: case 0x20:
@@ -367,12 +369,14 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		case 0x2d:	/* '-' */
 			if(state == ST_SKIPSPACE) {
 				sign = -1;
+                value_start = lp;
 				state = ST_WAITDIGITS;
 				continue;
 			}
 			break;
 		case 0x2b:	/* '+' */
 			if(state == ST_SKIPSPACE) {
+                value_start = lp;
 				state = ST_WAITDIGITS;
 				continue;
 			}
@@ -380,48 +384,26 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
 		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
 			switch(state) {
-			case ST_DIGITS: break;
+			case ST_DIGITS: continue;
 			case ST_SKIPSPHEX:	/* Fall through */
 			case ST_HEXDIGIT1:
-				value = (lv - 0x30) << 4;
+				hex_value = (lv - 0x30) << 4;
 				state = ST_HEXDIGIT2;
 				continue;
 			case ST_HEXDIGIT2:
-				value += (lv - 0x30);
+				hex_value += (lv - 0x30);
 				state = ST_HEXCOLON;
-				st->buf[st->size++] = (uint8_t)value;
+				st->buf[st->size++] = (uint8_t)hex_value;
 				continue;
 			case ST_HEXCOLON:
 				return XPBD_BROKEN_ENCODING;
 			default:
+                value_start = lp;
+            case ST_WAITDIGITS:
 				state = ST_DIGITS;
-				break;
+				continue;
 			}
-
-		    {
-			long volatile new_value = value * 10;
-			/* GCC 4.x optimizes (new_value) without `volatile'
-			 * so the following check does not detect overflow. */
-
-			if(new_value / 10 != value)
-				/* Overflow */
-				return XPBD_DECODER_LIMIT;
-
-			value = new_value + (lv - 0x30);
-			/* Check for two's complement overflow */
-			if(value < 0) {
-				/* Check whether it is a LONG_MIN */
-				if(sign == -1
-				&& (unsigned long)value
-						== ~((unsigned long)-1 >> 1)) {
-					sign = 1;
-				} else {
-					/* Overflow */
-					return XPBD_DECODER_LIMIT;
-				}
-			}
-		    }
-			continue;
+			break;  /* UNREACHABLE */
 		case 0x3c:	/* '<' */
 			if(state == ST_SKIPSPACE) {
 				const asn_INTEGER_enum_map_t *el;
@@ -933,3 +915,17 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 
 	return 0;
 }
+
+int
+asn_strtol(const char *str, const char **end, long *lp) {
+    long l;
+
+    errno = 0;
+    l = strtol(str, end, 10);
+    if(errno) {
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
