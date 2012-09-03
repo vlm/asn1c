@@ -3,6 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
+#include <INTEGER.h>
 #include <OBJECT_IDENTIFIER.h>
 #include <OCTET_STRING.h>
 #include <limits.h>	/* for CHAR_BIT */
@@ -649,12 +650,13 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	long *arcs, unsigned int arcs_slots, const char **opt_oid_text_end) {
 	unsigned int arcs_count = 0;
 	const char *oid_end;
-	long value = 0;
+	const char *value_start;
 	enum {
-		ST_SKIPSPACE,
+		ST_LEADSPACE,
+		ST_TAILSPACE,
 		ST_WAITDIGITS,	/* Next character is expected to be a digit */
-		ST_DIGITS
-	} state = ST_SKIPSPACE;
+		ST_DIGITS	/* INVARIANT: value_start != 0 in this state */
+	} state = ST_LEADSPACE;
 
 	if(!oid_text || oid_txt_length < -1 || (arcs_slots && !arcs)) {
 		if(opt_oid_text_end) *opt_oid_text_end = oid_text;
@@ -665,42 +667,70 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	if(oid_txt_length == -1)
 		oid_txt_length = strlen(oid_text);
 
+#define	_OID_CAPTURE_ARC(value_start, oid_text)		do {	\
+	long value;						\
+	switch(asn_strtol(value_start, oid_text, &value)) {	\
+	case ASN_STRTOL_OK:					\
+		if(arcs_count < arcs_slots)			\
+			arcs[arcs_count] = value;		\
+		arcs_count++;					\
+		break;						\
+	case ASN_STRTOL_ERROR_RANGE:				\
+		if(opt_oid_text_end)				\
+			*opt_oid_text_end = oid_text;		\
+		errno = ERANGE;					\
+		return -1;					\
+	case ASN_STRTOL_ERROR_INVAL:				\
+		if(opt_oid_text_end)				\
+			*opt_oid_text_end = oid_text;		\
+		errno = EINVAL;					\
+		return -1;					\
+	}							\
+  } while(0)
+
 	for(oid_end = oid_text + oid_txt_length; oid_text<oid_end; oid_text++) {
 	    switch(*oid_text) {
 	    case 0x09: case 0x0a: case 0x0d: case 0x20:	/* whitespace */
-		if(state == ST_SKIPSPACE) {
+		switch(state) {
+		case ST_LEADSPACE:
+		case ST_TAILSPACE:
 			continue;
-		} else {
-			break;	/* Finish */
-		}
-	    case 0x2e:	/* '.' */
-		if(state != ST_DIGITS
-		|| (oid_text + 1) == oid_end) {
-			state = ST_WAITDIGITS;
+		case ST_DIGITS:
+			_OID_CAPTURE_ARC(value_start, oid_text);
+			state = ST_TAILSPACE;
+			continue;
+		case ST_WAITDIGITS:
 			break;
 		}
-		if(arcs_count < arcs_slots)
-			arcs[arcs_count] = value;
-		arcs_count++;
-		state = ST_WAITDIGITS;
-		continue;
-	    case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
-	    case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
-		if(state != ST_DIGITS) {
-			state = ST_DIGITS;
-			value = 0;
-		}
-		if(1) {
-			long volatile new_value = value * 10;
-			/* GCC 4.x is being too smart without volatile */
-			if(new_value / 10 != value
-			|| (value = new_value + (*oid_text - 0x30)) < 0) {
-				/* Overflow */
-				state = ST_WAITDIGITS;
-				break;
-			}
+	    case 0x2e:	/* '.' */
+		switch(state) {
+		case ST_LEADSPACE:
+		case ST_WAITDIGITS:
+			break;
+		case ST_TAILSPACE:
+			state = ST_WAITDIGITS;
+			break;
+		case ST_DIGITS:
+			_OID_CAPTURE_ARC(value_start, oid_text);
+			state = ST_WAITDIGITS;
 			continue;
 		}
+		break;
+	    case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
+	    case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+		switch(state) {
+		case ST_TAILSPACE:
+			state = ST_WAITDIGITS;
+			break;
+		case ST_LEADSPACE:
+		case ST_WAITDIGITS:
+			state = ST_DIGITS;
+			value_start = oid_text;
+			continue;
+		case ST_DIGITS:
+			continue;
+		}
+		break;
 	    default:
 		/* Unexpected symbols */
 		state = ST_WAITDIGITS;
@@ -714,14 +744,14 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 
 	/* Finalize last arc */
 	switch(state) {
+	case ST_LEADSPACE:
 	case ST_WAITDIGITS:
 		errno = EINVAL;
 		return -1;
 	case ST_DIGITS:
-		if(arcs_count < arcs_slots)
-			arcs[arcs_count] = value;
-		arcs_count++;
+		_OID_CAPTURE_ARC(value_start, oid_text);
 		/* Fall through */
+	case ST_TAILSPACE:
 	default:
 		return arcs_count;
 	}

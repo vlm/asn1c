@@ -249,8 +249,10 @@ static void check_xer(int expect_arcs, char *xer) {
 		&asn_DEF_RELATIVE_OID, (void **)stp, "t",
 			xer, strlen(xer));
 	if(expect_arcs == -1) {
-		if(rc.code != RC_OK)
+		if(rc.code != RC_OK) {
+			printf("-1\n");
 			return;
+		}
 	}
 	assert(rc.code == RC_OK);
 
@@ -381,17 +383,27 @@ main() {
 	CHECK_REGEN_OID(19);
 	CHECK_REGEN_OID(20);
 
-	check_parse("", 0);
-	check_parse(" ", 0);
-	check_parse(" ", 0);
+	check_parse("", -1);
+	check_parse(" ", -1);
+	check_parse(" ", -1);
 	check_parse(".", -1);
 	check_parse(" .", -1);
+	check_parse(".1", -1);
+	check_parse("1.", -1);
+	check_parse("1. ", -1);
+	check_parse(".1. ", -1);
+	check_parse(" .1. ", -1);
 	check_parse(" 1", 1);
 	check_parse(" 1.2", 2);
 	check_parse(" 1.", -1);
 	check_parse(" 1. ", -1);
 	check_parse("1. ", -1);
 	check_parse("1.2", 2);
+	check_parse("1.2 ", 2);
+	check_parse("1.2  ", 2);
+	check_parse("  1.2  ", 2);
+	check_parse("1. 2", -1);
+	check_parse("1 .2", -1);
 	check_parse("10.30.234.234", 4);
 	check_parse("10.30.234.234 ", 4);
 	check_parse("10.30.234. 234 ", -1);
@@ -414,7 +426,7 @@ main() {
 	check_parse("1.900a0000000.3", -1);
 	check_parse("1.900a.3", -1);
 
-	check_xer(0, "<t></t>");
+	check_xer(-1, "<t></t>");
 	check_xer(2, "<t>1.2</t>");
 	check_xer(3, "<t>1.2.3</t>");
 	check_xer(3, "<t> 1.2.3 </t>");
