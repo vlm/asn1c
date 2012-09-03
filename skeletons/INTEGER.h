@@ -58,7 +58,12 @@ int asn_long2INTEGER(INTEGER_t *i, long l);
 int asn_ulong2INTEGER(INTEGER_t *i, unsigned long l);
 
 /* A a reified version of strtol(3) with nicer error reporting. */
-int asn_strtol(const char *str, const char *end, long *l);
+enum asn_strtol_result_e {
+    ASN_STRTOL_ERROR_INVAL = -1,  /* Invalid input */
+    ASN_STRTOL_OK          =  0,  /* Conversion succeded */
+    ASN_STRTOL_ERROR_RANGE =  1,  /* Input out of range */
+};
+enum asn_strtol_result_e asn_strtol(const char *str, const char *end, long *l);
 
 /*
  * Convert the integer value into the corresponding enumeration map entry.

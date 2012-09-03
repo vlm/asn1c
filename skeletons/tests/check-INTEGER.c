@@ -216,6 +216,15 @@ main(int ac, char **av) {
 	check_xer(-1, "<INTEGER>-</INTEGER>", 0);
 	check_xer(-1, "<INTEGER>+</INTEGER>", 0);
 	check_xer(-1, "<INTEGER>+-</INTEGER>", 0);
+	check_xer(-1, "<INTEGER> -</INTEGER>", 0);
+	check_xer(-1, "<INTEGER> +</INTEGER>", 0);
+	check_xer(-1, "<INTEGER> +-</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>- </INTEGER>", 0);
+	check_xer(-1, "<INTEGER>+ </INTEGER>", 0);
+	check_xer(-1, "<INTEGER>+- </INTEGER>", 0);
+	check_xer(-1, "<INTEGER> - </INTEGER>", 0);
+	check_xer(-1, "<INTEGER> + </INTEGER>", 0);
+	check_xer(-1, "<INTEGER> +- </INTEGER>", 0);
 	check_xer(0, "<INTEGER>+0</INTEGER>", 0);
 	check_xer(0, "<INTEGER>-0</INTEGER>", 0);
 	check_xer(0, "<INTEGER>+1</INTEGER>", 1);
@@ -232,6 +241,8 @@ main(int ac, char **av) {
 	check_xer(-1, "<INTEGER> +15 1</INTEGER>", 0);
 	check_xer(-1, "<INTEGER>+ 15</INTEGER>", 0);
 	check_xer(-1, "<INTEGER>12<z>34</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>12 <z>34</INTEGER>", 0);
+	check_xer(-1, "<INTEGER>12 <z></INTEGER>", 0);
 	check_xer(0, "<INTEGER>1234</INTEGER>", 1234);
 	check_xer(-1, "<INTEGER>1234 5678</INTEGER>", 0);
 	check_xer(0, "<INTEGER>-2147483647</INTEGER>", -2147483647);
