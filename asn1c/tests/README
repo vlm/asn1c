@@ -1,9 +1,9 @@
 
 The name of the check-N.c file is used as a pointer to the file
-../../tests/N-*.asn1. This ASN.1 file is compiled using the asn1c compiler
-from the above directory. After that, everything is coompiled together
-in a temporary directory with a check-N.c used as a testing engine.
+../../tests/N-*.asn1. That ASN.1 file is compiled together with check-N.c
+in a temporary directory. The check-N.c file contains the test engine.
 
-For manual execution of a specific test case, use the following pattern:
+For manual execution of a specific test case:
 
 	./check-assembly.sh check-<NN>.c
+
