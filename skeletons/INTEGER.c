@@ -337,6 +337,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		ST_DIGITS_TRAILSPACE,
 		ST_HEXDIGIT1,
 		ST_HEXDIGIT2,
+		ST_HEXDIGITS_TRAILSPACE,
 		ST_HEXCOLON,
 		ST_END_ENUM,
 		ST_UNEXPECTED
@@ -362,17 +363,15 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 			switch(state) {
 			case ST_LEADSPACE:
 			case ST_DIGITS_TRAILSPACE:
+			case ST_HEXDIGITS_TRAILSPACE:
 			case ST_SKIPSPHEX:
 				continue;
-			case ST_HEXCOLON:
-				if(xer_is_whitespace(lp, lstop - lp)) {
-					lp = lstop - 1;
-					continue;
-				}
-				break;
 			case ST_DIGITS:
 				dec_value_end = lp;
 				state = ST_DIGITS_TRAILSPACE;
+				continue;
+			case ST_HEXCOLON:
+				state = ST_HEXDIGITS_TRAILSPACE;
 				continue;
 			default:
 				break;
@@ -512,6 +511,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		}
 		break;
 	case ST_HEXCOLON:
+	case ST_HEXDIGITS_TRAILSPACE:
 		st->buf[st->size] = 0;	/* Just in case termination */
 		return XPBD_BODY_CONSUMED;
 	case ST_HEXDIGIT1:
