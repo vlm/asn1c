@@ -13969,7 +13969,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files skeletons/standard-modules/Makefile skeletons/tests/Makefile libasn1compiler/Makefile libasn1parser/Makefile libasn1print/Makefile asn1c/webcgi/Makefile asn1c/tests/Makefile libasn1fix/Makefile doc/docsrc/Makefile skeletons/Makefile examples/Makefile tests/Makefile asn1c/Makefile doc/Makefile asn1c.spec Makefile"
+ac_config_files="$ac_config_files skeletons/standard-modules/Makefile skeletons/tests/Makefile libasn1compiler/Makefile libasn1parser/Makefile libasn1print/Makefile asn1c/tests/Makefile libasn1fix/Makefile doc/docsrc/Makefile skeletons/Makefile examples/Makefile tests/Makefile asn1c/Makefile doc/Makefile asn1c.spec Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -14867,7 +14867,6 @@ do
     "libasn1compiler/Makefile") CONFIG_FILES="$CONFIG_FILES libasn1compiler/Makefile" ;;
     "libasn1parser/Makefile") CONFIG_FILES="$CONFIG_FILES libasn1parser/Makefile" ;;
     "libasn1print/Makefile") CONFIG_FILES="$CONFIG_FILES libasn1print/Makefile" ;;
-    "asn1c/webcgi/Makefile") CONFIG_FILES="$CONFIG_FILES asn1c/webcgi/Makefile" ;;
     "asn1c/tests/Makefile") CONFIG_FILES="$CONFIG_FILES asn1c/tests/Makefile" ;;
     "libasn1fix/Makefile") CONFIG_FILES="$CONFIG_FILES libasn1fix/Makefile" ;;
     "doc/docsrc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/docsrc/Makefile" ;;

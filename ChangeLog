@@ -11,6 +11,7 @@
 	* ENUMERATED extension values check relaxed. Reported by Gabriel Burca.
 	* Fixed decimal decoding of REAL values in -fnative-types mode
 	  (Severity: medium; Security impact: medium)
+	* Removed webcgi subproject (introduced in 2004) as inconsequential.
 
 0.9.22:	2008-Nov-19
 

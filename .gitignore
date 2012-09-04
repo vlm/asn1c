@@ -29,10 +29,6 @@
 /asn1c/tests/Makefile
 /asn1c/tests/test-*
 
-# /asn1c/webcgi/
-/asn1c/webcgi/Makefile
-/asn1c/webcgi/asn1c-suid-helper
-
 # /doc/
 /doc/Makefile
 

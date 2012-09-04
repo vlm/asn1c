@@ -263,7 +263,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = . webcgi tests
+SUBDIRS = . tests
 AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS = \
 	-I${top_srcdir}/libasn1compiler	\

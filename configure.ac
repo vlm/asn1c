@@ -70,7 +70,6 @@ skeletons/tests/Makefile		\
 libasn1compiler/Makefile		\
 libasn1parser/Makefile			\
 libasn1print/Makefile			\
-asn1c/webcgi/Makefile			\
 asn1c/tests/Makefile			\
 libasn1fix/Makefile			\
 doc/docsrc/Makefile			\

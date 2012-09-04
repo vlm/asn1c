@@ -1,5 +1,5 @@
 
-SUBDIRS = . webcgi tests
+SUBDIRS = . tests
 
 AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS = \
