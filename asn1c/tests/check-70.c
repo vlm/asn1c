@@ -2,7 +2,7 @@
  * Mode of operation:
  * Each of the *.in files is XER-decoded, then converted into DER,
  * then decoded from DER and encoded into XER again. The resulting
- * stream is compared with the corresponding .out file.
+ * stream is checked against rules specified in ../data-70/README file.
  */
 #undef	NDEBUG
 #include <stdio.h>
