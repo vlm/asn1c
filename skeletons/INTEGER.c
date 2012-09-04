@@ -518,7 +518,11 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 	case ST_HEXDIGIT2:
 	case ST_SKIPSPHEX:
 		return XPBD_BROKEN_ENCODING;
-	default:
+	case ST_LEADSPACE:
+		/* Content not found */
+		return XPBD_NOT_BODY_IGNORE;
+	case ST_WAITDIGITS:
+	case ST_UNEXPECTED:
 		ASN_DEBUG("INTEGER: No useful digits (state %d)", state);
 		return XPBD_BROKEN_ENCODING;	/* No digits */
 	}
