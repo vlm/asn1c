@@ -106,14 +106,12 @@ RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void 
 		(const char *)chunk_buf, chunk_size,
 		arcs, sizeof(s_arcs)/sizeof(s_arcs[0]), &endptr);
 	if(arcs_count < 0) {
-		/* Expecting at least zero arcs */
+		/* Expecting at least one arc arcs */
 		return XPBD_BROKEN_ENCODING;
+	} else if(arcs_count == 0) {
+		return XPBD_NOT_BODY_IGNORE;
 	}
-	if(endptr < chunk_end) {
-		/* We have a tail of unrecognized data. Check its safety. */
-		if(!xer_is_whitespace(endptr, chunk_end - endptr))
-			return XPBD_BROKEN_ENCODING;
-	}
+	assert(endptr == chunk_end);
 
 	if((size_t)arcs_count > sizeof(s_arcs)/sizeof(s_arcs[0])) {
 		arcs = (long *)MALLOC(arcs_count * sizeof(long));

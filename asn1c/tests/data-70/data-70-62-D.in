@@ -1,0 +1,9 @@
+<PDU>
+	<set>
+		<roid>
+			<!-- This is a special comment -->
+			123.456.789.101112
+			<!-- This is a special comment too -->
+		</roid>
+	</set>
+</PDU>

@@ -282,15 +282,13 @@ OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const 
 	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
 		(const char *)chunk_buf, chunk_size, arcs,
 			sizeof(s_arcs)/sizeof(s_arcs[0]), &endptr);
-	if(arcs_count <= 0) {
+	if(arcs_count < 0) {
 		/* Expecting more than zero arcs */
 		return XPBD_BROKEN_ENCODING;
+	} else if(arcs_count == 0) {
+		return XPBD_NOT_BODY_IGNORE;
 	}
-	if(endptr < chunk_end) {
-		/* We have a tail of unrecognized data. Check its safety. */
-		if(!xer_is_whitespace(endptr, chunk_end - endptr))
-			return XPBD_BROKEN_ENCODING;
-	}
+	assert(endptr == chunk_end);
 
 	if((size_t)arcs_count > sizeof(s_arcs)/sizeof(s_arcs[0])) {
 		arcs = (long *)MALLOC(arcs_count * sizeof(long));
@@ -745,16 +743,19 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	/* Finalize last arc */
 	switch(state) {
 	case ST_LEADSPACE:
-	case ST_WAITDIGITS:
-		errno = EINVAL;
-		return -1;
+		return 0; /* No OID found in input data */
 	case ST_DIGITS:
 		_OID_CAPTURE_ARC(value_start, oid_text);
-		/* Fall through */
+		return arcs_count;
+	case ST_WAITDIGITS:
+		errno = EINVAL;	/* Broken OID */
+		return -1;
 	case ST_TAILSPACE:
-	default:
 		return arcs_count;
 	}
+
+	errno = EINVAL;	/* Broken OID */
+	return -1;
 }
 
 
