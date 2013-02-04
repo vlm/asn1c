@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
-#include <sysexits.h>
 
 #ifdef	_WIN32
 #define setuid(s)
@@ -12,6 +11,12 @@
 #define setgid(s)
 #define getgid()
 #define chroot(p) (-1)
+#define EX_USAGE        64
+#define EX_DATAERR      65
+#define EX_UNAVAILABLE  69
+#define EX_OSERR        71
+#else
+#include <sysexits.h>
 #endif
 
 /*
