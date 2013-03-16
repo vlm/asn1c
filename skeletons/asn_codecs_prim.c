@@ -186,9 +186,10 @@ static ssize_t
 xer_decode__primitive_body(void *key, const void *chunk_buf, size_t chunk_size, int have_more) {
 	struct xdp_arg_s *arg = (struct xdp_arg_s *)key;
 	enum xer_pbd_rval bret;
+	size_t lead_wsp_size;
 
 	if(arg->decoded_something) {
-		if(xer_is_whitespace(chunk_buf, chunk_size)) {
+		if(xer_whitespace_span(chunk_buf, chunk_size) == chunk_size) {
 			/*
 			 * Example:
 			 * "<INTEGER>123<!--/--> </INTEGER>"
@@ -215,6 +216,10 @@ xer_decode__primitive_body(void *key, const void *chunk_buf, size_t chunk_size, 
 		return -1;
 	}
 
+	lead_wsp_size = xer_whitespace_span(chunk_buf, chunk_size);
+	chunk_buf += lead_wsp_size;
+	chunk_size -= lead_wsp_size;
+
 	bret = arg->prim_body_decoder(arg->type_descriptor,
 		arg->struct_key, chunk_buf, chunk_size);
 	switch(bret) {
@@ -227,7 +232,7 @@ xer_decode__primitive_body(void *key, const void *chunk_buf, size_t chunk_size, 
 		arg->decoded_something = 1;
 		/* Fall through */
 	case XPBD_NOT_BODY_IGNORE:	/* Safe to proceed further */
-		return chunk_size;
+		return lead_wsp_size + chunk_size;
 	}
 
 	return -1;

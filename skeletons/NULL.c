@@ -74,10 +74,13 @@ NULL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_b
 	(void)td;
 	(void)sptr;
 
-	if(xer_is_whitespace(chunk_buf, chunk_size))
-		return XPBD_BODY_CONSUMED;
-	else
+	/*
+	 * There must be no content in self-terminating <NULL/> tag.
+	 */
+	if(chunk_size)
 		return XPBD_BROKEN_ENCODING;
+	else
+		return XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t

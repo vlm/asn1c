@@ -161,10 +161,7 @@ BOOLEAN__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		}
 		return XPBD_BODY_CONSUMED;
 	} else {
-		if(xer_is_whitespace(chunk_buf, chunk_size))
-			return XPBD_NOT_BODY_IGNORE;
-		else
-			return XPBD_BROKEN_ENCODING;
+		return XPBD_BROKEN_ENCODING;
 	}
 }
 

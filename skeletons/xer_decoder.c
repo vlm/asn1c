@@ -316,8 +316,8 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 }
 
 
-int
-xer_is_whitespace(const void *chunk_buf, size_t chunk_size) {
+size_t
+xer_whitespace_span(const void *chunk_buf, size_t chunk_size) {
 	const char *p = (const char *)chunk_buf;
 	const char *pend = p + chunk_size;
 
@@ -330,12 +330,13 @@ xer_is_whitespace(const void *chunk_buf, size_t chunk_size) {
 		 * SPACE (32)
 		 */
 		case 0x09: case 0x0a: case 0x0d: case 0x20:
-			break;
+			continue;
 		default:
-			return 0;
+			break;
 		}
+		break;
 	}
-	return 1;       /* All whitespace */
+	return (p - (const char *)chunk_buf);
 }
 
 /*
