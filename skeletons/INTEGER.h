@@ -59,10 +59,15 @@ int asn_ulong2INTEGER(INTEGER_t *i, unsigned long l);
 
 /* A a reified version of strtol(3) with nicer error reporting. */
 enum asn_strtol_result_e {
-    ASN_STRTOL_ERROR_INVAL = -1,  /* Invalid input */
-    ASN_STRTOL_OK          =  0,  /* Conversion succeded */
-    ASN_STRTOL_ERROR_RANGE =  1,  /* Input out of range */
+    ASN_STRTOL_ERROR_RANGE = -3,  /* Input outside of numeric range for long type */
+    ASN_STRTOL_ERROR_INVAL = -2,  /* Invalid data encountered (e.g., "+-") */
+    ASN_STRTOL_EXPECT_MORE = -1,  /* More data expected (e.g. "+") */
+    ASN_STRTOL_OK          =  0,  /* Conversion succeded, number ends at (*end) */
+    ASN_STRTOL_EXTRA_DATA  =  1,  /* Conversion succeded, but the string has extra stuff */
 };
+enum asn_strtol_result_e asn_strtol_lim(const char *str, const char **end, long *l);
+
+/* The asn_strtol is going to be DEPRECATED soon */
 enum asn_strtol_result_e asn_strtol(const char *str, const char *end, long *l);
 
 /*

@@ -228,7 +228,8 @@ check_speed() {
 static void check_parse(const char *oid_txt, int retval) {
 	int ret;
 	long l[2];
-	const char *p;
+	const char *p = oid_txt - 13;
+	assert(p < oid_txt);
 
 	ret = OBJECT_IDENTIFIER_parse_arcs(oid_txt, -1, l, 2, &p);
 	printf("[%s] => %d == %d\n", oid_txt, ret, retval);
@@ -266,6 +267,7 @@ static void check_xer(int expect_arcs, char *xer) {
 	for(i = 0; i < ret; i++) {
 		if(i) printf(".");
 		printf("%ld", arcs[i]);
+		if(arcs[i] != i + 1) printf(" != %d\n", i + 1);
 		assert(arcs[i] == i + 1);
 	}
 	printf(": %d == %d\n", ret, expect_arcs);
@@ -383,9 +385,8 @@ main() {
 	CHECK_REGEN_OID(19);
 	CHECK_REGEN_OID(20);
 
-	check_parse("", -1);
-	check_parse(" ", -1);
-	check_parse(" ", -1);
+	check_parse("", 0);
+	check_parse(" ", 0);
 	check_parse(".", -1);
 	check_parse(" .", -1);
 	check_parse(".1", -1);
@@ -404,6 +405,10 @@ main() {
 	check_parse("  1.2  ", 2);
 	check_parse("1. 2", -1);
 	check_parse("1 .2", -1);
+	check_parse(" 1 .2", -1);
+	check_parse(" 1 .2 ", -1);
+	check_parse("1 .2 ", -1);
+	check_parse("1.+1", -1);
 	check_parse("10.30.234.234", 4);
 	check_parse("10.30.234.234 ", 4);
 	check_parse("10.30.234. 234 ", -1);

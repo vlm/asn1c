@@ -499,14 +499,17 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		break;
 	case ST_DIGITS:
 		dec_value_end = lstop;
+		/* FALL THROUGH */
 	case ST_DIGITS_TRAILSPACE:
 		/* The last symbol encountered was a digit. */
-		switch(asn_strtol(dec_value_start, dec_value_end, &dec_value)) {
+		switch(asn_strtol_lim(dec_value_start, &dec_value_end, &dec_value)) {
 		case ASN_STRTOL_OK:
 			break;
 		case ASN_STRTOL_ERROR_RANGE:
 			return XPBD_DECODER_LIMIT;
 		case ASN_STRTOL_ERROR_INVAL:
+		case ASN_STRTOL_EXPECT_MORE:
+		case ASN_STRTOL_EXTRA_DATA:
 			return XPBD_BROKEN_ENCODING;
 		}
 		break;
@@ -950,15 +953,44 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 	return 0;
 }
 
+/*
+ * This function is going to be DEPRECATED soon.
+ */
 enum asn_strtol_result_e
 asn_strtol(const char *str, const char *end, long *lp) {
+    const char *endp = end;
+
+    switch(asn_strtol_lim(str, &endp, lp)) {
+    case ASN_STRTOL_ERROR_RANGE:
+        return ASN_STRTOL_ERROR_RANGE;
+    case ASN_STRTOL_ERROR_INVAL:
+        return ASN_STRTOL_ERROR_INVAL;
+    case ASN_STRTOL_EXPECT_MORE:
+        return ASN_STRTOL_ERROR_INVAL;  /* Retain old behavior */
+    case ASN_STRTOL_OK:
+        return ASN_STRTOL_OK;
+    case ASN_STRTOL_EXTRA_DATA:
+        return ASN_STRTOL_ERROR_INVAL;  /* Retain old behavior */
+    }
+
+    return ASN_STRTOL_ERROR_INVAL;  /* Retain old behavior */
+}
+
+/*
+ * Parse the number in the given string until the given *end position,
+ * returning the position after the last parsed character back using the
+ * same (*end) pointer.
+ * WARNING: This behavior is different from the standard strtol(3).
+ */
+enum asn_strtol_result_e
+asn_strtol_lim(const char *str, const char **end, long *lp) {
 	int sign = 1;
 	long l;
 
 	const long upper_boundary = LONG_MAX / 10;
 	long last_digit_max = LONG_MAX % 10;
 
-	if(str >= end) return ASN_STRTOL_ERROR_INVAL;
+	if(str >= *end) return ASN_STRTOL_ERROR_INVAL;
 
 	switch(*str) {
 	case '-':
@@ -966,11 +998,13 @@ asn_strtol(const char *str, const char *end, long *lp) {
 		sign = -1;
 	case '+':
 		str++;
+		if(str >= *end) {
+			*end = str;
+			return ASN_STRTOL_EXPECT_MORE;
+		}
 	}
 
-	if(str >= end) return ASN_STRTOL_ERROR_INVAL;
-
-	for(l = 0; str < end; str++) {
+	for(l = 0; str < (*end); str++) {
 		switch(*str) {
 		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
 		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39: {
@@ -986,18 +1020,23 @@ asn_strtol(const char *str, const char *end, long *lp) {
 						l = -l * 10 - d;
 					}
 				} else {
+					*end = str;
 					return ASN_STRTOL_ERROR_RANGE;
 				}
 			} else {
+				*end = str;
 				return ASN_STRTOL_ERROR_RANGE;
 			}
 		    }
 		    continue;
 		default:
-			return ASN_STRTOL_ERROR_INVAL;
+		    *end = str;
+		    *lp = sign * l;
+		    return ASN_STRTOL_EXTRA_DATA;
 		}
 	}
 
+	*end = str;
 	*lp = sign * l;
 	return ASN_STRTOL_OK;
 }

@@ -648,12 +648,11 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	long *arcs, unsigned int arcs_slots, const char **opt_oid_text_end) {
 	unsigned int arcs_count = 0;
 	const char *oid_end;
-	const char *value_start;
 	enum {
 		ST_LEADSPACE,
 		ST_TAILSPACE,
+		ST_AFTERVALUE,	/* Next character ought to be '.' or a space */
 		ST_WAITDIGITS,	/* Next character is expected to be a digit */
-		ST_DIGITS	/* INVARIANT: value_start != 0 in this state */
 	} state = ST_LEADSPACE;
 
 	if(!oid_text || oid_txt_length < -1 || (arcs_slots && !arcs)) {
@@ -665,13 +664,16 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	if(oid_txt_length == -1)
 		oid_txt_length = strlen(oid_text);
 
-#define	_OID_CAPTURE_ARC(value_start, oid_text)		do {	\
+#define	_OID_CAPTURE_ARC(oid_text, oid_end)		do {	\
+	const char *endp = oid_end;				\
 	long value;						\
-	switch(asn_strtol(value_start, oid_text, &value)) {	\
+	switch(asn_strtol_lim(oid_text, &endp, &value)) {	\
+	case ASN_STRTOL_EXTRA_DATA:				\
 	case ASN_STRTOL_OK:					\
 		if(arcs_count < arcs_slots)			\
 			arcs[arcs_count] = value;		\
 		arcs_count++;					\
+		oid_text = endp - 1;				\
 		break;						\
 	case ASN_STRTOL_ERROR_RANGE:				\
 		if(opt_oid_text_end)				\
@@ -679,6 +681,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 		errno = ERANGE;					\
 		return -1;					\
 	case ASN_STRTOL_ERROR_INVAL:				\
+	case ASN_STRTOL_EXPECT_MORE:				\
 		if(opt_oid_text_end)				\
 			*opt_oid_text_end = oid_text;		\
 		errno = EINVAL;					\
@@ -693,23 +696,24 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 		case ST_LEADSPACE:
 		case ST_TAILSPACE:
 			continue;
-		case ST_DIGITS:
-			_OID_CAPTURE_ARC(value_start, oid_text);
+		case ST_AFTERVALUE:
 			state = ST_TAILSPACE;
 			continue;
 		case ST_WAITDIGITS:
-			break;
+			break;	/* Digits expected after ".", got whitespace */
 		}
+		break;
 	    case 0x2e:	/* '.' */
 		switch(state) {
 		case ST_LEADSPACE:
-		case ST_WAITDIGITS:
-			break;
 		case ST_TAILSPACE:
-			state = ST_WAITDIGITS;
+		case ST_WAITDIGITS:
+			if(opt_oid_text_end)
+				*opt_oid_text_end = oid_text;
+			errno = EINVAL;	/* Broken OID */
+			return -1;
 			break;
-		case ST_DIGITS:
-			_OID_CAPTURE_ARC(value_start, oid_text);
+		case ST_AFTERVALUE:
 			state = ST_WAITDIGITS;
 			continue;
 		}
@@ -718,14 +722,15 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	    case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
 		switch(state) {
 		case ST_TAILSPACE:
-			state = ST_WAITDIGITS;
-			break;
+		case ST_AFTERVALUE:
+			if(opt_oid_text_end)
+				*opt_oid_text_end = oid_text;
+			errno = EINVAL;	/* "1. 1" => broken OID */
+			return -1;
 		case ST_LEADSPACE:
 		case ST_WAITDIGITS:
-			state = ST_DIGITS;
-			value_start = oid_text;
-			continue;
-		case ST_DIGITS:
+			_OID_CAPTURE_ARC(oid_text, oid_end);
+			state = ST_AFTERVALUE;
 			continue;
 		}
 		break;
@@ -744,12 +749,10 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	switch(state) {
 	case ST_LEADSPACE:
 		return 0; /* No OID found in input data */
-	case ST_DIGITS:
-		_OID_CAPTURE_ARC(value_start, oid_text);
-		return arcs_count;
 	case ST_WAITDIGITS:
 		errno = EINVAL;	/* Broken OID */
 		return -1;
+	case ST_AFTERVALUE:
 	case ST_TAILSPACE:
 		return arcs_count;
 	}
