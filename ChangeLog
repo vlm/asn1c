@@ -1,5 +1,5 @@
 
-0.9.23:	2012-Sep-01
+0.9.24:	2013-Mar-16
 
 	* GeneralizedTime fix for working with time offsets which are not
 	  representable in whole hours. (Severity: low; Security impact: low)
@@ -11,7 +11,7 @@
 	* ENUMERATED extension values check relaxed. Reported by Gabriel Burca.
 	* Fixed decimal decoding of REAL values in -fnative-types mode
 	  (Severity: medium; Security impact: medium)
-	* Removed webcgi subproject (introduced in 2004) as inconsequential.
+	* Removed webcgi subproject (introduced in 2004) as useless.
 
 0.9.22:	2008-Nov-19
 
