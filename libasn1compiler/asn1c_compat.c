@@ -13,6 +13,17 @@
 #endif
 #endif
 
+#ifdef _WIN32
+int mkstemp(char *template) {
+	char *tmpFN = _mktemp(template);
+	if(tmpFN)
+		return open(tmpFN, O_CREAT | O_EXCL | O_WRONLY, DEFFILEMODE);
+	else
+		return -1;
+}
+#undef HAVE_MKSTEMPS
+#endif
+
 #ifdef	HAVE_MKSTEMPS
 #undef	mkstemp
 #define	mkstemp(foo)	mkstemps(foo, 0)
