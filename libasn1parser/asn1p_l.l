@@ -510,6 +510,9 @@ WITH			return TOK_WITH;
 	}
 
 
+"[["        return TOK_VBracketLeft;
+"]]"        return TOK_VBracketRight;
+
 [(){},;:|!.&@\[\]^]	return yytext[0];
 
 [^A-Za-z0-9:=,{}<.@()[]'\"|&^*;!-] {

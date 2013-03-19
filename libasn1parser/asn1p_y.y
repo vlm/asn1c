@@ -124,6 +124,7 @@ static asn1p_module_t *currentModule;
  * Token types returned by scanner.
  */
 %token			TOK_PPEQ	/* "::=", Pseudo Pascal EQuality */
+%token			TOK_VBracketLeft TOK_VBracketRight	/* "[[", "]]" */
 %token	<tv_opaque>	TOK_whitespace	/* A span of whitespace */
 %token	<tv_opaque>	TOK_opaque	/* opaque data (driven from .y) */
 %token	<tv_str>	TOK_bstring
@@ -969,6 +970,10 @@ ComponentTypeLists:
 	| ComponentTypeLists ',' ComponentType {
 		$$ = $1;
 		asn1p_expr_add($$, $3);
+	}
+	| ComponentTypeLists ',' TOK_VBracketLeft ComponentTypeLists TOK_VBracketRight {
+        $$ = $1;
+		asn1p_expr_add_many($$, $4);
 	}
 	;
 

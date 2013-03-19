@@ -278,6 +278,7 @@ asn1p_expr_t *asn1p_expr_clone_with_resolver(asn1p_expr_t *,
 	asn1p_expr_t *(*resolver)(asn1p_expr_t *to_resolve, void *resolver_arg),
 	void *resolver_arg);
 void asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what);
+void asn1p_expr_add_many(asn1p_expr_t *to, asn1p_expr_t *from_what);
 void asn1p_expr_free(asn1p_expr_t *expr);
 
 #define	TAG2STRING_BUFFER_SIZE	64	/* buf should be at least this big */

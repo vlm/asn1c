@@ -45,6 +45,14 @@
         (head)->tq_tail = &TQ_NEXT((__el), field);	\
 	} while(0)
 
+#define	TQ_CONCAT(head1, head2, field) do {		\
+	if(TQ_FIRST(head2)) {				\
+		*(head1)->tq_tail = (head2)->tq_head;	\
+		(head1)->tq_tail = (head2)->tq_tail;	\
+		TQ_INIT(head2);				\
+	}						\
+	} while(0)
+
 /*
  * Remove the first element and return it.
  */
