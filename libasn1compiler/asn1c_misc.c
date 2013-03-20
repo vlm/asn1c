@@ -9,14 +9,20 @@
  * ISO/IEC 9899:1999 (C99), A.1.2
  */
 static char *res_kwd[] = {
-	"const", "auto", "register", "volatile", "restrict", "extern",
-	"static", "inline",
-	"signed", "unsigned",
-	"void", "char", "short", "int", "long", "float", "double",
-	"enum", "union", "struct", "typedef", "class",
-	"switch", "case", "default", "break", "continue",
-	"if", "else", "do", "for", "while", "goto",
-	"sizeof", "return"
+	"auto", "break", "case", "char", "const", "continue", "default",
+	"do", "double", "else", "enum", "extern", "float", "for", "goto",
+	"if", "inline", "int", "long", "register", "restrict", "return",
+	"short", "signed", "sizeof", "static", "struct", "switch", "typedef",
+	"union", "unsigned", "void", "volatile", "while",
+	"_Bool", "_Complex", "_Imaginary",
+	/* C++ */
+	"explicit", "bool", "mutable", 
+	"template", "typeid", "typename", "and", "and_eq", 
+	"or", "or_eq", "xor", "xor_eq", "not", "not_eq",
+	"bitor", "compl", "bitand",
+	"const_cast", "dynamic_cast", "reinterpret_cast",
+	"static_cast", "true", "false", "namespace", "using",
+	"throw", "try", "catch"
 };
 static int
 reserved_keyword(const char *str) {
