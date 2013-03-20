@@ -360,7 +360,9 @@ per_skip_bits(asn_per_data_t *pd, int skip_nbits) {
 	int hasNonZeroBits = 0;
 	while(skip_nbits > 0) {
 		int skip;
-		if(skip_nbits < skip)
+
+		/* per_get_few_bits() is more efficient when nbits <= 24 */
+		if(skip_nbits < 24)
 			skip = skip_nbits;
 		else
 			skip = 24;
