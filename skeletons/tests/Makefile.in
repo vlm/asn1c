@@ -37,7 +37,8 @@ check_PROGRAMS = check-ber_tlv_tag$(EXEEXT) check-length$(EXEEXT) \
 	check-OIDs$(EXEEXT) check-GeneralizedTime$(EXEEXT) \
 	check-OCTET_STRING$(EXEEXT) check-UTF8String$(EXEEXT) \
 	check-UTCTime$(EXEEXT) check-INTEGER$(EXEEXT) \
-	check-REAL$(EXEEXT) check-XER$(EXEEXT) check-PER$(EXEEXT)
+	check-REAL$(EXEEXT) check-XER$(EXEEXT) check-PER$(EXEEXT) \
+	check-PER-INTEGER$(EXEEXT)
 subdir = skeletons/tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -71,6 +72,10 @@ check_PER_SOURCES = check-PER.c
 check_PER_OBJECTS = check-PER.$(OBJEXT)
 check_PER_LDADD = $(LDADD)
 check_PER_DEPENDENCIES =
+check_PER_INTEGER_SOURCES = check-PER-INTEGER.c
+check_PER_INTEGER_OBJECTS = check-PER-INTEGER.$(OBJEXT)
+check_PER_INTEGER_LDADD = $(LDADD)
+check_PER_INTEGER_DEPENDENCIES =
 check_REAL_SOURCES = check-REAL.c
 check_REAL_OBJECTS = check-REAL.$(OBJEXT)
 check_REAL_LDADD = $(LDADD)
@@ -109,13 +114,14 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = check-GeneralizedTime.c check-INTEGER.c check-OCTET_STRING.c \
-	check-OIDs.c check-PER.c check-REAL.c check-UTCTime.c \
-	check-UTF8String.c check-XER.c check-ber_tlv_tag.c \
-	check-length.c
-DIST_SOURCES = check-GeneralizedTime.c check-INTEGER.c \
-	check-OCTET_STRING.c check-OIDs.c check-PER.c check-REAL.c \
+	check-OIDs.c check-PER.c check-PER-INTEGER.c check-REAL.c \
 	check-UTCTime.c check-UTF8String.c check-XER.c \
 	check-ber_tlv_tag.c check-length.c
+DIST_SOURCES = check-GeneralizedTime.c check-INTEGER.c \
+	check-OCTET_STRING.c check-OIDs.c check-PER.c \
+	check-PER-INTEGER.c check-REAL.c check-UTCTime.c \
+	check-UTF8String.c check-XER.c check-ber_tlv_tag.c \
+	check-length.c
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -298,6 +304,9 @@ check-OIDs$(EXEEXT): $(check_OIDs_OBJECTS) $(check_OIDs_DEPENDENCIES)
 check-PER$(EXEEXT): $(check_PER_OBJECTS) $(check_PER_DEPENDENCIES) 
 	@rm -f check-PER$(EXEEXT)
 	$(LINK) $(check_PER_OBJECTS) $(check_PER_LDADD) $(LIBS)
+check-PER-INTEGER$(EXEEXT): $(check_PER_INTEGER_OBJECTS) $(check_PER_INTEGER_DEPENDENCIES) 
+	@rm -f check-PER-INTEGER$(EXEEXT)
+	$(LINK) $(check_PER_INTEGER_OBJECTS) $(check_PER_INTEGER_LDADD) $(LIBS)
 check-REAL$(EXEEXT): $(check_REAL_OBJECTS) $(check_REAL_DEPENDENCIES) 
 	@rm -f check-REAL$(EXEEXT)
 	$(LINK) $(check_REAL_OBJECTS) $(check_REAL_LDADD) $(LIBS)
@@ -327,6 +336,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-INTEGER.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-OCTET_STRING.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-OIDs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-PER-INTEGER.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-PER.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-REAL.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check-UTCTime.Po@am__quote@

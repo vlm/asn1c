@@ -74,17 +74,7 @@ doc/docsrc/*.xdv
 
 # /skeletons/tests/
 /skeletons/tests/Makefile
-/skeletons/tests/check-OCTET_STRING
-/skeletons/tests/check-UTCTime
-/skeletons/tests/check-length
-/skeletons/tests/check-REAL
-/skeletons/tests/check-GeneralizedTime
-/skeletons/tests/check-UTF8String
-/skeletons/tests/check-PER
-/skeletons/tests/check-ber_tlv_tag
-/skeletons/tests/check-INTEGER
-/skeletons/tests/check-OIDs
-/skeletons/tests/check-XER
+/skeletons/tests/check-*
 
 # /tests/
 /tests/Makefile

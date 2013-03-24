@@ -11,7 +11,8 @@ check_PROGRAMS = \
 	check-INTEGER		\
 	check-REAL		\
 	check-XER		\
-	check-PER
+	check-PER		\
+	check-PER-INTEGER
 
 AM_LDFLAGS = $(top_srcdir)/skeletons/libasn1cskeletons.la
 LDADD = -lm
