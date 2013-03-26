@@ -3,58 +3,88 @@
 \usepackage{xunicode}
 \usepackage{xltxtra}
 
-\usepackage[hmargin={1in,1in},vmargin={2in,2in}]{geometry}
+\usepackage[hmargin={1in,1in},vmargin={1.5in,1.5in}]{geometry}
 
 \defaultfontfeatures{Mapping=tex-text}
-\setmainfont{Myriad Pro}
-\setsansfont{Myriad Pro}
+\setmainfont{PT Sans}
+\setsansfont{PT Sans}
 \setmonofont{Consolas}
 
 \usepackage{fancyhdr}
-\pagestyle{fancy}
 \usepackage{longtable}
 \usepackage{booktabs}
 \usepackage{varioref}
 \usepackage{url}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{setspace}
+
+\setstretch{1.1}
+
+% Courier 10 Pitch
+\def\courierFont{Courier10 BT WGL4}
+%\def\courierFont{Consolas}
+\setmonofont[Scale=1.05]{\courierFont}
+
 
 \makeatletter
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
-%% Because html converters don't know tabularnewline
-\providecommand{\tabularnewline}{\\}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
-\newenvironment{lyxcode}
-{\par\begin{list}{}{
-\setlength{\rightmargin}{\leftmargin}
-\setlength{\listparindent}{0pt}% needed for AMS classes
-\raggedright
-\setlength{\itemsep}{0pt}
-\setlength{\parsep}{0pt}
-\normalfont\ttfamily}%
- \item[]}
-{\end{list}}
+\lstloadlanguages{C,bash}
+\newfontfamily\listingfont[Scale=1.05]{\courierFont}
+\newfontfamily\inlinelistingfont[Scale=1.05]{\courierFont}
+\definecolor{clrlcomment}{gray}{0.3}
+\definecolor{clrlkeyword}{rgb}{0.588,0.145,0.18}
+\newcommand{\listingkeyword}[1]{\color{clrlkeyword}{#1}}
+\newcommand{\listingstring}[1]{\color{clrlcomment}{#1}}
+\newcommand{\listingcomment}[1]{\color{clrlcomment}{#1}}
+\lstset{tabsize=4,
+  showstringspaces=false, 
+  showtabs=false, 
+  showspaces=false, 
+  keywordstyle=\listingkeyword,
+  stringstyle=\listingstring,
+  commentstyle=\listingcomment,
+  xleftmargin=\parindent,
+  columns=fixed,
+  escapechar=\%,
+  texcl
+}
+\lstdefinestyle{listingStyle}{
+        basicstyle=\small\listingfont,
+        stringstyle=\listingstring,
+        breaklines=true,
+        breakatwhitespace=true,
+        flexiblecolumns=false
+        }
+\lstdefinelanguage{asn1}{
+	morekeywords={DEFINITIONS,BEGIN,END,SEQUENCE,SET,OF,CHOICE,OPTIONAL},
+	morecomment=[l]{--},
+	morecomment=[n]{/*}{*/}
+        }
+
+\lstnewenvironment{codesample}[1][]{\lstset{style=listingStyle,language=C,#1}}{}
+\lstnewenvironment{bash}[1][]{\lstset{style=listingStyle,morekeywords={-fnative-types},language=bash,#1}}{}
+\lstnewenvironment{asn}[1][]{\lstset{style=listingStyle,language=asn1,#1}}{}
+\def\code{lstinline}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
 \usepackage{extramarks}
 \lhead{\firstxmark}
 \rfoot{\lastxmark}
-\usepackage{color}
-\definecolor{linkred}{rgb}{0.8235,0.0863,0.1843}
-\definecolor{urlblue}{rgb}{0,0,.6}
+\definecolor{clrlink}{rgb}{0,0.4,0}
+\definecolor{clrurl}{rgb}{0,0,.6}
 \usepackage[colorlinks=true,
-linkcolor={linkred},
-urlcolor={urlblue},
-pdfauthor={Lev Walkin},
-pdftitle={Using the Open Source ASN.1 Compiler},
-pdfkeywords={ASN.1,asn1c,compiler},
-xetex
+	linkcolor={clrlink},
+	citecolor={clrlink},
+	urlcolor={clrurl},
+	pdfauthor={Lev Walkin},
+	pdftitle={Using the Open Source ASN.1 Compiler},
+	pdfkeywords={ASN.1,asn1c,compiler},
+	bookmarksopen,bookmarksopenlevel=1,
+	pdffitwindow,
+	xetex
 ]{hyperref}
-%\fancyhf{}
-%\fancyhead[LE,RO]{\thepage}
-%\fancyhead[LO]{\rightmark}
-%\fancyhead[RE]{\leftmark}
-%\fancyfoot[R]{\lastxmark}
 
 \makeatother
 
@@ -63,19 +93,14 @@ xetex
 \begin{document}
 
 \title{Using the Open Source ASN.1 Compiler}
-
-
 \author{Lev Walkin <\href{mailto:vlm@lionet.info?Subject=asn1c}{vlm@lionet.info}>}
 
+\pagestyle{fancy}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\href{http://lionet.info/asn1c}{asn1c-0.9.25}}
 \maketitle
-\lhead{This document describes \href{http://lionet.info/asn1c}{asn1c-0.9.21}}
-
-\rhead{$Revision$}
 
 \tableofcontents{}
-
-\pagestyle{headings}
-
 
 \part{Using the ASN.1 Compiler}
 
@@ -96,40 +121,24 @@ standardized encoding rules (BER, DER, XER, PER).
 For example, suppose the following ASN.1 module is given%
 \footnote{Part \vref{par:ASN.1-Basics} provides a quick reference
 on the ASN.1 notation.}:
-\begin{lyxcode}
-RectangleTest~DEFINITIONS~::=
+\begin{asn}
+RectangleTest DEFINITIONS ::= BEGIN
 
-BEGIN
-
-~
-
-Rectangle~::=~SEQUENCE~\{
-
-~~~~height~~INTEGER,~~~~~~~~-{}-~Height~of~the~rectangle
-
-~~~~width~~~INTEGER~~~~~~~~~-{}-~Width~of~the~rectangle
-
-\}
-
-~
+Rectangle ::= SEQUENCE {
+    height  INTEGER,        -- Height of the rectangle
+    width   INTEGER         -- Width of the rectangle
+}
 
 END
-\end{lyxcode}
+\end{asn}
 The compiler would read this ASN.1 definition and produce the following
-C type%
-\footnote{\emph{-fnative-types} compiler option is used to produce basic C \emph{int}
-types instead of infinite width INTEGER\_t structures. See Section
-\vref{sec:Command-line-options}.%
-}:
-\begin{lyxcode}
-typedef~struct~Rectangle\_s~\{
-
-~~~~int~height;
-
-~~~~int~width;
-
-\}~Rectangle\_t;
-\end{lyxcode}
+C type:
+\begin{codesample}
+typedef struct Rectangle_s {
+    long height;
+    long width;
+} Rectangle_t;
+\end{codesample}
 It would also create the code for converting this structure into platform-independent
 wire representation (a serializer API) and the decoder of such wire
 representation back into local, machine-specific type (a deserializer
@@ -138,29 +147,34 @@ API).
 
 \section{Quick start with asn1c}
 
-After building and installing the compiler, the \emph{asn1c}%
-\footnote{The 1 symbol in asn\textbf{1}c is a digit, not an ``ell'' letter.%
-} command may be used to compile the ASN.1 module%
+After building and installing the compiler, the \emph{asn1c}
+command may be used to compile the ASN.1 modules%
 \footnote{This is probably \textbf{not} what you want to try out right now. Read through the rest of this chapter and check the Section \vref{sec:Command-line-options}
 to find out about \textbf{-P} and \textbf{-R} options.%
 }:
-\begin{lyxcode}
-asn1c~\emph{<module.asn1>}
-\end{lyxcode}
+\begin{bash}
+asn1c %\emph{<modules.asn1>}%
+\end{bash}
+The asn1c takes a number of command line options,
+such as an option to produce native long types
+for integers instead of infinite width INTEGER\_t structures:
+\begin{bash}
+asn1c %\textbf{-fnative-types} \emph{<modules.asn1>}%
+\end{bash}
 If several ASN.1 modules contain interdependencies, all of the files
 must be specified altogether:
-\begin{lyxcode}
-asn1c~\emph{<module1.asn1>~<module2.asn1>~...}
-\end{lyxcode}
+\begin{bash}
+asn1c %\emph{<module1.asn1> <module2.asn1> ...}%
+\end{bash}
 The compiler \textbf{-E} and \textbf{-EF} options are used for testing
 the parser and the semantic fixer, respectively. These options will
 instruct the compiler to dump out the parsed (and fixed, if \textbf{-F}
 is involved) ASN.1 specification as it was ``understood''
 by the compiler. It might be useful to check whether a particular
-syntactic construction is properly supported by the compiler.
-\begin{lyxcode}
-asn1c~\textbf{-EF}~\emph{<module-to-test.asn1>}
-\end{lyxcode}
+syntactic construct is properly supported by the compiler.
+\begin{bash}
+asn1c %\textbf{-EF} \emph{<module-to-test.asn1>}%
+\end{bash}
 The \textbf{-P} option is used to dump the compiled output on the
 screen instead of creating a bunch of .c and .h files on disk in the
 current directory. You would probably want to start with \textbf{-P}
@@ -170,109 +184,102 @@ need to be generated, and supress linking in the numerous support
 files.
 
 Print the compiled output instead of creating multiple source files:
-\begin{lyxcode}
-asn1c~\textbf{-P}~\emph{<module-to-compile-and-print.asn1>}
-\end{lyxcode}
+\begin{bash}
+asn1c %\textbf{-P} \emph{<module-to-compile-and-print.asn1>}%
+\end{bash}
 
 \section{Recognizing compiler output}
 
-After compiling, the following entities will be created in your current
-directory:
+The asn1c compiler produces a number of files:
 \begin{itemize}
-\item A set of .c and .h files, generally a single pair for each type defined
-in the ASN.1 specifications. These files will be named similarly to
+\item A set of .c and .h files for each type defined
+in the ASN.1 specification. These files will be named similarly to
 the ASN.1 types (\emph{Rectangle.c} and \emph{Rectangle.h} for the
 RectangleTest ASN.1 module defined in the beginning of this document).
-\item A set of helper .c and .h files which contain generic encoders, decoders
-and other useful routines. There will be quite a few of them, some
-of them even are not always necessary, but the overall amount of code
+\item A set of helper .c and .h files which contain the generic encoders,
+decoders and other useful routines. There will be quite a few of them, some
+of them are not even always necessary, but the overall amount of code
 after compilation will be rather small anyway.
+\item A \emph{converter-sample.c} file containing the \emph{int main()} function with a fully functioning decoder. It can convert a given PDU between BER, XER and possibly PER (if -gen-PER option to asn1c was in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
 \item A \emph{Makefile.am.sample} file mentioning all the files created
 at the earlier steps. This file is suitable for either automake suite
-or the plain `make` utility.
+or the plain `make` utility. Just rename it into \emph{Makefile}.
 \end{itemize}
-It is your responsibility to create .c file with the \emph{int main()}
-routine.
-
-In other words, after compiling the Rectangle module, you have the
-following set of files: \{~Makefile.am.sample, Rectangle.c, Rectangle.h,
-\textbf{\ldots{}} \}, where ``\textbf{\ldots{}}'' stands for the
-set of additional ``helper'' files created by the compiler. If you
-add a simple file with the \emph{int main()} routine, it would even
-be possible to compile everything with the single instruction:
-\begin{lyxcode}
-cc~-I.~-o~rectangle.exe~{*}.c~~~\#~It~could~be~\emph{that}~simple
-\end{lyxcode}
+It is possible to compile everything with just a couple of instructions:
+\begin{bash}
+asn1c -fnative-types -pdu=%\emph{Rectangle}% *.asn1
+make -f Makefile.am.sample                    # If you use `make`
+\end{bash}
+or
+\begin{bash}
+asn1c -fnative-types *.asn1
+cc -I. -DPDU=%\emph{Rectangle}% -o rectangle.exe *.c   # ... or like this
+\end{bash}
 Refer to the Chapter \vref{cha:Step-by-step-examples} for a sample
-\emph{int main()} routine.
+\emph{int main()} function if you want some custom logic and not satisfied
+with the supplied \emph{converter-sample.c}.
 
-
+\clearpage{}
 \section{\label{sec:Command-line-options}Command line options}
 
 The following table summarizes the asn1c command line options.
 
 \renewcommand{\arraystretch}{1.33}
 \begin{longtable}{lp{4in}}
-\toprule
-\textbf{\small Overall Options} & \textbf{\small Description}\tabularnewline
+\textbf{Overall Options} & \textbf{Description}\\
 \midrule
-{\small -E} & {\small Stop after the parsing stage and print the reconstructed ASN.1
-specification code to the standard output.}\tabularnewline
-{\small -F} & {\small Used together with -E, instructs the compiler to stop after
+{-E} & {\small Stop after the parsing stage and print the reconstructed ASN.1
+specification code to the standard output.}\\
+{-F} & {\small Used together with -E, instructs the compiler to stop after
 the ASN.1 syntax tree fixing stage and dump the reconstructed ASN.1
-specification to the standard output.}\tabularnewline
-{\small -P} & {\small Dump the compiled output to the standard output instead of
-creating the target language files on disk.}\tabularnewline
-{\small -R} & {\small Restrict the compiler to generate only the ASN.1 tables, omitting the usual support code.}\tabularnewline
-{\small -S }\emph{\small <directory>} & {\small Use the specified directory with ASN.1 skeleton files.}\tabularnewline
-{\small -X} & {\small Generate the XML DTD for the specified ASN.1 modules.}\tabularnewline
-\midrule\tabularnewline
-\textbf{\small Warning Options} & \textbf{\small Description}\tabularnewline
+specification to the standard output.}\\
+{-P} & {\small Dump the compiled output to the standard output instead of
+creating the target language files on disk.}\\
+{-R} & {\small Restrict the compiler to generate only the ASN.1 tables, omitting the usual support code.}\\
+{-S}~\emph{<directory>} & {\small Use the specified directory with ASN.1 skeleton files.}\\
+{-X} & {\small Generate the XML DTD for the specified ASN.1 modules.}\\\\
+\textbf{Warning Options} & \textbf{Description}\\
 \midrule
-{\small -Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\tabularnewline
-{\small -Wdebug-lexer} & {\small Enable lexer debugging during the ASN.1 parsing stage.}\tabularnewline
-{\small -Wdebug-fixer} & {\small Enable ASN.1 syntax  tree  fixer  debugging  during  the
- fixing stage.}\tabularnewline
-{\small -Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\tabularnewline
-\midrule\tabularnewline
-\textbf{\small Language Options} & \textbf{\small Description}\tabularnewline
+{-Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\\
+{-Wdebug-lexer} & {\small Enable lexer debugging during the ASN.1 parsing stage.}\\
+{-Wdebug-fixer} & {\small Enable ASN.1 syntax  tree  fixer  debugging  during  the
+ fixing stage.}\\
+{-Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\\  \\
+\textbf{Language Options} & \textbf{Description}\\
 \midrule
-{\small -fbless-SIZE} & {\small Allow SIZE() constraint for INTEGER, ENUMERATED, and other
+{-fbless-SIZE} & {\small Allow SIZE() constraint for INTEGER, ENUMERATED, and other
 types for which this constraint is normally prohibited by the standard.
 This is a violation of an ASN.1 standard and compiler may fail to
-produce the meaningful code.}\tabularnewline
-{\small -fcompound-names} & {\small Use complex names for C structures. Using complex names prevents
+produce the meaningful code.}\\
+{-fcompound-names} & {\small Use complex names for C structures. Using complex names prevents
 name clashes in case the module reuses the same identifiers in multiple
-contexts.}\tabularnewline
-{\small -findirect-choice} & {\small When generating code for a CHOICE type, compile the CHOICE
+contexts.}\\
+{-findirect-choice} & {\small When generating code for a CHOICE type, compile the CHOICE
 members as indirect pointers instead of declaring them inline. Consider
-using this option together with }\textbf{\small -fno-include-deps}{\small{}
-to prevent circular references. }\tabularnewline
-{\small -fknown-extern-type=}\emph{\small <name>} & {\small Pretend the specified type is known. The compiler will assume
+using this option together with \textbf{-fno-include-deps}
+to prevent circular references. }\\
+{-fknown-extern-type=}\emph{<name>} & {\small Pretend the specified type is known. The compiler will assume
 the target language source files for the given type have been provided
-manually. }\tabularnewline
-{\small -fnative-types} & {\small Use the native machine's data types (int, double) whenever
+manually. }\\
+{-fnative-types} & {\small Use the native machine's data types (long, double) whenever
 possible, instead of the compound INTEGER\_t, ENUMERATED\_t and REAL\_t
-types. }\tabularnewline
-{\small -fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
-may produce a shorter executable.}\tabularnewline
-{\small -fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical
-dependencies.}\tabularnewline
-{\small -funnamed-unions} & {\small Enable  unnamed  unions  in the definitions of target language's
-structures.}\tabularnewline
-\midrule\tabularnewline
-\textbf{\small Codecs Generation Options} & \textbf{\small Description}\tabularnewline
+types. }\\
+{-fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
+may produce a shorter executable.}\\
+{-fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical
+dependencies.}\\
+{-funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's
+structures.}\\\\
+\textbf{Codecs Generation Options} & \textbf{Description}\\
 \midrule
-{\small -gen-PER} & {\small Generate Packed Encoding Rules (PER) support code.}\tabularnewline
-{\small -pdu=}\emph{\small auto} & {\small Generate PDU tables by discovering Protocol Data Units automatically.}\tabularnewline
-\midrule\tabularnewline
-\textbf{\small Output Options} & \textbf{\small Description}\tabularnewline
+{-gen-PER} & {\small Generate Packed Encoding Rules (PER) support code.}\\
+{-pdu=}\emph{auto} & {\small Generate PDU tables by discovering Protocol Data Units automatically. Also accepts a special keyword \emph{all} or a particular type to be used as a PDU.}\\ \\
+\textbf{Output Options} & \textbf{Description}\\
 \midrule
-{\small -print-constraints} & {\small When -EF are also specified, this option forces the compiler
-to explain its internal understanding of subtype constraints.}\tabularnewline
-{\small -print-lines} & {\small Generate ``-{}- \#line'' comments
-in -E output.}\tabularnewline
-\bottomrule
+{-print-constraints} & {\small When -EF are also specified, this option forces the compiler
+to explain its internal understanding of subtype constraints.}\\
+{-print-lines} & {\small Generate ``-{}- \#line'' comments
+in -E output.}\\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
 
@@ -286,21 +293,19 @@ First of all, you should include one or more header files into your
 application. Typically, it is enough to include the header file of
 the main PDU type. For our Rectangle module, including the Rectangle.h
 file is sufficient:
-\begin{lyxcode}
-\#include~<Rectangle.h>
-\end{lyxcode}
+\begin{codesample}
+#include <Rectangle.h>
+\end{codesample}
 The header files defines the C structure corresponding to the ASN.1
 definition of a rectangle and the declaration of the ASN.1 type descriptor,
 which is used as an argument to most of the functions provided by
 the ASN.1 module. For example, here is the code which frees the Rectangle\_t
 structure:
-\begin{lyxcode}
-Rectangle\_t~{*}rect~=~...;
+\begin{codesample}
+Rectangle_t *rect = ...;
 
-~
-
-asn\_DEF\_Rectangle.free\_struct(\&asn\_DEF\_Rectangle, rect,~0);
-\end{lyxcode}
+asn_DEF_Rectangle.free_struct(&asn_DEF_Rectangle, rect, 0);
+\end{codesample}
 This code defines a \emph{rect} pointer which points to the Rectangle\_t
 structure which needs to be freed. The second line invokes the generic
 \emph{free\_struct()} routine created specifically for this Rectangle\_t
@@ -356,7 +361,7 @@ versions of BER, so the generic BER parser is also capable of decoding
 the data encoded by CER and DER encoders. The opposite is not true.
 
 \emph{The ASN.1 compiler provides the generic BER decoder which is
-implicitly capable of decoding BER, CER and DER encoded data.}
+capable of decoding BER, CER and DER encoded data.}
 
 The decoder is restartable (stream-oriented), which means that in
 case the buffer has less data than it is expected, the decoder will
@@ -367,59 +372,42 @@ the next buffer contain the unprocessed part of the previous buffer.
 
 Suppose, you have two buffers of encoded data: 100 bytes and 200 bytes.
 \begin{itemize}
-\item You may concatenate these buffers and feed the BER decoder with 300
+\item You can concatenate these buffers and feed the BER decoder with 300
 bytes of data, or
-\item You may feed it the first buffer of 100 bytes of data, realize that
+\item You can feed it the first buffer of 100 bytes of data, realize that
 the ber\_decoder consumed only 95 bytes from it and later feed the
 decoder with 205 bytes buffer which consists of 5 unprocessed bytes
 from the first buffer and the additional 200 bytes from the second
 buffer.
 \end{itemize}
-This is not as convenient as it could be (like, the BER encoder could
+This is not as convenient as it could be (the BER encoder could
 consume the whole 100 bytes and keep these 5 bytes in some temporary
 storage), but in case of existing stream based processing it might
 actually fit well into existing algorithm. Suggestions are welcome.
 
-Here is the simplest example of BER decoding.
-\begin{lyxcode}
-Rectangle\_t~{*}
+Here is the simplest example of BER decoding:
 
-simple\_deserializer(const~void~{*}buffer,~size\_t~buf\_size)~\{
+\begin{codesample}
+Rectangle_t *
+simple_deserializer(const void *buffer, size_t buf_size) {
+    Rectangle_t *rect = 0;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+    asn_dec_rval_t rval;
 
-~~~~Rectangle\_t~{*}rect~=~0;~~~~/{*}~Note~this~0!~{*}/
+    rval = %\textbf{asn\_DEF\_Rectangle.ber\_decoder}%(0,
+          &asn_DEF_Rectangle,
+          (void **)&rect,     /* Decoder %\emph{moves}% the pointer */
+          buffer, buf_size,
+          0);
 
-~~~~asn\_dec\_rval\_t~rval;
-
-~
-
-~~~~rval~=~\textbf{asn\_DEF\_Rectangle.ber\_decoder}(0,
-
-~~~~~~~~~~\&asn\_DEF\_Rectangle,
-
-~~~~~~~~~~(void~{*}{*})\&rect,
-
-~~~~~~~~~~buffer,~buf\_size,
-
-~~~~~~~~~~0);
-
-~
-
-~~~~if(rval\textbf{.code}~==~RC\_OK)~\{
-
-~~~~~~~~return~rect;~~~~~~~~~~/{*}~Decoding~succeeded~{*}/
-
-~~~~\}~else~\{
-
-~~~~~~~~/{*}~Free~partially~decoded~rect~{*}/
-
-~~~~~~~~asn\_DEF\_Rectangle.free\_struct(\&asn\_DEF\_Rectangle,~rect,~0);
-
-~~~~~~~~return~0;
-
-~~~~\}
-
-\}
-\end{lyxcode}
+    if(rval%\textbf{.code}% == RC_OK) {
+        return rect;          /* Decoding succeeded */
+    } else {
+        /* Free partially decoded rect */
+        asn_DEF_Rectangle.free_struct(&asn_DEF_Rectangle, rect, 0);
+        return 0;
+    }
+}
+\end{codesample}
 The code above defines a function, \emph{simple\_deserializer}, which
 takes a buffer and its length and is expected to return a pointer
 to the Rectangle\_t structure. Inside, it tries to convert the bytes
@@ -436,11 +424,9 @@ be decoded into the structure by the time something goes wrong.
 
 A little less wordy would be to invoke a globally available \emph{ber\_decode()}
 function instead of dereferencing the asn\_DEF\_Rectangle type descriptor:
-\begin{lyxcode}
-rval~=~ber\_decode(0,~\&asn\_DEF\_Rectangle,~(void~{*}{*})\&rect,
-
-~~~~buffer,~buf\_size);
-\end{lyxcode}
+\begin{codesample}
+rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
+\end{codesample}
 Note that the initial (asn\_DEF\_Rectangle.ber\_decoder) reference
 is gone, and also the last argument (0) is no longer necessary.
 
@@ -479,55 +465,30 @@ to encode X.509 certificates.
 As with BER decoder, the DER encoder may be invoked either directly
 from the ASN.1 type descriptor (asn\_DEF\_Rectangle) or from the stand-alone
 function, which is somewhat simpler:
-\begin{lyxcode}
-~
+\begin{codesample}
+/*
+ * This is the serializer itself.
+ * It supplies the DER encoder with the
+ * pointer to the custom output function.
+ */
+ssize_t
+simple_serializer(FILE *ostream, Rectangle_t *rect) {
+    asn_enc_rval_t er;  /* Encoder return value */
 
-/{*}
-
-~{*}~This~is~the~serializer~itself,
-
-~{*}~it~supplies~the~DER~encoder~with~the
-
-~{*}~pointer~to~the~custom~output~function.
-
-~{*}/
-
-ssize\_t
-
-simple\_serializer(FILE~{*}ostream,~Rectangle\_t~{*}rect)~\{
-
-~~~~asn\_enc\_rval\_t~er;~~/{*}~Encoder~return~value~{*}/
-
-~
-
-~~~~er~=~der\_encode(\&asn\_DEF\_Rect,~rect,
-
-~~~~~~~~write\_stream,~ostream);
-
-~~~~if(er.\textbf{encoded}~==~-1)~\{
-
-~~~~~~~~/{*}
-
-~~~~~~~~~{*}~Failed~to~encode~the~rectangle~data.
-
-~~~~~~~~~{*}/
-
-~~~~~~~~fprintf(stderr,~''Cannot~encode~\%s:~\%s\textbackslash{}n'',
-
-~~~~~~~~~~~~er.\textbf{failed\_type}->name, strerror(errno));
-
-~~~~~~~~return~-1;
-
-~~~~\}~else~\{
-
-~~~~~~~~/{*}~Return~the~number~of~bytes~{*}/
-
-~~~~~~~~return~er.encoded;
-
-~~~~\}
-
-\}
-\end{lyxcode}
+    er = der_encode(&asn_DEF_Rect, rect, write_stream, ostream);
+    if(er%\textbf{.encoded}% == -1) {
+        /*
+         * Failed to encode the rectangle data.
+         */
+        fprintf(stderr, "Cannot encode %\%%s: %\%%s\n",
+            er%\textbf{.failed\_type}%->name, strerror(errno));
+        return -1;
+    } else {
+        /* Return the number of bytes */
+        return er.encoded;
+    }
+}
+\end{codesample}
 As you see, the DER encoder does not write into some sort of buffer
 or something. It just invokes the custom function (possible, multiple
 times) which would save the data into appropriate storage. The optional
@@ -536,7 +497,7 @@ used by \emph{\_write\_stream()} as the pointer to the appropriate
 output stream to be used.
 
 If the custom write function is not given (passed as 0), then the
-DER encoder will essentially do the same thing (i.e., encode the data)
+DER encoder will essentially do the same thing (i.~e., encode the data)
 but no callbacks will be invoked (so the data goes nowhere). It may
 prove useful to determine the size of the structure's encoding before
 actually doing the encoding%
@@ -556,43 +517,26 @@ encoder routine API comes in two flavors: stdio-based and callback-based.
 With the callback-based encoder, the encoding process is very similar
 to the DER one, described in Section \vref{sub:Encoding-DER}. The
 following example uses the definition of write\_stream() from up there.
-\begin{lyxcode}
-/{*}
-
-~{*}~This~procedure~generates~the~XML~document
-
-~{*}~by~invoking~the~XER~encoder.
-
-~{*}~NOTE:~Do~not~copy~this~code~verbatim!
-
-~{*}~~~~~~~If~the~stdio~output~is~necessary,
-
-~{*}~~~~~~~use~the~xer\_fprint()~procedure~instead.
-
-~{*}~~~~~~~See~Section~\vref{sub:Printing-the-target}.
-
-~{*}/
-
+\begin{codesample}
+/*
+ * This procedure generates the XML document
+ * by invoking the XER encoder.
+ * NOTE: Do not copy this code verbatim!
+ *       If the stdio output is necessary,
+ *       use the xer_fprint() procedure instead.
+ *       See Section%\vref{sub:Printing-the-target}%.
+ */
 int
+print_as_XML(FILE *ostream, Rectangle_t *rect) {
+    asn_enc_rval_t er;  /* Encoder return value */
 
-print\_as\_XML(FILE~{*}ostream,~Rectangle\_t~{*}rect)~\{
+    er = xer_encode(&asn_DEF_Rectangle, rect,
+        XER_F_BASIC, /* BASIC-XER or CANONICAL-XER */
+        write_stream, ostream);
 
-~~~~asn\_enc\_rval\_t~er;~~/{*}~Encoder~return~value~{*}/
-
-~
-
-~~~~er~=~xer\_encode(\&asn\_DEF\_Rectangle,~rect,
-
-~~~~~~~~XER\_F\_BASIC,~/{*}~BASIC-XER~or~CANONICAL-XER~{*}/
-
-~~~~~~~~write\_stream,~ostream);
-
-~
-
-~~~~return~(er.encoded~==~-1)~?~-1~:~0;
-
-\}
-\end{lyxcode}
+    return (er.encoded == -1) ? -1 : 0;
+}
+\end{codesample}
 Look into xer\_encoder.h for the precise definition of xer\_encode()
 and related types.
 
@@ -604,37 +548,23 @@ XML encoder and other pretty-printing suggestions.
 
 The data encoded using the XER rules can be subsequently decoded using
 the xer\_decode() API call:
-\begin{lyxcode}
-Rectangle\_t~{*}
+\begin{codesample}
+Rectangle_t *
+XML_to_Rectangle(const void *buffer, size_t buf_size) {
+    Rectangle_t *rect = 0;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+    asn_dec_rval_t rval;
 
-XML\_to\_Rectangle(const~void~{*}buffer,~size\_t~buf\_size)~\{
+    rval = xer_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
 
-~~~~Rectangle\_t~{*}rect~=~0;~/{*}~Note~this~0!~{*}/
-
-~~~~asn\_dec\_rval\_t~rval;
-
-~~
-
-~~~~rval~=~xer\_decode(0,~\&asn\_DEF\_Rectangle,~(void~{*}{*})\&rect,
-
-~~~~~~~~buffer,~buf\_size);
-
-~~~~if(rval\textbf{.code}~==~RC\_OK)~\{
-
-~~~~~~~~return~rect;~~~~~~~~~~/{*}~Decoding~succeeded~{*}/
-
-~~~~\}~else~\{
-
-~~~~~~~~/{*}~Free~partially~decoded~rect~{*}/
-
-~~~~~~~~asn\_DEF\_Rectangle.free\_struct(\&asn\_DEF\_Rectangle,~rect,~0);
-
-~~~~~~~~return~0;
-
-~~~~\}
-
-\}
-\end{lyxcode}
+    if(rval%\textbf{.code}% == RC_OK) {
+        return rect;          /* Decoding succeeded */
+    } else {
+        /* Free partially decoded rect */
+        asn_DEF_Rectangle.free_struct(&asn_DEF_Rectangle, rect, 0);
+        return 0;
+    }
+}
+\end{codesample}
 The decoder takes both BASIC-XER and CANONICAL-XER encodings.
 
 The decoder shares its data consumption properties with BER decoder;
@@ -671,9 +601,9 @@ and related types.
 There are two ways to print the target structure: either invoke the
 print\_struct member of the ASN.1 type descriptor, or using the asn\_fprint()
 function, which is a simpler wrapper of the former:
-\begin{lyxcode}
-asn\_fprint(stdout,~\&asn\_DEF\_Rectangle,~rect);
-\end{lyxcode}
+\begin{codesample}
+asn_fprint(stdout, &asn_DEF_Rectangle, rect);
+\end{codesample}
 Look into constr\_TYPE.h for the precise definition of asn\_fprint()
 and related types.
 
@@ -682,9 +612,9 @@ be to invoke XER encoder. The default BASIC-XER encoder performs reasonable
 formatting for the output to be useful and human readable. To invoke
 the XER decoder in a manner similar to asn\_fprint(), use the xer\_fprint()
 call:
-\begin{lyxcode}
-xer\_fprint(stdout,~\&asn\_DEF\_Rectangle,~rect);
-\end{lyxcode}
+\begin{codesample}
+xer_fprint(stdout, &asn_DEF_Rectangle, rect);
+\end{codesample}
 See Section \vref{sub:Encoding-XER} for XML-related details.
 
 
@@ -694,19 +624,14 @@ Freeing the structure is slightly more complex than it may seem to.
 When the ASN.1 structure is freed, all the members of the structure
 and their submembers are recursively freed as well. But it might not
 be feasible to free the structure itself. Consider the following case:
-\begin{lyxcode}
-struct~my\_figure~\{~~~~~~~/{*}~The~custom~structure~{*}/
-
-~~~~int~flags;~~~~~~~~~~~/{*}~<some~custom~member>~{*}/
-
-~~~~/{*}~The~type~is~generated~by~the~ASN.1~compiler~{*}/
-
-~~~~\emph{Rectangle\_t~rect;}
-
-~~~~/{*}~other~members~of~the~structure~{*}/
-
-\};
-\end{lyxcode}
+\begin{codesample}
+struct my_figure {       /* The custom structure */
+    int flags;           /* <some custom member> */
+    /* The type is generated by the ASN.1 compiler */
+    Rectangle_t rect;
+    /* other members of the structure */
+};
+\end{codesample}
 In this example, the application programmer defined a custom structure
 with one ASN.1-derived member (rect). This member is not a reference
 to the Rectangle\_t, but an in-place inclusion of the Rectangle\_t
@@ -721,56 +646,35 @@ argument (besides the obvious type descriptor and target structure
 pointers), which is the flag specifying whether the outer pointer
 itself must be freed (0, default) or it should be left intact (non-zero
 value).
-\begin{lyxcode}
-\textbf{/{*}~1.~Rectangle\_t~is~defined~within~my\_figure~{*}/}
-
-struct~my\_figure~\{
-
-~~~~Rectangle\_t~rect;
-
-\}~{*}mf~=~\textbf{...};
-
-/{*}
-
-~{*}~Freeing~the~Rectangle\_t
-
-~{*}~without~freeing~the~mf->rect~area
-
-~{*}/
-
-asn\_DEF\_Rectangle.free\_struct(
-
-~~~~\&asn\_DEF\_Rectangle,~\&mf->rect,~\textbf{1}~\textbf{/{*}~!free~{*}/});
-
-~~~~
-
-~~
-
-\textbf{/{*}~2.~Rectangle\_t~is~a~stand-alone~pointer~{*}/}
-
-Rectangle\_t~{*}rect~=~\textbf{...};
-
-/{*}
-
-~{*}~Freeing~the~Rectangle\_t
-
-~{*}~and~freeing~the~rect~pointer
-
-~{*}/
-
-asn\_DEF\_Rectangle.free\_struct(
-
-~~~~\&asn\_DEF\_Rectangle,~rect,~\textbf{0}~\textbf{/{*}~free~the~pointer~too~{*}/});
-\end{lyxcode}
+\begin{codesample}
+/* %\textbf{1. Rectangle\_t is defined within my\_figure}% */
+struct my_figure {
+    Rectangle_t rect;
+} *mf = ...;
+/*
+ * Freeing the Rectangle_t
+ * without freeing the mf->rect area.
+ */
+asn_DEF_Rectangle.free_struct(
+    &asn_DEF_Rectangle, &mf->rect, %\textbf{1 /* !free */}%);
+  
+/* %\textbf{2. Rectangle\_t is a stand-alone pointer}% */
+Rectangle_t *rect = ...;
+/*
+ * Freeing the Rectangle_t
+ * and freeing the rect pointer.
+ */
+asn_DEF_Rectangle.free_struct(
+    &asn_DEF_Rectangle, rect, %\textbf{0 /* free the pointer too */}%);
+\end{codesample}
 It is safe to invoke the \emph{free\_struct} function with the target
 structure pointer set to 0 (NULL), the function will do nothing.
 
 For the programmer's convenience, the following macros are available:
-\begin{lyxcode}
-ASN\_STRUCT\_FREE(asn\_DEF,~ptr);
-
-ASN\_STRUCT\_FREE\_CONTENTS\_ONLY(asn\_DEF,~ptr);
-\end{lyxcode}
+\begin{codesample}
+ASN_STRUCT_FREE(asn_DEF, ptr);
+ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr);
+\end{codesample}
 These macros bear the same semantics as the \emph{free\_struct} function
 invocation, discussed above.
 
@@ -785,30 +689,21 @@ a ``Rectangle'' type used throughout this document.
 \begin{enumerate}
 \item Create a file named \textbf{rectangle.asn1} with the following contents:
 
-\begin{lyxcode}
-RectangleModule1~DEFINITIONS~::=
+\begin{asn}
+RectangleModule1 DEFINITIONS ::= BEGIN
 
-BEGIN
-
-~
-
-Rectangle~::=~SEQUENCE~\{
-
-~~~~height~~INTEGER,
-
-~~~~width~~~INTEGER
-
-\}
-
-~
+Rectangle ::= SEQUENCE {
+    height  INTEGER,
+    width   INTEGER
+}
 
 END
-\end{lyxcode}
+\end{asn}
 \item Compile it into the set of .c and .h files using asn1c compiler \cite{ASN1C}:
 
-\begin{lyxcode}
-\emph{asn1c~-fnative-types}~\textbf{rectangle.asn1}
-\end{lyxcode}
+\begin{bash}
+asn1c -fnative-types %\textbf{rectangle.asn1}%
+\end{bash}
 \item Alternatively, use the Online ASN.1 compiler \cite{AONL} by uploading
 the \textbf{rectangle.asn1} file into the Web form and unpacking the
 produced archive on your computer.
@@ -816,149 +711,73 @@ produced archive on your computer.
 directory, including the \textbf{Rectangle.c} and \textbf{Rectangle.h}.
 \item Create a main() routine which creates the Rectangle\_t structure in
 memory and encodes it using BER and XER encoding rules. Let's name
-the file \textbf{main.c}:\clearpage{}
-
-\begin{lyxcode}
-{\small \#include~<stdio.h>}{\small \par}
-
-{\small \#include~<sys/types.h>}{\small \par}
-
-{\small \#include~<Rectangle.h>~~~/{*}~Rectangle~ASN.1~type~~{*}/}{\small \par}
-
-~
-
-{\small /{*}}{\small \par}
-
-{\small{}~{*}~This~is~a~custom~function~which~writes~the}{\small \par}
-
-{\small{}~{*}~encoded~output~into~some~FILE~stream.}{\small \par}
-
-{\small{}~{*}/}{\small \par}
-
-{\small static~int}{\small \par}
-
-{\small write\_out(const~void~{*}buffer,~size\_t~size,~void~{*}app\_key)~\{}{\small \par}
-
-{\small{}~~~~FILE~{*}out\_fp~=~app\_key;}{\small \par}
-
-{\small{}~~~~size\_t~wrote;}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~wrote~=~fwrite(buffer,~1,~size,~out\_fp);}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~return~(wrote~==~size)~?~0~:~-1;}{\small \par}
-
-{\small \}}{\small \par}
-
-~
-
-{\small int~main(int~ac,~char~{*}{*}av)~\{}{\small \par}
-
-{\small{}~~~~Rectangle\_t~{*}rectangle;~/{*}~Type~to~encode~~~~~~~~{*}/}{\small \par}
-
-{\small{}~~~~asn\_enc\_rval\_t~ec;~~~~~~/{*}~Encoder~return~value~~{*}/}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~/{*}~Allocate~the~Rectangle\_t~{*}/}{\small \par}
-
-{\small{}~~~~rectangle~=~calloc(1,~sizeof(Rectangle\_t));~/{*}~not~malloc!~{*}/}{\small \par}
-
-{\small{}~~~~if(!rectangle)~\{}{\small \par}
-
-{\small{}~~~~~~perror(''calloc()~failed'');}{\small \par}
-
-{\small{}~~~~~~exit(71);~/{*}~better,~EX\_OSERR~{*}/}{\small \par}
-
-{\small{}~~~~\}}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~/{*}~Initialize~the~Rectangle~members~{*}/}{\small \par}
-
-{\small{}~~~~rectangle->height~=~42;~~/{*}~any~random~value~{*}/}{\small \par}
-
-{\small{}~~~~rectangle->width~~=~23;~~/{*}~any~random~value~{*}/}{\small \par}
-
-{\small{}~~~~~}{\small \par}
-
-{\small{}~~~~/{*}~BER~encode~the~data~if~filename~is~given~{*}/}{\small \par}
-
-{\small{}~~~~if(ac~<~2)~\{}{\small \par}
-
-{\small{}~~~~~~fprintf(stderr,~''Specify~filename~for~BER~output\textbackslash{}n'');}{\small \par}
-
-{\small{}~~~~\}~else~\{}{\small \par}
-
-{\small{}~~~~~~const~char~{*}filename~=~av{[}1{]};}{\small \par}
-
-{\small{}~~~~~~FILE~{*}fp~=~fopen(filename,~''wb'');~~~/{*}~for~BER~output~{*}/}{\small \par}
-
-~
-
-{\small{}~~~~~~if(!fp)~\{}{\small \par}
-
-{\small{}~~~~~~~~perror(filename);}{\small \par}
-
-{\small{}~~~~~~~~exit(71);~/{*}~better,~EX\_OSERR~{*}/}{\small \par}
-
-{\small{}~~~~~~\}}{\small \par}
-
-{\small{}~~}{\small \par}
-
-{\small{}~~~~~~/{*}~Encode~the~Rectangle~type~as~BER~(DER)~{*}/}{\small \par}
-
-{\small{}~~~~~~ec~=~der\_encode(\&asn\_DEF\_Rectangle,}{\small \par}
-
-{\small{}~~~~~~~~~~~~rectangle,~write\_out,~fp);}{\small \par}
-
-{\small{}~~~~~~fclose(fp);}{\small \par}
-
-{\small{}~~~~~~if(ec.encoded~==~-1)~\{}{\small \par}
-
-{\small{}~~~~~~~~fprintf(stderr,}{\small \par}
-
-{\small{}~~~~~~~~~~''Could~not~encode~Rectangle~(at~\%s)\textbackslash{}n'',}{\small \par}
-
-{\small{}~~~~~~~~~~ec.failed\_type~?~ec.failed\_type->name~:~''unknown'');}{\small \par}
-
-{\small{}~~~~~~~~exit(65);~/{*}~better,~EX\_DATAERR~{*}/}{\small \par}
-
-{\small{}~~~~~~\}~else~\{}{\small \par}
-
-{\small{}~~~~~~~~fprintf(stderr,~''Created~\%s~with~BER~encoded~Rectangle\textbackslash{}n'',}{\small \par}
-
-{\small{}~~~~~~~~~~filename);}{\small \par}
-
-{\small{}~~~~~~\}}{\small \par}
-
-{\small{}~~~~\}}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~/{*}~Also~print~the~constructed~Rectangle~XER~encoded~(XML)~{*}/}{\small \par}
-
-{\small{}~~~~xer\_fprint(stdout,~\&asn\_DEF\_Rectangle,~rectangle);}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~return~0;~/{*}~Encoding~finished~successfully~{*}/}{\small \par}
-
-{\small \}}{\small \par}
-\end{lyxcode}
+the file \textbf{main.c}:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+#include <stdio.h>
+#include <sys/types.h>
+#include <Rectangle.h>   /* Rectangle ASN.1 type  */
+
+/* Write the encoded output into some FILE stream. */
+static int write_out(const void *buffer, size_t size, void *app_key) {
+    FILE *out_fp = app_key;
+    size_t wrote = fwrite(buffer, 1, size, out_fp);
+    return (wrote == size) ? 0 : -1;
+}
+ 
+int main(int ac, char **av) {
+    Rectangle_t *rectangle; /* Type to encode        */
+    asn_enc_rval_t ec;      /* Encoder return value  */
+
+    /* Allocate the Rectangle_t */
+    rectangle = calloc(1, sizeof(Rectangle_t)); /* not malloc! */
+    if(!rectangle) {
+        perror("calloc() failed");
+        exit(1);
+    }
+
+    /* Initialize the Rectangle members */
+    rectangle->height = 42;  /* any random value */
+    rectangle->width  = 23;  /* any random value */
+
+    /* BER encode the data if filename is given */
+    if(ac < 2) {
+        fprintf(stderr, "Specify filename for BER output\n");
+    } else {
+        const char *filename = av[1];
+        FILE *fp = fopen(filename, "wb");   /* for BER output */
+ 
+        if(!fp) {
+          perror(filename);
+          exit(1);
+        }
+
+        /* Encode the Rectangle type as BER (DER) */
+        ec = der_encode(&asn_DEF_Rectangle, rectangle, write_out, fp);
+        fclose(fp);
+        if(ec.encoded == -1) {
+          fprintf(stderr, "Could not encode Rectangle (at %\%%s)\n",
+              ec.failed_type ? ec.failed_type->name : "unknown");
+          exit(1);
+        } else {
+          fprintf(stderr, "Created %\%%s with BER encoded Rectangle\n", filename);
+        }
+    }
+
+    /* Also print the constructed Rectangle XER encoded (XML) */
+    xer_fprint(stdout, &asn_DEF_Rectangle, rectangle);
+
+    return 0; /* Encoding finished successfully */
+ }
+\end{codesample}
 \item Compile all files together using C compiler (varies by platform):
 
-\begin{lyxcode}
-\emph{cc~-I.~-o}~\textbf{\emph{rencode}}~\emph{{*}.c}
-\end{lyxcode}
+\begin{bash}
+cc -I. -o %\textbf{\emph{rencode}} \emph{*.c}%
+\end{bash}
 \item Voila! You have just created the BER and XER encoder of a Rectangle
 type, named \textbf{rencode}!
 \end{enumerate}
-\clearpage{}
-
 
 \section{\label{sec:A-Rectangle-Decoder}A ``Rectangle'' Decoder}
 
@@ -967,30 +786,21 @@ This example will help you to create a simple BER decoder of a simple
 \begin{enumerate}
 \item Create a file named \textbf{rectangle.asn1} with the following contents:
 
-\begin{lyxcode}
-RectangleModule1~DEFINITIONS~::=
+\begin{asn}
+RectangleModule1 DEFINITIONS ::= BEGIN
 
-BEGIN
-
-~
-
-Rectangle~::=~SEQUENCE~\{
-
-~~~~height~~INTEGER,
-
-~~~~width~~~INTEGER
-
-\}
-
-~
+Rectangle ::= SEQUENCE {
+    height  INTEGER,
+    width   INTEGER
+}
 
 END
-\end{lyxcode}
+\end{asn}
 \item Compile it into the set of .c and .h files using asn1c compiler \cite{ASN1C}:
 
-\begin{lyxcode}
-\emph{asn1c~-fnative-types}~\textbf{rectangle.asn1}
-\end{lyxcode}
+\begin{bash}
+asn1c -fnative-types %\textbf{rectangle.asn1}%
+\end{bash}
 \item Alternatively, use the Online ASN.1 compiler \cite{AONL} by uploading
 the \textbf{rectangle.asn1} file into the Web form and unpacking the
 produced archive on your computer.
@@ -998,114 +808,61 @@ produced archive on your computer.
 directory, including the \textbf{Rectangle.c} and \textbf{Rectangle.h}.
 \item Create a main() routine which takes the binary input file, decodes
 it as it were a BER-encoded Rectangle type, and prints out the text
-(XML) representation of the Rectangle type. Let's name the file \textbf{main.c}:\clearpage{}
+(XML) representation of the Rectangle type. Let's name the file \textbf{main.c}:
 
-\begin{lyxcode}
-{\small \#include~<stdio.h>}{\small \par}
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+#include <stdio.h>
+#include <sys/types.h>
+#include <Rectangle.h>   /* Rectangle ASN.1 type  */
 
-{\small \#include~<sys/types.h>}{\small \par}
+int main(int ac, char **av) {
+    char buf[1024];      /* Temporary buffer      */
+    Rectangle_t *rectangle = 0; /* Type to decode. %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+    asn_dec_rval_t rval; /* Decoder return value  */
+    FILE *fp;            /* Input file handler    */
+    size_t size;         /* Number of bytes read  */
+    char *filename;      /* Input file name */
 
-{\small \#include~<Rectangle.h>~~~/{*}~Rectangle~ASN.1~type~~{*}/}{\small \par}
+    /* Require a single filename argument */
+    if(ac != 2) {
+        fprintf(stderr, "Usage: %\%%s <file.ber>\n", av[0]);
+        exit(1);
+    } else {
+        filename = av[1];
+    }
 
-{\small{}~}{\small \par}
+    /* Open input file as read-only binary */
+    fp = fopen(filename, "rb");
+    if(!fp) {
+        perror(filename);
+        exit(1);
+    }
 
-{\small int~main(int~ac,~char~{*}{*}av)~\{}{\small \par}
+    /* Read up to the buffer size */
+    size = fread(buf, 1, sizeof(buf), fp);
+    fclose(fp);
+    if(!size) {
+        fprintf(stderr, "%\%%s: Empty or broken\n", filename);
+        exit(1);
+    }
 
-{\small{}~~~~char~buf{[}1024{]};~~~~~~/{*}~Temporary~buffer~~~~~~{*}/}{\small \par}
+    /* Decode the input buffer as Rectangle type */
+    rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rectangle, buf, size);
+    if(rval.code != RC_OK) {
+        fprintf(stderr, "%\%%s: Broken Rectangle encoding at byte %\%%ld\n", filename, (long)rval.consumed);
+        exit(1);
+    }
 
-{\small{}~~~~Rectangle\_t~{*}rectangle~=~0;~/{*}~Type~to~decode~{*}/}{\small \par}
+    /* Print the decoded Rectangle type as XML */
+    xer_fprint(stdout, &asn_DEF_Rectangle, rectangle);
 
-{\small{}~~~~asn\_dec\_rval\_t~rval;~/{*}~Decoder~return~value~~{*}/}{\small \par}
-
-{\small{}~~~~FILE~{*}fp;~~~~~~~~~~~~/{*}~Input~file~handler~~~~{*}/}{\small \par}
-
-{\small{}~~~~size\_t~size;~~~~~~~~~/{*}~Number~of~bytes~read~~{*}/}{\small \par}
-
-{\small{}~~~~char~{*}filename;~~~~~~/{*}~Input~file~name~{*}/}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~/{*}~Require~a~single~filename~argument~{*}/}{\small \par}
-
-{\small{}~~~~if(ac~!=~2)~\{}{\small \par}
-
-{\small{}~~~~~~fprintf(stderr,~''Usage:~\%s~<file.ber>\textbackslash{}n'',~av{[}0{]});}{\small \par}
-
-{\small{}~~~~~~exit(64);~/{*}~better,~EX\_USAGE~{*}/}{\small \par}
-
-{\small{}~~~~\}~else~\{}{\small \par}
-
-{\small{}~~~~~~filename~=~av{[}1{]};}{\small \par}
-
-{\small{}~~~~\}}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~/{*}~Open~input~file~as~read-only~binary~{*}/}{\small \par}
-
-{\small{}~~~~fp~=~fopen(filename,~''rb'');}{\small \par}
-
-{\small{}~~~~if(!fp)~\{}{\small \par}
-
-{\small{}~~~~~~perror(filename);}{\small \par}
-
-{\small{}~~~~~~exit(66);~/{*}~better,~EX\_NOINPUT~{*}/}{\small \par}
-
-{\small{}~~~~\}}{\small \par}
-
-{\small{}~~}{\small \par}
-
-{\small{}~~~~/{*}~Read~up~to~the~buffer~size~{*}/}{\small \par}
-
-{\small{}~~~~size~=~fread(buf,~1,~sizeof(buf),~fp);}{\small \par}
-
-{\small{}~~~~fclose(fp);}{\small \par}
-
-{\small{}~~~~if(!size)~\{}{\small \par}
-
-{\small{}~~~~~~fprintf(stderr,~''\%s:~Empty~or~broken\textbackslash{}n'',~filename);}{\small \par}
-
-{\small{}~~~~~~exit(65);~/{*}~better,~EX\_DATAERR~{*}/}{\small \par}
-
-{\small{}~~~~\}}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~/{*}~Decode~the~input~buffer~as~Rectangle~type~{*}/}{\small \par}
-
-{\small{}~~~~rval~=~ber\_decode(0,~\&asn\_DEF\_Rectangle,}{\small \par}
-
-{\small{}~~~~~~(void~{*}{*})\&rectangle,~buf,~size);}{\small \par}
-
-{\small{}~~~~if(rval.code~!=~RC\_OK)~\{}{\small \par}
-
-{\small{}~~~~~~fprintf(stderr,}{\small \par}
-
-{\small{}~~~~~~~~''\%s:~Broken~Rectangle~encoding~at~byte~\%ld\textbackslash{}n'',}{\small \par}
-
-{\small{}~~~~~~~~filename,~(long)rval.consumed);}{\small \par}
-
-{\small{}~~~~~~exit(65);~/{*}~better,~EX\_DATAERR~{*}/}{\small \par}
-
-{\small{}~~~~\}}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~/{*}~Print~the~decoded~Rectangle~type~as~XML~{*}/}{\small \par}
-
-{\small{}~~~~xer\_fprint(stdout,~\&asn\_DEF\_Rectangle,~rectangle);}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small{}~~~~return~0;~/{*}~Decoding~finished~successfully~{*}/}{\small \par}
-
-{\small \}}{\small \par}
-\end{lyxcode}
+    return 0; /* Decoding finished successfully */
+\end{codesample}
 \item Compile all files together using C compiler (varies by platform):
 
-\begin{lyxcode}
-\emph{cc~-I.~-o}~\textbf{\emph{rdecode}}~\emph{{*}.c}
-\end{lyxcode}
+\begin{bash}
+cc -I. -o %\textbf{\emph{rdecode}} \emph{*.c}%
+\end{bash}
 \item Voila! You have just created the BER decoder of a Rectangle type,
 named \textbf{rdecode}!
 \end{enumerate}
@@ -1123,25 +880,16 @@ and how to invoke the constraints validation code in your application.
 \begin{enumerate}
 \item Create a file named \textbf{rectangle.asn1} with the following contents:
 
-\begin{lyxcode}
-RectangleModuleWithConstraints~DEFINITIONS~::=
+\begin{asn}
+RectangleModuleWithConstraints DEFINITIONS ::= BEGIN
 
-BEGIN
-
-~
-
-Rectangle~::=~SEQUENCE~\{
-
-~~~~height~~INTEGER~(0..100),~-{}-~Value~range~constraint
-
-~~~~width~~~INTEGER~(0..MAX)~~-{}-~Makes~width~non-negative~
-
-\}
-
-~
+Rectangle ::= SEQUENCE {
+    height  INTEGER (0..100), -- Value range constraint
+    width   INTEGER (0..MAX)  -- Makes width non-negative 
+}
 
 END
-\end{lyxcode}
+\end{asn}
 \item Compile the file according to procedures shown in the previous chapter.
 \item Modify the Rectangle type processing routine (you can start with the
 main() routine shown in the Section \vref{sec:A-Rectangle-Decoder})
@@ -1154,49 +902,32 @@ sharing the data with anyone else.
 Placing the constraint checking code \emph{after} decoding, but before
 any further action depending on the decoded data, helps to make sure
 the application got the valid contents before making use of it.%
-}:\clearpage{}
+}:
 
-\begin{lyxcode}
-{\small int~ret;~~~~~~~~~~~/{*}~Return~value~{*}/}{\small \par}
+\begin{codesample}
+int ret;           /* Return value */
+char errbuf[128];  /* Buffer for error message */
+size_t errlen = sizeof(errbuf);  /* Size of the buffer */
 
-{\small char~errbuf{[}128{]};~~/{*}~Buffer~for~error~message~{*}/}{\small \par}
+/* ... here may go Rectangle %\emph{decoding}% code ... */
 
-{\small size\_t~errlen~=~sizeof(errbuf);~~/{*}~Size~of~the~buffer~{*}/}{\small \par}
+ret = asn_check_constraints(&asn_DEF_Rectangle, rectangle, errbuf, &errlen);
+/* assert(errlen < sizeof(errbuf)); // you may rely on that */
+if(ret) {
+    fprintf(stderr, "Constraint validation failed: %\%%s\n",
+            errbuf   /* errbuf is properly nul-terminated */
+    );
+    /* exit(...); // Replace with appropriate action */
+ }
 
-{\small{}~~}{\small \par}
-
-{\small /{*}~...~here~may~go~Rectangle~decoding~code~...~{*}/}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small ret~=~asn\_check\_constraints(\&asn\_DEF\_Rectangle,}{\small \par}
-
-{\small{}~~~~~~~~rectangle,~errbuf,~\&errlen);}{\small \par}
-
-{\small /{*}~assert(errlen~<~sizeof(errbuf));~//~you~may~rely~on~that~{*}/}{\small \par}
-
-{\small if(ret)~\{}{\small \par}
-
-{\small{}~~~~~~~~fprintf(stderr,~''Constraint~validation~failed:~\%s\textbackslash{}n'',}{\small \par}
-
-{\small{}~~~~~~~~~~errbuf~~~/{*}~errbuf~is~properly~nul-terminated~{*}/}{\small \par}
-
-{\small{}~~~~~~~~);}{\small \par}
-
-{\small{}~~~~~~~~/{*}~exit(...);~//~Replace~with~appropriate~action~{*}/}{\small \par}
-
-{\small \}}{\small \par}
-
-{\small{}~}{\small \par}
-
-{\small /{*}~...~here~may~go~Rectangle~encoding~code~...~{*}/}{\small \par}
-\end{lyxcode}
+/* ... here may go Rectangle %\emph{encoding}% code ... */
+\end{codesample}
 \item Compile the resulting C code as shown in the previous chapters.
 \item Try to test the constraints checking code by assigning integer value
 101 to the \textbf{.height} member of the Rectangle structure, or
 a negative value to the \textbf{.width} member. In either case, the
 program should print ``Constraint validation failed'' message, followed
-by the short explanation why validation did not succeed.
+by a short explanation why validation did not succeed.
 \item Done.
 \end{enumerate}
 
@@ -1213,7 +944,7 @@ of standards itself \cite{ITU-T/ASN.1}.}
 
 The Abstract Syntax Notation One is used to formally describe the
 semantics of data transmitted across the network. Two communicating
-parties may have different formats of their native data types (i.e.
+parties may have different formats of their native data types (i.~e.
 number of bits in the integer type), thus it is important to have
 a way to describe the data in a manner which is independent from the
 particular machine's representation. The ASN.1 specifications are
@@ -1227,15 +958,12 @@ to encode and decode the data according to some encoding rules (which
 are also defined by the ASN.1 standard).
 \end{itemize}
 Consider the following example:
-\begin{lyxcode}
-Rectangle~::=~SEQUENCE~\{
-
-~~~~height~~INTEGER,
-
-~~~~width~~~INTEGER
-
-\}
-\end{lyxcode}
+\begin{asn}
+Rectangle ::= SEQUENCE {
+    height  INTEGER,
+    width   INTEGER
+}
+\end{asn}
 This ASN.1 specification describes a constructed type, \emph{Rectangle},
 containing two integer fields. This specification may tell the reader
 that there exists this kind of data structure and that some entity
@@ -1249,35 +977,22 @@ and others, including CER and DER derivatives from BER.
 
 The complete specification must be wrapped in a module, which looks
 like this:
-\begin{lyxcode}
+\begin{asn}
 RectangleModule1
-
-~~~~\{~iso~org(3)~dod(6)~internet(1)~private(4)
-
-~~~~~~enterprise(1)~spelio(9363)~software(1)
-
-~~~~~~asn1c(5)~docs(2)~rectangle(1)~1~\}~
-
-~~~~DEFINITIONS~AUTOMATIC~TAGS~::=
-
+    { iso org(3) dod(6) internet(1) private(4)
+      enterprise(1) spelio(9363) software(1)
+      asn1c(5) docs(2) rectangle(1) 1 }
+    DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 
-~
-
--{}-~This~is~a~comment~which~describes~nothing.
-
-Rectangle~::=~SEQUENCE~\{
-
-~~~~height~~INTEGER,~~~~~~~~-{}-~Height~of~the~rectangle
-
-~~~~width~~~INTEGER~~~~~~~~~-{}-~Width~of~the~rectangle
-
-\}
-
-~
+-- This is a comment which describes nothing.
+Rectangle ::= SEQUENCE {
+    height  INTEGER,        -- Height of the rectangle
+    width   INTEGER         -- Width of the rectangle
+}
 
 END
-\end{lyxcode}
+\end{asn}
 The module header consists of module name (RectangleModule1), the
 module object identifier (\{...\}), a keyword ``DEFINITIONS'', a
 set of module flags (AUTOMATIC TAGS) and ``::= BEGIN''. The module
@@ -1298,58 +1013,40 @@ or a similar kind of two-way choice.
 The INTEGER type is a signed natural number type without any restrictions
 on its size. If the automatic checking on INTEGER value bounds are
 necessary, the subtype constraints must be used.
-\begin{lyxcode}
-SimpleInteger~::=~INTEGER
+\begin{asn}
+SimpleInteger ::= INTEGER
 
-~
+-- An integer with a very limited range
+SmallPositiveInt ::= INTEGER (0..127)
 
--{}-~An~integer~with~a~very~limited~range
-
-SmallPositiveInt~::=~INTEGER~(0..127)
-
-~
-
--{}-~Integer,~negative
-
-NegativeInt~::=~INTEGER~(MIN..0)
-\end{lyxcode}
+-- Integer, negative
+NegativeInt ::= INTEGER (MIN..0)
+\end{asn}
 
 \subsection{The ENUMERATED type}
 
 The ENUMERATED type is semantically equivalent to the INTEGER type
 with some integer values explicitly named.
-\begin{lyxcode}
-FruitId~::=~ENUMERATED~\{~apple(1),~orange(2)~\}
+\begin{asn}
+FruitId ::= ENUMERATED { apple(1), orange(2) }
 
-~
-
--{}-~The~numbers~in~braces~are~optional,
-
--{}-~the~enumeration~can~be~performed
-
--{}-~automatically~by~the~compiler
-
-ComputerOSType~::=~ENUMERATED~\{
-
-~~~~FreeBSD,~~~~~~~~~~-{}-~acquires~value~0
-
-~~~~Windows,~~~~~~~~~~-{}-~acquires~value~1
-
-~~~~Solaris(5),~~~~~~~-{}-~remains~5
-
-~~~~Linux,~~~~~~~~~~~~-{}-~becomes~6
-
-~~~~MacOS~~~~~~~~~~~~~-{}-~becomes~7
-
-\}
-\end{lyxcode}
+-- The numbers in braces are optional,
+-- the enumeration can be performed
+-- automatically by the compiler
+ComputerOSType ::= ENUMERATED {
+    FreeBSD,          -- acquires value 0
+    Windows,          -- acquires value 1
+    Solaris(5),       -- remains 5
+    Linux,            -- becomes 6
+    MacOS             -- becomes 7
+}
+\end{asn}
 
 \subsection{The OCTET STRING type}
 
 This type models the sequence of 8-bit bytes. This may be used to
 transmit some opaque data or data serialized by other types of encoders
-(i.e. video file, photo picture, etc).
-
+(i.~e., video file, photo picture, etc).
 
 \subsection{The OBJECT IDENTIFIER type}
 
@@ -1361,25 +1058,17 @@ get your own identification subtree at \url{http://www.iana.org/protocols/forms.
 
 For example, the very first ASN.1 module in this Chapter (RectangleModule1)
 has the following OBJECT IDENTIFIER: 1 3 6 1 4 1 9363 1 5 2 1 1.
-\begin{lyxcode}
-ExampleOID~::=~OBJECT~IDENTIFIER
+\begin{asn}
+ExampleOID ::= OBJECT IDENTIFIER
 
-~
+rectangleModule1-oid ExampleOID
+  ::= { 1 3 6 1 4 1 9363 1 5 2 1 1 }
 
-rectangleModule1-oid~ExampleOID
-
-~~::=~\{~1~3~6~1~4~1~9363~1~5~2~1~1~\}
-
-~
-
--{}-~An~identifier~of~the~Internet.
-
-internet-id~OBJECT~IDENTIFIER
-
-~~::=~\{~iso(1)~identified-organization(3)
-
-~~~~~~~~dod(6)~internet(1)~\}
-\end{lyxcode}
+-- An identifier of the Internet.
+internet-id OBJECT IDENTIFIER
+  ::= { iso(1) identified-organization(3)
+        dod(6) internet(1) }
+\end{asn}
 As you see, names are optional.
 
 
@@ -1389,15 +1078,12 @@ The RELATIVE-OID type has the semantics of a subtree of an OBJECT
 IDENTIFIER. There may be no need to repeat the whole sequence of numbers
 from the root of the registration tree where the only thing of interest
 is some of the tree's subsequence.
-\begin{lyxcode}
-this-document~RELATIVE-OID~::=~\{~docs(2)~usage(1)~\}
+\begin{asn}
+this-document RELATIVE-OID ::= { docs(2) usage(1) }
 
-~
-
-this-example~RELATIVE-OID~::=~\{
-
-~~~~this-document~assorted-examples(0)~this-example(1)~\}
-\end{lyxcode}
+this-example RELATIVE-OID ::= {
+    this-document assorted-examples(0) this-example(1) }
+\end{asn}
 
 \section{Some of the ASN.1 String Types}
 
@@ -1439,7 +1125,7 @@ symbol (tilde).
 Alternatively, the alphabet may be described as the PrintableString
 alphabet presented earlier, plus the following characters: ``\textbf{!}'',
 ``\textbf{``}'', ``\textbf{\#}'', ``\textbf{\$}'', ``\textbf{\%}'',
-``\textbf{\&}'', ``\textbf{{*}}'', ``\textbf{;}'', ``\textbf{<}'',
+``\textbf{\&}'', ``\textbf{*}'', ``\textbf{;}'', ``\textbf{<}'',
 ``\textbf{>}'', ``\textbf{{[}}'', ``\textbf{\textbackslash{}}'',
 ``\textbf{{]}}'', ``\textbf{\textasciicircum{}}'', ``\textbf{\_}'',
 ``\textbf{`}`` (single left quote), ``\textbf{\{}'', ``\textbf{|}'',
@@ -1453,25 +1139,17 @@ alphabet presented earlier, plus the following characters: ``\textbf{!}'',
 
 This is an ordered collection of other simple or constructed types.
 The SEQUENCE constructed type resembles the C ``struct'' statement.
-\begin{lyxcode}
-Address~::=~SEQUENCE~\{
-
-~~~~-{}-~The~apartment~number~may~be~omitted
-
-~~~~apartmentNumber~~~~~~NumericString~OPTIONAL,
-
-~~~~streetName~~~~~~~~~~~PrintableString,
-
-~~~~cityName~~~~~~~~~~~~~PrintableString,
-
-~~~~stateName~~~~~~~~~~~~PrintableString,
-
-~~~~-{}-~This~one~may~be~omitted~too
-
-~~~~zipNo~~~~~~~~~~~~~~~~NumericString~OPTIONAL
-
-\}
-\end{lyxcode}
+\begin{asn}
+Address ::= SEQUENCE {
+    -- The apartment number may be omitted
+    apartmentNumber      NumericString OPTIONAL,
+    streetName           PrintableString,
+    cityName             PrintableString,
+    stateName            PrintableString,
+    -- This one may be omitted too
+    zipNo                NumericString OPTIONAL
+}
+\end{asn}
 
 \subsection{The SET type}
 
@@ -1490,68 +1168,50 @@ This one resembles the C ``union'' statement.
 
 The following type defines a response code, which may be either an
 integer code or a boolean ``true''/``false'' code.
-\begin{lyxcode}
-ResponseCode~::=~CHOICE~\{
-
-~~~~intCode~~~~INTEGER,
-
-~~~~boolCode~~~BOOLEAN
-
-\}
-
-
-\end{lyxcode}
+\begin{asn}
+ResponseCode ::= CHOICE {
+    intCode    INTEGER,
+    boolCode   BOOLEAN
+}
+\end{asn}
 
 \subsection{The SEQUENCE OF type}
 
 This one is the list (array) of simple or constructed types:
-\begin{lyxcode}
--{}-~Example~1
+\begin{asn}
+-- Example 1
+ManyIntegers ::= SEQUENCE OF INTEGER
 
-ManyIntegers~::=~SEQUENCE~OF~INTEGER
+-- Example 2
+ManyRectangles ::= SEQUENCE OF Rectangle
 
-~
-
--{}-~Example~2
-
-ManyRectangles~::=~SEQUENCE~OF~Rectangle
-
-~
-
--{}-~More~complex~example:
-
--{}-~an~array~of~structures~defined~in~place.
-
-ManyCircles~::=~SEQUENCE~OF~SEQUENCE~\{
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~radius~INTEGER
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~\}
-\end{lyxcode}
+-- More complex example:
+-- an array of structures defined in place.
+ManyCircles ::= SEQUENCE OF SEQUENCE {
+                            radius INTEGER
+                            }
+\end{asn}
 
 \subsection{The SET OF type}
 
 The SET OF type models the bag of structures. It resembles the SEQUENCE
-OF type, but the order is not important: i.e. the elements may arrive
+OF type, but the order is not important: i.~e. the elements may arrive
 in the order which is not necessarily the same as the in-memory order
 on the remote machines.
-\begin{lyxcode}
--{}-~A~set~of~structures~defined~elsewhere
+\begin{asn}
+-- A set of structures defined elsewhere
+SetOfApples :: SET OF Apple
 
-SetOfApples~::~SET~OF~Apple
-
-~
-
--{}-~Set~of~integers~encoding~the~kind~of~a~fruit
-
-FruitBag~::=~SET~OF~ENUMERATED~\{~apple,~orange~\}\end{lyxcode}
+-- Set of integers encoding the kind of a fruit
+FruitBag ::= SET OF ENUMERATED { apple, orange }
+\end{asn}
 \begin{thebibliography}{ITU-T/ASN.1}
 \bibitem[ASN1C]{ASN1C}The Open Source ASN.1 Compiler. \url{http://lionet.info/asn1c}
 
 \bibitem[AONL]{AONL}Online ASN.1 Compiler. \url{http://lionet.info/asn1c/asn1c.cgi}
 
 \bibitem[Dub00]{Dub00}Olivier Dubuisson --- \emph{ASN.1 Communication
-between heterogeneous systems}~---~Morgan Kaufmann Publishers, 2000.
+between heterogeneous systems} --- Morgan Kaufmann Publishers, 2000.
 \url{http://asn1.elibel.tm.fr/en/book/}. ISBN:0-12-6333361-0.
 
 \bibitem[ITU-T/ASN.1]{ITU-T/ASN.1}ITU-T Study Group 17 --- Languages

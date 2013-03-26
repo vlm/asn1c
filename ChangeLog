@@ -1,6 +1,7 @@
 
 ???:
 	* Made -fskeletons-copy a default one; removed cmdline option.
+	* Updated asn1c-usage.pdf.
 
 0.9.24:	2013-Mar-16
 
