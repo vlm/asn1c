@@ -101,7 +101,7 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_INCLUDES_QUOTED;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
-		} else if(strcmp(optarg, "skeletons-copy") == 0) {
+		} else if(strcmp(optarg, "skeletons-copy") == 0) { // DEPRECATED
 			asn1_compiler_flags |= A1C_SKELETONS_COPY;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
@@ -462,7 +462,6 @@ usage(const char *av0) {
 "  -fno-constraints      Do not generate constraint checking code\n"
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
-"  -fskeletons-copy      Force copying the support files\n"
 "\n"
 
 "  -gen-PER              Generate PER support code\n"
