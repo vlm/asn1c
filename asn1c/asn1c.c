@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005, 2006
+ * Copyright (c) 2003, 2004, 2005, 2006, 2013
  * 	Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,8 +101,10 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_INCLUDES_QUOTED;
 		} else if(strcmp(optarg, "unnamed-unions") == 0) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
-		} else if(strcmp(optarg, "skeletons-copy") == 0) { // DEPRECATED
-			asn1_compiler_flags |= A1C_SKELETONS_COPY;
+		} else if(strcmp(optarg, "skeletons-copy") == 0) {
+			fprintf(stderr, "-f%s: Deprecated option\n", optarg);
+		} else if(strcmp(optarg, "link-skeletons") == 0) {
+			asn1_compiler_flags |= A1C_LINK_SKELETONS;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);

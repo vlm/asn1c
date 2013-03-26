@@ -52,10 +52,10 @@ enum asn1c_flags {
 	 */
 	A1C_INDIRECT_CHOICE	= 0x0400,
 	/*
-	 * -fskeletons-copy
-	 * Copy support files rather than symlink them.
+	 * -flink-skeletons
+	 * Symlink support files rather than copy them.
 	 */
-	A1C_SKELETONS_COPY	= 0x0800,
+	A1C_LINK_SKELETONS	= 0x0800,
 	/*
 	 * -gen-PER
 	 * Generate PER support code

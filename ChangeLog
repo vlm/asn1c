@@ -1,6 +1,6 @@
 
 ???:
-	*
+	* Made -fskeletons-copy a default one; removed cmdline option.
 
 0.9.24:	2013-Mar-16
 

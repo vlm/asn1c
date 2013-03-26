@@ -434,7 +434,7 @@ asn1c_copy_over(arg_t *arg, char *path) {
 #ifdef	_WIN32
 	int use_real_copy = 1;
 #else
-	int use_real_copy = (arg->flags & A1C_SKELETONS_COPY);
+	int use_real_copy = !(arg->flags & A1C_LINK_SKELETONS);
 #endif
 
 	fname = a1c_basename(path);
