@@ -775,3 +775,4 @@ asn_dec_rval_t OCTET_STRING_decode_uper(asn_codec_ctx_t *ctx, asn_TYPE_descripto
 
 asn_enc_rval_t OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts, void *sptr, asn_per_outp_t *po) { asn_enc_rval_t er = { 0, 0, 0 }; (void)td; (void)cts; (void)sptr; (void)po; return er; }
 
+size_t xer_whitespace_span(const void *chunk_buf, size_t chunk_size) {  (void)chunk_buf; (void)chunk_size; return 0; }
