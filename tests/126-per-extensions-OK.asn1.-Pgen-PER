@@ -222,7 +222,7 @@ asn_TYPE_descriptor_t asn_DEF_Singleton = {
 
 /*** <<< INCLUDES [PDU-2] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [PDU-2] >>> ***/
@@ -240,13 +240,13 @@ typedef enum PDU_2_PR {
 typedef struct PDU_2 {
 	PDU_2_PR present;
 	union PDU_2_u {
-		INTEGER_t	 main;
+		long	 main;
 		/*
 		 * This type is extensible,
 		 * possible extensions are below.
 		 */
-		INTEGER_t	 ext1;
-		INTEGER_t	 ext0;
+		long	 ext1;
+		long	 ext0;
 	} choice;
 	
 	/* Context for parsing across buffer boundaries */
@@ -271,7 +271,7 @@ static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.main),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
@@ -280,7 +280,7 @@ static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.ext1),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
@@ -289,7 +289,7 @@ static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.ext0),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,

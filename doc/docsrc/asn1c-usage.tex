@@ -64,7 +64,7 @@
         }
 
 \lstnewenvironment{codesample}[1][]{\lstset{style=listingStyle,language=C,#1}}{}
-\lstnewenvironment{bash}[1][]{\lstset{style=listingStyle,morekeywords={-fnative-types},language=bash,#1}}{}
+\lstnewenvironment{bash}[1][]{\lstset{style=listingStyle,language=bash,#1}}{}
 \lstnewenvironment{asn}[1][]{\lstset{style=listingStyle,language=asn1,#1}}{}
 \def\code{lstinline}
 
@@ -155,12 +155,6 @@ to find out about \textbf{-P} and \textbf{-R} options.%
 \begin{bash}
 asn1c %\emph{<modules.asn1>}%
 \end{bash}
-The asn1c takes a number of command line options,
-such as an option to produce native long types
-for integers instead of infinite width INTEGER\_t structures:
-\begin{bash}
-asn1c %\textbf{-fnative-types} \emph{<modules.asn1>}%
-\end{bash}
 If several ASN.1 modules contain interdependencies, all of the files
 must be specified altogether:
 \begin{bash}
@@ -169,7 +163,7 @@ asn1c %\emph{<module1.asn1> <module2.asn1> ...}%
 The compiler \textbf{-E} and \textbf{-EF} options are used for testing
 the parser and the semantic fixer, respectively. These options will
 instruct the compiler to dump out the parsed (and fixed, if \textbf{-F}
-is involved) ASN.1 specification as it was ``understood''
+is involved) ASN.1 specification as it was understood
 by the compiler. It might be useful to check whether a particular
 syntactic construct is properly supported by the compiler.
 \begin{bash}
@@ -188,6 +182,7 @@ Print the compiled output instead of creating multiple source files:
 asn1c %\textbf{-P} \emph{<module-to-compile-and-print.asn1>}%
 \end{bash}
 
+\clearpage{}
 \section{Recognizing compiler output}
 
 The asn1c compiler produces a number of files:
@@ -207,12 +202,12 @@ or the plain `make` utility. Just rename it into \emph{Makefile}.
 \end{itemize}
 It is possible to compile everything with just a couple of instructions:
 \begin{bash}
-asn1c -fnative-types -pdu=%\emph{Rectangle}% *.asn1
+asn1c -pdu=%\emph{Rectangle}% *.asn1
 make -f Makefile.am.sample                    # If you use `make`
 \end{bash}
 or
 \begin{bash}
-asn1c -fnative-types *.asn1
+asn1c *.asn1
 cc -I. -DPDU=%\emph{Rectangle}% -o rectangle.exe *.c   # ... or like this
 \end{bash}
 Refer to the Chapter \vref{cha:Step-by-step-examples} for a sample
@@ -261,15 +256,12 @@ to prevent circular references. }\\
 {-fknown-extern-type=}\emph{<name>} & {\small Pretend the specified type is known. The compiler will assume
 the target language source files for the given type have been provided
 manually. }\\
-{-fnative-types} & {\small Use the native machine's data types (long, double) whenever
-possible, instead of the compound INTEGER\_t, ENUMERATED\_t and REAL\_t
-types. }\\
 {-fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
 may produce a shorter executable.}\\
 {-fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical
 dependencies.}\\
-{-funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's
-structures.}\\\\
+{-funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's structures.}\\
+{-fwide-types} & {\small Use the wide integer types (INTEGER\_t, REAL\_t) instead of machine's native data types (long, double). }\\\\
 \textbf{Codecs Generation Options} & \textbf{Description}\\
 \midrule
 {-gen-PER} & {\small Generate Packed Encoding Rules (PER) support code.}\\
@@ -702,7 +694,7 @@ END
 \item Compile it into the set of .c and .h files using asn1c compiler \cite{ASN1C}:
 
 \begin{bash}
-asn1c -fnative-types %\textbf{rectangle.asn1}%
+asn1c %\textbf{rectangle.asn1}%
 \end{bash}
 \item Alternatively, use the Online ASN.1 compiler \cite{AONL} by uploading
 the \textbf{rectangle.asn1} file into the Web form and unpacking the
@@ -799,7 +791,7 @@ END
 \item Compile it into the set of .c and .h files using asn1c compiler \cite{ASN1C}:
 
 \begin{bash}
-asn1c -fnative-types %\textbf{rectangle.asn1}%
+asn1c %\textbf{rectangle.asn1}%
 \end{bash}
 \item Alternatively, use the Online ASN.1 compiler \cite{AONL} by uploading
 the \textbf{rectangle.asn1} file into the Web form and unpacking the

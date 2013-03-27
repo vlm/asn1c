@@ -36,7 +36,6 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = asn1c$(EXEEXT) unber$(EXEEXT) enber$(EXEEXT)
-TESTS =
 subdir = asn1c
 DIST_COMMON = README $(dist_check_SCRIPTS) $(dist_man1_MANS) \
 	$(noinst_HEADERS) $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -282,6 +281,7 @@ asn1c_LDADD = \
 noinst_HEADERS = sys-common.h
 dist_man1_MANS = asn1c.1 unber.1 enber.1
 dist_check_SCRIPTS = check-xxber.sh check-parsing.sh
+TESTS = $(dist_check_SCRIPTS)
 CLEANFILES = .check-xxber.*.tmp .check-parsing.*.tmp
 all: all-recursive
 

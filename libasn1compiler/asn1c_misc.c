@@ -16,7 +16,7 @@ static char *res_kwd[] = {
 	"union", "unsigned", "void", "volatile", "while",
 	"_Bool", "_Complex", "_Imaginary",
 	/* C++ */
-	"explicit", "bool", "mutable", 
+	"class", "explicit", "bool", "mutable", 
 	"template", "typeid", "typename", "and", "and_eq", 
 	"or", "or_eq", "xor", "xor_eq", "not", "not_eq",
 	"bitor", "compl", "bitand",
@@ -214,7 +214,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	case ASN_BASIC_ENUMERATED:
 	case ASN_BASIC_REAL:
 		if((expr->expr_type == ASN_BASIC_REAL
-			&& (arg->flags & A1C_USE_NATIVE_TYPES))
+			&& !(arg->flags & A1C_USE_WIDE_TYPES))
 		|| asn1c_type_fits_long(arg, expr)) {
 			switch(_format) {
 			case TNF_CTYPE:
@@ -333,8 +333,8 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	}
 
 	if(!expr->combined_constraints) 
-		return (arg->flags & A1C_USE_NATIVE_TYPES)
-			? FL_FORCED : FL_NOTFIT;
+		return (arg->flags & A1C_USE_WIDE_TYPES)
+			? FL_NOTFIT : FL_PRESUMED;
 
 	/*
 	 * Second, if -fbless-SIZE is given, the (SIZE()) constraint may be
@@ -366,8 +366,8 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	|| range->not_PER_visible
 	) {
 		asn1constraint_range_free(range);
-		return (arg->flags & A1C_USE_NATIVE_TYPES)
-			? FL_FORCED : FL_NOTFIT;
+		return (arg->flags & A1C_USE_WIDE_TYPES)
+			? FL_NOTFIT : FL_PRESUMED;
 	}
 
 	left = range->left;
@@ -391,10 +391,10 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 			&& (right.value > RIGHTMAX || right.value < LEFTMIN))
 		return FL_NOTFIT;
 
-	/* If the range is open, fits only if -fnative-types is given */
+	/* If the range is open, fits only unless -fwide-types is given */
 	if(left.type != ARE_VALUE || right.type != ARE_VALUE) {
-		return (arg->flags & A1C_USE_NATIVE_TYPES)
-			? FL_FORCED : FL_NOTFIT;
+		return (arg->flags & A1C_USE_WIDE_TYPES)
+			? FL_NOTFIT : FL_PRESUMED;
 	}
 
 	return FL_FITS_SIGNED;

@@ -3515,7 +3515,7 @@ typedef struct Sequence {
 	Int1_t	*int1_c	/* DEFAULT 3 */;
 	Int4_t	 int4;
 	Int4_t	 int4_c;
-	BOOLEAN_t	*bool	/* DEFAULT 1 */;
+	BOOLEAN_t	*Bool	/* DEFAULT 1 */;
 	ENUMERATED_t	 enum_c;
 	NULL_t	*null	/* OPTIONAL */;
 	/*
@@ -3818,7 +3818,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.default_value = 0,
 		.name = "int4-c"
 		},
-	{ ATF_POINTER, 1, offsetof(struct Sequence, bool),
+	{ ATF_POINTER, 1, offsetof(struct Sequence, Bool),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,

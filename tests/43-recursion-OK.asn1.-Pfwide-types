@@ -239,14 +239,14 @@ struct Choice_1;
 typedef struct Choice_1 {
 	Choice_1_PR present;
 	union Choice_1_u {
-		struct Choice_1	*and;
-		struct or {
+		struct Choice_1	*And;
+		struct Or {
 			A_SET_OF(struct Choice_1) list;
 			
 			/* Context for parsing across buffer boundaries */
 			asn_struct_ctx_t _asn_ctx;
-		} or;
-		struct Choice_1	*not;
+		} Or;
+		struct Choice_1	*Not;
 		INTEGER_t	 other;
 	} choice;
 	
@@ -280,8 +280,8 @@ static ber_tlv_tag_t asn_DEF_or_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_or_specs_3 = {
-	sizeof(struct or),
-	offsetof(struct or, _asn_ctx),
+	sizeof(struct Or),
+	offsetof(struct Or, _asn_ctx),
 	2,	/* XER encoding is XMLValueList */
 };
 static /* Use -fall-defs-global to expose */
@@ -310,7 +310,7 @@ asn_TYPE_descriptor_t asn_DEF_or_3 = {
 };
 
 static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
-	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.and),
+	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.And),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Choice_1,
@@ -319,7 +319,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		.default_value = 0,
 		.name = "and"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct Choice_1, choice.or),
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice_1, choice.Or),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_or_3,
@@ -328,7 +328,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		.default_value = 0,
 		.name = "or"
 		},
-	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.not),
+	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.Not),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Choice_1,

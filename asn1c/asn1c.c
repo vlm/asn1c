@@ -92,7 +92,10 @@ main(int ac, char **av) {
 			ret = asn1f_make_known_external_type(known_type);
 			assert(ret == 0 || errno == EEXIST);
 		} else if(strcmp(optarg, "native-types") == 0) {
-			asn1_compiler_flags |= A1C_USE_NATIVE_TYPES;
+			fprintf(stderr, "-f%s: Deprecated option\n", optarg);
+			asn1_compiler_flags &= ~A1C_USE_WIDE_TYPES;
+		} else if(strcmp(optarg, "wide-types") == 0) {
+			asn1_compiler_flags |= A1C_USE_WIDE_TYPES;
 		} else if(strcmp(optarg, "no-constraints") == 0) {
 			asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
 		} else if(strcmp(optarg, "no-include-deps") == 0) {
@@ -103,6 +106,7 @@ main(int ac, char **av) {
 			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
 		} else if(strcmp(optarg, "skeletons-copy") == 0) {
 			fprintf(stderr, "-f%s: Deprecated option\n", optarg);
+			asn1_compiler_flags &= ~A1C_LINK_SKELETONS;
 		} else if(strcmp(optarg, "link-skeletons") == 0) {
 			asn1_compiler_flags |= A1C_LINK_SKELETONS;
 		} else {
@@ -460,10 +464,10 @@ usage(const char *av0) {
 "  -findirect-choice     Compile members of CHOICE as indirect pointers\n"
 "  -fincludes-quoted     Generate #includes in \"double\" instead of <angle> quotes\n"
 "  -fknown-extern-type=<name>    Pretend the specified type is known\n"
-"  -fnative-types        Use \"long\" instead of INTEGER_t whenever possible, etc.\n"
 "  -fno-constraints      Do not generate constraint checking code\n"
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
+"  -fwide-types          Use INTEGER_t instead of \"long\" by default, etc.\n"
 "\n"
 
 "  -gen-PER              Generate PER support code\n"

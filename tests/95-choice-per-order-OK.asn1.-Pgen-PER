@@ -5,7 +5,7 @@
 #include <BIT_STRING.h>
 #include <BOOLEAN.h>
 #include <NULL.h>
-#include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_CHOICE.h>
 
 /*** <<< DEPS [Choice] >>> ***/
@@ -35,7 +35,7 @@ typedef struct Choice {
 			ch_PR present;
 			union Choice__ch_u {
 				NULL_t	 null;
-				INTEGER_t	 Int;
+				long	 Int;
 			} choice;
 			
 			/* Context for parsing across buffer boundaries */
@@ -45,7 +45,7 @@ typedef struct Choice {
 		 * This type is extensible,
 		 * possible extensions are below.
 		 */
-		BOOLEAN_t	 bool;
+		BOOLEAN_t	 Bool;
 	} choice;
 	
 	/* Context for parsing across buffer boundaries */
@@ -84,7 +84,7 @@ static asn_TYPE_member_t asn_MBR_ch_4[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct ch, choice.Int),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
@@ -158,7 +158,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.default_value = 0,
 		.name = "ch"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.bool),
+	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.Bool),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,

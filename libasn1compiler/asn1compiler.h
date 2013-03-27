@@ -20,9 +20,9 @@ enum asn1c_flags {
 	 */
 	A1C_OMIT_SUPPORT_CODE	= 0x0004,
 	/*
-	 * Use native data types instead of INTEGER_t et al.
+	 * Use wide types by default (INTEGER_t etc) instead of native/long.
 	 */
-	A1C_USE_NATIVE_TYPES	= 0x0008,
+	A1C_USE_WIDE_TYPES	= 0x0008,
 	/*
 	 * Do not use C99 extensions.
 	 */

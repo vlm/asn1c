@@ -1,7 +1,9 @@
 
 ???:
-	* Made -fskeletons-copy a default one; removed cmdline option.
 	* Updated asn1c-usage.pdf.
+	* Made -fskeletons-copy a default option; removed cmdline option.
+	* Made -fnative-types a default options; removed cmdline option.
+	  Added -fwide-types for backwards compatibility.
 
 0.9.24:	2013-Mar-16
 

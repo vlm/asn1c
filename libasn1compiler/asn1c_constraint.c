@@ -78,7 +78,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			produce_st = 1;
 		break;
 	case ASN_BASIC_REAL:
-		if(!(arg->flags & A1C_USE_NATIVE_TYPES))
+		if((arg->flags & A1C_USE_WIDE_TYPES))
 			produce_st = 1;
 		break;
 	case ASN_BASIC_BIT_STRING:
@@ -656,9 +656,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 		}
 		break;
 	case ASN_BASIC_REAL:
-		if(arg->flags & A1C_USE_NATIVE_TYPES) {
-			OUT("value = *(const double *)sptr;\n");
-		} else {
+		if(arg->flags & A1C_USE_WIDE_TYPES) {
 			OUT("if(asn_REAL2double(st, &value)) {\n");
 				INDENT(+1);
 				OUT("_ASN_CTFAIL(app_key, td, sptr,\n");
@@ -667,6 +665,8 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 				OUT("return -1;\n");
 				INDENT(-1);
 			OUT("}\n");
+		} else {
+			OUT("value = *(const double *)sptr;\n");
 		}
 		break;
 	case ASN_BASIC_BOOLEAN:

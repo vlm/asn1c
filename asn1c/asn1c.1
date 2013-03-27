@@ -26,7 +26,7 @@ and other encoding rules.
 .br
 \fB\-fbless-SIZE \-fcompound-names \-findirect-choice
 .BI "\-fknown-extern-type="<name>
-\fB\-fnative-types \-fno-constraints \-fno-include-deps \-funnamed-unions
+\fB\-fno-constraints \-fno-include-deps \-funnamed-unions \-fwide-types
 .TP
 \fICodecs Generation Options\fR
 .br
@@ -98,10 +98,6 @@ to prevent circular references.
 Pretend the specified type is known. The compiler will assume the target
 language source files for the given type have been provided manually.
 .TP
-.B \-fnative-types
-Use the native machine's data types (int, double) whenever possible,
-instead of the compound INTEGER_t, ENUMERATED_t and REAL_t types.
-.TP
 .B \-fno-constraints
 Do not generate ASN.1 subtype constraint checking code. This may make a shorter executable.
 .TP
@@ -111,6 +107,10 @@ Helps prevent namespace collisions.
 .TP
 .B \-funnamed-unions
 Enable unnamed unions in the definitions of target language's structures.
+.TP
+.B \-fwide-types
+Use the unbounded size data types (INTEGER_t, ENUMERATED_t, REAL_t) by default,
+instead of the native machine's data types (long, double).
 .SH CODECS GENERATION OPTIONS
 .TP
 .B \-gen-PER

@@ -8,7 +8,7 @@
 #include <UTF8String.h>
 #include <BMPString.h>
 #include <UniversalString.h>
-#include <REAL.h>
+#include <NativeReal.h>
 #include <OBJECT_IDENTIFIER.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
@@ -55,7 +55,7 @@ typedef struct PDU {
 	UniversalString_t	*us_cs	/* OPTIONAL */;
 	UniversalString_t	*us_ce	/* OPTIONAL */;
 	UniversalString_t	*us_ir	/* OPTIONAL */;
-	REAL_t	*real	/* OPTIONAL */;
+	double	*real	/* OPTIONAL */;
 	OBJECT_IDENTIFIER_t	*oid	/* OPTIONAL */;
 	
 	/* Context for parsing across buffer boundaries */
@@ -1492,7 +1492,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 	{ ATF_POINTER, 2, offsetof(struct PDU, real),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (29 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_REAL,
+		.type = &asn_DEF_NativeReal,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,

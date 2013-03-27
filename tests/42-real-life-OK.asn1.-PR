@@ -589,7 +589,7 @@ asn_TYPE_descriptor_t asn_DEF_VariablePart = {
 
 /*** <<< INCLUDES [ActionItem] >>> ***/
 
-#include <ENUMERATED.h>
+#include <NativeEnumerated.h>
 #include <BOOLEAN.h>
 #include <VisibleString.h>
 #include <asn_SET_OF.h>
@@ -610,7 +610,7 @@ typedef enum accept_as {
 /*** <<< TYPE-DECLS [ActionItem] >>> ***/
 
 typedef struct ActionItem {
-	ENUMERATED_t	 accept_as;
+	long	 accept_as;
 	struct notify {
 		BOOLEAN_t	 critical;
 		struct email {
@@ -647,29 +647,29 @@ static int
 accept_as_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
 	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
- * This type is implemented using ENUMERATED,
+ * This type is implemented using NativeEnumerated,
  * so here we adjust the DEF accordingly.
  */
 static void
 accept_as_2_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->free_struct    = asn_DEF_NativeEnumerated.free_struct;
+	td->print_struct   = asn_DEF_NativeEnumerated.print_struct;
+	td->ber_decoder    = asn_DEF_NativeEnumerated.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
+	td->elements       = asn_DEF_NativeEnumerated.elements;
+	td->elements_count = asn_DEF_NativeEnumerated.elements_count;
+     /* td->specifics      = asn_DEF_NativeEnumerated.specifics;	// Defined explicitly */
 }
 
 static void

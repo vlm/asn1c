@@ -614,7 +614,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 /*** <<< INCLUDES [Set] >>> ***/
 
 #include <asn_SET_OF.h>
-#include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SET_OF.h>
 
@@ -627,7 +627,7 @@ struct Sequence;
 
 typedef struct Set {
 	A_SET_OF(struct Member {
-		INTEGER_t	 Int;
+		long	 Int;
 		struct Set	*set;
 		struct Sequence	*seq;
 		struct Set	*set2	/* OPTIONAL */;
@@ -660,7 +660,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Member, Int),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
@@ -793,7 +793,7 @@ asn_TYPE_descriptor_t asn_DEF_Set = {
 
 /*** <<< INCLUDES [Sequence] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 
 /*** <<< FWD-DECLS [Sequence] >>> ***/
@@ -804,13 +804,13 @@ struct Set;
 /*** <<< TYPE-DECLS [Sequence] >>> ***/
 
 typedef struct Sequence {
-	INTEGER_t	 a;
+	long	 a;
 	struct Sequence	*seq	/* OPTIONAL */;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
 	 */
-	INTEGER_t	*b;
+	long	*b;
 	struct Set	*set	/* OPTIONAL */;
 	
 	/* Context for parsing across buffer boundaries */
@@ -832,7 +832,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, a),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
@@ -850,7 +850,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 	{ ATF_POINTER, 2, offsetof(struct Sequence, b),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,

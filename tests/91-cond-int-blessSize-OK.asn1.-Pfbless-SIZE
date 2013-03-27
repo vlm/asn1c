@@ -549,11 +549,11 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
 
 /*** <<< INCLUDES [NO-Integer5] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [NO-Integer5] >>> ***/
 
-typedef INTEGER_t	 NO_Integer5_t;
+typedef long	 NO_Integer5_t;
 
 /*** <<< FUNC-DECLS [NO-Integer5] >>> ***/
 
@@ -571,7 +571,6 @@ xer_type_encoder_f NO_Integer5_encode_xer;
 int
 NO_Integer5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	
 	if(!sptr) {
 		_ASN_CTFAIL(app_key, td, sptr,
@@ -586,29 +585,29 @@ NO_Integer5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 NO_Integer5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
 }
 
 void

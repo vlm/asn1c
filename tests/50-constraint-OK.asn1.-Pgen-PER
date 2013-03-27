@@ -1,11 +1,11 @@
 
 /*** <<< INCLUDES [Int1] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [Int1] >>> ***/
 
-typedef INTEGER_t	 Int1_t;
+typedef long	 Int1_t;
 
 /*** <<< FUNC-DECLS [Int1] >>> ***/
 
@@ -26,29 +26,29 @@ int
 Int1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 Int1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
 }
 
 void
@@ -167,7 +167,6 @@ per_type_encoder_f Int2_encode_uper;
 int
 Int2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Int1_t *st = (const Int1_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -177,8 +176,7 @@ Int2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	/* Check if the sign bit is present */
-	value = st->buf ? ((st->buf[0] & 0x80) ? -1 : 1) : 0;
+	value = *(const long *)sptr;
 	
 	if((value >= 0)) {
 		/* Constraint check succeeded */
@@ -336,7 +334,6 @@ per_type_encoder_f Int3_encode_uper;
 int
 Int3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Int2_t *st = (const Int2_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -346,12 +343,7 @@ Int3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value >= 0 && value <= 10)) {
 		/* Constraint check succeeded */
@@ -509,7 +501,6 @@ per_type_encoder_f Int4_encode_uper;
 int
 Int4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Int3_t *st = (const Int3_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -519,12 +510,7 @@ Int4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value >= 1 && value <= 10)) {
 		/* Constraint check succeeded */
@@ -682,7 +668,6 @@ per_type_encoder_f Int5_encode_uper;
 int
 Int5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Int4_t *st = (const Int4_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -692,12 +677,7 @@ Int5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value == 5)) {
 		/* Constraint check succeeded */
@@ -831,11 +811,11 @@ asn_TYPE_descriptor_t asn_DEF_Int5 = {
 
 /*** <<< INCLUDES [ExtensibleExtensions] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 
 /*** <<< TYPE-DECLS [ExtensibleExtensions] >>> ***/
 
-typedef INTEGER_t	 ExtensibleExtensions_t;
+typedef long	 ExtensibleExtensions_t;
 
 /*** <<< FUNC-DECLS [ExtensibleExtensions] >>> ***/
 
@@ -855,7 +835,6 @@ per_type_encoder_f ExtensibleExtensions_encode_uper;
 int
 ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -865,12 +844,7 @@ ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value >= 1 && value <= 256)) {
 		/* Constraint check succeeded */
@@ -884,24 +858,24 @@ ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using INTEGER,
+ * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
 static void
 ExtensibleExtensions_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
 }
 
 void
@@ -4080,7 +4054,7 @@ asn_TYPE_descriptor_t asn_DEF_VisibleIdentifier = {
 #include "Int1.h"
 #include "Int4.h"
 #include <BOOLEAN.h>
-#include <ENUMERATED.h>
+#include <NativeEnumerated.h>
 #include <NULL.h>
 #include "Int5.h"
 #include <constr_SEQUENCE.h>
@@ -4102,8 +4076,8 @@ typedef struct Sequence {
 	Int1_t	*int1_c	/* DEFAULT 3 */;
 	Int4_t	 int4;
 	Int4_t	 int4_c;
-	BOOLEAN_t	*bool	/* DEFAULT 1 */;
-	ENUMERATED_t	 enum_c;
+	BOOLEAN_t	*Bool	/* DEFAULT 1 */;
+	long	 enum_c;
 	NULL_t	*null	/* OPTIONAL */;
 	/*
 	 * This type is extensible,
@@ -4126,29 +4100,29 @@ static int
 enum_c_6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
 	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
- * This type is implemented using ENUMERATED,
+ * This type is implemented using NativeEnumerated,
  * so here we adjust the DEF accordingly.
  */
 static void
 enum_c_6_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->free_struct    = asn_DEF_NativeEnumerated.free_struct;
+	td->print_struct   = asn_DEF_NativeEnumerated.print_struct;
+	td->ber_decoder    = asn_DEF_NativeEnumerated.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
+	td->elements       = asn_DEF_NativeEnumerated.elements;
+	td->elements_count = asn_DEF_NativeEnumerated.elements_count;
+     /* td->specifics      = asn_DEF_NativeEnumerated.specifics;	// Defined explicitly */
 }
 
 static void
@@ -4213,7 +4187,6 @@ enum_c_6_encode_uper(asn_TYPE_descriptor_t *td,
 static int
 memb_int1_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Int1_t *st = (const Int1_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -4223,12 +4196,7 @@ memb_int1_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value >= -2)) {
 		/* Constraint check succeeded */
@@ -4244,7 +4212,6 @@ memb_int1_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 static int
 memb_int4_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Int4_t *st = (const Int4_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -4254,12 +4221,7 @@ memb_int4_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value >= 5 && value <= 7)) {
 		/* Constraint check succeeded */
@@ -4275,7 +4237,6 @@ memb_int4_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 static int
 memb_int5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Int5_t *st = (const Int5_t *)sptr;
 	long value;
 	
 	if(!sptr) {
@@ -4285,12 +4246,7 @@ memb_int5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
-		_ASN_CTFAIL(app_key, td, sptr,
-			"%s: value too large (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+	value = *(const long *)sptr;
 	
 	if((value == 5)) {
 		/* Constraint check succeeded */
@@ -4340,13 +4296,11 @@ static int asn_DFL_2_set_3(int set_value, void **sptr) {
 	
 	if(set_value) {
 		/* Install default value 3 */
-		return asn_long2INTEGER(st, 3);
+		*st = 3;
+		return 0;
 	} else {
 		/* Test default value 3 */
-		long value;
-		if(asn_INTEGER2long(st, &value))
-			return -1;
-		return (value == 3);
+		return (*st == 3);
 	}
 }
 static int asn_DFL_5_set_1(int set_value, void **sptr) {
@@ -4444,7 +4398,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.default_value = 0,
 		.name = "int4-c"
 		},
-	{ ATF_POINTER, 1, offsetof(struct Sequence, bool),
+	{ ATF_POINTER, 1, offsetof(struct Sequence, Bool),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,
@@ -4613,7 +4567,7 @@ asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
 
 /*** <<< INCLUDES [Enum0] >>> ***/
 
-#include <ENUMERATED.h>
+#include <NativeEnumerated.h>
 
 /*** <<< DEPS [Enum0] >>> ***/
 
@@ -4624,7 +4578,7 @@ typedef enum Enum0 {
 
 /*** <<< TYPE-DECLS [Enum0] >>> ***/
 
-typedef ENUMERATED_t	 Enum0_t;
+typedef long	 Enum0_t;
 
 /*** <<< FUNC-DECLS [Enum0] >>> ***/
 
@@ -4645,29 +4599,29 @@ int
 Enum0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
+	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
 	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
- * This type is implemented using ENUMERATED,
+ * This type is implemented using NativeEnumerated,
  * so here we adjust the DEF accordingly.
  */
 static void
 Enum0_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->free_struct    = asn_DEF_NativeEnumerated.free_struct;
+	td->print_struct   = asn_DEF_NativeEnumerated.print_struct;
+	td->ber_decoder    = asn_DEF_NativeEnumerated.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
+		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
+	td->elements       = asn_DEF_NativeEnumerated.elements;
+	td->elements_count = asn_DEF_NativeEnumerated.elements_count;
+     /* td->specifics      = asn_DEF_NativeEnumerated.specifics;	// Defined explicitly */
 }
 
 void
