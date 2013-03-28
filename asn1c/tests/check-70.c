@@ -83,7 +83,7 @@ load_object_from(enum expectation expectation, char *fbuf, size_t size, enum der
 	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
 		asn_TYPE_descriptor_t *, void **, const void *, size_t);
 	PDU_t *st = 0;
-	int csize = 1;
+	size_t csize = 1;
 
 	if(how == AS_DER)
 		zer_decode = ber_decode;
@@ -99,7 +99,7 @@ load_object_from(enum expectation expectation, char *fbuf, size_t size, enum der
 		int fbuf_left = size;
 		int fbuf_chunk = csize;
 
-		fprintf(stderr, "LOADING OBJECT OF SIZE %d, chunks %d\n",
+		fprintf(stderr, "LOADING OBJECT OF SIZE %zd, chunks %zd\n",
 			size, csize);
 
 		if(st) asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);

@@ -69,7 +69,7 @@ uint8_t buf1_reconstr[] = {
 
 };
 
-sie_t buf_pos;
+size_t buf_pos;
 static int bytes_compare(const void *bufferp, size_t size, void *key) {
 	const uint8_t *buffer = bufferp;
 	assert(buf_pos + size <= sizeof(buf1_reconstr));
@@ -81,7 +81,7 @@ static int bytes_compare(const void *bufferp, size_t size, void *key) {
 	for(; size; buf_pos++, size--, buffer++) {
 		if(buf1_reconstr[buf_pos] != *buffer) {
 			fprintf(stderr,
-				"Byte %d is different: %d != %d (%x != %x)\n",
+				"Byte %zd is different: %d != %d (%x != %x)\n",
 				buf_pos,
 				*buffer, buf1_reconstr[buf_pos],
 				*buffer, buf1_reconstr[buf_pos]

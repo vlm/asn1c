@@ -115,7 +115,7 @@ load_object_from(const char *fname, enum expectation expectation, char *fbuf, si
 		int fbuf_left = size;
 		int fbuf_chunk = csize;
 
-		fprintf(stderr, "LOADING OBJECT OF SIZE %d FROM [%s] as %s,"
+		fprintf(stderr, "LOADING OBJECT OF SIZE %zd FROM [%s] as %s,"
 			" chunks %zd\n",
 			size, fname, how==AS_PER?"PER":"XER", csize);
 
@@ -170,7 +170,7 @@ load_object_from(const char *fname, enum expectation expectation, char *fbuf, si
 		if(expectation != EXP_BROKEN) {
 			assert(rval.code == RC_OK);
 			if(how == AS_PER) {
-				fprintf(stderr, "[left %d, off %d, size %d]\n",
+				fprintf(stderr, "[left %d, off %d, size %zd]\n",
 					fbuf_left, fbuf_offset, size);
 				assert(fbuf_offset == size);
 			} else {
