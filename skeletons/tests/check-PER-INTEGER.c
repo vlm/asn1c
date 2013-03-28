@@ -30,10 +30,13 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 	asn_dec_rval_t dec_rval;
 	asn_per_outp_t po;
 	asn_per_data_t pd;
-	long reconstructed_value;
 
-	printf("%d: Recoding %s %ld [%ld..%lu]\n", lineno,
-		unsigned_ ? "unsigned" : "signed", value, lbound, ubound);
+	if(unsigned_)
+		printf("%d: Recoding %s %lu [%ld..%lu]\n", lineno,
+		  unsigned_ ? "unsigned" : "signed", value, lbound, ubound);
+	else
+		printf("%d: Recoding %s %ld [%ld..%lu]\n", lineno,
+		  unsigned_ ? "unsigned" : "signed", value, lbound, ubound);
 
 	memset(&st, 0, sizeof(st));
 	memset(&po, 0, sizeof(po));
@@ -47,7 +50,10 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 	cts.value.lower_bound = lbound;
 	cts.value.upper_bound = ubound;
 
-	asn_long2INTEGER(&st, value);
+	if(unsigned_)
+		asn_ulong2INTEGER(&st, (unsigned long)value);
+	else
+		asn_long2INTEGER(&st, value);
 
 	po.buffer = po.tmpspace;
 	po.nboff = 0;
@@ -64,14 +70,26 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 	normalize(&po);
 
 	assert(po.buffer == &po.tmpspace[bit_range / 8]);
-	long recovered_value =
-		  ((uint32_t)po.tmpspace[0] << 24)
-		| ((uint32_t)po.tmpspace[1] << 16)
-		| ((uint32_t)po.tmpspace[2] << 8)
-		| ((uint32_t)po.tmpspace[3] << 0);
-	recovered_value >>= (32 - bit_range);
-	recovered_value += cts.value.lower_bound;
-	assert(recovered_value == value);
+
+	if(unsigned_) {
+		unsigned long recovered_value =
+			  ((uint32_t)po.tmpspace[0] << 24)
+			| ((uint32_t)po.tmpspace[1] << 16)
+			| ((uint32_t)po.tmpspace[2] << 8)
+			| ((uint32_t)po.tmpspace[3] << 0);
+		recovered_value >>= (32 - bit_range);
+		recovered_value += cts.value.lower_bound;
+		assert(recovered_value == (unsigned long)value);
+	} else {
+		long recovered_value =
+			  ((uint32_t)po.tmpspace[0] << 24)
+			| ((uint32_t)po.tmpspace[1] << 16)
+			| ((uint32_t)po.tmpspace[2] << 8)
+			| ((uint32_t)po.tmpspace[3] << 0);
+		recovered_value = (unsigned long)recovered_value >> (32 - bit_range);
+		recovered_value += cts.value.lower_bound;
+		assert((long)recovered_value == value);
+	}
 	assert(po.nboff == ((bit_range == 32) ? 0 : (8 - (32 - bit_range))));
 	assert(po.nbits ==  8 * (sizeof(po.tmpspace) - (po.buffer-po.tmpspace)));
 	assert(po.flushed_bytes == 0);
@@ -82,9 +100,16 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 	pd.moved = 0;
 	dec_rval = INTEGER_decode_uper(0, &asn_DEF_INTEGER, &cts,
 					(void **)&reconstructed_st, &pd);
-	reconstructed_value = 0;
-	asn_INTEGER2long(reconstructed_st, &reconstructed_value);
-	assert(reconstructed_value == value);
+	assert(dec_rval.code == RC_OK);
+	if(unsigned_) {
+		unsigned long reconstructed_value = 0;
+		asn_INTEGER2ulong(reconstructed_st, &reconstructed_value);
+		assert(reconstructed_value == (unsigned long)value);
+	} else {
+		long reconstructed_value = 0;
+		asn_INTEGER2long(reconstructed_st, &reconstructed_value);
+		assert(reconstructed_value == value);
+	}
 }
 
 #define	CHECK(u, v, l, r, b)	\
@@ -100,63 +125,83 @@ main() {
 	CHECK(u, 0x8babab, 0, 536870911UL, 29);
 	CHECK(u, 0x8babab, 0, 1073741823UL, 30);
 	CHECK(u, 0x8babab, 0, 2147483647UL, 31);
-	CHECK(u, 0x8babab, 0, 4294967295UL, 32);
 
 	CHECK(u, 0x8babab, 10, 536870901UL, 29);
 	CHECK(u, 0x8babab, 10, 1073741803UL, 30);
 	CHECK(u, 0x8babab, 10, 2147483607UL, 31);
-	CHECK(u, 0x8babab, 10, 4294967205UL, 32);
 
 	CHECK(0, 0x8babab, -10, 536870901UL, 29);
 	CHECK(0, 0x8babab, -10, 1073741803UL, 30);
 	CHECK(0, 0x8babab, -10, 2147483607UL, 31);
-	CHECK(0, 0x8babab, -10, 4294967205UL, 32);
 
 	CHECK(u, 11, 10, 536870901UL, 29);
 	CHECK(u, 11, 10, 1073741803UL, 30);
 	CHECK(u, 11, 10, 2147483607UL, 31);
-	CHECK(u, 11, 10, 4294967205UL, 32);
 
 	CHECK(0, 1, -10, 536870901UL, 29);
 	CHECK(0, 1, -10, 1073741803UL, 30);
 	CHECK(0, 1, -10, 2147483607UL, 31);
-	CHECK(0, 1, -10, 4294967205UL, 32);
 
 	CHECK(u, 10, 10, 536870901UL, 29);
 	CHECK(u, 10, 10, 1073741803UL, 30);
 	CHECK(u, 10, 10, 2147483607UL, 31);
-	CHECK(u, 10, 10, 4294967205UL, 32);
 
 	CHECK(0, 0, -10, 536870901UL, 29);
 	CHECK(0, 0, -10, 1073741803UL, 30);
 	CHECK(0, 0, -10, 2147483607UL, 31);
-	CHECK(0, 0, -10, 4294967205UL, 32);
 
 	CHECK(0, -1, -10, 536870901UL, 29);
 	CHECK(0, -1, -10, 1073741803UL, 30);
 	CHECK(0, -1, -10, 2147483607UL, 31);
-	CHECK(0, -1, -10, 4294967205UL, 32);
 
 	CHECK(0, -10, -10, 536870901UL, 29);
 	CHECK(0, -10, -10, 1073741803UL, 30);
 	CHECK(0, -10, -10, 2147483607UL, 31);
-	CHECK(0, -10, -10, 4294967205UL, 32);
 
 	CHECK(u, 536870901UL, 10, 536870901UL, 29);
 	CHECK(u, 1073741803UL, 10, 1073741803UL, 30);
 	CHECK(u, 2147483607UL, 10, 2147483607UL, 31);
-	CHECK(u, 4294967205UL, 10, 4294967205UL, 32);
 
 	CHECK(0, 536870901UL, -10, 536870901UL, 29);
 	CHECK(0, 1073741803UL, -10, 1073741803UL, 30);
 	CHECK(0, 2147483607UL, -10, 2147483607UL, 31);
-	CHECK(0, 4294967205UL, -10, 4294967205UL, 32);
 
-	CHECK(u, 2000000000, 0, 4294967295UL, 32);
-	CHECK(u, 2147483647, 0, 4294967295UL, 32);
-	CHECK(u, 2147483648, 0, 4294967295UL, 32);
-	CHECK(u, 4000000000, 0, 4294967295UL, 32);
-	CHECK(u, 4294967295UL, 1, 4294967295UL, 32);
+	if(sizeof(long) == 4) {
+		CHECK(0,  0, 0, 4294967205UL, 32);
+		CHECK(0,  1, 0, 4294967205UL, 32);
+		CHECK(0, 10, 0, 4294967205UL, 32);
+		CHECK(0, 0x8babab, 0, 4294967205UL, 32);
+
+		CHECK(1, 0x8babab, 0, 4294967295UL, 32);
+		CHECK(1, 0x8babab, 10, 4294967205UL, 32);
+		CHECK(1, 11, 10, 4294967205UL, 32);
+		CHECK(1, 10, 10, 4294967205UL, 32);
+
+		CHECK(1, 2000000000, 0, 4294967295UL, 32);
+		CHECK(1, 2147483647, 0, 4294967295UL, 32);
+		CHECK(1, 2147483648, 0, 4294967295UL, 32);
+		CHECK(1, 4000000000, 0, 4294967295UL, 32);
+	} else {
+		CHECK(0,   0, -10, 4294967205UL, 32);
+		CHECK(0,   1, -10, 4294967205UL, 32);
+		CHECK(0,  -1, -10, 4294967205UL, 32);
+		CHECK(0, -10, -10, 4294967205UL, 32);
+		CHECK(0, -10, -10, 4294967205UL, 32);
+		CHECK(0, 0x8babab, -10, 4294967205UL, 32);
+
+		CHECK(u, 0x8babab, 0, 4294967295UL, 32);
+		CHECK(u, 11, 10, 4294967205UL, 32);
+		CHECK(u, 10, 10, 4294967205UL, 32);
+		CHECK(u, 4294967205UL, 10, 4294967205UL, 32);
+
+		CHECK(0, 4294967205UL, -10, 4294967205UL, 32);
+		CHECK(u, 4294967295UL, 1, 4294967295UL, 32);
+
+		CHECK(u, 2000000000, 0, 4294967295UL, 32);
+		CHECK(u, 2147483647, 0, 4294967295UL, 32);
+		CHECK(u, 2147483648, 0, 4294967295UL, 32);
+		CHECK(u, 4000000000, 0, 4294967295UL, 32);
+	}
  }
 
   return 0;
