@@ -1,9 +1,9 @@
 /*-
- * Copyright (c) 2004, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004-2013 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#define	_ISOC99_SOURCE		/* For ilogb() and quiet NAN */
 #if	defined(__alpha)
-#define	_ISOC99_SOURCE		/* For quiet NAN, through bits/nan.h */
 #define	_BSD_SOURCE		/* To reintroduce finite(3) */
 #include <sys/resource.h>	/* For INFINITY */
 #endif
