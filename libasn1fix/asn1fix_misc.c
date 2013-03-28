@@ -289,7 +289,7 @@ asn1f_check_unique_expr_child(arg_t *arg, asn1p_expr_t *child,
 			if(expr->Identifier == NULL
 			|| expr->expr_type == A1TC_EXTENSIBLE)
 				continue;
-			ret = strcasecmp(expr->Identifier, child->Identifier);
+			ret = strcmp(expr->Identifier, child->Identifier);
 		}
 
 		if(ret == 0) {
