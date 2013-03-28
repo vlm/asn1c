@@ -111,47 +111,30 @@ INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_by
 	char scratch[32];	/* Enough for 64-bit integer */
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
-	signed long accum;
+	signed long value;
 	ssize_t wrote = 0;
 	char *p;
 	int ret;
 
-	/*
-	 * Advance buf pointer until the start of the value's body.
-	 * This will make us able to process large integers using simple case,
-	 * when the actual value is small
-	 * (0x0000000000abcdef would yield a fine 0x00abcdef)
-	 */
-	/* Skip the insignificant leading bytes */
-	for(; buf < buf_end-1; buf++) {
-		switch(*buf) {
-		case 0x00: if((buf[1] & 0x80) == 0) continue; break;
-		case 0xff: if((buf[1] & 0x80) != 0) continue; break;
-		}
-		break;
-	}
+	if(specs && specs->field_unsigned)
+		ret = asn_INTEGER2ulong(st, (unsigned long *)&value);
+	else
+		ret = asn_INTEGER2long(st, &value);
 
 	/* Simple case: the integer size is small */
-	if((size_t)(buf_end - buf) <= sizeof(accum)) {
+	if(ret == 0) {
 		const asn_INTEGER_enum_map_t *el;
 		size_t scrsize;
 		char *scr;
 
-		if(buf == buf_end) {
-			accum = 0;
-		} else {
-			accum = (*buf & 0x80) ? -1 : 0;
-			for(; buf < buf_end; buf++)
-				accum = (accum << 8) | *buf;
-		}
-
-		el = INTEGER_map_value2enum(specs, accum);
+		el = (value >= 0 || !specs || !specs->field_unsigned)
+			? INTEGER_map_value2enum(specs, value) : 0;
 		if(el) {
 			scrsize = el->enum_len + 32;
 			scr = (char *)alloca(scrsize);
 			if(plainOrXER == 0)
 				ret = snprintf(scr, scrsize,
-					"%ld (%s)", accum, el->enum_name);
+					"%ld (%s)", value, el->enum_name);
 			else
 				ret = snprintf(scr, scrsize,
 					"<%s/>", el->enum_name);
@@ -165,7 +148,7 @@ INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_by
 			scr = scratch;
 			ret = snprintf(scr, scrsize,
 				(specs && specs->field_unsigned)
-				?"%lu":"%ld", accum);
+				?"%lu":"%ld", value);
 		}
 		assert(ret > 0 && (size_t)ret < scrsize);
 		return (cb(scr, ret, app_key) < 0) ? -1 : ret;
