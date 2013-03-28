@@ -1,5 +1,6 @@
 \documentclass[english,oneside,12pt]{book}
-\usepackage{fontspec}
+\usepackage[no-math]{fontspec}
+\usepackage{MnSymbol}
 \usepackage{xunicode}
 \usepackage{xltxtra}
 
@@ -18,6 +19,9 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{setspace}
+\usepackage{unicode-math}
+\usepackage{perpage}
+\MakePerPage{footnote}
 
 \setstretch{1.1}
 
@@ -25,6 +29,7 @@
 \def\courierFont{Courier10 BT WGL4}
 %\def\courierFont{Consolas}
 \setmonofont[Scale=1.05]{\courierFont}
+\setmathfont[Scale=1.05]{Cambria Math}
 
 
 \makeatletter
@@ -119,7 +124,7 @@ serialization and deserialization of these structures using several
 standardized encoding rules (BER, DER, XER, PER).
 
 For example, suppose the following ASN.1 module is given%
-\footnote{Part \vref{par:ASN.1-Basics} provides a quick reference
+\footnote{Part \ref{par:ASN.1-Basics} provides a quick reference
 on the ASN.1 notation.}:
 \begin{asn}
 RectangleTest DEFINITIONS ::= BEGIN
@@ -149,7 +154,7 @@ API).
 
 After building and installing the compiler, the \emph{asn1c}
 command may be used to compile the ASN.1 modules%
-\footnote{This is probably \textbf{not} what you want to try out right now. Read through the rest of this chapter and check the Section \vref{sec:Command-line-options}
+\footnote{This is probably \textbf{not} what you want to try out right now. Read through the rest of this chapter and check the Section~\ref{sec:Command-line-options}
 to find out about \textbf{-P} and \textbf{-R} options.%
 }:
 \begin{bash}
@@ -210,7 +215,7 @@ or
 asn1c *.asn1
 cc -I. -DPDU=%\emph{Rectangle}% -o rectangle.exe *.c   # ... or like this
 \end{bash}
-Refer to the Chapter \vref{cha:Step-by-step-examples} for a sample
+Refer to the Chapter \ref{cha:Step-by-step-examples} for a sample
 \emph{int main()} function if you want some custom logic and not satisfied
 with the supplied \emph{converter-sample.c}.
 
@@ -313,32 +318,31 @@ are of interest:
 it will fail, but may later be invoked again with the rest of the
 buffer to continue decoding.%
 } BER decoder (Basic Encoding Rules). This decoder would create and/or
-fill the target structure for you. See Section \vref{sub:Decoding-BER}.
+fill the target structure for you. See Section~\ref{sub:Decoding-BER}.
 \item [{der\_encoder}] This is the generic DER encoder (Distinguished Encoding
 Rules). This encoder will take the target structure and encode it
-into a series of bytes. See Section \vref{sub:Encoding-DER}. NOTE:
+into a series of bytes. See Section~\ref{sub:Encoding-DER}. NOTE:
 DER encoding is a subset of BER. Any BER decoder should be able to
 handle DER input.
 \item [{xer\_decoder}] This is the generic XER decoder. It takes both BASIC-XER
 or CANONICAL-XER encodings and deserializes the data into a local,
-machine-dependent representation. See Section \vref{sub:Decoding-XER}.
+machine-dependent representation. See Section~\ref{sub:Decoding-XER}.
 \item [{xer\_encoder}] This is the XER encoder (XML Encoding Rules). This
 encoder will take the target structure and represent it as an XML
 (text) document using either BASIC-XER or CANONICAL-XER encoding rules.
-See Section \vref{sub:Encoding-XER}.
+See Section~\ref{sub:Encoding-XER}.
 \item [{uper\_decoder}] This is the Unaligned PER decoder.
 \item [{uper\_encoder}] This is the Unaligned Basic PER encoder. This encoder
 will take the target structure and encode it into a series of bytes.
 \item [{check\_constraints}] Check that the contents of the target structure
 are semantically valid and constrained to appropriate implicit or
-explicit subtype constraints. See Section \vref{sub:Validating-the-target}.
+explicit subtype constraints. See Section~\ref{sub:Validating-the-target}.
 \item [{print\_struct}] This function convert the contents of the passed
 target structure into human readable form. This form is not formal
 and cannot be converted back into the structure, but it may turn out
-to be useful for debugging or quick-n-dirty printing. See Section
-\vref{sub:Printing-the-target}.
+to be useful for debugging or quick-n-dirty printing. See Section~\ref{sub:Printing-the-target}.
 \item [{free\_struct}] This is a generic disposal which frees the target
-structure. See Section \vref{sub:Freeing-the-target}.
+structure. See Section~\ref{sub:Freeing-the-target}.
 \end{description}
 Each of the above function takes the type descriptor (\emph{asn\_DEF\_\ldots{}})
 and the target structure (\emph{rect}, in the above example).
@@ -382,14 +386,13 @@ Here is the simplest example of BER decoding:
 \begin{codesample}
 Rectangle_t *
 simple_deserializer(const void *buffer, size_t buf_size) {
-    Rectangle_t *rect = 0;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
     asn_dec_rval_t rval;
+    Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
 
     rval = %\textbf{asn\_DEF\_Rectangle.ber\_decoder}%(0,
           &asn_DEF_Rectangle,
-          (void **)&rect,     /* Decoder %\emph{moves}% the pointer */
-          buffer, buf_size,
-          0);
+          (void **) %$\underbracket{\textrm{\listingfont \&rect}}$%,    /* Decoder %\emph{moves}% the pointer */
+          buffer, buf_size, 0);
 
     if(rval%\textbf{.code}% == RC_OK) {
         return rect;          /* Decoding succeeded */
@@ -469,9 +472,6 @@ simple_serializer(FILE *ostream, Rectangle_t *rect) {
 
     er = der_encode(&asn_DEF_Rect, rect, write_stream, ostream);
     if(er%\textbf{.encoded}% == -1) {
-        /*
-         * Failed to encode the rectangle data.
-         */
         fprintf(stderr, "Cannot encode %\%%s: %\%%s\n",
             er%\textbf{.failed\_type}%->name, strerror(errno));
         return -1;
@@ -507,7 +507,7 @@ The XER stands for XML Encoding Rules, where XML, in turn, is eXtensible
 Markup Language, a text-based format for information exchange. The
 encoder routine API comes in two flavors: stdio-based and callback-based.
 With the callback-based encoder, the encoding process is very similar
-to the DER one, described in Section \vref{sub:Encoding-DER}. The
+to the DER one, described in Section~\ref{sub:Encoding-DER}. The
 following example uses the definition of write\_stream() from up there.
 \begin{codesample}
 /*
@@ -516,7 +516,7 @@ following example uses the definition of write\_stream() from up there.
  * NOTE: Do not copy this code verbatim!
  *       If the stdio output is necessary,
  *       use the xer_fprint() procedure instead.
- *       See Section%\vref{sub:Printing-the-target}%.
+ *       See Section~%\ref{sub:Printing-the-target}%.
  */
 int
 print_as_XML(FILE *ostream, Rectangle_t *rect) {
@@ -532,7 +532,7 @@ print_as_XML(FILE *ostream, Rectangle_t *rect) {
 Look into xer\_encoder.h for the precise definition of xer\_encode()
 and related types.
 
-See Section \ref{sub:Printing-the-target} for the example of stdio-based
+See Section~\ref{sub:Printing-the-target} for the example of stdio-based
 XML encoder and other pretty-printing suggestions.
 
 
@@ -543,8 +543,8 @@ the xer\_decode() API call:
 \begin{codesample}
 Rectangle_t *
 XML_to_Rectangle(const void *buffer, size_t buf_size) {
-    Rectangle_t *rect = 0;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
     asn_dec_rval_t rval;
+    Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
 
     rval = xer_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
 
@@ -560,7 +560,7 @@ XML_to_Rectangle(const void *buffer, size_t buf_size) {
 The decoder takes both BASIC-XER and CANONICAL-XER encodings.
 
 The decoder shares its data consumption properties with BER decoder;
-please read the Section \vref{sub:Decoding-BER} to know more.
+please read the Section~\ref{sub:Decoding-BER} to know more.
 
 Look into xer\_decoder.h for the precise definition of xer\_decode()
 and related types.
@@ -607,7 +607,7 @@ call:
 \begin{codesample}
 xer_fprint(stdout, &asn_DEF_Rectangle, rect);
 \end{codesample}
-See Section \vref{sub:Encoding-XER} for XML-related details.
+See Section~\ref{sub:Encoding-XER} for XML-related details.
 
 
 \subsection{\label{sub:Freeing-the-target}Freeing the target structure}
@@ -809,8 +809,8 @@ it as it were a BER-encoded Rectangle type, and prints out the text
 
 int main(int ac, char **av) {
     char buf[1024];      /* Temporary buffer      */
-    Rectangle_t *rectangle = 0; /* Type to decode. %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
     asn_dec_rval_t rval; /* Decoder return value  */
+    Rectangle_t *%$\underbracket{\textrm{\listingfont rectangle = 0}}$%; /* Type to decode. %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
     FILE *fp;            /* Input file handler    */
     size_t size;         /* Number of bytes read  */
     char *filename;      /* Input file name */
@@ -849,6 +849,7 @@ int main(int ac, char **av) {
     xer_fprint(stdout, &asn_DEF_Rectangle, rectangle);
 
     return 0; /* Decoding finished successfully */
+}
 \end{codesample}
 \item Compile all files together using C compiler (varies by platform):
 
@@ -884,7 +885,7 @@ END
 \end{asn}
 \item Compile the file according to procedures shown in the previous chapter.
 \item Modify the Rectangle type processing routine (you can start with the
-main() routine shown in the Section \vref{sec:A-Rectangle-Decoder})
+main() routine shown in the Section~\ref{sec:A-Rectangle-Decoder})
 by placing the following snippet of code \emph{before} encoding and/or
 \emph{after} decoding the Rectangle type%
 \footnote{Placing the constraint checking code \emph{before} encoding helps
