@@ -259,7 +259,7 @@ extern asn_TYPE_descriptor_t asn_DEF_PDU_2;
 
 /*** <<< CTDEFS [PDU-2] >>> ***/
 
-static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 = {
+static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  0,  0,  0,  0 }	/* (0..0,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
