@@ -1571,7 +1571,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		csiz->lower_bound, csiz->upper_bound,
 		csiz->effective_bits, ct_extensible ? " EXT" : "");
 
-	/* Figure out wheter size lies within PER visible constraint */
+	/* Figure out whether size lies within PER visible constraint */
 
 	if(csiz->effective_bits >= 0) {
 		if((int)sizeinunits < csiz->lower_bound
