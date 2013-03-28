@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+#define	EMIT_ASN_DEBUG	1
+#include <per_support.c>
 #include <per_support.h>
 
 static void
@@ -68,6 +70,58 @@ check_per_decoding() {
 	pos.nbits = sizeof(buf) * 8;
 	z = per_get_few_bits(&pos, 24);
 	assert(z == 14443711);
+
+	pos.buffer = "\001";
+	pos.nboff = 7;
+	pos.nbits = 7;
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 7);
+	assert(pos.nbits == 7);
+	assert(z == -1);
+
+	pos.buffer = "\001";
+	pos.nboff = 7;
+	pos.nbits = 8;
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 8);
+	assert(pos.nbits == 8);
+	assert(z == 1);
+
+	pos.buffer = "\000";
+	pos.nboff = 7;
+	pos.nbits = 8;
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 8);
+	assert(pos.nbits == 8);
+	assert(z == 0);
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 8);
+	assert(pos.nbits == 8);
+	assert(z == -1);
+
+	pos.buffer = "\000";
+	pos.nboff = 7;
+	pos.nbits = 9;
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 8);
+	assert(pos.nbits == 9);
+	assert(z == 0);
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 1);
+	assert(pos.nbits == 1);
+	assert(z == 0);
+
+	pos.buffer = "\001";
+	pos.nboff = 7;
+	pos.nbits = 9;
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 8);
+	assert(pos.nbits == 9);
+	assert(z == 1);
+	z = per_get_few_bits(&pos, 1);
+	assert(pos.nboff == 1);
+	assert(pos.nbits == 1);
+	assert(z == 0);
 
 	/* Get full 31-bit range */
 	pos.buffer = buf;
