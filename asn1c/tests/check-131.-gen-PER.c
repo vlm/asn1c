@@ -26,7 +26,7 @@ main() {
 	printf("Checking uper_open_type_put():\n");
 	assert(0 == uper_open_type_put(&asn_DEF_T, 0, &t, &po));
 	assert(po.nbits == (-1 + sizeof(po.tmpspace)) * 8);
-	printf("po{nboff=%d; nbits=%d; buffer=%p; tmpspace=%p}\n",
+	printf("po{nboff=%zd; nbits=%zd; buffer=%p; tmpspace=%p}\n",
 		po.nboff, po.nbits, po.buffer, po.tmpspace);
 	/* One byte length and one byte 0x00 */
 	assert(    (po.nboff == 8 && po.buffer == &po.tmpspace[1])

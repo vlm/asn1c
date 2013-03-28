@@ -69,14 +69,14 @@ uint8_t buf1_reconstr[] = {
 
 };
 
-int buf_pos;
+sie_t buf_pos;
 static int bytes_compare(const void *bufferp, size_t size, void *key) {
 	const uint8_t *buffer = bufferp;
 	assert(buf_pos + size <= sizeof(buf1_reconstr));
 
 	(void)key;	/* Unused argument */
 
-	fprintf(stderr,  "  writing %d (%d)\n", (int)size, buf_pos + (int)size);
+	fprintf(stderr,  "  writing %zd (%zd)\n", size, buf_pos + size);
 
 	for(; size; buf_pos++, size--, buffer++) {
 		if(buf1_reconstr[buf_pos] != *buffer) {
@@ -94,7 +94,7 @@ static int bytes_compare(const void *bufferp, size_t size, void *key) {
 }
 
 static void
-check(int is_ok, uint8_t *buf, int size, size_t consumed) {
+check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	Forest_t t, *tp;
 	asn_dec_rval_t rval;
 
@@ -177,7 +177,7 @@ check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
 
 
 static void
-try_corrupt(uint8_t *buf, int size) {
+try_corrupt(uint8_t *buf, size_t size) {
 	uint8_t *tmp;
 	int i;
 

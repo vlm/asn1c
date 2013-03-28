@@ -31,7 +31,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	printf("=> [");
 	for(; b < bend; b++)
 		printf(" %02X", *b);
-	printf("]:%ld\n", (long)size);
+	printf("]:%zd\n", size);
 	buf_offset += size;
 	return 0;
 }
@@ -57,7 +57,7 @@ save_object(T_t *st) {
 }
 
 static T_t *
-load_object(enum expectation expectation, char *fbuf, int size) {
+load_object(enum expectation expectation, char *fbuf, size_t size) {
 	asn_dec_rval_t rval;
 	T_t *st = 0;
 	int csize;
@@ -105,7 +105,7 @@ load_object(enum expectation expectation, char *fbuf, int size) {
 
 
 static void
-process_data(enum expectation expectation, char *fbuf, int size) {
+process_data(enum expectation expectation, char *fbuf, ssize_t size) {
 	T_t *st;
 	int ret;
 

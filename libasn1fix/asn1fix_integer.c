@@ -106,6 +106,7 @@ asn1f_fix_integer(arg_t *arg) {
 	return rvalue;
 }
 
+#if 0
 static int
 _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type) {
 	asn1p_expr_t *next_expr;
@@ -154,5 +155,6 @@ _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type)
 
 	return ret;
 }
+#endif
 
 

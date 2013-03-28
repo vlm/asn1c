@@ -23,7 +23,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	printf("=> [");
 	for(; b < bend; b++)
 		printf(" %02X", *b);
-	printf("]:%ld\n", (long)size);
+	printf("]:%zd\n", size);
 	buf_offset += size;
 	return 0;
 }

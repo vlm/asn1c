@@ -87,16 +87,16 @@ uint8_t buf1[] = {
 };
 
 static void
-check(int is_ok, uint8_t *buf, int size, size_t consumed) {
+check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
 
 	tp = memset(&t, 0, sizeof(t));
 
-	fprintf(stderr, "Buf %p (%d)\n", buf, (int)size);
+	fprintf(stderr, "Buf %p (%zd)\n", buf, size);
 	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
-	fprintf(stderr, "Returned code %d, consumed %d, expected %d\n",
-		(int)rval.code, (int)rval.consumed, (int)consumed);
+	fprintf(stderr, "Returned code %d, consumed %zd, expected %zd\n",
+		(int)rval.code, rval.consumed, consumed);
 
 	if(is_ok) {
 		assert(rval.code == RC_OK);
@@ -132,7 +132,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 			|| t.h->size != 3
 			);
 		}
-		fprintf(stderr, "%d %d\n", (int)rval.consumed, (int)consumed);
+		fprintf(stderr, "%zd %zd\n", rval.consumed, consumed);
 		assert(rval.consumed <= consumed);
 	}
 
@@ -140,7 +140,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 }
 
 static void
-try_corrupt(uint8_t *buf, int size, int allow_consume) {
+try_corrupt(uint8_t *buf, size_t size, int allow_consume) {
 	uint8_t *tmp;
 	int i;
 

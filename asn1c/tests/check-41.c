@@ -47,15 +47,15 @@ uint8_t buf1_reconstr[] = {
 
 
 static void
-check(T_t *tp, uint8_t *buf, int size, size_t consumed) {
+check(T_t *tp, uint8_t *buf, size_t size, size_t consumed) {
 	asn_dec_rval_t rval;
 
 	tp = memset(tp, 0, sizeof(*tp));
 
-	fprintf(stderr, "Buf %p (%d)\n", buf, size);
+	fprintf(stderr, "Buf %p (%zd)\n", buf, size);
 	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
-	fprintf(stderr, "Returned code %d, consumed %d\n",
-		(int)rval.code, (int)rval.consumed);
+	fprintf(stderr, "Returned code %d, consumed %zd\n",
+		(int)rval.code, rval.consumed);
 
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == consumed);
@@ -77,14 +77,14 @@ buf_fill(const void *buffer, size_t size, void *app_key) {
 	(void)app_key;	/* Unused argument */
 
 	if(buf_pos + size > buf_size) {
-		fprintf(stderr, "%d + %d > %d\n",
-			(int)buf_pos, (int)size, (int)buf_size);
+		fprintf(stderr, "%zd + %zd > %zd\n",
+			buf_pos, size, buf_size);
 		return -1;
 	}
 
 	memcpy(buf + buf_pos, buffer, size);
 	buf_pos += size;
-	fprintf(stderr, "   written %d (%d)\n", (int)size, (int)buf_pos);
+	fprintf(stderr, "   written %zd (%zd)\n", size, buf_pos);
 
 	return 0;
 }
@@ -104,7 +104,7 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 	erval = der_encode(&asn_DEF_T, tp, buf_fill, 0);
 	assert(erval.encoded != -1);
 	if(erval.encoded != cmp_buf_size) {
-		printf("%d != %d\n", erval.encoded, cmp_buf_size);
+		printf("%zd != %zd\n", erval.encoded, cmp_buf_size);
 	}
 	assert(erval.encoded == cmp_buf_size);
 	for(i = 0; i < cmp_buf_size; i++) {
@@ -146,8 +146,8 @@ partial_read(uint8_t *buf_0, size_t size) {
 			uint8_t *chunk3 = buf_0 + size1 + size2;
 			size_t size3 = size - size1 - size2;
 
-			fprintf(stderr, "\n%d:{%d, %d, %d}...\n",
-				(int)size, (int)size1, (int)size2, (int)size3);
+			fprintf(stderr, "\n%zd:{%zd, %zd, %zd}...\n",
+				size, size1, size2, size3);
 
 			memset(buf_1, 0, size);
 			memset(buf_2, 0, size);
@@ -158,7 +158,7 @@ partial_read(uint8_t *buf_0, size_t size) {
 
 			tp = memset(&t, 0, sizeof(t));
 
-			fprintf(stderr, "=> Chunk 1 (%d):\n", (int)size1);
+			fprintf(stderr, "=> Chunk 1 (%zd):\n", size1);
 			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				buf_1, size1);
 			assert(rval.code == RC_WMORE);
@@ -170,7 +170,7 @@ partial_read(uint8_t *buf_0, size_t size) {
 				size2 += leftover;
 			}
 
-			fprintf(stderr, "=> Chunk 2 (%d):\n", (int)size2);
+			fprintf(stderr, "=> Chunk 2 (%zd):\n", size2);
 			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				buf_2, size2);
 			assert(rval.code == RC_WMORE);
@@ -182,7 +182,7 @@ partial_read(uint8_t *buf_0, size_t size) {
 				size3 += leftover;
 			}
 
-			fprintf(stderr, "=> Chunk 3 (%d):\n", (int)size3);
+			fprintf(stderr, "=> Chunk 3 (%zd):\n", size3);
 			rval = ber_decode(0, &asn_DEF_T, (void **)&tp,
 				buf_3, size3);
 			assert(rval.code == RC_OK);

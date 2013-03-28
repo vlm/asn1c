@@ -45,7 +45,7 @@ buf2_fill(const void *buffer, size_t size, void *app_key) {
 }
 
 static void
-check(int is_ok, uint8_t *buf, int size, size_t consumed) {
+check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	T1_t t, *tp;
 	void *tpp = &tp;
 	asn_dec_rval_t rval;
@@ -116,7 +116,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 }
 
 static void
-try_corrupt(uint8_t *buf, int size) {
+try_corrupt(uint8_t *buf, size_t size) {
 	uint8_t *tmp;
 	int i;
 

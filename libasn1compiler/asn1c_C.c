@@ -1947,7 +1947,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	REDIR(OT_CTDEFS);
 
 	OUT("static asn_per_constraints_t "
-		"asn_PER_%s_%s_constr_%d = {\n",
+		"asn_PER_%s_%s_constr_%d GCC_NOTUSED = {\n",
 		pfx, MKID(expr), expr->_type_unique_index);
 
 	INDENT(+1);

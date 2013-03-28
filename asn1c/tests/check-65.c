@@ -52,7 +52,7 @@ uint8_t buf2[] = {
 };
 
 static void
-check_1(int is_ok, uint8_t *buf, int size, size_t consumed) {
+check_1(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	asn_TYPE_descriptor_t *td = &asn_DEF_T1;
 	asn_dec_rval_t rval;
 	T1_t t, *tp;
@@ -61,8 +61,8 @@ check_1(int is_ok, uint8_t *buf, int size, size_t consumed) {
 
 	fprintf(stderr, "Buf %p\n", buf);
 	rval = ber_decode(0, td, (void **)&tp, buf, size);
-	fprintf(stderr, "Returned code %d, consumed %d\n",
-		(int)rval.code, (int)rval.consumed);
+	fprintf(stderr, "Returned code %d, consumed %zd\n",
+		(int)rval.code, rval.consumed);
 
 	if(is_ok) {
 		assert(rval.code == RC_OK);
@@ -75,7 +75,7 @@ check_1(int is_ok, uint8_t *buf, int size, size_t consumed) {
 }
 
 static void
-check_2(int is_ok, uint8_t *buf, int size, size_t consumed) {
+check_2(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	asn_TYPE_descriptor_t *td = &asn_DEF_T;
 	asn_dec_rval_t rval;
 	T_t t, *tp;
@@ -84,8 +84,8 @@ check_2(int is_ok, uint8_t *buf, int size, size_t consumed) {
 
 	fprintf(stderr, "Buf %p\n", buf);
 	rval = ber_decode(0, td, (void **)&tp, buf, size);
-	fprintf(stderr, "Returned code %d, consumed %d\n",
-		(int)rval.code, (int)rval.consumed);
+	fprintf(stderr, "Returned code %d, consumed %zd\n",
+		(int)rval.code, rval.consumed);
 
 	if(is_ok) {
 		assert(rval.code == RC_OK);

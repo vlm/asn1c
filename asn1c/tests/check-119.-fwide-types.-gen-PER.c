@@ -27,7 +27,7 @@ enum expectation {
 };
 
 static unsigned char buf[4096];
-static int buf_offset;
+static size_t buf_offset;
 
 static int
 _buf_writer(const void *buffer, size_t size, void *app_key) {
@@ -44,7 +44,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 		else
 			fprintf(stderr, "%%%02x", *b);
 	}
-	fprintf(stderr, "]:%ld\n", (long)size);
+	fprintf(stderr, "]:%zd\n", size);
 	buf_offset += size;
 	return 0;
 }
@@ -73,7 +73,7 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 			assert(rval.encoded == -1);
 		else
 			assert(rval.encoded > 0);
-		fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
+		fprintf(stderr, "SAVED OBJECT IN SIZE %zd\n", buf_offset);
 		return;
 	case AS_DER:
 		rval = der_encode(&asn_DEF_PDU, st,
@@ -97,14 +97,14 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 		return;
 	}
 
-	fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
+	fprintf(stderr, "SAVED OBJECT IN SIZE %zd\n", buf_offset);
 }
 
 static PDU_t *
-load_object_from(const char *fname, enum expectation expectation, char *fbuf, int size, enum enctype how) {
+load_object_from(const char *fname, enum expectation expectation, char *fbuf, size_t size, enum enctype how) {
 	asn_dec_rval_t rval;
 	PDU_t *st = 0;
-	int csize = 1;
+	size_t csize = 1;
 
 	if(getenv("INITIAL_CHUNK_SIZE"))
 		csize = atoi(getenv("INITIAL_CHUNK_SIZE"));
@@ -116,7 +116,7 @@ load_object_from(const char *fname, enum expectation expectation, char *fbuf, in
 		int fbuf_chunk = csize;
 
 		fprintf(stderr, "LOADING OBJECT OF SIZE %d FROM [%s] as %s,"
-			" chunks %d\n",
+			" chunks %zd\n",
 			size, fname, how==AS_PER?"PER":"XER", csize);
 
 		if(st) asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
@@ -151,7 +151,7 @@ load_object_from(const char *fname, enum expectation expectation, char *fbuf, in
 					st = 0;
 					fprintf(stderr, "-> PER wants more\n");
 				} else {
-					fprintf(stderr, "-> PER ret %d/%d\n",
+					fprintf(stderr, "-> PER ret %d/%ld\n",
 						rval.code, rval.consumed);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;
@@ -227,9 +227,8 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-process_XER_data(const char *fname, enum expectation expectation, char *fbuf, int size) {
+process_XER_data(const char *fname, enum expectation expectation, char *fbuf, size_t size) {
 	PDU_t *st;
-	int ret;
 
 	st = load_object_from(fname, expectation, fbuf, size, AS_XER);
 	if(!st) return;
@@ -286,7 +285,6 @@ process(const char *fname) {
 	char fbuf[4096];
 	char *ext = strrchr(fname, '.');
 	enum expectation expectation;
-	int ret;
 	int rd;
 	FILE *fp;
 

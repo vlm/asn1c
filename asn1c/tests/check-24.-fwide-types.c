@@ -34,7 +34,7 @@ uint8_t buf1[] = {
 };
 
 static void
-check(int is_ok, uint8_t *buf, int size, size_t consumed) {
+check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
 
@@ -42,8 +42,8 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 
 	fprintf(stderr, "Buf %p\n", buf);
 	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
-	fprintf(stderr, "Returned code %d, consumed %d\n",
-		(int)rval.code, (int)rval.consumed);
+	fprintf(stderr, "Returned code %d, consumed %zd\n",
+		(int)rval.code, rval.consumed);
 
 	if(is_ok) {
 		assert(rval.code == RC_OK);
@@ -61,7 +61,7 @@ check(int is_ok, uint8_t *buf, int size, size_t consumed) {
 }
 
 static void
-try_corrupt(uint8_t *buf, int size) {
+try_corrupt(uint8_t *buf, size_t size) {
 	uint8_t *tmp;
 	int i;
 

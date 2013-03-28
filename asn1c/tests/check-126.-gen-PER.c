@@ -34,7 +34,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 		else
 			fprintf(stderr, "%%%02x", *b);
 	}
-	fprintf(stderr, "]:%ld\n", (long)size);
+	fprintf(stderr, "]:%zd\n", size);
 	buf_offset += size;
 	return 0;
 }
@@ -82,10 +82,10 @@ save_object_as(PDU_t *st, enum enctype how) {
 }
 
 static PDU_t *
-load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int mustfail) {
+load_object_from(const char *fname, char *fbuf, size_t size, enum enctype how, int mustfail) {
 	asn_dec_rval_t rval;
 	PDU_t *st = 0;
-	int csize = 1;
+	ssize_t csize = 1;
 
 	if(getenv("INITIAL_CHUNK_SIZE"))
 		csize = atoi(getenv("INITIAL_CHUNK_SIZE"));
@@ -96,8 +96,8 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 		int fbuf_left = size;
 		int fbuf_chunk = csize;
 
-		fprintf(stderr, "LOADING OBJECT OF SIZE %d FROM [%s] as %s,"
-			" chunks %d\n",
+		fprintf(stderr, "LOADING OBJECT OF SIZE %zd FROM [%s] as %s,"
+			" chunks %zd\n",
 			size, fname, how==AS_PER?"PER":"XER", csize);
 
 		if(st) asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
@@ -132,7 +132,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 					? fbuf_chunk : fbuf_left, 0, 0);
 				if(rval.code == RC_WMORE) {
 					if(fbuf_chunk == fbuf_left) {
-						fprintf(stderr, "-> PER decode error (%d bits of %d bytes (c=%d,l=%d)) \n", rval.consumed, size, fbuf_chunk, fbuf_left);
+						fprintf(stderr, "-> PER decode error (%zd bits of %zd bytes (c=%d,l=%d)) \n", rval.consumed, size, fbuf_chunk, fbuf_left);
 						rval.code = RC_FAIL;
 						rval.consumed += 7;
 						rval.consumed /= 8;
@@ -147,7 +147,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 						fprintf(stderr, "-> PER wants more\n");
 					}
 				} else {
-					fprintf(stderr, "-> PER ret %d/%d mf=%d\n",
+					fprintf(stderr, "-> PER ret %d/%zd mf=%d\n",
 						rval.code, rval.consumed, mustfail);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;
@@ -174,7 +174,7 @@ load_object_from(const char *fname, char *fbuf, int size, enum enctype how, int 
 
 		assert(rval.code == RC_OK);
 		if(how == AS_PER) {
-			fprintf(stderr, "[left %d, off %d, size %d]\n",
+			fprintf(stderr, "[left %d, off %d, size %zd]\n",
 				fbuf_left, fbuf_offset, size);
 			assert(fbuf_offset == size);
 		} else {
@@ -225,7 +225,7 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-compare_with_data_out(const char *fname, char *buf, int size) {
+compare_with_data_out(const char *fname, char *buf, size_t size) {
 	char outName[256];
 	char fbuf[1024];
 	size_t rd;
@@ -269,7 +269,7 @@ compare_with_data_out(const char *fname, char *buf, int size) {
 }
 
 static void
-process_XER_data(const char *fname, char *fbuf, int size) {
+process_XER_data(const char *fname, char *fbuf, size_t size) {
 	PDU_t *st;
 
 	st = load_object_from(fname, fbuf, size, AS_XER, 0);

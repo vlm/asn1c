@@ -162,34 +162,6 @@ _edge_value(const asn1cnst_edge_t *edge) {
 	return buf;
 }
 
-static void
-_range_print(const asn1cnst_range_t *range) {
-
-	if(_edge_compare(&range->left, &range->right)) {
-		printf("(%s.", _edge_value(&range->left));
-		printf(".%s", _edge_value(&range->right));
-	} else {
-		printf("(%s", _edge_value(&range->left));
-	}
-
-	if(range->extensible) {
-		printf(",...)");
-	} else {
-		printf(")");
-	}
-
-	if(range->incompatible) printf("/I");
-	if(range->not_PER_visible) printf("/!V");
-
-	if(range->el_count) {
-		int i;
-		printf("-=>");
-		for(i = 0; i < range->el_count; i++)
-			_range_print(range->elements[i]);
-	}
-
-}
-
 static int
 _edge_is_within(const asn1cnst_range_t *range, const asn1cnst_edge_t *edge) {
 	int i;

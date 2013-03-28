@@ -42,7 +42,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 		else
 			fprintf(stderr, "%%%02x", *b);
 	}
-	fprintf(stderr, "]:%ld\n", (long)size);
+	fprintf(stderr, "]:%zd\n", size);
 	buf_offset += size;
 	return 0;
 }
@@ -88,7 +88,7 @@ save_object_as(PDU_t *st, enum der_or_xer how) {
 }
 
 static PDU_t *
-load_object_from(enum expectation expectation, char *fbuf, int size, enum der_or_xer how) {
+load_object_from(enum expectation expectation, char *fbuf, size_t size, enum der_or_xer how) {
 	asn_dec_rval_t rval;
 	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
 		asn_TYPE_descriptor_t *, void **, const void *, size_t);
@@ -196,9 +196,8 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-process_XER_data(enum expectation expectation, char *fbuf, int size) {
+process_XER_data(enum expectation expectation, char *fbuf, size_t size) {
 	PDU_t *st;
-	int ret;
 
 	st = load_object_from(expectation, fbuf, size, AS_XER);
 	if(!st) return;

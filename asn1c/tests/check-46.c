@@ -18,7 +18,7 @@ uint8_t buf1[] = {
 };
 
 static void
-check(uint8_t *buf, int size, size_t consumed) {
+check(uint8_t *buf, size_t size, size_t consumed) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
 
@@ -26,8 +26,8 @@ check(uint8_t *buf, int size, size_t consumed) {
 
 	fprintf(stderr, "Buf %p\n", buf);
 	rval = ber_decode(0, &asn_DEF_T, (void **)&tp, buf, size);
-	fprintf(stderr, "Returned code %d, consumed %d\n",
-		(int)rval.code, (int)rval.consumed);
+	fprintf(stderr, "Returned code %d, consumed %zd\n",
+		(int)rval.code, rval.consumed);
 
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == consumed);
