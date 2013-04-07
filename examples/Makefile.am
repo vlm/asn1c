@@ -1,5 +1,5 @@
 
-dist_bin_SCRIPTS = crfc2asn1.pl clyx2asn1.pl
+dist_bin_SCRIPTS = crfc2asn1.pl
 
 ASN1_SOURCE_1 = rfc3280.txt
 ASN1_FILES_1 =				\

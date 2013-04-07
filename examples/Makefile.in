@@ -189,7 +189,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-dist_bin_SCRIPTS = crfc2asn1.pl clyx2asn1.pl
+dist_bin_SCRIPTS = crfc2asn1.pl
 ASN1_SOURCE_1 = rfc3280.txt
 ASN1_FILES_1 = \
 	rfc3280-PKIX1Explicit88.asn1	\
