@@ -7,13 +7,13 @@
  * if you need to create products based on this RRC ASN.1 module.
  *
  * The ETSI has granted me the right to reproduce this ASN.1 RRC
- * (Radio Resource Control) module provided that I insert the following
- * paragraph:
+ * (Radio Resource Control) module as part of asn1c provided that I insert
+ * the following paragraph:
  *
- * 3GPP(tm) TSs and TRs are the property of ARIB, ATIS, ETSI, CCSA, TTA and TTC
- * who jointly own the copyright in them. They are subject to further
- * modifications and are therefore provided to you "as is" for information
- * purposes only. Further use is strictly prohibited.
+ *   3GPP‚Ñ¢ TSs and TRs are the property of ARIB, ATIS, ETSI, CCSA, TTA and TTC
+ *   who jointly own the copyright in them. They are subject to further
+ *   modifications and are therefore provided to you "as is" for information
+ *   purposes only. Further use is strictly prohibited.
  */
 
 Class-definitions DEFINITIONS AUTOMATIC TAGS ::=
@@ -1172,7 +1172,7 @@ CellUpdateConfirm-r3-IEs ::= SEQUENCE {
 }
 
 CellUpdateConfirm-v3a0ext ::= SEQUENCE {
-	-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received the UE behaviour
+	-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received the UE behaviour
 	-- is unspecified
 	new-DSCH-RNTI				DSCH-RNTI								OPTIONAL
 }
@@ -1203,7 +1203,7 @@ CellUpdateConfirm-r4-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		rrc-StateIndicator				RRC-StateIndicator,
@@ -1258,7 +1258,7 @@ CellUpdateConfirm-r5-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -1315,7 +1315,7 @@ CellUpdateConfirm-r6-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -1375,7 +1375,7 @@ CellUpdateConfirm-r7-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -2057,7 +2057,7 @@ HandoverFromUTRANCommand-GSM-r3-IEs ::= SEQUENCE {
 			--    the GSM message.
 			-- 2> the RRC message excluding the GSM part, does not contain a length determinant; 
 			--    there is no explicit parameter indicating the size of the included GSM message.
-			-- 3> depending on need, final padding (all “0”s) is added to ensure the final result
+			-- 3> depending on need, final padding (all ‚Äú0‚Äùs) is added to ensure the final result
 			--    comprises a full number of octets
 			single-GSM-Message				SEQUENCE {},
 			gsm-MessageList					SEQUENCE {
@@ -2081,7 +2081,7 @@ HandoverFromUTRANCommand-GSM-r6-IEs ::= SEQUENCE {
 			--    the GSM message.
 			-- 2> the RRC message excluding the GSM part, does not contain a length determinant; 
 			--    there is no explicit parameter indicating the size of the included GSM message.
-			-- 3> depending on need, final padding (all “0”s) is added to ensure the final result
+			-- 3> depending on need, final padding (all ‚Äú0‚Äùs) is added to ensure the final result
 			--    comprises a full number of octets
 			single-GSM-Message				SEQUENCE {},
 			gsm-MessageList					SEQUENCE {
@@ -2134,7 +2134,7 @@ HandoverFromUTRANCommand-GERANIu-r5-IEs ::= SEQUENCE {
 			-- 2> the RRC message excluding the GERAN Iu part does not contain a length determinant; 
 --    there is no explicit parameter indicating the size of the included GERAN Iu
 --    message.
-			-- 3> depending on need, final padding (all “0”s) is added to ensure the final result
+			-- 3> depending on need, final padding (all ‚Äú0‚Äùs) is added to ensure the final result
 			--    comprises a full number of octets.
 			single-GERANIu-Message			SEQUENCE {},
 			geranIu-MessageList				SEQUENCE {
@@ -2442,7 +2442,7 @@ MeasurementControl-r4-IEs ::= SEQUENCE {
 
 MeasurementControl-v590ext-IEs ::= SEQUENCE {
 	measurementCommand-v590ext 			CHOICE {
-		-- the choice “intra-frequency” shall be used for the case of intra-frequency measurement,
+		-- the choice ‚Äúintra-frequency‚Äù shall be used for the case of intra-frequency measurement,
 		-- as well as when intra-frequency events are configured for inter-frequency measurement
 		intra-frequency						Intra-FreqEventCriteriaList-v590ext,
 		inter-frequency						Inter-FreqEventCriteriaList-v590ext
@@ -2747,7 +2747,7 @@ PhysicalChannelReconfiguration-r3-IEs ::= SEQUENCE {
 }
 
 PhysicalChannelReconfiguration-v3a0ext ::= SEQUENCE {
-	-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received the UE behaviour
+	-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received the UE behaviour
 	-- is unspecified
 	new-DSCH-RNTI					DSCH-RNTI							OPTIONAL
 }
@@ -2774,7 +2774,7 @@ PhysicalChannelReconfiguration-r4-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		rrc-StateIndicator				RRC-StateIndicator,
@@ -2810,7 +2810,7 @@ PhysicalChannelReconfiguration-r5-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -2849,7 +2849,7 @@ PhysicalChannelReconfiguration-r6-IEs ::= SEQUENCE {
 		delayRestrictionFlag			DelayRestrictionFlag				OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -2900,7 +2900,7 @@ PhysicalChannelReconfiguration-r7-IEs ::= SEQUENCE {
 		delayRestrictionFlag			DelayRestrictionFlag				OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -3242,7 +3242,7 @@ RadioBearerReconfiguration-r3-IEs ::= SEQUENCE {
 }
 
 RadioBearerReconfiguration-v3a0ext ::= SEQUENCE {
-	-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received the UE behaviour
+	-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received the UE behaviour
 	-- is unspecified
 	new-DSCH-RNTI					DSCH-RNTI							OPTIONAL
 }
@@ -3274,7 +3274,7 @@ RadioBearerReconfiguration-r4-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		rrc-StateIndicator				RRC-StateIndicator,
@@ -3326,7 +3326,7 @@ RadioBearerReconfiguration-r5-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received 
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received 
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -3399,7 +3399,7 @@ RadioBearerReconfiguration-r6-IEs ::= SEQUENCE {
 		delayRestrictionFlag			DelayRestrictionFlag				OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -3478,7 +3478,7 @@ RadioBearerReconfiguration-r7-IEs ::= SEQUENCE {
 		delayRestrictionFlag			DelayRestrictionFlag				OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -3713,7 +3713,7 @@ RadioBearerRelease-r3-IEs ::= SEQUENCE {
 }
 
 RadioBearerRelease-v3a0ext ::= SEQUENCE {
-	-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received the UE behaviour
+	-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received the UE behaviour
 	-- is unspecified
 	new-DSCH-RNTI					DSCH-RNTI							OPTIONAL
 }
@@ -3740,7 +3740,7 @@ RadioBearerRelease-r4-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		rrc-StateIndicator				RRC-StateIndicator,
@@ -3794,7 +3794,7 @@ RadioBearerRelease-r5-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -3867,7 +3867,7 @@ RadioBearerRelease-r6-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -3914,7 +3914,7 @@ RadioBearerRelease-r7-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -4143,7 +4143,7 @@ RadioBearerSetup-r3-IEs ::= SEQUENCE {
 }
 
 RadioBearerSetup-v3a0ext ::= SEQUENCE {
-	-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received the UE behaviour
+	-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received the UE behaviour
 	-- is unspecified
 	new-DSCH-RNTI					DSCH-RNTI							OPTIONAL
 }
@@ -4175,7 +4175,7 @@ RadioBearerSetup-r4-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		rrc-StateIndicator				RRC-StateIndicator,
@@ -4228,7 +4228,7 @@ RadioBearerSetup-r5-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -4300,7 +4300,7 @@ RadioBearerSetup-r6-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -4357,7 +4357,7 @@ RadioBearerSetup-r7-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -5615,7 +5615,7 @@ TransportChannelReconfiguration-r3-IEs ::= SEQUENCE {
 }
 
 TransportChannelReconfiguration-v3a0ext ::= SEQUENCE {
-	-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+	-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 	-- the UE behaviour is unspecified
 	new-DSCH-RNTI					DSCH-RNTI							OPTIONAL
 }
@@ -5642,7 +5642,7 @@ TransportChannelReconfiguration-r4-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		rrc-StateIndicator				RRC-StateIndicator,
@@ -5690,7 +5690,7 @@ TransportChannelReconfiguration-r5-IEs ::= SEQUENCE {
 		activationTime					ActivationTime						OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode, and if received
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode, and if received
 		-- the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -5758,7 +5758,7 @@ TransportChannelReconfiguration-r6-IEs ::= SEQUENCE {
 		delayRestrictionFlag			DelayRestrictionFlag				OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -5797,7 +5797,7 @@ TransportChannelReconfiguration-r7-IEs ::= SEQUENCE {
 		delayRestrictionFlag			DelayRestrictionFlag				OPTIONAL,
 		new-U-RNTI						U-RNTI								OPTIONAL,
 		new-C-RNTI						C-RNTI								OPTIONAL,
-		-- The IE “new-DSCH-RNTI” should not be included in FDD mode,
+		-- The IE ‚Äúnew-DSCH-RNTI‚Äù should not be included in FDD mode,
 		-- and if received the UE behaviour is unspecified
 		new-DSCH-RNTI					DSCH-RNTI							OPTIONAL,
 		new-H-RNTI						H-RNTI								OPTIONAL,
@@ -7353,7 +7353,7 @@ DL-CapabilityWithSimultaneousHS-DSCHConfig ::=	ENUMERATED{kbps32, kbps64, kbps12
 DL-DPCCH-BER ::=					INTEGER (0..63)
 
 DL-PhysChCapabilityFDD ::=			SEQUENCE {
-	-- The IE “maxNoDPCH-PDSCH-Codes” only gives information on the maximum number of DPCH Codes.
+	-- The IE ‚ÄúmaxNoDPCH-PDSCH-Codes‚Äù only gives information on the maximum number of DPCH Codes.
 	maxNoDPCH-PDSCH-Codes				INTEGER (1..8),
 	maxNoPhysChBitsReceived				MaxNoPhysChBitsReceived,
 	supportForSF-512					BOOLEAN,
@@ -7613,7 +7613,7 @@ MaxNumberOfTFC-UL ::=				ENUMERATED {
 										dummy1, dummy2, tfc16, tfc32, tfc48, tfc64, 
 										tfc96, tfc128, tfc256, tfc512, tfc1024 }
 
--- the values 1 …4 for MaxPhysChPerFrame are not used in this version of the protocol 
+-- the values 1 ‚Ä¶4 for MaxPhysChPerFrame are not used in this version of the protocol 
 MaxPhysChPerFrame ::=				INTEGER (1..224)
 
 MaxPhysChPerFrame-768 ::=			INTEGER (1..448)
@@ -7623,7 +7623,7 @@ MaxPhysChPerSubFrame-r4 ::=			INTEGER (1..96)
 MaxPhysChPerTimeslot ::=			ENUMERATED {
 										ts1, ts2 }
 
--- the values 1 …4 for MaxPhysChPerTS are not used in this version of the protocol 
+-- the values 1 ‚Ä¶4 for MaxPhysChPerTS are not used in this version of the protocol 
 MaxPhysChPerTS ::=					INTEGER (1..16)
 
 MaxPhysChPerTS-768 ::=				INTEGER (1..32)
@@ -8093,7 +8093,7 @@ S-RNTI-2 ::=						BIT STRING (SIZE (10))
 
 SecurityCapability ::=				SEQUENCE {
 	cipheringAlgorithmCap				BIT STRING {
-										-- For each bit value “0” means false/ not supported
+										-- For each bit value ‚Äú0‚Äù means false/ not supported
 											spare15(0),
 											spare14(1),
 											spare13(2),
@@ -8112,7 +8112,7 @@ SecurityCapability ::=				SEQUENCE {
 											uea0(15)
 											}	(SIZE (16)),
 	integrityProtectionAlgorithmCap		BIT STRING {
-										-- For each bit value “0” means false/ not supported
+										-- For each bit value ‚Äú0‚Äù means false/ not supported
 											spare15(0),
 											spare14(1),
 											spare13(2),
@@ -8836,10 +8836,10 @@ DL-TM-RLC-Mode ::=					SEQUENCE {
 DL-TransportChannelType ::=			CHOICE {
 	dch									TransportChannelIdentity,
 	fach								NULL,
-	-- The choice “dsch” should not be used in FDD mode, and if received
+	-- The choice ‚Äúdsch‚Äù should not be used in FDD mode, and if received
 	-- the UE behaviour is unspecified.
 	dsch								TransportChannelIdentity,
-	-- The choice “dch-and-dsch” should not be used in FDD mode, and if received the UE
+	-- The choice ‚Äúdch-and-dsch‚Äù should not be used in FDD mode, and if received the UE
 	-- behaviour is unspecified
 	dch-and-dsch						TransportChannelIdentityDCHandDSCH
 }
@@ -8847,10 +8847,10 @@ DL-TransportChannelType ::=			CHOICE {
 DL-TransportChannelType-r5 ::=			CHOICE {
 	dch									TransportChannelIdentity,
 	fach								NULL,
-	-- The choice “dsch” should not be used in FDD mode, and if received
+	-- The choice ‚Äúdsch‚Äù should not be used in FDD mode, and if received
 	-- the UE behaviour is unspecified.
 	dsch								TransportChannelIdentity,
-	-- The choice “dch-and-dsch” should not be used in FDD mode, and if received the UE 
+	-- The choice ‚Äúdch-and-dsch‚Äù should not be used in FDD mode, and if received the UE 
 	-- behaviour is unspecified
 	dch-and-dsch						TransportChannelIdentityDCHandDSCH,
 	hsdsch								MAC-d-FlowIdentity,
@@ -9931,12 +9931,12 @@ DL-TransportChannelIdentity-r5 ::= 		SEQUENCE {
 	dl-TransportChannelType				DL-TrCH-TypeId2-r5
 }
 
--- The choice “dsch” should not be used in FDD mode, and if received the UE behaviour is unspecified
+-- The choice ‚Äúdsch‚Äù should not be used in FDD mode, and if received the UE behaviour is unspecified
 DL-TrCH-Type ::=					ENUMERATED {dch, dsch}
 
 DL-TrCH-TypeId1-r5 ::=				CHOICE {
 	dch									TransportChannelIdentity,
-	-- The choice “dsch” should not be used in FDD mode, and if received
+	-- The choice ‚Äúdsch‚Äù should not be used in FDD mode, and if received
 	-- the UE behaviour is unspecified.
 	dsch								TransportChannelIdentity,
 	hsdsch								NULL
@@ -9944,7 +9944,7 @@ DL-TrCH-TypeId1-r5 ::=				CHOICE {
 
 DL-TrCH-TypeId2-r5 ::=				CHOICE {
 	dch									TransportChannelIdentity,
-	-- The choice “dsch” should not be used in FDD mode, and if received
+	-- The choice ‚Äúdsch‚Äù should not be used in FDD mode, and if received
 	-- the UE behaviour is unspecified.
 	dsch								TransportChannelIdentity,
 	hsdsch								MAC-d-FlowIdentity
@@ -13097,7 +13097,7 @@ PUSCH-Info-LCR-r4 ::=				SEQUENCE {
 
 PUSCH-PowerControlInfo-r4 ::=		SEQUENCE {
 	-- The IE ul-TargetSIR corresponds to PRX-PUSCHdes for 1.28Mcps TDD
-	-- Actual value PRX-PUSCHdes = (value of IE "ul-TargetSIR" – 120)
+	-- Actual value PRX-PUSCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 	ul-TargetSIR						UL-TargetSIR,
 	tddOption							CHOICE {
 		tdd384								NULL,
@@ -13109,7 +13109,7 @@ PUSCH-PowerControlInfo-r4 ::=		SEQUENCE {
 
 PUSCH-PowerControlInfo-r7 ::=		SEQUENCE {
 	-- The IE ul-TargetSIR corresponds to PRX-PUSCHdes for 1.28Mcps TDD
-	-- Actual value PRX-PUSCHdes = (value of IE "ul-TargetSIR" – 120)
+	-- Actual value PRX-PUSCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 	ul-TargetSIR						UL-TargetSIR,
 	tddOption							CHOICE {
 		tdd384								NULL,
@@ -13899,7 +13899,7 @@ UL-CCTrCH ::=						SEQUENCE {
 UL-CCTrCH-r4 ::=					SEQUENCE {
 	tfcs-ID								TFCS-IdentityPlain					DEFAULT 1,
 	-- The IE ul-TargetSIR corresponds to PRX-DPCHdes for 1.28Mcps TDD
-	-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" – 120)
+	-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 	ul-TargetSIR						UL-TargetSIR,
 	timeInfo							TimeInfo,
 	commonTimeslotInfo					CommonTimeslotInfo					OPTIONAL,
@@ -13916,7 +13916,7 @@ UL-CCTrCH-r4 ::=					SEQUENCE {
 UL-CCTrCH-r7 ::=					SEQUENCE {
 	tfcs-ID								TFCS-IdentityPlain					DEFAULT 1,
 	-- The IE ul-TargetSIR corresponds to PRX-DPCHdes for 1.28Mcps TDD
-	-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" – 120)
+	-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 	ul-TargetSIR						UL-TargetSIR,
 	timeInfo							TimeInfo,
 	commonTimeslotInfo					CommonTimeslotInfo					OPTIONAL,
@@ -14201,7 +14201,7 @@ UL-DPCH-PowerControlInfo-r4 ::=		CHOICE {
 	},
 	tdd									SEQUENCE {
 		-- The IE ul-TargetSIR corresponds to PRX-DPCHdes for 1.28Mcps TDD
-		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" – 120)
+		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 		ul-TargetSIR						UL-TargetSIR				OPTIONAL,
 		ul-OL-PC-Signalling					CHOICE {
 			broadcast-UL-OL-PC-info				NULL,
@@ -14234,7 +14234,7 @@ UL-DPCH-PowerControlInfo-r5 ::=		CHOICE {
 	},
 	tdd									SEQUENCE {
 		-- The IE ul-TargetSIR corresponds to PRX-DPCHdes for 1.28Mcps TDD
-		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" – 120)
+		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 		ul-TargetSIR						UL-TargetSIR				OPTIONAL,
 		ul-OL-PC-Signalling					CHOICE {
 			broadcast-UL-OL-PC-info				NULL,
@@ -14268,7 +14268,7 @@ UL-DPCH-PowerControlInfo-r6 ::=		CHOICE {
 	},
 	tdd									SEQUENCE {
 		-- The IE ul-TargetSIR corresponds to PRX-DPCHdes for 1.28Mcps TDD
-		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" – 120)
+		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 		ul-TargetSIR						UL-TargetSIR				OPTIONAL,
 		ul-OL-PC-Signalling					CHOICE {
 			broadcast-UL-OL-PC-info				NULL,
@@ -14303,7 +14303,7 @@ UL-DPCH-PowerControlInfo-r7 ::=		CHOICE {
 	},
 	tdd									SEQUENCE {
 		-- The IE ul-TargetSIR corresponds to PRX-DPCHdes for 1.28Mcps TDD
-		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" – 120)
+		-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 		ul-TargetSIR						UL-TargetSIR				OPTIONAL,
 		ul-OL-PC-Signalling					CHOICE {
 			broadcast-UL-OL-PC-info				NULL,
@@ -14342,7 +14342,7 @@ UL-DPCH-PowerControlInfoPostTDD ::=	SEQUENCE {
 
 UL-DPCH-PowerControlInfoPostTDD-LCR-r4 ::=	SEQUENCE {
 	-- The IE ul-TargetSIR corresponds to PRX-DPCHdes for 1.28Mcps TDD
-	-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" – 120)
+	-- Actual value PRX-DPCHdes = (value of IE "ul-TargetSIR" ‚Äì 120)
 	ul-TargetSIR						UL-TargetSIR
 }
 
@@ -17204,7 +17204,7 @@ ReportingIntervalLong ::=			ENUMERATED {
 										ril2, ril3, ril4, ril6, ril8,
 										ril12, ril16, ril20, ril24,
 										ril28, ril32, ril64 }
-									-- When the value “ril0” is used, the UE behaviour is not
+									-- When the value ‚Äúril0‚Äù is used, the UE behaviour is not
 									-- defined.
 
 -- Actual value ReportingRange = IE value * 0.5
@@ -18379,7 +18379,7 @@ GSM-MessageList ::=					SEQUENCE (SIZE (1..maxInterSysMessages)) OF
 GSM-MS-RadioAccessCapability ::=	OCTET STRING (SIZE (1..64))
 
 GsmSecurityCapability ::=			BIT STRING {
-										-- For each bit value “0” means false/ not supported
+										-- For each bit value ‚Äú0‚Äù means false/ not supported
 										a5-7(0),
 										a5-6(1),
 									 	a5-5(2),
@@ -18925,13 +18925,13 @@ SysInfoType5-v650ext-IEs ::= SEQUENCE {
 
 SysInfoType5-v680ext-IEs ::= SEQUENCE {
 	-- TABULAR: HSDPA Cell Indicator is MD in tabular description
-	-- Default value is ’HSDPA Capability not indicated’
+	-- Default value is ‚ÄôHSDPA Capability not indicated‚Äô
 	hsdpa-CellIndicator		ENUMERATED { hsdpa-CapableCell }			OPTIONAL
 }
 
 SysInfoType5-v690ext-IEs ::=		SEQUENCE {
 	-- TABULAR: E-DCH Cell Indicator is MD in tabular description
-	-- Default value is ’E-DCH Capability not indicated’
+	-- Default value is ‚ÄôE-DCH Capability not indicated‚Äô
 	edch-CellIndicator					ENUMERATED { edch-CapableCell }		OPTIONAL,
 	sccpch-SystemInformation-MBMS		CHOICE {
 		mcchOnSCCPCHusedForNonMBMS			MBMS-MCCH-ConfigurationInfo-r6,
@@ -19902,7 +19902,7 @@ maxEDCHRL					INTEGER ::= 4
 maxFACHPCH					INTEGER ::= 8
 maxFreq						INTEGER ::= 8
 maxFreqBandsFDD				INTEGER ::= 8
-maxFreqBandsFDD-ext			INTEGER ::= 15	-- maxFreqBandsFDD-ext ::= 22 – (maxFreqBandsFDD – 1)
+maxFreqBandsFDD-ext			INTEGER ::= 15	-- maxFreqBandsFDD-ext ::= 22 ‚Äì (maxFreqBandsFDD ‚Äì 1)
 maxFreqBandsTDD				INTEGER ::= 4
 maxFreqBandsGSM				INTEGER ::= 16
 maxGERAN-SI					INTEGER ::= 8
@@ -20484,8 +20484,8 @@ SRNC-RelocationInfo-v3b0ext-IEs ::= SEQUENCE {
 
 SRNC-RelocationInfo-v3c0ext-IEs ::= SEQUENCE {
 		-- IE rb-IdentityForHOMessage includes the identity of the RB used by the source SRNC
-		-- to send the message contained in the IE “TargetRNC-ToSourceRNC-Container”.
-		-- Only included if type is “UE involved”
+		-- to send the message contained in the IE ‚ÄúTargetRNC-ToSourceRNC-Container‚Äù.
+		-- Only included if type is ‚ÄúUE involved‚Äù
 		rb-IdentityForHOMessage				RB-Identity  		OPTIONAL
 }
 
@@ -20581,8 +20581,8 @@ StoredTGP-Sequence ::=				SEQUENCE {
 SRNC-RelocationInfo-r4-IEs ::=			SEQUENCE {
 	-- Non-RRC IEs
 		-- IE rb-IdentityForHOMessage includes the identity of the RB used by the source SRNC
-		-- to send the message contained in the IE “TargetRNC-ToSourceRNC-Container”.
-		-- Only included if type is “UE involved”
+		-- to send the message contained in the IE ‚ÄúTargetRNC-ToSourceRNC-Container‚Äù.
+		-- Only included if type is ‚ÄúUE involved‚Äù
 		rb-IdentityForHOMessage			RB-Identity							OPTIONAL,
 		stateOfRRC						StateOfRRC,
 		stateOfRRC-Procedure			StateOfRRC-Procedure,
@@ -20641,7 +20641,7 @@ SRNC-RelocationInfo-r4-IEs ::=			SEQUENCE {
 SRNC-RelocationInfo-r5-IEs ::=			SEQUENCE {
 	-- Non-RRC IEs
 		-- IE rb-IdentityForHOMessage includes the identity of the RB used by the source SRNC
-		-- to send the message contained in the IE “TargetRNC-ToSourceRNC-Container”.
+		-- to send the message contained in the IE ‚ÄúTargetRNC-ToSourceRNC-Container‚Äù.
 		-- Only included if type is "UE involved"
 		rb-IdentityForHOMessage			RB-Identity							OPTIONAL,
 		stateOfRRC						StateOfRRC,
@@ -20732,7 +20732,7 @@ SRNC-RelocationInfo-v690ext-IEs ::=	SEQUENCE {
 SRNC-RelocationInfo-r6-IEs ::=			SEQUENCE {
 	-- Non-RRC IEs
 		-- IE rb-IdentityForHOMessage includes the identity of the RB used by the source SRNC
-		-- to send the message contained in the IE “TargetRNC-ToSourceRNC-Container”.
+		-- to send the message contained in the IE ‚ÄúTargetRNC-ToSourceRNC-Container‚Äù.
 		-- Only included if type is "UE involved"
 		rb-IdentityForHOMessage			RB-Identity							OPTIONAL,
 		stateOfRRC						StateOfRRC,
@@ -20871,7 +20871,7 @@ COUNT-CSingle ::=						SEQUENCE {
 }
 
 DL-PhysChCapabilityFDD-r4 ::=		SEQUENCE {
-	-- The IE “maxNoDPCH-PDSCH-Codes” only gives information on the maximum number of DPCH Codes.
+	-- The IE ‚ÄúmaxNoDPCH-PDSCH-Codes‚Äù only gives information on the maximum number of DPCH Codes.
 	maxNoDPCH-PDSCH-Codes				INTEGER (1..8),
 	maxNoPhysChBitsReceived				MaxNoPhysChBitsReceived,
 	supportForSF-512					BOOLEAN,
@@ -20883,7 +20883,7 @@ DL-PhysChCapabilityFDD-r4 ::=		SEQUENCE {
 }
 
 DL-PhysChCapabilityFDD-r5 ::=		SEQUENCE {
-	-- The IE “maxNoDPCH-PDSCH-Codes” only gives information on the maximum number of DPCH Codes.
+	-- The IE ‚ÄúmaxNoDPCH-PDSCH-Codes‚Äù only gives information on the maximum number of DPCH Codes.
 	maxNoDPCH-PDSCH-Codes				INTEGER (1..8),
 	maxNoPhysChBitsReceived				MaxNoPhysChBitsReceived,
 	supportForSF-512					BOOLEAN,
