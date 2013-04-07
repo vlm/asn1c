@@ -4761,17 +4761,17 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=DL-DCCH-Message -pdu=auto -fcompound-names -gen-PER ../rrc.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=DL-DCCH-Message -pdu=auto -fcompound-names -gen-PER ../rrc-7.1.0.asn1
 
 
-DL-DCCH-Message.c: ../sample.makefile.regen ../rrc.asn1
+DL-DCCH-Message.c: ../sample.makefile.regen ../rrc-7.1.0.asn1
 	make regen-makefile
 	@touch DL-DCCH-Message.c
 	make
 
 regen-makefile:
 	ASN1CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
-	ASN1MODULES="../rrc.asn1" \
+	ASN1MODULES="../rrc-7.1.0.asn1" \
 	ASN1PDU=DL-DCCH-Message \
 	PROGNAME=rrc-dump \
 	../sample.makefile.regen

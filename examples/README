@@ -16,7 +16,7 @@ This directory contains a few examples.
    rfc4211.txt.
 
 6. The ./sample.source.RRC directory contains the 3GPP Radio Resource Control
-   decoder. Just type `make` in there to compile.
+   decoder for RRC version 7.1.0. Just type `make` in there to compile.
 
 5. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder.
    Before trying to compile, read the README file in that directory.

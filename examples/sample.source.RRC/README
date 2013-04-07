@@ -4,7 +4,7 @@ GENERAL INFORMATION
 
 The 3GPP TS 25.331 version 7.1.0 RRC (Radio Resource Control) PER decoder.
 Invoking `make` will compile the ASN.1 specifications from the
-../rrc.asn1 file.
+../rrc-7.1.0.asn1 file.
 
 OBTAINING THE RRC SPECIFICATION
 ================================
