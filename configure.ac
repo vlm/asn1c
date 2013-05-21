@@ -66,6 +66,7 @@ AC_SEARCH_LIBS(getopt, iberty)
 AC_CHECK_FUNCS(strtoimax strtoll)
 AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
+AC_CHECK_DECL(alloca)
 AC_TRY_LINK_FUNC([symlink],[AC_DEFINE([HAVE_SYMLINK], 1, [Define to 1 if you have the symlink function.])])
 
 AC_OUTPUT(				\
