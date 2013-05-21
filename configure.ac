@@ -15,6 +15,9 @@ AC_PROG_YACC
 AM_PROG_LEX
 AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)	dnl for Solaris
 
+# If you need to see the details, just run make V=1.
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 case "$host_os" in
 cygwin)
 	case "$target" in
