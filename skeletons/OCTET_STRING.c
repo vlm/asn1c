@@ -1,5 +1,7 @@
 /*-
  * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -32,6 +34,8 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
+	OCTET_STRING_decode_mder,
+	OCTET_STRING_encode_mder,
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
@@ -45,7 +49,8 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	&asn_DEF_OCTET_STRING_specs
+	&asn_DEF_OCTET_STRING_specs,
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
 #undef	_CH_PHASE
@@ -571,6 +576,100 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	er.encoded += st->size;
+	_ASN_ENCODED_OK(er);
+cb_failed:
+	_ASN_ENCODE_FAILED;
+}
+
+asn_dec_rval_t
+OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+	size_t size, asn_mder_contraints_t constr) {
+
+	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
+	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
+	asn_dec_rval_t rval;
+	const char *data;
+
+
+	/*
+	 * Create the string if does not exist.
+	 */
+	if(st == NULL) {
+		st = (OCTET_STRING_t *)(*sptr = CALLOC(1, sizeof(OCTET_STRING_t)));
+		if(st == NULL)
+			_ASN_DECODE_FAILED;
+	}
+
+	if (!oct) {
+		if (size < 2) {
+			rval.code = RC_WMORE;
+			rval.consumed = 0;
+			return rval;
+		}
+		st->size = 0;
+		st->size = ((const uint8_t *)buf_ptr)[0];
+		st->size = (st->size << 8) | ((const uint8_t *)buf_ptr)[1];
+		rval.consumed = 2;
+		data = (const char *)buf_ptr + 2;
+	} else {
+		st->size = *oct;
+		rval.consumed = 0;
+		data = (const char *)buf_ptr;
+	}
+	if (size < (st->size + rval.consumed)) {
+		rval.code = RC_WMORE;
+		rval.consumed = 0;
+		return rval;
+	}
+
+	if (OCTET_STRING_fromBuf(st, data, st->size) != 0)
+		_ASN_DECODE_FAILED;
+
+	rval.code = RC_OK;
+	rval.consumed += st->size;
+	return rval;
+}
+
+asn_enc_rval_t
+OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+			asn_mder_contraints_t constr,
+			asn_app_consume_bytes_f *cb, void *app_key)
+{
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	mder_octet_str *oct;
+	asn_enc_rval_t er;
+
+	ASN_DEBUG("%s %s as OCTET STRING",
+		cb?"Estimating":"Encoding", td->name);
+
+	/* specifics constraints prevail */
+	oct = (constr) ? (mder_octet_str *)constr :
+		(mder_octet_str *)td->mder_constraints;
+
+	if (!st)
+		_ASN_ENCODE_FAILED;
+
+	if ((st->size > 0) && !st->buf)
+		_ASN_ENCODE_FAILED;
+
+	if (oct && (st->size != *oct))
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = st->size;
+	if (!oct)
+		/* Variable Octet String */
+		er.encoded += 2;
+
+	if(!cb)
+		_ASN_ENCODED_OK(er);
+
+	if (!oct)
+		MDER_OUTPUT_INT_U16_LENGTH(st->size);
+
+	/* Invoke callback for the main part of the buffer */
+	_ASN_CALLBACK(st->buf, st->size);
+
 	_ASN_ENCODED_OK(er);
 cb_failed:
 	_ASN_ENCODE_FAILED;

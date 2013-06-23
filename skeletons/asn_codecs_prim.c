@@ -1,5 +1,8 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2010 Santiago Carot-Nemesio <sancane@gmail.com>
+ * Copyright (c) 2010 Jose Antonio Santos-Cadenas <santoscadenas@gmail.com>
+ * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -111,6 +114,35 @@ der_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 
 	erval.encoded += st->size;
+	_ASN_ENCODED_OK(erval);
+}
+
+/*
+* Encode an always-primitive type using MDER.
+*/
+asn_enc_rval_t
+mder_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
+		     asn_mder_contraints_t constr,
+		     asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t erval;
+	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)sptr;
+
+	ASN_DEBUG("%s %s as a primitive type ",
+			cb?"Encoding":"Estimating", td->name);
+
+
+	if(cb && st->buf) {
+		if(cb(st->buf, st->size, app_key) < 0) {
+			erval.encoded = -1;
+			erval.failed_type = td;
+			erval.structure_ptr = sptr;
+			return erval;
+		}
+	} else {
+		assert(st->buf || st->size == 0);
+	}
+
+	erval.encoded = st->size;
 	_ASN_ENCODED_OK(erval);
 }
 

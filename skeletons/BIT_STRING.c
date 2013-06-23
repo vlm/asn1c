@@ -25,6 +25,8 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	BIT_STRING_constraint,
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
+	BIT_STRING_decode_mder,
+	BIT_STRING_encode_mder,
 	OCTET_STRING_decode_xer_binary,
 	BIT_STRING_encode_xer,
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
@@ -38,7 +40,8 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	&asn_DEF_BIT_STRING_specs
+	&asn_DEF_BIT_STRING_specs,
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
 /*
@@ -71,6 +74,78 @@ static char *_bit_pattern[16] = {
 	"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
 	"1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"
 };
+
+asn_dec_rval_t
+BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+	size_t size, asn_mder_contraints_t constr) {
+
+	asn_dec_rval_t rval;
+	BIT_STRING_t *bs = (BIT_STRING_t *)*sptr;
+	mder_restricted_bit_str *rbs;
+
+	rbs = (constr) ? (mder_restricted_bit_str *)constr :
+		(mder_restricted_bit_str *)td->mder_constraints;
+
+	if (!rbs || *rbs == BITS_INVALID)
+		_ASN_DECODE_FAILED;
+
+	if(bs == NULL) {
+		bs = (BIT_STRING_t *)(*sptr = CALLOC(1, sizeof(BIT_STRING_t)));
+		if(bs == NULL)
+			_ASN_DECODE_FAILED;
+	}
+
+	bs->size = *rbs;
+	if ((size_t)bs->size > size) {
+		rval.code = RC_WMORE;
+		rval.consumed = 0;
+		return rval;
+	}
+	if (bs->buf)
+		free(bs->buf);
+	bs->buf = CALLOC(1, bs->size);
+	if (!memcpy(bs->buf, buf_ptr, bs->size))
+		_ASN_DECODE_FAILED;
+
+	rval.code = RC_OK;
+	rval.consumed = bs->size;
+
+	return rval;
+}
+
+asn_enc_rval_t
+BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+			asn_mder_contraints_t constr,
+			asn_app_consume_bytes_f *cb, void *app_key)
+{
+	asn_enc_rval_t er;
+	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
+	mder_restricted_bit_str *rbs;
+
+	ASN_DEBUG("%s %s as BIT STRING",
+		cb?"Encoding":"Estimating", td->name);
+
+	/* specifics constraints prevail */
+	rbs = (constr) ? (mder_restricted_bit_str *)constr :
+		(mder_restricted_bit_str *)td->mder_constraints;
+
+	if (!rbs || !st || (!st->buf && st->size))
+		_ASN_ENCODE_FAILED;
+
+	if (*rbs == BITS_INVALID)
+		_ASN_ENCODE_FAILED;
+
+	er.encoded = (ssize_t) *rbs;
+
+	if (cb)
+		/* Invoke callback for the main part of the buffer */
+		_ASN_CALLBACK(st->buf, (ssize_t) *rbs);
+
+	_ASN_ENCODED_OK(er);
+cb_failed:
+	_ASN_ENCODE_FAILED;
+}
 
 asn_enc_rval_t
 BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,

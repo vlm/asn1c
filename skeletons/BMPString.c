@@ -31,6 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	asn_generic_no_constraint,  /* No constraint by default */
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	BMPString_decode_xer,		/* Convert from UTF-8 */
 	BMPString_encode_xer,		/* Convert to UTF-8 */
 	OCTET_STRING_decode_uper,

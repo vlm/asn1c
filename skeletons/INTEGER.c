@@ -22,6 +22,8 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,
+	INTEGER_decode_mder,
+	INTEGER_encode_mder,
 	INTEGER_decode_xer,
 	INTEGER_encode_xer,
 #ifdef	ASN_DISABLE_PER_SUPPORT
@@ -38,8 +40,97 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	0	/* No specifics */
+	0,	/* No specifics */
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
+
+
+asn_dec_rval_t
+INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+	size_t size, asn_mder_contraints_t constr) {
+
+	INTEGER_t *integer = (INTEGER_t *)*sptr;
+	asn_dec_rval_t rval;
+	mder_restricted_int *rint;
+	unsigned int length;
+	union {
+		const void *constbuf;
+		void *nonconstbuf;
+	} unconst_buf;
+
+	rint = (constr) ? (mder_restricted_int *)constr :
+		(mder_restricted_int *)td->mder_constraints;
+	if (!rint || *rint == INT_INVALID) {
+		rval.code = RC_FAIL;
+		rval.consumed = 0;
+		return rval;
+	}
+
+	GET_INT_SIZE(*rint, length);
+
+	if(!integer) {
+		integer = (INTEGER_t *)(*sptr = CALLOC(1, sizeof(*integer)));
+		if(integer == NULL) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	if(length > size) {
+		rval.code = RC_WMORE;
+		rval.consumed = 0;
+		return rval;
+	}
+	unconst_buf.constbuf = buf_ptr;
+	integer->buf = (uint8_t *)unconst_buf.nonconstbuf;
+	integer->size = length;
+
+	rval.code = RC_OK;
+	rval.consumed = length;
+
+	return rval;
+}
+
+/*
+ * Encode INTEGER type using MDER.
+ */
+asn_enc_rval_t
+INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
+	asn_mder_contraints_t constr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	INTEGER_t *st = (INTEGER_t *)sptr;
+	mder_restricted_int *rint;
+	int size, shift;
+
+	ASN_DEBUG("%s %s as INTEGER",
+		cb?"Encoding":"Estimating", td->name);
+
+	/* specifics constraints prevail */
+	rint = (constr) ? (mder_restricted_int *)constr :
+		(mder_restricted_int *)td->mder_constraints;
+
+	if (!rint || *rint == INT_INVALID)
+		_ASN_ENCODE_FAILED;
+
+	GET_INT_SIZE(*rint, size);
+
+	if (st->buf) {
+		shift = st->size - size;
+		if(shift) {
+			uint8_t *nb = st->buf;
+			uint8_t *end, *buf = st->buf + shift;
+			st->size -= shift;	/* New size, minus bad bytes */
+			end = nb + st->size;
+
+			for(; nb < end; nb++, buf++)
+				*nb = *buf;
+		}
+	}
+
+	return mder_encode_primitive(td, sptr, constr, cb, app_key);
+}
 
 /*
  * Encode INTEGER type using DER.

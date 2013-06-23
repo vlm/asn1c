@@ -62,7 +62,8 @@ am_libasn1cskeletons_la_OBJECTS = ANY.lo BIT_STRING.lo BMPString.lo \
 	constr_CHOICE.lo constr_SEQUENCE.lo constr_SEQUENCE_OF.lo \
 	constr_SET.lo constr_SET_OF.lo constr_TYPE.lo constraints.lo \
 	der_encoder.lo per_decoder.lo per_encoder.lo per_opentype.lo \
-	per_support.lo xer_decoder.lo xer_encoder.lo xer_support.lo
+	per_support.lo xer_decoder.lo xer_encoder.lo xer_support.lo \
+	mder_encoder.lo mder_decoder.lo
 libasn1cskeletons_la_OBJECTS = $(am_libasn1cskeletons_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -317,7 +318,9 @@ libasn1cskeletons_la_SOURCES = \
 	per_support.c per_support.h			\
 	xer_decoder.c xer_decoder.h			\
 	xer_encoder.c xer_encoder.h			\
-	xer_support.c xer_support.h
+	xer_support.c xer_support.h			\
+	mder_encoder.c mder_encoder.h			\
+	mder_decoder.c mder_decoder.h
 
 all: all-recursive
 
@@ -414,6 +417,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constr_TYPE.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constraints.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/der_encoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mder_decoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mder_encoder.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/per_decoder.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/per_encoder.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/per_opentype.Plo@am__quote@

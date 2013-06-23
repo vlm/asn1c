@@ -34,6 +34,7 @@ typedef struct asn_CHOICE_specifics_s {
 	 * Extensions-related stuff.
 	 */
 	int ext_start;		/* First member of extensions, or -1 */
+	uint16_t *sorted_tags;	/* Tags used by MDER encoder and decoder */
 } asn_CHOICE_specifics_t;
 
 /*
@@ -44,6 +45,8 @@ asn_struct_print_f CHOICE_print;
 asn_constr_check_f CHOICE_constraint;
 ber_type_decoder_f CHOICE_decode_ber;
 der_type_encoder_f CHOICE_encode_der;
+mder_type_decoder_f CHOICE_decode_mder;
+mder_type_encoder_f CHOICE_encode_mder;
 xer_type_decoder_f CHOICE_decode_xer;
 xer_type_encoder_f CHOICE_encode_xer;
 per_type_decoder_f CHOICE_decode_uper;

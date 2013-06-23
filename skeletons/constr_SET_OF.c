@@ -884,7 +884,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	if(!st) {
 		st = *sptr = CALLOC(1, specs->struct_size);
 		if(!st) _ASN_DECODE_FAILED;
-	}                                                                       
+	}
 	list = _A_SET_FROM_VOID(st);
 
 	/* Figure out which constraints to use */
