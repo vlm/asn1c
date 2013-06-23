@@ -454,6 +454,18 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	_ASN_ENCODED_OK(erval);
 }
 
+/*
+ * MDER Decode SET OF type.
+ */
+asn_dec_rval_t
+SET_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, void **nint_ptr, const void *buf_ptr,
+	size_t size, asn_mder_contraints_t constr) {
+
+	printf("TODO: Implement decode of SET_OF\n");
+	_ASN_DECODE_FAILED;
+}
+
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
@@ -884,7 +896,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	if(!st) {
 		st = *sptr = CALLOC(1, specs->struct_size);
 		if(!st) _ASN_DECODE_FAILED;
-	}                                                                       
+	}
 	list = _A_SET_FROM_VOID(st);
 
 	/* Figure out which constraints to use */

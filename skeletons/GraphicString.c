@@ -20,6 +20,8 @@ asn_TYPE_descriptor_t asn_DEF_GraphicString = {
 	asn_generic_unknown_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,	/* Can't expect it to be ASCII/UTF8 */
 	OCTET_STRING_decode_uper,    /* Implemented in terms of OCTET STRING */

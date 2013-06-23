@@ -8,6 +8,8 @@
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
+#include <mder_decoder.h>
+#include <mder_encoder.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,6 +24,8 @@ asn_constr_check_f OBJECT_IDENTIFIER_constraint;
 der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
 xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
+mder_type_decoder_f OBJECT_IDENTIFIER_decode_mder;
+mder_type_encoder_f OBJECT_IDENTIFIER_encode_mder;
 
 /**********************************
  * Some handy conversion routines *

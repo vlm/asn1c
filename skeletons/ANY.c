@@ -19,6 +19,8 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
+	OCTET_STRING_decode_mder,
+	OCTET_STRING_encode_mder,
 	OCTET_STRING_decode_xer_hex,
 	ANY_encode_xer,
 	0, 0,
@@ -27,6 +29,7 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	&asn_DEF_ANY_specs,
+	0	/* MDER contraints (defined by asn1c compiler) */
 };
 
 

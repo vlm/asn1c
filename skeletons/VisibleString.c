@@ -25,6 +25,8 @@ asn_TYPE_descriptor_t asn_DEF_VisibleString = {
 	VisibleString_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
 	OCTET_STRING_decode_uper,

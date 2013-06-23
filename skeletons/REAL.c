@@ -41,6 +41,8 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
+	NON_SUP_decode_mder,
+	NON_SUP_encode_mder,
 	REAL_decode_xer,
 	REAL_encode_xer,
 	REAL_decode_uper,
