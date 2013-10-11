@@ -88,7 +88,7 @@ static ber_tlv_tag_t asn_DEF_TestType_16P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_TestType_16P0_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* common at 20 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* common */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_TestType_16P0_specs_1 = {
 	sizeof(struct TestType_16P0),
@@ -156,7 +156,7 @@ static ber_tlv_tag_t asn_DEF_TestType_16P1_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_TestType_16P1_tag2el_3[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 } /* common at 21 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 } /* common */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_TestType_16P1_specs_3 = {
 	sizeof(struct TestType_16P1),
@@ -245,8 +245,8 @@ static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_TestChoice_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* type1 at 20 */
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* type2 at 21 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* type1 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* type2 */
 };
 static asn_CHOICE_specifics_t asn_SPC_TestChoice_specs_1 = {
 	sizeof(struct TestChoice),
@@ -377,7 +377,7 @@ static ber_tlv_tag_t asn_DEF_AutoType_34P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_AutoType_34P0_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common at 37 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P0_specs_1 = {
 	sizeof(struct AutoType_34P0),
@@ -427,7 +427,7 @@ static ber_tlv_tag_t asn_DEF_AutoType_34P1_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_AutoType_34P1_tag2el_3[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common at 38 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* common */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P1_specs_3 = {
 	sizeof(struct AutoType_34P1),
@@ -516,8 +516,8 @@ static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_AutoChoice_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* type1 at 37 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* type2 at 38 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* type1 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* type2 */
 };
 static asn_CHOICE_specifics_t asn_SPC_AutoChoice_specs_1 = {
 	sizeof(struct AutoChoice),

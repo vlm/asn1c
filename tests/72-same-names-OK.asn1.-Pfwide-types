@@ -52,9 +52,9 @@ static ber_tlv_tag_t asn_DEF_Member_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Member_tag2el_2[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* t1 at 21 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 }, /* one-name at 37 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* two-name at 43 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* t1 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 }, /* one-name */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* two-name */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_2 = {
 	sizeof(struct Member),
@@ -200,8 +200,8 @@ static ber_tlv_tag_t asn_DEF_another_name_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_another_name_tag2el_3[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* a at 27 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* b at 27 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* a */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* b */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_another_name_specs_3 = {
 	sizeof(struct another_name),
@@ -249,7 +249,7 @@ static asn_TYPE_member_t asn_MBR_one_name_2[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_one_name_tag2el_2[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 27 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name */
 };
 static asn_CHOICE_specifics_t asn_SPC_one_name_specs_2 = {
 	sizeof(struct one_name),
@@ -299,7 +299,7 @@ static ber_tlv_tag_t asn_DEF_Type1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Type1_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 27 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Type1_specs_1 = {
 	sizeof(struct Type1),
@@ -498,8 +498,8 @@ static ber_tlv_tag_t asn_DEF_another_name_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_another_name_tag2el_3[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* b at 36 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* a at 34 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* b */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* a */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_another_name_specs_3 = {
 	sizeof(struct another_name),
@@ -550,7 +550,7 @@ static ber_tlv_tag_t asn_DEF_one_name_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_one_name_tag2el_2[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 34 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_one_name_specs_2 = {
 	sizeof(struct one_name),
@@ -610,8 +610,8 @@ static ber_tlv_tag_t asn_DEF_another_name_tags_8[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_another_name_tag2el_8[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* b at 42 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* a at 40 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* b */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* a */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_another_name_specs_8 = {
 	sizeof(struct another_name),
@@ -662,7 +662,7 @@ static ber_tlv_tag_t asn_DEF_two_name_tags_7[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_two_name_tag2el_7[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name at 40 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name */
 };
 static uint8_t asn_MAP_two_name_mmap_7[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
@@ -724,8 +724,8 @@ static asn_TYPE_member_t asn_MBR_Type2_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_Type2_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* one-name at 37 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* two-name at 43 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* one-name */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* two-name */
 };
 static asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
 	sizeof(struct Type2),

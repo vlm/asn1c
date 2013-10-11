@@ -152,7 +152,7 @@ static ber_tlv_tag_t asn_DEF_Flag_16P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Flag_16P0_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* field at 18 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* field */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Flag_16P0_specs_1 = {
 	sizeof(struct Flag_16P0),
@@ -268,7 +268,7 @@ static ber_tlv_tag_t asn_DEF_Flag_16P1_tags_6[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Flag_16P1_tag2el_6[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 } /* field at 19 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 } /* field */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Flag_16P1_specs_6 = {
 	sizeof(struct Flag_16P1),

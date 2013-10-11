@@ -93,8 +93,8 @@ static asn_TYPE_member_t asn_MBR_ch_4[] = {
 };
 static int asn_MAP_ch_cmap_4[] = { 1, 0 };
 static asn_TYPE_tag2member_t asn_MAP_ch_tag2el_4[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* int at 20 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 0, 0, 0 } /* null at 18 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* int */
+    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 0, 0, 0 } /* null */
 };
 static asn_CHOICE_specifics_t asn_SPC_ch_specs_4 = {
 	sizeof(struct ch),
@@ -170,11 +170,11 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 };
 static int asn_MAP_Choice_cmap_1[] = { 2, 1, 0, 3 };
 static asn_TYPE_tag2member_t asn_MAP_Choice_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 3, 0, 0 }, /* bool at 22 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 2, 0, 0 }, /* int at 20 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 1, 0, 0 }, /* bitstr at 16 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 2, 0, 0 }, /* null at 18 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (13 << 2)), 0, 0, 0 } /* roid at 15 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 3, 0, 0 }, /* bool */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 2, 0, 0 }, /* int */
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 1, 0, 0 }, /* bitstr */
+    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 2, 0, 0 }, /* null */
+    { (ASN_TAG_CLASS_UNIVERSAL | (13 << 2)), 0, 0, 0 } /* roid */
 };
 static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	sizeof(struct Choice),
@@ -272,8 +272,8 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_Choice2_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* bitstr at 26 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* roid at 27 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* bitstr */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* roid */
 };
 static asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	sizeof(struct Choice2),

@@ -1513,37 +1513,37 @@ static ber_tlv_tag_t asn_DEF_PDU_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* many at 15 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ia5 at 16 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* ia5-c at 17 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* ia5-ce at 18 */
-    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 4, 0, 0 }, /* ia5-ir at 19 */
-    { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 5, 0, 0 }, /* vs at 20 */
-    { (ASN_TAG_CLASS_CONTEXT | (6 << 2)), 6, 0, 0 }, /* vs-c at 21 */
-    { (ASN_TAG_CLASS_CONTEXT | (7 << 2)), 7, 0, 0 }, /* vs-ce at 22 */
-    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 }, /* vs-ir at 23 */
-    { (ASN_TAG_CLASS_CONTEXT | (9 << 2)), 9, 0, 0 }, /* pr at 24 */
-    { (ASN_TAG_CLASS_CONTEXT | (10 << 2)), 10, 0, 0 }, /* pr-c at 25 */
-    { (ASN_TAG_CLASS_CONTEXT | (11 << 2)), 11, 0, 0 }, /* pr-ir at 26 */
-    { (ASN_TAG_CLASS_CONTEXT | (12 << 2)), 12, 0, 0 }, /* ns at 27 */
-    { (ASN_TAG_CLASS_CONTEXT | (13 << 2)), 13, 0, 0 }, /* ns-c at 28 */
-    { (ASN_TAG_CLASS_CONTEXT | (14 << 2)), 14, 0, 0 }, /* ns-ce at 29 */
-    { (ASN_TAG_CLASS_CONTEXT | (15 << 2)), 15, 0, 0 }, /* ns-ir at 30 */
-    { (ASN_TAG_CLASS_CONTEXT | (16 << 2)), 16, 0, 0 }, /* ut-c at 31 */
-    { (ASN_TAG_CLASS_CONTEXT | (17 << 2)), 17, 0, 0 }, /* ut-ce at 32 */
-    { (ASN_TAG_CLASS_CONTEXT | (18 << 2)), 18, 0, 0 }, /* ut-ir at 33 */
-    { (ASN_TAG_CLASS_CONTEXT | (19 << 2)), 19, 0, 0 }, /* bm at 34 */
-    { (ASN_TAG_CLASS_CONTEXT | (20 << 2)), 20, 0, 0 }, /* bm-c at 35 */
-    { (ASN_TAG_CLASS_CONTEXT | (21 << 2)), 21, 0, 0 }, /* bm-cs at 36 */
-    { (ASN_TAG_CLASS_CONTEXT | (22 << 2)), 22, 0, 0 }, /* bm-ce at 37 */
-    { (ASN_TAG_CLASS_CONTEXT | (23 << 2)), 23, 0, 0 }, /* bm-ir at 38 */
-    { (ASN_TAG_CLASS_CONTEXT | (24 << 2)), 24, 0, 0 }, /* us at 39 */
-    { (ASN_TAG_CLASS_CONTEXT | (25 << 2)), 25, 0, 0 }, /* us-c at 40 */
-    { (ASN_TAG_CLASS_CONTEXT | (26 << 2)), 26, 0, 0 }, /* us-cs at 41 */
-    { (ASN_TAG_CLASS_CONTEXT | (27 << 2)), 27, 0, 0 }, /* us-ce at 42 */
-    { (ASN_TAG_CLASS_CONTEXT | (28 << 2)), 28, 0, 0 }, /* us-ir at 43 */
-    { (ASN_TAG_CLASS_CONTEXT | (29 << 2)), 29, 0, 0 }, /* real at 44 */
-    { (ASN_TAG_CLASS_CONTEXT | (30 << 2)), 30, 0, 0 } /* oid at 45 */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* many */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ia5 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* ia5-c */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 }, /* ia5-ce */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 4, 0, 0 }, /* ia5-ir */
+    { (ASN_TAG_CLASS_CONTEXT | (5 << 2)), 5, 0, 0 }, /* vs */
+    { (ASN_TAG_CLASS_CONTEXT | (6 << 2)), 6, 0, 0 }, /* vs-c */
+    { (ASN_TAG_CLASS_CONTEXT | (7 << 2)), 7, 0, 0 }, /* vs-ce */
+    { (ASN_TAG_CLASS_CONTEXT | (8 << 2)), 8, 0, 0 }, /* vs-ir */
+    { (ASN_TAG_CLASS_CONTEXT | (9 << 2)), 9, 0, 0 }, /* pr */
+    { (ASN_TAG_CLASS_CONTEXT | (10 << 2)), 10, 0, 0 }, /* pr-c */
+    { (ASN_TAG_CLASS_CONTEXT | (11 << 2)), 11, 0, 0 }, /* pr-ir */
+    { (ASN_TAG_CLASS_CONTEXT | (12 << 2)), 12, 0, 0 }, /* ns */
+    { (ASN_TAG_CLASS_CONTEXT | (13 << 2)), 13, 0, 0 }, /* ns-c */
+    { (ASN_TAG_CLASS_CONTEXT | (14 << 2)), 14, 0, 0 }, /* ns-ce */
+    { (ASN_TAG_CLASS_CONTEXT | (15 << 2)), 15, 0, 0 }, /* ns-ir */
+    { (ASN_TAG_CLASS_CONTEXT | (16 << 2)), 16, 0, 0 }, /* ut-c */
+    { (ASN_TAG_CLASS_CONTEXT | (17 << 2)), 17, 0, 0 }, /* ut-ce */
+    { (ASN_TAG_CLASS_CONTEXT | (18 << 2)), 18, 0, 0 }, /* ut-ir */
+    { (ASN_TAG_CLASS_CONTEXT | (19 << 2)), 19, 0, 0 }, /* bm */
+    { (ASN_TAG_CLASS_CONTEXT | (20 << 2)), 20, 0, 0 }, /* bm-c */
+    { (ASN_TAG_CLASS_CONTEXT | (21 << 2)), 21, 0, 0 }, /* bm-cs */
+    { (ASN_TAG_CLASS_CONTEXT | (22 << 2)), 22, 0, 0 }, /* bm-ce */
+    { (ASN_TAG_CLASS_CONTEXT | (23 << 2)), 23, 0, 0 }, /* bm-ir */
+    { (ASN_TAG_CLASS_CONTEXT | (24 << 2)), 24, 0, 0 }, /* us */
+    { (ASN_TAG_CLASS_CONTEXT | (25 << 2)), 25, 0, 0 }, /* us-c */
+    { (ASN_TAG_CLASS_CONTEXT | (26 << 2)), 26, 0, 0 }, /* us-cs */
+    { (ASN_TAG_CLASS_CONTEXT | (27 << 2)), 27, 0, 0 }, /* us-ce */
+    { (ASN_TAG_CLASS_CONTEXT | (28 << 2)), 28, 0, 0 }, /* us-ir */
+    { (ASN_TAG_CLASS_CONTEXT | (29 << 2)), 29, 0, 0 }, /* real */
+    { (ASN_TAG_CLASS_CONTEXT | (30 << 2)), 30, 0, 0 } /* oid */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 	sizeof(struct PDU),

@@ -1,5 +1,8 @@
-ModuleTypeIdentifier1 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
-	spelio(9363) software(1) asn1c(5) test(1) 97 1 }
+ModuleTypeIdentifier1 { iso org(3)
+	dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363)
+	software(1) asn1c(5) test(1)
+	97 1 }
 DEFINITIONS ::=
 BEGIN
 
@@ -16,8 +19,11 @@ TYPE-IDENTIFIER ::= CLASS {
 
 END
 
-ModuleTypeIdentifier2 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
-	spelio(9363) software(1) asn1c(5) test(1) 97 2 }
+ModuleTypeIdentifier2 { iso org(3)
+	dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363)
+	software(1) asn1c(5) test(1)
+	97 2 }
 DEFINITIONS ::=
 BEGIN
 

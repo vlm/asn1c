@@ -92,7 +92,7 @@ static ber_tlv_tag_t asn_DEF_Type_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Type_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* data at 16 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* data */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Type_specs_1 = {
 	sizeof(struct Type),
@@ -367,9 +367,9 @@ static ber_tlv_tag_t asn_DEF_Epyt_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Epyt_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* type at 22 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 1 }, /* stype at 21 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, -1, 0 } /* ypet at 23 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* type */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 1 }, /* stype */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, -1, 0 } /* ypet */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Epyt_specs_1 = {
 	sizeof(struct Epyt),
@@ -659,11 +659,11 @@ static ber_tlv_tag_t asn_DEF_Ypet_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Ypet_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* plain at 28 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* epyt at 27 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, 0, 0 }, /* senums at 29 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 3, 0, 0 }, /* patest1 at 30 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 4, 0, 0 } /* patest2 at 31 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* plain */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* epyt */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 2, 0, 0 }, /* senums */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 3, 0, 0 }, /* patest1 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 4, 0, 0 } /* patest2 */
 };
 static uint8_t asn_MAP_Ypet_mmap_1[(5 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (0 << 6) | (1 << 5) | (1 << 4) | (1 << 3)

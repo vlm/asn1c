@@ -96,6 +96,8 @@ main(int ac, char **av) {
 			asn1_compiler_flags &= ~A1C_USE_WIDE_TYPES;
 		} else if(strcmp(optarg, "wide-types") == 0) {
 			asn1_compiler_flags |= A1C_USE_WIDE_TYPES;
+		} else if(strcmp(optarg, "line-refs") == 0) {
+			asn1_compiler_flags |= A1C_LINE_REFS;
 		} else if(strcmp(optarg, "no-constraints") == 0) {
 			asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
 		} else if(strcmp(optarg, "no-include-deps") == 0) {
@@ -464,6 +466,7 @@ usage(const char *av0) {
 "  -findirect-choice     Compile members of CHOICE as indirect pointers\n"
 "  -fincludes-quoted     Generate #includes in \"double\" instead of <angle> quotes\n"
 "  -fknown-extern-type=<name>    Pretend the specified type is known\n"
+"  -fline-refs           Include ASN.1 module's line numbers in comments\n"
 "  -fno-constraints      Do not generate constraint checking code\n"
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"

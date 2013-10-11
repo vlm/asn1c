@@ -136,8 +136,8 @@ static ber_tlv_tag_t asn_DEF_LogLine_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_LogLine_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* varsets at 25 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 0, 0, 0 } /* line-digest at 23 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* varsets */
+    { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 0, 0, 0 } /* line-digest */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_LogLine_specs_1 = {
 	sizeof(struct LogLine),
@@ -303,8 +303,8 @@ static ber_tlv_tag_t asn_DEF_VariablePartSet_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_VariablePartSet_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* vparts at 33 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 } /* resolution at 35 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* vparts */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 } /* resolution */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_VariablePartSet_specs_1 = {
 	sizeof(struct VariablePartSet),
@@ -493,8 +493,8 @@ static ber_tlv_tag_t asn_DEF_vrange_tags_4[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_vrange_tag2el_4[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0, 0, 1 }, /* from at 45 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1, -1, 0 } /* to at 46 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0, 0, 1 }, /* from */
+    { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1, -1, 0 } /* to */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_vrange_specs_4 = {
 	sizeof(struct vrange),
@@ -551,8 +551,8 @@ static asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_VariablePart_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* vrange at 45 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* vset at 42 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* vrange */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* vset */
 };
 static asn_CHOICE_specifics_t asn_SPC_VariablePart_specs_1 = {
 	sizeof(struct VariablePart),
@@ -835,8 +835,8 @@ static ber_tlv_tag_t asn_DEF_notify_tags_7[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_notify_tag2el_7[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* critical at 61 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* email at 62 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* critical */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* email */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_notify_specs_7 = {
 	sizeof(struct notify),
@@ -896,8 +896,8 @@ static ber_tlv_tag_t asn_DEF_ActionItem_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_ActionItem_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 }, /* accept-as at 55 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 } /* notify at 61 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 }, /* accept-as */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 } /* notify */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_ActionItem_specs_1 = {
 	sizeof(struct ActionItem),

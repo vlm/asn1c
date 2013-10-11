@@ -306,8 +306,8 @@ static ber_tlv_tag_t asn_DEF_SeqWithMandatory_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_SeqWithMandatory_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString at 25 */
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfMan at 27 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfMan */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_SeqWithMandatory_specs_1 = {
 	sizeof(struct SeqWithMandatory),
@@ -448,8 +448,8 @@ static ber_tlv_tag_t asn_DEF_SeqWithOptional_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_SeqWithOptional_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString at 30 */
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfOpt at 31 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfOpt */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_SeqWithOptional_specs_1 = {
 	sizeof(struct SeqWithOptional),

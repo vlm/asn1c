@@ -1,5 +1,8 @@
-ModuleTestConstraint1 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
-	spelio(9363) software(1) asn1c(5) test(1) 16 1 }
+ModuleTestConstraint1 { iso org(3)
+	dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363)
+	software(1) asn1c(5) test(1)
+	16 1 }
 DEFINITIONS ::=
 BEGIN
 
@@ -9,8 +12,11 @@ Type6 ::= IA5String ((SIZE(1..10))(FROM("a".."z" | "#")))
 
 END
 
-ModuleTestConstraint2 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
-	spelio(9363) software(1) asn1c(5) test(1) 16 2 }
+ModuleTestConstraint2 { iso org(3)
+	dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363)
+	software(1) asn1c(5) test(1)
+	16 2 }
 DEFINITIONS ::=
 BEGIN
 

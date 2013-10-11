@@ -103,8 +103,8 @@ static ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* int at 15 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 } /* collection at 17 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* int */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 } /* collection */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
 	sizeof(struct T),
@@ -186,8 +186,8 @@ static ber_tlv_tag_t asn_DEF_T2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_T2_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* flag at 20 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 1, 0, 0 } /* str at 21 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* flag */
+    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 1, 0, 0 } /* str */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_T2_specs_1 = {
 	sizeof(struct T2),

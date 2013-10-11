@@ -60,19 +60,24 @@ enum asn1c_flags {
 	 * -gen-PER
 	 * Generate PER support code
 	 */
-	A1C_GEN_PER		= 0x1000,
+	A1C_GEN_PER			= 0x1000,
 	/*
 	 * -pdu={all|auto|Type}
 	 * Generate PDU table
 	 */
-	A1C_PDU_ALL		= 0x2000,
+	A1C_PDU_ALL			= 0x2000,
 	A1C_PDU_AUTO		= 0x4000,
 	A1C_PDU_TYPE		= 0x8000,
 	/*
 	 * -fincludes-quoted
 	 * Avoid generating #include <foo>, generate "foo" instead.
 	 */
-	A1C_INCLUDES_QUOTED	= 0x10000
+	A1C_INCLUDES_QUOTED	= 0x10000,
+	/*
+	 * -fline-refs
+	 * Include ASN.1 module's line numbers in comments.
+	 */
+	A1C_LINE_REFS       = 0x20000
 };
 
 /*

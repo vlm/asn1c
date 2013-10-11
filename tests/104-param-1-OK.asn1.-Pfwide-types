@@ -160,8 +160,8 @@ static ber_tlv_tag_t asn_DEF_Bunch_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Bunch_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 1 }, /* field-REAL at 17 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, -1, 0 } /* field-IA5String at 18 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 1 }, /* field-REAL */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, -1, 0 } /* field-IA5String */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Bunch_specs_1 = {
 	sizeof(struct Bunch),

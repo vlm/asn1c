@@ -1670,11 +1670,12 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *
 		OUT("%d, ", tag2el[i].el_no);
 		OUT("%d, ", tag2el[i].toff_first);
 		OUT("%d ", tag2el[i].toff_last);
-		OUT("}%s /* %s at %d */\n",
+		OUT("}%s /* %s",
 			(i + 1 < tag2el_count) ? "," : "",
-			tag2el[i].from_expr->Identifier,
-			tag2el[i].from_expr->_lineno
-		);
+			tag2el[i].from_expr->Identifier);
+        if(arg->flags & A1C_LINE_REFS)
+            OUT("at %d", tag2el[i].from_expr->_lineno);
+        OUT(" */\n");
 	}
 	OUT("};\n");
 

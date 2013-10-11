@@ -4440,13 +4440,13 @@ static ber_tlv_tag_t asn_DEF_Sequence_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 3, 0, 0 }, /* bool at 59 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 2 }, /* int1-c at 56 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 2, -1, 1 }, /* int4-c at 58 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 6, -2, 0 }, /* int5-c at 62 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 5, 0, 0 }, /* null at 64 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 4, 0, 0 }, /* enum-c at 60 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 } /* int4 at 57 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 3, 0, 0 }, /* bool */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 2 }, /* int1-c */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 2, -1, 1 }, /* int4-c */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 6, -2, 0 }, /* int5-c */
+    { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 5, 0, 0 }, /* null */
+    { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 4, 0, 0 }, /* enum-c */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 } /* int4 */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	sizeof(struct Sequence),

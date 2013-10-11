@@ -174,10 +174,10 @@ static ber_tlv_tag_t asn_DEF_Test_structure_1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Test_structure_1_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 3, 0, 0 }, /* t-member4 at 19 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 1 }, /* t-member2 at 16 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, -1, 0 }, /* t-member3 at 17 */
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* t-member1 at 15 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 3, 0, 0 }, /* t-member4 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 1 }, /* t-member2 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, -1, 0 }, /* t-member3 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* t-member1 */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Test_structure_1_specs_1 = {
 	sizeof(struct Test_structure_1),
@@ -348,10 +348,10 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		},
 };
 static asn_TYPE_tag2member_t asn_MAP_Choice_1_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* and at 22 */
-    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* or at 23 */
-    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* not at 24 */
-    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 3, 0, 0 } /* other at 26 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* and */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* or */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* not */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 3, 0, 0 } /* other */
 };
 static asn_CHOICE_specifics_t asn_SPC_Choice_1_specs_1 = {
 	sizeof(struct Choice_1),
@@ -442,7 +442,7 @@ static ber_tlv_tag_t asn_DEF_Test_structure_2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Test_structure_2_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 at 28 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 */
 };
 static uint8_t asn_MAP_Test_structure_2_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
@@ -539,7 +539,7 @@ static ber_tlv_tag_t asn_DEF_Test_structure_3_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_Test_structure_3_tag2el_1[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 at 29 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 */
 };
 static uint8_t asn_MAP_Test_structure_3_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
