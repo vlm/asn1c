@@ -1,8 +1,5 @@
-ModuleTestResolver2 { iso org(3)
-	dod(6) internet(1) private(4)
-	enterprise(1) spelio(9363)
-	software(1) asn1c(5) test(1)
-	14 1 }
+ModuleTestResolver2 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 14 1 }
 DEFINITIONS ::=
 BEGIN
 
@@ -21,11 +18,8 @@ check-other INTEGER ::= 1
 
 END
 
-ModuleTestResolver3 { iso org(3)
-	dod(6) internet(1) private(4)
-	enterprise(1) spelio(9363)
-	software(1) asn1c(5) test(1)
-	14 2 }
+ModuleTestResolver3 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 14 2 }
 DEFINITIONS ::=
 BEGIN
 
@@ -38,11 +32,8 @@ Enumeration ::= ENUMERATED {
 
 END
 
-HiddenModule { iso org(3)
-	dod(6) internet(1) private(4)
-	enterprise(1) spelio(9363)
-	software(1) asn1c(5) test(1)
-	14 3 }
+HiddenModule { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 14 3 }
 DEFINITIONS ::=
 BEGIN
 

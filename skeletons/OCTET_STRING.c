@@ -195,7 +195,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	/* Restore parsing context */
-	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
 
 	switch(ctx->phase) {
 	case 0:
@@ -1143,7 +1143,7 @@ OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	/* Restore parsing context */
-	ctx = (asn_struct_ctx_t *)(((char *)*sptr) + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)(((void *)*sptr) + specs->ctx_offset);
 
 	return xer_decode_general(opt_codec_ctx, ctx, *sptr, xml_tag,
 		buf_ptr, size, opt_unexpected_tag_decoder, body_receiver);
@@ -1716,7 +1716,7 @@ OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 				? (asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_DEF_OCTET_STRING_specs;
 	asn_struct_ctx_t *ctx = (asn_struct_ctx_t *)
-					((char *)st + specs->ctx_offset);
+					((void *)st + specs->ctx_offset);
 	struct _stack *stck;
 
 	if(!td || !st)
