@@ -1,10 +1,6 @@
 #!/usr/bin/env perl
-
 #
-# $Id$
-# $Author$
-#
-# Simple tool to fetch the ASN.1 specifications from the given set of RFC files.
+# Extract the ASN.1 module text from the given set of RFC files.
 #
 
 
@@ -13,7 +9,7 @@ my $found = 0;
 my $currentFname = '';
 
 if(-t STDIN && $#ARGV == -1) {
-	print STDERR "Rip ASN.1 specification from RFC file\n";
+	print STDERR "Extract ASN.1 specification from the RFC file\n";
 	print STDERR "Usage: $0 <rfc-file.txt> ...\n";
 	print STDERR "Usage: <someprog> | $0\n";
 	exit(1);
