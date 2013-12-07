@@ -36,6 +36,7 @@ static void
 T1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_T2.free_struct;
 	td->print_struct   = asn_DEF_T2.print_struct;
+	td->check_constraints = asn_DEF_T2.check_constraints;
 	td->ber_decoder    = asn_DEF_T2.ber_decoder;
 	td->der_encoder    = asn_DEF_T2.der_encoder;
 	td->xer_decoder    = asn_DEF_T2.xer_decoder;
@@ -171,6 +172,7 @@ static void
 T2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_T3.free_struct;
 	td->print_struct   = asn_DEF_T3.print_struct;
+	td->check_constraints = asn_DEF_T3.check_constraints;
 	td->ber_decoder    = asn_DEF_T3.ber_decoder;
 	td->der_encoder    = asn_DEF_T3.der_encoder;
 	td->xer_decoder    = asn_DEF_T3.xer_decoder;
@@ -304,6 +306,7 @@ static void
 T3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_T4.free_struct;
 	td->print_struct   = asn_DEF_T4.print_struct;
+	td->check_constraints = asn_DEF_T4.check_constraints;
 	td->ber_decoder    = asn_DEF_T4.ber_decoder;
 	td->der_encoder    = asn_DEF_T4.der_encoder;
 	td->xer_decoder    = asn_DEF_T4.xer_decoder;
@@ -435,6 +438,7 @@ static void
 T4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_T5.free_struct;
 	td->print_struct   = asn_DEF_T5.print_struct;
+	td->check_constraints = asn_DEF_T5.check_constraints;
 	td->ber_decoder    = asn_DEF_T5.ber_decoder;
 	td->der_encoder    = asn_DEF_T5.der_encoder;
 	td->xer_decoder    = asn_DEF_T5.xer_decoder;
@@ -561,6 +565,7 @@ static void
 T5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_T6.free_struct;
 	td->print_struct   = asn_DEF_T6.print_struct;
+	td->check_constraints = asn_DEF_T6.check_constraints;
 	td->ber_decoder    = asn_DEF_T6.ber_decoder;
 	td->der_encoder    = asn_DEF_T6.der_encoder;
 	td->xer_decoder    = asn_DEF_T6.xer_decoder;
@@ -686,6 +691,7 @@ static void
 T6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeReal.free_struct;
 	td->print_struct   = asn_DEF_NativeReal.print_struct;
+	td->check_constraints = asn_DEF_NativeReal.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeReal.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeReal.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeReal.xer_decoder;
@@ -810,6 +816,7 @@ static void
 T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Ts.free_struct;
 	td->print_struct   = asn_DEF_Ts.print_struct;
+	td->check_constraints = asn_DEF_Ts.check_constraints;
 	td->ber_decoder    = asn_DEF_Ts.ber_decoder;
 	td->der_encoder    = asn_DEF_Ts.der_encoder;
 	td->xer_decoder    = asn_DEF_Ts.xer_decoder;

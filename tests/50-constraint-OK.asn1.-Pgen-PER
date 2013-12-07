@@ -38,6 +38,7 @@ static void
 Int1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -197,6 +198,7 @@ static void
 Int2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Int1.free_struct;
 	td->print_struct   = asn_DEF_Int1.print_struct;
+	td->check_constraints = asn_DEF_Int1.check_constraints;
 	td->ber_decoder    = asn_DEF_Int1.ber_decoder;
 	td->der_encoder    = asn_DEF_Int1.der_encoder;
 	td->xer_decoder    = asn_DEF_Int1.xer_decoder;
@@ -364,6 +366,7 @@ static void
 Int3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Int2.free_struct;
 	td->print_struct   = asn_DEF_Int2.print_struct;
+	td->check_constraints = asn_DEF_Int2.check_constraints;
 	td->ber_decoder    = asn_DEF_Int2.ber_decoder;
 	td->der_encoder    = asn_DEF_Int2.der_encoder;
 	td->xer_decoder    = asn_DEF_Int2.xer_decoder;
@@ -531,6 +534,7 @@ static void
 Int4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Int3.free_struct;
 	td->print_struct   = asn_DEF_Int3.print_struct;
+	td->check_constraints = asn_DEF_Int3.check_constraints;
 	td->ber_decoder    = asn_DEF_Int3.ber_decoder;
 	td->der_encoder    = asn_DEF_Int3.der_encoder;
 	td->xer_decoder    = asn_DEF_Int3.xer_decoder;
@@ -698,6 +702,7 @@ static void
 Int5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Int4.free_struct;
 	td->print_struct   = asn_DEF_Int4.print_struct;
+	td->check_constraints = asn_DEF_Int4.check_constraints;
 	td->ber_decoder    = asn_DEF_Int4.ber_decoder;
 	td->der_encoder    = asn_DEF_Int4.der_encoder;
 	td->xer_decoder    = asn_DEF_Int4.xer_decoder;
@@ -865,6 +870,7 @@ static void
 ExtensibleExtensions_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -1015,6 +1021,7 @@ static void
 Str1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_IA5String.free_struct;
 	td->print_struct   = asn_DEF_IA5String.print_struct;
+	td->check_constraints = asn_DEF_IA5String.check_constraints;
 	td->ber_decoder    = asn_DEF_IA5String.ber_decoder;
 	td->der_encoder    = asn_DEF_IA5String.der_encoder;
 	td->xer_decoder    = asn_DEF_IA5String.xer_decoder;
@@ -1192,6 +1199,7 @@ static void
 Str2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Str1.free_struct;
 	td->print_struct   = asn_DEF_Str1.print_struct;
+	td->check_constraints = asn_DEF_Str1.check_constraints;
 	td->ber_decoder    = asn_DEF_Str1.ber_decoder;
 	td->der_encoder    = asn_DEF_Str1.der_encoder;
 	td->xer_decoder    = asn_DEF_Str1.xer_decoder;
@@ -1401,6 +1409,7 @@ static void
 Str3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Str2.free_struct;
 	td->print_struct   = asn_DEF_Str2.print_struct;
+	td->check_constraints = asn_DEF_Str2.check_constraints;
 	td->ber_decoder    = asn_DEF_Str2.ber_decoder;
 	td->der_encoder    = asn_DEF_Str2.der_encoder;
 	td->xer_decoder    = asn_DEF_Str2.xer_decoder;
@@ -1584,6 +1593,7 @@ static void
 Str4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_IA5String.free_struct;
 	td->print_struct   = asn_DEF_IA5String.print_struct;
+	td->check_constraints = asn_DEF_IA5String.check_constraints;
 	td->ber_decoder    = asn_DEF_IA5String.ber_decoder;
 	td->der_encoder    = asn_DEF_IA5String.der_encoder;
 	td->xer_decoder    = asn_DEF_IA5String.xer_decoder;
@@ -1766,6 +1776,7 @@ static void
 PER_Visible_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_IA5String.free_struct;
 	td->print_struct   = asn_DEF_IA5String.print_struct;
+	td->check_constraints = asn_DEF_IA5String.check_constraints;
 	td->ber_decoder    = asn_DEF_IA5String.ber_decoder;
 	td->der_encoder    = asn_DEF_IA5String.der_encoder;
 	td->xer_decoder    = asn_DEF_IA5String.xer_decoder;
@@ -1948,6 +1959,7 @@ static void
 PER_Visible_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_PER_Visible.free_struct;
 	td->print_struct   = asn_DEF_PER_Visible.print_struct;
+	td->check_constraints = asn_DEF_PER_Visible.check_constraints;
 	td->ber_decoder    = asn_DEF_PER_Visible.ber_decoder;
 	td->der_encoder    = asn_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn_DEF_PER_Visible.xer_decoder;
@@ -2130,6 +2142,7 @@ static void
 Not_PER_Visible_1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_PER_Visible.free_struct;
 	td->print_struct   = asn_DEF_PER_Visible.print_struct;
+	td->check_constraints = asn_DEF_PER_Visible.check_constraints;
 	td->ber_decoder    = asn_DEF_PER_Visible.ber_decoder;
 	td->der_encoder    = asn_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn_DEF_PER_Visible.xer_decoder;
@@ -2312,6 +2325,7 @@ static void
 Not_PER_Visible_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_PER_Visible.free_struct;
 	td->print_struct   = asn_DEF_PER_Visible.print_struct;
+	td->check_constraints = asn_DEF_PER_Visible.check_constraints;
 	td->ber_decoder    = asn_DEF_PER_Visible.ber_decoder;
 	td->der_encoder    = asn_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn_DEF_PER_Visible.xer_decoder;
@@ -2494,6 +2508,7 @@ static void
 Not_PER_Visible_3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_PER_Visible.free_struct;
 	td->print_struct   = asn_DEF_PER_Visible.print_struct;
+	td->check_constraints = asn_DEF_PER_Visible.check_constraints;
 	td->ber_decoder    = asn_DEF_PER_Visible.ber_decoder;
 	td->der_encoder    = asn_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn_DEF_PER_Visible.xer_decoder;
@@ -2679,6 +2694,7 @@ static void
 SIZE_but_not_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_PER_Visible.free_struct;
 	td->print_struct   = asn_DEF_PER_Visible.print_struct;
+	td->check_constraints = asn_DEF_PER_Visible.check_constraints;
 	td->ber_decoder    = asn_DEF_PER_Visible.ber_decoder;
 	td->der_encoder    = asn_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn_DEF_PER_Visible.xer_decoder;
@@ -2864,6 +2880,7 @@ static void
 SIZE_and_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_PER_Visible.free_struct;
 	td->print_struct   = asn_DEF_PER_Visible.print_struct;
+	td->check_constraints = asn_DEF_PER_Visible.check_constraints;
 	td->ber_decoder    = asn_DEF_PER_Visible.ber_decoder;
 	td->der_encoder    = asn_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn_DEF_PER_Visible.xer_decoder;
@@ -3046,6 +3063,7 @@ static void
 Neither_SIZE_nor_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_PER_Visible.free_struct;
 	td->print_struct   = asn_DEF_PER_Visible.print_struct;
+	td->check_constraints = asn_DEF_PER_Visible.check_constraints;
 	td->ber_decoder    = asn_DEF_PER_Visible.ber_decoder;
 	td->der_encoder    = asn_DEF_PER_Visible.der_encoder;
 	td->xer_decoder    = asn_DEF_PER_Visible.xer_decoder;
@@ -3222,6 +3240,7 @@ static void
 Utf8_4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_UTF8String.free_struct;
 	td->print_struct   = asn_DEF_UTF8String.print_struct;
+	td->check_constraints = asn_DEF_UTF8String.check_constraints;
 	td->ber_decoder    = asn_DEF_UTF8String.ber_decoder;
 	td->der_encoder    = asn_DEF_UTF8String.der_encoder;
 	td->xer_decoder    = asn_DEF_UTF8String.xer_decoder;
@@ -3426,6 +3445,7 @@ static void
 Utf8_3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Utf8_2.free_struct;
 	td->print_struct   = asn_DEF_Utf8_2.print_struct;
+	td->check_constraints = asn_DEF_Utf8_2.check_constraints;
 	td->ber_decoder    = asn_DEF_Utf8_2.ber_decoder;
 	td->der_encoder    = asn_DEF_Utf8_2.der_encoder;
 	td->xer_decoder    = asn_DEF_Utf8_2.xer_decoder;
@@ -3600,6 +3620,7 @@ static void
 Utf8_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Utf8_1.free_struct;
 	td->print_struct   = asn_DEF_Utf8_1.print_struct;
+	td->check_constraints = asn_DEF_Utf8_1.check_constraints;
 	td->ber_decoder    = asn_DEF_Utf8_1.ber_decoder;
 	td->der_encoder    = asn_DEF_Utf8_1.der_encoder;
 	td->xer_decoder    = asn_DEF_Utf8_1.xer_decoder;
@@ -3750,6 +3771,7 @@ static void
 Utf8_1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_UTF8String.free_struct;
 	td->print_struct   = asn_DEF_UTF8String.print_struct;
+	td->check_constraints = asn_DEF_UTF8String.check_constraints;
 	td->ber_decoder    = asn_DEF_UTF8String.ber_decoder;
 	td->der_encoder    = asn_DEF_UTF8String.der_encoder;
 	td->xer_decoder    = asn_DEF_UTF8String.xer_decoder;
@@ -3946,6 +3968,7 @@ static void
 VisibleIdentifier_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Identifier.free_struct;
 	td->print_struct   = asn_DEF_Identifier.print_struct;
+	td->check_constraints = asn_DEF_Identifier.check_constraints;
 	td->ber_decoder    = asn_DEF_Identifier.ber_decoder;
 	td->der_encoder    = asn_DEF_Identifier.der_encoder;
 	td->xer_decoder    = asn_DEF_Identifier.xer_decoder;
@@ -4112,6 +4135,7 @@ static void
 enum_c_6_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeEnumerated.free_struct;
 	td->print_struct   = asn_DEF_NativeEnumerated.print_struct;
+	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeEnumerated.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
@@ -4611,6 +4635,7 @@ static void
 Enum0_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeEnumerated.free_struct;
 	td->print_struct   = asn_DEF_NativeEnumerated.print_struct;
+	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeEnumerated.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
@@ -4802,6 +4827,7 @@ static void
 Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeEnumerated.free_struct;
 	td->print_struct   = asn_DEF_NativeEnumerated.print_struct;
+	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeEnumerated.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
@@ -5033,6 +5059,7 @@ static void
 Identifier_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_VisibleString.free_struct;
 	td->print_struct   = asn_DEF_VisibleString.print_struct;
+	td->check_constraints = asn_DEF_VisibleString.check_constraints;
 	td->ber_decoder    = asn_DEF_VisibleString.ber_decoder;
 	td->der_encoder    = asn_DEF_VisibleString.der_encoder;
 	td->xer_decoder    = asn_DEF_VisibleString.xer_decoder;

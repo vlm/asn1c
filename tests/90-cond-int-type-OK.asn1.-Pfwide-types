@@ -36,6 +36,7 @@ static void
 CN_IntegerUnlimited_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -174,6 +175,7 @@ static void
 CN_IntegerMinMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -321,6 +323,7 @@ static void
 CN_IntegerMinLow_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -468,6 +471,7 @@ static void
 NO_IntegerMinHigh_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -609,6 +613,7 @@ static void
 NO_IntegerLowHigh_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -761,6 +766,7 @@ static void
 CN_IntegerLowMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -908,6 +914,7 @@ static void
 NO_IntegerHighMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -1055,6 +1062,7 @@ static void
 NO_IntegerLowestMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -1196,6 +1204,7 @@ static void
 NO_IntegerOutRange_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -1342,6 +1351,7 @@ static void
 NO_IntegerOutValue_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -1488,6 +1498,7 @@ static void
 OK_IntegerInRange1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -1629,6 +1640,7 @@ static void
 OK_IntegerInRange2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -1770,6 +1782,7 @@ static void
 OK_IntegerInRange3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -1911,6 +1924,7 @@ static void
 OK_IntegerInRange4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -2058,6 +2072,7 @@ static void
 OK_IntegerInRange5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -2190,6 +2205,7 @@ static void
 NO_IntegerInRange6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -2326,6 +2342,7 @@ static void
 CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
@@ -2457,6 +2474,7 @@ static void
 NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_INTEGER.free_struct;
 	td->print_struct   = asn_DEF_INTEGER.print_struct;
+	td->check_constraints = asn_DEF_INTEGER.check_constraints;
 	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
 	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
 	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;

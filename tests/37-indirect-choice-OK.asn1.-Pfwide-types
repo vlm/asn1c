@@ -362,6 +362,7 @@ static void
 Choice3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Choice2.free_struct;
 	td->print_struct   = asn_DEF_Choice2.print_struct;
+	td->check_constraints = asn_DEF_Choice2.check_constraints;
 	td->ber_decoder    = asn_DEF_Choice2.ber_decoder;
 	td->der_encoder    = asn_DEF_Choice2.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
@@ -487,6 +488,7 @@ static void
 Choice4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Choice2.free_struct;
 	td->print_struct   = asn_DEF_Choice2.print_struct;
+	td->check_constraints = asn_DEF_Choice2.check_constraints;
 	td->ber_decoder    = asn_DEF_Choice2.ber_decoder;
 	td->der_encoder    = asn_DEF_Choice2.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
@@ -612,6 +614,7 @@ static void
 Choice5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Choice2.free_struct;
 	td->print_struct   = asn_DEF_Choice2.print_struct;
+	td->check_constraints = asn_DEF_Choice2.check_constraints;
 	td->ber_decoder    = asn_DEF_Choice2.ber_decoder;
 	td->der_encoder    = asn_DEF_Choice2.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
@@ -736,6 +739,7 @@ static void
 Choice6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Choice1.free_struct;
 	td->print_struct   = asn_DEF_Choice1.print_struct;
+	td->check_constraints = asn_DEF_Choice1.check_constraints;
 	td->ber_decoder    = asn_DEF_Choice1.ber_decoder;
 	td->der_encoder    = asn_DEF_Choice1.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice1.xer_decoder;

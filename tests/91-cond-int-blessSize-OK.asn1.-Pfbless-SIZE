@@ -49,6 +49,7 @@ static void
 OK_Integer1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -186,6 +187,7 @@ static void
 OK_Integer2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -323,6 +325,7 @@ static void
 OK_Integer3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -460,6 +463,7 @@ static void
 OK_Integer4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
@@ -597,6 +601,7 @@ static void
 NO_Integer5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
 	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
 	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;

@@ -225,6 +225,7 @@ static void
 NarrowInteger_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Narrow_15P0.free_struct;
 	td->print_struct   = asn_DEF_Narrow_15P0.print_struct;
+	td->check_constraints = asn_DEF_Narrow_15P0.check_constraints;
 	td->ber_decoder    = asn_DEF_Narrow_15P0.ber_decoder;
 	td->der_encoder    = asn_DEF_Narrow_15P0.der_encoder;
 	td->xer_decoder    = asn_DEF_Narrow_15P0.xer_decoder;

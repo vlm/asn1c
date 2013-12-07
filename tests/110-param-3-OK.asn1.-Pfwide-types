@@ -57,6 +57,7 @@ static void
 field_7_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
 	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
+	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
 	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
 	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
 	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
@@ -341,6 +342,7 @@ static void
 IntegerColorFlag_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Flag_16P0.free_struct;
 	td->print_struct   = asn_DEF_Flag_16P0.print_struct;
+	td->check_constraints = asn_DEF_Flag_16P0.check_constraints;
 	td->ber_decoder    = asn_DEF_Flag_16P0.ber_decoder;
 	td->der_encoder    = asn_DEF_Flag_16P0.der_encoder;
 	td->xer_decoder    = asn_DEF_Flag_16P0.xer_decoder;
@@ -465,6 +467,7 @@ static void
 EnumeratedColorFlag_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_Flag_16P1.free_struct;
 	td->print_struct   = asn_DEF_Flag_16P1.print_struct;
+	td->check_constraints = asn_DEF_Flag_16P1.check_constraints;
 	td->ber_decoder    = asn_DEF_Flag_16P1.ber_decoder;
 	td->der_encoder    = asn_DEF_Flag_16P1.der_encoder;
 	td->xer_decoder    = asn_DEF_Flag_16P1.xer_decoder;

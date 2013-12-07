@@ -1236,6 +1236,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	char *type_name = asn1c_type_name(arg, expr, TNF_SAFE);
 	OUT("td->free_struct    = asn_DEF_%s.free_struct;\n",    type_name);
 	OUT("td->print_struct   = asn_DEF_%s.print_struct;\n",   type_name);
+	OUT("td->check_constraints = asn_DEF_%s.check_constraints;\n", type_name);
 	OUT("td->ber_decoder    = asn_DEF_%s.ber_decoder;\n",    type_name);
 	OUT("td->der_encoder    = asn_DEF_%s.der_encoder;\n",    type_name);
 	OUT("td->xer_decoder    = asn_DEF_%s.xer_decoder;\n",    type_name);
