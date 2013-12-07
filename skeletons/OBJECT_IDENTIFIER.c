@@ -120,7 +120,7 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 			errno = ERANGE;	/* Overflow */
 			return -1;
 		}
-		*(unsigned long *)rvbuf = accum + add;	/* alignment OK! */
+		*(unsigned long *)(void *)rvbuf = accum + add;	/* alignment OK! */
 		return 0;
 	}
 
