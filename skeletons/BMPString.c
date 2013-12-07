@@ -143,7 +143,7 @@ BMPString_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 				return rc;
 			} else {
 				dstwc[wcs_len] = 0;	/* nul-terminate */
-				wcs = (uint32_t *)dstwc;
+				wcs = (uint32_t *)(void *)dstwc; /* Alignment OK */
 			}
 		}
 

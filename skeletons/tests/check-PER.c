@@ -71,7 +71,7 @@ check_per_decoding() {
 	z = per_get_few_bits(&pos, 24);
 	assert(z == 14443711);
 
-	pos.buffer = "\001";
+	pos.buffer = (unsigned char *)"\001";
 	pos.nboff = 7;
 	pos.nbits = 7;
 	z = per_get_few_bits(&pos, 1);
@@ -79,7 +79,7 @@ check_per_decoding() {
 	assert(pos.nbits == 7);
 	assert(z == -1);
 
-	pos.buffer = "\001";
+	pos.buffer = (unsigned char *)"\001";
 	pos.nboff = 7;
 	pos.nbits = 8;
 	z = per_get_few_bits(&pos, 1);
@@ -87,7 +87,7 @@ check_per_decoding() {
 	assert(pos.nbits == 8);
 	assert(z == 1);
 
-	pos.buffer = "\000";
+	pos.buffer = (unsigned char *)"\000";
 	pos.nboff = 7;
 	pos.nbits = 8;
 	z = per_get_few_bits(&pos, 1);
@@ -99,7 +99,7 @@ check_per_decoding() {
 	assert(pos.nbits == 8);
 	assert(z == -1);
 
-	pos.buffer = "\000";
+	pos.buffer = (unsigned char *)"\000";
 	pos.nboff = 7;
 	pos.nbits = 9;
 	z = per_get_few_bits(&pos, 1);
@@ -111,7 +111,7 @@ check_per_decoding() {
 	assert(pos.nbits == 1);
 	assert(z == 0);
 
-	pos.buffer = "\001";
+	pos.buffer = (unsigned char *)"\001";
 	pos.nboff = 7;
 	pos.nbits = 9;
 	z = per_get_few_bits(&pos, 1);
