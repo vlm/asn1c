@@ -27,6 +27,12 @@ static volatile double real_zero GCC_NOTUSED = 0.0;
 #define	INFINITY	(1.0/real_zero)
 #endif
 
+#ifdef isfinite
+#define _asn_isfinite(d)   isfinite(d)  /* ISO C99 */
+#else
+#define _asn_isfinite(d)   finite(d)    /* Deprecated on Mac OS X 10.9 */
+#endif
+
 /*
  * REAL basic type description.
  */
@@ -88,7 +94,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		buf = specialRealValue[SRV__NOT_A_NUMBER].string;
 		buflen = specialRealValue[SRV__NOT_A_NUMBER].length;
 		return (cb(buf, buflen, app_key) < 0) ? -1 : buflen;
-	} else if(!finite(d)) {
+	} else if(!_asn_isfinite(d)) {
 		if(copysign(1.0, d) < 0.0) {
 			buf = specialRealValue[SRV__MINUS_INFINITY].string;
 			buflen = specialRealValue[SRV__MINUS_INFINITY].length;
@@ -458,7 +464,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 			return -1;
 		}
 		if(used_malloc) FREEMEM(buf);
-		if(finite(d)) {
+		if(_asn_isfinite(d)) {
 			*dbl_value = d;
 			return 0;
 		} else {
@@ -538,7 +544,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	m = ldexp(m, scaleF) * pow(pow(2, base), expval);
 	 */
 	m = ldexp(m, expval * baseF + scaleF);
-	if(finite(m)) {
+	if(_asn_isfinite(m)) {
 		*dbl_value = sign ? -m : m;
 	} else {
 		errno = ERANGE;
@@ -599,7 +605,7 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 			st->buf[0] = 0x42;	/* NaN */
 			st->buf[1] = 0;
 			st->size = 1;
-		} else if(!finite(dbl_value)) {
+		} else if(!_asn_isfinite(dbl_value)) {
 			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x41;	/* MINUS-INFINITY */
 			} else {
