@@ -28,31 +28,26 @@ AC_ARG_ENABLE(Werror,
   [  --enable-Werror         abort compilation after any C compiler warning],
 	enable_werror=$enableval, enable_werror=no)
 if test x$enable_werror = xyes; then
-  ADD_CFLAGS="-Werror -W -Wpointer-arith"
+  TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
 fi
-AC_SUBST(ADD_CFLAGS)
+AC_SUBST(TESTSUITE_CFLAGS)
 
-dnl Add these flags if we're using GCC.
-case "$GCC$enable_werror" in
- yesno)
-    CFLAGS="$CFLAGS -Wall"  # Enable only if not going to fail with -Werror
-    ;;
-esac
-case "$GCC" in
- yes)
-   CFLAGS="$CFLAGS -Wall"
-   CFLAGS="$CFLAGS -Wshadow"
-   CFLAGS="$CFLAGS -Wcast-qual"
-   CFLAGS="$CFLAGS -Wchar-subscripts"
-   CFLAGS="$CFLAGS -Wmissing-prototypes"
-   CFLAGS="$CFLAGS -Wmissing-declarations"
-   # There are legitimate uses for these features
-   CFLAGS="$CFLAGS -Wno-error=cast-align"
-   CFLAGS="$CFLAGS -Wno-error=visibility"
-   CFLAGS="$CFLAGS -Wno-error=parentheses-equality"
-   ;;
-esac
+AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"])
+AX_CHECK_COMPILE_FLAG([-Wcast-qual], [CFLAGS="$CFLAGS -Wcast-qual"])
+AX_CHECK_COMPILE_FLAG([-Wchar-subscripts],
+                      [CFLAGS="$CFLAGS -Wchar-subscripts"])
+AX_CHECK_COMPILE_FLAG([-Wmissing-prototypes],
+                      [CFLAGS="$CFLAGS -Wmissing-prototypes"])
+AX_CHECK_COMPILE_FLAG([-Wmissing-declarations],
+                      [CFLAGS="$CFLAGS -Wmissing-declarations"])
 
+dnl There are legitimate uses for these features, disable warnings/errors.
+AX_CHECK_COMPILE_FLAG([-Wno-error=cast-align],
+                      [CFLAGS="$CFLAGS -Wno-error=cast-align"])
+AX_CHECK_COMPILE_FLAG([-Wno-error=visibility],
+                      [CFLAGS="$CFLAGS -Wno-error=visibility"])
+AX_CHECK_COMPILE_FLAG([-Wno-error=parentheses-equality],
+                      [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
 
 dnl Checks for header files.
 AC_HEADER_STDC

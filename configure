@@ -635,7 +635,7 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
-ADD_CFLAGS
+TESTSUITE_CFLAGS
 LEXLIB
 LEX_OUTPUT_ROOT
 LEX
@@ -12389,29 +12389,290 @@ else
 fi
 
 if test x$enable_werror = xyes; then
-  ADD_CFLAGS="-Werror -W -Wpointer-arith"
+  TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
 fi
 
 
-case "$GCC$enable_werror" in
- yesno)
-    CFLAGS="$CFLAGS -Wall"  # Enable only if not going to fail with -Werror
-    ;;
-esac
-case "$GCC" in
- yes)
-   CFLAGS="$CFLAGS -Wall"
-   CFLAGS="$CFLAGS -Wshadow"
-   CFLAGS="$CFLAGS -Wcast-qual"
-   CFLAGS="$CFLAGS -Wchar-subscripts"
-   CFLAGS="$CFLAGS -Wmissing-prototypes"
-   CFLAGS="$CFLAGS -Wmissing-declarations"
-   # There are legitimate uses for these features
-   CFLAGS="$CFLAGS -Wno-error=cast-align"
-   CFLAGS="$CFLAGS -Wno-error=visibility"
-   CFLAGS="$CFLAGS -Wno-error=parentheses-equality"
-   ;;
-esac
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wall" >&5
+$as_echo_n "checking whether C compiler accepts -Wall... " >&6; }
+if ${ax_cv_check_cflags___Wall+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wall"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wall=yes
+else
+  ax_cv_check_cflags___Wall=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wall" >&5
+$as_echo "$ax_cv_check_cflags___Wall" >&6; }
+if test x"$ax_cv_check_cflags___Wall" = xyes; then :
+  CFLAGS="$CFLAGS -Wall"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wcast-qual" >&5
+$as_echo_n "checking whether C compiler accepts -Wcast-qual... " >&6; }
+if ${ax_cv_check_cflags___Wcast_qual+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wcast-qual"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wcast_qual=yes
+else
+  ax_cv_check_cflags___Wcast_qual=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wcast_qual" >&5
+$as_echo "$ax_cv_check_cflags___Wcast_qual" >&6; }
+if test x"$ax_cv_check_cflags___Wcast_qual" = xyes; then :
+  CFLAGS="$CFLAGS -Wcast-qual"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wchar-subscripts" >&5
+$as_echo_n "checking whether C compiler accepts -Wchar-subscripts... " >&6; }
+if ${ax_cv_check_cflags___Wchar_subscripts+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wchar-subscripts"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wchar_subscripts=yes
+else
+  ax_cv_check_cflags___Wchar_subscripts=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wchar_subscripts" >&5
+$as_echo "$ax_cv_check_cflags___Wchar_subscripts" >&6; }
+if test x"$ax_cv_check_cflags___Wchar_subscripts" = xyes; then :
+  CFLAGS="$CFLAGS -Wchar-subscripts"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wmissing-prototypes" >&5
+$as_echo_n "checking whether C compiler accepts -Wmissing-prototypes... " >&6; }
+if ${ax_cv_check_cflags___Wmissing_prototypes+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wmissing-prototypes"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wmissing_prototypes=yes
+else
+  ax_cv_check_cflags___Wmissing_prototypes=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wmissing_prototypes" >&5
+$as_echo "$ax_cv_check_cflags___Wmissing_prototypes" >&6; }
+if test x"$ax_cv_check_cflags___Wmissing_prototypes" = xyes; then :
+  CFLAGS="$CFLAGS -Wmissing-prototypes"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wmissing-declarations" >&5
+$as_echo_n "checking whether C compiler accepts -Wmissing-declarations... " >&6; }
+if ${ax_cv_check_cflags___Wmissing_declarations+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wmissing-declarations"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wmissing_declarations=yes
+else
+  ax_cv_check_cflags___Wmissing_declarations=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wmissing_declarations" >&5
+$as_echo "$ax_cv_check_cflags___Wmissing_declarations" >&6; }
+if test x"$ax_cv_check_cflags___Wmissing_declarations" = xyes; then :
+  CFLAGS="$CFLAGS -Wmissing-declarations"
+else
+  :
+fi
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wno-error=cast-align" >&5
+$as_echo_n "checking whether C compiler accepts -Wno-error=cast-align... " >&6; }
+if ${ax_cv_check_cflags___Wno_error_cast_align+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wno-error=cast-align"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wno_error_cast_align=yes
+else
+  ax_cv_check_cflags___Wno_error_cast_align=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wno_error_cast_align" >&5
+$as_echo "$ax_cv_check_cflags___Wno_error_cast_align" >&6; }
+if test x"$ax_cv_check_cflags___Wno_error_cast_align" = xyes; then :
+  CFLAGS="$CFLAGS -Wno-error=cast-align"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wno-error=visibility" >&5
+$as_echo_n "checking whether C compiler accepts -Wno-error=visibility... " >&6; }
+if ${ax_cv_check_cflags___Wno_error_visibility+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wno-error=visibility"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wno_error_visibility=yes
+else
+  ax_cv_check_cflags___Wno_error_visibility=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wno_error_visibility" >&5
+$as_echo "$ax_cv_check_cflags___Wno_error_visibility" >&6; }
+if test x"$ax_cv_check_cflags___Wno_error_visibility" = xyes; then :
+  CFLAGS="$CFLAGS -Wno-error=visibility"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wno-error=parentheses-equality" >&5
+$as_echo_n "checking whether C compiler accepts -Wno-error=parentheses-equality... " >&6; }
+if ${ax_cv_check_cflags___Wno_error_parentheses_equality+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wno-error=parentheses-equality"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wno_error_parentheses_equality=yes
+else
+  ax_cv_check_cflags___Wno_error_parentheses_equality=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wno_error_parentheses_equality" >&5
+$as_echo "$ax_cv_check_cflags___Wno_error_parentheses_equality" >&6; }
+if test x"$ax_cv_check_cflags___Wno_error_parentheses_equality" = xyes; then :
+  CFLAGS="$CFLAGS -Wno-error=parentheses-equality"
+else
+  :
+fi
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5

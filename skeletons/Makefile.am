@@ -12,7 +12,7 @@ uninstall-local:
 
 check_LTLIBRARIES = libasn1cskeletons.la
 
-libasn1cskeletons_la_CFLAGS = $(ADD_CFLAGS)
+libasn1cskeletons_la_CFLAGS = $(TESTSUITE_CFLAGS)
 libasn1cskeletons_la_SOURCES = 				\
 	ANY.c ANY.h					\
 	BIT_STRING.c BIT_STRING.h			\
