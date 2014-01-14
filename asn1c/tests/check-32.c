@@ -53,7 +53,7 @@ main(int ac, char **av) {
 	drv = ber_decode(0, &asn_DEF_SeqWithOptional, (void **)&swo,
 			buf, erv.encoded);
 	assert(drv.code == RC_OK);
-	assert(drv.consumed == erv.encoded);
+	assert((ssize_t)drv.consumed == erv.encoded);
 	assert(swo->seqOfOpt != 0);
 
 	xer_fprint(stderr, &asn_DEF_SeqWithOptional, swo);
@@ -72,7 +72,7 @@ main(int ac, char **av) {
 	drv = ber_decode(0, &asn_DEF_SeqWithOptional, (void **)&swo,
 			buf, erv.encoded);
 	assert(drv.code == RC_OK);
-	assert(drv.consumed == erv.encoded);
+	assert((ssize_t)drv.consumed == erv.encoded);
 	assert(swo->seqOfOpt == 0);
 
 	xer_fprint(stderr, &asn_DEF_SeqWithOptional, swo);

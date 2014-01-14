@@ -19,7 +19,7 @@ verify(int testNo, T_t *ti) {
 	er = uper_encode_to_buffer(&asn_DEF_T, ti, buf, sizeof buf);
 	fprintf(stderr, "%d IN: %d => %zd\n", testNo, ti->present, er.encoded);
 	assert(er.encoded >= 1);
-	assert(er.encoded <= 8 * sizeof(buf));
+	assert(er.encoded <= (ssize_t)(8 * sizeof(buf)));
 
 	rv = uper_decode(0, &asn_DEF_T, (void *)&to, buf, sizeof buf, 0, 0);
 	assert(rv.code == RC_OK);
