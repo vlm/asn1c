@@ -636,6 +636,7 @@ am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
 TESTSUITE_CFLAGS
+ADD_CFLAGS
 LEXLIB
 LEX_OUTPUT_ROOT
 LEX
@@ -12390,7 +12391,9 @@ fi
 
 if test x$enable_werror = xyes; then
   TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
+  ADD_CFLAGS="-Werror -W -Wpointer-arith"
 fi
+
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wall" >&5

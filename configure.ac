@@ -29,7 +29,9 @@ AC_ARG_ENABLE(Werror,
 	enable_werror=$enableval, enable_werror=no)
 if test x$enable_werror = xyes; then
   TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
+  ADD_CFLAGS="-Werror -W -Wpointer-arith"
 fi
+AC_SUBST(ADD_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"])
