@@ -73,7 +73,7 @@ static enum xer_pbd_rval
 NULL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	(void)td;
 	(void)sptr;
-    (void)chunk_buf;    /* Going to be empty according to the rules below. */
+	(void)chunk_buf;    /* Going to be empty according to the rules below. */
 
 	/*
 	 * There must be no content in self-terminating <NULL/> tag.
