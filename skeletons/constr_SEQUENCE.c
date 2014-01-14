@@ -34,7 +34,7 @@
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr = ((const void *)ptr) + num;\
+		ptr = ((const char *)ptr) + num; \
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -144,7 +144,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -366,7 +366,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					ber_tlv_tag_string(tlv_tag), edx);
 				skip = ber_skip_length(opt_codec_ctx,
 					BER_TLV_CONSTRUCTED(ptr),
-					(const void *)ptr + tag_len,
+					(const char *)ptr + tag_len,
 					LEFT - tag_len);
 				ASN_DEBUG("Skip length %d in %s",
 					(int)skip, td->name);
@@ -397,13 +397,13 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 */
 		if(elements[edx].flags & ATF_POINTER) {
 			/* Member is a pointer to another structure */
-			memb_ptr2 = (void **)((void *)st + elements[edx].memb_offset);
+			memb_ptr2 = (void **)((char *)st + elements[edx].memb_offset);
 		} else {
 			/*
 			 * A pointer to a pointer
 			 * holding the start of the structure
 			 */
-			memb_ptr = (void *)st + elements[edx].memb_offset;
+			memb_ptr = (char *)st + elements[edx].memb_offset;
 			memb_ptr2 = &memb_ptr;
 		}
 		/*
@@ -489,7 +489,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			ll = ber_skip_length(opt_codec_ctx,
 				BER_TLV_CONSTRUCTED(ptr),
-				(const void *)ptr + tl, LEFT - tl);
+				(const char *)ptr + tl, LEFT - tl);
 			switch(ll) {
 			case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
 				/* Fall through */
@@ -528,14 +528,14 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((void *)sptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) {
 				if(elm->optional) continue;
 				/* Mandatory element is missing */
 				_ASN_ENCODE_FAILED;
 			}
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
 		erval = elm->type->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
@@ -567,10 +567,10 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((void *)sptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) continue;
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
 		tmperval = elm->type->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
@@ -595,7 +595,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		buf_ptr = ((const void *)buf_ptr) + num;\
+		buf_ptr = ((const char *)buf_ptr) + num;\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -637,7 +637,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 
 
 	/*
@@ -667,9 +667,9 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			if(elm->flags & ATF_POINTER) {
 				/* Member is a pointer to another structure */
-				memb_ptr2 = (void **)((void *)st + elm->memb_offset);
+				memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 			} else {
-				memb_ptr = (void *)st + elm->memb_offset;
+				memb_ptr = (char *)st + elm->memb_offset;
 				memb_ptr2 = &memb_ptr;
 			}
 
@@ -869,7 +869,7 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		unsigned int mlen = strlen(mname);
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((void *)sptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) {
 				if(elm->optional)
 					continue;
@@ -877,7 +877,7 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 				_ASN_ENCODE_FAILED;
 			}
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
 
 		if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel);
@@ -917,14 +917,14 @@ SEQUENCE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(const void * const *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) {
 				if(elm->optional) continue;
 				/* Print <absent> line */
 				/* Fall through */
 			}
 		} else {
-			memb_ptr = (const void *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
 		/* Indentation */
@@ -960,11 +960,11 @@ SEQUENCE_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((void *)sptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(memb_ptr)
 				ASN_STRUCT_FREE(*elm->type, memb_ptr);
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 			ASN_STRUCT_FREE_CONTENTS_ONLY(*elm->type, memb_ptr);
 		}
 	}
@@ -994,7 +994,7 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(const void * const *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) {
 				if(elm->optional)
 					continue;
@@ -1004,7 +1004,7 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 				return -1;
 			}
 		} else {
-			memb_ptr = (const void *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
 		if(elm->memb_constraints) {
@@ -1088,9 +1088,9 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((void *)st + elm->memb_offset);
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 		} else {
-			memb_ptr = (void *)st + elm->memb_offset;
+			memb_ptr = (char *)st + elm->memb_offset;
 			memb_ptr2 = &memb_ptr;
 		}
 
@@ -1171,9 +1171,9 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((void *)st + elm->memb_offset);
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 		} else {
-			memb_ptr = (void *)((void *)st + elm->memb_offset);
+			memb_ptr = (void *)((char *)st + elm->memb_offset);
 			memb_ptr2 = &memb_ptr;
 		}
 
@@ -1221,7 +1221,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((void *)st
+			memb_ptr2 = (void **)((char *)st
 					+ elm->memb_offset);
 			if(*memb_ptr2) continue;
 		} else {
@@ -1265,10 +1265,10 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((void *)sptr + elm->memb_offset);
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
 			present = (*memb_ptr2 != 0);
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 			memb_ptr2 = &memb_ptr;
 			present = 1;
 		}
@@ -1334,10 +1334,10 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((void *)sptr + elm->memb_offset);
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
 			present = (*memb_ptr2 != 0);
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 			memb_ptr2 = &memb_ptr;
 			present = 1;
 		}
@@ -1373,7 +1373,7 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 
 		/* Fetch the pointer to this member */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((void *)sptr + elm->memb_offset);
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
 			if(!*memb_ptr2) {
 				ASN_DEBUG("Element %s %d not present",
 					elm->name, edx);
@@ -1383,7 +1383,7 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 				_ASN_ENCODE_FAILED;
 			}
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 			memb_ptr2 = &memb_ptr;
 		}
 

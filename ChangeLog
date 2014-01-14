@@ -7,6 +7,7 @@
     * Add -fline-refs to avoid being unfriendly to version control systems.
     * Default constraint checking fix.
       Thanks to Bartosz Marcinkiewicz <bma@megawatt.com.pl>
+    * Get rid of non-standard pointer arithmetics on void* pointer.
 
 0.9.24:	2013-Mar-16
 

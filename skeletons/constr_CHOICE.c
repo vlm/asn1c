@@ -34,7 +34,7 @@
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr = ((const void *)ptr) + num;\
+		ptr = ((const char *)ptr) + num;\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -133,7 +133,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -211,7 +211,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 				skip = ber_skip_length(opt_codec_ctx,
 					BER_TLV_CONSTRUCTED(ptr),
-					(const void *)ptr + tag_len,
+					(const char *)ptr + tag_len,
 					LEFT - tag_len);
 
 				switch(skip) {
@@ -244,7 +244,7 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 */
 		if(elm->flags & ATF_POINTER) {
 			/* Member is a pointer to another structure */
-			memb_ptr2 = (void **)((void *)st + elm->memb_offset);
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 		} else {
 			/*
 			 * A pointer to a pointer
@@ -390,7 +390,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	 */
 	elm = &td->elements[present-1];
 	if(elm->flags & ATF_POINTER) {
-		memb_ptr = *(void **)((void *)sptr + elm->memb_offset);
+		memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 		if(memb_ptr == 0) {
 			if(elm->optional) {
 				erval.encoded = 0;
@@ -400,7 +400,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 			_ASN_ENCODE_FAILED;
 		}
 	} else {
-		memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+		memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 	}
 
 	/*
@@ -463,10 +463,10 @@ CHOICE_outmost_tag(asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber
 
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr = *(const void * const *)
-					((const void *)ptr + elm->memb_offset);
+					((const char *)ptr + elm->memb_offset);
 		} else {
 			memb_ptr = (const void *)
-					((const void *)ptr + elm->memb_offset);
+					((const char *)ptr + elm->memb_offset);
 		}
 
 		return asn_TYPE_outmost_tag(elm->type, memb_ptr,
@@ -498,7 +498,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(const void * const *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) {
 				if(elm->optional)
 					return 0;
@@ -508,7 +508,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 				return -1;
 			}
 		} else {
-			memb_ptr = (const void *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
 		if(elm->memb_constraints) {
@@ -535,7 +535,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		buf_ptr = ((const void *)buf_ptr) + num;\
+		buf_ptr = (const void *)(((const char *)buf_ptr) + num); \
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -574,7 +574,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 	if(ctx->phase == 0 && !*xml_tag)
 		ctx->phase = 1;	/* Skip the outer tag checking phase */
 
@@ -605,7 +605,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			if(elm->flags & ATF_POINTER) {
 				/* Member is a pointer to another structure */
-				memb_ptr2 = (void **)((void *)st
+				memb_ptr2 = (void **)((char *)st
 					+ elm->memb_offset);
 			} else {
 				memb_ptr = (char *)st + elm->memb_offset;
@@ -797,10 +797,10 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		unsigned int mlen = strlen(mname);
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((void *)sptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 			if(!memb_ptr) _ASN_ENCODE_FAILED;
 		} else {
-			memb_ptr = (void *)((void *)sptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
 
 		er.encoded = 0;
@@ -884,7 +884,7 @@ CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	elm = &td->elements[value];
 	if(elm->flags & ATF_POINTER) {
 		/* Member is a pointer to another structure */
-		memb_ptr2 = (void **)((void *)st + elm->memb_offset);
+		memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 	} else {
 		memb_ptr = (char *)st + elm->memb_offset;
 		memb_ptr2 = &memb_ptr;
@@ -962,7 +962,7 @@ CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 	elm = &td->elements[present];
 	if(elm->flags & ATF_POINTER) {
 		/* Member is a pointer to another structure */
-		memb_ptr = *(void **)((void *)sptr + elm->memb_offset);
+		memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
 		if(!memb_ptr) _ASN_ENCODE_FAILED;
 	} else {
 		memb_ptr = (char *)sptr + elm->memb_offset;
@@ -1010,10 +1010,10 @@ CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(const void * const *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = *(const void * const *)((const char *)sptr + elm->memb_offset);
 			if(!memb_ptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 		} else {
-			memb_ptr = (const void *)((const void *)sptr + elm->memb_offset);
+			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
 		/* Print member's name and stuff */
@@ -1053,11 +1053,11 @@ CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((void *)ptr + elm->memb_offset);
+			memb_ptr = *(void **)((char *)ptr + elm->memb_offset);
 			if(memb_ptr)
 				ASN_STRUCT_FREE(*elm->type, memb_ptr);
 		} else {
-			memb_ptr = (void *)((void *)ptr + elm->memb_offset);
+			memb_ptr = (void *)((char *)ptr + elm->memb_offset);
 			ASN_STRUCT_FREE_CONTENTS_ONLY(*elm->type, memb_ptr);
 		}
 	}
@@ -1082,7 +1082,7 @@ _fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
 	const void *present_ptr;
 	int present;
 
-	present_ptr = ((const void *)struct_ptr) + pres_offset;
+	present_ptr = ((const char *)struct_ptr) + pres_offset;
 
 	switch(pres_size) {
 	case sizeof(int):	present =   *(const int *)present_ptr; break;
@@ -1100,7 +1100,7 @@ _fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
 static void
 _set_present_idx(void *struct_ptr, int pres_offset, int pres_size, int present) {
 	void *present_ptr;
-	present_ptr = ((void *)struct_ptr) + pres_offset;
+	present_ptr = ((char *)struct_ptr) + pres_offset;
 
 	switch(pres_size) {
 	case sizeof(int):	*(int *)present_ptr   = present; break;

@@ -34,7 +34,7 @@
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr = ((const void *)ptr) + num;\
+		ptr = ((const char *)ptr) + num;\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -100,7 +100,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -457,7 +457,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		buf_ptr = ((const void *)buf_ptr) + num;\
+		buf_ptr = ((const char *)buf_ptr) + num;\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -505,7 +505,7 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 
 	/*
 	 * Phases of XER/XML processing:
@@ -627,7 +627,7 @@ SET_OF_encode_xer_callback(const void *buffer, size_t size, void *key) {
 		t->buffer = p;
 		t->size = newsize;
 	}
-	memcpy((void *)t->buffer + t->offset, buffer, size);
+	memcpy((char *)t->buffer + t->offset, buffer, size);
 	t->offset += size;
 	return 0;
 }
@@ -809,7 +809,7 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		asn_set_empty(list);	/* Remove (list->array) */
 
 		specs = (asn_SET_OF_specifics_t *)td->specifics;
-		ctx = (asn_struct_ctx_t *)((void *)ptr + specs->ctx_offset);
+		ctx = (asn_struct_ctx_t *)((char *)ptr + specs->ctx_offset);
 		if(ctx->ptr) {
 			ASN_STRUCT_FREE(*elm->type, ctx->ptr);
 			ctx->ptr = 0;
