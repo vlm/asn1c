@@ -33,15 +33,23 @@ fi
 AC_SUBST(ADD_CFLAGS)
 
 dnl Add these flags if we're using GCC.
+case "$GCC$enable_werror" in
+ yesno)
+    CFLAGS="$CFLAGS -Wall"  # Enable only if not going to fail with -Werror
+    ;;
+esac
 case "$GCC" in
  yes)
    CFLAGS="$CFLAGS -Wall"
    CFLAGS="$CFLAGS -Wshadow"
    CFLAGS="$CFLAGS -Wcast-qual"
-   CFLAGS="$CFLAGS -Wcast-align"
    CFLAGS="$CFLAGS -Wchar-subscripts"
    CFLAGS="$CFLAGS -Wmissing-prototypes"
    CFLAGS="$CFLAGS -Wmissing-declarations"
+   # There are legitimate uses for these features
+   CFLAGS="$CFLAGS -Wno-error=cast-align"
+   CFLAGS="$CFLAGS -Wno-error=visibility"
+   CFLAGS="$CFLAGS -Wno-error=parentheses-equality"
    ;;
 esac
 

@@ -49,21 +49,61 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 libasn1cskeletons_la_LIBADD =
-am_libasn1cskeletons_la_OBJECTS = ANY.lo BIT_STRING.lo BMPString.lo \
-	BOOLEAN.lo ENUMERATED.lo GeneralString.lo GeneralizedTime.lo \
-	GraphicString.lo IA5String.lo INTEGER.lo ISO646String.lo \
-	NULL.lo NativeEnumerated.lo NativeInteger.lo NativeReal.lo \
-	NumericString.lo OBJECT_IDENTIFIER.lo OCTET_STRING.lo \
-	ObjectDescriptor.lo PrintableString.lo REAL.lo RELATIVE-OID.lo \
-	T61String.lo TeletexString.lo UTCTime.lo UTF8String.lo \
-	UniversalString.lo VideotexString.lo VisibleString.lo \
-	asn_SEQUENCE_OF.lo asn_SET_OF.lo asn_codecs_prim.lo \
-	ber_decoder.lo ber_tlv_length.lo ber_tlv_tag.lo \
-	constr_CHOICE.lo constr_SEQUENCE.lo constr_SEQUENCE_OF.lo \
-	constr_SET.lo constr_SET_OF.lo constr_TYPE.lo constraints.lo \
-	der_encoder.lo per_decoder.lo per_encoder.lo per_opentype.lo \
-	per_support.lo xer_decoder.lo xer_encoder.lo xer_support.lo
+am_libasn1cskeletons_la_OBJECTS = libasn1cskeletons_la-ANY.lo \
+	libasn1cskeletons_la-BIT_STRING.lo \
+	libasn1cskeletons_la-BMPString.lo \
+	libasn1cskeletons_la-BOOLEAN.lo \
+	libasn1cskeletons_la-ENUMERATED.lo \
+	libasn1cskeletons_la-GeneralString.lo \
+	libasn1cskeletons_la-GeneralizedTime.lo \
+	libasn1cskeletons_la-GraphicString.lo \
+	libasn1cskeletons_la-IA5String.lo \
+	libasn1cskeletons_la-INTEGER.lo \
+	libasn1cskeletons_la-ISO646String.lo \
+	libasn1cskeletons_la-NULL.lo \
+	libasn1cskeletons_la-NativeEnumerated.lo \
+	libasn1cskeletons_la-NativeInteger.lo \
+	libasn1cskeletons_la-NativeReal.lo \
+	libasn1cskeletons_la-NumericString.lo \
+	libasn1cskeletons_la-OBJECT_IDENTIFIER.lo \
+	libasn1cskeletons_la-OCTET_STRING.lo \
+	libasn1cskeletons_la-ObjectDescriptor.lo \
+	libasn1cskeletons_la-PrintableString.lo \
+	libasn1cskeletons_la-REAL.lo \
+	libasn1cskeletons_la-RELATIVE-OID.lo \
+	libasn1cskeletons_la-T61String.lo \
+	libasn1cskeletons_la-TeletexString.lo \
+	libasn1cskeletons_la-UTCTime.lo \
+	libasn1cskeletons_la-UTF8String.lo \
+	libasn1cskeletons_la-UniversalString.lo \
+	libasn1cskeletons_la-VideotexString.lo \
+	libasn1cskeletons_la-VisibleString.lo \
+	libasn1cskeletons_la-asn_SEQUENCE_OF.lo \
+	libasn1cskeletons_la-asn_SET_OF.lo \
+	libasn1cskeletons_la-asn_codecs_prim.lo \
+	libasn1cskeletons_la-ber_decoder.lo \
+	libasn1cskeletons_la-ber_tlv_length.lo \
+	libasn1cskeletons_la-ber_tlv_tag.lo \
+	libasn1cskeletons_la-constr_CHOICE.lo \
+	libasn1cskeletons_la-constr_SEQUENCE.lo \
+	libasn1cskeletons_la-constr_SEQUENCE_OF.lo \
+	libasn1cskeletons_la-constr_SET.lo \
+	libasn1cskeletons_la-constr_SET_OF.lo \
+	libasn1cskeletons_la-constr_TYPE.lo \
+	libasn1cskeletons_la-constraints.lo \
+	libasn1cskeletons_la-der_encoder.lo \
+	libasn1cskeletons_la-per_decoder.lo \
+	libasn1cskeletons_la-per_encoder.lo \
+	libasn1cskeletons_la-per_opentype.lo \
+	libasn1cskeletons_la-per_support.lo \
+	libasn1cskeletons_la-xer_decoder.lo \
+	libasn1cskeletons_la-xer_encoder.lo \
+	libasn1cskeletons_la-xer_support.lo
 libasn1cskeletons_la_OBJECTS = $(am_libasn1cskeletons_la_OBJECTS)
+libasn1cskeletons_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libasn1cskeletons_la_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -159,6 +199,7 @@ CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -185,9 +226,11 @@ LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
@@ -196,6 +239,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 RANLIB = @RANLIB@
@@ -210,6 +254,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -242,7 +287,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -265,6 +309,7 @@ dist_pkgdata_DATA = \
 		$(srcdir)/file-dependencies
 
 check_LTLIBRARIES = libasn1cskeletons.la
+libasn1cskeletons_la_CFLAGS = $(ADD_CFLAGS)
 libasn1cskeletons_la_SOURCES = \
 	ANY.c ANY.h					\
 	BIT_STRING.c BIT_STRING.h			\
@@ -363,7 +408,7 @@ clean-checkLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libasn1cskeletons.la: $(libasn1cskeletons_la_OBJECTS) $(libasn1cskeletons_la_DEPENDENCIES) 
-	$(LINK)  $(libasn1cskeletons_la_OBJECTS) $(libasn1cskeletons_la_LIBADD) $(LIBS)
+	$(libasn1cskeletons_la_LINK)  $(libasn1cskeletons_la_OBJECTS) $(libasn1cskeletons_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -371,56 +416,56 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ANY.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/BIT_STRING.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/BMPString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/BOOLEAN.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ENUMERATED.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeneralString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeneralizedTime.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GraphicString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/IA5String.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/INTEGER.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ISO646String.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NULL.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NativeEnumerated.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NativeInteger.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NativeReal.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NumericString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OBJECT_IDENTIFIER.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OCTET_STRING.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ObjectDescriptor.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PrintableString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/REAL.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RELATIVE-OID.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/T61String.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TeletexString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/UTCTime.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/UTF8String.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/UniversalString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VideotexString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VisibleString.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn_SEQUENCE_OF.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn_SET_OF.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn_codecs_prim.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ber_decoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ber_tlv_length.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ber_tlv_tag.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constr_CHOICE.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constr_SEQUENCE.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constr_SEQUENCE_OF.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constr_SET.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constr_SET_OF.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constr_TYPE.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constraints.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/der_encoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/per_decoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/per_encoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/per_opentype.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/per_support.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xer_decoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xer_encoder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xer_support.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-ANY.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-BIT_STRING.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-BMPString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-BOOLEAN.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-ENUMERATED.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-GeneralString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-GeneralizedTime.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-GraphicString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-IA5String.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-INTEGER.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-ISO646String.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-NULL.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-NativeEnumerated.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-NativeInteger.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-NativeReal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-NumericString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-OBJECT_IDENTIFIER.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-OCTET_STRING.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-ObjectDescriptor.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-PrintableString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-REAL.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-RELATIVE-OID.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-T61String.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-TeletexString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-UTCTime.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-UTF8String.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-UniversalString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-VideotexString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-VisibleString.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-asn_SEQUENCE_OF.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-asn_SET_OF.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-asn_codecs_prim.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-ber_decoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-ber_tlv_length.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-ber_tlv_tag.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-constr_CHOICE.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE_OF.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-constr_SET.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-constr_SET_OF.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-constr_TYPE.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-constraints.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-der_encoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-per_decoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-per_encoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-per_opentype.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-per_support.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-xer_decoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-xer_encoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libasn1cskeletons_la-xer_support.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -442,6 +487,356 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+libasn1cskeletons_la-ANY.lo: ANY.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-ANY.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-ANY.Tpo -c -o libasn1cskeletons_la-ANY.lo `test -f 'ANY.c' || echo '$(srcdir)/'`ANY.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-ANY.Tpo $(DEPDIR)/libasn1cskeletons_la-ANY.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ANY.c' object='libasn1cskeletons_la-ANY.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-ANY.lo `test -f 'ANY.c' || echo '$(srcdir)/'`ANY.c
+
+libasn1cskeletons_la-BIT_STRING.lo: BIT_STRING.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-BIT_STRING.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-BIT_STRING.Tpo -c -o libasn1cskeletons_la-BIT_STRING.lo `test -f 'BIT_STRING.c' || echo '$(srcdir)/'`BIT_STRING.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-BIT_STRING.Tpo $(DEPDIR)/libasn1cskeletons_la-BIT_STRING.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='BIT_STRING.c' object='libasn1cskeletons_la-BIT_STRING.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-BIT_STRING.lo `test -f 'BIT_STRING.c' || echo '$(srcdir)/'`BIT_STRING.c
+
+libasn1cskeletons_la-BMPString.lo: BMPString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-BMPString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-BMPString.Tpo -c -o libasn1cskeletons_la-BMPString.lo `test -f 'BMPString.c' || echo '$(srcdir)/'`BMPString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-BMPString.Tpo $(DEPDIR)/libasn1cskeletons_la-BMPString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='BMPString.c' object='libasn1cskeletons_la-BMPString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-BMPString.lo `test -f 'BMPString.c' || echo '$(srcdir)/'`BMPString.c
+
+libasn1cskeletons_la-BOOLEAN.lo: BOOLEAN.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-BOOLEAN.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-BOOLEAN.Tpo -c -o libasn1cskeletons_la-BOOLEAN.lo `test -f 'BOOLEAN.c' || echo '$(srcdir)/'`BOOLEAN.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-BOOLEAN.Tpo $(DEPDIR)/libasn1cskeletons_la-BOOLEAN.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='BOOLEAN.c' object='libasn1cskeletons_la-BOOLEAN.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-BOOLEAN.lo `test -f 'BOOLEAN.c' || echo '$(srcdir)/'`BOOLEAN.c
+
+libasn1cskeletons_la-ENUMERATED.lo: ENUMERATED.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-ENUMERATED.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-ENUMERATED.Tpo -c -o libasn1cskeletons_la-ENUMERATED.lo `test -f 'ENUMERATED.c' || echo '$(srcdir)/'`ENUMERATED.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-ENUMERATED.Tpo $(DEPDIR)/libasn1cskeletons_la-ENUMERATED.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ENUMERATED.c' object='libasn1cskeletons_la-ENUMERATED.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-ENUMERATED.lo `test -f 'ENUMERATED.c' || echo '$(srcdir)/'`ENUMERATED.c
+
+libasn1cskeletons_la-GeneralString.lo: GeneralString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-GeneralString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-GeneralString.Tpo -c -o libasn1cskeletons_la-GeneralString.lo `test -f 'GeneralString.c' || echo '$(srcdir)/'`GeneralString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-GeneralString.Tpo $(DEPDIR)/libasn1cskeletons_la-GeneralString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='GeneralString.c' object='libasn1cskeletons_la-GeneralString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-GeneralString.lo `test -f 'GeneralString.c' || echo '$(srcdir)/'`GeneralString.c
+
+libasn1cskeletons_la-GeneralizedTime.lo: GeneralizedTime.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-GeneralizedTime.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-GeneralizedTime.Tpo -c -o libasn1cskeletons_la-GeneralizedTime.lo `test -f 'GeneralizedTime.c' || echo '$(srcdir)/'`GeneralizedTime.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-GeneralizedTime.Tpo $(DEPDIR)/libasn1cskeletons_la-GeneralizedTime.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='GeneralizedTime.c' object='libasn1cskeletons_la-GeneralizedTime.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-GeneralizedTime.lo `test -f 'GeneralizedTime.c' || echo '$(srcdir)/'`GeneralizedTime.c
+
+libasn1cskeletons_la-GraphicString.lo: GraphicString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-GraphicString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-GraphicString.Tpo -c -o libasn1cskeletons_la-GraphicString.lo `test -f 'GraphicString.c' || echo '$(srcdir)/'`GraphicString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-GraphicString.Tpo $(DEPDIR)/libasn1cskeletons_la-GraphicString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='GraphicString.c' object='libasn1cskeletons_la-GraphicString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-GraphicString.lo `test -f 'GraphicString.c' || echo '$(srcdir)/'`GraphicString.c
+
+libasn1cskeletons_la-IA5String.lo: IA5String.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-IA5String.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-IA5String.Tpo -c -o libasn1cskeletons_la-IA5String.lo `test -f 'IA5String.c' || echo '$(srcdir)/'`IA5String.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-IA5String.Tpo $(DEPDIR)/libasn1cskeletons_la-IA5String.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='IA5String.c' object='libasn1cskeletons_la-IA5String.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-IA5String.lo `test -f 'IA5String.c' || echo '$(srcdir)/'`IA5String.c
+
+libasn1cskeletons_la-INTEGER.lo: INTEGER.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-INTEGER.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-INTEGER.Tpo -c -o libasn1cskeletons_la-INTEGER.lo `test -f 'INTEGER.c' || echo '$(srcdir)/'`INTEGER.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-INTEGER.Tpo $(DEPDIR)/libasn1cskeletons_la-INTEGER.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='INTEGER.c' object='libasn1cskeletons_la-INTEGER.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-INTEGER.lo `test -f 'INTEGER.c' || echo '$(srcdir)/'`INTEGER.c
+
+libasn1cskeletons_la-ISO646String.lo: ISO646String.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-ISO646String.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-ISO646String.Tpo -c -o libasn1cskeletons_la-ISO646String.lo `test -f 'ISO646String.c' || echo '$(srcdir)/'`ISO646String.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-ISO646String.Tpo $(DEPDIR)/libasn1cskeletons_la-ISO646String.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ISO646String.c' object='libasn1cskeletons_la-ISO646String.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-ISO646String.lo `test -f 'ISO646String.c' || echo '$(srcdir)/'`ISO646String.c
+
+libasn1cskeletons_la-NULL.lo: NULL.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-NULL.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-NULL.Tpo -c -o libasn1cskeletons_la-NULL.lo `test -f 'NULL.c' || echo '$(srcdir)/'`NULL.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-NULL.Tpo $(DEPDIR)/libasn1cskeletons_la-NULL.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='NULL.c' object='libasn1cskeletons_la-NULL.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-NULL.lo `test -f 'NULL.c' || echo '$(srcdir)/'`NULL.c
+
+libasn1cskeletons_la-NativeEnumerated.lo: NativeEnumerated.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-NativeEnumerated.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-NativeEnumerated.Tpo -c -o libasn1cskeletons_la-NativeEnumerated.lo `test -f 'NativeEnumerated.c' || echo '$(srcdir)/'`NativeEnumerated.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-NativeEnumerated.Tpo $(DEPDIR)/libasn1cskeletons_la-NativeEnumerated.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='NativeEnumerated.c' object='libasn1cskeletons_la-NativeEnumerated.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-NativeEnumerated.lo `test -f 'NativeEnumerated.c' || echo '$(srcdir)/'`NativeEnumerated.c
+
+libasn1cskeletons_la-NativeInteger.lo: NativeInteger.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-NativeInteger.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-NativeInteger.Tpo -c -o libasn1cskeletons_la-NativeInteger.lo `test -f 'NativeInteger.c' || echo '$(srcdir)/'`NativeInteger.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-NativeInteger.Tpo $(DEPDIR)/libasn1cskeletons_la-NativeInteger.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='NativeInteger.c' object='libasn1cskeletons_la-NativeInteger.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-NativeInteger.lo `test -f 'NativeInteger.c' || echo '$(srcdir)/'`NativeInteger.c
+
+libasn1cskeletons_la-NativeReal.lo: NativeReal.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-NativeReal.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-NativeReal.Tpo -c -o libasn1cskeletons_la-NativeReal.lo `test -f 'NativeReal.c' || echo '$(srcdir)/'`NativeReal.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-NativeReal.Tpo $(DEPDIR)/libasn1cskeletons_la-NativeReal.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='NativeReal.c' object='libasn1cskeletons_la-NativeReal.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-NativeReal.lo `test -f 'NativeReal.c' || echo '$(srcdir)/'`NativeReal.c
+
+libasn1cskeletons_la-NumericString.lo: NumericString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-NumericString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-NumericString.Tpo -c -o libasn1cskeletons_la-NumericString.lo `test -f 'NumericString.c' || echo '$(srcdir)/'`NumericString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-NumericString.Tpo $(DEPDIR)/libasn1cskeletons_la-NumericString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='NumericString.c' object='libasn1cskeletons_la-NumericString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-NumericString.lo `test -f 'NumericString.c' || echo '$(srcdir)/'`NumericString.c
+
+libasn1cskeletons_la-OBJECT_IDENTIFIER.lo: OBJECT_IDENTIFIER.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-OBJECT_IDENTIFIER.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-OBJECT_IDENTIFIER.Tpo -c -o libasn1cskeletons_la-OBJECT_IDENTIFIER.lo `test -f 'OBJECT_IDENTIFIER.c' || echo '$(srcdir)/'`OBJECT_IDENTIFIER.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-OBJECT_IDENTIFIER.Tpo $(DEPDIR)/libasn1cskeletons_la-OBJECT_IDENTIFIER.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='OBJECT_IDENTIFIER.c' object='libasn1cskeletons_la-OBJECT_IDENTIFIER.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-OBJECT_IDENTIFIER.lo `test -f 'OBJECT_IDENTIFIER.c' || echo '$(srcdir)/'`OBJECT_IDENTIFIER.c
+
+libasn1cskeletons_la-OCTET_STRING.lo: OCTET_STRING.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-OCTET_STRING.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-OCTET_STRING.Tpo -c -o libasn1cskeletons_la-OCTET_STRING.lo `test -f 'OCTET_STRING.c' || echo '$(srcdir)/'`OCTET_STRING.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-OCTET_STRING.Tpo $(DEPDIR)/libasn1cskeletons_la-OCTET_STRING.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='OCTET_STRING.c' object='libasn1cskeletons_la-OCTET_STRING.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-OCTET_STRING.lo `test -f 'OCTET_STRING.c' || echo '$(srcdir)/'`OCTET_STRING.c
+
+libasn1cskeletons_la-ObjectDescriptor.lo: ObjectDescriptor.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-ObjectDescriptor.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-ObjectDescriptor.Tpo -c -o libasn1cskeletons_la-ObjectDescriptor.lo `test -f 'ObjectDescriptor.c' || echo '$(srcdir)/'`ObjectDescriptor.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-ObjectDescriptor.Tpo $(DEPDIR)/libasn1cskeletons_la-ObjectDescriptor.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ObjectDescriptor.c' object='libasn1cskeletons_la-ObjectDescriptor.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-ObjectDescriptor.lo `test -f 'ObjectDescriptor.c' || echo '$(srcdir)/'`ObjectDescriptor.c
+
+libasn1cskeletons_la-PrintableString.lo: PrintableString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-PrintableString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-PrintableString.Tpo -c -o libasn1cskeletons_la-PrintableString.lo `test -f 'PrintableString.c' || echo '$(srcdir)/'`PrintableString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-PrintableString.Tpo $(DEPDIR)/libasn1cskeletons_la-PrintableString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='PrintableString.c' object='libasn1cskeletons_la-PrintableString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-PrintableString.lo `test -f 'PrintableString.c' || echo '$(srcdir)/'`PrintableString.c
+
+libasn1cskeletons_la-REAL.lo: REAL.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-REAL.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-REAL.Tpo -c -o libasn1cskeletons_la-REAL.lo `test -f 'REAL.c' || echo '$(srcdir)/'`REAL.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-REAL.Tpo $(DEPDIR)/libasn1cskeletons_la-REAL.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='REAL.c' object='libasn1cskeletons_la-REAL.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-REAL.lo `test -f 'REAL.c' || echo '$(srcdir)/'`REAL.c
+
+libasn1cskeletons_la-RELATIVE-OID.lo: RELATIVE-OID.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-RELATIVE-OID.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-RELATIVE-OID.Tpo -c -o libasn1cskeletons_la-RELATIVE-OID.lo `test -f 'RELATIVE-OID.c' || echo '$(srcdir)/'`RELATIVE-OID.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-RELATIVE-OID.Tpo $(DEPDIR)/libasn1cskeletons_la-RELATIVE-OID.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='RELATIVE-OID.c' object='libasn1cskeletons_la-RELATIVE-OID.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-RELATIVE-OID.lo `test -f 'RELATIVE-OID.c' || echo '$(srcdir)/'`RELATIVE-OID.c
+
+libasn1cskeletons_la-T61String.lo: T61String.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-T61String.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-T61String.Tpo -c -o libasn1cskeletons_la-T61String.lo `test -f 'T61String.c' || echo '$(srcdir)/'`T61String.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-T61String.Tpo $(DEPDIR)/libasn1cskeletons_la-T61String.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='T61String.c' object='libasn1cskeletons_la-T61String.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-T61String.lo `test -f 'T61String.c' || echo '$(srcdir)/'`T61String.c
+
+libasn1cskeletons_la-TeletexString.lo: TeletexString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-TeletexString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-TeletexString.Tpo -c -o libasn1cskeletons_la-TeletexString.lo `test -f 'TeletexString.c' || echo '$(srcdir)/'`TeletexString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-TeletexString.Tpo $(DEPDIR)/libasn1cskeletons_la-TeletexString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='TeletexString.c' object='libasn1cskeletons_la-TeletexString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-TeletexString.lo `test -f 'TeletexString.c' || echo '$(srcdir)/'`TeletexString.c
+
+libasn1cskeletons_la-UTCTime.lo: UTCTime.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-UTCTime.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-UTCTime.Tpo -c -o libasn1cskeletons_la-UTCTime.lo `test -f 'UTCTime.c' || echo '$(srcdir)/'`UTCTime.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-UTCTime.Tpo $(DEPDIR)/libasn1cskeletons_la-UTCTime.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='UTCTime.c' object='libasn1cskeletons_la-UTCTime.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-UTCTime.lo `test -f 'UTCTime.c' || echo '$(srcdir)/'`UTCTime.c
+
+libasn1cskeletons_la-UTF8String.lo: UTF8String.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-UTF8String.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-UTF8String.Tpo -c -o libasn1cskeletons_la-UTF8String.lo `test -f 'UTF8String.c' || echo '$(srcdir)/'`UTF8String.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-UTF8String.Tpo $(DEPDIR)/libasn1cskeletons_la-UTF8String.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='UTF8String.c' object='libasn1cskeletons_la-UTF8String.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-UTF8String.lo `test -f 'UTF8String.c' || echo '$(srcdir)/'`UTF8String.c
+
+libasn1cskeletons_la-UniversalString.lo: UniversalString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-UniversalString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-UniversalString.Tpo -c -o libasn1cskeletons_la-UniversalString.lo `test -f 'UniversalString.c' || echo '$(srcdir)/'`UniversalString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-UniversalString.Tpo $(DEPDIR)/libasn1cskeletons_la-UniversalString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='UniversalString.c' object='libasn1cskeletons_la-UniversalString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-UniversalString.lo `test -f 'UniversalString.c' || echo '$(srcdir)/'`UniversalString.c
+
+libasn1cskeletons_la-VideotexString.lo: VideotexString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-VideotexString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-VideotexString.Tpo -c -o libasn1cskeletons_la-VideotexString.lo `test -f 'VideotexString.c' || echo '$(srcdir)/'`VideotexString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-VideotexString.Tpo $(DEPDIR)/libasn1cskeletons_la-VideotexString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='VideotexString.c' object='libasn1cskeletons_la-VideotexString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-VideotexString.lo `test -f 'VideotexString.c' || echo '$(srcdir)/'`VideotexString.c
+
+libasn1cskeletons_la-VisibleString.lo: VisibleString.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-VisibleString.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-VisibleString.Tpo -c -o libasn1cskeletons_la-VisibleString.lo `test -f 'VisibleString.c' || echo '$(srcdir)/'`VisibleString.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-VisibleString.Tpo $(DEPDIR)/libasn1cskeletons_la-VisibleString.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='VisibleString.c' object='libasn1cskeletons_la-VisibleString.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-VisibleString.lo `test -f 'VisibleString.c' || echo '$(srcdir)/'`VisibleString.c
+
+libasn1cskeletons_la-asn_SEQUENCE_OF.lo: asn_SEQUENCE_OF.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-asn_SEQUENCE_OF.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-asn_SEQUENCE_OF.Tpo -c -o libasn1cskeletons_la-asn_SEQUENCE_OF.lo `test -f 'asn_SEQUENCE_OF.c' || echo '$(srcdir)/'`asn_SEQUENCE_OF.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-asn_SEQUENCE_OF.Tpo $(DEPDIR)/libasn1cskeletons_la-asn_SEQUENCE_OF.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='asn_SEQUENCE_OF.c' object='libasn1cskeletons_la-asn_SEQUENCE_OF.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-asn_SEQUENCE_OF.lo `test -f 'asn_SEQUENCE_OF.c' || echo '$(srcdir)/'`asn_SEQUENCE_OF.c
+
+libasn1cskeletons_la-asn_SET_OF.lo: asn_SET_OF.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-asn_SET_OF.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-asn_SET_OF.Tpo -c -o libasn1cskeletons_la-asn_SET_OF.lo `test -f 'asn_SET_OF.c' || echo '$(srcdir)/'`asn_SET_OF.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-asn_SET_OF.Tpo $(DEPDIR)/libasn1cskeletons_la-asn_SET_OF.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='asn_SET_OF.c' object='libasn1cskeletons_la-asn_SET_OF.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-asn_SET_OF.lo `test -f 'asn_SET_OF.c' || echo '$(srcdir)/'`asn_SET_OF.c
+
+libasn1cskeletons_la-asn_codecs_prim.lo: asn_codecs_prim.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-asn_codecs_prim.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-asn_codecs_prim.Tpo -c -o libasn1cskeletons_la-asn_codecs_prim.lo `test -f 'asn_codecs_prim.c' || echo '$(srcdir)/'`asn_codecs_prim.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-asn_codecs_prim.Tpo $(DEPDIR)/libasn1cskeletons_la-asn_codecs_prim.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='asn_codecs_prim.c' object='libasn1cskeletons_la-asn_codecs_prim.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-asn_codecs_prim.lo `test -f 'asn_codecs_prim.c' || echo '$(srcdir)/'`asn_codecs_prim.c
+
+libasn1cskeletons_la-ber_decoder.lo: ber_decoder.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-ber_decoder.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-ber_decoder.Tpo -c -o libasn1cskeletons_la-ber_decoder.lo `test -f 'ber_decoder.c' || echo '$(srcdir)/'`ber_decoder.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-ber_decoder.Tpo $(DEPDIR)/libasn1cskeletons_la-ber_decoder.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ber_decoder.c' object='libasn1cskeletons_la-ber_decoder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-ber_decoder.lo `test -f 'ber_decoder.c' || echo '$(srcdir)/'`ber_decoder.c
+
+libasn1cskeletons_la-ber_tlv_length.lo: ber_tlv_length.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-ber_tlv_length.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-ber_tlv_length.Tpo -c -o libasn1cskeletons_la-ber_tlv_length.lo `test -f 'ber_tlv_length.c' || echo '$(srcdir)/'`ber_tlv_length.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-ber_tlv_length.Tpo $(DEPDIR)/libasn1cskeletons_la-ber_tlv_length.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ber_tlv_length.c' object='libasn1cskeletons_la-ber_tlv_length.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-ber_tlv_length.lo `test -f 'ber_tlv_length.c' || echo '$(srcdir)/'`ber_tlv_length.c
+
+libasn1cskeletons_la-ber_tlv_tag.lo: ber_tlv_tag.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-ber_tlv_tag.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-ber_tlv_tag.Tpo -c -o libasn1cskeletons_la-ber_tlv_tag.lo `test -f 'ber_tlv_tag.c' || echo '$(srcdir)/'`ber_tlv_tag.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-ber_tlv_tag.Tpo $(DEPDIR)/libasn1cskeletons_la-ber_tlv_tag.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ber_tlv_tag.c' object='libasn1cskeletons_la-ber_tlv_tag.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-ber_tlv_tag.lo `test -f 'ber_tlv_tag.c' || echo '$(srcdir)/'`ber_tlv_tag.c
+
+libasn1cskeletons_la-constr_CHOICE.lo: constr_CHOICE.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-constr_CHOICE.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-constr_CHOICE.Tpo -c -o libasn1cskeletons_la-constr_CHOICE.lo `test -f 'constr_CHOICE.c' || echo '$(srcdir)/'`constr_CHOICE.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-constr_CHOICE.Tpo $(DEPDIR)/libasn1cskeletons_la-constr_CHOICE.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='constr_CHOICE.c' object='libasn1cskeletons_la-constr_CHOICE.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-constr_CHOICE.lo `test -f 'constr_CHOICE.c' || echo '$(srcdir)/'`constr_CHOICE.c
+
+libasn1cskeletons_la-constr_SEQUENCE.lo: constr_SEQUENCE.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-constr_SEQUENCE.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE.Tpo -c -o libasn1cskeletons_la-constr_SEQUENCE.lo `test -f 'constr_SEQUENCE.c' || echo '$(srcdir)/'`constr_SEQUENCE.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE.Tpo $(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='constr_SEQUENCE.c' object='libasn1cskeletons_la-constr_SEQUENCE.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-constr_SEQUENCE.lo `test -f 'constr_SEQUENCE.c' || echo '$(srcdir)/'`constr_SEQUENCE.c
+
+libasn1cskeletons_la-constr_SEQUENCE_OF.lo: constr_SEQUENCE_OF.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-constr_SEQUENCE_OF.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE_OF.Tpo -c -o libasn1cskeletons_la-constr_SEQUENCE_OF.lo `test -f 'constr_SEQUENCE_OF.c' || echo '$(srcdir)/'`constr_SEQUENCE_OF.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE_OF.Tpo $(DEPDIR)/libasn1cskeletons_la-constr_SEQUENCE_OF.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='constr_SEQUENCE_OF.c' object='libasn1cskeletons_la-constr_SEQUENCE_OF.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-constr_SEQUENCE_OF.lo `test -f 'constr_SEQUENCE_OF.c' || echo '$(srcdir)/'`constr_SEQUENCE_OF.c
+
+libasn1cskeletons_la-constr_SET.lo: constr_SET.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-constr_SET.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-constr_SET.Tpo -c -o libasn1cskeletons_la-constr_SET.lo `test -f 'constr_SET.c' || echo '$(srcdir)/'`constr_SET.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-constr_SET.Tpo $(DEPDIR)/libasn1cskeletons_la-constr_SET.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='constr_SET.c' object='libasn1cskeletons_la-constr_SET.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-constr_SET.lo `test -f 'constr_SET.c' || echo '$(srcdir)/'`constr_SET.c
+
+libasn1cskeletons_la-constr_SET_OF.lo: constr_SET_OF.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-constr_SET_OF.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-constr_SET_OF.Tpo -c -o libasn1cskeletons_la-constr_SET_OF.lo `test -f 'constr_SET_OF.c' || echo '$(srcdir)/'`constr_SET_OF.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-constr_SET_OF.Tpo $(DEPDIR)/libasn1cskeletons_la-constr_SET_OF.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='constr_SET_OF.c' object='libasn1cskeletons_la-constr_SET_OF.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-constr_SET_OF.lo `test -f 'constr_SET_OF.c' || echo '$(srcdir)/'`constr_SET_OF.c
+
+libasn1cskeletons_la-constr_TYPE.lo: constr_TYPE.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-constr_TYPE.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-constr_TYPE.Tpo -c -o libasn1cskeletons_la-constr_TYPE.lo `test -f 'constr_TYPE.c' || echo '$(srcdir)/'`constr_TYPE.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-constr_TYPE.Tpo $(DEPDIR)/libasn1cskeletons_la-constr_TYPE.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='constr_TYPE.c' object='libasn1cskeletons_la-constr_TYPE.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-constr_TYPE.lo `test -f 'constr_TYPE.c' || echo '$(srcdir)/'`constr_TYPE.c
+
+libasn1cskeletons_la-constraints.lo: constraints.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-constraints.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-constraints.Tpo -c -o libasn1cskeletons_la-constraints.lo `test -f 'constraints.c' || echo '$(srcdir)/'`constraints.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-constraints.Tpo $(DEPDIR)/libasn1cskeletons_la-constraints.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='constraints.c' object='libasn1cskeletons_la-constraints.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-constraints.lo `test -f 'constraints.c' || echo '$(srcdir)/'`constraints.c
+
+libasn1cskeletons_la-der_encoder.lo: der_encoder.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-der_encoder.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-der_encoder.Tpo -c -o libasn1cskeletons_la-der_encoder.lo `test -f 'der_encoder.c' || echo '$(srcdir)/'`der_encoder.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-der_encoder.Tpo $(DEPDIR)/libasn1cskeletons_la-der_encoder.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='der_encoder.c' object='libasn1cskeletons_la-der_encoder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-der_encoder.lo `test -f 'der_encoder.c' || echo '$(srcdir)/'`der_encoder.c
+
+libasn1cskeletons_la-per_decoder.lo: per_decoder.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-per_decoder.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-per_decoder.Tpo -c -o libasn1cskeletons_la-per_decoder.lo `test -f 'per_decoder.c' || echo '$(srcdir)/'`per_decoder.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-per_decoder.Tpo $(DEPDIR)/libasn1cskeletons_la-per_decoder.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='per_decoder.c' object='libasn1cskeletons_la-per_decoder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-per_decoder.lo `test -f 'per_decoder.c' || echo '$(srcdir)/'`per_decoder.c
+
+libasn1cskeletons_la-per_encoder.lo: per_encoder.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-per_encoder.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-per_encoder.Tpo -c -o libasn1cskeletons_la-per_encoder.lo `test -f 'per_encoder.c' || echo '$(srcdir)/'`per_encoder.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-per_encoder.Tpo $(DEPDIR)/libasn1cskeletons_la-per_encoder.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='per_encoder.c' object='libasn1cskeletons_la-per_encoder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-per_encoder.lo `test -f 'per_encoder.c' || echo '$(srcdir)/'`per_encoder.c
+
+libasn1cskeletons_la-per_opentype.lo: per_opentype.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-per_opentype.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-per_opentype.Tpo -c -o libasn1cskeletons_la-per_opentype.lo `test -f 'per_opentype.c' || echo '$(srcdir)/'`per_opentype.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-per_opentype.Tpo $(DEPDIR)/libasn1cskeletons_la-per_opentype.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='per_opentype.c' object='libasn1cskeletons_la-per_opentype.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-per_opentype.lo `test -f 'per_opentype.c' || echo '$(srcdir)/'`per_opentype.c
+
+libasn1cskeletons_la-per_support.lo: per_support.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-per_support.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-per_support.Tpo -c -o libasn1cskeletons_la-per_support.lo `test -f 'per_support.c' || echo '$(srcdir)/'`per_support.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-per_support.Tpo $(DEPDIR)/libasn1cskeletons_la-per_support.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='per_support.c' object='libasn1cskeletons_la-per_support.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-per_support.lo `test -f 'per_support.c' || echo '$(srcdir)/'`per_support.c
+
+libasn1cskeletons_la-xer_decoder.lo: xer_decoder.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-xer_decoder.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-xer_decoder.Tpo -c -o libasn1cskeletons_la-xer_decoder.lo `test -f 'xer_decoder.c' || echo '$(srcdir)/'`xer_decoder.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-xer_decoder.Tpo $(DEPDIR)/libasn1cskeletons_la-xer_decoder.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xer_decoder.c' object='libasn1cskeletons_la-xer_decoder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-xer_decoder.lo `test -f 'xer_decoder.c' || echo '$(srcdir)/'`xer_decoder.c
+
+libasn1cskeletons_la-xer_encoder.lo: xer_encoder.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-xer_encoder.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-xer_encoder.Tpo -c -o libasn1cskeletons_la-xer_encoder.lo `test -f 'xer_encoder.c' || echo '$(srcdir)/'`xer_encoder.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-xer_encoder.Tpo $(DEPDIR)/libasn1cskeletons_la-xer_encoder.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xer_encoder.c' object='libasn1cskeletons_la-xer_encoder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-xer_encoder.lo `test -f 'xer_encoder.c' || echo '$(srcdir)/'`xer_encoder.c
+
+libasn1cskeletons_la-xer_support.lo: xer_support.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -MT libasn1cskeletons_la-xer_support.lo -MD -MP -MF $(DEPDIR)/libasn1cskeletons_la-xer_support.Tpo -c -o libasn1cskeletons_la-xer_support.lo `test -f 'xer_support.c' || echo '$(srcdir)/'`xer_support.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libasn1cskeletons_la-xer_support.Tpo $(DEPDIR)/libasn1cskeletons_la-xer_support.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xer_support.c' object='libasn1cskeletons_la-xer_support.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libasn1cskeletons_la_CFLAGS) $(CFLAGS) -c -o libasn1cskeletons_la-xer_support.lo `test -f 'xer_support.c' || echo '$(srcdir)/'`xer_support.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
