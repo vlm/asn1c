@@ -101,7 +101,7 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 }
 
 static PDU_t *
-load_object_from(const char *fname, enum expectation expectation, char *fbuf, size_t size, enum enctype how) {
+load_object_from(const char *fname, enum expectation expectation, unsigned char *fbuf, size_t size, enum enctype how) {
 	asn_dec_rval_t rval;
 	PDU_t *st = 0;
 	size_t csize = 1;
@@ -158,6 +158,9 @@ load_object_from(const char *fname, enum expectation expectation, char *fbuf, si
 					rval.consumed /= 8;
 				}
 				break;
+            case AS_DER:
+            case AS_CXER:
+                assert(!"DER or CXER not supported for load");
 			}
 			fbuf_offset += rval.consumed;
 			fbuf_left -= rval.consumed;
@@ -172,12 +175,12 @@ load_object_from(const char *fname, enum expectation expectation, char *fbuf, si
 			if(how == AS_PER) {
 				fprintf(stderr, "[left %d, off %d, size %zd]\n",
 					fbuf_left, fbuf_offset, size);
-				assert(fbuf_offset == size);
+				assert(fbuf_offset == (ssize_t)size);
 			} else {
 				assert(fbuf_offset - size < 2
-				|| (fbuf_offset + 1 /* "\n" */  == size
+				|| (fbuf_offset + 1 /* "\n" */  == (ssize_t)size
 					&& fbuf[size - 1] == '\n')
-				|| (fbuf_offset + 2 /* "\r\n" */  == size
+				|| (fbuf_offset + 2 /* "\r\n" */  == (ssize_t)size
 					&& fbuf[size - 2] == '\r'
 					&& fbuf[size - 1] == '\n')
 				);
@@ -227,7 +230,7 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-process_XER_data(const char *fname, enum expectation expectation, char *fbuf, size_t size) {
+process_XER_data(const char *fname, enum expectation expectation, unsigned char *fbuf, size_t size) {
 	PDU_t *st;
 
 	st = load_object_from(fname, expectation, fbuf, size, AS_XER);
@@ -253,10 +256,10 @@ process_XER_data(const char *fname, enum expectation expectation, char *fbuf, si
 
 	switch(expectation) {
 	case EXP_DIFFERENT:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal((char *)fbuf, size, (char *)buf, buf_offset));
 		break;
 	case EXP_BROKEN:
-		assert(!xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(!xer_encoding_equal((char *)fbuf, size, (char *)buf, buf_offset));
 		break;
 	case EXP_CXER_EXACT:
 		buf[buf_offset++] = '\n';
@@ -270,7 +273,7 @@ process_XER_data(const char *fname, enum expectation expectation, char *fbuf, si
 		break;
 	case EXP_OK:
 	case EXP_PER_NOCOMP:
-		assert(xer_encoding_equal(fbuf, size, buf, buf_offset));
+		assert(xer_encoding_equal((char *)fbuf, size, (char *)buf, buf_offset));
 		break;
 	}
 
@@ -282,7 +285,7 @@ process_XER_data(const char *fname, enum expectation expectation, char *fbuf, si
  */
 static int
 process(const char *fname) {
-	char fbuf[4096];
+	unsigned char fbuf[4096];
 	char *ext = strrchr(fname, '.');
 	enum expectation expectation;
 	int rd;
@@ -308,14 +311,14 @@ process(const char *fname) {
 
 	fprintf(stderr, "\nProcessing file [../%s]\n", fname);
 
-	snprintf(fbuf, sizeof(fbuf), "../data-119/%s", fname);
-	fp = fopen(fbuf, "r");
+	snprintf((char *)fbuf, sizeof(fbuf), "../data-119/%s", fname);
+	fp = fopen((char *)fbuf, "r");
 	assert(fp);
 
 	rd = fread(fbuf, 1, sizeof(fbuf), fp);
 	fclose(fp);
 
-	assert(rd < sizeof(fbuf));	/* expect small files */
+	assert(rd < (ssize_t)sizeof(fbuf));	/* expect small files */
 
 	process_XER_data(fname, expectation, fbuf, rd);
 

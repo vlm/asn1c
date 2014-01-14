@@ -57,12 +57,12 @@ save_object(T_t *st) {
 }
 
 static T_t *
-load_object(enum expectation expectation, char *fbuf, size_t size) {
+load_object(enum expectation expectation, unsigned char *fbuf, size_t size) {
 	asn_dec_rval_t rval;
 	T_t *st = 0;
 	int csize;
 
-	fprintf(stderr, "LOADING OBJECT OF SIZE %d\n", size);
+	fprintf(stderr, "LOADING OBJECT OF SIZE %d\n", (int)size);
 
 	/* Perform multiple iterations with multiple chunks sizes */
 	for(csize = 1; csize < 20; csize += 1) {
@@ -90,7 +90,7 @@ load_object(enum expectation expectation, char *fbuf, size_t size) {
 
 		if(expectation != EXP_BROKEN) {
 			assert(rval.code == RC_OK);
-			assert(fbuf_offset == size);
+			assert(fbuf_offset == (ssize_t)size);
 		} else {
 			assert(rval.code != RC_OK);
 			fprintf(stderr, "Failed, but this was expected\n");
@@ -105,7 +105,7 @@ load_object(enum expectation expectation, char *fbuf, size_t size) {
 
 
 static void
-process_data(enum expectation expectation, char *fbuf, ssize_t size) {
+process_data(enum expectation expectation, unsigned char *fbuf, ssize_t size) {
 	T_t *st;
 	int ret;
 
@@ -113,7 +113,7 @@ process_data(enum expectation expectation, char *fbuf, ssize_t size) {
 	if(!st) return;
 
 	ret = save_object(st);
-	assert(buf_offset < sizeof(buf));
+	assert(buf_offset < (ssize_t)sizeof(buf));
 	assert(ret == 0);
 
 	switch(expectation) {
@@ -129,7 +129,7 @@ process_data(enum expectation expectation, char *fbuf, ssize_t size) {
 			|| memcmp(buf, fbuf, buf_offset));
 		break;
 	case EXP_OK:
-		assert(buf_offset == size);
+		assert(buf_offset == (ssize_t)size);
 		assert(memcmp(buf, fbuf, buf_offset) == 0);
 		break;
 	}
@@ -142,7 +142,7 @@ process_data(enum expectation expectation, char *fbuf, ssize_t size) {
  */
 static int
 process(const char *fname) {
-	char fbuf[4096];
+	unsigned char fbuf[4096];
 	char *ext = strrchr(fname, '.');
 	enum expectation expectation;
 	int ret;
@@ -175,7 +175,7 @@ process(const char *fname) {
 	rd = fread(fbuf, 1, sizeof(fbuf), fp);
 	fclose(fp);
 
-	assert(rd < sizeof(fbuf));	/* expect small files */
+	assert(rd < (ssize_t)sizeof(fbuf));	/* expect small files */
 
 	process_data(expectation, fbuf, rd);
 

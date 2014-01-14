@@ -102,7 +102,7 @@ main() {
 
 	assert(ret == 0);
 	assert(t1_new.i == 112233);
-	assert(t1_new.any.size == sizeof(test_any_buf1));
+	assert(t1_new.any.size == (ssize_t)sizeof(test_any_buf1));
 	assert(memcmp(t1_new.any.buf, test_any_buf1, sizeof(test_any_buf1)) == 0);
 
 	/*
@@ -121,7 +121,7 @@ main() {
 
 	assert(ret == 0);
 	assert(t1_new.i == -112233);
-	assert(t1_new.any.size == sizeof(test_any_buf2));
+	assert(t1_new.any.size == (ssize_t)sizeof(test_any_buf2));
 	assert(memcmp(t1_new.any.buf, test_any_buf2, sizeof(test_any_buf2)) == 0);
 
 	/*
@@ -160,7 +160,7 @@ main() {
 
 	assert(ret == 0);
 	assert(t2_new.i == 332211);
-	assert(t2_new.any->size == sizeof(test_any_buf1));
+	assert(t2_new.any->size == (ssize_t)sizeof(test_any_buf1));
 	assert(memcmp(t2_new.any->buf, test_any_buf1, sizeof(test_any_buf1)) == 0);
 
 	/*
@@ -180,7 +180,7 @@ main() {
 
 	assert(ret == 0);
 	assert(t2_new.i == 0);
-	assert(t2_new.any->size == sizeof(test_any_buf2));
+	assert(t2_new.any->size == (ssize_t)sizeof(test_any_buf2));
 	assert(memcmp(t2_new.any->buf, test_any_buf2, sizeof(test_any_buf2)) == 0);
 
 	/*

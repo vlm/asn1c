@@ -162,7 +162,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 		assert(t.i.size == 1);
 		assert(t.i.buf[0] == 96);
 		assert(t.s.size == 3);
-		assert(strcmp(t.s.buf, "xyz") == 0);
+		assert(strcmp((char *)t.s.buf, "xyz") == 0);
 		if(buf == buf3) {
 			assert(t.b);
 		} else {

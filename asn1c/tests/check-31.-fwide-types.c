@@ -133,7 +133,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	buf_pos = 0;
 	der_encode(&asn_DEF_Forest, &t,
 		bytes_compare, buf1_reconstr);
-	assert(buf_pos == sizeof(buf1_reconstr));
+	assert(buf_pos == (ssize_t)sizeof(buf1_reconstr));
 
 	asn_fprint(stderr, &asn_DEF_Forest, &t);
 	xer_fprint(stderr, &asn_DEF_Forest, &t);

@@ -93,7 +93,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	if(erval.encoded != sizeof(buf1)) {
 		printf("%d != %d\n", (int)erval.encoded, (int)sizeof(buf1));
 	}
-	assert(erval.encoded == sizeof(buf1));
+	assert(erval.encoded == (ssize_t)sizeof(buf1));
 	for(i = 0; i < (ssize_t)sizeof(buf1); i++) {
 		if(buf1[i] != buf2[i]) {
 			fprintf(stderr, "Recreated buffer content mismatch:\n");

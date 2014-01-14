@@ -61,7 +61,7 @@ check(T_t *tp, uint8_t *buf, size_t size, size_t consumed) {
 	assert(rval.consumed == consumed);
 
 	assert(tp->choice.seq.string.size == 16);
-	assert(strcmp(tp->choice.seq.string.buf, "zzzzzzzzzzzzzzzz") == 0);
+	assert(strcmp((char *)tp->choice.seq.string.buf, "zzzzzzzzzzzzzzzz") == 0);
 	assert(tp->choice.seq.alpha == NULL);
 	assert(tp->choice.seq.beta);
 	assert(*tp->choice.seq.beta == 0x4b4b4b4b);

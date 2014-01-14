@@ -78,7 +78,7 @@ save_object_as(PDU_t *st, enum der_or_xer how) {
 }
 
 static PDU_t *
-load_object_from(enum expectation expectation, char *fbuf, size_t size, enum der_or_xer how) {
+load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size, enum der_or_xer how) {
 	asn_dec_rval_t rval;
 	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
 		asn_TYPE_descriptor_t *, void **, const void *, size_t);
@@ -131,12 +131,12 @@ load_object_from(enum expectation expectation, char *fbuf, size_t size, enum der
 		if(expectation != EXP_BROKEN) {
 			assert(rval.code == RC_OK);
 			if(how == AS_DER) {
-				assert(fbuf_offset == size);
+				assert(fbuf_offset == (ssize_t)size);
 			} else {
 				assert(fbuf_offset - size < 2
-				|| (fbuf_offset + 1 /* "\n" */  == size
+				|| (fbuf_offset + 1 /* "\n" */  == (ssize_t)size
 					&& fbuf[size - 1] == '\n')
-				|| (fbuf_offset + 2 /* "\r\n" */  == size
+				|| (fbuf_offset + 2 /* "\r\n" */  == (ssize_t)size
 					&& fbuf[size - 2] == '\r'
 					&& fbuf[size - 1] == '\n')
 				);
@@ -154,7 +154,9 @@ load_object_from(enum expectation expectation, char *fbuf, size_t size, enum der
 }
 
 static int
-xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
+xer_encoding_equal(void *obufp, size_t osize, void *nbufp, size_t nsize) {
+    char *obuf = obufp;
+    char *nbuf = nbufp;
 	char *oend = obuf + osize;
 	char *nend = nbuf + nsize;
 
@@ -186,7 +188,7 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-process_XER_data(enum expectation expectation, char *fbuf, size_t size) {
+process_XER_data(enum expectation expectation, unsigned char *fbuf, size_t size) {
 	PDU_t *st;
 
 	st = load_object_from(expectation, fbuf, size, AS_XER);
@@ -224,7 +226,7 @@ process_XER_data(enum expectation expectation, char *fbuf, size_t size) {
  */
 static int
 process(const char *fname) {
-	char fbuf[4096];
+	unsigned char fbuf[4096];
 	char *ext = strrchr(fname, '.');
 	enum expectation expectation;
 	int ret;
@@ -257,7 +259,7 @@ process(const char *fname) {
 	rd = fread(fbuf, 1, sizeof(fbuf), fp);
 	fclose(fp);
 
-	assert(rd < sizeof(fbuf));	/* expect small files */
+	assert(rd > 0 && (size_t)rd < sizeof(fbuf));	/* expect small files */
 
 	process_XER_data(expectation, fbuf, rd);
 

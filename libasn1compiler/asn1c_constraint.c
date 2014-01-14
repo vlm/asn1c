@@ -704,8 +704,8 @@ native_long_sign(asn1cnst_range_t *r) {
 	if(r->left.type == ARE_VALUE
 	&& r->left.value >= 0
 	&& r->right.type == ARE_VALUE
-	&& r->right.value > 2147483647UL
-	&& r->right.value <= 4294967295UL) {
+	&& r->right.value > 2147483647
+	&& (unsigned long)r->right.value <= 4294967295UL) {
 		if(r->el_count == 0
 		&& r->left.value == 0
 		&& r->right.value == 4294967295UL)
