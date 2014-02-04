@@ -1,0 +1,33 @@
+
+-- OK: Everything is fine
+
+-- Check restrictions for Integer types using MDER
+
+ModuleIntegersMDER DEFINITIONS ::=
+BEGIN
+
+	-- 8-bit unsigned integer
+	INT-U8 ::= INTEGER (0..255)
+	INT-GOOD ::= INT-U8
+
+	-- 8-bit signed integer
+	INT-I8 ::= INTEGER (-128..127)
+
+	-- 16-bit unsigned integer
+	INT-U16 ::= INTEGER (0..65535)
+
+	-- 16-bit signed integer
+	INT-I16 ::= INTEGER (-32768..32767)
+
+	-- 32-bit unsigned integer
+	INT-U32 ::= INTEGER (0..4294967295)
+
+	-- 32-bit signed integer
+	INT-I32 ::= INTEGER (-2147483648..2147483647)
+
+
+	-- Example of invalid MDER integer ranges
+	INT-BAD1 ::= INTEGER (0..33)
+	INT-BAD2 ::= INTEGER (-5..45)
+	INT-BAD3 ::= INTEGER
+END

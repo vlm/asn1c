@@ -42,9 +42,8 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 
 asn_dec_rval_t
 INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
-	size_t size, asn_mder_contraints_t constr) {
-
+		asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+		size_t size, asn_mder_contraints_t constr) {
 	INTEGER_t *integer = (INTEGER_t *)*sptr;
 	asn_dec_rval_t rval;
 	mder_restricted_int *rint;
@@ -54,8 +53,10 @@ INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		void *nonconstbuf;
 	} unconst_buf;
 
+	/* specific constraints prevail */
 	rint = (constr) ? (mder_restricted_int *)constr :
 		(mder_restricted_int *)td->mder_constraints;
+
 	if (!rint || *rint == INT_INVALID) {
 		rval.code = RC_FAIL;
 		rval.consumed = 0;
@@ -78,6 +79,7 @@ INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		rval.consumed = 0;
 		return rval;
 	}
+
 	unconst_buf.constbuf = buf_ptr;
 	integer->buf = (uint8_t *)unconst_buf.nonconstbuf;
 	integer->size = length;
@@ -93,8 +95,8 @@ INTEGER_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_enc_rval_t
 INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-	asn_mder_contraints_t constr,
-	asn_app_consume_bytes_f *cb, void *app_key) {
+		asn_mder_contraints_t constr,
+		asn_app_consume_bytes_f *cb, void *app_key) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	mder_restricted_int *rint;
 	int size, shift;
@@ -102,7 +104,7 @@ INTEGER_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	ASN_DEBUG("%s %s as INTEGER",
 		cb?"Encoding":"Estimating", td->name);
 
-	/* specifics constraints prevail */
+	/* specific constraints prevail */
 	rint = (constr) ? (mder_restricted_int *)constr :
 		(mder_restricted_int *)td->mder_constraints;
 

@@ -1,0 +1,16 @@
+
+-- OK: Everything is fine
+
+-- Check restrictions for Octet String types using MDER
+
+ModuleOctetStringMDER DEFINITIONS ::=
+BEGIN
+
+	-- MDER distinguishes between the fixed-length (size-constrained)
+	-- OCTET STRING and the variable-length OCTET STRING
+
+	Fixed-sized-label ::= OCTET STRING (SIZE(12))
+	Fixed-sized-label2 ::= OCTET STRING (SIZE(4))
+	Fixed-sized-label3 ::= OCTET STRING (SIZE(0))
+	Variable-label ::= OCTET STRING
+END

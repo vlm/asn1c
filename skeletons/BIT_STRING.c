@@ -76,13 +76,13 @@ static char *_bit_pattern[16] = {
 
 asn_dec_rval_t
 BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
-	size_t size, asn_mder_contraints_t constr) {
-
+		asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+		size_t size, asn_mder_contraints_t constr) {
 	asn_dec_rval_t rval;
 	BIT_STRING_t *bs = (BIT_STRING_t *)*sptr;
 	mder_restricted_bit_str *rbs;
 
+	/* specific constraints prevail */
 	rbs = (constr) ? (mder_restricted_bit_str *)constr :
 		(mder_restricted_bit_str *)td->mder_constraints;
 
@@ -101,8 +101,10 @@ BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		rval.consumed = 0;
 		return rval;
 	}
+
 	if (bs->buf)
 		free(bs->buf);
+
 	bs->buf = CALLOC(1, bs->size);
 	if (!memcpy(bs->buf, buf_ptr, bs->size))
 		_ASN_DECODE_FAILED;
@@ -115,9 +117,8 @@ BIT_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 asn_enc_rval_t
 BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-			asn_mder_contraints_t constr,
-			asn_app_consume_bytes_f *cb, void *app_key)
-{
+		asn_mder_contraints_t constr,
+		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
 	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
 	mder_restricted_bit_str *rbs;
@@ -125,7 +126,7 @@ BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	ASN_DEBUG("%s %s as BIT STRING",
 		cb?"Encoding":"Estimating", td->name);
 
-	/* specifics constraints prevail */
+	/* specific constraints prevail */
 	rbs = (constr) ? (mder_restricted_bit_str *)constr :
 		(mder_restricted_bit_str *)td->mder_constraints;
 
@@ -142,6 +143,7 @@ BIT_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 		_ASN_CALLBACK(st->buf, (ssize_t) *rbs);
 
 	_ASN_ENCODED_OK(er);
+
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }

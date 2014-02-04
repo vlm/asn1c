@@ -598,11 +598,9 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
  */
 asn_dec_rval_t
 SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr,
-	const void *ptr, size_t size, asn_mder_contraints_t constr) {
-
+		asn_TYPE_descriptor_t *td, void **sptr,
+		const void *ptr, size_t size, asn_mder_contraints_t constr) {
 	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
-
 	void *st = *sptr;	/* Target structure. */
 	asn_dec_rval_t rval;	/* Return code */
 	asn_struct_ctx_t *ctx;
@@ -669,9 +667,8 @@ SEQUENCE_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_enc_rval_t
 SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
-	void *sptr, asn_mder_contraints_t constr,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-
+		void *sptr, asn_mder_contraints_t constr,
+		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t erval;
 	int edx;
 
@@ -690,7 +687,8 @@ SEQUENCE_encode_mder(asn_TYPE_descriptor_t *td,
 
 		if (elm->flags & ATF_POINTER) {
 			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			if(!memb_ptr)
+				continue;
 		} else
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 

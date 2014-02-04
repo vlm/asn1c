@@ -72,7 +72,12 @@ enum asn1c_flags {
 	 * -fincludes-quoted
 	 * Avoid generating #include <foo>, generate "foo" instead.
 	 */
-	A1C_INCLUDES_QUOTED	= 0x10000
+	A1C_INCLUDES_QUOTED	= 0x10000,
+	/*
+	 * -gen-MDER
+	 * Generate MDER support code
+	 */
+	A1C_GEN_MDER		= 0x20000
 };
 
 /*

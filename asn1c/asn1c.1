@@ -30,7 +30,7 @@ and other encoding rules.
 .TP
 \fICodecs Generation Options\fR
 .br
-.B \-gen-PER \-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}
+.B \-gen-MDER \-gen-PER \-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}
 .TP
 \fIOutput Options\fR
 .br
@@ -115,6 +115,9 @@ Enable unnamed unions in the definitions of target language's structures.
 .B \-fskeletons-copy
 Copy support files (skeletons) rather than symlink them.
 .SH CODECS GENERATION OPTIONS
+.TP
+.B \-gen-MDER
+Generate Medical Device Encoding Rules (MDER) support code.
 .TP
 .B \-gen-PER
 Generate Packed Encoding Rules (PER) support code.

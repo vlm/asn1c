@@ -105,9 +105,8 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 
 asn_dec_rval_t
 SEQUENCE_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr,
-	const void *ptr, size_t size, asn_mder_contraints_t constr) {
-
+		asn_TYPE_descriptor_t *td, void **sptr,
+		const void *ptr, size_t size, asn_mder_contraints_t constr) {
 	asn_TYPE_member_t *elm = td->elements;
 	asn_anonymous_sequence_ *list = *((asn_anonymous_sequence_ **)sptr);
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
@@ -133,9 +132,11 @@ SEQUENCE_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 	if (ctx->phase == 1)
 		goto phase1;
+
 	if (size < 4) {
 		RETURN(RC_WMORE);
 	}
+
 	MDER_INPUT_INT_U16(list->count, ptr);
 	ADVANCE_MDER(2);
 	MDER_INPUT_INT_U16(rec_size, ptr);
@@ -144,10 +145,12 @@ SEQUENCE_OF_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 	/* Allocate memory for the return type*/
 	if (list->array)
 		free(list->array);
+
 	list->size = list->count * sizeof(*list->array);
 	list->array = CALLOC(rec_size, sizeof(*list->array));
 	if (!list->array)
 		RETURN(RC_FAIL);
+
 	ctx->phase = 1;
 
 phase1:
@@ -169,8 +172,8 @@ phase1:
  */
 asn_enc_rval_t
 SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-	asn_mder_contraints_t constr,
-	asn_app_consume_bytes_f *cb, void *app_key) {
+		asn_mder_contraints_t constr,
+		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_TYPE_member_t *elm = td->elements;
 	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
 	int edx, computed_size = 0, encoding_size = 0;
@@ -184,12 +187,14 @@ SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	 */
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
-		if(!memb_ptr) continue;
+		if(!memb_ptr)
+			continue;
+
 		er = elm->type->mder_encoder(elm->type, memb_ptr,
-			elm->mder_constraints,
-			0, 0);
+						elm->mder_constraints, 0, 0);
 		if(er.encoded == -1)
 			return er;
+
 		computed_size += er.encoded;
 	}
 
@@ -209,12 +214,14 @@ SEQUENCE_OF_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	 */
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
-		if(!memb_ptr) continue;
+		if(!memb_ptr)
+			continue;
+
 		er = elm->type->mder_encoder(elm->type, memb_ptr,
-			elm->mder_constraints,
-			cb, app_key);
+					elm->mder_constraints, cb, app_key);
 		if(er.encoded == -1)
 			return er;
+
 		encoding_size += er.encoded;
 	}
 

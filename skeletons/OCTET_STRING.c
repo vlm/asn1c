@@ -583,14 +583,16 @@ cb_failed:
 
 asn_dec_rval_t
 OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
-	size_t size, asn_mder_contraints_t constr) {
-
+		asn_TYPE_descriptor_t *td, void **sptr, const void *buf_ptr,
+		size_t size, asn_mder_contraints_t constr) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
-	mder_octet_str *oct = (mder_octet_str *)td->mder_constraints;
+	mder_octet_str *oct;
 	asn_dec_rval_t rval;
 	const char *data;
 
+	/* specifics constraints prevail */
+	oct = (constr) ? (mder_octet_str *)constr :
+		(mder_octet_str *)td->mder_constraints;
 
 	/*
 	 * Create the string if does not exist.
@@ -607,9 +609,7 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 			rval.consumed = 0;
 			return rval;
 		}
-		st->size = 0;
-		st->size = ((const uint8_t *)buf_ptr)[0];
-		st->size = (st->size << 8) | ((const uint8_t *)buf_ptr)[1];
+		MDER_INPUT_INT_U16(st->size, buf_ptr);
 		rval.consumed = 2;
 		data = (const char *)buf_ptr + 2;
 	} else {
@@ -617,6 +617,7 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 		rval.consumed = 0;
 		data = (const char *)buf_ptr;
 	}
+
 	if (size < (st->size + rval.consumed)) {
 		rval.code = RC_WMORE;
 		rval.consumed = 0;
@@ -633,9 +634,8 @@ OCTET_STRING_decode_mder(asn_codec_ctx_t *opt_codec_ctx,
 
 asn_enc_rval_t
 OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
-			asn_mder_contraints_t constr,
-			asn_app_consume_bytes_f *cb, void *app_key)
-{
+		asn_mder_contraints_t constr,
+		asn_app_consume_bytes_f *cb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	mder_octet_str *oct;
 	asn_enc_rval_t er;
@@ -671,6 +671,7 @@ OCTET_STRING_encode_mder(asn_TYPE_descriptor_t *td, void *sptr,
 	_ASN_CALLBACK(st->buf, st->size);
 
 	_ASN_ENCODED_OK(er);
+
 cb_failed:
 	_ASN_ENCODE_FAILED;
 }

@@ -10,9 +10,8 @@
  * The MDER decoder of any type.
  */
 asn_dec_rval_t
-mder_decode(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *type_descriptor,
-	void **struct_ptr, const void *ptr, size_t size) {
+mder_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+				void **sptr, const void *buffer, size_t size) {
 	asn_codec_ctx_t s_codec_ctx;
 
 	/*
@@ -34,10 +33,13 @@ mder_decode(asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Invoke type-specific decoder.
 	 */
-	return type_descriptor->mder_decoder(opt_codec_ctx, type_descriptor,
-		struct_ptr,	/* Pointer to the destination structure */
-		ptr, size,	/* Buffer and its size */
-		0		/* Default tag mode is 0 */
+	if(!td->mder_decoder)
+		_ASN_DECODE_FAILED;	/* MDER is not compiled in */
+
+	return td->mder_decoder(opt_codec_ctx, td,
+		sptr,		/* Pointer to the destination structure */
+		buffer, size,	/* Buffer and its size */
+		0		/* No specifics constraints */
 		);
 }
 
