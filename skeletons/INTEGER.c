@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003-2014 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -595,30 +595,35 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 	}
 
-	/* X.691, #12.2.2 */
+	/* X.691-2008/11, #13.2.2, constrained whole number */
 	if(ct && ct->flags != APC_UNCONSTRAINED) {
-		/* #10.5.6 */
+		/* #11.5.6 */
 		ASN_DEBUG("Integer with range %d bits", ct->range_bits);
 		if(ct->range_bits >= 0) {
-			long value;
-			if(ct->range_bits == 32) {
-				long lhalf;
-				value = per_get_few_bits(pd, 16);
-				if(value < 0) _ASN_DECODE_STARVED;
-				lhalf = per_get_few_bits(pd, 16);
-				if(lhalf < 0) _ASN_DECODE_STARVED;
-				value = (value << 16) | lhalf;
-			} else {
-				value = per_get_few_bits(pd, ct->range_bits);
-				if(value < 0) _ASN_DECODE_STARVED;
-			}
-			ASN_DEBUG("Got value %ld + low %ld",
-				value, ct->lower_bound);
-			value += ct->lower_bound;
-			if((specs && specs->field_unsigned)
-				? asn_ulong2INTEGER(st, value)
-				: asn_long2INTEGER(st, value))
+			if((size_t)ct->range_bits > 8 * sizeof(unsigned long))
 				_ASN_DECODE_FAILED;
+
+			if(specs && specs->field_unsigned) {
+				unsigned long uvalue;
+				if(uper_get_constrained_whole_number(pd,
+					&uvalue, ct->range_bits))
+					_ASN_DECODE_STARVED;
+				ASN_DEBUG("Got value %lu + low %ld",
+					uvalue, ct->lower_bound);
+				uvalue += ct->lower_bound;
+				if(asn_ulong2INTEGER(st, uvalue))
+					_ASN_DECODE_FAILED;
+			} else {
+				unsigned long svalue;
+				if(uper_get_constrained_whole_number(pd,
+					&svalue, ct->range_bits))
+					_ASN_DECODE_STARVED;
+				ASN_DEBUG("Got value %ld + low %ld",
+					svalue, ct->lower_bound);
+				svalue += ct->lower_bound;
+				if(asn_long2INTEGER(st, svalue))
+					_ASN_DECODE_FAILED;
+			}
 			return rval;
 		}
 	} else {
@@ -725,22 +730,14 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 	}
 
 
-	/* X.691, #12.2.2 */
+	/* X.691-11/2008, #13.2.2, test if constrained whole number */
 	if(ct && ct->range_bits >= 0) {
-		/* #10.5.6 */
+		/* #11.5.6 -> #11.3 */
 		ASN_DEBUG("Encoding integer with range %d bits",
 			ct->range_bits);
-		if(ct->range_bits == 32) {
-			/* TODO: extend to >32 bits */
-			long v = value - ct->lower_bound;
-			if(per_put_few_bits(po, v >> 1, 31)
-			|| per_put_few_bits(po, v, 1))
-				_ASN_ENCODE_FAILED;
-		} else {
-			if(per_put_few_bits(po, value - ct->lower_bound,
-				ct->range_bits))
-				_ASN_ENCODE_FAILED;
-		}
+		long v = value - ct->lower_bound;
+		if(uper_put_constrained_whole_number_s(po, v, ct->range_bits))
+			_ASN_ENCODE_FAILED;
 		_ASN_ENCODED_OK(er);
 	}
 

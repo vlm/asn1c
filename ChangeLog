@@ -8,6 +8,7 @@
     * Default constraint checking fix.
       Thanks to Bartosz Marcinkiewicz <bma@megawatt.com.pl>
     * Get rid of non-standard pointer arithmetics on void* pointer.
+    * PER-encoding of integers wider than 32 bits.
 
 0.9.24:	2013-Mar-16
 

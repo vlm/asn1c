@@ -1,0 +1,161 @@
+
+/*** <<< INCLUDES [T] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [T] >>> ***/
+
+typedef struct T {
+	INTEGER_t	 unsigned33;
+	INTEGER_t	 unsigned42;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
+
+/*** <<< CODE [T] >>> ***/
+
+static int
+memb_unsigned33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
+	long value;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(asn_INTEGER2long(st, &value)) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((value >= 0 && value <= 5000000000)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_unsigned42_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
+	long value;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(asn_INTEGER2long(st, &value)) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((value >= 0 && value <= 3153600000000)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< CTDEFS [T] >>> ***/
+
+static asn_per_constraints_t asn_PER_memb_unsigned33_constr_2 GCC_NOTUSED = {
+	{ APC_CONSTRAINED,	 33, -1,  0,  5000000000 }	/* (0..5000000000) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+static asn_per_constraints_t asn_PER_memb_unsigned42_constr_3 GCC_NOTUSED = {
+	{ APC_CONSTRAINED,	 42, -1,  0,  3153600000000 }	/* (0..3153600000000) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [T] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_T_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct T, unsigned33),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = memb_unsigned33_constraint_1,
+		.per_constraints = &asn_PER_memb_unsigned33_constr_2,
+		.default_value = 0,
+		.name = "unsigned33"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, unsigned42),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = memb_unsigned42_constraint_1,
+		.per_constraints = &asn_PER_memb_unsigned42_constr_3,
+		.default_value = 0,
+		.name = "unsigned42"
+		},
+};
+static ber_tlv_tag_t asn_DEF_T_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* unsigned33 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* unsigned42 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
+	sizeof(struct T),
+	offsetof(struct T, _asn_ctx),
+	asn_MAP_T_tag2el_1,
+	2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
+	"T",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	SEQUENCE_decode_uper,
+	SEQUENCE_encode_uper,
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_T_tags_1,
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	asn_DEF_T_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_T_1,
+	2,	/* Elements count */
+	&asn_SPC_T_specs_1	/* Additional specs */
+};
+
