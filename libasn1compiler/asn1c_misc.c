@@ -359,9 +359,13 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	 */
 	range = asn1constraint_compute_PER_range(expr->expr_type,
 		expr->combined_constraints, ACT_EL_RANGE, 0, 0, 0);
+
 	if(!range
+	/* Commenting out
+    || range->extensible
+     * because this may or may not indicate wide type.
+     */
 	|| range->empty_constraint
-	|| range->extensible
 	|| range->incompatible
 	|| range->not_PER_visible
 	) {
@@ -379,7 +383,7 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 		&& left.value >= 0
 	&& right.type == ARE_VALUE
 		&& right.value > 2147483647
-		&& (unsigned long)right.value <= 4294967295UL)
+		&& right.value <= 4294967295UL)
 		return FL_FITS_UNSIGN;
 		
 
