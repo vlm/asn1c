@@ -365,6 +365,7 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
     || range->extensible
      * because this may or may not indicate wide type.
      */
+    || (range->extensible && (arg->flags & A1C_USE_WIDE_TYPES))
 	|| range->empty_constraint
 	|| range->incompatible
 	|| range->not_PER_visible
