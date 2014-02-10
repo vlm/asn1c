@@ -26,8 +26,20 @@ static unsigned long i2ul(const INTEGER_t *i) {
     return l;
 }
 
+static long i2l(const INTEGER_t *i) {
+    long l;
+    int ret = asn_INTEGER2long(i, &l);
+    assert(ret == 0);
+    return l;
+}
+
 static void ul2i(INTEGER_t *i, unsigned long l) {
     int ret = asn_ulong2INTEGER(i, l);
+    assert(ret == 0);
+}
+
+static void l2i(INTEGER_t *i, long l) {
+    int ret = asn_long2INTEGER(i, l);
     assert(ret == 0);
 }
 
@@ -40,7 +52,7 @@ verify(int testNo, T_t *ti) {
 
 	fprintf(stderr, "%d IN: { %lu, %lu, %ld, %ld }\n", testNo,
 		i2ul(&ti->unsigned33), i2ul(&ti->unsigned42),
-		i2ul(&ti->signed33), ti->signed33ext
+		i2l(&ti->signed33), i2l(&ti->signed33ext)
     );
 
 	er = uper_encode_to_buffer(&asn_DEF_T, ti, buf, sizeof buf);
@@ -55,13 +67,13 @@ verify(int testNo, T_t *ti) {
 	fprintf(stderr, "%d OUT: { %lu, %lu, %ld, %ld } vs { %lu, %lu, %ld, %ld }\n",
 		testNo,
 		i2ul(&ti->unsigned33), i2ul(&ti->unsigned42),
-		i2ul(&ti->signed33), ti->signed33ext,
+		i2l(&ti->signed33), i2l(&ti->signed33ext),
 		i2ul(&to->unsigned33), i2ul(&to->unsigned42),
-		i2ul(&to->signed33), to->signed33ext);
+		i2l(&to->signed33), i2l(&to->signed33ext));
 	assert(i2ul(&ti->unsigned33) == i2ul(&to->unsigned33));
 	assert(i2ul(&ti->unsigned42) == i2ul(&to->unsigned42));
-	assert(i2ul(&ti->signed33) == i2ul(&to->signed33));
-	assert(ti->signed33ext == to->signed33ext);
+	assert(i2l(&ti->signed33) == i2l(&to->signed33));
+	assert(i2l(&ti->signed33ext) == i2l(&to->signed33ext));
 
 	xer_fprint(stderr, &asn_DEF_T, ti);
 	xer_fprint(stderr, &asn_DEF_T, to);
@@ -72,8 +84,10 @@ NO_encode(int testNo, T_t *ti) {
 	asn_enc_rval_t er;
 	unsigned char buf[16];
 
-	fprintf(stderr, "%d IN: { %lu, %lu }\n", testNo,
-		i2ul(&ti->unsigned33), i2ul(&ti->unsigned42));
+	fprintf(stderr, "%d IN: { %lu, %lu, %ld, %ld }\n", testNo,
+		i2ul(&ti->unsigned33), i2ul(&ti->unsigned42),
+		i2l(&ti->signed33), i2l(&ti->signed33ext)
+    );
 
 	er = uper_encode_to_buffer(&asn_DEF_T, ti, buf, sizeof buf);
 	assert(er.encoded == -1);
@@ -85,68 +99,69 @@ int main() {
     memset(&ti, 0, sizeof(ti));
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  0);
-    ul2i(&ti.signed33,    0);
-    ti.signed33ext      = 0;
+    l2i(&ti.signed33,    0);
+    l2i(&ti.signed33ext, 0);
 	verify(1, &ti);
 
     ul2i(&ti.unsigned33,  1);
     ul2i(&ti.unsigned42,  1);
-    ul2i(&ti.signed33,    1);
-    ti.signed33ext      = 1;
+    l2i(&ti.signed33,    1);
+    l2i(&ti.signed33ext, 1);
 	verify(2, &ti);
 
     ul2i(&ti.unsigned33,  5000000000);
     ul2i(&ti.unsigned42,  3153600000000);
-    ul2i(&ti.signed33,    4000000000);
-    ti.signed33ext      = 4000000000;
+    l2i(&ti.signed33,    4000000000);
+    l2i(&ti.signed33ext, 4000000000);
 	verify(3, &ti);
 
     ul2i(&ti.unsigned33, -1);
     ul2i(&ti.unsigned42,  0);
-    ul2i(&ti.signed33,    0);
-    ti.signed33ext      = 0;
+    l2i(&ti.signed33,    0);
+    l2i(&ti.signed33ext, 0);
 	NO_encode(4, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42, -1);
-    ul2i(&ti.signed33,    0);
-    ti.signed33ext      = 0;
+    l2i(&ti.signed33,    0);
+    l2i(&ti.signed33ext, 0);
 	NO_encode(5, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  0);
-    ul2i(&ti.signed33,    -4000000000-1);
-    ti.signed33ext      = 0;
+    l2i(&ti.signed33,    -4000000000-1);
+    l2i(&ti.signed33ext, 0);
 	NO_encode(6, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  0);
-    ul2i(&ti.signed33,    0);
-    ti.signed33ext      = -4000000000-1;
+    l2i(&ti.signed33,    0);
+    l2i(&ti.signed33ext, -4000000000-1);
+    assert(ti.signed33ext.size == 5);
 	verify(7, &ti); /* signed33ext is extensible */
 
     ul2i(&ti.unsigned33,  5000000000 + 1);
     ul2i(&ti.unsigned42,  0);
-    ul2i(&ti.signed33,    0);
-    ti.signed33ext      = 0;
+    l2i(&ti.signed33,    0);
+    l2i(&ti.signed33ext, 0);
 	NO_encode(8, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  3153600000000 + 1);
-    ul2i(&ti.signed33,    0);
-    ti.signed33ext      = 0;
+    l2i(&ti.signed33,    0);
+    l2i(&ti.signed33ext, 0);
 	NO_encode(9, &ti);
 
     ul2i(&ti.unsigned33,  5000000000 - 1);
     ul2i(&ti.unsigned42,  3153600000000 - 1);
-    ul2i(&ti.signed33,    4000000000 - 1);
-    ti.signed33ext      = 4000000000 - 1;
+    l2i(&ti.signed33,    4000000000 - 1);
+    l2i(&ti.signed33ext, 4000000000 - 1);
 	verify(10, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  0);
-    ul2i(&ti.signed33,    0);
-    ti.signed33ext      = 4000000000 + 1;
+    l2i(&ti.signed33,    0);
+    l2i(&ti.signed33ext, 4000000000 + 1);
 	verify(11, &ti);
 
 	return 0;
