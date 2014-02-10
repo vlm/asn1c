@@ -2,6 +2,7 @@
 /*** <<< INCLUDES [T] >>> ***/
 
 #include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 
 /*** <<< TYPE-DECLS [T] >>> ***/
@@ -9,6 +10,8 @@
 typedef struct T {
 	INTEGER_t	 unsigned33;
 	INTEGER_t	 unsigned42;
+	INTEGER_t	 signed33;
+	long	 signed33ext;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -82,6 +85,62 @@ memb_unsigned42_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 }
 
+static int
+memb_signed33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
+	long value;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(asn_INTEGER2long(st, &value)) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value too large (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((value >= -4000000000 && value <= 4000000000)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_signed33ext_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= -4000000000 && value <= 4000000000)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
 
 /*** <<< CTDEFS [T] >>> ***/
 
@@ -92,6 +151,16 @@ static asn_per_constraints_t asn_PER_memb_unsigned33_constr_2 GCC_NOTUSED = {
 };
 static asn_per_constraints_t asn_PER_memb_unsigned42_constr_3 GCC_NOTUSED = {
 	{ APC_CONSTRAINED,	 42, -1,  0,  3153600000000 }	/* (0..3153600000000) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+static asn_per_constraints_t asn_PER_memb_signed33_constr_4 GCC_NOTUSED = {
+	{ APC_CONSTRAINED,	 33, -1, -4000000000,  4000000000 }	/* (-4000000000..4000000000) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+static asn_per_constraints_t asn_PER_memb_signed33ext_constr_5 GCC_NOTUSED = {
+	{ APC_CONSTRAINED | APC_EXTENSIBLE,  33, -1, -4000000000,  4000000000 }	/* (-4000000000..4000000000,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
@@ -117,19 +186,39 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.default_value = 0,
 		.name = "unsigned42"
 		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, signed33),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = memb_signed33_constraint_1,
+		.per_constraints = &asn_PER_memb_signed33_constr_4,
+		.default_value = 0,
+		.name = "signed33"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, signed33ext),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_NativeInteger,
+		.memb_constraints = memb_signed33ext_constraint_1,
+		.per_constraints = &asn_PER_memb_signed33ext_constr_5,
+		.default_value = 0,
+		.name = "signed33ext"
+		},
 };
 static ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* unsigned33 */
-    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* unsigned42 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* unsigned42 */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* signed33 */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 3, 0, 0 } /* signed33ext */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
 	sizeof(struct T),
 	offsetof(struct T, _asn_ctx),
 	asn_MAP_T_tag2el_1,
-	2,	/* Count of tags in the map */
+	4,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -155,7 +244,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
 	0,	/* No PER visible constraints */
 	asn_MBR_T_1,
-	2,	/* Elements count */
+	4,	/* Elements count */
 	&asn_SPC_T_specs_1	/* Additional specs */
 };
 

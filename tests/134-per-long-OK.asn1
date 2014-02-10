@@ -15,7 +15,9 @@ BEGIN
     -- Supported only on 64-bit platforms.
 	T ::= SEQUENCE {
 		unsigned33  INTEGER (0..5000000000),    -- range 33 bits
-		unsigned42  INTEGER (0..3153600000000)  -- range 42 bits
+		unsigned42  INTEGER (0..3153600000000), -- range 42 bits
+		signed33    INTEGER (-4000000000..4000000000), -- 33 bits
+		signed33ext INTEGER (-4000000000..4000000000,...)
 	}
 
 END

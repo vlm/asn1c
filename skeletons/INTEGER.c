@@ -733,10 +733,10 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 	/* X.691-11/2008, #13.2.2, test if constrained whole number */
 	if(ct && ct->range_bits >= 0) {
 		/* #11.5.6 -> #11.3 */
-		ASN_DEBUG("Encoding integer with range %d bits",
-			ct->range_bits);
-		long v = value - ct->lower_bound;
-		if(uper_put_constrained_whole_number_s(po, v, ct->range_bits))
+		ASN_DEBUG("Encoding integer %ld (%lu) with range %d bits",
+			value, value - ct->lower_bound, ct->range_bits);
+		unsigned long v = value - ct->lower_bound;
+		if(uper_put_constrained_whole_number_u(po, v, ct->range_bits))
 			_ASN_ENCODE_FAILED;
 		_ASN_ENCODED_OK(er);
 	}
