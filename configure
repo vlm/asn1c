@@ -635,6 +635,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+TEST_64BIT_FALSE
+TEST_64BIT_TRUE
 TESTSUITE_CFLAGS
 ADD_CFLAGS
 LEXLIB
@@ -13096,6 +13098,40 @@ _ACEOF
 fi
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking size of long is longer than 32 bit" >&5
+$as_echo_n "checking size of long is longer than 32 bit... " >&6; }
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include "confdefs.h"
+#include <sys/types.h>
+
+int
+main ()
+{
+switch (0) case 0: case (sizeof ($1) >= 8):;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  WIDE_LONG=yes
+else
+  WIDE_LONG=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $WIDE_LONG" >&5
+$as_echo "$WIDE_LONG" >&6; }
+ if test x$WIDE_LONG = xyes; then
+  TEST_64BIT_TRUE=
+  TEST_64BIT_FALSE='#'
+else
+  TEST_64BIT_TRUE='#'
+  TEST_64BIT_FALSE=
+fi
+
+
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing getopt" >&5
 $as_echo_n "checking for library containing getopt... " >&6; }
 if ${ac_cv_search_getopt+:} false; then :
@@ -13320,6 +13356,10 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
+if test -z "${TEST_64BIT_TRUE}" && test -z "${TEST_64BIT_FALSE}"; then
+  as_fn_error $? "conditional \"TEST_64BIT\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 
 : "${CONFIG_STATUS=./config.status}"
 ac_write_fail=0

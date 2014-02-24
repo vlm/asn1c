@@ -12,13 +12,6 @@
 
 #include <T.h>
 
-#ifndef  _LP64
-int main() {
-    assert(sizeof(void *) < 8);
-    return;
-}
-#else   /* 64-bit platform */
-
 static unsigned long i2ul(const INTEGER_t *i) {
     unsigned long l;
     int ret = asn_INTEGER2ulong(i, &l);
@@ -167,4 +160,3 @@ int main() {
 	return 0;
 }
 
-#endif  /* 64-bit platform */

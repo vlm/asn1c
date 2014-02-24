@@ -33,6 +33,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@TEST_64BIT_TRUE@am__append_1 = check64-*.c
 subdir = asn1c/tests
 DIST_COMMON = README $(dist_check_SCRIPTS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -174,7 +175,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 dist_check_SCRIPTS = check-assembly.sh
 TESTS_ENVIRONMENT = CC="${CC}" CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS} -Wno-error=unused-variable" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
-TESTS = check-*.c
+TESTS = check-*.c $(am__append_1)
 EXTRA_DIST = \
 	check-*.c*		\
 	data-62			\
