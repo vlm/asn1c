@@ -44,14 +44,15 @@ while(<>) {
 			$inasn = 1;
 		} elsif(/^[ \t]*([A-Z][A-Za-z0-9-]*).*{[ \t]*iso/
 		|| /^[ \t]*{[ \t]*iso/) {
+			my @a = ($_);
 			$modName = $1;
 			unless(length($modName)) {
 				next unless $prevLine =~
 					/^[ \t]*([A-Z][A-Za-z0-9-]*)[ \t]*$/;
 				$modName = $1;
+				unshift(@a, $prevLine);
 			}
 			$currentFname = $rfcid . $modName . ".asn1";
-			my @a = ($_);
 			my $i;
 			for($i = 0; $i < 8; $i++) {
 				$_ = <>;
