@@ -65,9 +65,9 @@ OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 
 int
-OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbufp, unsigned int rvsize) {
+OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbufp, unsigned int rvsize) {
 	unsigned LE GCC_NOTUSED = 1; /* Little endian (x86) */
-	uint8_t *arcend = arcbuf + arclen;	/* End of arc */
+	const uint8_t *arcend = arcbuf + arclen;	/* End of arc */
 	unsigned int cache = 0;	/* No more than 14 significant bits */
 	unsigned char *rvbuf = (unsigned char *)rvbufp;
 	unsigned char *rvstart = rvbuf;	/* Original start of the value buffer */
@@ -181,7 +181,7 @@ OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen, signed in
 }
 
 ssize_t
-OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
+OBJECT_IDENTIFIER__dump_arc(const uint8_t *arcbuf, int arclen, int add,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	char scratch[64];	/* Conservative estimate */
 	unsigned long accum;	/* Bits accumulator */
@@ -212,7 +212,7 @@ OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
 }
 
 int
-OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen, int add,
+OBJECT_IDENTIFIER_print_arc(const uint8_t *arcbuf, int arclen, int add,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 
 	if(OBJECT_IDENTIFIER__dump_arc(arcbuf, arclen, add, cb, app_key) < 0)
@@ -360,7 +360,7 @@ OBJECT_IDENTIFIER_print(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 int
-OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *oid, void *arcs,
+OBJECT_IDENTIFIER_get_arcs(const OBJECT_IDENTIFIER_t *oid, void *arcs,
 		unsigned int arc_type_size, unsigned int arc_slots) {
 	void *arcs_end = (char *)arcs + (arc_type_size * arc_slots);
 	int num_arcs = 0;

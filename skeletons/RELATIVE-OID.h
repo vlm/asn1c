@@ -25,7 +25,7 @@ xer_type_encoder_f RELATIVE_OID_encode_xer;
  **********************************/
 
 /* See OBJECT_IDENTIFIER_get_arcs() function in OBJECT_IDENTIFIER.h */
-int RELATIVE_OID_get_arcs(RELATIVE_OID_t *_roid,
+int RELATIVE_OID_get_arcs(const RELATIVE_OID_t *_roid,
 	void *arcs, unsigned int arc_type_size, unsigned int arc_slots);
 
 /* See OBJECT_IDENTIFIER_set_arcs() function in OBJECT_IDENTIFIER.h */

@@ -73,7 +73,7 @@ typedef int (asn_struct_print_f)(
  * Do not use it in your application.
  */
 typedef ber_tlv_tag_t (asn_outmost_tag_f)(
-		struct asn_TYPE_descriptor_s *type_descriptor,
+		const struct asn_TYPE_descriptor_s *type_descriptor,
 		const void *struct_ptr, int tag_mode, ber_tlv_tag_t tag);
 /* The instance of the above function type; used internally. */
 asn_outmost_tag_f asn_TYPE_outmost_tag;

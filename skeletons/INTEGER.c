@@ -106,7 +106,7 @@ static const asn_INTEGER_enum_map_t *INTEGER_map_enum2value(asn_INTEGER_specific
  * INTEGER specific human-readable output.
  */
 static ssize_t
-INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key, int plainOrXER) {
+INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key, int plainOrXER) {
 	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	char scratch[32];	/* Enough for 64-bit integer */
 	uint8_t *buf = st->buf;
