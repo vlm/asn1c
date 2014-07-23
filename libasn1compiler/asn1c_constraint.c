@@ -315,7 +315,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 
 		untl = (range_stop - range_start) + 1;
 		untl += (untl % 16)?16 - (untl % 16):0;
-		OUT("static int permitted_alphabet_table_%d[%d] = {\n",
+		OUT("static const int permitted_alphabet_table_%d[%d] = {\n",
 			arg->expr->_type_unique_index, max_table_size);
 		for(n = 0; n < untl; n++) {
 			cardinal += table[n] ? 1 : 0;
@@ -347,7 +347,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		if((arg->flags & A1C_GEN_PER)
 		&& (etype & ASN_STRING_KM_MASK)) {
 		    int c;
-		    OUT("static int permitted_alphabet_code2value_%d[%d] = {\n",
+		    OUT("static const int permitted_alphabet_code2value_%d[%d] = {\n",
 			arg->expr->_type_unique_index, cardinal);
 		    for(n = c = 0; c < max_table_size; c++) {
 			if(table[c]) {
@@ -396,7 +396,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		OUT("\n");
 	} else {
 		if(use_table) {
-			OUT("int *table = permitted_alphabet_table_%d;\n",
+			OUT("const int *table = permitted_alphabet_table_%d;\n",
 				arg->expr->_type_unique_index);
 			emit_alphabet_check_loop(arg, 0);
 		} else {
