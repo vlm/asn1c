@@ -183,11 +183,11 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		do {
-			asn_TYPE_tag2member_t *t2m;
+			const asn_TYPE_tag2member_t *t2m;
 			asn_TYPE_tag2member_t key;
 
 			key.el_tag = tlv_tag;
-			t2m = (asn_TYPE_tag2member_t *)bsearch(&key,
+			t2m = (const asn_TYPE_tag2member_t *)bsearch(&key,
 					specs->tag2el, specs->tag2el_count,
 					sizeof(specs->tag2el[0]), _search4tag);
 			if(t2m) {

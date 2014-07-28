@@ -145,7 +145,7 @@ NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraint_t *ct;
 	int inext = 0;
 	asn_INTEGER_enum_map_t key;
-	asn_INTEGER_enum_map_t *kf;
+	const asn_INTEGER_enum_map_t *kf;
 
 	if(!sptr) _ASN_ENCODE_FAILED;
 	if(!specs) _ASN_ENCODE_FAILED;

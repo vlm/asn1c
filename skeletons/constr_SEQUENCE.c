@@ -310,16 +310,16 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			 * Resort to a binary search over
 			 * sorted array of tags.
 			 */
-			asn_TYPE_tag2member_t *t2m;
+			const asn_TYPE_tag2member_t *t2m;
 			asn_TYPE_tag2member_t key;
 			key.el_tag = tlv_tag;
 			key.el_no = edx;
-			t2m = (asn_TYPE_tag2member_t *)bsearch(&key,
+			t2m = (const asn_TYPE_tag2member_t *)bsearch(&key,
 				specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);
 			if(t2m) {
-				asn_TYPE_tag2member_t *best = 0;
-				asn_TYPE_tag2member_t *t2m_f, *t2m_l;
+				const asn_TYPE_tag2member_t *best = 0;
+				const asn_TYPE_tag2member_t *t2m_f, *t2m_l;
 				int edx_max = edx + elements[edx].optional;
 				/*
 				 * Rewind to the first element with that tag,

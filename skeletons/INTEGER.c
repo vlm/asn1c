@@ -208,8 +208,8 @@ INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 struct e2v_key {
 	const char *start;
 	const char *stop;
-	asn_INTEGER_enum_map_t *vemap;
-	unsigned int *evmap;
+	const asn_INTEGER_enum_map_t *vemap;
+	const unsigned int *evmap;
 };
 static int
 INTEGER__compar_enum2value(const void *kp, const void *am) {
@@ -232,7 +232,7 @@ INTEGER__compar_enum2value(const void *kp, const void *am) {
 
 static const asn_INTEGER_enum_map_t *
 INTEGER_map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop) {
-	asn_INTEGER_enum_map_t *el_found;
+	const asn_INTEGER_enum_map_t *el_found;
 	int count = specs ? specs->map_count : 0;
 	struct e2v_key key;
 	const char *lp;
