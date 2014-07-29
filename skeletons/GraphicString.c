@@ -8,7 +8,7 @@
 /*
  * GraphicString basic type description.
  */
-static ber_tlv_tag_t asn_DEF_GraphicString_tags[] = {
+static const ber_tlv_tag_t asn_DEF_GraphicString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (25 << 2)),	/* [UNIVERSAL 25] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };

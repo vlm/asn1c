@@ -145,7 +145,7 @@ static time_t timegm(struct tm *tm) {
 /*
  * GeneralizedTime basic type description.
  */
-static ber_tlv_tag_t asn_DEF_GeneralizedTime_tags[] = {
+static const ber_tlv_tag_t asn_DEF_GeneralizedTime_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (24 << 2)),	/* [UNIVERSAL 24] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),  /* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */

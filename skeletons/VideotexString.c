@@ -8,7 +8,7 @@
 /*
  * VideotexString basic type description.
  */
-static ber_tlv_tag_t asn_DEF_VideotexString_tags[] = {
+static const ber_tlv_tag_t asn_DEF_VideotexString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (21 << 2)),	/* [UNIVERSAL 21] IMPLICIT */
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };

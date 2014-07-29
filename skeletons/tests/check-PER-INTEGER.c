@@ -25,7 +25,7 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 	INTEGER_t st;
 	INTEGER_t *reconstructed_st = 0;
 	struct asn_INTEGER_specifics_s specs;
-	asn_per_constraints_t cts;
+	struct asn_per_constraints_s cts;
 	asn_enc_rval_t enc_rval;
 	asn_dec_rval_t dec_rval;
 	asn_per_outp_t po;

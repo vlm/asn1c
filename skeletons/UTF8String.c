@@ -9,7 +9,7 @@
 /*
  * UTF8String basic type description.
  */
-static ber_tlv_tag_t asn_DEF_UTF8String_tags[] = {
+static const ber_tlv_tag_t asn_DEF_UTF8String_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),	/* [UNIVERSAL 12] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),	/* ... OCTET STRING */
 };
@@ -41,7 +41,7 @@ asn_TYPE_descriptor_t asn_DEF_UTF8String = {
  * This is the table of length expectations.
  * The second half of this table is only applicable to the long sequences.
  */
-static int UTF8String_ht[2][16] = {
+static const int UTF8String_ht[2][16] = {
 	{ /* 0x0 ... 0x7 */
 	  /* 0000..0111 */
 	  1, 1, 1, 1, 1, 1, 1, 1,
@@ -52,7 +52,7 @@ static int UTF8String_ht[2][16] = {
 	  4, 4, 4, 4, 4, 4, 4, 4,
 	  5, 5, 5, 5, 6, 6, -1, -1 }
 };
-static int32_t UTF8String_mv[7] = { 0, 0,
+static const int32_t UTF8String_mv[7] = { 0, 0,
 	0x00000080,
 	0x00000800,
 	0x00010000,

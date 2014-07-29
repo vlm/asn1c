@@ -11,15 +11,15 @@
 /*
  * OCTET STRING basic type description.
  */
-static ber_tlv_tag_t asn_DEF_OCTET_STRING_tags[] = {
+static const ber_tlv_tag_t asn_DEF_OCTET_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
-static asn_OCTET_STRING_specifics_t asn_DEF_OCTET_STRING_specs = {
+static const asn_OCTET_STRING_specifics_t asn_DEF_OCTET_STRING_specs = {
 	sizeof(OCTET_STRING_t),
 	offsetof(OCTET_STRING_t, _asn_ctx),
 	ASN_OSUBV_STR
 };
-static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
+static const asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
 	{ APC_CONSTRAINED, 8, 8, 0, 255 },
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
@@ -639,8 +639,8 @@ cb_failed:
 	_ASN_ENCODE_FAILED;
 }
 
-static struct OCTET_STRING__xer_escape_table_s {
-	char *string;
+static const struct OCTET_STRING__xer_escape_table_s {
+	const char *string;
 	int size;
 } OCTET_STRING__xer_escape_table[] = {
 #define	OSXET(s)	{ s, sizeof(s) - 1 }
@@ -702,7 +702,7 @@ OS__check_escaped_control_char(const void *buf, int size) {
 	 * nested table lookups).
 	 */
 	for(i = 0; i < 32 /* Don't spend time on the bottom half */; i++) {
-		struct OCTET_STRING__xer_escape_table_s *el;
+		const struct OCTET_STRING__xer_escape_table_s *el;
 		el = &OCTET_STRING__xer_escape_table[i];
 		if(el->size == size && memcmp(buf, el->string, size) == 0)
 			return i;

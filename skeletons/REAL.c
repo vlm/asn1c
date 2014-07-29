@@ -36,7 +36,7 @@ static volatile double real_zero GCC_NOTUSED = 0.0;
 /*
  * REAL basic type description.
  */
-static ber_tlv_tag_t asn_DEF_REAL_tags[] = {
+static const ber_tlv_tag_t asn_DEF_REAL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_REAL = {

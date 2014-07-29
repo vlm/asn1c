@@ -13,7 +13,7 @@
 /*
  * RELATIVE-OID basic type description.
  */
-static ber_tlv_tag_t asn_DEF_RELATIVE_OID_tags[] = {
+static const ber_tlv_tag_t asn_DEF_RELATIVE_OID_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (13 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {

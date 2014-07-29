@@ -9,7 +9,7 @@
 /*
  * BOOLEAN basic type description.
  */
-static ber_tlv_tag_t asn_DEF_BOOLEAN_tags[] = {
+static const ber_tlv_tag_t asn_DEF_BOOLEAN_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (1 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {

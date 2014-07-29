@@ -15,7 +15,7 @@
 /*
  * NativeEnumerated basic type description.
  */
-static ber_tlv_tag_t asn_DEF_NativeEnumerated_tags[] = {
+static const ber_tlv_tag_t asn_DEF_NativeEnumerated_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {

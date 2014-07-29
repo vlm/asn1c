@@ -9,7 +9,7 @@
 /*
  * UniversalString basic type description.
  */
-static ber_tlv_tag_t asn_DEF_UniversalString_tags[] = {
+static const ber_tlv_tag_t asn_DEF_UniversalString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (28 << 2)),	/* [UNIVERSAL 28] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };

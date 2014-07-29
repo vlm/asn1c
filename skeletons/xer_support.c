@@ -31,7 +31,7 @@ static pxml_chunk_type_e final_chunk_type[] = {
 };
 
 
-static int
+static const int
 _charclass[256] = {
 	0,0,0,0,0,0,0,0, 0,1,1,0,1,1,0,0,
 	0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,

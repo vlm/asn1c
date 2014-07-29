@@ -12,7 +12,7 @@
 /*
  * OBJECT IDENTIFIER basic type description.
  */
-static ber_tlv_tag_t asn_DEF_OBJECT_IDENTIFIER_tags[] = {
+static const ber_tlv_tag_t asn_DEF_OBJECT_IDENTIFIER_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (6 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
