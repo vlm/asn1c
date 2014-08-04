@@ -580,7 +580,7 @@ asn_enc_rval_t
 OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	static const char *h2c = "0123456789ABCDEF";
+	const char * const h2c = "0123456789ABCDEF";
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	asn_enc_rval_t er;
 	char scratch[16 * 3 + 4];
@@ -1655,7 +1655,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 int
 OCTET_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	static const char *h2c = "0123456789ABCDEF";
+	const char * const h2c = "0123456789ABCDEF";
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	char scratch[16 * 3 + 4];
 	char *p = scratch;

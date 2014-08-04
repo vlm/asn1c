@@ -166,7 +166,7 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 	/* Output in the long xx:yy:zz... format */
 	/* TODO: replace with generic algorithm (Knuth TAOCP Vol 2, 4.3.1) */
 	for(p = scratch; buf < buf_end; buf++) {
-		static const char *h2c = "0123456789ABCDEF";
+		const char * const h2c = "0123456789ABCDEF";
 		if((p - scratch) >= (ssize_t)(sizeof(scratch) - 4)) {
 			/* Flush buffer */
 			if(cb(scratch, p - scratch, app_key) < 0)
