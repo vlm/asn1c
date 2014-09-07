@@ -9,9 +9,9 @@ my $found = 0;
 my $currentFname = '';
 
 if(-t STDIN && $#ARGV == -1) {
-	print STDERR "Extract ASN.1 specification from the RFC file\n";
-	print STDERR "Usage: $0 <rfc-file.txt> ...\n";
-	print STDERR "Usage: <someprog> | $0\n";
+	print STDERR "Extract the ASN.1 specification from the RFC file(s).\n";
+	print STDERR "Usage 1: $0 <rfc-file.txt> ...\n";
+	print STDERR "Usage 2: <someprog> | $0\n";
 	exit(1);
 }
 
