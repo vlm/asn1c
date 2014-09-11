@@ -116,6 +116,7 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
@@ -208,20 +209,23 @@ ASN1_SOURCE_3 = rfc4511.txt
 ASN1_FILES_3 = \
 	rfc4511-Lightweight-Directory-Access-Protocol-V3.asn1
 
-EXTRA_DIST = $(srcdir)/rfc*.txt					\
-	$(srcdir)/sample.source.LDAP3				\
-	$(srcdir)/sample.source.MEGACO				\
-	$(srcdir)/sample.source.MHEG5				\
-	$(srcdir)/sample.source.RRC				\
-	$(srcdir)/sample.source.TAP3				\
-	$(srcdir)/sample.source.PKIX1				\
-	$(srcdir)/sample.makefile.regen
+BUILT_SOURCES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
+EXTRA_DIST = \
+	rfc3280.txt rfc3525.txt rfc4511.txt		\
+	sample.source.LDAP3				\
+	sample.source.MEGACO				\
+	sample.source.MHEG5				\
+	sample.source.RRC				\
+	sample.source.TAP3				\
+	sample.source.PKIX1				\
+	sample.makefile.regen
 
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
-all: all-am
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -246,9 +250,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 install-dist_binSCRIPTS: $(dist_bin_SCRIPTS)
@@ -332,13 +336,15 @@ distdir: $(DISTFILES)
 	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
 	  dist-hook
 check-am: all-am
-check: check-am
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(SCRIPTS)
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -364,6 +370,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-generic clean-libtool clean-local mostlyclean-am
@@ -430,7 +437,7 @@ ps-am:
 
 uninstall-am: uninstall-dist_binSCRIPTS
 
-.MAKE: install-am install-strip
+.MAKE: all check install install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	clean-local dist-hook distclean distclean-generic \
@@ -446,23 +453,21 @@ uninstall-am: uninstall-dist_binSCRIPTS
 	uninstall-dist_binSCRIPTS
 
 
-all: $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
-
 $(ASN1_FILES_1): crfc2asn1.pl $(ASN1_SOURCE_1)
-	./crfc2asn1.pl $(ASN1_SOURCE_1)
+	${srcdir}/crfc2asn1.pl ${srcdir}/$(ASN1_SOURCE_1)
 
 $(ASN1_FILES_2): crfc2asn1.pl $(ASN1_SOURCE_2)
-	./crfc2asn1.pl $(ASN1_SOURCE_2)
+	${srcdir}/crfc2asn1.pl ${srcdir}/$(ASN1_SOURCE_2)
 
 $(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
-	./crfc2asn1.pl $(ASN1_SOURCE_3)
-
-dist-hook:
-	rm -f `find $(distdir) -name "*.core" -or -name ".tmp.*"`
-	rm -f `find $(distdir) -name "*.[ch].??????"`
+	${srcdir}/crfc2asn1.pl ${srcdir}/$(ASN1_SOURCE_3)
 
 clean-local:
-	for dir in sample.source.*; do (cd $$dir && make distclean); done
+	for dir in ${srcdir}/sample.source.*; do (cd $$dir && make distclean); done
+
+dist-hook: clean-local
+	rm -f `find $(distdir) -name "*.core" -or -name ".tmp.*"`
+	rm -f `find $(distdir) -name "*.[ch].??????"`
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

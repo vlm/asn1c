@@ -10,11 +10,15 @@ if [ "x$1" = "x" ]; then
 	exit
 fi
 
-# Compute the .asn1 spec name by the given file name.
-source=`echo "$1" | sed -e 's/.*\///'`
-testno=`echo "$source" | cut -f2 -d'-' | cut -f1 -d'.'`
+set -o pipefail
+set -e
 
-args=`echo "$source" | sed -e 's/\.c[c]*$//'`
+# Compute the .asn1 spec name by the given file name.
+source_full=$1
+source_short=`echo "$source_full" | sed -e 's/.*\///'`
+testno=`echo "$source_short" | cut -f2 -d'-' | cut -f1 -d'.'`
+
+args=`echo "$source_short" | sed -e 's/\.c[c]*$//'`
 testdir=test-${args}
 
 OFS=$IFS
@@ -24,16 +28,15 @@ shift
 IFS=$OFS
 AFLAGS="$@"
 
-touch ${testdir}-FAILED		# Create this file to ease post mortem analysis
+# Assume the test fails. Will be removed when it passes well.
+touch ${testdir}-FAILED
 
-if [ ! -d $testdir ]; then
-	mkdir $testdir		|| exit $?
-fi
-cd $testdir			|| exit $?
-rm -f ./$source 2>/dev/null
-ln -fns ../$source		|| exit $?
+mkdir -p $testdir
+cd $testdir
+rm -f $source_short
+ln -fns ../$source_full
 
-asn_module=`echo ../../../tests/${testno}-*.asn1`
+asn_module=`echo ../${top_srcdir}/tests/${testno}-*.asn1`
 
 # Create a Makefile for the project.
 cat > Makefile <<EOM
@@ -41,6 +44,7 @@ cat > Makefile <<EOM
 
 COMMON_FLAGS= -I. -DEMIT_ASN_DEBUG
 CFLAGS = \${COMMON_FLAGS} ${CFLAGS} -g -O0
+CPPFLAGS = -DSRCDIR=../${srcdir}
 CXXFLAGS = \${COMMON_FLAGS} ${CXXFLAGS}
 
 CC ?= ${CC}
@@ -48,11 +52,11 @@ CC ?= ${CC}
 all: check-executable
 check-executable: compiled-module *.c*
 	@rm -f *.core
-	\$(CC) \$(CFLAGS) -o check-executable *.c* -lm
+	\$(CC) \$(CPPFLAGS) \$(CFLAGS) -o check-executable *.c* -lm
 
 # Compile the corresponding .asn1 spec.
-compiled-module: ${asn_module} ../../asn1c
-	../../asn1c -S ../../../skeletons -Wdebug-compiler	\\
+compiled-module: ${asn_module} ../${top_builddir}/asn1c/asn1c
+	../${top_builddir}/asn1c/asn1c -S ../${top_srcdir}/skeletons -Wdebug-compiler	\\
 		${AFLAGS} ${asn_module}
 	rm -f converter-sample.c
 	@touch compiled-module
@@ -69,8 +73,7 @@ clean:
 EOM
 
 # Perform building and checking
-make check || exit $?
+make check
 
+# Make sure the test is not marked as failed any longer.
 rm -f ../${testdir}-FAILED
-
-exit 0

@@ -1,7 +1,9 @@
-AC_INIT([asn1c], [0.9.24], [vlm@lionet.info])
+AC_INIT([asn1c], [0.9.26], [vlm@lionet.info])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+
+AM_MAINTAINER_MODE
 
 AM_PROG_LIBTOOL
 
@@ -81,7 +83,6 @@ AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
 
 AC_OUTPUT(				\
-skeletons/standard-modules/Makefile	\
 skeletons/tests/Makefile		\
 libasn1compiler/Makefile		\
 libasn1parser/Makefile			\
@@ -91,7 +92,6 @@ libasn1fix/Makefile			\
 doc/docsrc/Makefile			\
 skeletons/Makefile			\
 examples/Makefile			\
-tests/Makefile				\
 asn1c/Makefile				\
 doc/Makefile				\
 asn1c.spec				\

@@ -13,6 +13,14 @@
 
 #include "asn1fix.h"
 
+#ifndef TOP_SRCDIR
+#define TOP_SRCDIR_S    ".."
+#else
+#define STRINGIFY_MACRO2(x)  #x
+#define STRINGIFY_MACRO(x)  STRINGIFY_MACRO2(x)
+#define TOP_SRCDIR_S    STRINGIFY_MACRO(TOP_SRCDIR)
+#endif
+
 static int check(const char *fname,
 	enum asn1p_flags parser_flags,
 	enum asn1f_flags fixer_flags);
@@ -182,7 +190,7 @@ check(const char *fname,
 
 	if(r_value == 0) {
 		asn1p_t *std_asn;
-		std_asn = asn1p_parse_file("../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
+		std_asn = asn1p_parse_file(TOP_SRCDIR_S "/skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
 		if(std_asn) {
 			asn1p_module_t *mod;
 			while((mod = TQ_REMOVE(&(std_asn->modules), mod_next))) {

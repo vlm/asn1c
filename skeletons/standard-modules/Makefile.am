@@ -2,8 +2,8 @@
 smodsdir = $(pkgdatadir)/standard-modules
 
 dist_smods_DATA =				\
-		$(srcdir)/*.asn1		\
-		$(srcdir)/README
+		s/README		\
+		${srcdir}/*.asn1
 
 uninstall-local:
 	-@echo -n " "

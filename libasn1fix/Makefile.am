@@ -33,6 +33,7 @@ check_PROGRAMS = check_fixer
 
 check_fixer_LDADD = $(noinst_LTLIBRARIES)		\
 	$(top_builddir)/libasn1parser/libasn1parser.la
+check_fixer_CPPFLAGS = -DTOP_SRCDIR=${top_srcdir} $(AM_CPPFLAGS)
 check_fixer_DEPENDENCIES = $(check_fixer_LDADD)
 
 TESTS_ENVIRONMENT= ./check_fixer

@@ -1,10 +1,18 @@
 
-SUBDIRS = . standard-modules tests
+SUBDIRS = . tests
 
 dist_pkgdata_DATA =				\
-		$(srcdir)/README		\
-		$(srcdir)/*.[ch]		\
-		$(srcdir)/file-dependencies
+		${srcdir}/README		\
+		${srcdir}/*.[ch]		\
+		${srcdir}/file-dependencies
+
+smodsdir=$(pkgdata)
+
+nobase_dist_smods_DATA =     \
+	standard-modules/README  \
+	standard-modules/ASN1-Object-Identifier-Module.asn1 \
+	standard-modules/ASN1C-UsefulInformationObjectClasses.asn1
+
 
 uninstall-local:
 	-@echo -n " "

@@ -35,8 +35,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = skeletons
-DIST_COMMON = README $(dist_pkgdata_DATA) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+DIST_COMMON = README $(dist_pkgdata_DATA) $(nobase_dist_smods_DATA) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
@@ -147,8 +147,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(pkgdatadir)"
-DATA = $(dist_pkgdata_DATA)
+am__installdirs = "$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(smodsdir)"
+DATA = $(dist_pkgdata_DATA) $(nobase_dist_smods_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -225,6 +225,7 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
@@ -303,11 +304,17 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = . standard-modules tests
+SUBDIRS = . tests
 dist_pkgdata_DATA = \
-		$(srcdir)/README		\
-		$(srcdir)/*.[ch]		\
-		$(srcdir)/file-dependencies
+		${srcdir}/README		\
+		${srcdir}/*.[ch]		\
+		${srcdir}/file-dependencies
+
+smodsdir = $(pkgdata)
+nobase_dist_smods_DATA = \
+	standard-modules/README  \
+	standard-modules/ASN1-Object-Identifier-Module.asn1 \
+	standard-modules/ASN1C-UsefulInformationObjectClasses.asn1
 
 check_LTLIBRARIES = libasn1cskeletons.la
 libasn1cskeletons_la_CFLAGS = $(TESTSUITE_CFLAGS)
@@ -369,7 +376,7 @@ all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -394,9 +401,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
@@ -864,6 +871,29 @@ uninstall-dist_pkgdataDATA:
 	test -n "$$files" || exit 0; \
 	echo " ( cd '$(DESTDIR)$(pkgdatadir)' && rm -f" $$files ")"; \
 	cd "$(DESTDIR)$(pkgdatadir)" && rm -f $$files
+install-nobase_dist_smodsDATA: $(nobase_dist_smods_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(smodsdir)" || $(MKDIR_P) "$(DESTDIR)$(smodsdir)"
+	@list='$(nobase_dist_smods_DATA)'; test -n "$(smodsdir)" || list=; \
+	$(am__nobase_list) | while read dir files; do \
+	  xfiles=; for file in $$files; do \
+	    if test -f "$$file"; then xfiles="$$xfiles $$file"; \
+	    else xfiles="$$xfiles $(srcdir)/$$file"; fi; done; \
+	  test -z "$$xfiles" || { \
+	    test "x$$dir" = x. || { \
+	      echo "$(MKDIR_P) '$(DESTDIR)$(smodsdir)/$$dir'"; \
+	      $(MKDIR_P) "$(DESTDIR)$(smodsdir)/$$dir"; }; \
+	    echo " $(INSTALL_DATA) $$xfiles '$(DESTDIR)$(smodsdir)/$$dir'"; \
+	    $(INSTALL_DATA) $$xfiles "$(DESTDIR)$(smodsdir)/$$dir" || exit $$?; }; \
+	done
+
+uninstall-nobase_dist_smodsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nobase_dist_smods_DATA)'; test -n "$(smodsdir)" || list=; \
+	$(am__nobase_strip_setup); files=`$(am__nobase_strip)`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(smodsdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(smodsdir)" && rm -f $$files
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -1064,7 +1094,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(pkgdatadir)"; do \
+	for dir in "$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(smodsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -1115,7 +1145,8 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-dist_pkgdataDATA
+install-data-am: install-dist_pkgdataDATA \
+	install-nobase_dist_smodsDATA
 
 install-dvi: install-dvi-recursive
 
@@ -1161,7 +1192,8 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-dist_pkgdataDATA uninstall-local
+uninstall-am: uninstall-dist_pkgdataDATA uninstall-local \
+	uninstall-nobase_dist_smodsDATA
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) check-am \
 	ctags-recursive install-am install-strip tags-recursive
@@ -1174,13 +1206,15 @@ uninstall-am: uninstall-dist_pkgdataDATA uninstall-local
 	install install-am install-data install-data-am \
 	install-dist_pkgdataDATA install-dvi install-dvi-am \
 	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
-	uninstall-dist_pkgdataDATA uninstall-local
+	install-info install-info-am install-man \
+	install-nobase_dist_smodsDATA install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am \
+	uninstall-dist_pkgdataDATA uninstall-local \
+	uninstall-nobase_dist_smodsDATA
 
 
 uninstall-local:

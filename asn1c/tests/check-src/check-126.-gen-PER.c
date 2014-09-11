@@ -1,8 +1,7 @@
 /*
  * Mode of operation:
  * Each of the *.in files is XER-decoded, then converted into PER,
- * then decoded back from PER, then encoded into XER again,
- * and finally compared to the original encoding.
+ * compared with *.out file, then decoded and compared with the original.
  */
 #undef	NDEBUG
 #include <stdio.h>
@@ -17,17 +16,16 @@
 
 #include <PDU.h>
 
-enum expectation {
-	EXP_OK,		/* Encoding/decoding must succeed */
-	EXP_CXER_EXACT,	/* Encoding/decoding using CXER must be exact */
-	EXP_CXER_DIFF,	/* Encoding/decoding using CXER must be different */
-	EXP_BROKEN,	/* Decoding must fail */
-	EXP_DIFFERENT,	/* Reconstruction will yield different encoding */
-	EXP_PER_NOCOMP,	/* Not PER compatible */
-};
+#ifndef SRCDIR
+#define SRCDIR_S ".."
+#else
+#define STRINGIFY_MACRO2(x) #x
+#define STRINGIFY_MACRO(x)  STRINGIFY_MACRO2(x)
+#define SRCDIR_S    STRINGIFY_MACRO(SRCDIR)
+#endif
 
 static unsigned char buf[4096];
-static size_t buf_offset;
+static int buf_offset;
 
 static int
 _buf_writer(const void *buffer, size_t size, void *app_key) {
@@ -53,11 +51,10 @@ enum enctype {
 	AS_PER,
 	AS_DER,
 	AS_XER,
-	AS_CXER,
 };
 
 static void
-save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
+save_object_as(PDU_t *st, enum enctype how) {
 	asn_enc_rval_t rval; /* Return value */
 
 	buf_offset = 0;
@@ -67,13 +64,9 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 	 */
 	switch(how) {
 	case AS_PER:
-		rval = uper_encode(&asn_DEF_PDU, st,
-			_buf_writer, 0);
-		if(exp == EXP_PER_NOCOMP)
-			assert(rval.encoded == -1);
-		else
-			assert(rval.encoded > 0);
-		fprintf(stderr, "SAVED OBJECT IN SIZE %zd\n", buf_offset);
+		rval = uper_encode(&asn_DEF_PDU, st, _buf_writer, 0);
+		assert(rval.encoded > 0);
+		fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
 		return;
 	case AS_DER:
 		rval = der_encode(&asn_DEF_PDU, st,
@@ -81,10 +74,6 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 		break;
 	case AS_XER:
 		rval = xer_encode(&asn_DEF_PDU, st, XER_F_BASIC,
-			_buf_writer, 0);
-		break;
-	case AS_CXER:
-		rval = xer_encode(&asn_DEF_PDU, st, XER_F_CANONICAL,
 			_buf_writer, 0);
 		break;
 	}
@@ -97,14 +86,14 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 		return;
 	}
 
-	fprintf(stderr, "SAVED OBJECT IN SIZE %zd\n", buf_offset);
+	fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
 }
 
 static PDU_t *
-load_object_from(const char *fname, enum expectation expectation, unsigned char *fbuf, size_t size, enum enctype how) {
+load_object_from(const char *fname, unsigned char *fbuf, size_t size, enum enctype how, int mustfail) {
 	asn_dec_rval_t rval;
 	PDU_t *st = 0;
-	size_t csize = 1;
+	ssize_t csize = 1;
 
 	if(getenv("INITIAL_CHUNK_SIZE"))
 		csize = atoi(getenv("INITIAL_CHUNK_SIZE"));
@@ -123,11 +112,12 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 		st = 0;
 
 		do {
-			fprintf(stderr, "Decoding bytes %d..%d (left %d)\n",
+			fprintf(stderr, "\nDecoding bytes %d..%d (left %d) [%s]\n",
 				fbuf_offset,
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,
-					fbuf_left);
+					fbuf_left,
+				fname);
 			if(st) {
 				fprintf(stderr, "=== currently ===\n");
 				asn_fprint(stderr, &asn_DEF_PDU, st);
@@ -140,27 +130,47 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 					fbuf_chunk < fbuf_left 
 					? fbuf_chunk : fbuf_left);
 				break;
+			case AS_DER:
+				assert(0);
+				break;
 			case AS_PER:
 				rval = uper_decode(0, &asn_DEF_PDU,
 					(void **)&st, fbuf + fbuf_offset,
 					fbuf_chunk < fbuf_left 
 					? fbuf_chunk : fbuf_left, 0, 0);
 				if(rval.code == RC_WMORE) {
-					rval.consumed = 0; /* Not restartable */
-					ASN_STRUCT_FREE(asn_DEF_PDU, st);
-					st = 0;
-					fprintf(stderr, "-> PER wants more\n");
+					if(fbuf_chunk == fbuf_left) {
+						fprintf(stderr, "-> PER decode error (%zd bits of %zd bytes (c=%d,l=%d)) \n", rval.consumed, size, fbuf_chunk, fbuf_left);
+						rval.code = RC_FAIL;
+						rval.consumed += 7;
+						rval.consumed /= 8;
+						if(mustfail) {
+							fprintf(stderr, "-> (this was expected failure)\n");
+							return 0;
+						}
+					} else {
+						rval.consumed = 0; /* Not restartable */
+						ASN_STRUCT_FREE(asn_DEF_PDU, st);
+						st = 0;
+						fprintf(stderr, "-> PER wants more\n");
+					}
 				} else {
-					fprintf(stderr, "-> PER ret %d/%ld\n",
-						rval.code, rval.consumed);
+					fprintf(stderr, "-> PER ret %d/%zd mf=%d\n",
+						rval.code, rval.consumed, mustfail);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;
 					rval.consumed /= 8;
+					if((mustfail?1:0) == (rval.code == RC_FAIL)) {
+						if(mustfail) {
+							fprintf(stderr, "-> (this was expected failure)\n");
+							return 0;
+						}
+					} else {
+						fprintf(stderr, "-> (unexpected %s)\n", mustfail ? "success" : "failure");
+						rval.code = RC_FAIL;
+					}
 				}
 				break;
-            case AS_DER:
-            case AS_CXER:
-                assert(!"DER or CXER not supported for load");
 			}
 			fbuf_offset += rval.consumed;
 			fbuf_left -= rval.consumed;
@@ -170,26 +180,19 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 				fbuf_chunk = csize;	/* Back off */
 		} while(fbuf_left && rval.code == RC_WMORE);
 
-		if(expectation != EXP_BROKEN) {
-			assert(rval.code == RC_OK);
-			if(how == AS_PER) {
-				fprintf(stderr, "[left %d, off %d, size %zd]\n",
-					fbuf_left, fbuf_offset, size);
-				assert(fbuf_offset == (ssize_t)size);
-			} else {
-				assert(fbuf_offset - size < 2
-				|| (fbuf_offset + 1 /* "\n" */  == (ssize_t)size
-					&& fbuf[size - 1] == '\n')
-				|| (fbuf_offset + 2 /* "\r\n" */  == (ssize_t)size
-					&& fbuf[size - 2] == '\r'
-					&& fbuf[size - 1] == '\n')
-				);
-			}
+		assert(rval.code == RC_OK);
+		if(how == AS_PER) {
+			fprintf(stderr, "[left %d, off %d, size %zd]\n",
+				fbuf_left, fbuf_offset, size);
+			assert(fbuf_offset == (ssize_t)size);
 		} else {
-			assert(rval.code != RC_OK);
-			fprintf(stderr, "Failed, but this was expected\n");
-			asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
-			st = 0;	/* ignore leak for now */
+			assert(fbuf_offset - size < 2
+			|| (fbuf_offset + 1 /* "\n" */  == (ssize_t)size
+				&& fbuf[size - 1] == '\n')
+			|| (fbuf_offset + 2 /* "\r\n" */  == (ssize_t)size
+				&& fbuf[size - 2] == '\r'
+				&& fbuf[size - 1] == '\n')
+			);
 		}
 	}
 
@@ -198,7 +201,9 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 }
 
 static int
-xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
+xer_encoding_equal(void *obufp, size_t osize, void *nbufp, size_t nsize) {
+    char *obuf = obufp;
+    char *nbuf = nbufp;
 	char *oend = obuf + osize;
 	char *nend = nbuf + nsize;
 
@@ -230,52 +235,74 @@ xer_encoding_equal(char *obuf, size_t osize, char *nbuf, size_t nsize) {
 }
 
 static void
-process_XER_data(const char *fname, enum expectation expectation, unsigned char *fbuf, size_t size) {
+compare_with_data_out(const char *fname, void *datap, size_t size) {
+    char *data = datap;
+	char outName[sizeof(SRCDIR_S) + 256];
+	unsigned char fbuf[1024];
+	size_t rd;
+	FILE *f;
+	char lastChar;
+	int mustfail, compare;
+
+	sprintf(outName, SRCDIR_S "/data-126/%s", fname);
+	strcpy(outName + strlen(outName) - 3, ".out");
+
+	fprintf(stderr, "Comparing PER output with [%s]\n", outName);
+
+	lastChar = outName[strlen(outName)-5];
+	mustfail = lastChar == 'P';
+	compare = lastChar != 'C';
+
+	if((compare && !mustfail) && getenv("REGENERATE")) {
+		f = fopen(outName, "w");
+		fwrite(data, 1, size, f);
+		fclose(f);
+	} else {
+		f = fopen(outName, "r");
+		assert(f);
+		rd = fread(fbuf, 1, sizeof(fbuf), f);
+		assert(rd);
+		fclose(f);
+
+		fprintf(stderr, "Trying to decode [%s]\n", outName);
+		load_object_from(outName, fbuf, rd, AS_PER, mustfail);
+		if(mustfail) return;
+
+		if(compare) {
+			assert(rd == (size_t)size);
+			assert(memcmp(fbuf, data, rd) == 0);
+			fprintf(stderr, "XER->PER recoding .in->.out match.\n");
+		} else {
+			assert(rd != (size_t)size || memcmp(fbuf, data, rd));
+			fprintf(stderr, "XER->PER recoding .in->.out diverge.\n");
+		}
+	}
+}
+
+static void
+process_XER_data(const char *fname, unsigned char *fbuf, size_t size) {
 	PDU_t *st;
 
-	st = load_object_from(fname, expectation, fbuf, size, AS_XER);
+	st = load_object_from(fname, fbuf, size, AS_XER, 0);
 	if(!st) return;
 
 	/* Save and re-load as PER */
-	save_object_as(st, expectation, AS_PER);
-	if(expectation == EXP_PER_NOCOMP)
-		return;	/* Already checked */
-	st = load_object_from("buffer", expectation, buf, buf_offset, AS_PER);
+	save_object_as(st, AS_PER);
+	compare_with_data_out(fname, buf, buf_offset);
+	st = load_object_from("buffer", buf, buf_offset, AS_PER, 0);
 	assert(st);
 
-	save_object_as(st,
-			expectation,
-			(expectation == EXP_CXER_EXACT
-			|| expectation == EXP_CXER_DIFF)
-			? AS_CXER : AS_XER);
+	save_object_as(st, AS_XER);
 	fprintf(stderr, "=== original ===\n");
 	fwrite(fbuf, 1, size, stderr);
 	fprintf(stderr, "=== re-encoded ===\n");
 	fwrite(buf, 1, buf_offset, stderr);
 	fprintf(stderr, "=== end ===\n");
 
-	switch(expectation) {
-	case EXP_DIFFERENT:
+	if(fname[strlen(fname) - 4] == 'X')
 		assert(!xer_encoding_equal((char *)fbuf, size, (char *)buf, buf_offset));
-		break;
-	case EXP_BROKEN:
-		assert(!xer_encoding_equal((char *)fbuf, size, (char *)buf, buf_offset));
-		break;
-	case EXP_CXER_EXACT:
-		buf[buf_offset++] = '\n';
-		assert(size == buf_offset);
-		assert(memcmp(fbuf, buf, size) == 0);
-		break;
-	case EXP_CXER_DIFF:
-		buf[buf_offset++] = '\n';
-		assert(size != buf_offset
-			|| memcmp(fbuf, buf, size));
-		break;
-	case EXP_OK:
-	case EXP_PER_NOCOMP:
+	else
 		assert(xer_encoding_equal((char *)fbuf, size, (char *)buf, buf_offset));
-		break;
-	}
 
 	asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
 }
@@ -285,42 +312,26 @@ process_XER_data(const char *fname, enum expectation expectation, unsigned char 
  */
 static int
 process(const char *fname) {
-	unsigned char fbuf[4096];
+	unsigned char fbuf[sizeof(SRCDIR_S) + 4096];
 	char *ext = strrchr(fname, '.');
-	enum expectation expectation;
 	int rd;
 	FILE *fp;
 
 	if(ext == 0 || strcmp(ext, ".in"))
 		return 0;
 
-	switch(ext[-1]) {
-	case 'B':	/* The file is intentionally broken */
-		expectation = EXP_BROKEN; break;
-	case 'D':	/* Reconstructing should yield different data */
-		expectation = EXP_DIFFERENT; break;
-	case 'E':	/* Byte to byte exact reconstruction */
-		expectation = EXP_CXER_EXACT; break;
-	case 'X':	/* Should fail byte-to-byte comparison */
-		expectation = EXP_CXER_DIFF; break;
-	case 'P':	/* Incompatible with PER */
-		expectation = EXP_PER_NOCOMP; break;
-	default:
-		expectation = EXP_OK; break;
-	}
-
 	fprintf(stderr, "\nProcessing file [../%s]\n", fname);
 
-	snprintf((char *)fbuf, sizeof(fbuf), "../data-119/%s", fname);
+	snprintf((char *)fbuf, sizeof(fbuf), SRCDIR_S "/data-126/%s", fname);
 	fp = fopen((char *)fbuf, "r");
 	assert(fp);
 
 	rd = fread(fbuf, 1, sizeof(fbuf), fp);
 	fclose(fp);
 
-	assert(rd < (ssize_t)sizeof(fbuf));	/* expect small files */
+	assert((size_t)rd < sizeof(fbuf));	/* expect small files */
 
-	process_XER_data(fname, expectation, fbuf, rd);
+	process_XER_data(fname, fbuf, rd);
 
 	fprintf(stderr, "Finished [%s]\n", fname);
 
@@ -335,20 +346,20 @@ main() {
 	char *str;
 
 	/* Process a specific test file */
-	str = getenv("DATA_119_FILE");
-	if(str && strncmp(str, "data-119-", 9) == 0) {
+	str = getenv("DATA_126_FILE");
+	if(str && strncmp(str, "data-126-", 9) == 0) {
 		process(str);
 		return 0;
 	}
 
-	dir = opendir("../data-119");
+	dir = opendir(SRCDIR_S "/data-126");
 	assert(dir);
 
 	/*
 	 * Process each file in that directory.
 	 */
 	while((dent = readdir(dir))) {
-		if(strncmp(dent->d_name, "data-119-", 9) == 0)
+		if(strncmp(dent->d_name, "data-126-", 9) == 0)
 			if(process(dent->d_name))
 				processed_files++;
 	}

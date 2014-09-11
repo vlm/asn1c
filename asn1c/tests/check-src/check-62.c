@@ -2,13 +2,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <unistd.h>	/* for chdir(2) */
+#include <unistd.h>	/* for chdir(2), getcwd(3) */
 #include <string.h>
 #include <dirent.h>
 #include <assert.h>
 #include <errno.h>
 
 #include <T.h>
+
+#ifndef SRCDIR
+#define SRCDIR_S ".."
+#else
+#define STRINGIFY_MACRO2(x) #x
+#define STRINGIFY_MACRO(x)  STRINGIFY_MACRO2(x)
+#define SRCDIR_S    STRINGIFY_MACRO(SRCDIR)
+#endif
 
 enum expectation {
 	EXP_OK,		/* Encoding/decoding must succeed */
@@ -142,6 +150,7 @@ process_data(enum expectation expectation, unsigned char *fbuf, ssize_t size) {
  */
 static int
 process(const char *fname) {
+	char prevdir[256];
 	unsigned char fbuf[4096];
 	char *ext = strrchr(fname, '.');
 	enum expectation expectation;
@@ -165,10 +174,11 @@ process(const char *fname) {
 
 	fprintf(stderr, "\nProcessing file [../%s]\n", fname);
 
-	ret = chdir("../data-62");
+	getcwd(prevdir, sizeof(prevdir));
+	ret = chdir(SRCDIR_S "/data-62");
 	assert(ret == 0);
 	fp = fopen(fname, "r");
-	ret = chdir("../test-check-62");
+	ret = chdir(prevdir);
 	assert(ret == 0);
 	assert(fp);
 
@@ -189,7 +199,7 @@ main() {
 	int processed_files = 0;
 	char *str;
 
-	dir = opendir("../data-62");
+	dir = opendir(SRCDIR_S "/data-62");
 	assert(dir);
 
 	str = getenv("DATA_62_FILE");

@@ -62,7 +62,7 @@ libasn1fix_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libasn1fix_la_LDFLAGS) $(LDFLAGS) -o $@
 check_fixer_SOURCES = check_fixer.c
-check_fixer_OBJECTS = check_fixer.$(OBJEXT)
+check_fixer_OBJECTS = check_fixer-check_fixer.$(OBJEXT)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -125,6 +125,7 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
@@ -235,6 +236,7 @@ libasn1fix_la_SOURCES = \
 check_fixer_LDADD = $(noinst_LTLIBRARIES)		\
 	$(top_builddir)/libasn1parser/libasn1parser.la
 
+check_fixer_CPPFLAGS = -DTOP_SRCDIR=${top_srcdir} $(AM_CPPFLAGS)
 check_fixer_DEPENDENCIES = $(check_fixer_LDADD)
 TESTS_ENVIRONMENT = ./check_fixer
 TESTS = ${top_srcdir}/tests/*.asn1
@@ -242,7 +244,7 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -267,9 +269,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
@@ -322,7 +324,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_retrieve.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_tags.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1fix_value.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_fixer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_fixer-check_fixer.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -344,6 +346,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+check_fixer-check_fixer.o: check_fixer.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_fixer_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT check_fixer-check_fixer.o -MD -MP -MF $(DEPDIR)/check_fixer-check_fixer.Tpo -c -o check_fixer-check_fixer.o `test -f 'check_fixer.c' || echo '$(srcdir)/'`check_fixer.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/check_fixer-check_fixer.Tpo $(DEPDIR)/check_fixer-check_fixer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='check_fixer.c' object='check_fixer-check_fixer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_fixer_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o check_fixer-check_fixer.o `test -f 'check_fixer.c' || echo '$(srcdir)/'`check_fixer.c
+
+check_fixer-check_fixer.obj: check_fixer.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_fixer_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT check_fixer-check_fixer.obj -MD -MP -MF $(DEPDIR)/check_fixer-check_fixer.Tpo -c -o check_fixer-check_fixer.obj `if test -f 'check_fixer.c'; then $(CYGPATH_W) 'check_fixer.c'; else $(CYGPATH_W) '$(srcdir)/check_fixer.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/check_fixer-check_fixer.Tpo $(DEPDIR)/check_fixer-check_fixer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='check_fixer.c' object='check_fixer-check_fixer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_fixer_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o check_fixer-check_fixer.obj `if test -f 'check_fixer.c'; then $(CYGPATH_W) 'check_fixer.c'; else $(CYGPATH_W) '$(srcdir)/check_fixer.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

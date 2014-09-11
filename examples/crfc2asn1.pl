@@ -36,7 +36,7 @@ while(<>) {
 
 		my $modName = '';	# ASN.1 module name
 		my $rfcid = '';
-		$rfcid = $1 . '-' if($ARGV =~ /([a-z0-9]+)/i);
+		$rfcid = $1 . '-' if($ARGV =~ /([a-z0-9]+)\.[^.]+$/i);
 
 		if(/^[ \t]*([A-Z][A-Za-z0-9-]*).*DEFINITIONS.*::=/) {
 			$modName = $1;
@@ -100,10 +100,10 @@ while(<>) {
 	}
 
 	#
-	# The following clauses are primarily designed to make
-	# asn1c command-line easier (i.e., to avoid "-ftypes88").
+	# The following clauses are primarily designed to simplify
+	# asn1c tool behavior.
 	# You may want to get rid of them if you're doing generic
-	# ASN.1 extraction and do not want to alter the ASN.1 specs.
+	# ASN.1 extraction and do not want to alter the ASN.1 specs at all.
 	#
 	if(
 /^([ \t]*)((UniversalString|BMPString|UTF8String)\s+::=\s+\[[A-Z]+\s\d+\]\sIMPLICIT\sOCTET\sSTRING)(.*)$/ms
@@ -113,7 +113,7 @@ while(<>) {
 		next;
 	} elsif(/delete following line if \"new\" types are supported/) {
 		print;
-		print "/* Legacy stuff deleted by $0:\n";
+		print "/* Legacy constructs deleted by $0:\n";
 		$_ = <>;
 		print;
 		print " */\n";

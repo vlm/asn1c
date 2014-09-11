@@ -1,25 +1,43 @@
 #!/bin/sh
 
-tmpfile=".check-parsing.$$.tmp"
-
 # Test diff(1) capabilities
 diff -a . . 2>/dev/null && diffArgs="-a"		# Assume text files
 diff -u . . 2>/dev/null && diffArgs="$diffArgs -u"	# Unified diff output
 
 ec=0
 
-for ref in ../tests/*.asn1.-*; do
+set -o pipefail
+set -e
+
+PROCESSING=""
+print_status() {
+    echo "Error while processing $PROCESSING"
+}
+
+trap print_status ERR
+
+if [ "x${top_srcdir}" = "x" ]; then
+  top_srcdir=".."
+fi
+
+for ref in ${top_srcdir}/tests/*.asn1.-*; do
+	# Figure out the initial source file used to generate this output.
 	src=`echo "$ref" | sed -e 's/\.-[-a-zA-Z0-9=]*$//'`
+	# Figure out compiler flags used to create the file.
 	flags=`echo "$ref" | sed -e 's/.*\.-//'`
 	echo "Checking $src against $ref"
-	./asn1c -S../skeletons "-$flags" "$src" > "$tmpfile" || ec=$?
+	template=.tmp.check-parsing.$$
+	oldversion=${template}.old
+	newversion=${template}.new
+	PROCESSING="$ref (from $src)"
+	cat "$ref" | LANG=C sed -e 's/^found in .*/found in .../' > $oldversion
+	(./asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" | LANG=C sed -e 's/^found in .*/found in .../' > "$newversion") || ec=$?
 	if [ $? = 0 ]; then
-		diff $diffArgs "$ref" "$tmpfile" || ec=$?
+		diff $diffArgs "$oldversion" "$newversion" || ec=$?
 	fi
-	if [ "$1" != "regenerate" ]; then
-		rm -f "$tmpfile"
-	else
-		mv "$tmpfile" "$ref"
+	rm -f $oldversion $newversion
+	if [ "$1" = "regenerate" ]; then
+		./asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" > "$ref"
 	fi
 done
 

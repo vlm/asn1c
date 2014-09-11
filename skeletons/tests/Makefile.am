@@ -14,7 +14,7 @@ check_PROGRAMS = \
 	check-PER		\
 	check-PER-INTEGER
 
-AM_LDFLAGS = $(top_srcdir)/skeletons/libasn1cskeletons.la
+AM_LDFLAGS = $(top_builddir)/skeletons/libasn1cskeletons.la
 LDADD = -lm
 
 TESTS = $(check_PROGRAMS)

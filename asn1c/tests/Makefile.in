@@ -33,7 +33,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@TEST_64BIT_TRUE@am__append_1 = check64-*.c
+@TEST_64BIT_TRUE@am__append_1 = ${srcdir}/check-src/check64-*.c
 subdir = asn1c/tests
 DIST_COMMON = README $(dist_check_SCRIPTS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -95,6 +95,7 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
@@ -174,10 +175,10 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 dist_check_SCRIPTS = check-assembly.sh
-TESTS_ENVIRONMENT = CC="${CC}" CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS} -Wno-error=unused-variable" CXXFLAGS="${CXXFLAGS}" ./check-assembly.sh
-TESTS = check-*.c $(am__append_1)
+TESTS_ENVIRONMENT = CC="${CC}" CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS} -Wno-error=unused-variable" CXXFLAGS="${CXXFLAGS}" srcdir=${srcdir} top_srcdir=${top_srcdir} top_builddir=${top_builddir} ${srcdir}/check-assembly.sh
+TESTS = ${srcdir}/check-src/check-*.c $(am__append_1)
 EXTRA_DIST = \
-	check-*.c*		\
+	check-src/		\
 	data-62			\
 	data-70			\
 	data-119		\
@@ -186,7 +187,7 @@ EXTRA_DIST = \
 all: all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -211,9 +212,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
