@@ -67,6 +67,14 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 #define	GMTOFF(tm)	(-timezone)
 #endif	/* HAVE_TM_GMTOFF */
 
+#if	defined(_WIN32)
+#pragma message( "PLEASE STOP AND READ!")
+#pragma message( "  timegm() is implemented via getenv(\"TZ\")/setenv(\"TZ\"), which may be not thread-safe.")
+#pragma message( "  ")
+#pragma message( "  You must fix the code by inserting appropriate locking")
+#pragma message( "  if you want to use asn_GT2time() or asn_UT2time().")
+#pragma message( "PLEASE STOP AND READ!")
+#else
 #if	(defined(_EMULATE_TIMEGM) || !defined(HAVE_TM_GMTOFF))
 #warning "PLEASE STOP AND READ!"
 #warning "  timegm() is implemented via getenv(\"TZ\")/setenv(\"TZ\"), which may be not thread-safe."
@@ -75,6 +83,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 #warning "  if you want to use asn_GT2time() or asn_UT2time()."
 #warning "PLEASE STOP AND READ!"
 #endif	/* _EMULATE_TIMEGM */
+#endif
 
 /*
  * Override our GMTOFF decision for other known platforms.
