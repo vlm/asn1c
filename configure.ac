@@ -1,4 +1,4 @@
-AC_INIT([asn1c], [0.9.26], [vlm@lionet.info])
+AC_INIT([asn1c], [0.9.27], [vlm@lionet.info])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -33,25 +33,28 @@ if test x$enable_werror = xyes; then
   TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
   ADD_CFLAGS="-Werror -W -Wpointer-arith"
 fi
-AC_SUBST(ADD_CFLAGS)
-AC_SUBST(TESTSUITE_CFLAGS)
 
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"])
 AX_CHECK_COMPILE_FLAG([-Wcast-qual], [CFLAGS="$CFLAGS -Wcast-qual"])
 AX_CHECK_COMPILE_FLAG([-Wchar-subscripts],
-                      [CFLAGS="$CFLAGS -Wchar-subscripts"])
+      [CFLAGS="$CFLAGS -Wchar-subscripts"])
 AX_CHECK_COMPILE_FLAG([-Wmissing-prototypes],
-                      [CFLAGS="$CFLAGS -Wmissing-prototypes"])
+      [CFLAGS="$CFLAGS -Wmissing-prototypes"])
 AX_CHECK_COMPILE_FLAG([-Wmissing-declarations],
-                      [CFLAGS="$CFLAGS -Wmissing-declarations"])
+      [CFLAGS="$CFLAGS -Wmissing-declarations"])
 
 dnl There are legitimate uses for these features, disable warnings/errors.
 AX_CHECK_COMPILE_FLAG([-Wno-error=cast-align],
-                      [CFLAGS="$CFLAGS -Wno-error=cast-align"])
+      [CFLAGS="$CFLAGS -Wno-error=cast-align"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=visibility],
-                      [CFLAGS="$CFLAGS -Wno-error=visibility"])
+      [CFLAGS="$CFLAGS -Wno-error=visibility"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=parentheses-equality],
-                      [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
+      [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
+AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
+      [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -Wno-error=unused-variable"])
+
+AC_SUBST(ADD_CFLAGS)
+AC_SUBST(TESTSUITE_CFLAGS)
 
 dnl Checks for header files.
 AC_HEADER_STDC

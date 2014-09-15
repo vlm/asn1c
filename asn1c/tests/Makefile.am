@@ -1,7 +1,7 @@
 
 dist_check_SCRIPTS = check-assembly.sh
 
-TESTS_ENVIRONMENT= CC="${CC}" CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS} -Wno-error=unused-variable" CXXFLAGS="${CXXFLAGS}" srcdir=${srcdir} top_srcdir=${top_srcdir} top_builddir=${top_builddir} ${srcdir}/check-assembly.sh
+TESTS_ENVIRONMENT= CC="${CC}" CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}" CXXFLAGS="${CXXFLAGS}" srcdir=${srcdir} top_srcdir=${top_srcdir} top_builddir=${top_builddir} ${srcdir}/check-assembly.sh
 
 TESTS = ${srcdir}/check-src/check-*.c
 if TEST_64BIT

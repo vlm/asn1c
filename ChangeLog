@@ -1,4 +1,7 @@
 
+0.9.??:
+    * Build structure fixes for portability.
+
 0.9.26: 2014-Sep-11
 	* Updated asn1c-usage.pdf.
 	* Made -fskeletons-copy a default option; removed cmdline option.
