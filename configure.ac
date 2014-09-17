@@ -91,6 +91,7 @@ AC_SEARCH_LIBS(getopt, iberty)
 AC_CHECK_FUNCS(strtoimax strtoll)
 AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
+AC_CHECK_FUNCS(timegm)
 
 AC_OUTPUT(				\
 skeletons/tests/Makefile		\

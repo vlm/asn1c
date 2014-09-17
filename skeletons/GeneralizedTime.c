@@ -128,6 +128,7 @@ static long GMTOFF(struct tm a){
 	tzset();							\
 } while(0); } while(0);
 
+#ifndef HAVE_TIMEGM
 #ifdef	_EMULATE_TIMEGM
 static time_t timegm(struct tm *tm) {
 	time_t tloc;
@@ -138,6 +139,7 @@ static time_t timegm(struct tm *tm) {
 	return tloc;
 }
 #endif	/* _EMULATE_TIMEGM */
+#endif
 
 
 #ifndef	__ASN_INTERNAL_TEST_MODE__
