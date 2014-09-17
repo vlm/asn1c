@@ -114,17 +114,19 @@ load_object_from(const char *fname, unsigned char *fbuf, size_t size, enum encty
 		st = 0;
 
 		do {
-			fprintf(stderr, "\nDecoding bytes %d..%d (left %d) [%s]\n",
+			ASN_DEBUG("\nDecoding bytes %d..%d (left %d) [%s]",
 				fbuf_offset,
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,
 					fbuf_left,
 				fname);
+#ifdef  EMIT_ASN_DEBUG
 			if(st) {
 				fprintf(stderr, "=== currently ===\n");
 				asn_fprint(stderr, &asn_DEF_PDU, st);
 				fprintf(stderr, "=== end ===\n");
 			}
+#endif
 			switch(how) {
 			case AS_XER:
 				rval = xer_decode(0, &asn_DEF_PDU, (void **)&st,
