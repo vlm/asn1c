@@ -125,16 +125,18 @@ load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size,
 		st = 0;
 
 		do {
-			fprintf(stderr, "Decoding bytes %d..%d (left %d)\n",
+			ASN_DEBUG("Decoding bytes %d..%d (left %d)",
 				fbuf_offset,
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,
 					fbuf_left);
+#ifdef  EMIT_ASN_DEBUG
 			if(st) {
 				fprintf(stderr, "=== currently ===\n");
 				asn_fprint(stderr, &asn_DEF_PDU, st);
 				fprintf(stderr, "=== end ===\n");
 			}
+#endif
 			rval = zer_decode(0, &asn_DEF_PDU, (void **)&st,
 				fbuf + fbuf_offset,
 					fbuf_chunk < fbuf_left 

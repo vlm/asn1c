@@ -45,6 +45,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	memcpy(buf + buf_offset, buffer, size);
 	b = buf + buf_offset;
 	bend = b + size;
+#ifdef EMIT_ASN_DEBUG
 	fprintf(stderr, "=> [");
 	for(; b < bend; b++) {
 		if(*b >= 32 && *b < 127 && *b != '%')
@@ -53,6 +54,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 			fprintf(stderr, "%%%02x", *b);
 	}
 	fprintf(stderr, "]:%zd\n", size);
+#endif
 	buf_offset += size;
 	return 0;
 }
@@ -131,16 +133,18 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 		st = 0;
 
 		do {
-			fprintf(stderr, "Decoding bytes %d..%d (left %d)\n",
+			ASN_DEBUG("Decoding bytes %d..%d (left %d)",
 				fbuf_offset,
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,
 					fbuf_left);
+#ifdef  EMIT_ASN_DEBUG
 			if(st) {
 				fprintf(stderr, "=== currently ===\n");
 				asn_fprint(stderr, &asn_DEF_PDU, st);
 				fprintf(stderr, "=== end ===\n");
 			}
+#endif
 			switch(how) {
 			case AS_XER:
 				rval = xer_decode(0, &asn_DEF_PDU, (void **)&st,
@@ -157,9 +161,9 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 					rval.consumed = 0; /* Not restartable */
 					ASN_STRUCT_FREE(asn_DEF_PDU, st);
 					st = 0;
-					fprintf(stderr, "-> PER wants more\n");
+					ASN_DEBUG("-> PER wants more");
 				} else {
-					fprintf(stderr, "-> PER ret %d/%ld\n",
+					ASN_DEBUG("-> PER ret %d/%ld",
 						rval.code, rval.consumed);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;

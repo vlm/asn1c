@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define	EMIT_ASN_DEBUG	1
 #include <INTEGER.h>
 #include <INTEGER.c>
 #include <per_support.c>

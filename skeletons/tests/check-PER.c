@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define	EMIT_ASN_DEBUG	1
 #include <per_support.c>
 #include <per_support.h>
 
@@ -290,14 +289,14 @@ check_per_encoding_auto() {
         ret = per_put_few_bits(&po, -1, prior);
         assert(ret == 0);
 
-		fprintf(stderr, " (out{nboff=%d,nbits=%d,buf_offset=%d})\n", (int)po.nboff, (int)po.nbits, (int)(po.buffer - po.tmpspace));
+		ASN_DEBUG(" (out{nboff=%d,nbits=%d,buf_offset=%d})", (int)po.nboff, (int)po.nbits, (int)(po.buffer - po.tmpspace));
 
         ret = per_put_few_bits(&po, -1, next);
         assert(ret == 0);
 
-		fprintf(stderr, " (out{nboff=%d,nbits=%d,buf_offset=%d})\n", (int)po.nboff, (int)po.nbits, (int)(po.buffer - po.tmpspace));
+		ASN_DEBUG(" (out{nboff=%d,nbits=%d,buf_offset=%d})", (int)po.nboff, (int)po.nbits, (int)(po.buffer - po.tmpspace));
 
-		fprintf(stderr, "Putting %d + %d bits (%d/%d), got %d bytes and %d bits\n",
+		ASN_DEBUG("Putting %d + %d bits (%d/%d), got %d bytes and %d bits",
             prior, next, (prior + next) / 8, (prior + next) % 8,
             (int)(po.buffer - po.tmpspace), (int)po.nboff);
         assert((po.buffer - po.tmpspace) * 8 + po.nboff == prior + next);

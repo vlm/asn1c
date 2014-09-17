@@ -2,7 +2,6 @@
 #include <assert.h>
 #include <math.h>
 
-#define	EMIT_ASN_DEBUG	1
 #include <REAL.h>
 
 static char reconstructed[2][512];

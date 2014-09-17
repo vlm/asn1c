@@ -35,6 +35,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	memcpy(buf + buf_offset, buffer, size);
 	b = buf + buf_offset;
 	bend = b + size;
+#ifdef EMIT_ASN_DEBUG
 	fprintf(stderr, "=> [");
 	for(; b < bend; b++) {
 		if(*b >= 32 && *b < 127 && *b != '%')
@@ -43,6 +44,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 			fprintf(stderr, "%%%02x", *b);
 	}
 	fprintf(stderr, "]:%zd\n", size);
+#endif
 	buf_offset += size;
 	return 0;
 }
@@ -152,10 +154,10 @@ load_object_from(const char *fname, unsigned char *fbuf, size_t size, enum encty
 						rval.consumed = 0; /* Not restartable */
 						ASN_STRUCT_FREE(asn_DEF_PDU, st);
 						st = 0;
-						fprintf(stderr, "-> PER wants more\n");
+						ASN_DEBUG("-> PER wants more");
 					}
 				} else {
-					fprintf(stderr, "-> PER ret %d/%zd mf=%d\n",
+					ASN_DEBUG("-> PER ret %d/%zd mf=%d",
 						rval.code, rval.consumed, mustfail);
 					/* uper_decode() returns _bits_ */
 					rval.consumed += 7;

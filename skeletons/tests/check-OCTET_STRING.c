@@ -3,7 +3,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-#define	EMIT_ASN_DEBUG	1
 #include <OCTET_STRING.h>
 #include <BIT_STRING.h>
 
