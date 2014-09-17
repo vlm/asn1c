@@ -6,7 +6,6 @@ diff -u . . 2>/dev/null && diffArgs="$diffArgs -u"	# Unified diff output
 
 ec=0
 
-set -o pipefail
 set -e
 
 PROCESSING=""
