@@ -767,6 +767,7 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 enable_Werror
+enable_ASN_DEBUG
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1407,6 +1408,7 @@ Optional Features:
   --enable-dependency-tracking   do not reject slow dependency extractors
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-Werror         abort compilation after any C compiler warning
+  --enable-ASN_DEBUG      produce debug log during `make check` testing
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -12424,6 +12426,17 @@ fi
 if test x$enable_werror = xyes; then
   TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
   ADD_CFLAGS="-Werror -W -Wpointer-arith"
+fi
+
+# Check whether --enable-ASN_DEBUG was given.
+if test "${enable_ASN_DEBUG+set}" = set; then :
+  enableval=$enable_ASN_DEBUG; enable_asn_debug=$enableval
+else
+  enable_asn_debug=no
+fi
+
+if test x$enable_asn_debug = xyes; then
+  TESTSUITE_CFLAGS="-DEMIT_ASN_DEBUG"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wall" >&5

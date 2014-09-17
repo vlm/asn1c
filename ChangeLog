@@ -1,6 +1,8 @@
 
 0.9.??:
     * Build structure fixes for portability.
+    * Disable long debug of ASN.1 operations during `make check` stage.
+    * Introduce --enable-ASN_DEBUG configure flag to emit long debug output.
 
 0.9.26: 2014-Sep-11
 	* Updated asn1c-usage.pdf.

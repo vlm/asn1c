@@ -34,6 +34,13 @@ if test x$enable_werror = xyes; then
   ADD_CFLAGS="-Werror -W -Wpointer-arith"
 fi
 
+AC_ARG_ENABLE([ASN_DEBUG],
+  [  --enable-ASN_DEBUG      produce debug log during `make check` testing],
+	enable_asn_debug=$enableval, enable_asn_debug=no)
+if test x$enable_asn_debug = xyes; then
+  TESTSUITE_CFLAGS="-DEMIT_ASN_DEBUG"
+fi
+
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"])
 AX_CHECK_COMPILE_FLAG([-Wcast-qual], [CFLAGS="$CFLAGS -Wcast-qual"])
 AX_CHECK_COMPILE_FLAG([-Wchar-subscripts],
