@@ -13,7 +13,7 @@ print_status() {
     echo "Error while processing $PROCESSING"
 }
 
-trap print_status ERR
+trap print_status EXIT
 
 if [ "x${top_srcdir}" = "x" ]; then
   top_srcdir=".."
@@ -39,5 +39,9 @@ for ref in ${top_srcdir}/tests/*.asn1.-*; do
 		./asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" > "$ref"
 	fi
 done
+
+if [ $ec = 0 ]; then
+    trap '' EXIT
+fi
 
 exit $ec

@@ -10,7 +10,6 @@ if [ "x$1" = "x" ]; then
 	exit
 fi
 
-set -o pipefail
 set -e
 
 # Compute the .asn1 spec name by the given file name.
