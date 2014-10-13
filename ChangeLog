@@ -1,5 +1,6 @@
 
 0.9.??:
+    * Fixed generated file permissions introduced by earlier pull (issue/32).
     * Constness patch #46 by Wim L <wiml@omnigroup.com> (41bbf1c..78d604f).
     * Win32/MinGW patch #31 by Frank Morgner (frankmorgner).
 
