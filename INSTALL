@@ -1,24 +1,44 @@
+
 QUICK START INSTALLATION
 ========================
 
-./configure	# Configure the build infrastructure for your platform
+./configure
 
-make		# Build the libraries and the compiler
+    (or autoreconf -iv && ./configure, if you've got asn1c straight from github).
 
-make check	# Ensure that the code is still behaving well
-		# after compiling on your platform
-		# PLEASE CONTACT ME IF THIS FAILS ON YOUR PLATFORM!
-		# => Lev Walkin <vlm@lionet.info>
+    Configure the build infrastructure for your platform
+    asn1c specific ./configure options include:
+    --enable-Werror
+    --enable-ASN_DEBUG
+    invoke `./configure --help` for details.
 
-make install	# Install the compiler into standard location
+make
 
-man asn1c	# Display the asn1c manual page
+    Build the libraries and the compiler.
 
+make check
+
+    Ensure that the code is still behaving well after compiling on your platform.
+    PLEASE CONTACT ME IF THIS FAILS ON YOUR PLATFORM! Lev Walkin <vlm@lionet.info>
+
+make install
+
+    Install the compiler into a standard location.
+    Use ./configure --prefix to override install location.
+
+man asn1c
+
+    Display the asn1c manual page.
 
 QUICK USAGE GUIDE
 =================
 
-For usage guide and more information please refer to the README file.
+For usage guide and more information please refer to:
+
+    * the ./README.md file.
+    * the asn1c manual page `man asn1c`
+    * the included quick start PDF doc/asn1c-quick.pdf
+    * the comprehensive usage documentation doc/asn1c-usage.pdf
 
 In case of any difficulties with installing the compiler, consider using
 the Online ASN.1 Compiler at
