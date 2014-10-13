@@ -1,7 +1,10 @@
-# WHAT TO READ?
+
+# Installation
 
 If you haven't installed the asn1c yet, read the INSTALL file for a
 short installation guide.
+
+# What to read?
 
 For the list of asn1c command line options, see `asn1c -h` or `man asn1c`.
 
@@ -16,7 +19,7 @@ Please also read the FAQ file.
 An excellent book on ASN.1 is written by Olivier Dubuisson:
 "ASN.1 Communication between heterogeneous systems", ISBN:0-12-6333361-0.
 
-# QUICK START
+# Quick start
 
 (also check out ./doc/asn1c-quick.pdf)
 
@@ -51,7 +54,7 @@ by the compiler.
 
     asn1c -EF <module-to-test.asn1>     # Check semantic validity
 
-# MODEL OF OPERATION
+# Model of operation
 
 The asn1c compiler works by processing the ASN.1 module specifications
 in several stages:
