@@ -109,21 +109,21 @@ Enum1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Enum1] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_Enum1_value2enum_1[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_Enum1_value2enum_1[] = {
 	{ 0,	3,	"red" },
 	{ 1,	5,	"green" },
 	{ 4,	4,	"blue" },
 	{ 5,	5,	"alpha" }
 	/* This list is extensible */
 };
-static unsigned int asn_MAP_Enum1_enum2value_1[] = {
+static const unsigned int asn_MAP_Enum1_enum2value_1[] = {
 	3,	/* alpha(5) */
 	2,	/* blue(4) */
 	1,	/* green(1) */
 	0	/* red(0) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
 	asn_MAP_Enum1_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum1_enum2value_1,	/* N => "tag"; sorted by N */
 	4,	/* Number of elements in the maps */
@@ -132,7 +132,7 @@ static asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_Enum1_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Enum1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_Enum1 = {
@@ -272,7 +272,7 @@ Enum2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Enum2] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_Enum2_value2enum_1[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_Enum2_value2enum_1[] = {
 	{ 0,	3,	"red" },
 	{ 1,	5,	"green" },
 	{ 12,	4,	"beta" },
@@ -282,7 +282,7 @@ static asn_INTEGER_enum_map_t asn_MAP_Enum2_value2enum_1[] = {
 	{ 103,	5,	"gamma" }
 	/* This list is extensible */
 };
-static unsigned int asn_MAP_Enum2_enum2value_1[] = {
+static const unsigned int asn_MAP_Enum2_enum2value_1[] = {
 	5,	/* alpha(46) */
 	2,	/* beta(12) */
 	4,	/* blue(45) */
@@ -292,7 +292,7 @@ static unsigned int asn_MAP_Enum2_enum2value_1[] = {
 	0	/* red(0) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
 	asn_MAP_Enum2_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum2_enum2value_1,	/* N => "tag"; sorted by N */
 	7,	/* Number of elements in the maps */
@@ -301,7 +301,7 @@ static asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_Enum2_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Enum2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_Enum2 = {
@@ -437,19 +437,19 @@ Enum3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Enum3] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_Enum3_value2enum_1[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_Enum3_value2enum_1[] = {
 	{ 0,	1,	"a" },
 	{ 1,	1,	"c" },
 	{ 3,	1,	"b" }
 	/* This list is extensible */
 };
-static unsigned int asn_MAP_Enum3_enum2value_1[] = {
+static const unsigned int asn_MAP_Enum3_enum2value_1[] = {
 	0,	/* a(0) */
 	2,	/* b(3) */
 	1	/* c(1) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
 	asn_MAP_Enum3_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum3_enum2value_1,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
@@ -458,7 +458,7 @@ static asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_Enum3_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Enum3_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_Enum3 = {
@@ -595,21 +595,21 @@ Enum4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Enum4] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_Enum4_value2enum_1[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_Enum4_value2enum_1[] = {
 	{ 0,	1,	"a" },
 	{ 1,	1,	"b" },
 	{ 3,	1,	"c" },
 	{ 4,	1,	"d" }
 	/* This list is extensible */
 };
-static unsigned int asn_MAP_Enum4_enum2value_1[] = {
+static const unsigned int asn_MAP_Enum4_enum2value_1[] = {
 	0,	/* a(0) */
 	1,	/* b(1) */
 	2,	/* c(3) */
 	3	/* d(4) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
 	asn_MAP_Enum4_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum4_enum2value_1,	/* N => "tag"; sorted by N */
 	4,	/* Number of elements in the maps */
@@ -618,7 +618,7 @@ static asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_Enum4_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Enum4_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_Enum4 = {
@@ -754,19 +754,19 @@ Enum5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Enum5] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_Enum5_value2enum_1[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_Enum5_value2enum_1[] = {
 	{ 0,	1,	"a" },
 	{ 25,	1,	"z" },
 	{ 26,	1,	"d" }
 	/* This list is extensible */
 };
-static unsigned int asn_MAP_Enum5_enum2value_1[] = {
+static const unsigned int asn_MAP_Enum5_enum2value_1[] = {
 	0,	/* a(0) */
 	2,	/* d(26) */
 	1	/* z(25) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
 	asn_MAP_Enum5_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum5_enum2value_1,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
@@ -775,7 +775,7 @@ static asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_Enum5_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Enum5_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_Enum5 = {

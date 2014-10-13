@@ -38,7 +38,7 @@ static asn_TYPE_member_t asn_MBR_Programming_1[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Programming_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Programming_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_Programming_specs_1 = {
@@ -110,7 +110,7 @@ static asn_TYPE_member_t asn_MBR_Fault_1[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Fault_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Fault_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_Fault_specs_1 = {
@@ -165,7 +165,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Error;
 
 /*** <<< STAT-DEFS [Error] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_Error_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Error_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Error_specs_1 = {
@@ -248,7 +248,7 @@ static asn_TYPE_member_t asn_MBR_seqOfMan_3[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_seqOfMan_tags_3[] = {
+static const ber_tlv_tag_t asn_DEF_seqOfMan_tags_3[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
@@ -302,10 +302,10 @@ static asn_TYPE_member_t asn_MBR_SeqWithMandatory_1[] = {
 		.name = "seqOfMan"
 		},
 };
-static ber_tlv_tag_t asn_DEF_SeqWithMandatory_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SeqWithMandatory_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_SeqWithMandatory_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_SeqWithMandatory_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString */
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfMan */
 };
@@ -390,7 +390,7 @@ static asn_TYPE_member_t asn_MBR_seqOfOpt_3[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_seqOfOpt_tags_3[] = {
+static const ber_tlv_tag_t asn_DEF_seqOfOpt_tags_3[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
@@ -444,10 +444,10 @@ static asn_TYPE_member_t asn_MBR_SeqWithOptional_1[] = {
 		.name = "seqOfOpt"
 		},
 };
-static ber_tlv_tag_t asn_DEF_SeqWithOptional_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SeqWithOptional_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_SeqWithOptional_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_SeqWithOptional_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 0, 0, 0 }, /* someString */
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 1, 0, 0 } /* seqOfOpt */
 };

@@ -40,10 +40,10 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.name = "aptr"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Sequence_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Sequence_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr */
 };
@@ -145,14 +145,14 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.name = "aptr"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Set_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Set_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Set_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Set_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr */
 };
-static uint8_t asn_MAP_Set_mmap_1[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static const uint8_t asn_MAP_Set_mmap_1[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (1 << 6)
 };
 static asn_SET_specifics_t asn_SPC_Set_specs_1 = {
@@ -252,7 +252,7 @@ static asn_TYPE_member_t asn_MBR_setof_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_setof_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_setof_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
@@ -315,7 +315,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.name = "ainl"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_Choice_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Choice_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* setof */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* aptr */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* ainl */

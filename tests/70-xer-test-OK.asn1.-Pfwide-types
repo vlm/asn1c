@@ -214,7 +214,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.name = "namedSetOfChoice"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* sequence */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* set */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* sequenceOf */
@@ -335,10 +335,10 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.name = "string"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Sequence_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Sequence_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* integer */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* sequence */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* bits */
@@ -435,14 +435,14 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.name = "opaque"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Set_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Set_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Set_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Set_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* roid */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* opaque */
 };
-static uint8_t asn_MAP_Set_mmap_1[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static const uint8_t asn_MAP_Set_mmap_1[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (0 << 6)
 };
 static asn_SET_specifics_t asn_SPC_Set_specs_1 = {
@@ -604,15 +604,15 @@ enum_4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [ExtensibleSet] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_enum_value2enum_4[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_enum_value2enum_4[] = {
 	{ 0,	1,	"b" },
 	{ 1,	1,	"a" }
 };
-static unsigned int asn_MAP_enum_enum2value_4[] = {
+static const unsigned int asn_MAP_enum_enum2value_4[] = {
 	1,	/* a(1) */
 	0	/* b(0) */
 };
-static asn_INTEGER_specifics_t asn_SPC_enum_specs_4 = {
+static const asn_INTEGER_specifics_t asn_SPC_enum_specs_4 = {
 	asn_MAP_enum_value2enum_4,	/* "tag" => N; sorted by tag */
 	asn_MAP_enum_enum2value_4,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
@@ -621,7 +621,7 @@ static asn_INTEGER_specifics_t asn_SPC_enum_specs_4 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_enum_tags_4[] = {
+static const ber_tlv_tag_t asn_DEF_enum_tags_4[] = {
 	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
@@ -669,14 +669,14 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSet_1[] = {
 		.name = "enum"
 		},
 };
-static ber_tlv_tag_t asn_DEF_ExtensibleSet_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_ExtensibleSet_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_ExtensibleSet_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_ExtensibleSet_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* enum */
 };
-static uint8_t asn_MAP_ExtensibleSet_mmap_1[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static const uint8_t asn_MAP_ExtensibleSet_mmap_1[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7) | (0 << 6)
 };
 static asn_SET_specifics_t asn_SPC_ExtensibleSet_specs_1 = {
@@ -772,10 +772,10 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
 		.name = "gtime"
 		},
 };
-static ber_tlv_tag_t asn_DEF_ExtensibleSequence_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_ExtensibleSequence_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_ExtensibleSequence_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_ExtensibleSequence_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* integer */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* gtime */
@@ -860,10 +860,10 @@ static asn_TYPE_member_t asn_MBR_ExtensibleSequence2_1[] = {
 		.name = "integer"
 		},
 };
-static ber_tlv_tag_t asn_DEF_ExtensibleSequence2_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_ExtensibleSequence2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_ExtensibleSequence2_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_ExtensibleSequence2_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* string */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* integer */
 };
@@ -933,7 +933,7 @@ static asn_TYPE_member_t asn_MBR_SetOfNULL_1[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_SetOfNULL_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SetOfNULL_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_SetOfNULL_specs_1 = {
@@ -998,7 +998,7 @@ static asn_TYPE_member_t asn_MBR_SetOfREAL_1[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_SetOfREAL_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SetOfREAL_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_SetOfREAL_specs_1 = {
@@ -1137,15 +1137,15 @@ Member_2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [SetOfEnums] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_Member_value2enum_2[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_Member_value2enum_2[] = {
 	{ 0,	3,	"one" },
 	{ 1,	7,	"oneMore" }
 };
-static unsigned int asn_MAP_Member_enum2value_2[] = {
+static const unsigned int asn_MAP_Member_enum2value_2[] = {
 	0,	/* one(0) */
 	1	/* oneMore(1) */
 };
-static asn_INTEGER_specifics_t asn_SPC_Member_specs_2 = {
+static const asn_INTEGER_specifics_t asn_SPC_Member_specs_2 = {
 	asn_MAP_Member_value2enum_2,	/* "tag" => N; sorted by tag */
 	asn_MAP_Member_enum2value_2,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
@@ -1154,7 +1154,7 @@ static asn_INTEGER_specifics_t asn_SPC_Member_specs_2 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_Member_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_Member_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 static /* Use -fall-defs-global to expose */
@@ -1192,7 +1192,7 @@ static asn_TYPE_member_t asn_MBR_SetOfEnums_1[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_SetOfEnums_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SetOfEnums_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_SetOfEnums_specs_1 = {
@@ -1257,7 +1257,7 @@ static asn_TYPE_member_t asn_MBR_NamedSetOfNULL_1[] = {
 		.name = "y"
 		},
 };
-static ber_tlv_tag_t asn_DEF_NamedSetOfNULL_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NamedSetOfNULL_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_NamedSetOfNULL_specs_1 = {
@@ -1322,7 +1322,7 @@ static asn_TYPE_member_t asn_MBR_NamedSetOfREAL_1[] = {
 		.name = "name"
 		},
 };
-static ber_tlv_tag_t asn_DEF_NamedSetOfREAL_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NamedSetOfREAL_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_NamedSetOfREAL_specs_1 = {
@@ -1461,15 +1461,15 @@ name_2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NamedSetOfEnums] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_name_value2enum_2[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_name_value2enum_2[] = {
 	{ 0,	3,	"one" },
 	{ 1,	7,	"oneMore" }
 };
-static unsigned int asn_MAP_name_enum2value_2[] = {
+static const unsigned int asn_MAP_name_enum2value_2[] = {
 	0,	/* one(0) */
 	1	/* oneMore(1) */
 };
-static asn_INTEGER_specifics_t asn_SPC_name_specs_2 = {
+static const asn_INTEGER_specifics_t asn_SPC_name_specs_2 = {
 	asn_MAP_name_value2enum_2,	/* "tag" => N; sorted by tag */
 	asn_MAP_name_enum2value_2,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
@@ -1478,7 +1478,7 @@ static asn_INTEGER_specifics_t asn_SPC_name_specs_2 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_name_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_name_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 static /* Use -fall-defs-global to expose */
@@ -1516,7 +1516,7 @@ static asn_TYPE_member_t asn_MBR_NamedSetOfEnums_1[] = {
 		.name = "name"
 		},
 };
-static ber_tlv_tag_t asn_DEF_NamedSetOfEnums_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NamedSetOfEnums_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_NamedSetOfEnums_specs_1 = {
@@ -1581,7 +1581,7 @@ static asn_TYPE_member_t asn_MBR_SequenceOf_1[] = {
 		.name = "id"
 		},
 };
-static ber_tlv_tag_t asn_DEF_SequenceOf_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SequenceOf_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_SequenceOf_specs_1 = {
@@ -1646,7 +1646,7 @@ static asn_TYPE_member_t asn_MBR_SeqOfZuka_1[] = {
 		.name = "zuka"
 		},
 };
-static ber_tlv_tag_t asn_DEF_SeqOfZuka_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SeqOfZuka_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_SeqOfZuka_specs_1 = {
@@ -1718,7 +1718,7 @@ static asn_TYPE_member_t asn_MBR_SetOfChoice_1[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_SetOfChoice_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_SetOfChoice_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_SetOfChoice_specs_1 = {
@@ -1790,7 +1790,7 @@ static asn_TYPE_member_t asn_MBR_NamedSetOfChoice_1[] = {
 		.name = "whatever"
 		},
 };
-static ber_tlv_tag_t asn_DEF_NamedSetOfChoice_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NamedSetOfChoice_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_NamedSetOfChoice_specs_1 = {
@@ -1876,7 +1876,7 @@ static asn_TYPE_member_t asn_MBR_SimpleChoice_1[] = {
 		.name = "b"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_SimpleChoice_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_SimpleChoice_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* b */
 };

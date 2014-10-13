@@ -79,7 +79,7 @@ static asn_TYPE_member_t asn_MBR_varsets_3[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_varsets_tags_3[] = {
+static const ber_tlv_tag_t asn_DEF_varsets_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_varsets_specs_3 = {
@@ -132,10 +132,10 @@ static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
 		.name = "varsets"
 		},
 };
-static ber_tlv_tag_t asn_DEF_LogLine_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_LogLine_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_LogLine_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_LogLine_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* varsets */
     { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 0, 0, 0 } /* line-digest */
 };
@@ -246,7 +246,7 @@ static asn_TYPE_member_t asn_MBR_vparts_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_vparts_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_vparts_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_vparts_specs_2 = {
@@ -299,10 +299,10 @@ static asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
 		.name = "resolution"
 		},
 };
-static ber_tlv_tag_t asn_DEF_VariablePartSet_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_VariablePartSet_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_VariablePartSet_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_VariablePartSet_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* vparts */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 } /* resolution */
 };
@@ -436,7 +436,7 @@ static asn_TYPE_member_t asn_MBR_vset_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_vset_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_vset_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_vset_specs_2 = {
@@ -489,10 +489,10 @@ static asn_TYPE_member_t asn_MBR_vrange_4[] = {
 		.name = "to"
 		},
 };
-static ber_tlv_tag_t asn_DEF_vrange_tags_4[] = {
+static const ber_tlv_tag_t asn_DEF_vrange_tags_4[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_vrange_tag2el_4[] = {
+static const asn_TYPE_tag2member_t asn_MAP_vrange_tag2el_4[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 0, 0, 1 }, /* from */
     { (ASN_TAG_CLASS_UNIVERSAL | (26 << 2)), 1, -1, 0 } /* to */
 };
@@ -550,7 +550,7 @@ static asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 		.name = "vrange"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_VariablePart_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_VariablePart_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* vrange */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* vset */
 };
@@ -720,19 +720,19 @@ accept_as_2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [ActionItem] >>> ***/
 
-static asn_INTEGER_enum_map_t asn_MAP_accept_as_value2enum_2[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_accept_as_value2enum_2[] = {
 	{ 0,	7,	"unknown" },
 	{ 1,	4,	"safe" },
 	{ 2,	6,	"unsafe" }
 	/* This list is extensible */
 };
-static unsigned int asn_MAP_accept_as_enum2value_2[] = {
+static const unsigned int asn_MAP_accept_as_enum2value_2[] = {
 	1,	/* safe(1) */
 	0,	/* unknown(0) */
 	2	/* unsafe(2) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
+static const asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
 	asn_MAP_accept_as_value2enum_2,	/* "tag" => N; sorted by tag */
 	asn_MAP_accept_as_enum2value_2,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
@@ -741,7 +741,7 @@ static asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
 	0,	/* Native long size */
 	0
 };
-static ber_tlv_tag_t asn_DEF_accept_as_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_accept_as_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 static /* Use -fall-defs-global to expose */
@@ -779,7 +779,7 @@ static asn_TYPE_member_t asn_MBR_email_9[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_email_tags_9[] = {
+static const ber_tlv_tag_t asn_DEF_email_tags_9[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_email_specs_9 = {
@@ -832,10 +832,10 @@ static asn_TYPE_member_t asn_MBR_notify_7[] = {
 		.name = "email"
 		},
 };
-static ber_tlv_tag_t asn_DEF_notify_tags_7[] = {
+static const ber_tlv_tag_t asn_DEF_notify_tags_7[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_notify_tag2el_7[] = {
+static const asn_TYPE_tag2member_t asn_MAP_notify_tag2el_7[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* critical */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* email */
 };
@@ -893,10 +893,10 @@ static asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 		.name = "notify"
 		},
 };
-static ber_tlv_tag_t asn_DEF_ActionItem_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_ActionItem_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_ActionItem_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_ActionItem_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 }, /* accept-as */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 } /* notify */
 };

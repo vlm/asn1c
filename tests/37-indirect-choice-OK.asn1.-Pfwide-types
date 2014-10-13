@@ -76,7 +76,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.name = "t-d"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* t-a */
     { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 1, 0, 0 }, /* t-b */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 2, 0, 0 }, /* t-c */
@@ -168,7 +168,7 @@ static asn_TYPE_member_t asn_MBR_Choice1_1[] = {
 		.name = "c-b"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_Choice1_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Choice1_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* c-b */
     { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 0, 0, 0 } /* c-a */
 };
@@ -281,10 +281,10 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.name = "c-e"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Choice2_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Choice2_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Choice2_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Choice2_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* c-b */
     { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 0, 0, 0 }, /* c-a */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* c-d */
@@ -423,7 +423,7 @@ Choice3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Choice3] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_Choice3_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Choice3_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
 };
@@ -549,7 +549,7 @@ Choice4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Choice4] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_Choice4_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Choice4_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
 };
@@ -675,7 +675,7 @@ Choice5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [Choice5] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_Choice5_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Choice5_tags_1[] = {
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_Choice5 = {

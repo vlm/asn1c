@@ -55,7 +55,7 @@ static asn_TYPE_member_t asn_MBR_t_member1_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_t_member1_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_t_member1_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_t_member1_specs_2 = {
@@ -99,7 +99,7 @@ static asn_TYPE_member_t asn_MBR_t_member2_4[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_t_member2_tags_4[] = {
+static const ber_tlv_tag_t asn_DEF_t_member2_tags_4[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_t_member2_specs_4 = {
@@ -170,10 +170,10 @@ static asn_TYPE_member_t asn_MBR_Test_structure_1_1[] = {
 		.name = "t-member4"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Test_structure_1_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Test_structure_1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Test_structure_1_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Test_structure_1_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 3, 0, 0 }, /* t-member4 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 1 }, /* t-member2 */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, -1, 0 }, /* t-member3 */
@@ -275,7 +275,7 @@ static asn_TYPE_member_t asn_MBR_or_3[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_or_tags_3[] = {
+static const ber_tlv_tag_t asn_DEF_or_tags_3[] = {
 	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
@@ -347,7 +347,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		.name = "other"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_Choice_1_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Choice_1_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* and */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* or */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* not */
@@ -438,13 +438,13 @@ static asn_TYPE_member_t asn_MBR_Test_structure_2_1[] = {
 		.name = "m1"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Test_structure_2_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Test_structure_2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Test_structure_2_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Test_structure_2_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 */
 };
-static uint8_t asn_MAP_Test_structure_2_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static const uint8_t asn_MAP_Test_structure_2_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
 };
 static asn_SET_specifics_t asn_SPC_Test_structure_2_specs_1 = {
@@ -535,13 +535,13 @@ static asn_TYPE_member_t asn_MBR_Test_structure_3_1[] = {
 		.name = "m1"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Test_structure_3_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Test_structure_3_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Test_structure_3_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Test_structure_3_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* m1 */
 };
-static uint8_t asn_MAP_Test_structure_3_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+static const uint8_t asn_MAP_Test_structure_3_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
 };
 static asn_SET_specifics_t asn_SPC_Test_structure_3_specs_1 = {

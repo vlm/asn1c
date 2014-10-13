@@ -74,11 +74,11 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.name = "pdu-2"
 		},
 };
-static int asn_MAP_PDU_oms_1[] = { 0, 1, 2, 3 };
-static ber_tlv_tag_t asn_DEF_PDU_tags_1[] = {
+static const int asn_MAP_PDU_oms_1[] = { 0, 1, 2, 3 };
+static const ber_tlv_tag_t asn_DEF_PDU_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* str-o */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* str-m */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* singl */
@@ -177,11 +177,11 @@ static asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 		.name = "opt-z"
 		},
 };
-static int asn_MAP_Singleton_oms_1[] = { 0 };
-static ber_tlv_tag_t asn_DEF_Singleton_tags_1[] = {
+static const int asn_MAP_Singleton_oms_1[] = { 0 };
+static const ber_tlv_tag_t asn_DEF_Singleton_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Singleton_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Singleton_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* opt-z */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
@@ -296,8 +296,8 @@ static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 		.name = "ext0"
 		},
 };
-static int asn_MAP_PDU_2_cmap_1[] = { 0, 2, 1 };
-static asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
+static const int asn_MAP_PDU_2_cmap_1[] = { 0, 2, 1 };
+static const asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* ext0 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ext1 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 0, 0, 0 } /* main */

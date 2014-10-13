@@ -39,7 +39,7 @@ static asn_TYPE_member_t asn_MBR_Collection_16P0_1[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Collection_16P0_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Collection_16P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_Collection_16P0_specs_1 = {
@@ -82,7 +82,7 @@ static asn_TYPE_member_t asn_MBR_Collection_16P1_3[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_Collection_16P1_tags_3[] = {
+static const ber_tlv_tag_t asn_DEF_Collection_16P1_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_Collection_16P1_specs_3 = {
@@ -156,10 +156,10 @@ static asn_TYPE_member_t asn_MBR_Bunch_1[] = {
 		.name = "field-IA5String"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Bunch_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Bunch_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Bunch_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Bunch_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 1 }, /* field-REAL */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, -1, 0 } /* field-IA5String */
 };

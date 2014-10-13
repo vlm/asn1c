@@ -46,7 +46,7 @@ static asn_TYPE_member_t asn_MBR_collection_3[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_collection_tags_3[] = {
+static const ber_tlv_tag_t asn_DEF_collection_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SET_OF_specifics_t asn_SPC_collection_specs_3 = {
@@ -99,10 +99,10 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.name = "collection"
 		},
 };
-static ber_tlv_tag_t asn_DEF_T_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* int */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 } /* collection */
 };
@@ -182,10 +182,10 @@ static asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.name = "str"
 		},
 };
-static ber_tlv_tag_t asn_DEF_T2_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_T2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_T2_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_T2_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* flag */
     { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 1, 0, 0 } /* str */
 };

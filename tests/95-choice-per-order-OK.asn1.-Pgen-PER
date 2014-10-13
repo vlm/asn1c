@@ -91,8 +91,8 @@ static asn_TYPE_member_t asn_MBR_ch_4[] = {
 		.name = "int"
 		},
 };
-static int asn_MAP_ch_cmap_4[] = { 1, 0 };
-static asn_TYPE_tag2member_t asn_MAP_ch_tag2el_4[] = {
+static const int asn_MAP_ch_cmap_4[] = { 1, 0 };
+static const asn_TYPE_tag2member_t asn_MAP_ch_tag2el_4[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* int */
     { (ASN_TAG_CLASS_UNIVERSAL | (5 << 2)), 0, 0, 0 } /* null */
 };
@@ -168,8 +168,8 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.name = "bool"
 		},
 };
-static int asn_MAP_Choice_cmap_1[] = { 2, 1, 0, 3 };
-static asn_TYPE_tag2member_t asn_MAP_Choice_tag2el_1[] = {
+static const int asn_MAP_Choice_cmap_1[] = { 2, 1, 0, 3 };
+static const asn_TYPE_tag2member_t asn_MAP_Choice_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 3, 0, 0 }, /* bool */
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 2, 0, 0 }, /* int */
     { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 1, 0, 0 }, /* bitstr */
@@ -271,7 +271,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.name = "roid"
 		},
 };
-static asn_TYPE_tag2member_t asn_MAP_Choice2_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Choice2_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* bitstr */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* roid */
 };

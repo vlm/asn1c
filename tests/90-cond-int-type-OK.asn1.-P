@@ -97,7 +97,7 @@ CN_IntegerUnlimited_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [CN-IntegerUnlimited] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_CN_IntegerUnlimited_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_CN_IntegerUnlimited_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerUnlimited = {
@@ -235,7 +235,7 @@ CN_IntegerMinMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [CN-IntegerMinMax] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_CN_IntegerMinMax_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_CN_IntegerMinMax_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinMax = {
@@ -377,7 +377,7 @@ CN_IntegerMinLow_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [CN-IntegerMinLow] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_CN_IntegerMinLow_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_CN_IntegerMinLow_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinLow = {
@@ -525,7 +525,7 @@ NO_IntegerMinHigh_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerMinHigh] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_NO_IntegerMinHigh_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerMinHigh_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
@@ -667,12 +667,12 @@ NO_IntegerLowHigh_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerLowHigh] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
 };
-static ber_tlv_tag_t asn_DEF_NO_IntegerLowHigh_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerLowHigh_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
@@ -814,7 +814,7 @@ CN_IntegerLowMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [CN-IntegerLowMax] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_CN_IntegerLowMax_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_CN_IntegerLowMax_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
@@ -962,7 +962,7 @@ NO_IntegerHighMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerHighMax] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_NO_IntegerHighMax_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerHighMax_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerHighMax = {
@@ -1110,7 +1110,7 @@ NO_IntegerLowestMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerLowestMax] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_NO_IntegerLowestMax_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerLowestMax_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
@@ -1252,12 +1252,12 @@ NO_IntegerOutRange_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerOutRange] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
 };
-static ber_tlv_tag_t asn_DEF_NO_IntegerOutRange_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerOutRange_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
@@ -1399,12 +1399,12 @@ NO_IntegerOutValue_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerOutValue] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
 };
-static ber_tlv_tag_t asn_DEF_NO_IntegerOutValue_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerOutValue_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
@@ -1546,7 +1546,7 @@ OK_IntegerInRange1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-IntegerInRange1] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_IntegerInRange1_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange1 = {
@@ -1688,7 +1688,7 @@ OK_IntegerInRange2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-IntegerInRange2] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_IntegerInRange2_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange2 = {
@@ -1830,7 +1830,7 @@ OK_IntegerInRange3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-IntegerInRange3] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_IntegerInRange3_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange3_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange3 = {
@@ -1972,7 +1972,7 @@ OK_IntegerInRange4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-IntegerInRange4] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_IntegerInRange4_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange4_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange4 = {
@@ -2114,7 +2114,7 @@ OK_IntegerInRange5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [OK-IntegerInRange5] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_OK_IntegerInRange5_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange5_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
@@ -2247,12 +2247,12 @@ NO_IntegerInRange6_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerInRange6] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
 };
-static ber_tlv_tag_t asn_DEF_NO_IntegerInRange6_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerInRange6_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
@@ -2384,7 +2384,7 @@ CN_IntegerEnumerated1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [CN-IntegerEnumerated1] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_CN_IntegerEnumerated1_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_CN_IntegerEnumerated1_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerEnumerated1 = {
@@ -2516,7 +2516,7 @@ NO_IntegerEnumerated2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerEnumerated2] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_NO_IntegerEnumerated2_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_NO_IntegerEnumerated2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerEnumerated2 = {

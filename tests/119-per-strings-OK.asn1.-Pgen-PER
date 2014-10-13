@@ -98,7 +98,7 @@ static int check_permitted_alphabet_6(const void *sptr) {
 	return 0;
 }
 
-static int permitted_alphabet_table_7[256] = {
+static const int permitted_alphabet_table_7[256] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
@@ -106,12 +106,12 @@ static int permitted_alphabet_table_7[256] = {
  0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
  0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
 };
-static int permitted_alphabet_code2value_7[5] = {
+static const int permitted_alphabet_code2value_7[5] = {
 65,66,88,89,90,};
 
 
 static int check_permitted_alphabet_7(const void *sptr) {
-	int *table = permitted_alphabet_table_7;
+	const int *table = permitted_alphabet_table_7;
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -150,7 +150,7 @@ static int check_permitted_alphabet_10(const void *sptr) {
 	return 0;
 }
 
-static int permitted_alphabet_table_11[256] = {
+static const int permitted_alphabet_table_11[256] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
@@ -158,12 +158,12 @@ static int permitted_alphabet_table_11[256] = {
  0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
  0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
 };
-static int permitted_alphabet_code2value_11[5] = {
+static const int permitted_alphabet_code2value_11[5] = {
 65,66,88,89,90,};
 
 
 static int check_permitted_alphabet_11(const void *sptr) {
-	int *table = permitted_alphabet_table_11;
+	const int *table = permitted_alphabet_table_11;
 	/* The underlying type is VisibleString */
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -189,7 +189,7 @@ static int check_permitted_alphabet_13(const void *sptr) {
 	return 0;
 }
 
-static int permitted_alphabet_table_14[256] = {
+static const int permitted_alphabet_table_14[256] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
@@ -197,12 +197,12 @@ static int permitted_alphabet_table_14[256] = {
  0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
  0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
 };
-static int permitted_alphabet_code2value_14[5] = {
+static const int permitted_alphabet_code2value_14[5] = {
 65,66,88,89,90,};
 
 
 static int check_permitted_alphabet_14(const void *sptr) {
-	int *table = permitted_alphabet_table_14;
+	const int *table = permitted_alphabet_table_14;
 	/* The underlying type is PrintableString */
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -241,18 +241,18 @@ static int check_permitted_alphabet_17(const void *sptr) {
 	return 0;
 }
 
-static int permitted_alphabet_table_18[256] = {
+static const int permitted_alphabet_table_18[256] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0,	/*  1       9       */
 };
-static int permitted_alphabet_code2value_18[2] = {
+static const int permitted_alphabet_code2value_18[2] = {
 49,57,};
 
 
 static int check_permitted_alphabet_18(const void *sptr) {
-	int *table = permitted_alphabet_table_18;
+	const int *table = permitted_alphabet_table_18;
 	/* The underlying type is NumericString */
 	const NumericString_t *st = (const NumericString_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -265,7 +265,7 @@ static int check_permitted_alphabet_18(const void *sptr) {
 	return 0;
 }
 
-static int permitted_alphabet_table_21[128] = {
+static const int permitted_alphabet_table_21[128] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
@@ -275,7 +275,7 @@ static int permitted_alphabet_table_21[128] = {
 };
 
 static int check_permitted_alphabet_21(const void *sptr) {
-	int *table = permitted_alphabet_table_21;
+	const int *table = permitted_alphabet_table_21;
 	/* The underlying type is UTF8String */
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -334,7 +334,7 @@ static int check_permitted_alphabet_25(const void *sptr) {
 	return 0;
 }
 
-static int permitted_alphabet_table_26[256] = {
+static const int permitted_alphabet_table_26[256] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
@@ -342,12 +342,12 @@ static int permitted_alphabet_table_26[256] = {
  0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
  0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
 };
-static int permitted_alphabet_code2value_26[5] = {
+static const int permitted_alphabet_code2value_26[5] = {
 65,66,88,89,90,};
 
 
 static int check_permitted_alphabet_26(const void *sptr) {
-	int *table = permitted_alphabet_table_26;
+	const int *table = permitted_alphabet_table_26;
 	/* The underlying type is BMPString */
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -414,7 +414,7 @@ static int check_permitted_alphabet_30(const void *sptr) {
 	return 0;
 }
 
-static int permitted_alphabet_table_31[256] = {
+static const int permitted_alphabet_table_31[256] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
@@ -422,12 +422,12 @@ static int permitted_alphabet_table_31[256] = {
  0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*  AB              */
  0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 0, 0, 0, 0, 0,	/*         XYZ      */
 };
-static int permitted_alphabet_code2value_31[5] = {
+static const int permitted_alphabet_code2value_31[5] = {
 65,66,88,89,90,};
 
 
 static int check_permitted_alphabet_31(const void *sptr) {
-	int *table = permitted_alphabet_table_31;
+	const int *table = permitted_alphabet_table_31;
 	/* The underlying type is UniversalString */
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	const uint8_t *ch = st->buf;
@@ -1192,7 +1192,7 @@ static asn_TYPE_member_t asn_MBR_many_2[] = {
 		.name = ""
 		},
 };
-static ber_tlv_tag_t asn_DEF_many_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_many_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
@@ -1508,11 +1508,11 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.name = "oid"
 		},
 };
-static int asn_MAP_PDU_oms_1[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
-static ber_tlv_tag_t asn_DEF_PDU_tags_1[] = {
+static const int asn_MAP_PDU_oms_1[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
+static const ber_tlv_tag_t asn_DEF_PDU_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* many */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ia5 */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* ia5-c */

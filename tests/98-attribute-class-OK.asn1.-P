@@ -63,10 +63,10 @@ static asn_TYPE_member_t asn_MBR_Attribute_1[] = {
 		.name = "siAttributeValue"
 		},
 };
-static ber_tlv_tag_t asn_DEF_Attribute_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Attribute_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_TYPE_tag2member_t asn_MAP_Attribute_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Attribute_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (13 << 2)), 0, 0, 0 }, /* identifier */
     { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 1, 0, 0 } /* siAttributeValue */
 };

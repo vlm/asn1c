@@ -17,7 +17,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T;
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
-static ber_tlv_tag_t asn_DEF_T_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
