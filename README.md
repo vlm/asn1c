@@ -4,7 +4,7 @@
 If you haven't installed the asn1c yet, read the [INSTALL](INSTALL) file for a
 short installation guide.
 
-# What to read?
+# Documentation
 
 For the list of asn1c command line options, see `asn1c -h` or `man asn1c`.
 
