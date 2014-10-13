@@ -1,6 +1,7 @@
 
 0.9.??:
-    * Merged constness patch by Wim L <wiml@omnigroup.com> (41bbf1c..78d604f).
+    * Constness patch #46 by Wim L <wiml@omnigroup.com> (41bbf1c..78d604f).
+    * Win32/MinGW patch #31 by Frank Morgner (frankmorgner).
 
 0.9.27: 2014-Sep-17
     * Build structure fixes for portability.
