@@ -50,7 +50,7 @@ asn1f_parse_class_object(arg_t *arg) {
 			+ expr->value->value.string.size - 1,
 		0, 0);
 	if(ret) {
-		LOG((ret < 0),
+		LOG((int)(ret < 0),
 			"Cannot parse %s of CLASS %s found at line %d",
 			expr->Identifier, eclass->Identifier, expr->_lineno);
 		asn1p_ioc_row_delete(row);
