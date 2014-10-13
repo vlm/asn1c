@@ -4,7 +4,8 @@ QUICK START INSTALLATION
 
 ./configure
 
-    (or autoreconf -iv && ./configure, if you've got asn1c straight from github).
+    (or `autoreconf -iv && ./configure` if you've got asn1c
+    straight from github).
 
     Configure the build infrastructure for your platform
     asn1c specific ./configure options include:
@@ -18,8 +19,8 @@ make
 
 make check
 
-    Ensure that the code is still behaving well after compiling on your platform.
-    PLEASE CONTACT ME IF THIS FAILS ON YOUR PLATFORM! Lev Walkin <vlm@lionet.info>
+    Ensure asn1c is still behaving well after compiling on your platform.
+    PLEASE CONTACT ME IF THIS STEP FAILS! Lev Walkin <vlm@lionet.info>
 
 make install
 
