@@ -19,6 +19,9 @@ AC_PROG_YACC
 AM_PROG_LEX
 AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)	dnl for Solaris
 
+dnl If you need to see the details, just run make V=1.
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
 case "$host_os" in
 cygwin)
 	case "$target" in
@@ -94,6 +97,8 @@ AC_CHECK_FUNCS(strtoimax strtoll)
 AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
 AC_CHECK_FUNCS(timegm)
+AC_CHECK_DECLS(alloca strcasecmp)
+AC_TRY_LINK_FUNC([symlink],[AC_DEFINE([HAVE_SYMLINK], 1, [Define to 1 if you have the symlink function.])])
 
 AC_OUTPUT(				\
 skeletons/tests/Makefile		\

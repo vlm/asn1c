@@ -6,6 +6,10 @@
 #include "asn1c_save.h"
 #include "asn1c_out.h"
 
+#ifndef HAVE_SYMLINK
+#define symlink(a,b) (errno=ENOSYS, -1)
+#endif
+
 #define	HINCLUDE(s)						\
 	((arg->flags & A1C_INCLUDES_QUOTED)			\
 		? fprintf(fp_h, "#include \"%s\"\n", s)		\
