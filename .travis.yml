@@ -2,4 +2,4 @@ language: c
 compiler:
   - gcc
   - clang
-script: ./configure && make && make check
+script: autoreconf -iv && ./configure && make && make check
