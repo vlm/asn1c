@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005, 2006, 2013
+ * Copyright (c) 2003-2014
  * 	Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 
 #undef  COPYRIGHT
 #define COPYRIGHT       \
-	"Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>\n"
+	"Copyright (c) 2003-2014 Lev Walkin <vlm@lionet.info>\n"
 
 #include <asn1parser.h>		/* Parse the ASN.1 file and build a tree */
 #include <asn1fix.h>		/* Fix the ASN.1 tree */
