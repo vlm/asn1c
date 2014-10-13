@@ -1,27 +1,27 @@
 
 # Installation
 
-If you haven't installed the asn1c yet, read the INSTALL file for a
+If you haven't installed the asn1c yet, read the [INSTALL](INSTALL) file for a
 short installation guide.
 
 # What to read?
 
 For the list of asn1c command line options, see `asn1c -h` or `man asn1c`.
 
-The comprehensive documentation on this compiler is in asn1c-usage.pdf.
+The comprehensive documentation on this compiler is in [asn1c-usage.pdf](doc/asn1c-usage.pdf).
 
 If you are building the compiler from the sources, the PDFs reside
 in the ./doc directory. Normally the file is installed together with the
 README.md file you're reading right now.
 
-Please also read the FAQ file.
+Please also read the [FAQ](FAQ) file.
 
 An excellent book on ASN.1 is written by Olivier Dubuisson:
 "ASN.1 Communication between heterogeneous systems", ISBN:0-12-6333361-0.
 
 # Quick start
 
-(also check out ./doc/asn1c-quick.pdf)
+(also check out [asn1c-quick.pdf](doc/asn1c-quick.pdf))
 
 After building [and installing] the compiler (see INSTALL), you may use
 the asn1c command to compile the ASN.1 specification:
