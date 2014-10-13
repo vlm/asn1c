@@ -5,11 +5,21 @@
 #define	MAXPATHLEN	1024
 #endif
 
+/* Normally file permissions are (DEFFILEMODE & ~umask(2)) */
 #ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
+
 #ifdef	_WIN32
 #define	DEFFILEMODE	(S_IREAD|S_IWRITE)
+#define REASONABLE_FILE_MODE    DEFFILEMODE
 #else
 #define	DEFFILEMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+#define REASONABLE_FILE_MODE    (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)
+#endif
+#else   /* !DEFFILEMODE */
+#ifdef	_WIN32
+#define REASONABLE_FILE_MODE    DEFFILEMODE
+#else
+#define REASONABLE_FILE_MODE    (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)
 #endif
 #endif
 
@@ -56,7 +66,8 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 		 */
 		fd = mkstemp(fname);
 #ifndef	_WIN32
-		(void)fchmod(fd, DEFFILEMODE);
+		/* fchmod() does not respect umask */
+		(void)fchmod(fd, REASONABLE_FILE_MODE);
 #endif
 	} else {
 		/*
