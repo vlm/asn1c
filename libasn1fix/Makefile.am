@@ -5,7 +5,6 @@ AM_CPPFLAGS =				\
 
 noinst_LTLIBRARIES = libasn1fix.la
 
-libasn1fix_la_LDFLAGS = -all-static
 libasn1fix_la_SOURCES =					\
 	asn1fix.c asn1fix.h				\
 	asn1fix_internal.h				\

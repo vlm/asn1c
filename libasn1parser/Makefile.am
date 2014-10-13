@@ -5,7 +5,6 @@ AM_LFLAGS = -s -p -Cem -Pasn1p_ -olex.yy.c
 
 noinst_LTLIBRARIES = libasn1parser.la
 
-libasn1parser_la_LDFLAGS = -all-static
 libasn1parser_la_SOURCES =		\
 	asn1parser.c asn1parser.h	\
 	asn1p_y.c asn1p_y.h asn1p_l.c	\
