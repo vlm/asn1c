@@ -64,7 +64,9 @@
 #ifndef	EX_OSFILE
 #define	EX_OSFILE 72
 #endif
+#if defined HAVE_DECL_ALLOCA && !HAVE_DECL_ALLOCA
 #define	alloca _alloca
+#endif
 #define	snprintf _snprintf
 #endif	/* _WIN32 */
 

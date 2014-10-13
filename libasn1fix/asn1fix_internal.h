@@ -27,7 +27,9 @@
 #define	EX_NOINPUT	66
 #define	EX_DATAERR	65
 #define	snprintf	_snprintf
+#if defined HAVE_DECL_STRCASECMP && !HAVE_DECL_STRCASECMP
 #define	strcasecmp	stricmp
+#endif
 #endif
 
 #ifndef	ETOOMANYREFS
