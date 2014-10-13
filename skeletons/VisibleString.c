@@ -8,7 +8,7 @@
 /*
  * VisibleString basic type description.
  */
-static ber_tlv_tag_t asn_DEF_VisibleString_tags[] = {
+static const ber_tlv_tag_t asn_DEF_VisibleString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),	/* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };

@@ -175,7 +175,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		 */
 		REDIR(OT_STAT_DEFS);
 
-		OUT("static asn_INTEGER_enum_map_t asn_MAP_%s_value2enum_%d[] = {\n",
+		OUT("static const asn_INTEGER_enum_map_t asn_MAP_%s_value2enum_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byValue);
 		for(eidx = 0; eidx < el_count; eidx++) {
@@ -189,7 +189,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 			OUT("\t/* This list is extensible */\n");
 		OUT("};\n");
 
-		OUT("static unsigned int asn_MAP_%s_enum2value_%d[] = {\n",
+		OUT("static const unsigned int asn_MAP_%s_enum2value_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byName);
 		for(eidx = 0; eidx < el_count; eidx++) {
@@ -202,7 +202,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 			OUT("\t/* This list is extensible */\n");
 		OUT("};\n");
 
-		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
+		OUT("static const asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr), expr->_type_unique_index);
 		INDENT(+1);
 		OUT("asn_MAP_%s_value2enum_%d,\t"
@@ -234,7 +234,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	if(expr->expr_type == ASN_BASIC_INTEGER
 	&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN) {
 		REDIR(OT_STAT_DEFS);
-		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
+		OUT("static const asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr), expr->_type_unique_index);
 		INDENT(+1);
 		OUT("0,\t");
@@ -383,7 +383,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 			int elm = 0;
 			int comma = 0;
 			comp_mode = 0;
-			OUT("static int asn_MAP_%s_oms_%d[] = {",
+			OUT("static const int asn_MAP_%s_oms_%d[] = {",
 				MKID(expr),
 				expr->_type_unique_index);
 			TQ_FOR(v, &(expr->members), next) {
@@ -628,7 +628,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	/*
 	 * Emit a map of mandatory elements.
 	 */
-	OUT("static uint8_t asn_MAP_%s_mmap_%d",
+	OUT("static const uint8_t asn_MAP_%s_mmap_%d",
 		MKID(expr), expr->_type_unique_index);
 	p = MKID_safe(expr);
 	OUT("[(%d + (8 * sizeof(unsigned int)) - 1) / 8]", elements);
@@ -964,7 +964,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		int i;
 		cmap = compute_canonical_members_order(arg, elements);
 		if(cmap) {
-			OUT("static int asn_MAP_%s_cmap_%d[] = {",
+			OUT("static const int asn_MAP_%s_cmap_%d[] = {",
 				MKID(expr),
 				expr->_type_unique_index);
 			for(i = 0; i < elements; i++) {
@@ -1661,7 +1661,7 @@ emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *
 
 	if(!tag2el_count) return 0;	/* No top level tags */
 
-	OUT("static asn_TYPE_tag2member_t asn_MAP_%s_tag2el%s_%d[] = {\n",
+	OUT("static const asn_TYPE_tag2member_t asn_MAP_%s_tag2el%s_%d[] = {\n",
 		MKID(expr), opt_modifier?opt_modifier:"",
 		expr->_type_unique_index);
 	for(i = 0; i < tag2el_count; i++) {
@@ -1730,7 +1730,7 @@ emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_ta
 	}
 
 #define	EMIT_TAGS_TABLE(name, tags, tags_count)	do {			\
-		OUT("static ber_tlv_tag_t asn_DEF_%s%s_tags_%d[] = {\n",\
+		OUT("static const ber_tlv_tag_t asn_DEF_%s%s_tags_%d[] = {\n",\
 			MKID(expr), name,			\
 			expr->_type_unique_index);			\
 		INDENT(+1);						\

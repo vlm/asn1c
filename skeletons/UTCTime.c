@@ -18,7 +18,7 @@
 /*
  * UTCTime basic type description.
  */
-static ber_tlv_tag_t asn_DEF_UTCTime_tags[] = {
+static const ber_tlv_tag_t asn_DEF_UTCTime_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (23 << 2)),	/* [UNIVERSAL 23] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),  /* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */

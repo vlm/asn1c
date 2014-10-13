@@ -11,7 +11,7 @@
 /*
  * INTEGER basic type description.
  */
-static ber_tlv_tag_t asn_DEF_INTEGER_tags[] = {
+static const ber_tlv_tag_t asn_DEF_INTEGER_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_INTEGER = {
@@ -106,7 +106,7 @@ static const asn_INTEGER_enum_map_t *INTEGER_map_enum2value(asn_INTEGER_specific
  * INTEGER specific human-readable output.
  */
 static ssize_t
-INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key, int plainOrXER) {
+INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key, int plainOrXER) {
 	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	char scratch[32];	/* Enough for 64-bit integer */
 	uint8_t *buf = st->buf;
@@ -166,7 +166,7 @@ INTEGER__dump(asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_by
 	/* Output in the long xx:yy:zz... format */
 	/* TODO: replace with generic algorithm (Knuth TAOCP Vol 2, 4.3.1) */
 	for(p = scratch; buf < buf_end; buf++) {
-		static const char *h2c = "0123456789ABCDEF";
+		const char * const h2c = "0123456789ABCDEF";
 		if((p - scratch) >= (ssize_t)(sizeof(scratch) - 4)) {
 			/* Flush buffer */
 			if(cb(scratch, p - scratch, app_key) < 0)
@@ -208,8 +208,8 @@ INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 struct e2v_key {
 	const char *start;
 	const char *stop;
-	asn_INTEGER_enum_map_t *vemap;
-	unsigned int *evmap;
+	const asn_INTEGER_enum_map_t *vemap;
+	const unsigned int *evmap;
 };
 static int
 INTEGER__compar_enum2value(const void *kp, const void *am) {
@@ -232,7 +232,7 @@ INTEGER__compar_enum2value(const void *kp, const void *am) {
 
 static const asn_INTEGER_enum_map_t *
 INTEGER_map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop) {
-	asn_INTEGER_enum_map_t *el_found;
+	const asn_INTEGER_enum_map_t *el_found;
 	int count = specs ? specs->map_count : 0;
 	struct e2v_key key;
 	const char *lp;

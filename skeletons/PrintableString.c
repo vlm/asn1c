@@ -9,7 +9,7 @@
 /*
  * ASN.1:1984 (X.409)
  */
-static int _PrintableString_alphabet[256] = {
+static const int _PrintableString_alphabet[256] = {
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/*                  */
  1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 0, 5, 6, 7, 8, 9,	/* .      '() +,-./ */
@@ -19,7 +19,7 @@ static int _PrintableString_alphabet[256] = {
  0,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,	/*  abcdefghijklmno */
 64,65,66,67,68,69,70,71,72,73,74, 0, 0, 0, 0, 0,	/* pqrstuvwxyz      */
 };
-static int _PrintableString_code2value[74] = { 
+static const int _PrintableString_code2value[74] = { 
 32,39,40,41,43,44,45,46,47,48,49,50,51,52,53,54,
 55,56,57,58,61,63,65,66,67,68,69,70,71,72,73,74,
 75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,
@@ -29,7 +29,7 @@ static int _PrintableString_code2value[74] = {
 /*
  * PrintableString basic type description.
  */
-static ber_tlv_tag_t asn_DEF_PrintableString_tags[] = {
+static const ber_tlv_tag_t asn_DEF_PrintableString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (19 << 2)),	/* [UNIVERSAL 19] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
@@ -41,7 +41,7 @@ static int asn_DEF_PrintableString_c2v(unsigned int code) {
 		return _PrintableString_code2value[code];
 	return -1;
 }
-static asn_per_constraints_t asn_DEF_PrintableString_constraints = {
+static const asn_per_constraints_t asn_DEF_PrintableString_constraints = {
 	{ APC_CONSTRAINED, 4, 4, 0x20, 0x39 },	/* Value */
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
 	asn_DEF_PrintableString_v2c,

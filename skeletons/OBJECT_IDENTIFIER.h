@@ -68,7 +68,7 @@ xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
  * WARNING: The function always returns the real number of arcs,
  * even if there is no sufficient (_arc_slots) provided.
  */
-int OBJECT_IDENTIFIER_get_arcs(OBJECT_IDENTIFIER_t *_oid,
+int OBJECT_IDENTIFIER_get_arcs(const OBJECT_IDENTIFIER_t *_oid,
 	void *_arcs,			/* e.g., unsigned int arcs[N] */
 	unsigned int _arc_type_size,	/* e.g., sizeof(arcs[0]) */
 	unsigned int _arc_slots		/* e.g., N */);
@@ -91,12 +91,12 @@ int OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *_oid,
 /*
  * Print the specified OBJECT IDENTIFIER arc.
  */
-int OBJECT_IDENTIFIER_print_arc(uint8_t *arcbuf, int arclen,
+int OBJECT_IDENTIFIER_print_arc(const uint8_t *arcbuf, int arclen,
 	int add, /* Arbitrary offset, required to process the first two arcs */
 	asn_app_consume_bytes_f *cb, void *app_key);
 
 /* Same as above, but returns the number of written digits, instead of 0 */
-ssize_t OBJECT_IDENTIFIER__dump_arc(uint8_t *arcbuf, int arclen, int add,
+ssize_t OBJECT_IDENTIFIER__dump_arc(const uint8_t *arcbuf, int arclen, int add,
 	asn_app_consume_bytes_f *cb, void *app_key);
 
 /*
@@ -127,7 +127,7 @@ int OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
  * Internal functions.
  * Used by RELATIVE-OID implementation in particular.
  */
-int OBJECT_IDENTIFIER_get_single_arc(uint8_t *arcbuf, unsigned int arclen,
+int OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen,
 	signed int add, void *value, unsigned int value_size);
 int OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf,
 	const void *arcval, unsigned int arcval_size, int _prepared_order);

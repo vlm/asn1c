@@ -8,7 +8,7 @@
 /*
  * GeneralString basic type description.
  */
-static ber_tlv_tag_t asn_DEF_GeneralString_tags[] = {
+static const ber_tlv_tag_t asn_DEF_GeneralString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (27 << 2)),	/* [UNIVERSAL 27] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };

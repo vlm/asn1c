@@ -10,7 +10,7 @@
 /*
  * NULL basic type description.
  */
-static ber_tlv_tag_t asn_DEF_NULL_tags[] = {
+static const ber_tlv_tag_t asn_DEF_NULL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (5 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_NULL = {

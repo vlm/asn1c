@@ -183,11 +183,11 @@ CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		do {
-			asn_TYPE_tag2member_t *t2m;
+			const asn_TYPE_tag2member_t *t2m;
 			asn_TYPE_tag2member_t key;
 
 			key.el_tag = tlv_tag;
-			t2m = (asn_TYPE_tag2member_t *)bsearch(&key,
+			t2m = (const asn_TYPE_tag2member_t *)bsearch(&key,
 					specs->tag2el, specs->tag2el_count,
 					sizeof(specs->tag2el[0]), _search4tag);
 			if(t2m) {
@@ -445,7 +445,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 }
 
 ber_tlv_tag_t
-CHOICE_outmost_tag(asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber_tlv_tag_t tag) {
+CHOICE_outmost_tag(const asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber_tlv_tag_t tag) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	int present;
 
@@ -458,7 +458,7 @@ CHOICE_outmost_tag(asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber
 	present = _fetch_present_idx(ptr, specs->pres_offset, specs->pres_size);
 
 	if(present > 0 || present <= td->elements_count) {
-		asn_TYPE_member_t *elm = &td->elements[present-1];
+		const asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
 		if(elm->flags & ATF_POINTER) {

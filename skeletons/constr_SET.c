@@ -175,7 +175,7 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 * for optimization.
 		 */
 	  for(;; ctx->step = 0) {
-		asn_TYPE_tag2member_t *t2m;
+		const asn_TYPE_tag2member_t *t2m;
 		asn_TYPE_tag2member_t key;
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
@@ -225,7 +225,7 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		key.el_tag = tlv_tag;
-		t2m = (asn_TYPE_tag2member_t *)bsearch(&key,
+		t2m = (const asn_TYPE_tag2member_t *)bsearch(&key,
 				specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);
 		if(t2m) {
@@ -439,7 +439,8 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	size_t computed_size = 0;
 	asn_enc_rval_t er;
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
-	asn_TYPE_tag2member_t *t2m;
+	const asn_TYPE_tag2member_t *t2m;
+	asn_TYPE_tag2member_t *t2m_build;
 	int t2m_count;
 	ssize_t ret;
 	int edx;
@@ -448,17 +449,16 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Use existing, or build our own tags map.
 	 */
 	if(t2m_build_own) {
-		t2m = (asn_TYPE_tag2member_t *)alloca(
-				td->elements_count * sizeof(t2m[0]));
-		if(!t2m) _ASN_ENCODE_FAILED; /* There are such platforms */
+		t2m_build = (asn_TYPE_tag2member_t *)alloca(
+				td->elements_count * sizeof(t2m_build[0]));
+		if(!t2m_build) _ASN_ENCODE_FAILED; /* There are such platforms */
 		t2m_count = 0;
 	} else {
+		t2m_build = NULL;
 		/*
 		 * There is no untagged CHOICE in this SET.
 		 * Employ existing table.
 		 */
-		t2m = specs->tag2el;
-		t2m_count = specs->tag2el_count;
 	}
 
 	/*
@@ -479,8 +479,8 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 					/* Mandatory elements missing */
 					_ASN_ENCODE_FAILED;
 				if(t2m_build_own) {
-					t2m[t2m_count].el_no = edx;
-					t2m[t2m_count].el_tag = 0;
+					t2m_build[t2m_count].el_no = edx;
+					t2m_build[t2m_count].el_tag = 0;
 					t2m_count++;
 				}
 				continue;
@@ -499,8 +499,8 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		 * Remember the outmost tag of this member.
 		 */
 		if(t2m_build_own) {
-			t2m[t2m_count].el_no = edx;
-			t2m[t2m_count].el_tag = asn_TYPE_outmost_tag(
+			t2m_build[t2m_count].el_no = edx;
+			t2m_build[t2m_count].el_tag = asn_TYPE_outmost_tag(
 				elm->type, memb_ptr, elm->tag_mode, elm->tag);
 			t2m_count++;
 		} else {
@@ -513,18 +513,21 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	/*
 	 * Finalize order of the components.
 	 */
-	assert(t2m_count == td->elements_count);
 	if(t2m_build_own) {
 		/*
 		 * Sort the underlying members according to their
 		 * canonical tags order. DER encoding mandates it.
 		 */
-		qsort(t2m, t2m_count, sizeof(specs->tag2el[0]), _t2e_cmp);
+		qsort(t2m_build, t2m_count, sizeof(specs->tag2el[0]), _t2e_cmp);
+		t2m = t2m_build;
 	} else {
 		/*
 		 * Tags are already sorted by the compiler.
 		 */
+		t2m = specs->tag2el;
+		t2m_count = specs->tag2el_count;
 	}
+	assert(t2m_count == td->elements_count);
 
 	/*
 	 * Encode the TLV for the sequence itself.
@@ -803,7 +806,7 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int xcan = (flags & XER_F_CANONICAL);
-	asn_TYPE_tag2member_t *t2m = specs->tag2el_cxer;
+	const asn_TYPE_tag2member_t *t2m = specs->tag2el_cxer;
 	int t2m_count = specs->tag2el_cxer_count;
 	int edx;
 

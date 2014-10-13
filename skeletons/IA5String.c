@@ -8,7 +8,7 @@
 /*
  * IA5String basic type description.
  */
-static ber_tlv_tag_t asn_DEF_IA5String_tags[] = {
+static const ber_tlv_tag_t asn_DEF_IA5String_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),	/* [UNIVERSAL 22] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
