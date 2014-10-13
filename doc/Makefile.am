@@ -3,7 +3,7 @@ SUBDIRS = docsrc
 
 docsdir = $(datadir)/doc/asn1c
 
-docs_DATA = $(srcdir)/*.pdf
+docs_DATA = $(srcdir)/asn1c-*.pdf
 
-EXTRA_DIST = $(srcdir)/*.pdf
+EXTRA_DIST = $(srcdir)/asn1c-*.pdf
 

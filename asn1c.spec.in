@@ -37,7 +37,7 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%doc README FAQ COPYING ChangeLog BUGS TODO
+%doc README.md FAQ COPYING ChangeLog BUGS TODO
 %doc doc/asn1c-usage.pdf doc/asn1c-usage.html
 %attr(755,root,root) %{_bindir}
 %attr(644,root,root) %{_datadir}/asn1c

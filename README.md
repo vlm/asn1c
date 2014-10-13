@@ -1,42 +1,41 @@
-WHAT TO READ?
-=============
+# WHAT TO READ?
 
-If you haven't installed the asn1c yet, read the INSTALL file for
-a short installation guide.
+If you haven't installed the asn1c yet, read the INSTALL file for a
+short installation guide.
 
 For the list of asn1c command line options, see `asn1c -h` or `man asn1c`.
 
-For more complete documentation on this compiler and on using the
-results of compilation phase, please look into asn1c-quick.pdf and
-asn1c-usage.{pdf,html}.
-If you are building the compiler from the sources, these documents reside
-in the ./doc directory, otherwise they lie nearby the README file you're
-reading right now.
+The comprehensive documentation on this compiler is in asn1c-usage.pdf.
+
+If you are building the compiler from the sources, the PDFs reside
+in the ./doc directory. Normally the file is installed together with the
+README.md file you're reading right now.
 
 Please also read the FAQ file.
 
 An excellent book on ASN.1 is written by Olivier Dubuisson:
 "ASN.1 Communication between heterogeneous systems", ISBN:0-12-6333361-0.
 
-QUICK START (also check out asn1c-quick.pdf)
-============================================
+# QUICK START
+
+(also check out ./doc/asn1c-quick.pdf)
 
 After building [and installing] the compiler (see INSTALL), you may use
 the asn1c command to compile the ASN.1 specification:
 
-	asn1c <module.asn1>			# Compile module
+    asn1c <module.asn1>                         # Compile module
 
 If several specifications contain interdependencies, all of them must be
 specified:
 
-	asn1c <module1.asn1> <module2.asn1> ...	# Compile interdependent modules
+    asn1c <module1.asn1> <module2.asn1> ...     # Compile interdependent modules
 
 If you are building the asn1c from the sources, the ./examples directory
 contains several ASN.1 modules and a script to extract the ASN.1 modules
 from RFC documents. Refer to the README file in that directory.
 To compile the X.509 PKI module:
 
-	./asn1c/asn1c -P ./examples/rfc3280-*.asn1	# Compile-n-print
+    ./asn1c/asn1c -P ./examples/rfc3280-*.asn1  # Compile-n-print
 
 In this example, -P option is used to instruct the compiler to print the
 compiled text on the standard output instead of creating multiple .c
@@ -50,28 +49,27 @@ to dump out the parsed (and fixed) ASN.1 specification as it was
 whether a particular syntactic construction is properly supported
 by the compiler.
 
-	asn1c -EF <module-to-test.asn1>		# Check semantic validity
+    asn1c -EF <module-to-test.asn1>     # Check semantic validity
 
-
-MODEL OF OPERATION
-==================
+# MODEL OF OPERATION
 
-The asn1c compiler works by processing the ASN.1 module specification
+The asn1c compiler works by processing the ASN.1 module specifications
 in several stages:
+
 1. In the first stage, the ASN.1 file is parsed.
-	(Parsing produces an ASN.1 syntax tree for the subsequent levels)
+   (Parsing produces an ASN.1 syntax tree for the subsequent levels)
 2. In the second stage, the syntax tree is "fixed".
-	(Fixing is a process of checking the tree for semantic errors,
-	 accompanied by the tree transformation into the canonical form)
+   (Fixing is a process of checking the tree for semantic errors,
+   accompanied by the tree transformation into the canonical form)
 3. In the third stage, the syntax tree is compiled into the target language.
 
 There are several command-line options reserved for printing the results
 after each stage of operation:
 
-	<parser> => print					(-E)
-	<parser> => <fixer> => print				(-E -F)
-	<parser> => <fixer> => <compiler> => print		(-P)
-	<parser> => <fixer> => <compiler> => save-compiled	[default]
+    <parser> => print                                       (-E)
+    <parser> => <fixer> => print                            (-E -F)
+    <parser> => <fixer> => <compiler> => print              (-P)
+    <parser> => <fixer> => <compiler> => save-compiled      [default]
 
 
 -- 
