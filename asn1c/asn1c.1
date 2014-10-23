@@ -74,10 +74,16 @@ Consider using this option together with
 .B \-fno-include-deps
 to prevent circular references.
 .TP 4
+.B \-fincludes-quoted
+Generate #include lines in "double" instead of <angle> quotes.
+.TP 4
 .BI "\-fknown-extern-type="<name>
 Pretend the specified type is known.
 The compiler will assume the target language source files
 for the given type have been provided manually.
+.TP 4
+.B \-fline-refs
+Include ASN.1 module's line numbers in generated code comments.
 .TP 4
 .B \-fno-constraints
 Do not generate ASN.1 subtype constraint checking code.
