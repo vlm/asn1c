@@ -1,138 +1,119 @@
-.TH asn1c 1 "\*(Dt" "ASN.1 Compiler" "ASN.1 Compiler"
+.TH asn1c 1 "2014-10-23" "ASN.1 Compiler"
+.if n .ad l \" Turn off justifications
+.nh \" Turn off hyphenation; can damage formatting in technical documents.
 .SH NAME
-asn1c \- ASN.1 Compiler
+asn1c \(em the ASN.1 Compiler
 .SH SYNOPSIS
 asn1c [\fB\-E\fR [\fB-F\fR] | \fB\-P\fR | \fB\-R\fR]
       [\fB\-S\fR\fIdir\fR] [\fB-X\fR]
       [\fB\-W\fR\fIdebug-\fR...] [\fB\-f\fR\fIoption\fR] [\fB\-gen-\fR\fIoption\fR] [\fB\-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}\fR]
       [\fB\-print-\fR\fIoption\fR]
-      \fIinfile\fR...
+      \fIinput-filenames\fR...
 .SH DESCRIPTION
 asn1c compiles ASN.1 specifications into a set of
 target language (C/C++) encoders and decoders for BER, DER, PER, XER
 and other encoding rules.
 .SH OPTIONS
-.TP
-\fIOverall Options\fR
-\fB\-E \-F \-P \-R\fR
-.BI "\-S " directory
-\fB\-X
-.TP
-\fIWarning Options\fR
-.br
-\fB\-Werror \-Wdebug-lexer \-Wdebug-fixer \-Wdebug-compiler\fR
-.TP
-\fILanguage Options\fR
-.br
-\fB\-fbless-SIZE \-fcompound-names \-findirect-choice
-.BI "\-fknown-extern-type="<name>
-\fB\-fno-constraints \-fno-include-deps \-funnamed-unions \-fwide-types
-.TP
-\fICodecs Generation Options\fR
-.br
-.B \-gen-PER \-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}
-.TP
-\fIOutput Options\fR
-.br
-.B \-print-constraints \-print-lines
-.SH OVERALL OPTIONS
-.TP
+.SS Stage Selection Options
+.TP 4
 .B \-E
-Stop after the parsing stage and print the reconstructed ASN.1
-specification code to the standard output.
-.TP
+Run the parsing stage only.
+Print the reconstructed ASN.1 text.
+.TP 4
 .B \-F
-Used together with \c
+Used together with
 .B \-E\c
 , instructs the compiler to stop after the ASN.1 syntax
 tree fixing stage and dump the reconstructed ASN.1 specification
 to the standard output.
-.TP
+.TP 4
 .B \-P
 Dump the compiled output to the standard output instead of creating the
 target language files on disk.
-.TP
+.TP 4
 .B \-R
 Restrict the compiler to generate only the ASN.1 tables,
 omitting the usual support code.
-.TP
+.TP 4
 \fB\-S\fR \fIdirectory\fR
 Use the specified directory with ASN.1 skeleton files.
-.TP
+.TP 4
 .B \-X
 Generate an XML DTD schema for the specified ASN.1 files.
-.SH WARNING OPTIONS
-.TP
+.SS Warning Options
+.TP 4
 .B \-Werror
 Treat warnings as errors; abort if any warning is produced.
-.TP
+.TP 4
 .B \-Wdebug-lexer
 Enable lexer debugging during the ASN.1 parsing stage.
-.TP
+.TP 4
 .B \-Wdebug-fixer
 Enable ASN.1 syntax tree fixer debugging during the fixing stage.
-.TP
+.TP 4
 .B \-Wdebug-compiler
 Enable debugging during the actual compile time.
-.SH LANGUAGE OPTIONS
-.TP
+.SS Language Options
+.TP 4
 .B \-fbless-SIZE
 Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which this
-constraint is normally prohibited by the standard. This is a violation of
-ASN.1 standard, and the compiler may fail to produce a meaningful code.
-.TP
+constraint is normally prohibited by the standard.
+This is a violation of ASN.1 standard, and the compiler may
+fail to\ produce a meaningful code.
+.TP 4
 .B \-fcompound-names
 Using this option prevents name collisions in the target source code
-by using complex names for target language structures. (Name collisions
-may occur if the ASN.1 module reuses the same identifiers in multiple
-contexts).
-.TP
+by using complex names for target language structures.
+(Name\ collisions may occur if the ASN.1 module reuses the same identifiers
+in multiple contexts).
+.TP 4
 .B \-findirect-choice
 When generating code for a CHOICE type, compile the CHOICE members as indirect
-pointers instead of declaring them inline. Consider using this option
-together with
+pointers instead of declaring them inline.
+Consider using this option together with
 .B \-fno-include-deps
 to prevent circular references.
-.TP
+.TP 4
 .BI "\-fknown-extern-type="<name>
-Pretend the specified type is known. The compiler will assume the target
-language source files for the given type have been provided manually.
-.TP
+Pretend the specified type is known.
+The compiler will assume the target language source files
+for the given type have been provided manually.
+.TP 4
 .B \-fno-constraints
-Do not generate ASN.1 subtype constraint checking code. This may make a shorter executable.
-.TP
+Do not generate ASN.1 subtype constraint checking code.
+This may make a shorter executable.
+.TP 4
 .B \-fno-include-deps
 Do not generate courtesy #include lines for non-critical type dependencies.
 Helps prevent namespace collisions.
-.TP
+.TP 4
 .B \-funnamed-unions
 Enable unnamed unions in the definitions of target language's structures.
-.TP
+.TP 4
 .B \-fwide-types
 Use the unbounded size data types (INTEGER_t, ENUMERATED_t, REAL_t) by default,
 instead of the native machine's data types (long, double).
-.SH CODECS GENERATION OPTIONS
-.TP
+.SS Codecs Generation Options
+.TP 4
 .B \-gen-PER
 Generate Packed Encoding Rules (PER) support code.
-.TP
+.TP 4
 .B \-pdu=\fR{\fBall\fR|\fBauto\fR|\fIType\fR}
-Create a PDU table for specified types, or discover Protocol Data Units
-automatically. In case of -pdu=\fBall\fR, all ASN.1 types defined in
-all modules will form a PDU table. In case of -pdu=\fBauto\fR, all types
-not referenced by any other type will form a PDU table.
-If \fIType\fR is an ASN.1 type identifier, it is added to a PDU table.
-The last form may be specified multiple times to add any number of PDUs.
-.SH OUTPUT OPTIONS
-.TP
+Create a PDU table for specified types, or discover Protocol Data Units automatically.
+In case of -pdu=\fBall\fR, all ASN.1 types defined in all modules will form a PDU table.
+In case of -pdu=\fBauto\fR, all types not referenced by any other type will form a PDU table.
+If\ \fIType\fR is an ASN.1 type identifier, it is added to a PDU table.
+The\ last form may be specified multiple times to add any number of PDUs.
+.SS Output Options
+.TP 4
 .B \-print-constraints
 When -EF are also specified, this option forces the compiler to explain
 its internal understanding of subtype constraints.
-.TP
+.TP 4
 .B \-print-lines
 Generate "-- #line" comments in \fB-E\fR output.
 .SH SEE ALSO
-.TP
+.TP 4
 \&\fIunber\fR\|(1), \&\fIenber\fR\|(1)
 .SH AUTHORS
 Lev Walkin <vlm@lionet.info>

@@ -1,18 +1,27 @@
-.de Vb
+.TH unber 1 "2014-10-23" "ASN.1 BER Decoder"
+.if n .ad l \" Turn off justifications
+.nh \" Turn off hyphenation; can damage formatting in technical documents.
+.de Vb \" Verbatim.
 .sp
 .ft CW
 .nf
 ..
-.de Ve
+.de Vbi \" Verbatim, indented.
+.sp
+.ft CW
+.nf
+.in +4
+..
+.de Ve \" Verbatim end.
 .ft R
+.in
 .fi
 .sp
 ..
-.TH unber 1 "\*(Dt" "ASN.1 BER Decoder" "ASN.1 BER Decoder"
 .SH NAME
-unber \- ASN.1 BER Decoder
+unber \(em the ASN.1 BER Decoder
 .SH SYNOPSIS
-unber [\fB-1\fR] [\fB-i\fRindent] [\fB-m\fR] [\fB-p\fR] [\fB\-s\fR\fIskip\fR] [\fB\-t\fR\fIhex-string\fR] [\fB-\fR] [\fIinfile\fR...]
+unber [\fB\-1\fR] [\fB\-i\fRindent] [\fB\-m\fR] [\fB\-p\fR] [\fB\-s\fR\fIskip\fR] [\fB\-t\fR\fIhex\-string\fR] [\fB\-\fR] [\fIinput-filenames\fR...]
 .SH DESCRIPTION
 unber presents the internal structure of BER-encoded files as human readable text.
 A single dash denotes the standard input.
@@ -26,14 +35,16 @@ This may be useful if the input contains garbage past the single BER sequence.
 By default, unber continues decoding until the end of file (input stream).
 .TP
 \fB\-i\fR \fIindent\fR
-Use the specified number of spaces for output indentation. Default is 4 spaces.
+Use the specified number of spaces for output indentation.
+Default is 4 spaces.
 .TP
 \fB\-m\fR
 Generate shorter output while still preserving BER encoding information.
 .TP
 \fB\-p\fR
-Do \fInot\fR attempt pretty-printing of known ASN.1 types (BOOLEAN, INTEGER, OBJECT IDENTIFIER, etc). By default, some ASN.1 types are converted into
-the text representation. This option is required for \&\fIenber\fR\|(1).
+Do \fInot\fR attempt pretty-printing of known ASN.1 types (BOOLEAN, INTEGER, OBJECT IDENTIFIER, etc).
+By default, some ASN.1 types are converted into the text representation.
+This option is required for \&\fIenber\fR\|(1).
 .TP
 \fB\-s\fR \fIskip\fR
 Ignore the first \fIskip\fR bytes in the input stream; useful for stripping off
@@ -41,14 +52,15 @@ lower level protocol framing data.
 .TP
 \fB\-t\fR \fIhex-string\fR
 Interpret the hex-string as a sequence of hexadecimal values representing
-the start of BER TLV encoding. Print the human readable explanation.
+the start of BER TLV encoding.
+Print the human readable explanation.
 .SH XML FORMAT
 unber dumps the output in the regular XML format which preserves most of the
 information from the underlying binary encoding.
 .P
 The XML opening tag format is as follows:
 .Vb
-\&<\fBtform\fR O="\fBoff\fR" T="\fBtag\fR" TL="\fBtl_len\fR" V="{Indefinite|\fBv_len\fR}" [A="\fBtype\fR"] [\fBF\fR]>
+<\fBtform\fR O="\fBoff\fR" T="\fBtag\fR" TL="\fBtl_len\fR" V="{Indefinite|\fBv_len\fR}" [A="\fBtype\fR"] [\fBF\fR]>
 .Ve
 Where:
 .TP
@@ -71,33 +83,34 @@ The length of the value (V, encoded by the L), may be "Indefinite".
 Likely name of the underlying ASN.1 type (for UNIVERSAL tags).
 .TP
 [\fBF\fR]
-Indicates that the value was reformatted (pretty-printed). This will never appear in the output produced using \fB-p\fR command line option.
+Indicates that the value was reformatted (pretty-printed).
+This will never appear in the output produced using \fB\-p\fR command line option.
 .P
 Sample XML output:
 .Vb
-\&<I O="0" T="[UNIVERSAL 16]" TL="2" V="Indefinite" A="SEQUENCE">
-\&  <P O="2" T="[UNIVERSAL 19]" TL="2" V="2" A="PrintableString">US</P>
-\&  <C O="6" T="[UNIVERSAL 16]" TL="2" V="6" A="SEQUENCE">
-\&    <P O="8" T="[UNIVERSAL 2]" TL="2" V="4" A="INTEGER" F>832970823</P>
-\&  </C O="14" T="[UNIVERSAL 16]" A="SEQUENCE" L="8">
-\&</I O="14" T="[UNIVERSAL 0]" TL="2" L="16">
+<I O="0" T="[UNIVERSAL 16]" TL="2" V="Indefinite" A="SEQUENCE">
+  <P O="2" T="[UNIVERSAL 19]" TL="2" V="2" A="PrintableString">US</P>
+  <C O="6" T="[UNIVERSAL 16]" TL="2" V="6" A="SEQUENCE">
+    <P O="8" T="[UNIVERSAL 2]" TL="2" V="4" A="INTEGER" F>832970823</P>
+  </C O="14" T="[UNIVERSAL 16]" A="SEQUENCE" L="8">
+</I O="14" T="[UNIVERSAL 0]" TL="2" L="16">
 .Ve
 .SH EXAMPLES
 Decode the given Tag/Length sequence specified in hexadecimal form:
-.Vb
-\&    unber  \fB-t\fR "\fIbf 20\fR"
+.Vbi
+unber  \fB\-t\fR "\fIbf 20\fR"
 .Ve
 Decode the DER file using two-spaces indentation:
-.Vb
-\&    unber  \fB-i\fR \fI2\fR   \fIfilename.der\fR
+.Vbi
+unber  \fB\-i\fR \fI2\fR   \fIfilename.der\fR
 .Ve
 Decode the binary stream taken from the standard input:
-.Vb
-\&    cat \fI...\fR | unber \fB-\fR
+.Vbi
+cat \fIfilename.der\fR | unber \fB\-\fR
 .Ve
 Decode the binary stream and encode it back into an identical stream (see \&\fIenber\fR\|(1)):
-.Vb
-\&    cat \fI...\fR | unber \fB-p\fR \fB-\fR | enber \fB-\fR > \fIfilename.ber\fR
+.Vbi
+cat \fIfilename.der\fR | unber \fB\-p\fR \fB\-\fR | enber \fB\-\fR > \fIfilename.ber\fR
 .Ve
 .SH FOOTNOTES
 The constructed XML output is not necessarily well-formed.
@@ -107,9 +120,9 @@ terminated with the end-of-content octets, will cause the terminating \fB</I>\fR
 XML tag to disappear.
 Thus, invalid BER framing directly causes invalid XML output.
 .P
-The \&\fIenber\fR\|(1) utility understands such XML correctly.
+The \fIenber\fR\|(1) utility understands such XML correctly.
 .SH SEE ALSO
 .TP
-\&\fIenber\fR\|(1), \&\fIasn1c\fR\|(1)
+\fIenber\fR\|(1), \fIasn1c\fR\|(1)
 .SH AUTHORS
 Lev Walkin <vlm@lionet.info>
