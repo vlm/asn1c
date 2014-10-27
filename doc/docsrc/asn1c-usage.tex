@@ -935,19 +935,20 @@ refer to Olivier Dubuisson's book \cite{Dub00} or the ASN.1 body
 of standards itself \cite{ITU-T/ASN.1}.}
 
 The Abstract Syntax Notation One is used to formally describe the
-semantics of data transmitted across the network. Two communicating
-parties may have different formats of their native data types (i.~e.
-number of bits in the integer type), thus it is important to have
+data transmitted across the network. Two communicating parties may employ
+different formats of their native data types (e.~g., different number
+of bits for the native integer type), thus it is important to have
 a way to describe the data in a manner which is independent from the
-particular machine's representation. The ASN.1 specifications are
-used to achieve the following:
+particular machine's representation.
+The ASN.1 specifications are used to achieve the following:
 \begin{itemize}
 \item The specification expressed in the ASN.1 notation is a formal and
-precise way to communicate the data semantics to human readers;
+precise way to communicate the structure of data to human readers;
 \item The ASN.1 specifications may be used as input for automatic compilers
 which produce the code for some target language (C, C++, Java, etc)
-to encode and decode the data according to some encoding rules (which
-are also defined by the ASN.1 standard).
+to encode and decode the data according to some encoding formats.
+Several such encoding formats (called Transfer Encoding Rules)
+have been defined by the ASN.1 standard.
 \end{itemize}
 Consider the following example:
 \begin{asn}
@@ -1038,7 +1039,7 @@ ComputerOSType ::= ENUMERATED {
 
 This type models the sequence of 8-bit bytes. This may be used to
 transmit some opaque data or data serialized by other types of encoders
-(i.~e., video file, photo picture, etc).
+(e.~g., video file, photo picture, etc).
 
 \subsection{The OBJECT IDENTIFIER type}
 
@@ -1187,7 +1188,7 @@ ManyCircles ::= SEQUENCE OF SEQUENCE {
 \subsection{The SET OF type}
 
 The SET OF type models the bag of structures. It resembles the SEQUENCE
-OF type, but the order is not important: i.~e. the elements may arrive
+OF type, but the order is not important. The elements may arrive
 in the order which is not necessarily the same as the in-memory order
 on the remote machines.
 \begin{asn}
