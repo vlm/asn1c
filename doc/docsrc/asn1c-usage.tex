@@ -888,12 +888,10 @@ END
 main() routine shown in the Section~\ref{sec:A-Rectangle-Decoder})
 by placing the following snippet of code \emph{before} encoding and/or
 \emph{after} decoding the Rectangle type%
-\footnote{Placing the constraint checking code \emph{before} encoding helps
-to make sure you know the data is correct and within constraints before
+\footnote{Placing the constraint checking code \emph{before encoding} helps
+to make sure the data is correct and within constraints before
 sharing the data with anyone else.
-
-Placing the constraint checking code \emph{after} decoding, but before
-any further action depending on the decoded data, helps to make sure
+Placing the constraint checking code \emph{after decoding} helps to make sure
 the application got the valid contents before making use of it.%
 }:
 
@@ -902,7 +900,7 @@ int ret;           /* Return value */
 char errbuf[128];  /* Buffer for error message */
 size_t errlen = sizeof(errbuf);  /* Size of the buffer */
 
-/* ... here may go Rectangle %\emph{decoding}% code ... */
+/* ... here goes the Rectangle %\emph{decoding}% code ... */
 
 ret = asn_check_constraints(&asn_DEF_Rectangle, rectangle, errbuf, &errlen);
 /* assert(errlen < sizeof(errbuf)); // you may rely on that */
@@ -913,7 +911,7 @@ if(ret) {
     /* exit(...); // Replace with appropriate action */
  }
 
-/* ... here may go Rectangle %\emph{encoding}% code ... */
+/* ... here goes the Rectangle %\emph{encoding}% code ... */
 \end{codesample}
 \item Compile the resulting C code as shown in the previous chapters.
 \item Try to test the constraints checking code by assigning integer value
