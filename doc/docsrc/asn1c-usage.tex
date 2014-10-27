@@ -1,3 +1,4 @@
+\batchmode
 \documentclass[english,oneside,12pt]{book}
 \usepackage[no-math]{fontspec}
 \usepackage{MnSymbol}
@@ -98,7 +99,7 @@
 \begin{document}
 
 \title{Using the Open Source ASN.1 Compiler\\
-\vspace*{1cm}
+\vspace*{0.4cm}
 \Large Documentation for asn1c version \asnver{}}
 \author{Lev Walkin <\href{mailto:vlm@lionet.info?Subject=asn1c}{vlm@lionet.info}>}
 
@@ -228,57 +229,56 @@ The following table summarizes the asn1c command line options.
 
 \renewcommand{\arraystretch}{1.33}
 \begin{longtable}{lp{4in}}
-\textbf{Overall Options} & \textbf{Description}\\
+\textbf{Stage Selection Options} & \textbf{Description}\\
 \midrule
-{-E} & {\small Stop after the parsing stage and print the reconstructed ASN.1
+{\ttfamily -E} & {\small Stop after the parsing stage and print the reconstructed ASN.1
 specification code to the standard output.}\\
-{-F} & {\small Used together with -E, instructs the compiler to stop after
+{\ttfamily -F} & {\small Used together with \texttt{-E}, instructs the compiler to stop after
 the ASN.1 syntax tree fixing stage and dump the reconstructed ASN.1
 specification to the standard output.}\\
-{-P} & {\small Dump the compiled output to the standard output instead of
+{\ttfamily -P} & {\small Dump the compiled output to the standard output instead of
 creating the target language files on disk.}\\
-{-R} & {\small Restrict the compiler to generate only the ASN.1 tables, omitting the usual support code.}\\
-{-S}~\emph{<directory>} & {\small Use the specified directory with ASN.1 skeleton files.}\\
-{-X} & {\small Generate the XML DTD for the specified ASN.1 modules.}\\\\
+{\ttfamily -R} & {\small Restrict the compiler to generate only the ASN.1 tables, omitting the usual support code.}\\
+{\ttfamily -S~\emph{<directory>}} & {\small Use the specified directory with ASN.1 skeleton files.}\\
+{\ttfamily -X} & {\small Generate the XML DTD for the specified ASN.1 modules.}\\\\
 \textbf{Warning Options} & \textbf{Description}\\
 \midrule
-{-Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\\
-{-Wdebug-lexer} & {\small Enable lexer debugging during the ASN.1 parsing stage.}\\
-{-Wdebug-fixer} & {\small Enable ASN.1 syntax  tree  fixer  debugging  during  the
- fixing stage.}\\
-{-Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\\  \\
+{\ttfamily -Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\\
+{\ttfamily -Wdebug-lexer} & {\small Enable lexer debugging during the ASN.1 parsing stage.}\\
+{\ttfamily -Wdebug-fixer} & {\small Enable ASN.1 syntax  tree  fixer  debugging  during  the fixing stage.}\\
+{\ttfamily -Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\\  \\
 \textbf{Language Options} & \textbf{Description}\\
 \midrule
-{-fbless-SIZE} & {\small Allow SIZE() constraint for INTEGER, ENUMERATED, and other
-types for which this constraint is normally prohibited by the standard.
-This is a violation of an ASN.1 standard and compiler may fail to
-produce the meaningful code.}\\
-{-fcompound-names} & {\small Use complex names for C structures. Using complex names prevents
+{\ttfamily -fbless-SIZE} & {\small Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which this constraint is normally prohibited by the standard.
+This is a violation of an ASN.1 standard and compiler may fail to produce the meaningful code.}\\
+{\ttfamily -fcompound-names} & {\small Use complex names for C structures. Using complex names prevents
 name clashes in case the module reuses the same identifiers in multiple
 contexts.}\\
-{-findirect-choice} & {\small When generating code for a CHOICE type, compile the CHOICE
+{\ttfamily -findirect-choice} & {\small When generating code for a CHOICE type, compile the CHOICE
 members as indirect pointers instead of declaring them inline. Consider
-using this option together with \textbf{-fno-include-deps}
-to prevent circular references. }\\
-{-fknown-extern-type=}\emph{<name>} & {\small Pretend the specified type is known. The compiler will assume
+using this option together with \texttt{-fno-include-deps}
+to prevent circular references.}\\
+{\ttfamily -fincludes-quoted} & {\small Generate \#include lines in "double" instead of <angle> quotes.}\\
+{\ttfamily -fknown-extern-type=\emph{<name>}} & {\small Pretend the specified type is known. The compiler will assume
 the target language source files for the given type have been provided
 manually. }\\
-{-fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
+{\ttfamily -fline-refs} & {\small Include ASN.1 module's line numbers in generated code comments.}\\
+{\ttfamily -fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
 may produce a shorter executable.}\\
-{-fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical
-dependencies.}\\
-{-funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's structures.}\\
-{-fwide-types} & {\small Use the wide integer types (INTEGER\_t, REAL\_t) instead of machine's native data types (long, double). }\\\\
+{\ttfamily -fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical dependencies.}\\
+{\ttfamily -funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's structures.}\\
+{\ttfamily -fwide-types} & {\small Use the wide integer types (INTEGER\_t, REAL\_t) instead of machine's native data types (long, double). }\\\\
 \textbf{Codecs Generation Options} & \textbf{Description}\\
 \midrule
-{-gen-PER} & {\small Generate Packed Encoding Rules (PER) support code.}\\
-{-pdu=}\emph{auto} & {\small Generate PDU tables by discovering Protocol Data Units automatically. Also accepts a special keyword \emph{all} or a particular type to be used as a PDU.}\\ \\
+{\ttfamily -gen-PER} & {\small Generate the Packed Encoding Rules (PER) support code.}\\
+{\ttfamily -pdu=\{\textbf{all}|\textbf{auto}|\emph{Type}\}} & {\small Create a PDU table for specified types, or discover the Protocol Data Units automatically.
+In case of \texttt{-pdu=\textbf{all}}, all ASN.1 types defined in all modules wil form a PDU table. In case of \texttt{-pdu=\textbf{auto}}, all types not referenced by any other type will form a PDU table. If \texttt{\emph{Type}} is an ASN.1 type identifier, it is added to a PDU table. The last form may be specified multiple times.}\\ \\
 \textbf{Output Options} & \textbf{Description}\\
 \midrule
-{-print-constraints} & {\small When -EF are also specified, this option forces the compiler
+{\ttfamily -print-constraints} & {\small When \texttt{-EF} are also specified, this option forces the compiler
 to explain its internal understanding of subtype constraints.}\\
-{-print-lines} & {\small Generate ``-{}- \#line'' comments
-in -E output.}\\
+{\ttfamily -print-lines} & {\small Generate \texttt{``-{}- \#line''} comments
+in \texttt{-E} output.}\\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
 
@@ -316,10 +316,9 @@ The following member functions of the asn\_DEF\_Rectangle type descriptor
 are of interest:
 \begin{description}
 \item [{ber\_decoder}] This is the generic \emph{restartable}%
-\footnote{Restartable means that if the decoder encounters the end of the buffer,
-it will fail, but may later be invoked again with the rest of the
-buffer to continue decoding.%
-} BER decoder (Basic Encoding Rules). This decoder would create and/or
+\footnote{Restartability mean that if the decoder encounters the end of the buffer it may be invoked again with the rest of the
+buffer to continue decoding.}
+BER decoder (Basic Encoding Rules). This decoder would create and/or
 fill the target structure for you. See Section~\ref{sub:Decoding-BER}.
 \item [{der\_encoder}] This is the generic DER encoder (Distinguished Encoding
 Rules). This encoder will take the target structure and encode it
