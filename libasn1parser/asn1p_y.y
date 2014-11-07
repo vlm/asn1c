@@ -13,7 +13,7 @@
 #define YYERROR_VERBOSE
 
 int yylex(void);
-int yyerror(const char *msg);
+int yyerror(void **param, const char *msg);
 #ifdef	YYBYACC
 int yyparse(void **param);	/* byacc does not produce a prototype */
 #endif
@@ -42,7 +42,7 @@ static asn1p_module_t *currentModule;
 
 #define	checkmem(ptr)	do {						\
 		if(!(ptr))						\
-		return yyerror("Memory failure");			\
+		return yyerror(NULL, "Memory failure");			\
 	} while(0)
 
 #define	CONSTRAINT_INSERT(root, constr_type, arg1, arg2) do {		\
@@ -349,10 +349,9 @@ static asn1p_module_t *currentModule;
 %type	<tv_str>		ComponentIdList
 %type	<a_int>			NSTD_IndirectMarker
 
+%parse-param {void** param}
 
 %%
-
-
 ParsedGrammar:
 	ModuleList {
 		*(void **)param = $1;
@@ -594,7 +593,7 @@ Assignment:
 	 * Erroneous attemps
 	 */
 	| BasicString {
-		return yyerror(
+		return yyerror(NULL,
 			"Attempt to redefine a standard basic string type, "
 			"please comment out or remove this type redefinition.");
 	}
@@ -612,7 +611,7 @@ optImports:
 ImportsDefinition:
 	TOK_IMPORTS optImportsBundleSet ';' {
 		if(!saved_aid && 0)
-			return yyerror("Unterminated IMPORTS FROM, "
+			return yyerror(NULL, "Unterminated IMPORTS FROM, "
 					"expected semicolon ';'");
 		saved_aid = 0;
 		$$ = $2;
@@ -621,7 +620,7 @@ ImportsDefinition:
 	 * Some error cases.
 	 */
 	| TOK_IMPORTS TOK_FROM /* ... */ {
-		return yyerror("Empty IMPORTS list");
+		return yyerror(NULL, "Empty IMPORTS list");
 	}
 	;
 
@@ -683,6 +682,12 @@ ImportsElement:
 		$$->expr_type = A1TC_REFERENCE;
 	}
 	| Identifier {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		$$->Identifier = $1;
+		$$->expr_type = A1TC_REFERENCE;
+	}
+	| Identifier '{' '}' {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->Identifier = $1;
@@ -2448,7 +2453,7 @@ _fixup_anonymous_identifier(asn1p_expr_t *expr) {
 }
 
 int
-yyerror(const char *msg) {
+yyerror(void** param, const char *msg) {
 	extern char *asn1p_text;
 	fprintf(stderr,
 		"ASN.1 grammar parse error "
