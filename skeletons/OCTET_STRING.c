@@ -157,7 +157,7 @@ OS__add_stack_el(struct _stack *st) {
 }
 
 static struct _stack *
-_new_stack() {
+_new_stack(void) {
 	return (struct _stack *)CALLOC(1, sizeof(struct _stack));
 }
 
