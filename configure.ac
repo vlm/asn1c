@@ -32,19 +32,21 @@ cygwin)
 esac
 
 AC_ARG_ENABLE(Werror,
-  [  --enable-Werror         abort compilation after any C compiler warning],
-	enable_werror=$enableval, enable_werror=no)
-if test x$enable_werror = xyes; then
-  TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
-  ADD_CFLAGS="-Werror -W -Wpointer-arith"
-fi
+  [AS_HELP_STRING([--enable-Werror],
+                  [abort compilation after any C compiler warning])],
+  [enable_werror=$enableval], [enable_werror=no])
+  AS_IF([test x$enable_werror != xno], [
+      TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
+      ADD_CFLAGS="-Werror -W -Wpointer-arith"
+  ])
 
 AC_ARG_ENABLE([ASN_DEBUG],
-  [  --enable-ASN_DEBUG      produce debug log during `make check` testing],
-	enable_asn_debug=$enableval, enable_asn_debug=no)
-if test x$enable_asn_debug = xyes; then
-  TESTSUITE_CFLAGS="-DEMIT_ASN_DEBUG"
-fi
+  [AS_HELP_STRING([--enable-ASN_DEBUG],
+                  [produce debug log during `make check` testing])],
+  [enable_asn_debug=$enableval], [enable_asn_debug=no])
+  AS_IF([test x$enable_asn_debug != xno], [
+      TESTSUITE_CFLAGS="-DEMIT_ASN_DEBUG"
+  ])
 
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"])
 AX_CHECK_COMPILE_FLAG([-Wcast-qual], [CFLAGS="$CFLAGS -Wcast-qual"])
