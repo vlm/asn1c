@@ -46,7 +46,7 @@ CFLAGS = \${COMMON_FLAGS} ${CFLAGS} -g -O0
 CPPFLAGS = -DSRCDIR=../${srcdir}
 CXXFLAGS = \${COMMON_FLAGS} ${CXXFLAGS}
 
-CC ?= ${CC}
+CC = ${CC}
 
 all: check-executable
 check-executable: compiled-module *.c*
