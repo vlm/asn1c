@@ -1,11 +1,13 @@
 
 0.9.??:
+    * PER decoding: avoid memory leak on error. By github.com/simo5
     * Constness patch #46 by Wim L <wiml@omnigroup.com> (41bbf1c..78d604f).
     Build issues:
     * Fixed generated file permissions introduced by earlier pull (issue/32).
     * Win32/MinGW patch #31 by Frank Morgner (frankmorgner).
     * Autoreconf fix patch by Dave Cridland (github.com/dwd)
     * Fix autoreconf-2.69 failure by github.com/brchiu
+    * Fix C99 warnings. Fix by Adrien Destugues (github.com/pulkomandy).
 
 0.9.27: 2014-Sep-17
     * Build structure fixes for portability.
