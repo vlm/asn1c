@@ -976,6 +976,7 @@ asn_strtol_lim(const char *str, const char **end, long *lp) {
 	case '-':
 		last_digit_max++;
 		sign = -1;
+		/* FALL THROUGH */
 	case '+':
 		str++;
 		if(str >= *end) {
