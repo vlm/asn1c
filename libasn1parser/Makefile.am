@@ -7,7 +7,7 @@ noinst_LTLIBRARIES = libasn1parser.la
 
 libasn1parser_la_SOURCES =		\
 	asn1parser.c asn1parser.h	\
-	asn1p_y.c asn1p_y.h asn1p_l.c	\
+	asn1p_y.y asn1p_l.l	\
 	asn1p_module.c asn1p_module.h	\
 	asn1p_oid.c asn1p_oid.h		\
 	asn1p_value.c asn1p_value.h	\
