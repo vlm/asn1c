@@ -8,6 +8,7 @@
     * Autoreconf fix patch by Dave Cridland (github.com/dwd)
     * Fix autoreconf-2.69 failure by github.com/brchiu
     * Fix C99 warnings. Fix by Adrien Destugues (github.com/pulkomandy).
+    * C89 compliance fix by Jaroslav Imrich (github.com/jariq).
 
 0.9.27: 2014-Sep-17
     * Build structure fixes for portability.
