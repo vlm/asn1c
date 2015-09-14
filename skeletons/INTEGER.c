@@ -675,6 +675,7 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 	const uint8_t *end;
 	asn_per_constraint_t *ct;
 	long value = 0;
+	unsigned long v = 0;
 
 	if(!st || st->size == 0) _ASN_ENCODE_FAILED;
 
@@ -735,7 +736,7 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 		/* #11.5.6 -> #11.3 */
 		ASN_DEBUG("Encoding integer %ld (%lu) with range %d bits",
 			value, value - ct->lower_bound, ct->range_bits);
-		unsigned long v = value - ct->lower_bound;
+		v = value - ct->lower_bound;
 		if(uper_put_constrained_whole_number_u(po, v, ct->range_bits))
 			_ASN_ENCODE_FAILED;
 		_ASN_ENCODED_OK(er);
