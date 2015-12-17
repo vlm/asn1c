@@ -109,7 +109,7 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		(int)pd->moved,
 		(((long)pd->buffer) & 0xf),
 		(int)pd->nboff, (int)pd->nbits,
-		pd->buffer[0],
+		((pd->buffer != NULL)?pd->buffer[0]:0),
 		(int)(pd->nbits - pd->nboff),
 		(int)accum);
 
