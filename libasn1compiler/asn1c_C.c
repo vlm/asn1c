@@ -1775,8 +1775,8 @@ expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 	if(!topmost_parent) return 0;
 
 	if(!(topmost_parent->expr_type & ASN_CONSTR_MASK)
-	&& !topmost_parent->expr_type == ASN_BASIC_INTEGER
-	&& !topmost_parent->expr_type == ASN_BASIC_ENUMERATED)
+	&& !(topmost_parent->expr_type == ASN_BASIC_INTEGER)
+	&& !(topmost_parent->expr_type == ASN_BASIC_ENUMERATED))
 		return 0;
 
 	TQ_FOR(v, &(topmost_parent->members), next) {
