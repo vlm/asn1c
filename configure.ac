@@ -2,7 +2,7 @@ AC_INIT([asn1c], [0.9.28], [vlm@lionet.info])
 
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([-Wall -Wno-extra-portability -Werror foreign])
+AM_INIT_AUTOMAKE([foreign])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
@@ -33,15 +33,6 @@ cygwin)
 	;;
 esac
 
-AC_ARG_ENABLE(Werror,
-  [AS_HELP_STRING([--enable-Werror],
-                  [abort compilation after any C compiler warning])],
-  [enable_werror=$enableval], [enable_werror=no])
-  AS_IF([test x$enable_werror != xno], [
-      TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
-      ADD_CFLAGS="-Werror -W -Wpointer-arith"
-  ])
-
 AC_ARG_ENABLE([ASN_DEBUG],
   [AS_HELP_STRING([--enable-ASN_DEBUG],
                   [produce debug log during `make check` testing])],
@@ -68,6 +59,22 @@ AX_CHECK_COMPILE_FLAG([-Wno-error=parentheses-equality],
       [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
       [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -Wno-error=unused-variable"])
+
+AC_ARG_ENABLE(Werror,
+  [AS_HELP_STRING([--enable-Werror],
+                  [abort compilation after any C compiler warning])],
+  [enable_werror=$enableval], [enable_werror=no])
+  AS_IF([test x$enable_werror != xno], [
+      ADD_CFLAGS="-Werror -W -Wpointer-arith"
+  ])
+
+AC_ARG_ENABLE(test-Werror,
+  [AS_HELP_STRING([--enable-test-Werror],
+                  [abort compiling tests after any C compiler warning])],
+  [enable_test_werror=$enableval], [enable_test_werror=no])
+  AS_IF([test x$enable_test_werror != xno], [
+      TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
+  ])
 
 AC_SUBST(ADD_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
