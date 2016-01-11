@@ -9,6 +9,8 @@ print<<EOM;
 #ifndef	ASN1_PARSER_EXPR_STR_H
 #define	ASN1_PARSER_EXPR_STR_H
 
+#include <assert.h>
+
 #ifndef	__GNUC__
 #define	__attribute__(x)	/* unused */
 #endif
@@ -40,14 +42,15 @@ print<<EOM;
 /*
  * Convert the ASN.1 expression type back into the string representation.
  */
-#define	ASN_EXPR_TYPE2STR(type)					\\
-	(							\\
-	(((ssize_t)(type)) < 0					\\
-	|| ((size_t)(type)) >= sizeof(asn1p_expr_type2str)	\\
-		/ sizeof(asn1p_expr_type2str[0]))		\\
-		? (char *)0					\\
-		: asn1p_expr_type2str[(int)(type)]		\\
-	)
+#define ASN_EXPR_TYPE2STR(type) _asn_expr_type2str(type)
+
+static char * __attribute__((unused))
+_asn_expr_type2str(size_t type) {
+    assert((ssize_t)type >= 0);
+    if(type < sizeof(asn1p_expr_type2str)/sizeof(asn1p_expr_type2str[0]))
+        return asn1p_expr_type2str[type];
+    return NULL;
+}
 
 #endif	/* ASN1_PARSER_EXPR_STR_H */
 EOM
