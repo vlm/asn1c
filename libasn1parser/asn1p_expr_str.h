@@ -51,11 +51,11 @@ static char *asn1p_expr_type2str[] __attribute__ ((unused)) = {
 /*
  * Convert the ASN.1 expression type back into the string representation.
  */
-#define ASN_EXPR_TYPE2STR(type) _asn_expr_type2str(type)
+#define ASN_EXPR_TYPE2STR(type) _asn1p_expr_type2string(type)
 
-static char * __attribute__((unused))
-_asn_expr_type2str(size_t type) {
-    assert((ssize_t)type >= 0);
+static inline char * __attribute__((unused))
+_asn1p_expr_type2string(asn1p_expr_type_e type) {
+    assert((signed int)type >= 0);
     if(type < sizeof(asn1p_expr_type2str)/sizeof(asn1p_expr_type2str[0]))
         return asn1p_expr_type2str[type];
     return NULL;
