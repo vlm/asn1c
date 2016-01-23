@@ -9,7 +9,7 @@ SUBDIRS = 				\
 
 docsdir = $(datadir)/doc/asn1c
 
-docs_DATA = README.md FAQ COPYING ChangeLog BUGS TODO
+docs_DATA = README.md FAQ LICENSE ChangeLog BUGS TODO
 
-EXTRA_DIST = asn1c.spec.in README.md FAQ BUGS MANIFEST tests/
+EXTRA_DIST = asn1c.spec.in README.md FAQ BUGS tests/
 CLEANFILES = asn1c.spec

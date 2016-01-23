@@ -1,9 +1,0 @@
-libasn1compiler
-libasn1parser
-libasn1print
-libasn1fix
-skeletons
-examples
-tests
-asn1c
-doc
