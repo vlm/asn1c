@@ -39,6 +39,7 @@ stamp-h*
 
 # /doc/
 /doc/Makefile
+/doc/man/Makefile
 
 # /doc/docsrc
 /doc/docsrc/Makefile
