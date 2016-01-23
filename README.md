@@ -58,14 +58,14 @@ standard output. The default behavior is that asn1c compiler creates
 multiple .c and .h files for every ASN.1 type found inside the specified
 ASN.1 modules.
 
-The compiler's *-E* and *-EF* options are used for testing the parser and
+The compiler's **-E** and **-EF** options are used for testing the parser and
 the semantic fixer, respectively. These options will instruct the compiler
 to dump out the parsed (and fixed) ASN.1 specification as it was
 "understood" by the compiler. It might be useful for checking
 whether a particular syntactic construction is properly supported
 by the compiler.
 
-    asn1c -EF <module-to-test.asn1>     # Check semantic validity
+    asn1c -EF <module-to-test.asn1>             # Check semantic validity
 
 # Model of operation
 
