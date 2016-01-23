@@ -1,0 +1,14 @@
+---
+Language:        Cpp
+BasedOnStyle:  Google
+AllowShortFunctionsOnASingleLine: None
+AlwaysBreakAfterDefinitionReturnType: TopLevel
+BreakBeforeBinaryOperators: NonAssignment
+ForEachMacros:       [ TQ_FOR ]
+IndentCaseLabels:    false
+IndentWidth:         4
+MaxEmptyLinesToKeep: 2
+SpaceBeforeParens:   false
+TabWidth:            4
+...
+
