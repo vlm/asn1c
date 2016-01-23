@@ -95,7 +95,12 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 		return NULL;
 	}
 
-	(void)ftruncate(fd, 0);
+	if(ftruncate(fd, 0) == -1) {
+		fprintf(stderr, "%s: ftruncate failed: %s\n",
+                        fname, strerror(errno));
+		if(created) unlink(fname);
+        return NULL;
+    }
 #else
 	_chsize(fd, 0);
 #endif	/* _WIN32 */
