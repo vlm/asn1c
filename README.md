@@ -37,12 +37,12 @@ An excellent book on ASN.1 is written by Olivier Dubuisson:
 After installing the compiler (see [INSTALL](INSTALL)), you may use
 the asn1c command to compile the ASN.1 specification:
 
->   asn1c <module.asn1>                         # Compile module
+    asn1c <module.asn1>                         # Compile module
 
 If several specifications contain interdependencies, all of them must be
 specified at the same time:
 
->   asn1c <module1.asn1> <module2.asn1> ...     # Compile interdependent modules
+    asn1c <module1.asn1> <module2.asn1> ...     # Compile interdependent modules
 
 The asn1c source tarball contains the [examples/](examples/) directory
 with several ASN.1 modules and a [script](examples/crfc2asn1.pl)
@@ -51,7 +51,7 @@ Refer to the [examples/README](examples/README) file in that directory.
 
 To compile the X.509 PKI module:
 
->   ./asn1c/asn1c -P ./examples/rfc3280-*.asn1  # Compile-n-print
+    ./asn1c/asn1c -P ./examples/rfc3280-*.asn1  # Compile-n-print
 
 In this example, the **-P** option is to print the compiled text on the
 standard output. The default behavior is that asn1c compiler creates
@@ -65,7 +65,7 @@ to dump out the parsed (and fixed) ASN.1 specification as it was
 whether a particular syntactic construction is properly supported
 by the compiler.
 
->   asn1c -EF <module-to-test.asn1>             # Check semantic validity
+    asn1c -EF <module-to-test.asn1>             # Check semantic validity
 
 # Model of operation
 
