@@ -111,6 +111,10 @@ AC_CHECK_FUNCS(timegm)
 AC_CHECK_DECLS(alloca strcasecmp)
 AC_TRY_LINK_FUNC([symlink],[AC_DEFINE([HAVE_SYMLINK], 1, [Define to 1 if you have the symlink function.])])
 
+dnl Use pandoc to generate manual pages.
+AC_PATH_PROG([PANDOC], pandoc)
+AM_CONDITIONAL([HAVE_PANDOC], [test -n "$PANDOC"])
+
 AC_OUTPUT(				\
 skeletons/tests/Makefile		\
 libasn1compiler/Makefile		\
@@ -121,6 +125,7 @@ libasn1fix/Makefile			\
 doc/docsrc/Makefile			\
 skeletons/Makefile			\
 examples/Makefile			\
+doc/man/Makefile			\
 asn1c/Makefile				\
 doc/Makefile				\
 asn1c.spec				\

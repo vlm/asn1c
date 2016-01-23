@@ -1,5 +1,5 @@
 
-SUBDIRS = docsrc
+SUBDIRS = docsrc man
 
 docsdir = $(datadir)/doc/asn1c
 

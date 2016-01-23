@@ -20,8 +20,6 @@ bin_PROGRAMS = asn1c unber enber
 
 noinst_HEADERS = sys-common.h
 
-dist_man1_MANS = asn1c.1 unber.1 enber.1
-
 dist_check_SCRIPTS = check-xxber.sh check-parsing.sh
 TESTS_ENVIRONMENT= top_srcdir=${top_srcdir}
 TESTS = $(dist_check_SCRIPTS)
