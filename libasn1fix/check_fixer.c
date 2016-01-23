@@ -58,8 +58,8 @@ main(int ac, char **av) {
 	 * Go into a directory with tests.
 	 */
 	if(ac <= 1) {
-		fprintf(stderr, "Testing in ./tests...\n");
-		ret = chdir("../tests");
+		fprintf(stderr, "Testing in " TOP_SRCDIR_S "/tests...\n");
+		ret = chdir(TOP_SRCDIR_S "/tests");
 		assert(ret == 0);
 #ifdef	_WIN32
 		dir = _findfirst("*.asn1", &c_file);
