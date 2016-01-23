@@ -124,7 +124,6 @@ examples/Makefile			\
 doc/man/Makefile			\
 asn1c/Makefile				\
 doc/Makefile				\
-asn1c.spec				\
 Makefile				\
 )
 
