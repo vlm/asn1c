@@ -300,13 +300,16 @@ process_line(const char *fname, char *line, int lineno) {
 		}
 		break;
 	}
+	unsigned long tag_value_UL;
 	errno = 0;
 	if(!*tcl_pos
-	|| ((long)(tag_value = strtoul(tcl_pos, 0, 10))) < 0
+	|| ((tag_value_UL = strtoul(tcl_pos, 0, 10)) > UINT_MAX)
 	|| errno) {
 		fprintf(stderr, "%s: Invalid tag value (%c) at line %d\n",
 			fname, *tcl_pos, lineno);
 		exit(EX_DATAERR);
+	} else {
+	    tag_value = tag_value_UL;
 	}
 	tlv_tag = ((tag_value << 2) | tag_class);
 
