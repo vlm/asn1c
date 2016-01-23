@@ -9,6 +9,6 @@ SUBDIRS = 				\
 
 docsdir = $(datadir)/doc/asn1c
 
-docs_DATA = README.md FAQ LICENSE ChangeLog BUGS TODO
+docs_DATA = README.md FAQ ChangeLog BUGS TODO
 
-EXTRA_DIST = README.md FAQ BUGS tests/
+EXTRA_DIST = README.md FAQ LICENSE BUGS tests/
