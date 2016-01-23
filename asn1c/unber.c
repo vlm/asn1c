@@ -27,9 +27,9 @@
  */
 #include "sys-common.h"
 
-#define	ASN_DISABLE_PER_SUPPORT	1
+#define ASN_DISABLE_PER_SUPPORT 1
 
-#include <asn1parser.h>		/* For static string tables */
+#include <asn1parser.h> /* For static string tables */
 
 #include <asn_application.h>
 #include <constraints.c>
@@ -40,93 +40,88 @@
 #include <RELATIVE-OID.c>
 #include <asn_codecs_prim.c>
 
-#undef  COPYRIGHT
-#define COPYRIGHT       \
-	"Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>\n"
+#undef COPYRIGHT
+#define COPYRIGHT "Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>\n"
 
-static void usage(const char *av0);	/* Print the Usage screen and exit */
-static int process(const char *fname);	/* Perform the BER decoding */
+static void usage(const char *av0);    /* Print the Usage screen and exit */
+static int process(const char *fname); /* Perform the BER decoding */
 static int decode_tlv_from_string(const char *datastring);
 
-static int single_type_decoding = 0;	/* -1 enables that */
-static int minimalistic = 0;		/* -m enables that */
-static int pretty_printing = 1;		/* -p disables that */
-static int skip_bytes = 0;		/* -s controls that */
-static char indent_bytes[16] = "    ";	/* -i controls that */
+static int single_type_decoding = 0;   /* -1 enables that */
+static int minimalistic = 0;           /* -m enables that */
+static int pretty_printing = 1;        /* -p disables that */
+static int skip_bytes = 0;             /* -s controls that */
+static char indent_bytes[16] = "    "; /* -i controls that */
 
 int
 main(int ac, char **av) {
-	int ch;				/* Command line character */
-	int i;				/* Index in some loops */
+    int ch; /* Command line character */
+    int i;  /* Index in some loops */
 
-	/*
-	 * Process command-line options.
-	 */
-	while((ch = getopt(ac, av, "1hi:mps:t:v")) != -1)
-	switch(ch) {
-	case '1':
-		single_type_decoding = 1;
-		break;
-	case 'i':
-		i = atoi(optarg);
-		if(i >= 0 && i < (int)sizeof(indent_bytes)) {
-			memset(indent_bytes, ' ', i);
-			indent_bytes[i] = '\0';
-		} else {
-			fprintf(stderr, "-i %s: Invalid indent value\n",optarg);
-			exit(EX_USAGE);
-		}
-		break;
-	case 'm':
-		minimalistic = 1;
-		break;
-	case 'p':
-		pretty_printing = 0;
-		break;
-	case 's':
-		skip_bytes = atoi(optarg);
-		if(skip_bytes < 0) {
-			fprintf(stderr, "-s %s: positive value expected\n",
-				optarg);
-			exit(EX_USAGE);
-		}
-		break;
-	case 't':
-		if(decode_tlv_from_string(optarg))
-			exit(EX_DATAERR);
-		exit(0);
-	case 'v':
-		fprintf(stderr, "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT);
-		exit(0);
-		break;
-	case 'h':
-	default:
-		usage(av[0]);
-	}
+    /*
+     * Process command-line options.
+     */
+    while((ch = getopt(ac, av, "1hi:mps:t:v")) != -1) switch(ch) {
+        case '1':
+            single_type_decoding = 1;
+            break;
+        case 'i':
+            i = atoi(optarg);
+            if(i >= 0 && i < (int)sizeof(indent_bytes)) {
+                memset(indent_bytes, ' ', i);
+                indent_bytes[i] = '\0';
+            } else {
+                fprintf(stderr, "-i %s: Invalid indent value\n", optarg);
+                exit(EX_USAGE);
+            }
+            break;
+        case 'm':
+            minimalistic = 1;
+            break;
+        case 'p':
+            pretty_printing = 0;
+            break;
+        case 's':
+            skip_bytes = atoi(optarg);
+            if(skip_bytes < 0) {
+                fprintf(stderr, "-s %s: positive value expected\n", optarg);
+                exit(EX_USAGE);
+            }
+            break;
+        case 't':
+            if(decode_tlv_from_string(optarg)) exit(EX_DATAERR);
+            exit(0);
+        case 'v':
+            fprintf(stderr, "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT);
+            exit(0);
+            break;
+        case 'h':
+        default:
+            usage(av[0]);
+        }
 
-	/*
-	 * Ensure that there are some input files present.
-	 */
-	if(ac > optind) {
-		ac -= optind;
-		av += optind;
-	} else {
-		fprintf(stderr, "%s: No input files specified\n", av[0]);
-		exit(1);
-	}
+    /*
+     * Ensure that there are some input files present.
+     */
+    if(ac > optind) {
+        ac -= optind;
+        av += optind;
+    } else {
+        fprintf(stderr, "%s: No input files specified\n", av[0]);
+        exit(1);
+    }
 
-	setvbuf(stdout, 0, _IOLBF, 0);
+    setvbuf(stdout, 0, _IOLBF, 0);
 
-	/*
-	 * Iterate over input files and parse each.
-	 * All syntax trees from all files will be bundled together.
-	 */
-	for(i = 0; i < ac; i++) {
-		if(process(av[i]))
-			exit(EX_DATAERR);
-	}
+    /*
+     * Iterate over input files and parse each.
+     * All syntax trees from all files will be bundled together.
+     */
+    for(i = 0; i < ac; i++) {
+        if(process(av[i])) exit(EX_DATAERR);
+    }
 
-	return 0;
+    return 0;
 }
 
 /*
@@ -134,6 +129,7 @@ main(int ac, char **av) {
  */
 static void
 usage(const char *av0) {
+    /* clang-format off */
 	fprintf(stderr,
 "ASN.1 BER Decoder, v" VERSION "\n" COPYRIGHT
 "Usage: %s [options] [-] [file ...]\n"
@@ -157,16 +153,22 @@ usage(const char *av0) {
 "  [F]      Indicates that the value was reformatted (pretty-printed)\n"
 "See the manual page for details\n"
 	, av0);
-	exit(EX_USAGE);
+    /* clang-format on */
+    exit(EX_USAGE);
 }
 
 typedef enum pd_code {
-	PD_FAILED	= -1,
-	PD_FINISHED	= 0,
-	PD_EOF		= 1,
+    PD_FAILED = -1,
+    PD_FINISHED = 0,
+    PD_EOF = 1,
 } pd_code_e;
-static pd_code_e process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ber_tlv_len_t *frame_size, ber_tlv_len_t effective_size, int expect_eoc);
-static void print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t, ber_tlv_len_t effective_frame_size);
+static pd_code_e process_deeper(const char *fname, FILE *fp,
+                                asn1c_integer_t *offset, int level,
+                                ssize_t limit, ber_tlv_len_t *frame_size,
+                                ber_tlv_len_t effective_size, int expect_eoc);
+static void print_TL(int fin, asn1c_integer_t offset, int level, int constr,
+                     ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t,
+                     ber_tlv_len_t effective_frame_size);
 static int print_V(const char *fname, FILE *fp, ber_tlv_tag_t, ber_tlv_len_t);
 
 /*
@@ -174,514 +176,515 @@ static int print_V(const char *fname, FILE *fp, ber_tlv_tag_t, ber_tlv_len_t);
  */
 static int
 process(const char *fname) {
-	FILE *fp;
-	pd_code_e pdc;
-	asn1c_integer_t offset = 0;		/* Stream decoding position */
-	ber_tlv_len_t frame_size = 0;		/* Single frame size */
+    FILE *fp;
+    pd_code_e pdc;
+    asn1c_integer_t offset = 0;   /* Stream decoding position */
+    ber_tlv_len_t frame_size = 0; /* Single frame size */
 
-	if(strcmp(fname, "-")) {
-		fp = fopen(fname, "rb");
-		if(!fp) {
-			perror(fname);
-			return -1;
-		}
-	} else {
-		fp = stdin;
-	}
+    if(strcmp(fname, "-")) {
+        fp = fopen(fname, "rb");
+        if(!fp) {
+            perror(fname);
+            return -1;
+        }
+    } else {
+        fp = stdin;
+    }
 
-	/*
-	 * Skip the requested amount of bytes.
-	 */
-	for(; offset < skip_bytes; offset++) {
-		if(fgetc(fp) == -1) {
-			fprintf(stderr,
-				"%s: input source (%" PRIdASN " bytes) "
-				"has less data than \"-s %d\" switch "
-				"wants to skip\n",
-				fname, offset, skip_bytes);
-			if(fp != stdin) fclose(fp);
-			return -1;
-		}
-	}
+    /*
+     * Skip the requested amount of bytes.
+     */
+    for(; offset < skip_bytes; offset++) {
+        if(fgetc(fp) == -1) {
+            fprintf(stderr, "%s: input source (%" PRIdASN
+                            " bytes) "
+                            "has less data than \"-s %d\" switch "
+                            "wants to skip\n",
+                    fname, offset, skip_bytes);
+            if(fp != stdin) fclose(fp);
+            return -1;
+        }
+    }
 
-	/*
-	 * Fetch out BER-encoded data until EOF or error.
-	 */
-	do {
-		pdc = process_deeper(fname, fp, &offset,
-				     0, -1, &frame_size, 0, 0);
-	} while(pdc == PD_FINISHED && !single_type_decoding);
+    /*
+     * Fetch out BER-encoded data until EOF or error.
+     */
+    do {
+        pdc = process_deeper(fname, fp, &offset, 0, -1, &frame_size, 0, 0);
+    } while(pdc == PD_FINISHED && !single_type_decoding);
 
-	if(fp != stdin)
-		fclose(fp);
+    if(fp != stdin) fclose(fp);
 
-	if(pdc == PD_FAILED)
-		return -1;
-	return 0;
+    if(pdc == PD_FAILED) return -1;
+    return 0;
 }
 
 /*
  * Process the TLV recursively.
  */
 static pd_code_e
-process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level, ssize_t limit, ber_tlv_len_t *frame_size, ber_tlv_len_t effective_size, int expect_eoc) {
-	unsigned char tagbuf[32];
-	ssize_t tblen = 0;
-	pd_code_e pdc = PD_FINISHED;
-	ber_tlv_tag_t tlv_tag;
-	ber_tlv_len_t tlv_len;
-	ssize_t t_len;
-	ssize_t l_len;
+process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level,
+               ssize_t limit, ber_tlv_len_t *frame_size,
+               ber_tlv_len_t effective_size, int expect_eoc) {
+    unsigned char tagbuf[32];
+    ssize_t tblen = 0;
+    pd_code_e pdc = PD_FINISHED;
+    ber_tlv_tag_t tlv_tag;
+    ber_tlv_len_t tlv_len;
+    ssize_t t_len;
+    ssize_t l_len;
 
-	for(;;) {
-		ber_tlv_len_t local_esize = 0;
-		int constr;
-		int ch;
+    for(;;) {
+        ber_tlv_len_t local_esize = 0;
+        int constr;
+        int ch;
 
-		if(limit == 0)
-			return PD_FINISHED;
+        if(limit == 0) return PD_FINISHED;
 
-		if(limit >= 0 && tblen >= limit) {
-			fprintf(stderr,
-				"%s: Too long TL sequence (%ld >= %ld)"
-				" at %" PRIdASN ". "
-				"Broken or maliciously constructed file\n",
-				fname, (long)tblen, (long)limit, *offset);
-			return PD_FAILED;
-		}
+        if(limit >= 0 && tblen >= limit) {
+            fprintf(stderr,
+                    "%s: Too long TL sequence (%ld >= %ld)"
+                    " at %" PRIdASN
+                    ". "
+                    "Broken or maliciously constructed file\n",
+                    fname, (long)tblen, (long)limit, *offset);
+            return PD_FAILED;
+        }
 
-		/* Get the next byte from the input stream */
-		ch = fgetc(fp);
-		if(ch == -1) {
-			if(limit > 0 || expect_eoc) {
-				fprintf(stderr,
-					"%s: Unexpected end of file (TL)"
-					" at %" PRIdASN "\n",
-					fname, *offset);
-				return PD_FAILED;
-			} else {
-				return PD_EOF;
-			}
-		}
+        /* Get the next byte from the input stream */
+        ch = fgetc(fp);
+        if(ch == -1) {
+            if(limit > 0 || expect_eoc) {
+                fprintf(stderr,
+                        "%s: Unexpected end of file (TL)"
+                        " at %" PRIdASN "\n",
+                        fname, *offset);
+                return PD_FAILED;
+            } else {
+                return PD_EOF;
+            }
+        }
 
-		tagbuf[tblen++] = ch;
+        tagbuf[tblen++] = ch;
 
-		/*
-		 * Decode the TLV tag.
-		 */
-		t_len = ber_fetch_tag(tagbuf, tblen, &tlv_tag);
-		switch(t_len) {
-		case -1:
-			fprintf(stderr, "%s: Fatal error decoding tag"
-				" at %" PRIdASN "+%ld\n",
-				fname, *offset, (long)tblen);
-			return PD_FAILED;
-		case 0:
-			/* More data expected */
-			continue;
-		}
+        /*
+         * Decode the TLV tag.
+         */
+        t_len = ber_fetch_tag(tagbuf, tblen, &tlv_tag);
+        switch(t_len) {
+        case -1:
+            fprintf(stderr,
+                    "%s: Fatal error decoding tag"
+                    " at %" PRIdASN "+%ld\n",
+                    fname, *offset, (long)tblen);
+            return PD_FAILED;
+        case 0:
+            /* More data expected */
+            continue;
+        }
 
-		/*
-		 * Decode the TLV length.
-		 */
-		constr = BER_TLV_CONSTRUCTED(tagbuf);
-		l_len = ber_fetch_length(constr,
-				tagbuf + t_len, tblen - t_len, &tlv_len);
-		switch(l_len) {
-		case -1:
-			fprintf(stderr,
-				"%s: Fatal error decoding value length"
-				" at %" PRIdASN "\n",
-				fname, *offset + t_len);
-			return PD_FAILED;
-		case 0:
-			/* More data expected */
-			continue;
-		}
+        /*
+         * Decode the TLV length.
+         */
+        constr = BER_TLV_CONSTRUCTED(tagbuf);
+        l_len =
+            ber_fetch_length(constr, tagbuf + t_len, tblen - t_len, &tlv_len);
+        switch(l_len) {
+        case -1:
+            fprintf(stderr,
+                    "%s: Fatal error decoding value length"
+                    " at %" PRIdASN "\n",
+                    fname, *offset + t_len);
+            return PD_FAILED;
+        case 0:
+            /* More data expected */
+            continue;
+        }
 
-		/* Make sure the T & L decoders took exactly the whole buffer */
-		assert((t_len + l_len) == tblen);
+        /* Make sure the T & L decoders took exactly the whole buffer */
+        assert((t_len + l_len) == tblen);
 
-		if(!expect_eoc || tagbuf[0] || tagbuf[1])
-			print_TL(0, *offset, level, constr, tblen,
-				 tlv_tag, tlv_len, effective_size);
+        if(!expect_eoc || tagbuf[0] || tagbuf[1])
+            print_TL(0, *offset, level, constr, tblen, tlv_tag, tlv_len,
+                     effective_size);
 
-		if(limit != -1) {
-			/* If limit is set, account for the TL sequence */
-			limit -= (t_len + l_len);
-			assert(limit >= 0);
+        if(limit != -1) {
+            /* If limit is set, account for the TL sequence */
+            limit -= (t_len + l_len);
+            assert(limit >= 0);
 
-			if(tlv_len > limit) {
-				fprintf(stderr,
-				"%s: Structure advertizes length (%ld) "
-				"greater than of a parent container (%ld)\n",
-					fname, (long)tlv_len, (long)limit);
-				return PD_FAILED;
-			}
-		}
+            if(tlv_len > limit) {
+                fprintf(stderr,
+                        "%s: Structure advertizes length (%ld) "
+                        "greater than of a parent container (%ld)\n",
+                        fname, (long)tlv_len, (long)limit);
+                return PD_FAILED;
+            }
+        }
 
-		*offset += t_len + l_len;
-		*frame_size += t_len + l_len;
-		effective_size += t_len + l_len;
-		local_esize += t_len + l_len;
+        *offset += t_len + l_len;
+        *frame_size += t_len + l_len;
+        effective_size += t_len + l_len;
+        local_esize += t_len + l_len;
 
-		if(expect_eoc && !tagbuf[0] && !tagbuf[1]) {
-			/* End of content octets */
-			print_TL(1, *offset - 2, level - 1, 1, 2, 0, -1,
-					effective_size);
-			return PD_FINISHED;
-		}
+        if(expect_eoc && !tagbuf[0] && !tagbuf[1]) {
+            /* End of content octets */
+            print_TL(1, *offset - 2, level - 1, 1, 2, 0, -1, effective_size);
+            return PD_FINISHED;
+        }
 
-		if(constr) {
-			ber_tlv_len_t dec = 0;
-			/*
-			 * This is a constructed type. Process recursively.
-			 */
-			printf(">\n");	/* Close the opening tag */
-			if(tlv_len != -1 && limit != -1) {
-				assert(limit >= tlv_len);
-			}
-			pdc = process_deeper(fname, fp, offset, level + 1,
-				tlv_len == -1 ? limit : tlv_len,
-				&dec, t_len + l_len, tlv_len == -1);
-			if(pdc == PD_FAILED) return pdc;
-			if(limit != -1) {
-				assert(limit >= dec);
-				limit -= dec;
-			}
-			*frame_size += dec;
-			effective_size += dec;
-			local_esize += dec;
-			if(tlv_len == -1) {
-				tblen = 0;
-				if(pdc == PD_FINISHED
-					&& limit < 0 && !expect_eoc)
-					return pdc;
-				continue;
-			}
-		} else {
-			assert(tlv_len >= 0);
-			if(print_V(fname, fp, tlv_tag, tlv_len))
-				return PD_FAILED;
+        if(constr) {
+            ber_tlv_len_t dec = 0;
+            /*
+             * This is a constructed type. Process recursively.
+             */
+            printf(">\n"); /* Close the opening tag */
+            if(tlv_len != -1 && limit != -1) {
+                assert(limit >= tlv_len);
+            }
+            pdc = process_deeper(fname, fp, offset, level + 1,
+                                 tlv_len == -1 ? limit : tlv_len, &dec,
+                                 t_len + l_len, tlv_len == -1);
+            if(pdc == PD_FAILED) return pdc;
+            if(limit != -1) {
+                assert(limit >= dec);
+                limit -= dec;
+            }
+            *frame_size += dec;
+            effective_size += dec;
+            local_esize += dec;
+            if(tlv_len == -1) {
+                tblen = 0;
+                if(pdc == PD_FINISHED && limit < 0 && !expect_eoc) return pdc;
+                continue;
+            }
+        } else {
+            assert(tlv_len >= 0);
+            if(print_V(fname, fp, tlv_tag, tlv_len)) return PD_FAILED;
 
-			if(limit != -1) {
-				assert(limit >= tlv_len);
-				limit -= tlv_len;
-			}
-			*offset += tlv_len;
-			*frame_size += tlv_len;
-			effective_size += tlv_len;
-			local_esize += tlv_len;
-		}
+            if(limit != -1) {
+                assert(limit >= tlv_len);
+                limit -= tlv_len;
+            }
+            *offset += tlv_len;
+            *frame_size += tlv_len;
+            effective_size += tlv_len;
+            local_esize += tlv_len;
+        }
 
-		print_TL(1, *offset, level, constr, tblen,
-			 tlv_tag, tlv_len, local_esize);
+        print_TL(1, *offset, level, constr, tblen, tlv_tag, tlv_len,
+                 local_esize);
 
-		tblen = 0;
+        tblen = 0;
 
-		/* Report success for a single top level TLV */
-		if(level == 0 && limit == -1 && !expect_eoc)
-			break;
-	} /* for(;;) */
+        /* Report success for a single top level TLV */
+        if(level == 0 && limit == -1 && !expect_eoc) break;
+    } /* for(;;) */
 
-	return pdc;
+    return pdc;
 }
 
 static void
-print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len, ber_tlv_len_t effective_size) {
+print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen,
+         ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len,
+         ber_tlv_len_t effective_size) {
+    if(fin && !constr) {
+        printf("</P>\n");
+        return;
+    }
 
-	if(fin && !constr) {
-		printf("</P>\n");
-		return;
-	}
+    while(level-- > 0) fputs(indent_bytes, stdout); /* Print indent */
+    printf(fin ? "</" : "<");
 
-	while(level-- > 0) fputs(indent_bytes, stdout);  /* Print indent */
-	printf(fin ? "</" : "<");
+    printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
 
-	printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
+    /* Print out the offset of this boundary, even if closing tag */
+    if(!minimalistic) printf(" O=\"%" PRIdASN "\"", offset);
 
-	/* Print out the offset of this boundary, even if closing tag */
-	if(!minimalistic)
-		printf(" O=\"%" PRIdASN "\"", offset);
+    printf(" T=\"");
+    ber_tlv_tag_fwrite(tlv_tag, stdout);
+    printf("\"");
 
-	printf(" T=\"");
-	ber_tlv_tag_fwrite(tlv_tag, stdout);
-	printf("\"");
+    if(!fin || (tlv_len == -1 && !minimalistic))
+        printf(" TL=\"%ld\"", (long)tlen);
+    if(!fin) {
+        if(tlv_len == -1)
+            printf(" V=\"Indefinite\"");
+        else
+            printf(" V=\"%ld\"", (long)tlv_len);
+    }
 
-	if(!fin || (tlv_len == -1 && !minimalistic))
-		printf(" TL=\"%ld\"", (long)tlen);
-	if(!fin) {
-		if(tlv_len == -1)
-			printf(" V=\"Indefinite\"");
-		else
-			printf(" V=\"%ld\"", (long)tlv_len);
-	}
+    if(!minimalistic && BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
+        const char *str;
+        ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
+        str = ASN_UNIVERSAL_TAG2STR(tvalue);
+        if(str) printf(" A=\"%s\"", str);
+    }
 
-	if(!minimalistic
-	&& BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
-		const char *str;
-		ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
-		str = ASN_UNIVERSAL_TAG2STR(tvalue);
-		if(str) printf(" A=\"%s\"", str);
-	}
-
-	if(fin) {
-		if(constr && !minimalistic)
-			printf(" L=\"%ld\"", (long)effective_size);
-		printf(">\n");
-	}
+    if(fin) {
+        if(constr && !minimalistic) printf(" L=\"%ld\"", (long)effective_size);
+        printf(">\n");
+    }
 }
 
 /*
  * Print the value in binary form, or reformat for pretty-printing.
  */
 static int
-print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
-	asn1c_integer_t *arcs = 0;	/* Object identifier arcs */
-	unsigned char *vbuf = 0;
-	asn1p_expr_type_e etype = 0;
-	asn1c_integer_t collector = 0;
-	int special_format = 0;
-	ssize_t i;
+print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
+        ber_tlv_len_t tlv_len) {
+    asn1c_integer_t *arcs = 0; /* Object identifier arcs */
+    unsigned char *vbuf = 0;
+    asn1p_expr_type_e etype = 0;
+    asn1c_integer_t collector = 0;
+    int special_format = 0;
+    ssize_t i;
 
-	/* Figure out what type is it */
-	if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL
-	&& pretty_printing) {
-		ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
-		etype = ASN_UNIVERSAL_TAG2TYPE(tvalue);
-	}
+    /* Figure out what type is it */
+    if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL && pretty_printing) {
+        ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
+        etype = ASN_UNIVERSAL_TAG2TYPE(tvalue);
+    }
 
-	/*
-	 * Determine how to print the value, either in its native binary form,
-	 * encoded with &xNN characters, or using pretty-printing.
-	 * The basic string types (including "useful types", like UTCTime)
-	 * are excempt from this determination logic, because their alphabets
-	 * are subsets of the XML's native UTF-8 encoding.
-	 */
-	switch(etype) {
-	case ASN_BASIC_BOOLEAN:
-		if(tlv_len == 1)
-			special_format = 1;
-		else
-			etype = 0;
-		break;
-	case ASN_BASIC_INTEGER:
-	case ASN_BASIC_ENUMERATED:
-		if((size_t)tlv_len <= sizeof(collector))
-			special_format = 1;
-		else
-			etype = 0;
-		break;
-	case ASN_BASIC_OBJECT_IDENTIFIER:
-	case ASN_BASIC_RELATIVE_OID:
-		if(tlv_len > 0 && tlv_len < 128*1024 /* VERY long OID! */) {
-			arcs = MALLOC(sizeof(*arcs) * (tlv_len + 1));
-			if(arcs) {
-				vbuf = MALLOC(tlv_len + 1);
-				/* Not checking is intentional */
-			}
-		}
-	case ASN_BASIC_UTCTime:
-	case ASN_BASIC_GeneralizedTime:
-	case ASN_STRING_NumericString:
-	case ASN_STRING_PrintableString:
-	case ASN_STRING_VisibleString:
-	case ASN_STRING_IA5String:
-	case ASN_STRING_UTF8String:
-		break;	/* Directly compatible with UTF-8 */
-	case ASN_STRING_BMPString:
-	case ASN_STRING_UniversalString:
-		break;	/* Not directly compatible with UTF-8 */
-	default:
-		/* Conditionally compatible with UTF-8 */
-		if((
-			(etype & ASN_STRING_MASK)
-			||
-			(etype == ASN_BASIC_OCTET_STRING)
-			||
-			/*
-			 * AUTOMATIC TAGS or IMPLICIT TAGS in effect,
-			 * Treat this primitive type as OCTET_STRING.
-			 */
-			(BER_TAG_CLASS(tlv_tag) != ASN_TAG_CLASS_UNIVERSAL
-				&& pretty_printing)
-		) && (tlv_len > 0 && tlv_len < 128 * 1024)) {
-			vbuf = MALLOC(tlv_len + 1);
-			/* Not checking is intentional */
-		}
-		break;
-	}
+    /*
+     * Determine how to print the value, either in its native binary form,
+     * encoded with &xNN characters, or using pretty-printing.
+     * The basic string types (including "useful types", like UTCTime)
+     * are excempt from this determination logic, because their alphabets
+     * are subsets of the XML's native UTF-8 encoding.
+     */
+    switch(etype) {
+    case ASN_BASIC_BOOLEAN:
+        if(tlv_len == 1)
+            special_format = 1;
+        else
+            etype = 0;
+        break;
+    case ASN_BASIC_INTEGER:
+    case ASN_BASIC_ENUMERATED:
+        if((size_t)tlv_len <= sizeof(collector))
+            special_format = 1;
+        else
+            etype = 0;
+        break;
+    case ASN_BASIC_OBJECT_IDENTIFIER:
+    case ASN_BASIC_RELATIVE_OID:
+        if(tlv_len > 0 && tlv_len < 128 * 1024 /* VERY long OID! */) {
+            arcs = MALLOC(sizeof(*arcs) * (tlv_len + 1));
+            if(arcs) {
+                vbuf = MALLOC(tlv_len + 1);
+                /* Not checking is intentional */
+            }
+        }
+    case ASN_BASIC_UTCTime:
+    case ASN_BASIC_GeneralizedTime:
+    case ASN_STRING_NumericString:
+    case ASN_STRING_PrintableString:
+    case ASN_STRING_VisibleString:
+    case ASN_STRING_IA5String:
+    case ASN_STRING_UTF8String:
+        break; /* Directly compatible with UTF-8 */
+    case ASN_STRING_BMPString:
+    case ASN_STRING_UniversalString:
+        break; /* Not directly compatible with UTF-8 */
+    default:
+        /* Conditionally compatible with UTF-8 */
+        if(((etype & ASN_STRING_MASK) || (etype == ASN_BASIC_OCTET_STRING) ||
+            /*
+             * AUTOMATIC TAGS or IMPLICIT TAGS in effect,
+             * Treat this primitive type as OCTET_STRING.
+             */
+            (BER_TAG_CLASS(tlv_tag) != ASN_TAG_CLASS_UNIVERSAL
+             && pretty_printing))
+           && (tlv_len > 0 && tlv_len < 128 * 1024)) {
+            vbuf = MALLOC(tlv_len + 1);
+            /* Not checking is intentional */
+        }
+        break;
+    }
 
-	/* If collection vbuf is present, defer printing the F flag. */
-	if(!vbuf) printf(special_format ? " F>" : ">");
+    /* If collection vbuf is present, defer printing the F flag. */
+    if(!vbuf) printf(special_format ? " F>" : ">");
 
-	/*
-	 * Print the value in binary or text form,
-	 * or collect the bytes into vbuf.
-	 */
-	for(i = 0; i < tlv_len; i++) {
-		int ch = fgetc(fp);
-		if(ch == -1) {
-			fprintf(stderr,
-			"%s: Unexpected end of file (V)\n", fname);
-			if(vbuf) FREEMEM(vbuf);
-			if(arcs) FREEMEM(arcs);
-			return -1;
-		}
-		switch(etype) {
-		case ASN_BASIC_UTCTime:
-		case ASN_BASIC_GeneralizedTime:
-		case ASN_STRING_NumericString:
-		case ASN_STRING_PrintableString:
-		case ASN_STRING_VisibleString:
-		case ASN_STRING_IA5String:
-		case ASN_STRING_UTF8String:
-			switch(ch) {
-			default:
-				if(((etype == ASN_STRING_UTF8String)
-					|| !(ch & 0x80))
-				&& (ch >= 0x20)
-				) {
-					printf("%c", ch);
-					break;
-				}
-				/* Fall through */
-			case 0x3c: case 0x3e: case 0x26:
-				printf("&#x%02x;", ch);
-			}
-			break;
-		case ASN_BASIC_BOOLEAN:
-			switch(ch) {
-			case 0: printf("<false/>"); break;
-			case 0xff: printf("<true/>"); break;
-			default: printf("<true value=\"&#x%02x\"/>", ch);
-			}
-			break;
-		case ASN_BASIC_INTEGER:
-		case ASN_BASIC_ENUMERATED:
-			if(i)	collector = collector * 256 + ch;
-			else	collector = (int)(signed char)ch;
-			break;
-		default:
-			if(vbuf) {
-				vbuf[i] = ch;
-			} else {
-				printf("&#x%02x;", ch);
-			}
-		}
-	}
+    /*
+     * Print the value in binary or text form,
+     * or collect the bytes into vbuf.
+     */
+    for(i = 0; i < tlv_len; i++) {
+        int ch = fgetc(fp);
+        if(ch == -1) {
+            fprintf(stderr, "%s: Unexpected end of file (V)\n", fname);
+            if(vbuf) FREEMEM(vbuf);
+            if(arcs) FREEMEM(arcs);
+            return -1;
+        }
+        switch(etype) {
+        case ASN_BASIC_UTCTime:
+        case ASN_BASIC_GeneralizedTime:
+        case ASN_STRING_NumericString:
+        case ASN_STRING_PrintableString:
+        case ASN_STRING_VisibleString:
+        case ASN_STRING_IA5String:
+        case ASN_STRING_UTF8String:
+            switch(ch) {
+            default:
+                if(((etype == ASN_STRING_UTF8String) || !(ch & 0x80))
+                   && (ch >= 0x20)) {
+                    printf("%c", ch);
+                    break;
+                }
+            /* Fall through */
+            case 0x3c:
+            case 0x3e:
+            case 0x26:
+                printf("&#x%02x;", ch);
+            }
+            break;
+        case ASN_BASIC_BOOLEAN:
+            switch(ch) {
+            case 0:
+                printf("<false/>");
+                break;
+            case 0xff:
+                printf("<true/>");
+                break;
+            default:
+                printf("<true value=\"&#x%02x\"/>", ch);
+            }
+            break;
+        case ASN_BASIC_INTEGER:
+        case ASN_BASIC_ENUMERATED:
+            if(i)
+                collector = collector * 256 + ch;
+            else
+                collector = (int)(signed char)ch;
+            break;
+        default:
+            if(vbuf) {
+                vbuf[i] = ch;
+            } else {
+                printf("&#x%02x;", ch);
+            }
+        }
+    }
 
-	/* Do post-processing */
-	switch(etype) {
-	case ASN_BASIC_INTEGER:
-	case ASN_BASIC_ENUMERATED:
-		printf("%" PRIdASN, collector);
-		break;
-	case ASN_BASIC_OBJECT_IDENTIFIER:
-		if(vbuf) {
-			OBJECT_IDENTIFIER_t oid;
-			int arcno;
+    /* Do post-processing */
+    switch(etype) {
+    case ASN_BASIC_INTEGER:
+    case ASN_BASIC_ENUMERATED:
+        printf("%" PRIdASN, collector);
+        break;
+    case ASN_BASIC_OBJECT_IDENTIFIER:
+        if(vbuf) {
+            OBJECT_IDENTIFIER_t oid;
+            int arcno;
 
-			oid.buf = vbuf;
-			oid.size = tlv_len;
+            oid.buf = vbuf;
+            oid.size = tlv_len;
 
-			arcno = OBJECT_IDENTIFIER_get_arcs(&oid, arcs,
-				sizeof(*arcs), tlv_len + 1);
-			if(arcno >= 0) {
-				assert(arcno <= (tlv_len + 1));
-				printf(" F>");
-				for(i = 0; i < arcno; i++) {
-					if(i) printf(".");
-					printf("%" PRIuASN, arcs[i]);
-				}
-				FREEMEM(vbuf);
-				vbuf = 0;
-			}
-		}
-		break;
-	case ASN_BASIC_RELATIVE_OID:
-		if(vbuf) {
-			RELATIVE_OID_t oid;
-			int arcno;
+            arcno = OBJECT_IDENTIFIER_get_arcs(&oid, arcs, sizeof(*arcs),
+                                               tlv_len + 1);
+            if(arcno >= 0) {
+                assert(arcno <= (tlv_len + 1));
+                printf(" F>");
+                for(i = 0; i < arcno; i++) {
+                    if(i) printf(".");
+                    printf("%" PRIuASN, arcs[i]);
+                }
+                FREEMEM(vbuf);
+                vbuf = 0;
+            }
+        }
+        break;
+    case ASN_BASIC_RELATIVE_OID:
+        if(vbuf) {
+            RELATIVE_OID_t oid;
+            int arcno;
 
-			oid.buf = vbuf;
-			oid.size = tlv_len;
-	
-			arcno = RELATIVE_OID_get_arcs(&oid, arcs,
-				sizeof(*arcs), tlv_len);
-			if(arcno >= 0) {
-				assert(arcno <= (tlv_len + 1));
-				printf(" F>");
-				for(i = 0; i < arcno; i++) {
-					if(i) printf(".");
-					printf("%" PRIuASN, arcs[i]);
-				}
-				FREEMEM(vbuf);
-				vbuf = 0;
-			}
-		}
-		break;
-	default: break;
-	}
+            oid.buf = vbuf;
+            oid.size = tlv_len;
 
-	/*
-	 * If the buffer was not consumed, print it out.
-	 * It might be an OCTET STRING or other primitive type,
-	 * which might actually be printable, but we need to figure it out.
-	 */
-	if(vbuf) {
-		int binary;
+            arcno = RELATIVE_OID_get_arcs(&oid, arcs, sizeof(*arcs), tlv_len);
+            if(arcno >= 0) {
+                assert(arcno <= (tlv_len + 1));
+                printf(" F>");
+                for(i = 0; i < arcno; i++) {
+                    if(i) printf(".");
+                    printf("%" PRIuASN, arcs[i]);
+                }
+                FREEMEM(vbuf);
+                vbuf = 0;
+            }
+        }
+        break;
+    default:
+        break;
+    }
 
-		/*
-		 * Check whether the data could be represented as text
-		 */
-		binary = -1 * (tlv_len >> 3); /* Threshold is 12.5% binary */
-		for(i = 0; i < tlv_len; i++) {
-			switch(vbuf[i]) {
-			case 0x1b: binary = 1; break;
-			case 0x09: case 0x0a: case 0x0d: continue;
-			default:
-				if(vbuf[i] < 0x20 || vbuf[i] >= 0x7f)
-					if(++binary > 0)  /* Way too many */
-						break;
-				continue;
-			}
-			break;
-		}
-		printf(">");
-		for(i = 0; i < tlv_len; i++) {
-			if(binary > 0 || vbuf[i] < 0x20 || vbuf[i] >= 0x7f
-				|| vbuf[i] == 0x26	/* '&' */
-				|| vbuf[i] == 0x3c	/* '<' */
-				|| vbuf[i] == 0x3e	/* '>' */
-			)
-				printf("&#x%02x;", vbuf[i]);
-			else
-				printf("%c", vbuf[i]);
-		}
-		FREEMEM(vbuf);
-	}
+    /*
+     * If the buffer was not consumed, print it out.
+     * It might be an OCTET STRING or other primitive type,
+     * which might actually be printable, but we need to figure it out.
+     */
+    if(vbuf) {
+        int binary;
 
-	if(arcs) FREEMEM(arcs);
-	return 0;
+        /*
+         * Check whether the data could be represented as text
+         */
+        binary = -1 * (tlv_len >> 3); /* Threshold is 12.5% binary */
+        for(i = 0; i < tlv_len; i++) {
+            switch(vbuf[i]) {
+            case 0x1b:
+                binary = 1;
+                break;
+            case 0x09:
+            case 0x0a:
+            case 0x0d:
+                continue;
+            default:
+                if(vbuf[i] < 0x20 || vbuf[i] >= 0x7f)
+                    if(++binary > 0) /* Way too many */
+                        break;
+                continue;
+            }
+            break;
+        }
+        printf(">");
+        for(i = 0; i < tlv_len; i++) {
+            if(binary > 0 || vbuf[i] < 0x20 || vbuf[i] >= 0x7f
+               || vbuf[i] == 0x26 /* '&' */
+               || vbuf[i] == 0x3c /* '<' */
+               || vbuf[i] == 0x3e /* '>' */
+               )
+                printf("&#x%02x;", vbuf[i]);
+            else
+                printf("%c", vbuf[i]);
+        }
+        FREEMEM(vbuf);
+    }
+
+    if(arcs) FREEMEM(arcs);
+    return 0;
 }
 
 
 static int
 decode_tlv_from_string(const char *datastring) {
-	unsigned char *data, *dp;
-	size_t dsize;	/* Data size */
-	ssize_t len;
-	ber_tlv_tag_t tlv_tag;
-	ber_tlv_len_t tlv_len;
-	const char *p;
-	int half;
+    unsigned char *data, *dp;
+    size_t dsize; /* Data size */
+    ssize_t len;
+    ber_tlv_tag_t tlv_tag;
+    ber_tlv_len_t tlv_len;
+    const char *p;
+    int half;
 
-	dsize = strlen(datastring) + 1;
-	dp = data = CALLOC(1, dsize);
-	assert(data);
+    dsize = strlen(datastring) + 1;
+    dp = data = CALLOC(1, dsize);
+    assert(data);
 
-	for(half = 0, p = datastring; *p; p++) {
+    for(half = 0, p = datastring; *p; p++) {
+        /* clang-format off */
 		switch(*p) {
 		case '0': case '1': case '2': case '3': case '4':
 		case '5': case '6': case '7': case '8': case '9':
@@ -701,78 +704,151 @@ decode_tlv_from_string(const char *datastring) {
 			fprintf(stderr, "%s^ <- here\n", (char *)data);
 			return -1;
 		}
-		if(half) dp++; else (*dp) <<= 4;
-		half = !half;
-	}
+        /* clang-format on */
+        if(half)
+            dp++;
+        else
+            (*dp) <<= 4;
+        half = !half;
+    }
 
-	assert((size_t)(dp - data) <= dsize);
-	dsize = dp - data;
+    assert((size_t)(dp - data) <= dsize);
+    dsize = dp - data;
 
-	printf("BER: ");
-	for(dp = data; dp < data + dsize; dp++)
-		printf("%02X", *dp);
-	printf("\n");
+    printf("BER: ");
+    for(dp = data; dp < data + dsize; dp++) printf("%02X", *dp);
+    printf("\n");
 
-	len = ber_fetch_tag(data, dsize, &tlv_tag);
-	switch(len) {
-	case -1:
-		fprintf(stderr, "TAG: Fatal error decoding tag\n");
-		return -1;
-	case 0:
-		fprintf(stderr, "TAG: More data expected\n");
-		return -1;
-	default:
-		printf("TAG: ");
-		ber_tlv_tag_fwrite(tlv_tag, stdout);
-		if(BER_TLV_CONSTRUCTED(data)) {
-			printf(" (constructed)");
-		} else if(dsize >= 2 && data[0] == 0 && data[1] == 0) {
-			printf(" (end-of-content)");
-		} else {
-			printf(" (primitive)");
-		}
-		if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
-			const char *str;
-			ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
-			str = ASN_UNIVERSAL_TAG2STR(tvalue);
-			if(str) printf(" \"%s\"", str);
-		}
-		printf("\n");
-	}
+    len = ber_fetch_tag(data, dsize, &tlv_tag);
+    switch(len) {
+    case -1:
+        fprintf(stderr, "TAG: Fatal error decoding tag\n");
+        return -1;
+    case 0:
+        fprintf(stderr, "TAG: More data expected\n");
+        return -1;
+    default:
+        printf("TAG: ");
+        ber_tlv_tag_fwrite(tlv_tag, stdout);
+        if(BER_TLV_CONSTRUCTED(data)) {
+            printf(" (constructed)");
+        } else if(dsize >= 2 && data[0] == 0 && data[1] == 0) {
+            printf(" (end-of-content)");
+        } else {
+            printf(" (primitive)");
+        }
+        if(BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
+            const char *str;
+            ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
+            str = ASN_UNIVERSAL_TAG2STR(tvalue);
+            if(str) printf(" \"%s\"", str);
+        }
+        printf("\n");
+    }
 
-	if(dsize > (size_t)len) {
-		len = ber_fetch_length(BER_TLV_CONSTRUCTED(data),
-			data + len, dsize - len, &tlv_len);
-		switch(len) {
-		case -1:
-			fprintf(stderr,
-				"LEN: Fatal error decoding length\n");
-			return -1;
-		case 0:
-			fprintf(stderr, "LEN: More data expected\n");
-			return -1;
-		default:
-			if(tlv_len == (ber_tlv_len_t)-1)
-				printf("LEN: Indefinite length encoding\n");
-			else
-				printf("LEN: %ld bytes\n", (long)tlv_len);
-		}
-	}
+    if(dsize > (size_t)len) {
+        len = ber_fetch_length(BER_TLV_CONSTRUCTED(data), data + len,
+                               dsize - len, &tlv_len);
+        switch(len) {
+        case -1:
+            fprintf(stderr, "LEN: Fatal error decoding length\n");
+            return -1;
+        case 0:
+            fprintf(stderr, "LEN: More data expected\n");
+            return -1;
+        default:
+            if(tlv_len == (ber_tlv_len_t)-1)
+                printf("LEN: Indefinite length encoding\n");
+            else
+                printf("LEN: %ld bytes\n", (long)tlv_len);
+        }
+    }
 
-	return 0;
+    return 0;
 }
 
 /*
  * Dummy functions.
  */
-asn_dec_rval_t ber_check_tags(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx, const void *ptr, size_t size, int tag_mode, int last_tag_form, ber_tlv_len_t *last_length, int *opt_tlv_form) { asn_dec_rval_t rv = { 0, 0 }; (void)opt_codec_ctx; (void)td; (void)opt_ctx; (void)ptr; (void)size; (void)tag_mode; (void)last_tag_form; (void)last_length; (void)opt_tlv_form; return rv; }
+asn_dec_rval_t
+ber_check_tags(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+               asn_struct_ctx_t *opt_ctx, const void *ptr, size_t size,
+               int tag_mode, int last_tag_form, ber_tlv_len_t *last_length,
+               int *opt_tlv_form) {
+    asn_dec_rval_t rv = {0, 0};
+    (void)opt_codec_ctx;
+    (void)td;
+    (void)opt_ctx;
+    (void)ptr;
+    (void)size;
+    (void)tag_mode;
+    (void)last_tag_form;
+    (void)last_length;
+    (void)opt_tlv_form;
+    return rv;
+}
 
-ssize_t der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode, int last_tag_form, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) { (void)td; (void)slen; (void)tag_mode; (void)last_tag_form; (void)tag; (void)cb; (void)app_key; return -1; }
+ssize_t
+der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode,
+               int last_tag_form, ber_tlv_tag_t tag,
+               asn_app_consume_bytes_f *cb, void *app_key) {
+    (void)td;
+    (void)slen;
+    (void)tag_mode;
+    (void)last_tag_form;
+    (void)tag;
+    (void)cb;
+    (void)app_key;
+    return -1;
+}
 
-asn_dec_rval_t xer_decode_general(asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx, void *struct_key, const char *xml_tag, const void *buf_ptr, size_t size, int (*otd)(void *struct_key, const void *chunk_buf, size_t chunk_size), ssize_t (*br)(void *struct_key, const void *chunk_buf, size_t chunk_size, int have_more)) { asn_dec_rval_t rv = { 0, 0 }; (void)opt_codec_ctx; (void)ctx; (void)struct_key; (void)xml_tag; (void)buf_ptr; (void)size; (void)otd; (void)br; return rv; }
+asn_dec_rval_t
+xer_decode_general(asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx,
+                   void *struct_key, const char *xml_tag, const void *buf_ptr,
+                   size_t size,
+                   int (*otd)(void *struct_key, const void *chunk_buf,
+                              size_t chunk_size),
+                   ssize_t (*br)(void *struct_key, const void *chunk_buf,
+                                 size_t chunk_size, int have_more)) {
+    asn_dec_rval_t rv = {0, 0};
+    (void)opt_codec_ctx;
+    (void)ctx;
+    (void)struct_key;
+    (void)xml_tag;
+    (void)buf_ptr;
+    (void)size;
+    (void)otd;
+    (void)br;
+    return rv;
+}
 
-asn_dec_rval_t OCTET_STRING_decode_uper(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts, void **sptr, asn_per_data_t *pd) { asn_dec_rval_t rv = { 0, 0 }; (void)ctx; (void)td; (void)cts; (void)sptr; (void)pd; return rv; }
+asn_dec_rval_t
+OCTET_STRING_decode_uper(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
+                         asn_per_constraints_t *cts, void **sptr,
+                         asn_per_data_t *pd) {
+    asn_dec_rval_t rv = {0, 0};
+    (void)ctx;
+    (void)td;
+    (void)cts;
+    (void)sptr;
+    (void)pd;
+    return rv;
+}
 
-asn_enc_rval_t OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts, void *sptr, asn_per_outp_t *po) { asn_enc_rval_t er = { 0, 0, 0 }; (void)td; (void)cts; (void)sptr; (void)po; return er; }
+asn_enc_rval_t
+OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts,
+                         void *sptr, asn_per_outp_t *po) {
+    asn_enc_rval_t er = {0, 0, 0};
+    (void)td;
+    (void)cts;
+    (void)sptr;
+    (void)po;
+    return er;
+}
 
-size_t xer_whitespace_span(const void *chunk_buf, size_t chunk_size) {  (void)chunk_buf; (void)chunk_size; return 0; }
+size_t
+xer_whitespace_span(const void *chunk_buf, size_t chunk_size) {
+    (void)chunk_buf;
+    (void)chunk_size;
+    return 0;
+}

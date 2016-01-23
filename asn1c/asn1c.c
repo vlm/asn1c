@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2014
+ * Copyright (c) 2003-2016
  * 	Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,314 +31,306 @@
  */
 #include "sys-common.h"
 
-#undef  COPYRIGHT
-#define COPYRIGHT       \
-	"Copyright (c) 2003-2014 Lev Walkin <vlm@lionet.info>\n"
+#undef COPYRIGHT
+#define COPYRIGHT "Copyright (c) 2003-2016 Lev Walkin <vlm@lionet.info>\n"
 
-#include <asn1parser.h>		/* Parse the ASN.1 file and build a tree */
-#include <asn1fix.h>		/* Fix the ASN.1 tree */
-#include <asn1print.h>		/* Print the ASN.1 tree */
-#include <asn1compiler.h>	/* Compile the ASN.1 tree */
+#include <asn1parser.h>   /* Parse the ASN.1 file and build a tree */
+#include <asn1fix.h>      /* Fix the ASN.1 tree */
+#include <asn1print.h>    /* Print the ASN.1 tree */
+#include <asn1compiler.h> /* Compile the ASN.1 tree */
 
-#include <asn1c_compat.h>	/* Portable basename(3) and dirname(3) */
+#include <asn1c_compat.h> /* Portable basename(3) and dirname(3) */
 
-#ifdef	_WIN32
+#ifdef _WIN32
 #include <io.h>
 #include <direct.h>
 #else
 #include <dirent.h>
 #endif
 
-static void usage(const char *av0);	/* Print the Usage screen and exit */
+static void usage(const char *av0); /* Print the Usage screen and exit */
 static int importStandardModules(asn1p_t *asn, const char *skeletons_dir);
 
 int
 main(int ac, char **av) {
-	enum asn1p_flags     asn1_parser_flags	= A1P_NOFLAGS;
-	enum asn1f_flags     asn1_fixer_flags	= A1F_NOFLAGS;
-	enum asn1c_flags     asn1_compiler_flags= A1C_NO_C99;
-	enum asn1print_flags asn1_printer_flags	= APF_NOFLAGS;
-	int print_arg__print_out = 0;	/* Don't compile, just print parsed */
-	int print_arg__fix_n_print = 0;	/* Fix and print */
-	int warnings_as_errors = 0;	/* Treat warnings as errors */
-	char *skeletons_dir = NULL;	/* Directory with supplementary stuff */
-	asn1p_t *asn = 0;		/* An ASN.1 parsed tree */
-	int ret;			/* Return value from misc functions */
-	int ch;				/* Command line character */
-	int i;				/* Index in some loops */
+    enum asn1p_flags asn1_parser_flags = A1P_NOFLAGS;
+    enum asn1f_flags asn1_fixer_flags = A1F_NOFLAGS;
+    enum asn1c_flags asn1_compiler_flags = A1C_NO_C99;
+    enum asn1print_flags asn1_printer_flags = APF_NOFLAGS;
+    int print_arg__print_out = 0;   /* Don't compile, just print parsed */
+    int print_arg__fix_n_print = 0; /* Fix and print */
+    int warnings_as_errors = 0;     /* Treat warnings as errors */
+    char *skeletons_dir = NULL;     /* Directory with supplementary stuff */
+    asn1p_t *asn = 0;               /* An ASN.1 parsed tree */
+    int ret;                        /* Return value from misc functions */
+    int ch;                         /* Command line character */
+    int i;                          /* Index in some loops */
 
-	/*
-	 * Process command-line options.
-	 */
-	while((ch = getopt(ac, av, "EFf:g:hLPp:RS:vW:X")) != -1)
-	switch(ch) {
-	case 'E':
-		print_arg__print_out = 1;
-		break;
-	case 'F':
-		print_arg__fix_n_print = 1;
-		break;
-	case 'f':
-		if(strcmp(optarg, "all-defs-global") == 0) {
-			asn1_compiler_flags |= A1C_ALL_DEFS_GLOBAL;
-		} else if(strcmp(optarg, "bless-SIZE") == 0) {
-			asn1_fixer_flags |= A1F_EXTENDED_SizeConstraint;
-		} else if(strcmp(optarg, "compound-names") == 0) {
-			asn1_compiler_flags |= A1C_COMPOUND_NAMES;
-		} else if(strcmp(optarg, "indirect-choice") == 0) {
-			asn1_compiler_flags |= A1C_INDIRECT_CHOICE;
-		} else if(strncmp(optarg, "known-extern-type=", 18) == 0) {
-			char *known_type = optarg + 18;
-			ret = asn1f_make_known_external_type(known_type);
-			assert(ret == 0 || errno == EEXIST);
-		} else if(strcmp(optarg, "native-types") == 0) {
-			fprintf(stderr, "-f%s: Deprecated option\n", optarg);
-			asn1_compiler_flags &= ~A1C_USE_WIDE_TYPES;
-		} else if(strcmp(optarg, "wide-types") == 0) {
-			asn1_compiler_flags |= A1C_USE_WIDE_TYPES;
-		} else if(strcmp(optarg, "line-refs") == 0) {
-			asn1_compiler_flags |= A1C_LINE_REFS;
-		} else if(strcmp(optarg, "no-constraints") == 0) {
-			asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
-		} else if(strcmp(optarg, "no-include-deps") == 0) {
-			asn1_compiler_flags |= A1C_NO_INCLUDE_DEPS;
-		} else if(strcmp(optarg, "includes-quoted") == 0) {
-			asn1_compiler_flags |= A1C_INCLUDES_QUOTED;
-		} else if(strcmp(optarg, "unnamed-unions") == 0) {
-			asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
-		} else if(strcmp(optarg, "skeletons-copy") == 0) {
-			fprintf(stderr, "-f%s: Deprecated option\n", optarg);
-			asn1_compiler_flags &= ~A1C_LINK_SKELETONS;
-		} else if(strcmp(optarg, "link-skeletons") == 0) {
-			asn1_compiler_flags |= A1C_LINK_SKELETONS;
-		} else {
-			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
-			exit(EX_USAGE);
-		}
-		break;
-	case 'g':
-		if(strcmp(optarg, "en-PER") == 0) {
-			asn1_compiler_flags |= A1C_GEN_PER;
-		} else {
-			fprintf(stderr, "-g%s: Invalid argument\n", optarg);
-			exit(EX_USAGE);
-		}
-		break;
-	case 'h':
-		usage(av[0]);
-	case 'P':
-		asn1_compiler_flags |= A1C_PRINT_COMPILED;
-		asn1_compiler_flags &= ~A1C_NO_C99;
-		break;
-	case 'p':
-		if(strncmp(optarg, "du=", 3) == 0) {
-			char *pduname = optarg + 3;
-			if(strcmp(pduname, "all") == 0) {
-				asn1_compiler_flags |= A1C_PDU_ALL;
-			} else if(strcmp(pduname, "auto") == 0) {
-				asn1_compiler_flags |= A1C_PDU_AUTO;
-			} else if(pduname[0] >= 'A' && pduname[0] <= 'Z') {
-				asn1c__add_pdu_type(pduname);
-				asn1_compiler_flags |= A1C_PDU_TYPE;
-			} else {
-				fprintf(stderr, "-pdu=%s"
-					": expected -pdu={all|auto|Type}\n",
-					pduname);
-				exit(EX_USAGE);
-			}
-		} else if(strcmp(optarg, "rint-class-matrix") == 0) {
-			asn1_printer_flags |= APF_PRINT_CLASS_MATRIX;
-		} else if(strcmp(optarg, "rint-constraints") == 0) {
-			asn1_printer_flags |= APF_PRINT_CONSTRAINTS;
-		} else if(strcmp(optarg, "rint-lines") == 0) {
-			asn1_printer_flags |= APF_LINE_COMMENTS;
-		} else {
-			fprintf(stderr, "-p%s: Invalid argument\n", optarg);
-			exit(EX_USAGE);
-		}
-		break;
-	case 'R':
-		asn1_compiler_flags |= A1C_OMIT_SUPPORT_CODE;
-		break;
-	case 'S':
-		skeletons_dir = optarg;
-		break;
-	case 'v':
-		fprintf(stderr, "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT);
-		exit(0);
-		break;
-	case 'W':
-		if(strcmp(optarg, "error") == 0) {
-			warnings_as_errors = 1;
-			break;
-		} else if(strcmp(optarg, "debug-lexer") == 0) {
-			asn1_parser_flags |= A1P_LEXER_DEBUG;
-			break;
-		} else if(strcmp(optarg, "debug-fixer") == 0) {
-			asn1_fixer_flags |= A1F_DEBUG;
-			break;
-		} else if(strcmp(optarg, "debug-compiler") == 0) {
-			asn1_compiler_flags |= A1C_DEBUG;
-			break;
-		} else {
-			fprintf(stderr, "-W%s: Invalid argument\n", optarg);
-			exit(EX_USAGE);
-		}
-		break;
-	case 'X':
-		print_arg__print_out = 1;	/* Implicit -E */
-		print_arg__fix_n_print = 1;	/* Implicit -F */
-		asn1_printer_flags |= APF_PRINT_XML_DTD;
-		break;
-	default:
-		usage(av[0]);
-	}
+    /*
+     * Process command-line options.
+     */
+    while((ch = getopt(ac, av, "EFf:g:hLPp:RS:vW:X")) != -1) switch(ch) {
+        case 'E':
+            print_arg__print_out = 1;
+            break;
+        case 'F':
+            print_arg__fix_n_print = 1;
+            break;
+        case 'f':
+            if(strcmp(optarg, "all-defs-global") == 0) {
+                asn1_compiler_flags |= A1C_ALL_DEFS_GLOBAL;
+            } else if(strcmp(optarg, "bless-SIZE") == 0) {
+                asn1_fixer_flags |= A1F_EXTENDED_SizeConstraint;
+            } else if(strcmp(optarg, "compound-names") == 0) {
+                asn1_compiler_flags |= A1C_COMPOUND_NAMES;
+            } else if(strcmp(optarg, "indirect-choice") == 0) {
+                asn1_compiler_flags |= A1C_INDIRECT_CHOICE;
+            } else if(strncmp(optarg, "known-extern-type=", 18) == 0) {
+                char *known_type = optarg + 18;
+                ret = asn1f_make_known_external_type(known_type);
+                assert(ret == 0 || errno == EEXIST);
+            } else if(strcmp(optarg, "native-types") == 0) {
+                fprintf(stderr, "-f%s: Deprecated option\n", optarg);
+                asn1_compiler_flags &= ~A1C_USE_WIDE_TYPES;
+            } else if(strcmp(optarg, "wide-types") == 0) {
+                asn1_compiler_flags |= A1C_USE_WIDE_TYPES;
+            } else if(strcmp(optarg, "line-refs") == 0) {
+                asn1_compiler_flags |= A1C_LINE_REFS;
+            } else if(strcmp(optarg, "no-constraints") == 0) {
+                asn1_compiler_flags |= A1C_NO_CONSTRAINTS;
+            } else if(strcmp(optarg, "no-include-deps") == 0) {
+                asn1_compiler_flags |= A1C_NO_INCLUDE_DEPS;
+            } else if(strcmp(optarg, "includes-quoted") == 0) {
+                asn1_compiler_flags |= A1C_INCLUDES_QUOTED;
+            } else if(strcmp(optarg, "unnamed-unions") == 0) {
+                asn1_compiler_flags |= A1C_UNNAMED_UNIONS;
+            } else if(strcmp(optarg, "skeletons-copy") == 0) {
+                fprintf(stderr, "-f%s: Deprecated option\n", optarg);
+                asn1_compiler_flags &= ~A1C_LINK_SKELETONS;
+            } else if(strcmp(optarg, "link-skeletons") == 0) {
+                asn1_compiler_flags |= A1C_LINK_SKELETONS;
+            } else {
+                fprintf(stderr, "-f%s: Invalid argument\n", optarg);
+                exit(EX_USAGE);
+            }
+            break;
+        case 'g':
+            if(strcmp(optarg, "en-PER") == 0) {
+                asn1_compiler_flags |= A1C_GEN_PER;
+            } else {
+                fprintf(stderr, "-g%s: Invalid argument\n", optarg);
+                exit(EX_USAGE);
+            }
+            break;
+        case 'h':
+            usage(av[0]);
+        case 'P':
+            asn1_compiler_flags |= A1C_PRINT_COMPILED;
+            asn1_compiler_flags &= ~A1C_NO_C99;
+            break;
+        case 'p':
+            if(strncmp(optarg, "du=", 3) == 0) {
+                char *pduname = optarg + 3;
+                if(strcmp(pduname, "all") == 0) {
+                    asn1_compiler_flags |= A1C_PDU_ALL;
+                } else if(strcmp(pduname, "auto") == 0) {
+                    asn1_compiler_flags |= A1C_PDU_AUTO;
+                } else if(pduname[0] >= 'A' && pduname[0] <= 'Z') {
+                    asn1c__add_pdu_type(pduname);
+                    asn1_compiler_flags |= A1C_PDU_TYPE;
+                } else {
+                    fprintf(stderr, "-pdu=%s: expected -pdu={all|auto|Type}\n",
+                            pduname);
+                    exit(EX_USAGE);
+                }
+            } else if(strcmp(optarg, "rint-class-matrix") == 0) {
+                asn1_printer_flags |= APF_PRINT_CLASS_MATRIX;
+            } else if(strcmp(optarg, "rint-constraints") == 0) {
+                asn1_printer_flags |= APF_PRINT_CONSTRAINTS;
+            } else if(strcmp(optarg, "rint-lines") == 0) {
+                asn1_printer_flags |= APF_LINE_COMMENTS;
+            } else {
+                fprintf(stderr, "-p%s: Invalid argument\n", optarg);
+                exit(EX_USAGE);
+            }
+            break;
+        case 'R':
+            asn1_compiler_flags |= A1C_OMIT_SUPPORT_CODE;
+            break;
+        case 'S':
+            skeletons_dir = optarg;
+            break;
+        case 'v':
+            fprintf(stderr, "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT);
+            exit(0);
+            break;
+        case 'W':
+            if(strcmp(optarg, "error") == 0) {
+                warnings_as_errors = 1;
+                break;
+            } else if(strcmp(optarg, "debug-lexer") == 0) {
+                asn1_parser_flags |= A1P_LEXER_DEBUG;
+                break;
+            } else if(strcmp(optarg, "debug-fixer") == 0) {
+                asn1_fixer_flags |= A1F_DEBUG;
+                break;
+            } else if(strcmp(optarg, "debug-compiler") == 0) {
+                asn1_compiler_flags |= A1C_DEBUG;
+                break;
+            } else {
+                fprintf(stderr, "-W%s: Invalid argument\n", optarg);
+                exit(EX_USAGE);
+            }
+            break;
+        case 'X':
+            print_arg__print_out = 1;   /* Implicit -E */
+            print_arg__fix_n_print = 1; /* Implicit -F */
+            asn1_printer_flags |= APF_PRINT_XML_DTD;
+            break;
+        default:
+            usage(av[0]);
+        }
 
-	/*
-	 * Validate the options combination.
-	 */
-	if(!print_arg__print_out) {
-		if(print_arg__fix_n_print) {
-			fprintf(stderr, "Error: -F requires -E\n");
-			exit(EX_USAGE);
-		}
-		if(asn1_printer_flags) {
-			fprintf(stderr, "Error: "
-				"-print-... arguments require -E\n");
-			exit(EX_USAGE);
-		}
-	}
+    /*
+     * Validate the options combination.
+     */
+    if(!print_arg__print_out) {
+        if(print_arg__fix_n_print) {
+            fprintf(stderr, "Error: -F requires -E\n");
+            exit(EX_USAGE);
+        }
+        if(asn1_printer_flags) {
+            fprintf(stderr, "Error: -print-... arguments require -E\n");
+            exit(EX_USAGE);
+        }
+    }
 
-	/*
-	 * Ensure that there are some input files present.
-	 */
-	if(ac > optind) {
-		ac -= optind;
-		av += optind;
-	} else {
-		char *bin_name = a1c_basename(av[0]);
-		fprintf(stderr, "%s: No input files specified. "
-			"Try '%s -h' for more information\n",
-			bin_name, bin_name);
-		exit(1);
-	}
+    /*
+     * Ensure that there are some input files present.
+     */
+    if(ac > optind) {
+        ac -= optind;
+        av += optind;
+    } else {
+        char *bin_name = a1c_basename(av[0]);
+        fprintf(stderr,
+                "%s: No input files specified. "
+                "Try '%s -h' for more information\n",
+                bin_name, bin_name);
+        exit(1);
+    }
 
-	/*
-	 * Make sure the skeleton directory is out there.
-	 */
-	if(skeletons_dir == NULL) {
-		struct stat sb;
-		skeletons_dir = DATADIR;
-		if((av[-optind][0] == '.' || av[-optind][1] == '/')
-		&& stat(skeletons_dir, &sb)) {
-			/*
-			 * The default skeletons directory does not exist,
-			 * compute it from my file name:
-			 * ./asn1c/asn1c -> ./skeletons
-			 */
-			char *p;
-			size_t len;
+    /*
+     * Make sure the skeleton directory is out there.
+     */
+    if(skeletons_dir == NULL) {
+        struct stat sb;
+        skeletons_dir = DATADIR;
+        if((av[-optind][0] == '.' || av[-optind][1] == '/')
+           && stat(skeletons_dir, &sb)) {
+            /*
+             * The default skeletons directory does not exist,
+             * compute it from my file name:
+             * ./asn1c/asn1c -> ./skeletons
+             */
+            char *p;
+            size_t len;
 
-			p = a1c_dirname(av[-optind]);
+            p = a1c_dirname(av[-optind]);
 
-			len = strlen(p) + sizeof("/../skeletons");
-			skeletons_dir = malloc(len);
-			assert(skeletons_dir);
-			snprintf(skeletons_dir, len, "%s/../skeletons", p);
-			if(stat(skeletons_dir, &sb)) {
-				fprintf(stderr,
-					"WARNING: skeletons are neither in "
-					"\"%s\" nor in \"%s\"!\n",
-					DATADIR, skeletons_dir);
-				if(warnings_as_errors)
-					exit(EX_OSFILE);
-			}
-		}
-	}
+            len = strlen(p) + sizeof("/../skeletons");
+            skeletons_dir = malloc(len);
+            assert(skeletons_dir);
+            snprintf(skeletons_dir, len, "%s/../skeletons", p);
+            if(stat(skeletons_dir, &sb)) {
+                fprintf(stderr,
+                        "WARNING: skeletons are neither in "
+                        "\"%s\" nor in \"%s\"!\n",
+                        DATADIR, skeletons_dir);
+                if(warnings_as_errors) exit(EX_OSFILE);
+            }
+        }
+    }
 
-	/*
-	 * Iterate over input files and parse each.
-	 * All syntax trees from all files will be bundled together.
-	 */
-	for(i = 0; i < ac; i++) {
-		asn1p_t *new_asn;
+    /*
+     * Iterate over input files and parse each.
+     * All syntax trees from all files will be bundled together.
+     */
+    for(i = 0; i < ac; i++) {
+        asn1p_t *new_asn;
 
-		new_asn = asn1p_parse_file(av[i], asn1_parser_flags);
-		if(new_asn == NULL) {
-			fprintf(stderr, "Cannot parse \"%s\"\n", av[i]);
-			exit(EX_DATAERR);
-		}
+        new_asn = asn1p_parse_file(av[i], asn1_parser_flags);
+        if(new_asn == NULL) {
+            fprintf(stderr, "Cannot parse \"%s\"\n", av[i]);
+            exit(EX_DATAERR);
+        }
 
-		/*
-		 * Bundle the parsed tree with existing one.
-		 */
-		if(asn) {
-			asn1p_module_t *mod;
-			while((mod = TQ_REMOVE(&(new_asn->modules), mod_next)))
-				TQ_ADD(&(asn->modules), mod, mod_next);
-			asn1p_delete(new_asn);
-		} else {
-			asn = new_asn;
-		}
-	}
+        /*
+         * Bundle the parsed tree with existing one.
+         */
+        if(asn) {
+            asn1p_module_t *mod;
+            while((mod = TQ_REMOVE(&(new_asn->modules), mod_next)))
+                TQ_ADD(&(asn->modules), mod, mod_next);
+            asn1p_delete(new_asn);
+        } else {
+            asn = new_asn;
+        }
+    }
 
-	/* These are mostly notes for the human readers */
-	assert(asn);
-	assert(skeletons_dir);
+    /* These are mostly notes for the human readers */
+    assert(asn);
+    assert(skeletons_dir);
 
-	/*
-	 * Dump the parsed ASN.1 tree if -E specified and -F is NOT given.
-	 */
-	if(print_arg__print_out && !print_arg__fix_n_print) {
-		if(asn1print(asn, asn1_printer_flags))
-			exit(EX_SOFTWARE);
-		return 0;
-	}
+    /*
+     * Dump the parsed ASN.1 tree if -E specified and -F is NOT given.
+     */
+    if(print_arg__print_out && !print_arg__fix_n_print) {
+        if(asn1print(asn, asn1_printer_flags)) exit(EX_SOFTWARE);
+        return 0;
+    }
 
-	/*
-	 * Read in the files from skeletons/standard-modules
-	 */
-	if(importStandardModules(asn, skeletons_dir)) {
-		if(warnings_as_errors)
-			exit(EX_DATAERR);
-	}
+    /*
+     * Read in the files from skeletons/standard-modules
+     */
+    if(importStandardModules(asn, skeletons_dir)) {
+        if(warnings_as_errors) exit(EX_DATAERR);
+    }
 
-	/*
-	 * Process the ASN.1 specification: perform semantic checks,
-	 * expand references, etc, etc.
-	 * This function will emit necessary warnings and error messages.
-	 */
-	ret = asn1f_process(asn, asn1_fixer_flags,
-		NULL /* default fprintf(stderr) */);
-	switch(ret) {
-	case 1:
-		if(!warnings_as_errors)
-			/* Fall through */
-	case 0:
-		break;			/* All clear */
-	case -1:
-		exit(EX_DATAERR);	/* Fatal failure */
-	}
+    /*
+     * Process the ASN.1 specification: perform semantic checks,
+     * expand references, etc, etc.
+     * This function will emit necessary warnings and error messages.
+     */
+    ret = asn1f_process(asn, asn1_fixer_flags,
+                        NULL /* default fprintf(stderr) */);
+    switch(ret) {
+    case 1:
+        if(!warnings_as_errors) /* Fall through */
+        case 0:
+        break; /* All clear */
+    case -1:
+        exit(EX_DATAERR); /* Fatal failure */
+    }
 
-	/*
-	 * Dump the parsed ASN.1 tree if -E specified and -F is given.
-	 */
-	if(print_arg__print_out && print_arg__fix_n_print) {
-		if(asn1print(asn, asn1_printer_flags))
-			exit(EX_SOFTWARE);
-		return 0;
-	}
+    /*
+     * Dump the parsed ASN.1 tree if -E specified and -F is given.
+     */
+    if(print_arg__print_out && print_arg__fix_n_print) {
+        if(asn1print(asn, asn1_printer_flags)) exit(EX_SOFTWARE);
+        return 0;
+    }
 
-	/*
-	 * Compile the ASN.1 tree into a set of source files
-	 * of another language.
-	 */
-	if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags,
-			ac + optind, optind - 1, av - optind)) {
-		exit(EX_SOFTWARE);
-	}
+    /*
+     * Compile the ASN.1 tree into a set of source files
+     * of another language.
+     */
+    if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags, ac + optind,
+                    optind - 1, av - optind)) {
+        exit(EX_SOFTWARE);
+    }
 
-	return 0;
+    return 0;
 }
 
 /*
@@ -346,94 +338,92 @@ main(int ac, char **av) {
  */
 static int
 importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
-	asn1p_t *new_asn;
-	asn1p_module_t *mod;
-	const char *filename;
-	char *fullname;
-	char *target_dir;
-	int target_dir_len;
-	int len;
-#ifdef	_WIN32
-	intptr_t dir;
-	struct _finddata_t c_file;
-	char *pattern;
+    asn1p_t *new_asn;
+    asn1p_module_t *mod;
+    const char *filename;
+    char *fullname;
+    char *target_dir;
+    int target_dir_len;
+    int len;
+#ifdef _WIN32
+    intptr_t dir;
+    struct _finddata_t c_file;
+    char *pattern;
 #else
-	struct dirent *dp;
-	DIR *dir;
+    struct dirent *dp;
+    DIR *dir;
 #endif
-	int ret = 0;
+    int ret = 0;
 
-	/* Notes for the human reader */
-	assert(asn);
-	assert(skeletons_dir);
+    /* Notes for the human reader */
+    assert(asn);
+    assert(skeletons_dir);
 
-	/*
-	 * Figure out the standard-modules directory.
-	 */
-	target_dir_len = strlen(skeletons_dir)
-				+ sizeof("/standard-modules") - 1;
-	target_dir = malloc(target_dir_len + 1);
-	assert(target_dir);
-	snprintf(target_dir, target_dir_len + 1, "%s/standard-modules",
-		skeletons_dir);
+    /*
+     * Figure out the standard-modules directory.
+     */
+    target_dir_len = strlen(skeletons_dir) + sizeof("/standard-modules") - 1;
+    target_dir = malloc(target_dir_len + 1);
+    assert(target_dir);
+    snprintf(target_dir, target_dir_len + 1, "%s/standard-modules",
+             skeletons_dir);
 
-#ifdef	_WIN32
-	len = target_dir_len + sizeof("/*.asn1");
-	pattern = malloc(len);
-	assert(pattern);
-	snprintf(pattern, len, "%s/*.asn1", target_dir);
-	dir = _findfirst(pattern, &c_file);
-	if(dir == -1L) {
+#ifdef _WIN32
+    len = target_dir_len + sizeof("/*.asn1");
+    pattern = malloc(len);
+    assert(pattern);
+    snprintf(pattern, len, "%s/*.asn1", target_dir);
+    dir = _findfirst(pattern, &c_file);
+    if(dir == -1L) {
 #else
-	dir = opendir(target_dir);
-	if(!dir) {
+    dir = opendir(target_dir);
+    if(!dir) {
 #endif
-		fprintf(stderr,
-			"WARNING: Cannot find standard modules in %s\n",
-			target_dir);
-		return -1;
-	}
+        fprintf(stderr, "WARNING: Cannot find standard modules in %s\n",
+                target_dir);
+        return -1;
+    }
 
-#ifdef	_WIN32
-	do {
-		filename = c_file.name;
+#ifdef _WIN32
+    do {
+        filename = c_file.name;
 #else
-	while((dp = readdir(dir))) {
-		filename = dp->d_name;
+    while((dp = readdir(dir))) {
+        filename = dp->d_name;
 #endif
-		len = strlen(filename);
-		if(len <= 5 || strcmp(filename + len - 5, ".asn1"))
-			continue;
-		len = target_dir_len + 1 + len + 1;
-		fullname = malloc(len);
-		if(!fullname) continue;	/* Just skip it, no big deal */
-		snprintf(fullname, len, "%s/%s", target_dir, filename);
-		filename = fullname;
+        len = strlen(filename);
+        if(len <= 5 || strcmp(filename + len - 5, ".asn1")) continue;
+        len = target_dir_len + 1 + len + 1;
+        fullname = malloc(len);
+        if(!fullname) continue; /* Just skip it, no big deal */
+        snprintf(fullname, len, "%s/%s", target_dir, filename);
+        filename = fullname;
 
-		new_asn = asn1p_parse_file(filename, A1P_NOFLAGS);
-		if(new_asn == NULL) {
-			fprintf(stderr, "WARNING: Cannot parse standard module \"%s\"\n", filename);
-			ret = -1;
-			continue;
-		}
+        new_asn = asn1p_parse_file(filename, A1P_NOFLAGS);
+        if(new_asn == NULL) {
+            fprintf(stderr, "WARNING: Cannot parse standard module \"%s\"\n",
+                    filename);
+            ret = -1;
+            continue;
+        }
 
-		/* Import these modules and mark them as "standard" */
-		while((mod = TQ_REMOVE(&(new_asn->modules), mod_next))) {
-			mod->_tags |= MT_STANDARD_MODULE;
-			TQ_ADD(&(asn->modules), mod, mod_next);
-		}
-		asn1p_delete(new_asn);
+        /* Import these modules and mark them as "standard" */
+        while((mod = TQ_REMOVE(&(new_asn->modules), mod_next))) {
+            mod->_tags |= MT_STANDARD_MODULE;
+            TQ_ADD(&(asn->modules), mod, mod_next);
+        }
+        asn1p_delete(new_asn);
 
-#ifdef	_WIN32
-	} while(_findnext(dir, &c_file) == 0);
-	_findclose(dir);
+#ifdef _WIN32
+    } while(_findnext(dir, &c_file) == 0);
+    _findclose(dir);
 #else
-		free(fullname);
-	} /* while(readdir()) */
-	closedir(dir);
+        free(fullname);
+    } /* while(readdir()) */
+    closedir(dir);
 #endif
 
-	return ret;
+    return ret;
 }
 
 /*
@@ -441,6 +431,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
  */
 static void
 usage(const char *av0) {
+    /* clang-format off */
 	fprintf(stderr,
 "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT
 "Usage: %s [options] file ...\n"
@@ -482,8 +473,7 @@ usage(const char *av0) {
 "  -print-lines          Generate \"-- #line\" comments in -E output\n"
 
 	,
-	a1c_basename(av0), DATADIR
-	);
-	exit(EX_USAGE);
+	a1c_basename(av0), DATADIR);
+    /* clang-format on */
+    exit(EX_USAGE);
 }
-

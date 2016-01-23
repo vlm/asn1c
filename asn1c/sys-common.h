@@ -24,7 +24,7 @@
  *
  * $Id$
  */
-#ifdef	HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
@@ -34,39 +34,38 @@
 #include <assert.h>
 #include <errno.h>
 
-#ifdef	HAVE_UNISTD_H
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-#ifdef	HAVE_SYS_TYPES_H
+#ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
 
-#ifdef	HAVE_SYS_STAT_H
-#include <sys/stat.h>		/* for stat(2) */
+#ifdef HAVE_SYS_STAT_H
+#include <sys/stat.h> /* for stat(2) */
 #endif
 
-#ifndef	_WIN32
-#include <sysexits.h>		/* for EX_USAGE & others */
-#else	/* _WIN32 */
-#ifndef	EX_USAGE
-#define	EX_USAGE 64
+#ifndef _WIN32
+#include <sysexits.h> /* for EX_USAGE & others */
+#else                 /* _WIN32 */
+#ifndef EX_USAGE
+#define EX_USAGE 64
 #endif
-#ifndef	EX_DATAERR
-#define	EX_DATAERR 65
+#ifndef EX_DATAERR
+#define EX_DATAERR 65
 #endif
-#ifndef	EX_SOFTWARE
-#define	EX_SOFTWARE 70
+#ifndef EX_SOFTWARE
+#define EX_SOFTWARE 70
 #endif
-#ifndef	EX_OSERR
-#define	EX_OSERR 71
+#ifndef EX_OSERR
+#define EX_OSERR 71
 #endif
-#ifndef	EX_OSFILE
-#define	EX_OSFILE 72
+#ifndef EX_OSFILE
+#define EX_OSFILE 72
 #endif
 #if defined HAVE_DECL_ALLOCA && !HAVE_DECL_ALLOCA
-#define	alloca _alloca
+#define alloca _alloca
 #endif
-#define	snprintf _snprintf
-#endif	/* _WIN32 */
-
+#define snprintf _snprintf
+#endif /* _WIN32 */
