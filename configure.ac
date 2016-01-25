@@ -75,6 +75,15 @@ AC_ARG_ENABLE(test-Werror,
 AC_SUBST(ADD_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 
+dnl Skeletons should be very compatible with most of the compilers, hence
+dnl very strict backward compatibility flags.
+SKELETONS_CFLAGS="${ADD_CFLAGS}"
+AX_CHECK_COMPILE_FLAG([-std=c89],
+    [SKELETONS_FLAGS="$SKELETONS_FLAGS -std=c89"])
+AX_CHECK_COMPILE_FLAG([-Wpedantic],
+    [SKELETONS_FLAGS="$SKELETONS_FLAGS -Wpedantic"])
+AC_SUBST(SKELETONS_CFLAGS)
+
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(sys/param.h)

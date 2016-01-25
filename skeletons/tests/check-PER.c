@@ -178,6 +178,9 @@ check_per_decoding() {
 }
 
 static int Ignore(const void *data, size_t size, void *op_key) {
+    (void)data;
+    (void)size;
+    (void)op_key;
 	return 0;
 }
 
@@ -299,7 +302,7 @@ check_per_encoding_auto() {
 		ASN_DEBUG("Putting %d + %d bits (%d/%d), got %d bytes and %d bits",
             prior, next, (prior + next) / 8, (prior + next) % 8,
             (int)(po.buffer - po.tmpspace), (int)po.nboff);
-        assert((po.buffer - po.tmpspace) * 8 + po.nboff == prior + next);
+        assert((po.buffer - po.tmpspace) * 8 + po.nboff == (size_t)(prior + next));
         for(i = 0; i < (po.buffer - po.tmpspace); i++)
             assert(po.tmpspace[0] == (unsigned char)-1);
       }
@@ -315,7 +318,6 @@ check_per_encoding_sweep_with(uint8_t buf[], int already_bits, int add_bits) {
 	int32_t d_add;
 	int32_t d_left;
 	int left_bits;
-	int i;
 
 	memset(&pos, 0, sizeof(pos));
 	pos.buffer = buf;
@@ -345,10 +347,10 @@ check_per_encoding_sweep_with(uint8_t buf[], int already_bits, int add_bits) {
 
 	if(0 != memcmp(out.tmpspace, buf, buf_size)) {
 		printf("IN: ");
-		for(i = 0; i < buf_size; i++)
+		for(size_t i = 0; i < buf_size; i++)
 			printf(" %02x", buf[i]);
 		printf("\nOUT:");
-		for(i = 0; i < buf_size; i++)
+		for(size_t i = 0; i < buf_size; i++)
 			printf(" %02x", out.tmpspace[i]);
 		printf(" (out{nboff=%d,left=%d,%02x})\n", (int)out.nboff, left_bits, (int)d_left);
 		assert(0 == memcmp(out.tmpspace, buf, buf_size));

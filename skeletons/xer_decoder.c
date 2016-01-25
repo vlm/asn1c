@@ -70,6 +70,7 @@ xer_next_token(int *stateContext, const void *buffer, size_t size, pxer_chunk_ty
 	if(ret < 0) return -1;
 	if(arg.callback_not_invoked) {
 		assert(ret == 0);	/* No data was consumed */
+        *ch_type = PXER_WMORE;
 		return 0;		/* Try again with more data */
 	} else {
 		assert(arg.chunk_size);
@@ -83,7 +84,9 @@ xer_next_token(int *stateContext, const void *buffer, size_t size, pxer_chunk_ty
 	case PXML_TEXT:
 		*ch_type = PXER_TEXT;
 		break;
-	case PXML_TAG: return 0;	/* Want more */
+	case PXML_TAG:
+        *ch_type = PXER_WMORE;
+        return 0;	/* Want more */
 	case PXML_TAG_END:
 		*ch_type = PXER_TAG;
 		break;
@@ -231,12 +234,12 @@ xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
 		 */
 		ch_size = xer_next_token(&ctx->context, buf_ptr, size,
 			&ch_type);
-		switch(ch_size) {
-		case -1: RETURN(RC_FAIL);
-		case 0:
-			RETURN(RC_WMORE);
-		default:
+		if(ch_size == -1) {
+            RETURN(RC_FAIL);
+        } else {
 			switch(ch_type) {
+			case PXER_WMORE:
+                RETURN(RC_WMORE);
 			case PXER_COMMENT:		/* Got XML comment */
 				ADVANCE(ch_size);	/* Skip silently */
 				continue;

@@ -31,7 +31,7 @@ check_next(char *xerbuf, int expected_chunk_size, pxer_chunk_type_e expected_chu
 		ch_type, (long)expected_chunk_type
 	);
 
-	if(expected_chunk_type == -1) {
+	if(expected_chunk_type == PXER_WMORE) {
 		assert(ch_size == 0);
 	} else {
 		assert(ch_size == expected_chunk_size);
@@ -81,13 +81,13 @@ main() {
 	check("<tag attribute=\"value\"/>", "tag", XCT_BOTH);
 
 	check_next("<tag/>", -1, PXER_TAG);
-	check_next("<tag", -1, -1);
+	check_next("<tag", -1, PXER_WMORE);
 	check_next("tag", -1, PXER_TEXT);
 	check_next("tag<s", 3, PXER_TEXT);
 	check_next("</a/>la", 5, PXER_TAG);
 	check_next("<!--blah", -1, PXER_COMMENT);
-	check_next("<!--blah-", -1, -1);
-	check_next("<!--blah--", -1, -1);
+	check_next("<!--blah-", -1, PXER_WMORE);
+	check_next("<!--blah--", -1, PXER_WMORE);
 	check_next("<!--blah-->", -1, PXER_COMMENT);
 
 	return 0;

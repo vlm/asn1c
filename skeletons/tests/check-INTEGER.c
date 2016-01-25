@@ -61,7 +61,7 @@ check(uint8_t *buf, int size, long check_long, int check_ret) {
 	assert(shared_scratch_start < scratch + sizeof(scratch));
 	assert(ret == 0);
 	ret = snprintf(verify, sizeof(verify), "%ld", check_long);
-	assert(ret < sizeof(verify));
+	assert(ret < 0 || (size_t)ret < sizeof(verify));
 	ret = strcmp(scratch, verify);
 	printf("         [%s] vs [%s]: %d%s\n",
 		scratch, verify, ret,
@@ -170,7 +170,7 @@ check_xer(int tofail, char *xmldata, long orig_value) {
 }
 
 int
-main(int ac, char **av) {
+main() {
 	uint8_t buf1[] = { 1 };
 	uint8_t buf2[] = { 0xff };
 	uint8_t buf3[] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
@@ -277,7 +277,7 @@ main(int ac, char **av) {
 		check_xer(-1, "<INTEGER>50223372036854775807</INTEGER>", 0);
 		check_xer(-1, "<INTEGER>100223372036854775807</INTEGER>", 0);
 		check_xer(-1, "<INTEGER>500223372036854775807</INTEGER>", 0);
-		check_xer(0, "<INTEGER>-9223372036854775808</INTEGER>", -9223372036854775808);
+		check_xer(0, "<INTEGER>-9223372036854775808</INTEGER>", -9223372036854775807-1);
 		check_xer(-1, "<INTEGER>-9223372036854775809</INTEGER>", 0);
 		check_xer(-1, "<INTEGER>-10223372036854775807</INTEGER>", 0);
 		check_xer(-1, "<INTEGER>-50223372036854775807</INTEGER>", 0);

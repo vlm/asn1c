@@ -22,12 +22,12 @@ callback(const void *buffer, size_t size, void *app_key) {
 }
 
 static char *
-d2s(double d, int canonical, const char *str) {
+d2s(double d, int canonical) {
 	ssize_t s;
 
 	reconstr_lens[canonical] = 0;
 	s = REAL__dump(d, canonical, callback, (void *)(ptrdiff_t)canonical);
-	assert(s < sizeof(reconstructed[canonical]));
+	assert(s > 0 && (size_t)s < sizeof(reconstructed[canonical]));
 	assert(s == reconstr_lens[canonical]);
 	reconstructed[canonical][s] = '\0';	// ASCIIZ
 	return reconstructed[canonical];
@@ -41,8 +41,8 @@ static void
 check_str_representation(double d, const char *sample, const char *canonical_sample, int lineno) {
 	char *s0, *s1;
 
-	s0 = d2s(d, 0, sample);
-	s1 = d2s(d, 1, canonical_sample);
+	s0 = d2s(d, 0);
+	s1 = d2s(d, 1);
 
 	if(sample) {
 		printf("%03d: Checking %f->[\"%s\"] against [\"%s\"]%s\n",
@@ -136,12 +136,12 @@ check_xer(int fuzzy, double orig_value) {
 	rc = xer_decode(0, &asn_DEF_REAL, (void **)newst0p,
 		reconstructed[0], reconstr_lens[0]);
 	assert(rc.code == RC_OK);
-	assert(rc.consumed < reconstr_lens[0]);
+	assert(reconstr_lens[0] > 0 && rc.consumed < (size_t)reconstr_lens[0]);
 
 	rc = xer_decode(0, &asn_DEF_REAL, (void **)newst1p,
 		reconstructed[1], reconstr_lens[1]);
 	assert(rc.code == RC_OK);
-	assert(rc.consumed == reconstr_lens[1]);
+	assert(rc.consumed == (size_t)reconstr_lens[1]);
 
 	ret = asn_REAL2double(newst0, &value0);
 	assert(ret == 0);
@@ -185,10 +185,10 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	memset(&rn, 0, sizeof(rn));
 	ret = asn_double2REAL(&rn, d);
 	assert(ret == 0);
-	if(rn.size != outsize) {
+	if((size_t)rn.size != outsize) {
 		printf("Encoded %f into %d expected %ld\n",
 			d, (int)rn.size, outsize);
-		assert(rn.size == outsize);
+		assert((size_t)rn.size == outsize);
 	}
 	assert(memcmp(rn.buf, outbuf, rn.size) == 0);
 

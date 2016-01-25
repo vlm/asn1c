@@ -31,13 +31,12 @@ write_to_buf(const void *buffer, size_t size, void *key) {
 
 
 static void
-check(int size) {
+check(size_t size) {
 	OCTET_STRING_t *os;
 	OCTET_STRING_t *nos = 0;
 	OCTET_STRING_t **nosp = &nos;
 	asn_enc_rval_t erval;
 	asn_dec_rval_t rval;
-	int i;
 
 	os = OCTET_STRING_new_fromBuf(&asn_DEF_OCTET_STRING, 0, size);
 	assert(os);
@@ -47,14 +46,14 @@ check(int size) {
 	assert(os->buf);
 	os->size = size;
 
-	for(i = 0; i < size; i++) {
+	for(size_t i = 0; i < size; i++) {
 		os->buf[i] = i;
 	}
 
 	buf_off = 0;
 	erval = der_encode(&asn_DEF_OCTET_STRING,
 		os, write_to_buf, 0);
-	assert(erval.encoded == buf_off);
+	assert(erval.encoded >= 0 && (size_t)erval.encoded == buf_off);
 	assert(buf_off > size);
 
 	rval = ber_decode(0, &asn_DEF_OCTET_STRING, (void **)nosp, buf, buf_off);
@@ -63,13 +62,13 @@ check(int size) {
 
 	assert(os->size == nos->size);
 
-	for(i = 0; i < size; i++) {
+	for(size_t i = 0; i < size; i++) {
 		assert(os->buf[i] == nos->buf[i]);
 	}
 
 	if(0) {
-	fprintf(stderr, "new(%d):", size);
-	for(i = 0; i < (buf_off<10?buf_off:10); i++)
+	fprintf(stderr, "new(%zd):", size);
+	for(size_t i = 0; i < (buf_off<10?buf_off:10); i++)
 		fprintf(stderr, " %02x", buf[i]);
 	printf("\n");
 	}
@@ -87,9 +86,8 @@ main() {
 	uint8_t buf4[] = { 0x89, 0x00, 0x7f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x04 };
 	ber_tlv_len_t tlv_len;
 	ssize_t ret;
-	int i;
 
-	for(i = 0; i < 66000; i++) {
+	for(size_t i = 0; i < 66000; i++) {
 		if(i == 4500) i = 64000;	/* Jump */
 		check(i);
 	}

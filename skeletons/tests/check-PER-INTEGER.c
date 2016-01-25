@@ -7,6 +7,9 @@
 #include <per_support.h>
 
 static int FailOut(const void *data, size_t size, void *op_key) {
+    (void)data;
+    (void)size;
+    (void)op_key;
 	assert(!"UNREACHABLE");
 	return 0;
 }
@@ -89,7 +92,7 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 		recovered_value += cts.value.lower_bound;
 		assert((long)recovered_value == value);
 	}
-	assert(po.nboff == ((bit_range == 32) ? 0 : (8 - (32 - bit_range))));
+	assert(po.nboff == (size_t)((bit_range == 32) ? 0 : (8 - (32 - bit_range))));
 	assert(po.nbits ==  8 * (sizeof(po.tmpspace) - (po.buffer-po.tmpspace)));
 	assert(po.flushed_bytes == 0);
 
