@@ -66,7 +66,7 @@ doc/docsrc/*.xdv
 
 # /libasn1fix/
 /libasn1fix/Makefile
-/libasn1fix/check_fixer
+/libasn1fix/check_*
 
 # /libasn1parser/
 /libasn1parser/Makefile

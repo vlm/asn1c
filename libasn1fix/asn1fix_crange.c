@@ -158,6 +158,9 @@ _edge_value(const asn1cnst_edge_t *edge) {
 	case ARE_MAX:	strcpy(buf, "MAX"); break;
 	case ARE_VALUE:
 		snprintf(buf, sizeof(buf), "%" PRIdASN, edge->value);
+        break;
+    default:
+        assert(!"edge->type");
 	}
 	return buf;
 }
@@ -385,6 +388,19 @@ _range_overlap(const asn1cnst_range_t *ra, const asn1cnst_range_t *rb) {
 	return 1;
 }
 
+
+static int _range_partial_compare(const void *pa, const void *pb) {
+    const asn1cnst_range_t *ra = *(const void * const *)pa;
+    const asn1cnst_range_t *rb = *(const void * const *)pb;
+
+	return _edge_compare(&ra->left, &rb->left);
+}
+
+static void _range_partial_sort_elements(asn1cnst_range_t *r) {
+    qsort(r->elements, r->el_count, sizeof(r->elements[0]),
+          _range_partial_compare);
+}
+
 /*
  * (MIN..20) x (10..15) = (MIN..9,10..15,16..20)
  */
@@ -429,7 +445,7 @@ _range_split(asn1cnst_range_t *ra, const asn1cnst_range_t *rb) {
 		nr->left = ra->left;
 		nr->right = rb->left;
 		if(nr->right.type == ARE_VALUE) {
-			if(nr->right.value - 1 >= nr->right.value) {
+			if(nr->right.value == INTMAX_MIN) {
 				/* We've hit the limit here. */
 				break;
 			}
@@ -449,7 +465,7 @@ _range_split(asn1cnst_range_t *ra, const asn1cnst_range_t *rb) {
 		nr->left = rb->right;
 		nr->right = ra->right;
 		if(nr->left.type == ARE_VALUE) {
-			if(nr->left.value + 1 <= nr->left.value) {
+			if(nr->left.value == INTMAX_MAX) {
 				/* We've hit the limit here. */
 				break;
 			}
@@ -473,6 +489,8 @@ _range_split(asn1cnst_range_t *ra, const asn1cnst_range_t *rb) {
 		nr->right = rb->right;
 
 	_range_insert(range, nr);
+
+    _range_partial_sort_elements(range);
 
 	return range;
 }
@@ -1017,3 +1035,98 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 	return range;
 }
 
+#ifdef UNIT_TEST
+int main() {
+    asn1cnst_range_t *ra = _range_new();
+    asn1cnst_range_t *rb = _range_new();
+
+    fprintf(stderr, "Testing (MIN..20) x (10..15) => (MIN..9,10..15,16..20)\n");
+
+    /* (MIN..20) */
+    ra->left.type = ARE_MIN;
+    ra->right.type = ARE_VALUE; ra->right.value = 20;
+
+    /* (10..15) */
+    rb->left.type = ARE_VALUE; rb->left.value = 10;
+    rb->right.type = ARE_VALUE; rb->right.value = 15;
+
+    /*
+     * (MIN..20) x (10..15) = (MIN..9,10..15,16..20)
+     */
+    asn1cnst_range_t *r = _range_split(ra, rb);
+    assert(r);
+    assert(r->left.type == ARE_MIN);
+    assert(r->right.type == ARE_MAX);
+
+    assert(r->el_count == 3);
+    assert(r->elements[0]->elements == NULL);
+    assert(r->elements[1]->elements == NULL);
+    assert(r->elements[2]->elements == NULL);
+
+    /* (MIN..9) */
+    fprintf(stderr, "[0].left = %s\n", _edge_value(&r->elements[0]->left));
+    fprintf(stderr, "[0].right = %s\n", _edge_value(&r->elements[0]->right));
+    assert(r->elements[0]->left.type == ARE_MIN);
+    assert(r->elements[0]->right.type == ARE_VALUE);
+    assert(r->elements[0]->right.value == 9);
+
+    /* (10..15) */
+    fprintf(stderr, "[1].left = %s\n", _edge_value(&r->elements[1]->left));
+    fprintf(stderr, "[1].right = %s\n", _edge_value(&r->elements[1]->right));
+    assert(r->elements[1]->left.type == ARE_VALUE);
+    assert(r->elements[1]->left.value == 10);
+    assert(r->elements[1]->right.type == ARE_VALUE);
+    assert(r->elements[1]->right.value == 15);
+
+    /* (16..20) */
+    fprintf(stderr, "[2].left = %s\n", _edge_value(&r->elements[2]->left));
+    fprintf(stderr, "[2].right = %s\n", _edge_value(&r->elements[2]->right));
+    assert(r->elements[2]->left.type == ARE_VALUE);
+    assert(r->elements[2]->left.value == 16);
+    assert(r->elements[2]->right.type == ARE_VALUE);
+    assert(r->elements[2]->right.value == 20);
+
+    _range_free(r);
+
+
+
+    fprintf(stderr, "Testing (MIN..20) x (<min>..15) => (<min>..15,16..20)\n");
+
+    /* (MIN..20) */
+    ra->left.type = ARE_MIN;
+    ra->right.type = ARE_VALUE; ra->right.value = 20;
+
+    /* (<INTMAX_MIN>..15) */
+    rb->left.type = ARE_VALUE; rb->left.value = INTMAX_MIN;
+    rb->right.type = ARE_VALUE; rb->right.value = 15;
+
+    r = _range_split(ra, rb);
+    assert(r);
+    assert(r->left.type == ARE_MIN);
+    assert(r->right.type == ARE_MAX);
+
+    assert(r->el_count == 2);
+    assert(r->elements[0]->elements == NULL);
+    assert(r->elements[1]->elements == NULL);
+
+    /* (<min>..16) */
+    fprintf(stderr, "[0].left = %s\n", _edge_value(&r->elements[0]->left));
+    fprintf(stderr, "[0].right = %s\n", _edge_value(&r->elements[0]->right));
+    assert(r->elements[0]->left.type == ARE_VALUE);
+    assert(r->elements[0]->left.value == INTMAX_MIN);
+    assert(r->elements[0]->right.type == ARE_VALUE);
+    assert(r->elements[0]->right.value == 15);
+
+    /* (16..20) */
+    fprintf(stderr, "[1].left = %s\n", _edge_value(&r->elements[1]->left));
+    fprintf(stderr, "[1].right = %s\n", _edge_value(&r->elements[1]->right));
+    assert(r->elements[1]->left.type == ARE_VALUE);
+    assert(r->elements[1]->left.value == 16);
+    assert(r->elements[1]->right.type == ARE_VALUE);
+    assert(r->elements[1]->right.value == 20);
+
+    _range_free(r);
+
+    return 0;
+}
+#endif

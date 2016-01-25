@@ -28,14 +28,16 @@ libasn1fix_la_SOURCES =					\
 	asn1fix_cws.c asn1fix_cws.h			\
 	asn1fix_constraint_compat.c
 
-check_PROGRAMS = check_fixer
-
 check_fixer_LDADD = $(noinst_LTLIBRARIES)		\
 	$(top_builddir)/libasn1parser/libasn1parser.la
 check_fixer_CPPFLAGS = -DTOP_SRCDIR=${top_srcdir} $(AM_CPPFLAGS)
-check_fixer_DEPENDENCIES = $(check_fixer_LDADD)
 
-TESTS_ENVIRONMENT= ./check_fixer
-TESTS = ${top_srcdir}/tests/*.asn1
-## TESTS = ${check_PROGRAMS}	# This is an alternate form of testing
+check_crange_SOURCES = asn1fix_crange.c asn1fix_constraint_compat.c
+check_crange_CPPFLAGS = -DUNIT_TEST $(AM_CPPFLAGS)
+check_crange_LDADD = $(noinst_LTLIBRARIES)		\
+	$(top_builddir)/libasn1parser/libasn1parser.la
+
+check_PROGRAMS = check_crange check_fixer
+
+TESTS = ${check_PROGRAMS}
 
