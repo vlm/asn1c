@@ -137,9 +137,16 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		 * Transform the "[-]d.dddE+-dd" output into "[-]d.dddE[-]d"
 		 * Check that snprintf() constructed the output correctly.
 		 */
-		char *dot, *E;
+		char *dot;
 		char *end = buf + buflen;
 		char *last_zero;
+		char *prev_zero;
+        char *s;
+
+        enum {
+            LZSTATE_NOTHING,
+            LZSTATE_SEEN_ZERO
+        } lz_state = LZSTATE_NOTHING;
 
 		dot = (buf[0] == 0x2d /* '-' */) ? (buf + 2) : (buf + 1);
 		if(*dot >= 0x30) {
@@ -149,51 +156,67 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		}
 		*dot = 0x2e;		/* Replace possible comma */
 
-		for(last_zero = dot + 2, E = dot; dot < end; E++) {
-			if(*E == 0x45) {
-				char *expptr = ++E;
-				char *s = expptr;
-				int sign;
-				if(*expptr == 0x2b /* '+' */) {
-					/* Skip the "+" */
-					buflen -= 1;
-					sign = 0;
-				} else {
-					sign = 1;
-					s++;
-				}
-				expptr++;
-				if(expptr > end) {
-					if(buf != local_buf) FREEMEM(buf);
-					errno = EINVAL;
-					return -1;
-				}
-				if(*expptr == 0x30) {
-					buflen--;
-					expptr++;
-				}
-				if(*last_zero == 0x30) {
-					*last_zero = 0x45;	/* E */
-					buflen -= s - (last_zero + 1);
-					s = last_zero + 1;
-					if(sign) {
-						*s++ = 0x2d /* '-' */;
-						buflen++;
-					}
-				}
-				for(; expptr <= end; s++, expptr++)
-					*s = *expptr;
-				break;
-			} else if(*E == 0x30) {
-				if(*last_zero != 0x30)
-					last_zero = E;
-			}
-		}
-		if(E == end) {
+		for(prev_zero = last_zero = s = dot + 2; s < end; s++) {
+            switch(*s) {
+            case 0x45: /* 'E' */
+                if(lz_state == LZSTATE_SEEN_ZERO)
+                    last_zero = prev_zero;
+                break;
+            case 0x30:  /* '0' */
+                if(lz_state == LZSTATE_NOTHING)
+                    prev_zero = s;
+                lz_state = LZSTATE_SEEN_ZERO;
+                continue;
+            default:
+                lz_state = LZSTATE_NOTHING;
+                continue;
+            }
+            break;
+        }
+
+		if(s == end) {
 			if(buf != local_buf) FREEMEM(buf);
 			errno = EINVAL;
 			return -1;		/* No promised E */
 		}
+
+        assert(*s == 0x45);
+        {
+            char *E = s;
+            char *expptr = ++E;
+            char *s = expptr;
+            int sign;
+
+            if(*expptr == 0x2b /* '+' */) {
+                /* Skip the "+" */
+                buflen -= 1;
+                sign = 0;
+            } else {
+                sign = 1;
+                s++;
+            }
+            expptr++;
+            if(expptr > end) {
+                if(buf != local_buf) FREEMEM(buf);
+                errno = EINVAL;
+                return -1;
+            }
+            if(*expptr == 0x30) {
+                buflen--;
+                expptr++;
+            }
+            if(*last_zero == 0x30) {
+                *last_zero = 0x45;	/* E */
+                buflen -= s - (last_zero + 1);
+                s = last_zero + 1;
+                if(sign) {
+                    *s++ = 0x2d /* '-' */;
+                    buflen++;
+                }
+            }
+            for(; expptr <= end; s++, expptr++)
+                *s = *expptr;
+        }
 	} else {
 		/*
 		 * Remove trailing zeros.
