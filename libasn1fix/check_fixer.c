@@ -58,9 +58,14 @@ main(int ac, char **av) {
 	 * Go into a directory with tests.
 	 */
 	if(ac <= 1) {
-		fprintf(stderr, "Testing in " TOP_SRCDIR_S "/tests...\n");
-		ret = chdir(TOP_SRCDIR_S "/tests");
-		assert(ret == 0);
+        const char *asn1_tests_dir = getenv("ASN1_TESTS_DIR");
+        if(!asn1_tests_dir)
+            asn1_tests_dir = TOP_SRCDIR_S "/tests";
+        fprintf(stderr, "Testing in %s...\n", asn1_tests_dir);
+        ret = chdir(asn1_tests_dir);
+        if(ret == -1)
+            fprintf(stderr, "%s: %s\n", asn1_tests_dir, strerror(errno));
+        assert(ret == 0);
 #ifdef	_WIN32
 		dir = _findfirst("*.asn1", &c_file);
 		assert(dir != -1L);
