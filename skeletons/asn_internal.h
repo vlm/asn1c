@@ -59,7 +59,7 @@ void ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
 #endif	/* __GNUC__ */
 #else	/* EMIT_ASN_DEBUG != 1 */
-static inline void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
+static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 #endif	/* EMIT_ASN_DEBUG */
 #endif	/* ASN_DEBUG */
 
@@ -101,7 +101,7 @@ static inline void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
  * Check stack against overflow, if limit is set.
  */
 #define	_ASN_DEFAULT_STACK_MAX	(30000)
-static inline int
+static int __attribute__((unused))
 _ASN_STACK_OVERFLOW_CHECK(asn_codec_ctx_t *ctx) {
 	if(ctx && ctx->max_stack_size) {
 

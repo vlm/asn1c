@@ -652,7 +652,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 		ST_LEADSPACE,
 		ST_TAILSPACE,
 		ST_AFTERVALUE,	/* Next character ought to be '.' or a space */
-		ST_WAITDIGITS,	/* Next character is expected to be a digit */
+		ST_WAITDIGITS 	/* Next character is expected to be a digit */
 	} state = ST_LEADSPACE;
 
 	if(!oid_text || oid_txt_length < -1 || (arcs_slots && !arcs)) {

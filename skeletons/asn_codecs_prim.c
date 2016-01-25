@@ -15,7 +15,7 @@ ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
 	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)*sptr;
 	asn_dec_rval_t rval;
-	ber_tlv_len_t length = 0; // =0 to avoid [incorrect] warning.
+	ber_tlv_len_t length = 0; /* =0 to avoid [incorrect] warning. */
 
 	/*
 	 * If the structure is not there, allocate it.

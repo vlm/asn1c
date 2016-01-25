@@ -63,7 +63,7 @@ enum asn_strtol_result_e {
     ASN_STRTOL_ERROR_INVAL = -2,  /* Invalid data encountered (e.g., "+-") */
     ASN_STRTOL_EXPECT_MORE = -1,  /* More data expected (e.g. "+") */
     ASN_STRTOL_OK          =  0,  /* Conversion succeded, number ends at (*end) */
-    ASN_STRTOL_EXTRA_DATA  =  1,  /* Conversion succeded, but the string has extra stuff */
+    ASN_STRTOL_EXTRA_DATA  =  1   /* Conversion succeded, but the string has extra stuff */
 };
 enum asn_strtol_result_e asn_strtol_lim(const char *str, const char **end, long *l);
 
