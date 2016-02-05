@@ -1,3 +1,5 @@
+%parse-param { void **param }
+
 %{
 
 #include <stdlib.h>
@@ -9,8 +11,6 @@
 
 #include "asn1parser.h"
 
-#define YYPARSE_PARAM	param
-#define YYPARSE_PARAM_TYPE	void **
 #define YYERROR_VERBOSE
 #define YYDEBUG 1
 #define YYFPRINTF   prefixed_fprintf
@@ -38,8 +38,7 @@ prefixed_fprintf(FILE *f, const char *fmt, ...) {
 }
 
 int yylex(void);
-static int yyerror(const char *msg);
-
+int yyerror(void **param, const char *msg);
 #ifdef	YYBYACC
 int yyparse(void **param);	/* byacc does not produce a prototype */
 #endif
@@ -70,7 +69,7 @@ static asn1p_module_t *currentModule;
 
 #define	checkmem(ptr)	do {						\
 		if(!(ptr))						\
-		return yyerror("Memory failure");			\
+		return yyerror(param, "Memory failure");		\
 	} while(0)
 
 #define	CONSTRAINT_INSERT(root, constr_type, arg1, arg2) do {		\
@@ -660,7 +659,7 @@ Assignment:
 	 * Erroneous attemps
 	 */
 	| BasicString {
-		return yyerror(
+		return yyerror(param,
 			"Attempt to redefine a standard basic string type, "
 			"please comment out or remove this type redefinition.");
 	}
@@ -678,7 +677,7 @@ optImports:
 ImportsDefinition:
 	TOK_IMPORTS optImportsBundleSet ';' {
 		if(!saved_aid && 0)
-			return yyerror("Unterminated IMPORTS FROM, "
+			return yyerror(param, "Unterminated IMPORTS FROM, "
 					"expected semicolon ';'");
 		saved_aid = 0;
 		$$ = $2;
@@ -687,7 +686,7 @@ ImportsDefinition:
 	 * Some error cases.
 	 */
 	| TOK_IMPORTS TOK_FROM /* ... */ {
-		return yyerror("Empty IMPORTS list");
+		return yyerror(param, "Empty IMPORTS list");
 	}
 	;
 
@@ -2311,11 +2310,11 @@ Enumerations:
         asn1p_expr_t *first_memb = TQ_FIRST(&($$->members));
         if(first_memb) {
             if(first_memb->expr_type == A1TC_EXTENSIBLE) {
-                return yyerror(
+                return yyerror(param,
                     "The ENUMERATION cannot start with extension (...).");
             }
         } else {
-            return yyerror(
+            return yyerror(param,
                 "The ENUMERATION list cannot be empty.");
         }
     }
@@ -2623,8 +2622,9 @@ _fixup_anonymous_identifier(asn1p_expr_t *expr) {
 		expr->Identifier);
 }
 
-static int
-yyerror(const char *msg) {
+int
+yyerror(void **param, const char *msg) {
+	(void)param;
 	extern char *asn1p_text;
 	fprintf(stderr,
 		"ASN.1 grammar parse error "
