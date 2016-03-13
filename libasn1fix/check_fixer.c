@@ -127,6 +127,8 @@ main(int ac, char **av) {
 
 	if(completed == 0) {
 		fprintf(stderr, "No tests defined?!\n");
+		system("pwd");
+		system("env");
 		exit(EX_NOINPUT);
 	}
 
