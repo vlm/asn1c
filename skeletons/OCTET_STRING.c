@@ -1712,15 +1712,17 @@ OCTET_STRING_print_utf8(asn_TYPE_descriptor_t *td, const void *sptr,
 void
 OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
-				? (asn_OCTET_STRING_specifics_t *)td->specifics
-				: &asn_DEF_OCTET_STRING_specs;
-	asn_struct_ctx_t *ctx = (asn_struct_ctx_t *)
-					((char *)st + specs->ctx_offset);
+	asn_OCTET_STRING_specifics_t *specs;
+	asn_struct_ctx_t *ctx;
 	struct _stack *stck;
 
 	if(!td || !st)
 		return;
+
+	specs = td->specifics
+		    ? (asn_OCTET_STRING_specifics_t *)td->specifics
+		    : &asn_DEF_OCTET_STRING_specs;
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 
 	ASN_DEBUG("Freeing %s as OCTET STRING", td->name);
 

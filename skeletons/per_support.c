@@ -12,7 +12,7 @@ per_data_string(asn_per_data_t *pd) {
 	static char buf[2][32];
 	static int n;
 	n = (n+1) % 2;
-	snprintf(buf[n], sizeof(buf),
+	snprintf(buf[n], sizeof(buf[n]),
 		"{m=%ld span %+ld[%d..%d] (%d)}",
 		(long)pd->moved,
 		(((long)pd->buffer) & 0xf),
