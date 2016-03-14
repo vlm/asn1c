@@ -10,10 +10,27 @@
 #define symlink(a,b) (errno=ENOSYS, -1)
 #endif
 
+/* Pedantically check fprintf's return value. */
+static int safe_fprintf(FILE *fp, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int ret = vfprintf(fp, fmt, ap);
+    va_end(ap);
+    assert(ret >= 0);
+    return ret;
+}
+
+/* Pedantically check fwrite's return value. */
+static size_t safe_fwrite(const void *ptr, size_t size, size_t nitems, FILE *stream) {
+    size_t ret = fwrite(ptr, 1, size * nitems, stream);
+    assert(ret == size * nitems);
+    return ret;
+}
+
 #define	HINCLUDE(s)						\
 	((arg->flags & A1C_INCLUDES_QUOTED)			\
-		? fprintf(fp_h, "#include \"%s\"\n", s)		\
-		: fprintf(fp_h, "#include <%s>\n", s))		\
+		? safe_fprintf(fp_h, "#include \"%s\"\n", s)		\
+		: safe_fprintf(fp_h, "#include <%s>\n", s))		\
 
 static int asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
 static int asn1c_print_streams(arg_t *arg);
@@ -66,27 +83,27 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		return -1;
 	}
 
-	fprintf(mkf, "ASN_MODULE_SOURCES=");
+	safe_fprintf(mkf, "ASN_MODULE_SOURCES=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				fprintf(mkf, "\t\\\n\t%s.c",
+				safe_fprintf(mkf, "\t\\\n\t%s.c",
 				arg->expr->Identifier);
 			}
 		}
 	}
-	fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
+	safe_fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				fprintf(mkf, "\t\\\n\t%s.h",
+				safe_fprintf(mkf, "\t\\\n\t%s.h",
 				arg->expr->Identifier);
 			}
 		}
 	}
-	fprintf(mkf, "\n\n");
+	safe_fprintf(mkf, "\n\n");
 
 	/*
 	 * Move necessary skeleton files and add them to Makefile.am.sample.
@@ -112,7 +129,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			strcpy(dir_end, fname);
 
 			if(asn1c_copy_over(arg, buf) == -1) {
-				fprintf(mkf, ">>>ABORTED<<<");
+				safe_fprintf(mkf, ">>>ABORTED<<<");
 				fclose(mkf);
 				return -1;
 			}
@@ -129,18 +146,18 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 				what_kind = "HEADERS";
 			else
 				what_kind = "SOURCES";
-			fprintf(mkf, "ASN_%s_%s+=%s\n",
+			safe_fprintf(mkf, "ASN_%s_%s+=%s\n",
 				what_class, what_kind, fname);
 		}
 	}
 
 	if(need_to_generate_pdu_collection(arg)) {
-		fprintf(mkf, "ASN_CONVERTER_SOURCES+=pdu_collection.c\n");
+		safe_fprintf(mkf, "ASN_CONVERTER_SOURCES+=pdu_collection.c\n");
 		if(generate_pdu_collection_file(arg))
 			return -1;
 	}
 
-	fprintf(mkf, "\n\n"
+	safe_fprintf(mkf, "\n\n"
 		"lib_LTLIBRARIES=libsomething.la\n"
 		"libsomething_la_SOURCES="
 			"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
@@ -170,11 +187,11 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	);
 
 	for(i = 0; i < argc; i++)
-		fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
-	fprintf(mkf, "\n\n");
+		safe_fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
+	safe_fprintf(mkf, "\n\n");
 
 	fclose(mkf);
-	fprintf(stderr, "Generated Makefile.am.sample\n");
+	safe_fprintf(stderr, "Generated Makefile.am.sample\n");
 
 	return 0;
 }
@@ -207,7 +224,7 @@ asn1c_print_streams(arg_t *arg)  {
 			expr->Identifier);
 
 		TQ_FOR(ot, &(cs->destination[i].chunks), next) {
-			fwrite(ot->buf, ot->len, 1, stdout);
+			safe_fwrite(ot->buf, ot->len, 1, stdout);
 		}
 	}
 
@@ -227,7 +244,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	const char *h_retained = "";
 
 	if(cs == NULL) {
-		fprintf(stderr, "Cannot compile %s at line %d\n",
+		safe_fprintf(stderr, "Cannot compile %s at line %d\n",
 			expr->Identifier, expr->_lineno);
 		return -1;
 	}
@@ -244,49 +261,49 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	generate_preamble(arg, fp_h, optc, argv);
 
 	header_id = asn1c_make_identifier(0, expr, NULL);
-	fprintf(fp_h,
+	safe_fprintf(fp_h,
 		"#ifndef\t_%s_H_\n"
 		"#define\t_%s_H_\n"
 		"\n", header_id, header_id);
 
-	fprintf(fp_h, "\n");
+	safe_fprintf(fp_h, "\n");
 	HINCLUDE("asn_application.h");
 
 #define	SAVE_STREAM(fp, idx, msg, actdep)	do {			\
 	if(TQ_FIRST(&(cs->destination[idx].chunks)) && *msg)		\
-		fprintf(fp, "\n/* %s */\n", msg);			\
+		safe_fprintf(fp, "\n/* %s */\n", msg);			\
 	TQ_FOR(ot, &(cs->destination[idx].chunks), next) {		\
 		if(actdep) asn1c_activate_dependency(deps, 0, ot->buf);	\
-		fwrite(ot->buf, ot->len, 1, fp);			\
+		safe_fwrite(ot->buf, ot->len, 1, fp);			\
 	}								\
 } while(0)
 
 	SAVE_STREAM(fp_h, OT_INCLUDES,	"Including external dependencies", 1);
 
-	fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
+	safe_fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
 	SAVE_STREAM(fp_h, OT_DEPS,	"Dependencies", 0);
 	SAVE_STREAM(fp_h, OT_FWD_DECLS,	"Forward declarations", 0);
 	SAVE_STREAM(fp_h, OT_TYPE_DECLS, expr->Identifier, 0);
 	SAVE_STREAM(fp_h, OT_FUNC_DECLS,"Implementation", 0);
-	fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n");
+	safe_fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n");
 
 	if(!(arg->flags & A1C_NO_INCLUDE_DEPS))
 	SAVE_STREAM(fp_h, OT_POST_INCLUDE, "Referred external types", 1);
 
-	fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
+	safe_fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
 
 	HINCLUDE("asn_internal.h");
-	fprintf(fp_c, "#include \"%s.h\"\n\n", expr->Identifier);
+	safe_fprintf(fp_c, "#include \"%s.h\"\n\n", expr->Identifier);
 	if(arg->flags & A1C_NO_INCLUDE_DEPS)
 		SAVE_STREAM(fp_c, OT_POST_INCLUDE, "", 1);
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
-		fwrite(ot->buf, ot->len, 1, fp_c);
+		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CODE].chunks), next)
-		fwrite(ot->buf, ot->len, 1, fp_c);
+		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CTDEFS].chunks), next)
-		fwrite(ot->buf, ot->len, 1, fp_c);
+		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
-		fwrite(ot->buf, ot->len, 1, fp_c);
+		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 
 	assert(OT_MAX == 11);	/* Protection from reckless changes */
 
@@ -326,16 +343,16 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	free(tmpname_c);
 	free(tmpname_h);
 
-	fprintf(stderr, "Compiled %s.c%s\n",
+	safe_fprintf(stderr, "Compiled %s.c%s\n",
 		expr->Identifier, c_retained);
-	fprintf(stderr, "Compiled %s.h%s\n",
+	safe_fprintf(stderr, "Compiled %s.h%s\n",
 		expr->Identifier, h_retained);
 	return 0;
 }
 
 static int
 generate_preamble(arg_t *arg, FILE *fp, int optc, char **argv) {
-	fprintf(fp,
+	safe_fprintf(fp,
 	"/*\n"
 	" * Generated by asn1c-" VERSION " (http://lionet.info/asn1c)\n"
 	" * From ASN.1 module \"%s\"\n"
@@ -344,12 +361,12 @@ generate_preamble(arg_t *arg, FILE *fp, int optc, char **argv) {
 		arg->expr->module->source_file_name);
 	if(optc > 1) {
 		int i;
-		fprintf(fp, " * \t`asn1c ");
+		safe_fprintf(fp, " * \t`asn1c ");
 		for(i = 1; i < optc; i++)
-			fprintf(fp, "%s%s", i>1?" ":"", argv[i]);
-		fprintf(fp, "`\n");
+			safe_fprintf(fp, "%s%s", i>1?" ":"", argv[i]);
+		safe_fprintf(fp, "`\n");
 	}
-	fprintf(fp, " */\n\n");
+	safe_fprintf(fp, " */\n\n");
 	return 0;
 }
 
@@ -410,7 +427,7 @@ real_copy(const char *src, const char *dst) {
 
 	while(!feof(fpsrc)) {
 		len = fread(buf, 1, sizeof(buf), fpsrc);
-		if(fwrite(buf, 1, len, fpdst) != len) {
+		if(safe_fwrite(buf, 1, len, fpdst) != len) {
 			perror(tmpname);
 			errno = EIO;
 			retval = -1;
@@ -454,12 +471,12 @@ asn1c_copy_over(arg_t *arg, char *path) {
 				/*
 				 * Nothing to do.
 				 */
-				fprintf(stderr,
+				safe_fprintf(stderr,
 					"File %s is already here as %s\n",
 					path, fname);
 				return 1;
 			} else {
-				fprintf(stderr,
+				safe_fprintf(stderr,
 					"Retaining local %s (%s suggested)\n",
 					fname, path);
 				return 1;
@@ -468,14 +485,14 @@ asn1c_copy_over(arg_t *arg, char *path) {
 			/* Ignore this */
 			return 0;
 		} else {
-			fprintf(stderr, "%s %s -> %s failed: %s\n",
+			safe_fprintf(stderr, "%s %s -> %s failed: %s\n",
 				use_real_copy ? "Copy" : "Symlink",
 				path, fname, strerror(errno));
 			return -1;
 		}
 	}
 
-	fprintf(stderr, "%s %s\t-> %s\n",
+	safe_fprintf(stderr, "%s %s\t-> %s\n",
 		use_real_copy ? "Copied" : "Symlinked", path, fname);
 
 	return 1;
@@ -493,45 +510,45 @@ generate_pdu_collection_file(arg_t *arg) {
 		return -1;
 	}
 
-	fprintf(fp,
+	safe_fprintf(fp,
 		"/*\n"
 		" * Generated by asn1c-" VERSION " (http://lionet.info/asn1c)\n"
 		" */\n\n");
-	fprintf(fp, "struct asn_TYPE_descriptor_s;\t"
+	safe_fprintf(fp, "struct asn_TYPE_descriptor_s;\t"
 			"/* Forward declaration */\n\n");
 
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(!include_type_to_pdu_collection(arg))
 				continue;
-			fprintf(fp, "extern struct asn_TYPE_descriptor_s "
+			safe_fprintf(fp, "extern struct asn_TYPE_descriptor_s "
 				"asn_DEF_%s;\n",
 				asn1c_make_identifier(0, arg->expr, NULL));
 		}
 	}
 
-	fprintf(fp, "\n\n");
-	fprintf(fp, "struct asn_TYPE_descriptor_s *asn_pdu_collection[] = {\n");
+	safe_fprintf(fp, "\n\n");
+	safe_fprintf(fp, "struct asn_TYPE_descriptor_s *asn_pdu_collection[] = {\n");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		int mod_printed = 0;
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(!include_type_to_pdu_collection(arg))
 				continue;
 			if(!mod_printed++)
-			fprintf(fp, "\t/* From module %s in %s */\n",
+			safe_fprintf(fp, "\t/* From module %s in %s */\n",
 				arg->expr->module->ModuleName,
 				arg->expr->module->source_file_name);
-			fprintf(fp, "\t&asn_DEF_%s,\t\n",
+			safe_fprintf(fp, "\t&asn_DEF_%s,\t\n",
 				asn1c_make_identifier(0, arg->expr, NULL));
 		}
 	}
 
-	fprintf(fp, "\t0\n};\n\n");
+	safe_fprintf(fp, "\t0\n};\n\n");
 
 	pdu_collection_print_unused_types(arg);
 
 	fclose(fp);
-	fprintf(stderr, "Generated pdu_collection.c\n");
+	safe_fprintf(stderr, "Generated pdu_collection.c\n");
 
 	return 0;
 }
