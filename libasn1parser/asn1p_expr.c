@@ -245,8 +245,7 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 			asn1p_expr_free(tm);
 		}
 
-		if(expr->Identifier)
-			free(expr->Identifier);
+		free(expr->Identifier);
 		if(expr->reference)
 			asn1p_ref_free(expr->reference);
 		if(expr->constraints)

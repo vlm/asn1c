@@ -27,7 +27,6 @@ asn1p_ref_free(asn1p_ref_t *ref) {
 		if(ref->components) {
 			int i = ref->comp_count;
 			while(i--) {
-				if(ref->components[i].name)
 				free(ref->components[i].name);
 				ref->components[i].name = 0;
 			}

@@ -78,7 +78,7 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	 * Make sure we have this amount of storage.
 	 */
 	if(storage_size <= size) {
-		if(storage) free(storage);
+		free(storage);
 		storage = malloc(size + 1);
 		if(storage) {
 			storage_size = size;

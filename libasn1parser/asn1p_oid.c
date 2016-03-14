@@ -50,7 +50,6 @@ asn1p_oid_free(asn1p_oid_t *oid) {
 	if(oid) {
 		if(oid->arcs) {
 			while(oid->arcs_count--) {
-				if(oid->arcs[oid->arcs_count].name)
 				free(oid->arcs[oid->arcs_count].name);
 			}
 		}
@@ -75,8 +74,7 @@ asn1p_oid_arc_new(const char *optName, asn1c_integer_t optNumber /* = -1 */) {
 void
 asn1p_oid_arc_free(asn1p_oid_arc_t *arc) {
 	if(arc) {
-		if(arc->name)
-			free(arc->name);
+		free(arc->name);
 		free(arc);
 	}
 }

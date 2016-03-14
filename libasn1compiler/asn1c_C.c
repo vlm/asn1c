@@ -1048,8 +1048,7 @@ asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 
 		extract = asn1p_expr_clone(extract, 0);
 		if(extract) {
-			if(extract->Identifier)
-				free(extract->Identifier);
+			free(extract->Identifier);
 			extract->Identifier = strdup(arg->expr->Identifier);
 			if(extract->Identifier == NULL) {
 				asn1p_expr_free(extract);
@@ -1707,7 +1706,7 @@ emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_ta
 	all_tags_count = asn1f_fetch_tags(arg->asn, expr->module, expr,
 		&all_tags, AFT_FULL_COLLECT);
 	if(all_tags_count < 0) {
-		if(tags) free(tags);
+		free(tags);
 		DEBUG("fail to fetch tags chain for %s", expr->Identifier);
 		return -1;
 	}
@@ -1756,8 +1755,8 @@ emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_ta
 			EMIT_TAGS_TABLE("_all", all_tags, all_tags_count);
 	}
 
-	if(tags) free(tags);
-	if(all_tags) free(all_tags);
+	free(tags);
+	free(all_tags);
 
 	*tags_count_r = tags_count;
 	*all_tags_count_r = all_tags_count;
