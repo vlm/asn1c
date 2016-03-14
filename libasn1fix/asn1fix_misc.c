@@ -22,20 +22,19 @@ asn1f_printable_value(asn1p_value_t *v) {
 	static size_t managedptr_len;
 	int ret;
 
-#define	ENSURE(len)	do {						\
-		size_t __len = (len);					\
-		if(__len >= managedptr_len) {				\
-			if(managedptr)					\
-				free(managedptr);			\
-			managedptr = malloc(__len + 1);			\
-			if(managedptr) {				\
-				managedptr_len = __len;			\
-			} else {					\
-				managedptr_len = 0;			\
-				return "<memory allocation error>";	\
-			}						\
-		}							\
-	} while(0)
+#define ENSURE(len)     do {                        \
+        size_t tmp_len = (len);                     \
+        if(tmp_len >= managedptr_len) {             \
+            free(managedptr);                       \
+            managedptr = malloc(tmp_len + 1);       \
+            if(managedptr) {                        \
+                managedptr_len = tmp_len;           \
+            } else {                                \
+                managedptr_len = 0;                 \
+                return "<memory allocation error>"; \
+            }                                       \
+        }                                           \
+    } while(0)
 
 	if(v == NULL)
 		return "<no value>";

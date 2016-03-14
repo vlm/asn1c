@@ -9,13 +9,13 @@
 
 #include "asn1print.h"
 
-#define	INDENT(fmt, args...)	do {					\
-		if(!(flags & APF_NOINDENT)) {				\
-			int __i = level;				\
-			while(__i--) printf("    ");			\
-		}							\
-		printf(fmt, ##args);					\
-	} while(0)
+#define	INDENT(fmt, args...)    do {        \
+        if(!(flags & APF_NOINDENT)) {       \
+            int tmp_i = level;              \
+            while(tmp_i--) printf("    ");  \
+        }                                   \
+        printf(fmt, ##args);                \
+    } while(0)
 
 static int asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags);
 static int asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags);

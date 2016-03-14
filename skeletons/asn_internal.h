@@ -79,23 +79,25 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 		|| __ASN_E_cbc(buf2, size2)				\
 		|| __ASN_E_cbc(buf3, size3))
 
-#define	_i_ASN_TEXT_INDENT(nl, level) do {				\
-	int __level = (level);						\
-	int __nl = ((nl) != 0);						\
-	int __i;							\
-	if(__nl) _ASN_CALLBACK("\n", 1);				\
-	if(__level < 0) __level = 0;					\
-	for(__i = 0; __i < __level; __i++)				\
-		_ASN_CALLBACK("    ", 4);				\
-	er.encoded += __nl + 4 * __level;				\
-} while(0)
+#define	_i_ASN_TEXT_INDENT(nl, level) do {          \
+        int tmp_level = (level);                    \
+        int tmp_nl = ((nl) != 0);                   \
+        int tmp_i;                                  \
+        if(tmp_nl) _ASN_CALLBACK("\n", 1);          \
+        if(tmp_level < 0) tmp_level = 0;            \
+        for(tmp_i = 0; tmp_i < tmp_level; tmp_i++)  \
+            _ASN_CALLBACK("    ", 4);               \
+        er.encoded += tmp_nl + 4 * tmp_level;       \
+    } while(0)
 
-#define	_i_INDENT(nl)	do {						\
-	int __i;							\
-	if((nl) && cb("\n", 1, app_key) < 0) return -1;			\
-	for(__i = 0; __i < ilevel; __i++)				\
-		if(cb("    ", 4, app_key) < 0) return -1;		\
-} while(0)
+#define	_i_INDENT(nl)	do {                        \
+        int tmp_i;                                  \
+        if((nl) && cb("\n", 1, app_key) < 0)        \
+            return -1;                              \
+        for(tmp_i = 0; tmp_i < ilevel; tmp_i++)     \
+            if(cb("    ", 4, app_key) < 0)          \
+                return -1;                          \
+    } while(0)
 
 /*
  * Check stack against overflow, if limit is set.
