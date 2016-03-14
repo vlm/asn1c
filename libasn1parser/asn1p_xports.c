@@ -26,8 +26,7 @@ void
 asn1p_xports_free(asn1p_xports_t *xp) {
 	if(xp) {
 		free(xp->fromModuleName);
-		if(xp->identifier.oid)
-			asn1p_oid_free(xp->identifier.oid);
+		asn1p_oid_free(xp->identifier.oid);
 		free(xp);
 	}
 }
