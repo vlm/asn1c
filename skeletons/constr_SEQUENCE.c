@@ -881,7 +881,7 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
 
-		if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel);
+		if(!xcan) ASN__TEXT_INDENT(1, ilevel);
 		_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
 
 		/* Print the member itself */
@@ -893,7 +893,7 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		er.encoded += 5 + (2 * mlen) + tmper.encoded;
 	}
 
-	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
+	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
 
 	_ASN_ENCODED_OK(er);
 cb_failed:

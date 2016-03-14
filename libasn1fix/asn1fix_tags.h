@@ -1,5 +1,5 @@
-#ifndef	_ASN1FIX_TAGS_H_
-#define	_ASN1FIX_TAGS_H_
+#ifndef	ASN1FIX_TAGS_H
+#define	ASN1FIX_TAGS_H
 
 enum asn1f_aft_flags_e {
 	AFT_IMAGINARY_ANY	= 0x01,	/* Treat ANY tag as [IMAGINARY ANY] */
@@ -27,4 +27,4 @@ int asn1f_fetch_tags(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr,
  */
 int asn1f_fetch_outmost_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, enum asn1f_aft_flags_e);
 
-#endif	/* _ASN1FIX_TAGS_H_ */
+#endif	/* ASN1FIX_TAGS_H */

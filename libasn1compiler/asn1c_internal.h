@@ -1,5 +1,5 @@
-#ifndef	_ASN1_COMPILER_INTERNAL_H_
-#define	_ASN1_COMPILER_INTERNAL_H_
+#ifndef	ASN1_COMPILER_INTERNAL_H
+#define	ASN1_COMPILER_INTERNAL_H
 
 #ifdef	HAVE_CONFIG_H
 #include <config.h>
@@ -70,4 +70,4 @@ typedef struct arg_s {
 #define	WARNING(fmt, args...)	LOG(0, fmt, ##args);
 #define	FATAL(fmt, args...)	LOG(1, fmt, ##args);
 
-#endif	/* _ASN1_COMPILER_INTERNAL_H_ */
+#endif	/* ASN1_COMPILER_INTERNAL_H */

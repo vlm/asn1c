@@ -1,5 +1,5 @@
-#ifndef	_ASN1_COMPILED_OUTPUT_H_
-#define	_ASN1_COMPILED_OUTPUT_H_
+#ifndef	ASN1_COMPILED_OUTPUT_H
+#define	ASN1_COMPILED_OUTPUT_H
 
 /*
  * An elementary chunk of target language text.
@@ -130,4 +130,4 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 		OUT("% " PRIdASN, iv);				\
 } while(0)
 
-#endif	/* _ASN1_COMPILED_OUTPUT_H_ */
+#endif	/* ASN1_COMPILED_OUTPUT_H */

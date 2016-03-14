@@ -1,8 +1,8 @@
 /*
  * Functions related with processing values.
  */
-#ifndef	_ASN1FIX_VALUE_H_
-#define	_ASN1FIX_VALUE_H_
+#ifndef	ASN1FIX_VALUE_H
+#define	ASN1FIX_VALUE_H
 
 /*
  * Resolve the value given by reference.
@@ -26,4 +26,4 @@ int asn1f_value_resolve(arg_t *arg, asn1p_expr_t *tc,
 int asn1f_look_value_in_type(arg_t *arg,
 		asn1p_expr_t *type_expr, asn1p_expr_t *value_expr);
 
-#endif	/* _ASN1FIX_VALUE_H_ */
+#endif	/* ASN1FIX_VALUE_H */

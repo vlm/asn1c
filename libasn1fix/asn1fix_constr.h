@@ -1,5 +1,5 @@
-#ifndef	_ASN1FIX_CONSTRUCTED_H_
-#define	_ASN1FIX_CONSTRUCTED_H_
+#ifndef	ASN1FIX_CONSTRUCTED_H
+#define	ASN1FIX_CONSTRUCTED_H
 
 /*
  * Pull in COMPONENTS OF.
@@ -26,4 +26,4 @@ int asn1f_check_constr_tags_distinct(arg_t *);
  */
 int asn1f_fix_constr_autotag(arg_t *);
 
-#endif	/* _ASN1FIX_CONSTRUCTED_H_ */
+#endif	/* ASN1FIX_CONSTRUCTED_H */

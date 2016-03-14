@@ -619,7 +619,7 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 				_ASN_CALLBACK(scratch, p-scratch);
 				er.encoded += (p-scratch);
 				p = scratch;
-				_i_ASN_TEXT_INDENT(1, ilevel);
+				ASN__TEXT_INDENT(1, ilevel);
 			}
 			*p++ = h2c[(*buf >> 4) & 0x0F];
 			*p++ = h2c[*buf & 0x0F];
@@ -630,7 +630,7 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			_ASN_CALLBACK(scratch, p-scratch); /* Dump the rest */
 			er.encoded += p - scratch;
 			if(st->size > 16)
-				_i_ASN_TEXT_INDENT(1, ilevel-1);
+				ASN__TEXT_INDENT(1, ilevel-1);
 		}
 	}
 

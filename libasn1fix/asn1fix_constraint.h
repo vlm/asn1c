@@ -1,5 +1,5 @@
-#ifndef	_ASN1FIX_CONSTRAINT_H_
-#define	_ASN1FIX_CONSTRAINT_H_
+#ifndef	ASN1FIX_CONSTRAINT_H
+#define	ASN1FIX_CONSTRAINT_H
 
 /*
  * Resolve referenced values inside constraints.
@@ -16,4 +16,4 @@ int asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct,
  */
 int asn1constraint_pullup(arg_t *arg);
 
-#endif	/* _ASN1FIX_CONSTRAINT_H_ */
+#endif	/* ASN1FIX_CONSTRAINT_H */

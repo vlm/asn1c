@@ -1,5 +1,5 @@
-#ifndef	_ASN1PRINT_H_
-#define	_ASN1PRINT_H_
+#ifndef	ASN1PRINT_H
+#define	ASN1PRINT_H
 
 enum asn1print_flags {
 	APF_NOFLAGS,
@@ -16,4 +16,4 @@ enum asn1print_flags {
 int asn1print(asn1p_t *asn, enum asn1print_flags flags);
 
 
-#endif	/* _ASN1PRINT_H_ */
+#endif	/* ASN1PRINT_H */

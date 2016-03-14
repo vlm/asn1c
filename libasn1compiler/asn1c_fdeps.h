@@ -1,5 +1,5 @@
-#ifndef	_ASN1C_FDEPS_H_
-#define	_ASN1C_FDEPS_H_
+#ifndef	ASN1C_FDEPS_H
+#define	ASN1C_FDEPS_H
 
 typedef struct asn1c_fdeps_s {
 	char *filename;		/* Or 0, if root. */
@@ -26,4 +26,4 @@ int asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur,
 
 asn1c_fdeps_t *asn1c_deps_makelist(asn1c_fdeps_t *deps);
 
-#endif	/* _ASN1C_FDEPS_H_ */
+#endif	/* ASN1C_FDEPS_H */

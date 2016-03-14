@@ -3,8 +3,8 @@
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_ASN_CODECS_H_
-#define	_ASN_CODECS_H_
+#ifndef	ASN_CODECS_H
+#define	ASN_CODECS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -106,4 +106,4 @@ typedef struct asn_dec_rval_s {
 }
 #endif
 
-#endif	/* _ASN_CODECS_H_ */
+#endif	/* ASN_CODECS_H */

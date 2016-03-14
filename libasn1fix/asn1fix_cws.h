@@ -1,9 +1,9 @@
-#ifndef	_ASN1FIX_CLASS_WITH_SYNTAX_H_
-#define	_ASN1FIX_CLASS_WITH_SYNTAX_H_
+#ifndef	ASN1FIX_CLASS_WITH_SYNTAX_H
+#define	ASN1FIX_CLASS_WITH_SYNTAX_H
 
 /*
  * Parse class objects
  */
 int asn1f_parse_class_object(arg_t *arg);
 
-#endif	/* _ASN1FIX_CLASS_WITH_SYNTAX_H_ */
+#endif	/* ASN1FIX_CLASS_WITH_SYNTAX_H */

@@ -1,5 +1,5 @@
-#ifndef	_ASN1FIX_INTERNAL_H_
-#define	_ASN1FIX_INTERNAL_H_
+#ifndef	ASN1FIX_INTERNAL_H
+#define	ASN1FIX_INTERNAL_H
 
 #ifdef	HAVE_CONFIG_H
 #include <config.h>
@@ -135,4 +135,4 @@ typedef struct arg_s {
 #endif
 
 
-#endif	/* _ASN1FIX_INTERNAL_H_ */
+#endif	/* ASN1FIX_INTERNAL_H */

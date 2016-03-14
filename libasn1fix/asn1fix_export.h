@@ -2,8 +2,8 @@
  * This header exports fixer procedures that are common enough to be used
  * in other modules.
  */
-#ifndef	_ASN1FIX_EXPORT_H_
-#define	_ASN1FIX_EXPORT_H_
+#ifndef	ASN1FIX_EXPORT_H
+#define	ASN1FIX_EXPORT_H
 
 #include "asn1fix_tags.h"
 
@@ -38,4 +38,4 @@ asn1p_expr_t *asn1f_find_terminal_type_ex(asn1p_t *asn, asn1p_expr_t *tc);
 int asn1f_fix_dereference_values_ex(asn1p_t *asn, asn1p_module_t *mod,
 	asn1p_expr_t *expr);
 
-#endif	/* _ASN1FIX_EXPORT_H_ */
+#endif	/* ASN1FIX_EXPORT_H */

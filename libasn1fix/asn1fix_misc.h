@@ -1,8 +1,8 @@
 /*
  * Miscellaneous functions necessary for several other modules.
  */
-#ifndef	_ASN1FIX_MISC_H_
-#define	_ASN1FIX_MISC_H_
+#ifndef	ASN1FIX_MISC_H
+#define	ASN1FIX_MISC_H
 
 /*
  * Recursively invoke a given function over the given expr and all its
@@ -35,4 +35,4 @@ int asn1f_count_children(asn1p_expr_t *parent);
  */
 int asn1f_check_known_external_type(const char *);
 
-#endif	/* _ASN1FIX_MISC_H_ */
+#endif	/* ASN1FIX_MISC_H */

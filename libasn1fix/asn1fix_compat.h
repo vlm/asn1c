@@ -1,5 +1,5 @@
-#ifndef	_ASN1FIX_COMPAT_H_
-#define	_ASN1FIX_COMPAT_H_
+#ifndef	ASN1FIX_COMPAT_H
+#define	ASN1FIX_COMPAT_H
 
 /*
  * Check that the expressions given are compatible in their type.
@@ -11,4 +11,4 @@ int asn1f_check_type_compatibility(arg_t *arg,
 	asn1p_expr_t *a,
 	asn1p_expr_t *b);
 
-#endif	/* _ASN1FIX_COMPAT_H_ */
+#endif	/* ASN1FIX_COMPAT_H */

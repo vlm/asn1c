@@ -691,12 +691,12 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		}
 
 		if(mname) {
-			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel);
+			if(!xcan) ASN__TEXT_INDENT(1, ilevel);
 			_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
 		}
 
 		if(!xcan && specs->as_XMLValueList == 1)
-			_i_ASN_TEXT_INDENT(1, ilevel + 1);
+			ASN__TEXT_INDENT(1, ilevel + 1);
 		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
 				ilevel + (specs->as_XMLValueList != 2),
 				flags, cb, app_key);
@@ -719,7 +719,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		er.encoded += (2 * mlen) + tmper.encoded;
 	}
 
-	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
+	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
 
 	if(encs) {
 		xer_tmp_enc_t *enc = encs;

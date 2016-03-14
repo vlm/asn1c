@@ -1,8 +1,8 @@
 /*
  * Miscellaneous functions necessary for several other modules.
  */
-#ifndef	_ASN1FIX_RETRIEVE_H_
-#define	_ASN1FIX_RETRIEVE_H_
+#ifndef	ASN1FIX_RETRIEVE_H
+#define	ASN1FIX_RETRIEVE_H
 
 /*
  * Simple search for the label in the descendants of the given node.
@@ -68,4 +68,4 @@ asn1p_expr_t *asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *tc);
  */
 asn1p_expr_t *asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *tc);
 
-#endif	/* _ASN1FIX_RETRIEVE_H_ */
+#endif	/* ASN1FIX_RETRIEVE_H */

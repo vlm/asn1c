@@ -6,8 +6,8 @@
 /*
  * Miscellaneous system-dependent types.
  */
-#ifndef	_ASN_SYSTEM_H_
-#define	_ASN_SYSTEM_H_
+#ifndef	ASN_SYSTEM_H
+#define	ASN_SYSTEM_H
 
 #ifdef	HAVE_CONFIG_H
 #include "config.h"
@@ -126,4 +126,4 @@ typedef	unsigned int	uint32_t;
 #endif /* __GNUC__ */
 #endif	/* MIN */
 
-#endif	/* _ASN_SYSTEM_H_ */
+#endif	/* ASN_SYSTEM_H */

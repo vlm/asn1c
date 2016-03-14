@@ -806,7 +806,7 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		er.encoded = 0;
 
-                if(!(flags & XER_F_CANONICAL)) _i_ASN_TEXT_INDENT(1, ilevel);
+                if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel);
 		_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
 
 		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
@@ -818,7 +818,7 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		er.encoded += 5 + (2 * mlen) + tmper.encoded;
 	}
 
-	if(!(flags & XER_F_CANONICAL)) _i_ASN_TEXT_INDENT(1, ilevel - 1);
+	if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel - 1);
 
 	_ASN_ENCODED_OK(er);
 cb_failed:

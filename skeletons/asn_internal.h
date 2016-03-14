@@ -6,8 +6,8 @@
 /*
  * Declarations internally useful for the ASN.1 support code.
  */
-#ifndef	_ASN_INTERNAL_H_
-#define	_ASN_INTERNAL_H_
+#ifndef	ASN_INTERNAL_H
+#define	ASN_INTERNAL_H
 
 #include "asn_application.h"	/* Application-visible API */
 
@@ -66,20 +66,20 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 /*
  * Invoke the application-supplied callback and fail, if something is wrong.
  */
-#define	__ASN_E_cbc(buf, size)	(cb((buf), (size), app_key) < 0)
-#define	_ASN_E_CALLBACK(foo)	do {					\
+#define	ASN__E_cbc(buf, size)	(cb((buf), (size), app_key) < 0)
+#define	ASN__E_CALLBACK(foo)	do {					\
 		if(foo)	goto cb_failed;					\
 	} while(0)
 #define	_ASN_CALLBACK(buf, size)					\
-	_ASN_E_CALLBACK(__ASN_E_cbc(buf, size))
+	ASN__E_CALLBACK(ASN__E_cbc(buf, size))
 #define	_ASN_CALLBACK2(buf1, size1, buf2, size2)			\
-	_ASN_E_CALLBACK(__ASN_E_cbc(buf1, size1) || __ASN_E_cbc(buf2, size2))
+	ASN__E_CALLBACK(ASN__E_cbc(buf1, size1) || ASN__E_cbc(buf2, size2))
 #define	_ASN_CALLBACK3(buf1, size1, buf2, size2, buf3, size3)		\
-	_ASN_E_CALLBACK(__ASN_E_cbc(buf1, size1)			\
-		|| __ASN_E_cbc(buf2, size2)				\
-		|| __ASN_E_cbc(buf3, size3))
+	ASN__E_CALLBACK(ASN__E_cbc(buf1, size1)			\
+		|| ASN__E_cbc(buf2, size2)				\
+		|| ASN__E_cbc(buf3, size3))
 
-#define	_i_ASN_TEXT_INDENT(nl, level) do {          \
+#define	ASN__TEXT_INDENT(nl, level) do {            \
         int tmp_level = (level);                    \
         int tmp_nl = ((nl) != 0);                   \
         int tmp_i;                                  \
@@ -125,4 +125,4 @@ _ASN_STACK_OVERFLOW_CHECK(asn_codec_ctx_t *ctx) {
 }
 #endif
 
-#endif	/* _ASN_INTERNAL_H_ */
+#endif	/* ASN_INTERNAL_H */

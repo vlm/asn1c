@@ -111,7 +111,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		if(!memb_ptr) continue;
 
 		if(mname) {
-			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel);
+			if(!xcan) ASN__TEXT_INDENT(1, ilevel);
 			_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
 		}
 
@@ -121,7 +121,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
                 if(tmper.encoded == 0 && specs->as_XMLValueList) {
                         const char *name = elm->type->xml_tag;
 			size_t len = strlen(name);
-			if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel + 1);
+			if(!xcan) ASN__TEXT_INDENT(1, ilevel + 1);
 			_ASN_CALLBACK3("<", 1, name, len, "/>", 2);
                 }
 
@@ -133,7 +133,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		er.encoded += (2 * mlen) + tmper.encoded;
 	}
 
-	if(!xcan) _i_ASN_TEXT_INDENT(1, ilevel - 1);
+	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
 
 	_ASN_ENCODED_OK(er);
 cb_failed:

@@ -1,5 +1,5 @@
-#ifndef	_ASN1_COMPILER_MISC_H_
-#define	_ASN1_COMPILER_MISC_H_
+#ifndef	ASN1_COMPILER_MISC_H
+#define	ASN1_COMPILER_MISC_H
 
 /*
  * Make the target language identifier out of one or more names.
@@ -42,4 +42,4 @@ enum asn1c_fitslong_e {
 };
 enum asn1c_fitslong_e asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr);
 
-#endif	/* _ASN1_COMPILER_MISC_H_ */
+#endif	/* ASN1_COMPILER_MISC_H */
