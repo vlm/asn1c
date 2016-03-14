@@ -21,7 +21,7 @@
 #define TOP_SRCDIR_S    STRINGIFY_MACRO(TOP_SRCDIR)
 #endif
 
-static int check(int skeletons_hier_level, const char *fname,
+static int check(const char *fname,
 	enum asn1p_flags parser_flags,
 	enum asn1f_flags fixer_flags);
 static int post_fix_check(asn1p_t *asn);
@@ -41,7 +41,6 @@ main(int ac, char **av) {
 	enum asn1p_flags parser_flags = A1P_NOFLAGS;
 	enum asn1f_flags fixer_flags  = A1F_NOFLAGS;
 	const char *filename;
-    int skeletons_hier_level = 1;
 	size_t len;
 	int ret;
 
@@ -68,9 +67,6 @@ main(int ac, char **av) {
             fprintf(stderr, "%s: %s\n", asn1_tests_dir, strerror(errno));
         assert(ret == 0);
         /* For some reasons, tests could be hidden under extra tests dir. */
-        if(0 && chdir("tests") == 0) {
-            skeletons_hier_level++;
-        }
 #ifdef	_WIN32
 		dir = _findfirst("*.asn1", &c_file);
 		assert(dir != -1L);
@@ -96,7 +92,7 @@ main(int ac, char **av) {
 			len = strlen(filename);
 			if(len <= 5 || strcmp(filename + len - 5, ".asn1"))
 				continue;
-			ret = check(skeletons_hier_level, filename, parser_flags, fixer_flags);
+			ret = check(filename, parser_flags, fixer_flags);
 			if(ret) {
 				fprintf(stderr, "FAILED: %s\n",
 					filename);
@@ -121,7 +117,7 @@ main(int ac, char **av) {
 	} else {
 		int i;
 		for(i = 1; i < ac; i++) {
-			ret = check(skeletons_hier_level, av[i], parser_flags, fixer_flags);
+			ret = check(av[i], parser_flags, fixer_flags);
 			if(ret) {
 				fprintf(stderr, "FAILED: %s\n", av[i]);
 				failed++;
@@ -141,7 +137,7 @@ main(int ac, char **av) {
 }
 
 static int
-check(int skeletons_hier_level, const char *fname,
+check(const char *fname,
 		enum asn1p_flags parser_flags,
 		enum asn1f_flags fixer_flags) {
 	asn1p_t *asn;
@@ -200,10 +196,7 @@ check(int skeletons_hier_level, const char *fname,
 
 	if(r_value == 0) {
 		asn1p_t *std_asn;
-		std_asn = asn1p_parse_file(skeletons_hier_level == 1
-                ? "../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1"
-                : "../../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1"
-                , A1P_NOFLAGS);
+		std_asn = asn1p_parse_file("../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
 		if(std_asn) {
 			asn1p_module_t *mod;
 			while((mod = TQ_REMOVE(&(std_asn->modules), mod_next))) {
