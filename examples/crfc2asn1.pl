@@ -42,8 +42,8 @@ while(<>) {
 			$modName = $1;
 			$currentFname = $rfcid . $modName . ".asn1";
 			$inasn = 1;
-		} elsif(/^[ \t]*([A-Z][A-Za-z0-9-]*).*{[ \t]*iso/
-		|| /^[ \t]*{[ \t]*iso/) {
+		} elsif(/^[ \t]*([A-Z][A-Za-z0-9-]*).*{[ \t]*(?:joint-)?iso/
+		|| /^[ \t]*{[ \t]*(?:joint-)?iso/) {
 			my @a = ($_);
 			$modName = $1;
 			unless(length($modName)) {
