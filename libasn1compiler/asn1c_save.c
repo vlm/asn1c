@@ -549,6 +549,7 @@ generate_pdu_C_definition(void) {
 	char *dst;
 	if(pduTypes == 0) return "";
 	def = malloc(strlen(pduType[0].typename) + 20);
+	assert(def);
 	strcpy(def, " -DPDU=");
 	for(src = pduType[0].typename, dst = def + 7; *src; src++, dst++)
 		if((*dst = *src) == '-')
