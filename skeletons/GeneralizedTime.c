@@ -4,15 +4,18 @@
  */
 #define	_POSIX_PTHREAD_SEMANTICS	/* for Sun */
 #define	_REENTRANT			/* for Sun */
+#define _BSD_SOURCE     /* for timegm(3) */
 #include <asn_internal.h>
 #include <GeneralizedTime.h>
-#include <errno.h>
 
 #ifdef	__CYGWIN__
 #include "/usr/include/time.h"
 #else
 #include <time.h>
 #endif	/* __CYGWIN__ */
+
+#include <stdio.h>
+#include <errno.h>
 
 #if	defined(_WIN32)
 #pragma message( "PLEASE STOP AND READ!")
