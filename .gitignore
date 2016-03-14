@@ -13,6 +13,7 @@ aclocal.m4
 config.h.in
 configure
 /autom4te.cache
+Makefile
 Makefile.in
 ylwrap
 
@@ -26,24 +27,16 @@ stamp-h*
 /asn1c-*.tar.gz
 /asn1c-*.*.*
 /asn1c.spec
-/Makefile
 
 # /asn1c/
-/asn1c/Makefile
 /asn1c/asn1c
 /asn1c/unber
 /asn1c/enber
 
 # /asn1c/tests/
-/asn1c/tests/Makefile
 /asn1c/tests/test-*
 
-# /doc/
-/doc/Makefile
-/doc/man/Makefile
-
 # /doc/docsrc
-/doc/docsrc/Makefile
 doc/docsrc/*.aux
 doc/docsrc/*.dvi
 doc/docsrc/*.log
@@ -52,7 +45,6 @@ doc/docsrc/*.toc
 doc/docsrc/*.xdv
 
 # /examples/
-/examples/Makefile
 /examples/*.asn1
 
 # /examples/*/
@@ -62,29 +54,14 @@ doc/docsrc/*.xdv
 /examples/*/.tmp.*
 
 # /libasn1compiler/
-/libasn1compiler/Makefile
 /libasn1compiler/check_compiler
 
 # /libasn1fix/
-/libasn1fix/Makefile
 /libasn1fix/check_*
 
 # /libasn1parser/
-/libasn1parser/Makefile
 /libasn1parser/check_parser
 
-# /libasn1print/
-/libasn1print/Makefile
-
-# /skeletons/
-/skeletons/Makefile
-
-# /skeletons/standard-modules/
-/skeletons/standard-modules/Makefile
-
 # /skeletons/tests/
-/skeletons/tests/Makefile
 /skeletons/tests/check-*
 
-# /tests/
-/tests/Makefile
