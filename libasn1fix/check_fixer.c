@@ -129,7 +129,7 @@ main(int ac, char **av) {
 		fprintf(stderr, "No tests defined?!\n");
 		system("pwd");
 		system("env");
-		system("ls");
+		system("cd .. && find .");
 		exit(EX_NOINPUT);
 	}
 
