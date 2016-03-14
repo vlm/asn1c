@@ -52,13 +52,13 @@ BIT_STRING_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	if(st && st->buf) {
 		if((st->size == 0 && st->bits_unused)
 		|| st->bits_unused < 0 || st->bits_unused > 7) {
-			_ASN_CTFAIL(app_key, td, sptr,
+			ASN__CTFAIL(app_key, td, sptr,
 				"%s: invalid padding byte (%s:%d)",
 				td->name, __FILE__, __LINE__);
 			return -1;
 		}
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -86,7 +86,7 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	uint8_t *end;
 
 	if(!st || !st->buf)
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
 	er.encoded = 0;
 
@@ -101,7 +101,7 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		int nline = xcan?0:(((buf - st->buf) % 8) == 0);
 		if(p >= scend || nline) {
 			er.encoded += p - scratch;
-			_ASN_CALLBACK(scratch, p - scratch);
+			ASN__CALLBACK(scratch, p - scratch);
 			p = scratch;
 			if(nline) ASN__TEXT_INDENT(1, ilevel);
 		}
@@ -113,7 +113,7 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	if(!xcan && ((buf - st->buf) % 8) == 0)
 		ASN__TEXT_INDENT(1, ilevel);
 	er.encoded += p - scratch;
-	_ASN_CALLBACK(scratch, p - scratch);
+	ASN__CALLBACK(scratch, p - scratch);
 	p = scratch;
 
 	if(buf == end) {
@@ -123,14 +123,14 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		for(i = 7; i >= ubits; i--)
 			*p++ = (v & (1 << i)) ? 0x31 : 0x30;
 		er.encoded += p - scratch;
-		_ASN_CALLBACK(scratch, p - scratch);
+		ASN__CALLBACK(scratch, p - scratch);
 	}
 
 	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 cb_failed:
-	_ASN_ENCODE_FAILED;
+	ASN__ENCODE_FAILED;
 }
 
 

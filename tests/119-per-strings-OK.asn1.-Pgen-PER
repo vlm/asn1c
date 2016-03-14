@@ -454,7 +454,7 @@ memb_ia5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -465,7 +465,7 @@ memb_ia5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -478,7 +478,7 @@ memb_ia5_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -489,7 +489,7 @@ memb_ia5_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -502,7 +502,7 @@ memb_ia5_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -513,7 +513,7 @@ memb_ia5_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -536,7 +536,7 @@ memb_vs_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -547,7 +547,7 @@ memb_vs_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -560,7 +560,7 @@ memb_vs_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -571,7 +571,7 @@ memb_vs_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -584,7 +584,7 @@ memb_vs_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -595,7 +595,7 @@ memb_vs_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -618,7 +618,7 @@ memb_pr_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -629,7 +629,7 @@ memb_pr_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -642,7 +642,7 @@ memb_pr_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -653,7 +653,7 @@ memb_pr_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -676,7 +676,7 @@ memb_ns_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const NumericString_t *st = (const NumericString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -687,7 +687,7 @@ memb_ns_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -700,7 +700,7 @@ memb_ns_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const NumericString_t *st = (const NumericString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -711,7 +711,7 @@ memb_ns_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -724,7 +724,7 @@ memb_ns_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const NumericString_t *st = (const NumericString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -735,7 +735,7 @@ memb_ns_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -759,7 +759,7 @@ memb_ut_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -767,7 +767,7 @@ memb_ut_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = UTF8String_length(st);
 	if((ssize_t)size < 0) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: UTF-8: broken encoding (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -777,7 +777,7 @@ memb_ut_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -791,7 +791,7 @@ memb_ut_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -799,7 +799,7 @@ memb_ut_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = UTF8String_length(st);
 	if((ssize_t)size < 0) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: UTF-8: broken encoding (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -809,7 +809,7 @@ memb_ut_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -822,7 +822,7 @@ memb_ut_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -833,7 +833,7 @@ memb_ut_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -846,7 +846,7 @@ memb_bm_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -857,7 +857,7 @@ memb_bm_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -871,7 +871,7 @@ memb_bm_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -884,7 +884,7 @@ memb_bm_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -897,7 +897,7 @@ memb_bm_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -908,7 +908,7 @@ memb_bm_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -921,7 +921,7 @@ memb_bm_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -932,7 +932,7 @@ memb_bm_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -955,7 +955,7 @@ memb_us_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -966,7 +966,7 @@ memb_us_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -980,7 +980,7 @@ memb_us_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -993,7 +993,7 @@ memb_us_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1006,7 +1006,7 @@ memb_us_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1017,7 +1017,7 @@ memb_us_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1030,7 +1030,7 @@ memb_us_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -1041,7 +1041,7 @@ memb_us_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

@@ -39,7 +39,7 @@ ANY_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		/*
 		 * Canonical XER-encoding of ANY type is not supported.
 		 */
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 	}
 
 	/* Dump as binary */

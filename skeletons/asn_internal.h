@@ -70,11 +70,11 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 #define	ASN__E_CALLBACK(foo)	do {					\
 		if(foo)	goto cb_failed;					\
 	} while(0)
-#define	_ASN_CALLBACK(buf, size)					\
+#define	ASN__CALLBACK(buf, size)					\
 	ASN__E_CALLBACK(ASN__E_cbc(buf, size))
-#define	_ASN_CALLBACK2(buf1, size1, buf2, size2)			\
+#define	ASN__CALLBACK2(buf1, size1, buf2, size2)			\
 	ASN__E_CALLBACK(ASN__E_cbc(buf1, size1) || ASN__E_cbc(buf2, size2))
-#define	_ASN_CALLBACK3(buf1, size1, buf2, size2, buf3, size3)		\
+#define	ASN__CALLBACK3(buf1, size1, buf2, size2, buf3, size3)		\
 	ASN__E_CALLBACK(ASN__E_cbc(buf1, size1)			\
 		|| ASN__E_cbc(buf2, size2)				\
 		|| ASN__E_cbc(buf3, size3))
@@ -83,10 +83,10 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
         int tmp_level = (level);                    \
         int tmp_nl = ((nl) != 0);                   \
         int tmp_i;                                  \
-        if(tmp_nl) _ASN_CALLBACK("\n", 1);          \
+        if(tmp_nl) ASN__CALLBACK("\n", 1);          \
         if(tmp_level < 0) tmp_level = 0;            \
         for(tmp_i = 0; tmp_i < tmp_level; tmp_i++)  \
-            _ASN_CALLBACK("    ", 4);               \
+            ASN__CALLBACK("    ", 4);               \
         er.encoded += tmp_nl + 4 * tmp_level;       \
     } while(0)
 
@@ -102,9 +102,9 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 /*
  * Check stack against overflow, if limit is set.
  */
-#define	_ASN_DEFAULT_STACK_MAX	(30000)
+#define	ASN__DEFAULT_STACK_MAX	(30000)
 static int __attribute__((unused))
-_ASN_STACK_OVERFLOW_CHECK(asn_codec_ctx_t *ctx) {
+ASN__STACK_OVERFLOW_CHECK(asn_codec_ctx_t *ctx) {
 	if(ctx && ctx->max_stack_size) {
 
 		/* ctx MUST be allocated on the stack */

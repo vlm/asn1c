@@ -288,12 +288,12 @@ REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	(void)ilevel;
 
 	if(!st || !st->buf || asn_REAL2double(st, &d))
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
 	er.encoded = REAL__dump(d, flags & XER_F_CANONICAL, cb, app_key);
-	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+	if(er.encoded < 0) ASN__ENCODE_FAILED;
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 

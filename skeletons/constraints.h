@@ -54,7 +54,7 @@ asn_constr_check_f asn_generic_unknown_constraint; /* Not fully supported */
 /*
  * Invoke the callback with a complete error message.
  */
-#define	_ASN_CTFAIL	if(ctfailcb) ctfailcb
+#define	ASN__CTFAIL	if(ctfailcb) ctfailcb
 
 #ifdef __cplusplus
 }

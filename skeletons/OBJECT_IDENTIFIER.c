@@ -47,14 +47,14 @@ OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 	if(st && st->buf) {
 		if(st->size < 1) {
-			_ASN_CTFAIL(app_key, td, sptr,
+			ASN__CTFAIL(app_key, td, sptr,
 				"%s: at least one numerical value "
 				"expected (%s:%d)",
 				td->name, __FILE__, __LINE__);
 			return -1;
 		}
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -330,12 +330,12 @@ OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	(void)flags;
 
 	if(!st || !st->buf)
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
 	er.encoded = OBJECT_IDENTIFIER__dump_body(st, cb, app_key);
-	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+	if(er.encoded < 0) ASN__ENCODE_FAILED;
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 int

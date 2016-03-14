@@ -58,7 +58,7 @@ VisibleString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		 */
 		for(; buf < end; buf++) {
 			if(*buf < 0x20 || *buf > 0x7e) {
-				_ASN_CTFAIL(app_key, td, sptr,
+				ASN__CTFAIL(app_key, td, sptr,
 					"%s: value byte %ld (%d) "
 					"not in VisibleString alphabet (%s:%d)",
 					td->name,
@@ -69,7 +69,7 @@ VisibleString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			}
 		}
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

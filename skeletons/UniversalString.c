@@ -175,12 +175,12 @@ UniversalString_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	(void)flags;
 
 	if(!st || !st->buf)
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
 	er.encoded = UniversalString__dump(st, cb, app_key);
-	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+	if(er.encoded < 0) ASN__ENCODE_FAILED;
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 int

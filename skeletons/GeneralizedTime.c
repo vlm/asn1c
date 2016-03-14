@@ -151,7 +151,7 @@ static time_t timegm(struct tm *tm) {
 #endif
 
 
-#ifndef	__ASN_INTERNAL_TEST_MODE__
+#ifndef	ASN___INTERNAL_TEST_MODE
 
 /*
  * GeneralizedTime basic type description.
@@ -190,7 +190,7 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	0	/* No specifics */
 };
 
-#endif	/* __ASN_INTERNAL_TEST_MODE__ */
+#endif	/* ASN___INTERNAL_TEST_MODE */
 
 /*
  * Check that the time looks like the time.
@@ -204,7 +204,7 @@ GeneralizedTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	errno = EPERM;			/* Just an unlikely error code */
 	tloc = asn_GT2time(st, 0, 0);
 	if(tloc == -1 && errno != EPERM) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: Invalid time format: %s (%s:%d)",
 			td->name, strerror(errno), __FILE__, __LINE__);
 		return -1;
@@ -230,10 +230,10 @@ GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	tloc = asn_GT2time_frac(st, &fv, &fd, &tm, 1);	/* Recognize time */
 	if(tloc == -1 && errno != EPERM)
 		/* Failed to recognize time. Fail completely. */
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
 	st = asn_time2GT_frac(0, &tm, fv, fd, 1); /* Save time canonically */
-	if(!st) _ASN_ENCODE_FAILED;	/* Memory allocation failure. */
+	if(!st) ASN__ENCODE_FAILED;	/* Memory allocation failure. */
 
 	erval = OCTET_STRING_encode_der(td, st, tag_mode, tag, cb, app_key);
 
@@ -243,7 +243,7 @@ GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	return erval;
 }
 
-#ifndef	__ASN_INTERNAL_TEST_MODE__
+#ifndef	ASN___INTERNAL_TEST_MODE
 
 asn_enc_rval_t
 GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
@@ -260,10 +260,10 @@ GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		if(asn_GT2time_frac((GeneralizedTime_t *)sptr,
 					&fv, &fd, &tm, 1) == -1
 				&& errno != EPERM)
-			_ASN_ENCODE_FAILED;
+			ASN__ENCODE_FAILED;
 
 		gt = asn_time2GT_frac(0, &tm, fv, fd, 1);
-		if(!gt) _ASN_ENCODE_FAILED;
+		if(!gt) ASN__ENCODE_FAILED;
 	
 		rv = OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
 			cb, app_key);
@@ -275,7 +275,7 @@ GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	}
 }
 
-#endif	/* __ASN_INTERNAL_TEST_MODE__ */
+#endif	/* ASN___INTERNAL_TEST_MODE */
 
 int
 GeneralizedTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,

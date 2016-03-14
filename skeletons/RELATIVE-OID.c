@@ -153,12 +153,12 @@ RELATIVE_OID_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	(void)flags;	/* Unused argument */
 
 	if(!st || !st->buf)
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
 	er.encoded = RELATIVE_OID__dump_body(st, cb, app_key);
-	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+	if(er.encoded < 0) ASN__ENCODE_FAILED;
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 int

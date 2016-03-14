@@ -416,7 +416,7 @@ memb_a_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -433,7 +433,7 @@ memb_a_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -447,7 +447,7 @@ memb_a_constraint_8(asn_TYPE_descriptor_t *td, const void *sptr,
 	size_t size;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -464,7 +464,7 @@ memb_a_constraint_8(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Constraint check succeeded */
 		return 0;
 	} else {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

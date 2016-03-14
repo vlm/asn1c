@@ -129,7 +129,7 @@ BOOLEAN_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 
 	erval.encoded += 1;
 
-	_ASN_ENCODED_OK(erval);
+	ASN__ENCODED_OK(erval);
 }
 
 
@@ -186,19 +186,19 @@ BOOLEAN_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	(void)ilevel;
 	(void)flags;
 
-	if(!st) _ASN_ENCODE_FAILED;
+	if(!st) ASN__ENCODE_FAILED;
 
 	if(*st) {
-		_ASN_CALLBACK("<true/>", 7);
+		ASN__CALLBACK("<true/>", 7);
 		er.encoded = 7;
 	} else {
-		_ASN_CALLBACK("<false/>", 8);
+		ASN__CALLBACK("<false/>", 8);
 		er.encoded = 8;
 	}
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 cb_failed:
-	_ASN_ENCODE_FAILED;
+	ASN__ENCODE_FAILED;
 }
 
 int
@@ -245,7 +245,7 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	if(!st) {
 		st = (BOOLEAN_t *)(*sptr = MALLOC(sizeof(*st)));
-		if(!st) _ASN_DECODE_FAILED;
+		if(!st) ASN__DECODE_FAILED;
 	}
 
 	/*
@@ -254,7 +254,7 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	switch(per_get_few_bits(pd, 1)) {
 	case 1: *st = 1; break;
 	case 0: *st = 0; break;
-	case -1: default: _ASN_DECODE_STARVED;
+	case -1: default: ASN__DECODE_STARVED;
 	}
 
 	ASN_DEBUG("%s decoded as %s", td->name, *st ? "TRUE" : "FALSE");
@@ -273,10 +273,10 @@ BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 
 	(void)constraints;
 
-	if(!st) _ASN_ENCODE_FAILED;
+	if(!st) ASN__ENCODE_FAILED;
 
 	if(per_put_few_bits(po, *st ? 1 : 0, 1))
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }

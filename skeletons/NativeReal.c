@@ -210,7 +210,7 @@ NativeReal_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 		*dbl_ptr = CALLOC(1, sizeof(*Dbl));
 		Dbl = (double *)*dbl_ptr;
 		if(Dbl == NULL)
-			_ASN_DECODE_FAILED;
+			ASN__DECODE_FAILED;
 	}
 
 	memset(&tmp, 0, sizeof(tmp));
@@ -223,7 +223,7 @@ NativeReal_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 	ret = asn_REAL2double(&tmp, Dbl);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
-	if(ret) _ASN_DECODE_FAILED;
+	if(ret) ASN__DECODE_FAILED;
 
 	return rval;
 }
@@ -244,7 +244,7 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
 	memset(&tmp, 0, sizeof(tmp));
 
 	if(asn_double2REAL(&tmp, Dbl))
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 	
 	/* Encode a DER REAL */
 	erval = OCTET_STRING_encode_uper(td, NULL, &tmp, po);
@@ -302,12 +302,12 @@ NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	(void)ilevel;
 
-	if(!Dbl) _ASN_ENCODE_FAILED;
+	if(!Dbl) ASN__ENCODE_FAILED;
 
 	er.encoded = REAL__dump(*Dbl, flags & XER_F_CANONICAL, cb, app_key);
-	if(er.encoded < 0) _ASN_ENCODE_FAILED;
+	if(er.encoded < 0) ASN__ENCODE_FAILED;
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 /*

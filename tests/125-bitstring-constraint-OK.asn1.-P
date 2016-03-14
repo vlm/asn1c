@@ -34,7 +34,7 @@ T_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;

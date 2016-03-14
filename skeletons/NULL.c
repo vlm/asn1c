@@ -47,7 +47,7 @@ NULL_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 		erval.structure_ptr = ptr;
 	}
 
-	_ASN_ENCODED_OK(erval);
+	ASN__ENCODED_OK(erval);
 }
 
 asn_enc_rval_t
@@ -65,7 +65,7 @@ NULL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	/* XMLNullValue is empty */
 	er.encoded = 0;
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 
@@ -123,7 +123,7 @@ NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		if(*sptr) {
 			*(NULL_t *)*sptr = 0;
 		} else {
-			_ASN_DECODE_FAILED;
+			ASN__DECODE_FAILED;
 		}
 	}
 
@@ -147,5 +147,5 @@ NULL_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
 	(void)po;
 
 	er.encoded = 0;
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }

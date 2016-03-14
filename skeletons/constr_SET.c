@@ -116,8 +116,8 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	ASN_DEBUG("Decoding %s as SET", td->name);
 
-	if(_ASN_STACK_OVERFLOW_CHECK(opt_codec_ctx))
-		_ASN_DECODE_FAILED;
+	if(ASN__STACK_OVERFLOW_CHECK(opt_codec_ctx))
+		ASN__DECODE_FAILED;
 
 	/*
 	 * Create the target structure if it is not present already.
@@ -451,7 +451,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	if(t2m_build_own) {
 		t2m_build = (asn_TYPE_tag2member_t *)alloca(
 				td->elements_count * sizeof(t2m_build[0]));
-		if(!t2m_build) _ASN_ENCODE_FAILED; /* There are such platforms */
+		if(!t2m_build) ASN__ENCODE_FAILED; /* There are such platforms */
 		t2m_count = 0;
 	} else {
 		t2m_build = NULL;
@@ -477,7 +477,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 			if(!memb_ptr) {
 				if(!elm->optional)
 					/* Mandatory elements missing */
-					_ASN_ENCODE_FAILED;
+					ASN__ENCODE_FAILED;
 				if(t2m_build_own) {
 					t2m_build[t2m_count].el_no = edx;
 					t2m_build[t2m_count].el_tag = 0;
@@ -533,10 +533,10 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Encode the TLV for the sequence itself.
 	 */
 	ret = der_write_tags(td, computed_size, tag_mode, 1, tag, cb, app_key);
-	if(ret == -1) _ASN_ENCODE_FAILED;
+	if(ret == -1) ASN__ENCODE_FAILED;
 	er.encoded = computed_size + ret;
 
-	if(!cb) _ASN_ENCODED_OK(er);
+	if(!cb) ASN__ENCODED_OK(er);
 
 	/*
 	 * Encode all members.
@@ -567,10 +567,10 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		/*
 		 * Encoded size is not equal to the computed size.
 		 */
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 	}
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 #undef	XER_ADVANCE
@@ -812,7 +812,7 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int edx;
 
 	if(!sptr)
-		_ASN_ENCODE_FAILED;
+		ASN__ENCODE_FAILED;
 
 	assert(t2m_count == td->elements_count);
 
@@ -835,7 +835,7 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 				if(elm->optional)
 					continue;
 				/* Mandatory element missing */
-				_ASN_ENCODE_FAILED;
+				ASN__ENCODE_FAILED;
 			}
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
@@ -843,23 +843,23 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		if(!xcan)
 			ASN__TEXT_INDENT(1, ilevel);
-		_ASN_CALLBACK3("<", 1, mname, mlen, ">", 1);
+		ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 
 		/* Print the member itself */
 		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
 
-		_ASN_CALLBACK3("</", 2, mname, mlen, ">", 1);
+		ASN__CALLBACK3("</", 2, mname, mlen, ">", 1);
 
 		er.encoded += 5 + (2 * mlen) + tmper.encoded;
 	}
 
 	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 cb_failed:
-	_ASN_ENCODE_FAILED;
+	ASN__ENCODE_FAILED;
 }
 
 int
@@ -942,7 +942,7 @@ SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	int edx;
 
 	if(!sptr) {
-		_ASN_CTFAIL(app_key, td, sptr,
+		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value not given (%s:%d)",
 			td->name, __FILE__, __LINE__);
 		return -1;
@@ -960,7 +960,7 @@ SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			if(!memb_ptr) {
 				if(elm->optional)
 					continue;
-				_ASN_CTFAIL(app_key, td, sptr,
+				ASN__CTFAIL(app_key, td, sptr,
 				"%s: mandatory element %s absent (%s:%d)",
 				td->name, elm->name, __FILE__, __LINE__);
 				return -1;

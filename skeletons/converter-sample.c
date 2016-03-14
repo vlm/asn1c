@@ -19,7 +19,7 @@
 #include <errno.h>	/* for errno */
 
 #include <asn_application.h>
-#include <asn_internal.h>	/* for _ASN_DEFAULT_STACK_MAX */
+#include <asn_internal.h>	/* for ASN__DEFAULT_STACK_MAX */
 
 /* Convert "Type" defined by -DPDU into "asn_DEF_Type" */
 #define	ASN_DEF_PDU(t)	asn_DEF_ ## t
@@ -228,7 +228,7 @@ main(int ac, char *av[]) {
 #ifdef	JUNKTEST
 		"  -J <prob>    Set random junk test bit garbaging probability\n"
 #endif
-		, (long)suggested_bufsize, _ASN_DEFAULT_STACK_MAX);
+		, (long)suggested_bufsize, ASN__DEFAULT_STACK_MAX);
 		exit(EX_USAGE);
 	}
 
