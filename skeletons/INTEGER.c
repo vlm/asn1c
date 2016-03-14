@@ -6,6 +6,7 @@
 #include <asn_internal.h>
 #include <INTEGER.h>
 #include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */
+#include <stdio.h>
 #include <errno.h>
 
 /*
