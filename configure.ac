@@ -1,11 +1,11 @@
-AC_INIT([asn1c], [0.9.28], [vlm@lionet.info])
+AC_INIT([asn1c],[0.9.28],[vlm@lionet.info])
 
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_PROG_LIBTOOL
+LT_INIT
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -100,10 +100,9 @@ AC_CHECK_TYPE(intmax_t, int64_t)
 dnl Test if we should check features that depend on 64-bitness.
 AC_MSG_CHECKING(size of long is longer than 32 bit)
 AS_VAR_PUSHDEF([WIDE_LONG], [WIDE_LONG])
-AC_TRY_COMPILE([#include "confdefs.h"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include "confdefs.h"
 #include <sys/types.h>
-], [switch (0) case 0: case (sizeof ($1) >= 8):;],
-    WIDE_LONG=yes, WIDE_LONG=no)
+]], [[switch (0) case 0: case (sizeof ($1) >= 8):;]])],[WIDE_LONG=yes],[WIDE_LONG=no])
 AC_MSG_RESULT($WIDE_LONG)
 AM_CONDITIONAL([TEST_64BIT], [test x$WIDE_LONG = xyes])
 AS_VAR_POPDEF([WIDE_LONG])
@@ -122,7 +121,7 @@ dnl Use pandoc to generate manual pages.
 AC_PATH_PROG([PANDOC], pandoc)
 AM_CONDITIONAL([HAVE_PANDOC], [test -n "$PANDOC"])
 
-AC_OUTPUT(				\
+AC_CONFIG_FILES([\
 skeletons/tests/Makefile		\
 libasn1compiler/Makefile		\
 libasn1parser/Makefile			\
@@ -136,5 +135,6 @@ doc/man/Makefile			\
 asn1c/Makefile				\
 doc/Makefile				\
 Makefile				\
-)
+])
+AC_OUTPUT
 
