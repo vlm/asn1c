@@ -6,5 +6,5 @@ script:
     - autoreconf -iv
     - ./configure --enable-Werror
     - make -j8
-    - make check
-    - make distcheck
+    - make check V=1
+    - make distcheck V=1
