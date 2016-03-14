@@ -68,7 +68,7 @@ main(int ac, char **av) {
             fprintf(stderr, "%s: %s\n", asn1_tests_dir, strerror(errno));
         assert(ret == 0);
         /* For some reasons, tests could be hidden under extra tests dir. */
-        if(chdir("tests") == 0) {
+        if(0 && chdir("tests") == 0) {
             skeletons_hier_level++;
         }
 #ifdef	_WIN32

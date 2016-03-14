@@ -132,6 +132,7 @@ doc/docsrc/Makefile			\
 skeletons/Makefile			\
 examples/Makefile			\
 doc/man/Makefile			\
+tests/Makefile				\
 asn1c/Makefile				\
 doc/Makefile				\
 Makefile				\
