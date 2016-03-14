@@ -66,6 +66,7 @@ main(int ac, char **av) {
         if(ret == -1)
             fprintf(stderr, "%s: %s\n", asn1_tests_dir, strerror(errno));
         assert(ret == 0);
+        (void)chdir("tests");   /* For some reasons, tests could be hidden. */
 #ifdef	_WIN32
 		dir = _findfirst("*.asn1", &c_file);
 		assert(dir != -1L);
@@ -127,9 +128,6 @@ main(int ac, char **av) {
 
 	if(completed == 0) {
 		fprintf(stderr, "No tests defined?!\n");
-		system("pwd");
-		system("env");
-		system("cd .. && find .");
 		exit(EX_NOINPUT);
 	}
 
