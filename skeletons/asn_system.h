@@ -15,6 +15,7 @@
 
 #include <stdio.h>	/* For snprintf(3) */
 #include <stdlib.h>	/* For *alloc(3) */
+#include <alloca.h>	/* For alloca(3) */
 #include <string.h>	/* For memcpy(3) */
 #include <sys/types.h>	/* For size_t */
 #include <limits.h>	/* For LONG_MAX */
