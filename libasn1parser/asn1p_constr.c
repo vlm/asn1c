@@ -23,14 +23,10 @@ void
 asn1p_constraint_free(asn1p_constraint_t *ct) {
 	if(ct) {
 
-		if(ct->containedSubtype)
-			asn1p_value_free(ct->containedSubtype);
-		if(ct->value)
-			asn1p_value_free(ct->value);
-		if(ct->range_start)
-			asn1p_value_free(ct->range_start);
-		if(ct->range_stop)
-			asn1p_value_free(ct->range_stop);
+		asn1p_value_free(ct->containedSubtype);
+		asn1p_value_free(ct->value);
+		asn1p_value_free(ct->range_start);
+		asn1p_value_free(ct->range_stop);
 
 		if(ct->elements) {
 			while(ct->el_count--) {
