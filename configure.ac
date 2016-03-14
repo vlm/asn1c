@@ -124,6 +124,7 @@ AC_PATH_PROG([PANDOC], pandoc)
 AM_CONDITIONAL([HAVE_PANDOC], [test -n "$PANDOC"])
 
 AC_CONFIG_FILES([\
+asn1c/tests/check-src/Makefile  \
 skeletons/tests/Makefile		\
 libasn1compiler/Makefile		\
 libasn1parser/Makefile			\
