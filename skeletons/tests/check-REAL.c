@@ -3,6 +3,11 @@
 #include <math.h>
 #include <float.h>
 
+/* C11 specifies DBL_TRUE_MIN, might not be immediately available. */
+#ifndef DBL_TRUE_MIN
+#define DBL_TRUE_MIN    4.9406564584124654E-324
+#endif
+
 #include <REAL.h>
 
 static char reconstructed[2][512];
