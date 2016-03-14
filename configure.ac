@@ -35,6 +35,7 @@ AC_ARG_ENABLE([ASN_DEBUG],
   [enable_asn_debug=$enableval], [enable_asn_debug=no])
   AS_IF([test x$enable_asn_debug != xno], [
       TESTSUITE_CFLAGS="-DEMIT_ASN_DEBUG"
+      SKELETONS_CFLAGS="-DEMIT_ASN_DEBUG"
   ])
 
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"])
@@ -79,7 +80,7 @@ AC_SUBST(TESTSUITE_CFLAGS)
 
 dnl Skeletons should be very compatible with most of the compilers, hence
 dnl very strict backward compatibility flags.
-SKELETONS_CFLAGS="${ADD_CFLAGS}"
+SKELETONS_CFLAGS="${ADD_CFLAGS} ${SKELETONS_CFLAGS}"
 AX_CHECK_COMPILE_FLAG([-std=c89],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -std=c89"])
 AX_CHECK_COMPILE_FLAG([-Wpedantic],
