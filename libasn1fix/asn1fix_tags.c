@@ -166,7 +166,7 @@ asn1f_fetch_tags(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct a
 	arg.expr = expr;
 
 	count = asn1f_fetch_tags_impl(&arg, &tags, 0, 0, flags);
-	if(count <= 0 && tags) {
+	if (count <= 0) {
 		free(tags);
 		tags = 0;
 	}
