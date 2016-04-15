@@ -103,6 +103,7 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 		case WC_FIELD: {
 			struct asn1p_ioc_cell_s *cell;
 			int lbraces = 0;
+			int lquotes = 0;
 			uint8_t *p;
 
 			SKIPSPACES;
@@ -110,6 +111,8 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 			p = buf;
 			if(p < bend && *p == '{')
 				lbraces = 1, p++;
+			if(p < bend && *p == '"')
+				lquotes = 1, p++;
 			for(; p < bend; p++) {
 				if(lbraces) {
 					/* Search the terminating brace */
@@ -117,11 +120,14 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 					case '}': lbraces--; break;
 					case '{': lbraces++; break;
 					}
-				} else if(isspace(*p)) {
+				} else if (lquotes) {
+					if (*p == '"')
+						lquotes--;
+				} else if(isspace(*p) || *p == ',') {
 					break;
 				}
 			}
-			if(lbraces) {
+			if(lbraces || lquotes) {
 				FATAL("Field reference %s found in class value definition for %s at line %d can not be satisfied by broken value \"%s\"",
 				chunk->content.token,
 				arg->expr->Identifier, arg->expr->_lineno, buf);
@@ -185,7 +191,6 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 	p[bend - buf] = '\0';
 
 	if(!isalpha(*p)) {
-
 		if(isdigit(*p)) {
 			asn1c_integer_t value;
 			if(asn1p_atoi(p, &value)) {
@@ -197,6 +202,12 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 			expr->meta_type = AMT_VALUE; 
 			expr->expr_type = ASN_BASIC_INTEGER;
 			expr->value = asn1p_value_fromint(value);
+		} else if (*p == '"') {
+			expr = asn1p_expr_new(arg->expr->_lineno, arg->expr->module);
+			expr->Identifier = p;
+			expr->meta_type = AMT_VALUE;
+			expr->expr_type = ASN_BASIC_CHARACTER_STRING;
+			expr->value = asn1p_value_frombuf(p + 1, strlen(p) - 2, 0);
 		} else {
 			WARNING("asn1c is not yet able to parse arbitrary direct values; try converting %s at line %d to a reference.", p, arg->expr->_lineno);
 			free(p);
