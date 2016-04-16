@@ -219,7 +219,21 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 		assert(ref);
 	
 		expr = asn1f_lookup_symbol(arg, arg->mod, arg->expr->rhs_pspecs, ref);
-		if(!expr) {
+		if(!expr && TQ_FIRST(&cell->field->members)) {
+			expr = asn1p_expr_new(arg->expr->_lineno, arg->expr->module);
+			expr->Identifier = p;
+			expr->meta_type = AMT_VALUE;
+			expr->expr_type = A1TC_REFERENCE;
+			expr->reference = TQ_FIRST(&cell->field->members)->reference;
+			expr->value = asn1p_value_fromref(ref, 0);
+			if (asn1f_value_resolve(arg, expr, 0)) {
+				expr->Identifier = NULL;
+				expr->reference = NULL;
+				asn1p_expr_free(expr);
+				expr = NULL;
+			}
+		}
+		if (!expr) {
 			FATAL("Cannot find %s referenced by %s at line %d",
 				p, arg->expr->Identifier,
 				arg->expr->_lineno);
