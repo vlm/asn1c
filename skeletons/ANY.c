@@ -6,7 +6,7 @@
 #include <ANY.h>
 #include <errno.h>
 
-static asn_OCTET_STRING_specifics_t asn_DEF_ANY_specs = {
+static asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs = {
 	sizeof(ANY_t),
 	offsetof(ANY_t, _asn_ctx),
 	ASN_OSUBV_ANY
@@ -26,7 +26,7 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	0, 0, 0, 0,
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	&asn_DEF_ANY_specs,
+	&asn_SPC_ANY_specs,
 };
 
 
