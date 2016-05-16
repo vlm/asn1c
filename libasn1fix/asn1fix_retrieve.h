@@ -68,4 +68,11 @@ asn1p_expr_t *asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *tc);
  */
 asn1p_expr_t *asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *tc);
 
+/*
+ * Recursively find the original type with constraint for the given
+ * expression.
+ */
+asn1p_expr_t *asn1f_find_ancestor_type_with_PER_constraint(arg_t *arg, asn1p_expr_t *tc);
+
+
 #endif	/* ASN1FIX_RETRIEVE_H */

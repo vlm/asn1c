@@ -81,7 +81,8 @@ static const ber_tlv_tag_t asn_DEF_class_tags_4[] = {
 static const uint8_t asn_MAP_class_mmap_4[(0 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	0
 };
-static asn_SET_specifics_t asn_SPC_class_specs_4 = {
+static 
+asn_SET_specifics_t asn_SPC_class_specs_4 = {
 	sizeof(struct Class),
 	offsetof(struct Class, _asn_ctx),
 	offsetof(struct Class, _presence_map),

@@ -37,6 +37,8 @@ typedef struct Test_structure_1 {
 /*** <<< FUNC-DECLS [Test-structure-1] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Test_structure_1;
+extern asn_SEQUENCE_specifics_t asn_SPC_Test_structure_1_specs_1;
+extern asn_TYPE_member_t asn_MBR_Test_structure_1_1[4];
 
 /*** <<< POST-INCLUDE [Test-structure-1] >>> ***/
 
@@ -132,7 +134,7 @@ asn_TYPE_descriptor_t asn_DEF_t_member2_4 = {
 	&asn_SPC_t_member2_specs_4	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Test_structure_1_1[] = {
+asn_TYPE_member_t asn_MBR_Test_structure_1_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Test_structure_1, t_member1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
@@ -179,7 +181,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Test_structure_1_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 2, -1, 0 }, /* t-member3 */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* t-member1 */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Test_structure_1_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_Test_structure_1_specs_1 = {
 	sizeof(struct Test_structure_1),
 	offsetof(struct Test_structure_1, _asn_ctx),
 	asn_MAP_Test_structure_1_tag2el_1,
@@ -257,6 +259,8 @@ typedef struct Choice_1 {
 /*** <<< FUNC-DECLS [Choice-1] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Choice_1;
+extern asn_CHOICE_specifics_t asn_SPC_Choice_1_specs_1;
+extern asn_TYPE_member_t asn_MBR_Choice_1_1[4];
 
 /*** <<< POST-INCLUDE [Choice-1] >>> ***/
 
@@ -309,7 +313,7 @@ asn_TYPE_descriptor_t asn_DEF_or_3 = {
 	&asn_SPC_or_specs_3	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
+asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 	{ ATF_POINTER, 0, offsetof(struct Choice_1, choice.And),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
@@ -353,7 +357,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Choice_1_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 }, /* not */
     { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 3, 0, 0 } /* other */
 };
-static asn_CHOICE_specifics_t asn_SPC_Choice_1_specs_1 = {
+asn_CHOICE_specifics_t asn_SPC_Choice_1_specs_1 = {
 	sizeof(struct Choice_1),
 	offsetof(struct Choice_1, _asn_ctx),
 	offsetof(struct Choice_1, present),
@@ -420,6 +424,8 @@ typedef struct Test_structure_2 {
 /*** <<< FUNC-DECLS [Test-structure-2] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Test_structure_2;
+extern asn_SET_specifics_t asn_SPC_Test_structure_2_specs_1;
+extern asn_TYPE_member_t asn_MBR_Test_structure_2_1[1];
 
 /*** <<< POST-INCLUDE [Test-structure-2] >>> ***/
 
@@ -427,7 +433,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Test_structure_2;
 
 /*** <<< STAT-DEFS [Test-structure-2] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Test_structure_2_1[] = {
+asn_TYPE_member_t asn_MBR_Test_structure_2_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Test_structure_2, m1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
@@ -447,7 +453,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Test_structure_2_tag2el_1[] = {
 static const uint8_t asn_MAP_Test_structure_2_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
 };
-static asn_SET_specifics_t asn_SPC_Test_structure_2_specs_1 = {
+asn_SET_specifics_t asn_SPC_Test_structure_2_specs_1 = {
 	sizeof(struct Test_structure_2),
 	offsetof(struct Test_structure_2, _asn_ctx),
 	offsetof(struct Test_structure_2, _presence_map),
@@ -517,6 +523,8 @@ typedef struct Test_structure_3 {
 /*** <<< FUNC-DECLS [Test-structure-3] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Test_structure_3;
+extern asn_SET_specifics_t asn_SPC_Test_structure_3_specs_1;
+extern asn_TYPE_member_t asn_MBR_Test_structure_3_1[1];
 
 /*** <<< POST-INCLUDE [Test-structure-3] >>> ***/
 
@@ -524,7 +532,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Test_structure_3;
 
 /*** <<< STAT-DEFS [Test-structure-3] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Test_structure_3_1[] = {
+asn_TYPE_member_t asn_MBR_Test_structure_3_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Test_structure_3, m1),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
@@ -544,7 +552,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Test_structure_3_tag2el_1[] = {
 static const uint8_t asn_MAP_Test_structure_3_mmap_1[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7)
 };
-static asn_SET_specifics_t asn_SPC_Test_structure_3_specs_1 = {
+asn_SET_specifics_t asn_SPC_Test_structure_3_specs_1 = {
 	sizeof(struct Test_structure_3),
 	offsetof(struct Test_structure_3, _asn_ctx),
 	offsetof(struct Test_structure_3, _presence_map),
