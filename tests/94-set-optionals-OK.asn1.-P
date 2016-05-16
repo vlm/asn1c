@@ -176,7 +176,8 @@ static const uint8_t asn_MAP_TestSet_mmap_1[(10 + (8 * sizeof(unsigned int)) - 1
 	(1 << 7) | (0 << 6) | (1 << 5) | (1 << 4) | (0 << 3) | (1 << 2) | (1 << 1) | (1 << 0),
 	(0 << 7) | (1 << 6)
 };
-static asn_SET_specifics_t asn_SPC_TestSet_specs_1 = {
+static 
+asn_SET_specifics_t asn_SPC_TestSet_specs_1 = {
 	sizeof(struct TestSet),
 	offsetof(struct TestSet, _asn_ctx),
 	offsetof(struct TestSet, _presence_map),

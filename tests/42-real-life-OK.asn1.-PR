@@ -213,6 +213,8 @@ typedef struct VariablePartSet {
 /*** <<< FUNC-DECLS [VariablePartSet] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_VariablePartSet;
+extern asn_SEQUENCE_specifics_t asn_SPC_VariablePartSet_specs_1;
+extern asn_TYPE_member_t asn_MBR_VariablePartSet_1[2];
 
 /*** <<< POST-INCLUDE [VariablePartSet] >>> ***/
 
@@ -289,7 +291,7 @@ asn_TYPE_descriptor_t asn_DEF_vparts_2 = {
 	&asn_SPC_vparts_specs_2	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
+asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, vparts),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
@@ -318,7 +320,7 @@ static const asn_TYPE_tag2member_t asn_MAP_VariablePartSet_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* vparts */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 } /* resolution */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_VariablePartSet_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_VariablePartSet_specs_1 = {
 	sizeof(struct VariablePartSet),
 	offsetof(struct VariablePartSet, _asn_ctx),
 	asn_MAP_VariablePartSet_tag2el_1,
@@ -407,6 +409,8 @@ typedef struct VariablePart {
 /*** <<< FUNC-DECLS [VariablePart] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_VariablePart;
+extern asn_CHOICE_specifics_t asn_SPC_VariablePart_specs_1;
+extern asn_TYPE_member_t asn_MBR_VariablePart_1[2];
 
 /*** <<< CODE [VariablePart] >>> ***/
 
@@ -551,7 +555,7 @@ asn_TYPE_descriptor_t asn_DEF_vrange_4 = {
 	&asn_SPC_vrange_specs_4	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
+asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vset),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
@@ -577,7 +581,7 @@ static const asn_TYPE_tag2member_t asn_MAP_VariablePart_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 }, /* vrange */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 0, 0, 0 } /* vset */
 };
-static asn_CHOICE_specifics_t asn_SPC_VariablePart_specs_1 = {
+asn_CHOICE_specifics_t asn_SPC_VariablePart_specs_1 = {
 	sizeof(struct VariablePart),
 	offsetof(struct VariablePart, _asn_ctx),
 	offsetof(struct VariablePart, present),
@@ -665,87 +669,15 @@ typedef struct ActionItem {
 
 /* extern asn_TYPE_descriptor_t asn_DEF_accept_as_2;	// (Use -fall-defs-global to expose) */
 extern asn_TYPE_descriptor_t asn_DEF_ActionItem;
+extern asn_SEQUENCE_specifics_t asn_SPC_ActionItem_specs_1;
+extern asn_TYPE_member_t asn_MBR_ActionItem_1[2];
 
 /*** <<< CODE [ActionItem] >>> ***/
-
-static int
-accept_as_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
 
 /*
  * This type is implemented using NativeEnumerated,
  * so here we adjust the DEF accordingly.
  */
-static void
-accept_as_2_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeEnumerated.free_struct;
-	td->print_struct   = asn_DEF_NativeEnumerated.print_struct;
-	td->check_constraints = asn_DEF_NativeEnumerated.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeEnumerated.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
-	td->oer_decoder    = asn_DEF_NativeEnumerated.oer_decoder;
-	td->oer_encoder    = asn_DEF_NativeEnumerated.oer_encoder;
-	if(!td->oer_constraints)
-		td->oer_constraints = asn_DEF_NativeEnumerated.oer_constraints;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
-	td->elements       = asn_DEF_NativeEnumerated.elements;
-	td->elements_count = asn_DEF_NativeEnumerated.elements_count;
-     /* td->specifics      = asn_DEF_NativeEnumerated.specifics;	// Defined explicitly */
-}
-
-static void
-accept_as_2_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	accept_as_2_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-static int
-accept_as_2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	accept_as_2_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-static asn_dec_rval_t
-accept_as_2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	accept_as_2_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-static asn_enc_rval_t
-accept_as_2_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	accept_as_2_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-static asn_dec_rval_t
-accept_as_2_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	accept_as_2_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-static asn_enc_rval_t
-accept_as_2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	accept_as_2_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
 
 /*** <<< STAT-DEFS [ActionItem] >>> ***/
 
@@ -761,7 +693,7 @@ static const unsigned int asn_MAP_accept_as_enum2value_2[] = {
 	2	/* unsafe(2) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
+static const asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
 	asn_MAP_accept_as_value2enum_2,	/* "tag" => N; sorted by tag */
 	asn_MAP_accept_as_enum2value_2,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
@@ -777,13 +709,13 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_accept_as_2 = {
 	"accept-as",
 	"accept-as",
-	accept_as_2_free,
-	accept_as_2_print,
-	accept_as_2_constraint,
-	accept_as_2_decode_ber,
-	accept_as_2_encode_der,
-	accept_as_2_decode_xer,
-	accept_as_2_encode_xer,
+	NativeEnumerated_free,
+	NativeEnumerated_print,
+	NativeEnumerated_constraint,
+	NativeEnumerated_decode_ber,
+	NativeEnumerated_encode_der,
+	NativeEnumerated_decode_xer,
+	NativeEnumerated_encode_xer,
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
@@ -911,7 +843,7 @@ asn_TYPE_descriptor_t asn_DEF_notify_7 = {
 	&asn_SPC_notify_specs_7	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
+asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct ActionItem, accept_as),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
@@ -940,7 +872,7 @@ static const asn_TYPE_tag2member_t asn_MAP_ActionItem_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 }, /* accept-as */
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, 0, 0 } /* notify */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_ActionItem_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_ActionItem_specs_1 = {
 	sizeof(struct ActionItem),
 	offsetof(struct ActionItem, _asn_ctx),
 	asn_MAP_ActionItem_tag2el_1,

@@ -206,7 +206,8 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 			OUT("\t/* This list is extensible */\n");
 		OUT("};\n");
 
-		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
+		if(!(expr->_type_referenced)) OUT("static ");
+		OUT("const asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr), expr->_type_unique_index);
 		INDENT(+1);
 		OUT("asn_MAP_%s_value2enum_%d,\t"
@@ -238,7 +239,8 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	if(expr->expr_type == ASN_BASIC_INTEGER
 	&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN) {
 		REDIR(OT_STAT_DEFS);
-		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
+		if(!(expr->_type_referenced)) OUT("static ");
+		OUT("const asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr), expr->_type_unique_index);
 		INDENT(+1);
 		OUT("0,\t");
@@ -379,7 +381,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 
 	GEN_INCLUDE_STD("constr_SEQUENCE");
 	if(!arg->embed)
-		GEN_DECLARE(expr);	/* asn_DEF_xxx */
+		GEN_DECLARE("SEQUENCE", expr);	/* asn_DEF_xxx */
 
 	REDIR(OT_STAT_DEFS);
 
@@ -389,7 +391,8 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	if(expr_elements_count(arg, expr)) {
 		int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 
-		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
+		if(!(expr->_type_referenced)) OUT("static ");
+		OUT("asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
 
 		elements = 0;
@@ -471,7 +474,8 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
-	OUT("static asn_SEQUENCE_specifics_t asn_SPC_%s_specs_%d = {\n",
+	if(!(expr->_type_referenced)) OUT("static ");
+	OUT("asn_SEQUENCE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENT(+1);
 	OUT("sizeof(struct ");
@@ -638,7 +642,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 
 	GEN_INCLUDE_STD("constr_SET");
 	if(!arg->embed)
-		GEN_DECLARE(expr);	/* asn_DEF_xxx */
+		GEN_DECLARE("SET", expr);	/* asn_DEF_xxx */
 
 	REDIR(OT_STAT_DEFS);
 
@@ -648,7 +652,8 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	if(expr_elements_count(arg, expr)) {
 		int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 
-		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
+		if(!(expr->_type_referenced)) OUT("static ");
+		OUT("asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
 
 		elements = 0;
@@ -708,7 +713,8 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	OUT("\n");
 	OUT("};\n");
 
-	OUT("static asn_SET_specifics_t asn_SPC_%s_specs_%d = {\n",
+	if(!(expr->_type_referenced)) OUT("static \n");
+	OUT("asn_SET_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
 		OUT("sizeof(struct ");
@@ -863,14 +869,15 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 		GEN_INCLUDE_STD("constr_SET_OF");
 	}
 	if(!arg->embed)
-		GEN_DECLARE(expr);	/* asn_DEF_xxx */
+		GEN_DECLARE("SET_OF", expr);	/* asn_DEF_xxx */
 
 	REDIR(OT_STAT_DEFS);
 
 	/*
 	 * Print out the table according to which parsing is performed.
 	 */
-	OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
+	if(!(expr->_type_referenced)) OUT("static ");
+	OUT("asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENT(+1);
 		v = TQ_FIRST(&(expr->members));
@@ -892,7 +899,8 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	 */
 	tv_mode = emit_tags_vectors(arg, expr, &tags_count, &all_tags_count);
 
-	OUT("static asn_SET_OF_specifics_t asn_SPC_%s_specs_%d = {\n",
+	if(!(expr->_type_referenced)) OUT("static ");
+	OUT("asn_SET_OF_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
 		OUT("sizeof(struct ");
@@ -1031,7 +1039,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 
 	GEN_INCLUDE_STD("constr_CHOICE");
 	if(!arg->embed)
-		GEN_DECLARE(expr);	/* asn_DEF_xxx */
+		GEN_DECLARE("CHOICE", expr);	/* asn_DEF_xxx */
 
 	REDIR(OT_STAT_DEFS);
 
@@ -1040,7 +1048,8 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 */
 	if(expr_elements_count(arg, expr)) {
 
-		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
+		if(!(expr->_type_referenced)) OUT("static ");
+		OUT("asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
 
 		elements = 0;
@@ -1088,7 +1097,8 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
-	OUT("static asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
+	if(!(expr->_type_referenced)) OUT("static ");
+	OUT("asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
 		OUT("sizeof(struct ");
@@ -1275,7 +1285,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	/*
 	 * Constraint checking.
 	 */
-	if(!(arg->flags & A1C_NO_CONSTRAINTS)) {
+	if(!(arg->flags & A1C_NO_CONSTRAINTS) && expr->combined_constraints) {
 		p = MKID(expr);
 		if(HIDE_INNER_DEFS) OUT("static ");
 		OUT("int\n");
@@ -1327,6 +1337,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		asn1c_type_name(arg, expr, TNF_SAFE));
 	OUT(" * so here we adjust the DEF accordingly.\n");
 	OUT(" */\n");
+
+#if 0 /* remove unnecessary functions */
 	OUT("static void\n");
 	OUT("%s_%d_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {\n",
 		MKID(expr), expr->_type_unique_index);
@@ -1535,7 +1547,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("}\n");
 	OUT("\n");
   }
-
+#endif
 	REDIR(OT_FUNC_DECLS);
 
 	p = MKID(expr);
@@ -1545,6 +1557,20 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			p, expr->_type_unique_index);
 	} else {
 		OUT("extern asn_TYPE_descriptor_t asn_DEF_%s;\n", p);
+		if (etd_spec == ETD_HAS_SPECIFICS) {
+			if((expr->expr_type == ASN_BASIC_ENUMERATED) ||
+				(expr->expr_type == ASN_BASIC_INTEGER)) {
+				if(expr->_type_referenced) {
+					OUT("extern asn_INTEGER_specifics_t "
+						"asn_SPC_%s_specs_%d;\n", p, expr->_type_unique_index);
+				}
+			} else {
+				asn1p_expr_t *terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+
+				OUT("extern asn_%s_specifics_t ", asn1c_type_name(arg, terminal, TNF_SAFE));
+				OUT("asn_SPC_%s_specs_%d;\n", MKID(expr), expr->_type_unique_index);
+			}
+		}
 		OUT("asn_struct_free_f %s_free;\n", p);
 		OUT("asn_struct_print_f %s_print;\n", p);
 		OUT("asn_constr_check_f %s_constraint;\n", p);
@@ -2246,9 +2272,18 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		return 0;
 	}
 
+	if(expr->_type_referenced) {
+		REDIR(OT_FUNC_DECLS);
+
+		OUT("extern asn_per_constraints_t "
+			"asn_PER_%s_%s_constr_%d;\n",
+			pfx, MKID(expr), expr->_type_unique_index);
+	}
+
 	REDIR(OT_CTDEFS);
 
-	OUT("static asn_per_constraints_t "
+	if(!(expr->_type_referenced)) OUT("static ");
+	OUT("asn_per_constraints_t "
 		"asn_PER_%s_%s_constr_%d GCC_NOTUSED = {\n",
 		pfx, MKID(expr), expr->_type_unique_index);
 
@@ -2723,6 +2758,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	asn1p_expr_t *terminal;
 	int using_type_name = 0;
 	char *p = MKID(expr);
+	char *p2 = (char *)0;
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 
@@ -2754,8 +2790,15 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			using_type_name = 1;
 			p = asn1c_type_name(arg, arg->expr, TNF_SAFE);
 		} else {
+			if (expr->expr_type == A1TC_REFERENCE) {
+				p2 = strdup(asn1c_type_name(arg, terminal, TNF_SAFE));
+			} else {
+				p2 = strdup(asn1c_type_name(arg, expr, TNF_SAFE));
+			}
 			p = MKID(expr);
 		}
+		if (!p2)
+			p2 = strdup(p);
 
 #define FUNCREF(foo)	do {				\
 	OUT("%s", p);					\
@@ -2764,29 +2807,38 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	OUT("_" #foo ",\n");				\
 } while(0)
 
-		FUNCREF(free);
-		FUNCREF(print);
-		FUNCREF(constraint);
-		FUNCREF(decode_ber);
-		FUNCREF(encode_der);
-		FUNCREF(decode_xer);
-		FUNCREF(encode_xer);
+#define FUNCREF2(foo)		\
+do {				\
+	OUT("%s", p2);		\
+	OUT("_" #foo ",\n");	\
+} while(0)
+
+		FUNCREF2(free);
+		FUNCREF2(print);
+		if (!expr->combined_constraints)
+			FUNCREF2(constraint);
+		else
+			FUNCREF(constraint);
+		FUNCREF2(decode_ber);
+		FUNCREF2(encode_der);
+		FUNCREF2(decode_xer);
+		FUNCREF2(encode_xer);
 
 		if(arg->flags & A1C_GEN_OER) {
-			FUNCREF(decode_oer);
-			FUNCREF(encode_oer);
+			FUNCREF2(decode_oer);
+			FUNCREF2(encode_oer);
 		} else {
 			OUT("0, 0,\t/* No OER support, "
 				"use \"-gen-OER\" to enable */\n");
 		}
-
 		if(arg->flags & A1C_GEN_PER) {
-			FUNCREF(decode_uper);
-			FUNCREF(encode_uper);
+			FUNCREF2(decode_uper);
+			FUNCREF2(encode_uper);
 		} else {
 			OUT("0, 0,\t/* No PER support, "
 				"use \"-gen-PER\" to enable */\n");
 		}
+		if (p2) free(p2);
 
 		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {
 		//if(expr->expr_type == ASN_CONSTR_CHOICE) {
@@ -2857,16 +2909,35 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			OUT("0,\t/* No PER visible constraints */\n");
 		}
 
-		if(elements_count) {
-			OUT("asn_MBR_%s_%d,\n", p, expr->_type_unique_index);
-			if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF
-			|| expr->expr_type == ASN_CONSTR_SET_OF) {
-				OUT("%d,\t/* Single element */\n",
-					elements_count);
-				assert(elements_count == 1);
+		if(elements_count ||
+			((expr->expr_type == A1TC_REFERENCE) &&
+				(terminal->expr_type & ASN_CONSTR_MASK) &&
+				expr_elements_count(arg, terminal))) {
+
+			if (expr->expr_type == A1TC_REFERENCE) {
+				OUT("asn_MBR_%s_%d,\n", MKID(terminal), terminal->_type_unique_index);
+
+				if(terminal->expr_type == ASN_CONSTR_SEQUENCE_OF
+				|| terminal->expr_type == ASN_CONSTR_SET_OF) {
+					OUT("%d,\t/* Single element */\n",
+						expr_elements_count(arg, terminal));
+					assert(expr_elements_count(arg, terminal) == 1);
+				} else {
+					OUT("%d,\t/* Elements count */\n",
+						expr_elements_count(arg, terminal));
+				}
 			} else {
-				OUT("%d,\t/* Elements count */\n",
-					elements_count);
+				OUT("asn_MBR_%s_%d,\n", p, expr->_type_unique_index);
+
+				if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF
+				|| expr->expr_type == ASN_CONSTR_SET_OF) {
+					OUT("%d,\t/* Single element */\n",
+						elements_count);
+					assert(elements_count == 1);
+				} else {
+					OUT("%d,\t/* Elements count */\n",
+						elements_count);
+				}
 			}
 		} else {
 			if(expr_elements_count(arg, expr))
@@ -2877,7 +2948,28 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 		switch(spec) {
 		case ETD_NO_SPECIFICS:
-			OUT("0\t/* No specifics */\n");
+			if ((expr->expr_type == A1TC_REFERENCE) &&
+				((terminal->expr_type & ASN_CONSTR_MASK) ||
+				(terminal->expr_type == ASN_BASIC_ENUMERATED) ||
+				((terminal->expr_type == ASN_BASIC_INTEGER) &&
+				(asn1c_type_fits_long(arg, terminal) == FL_FITS_UNSIGN)))) {
+				OUT("&asn_SPC_%s_specs_%d\t/* Additional specs */\n", MKID(terminal), terminal->_type_unique_index);
+			} else if ((expr->expr_type == ASN_TYPE_ANY) ||
+					(expr->expr_type == ASN_BASIC_BIT_STRING) ||
+					(expr->expr_type == ASN_STRING_BMPString) ||
+					(expr->expr_type == ASN_BASIC_OCTET_STRING) ||
+					(expr->expr_type == ASN_STRING_UniversalString)) {
+				OUT("&asn_SPC_%s_specs\t/* Additional specs */\n", asn1c_type_name(arg, expr, TNF_SAFE));
+			} else if ((expr->expr_type == A1TC_REFERENCE) &&
+					((terminal->expr_type == ASN_TYPE_ANY) ||
+					(terminal->expr_type == ASN_BASIC_BIT_STRING) ||
+					(terminal->expr_type == ASN_STRING_BMPString) ||
+					(terminal->expr_type == ASN_BASIC_OCTET_STRING) ||
+					(terminal->expr_type == ASN_STRING_UniversalString))) {
+				OUT("&asn_SPC_%s_specs\t/* Additional specs */\n", asn1c_type_name(arg, terminal, TNF_SAFE));
+			} else {
+				OUT("0\t/* No specifics */\n");
+			}
 			break;
 		case ETD_HAS_SPECIFICS:
 			OUT("&asn_SPC_%s_specs_%d\t/* Additional specs */\n",

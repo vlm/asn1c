@@ -86,7 +86,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
 static const uint8_t asn_MAP_T_mmap_1[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (1 << 6) | (0 << 5)
 };
-static asn_SET_specifics_t asn_SPC_T_specs_1 = {
+static 
+asn_SET_specifics_t asn_SPC_T_specs_1 = {
 	sizeof(struct T),
 	offsetof(struct T, _asn_ctx),
 	offsetof(struct T, _presence_map),

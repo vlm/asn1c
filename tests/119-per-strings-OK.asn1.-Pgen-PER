@@ -65,6 +65,8 @@ typedef struct PDU {
 /*** <<< FUNC-DECLS [PDU] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_PDU;
+extern asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1;
+extern asn_TYPE_member_t asn_MBR_PDU_1[31];
 
 /*** <<< POST-INCLUDE [PDU] >>> ***/
 
@@ -1230,7 +1232,7 @@ asn_TYPE_descriptor_t asn_DEF_many_2 = {
 	&asn_SPC_many_specs_2	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_PDU_1[] = {
+asn_TYPE_member_t asn_MBR_PDU_1[] = {
 	{ ATF_POINTER, 31, offsetof(struct PDU, many),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = 0,
@@ -1579,7 +1581,7 @@ static const asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (29 << 2)), 29, 0, 0 }, /* real */
     { (ASN_TAG_CLASS_CONTEXT | (30 << 2)), 30, 0, 0 } /* oid */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 	sizeof(struct PDU),
 	offsetof(struct PDU, _asn_ctx),
 	asn_MAP_PDU_tag2el_1,

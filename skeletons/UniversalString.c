@@ -13,7 +13,7 @@ static const ber_tlv_tag_t asn_DEF_UniversalString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (28 << 2)),	/* [UNIVERSAL 28] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-static asn_OCTET_STRING_specifics_t asn_SPC_UniversalString_specs = {
+asn_OCTET_STRING_specifics_t asn_SPC_UniversalString_specs = {
 	sizeof(UniversalString_t),
 	offsetof(UniversalString_t, _asn_ctx),
 	ASN_OSUBV_U32	/* 32-bits character */

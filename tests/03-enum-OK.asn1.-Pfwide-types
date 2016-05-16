@@ -32,84 +32,10 @@ xer_type_encoder_f Enum1_encode_xer;
 
 /*** <<< CODE [Enum1] >>> ***/
 
-int
-Enum1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using ENUMERATED,
  * so here we adjust the DEF accordingly.
  */
-static void
-Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
-	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
-	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
-	if(!td->oer_constraints)
-		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
-}
-
-void
-Enum1_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Enum1_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Enum1_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum1_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum1_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	Enum1_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Enum1_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum1_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum1_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	Enum1_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-Enum1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum1_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
 
 /*** <<< STAT-DEFS [Enum1] >>> ***/
 
@@ -127,7 +53,7 @@ static const unsigned int asn_MAP_Enum1_enum2value_1[] = {
 	0	/* red(0) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
 	asn_MAP_Enum1_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum1_enum2value_1,	/* N => "tag"; sorted by N */
 	4,	/* Number of elements in the maps */
@@ -142,13 +68,13 @@ static const ber_tlv_tag_t asn_DEF_Enum1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	"Enum1",
 	"Enum1",
-	Enum1_free,
-	Enum1_print,
-	Enum1_constraint,
-	Enum1_decode_ber,
-	Enum1_encode_der,
-	Enum1_decode_xer,
-	Enum1_encode_xer,
+	ENUMERATED_free,
+	ENUMERATED_print,
+	ENUMERATED_constraint,
+	ENUMERATED_decode_ber,
+	ENUMERATED_encode_der,
+	ENUMERATED_decode_xer,
+	ENUMERATED_encode_xer,
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
@@ -201,84 +127,10 @@ xer_type_encoder_f Enum2_encode_xer;
 
 /*** <<< CODE [Enum2] >>> ***/
 
-int
-Enum2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using ENUMERATED,
  * so here we adjust the DEF accordingly.
  */
-static void
-Enum2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
-	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
-	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
-	if(!td->oer_constraints)
-		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
-}
-
-void
-Enum2_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Enum2_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Enum2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum2_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	Enum2_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Enum2_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum2_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum2_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	Enum2_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-Enum2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum2_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
 
 /*** <<< STAT-DEFS [Enum2] >>> ***/
 
@@ -302,7 +154,7 @@ static const unsigned int asn_MAP_Enum2_enum2value_1[] = {
 	0	/* red(0) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
 	asn_MAP_Enum2_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum2_enum2value_1,	/* N => "tag"; sorted by N */
 	7,	/* Number of elements in the maps */
@@ -317,13 +169,13 @@ static const ber_tlv_tag_t asn_DEF_Enum2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum2 = {
 	"Enum2",
 	"Enum2",
-	Enum2_free,
-	Enum2_print,
-	Enum2_constraint,
-	Enum2_decode_ber,
-	Enum2_encode_der,
-	Enum2_decode_xer,
-	Enum2_encode_xer,
+	ENUMERATED_free,
+	ENUMERATED_print,
+	ENUMERATED_constraint,
+	ENUMERATED_decode_ber,
+	ENUMERATED_encode_der,
+	ENUMERATED_decode_xer,
+	ENUMERATED_encode_xer,
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
@@ -372,84 +224,10 @@ xer_type_encoder_f Enum3_encode_xer;
 
 /*** <<< CODE [Enum3] >>> ***/
 
-int
-Enum3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using ENUMERATED,
  * so here we adjust the DEF accordingly.
  */
-static void
-Enum3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
-	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
-	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
-	if(!td->oer_constraints)
-		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
-}
-
-void
-Enum3_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Enum3_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Enum3_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum3_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum3_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	Enum3_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Enum3_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum3_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum3_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	Enum3_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-Enum3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum3_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
 
 /*** <<< STAT-DEFS [Enum3] >>> ***/
 
@@ -465,7 +243,7 @@ static const unsigned int asn_MAP_Enum3_enum2value_1[] = {
 	1	/* c(1) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
 	asn_MAP_Enum3_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum3_enum2value_1,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
@@ -480,13 +258,13 @@ static const ber_tlv_tag_t asn_DEF_Enum3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum3 = {
 	"Enum3",
 	"Enum3",
-	Enum3_free,
-	Enum3_print,
-	Enum3_constraint,
-	Enum3_decode_ber,
-	Enum3_encode_der,
-	Enum3_decode_xer,
-	Enum3_encode_xer,
+	ENUMERATED_free,
+	ENUMERATED_print,
+	ENUMERATED_constraint,
+	ENUMERATED_decode_ber,
+	ENUMERATED_encode_der,
+	ENUMERATED_decode_xer,
+	ENUMERATED_encode_xer,
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
@@ -536,84 +314,10 @@ xer_type_encoder_f Enum4_encode_xer;
 
 /*** <<< CODE [Enum4] >>> ***/
 
-int
-Enum4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using ENUMERATED,
  * so here we adjust the DEF accordingly.
  */
-static void
-Enum4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
-	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
-	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
-	if(!td->oer_constraints)
-		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
-}
-
-void
-Enum4_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Enum4_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Enum4_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum4_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum4_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	Enum4_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Enum4_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum4_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum4_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	Enum4_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-Enum4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum4_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
 
 /*** <<< STAT-DEFS [Enum4] >>> ***/
 
@@ -631,7 +335,7 @@ static const unsigned int asn_MAP_Enum4_enum2value_1[] = {
 	3	/* d(4) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
 	asn_MAP_Enum4_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum4_enum2value_1,	/* N => "tag"; sorted by N */
 	4,	/* Number of elements in the maps */
@@ -646,13 +350,13 @@ static const ber_tlv_tag_t asn_DEF_Enum4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum4 = {
 	"Enum4",
 	"Enum4",
-	Enum4_free,
-	Enum4_print,
-	Enum4_constraint,
-	Enum4_decode_ber,
-	Enum4_encode_der,
-	Enum4_decode_xer,
-	Enum4_encode_xer,
+	ENUMERATED_free,
+	ENUMERATED_print,
+	ENUMERATED_constraint,
+	ENUMERATED_decode_ber,
+	ENUMERATED_encode_der,
+	ENUMERATED_decode_xer,
+	ENUMERATED_encode_xer,
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
@@ -701,84 +405,10 @@ xer_type_encoder_f Enum5_encode_xer;
 
 /*** <<< CODE [Enum5] >>> ***/
 
-int
-Enum5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using ENUMERATED,
  * so here we adjust the DEF accordingly.
  */
-static void
-Enum5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_ENUMERATED.free_struct;
-	td->print_struct   = asn_DEF_ENUMERATED.print_struct;
-	td->check_constraints = asn_DEF_ENUMERATED.check_constraints;
-	td->ber_decoder    = asn_DEF_ENUMERATED.ber_decoder;
-	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
-	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
-	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
-	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
-	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
-	if(!td->oer_constraints)
-		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
-	td->elements       = asn_DEF_ENUMERATED.elements;
-	td->elements_count = asn_DEF_ENUMERATED.elements_count;
-     /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
-}
-
-void
-Enum5_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	Enum5_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-Enum5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum5_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	Enum5_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-Enum5_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum5_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-Enum5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	Enum5_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-Enum5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	Enum5_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
 
 /*** <<< STAT-DEFS [Enum5] >>> ***/
 
@@ -794,7 +424,7 @@ static const unsigned int asn_MAP_Enum5_enum2value_1[] = {
 	1	/* z(25) */
 	/* This list is extensible */
 };
-static asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
 	asn_MAP_Enum5_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum5_enum2value_1,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
@@ -809,13 +439,13 @@ static const ber_tlv_tag_t asn_DEF_Enum5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum5 = {
 	"Enum5",
 	"Enum5",
-	Enum5_free,
-	Enum5_print,
-	Enum5_constraint,
-	Enum5_decode_ber,
-	Enum5_encode_der,
-	Enum5_decode_xer,
-	Enum5_encode_xer,
+	ENUMERATED_free,
+	ENUMERATED_print,
+	ENUMERATED_constraint,
+	ENUMERATED_decode_ber,
+	ENUMERATED_encode_der,
+	ENUMERATED_decode_xer,
+	ENUMERATED_encode_xer,
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */

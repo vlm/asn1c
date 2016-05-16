@@ -38,4 +38,10 @@ asn1p_expr_t *asn1f_find_terminal_type_ex(asn1p_t *asn, asn1p_expr_t *tc);
 int asn1f_fix_dereference_values_ex(asn1p_t *asn, asn1p_module_t *mod,
 	asn1p_expr_t *expr);
 
+/*
+ * Exportable version of asn1f_find_ancestor_type_with_PER_constraint().
+ */
+asn1p_expr_t *asn1f_find_ancestor_type_with_PER_constraint_ex(asn1p_t *asn,
+	asn1p_expr_t *expr);
+
 #endif	/* ASN1FIX_EXPORT_H */

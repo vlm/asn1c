@@ -29,6 +29,8 @@ xer_type_encoder_f BOOLEAN_encode_xer;
 per_type_decoder_f BOOLEAN_decode_uper;
 per_type_encoder_f BOOLEAN_encode_uper;
 
+#define BOOLEAN_constraint     asn_generic_no_constraint
+
 #ifdef __cplusplus
 }
 #endif

@@ -20,6 +20,8 @@ typedef struct Forest {
 /*** <<< FUNC-DECLS [Forest] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Forest;
+extern asn_SET_OF_specifics_t asn_SPC_Forest_specs_1;
+extern asn_TYPE_member_t asn_MBR_Forest_1[1];
 
 /*** <<< POST-INCLUDE [Forest] >>> ***/
 
@@ -27,7 +29,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Forest;
 
 /*** <<< STAT-DEFS [Forest] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Forest_1[] = {
+asn_TYPE_member_t asn_MBR_Forest_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
@@ -42,7 +44,7 @@ static asn_TYPE_member_t asn_MBR_Forest_1[] = {
 static const ber_tlv_tag_t asn_DEF_Forest_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_Forest_specs_1 = {
+asn_SET_OF_specifics_t asn_SPC_Forest_specs_1 = {
 	sizeof(struct Forest),
 	offsetof(struct Forest, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -92,10 +94,12 @@ typedef struct Tree {
 /*** <<< FUNC-DECLS [Tree] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Tree;
+extern asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1;
+extern asn_TYPE_member_t asn_MBR_Tree_1[2];
 
 /*** <<< STAT-DEFS [Tree] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Tree_1[] = {
+asn_TYPE_member_t asn_MBR_Tree_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Tree, height),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
@@ -124,7 +128,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Tree_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* height */
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* width */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
 	sizeof(struct Tree),
 	offsetof(struct Tree, _asn_ctx),
 	asn_MAP_Tree_tag2el_1,
@@ -512,7 +516,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Stuff_tag2el_cxer_1[] = {
 static const uint8_t asn_MAP_Stuff_mmap_1[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7) | (0 << 6) | (0 << 5)
 };
-static asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
+static 
+asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
 	sizeof(struct Stuff),
 	offsetof(struct Stuff, _asn_ctx),
 	offsetof(struct Stuff, _presence_map),

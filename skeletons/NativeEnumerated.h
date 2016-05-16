@@ -25,6 +25,13 @@ xer_type_encoder_f NativeEnumerated_encode_xer;
 per_type_decoder_f NativeEnumerated_decode_uper;
 per_type_encoder_f NativeEnumerated_encode_uper;
 
+#define NativeEnumerated_free       NativeInteger_free
+#define NativeEnumerated_print      NativeInteger_print
+#define NativeEnumerated_constraint asn_generic_no_constraint
+#define NativeEnumerated_decode_ber NativeInteger_decode_ber
+#define NativeEnumerated_encode_der NativeInteger_encode_der
+#define NativeEnumerated_decode_xer NativeInteger_decode_xer
+
 #ifdef __cplusplus
 }
 #endif

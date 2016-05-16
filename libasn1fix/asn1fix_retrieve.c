@@ -3,6 +3,7 @@
 enum ftt_what {
 	FTT_TYPE,	/* Find the type of the given expression */
 	FTT_VALUE,	/* Find the value of the given expression */
+	FTT_CONSTR_TYPE /* Find the type of the given expression having constraint */ 
 };
 
 static asn1p_expr_t *asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what);
@@ -382,6 +383,11 @@ asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *expr) {
 	return asn1f_find_terminal_thing(arg, expr, FTT_VALUE);
 }
 
+asn1p_expr_t *
+asn1f_find_ancestor_type_with_PER_constraint(arg_t *arg, asn1p_expr_t *expr) {
+	return asn1f_find_terminal_thing(arg, expr, FTT_CONSTR_TYPE);
+}
+
 static asn1p_expr_t *
 asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	asn1p_ref_t *ref = 0;
@@ -389,6 +395,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 
 	switch(what) {
 	case FTT_TYPE:
+	case FTT_CONSTR_TYPE:
 		/* Expression may be a terminal type itself */
 		if(expr->expr_type != A1TC_REFERENCE)
 			return expr;
@@ -455,6 +462,10 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	}
 
 	tc->_type_referenced = 1;
+
+	if((what == FTT_CONSTR_TYPE) && (tc->constraints))
+		return tc;
+
 	tc->_mark |= TM_RECURSION;
 	WITH_MODULE(tc->module,
 		expr = asn1f_find_terminal_thing(arg, tc, what));
@@ -462,6 +473,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 
 	return expr;
 }
+
 
 /*
  * Make sure that the specified name is present or otherwise does
