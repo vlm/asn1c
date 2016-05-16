@@ -17,10 +17,12 @@ typedef struct Sequence {
 /*** <<< FUNC-DECLS [Sequence] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Sequence;
+extern asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1;
+extern asn_TYPE_member_t asn_MBR_Sequence_1[2];
 
 /*** <<< STAT-DEFS [Sequence] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
+asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, ainl),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -47,7 +49,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ainl */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* aptr */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	sizeof(struct Sequence),
 	offsetof(struct Sequence, _asn_ctx),
 	asn_MAP_Sequence_tag2el_1,
@@ -155,7 +157,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Set_tag2el_1[] = {
 static const uint8_t asn_MAP_Set_mmap_1[(2 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (1 << 6)
 };
-static asn_SET_specifics_t asn_SPC_Set_specs_1 = {
+static 
+asn_SET_specifics_t asn_SPC_Set_specs_1 = {
 	sizeof(struct Set),
 	offsetof(struct Set, _asn_ctx),
 	offsetof(struct Set, _presence_map),

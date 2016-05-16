@@ -105,12 +105,22 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 } while(0)
 
 /* Generate ASN.1 type declaration */
-#define	GEN_DECLARE(expr)	do {				\
-	int saved_target = arg->target->target;			\
-	REDIR(OT_FUNC_DECLS);					\
-	OUT_NOINDENT("extern asn_TYPE_descriptor_t "		\
-			"asn_DEF_%s;\n", MKID(expr));		\
-	REDIR(saved_target);					\
+#define	GEN_DECLARE(type_name, expr)	do {				\
+	int saved_target = arg->target->target;				\
+	REDIR(OT_FUNC_DECLS);						\
+	OUT_NOINDENT("extern asn_TYPE_descriptor_t "			\
+			"asn_DEF_%s;\n", MKID(expr));			\
+	if (expr->_type_referenced) {					\
+		OUT_NOINDENT("extern asn_%s_specifics_t "		\
+				"asn_SPC_%s_specs_%d;\n", type_name,	\
+				MKID(expr), expr->_type_unique_index);	\
+		if(expr_elements_count(arg, expr))			\
+			OUT_NOINDENT("extern asn_TYPE_member_t "	\
+				"asn_MBR_%s_%d[%d];\n",			\
+				MKID(expr), expr->_type_unique_index, 	\
+				expr_elements_count(arg, expr));	\
+	} 								\
+	REDIR(saved_target);						\
 } while(0)
 
 /*

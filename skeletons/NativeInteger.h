@@ -30,6 +30,8 @@ xer_type_encoder_f NativeInteger_encode_xer;
 per_type_decoder_f NativeInteger_decode_uper;
 per_type_encoder_f NativeInteger_encode_uper;
 
+#define NativeInteger_constraint  asn_generic_no_constraint
+
 #ifdef __cplusplus
 }
 #endif

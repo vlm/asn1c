@@ -4825,7 +4825,7 @@ check-per:
 	done; done; fi
 	@if test -f sample-DL-DCCH-Message-1.per ; then \
 	for f in sample-*-[1-9].per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*//"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f into DER into XER and back ($$b)..."; \
 	./${TARGET} -b $$b -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \

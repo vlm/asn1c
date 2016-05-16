@@ -28,6 +28,8 @@ xer_type_encoder_f NativeReal_encode_xer;
 per_type_decoder_f NativeReal_decode_uper;
 per_type_encoder_f NativeReal_encode_uper;
 
+#define NativeReal_constraint  asn_generic_no_constraint
+
 #ifdef __cplusplus
 }
 #endif

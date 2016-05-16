@@ -20,6 +20,13 @@ asn_struct_print_f RELATIVE_OID_print;
 xer_type_decoder_f RELATIVE_OID_decode_xer;
 xer_type_encoder_f RELATIVE_OID_encode_xer;
 
+#define RELATIVE_OID_free         ASN__PRIMITIVE_TYPE_free
+#define RELATIVE_OID_constraint   asn_generic_no_constraint
+#define RELATIVE_OID_decode_ber   ber_decode_primitive
+#define RELATIVE_OID_encode_der   der_encode_primitive
+#define RELATIVE_OID_decode_uper  OCTET_STRING_decode_uper
+#define RELATIVE_OID_encode_uper  OCTET_STRING_encode_uper
+
 /**********************************
  * Some handy conversion routines *
  **********************************/
