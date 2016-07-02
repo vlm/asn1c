@@ -4,6 +4,8 @@
 *.lo
 *.libs
 *.deps
+*.log
+*.trs
 *.core
 .tmp.*
 
