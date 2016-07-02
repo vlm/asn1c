@@ -92,6 +92,7 @@ AC_SUBST(SKELETONS_CFLAGS)
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(sys/param.h)
+AC_CHECK_HEADERS(alloca.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
