@@ -24,7 +24,7 @@ cat<<EOM > $ORIG
 EOM
 
 ./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
-diff $diffArgs $ORIG $TEST >/dev/null 2>&1
+diff $diffArgs "$ORIG" "$TEST" >/dev/null 2>&1
 diffExitCode=$?
 
 if [ "$diffExitCode" = "0" ]; then
@@ -38,7 +38,7 @@ echo '</I O="34" T="[UNIVERSAL 0]" TL="2" L="36">' >> $ORIG
 # Try trancoding again
 ./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
 
-diff $diffArgs $ORIG $TEST
+diff $diffArgs "$ORIG" "$TEST"
 diffExitCode=$?
 
 rm -f $ORIG $TEST

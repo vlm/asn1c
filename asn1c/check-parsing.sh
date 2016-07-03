@@ -21,15 +21,15 @@ fi
 
 for ref in ${top_srcdir}/tests/*.asn1.-*; do
 	# Figure out the initial source file used to generate this output.
-	src=`echo "$ref" | sed -e 's/\.-[-a-zA-Z0-9=]*$//'`
+	src=$(echo "$ref" | sed -e 's/\.-[-a-zA-Z0-9=]*$//')
 	# Figure out compiler flags used to create the file.
-	flags=`echo "$ref" | sed -e 's/.*\.-//'`
+	flags=$(echo "$ref" | sed -e 's/.*\.-//')
 	echo "Checking $src against $ref"
 	template=.tmp.check-parsing.$$
 	oldversion=${template}.old
 	newversion=${template}.new
 	PROCESSING="$ref (from $src)"
-	cat "$ref" | LANG=C sed -e 's/^found in .*/found in .../' > $oldversion
+	LANG=C sed -e 's/^found in .*/found in .../' < "$ref" > "$oldversion"
 	(./asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" | LANG=C sed -e 's/^found in .*/found in .../' > "$newversion") || ec=$?
 	if [ $? = 0 ]; then
 		diff $diffArgs "$oldversion" "$newversion" || ec=$?
