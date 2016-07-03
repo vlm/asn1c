@@ -162,7 +162,7 @@ OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, sig
 	if(add) {
 		for(rvbuf -= inc; rvbuf != rvstart; rvbuf -= inc) {
 			int v = add + *rvbuf;
-			if(v & (-1 << CHAR_BIT)) {
+			if(v & ((unsigned)~0 << CHAR_BIT)) {
 				*rvbuf = (unsigned char)(v + (1 << CHAR_BIT));
 				add = -1;
 			} else {
