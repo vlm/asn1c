@@ -3,6 +3,7 @@
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
+#define _BSD_SOURCE /* for snprintf() on some linux systems  */
 #include <stdio.h>
 #include <asn_internal.h>
 #include <INTEGER.h>
