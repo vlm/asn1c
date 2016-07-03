@@ -3,10 +3,6 @@
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef _BSD_SOURCE
-#define _BSD_SOURCE /* for snprintf() on some linux systems  */
-#endif
-#include <stdio.h>
 #include <asn_internal.h>
 #include <INTEGER.h>
 #include <asn_codecs_prim.h>	/* Encoder and decoder of a primitive type */

@@ -13,6 +13,10 @@
 #include "config.h"
 #endif
 
+#ifndef _BSD_SOURCE
+#define _BSD_SOURCE /* for snprintf() on some linux systems  */
+#endif
+
 #include <stdio.h>	/* For snprintf(3) */
 #include <stdlib.h>	/* For *alloc(3) */
 #include <string.h>	/* For memcpy(3) */
