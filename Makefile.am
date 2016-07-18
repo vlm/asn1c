@@ -1,6 +1,8 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
+@CODE_COVERAGE_RULES@
+
 SUBDIRS = 				\
 	libasn1parser libasn1fix	\
 	libasn1print libasn1compiler	\
