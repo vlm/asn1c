@@ -2,9 +2,14 @@ language: c
 compiler:
   - gcc
   - clang
+before_install:
+  - sudo apt-get install -y lcov
+  - gem install coveralls-lcov
 script:
     - autoreconf -iv
-    - ./configure --enable-Werror
+    - ./configure --enable-Werror --enable-code-coverage
     - make -j8
     - make check
     - make distcheck
+after_success:
+  - test "x$CC" = "xgcc" && make code-coverage-capture && coveralls-lcov asn1c-*-coverage.info

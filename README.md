@@ -1,3 +1,6 @@
+
+[![Coverage Status](https://coveralls.io/repos/github/velichkov/asn1c/badge.svg?branch=master)](https://coveralls.io/github/velichkov/asn1c?branch=master)
+
 # About
 
 ASN.1 to C compiler takes the ASN.1 module files (example) and generates
