@@ -1,3 +1,4 @@
+@CODE_COVERAGE_RULES@
 
 SUBDIRS = check-src
 

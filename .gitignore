@@ -68,3 +68,6 @@ doc/docsrc/*.xdv
 # /skeletons/tests/
 /skeletons/tests/check-*
 
+#code coverage
+*.gcno
+*.gcda

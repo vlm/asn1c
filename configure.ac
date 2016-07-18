@@ -75,6 +75,20 @@ AC_ARG_ENABLE(test-Werror,
       TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
   ])
 
+AX_CODE_COVERAGE
+AS_IF([test x$enable_code_coverage != xno], [
+	CFLAGS="$CFLAGS $CODE_COVERAGE_CFLAGS"
+	# The CODE_COVERAGE_CPPFLAGS contains -DNDEBUG flag
+	# which removes assert(...) macros from code coverage and improves the
+	# branches score. But when it is defined it results in few
+	# unsed-but-set-variable warnings that are treated as errors in the travis-ci
+	# build because these variables are only used inside assert macros.
+	# error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
+	#CPPFLAGS="$CPPFLAGS $CODE_COVERAGE_CPPFLAGS"
+	CXXFLAGS="$CXXFLAGS $CODE_COVERAGE_CXXFLAGS"
+	LDFLAGS="$LDFLAGS $CODE_COVERAGE_LDFLAGS"
+])
+
 AC_SUBST(ADD_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 
