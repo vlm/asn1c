@@ -98,7 +98,14 @@ SKELETONS_CFLAGS="${ADD_CFLAGS} ${SKELETONS_CFLAGS}"
 AX_CHECK_COMPILE_FLAG([-std=c89],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -std=c89"])
 AX_CHECK_COMPILE_FLAG([-Wpedantic],
-    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wpedantic"])
+    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wpedantic"],
+    [
+        dnl When -Wpedantic is not supported try the -pedantic instead. (gcc-4.7)
+        dnl See https://gcc.gnu.org/gcc-4.8/changes.html
+        AX_CHECK_COMPILE_FLAG([-pedantic],
+            [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
+    ],
+    [-Werror]) #clang 3.0 prints warning when the flag is not supported
 AX_CHECK_COMPILE_FLAG([-Wno-duplicate-decl-specifier],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-duplicate-decl-specifier"])
 AC_SUBST(SKELETONS_CFLAGS)
