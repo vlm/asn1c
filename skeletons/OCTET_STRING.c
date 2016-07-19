@@ -14,12 +14,12 @@
 static const ber_tlv_tag_t asn_DEF_OCTET_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
-static const asn_OCTET_STRING_specifics_t asn_DEF_OCTET_STRING_specs = {
+static asn_OCTET_STRING_specifics_t asn_DEF_OCTET_STRING_specs = {
 	sizeof(OCTET_STRING_t),
 	offsetof(OCTET_STRING_t, _asn_ctx),
 	ASN_OSUBV_STR
 };
-static const asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
+static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
 	{ APC_CONSTRAINED, 8, 8, 0, 255 },
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0

@@ -41,7 +41,7 @@ static int asn_DEF_PrintableString_c2v(unsigned int code) {
 		return _PrintableString_code2value[code];
 	return -1;
 }
-static const asn_per_constraints_t asn_DEF_PrintableString_constraints = {
+static asn_per_constraints_t asn_DEF_PrintableString_constraints = {
 	{ APC_CONSTRAINED, 4, 4, 0x20, 0x39 },	/* Value */
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
 	asn_DEF_PrintableString_v2c,
