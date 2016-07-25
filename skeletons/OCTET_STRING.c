@@ -244,8 +244,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		ber_tlv_tag_t expected_tag;
 		ssize_t tl, ll, tlvl;
 				/* This one works even if (sel->left == -1) */
-		ssize_t Left = ((!sel||(size_t)sel->left >= size)
-					?(ssize_t)size:sel->left);
+		size_t Left = ((!sel||(size_t)sel->left >= size)
+					?size:(size_t)sel->left);
 
 
 		ASN_DEBUG("%p, s->l=%ld, s->wn=%ld, s->g=%ld\n", sel,
