@@ -483,15 +483,6 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		break;
 	}
 
-	if(sel) {
-		ASN_DEBUG("3sel p=%p, wn=%d, l=%ld, g=%ld, size=%ld",
-			sel->prev, sel->want_nulls,
-			(long)sel->left, (long)sel->got, (long)size);
-		if(sel->prev || sel->want_nulls > 1 || sel->left > 0) {
-			RETURN(RC_WMORE);
-		}
-	}
-
 	/*
 	 * BIT STRING-specific processing.
 	 */
