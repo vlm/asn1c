@@ -49,7 +49,7 @@ For a usage guide and more information please refer to:
  * the comprehensive usage documentation [doc/asn1c-usage.pdf](doc/asn1c-usage.pdf)
 
 In case of any difficulties with installing the compiler, consider using
-the Online ASN.1 Compiler at (http://lionet.info/asn1c).
+the Online ASN.1 Compiler at http://lionet.info/asn1c.
 
 -- 
 Lev Walkin
