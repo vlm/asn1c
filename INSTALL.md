@@ -1,5 +1,5 @@
 
-## QUICK START INSTALLATION
+## Compiling From Sources
 
 ### Configure
 
