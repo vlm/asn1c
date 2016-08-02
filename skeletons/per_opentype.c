@@ -53,6 +53,35 @@ uper_open_type_put(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints
 	return 0;
 }
 
+int
+aper_open_type_put(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	void *buf;
+	void *bptr;
+	ssize_t size;
+	size_t toGo;
+
+	ASN_DEBUG("Open type put %s ...", td->name);
+
+	size = aper_encode_to_new_buffer(td, constraints, sptr, &buf);
+	if(size <= 0) return -1;
+
+	for(bptr = buf, toGo = size; toGo;) {
+		ssize_t maySave = aper_put_length(po, -1, toGo);
+		if(maySave < 0) break;
+		if(per_put_many_bits(po, bptr, maySave * 8)) break;
+		bptr = (char *)bptr + maySave;
+		toGo -= maySave;
+	}
+
+	FREEMEM(buf);
+	if(toGo) return -1;
+
+	ASN_DEBUG("Open type put %s of length %d + overhead (1byte?)",
+			  td->name, size);
+
+	return 0;
+}
+
 static asn_dec_rval_t
 uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {

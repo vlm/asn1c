@@ -18,7 +18,7 @@ extern asn_TYPE_descriptor_t asn_DEF_INTEGER;
 
 /* Map with <tag> to integer value association */
 typedef struct asn_INTEGER_enum_map_s {
-	long		 nat_value;	/* associated native integer value */
+	int64_t		 nat_value;	/* associated native integer value */
 	size_t		 enum_len;	/* strlen("tag") */
 	const char	*enum_name;	/* "tag" */
 } asn_INTEGER_enum_map_t;
@@ -41,6 +41,8 @@ xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
 per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
+per_type_decoder_f INTEGER_decode_aper;
+per_type_encoder_f INTEGER_encode_aper;
 
 /***********************************
  * Some handy conversion routines. *
@@ -52,8 +54,12 @@ per_type_encoder_f INTEGER_encode_uper;
  * -1/ERANGE: Value encoded is out of range for long representation
  * -1/ENOMEM: Memory allocation failed (in asn_long2INTEGER()).
  */
+int asn_INTEGER2int64(const INTEGER_t *i, int64_t *l);
+int asn_INTEGER2uint64(const INTEGER_t *i, uint64_t *l);
 int asn_INTEGER2long(const INTEGER_t *i, long *l);
 int asn_INTEGER2ulong(const INTEGER_t *i, unsigned long *l);
+int asn_int642INTEGER(INTEGER_t *i, int64_t l);
+int asn_uint642INTEGER(INTEGER_t *i, uint64_t l);
 int asn_long2INTEGER(INTEGER_t *i, long l);
 int asn_ulong2INTEGER(INTEGER_t *i, unsigned long l);
 

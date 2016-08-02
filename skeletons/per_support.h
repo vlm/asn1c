@@ -24,8 +24,8 @@ typedef const struct asn_per_constraint_s {
 	} flags;
 	int  range_bits;		/* Full number of bits in the range */
 	int  effective_bits;		/* Effective bits */
-	long lower_bound;		/* "lb" value */
-	long upper_bound;		/* "ub" value */
+	int64_t lower_bound;		/* "lb" value */
+	int64_t upper_bound;		/* "ub" value */
 } asn_per_constraint_t;
 typedef const struct asn_per_constraints_s {
 	struct asn_per_constraint_s value;
@@ -39,9 +39,9 @@ typedef const struct asn_per_constraints_s {
  */
 typedef struct asn_per_data_s {
   const uint8_t *buffer;  /* Pointer to the octet stream */
-         size_t  nboff;   /* Bit offset to the meaningful bit */
-         size_t  nbits;   /* Number of bits in the stream */
-         size_t  moved;   /* Number of bits moved through this bit stream */
+		 size_t  nboff;   /* Bit offset to the meaningful bit */
+		 size_t  nbits;   /* Number of bits in the stream */
+		 size_t  moved;   /* Number of bits moved through this bit stream */
   int (*refill)(struct asn_per_data_s *);
   void *refill_key;
 } asn_per_data_t;
@@ -71,15 +71,22 @@ ssize_t uper_get_length(asn_per_data_t *pd,
 			int effective_bound_bits,
 			int *repeat);
 
+ssize_t aper_get_length(asn_per_data_t *pd,
+						int range,
+						int effective_bound_bits,
+						int *repeat);
+
 /*
  * Get the normally small length "n".
  */
 ssize_t uper_get_nslength(asn_per_data_t *pd);
+ssize_t aper_get_nslength(asn_per_data_t *pd);
 
 /*
  * Get the normally small non-negative whole number.
  */
 ssize_t uper_get_nsnnwn(asn_per_data_t *pd);
+ssize_t aper_get_nsnnwn(asn_per_data_t *pd, int range);
 
 /* X.691-2008/11, #11.5.6 */
 int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *v, int nbits);
@@ -110,6 +117,10 @@ int per_put_many_bits(asn_per_outp_t *po, const uint8_t *src, int put_nbits);
 int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits);
 int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits);
 
+/* Align the current bit position to octet bundary */
+int aper_put_align(asn_per_outp_t *po);
+int32_t aper_get_align(asn_per_data_t *pd);
+
 /*
  * Put the length "n" to the Unaligned PER stream.
  * This function returns the number of units which may be flushed
@@ -117,16 +128,22 @@ int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int
  */
 ssize_t uper_put_length(asn_per_outp_t *po, size_t whole_length);
 
+ssize_t aper_put_length(asn_per_outp_t *po, int range, size_t length);
+
 /*
  * Put the normally small length "n" to the Unaligned PER stream.
  * Returns 0 or -1.
  */
 int uper_put_nslength(asn_per_outp_t *po, size_t length);
 
+int aper_put_nslength(asn_per_outp_t *po, size_t length);
+
 /*
  * Put the normally small non-negative whole number.
  */
 int uper_put_nsnnwn(asn_per_outp_t *po, int n);
+
+int aper_put_nsnnwn(asn_per_outp_t *po, int range, int number);
 
 #ifdef __cplusplus
 }

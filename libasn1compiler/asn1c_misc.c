@@ -383,7 +383,7 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	if(left.type == ARE_VALUE
 		&& left.value >= 0
 	&& right.type == ARE_VALUE
-		&& right.value > 2147483647
+		&& right.value > 2147483647L
 		&& right.value <= (asn1c_integer_t)(4294967295UL))
 		return FL_FITS_UNSIGN;
 		

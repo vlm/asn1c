@@ -21,7 +21,10 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	ANY_encode_xer,
-	0, 0,
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,
+	OCTET_STRING_encode_aper,
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
 	0,	/* No PER visible constraints */
@@ -87,6 +90,37 @@ ANY_fromType(ANY_t *st, asn_TYPE_descriptor_t *td, void *sptr) {
 	return 0;
 }
 
+int
+ANY_fromType_aper(ANY_t *st, asn_TYPE_descriptor_t *td, void *sptr) {
+	uint8_t *buffer = NULL;
+	ssize_t erval;
+
+	if(!st || !td) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	if(!sptr) {
+		if(st->buf) FREEMEM(st->buf);
+		st->size = 0;
+		return 0;
+	}
+
+	erval = aper_encode_to_new_buffer(td, td->per_constraints, sptr, (void**)&buffer);
+
+	if(erval == -1) {
+		if(buffer) FREEMEM(buffer);
+		return -1;
+	}
+	assert((size_t)erval > 0);
+
+	if(st->buf) FREEMEM(st->buf);
+	st->buf = buffer;
+	st->size = erval;
+
+	return 0;
+}
+
 ANY_t *
 ANY_new_fromType(asn_TYPE_descriptor_t *td, void *sptr) {
 	ANY_t tmp;
@@ -100,6 +134,30 @@ ANY_new_fromType(asn_TYPE_descriptor_t *td, void *sptr) {
 	memset(&tmp, 0, sizeof(tmp));
 
 	if(ANY_fromType(&tmp, td, sptr)) return 0;
+
+	st = (ANY_t *)CALLOC(1, sizeof(ANY_t));
+	if(st) {
+		*st = tmp;
+		return st;
+	} else {
+		FREEMEM(tmp.buf);
+		return 0;
+	}
+}
+
+ANY_t *
+ANY_new_fromType_aper(asn_TYPE_descriptor_t *td, void *sptr) {
+	ANY_t tmp;
+	ANY_t *st;
+
+	if(!td || !sptr) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	memset(&tmp, 0, sizeof(tmp));
+
+	if(ANY_fromType_aper(&tmp, td, sptr)) return 0;
 
 	st = (ANY_t *)CALLOC(1, sizeof(ANY_t));
 	if(st) {
@@ -128,6 +186,33 @@ ANY_to_type(ANY_t *st, asn_TYPE_descriptor_t *td, void **struct_ptr) {
 	}
 
 	rval = ber_decode(0, td, (void **)&newst, st->buf, st->size);
+	if(rval.code == RC_OK) {
+		*struct_ptr = newst;
+		return 0;
+	} else {
+		/* Remove possibly partially decoded data. */
+		ASN_STRUCT_FREE(*td, newst);
+		return -1;
+	}
+}
+
+int
+ANY_to_type_aper(ANY_t *st, asn_TYPE_descriptor_t *td, void **struct_ptr) {
+	asn_dec_rval_t rval;
+	void *newst = 0;
+
+	if(!st || !td || !struct_ptr) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	if(st->buf == 0) {
+		/* Nothing to convert, make it empty. */
+		*struct_ptr = (void *)0;
+		return 0;
+	}
+
+	rval = aper_decode(0, td, (void **)&newst, st->buf, st->size, 0, 0);
 	if(rval.code == RC_OK) {
 		*struct_ptr = newst;
 		return 0;

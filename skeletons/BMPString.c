@@ -35,6 +35,8 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	BMPString_encode_xer,		/* Convert to UTF-8 */
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,	/* Aligned PER decoder */
+	OCTET_STRING_encode_aper,	/* Aligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)

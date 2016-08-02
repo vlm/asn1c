@@ -20,7 +20,7 @@ extern "C" {
 #endif
 
 /* Environment version might be used to avoid running with the old library */
-#define	ASN1C_ENVIRONMENT_VERSION	923	/* Compile-time version */
+#define	ASN1C_ENVIRONMENT_VERSION	924	/* Compile-time version */
 int get_asn1c_environment_version(void);	/* Run-time version */
 
 #define	CALLOC(nmemb, size)	calloc(nmemb, size)
@@ -47,13 +47,17 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 int asn_debug_indent;
 #define ASN_DEBUG_INDENT_ADD(i) do { asn_debug_indent += i; } while(0)
 #endif	/* ASN_THREAD_SAFE */
-#define	ASN_DEBUG(fmt, args...)	do {			\
+extern int asn_debug; /* Allow option on execution */
+#define	ASN_DEBUG(fmt, args...) \
+if (asn_debug) {    \
+    do {			\
 		int adi = asn_debug_indent;		\
 		while(adi--) fprintf(stderr, " ");	\
 		fprintf(stderr, fmt, ##args);		\
 		fprintf(stderr, " (%s:%d)\n",		\
 			__FILE__, __LINE__);		\
-	} while(0)
+	} while(0);  \
+}
 #else	/* !__GNUC__ */
 void ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
