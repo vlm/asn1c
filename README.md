@@ -16,8 +16,10 @@ ASN.1 compiler.
 
 # Build and Install
 
-If you haven't installed the asn1c yet, read the [INSTALL](INSTALL) file for a
-short installation guide.
+If you haven't installed the asn1c yet, read the [INSTALL.md](INSTALL.md) file
+for a short installation guide.
+
+[![Build Status](https://travis-ci.org/vlm/asn1c.svg?branch=master)](https://travis-ci.org/vlm/asn1c)
 
 # Documentation
 
@@ -34,7 +36,7 @@ An excellent book on ASN.1 is written by Olivier Dubuisson:
 
 (also check out [doc/asn1c-quick.pdf](doc/asn1c-quick.pdf))
 
-After installing the compiler (see [INSTALL](INSTALL)), you may use
+After installing the compiler (see [INSTALL.md](INSTALL.md)), you may use
 the asn1c command to compile the ASN.1 specification:
 
     asn1c <module.asn1>                         # Compile module
