@@ -43,7 +43,7 @@ Display the `asn1c` manual page:
 
 For a usage guide and more information please refer to:
 
- * the [README.md](README.md) file.
+ * the [README.md](README.md) file
  * the asn1c manual page `man asn1c`
  * the included quick start PDF [doc/asn1c-quick.pdf](doc/asn1c-quick.pdf)
  * the comprehensive usage documentation [doc/asn1c-usage.pdf](doc/asn1c-usage.pdf)
