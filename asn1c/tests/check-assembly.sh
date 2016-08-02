@@ -32,7 +32,7 @@ args=$(echo "$source_short" | sed -e 's/\.c[c]*$//')
 
 OFS=$IFS
 IFS="."
-set "$args"
+set $args
 shift
 IFS=$OFS
 AFLAGS="$*"
