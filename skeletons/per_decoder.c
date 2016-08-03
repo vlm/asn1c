@@ -143,7 +143,7 @@ aper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sp
 	} else {
 		/* If context is not given, be security-conscious anyway */
 		memset(&s_codec_ctx, 0, sizeof(s_codec_ctx));
-		s_codec_ctx.max_stack_size = _ASN_DEFAULT_STACK_MAX;
+		s_codec_ctx.max_stack_size = ASN__DEFAULT_STACK_MAX;
 		opt_codec_ctx = &s_codec_ctx;
 	}
 

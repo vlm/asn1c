@@ -1255,7 +1255,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	(void)constraints;
 
-	if(_ASN_STACK_OVERFLOW_CHECK(opt_codec_ctx))
+	if(ASN__STACK_OVERFLOW_CHECK(opt_codec_ctx))
 		ASN__DECODE_FAILED;
 
 	if(!st) {

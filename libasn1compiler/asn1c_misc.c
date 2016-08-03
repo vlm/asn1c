@@ -84,7 +84,7 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	 * Make sure we have this amount of storage.
 	 */
 	if(storage_size <= size) {
-		free(storage);
+		if(storage) free(storage);
 		storage = malloc(size + 1);
 		if(storage) {
 			storage_size = size;
@@ -286,10 +286,11 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 		return asn1c_make_identifier(
 			AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
 			0, ((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
-				? "\"" : "<"), stdname ? "" : prefix,
+				? "\"" : "<"),
 			exprid ? exprid->Identifier : typename,
 			((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
 				? ".h\"" : ".h>"), 0);
+	}
 	case TNF_SAFE:
 		return asn1c_make_identifier(stdname ? 0 : AMI_USE_PREFIX,
 				exprid, typename, 0);

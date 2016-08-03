@@ -47,17 +47,13 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 int asn_debug_indent;
 #define ASN_DEBUG_INDENT_ADD(i) do { asn_debug_indent += i; } while(0)
 #endif	/* ASN_THREAD_SAFE */
-extern int asn_debug; /* Allow option on execution */
-#define	ASN_DEBUG(fmt, args...) \
-if (asn_debug) {    \
-    do {			\
+#define	ASN_DEBUG(fmt, args...)	do {			\
 		int adi = asn_debug_indent;		\
 		while(adi--) fprintf(stderr, " ");	\
 		fprintf(stderr, fmt, ##args);		\
 		fprintf(stderr, " (%s:%d)\n",		\
 			__FILE__, __LINE__);		\
-	} while(0);  \
-}
+	} while(0)
 #else	/* !__GNUC__ */
 void ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f

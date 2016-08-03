@@ -313,7 +313,7 @@ NativeEnumerated_encode_aper(asn_TYPE_descriptor_t *td,
         if(ct && ct->range_bits >= 0) {
                 if(per_put_few_bits(po, value, ct->range_bits))
                         ASN__ENCODE_FAILED;
-                _ASN_ENCODED_OK(er);
+                ASN__ENCODED_OK(er);
         }
 
         if(!specs->extension)
@@ -328,5 +328,5 @@ NativeEnumerated_encode_aper(asn_TYPE_descriptor_t *td,
         if(uper_put_nsnnwn(po, value - (inext ? (specs->extension - 1) : 0)))
                 ASN__ENCODE_FAILED;
 
-        _ASN_ENCODED_OK(er);
+        ASN__ENCODED_OK(er);
 }
