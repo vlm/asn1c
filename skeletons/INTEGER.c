@@ -996,18 +996,34 @@ INTEGER_encode_aper(asn_TYPE_descriptor_t *td,
 		} else {
 			/* TODO: extend to >64 bits */
 			int64_t v64 = v;
-			int i;
+			int i, j;
+			int max_range_bytes = (ct->range_bits >> 3) +
+					(((ct->range_bits % 8) > 0) ? 1 : 0);
 
-			/* Putting length - 1 in the minimum number of bits ex: 5 = 3bits */
-			if (per_put_few_bits(po, st->size - 1, (ct->range_bits >> 3)-1))
+			for (i = 1; ; i++) {
+				int upper = 1 << i;
+				if (upper >= max_range_bytes)
+					break;
+			}
+
+			for (j = sizeof(int64_t) -1; j != 0; j--) {
+				uint8_t val;
+				val = v64 >> (j * 8);
+				if (val != 0)
+					break;
+			}
+
+			/* Putting length in the minimum number of bits ex: 5 = 3bits */
+			if (per_put_few_bits(po, j, i))
 				ASN__ENCODE_FAILED;
 
 			// Consume the bits to align on octet
 			if (aper_put_align(po) < 0)
 				ASN__ENCODE_FAILED;
 			/* Put the value */
-			for (i = 0; i < st->size; i++) {
-				if(per_put_few_bits(po, (v64 >> (8 * (st->size - i - 1))) & 0xff, 8)) ASN__ENCODE_FAILED;
+			for (i = 0; i <= j; i++) {
+				if(per_put_few_bits(po, (v64 >> (8 * (j - i))) & 0xff, 8))
+					ASN__ENCODE_FAILED;
 			}
 		}
 		ASN__ENCODED_OK(er);
