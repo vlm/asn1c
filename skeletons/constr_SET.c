@@ -578,11 +578,13 @@ SET_encode_uper(asn_TYPE_descriptor_t *td,
 				asn_per_constraints_t *constraints,
 				void *sptr,
 				asn_per_outp_t *po) {
+	ASN__ENCODE_FAILED;
 }
 
 asn_dec_rval_t
 SET_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					 asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	ASN__ENCODE_FAILED;
 }
 
 asn_enc_rval_t
@@ -592,9 +594,10 @@ SET_encode_aper(asn_TYPE_descriptor_t *td,
 				asn_per_outp_t *po) {
 	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
-	int edx, i;
+	int edx;
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
-	asn_TYPE_tag2member_t *t2m;
+	const asn_TYPE_tag2member_t *t2m;
+	asn_TYPE_tag2member_t *t2m_build;
 	int t2m_count;
 
 	(void)constraints;
@@ -610,17 +613,16 @@ SET_encode_aper(asn_TYPE_descriptor_t *td,
 	 * Use existing, or build our own tags map.
 	 */
 	if(t2m_build_own) {
-		t2m = (asn_TYPE_tag2member_t *)alloca(
+		t2m_build = (asn_TYPE_tag2member_t *)alloca(
 			td->elements_count * sizeof(t2m[0]));
-	if(!t2m) ASN__ENCODE_FAILED; /* There are such platforms */
+	if(!t2m_build) ASN__ENCODE_FAILED; /* There are such platforms */
 		t2m_count = 0;
 	} else {
+		t2m_build = NULL;
 		/*
 		 * There is no untagged CHOICE in this SET.
 		 * Employ existing table.
 		 */
-		t2m = specs->tag2el;
-		t2m_count = specs->tag2el_count;
 	}
 
 	/*
@@ -628,7 +630,6 @@ SET_encode_aper(asn_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
-		asn_enc_rval_t tmper;
 		void *memb_ptr;
 
 		/*
@@ -641,8 +642,8 @@ SET_encode_aper(asn_TYPE_descriptor_t *td,
 				/* Mandatory elements missing */
 					ASN__ENCODE_FAILED;
 				if(t2m_build_own) {
-					t2m[t2m_count].el_no = edx;
-					t2m[t2m_count].el_tag = 0;
+					t2m_build[t2m_count].el_no = edx;
+					t2m_build[t2m_count].el_tag = 0;
 					t2m_count++;
 				}
 				continue;
@@ -655,8 +656,8 @@ SET_encode_aper(asn_TYPE_descriptor_t *td,
 		 * Remember the outmost tag of this member.
 		 */
 		if(t2m_build_own) {
-			t2m[t2m_count].el_no = edx;
-			t2m[t2m_count].el_tag = asn_TYPE_outmost_tag(
+			t2m_build[t2m_count].el_no = edx;
+			t2m_build[t2m_count].el_tag = asn_TYPE_outmost_tag(
 				elm->type, memb_ptr, elm->tag_mode, elm->tag);
 			t2m_count++;
 		} else {
@@ -675,17 +676,21 @@ SET_encode_aper(asn_TYPE_descriptor_t *td,
 		 * Sort the underlying members according to their
 		 * canonical tags order. DER encoding mandates it.
 		 */
-		qsort(t2m, t2m_count, sizeof(specs->tag2el[0]), _t2e_cmp);
+		qsort(t2m_build, t2m_count, sizeof(specs->tag2el[0]), _t2e_cmp);
+		t2m = t2m_build;
 	} else {
 		/*
 		 * Tags are already sorted by the compiler.
 		 */
+		t2m = specs->tag2el;
+		t2m_count = specs->tag2el_count;
 	}
+	assert(t2m_count == td->elements_count);
 
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[t2m[edx].el_no];
-		asn_enc_rval_t tmper;
-		void *memb_ptr;		 /* Pointer to the member */
+//		asn_enc_rval_t tmper;
+//		void *memb_ptr;		 /* Pointer to the member */
 		void **memb_ptr2;	   /* Pointer to that pointer */
 		int present;
 
