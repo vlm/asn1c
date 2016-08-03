@@ -716,34 +716,41 @@ INTEGER_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ASN_DEBUG("Integer with range %d bits", ct->range_bits);
 		if(ct->range_bits >= 0) {
 			if (ct->range_bits > 16) {
-				int max_range_bytes = (ct->range_bits >> 3) + 1;
-				int length, i;
+				int max_range_bytes = (ct->range_bits >> 3) +
+					(((ct->range_bits % 8) > 0) ? 1 : 0);
+				int length = 0, i;
 				int64_t value = 0;
 
-				for (i = 0; i < max_range_bytes; i++) {
-					int upper = 1 << (i + 1);
-					if (upper > max_range_bytes)
+				for (i = 1; ; i++) {
+					int upper = 1 << i;
+					if (upper >= max_range_bytes)
 						break;
 				}
-				if ((length = per_get_few_bits(pd, i + 1)) < 0)
+				ASN_DEBUG("Can encode %d (%d bytes) in %d bits", ct->range_bits,
+						max_range_bytes, i);
+
+				if ((length = per_get_few_bits(pd, i)) < 0)
 					ASN__DECODE_FAILED;
+
+				/* X.691 #12.2.6 length determinant + lb (1) */
+				length += 1;
+				ASN_DEBUG("Got length %d", length);
 				if (aper_get_align(pd) != 0)
 					ASN__DECODE_FAILED;
-				ASN_DEBUG("Got length %d", length + 1);
-				for (i = 0; i < length + 1; i++) {
+				while (length--) {
 					int buf = per_get_few_bits(pd, 8);
 					if (buf < 0)
 						ASN__DECODE_FAILED;
-					value += (((int64_t)buf) << (8 * i));
+					value += (((int64_t)buf) << (8 * length));
 				}
 
+				value += ct->lower_bound;
 				if((specs && specs->field_unsigned)
 					? asn_uint642INTEGER(st, value)
 					: asn_int642INTEGER(st, value))
 					ASN__DECODE_FAILED;
 				ASN_DEBUG("Got value %lld + low %lld",
 						  value, ct->lower_bound);
-				value += ct->lower_bound;
 			} else {
 				long value = 0;
 				if (ct->range_bits < 8) {
@@ -761,13 +768,13 @@ INTEGER_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					value = per_get_few_bits(pd, 16);
 					if(value < 0) ASN__DECODE_STARVED;
 				}
+				value += ct->lower_bound;
 				if((specs && specs->field_unsigned)
 					? asn_ulong2INTEGER(st, value)
 					: asn_long2INTEGER(st, value))
 					ASN__DECODE_FAILED;
 					ASN_DEBUG("Got value %ld + low %lld",
 							  value, ct->lower_bound);
-				value += ct->lower_bound;
 			}
 			return rval;
 		} else {
