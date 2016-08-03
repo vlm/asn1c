@@ -306,7 +306,7 @@ uper_sot_suck(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	(void)constraints;
 	(void)sptr;
 
-	while(per_get_few_bits(pd, 24) >= 0);
+	while(per_get_few_bits(pd, 1) >= 0);
 
 	rv.code = RC_OK;
 	rv.consumed = pd->moved;
