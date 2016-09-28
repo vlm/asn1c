@@ -846,6 +846,31 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts,
     return er;
 }
 
+asn_dec_rval_t
+OCTET_STRING_decode_aper(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
+						 asn_per_constraints_t *cts, void **sptr,
+						 asn_per_data_t *pd)
+{
+	asn_dec_rval_t rv = { 0, 0 };
+	(void)ctx;
+	(void)td;
+	(void)cts;
+	(void)sptr;
+	(void)pd;
+	return rv;
+}
+
+asn_enc_rval_t
+OCTET_STRING_encode_aper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *cts,
+						 void *sptr, asn_per_outp_t *po) {
+	asn_enc_rval_t er = { 0, 0, 0 };
+	(void)td;
+	(void)cts;
+	(void)sptr;
+	(void)po;
+	return er;
+}
+
 size_t
 xer_whitespace_span(const void *chunk_buf, size_t chunk_size) {
     (void)chunk_buf;
