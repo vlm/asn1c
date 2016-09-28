@@ -25,6 +25,8 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	NULL_encode_xer,
 	NULL_decode_uper,	/* Unaligned PER decoder */
 	NULL_encode_uper,	/* Unaligned PER encoder */
+	NULL_decode_aper,	/* Aligned PER decoder */
+	NULL_encode_aper,	/* Aligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
@@ -138,6 +140,48 @@ NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 asn_enc_rval_t
 NULL_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+		void *sptr, asn_per_outp_t *po) {
+	asn_enc_rval_t er;
+
+	(void)td;
+	(void)constraints;
+	(void)sptr;
+	(void)po;
+
+	er.encoded = 0;
+	ASN__ENCODED_OK(er);
+}
+
+asn_dec_rval_t
+NULL_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+
+	(void)opt_codec_ctx;
+	(void)td;
+	(void)constraints;
+	(void)pd;
+
+	if(!*sptr) {
+		*sptr = MALLOC(sizeof(NULL_t));
+		if(*sptr) {
+			*(NULL_t *)*sptr = 0;
+		} else {
+			ASN__DECODE_FAILED;
+		}
+	}
+
+	/*
+	 * NULL type does not have content octets.
+	 */
+
+	rv.code = RC_OK;
+	rv.consumed = 0;
+	return rv;
+}
+
+asn_enc_rval_t
+NULL_encode_aper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
 		void *sptr, asn_per_outp_t *po) {
 	asn_enc_rval_t er;
 
