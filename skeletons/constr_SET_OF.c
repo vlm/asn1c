@@ -864,6 +864,18 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
+asn_enc_rval_t
+SET_OF_encode_uper(
+        struct asn_TYPE_descriptor_s *type_descriptor,
+        asn_per_constraints_t *constraints,
+        void *struct_ptr,
+        asn_per_outp_t *per_output) {
+ 
+        asn_enc_rval_t erval;
+        erval.encoded = -1;
+        ASN__ENCODED_OK(erval);
+}
+
 asn_dec_rval_t
 SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
@@ -950,6 +962,18 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	rv.code = RC_OK;
 	rv.consumed = 0;
 	return rv;
+}
+
+asn_enc_rval_t
+SET_OF_encode_aper(
+        struct asn_TYPE_descriptor_s *type_descriptor,
+        asn_per_constraints_t *constraints,
+        void *struct_ptr,
+        asn_per_outp_t *per_output) {
+ 
+        asn_enc_rval_t erval;
+        erval.encoded = -1;
+        ASN__ENCODED_OK(erval);
 }
 
 asn_dec_rval_t
