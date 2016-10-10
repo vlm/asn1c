@@ -31,6 +31,26 @@ per_get_undo(asn_per_data_t *pd, int nbits) {
 	}
 }
 
+/* Add and remove align bits */
+int aper_insert_align_bits(asn_per_outp_t *po) {
+	int bits = po->nboff % 8;
+	if (bits) {
+		ASN_DEBUG("Aligning %d bits", 8 - bits);
+		if (per_put_few_bits(po, 0, (8 - bits)))
+			return -1;
+	}
+	return 0;
+}
+
+int aper_get_align_bits(asn_per_data_t *pd) {
+	int bits = pd->nboff % 8;
+	if(bits) {
+		ASN_DEBUG("Aligning %d bits", 8 - bits);
+		return per_get_few_bits(pd, 8 - bits);
+	}
+	return 0;
+}
+
 /*
  * Extract a small number of bits (<= 31) from the specified PER data pointer.
  */
@@ -187,6 +207,42 @@ uper_get_length(asn_per_data_t *pd, int ebits, int *repeat) {
 	return (16384 * value);
 }
 
+ssize_t
+aper_get_length(asn_per_data_t *pd, int ebits, int *repeat) {
+	ssize_t value;
+
+	*repeat = 0;
+
+	if(aper_get_align_bits(pd) == -1) {
+		return -1;
+	}
+
+	if(ebits >= 0) {
+		return per_get_few_bits(pd, ebits);
+	}
+
+	value = per_get_few_bits(pd, 8);
+	if(value < 0) {
+		return -1;
+	}
+	if((value & 128) == 0) { /* #10.9.3.6 */
+		return (value & 0x7F);
+	}
+	if((value & 64) == 0) {	/* #10.9.3.7 */
+		value = ((value & 63) << 8) | per_get_few_bits(pd, 8);
+		if(value < 0) {
+			return -1;
+		}
+		return value;
+	}
+	value &= 63;	/* this is "m" from X.691, #10.9.3.8 */
+	if(value < 1 || value > 4) {
+		return -1;
+	}
+	*repeat = 1;
+	return (16384 * value);
+}
+
 /*
  * Get the normally small length "n".
  * This procedure used to decode length of extensions bit-maps
@@ -211,6 +267,29 @@ uper_get_nslength(asn_per_data_t *pd) {
 	}
 }
 
+ssize_t
+aper_get_nslength(asn_per_data_t *pd) {
+	ssize_t length;
+
+	ASN_DEBUG("Getting normally small length(APER)");
+
+	if(per_get_few_bits(pd, 1) == 0) {
+		length = per_get_few_bits(pd, 6) + 1;
+		if(length <= 0) {
+			return -1;
+		}
+		ASN_DEBUG("l=%d", (int)length);
+		return length;
+	} else {
+		int repeat;
+		length = aper_get_length(pd, -1, &repeat);
+		if(length >= 0 && !repeat) {
+			return length;
+		}
+		return -1; /* Error, or do not support >16K extensions */
+	}
+}
+
 /*
  * Get the normally small non-negative whole number.
  * X.691, #10.6
@@ -218,6 +297,30 @@ uper_get_nslength(asn_per_data_t *pd) {
 ssize_t
 uper_get_nsnnwn(asn_per_data_t *pd) {
 	ssize_t value;
+
+	value = per_get_few_bits(pd, 7);
+	if(value & 64) {	/* implicit (value < 0) */
+		value &= 63;
+		value <<= 2;
+		value |= per_get_few_bits(pd, 2);
+		if(value & 128)	/* implicit (value < 0) */
+			return -1;
+		if(value == 0)
+			return 0;
+		if(value >= 3)
+			return -1;
+		value = per_get_few_bits(pd, 8 * value);
+		return value;
+	}
+
+	return value;
+}
+
+ssize_t
+aper_get_nsnnwn(asn_per_data_t *pd) {
+	ssize_t value;
+
+	ASN_DEBUG("Get the normally small non-negative whole number APER");
 
 	value = per_get_few_bits(pd, 7);
 	if(value & 64) {	/* implicit (value < 0) */
@@ -263,6 +366,30 @@ uper_put_nsnnwn(asn_per_outp_t *po, int n) {
 	return per_put_few_bits(po, n, 8 * bytes);
 }
 
+int
+aper_put_nsnnwn(asn_per_outp_t *po, int n) {
+	int bytes;
+
+	ASN_DEBUG("aper_put_nsnnwn");
+
+	if(n <= 63) {
+		if(n < 0) return -1;
+		return per_put_few_bits(po, n, 7);
+	}
+	if(n < 256)
+		bytes = 1;
+	else if(n < 65536)
+		bytes = 2;
+	else if(n < 256 * 65536)
+		bytes = 3;
+	else
+		return -1;	/* This is not a "normally small" value */
+	if(per_put_few_bits(po, bytes, 8))
+		return -1;
+
+	return per_put_few_bits(po, n, 8 * bytes);
+}
+
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
 int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value, int nbits) {
@@ -289,6 +416,32 @@ int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_val
 	return 0;
 }
 
+int aper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value, int nbits) {
+	unsigned long lhalf;    /* Lower half of the number*/
+	long half;
+
+	ASN_DEBUG("aper_get_constrained_whole_number");
+
+	if(nbits <= 31) {
+		half = per_get_few_bits(pd, nbits);
+		if(half < 0) return -1;
+		*out_value = half;
+		return 0;
+	}
+
+	if((size_t)nbits > 8 * sizeof(*out_value))
+		return -1;  /* RANGE */
+
+	half = per_get_few_bits(pd, 31);
+	if(half < 0) return -1;
+
+	if(aper_get_constrained_whole_number(pd, &lhalf, nbits - 31))
+		return -1;
+
+	*out_value = ((unsigned long)half << (nbits - 31)) | lhalf;
+	return 0;
+}
+
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
 int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits) {
@@ -305,7 +458,34 @@ int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits) {
 	return uper_put_constrained_whole_number_u(po, v, nbits);
 }
 
+int aper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits) {
+	/*
+	 * Assume signed number can be safely coerced into
+	 * unsigned of the same range.
+	 * The following testing code will likely be optimized out
+	 * by compiler if it is true.
+	 */
+	unsigned long uvalue1 = ULONG_MAX;
+	         long svalue  = uvalue1;
+	unsigned long uvalue2 = svalue;
+	assert(uvalue1 == uvalue2);
+	ASN_DEBUG("aper_put_constrained_whole_number_s");
+	return aper_put_constrained_whole_number_u(po, v, nbits);
+}
+
 int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits) {
+	if(nbits <= 31) {
+		return per_put_few_bits(po, v, nbits);
+	} else {
+		/* Put higher portion first, followed by lower 31-bit */
+		if(uper_put_constrained_whole_number_u(po, v >> 31, nbits - 31))
+			return -1;
+		return per_put_few_bits(po, v, 31);
+	}
+}
+
+int aper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits) {
+	ASN_DEBUG("aper_put_constrained_whole_number_u");
 	if(nbits <= 31) {
 		return per_put_few_bits(po, v, nbits);
 	} else {
@@ -458,6 +638,28 @@ uper_put_length(asn_per_outp_t *po, size_t length) {
 			? -1 : (ssize_t)(length << 14);
 }
 
+ssize_t
+aper_put_length(asn_per_outp_t *po, size_t length) {
+	ASN_DEBUG("APER put length %zu", length);
+
+	if (aper_insert_align_bits(po) == -1)
+		return -1;
+
+	if(length <= 127)	/* #10.9.3.6 */
+		return per_put_few_bits(po, length, 8)
+			? -1 : (ssize_t)length;
+	else if(length < 16384)	/* #10.9.3.7 */
+		return per_put_few_bits(po, length|0x8000, 16)
+			? -1 : (ssize_t)length;
+
+	length >>= 14;
+	if(length > 4) length = 4;
+
+	return per_put_few_bits(po, 0xC0 | length, 8)
+			? -1 : (ssize_t)(length << 14);
+}
+
+
 
 /*
  * Put the normally small length "n" into the stream.
@@ -473,6 +675,26 @@ uper_put_nslength(asn_per_outp_t *po, size_t length) {
 		return per_put_few_bits(po, length-1, 7) ? -1 : 0;
 	} else {
 		if(uper_put_length(po, length) != (ssize_t)length) {
+			/* This might happen in case of >16K extensions */
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+int
+aper_put_nslength(asn_per_outp_t *po, size_t length) {
+
+	ASN_DEBUG("aper_put_nslength");
+	if(length <= 64) {
+		/* #10.9.3.4 */
+		if(length == 0) {
+			return -1;
+		}
+		return per_put_few_bits(po, length-1, 7) ? -1 : 0;
+	} else {
+		if(aper_put_length(po, length) != (ssize_t)length) {
 			/* This might happen in case of >16K extensions */
 			return -1;
 		}
