@@ -338,7 +338,7 @@ main(int ac, char *av[]) {
 			erv = aper_encode(pduType, structure, write_out, stdout);
 			if(erv.encoded < 0) {
 				fprintf(stderr,
-				"%s: Cannot convert %s into Unaligned PER\n",
+				"%s: Cannot convert %s into Aligned PER\n",
 					name, pduType->name);
 				exit(EX_UNAVAILABLE);
 			}
