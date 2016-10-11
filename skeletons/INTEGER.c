@@ -1006,7 +1006,7 @@ INTEGER_encode_aper(asn_TYPE_descriptor_t *td,
 			int i;
 			for (min_octet = 0; min_octet < 8; min_octet++) {
 				max_value = max_value << 8;
-				if (max_value > value)
+				if (max_value > v)
 					break;
 			}
 
@@ -1027,7 +1027,7 @@ INTEGER_encode_aper(asn_TYPE_descriptor_t *td,
 
 			/* Write number of octet */
 			for (i = 8*min_octet; i >= 0; i-=8) {
-				uint8_t octet_to_write = (value >> i) & 0xFF;
+				uint8_t octet_to_write = (v >> i) & 0xFF;
 				if (per_put_few_bits(po, octet_to_write, 8))
 					ASN__ENCODE_FAILED;
 			}
