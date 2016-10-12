@@ -26,10 +26,17 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	der_encode_primitive,
 	RELATIVE_OID_decode_xer,
 	RELATIVE_OID_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 	OCTET_STRING_decode_aper,	/* Aligned PER decoder */
 	OCTET_STRING_encode_aper,	/* Aligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_RELATIVE_OID_tags,
 	sizeof(asn_DEF_RELATIVE_OID_tags)

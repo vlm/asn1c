@@ -1240,10 +1240,12 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->der_encoder    = asn_DEF_%s.der_encoder;\n",    type_name);
 	OUT("td->xer_decoder    = asn_DEF_%s.xer_decoder;\n",    type_name);
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
-	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
-	OUT("td->uper_encoder   = asn_DEF_%s.uper_encoder;\n",   type_name);
-	OUT("td->aper_decoder   = asn_DEF_%s.aper_decoder;\n",   type_name);
-	OUT("td->aper_encoder   = asn_DEF_%s.aper_encoder;\n",   type_name);
+	if(arg->flags & A1C_GEN_PER) {
+	  OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
+	  OUT("td->uper_encoder   = asn_DEF_%s.uper_encoder;\n",   type_name);
+	  OUT("td->aper_decoder   = asn_DEF_%s.aper_decoder;\n",   type_name);
+	  OUT("td->aper_encoder   = asn_DEF_%s.aper_encoder;\n",   type_name);
+	}
 	if(!terminal && !tags_count) {
 	  OUT("/* The next four lines are here because of -fknown-extern-type */\n");
 	  OUT("td->tags           = asn_DEF_%s.tags;\n",         type_name);
@@ -1252,9 +1254,11 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	  OUT("td->all_tags_count = asn_DEF_%s.all_tags_count;\n",type_name);
 	  OUT("/* End of these lines */\n");
 	}
-	OUT("if(!td->per_constraints)\n");
+	if(arg->flags & A1C_GEN_PER) {
+	  OUT("if(!td->per_constraints)\n");
 		OUT("\ttd->per_constraints = asn_DEF_%s.per_constraints;\n",
 			type_name);
+	}
 	OUT("td->elements       = asn_DEF_%s.elements;\n",       type_name);
 	OUT("td->elements_count = asn_DEF_%s.elements_count;\n", type_name);
 	if(etd_spec != ETD_NO_SPECIFICS) {
@@ -2516,6 +2520,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		} else {
 			OUT("0, 0,\t/* No PER support, "
 				"use \"-gen-PER\" to enable */\n");
+			OUT("0, 0,\t/* No APER */\n");
 		}
 
 		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {

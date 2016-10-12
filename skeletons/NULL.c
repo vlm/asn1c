@@ -23,10 +23,17 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	NULL_encode_der,	/* Special handling of DER encoding */
 	NULL_decode_xer,
 	NULL_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	NULL_decode_uper,	/* Unaligned PER decoder */
 	NULL_encode_uper,	/* Unaligned PER encoder */
 	NULL_decode_aper,	/* Aligned PER decoder */
 	NULL_encode_aper,	/* Aligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
@@ -109,6 +116,8 @@ NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 	}
 }
+
+#ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
 NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
@@ -193,3 +202,4 @@ NULL_encode_aper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
 	er.encoded = 0;
 	ASN__ENCODED_OK(er);
 }
+#endif /* ASN_DISABLE_PER_SUPPORT */

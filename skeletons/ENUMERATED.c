@@ -24,10 +24,17 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	INTEGER_encode_der,		/* Implemented in terms of INTEGER */
 	INTEGER_decode_xer,	/* This is temporary! */
 	INTEGER_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	ENUMERATED_decode_uper,	/* Unaligned PER decoder */
 	ENUMERATED_encode_uper,	/* Unaligned PER encoder */
 	ENUMERATED_decode_aper,	/* Aligned PER decoder */
 	ENUMERATED_encode_aper,	/* Aligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_ENUMERATED_tags,
 	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
@@ -38,6 +45,7 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	0	/* No specifics */
 };
 
+#ifndef ASN_DISABLE_PER_SUPPORT
 asn_dec_rval_t
 ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
@@ -105,3 +113,4 @@ ENUMERATED_encode_aper(asn_TYPE_descriptor_t *td,
 	return NativeEnumerated_encode_aper(td, constraints, &value, po);
 }
 
+#endif /* ASN_DISABLE_PER_SUPPORT */

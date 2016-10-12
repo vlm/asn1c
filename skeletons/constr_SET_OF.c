@@ -864,6 +864,7 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
 asn_enc_rval_t
 SET_OF_encode_uper(
         struct asn_TYPE_descriptor_s *type_descriptor,
@@ -1082,3 +1083,4 @@ SET_OF_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	return rv;
 }
 
+#endif /* ASN_DISABLE_PER_SUPPORT */

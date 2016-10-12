@@ -49,10 +49,17 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	der_encode_primitive,
 	REAL_decode_xer,
 	REAL_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	REAL_decode_uper,
 	REAL_encode_uper,
 	REAL_decode_aper,
 	REAL_encode_aper,
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_REAL_tags,
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
@@ -377,6 +384,7 @@ REAL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		buf_ptr, size, REAL__xer_body_decode);
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
 asn_dec_rval_t
 REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
@@ -406,6 +414,7 @@ REAL_encode_aper(asn_TYPE_descriptor_t *td,
 	(void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_encode_aper(td, 0, sptr, po);
 }
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 int
 asn_REAL2double(const REAL_t *st, double *dbl_value) {

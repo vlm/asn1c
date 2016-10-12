@@ -30,10 +30,17 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	NativeReal_encode_der,
 	NativeReal_decode_xer,
 	NativeReal_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	NativeReal_decode_uper,
 	NativeReal_encode_uper,
 	NativeReal_decode_aper,
 	NativeReal_encode_aper,
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
@@ -190,6 +197,7 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
 /*
  * Decode REAL type using PER.
  */
@@ -333,6 +341,8 @@ NativeReal_encode_aper(asn_TYPE_descriptor_t *td,
 
 	return erval;
 }
+
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * Decode the chunk of XML text encoding REAL.

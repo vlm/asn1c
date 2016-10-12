@@ -140,6 +140,8 @@ cb_failed:
 	ASN__ENCODE_FAILED;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
+
 asn_enc_rval_t
 SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
@@ -271,3 +273,4 @@ SEQUENCE_OF_encode_aper(asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+#endif /* ASN_DISABLE_PER_SUPPORT */

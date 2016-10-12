@@ -1027,6 +1027,7 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
 asn_dec_rval_t
 SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
@@ -1767,3 +1768,5 @@ SEQUENCE_encode_aper(asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+
+#endif /* ASN_DISABLE_PER_SUPPORT */

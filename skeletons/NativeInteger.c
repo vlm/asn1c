@@ -29,10 +29,17 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
 	NativeInteger_encode_uper,	/* Unaligned PER encoder */
 	NativeInteger_decode_aper,	/* Aligned PER decoder */
 	NativeInteger_encode_aper,	/* Aligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
@@ -233,6 +240,7 @@ NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	ASN__ENCODED_OK(er);
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
 asn_dec_rval_t
 NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
@@ -358,6 +366,8 @@ NativeInteger_encode_aper(asn_TYPE_descriptor_t *td,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 	return er;
 }
+
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * INTEGER specific human-readable output.

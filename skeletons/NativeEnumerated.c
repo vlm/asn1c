@@ -28,10 +28,17 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,
 	NativeEnumerated_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 	NativeEnumerated_decode_aper,
 	NativeEnumerated_encode_aper,
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
@@ -71,6 +78,8 @@ NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		ASN__ENCODE_FAILED;
 	}
 }
+
+#ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
 NativeEnumerated_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
@@ -360,3 +369,4 @@ NativeEnumerated_encode_aper(asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+#endif /* ASN_DISABLE_PER_SUPPORT */

@@ -825,6 +825,7 @@ cb_failed:
 	ASN__ENCODE_FAILED;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
 asn_dec_rval_t
 CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
@@ -1153,6 +1154,7 @@ CHOICE_encode_aper(asn_TYPE_descriptor_t *td,
 	}
 }
 
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 int
 CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
