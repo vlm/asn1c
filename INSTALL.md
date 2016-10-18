@@ -2,6 +2,9 @@
 ## Compiling From Sources
 
 ### Configure
+Requirements:
+
+    apt install autoconf libtool-bin
 
 Configure with the default settings:
 
