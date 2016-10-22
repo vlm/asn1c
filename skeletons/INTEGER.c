@@ -823,14 +823,20 @@ INTEGER_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				&uvalue, ct->range_bits))
 				ASN__DECODE_STARVED;
 		}
-		else if (ct->range_bits <= 16)
-		{
+		else if (ct->range_bits == 8) {
 			/* 11.5.7.2 One octet size */
-			/* 11.5.7.3 Two octet size */
 			if (aper_get_align_bits(pd) < 0)
 				ASN__DECODE_FAILED;
 			if (aper_get_constrained_whole_number(pd,
 				&uvalue, ct->range_bits))
+				ASN__DECODE_STARVED;
+		}
+		else if (ct->range_bits <= 16) {
+			/* 11.5.7.3 Two octet size */
+			if (aper_get_align_bits(pd) < 0)
+				ASN__DECODE_FAILED;
+			if (aper_get_constrained_whole_number(pd,
+				&uvalue, 16))
 				ASN__DECODE_STARVED;
 		}
 		else
@@ -984,16 +990,26 @@ INTEGER_encode_aper(asn_TYPE_descriptor_t *td,
 
 		/* #11.5.7.a -> #11.3 the bitfield case */
 		if(ct->range_bits < 8) {
-			if(aper_put_constrained_whole_number_u(po, v, ct->range_bits))
+			if(aper_put_constrained_whole_number_u(po,
+				v, ct->range_bits))
 				ASN__ENCODE_FAILED;
 			ASN__ENCODED_OK(er);
 		}
 		/* #11.5.7.2 -> #11.3 the one octet case */
+		else if (ct->range_bits == 8) {
+			if (aper_insert_align_bits(po) < 0)
+				ASN__ENCODE_FAILED;
+			if (aper_put_constrained_whole_number_u(po,
+				v, ct->range_bits))
+				ASN__ENCODE_FAILED;
+			ASN__ENCODED_OK(er);
+		}
 		/* #11.5.7.3 -> #11.3 the two octet case */
 		else if (ct->range_bits <= 16) {
 			if (aper_insert_align_bits(po) < 0)
 				ASN__ENCODE_FAILED;
-			if (aper_put_constrained_whole_number_u(po, v, ct->range_bits))
+			if (aper_put_constrained_whole_number_u(po,
+				v, 16))
 				ASN__ENCODE_FAILED;
 			ASN__ENCODED_OK(er);
 		}
@@ -1010,7 +1026,10 @@ INTEGER_encode_aper(asn_TYPE_descriptor_t *td,
 					break;
 			}
 
-			/* how many bits need to store the maximum minimum number of octet */
+			/*
+			 * how many bits need to store the maximum
+			 * minimum number of octet
+			 */
 			max_value = (ct->range_bits >> 3) +
 				(ct->range_bits % 8 > 0) - 1;
 			for (num_bits = 0; max_value; num_bits++) {
@@ -1018,7 +1037,8 @@ INTEGER_encode_aper(asn_TYPE_descriptor_t *td,
 			}
 
 			/* Write the length (number of minimum octets) */
-			if(aper_put_constrained_whole_number_u(po, min_octet, num_bits))
+			if(aper_put_constrained_whole_number_u(po,
+				min_octet, num_bits))
 				ASN__ENCODE_FAILED;
 
 			/* align */
