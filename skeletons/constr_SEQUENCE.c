@@ -1585,7 +1585,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		ASN_DEBUG("Decoding member %s in %s %p", elm->name, td->name, *memb_ptr2);
-		rv = uper_open_type_get(opt_codec_ctx, elm->type,
+		rv = aper_open_type_get(opt_codec_ctx, elm->type,
 			elm->per_constraints, memb_ptr2, pd);
 		if(rv.code != RC_OK) {
 			FREEMEM(epres);
@@ -1601,7 +1601,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			case -1: break;
 			case 0: continue;
 			default:
-				if(uper_open_type_skip(opt_codec_ctx, pd)) {
+				if(aper_open_type_skip(opt_codec_ctx, pd)) {
 					FREEMEM(epres);
 					ASN__DECODE_STARVED;
 				}
