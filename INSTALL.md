@@ -3,10 +3,12 @@
 
 ### Requirements
 
-**For Ubuntu 16.04**
+For Ubuntu 16.04
+
       apt install autoconf libtool-bin
 
-**For Fedora 24 and Centos 7.2**
+For Fedora 24 and Centos 7.2
+
       yum install autoconf libtool automake make
 
 ### Configure
