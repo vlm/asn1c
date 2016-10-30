@@ -41,10 +41,6 @@ T1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T2.der_encoder;
 	td->xer_decoder    = asn_DEF_T2.xer_decoder;
 	td->xer_encoder    = asn_DEF_T2.xer_encoder;
-	td->uper_decoder   = asn_DEF_T2.uper_decoder;
-	td->uper_encoder   = asn_DEF_T2.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_T2.per_constraints;
 	td->elements       = asn_DEF_T2.elements;
 	td->elements_count = asn_DEF_T2.elements_count;
 	td->specifics      = asn_DEF_T2.specifics;
@@ -122,6 +118,7 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	T1_decode_xer,
 	T1_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
@@ -177,10 +174,6 @@ T2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T3.der_encoder;
 	td->xer_decoder    = asn_DEF_T3.xer_decoder;
 	td->xer_encoder    = asn_DEF_T3.xer_encoder;
-	td->uper_decoder   = asn_DEF_T3.uper_decoder;
-	td->uper_encoder   = asn_DEF_T3.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_T3.per_constraints;
 	td->elements       = asn_DEF_T3.elements;
 	td->elements_count = asn_DEF_T3.elements_count;
 	td->specifics      = asn_DEF_T3.specifics;
@@ -256,6 +249,7 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	T2_decode_xer,
 	T2_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags_1,
 	sizeof(asn_DEF_T2_tags_1)
@@ -311,10 +305,6 @@ T3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T4.der_encoder;
 	td->xer_decoder    = asn_DEF_T4.xer_decoder;
 	td->xer_encoder    = asn_DEF_T4.xer_encoder;
-	td->uper_decoder   = asn_DEF_T4.uper_decoder;
-	td->uper_encoder   = asn_DEF_T4.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_T4.per_constraints;
 	td->elements       = asn_DEF_T4.elements;
 	td->elements_count = asn_DEF_T4.elements_count;
 	td->specifics      = asn_DEF_T4.specifics;
@@ -388,6 +378,7 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	T3_decode_xer,
 	T3_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T3_tags_1,
 	sizeof(asn_DEF_T3_tags_1)
@@ -443,10 +434,6 @@ T4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T5.der_encoder;
 	td->xer_decoder    = asn_DEF_T5.xer_decoder;
 	td->xer_encoder    = asn_DEF_T5.xer_encoder;
-	td->uper_decoder   = asn_DEF_T5.uper_decoder;
-	td->uper_encoder   = asn_DEF_T5.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_T5.per_constraints;
 	td->elements       = asn_DEF_T5.elements;
 	td->elements_count = asn_DEF_T5.elements_count;
 	td->specifics      = asn_DEF_T5.specifics;
@@ -515,6 +502,7 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	T4_decode_xer,
 	T4_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T4_tags_1,
 	sizeof(asn_DEF_T4_tags_1)
@@ -570,10 +558,6 @@ T5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_T6.der_encoder;
 	td->xer_decoder    = asn_DEF_T6.xer_decoder;
 	td->xer_encoder    = asn_DEF_T6.xer_encoder;
-	td->uper_decoder   = asn_DEF_T6.uper_decoder;
-	td->uper_encoder   = asn_DEF_T6.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_T6.per_constraints;
 	td->elements       = asn_DEF_T6.elements;
 	td->elements_count = asn_DEF_T6.elements_count;
 	td->specifics      = asn_DEF_T6.specifics;
@@ -641,6 +625,7 @@ asn_TYPE_descriptor_t asn_DEF_T5 = {
 	T5_decode_xer,
 	T5_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T5_tags_1,
 	sizeof(asn_DEF_T5_tags_1)
@@ -696,10 +681,6 @@ T6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_NativeReal.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeReal.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeReal.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeReal.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeReal.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeReal.per_constraints;
 	td->elements       = asn_DEF_NativeReal.elements;
 	td->elements_count = asn_DEF_NativeReal.elements_count;
 	td->specifics      = asn_DEF_NativeReal.specifics;
@@ -766,6 +747,7 @@ asn_TYPE_descriptor_t asn_DEF_T6 = {
 	T6_decode_xer,
 	T6_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T6_tags_1,
 	sizeof(asn_DEF_T6_tags_1)
@@ -821,10 +803,6 @@ T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_Ts.der_encoder;
 	td->xer_decoder    = asn_DEF_Ts.xer_decoder;
 	td->xer_encoder    = asn_DEF_Ts.xer_encoder;
-	td->uper_decoder   = asn_DEF_Ts.uper_decoder;
-	td->uper_encoder   = asn_DEF_Ts.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_Ts.per_constraints;
 	td->elements       = asn_DEF_Ts.elements;
 	td->elements_count = asn_DEF_Ts.elements_count;
 	td->specifics      = asn_DEF_Ts.specifics;
@@ -893,6 +871,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_decode_xer,
 	T_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
@@ -987,6 +966,7 @@ asn_TYPE_descriptor_t asn_DEF_Ts = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Ts_tags_1,
 	sizeof(asn_DEF_Ts_tags_1)

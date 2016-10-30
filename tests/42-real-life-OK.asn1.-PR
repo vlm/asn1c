@@ -99,6 +99,7 @@ asn_TYPE_descriptor_t asn_DEF_varsets_3 = {
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_varsets_tags_3,
 	sizeof(asn_DEF_varsets_tags_3)
@@ -159,6 +160,7 @@ asn_TYPE_descriptor_t asn_DEF_LogLine = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_LogLine_tags_1,
 	sizeof(asn_DEF_LogLine_tags_1)
@@ -266,6 +268,7 @@ asn_TYPE_descriptor_t asn_DEF_vparts_2 = {
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_vparts_tags_2,
 	sizeof(asn_DEF_vparts_tags_2)
@@ -326,6 +329,7 @@ asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_VariablePartSet_tags_1,
 	sizeof(asn_DEF_VariablePartSet_tags_1)
@@ -456,6 +460,7 @@ asn_TYPE_descriptor_t asn_DEF_vset_2 = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_vset_tags_2,
 	sizeof(asn_DEF_vset_tags_2)
@@ -517,6 +522,7 @@ asn_TYPE_descriptor_t asn_DEF_vrange_4 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_vrange_tags_4,
 	sizeof(asn_DEF_vrange_tags_4)
@@ -575,6 +581,7 @@ asn_TYPE_descriptor_t asn_DEF_VariablePart = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -664,10 +671,6 @@ accept_as_2_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_NativeEnumerated.der_encoder;
 	td->xer_decoder    = asn_DEF_NativeEnumerated.xer_decoder;
 	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
 	td->elements       = asn_DEF_NativeEnumerated.elements;
 	td->elements_count = asn_DEF_NativeEnumerated.elements_count;
      /* td->specifics      = asn_DEF_NativeEnumerated.specifics;	// Defined explicitly */
@@ -756,6 +759,7 @@ asn_TYPE_descriptor_t asn_DEF_accept_as_2 = {
 	accept_as_2_decode_xer,
 	accept_as_2_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_accept_as_tags_2,
 	sizeof(asn_DEF_accept_as_tags_2)
@@ -799,6 +803,7 @@ asn_TYPE_descriptor_t asn_DEF_email_9 = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_email_tags_9,
 	sizeof(asn_DEF_email_tags_9)
@@ -860,6 +865,7 @@ asn_TYPE_descriptor_t asn_DEF_notify_7 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_notify_tags_7,
 	sizeof(asn_DEF_notify_tags_7)
@@ -920,6 +926,7 @@ asn_TYPE_descriptor_t asn_DEF_ActionItem = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ActionItem_tags_1,
 	sizeof(asn_DEF_ActionItem_tags_1)

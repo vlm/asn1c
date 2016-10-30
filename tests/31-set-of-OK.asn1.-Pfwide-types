@@ -57,6 +57,7 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Forest_tags_1,
 	sizeof(asn_DEF_Forest_tags_1)
@@ -139,6 +140,7 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Tree_tags_1,
 	sizeof(asn_DEF_Tree_tags_1)
@@ -273,6 +275,7 @@ asn_TYPE_descriptor_t asn_DEF_trees_2 = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_trees_tags_2,
 	sizeof(asn_DEF_trees_tags_2)
@@ -324,6 +327,7 @@ asn_TYPE_descriptor_t asn_DEF_Member_5 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Member_tags_5,
 	sizeof(asn_DEF_Member_tags_5)
@@ -369,6 +373,7 @@ asn_TYPE_descriptor_t asn_DEF_anything_4 = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_anything_tags_4,
 	sizeof(asn_DEF_anything_tags_4)
@@ -428,6 +433,7 @@ asn_TYPE_descriptor_t asn_DEF_other_9 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -507,6 +513,7 @@ asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Stuff_tags_1,
 	sizeof(asn_DEF_Stuff_tags_1)

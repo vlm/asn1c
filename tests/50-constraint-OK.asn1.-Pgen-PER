@@ -19,6 +19,8 @@ xer_type_decoder_f Int1_decode_xer;
 xer_type_encoder_f Int1_encode_xer;
 per_type_decoder_f Int1_decode_uper;
 per_type_encoder_f Int1_encode_uper;
+per_type_decoder_f Int1_decode_aper;
+per_type_encoder_f Int1_encode_aper;
 
 /*** <<< CODE [Int1] >>> ***/
 
@@ -45,6 +47,8 @@ Int1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->aper_decoder   = asn_DEF_NativeInteger.aper_decoder;
+	td->aper_encoder   = asn_DEF_NativeInteger.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -111,6 +115,21 @@ Int1_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Int1_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Int1_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Int1_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Int1_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< STAT-DEFS [Int1] >>> ***/
 
@@ -129,6 +148,8 @@ asn_TYPE_descriptor_t asn_DEF_Int1 = {
 	Int1_encode_xer,
 	Int1_decode_uper,
 	Int1_encode_uper,
+	Int1_decode_aper,
+	Int1_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int1_tags_1,
 	sizeof(asn_DEF_Int1_tags_1)
@@ -162,6 +183,8 @@ xer_type_decoder_f Int2_decode_xer;
 xer_type_encoder_f Int2_encode_xer;
 per_type_decoder_f Int2_decode_uper;
 per_type_encoder_f Int2_encode_uper;
+per_type_decoder_f Int2_decode_aper;
+per_type_encoder_f Int2_encode_aper;
 
 /*** <<< CODE [Int2] >>> ***/
 
@@ -205,6 +228,8 @@ Int2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Int1.xer_encoder;
 	td->uper_decoder   = asn_DEF_Int1.uper_decoder;
 	td->uper_encoder   = asn_DEF_Int1.uper_encoder;
+	td->aper_decoder   = asn_DEF_Int1.aper_decoder;
+	td->aper_encoder   = asn_DEF_Int1.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int1.per_constraints;
 	td->elements       = asn_DEF_Int1.elements;
@@ -271,6 +296,21 @@ Int2_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Int2_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Int2_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Int2_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Int2_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Int2] >>> ***/
 
@@ -297,6 +337,8 @@ asn_TYPE_descriptor_t asn_DEF_Int2 = {
 	Int2_encode_xer,
 	Int2_decode_uper,
 	Int2_encode_uper,
+	Int2_decode_aper,
+	Int2_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int2_tags_1,
 	sizeof(asn_DEF_Int2_tags_1)
@@ -330,6 +372,8 @@ xer_type_decoder_f Int3_decode_xer;
 xer_type_encoder_f Int3_encode_xer;
 per_type_decoder_f Int3_decode_uper;
 per_type_encoder_f Int3_encode_uper;
+per_type_decoder_f Int3_decode_aper;
+per_type_encoder_f Int3_encode_aper;
 
 /*** <<< CODE [Int3] >>> ***/
 
@@ -373,6 +417,8 @@ Int3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Int2.xer_encoder;
 	td->uper_decoder   = asn_DEF_Int2.uper_decoder;
 	td->uper_encoder   = asn_DEF_Int2.uper_encoder;
+	td->aper_decoder   = asn_DEF_Int2.aper_decoder;
+	td->aper_encoder   = asn_DEF_Int2.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int2.per_constraints;
 	td->elements       = asn_DEF_Int2.elements;
@@ -439,6 +485,21 @@ Int3_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Int3_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Int3_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Int3_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Int3_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Int3] >>> ***/
 
@@ -465,6 +526,8 @@ asn_TYPE_descriptor_t asn_DEF_Int3 = {
 	Int3_encode_xer,
 	Int3_decode_uper,
 	Int3_encode_uper,
+	Int3_decode_aper,
+	Int3_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int3_tags_1,
 	sizeof(asn_DEF_Int3_tags_1)
@@ -498,6 +561,8 @@ xer_type_decoder_f Int4_decode_xer;
 xer_type_encoder_f Int4_encode_xer;
 per_type_decoder_f Int4_decode_uper;
 per_type_encoder_f Int4_encode_uper;
+per_type_decoder_f Int4_decode_aper;
+per_type_encoder_f Int4_encode_aper;
 
 /*** <<< CODE [Int4] >>> ***/
 
@@ -541,6 +606,8 @@ Int4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Int3.xer_encoder;
 	td->uper_decoder   = asn_DEF_Int3.uper_decoder;
 	td->uper_encoder   = asn_DEF_Int3.uper_encoder;
+	td->aper_decoder   = asn_DEF_Int3.aper_decoder;
+	td->aper_encoder   = asn_DEF_Int3.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int3.per_constraints;
 	td->elements       = asn_DEF_Int3.elements;
@@ -607,6 +674,21 @@ Int4_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Int4_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Int4_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Int4_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Int4_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Int4] >>> ***/
 
@@ -633,6 +715,8 @@ asn_TYPE_descriptor_t asn_DEF_Int4 = {
 	Int4_encode_xer,
 	Int4_decode_uper,
 	Int4_encode_uper,
+	Int4_decode_aper,
+	Int4_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int4_tags_1,
 	sizeof(asn_DEF_Int4_tags_1)
@@ -666,6 +750,8 @@ xer_type_decoder_f Int5_decode_xer;
 xer_type_encoder_f Int5_encode_xer;
 per_type_decoder_f Int5_decode_uper;
 per_type_encoder_f Int5_encode_uper;
+per_type_decoder_f Int5_decode_aper;
+per_type_encoder_f Int5_encode_aper;
 
 /*** <<< CODE [Int5] >>> ***/
 
@@ -709,6 +795,8 @@ Int5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Int4.xer_encoder;
 	td->uper_decoder   = asn_DEF_Int4.uper_decoder;
 	td->uper_encoder   = asn_DEF_Int4.uper_encoder;
+	td->aper_decoder   = asn_DEF_Int4.aper_decoder;
+	td->aper_encoder   = asn_DEF_Int4.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int4.per_constraints;
 	td->elements       = asn_DEF_Int4.elements;
@@ -775,6 +863,21 @@ Int5_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Int5_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Int5_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Int5_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Int5_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Int5] >>> ***/
 
@@ -801,6 +904,8 @@ asn_TYPE_descriptor_t asn_DEF_Int5 = {
 	Int5_encode_xer,
 	Int5_decode_uper,
 	Int5_encode_uper,
+	Int5_decode_aper,
+	Int5_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int5_tags_1,
 	sizeof(asn_DEF_Int5_tags_1)
@@ -834,6 +939,8 @@ xer_type_decoder_f ExtensibleExtensions_decode_xer;
 xer_type_encoder_f ExtensibleExtensions_encode_xer;
 per_type_decoder_f ExtensibleExtensions_decode_uper;
 per_type_encoder_f ExtensibleExtensions_encode_uper;
+per_type_decoder_f ExtensibleExtensions_decode_aper;
+per_type_encoder_f ExtensibleExtensions_encode_aper;
 
 /*** <<< CODE [ExtensibleExtensions] >>> ***/
 
@@ -877,6 +984,8 @@ ExtensibleExtensions_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->aper_decoder   = asn_DEF_NativeInteger.aper_decoder;
+	td->aper_encoder   = asn_DEF_NativeInteger.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -943,6 +1052,21 @@ ExtensibleExtensions_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+ExtensibleExtensions_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	ExtensibleExtensions_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+ExtensibleExtensions_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	ExtensibleExtensions_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [ExtensibleExtensions] >>> ***/
 
@@ -969,6 +1093,8 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleExtensions = {
 	ExtensibleExtensions_encode_xer,
 	ExtensibleExtensions_decode_uper,
 	ExtensibleExtensions_encode_uper,
+	ExtensibleExtensions_decode_aper,
+	ExtensibleExtensions_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ExtensibleExtensions_tags_1,
 	sizeof(asn_DEF_ExtensibleExtensions_tags_1)
@@ -1002,6 +1128,8 @@ xer_type_decoder_f Str1_decode_xer;
 xer_type_encoder_f Str1_encode_xer;
 per_type_decoder_f Str1_decode_uper;
 per_type_encoder_f Str1_encode_uper;
+per_type_decoder_f Str1_decode_aper;
+per_type_encoder_f Str1_encode_aper;
 
 /*** <<< CODE [Str1] >>> ***/
 
@@ -1028,6 +1156,8 @@ Str1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_IA5String.xer_encoder;
 	td->uper_decoder   = asn_DEF_IA5String.uper_decoder;
 	td->uper_encoder   = asn_DEF_IA5String.uper_encoder;
+	td->aper_decoder   = asn_DEF_IA5String.aper_decoder;
+	td->aper_encoder   = asn_DEF_IA5String.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_IA5String.per_constraints;
 	td->elements       = asn_DEF_IA5String.elements;
@@ -1094,6 +1224,21 @@ Str1_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Str1_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Str1_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Str1_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Str1_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< STAT-DEFS [Str1] >>> ***/
 
@@ -1112,6 +1257,8 @@ asn_TYPE_descriptor_t asn_DEF_Str1 = {
 	Str1_encode_xer,
 	Str1_decode_uper,
 	Str1_encode_uper,
+	Str1_decode_aper,
+	Str1_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str1_tags_1,
 	sizeof(asn_DEF_Str1_tags_1)
@@ -1145,6 +1292,8 @@ xer_type_decoder_f Str2_decode_xer;
 xer_type_encoder_f Str2_encode_xer;
 per_type_decoder_f Str2_decode_uper;
 per_type_encoder_f Str2_encode_uper;
+per_type_decoder_f Str2_decode_aper;
+per_type_encoder_f Str2_encode_aper;
 
 /*** <<< CTABLES [Str2] >>> ***/
 
@@ -1206,6 +1355,8 @@ Str2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Str1.xer_encoder;
 	td->uper_decoder   = asn_DEF_Str1.uper_decoder;
 	td->uper_encoder   = asn_DEF_Str1.uper_encoder;
+	td->aper_decoder   = asn_DEF_Str1.aper_decoder;
+	td->aper_encoder   = asn_DEF_Str1.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Str1.per_constraints;
 	td->elements       = asn_DEF_Str1.elements;
@@ -1272,6 +1423,21 @@ Str2_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Str2_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Str2_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Str2_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Str2_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Str2] >>> ***/
 
@@ -1298,6 +1464,8 @@ asn_TYPE_descriptor_t asn_DEF_Str2 = {
 	Str2_encode_xer,
 	Str2_decode_uper,
 	Str2_encode_uper,
+	Str2_decode_aper,
+	Str2_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str2_tags_1,
 	sizeof(asn_DEF_Str2_tags_1)
@@ -1331,6 +1499,8 @@ xer_type_decoder_f Str3_decode_xer;
 xer_type_encoder_f Str3_encode_xer;
 per_type_decoder_f Str3_decode_uper;
 per_type_encoder_f Str3_encode_uper;
+per_type_decoder_f Str3_decode_aper;
+per_type_encoder_f Str3_encode_aper;
 
 /*** <<< CTABLES [Str3] >>> ***/
 
@@ -1416,6 +1586,8 @@ Str3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Str2.xer_encoder;
 	td->uper_decoder   = asn_DEF_Str2.uper_decoder;
 	td->uper_encoder   = asn_DEF_Str2.uper_encoder;
+	td->aper_decoder   = asn_DEF_Str2.aper_decoder;
+	td->aper_encoder   = asn_DEF_Str2.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Str2.per_constraints;
 	td->elements       = asn_DEF_Str2.elements;
@@ -1482,6 +1654,21 @@ Str3_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Str3_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Str3_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Str3_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Str3_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Str3] >>> ***/
 
@@ -1509,6 +1696,8 @@ asn_TYPE_descriptor_t asn_DEF_Str3 = {
 	Str3_encode_xer,
 	Str3_decode_uper,
 	Str3_encode_uper,
+	Str3_decode_aper,
+	Str3_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str3_tags_1,
 	sizeof(asn_DEF_Str3_tags_1)
@@ -1542,6 +1731,8 @@ xer_type_decoder_f Str4_decode_xer;
 xer_type_encoder_f Str4_encode_xer;
 per_type_decoder_f Str4_decode_uper;
 per_type_encoder_f Str4_encode_uper;
+per_type_decoder_f Str4_decode_aper;
+per_type_encoder_f Str4_encode_aper;
 
 /*** <<< CTABLES [Str4] >>> ***/
 
@@ -1600,6 +1791,8 @@ Str4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_IA5String.xer_encoder;
 	td->uper_decoder   = asn_DEF_IA5String.uper_decoder;
 	td->uper_encoder   = asn_DEF_IA5String.uper_encoder;
+	td->aper_decoder   = asn_DEF_IA5String.aper_decoder;
+	td->aper_encoder   = asn_DEF_IA5String.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_IA5String.per_constraints;
 	td->elements       = asn_DEF_IA5String.elements;
@@ -1666,6 +1859,21 @@ Str4_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Str4_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Str4_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Str4_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Str4_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Str4] >>> ***/
 
@@ -1692,6 +1900,8 @@ asn_TYPE_descriptor_t asn_DEF_Str4 = {
 	Str4_encode_xer,
 	Str4_decode_uper,
 	Str4_encode_uper,
+	Str4_decode_aper,
+	Str4_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str4_tags_1,
 	sizeof(asn_DEF_Str4_tags_1)
@@ -1725,6 +1935,8 @@ xer_type_decoder_f PER_Visible_decode_xer;
 xer_type_encoder_f PER_Visible_encode_xer;
 per_type_decoder_f PER_Visible_decode_uper;
 per_type_encoder_f PER_Visible_encode_uper;
+per_type_decoder_f PER_Visible_decode_aper;
+per_type_encoder_f PER_Visible_encode_aper;
 
 /*** <<< CTABLES [PER-Visible] >>> ***/
 
@@ -1783,6 +1995,8 @@ PER_Visible_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_IA5String.xer_encoder;
 	td->uper_decoder   = asn_DEF_IA5String.uper_decoder;
 	td->uper_encoder   = asn_DEF_IA5String.uper_encoder;
+	td->aper_decoder   = asn_DEF_IA5String.aper_decoder;
+	td->aper_encoder   = asn_DEF_IA5String.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_IA5String.per_constraints;
 	td->elements       = asn_DEF_IA5String.elements;
@@ -1849,6 +2063,21 @@ PER_Visible_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+PER_Visible_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	PER_Visible_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+PER_Visible_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	PER_Visible_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [PER-Visible] >>> ***/
 
@@ -1875,6 +2104,8 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible = {
 	PER_Visible_encode_xer,
 	PER_Visible_decode_uper,
 	PER_Visible_encode_uper,
+	PER_Visible_decode_aper,
+	PER_Visible_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PER_Visible_tags_1,
 	sizeof(asn_DEF_PER_Visible_tags_1)
@@ -1908,6 +2139,8 @@ xer_type_decoder_f PER_Visible_2_decode_xer;
 xer_type_encoder_f PER_Visible_2_encode_xer;
 per_type_decoder_f PER_Visible_2_decode_uper;
 per_type_encoder_f PER_Visible_2_encode_uper;
+per_type_decoder_f PER_Visible_2_decode_aper;
+per_type_encoder_f PER_Visible_2_encode_aper;
 
 /*** <<< CTABLES [PER-Visible-2] >>> ***/
 
@@ -1966,6 +2199,8 @@ PER_Visible_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_PER_Visible.xer_encoder;
 	td->uper_decoder   = asn_DEF_PER_Visible.uper_decoder;
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
+	td->aper_decoder   = asn_DEF_PER_Visible.aper_decoder;
+	td->aper_encoder   = asn_DEF_PER_Visible.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2032,6 +2267,21 @@ PER_Visible_2_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+PER_Visible_2_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	PER_Visible_2_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+PER_Visible_2_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	PER_Visible_2_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [PER-Visible-2] >>> ***/
 
@@ -2058,6 +2308,8 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible_2 = {
 	PER_Visible_2_encode_xer,
 	PER_Visible_2_decode_uper,
 	PER_Visible_2_encode_uper,
+	PER_Visible_2_decode_aper,
+	PER_Visible_2_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PER_Visible_2_tags_1,
 	sizeof(asn_DEF_PER_Visible_2_tags_1)
@@ -2091,6 +2343,8 @@ xer_type_decoder_f Not_PER_Visible_1_decode_xer;
 xer_type_encoder_f Not_PER_Visible_1_encode_xer;
 per_type_decoder_f Not_PER_Visible_1_decode_uper;
 per_type_encoder_f Not_PER_Visible_1_encode_uper;
+per_type_decoder_f Not_PER_Visible_1_decode_aper;
+per_type_encoder_f Not_PER_Visible_1_encode_aper;
 
 /*** <<< CTABLES [Not-PER-Visible-1] >>> ***/
 
@@ -2149,6 +2403,8 @@ Not_PER_Visible_1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_PER_Visible.xer_encoder;
 	td->uper_decoder   = asn_DEF_PER_Visible.uper_decoder;
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
+	td->aper_decoder   = asn_DEF_PER_Visible.aper_decoder;
+	td->aper_encoder   = asn_DEF_PER_Visible.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2215,6 +2471,21 @@ Not_PER_Visible_1_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Not_PER_Visible_1_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Not_PER_Visible_1_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Not_PER_Visible_1_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Not_PER_Visible_1_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Not-PER-Visible-1] >>> ***/
 
@@ -2241,6 +2512,8 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_1 = {
 	Not_PER_Visible_1_encode_xer,
 	Not_PER_Visible_1_decode_uper,
 	Not_PER_Visible_1_encode_uper,
+	Not_PER_Visible_1_decode_aper,
+	Not_PER_Visible_1_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_1_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_1_tags_1)
@@ -2274,6 +2547,8 @@ xer_type_decoder_f Not_PER_Visible_2_decode_xer;
 xer_type_encoder_f Not_PER_Visible_2_encode_xer;
 per_type_decoder_f Not_PER_Visible_2_decode_uper;
 per_type_encoder_f Not_PER_Visible_2_encode_uper;
+per_type_decoder_f Not_PER_Visible_2_decode_aper;
+per_type_encoder_f Not_PER_Visible_2_encode_aper;
 
 /*** <<< CTABLES [Not-PER-Visible-2] >>> ***/
 
@@ -2332,6 +2607,8 @@ Not_PER_Visible_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_PER_Visible.xer_encoder;
 	td->uper_decoder   = asn_DEF_PER_Visible.uper_decoder;
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
+	td->aper_decoder   = asn_DEF_PER_Visible.aper_decoder;
+	td->aper_encoder   = asn_DEF_PER_Visible.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2398,6 +2675,21 @@ Not_PER_Visible_2_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Not_PER_Visible_2_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Not_PER_Visible_2_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Not_PER_Visible_2_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Not_PER_Visible_2_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Not-PER-Visible-2] >>> ***/
 
@@ -2424,6 +2716,8 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_2 = {
 	Not_PER_Visible_2_encode_xer,
 	Not_PER_Visible_2_decode_uper,
 	Not_PER_Visible_2_encode_uper,
+	Not_PER_Visible_2_decode_aper,
+	Not_PER_Visible_2_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_2_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_2_tags_1)
@@ -2457,6 +2751,8 @@ xer_type_decoder_f Not_PER_Visible_3_decode_xer;
 xer_type_encoder_f Not_PER_Visible_3_encode_xer;
 per_type_decoder_f Not_PER_Visible_3_decode_uper;
 per_type_encoder_f Not_PER_Visible_3_encode_uper;
+per_type_decoder_f Not_PER_Visible_3_decode_aper;
+per_type_encoder_f Not_PER_Visible_3_encode_aper;
 
 /*** <<< CTABLES [Not-PER-Visible-3] >>> ***/
 
@@ -2515,6 +2811,8 @@ Not_PER_Visible_3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_PER_Visible.xer_encoder;
 	td->uper_decoder   = asn_DEF_PER_Visible.uper_decoder;
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
+	td->aper_decoder   = asn_DEF_PER_Visible.aper_decoder;
+	td->aper_encoder   = asn_DEF_PER_Visible.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2581,6 +2879,21 @@ Not_PER_Visible_3_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Not_PER_Visible_3_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Not_PER_Visible_3_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Not_PER_Visible_3_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Not_PER_Visible_3_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Not-PER-Visible-3] >>> ***/
 
@@ -2607,6 +2920,8 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_3 = {
 	Not_PER_Visible_3_encode_xer,
 	Not_PER_Visible_3_decode_uper,
 	Not_PER_Visible_3_encode_uper,
+	Not_PER_Visible_3_decode_aper,
+	Not_PER_Visible_3_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_3_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_3_tags_1)
@@ -2640,6 +2955,8 @@ xer_type_decoder_f SIZE_but_not_FROM_decode_xer;
 xer_type_encoder_f SIZE_but_not_FROM_encode_xer;
 per_type_decoder_f SIZE_but_not_FROM_decode_uper;
 per_type_encoder_f SIZE_but_not_FROM_encode_uper;
+per_type_decoder_f SIZE_but_not_FROM_decode_aper;
+per_type_encoder_f SIZE_but_not_FROM_encode_aper;
 
 /*** <<< CTABLES [SIZE-but-not-FROM] >>> ***/
 
@@ -2701,6 +3018,8 @@ SIZE_but_not_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_PER_Visible.xer_encoder;
 	td->uper_decoder   = asn_DEF_PER_Visible.uper_decoder;
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
+	td->aper_decoder   = asn_DEF_PER_Visible.aper_decoder;
+	td->aper_encoder   = asn_DEF_PER_Visible.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2767,6 +3086,21 @@ SIZE_but_not_FROM_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+SIZE_but_not_FROM_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	SIZE_but_not_FROM_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+SIZE_but_not_FROM_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	SIZE_but_not_FROM_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [SIZE-but-not-FROM] >>> ***/
 
@@ -2793,6 +3127,8 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_but_not_FROM = {
 	SIZE_but_not_FROM_encode_xer,
 	SIZE_but_not_FROM_decode_uper,
 	SIZE_but_not_FROM_encode_uper,
+	SIZE_but_not_FROM_decode_aper,
+	SIZE_but_not_FROM_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIZE_but_not_FROM_tags_1,
 	sizeof(asn_DEF_SIZE_but_not_FROM_tags_1)
@@ -2826,6 +3162,8 @@ xer_type_decoder_f SIZE_and_FROM_decode_xer;
 xer_type_encoder_f SIZE_and_FROM_encode_xer;
 per_type_decoder_f SIZE_and_FROM_decode_uper;
 per_type_encoder_f SIZE_and_FROM_encode_uper;
+per_type_decoder_f SIZE_and_FROM_decode_aper;
+per_type_encoder_f SIZE_and_FROM_encode_aper;
 
 /*** <<< CTABLES [SIZE-and-FROM] >>> ***/
 
@@ -2887,6 +3225,8 @@ SIZE_and_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_PER_Visible.xer_encoder;
 	td->uper_decoder   = asn_DEF_PER_Visible.uper_decoder;
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
+	td->aper_decoder   = asn_DEF_PER_Visible.aper_decoder;
+	td->aper_encoder   = asn_DEF_PER_Visible.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2953,6 +3293,21 @@ SIZE_and_FROM_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+SIZE_and_FROM_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	SIZE_and_FROM_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+SIZE_and_FROM_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	SIZE_and_FROM_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [SIZE-and-FROM] >>> ***/
 
@@ -2979,6 +3334,8 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_and_FROM = {
 	SIZE_and_FROM_encode_xer,
 	SIZE_and_FROM_decode_uper,
 	SIZE_and_FROM_encode_uper,
+	SIZE_and_FROM_decode_aper,
+	SIZE_and_FROM_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIZE_and_FROM_tags_1,
 	sizeof(asn_DEF_SIZE_and_FROM_tags_1)
@@ -3012,6 +3369,8 @@ xer_type_decoder_f Neither_SIZE_nor_FROM_decode_xer;
 xer_type_encoder_f Neither_SIZE_nor_FROM_encode_xer;
 per_type_decoder_f Neither_SIZE_nor_FROM_decode_uper;
 per_type_encoder_f Neither_SIZE_nor_FROM_encode_uper;
+per_type_decoder_f Neither_SIZE_nor_FROM_decode_aper;
+per_type_encoder_f Neither_SIZE_nor_FROM_encode_aper;
 
 /*** <<< CTABLES [Neither-SIZE-nor-FROM] >>> ***/
 
@@ -3070,6 +3429,8 @@ Neither_SIZE_nor_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_PER_Visible.xer_encoder;
 	td->uper_decoder   = asn_DEF_PER_Visible.uper_decoder;
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
+	td->aper_decoder   = asn_DEF_PER_Visible.aper_decoder;
+	td->aper_encoder   = asn_DEF_PER_Visible.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -3136,6 +3497,21 @@ Neither_SIZE_nor_FROM_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Neither_SIZE_nor_FROM_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Neither_SIZE_nor_FROM_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Neither_SIZE_nor_FROM_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Neither_SIZE_nor_FROM_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Neither-SIZE-nor-FROM] >>> ***/
 
@@ -3162,6 +3538,8 @@ asn_TYPE_descriptor_t asn_DEF_Neither_SIZE_nor_FROM = {
 	Neither_SIZE_nor_FROM_encode_xer,
 	Neither_SIZE_nor_FROM_decode_uper,
 	Neither_SIZE_nor_FROM_encode_uper,
+	Neither_SIZE_nor_FROM_decode_aper,
+	Neither_SIZE_nor_FROM_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Neither_SIZE_nor_FROM_tags_1,
 	sizeof(asn_DEF_Neither_SIZE_nor_FROM_tags_1)
@@ -3195,6 +3573,8 @@ xer_type_decoder_f Utf8_4_decode_xer;
 xer_type_encoder_f Utf8_4_encode_xer;
 per_type_decoder_f Utf8_4_decode_uper;
 per_type_encoder_f Utf8_4_encode_uper;
+per_type_decoder_f Utf8_4_decode_aper;
+per_type_encoder_f Utf8_4_encode_aper;
 
 /*** <<< CTABLES [Utf8-4] >>> ***/
 
@@ -3247,6 +3627,8 @@ Utf8_4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_UTF8String.xer_encoder;
 	td->uper_decoder   = asn_DEF_UTF8String.uper_decoder;
 	td->uper_encoder   = asn_DEF_UTF8String.uper_encoder;
+	td->aper_decoder   = asn_DEF_UTF8String.aper_decoder;
+	td->aper_encoder   = asn_DEF_UTF8String.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_UTF8String.per_constraints;
 	td->elements       = asn_DEF_UTF8String.elements;
@@ -3313,6 +3695,21 @@ Utf8_4_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Utf8_4_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Utf8_4_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Utf8_4_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Utf8_4_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Utf8-4] >>> ***/
 
@@ -3339,6 +3736,8 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_4 = {
 	Utf8_4_encode_xer,
 	Utf8_4_decode_uper,
 	Utf8_4_encode_uper,
+	Utf8_4_decode_aper,
+	Utf8_4_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_4_tags_1,
 	sizeof(asn_DEF_Utf8_4_tags_1)
@@ -3372,6 +3771,8 @@ xer_type_decoder_f Utf8_3_decode_xer;
 xer_type_encoder_f Utf8_3_encode_xer;
 per_type_decoder_f Utf8_3_decode_uper;
 per_type_encoder_f Utf8_3_encode_uper;
+per_type_decoder_f Utf8_3_decode_aper;
+per_type_encoder_f Utf8_3_encode_aper;
 
 /*** <<< CTABLES [Utf8-3] >>> ***/
 
@@ -3452,6 +3853,8 @@ Utf8_3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Utf8_2.xer_encoder;
 	td->uper_decoder   = asn_DEF_Utf8_2.uper_decoder;
 	td->uper_encoder   = asn_DEF_Utf8_2.uper_encoder;
+	td->aper_decoder   = asn_DEF_Utf8_2.aper_decoder;
+	td->aper_encoder   = asn_DEF_Utf8_2.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Utf8_2.per_constraints;
 	td->elements       = asn_DEF_Utf8_2.elements;
@@ -3518,6 +3921,21 @@ Utf8_3_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Utf8_3_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Utf8_3_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Utf8_3_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Utf8_3_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Utf8-3] >>> ***/
 
@@ -3544,6 +3962,8 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_3 = {
 	Utf8_3_encode_xer,
 	Utf8_3_decode_uper,
 	Utf8_3_encode_uper,
+	Utf8_3_decode_aper,
+	Utf8_3_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_3_tags_1,
 	sizeof(asn_DEF_Utf8_3_tags_1)
@@ -3577,6 +3997,8 @@ xer_type_decoder_f Utf8_2_decode_xer;
 xer_type_encoder_f Utf8_2_encode_xer;
 per_type_decoder_f Utf8_2_decode_uper;
 per_type_encoder_f Utf8_2_encode_uper;
+per_type_decoder_f Utf8_2_decode_aper;
+per_type_encoder_f Utf8_2_encode_aper;
 
 /*** <<< CODE [Utf8-2] >>> ***/
 
@@ -3627,6 +4049,8 @@ Utf8_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Utf8_1.xer_encoder;
 	td->uper_decoder   = asn_DEF_Utf8_1.uper_decoder;
 	td->uper_encoder   = asn_DEF_Utf8_1.uper_encoder;
+	td->aper_decoder   = asn_DEF_Utf8_1.aper_decoder;
+	td->aper_encoder   = asn_DEF_Utf8_1.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Utf8_1.per_constraints;
 	td->elements       = asn_DEF_Utf8_1.elements;
@@ -3693,6 +4117,21 @@ Utf8_2_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Utf8_2_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Utf8_2_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Utf8_2_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Utf8_2_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Utf8-2] >>> ***/
 
@@ -3719,6 +4158,8 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_2 = {
 	Utf8_2_encode_xer,
 	Utf8_2_decode_uper,
 	Utf8_2_encode_uper,
+	Utf8_2_decode_aper,
+	Utf8_2_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_2_tags_1,
 	sizeof(asn_DEF_Utf8_2_tags_1)
@@ -3752,6 +4193,8 @@ xer_type_decoder_f Utf8_1_decode_xer;
 xer_type_encoder_f Utf8_1_encode_xer;
 per_type_decoder_f Utf8_1_decode_uper;
 per_type_encoder_f Utf8_1_encode_uper;
+per_type_decoder_f Utf8_1_decode_aper;
+per_type_encoder_f Utf8_1_encode_aper;
 
 /*** <<< CODE [Utf8-1] >>> ***/
 
@@ -3778,6 +4221,8 @@ Utf8_1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_UTF8String.xer_encoder;
 	td->uper_decoder   = asn_DEF_UTF8String.uper_decoder;
 	td->uper_encoder   = asn_DEF_UTF8String.uper_encoder;
+	td->aper_decoder   = asn_DEF_UTF8String.aper_decoder;
+	td->aper_encoder   = asn_DEF_UTF8String.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_UTF8String.per_constraints;
 	td->elements       = asn_DEF_UTF8String.elements;
@@ -3844,6 +4289,21 @@ Utf8_1_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Utf8_1_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Utf8_1_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Utf8_1_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Utf8_1_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< STAT-DEFS [Utf8-1] >>> ***/
 
@@ -3862,6 +4322,8 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_1 = {
 	Utf8_1_encode_xer,
 	Utf8_1_decode_uper,
 	Utf8_1_encode_uper,
+	Utf8_1_decode_aper,
+	Utf8_1_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_1_tags_1,
 	sizeof(asn_DEF_Utf8_1_tags_1)
@@ -3895,6 +4357,8 @@ xer_type_decoder_f VisibleIdentifier_decode_xer;
 xer_type_encoder_f VisibleIdentifier_encode_xer;
 per_type_decoder_f VisibleIdentifier_decode_uper;
 per_type_encoder_f VisibleIdentifier_encode_uper;
+per_type_decoder_f VisibleIdentifier_decode_aper;
+per_type_encoder_f VisibleIdentifier_encode_aper;
 
 /*** <<< CTABLES [VisibleIdentifier] >>> ***/
 
@@ -3975,6 +4439,8 @@ VisibleIdentifier_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Identifier.xer_encoder;
 	td->uper_decoder   = asn_DEF_Identifier.uper_decoder;
 	td->uper_encoder   = asn_DEF_Identifier.uper_encoder;
+	td->aper_decoder   = asn_DEF_Identifier.aper_decoder;
+	td->aper_encoder   = asn_DEF_Identifier.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Identifier.per_constraints;
 	td->elements       = asn_DEF_Identifier.elements;
@@ -4041,6 +4507,21 @@ VisibleIdentifier_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+VisibleIdentifier_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	VisibleIdentifier_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+VisibleIdentifier_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	VisibleIdentifier_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< STAT-DEFS [VisibleIdentifier] >>> ***/
 
@@ -4059,6 +4540,8 @@ asn_TYPE_descriptor_t asn_DEF_VisibleIdentifier = {
 	VisibleIdentifier_encode_xer,
 	VisibleIdentifier_decode_uper,
 	VisibleIdentifier_encode_uper,
+	VisibleIdentifier_decode_aper,
+	VisibleIdentifier_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_VisibleIdentifier_tags_1,
 	sizeof(asn_DEF_VisibleIdentifier_tags_1)
@@ -4142,6 +4625,8 @@ enum_c_6_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
+	td->aper_decoder   = asn_DEF_NativeEnumerated.aper_decoder;
+	td->aper_encoder   = asn_DEF_NativeEnumerated.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
 	td->elements       = asn_DEF_NativeEnumerated.elements;
@@ -4206,6 +4691,21 @@ enum_c_6_encode_uper(asn_TYPE_descriptor_t *td,
 		void *structure, asn_per_outp_t *per_out) {
 	enum_c_6_inherit_TYPE_descriptor(td);
 	return td->uper_encoder(td, constraints, structure, per_out);
+}
+
+static asn_dec_rval_t
+enum_c_6_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	enum_c_6_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+static asn_enc_rval_t
+enum_c_6_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	enum_c_6_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
 }
 
 static int
@@ -4382,6 +4882,8 @@ asn_TYPE_descriptor_t asn_DEF_enum_c_6 = {
 	enum_c_6_encode_xer,
 	enum_c_6_decode_uper,
 	enum_c_6_encode_uper,
+	enum_c_6_decode_aper,
+	enum_c_6_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_enum_c_tags_6,
 	sizeof(asn_DEF_enum_c_tags_6)
@@ -4494,6 +4996,8 @@ asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	SEQUENCE_decode_aper,
+	SEQUENCE_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Sequence_tags_1,
 	sizeof(asn_DEF_Sequence_tags_1)
@@ -4575,6 +5079,8 @@ asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
 	SEQUENCE_OF_encode_xer,
 	SEQUENCE_OF_decode_uper,
 	SEQUENCE_OF_encode_uper,
+	SEQUENCE_OF_decode_aper,
+	SEQUENCE_OF_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SequenceOf_tags_1,
 	sizeof(asn_DEF_SequenceOf_tags_1)
@@ -4616,6 +5122,8 @@ xer_type_decoder_f Enum0_decode_xer;
 xer_type_encoder_f Enum0_encode_xer;
 per_type_decoder_f Enum0_decode_uper;
 per_type_encoder_f Enum0_encode_uper;
+per_type_decoder_f Enum0_decode_aper;
+per_type_encoder_f Enum0_encode_aper;
 
 /*** <<< CODE [Enum0] >>> ***/
 
@@ -4642,6 +5150,8 @@ Enum0_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
+	td->aper_decoder   = asn_DEF_NativeEnumerated.aper_decoder;
+	td->aper_encoder   = asn_DEF_NativeEnumerated.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
 	td->elements       = asn_DEF_NativeEnumerated.elements;
@@ -4708,6 +5218,21 @@ Enum0_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Enum0_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Enum0_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Enum0_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Enum0_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Enum0] >>> ***/
 
@@ -4751,6 +5276,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum0 = {
 	Enum0_encode_xer,
 	Enum0_decode_uper,
 	Enum0_encode_uper,
+	Enum0_decode_aper,
+	Enum0_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum0_tags_1,
 	sizeof(asn_DEF_Enum0_tags_1)
@@ -4791,6 +5318,8 @@ xer_type_decoder_f Enum1_decode_xer;
 xer_type_encoder_f Enum1_encode_xer;
 per_type_decoder_f Enum1_decode_uper;
 per_type_encoder_f Enum1_encode_uper;
+per_type_decoder_f Enum1_decode_aper;
+per_type_encoder_f Enum1_encode_aper;
 
 /*** <<< CODE [Enum1] >>> ***/
 
@@ -4834,6 +5363,8 @@ Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeEnumerated.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeEnumerated.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
+	td->aper_decoder   = asn_DEF_NativeEnumerated.aper_decoder;
+	td->aper_encoder   = asn_DEF_NativeEnumerated.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
 	td->elements       = asn_DEF_NativeEnumerated.elements;
@@ -4900,6 +5431,21 @@ Enum1_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Enum1_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Enum1_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Enum1_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Enum1] >>> ***/
 
@@ -4943,6 +5489,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	Enum1_encode_xer,
 	Enum1_decode_uper,
 	Enum1_encode_uper,
+	Enum1_decode_aper,
+	Enum1_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
@@ -4976,6 +5524,8 @@ xer_type_decoder_f Identifier_decode_xer;
 xer_type_encoder_f Identifier_encode_xer;
 per_type_decoder_f Identifier_decode_uper;
 per_type_encoder_f Identifier_encode_uper;
+per_type_decoder_f Identifier_decode_aper;
+per_type_encoder_f Identifier_encode_aper;
 
 /*** <<< CTABLES [Identifier] >>> ***/
 
@@ -5066,6 +5616,8 @@ Identifier_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_VisibleString.xer_encoder;
 	td->uper_decoder   = asn_DEF_VisibleString.uper_decoder;
 	td->uper_encoder   = asn_DEF_VisibleString.uper_encoder;
+	td->aper_decoder   = asn_DEF_VisibleString.aper_decoder;
+	td->aper_encoder   = asn_DEF_VisibleString.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_VisibleString.per_constraints;
 	td->elements       = asn_DEF_VisibleString.elements;
@@ -5132,6 +5684,21 @@ Identifier_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+asn_dec_rval_t
+Identifier_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	Identifier_1_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+asn_enc_rval_t
+Identifier_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	Identifier_1_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 
 /*** <<< CTDEFS [Identifier] >>> ***/
 
@@ -5159,6 +5726,8 @@ asn_TYPE_descriptor_t asn_DEF_Identifier = {
 	Identifier_encode_xer,
 	Identifier_decode_uper,
 	Identifier_encode_uper,
+	Identifier_decode_aper,
+	Identifier_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Identifier_tags_1,
 	sizeof(asn_DEF_Identifier_tags_1)

@@ -119,6 +119,8 @@ asn_TYPE_descriptor_t asn_DEF_ch_4 = {
 	CHOICE_encode_xer,
 	CHOICE_decode_uper,
 	CHOICE_encode_uper,
+	CHOICE_decode_aper,
+	CHOICE_encode_aper,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -198,6 +200,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	CHOICE_encode_xer,
 	CHOICE_decode_uper,
 	CHOICE_encode_uper,
+	CHOICE_decode_aper,
+	CHOICE_encode_aper,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -297,6 +301,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	CHOICE_encode_xer,
 	CHOICE_decode_uper,
 	CHOICE_encode_uper,
+	CHOICE_decode_aper,
+	CHOICE_encode_aper,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

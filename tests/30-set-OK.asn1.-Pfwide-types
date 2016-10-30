@@ -105,6 +105,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)

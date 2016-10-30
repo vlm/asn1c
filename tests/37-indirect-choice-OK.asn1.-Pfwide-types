@@ -103,6 +103,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -193,6 +194,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -311,6 +313,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice2_tags_1,
 	sizeof(asn_DEF_Choice2_tags_1)
@@ -367,10 +370,6 @@ Choice3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_Choice2.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
 	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
-	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
-	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
 	td->elements_count = asn_DEF_Choice2.elements_count;
 	td->specifics      = asn_DEF_Choice2.specifics;
@@ -438,6 +437,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	Choice3_decode_xer,
 	Choice3_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice3_tags_1,
 	sizeof(asn_DEF_Choice3_tags_1)
@@ -493,10 +493,6 @@ Choice4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_Choice2.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
 	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
-	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
-	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
 	td->elements_count = asn_DEF_Choice2.elements_count;
 	td->specifics      = asn_DEF_Choice2.specifics;
@@ -564,6 +560,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice4 = {
 	Choice4_decode_xer,
 	Choice4_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice4_tags_1,
 	sizeof(asn_DEF_Choice4_tags_1)
@@ -619,10 +616,6 @@ Choice5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_Choice2.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice2.xer_decoder;
 	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
-	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
-	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
 	td->elements_count = asn_DEF_Choice2.elements_count;
 	td->specifics      = asn_DEF_Choice2.specifics;
@@ -689,6 +682,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice5 = {
 	Choice5_decode_xer,
 	Choice5_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice5_tags_1,
 	sizeof(asn_DEF_Choice5_tags_1)
@@ -744,10 +738,6 @@ Choice6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_Choice1.der_encoder;
 	td->xer_decoder    = asn_DEF_Choice1.xer_decoder;
 	td->xer_encoder    = asn_DEF_Choice1.xer_encoder;
-	td->uper_decoder   = asn_DEF_Choice1.uper_decoder;
-	td->uper_encoder   = asn_DEF_Choice1.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_Choice1.per_constraints;
 	td->elements       = asn_DEF_Choice1.elements;
 	td->elements_count = asn_DEF_Choice1.elements_count;
 	td->specifics      = asn_DEF_Choice1.specifics;
@@ -811,6 +801,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice6 = {
 	Choice6_decode_xer,
 	Choice6_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

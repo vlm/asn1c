@@ -55,6 +55,8 @@ unsigned32_4_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->aper_decoder   = asn_DEF_NativeInteger.aper_decoder;
+	td->aper_encoder   = asn_DEF_NativeInteger.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -121,6 +123,21 @@ unsigned32_4_encode_uper(asn_TYPE_descriptor_t *td,
 	return td->uper_encoder(td, constraints, structure, per_out);
 }
 
+static asn_dec_rval_t
+unsigned32_4_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	unsigned32_4_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+static asn_enc_rval_t
+unsigned32_4_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	unsigned32_4_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
+}
+
 static int
 unsplit32_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
@@ -161,6 +178,8 @@ unsplit32_5_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->aper_decoder   = asn_DEF_NativeInteger.aper_decoder;
+	td->aper_encoder   = asn_DEF_NativeInteger.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -225,6 +244,21 @@ unsplit32_5_encode_uper(asn_TYPE_descriptor_t *td,
 		void *structure, asn_per_outp_t *per_out) {
 	unsplit32_5_inherit_TYPE_descriptor(td);
 	return td->uper_encoder(td, constraints, structure, per_out);
+}
+
+static asn_dec_rval_t
+unsplit32_5_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
+	unsplit32_5_inherit_TYPE_descriptor(td);
+	return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
+}
+
+static asn_enc_rval_t
+unsplit32_5_encode_aper(asn_TYPE_descriptor_t *td,
+		asn_per_constraints_t *constraints,
+		void *structure, asn_per_outp_t *per_out) {
+	unsplit32_5_inherit_TYPE_descriptor(td);
+	return td->aper_encoder(td, constraints, structure, per_out);
 }
 
 static int
@@ -376,6 +410,8 @@ asn_TYPE_descriptor_t asn_DEF_unsigned32_4 = {
 	unsigned32_4_encode_xer,
 	unsigned32_4_decode_uper,
 	unsigned32_4_encode_uper,
+	unsigned32_4_decode_aper,
+	unsigned32_4_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_unsigned32_tags_4,
 	sizeof(asn_DEF_unsigned32_tags_4)
@@ -410,6 +446,8 @@ asn_TYPE_descriptor_t asn_DEF_unsplit32_5 = {
 	unsplit32_5_encode_xer,
 	unsplit32_5_decode_uper,
 	unsplit32_5_encode_uper,
+	unsplit32_5_decode_aper,
+	unsplit32_5_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_unsplit32_tags_5,
 	sizeof(asn_DEF_unsplit32_tags_5)
@@ -490,6 +528,8 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	SEQUENCE_decode_aper,
+	SEQUENCE_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)

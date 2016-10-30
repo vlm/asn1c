@@ -104,6 +104,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice_tags_1,
 	sizeof(asn_DEF_Choice_tags_1)

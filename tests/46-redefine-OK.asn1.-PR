@@ -41,10 +41,6 @@ PrimitiveType_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_OCTET_STRING.der_encoder;
 	td->xer_decoder    = asn_DEF_OCTET_STRING.xer_decoder;
 	td->xer_encoder    = asn_DEF_OCTET_STRING.xer_encoder;
-	td->uper_decoder   = asn_DEF_OCTET_STRING.uper_decoder;
-	td->uper_encoder   = asn_DEF_OCTET_STRING.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_OCTET_STRING.per_constraints;
 	td->elements       = asn_DEF_OCTET_STRING.elements;
 	td->elements_count = asn_DEF_OCTET_STRING.elements_count;
 	td->specifics      = asn_DEF_OCTET_STRING.specifics;
@@ -111,6 +107,7 @@ asn_TYPE_descriptor_t asn_DEF_PrimitiveType = {
 	PrimitiveType_decode_xer,
 	PrimitiveType_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PrimitiveType_tags_1,
 	sizeof(asn_DEF_PrimitiveType_tags_1)
@@ -181,6 +178,7 @@ asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ConstructedType_tags_1,
 	sizeof(asn_DEF_ConstructedType_tags_1)
@@ -237,10 +235,6 @@ T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_ConstructedType.der_encoder;
 	td->xer_decoder    = asn_DEF_ConstructedType.xer_decoder;
 	td->xer_encoder    = asn_DEF_ConstructedType.xer_encoder;
-	td->uper_decoder   = asn_DEF_ConstructedType.uper_decoder;
-	td->uper_encoder   = asn_DEF_ConstructedType.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ConstructedType.per_constraints;
 	td->elements       = asn_DEF_ConstructedType.elements;
 	td->elements_count = asn_DEF_ConstructedType.elements_count;
 	td->specifics      = asn_DEF_ConstructedType.specifics;
@@ -308,6 +302,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_decode_xer,
 	T_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)

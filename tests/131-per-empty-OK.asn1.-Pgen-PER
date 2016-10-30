@@ -41,6 +41,8 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	SEQUENCE_decode_aper,
+	SEQUENCE_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
