@@ -873,6 +873,12 @@ SET_OF_encode_uper(
         asn_per_outp_t *per_output) {
  
         asn_enc_rval_t erval;
+
+	(void)type_descriptor;	/* Unused argument */
+	(void)constraints;	/* Unused argument */
+	(void)struct_ptr;	/* Unused argument */
+	(void)per_output;	/* Unused argument */
+
         erval.encoded = -1;
         ASN__ENCODED_OK(erval);
 }
@@ -973,6 +979,12 @@ SET_OF_encode_aper(
         asn_per_outp_t *per_output) {
  
         asn_enc_rval_t erval;
+
+	(void)type_descriptor;	/* Unused argument */
+	(void)constraints;	/* Unused argument */
+	(void)struct_ptr;	/* Unused argument */
+	(void)per_output;	/* Unused argument */
+
         erval.encoded = -1;
         ASN__ENCODED_OK(erval);
 }
