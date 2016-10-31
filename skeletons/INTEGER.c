@@ -843,8 +843,8 @@ INTEGER_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		{
 			/* The indefinite length case */
 
-			int i;
-			uint8_t length, num_bits, max_value;
+			int length;
+			uint8_t num_bits, max_value;
 			max_value = (ct->range_bits >> 3) +
 				(ct->range_bits % 8 > 0) - 1;
 			for (num_bits = 0; max_value; num_bits++) {
