@@ -28,6 +28,7 @@ asn1p_module_free(asn1p_module_t *mod) {
 		asn1p_expr_t *expr;
 
 		free(mod->ModuleName);
+		free(mod->source_file_name);
 
 		asn1p_oid_free(mod->module_oid);
 
