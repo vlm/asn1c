@@ -813,6 +813,8 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 		arg->embed++;
 		emit_member_table(arg, v);
 		arg->embed--;
+		free(v->Identifier);
+		v->Identifier = (char *)NULL;
 	INDENT(-1);
 	OUT("};\n");
 
