@@ -330,6 +330,8 @@ main(int ac, char **av) {
         exit(EX_SOFTWARE);
     }
 
+    asn1p_delete(asn);
+
     return 0;
 }
 
