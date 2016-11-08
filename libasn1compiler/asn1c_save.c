@@ -149,6 +149,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			safe_fprintf(mkf, "ASN_%s_%s+=%s\n",
 				what_class, what_kind, fname);
 		}
+
+		asn1c_deps_freelist(deps);
+		asn1c_deps_freelist(dlist);
 	}
 
 	if(need_to_generate_pdu_collection(arg)) {
