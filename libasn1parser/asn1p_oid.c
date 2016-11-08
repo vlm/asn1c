@@ -52,6 +52,7 @@ asn1p_oid_free(asn1p_oid_t *oid) {
 			while(oid->arcs_count--) {
 				free(oid->arcs[oid->arcs_count].name);
 			}
+			free(oid->arcs);
 		}
 		free(oid);
 	}
