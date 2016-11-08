@@ -425,6 +425,11 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
     closedir(dir);
 #endif
 
+#ifdef _WIN32
+    free(pattern);
+#endif
+    free(target_dir);
+
     return ret;
 }
 
