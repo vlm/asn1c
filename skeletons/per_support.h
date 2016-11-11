@@ -24,8 +24,8 @@ typedef const struct asn_per_constraint_s {
 	} flags;
 	int  range_bits;		/* Full number of bits in the range */
 	int  effective_bits;		/* Effective bits */
-	long lower_bound;		/* "lb" value */
-	long upper_bound;		/* "ub" value */
+	long long lower_bound;		/* "lb" value */
+	long long upper_bound;		/* "ub" value */
 } asn_per_constraint_t;
 typedef const struct asn_per_constraints_s {
 	struct asn_per_constraint_s value;
