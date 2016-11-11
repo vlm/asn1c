@@ -106,10 +106,10 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 				if(native_long_sign(r_value) >= 0) {
 					ulong_optimize = ulong_optimization(etype, r_size, r_value);
 					if(!ulong_optimize) {
-						OUT("unsigned long value;\n");
+						OUT("unsigned long long value;\n");
 					}
 				} else {
-					OUT("long value;\n");
+					OUT("long long value;\n");
 				}
 				break;
 			case ASN_BASIC_REAL:
@@ -613,9 +613,9 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 		if(asn1c_type_fits_long(arg, arg->expr) == FL_FITS_UNSIGN) {
-			OUT("value = *(const unsigned long *)sptr;\n");
+			OUT("value = *(const unsigned long long *)sptr;\n");
 		} else if(asn1c_type_fits_long(arg, arg->expr) != FL_NOTFIT) {
-			OUT("value = *(const long *)sptr;\n");
+			OUT("value = *(const long long *)sptr;\n");
 		} else {
 			/*
 			 * In some cases we can explore our knowledge of
