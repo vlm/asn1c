@@ -82,7 +82,7 @@ ssize_t uper_get_nslength(asn_per_data_t *pd);
 ssize_t uper_get_nsnnwn(asn_per_data_t *pd);
 
 /* X.691-2008/11, #11.5.6 */
-int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *v, int nbits);
+int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long long *v, int nbits);
 
 /* Non-thread-safe debugging function, don't use it */
 char *per_data_string(asn_per_data_t *pd);
@@ -107,8 +107,8 @@ int per_put_few_bits(asn_per_outp_t *per_data, uint32_t bits, int obits);
 int per_put_many_bits(asn_per_outp_t *po, const uint8_t *src, int put_nbits);
 
 /* X.691-2008/11, #11.5 */
-int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits);
-int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits);
+int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long long v, int nbits);
+int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long long v, int nbits);
 
 /*
  * Put the length "n" to the Unaligned PER stream.

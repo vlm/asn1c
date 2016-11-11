@@ -265,9 +265,9 @@ uper_put_nsnnwn(asn_per_outp_t *po, int n) {
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value, int nbits) {
-	unsigned long lhalf;    /* Lower half of the number*/
-	long half;
+int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long long *out_value, int nbits) {
+	unsigned long long lhalf;    /* Lower half of the number*/
+	long long half;
 
 	if(nbits <= 31) {
 		half = per_get_few_bits(pd, nbits);
@@ -285,27 +285,27 @@ int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_val
 	if(uper_get_constrained_whole_number(pd, &lhalf, nbits - 31))
 		return -1;
 
-	*out_value = ((unsigned long)half << (nbits - 31)) | lhalf;
+	*out_value = ((unsigned long long)half << (nbits - 31)) | lhalf;
 	return 0;
 }
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits) {
+int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long long v, int nbits) {
 	/*
 	 * Assume signed number can be safely coerced into
 	 * unsigned of the same range.
 	 * The following testing code will likely be optimized out
 	 * by compiler if it is true.
 	 */
-	unsigned long uvalue1 = ULONG_MAX;
-	         long svalue  = uvalue1;
-	unsigned long uvalue2 = svalue;
+	unsigned long long uvalue1 = ULLONG_MAX;
+	         long long svalue  = uvalue1;
+	unsigned long long uvalue2 = svalue;
 	assert(uvalue1 == uvalue2);
 	return uper_put_constrained_whole_number_u(po, v, nbits);
 }
 
-int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits) {
+int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long long v, int nbits) {
 	if(nbits <= 31) {
 		return per_put_few_bits(po, v, nbits);
 	} else {
