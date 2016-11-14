@@ -47,12 +47,16 @@
 #endif
 #ifndef	ASSUMESTDTYPES	/* Standard types have been defined elsewhere */
 #define	ssize_t		SSIZE_T
+#if _MSC_VER < 1600
 typedef	char		int8_t;
 typedef	short		int16_t;
 typedef	int		int32_t;
 typedef	unsigned char	uint8_t;
 typedef	unsigned short	uint16_t;
 typedef	unsigned int	uint32_t;
+#else /* _MSC_VER >= 1600 */
+#include <stdint.h>
+#endif /* _MSC_VER < 1600 */
 #endif	/* ASSUMESTDTYPES */
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
