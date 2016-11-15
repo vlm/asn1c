@@ -100,14 +100,14 @@ NativeInteger_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 			const void *constbuf;
 			void *nonconstbuf;
 		} unconst_buf;
-		long l;
+		long long l;
 
 		unconst_buf.constbuf = buf_ptr;
 		tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
 		tmp.size = length;
 
 		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&tmp, (unsigned long *)&l) /* sic */
+			? asn_INTEGER2ulong(&tmp, (unsigned long long *)&l) /* sic */
 			: asn_INTEGER2long(&tmp, &l)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -185,9 +185,9 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr, 
 		opt_mname, buf_ptr, size);
 	if(rval.code == RC_OK) {
-		long l;
+		long long l;
 		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&st, (unsigned long *)&l) /* sic */
+			? asn_INTEGER2ulong(&st, (unsigned long long *)&l) /* sic */
 			: asn_INTEGER2long(&st, &l)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
@@ -238,7 +238,7 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_dec_rval_t rval;
-	long *native = (long *)*sptr;
+	long long *native = (long long*)*sptr;
 	INTEGER_t tmpint;
 	void *tmpintptr = &tmpint;
 
@@ -246,7 +246,7 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	ASN_DEBUG("Decoding NativeInteger %s (UPER)", td->name);
 
 	if(!native) {
-		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
+		native = (long long *)(*sptr = CALLOC(1, sizeof(*native)));
 		if(!native) ASN__DECODE_FAILED;
 	}
 
@@ -255,7 +255,7 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 				   &tmpintptr, pd);
 	if(rval.code == RC_OK) {
 		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&tmpint, (unsigned long *)native)
+			? asn_INTEGER2ulong(&tmpint, (unsigned long long *)native)
 			: asn_INTEGER2long(&tmpint, native))
 			rval.code = RC_FAIL;
 		else

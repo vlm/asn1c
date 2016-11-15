@@ -666,7 +666,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 
 #define	_OID_CAPTURE_ARC(oid_text, oid_end)		do {	\
 	const char *endp = oid_end;				\
-	long value;						\
+	long long value;						\
 	switch(asn_strtol_lim(oid_text, &endp, &value)) {	\
 	case ASN_STRTOL_EXTRA_DATA:				\
 	case ASN_STRTOL_OK:					\

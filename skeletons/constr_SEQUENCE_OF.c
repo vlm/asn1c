@@ -164,7 +164,7 @@ SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
 	if(ct) {
 		int not_in_root = (list->count < ct->lower_bound
 				|| list->count > ct->upper_bound);
-		ASN_DEBUG("lb %ld ub %ld %s",
+		ASN_DEBUG("lb %lld ub %lld %s",
 			ct->lower_bound, ct->upper_bound,
 			ct->flags & APC_EXTENSIBLE ? "ext" : "fix");
 		if(ct->flags & APC_EXTENSIBLE) {
