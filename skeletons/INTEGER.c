@@ -699,7 +699,7 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 				|| uval > (unsigned long long)ct->upper_bound)
 					inext = 1;
 			}
-			ASN_DEBUG("Value %lu (%02x/%d) lb %llu ub %llu %s",
+			ASN_DEBUG("Value %llu (%02x/%d) lb %llu ub %llu %s",
 				uval, st->buf[0], st->size,
 				ct->lower_bound, ct->upper_bound,
 				inext ? "ext" : "fix");
