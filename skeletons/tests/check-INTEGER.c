@@ -142,7 +142,7 @@ check_unsigned(uint8_t *buf, int size, unsigned long long  check_long, int check
 }
 
 static void
-check_xer(int tofail, char *xmldata, long orig_value) {
+check_xer(int tofail, char *xmldata, long long orig_value) {
 	INTEGER_t *st = 0;
 	asn_dec_rval_t rc;
 	long long value;
@@ -249,19 +249,27 @@ main() {
 	check_xer(0, "<INTEGER>-2147483648</INTEGER>", -2147483647-1);
 	check_xer(0, "<INTEGER>+2147483647</INTEGER>", 2147483647);
 	check_xer(0, "<INTEGER>2147483647</INTEGER>", 2147483647);
+
 	if(sizeof(long) == 4) {
-		check_xer( 0, "<INTEGER>-2147483648</INTEGER>", -2147483648);
-		check_xer(-1, "<INTEGER>-2147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>2147483648</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>2147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>3147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>4147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>5147483649</INTEGER>", 0); /* special */
-		check_xer(-1, "<INTEGER>9147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>9999999999</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-5147483649</INTEGER>", 0);/* special */
-		check_xer(-1, "<INTEGER>-9147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-9999999999</INTEGER>", 0);
+		check_xer(0, "<INTEGER>2147483648</INTEGER>", 2147483648);
+		check_xer(0, "<INTEGER>2147483649</INTEGER>", 2147483649);
+		check_xer(0, "<INTEGER>3147483649</INTEGER>", 3147483649);
+		check_xer(0, "<INTEGER>4147483649</INTEGER>", 4147483649);
+		check_xer(0, "<INTEGER>5147483649</INTEGER>", 5147483649);
+		check_xer(0, "<INTEGER>9147483649</INTEGER>", 9147483649);
+		check_xer(0, "<INTEGER>9999999999</INTEGER>", 9999999999);
+		check_xer(0, "<INTEGER>9223372036854775807</INTEGER>", 9223372036854775807);
+		check_xer(-1, "<INTEGER>9223372036854775808</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>10223372036854775807</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>50223372036854775807</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>100223372036854775807</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>500223372036854775807</INTEGER>", 0);
+		check_xer(0, "<INTEGER>-9223372036854775808</INTEGER>", -9223372036854775807-1);
+		check_xer(-1, "<INTEGER>-9223372036854775809</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>-10223372036854775807</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>-50223372036854775807</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>-100223372036854775807</INTEGER>", 0);
+		check_xer(-1, "<INTEGER>-500223372036854775807</INTEGER>", 0);
 	}
 	if(sizeof(long) == 8) {
 		check_xer(0, "<INTEGER>2147483648</INTEGER>", 2147483648);
