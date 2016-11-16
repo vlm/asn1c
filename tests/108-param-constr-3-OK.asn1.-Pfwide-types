@@ -24,7 +24,7 @@ int
 MinMax_16P0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -40,7 +40,7 @@ MinMax_16P0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 3)) {
+	if((value >= 3LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -172,7 +172,7 @@ int
 ThreePlus_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const MinMax_16P0_t *st = (const MinMax_16P0_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -188,7 +188,7 @@ ThreePlus_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 3)) {
+	if((value >= 3LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

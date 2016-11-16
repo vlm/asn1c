@@ -24,7 +24,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Narrow_15P0;
 static int
 memb_narrow1_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -33,9 +33,9 @@ memb_narrow1_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value >= 1 && value <= 5)) {
+	if((value >= 1LL && value <= 5LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -49,7 +49,7 @@ memb_narrow1_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 static int
 memb_narrow2_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -58,9 +58,9 @@ memb_narrow2_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value >= 2 && value <= 5)) {
+	if((value >= 2LL && value <= 5LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -74,7 +74,7 @@ memb_narrow2_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 static int
 memb_narrow3_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -83,9 +83,9 @@ memb_narrow3_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value >= 3 && value <= 5)) {
+	if((value >= 3LL && value <= 5LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

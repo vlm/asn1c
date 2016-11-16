@@ -30,7 +30,7 @@ extern asn_TYPE_descriptor_t asn_DEF_TestType_16P1;
 static int
 memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -39,9 +39,9 @@ memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value >= 1 && value <= 10)) {
+	if((value >= 1LL && value <= 10LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -312,7 +312,7 @@ extern asn_TYPE_descriptor_t asn_DEF_AutoType_34P1;
 static int
 memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -321,9 +321,9 @@ memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value == 0)) {
+	if((value == 0LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -348,7 +348,7 @@ memb_common_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	value = (*(const long *)sptr) ? 1 : 0;
 	
-	if((value <= 0)) {
+	if((value <= 0LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

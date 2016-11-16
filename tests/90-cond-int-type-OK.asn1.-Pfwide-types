@@ -288,7 +288,7 @@ int
 CN_IntegerMinLow_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -304,7 +304,7 @@ CN_IntegerMinLow_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value <= 1)) {
+	if((value <= 1LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -436,7 +436,7 @@ int
 NO_IntegerMinHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -452,7 +452,7 @@ NO_IntegerMinHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value <= 3000000000)) {
+	if((value <= 3000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -583,7 +583,7 @@ xer_type_encoder_f NO_IntegerLowHigh_encode_xer;
 int
 NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	unsigned long value;
+	unsigned long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -592,9 +592,9 @@ NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const unsigned long *)sptr;
+	value = *(const unsigned long long *)sptr;
 	
-	if((value >= 1 && value <= 3000000000)) {
+	if((value >= 1LL && value <= 3000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -731,7 +731,7 @@ int
 CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -747,7 +747,7 @@ CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 1)) {
+	if((value >= 1LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -879,7 +879,7 @@ int
 NO_IntegerHighMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -895,7 +895,7 @@ NO_IntegerHighMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 3000000000)) {
+	if((value >= 3000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1027,7 +1027,7 @@ int
 NO_IntegerLowestMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1043,7 +1043,7 @@ NO_IntegerLowestMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= -3000000000)) {
+	if((value >= -3000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1174,7 +1174,7 @@ xer_type_encoder_f NO_IntegerOutRange_encode_xer;
 int
 NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	unsigned long value;
+	unsigned long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1183,9 +1183,9 @@ NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const unsigned long *)sptr;
+	value = *(const unsigned long long *)sptr;
 	
-	if((value >= 3000000000 && value <= 3000000001)) {
+	if((value >= 3000000000LL && value <= 3000000001LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1321,7 +1321,7 @@ xer_type_encoder_f NO_IntegerOutValue_encode_xer;
 int
 NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	unsigned long value;
+	unsigned long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1330,9 +1330,9 @@ NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const unsigned long *)sptr;
+	value = *(const unsigned long long *)sptr;
 	
-	if((value == 3000000000)) {
+	if((value == 3000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1468,7 +1468,7 @@ xer_type_encoder_f OK_IntegerInRange1_encode_xer;
 int
 OK_IntegerInRange1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1477,9 +1477,9 @@ OK_IntegerInRange1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value >= -100 && value <= 100)) {
+	if((value >= -100LL && value <= 100LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1610,7 +1610,7 @@ xer_type_encoder_f OK_IntegerInRange2_encode_xer;
 int
 OK_IntegerInRange2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1619,9 +1619,9 @@ OK_IntegerInRange2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if(((value == -100) || (value == 100))) {
+	if(((value == -100LL) || (value == 100LL))) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1752,7 +1752,7 @@ xer_type_encoder_f OK_IntegerInRange3_encode_xer;
 int
 OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1761,9 +1761,9 @@ OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value >= (-2147483647L - 1) && value <= 2147483647)) {
+	if((value >= (-2147483647L - 1)LL && value <= 2147483647LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1894,7 +1894,7 @@ xer_type_encoder_f OK_IntegerInRange4_encode_xer;
 int
 OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1903,9 +1903,9 @@ OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if(((value == (-2147483647L - 1)) || (value == 2147483647))) {
+	if(((value == (-2147483647L - 1)LL) || (value == 2147483647LL))) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -2037,7 +2037,7 @@ int
 OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -2053,7 +2053,7 @@ OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(((value == (-2147483647L - 1)) || (value == 2147483647))) {
+	if(((value == (-2147483647L - 1)LL) || (value == 2147483647LL))) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

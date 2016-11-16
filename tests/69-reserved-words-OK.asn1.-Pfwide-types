@@ -61,7 +61,7 @@ memb_char_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size;
 	
-	if((size == 1)) {
+	if((size == 1LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

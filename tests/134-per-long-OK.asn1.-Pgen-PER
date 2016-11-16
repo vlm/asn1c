@@ -26,7 +26,7 @@ static int
 memb_unsigned33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -42,7 +42,7 @@ memb_unsigned33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 0 && value <= 5000000000)) {
+	if((value >= 0LL && value <= 5000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -57,7 +57,7 @@ static int
 memb_unsigned42_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -73,7 +73,7 @@ memb_unsigned42_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 0 && value <= 3153600000000)) {
+	if((value >= 0LL && value <= 3153600000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -88,7 +88,7 @@ static int
 memb_signed33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -104,7 +104,7 @@ memb_signed33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= -4000000000 && value <= 4000000000)) {
+	if((value >= -4000000000LL && value <= 4000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -119,7 +119,7 @@ static int
 memb_signed33ext_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -135,7 +135,7 @@ memb_signed33ext_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= -4000000000 && value <= 4000000000)) {
+	if((value >= -4000000000LL && value <= 4000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
