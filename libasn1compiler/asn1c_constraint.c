@@ -524,25 +524,15 @@ emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varn
 		}
 
 		if(ignore_left) {
-			OUT("%s <= ", varname);
-			OINT(r->right.value);
-            OUT("LL");
+			OUT("%s <= %lldLL", varname, r->right.value);
 		} else if(ignore_right) {
-			OUT("%s >= ", varname);
-			OINT(r->left.value);
-            OUT("LL");
+			OUT("%s >= %lldLL", varname, r->left.value);
 		} else if(r->left.value == r->right.value) {
-			OUT("%s == ", varname);
-			OINT(r->right.value);
-            OUT("LL");
+			OUT("%s == %lldLL", varname, r->right.value);
 		} else {
-			OUT("%s >= ", varname);
-			OINT(r->left.value);
-            OUT("LL");
+			OUT("%s >= %lldLL", varname, r->left.value);
 			OUT(" && ");
-			OUT("%s <= ", varname);
-			OINT(r->right.value);
-            OUT("LL");
+			OUT("%s <= %lldLL", varname, r->right.value);
 		}
 		if(r != range) OUT(")");
 		generated_something = 1;

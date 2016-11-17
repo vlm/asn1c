@@ -266,7 +266,7 @@ memb_full32range_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	value = *(const long long *)sptr;
 	
-	if((value >= (-2147483647L - 1)LL && value <= 2147483647LL)) {
+	if((value >= -2147483648LL && value <= 2147483647LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
