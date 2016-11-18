@@ -28,7 +28,7 @@ check_xer(e_Enum2 eval, char *xer_string) {
 	asn_dec_rval_t rv;
 	char buf2[128];
 	Enum2_t *e = 0;
-	long val;
+	long long val;
 
 	rv = xer_decode(0, &asn_DEF_Enum2, (void **)&e,
 		xer_string, strlen(xer_string));
