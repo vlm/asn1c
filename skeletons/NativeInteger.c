@@ -283,7 +283,7 @@ NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
 
 	memset(&tmpint, 0, sizeof(tmpint));
 	if((specs&&specs->field_unsigned)
-		? asn_ulong2INTEGER(&tmpint, native)
+		? asn_ulong2INTEGER(&tmpint, (unsigned long)native)
 		: asn_long2INTEGER(&tmpint, native))
 		ASN__ENCODE_FAILED;
 	er = INTEGER_encode_uper(td, constraints, &tmpint, po);
