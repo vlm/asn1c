@@ -2,9 +2,18 @@ language: c
 compiler:
   - gcc
   - clang
+env:
+  - BUILD=x86_64-linux-gnu
+    CFLAGS=-m64 LDFLAGS=-m64
+  - BUILD=i686-linux-gnu
+    CFLAGS=-m32 LDFLAGS=-m32
+addons:
+  apt:
+    packages:
+    - gcc-multilib
 script:
     - autoreconf -iv
-    - ./configure --enable-Werror
+    - ./configure --enable-Werror --build=$BUILD
     - make -j8
     - make check
     - make distcheck
