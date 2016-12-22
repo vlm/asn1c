@@ -14,7 +14,7 @@ extern "C" {
 		type **array;				\
 		int count;	/* Meaningful size */	\
 		int size;	/* Allocated size */	\
-		void (*free)(type *);			\
+		void (*free)(void *);			\
 	}
 
 #define	ASN_SET_ADD(headptr, ptr)		\
