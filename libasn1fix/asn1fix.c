@@ -253,9 +253,8 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 		if (prefix) {
 			char *tmp = malloc(strlen(prefix)+strlen(expr->Identifier)+1);
 			sprintf(tmp, "%s%s", prefix, expr->Identifier);
+			free(expr->Identifier);
 			expr->Identifier = tmp;
-			/* FIXME: what about old memory ? */
-#warning "Fix this memory leak"
 		}
 		/*
 		 * Dereference DEFAULT values.
