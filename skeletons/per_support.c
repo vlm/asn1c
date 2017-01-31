@@ -136,6 +136,91 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 	return accum;
 }
 
+int32_t
+aper_get_few_bits(asn_per_data_t *pd, int nbits) {
+	size_t off;	/* Next after last bit offset */
+	ssize_t nleft;	/* Number of bits left in this stream */
+	uint32_t accum;
+	const uint8_t *buf;
+
+	if(nbits < 0)
+		return -1;
+
+	if (nbits >= 8 && aper_get_align_bits(pd) < 0)
+		return -1;
+
+	nleft = pd->nbits - pd->nboff;
+	if(nbits > nleft) {
+		int32_t tailv, vhead;
+		if(!pd->refill || nbits > 31) return -1;
+		/* Accumulate unused bytes before refill */
+		ASN_DEBUG("Obtain the rest %d bits (want %d)",
+			(int)nleft, (int)nbits);
+		tailv = per_get_few_bits(pd, nleft);
+		if(tailv < 0) return -1;
+		/* Refill (replace pd contents with new data) */
+		if(pd->refill(pd))
+			return -1;
+		nbits -= nleft;
+		vhead = per_get_few_bits(pd, nbits);
+		/* Combine the rest of previous pd with the head of new one */
+		tailv = (tailv << nbits) | vhead;  /* Could == -1 */
+		return tailv;
+	}
+
+	/*
+	 * Normalize position indicator.
+	 */
+	if(pd->nboff >= 8) {
+		pd->buffer += (pd->nboff >> 3);
+		pd->nbits  -= (pd->nboff & ~0x07);
+		pd->nboff  &= 0x07;
+	}
+	pd->moved += nbits;
+	pd->nboff += nbits;
+	off = pd->nboff;
+	buf = pd->buffer;
+
+	/*
+	 * Extract specified number of bits.
+	 */
+	if(off <= 8)
+		accum = nbits ? (buf[0]) >> (8 - off) : 0;
+	else if(off <= 16)
+		accum = ((buf[0] << 8) + buf[1]) >> (16 - off);
+	else if(off <= 24)
+		accum = ((buf[0] << 16) + (buf[1] << 8) + buf[2]) >> (24 - off);
+	else if(off <= 31)
+		accum = ((buf[0] << 24) + (buf[1] << 16)
+			+ (buf[2] << 8) + (buf[3])) >> (32 - off);
+	else if(nbits <= 31) {
+		asn_per_data_t tpd = *pd;
+		/* Here are we with our 31-bits limit plus 1..7 bits offset. */
+		per_get_undo(&tpd, nbits);
+		/* The number of available bits in the stream allow
+		 * for the following operations to take place without
+		 * invoking the ->refill() function */
+		accum  = per_get_few_bits(&tpd, nbits - 24) << 24;
+		accum |= per_get_few_bits(&tpd, 24);
+	} else {
+		per_get_undo(pd, nbits);
+		return -1;
+	}
+
+	accum &= (((uint32_t)1 << nbits) - 1);
+
+	ASN_DEBUG("  [PER got %2d<=%2d bits => span %d %+ld[%d..%d]:%02x (%d) => 0x%x]",
+		(int)nbits, (int)nleft,
+		(int)pd->moved,
+		(((long)pd->buffer) & 0xf),
+		(int)pd->nboff, (int)pd->nbits,
+		pd->buffer[0],
+		(int)(pd->nbits - pd->nboff),
+		(int)accum);
+
+	return accum;
+}
+
 /*
  * Extract a large number of bits from the specified PER data pointer.
  */

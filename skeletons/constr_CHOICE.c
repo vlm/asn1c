@@ -1018,13 +1018,13 @@ CHOICE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	else ct = 0;
 
 	if(ct && ct->flags & APC_EXTENSIBLE) {
-		value = per_get_few_bits(pd, 1);
+		value = aper_get_few_bits(pd, 1);
 		if(value < 0) ASN__DECODE_STARVED;
 		if(value) ct = 0;	/* Not restricted */
 	}
 
 	if(ct && ct->range_bits >= 0) {
-		value = per_get_few_bits(pd, ct->range_bits);
+		value = aper_get_few_bits(pd, ct->range_bits);
 		if(value < 0) ASN__DECODE_STARVED;
 		ASN_DEBUG("CHOICE %s got index %d in range %d",
 			td->name, value, ct->range_bits);

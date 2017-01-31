@@ -1450,7 +1450,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	/* Handle extensions */
 	if(specs->ext_before >= 0) {
-		extpresent = per_get_few_bits(pd, 1);
+		extpresent = aper_get_few_bits(pd, 1);
 		if(extpresent < 0) ASN__DECODE_STARVED;
 	} else {
 		extpresent = 0;
@@ -1495,7 +1495,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Deal with optionality */
 		if(elm->optional) {
-			int present = per_get_few_bits(&opmd, 1);
+			int present = aper_get_few_bits(&opmd, 1);
 			ASN_DEBUG("Member %s->%s is optional, p=%d (%d->%d)",
 				td->name, elm->name, present,
 				(int)opmd.nboff, (int)opmd.nbits);
@@ -1578,7 +1578,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			memb_ptr2 = &memb_ptr;
 		}
 
-		present = per_get_few_bits(&epmd, 1);
+		present = aper_get_few_bits(&epmd, 1);
 		if(present <= 0) {
 			if(present < 0) break;	/* No more extensions */
 			continue;
@@ -1597,7 +1597,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 * in this system's version of the protocol */
 		for(;;) {
 			ASN_DEBUG("Getting overflow extensions");
-			switch(per_get_few_bits(&epmd, 1)) {
+			switch(aper_get_few_bits(&epmd, 1)) {
 			case -1: break;
 			case 0: continue;
 			default:

@@ -247,7 +247,7 @@ NativeEnumerated_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 	ASN_DEBUG("Decoding %s as NativeEnumerated", td->name);
 
 	if(ct->flags & APC_EXTENSIBLE) {
-		int inext = per_get_few_bits(pd, 1);
+		int inext = aper_get_few_bits(pd, 1);
 		if(inext < 0) {
 			ASN__DECODE_STARVED;
 		}
@@ -257,7 +257,7 @@ NativeEnumerated_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	if(ct && ct->range_bits >= 0) {
-		value = per_get_few_bits(pd, ct->range_bits);
+		value = aper_get_few_bits(pd, ct->range_bits);
 		if(value < 0) {
 			ASN__DECODE_STARVED;
 		}

@@ -308,7 +308,7 @@ BOOLEAN_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Extract a single bit
 	 */
-	switch(per_get_few_bits(pd, 1)) {
+	switch(aper_get_few_bits(pd, 1)) {
 	case 1:
 		*st = 1;
 		break;

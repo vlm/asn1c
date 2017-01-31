@@ -784,7 +784,7 @@ INTEGER_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	ct = constraints ? &constraints->value : 0;
 
 	if(ct && ct->flags & APC_EXTENSIBLE) {
-		int inext = per_get_few_bits(pd, 1);
+		int inext = aper_get_few_bits(pd, 1);
 		if(inext < 0) ASN__DECODE_STARVED;
 		if(inext) ct = 0;
 	}

@@ -55,6 +55,7 @@ int aper_get_align_bits(asn_per_data_t *pd);
  * extracted due to EOD or other conditions.
  */
 int32_t per_get_few_bits(asn_per_data_t *per_data, int get_nbits);
+int32_t aper_get_few_bits(asn_per_data_t *per_data, int get_nbits);
 
 /* Undo the immediately preceeding "get_few_bits" operation */
 void per_get_undo(asn_per_data_t *per_data, int get_nbits);
