@@ -578,13 +578,21 @@ SET_encode_uper(asn_TYPE_descriptor_t *td,
 				asn_per_constraints_t *constraints,
 				void *sptr,
 				asn_per_outp_t *po) {
+	int useless_test = (constraints && po);
+	if (useless_test) {
+		useless_test = 0;
+	}
 	ASN__ENCODE_FAILED;
 }
 
 asn_dec_rval_t
 SET_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					 asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	ASN__ENCODE_FAILED;
+	int useless_test = (opt_codec_ctx && constraints && sptr && pd);
+	if (useless_test) {
+		useless_test = 0;
+	}
+	ASN__DECODE_FAILED;
 }
 
 asn_enc_rval_t

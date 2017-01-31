@@ -50,7 +50,7 @@ aper_decode_complete(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, 
 		rval.consumed >>= 3;
 	} else if(rval.code == RC_OK) {
 		if(size) {
-			if(((uint8_t *)buffer)[0] == 0) {
+			if(((const uint8_t *)buffer)[0] == 0) {
 				rval.consumed = 1;	/* 1 byte */
 			} else {
 				ASN_DEBUG("Expecting single zeroed byte");
