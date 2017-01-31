@@ -1700,13 +1700,13 @@ OCTET_STRING_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 
 	switch(specs->subvariant) {
 	default:
-	case ASN_OSUBV_ANY:
 		ASN_DEBUG("Unrecognized subvariant %d", specs->subvariant);
 		RETURN(RC_FAIL);
 	case ASN_OSUBV_BIT:
 		canonical_unit_bits = unit_bits = 1;
 		bpc = OS__BPC_BIT;
 		break;
+	case ASN_OSUBV_ANY:
 	case ASN_OSUBV_STR:
 		canonical_unit_bits = unit_bits = 8;
 		if(cval->flags & APC_CONSTRAINED)
