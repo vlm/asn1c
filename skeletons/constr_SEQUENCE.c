@@ -1358,7 +1358,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		bmlength = uper_get_nslength(pd);
 		if(bmlength < 0) ASN__DECODE_STARVED;
 
-		ASN_DEBUG("Extensions %d present in %s", bmlength, td->name);
+		ASN_DEBUG("Extensions %lld present in %s", (long long)bmlength, td->name);
 
 		epres = (uint8_t *)MALLOC((bmlength + 15) >> 3);
 		if(!epres) ASN__DECODE_STARVED;
@@ -1370,8 +1370,8 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		memset(&epmd, 0, sizeof(epmd));
 		epmd.buffer = epres;
 		epmd.nbits = bmlength;
-		ASN_DEBUG("Read in extensions bitmap for %s of %d bits (%x..)",
-			td->name, bmlength, *epres);
+		ASN_DEBUG("Read in extensions bitmap for %s of %lld bits (%x..)",
+			td->name, (long long)bmlength, *epres);
 
 	    /* Go over extensions and read them in */
 	    for(edx = specs->ext_after + 1; edx < td->elements_count; edx++) {

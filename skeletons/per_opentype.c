@@ -76,8 +76,8 @@ aper_open_type_put(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints
 	FREEMEM(buf);
 	if(toGo) return -1;
 
-	ASN_DEBUG("Open type put %s of length %d + overhead (1byte?)",
-			  td->name, size);
+	ASN_DEBUG("Open type put %s of length %lld + overhead (1byte?)",
+			  td->name, (long long)size);
 
 	return 0;
 }

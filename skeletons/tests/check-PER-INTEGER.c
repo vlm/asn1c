@@ -104,11 +104,11 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 					(void **)&reconstructed_st, &pd);
 	assert(dec_rval.code == RC_OK);
 	if(unsigned_) {
-		unsigned long reconstructed_value = 0;
+		unsigned long long reconstructed_value = 0;
 		asn_INTEGER2ulong(reconstructed_st, &reconstructed_value);
 		assert(reconstructed_value == (unsigned long)value);
 	} else {
-		long reconstructed_value = 0;
+		long long reconstructed_value = 0;
 		asn_INTEGER2long(reconstructed_st, &reconstructed_value);
 		assert(reconstructed_value == value);
 	}

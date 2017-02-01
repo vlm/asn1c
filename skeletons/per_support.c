@@ -35,7 +35,7 @@ int32_t
 aper_get_align(asn_per_data_t *pd) {
 
 	if(pd->nboff & 0x7) {
-		ASN_DEBUG("Aligning %d bits", 8 - (pd->nboff & 0x7));
+		ASN_DEBUG("Aligning %ld bits", 8 - ((unsigned long)pd->nboff & 0x7));
 		return per_get_few_bits(pd, 8 - (pd->nboff & 0x7));
 	}
 	return 0;
@@ -262,7 +262,7 @@ aper_get_nslength(asn_per_data_t *pd) {
 	if(per_get_few_bits(pd, 1) == 0) {
 		length = per_get_few_bits(pd, 6) + 1;
 		if(length <= 0) return -1;
-		ASN_DEBUG("l=%d", length);
+		ASN_DEBUG("l=%lld", (long long)length);
 		return length;
 	} else {
 		int repeat;
@@ -361,9 +361,9 @@ uper_put_nsnnwn(asn_per_outp_t *po, int n) {
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value, int nbits) {
-	unsigned long lhalf;    /* Lower half of the number*/
-	long half;
+int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long long *out_value, int nbits) {
+	unsigned long long lhalf;    /* Lower half of the number*/
+	long long half;
 
 	if(nbits <= 31) {
 		half = per_get_few_bits(pd, nbits);
@@ -381,27 +381,27 @@ int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_val
 	if(uper_get_constrained_whole_number(pd, &lhalf, nbits - 31))
 		return -1;
 
-	*out_value = ((unsigned long)half << (nbits - 31)) | lhalf;
+	*out_value = ((unsigned long long)half << (nbits - 31)) | lhalf;
 	return 0;
 }
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits) {
+int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long long v, int nbits) {
 	/*
 	 * Assume signed number can be safely coerced into
 	 * unsigned of the same range.
 	 * The following testing code will likely be optimized out
 	 * by compiler if it is true.
 	 */
-	unsigned long uvalue1 = ULONG_MAX;
-	         long svalue  = uvalue1;
-	unsigned long uvalue2 = svalue;
+	unsigned long long uvalue1 = ULONG_MAX;
+	         long long svalue  = uvalue1;
+	unsigned long long uvalue2 = svalue;
 	assert(uvalue1 == uvalue2);
 	return uper_put_constrained_whole_number_u(po, v, nbits);
 }
 
-int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits) {
+int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long long v, int nbits) {
 	if(nbits <= 31) {
 		return per_put_few_bits(po, v, nbits);
 	} else {
@@ -550,7 +550,7 @@ aper_put_nsnnwn(asn_per_outp_t *po, int range, int number) {
 int aper_put_align(asn_per_outp_t *po) {
 
 	if(po->nboff & 0x7) {
-		ASN_DEBUG("Aligning %d bits", 8 - (po->nboff & 0x7));
+		ASN_DEBUG("Aligning %ld bits", 8 - ((unsigned long)po->nboff & 0x7));
 		if(per_put_few_bits(po, 0x00, (8 - (po->nboff & 0x7))))
 			return -1;
 	}
@@ -595,7 +595,7 @@ per_put_many_bits(asn_per_outp_t *po, const uint8_t *src, int nbits) {
 ssize_t
 uper_put_length(asn_per_outp_t *po, size_t length) {
 
-	ASN_DEBUG("UPER put length %d", length);
+	ASN_DEBUG("UPER put length %zu", length);
 
 	if(length <= 127)	/* #10.9.3.6 */
 		return per_put_few_bits(po, length, 8)
@@ -614,7 +614,7 @@ uper_put_length(asn_per_outp_t *po, size_t length) {
 ssize_t
 aper_put_length(asn_per_outp_t *po, int range, size_t length) {
 
-	ASN_DEBUG("APER put length %d with range %d", length, range);
+	ASN_DEBUG("APER put length %zu with range %d", length, range);
 
 	/* 10.9 X.691 Note 2 */
 	if (range <= 65536 && range >= 0)

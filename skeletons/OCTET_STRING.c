@@ -1196,14 +1196,14 @@ OCTET_STRING_decode_xer_utf8(asn_codec_ctx_t *opt_codec_ctx,
 static int
 OCTET_STRING_per_get_characters(asn_per_data_t *po, uint8_t *buf,
 		size_t units, unsigned int bpc, unsigned int unit_bits,
-		int64_t lb, int64_t ub, asn_per_constraints_t *pc) {
+		long long lb, long long ub, asn_per_constraints_t *pc) {
 	uint8_t *end = buf + units * bpc;
 
 	ASN_DEBUG("Expanding %d characters into (%lld..%lld):%d",
 		(int)units, lb, ub, unit_bits);
 
 	/* X.691: 27.5.4 */
-	if((uint64_t)ub <= ((uint64_t)2 << (unit_bits - 1))) {
+	if((unsigned long long)ub <= ((unsigned long long)2 << (unit_bits - 1))) {
 		/* Decode without translation */
 		lb = 0;
 	} else if(pc && pc->code2value) {
@@ -1260,14 +1260,14 @@ OCTET_STRING_per_get_characters(asn_per_data_t *po, uint8_t *buf,
 static int
 OCTET_STRING_per_put_characters(asn_per_outp_t *po, const uint8_t *buf,
 		size_t units, unsigned int bpc, unsigned int unit_bits,
-		int64_t lb, int64_t ub, asn_per_constraints_t *pc) {
+		long long lb, long long ub, asn_per_constraints_t *pc) {
 	const uint8_t *end = buf + units * bpc;
 
 	ASN_DEBUG("Squeezing %d characters into (%lld..%lld):%d (%d bpc)",
 		(int)units, lb, ub, unit_bits, bpc);
 
 	/* X.691: 27.5.4 */
-	if((uint64_t)ub <= ((uint64_t)2 << (unit_bits - 1))) {
+	if((unsigned long long)ub <= ((unsigned long long)2 << (unit_bits - 1))) {
 		/* Encode as is */
 		lb = 0;
 	} else if(pc && pc->value2code) {
