@@ -8,6 +8,42 @@ static int _asn1f_parse_class_object_data(arg_t *, asn1p_expr_t *eclass,
 static int _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_ioc_cell_s *cell, uint8_t *buf, const uint8_t *bend);
 
 int
+asn1f_check_class_object(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *eclass;
+	asn1p_ioc_row_t *row;
+
+	if(expr->meta_type != AMT_VALUE
+	|| expr->expr_type != A1TC_REFERENCE
+	|| !expr->value
+	|| expr->value->type != ATV_UNPARSED)
+		return 0;
+
+	eclass = asn1f_find_terminal_type(arg, expr);
+	if(!eclass
+	|| eclass->meta_type != AMT_OBJECTCLASS
+	|| eclass->expr_type != A1TC_CLASSDEF) {
+		return 0;
+	}
+
+	if(!eclass->with_syntax) {
+		DEBUG("Can't process classes without %s just yet",
+			"WITH SYNTAX");
+		return 0;
+	}
+
+	row = asn1p_ioc_row_new(eclass);
+	assert(row);
+
+	return _asn1f_parse_class_object_data(arg, eclass, row,
+		eclass->with_syntax,
+		expr->value->value.string.buf + 1,
+		expr->value->value.string.buf
+			+ expr->value->value.string.size - 1,
+		0, 0);
+}
+
+int
 asn1f_parse_class_object(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *eclass;

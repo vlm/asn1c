@@ -361,7 +361,7 @@ constraint_object_resolve(arg_t *arg, asn1p_value_t *value) {
 	tmp_expr.value = value;
 	arg->expr = &tmp_expr;
 
-	if (asn1f_parse_class_object(arg)) {
+	if (asn1f_check_class_object(arg)) {
 		arg->expr = saved_expr;
 		FATAL("Parsing ObjectSet %s failed at %d", arg->expr->Identifier,
 				arg->expr->_lineno);
