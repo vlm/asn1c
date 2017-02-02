@@ -83,7 +83,8 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_16P0 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIGNED_16P0_tags_1,
 	sizeof(asn_DEF_SIGNED_16P0_tags_1)
@@ -139,7 +140,8 @@ asn_TYPE_descriptor_t asn_DEF_signed_4 = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_signed_tags_4,
 	sizeof(asn_DEF_signed_tags_4)
@@ -189,7 +191,8 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_16P1 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIGNED_16P1_tags_3,
 	sizeof(asn_DEF_SIGNED_16P1_tags_3)
@@ -248,6 +251,8 @@ SignedREAL_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_SIGNED_16P0.xer_encoder;
 	td->uper_decoder   = asn_DEF_SIGNED_16P0.uper_decoder;
 	td->uper_encoder   = asn_DEF_SIGNED_16P0.uper_encoder;
+	td->aper_decoder   = asn_DEF_SIGNED_16P0.aper_decoder;
+	td->aper_encoder   = asn_DEF_SIGNED_16P0.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_SIGNED_16P0.per_constraints;
 	td->elements       = asn_DEF_SIGNED_16P0.elements;
@@ -315,7 +320,8 @@ asn_TYPE_descriptor_t asn_DEF_SignedREAL = {
 	SignedREAL_encode_der,
 	SignedREAL_decode_xer,
 	SignedREAL_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SignedREAL_tags_1,
 	sizeof(asn_DEF_SignedREAL_tags_1)
@@ -373,6 +379,8 @@ SignedSET_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_SIGNED_16P1.xer_encoder;
 	td->uper_decoder   = asn_DEF_SIGNED_16P1.uper_decoder;
 	td->uper_encoder   = asn_DEF_SIGNED_16P1.uper_encoder;
+	td->aper_decoder   = asn_DEF_SIGNED_16P1.aper_decoder;
+	td->aper_encoder   = asn_DEF_SIGNED_16P1.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_SIGNED_16P1.per_constraints;
 	td->elements       = asn_DEF_SIGNED_16P1.elements;
@@ -440,7 +448,8 @@ asn_TYPE_descriptor_t asn_DEF_SignedSET = {
 	SignedSET_encode_der,
 	SignedSET_decode_xer,
 	SignedSET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SignedSET_tags_1,
 	sizeof(asn_DEF_SignedSET_tags_1)

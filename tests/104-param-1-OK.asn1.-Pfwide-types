@@ -57,7 +57,8 @@ asn_TYPE_descriptor_t asn_DEF_Collection_16P0 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Collection_16P0_tags_1,
 	sizeof(asn_DEF_Collection_16P0_tags_1)
@@ -100,7 +101,8 @@ asn_TYPE_descriptor_t asn_DEF_Collection_16P1 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Collection_16P1_tags_3,
 	sizeof(asn_DEF_Collection_16P1_tags_3)
@@ -182,7 +184,8 @@ asn_TYPE_descriptor_t asn_DEF_Bunch = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Bunch_tags_1,
 	sizeof(asn_DEF_Bunch_tags_1)

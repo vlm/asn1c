@@ -55,6 +55,8 @@ Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->aper_decoder   = asn_DEF_ENUMERATED.aper_decoder;
+	td->aper_encoder   = asn_DEF_ENUMERATED.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -145,7 +147,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	Enum1_encode_der,
 	Enum1_decode_xer,
 	Enum1_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
@@ -218,6 +221,8 @@ Enum2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->aper_decoder   = asn_DEF_ENUMERATED.aper_decoder;
+	td->aper_encoder   = asn_DEF_ENUMERATED.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -314,7 +319,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum2 = {
 	Enum2_encode_der,
 	Enum2_decode_xer,
 	Enum2_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum2_tags_1,
 	sizeof(asn_DEF_Enum2_tags_1)
@@ -383,6 +389,8 @@ Enum3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->aper_decoder   = asn_DEF_ENUMERATED.aper_decoder;
+	td->aper_encoder   = asn_DEF_ENUMERATED.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -471,7 +479,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum3 = {
 	Enum3_encode_der,
 	Enum3_decode_xer,
 	Enum3_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum3_tags_1,
 	sizeof(asn_DEF_Enum3_tags_1)
@@ -541,6 +550,8 @@ Enum4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->aper_decoder   = asn_DEF_ENUMERATED.aper_decoder;
+	td->aper_encoder   = asn_DEF_ENUMERATED.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -631,7 +642,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum4 = {
 	Enum4_encode_der,
 	Enum4_decode_xer,
 	Enum4_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum4_tags_1,
 	sizeof(asn_DEF_Enum4_tags_1)
@@ -700,6 +712,8 @@ Enum5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->aper_decoder   = asn_DEF_ENUMERATED.aper_decoder;
+	td->aper_encoder   = asn_DEF_ENUMERATED.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -788,7 +802,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum5 = {
 	Enum5_encode_der,
 	Enum5_decode_xer,
 	Enum5_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum5_tags_1,
 	sizeof(asn_DEF_Enum5_tags_1)

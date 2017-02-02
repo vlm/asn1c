@@ -26,7 +26,7 @@ static int
 memb_unsigned33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -42,7 +42,7 @@ memb_unsigned33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 0 && value <= 5000000000)) {
+	if((value >= 0LL && value <= 5000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -57,7 +57,7 @@ static int
 memb_unsigned42_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -73,7 +73,7 @@ memb_unsigned42_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 0 && value <= 3153600000000)) {
+	if((value >= 0LL && value <= 3153600000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -88,7 +88,7 @@ static int
 memb_signed33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -104,7 +104,7 @@ memb_signed33_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= -4000000000 && value <= 4000000000)) {
+	if((value >= -4000000000LL && value <= 4000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -119,7 +119,7 @@ static int
 memb_signed33ext_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -135,7 +135,7 @@ memb_signed33ext_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= -4000000000 && value <= 4000000000)) {
+	if((value >= -4000000000LL && value <= 4000000000LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -150,22 +150,22 @@ memb_signed33ext_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< CTDEFS [T] >>> ***/
 
 static asn_per_constraints_t asn_PER_memb_unsigned33_constr_2 GCC_NOTUSED = {
-	{ APC_CONSTRAINED,	 33, -1,  0,  5000000000 }	/* (0..5000000000) */,
+	{ APC_CONSTRAINED,	 33, -1,  0l, 5000000000ull }	/* (0..5000000000) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
 static asn_per_constraints_t asn_PER_memb_unsigned42_constr_3 GCC_NOTUSED = {
-	{ APC_CONSTRAINED,	 42, -1,  0,  3153600000000 }	/* (0..3153600000000) */,
+	{ APC_CONSTRAINED,	 42, -1,  0l, 3153600000000ull }	/* (0..3153600000000) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
 static asn_per_constraints_t asn_PER_memb_signed33_constr_4 GCC_NOTUSED = {
-	{ APC_CONSTRAINED,	 33, -1, -4000000000,  4000000000 }	/* (-4000000000..4000000000) */,
+	{ APC_CONSTRAINED,	 33, -1, -4000000000l, 4000000000ul }	/* (-4000000000..4000000000) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
 static asn_per_constraints_t asn_PER_memb_signed33ext_constr_5 GCC_NOTUSED = {
-	{ APC_CONSTRAINED | APC_EXTENSIBLE,  33, -1, -4000000000,  4000000000 }	/* (-4000000000..4000000000,...) */,
+	{ APC_CONSTRAINED | APC_EXTENSIBLE,  33, -1, -4000000000l, 4000000000ul }	/* (-4000000000..4000000000,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
@@ -240,6 +240,8 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	SEQUENCE_decode_aper,
+	SEQUENCE_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)

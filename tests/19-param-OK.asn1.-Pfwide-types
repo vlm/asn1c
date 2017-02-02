@@ -51,7 +51,7 @@ memb_signature_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		size = 0;
 	}
 	
-	if((size <= 256)) {
+	if((size <= 256LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -122,7 +122,8 @@ asn_TYPE_descriptor_t asn_DEF_toBeSigned_2 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_toBeSigned_tags_2,
 	sizeof(asn_DEF_toBeSigned_tags_2)
@@ -192,7 +193,8 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIGNED_15P0_tags_1,
 	sizeof(asn_DEF_SIGNED_15P0_tags_1)
@@ -251,6 +253,8 @@ Certificate_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_SIGNED_15P0.xer_encoder;
 	td->uper_decoder   = asn_DEF_SIGNED_15P0.uper_decoder;
 	td->uper_encoder   = asn_DEF_SIGNED_15P0.uper_encoder;
+	td->aper_decoder   = asn_DEF_SIGNED_15P0.aper_decoder;
+	td->aper_encoder   = asn_DEF_SIGNED_15P0.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_SIGNED_15P0.per_constraints;
 	td->elements       = asn_DEF_SIGNED_15P0.elements;
@@ -318,7 +322,8 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 	Certificate_encode_der,
 	Certificate_decode_xer,
 	Certificate_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Certificate_tags_1,
 	sizeof(asn_DEF_Certificate_tags_1)
@@ -389,7 +394,8 @@ asn_TYPE_descriptor_t asn_DEF_Name = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Name_tags_1,
 	sizeof(asn_DEF_Name_tags_1)
@@ -509,7 +515,8 @@ asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_RelativeDistinguishedName_tags_1,
 	sizeof(asn_DEF_RelativeDistinguishedName_tags_1)

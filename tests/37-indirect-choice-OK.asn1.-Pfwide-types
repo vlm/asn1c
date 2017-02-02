@@ -102,7 +102,8 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -192,7 +193,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -310,7 +312,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice2_tags_1,
 	sizeof(asn_DEF_Choice2_tags_1)
@@ -369,6 +372,8 @@ Choice3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
 	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
 	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
+	td->aper_decoder   = asn_DEF_Choice2.aper_decoder;
+	td->aper_encoder   = asn_DEF_Choice2.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
@@ -437,7 +442,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	Choice3_encode_der,
 	Choice3_decode_xer,
 	Choice3_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice3_tags_1,
 	sizeof(asn_DEF_Choice3_tags_1)
@@ -495,6 +501,8 @@ Choice4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
 	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
 	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
+	td->aper_decoder   = asn_DEF_Choice2.aper_decoder;
+	td->aper_encoder   = asn_DEF_Choice2.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
@@ -563,7 +571,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice4 = {
 	Choice4_encode_der,
 	Choice4_decode_xer,
 	Choice4_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice4_tags_1,
 	sizeof(asn_DEF_Choice4_tags_1)
@@ -621,6 +630,8 @@ Choice5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Choice2.xer_encoder;
 	td->uper_decoder   = asn_DEF_Choice2.uper_decoder;
 	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
+	td->aper_decoder   = asn_DEF_Choice2.aper_decoder;
+	td->aper_encoder   = asn_DEF_Choice2.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
@@ -688,7 +699,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice5 = {
 	Choice5_encode_der,
 	Choice5_decode_xer,
 	Choice5_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice5_tags_1,
 	sizeof(asn_DEF_Choice5_tags_1)
@@ -746,6 +758,8 @@ Choice6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_Choice1.xer_encoder;
 	td->uper_decoder   = asn_DEF_Choice1.uper_decoder;
 	td->uper_encoder   = asn_DEF_Choice1.uper_encoder;
+	td->aper_decoder   = asn_DEF_Choice1.aper_decoder;
+	td->aper_encoder   = asn_DEF_Choice1.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice1.per_constraints;
 	td->elements       = asn_DEF_Choice1.elements;
@@ -810,7 +824,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice6 = {
 	Choice6_encode_der,
 	Choice6_decode_xer,
 	Choice6_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

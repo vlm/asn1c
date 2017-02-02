@@ -24,7 +24,7 @@ int
 MinMax_16P0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -40,7 +40,7 @@ MinMax_16P0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 3)) {
+	if((value >= 3LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -66,6 +66,8 @@ MinMax_16P0_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
 	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->aper_decoder   = asn_DEF_INTEGER.aper_decoder;
+	td->aper_encoder   = asn_DEF_INTEGER.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -133,7 +135,8 @@ asn_TYPE_descriptor_t asn_DEF_MinMax_16P0 = {
 	MinMax_16P0_encode_der,
 	MinMax_16P0_decode_xer,
 	MinMax_16P0_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_MinMax_16P0_tags_1,
 	sizeof(asn_DEF_MinMax_16P0_tags_1)
@@ -172,7 +175,7 @@ int
 ThreePlus_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const MinMax_16P0_t *st = (const MinMax_16P0_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -188,7 +191,7 @@ ThreePlus_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 3)) {
+	if((value >= 3LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -214,6 +217,8 @@ ThreePlus_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_MinMax_16P0.xer_encoder;
 	td->uper_decoder   = asn_DEF_MinMax_16P0.uper_decoder;
 	td->uper_encoder   = asn_DEF_MinMax_16P0.uper_encoder;
+	td->aper_decoder   = asn_DEF_MinMax_16P0.aper_decoder;
+	td->aper_encoder   = asn_DEF_MinMax_16P0.aper_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_MinMax_16P0.per_constraints;
 	td->elements       = asn_DEF_MinMax_16P0.elements;
@@ -281,7 +286,8 @@ asn_TYPE_descriptor_t asn_DEF_ThreePlus = {
 	ThreePlus_encode_der,
 	ThreePlus_decode_xer,
 	ThreePlus_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No UPER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ThreePlus_tags_1,
 	sizeof(asn_DEF_ThreePlus_tags_1)
