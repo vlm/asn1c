@@ -317,7 +317,7 @@ EXCEPT			return TOK_EXCEPT;
 EXPLICIT		return TOK_EXPLICIT;
 EXPORTS			return TOK_EXPORTS;
 EXTENSIBILITY		return TOK_EXTENSIBILITY;
-EXTERNAL		return TOK_EXTERNAL;
+	/*EXTERNAL		return TOK_EXTERNAL;*/
 FALSE			return TOK_FALSE;
 FROM			return TOK_FROM;
 GeneralizedTime		return TOK_GeneralizedTime;
