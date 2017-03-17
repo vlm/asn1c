@@ -19,6 +19,7 @@ typedef struct ANY {
 } ANY_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_ANY;
+extern asn_TYPE_operation_t asn_OP_ANY;
 extern asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs;
 
 asn_struct_free_f ANY_free;
@@ -27,12 +28,7 @@ ber_type_decoder_f ANY_decode_ber;
 der_type_encoder_f ANY_encode_der;
 xer_type_encoder_f ANY_encode_xer;
 
-#define ANY_free         OCTET_STRING_free
-#define ANY_print        OCTET_STRING_print
-#define ANY_constraint   asn_generic_no_constraint
-#define ANY_decode_ber   OCTET_STRING_decode_ber
-#define ANY_encode_der   OCTET_STRING_encode_der
-#define ANY_decode_xer   OCTET_STRING_decode_xer_hex
+#define ANY_constraint  asn_generic_no_constraint
 
 /******************************
  * Handy conversion routines. *

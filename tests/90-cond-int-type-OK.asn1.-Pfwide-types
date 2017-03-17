@@ -33,15 +33,8 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerUnlimited_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerUnlimited = {
 	"CN-IntegerUnlimited",
 	"CN-IntegerUnlimited",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	INTEGER_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerUnlimited_tags_1,
 	sizeof(asn_DEF_CN_IntegerUnlimited_tags_1)
 		/sizeof(asn_DEF_CN_IntegerUnlimited_tags_1[0]), /* 1 */
@@ -110,15 +103,8 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerMinMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinMax = {
 	"CN-IntegerMinMax",
 	"CN-IntegerMinMax",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	CN_IntegerMinMax_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerMinMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinMax_tags_1[0]), /* 1 */
@@ -196,15 +182,8 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerMinLow_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinLow = {
 	"CN-IntegerMinLow",
 	"CN-IntegerMinLow",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	CN_IntegerMinLow_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerMinLow_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinLow_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinLow_tags_1[0]), /* 1 */
@@ -282,15 +261,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerMinHigh_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
 	"NO-IntegerMinHigh",
 	"NO-IntegerMinHigh",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	NO_IntegerMinHigh_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerMinHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerMinHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerMinHigh_tags_1[0]), /* 1 */
@@ -367,15 +339,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerLowHigh_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 	"NO-IntegerLowHigh",
 	"NO-IntegerLowHigh",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	NO_IntegerLowHigh_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerLowHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowHigh_tags_1[0]), /* 1 */
@@ -453,15 +418,8 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerLowMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
 	"CN-IntegerLowMax",
 	"CN-IntegerLowMax",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	CN_IntegerLowMax_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerLowMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerLowMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerLowMax_tags_1[0]), /* 1 */
@@ -539,15 +497,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerHighMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerHighMax = {
 	"NO-IntegerHighMax",
 	"NO-IntegerHighMax",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	NO_IntegerHighMax_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerHighMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerHighMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerHighMax_tags_1[0]), /* 1 */
@@ -625,15 +576,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerLowestMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
 	"NO-IntegerLowestMax",
 	"NO-IntegerLowestMax",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	NO_IntegerLowestMax_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerLowestMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowestMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowestMax_tags_1[0]), /* 1 */
@@ -710,15 +654,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerOutRange_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
 	"NO-IntegerOutRange",
 	"NO-IntegerOutRange",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	NO_IntegerOutRange_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerOutRange_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutRange_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutRange_tags_1[0]), /* 1 */
@@ -795,15 +732,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerOutValue_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
 	"NO-IntegerOutValue",
 	"NO-IntegerOutValue",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	NO_IntegerOutValue_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerOutValue_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutValue_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutValue_tags_1[0]), /* 1 */
@@ -875,15 +805,8 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange1 = {
 	"OK-IntegerInRange1",
 	"OK-IntegerInRange1",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_IntegerInRange1_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange1_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange1_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange1_tags_1[0]), /* 1 */
@@ -955,15 +878,8 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange2 = {
 	"OK-IntegerInRange2",
 	"OK-IntegerInRange2",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_IntegerInRange2_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange2_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange2_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange2_tags_1[0]), /* 1 */
@@ -1035,15 +951,8 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange3 = {
 	"OK-IntegerInRange3",
 	"OK-IntegerInRange3",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_IntegerInRange3_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange3_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange3_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange3_tags_1[0]), /* 1 */
@@ -1115,15 +1024,8 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange4 = {
 	"OK-IntegerInRange4",
 	"OK-IntegerInRange4",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_IntegerInRange4_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange4_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange4_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange4_tags_1[0]), /* 1 */
@@ -1201,15 +1103,8 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
 	"OK-IntegerInRange5",
 	"OK-IntegerInRange5",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	OK_IntegerInRange5_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange5_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange5_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange5_tags_1[0]), /* 1 */
@@ -1277,15 +1172,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerInRange6_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 	"NO-IntegerInRange6",
 	"NO-IntegerInRange6",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	NO_IntegerInRange6_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerInRange6_tags_1,
 	sizeof(asn_DEF_NO_IntegerInRange6_tags_1)
 		/sizeof(asn_DEF_NO_IntegerInRange6_tags_1[0]), /* 1 */
@@ -1339,15 +1227,8 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerEnumerated1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerEnumerated1 = {
 	"CN-IntegerEnumerated1",
 	"CN-IntegerEnumerated1",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	INTEGER_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerEnumerated1_tags_1,
 	sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1)
 		/sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1[0]), /* 1 */
@@ -1401,15 +1282,8 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerEnumerated2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerEnumerated2 = {
 	"NO-IntegerEnumerated2",
 	"NO-IntegerEnumerated2",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	INTEGER_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerEnumerated2_tags_1,
 	sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1)
 		/sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1[0]), /* 1 */

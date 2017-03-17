@@ -167,15 +167,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Everything_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Everything = {
 	"Everything",
 	"Everything",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Everything_tags_1,
 	sizeof(asn_DEF_Everything_tags_1)
 		/sizeof(asn_DEF_Everything_tags_1[0]), /* 1 */
@@ -272,15 +265,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	"Choice1",
 	"Choice1",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -377,15 +363,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",
 	"Choice2",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -486,15 +465,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_a_2 = {
 	"a",
 	"a",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_a_tags_2,
 	sizeof(asn_DEF_a_tags_2)
 		/sizeof(asn_DEF_a_tags_2[0]) - 1, /* 1 */
@@ -531,15 +503,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_c_5 = {
 	"c",
 	"c",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_c_tags_5,
 	sizeof(asn_DEF_c_tags_5)
 		/sizeof(asn_DEF_c_tags_5[0]) - 1, /* 1 */
@@ -599,15 +564,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice3_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	"Choice3",
 	"Choice3",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -736,15 +694,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_Member_2 = {
 	"SEQUENCE",
 	"SEQUENCE",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Member_tags_2,
 	sizeof(asn_DEF_Member_tags_2)
 		/sizeof(asn_DEF_Member_tags_2[0]), /* 1 */
@@ -779,15 +730,8 @@ asn_SET_OF_specifics_t asn_SPC_Set_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Set = {
 	"Set",
 	"Set",
-	SET_OF_free,
-	SET_OF_print,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Set_tags_1,
 	sizeof(asn_DEF_Set_tags_1)
 		/sizeof(asn_DEF_Set_tags_1[0]), /* 1 */
@@ -899,15 +843,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	"Sequence",
 	"Sequence",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Sequence_tags_1,
 	sizeof(asn_DEF_Sequence_tags_1)
 		/sizeof(asn_DEF_Sequence_tags_1[0]), /* 1 */
@@ -955,15 +892,8 @@ static const ber_tlv_tag_t asn_DEF_TypeRef_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_TypeRef = {
 	"TypeRef",
 	"TypeRef",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TypeRef_tags_1,
 	sizeof(asn_DEF_TypeRef_tags_1)
 		/sizeof(asn_DEF_TypeRef_tags_1[0]), /* 1 */
@@ -1043,15 +973,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_b_3 = {
 	"b",
 	"b",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_b_tags_3,
 	sizeof(asn_DEF_b_tags_3)
 		/sizeof(asn_DEF_b_tags_3[0]) - 1, /* 1 */
@@ -1103,15 +1026,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Alpha_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Alpha = {
 	"Alpha",
 	"Alpha",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Alpha_tags_1,
 	sizeof(asn_DEF_Alpha_tags_1)
 		/sizeof(asn_DEF_Alpha_tags_1[0]), /* 1 */
@@ -1196,15 +1112,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Beta_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Beta = {
 	"Beta",
 	"Beta",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Beta_tags_1,
 	sizeof(asn_DEF_Beta_tags_1)
 		/sizeof(asn_DEF_Beta_tags_1[0]), /* 1 */
@@ -1302,15 +1211,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Gamma_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Gamma = {
 	"Gamma",
 	"Gamma",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Gamma_tags_1,
 	sizeof(asn_DEF_Gamma_tags_1)
 		/sizeof(asn_DEF_Gamma_tags_1[0]), /* 1 */
@@ -1401,15 +1303,8 @@ asn_SET_specifics_t asn_SPC_OneTwo_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_OneTwo = {
 	"OneTwo",
 	"OneTwo",
-	SET_free,
-	SET_print,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OneTwo_tags_1,
 	sizeof(asn_DEF_OneTwo_tags_1)
 		/sizeof(asn_DEF_OneTwo_tags_1[0]), /* 1 */
@@ -1500,15 +1395,8 @@ asn_SET_specifics_t asn_SPC_TwoThree_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_TwoThree = {
 	"TwoThree",
 	"TwoThree",
-	SET_free,
-	SET_print,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TwoThree_tags_1,
 	sizeof(asn_DEF_TwoThree_tags_1)
 		/sizeof(asn_DEF_TwoThree_tags_1[0]), /* 1 */
@@ -1613,15 +1501,8 @@ asn_SET_specifics_t asn_SPC_ThreeOne_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_ThreeOne = {
 	"ThreeOne",
 	"ThreeOne",
-	SET_free,
-	SET_print,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ThreeOne_tags_1,
 	sizeof(asn_DEF_ThreeOne_tags_1)
 		/sizeof(asn_DEF_ThreeOne_tags_1[0]), /* 1 */

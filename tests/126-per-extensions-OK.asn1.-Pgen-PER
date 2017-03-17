@@ -97,16 +97,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",
 	"PDU",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	SEQUENCE_decode_uper,
-	SEQUENCE_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PDU_tags_1,
 	sizeof(asn_DEF_PDU_tags_1)
 		/sizeof(asn_DEF_PDU_tags_1[0]), /* 1 */
@@ -199,16 +191,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Singleton = {
 	"Singleton",
 	"Singleton",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	SEQUENCE_decode_uper,
-	SEQUENCE_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Singleton_tags_1,
 	sizeof(asn_DEF_Singleton_tags_1)
 		/sizeof(asn_DEF_Singleton_tags_1[0]), /* 1 */
@@ -319,16 +303,8 @@ asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	"PDU-2",
 	"PDU-2",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

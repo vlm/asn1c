@@ -261,6 +261,8 @@ ASN_MODULE_SOURCES+=BMPString.c
 ASN_MODULE_HEADERS+=UTF8String.h
 ASN_MODULE_HEADERS+=BOOLEAN.h
 ASN_MODULE_SOURCES+=BOOLEAN.c
+ASN_MODULE_HEADERS+=ENUMERATED.h
+ASN_MODULE_SOURCES+=ENUMERATED.c
 ASN_MODULE_HEADERS+=INTEGER.h
 ASN_MODULE_HEADERS+=NativeEnumerated.h
 ASN_MODULE_HEADERS+=GeneralizedTime.h
@@ -345,7 +347,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = x509dump
-CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -DPDU=Certificate -I.
+CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -DASN_DISABLE_PER_SUPPORT -DPDU=Certificate -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: Certificate.c $(TARGET)
@@ -366,7 +368,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=Certificate ../rfc3280-PKIX1Explicit88.asn1 ../rfc3280-PKIX1Implicit88.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=Certificate -fwide-types ../rfc3280-PKIX1Explicit88.asn1 ../rfc3280-PKIX1Implicit88.asn1
 
 
 Certificate.c: ../sample.makefile.regen ../rfc3280-*.asn1
@@ -375,10 +377,11 @@ Certificate.c: ../sample.makefile.regen ../rfc3280-*.asn1
 	make
 
 regen-makefile:
-	ASN1CMDOPTS="" \
+	ASN1CMDOPTS="-fwide-types" \
 	ASN1MODULES="../rfc3280-*.asn1" \
 	ASN1PDU=Certificate \
 	PROGNAME=x509dump \
+	CFLAGS="-DASN_DISABLE_PER_SUPPORT" \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-per
@@ -430,7 +433,7 @@ check-per:
 	done; done; fi
 	@if test -f sample-Certificate-1.per ; then \
 	for f in sample-*-[1-9].per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*//"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f into DER into XER and back ($$b)..."; \
 	./${TARGET} -b $$b -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \

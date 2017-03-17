@@ -25,7 +25,7 @@ xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 
 	ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 
-	tmper = td->xer_encoder(td, sptr, 1, xer_flags, cb, app_key);
+	tmper = td->op->xer_encoder(td, sptr, 1, xer_flags, cb, app_key);
 	if(tmper.encoded == -1) return tmper;
 
 	ASN__CALLBACK3("</", 2, mname, mlen, ">\n", xcan);

@@ -136,7 +136,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 		assert(rval.consumed <= consumed);
 	}
 
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 }
 
 static void
@@ -237,7 +237,7 @@ partial_read(uint8_t *buf, size_t size) {
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
-			asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+			asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 		}
 	}
 }

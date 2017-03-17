@@ -35,16 +35,8 @@ static const ber_tlv_tag_t asn_DEF_Int1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Int1 = {
 	"Int1",
 	"Int1",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	NativeInteger_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_uper,
-	NativeInteger_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int1_tags_1,
 	sizeof(asn_DEF_Int1_tags_1)
 		/sizeof(asn_DEF_Int1_tags_1[0]), /* 1 */
@@ -126,16 +118,8 @@ static const ber_tlv_tag_t asn_DEF_Int2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Int2 = {
 	"Int2",
 	"Int2",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	Int2_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_uper,
-	NativeInteger_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int2_tags_1,
 	sizeof(asn_DEF_Int2_tags_1)
 		/sizeof(asn_DEF_Int2_tags_1[0]), /* 1 */
@@ -217,16 +201,8 @@ static const ber_tlv_tag_t asn_DEF_Int3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Int3 = {
 	"Int3",
 	"Int3",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	Int3_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_uper,
-	NativeInteger_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int3_tags_1,
 	sizeof(asn_DEF_Int3_tags_1)
 		/sizeof(asn_DEF_Int3_tags_1[0]), /* 1 */
@@ -308,16 +284,8 @@ static const ber_tlv_tag_t asn_DEF_Int4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Int4 = {
 	"Int4",
 	"Int4",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	Int4_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_uper,
-	NativeInteger_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int4_tags_1,
 	sizeof(asn_DEF_Int4_tags_1)
 		/sizeof(asn_DEF_Int4_tags_1[0]), /* 1 */
@@ -399,16 +367,8 @@ static const ber_tlv_tag_t asn_DEF_Int5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Int5 = {
 	"Int5",
 	"Int5",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	Int5_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_uper,
-	NativeInteger_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int5_tags_1,
 	sizeof(asn_DEF_Int5_tags_1)
 		/sizeof(asn_DEF_Int5_tags_1[0]), /* 1 */
@@ -490,16 +450,8 @@ static const ber_tlv_tag_t asn_DEF_ExtensibleExtensions_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_ExtensibleExtensions = {
 	"ExtensibleExtensions",
 	"ExtensibleExtensions",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	ExtensibleExtensions_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_uper,
-	NativeInteger_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ExtensibleExtensions_tags_1,
 	sizeof(asn_DEF_ExtensibleExtensions_tags_1)
 		/sizeof(asn_DEF_ExtensibleExtensions_tags_1[0]), /* 1 */
@@ -548,16 +500,8 @@ static const ber_tlv_tag_t asn_DEF_Str1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Str1 = {
 	"Str1",
 	"Str1",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	IA5String_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str1_tags_1,
 	sizeof(asn_DEF_Str1_tags_1)
 		/sizeof(asn_DEF_Str1_tags_1[0]), /* 1 */
@@ -657,16 +601,8 @@ static const ber_tlv_tag_t asn_DEF_Str2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Str2 = {
 	"Str2",
 	"Str2",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	Str2_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str2_tags_1,
 	sizeof(asn_DEF_Str2_tags_1)
 		/sizeof(asn_DEF_Str2_tags_1[0]), /* 1 */
@@ -791,16 +727,8 @@ static const ber_tlv_tag_t asn_DEF_Str3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Str3 = {
 	"Str3",
 	"Str3",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	Str3_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str3_tags_1,
 	sizeof(asn_DEF_Str3_tags_1)
 		/sizeof(asn_DEF_Str3_tags_1[0]), /* 1 */
@@ -897,16 +825,8 @@ static const ber_tlv_tag_t asn_DEF_Str4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Str4 = {
 	"Str4",
 	"Str4",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	Str4_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str4_tags_1,
 	sizeof(asn_DEF_Str4_tags_1)
 		/sizeof(asn_DEF_Str4_tags_1[0]), /* 1 */
@@ -1003,16 +923,8 @@ static const ber_tlv_tag_t asn_DEF_PER_Visible_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_PER_Visible = {
 	"PER-Visible",
 	"PER-Visible",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	PER_Visible_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PER_Visible_tags_1,
 	sizeof(asn_DEF_PER_Visible_tags_1)
 		/sizeof(asn_DEF_PER_Visible_tags_1[0]), /* 1 */
@@ -1109,16 +1021,8 @@ static const ber_tlv_tag_t asn_DEF_PER_Visible_2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_PER_Visible_2 = {
 	"PER-Visible-2",
 	"PER-Visible-2",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	PER_Visible_2_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PER_Visible_2_tags_1,
 	sizeof(asn_DEF_PER_Visible_2_tags_1)
 		/sizeof(asn_DEF_PER_Visible_2_tags_1[0]), /* 1 */
@@ -1215,16 +1119,8 @@ static const ber_tlv_tag_t asn_DEF_Not_PER_Visible_1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_1 = {
 	"Not-PER-Visible-1",
 	"Not-PER-Visible-1",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	Not_PER_Visible_1_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_1_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_1_tags_1)
 		/sizeof(asn_DEF_Not_PER_Visible_1_tags_1[0]), /* 1 */
@@ -1321,16 +1217,8 @@ static const ber_tlv_tag_t asn_DEF_Not_PER_Visible_2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_2 = {
 	"Not-PER-Visible-2",
 	"Not-PER-Visible-2",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	Not_PER_Visible_2_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_2_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_2_tags_1)
 		/sizeof(asn_DEF_Not_PER_Visible_2_tags_1[0]), /* 1 */
@@ -1427,16 +1315,8 @@ static const ber_tlv_tag_t asn_DEF_Not_PER_Visible_3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_3 = {
 	"Not-PER-Visible-3",
 	"Not-PER-Visible-3",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	Not_PER_Visible_3_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_3_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_3_tags_1)
 		/sizeof(asn_DEF_Not_PER_Visible_3_tags_1[0]), /* 1 */
@@ -1536,16 +1416,8 @@ static const ber_tlv_tag_t asn_DEF_SIZE_but_not_FROM_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_SIZE_but_not_FROM = {
 	"SIZE-but-not-FROM",
 	"SIZE-but-not-FROM",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	SIZE_but_not_FROM_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIZE_but_not_FROM_tags_1,
 	sizeof(asn_DEF_SIZE_but_not_FROM_tags_1)
 		/sizeof(asn_DEF_SIZE_but_not_FROM_tags_1[0]), /* 1 */
@@ -1645,16 +1517,8 @@ static const ber_tlv_tag_t asn_DEF_SIZE_and_FROM_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_SIZE_and_FROM = {
 	"SIZE-and-FROM",
 	"SIZE-and-FROM",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	SIZE_and_FROM_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIZE_and_FROM_tags_1,
 	sizeof(asn_DEF_SIZE_and_FROM_tags_1)
 		/sizeof(asn_DEF_SIZE_and_FROM_tags_1[0]), /* 1 */
@@ -1751,16 +1615,8 @@ static const ber_tlv_tag_t asn_DEF_Neither_SIZE_nor_FROM_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Neither_SIZE_nor_FROM = {
 	"Neither-SIZE-nor-FROM",
 	"Neither-SIZE-nor-FROM",
-	IA5String_free,
-	IA5String_print,
+	&asn_OP_IA5String,
 	Neither_SIZE_nor_FROM_constraint,
-	IA5String_decode_ber,
-	IA5String_encode_der,
-	IA5String_decode_xer,
-	IA5String_encode_xer,
-	IA5String_decode_uper,
-	IA5String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Neither_SIZE_nor_FROM_tags_1,
 	sizeof(asn_DEF_Neither_SIZE_nor_FROM_tags_1)
 		/sizeof(asn_DEF_Neither_SIZE_nor_FROM_tags_1[0]), /* 1 */
@@ -1851,16 +1707,8 @@ static const ber_tlv_tag_t asn_DEF_Utf8_4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Utf8_4 = {
 	"Utf8-4",
 	"Utf8-4",
-	UTF8String_free,
-	UTF8String_print,
+	&asn_OP_UTF8String,
 	Utf8_4_constraint,
-	UTF8String_decode_ber,
-	UTF8String_encode_der,
-	UTF8String_decode_xer,
-	UTF8String_encode_xer,
-	UTF8String_decode_uper,
-	UTF8String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_4_tags_1,
 	sizeof(asn_DEF_Utf8_4_tags_1)
 		/sizeof(asn_DEF_Utf8_4_tags_1[0]), /* 1 */
@@ -1979,16 +1827,8 @@ static const ber_tlv_tag_t asn_DEF_Utf8_3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Utf8_3 = {
 	"Utf8-3",
 	"Utf8-3",
-	UTF8String_free,
-	UTF8String_print,
+	&asn_OP_UTF8String,
 	Utf8_3_constraint,
-	UTF8String_decode_ber,
-	UTF8String_encode_der,
-	UTF8String_decode_xer,
-	UTF8String_encode_xer,
-	UTF8String_decode_uper,
-	UTF8String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_3_tags_1,
 	sizeof(asn_DEF_Utf8_3_tags_1)
 		/sizeof(asn_DEF_Utf8_3_tags_1[0]), /* 1 */
@@ -2077,16 +1917,8 @@ static const ber_tlv_tag_t asn_DEF_Utf8_2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Utf8_2 = {
 	"Utf8-2",
 	"Utf8-2",
-	UTF8String_free,
-	UTF8String_print,
+	&asn_OP_UTF8String,
 	Utf8_2_constraint,
-	UTF8String_decode_ber,
-	UTF8String_encode_der,
-	UTF8String_decode_xer,
-	UTF8String_encode_xer,
-	UTF8String_decode_uper,
-	UTF8String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_2_tags_1,
 	sizeof(asn_DEF_Utf8_2_tags_1)
 		/sizeof(asn_DEF_Utf8_2_tags_1[0]), /* 1 */
@@ -2135,16 +1967,8 @@ static const ber_tlv_tag_t asn_DEF_Utf8_1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Utf8_1 = {
 	"Utf8-1",
 	"Utf8-1",
-	UTF8String_free,
-	UTF8String_print,
+	&asn_OP_UTF8String,
 	UTF8String_constraint,
-	UTF8String_decode_ber,
-	UTF8String_encode_der,
-	UTF8String_decode_xer,
-	UTF8String_encode_xer,
-	UTF8String_decode_uper,
-	UTF8String_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_1_tags_1,
 	sizeof(asn_DEF_Utf8_1_tags_1)
 		/sizeof(asn_DEF_Utf8_1_tags_1[0]), /* 1 */
@@ -2255,16 +2079,8 @@ static const ber_tlv_tag_t asn_DEF_VisibleIdentifier_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_VisibleIdentifier = {
 	"VisibleIdentifier",
 	"VisibleIdentifier",
-	VisibleString_free,
-	VisibleString_print,
+	&asn_OP_VisibleString,
 	VisibleIdentifier_constraint,
-	VisibleString_decode_ber,
-	VisibleString_encode_der,
-	VisibleString_decode_xer,
-	VisibleString_encode_xer,
-	VisibleString_decode_uper,
-	VisibleString_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_VisibleIdentifier_tags_1,
 	sizeof(asn_DEF_VisibleIdentifier_tags_1)
 		/sizeof(asn_DEF_VisibleIdentifier_tags_1[0]), /* 1 */
@@ -2495,16 +2311,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_enum_c_6 = {
 	"enum-c",
 	"enum-c",
-	NativeEnumerated_free,
-	NativeEnumerated_print,
+	&asn_OP_NativeEnumerated,
 	NativeEnumerated_constraint,
-	NativeEnumerated_decode_ber,
-	NativeEnumerated_encode_der,
-	NativeEnumerated_decode_xer,
-	NativeEnumerated_encode_xer,
-	NativeEnumerated_decode_uper,
-	NativeEnumerated_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_enum_c_tags_6,
 	sizeof(asn_DEF_enum_c_tags_6)
 		/sizeof(asn_DEF_enum_c_tags_6[0]), /* 1 */
@@ -2607,16 +2415,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	"Sequence",
 	"Sequence",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	SEQUENCE_decode_uper,
-	SEQUENCE_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Sequence_tags_1,
 	sizeof(asn_DEF_Sequence_tags_1)
 		/sizeof(asn_DEF_Sequence_tags_1[0]), /* 1 */
@@ -2688,16 +2488,8 @@ static asn_SET_OF_specifics_t asn_SPC_SequenceOf_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
 	"SequenceOf",
 	"SequenceOf",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	SEQUENCE_OF_decode_uper,
-	SEQUENCE_OF_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SequenceOf_tags_1,
 	sizeof(asn_DEF_SequenceOf_tags_1)
 		/sizeof(asn_DEF_SequenceOf_tags_1[0]), /* 1 */
@@ -2779,16 +2571,8 @@ static const ber_tlv_tag_t asn_DEF_Enum0_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum0 = {
 	"Enum0",
 	"Enum0",
-	NativeEnumerated_free,
-	NativeEnumerated_print,
+	&asn_OP_NativeEnumerated,
 	NativeEnumerated_constraint,
-	NativeEnumerated_decode_ber,
-	NativeEnumerated_encode_der,
-	NativeEnumerated_decode_xer,
-	NativeEnumerated_encode_xer,
-	NativeEnumerated_decode_uper,
-	NativeEnumerated_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum0_tags_1,
 	sizeof(asn_DEF_Enum0_tags_1)
 		/sizeof(asn_DEF_Enum0_tags_1[0]), /* 1 */
@@ -2894,16 +2678,8 @@ static const ber_tlv_tag_t asn_DEF_Enum1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	"Enum1",
 	"Enum1",
-	NativeEnumerated_free,
-	NativeEnumerated_print,
+	&asn_OP_NativeEnumerated,
 	Enum1_constraint,
-	NativeEnumerated_decode_ber,
-	NativeEnumerated_encode_der,
-	NativeEnumerated_decode_xer,
-	NativeEnumerated_encode_xer,
-	NativeEnumerated_decode_uper,
-	NativeEnumerated_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
 		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
@@ -3033,16 +2809,8 @@ static const ber_tlv_tag_t asn_DEF_Identifier_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Identifier = {
 	"Identifier",
 	"Identifier",
-	VisibleString_free,
-	VisibleString_print,
+	&asn_OP_VisibleString,
 	Identifier_constraint,
-	VisibleString_decode_ber,
-	VisibleString_encode_der,
-	VisibleString_decode_xer,
-	VisibleString_encode_xer,
-	VisibleString_decode_uper,
-	VisibleString_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Identifier_tags_1,
 	sizeof(asn_DEF_Identifier_tags_1)
 		/sizeof(asn_DEF_Identifier_tags_1[0]), /* 1 */

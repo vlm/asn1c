@@ -101,15 +101,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Flag_16P0_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Flag_16P0 = {
 	"Flag",
 	"Flag",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Flag_16P0_tags_1,
 	sizeof(asn_DEF_Flag_16P0_tags_1)
 		/sizeof(asn_DEF_Flag_16P0_tags_1[0]), /* 1 */
@@ -168,15 +161,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_field_7 = {
 	"field",
 	"field",
-	ENUMERATED_free,
-	ENUMERATED_print,
+	&asn_OP_ENUMERATED,
 	ENUMERATED_constraint,
-	ENUMERATED_decode_ber,
-	ENUMERATED_encode_der,
-	ENUMERATED_decode_xer,
-	ENUMERATED_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_field_tags_7,
 	sizeof(asn_DEF_field_tags_7)
 		/sizeof(asn_DEF_field_tags_7[0]), /* 1 */
@@ -217,15 +203,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Flag_16P1_specs_6 = {
 asn_TYPE_descriptor_t asn_DEF_Flag_16P1 = {
 	"Flag",
 	"Flag",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Flag_16P1_tags_6,
 	sizeof(asn_DEF_Flag_16P1_tags_6)
 		/sizeof(asn_DEF_Flag_16P1_tags_6[0]), /* 1 */
@@ -273,15 +252,8 @@ static const ber_tlv_tag_t asn_DEF_IntegerColorFlag_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_IntegerColorFlag = {
 	"IntegerColorFlag",
 	"IntegerColorFlag",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_IntegerColorFlag_tags_1,
 	sizeof(asn_DEF_IntegerColorFlag_tags_1)
 		/sizeof(asn_DEF_IntegerColorFlag_tags_1[0]), /* 1 */
@@ -329,15 +301,8 @@ static const ber_tlv_tag_t asn_DEF_EnumeratedColorFlag_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_EnumeratedColorFlag = {
 	"EnumeratedColorFlag",
 	"EnumeratedColorFlag",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_EnumeratedColorFlag_tags_1,
 	sizeof(asn_DEF_EnumeratedColorFlag_tags_1)
 		/sizeof(asn_DEF_EnumeratedColorFlag_tags_1[0]), /* 1 */

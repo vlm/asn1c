@@ -26,7 +26,7 @@ asn_TYPE_outmost_tag(const asn_TYPE_descriptor_t *type_descriptor,
 	if(type_descriptor->tags_count)
 		return type_descriptor->tags[0];
 
-	return type_descriptor->outmost_tag(type_descriptor, struct_ptr, 0, 0);
+	return type_descriptor->op->outmost_tag(type_descriptor, struct_ptr, 0, 0);
 }
 
 /*
@@ -41,7 +41,7 @@ asn_fprint(FILE *stream, asn_TYPE_descriptor_t *td, const void *struct_ptr) {
 	}
 
 	/* Invoke type-specific printer */
-	if(td->print_struct(td, struct_ptr, 1, _print2fp, stream))
+	if(td->op->print_struct(td, struct_ptr, 1, _print2fp, stream))
 		return -1;
 
 	/* Terminate the output */

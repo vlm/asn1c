@@ -138,7 +138,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	asn_fprint(stderr, &asn_DEF_Forest, &t);
 	xer_fprint(stderr, &asn_DEF_Forest, &t);
 
-	asn_DEF_Forest.free_struct(&asn_DEF_Forest, &t, 1);
+	asn_DEF_Forest.op->free_struct(&asn_DEF_Forest, &t, 1);
 }
 
 static char xer_buf[512];

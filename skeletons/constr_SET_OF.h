@@ -34,6 +34,7 @@ xer_type_decoder_f SET_OF_decode_xer;
 xer_type_encoder_f SET_OF_encode_xer;
 per_type_decoder_f SET_OF_decode_uper;
 per_type_encoder_f SET_OF_encode_uper;
+extern asn_TYPE_operation_t asn_OP_SET_OF;
 
 #ifdef __cplusplus
 }

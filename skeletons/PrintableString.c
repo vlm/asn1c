@@ -47,9 +47,7 @@ static const asn_per_constraints_t asn_DEF_PrintableString_constraints = {
 	asn_DEF_PrintableString_v2c,
 	asn_DEF_PrintableString_c2v
 };
-asn_TYPE_descriptor_t asn_DEF_PrintableString = {
-	"PrintableString",
-	"PrintableString",
+asn_TYPE_operation_t asn_OP_PrintableString = {
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,	/* ASCII subset */
 	PrintableString_constraint,
@@ -57,9 +55,21 @@ asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_PrintableString = {
+	"PrintableString",
+	"PrintableString",
+	&asn_OP_PrintableString,
+	PrintableString_constraint,
+
 	asn_DEF_PrintableString_tags,
 	sizeof(asn_DEF_PrintableString_tags)
 	  / sizeof(asn_DEF_PrintableString_tags[0]) - 1,

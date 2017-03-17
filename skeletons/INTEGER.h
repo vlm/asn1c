@@ -15,6 +15,7 @@ extern "C" {
 typedef ASN__PRIMITIVE_TYPE_t INTEGER_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_INTEGER;
+extern asn_TYPE_operation_t asn_OP_INTEGER;
 
 /* Map with <tag> to integer value association */
 typedef struct asn_INTEGER_enum_map_s {
@@ -41,6 +42,8 @@ xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
 per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
+
+#define INTEGER_constraint asn_generic_no_constraint
 
 /***********************************
  * Some handy conversion routines. *

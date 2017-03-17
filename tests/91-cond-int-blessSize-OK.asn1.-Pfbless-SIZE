@@ -54,15 +54,8 @@ static const ber_tlv_tag_t asn_DEF_OK_Integer1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
 	"OK-Integer1",
 	"OK-Integer1",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_Integer1_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer1_tags_1,
 	sizeof(asn_DEF_OK_Integer1_tags_1)
 		/sizeof(asn_DEF_OK_Integer1_tags_1[0]), /* 1 */
@@ -130,15 +123,8 @@ static const ber_tlv_tag_t asn_DEF_OK_Integer2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
 	"OK-Integer2",
 	"OK-Integer2",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_Integer2_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer2_tags_1,
 	sizeof(asn_DEF_OK_Integer2_tags_1)
 		/sizeof(asn_DEF_OK_Integer2_tags_1[0]), /* 1 */
@@ -206,15 +192,8 @@ static const ber_tlv_tag_t asn_DEF_OK_Integer3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
 	"OK-Integer3",
 	"OK-Integer3",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_Integer3_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer3_tags_1,
 	sizeof(asn_DEF_OK_Integer3_tags_1)
 		/sizeof(asn_DEF_OK_Integer3_tags_1[0]), /* 1 */
@@ -282,15 +261,8 @@ static const ber_tlv_tag_t asn_DEF_OK_Integer4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
 	"OK-Integer4",
 	"OK-Integer4",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	OK_Integer4_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer4_tags_1,
 	sizeof(asn_DEF_OK_Integer4_tags_1)
 		/sizeof(asn_DEF_OK_Integer4_tags_1[0]), /* 1 */
@@ -358,15 +330,8 @@ static const ber_tlv_tag_t asn_DEF_NO_Integer5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_Integer5 = {
 	"NO-Integer5",
 	"NO-Integer5",
-	NativeInteger_free,
-	NativeInteger_print,
+	&asn_OP_NativeInteger,
 	NO_Integer5_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_Integer5_tags_1,
 	sizeof(asn_DEF_NO_Integer5_tags_1)
 		/sizeof(asn_DEF_NO_Integer5_tags_1[0]), /* 1 */

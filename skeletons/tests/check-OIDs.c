@@ -246,7 +246,7 @@ static void check_xer(int expect_arcs, char *xer) {
 	int i;
 
 	printf("[%s] => ", xer); fflush(stdout);
-	rc = asn_DEF_RELATIVE_OID.xer_decoder(0,
+	rc = asn_DEF_RELATIVE_OID.op->xer_decoder(0,
 		&asn_DEF_RELATIVE_OID, (void **)stp, "t",
 			xer, strlen(xer));
 	if(expect_arcs == -1) {

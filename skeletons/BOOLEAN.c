@@ -12,9 +12,7 @@
 static const ber_tlv_tag_t asn_DEF_BOOLEAN_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (1 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
-	"BOOLEAN",
-	"BOOLEAN",
+asn_TYPE_operation_t asn_OP_BOOLEAN = {
 	BOOLEAN_free,
 	BOOLEAN_print,
 	asn_generic_no_constraint,
@@ -22,9 +20,20 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	BOOLEAN_encode_der,
 	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
 	BOOLEAN_encode_uper,	/* Unaligned PER encoder */
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
+	"BOOLEAN",
+	"BOOLEAN",
+	&asn_OP_BOOLEAN,
+	asn_generic_no_constraint,
 	asn_DEF_BOOLEAN_tags,
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
 	asn_DEF_BOOLEAN_tags,	/* Same as above */

@@ -20,6 +20,7 @@ extern "C" {
 #endif
 
 extern asn_TYPE_descriptor_t asn_DEF_NativeInteger;
+extern asn_TYPE_operation_t asn_OP_NativeInteger;
 
 asn_struct_free_f  NativeInteger_free;
 asn_struct_print_f NativeInteger_print;

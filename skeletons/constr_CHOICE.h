@@ -49,6 +49,7 @@ xer_type_encoder_f CHOICE_encode_xer;
 per_type_decoder_f CHOICE_decode_uper;
 per_type_encoder_f CHOICE_encode_uper;
 asn_outmost_tag_f CHOICE_outmost_tag;
+extern asn_TYPE_operation_t asn_OP_CHOICE;
 
 #ifdef __cplusplus
 }

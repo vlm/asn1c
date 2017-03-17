@@ -95,15 +95,8 @@ static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -187,15 +180,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	"Choice1",
 	"Choice1",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -307,15 +293,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",
 	"Choice2",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice2_tags_1,
 	sizeof(asn_DEF_Choice2_tags_1)
 		/sizeof(asn_DEF_Choice2_tags_1[0]), /* 1 */
@@ -364,15 +343,8 @@ static const ber_tlv_tag_t asn_DEF_Choice3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	"Choice3",
 	"Choice3",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice3_tags_1,
 	sizeof(asn_DEF_Choice3_tags_1)
 		/sizeof(asn_DEF_Choice3_tags_1[0]), /* 2 */
@@ -421,15 +393,8 @@ static const ber_tlv_tag_t asn_DEF_Choice4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Choice4 = {
 	"Choice4",
 	"Choice4",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice4_tags_1,
 	sizeof(asn_DEF_Choice4_tags_1)
 		/sizeof(asn_DEF_Choice4_tags_1[0]) - 1, /* 1 */
@@ -477,15 +442,8 @@ static const ber_tlv_tag_t asn_DEF_Choice5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Choice5 = {
 	"Choice5",
 	"Choice5",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice5_tags_1,
 	sizeof(asn_DEF_Choice5_tags_1)
 		/sizeof(asn_DEF_Choice5_tags_1[0]), /* 1 */
@@ -530,15 +488,8 @@ xer_type_encoder_f Choice6_encode_xer;
 asn_TYPE_descriptor_t asn_DEF_Choice6 = {
 	"Choice6",
 	"Choice6",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

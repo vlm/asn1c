@@ -44,15 +44,8 @@ static const ber_tlv_tag_t asn_DEF_T1_all_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
 	"T1",
-	NativeReal_free,
-	NativeReal_print,
+	&asn_OP_NativeReal,
 	NativeReal_constraint,
-	NativeReal_decode_ber,
-	NativeReal_encode_der,
-	NativeReal_decode_xer,
-	NativeReal_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
 		/sizeof(asn_DEF_T1_tags_1[0]), /* 4 */
@@ -108,15 +101,8 @@ static const ber_tlv_tag_t asn_DEF_T2_all_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T2 = {
 	"T2",
 	"T2",
-	NativeReal_free,
-	NativeReal_print,
+	&asn_OP_NativeReal,
 	NativeReal_constraint,
-	NativeReal_decode_ber,
-	NativeReal_encode_der,
-	NativeReal_decode_xer,
-	NativeReal_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags_1,
 	sizeof(asn_DEF_T2_tags_1)
 		/sizeof(asn_DEF_T2_tags_1[0]), /* 3 */
@@ -170,15 +156,8 @@ static const ber_tlv_tag_t asn_DEF_T3_all_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T3 = {
 	"T3",
 	"T3",
-	NativeReal_free,
-	NativeReal_print,
+	&asn_OP_NativeReal,
 	NativeReal_constraint,
-	NativeReal_decode_ber,
-	NativeReal_encode_der,
-	NativeReal_decode_xer,
-	NativeReal_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T3_tags_1,
 	sizeof(asn_DEF_T3_tags_1)
 		/sizeof(asn_DEF_T3_tags_1[0]), /* 2 */
@@ -227,15 +206,8 @@ static const ber_tlv_tag_t asn_DEF_T4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T4 = {
 	"T4",
 	"T4",
-	NativeReal_free,
-	NativeReal_print,
+	&asn_OP_NativeReal,
 	NativeReal_constraint,
-	NativeReal_decode_ber,
-	NativeReal_encode_der,
-	NativeReal_decode_xer,
-	NativeReal_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T4_tags_1,
 	sizeof(asn_DEF_T4_tags_1)
 		/sizeof(asn_DEF_T4_tags_1[0]) - 1, /* 2 */
@@ -283,15 +255,8 @@ static const ber_tlv_tag_t asn_DEF_T5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T5 = {
 	"T5",
 	"T5",
-	NativeReal_free,
-	NativeReal_print,
+	&asn_OP_NativeReal,
 	NativeReal_constraint,
-	NativeReal_decode_ber,
-	NativeReal_encode_der,
-	NativeReal_decode_xer,
-	NativeReal_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T5_tags_1,
 	sizeof(asn_DEF_T5_tags_1)
 		/sizeof(asn_DEF_T5_tags_1[0]) - 1, /* 1 */
@@ -338,15 +303,8 @@ static const ber_tlv_tag_t asn_DEF_T6_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T6 = {
 	"T6",
 	"T6",
-	NativeReal_free,
-	NativeReal_print,
+	&asn_OP_NativeReal,
 	NativeReal_constraint,
-	NativeReal_decode_ber,
-	NativeReal_encode_der,
-	NativeReal_decode_xer,
-	NativeReal_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T6_tags_1,
 	sizeof(asn_DEF_T6_tags_1)
 		/sizeof(asn_DEF_T6_tags_1[0]), /* 1 */
@@ -395,15 +353,8 @@ static const ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]) - 2, /* 1 */
@@ -492,15 +443,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Ts_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Ts = {
 	"Ts",
 	"Ts",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Ts_tags_1,
 	sizeof(asn_DEF_Ts_tags_1)
 		/sizeof(asn_DEF_Ts_tags_1[0]) - 1, /* 1 */

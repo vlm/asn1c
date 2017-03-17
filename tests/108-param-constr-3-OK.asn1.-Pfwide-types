@@ -64,15 +64,8 @@ static const ber_tlv_tag_t asn_DEF_MinMax_16P0_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_MinMax_16P0 = {
 	"MinMax",
 	"MinMax",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	MinMax_16P0_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_MinMax_16P0_tags_1,
 	sizeof(asn_DEF_MinMax_16P0_tags_1)
 		/sizeof(asn_DEF_MinMax_16P0_tags_1[0]), /* 1 */
@@ -150,15 +143,8 @@ static const ber_tlv_tag_t asn_DEF_ThreePlus_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_ThreePlus = {
 	"ThreePlus",
 	"ThreePlus",
-	INTEGER_free,
-	INTEGER_print,
+	&asn_OP_INTEGER,
 	ThreePlus_constraint,
-	INTEGER_decode_ber,
-	INTEGER_encode_der,
-	INTEGER_decode_xer,
-	INTEGER_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ThreePlus_tags_1,
 	sizeof(asn_DEF_ThreePlus_tags_1)
 		/sizeof(asn_DEF_ThreePlus_tags_1[0]), /* 1 */

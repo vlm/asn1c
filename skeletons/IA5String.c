@@ -17,9 +17,7 @@ static asn_per_constraints_t asn_DEF_IA5String_constraints = {
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
 	0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_IA5String = {
-	"IA5String",
-	"IA5String",
+asn_TYPE_operation_t asn_OP_IA5String = {
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,	/* ASCII subset */
 	IA5String_constraint,       /* Constraint on the alphabet */
@@ -27,9 +25,20 @@ asn_TYPE_descriptor_t asn_DEF_IA5String = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_IA5String = {
+	"IA5String",
+	"IA5String",
+	&asn_OP_IA5String,
+	IA5String_constraint,       /* Constraint on the alphabet */
 	asn_DEF_IA5String_tags,
 	sizeof(asn_DEF_IA5String_tags)
 	  / sizeof(asn_DEF_IA5String_tags[0]) - 1,

@@ -19,6 +19,7 @@ typedef struct OCTET_STRING {
 } OCTET_STRING_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
+extern asn_TYPE_operation_t asn_OP_OCTET_STRING;
 
 asn_struct_free_f OCTET_STRING_free;
 asn_struct_print_f OCTET_STRING_print;
@@ -34,7 +35,6 @@ per_type_decoder_f OCTET_STRING_decode_uper;
 per_type_encoder_f OCTET_STRING_encode_uper;
 
 #define OCTET_STRING_constraint  asn_generic_no_constraint
-#define OCTET_STRING_decode_xer  OCTET_STRING_decode_xer_hex
 
 /******************************
  * Handy conversion routines. *

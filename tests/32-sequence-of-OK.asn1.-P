@@ -49,15 +49,8 @@ static asn_SET_OF_specifics_t asn_SPC_Programming_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Programming = {
 	"Programming",
 	"Programming",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Programming_tags_1,
 	sizeof(asn_DEF_Programming_tags_1)
 		/sizeof(asn_DEF_Programming_tags_1[0]), /* 1 */
@@ -123,15 +116,8 @@ asn_SET_OF_specifics_t asn_SPC_Fault_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Fault = {
 	"Fault",
 	"Fault",
-	SET_OF_free,
-	SET_OF_print,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Fault_tags_1,
 	sizeof(asn_DEF_Fault_tags_1)
 		/sizeof(asn_DEF_Fault_tags_1[0]), /* 1 */
@@ -183,15 +169,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Error_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Error = {
 	"Error",
 	"Error",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Error_tags_1,
 	sizeof(asn_DEF_Error_tags_1)
 		/sizeof(asn_DEF_Error_tags_1[0]), /* 1 */
@@ -264,15 +243,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_seqOfMan_3 = {
 	"seqOfMan",
 	"seqOfMan",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_seqOfMan_tags_3,
 	sizeof(asn_DEF_seqOfMan_tags_3)
 		/sizeof(asn_DEF_seqOfMan_tags_3[0]), /* 2 */
@@ -324,15 +296,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_SeqWithMandatory_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_SeqWithMandatory = {
 	"SeqWithMandatory",
 	"SeqWithMandatory",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SeqWithMandatory_tags_1,
 	sizeof(asn_DEF_SeqWithMandatory_tags_1)
 		/sizeof(asn_DEF_SeqWithMandatory_tags_1[0]), /* 1 */
@@ -406,15 +371,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_seqOfOpt_3 = {
 	"seqOfOpt",
 	"seqOfOpt",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_seqOfOpt_tags_3,
 	sizeof(asn_DEF_seqOfOpt_tags_3)
 		/sizeof(asn_DEF_seqOfOpt_tags_3[0]), /* 2 */
@@ -466,15 +424,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_SeqWithOptional_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_SeqWithOptional = {
 	"SeqWithOptional",
 	"SeqWithOptional",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SeqWithOptional_tags_1,
 	sizeof(asn_DEF_SeqWithOptional_tags_1)
 		/sizeof(asn_DEF_SeqWithOptional_tags_1[0]), /* 1 */

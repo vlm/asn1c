@@ -68,15 +68,8 @@ static const ber_tlv_tag_t asn_DEF_Enum1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	"Enum1",
 	"Enum1",
-	ENUMERATED_free,
-	ENUMERATED_print,
+	&asn_OP_ENUMERATED,
 	ENUMERATED_constraint,
-	ENUMERATED_decode_ber,
-	ENUMERATED_encode_der,
-	ENUMERATED_decode_xer,
-	ENUMERATED_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
 		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
@@ -167,15 +160,8 @@ static const ber_tlv_tag_t asn_DEF_Enum2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum2 = {
 	"Enum2",
 	"Enum2",
-	ENUMERATED_free,
-	ENUMERATED_print,
+	&asn_OP_ENUMERATED,
 	ENUMERATED_constraint,
-	ENUMERATED_decode_ber,
-	ENUMERATED_encode_der,
-	ENUMERATED_decode_xer,
-	ENUMERATED_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum2_tags_1,
 	sizeof(asn_DEF_Enum2_tags_1)
 		/sizeof(asn_DEF_Enum2_tags_1[0]), /* 1 */
@@ -254,15 +240,8 @@ static const ber_tlv_tag_t asn_DEF_Enum3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum3 = {
 	"Enum3",
 	"Enum3",
-	ENUMERATED_free,
-	ENUMERATED_print,
+	&asn_OP_ENUMERATED,
 	ENUMERATED_constraint,
-	ENUMERATED_decode_ber,
-	ENUMERATED_encode_der,
-	ENUMERATED_decode_xer,
-	ENUMERATED_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum3_tags_1,
 	sizeof(asn_DEF_Enum3_tags_1)
 		/sizeof(asn_DEF_Enum3_tags_1[0]), /* 1 */
@@ -344,15 +323,8 @@ static const ber_tlv_tag_t asn_DEF_Enum4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum4 = {
 	"Enum4",
 	"Enum4",
-	ENUMERATED_free,
-	ENUMERATED_print,
+	&asn_OP_ENUMERATED,
 	ENUMERATED_constraint,
-	ENUMERATED_decode_ber,
-	ENUMERATED_encode_der,
-	ENUMERATED_decode_xer,
-	ENUMERATED_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum4_tags_1,
 	sizeof(asn_DEF_Enum4_tags_1)
 		/sizeof(asn_DEF_Enum4_tags_1[0]), /* 1 */
@@ -431,15 +403,8 @@ static const ber_tlv_tag_t asn_DEF_Enum5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Enum5 = {
 	"Enum5",
 	"Enum5",
-	ENUMERATED_free,
-	ENUMERATED_print,
+	&asn_OP_ENUMERATED,
 	ENUMERATED_constraint,
-	ENUMERATED_decode_ber,
-	ENUMERATED_encode_der,
-	ENUMERATED_decode_xer,
-	ENUMERATED_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum5_tags_1,
 	sizeof(asn_DEF_Enum5_tags_1)
 		/sizeof(asn_DEF_Enum5_tags_1[0]), /* 1 */

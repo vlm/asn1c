@@ -74,8 +74,8 @@ check(size_t size) {
 	}
 
 
-	asn_DEF_OCTET_STRING.free_struct(&asn_DEF_OCTET_STRING, os, 0);
-	asn_DEF_OCTET_STRING.free_struct(&asn_DEF_OCTET_STRING, nos, 0);
+	asn_DEF_OCTET_STRING.op->free_struct(&asn_DEF_OCTET_STRING, os, 0);
+	asn_DEF_OCTET_STRING.op->free_struct(&asn_DEF_OCTET_STRING, nos, 0);
 }
 
 int

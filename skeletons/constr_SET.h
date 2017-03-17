@@ -54,7 +54,7 @@ xer_type_decoder_f SET_decode_xer;
 xer_type_encoder_f SET_encode_xer;
 per_type_decoder_f SET_decode_uper;
 per_type_encoder_f SET_encode_uper;
-
+extern asn_TYPE_operation_t asn_OP_SET;
 /***********************
  * Some handy helpers. *
  ***********************/

@@ -2486,6 +2486,13 @@ do {				\
 	OUT("_" #foo ",\n");	\
 } while(0)
 
+#if 1
+		OUT("&asn_OP_%s,\n", p2);
+		if (!expr->combined_constraints)
+			FUNCREF2(constraint);
+		else
+			FUNCREF(constraint);
+#else
 		FUNCREF2(free);
 		FUNCREF2(print);
 		if (!expr->combined_constraints)
@@ -2511,6 +2518,8 @@ do {				\
 		} else {
 			OUT("0,\t/* Use generic outmost tag fetcher */\n");
 		}
+#endif
+		if (p2) free(p2);
 
 		p = MKID(expr);
 		if(tags_count) {

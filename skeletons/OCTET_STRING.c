@@ -24,9 +24,7 @@ static const asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
-	"OCTET STRING",		/* Canonical name */
-	"OCTET_STRING",		/* XML tag name */
+asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,	/* non-ascii stuff, generally */
 	asn_generic_no_constraint,
@@ -34,9 +32,20 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
+	"OCTET STRING",		/* Canonical name */
+	"OCTET_STRING",		/* XML tag name */
+	&asn_OP_OCTET_STRING,
+	asn_generic_no_constraint,
 	asn_DEF_OCTET_STRING_tags,
 	sizeof(asn_DEF_OCTET_STRING_tags)
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),

@@ -97,15 +97,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_class_4 = {
 	"class",
 	"class",
-	SET_free,
-	SET_print,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_class_tags_4,
 	sizeof(asn_DEF_class_tags_4)
 		/sizeof(asn_DEF_class_tags_4[0]), /* 1 */
@@ -176,15 +169,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */

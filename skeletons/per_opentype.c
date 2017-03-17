@@ -100,7 +100,7 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	spd.nbits = bufLen << 3;
 
 	ASN_DEBUG_INDENT_ADD(+4);
-	rv = td->uper_decoder(ctx, td, constraints, sptr, &spd);
+	rv = td->op->uper_decoder(ctx, td, constraints, sptr, &spd);
 	ASN_DEBUG_INDENT_ADD(-4);
 
 	if(rv.code == RC_OK) {
@@ -152,7 +152,7 @@ uper_open_type_get_complex(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	pd->moved = 0;	/* This now counts the open type size in bits */
 
 	ASN_DEBUG_INDENT_ADD(+4);
-	rv = td->uper_decoder(ctx, td, constraints, sptr, pd);
+	rv = td->op->uper_decoder(ctx, td, constraints, sptr, pd);
 	ASN_DEBUG_INDENT_ADD(-4);
 
 #define	UPDRESTOREPD	do {						\
@@ -254,7 +254,7 @@ uper_open_type_skip(asn_codec_ctx_t *ctx, asn_per_data_t *pd) {
 	asn_dec_rval_t rv;
 
 	s_td.name = "<unknown extension>";
-	s_td.uper_decoder = uper_sot_suck;
+	s_td.op->uper_decoder = uper_sot_suck;
 
 	rv = uper_open_type_get(ctx, &s_td, 0, 0, pd);
 	if(rv.code != RC_OK)

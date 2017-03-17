@@ -66,7 +66,7 @@ check(LogLine_t *tp, uint8_t *ptr, size_t size, size_t consumed) {
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == consumed);
 	asn_fprint(stderr, &asn_DEF_LogLine, tp);
-	asn_DEF_LogLine.free_struct(&asn_DEF_LogLine, tp, 1);
+	asn_DEF_LogLine.op->free_struct(&asn_DEF_LogLine, tp, 1);
 }
 
 uint8_t *buf;
