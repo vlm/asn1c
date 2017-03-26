@@ -127,13 +127,11 @@ AC_CHECK_TYPE(intmax_t, int64_t)
 
 dnl Test if we should check features that depend on 64-bitness.
 AC_MSG_CHECKING(size of long is longer than 32 bit)
-AS_VAR_PUSHDEF([WIDE_LONG], [WIDE_LONG])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include "confdefs.h"
 #include <sys/types.h>
-]], [[switch (0) case 0: case (sizeof (long) >= 8):;]])],[WIDE_LONG=yes],[WIDE_LONG=no])
-AC_MSG_RESULT($WIDE_LONG)
-AM_CONDITIONAL([TEST_64BIT], [test x$WIDE_LONG = xyes])
-AS_VAR_POPDEF([WIDE_LONG])
+]], [[switch (0) case 0: case (sizeof (long) >= 8):;]])],[ac_cv_wide_long=yes],[ac_cv_wide_long=no])
+AC_MSG_RESULT($ac_cv_wide_long)
+AM_CONDITIONAL([TEST_64BIT], [test x$ac_cv_wide_long = xyes])
 
 dnl For mingw
 AC_SEARCH_LIBS(getopt, iberty)
