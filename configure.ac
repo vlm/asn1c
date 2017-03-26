@@ -1,11 +1,9 @@
-AC_INIT([asn1c],[0.9.28],[vlm@lionet.info])
+AC_INIT([asn1c],[0.9.29],[vlm@lionet.info])
 
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_MACRO_DIR([m4])
-
-LT_INIT
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -15,7 +13,12 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_YACC
 AM_PROG_LEX
-AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)	dnl for Solaris
+dnl locate ar using standard macro (old automake 1.11 does not know about AM_PROG_AR)
+m4_ifdef([AM_PROG_AR],
+         [AM_PROG_AR],
+         [AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)])
+
+LT_INIT
 
 dnl If you need to see the details, just run make V=1.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
@@ -75,6 +78,20 @@ AC_ARG_ENABLE(test-Werror,
       TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
   ])
 
+AX_CODE_COVERAGE
+AS_IF([test x$enable_code_coverage != xno], [
+	CFLAGS="$CFLAGS $CODE_COVERAGE_CFLAGS"
+	# The CODE_COVERAGE_CPPFLAGS contains -DNDEBUG flag
+	# which removes assert(...) macros from code coverage and improves the
+	# branches score. But when it is defined it results in few
+	# unsed-but-set-variable warnings that are treated as errors in the travis-ci
+	# build because these variables are only used inside assert macros.
+	# error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
+	#CPPFLAGS="$CPPFLAGS $CODE_COVERAGE_CPPFLAGS"
+	CXXFLAGS="$CXXFLAGS $CODE_COVERAGE_CXXFLAGS"
+	LDFLAGS="$LDFLAGS $CODE_COVERAGE_LDFLAGS"
+])
+
 AC_SUBST(ADD_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 
@@ -84,7 +101,14 @@ SKELETONS_CFLAGS="${ADD_CFLAGS} ${SKELETONS_CFLAGS}"
 AX_CHECK_COMPILE_FLAG([-std=c89],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -std=c89"])
 AX_CHECK_COMPILE_FLAG([-Wpedantic],
-    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wpedantic"])
+    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wpedantic"],
+    [
+        dnl When -Wpedantic is not supported try the -pedantic instead. (gcc-4.7)
+        dnl See https://gcc.gnu.org/gcc-4.8/changes.html
+        AX_CHECK_COMPILE_FLAG([-pedantic],
+            [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
+    ],
+    [-Werror]) #clang 3.0 prints warning when the flag is not supported
 AX_CHECK_COMPILE_FLAG([-Wno-duplicate-decl-specifier],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-duplicate-decl-specifier"])
 AC_SUBST(SKELETONS_CFLAGS)
@@ -102,8 +126,14 @@ AC_STRUCT_TM
 AC_CHECK_TYPE(intmax_t, int64_t)
 
 dnl Test if we should check features that depend on 64-bitness.
-AC_CHECK_SIZEOF([void *])
-AM_CONDITIONAL([TEST_64BIT], [test "$ac_cv_sizeof_void_p" -eq 8])
+AC_MSG_CHECKING(size of long is longer than 32 bit)
+AS_VAR_PUSHDEF([WIDE_LONG], [WIDE_LONG])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include "confdefs.h"
+#include <sys/types.h>
+]], [[switch (0) case 0: case (sizeof (long) >= 8):;]])],[WIDE_LONG=yes],[WIDE_LONG=no])
+AC_MSG_RESULT($WIDE_LONG)
+AM_CONDITIONAL([TEST_64BIT], [test x$WIDE_LONG = xyes])
+AS_VAR_POPDEF([WIDE_LONG])
 
 dnl For mingw
 AC_SEARCH_LIBS(getopt, iberty)

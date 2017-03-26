@@ -246,20 +246,13 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 		}
 
 		free(expr->Identifier);
-		if(expr->reference)
-			asn1p_ref_free(expr->reference);
-		if(expr->constraints)
-			asn1p_constraint_free(expr->constraints);
-		if(expr->combined_constraints)
-			asn1p_constraint_free(expr->combined_constraints);
-		if(expr->lhs_params)
-			asn1p_paramlist_free(expr->lhs_params);
-		if(expr->value)
-			asn1p_value_free(expr->value);
-		if(expr->marker.default_value)
-			asn1p_value_free(expr->marker.default_value);
-		if(expr->with_syntax)
-			asn1p_wsyntx_free(expr->with_syntax);
+		asn1p_ref_free(expr->reference);
+		asn1p_constraint_free(expr->constraints);
+		asn1p_constraint_free(expr->combined_constraints);
+		asn1p_paramlist_free(expr->lhs_params);
+		asn1p_value_free(expr->value);
+		asn1p_value_free(expr->marker.default_value);
+		asn1p_wsyntx_free(expr->with_syntax);
 
 		if(expr->data && expr->data_free)
 			expr->data_free(expr->data);

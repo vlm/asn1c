@@ -294,7 +294,7 @@ typedef union YYSTYPE
 	} tv_nametag;
 }
 /* Line 1529 of yacc.c.  */
-#line 298 "y.tab.h"
+#line 298 "asn1p_y.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
