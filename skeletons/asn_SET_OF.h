@@ -6,16 +6,26 @@
 #define	ASN_SET_OF_H
 
 #ifdef __cplusplus
-extern "C" {
+#define A_SET_OF(type)                   \
+    struct {                             \
+        type **array;                    \
+        int count; /* Meaningful size */ \
+        int size;  /* Allocated size */  \
+        void (*free)(decltype(*array));  \
+    }
+#else   /* C */
+#define A_SET_OF(type)                   \
+    struct {                             \
+        type **array;                    \
+        int count; /* Meaningful size */ \
+        int size;  /* Allocated size */  \
+        void (*free)(type *);    \
+    }
 #endif
 
-#define	A_SET_OF(type)					\
-	struct {					\
-		type **array;				\
-		int count;	/* Meaningful size */	\
-		int size;	/* Allocated size */	\
-		void (*free)(type *);			\
-	}
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define	ASN_SET_ADD(headptr, ptr)		\
 	asn_set_add((headptr), (ptr))
