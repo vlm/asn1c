@@ -5,8 +5,6 @@ AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_MACRO_DIR([m4])
 
-LT_INIT
-
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
@@ -15,7 +13,12 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_YACC
 AM_PROG_LEX
-AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)	dnl for Solaris
+dnl locate ar using standard macro (old automake 1.11 does not know about AM_PROG_AR)
+m4_ifdef([AM_PROG_AR],
+         [AM_PROG_AR],
+         [AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)])
+
+LT_INIT
 
 dnl If you need to see the details, just run make V=1.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
