@@ -430,7 +430,7 @@ typedef union YYSTYPE
 	} tv_nametag;
 }
 /* Line 193 of yacc.c.  */
-#line 434 "y.tab.c"
+#line 434 "asn1p_y.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -443,7 +443,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 447 "y.tab.c"
+#line 447 "asn1p_y.c"
 
 #ifdef short
 # undef short
@@ -2318,7 +2318,8 @@ yyreduce:
     {
 		(yyval.a_oid) = asn1p_oid_new();
 		asn1p_oid_add_arc((yyval.a_oid), &(yyvsp[(1) - (1)].a_oid_arc));
-		free((yyvsp[(1) - (1)].a_oid_arc).name);
+		if((yyvsp[(1) - (1)].a_oid_arc).name)
+			free((yyvsp[(1) - (1)].a_oid_arc).name);
 	}
     break;
 
@@ -2327,7 +2328,8 @@ yyreduce:
     {
 		(yyval.a_oid) = (yyvsp[(1) - (2)].a_oid);
 		asn1p_oid_add_arc((yyval.a_oid), &(yyvsp[(2) - (2)].a_oid_arc));
-		free((yyvsp[(2) - (2)].a_oid_arc).name);
+		if((yyvsp[(2) - (2)].a_oid_arc).name)
+			free((yyvsp[(2) - (2)].a_oid_arc).name);
 	}
     break;
 
@@ -2823,7 +2825,7 @@ yyreduce:
 		checkmem((yyval.a_plist));
 		ret = asn1p_paramlist_add_param((yyval.a_plist), (yyvsp[(1) - (1)].a_parg).governor, (yyvsp[(1) - (1)].a_parg).argument);
 		checkmem(ret == 0);
-		if((yyvsp[(1) - (1)].a_parg).governor) asn1p_ref_free((yyvsp[(1) - (1)].a_parg).governor);
+		asn1p_ref_free((yyvsp[(1) - (1)].a_parg).governor);
 		free((yyvsp[(1) - (1)].a_parg).argument);
 	}
     break;
@@ -2835,7 +2837,7 @@ yyreduce:
 		(yyval.a_plist) = (yyvsp[(1) - (3)].a_plist);
 		ret = asn1p_paramlist_add_param((yyval.a_plist), (yyvsp[(3) - (3)].a_parg).governor, (yyvsp[(3) - (3)].a_parg).argument);
 		checkmem(ret == 0);
-		if((yyvsp[(3) - (3)].a_parg).governor) asn1p_ref_free((yyvsp[(3) - (3)].a_parg).governor);
+		asn1p_ref_free((yyvsp[(3) - (3)].a_parg).governor);
 		free((yyvsp[(3) - (3)].a_parg).argument);
 	}
     break;
@@ -4793,7 +4795,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 4799 "y.tab.c"
+#line 4799 "asn1p_y.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
