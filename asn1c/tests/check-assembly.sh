@@ -17,7 +17,7 @@ abs_top_srcdir="${abs_top_srcdir:-$(pwd)/../../}"
 abs_top_builddir="${abs_top_builddir:-$(pwd)/../../}"
 
 if echo "$*" | grep -q -- -- ; then
-    TEST_DRIVER=$(echo "$*"  | sed -e 's/ -- .*/--/g')
+    TEST_DRIVER=$(echo "$*"  | sed -e 's/ -- .*/ -- /g')
     source_full=$(echo "$*"  | sed -e 's/.* //g')
 else
     TEST_DRIVER=""

@@ -573,6 +573,194 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	ASN__ENCODED_OK(er);
 }
 
+asn_enc_rval_t
+SET_encode_uper(asn_TYPE_descriptor_t *td,
+				asn_per_constraints_t *constraints,
+				void *sptr,
+				asn_per_outp_t *po) {
+	int useless_test = (constraints && po);
+	if (useless_test) {
+		useless_test = 0;
+	}
+	ASN__ENCODE_FAILED;
+}
+
+asn_dec_rval_t
+SET_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+					 asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	int useless_test = (opt_codec_ctx && constraints && sptr && pd);
+	if (useless_test) {
+		useless_test = 0;
+	}
+	ASN__DECODE_FAILED;
+}
+
+asn_enc_rval_t
+SET_encode_aper(asn_TYPE_descriptor_t *td,
+				asn_per_constraints_t *constraints,
+				void *sptr,
+				asn_per_outp_t *po) {
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	asn_enc_rval_t er;
+	int edx;
+	int t2m_build_own = (specs->tag2el_count != td->elements_count);
+	const asn_TYPE_tag2member_t *t2m;
+	asn_TYPE_tag2member_t *t2m_build;
+	int t2m_count;
+
+	(void)constraints;
+
+	if(!sptr)
+		ASN__ENCODE_FAILED;
+
+	er.encoded = 0;
+
+	ASN_DEBUG("Encoding %s as SET (APER) map %d", td->name, specs->_mandatory_elements[0]);
+
+	/*
+	 * Use existing, or build our own tags map.
+	 */
+	if(t2m_build_own) {
+		t2m_build = (asn_TYPE_tag2member_t *)alloca(
+			td->elements_count * sizeof(t2m[0]));
+	if(!t2m_build) ASN__ENCODE_FAILED; /* There are such platforms */
+		t2m_count = 0;
+	} else {
+		t2m_build = NULL;
+		/*
+		 * There is no untagged CHOICE in this SET.
+		 * Employ existing table.
+		 */
+	}
+
+	/*
+	 * Gather the length of the underlying members sequence.
+	 */
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;
+
+		/*
+		 * Compute the length of the encoding of this member.
+		 */
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+			if(!memb_ptr) {
+				if(!elm->optional)
+				/* Mandatory elements missing */
+					ASN__ENCODE_FAILED;
+				if(t2m_build_own) {
+					t2m_build[t2m_count].el_no = edx;
+					t2m_build[t2m_count].el_tag = 0;
+					t2m_count++;
+				}
+				continue;
+			}
+		} else {
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+		}
+
+		/*
+		 * Remember the outmost tag of this member.
+		 */
+		if(t2m_build_own) {
+			t2m_build[t2m_count].el_no = edx;
+			t2m_build[t2m_count].el_tag = asn_TYPE_outmost_tag(
+				elm->type, memb_ptr, elm->tag_mode, elm->tag);
+			t2m_count++;
+		} else {
+			/*
+			 * No dynamic sorting is necessary.
+			 */
+		}
+	}
+
+	/*
+	 * Finalize order of the components.
+	 */
+	assert(t2m_count == td->elements_count);
+	if(t2m_build_own) {
+		/*
+		 * Sort the underlying members according to their
+		 * canonical tags order. DER encoding mandates it.
+		 */
+		qsort(t2m_build, t2m_count, sizeof(specs->tag2el[0]), _t2e_cmp);
+		t2m = t2m_build;
+	} else {
+		/*
+		 * Tags are already sorted by the compiler.
+		 */
+		t2m = specs->tag2el;
+		t2m_count = specs->tag2el_count;
+	}
+	assert(t2m_count == td->elements_count);
+
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[t2m[edx].el_no];
+//		asn_enc_rval_t tmper;
+//		void *memb_ptr;		 /* Pointer to the member */
+		void **memb_ptr2;	   /* Pointer to that pointer */
+		int present;
+
+		/* Fetch the pointer to this member */
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			present = (*memb_ptr2 != 0);
+		} else {
+//			 memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+//			 memb_ptr2 = &memb_ptr;
+			present = 1;
+			continue;
+		}
+
+//		 /* Eliminate default values */
+//		 if(present && elm->default_value
+//			 && elm->default_value(0, memb_ptr2) == 1)
+//			 present = 0;
+
+		ASN_DEBUG("Element %s %s %s->%s is %s",
+				  elm->flags & ATF_POINTER ? "ptr" : "inline",
+				  elm->default_value ? "def" : "wtv",
+				  td->name, elm->name, present ? "present" : "absent");
+		if(per_put_few_bits(po, present << 7, 8))
+			ASN__ENCODE_FAILED;
+	}
+
+	/*
+	 * Encode all members.
+	 */
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		asn_enc_rval_t tmper;
+		void *memb_ptr;		 /* Pointer to the member */
+		void **memb_ptr2;	   /* Pointer to that pointer */
+
+		/* Encode according to the tag order */
+//		 elm = &td->elements[t2m[edx].el_no];
+
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) {
+				ASN_DEBUG("Element %s %d not present",
+						  elm->name, edx);
+				if(elm->optional)
+					continue;
+				/* Mandatory element is missing */
+				ASN__ENCODE_FAILED;
+			}
+		} else {
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr;
+		}
+		tmper = elm->type->aper_encoder(elm->type, elm->per_constraints,
+										*memb_ptr2, po);
+		if(tmper.encoded == -1)
+			return tmper;
+	}
+
+	ASN__ENCODED_OK(er);
+}
+
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\

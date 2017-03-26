@@ -49,6 +49,8 @@ asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	OCTET_STRING_encode_xer_utf8,
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,
+	OCTET_STRING_encode_aper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)

@@ -50,6 +50,10 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	char *second = 0;
 	ssize_t size;
 	char *p;
+	char *prefix = NULL;
+
+	if (flags & AMI_USE_PREFIX)
+		prefix = getenv("ASN1C_PREFIX");
 
 	if(expr) {
 		/*
@@ -74,11 +78,13 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	va_end(ap);
 	if(size == -1) return NULL;
 
+	if(prefix)
+		size += 1 + strlen(prefix);
 	/*
 	 * Make sure we have this amount of storage.
 	 */
 	if(storage_size <= size) {
-		free(storage);
+		if(storage) free(storage);
 		storage = malloc(size + 1);
 		if(storage) {
 			storage_size = size;
@@ -93,8 +99,12 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	 */
 	va_start(ap, expr);
 	p = storage;
+	if(prefix) {
+		strcpy(storage, prefix);
+		p += strlen(prefix);
+	}
 	nextstr = "";
-	for(p = storage, str = 0; str || nextstr; str = nextstr) {
+	for(str = 0; str || nextstr; str = nextstr) {
 		int subst_made = 0;
 		nextstr = second ? second : va_arg(ap, char *);
 
@@ -204,7 +214,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			}
 		}
 
-		if(terminal && terminal->spec_index != -1) {
+		if(_format != TNF_RSAFE && terminal && terminal->spec_index != -1) {
 			exprid = terminal;
 			typename = 0;
 		}
@@ -262,9 +272,17 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 
 	switch(_format) {
 	case TNF_UNMODIFIED:
-		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES,
+		return asn1c_make_identifier(stdname ? AMI_MASK_ONLY_SPACES :
+			AMI_MASK_ONLY_SPACES | AMI_USE_PREFIX,
 			0, exprid ? exprid->Identifier : typename, 0);
-	case TNF_INCLUDE:
+	case TNF_INCLUDE: {
+		/* as we have the quote marks " or < preceding the type
+		 * name, we cannot simply have asn1c_make_identifier
+		 * generate the prefix.  Then we would end up with
+		 * strings like PREFIX_<foo.h>" */
+		char *prefix = getenv("ASN1C_PREFIX");
+		if (!prefix)
+			prefix = "";
 		return asn1c_make_identifier(
 			AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
 			0, ((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
@@ -272,13 +290,16 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			exprid ? exprid->Identifier : typename,
 			((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
 				? ".h\"" : ".h>"), 0);
+	}
 	case TNF_SAFE:
-		return asn1c_make_identifier(0, exprid, typename, 0);
+		return asn1c_make_identifier(stdname ? 0 : AMI_USE_PREFIX,
+				exprid, typename, 0);
 	case TNF_CTYPE:	/* C type */
-		return asn1c_make_identifier(0, exprid,
-				exprid?"t":typename, exprid?0:"t", 0);
+		return asn1c_make_identifier(stdname ? 0 : AMI_USE_PREFIX,
+				exprid, exprid?"t":typename, exprid?0:"t", 0);
 	case TNF_RSAFE:	/* Recursion-safe type */
-		return asn1c_make_identifier(AMI_CHECK_RESERVED, 0,
+		return asn1c_make_identifier(stdname ? AMI_CHECK_RESERVED :
+			AMI_CHECK_RESERVED | AMI_USE_PREFIX, 0,
 			"struct", " ", typename, 0);
 	}
 
@@ -383,7 +404,7 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	if(left.type == ARE_VALUE
 		&& left.value >= 0
 	&& right.type == ARE_VALUE
-		&& right.value > 2147483647
+		&& right.value > 2147483647L
 		&& right.value <= (asn1c_integer_t)(4294967295UL))
 		return FL_FITS_UNSIGN;
 		

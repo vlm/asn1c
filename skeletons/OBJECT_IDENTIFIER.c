@@ -27,6 +27,8 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OBJECT_IDENTIFIER_encode_xer,
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,
+	OCTET_STRING_encode_aper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
@@ -666,7 +668,7 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 
 #define	_OID_CAPTURE_ARC(oid_text, oid_end)		do {	\
 	const char *endp = oid_end;				\
-	long value;						\
+	long long value;						\
 	switch(asn_strtol_lim(oid_text, &endp, &value)) {	\
 	case ASN_STRTOL_EXTRA_DATA:				\
 	case ASN_STRTOL_OK:					\

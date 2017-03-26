@@ -192,7 +192,7 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	ret = asn_double2REAL(&rn, d);
 	assert(ret == 0);
 	if((size_t)rn.size != outsize) {
-		printf("Encoded %f into %d expected %ld\n",
+		printf("Encoded %f into %d expected %zu\n",
 			d, (int)rn.size, outsize);
 		assert((size_t)rn.size == outsize);
 	}

@@ -99,6 +99,8 @@ typedef struct asn_TYPE_descriptor_s {
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
 	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
 	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
+	per_type_decoder_f *aper_decoder;	/* Aligned PER decoder */
+	per_type_encoder_f *aper_encoder;	/* Aligned PER encoder */
 
 	/***********************************************************************
 	 * Internally useful members. Not to be used by applications directly. *

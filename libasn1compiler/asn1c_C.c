@@ -1242,6 +1242,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
 	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
 	OUT("td->uper_encoder   = asn_DEF_%s.uper_encoder;\n",   type_name);
+	OUT("td->aper_decoder   = asn_DEF_%s.aper_decoder;\n",   type_name);
+	OUT("td->aper_encoder   = asn_DEF_%s.aper_encoder;\n",   type_name);
 	if(!terminal && !tags_count) {
 	  OUT("/* The next four lines are here because of -fknown-extern-type */\n");
 	  OUT("td->tags           = asn_DEF_%s.tags;\n",         type_name);
@@ -1394,7 +1396,39 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	);
 	OUT("}\n");
 	OUT("\n");
-  }
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
+							OUT("asn_enc_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+		OUT("_encode_aper(asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tasn_per_constraints_t *constraints,\n");
+	OUT("\tvoid *structure, asn_per_outp_t *per_out) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->aper_encoder(td, constraints, structure, per_out);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_dec_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+		OUT("\tasn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->aper_decoder(opt_codec_ctx, td, constraints, structure, per_data);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+	}
 
 	REDIR(OT_FUNC_DECLS);
 
@@ -1415,6 +1449,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		if(arg->flags & A1C_GEN_PER) {
 		OUT("per_type_decoder_f %s_decode_uper;\n", p);
 		OUT("per_type_encoder_f %s_encode_uper;\n", p);
+		OUT("per_type_decoder_f %s_decode_aper;\n", p);
+		OUT("per_type_encoder_f %s_encode_aper;\n", p);
 		}
 	}
 
@@ -2003,7 +2039,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 				break;
 			case ASN_STRING_UniversalString:
 				OUT("{ APC_CONSTRAINED,\t32, 32,"
-					" 0, 2147483647 }"
+					" 0, 2147483647L }"
 					" /* special case 1 */\n");
 				goto avoid;
 			default:
@@ -2456,8 +2492,12 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		if(arg->flags & A1C_GEN_PER) {
 			FUNCREF(decode_uper);
 			FUNCREF(encode_uper);
+			FUNCREF(decode_aper);
+			FUNCREF(encode_aper);
 		} else {
-			OUT("0, 0,\t/* No PER support, "
+			OUT("0, 0,\t/* No UPER support, "
+				"use \"-gen-PER\" to enable */\n");
+			OUT("0, 0,\t/* No APER support, "
 				"use \"-gen-PER\" to enable */\n");
 		}
 

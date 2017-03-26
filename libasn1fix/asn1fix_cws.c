@@ -8,6 +8,42 @@ static int _asn1f_parse_class_object_data(arg_t *, asn1p_expr_t *eclass,
 static int _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_ioc_cell_s *cell, uint8_t *buf, const uint8_t *bend);
 
 int
+asn1f_check_class_object(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *eclass;
+	asn1p_ioc_row_t *row;
+
+	if(expr->meta_type != AMT_VALUE
+	|| expr->expr_type != A1TC_REFERENCE
+	|| !expr->value
+	|| expr->value->type != ATV_UNPARSED)
+		return 0;
+
+	eclass = asn1f_find_terminal_type(arg, expr);
+	if(!eclass
+	|| eclass->meta_type != AMT_OBJECTCLASS
+	|| eclass->expr_type != A1TC_CLASSDEF) {
+		return 0;
+	}
+
+	if(!eclass->with_syntax) {
+		DEBUG("Can't process classes without %s just yet",
+			"WITH SYNTAX");
+		return 0;
+	}
+
+	row = asn1p_ioc_row_new(eclass);
+	assert(row);
+
+	return _asn1f_parse_class_object_data(arg, eclass, row,
+		eclass->with_syntax,
+		expr->value->value.string.buf + 1,
+		expr->value->value.string.buf
+			+ expr->value->value.string.size - 1,
+		0, 0);
+}
+
+int
 asn1f_parse_class_object(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *eclass;
@@ -103,6 +139,7 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 		case WC_FIELD: {
 			struct asn1p_ioc_cell_s *cell;
 			int lbraces = 0;
+			int lquotes = 0;
 			uint8_t *p;
 
 			SKIPSPACES;
@@ -110,6 +147,8 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 			p = buf;
 			if(p < bend && *p == '{')
 				lbraces = 1, p++;
+			if(p < bend && *p == '"')
+				lquotes = 1, p++;
 			for(; p < bend; p++) {
 				if(lbraces) {
 					/* Search the terminating brace */
@@ -117,11 +156,14 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 					case '}': lbraces--; break;
 					case '{': lbraces++; break;
 					}
-				} else if(isspace(*p)) {
+				} else if (lquotes) {
+					if (*p == '"')
+						lquotes--;
+				} else if(isspace(*p) || *p == ',') {
 					break;
 				}
 			}
-			if(lbraces) {
+			if(lbraces || lquotes) {
 				FATAL("Field reference %s found in class value definition for %s at line %d can not be satisfied by broken value \"%s\"",
 				chunk->content.token,
 				arg->expr->Identifier, arg->expr->_lineno, buf);
@@ -185,7 +227,6 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 	p[bend - buf] = '\0';
 
 	if(!isalpha(*p)) {
-
 		if(isdigit(*p)) {
 			asn1c_integer_t value;
 			if(asn1p_atoi(p, &value)) {
@@ -197,6 +238,12 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 			expr->meta_type = AMT_VALUE; 
 			expr->expr_type = ASN_BASIC_INTEGER;
 			expr->value = asn1p_value_fromint(value);
+		} else if (*p == '"') {
+			expr = asn1p_expr_new(arg->expr->_lineno, arg->expr->module);
+			expr->Identifier = p;
+			expr->meta_type = AMT_VALUE;
+			expr->expr_type = ASN_BASIC_CHARACTER_STRING;
+			expr->value = asn1p_value_frombuf(p + 1, strlen(p) - 2, 0);
 		} else {
 			WARNING("asn1c is not yet able to parse arbitrary direct values; try converting %s at line %d to a reference.", p, arg->expr->_lineno);
 			free(p);
@@ -208,7 +255,21 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 		assert(ref);
 	
 		expr = asn1f_lookup_symbol(arg, arg->mod, arg->expr->rhs_pspecs, ref);
-		if(!expr) {
+		if(!expr && TQ_FIRST(&cell->field->members)) {
+			expr = asn1p_expr_new(arg->expr->_lineno, arg->expr->module);
+			expr->Identifier = p;
+			expr->meta_type = AMT_VALUE;
+			expr->expr_type = A1TC_REFERENCE;
+			expr->reference = TQ_FIRST(&cell->field->members)->reference;
+			expr->value = asn1p_value_fromref(ref, 0);
+			if (asn1f_value_resolve(arg, expr, 0)) {
+				expr->Identifier = NULL;
+				expr->reference = NULL;
+				asn1p_expr_free(expr);
+				expr = NULL;
+			}
+		}
+		if (!expr) {
 			FATAL("Cannot find %s referenced by %s at line %d",
 				p, arg->expr->Identifier,
 				arg->expr->_lineno);

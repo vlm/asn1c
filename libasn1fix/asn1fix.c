@@ -245,10 +245,17 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 	asn1p_expr_t *expr;
 	int rvalue = 0;
 	int ret;
+	char *prefix = getenv("ASN1C_PREFIX");
 
 	TQ_FOR(expr, &(arg->mod->members), next) {
 		arg->expr = expr;
 
+		if (prefix) {
+			char *tmp = malloc(strlen(prefix)+strlen(expr->Identifier)+1);
+			sprintf(tmp, "%s%s", prefix, expr->Identifier);
+			free(expr->Identifier);
+			expr->Identifier = tmp;
+		}
 		/*
 		 * Dereference DEFAULT values.
 		 */

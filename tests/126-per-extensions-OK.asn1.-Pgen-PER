@@ -106,6 +106,8 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	SEQUENCE_decode_aper,
+	SEQUENCE_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PDU_tags_1,
 	sizeof(asn_DEF_PDU_tags_1)
@@ -206,6 +208,8 @@ asn_TYPE_descriptor_t asn_DEF_Singleton = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	SEQUENCE_decode_aper,
+	SEQUENCE_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Singleton_tags_1,
 	sizeof(asn_DEF_Singleton_tags_1)
@@ -260,7 +264,7 @@ extern asn_TYPE_descriptor_t asn_DEF_PDU_2;
 /*** <<< CTDEFS [PDU-2] >>> ***/
 
 static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 GCC_NOTUSED = {
-	{ APC_CONSTRAINED | APC_EXTENSIBLE,  0,  0,  0,  0 }	/* (0..0,...) */,
+	{ APC_CONSTRAINED | APC_EXTENSIBLE,  0,  0,  0l,  0l }	/* (0..0,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
@@ -324,6 +328,8 @@ asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	CHOICE_encode_xer,
 	CHOICE_decode_uper,
 	CHOICE_encode_uper,
+	CHOICE_decode_aper,
+	CHOICE_encode_aper,
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

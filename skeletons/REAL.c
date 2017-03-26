@@ -51,6 +51,8 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	REAL_encode_xer,
 	REAL_decode_uper,
 	REAL_encode_uper,
+	REAL_decode_aper,
+	REAL_encode_aper,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_REAL_tags,
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
@@ -388,6 +390,21 @@ REAL_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
 	(void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_encode_uper(td, 0, sptr, po);
+}
+
+asn_dec_rval_t
+REAL_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+	void **sptr, asn_per_data_t *pd) {
+	(void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_decode_aper(opt_codec_ctx, td, 0, sptr, pd);
+}
+
+asn_enc_rval_t
+REAL_encode_aper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	(void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_encode_aper(td, 0, sptr, po);
 }
 
 int
