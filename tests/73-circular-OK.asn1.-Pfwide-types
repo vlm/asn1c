@@ -473,7 +473,7 @@ static int check_permitted_alphabet_6(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -486,7 +486,7 @@ static int check_permitted_alphabet_7(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 97 && cv <= 122)) return -1;
+		if(!(cv >= 97LL && cv <= 122LL)) return -1;
 	}
 	return 0;
 }

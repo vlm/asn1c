@@ -149,7 +149,7 @@ int
 Int2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int1_t *st = (const Int1_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -161,7 +161,7 @@ Int2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	/* Check if the sign bit is present */
 	value = st->buf ? ((st->buf[0] & 0x80) ? -1 : 1) : 0;
 	
-	if((value >= 0)) {
+	if((value >= 0LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -293,7 +293,7 @@ int
 Int3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int2_t *st = (const Int2_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -309,7 +309,7 @@ Int3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 0 && value <= 10)) {
+	if((value >= 0LL && value <= 10LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -441,7 +441,7 @@ int
 Int4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int3_t *st = (const Int3_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -457,7 +457,7 @@ Int4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 1 && value <= 10)) {
+	if((value >= 1LL && value <= 10LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -589,7 +589,7 @@ int
 Int5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int4_t *st = (const Int4_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -605,7 +605,7 @@ Int5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value == 5)) {
+	if((value == 5LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -737,7 +737,7 @@ int
 ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -753,7 +753,7 @@ ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 1 && value <= 256)) {
+	if((value >= 1LL && value <= 256LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -1014,7 +1014,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv <= 127)) return -1;
+		if(!(cv <= 127LL)) return -1;
 	}
 	return 0;
 }
@@ -1037,7 +1037,7 @@ Str2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size;
 	
-	if(((size <= 20) || (size >= 25 && size <= 30))
+	if(((size <= 20LL) || (size >= 25LL && size <= 30LL))
 		 && !check_permitted_alphabet_1(st)) {
 		/* Constraint check succeeded */
 		return 0;
@@ -1208,7 +1208,7 @@ Str3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size;
 	
-	if(((size >= 10 && size <= 20) || (size >= 25 && size <= 27))
+	if(((size >= 10LL && size <= 20LL) || (size >= 25LL && size <= 27LL))
 		 && !check_permitted_alphabet_1(st)) {
 		/* Constraint check succeeded */
 		return 0;
@@ -1345,7 +1345,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv <= 127)) return -1;
+		if(!(cv <= 127LL)) return -1;
 	}
 	return 0;
 }
@@ -1502,7 +1502,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 70)) return -1;
+		if(!(cv >= 65LL && cv <= 70LL)) return -1;
 	}
 	return 0;
 }
@@ -1659,7 +1659,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 69 && cv <= 70)) return -1;
+		if(!(cv >= 69LL && cv <= 70LL)) return -1;
 	}
 	return 0;
 }
@@ -1816,7 +1816,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 70)) return -1;
+		if(!(cv >= 65LL && cv <= 70LL)) return -1;
 	}
 	return 0;
 }
@@ -1973,7 +1973,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 66)) return -1;
+		if(!(cv >= 65LL && cv <= 66LL)) return -1;
 	}
 	return 0;
 }
@@ -2130,7 +2130,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 66)) return -1;
+		if(!(cv >= 65LL && cv <= 66LL)) return -1;
 	}
 	return 0;
 }
@@ -2287,7 +2287,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 68)) return -1;
+		if(!(cv >= 65LL && cv <= 68LL)) return -1;
 	}
 	return 0;
 }
@@ -2310,7 +2310,7 @@ SIZE_but_not_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size;
 	
-	if((size >= 1 && size <= 4)
+	if((size >= 1LL && size <= 4LL)
 		 && !check_permitted_alphabet_1(st)) {
 		/* Constraint check succeeded */
 		return 0;
@@ -2447,7 +2447,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 68)) return -1;
+		if(!(cv >= 65LL && cv <= 68LL)) return -1;
 	}
 	return 0;
 }
@@ -2470,7 +2470,7 @@ SIZE_and_FROM_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size;
 	
-	if((size >= 1 && size <= 4)
+	if((size >= 1LL && size <= 4LL)
 		 && !check_permitted_alphabet_1(st)) {
 		/* Constraint check succeeded */
 		return 0;
@@ -2607,7 +2607,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 70)) return -1;
+		if(!(cv >= 65LL && cv <= 70LL)) return -1;
 	}
 	return 0;
 }
@@ -2957,7 +2957,7 @@ Utf8_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((size >= 1 && size <= 2)
+	if((size >= 1LL && size <= 2LL)
 		 && !check_permitted_alphabet_1(st)) {
 		/* Constraint check succeeded */
 		return 0;
@@ -3107,7 +3107,7 @@ Utf8_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((size >= 1 && size <= 2)) {
+	if((size >= 1LL && size <= 2LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -3403,7 +3403,7 @@ VisibleIdentifier_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size;
 	
-	if((size >= 1 && size <= 32)
+	if((size >= 1LL && size <= 32LL)
 		 && !check_permitted_alphabet_1(st)) {
 		/* Constraint check succeeded */
 		return 0;
@@ -3636,7 +3636,7 @@ static int
 memb_int1_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int1_t *st = (const Int1_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -3652,7 +3652,7 @@ memb_int1_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= -2)) {
+	if((value >= -2LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -3667,7 +3667,7 @@ static int
 memb_int4_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int4_t *st = (const Int4_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -3683,7 +3683,7 @@ memb_int4_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 5 && value <= 7)) {
+	if((value >= 5LL && value <= 7LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -3698,7 +3698,7 @@ static int
 memb_int5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const Int5_t *st = (const Int5_t *)sptr;
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -3714,7 +3714,7 @@ memb_int5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value == 5)) {
+	if((value == 5LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -4177,7 +4177,7 @@ xer_type_encoder_f Enum1_encode_xer;
 int
 Enum1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	long long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -4186,9 +4186,9 @@ Enum1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const long long *)sptr;
 	
-	if((value == 0)) {
+	if((value == 0LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -4376,7 +4376,7 @@ Identifier_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size;
 	
-	if((size >= 1 && size <= 32)
+	if((size >= 1LL && size <= 32LL)
 		 && !check_permitted_alphabet_1(st)) {
 		/* Constraint check succeeded */
 		return 0;

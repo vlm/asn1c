@@ -51,7 +51,7 @@ memb_signature_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		size = 0;
 	}
 	
-	if((size <= 256)) {
+	if((size <= 256LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

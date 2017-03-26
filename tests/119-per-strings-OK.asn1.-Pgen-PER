@@ -80,7 +80,7 @@ static int check_permitted_alphabet_5(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -93,7 +93,7 @@ static int check_permitted_alphabet_6(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -132,7 +132,7 @@ static int check_permitted_alphabet_9(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -145,7 +145,7 @@ static int check_permitted_alphabet_10(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -184,7 +184,7 @@ static int check_permitted_alphabet_13(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -223,7 +223,7 @@ static int check_permitted_alphabet_16(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 53 && cv <= 57)) return -1;
+		if(!(cv >= 53LL && cv <= 57LL)) return -1;
 	}
 	return 0;
 }
@@ -236,7 +236,7 @@ static int check_permitted_alphabet_17(const void *sptr) {
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
-		if(!(cv >= 53 && cv <= 57)) return -1;
+		if(!(cv >= 53LL && cv <= 57LL)) return -1;
 	}
 	return 0;
 }
@@ -299,7 +299,7 @@ static int check_permitted_alphabet_23(const void *sptr) {
 	for(; ch < end; ch += 2) {
 		uint16_t cv = (ch[0] << 8)
 				| ch[1];
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -314,7 +314,7 @@ static int check_permitted_alphabet_24(const void *sptr) {
 	for(; ch < end; ch += 2) {
 		uint16_t cv = (ch[0] << 8)
 				| ch[1];
-		if(!(cv <= 65533)) return -1;
+		if(!(cv <= 65533LL)) return -1;
 	}
 	return 0;
 }
@@ -329,7 +329,7 @@ static int check_permitted_alphabet_25(const void *sptr) {
 	for(; ch < end; ch += 2) {
 		uint16_t cv = (ch[0] << 8)
 				| ch[1];
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -375,7 +375,7 @@ static int check_permitted_alphabet_28(const void *sptr) {
 				| (ch[1] << 16)
 				| (ch[2] << 8)
 				|  ch[3];
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -409,7 +409,7 @@ static int check_permitted_alphabet_30(const void *sptr) {
 				| (ch[1] << 16)
 				| (ch[2] << 8)
 				|  ch[3];
-		if(!(cv >= 65 && cv <= 90)) return -1;
+		if(!(cv >= 65LL && cv <= 90LL)) return -1;
 	}
 	return 0;
 }
@@ -773,7 +773,7 @@ memb_ut_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((size == 6)) {
+	if((size == 6LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -805,7 +805,7 @@ memb_ut_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((size == 6)) {
+	if((size == 6LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -879,7 +879,7 @@ memb_bm_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size >> 1;	/* 2 byte per character */
 	
-	if((size == 6)
+	if((size == 6LL)
 		 && !check_permitted_alphabet_24(st)) {
 		/* Constraint check succeeded */
 		return 0;
@@ -988,7 +988,7 @@ memb_us_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	size = st->size >> 2;	/* 4 byte per character */
 	
-	if((size == 6)
+	if((size == 6LL)
 		 && !check_permitted_alphabet_29(st)) {
 		/* Constraint check succeeded */
 		return 0;

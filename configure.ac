@@ -81,8 +81,8 @@ AC_SUBST(TESTSUITE_CFLAGS)
 dnl Skeletons should be very compatible with most of the compilers, hence
 dnl very strict backward compatibility flags.
 SKELETONS_CFLAGS="${ADD_CFLAGS} ${SKELETONS_CFLAGS}"
-AX_CHECK_COMPILE_FLAG([-std=c89],
-    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -std=c89"])
+AX_CHECK_COMPILE_FLAG([-std=c99],
+    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -std=c99"])
 AX_CHECK_COMPILE_FLAG([-Wpedantic],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wpedantic"])
 AX_CHECK_COMPILE_FLAG([-Wno-duplicate-decl-specifier],

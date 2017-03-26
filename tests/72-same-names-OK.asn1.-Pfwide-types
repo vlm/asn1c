@@ -433,7 +433,7 @@ memb_a_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
 		size = 0;
 	}
 	
-	if((size == 2)) {
+	if((size == 2LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -464,7 +464,7 @@ memb_a_constraint_8(asn_TYPE_descriptor_t *td, const void *sptr,
 		size = 0;
 	}
 	
-	if((size == 2)) {
+	if((size == 2LL)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
