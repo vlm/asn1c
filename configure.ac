@@ -75,6 +75,20 @@ AC_ARG_ENABLE(test-Werror,
       TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
   ])
 
+AX_CODE_COVERAGE
+AS_IF([test x$enable_code_coverage != xno], [
+	CFLAGS="$CFLAGS $CODE_COVERAGE_CFLAGS"
+	# The CODE_COVERAGE_CPPFLAGS contains -DNDEBUG flag
+	# which removes assert(...) macros from code coverage and improves the
+	# branches score. But when it is defined it results in few
+	# unsed-but-set-variable warnings that are treated as errors in the travis-ci
+	# build because these variables are only used inside assert macros.
+	# error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
+	#CPPFLAGS="$CPPFLAGS $CODE_COVERAGE_CPPFLAGS"
+	CXXFLAGS="$CXXFLAGS $CODE_COVERAGE_CXXFLAGS"
+	LDFLAGS="$LDFLAGS $CODE_COVERAGE_LDFLAGS"
+])
+
 AC_SUBST(ADD_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 
@@ -84,7 +98,14 @@ SKELETONS_CFLAGS="${ADD_CFLAGS} ${SKELETONS_CFLAGS}"
 AX_CHECK_COMPILE_FLAG([-std=c89],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -std=c89"])
 AX_CHECK_COMPILE_FLAG([-Wpedantic],
-    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wpedantic"])
+    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wpedantic"],
+    [
+        dnl When -Wpedantic is not supported try the -pedantic instead. (gcc-4.7)
+        dnl See https://gcc.gnu.org/gcc-4.8/changes.html
+        AX_CHECK_COMPILE_FLAG([-pedantic],
+            [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
+    ],
+    [-Werror]) #clang 3.0 prints warning when the flag is not supported
 AX_CHECK_COMPILE_FLAG([-Wno-duplicate-decl-specifier],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-duplicate-decl-specifier"])
 AC_SUBST(SKELETONS_CFLAGS)
