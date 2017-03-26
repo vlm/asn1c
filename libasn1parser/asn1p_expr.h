@@ -216,6 +216,7 @@ typedef struct asn1p_expr_s {
 		asn1p_value_t *default_value;	/* For EM_DEFAULT case */
 	} marker;
 	int unique;	/* UNIQUE */
+	int ref_cnt;	/* reference count */
 
 	/*
 	 * Whether automatic tagging may be applied for subtypes.

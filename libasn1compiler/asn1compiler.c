@@ -6,6 +6,7 @@
 static void default_logger_cb(int, const char *fmt, ...);
 static int asn1c_compile_expr(arg_t *arg);
 static int asn1c_attach_streams(asn1p_expr_t *expr);
+static int asn1c_detach_streams(asn1p_expr_t *expr);
 
 int
 asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
@@ -60,6 +61,12 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 	 */
 	if(asn1c_save_compiled_output(arg, datadir, argc, optc, argv))
 		return -1;
+
+	TQ_FOR(mod, &(asn->modules), mod_next) {
+		TQ_FOR(arg->expr, &(mod->members), next) {
+			asn1c_detach_streams(arg->expr);
+		}
+	}
 
 	return 0;
 }
@@ -155,6 +162,28 @@ asn1c_attach_streams(asn1p_expr_t *expr) {
 	for(i = 0; i < OT_MAX; i++) {
 		TQ_INIT(&(cs->destination[i].chunks));
 	}
+
+	return 0;
+}
+
+int
+asn1c_detach_streams(asn1p_expr_t *expr) {
+	compiler_streams_t *cs;
+	out_chunk_t *m;
+	int i;
+
+	if(!expr->data)
+		return 0;	/* Already detached? */
+
+	cs = expr->data;
+	for(i = 0; i < OT_MAX; i++) {
+		while((m = TQ_REMOVE(&(cs->destination[i].chunks), next))) {
+			free(m->buf);
+			free(m);
+		}
+	}
+	free(expr->data);
+	expr->data = (void *)NULL;
 
 	return 0;
 }

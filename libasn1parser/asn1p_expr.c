@@ -22,6 +22,7 @@ asn1p_expr_new(int _lineno, asn1p_module_t *mod) {
 		expr->spec_index = -1;
 		expr->module = mod;
 		expr->_lineno = _lineno;
+		expr->ref_cnt = 0;
 	}
 
 	return expr;
@@ -234,6 +235,12 @@ void
 asn1p_expr_free(asn1p_expr_t *expr) {
 	if(expr) {
 		asn1p_expr_t *tm;
+
+		if (expr->ref_cnt) {
+			/* Decrease reference count only */
+			expr->ref_cnt--;
+			return;
+		}
 
 		/* Remove all children */
 		while((tm = TQ_REMOVE(&(expr->members), next))) {

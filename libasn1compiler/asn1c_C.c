@@ -507,6 +507,8 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 
 	REDIR(saved_target);
 
+	if(tag2el) free(tag2el);
+
 	return 0;
 } /* _SEQUENCE_def() */
 
@@ -741,6 +743,9 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 
 	REDIR(saved_target);
 
+	if (tag2el) free(tag2el);
+	if (tag2el_cxer) free(tag2el_cxer);
+
 	return 0;
 } /* _SET_def() */
 
@@ -874,6 +879,8 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 		arg->embed++;
 		emit_member_table(arg, v);
 		arg->embed--;
+		free(v->Identifier);
+		v->Identifier = (char *)NULL;
 	INDENT(-1);
 	OUT("};\n");
 
@@ -1112,6 +1119,8 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 			ETD_HAS_SPECIFICS);
 
 	REDIR(saved_target);
+
+	if (tag2el) free(tag2el);
 
 	return 0;
 } /* _CHOICE_def() */
