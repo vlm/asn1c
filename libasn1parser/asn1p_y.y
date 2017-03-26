@@ -315,6 +315,7 @@ static asn1p_module_t *currentModule;
 %type	<a_constr>		optConstraints
 %type	<a_constr>		Constraint
 %type	<a_constr>		SubtypeConstraint
+%type	<a_constr>		ConstraintSpecs
 %type	<a_constr>		GeneralConstraint
 %type	<a_constr>		SetOfConstraints
 %type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */
@@ -1693,7 +1694,7 @@ SubtypeConstraint:
 	SetOfConstraints {
 		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
 	}
-	| TOK_SIZE '('  ElementSetSpecs ')' {
+	| TOK_SIZE '('  ConstraintSpecs ')' {
 		/*
 		 * This is a special case, for compatibility purposes.
 		 * It goes without parentheses.
@@ -1703,11 +1704,20 @@ SubtypeConstraint:
 	;
 
 SetOfConstraints:
-	'(' ElementSetSpecs ')' {
+	'(' ConstraintSpecs ')' {
 		$$ = $2;
 	}
-	| SetOfConstraints '(' ElementSetSpecs ')' {
+	| SetOfConstraints '(' ConstraintSpecs ')' {
 		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $3);
+	}
+	;
+
+ConstraintSpecs:
+	ElementSetSpecs {
+		$$ = $1;
+	}
+	| GeneralConstraint {
+		$$ = $1;
 	}
 	;
 
@@ -1732,9 +1742,6 @@ ElementSetSpecs:
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
 		ct = $$;
 		CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $5);
-	}
-	| GeneralConstraint {
-		$$ = $1;
 	}
 	;
 
@@ -1833,6 +1840,13 @@ ConstraintSubtypeElement:
 	}
 	| PatternConstraint {
 		$$ = $1;
+	}
+	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+		$$ = asn1p_constraint_new(yylineno);
+		checkmem($$);
+		$$->type = ACT_EL_VALUE;
+		$$->value = asn1p_value_frombuf($3.buf, $3.len, 0);
+		$$->value->type = ATV_UNPARSED;
 	}
 	;
 
