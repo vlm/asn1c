@@ -120,6 +120,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	struct value2enum *v2e;
 	int map_extensions = (expr->expr_type == ASN_BASIC_INTEGER);
 	int eidx;
+	int saved_target = arg->target->target;
 
 	v2e = alloca((el_count + 1) * sizeof(*v2e));
 
@@ -248,6 +249,8 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		OUT("};\n");
 	}
 
+	REDIR(saved_target);
+
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 
@@ -256,6 +259,7 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int el_count = expr_elements_count(arg, expr);
+	int saved_target = arg->target->target;
 
 	if(el_count) {
 		int eidx = 0;
@@ -283,6 +287,8 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 		assert(eidx == el_count);
 	}
 
+	REDIR(saved_target);
+
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 
@@ -291,14 +297,23 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
+	int saved_target = arg->target->target;
 
 	DEPENDENCIES;
 
 	if(arg->embed) {
+
+		/* Use _anonymous_type field to indicate it's called from
+		 * asn1c_lang_C_type_SEx_OF() */
+		if (expr->_anonymous_type) {
+			REDIR(OT_FWD_DEFS);
+			OUT("typedef ");
+		}
 		OUT("struct ");
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(" {\n");
 	} else {
+		REDIR(OT_TYPE_DECLS);
 		OUT("typedef struct %s {\n",
 			MKID_safe(expr));
 	}
@@ -313,12 +328,24 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	}
 
 	PCTX_DEF;
-	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+
+	if (arg->embed && expr->_anonymous_type) {
+		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+		out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s;\n", arg->embed ? "" : "_t");
+
+		REDIR(saved_target);
+
+		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+			out_name_chain(arg, ONC_avoid_keywords);
+	} else {
+		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 		expr->_anonymous_type ? "" :
 			arg->embed
 				? MKID_safe(expr)
 				: MKID(expr),
 		arg->embed ? "" : "_t");
+	}
 
 	return asn1c_lang_C_type_SEQUENCE_def(arg);
 }
@@ -337,6 +364,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	enum tvm_compat tv_mode;
 	int roms_count;		/* Root optional members */
 	int aoms_count;		/* Additions optional members */
+	int saved_target = arg->target->target;
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -477,7 +505,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, elements,
 			ETD_HAS_SPECIFICS);
 
-	REDIR(OT_TYPE_DECLS);
+	REDIR(saved_target);
 
 	return 0;
 } /* _SEQUENCE_def() */
@@ -489,6 +517,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	long mcount;
 	char *id;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
+	int saved_target = arg->target->target;
 
 	DEPENDENCIES;
 
@@ -515,13 +544,18 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	}
 	OUT("} "); out_name_chain(arg, ONC_noflags); OUT("_PR;\n");
 
-	REDIR(OT_TYPE_DECLS);
+	REDIR(saved_target);
 
 	if(arg->embed) {
+		if (expr->_anonymous_type) {
+			REDIR(OT_FWD_DEFS);
+			OUT("typedef ");
+		}
 		OUT("struct ");
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(" {\n");
 	} else {
+		REDIR(OT_TYPE_DECLS);
 		OUT("typedef struct %s {\n",
 			MKID_safe(expr));
 	}
@@ -545,9 +579,21 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-		expr->_anonymous_type ? "" : MKID_safe(expr),
-		arg->embed ? "" : "_t");
+
+	if (arg->embed && expr->_anonymous_type) {
+		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+		out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s;\n", arg->embed ? "" : "_t");
+
+		REDIR(saved_target);
+
+		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+			out_name_chain(arg, ONC_avoid_keywords);
+	} else {
+		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			expr->_anonymous_type ? "" : MKID_safe(expr),
+			arg->embed ? "" : "_t");
+	}
 
 	return asn1c_lang_C_type_SET_def(arg);
 }
@@ -565,6 +611,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	int all_tags_count;
 	enum tvm_compat tv_mode;
 	char *p;
+	int saved_target = arg->target->target;
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -598,7 +645,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 
 		OUT("static asn_TYPE_member_t asn_MBR_%s_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
-	
+
 		elements = 0;
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
@@ -692,7 +739,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, elements,
 			ETD_HAS_SPECIFICS);
 
-	REDIR(OT_TYPE_DECLS);
+	REDIR(saved_target);
 
 	return 0;
 } /* _SET_def() */
@@ -701,10 +748,15 @@ int
 asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *memb = TQ_FIRST(&expr->members);
+	int saved_target = arg->target->target;
 
 	DEPENDENCIES;
 
 	if(arg->embed) {
+		if (expr->_anonymous_type) {
+			REDIR(OT_FWD_DEFS);
+			OUT("typedef ");
+		}
 		OUT("struct ");
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(" {\n");
@@ -748,7 +800,8 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			if(tmp_memb.Identifier != memb->Identifier)
 				if(0) free(tmp_memb.Identifier);
 		arg->embed--;
-		assert(arg->target->target == OT_TYPE_DECLS);
+		assert(arg->target->target == OT_TYPE_DECLS ||
+				arg->target->target == OT_FWD_DEFS);
 	} else {
 		OUT("%s", asn1c_type_name(arg, memb,
 			(memb->marker.flags & EM_UNRECURSE)
@@ -761,9 +814,21 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	INDENT(-1);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-		expr->_anonymous_type ? "" : MKID_safe(expr),
-		arg->embed ? "" : "_t");
+
+	if (arg->embed && expr->_anonymous_type) {
+		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+		out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s;\n", arg->embed ? "" : "_t");
+
+		REDIR(saved_target);
+
+		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+			out_name_chain(arg, ONC_avoid_keywords);
+	} else {
+		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			expr->_anonymous_type ? "" : MKID_safe(expr),
+			arg->embed ? "" : "_t");
+	}
 
 	/*
 	 * SET OF/SEQUENCE OF definition
@@ -779,6 +844,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	int tags_count;
 	int all_tags_count;
 	enum tvm_compat tv_mode;
+	int saved_target = arg->target->target;
 
 	/*
 	 * Print out the table according to which parsing is performed.
@@ -840,7 +906,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, 1,
 			ETD_HAS_SPECIFICS);
 
-	REDIR(OT_TYPE_DECLS);
+	REDIR(saved_target);
 
 	return 0;
 } /* _SEx_OF_def() */
@@ -850,6 +916,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	char *id;
+	int saved_target = arg->target->target;
 
 	DEPENDENCIES;
 
@@ -878,11 +945,16 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	);
 	OUT("} "); out_name_chain(arg, ONC_noflags); OUT("_PR;\n");
 
-	REDIR(OT_TYPE_DECLS);
+	REDIR(saved_target);
 
 	if(arg->embed) {
+		if (expr->_anonymous_type) {
+			REDIR(OT_FWD_DEFS);
+			OUT("typedef ");
+		}
 		OUT("struct "); out_name_chain(arg, ONC_avoid_keywords); OUT(" {\n");
 	} else {
+		REDIR(OT_TYPE_DECLS);
 		OUT("typedef struct %s {\n", MKID_safe(expr));
 	}
 
@@ -903,12 +975,24 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	);
 
 	PCTX_DEF;
-	OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-		expr->_anonymous_type ? "" :
-			arg->embed
-				? MKID_safe(expr)
-				: MKID(expr),
-		arg->embed ? "" : "_t");
+
+	if (arg->embed && expr->_anonymous_type) {
+		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+		out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s;\n", arg->embed ? "" : "_t");
+
+		REDIR(saved_target);
+
+		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
+			out_name_chain(arg, ONC_avoid_keywords);
+	} else {
+		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			expr->_anonymous_type ? "" :
+				arg->embed
+					? MKID_safe(expr)
+					: MKID(expr),
+			arg->embed ? "" : "_t");
+	}
 
 	return asn1c_lang_C_type_CHOICE_def(arg);
 }
@@ -924,6 +1008,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	int all_tags_count;
 	enum tvm_compat tv_mode;
 	int *cmap = 0;
+	int saved_target = arg->target->target;
 
 	/*
 	 * Fetch every inner tag from the tag to elements map.
@@ -1026,7 +1111,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	emit_type_DEF(arg, expr, tv_mode, tags_count, all_tags_count, elements,
 			ETD_HAS_SPECIFICS);
 
-	REDIR(OT_TYPE_DECLS);
+	REDIR(saved_target);
 
 	return 0;
 } /* _CHOICE_def() */
@@ -1081,6 +1166,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	enum tvm_compat tv_mode;
 	enum etd_spec etd_spec;
 	char *p;
+	int saved_target = arg->target->target;
 
 	if(arg->embed) {
 		enum tnfmt tnfmt = TNF_CTYPE;
@@ -1093,13 +1179,15 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		if(expr->marker.flags & (EM_INDIRECT | EM_UNRECURSE)) {
 			if(terminal_structable(arg, expr)) {
 				tnfmt = TNF_RSAFE;
-				REDIR(OT_FWD_DECLS);
-				OUT("%s;\n",
-					asn1c_type_name(arg, arg->expr, tnfmt));
+				if(saved_target != OT_FWD_DECLS) {
+					REDIR(OT_FWD_DECLS);
+					OUT("%s;\n",
+						asn1c_type_name(arg, arg->expr, tnfmt));
+				}
+				REDIR(saved_target);
 			}
 		}
 
-		REDIR(OT_TYPE_DECLS);
 
 		OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
 		if(!expr->_anonymous_type) {
@@ -1143,7 +1231,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	 * 	Type1 ::= Type2
 	 */
 	if(arg->embed && etd_spec == ETD_NO_SPECIFICS) {
-		REDIR(OT_TYPE_DECLS);
+		REDIR(saved_target);
 		return 0;
 	}
 	if((!expr->constraints || (arg->flags & A1C_NO_CONSTRAINTS))
@@ -1165,7 +1253,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		REDIR(OT_CODE);
 		OUT("/* This type is equivalent to %s */\n", type_name);
 		OUT("\n");
-		REDIR(OT_TYPE_DECLS);
+		REDIR(saved_target);
 		return 0;
 	}
 
@@ -1418,7 +1506,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		}
 	}
 
-	REDIR(OT_TYPE_DECLS);
+	REDIR(saved_target);
 
 	return 0;
 }
@@ -2620,9 +2708,11 @@ emit_include_dependencies(arg_t *arg) {
 		if(memb->marker.flags & (EM_INDIRECT | EM_UNRECURSE)) {
 			if(terminal_structable(arg, memb)) {
 				int saved_target = arg->target->target;
-				REDIR(OT_FWD_DECLS);
-				OUT("%s;\n",
-					asn1c_type_name(arg, memb, TNF_RSAFE));
+				if(saved_target != OT_FWD_DECLS) {
+					REDIR(OT_FWD_DECLS);
+					OUT("%s;\n",
+						asn1c_type_name(arg, memb, TNF_RSAFE));
+				}
 				REDIR(saved_target);
 			}
 		}

@@ -27,8 +27,7 @@ asn1p_paramlist_free(asn1p_paramlist_t *pl) {
 		if(pl->params) {
 			int i = pl->params_count;
 			while(i--) {
-				if(pl->params[i].governor)
-					asn1p_ref_free(pl->params[i].governor);
+				asn1p_ref_free(pl->params[i].governor);
 				free(pl->params[i].argument);
 				pl->params[i].governor = 0;
 				pl->params[i].argument = 0;
@@ -82,8 +81,7 @@ asn1p_paramlist_add_param(asn1p_paramlist_t *pl, asn1p_ref_t *gov, char *arg) {
 		pl->params_count++;
 		return 0;
 	} else {
-		if(pl->params[pl->params_count].governor)
-			asn1p_ref_free(pl->params[pl->params_count].governor);
+		asn1p_ref_free(pl->params[pl->params_count].governor);
 		return -1;
 	}
 }

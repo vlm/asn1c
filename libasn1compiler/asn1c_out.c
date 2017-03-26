@@ -38,6 +38,11 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	 */
 	if(dst->indented == 0) {
 		int i = dst->indent_level;
+		if (i < 0) {
+			/* fatal error */
+			fprintf(stderr, "target %d : Indent level %d ?!\n", arg->target->target, i);
+			exit(1);
+		}
 		dst->indented = 1;
 		while(i--) {
 			ret = asn1c_compiled_output(arg, "\t");
