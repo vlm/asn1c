@@ -2318,8 +2318,7 @@ yyreduce:
     {
 		(yyval.a_oid) = asn1p_oid_new();
 		asn1p_oid_add_arc((yyval.a_oid), &(yyvsp[(1) - (1)].a_oid_arc));
-		if((yyvsp[(1) - (1)].a_oid_arc).name)
-			free((yyvsp[(1) - (1)].a_oid_arc).name);
+		free((yyvsp[(1) - (1)].a_oid_arc).name);
 	}
     break;
 
@@ -2328,8 +2327,7 @@ yyreduce:
     {
 		(yyval.a_oid) = (yyvsp[(1) - (2)].a_oid);
 		asn1p_oid_add_arc((yyval.a_oid), &(yyvsp[(2) - (2)].a_oid_arc));
-		if((yyvsp[(2) - (2)].a_oid_arc).name)
-			free((yyvsp[(2) - (2)].a_oid_arc).name);
+		free((yyvsp[(2) - (2)].a_oid_arc).name);
 	}
     break;
 
@@ -2826,7 +2824,7 @@ yyreduce:
 		ret = asn1p_paramlist_add_param((yyval.a_plist), (yyvsp[(1) - (1)].a_parg).governor, (yyvsp[(1) - (1)].a_parg).argument);
 		checkmem(ret == 0);
 		if((yyvsp[(1) - (1)].a_parg).governor) asn1p_ref_free((yyvsp[(1) - (1)].a_parg).governor);
-		if((yyvsp[(1) - (1)].a_parg).argument) free((yyvsp[(1) - (1)].a_parg).argument);
+		free((yyvsp[(1) - (1)].a_parg).argument);
 	}
     break;
 
@@ -2838,7 +2836,7 @@ yyreduce:
 		ret = asn1p_paramlist_add_param((yyval.a_plist), (yyvsp[(3) - (3)].a_parg).governor, (yyvsp[(3) - (3)].a_parg).argument);
 		checkmem(ret == 0);
 		if((yyvsp[(3) - (3)].a_parg).governor) asn1p_ref_free((yyvsp[(3) - (3)].a_parg).governor);
-		if((yyvsp[(3) - (3)].a_parg).argument) free((yyvsp[(3) - (3)].a_parg).argument);
+		free((yyvsp[(3) - (3)].a_parg).argument);
 	}
     break;
 
