@@ -89,7 +89,7 @@ AS_IF([test x$enable_code_coverage != xno], [
 	# error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
 	#CPPFLAGS="$CPPFLAGS $CODE_COVERAGE_CPPFLAGS"
 	CXXFLAGS="$CXXFLAGS $CODE_COVERAGE_CXXFLAGS"
-	LDFLAGS="$LDFLAGS $CODE_COVERAGE_LDFLAGS"
+	AC_SEARCH_LIBS(gcov_open, gcov, [LDFLAGS="$LDFLAGS $CODE_COVERAGE_LDFLAGS"])
 ])
 
 AC_SUBST(ADD_CFLAGS)
