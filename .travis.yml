@@ -12,4 +12,4 @@ script:
     - make check
     - make distcheck
 after_success:
-  - test "x$CC" = "xgcc" && make code-coverage-capture && coveralls-lcov asn1c-*-coverage.info
+  - test "x$CC" = "xgcc" -o "x$CC" = "xclang" && make code-coverage-capture && coveralls-lcov asn1c-*-coverage.info
