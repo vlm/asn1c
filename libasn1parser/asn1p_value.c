@@ -138,6 +138,7 @@ asn1p_value_fromtype(asn1p_expr_t *expr) {
 	if(v) {
 		v->value.v_type = expr;
 		v->type = ATV_TYPE;
+		expr->ref_cnt++;
 	}
 	return v;
 }
@@ -258,6 +259,7 @@ asn1p_value_free(asn1p_value_t *v) {
 			asn1p_value_free(v->value.choice_identifier.value);
 			break;
 		}
+		memset(v, 0, sizeof(*v));
 		free(v);
 	}
 }

@@ -4,7 +4,9 @@
  */
 #define	_POSIX_PTHREAD_SEMANTICS	/* for Sun */
 #define	_REENTRANT			/* for Sun */
+#ifndef _BSD_SOURCE
 #define _BSD_SOURCE     /* for timegm(3) */
+#endif
 #include <asn_internal.h>
 #include <GeneralizedTime.h>
 

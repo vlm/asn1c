@@ -850,16 +850,16 @@ ParameterArgumentList:
 		checkmem($$);
 		ret = asn1p_paramlist_add_param($$, $1.governor, $1.argument);
 		checkmem(ret == 0);
-		if($1.governor) asn1p_ref_free($1.governor);
-		if($1.argument) free($1.argument);
+		asn1p_ref_free($1.governor);
+		free($1.argument);
 	}
 	| ParameterArgumentList ',' ParameterArgumentName {
 		int ret;
 		$$ = $1;
 		ret = asn1p_paramlist_add_param($$, $3.governor, $3.argument);
 		checkmem(ret == 0);
-		if($3.governor) asn1p_ref_free($3.governor);
-		if($3.argument) free($3.argument);
+		asn1p_ref_free($3.governor);
+		free($3.argument);
 	}
 	;
 	

@@ -174,6 +174,19 @@ typedef enum other_PR {
 
 struct Forest;
 
+/*** <<< FWD-DEFS [Stuff] >>> ***/
+
+typedef struct Member {
+	BIT_STRING_t	 cup_of_coffee;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Member;
+
 /*** <<< TYPE-DECLS [Stuff] >>> ***/
 
 typedef struct Stuff {
@@ -184,16 +197,7 @@ typedef struct Stuff {
 		asn_struct_ctx_t _asn_ctx;
 	} *trees;
 	struct anything {
-		A_SET_OF(struct Member {
-			BIT_STRING_t	 cup_of_coffee;
-			/*
-			 * This type is extensible,
-			 * possible extensions are below.
-			 */
-			
-			/* Context for parsing across buffer boundaries */
-			asn_struct_ctx_t _asn_ctx;
-		} ) list;
+		A_SET_OF(Member) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;

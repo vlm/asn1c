@@ -36,7 +36,7 @@ In particular, the XML style comments are not supported.
 A hash "**#**" or two dashes "**--**" following a whitespace is treated as a beginning of a comment line, which is ignored completely.
 Empty lines are ignored as well.
 
-The following example `enber`(1) input demostrates the use of comments:
+The following example `enber`(1) input demonstrates the use of comments:
 
 | \<C O="0" T="[1]" TL="2" V="2">
 |     \<I O="2" T="[1]" TL="2" V="Indefinite">

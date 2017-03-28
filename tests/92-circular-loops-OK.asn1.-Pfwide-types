@@ -588,23 +588,27 @@ asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 struct Set;
 struct Sequence;
 
+/*** <<< FWD-DEFS [Set] >>> ***/
+
+typedef struct Member {
+	INTEGER_t	 Int;
+	struct Set	*set;
+	struct Sequence	*seq;
+	struct Set	*set2	/* OPTIONAL */;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	struct Set	*set3;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Member;
+
 /*** <<< TYPE-DECLS [Set] >>> ***/
 
 typedef struct Set {
-	A_SET_OF(struct Member {
-		INTEGER_t	 Int;
-		struct Set	*set;
-		struct Sequence	*seq;
-		struct Set	*set2	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		struct Set	*set3;
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SET_OF(Member) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

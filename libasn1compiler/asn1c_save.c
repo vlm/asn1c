@@ -149,6 +149,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			safe_fprintf(mkf, "ASN_%s_%s+=%s\n",
 				what_class, what_kind, fname);
 		}
+
+		asn1c_deps_freelist(deps);
+		asn1c_deps_freelist(dlist);
 	}
 
 	if(need_to_generate_pdu_collection(arg)) {
@@ -283,6 +286,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	safe_fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
 	SAVE_STREAM(fp_h, OT_DEPS,	"Dependencies", 0);
 	SAVE_STREAM(fp_h, OT_FWD_DECLS,	"Forward declarations", 0);
+	SAVE_STREAM(fp_h, OT_FWD_DEFS,	"Forward definitions", 0);
 	SAVE_STREAM(fp_h, OT_TYPE_DECLS, expr->Identifier, 0);
 	SAVE_STREAM(fp_h, OT_FUNC_DECLS,"Implementation", 0);
 	safe_fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n");
@@ -305,7 +309,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
 		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 11);	/* Protection from reckless changes */
+	assert(OT_MAX == 12);	/* Protection from reckless changes */
 
 	fclose(fp_c);
 	fclose(fp_h);

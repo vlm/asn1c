@@ -22,6 +22,7 @@ asn1p_expr_new(int _lineno, asn1p_module_t *mod) {
 		expr->spec_index = -1;
 		expr->module = mod;
 		expr->_lineno = _lineno;
+		expr->ref_cnt = 0;
 	}
 
 	return expr;
@@ -235,6 +236,12 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 	if(expr) {
 		asn1p_expr_t *tm;
 
+		if (expr->ref_cnt) {
+			/* Decrease reference count only */
+			expr->ref_cnt--;
+			return;
+		}
+
 		/* Remove all children */
 		while((tm = TQ_REMOVE(&(expr->members), next))) {
 			if(tm->parent_expr != expr)
@@ -246,20 +253,13 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 		}
 
 		free(expr->Identifier);
-		if(expr->reference)
-			asn1p_ref_free(expr->reference);
-		if(expr->constraints)
-			asn1p_constraint_free(expr->constraints);
-		if(expr->combined_constraints)
-			asn1p_constraint_free(expr->combined_constraints);
-		if(expr->lhs_params)
-			asn1p_paramlist_free(expr->lhs_params);
-		if(expr->value)
-			asn1p_value_free(expr->value);
-		if(expr->marker.default_value)
-			asn1p_value_free(expr->marker.default_value);
-		if(expr->with_syntax)
-			asn1p_wsyntx_free(expr->with_syntax);
+		asn1p_ref_free(expr->reference);
+		asn1p_constraint_free(expr->constraints);
+		asn1p_constraint_free(expr->combined_constraints);
+		asn1p_paramlist_free(expr->lhs_params);
+		asn1p_value_free(expr->value);
+		asn1p_value_free(expr->marker.default_value);
+		asn1p_wsyntx_free(expr->with_syntax);
 
 		if(expr->data && expr->data_free)
 			expr->data_free(expr->data);

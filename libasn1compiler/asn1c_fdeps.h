@@ -25,5 +25,6 @@ int asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur,
 	const char *data);
 
 asn1c_fdeps_t *asn1c_deps_makelist(asn1c_fdeps_t *deps);
+void asn1c_deps_freelist(asn1c_fdeps_t *deps);
 
 #endif	/* ASN1C_FDEPS_H */

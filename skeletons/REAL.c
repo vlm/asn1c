@@ -3,7 +3,9 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #define	_ISOC99_SOURCE		/* For ilogb() and quiet NAN */
+#ifndef _BSD_SOURCE
 #define	_BSD_SOURCE		/* To reintroduce finite(3) */
+#endif
 #if	defined(__alpha)
 #include <sys/resource.h>	/* For INFINITY */
 #endif

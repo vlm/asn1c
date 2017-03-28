@@ -1,3 +1,4 @@
+@CODE_COVERAGE_RULES@
 
 SUBDIRS = check-src
 
@@ -51,7 +52,8 @@ EXTRA_DIST =		\
 	data-62			\
 	data-70			\
 	data-119		\
-	data-126
+	data-126		\
+	check-src/check64-134.-gen-PER.c
 
 clean-local:
 	rm -rf test-*

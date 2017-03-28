@@ -19,7 +19,7 @@ const asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs = {
 	offsetof(OCTET_STRING_t, _asn_ctx),
 	ASN_OSUBV_STR
 };
-static const asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
+static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
 	{ APC_CONSTRAINED, 8, 8, 0, 255 },
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
@@ -253,8 +253,8 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		ber_tlv_tag_t expected_tag;
 		ssize_t tl, ll, tlvl;
 				/* This one works even if (sel->left == -1) */
-		ssize_t Left = ((!sel||(size_t)sel->left >= size)
-					?(ssize_t)size:sel->left);
+		size_t Left = ((!sel||(size_t)sel->left >= size)
+					?size:(size_t)sel->left);
 
 
 		ASN_DEBUG("%p, s->l=%ld, s->wn=%ld, s->g=%ld\n", sel,

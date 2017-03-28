@@ -1,6 +1,6 @@
-/*-
- * Copyright (c) 2003-2016
- * 	Lev Walkin <vlm@lionet.info>. All rights reserved.
+/*
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info> and contributors.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
 #include "sys-common.h"
 
 #undef COPYRIGHT
-#define COPYRIGHT "Copyright (c) 2003-2016 Lev Walkin <vlm@lionet.info>\n"
+#define COPYRIGHT "Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info> and contributors.\n"
 
 #include <asn1parser.h>   /* Parse the ASN.1 file and build a tree */
 #include <asn1fix.h>      /* Fix the ASN.1 tree */
@@ -330,6 +330,8 @@ main(int ac, char **av) {
         exit(EX_SOFTWARE);
     }
 
+    asn1p_delete(asn);
+
     return 0;
 }
 
@@ -422,6 +424,11 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
     } /* while(readdir()) */
     closedir(dir);
 #endif
+
+#ifdef _WIN32
+    free(pattern);
+#endif
+    free(target_dir);
 
     return ret;
 }

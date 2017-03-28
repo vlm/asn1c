@@ -7,16 +7,20 @@
 #include <constr_SEQUENCE.h>
 #include <constr_SET_OF.h>
 
+/*** <<< FWD-DEFS [Type] >>> ***/
+
+typedef struct Member {
+	Type1_t	 t1;
+	Type2_t	 t2;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Member;
+
 /*** <<< TYPE-DECLS [Type] >>> ***/
 
 typedef struct Type {
-	A_SET_OF(struct Member {
-		Type1_t	 t1;
-		Type2_t	 t2;
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SET_OF(Member) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
