@@ -14,7 +14,7 @@
 static const ber_tlv_tag_t asn_DEF_OCTET_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
-const asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs = {
+asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs = {
 	sizeof(OCTET_STRING_t),
 	offsetof(OCTET_STRING_t, _asn_ctx),
 	ASN_OSUBV_STR
