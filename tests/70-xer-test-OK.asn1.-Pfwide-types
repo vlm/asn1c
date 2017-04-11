@@ -36,7 +36,7 @@ typedef enum PDU_PR {
 	PDU_PR_namedSetOfEnums,
 	PDU_PR_seqOfZuka,
 	PDU_PR_setOfChoice,
-	PDU_PR_namedSetOfChoice,
+	PDU_PR_namedSetOfChoice
 	/* Extensions may appear below */
 	
 } PDU_PR;

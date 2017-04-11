@@ -196,7 +196,7 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 
 typedef enum T3_PR {
 	T3_PR_NOTHING,	/* No components present */
-	T3_PR_i,
+	T3_PR_i
 	/* Extensions may appear below */
 	
 } T3_PR;
@@ -279,7 +279,7 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 
 typedef enum T4_PR {
 	T4_PR_NOTHING,	/* No components present */
-	T4_PR_i,
+	T4_PR_i
 	/* Extensions may appear below */
 	
 } T4_PR;

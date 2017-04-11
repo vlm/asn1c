@@ -353,7 +353,7 @@ asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
 typedef enum VariablePart_PR {
 	VariablePart_PR_NOTHING,	/* No components present */
 	VariablePart_PR_vset,
-	VariablePart_PR_vrange,
+	VariablePart_PR_vrange
 	/* Extensions may appear below */
 	
 } VariablePart_PR;
