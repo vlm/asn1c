@@ -1746,6 +1746,8 @@ OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 
 	if(!contents_only) {
 		FREEMEM(st);
+	} else if(td->specifics) {
+		memset(st, 0, ((asn_OCTET_STRING_specifics_t *)(td->specifics))->struct_size);
 	}
 }
 
