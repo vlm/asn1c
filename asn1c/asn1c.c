@@ -117,6 +117,8 @@ main(int ac, char **av) {
         case 'g':
             if(strcmp(optarg, "en-PER") == 0) {
                 asn1_compiler_flags |= A1C_GEN_PER;
+            } else if (strcmp(optarg, "en-OER") == 0){
+                asn1_compiler_flags |= A1C_GEN_OER;
             } else {
                 fprintf(stderr, "-g%s: Invalid argument\n", optarg);
                 exit(EX_USAGE);

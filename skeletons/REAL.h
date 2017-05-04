@@ -21,6 +21,8 @@ xer_type_decoder_f REAL_decode_xer;
 xer_type_encoder_f REAL_encode_xer;
 per_type_decoder_f REAL_decode_uper;
 per_type_encoder_f REAL_encode_uper;
+oer_type_decoder_f REAL_decode_oer;
+oer_type_encoder_f REAL_encode_oer;
 
 /***********************************
  * Some handy conversion routines. *

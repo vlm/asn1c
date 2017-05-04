@@ -988,7 +988,268 @@ CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 	}
 }
    
+/* Decode CHOICE using OER, copied and simplified based on BER decoding.
+ * CHOICE is the only type that TAG is used in OER.
+ */
+asn_dec_rval_t
+CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, 
+    const void *ptr, size_t size) {
 
+	/*
+	 * Bring closer parts of structure description.
+	 */
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elements = td->elements;
+
+	/*
+	 * Parts of the structure being constructed.
+	 */
+	void *st = *sptr;	/* Target structure. */
+	asn_struct_ctx_t *ctx;	/* Decoder context */
+
+	ber_tlv_tag_t tag;
+	ssize_t tag_len;
+	asn_dec_rval_t rval;	/* Return code from subparsers */
+
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+
+	ASN_DEBUG("OER Decoding %s as CHOICE", td->name);
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(st == 0) {
+		st = *sptr = CALLOC(1, specs->struct_size);
+		if(st == 0) {
+			RETURN(RC_FAIL);
+		}
+	}
+
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+	
+	/*
+	 * Start to parse where left previously
+	 */
+	switch(ctx->phase) {
+	case 0:
+		NEXT_PHASE(ctx);
+
+		ASN_DEBUG("Structure consumes %ld bytes, size %ld",
+			(long)ctx->left, (long)size);
+
+		/* Fall through */
+	case 1:
+		/*
+		 * Fetch the Tag
+		 */
+		tag_len = oer_fetch_tag(ptr, size, &tag);
+		ASN_DEBUG("In %s CHOICE tag length %d tag %d", 
+                td->name, (int)tag_len, (int)tag);
+        ADVANCE(tag_len);
+		switch(tag_len) {
+		case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
+			/* Fall through */
+		case -1: RETURN(RC_FAIL);
+		}
+
+		do {
+			const asn_TYPE_tag2member_t *t2m;
+			asn_TYPE_tag2member_t key;
+
+			key.el_tag = tag;
+			t2m = (const asn_TYPE_tag2member_t *)bsearch(&key,
+					specs->tag2el, specs->tag2el_count,
+					sizeof(specs->tag2el[0]), _search4tag);
+			if(t2m) {
+				/*
+				 * Found the element corresponding to the tag.
+				 */
+				NEXT_PHASE(ctx);
+				ctx->step = t2m->el_no;
+				break;
+			} else if(specs->ext_start == -1) {
+				ASN_DEBUG("Unexpected tag %s "
+					"in non-extensible CHOICE %s",
+					oer_tag_string(tag), td->name);
+				RETURN(RC_FAIL);
+			} else {
+				/* Skip this tag */
+				ssize_t skip;
+
+				ASN_DEBUG("Skipping unknown tag %s",
+					oer_tag_string(tag));
+
+				skip = ber_skip_length(opt_codec_ctx,
+					BER_TLV_CONSTRUCTED(ptr),
+					(const char *)ptr + tag_len,
+					LEFT - tag_len);
+
+				switch(skip) {
+				case 0: if(!SIZE_VIOLATION) RETURN(RC_WMORE);
+					/* Fall through */
+				case -1: RETURN(RC_FAIL);
+				}
+
+				ADVANCE(skip + tag_len);
+				RETURN(RC_OK);
+			}
+		} while(0);
+
+	case 2:
+		/*
+		 * PHASE 2.
+		 * Read in the element.
+		 */
+	    do {
+		asn_TYPE_member_t *elm;/* CHOICE's element */
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
+
+		elm = &elements[ctx->step];
+
+		/*
+		 * Compute the position of the member inside a structure,
+		 * and also a type of containment (it may be contained
+		 * as pointer or using inline inclusion).
+		 */
+		if(elm->flags & ATF_POINTER) {
+			/* Member is a pointer to another structure */
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+		} else {
+			/*
+			 * A pointer to a pointer
+			 * holding the start of the structure
+			 */
+			memb_ptr = (char *)st + elm->memb_offset;
+			memb_ptr2 = &memb_ptr;
+		}
+		/* Set presence to be able to free it properly at any time */
+		_set_present_idx(st, specs->pres_offset,
+				specs->pres_size, ctx->step + 1);
+		/*
+		 * Invoke the member fetch routine according to member's type
+		 */
+		rval = elm->type->oer_decoder(opt_codec_ctx, elm->type, elm->per_constraints,
+				memb_ptr2, ptr, LEFT);
+		switch(rval.code) {
+		case RC_OK:
+			break;
+		case RC_WMORE: /* More data expected */
+			if(!SIZE_VIOLATION) {
+				ADVANCE(rval.consumed);
+				RETURN(RC_WMORE);
+			}
+			RETURN(RC_FAIL);
+		case RC_FAIL: /* Fatal error */
+			RETURN(rval.code);
+		} /* switch(rval) */
+		
+		ADVANCE(rval.consumed);
+	  } while(0);
+
+	    NEXT_PHASE(ctx);
+
+		/* Fall through */
+	case 3:
+		ASN_DEBUG("CHOICE %s Leftover: %ld, size = %ld",
+			td->name, (long)ctx->left, (long)size);
+
+		if(ctx->left > 0) {
+			/*
+			 * The type must be fully decoded
+			 * by the CHOICE member-specific decoder.
+			 */
+			RETURN(RC_FAIL);
+		}
+		NEXT_PHASE(ctx);
+	case 4:
+		/* No meaningful work here */
+		break;
+        printf("i am done\n");
+	}
+
+	RETURN(RC_OK);
+}
+asn_enc_rval_t
+CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, 
+    asn_app_consume_bytes_f *cb, 
+    void *app_key) {
+	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elm;	/* CHOICE element */
+	asn_enc_rval_t erval;
+	void *memb_ptr;
+	size_t computed_size = 0, tag_len;
+	int present;
+    uint8_t tag[8];
+
+	if(!sptr) ASN__ENCODE_FAILED;
+
+	ASN_DEBUG("%s %s as CHOICE",
+		cb?"Encoding":"Estimating", td->name);
+
+	present = _fetch_present_idx(sptr,
+		specs->pres_offset, specs->pres_size);
+
+	/*
+	 * If the structure was not initialized, it cannot be encoded:
+	 * can't deduce what to encode in the choice type.
+	 */
+	if(present <= 0 || present > td->elements_count) {
+		if(present == 0 && td->elements_count == 0) {
+			/* The CHOICE is empty?! */
+			erval.encoded = 0;
+			ASN__ENCODED_OK(erval);
+		}
+		ASN__ENCODE_FAILED;
+	}
+
+	/*
+	 * Seek over the present member of the structure.
+	 */
+	elm = &td->elements[present-1];
+	if(elm->flags & ATF_POINTER) {
+		memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+		if(memb_ptr == 0) {
+			if(elm->optional) {
+				erval.encoded = 0;
+				ASN__ENCODED_OK(erval);
+			}
+			/* Mandatory element absent */
+			ASN__ENCODE_FAILED;
+		}
+	} else {
+		memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+	}
+    
+    /* encode the chosen member tag */
+    if ((tag_len = oer_tag_serialize(elm->tag, (void *)tag, 8)) > 8)
+        ASN__ENCODE_FAILED;
+    
+    computed_size += tag_len;
+    
+    if (cb) {
+        cb(tag, tag_len, app_key);
+    }
+	/*
+	 * Encode the single underlying member.
+	 */
+	erval = elm->type->oer_encoder(elm->type, elm->per_constraints,
+            memb_ptr, cb, app_key);
+	if(erval.encoded == -1)
+		return erval;
+
+	ASN_DEBUG("Encoded CHOICE member in %ld bytes (+%ld)",
+		(long)erval.encoded, (long)computed_size);
+
+	erval.encoded += computed_size;
+
+	return erval;
+}
 int
 CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {

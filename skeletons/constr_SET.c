@@ -987,3 +987,349 @@ SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 	return 0;
 }
+static asn_TYPE_tag2member_t *SET_build_t2m(asn_TYPE_descriptor_t *td,
+        void *sptr, int *roms_count, int *roms) {
+	const asn_TYPE_tag2member_t *t2m;
+    asn_TYPE_tag2member_t *t2m_build;
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	int t2m_build_own = (specs->tag2el_count != td->elements_count);
+	int i, edx;
+	int t2m_count;
+
+    *roms_count = 0;
+	/*
+	 * Use existing, or build our own tags map.
+	 */
+	if(t2m_build_own) {
+		t2m_build = (asn_TYPE_tag2member_t *)alloca(
+				td->elements_count * sizeof(t2m_build[0]));
+		if(!t2m_build) return NULL;
+		t2m_count = 0;
+	} else {
+		t2m_build = NULL;
+		/*
+		 * There is no untagged CHOICE in this SET.
+		 * Employ existing table.
+		 */
+	}
+	/*
+	 * X.696 18.2 sort the member.
+	 */
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;
+        
+        if (elm->optional) {
+            roms[*roms_count] = edx;
+            (*roms_count)++;
+        }
+		/*
+		 * Compute the length of the encoding of this member.
+		 */
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+			if(!memb_ptr) {
+				if(!elm->optional) {
+					/* Mandatory elements missing */
+                    ASN_DEBUG("Madatory element missing\n");
+                    return NULL;
+                }
+				if(t2m_build_own) {
+					t2m_build[t2m_count].el_no = edx;
+					t2m_build[t2m_count].el_tag = 0;
+					t2m_count++;
+				}
+				continue;
+			}
+		} else {
+			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+		}
+		/*
+		 * Remember the outmost tag of this member.
+		 */
+		if(t2m_build_own) {
+			t2m_build[t2m_count].el_no = edx;
+			t2m_build[t2m_count].el_tag = asn_TYPE_outmost_tag(
+				elm->type, memb_ptr, elm->tag_mode, elm->tag);
+			t2m_count++;
+		} else {
+			/*
+			 * No dynamic sorting is necessary.
+			 */
+		}
+	}
+
+	/*
+	 * Finalize order of the components.
+	 */
+	if(t2m_build_own) {
+		/*
+		 * Sort the underlying members according to their
+		 * canonical tags order. DER encoding mandates it.
+		 */
+		qsort(t2m_build, t2m_count, sizeof(specs->tag2el[0]), _t2e_cmp);
+		t2m = t2m_build;
+	} else {
+		/*
+		 * Tags are already sorted by the compiler.
+		 */
+		t2m = specs->tag2el;
+		t2m_count = specs->tag2el_count;
+	}
+	assert(t2m_count == td->elements_count);
+    return t2m;
+}
+asn_enc_rval_t
+SET_encode_oer(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr,
+    asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	asn_enc_rval_t er;
+	const asn_TYPE_tag2member_t *t2m;
+	ssize_t ret;
+	int i, edx;
+    int roms_count = 0; /* Root optional member count */
+    int *roms = NULL;   /* Root optional members */
+    asn_per_outp_t po;
+
+    po.buffer = po.tmpspace;
+    po.nboff = 0;
+    po.nbits = 8 * sizeof(po.tmpspace);
+    po.outper = cb;
+    po.op_key = app_key;
+    po.flushed_bytes = 0;
+    
+    roms = (int *)MALLOC(td->elements_count);
+    if (!roms)
+        ASN__ENCODE_FAILED;
+    t2m = SET_build_t2m(td, sptr, &roms_count, roms);
+    if (!t2m)
+        ASN__ENCODE_FAILED;
+    /* Encode a presence bitmap */
+    for (i = 0; i < roms_count; i++) {
+        /* 
+         * same as SEQUENCE_encode_oer(), but the roms and oms_count
+         * are buit dynamically
+         */
+        asn_TYPE_member_t *elm;
+        void *memb_ptr;     /* Pointer to the member */
+        void **memb_ptr2;   /* Pointer to that pointer */
+        int present;
+
+        edx = roms[i];
+        elm = &td->elements[edx];
+
+        /* Fetch the pointer to this member */
+        if(elm->flags & ATF_POINTER) {
+            memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+            present = (*memb_ptr2 != 0);
+        } else {
+            memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+            memb_ptr2 = &memb_ptr;
+            present = 1;
+        }
+
+        /* Eliminate default values */
+        if(present && elm->default_value
+        && elm->default_value(0, memb_ptr2) == 1)
+            present = 0;
+
+        ASN_DEBUG("Element %s %s %s->%s is %s",
+            elm->flags & ATF_POINTER ? "ptr" : "inline",
+            elm->default_value ? "def" : "wtv",
+            td->name, elm->name, present ? "present" : "absent");
+        if(per_put_few_bits(&po, present, 1))
+            ASN__ENCODE_FAILED;
+    }
+    FREEMEM(roms);
+    if (roms_count > 0) {
+        if (per_flush_bytes(&po) < 0)
+            ASN__ENCODE_FAILED;
+    }
+    
+	/*
+	 * Encode the sequence ROOT elements.
+     * Same as SEQUENCE_encode_oer(), but the member is sorted.
+	 */
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm;
+		asn_enc_rval_t tmper;
+		void *memb_ptr;
+        void **memb_ptr2;
+
+		/* Encode according to the tag order */
+		elm = &td->elements[t2m[edx].el_no];
+        ASN_DEBUG("About to encode %s", elm->type->name);
+
+        /* Fetch the pointer to this member */
+        if(elm->flags & ATF_POINTER) {
+            memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+            if(!*memb_ptr2) {
+                ASN_DEBUG("Element %s %d not present",
+                    elm->name, edx);
+                if(elm->optional)
+                    continue;
+                /* Mandatory element is missing */
+                ASN__ENCODE_FAILED;
+            }
+        } else {
+            memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+            memb_ptr2 = &memb_ptr;
+        }
+
+        /* Eliminate default values */
+        if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
+            continue;
+
+        ASN_DEBUG("Encoding %s->%s", td->name, elm->name);
+        er = elm->type->oer_encoder(elm->type, elm->per_constraints,
+            *memb_ptr2, cb, app_key);
+        if(er.encoded == -1)
+            return er;
+	}
+
+    /*TODO: Handle extensions */
+	ASN__ENCODED_OK(er);
+}
+asn_dec_rval_t
+SET_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, 
+    const void *buf_ptr, size_t size) {
+	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	asn_TYPE_tag2member_t *t2m;
+	void *st = *sptr;	/* Target structure. */
+	int extpresent;		/* Extension additions are present */
+	uint8_t *opres;		/* Presence of optional root members */
+	asn_per_data_t opmd;/* borrow this due to similarity of OER and PER sequence encoding */
+	asn_per_data_t pd;  /* borrow this due to similarity of OER and PER sequence encoding */
+	asn_dec_rval_t rv;
+    uint8_t ioctet;
+	int edx;
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+    int roms_count = 0;
+    int *roms = NULL;   /* Root optional members */
+
+	(void)constraints;
+
+	if(ASN__STACK_OVERFLOW_CHECK(opt_codec_ctx))
+		ASN__DECODE_FAILED;
+
+	if(!st) {
+		st = *sptr = CALLOC(1, specs->struct_size);
+		if(!st) ASN__DECODE_FAILED;
+	}
+    pd.buffer = buf_ptr;
+    pd.nboff = 0;
+    pd.nbits = 8 * size;
+    pd.moved = 0;
+
+	ASN_DEBUG("Decoding %s as SET (OER)", td->name);
+    /*TODO: handle extension ?*/
+    
+    roms = (int *)MALLOC(td->elements_count);
+    if (!roms)
+        ASN__DECODE_FAILED;
+    t2m = SET_build_t2m(td, st, &roms_count, roms);
+    if (!t2m)
+        ASN__DECODE_FAILED;
+	
+    /* Prepare a place and read-in the presence bitmap */
+	memset(&opmd, 0, sizeof(opmd));
+	if(roms_count) {
+		opres = (uint8_t *)MALLOC(((roms_count + 7) >> 3) + 1);
+		if(!opres) ASN__DECODE_FAILED;
+		/* Get the presence map */
+		if(per_get_many_bits(&pd, opres, 0, roms_count)) {
+			FREEMEM(opres);
+			ASN__DECODE_STARVED;
+		}
+		opmd.buffer = opres;
+		opmd.nbits = roms_count;
+		ASN_DEBUG("Read in presence bitmap for %s of %d bits (%x..)",
+			td->name, roms_count, *opres);
+        per_skip_unused_bits(&pd);
+        consumed_myself += (pd.moved/8);
+	} else {
+		opres = 0;
+	}
+
+	/*
+	 * Get the sequence ROOT elements.
+	 */
+	for(edx = 0; edx < td->elements_count; edx++) {
+        printf("edx=%d el_no=%d\n", edx, t2m[edx].el_no);
+		asn_TYPE_member_t *elm = &td->elements[t2m[edx].el_no];
+		//asn_TYPE_member_t *elm = &td->elements[edx];
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
+		
+        /* Fetch the pointer to this member */
+		if(elm->flags & ATF_POINTER) {
+			memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+		} else {
+			memb_ptr = (char *)st + elm->memb_offset;
+			memb_ptr2 = &memb_ptr;
+		}
+
+		/* Deal with optionality */
+		if(elm->optional) {
+			int present = per_get_few_bits(&opmd, 1);
+			ASN_DEBUG("Member %s->%s is optional, p=%d (%d->%d)",
+				td->name, elm->name, present,
+				(int)opmd.nboff, (int)opmd.nbits);
+			if(present == 0) {
+				/* This element is not present */
+				if(elm->default_value) {
+					/* Fill-in DEFAULT */
+					if(elm->default_value(1, memb_ptr2)) {
+						FREEMEM(opres);
+						ASN__DECODE_FAILED;
+					}
+					ASN_DEBUG("Filled-in default");
+				}
+				/* The member is just not present */
+				continue;
+			}
+			/* Fall through */
+		}
+
+		/* Fetch the member from the stream */
+		ASN_DEBUG("Decoding member %s in %s", elm->name, td->name);
+#if 0
+		ASN_DEBUG("Before decoding member %s in %s buf_ptr=%p", 
+                elm->name, td->name,pd.buffer );
+        {
+            int i;
+            for (i = 0; i < 16; i ++)
+                printf("%02X ", *(pd.buffer + i));
+            printf("\n");
+        }
+#endif
+		rv = elm->type->oer_decoder(opt_codec_ctx, elm->type,
+			elm->per_constraints, memb_ptr2, pd.buffer, pd.nbits/8);
+		if(rv.code != RC_OK) {
+			ASN_DEBUG("Failed decode %s in %s",
+				elm->name, td->name);
+			FREEMEM(opres);
+			return rv;
+		}
+        per_skip_bytes(&pd, rv.consumed);
+#if 0
+		ASN_DEBUG("After decoding member %s in %s consumed=%d", 
+                elm->name, td->name, rv.consumed);
+        {
+            int i;
+            for (i = 0; i < 16; i ++)
+                printf("%02X ", *(pd.buffer + i));
+            printf("\n");
+        }
+#endif
+        consumed_myself += rv.consumed;
+	}
+
+	/* Optionality map is not needed anymore */
+	FREEMEM(opres);
+	rv.consumed = consumed_myself;
+	rv.code = RC_OK;
+	return rv;
+}

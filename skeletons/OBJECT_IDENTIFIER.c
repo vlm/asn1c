@@ -27,6 +27,8 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OBJECT_IDENTIFIER_encode_xer,
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OBJECT_IDENTIFIER_decode_oer,
+	OBJECT_IDENTIFIER_encode_oer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
@@ -761,4 +763,25 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	return -1;
 }
 
+asn_dec_rval_t
+OBJECT_IDENTIFIER_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
+    struct asn_TYPE_descriptor_s *td,
+    asn_per_constraints_t *constraints,
+    void **sptr, const void *buf_ptr, size_t size) {
+    
+    (void)constraints;
+	return oer_decode_primitive(opt_codec_ctx, td,
+		sptr, buf_ptr, size);
+}
+
+asn_enc_rval_t OBJECT_IDENTIFIER_encode_oer(
+    struct asn_TYPE_descriptor_s *td,
+    asn_per_constraints_t *constraints,
+    void *sptr,
+    asn_app_consume_bytes_f *cb,  /* Callback */
+    void *app_key) {
+
+    (void)constraints;
+    return oer_encode_primitive(td, sptr, cb, app_key);
+}
 
