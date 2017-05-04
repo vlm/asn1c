@@ -29,6 +29,8 @@ asn_TYPE_descriptor_t asn_DEF_GeneralString = {
 	OCTET_STRING_decode_uper,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	OCTET_STRING_decode_oer,    /* Implemented in terms of OCTET STRING */
+	OCTET_STRING_encode_oer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_GeneralString_tags,
 	sizeof(asn_DEF_GeneralString_tags)

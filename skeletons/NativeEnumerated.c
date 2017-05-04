@@ -35,6 +35,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	NativeEnumerated_decode_oer,
+	NativeEnumerated_encode_oer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
@@ -209,4 +211,80 @@ NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+/*
+ * Encode the NativeEnumerated using the standard INTEGER type OER encoder.
+ * Same as NativeInteger, except the native is signed.
+ */
+asn_enc_rval_t
+NativeEnumerated_encode_oer(asn_TYPE_descriptor_t *td, 
+    asn_per_constraints_t *constraints, void *sptr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	long long native = *(long long *)sptr;
+	asn_enc_rval_t erval;
+	INTEGER_t tmp;
 
+	ASN_DEBUG("%s %s as NativeEnumerated %lld",
+		cb?"Encoding":"Estimating", td->name, native);
+#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+
+	tmp.buf = (uint8_t *)&native;
+	tmp.size = sizeof(native);
+
+#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
+	uint8_t buf[sizeof(native)];
+	uint8_t *p;
+
+	/* Prepare a fake INTEGER */
+	for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)
+		*p = (uint8_t)native;
+
+	tmp.buf = buf;
+	tmp.size = sizeof(buf);
+#endif	/* WORDS_BIGENDIAN */
+	erval = INTEGER_encode_oer(td, constraints, &tmp, cb, app_key);
+	if(erval.encoded == -1) {
+		assert(erval.structure_ptr == &tmp);
+		erval.structure_ptr = sptr;
+	}
+	ASN_DEBUG("Encoded NativeInteger member in %ld",
+		(long)erval.encoded);
+	return erval;
+}
+/*
+ * Decode INTEGER type, OER encoded, similar to PER but the native data type if "long long"
+ */
+asn_dec_rval_t
+NativeEnumerated_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+    asn_per_constraints_t *constraints,
+	void **sptr, const void *buf_ptr, size_t size) {
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+	intmax_t *native = (intmax_t *)*sptr;
+	asn_dec_rval_t rval;
+	INTEGER_t tmpint;
+    void *tmpintptr = &tmpint;
+    uint8_t tmpbuf[8];
+	/*
+	 * If the structure is not there, allocate it.
+	 */
+	if(native == NULL) {
+		native = (long long *)(*sptr = CALLOC(1, sizeof(*native)));
+		if(native == NULL) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	ASN_DEBUG("Decoding NativeEnumerated %s ", td->name);
+    memset(&tmpint, 0, sizeof tmpint);
+    tmpint.buf = tmpbuf;
+    rval = INTEGER_decode_oer(opt_codec_ctx, td, constraints,
+            &tmpintptr, buf_ptr, size);
+    if (rval.code == RC_OK) {
+		asn_INTEGER2imax(&tmpint, native);
+        ASN_DEBUG("Decoded Enum value %lld\n", *native);
+    }
+
+	return rval;
+}

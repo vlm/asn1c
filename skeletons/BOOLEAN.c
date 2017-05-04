@@ -29,6 +29,8 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
 	BOOLEAN_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	BOOLEAN_decode_oer,     /* OER decoder */
+	BOOLEAN_encode_oer,     /* OER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BOOLEAN_tags,
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
@@ -284,4 +286,62 @@ BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 		ASN__ENCODE_FAILED;
 
 	ASN__ENCODED_OK(er);
+}
+asn_enc_rval_t
+BOOLEAN_encode_oer(asn_TYPE_descriptor_t *td, 
+    asn_per_constraints_t *constraints,
+    void *sptr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t erval;
+	BOOLEAN_t *st = (BOOLEAN_t *)sptr;
+
+	if(cb) {
+		uint8_t bool_value;
+
+		bool_value = *st ? 0xff : 0; /* 0xff mandated by COER */
+
+		if(cb(&bool_value, 1, app_key) < 0) {
+			erval.encoded = -1;
+			erval.failed_type = td;
+			erval.structure_ptr = sptr;
+			return erval;
+		}
+	}
+
+	erval.encoded += 1;
+
+	ASN__ENCODED_OK(erval);
+}
+/*
+ * OER Decode BOOLEAN type.
+ */
+asn_dec_rval_t
+BOOLEAN_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
+		asn_TYPE_descriptor_t *td,
+        asn_per_constraints_t *constraints,
+		void **bool_value, const void *buf_ptr, size_t size) {
+	BOOLEAN_t *st = (BOOLEAN_t *)*bool_value;
+	asn_dec_rval_t rval;
+    (void)constraints;
+
+	if(st == NULL) {
+		st = (BOOLEAN_t *)(*bool_value = CALLOC(1, sizeof(*st)));
+		if(st == NULL) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	ASN_DEBUG("Decoding %s as BOOLEAN\n", td->name);
+	/*
+	 * Compute boolean value.
+	 */
+    *st = *(const uint8_t *)buf_ptr == 0xff ? 1 : 0;
+    rval.code = RC_OK;
+	rval.consumed += 1;
+
+	ASN_DEBUG("Decoded %s as BOOLEAN value = %d\n", td->name, *st);
+	
+	return rval;
 }

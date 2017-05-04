@@ -31,6 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	ENUMERATED_decode_uper,	/* Unaligned PER decoder */
 	ENUMERATED_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	0,	/* OER decoder, use NativeEnumerated */
+	0,	/* OER encoder, use NativeEnumerated */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_ENUMERATED_tags,
 	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
@@ -73,4 +75,3 @@ ENUMERATED_encode_uper(asn_TYPE_descriptor_t *td,
 
 	return NativeEnumerated_encode_uper(td, constraints, &value, po);
 }
-

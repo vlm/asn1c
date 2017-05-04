@@ -50,7 +50,9 @@ static int opt_onepdu;	/* -1 (decode single PDU) */
 static enum input_format {
 	INP_BER,	/* -iber: BER input */
 	INP_XER,	/* -ixer: XER input */
-	INP_PER		/* -iper: Unaligned PER input */
+	INP_PER,	/* -iper: Unaligned PER input */
+    INP_OER     /* -ioer: OER input */
+
 } iform;	/* -i<format> */
 
 /* Output data format selector */
@@ -58,6 +60,7 @@ static enum output_format {
 	OUT_XER,	/* -oxer: XER (XML) output */
 	OUT_DER,	/* -oder: DER (BER) output */
 	OUT_PER,	/* -oper: Unaligned PER output */
+    OUT_OER,    /* -ooer; OER output */
 	OUT_TEXT,	/* -otext: semi-structured text */
 	OUT_NULL	/* -onull: No pretty-printing */
 } oform;	/* -o<format> */
@@ -70,6 +73,7 @@ static void   junk_bytes_with_probability(uint8_t *, size_t, double prob);
 #else
 #define	JUNKOPT
 #endif
+static char ofname[64];
 
 /* Debug output function */
 static inline void
@@ -90,7 +94,9 @@ main(int ac, char *av[]) {
 	int number_of_iterations = 1;
 	int num;
 	int ch;
+    FILE *ofd = NULL;
 
+    memset(ofname, 0, 64);
 	/* Figure out if Unaligned PER needs to be default */
 	if(pduType->uper_decoder)
 		iform = INP_PER;
@@ -98,13 +104,15 @@ main(int ac, char *av[]) {
 	/*
 	 * Pocess the command-line argments.
 	 */
-	while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:" JUNKOPT)) != -1)
+	while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:f:" JUNKOPT)) != -1)
 	switch(ch) {
 	case 'i':
 		if(optarg[0] == 'b') { iform = INP_BER; break; }
 		if(optarg[0] == 'x') { iform = INP_XER; break; }
 		if(pduType->uper_decoder
 		&& optarg[0] == 'p') { iform = INP_PER; break; }
+        if (pduType->oer_decoder
+        && optarg[0] == 'o') { iform = INP_OER; break;}
 		fprintf(stderr, "-i<format>: '%s': improper format selector\n",
 			optarg);
 		exit(EX_UNAVAILABLE);
@@ -113,6 +121,7 @@ main(int ac, char *av[]) {
 		if(pduType->uper_encoder
 		&& optarg[0] == 'p') { oform = OUT_PER; break; }
 		if(optarg[0] == 'x') { oform = OUT_XER; break; }
+		if(optarg[0] == 'o') { oform = OUT_OER; break; }
 		if(optarg[0] == 't') { oform = OUT_TEXT; break; }
 		if(optarg[0] == 'n') { oform = OUT_NULL; break; }
 		fprintf(stderr, "-o<format>: '%s': improper format selector\n",
@@ -185,6 +194,9 @@ main(int ac, char *av[]) {
 		}
 		break;
 #endif	/* JUNKTEST */
+    case 'f':
+        strcpy(ofname, optarg);
+        break;
 	case 'h':
 	default:
 #ifdef	ASN_CONVERTER_TITLE
@@ -197,6 +209,9 @@ main(int ac, char *av[]) {
 		if(pduType->uper_decoder)
 		fprintf(stderr,
 		"  -iper        Input is in Unaligned PER (Packed Encoding Rules) (DEFAULT)\n");
+		if(pduType->oer_decoder)
+		fprintf(stderr,
+		"  -ioer        Input is in OER (Octet Encoding Rules) (DEFAULT)\n");
 		fprintf(stderr,
 		"  -iber        Input is in BER (Basic Encoding Rules)%s\n",
 			iform == INP_PER ? "" : " (DEFAULT)");
@@ -205,6 +220,9 @@ main(int ac, char *av[]) {
 		if(pduType->uper_encoder)
 		fprintf(stderr,
 		"  -oper        Output in Unaligned PER (Packed Encoding Rules)\n");
+		if(pduType->oer_encoder)
+		fprintf(stderr,
+		"  -ooer        Output in OER (Octet Encoding Rules)\n");
 		fprintf(stderr,
 		"  -oder        Output in DER (Distinguished Encoding Rules)\n"
 		"  -oxer        Output in XER (XML Encoding Rules) (DEFAULT)\n"
@@ -284,6 +302,17 @@ main(int ac, char *av[]) {
 			}
 		}
 
+        if (strlen(ofname) != 0) {
+            printf("open file for writting\n");
+            ofd = fopen(ofname, "a+");
+            if (ofd == NULL) {
+                fprintf(stderr, "failed to open output file: %s\n", ofname);
+                exit(EX_DATAERR);
+            }
+        } else {
+            ofd = stdout;
+        }
+
 		switch(oform) {
 		case OUT_NULL:
 #ifdef	JUNKTEST
@@ -322,6 +351,15 @@ main(int ac, char *av[]) {
 			}
 			DEBUG("Encoded in %ld bits of UPER", (long)erv.encoded);
 			break;
+        case OUT_OER:
+            erv = oer_encode(pduType, structure, write_out, ofd);
+			if(erv.encoded < 0) {
+				fprintf(stderr,
+				"%s: Cannot convert %s into OER\n",
+					name, pduType->name);
+				exit(EX_UNAVAILABLE);
+			}
+			DEBUG("Encoded in %ld bytes of OER", (long)erv.encoded);
 		}
 
 		ASN_STRUCT_FREE(*pduType, structure);
@@ -635,6 +673,10 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 			rval = xer_decode(opt_codec_ctx, pduType,
 				(void **)&structure, i_bptr, i_size);
 			break;
+        case INP_OER:
+            rval = oer_decode(opt_codec_ctx, pduType,
+                (void **)&structure, i_bptr, i_size);
+            break;
 		case INP_PER:
 			if(opt_nopad)
 			rval = uper_decode(opt_codec_ctx, pduType,
@@ -770,7 +812,14 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 /* Dump the buffer out to the specified FILE */
 static int write_out(const void *buffer, size_t size, void *key) {
 	FILE *fp = (FILE *)key;
-	return (fwrite(buffer, 1, size, fp) == size) ? 0 : -1;
+    if (fp == stdout) {
+        int i;
+        for (i = 0; i < size; i++)
+            fprintf(stdout, "%02X ", *((const unsigned char *)buffer + i));
+        fprintf(stdout, "\n");
+    } else {
+	    return (fwrite(buffer, 1, size, fp) == size) ? 0 : -1;
+    }
 }
 
 static int argument_is_stdin(char *av[], int idx) {

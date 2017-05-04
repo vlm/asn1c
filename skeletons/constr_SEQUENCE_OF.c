@@ -6,6 +6,7 @@
 #include <asn_internal.h>
 #include <constr_SEQUENCE_OF.h>
 #include <asn_SEQUENCE_OF.h>
+#include <INTEGER.h>
 
 /*
  * The DER encoder of the SEQUENCE OF type.
@@ -206,3 +207,69 @@ SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
 	ASN__ENCODED_OK(er);
 }
 
+asn_enc_rval_t
+SEQUENCE_OF_encode_oer(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr,
+    asn_app_consume_bytes_f *cb, void *app_key) {
+
+	asn_TYPE_member_t *elm = td->elements;
+	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
+	uintmax_t quantity = 0;
+	ssize_t encoding_size = 0;
+    INTEGER_t tmpint;
+	asn_enc_rval_t erval;
+	int edx;
+    uint8_t tmpbuf[16];
+
+	ASN_DEBUG("Estimating size of SEQUENCE OF %s", td->name);
+
+	/*
+	 * Gather the number of the underlying members sequence.
+	 */
+	for(edx = 0; edx < list->count; edx++) {
+		void *memb_ptr = list->array[edx];
+		if(!memb_ptr) continue;
+		quantity++;
+	}
+
+	/*
+	 * Encode x696 #17.2  quantity field
+     * 1. Determine how many octets are required to encode length of the quantity.
+	 */
+    tmpint.buf = NULL;
+    asn_umax2INTEGER(&tmpint, quantity);
+
+    encoding_size = der_tlv_length_serialize(tmpint.size,  (void *)tmpbuf, 16);
+	if(encoding_size == -1) {
+		erval.encoded = -1;
+		erval.failed_type = td;
+		erval.structure_ptr = sptr;
+		return erval;
+	}
+    /* 2. Encoding of the quantity */
+    memcpy(&tmpbuf[encoding_size], tmpint.buf, tmpint.size);
+    encoding_size += tmpint.size;
+	if(cb) {
+        if (cb((void *)tmpbuf, encoding_size, app_key) < 0)
+            ASN__ENCODE_FAILED;
+    }
+
+	ASN_DEBUG("Encoding members of SEQUENCE OF %s", td->name);
+
+	/*
+	 * Encode all members.
+	 */
+	for(edx = 0; edx < list->count; edx++) {
+		void *memb_ptr = list->array[edx];
+		if(!memb_ptr) continue;
+		erval = elm->type->oer_encoder(elm->type, constraints,
+            memb_ptr, cb, app_key);
+		if(erval.encoded == -1)
+			return erval;
+		encoding_size += erval.encoded;
+	}
+
+	erval.structure_ptr = 0;
+	erval.failed_type = 0;
+	return erval;
+}

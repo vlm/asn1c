@@ -46,6 +46,14 @@ asn_dec_rval_t xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	xer_primitive_body_decoder_f *prim_body_decoder
 );
 
+asn_dec_rval_t oer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **sptr, const void *buf_ptr, size_t size
+);
+
+asn_enc_rval_t oer_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
+	asn_app_consume_bytes_f *cb, void *app_key
+);
 #ifdef __cplusplus
 }
 #endif
