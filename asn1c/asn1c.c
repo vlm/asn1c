@@ -65,6 +65,7 @@ main(int ac, char **av) {
     int ret;                        /* Return value from misc functions */
     int ch;                         /* Command line character */
     int i;                          /* Index in some loops */
+    int exit_code = 0;              /* Exit code */
 
     /*
      * Process command-line options.
@@ -262,7 +263,8 @@ main(int ac, char **av) {
         new_asn = asn1p_parse_file(av[i], asn1_parser_flags);
         if(new_asn == NULL) {
             fprintf(stderr, "Cannot parse \"%s\"\n", av[i]);
-            exit(EX_DATAERR);
+            exit_code = EX_DATAERR;
+            goto cleanup;
         }
 
         /*
@@ -286,7 +288,10 @@ main(int ac, char **av) {
      * Dump the parsed ASN.1 tree if -E specified and -F is NOT given.
      */
     if(print_arg__print_out && !print_arg__fix_n_print) {
-        if(asn1print(asn, asn1_printer_flags)) exit(EX_SOFTWARE);
+        if(asn1print(asn, asn1_printer_flags)) {
+            exit_code = EX_SOFTWARE;
+            goto cleanup;
+        }
         return 0;
     }
 
@@ -294,7 +299,10 @@ main(int ac, char **av) {
      * Read in the files from skeletons/standard-modules
      */
     if(importStandardModules(asn, skeletons_dir)) {
-        if(warnings_as_errors) exit(EX_DATAERR);
+        if(warnings_as_errors) {
+            exit_code = EX_DATAERR;
+            goto cleanup;
+        }
     }
 
     /*
@@ -310,14 +318,18 @@ main(int ac, char **av) {
         case 0:
         break; /* All clear */
     case -1:
-        exit(EX_DATAERR); /* Fatal failure */
+        exit_code = EX_DATAERR; /* Fatal failure */
+        goto cleanup;
     }
 
     /*
      * Dump the parsed ASN.1 tree if -E specified and -F is given.
      */
     if(print_arg__print_out && print_arg__fix_n_print) {
-        if(asn1print(asn, asn1_printer_flags)) exit(EX_SOFTWARE);
+        if(asn1print(asn, asn1_printer_flags)) {
+            exit_code = EX_SOFTWARE;
+            goto cleanup;
+        }
         return 0;
     }
 
@@ -327,10 +339,13 @@ main(int ac, char **av) {
      */
     if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags, ac + optind,
                     optind, av - optind)) {
-        exit(EX_SOFTWARE);
+        exit_code = EX_SOFTWARE;
     }
 
+cleanup:
     asn1p_delete(asn);
+    asn1p_lex_destroy();
+    if (exit_code) exit(exit_code);
 
     return 0;
 }
@@ -415,6 +430,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
             TQ_ADD(&(asn->modules), mod, mod_next);
         }
         asn1p_delete(new_asn);
+        asn1p_lex_destroy();
 
 #ifdef _WIN32
     } while(_findnext(dir, &c_file) == 0);

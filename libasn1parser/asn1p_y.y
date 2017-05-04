@@ -529,6 +529,10 @@ ModuleBody:
 		AL_IMPORT($$, exports, $1, xp_next);
 		AL_IMPORT($$, imports, $2, xp_next);
 		AL_IMPORT($$, members, $3, next);
+
+		asn1p_module_free($1);
+		asn1p_module_free($2);
+		asn1p_module_free($3);
 	}
 	;
 
@@ -544,6 +548,7 @@ AssignmentList:
 			break;
 		}
 		AL_IMPORT($$, members, $2, next);
+		asn1p_module_free($2);
 	}
 	;
 
@@ -874,6 +879,7 @@ ParameterArgumentName:
 		ret = asn1p_ref_add_component($$.governor, $1, 0);
 		checkmem(ret == 0);
 		$$.argument = $3;
+		free($1);
 	}
 	| TypeRefName ':' TypeRefName {
 		int ret;
@@ -881,6 +887,7 @@ ParameterArgumentName:
 		ret = asn1p_ref_add_component($$.governor, $1, 0);
 		checkmem(ret == 0);
 		$$.argument = $3;
+		free($1);
 	}
 	| BasicTypeId ':' Identifier {
 		int ret;
@@ -919,7 +926,7 @@ ActualParameter:
 	| SimpleValue {
 		$$ = NEW_EXPR();
 		checkmem($$);
-		$$->Identifier = "?";
+		$$->Identifier = strdup("?");
 		$$->expr_type = A1TC_REFERENCE;
 		$$->meta_type = AMT_VALUE;
 		$$->value = $1;
@@ -972,8 +979,9 @@ ComponentTypeLists:
 		asn1p_expr_add($$, $3);
 	}
 	| ComponentTypeLists ',' TOK_VBracketLeft ComponentTypeLists TOK_VBracketRight {
-        $$ = $1;
+		$$ = $1;
 		asn1p_expr_add_many($$, $4);
+		asn1p_expr_free($4);
 	}
 	;
 
@@ -1225,6 +1233,8 @@ Type:
 		} else {
 			if($$->constraints) {
 				assert(!$2);
+				/* Check this : optConstraints is not used ?! */
+				asn1p_constraint_free($3);
 			} else {
 				$$->constraints = $3;
 			}
@@ -1316,6 +1326,7 @@ TypeDeclarationSet:
 		checkmem(ret == 0);
 		$$->expr_type = ASN_TYPE_ANY;
 		$$->meta_type = AMT_TYPE;
+		free($4);
 	}
 	| TOK_INSTANCE TOK_OF ComplexTypeReference {
 		$$ = NEW_EXPR();
@@ -1349,6 +1360,7 @@ ComplexTypeReference:
 		ret = asn1p_ref_add_component($$, $3, RLT_UNKNOWN);
 		checkmem(ret == 0);
 		free($1);
+		free($3);
 	}
 	| ObjectClassReference '.' TypeRefName {
 		int ret;
@@ -1359,6 +1371,7 @@ ComplexTypeReference:
 		ret = asn1p_ref_add_component($$, $3, RLT_UNKNOWN);
 		checkmem(ret == 0);
 		free($1);
+		free($3);
 	}
 	| TOK_typereference '.' Identifier {
 		int ret;
@@ -1369,6 +1382,7 @@ ComplexTypeReference:
 		ret = asn1p_ref_add_component($$, $3, RLT_lowercase);
 		checkmem(ret == 0);
 		free($1);
+		free($3);
 	}
 	| ObjectClassReference {
 		int ret;
@@ -1438,14 +1452,17 @@ FieldName:
 	TOK_typefieldreference {
 		$$ = asn1p_ref_new(yylineno);
 		asn1p_ref_add_component($$, $1, RLT_AmpUppercase);
+		free($1);
 	}
 	| FieldName '.' TOK_typefieldreference {
 		$$ = $$;
 		asn1p_ref_add_component($$, $3, RLT_AmpUppercase);
+		free($3);
 	}
 	| FieldName '.' TOK_valuefieldreference {
 		$$ = $$;
 		asn1p_ref_add_component($$, $3, RLT_Amplowercase);
+		free($3);
 	}
 	;
 
@@ -1453,12 +1470,15 @@ DefinedObjectClass:
 	TOK_capitalreference {
 		$$ = asn1p_ref_new(yylineno);
 		asn1p_ref_add_component($$, $1, RLT_CAPITALS);
+		free($1);
 	}
 /*
 	| TypeRefName '.' TOK_capitalreference {
 		$$ = asn1p_ref_new(yylineno);
 		asn1p_ref_add_component($$, $1, RLT_AmpUppercase);
 		asn1p_ref_add_component($$, $3, RLT_CAPITALS);
+		free($1);
+		free($3);
 	}
 */
 	;
@@ -1515,10 +1535,12 @@ SimpleValue:
 	| TOK_bstring {
 		$$ = _convert_bitstring2binary($1, 'B');
 		checkmem($$);
+		free($1);
 	}
 	| TOK_hstring {
 		$$ = _convert_bitstring2binary($1, 'H');
 		checkmem($$);
+		free($1);
 	}
 	| RestrictedCharacterStringValue {
 		$$ = $$;
@@ -1849,6 +1871,7 @@ PatternConstraint:
 		ref = asn1p_ref_new(yylineno);
 		asn1p_ref_add_component(ref, $2, RLT_lowercase);
 		$$->value = asn1p_value_fromref(ref, 0);
+		free($2);
 	}
 	;
 
@@ -1892,10 +1915,12 @@ BitStringValue:
 	TOK_bstring {
 		$$ = _convert_bitstring2binary($1, 'B');
 		checkmem($$);
+		free($1);
 	}
 	| TOK_hstring {
 		$$ = _convert_bitstring2binary($1, 'H');
 		checkmem($$);
+		free($1);
 	}
 	;
 
@@ -1993,6 +2018,7 @@ ContentsConstraint:
 		$$ = asn1p_constraint_new(yylineno);
 		$$->type = ACT_CT_CTNG;
 		$$->value = asn1p_value_fromtype($2);
+		asn1p_expr_free($2);
 	}
 	;
 
@@ -2026,6 +2052,7 @@ SimpleTableConstraint:
 		ct->type = ACT_EL_VALUE;
 		ct->value = asn1p_value_fromref(ref, 0);
 		CONSTRAINT_INSERT($$, ACT_CA_CRC, ct, 0);
+		free($2);
 	}
 	;
 
@@ -2094,6 +2121,8 @@ ComponentIdList:
 		$$[l1] = '.';
 		memcpy($$ + l1 + 1, $3, l3);
 		$$[l1 + 1 + l3] = '\0';
+		free($1);
+		free($3);
 	}
 	;
 

@@ -26,7 +26,7 @@ asn1f_printable_value(asn1p_value_t *v) {
         size_t tmp_len = (len);                     \
         if(tmp_len >= managedptr_len) {             \
             free(managedptr);                       \
-            managedptr = malloc(tmp_len + 1);       \
+            managedptr = calloc(1, tmp_len + 1);    \
             if(managedptr) {                        \
                 managedptr_len = tmp_len;           \
             } else {                                \

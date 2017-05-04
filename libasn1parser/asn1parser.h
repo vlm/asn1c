@@ -70,5 +70,6 @@ asn1p_t	*asn1p_parse_buffer(const char *buffer, int size /* = -1 */,
 	enum asn1p_flags);
 
 int asn1p_atoi(const char *ptr, asn1c_integer_t *r_value);
+int asn1p_lex_destroy();
 
 #endif	/* ASN1PARSER_H */

@@ -2449,6 +2449,10 @@ yyreduce:
 		AL_IMPORT((yyval.a_module), exports, (yyvsp[(1) - (3)].a_module), xp_next);
 		AL_IMPORT((yyval.a_module), imports, (yyvsp[(2) - (3)].a_module), xp_next);
 		AL_IMPORT((yyval.a_module), members, (yyvsp[(3) - (3)].a_module), next);
+
+		asn1p_module_free((yyvsp[(1) - (3)].a_module));
+		asn1p_module_free((yyvsp[(2) - (3)].a_module));
+		asn1p_module_free((yyvsp[(3) - (3)].a_module));
 	}
     break;
 
@@ -2469,6 +2473,8 @@ yyreduce:
 			break;
 		}
 		AL_IMPORT((yyval.a_module), members, (yyvsp[(2) - (2)].a_module), next);
+
+		asn1p_module_free((yyvsp[(2) - (2)].a_module));
 	}
     break;
 
@@ -2925,7 +2931,7 @@ yyreduce:
     {
 		(yyval.a_expr) = NEW_EXPR();
 		checkmem((yyval.a_expr));
-		(yyval.a_expr)->Identifier = "?";
+		(yyval.a_expr)->Identifier = strdup("?");
 		(yyval.a_expr)->expr_type = A1TC_REFERENCE;
 		(yyval.a_expr)->meta_type = AMT_VALUE;
 		(yyval.a_expr)->value = (yyvsp[(1) - (1)].a_value);
@@ -2989,6 +2995,7 @@ yyreduce:
     {
         (yyval.a_expr) = (yyvsp[(1) - (5)].a_expr);
 		asn1p_expr_add_many((yyval.a_expr), (yyvsp[(4) - (5)].a_expr));
+		asn1p_expr_free((yyvsp[(4) - (5)].a_expr));
 	}
     break;
 
@@ -3324,6 +3331,8 @@ yyreduce:
 		} else {
 			if((yyval.a_expr)->constraints) {
 				assert(!(yyvsp[(2) - (3)].a_expr));
+				/* Check this : optConstraints is not used ?! */
+				asn1p_constraint_free((yyvsp[(3) - (3)].a_constr));
 			} else {
 				(yyval.a_expr)->constraints = (yyvsp[(3) - (3)].a_constr);
 			}
@@ -4412,6 +4421,7 @@ yyreduce:
 		(yyval.a_constr) = asn1p_constraint_new(yylineno);
 		(yyval.a_constr)->type = ACT_CT_CTNG;
 		(yyval.a_constr)->value = asn1p_value_fromtype((yyvsp[(2) - (2)].a_expr));
+		asn1p_expr_free((yyvsp[(2) - (2)].a_expr));
 	}
     break;
 
