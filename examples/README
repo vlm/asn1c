@@ -25,6 +25,9 @@ This directory contains a few examples.
    UserPlane Location Protocol decoder. Before trying to compile, read the
    README file in that directory.
 
+7. The ./sample.source.LTE-RRC directory contains the 3GPP Radio Resource Control
+   decoder for LTE RRC version 14.2.1. Read the README file in that directory.
+
 The crfc2asn1.pl script can be used to extract ASN.1 data from RFC texts.
 For instance, it is used to extract X.509, MEGACO, and LDAPv3 ASN.1 modules
 from the corresponding RFC texts (rfc3280.txt, rfc3525.txt, rfc4211.txt).
