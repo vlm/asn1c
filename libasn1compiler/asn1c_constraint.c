@@ -267,6 +267,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		 */
 		assert(range->el_count == 0);
 		/* The full range is specified. Ignore it. */
+		asn1constraint_range_free(range);
 		return 0;
 	}
 

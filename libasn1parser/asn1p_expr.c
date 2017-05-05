@@ -222,8 +222,8 @@ void
 asn1p_expr_add_many(asn1p_expr_t *to, asn1p_expr_t *from_what) {
 	asn1p_expr_t *expr;
 	TQ_FOR(expr, &(from_what->members), next) {
-        expr->parent_expr = to;
-    }
+		expr->parent_expr = to;
+	}
 	TQ_CONCAT(&(to->members), &(from_what->members), next);
 }
 
@@ -257,9 +257,25 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 		asn1p_constraint_free(expr->constraints);
 		asn1p_constraint_free(expr->combined_constraints);
 		asn1p_paramlist_free(expr->lhs_params);
+		asn1p_expr_free(expr->rhs_pspecs);
 		asn1p_value_free(expr->value);
 		asn1p_value_free(expr->marker.default_value);
 		asn1p_wsyntx_free(expr->with_syntax);
+		if(expr->specializations.pspec) {
+			int pspec;
+			for(pspec = 0; pspec < expr->specializations.pspecs_count; pspec++) {
+				asn1p_expr_free(expr->specializations.pspec[pspec].rhs_pspecs);
+				asn1p_expr_free(expr->specializations.pspec[pspec].my_clone);
+			}
+			free(expr->specializations.pspec);
+		}
+		if(expr->object_class_matrix.row) {
+			int row;
+			for(row = 0; row < expr->object_class_matrix.rows; row++) {
+				asn1p_ioc_row_delete(expr->object_class_matrix.row[row]);
+			}
+			free(expr->object_class_matrix.row);
+		}
 
 		if(expr->data && expr->data_free)
 			expr->data_free(expr->data);
