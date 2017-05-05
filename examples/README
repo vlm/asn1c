@@ -15,18 +15,18 @@ This directory contains a few examples.
    Lightweight Directory Access Protocol version 3 PDU as specified in
    rfc4211.txt.
 
-6. The ./sample.source.RRC directory contains the 3GPP Radio Resource Control
+5. The ./sample.source.RRC directory contains the 3GPP Radio Resource Control
    decoder for RRC version 7.1.0. Just type `make` in there to compile.
 
-5. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder.
+6. The ./sample.source.LTE-RRC directory contains the 3GPP RRC
+   decoder for LTE RRC version 14.2.1. Read the README file in that directory.
+
+7. The ./sample.source.TAP3 directory contains the GSM TAP3 decoder.
    Before trying to compile, read the README file in that directory.
 
-6. The ./sample.source.ULP directory contains the Open Mobile Alliance
+8. The ./sample.source.ULP directory contains the Open Mobile Alliance
    UserPlane Location Protocol decoder. Before trying to compile, read the
    README file in that directory.
-
-7. The ./sample.source.LTE-RRC directory contains the 3GPP Radio Resource Control
-   decoder for LTE RRC version 14.2.1. Read the README file in that directory.
 
 The crfc2asn1.pl script can be used to extract ASN.1 data from RFC texts.
 For instance, it is used to extract X.509, MEGACO, and LDAPv3 ASN.1 modules
