@@ -938,6 +938,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 		OUT("_PR_NOTHING,\t/* No components present */\n");
 		TQ_FOR(v, &(expr->members), next) {
 			if(skipComma) skipComma = 0;
+			else if (v->expr_type == A1TC_EXTENSIBLE && !TQ_NEXT(v, next)) OUT("\n");
 			else OUT(",\n");
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				OUT("/* Extensions may appear below */\n");
