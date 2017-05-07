@@ -2707,7 +2707,7 @@ YY_RULE_SETUP
 #line 210 "asn1p_l.l"
 {
 		/* " \t\r\n" weren't allowed in ASN.1:1990. */
-		asn1p_lval.tv_str = asn1p_text;
+		asn1p_lval.tv_str = strdup(asn1p_text);
 		return TOK_hstring;
 	}
 	YY_BREAK

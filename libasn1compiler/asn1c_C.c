@@ -2815,7 +2815,7 @@ asn1c_recurse(arg_t *arg, asn1p_expr_t *expr, int (*callback)(arg_t *arg, void *
 	int maxret = 0;
 	int ret;
 
-	if(expr->_mark) return 0;
+	if(expr->_mark & TM_RECURSION) return 0;
 	expr->_mark |= TM_RECURSION;
 
 	/* Invoke callback for every type going into recursion */

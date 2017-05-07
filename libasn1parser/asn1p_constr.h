@@ -47,6 +47,8 @@ typedef struct asn1p_constraint_s {
 		ACPRES_OPTIONAL,
 	} presence;
 
+	struct asn1p_constraint_s *parent_ct;	/* optional */
+
 	/*
 	 * Separate types and values.
 	 */
@@ -62,6 +64,7 @@ typedef struct asn1p_constraint_s {
 	unsigned int el_count;	/* Number of meaningful elements */
 	unsigned int el_size;	/* Size of the allocated (elements) */
 
+	struct asn1p_module_s *module;	/* Defined in module */
 	int _lineno;	/* Position in a source file */
 } asn1p_constraint_t;
 
@@ -71,7 +74,7 @@ char *asn1p_constraint_type2str(enum asn1p_constraint_type_e);
 /*
  * Constructors and a recursive destructor.
  */
-asn1p_constraint_t *asn1p_constraint_new(int _lineno);
+asn1p_constraint_t *asn1p_constraint_new(int _lineno, asn1p_module_t *mod);
 void asn1p_constraint_free(asn1p_constraint_t *);
 
 /*

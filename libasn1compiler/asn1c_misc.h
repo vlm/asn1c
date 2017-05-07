@@ -7,9 +7,10 @@
  * with safe ones.
  */
 enum ami_flags_e {
-  AMI_MASK_ONLY_SPACES	= 1,	/* Mask only spaces, everything else's safe */
-  AMI_CHECK_RESERVED	= 2,	/* Check against reserved keywords */
-  AMI_NODELIMITER       = 4,	/* Do not put delimiter, just concatenate */
+	AMI_MASK_ONLY_SPACES	= 1,	/* Mask only spaces, everything else's safe */
+	AMI_CHECK_RESERVED	= 2,	/* Check against reserved keywords */
+	AMI_NODELIMITER       = 4,	/* Do not put delimiter, just concatenate */
+	AMI_USE_PREFIX        = 8,	/* Use Prefix when generating identifier */
 };
 char *asn1c_make_identifier(enum ami_flags_e, asn1p_expr_t *expr, ...);
 

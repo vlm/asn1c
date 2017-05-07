@@ -287,14 +287,13 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 			break;
 	}
 	if(ref_tc) {
+		/* It is acceptable that we don't use input parameters */
 		if(rhs_pspecs && !ref_tc->lhs_params) {
-			FATAL("Parameterized type %s expected "
+			WARNING("Parameterized type %s expected "
 				"for %s at line %d",
 				ref_tc->Identifier,
 				asn1f_printable_reference(ref),
 				ref->_lineno);
-			errno = EPERM;
-			return NULL;
 		}
 		if(!rhs_pspecs && ref_tc->lhs_params) {
 			FATAL("Type %s expects specialization "
@@ -320,30 +319,33 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 	 */
 	{
 		/* Search inside standard module */
-		static asn1p_oid_t *uioc_oid;
-		if(!uioc_oid) {
-			asn1p_oid_arc_t arcs[] = {
-				{ 1, "iso" },
-				{ 3, "org" },
-				{ 6, "dod" },
-				{ 1, "internet" },
-				{ 4, "private" },
-				{ 1, "enterprise" },
-				{ 9363, "spelio" },
-				{ 1, "software" },
-				{ 5, "asn1c" },
-				{ 3, "standard-modules" },
-				{ 0, "auto-imported" },
-				{ 1, 0 }
-			};
+		asn1p_oid_t *uioc_oid;
+		asn1p_oid_arc_t arcs[] = {
+			{ 1, "iso" },
+			{ 3, "org" },
+			{ 6, "dod" },
+			{ 1, "internet" },
+			{ 4, "private" },
+			{ 1, "enterprise" },
+			{ 9363, "spelio" },
+			{ 1, "software" },
+			{ 5, "asn1c" },
+			{ 3, "standard-modules" },
+			{ 0, "auto-imported" },
+			{ 1, 0 }
+		};
+
+		if(!imports_from) {
 			uioc_oid = asn1p_oid_construct(arcs,
 				sizeof(arcs)/sizeof(arcs[0]));
-		}
-		if(!imports_from && (!mod->module_oid
-		|| asn1p_oid_compare(mod->module_oid, uioc_oid))) {
-			imports_from = asn1f_lookup_module(arg,
-				"ASN1C-UsefulInformationObjectClasses",
-				uioc_oid);
+
+			if(!mod->module_oid
+				|| asn1p_oid_compare(mod->module_oid, uioc_oid))
+				imports_from = asn1f_lookup_module(arg,
+					"ASN1C-UsefulInformationObjectClasses",
+					uioc_oid);
+
+			asn1p_oid_free(uioc_oid);
 			if(imports_from) goto importing;
 		}
 	}
@@ -430,10 +432,16 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	 */
 	tc = asn1f_lookup_symbol(arg, expr->module, expr->rhs_pspecs, ref);
 	if(tc == NULL) {
-		DEBUG("\tSymbol \"%s\" not found: %s",
-			asn1f_printable_reference(ref),
-			strerror(errno));
-		return NULL;
+		/*
+	 	 * Lookup inside the ref's module and its IMPORTS section.
+	 	 */
+		tc = asn1f_lookup_symbol(arg, ref->module, expr->rhs_pspecs, ref);
+		if(tc == NULL) {
+			DEBUG("\tSymbol \"%s\" not found: %s",
+				asn1f_printable_reference(ref),
+				strerror(errno));
+			return NULL;
+		}
 	}
 
 	/*

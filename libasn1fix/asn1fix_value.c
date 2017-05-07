@@ -199,8 +199,28 @@ asn1f_look_value_in_type(arg_t *arg,
 			: "<not found>"
 		);
 
-	if(child_expr && child_expr->value) {
-		if(_asn1f_copy_value(arg, value_expr, child_expr))
+	if(child_expr) {
+		/* Maybe hasn't been fixed yet. */
+		if (!child_expr->value) {
+			asn1p_expr_t *saved_expr = arg->expr;
+			arg->expr = type_expr;
+			switch (type_expr->expr_type) {
+			case ASN_BASIC_INTEGER:
+				asn1f_fix_integer(arg);
+				break;
+			case ASN_BASIC_ENUMERATED:
+				asn1f_fix_enum(arg);
+				break;
+			default:
+				WARNING("Unexpected type %s for %s",
+						type_expr->expr_type,
+						type_expr->Identifier);
+				return -1;
+			}
+			arg->expr = saved_expr;
+		}
+		if(child_expr->value && _asn1f_copy_value(arg,
+				value_expr, child_expr))
 			return -1;
 		/* Fall through */
 	}

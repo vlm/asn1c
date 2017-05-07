@@ -42,8 +42,20 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 
 void
 asn1p_ioc_row_delete(asn1p_ioc_row_t *row) {
+	int i;
 	if(row) {
 		if(row->column) {
+			for(i = 0; i < row->columns; i++) {
+				if(!row->column[i].new_ref && row->column[i].value) {
+					/* 
+					 * Field 'reference' comes from asn1fix_cws.c :
+					 * TQ_FIRST(&cell->field->members)->reference
+					 * so it should not be freed here.
+					 */
+					row->column[i].value->reference = NULL;
+				}
+				asn1p_expr_free(row->column[i].value);
+			}
 			free(row->column);
 		}
 		free(row);
@@ -182,6 +194,7 @@ asn1p_wsyntx_chunk_fromsyntax(asn1p_wsyntx_t *syntax) {
 	if(wc) {
 		wc->type = WC_OPTIONALGROUP;
 		wc->content.syntax = syntax;
+		syntax->parent = wc;
 	}
 
 	return wc;
