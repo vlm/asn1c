@@ -612,7 +612,7 @@ static const unsigned int asn_MAP_enum_enum2value_4[] = {
 	1,	/* a(1) */
 	0	/* b(0) */
 };
-static const asn_INTEGER_specifics_t asn_SPC_enum_specs_4 = {
+static asn_INTEGER_specifics_t asn_SPC_enum_specs_4 = {
 	asn_MAP_enum_value2enum_4,	/* "tag" => N; sorted by tag */
 	asn_MAP_enum_enum2value_4,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
@@ -1145,7 +1145,7 @@ static const unsigned int asn_MAP_Member_enum2value_2[] = {
 	0,	/* one(0) */
 	1	/* oneMore(1) */
 };
-static const asn_INTEGER_specifics_t asn_SPC_Member_specs_2 = {
+static asn_INTEGER_specifics_t asn_SPC_Member_specs_2 = {
 	asn_MAP_Member_value2enum_2,	/* "tag" => N; sorted by tag */
 	asn_MAP_Member_enum2value_2,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
@@ -1469,7 +1469,7 @@ static const unsigned int asn_MAP_name_enum2value_2[] = {
 	0,	/* one(0) */
 	1	/* oneMore(1) */
 };
-static const asn_INTEGER_specifics_t asn_SPC_name_specs_2 = {
+static asn_INTEGER_specifics_t asn_SPC_name_specs_2 = {
 	asn_MAP_name_value2enum_2,	/* "tag" => N; sorted by tag */
 	asn_MAP_name_enum2value_2,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
