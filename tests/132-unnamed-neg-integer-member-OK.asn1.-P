@@ -1,0 +1,91 @@
+
+/*** <<< INCLUDES [IntegerContainer] >>> ***/
+
+#include <INTEGER.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [IntegerContainer] >>> ***/
+
+typedef struct IntegerContainer {
+	INTEGER_t	*myInteger	/* DEFAULT -1 */;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} IntegerContainer_t;
+
+/*** <<< FUNC-DECLS [IntegerContainer] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_IntegerContainer;
+
+/*** <<< STAT-DEFS [IntegerContainer] >>> ***/
+
+static int asn_DFL_2_set_minus_1(int set_value, void **sptr) {
+	INTEGER_t *st = *sptr;
+	
+	if(!st) {
+		if(!set_value) return -1;	/* Not a default value */
+		st = (*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) return -1;
+	}
+	
+	if(set_value) {
+		/* Install default value -1 */
+		return asn_long2INTEGER(st, -1);
+	} else {
+		/* Test default value -1 */
+		long value;
+		if(asn_INTEGER2long(st, &value))
+			return -1;
+		return (value == -1);
+	}
+}
+static asn_TYPE_member_t asn_MBR_IntegerContainer_1[] = {
+	{ ATF_POINTER, 1, offsetof(struct IntegerContainer, myInteger),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_INTEGER,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = asn_DFL_2_set_minus_1,	/* DEFAULT -1 */
+		.name = "myInteger"
+		},
+};
+static ber_tlv_tag_t asn_DEF_IntegerContainer_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_TYPE_tag2member_t asn_MAP_IntegerContainer_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* myInteger at 10 */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_IntegerContainer_specs_1 = {
+	sizeof(struct IntegerContainer),
+	offsetof(struct IntegerContainer, _asn_ctx),
+	asn_MAP_IntegerContainer_tag2el_1,
+	1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_IntegerContainer = {
+	"IntegerContainer",
+	"IntegerContainer",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_IntegerContainer_tags_1,
+	sizeof(asn_DEF_IntegerContainer_tags_1)
+		/sizeof(asn_DEF_IntegerContainer_tags_1[0]), /* 1 */
+	asn_DEF_IntegerContainer_tags_1,	/* Same as above */
+	sizeof(asn_DEF_IntegerContainer_tags_1)
+		/sizeof(asn_DEF_IntegerContainer_tags_1[0]), /* 1 */
+	0,	/* No PER visible constraints */
+	asn_MBR_IntegerContainer_1,
+	1,	/* Elements count */
+	&asn_SPC_IntegerContainer_specs_1	/* Additional specs */
+};
+
