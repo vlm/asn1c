@@ -270,7 +270,9 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_byte
 static enum xer_pbd_rval
 OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
+#ifndef NDEBUG
 	const char *chunk_end = (const char *)chunk_buf + chunk_size;
+#endif
 	const char *endptr;
 	long s_arcs[10];
 	long *arcs = s_arcs;
