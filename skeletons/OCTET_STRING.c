@@ -86,7 +86,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 			void *ptr;					\
 			/* Be nice and round to the memory allocator */	\
 			do { _ns = _ns ? _ns << 1 : 16; }		\
-			    while(_ns <= _es);				\
+			    while(_ns < _es);				\
 			/* int is really a typeof(st->size): */		\
 			if((int)_ns < 0) RETURN(RC_FAIL);		\
 			ptr = REALLOC(st->buf, _ns);			\
