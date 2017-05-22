@@ -170,9 +170,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	INDENT(+1);
 		if(r_size) {
 			if(got_something++) { OUT("\n"); OUT(" && "); }
-			OUT("(");
 			emit_range_comparison_code(arg, r_size, "size", 0, -1);
-			OUT(")");
 		}
 		if(r_value) {
 			if(got_something++) { OUT("\n"); OUT(" && "); }
