@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t UTCTime_t;  /* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_UTCTime;
+extern asn_TYPE_operation_t asn_OP_UTCTime;
 
 asn_struct_print_f UTCTime_print;
 asn_constr_check_f UTCTime_constraint;

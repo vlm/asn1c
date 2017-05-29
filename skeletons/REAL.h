@@ -15,12 +15,15 @@ extern "C" {
 typedef ASN__PRIMITIVE_TYPE_t REAL_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_REAL;
+extern asn_TYPE_operation_t asn_OP_REAL;
 
 asn_struct_print_f REAL_print;
 xer_type_decoder_f REAL_decode_xer;
 xer_type_encoder_f REAL_encode_xer;
 per_type_decoder_f REAL_decode_uper;
 per_type_encoder_f REAL_encode_uper;
+
+#define REAL_constraint    asn_generic_no_constraint
 
 /***********************************
  * Some handy conversion routines. *

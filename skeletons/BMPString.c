@@ -13,7 +13,7 @@ static const ber_tlv_tag_t asn_DEF_BMPString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (30 << 2)),	/* [UNIVERSAL 30] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-static asn_OCTET_STRING_specifics_t asn_SPC_BMPString_specs = {
+asn_OCTET_STRING_specifics_t asn_SPC_BMPString_specs = {
 	sizeof(BMPString_t),
 	offsetof(BMPString_t, _asn_ctx),
 	ASN_OSUBV_U16	/* 16-bits character */
@@ -23,9 +23,7 @@ static asn_per_constraints_t asn_DEF_BMPString_constraints = {
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_BMPString = {
-	"BMPString",
-	"BMPString",
+asn_TYPE_operation_t asn_OP_BMPString = {
 	OCTET_STRING_free,          /* Implemented in terms of OCTET STRING */
 	BMPString_print,
 	asn_generic_no_constraint,  /* No constraint by default */
@@ -33,9 +31,20 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	OCTET_STRING_encode_der,
 	BMPString_decode_xer,		/* Convert from UTF-8 */
 	BMPString_encode_xer,		/* Convert to UTF-8 */
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_BMPString = {
+	"BMPString",
+	"BMPString",
+	&asn_OP_BMPString,
+	asn_generic_no_constraint,
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
 	  / sizeof(asn_DEF_BMPString_tags[0]) - 1,

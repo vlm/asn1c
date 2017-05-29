@@ -171,9 +171,7 @@ static asn_per_constraints_t asn_DEF_GeneralizedTime_constraints = {
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 }, /* Size */
 	0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
-	"GeneralizedTime",
-	"GeneralizedTime",
+asn_TYPE_operation_t asn_OP_GeneralizedTime = {
 	OCTET_STRING_free,
 	GeneralizedTime_print,
 	GeneralizedTime_constraint, /* Check validity of time */
@@ -181,9 +179,20 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	GeneralizedTime_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	GeneralizedTime_encode_xer,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
+	"GeneralizedTime",
+	"GeneralizedTime",
+	&asn_OP_GeneralizedTime,
+	GeneralizedTime_constraint,
 	asn_DEF_GeneralizedTime_tags,
 	sizeof(asn_DEF_GeneralizedTime_tags)
 	  / sizeof(asn_DEF_GeneralizedTime_tags[0]) - 2,
@@ -269,7 +278,7 @@ GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		gt = asn_time2GT_frac(0, &tm, fv, fd, 1);
 		if(!gt) ASN__ENCODE_FAILED;
-	
+
 		rv = OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
 			cb, app_key);
 		ASN_STRUCT_FREE(asn_DEF_GeneralizedTime, gt);

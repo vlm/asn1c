@@ -14,8 +14,11 @@ extern "C" {
 typedef OCTET_STRING_t VisibleString_t;  /* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_VisibleString;
+extern asn_TYPE_operation_t asn_OP_VisibleString;
 
 asn_constr_check_f VisibleString_constraint;
+
+#define VisibleString_constraint   VisibleString_constraint
 
 #ifdef __cplusplus
 }

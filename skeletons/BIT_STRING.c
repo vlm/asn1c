@@ -12,14 +12,12 @@
 static const ber_tlv_tag_t asn_DEF_BIT_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
 };
-static asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs = {
+asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs = {
 	sizeof(BIT_STRING_t),
 	offsetof(BIT_STRING_t, _asn_ctx),
 	ASN_OSUBV_BIT
 };
-asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
-	"BIT STRING",
-	"BIT_STRING",
+asn_TYPE_operation_t asn_OP_BIT_STRING = {
 	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
 	BIT_STRING_print,
 	BIT_STRING_constraint,
@@ -27,9 +25,20 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_decode_xer_binary,
 	BIT_STRING_encode_xer,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
+	"BIT STRING",
+	"BIT_STRING",
+	&asn_OP_BIT_STRING,
+	BIT_STRING_constraint,
 	asn_DEF_BIT_STRING_tags,
 	sizeof(asn_DEF_BIT_STRING_tags)
 	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
@@ -37,7 +46,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	sizeof(asn_DEF_BIT_STRING_tags)
 	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
 	0,	/* No PER visible constraints */
-	0, 0,	/* No members */
+	0, 0,  /* No members */
 	&asn_SPC_BIT_STRING_specs
 };
 

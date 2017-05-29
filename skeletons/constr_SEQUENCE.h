@@ -52,6 +52,7 @@ xer_type_decoder_f SEQUENCE_decode_xer;
 xer_type_encoder_f SEQUENCE_encode_xer;
 per_type_decoder_f SEQUENCE_decode_uper;
 per_type_encoder_f SEQUENCE_encode_uper;
+extern asn_TYPE_operation_t asn_OP_SEQUENCE;
 
 #ifdef __cplusplus
 }

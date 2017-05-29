@@ -19,6 +19,7 @@ typedef struct OCTET_STRING {
 } OCTET_STRING_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
+extern asn_TYPE_operation_t asn_OP_OCTET_STRING;
 
 asn_struct_free_f OCTET_STRING_free;
 asn_struct_print_f OCTET_STRING_print;
@@ -32,6 +33,8 @@ xer_type_encoder_f OCTET_STRING_encode_xer;
 xer_type_encoder_f OCTET_STRING_encode_xer_utf8;
 per_type_decoder_f OCTET_STRING_decode_uper;
 per_type_encoder_f OCTET_STRING_encode_uper;
+
+#define OCTET_STRING_constraint  asn_generic_no_constraint
 
 /******************************
  * Handy conversion routines. *
@@ -78,6 +81,8 @@ typedef const struct asn_OCTET_STRING_specifics_s {
 		ASN_OSUBV_U32	/* 32-bit character (UniversalString) */
 	} subvariant;
 } asn_OCTET_STRING_specifics_t;
+
+extern asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs;
 
 #ifdef __cplusplus
 }

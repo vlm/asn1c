@@ -73,15 +73,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_Member_2 = {
 	"SEQUENCE",
 	"SEQUENCE",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Member_tags_2,
 	sizeof(asn_DEF_Member_tags_2)
 		/sizeof(asn_DEF_Member_tags_2[0]), /* 1 */
@@ -116,15 +109,8 @@ static asn_SET_OF_specifics_t asn_SPC_Type_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Type = {
 	"Type",
 	"Type",
-	SET_OF_free,
-	SET_OF_print,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Type_tags_1,
 	sizeof(asn_DEF_Type_tags_1)
 		/sizeof(asn_DEF_Type_tags_1[0]), /* 1 */
@@ -177,6 +163,8 @@ typedef struct Type1 {
 /*** <<< FUNC-DECLS [Type1] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Type1;
+extern asn_SEQUENCE_specifics_t asn_SPC_Type1_specs_1;
+extern asn_TYPE_member_t asn_MBR_Type1_1[1];
 
 /*** <<< STAT-DEFS [Type1] >>> ***/
 
@@ -220,15 +208,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_another_name_3 = {
 	"another-name",
 	"another-name",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_another_name_tags_3,
 	sizeof(asn_DEF_another_name_tags_3)
 		/sizeof(asn_DEF_another_name_tags_3[0]), /* 1 */
@@ -269,15 +250,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
 	"one-name",
 	"one-name",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -288,7 +262,7 @@ asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
 	&asn_SPC_one_name_specs_2	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Type1_1[] = {
+asn_TYPE_member_t asn_MBR_Type1_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Type1, one_name),
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
@@ -305,7 +279,7 @@ static const ber_tlv_tag_t asn_DEF_Type1_tags_1[] = {
 static const asn_TYPE_tag2member_t asn_MAP_Type1_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 } /* another-name */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Type1_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_Type1_specs_1 = {
 	sizeof(struct Type1),
 	offsetof(struct Type1, _asn_ctx),
 	asn_MAP_Type1_tag2el_1,
@@ -317,15 +291,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_Type1_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Type1 = {
 	"Type1",
 	"Type1",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Type1_tags_1,
 	sizeof(asn_DEF_Type1_tags_1)
 		/sizeof(asn_DEF_Type1_tags_1[0]), /* 1 */
@@ -410,6 +377,8 @@ typedef struct Type2 {
 /*** <<< FUNC-DECLS [Type2] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Type2;
+extern asn_CHOICE_specifics_t asn_SPC_Type2_specs_1;
+extern asn_TYPE_member_t asn_MBR_Type2_1[2];
 
 /*** <<< CODE [Type2] >>> ***/
 
@@ -518,15 +487,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_another_name_3 = {
 	"another-name",
 	"another-name",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_another_name_tags_3,
 	sizeof(asn_DEF_another_name_tags_3)
 		/sizeof(asn_DEF_another_name_tags_3[0]), /* 1 */
@@ -569,15 +531,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
 	"one-name",
 	"one-name",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_one_name_tags_2,
 	sizeof(asn_DEF_one_name_tags_2)
 		/sizeof(asn_DEF_one_name_tags_2[0]), /* 1 */
@@ -630,15 +585,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_another_name_8 = {
 	"another-name",
 	"another-name",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_another_name_tags_8,
 	sizeof(asn_DEF_another_name_tags_8)
 		/sizeof(asn_DEF_another_name_tags_8[0]), /* 1 */
@@ -671,7 +619,8 @@ static const asn_TYPE_tag2member_t asn_MAP_two_name_tag2el_7[] = {
 static const uint8_t asn_MAP_two_name_mmap_7[(1 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7)
 };
-static asn_SET_specifics_t asn_SPC_two_name_specs_7 = {
+static 
+asn_SET_specifics_t asn_SPC_two_name_specs_7 = {
 	sizeof(struct two_name),
 	offsetof(struct two_name, _asn_ctx),
 	offsetof(struct two_name, _presence_map),
@@ -686,15 +635,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_two_name_7 = {
 	"two-name",
 	"two-name",
-	SET_free,
-	SET_print,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_two_name_tags_7,
 	sizeof(asn_DEF_two_name_tags_7)
 		/sizeof(asn_DEF_two_name_tags_7[0]), /* 1 */
@@ -707,7 +649,7 @@ asn_TYPE_descriptor_t asn_DEF_two_name_7 = {
 	&asn_SPC_two_name_specs_7	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Type2_1[] = {
+asn_TYPE_member_t asn_MBR_Type2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Type2, choice.one_name),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
@@ -731,7 +673,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Type2_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 0 }, /* one-name */
     { (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)), 1, 0, 0 } /* two-name */
 };
-static asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
+asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
 	sizeof(struct Type2),
 	offsetof(struct Type2, _asn_ctx),
 	offsetof(struct Type2, present),
@@ -744,15 +686,8 @@ static asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Type2 = {
 	"Type2",
 	"Type2",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

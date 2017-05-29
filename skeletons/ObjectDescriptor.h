@@ -14,6 +14,9 @@ extern "C" {
 typedef GraphicString_t ObjectDescriptor_t;  /* Implemented via GraphicString */
 
 extern asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor;
+extern asn_TYPE_operation_t asn_OP_ObjectDescriptor;
+
+#define ObjectDescriptor_constraint   asn_generic_unknown_constraint
 
 #ifdef __cplusplus
 }

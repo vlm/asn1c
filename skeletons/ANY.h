@@ -19,12 +19,16 @@ typedef struct ANY {
 } ANY_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_ANY;
+extern asn_TYPE_operation_t asn_OP_ANY;
+extern asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs;
 
 asn_struct_free_f ANY_free;
 asn_struct_print_f ANY_print;
 ber_type_decoder_f ANY_decode_ber;
 der_type_encoder_f ANY_encode_der;
 xer_type_encoder_f ANY_encode_xer;
+
+#define ANY_constraint  asn_generic_no_constraint
 
 /******************************
  * Handy conversion routines. *

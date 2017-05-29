@@ -6,14 +6,12 @@
 #include <ANY.h>
 #include <errno.h>
 
-static asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs = {
+asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs = {
 	sizeof(ANY_t),
 	offsetof(ANY_t, _asn_ctx),
 	ASN_OSUBV_ANY
 };
-asn_TYPE_descriptor_t asn_DEF_ANY = {
-	"ANY",
-	"ANY",
+asn_TYPE_operation_t asn_OP_ANY = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,
 	asn_generic_no_constraint,
@@ -21,10 +19,17 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	ANY_encode_xer,
-	0, 0,
-	0, /* Use generic outmost tag fetcher */
-	0, 0, 0, 0,
-	0,	/* No PER visible constraints */
+	0,
+	0,
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_ANY = {
+	"ANY",
+	"ANY",
+	&asn_OP_ANY,
+	asn_generic_no_constraint,
+	0, 0, 0, 0,	/* No PER visible constraints */
+	0,
 	0, 0,	/* No members */
 	&asn_SPC_ANY_specs,
 };

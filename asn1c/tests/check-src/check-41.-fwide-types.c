@@ -281,7 +281,7 @@ partial_read(uint8_t *data, size_t size) {
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
-			asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+			asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 		}
 	}
 }
@@ -293,27 +293,27 @@ main() {
 	/* Check exact buf0 */
 	check(&t, buf0, sizeof(buf0), sizeof(buf0));
 	compare(&t, buf0_reconstr, sizeof(buf0_reconstr));
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check exact buf1 */
 	check(&t, buf1, sizeof(buf1), sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check slightly more than buf1 */
 	check(&t, buf1, sizeof(buf1) + 10, sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check exact buf2 */
 	check(&t, buf2, sizeof(buf2), sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 
 	/* Check slightly more than buf2 */
 	check(&t, buf2, sizeof(buf2) + 10, sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	asn_DEF_T.op->free_struct(&asn_DEF_T, &t, 1);
 
 	/* Split the buffer in parts and check decoder restartability */
 	partial_read(buf0, sizeof(buf0));

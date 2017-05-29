@@ -97,16 +97,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",
 	"PDU",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	SEQUENCE_decode_uper,
-	SEQUENCE_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PDU_tags_1,
 	sizeof(asn_DEF_PDU_tags_1)
 		/sizeof(asn_DEF_PDU_tags_1[0]), /* 1 */
@@ -137,6 +129,8 @@ typedef struct Singleton {
 /*** <<< FUNC-DECLS [Singleton] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Singleton;
+extern asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1;
+extern asn_TYPE_member_t asn_MBR_Singleton_1[1];
 
 /*** <<< STAT-DEFS [Singleton] >>> ***/
 
@@ -166,7 +160,7 @@ static int asn_DFL_2_set(int set_value, void **sptr) {
 	}
 	
 }
-static asn_TYPE_member_t asn_MBR_Singleton_1[] = {
+asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Singleton, opt_z),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -184,7 +178,7 @@ static const ber_tlv_tag_t asn_DEF_Singleton_tags_1[] = {
 static const asn_TYPE_tag2member_t asn_MAP_Singleton_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* opt-z */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
 	sizeof(struct Singleton),
 	offsetof(struct Singleton, _asn_ctx),
 	asn_MAP_Singleton_tag2el_1,
@@ -197,16 +191,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Singleton = {
 	"Singleton",
 	"Singleton",
-	SEQUENCE_free,
-	SEQUENCE_print,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	SEQUENCE_decode_uper,
-	SEQUENCE_encode_uper,
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Singleton_tags_1,
 	sizeof(asn_DEF_Singleton_tags_1)
 		/sizeof(asn_DEF_Singleton_tags_1[0]), /* 1 */
@@ -256,6 +242,8 @@ typedef struct PDU_2 {
 /*** <<< FUNC-DECLS [PDU-2] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_PDU_2;
+extern asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1;
+extern asn_TYPE_member_t asn_MBR_PDU_2_1[3];
 
 /*** <<< CTDEFS [PDU-2] >>> ***/
 
@@ -267,7 +255,7 @@ static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 GCC_NOTUSED = {
 
 /*** <<< STAT-DEFS [PDU-2] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
+asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.main),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
@@ -302,7 +290,7 @@ static const asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ext1 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 0, 0, 0 } /* main */
 };
-static asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
+asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 	sizeof(struct PDU_2),
 	offsetof(struct PDU_2, _asn_ctx),
 	offsetof(struct PDU_2, present),
@@ -315,16 +303,8 @@ static asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	"PDU-2",
 	"PDU-2",
-	CHOICE_free,
-	CHOICE_print,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

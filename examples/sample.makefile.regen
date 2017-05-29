@@ -38,7 +38,7 @@ if test ! -f Makefile.am.sample ; then
 	exit 1
 fi
 
-EXTRA_CFLAGS="-DJUNKTEST"
+EXTRA_CFLAGS="-DJUNKTEST ${CFLAGS}"
 test -f config.h && EXTRA_CFLAGS="-DHAVE_CONFIG_H ${EXTRA_CFLAGS}"
 test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAGS}"
 
@@ -62,6 +62,7 @@ set +x
 	echo "	ASN1MODULES=\"${ASN1MODULES}\" \\"
 	echo "	ASN1PDU=${ASN1PDU} \\"
 	echo "	PROGNAME=${PROGNAME} \\"
+	echo "	CFLAGS=\"${CFLAGS}\" \\"
 	echo "	$0"
 	echo
 	echo 'check: ${TARGET} check-ber check-xer check-per'

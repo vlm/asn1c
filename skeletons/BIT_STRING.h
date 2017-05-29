@@ -21,6 +21,8 @@ typedef struct BIT_STRING_s {
 } BIT_STRING_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_BIT_STRING;
+extern asn_TYPE_operation_t asn_OP_BIT_STRING;
+extern asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs;
 
 asn_struct_print_f BIT_STRING_print;	/* Human-readable output */
 asn_constr_check_f BIT_STRING_constraint;

@@ -41,9 +41,7 @@ static volatile double real_zero GCC_NOTUSED = 0.0;
 static const ber_tlv_tag_t asn_DEF_REAL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_REAL = {
-	"REAL",
-	"REAL",
+asn_TYPE_operation_t asn_OP_REAL = {
 	ASN__PRIMITIVE_TYPE_free,
 	REAL_print,
 	asn_generic_no_constraint,
@@ -51,9 +49,20 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	der_encode_primitive,
 	REAL_decode_xer,
 	REAL_encode_xer,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	REAL_decode_uper,
 	REAL_encode_uper,
-	0, /* Use generic outmost tag fetcher */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_REAL = {
+	"REAL",
+	"REAL",
+	&asn_OP_REAL,
+	asn_generic_no_constraint,
 	asn_DEF_REAL_tags,
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
 	asn_DEF_REAL_tags,	/* Same as above */

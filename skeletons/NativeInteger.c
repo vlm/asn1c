@@ -19,9 +19,7 @@
 static const ber_tlv_tag_t asn_DEF_NativeInteger_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
-	"INTEGER",			/* The ASN.1 type is still INTEGER */
-	"INTEGER",
+asn_TYPE_operation_t asn_OP_NativeInteger = {
 	NativeInteger_free,
 	NativeInteger_print,
 	asn_generic_no_constraint,
@@ -29,9 +27,20 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
-	NativeInteger_encode_uper,	/* Unaligned PER encoder */
-	0, /* Use generic outmost tag fetcher */
+	NativeInteger_encode_uper,
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
+	"INTEGER",			/* The ASN.1 type is still INTEGER */
+	"INTEGER",
+	&asn_OP_NativeInteger,
+	asn_generic_no_constraint,
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
 	asn_DEF_NativeInteger_tags,	/* Same as above */
@@ -153,7 +162,7 @@ NativeInteger_encode_der(asn_TYPE_descriptor_t *sd, void *ptr,
 	tmp.buf = buf;
 	tmp.size = sizeof(buf);
 #endif	/* WORDS_BIGENDIAN */
-	
+
 	/* Encode fake INTEGER */
 	erval = INTEGER_encode_der(sd, &tmp, tag_mode, tag, cb, app_key);
 	if(erval.encoded == -1) {
@@ -182,7 +191,7 @@ NativeInteger_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	}
 
 	memset(&st, 0, sizeof(st));
-	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr, 
+	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr,
 		opt_mname, buf_ptr, size);
 	if(rval.code == RC_OK) {
 		long l;
@@ -230,6 +239,8 @@ NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	ASN__ENCODED_OK(er);
 }
+
+#ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
 NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
@@ -290,6 +301,8 @@ NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 	return er;
 }
+
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * INTEGER specific human-readable output.
