@@ -32,6 +32,8 @@ xer_type_encoder_f OCTET_STRING_encode_xer;
 xer_type_encoder_f OCTET_STRING_encode_xer_utf8;
 per_type_decoder_f OCTET_STRING_decode_uper;
 per_type_encoder_f OCTET_STRING_encode_uper;
+oer_type_decoder_f OCTET_STRING_decode_oer;
+oer_type_encoder_f OCTET_STRING_encode_oer;
 
 /******************************
  * Handy conversion routines. *

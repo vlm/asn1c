@@ -115,7 +115,23 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 
 	return accum;
 }
+void per_skip_unused_bits(asn_per_data_t *pd)
+{
+    if (pd->nboff & 0x7 == 0)
+        return;
+    pd->moved += (8 - pd->nboff);
+    pd->nbits -= (8 - pd->nboff);
+    pd->nboff = 0;
+    pd->buffer += 1;
+}
+void per_skip_bytes(asn_per_data_t *pd, int nbytes)
+{
+	assert(pd->nboff % 8 == 0); /* can't skip bytes if in the middle of byte */
 
+    pd->buffer += nbytes;
+    pd->nbits -= nbytes * 8;
+    pd->moved += nbytes * 8;
+}
 /*
  * Extract a large number of bits from the specified PER data pointer.
  */
@@ -315,7 +331,21 @@ int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int
 		return per_put_few_bits(po, v, 31);
 	}
 }
+/*
+ * flush out current byte (used by OER encoding only )
+ */
+int per_flush_bytes(asn_per_outp_t *po)
+{
+    size_t size = (size_t )(po->buffer - po->tmpspace) + 1;;
 
+	if(po->outper(po->tmpspace, size, po->op_key) < 0)
+		return -1;
+	po->buffer = po->tmpspace;
+	po->nbits = 8 * sizeof(po->tmpspace);
+    po->nboff = 0;
+	po->flushed_bytes += 1;
+    return 0;
+}
 /*
  * Put a small number of bits (<= 31).
  */

@@ -6,6 +6,7 @@
 #include <asn_internal.h>
 #include <constr_SET_OF.h>
 #include <asn_SET_OF.h>
+#include <INTEGER.h>
 
 /*
  * Number of bytes left for this structure.
@@ -951,4 +952,90 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	rv.consumed = 0;
 	return rv;
 }
+asn_dec_rval_t
+SET_OF_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, 
+    const void *ptr, size_t size) {
 
+	asn_dec_rval_t rv;
+    asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elm = td->elements;	/* Single one */
+	void *st = *sptr;
+	asn_anonymous_set_ *list;
+	asn_per_constraint_t *ct;
+	int i;
+	ssize_t lenbytes;
+    ber_tlv_len_t len;
+    unsigned long long nelems;
+	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
+	asn_struct_ctx_t *ctx;	/* Decoder context */
+
+	if(ASN__STACK_OVERFLOW_CHECK(opt_codec_ctx))
+		ASN__DECODE_FAILED;
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(!st) {
+		st = *sptr = CALLOC(1, specs->struct_size);
+		if(!st) ASN__DECODE_FAILED;
+	}                                                                       
+	/*
+	 * Restore parsing context.
+	 */
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
+	list = _A_SET_FROM_VOID(st);
+
+	/* Figure out which constraints to use */
+	if(constraints) ct = &constraints->size;
+	else if(td->per_constraints) ct = &td->per_constraints->size;
+	else ct = 0;
+    
+    lenbytes = ber_fetch_length(0, ptr, size, &len);
+    if (lenbytes < 0)
+        ASN__DECODE_FAILED;
+    else {
+        /* NOTE: after length, it's the 'quantity' field */
+        INTEGER_t st;
+        uint8_t buf[8];
+        assert(len <= 8);
+        st.buf = buf;
+        st.size = len;
+        memcpy(st.buf, ptr + lenbytes, len);
+        asn_INTEGER2ullong(&st, &nelems);
+    }
+
+	ASN_DEBUG("Got to decode %d elements ", (int)nelems);
+			
+    if(nelems < 0) 
+        ASN__DECODE_STARVED;
+
+    ADVANCE(lenbytes + len);	
+    for(i = 0; i < nelems; i++) {
+		void *esptr = 0;
+		ASN_DEBUG("SET OF %s decoding", elm->type->name);
+		rv = elm->type->oer_decoder(opt_codec_ctx, elm->type,
+				elm->per_constraints, &esptr, ptr, size);
+        ADVANCE(rv.consumed);
+		ASN_DEBUG("%s SET OF %s decoded %d, %p",
+				td->name, elm->type->name, rv.code, esptr);
+		if(rv.code == RC_OK) {
+			if(ASN_SET_ADD(list, esptr) == 0)
+				continue;
+			ASN_DEBUG("Failed to add element into %s",
+					td->name);
+			/* Fall through */
+			rv.code = RC_FAIL;
+		} else {
+			ASN_DEBUG("Failed decoding %s of %s (SET OF)",
+				elm->type->name, td->name);
+		}
+		if(esptr) ASN_STRUCT_FREE(*elm->type, esptr);
+		return rv;
+	}
+	ASN_DEBUG("Decoded %s as SET OF", td->name);
+
+	rv.code = RC_OK;
+	rv.consumed = consumed_myself;
+	return rv;
+}

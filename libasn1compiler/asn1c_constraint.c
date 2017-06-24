@@ -351,7 +351,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		}
 		OUT("};\n");
 
-		if((arg->flags & A1C_GEN_PER)
+		if(((arg->flags & A1C_GEN_PER) || (arg->flags & A1C_GEN_OER))
 		&& (etype & ASN_STRING_KM_MASK)) {
 		    int c;
 		    OUT("static const int permitted_alphabet_code2value_%d[%d] = {\n",

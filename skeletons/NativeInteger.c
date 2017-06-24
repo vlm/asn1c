@@ -31,6 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_encode_xer,
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
 	NativeInteger_encode_uper,	/* Unaligned PER encoder */
+	NativeInteger_decode_oer,	/* OER decoder */
+	NativeInteger_encode_oer,	/* OER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
@@ -330,3 +332,86 @@ NativeInteger_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	}
 }
 
+/*
+ * Encode the NativeInteger using the standard INTEGER type DER encoder.
+ */
+asn_enc_rval_t
+NativeInteger_encode_oer(asn_TYPE_descriptor_t *sd, 
+    asn_per_constraints_t *constraints, void *ptr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	unsigned long long native = *(unsigned long long*)ptr;	/* Disable sign ext. */
+	asn_enc_rval_t erval;
+	INTEGER_t tmp;
+
+	ASN_DEBUG("%s %s as NativeInteger",
+		cb?"Encoding":"Estimating", sd->name);
+#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+
+	tmp.buf = (uint8_t *)&native;
+	tmp.size = sizeof(native);
+
+#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
+	uint8_t buf[sizeof(native)];
+	uint8_t *p;
+
+	/* Prepare a fake INTEGER */
+	for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)
+		*p = (uint8_t)native;
+
+	tmp.buf = buf;
+	tmp.size = sizeof(buf);
+#endif	/* WORDS_BIGENDIAN */
+	
+	/* Encode fake INTEGER */
+	erval = INTEGER_encode_oer(sd, constraints, &tmp, cb, app_key);
+	if(erval.encoded == -1) {
+		assert(erval.structure_ptr == &tmp);
+		erval.structure_ptr = ptr;
+	}
+	ASN_DEBUG("Encoded NativeInteger member in %ld octets",
+		(long)erval.encoded);
+	return erval;
+}
+/*
+ * Decode INTEGER type, OER encoded, similar to PER but the native data type if "long long"
+ */
+asn_dec_rval_t
+NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+    asn_per_constraints_t *constraints,
+	void **sptr, const void *buf_ptr, size_t size) {
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+	long long *native = (long long *)*sptr;
+	asn_dec_rval_t rval;
+	INTEGER_t tmpint;
+	void *tmpintptr = &tmpint;
+	/*
+	 * If the structure is not there, allocate it.
+	 */
+	if(native == NULL) {
+		native = (long long *)(*sptr = CALLOC(1, sizeof(*native)));
+		if(native == NULL) {
+			rval.code = RC_FAIL;
+			rval.consumed = 0;
+			return rval;
+		}
+	}
+
+	ASN_DEBUG("Decoding NativeInteger %s ", td->name);
+	
+    memset(&tmpint, 0, sizeof tmpint);
+	rval = INTEGER_decode_oer(opt_codec_ctx, td, constraints,
+				   &tmpintptr, buf_ptr, size);
+	if(rval.code == RC_OK) {
+		if((specs&&specs->field_unsigned)
+			? asn_INTEGER2ullong(&tmpint, (unsigned long *)native)
+			: asn_INTEGER2llong(&tmpint, native))
+			rval.code = RC_FAIL;
+		else
+			ASN_DEBUG("NativeInteger %s got value %lld",
+				td->name, *native);
+	}
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+
+	return rval;
+}

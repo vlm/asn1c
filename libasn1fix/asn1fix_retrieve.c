@@ -287,14 +287,13 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 			break;
 	}
 	if(ref_tc) {
+        /* It is acceptable that we don't use input parameters */
 		if(rhs_pspecs && !ref_tc->lhs_params) {
-			FATAL("Parameterized type %s expected "
+			WARNING("Parameterized type %s expected "
 				"for %s at line %d",
 				ref_tc->Identifier,
 				asn1f_printable_reference(ref),
 				ref->_lineno);
-			errno = EPERM;
-			return NULL;
 		}
 		if(!rhs_pspecs && ref_tc->lhs_params) {
 			FATAL("Type %s expects specialization "

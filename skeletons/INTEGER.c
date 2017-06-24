@@ -31,6 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	INTEGER_decode_uper,	/* Unaligned PER decoder */
 	INTEGER_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+    INTEGER_decode_oer,
+    INTEGER_encode_oer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
@@ -761,7 +763,174 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 }
 
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+static ssize_t INTEGER_oer_size(asn_per_constraint_t *ct)
+{
+    ssize_t size = 0;
+        
+    /* X.696 10.2 */
+    if ((ct->flags & APC_SEMI_CONSTRAINED) ||
+            (ct->flags & APC_CONSTRAINED)) {
 
+        if (ct->lower_bound == 0 && ct->upper_bound == 0)
+            return 0;   /* (0..MAX) */
+
+        if (ct->lower_bound >= 0) {
+            if (ct->upper_bound <= 255)
+                size = 1;
+            else if (ct->upper_bound <= 65535)
+                size = 2;
+            else if (ct->upper_bound <= UINT_MAX)
+                size = 4;
+            else if (ct->upper_bound <= LLONG_MAX) /* should be ULLONG_MAX, but asn1c doesn't handle it, so we limit the implementation here*/
+                size = 8;
+            else 
+                size = 0;   /* variable length is needed */
+        } else {
+            if (ct->lower_bound >= -128 && ct->upper_bound <= 127)
+                size = 1;
+            else if (ct->lower_bound >= -32768 && ct->upper_bound <= 32767)
+                size = 2;
+            else if (ct->lower_bound >= INT_MIN && ct->upper_bound <= INT_MAX)
+                size = 4;
+            else if (ct->lower_bound >= LLONG_MIN && ct->upper_bound <= LLONG_MIN)
+                size = 8;
+            else
+                size = 0;    /* variable length is needed */
+        }
+    }
+
+    return size;
+}
+asn_enc_rval_t
+INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, 
+    asn_app_consume_bytes_f *cb, void *app_key) {
+
+	asn_enc_rval_t rval;
+	INTEGER_t *st = (INTEGER_t *)sptr;
+	asn_per_constraint_t *ct;
+    ssize_t size = 0;
+
+	if(!st || st->size == 0) ASN__ENCODE_FAILED;
+
+	if(!constraints) constraints = td->per_constraints;
+	ct = constraints ? &constraints->value : 0;
+
+	rval.encoded = 0;
+	if(ct) {
+        /* X.696 10.2 */
+        size = INTEGER_oer_size(ct);
+    }
+    
+    if (cb && st->buf && size) {
+        if (cb(st->buf + (sizeof(long long) - size), size, app_key) < 0 ) {
+            rval.encoded = -1;
+            rval.failed_type = td;
+            rval.structure_ptr = sptr;
+            return rval;
+        }
+    } else if(size == 0) {
+        /* Variable size, COER encoding */
+		uint8_t *buf = st->buf;
+		uint8_t *end1 = buf + st->size - 1;
+        uint8_t *lenbuf[8];
+        size_t lenbytes;
+		int shift;
+
+		/* Compute the number of superfluous leading bytes */
+		for(; buf < end1; buf++) {
+			/*
+			 * If the contents octets of an integer value encoding
+			 * consist of more than one octet, then the bits of the
+			 * first octet and bit 8 of the second octet:
+			 * a) shall not all be ones; and
+			 * b) shall not all be zero.
+			 */
+			switch(*buf) {
+			case 0x00: if((buf[1] & 0x80) == 0)
+					continue;
+				break;
+			case 0xff: if((buf[1] & 0x80))
+					continue;
+				break;
+			}
+			break;
+		}
+
+		/* Remove leading superfluous bytes from the integer */
+		shift = buf - st->buf;
+		if(shift) {
+			uint8_t *nb = st->buf;
+			uint8_t *end;
+
+			st->size -= shift;	/* New size, minus bad bytes */
+			end = nb + st->size;
+
+			for(; nb < end; nb++, buf++)
+				*nb = *buf;
+		}
+        /* length bytes */
+        if((lenbytes = der_tlv_length_serialize(st->size, lenbuf, 8)) > 8) {
+            ASN_DEBUG("INTEGER length is too long!\n");
+            ASN__ENCODE_FAILED;
+        }
+        if (cb) {
+            if (cb(lenbuf, lenbytes, app_key) < 0 ) {
+                rval.encoded = -1;
+                rval.failed_type = td;
+                rval.structure_ptr = sptr;
+                return rval;
+            }
+        }
+        rval.encoded += lenbytes;
+        if (cb) {
+            if (cb(st->buf, st->size, app_key) < 0 ) {
+                rval.encoded = -1;
+                rval.failed_type = td;
+                rval.structure_ptr = sptr;
+                return rval;
+            }
+        }
+    } else {
+        assert(st->buf || st->size == 0);
+    }
+
+    rval.encoded += (size ?  size : st->size);
+	ASN__ENCODED_OK(rval);
+}
+asn_dec_rval_t
+INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, const void *buf_ptr, size_t buf_size) {
+	asn_dec_rval_t rval = {RC_OK, 0};
+	INTEGER_t *st = (INTEGER_t *)*sptr;
+	asn_per_constraint_t *ct;
+    ssize_t size = 0;
+
+	if(!st) {
+		st = (INTEGER_t *)(*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) ASN__DECODE_FAILED;
+    }
+
+	if(!constraints) constraints = td->per_constraints;
+	ct = constraints ? &constraints->value : 0;
+	if(ct) {
+        size = INTEGER_oer_size(ct);
+    }
+    if(!size) {
+        ssize_t lenbytes = 0;
+        if ((lenbytes = ber_fetch_length(0, buf_ptr, buf_size, &size)) < 0)
+            ASN__DECODE_FAILED;
+        rval.consumed += lenbytes;
+        buf_ptr += lenbytes;
+    }
+    st->buf = MALLOC(size + 1);
+    st->size = size;
+    memcpy(st->buf, buf_ptr, size);
+    st->buf[size] = '\0';
+    rval.code = RC_OK;
+    rval.consumed += size;
+    return rval;
+}
 int
 asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
 	uint8_t *b, *end;
@@ -821,6 +990,66 @@ asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
 	*lptr = l;
 	return 0;
 }
+int
+asn_INTEGER2llong(const INTEGER_t *iptr, long long *lptr) {
+	uint8_t *b, *end;
+	size_t size;
+	long long l;
+
+	/* Sanity checking */
+	if(!iptr || !iptr->buf || !lptr) {
+		errno = EINVAL;
+		return -1;
+	}
+
+    ASN_DEBUG("asn_INTEGER2llong: buf=%p\n", iptr->buf);
+	/* Cache the begin/end of the buffer */
+	b = iptr->buf;	/* Start of the INTEGER buffer */
+	size = iptr->size;
+	end = b + size;	/* Where to stop */
+
+	if(size > sizeof(long long)) {
+		uint8_t *end1 = end - 1;
+		/*
+		 * Slightly more advanced processing,
+		 * able to >sizeof(long) bytes,
+		 * when the actual value is small
+		 * (0x0000000000abcdef would yield a fine 0x00abcdef)
+		 */
+		/* Skip out the insignificant leading bytes */
+		for(; b < end1; b++) {
+			switch(*b) {
+			case 0x00: if((b[1] & 0x80) == 0) continue; break;
+			case 0xff: if((b[1] & 0x80) != 0) continue; break;
+			}
+			break;
+		}
+
+		size = end - b;
+		if(size > sizeof(long long)) {
+			/* Still cannot fit the long */
+			errno = ERANGE;
+			return -1;
+		}
+	}
+
+	/* Shortcut processing of a corner case */
+	if(end == b) {
+		*lptr = 0;
+		return 0;
+	}
+
+	/* Perform the sign initialization */
+	/* Actually l = -(*b >> 7); gains nothing, yet unreadable! */
+	if((*b >> 7)) l = -1; else l = 0;
+
+	/* Conversion engine */
+	for(; b < end; b++)
+		l = (l << 8) | *b;
+
+	*lptr = l;
+	return 0;
+}
 
 int
 asn_INTEGER2ulong(const INTEGER_t *iptr, unsigned long *lptr) {
@@ -839,6 +1068,38 @@ asn_INTEGER2ulong(const INTEGER_t *iptr, unsigned long *lptr) {
 
 	/* If all extra leading bytes are zeroes, ignore them */
 	for(; size > sizeof(unsigned long); b++, size--) {
+		if(*b) {
+			/* Value won't fit unsigned long */
+			errno = ERANGE;
+			return -1;
+		}
+	}
+
+	/* Conversion engine */
+	for(l = 0; b < end; b++)
+		l = (l << 8) | *b;
+
+	*lptr = l;
+	return 0;
+}
+int
+asn_INTEGER2ullong(const INTEGER_t *iptr, unsigned long long *lptr) {
+	uint8_t *b, *end;
+	unsigned long long l;
+	size_t size;
+
+    ASN_DEBUG("asn_INTEGER2ullong: buf=%p\n", iptr->buf);
+	if(!iptr || !iptr->buf || !lptr) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	b = iptr->buf;
+	size = iptr->size;
+	end = b + size;
+
+	/* If all extra leading bytes are zeroes, ignore them */
+	for(; size > sizeof(unsigned long long); b++, size--) {
 		if(*b) {
 			/* Value won't fit unsigned long */
 			errno = ERANGE;
@@ -878,7 +1139,31 @@ asn_ulong2INTEGER(INTEGER_t *st, unsigned long value) {
 
 	return 0;
 }
+int
+asn_ullong2INTEGER(INTEGER_t *st, unsigned long long value)
+{
+    uint8_t *buf;
+    uint8_t *end;
+    uint8_t *b;
+    int shr;
+    if (value <= ULONG_MAX)
+        return asn_ulong2INTEGER(st, value);
+    buf = (uint8_t *)MALLOC(1 + sizeof(value));
+    if(!buf) return -1;
 
+    end = buf + (sizeof(value) + 1);
+    buf[0] = 0;
+
+	for(b = buf + 1, shr = (sizeof(long long)-1)*8; b < end; shr -= 8, b++)
+		*b = (uint8_t)(value >> shr);
+
+	if(st->buf) FREEMEM(st->buf);
+	st->buf = buf;
+	st->size = 1 + sizeof(value);
+
+	return 0;
+}
+#if 0
 int
 asn_long2INTEGER(INTEGER_t *st, long value) {
 	uint8_t *buf, *bp;
@@ -933,7 +1218,69 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 
 	return 0;
 }
+#endif
+static int
+asn_long2INTEGER_internal(INTEGER_t *st, uint8_t *intp, size_t ints) {
+	uint8_t *buf, *bp;
+	uint8_t *p;
+	uint8_t *pstart;
+	uint8_t *pend1;
+	int littleEndian = 1;	/* Run-time detection */
+	int add;
+	if(!st) {
+		errno = EINVAL;
+		return -1;
+	}
 
+	buf = (uint8_t *)MALLOC(ints);
+	if(!buf) return -1;
+
+	if(*(char *)&littleEndian) {
+		pstart = intp + ints - 1;
+		pend1 = intp;
+		add = -1;
+	} else {
+		pstart = intp;
+		pend1 = pstart + ints - 1;
+		add = 1;
+	}
+
+	/*
+	 * If the contents octet consists of more than one octet,
+	 * then bits of the first octet and bit 8 of the second octet:
+	 * a) shall not all be ones; and
+	 * b) shall not all be zero.
+	 */
+	for(p = pstart; p != pend1; p += add) {
+		switch(*p) {
+		case 0x00: if((*(p+add) & 0x80) == 0)
+				continue;
+			break;
+		case 0xff: if((*(p+add) & 0x80))
+				continue;
+			break;
+		}
+		break;
+	}
+	/* Copy the integer body */
+	for(pstart = p, bp = buf, pend1 += add; p != pend1; p += add)
+		*bp++ = *p;
+
+	if(st->buf) FREEMEM(st->buf);
+	st->buf = buf;
+	st->size = bp - buf;
+
+	return 0;
+}
+
+int
+asn_long2INTEGER(INTEGER_t *st, long value) {
+    return asn_long2INTEGER_internal(st, (uint8_t *)&value, sizeof(long));
+}
+int
+asn_llong2INTEGER(INTEGER_t *st, long long value) {
+    return asn_long2INTEGER_internal(st, (uint8_t *)&value, sizeof(long long));
+}
 /*
  * This function is going to be DEPRECATED soon.
  */
