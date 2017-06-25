@@ -69,6 +69,11 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	pspec->rhs_pspecs = rpc;
 	pspec->my_clone = exc;
 	exc->spec_index = npspecs;
+    /* Passing arguments to members and type references */
+    exc->rhs_pspecs = expr->rhs_pspecs ? expr->rhs_pspecs : rhs_pspecs;
+    TQ_FOR(m, &exc->members, next) {
+           m->rhs_pspecs = exc->rhs_pspecs;
+    }
 
 	/* Passing arguments to members and type references */
 	exc->rhs_pspecs = expr->rhs_pspecs ? expr->rhs_pspecs : rhs_pspecs;

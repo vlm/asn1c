@@ -221,7 +221,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			}
 		}
 
-		if(_format != TNF_RSAFE && terminal && terminal->spec_index != -1) {
+        if(_format != TNF_RSAFE && terminal && terminal->spec_index != -1) {
 			exprid = terminal;
 			typename = 0;
 		}

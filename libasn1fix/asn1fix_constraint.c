@@ -350,25 +350,23 @@ constraint_value_resolve(arg_t *arg,
 
 	return rvalue;
 }
-
 static int
 constraint_object_resolve(arg_t *arg, asn1p_value_t *value) {
-	asn1p_expr_t tmp_expr = *arg->expr;
-	asn1p_expr_t *saved_expr = arg->expr;
+    asn1p_expr_t tmp_expr = *arg->expr;
+    asn1p_expr_t *saved_expr = arg->expr;
 
-	tmp_expr.meta_type = AMT_VALUE;
-	tmp_expr.expr_type = A1TC_REFERENCE;
-	tmp_expr.value = value;
-	arg->expr = &tmp_expr;
+    tmp_expr.meta_type = AMT_VALUE;
+    tmp_expr.expr_type = A1TC_REFERENCE;
+    tmp_expr.value = value;
+    arg->expr = &tmp_expr;
 
-	if (asn1f_check_class_object(arg)) {
-		arg->expr = saved_expr;
-		FATAL("Parsing ObjectSet %s failed at %d", arg->expr->Identifier,
-				arg->expr->_lineno);
-		return -1;
-	}
+    if (asn1f_parse_class_object(arg)) {
+        arg->expr = saved_expr;
+        FATAL("Parsing ObjectSet %s failed at %d", arg->expr->Identifier,
+                arg->expr->_lineno);
+        return -1;
+    }
 
-	arg->expr = saved_expr;
-	return 0;
+    arg->expr = saved_expr;
+    return 0;
 }
-
