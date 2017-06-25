@@ -1618,6 +1618,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/* Handle extensions */
 	if(specs->ext_before >= 0) {
 		extpresent = per_get_few_bits(&pd, 1);
+        ASN_DEBUG("extpresent=%d\n",extpresent);
 		if(extpresent < 0) ASN__DECODE_STARVED;
 	} else {
 		extpresent = 0;
@@ -1643,7 +1644,9 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	} else {
 		opres = 0;
 	}
-
+    /*If there are extension, but no presence bitmap, we'd have only processed 1 bit, so we need to align it to byte*/
+    per_skip_unused_bits(&pd);
+    ASN_DEBUG("pd.nboff=%d pd.moved=%d\n", pd.nboff, pd.moved);
 	/*
 	 * Get the sequence ROOT elements.
 	 */
@@ -1686,7 +1689,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		/* Fetch the member from the stream */
-		ASN_DEBUG("Decoding member %s in %s", elm->name, td->name);
+		ASN_DEBUG("Decoding member %s in %s as %s", elm->name, td->name, elm->type->name);
 #if 0
 		ASN_DEBUG("Before decoding member %s in %s buf_ptr=%p", 
                 elm->name, td->name,pd.buffer );
