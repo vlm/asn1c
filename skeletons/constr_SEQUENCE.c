@@ -1500,7 +1500,7 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
         
 	}
     /* special to OER, align the octet */
-    if (specs->roms_count) {
+    if ((specs->roms_count) || (specs->ext_before >= 0)) {
         if (per_flush_bytes(&po) < 0)
             ASN__ENCODE_FAILED;
     }

@@ -776,6 +776,12 @@ static ssize_t INTEGER_oer_size(asn_per_constraint_t *ct)
             return 0;   /* (0..MAX) */
 
         if (ct->lower_bound >= 0) {
+           if (ct->upper_bound < ct->lower_bound) {
+                /* 32 bit machine, upper bound is bigger then 4 bytes integer */
+                size = 8;
+                return size;
+            }
+
             if (ct->upper_bound <= 255)
                 size = 1;
             else if (ct->upper_bound <= 65535)
