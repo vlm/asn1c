@@ -306,8 +306,8 @@ NativeInteger_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
-
-	if(native) {
+	
+    if(native) {
 		ret = snprintf(scratch, sizeof(scratch),
 			(specs && specs->field_unsigned)
 			? "%lu" : "%ld", *native);
@@ -381,10 +381,14 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
     asn_per_constraints_t *constraints,
 	void **sptr, const void *buf_ptr, size_t size) {
 	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+    asn_per_constraint_t *ct;
 	long long *native = (long long *)*sptr;
 	asn_dec_rval_t rval;
 	INTEGER_t tmpint;
 	void *tmpintptr = &tmpint;
+	
+    if(!constraints) constraints = td->per_constraints;
+	ct = constraints ? &constraints->value : 0;
 	/*
 	 * If the structure is not there, allocate it.
 	 */
@@ -407,6 +411,12 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
 			? asn_INTEGER2ullong(&tmpint, (unsigned long *)native)
 			: asn_INTEGER2llong(&tmpint, native))
 			rval.code = RC_FAIL;
+        else if (ct) {
+            if (ct->lower_bound >= 0)
+                asn_INTEGER2ullong(&tmpint, (unsigned long *)native);
+            else
+                asn_INTEGER2llong(&tmpint, native);
+        }
 		else
 			ASN_DEBUG("NativeInteger %s got value %lld",
 				td->name, *native);
