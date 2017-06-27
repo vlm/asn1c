@@ -195,6 +195,9 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			OUT("1 /* No applicable constraints whatsoever */");
 			OUT(") {\n");
 			INDENT(-1);
+			if(produce_st) {
+				INDENTED(OUT("(void)st; /* Unused variable */\n"));
+			}
 			INDENTED(OUT("/* Nothing is here. See below */\n"));
 			OUT("}\n");
 			OUT("\n");

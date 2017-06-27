@@ -159,6 +159,7 @@ CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
+		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
