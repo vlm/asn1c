@@ -14,10 +14,19 @@ extern "C" {
 typedef OCTET_STRING_t BMPString_t;  /* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_BMPString;
+extern asn_OCTET_STRING_specifics_t asn_SPC_BMPString_specs;
 
 asn_struct_print_f BMPString_print;	/* Human-readable output */
 xer_type_decoder_f BMPString_decode_xer;
 xer_type_encoder_f BMPString_encode_xer;
+
+#define BMPString_free        OCTET_STRING_free
+#define BMPString_print       BMPString_print
+#define BMPString_constraint  asn_generic_no_constraint
+#define BMPString_decode_ber  OCTET_STRING_decode_ber
+#define BMPString_encode_der  OCTET_STRING_encode_der
+#define BMPString_decode_uper OCTET_STRING_decode_uper
+#define BMPString_encode_uper OCTET_STRING_encode_uper
 
 #ifdef __cplusplus
 }

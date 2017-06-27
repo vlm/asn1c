@@ -15,6 +15,16 @@ typedef OCTET_STRING_t VideotexString_t;  /* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_VideotexString;
 
+#define VideotexString_free         OCTET_STRING_free
+#define VideotexString_print        OCTET_STRING_print
+#define VideotexString_constraint   asn_generic_unknown_constraint
+#define VideotexString_decode_ber   OCTET_STRING_decode_ber
+#define VideotexString_encode_der   OCTET_STRING_encode_der
+#define VideotexString_decode_xer   OCTET_STRING_decode_xer_hex
+#define VideotexString_encode_xer   OCTET_STRING_encode_xer
+#define VideotexString_decode_uper  OCTET_STRING_decode_uper
+#define VideotexString_encode_uper  OCTET_STRING_encode_uper
+
 #ifdef __cplusplus
 }
 #endif

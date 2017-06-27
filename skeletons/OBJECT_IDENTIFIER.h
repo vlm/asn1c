@@ -23,6 +23,12 @@ der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
 xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
 
+#define OBJECT_IDENTIFIER_free           ASN__PRIMITIVE_TYPE_free
+#define OBJECT_IDENTIFIER_decode_ber     ber_decode_primitive
+#define OBJECT_IDENTIFIER_encode_der     der_encode_primitive
+#define OBJECT_IDENTIFIER_decode_uper    OCTET_STRING_decode_uper
+#define OBJECT_IDENTIFIER_encode_uper    OCTET_STRING_encode_uper
+
 /**********************************
  * Some handy conversion routines *
  **********************************/

@@ -17,6 +17,15 @@ extern asn_TYPE_descriptor_t asn_DEF_NumericString;
 
 asn_constr_check_f NumericString_constraint;
 
+#define NumericString_free           OCTET_STRING_free
+#define NumericString_print          OCTET_STRING_print_utf8
+#define NumericString_decode_ber     OCTET_STRING_decode_ber
+#define NumericString_encode_der     OCTET_STRING_encode_der
+#define NumericString_decode_xer     OCTET_STRING_decode_xer_utf8
+#define NumericString_encode_xer     OCTET_STRING_encode_xer_utf8
+#define NumericString_decode_uper    OCTET_STRING_decode_uper
+#define NumericString_encode_uper    OCTET_STRING_encode_uper
+
 #ifdef __cplusplus
 }
 #endif
