@@ -21,7 +21,7 @@
 #   Test also for gcov program and create GCOV variable that could be
 #   substituted.
 #
-#   Note that all optimisation flags in CFLAGS must be disabled when code
+#   Note that all optimization flags in CFLAGS must be disabled when code
 #   coverage is enabled.
 #
 #   Usage example:
@@ -44,11 +44,6 @@
 #   check-code-coverage` in that directory will run the module's test suite
 #   (`make check`) and build a code coverage report detailing the code which
 #   was touched, then print the URI for the report.
-#
-#   In earlier versions of this macro, CODE_COVERAGE_LDFLAGS was defined
-#   instead of CODE_COVERAGE_LIBS. They are both still defined, but use of
-#   CODE_COVERAGE_LIBS is preferred for clarity; CODE_COVERAGE_LDFLAGS is
-#   deprecated. They have the same value.
 #
 #   This code was derived from Makefile.decl in GLib, originally licenced
 #   under LGPLv2.1+.
@@ -75,7 +70,7 @@
 #   You should have received a copy of the GNU Lesser General Public License
 #   along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-#serial 21
+#serial 23
 
 AC_DEFUN([AX_CODE_COVERAGE],[
 	dnl Check for --enable-code-coverage
@@ -123,12 +118,19 @@ AC_DEFUN([AX_CODE_COVERAGE],[
 		])
 
 		dnl Build the code coverage flags
-		dnl Define CODE_COVERAGE_LDFLAGS for backwards compatibility
 		CODE_COVERAGE_CPPFLAGS="-DNDEBUG"
-		CODE_COVERAGE_CFLAGS="-O0 -g -fprofile-arcs -ftest-coverage"
-		CODE_COVERAGE_CXXFLAGS="-O0 -g -fprofile-arcs -ftest-coverage"
-		CODE_COVERAGE_LIBS="-lgcov"
-		CODE_COVERAGE_LDFLAGS="$CODE_COVERAGE_LIBS"
+		AX_CHECK_COMPILE_FLAG([-coverage], [
+			CODE_COVERAGE_CFLAGS="-O0 -g -coverage"
+			CODE_COVERAGE_CXXFLAGS="-O0 -g -coverage"
+			CODE_COVERAGE_LDFLAGS="-coverage"
+			CODE_COVERAGE_LIBS=""
+		], [
+			CODE_COVERAGE_CFLAGS="-O0 -g -fprofile-arcs -ftest-coverage"
+			CODE_COVERAGE_CXXFLAGS="-O0 -g -fprofile-arcs -ftest-coverage"
+			CODE_COVERAGE_LIBS="-lgcov"
+			dnl Define CODE_COVERAGE_LDFLAGS for backwards compatibility
+			CODE_COVERAGE_LDFLAGS="$CODE_COVERAGE_LIBS"
+		])
 
 		AC_SUBST([CODE_COVERAGE_CPPFLAGS])
 		AC_SUBST([CODE_COVERAGE_CFLAGS])
@@ -218,7 +220,7 @@ CODE_COVERAGE_LCOV_RMOPTS ?= $(CODE_COVERAGE_LCOV_RMOPTS_DEFAULT)
 CODE_COVERAGE_GENHTML_OPTIONS_DEFAULT ?=\
 $(if $(CODE_COVERAGE_BRANCH_COVERAGE),\
 --rc genhtml_branch_coverage=$(CODE_COVERAGE_BRANCH_COVERAGE))
-CODE_COVERAGE_GENHTML_OPTIONS ?= $(CODE_COVERAGE_GENHTML_OPTIONS_DEFAULTS)
+CODE_COVERAGE_GENHTML_OPTIONS ?= $(CODE_COVERAGE_GENHTML_OPTIONS_DEFAULT)
 CODE_COVERAGE_IGNORE_PATTERN ?=
 
 code_coverage_v_lcov_cap = $(code_coverage_v_lcov_cap_$(V))

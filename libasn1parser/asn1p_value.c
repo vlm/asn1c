@@ -83,6 +83,7 @@ asn1p_value_frombits(uint8_t *bits, int size_in_bits, int do_copy) {
 		return NULL;
 	}
 }
+
 asn1p_value_t *
 asn1p_value_frombuf(char *buffer, int size, int do_copy) {
 	if(buffer) {

@@ -252,6 +252,7 @@ typedef struct asn1p_expr_s {
 	  TM_RECURSION	= (1<<0), /* Used to break recursion */
 	  TM_BROKEN	= (1<<1), /* A warning was already issued */
 	  TM_PERFROMCT	= (1<<2), /* PER FROM() constraint tables emitted */
+	  TM_NAMECLASH	= (1<<3)  /* Name clash found, need to add module name to resolve */
 	} _mark;
 
 	/*
@@ -284,5 +285,12 @@ void asn1p_expr_free(asn1p_expr_t *expr);
 
 #define	TAG2STRING_BUFFER_SIZE	64	/* buf should be at least this big */
 char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *opt_buf);
+
+#define MODULE_NAME_OF(expr) \
+		((!expr) ? "" : \
+			(!(expr->_mark & TM_NAMECLASH) ? "" : \
+				(!expr->module ? "" : expr->module->ModuleName))), \
+		((!expr) ? "" : \
+			(!(expr->_mark & TM_NAMECLASH) ? "" : "_"))
 
 #endif	/* ASN1_PARSER_EXPR_H */

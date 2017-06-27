@@ -12,6 +12,7 @@ typedef struct asn1p_ioc_row_s {
 	struct asn1p_ioc_cell_s {
 		struct asn1p_expr_s *field;	/* may never be NULL */
 		struct asn1p_expr_s *value;	/* may be left uninitialized */
+		int new_ref;
 	} *column;
 	int columns;
 	int max_identifier_length;
@@ -47,6 +48,8 @@ typedef struct asn1p_wsyntx_chunk_s {
 } asn1p_wsyntx_chunk_t;
 
 typedef struct asn1p_wsyntx_s {
+
+	struct asn1p_wsyntx_chunk_s *parent;
 
 	TQ_HEAD(struct asn1p_wsyntx_chunk_s) chunks;
 

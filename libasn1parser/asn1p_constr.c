@@ -7,12 +7,13 @@
 #include "asn1parser.h"
 
 asn1p_constraint_t *
-asn1p_constraint_new(int _lineno) {
+asn1p_constraint_new(int _lineno, asn1p_module_t *mod) {
 	asn1p_constraint_t *ct;
 
 	ct = calloc(1, sizeof(*ct));
 	if(ct) {
 		ct->_lineno = _lineno;
+		ct->module = mod;
 	}
 
 	return ct;
@@ -58,7 +59,7 @@ asn1p_constraint_clone_with_resolver(asn1p_constraint_t *src,
 			}						\
 		} } while(0)
 
-	clone = asn1p_constraint_new(src->_lineno);
+	clone = asn1p_constraint_new(src->_lineno, src->module);
 	if(clone) {
 		unsigned int i;
 
@@ -117,6 +118,7 @@ asn1p_constraint_insert(asn1p_constraint_t *into, asn1p_constraint_t *what) {
 		return -1;
 
 	into->elements[into->el_count++] = what;
+	what->parent_ct = into;
 
 	return 0;
 }
@@ -134,6 +136,7 @@ asn1p_constraint_prepend(asn1p_constraint_t *before, asn1p_constraint_t *what) {
 
 	before->elements[0] = what;
 	before->el_count++;
+	what->parent_ct = before;
 
 	return 0;
 }
