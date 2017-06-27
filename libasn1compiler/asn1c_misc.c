@@ -93,17 +93,17 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	if(prefix)
 		size += 1 + strlen(prefix);
 	/*
-	 * Make sure we have this amount of storage.
+	 * Make sure we have the required amount of storage.
 	 */
 	if(storage_size <= size) {
-		if(storage) free(storage);
-		storage = malloc(size + 1);
-		if(storage) {
-			storage_size = size + 1;
-		} else {
-			storage_size = 0;
-			return NULL;
-		}
+        char *tmp = malloc(size + 1);
+        if(tmp) {
+            free(storage);
+            storage = tmp;
+            storage_size = size + 1;
+        } else {
+            return NULL;
+        }
 	}
 
 	/*
