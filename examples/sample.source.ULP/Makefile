@@ -234,7 +234,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = ulp-dump
-CFLAGS += -DASN_CONVERTER_TITLE="OMA UserPlane Location Protocol decoder" -DHAVE_CONFIG_H -DJUNKTEST -DPDU=ULP_PDU -DASN_PDU_COLLECTION -I.
+CFLAGS += -DASN_CONVERTER_TITLE="OMA UserPlane Location Protocol decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE -DPDU=ULP_PDU -DASN_PDU_COLLECTION -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: ULP-PDU.c $(TARGET)
@@ -269,6 +269,7 @@ regen-makefile:
 	ASN1MODULES="../ulp.asn1" \
 	ASN1PDU=ULP-PDU \
 	PROGNAME=ulp-dump \
+	CFLAGS="" \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-per
