@@ -203,7 +203,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 			OUT("\t/* This list is extensible */\n");
 		OUT("};\n");
 
-		OUT("static const asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
+		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr), expr->_type_unique_index);
 		INDENT(+1);
 		OUT("asn_MAP_%s_value2enum_%d,\t"
@@ -235,7 +235,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	if(expr->expr_type == ASN_BASIC_INTEGER
 	&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN) {
 		REDIR(OT_STAT_DEFS);
-		OUT("static const asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
+		OUT("static asn_INTEGER_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr), expr->_type_unique_index);
 		INDENT(+1);
 		OUT("0,\t");

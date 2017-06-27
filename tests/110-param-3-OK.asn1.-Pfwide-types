@@ -218,7 +218,7 @@ static const unsigned int asn_MAP_field_enum2value_7[] = {
 	1,	/* green(4) */
 	0	/* red(3) */
 };
-static const asn_INTEGER_specifics_t asn_SPC_field_specs_7 = {
+static asn_INTEGER_specifics_t asn_SPC_field_specs_7 = {
 	asn_MAP_field_value2enum_7,	/* "tag" => N; sorted by tag */
 	asn_MAP_field_enum2value_7,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
