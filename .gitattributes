@@ -1,0 +1,2 @@
+Makefile.am text eol=lf
+configure.ac text eol=lf
