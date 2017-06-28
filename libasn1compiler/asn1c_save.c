@@ -89,7 +89,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
 				safe_fprintf(mkf, "\t\\\n\t%s.c",
-				arg->expr->Identifier);
+				asn1c_make_identifier(AMI_MASK_ONLY_SPACES, arg->expr, 0));
 			}
 		}
 	}
@@ -99,7 +99,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
 				safe_fprintf(mkf, "\t\\\n\t%s.h",
-				arg->expr->Identifier);
+				asn1c_make_identifier(AMI_MASK_ONLY_SPACES, arg->expr, 0));
 			}
 		}
 	}
@@ -149,6 +149,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			safe_fprintf(mkf, "ASN_%s_%s+=%s\n",
 				what_class, what_kind, fname);
 		}
+
+		asn1c_deps_freelist(deps);
+		asn1c_deps_freelist(dlist);
 	}
 
 	if(need_to_generate_pdu_collection(arg)) {
@@ -242,6 +245,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	char *header_id;
 	const char *c_retained = "";
 	const char *h_retained = "";
+	char *filename;
 
 	if(cs == NULL) {
 		safe_fprintf(stderr, "Cannot compile %s at line %d\n",
@@ -249,8 +253,9 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		return -1;
 	}
 
-	fp_c = asn1c_open_file(expr->Identifier, ".c", &tmpname_c);
-	fp_h = asn1c_open_file(expr->Identifier, ".h", &tmpname_h);
+	filename = strdup(asn1c_make_identifier(AMI_MASK_ONLY_SPACES, expr, (char*)0));
+	fp_c = asn1c_open_file(filename, ".c", &tmpname_c);
+	fp_h = asn1c_open_file(filename, ".h", &tmpname_h);
 	if(fp_c == NULL || fp_h == NULL) {
 		if(fp_c) { unlink(tmpname_c); free(tmpname_c); fclose(fp_c); }
 		if(fp_h) { unlink(tmpname_h); free(tmpname_h); fclose(fp_h); }
@@ -283,6 +288,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	safe_fprintf(fp_h, "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
 	SAVE_STREAM(fp_h, OT_DEPS,	"Dependencies", 0);
 	SAVE_STREAM(fp_h, OT_FWD_DECLS,	"Forward declarations", 0);
+	SAVE_STREAM(fp_h, OT_FWD_DEFS,	"Forward definitions", 0);
 	SAVE_STREAM(fp_h, OT_TYPE_DECLS, expr->Identifier, 0);
 	SAVE_STREAM(fp_h, OT_FUNC_DECLS,"Implementation", 0);
 	safe_fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n");
@@ -293,7 +299,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	safe_fprintf(fp_h, "\n#endif\t/* _%s_H_ */\n", header_id);
 
 	HINCLUDE("asn_internal.h");
-	safe_fprintf(fp_c, "#include \"%s.h\"\n\n", expr->Identifier);
+	safe_fprintf(fp_c, "#include \"%s.h\"\n\n", filename);
 	if(arg->flags & A1C_NO_INCLUDE_DEPS)
 		SAVE_STREAM(fp_c, OT_POST_INCLUDE, "", 1);
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
@@ -305,14 +311,14 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
 		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 11);	/* Protection from reckless changes */
+	assert(OT_MAX == 12);	/* Protection from reckless changes */
 
 	fclose(fp_c);
 	fclose(fp_h);
 
-	name_buf = alloca(strlen(expr->Identifier) + 3);
+	name_buf = alloca(strlen(filename) + 3);
 
-	sprintf(name_buf, "%s.c", expr->Identifier);
+	sprintf(name_buf, "%s.c", filename);
 	if(identical_files(name_buf, tmpname_c)) {
 		c_retained = " (contents unchanged)";
 		unlink(tmpname_c);
@@ -326,7 +332,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		}
 	}
 
-	sprintf(name_buf, "%s.h", expr->Identifier);
+	sprintf(name_buf, "%s.h", filename);
 	if(identical_files(name_buf, tmpname_h)) {
 		h_retained = " (contents unchanged)";
 		unlink(tmpname_h);
@@ -344,9 +350,10 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	free(tmpname_h);
 
 	safe_fprintf(stderr, "Compiled %s.c%s\n",
-		expr->Identifier, c_retained);
+		filename, c_retained);
 	safe_fprintf(stderr, "Compiled %s.h%s\n",
-		expr->Identifier, h_retained);
+		filename, h_retained);
+	free(filename);
 	return 0;
 }
 

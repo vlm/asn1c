@@ -83,6 +83,7 @@ asn1p_value_frombits(uint8_t *bits, int size_in_bits, int do_copy) {
 		return NULL;
 	}
 }
+
 asn1p_value_t *
 asn1p_value_frombuf(char *buffer, int size, int do_copy) {
 	if(buffer) {
@@ -138,6 +139,7 @@ asn1p_value_fromtype(asn1p_expr_t *expr) {
 	if(v) {
 		v->value.v_type = expr;
 		v->type = ATV_TYPE;
+		expr->ref_cnt++;
 	}
 	return v;
 }
@@ -258,6 +260,7 @@ asn1p_value_free(asn1p_value_t *v) {
 			asn1p_value_free(v->value.choice_identifier.value);
 			break;
 		}
+		memset(v, 0, sizeof(*v));
 		free(v);
 	}
 }

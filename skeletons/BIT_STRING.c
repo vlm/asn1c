@@ -12,7 +12,7 @@
 static const ber_tlv_tag_t asn_DEF_BIT_STRING_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
 };
-static asn_OCTET_STRING_specifics_t asn_DEF_BIT_STRING_specs = {
+static asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs = {
 	sizeof(BIT_STRING_t),
 	offsetof(BIT_STRING_t, _asn_ctx),
 	ASN_OSUBV_BIT
@@ -47,7 +47,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
-	&asn_DEF_BIT_STRING_specs
+	&asn_SPC_BIT_STRING_specs
 };
 
 /*

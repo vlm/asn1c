@@ -1,0 +1,28 @@
+ModuleTestClass { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 18 }
+DEFINITIONS ::=
+BEGIN
+
+AlphaNumeric ::= IA5String (FROM("A".."Z" | "a".."z" | "0".."9"))
+
+FUNCTION ::= CLASS {
+    &code	 INTEGER (0..MAX) UNIQUE,
+    &Alphabet	 IA5String DEFAULT {AlphaNumeric},
+    &ArgType	,
+    &SupportedArguments	 &ArgType OPTIONAL,
+    &ResultType	 DEFAULT NULL,
+    &result-if-error	 &ResultType DEFAULT NULL,
+    &associated-function	 FUNCTION OPTIONAL
+}
+
+operator-plus FUNCTION ::= {
+		&ArgType		Pair,
+		&SupportedArguments	{ PosPair | NegPair }
+		&ResultType		INTEGER,
+		&result-if-error	0,
+		&code			1
+	}
+
+FunctionCodeType ::= FUNCTION.&code
+
+END

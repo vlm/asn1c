@@ -1,0 +1,15 @@
+ModuleClassSample { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 100 }
+DEFINITIONS ::=
+BEGIN
+
+REF-ID ::= TYPE-IDENTIFIER
+
+RefID ::= SEQUENCE {
+    field	 REF-ID.&id,
+    params	 REF-ID.&Type
+}
+
+SupportedReferences REF-ID ::= {...}
+
+END

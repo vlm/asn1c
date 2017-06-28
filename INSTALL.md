@@ -3,6 +3,8 @@
 
 ### Configure
 
+See [REQUIREMENTS.md](REQUIREMENTS.md) for the complete list of dependencies.
+
 Configure with the default settings:
 
     test -f configure || autoreconf -iv

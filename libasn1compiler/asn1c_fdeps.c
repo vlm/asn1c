@@ -140,6 +140,16 @@ asn1c_new_dep(const char *filename) {
 	return d;
 }
 
+static void
+asn1c_free_dep(asn1c_fdeps_t *d) {
+
+	if(d) {
+		if(d->filename) free(d->filename);
+		d->filename = 0;
+		free(d);
+	}
+}
+
 static int
 asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d) {
 	int n;
@@ -180,7 +190,9 @@ asn1c_deps_makelist(asn1c_fdeps_t *deps) {
 	if(deps->filename && deps->usage != FDEP_NOTUSED) {
 		d = asn1c_new_dep(deps->filename);
 		d->usage = deps->usage;
-		asn1c_dep_add(dlist, d);
+		if(!asn1c_dep_add(dlist, d)) {
+			asn1c_free_dep(d);
+		}
 	}
 
 	for(i = 0; i < deps->el_count; i++) {
@@ -188,10 +200,28 @@ asn1c_deps_makelist(asn1c_fdeps_t *deps) {
 		d = asn1c_deps_makelist(deps->elements[i]);
 		assert(!d->filename);
 		for(j = 0; j < d->el_count; j++) {
-			asn1c_dep_add(dlist, d->elements[j]);
+			if(asn1c_dep_add(dlist, d->elements[j])) {
+				d->elements[j] = 0;
+			}
 		}
+		asn1c_deps_freelist(d);
 	}
 
 	return dlist;
 }
 
+void
+asn1c_deps_freelist(asn1c_fdeps_t *deps) {
+	if(deps) {
+		int i;
+		if(deps->elements) {
+			for(i = 0; i < deps->el_count; i++) {
+				asn1c_deps_freelist(deps->elements[i]);
+				deps->elements[i] = 0;
+			}
+			free(deps->elements);
+			deps->elements = 0;			
+		}
+		asn1c_free_dep(deps);
+	}
+}

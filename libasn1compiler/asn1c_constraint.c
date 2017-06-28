@@ -35,6 +35,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	int alphabet_table_compiled;
 	int produce_st = 0;
 	int ulong_optimize = 0;
+	int ret = 0;
 
 	ct = expr->combined_constraints;
 	if(ct == NULL)
@@ -158,7 +159,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		OUT("\n");
 		OUT("/* Constraint check succeeded */\n");
 		OUT("return 0;\n");
-		return 0;
+		goto end;
 	}
 
 	/*
@@ -194,10 +195,14 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			OUT("1 /* No applicable constraints whatsoever */");
 			OUT(") {\n");
 			INDENT(-1);
+			if(produce_st) {
+				INDENTED(OUT("(void)st; /* Unused variable */\n"));
+			}
 			INDENTED(OUT("/* Nothing is here. See below */\n"));
 			OUT("}\n");
 			OUT("\n");
-			return 1;
+			ret = 1;
+			goto end;
 		}
 	INDENT(-1);
 	OUT(") {\n");
@@ -222,7 +227,11 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		INDENT(-1);
 	OUT("}\n");
 
-	return 0;
+end:
+	if (r_value) asn1constraint_range_free(r_value);
+	if (r_size) asn1constraint_range_free(r_size);
+
+	return ret;
 }
 
 static int
@@ -261,6 +270,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 		 */
 		assert(range->el_count == 0);
 		/* The full range is specified. Ignore it. */
+		asn1constraint_range_free(range);
 		return 0;
 	}
 

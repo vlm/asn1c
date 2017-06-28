@@ -40,12 +40,12 @@ typedef	intmax_t asn1c_integer_t;
 
 #include "asn1p_list.h"
 #include "asn1p_oid.h"		/* Object identifiers (OIDs) */
+#include "asn1p_module.h"	/* ASN.1 definition module */
 #include "asn1p_ref.h"		/* References to custom types */
 #include "asn1p_value.h"	/* Value definition */
 #include "asn1p_param.h"	/* Parameterization */
 #include "asn1p_constr.h"	/* Type Constraints */
 #include "asn1p_xports.h"	/* IMports/EXports */
-#include "asn1p_module.h"	/* ASN.1 definition module */
 #include "asn1p_class.h"	/* CLASS-related stuff */
 #include "asn1p_expr.h"		/* A single ASN.1 expression */
 
@@ -70,5 +70,6 @@ asn1p_t	*asn1p_parse_buffer(const char *buffer, int size /* = -1 */,
 	enum asn1p_flags);
 
 int asn1p_atoi(const char *ptr, asn1c_integer_t *r_value);
+int asn1p_lex_destroy();
 
 #endif	/* ASN1PARSER_H */

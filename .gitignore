@@ -55,6 +55,8 @@ doc/docsrc/*.xdv
 /examples/*/*.h
 /examples/*/*dump
 /examples/*/.tmp.*
+!/examples/*/Makefile
+!/examples/*/config.h
 
 # /libasn1compiler/
 /libasn1compiler/check_compiler
@@ -68,3 +70,6 @@ doc/docsrc/*.xdv
 # /skeletons/tests/
 /skeletons/tests/check-*
 
+#code coverage
+*.gcno
+*.gcda

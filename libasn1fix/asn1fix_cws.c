@@ -6,6 +6,48 @@ static int _asn1f_parse_class_object_data(arg_t *, asn1p_expr_t *eclass,
 		uint8_t *buf, const uint8_t *bend,
 		int optional_mode, uint8_t **newpos);
 static int _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_ioc_cell_s *cell, uint8_t *buf, const uint8_t *bend);
+static asn1p_wsyntx_chunk_t *asn1f_next_literal_chunk(asn1p_wsyntx_t *syntax, asn1p_wsyntx_chunk_t *chunk, uint8_t *buf);
+
+int
+asn1f_check_class_object(arg_t *arg) {
+	asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *eclass;
+	asn1p_ioc_row_t *row;
+	int ret;
+
+	if(expr->meta_type != AMT_VALUE
+	|| expr->expr_type != A1TC_REFERENCE
+	|| !expr->value
+	|| expr->value->type != ATV_UNPARSED)
+		return 0;
+
+	eclass = asn1f_find_terminal_type(arg, expr);
+	if(!eclass
+	|| eclass->meta_type != AMT_OBJECTCLASS
+	|| eclass->expr_type != A1TC_CLASSDEF) {
+		return 0;
+	}
+
+	if(!eclass->with_syntax) {
+		DEBUG("Can't process classes without %s just yet",
+			"WITH SYNTAX");
+		return 0;
+	}
+
+	row = asn1p_ioc_row_new(eclass);
+	assert(row);
+
+	ret = _asn1f_parse_class_object_data(arg, eclass, row,
+		eclass->with_syntax,
+		expr->value->value.string.buf + 1,
+		expr->value->value.string.buf
+			+ expr->value->value.string.size - 1,
+		0, 0);
+
+	asn1p_ioc_row_delete(row);
+
+	return ret;
+}
 
 int
 asn1f_parse_class_object(arg_t *arg) {
@@ -102,31 +144,24 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 		case WC_WHITESPACE: break;	/* Ignore whitespace */
 		case WC_FIELD: {
 			struct asn1p_ioc_cell_s *cell;
-			int lbraces = 0;
-			uint8_t *p;
+			asn1p_wsyntx_chunk_t *next_literal;
+			uint8_t *buf_old = buf;
+			uint8_t *p = 0;
 
 			SKIPSPACES;
 
-			p = buf;
-			if(p < bend && *p == '{')
-				lbraces = 1, p++;
-			for(; p < bend; p++) {
-				if(lbraces) {
-					/* Search the terminating brace */
-					switch(*p) {
-					case '}': lbraces--; break;
-					case '{': lbraces++; break;
-					}
-				} else if(isspace(*p)) {
-					break;
+			next_literal = asn1f_next_literal_chunk(syntax, chunk, buf);
+			if(!next_literal) {
+				p += (bend - p);
+			} else {
+				p = (uint8_t *)strstr((char *)buf, (char *)next_literal->content.token);
+				if(!p) {
+					if (!optional_mode)
+						FATAL("Next literal \"%s\" not found !", next_literal->content.token);
+
+					if(newpos) *newpos = buf_old;
+					return -1;
 				}
-			}
-			if(lbraces) {
-				FATAL("Field reference %s found in class value definition for %s at line %d can not be satisfied by broken value \"%s\"",
-				chunk->content.token,
-				arg->expr->Identifier, arg->expr->_lineno, buf);
-				if(newpos) *newpos = buf;
-				return -1;
 			}
 			cell = asn1p_ioc_row_cell_fetch(row,
 					chunk->content.token);
@@ -167,10 +202,15 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 static int
 _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_ioc_cell_s *cell,
 		uint8_t *buf, const uint8_t *bend) {
-	asn1p_expr_t *expr;
-	asn1p_ref_t *ref;
+	asn1p_expr_t *expr = (asn1p_expr_t *)NULL;
 	int idLength;
 	char *p;
+	int new_ref = 1;
+	asn1p_t *asn;
+	asn1p_module_t *mod;
+	asn1p_expr_t *type_expr = (asn1p_expr_t *)NULL;
+	int i, ret = 0, psize;
+	char *pp;
 
 	if((bend - buf) <= 0) {
 		FATAL("Assignment warning: empty string is being assigned into %s for %s at line %d",
@@ -183,35 +223,89 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 	assert(p);
 	memcpy(p, buf, bend - buf);
 	p[bend - buf] = '\0';
+	/* remove trailing space */
+	for (i = bend - buf - 1; (i > 0) && isspace(p[i]); i--)
+		p[i] = '\0';
 
-	if(!isalpha(*p)) {
+	/* This value 100 should be larger than following formatting string */
+	psize = bend - buf + 100;
+	pp = malloc(psize);
+	if(pp == NULL) {
+		free(p);
+		return -1;
+	}
 
-		if(isdigit(*p)) {
-			asn1c_integer_t value;
-			if(asn1p_atoi(p, &value)) {
-				FATAL("Value %s at line %d is too large for this compiler! Contact the asn1c author.\n", p, arg->expr->_lineno);
-				return -1;
-			}
-			expr = asn1p_expr_new(arg->expr->_lineno, arg->expr->module);
-			expr->Identifier = p;
-			expr->meta_type = AMT_VALUE; 
-			expr->expr_type = ASN_BASIC_INTEGER;
-			expr->value = asn1p_value_fromint(value);
-		} else {
-			WARNING("asn1c is not yet able to parse arbitrary direct values; try converting %s at line %d to a reference.", p, arg->expr->_lineno);
-			free(p);
-			return 1;
-		}
+	if(cell->field->expr_type == A1TC_CLASSFIELD_TFS) {
+		ret = snprintf(pp, psize,
+			"M DEFINITIONS ::=\nBEGIN\n"
+			"V ::= %s\n"
+			"END\n",
+			p
+		);
+	} else if(cell->field->expr_type == A1TC_CLASSFIELD_FTVFS) {
+		type_expr = TQ_FIRST(&(cell->field->members));
+		ret = snprintf(pp, psize,
+				"M DEFINITIONS ::=\nBEGIN\n"
+				"v %s ::= %s\n"
+				"END\n",
+				type_expr->reference ? 
+					type_expr->reference->components[0].name : 
+					_asn1p_expr_type2string(type_expr->expr_type),
+				p
+			);
 	} else {
-		ref = asn1p_ref_new(arg->expr->_lineno);
-		asn1p_ref_add_component(ref, p, RLT_UNKNOWN);
-		assert(ref);
-	
-		expr = asn1f_lookup_symbol(arg, arg->mod, arg->expr->rhs_pspecs, ref);
-		if(!expr) {
+		WARNING("asn1c only be able to parse TypeFieldSpec and FixedTypeValueFieldSpec. Failed when parsing %s at line %d\n", p, arg->expr->_lineno);
+		free(p);
+		free(pp);
+		return -1;
+	}
+	DEBUG("ASN.1 :\n\n%s\n", pp);
+
+	assert(ret < psize);
+	psize = ret;
+
+	asn = asn1p_parse_buffer(pp, psize, A1P_NOFLAGS);
+	free(pp);
+	if(asn == NULL) {
+		FATAL("Cannot parse Setting token %s "
+			"at line %d",
+			p,
+			arg->expr->_lineno
+		);
+		free(p);
+		return -1;
+	} else {
+		mod = TQ_FIRST(&(asn->modules));
+		assert(mod);
+		expr = TQ_REMOVE(&(mod->members), next);
+		assert(expr);
+
+		free(expr->Identifier);
+		expr->module = arg->expr->module;
+		expr->_lineno = arg->expr->_lineno;
+		if (expr->reference) {
+			expr->reference->module = arg->expr->module;
+			expr->reference->_lineno = arg->expr->_lineno;
+			expr->Identifier = strdup(expr->reference->components[expr->reference->comp_count - 1].name);
+		} else {
+			expr->Identifier = p;
+		}
+		asn1p_delete(asn);
+	}
+
+	if(expr->reference &&
+		!asn1f_lookup_symbol(arg, arg->mod, expr->rhs_pspecs, expr->reference)) {
+
+		asn1p_ref_free(expr->reference);
+		new_ref = 0;
+		expr->reference = type_expr->reference;
+		if (asn1f_value_resolve(arg, expr, 0)) {
+			expr->reference = 0;
+			asn1p_expr_free(expr);
 			FATAL("Cannot find %s referenced by %s at line %d",
 				p, arg->expr->Identifier,
 				arg->expr->_lineno);
+			free(p); /* freeing must happen *after* p was used in FATAL() */
 			return -1;
 		}
 	}
@@ -220,11 +314,43 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_i
 		cell->field->Identifier, p, expr->Identifier);
 
 	cell->value = expr;
+	cell->new_ref = new_ref;
 
 	idLength = strlen(expr->Identifier);
 	if(row->max_identifier_length < idLength)
 		row->max_identifier_length = idLength;
 
+	if(expr->Identifier != p)
+		free(p);
+
 	return 0;
 }
 
+static asn1p_wsyntx_chunk_t *
+asn1f_next_literal_chunk(asn1p_wsyntx_t *syntax, asn1p_wsyntx_chunk_t *chunk, uint8_t *buf)
+{
+	asn1p_wsyntx_chunk_t *next_chunk;
+
+	next_chunk = TQ_NEXT(chunk, next);
+	do {
+		if(next_chunk == (struct asn1p_wsyntx_chunk_s *)0) {
+			if(!syntax->parent)
+				break;
+			next_chunk = TQ_NEXT(syntax->parent, next);
+		} else if(next_chunk->type == WC_LITERAL) {
+			if(strstr((char *)buf, (char *)next_chunk->content.token))
+				break;
+			if(!syntax->parent)
+				break;
+			next_chunk = TQ_NEXT(syntax->parent, next);
+		} else if(next_chunk->type == WC_WHITESPACE) {
+			next_chunk = TQ_NEXT(next_chunk, next);
+		} else if(next_chunk->type == WC_OPTIONALGROUP) {
+			syntax = next_chunk->content.syntax;
+			next_chunk = TQ_FIRST(((&next_chunk->content.syntax->chunks)));
+		} else 
+			break;
+	} while (next_chunk);
+
+	return next_chunk;
+}

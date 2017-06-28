@@ -673,10 +673,8 @@ _range_canonicalize(asn1cnst_range_t *range) {
 			range->right = tmp;
 		}
 
-		if(range->elements) {
-			free(range->elements);
-			range->elements = 0;
-		}
+		free(range->elements);
+		range->elements = 0;
 		range->el_size = 0;
 		return 0;
 	}

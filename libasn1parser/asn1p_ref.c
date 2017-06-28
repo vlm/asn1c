@@ -10,12 +10,13 @@
  * Construct a new empty reference.
  */
 asn1p_ref_t *
-asn1p_ref_new(int _lineno) {
+asn1p_ref_new(int _lineno, asn1p_module_t *mod) {
 	asn1p_ref_t *ref;
 
 	ref = calloc(1, sizeof *ref);
 	if(ref) {
 		ref->_lineno = _lineno;
+		ref->module = mod;
 	}
 
 	return ref;
@@ -118,7 +119,7 @@ asn1p_ref_t *
 asn1p_ref_clone(asn1p_ref_t *ref) {
 	asn1p_ref_t *newref;
 
-	newref = asn1p_ref_new(ref->_lineno);
+	newref = asn1p_ref_new(ref->_lineno, ref->module);
 	if(newref) {
 		int i;
 		for(i = 0; i < ref->comp_count; i++) {

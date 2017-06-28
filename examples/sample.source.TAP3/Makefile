@@ -15,6 +15,8 @@ ASN_MODULE_SOURCES=	\
 	GprsCall.c	\
 	ContentTransaction.c	\
 	LocationService.c	\
+	MessagingEvent.c	\
+	MobileSession.c	\
 	AuditControlInfo.c	\
 	AccessPointNameNI.c	\
 	AccessPointNameOI.c	\
@@ -56,6 +58,7 @@ ASN_MODULE_SOURCES=	\
 	ChargeDetailList.c	\
 	ChargeDetailTimeStamp.c	\
 	ChargedItem.c	\
+	ChargedParty.c	\
 	ChargedPartyEquipment.c	\
 	ChargedPartyHomeIdentification.c	\
 	ChargedPartyHomeIdList.c	\
@@ -115,9 +118,12 @@ ASN_MODULE_SOURCES=	\
 	DiscountValue.c	\
 	DistanceChargeBandCode.c	\
 	EarliestCallTimeStamp.c	\
+	ElementId.c	\
+	ElementType.c	\
 	EquipmentId.c	\
 	EquipmentIdType.c	\
 	Esn.c	\
+	EventReference.c	\
 	ExchangeRate.c	\
 	ExchangeRateCode.c	\
 	FileAvailableTimeStamp.c	\
@@ -179,16 +185,23 @@ ASN_MODULE_SOURCES=	\
 	MessageDescriptionInformation.c	\
 	MessageStatus.c	\
 	MessageType.c	\
+	MessagingEventService.c	\
 	Min.c	\
 	MinChargeableSubscriber.c	\
 	MoBasicCallInformation.c	\
+	MobileSessionService.c	\
 	Msisdn.c	\
 	MtBasicCallInformation.c	\
 	NetworkAccessIdentifier.c	\
+	NetworkElement.c	\
+	NetworkElementList.c	\
 	NetworkId.c	\
 	NetworkInitPDPContext.c	\
 	NetworkLocation.c	\
 	NonChargedNumber.c	\
+	NonChargedParty.c	\
+	NonChargedPartyNumber.c	\
+	NonChargedPublicUserId.c	\
 	NumberOfDecimalPlaces.c	\
 	ObjectType.c	\
 	OperatorSpecInfoList.c	\
@@ -204,6 +217,7 @@ ASN_MODULE_SOURCES=	\
 	PlmnId.c	\
 	PositioningMethod.c	\
 	PriorityCode.c	\
+	PublicUserId.c	\
 	RapFileSequenceNumber.c	\
 	RecEntityCode.c	\
 	RecEntityCodeList.c	\
@@ -221,10 +235,13 @@ ASN_MODULE_SOURCES=	\
 	ScuTimeStamps.c	\
 	ScuChargeableSubscriber.c	\
 	Sender.c	\
+	ServiceStartTimestamp.c	\
 	ServingBid.c	\
 	ServingLocationDescription.c	\
 	ServingNetwork.c	\
 	ServingPartiesInformation.c	\
+	SessionChargeInfoList.c	\
+	SessionChargeInformation.c	\
 	SimChargeableSubscriber.c	\
 	SimToolkitIndicator.c	\
 	SMSDestinationNumber.c	\
@@ -240,6 +257,7 @@ ASN_MODULE_SOURCES=	\
 	Taxation.c	\
 	TaxationList.c	\
 	TaxCode.c	\
+	TaxIndicator.c	\
 	TaxInformation.c	\
 	TaxInformationList.c	\
 	TaxRate.c	\
@@ -324,6 +342,8 @@ ASN_MODULE_HEADERS=	\
 	GprsCall.h	\
 	ContentTransaction.h	\
 	LocationService.h	\
+	MessagingEvent.h	\
+	MobileSession.h	\
 	AuditControlInfo.h	\
 	AccessPointNameNI.h	\
 	AccessPointNameOI.h	\
@@ -365,6 +385,7 @@ ASN_MODULE_HEADERS=	\
 	ChargeDetailList.h	\
 	ChargeDetailTimeStamp.h	\
 	ChargedItem.h	\
+	ChargedParty.h	\
 	ChargedPartyEquipment.h	\
 	ChargedPartyHomeIdentification.h	\
 	ChargedPartyHomeIdList.h	\
@@ -424,9 +445,12 @@ ASN_MODULE_HEADERS=	\
 	DiscountValue.h	\
 	DistanceChargeBandCode.h	\
 	EarliestCallTimeStamp.h	\
+	ElementId.h	\
+	ElementType.h	\
 	EquipmentId.h	\
 	EquipmentIdType.h	\
 	Esn.h	\
+	EventReference.h	\
 	ExchangeRate.h	\
 	ExchangeRateCode.h	\
 	FileAvailableTimeStamp.h	\
@@ -488,16 +512,23 @@ ASN_MODULE_HEADERS=	\
 	MessageDescriptionInformation.h	\
 	MessageStatus.h	\
 	MessageType.h	\
+	MessagingEventService.h	\
 	Min.h	\
 	MinChargeableSubscriber.h	\
 	MoBasicCallInformation.h	\
+	MobileSessionService.h	\
 	Msisdn.h	\
 	MtBasicCallInformation.h	\
 	NetworkAccessIdentifier.h	\
+	NetworkElement.h	\
+	NetworkElementList.h	\
 	NetworkId.h	\
 	NetworkInitPDPContext.h	\
 	NetworkLocation.h	\
 	NonChargedNumber.h	\
+	NonChargedParty.h	\
+	NonChargedPartyNumber.h	\
+	NonChargedPublicUserId.h	\
 	NumberOfDecimalPlaces.h	\
 	ObjectType.h	\
 	OperatorSpecInfoList.h	\
@@ -513,6 +544,7 @@ ASN_MODULE_HEADERS=	\
 	PlmnId.h	\
 	PositioningMethod.h	\
 	PriorityCode.h	\
+	PublicUserId.h	\
 	RapFileSequenceNumber.h	\
 	RecEntityCode.h	\
 	RecEntityCodeList.h	\
@@ -530,10 +562,13 @@ ASN_MODULE_HEADERS=	\
 	ScuTimeStamps.h	\
 	ScuChargeableSubscriber.h	\
 	Sender.h	\
+	ServiceStartTimestamp.h	\
 	ServingBid.h	\
 	ServingLocationDescription.h	\
 	ServingNetwork.h	\
 	ServingPartiesInformation.h	\
+	SessionChargeInfoList.h	\
+	SessionChargeInformation.h	\
 	SimChargeableSubscriber.h	\
 	SimToolkitIndicator.h	\
 	SMSDestinationNumber.h	\
@@ -549,6 +584,7 @@ ASN_MODULE_HEADERS=	\
 	Taxation.h	\
 	TaxationList.h	\
 	TaxCode.h	\
+	TaxIndicator.h	\
 	TaxInformation.h	\
 	TaxInformationList.h	\
 	TaxRate.h	\
@@ -618,8 +654,6 @@ ASN_MODULE_HEADERS=	\
 
 ASN_MODULE_HEADERS+=INTEGER.h
 ASN_MODULE_HEADERS+=NativeEnumerated.h
-ASN_MODULE_HEADERS+=IA5String.h
-ASN_MODULE_SOURCES+=IA5String.c
 ASN_MODULE_SOURCES+=INTEGER.c
 ASN_MODULE_SOURCES+=NativeEnumerated.c
 ASN_MODULE_HEADERS+=NativeInteger.h
@@ -681,7 +715,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = tap3dump
-CFLAGS += -DASN_CONVERTER_TITLE="GSM TAP3 (Transferred Account Procedure, Version 3) decoder" -DHAVE_CONFIG_H -DJUNKTEST -DPDU=DataInterChange -I.
+CFLAGS += -DASN_CONVERTER_TITLE="GSM TAP3 (Transferred Account Procedure, Version 3) decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DPDU=DataInterChange -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: DataInterChange.c $(TARGET)
@@ -716,6 +750,7 @@ regen-makefile:
 	ASN1MODULES="../tap3.asn1" \
 	ASN1PDU=DataInterChange \
 	PROGNAME=tap3dump \
+	CFLAGS="" \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-per

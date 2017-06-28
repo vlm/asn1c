@@ -48,6 +48,7 @@ asn1f_fix_dereference_defaults(arg_t *arg) {
 			child->marker.default_value=expr->marker.default_value;
 			ret = asn1f_fix_dereference_defaults(&tmparg);
 			expr->marker.default_value = child->marker.default_value;
+			child->marker.default_value = 0; /* ULB: trying to ensure there isn't another pointer to the same value object */
 			if(ret == 0) return 0;	/* Finished */
 		}
 

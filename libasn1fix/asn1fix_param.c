@@ -18,6 +18,7 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	resolver_arg_t rarg;	/* resolver argument */
 	asn1p_expr_t *exc;	/* expr clone */
 	asn1p_expr_t *rpc;	/* rhs_pspecs clone */
+	asn1p_expr_t *m;	/* expr members */
 	void *p;
 	struct asn1p_pspec_s *pspec;
 	int npspecs;
@@ -69,6 +70,17 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	pspec->my_clone = exc;
 	exc->spec_index = npspecs;
 
+	/* Passing arguments to members and type references */
+	exc->rhs_pspecs = expr->rhs_pspecs ? expr->rhs_pspecs : rhs_pspecs;
+	if(exc->rhs_pspecs)
+		exc->rhs_pspecs->ref_cnt++;
+
+	TQ_FOR(m, &exc->members, next) {
+		m->rhs_pspecs = exc->rhs_pspecs;
+		if (exc->rhs_pspecs)
+			exc->rhs_pspecs->ref_cnt++;
+	}
+
 	DEBUG("Forked new parameterization for %s", expr->Identifier);
 
 	/* Commit */
@@ -86,7 +98,15 @@ compare_specializations(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 		if(ac == bc) continue;
 		if(ac->meta_type != bc->meta_type) break;
 		if(ac->expr_type != bc->expr_type) break;
-
+		/* Maybe different object sets */
+		if(ac->constraints && bc->constraints
+				&& ac->constraints->containedSubtype
+				&& bc->constraints->containedSubtype
+				&& ac->constraints->containedSubtype->type == ATV_REFERENCED
+				&& bc->constraints->containedSubtype->type == ATV_REFERENCED
+				&& strcmp(ac->constraints->containedSubtype->value.reference->components[0].name,
+						bc->constraints->containedSubtype->value.reference->components[0].name))
+			break;
 		if(!ac->reference && !bc->reference)
 			continue;
 

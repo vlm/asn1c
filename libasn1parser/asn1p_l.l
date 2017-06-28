@@ -209,7 +209,7 @@ WSP	[\t\r\v\f\n ]
 
 '[0-9A-F \t\r\v\f\n]+'H {
 		/* " \t\r\n" weren't allowed in ASN.1:1990. */
-		asn1p_lval.tv_str = yytext;
+		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_hstring;
 	}
 

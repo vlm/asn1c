@@ -5,24 +5,28 @@
 #include <asn1fix_export.h>	/* other exportable stuff from libasn1fix */
 
 /*
- * Checks that the given string is not a reserved C/C++ keyword.
- * ISO/IEC 9899:1999 (C99), A.1.2
+ * Checks that the given string is not a reserved C/C++ keyword [1],[2].
+ * _* keywords not included, since asn1 identifiers cannot begin with hyphen [3]
+ * [1] ISO/IEC 9899:2011 (C11), 6.4.1
+ * [2] ISO/IEC 14882:2014 (C++14), 2.12
+ * [3] ISO/IEC 8824-1:2003 (asn1) 11.3
  */
 static char *res_kwd[] = {
-	"auto", "break", "case", "char", "const", "continue", "default",
-	"do", "double", "else", "enum", "extern", "float", "for", "goto",
-	"if", "inline", "int", "long", "register", "restrict", "return",
-	"short", "signed", "sizeof", "static", "struct", "switch", "typedef",
-	"union", "unsigned", "void", "volatile", "while",
-	"_Bool", "_Complex", "_Imaginary",
-	/* C++ */
-	"class", "explicit", "bool", "mutable", 
-	"template", "typeid", "typename", "and", "and_eq", 
-	"or", "or_eq", "xor", "xor_eq", "not", "not_eq",
-	"bitor", "compl", "bitand",
-	"const_cast", "dynamic_cast", "reinterpret_cast",
-	"static_cast", "true", "false", "namespace", "using",
-	"throw", "try", "catch"
+		/* C */
+	"auto", "break", "case", "char", "const", "continue", "default", "do",
+	"double", "else", "enum", "extern", "float", "for", "goto", "if",
+	"inline", "int", "long", "register", "restrict", "return", "short",
+	"signed", "sizeof", "static", "struct", "switch", "typedef", "union",
+	"unsigned", "void", "volatile", "while",
+		/* C++ */
+	"alignas", "alignof", "and", "and_eq", "asm", "bitand", "bitor", "bool",
+	"catch", "char16_t", "char32_t", "class", "compl", "const_cast",
+	"constexpr", "decltype", "delete", "delete", "dynamic_cast",
+	"explicit", "export", "false", "friend", "mutable", "namespace", "new",
+	"noexcept", "not", "not_eq", "nullptr", "operator", "or", "or_eq",
+	"private", "protected", "public", "reinterpret_cast", "static_assert",
+	"static_cast", "template", "this", "thread_local", "throw", "true", "try",
+	"typeid", "typename", "using", "virtual", "wchar_t", "xor", "xor_eq"
 };
 static int
 reserved_keyword(const char *str) {
@@ -47,9 +51,11 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	char *str;
 	char *nextstr;
 	char *first = 0;
-	char *second = 0;
-	ssize_t size;
+	ssize_t size = 0;
 	char *p;
+	char *prefix = NULL;
+	char *sptr[4], **psptr = &sptr[0];
+	int sptr_cnt = 0;
 
 	if(expr) {
 		/*
@@ -57,16 +63,26 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 		 */
 		if(expr->Identifier == NULL)
 			return "Member";
-		size = strlen(expr->Identifier);
+		/*
+		 * Add MODULE name to resolve clash
+		 */
+		if(expr->_mark & TM_NAMECLASH) {
+			size += strlen(expr->module->ModuleName) + 2;
+			sptr[sptr_cnt++] = expr->module->ModuleName;
+		}
+		sptr[sptr_cnt++] = expr->Identifier;
+
+		size += strlen(expr->Identifier);
 		if(expr->spec_index != -1) {
 			static char buf[32];
-			second = buf;
 			size += 1 + snprintf(buf, sizeof buf, "%dP%d",
 				expr->_lineno, expr->spec_index);
+			sptr[sptr_cnt++] = (char *)&buf;
 		}
 	} else {
 		size = -1;
 	}
+	sptr[sptr_cnt++] = (char *)0;
 
 	va_start(ap, expr);
 	while((str = va_arg(ap, char *)))
@@ -74,18 +90,20 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	va_end(ap);
 	if(size == -1) return NULL;
 
+	if(prefix)
+		size += 1 + strlen(prefix);
 	/*
-	 * Make sure we have this amount of storage.
+	 * Make sure we have the required amount of storage.
 	 */
 	if(storage_size <= size) {
-		free(storage);
-		storage = malloc(size + 1);
-		if(storage) {
-			storage_size = size;
-		} else {
-			storage_size = 0;
-			return NULL;
-		}
+        char *tmp = malloc(size + 1);
+        if(tmp) {
+            free(storage);
+            storage = tmp;
+            storage_size = size + 1;
+        } else {
+            return NULL;
+        }
 	}
 
 	/*
@@ -93,20 +111,19 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	 */
 	va_start(ap, expr);
 	p = storage;
+	if(prefix) {
+		strcpy(storage, prefix);
+		p += strlen(prefix);
+	}
 	nextstr = "";
-	for(p = storage, str = 0; str || nextstr; str = nextstr) {
+	for(str = 0; str || nextstr; str = nextstr) {
 		int subst_made = 0;
-		nextstr = second ? second : va_arg(ap, char *);
+		nextstr = *(psptr) ? *(psptr++) : va_arg(ap, char *);
 
 		if(str == 0) {
-			if(expr) {
-				str = expr->Identifier;
-				first = str;
-				second = 0;
-			} else {
-				first = nextstr;
-				continue;
-			}
+			str = first = nextstr;
+			nextstr = *(psptr) ? *(psptr++) : va_arg(ap, char *);
+			if (!first) continue;
 		}
 
 		if(str[0] == ' ' && str[1] == '\0') {
@@ -155,7 +172,7 @@ char *
 asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	asn1p_expr_t *exprid = 0;
 	asn1p_expr_t *top_parent;
-	asn1p_expr_t *terminal;
+	asn1p_expr_t *terminal = 0;
 	int stdname = 0;
 	char *typename;
 
@@ -204,7 +221,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			}
 		}
 
-		if(terminal && terminal->spec_index != -1) {
+		if(_format != TNF_RSAFE && terminal && terminal->spec_index != -1) {
 			exprid = terminal;
 			typename = 0;
 		}
@@ -262,24 +279,25 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 
 	switch(_format) {
 	case TNF_UNMODIFIED:
-		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES,
-			0, exprid ? exprid->Identifier : typename, 0);
+		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
+			0, MODULE_NAME_OF(exprid), exprid ? exprid->Identifier : typename, (char*)0);
 	case TNF_INCLUDE:
 		return asn1c_make_identifier(
 			AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
 			0, ((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
 				? "\"" : "<"),
+			MODULE_NAME_OF(exprid),
 			exprid ? exprid->Identifier : typename,
 			((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
-				? ".h\"" : ".h>"), 0);
+				? ".h\"" : ".h>"), (char*)0);
 	case TNF_SAFE:
-		return asn1c_make_identifier(0, exprid, typename, 0);
+		return asn1c_make_identifier(0, exprid, typename, (char*)0);
 	case TNF_CTYPE:	/* C type */
 		return asn1c_make_identifier(0, exprid,
-				exprid?"t":typename, exprid?0:"t", 0);
+				exprid?"t":typename, exprid?0:"t", (char*)0);
 	case TNF_RSAFE:	/* Recursion-safe type */
-		return asn1c_make_identifier(AMI_CHECK_RESERVED, 0,
-			"struct", " ", typename, 0);
+		return asn1c_make_identifier(AMI_CHECK_RESERVED | AMI_NODELIMITER, 0,
+			"struct", " ", MODULE_NAME_OF(exprid), typename, (char*)0);
 	}
 
 	assert(!"unreachable");

@@ -37,13 +37,14 @@ typedef struct asn1p_ref_s {
 	int comp_count;	/* Number of the components in the reference name. */
 	int comp_size;	/* Number of allocated structures */
 
+	struct asn1p_module_s *module;	/* Defined in module */
 	int _lineno;	/* Number of line in the file */
 } asn1p_ref_t;
 
 /*
  * Constructor and destructor.
  */
-asn1p_ref_t *asn1p_ref_new(int _lineno);
+asn1p_ref_t *asn1p_ref_new(int _lineno, asn1p_module_t *mod);
 void asn1p_ref_free(asn1p_ref_t *);
 
 asn1p_ref_t *asn1p_ref_clone(asn1p_ref_t *ref);

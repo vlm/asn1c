@@ -119,7 +119,7 @@ static const unsigned int asn_MAP_Enum1_enum2value_1[] = {
 	0	/* red(0) */
 	/* This list is extensible */
 };
-static const asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_Enum1_specs_1 = {
 	asn_MAP_Enum1_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum1_enum2value_1,	/* N => "tag"; sorted by N */
 	4,	/* Number of elements in the maps */
@@ -285,7 +285,7 @@ static const unsigned int asn_MAP_Enum2_enum2value_1[] = {
 	0	/* red(0) */
 	/* This list is extensible */
 };
-static const asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_Enum2_specs_1 = {
 	asn_MAP_Enum2_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum2_enum2value_1,	/* N => "tag"; sorted by N */
 	7,	/* Number of elements in the maps */
@@ -439,7 +439,7 @@ static const unsigned int asn_MAP_Enum3_enum2value_1[] = {
 	1	/* c(1) */
 	/* This list is extensible */
 };
-static const asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
 	asn_MAP_Enum3_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum3_enum2value_1,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
@@ -596,7 +596,7 @@ static const unsigned int asn_MAP_Enum4_enum2value_1[] = {
 	3	/* d(4) */
 	/* This list is extensible */
 };
-static const asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_Enum4_specs_1 = {
 	asn_MAP_Enum4_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum4_enum2value_1,	/* N => "tag"; sorted by N */
 	4,	/* Number of elements in the maps */
@@ -750,7 +750,7 @@ static const unsigned int asn_MAP_Enum5_enum2value_1[] = {
 	1	/* z(25) */
 	/* This list is extensible */
 };
-static const asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_Enum5_specs_1 = {
 	asn_MAP_Enum5_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_Enum5_enum2value_1,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */

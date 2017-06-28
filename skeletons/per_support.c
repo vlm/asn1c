@@ -129,7 +129,7 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		(int)pd->moved,
 		(((long)pd->buffer) & 0xf),
 		(int)pd->nboff, (int)pd->nbits,
-		pd->buffer[0],
+		((pd->buffer != NULL)?pd->buffer[0]:0),
 		(int)(pd->nbits - pd->nboff),
 		(int)accum);
 
@@ -659,8 +659,8 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 		buf[2] = bits >> 8,
 		buf[3] = bits;
 	else {
-		per_put_few_bits(po, bits >> (obits - 24), 24);
-		per_put_few_bits(po, bits, obits - 24);
+		if(per_put_few_bits(po, bits >> (obits - 24), 24)) return -1;
+		if(per_put_few_bits(po, bits, obits - 24)) return -1;
 	}
 
 	ASN_DEBUG("[PER out %u/%x => %02x buf+%ld]",

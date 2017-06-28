@@ -1,9 +1,22 @@
+@CODE_COVERAGE_RULES@
 
 SUBDIRS = check-src
 
 dist_check_SCRIPTS = check-assembly.sh
 
-TESTS_ENVIRONMENT= CC="${CC}" CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}" CXXFLAGS="${CXXFLAGS}" srcdir=${srcdir} abs_top_srcdir=${abs_top_srcdir} abs_top_builddir=${abs_top_builddir} ${srcdir}/check-assembly.sh
+#Filter out the coverage options from CFLAGS as we don't need
+#code coverage data for the tests executables
+CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
+
+TESTS_ENVIRONMENT= \
+				   CC="${CC}" \
+				   CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}" \
+				   CXXFLAGS="${CXXFLAGS}" \
+				   LDFLAGS="${LDFLAGS}" \
+				   srcdir=${srcdir} \
+				   abs_top_srcdir=${abs_top_srcdir} \
+				   abs_top_builddir=${abs_top_builddir} \
+				   ${srcdir}/check-assembly.sh
 
 TESTS = 
 TESTS += check-src/check-03.-fwide-types.c
@@ -51,7 +64,8 @@ EXTRA_DIST =		\
 	data-62			\
 	data-70			\
 	data-119		\
-	data-126
+	data-126		\
+	check-src/check64-134.-gen-PER.c
 
 clean-local:
 	rm -rf test-*

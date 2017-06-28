@@ -891,7 +891,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerLowHigh_constr_1 GCC_NOTUSED
 
 /*** <<< STAT-DEFS [NO-IntegerLowHigh] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -1664,7 +1664,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerOutRange_constr_1 GCC_NOTUSE
 
 /*** <<< STAT-DEFS [NO-IntegerOutRange] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -1858,7 +1858,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerOutValue_constr_1 GCC_NOTUSE
 
 /*** <<< STAT-DEFS [NO-IntegerOutValue] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -2988,7 +2988,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerInRange6_constr_1 GCC_NOTUSE
 
 /*** <<< STAT-DEFS [NO-IntegerInRange6] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */

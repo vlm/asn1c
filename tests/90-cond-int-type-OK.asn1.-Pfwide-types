@@ -156,6 +156,7 @@ CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
+		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -658,7 +659,7 @@ NO_IntegerLowHigh_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerLowHigh] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -1237,7 +1238,7 @@ NO_IntegerOutRange_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerOutRange] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -1381,7 +1382,7 @@ NO_IntegerOutValue_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerOutValue] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -2217,7 +2218,7 @@ NO_IntegerInRange6_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 
 /*** <<< STAT-DEFS [NO-IntegerInRange6] >>> ***/
 
-static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */

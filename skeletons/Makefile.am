@@ -1,12 +1,13 @@
 
 SUBDIRS = . tests
+CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
 
 dist_pkgdata_DATA =				\
 		${srcdir}/README		\
 		${srcdir}/*.[ch]		\
 		${srcdir}/file-dependencies
 
-smodsdir=$(pkgdata)
+smodsdir=$(pkgdatadir)
 
 nobase_dist_smods_DATA =     \
 	standard-modules/README  \

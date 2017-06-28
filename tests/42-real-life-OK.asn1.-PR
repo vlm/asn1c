@@ -357,7 +357,7 @@ asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
 typedef enum VariablePart_PR {
 	VariablePart_PR_NOTHING,	/* No components present */
 	VariablePart_PR_vset,
-	VariablePart_PR_vrange,
+	VariablePart_PR_vrange
 	/* Extensions may appear below */
 	
 } VariablePart_PR;
@@ -735,7 +735,7 @@ static const unsigned int asn_MAP_accept_as_enum2value_2[] = {
 	2	/* unsafe(2) */
 	/* This list is extensible */
 };
-static const asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
+static asn_INTEGER_specifics_t asn_SPC_accept_as_specs_2 = {
 	asn_MAP_accept_as_value2enum_2,	/* "tag" => N; sorted by tag */
 	asn_MAP_accept_as_enum2value_2,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */

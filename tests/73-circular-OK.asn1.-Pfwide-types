@@ -817,7 +817,7 @@ static const unsigned int asn_MAP_EnumType_enum2value_1[] = {
 	0,	/* one(0) */
 	1	/* two(1) */
 };
-static const asn_INTEGER_specifics_t asn_SPC_EnumType_specs_1 = {
+static asn_INTEGER_specifics_t asn_SPC_EnumType_specs_1 = {
 	asn_MAP_EnumType_value2enum_1,	/* "tag" => N; sorted by tag */
 	asn_MAP_EnumType_enum2value_1,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
