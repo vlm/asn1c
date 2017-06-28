@@ -2592,14 +2592,18 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		if(arg->flags & A1C_GEN_PER) {
 			FUNCREF(decode_uper);
 			FUNCREF(encode_uper);
-		} else if (arg->flags & A1C_GEN_OER) {
+        } else {
 			OUT("0, 0,\t/* No PER support, "
 				"use \"-gen-PER\" to enable */\n");
+        }
+		if (arg->flags & A1C_GEN_OER) {
+			//OUT("0, 0,\t/* No PER support, "
+			//	"use \"-gen-PER\" to enable */\n");
 			FUNCREF(decode_oer);
 			FUNCREF(encode_oer);
         }else {
-			OUT("0, 0,\t/* No PER support, "
-				"use \"-gen-PER\" to enable */\n");
+			OUT("0, 0,\t/* No OER support, "
+				"use \"-gen-OER\" to enable */\n");
 		}
 
 		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {
