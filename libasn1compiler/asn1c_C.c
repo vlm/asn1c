@@ -2673,7 +2673,8 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 	assert(expr->Identifier);
 
 	if((arg->flags & A1C_COMPOUND_NAMES
-	   || onc_flags & ONC_force_compound_name)
+	   || onc_flags & ONC_force_compound_name
+	   || arg->embed)
 	&& ((expr->expr_type & ASN_CONSTR_MASK)
 	   || expr->expr_type == ASN_BASIC_ENUMERATED
 	   || ((expr->expr_type == ASN_BASIC_INTEGER
