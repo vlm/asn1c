@@ -213,9 +213,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 			 * Complex operation, requires stack of expectations.
 			 */
 			ctx->ptr = _new_stack();
-			if(ctx->ptr) {
-				stck = (struct _stack *)ctx->ptr;
-			} else {
+			if(!ctx->ptr) {
 				RETURN(RC_FAIL);
 			}
 		} else {
