@@ -668,20 +668,20 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	const char *endp = oid_end;				\
 	long value;						\
 	switch(asn_strtol_lim(oid_text, &endp, &value)) {	\
-	case ASN_STRTOL_EXTRA_DATA:				\
-	case ASN_STRTOL_OK:					\
+	case ASN_STRTOX_EXTRA_DATA:				\
+	case ASN_STRTOX_OK:					\
 		if(arcs_count < arcs_slots)			\
 			arcs[arcs_count] = value;		\
 		arcs_count++;					\
 		oid_text = endp - 1;				\
 		break;						\
-	case ASN_STRTOL_ERROR_RANGE:				\
+	case ASN_STRTOX_ERROR_RANGE:				\
 		if(opt_oid_text_end)				\
 			*opt_oid_text_end = oid_text;		\
 		errno = ERANGE;					\
 		return -1;					\
-	case ASN_STRTOL_ERROR_INVAL:				\
-	case ASN_STRTOL_EXPECT_MORE:				\
+	case ASN_STRTOX_ERROR_INVAL:				\
+	case ASN_STRTOX_EXPECT_MORE:				\
 		if(opt_oid_text_end)				\
 			*opt_oid_text_end = oid_text;		\
 		errno = EINVAL;					\

@@ -41,34 +41,44 @@ xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
 per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
+per_type_decoder_f INTEGER_decode_aper;
+per_type_encoder_f INTEGER_encode_aper;
 
 /***********************************
  * Some handy conversion routines. *
  ***********************************/
 
 /*
+ * Natiwe size-independent conversion of native integers to/from INTEGER.
+ * (l_size) is in bytes.
  * Returns 0 if it was possible to convert, -1 otherwise.
  * -1/EINVAL: Mandatory argument missing
  * -1/ERANGE: Value encoded is out of range for long representation
- * -1/ENOMEM: Memory allocation failed (in asn_long2INTEGER()).
+ * -1/ENOMEM: Memory allocation failed (in asn_*2INTEGER()).
+ */
+int asn_INTEGER2imax(const INTEGER_t *i, intmax_t *l);
+int asn_INTEGER2umax(const INTEGER_t *i, uintmax_t *l);
+int asn_imax2INTEGER(INTEGER_t *i, intmax_t l);
+int asn_umax2INTEGER(INTEGER_t *i, uintmax_t l);
+
+/*
+ * Size-specific conversion helpers.
  */
 int asn_INTEGER2long(const INTEGER_t *i, long *l);
 int asn_INTEGER2ulong(const INTEGER_t *i, unsigned long *l);
 int asn_long2INTEGER(INTEGER_t *i, long l);
 int asn_ulong2INTEGER(INTEGER_t *i, unsigned long l);
 
-/* A a reified version of strtol(3) with nicer error reporting. */
-enum asn_strtol_result_e {
-    ASN_STRTOL_ERROR_RANGE = -3,  /* Input outside of numeric range for long type */
-    ASN_STRTOL_ERROR_INVAL = -2,  /* Invalid data encountered (e.g., "+-") */
-    ASN_STRTOL_EXPECT_MORE = -1,  /* More data expected (e.g. "+") */
-    ASN_STRTOL_OK          =  0,  /* Conversion succeded, number ends at (*end) */
-    ASN_STRTOL_EXTRA_DATA  =  1   /* Conversion succeded, but the string has extra stuff */
+/* A version of strtol/strtoimax(3) with nicer error reporting. */
+enum asn_strtox_result_e {
+    ASN_STRTOX_ERROR_RANGE = -3,  /* Input outside of supported numeric range */
+    ASN_STRTOX_ERROR_INVAL = -2,  /* Invalid data encountered (e.g., "+-") */
+    ASN_STRTOX_EXPECT_MORE = -1,  /* More data expected (e.g. "+") */
+    ASN_STRTOX_OK          =  0,  /* Conversion succeded, number ends at (*end) */
+    ASN_STRTOX_EXTRA_DATA  =  1   /* Conversion succeded, but the string has extra stuff */
 };
-enum asn_strtol_result_e asn_strtol_lim(const char *str, const char **end, long *l);
-
-/* The asn_strtol is going to be DEPRECATED soon */
-enum asn_strtol_result_e asn_strtol(const char *str, const char *end, long *l);
+enum asn_strtox_result_e asn_strtol_lim(const char *str, const char **end, long *l);
+enum asn_strtox_result_e asn_strtoimax_lim(const char *str, const char **end, intmax_t *l);
 
 /*
  * Convert the integer value into the corresponding enumeration map entry.
