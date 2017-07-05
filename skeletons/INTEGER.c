@@ -1069,5 +1069,8 @@ asn_strtol_lim(const char *str, const char **end, long *lp) {
             return ASN_STRTOX_ERROR_RANGE;
         }
     }
+
+    assert(!"Unreachable");
+    return ASN_STRTOX_ERROR_INVAL;
 }
 
