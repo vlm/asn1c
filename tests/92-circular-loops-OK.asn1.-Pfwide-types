@@ -1448,7 +1448,7 @@ static asn_SET_specifics_t asn_SPC_OneTwo_specs_1 = {
 	asn_MAP_OneTwo_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
-	(unsigned int *)asn_MAP_OneTwo_mmap_1	/* Mandatory elements map */
+	(const unsigned int *)asn_MAP_OneTwo_mmap_1	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_OneTwo = {
 	"OneTwo",
@@ -1545,7 +1545,7 @@ static asn_SET_specifics_t asn_SPC_TwoThree_specs_1 = {
 	asn_MAP_TwoThree_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
-	(unsigned int *)asn_MAP_TwoThree_mmap_1	/* Mandatory elements map */
+	(const unsigned int *)asn_MAP_TwoThree_mmap_1	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_TwoThree = {
 	"TwoThree",
@@ -1656,7 +1656,7 @@ static asn_SET_specifics_t asn_SPC_ThreeOne_specs_1 = {
 	asn_MAP_ThreeOne_tag2el_1,	/* Same as above */
 	2,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
-	(unsigned int *)asn_MAP_ThreeOne_mmap_1	/* Mandatory elements map */
+	(const unsigned int *)asn_MAP_ThreeOne_mmap_1	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_ThreeOne = {
 	"ThreeOne",

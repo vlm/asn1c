@@ -680,7 +680,7 @@ static asn_SET_specifics_t asn_SPC_two_name_specs_7 = {
 	asn_MAP_two_name_tag2el_7,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
-	(unsigned int *)asn_MAP_two_name_mmap_7	/* Mandatory elements map */
+	(const unsigned int *)asn_MAP_two_name_mmap_7	/* Mandatory elements map */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_two_name_7 = {

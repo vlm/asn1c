@@ -92,7 +92,7 @@ static asn_SET_specifics_t asn_SPC_T_specs_1 = {
 	asn_MAP_T_tag2el_1,	/* Same as above */
 	3,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
-	(unsigned int *)asn_MAP_T_mmap_1	/* Mandatory elements map */
+	(const unsigned int *)asn_MAP_T_mmap_1	/* Mandatory elements map */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
