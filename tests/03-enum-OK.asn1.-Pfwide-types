@@ -146,6 +146,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	Enum1_decode_xer,
 	Enum1_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
@@ -315,6 +316,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum2 = {
 	Enum2_decode_xer,
 	Enum2_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum2_tags_1,
 	sizeof(asn_DEF_Enum2_tags_1)
@@ -472,6 +474,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum3 = {
 	Enum3_decode_xer,
 	Enum3_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum3_tags_1,
 	sizeof(asn_DEF_Enum3_tags_1)
@@ -632,6 +635,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum4 = {
 	Enum4_decode_xer,
 	Enum4_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum4_tags_1,
 	sizeof(asn_DEF_Enum4_tags_1)
@@ -789,6 +793,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum5 = {
 	Enum5_decode_xer,
 	Enum5_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum5_tags_1,
 	sizeof(asn_DEF_Enum5_tags_1)
