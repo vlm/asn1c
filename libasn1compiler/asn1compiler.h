@@ -56,11 +56,7 @@ enum asn1c_flags {
 	 * Symlink support files rather than copy them.
 	 */
 	A1C_LINK_SKELETONS	= 0x0800,
-	/*
-	 * -gen-PER
-	 * Generate PER support code
-	 */
-	A1C_GEN_PER			= 0x1000,
+
 	/*
 	 * -pdu={all|auto|Type}
 	 * Generate PDU table
@@ -77,7 +73,17 @@ enum asn1c_flags {
 	 * -fline-refs
 	 * Include ASN.1 module's line numbers in comments.
 	 */
-	A1C_LINE_REFS       = 0x20000
+	A1C_LINE_REFS       = 0x20000,
+	/*
+	 * -gen-OER
+	 * Generate Octet Encoding Rules support code
+	 */
+	A1C_GEN_OER			= 0x40000,
+	/*
+	 * -gen-PER
+	 * Generate Packed Encoding Rules support code
+	 */
+	A1C_GEN_PER			= 0x80000,
 };
 
 /*

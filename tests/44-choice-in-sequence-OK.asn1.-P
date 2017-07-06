@@ -116,6 +116,7 @@ asn_TYPE_descriptor_t asn_DEF_e_6 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -173,6 +174,7 @@ asn_TYPE_descriptor_t asn_DEF_h_9 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -251,6 +253,7 @@ asn_TYPE_descriptor_t asn_DEF_b_3 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -314,6 +317,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)

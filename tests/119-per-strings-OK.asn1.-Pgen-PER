@@ -1214,6 +1214,7 @@ asn_TYPE_descriptor_t asn_DEF_many_2 = {
 	SEQUENCE_OF_encode_xer,
 	SEQUENCE_OF_decode_uper,
 	SEQUENCE_OF_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_many_tags_2,
 	sizeof(asn_DEF_many_tags_2)
@@ -1567,6 +1568,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PDU_tags_1,
 	sizeof(asn_DEF_PDU_tags_1)

@@ -106,6 +106,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PDU_tags_1,
 	sizeof(asn_DEF_PDU_tags_1)
@@ -206,6 +207,7 @@ asn_TYPE_descriptor_t asn_DEF_Singleton = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Singleton_tags_1,
 	sizeof(asn_DEF_Singleton_tags_1)
@@ -324,6 +326,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	CHOICE_encode_xer,
 	CHOICE_decode_uper,
 	CHOICE_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

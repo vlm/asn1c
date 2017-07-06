@@ -50,6 +50,8 @@ T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
 	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
 	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
+	td->oer_decoder    = asn_DEF_INTEGER.oer_decoder;
+	td->oer_encoder    = asn_DEF_INTEGER.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_INTEGER.per_constraints;
 	td->elements       = asn_DEF_INTEGER.elements;
@@ -118,6 +120,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_decode_xer,
 	T_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)

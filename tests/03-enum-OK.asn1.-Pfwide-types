@@ -55,6 +55,8 @@ Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
+	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -219,6 +221,8 @@ Enum2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
+	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -385,6 +389,8 @@ Enum3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
+	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -544,6 +550,8 @@ Enum4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
+	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -704,6 +712,8 @@ Enum5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
 	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
+	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
+	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;

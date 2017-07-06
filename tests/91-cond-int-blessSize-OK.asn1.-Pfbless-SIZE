@@ -56,6 +56,8 @@ OK_Integer1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -124,6 +126,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
 	OK_Integer1_decode_xer,
 	OK_Integer1_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer1_tags_1,
 	sizeof(asn_DEF_OK_Integer1_tags_1)
@@ -194,6 +197,8 @@ OK_Integer2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -262,6 +267,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
 	OK_Integer2_decode_xer,
 	OK_Integer2_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer2_tags_1,
 	sizeof(asn_DEF_OK_Integer2_tags_1)
@@ -332,6 +338,8 @@ OK_Integer3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -400,6 +408,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
 	OK_Integer3_decode_xer,
 	OK_Integer3_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer3_tags_1,
 	sizeof(asn_DEF_OK_Integer3_tags_1)
@@ -470,6 +479,8 @@ OK_Integer4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -538,6 +549,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
 	OK_Integer4_decode_xer,
 	OK_Integer4_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer4_tags_1,
 	sizeof(asn_DEF_OK_Integer4_tags_1)
@@ -608,6 +620,8 @@ NO_Integer5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -676,6 +690,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_Integer5 = {
 	NO_Integer5_decode_xer,
 	NO_Integer5_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_Integer5_tags_1,
 	sizeof(asn_DEF_NO_Integer5_tags_1)

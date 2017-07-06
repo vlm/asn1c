@@ -55,6 +55,8 @@ unsigned32_4_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -161,6 +163,8 @@ unsplit32_5_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
 	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -376,6 +380,7 @@ asn_TYPE_descriptor_t asn_DEF_unsigned32_4 = {
 	unsigned32_4_encode_xer,
 	unsigned32_4_decode_uper,
 	unsigned32_4_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_unsigned32_tags_4,
 	sizeof(asn_DEF_unsigned32_tags_4)
@@ -410,6 +415,7 @@ asn_TYPE_descriptor_t asn_DEF_unsplit32_5 = {
 	unsplit32_5_encode_xer,
 	unsplit32_5_decode_uper,
 	unsplit32_5_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_unsplit32_tags_5,
 	sizeof(asn_DEF_unsplit32_tags_5)
@@ -490,6 +496,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_encode_xer,
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
