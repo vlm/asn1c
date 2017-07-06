@@ -41,6 +41,8 @@ typedef struct asn_struct_ctx_s {
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */
 #include <per_encoder.h>	/* Packet Encoding Rules encoder */
+#include <oer_decoder.h>	/* Octet Encoding Rules encoder */
+#include <oer_encoder.h>	/* Octet Encoding Rules encoder */
 #include <constraints.h>	/* Subtype constraints support */
 
 /*
@@ -99,6 +101,8 @@ typedef struct asn_TYPE_descriptor_s {
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
 	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
 	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
+	oer_type_decoder_f *oer_decoder;	/* Generic OER decoder */
+	oer_type_encoder_f *oer_encoder;	/* Canonical OER encoder */
 
 	/***********************************************************************
 	 * Internally useful members. Not to be used by applications directly. *

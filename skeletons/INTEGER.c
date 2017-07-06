@@ -31,6 +31,14 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	INTEGER_decode_uper,	/* Unaligned PER decoder */
 	INTEGER_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef  ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	//INTEGER_decode_oer,   /* OER decoder */
+	//INTEGER_encode_oer,   /* Canonical OER encoder */
+	0,0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),

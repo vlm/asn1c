@@ -54,6 +54,13 @@ asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)

@@ -35,6 +35,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),

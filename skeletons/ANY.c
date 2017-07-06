@@ -21,7 +21,18 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	ANY_encode_xer,
+#ifdef	ASN_DISABLE_PER_SUPPORT
 	0, 0,
+#else
+	0, 0,
+#endif  /* ASN_DISABLE_PER_SUPPORT */
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
 	0,	/* No PER visible constraints */

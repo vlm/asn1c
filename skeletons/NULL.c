@@ -30,6 +30,13 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	NULL_decode_uper,	/* Unaligned PER decoder */
 	NULL_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
