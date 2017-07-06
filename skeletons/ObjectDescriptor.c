@@ -22,8 +22,17 @@ asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
-	OCTET_STRING_decode_uper,
-	OCTET_STRING_encode_uper,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
+	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
+	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
+	OCTET_STRING_decode_aper,	/* Aligned PER decoder */
+	OCTET_STRING_encode_aper,	/* Aligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_ObjectDescriptor_tags,
 	sizeof(asn_DEF_ObjectDescriptor_tags)

@@ -81,6 +81,7 @@ asn_TYPE_descriptor_t asn_DEF_Member_2 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Member_tags_2,
 	sizeof(asn_DEF_Member_tags_2)
@@ -124,6 +125,7 @@ asn_TYPE_descriptor_t asn_DEF_Type = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Type_tags_1,
 	sizeof(asn_DEF_Type_tags_1)
@@ -228,6 +230,7 @@ asn_TYPE_descriptor_t asn_DEF_another_name_3 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_another_name_tags_3,
 	sizeof(asn_DEF_another_name_tags_3)
@@ -277,6 +280,7 @@ asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
@@ -325,6 +329,7 @@ asn_TYPE_descriptor_t asn_DEF_Type1 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Type1_tags_1,
 	sizeof(asn_DEF_Type1_tags_1)
@@ -526,6 +531,7 @@ asn_TYPE_descriptor_t asn_DEF_another_name_3 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_another_name_tags_3,
 	sizeof(asn_DEF_another_name_tags_3)
@@ -577,6 +583,7 @@ asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_one_name_tags_2,
 	sizeof(asn_DEF_one_name_tags_2)
@@ -638,6 +645,7 @@ asn_TYPE_descriptor_t asn_DEF_another_name_8 = {
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_another_name_tags_8,
 	sizeof(asn_DEF_another_name_tags_8)
@@ -694,6 +702,7 @@ asn_TYPE_descriptor_t asn_DEF_two_name_7 = {
 	SET_decode_xer,
 	SET_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_two_name_tags_7,
 	sizeof(asn_DEF_two_name_tags_7)
@@ -752,6 +761,7 @@ asn_TYPE_descriptor_t asn_DEF_Type2 = {
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */

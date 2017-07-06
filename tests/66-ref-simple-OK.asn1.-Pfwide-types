@@ -50,6 +50,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
@@ -114,10 +115,6 @@ SimpleType_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->der_encoder    = asn_DEF_ENUMERATED.der_encoder;
 	td->xer_decoder    = asn_DEF_ENUMERATED.xer_decoder;
 	td->xer_encoder    = asn_DEF_ENUMERATED.xer_encoder;
-	td->uper_decoder   = asn_DEF_ENUMERATED.uper_decoder;
-	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
 	td->elements_count = asn_DEF_ENUMERATED.elements_count;
      /* td->specifics      = asn_DEF_ENUMERATED.specifics;	// Defined explicitly */
@@ -203,6 +200,7 @@ asn_TYPE_descriptor_t asn_DEF_SimpleType = {
 	SimpleType_decode_xer,
 	SimpleType_encode_xer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0, 0,	/* No APER */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SimpleType_tags_1,
 	sizeof(asn_DEF_SimpleType_tags_1)

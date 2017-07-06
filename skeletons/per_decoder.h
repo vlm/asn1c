@@ -25,11 +25,27 @@ asn_dec_rval_t uper_decode_complete(struct asn_codec_ctx_s *opt_codec_ctx,
 	size_t size		/* Size of data buffer */
 	);
 
+asn_dec_rval_t aper_decode_complete(struct asn_codec_ctx_s *opt_codec_ctx,
+	struct asn_TYPE_descriptor_s *type_descriptor,	/* Type to decode */
+	void **struct_ptr,	/* Pointer to a target structure's pointer */
+	const void *buffer,	/* Data to be decoded */
+	size_t size		/* Size of data buffer */
+	);
+
 /*
  * Unaligned PER decoder of any ASN.1 type. May be invoked by the application.
  * WARNING: This call returns the number of BITS read from the stream. Beware.
  */
 asn_dec_rval_t uper_decode(struct asn_codec_ctx_s *opt_codec_ctx,
+	struct asn_TYPE_descriptor_s *type_descriptor,	/* Type to decode */
+	void **struct_ptr,	/* Pointer to a target structure's pointer */
+	const void *buffer,	/* Data to be decoded */
+	size_t size,		/* Size of data buffer */
+	int skip_bits,		/* Number of unused leading bits, 0..7 */
+	int unused_bits		/* Number of unused tailing bits, 0..7 */
+	);
+
+asn_dec_rval_t aper_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,	/* Type to decode */
 	void **struct_ptr,	/* Pointer to a target structure's pointer */
 	const void *buffer,	/* Data to be decoded */

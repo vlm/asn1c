@@ -22,8 +22,17 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	BOOLEAN_encode_der,
 	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
+#ifdef  ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+	0,
+	0,
+#else
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
 	BOOLEAN_encode_uper,	/* Unaligned PER encoder */
+	BOOLEAN_decode_aper,	/* Aligned PER decoder */
+	BOOLEAN_encode_aper,	/* Aligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BOOLEAN_tags,
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
@@ -234,6 +243,8 @@ BOOLEAN_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	}
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
+
 asn_dec_rval_t
 BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
@@ -264,7 +275,6 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	return rv;
 }
 
-
 asn_enc_rval_t
 BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
@@ -280,3 +290,59 @@ BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+
+asn_dec_rval_t
+BOOLEAN_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+	BOOLEAN_t *st = (BOOLEAN_t *)*sptr;
+
+	(void)opt_codec_ctx;
+	(void)constraints;
+
+	if(!st) {
+		st = (BOOLEAN_t *)(*sptr = MALLOC(sizeof(*st)));
+		if(!st) ASN__DECODE_FAILED;
+	}
+
+	/*
+	 * Extract a single bit
+	 */
+	switch(aper_get_few_bits(pd, 1)) {
+	case 1:
+		*st = 1;
+		break;
+	case 0:
+		*st = 0;
+		break;
+	case -1:
+	default:
+		ASN__DECODE_STARVED;
+	}
+
+	ASN_DEBUG("%s decoded as %s", td->name, *st ? "TRUE" : "FALSE");
+
+	rv.code = RC_OK;
+	rv.consumed = 1;
+	return rv;
+}
+
+asn_enc_rval_t
+BOOLEAN_encode_aper(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+	asn_enc_rval_t er = { 0, 0, 0 };
+
+	(void)constraints;
+
+	if(!st) {
+		ASN__ENCODE_FAILED;
+	}
+
+	if(per_put_few_bits(po, *st ? 1 : 0, 1)) {
+		ASN__ENCODE_FAILED;
+	}
+
+	ASN__ENCODED_OK(er);
+}
+#endif /* ASN_DISABLE_PER_SUPPORT */
