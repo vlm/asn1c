@@ -418,9 +418,9 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
 			rval.code = RC_FAIL;
         else if (ct) {
             if (ct->lower_bound >= 0)
-                asn_INTEGER2ullong(&tmpint, (unsigned long *)native);
+                asn_INTEGER2umax(&tmpint, (unsigned long *)native);
             else
-                asn_INTEGER2llong(&tmpint, native);
+                asn_INTEGER2imax(&tmpint, native);
         }
 		else
 			ASN_DEBUG("NativeInteger %s got value %lld",

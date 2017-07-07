@@ -2716,8 +2716,6 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 	asn1p_expr_t *expr = arg->expr;
 	char *id;
 
-	assert(expr->Identifier);
-
 	if((arg->flags & A1C_COMPOUND_NAMES
 	   || onc_flags & ONC_force_compound_name)
 	&& ((expr->expr_type & ASN_CONSTR_MASK)
@@ -2726,8 +2724,7 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 	   	|| expr->expr_type == ASN_BASIC_BIT_STRING)
 		&& expr_elements_count(arg, expr))
 	   )
-	&& expr->parent_expr
-	&& expr->parent_expr->Identifier) {
+	&& expr->parent_expr) {
 		arg_t tmparg = *arg;
 
 		tmparg.expr = expr->parent_expr;
@@ -2735,7 +2732,7 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 
 		out_name_chain(&tmparg, onc_flags);
 
-		OUT("__");	/* a separator between id components */
+		if(expr->parent_expr->Identifier) OUT("__");	/* a separator between id components */
 
 		/* Fall through */
 	}
