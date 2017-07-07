@@ -215,10 +215,10 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e ety
 			&ct->range_stop, real_constraint_type);
 		RET2RVAL(ret, rvalue);
 	}
-	if (ct->value && ct->value->type == ATV_UNPARSED && etype == A1TC_CLASSDEF) {
-		ret = constraint_object_resolve(arg, ct->value);
-		RET2RVAL(ret, rvalue);
-	}
+    if (ct->value && ct->value->type == ATV_UNPARSED && etype == A1TC_CLASSDEF) {
+           ret = constraint_object_resolve(arg, ct->value);
+           RET2RVAL(ret, rvalue);
+    }
 
 	/*
 	 * Proceed recursively.

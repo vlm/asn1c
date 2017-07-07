@@ -70,10 +70,6 @@ int asn_INTEGER2long(const INTEGER_t *i, long *l);
 int asn_INTEGER2ulong(const INTEGER_t *i, unsigned long *l);
 int asn_long2INTEGER(INTEGER_t *i, long l);
 int asn_ulong2INTEGER(INTEGER_t *i, unsigned long l);
-//int asn_INTEGER2llong(const INTEGER_t *iptr, long long *lptr);
-//int asn_INTEGER2ullong(const INTEGER_t *iptr, unsigned long long *lptr);
-//int asn_ullong2INTEGER(INTEGER_t *st, unsigned long long value);
-//int asn_llong2INTEGER(INTEGER_t *st, long long value);
 
 /* A version of strtol/strtoimax(3) with nicer error reporting. */
 enum asn_strtox_result_e {

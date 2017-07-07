@@ -39,7 +39,6 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 #else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
-<<<<<<< HEAD
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	OCTET_STRING_decode_oer,
 	OCTET_STRING_encode_oer,

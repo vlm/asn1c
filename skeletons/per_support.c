@@ -117,12 +117,17 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 }
 void per_skip_unused_bits(asn_per_data_t *pd)
 {
-    if ((pd->nboff & 0x7) == 0)
-        return;
-    pd->moved += (8 - pd->nboff);
-    pd->nbits -= (8 - pd->nboff);
-    pd->nboff = 0;
-    pd->buffer += 1;
+    if (pd->nboff == 8) {
+        pd->moved += 8;
+        pd->nbits -= 8;
+        pd->nboff = 0;
+        pd->buffer += 1;
+    } else {
+        pd->moved += (8 - pd->nboff);
+        pd->nbits -= (8 - pd->nboff);
+        pd->nboff = 0;
+        pd->buffer += 1;
+    }
 }
 void per_skip_bytes(asn_per_data_t *pd, int nbytes)
 {
