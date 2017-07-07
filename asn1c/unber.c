@@ -28,6 +28,7 @@
 #include "sys-common.h"
 
 #define ASN_DISABLE_PER_SUPPORT 1
+#define ASN_DISABLE_OER_SUPPORT 1
 
 #include <asn1parser.h> /* For static string tables */
 
