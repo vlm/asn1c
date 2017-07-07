@@ -35,9 +35,8 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	0,
 	0,
 #else
-	//INTEGER_decode_oer,   /* OER decoder */
-	//INTEGER_encode_oer,   /* Canonical OER encoder */
-	0,0,
+	INTEGER_decode_oer,   /* OER decoder */
+	0, /*INTEGER_encode_oer,*/   /* Canonical OER encoder */
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,

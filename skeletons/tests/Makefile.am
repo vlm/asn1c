@@ -11,6 +11,7 @@ check_PROGRAMS = \
 	check-INTEGER		\
 	check-REAL		\
 	check-XER		\
+	check-OER-INTEGER	\
 	check-PER		\
 	check-PER-INTEGER
 

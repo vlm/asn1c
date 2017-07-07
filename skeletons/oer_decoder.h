@@ -32,7 +32,7 @@ asn_dec_rval_t oer_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 typedef asn_dec_rval_t(oer_type_decoder_f)(
     struct asn_codec_ctx_s *opt_codec_ctx,
     struct asn_TYPE_descriptor_s *type_descriptor,
-    asn_oer_constraint_t *constraints,
+    asn_oer_constraints_t *constraints,
     void **struct_ptr,
     const void *buf_ptr,
     size_t size);
