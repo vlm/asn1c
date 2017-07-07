@@ -202,6 +202,7 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
 	asn_DEF_GeneralizedTime_tags,
 	sizeof(asn_DEF_GeneralizedTime_tags)
 	  / sizeof(asn_DEF_GeneralizedTime_tags[0]),
+	0,	/* No OER visible constraints */
 	&asn_DEF_GeneralizedTime_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */

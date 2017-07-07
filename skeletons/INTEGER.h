@@ -7,6 +7,7 @@
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
+#include <INTEGER_oer.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,8 +42,6 @@ xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
 per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
-oer_type_decoder_f INTEGER_decode_oer;
-oer_type_encoder_f INTEGER_encode_oer;
 
 /***********************************
  * Some handy conversion routines. *

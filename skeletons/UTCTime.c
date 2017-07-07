@@ -59,6 +59,7 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	asn_DEF_UTCTime_tags,
 	sizeof(asn_DEF_UTCTime_tags)
 	  / sizeof(asn_DEF_UTCTime_tags[0]),
+	0,	/* No OER visible constraints */
 	&asn_DEF_UTCTime_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */

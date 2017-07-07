@@ -31,7 +31,7 @@ static int asn_DEF_NumericString_c2v(unsigned int code) {
 		return 0x20;
 	}
 }
-static asn_per_constraints_t asn_DEF_NumericString_constraints = {
+static asn_per_constraints_t asn_DEF_NumericString_per_constraints = {
 	{ APC_CONSTRAINED, 4, 4, 0x20, 0x39 },	/* Value */
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
 	asn_DEF_NumericString_v2c,
@@ -68,7 +68,8 @@ asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)
 	  / sizeof(asn_DEF_NumericString_tags[0]),
-	&asn_DEF_NumericString_constraints,
+	0,	/* No OER visible constraints */
+	&asn_DEF_NumericString_per_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

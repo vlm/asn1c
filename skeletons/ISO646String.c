@@ -12,7 +12,7 @@ static const ber_tlv_tag_t asn_DEF_ISO646String_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (26 << 2)),	/* [UNIVERSAL 26] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-static asn_per_constraints_t asn_DEF_ISO646String_constraints = {
+static asn_per_constraints_t asn_DEF_ISO646String_per_constraints = {
 	{ APC_CONSTRAINED, 7, 7, 0x20, 0x7e },	/* Value */
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
 	0, 0
@@ -48,7 +48,8 @@ asn_TYPE_descriptor_t asn_DEF_ISO646String = {
 	asn_DEF_ISO646String_tags,
 	sizeof(asn_DEF_ISO646String_tags)
 	  / sizeof(asn_DEF_ISO646String_tags[0]),
-	&asn_DEF_ISO646String_constraints,
+	0,	/* No OER visible constraints */
+	&asn_DEF_ISO646String_per_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

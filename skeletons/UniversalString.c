@@ -18,7 +18,7 @@ static asn_OCTET_STRING_specifics_t asn_SPC_UniversalString_specs = {
 	offsetof(UniversalString_t, _asn_ctx),
 	ASN_OSUBV_U32	/* 32-bits character */
 };
-static asn_per_constraints_t asn_DEF_UniversalString_constraints = {
+static asn_per_constraints_t asn_DEF_UniversalString_per_constraints = {
 	{ APC_CONSTRAINED, 32, 32, 0, 2147483647 },
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
@@ -54,7 +54,8 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
 	  / sizeof(asn_DEF_UniversalString_tags[0]),
-	&asn_DEF_UniversalString_constraints,
+	0,	/* No OER visible constraints */
+	&asn_DEF_UniversalString_per_constraints,
 	0, 0,	/* No members */
 	&asn_SPC_UniversalString_specs
 };

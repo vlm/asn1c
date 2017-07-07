@@ -48,6 +48,7 @@ asn_TYPE_descriptor_t asn_DEF_VisibleString = {
 	asn_DEF_VisibleString_tags,
 	sizeof(asn_DEF_VisibleString_tags)
 	  / sizeof(asn_DEF_VisibleString_tags[0]),
+	0,	/* No OER visible constraints */
 	&asn_DEF_VisibleString_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */

@@ -117,7 +117,8 @@ typedef struct asn_TYPE_descriptor_s {
 	const ber_tlv_tag_t *all_tags;	/* Every tag for BER/containment */
 	int all_tags_count;		/* Number of tags */
 
-	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
+	asn_oer_constraints_t *oer_constraints;	/* OER constraints */
+	asn_per_constraints_t *per_constraints;	/* PER constraints */
 
 	/*
 	 * An ASN.1 production type members (members of SEQUENCE, SET, CHOICE).

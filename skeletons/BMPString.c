@@ -18,7 +18,7 @@ static asn_OCTET_STRING_specifics_t asn_SPC_BMPString_specs = {
 	offsetof(BMPString_t, _asn_ctx),
 	ASN_OSUBV_U16	/* 16-bits character */
 };
-static asn_per_constraints_t asn_DEF_BMPString_constraints = {
+static asn_per_constraints_t asn_DEF_BMPString_per_constraints = {
 	{ APC_CONSTRAINED, 16, 16, 0, 65535 },
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
@@ -54,7 +54,8 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
 	  / sizeof(asn_DEF_BMPString_tags[0]),
-	&asn_DEF_BMPString_constraints,
+	0,	/* No OER visible constraints */
+	&asn_DEF_BMPString_per_constraints,
 	0, 0,	/* No members */
 	&asn_SPC_BMPString_specs
 };

@@ -35,6 +35,7 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	&asn_SPC_ANY_specs,
