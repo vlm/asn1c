@@ -126,7 +126,7 @@ static asn_SET_specifics_t asn_SPC_signed_specs_4 = {
 	asn_MAP_signed_tag2el_4,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
-	(unsigned int *)asn_MAP_signed_mmap_4	/* Mandatory elements map */
+	(const unsigned int *)asn_MAP_signed_mmap_4	/* Mandatory elements map */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_signed_4 = {

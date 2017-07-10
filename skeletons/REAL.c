@@ -51,8 +51,13 @@ asn_TYPE_descriptor_t asn_DEF_REAL = {
 	der_encode_primitive,
 	REAL_decode_xer,
 	REAL_encode_xer,
+#ifdef	ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	REAL_decode_uper,
 	REAL_encode_uper,
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_REAL_tags,
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),

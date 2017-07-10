@@ -111,15 +111,15 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 	char scratch[32];	/* Enough for 64-bit integer */
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
-	signed long value;
+	intmax_t value;
 	ssize_t wrote = 0;
 	char *p;
 	int ret;
 
 	if(specs && specs->field_unsigned)
-		ret = asn_INTEGER2ulong(st, (unsigned long *)&value);
+		ret = asn_INTEGER2umax(st, (uintmax_t *)&value);
 	else
-		ret = asn_INTEGER2long(st, &value);
+		ret = asn_INTEGER2imax(st, &value);
 
 	/* Simple case: the integer size is small */
 	if(ret == 0) {
@@ -134,7 +134,7 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 			scr = (char *)alloca(scrsize);
 			if(plainOrXER == 0)
 				ret = snprintf(scr, scrsize,
-					"%ld (%s)", value, el->enum_name);
+					"%" PRIdMAX " (%s)", value, el->enum_name);
 			else
 				ret = snprintf(scr, scrsize,
 					"<%s/>", el->enum_name);
@@ -146,10 +146,11 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 		} else {
 			scrsize = sizeof(scratch);
 			scr = scratch;
-			ret = snprintf(scr, scrsize,
-				(specs && specs->field_unsigned)
-				?"%lu":"%ld", value);
-		}
+            ret = snprintf(
+                scr, scrsize,
+                (specs && specs->field_unsigned) ? "%" PRIuMAX : "%" PRIdMAX,
+                value);
+        }
 		assert(ret > 0 && (size_t)ret < scrsize);
 		return (cb(scr, ret, app_key) < 0) ? -1 : ret;
 	} else if(plainOrXER && specs && specs->strict_enumeration) {
@@ -307,8 +308,8 @@ INTEGER_st_prealloc(INTEGER_t *st, int min_size) {
 static enum xer_pbd_rval
 INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
 	INTEGER_t *st = (INTEGER_t *)sptr;
-	long dec_value;
-	long hex_value = 0;
+	intmax_t dec_value;
+	intmax_t hex_value = 0;
 	const char *lp;
 	const char *lstart = (const char *)chunk_buf;
 	const char *lstop = lstart + chunk_size;
@@ -486,13 +487,13 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 	case ST_DIGITS_TRAILSPACE:
 		/* The last symbol encountered was a digit. */
 		switch(asn_strtol_lim(dec_value_start, &dec_value_end, &dec_value)) {
-		case ASN_STRTOL_OK:
+		case ASN_STRTOX_OK:
 			break;
-		case ASN_STRTOL_ERROR_RANGE:
+		case ASN_STRTOX_ERROR_RANGE:
 			return XPBD_DECODER_LIMIT;
-		case ASN_STRTOL_ERROR_INVAL:
-		case ASN_STRTOL_EXPECT_MORE:
-		case ASN_STRTOL_EXTRA_DATA:
+		case ASN_STRTOX_ERROR_INVAL:
+		case ASN_STRTOX_EXPECT_MORE:
+		case ASN_STRTOX_EXTRA_DATA:
 			return XPBD_BROKEN_ENCODING;
 		}
 		break;
@@ -604,7 +605,7 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				ASN__DECODE_FAILED;
 
 			if(specs && specs->field_unsigned) {
-				unsigned long uvalue;
+				unsigned long uvalue = 0;
 				if(uper_get_constrained_whole_number(pd,
 					&uvalue, ct->range_bits))
 					ASN__DECODE_STARVED;
@@ -614,7 +615,7 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				if(asn_ulong2INTEGER(st, uvalue))
 					ASN__DECODE_FAILED;
 			} else {
-				unsigned long svalue;
+				unsigned long svalue = 0;
 				if(uper_get_constrained_whole_number(pd,
 					&svalue, ct->range_bits))
 					ASN__DECODE_STARVED;
@@ -632,9 +633,9 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	/* X.691, #12.2.3, #12.2.4 */
 	do {
-		ssize_t len;
-		void *p;
-		int ret;
+		ssize_t len = 0;
+		void *p = NULL;
+		int ret = 0;
 
 		/* Get the PER length */
 		len = uper_get_length(pd, -1, &repeat);
@@ -655,10 +656,10 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * TODO: replace by in-place arithmetics.
 		 */
-		long value;
+		long value = 0;
 		if(asn_INTEGER2long(st, &value))
 			ASN__DECODE_FAILED;
-		if(asn_long2INTEGER(st, value + ct->lower_bound))
+		if(asn_imax2INTEGER(st, value + ct->lower_bound))
 			ASN__DECODE_FAILED;
 	}
 
@@ -763,10 +764,10 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 
 int
-asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
+asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 	uint8_t *b, *end;
 	size_t size;
-	long l;
+	intmax_t value;
 
 	/* Sanity checking */
 	if(!iptr || !iptr->buf || !lptr) {
@@ -779,26 +780,26 @@ asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
 	size = iptr->size;
 	end = b + size;	/* Where to stop */
 
-	if(size > sizeof(long)) {
+	if(size > sizeof(value)) {
 		uint8_t *end1 = end - 1;
 		/*
 		 * Slightly more advanced processing,
-		 * able to >sizeof(long) bytes,
-		 * when the actual value is small
-		 * (0x0000000000abcdef would yield a fine 0x00abcdef)
+		 * able to process INTEGERs with >sizeof(value) bytes
+		 * when the actual value is small, e.g. for intmax_t == int32_t
+		 * (0x0000000000abcdef INTEGER would yield a fine 0x00abcdef int32_t)
 		 */
 		/* Skip out the insignificant leading bytes */
 		for(; b < end1; b++) {
 			switch(*b) {
-			case 0x00: if((b[1] & 0x80) == 0) continue; break;
-			case 0xff: if((b[1] & 0x80) != 0) continue; break;
+				case 0x00: if((b[1] & 0x80) == 0) continue; break;
+				case 0xff: if((b[1] & 0x80) != 0) continue; break;
 			}
 			break;
 		}
 
 		size = end - b;
-		if(size > sizeof(long)) {
-			/* Still cannot fit the long */
+		if(size > sizeof(value)) {
+			/* Still cannot fit the sizeof(value) */
 			errno = ERANGE;
 			return -1;
 		}
@@ -811,21 +812,23 @@ asn_INTEGER2long(const INTEGER_t *iptr, long *lptr) {
 	}
 
 	/* Perform the sign initialization */
-	/* Actually l = -(*b >> 7); gains nothing, yet unreadable! */
-	if((*b >> 7)) l = -1; else l = 0;
+	/* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
+	if((*b >> 7)) value = -1; else value = 0;
 
 	/* Conversion engine */
-	for(; b < end; b++)
-		l = (l << 8) | *b;
+	for(; b < end; b++) {
+		value = (value << 8) | *b;
+    }
 
-	*lptr = l;
+	*lptr = value;
 	return 0;
 }
 
+/* FIXME: negative INTEGER values are silently interpreted as large unsigned ones. */
 int
-asn_INTEGER2ulong(const INTEGER_t *iptr, unsigned long *lptr) {
+asn_INTEGER2umax(const INTEGER_t *iptr, uintmax_t *lptr) {
 	uint8_t *b, *end;
-	unsigned long l;
+	uintmax_t value;
 	size_t size;
 
 	if(!iptr || !iptr->buf || !lptr) {
@@ -838,49 +841,50 @@ asn_INTEGER2ulong(const INTEGER_t *iptr, unsigned long *lptr) {
 	end = b + size;
 
 	/* If all extra leading bytes are zeroes, ignore them */
-	for(; size > sizeof(unsigned long); b++, size--) {
+	for(; size > sizeof(value); b++, size--) {
 		if(*b) {
-			/* Value won't fit unsigned long */
+			/* Value won't fit into uintmax_t */
 			errno = ERANGE;
 			return -1;
 		}
 	}
 
 	/* Conversion engine */
-	for(l = 0; b < end; b++)
-		l = (l << 8) | *b;
+	for(value = 0; b < end; b++)
+		value = (value << 8) | *b;
 
-	*lptr = l;
+	*lptr = value;
 	return 0;
 }
 
 int
-asn_ulong2INTEGER(INTEGER_t *st, unsigned long value) {
-	uint8_t *buf;
-	uint8_t *end;
-	uint8_t *b;
-	int shr;
+asn_umax2INTEGER(INTEGER_t *st, uintmax_t value) {
+    uint8_t *buf;
+    uint8_t *end;
+    uint8_t *b;
+    int shr;
 
-	if(value <= LONG_MAX)
-		return asn_long2INTEGER(st, value);
+    if(value <= INTMAX_MAX) {
+        return asn_imax2INTEGER(st, value);
+    }
 
-	buf = (uint8_t *)MALLOC(1 + sizeof(value));
-	if(!buf) return -1;
+    buf = (uint8_t *)MALLOC(1 + sizeof(value));
+    if(!buf) return -1;
 
-	end = buf + (sizeof(value) + 1);
-	buf[0] = 0;
-	for(b = buf + 1, shr = (sizeof(long)-1)*8; b < end; shr -= 8, b++)
-		*b = (uint8_t)(value >> shr);
+    end = buf + (sizeof(value) + 1);
+    buf[0] = 0; /* INTEGERs are signed. 0-byte indicates positive. */
+    for(b = buf + 1, shr = (sizeof(value) - 1) * 8; b < end; shr -= 8, b++)
+        *b = (uint8_t)(value >> shr);
 
-	if(st->buf) FREEMEM(st->buf);
-	st->buf = buf;
-	st->size = 1 + sizeof(value);
+    if(st->buf) FREEMEM(st->buf);
+    st->buf = buf;
+    st->size = 1 + sizeof(value);
 
 	return 0;
 }
 
 int
-asn_long2INTEGER(INTEGER_t *st, long value) {
+asn_imax2INTEGER(INTEGER_t *st, intmax_t value) {
 	uint8_t *buf, *bp;
 	uint8_t *p;
 	uint8_t *pstart;
@@ -924,7 +928,7 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 		break;
 	}
 	/* Copy the integer body */
-	for(pstart = p, bp = buf, pend1 += add; p != pend1; p += add)
+	for(bp = buf, pend1 += add; p != pend1; p += add)
 		*bp++ = *p;
 
 	if(st->buf) FREEMEM(st->buf);
@@ -934,44 +938,61 @@ asn_long2INTEGER(INTEGER_t *st, long value) {
 	return 0;
 }
 
-/*
- * This function is going to be DEPRECATED soon.
- */
-enum asn_strtol_result_e
-asn_strtol(const char *str, const char *end, long *lp) {
-    const char *endp = end;
-
-    switch(asn_strtol_lim(str, &endp, lp)) {
-    case ASN_STRTOL_ERROR_RANGE:
-        return ASN_STRTOL_ERROR_RANGE;
-    case ASN_STRTOL_ERROR_INVAL:
-        return ASN_STRTOL_ERROR_INVAL;
-    case ASN_STRTOL_EXPECT_MORE:
-        return ASN_STRTOL_ERROR_INVAL;  /* Retain old behavior */
-    case ASN_STRTOL_OK:
-        return ASN_STRTOL_OK;
-    case ASN_STRTOL_EXTRA_DATA:
-        return ASN_STRTOL_ERROR_INVAL;  /* Retain old behavior */
+int
+asn_INTEGER2long(const INTEGER_t *iptr, long *l) {
+    intmax_t v;
+    if(asn_INTEGER2imax(iptr, &v) == 0) {
+        if(v < LONG_MIN || v > LONG_MAX) {
+            errno = ERANGE;
+            return -1;
+        }
+        *l = v;
+        return 0;
+    } else {
+        return -1;
     }
+}
 
-    return ASN_STRTOL_ERROR_INVAL;  /* Retain old behavior */
+int
+asn_INTEGER2ulong(const INTEGER_t *iptr, unsigned long *l) {
+    uintmax_t v;
+    if(asn_INTEGER2umax(iptr, &v) == 0) {
+        if(v > ULONG_MAX) {
+            errno = ERANGE;
+            return -1;
+        }
+        *l = v;
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
+int
+asn_long2INTEGER(INTEGER_t *st, long value) {
+    return asn_imax2INTEGER(st, value);
+}
+
+int
+asn_ulong2INTEGER(INTEGER_t *st, unsigned long value) {
+    return asn_imax2INTEGER(st, value);
 }
 
 /*
  * Parse the number in the given string until the given *end position,
  * returning the position after the last parsed character back using the
  * same (*end) pointer.
- * WARNING: This behavior is different from the standard strtol(3).
+ * WARNING: This behavior is different from the standard strtol/strtoimax(3).
  */
-enum asn_strtol_result_e
-asn_strtol_lim(const char *str, const char **end, long *lp) {
+enum asn_strtox_result_e
+asn_strtoimax_lim(const char *str, const char **end, intmax_t *intp) {
 	int sign = 1;
-	long l;
+	intmax_t value;
 
-	const long upper_boundary = LONG_MAX / 10;
-	long last_digit_max = LONG_MAX % 10;
+	const intmax_t upper_boundary = INTMAX_MAX / 10;
+	intmax_t last_digit_max = INTMAX_MAX % 10;
 
-	if(str >= *end) return ASN_STRTOL_ERROR_INVAL;
+	if(str >= *end) return ASN_STRTOX_ERROR_INVAL;
 
 	switch(*str) {
 	case '-':
@@ -982,44 +1003,74 @@ asn_strtol_lim(const char *str, const char **end, long *lp) {
 		str++;
 		if(str >= *end) {
 			*end = str;
-			return ASN_STRTOL_EXPECT_MORE;
+			return ASN_STRTOX_EXPECT_MORE;
 		}
 	}
 
-	for(l = 0; str < (*end); str++) {
+	for(value = 0; str < (*end); str++) {
 		switch(*str) {
 		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
 		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39: {
 			int d = *str - '0';
-			if(l < upper_boundary) {
-				l = l * 10 + d;
-			} else if(l == upper_boundary) {
+			if(value < upper_boundary) {
+				value = value * 10 + d;
+			} else if(value == upper_boundary) {
 				if(d <= last_digit_max) {
 					if(sign > 0) {
-						l = l * 10 + d;
+						value = value * 10 + d;
 					} else {
 						sign = 1;
-						l = -l * 10 - d;
+						value = -value * 10 - d;
 					}
 				} else {
 					*end = str;
-					return ASN_STRTOL_ERROR_RANGE;
+					return ASN_STRTOX_ERROR_RANGE;
 				}
 			} else {
 				*end = str;
-				return ASN_STRTOL_ERROR_RANGE;
+				return ASN_STRTOX_ERROR_RANGE;
 			}
 		    }
 		    continue;
 		default:
 		    *end = str;
-		    *lp = sign * l;
-		    return ASN_STRTOL_EXTRA_DATA;
+		    *intp = sign * value;
+		    return ASN_STRTOX_EXTRA_DATA;
 		}
 	}
 
 	*end = str;
-	*lp = sign * l;
-	return ASN_STRTOL_OK;
+	*intp = sign * value;
+	return ASN_STRTOX_OK;
+}
+
+enum asn_strtox_result_e
+asn_strtol_lim(const char *str, const char **end, long *lp) {
+    intmax_t value;
+    switch(asn_strtoimax_lim(str, end, &value)) {
+    case ASN_STRTOX_ERROR_RANGE:
+        return ASN_STRTOX_ERROR_RANGE;
+    case ASN_STRTOX_ERROR_INVAL:
+        return ASN_STRTOX_ERROR_INVAL;
+    case ASN_STRTOX_EXPECT_MORE:
+        return ASN_STRTOX_EXPECT_MORE;
+    case ASN_STRTOX_OK:
+        if(value >= LONG_MIN && value <= LONG_MAX) {
+            *lp = value;
+            return ASN_STRTOX_OK;
+        } else {
+            return ASN_STRTOX_ERROR_RANGE;
+        }
+    case ASN_STRTOX_EXTRA_DATA:
+        if(value >= LONG_MIN && value <= LONG_MAX) {
+            *lp = value;
+            return ASN_STRTOX_EXTRA_DATA;
+        } else {
+            return ASN_STRTOX_ERROR_RANGE;
+        }
+    }
+
+    assert(!"Unreachable");
+    return ASN_STRTOX_ERROR_INVAL;
 }
 

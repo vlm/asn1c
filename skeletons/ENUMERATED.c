@@ -24,8 +24,13 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	INTEGER_encode_der,		/* Implemented in terms of INTEGER */
 	INTEGER_decode_xer,	/* This is temporary! */
 	INTEGER_encode_xer,
+#ifdef	ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	ENUMERATED_decode_uper,	/* Unaligned PER decoder */
 	ENUMERATED_encode_uper,	/* Unaligned PER encoder */
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_ENUMERATED_tags,
 	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),

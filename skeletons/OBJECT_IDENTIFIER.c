@@ -25,8 +25,13 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	der_encode_primitive,
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
+#ifdef	ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
@@ -668,20 +673,20 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	const char *endp = oid_end;				\
 	long value;						\
 	switch(asn_strtol_lim(oid_text, &endp, &value)) {	\
-	case ASN_STRTOL_EXTRA_DATA:				\
-	case ASN_STRTOL_OK:					\
+	case ASN_STRTOX_EXTRA_DATA:				\
+	case ASN_STRTOX_OK:					\
 		if(arcs_count < arcs_slots)			\
 			arcs[arcs_count] = value;		\
 		arcs_count++;					\
 		oid_text = endp - 1;				\
 		break;						\
-	case ASN_STRTOL_ERROR_RANGE:				\
+	case ASN_STRTOX_ERROR_RANGE:				\
 		if(opt_oid_text_end)				\
 			*opt_oid_text_end = oid_text;		\
 		errno = ERANGE;					\
 		return -1;					\
-	case ASN_STRTOL_ERROR_INVAL:				\
-	case ASN_STRTOL_EXPECT_MORE:				\
+	case ASN_STRTOX_ERROR_INVAL:				\
+	case ASN_STRTOX_EXPECT_MORE:				\
 		if(opt_oid_text_end)				\
 			*opt_oid_text_end = oid_text;		\
 		errno = EINVAL;					\

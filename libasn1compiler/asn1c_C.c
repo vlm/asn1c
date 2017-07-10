@@ -730,7 +730,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 			tag2el_cxer_count);
 		OUT("%d,\t/* Whether extensible */\n",
 			compute_extensions_start(expr) == -1 ? 0 : 1);
-		OUT("(unsigned int *)asn_MAP_%s_mmap_%d\t/* Mandatory elements map */\n",
+		OUT("(const unsigned int *)asn_MAP_%s_mmap_%d\t/* Mandatory elements map */\n",
 			p, expr->_type_unique_index);
 	);
 	OUT("};\n");
