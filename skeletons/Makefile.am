@@ -71,7 +71,7 @@ libasn1cskeletons_la_SOURCES = 				\
 	der_encoder.c der_encoder.h			\
 	oer_decoder.c oer_decoder.h			\
 	oer_encoder.c oer_encoder.h			\
-	oer_support.c oer_support.h			\
+	oer_support.h			\
 	per_decoder.c per_decoder.h			\
 	per_encoder.c per_encoder.h			\
 	per_opentype.c per_opentype.h			\
