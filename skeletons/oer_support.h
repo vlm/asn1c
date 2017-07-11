@@ -21,12 +21,23 @@ typedef const struct asn_oer_constraint_s {
 		AOC_HAS_UPPER_BOUND = 0x02
 	} flags;
 	intmax_t lower_bound;
-	intmax_t upoer_bound;
+	intmax_t upper_bound;
 } asn_oer_constraint_t;
 typedef const struct asn_oer_constraints_s {
     struct asn_oer_constraint_s value;
     struct asn_oer_constraint_s size;
 } asn_oer_constraints_t;
+
+
+/*
+ * Fetch the length determinant (X.696 08/2015, #8.6) into *len_r.
+ * RETURN VALUES:
+ *       0:     More data expected than bufptr contains.
+ *      -1:     Fatal error deciphering length.
+ *      >0:     Number of bytes used from bufptr.
+ */
+ssize_t oer_fetch_length(const void *bufptr, size_t size, size_t *len_r);
+
 
 #ifdef __cplusplus
 }
