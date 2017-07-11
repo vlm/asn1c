@@ -87,23 +87,23 @@ INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
         rval.consumed += req_bytes;
         return rval;
-    } else if(ct && (ct->flags & AOC_HAS_LOWER_BOUND)) {
+    } else if(ct
+              && ((ct->flags
+                  & (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))
+                        == (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))) {
         /* X.969 08/2015 10.2(b) - no lower bound or negative lower bound */
 
         intmax_t lb = ct->lower_bound;
         intmax_t ub = ct->upper_bound;
 
-        if(ct->flags & AOC_HAS_UPPER_BOUND) {
-            if(lb >= -128 && ub <= 127) {
-                req_bytes = 1;
-            } else if(lb >= -32768 && ub <= 32767) {
-                req_bytes = 2;
-            } else if(lb >= -2147483648L && ub <= 2147483647L) {
-                req_bytes = 4;
-            } else if(lb >= -9223372036854775808LL
-                      && ub <= 9223372036854775807LL) {
-                req_bytes = 8;
-            }
+        if(lb >= -128 && ub <= 127) {
+            req_bytes = 1;
+        } else if(lb >= -32768 && ub <= 32767) {
+            req_bytes = 2;
+        } else if(lb >= -2147483648L && ub <= 2147483647L) {
+            req_bytes = 4;
+        } else if(lb >= -9223372036854775808LL && ub <= 9223372036854775807LL) {
+            req_bytes = 8;
         }
     }
 
@@ -136,6 +136,112 @@ INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
     rval.consumed += req_bytes;
     return rval;
+}
+
+/*
+ * Encode as Canonical OER.
+ */
+asn_enc_rval_t
+INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
+                   asn_oer_constraints_t *constraints, void *sptr,
+                   asn_app_consume_bytes_f *cb, void *app_key) {
+    const INTEGER_t *st = *(const INTEGER_t **)sptr;
+    asn_enc_rval_t er;
+    asn_oer_constraint_t *ct;
+    const uint8_t *buf;
+    const uint8_t *end;
+    size_t useful_bytes;
+    size_t req_bytes = 0;
+    int encode_as_unsigned;
+    int sign = 0;
+
+    if(!st || st->size == 0) ASN__ENCODE_FAILED;
+
+    if(!constraints) constraints = td->oer_constraints;
+    ct = constraints ? &constraints->value : 0;
+
+    er.encoded = 0;
+
+    buf = st->buf;
+    end = buf + st->size;
+
+    encode_as_unsigned =
+        ct && (ct->flags & AOC_HAS_LOWER_BOUND) && ct->lower_bound >= 0;
+
+    sign = (buf && buf < end) ? buf[0] & 0x80 : 0;
+
+    if(encode_as_unsigned && sign) {
+        /* The value given is a signed value. Can't proceed. */
+        ASN__ENCODE_FAILED;
+    }
+
+    /* Ignore 9 leading zeroes or ones */
+    for(; buf + 1 < end; buf++) {
+        if(buf[0] == 0x0 && ((buf[1] & 0x80) == 0 || encode_as_unsigned)) {
+            continue;
+        } else if(buf[0] == 0xff && (buf[1] & 0x80) != 0) {
+            continue;
+        }
+        break;
+    }
+
+    useful_bytes = end - buf;
+    if(encode_as_unsigned) {
+        intmax_t ub = ct->upper_bound;
+
+        if(ub <= 255) {
+            req_bytes = 1;
+        } else if(ub <= 65535) {
+            req_bytes = 2;
+        } else if(ub <= 4294967295UL) {
+            req_bytes = 4;
+        } else if(ub <= 18446744073709551615ULL) {
+            req_bytes = 8;
+        }
+    } else if(ct
+              && ((ct->flags
+                  & (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))
+                        == (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))) {
+        /* X.969 08/2015 10.2(b) - no lower bound or negative lower bound */
+
+        intmax_t lb = ct->lower_bound;
+        intmax_t ub = ct->upper_bound;
+
+        if(lb >= -128 && ub <= 127) {
+            req_bytes = 1;
+        } else if(lb >= -32768 && ub <= 32767) {
+            req_bytes = 2;
+        } else if(lb >= -2147483648L && ub <= 2147483647L) {
+            req_bytes = 4;
+        } else if(lb >= -9223372036854775808LL && ub <= 9223372036854775807LL) {
+            req_bytes = 8;
+        }
+    }
+
+    if(req_bytes == 0) {
+        ssize_t r = oer_serialize_length(useful_bytes, cb, app_key);
+        if(r < 0) {
+            ASN__ENCODE_FAILED;
+        }
+        er.encoded += r;
+        req_bytes = useful_bytes;
+    } else if(req_bytes < useful_bytes) {
+        ASN__ENCODE_FAILED;
+    }
+
+    er.encoded += req_bytes;
+
+    for(; req_bytes > useful_bytes; req_bytes--) {
+        if(cb(sign?"\xff":"\0", 1, app_key) < 0) {
+            ASN__ENCODE_FAILED;
+        }
+    }
+
+    if(cb(buf, useful_bytes, app_key) < 0) {
+        ASN__ENCODE_FAILED;
+    }
+
+    ASN__ENCODED_OK(er);
 }
 
 #endif  /* ASN_DISABLE_OER_SUPPORT */

@@ -38,6 +38,12 @@ typedef const struct asn_oer_constraints_s {
  */
 ssize_t oer_fetch_length(const void *bufptr, size_t size, size_t *len_r);
 
+/*
+ * Serialize OER length. Returns the number of bytes serialized
+ * or -1 if a given callback returned with negative result.
+ */
+ssize_t oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb, void *app_key);
+
 
 #ifdef __cplusplus
 }

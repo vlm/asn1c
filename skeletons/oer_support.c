@@ -63,3 +63,54 @@ oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
 }
 
 
+/*
+ * Serialize OER length. Returns the number of bytes serialized
+ * or -1 if a given callback returned with negative result.
+ */
+ssize_t
+oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb,
+                     void *app_key) {
+    uint8_t scratch[1 + sizeof(length)];
+    uint8_t *sp = scratch;
+    int littleEndian = 1;   /* Run-time detection */
+    const uint8_t *pstart;
+    const uint8_t *pend;
+    const uint8_t *p;
+    int add;
+
+    if(length <= 127) {
+        uint8_t b = length;
+        if(cb(&b, 1, app_key) < 0) {
+            return -1;
+        }
+        return 1;
+    }
+
+    if(*(char *)&littleEndian) {
+        pstart = (const uint8_t *)&length + sizeof(length);
+        pend = (const uint8_t *)&length;
+        add = -1;
+    } else {
+        pstart = (const uint8_t *)&length;
+        pend = pstart + sizeof(length);
+        add = 1;
+    }
+
+    for(p = pstart; p != pend; p += add) {
+        /* Skip leading zeros. */
+        if(*p) break;
+    }
+
+    for(sp = scratch + 1; p != pend; p += add, sp++) {
+        *sp = *p;
+    }
+    assert((sp - scratch) - 1 <= 0x7f);
+    scratch[0] = 0x80 + ((sp - scratch) - 1);
+
+    if(cb(scratch, sp - scratch, app_key) < 0) {
+        return -1;
+    }
+
+    return sp - scratch;
+}
+
