@@ -47,23 +47,24 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
  */
 asn_enc_rval_t
 oer_encode_to_buffer(struct asn_TYPE_descriptor_s *type_descriptor,
+                     asn_oer_constraints_t *constraints,
                      void *struct_ptr,  /* Structure to be encoded */
                      void *buffer,      /* Pre-allocated buffer */
                      size_t buffer_size /* Initial buffer size (maximum) */
                      ) {
-        enc_to_buf_arg arg;
-        asn_enc_rval_t ec;
+    enc_to_buf_arg arg;
+    asn_enc_rval_t ec;
 
-        arg.buffer = buffer;
-        arg.left = buffer_size;
+    arg.buffer = buffer;
+    arg.left = buffer_size;
 
-        ec = type_descriptor->oer_encoder(
-            type_descriptor, 0,
-            struct_ptr, /* Pointer to the destination structure */
-            encode_to_buffer_cb, &arg);
-        if(ec.encoded != -1) {
-                assert(ec.encoded == (ssize_t)(buffer_size - arg.left));
-                /* Return the encoded contents size */
-        }
-        return ec;
+    ec = type_descriptor->oer_encoder(
+        type_descriptor, constraints,
+        struct_ptr, /* Pointer to the destination structure */
+        encode_to_buffer_cb, &arg);
+    if(ec.encoded != -1) {
+        assert(ec.encoded == (ssize_t)(buffer_size - arg.left));
+        /* Return the encoded contents size */
+    }
+    return ec;
 }

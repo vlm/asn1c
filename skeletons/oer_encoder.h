@@ -26,6 +26,7 @@ asn_enc_rval_t oer_encode(struct asn_TYPE_descriptor_s *type_descriptor,
 /* A variant of oer_encode() which encodes data into the pre-allocated buffer */
 asn_enc_rval_t oer_encode_to_buffer(
     struct asn_TYPE_descriptor_s *type_descriptor,
+    asn_oer_constraints_t *constraints,
     void *struct_ptr,  /* Structure to be encoded */
     void *buffer,      /* Pre-allocated buffer */
     size_t buffer_size /* Initial buffer size (maximum) */
