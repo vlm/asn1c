@@ -39,6 +39,7 @@ static asn_TYPE_member_t asn_MBR_data_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_EpytRef,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -63,8 +64,8 @@ asn_TYPE_descriptor_t asn_DEF_data_2 = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_data_tags_2,
 	sizeof(asn_DEF_data_tags_2)
@@ -72,6 +73,7 @@ asn_TYPE_descriptor_t asn_DEF_data_2 = {
 	asn_DEF_data_tags_2,	/* Same as above */
 	sizeof(asn_DEF_data_tags_2)
 		/sizeof(asn_DEF_data_tags_2[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_data_2,
 	1,	/* Single element */
@@ -84,6 +86,7 @@ static asn_TYPE_member_t asn_MBR_Type_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_data_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "data"
@@ -114,8 +117,8 @@ asn_TYPE_descriptor_t asn_DEF_Type = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Type_tags_1,
 	sizeof(asn_DEF_Type_tags_1)
@@ -123,6 +126,7 @@ asn_TYPE_descriptor_t asn_DEF_Type = {
 	asn_DEF_Type_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Type_tags_1)
 		/sizeof(asn_DEF_Type_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Type_1,
 	1,	/* Elements count */
@@ -176,6 +180,8 @@ EpytRef_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Epyt.uper_encoder;
 	td->oer_decoder    = asn_DEF_Epyt.oer_decoder;
 	td->oer_encoder    = asn_DEF_Epyt.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Epyt.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Epyt.per_constraints;
 	td->elements       = asn_DEF_Epyt.elements;
@@ -243,8 +249,8 @@ asn_TYPE_descriptor_t asn_DEF_EpytRef = {
 	EpytRef_encode_der,
 	EpytRef_decode_xer,
 	EpytRef_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_EpytRef_tags_1,
 	sizeof(asn_DEF_EpytRef_tags_1)
@@ -252,6 +258,7 @@ asn_TYPE_descriptor_t asn_DEF_EpytRef = {
 	asn_DEF_EpytRef_tags_1,	/* Same as above */
 	sizeof(asn_DEF_EpytRef_tags_1)
 		/sizeof(asn_DEF_EpytRef_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -302,6 +309,7 @@ static asn_TYPE_member_t asn_MBR_stype_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Type,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -326,8 +334,8 @@ asn_TYPE_descriptor_t asn_DEF_stype_2 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_stype_tags_2,
 	sizeof(asn_DEF_stype_tags_2)
@@ -335,6 +343,7 @@ asn_TYPE_descriptor_t asn_DEF_stype_2 = {
 	asn_DEF_stype_tags_2,	/* Same as above */
 	sizeof(asn_DEF_stype_tags_2)
 		/sizeof(asn_DEF_stype_tags_2[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_stype_2,
 	1,	/* Single element */
@@ -347,6 +356,7 @@ static asn_TYPE_member_t asn_MBR_Epyt_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_stype_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "stype"
@@ -356,6 +366,7 @@ static asn_TYPE_member_t asn_MBR_Epyt_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Type,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "type"
@@ -365,6 +376,7 @@ static asn_TYPE_member_t asn_MBR_Epyt_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Ypet,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "ypet"
@@ -397,8 +409,8 @@ asn_TYPE_descriptor_t asn_DEF_Epyt = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Epyt_tags_1,
 	sizeof(asn_DEF_Epyt_tags_1)
@@ -406,6 +418,7 @@ asn_TYPE_descriptor_t asn_DEF_Epyt = {
 	asn_DEF_Epyt_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Epyt_tags_1)
 		/sizeof(asn_DEF_Epyt_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Epyt_1,
 	3,	/* Elements count */
@@ -578,6 +591,7 @@ static asn_TYPE_member_t asn_MBR_senums_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_EnumType,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -602,8 +616,8 @@ asn_TYPE_descriptor_t asn_DEF_senums_4 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_senums_tags_4,
 	sizeof(asn_DEF_senums_tags_4)
@@ -611,6 +625,7 @@ asn_TYPE_descriptor_t asn_DEF_senums_4 = {
 	asn_DEF_senums_tags_4,	/* Same as above */
 	sizeof(asn_DEF_senums_tags_4)
 		/sizeof(asn_DEF_senums_tags_4[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_senums_4,
 	1,	/* Single element */
@@ -623,6 +638,7 @@ static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Epyt,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "epyt"
@@ -632,6 +648,7 @@ static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = asn_DFL_3_set_7,	/* DEFAULT 7 */
 		.name = "plain"
@@ -641,6 +658,7 @@ static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_senums_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "senums"
@@ -650,6 +668,7 @@ static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_patest1_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "patest1"
@@ -659,6 +678,7 @@ static asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_patest2_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "patest2"
@@ -698,8 +718,8 @@ asn_TYPE_descriptor_t asn_DEF_Ypet = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Ypet_tags_1,
 	sizeof(asn_DEF_Ypet_tags_1)
@@ -707,6 +727,7 @@ asn_TYPE_descriptor_t asn_DEF_Ypet = {
 	asn_DEF_Ypet_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Ypet_tags_1)
 		/sizeof(asn_DEF_Ypet_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Ypet_1,
 	5,	/* Elements count */
@@ -767,6 +788,8 @@ EnumType_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
 	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -851,8 +874,8 @@ asn_TYPE_descriptor_t asn_DEF_EnumType = {
 	EnumType_encode_der,
 	EnumType_decode_xer,
 	EnumType_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_EnumType_tags_1,
 	sizeof(asn_DEF_EnumType_tags_1)
@@ -860,6 +883,7 @@ asn_TYPE_descriptor_t asn_DEF_EnumType = {
 	asn_DEF_EnumType_tags_1,	/* Same as above */
 	sizeof(asn_DEF_EnumType_tags_1)
 		/sizeof(asn_DEF_EnumType_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_EnumType_specs_1	/* Additional specs */

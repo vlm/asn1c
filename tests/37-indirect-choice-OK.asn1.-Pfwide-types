@@ -44,6 +44,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-a"
@@ -53,6 +54,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OCTET_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-b"
@@ -62,6 +64,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Choice1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-c"
@@ -71,6 +74,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Choice2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-d"
@@ -102,13 +106,14 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_T_1,
 	4,	/* Elements count */
@@ -155,6 +160,7 @@ static asn_TYPE_member_t asn_MBR_Choice1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OCTET_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c-a"
@@ -164,6 +170,7 @@ static asn_TYPE_member_t asn_MBR_Choice1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c-b"
@@ -193,13 +200,14 @@ asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Choice1_1,
 	2,	/* Elements count */
@@ -251,6 +259,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OCTET_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c-a"
@@ -260,6 +269,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c-b"
@@ -269,6 +279,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Choice1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c-d"
@@ -278,6 +289,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Choice1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c-e"
@@ -312,8 +324,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice2_tags_1,
 	sizeof(asn_DEF_Choice2_tags_1)
@@ -321,6 +333,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	asn_DEF_Choice2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Choice2_tags_1)
 		/sizeof(asn_DEF_Choice2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Choice2_1,
 	4,	/* Elements count */
@@ -374,6 +387,8 @@ Choice3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
 	td->oer_decoder    = asn_DEF_Choice2.oer_decoder;
 	td->oer_encoder    = asn_DEF_Choice2.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Choice2.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
@@ -442,8 +457,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	Choice3_encode_der,
 	Choice3_decode_xer,
 	Choice3_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice3_tags_1,
 	sizeof(asn_DEF_Choice3_tags_1)
@@ -451,6 +466,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	asn_DEF_Choice3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Choice3_tags_1)
 		/sizeof(asn_DEF_Choice3_tags_1[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -503,6 +519,8 @@ Choice4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
 	td->oer_decoder    = asn_DEF_Choice2.oer_decoder;
 	td->oer_encoder    = asn_DEF_Choice2.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Choice2.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
@@ -571,8 +589,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice4 = {
 	Choice4_encode_der,
 	Choice4_decode_xer,
 	Choice4_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice4_tags_1,
 	sizeof(asn_DEF_Choice4_tags_1)
@@ -580,6 +598,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice4 = {
 	asn_DEF_Choice4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Choice4_tags_1)
 		/sizeof(asn_DEF_Choice4_tags_1[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -632,6 +651,8 @@ Choice5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Choice2.uper_encoder;
 	td->oer_decoder    = asn_DEF_Choice2.oer_decoder;
 	td->oer_encoder    = asn_DEF_Choice2.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Choice2.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice2.per_constraints;
 	td->elements       = asn_DEF_Choice2.elements;
@@ -699,8 +720,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice5 = {
 	Choice5_encode_der,
 	Choice5_decode_xer,
 	Choice5_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice5_tags_1,
 	sizeof(asn_DEF_Choice5_tags_1)
@@ -708,6 +729,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice5 = {
 	asn_DEF_Choice5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Choice5_tags_1)
 		/sizeof(asn_DEF_Choice5_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -760,6 +782,8 @@ Choice6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Choice1.uper_encoder;
 	td->oer_decoder    = asn_DEF_Choice1.oer_decoder;
 	td->oer_encoder    = asn_DEF_Choice1.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Choice1.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Choice1.per_constraints;
 	td->elements       = asn_DEF_Choice1.elements;
@@ -824,13 +848,14 @@ asn_TYPE_descriptor_t asn_DEF_Choice6 = {
 	Choice6_encode_der,
 	Choice6_decode_xer,
 	Choice6_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */

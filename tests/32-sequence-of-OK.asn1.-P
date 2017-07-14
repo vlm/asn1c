@@ -33,6 +33,7 @@ static asn_TYPE_member_t asn_MBR_Programming_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Fault,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -56,8 +57,8 @@ asn_TYPE_descriptor_t asn_DEF_Programming = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Programming_tags_1,
 	sizeof(asn_DEF_Programming_tags_1)
@@ -65,6 +66,7 @@ asn_TYPE_descriptor_t asn_DEF_Programming = {
 	asn_DEF_Programming_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Programming_tags_1)
 		/sizeof(asn_DEF_Programming_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Programming_1,
 	1,	/* Single element */
@@ -106,6 +108,7 @@ static asn_TYPE_member_t asn_MBR_Fault_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Error,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -129,8 +132,8 @@ asn_TYPE_descriptor_t asn_DEF_Fault = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Fault_tags_1,
 	sizeof(asn_DEF_Fault_tags_1)
@@ -138,6 +141,7 @@ asn_TYPE_descriptor_t asn_DEF_Fault = {
 	asn_DEF_Fault_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Fault_tags_1)
 		/sizeof(asn_DEF_Fault_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Fault_1,
 	1,	/* Single element */
@@ -189,8 +193,8 @@ asn_TYPE_descriptor_t asn_DEF_Error = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Error_tags_1,
 	sizeof(asn_DEF_Error_tags_1)
@@ -198,6 +202,7 @@ asn_TYPE_descriptor_t asn_DEF_Error = {
 	asn_DEF_Error_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Error_tags_1)
 		/sizeof(asn_DEF_Error_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	&asn_SPC_Error_specs_1	/* Additional specs */
@@ -246,6 +251,7 @@ static asn_TYPE_member_t asn_MBR_seqOfMan_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Error,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -271,8 +277,8 @@ asn_TYPE_descriptor_t asn_DEF_seqOfMan_3 = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_seqOfMan_tags_3,
 	sizeof(asn_DEF_seqOfMan_tags_3)
@@ -280,6 +286,7 @@ asn_TYPE_descriptor_t asn_DEF_seqOfMan_3 = {
 	asn_DEF_seqOfMan_tags_3,	/* Same as above */
 	sizeof(asn_DEF_seqOfMan_tags_3)
 		/sizeof(asn_DEF_seqOfMan_tags_3[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_seqOfMan_3,
 	1,	/* Single element */
@@ -292,6 +299,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithMandatory_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "someString"
@@ -301,6 +309,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithMandatory_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_seqOfMan_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "seqOfMan"
@@ -332,8 +341,8 @@ asn_TYPE_descriptor_t asn_DEF_SeqWithMandatory = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SeqWithMandatory_tags_1,
 	sizeof(asn_DEF_SeqWithMandatory_tags_1)
@@ -341,6 +350,7 @@ asn_TYPE_descriptor_t asn_DEF_SeqWithMandatory = {
 	asn_DEF_SeqWithMandatory_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SeqWithMandatory_tags_1)
 		/sizeof(asn_DEF_SeqWithMandatory_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_SeqWithMandatory_1,
 	2,	/* Elements count */
@@ -390,6 +400,7 @@ static asn_TYPE_member_t asn_MBR_seqOfOpt_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Error,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -415,8 +426,8 @@ asn_TYPE_descriptor_t asn_DEF_seqOfOpt_3 = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_seqOfOpt_tags_3,
 	sizeof(asn_DEF_seqOfOpt_tags_3)
@@ -424,6 +435,7 @@ asn_TYPE_descriptor_t asn_DEF_seqOfOpt_3 = {
 	asn_DEF_seqOfOpt_tags_3,	/* Same as above */
 	sizeof(asn_DEF_seqOfOpt_tags_3)
 		/sizeof(asn_DEF_seqOfOpt_tags_3[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_seqOfOpt_3,
 	1,	/* Single element */
@@ -436,6 +448,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithOptional_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_UTF8String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "someString"
@@ -445,6 +458,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithOptional_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_seqOfOpt_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "seqOfOpt"
@@ -476,8 +490,8 @@ asn_TYPE_descriptor_t asn_DEF_SeqWithOptional = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SeqWithOptional_tags_1,
 	sizeof(asn_DEF_SeqWithOptional_tags_1)
@@ -485,6 +499,7 @@ asn_TYPE_descriptor_t asn_DEF_SeqWithOptional = {
 	asn_DEF_SeqWithOptional_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SeqWithOptional_tags_1)
 		/sizeof(asn_DEF_SeqWithOptional_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_SeqWithOptional_1,
 	2,	/* Elements count */

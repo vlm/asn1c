@@ -71,6 +71,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "version"
@@ -80,6 +81,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "signature"
@@ -89,6 +91,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Name,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "issuer"
@@ -122,8 +125,8 @@ asn_TYPE_descriptor_t asn_DEF_toBeSigned_2 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_toBeSigned_tags_2,
 	sizeof(asn_DEF_toBeSigned_tags_2)
@@ -131,6 +134,7 @@ asn_TYPE_descriptor_t asn_DEF_toBeSigned_2 = {
 	asn_DEF_toBeSigned_tags_2,	/* Same as above */
 	sizeof(asn_DEF_toBeSigned_tags_2)
 		/sizeof(asn_DEF_toBeSigned_tags_2[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_toBeSigned_2,
 	3,	/* Elements count */
@@ -143,6 +147,7 @@ static asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_toBeSigned_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "toBeSigned"
@@ -152,6 +157,7 @@ static asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "algorithm"
@@ -161,6 +167,7 @@ static asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = memb_signature_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "signature"
@@ -193,8 +200,8 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIGNED_15P0_tags_1,
 	sizeof(asn_DEF_SIGNED_15P0_tags_1)
@@ -202,6 +209,7 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0 = {
 	asn_DEF_SIGNED_15P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SIGNED_15P0_tags_1)
 		/sizeof(asn_DEF_SIGNED_15P0_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_SIGNED_15P0_1,
 	3,	/* Elements count */
@@ -255,6 +263,8 @@ Certificate_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_SIGNED_15P0.uper_encoder;
 	td->oer_decoder    = asn_DEF_SIGNED_15P0.oer_decoder;
 	td->oer_encoder    = asn_DEF_SIGNED_15P0.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_SIGNED_15P0.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_SIGNED_15P0.per_constraints;
 	td->elements       = asn_DEF_SIGNED_15P0.elements;
@@ -322,8 +332,8 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 	Certificate_encode_der,
 	Certificate_decode_xer,
 	Certificate_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Certificate_tags_1,
 	sizeof(asn_DEF_Certificate_tags_1)
@@ -331,6 +341,7 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 	asn_DEF_Certificate_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Certificate_tags_1)
 		/sizeof(asn_DEF_Certificate_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -371,6 +382,7 @@ static asn_TYPE_member_t asn_MBR_Name_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_RelativeDistinguishedName,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -394,8 +406,8 @@ asn_TYPE_descriptor_t asn_DEF_Name = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Name_tags_1,
 	sizeof(asn_DEF_Name_tags_1)
@@ -403,6 +415,7 @@ asn_TYPE_descriptor_t asn_DEF_Name = {
 	asn_DEF_Name_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Name_tags_1)
 		/sizeof(asn_DEF_Name_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Name_1,
 	1,	/* Single element */
@@ -492,6 +505,7 @@ static asn_TYPE_member_t asn_MBR_RelativeDistinguishedName_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_IA5String_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -515,8 +529,8 @@ asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_RelativeDistinguishedName_tags_1,
 	sizeof(asn_DEF_RelativeDistinguishedName_tags_1)
@@ -524,6 +538,7 @@ asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName = {
 	asn_DEF_RelativeDistinguishedName_tags_1,	/* Same as above */
 	sizeof(asn_DEF_RelativeDistinguishedName_tags_1)
 		/sizeof(asn_DEF_RelativeDistinguishedName_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_RelativeDistinguishedName_1,
 	1,	/* Single element */

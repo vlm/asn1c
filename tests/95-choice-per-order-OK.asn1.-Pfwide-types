@@ -64,6 +64,7 @@ static asn_TYPE_member_t asn_MBR_ch_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "null"
@@ -73,6 +74,7 @@ static asn_TYPE_member_t asn_MBR_ch_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "int"
@@ -103,13 +105,14 @@ asn_TYPE_descriptor_t asn_DEF_ch_4 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_ch_4,
 	2,	/* Elements count */
@@ -122,6 +125,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_RELATIVE_OID,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "roid"
@@ -131,6 +135,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "bitstr"
@@ -140,6 +145,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_ch_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "ch"
@@ -149,6 +155,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "bool"
@@ -181,13 +188,14 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Choice_1,
 	4,	/* Elements count */
@@ -234,6 +242,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_BIT_STRING,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "bitstr"
@@ -243,6 +252,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_RELATIVE_OID,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "roid"
@@ -272,13 +282,14 @@ asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Choice2_1,
 	2,	/* Elements count */

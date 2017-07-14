@@ -99,10 +99,10 @@ typedef struct asn_TYPE_descriptor_s {
 	der_type_encoder_f *der_encoder;	/* Canonical DER encoder */
 	xer_type_decoder_f *xer_decoder;	/* Generic XER decoder */
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
-	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
-	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
 	oer_type_decoder_f *oer_decoder;	/* Generic OER decoder */
 	oer_type_encoder_f *oer_encoder;	/* Canonical OER encoder */
+	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
+	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
 
 	/***********************************************************************
 	 * Internally useful members. Not to be used by applications directly. *
@@ -150,6 +150,7 @@ typedef struct asn_TYPE_member_s {
 	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
 	asn_TYPE_descriptor_t *type;	/* Member type descriptor */
 	asn_constr_check_f *memb_constraints;	/* Constraints validator */
+	asn_oer_constraints_t *oer_constraints;	/* OER compiled constraints */
 	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
 	int (*default_value)(int setval, void **sptr);	/* DEFAULT <value> */
 	const char *name;			/* ASN.1 identifier of the element */

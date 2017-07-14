@@ -178,6 +178,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = memb_unsigned33_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_unsigned33_constr_2,
 		.default_value = 0,
 		.name = "unsigned33"
@@ -187,6 +188,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = memb_unsigned42_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_unsigned42_constr_3,
 		.default_value = 0,
 		.name = "unsigned42"
@@ -196,6 +198,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = memb_signed33_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_signed33_constr_4,
 		.default_value = 0,
 		.name = "signed33"
@@ -205,6 +208,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = memb_signed33ext_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_signed33ext_constr_5,
 		.default_value = 0,
 		.name = "signed33ext"
@@ -238,9 +242,9 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
@@ -248,6 +252,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_T_1,
 	4,	/* Elements count */

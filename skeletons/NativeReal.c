@@ -30,13 +30,6 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	NativeReal_encode_der,
 	NativeReal_decode_xer,
 	NativeReal_encode_xer,
-#ifdef	ASN_DISABLE_PER_SUPPORT
-	0,
-	0,
-#else
-	NativeReal_decode_uper,
-	NativeReal_encode_uper,
-#endif	/* ASN_DISABLE_PER_SUPPORT */
 #ifdef	ASN_DISABLE_OER_SUPPORT
 	0,
 	0,
@@ -44,6 +37,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	0,
 	0,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
+#ifdef	ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
+	NativeReal_decode_uper,
+	NativeReal_encode_uper,
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),

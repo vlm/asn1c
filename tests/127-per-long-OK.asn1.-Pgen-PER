@@ -57,6 +57,8 @@ unsigned32_4_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -165,6 +167,8 @@ unsplit32_5_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -378,9 +382,9 @@ asn_TYPE_descriptor_t asn_DEF_unsigned32_4 = {
 	unsigned32_4_encode_der,
 	unsigned32_4_decode_xer,
 	unsigned32_4_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	unsigned32_4_decode_uper,
 	unsigned32_4_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_unsigned32_tags_4,
 	sizeof(asn_DEF_unsigned32_tags_4)
@@ -388,6 +392,7 @@ asn_TYPE_descriptor_t asn_DEF_unsigned32_4 = {
 	asn_DEF_unsigned32_tags_4,	/* Same as above */
 	sizeof(asn_DEF_unsigned32_tags_4)
 		/sizeof(asn_DEF_unsigned32_tags_4[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_unsigned32_constr_4,
 	0, 0,	/* No members */
 	&asn_SPC_unsigned32_specs_4	/* Additional specs */
@@ -413,9 +418,9 @@ asn_TYPE_descriptor_t asn_DEF_unsplit32_5 = {
 	unsplit32_5_encode_der,
 	unsplit32_5_decode_xer,
 	unsplit32_5_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	unsplit32_5_decode_uper,
 	unsplit32_5_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_unsplit32_tags_5,
 	sizeof(asn_DEF_unsplit32_tags_5)
@@ -423,6 +428,7 @@ asn_TYPE_descriptor_t asn_DEF_unsplit32_5 = {
 	asn_DEF_unsplit32_tags_5,	/* Same as above */
 	sizeof(asn_DEF_unsplit32_tags_5)
 		/sizeof(asn_DEF_unsplit32_tags_5[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_unsplit32_constr_5,
 	0, 0,	/* No members */
 	&asn_SPC_unsplit32_specs_5	/* Additional specs */
@@ -434,6 +440,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = memb_small32range_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_small32range_constr_2,
 		.default_value = 0,
 		.name = "small32range"
@@ -443,6 +450,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.memb_constraints = memb_full32range_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_full32range_constr_3,
 		.default_value = 0,
 		.name = "full32range"
@@ -452,6 +460,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_unsigned32_4,
 		.memb_constraints = memb_unsigned32_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_unsigned32_constr_4,
 		.default_value = 0,
 		.name = "unsigned32"
@@ -461,6 +470,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_unsplit32_5,
 		.memb_constraints = memb_unsplit32_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_unsplit32_constr_5,
 		.default_value = 0,
 		.name = "unsplit32"
@@ -494,9 +504,9 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
@@ -504,6 +514,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_T_1,
 	4,	/* Elements count */

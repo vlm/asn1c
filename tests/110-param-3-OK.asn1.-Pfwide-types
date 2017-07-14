@@ -66,6 +66,8 @@ field_7_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
 	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -146,6 +148,7 @@ static asn_TYPE_member_t asn_MBR_Flag_16P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = asn_DFL_2_set_5,	/* DEFAULT 5 */
 		.name = "field"
@@ -176,8 +179,8 @@ asn_TYPE_descriptor_t asn_DEF_Flag_16P0 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Flag_16P0_tags_1,
 	sizeof(asn_DEF_Flag_16P0_tags_1)
@@ -185,6 +188,7 @@ asn_TYPE_descriptor_t asn_DEF_Flag_16P0 = {
 	asn_DEF_Flag_16P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Flag_16P0_tags_1)
 		/sizeof(asn_DEF_Flag_16P0_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Flag_16P0_1,
 	1,	/* Elements count */
@@ -244,8 +248,8 @@ asn_TYPE_descriptor_t asn_DEF_field_7 = {
 	field_7_encode_der,
 	field_7_decode_xer,
 	field_7_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_field_tags_7,
 	sizeof(asn_DEF_field_tags_7)
@@ -253,6 +257,7 @@ asn_TYPE_descriptor_t asn_DEF_field_7 = {
 	asn_DEF_field_tags_7,	/* Same as above */
 	sizeof(asn_DEF_field_tags_7)
 		/sizeof(asn_DEF_field_tags_7[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_field_specs_7	/* Additional specs */
@@ -264,6 +269,7 @@ static asn_TYPE_member_t asn_MBR_Flag_16P1_6[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_field_7,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = asn_DFL_7_set_5,	/* DEFAULT 5 */
 		.name = "field"
@@ -294,8 +300,8 @@ asn_TYPE_descriptor_t asn_DEF_Flag_16P1 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Flag_16P1_tags_6,
 	sizeof(asn_DEF_Flag_16P1_tags_6)
@@ -303,6 +309,7 @@ asn_TYPE_descriptor_t asn_DEF_Flag_16P1 = {
 	asn_DEF_Flag_16P1_tags_6,	/* Same as above */
 	sizeof(asn_DEF_Flag_16P1_tags_6)
 		/sizeof(asn_DEF_Flag_16P1_tags_6[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Flag_16P1_6,
 	1,	/* Elements count */
@@ -356,6 +363,8 @@ IntegerColorFlag_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Flag_16P0.uper_encoder;
 	td->oer_decoder    = asn_DEF_Flag_16P0.oer_decoder;
 	td->oer_encoder    = asn_DEF_Flag_16P0.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Flag_16P0.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Flag_16P0.per_constraints;
 	td->elements       = asn_DEF_Flag_16P0.elements;
@@ -423,8 +432,8 @@ asn_TYPE_descriptor_t asn_DEF_IntegerColorFlag = {
 	IntegerColorFlag_encode_der,
 	IntegerColorFlag_decode_xer,
 	IntegerColorFlag_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_IntegerColorFlag_tags_1,
 	sizeof(asn_DEF_IntegerColorFlag_tags_1)
@@ -432,6 +441,7 @@ asn_TYPE_descriptor_t asn_DEF_IntegerColorFlag = {
 	asn_DEF_IntegerColorFlag_tags_1,	/* Same as above */
 	sizeof(asn_DEF_IntegerColorFlag_tags_1)
 		/sizeof(asn_DEF_IntegerColorFlag_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -484,6 +494,8 @@ EnumeratedColorFlag_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Flag_16P1.uper_encoder;
 	td->oer_decoder    = asn_DEF_Flag_16P1.oer_decoder;
 	td->oer_encoder    = asn_DEF_Flag_16P1.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Flag_16P1.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Flag_16P1.per_constraints;
 	td->elements       = asn_DEF_Flag_16P1.elements;
@@ -551,8 +563,8 @@ asn_TYPE_descriptor_t asn_DEF_EnumeratedColorFlag = {
 	EnumeratedColorFlag_encode_der,
 	EnumeratedColorFlag_decode_xer,
 	EnumeratedColorFlag_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_EnumeratedColorFlag_tags_1,
 	sizeof(asn_DEF_EnumeratedColorFlag_tags_1)
@@ -560,6 +572,7 @@ asn_TYPE_descriptor_t asn_DEF_EnumeratedColorFlag = {
 	asn_DEF_EnumeratedColorFlag_tags_1,	/* Same as above */
 	sizeof(asn_DEF_EnumeratedColorFlag_tags_1)
 		/sizeof(asn_DEF_EnumeratedColorFlag_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */

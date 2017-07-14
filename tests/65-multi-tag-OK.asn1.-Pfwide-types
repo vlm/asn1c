@@ -45,6 +45,8 @@ T1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_T2.uper_encoder;
 	td->oer_decoder    = asn_DEF_T2.oer_decoder;
 	td->oer_encoder    = asn_DEF_T2.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_T2.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_T2.per_constraints;
 	td->elements       = asn_DEF_T2.elements;
@@ -123,8 +125,8 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	T1_encode_der,
 	T1_decode_xer,
 	T1_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
@@ -132,6 +134,7 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	asn_DEF_T1_all_tags_1,
 	sizeof(asn_DEF_T1_all_tags_1)
 		/sizeof(asn_DEF_T1_all_tags_1[0]), /* 6 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -184,6 +187,8 @@ T2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_T3.uper_encoder;
 	td->oer_decoder    = asn_DEF_T3.oer_decoder;
 	td->oer_encoder    = asn_DEF_T3.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_T3.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_T3.per_constraints;
 	td->elements       = asn_DEF_T3.elements;
@@ -260,8 +265,8 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	T2_encode_der,
 	T2_decode_xer,
 	T2_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags_1,
 	sizeof(asn_DEF_T2_tags_1)
@@ -269,6 +274,7 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	asn_DEF_T2_all_tags_1,
 	sizeof(asn_DEF_T2_all_tags_1)
 		/sizeof(asn_DEF_T2_all_tags_1[0]), /* 5 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -321,6 +327,8 @@ T3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_T4.uper_encoder;
 	td->oer_decoder    = asn_DEF_T4.oer_decoder;
 	td->oer_encoder    = asn_DEF_T4.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_T4.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_T4.per_constraints;
 	td->elements       = asn_DEF_T4.elements;
@@ -395,8 +403,8 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	T3_encode_der,
 	T3_decode_xer,
 	T3_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T3_tags_1,
 	sizeof(asn_DEF_T3_tags_1)
@@ -404,6 +412,7 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	asn_DEF_T3_all_tags_1,
 	sizeof(asn_DEF_T3_all_tags_1)
 		/sizeof(asn_DEF_T3_all_tags_1[0]), /* 4 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -456,6 +465,8 @@ T4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_T5.uper_encoder;
 	td->oer_decoder    = asn_DEF_T5.oer_decoder;
 	td->oer_encoder    = asn_DEF_T5.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_T5.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_T5.per_constraints;
 	td->elements       = asn_DEF_T5.elements;
@@ -525,8 +536,8 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	T4_encode_der,
 	T4_decode_xer,
 	T4_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T4_tags_1,
 	sizeof(asn_DEF_T4_tags_1)
@@ -534,6 +545,7 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	asn_DEF_T4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T4_tags_1)
 		/sizeof(asn_DEF_T4_tags_1[0]), /* 3 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -586,6 +598,8 @@ T5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_T6.uper_encoder;
 	td->oer_decoder    = asn_DEF_T6.oer_decoder;
 	td->oer_encoder    = asn_DEF_T6.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_T6.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_T6.per_constraints;
 	td->elements       = asn_DEF_T6.elements;
@@ -654,8 +668,8 @@ asn_TYPE_descriptor_t asn_DEF_T5 = {
 	T5_encode_der,
 	T5_decode_xer,
 	T5_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T5_tags_1,
 	sizeof(asn_DEF_T5_tags_1)
@@ -663,6 +677,7 @@ asn_TYPE_descriptor_t asn_DEF_T5 = {
 	asn_DEF_T5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T5_tags_1)
 		/sizeof(asn_DEF_T5_tags_1[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -715,6 +730,8 @@ T6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_REAL.uper_encoder;
 	td->oer_decoder    = asn_DEF_REAL.oer_decoder;
 	td->oer_encoder    = asn_DEF_REAL.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_REAL.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_REAL.per_constraints;
 	td->elements       = asn_DEF_REAL.elements;
@@ -782,8 +799,8 @@ asn_TYPE_descriptor_t asn_DEF_T6 = {
 	T6_encode_der,
 	T6_decode_xer,
 	T6_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T6_tags_1,
 	sizeof(asn_DEF_T6_tags_1)
@@ -791,6 +808,7 @@ asn_TYPE_descriptor_t asn_DEF_T6 = {
 	asn_DEF_T6_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T6_tags_1)
 		/sizeof(asn_DEF_T6_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -843,6 +861,8 @@ T_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Ts.uper_encoder;
 	td->oer_decoder    = asn_DEF_Ts.oer_decoder;
 	td->oer_encoder    = asn_DEF_Ts.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Ts.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Ts.per_constraints;
 	td->elements       = asn_DEF_Ts.elements;
@@ -912,8 +932,8 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	T_encode_der,
 	T_decode_xer,
 	T_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
@@ -921,6 +941,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 3 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -956,6 +977,7 @@ static asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_T2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m1"
@@ -965,6 +987,7 @@ static asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_T3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m2"
@@ -974,6 +997,7 @@ static asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_T3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m3"
@@ -1007,8 +1031,8 @@ asn_TYPE_descriptor_t asn_DEF_Ts = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Ts_tags_1,
 	sizeof(asn_DEF_Ts_tags_1)
@@ -1016,6 +1040,7 @@ asn_TYPE_descriptor_t asn_DEF_Ts = {
 	asn_DEF_Ts_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Ts_tags_1)
 		/sizeof(asn_DEF_Ts_tags_1[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Ts_1,
 	3,	/* Elements count */

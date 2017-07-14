@@ -33,13 +33,6 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	OCTET_STRING_encode_der,
 	BMPString_decode_xer,		/* Convert from UTF-8 */
 	BMPString_encode_xer,		/* Convert to UTF-8 */
-#ifdef	ASN_DISABLE_PER_SUPPORT
-	0,
-	0,
-#else
-	OCTET_STRING_decode_uper,
-	OCTET_STRING_encode_uper,
-#endif	/* ASN_DISABLE_PER_SUPPORT */
 #ifdef	ASN_DISABLE_OER_SUPPORT
 	0,
 	0,
@@ -47,6 +40,13 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	0,
 	0,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
+#ifdef	ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
+	OCTET_STRING_decode_uper,
+	OCTET_STRING_encode_uper,
+#endif	/* ASN_DISABLE_PER_SUPPORT */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)

@@ -52,6 +52,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "a"
@@ -61,6 +62,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "b"
@@ -70,6 +72,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Choice,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c"
@@ -103,8 +106,8 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	asn_DEF_Choice_tags_1,
 	sizeof(asn_DEF_Choice_tags_1)
@@ -112,6 +115,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	asn_DEF_Choice_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Choice_tags_1)
 		/sizeof(asn_DEF_Choice_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Choice_1,
 	3,	/* Elements count */

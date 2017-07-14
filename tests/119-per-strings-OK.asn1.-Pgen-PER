@@ -1187,6 +1187,7 @@ static asn_TYPE_member_t asn_MBR_many_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_PDU,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = ""
@@ -1212,9 +1213,9 @@ asn_TYPE_descriptor_t asn_DEF_many_2 = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_OF_decode_uper,
 	SEQUENCE_OF_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_many_tags_2,
 	sizeof(asn_DEF_many_tags_2)
@@ -1222,6 +1223,7 @@ asn_TYPE_descriptor_t asn_DEF_many_2 = {
 	asn_DEF_many_tags_2,	/* Same as above */
 	sizeof(asn_DEF_many_tags_2)
 		/sizeof(asn_DEF_many_tags_2[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_many_2,
 	1,	/* Single element */
@@ -1234,6 +1236,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_many_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "many"
@@ -1243,6 +1246,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "ia5"
@@ -1252,6 +1256,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_ia5_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ia5_c_constr_5,
 		.default_value = 0,
 		.name = "ia5-c"
@@ -1261,6 +1266,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_ia5_ce_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ia5_ce_constr_6,
 		.default_value = 0,
 		.name = "ia5-ce"
@@ -1270,6 +1276,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
 		.memb_constraints = memb_ia5_ir_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ia5_ir_constr_7,
 		.default_value = 0,
 		.name = "ia5-ir"
@@ -1279,6 +1286,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "vs"
@@ -1288,6 +1296,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
 		.memb_constraints = memb_vs_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_vs_c_constr_9,
 		.default_value = 0,
 		.name = "vs-c"
@@ -1297,6 +1306,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
 		.memb_constraints = memb_vs_ce_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_vs_ce_constr_10,
 		.default_value = 0,
 		.name = "vs-ce"
@@ -1306,6 +1316,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
 		.memb_constraints = memb_vs_ir_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_vs_ir_constr_11,
 		.default_value = 0,
 		.name = "vs-ir"
@@ -1315,6 +1326,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_PrintableString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "pr"
@@ -1324,6 +1336,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_PrintableString,
 		.memb_constraints = memb_pr_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_pr_c_constr_13,
 		.default_value = 0,
 		.name = "pr-c"
@@ -1333,6 +1346,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_PrintableString,
 		.memb_constraints = memb_pr_ir_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_pr_ir_constr_14,
 		.default_value = 0,
 		.name = "pr-ir"
@@ -1342,6 +1356,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NumericString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "ns"
@@ -1351,6 +1366,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NumericString,
 		.memb_constraints = memb_ns_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ns_c_constr_16,
 		.default_value = 0,
 		.name = "ns-c"
@@ -1360,6 +1376,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NumericString,
 		.memb_constraints = memb_ns_ce_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ns_ce_constr_17,
 		.default_value = 0,
 		.name = "ns-ce"
@@ -1369,6 +1386,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NumericString,
 		.memb_constraints = memb_ns_ir_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ns_ir_constr_18,
 		.default_value = 0,
 		.name = "ns-ir"
@@ -1378,6 +1396,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UTF8String,
 		.memb_constraints = memb_ut_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ut_c_constr_19,
 		.default_value = 0,
 		.name = "ut-c"
@@ -1387,6 +1406,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UTF8String,
 		.memb_constraints = memb_ut_ce_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ut_ce_constr_20,
 		.default_value = 0,
 		.name = "ut-ce"
@@ -1396,6 +1416,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UTF8String,
 		.memb_constraints = memb_ut_ir_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_ut_ir_constr_21,
 		.default_value = 0,
 		.name = "ut-ir"
@@ -1405,6 +1426,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_BMPString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "bm"
@@ -1414,6 +1436,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_BMPString,
 		.memb_constraints = memb_bm_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_bm_c_constr_23,
 		.default_value = 0,
 		.name = "bm-c"
@@ -1423,6 +1446,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_BMPString,
 		.memb_constraints = memb_bm_cs_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_bm_cs_constr_24,
 		.default_value = 0,
 		.name = "bm-cs"
@@ -1432,6 +1456,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_BMPString,
 		.memb_constraints = memb_bm_ce_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_bm_ce_constr_25,
 		.default_value = 0,
 		.name = "bm-ce"
@@ -1441,6 +1466,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_BMPString,
 		.memb_constraints = memb_bm_ir_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_bm_ir_constr_26,
 		.default_value = 0,
 		.name = "bm-ir"
@@ -1450,6 +1476,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UniversalString,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "us"
@@ -1459,6 +1486,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UniversalString,
 		.memb_constraints = memb_us_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_us_c_constr_28,
 		.default_value = 0,
 		.name = "us-c"
@@ -1468,6 +1496,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UniversalString,
 		.memb_constraints = memb_us_cs_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_us_cs_constr_29,
 		.default_value = 0,
 		.name = "us-cs"
@@ -1477,6 +1506,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UniversalString,
 		.memb_constraints = memb_us_ce_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_us_ce_constr_30,
 		.default_value = 0,
 		.name = "us-ce"
@@ -1486,6 +1516,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_UniversalString,
 		.memb_constraints = memb_us_ir_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_us_ir_constr_31,
 		.default_value = 0,
 		.name = "us-ir"
@@ -1495,6 +1526,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeReal,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "real"
@@ -1504,6 +1536,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "oid"
@@ -1566,9 +1599,9 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PDU_tags_1,
 	sizeof(asn_DEF_PDU_tags_1)
@@ -1576,6 +1609,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	asn_DEF_PDU_tags_1,	/* Same as above */
 	sizeof(asn_DEF_PDU_tags_1)
 		/sizeof(asn_DEF_PDU_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_PDU_1,
 	31,	/* Elements count */

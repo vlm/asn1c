@@ -1350,6 +1350,9 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	  OUT("td->all_tags_count = asn_DEF_%s.all_tags_count;\n",type_name);
 	  OUT("/* End of these lines */\n");
 	}
+	OUT("if(!td->oer_constraints)\n");
+		OUT("\ttd->oer_constraints = asn_DEF_%s.oer_constraints;\n",
+			type_name);
 	OUT("if(!td->per_constraints)\n");
 		OUT("\ttd->per_constraints = asn_DEF_%s.per_constraints;\n",
 			type_name);
@@ -1462,6 +1465,40 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("}\n");
 	OUT("\n");
 
+  if(arg->flags & A1C_GEN_OER) {
+	p = MKID(expr);
+
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_dec_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tasn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_enc_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_encode_oer(asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tasn_oer_constraints_t *constraints,\n");
+	OUT("\tvoid *structure, asn_app_consume_bytes_f *cb, void *app_key) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->uper_encoder(td, constraints, structure, cb, app_key);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+  }
+
   if(arg->flags & A1C_GEN_PER) {
 	p = MKID(expr);
 
@@ -1512,6 +1549,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("der_type_encoder_f %s_encode_der;\n", p);
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
+		if(arg->flags & A1C_GEN_OER) {
+		OUT("oer_type_decoder_f %s_decode_oer;\n", p);
+		OUT("oer_type_encoder_f %s_encode_oer;\n", p);
+		}
 		if(arg->flags & A1C_GEN_PER) {
 		OUT("per_type_decoder_f %s_decode_uper;\n", p);
 		OUT("per_type_encoder_f %s_encode_uper;\n", p);
@@ -2441,6 +2482,18 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 	} else {
 		OUT("0,\t/* Defer constraints checking to the member type */\n");
 	}
+	if(C99_MODE) OUT(".oer_constraints = ");
+	if(arg->flags & A1C_GEN_OER) {
+		if(expr->constraints) {
+			OUT("&asn_OER_memb_%s_constr_%d,\n",
+				MKID(expr),
+				expr->_type_unique_index);
+		} else {
+			OUT("0,\t/* No OER visible constraints */\n");
+		}
+	} else {
+		OUT("0,\t/* OER is not compiled, use -gen-OER */\n");
+	}
 	if(C99_MODE) OUT(".per_constraints = ");
 	if(arg->flags & A1C_GEN_PER) {
 		if(expr->constraints) {
@@ -2553,18 +2606,21 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		FUNCREF(encode_der);
 		FUNCREF(decode_xer);
 		FUNCREF(encode_xer);
+
+		if(arg->flags & A1C_GEN_OER) {
+			FUNCREF(decode_oer);
+			FUNCREF(encode_oer);
+		} else {
+			OUT("0, 0,\t/* No OER support, "
+				"use \"-gen-OER\" to enable */\n");
+		}
+
 		if(arg->flags & A1C_GEN_PER) {
 			FUNCREF(decode_uper);
 			FUNCREF(encode_uper);
 		} else {
 			OUT("0, 0,\t/* No PER support, "
 				"use \"-gen-PER\" to enable */\n");
-		}
-		if(arg->flags & A1C_GEN_OER) {
-			OUT("0, 0,\t/* No OER support yet */\n");
-		} else {
-			OUT("0, 0,\t/* No OER support, "
-				"use \"-gen-OER\" to enable */\n");
 		}
 
 		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {
@@ -2608,6 +2664,19 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		} else {
 			OUT("0,\t/* No tags (pointer) */\n");
 			OUT("0,\t/* No tags (count) */\n");
+		}
+
+		if(arg->flags & A1C_GEN_OER) {
+			if(expr->constraints
+			|| expr->expr_type == ASN_BASIC_ENUMERATED
+			|| expr->expr_type == ASN_CONSTR_CHOICE) {
+				OUT("&asn_OER_type_%s_constr_%d,\n",
+					p, expr->_type_unique_index);
+			} else {
+				OUT("0,\t/* No OER visible constraints */\n");
+			}
+		} else {
+			OUT("0,\t/* No OER visible constraints */\n");
 		}
 
 		if(arg->flags & A1C_GEN_PER) {

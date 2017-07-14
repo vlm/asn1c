@@ -50,6 +50,7 @@ static asn_TYPE_member_t asn_MBR_t_member1_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Test_structure_1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -74,8 +75,8 @@ asn_TYPE_descriptor_t asn_DEF_t_member1_2 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_t_member1_tags_2,
 	sizeof(asn_DEF_t_member1_tags_2)
@@ -83,6 +84,7 @@ asn_TYPE_descriptor_t asn_DEF_t_member1_2 = {
 	asn_DEF_t_member1_tags_2,	/* Same as above */
 	sizeof(asn_DEF_t_member1_tags_2)
 		/sizeof(asn_DEF_t_member1_tags_2[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_t_member1_2,
 	1,	/* Single element */
@@ -95,6 +97,7 @@ static asn_TYPE_member_t asn_MBR_t_member2_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Test_structure_1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -119,8 +122,8 @@ asn_TYPE_descriptor_t asn_DEF_t_member2_4 = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_t_member2_tags_4,
 	sizeof(asn_DEF_t_member2_tags_4)
@@ -128,6 +131,7 @@ asn_TYPE_descriptor_t asn_DEF_t_member2_4 = {
 	asn_DEF_t_member2_tags_4,	/* Same as above */
 	sizeof(asn_DEF_t_member2_tags_4)
 		/sizeof(asn_DEF_t_member2_tags_4[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_t_member2_4,
 	1,	/* Single element */
@@ -140,6 +144,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_t_member1_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-member1"
@@ -149,6 +154,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_t_member2_4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-member2"
@@ -158,6 +164,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Test_structure_1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-member3"
@@ -167,6 +174,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "t-member4"
@@ -200,8 +208,8 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_1 = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Test_structure_1_tags_1,
 	sizeof(asn_DEF_Test_structure_1_tags_1)
@@ -209,6 +217,7 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_1 = {
 	asn_DEF_Test_structure_1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Test_structure_1_tags_1)
 		/sizeof(asn_DEF_Test_structure_1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Test_structure_1_1,
 	4,	/* Elements count */
@@ -273,6 +282,7 @@ static asn_TYPE_member_t asn_MBR_or_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Choice_1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -298,8 +308,8 @@ asn_TYPE_descriptor_t asn_DEF_or_3 = {
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_or_tags_3,
 	sizeof(asn_DEF_or_tags_3)
@@ -307,6 +317,7 @@ asn_TYPE_descriptor_t asn_DEF_or_3 = {
 	asn_DEF_or_tags_3,	/* Same as above */
 	sizeof(asn_DEF_or_tags_3)
 		/sizeof(asn_DEF_or_tags_3[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_or_3,
 	1,	/* Single element */
@@ -319,6 +330,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Choice_1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "and"
@@ -328,6 +340,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_or_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "or"
@@ -337,6 +350,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Choice_1,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "not"
@@ -346,6 +360,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "other"
@@ -377,13 +392,14 @@ asn_TYPE_descriptor_t asn_DEF_Choice_1 = {
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Choice_1_1,
 	4,	/* Elements count */
@@ -438,6 +454,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_2_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Test_structure_3,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m1"
@@ -473,8 +490,8 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_2 = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Test_structure_2_tags_1,
 	sizeof(asn_DEF_Test_structure_2_tags_1)
@@ -482,6 +499,7 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_2 = {
 	asn_DEF_Test_structure_2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Test_structure_2_tags_1)
 		/sizeof(asn_DEF_Test_structure_2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Test_structure_2_1,
 	1,	/* Elements count */
@@ -536,6 +554,7 @@ static asn_TYPE_member_t asn_MBR_Test_structure_3_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Test_structure_2,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m1"
@@ -571,8 +590,8 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_3 = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Test_structure_3_tags_1,
 	sizeof(asn_DEF_Test_structure_3_tags_1)
@@ -580,6 +599,7 @@ asn_TYPE_descriptor_t asn_DEF_Test_structure_3 = {
 	asn_DEF_Test_structure_3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Test_structure_3_tags_1)
 		/sizeof(asn_DEF_Test_structure_3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Test_structure_3_1,
 	1,	/* Elements count */

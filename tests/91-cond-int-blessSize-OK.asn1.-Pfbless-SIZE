@@ -58,6 +58,8 @@ OK_Integer1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -125,8 +127,8 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
 	OK_Integer1_encode_der,
 	OK_Integer1_decode_xer,
 	OK_Integer1_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer1_tags_1,
 	sizeof(asn_DEF_OK_Integer1_tags_1)
@@ -134,6 +136,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
 	asn_DEF_OK_Integer1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer1_tags_1)
 		/sizeof(asn_DEF_OK_Integer1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -199,6 +202,8 @@ OK_Integer2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -266,8 +271,8 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
 	OK_Integer2_encode_der,
 	OK_Integer2_decode_xer,
 	OK_Integer2_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer2_tags_1,
 	sizeof(asn_DEF_OK_Integer2_tags_1)
@@ -275,6 +280,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
 	asn_DEF_OK_Integer2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer2_tags_1)
 		/sizeof(asn_DEF_OK_Integer2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -340,6 +346,8 @@ OK_Integer3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -407,8 +415,8 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
 	OK_Integer3_encode_der,
 	OK_Integer3_decode_xer,
 	OK_Integer3_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer3_tags_1,
 	sizeof(asn_DEF_OK_Integer3_tags_1)
@@ -416,6 +424,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
 	asn_DEF_OK_Integer3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer3_tags_1)
 		/sizeof(asn_DEF_OK_Integer3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -481,6 +490,8 @@ OK_Integer4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -548,8 +559,8 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
 	OK_Integer4_encode_der,
 	OK_Integer4_decode_xer,
 	OK_Integer4_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_Integer4_tags_1,
 	sizeof(asn_DEF_OK_Integer4_tags_1)
@@ -557,6 +568,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
 	asn_DEF_OK_Integer4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer4_tags_1)
 		/sizeof(asn_DEF_OK_Integer4_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -622,6 +634,8 @@ NO_Integer5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -689,8 +703,8 @@ asn_TYPE_descriptor_t asn_DEF_NO_Integer5 = {
 	NO_Integer5_encode_der,
 	NO_Integer5_decode_xer,
 	NO_Integer5_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_Integer5_tags_1,
 	sizeof(asn_DEF_NO_Integer5_tags_1)
@@ -698,6 +712,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_Integer5 = {
 	asn_DEF_NO_Integer5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_Integer5_tags_1)
 		/sizeof(asn_DEF_NO_Integer5_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */

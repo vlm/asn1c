@@ -57,6 +57,8 @@ Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
 	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -147,8 +149,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	Enum1_encode_der,
 	Enum1_decode_xer,
 	Enum1_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
@@ -156,6 +158,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	asn_DEF_Enum1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum1_tags_1)
 		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum1_specs_1	/* Additional specs */
@@ -223,6 +226,8 @@ Enum2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
 	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -319,8 +324,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum2 = {
 	Enum2_encode_der,
 	Enum2_decode_xer,
 	Enum2_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum2_tags_1,
 	sizeof(asn_DEF_Enum2_tags_1)
@@ -328,6 +333,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum2 = {
 	asn_DEF_Enum2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum2_tags_1)
 		/sizeof(asn_DEF_Enum2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum2_specs_1	/* Additional specs */
@@ -391,6 +397,8 @@ Enum3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
 	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -479,8 +487,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum3 = {
 	Enum3_encode_der,
 	Enum3_decode_xer,
 	Enum3_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum3_tags_1,
 	sizeof(asn_DEF_Enum3_tags_1)
@@ -488,6 +496,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum3 = {
 	asn_DEF_Enum3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum3_tags_1)
 		/sizeof(asn_DEF_Enum3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum3_specs_1	/* Additional specs */
@@ -552,6 +561,8 @@ Enum4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
 	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -642,8 +653,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum4 = {
 	Enum4_encode_der,
 	Enum4_decode_xer,
 	Enum4_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum4_tags_1,
 	sizeof(asn_DEF_Enum4_tags_1)
@@ -651,6 +662,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum4 = {
 	asn_DEF_Enum4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum4_tags_1)
 		/sizeof(asn_DEF_Enum4_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum4_specs_1	/* Additional specs */
@@ -714,6 +726,8 @@ Enum5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_ENUMERATED.uper_encoder;
 	td->oer_decoder    = asn_DEF_ENUMERATED.oer_decoder;
 	td->oer_encoder    = asn_DEF_ENUMERATED.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_ENUMERATED.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_ENUMERATED.per_constraints;
 	td->elements       = asn_DEF_ENUMERATED.elements;
@@ -802,8 +816,8 @@ asn_TYPE_descriptor_t asn_DEF_Enum5 = {
 	Enum5_encode_der,
 	Enum5_decode_xer,
 	Enum5_encode_xer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum5_tags_1,
 	sizeof(asn_DEF_Enum5_tags_1)
@@ -811,6 +825,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum5 = {
 	asn_DEF_Enum5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum5_tags_1)
 		/sizeof(asn_DEF_Enum5_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum5_specs_1	/* Additional specs */

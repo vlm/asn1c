@@ -47,6 +47,8 @@ Int1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -129,9 +131,9 @@ asn_TYPE_descriptor_t asn_DEF_Int1 = {
 	Int1_encode_der,
 	Int1_decode_xer,
 	Int1_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Int1_decode_uper,
 	Int1_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int1_tags_1,
 	sizeof(asn_DEF_Int1_tags_1)
@@ -139,6 +141,7 @@ asn_TYPE_descriptor_t asn_DEF_Int1 = {
 	asn_DEF_Int1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Int1_tags_1)
 		/sizeof(asn_DEF_Int1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -210,6 +213,8 @@ Int2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Int1.uper_encoder;
 	td->oer_decoder    = asn_DEF_Int1.oer_decoder;
 	td->oer_encoder    = asn_DEF_Int1.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Int1.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int1.per_constraints;
 	td->elements       = asn_DEF_Int1.elements;
@@ -300,9 +305,9 @@ asn_TYPE_descriptor_t asn_DEF_Int2 = {
 	Int2_encode_der,
 	Int2_decode_xer,
 	Int2_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Int2_decode_uper,
 	Int2_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int2_tags_1,
 	sizeof(asn_DEF_Int2_tags_1)
@@ -310,6 +315,7 @@ asn_TYPE_descriptor_t asn_DEF_Int2 = {
 	asn_DEF_Int2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Int2_tags_1)
 		/sizeof(asn_DEF_Int2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Int2_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -381,6 +387,8 @@ Int3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Int2.uper_encoder;
 	td->oer_decoder    = asn_DEF_Int2.oer_decoder;
 	td->oer_encoder    = asn_DEF_Int2.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Int2.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int2.per_constraints;
 	td->elements       = asn_DEF_Int2.elements;
@@ -471,9 +479,9 @@ asn_TYPE_descriptor_t asn_DEF_Int3 = {
 	Int3_encode_der,
 	Int3_decode_xer,
 	Int3_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Int3_decode_uper,
 	Int3_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int3_tags_1,
 	sizeof(asn_DEF_Int3_tags_1)
@@ -481,6 +489,7 @@ asn_TYPE_descriptor_t asn_DEF_Int3 = {
 	asn_DEF_Int3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Int3_tags_1)
 		/sizeof(asn_DEF_Int3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Int3_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -552,6 +561,8 @@ Int4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Int3.uper_encoder;
 	td->oer_decoder    = asn_DEF_Int3.oer_decoder;
 	td->oer_encoder    = asn_DEF_Int3.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Int3.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int3.per_constraints;
 	td->elements       = asn_DEF_Int3.elements;
@@ -642,9 +653,9 @@ asn_TYPE_descriptor_t asn_DEF_Int4 = {
 	Int4_encode_der,
 	Int4_decode_xer,
 	Int4_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Int4_decode_uper,
 	Int4_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int4_tags_1,
 	sizeof(asn_DEF_Int4_tags_1)
@@ -652,6 +663,7 @@ asn_TYPE_descriptor_t asn_DEF_Int4 = {
 	asn_DEF_Int4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Int4_tags_1)
 		/sizeof(asn_DEF_Int4_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Int4_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -723,6 +735,8 @@ Int5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Int4.uper_encoder;
 	td->oer_decoder    = asn_DEF_Int4.oer_decoder;
 	td->oer_encoder    = asn_DEF_Int4.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Int4.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Int4.per_constraints;
 	td->elements       = asn_DEF_Int4.elements;
@@ -813,9 +827,9 @@ asn_TYPE_descriptor_t asn_DEF_Int5 = {
 	Int5_encode_der,
 	Int5_decode_xer,
 	Int5_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Int5_decode_uper,
 	Int5_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Int5_tags_1,
 	sizeof(asn_DEF_Int5_tags_1)
@@ -823,6 +837,7 @@ asn_TYPE_descriptor_t asn_DEF_Int5 = {
 	asn_DEF_Int5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Int5_tags_1)
 		/sizeof(asn_DEF_Int5_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Int5_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -894,6 +909,8 @@ ExtensibleExtensions_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
 	td->elements       = asn_DEF_NativeInteger.elements;
@@ -984,9 +1001,9 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleExtensions = {
 	ExtensibleExtensions_encode_der,
 	ExtensibleExtensions_decode_xer,
 	ExtensibleExtensions_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	ExtensibleExtensions_decode_uper,
 	ExtensibleExtensions_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ExtensibleExtensions_tags_1,
 	sizeof(asn_DEF_ExtensibleExtensions_tags_1)
@@ -994,6 +1011,7 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleExtensions = {
 	asn_DEF_ExtensibleExtensions_tags_1,	/* Same as above */
 	sizeof(asn_DEF_ExtensibleExtensions_tags_1)
 		/sizeof(asn_DEF_ExtensibleExtensions_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_ExtensibleExtensions_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1048,6 +1066,8 @@ Str1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_IA5String.uper_encoder;
 	td->oer_decoder    = asn_DEF_IA5String.oer_decoder;
 	td->oer_encoder    = asn_DEF_IA5String.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_IA5String.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_IA5String.per_constraints;
 	td->elements       = asn_DEF_IA5String.elements;
@@ -1130,9 +1150,9 @@ asn_TYPE_descriptor_t asn_DEF_Str1 = {
 	Str1_encode_der,
 	Str1_decode_xer,
 	Str1_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Str1_decode_uper,
 	Str1_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str1_tags_1,
 	sizeof(asn_DEF_Str1_tags_1)
@@ -1140,6 +1160,7 @@ asn_TYPE_descriptor_t asn_DEF_Str1 = {
 	asn_DEF_Str1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Str1_tags_1)
 		/sizeof(asn_DEF_Str1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1229,6 +1250,8 @@ Str2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Str1.uper_encoder;
 	td->oer_decoder    = asn_DEF_Str1.oer_decoder;
 	td->oer_encoder    = asn_DEF_Str1.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Str1.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Str1.per_constraints;
 	td->elements       = asn_DEF_Str1.elements;
@@ -1319,9 +1342,9 @@ asn_TYPE_descriptor_t asn_DEF_Str2 = {
 	Str2_encode_der,
 	Str2_decode_xer,
 	Str2_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Str2_decode_uper,
 	Str2_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str2_tags_1,
 	sizeof(asn_DEF_Str2_tags_1)
@@ -1329,6 +1352,7 @@ asn_TYPE_descriptor_t asn_DEF_Str2 = {
 	asn_DEF_Str2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Str2_tags_1)
 		/sizeof(asn_DEF_Str2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Str2_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1442,6 +1466,8 @@ Str3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Str2.uper_encoder;
 	td->oer_decoder    = asn_DEF_Str2.oer_decoder;
 	td->oer_encoder    = asn_DEF_Str2.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Str2.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Str2.per_constraints;
 	td->elements       = asn_DEF_Str2.elements;
@@ -1533,9 +1559,9 @@ asn_TYPE_descriptor_t asn_DEF_Str3 = {
 	Str3_encode_der,
 	Str3_decode_xer,
 	Str3_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Str3_decode_uper,
 	Str3_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str3_tags_1,
 	sizeof(asn_DEF_Str3_tags_1)
@@ -1543,6 +1569,7 @@ asn_TYPE_descriptor_t asn_DEF_Str3 = {
 	asn_DEF_Str3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Str3_tags_1)
 		/sizeof(asn_DEF_Str3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Str3_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1629,6 +1656,8 @@ Str4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_IA5String.uper_encoder;
 	td->oer_decoder    = asn_DEF_IA5String.oer_decoder;
 	td->oer_encoder    = asn_DEF_IA5String.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_IA5String.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_IA5String.per_constraints;
 	td->elements       = asn_DEF_IA5String.elements;
@@ -1719,9 +1748,9 @@ asn_TYPE_descriptor_t asn_DEF_Str4 = {
 	Str4_encode_der,
 	Str4_decode_xer,
 	Str4_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Str4_decode_uper,
 	Str4_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Str4_tags_1,
 	sizeof(asn_DEF_Str4_tags_1)
@@ -1729,6 +1758,7 @@ asn_TYPE_descriptor_t asn_DEF_Str4 = {
 	asn_DEF_Str4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Str4_tags_1)
 		/sizeof(asn_DEF_Str4_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Str4_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1815,6 +1845,8 @@ PER_Visible_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_IA5String.uper_encoder;
 	td->oer_decoder    = asn_DEF_IA5String.oer_decoder;
 	td->oer_encoder    = asn_DEF_IA5String.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_IA5String.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_IA5String.per_constraints;
 	td->elements       = asn_DEF_IA5String.elements;
@@ -1905,9 +1937,9 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible = {
 	PER_Visible_encode_der,
 	PER_Visible_decode_xer,
 	PER_Visible_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	PER_Visible_decode_uper,
 	PER_Visible_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PER_Visible_tags_1,
 	sizeof(asn_DEF_PER_Visible_tags_1)
@@ -1915,6 +1947,7 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible = {
 	asn_DEF_PER_Visible_tags_1,	/* Same as above */
 	sizeof(asn_DEF_PER_Visible_tags_1)
 		/sizeof(asn_DEF_PER_Visible_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_PER_Visible_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2001,6 +2034,8 @@ PER_Visible_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
 	td->oer_decoder    = asn_DEF_PER_Visible.oer_decoder;
 	td->oer_encoder    = asn_DEF_PER_Visible.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_PER_Visible.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2091,9 +2126,9 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible_2 = {
 	PER_Visible_2_encode_der,
 	PER_Visible_2_decode_xer,
 	PER_Visible_2_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	PER_Visible_2_decode_uper,
 	PER_Visible_2_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PER_Visible_2_tags_1,
 	sizeof(asn_DEF_PER_Visible_2_tags_1)
@@ -2101,6 +2136,7 @@ asn_TYPE_descriptor_t asn_DEF_PER_Visible_2 = {
 	asn_DEF_PER_Visible_2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_PER_Visible_2_tags_1)
 		/sizeof(asn_DEF_PER_Visible_2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_PER_Visible_2_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2187,6 +2223,8 @@ Not_PER_Visible_1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
 	td->oer_decoder    = asn_DEF_PER_Visible.oer_decoder;
 	td->oer_encoder    = asn_DEF_PER_Visible.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_PER_Visible.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2277,9 +2315,9 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_1 = {
 	Not_PER_Visible_1_encode_der,
 	Not_PER_Visible_1_decode_xer,
 	Not_PER_Visible_1_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Not_PER_Visible_1_decode_uper,
 	Not_PER_Visible_1_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_1_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_1_tags_1)
@@ -2287,6 +2325,7 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_1 = {
 	asn_DEF_Not_PER_Visible_1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Not_PER_Visible_1_tags_1)
 		/sizeof(asn_DEF_Not_PER_Visible_1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Not_PER_Visible_1_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2373,6 +2412,8 @@ Not_PER_Visible_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
 	td->oer_decoder    = asn_DEF_PER_Visible.oer_decoder;
 	td->oer_encoder    = asn_DEF_PER_Visible.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_PER_Visible.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2463,9 +2504,9 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_2 = {
 	Not_PER_Visible_2_encode_der,
 	Not_PER_Visible_2_decode_xer,
 	Not_PER_Visible_2_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Not_PER_Visible_2_decode_uper,
 	Not_PER_Visible_2_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_2_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_2_tags_1)
@@ -2473,6 +2514,7 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_2 = {
 	asn_DEF_Not_PER_Visible_2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Not_PER_Visible_2_tags_1)
 		/sizeof(asn_DEF_Not_PER_Visible_2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Not_PER_Visible_2_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2559,6 +2601,8 @@ Not_PER_Visible_3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
 	td->oer_decoder    = asn_DEF_PER_Visible.oer_decoder;
 	td->oer_encoder    = asn_DEF_PER_Visible.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_PER_Visible.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2649,9 +2693,9 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_3 = {
 	Not_PER_Visible_3_encode_der,
 	Not_PER_Visible_3_decode_xer,
 	Not_PER_Visible_3_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Not_PER_Visible_3_decode_uper,
 	Not_PER_Visible_3_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Not_PER_Visible_3_tags_1,
 	sizeof(asn_DEF_Not_PER_Visible_3_tags_1)
@@ -2659,6 +2703,7 @@ asn_TYPE_descriptor_t asn_DEF_Not_PER_Visible_3 = {
 	asn_DEF_Not_PER_Visible_3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Not_PER_Visible_3_tags_1)
 		/sizeof(asn_DEF_Not_PER_Visible_3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Not_PER_Visible_3_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2748,6 +2793,8 @@ SIZE_but_not_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
 	td->oer_decoder    = asn_DEF_PER_Visible.oer_decoder;
 	td->oer_encoder    = asn_DEF_PER_Visible.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_PER_Visible.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -2838,9 +2885,9 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_but_not_FROM = {
 	SIZE_but_not_FROM_encode_der,
 	SIZE_but_not_FROM_decode_xer,
 	SIZE_but_not_FROM_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SIZE_but_not_FROM_decode_uper,
 	SIZE_but_not_FROM_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIZE_but_not_FROM_tags_1,
 	sizeof(asn_DEF_SIZE_but_not_FROM_tags_1)
@@ -2848,6 +2895,7 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_but_not_FROM = {
 	asn_DEF_SIZE_but_not_FROM_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SIZE_but_not_FROM_tags_1)
 		/sizeof(asn_DEF_SIZE_but_not_FROM_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_SIZE_but_not_FROM_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2937,6 +2985,8 @@ SIZE_and_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
 	td->oer_decoder    = asn_DEF_PER_Visible.oer_decoder;
 	td->oer_encoder    = asn_DEF_PER_Visible.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_PER_Visible.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -3027,9 +3077,9 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_and_FROM = {
 	SIZE_and_FROM_encode_der,
 	SIZE_and_FROM_decode_xer,
 	SIZE_and_FROM_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SIZE_and_FROM_decode_uper,
 	SIZE_and_FROM_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIZE_and_FROM_tags_1,
 	sizeof(asn_DEF_SIZE_and_FROM_tags_1)
@@ -3037,6 +3087,7 @@ asn_TYPE_descriptor_t asn_DEF_SIZE_and_FROM = {
 	asn_DEF_SIZE_and_FROM_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SIZE_and_FROM_tags_1)
 		/sizeof(asn_DEF_SIZE_and_FROM_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_SIZE_and_FROM_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -3123,6 +3174,8 @@ Neither_SIZE_nor_FROM_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_PER_Visible.uper_encoder;
 	td->oer_decoder    = asn_DEF_PER_Visible.oer_decoder;
 	td->oer_encoder    = asn_DEF_PER_Visible.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_PER_Visible.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_PER_Visible.per_constraints;
 	td->elements       = asn_DEF_PER_Visible.elements;
@@ -3213,9 +3266,9 @@ asn_TYPE_descriptor_t asn_DEF_Neither_SIZE_nor_FROM = {
 	Neither_SIZE_nor_FROM_encode_der,
 	Neither_SIZE_nor_FROM_decode_xer,
 	Neither_SIZE_nor_FROM_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Neither_SIZE_nor_FROM_decode_uper,
 	Neither_SIZE_nor_FROM_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Neither_SIZE_nor_FROM_tags_1,
 	sizeof(asn_DEF_Neither_SIZE_nor_FROM_tags_1)
@@ -3223,6 +3276,7 @@ asn_TYPE_descriptor_t asn_DEF_Neither_SIZE_nor_FROM = {
 	asn_DEF_Neither_SIZE_nor_FROM_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Neither_SIZE_nor_FROM_tags_1)
 		/sizeof(asn_DEF_Neither_SIZE_nor_FROM_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Neither_SIZE_nor_FROM_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -3303,6 +3357,8 @@ Utf8_4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_UTF8String.uper_encoder;
 	td->oer_decoder    = asn_DEF_UTF8String.oer_decoder;
 	td->oer_encoder    = asn_DEF_UTF8String.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_UTF8String.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_UTF8String.per_constraints;
 	td->elements       = asn_DEF_UTF8String.elements;
@@ -3393,9 +3449,9 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_4 = {
 	Utf8_4_encode_der,
 	Utf8_4_decode_xer,
 	Utf8_4_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Utf8_4_decode_uper,
 	Utf8_4_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_4_tags_1,
 	sizeof(asn_DEF_Utf8_4_tags_1)
@@ -3403,6 +3459,7 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_4 = {
 	asn_DEF_Utf8_4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Utf8_4_tags_1)
 		/sizeof(asn_DEF_Utf8_4_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Utf8_4_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -3511,6 +3568,8 @@ Utf8_3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Utf8_2.uper_encoder;
 	td->oer_decoder    = asn_DEF_Utf8_2.oer_decoder;
 	td->oer_encoder    = asn_DEF_Utf8_2.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Utf8_2.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Utf8_2.per_constraints;
 	td->elements       = asn_DEF_Utf8_2.elements;
@@ -3601,9 +3660,9 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_3 = {
 	Utf8_3_encode_der,
 	Utf8_3_decode_xer,
 	Utf8_3_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Utf8_3_decode_uper,
 	Utf8_3_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_3_tags_1,
 	sizeof(asn_DEF_Utf8_3_tags_1)
@@ -3611,6 +3670,7 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_3 = {
 	asn_DEF_Utf8_3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Utf8_3_tags_1)
 		/sizeof(asn_DEF_Utf8_3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Utf8_3_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -3689,6 +3749,8 @@ Utf8_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Utf8_1.uper_encoder;
 	td->oer_decoder    = asn_DEF_Utf8_1.oer_decoder;
 	td->oer_encoder    = asn_DEF_Utf8_1.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Utf8_1.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Utf8_1.per_constraints;
 	td->elements       = asn_DEF_Utf8_1.elements;
@@ -3779,9 +3841,9 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_2 = {
 	Utf8_2_encode_der,
 	Utf8_2_decode_xer,
 	Utf8_2_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Utf8_2_decode_uper,
 	Utf8_2_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_2_tags_1,
 	sizeof(asn_DEF_Utf8_2_tags_1)
@@ -3789,6 +3851,7 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_2 = {
 	asn_DEF_Utf8_2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Utf8_2_tags_1)
 		/sizeof(asn_DEF_Utf8_2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Utf8_2_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -3843,6 +3906,8 @@ Utf8_1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_UTF8String.uper_encoder;
 	td->oer_decoder    = asn_DEF_UTF8String.oer_decoder;
 	td->oer_encoder    = asn_DEF_UTF8String.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_UTF8String.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_UTF8String.per_constraints;
 	td->elements       = asn_DEF_UTF8String.elements;
@@ -3925,9 +3990,9 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_1 = {
 	Utf8_1_encode_der,
 	Utf8_1_decode_xer,
 	Utf8_1_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Utf8_1_decode_uper,
 	Utf8_1_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Utf8_1_tags_1,
 	sizeof(asn_DEF_Utf8_1_tags_1)
@@ -3935,6 +4000,7 @@ asn_TYPE_descriptor_t asn_DEF_Utf8_1 = {
 	asn_DEF_Utf8_1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Utf8_1_tags_1)
 		/sizeof(asn_DEF_Utf8_1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -4043,6 +4109,8 @@ VisibleIdentifier_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_Identifier.uper_encoder;
 	td->oer_decoder    = asn_DEF_Identifier.oer_decoder;
 	td->oer_encoder    = asn_DEF_Identifier.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_Identifier.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_Identifier.per_constraints;
 	td->elements       = asn_DEF_Identifier.elements;
@@ -4125,9 +4193,9 @@ asn_TYPE_descriptor_t asn_DEF_VisibleIdentifier = {
 	VisibleIdentifier_encode_der,
 	VisibleIdentifier_decode_xer,
 	VisibleIdentifier_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	VisibleIdentifier_decode_uper,
 	VisibleIdentifier_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_VisibleIdentifier_tags_1,
 	sizeof(asn_DEF_VisibleIdentifier_tags_1)
@@ -4135,6 +4203,7 @@ asn_TYPE_descriptor_t asn_DEF_VisibleIdentifier = {
 	asn_DEF_VisibleIdentifier_tags_1,	/* Same as above */
 	sizeof(asn_DEF_VisibleIdentifier_tags_1)
 		/sizeof(asn_DEF_VisibleIdentifier_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -4213,6 +4282,8 @@ enum_c_6_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeEnumerated.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeEnumerated.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeEnumerated.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
 	td->elements       = asn_DEF_NativeEnumerated.elements;
@@ -4451,9 +4522,9 @@ asn_TYPE_descriptor_t asn_DEF_enum_c_6 = {
 	enum_c_6_encode_der,
 	enum_c_6_decode_xer,
 	enum_c_6_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	enum_c_6_decode_uper,
 	enum_c_6_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_enum_c_tags_6,
 	sizeof(asn_DEF_enum_c_tags_6)
@@ -4461,6 +4532,7 @@ asn_TYPE_descriptor_t asn_DEF_enum_c_6 = {
 	asn_DEF_enum_c_tags_6,	/* Same as above */
 	sizeof(asn_DEF_enum_c_tags_6)
 		/sizeof(asn_DEF_enum_c_tags_6[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_enum_c_constr_6,
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_enum_c_specs_6	/* Additional specs */
@@ -4472,6 +4544,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Int1,
 		.memb_constraints = memb_int1_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_int1_c_constr_2,
 		.default_value = asn_DFL_2_set_3,	/* DEFAULT 3 */
 		.name = "int1-c"
@@ -4481,6 +4554,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Int4,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "int4"
@@ -4490,6 +4564,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Int4,
 		.memb_constraints = memb_int4_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_int4_c_constr_4,
 		.default_value = 0,
 		.name = "int4-c"
@@ -4499,6 +4574,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = asn_DFL_5_set_1,	/* DEFAULT 1 */
 		.name = "bool"
@@ -4508,6 +4584,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_enum_c_6,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "enum-c"
@@ -4517,6 +4594,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NULL,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "null"
@@ -4526,6 +4604,7 @@ static asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Int5,
 		.memb_constraints = memb_int5_c_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = &asn_PER_memb_int5_c_constr_13,
 		.default_value = 0,
 		.name = "int5-c"
@@ -4564,9 +4643,9 @@ asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Sequence_tags_1,
 	sizeof(asn_DEF_Sequence_tags_1)
@@ -4574,6 +4653,7 @@ asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	asn_DEF_Sequence_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Sequence_tags_1)
 		/sizeof(asn_DEF_Sequence_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Sequence_1,
 	7,	/* Elements count */
@@ -4623,6 +4703,7 @@ static asn_TYPE_member_t asn_MBR_SequenceOf_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Sequence,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = ""
@@ -4646,9 +4727,9 @@ asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_OF_decode_uper,
 	SEQUENCE_OF_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SequenceOf_tags_1,
 	sizeof(asn_DEF_SequenceOf_tags_1)
@@ -4656,6 +4737,7 @@ asn_TYPE_descriptor_t asn_DEF_SequenceOf = {
 	asn_DEF_SequenceOf_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SequenceOf_tags_1)
 		/sizeof(asn_DEF_SequenceOf_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_SequenceOf_constr_1,
 	asn_MBR_SequenceOf_1,
 	1,	/* Single element */
@@ -4718,6 +4800,8 @@ Enum0_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeEnumerated.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeEnumerated.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeEnumerated.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
 	td->elements       = asn_DEF_NativeEnumerated.elements;
@@ -4825,9 +4909,9 @@ asn_TYPE_descriptor_t asn_DEF_Enum0 = {
 	Enum0_encode_der,
 	Enum0_decode_xer,
 	Enum0_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Enum0_decode_uper,
 	Enum0_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum0_tags_1,
 	sizeof(asn_DEF_Enum0_tags_1)
@@ -4835,6 +4919,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum0 = {
 	asn_DEF_Enum0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum0_tags_1)
 		/sizeof(asn_DEF_Enum0_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Enum0_constr_1,
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum0_specs_1	/* Additional specs */
@@ -4913,6 +4998,8 @@ Enum1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_NativeEnumerated.uper_encoder;
 	td->oer_decoder    = asn_DEF_NativeEnumerated.oer_decoder;
 	td->oer_encoder    = asn_DEF_NativeEnumerated.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeEnumerated.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_NativeEnumerated.per_constraints;
 	td->elements       = asn_DEF_NativeEnumerated.elements;
@@ -5020,9 +5107,9 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	Enum1_encode_der,
 	Enum1_decode_xer,
 	Enum1_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Enum1_decode_uper,
 	Enum1_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
@@ -5030,6 +5117,7 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	asn_DEF_Enum1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum1_tags_1)
 		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Enum1_constr_1,
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum1_specs_1	/* Additional specs */
@@ -5148,6 +5236,8 @@ Identifier_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->uper_encoder   = asn_DEF_VisibleString.uper_encoder;
 	td->oer_decoder    = asn_DEF_VisibleString.oer_decoder;
 	td->oer_encoder    = asn_DEF_VisibleString.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_VisibleString.oer_constraints;
 	if(!td->per_constraints)
 		td->per_constraints = asn_DEF_VisibleString.per_constraints;
 	td->elements       = asn_DEF_VisibleString.elements;
@@ -5239,9 +5329,9 @@ asn_TYPE_descriptor_t asn_DEF_Identifier = {
 	Identifier_encode_der,
 	Identifier_decode_xer,
 	Identifier_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	Identifier_decode_uper,
 	Identifier_encode_uper,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Identifier_tags_1,
 	sizeof(asn_DEF_Identifier_tags_1)
@@ -5249,6 +5339,7 @@ asn_TYPE_descriptor_t asn_DEF_Identifier = {
 	asn_DEF_Identifier_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Identifier_tags_1)
 		/sizeof(asn_DEF_Identifier_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_Identifier_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
