@@ -145,7 +145,7 @@ asn_enc_rval_t
 INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
                    asn_oer_constraints_t *constraints, void *sptr,
                    asn_app_consume_bytes_f *cb, void *app_key) {
-    const INTEGER_t *st = *(const INTEGER_t **)sptr;
+    const INTEGER_t *st = sptr;
     asn_enc_rval_t er;
     asn_oer_constraint_t *ct;
     const uint8_t *buf;
@@ -170,19 +170,25 @@ INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
 
     sign = (buf && buf < end) ? buf[0] & 0x80 : 0;
 
-    if(encode_as_unsigned && sign) {
-        /* The value given is a signed value. Can't proceed. */
-        ASN__ENCODE_FAILED;
-    }
-
     /* Ignore 9 leading zeroes or ones */
-    for(; buf + 1 < end; buf++) {
-        if(buf[0] == 0x0 && ((buf[1] & 0x80) == 0 || encode_as_unsigned)) {
-            continue;
-        } else if(buf[0] == 0xff && (buf[1] & 0x80) != 0) {
-            continue;
+    if(encode_as_unsigned) {
+        if(sign) {
+            /* The value given is a signed value. Can't proceed. */
+            ASN__ENCODE_FAILED;
         }
-        break;
+        /* Remove leading zeros. */
+        for(; buf + 1 < end; buf++) {
+            if(buf[0] != 0x0) break;
+        }
+    } else {
+        for(; buf + 1 < end; buf++) {
+            if(buf[0] == 0x0 && (buf[1] & 0x80) == 0) {
+                continue;
+            } else if(buf[0] == 0xff && (buf[1] & 0x80) != 0) {
+                continue;
+            }
+            break;
+        }
     }
 
     useful_bytes = end - buf;

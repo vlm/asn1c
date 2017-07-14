@@ -58,13 +58,21 @@ oer_encode_to_buffer(struct asn_TYPE_descriptor_s *type_descriptor,
     arg.buffer = buffer;
     arg.left = buffer_size;
 
-    ec = type_descriptor->oer_encoder(
-        type_descriptor, constraints,
-        struct_ptr, /* Pointer to the destination structure */
-        encode_to_buffer_cb, &arg);
-    if(ec.encoded != -1) {
-        assert(ec.encoded == (ssize_t)(buffer_size - arg.left));
-        /* Return the encoded contents size */
+    if(type_descriptor->oer_encoder == NULL) {
+        ec.encoded = -1;
+        ec.failed_type = type_descriptor;
+        ec.structure_ptr = struct_ptr;
+        ASN_DEBUG("OER encoder is not defined for %s",
+                type_descriptor->name);
+    } else {
+        ec = type_descriptor->oer_encoder(
+            type_descriptor, constraints,
+            struct_ptr, /* Pointer to the destination structure */
+            encode_to_buffer_cb, &arg);
+        if(ec.encoded != -1) {
+            assert(ec.encoded == (ssize_t)(buffer_size - arg.left));
+            /* Return the encoded contents size */
+        }
     }
     return ec;
 }
