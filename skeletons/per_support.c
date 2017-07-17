@@ -117,6 +117,8 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 }
 void per_skip_unused_bits(asn_per_data_t *pd)
 {
+    if (pd->nboff == 0)
+        return;
     if (pd->nboff == 8) {
         pd->moved += 8;
         pd->nbits -= 8;
