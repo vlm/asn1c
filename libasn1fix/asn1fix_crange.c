@@ -699,7 +699,17 @@ _range_canonicalize(asn1cnst_range_t *range) {
 }
 
 asn1cnst_range_t *
+asn1constraint_compute_OER_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+    return asn1constraint_compute_constraint_range(expr_type, ct, type, minmax, exmet, cpr_flags);
+}
+
+asn1cnst_range_t *
 asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+    return asn1constraint_compute_constraint_range(expr_type, ct, type, minmax, exmet, cpr_flags);
+}
+
+asn1cnst_range_t *
+asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
 	asn1cnst_range_t *range;
 	asn1cnst_range_t *tmp;
 	asn1p_value_t *vmin;
@@ -730,6 +740,10 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 			*exmet = 1;
 		break;
 	case ACT_CT_FROM:
+        if(cpr_flags & CPR_strict_OER_visibility) {
+            errno = EINVAL;
+            return 0;
+        }
 		if(!minmax) {
 			minmax = asn1constraint_default_alphabet(expr_type);
 			if(minmax) {
@@ -759,15 +773,27 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 
 	/*
 	 * X.691, #9.3.6
-	 * Constraints on restricter character string types
+	 * Constraints on restricted character string types
 	 * which are not known-multiplier are not PER-visible.
 	 */
 	if((expr_type & ASN_STRING_NKM_MASK))
 		range->not_PER_visible = 1;
 
-	if(!ct
-	|| (range->not_PER_visible && (cpr_flags & CPR_strict_PER_visibility)))
-		return range;
+    if(!ct
+       || (range->not_PER_visible && (cpr_flags & CPR_strict_PER_visibility)))
+        return range;
+
+    /*
+     * X.696 (08/2015), #8.2.2
+     * SIZE constraints on restricted character string types
+     * which are not known-multiplier are not OER-visible.
+     */
+	if(type == ACT_CT_SIZE && (expr_type & ASN_STRING_NKM_MASK))
+		range->not_OER_visible = 1;
+
+    if(!ct
+       || (range->not_OER_visible && (cpr_flags & CPR_strict_OER_visibility)))
+        return range;
 
 	switch(ct->type) {
 	case ACT_EL_VALUE:
@@ -798,7 +824,7 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 			return range;
 		}
 		assert(ct->el_count == 1);
-		tmp = asn1constraint_compute_PER_range(expr_type,
+		tmp = asn1constraint_compute_constraint_range(expr_type,
 			ct->elements[0], type, minmax, exmet, cpr_flags);
 		if(tmp) {
 			_range_free(range);
@@ -817,7 +843,7 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 
 		/* AND constraints, one after another. */
 		for(i = 0; i < ct->el_count; i++) {
-			tmp = asn1constraint_compute_PER_range(expr_type,
+			tmp = asn1constraint_compute_constraint_range(expr_type,
 				ct->elements[i], type,
 				ct->type==ACT_CA_SET?range:minmax, exmet,
 				cpr_flags);
@@ -838,6 +864,15 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 				 * either SIZE or FROM will be ignored.
 				 */
 				_range_free(tmp);
+				continue;
+			}
+
+			if(tmp->not_OER_visible
+			&& (cpr_flags & CPR_strict_OER_visibility)) {
+                /*
+                 * Ignore not OER-visible
+                 */
+                _range_free(tmp);
 				continue;
 			}
 
@@ -878,7 +913,7 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		 */
 		tmp = 0;
 		for(i = 0; i < ct->el_count; i++) {
-			tmp = asn1constraint_compute_PER_range(expr_type,
+			tmp = asn1constraint_compute_constraint_range(expr_type,
 				ct->elements[i], type, minmax, exmet,
 				cpr_flags);
 			if(!tmp) {
@@ -911,7 +946,7 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		 * Canonicalizator will do the union magic.
 		 */
 		for(; i < ct->el_count; i++) {
-			tmp = asn1constraint_compute_PER_range(expr_type,
+			tmp = asn1constraint_compute_constraint_range(expr_type,
 				ct->elements[i], type, minmax, exmet,
 				cpr_flags);
 			if(!tmp) {
@@ -945,14 +980,20 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 
 		_range_canonicalize(range);
 
-		if(range->extensible && type == ACT_CT_FROM) {
-			/*
-			 * X.691, #9.3.10:
-			 * Extensible permitted alphabet constraints
-			 * are not PER-visible.
-			 */
-			range->not_PER_visible = 1;
-		}
+        if(type == ACT_CT_FROM) {
+            /*
+             * X.696 permitted alphabet constraints are not OER-visible.
+             */
+            range->not_OER_visible = 1;
+            if(range->extensible) {
+                /*
+                 * X.691, #9.3.10:
+                 * Extensible permitted alphabet constraints
+                 * are not PER-visible.
+                 */
+                range->not_PER_visible = 1;
+            }
+        }
 
 		if(range->not_PER_visible
 		&& (cpr_flags & CPR_strict_PER_visibility)) {
@@ -978,7 +1019,7 @@ asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constr
 		 */
 		assert(ct->el_count >= 1);
 		_range_free(range);
-		range = asn1constraint_compute_PER_range(expr_type,
+		range = asn1constraint_compute_constraint_range(expr_type,
 			ct->elements[0], type, minmax, exmet, cpr_flags);
 		return range;
 	default:
