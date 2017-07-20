@@ -13,10 +13,22 @@
 #include <T.h>
 
 int main() {
-	T_t t;
+    uint8_t tmpbuf[128];
+	T_t empty_t;
+	T_t *decoded_t = 0; /* "= 0" is important */
 
-    memset(&t, 0, sizeof(t));
+    memset(&empty_t, 0, sizeof(empty_t));
 
-	return 0;
+    asn_enc_rval_t er =
+        oer_encode_to_buffer(&asn_DEF_T, 0, &empty_t, tmpbuf, sizeof(tmpbuf));
+    assert(er.encoded != -1);
+
+    asn_dec_rval_t dr =
+        oer_decode(0, &asn_DEF_T, (void **)&decoded_t, tmpbuf, er.encoded);
+
+    assert(dr.code == RC_OK);
+    assert(dr.consumed == er.encoded);
+
+    return 0;
 }
 
