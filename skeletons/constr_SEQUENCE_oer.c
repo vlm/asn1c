@@ -327,10 +327,10 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
             case 0:
                 continue;
             case 1: {
-                ssize_t slurped = oer_open_type_slurp(ptr, size);
-                if(slurped > 0) {
-                    ADVANCE(slurped);
-                } else if(slurped < 0) {
+                ssize_t skipped = oer_open_type_skip(ptr, size);
+                if(skipped > 0) {
+                    ADVANCE(skipped);
+                } else if(skipped < 0) {
                     RETURN(RC_FAIL);
                 } else {
                     per_get_undo(extadds, 1);
