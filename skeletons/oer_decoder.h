@@ -44,7 +44,7 @@ typedef asn_dec_rval_t(oer_type_decoder_f)(
  *      -1:     Fatal error deciphering length.
  *      >0:     Number of bytes used from bufptr.
  */
-ssize_t oer_open_type_slurp(const void *bufptr, size_t size);
+ssize_t oer_open_type_skip(const void *bufptr, size_t size);
 
 /*
  * Read the Open Type (X.696 (08/2015), #30).
