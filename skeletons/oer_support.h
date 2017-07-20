@@ -3,8 +3,8 @@
  * All rights reserved.
  * Redistribution and modifications are oermitted subject to BSD license.
  */
-#ifndef	_OER_SUPPORT_H_
-#define	_OER_SUPPORT_H_
+#ifndef	OER_SUPPORT_H
+#define	OER_SUPPORT_H
 
 #include <asn_system.h>		/* Platform-specific types */
 
@@ -30,7 +30,7 @@ typedef const struct asn_oer_constraints_s {
 
 
 /*
- * Fetch the length determinant (X.696 08/2015, #8.6) into *len_r.
+ * Fetch the length determinant (X.696 (08/2015), #8.6) into *len_r.
  * RETURN VALUES:
  *       0:     More data expected than bufptr contains.
  *      -1:     Fatal error deciphering length.
@@ -49,4 +49,4 @@ ssize_t oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb, void *a
 }
 #endif
 
-#endif	/* _OER_SUPPORT_H_ */
+#endif	/* OER_SUPPORT_H */

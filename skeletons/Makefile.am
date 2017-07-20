@@ -63,6 +63,7 @@ libasn1cskeletons_la_SOURCES = 				\
 	ber_tlv_tag.c ber_tlv_tag.h			\
 	constr_CHOICE.c constr_CHOICE.h			\
 	constr_SEQUENCE.c constr_SEQUENCE.h		\
+	constr_SEQUENCE_oer.c constr_SEQUENCE_oer.h	\
 	constr_SEQUENCE_OF.c constr_SEQUENCE_OF.h	\
 	constr_SET.c constr_SET.h			\
 	constr_SET_OF.c constr_SET_OF.h			\

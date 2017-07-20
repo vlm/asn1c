@@ -6,6 +6,7 @@
 #define	_CONSTR_SEQUENCE_H_
 
 #include <asn_application.h>
+#include <constr_SEQUENCE_oer.h>
 
 #ifdef __cplusplus
 extern "C" {

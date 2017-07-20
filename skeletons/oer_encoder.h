@@ -2,8 +2,8 @@
  * Copyright (c) 2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_OER_ENCODER_H_
-#define	_OER_ENCODER_H_
+#ifndef	OER_ENCODER_H
+#define	OER_ENCODER_H
 
 #include <asn_application.h>
 
@@ -48,4 +48,4 @@ typedef asn_enc_rval_t(oer_type_encoder_f)(
 }
 #endif
 
-#endif	/* _OER_ENCODER_H_ */
+#endif	/* OER_ENCODER_H */

@@ -2,8 +2,8 @@
  * Copyright (c) 2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_OER_DECODER_H_
-#define	_OER_DECODER_H_
+#ifndef	OER_DECODER_H
+#define	OER_DECODER_H
 
 #include <asn_application.h>
 #include <oer_support.h>
@@ -37,8 +37,30 @@ typedef asn_dec_rval_t(oer_type_decoder_f)(
     const void *buf_ptr,
     size_t size);
 
+/*
+ * Swallow the Open Type (X.696 (08/2015), #30) into /dev/null.
+ * RETURN VALUES:
+ *       0:     More data expected than bufptr contains.
+ *      -1:     Fatal error deciphering length.
+ *      >0:     Number of bytes used from bufptr.
+ */
+ssize_t oer_open_type_slurp(const void *bufptr, size_t size);
+
+/*
+ * Read the Open Type (X.696 (08/2015), #30).
+ * RETURN VALUES:
+ *       0:     More data expected than bufptr contains.
+ *      -1:     Fatal error deciphering length.
+ *      >0:     Number of bytes used from bufptr.
+ */
+ssize_t oer_open_type_get(asn_codec_ctx_t *opt_codec_ctx,
+                          struct asn_TYPE_descriptor_s *td,
+                          asn_oer_constraints_t *constraints, void **struct_ptr,
+                          const void *bufptr, size_t size);
+
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif	/* _OER_DECODER_H_ */
+#endif	/* OER_DECODER_H */
