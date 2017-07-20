@@ -57,6 +57,9 @@ oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
         len = (len << 8) + *b;
     }
 
+    if(len > RSIZE_MAX) /* A bit of C11 validation */
+        return -1;
+
     *len_r = len;
     assert(len_len + 1 == bend - (const uint8_t *)bufptr);
     return len_len + 1;
