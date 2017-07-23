@@ -19,6 +19,9 @@ int main() {
 
     memset(&empty_t, 0, sizeof(empty_t));
 
+    /* Fill in complex INTEGER */
+    asn_long2INTEGER(&empty_t.unsigned33, 0);
+
     asn_enc_rval_t er =
         oer_encode_to_buffer(&asn_DEF_T, 0, &empty_t, tmpbuf, sizeof(tmpbuf));
     assert(er.encoded != -1);
@@ -27,7 +30,15 @@ int main() {
         oer_decode(0, &asn_DEF_T, (void **)&decoded_t, tmpbuf, er.encoded);
 
     assert(dr.code == RC_OK);
-    assert(dr.consumed == er.encoded);
+    if(dr.consumed != er.encoded) {
+        ASN_DEBUG("Consumed %zu, expected %zu", dr.consumed, er.encoded);
+        assert(dr.consumed == er.encoded);
+    }
+
+    fprintf(stderr, "Original:\n");
+    xer_fprint(stderr, &asn_DEF_T, &empty_t);
+    fprintf(stderr, "Decoded:\n");
+    xer_fprint(stderr, &asn_DEF_T, decoded_t);
 
     return 0;
 }
