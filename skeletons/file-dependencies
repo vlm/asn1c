@@ -37,7 +37,7 @@ asn_SEQUENCE_OF.h asn_SEQUENCE_OF.c asn_SET_OF.h
 asn_SET_OF.h asn_SET_OF.c
 constr_CHOICE.h constr_CHOICE.c
 constr_SEQUENCE.h constr_SEQUENCE.c
-constr_SEQUENCE_OF.h constr_SEQUENCE_OF.c asn_SEQUENCE_OF.h constr_SET_OF.h
+constr_SEQUENCE_OF.h constr_SEQUENCE_OF.c constr_SEQUENCE_oer.h asn_SEQUENCE_OF.h constr_SET_OF.h
 constr_SET.h constr_SET.c
 constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h
 
@@ -58,6 +58,9 @@ constraints.h constraints.c	# Subtype constraints support
 xer_support.h xer_support.c	# XML parsing
 xer_decoder.h xer_decoder.c	# XER decoding support
 xer_encoder.h xer_encoder.c	# XER encoding support
+oer_decoder.h oer_decoder.c # OER decoding support
+oer_encoder.h oer_encoder.c # OER encoding support
+oer_support.h oer_support.c # OER support
 per_support.h per_support.c	# PER parsing
 per_decoder.h per_decoder.c	# PER decoding support
 per_encoder.h per_encoder.c	# PER encoding support
@@ -65,5 +68,8 @@ per_opentype.h per_opentype.c	# PER "open type" handling
 
 CONVERTER:			# THIS IS A SPECIAL SECTION
 converter-sample.c		# A default name for sample transcoder
+
+CODEC-OER:			# THIS IS A SPECIAL SECTION
+constr_SEQUENCE_oer.h constr_SEQUENCE_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION

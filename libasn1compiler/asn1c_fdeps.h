@@ -10,7 +10,8 @@ typedef struct asn1c_fdeps_s {
 	  FDEP_REFERRED     =  1,	/* Dynamic list of dependencies */
 	  FDEP_CONVERTER    =  2,	/* Name of the int main() file */
 	  FDEP_COMMON_FILES =  3,	/* Section for mandatory dependencies */
-	  FDEP_CODEC_PER    =  4,	/* Use contents only if -gen-PER */
+	  FDEP_CODEC_OER    =  4,	/* Use contents only if -gen-OER */
+	  FDEP_CODEC_PER    =  8,	/* Use contents only if -gen-PER */
 	} usage;		/* Some file refers to it */
 
 	struct asn1c_fdeps_s **elements;

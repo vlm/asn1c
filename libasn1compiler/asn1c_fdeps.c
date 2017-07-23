@@ -104,6 +104,9 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 					special_section = FDEP_COMMON_FILES;
 				} else if(strcmp(p, "CONVERTER:") == 0) {
 					special_section = FDEP_CONVERTER;
+				} else if((arg->flags & A1C_GEN_OER)
+					  && strcmp(p, "CODEC-OER:") == 0) {
+					special_section = FDEP_CODEC_OER;
 				} else if((arg->flags & A1C_GEN_PER)
 					  && strcmp(p, "CODEC-PER:") == 0) {
 					special_section = FDEP_CODEC_PER;
