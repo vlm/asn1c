@@ -483,17 +483,22 @@ asn1print_crange_value(asn1cnst_edge_t *edge, int as_char) {
 }
 
 static int
-asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, int strict_PER_visible) {
+asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, enum cpr_flags cpr) {
 	asn1cnst_range_t *range;
 	int as_char = (type==ACT_CT_FROM);
 	int i;
 
-	range = asn1constraint_compute_PER_range(expr_type, ct, type, 0, 0,
-			strict_PER_visible ? CPR_strict_PER_visibility : 0);
+	range = asn1constraint_compute_constraint_range(expr_type, ct, type, 0, 0, cpr);
 	if(!range) return -1;
 
-	if(range->incompatible
-	|| (strict_PER_visible && range->not_PER_visible)) {
+	if(range->incompatible) return 0;
+
+	if((cpr & CPR_strict_OER_visibility) && range->not_OER_visible) {
+		asn1constraint_range_free(range);
+		return 0;
+	}
+
+	if((cpr & CPR_strict_PER_visibility) && range->not_PER_visible) {
 		asn1constraint_range_free(range);
 		return 0;
 	}
@@ -534,13 +539,13 @@ asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_
 
 static int
 asn1print_constraint_explain(asn1p_expr_type_e expr_type,
-		asn1p_constraint_t *ct, int s_PV) {
+		asn1p_constraint_t *ct, enum cpr_flags cpr) {
 
-	asn1print_constraint_explain_type(expr_type, ct, ACT_EL_RANGE, s_PV);
+	asn1print_constraint_explain_type(expr_type, ct, ACT_EL_RANGE, cpr);
 	safe_printf(" ");
-	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_SIZE, s_PV);
+	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_SIZE, cpr);
 	safe_printf(" ");
-	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_FROM, s_PV);
+	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_FROM, cpr);
 
 	return 0;
 }
@@ -755,10 +760,14 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 				top_parent->Identifier);
 			asn1print_constraint_explain(top_parent->expr_type,
 				tc->combined_constraints, 0);
+			safe_printf("\n-- OER-visible constraints (%s): ",
+				top_parent->Identifier);
+			asn1print_constraint_explain(top_parent->expr_type,
+				tc->combined_constraints, CPR_strict_OER_visibility);
 			safe_printf("\n-- PER-visible constraints (%s): ",
 				top_parent->Identifier);
 			asn1print_constraint_explain(top_parent->expr_type,
-				tc->combined_constraints, 1);
+				tc->combined_constraints, CPR_strict_PER_visibility);
 		}
 		safe_printf("\n");
 	}
