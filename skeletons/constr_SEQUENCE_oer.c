@@ -50,6 +50,24 @@
                 return rval;                    \
         } while(0)
 
+/*
+ * Return pointer to a member.
+ */
+static void **element_ptrptr(void *struct_ptr, asn_TYPE_member_t *elm) {
+    assert(elm->flags & ATF_POINTER);
+    /* Member is a pointer to another structure */
+    return (void **)((char *)struct_ptr + elm->memb_offset);
+}
+
+static void *element_ptr(void *struct_ptr, asn_TYPE_member_t *elm) {
+    if(elm->flags & ATF_POINTER) {
+        /* Member is a pointer to another structure */
+        return *(void **)((char *)struct_ptr + elm->memb_offset);
+    } else {
+        return (void *)((char *)struct_ptr + elm->memb_offset);
+    }
+}
+
 asn_dec_rval_t
 SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                    asn_oer_constraints_t *constraints, void **struct_ptr,
@@ -90,14 +108,19 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
      */
     switch(ctx->phase) {
     case 0: {
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 0", td->name);
         /*
          * Fetch preamble.
          */
         asn_per_data_t *preamble = ctx->ptr;
-        int has_extensions = (specs->ext_before >= 0);
-        size_t preamble_bits = (has_extensions + specs->roms_count);
-        size_t preamble_bytes = (preamble_bits >> 3);
+        int has_extensions_bit = (specs->ext_before >= 0);
+        size_t preamble_bits = (has_extensions_bit + specs->roms_count);
+        size_t preamble_bytes = ((7 + preamble_bits) >> 3);
         uint8_t *pbytes;
+
+        ASN_DEBUG(
+            "Expecting preamble bits %zu for %s (including %d extension bits)",
+            preamble_bits, td->name, has_extensions_bit);
 
         if(size < preamble_bytes) {
             ASN__DECODE_STARVED;
@@ -110,13 +133,14 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         preamble->buffer = (const void *)pbytes;
         memcpy(pbytes, ptr, preamble_bytes);
         pbytes[preamble_bytes] = '\0';    /* Just in case */
-        preamble->nboff = has_extensions;
+        preamble->nboff = has_extensions_bit;
         preamble->nbits = preamble_bits;
         ADVANCE(preamble_bytes);
     }
         NEXT_PHASE(ctx);
         /* FALL THROUGH */
     case 1: {
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 1", td->name);
         /* Decode components of the extension root */
         asn_per_data_t *preamble = ctx->ptr;
         size_t edx;
@@ -124,7 +148,10 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         for(edx = (ctx->step >> 1); edx < td->elements_count;
             edx++, ctx->step = (ctx->step & ~1) + 2) {
             asn_TYPE_member_t *elm = &td->elements[edx];
+            void *memb_tmpptr;     /* Temporary reference. */
             void **memb_ptr2;   /* Pointer to a pointer to a memmber */
+
+            ASN_DEBUG("Decoding %s->%s", td->name, elm->name);
 
             if(ctx->step & 1) {
                 goto microphase2_decode_continues;
@@ -133,25 +160,18 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
             if(IN_EXTENSION_GROUP(specs, edx)) {
                 /* Ignore non-root components in PHASE 1 */
-                continue;
+                break;
             }
 
             if(elm->optional) {
                 int32_t present = per_get_few_bits(preamble, 1);
                 if(present < 0) {
+                    ASN_DEBUG("Presence map ended prematurely: %d", present);
                     RETURN(RC_FAIL);
                 } else if(present == 0) {
                     if(elm->default_value) {
-                        if(elm->flags & ATF_POINTER) {
-                            /* Member is a pointer to another structure */
-                            memb_ptr2 =
-                                (void **)((char *)st + elm->memb_offset);
-                        } else {
-                            void *memb_ptr = (char *)st + elm->memb_offset;
-                            memb_ptr2 = &memb_ptr;
-                        }
                         /* Fill-in DEFAULT */
-                        if(elm->default_value(1, memb_ptr2)) {
+                        if(elm->default_value(1, element_ptrptr(st, elm))) {
                             RETURN(RC_FAIL);
                         }
                     }
@@ -170,8 +190,8 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 /* Member is a pointer to another structure */
                 memb_ptr2 = (void **)((char *)st + elm->memb_offset);
             } else {
-                void *memb_ptr = (char *)st + elm->memb_offset;
-                memb_ptr2 = &memb_ptr;
+                memb_tmpptr = (char *)st + elm->memb_offset;
+                memb_ptr2 = &memb_tmpptr; /* Ensure this & remains in scope! */
             }
 
             rval = elm->type->oer_decoder(opt_codec_ctx, elm->type,
@@ -182,9 +202,13 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 ADVANCE(rval.consumed);
                 break;
             case RC_WMORE:
+                ASN_DEBUG("More bytes needed at element %s \"%s\"", td->name,
+                          elm->name);
                 ADVANCE(rval.consumed);
                 RETURN(RC_WMORE);
             case RC_FAIL:
+                ASN_DEBUG("Decoding failed at element %s \"%s\"", td->name,
+                          elm->name);
                 RETURN(RC_FAIL);
             }
         } /* for(all root members) */
@@ -193,12 +217,13 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         NEXT_PHASE(ctx);
         /* FALL THROUGH */
     case 2: {
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 2", td->name);
         /* Cleanup preamble. */
         asn_per_data_t *preamble = ctx->ptr;
         asn_per_data_t *extadds;
-        int has_extensions = (specs->ext_before >= 0);
+        int has_extensions_bit = (specs->ext_before >= 0);
         int extensions_present =
-            has_extensions && (((const uint8_t *)preamble->buffer)[0] & 0x80);
+            has_extensions_bit && (((const uint8_t *)preamble->buffer)[0] & 0x80);
         uint8_t unused_bits;
         size_t len = 0;
         ssize_t len_len;
@@ -266,20 +291,12 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         ctx->step = (specs->ext_after + 1);
         /* Fall through */
     case 3:
-        for(; ctx->step < specs->ext_before; ctx->step++) {
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 3", td->name);
+        for(; ctx->step < specs->ext_before - 1; ctx->step++) {
             asn_per_data_t *extadds = ctx->ptr;
             size_t edx = ctx->step;
             asn_TYPE_member_t *elm = &td->elements[edx];
-            void **memb_ptr2;
-
-            if(elm->flags & ATF_POINTER) {
-                /* Member is a pointer to another structure */
-                memb_ptr2 = (void **)((char *)st + elm->memb_offset);
-            } else {
-                void *memb_ptr = (char *)st + elm->memb_offset;
-                memb_ptr2 = &memb_ptr;
-                assert(elm->flags & ATF_POINTER); /* Extensions are indirect */
-            }
+            void **memb_ptr2 = element_ptrptr(st, elm);
 
             switch(per_get_few_bits(extadds, 1)) {
             case -1:
@@ -320,6 +337,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         NEXT_PHASE(ctx);
         /* Fall through */
     case 4:
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 4", td->name);
         /* Read in the rest of Open Types while ignoring them */
         for(;;) {
             asn_per_data_t *extadds = ctx->ptr;
@@ -358,17 +376,151 @@ asn_enc_rval_t
 SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
                    asn_oer_constraints_t *constraints, void *sptr,
                    asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_enc_rval_t er;
-    const uint8_t *buf;
-    const uint8_t *end;
-    size_t useful_bytes;
-    size_t req_bytes = 0;
-    int encode_as_unsigned;
-    int sign = 0;
+    asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+    size_t computed_size = 0;
+    int has_extensions_bit = (specs->ext_before >= 0);
+    size_t preamble_bits = (has_extensions_bit + specs->roms_count);
+    uint32_t has_extensions = 0;
+    size_t edx;
+    int ret;
 
-    er.encoded = -1;
+    if(preamble_bits) {
+        asn_per_outp_t preamble;
 
-    return er;
+        memset(&preamble, 0, sizeof(preamble));
+        preamble.outper = cb;
+        preamble.op_key = app_key;
+
+        if(has_extensions_bit) {
+            for(edx = specs->ext_after + 1; edx < specs->ext_before - 1;
+                edx++) {
+                asn_TYPE_member_t *elm = &td->elements[edx];
+                if(element_ptr(sptr, elm)) {
+                    has_extensions = 1;
+                    break;
+                }
+            }
+            ret = per_put_few_bits(&preamble, has_extensions, 1);
+            assert(ret == 0);
+            if(ret < 0) {
+                ASN__ENCODE_FAILED;
+            }
+        }
+
+        /*
+         * Encode optional components bitmap.
+         */
+        if(specs->roms_count) {
+            for(edx = 0; edx < td->elements_count; edx++) {
+                asn_TYPE_member_t *elm = &td->elements[edx];
+
+                if(IN_EXTENSION_GROUP(specs, edx)) break;
+
+                if(elm->optional) {
+                    uint32_t has_component = (element_ptr(sptr, elm) != NULL);
+                    ret = per_put_few_bits(&preamble, has_component, 1);
+                    if(ret < 0) {
+                        ASN__ENCODE_FAILED;
+                    }
+                }
+            }
+        }
+
+        per_put_aligned_flush(&preamble);
+        computed_size += preamble.flushed_bytes;
+    }   /* if(preamble_bits) */
+
+    /*
+     * Put root components and extensions root.
+     */
+    for(edx = 0; edx < td->elements_count; edx++) {
+        asn_TYPE_member_t *elm = &td->elements[edx];
+        asn_enc_rval_t er;
+        void *memb_ptr;
+
+        if(IN_EXTENSION_GROUP(specs, edx)) break;
+
+        memb_ptr = element_ptr(sptr, elm);
+        if(!memb_ptr) {
+            if(elm->optional) continue;
+            /* Mandatory element is missing */
+            ASN__ENCODE_FAILED;
+        }
+        if(!elm->type->oer_encoder) {
+            ASN_DEBUG("OER encoder is not defined for type %s", elm->type->name);
+            ASN__ENCODE_FAILED;
+        }
+        er = elm->type->oer_encoder(elm->type, elm->oer_constraints, memb_ptr,
+                                    cb, app_key);
+        if(er.encoded == -1) {
+            ASN_DEBUG("... while encoding %s member \"%s\"\n", td->name,
+                      elm->name);
+            return er;
+        }
+        computed_size += er.encoded;
+    }
+
+    /*
+     * Before encode extensions, encode extensions additions presense bitmap
+     # X.696 (08/2015) #16.4.
+     */
+    if(has_extensions) {
+        asn_per_outp_t extadds;
+
+        /* Special case allowing us to use exactly one byte for #8.6 */
+        size_t aoms_length_bits = specs->aoms_count;
+        size_t aoms_length_bytes = (7 + specs->aoms_count) >> 3;
+        uint8_t unused_bits = 0x07 & (8 - (aoms_length_bits & 0x07));
+
+        assert(1 + aoms_length_bytes <= 127);
+
+        memset(&extadds, 0, sizeof(extadds));
+        extadds.outper = cb;
+        extadds.op_key = app_key;
+
+        /* #8.6 length determinant */
+        ret = per_put_few_bits(&extadds, (1 + aoms_length_bytes), 8);
+        if(ret < 0) ASN__ENCODE_FAILED;
+
+        /* Number of unused bytes, #16.4.2 */
+        ret = per_put_few_bits(&extadds, unused_bits, 8);
+        if(ret < 0) ASN__ENCODE_FAILED;
+
+        /* Encode presence bitmap #16.4.3 */
+        for(edx = specs->ext_after + 1; edx < specs->ext_before - 1; edx++) {
+            asn_TYPE_member_t *elm = &td->elements[edx];
+            void *memb_ptr = element_ptr(sptr, elm);
+            ret |= per_put_few_bits(&extadds, memb_ptr ? 1 : 0, 1);
+        }
+        if(ret < 0) ASN__ENCODE_FAILED;
+
+        per_put_aligned_flush(&extadds);
+        computed_size += extadds.flushed_bytes;
+
+        /* Now, encode extensions */
+        for(edx = specs->ext_after + 1; edx < specs->ext_before - 1; edx++) {
+            asn_TYPE_member_t *elm = &td->elements[edx];
+            void *memb_ptr = element_ptr(sptr, elm);
+
+            if(memb_ptr) {
+                asn_enc_rval_t er = elm->type->oer_encoder(
+                    elm->type, elm->oer_constraints, memb_ptr, cb, app_key);
+                if(er.encoded == -1) {
+                    return er;
+                }
+                computed_size += er.encoded;
+            } else if(!elm->optional) {
+                ASN__ENCODE_FAILED;
+            }
+        }
+    }   /* if(has_extensions) */
+
+
+    {
+        asn_enc_rval_t er = {0, 0, 0};
+        er.encoded = computed_size;
+        ASN__ENCODED_OK(er);
+    }
 }
 
 #endif  /* ASN_DISABLE_OER_SUPPORT */
