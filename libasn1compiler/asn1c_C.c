@@ -409,7 +409,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 		});
 		OUT("};\n");
 
-		if((roms_count + aoms_count) && (arg->flags & A1C_GEN_PER)) {
+		if((roms_count + aoms_count) && (arg->flags & (A1C_GEN_OER|A1C_GEN_PER))) {
 			int elm = 0;
 			int comma = 0;
 			comp_mode = 0;
