@@ -6,7 +6,6 @@
 #define	_CONSTR_SEQUENCE_H_
 
 #include <asn_application.h>
-#include <constr_SEQUENCE_oer.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +50,8 @@ ber_type_decoder_f SEQUENCE_decode_ber;
 der_type_encoder_f SEQUENCE_encode_der;
 xer_type_decoder_f SEQUENCE_decode_xer;
 xer_type_encoder_f SEQUENCE_encode_xer;
+oer_type_decoder_f SEQUENCE_decode_oer;
+oer_type_encoder_f SEQUENCE_encode_oer;
 per_type_decoder_f SEQUENCE_decode_uper;
 per_type_encoder_f SEQUENCE_encode_uper;
 
