@@ -20,14 +20,14 @@ BEGIN
         unsigned16stack-ext [15] INTEGER (0..32767)(0..255,...), -- OER 2 bytes
         unsigned33        [3] INTEGER (0..5000000000),    -- OER 8 bytes
         ...,
-        signed8           [10] INTEGER (-128..127),        -- OER 1 byte
+        signed8           [10] INTEGER (-128..127) DEFAULT 3, -- OER 1 byte
         signed16          [11] INTEGER (-32768..32767),    -- OER 2 bytes
         signed16stack     [12] INTEGER (-32768..32767)(-128..127), -- OER 1 byte
         signed16stack-ext [5] INTEGER (-32768..32767)(-128..127,...), -- OER 2 b
         signed32          [7] INTEGER (-2000000000..2000000000), -- OER 4 bytes
         signed33ext       [8] INTEGER (-4000000000..4000000000,...),-- OER vrble
         ...,
-        minmax            [6] INTEGER (MIN..MAX)
+        minmax            [6] INTEGER (MIN..MAX) OPTIONAL
     }
 
 END
