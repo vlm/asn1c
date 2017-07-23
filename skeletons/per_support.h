@@ -106,6 +106,13 @@ int per_put_few_bits(asn_per_outp_t *per_data, uint32_t bits, int obits);
 /* Output a large number of bits */
 int per_put_many_bits(asn_per_outp_t *po, const uint8_t *src, int put_nbits);
 
+/*
+ * Flush whole bytes (0 or more) through (outper) member.
+ * The least significant bits which are not used are guaranteed to be set to 0.
+ * Returns -1 if callback returns -1. Otherwise, 0.
+ */
+int per_put_aligned_flush(asn_per_outp_t *po);
+
 /* X.691-2008/11, #11.5 */
 int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits);
 int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits);

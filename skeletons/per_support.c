@@ -316,6 +316,27 @@ int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int
 	}
 }
 
+int
+per_put_aligned_flush(asn_per_outp_t *po) {
+    uint32_t unused_bits = (0x7 & (8 - (po->nboff & 0x07)));
+    size_t complete_bytes =
+        (po->buffer ? po->buffer - po->tmpspace : 0) + ((po->nboff + 7) >> 3);
+
+    if(unused_bits) {
+        po->buffer[po->nboff >> 3] &= ~0 << unused_bits;
+    }
+
+    if(po->outper(po->tmpspace, complete_bytes, po->op_key) < 0) {
+        return -1;
+    } else {
+        po->buffer = po->tmpspace;
+        po->nboff = 0;
+        po->nbits = 8 * sizeof(po->tmpspace);
+        po->flushed_bytes += complete_bytes;
+        return 0;
+    }
+}
+
 /*
  * Put a small number of bits (<= 31).
  */
@@ -343,7 +364,9 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	 * Flush whole-bytes output, if necessary.
 	 */
 	if(po->nboff + obits > po->nbits) {
-		int complete_bytes = (po->buffer - po->tmpspace);
+		size_t complete_bytes;
+		if(!po->buffer) po->buffer = po->tmpspace;
+		complete_bytes = (po->buffer - po->tmpspace);
 		ASN_DEBUG("[PER output %ld complete + %ld]",
 			(long)complete_bytes, (long)po->flushed_bytes);
 		if(po->outper(po->tmpspace, complete_bytes, po->op_key) < 0)
