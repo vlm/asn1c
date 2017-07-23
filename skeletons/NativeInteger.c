@@ -33,8 +33,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	0,
 	0,
 #else
-	0,
-	0,
+	NativeInteger_decode_oer,	/* OER decoder */
+	NativeInteger_encode_oer,	/* Canonical OER encoder */
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
