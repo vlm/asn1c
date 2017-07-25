@@ -19,14 +19,15 @@ int main() {
 
     memset(&source, 0, sizeof(source));
 
-    OCTET_STRING_fromBuf(&source.unconstrained.ia5, "foo", 3);
-    OCTET_STRING_fromBuf(&source.unconstrained.utf8, "bar", 3);
-    OCTET_STRING_fromBuf(&source.unconstrained.universal,
+    OCTET_STRING_fromBuf(&source.unconstrained.unc_ia5, "foo", 3);
+    OCTET_STRING_fromBuf(&source.unconstrained.unc_utf8, "bar-whatever", 12);
+    OCTET_STRING_fromBuf(&source.unconstrained.unc_universal,
                          "\0\0\0b\0\0\0a\0\0\0z", 12);
 
-    OCTET_STRING_fromBuf(&source.constrained.ia5, "ab", 2);
-    OCTET_STRING_fromBuf(&source.constrained.utf8, "cd", 2);
-    OCTET_STRING_fromBuf(&source.constrained.universal, "\0\0\0e\0\0\0f", 8);
+    OCTET_STRING_fromBuf(&source.constrained.con_ia5, "ab", 2);
+    OCTET_STRING_fromBuf(&source.constrained.con_utf8, "cd-whatever", 11);
+    OCTET_STRING_fromBuf(&source.constrained.con_universal, "\0\0\0e\0\0\0f",
+                         8);
 
     asn_enc_rval_t er =
         oer_encode_to_buffer(&asn_DEF_T, 0, &source, tmpbuf, sizeof(tmpbuf));

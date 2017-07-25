@@ -1,0 +1,391 @@
+
+/*** <<< INCLUDES [T] >>> ***/
+
+#include <IA5String.h>
+#include <UTF8String.h>
+#include <UniversalString.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [T] >>> ***/
+
+typedef struct T {
+	struct unconstrained {
+		IA5String_t	 unc_ia5;
+		UTF8String_t	 unc_utf8;
+		UniversalString_t	 unc_universal;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} unconstrained;
+	struct constrained {
+		IA5String_t	 con_ia5;
+		UTF8String_t	 con_utf8;
+		UniversalString_t	 con_universal;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} constrained;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
+
+/*** <<< CTABLES [T] >>> ***/
+
+static int check_permitted_alphabet_7(const void *sptr) {
+	/* The underlying type is IA5String */
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	for(; ch < end; ch++) {
+		uint8_t cv = *ch;
+		if(!(cv <= 127)) return -1;
+	}
+	return 0;
+}
+
+static int check_permitted_alphabet_9(const void *sptr) {
+	/* The underlying type is UniversalString */
+	const UniversalString_t *st = (const UniversalString_t *)sptr;
+	const uint8_t *ch = st->buf;
+	const uint8_t *end = ch + st->size;
+	
+	if(st->size % 4) return -1; /* (size%4)! */
+	for(; ch < end; ch += 4) {
+		uint32_t cv = (ch[0] << 24)
+				| (ch[1] << 16)
+				| (ch[2] << 8)
+				|  ch[3];
+		if(!(1 /* Constraint matches natural range of cv */)) return -1;
+	}
+	return 0;
+}
+
+
+/*** <<< CODE [T] >>> ***/
+
+static int
+memb_con_ia5_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const IA5String_t *st = (const IA5String_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = st->size;
+	
+	if((size == 2)
+		 && !check_permitted_alphabet_7(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_con_utf8_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const UTF8String_t *st = (const UTF8String_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = UTF8String_length(st);
+	if((ssize_t)size < 0) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: UTF-8: broken encoding (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if((size == 2)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_con_universal_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const UniversalString_t *st = (const UniversalString_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = st->size >> 2;	/* 4 byte per character */
+	
+	if((size == 2)
+		 && !check_permitted_alphabet_9(st)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< CTDEFS [T] >>> ***/
+
+static asn_oer_constraints_t asn_OER_memb_con_ia5_constr_7 GCC_NOTUSED = {
+	{ 0, 0, 0 },
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 2, 2 }	/* (SIZE(2..2)) */};
+static asn_oer_constraints_t asn_OER_memb_con_utf8_constr_8 GCC_NOTUSED = {
+	{ 0, 0, 0 },
+	{ 0, 0, 0 }	/* (SIZE(2..2)) */};
+static asn_oer_constraints_t asn_OER_memb_con_universal_constr_9 GCC_NOTUSED = {
+	{ 0, 0, 0 },
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 2, 2 }	/* (SIZE(2..2)) */};
+
+/*** <<< STAT-DEFS [T] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_unconstrained_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct unconstrained, unc_ia5),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* No OER visible constraints */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "unc-ia5"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct unconstrained, unc_utf8),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_UTF8String,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* No OER visible constraints */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "unc-utf8"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct unconstrained, unc_universal),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (28 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_UniversalString,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* No OER visible constraints */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "unc-universal"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_unconstrained_tags_2[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_unconstrained_tag2el_2[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 1, 0, 0 }, /* unc-utf8 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 0, 0, 0 }, /* unc-ia5 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (28 << 2)), 2, 0, 0 } /* unc-universal */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_unconstrained_specs_2 = {
+	sizeof(struct unconstrained),
+	offsetof(struct unconstrained, _asn_ctx),
+	asn_MAP_unconstrained_tag2el_2,
+	3,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_unconstrained_2 = {
+	"unconstrained",
+	"unconstrained",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	SEQUENCE_decode_oer,
+	SEQUENCE_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_unconstrained_tags_2,
+	sizeof(asn_DEF_unconstrained_tags_2)
+		/sizeof(asn_DEF_unconstrained_tags_2[0]), /* 1 */
+	asn_DEF_unconstrained_tags_2,	/* Same as above */
+	sizeof(asn_DEF_unconstrained_tags_2)
+		/sizeof(asn_DEF_unconstrained_tags_2[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_unconstrained_2,
+	3,	/* Elements count */
+	&asn_SPC_unconstrained_specs_2	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_constrained_6[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct constrained, con_ia5),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_IA5String,
+		.memb_constraints = memb_con_ia5_constraint_6,
+		.oer_constraints = &asn_OER_memb_con_ia5_constr_7,
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "con-ia5"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct constrained, con_utf8),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_UTF8String,
+		.memb_constraints = memb_con_utf8_constraint_6,
+		.oer_constraints = &asn_OER_memb_con_utf8_constr_8,
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "con-utf8"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct constrained, con_universal),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (28 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_UniversalString,
+		.memb_constraints = memb_con_universal_constraint_6,
+		.oer_constraints = &asn_OER_memb_con_universal_constr_9,
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "con-universal"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_constrained_tags_6[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_constrained_tag2el_6[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 1, 0, 0 }, /* con-utf8 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 0, 0, 0 }, /* con-ia5 */
+    { (ASN_TAG_CLASS_UNIVERSAL | (28 << 2)), 2, 0, 0 } /* con-universal */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_constrained_specs_6 = {
+	sizeof(struct constrained),
+	offsetof(struct constrained, _asn_ctx),
+	asn_MAP_constrained_tag2el_6,
+	3,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_constrained_6 = {
+	"constrained",
+	"constrained",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	SEQUENCE_decode_oer,
+	SEQUENCE_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_constrained_tags_6,
+	sizeof(asn_DEF_constrained_tags_6)
+		/sizeof(asn_DEF_constrained_tags_6[0]), /* 1 */
+	asn_DEF_constrained_tags_6,	/* Same as above */
+	sizeof(asn_DEF_constrained_tags_6)
+		/sizeof(asn_DEF_constrained_tags_6[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_constrained_6,
+	3,	/* Elements count */
+	&asn_SPC_constrained_specs_6	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_T_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct T, unconstrained),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_unconstrained_2,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* No OER visible constraints */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "unconstrained"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, constrained),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_constrained_6,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* No OER visible constraints */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "constrained"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_T_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* unconstrained */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 } /* constrained */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
+	sizeof(struct T),
+	offsetof(struct T, _asn_ctx),
+	asn_MAP_T_tag2el_1,
+	2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
+	"T",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	SEQUENCE_decode_oer,
+	SEQUENCE_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_T_tags_1,
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	asn_DEF_T_tags_1,	/* Same as above */
+	sizeof(asn_DEF_T_tags_1)
+		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_T_1,
+	2,	/* Elements count */
+	&asn_SPC_T_specs_1	/* Additional specs */
+};
+

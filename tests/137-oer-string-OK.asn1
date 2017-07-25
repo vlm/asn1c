@@ -13,14 +13,14 @@ BEGIN
 
     T ::= SEQUENCE {
         unconstrained SEQUENCE {
-            ia5         IA5String,
-            utf8        UTF8String,
-            universal   UniversalString
+            unc-ia5         IA5String,
+            unc-utf8        UTF8String,
+            unc-universal   UniversalString
         },
         constrained SEQUENCE {
-            ia5         IA5String (SIZE(2..2)),
-            utf8        UTF8String (SIZE(2)),
-            universal   UniversalString (SIZE(2 | 2))
+            con-ia5         IA5String (SIZE(2..2)),
+            con-utf8        UTF8String (SIZE(2)),
+            con-universal   UniversalString (SIZE(2 | 2))
         }
     }
 
