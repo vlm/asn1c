@@ -5,107 +5,129 @@ BEGIN
 
 CN-IntegerUnlimited ::= INTEGER
 -- Practical constraints (CN-IntegerUnlimited): (MIN..MAX)  
+-- OER-visible constraints (CN-IntegerUnlimited): (MIN..MAX)  
 -- PER-visible constraints (CN-IntegerUnlimited): (MIN..MAX)  
 
 CN-IntegerMinMax ::= INTEGER (MIN..MAX)
 -- Combined constraints: (MIN..MAX)
 -- Practical constraints (CN-IntegerMinMax): (MIN..MAX)  
+-- OER-visible constraints (CN-IntegerMinMax): (MIN..MAX)  
 -- PER-visible constraints (CN-IntegerMinMax): (MIN..MAX)  
 
 CN-IntegerMinLow ::= INTEGER (MIN..1)
 -- Combined constraints: (MIN..1)
 -- Practical constraints (CN-IntegerMinLow): (MIN..1)  
+-- OER-visible constraints (CN-IntegerMinLow): (MIN..1)  
 -- PER-visible constraints (CN-IntegerMinLow): (MIN..1)  
 
 NO-IntegerMinHigh ::= INTEGER (MIN..3000000000)
 -- Combined constraints: (MIN..3000000000)
 -- Practical constraints (NO-IntegerMinHigh): (MIN..3000000000)  
+-- OER-visible constraints (NO-IntegerMinHigh): (MIN..3000000000)  
 -- PER-visible constraints (NO-IntegerMinHigh): (MIN..3000000000)  
 
 NO-IntegerLowHigh ::= INTEGER (1..3000000000)
 -- Combined constraints: (1..3000000000)
 -- Practical constraints (NO-IntegerLowHigh): (1..3000000000)  
+-- OER-visible constraints (NO-IntegerLowHigh): (1..3000000000)  
 -- PER-visible constraints (NO-IntegerLowHigh): (1..3000000000)  
 
 CN-IntegerLowMax ::= INTEGER (1..MAX)
 -- Combined constraints: (1..MAX)
 -- Practical constraints (CN-IntegerLowMax): (1..MAX)  
+-- OER-visible constraints (CN-IntegerLowMax): (1..MAX)  
 -- PER-visible constraints (CN-IntegerLowMax): (1..MAX)  
 
 NO-IntegerHighMax ::= INTEGER (3000000000..MAX)
 -- Combined constraints: (3000000000..MAX)
 -- Practical constraints (NO-IntegerHighMax): (3000000000..MAX)  
+-- OER-visible constraints (NO-IntegerHighMax): (3000000000..MAX)  
 -- PER-visible constraints (NO-IntegerHighMax): (3000000000..MAX)  
 
 NO-IntegerLowestMax ::= INTEGER (-3000000000..MAX)
 -- Combined constraints: (-3000000000..MAX)
 -- Practical constraints (NO-IntegerLowestMax): (-3000000000..MAX)  
+-- OER-visible constraints (NO-IntegerLowestMax): (-3000000000..MAX)  
 -- PER-visible constraints (NO-IntegerLowestMax): (-3000000000..MAX)  
 
 NO-IntegerOutRange ::= INTEGER (3000000000..3000000001)
 -- Combined constraints: (3000000000..3000000001)
 -- Practical constraints (NO-IntegerOutRange): (3000000000..3000000001)  
+-- OER-visible constraints (NO-IntegerOutRange): (3000000000..3000000001)  
 -- PER-visible constraints (NO-IntegerOutRange): (3000000000..3000000001)  
 
 NO-IntegerOutValue ::= INTEGER (3000000000)
 -- Combined constraints: (3000000000)
 -- Practical constraints (NO-IntegerOutValue): (3000000000)  
+-- OER-visible constraints (NO-IntegerOutValue): (3000000000)  
 -- PER-visible constraints (NO-IntegerOutValue): (3000000000)  
 
 OK-IntegerInRange1 ::= INTEGER (-100..100)
 -- Combined constraints: (-100..100)
 -- Practical constraints (OK-IntegerInRange1): (-100..100)  
+-- OER-visible constraints (OK-IntegerInRange1): (-100..100)  
 -- PER-visible constraints (OK-IntegerInRange1): (-100..100)  
 
 OK-IntegerInRange2 ::= INTEGER (-100 | 100)
 -- Combined constraints: (-100 | 100)
 -- Practical constraints (OK-IntegerInRange2): (-100 | 100)  
+-- OER-visible constraints (OK-IntegerInRange2): (-100 | 100)  
 -- PER-visible constraints (OK-IntegerInRange2): (-100 | 100)  
 
 OK-IntegerInRange3 ::= INTEGER (-2147483648..2147483647)
 -- Combined constraints: (-2147483648..2147483647)
 -- Practical constraints (OK-IntegerInRange3): (-2147483648..2147483647)  
+-- OER-visible constraints (OK-IntegerInRange3): (-2147483648..2147483647)  
 -- PER-visible constraints (OK-IntegerInRange3): (-2147483648..2147483647)  
 
 OK-IntegerInRange4 ::= INTEGER (-2147483648 | 2147483647)
 -- Combined constraints: (-2147483648 | 2147483647)
 -- Practical constraints (OK-IntegerInRange4): (-2147483648 | 2147483647)  
+-- OER-visible constraints (OK-IntegerInRange4): (-2147483648 | 2147483647)  
 -- PER-visible constraints (OK-IntegerInRange4): (-2147483648 | 2147483647)  
 
 OK-IntegerInRange5 ::= INTEGER (-2147483648 | 2147483647,...)
 -- Combined constraints: (-2147483648 | 2147483647,...)
 -- Practical constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
+-- OER-visible constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
 -- PER-visible constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
 
 NO-IntegerInRange6 ::= INTEGER (0..4294967295)
 -- Combined constraints: (0..4294967295)
 -- Practical constraints (NO-IntegerInRange6): (0..4294967295)  
+-- OER-visible constraints (NO-IntegerInRange6): (0..4294967295)  
 -- PER-visible constraints (NO-IntegerInRange6): (0..4294967295)  
 
 CN-IntegerEnumerated1 ::= INTEGER {
     a(1)
 -- Practical constraints (a):   
+-- OER-visible constraints (a):   
 -- PER-visible constraints (a):   
 ,
     b(2)
 -- Practical constraints (b):   
+-- OER-visible constraints (b):   
 -- PER-visible constraints (b):   
 
 }
 -- Practical constraints (CN-IntegerEnumerated1): (MIN..MAX)  
+-- OER-visible constraints (CN-IntegerEnumerated1): (MIN..MAX)  
 -- PER-visible constraints (CN-IntegerEnumerated1): (MIN..MAX)  
 
 NO-IntegerEnumerated2 ::= INTEGER {
     a(1)
 -- Practical constraints (a):   
+-- OER-visible constraints (a):   
 -- PER-visible constraints (a):   
 ,
     b(3000000000)
 -- Practical constraints (b):   
+-- OER-visible constraints (b):   
 -- PER-visible constraints (b):   
 
 }
 -- Practical constraints (NO-IntegerEnumerated2): (MIN..MAX)  
+-- OER-visible constraints (NO-IntegerEnumerated2): (MIN..MAX)  
 -- PER-visible constraints (NO-IntegerEnumerated2): (MIN..MAX)  
 
 END
