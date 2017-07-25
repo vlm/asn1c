@@ -26,7 +26,7 @@ int main() {
 
     OCTET_STRING_fromBuf(&source.constrained.ia5, "ab", 2);
     OCTET_STRING_fromBuf(&source.constrained.utf8, "cd", 2);
-    OCTET_STRING_fromBuf(&source.unconstrained.universal, "\0\0\0e\0\0\0f", 8);
+    OCTET_STRING_fromBuf(&source.constrained.universal, "\0\0\0e\0\0\0f", 8);
 
     asn_enc_rval_t er =
         oer_encode_to_buffer(&asn_DEF_T, 0, &source, tmpbuf, sizeof(tmpbuf));
