@@ -19,9 +19,6 @@ int main() {
 
     memset(&empty_t, 0, sizeof(empty_t));
 
-    /* Fill in complex INTEGER */
-    asn_long2INTEGER(&empty_t.unsigned33, 0);
-
     asn_enc_rval_t er =
         oer_encode_to_buffer(&asn_DEF_T, 0, &empty_t, tmpbuf, sizeof(tmpbuf));
     assert(er.encoded != -1);
