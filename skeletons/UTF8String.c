@@ -27,8 +27,8 @@ asn_TYPE_descriptor_t asn_DEF_UTF8String = {
 	0,
 	0,
 #else
-	0,
-	0,
+	OCTET_STRING_decode_oer,
+	OCTET_STRING_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,

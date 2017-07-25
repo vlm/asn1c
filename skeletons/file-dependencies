@@ -69,6 +69,7 @@ converter-sample.c		# A default name for sample transcoder
 
 CODEC-OER:			# THIS IS A SPECIAL SECTION
 INTEGER_oer.c
+OCTET_STRING_oer.c
 NativeInteger_oer.c
 constr_SEQUENCE_oer.c
 
