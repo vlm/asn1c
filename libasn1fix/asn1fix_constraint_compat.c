@@ -113,19 +113,17 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 }
 
 
-#define	DECL_RANGE(foo, val1, val2, pv)				\
-	static asn1cnst_range_t range_ ## foo = {		\
-			{ ARE_VALUE, 0, val1 },			\
-			{ ARE_VALUE, 0, val2 },			\
-			0, 0, 0, 0, 0, 0, pv }
+#define DECL_RANGE(foo, lb, ub, ov, pv)     \
+    static asn1cnst_range_t range_##foo = { \
+        {ARE_VALUE, 0, lb}, {ARE_VALUE, 0, ub}, 0, 0, 0, 0, 0, 0, ov, pv}
 
-#define	DECL(foo, val1, val2)		DECL_RANGE(foo, val1, val2, 0)
-#define	DECL_notPV(foo, val1, val2)	DECL_RANGE(foo, val1, val2, 1)
+#define DECL(name, lb, ub) DECL_RANGE(name, lb, ub, 0, 0)
+#define DECL_notOPV(name, lb, ub) DECL_RANGE(name, lb, ub, 1, 1)
 
 asn1cnst_range_t *
 asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
-	DECL_notPV(octstr,	0x00, 0xff);	/* Not PER-visible */
-	DECL_notPV(utf8,	0x00, 0x7fffffff);	/* Not PER-visible */
+	DECL_notOPV(octstr,	0x00, 0xff);	/* Not OER- and PER-visible */
+	DECL_notOPV(utf8,	0x00, 0x7fffffff);	/* Not OER- and PER-visible */
 	DECL(bmp,	0x00, 65533);	/* 64K-2 cells */
 	DECL(uint7,	0x00, 0x7f);
 	DECL(uint32,	0x00, 0xffffffff);
@@ -160,39 +158,39 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 	static asn1cnst_range_t range_notPERVisible = {
 			{ ARE_MIN, 0, 0 },
 			{ ARE_MAX, 0, 0 },
-			0, 0, 0, 0, 0, 0, 1 };
+			0, 0, 0, 0, 0, 0, 0, 1 };
 	static asn1cnst_range_t range_NumericString = {
 			{ ARE_VALUE, 0, 0x20 },
 			{ ARE_VALUE, 0, 0x39 },
 			range_NumericString_array,
 			sizeof(range_NumericString_array)
 				/sizeof(range_NumericString_array[0]),
-			0, 0, 0, 0, 0 };
+			0, 0, 0, 0, 0, 0 };
 	static asn1cnst_range_t range_PrintableString = {
 			{ ARE_VALUE, 0, 0x20 },
 			{ ARE_VALUE, 0, 0x7a },
 			range_PrintableString_array,
 			sizeof(range_PrintableString_array)
 				/sizeof(range_PrintableString_array[0]),
-			0, 0, 0, 0, 0 };
+			0, 0, 0, 0, 0, 0 };
 	static asn1cnst_range_t range_VisibleString = {
 			{ ARE_VALUE, 0, 0x20 },
 			{ ARE_VALUE, 0, 0x7e },
-			0, 0, 0, 0, 0, 0, 0 };
+			0, 0, 0, 0, 0, 0, 0, 0 };
 	static asn1cnst_range_t range_UTCTime = {
 			{ ARE_VALUE, 0, 0x2b },
 			{ ARE_VALUE, 0, 0x5a },
 			range_UTCTime_array,
 			sizeof(range_UTCTime_array)
 				/sizeof(range_UTCTime_array[0]),
-			0, 0, 0, 0, 1 };
+			0, 0, 0, 0, 0, 1 };
 	static asn1cnst_range_t range_GeneralizedTime = {
 			{ ARE_VALUE, 0, 0x2b },
 			{ ARE_VALUE, 0, 0x5a },
 			range_GeneralizedTime_array,
 			sizeof(range_GeneralizedTime_array)
 				/sizeof(range_GeneralizedTime_array[0]),
-			0, 0, 0, 0, 1 };
+			0, 0, 0, 0, 0, 1 };
 
 	switch(expr_type) {
 	case ASN_STRING_NumericString:
@@ -210,6 +208,7 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 		 * X.691, #9.3.6
 		 * Not a known-multipler character string type.
 		 */
+		assert(range_utf8.not_OER_visible);
 		assert(range_utf8.not_PER_visible);
 		return &range_utf8;
 	case ASN_STRING_UniversalString:
