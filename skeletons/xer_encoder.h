@@ -31,6 +31,28 @@ asn_enc_rval_t xer_encode(struct asn_TYPE_descriptor_s *type_descriptor,
 	);
 
 /*
+ * A helper function that uses XER encoding/decoding to verify that:
+ * - Both structures encode into the same BASIC XER.
+ * - Both resulting XER byte streams can be decoded back.
+ * - Both decoded structures encode into the same BASIC XER (round-trip).
+ * All of this verifies equivalence between structures and a round-trip.
+ * ARGUMENTS:
+ *  (opt_debug_stream)  - If specified, prints ongoing details.
+ */
+enum xer_equivalence_e {
+    XEQ_SUCCESS,          /* The only completely positive return value */
+    XEQ_FAILURE,          /* General failure */
+    XEQ_ENCODE1_FAILED,   /* First sructure XER encoding failed */
+    XEQ_ENCODE2_FAILED,   /* Second structure XER encoding failed */
+    XEQ_DIFFERENT,        /* Structures encoded into different XER */
+    XEQ_DECODE_FAILED,    /* Decode of the XER data failed */
+    XEQ_ROUND_TRIP_FAILED /* Bad round-trip */
+};
+enum xer_equivalence_e xer_equivalent(
+    struct asn_TYPE_descriptor_s *type_descriptor, void *struct1, void *struct2,
+    FILE *opt_debug_stream);
+
+/*
  * The variant of the above function which dumps the BASIC-XER (XER_F_BASIC)
  * output into the chosen file pointer.
  * RETURN VALUES:
