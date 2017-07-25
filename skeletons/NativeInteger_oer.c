@@ -20,7 +20,6 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
     asn_oer_constraint_t *ct;
 
     (void)opt_codec_ctx;
-    (void)specs;
 
     if(!native) {
         native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
