@@ -14,8 +14,8 @@
 
 int main() {
     uint8_t tmpbuf[128];
-	T_t source;
-	T_t *decoded = 0; /* "= 0" is important */
+    T_t source;
+    T_t *decoded = 0; /* "= 0" is important */
 
     memset(&source, 0, sizeof(source));
 
@@ -42,10 +42,9 @@ int main() {
         assert(dr.consumed == er.encoded);
     }
 
-    fprintf(stderr, "Original:\n");
-    xer_fprint(stderr, &asn_DEF_T, &source);
-    fprintf(stderr, "Decoded:\n");
-    xer_fprint(stderr, &asn_DEF_T, decoded);
+    if(XEQ_SUCCESS != xer_equivalent(&asn_DEF_T, &source, decoded, stderr)) {
+        return 1;
+    }
 
     return 0;
 }

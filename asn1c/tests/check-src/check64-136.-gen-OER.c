@@ -14,20 +14,20 @@
 
 int main() {
     uint8_t tmpbuf[128];
-	T_t empty_t;
-	T_t *decoded_t = 0; /* "= 0" is important */
+    T_t source;
+    T_t *decoded = 0; /* "= 0" is important */
 
-    memset(&empty_t, 0, sizeof(empty_t));
+    memset(&source, 0, sizeof(source));
 
     /* Fill in complex INTEGER */
-    asn_long2INTEGER(&empty_t.unsigned33, 0);
+    asn_long2INTEGER(&source.unsigned33, 0);
 
     asn_enc_rval_t er =
-        oer_encode_to_buffer(&asn_DEF_T, 0, &empty_t, tmpbuf, sizeof(tmpbuf));
+        oer_encode_to_buffer(&asn_DEF_T, 0, &source, tmpbuf, sizeof(tmpbuf));
     assert(er.encoded != -1);
 
     asn_dec_rval_t dr =
-        oer_decode(0, &asn_DEF_T, (void **)&decoded_t, tmpbuf, er.encoded);
+        oer_decode(0, &asn_DEF_T, (void **)&decoded, tmpbuf, er.encoded);
 
     assert(dr.code == RC_OK);
     if(dr.consumed != er.encoded) {
@@ -35,10 +35,9 @@ int main() {
         assert(dr.consumed == er.encoded);
     }
 
-    fprintf(stderr, "Original:\n");
-    xer_fprint(stderr, &asn_DEF_T, &empty_t);
-    fprintf(stderr, "Decoded:\n");
-    xer_fprint(stderr, &asn_DEF_T, decoded_t);
+    if(XEQ_SUCCESS != xer_equivalent(&asn_DEF_T, &source, decoded, stderr)) {
+        return 1;
+    }
 
     return 0;
 }
