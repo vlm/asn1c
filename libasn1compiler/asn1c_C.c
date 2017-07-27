@@ -2674,6 +2674,9 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
 
+	if(emit_member_OER_constraints(arg, expr, "type"))
+		return -1;
+
 	if(emit_member_PER_constraints(arg, expr, "type"))
 		return -1;
 
