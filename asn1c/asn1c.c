@@ -197,7 +197,14 @@ main(int ac, char **av) {
     /*
      * Validate the options combination.
      */
-    if(!print_arg__print_out) {
+    if(print_arg__print_out) {
+        if((asn1_printer_flags & APF_PRINT_CONSTRAINTS)
+           && !print_arg__fix_n_print) {
+            fprintf(stderr,
+                    "Error: -print-constraints argument requires -E -F\n");
+            exit(EX_USAGE);
+        }
+    } else {
         if(print_arg__fix_n_print) {
             fprintf(stderr, "Error: -F requires -E\n");
             exit(EX_USAGE);
