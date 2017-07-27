@@ -1014,8 +1014,10 @@ asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p
 		return range;
 	case ACT_CA_EXC:	/* FROM("ABCD") EXCEPT FROM("AB") */
 		/*
-		 * X.691, #9.3.19:
+		 * X.691 (PER), #9.3.19:
 		 * EXCEPT and the following value set is completely ignored.
+		 * X.696 (OER), #8.2.6:
+		 * EXCEPT keyword and the following value set is completely ignored.
 		 */
 		assert(ct->el_count >= 1);
 		_range_free(range);
