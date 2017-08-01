@@ -216,8 +216,11 @@ static int _range_merge_in(asn1cnst_range_t *into, asn1cnst_range_t *cr) {
 	int prev_count = into->el_count;
 	int i;
 
+	into->not_OER_visible |= cr->not_OER_visible;
 	into->not_PER_visible |= cr->not_PER_visible;
 	into->extensible |= cr->extensible;
+	if(into->extensible)
+		into->not_OER_visible = 1;
 
 	/*
 	 * Add the element OR all its children "into".
@@ -496,15 +499,44 @@ _range_split(asn1cnst_range_t *ra, const asn1cnst_range_t *rb) {
 }
 
 static int
-_range_intersection(asn1cnst_range_t *range, const asn1cnst_range_t *with, int strict_edge_check) {
+_range_intersection(asn1cnst_range_t *range, const asn1cnst_range_t *with, int strict_edge_check, int is_oer) {
 	int ret;
 	int i, j;
 
 	assert(!range->incompatible);
 
-	/* Propagate errors */
-	range->extensible |= with->extensible;
-	range->not_PER_visible |= with->not_PER_visible;
+    if(is_oer) {
+        assert(range->extensible == 0);
+        assert(range->not_OER_visible == 0);
+        assert(with->extensible == 0);
+        assert(with->not_OER_visible == 0);
+        if(range->extensible) {
+            assert(range->not_OER_visible);
+        }
+        if(range->extensible || range->not_OER_visible) {
+            /* X.696 #8.2.4 Completely ignore the extensible constraints */
+            /* (XXX)(YYY,...) Retain the first one (XXX). */
+            asn1cnst_range_t *tmp = _range_new();
+            *tmp = *range;
+            *range = *with;
+            _range_free(tmp);
+            return 0;
+        }
+
+        if(with->extensible) {
+            assert(with->not_OER_visible);
+        }
+        if(with->extensible || with->not_OER_visible) {
+            /* X.696 #8.2.4 Completely ignore the extensible constraints */
+            return 0;
+        }
+    } else {
+        /* Propagate errors */
+        range->extensible |= with->extensible;
+        if(with->extensible)
+            range->not_OER_visible = 1;
+        range->not_PER_visible |= with->not_PER_visible;
+    }
 	range->empty_constraint |= with->empty_constraint;
 
 	if(range->empty_constraint) {
@@ -699,22 +731,24 @@ _range_canonicalize(asn1cnst_range_t *range) {
 }
 
 asn1cnst_range_t *
-asn1constraint_compute_OER_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e requested_ct_type
-, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+asn1constraint_compute_OER_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e requested_ct_type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
     return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags | CPR_strict_OER_visibility);
 }
 
 asn1cnst_range_t *
-asn1constraint_compute_PER_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e requested_ct_type
-, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+asn1constraint_compute_PER_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e requested_ct_type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
     if(0) return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags | CPR_strict_PER_visibility);
     /* Due to pecularities of PER constraint handling, we don't enable strict PER visibility upfront here. */
     return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags);
 }
 
 asn1cnst_range_t *
-asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
-	asn1cnst_range_t *range;
+asn1constraint_compute_constraint_range(
+    const char *dbg_name, asn1p_expr_type_e expr_type,
+    const asn1p_constraint_t *ct,
+    enum asn1p_constraint_type_e requested_ct_type,
+    const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+    asn1cnst_range_t *range;
 	asn1cnst_range_t *tmp;
 	asn1p_value_t *vmin;
 	asn1p_value_t *vmax;
@@ -731,14 +765,16 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 	 * Check if the requested constraint is theoretically compatible
 	 * with the given expression type.
 	 */
-	if(asn1constraint_compatible(expr_type, type,
+	if(asn1constraint_compatible(expr_type, requested_ct_type,
 			cpr_flags & CPR_simulate_fbless_SIZE) != 1) {
 		errno = EINVAL;
 		return 0;
 	}
 
-	/* Check arguments' validity. */
-	switch(type) {
+	/*
+	 * Check arguments' validity.
+	 */
+	switch(requested_ct_type) {
 	case ACT_EL_RANGE:
 		if(exmet == &expectation_met)
 			*exmet = 1;
@@ -792,7 +828,7 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
      * SIZE constraints on restricted character string types
      * which are not known-multiplier are not OER-visible.
      */
-	if(type == ACT_CT_SIZE && (expr_type & ASN_STRING_NKM_MASK))
+	if(requested_ct_type == ACT_CT_SIZE && (expr_type & ASN_STRING_NKM_MASK))
 		range->not_OER_visible = 1;
 
     if(!ct
@@ -813,6 +849,8 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 	case ACT_EL_EXT:
 		if(!*exmet) {
 			range->incompatible = 1;
+			range->extensible = 1;
+			range->not_OER_visible = 1;
 		} else {
 			_range_free(range);
 			errno = ERANGE;
@@ -821,21 +859,27 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 		return range;
 	case ACT_CT_SIZE:
 	case ACT_CT_FROM:
-		if(type == ct->type) {
+		if(requested_ct_type == ct->type) {
+			/*
+			 * Specifically requested to process SIZE() or FROM() constraint.
+			 */
 			*exmet = 1;
 		} else {
 			range->incompatible = 1;
 			return range;
 		}
 		assert(ct->el_count == 1);
-		tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
-			ct->elements[0], type, minmax, exmet, cpr_flags);
+		tmp = asn1constraint_compute_constraint_range(
+			dbg_name, expr_type, ct->elements[0], requested_ct_type, minmax,
+			exmet, cpr_flags);
 		if(tmp) {
 			_range_free(range);
 		} else {
 			if(errno == ERANGE) {
 				range->empty_constraint = 1;
 				range->extensible = 1;
+				if(range->extensible)
+					range->not_OER_visible = 1;
 				tmp = range;
 			} else {
 				_range_free(range);
@@ -848,11 +892,14 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 		/* AND constraints, one after another. */
 		for(i = 0; i < ct->el_count; i++) {
 			tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
-				ct->elements[i], type,
+				ct->elements[i], requested_ct_type,
 				ct->type==ACT_CA_SET?range:minmax, exmet,
 				cpr_flags);
 			if(!tmp) {
 				if(errno == ERANGE) {
+					range->extensible = 1;
+					if(range->extensible)
+						range->not_OER_visible = 1;
 					continue;
 				} else {
 					_range_free(range);
@@ -898,13 +945,14 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 			}
 
 			ret = _range_intersection(range, tmp,
-				ct->type == ACT_CA_SET);
+				ct->type == ACT_CA_SET, cpr_flags & CPR_strict_OER_visibility);
 			_range_free(tmp);
 			if(ret) {
 				_range_free(range);
 				errno = EPERM;
 				return NULL;
 			}
+
 			_range_canonicalize(range);
 		}
 
@@ -918,11 +966,12 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 		tmp = 0;
 		for(i = 0; i < ct->el_count; i++) {
 			tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
-				ct->elements[i], type, minmax, exmet,
+				ct->elements[i], requested_ct_type, minmax, exmet,
 				cpr_flags);
 			if(!tmp) {
 				if(errno == ERANGE) {
 					range->extensible = 1;
+					range->not_OER_visible = 1;
 					continue;
 				} else {
 					_range_free(range);
@@ -937,6 +986,7 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 		}
 		if(tmp) {
 			tmp->extensible |= range->extensible;
+			tmp->not_OER_visible |= range->not_OER_visible;
 			tmp->empty_constraint |= range->empty_constraint;
 			_range_free(range);
 			range = tmp;
@@ -951,11 +1001,12 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 		 */
 		for(; i < ct->el_count; i++) {
 			tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
-				ct->elements[i], type, minmax, exmet,
+				ct->elements[i], requested_ct_type, minmax, exmet,
 				cpr_flags);
 			if(!tmp) {
 				if(errno == ERANGE) {
 					range->extensible = 1;
+					range->not_OER_visible = 1;
 					continue;
 				} else {
 					_range_free(range);
@@ -975,6 +1026,7 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 				 * Ignore empty constraints in OR logic.
 				 */
 				range->extensible |= tmp->extensible;
+				range->not_OER_visible |= tmp->not_OER_visible;
 				_range_free(tmp);
 				continue;
 			}
@@ -984,7 +1036,7 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 
 		_range_canonicalize(range);
 
-        if(type == ACT_CT_FROM) {
+        if(requested_ct_type == ACT_CT_FROM) {
             /*
              * X.696 permitted alphabet constraints are not OER-visible.
              */
@@ -1026,7 +1078,7 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 		assert(ct->el_count >= 1);
 		_range_free(range);
 		range = asn1constraint_compute_constraint_range(dbg_name, expr_type,
-			ct->elements[0], type, minmax, exmet, cpr_flags);
+			ct->elements[0], requested_ct_type, minmax, exmet, cpr_flags);
 		return range;
 	default:
 		range->incompatible = 1;
@@ -1046,10 +1098,10 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 	range = _range_new();
 
 	ret  = _range_fill(vmin, minmax, &range->left,
-				range, type, ct->_lineno);
+				range, requested_ct_type, ct->_lineno);
 	if(!ret)
 	ret = _range_fill(vmax, minmax, &range->right,
-				range, type, ct->_lineno);
+				range, requested_ct_type, ct->_lineno);
 	if(ret) {
 		_range_free(range);
 		errno = EPERM;
@@ -1062,7 +1114,8 @@ asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e 
 		clone = _range_clone(minmax);
 
 		/* Constrain parent type with given data. */
-		ret = _range_intersection(clone, range, 1);
+		ret = _range_intersection(clone, range, 1,
+		                          cpr_flags & CPR_strict_OER_visibility);
 		_range_free(range);
 		if(ret) {
 			_range_free(clone);
