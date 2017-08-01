@@ -45,20 +45,23 @@ enum cpr_flags {
 	CPR_strict_PER_visibility	= 0x02,
 	CPR_simulate_fbless_SIZE	= 0x04,
 };
-asn1cnst_range_t *asn1constraint_compute_OER_range(asn1p_expr_type_e expr_type,
+asn1cnst_range_t *asn1constraint_compute_OER_range(const char *dbg_name,
+	asn1p_expr_type_e expr_type,
 	const asn1p_constraint_t *ct,
 	enum asn1p_constraint_type_e required_type,
 	const asn1cnst_range_t *minmax,
 	int *expectation_met,
 	enum cpr_flags);
-asn1cnst_range_t *asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type,
+asn1cnst_range_t *asn1constraint_compute_PER_range(const char *dbg_name,
+	asn1p_expr_type_e expr_type,
 	const asn1p_constraint_t *ct,
 	enum asn1p_constraint_type_e required_type,
 	const asn1cnst_range_t *minmax,
 	int *expectation_met,
 	enum cpr_flags);
 /* Base implementation */
-asn1cnst_range_t *asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type,
+asn1cnst_range_t *asn1constraint_compute_constraint_range(const char *dbg_name,
+	asn1p_expr_type_e expr_type,
 	const asn1p_constraint_t *ct,
 	enum asn1p_constraint_type_e required_type,
 	const asn1cnst_range_t *minmax,

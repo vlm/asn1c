@@ -359,7 +359,8 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	 * applied (non-standard! but we can deal with this) to the type.
 	 * Check the range.
 	 */
-	range = asn1constraint_compute_PER_range(expr->expr_type,
+	range = asn1constraint_compute_constraint_range(expr->Identifier,
+		expr->expr_type,
 		expr->combined_constraints, ACT_CT_SIZE, 0, 0,
 		CPR_simulate_fbless_SIZE);
 	if(range) {
@@ -375,7 +376,7 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	/*
 	 * Third, pull up the PER visible range of the INTEGER.
 	 */
-	range = asn1constraint_compute_PER_range(expr->expr_type,
+	range = asn1constraint_compute_PER_range(expr->Identifier, expr->expr_type,
 		expr->combined_constraints, ACT_EL_RANGE, 0, 0, 0);
 
 	if(!range

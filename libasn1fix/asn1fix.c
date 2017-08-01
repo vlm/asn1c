@@ -448,7 +448,8 @@ asn1f_check_constraints(arg_t *arg) {
 	RET2RVAL(ret, rvalue);
 
 	for(i = 0; i < sizeof(test_types)/sizeof(test_types[0]); i++) {
-		range = asn1constraint_compute_PER_range(
+		range = asn1constraint_compute_constraint_range(
+				arg->expr->Identifier,
 				etype,
 				arg->expr->combined_constraints,
 				test_types[i], 0, 0,

@@ -2151,7 +2151,8 @@ emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 
     INDENT(+1);
 
-    range = asn1constraint_compute_OER_range(etype, expr->combined_constraints,
+    range = asn1constraint_compute_OER_range(expr->Identifier, etype,
+                                             expr->combined_constraints,
                                              ACT_EL_RANGE, 0, 0, 0);
     if(emit_single_member_OER_constraint(arg, range, 0)) {
         return -1;
@@ -2160,7 +2161,8 @@ emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 
 	OUT(",\n");
 
-    range = asn1constraint_compute_OER_range(etype, expr->combined_constraints,
+    range = asn1constraint_compute_OER_range(expr->Identifier, etype,
+                                             expr->combined_constraints,
                                              ACT_CT_SIZE, 0, 0, 0);
     if(emit_single_member_OER_constraint(arg, range, "SIZE")) {
         return -1;
@@ -2233,7 +2235,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		if(emit_single_member_PER_constraint(arg, &tmprng, 0, 0))
 			return -1;
 	} else if(etype & ASN_STRING_KM_MASK) {
-		range = asn1constraint_compute_PER_range(etype,
+		range = asn1constraint_compute_PER_range(expr->Identifier, etype,
 				expr->combined_constraints, ACT_CT_FROM,
 				0, 0, 0);
 		DEBUG("Emitting FROM constraint for %s", expr->Identifier);
@@ -2263,7 +2265,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		avoid:
 		asn1constraint_range_free(range);
 	} else {
-		range = asn1constraint_compute_PER_range(etype,
+		range = asn1constraint_compute_PER_range(expr->Identifier, etype,
 				expr->combined_constraints, ACT_EL_RANGE,
 				0, 0, 0);
 		if(emit_single_member_PER_constraint(arg, range, 0, 0))
@@ -2272,7 +2274,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	}
 	OUT(",\n");
 
-	range = asn1constraint_compute_PER_range(etype,
+	range = asn1constraint_compute_PER_range(expr->Identifier, etype,
 			expr->combined_constraints, ACT_CT_SIZE, 0, 0, 0);
 	if(emit_single_member_PER_constraint(arg, range, 0, "SIZE"))
 		return -1;

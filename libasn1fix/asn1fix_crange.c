@@ -699,17 +699,21 @@ _range_canonicalize(asn1cnst_range_t *range) {
 }
 
 asn1cnst_range_t *
-asn1constraint_compute_OER_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
-    return asn1constraint_compute_constraint_range(expr_type, ct, type, minmax, exmet, cpr_flags);
+asn1constraint_compute_OER_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e requested_ct_type
+, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+    return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags | CPR_strict_OER_visibility);
 }
 
 asn1cnst_range_t *
-asn1constraint_compute_PER_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
-    return asn1constraint_compute_constraint_range(expr_type, ct, type, minmax, exmet, cpr_flags);
+asn1constraint_compute_PER_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e requested_ct_type
+, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+    if(0) return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags | CPR_strict_PER_visibility);
+    /* Due to pecularities of PER constraint handling, we don't enable strict PER visibility upfront here. */
+    return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags);
 }
 
 asn1cnst_range_t *
-asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
+asn1constraint_compute_constraint_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
 	asn1cnst_range_t *range;
 	asn1cnst_range_t *tmp;
 	asn1p_value_t *vmin;
@@ -824,7 +828,7 @@ asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p
 			return range;
 		}
 		assert(ct->el_count == 1);
-		tmp = asn1constraint_compute_constraint_range(expr_type,
+		tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
 			ct->elements[0], type, minmax, exmet, cpr_flags);
 		if(tmp) {
 			_range_free(range);
@@ -843,7 +847,7 @@ asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p
 
 		/* AND constraints, one after another. */
 		for(i = 0; i < ct->el_count; i++) {
-			tmp = asn1constraint_compute_constraint_range(expr_type,
+			tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
 				ct->elements[i], type,
 				ct->type==ACT_CA_SET?range:minmax, exmet,
 				cpr_flags);
@@ -913,7 +917,7 @@ asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p
 		 */
 		tmp = 0;
 		for(i = 0; i < ct->el_count; i++) {
-			tmp = asn1constraint_compute_constraint_range(expr_type,
+			tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
 				ct->elements[i], type, minmax, exmet,
 				cpr_flags);
 			if(!tmp) {
@@ -946,7 +950,7 @@ asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p
 		 * Canonicalizator will do the union magic.
 		 */
 		for(; i < ct->el_count; i++) {
-			tmp = asn1constraint_compute_constraint_range(expr_type,
+			tmp = asn1constraint_compute_constraint_range(dbg_name, expr_type,
 				ct->elements[i], type, minmax, exmet,
 				cpr_flags);
 			if(!tmp) {
@@ -1021,7 +1025,7 @@ asn1constraint_compute_constraint_range(asn1p_expr_type_e expr_type, const asn1p
 		 */
 		assert(ct->el_count >= 1);
 		_range_free(range);
-		range = asn1constraint_compute_constraint_range(expr_type,
+		range = asn1constraint_compute_constraint_range(dbg_name, expr_type,
 			ct->elements[0], type, minmax, exmet, cpr_flags);
 		return range;
 	default:
