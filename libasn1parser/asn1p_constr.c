@@ -142,7 +142,7 @@ asn1p_constraint_prepend(asn1p_constraint_t *before, asn1p_constraint_t *what) {
 }
 
 
-char *
+const char *
 asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
 	switch(type) {
 	case ACT_INVALID:
