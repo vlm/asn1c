@@ -12,11 +12,21 @@ ModuleOERConstraints
 BEGIN
 
     A-noc ::= INTEGER                           -- No constraints
-    B-vis ::= INTEGER (0)                       -- Value constraint
-    C-vis ::= INTEGER (-1..1)                   -- Value range constraint
+    B-0-0 ::= INTEGER (0)                       -- Value constraint
+    C-1-2 ::= INTEGER (1..2)                    -- Value range constraint
     D-inv ::= INTEGER (0..10,...)               -- Extensible, not OER-visible
-    E-vis ::= INTEGER (0..10,...)(2..5)         -- OER-visible constraint 2..5
+    E-2-5 ::= INTEGER (0..10,...)(2..5)         -- OER-visible constraint 2..5
     F-inv ::= INTEGER (0..10,...)(2..5,...)     -- Not OER-visible
-    G-vis ::= INTEGER (0..10,...)(2..5,...)(3)  -- OER-visible constraint 3
+    G-3-3 ::= INTEGER (0..10,...)(2..5,...)(3)  -- OER-visible constraint 3
+    -- X.696 #8.2.4 Not OER-visible parts of INTERSECTION are ignored
+    H-4-5 ::= INTEGER ((0..5) ^ (4..9))         -- OER-visible constraint 4..5
+    I-0-5 ::= INTEGER ((0..5) ^ (4..12,...))    -- OER-visible constraint 0..5
+    J-4-9 ::= INTEGER ((0..5,...) ^ (4..9))     -- OER-visible constraint 4..9
+    K-inv ::= INTEGER ((0..5,...) ^ (4..9,...)) -- Not OER-visible
+    -- X.696 #8.2.5 UNION with exeptions are ignored
+    L-0-5 ::= INTEGER ((0) | (5))               -- OER-visible constraint 0..5
+    M-inv ::= INTEGER ((0) | (5,...))           -- Not OER-visible
+    N-inv ::= INTEGER ((0..4,...) | (5))        -- Not OER-visible
+    O-inv ::= INTEGER ((0..4,...) | (5,...))    -- Not OER-visible
 
 END

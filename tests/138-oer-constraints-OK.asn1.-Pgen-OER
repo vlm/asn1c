@@ -148,31 +148,31 @@ asn_TYPE_descriptor_t asn_DEF_A_noc = {
 };
 
 
-/*** <<< INCLUDES [B-vis] >>> ***/
+/*** <<< INCLUDES [B-0-0] >>> ***/
 
 #include <NativeInteger.h>
 
-/*** <<< TYPE-DECLS [B-vis] >>> ***/
+/*** <<< TYPE-DECLS [B-0-0] >>> ***/
 
-typedef long	 B_vis_t;
+typedef long	 B_0_0_t;
 
-/*** <<< FUNC-DECLS [B-vis] >>> ***/
+/*** <<< FUNC-DECLS [B-0-0] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_B_vis;
-asn_struct_free_f B_vis_free;
-asn_struct_print_f B_vis_print;
-asn_constr_check_f B_vis_constraint;
-ber_type_decoder_f B_vis_decode_ber;
-der_type_encoder_f B_vis_encode_der;
-xer_type_decoder_f B_vis_decode_xer;
-xer_type_encoder_f B_vis_encode_xer;
-oer_type_decoder_f B_vis_decode_oer;
-oer_type_encoder_f B_vis_encode_oer;
+extern asn_TYPE_descriptor_t asn_DEF_B_0_0;
+asn_struct_free_f B_0_0_free;
+asn_struct_print_f B_0_0_print;
+asn_constr_check_f B_0_0_constraint;
+ber_type_decoder_f B_0_0_decode_ber;
+der_type_encoder_f B_0_0_encode_der;
+xer_type_decoder_f B_0_0_decode_xer;
+xer_type_encoder_f B_0_0_encode_xer;
+oer_type_decoder_f B_0_0_decode_oer;
+oer_type_encoder_f B_0_0_encode_oer;
 
-/*** <<< CODE [B-vis] >>> ***/
+/*** <<< CODE [B-0-0] >>> ***/
 
 int
-B_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+B_0_0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -201,7 +201,7 @@ B_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-B_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+B_0_0_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
 	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
@@ -223,128 +223,128 @@ B_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 }
 
 void
-B_vis_free(asn_TYPE_descriptor_t *td,
+B_0_0_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
-B_vis_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+B_0_0_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
-B_vis_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+B_0_0_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
 asn_enc_rval_t
-B_vis_encode_der(asn_TYPE_descriptor_t *td,
+B_0_0_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
-B_vis_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+B_0_0_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
 asn_enc_rval_t
-B_vis_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+B_0_0_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 asn_dec_rval_t
-B_vis_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+B_0_0_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
 }
 
 asn_enc_rval_t
-B_vis_encode_oer(asn_TYPE_descriptor_t *td,
+B_0_0_encode_oer(asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints,
 		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
-	B_vis_1_inherit_TYPE_descriptor(td);
+	B_0_0_1_inherit_TYPE_descriptor(td);
 	return td->uper_encoder(td, constraints, structure, cb, app_key);
 }
 
 
-/*** <<< CTDEFS [B-vis] >>> ***/
+/*** <<< CTDEFS [B-0-0] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_B_vis_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_B_0_0_constr_1 GCC_NOTUSED = {
 	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 0 }	/* (0..0) */,
 	{ 0, 0, 0 }};
 
-/*** <<< STAT-DEFS [B-vis] >>> ***/
+/*** <<< STAT-DEFS [B-0-0] >>> ***/
 
-static const ber_tlv_tag_t asn_DEF_B_vis_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_B_0_0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_B_vis = {
-	"B-vis",
-	"B-vis",
-	B_vis_free,
-	B_vis_print,
-	B_vis_constraint,
-	B_vis_decode_ber,
-	B_vis_encode_der,
-	B_vis_decode_xer,
-	B_vis_encode_xer,
-	B_vis_decode_oer,
-	B_vis_encode_oer,
+asn_TYPE_descriptor_t asn_DEF_B_0_0 = {
+	"B-0-0",
+	"B-0-0",
+	B_0_0_free,
+	B_0_0_print,
+	B_0_0_constraint,
+	B_0_0_decode_ber,
+	B_0_0_encode_der,
+	B_0_0_decode_xer,
+	B_0_0_encode_xer,
+	B_0_0_decode_oer,
+	B_0_0_encode_oer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_B_vis_tags_1,
-	sizeof(asn_DEF_B_vis_tags_1)
-		/sizeof(asn_DEF_B_vis_tags_1[0]), /* 1 */
-	asn_DEF_B_vis_tags_1,	/* Same as above */
-	sizeof(asn_DEF_B_vis_tags_1)
-		/sizeof(asn_DEF_B_vis_tags_1[0]), /* 1 */
-	&asn_OER_type_B_vis_constr_1,
+	asn_DEF_B_0_0_tags_1,
+	sizeof(asn_DEF_B_0_0_tags_1)
+		/sizeof(asn_DEF_B_0_0_tags_1[0]), /* 1 */
+	asn_DEF_B_0_0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_B_0_0_tags_1)
+		/sizeof(asn_DEF_B_0_0_tags_1[0]), /* 1 */
+	&asn_OER_type_B_0_0_constr_1,
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
 
-/*** <<< INCLUDES [C-vis] >>> ***/
+/*** <<< INCLUDES [C-1-2] >>> ***/
 
 #include <NativeInteger.h>
 
-/*** <<< TYPE-DECLS [C-vis] >>> ***/
+/*** <<< TYPE-DECLS [C-1-2] >>> ***/
 
-typedef long	 C_vis_t;
+typedef long	 C_1_2_t;
 
-/*** <<< FUNC-DECLS [C-vis] >>> ***/
+/*** <<< FUNC-DECLS [C-1-2] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_C_vis;
-asn_struct_free_f C_vis_free;
-asn_struct_print_f C_vis_print;
-asn_constr_check_f C_vis_constraint;
-ber_type_decoder_f C_vis_decode_ber;
-der_type_encoder_f C_vis_encode_der;
-xer_type_decoder_f C_vis_decode_xer;
-xer_type_encoder_f C_vis_encode_xer;
-oer_type_decoder_f C_vis_decode_oer;
-oer_type_encoder_f C_vis_encode_oer;
+extern asn_TYPE_descriptor_t asn_DEF_C_1_2;
+asn_struct_free_f C_1_2_free;
+asn_struct_print_f C_1_2_print;
+asn_constr_check_f C_1_2_constraint;
+ber_type_decoder_f C_1_2_decode_ber;
+der_type_encoder_f C_1_2_encode_der;
+xer_type_decoder_f C_1_2_decode_xer;
+xer_type_encoder_f C_1_2_encode_xer;
+oer_type_decoder_f C_1_2_decode_oer;
+oer_type_encoder_f C_1_2_encode_oer;
 
-/*** <<< CODE [C-vis] >>> ***/
+/*** <<< CODE [C-1-2] >>> ***/
 
 int
-C_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+C_1_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -357,7 +357,7 @@ C_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	value = *(const long *)sptr;
 	
-	if((value >= -1 && value <= 1)) {
+	if((value >= 1 && value <= 2)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {
@@ -373,7 +373,7 @@ C_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-C_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+C_1_2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
 	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
@@ -395,97 +395,97 @@ C_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 }
 
 void
-C_vis_free(asn_TYPE_descriptor_t *td,
+C_1_2_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
-C_vis_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+C_1_2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
-C_vis_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+C_1_2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
 asn_enc_rval_t
-C_vis_encode_der(asn_TYPE_descriptor_t *td,
+C_1_2_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
-C_vis_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+C_1_2_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
 asn_enc_rval_t
-C_vis_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+C_1_2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 asn_dec_rval_t
-C_vis_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+C_1_2_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
 }
 
 asn_enc_rval_t
-C_vis_encode_oer(asn_TYPE_descriptor_t *td,
+C_1_2_encode_oer(asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints,
 		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
-	C_vis_1_inherit_TYPE_descriptor(td);
+	C_1_2_1_inherit_TYPE_descriptor(td);
 	return td->uper_encoder(td, constraints, structure, cb, app_key);
 }
 
 
-/*** <<< CTDEFS [C-vis] >>> ***/
+/*** <<< CTDEFS [C-1-2] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_C_vis_constr_1 GCC_NOTUSED = {
-	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, -1, 1 }	/* (-1..1) */,
+static asn_oer_constraints_t asn_OER_type_C_1_2_constr_1 GCC_NOTUSED = {
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 1, 2 }	/* (1..2) */,
 	{ 0, 0, 0 }};
 
-/*** <<< STAT-DEFS [C-vis] >>> ***/
+/*** <<< STAT-DEFS [C-1-2] >>> ***/
 
-static const ber_tlv_tag_t asn_DEF_C_vis_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_C_1_2_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_C_vis = {
-	"C-vis",
-	"C-vis",
-	C_vis_free,
-	C_vis_print,
-	C_vis_constraint,
-	C_vis_decode_ber,
-	C_vis_encode_der,
-	C_vis_decode_xer,
-	C_vis_encode_xer,
-	C_vis_decode_oer,
-	C_vis_encode_oer,
+asn_TYPE_descriptor_t asn_DEF_C_1_2 = {
+	"C-1-2",
+	"C-1-2",
+	C_1_2_free,
+	C_1_2_print,
+	C_1_2_constraint,
+	C_1_2_decode_ber,
+	C_1_2_encode_der,
+	C_1_2_decode_xer,
+	C_1_2_encode_xer,
+	C_1_2_decode_oer,
+	C_1_2_encode_oer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_C_vis_tags_1,
-	sizeof(asn_DEF_C_vis_tags_1)
-		/sizeof(asn_DEF_C_vis_tags_1[0]), /* 1 */
-	asn_DEF_C_vis_tags_1,	/* Same as above */
-	sizeof(asn_DEF_C_vis_tags_1)
-		/sizeof(asn_DEF_C_vis_tags_1[0]), /* 1 */
-	&asn_OER_type_C_vis_constr_1,
+	asn_DEF_C_1_2_tags_1,
+	sizeof(asn_DEF_C_1_2_tags_1)
+		/sizeof(asn_DEF_C_1_2_tags_1[0]), /* 1 */
+	asn_DEF_C_1_2_tags_1,	/* Same as above */
+	sizeof(asn_DEF_C_1_2_tags_1)
+		/sizeof(asn_DEF_C_1_2_tags_1[0]), /* 1 */
+	&asn_OER_type_C_1_2_constr_1,
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -629,7 +629,7 @@ D_inv_encode_oer(asn_TYPE_descriptor_t *td,
 /*** <<< CTDEFS [D-inv] >>> ***/
 
 static asn_oer_constraints_t asn_OER_type_D_inv_constr_1 GCC_NOTUSED = {
-	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 10 }	/* (0..10,...) */,
+	{ 0, 0, 0 },
 	{ 0, 0, 0 }};
 
 /*** <<< STAT-DEFS [D-inv] >>> ***/
@@ -664,31 +664,31 @@ asn_TYPE_descriptor_t asn_DEF_D_inv = {
 };
 
 
-/*** <<< INCLUDES [E-vis] >>> ***/
+/*** <<< INCLUDES [E-2-5] >>> ***/
 
 #include <NativeInteger.h>
 
-/*** <<< TYPE-DECLS [E-vis] >>> ***/
+/*** <<< TYPE-DECLS [E-2-5] >>> ***/
 
-typedef long	 E_vis_t;
+typedef long	 E_2_5_t;
 
-/*** <<< FUNC-DECLS [E-vis] >>> ***/
+/*** <<< FUNC-DECLS [E-2-5] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_E_vis;
-asn_struct_free_f E_vis_free;
-asn_struct_print_f E_vis_print;
-asn_constr_check_f E_vis_constraint;
-ber_type_decoder_f E_vis_decode_ber;
-der_type_encoder_f E_vis_encode_der;
-xer_type_decoder_f E_vis_decode_xer;
-xer_type_encoder_f E_vis_encode_xer;
-oer_type_decoder_f E_vis_decode_oer;
-oer_type_encoder_f E_vis_encode_oer;
+extern asn_TYPE_descriptor_t asn_DEF_E_2_5;
+asn_struct_free_f E_2_5_free;
+asn_struct_print_f E_2_5_print;
+asn_constr_check_f E_2_5_constraint;
+ber_type_decoder_f E_2_5_decode_ber;
+der_type_encoder_f E_2_5_encode_der;
+xer_type_decoder_f E_2_5_decode_xer;
+xer_type_encoder_f E_2_5_encode_xer;
+oer_type_decoder_f E_2_5_decode_oer;
+oer_type_encoder_f E_2_5_encode_oer;
 
-/*** <<< CODE [E-vis] >>> ***/
+/*** <<< CODE [E-2-5] >>> ***/
 
 int
-E_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+E_2_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -717,7 +717,7 @@ E_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-E_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+E_2_5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
 	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
@@ -739,97 +739,97 @@ E_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 }
 
 void
-E_vis_free(asn_TYPE_descriptor_t *td,
+E_2_5_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
-E_vis_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+E_2_5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
-E_vis_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+E_2_5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
 asn_enc_rval_t
-E_vis_encode_der(asn_TYPE_descriptor_t *td,
+E_2_5_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
-E_vis_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+E_2_5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
 asn_enc_rval_t
-E_vis_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+E_2_5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 asn_dec_rval_t
-E_vis_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+E_2_5_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
 }
 
 asn_enc_rval_t
-E_vis_encode_oer(asn_TYPE_descriptor_t *td,
+E_2_5_encode_oer(asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints,
 		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
-	E_vis_1_inherit_TYPE_descriptor(td);
+	E_2_5_1_inherit_TYPE_descriptor(td);
 	return td->uper_encoder(td, constraints, structure, cb, app_key);
 }
 
 
-/*** <<< CTDEFS [E-vis] >>> ***/
+/*** <<< CTDEFS [E-2-5] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_E_vis_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_E_2_5_constr_1 GCC_NOTUSED = {
 	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 2, 5 }	/* (2..5) */,
 	{ 0, 0, 0 }};
 
-/*** <<< STAT-DEFS [E-vis] >>> ***/
+/*** <<< STAT-DEFS [E-2-5] >>> ***/
 
-static const ber_tlv_tag_t asn_DEF_E_vis_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_E_2_5_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_E_vis = {
-	"E-vis",
-	"E-vis",
-	E_vis_free,
-	E_vis_print,
-	E_vis_constraint,
-	E_vis_decode_ber,
-	E_vis_encode_der,
-	E_vis_decode_xer,
-	E_vis_encode_xer,
-	E_vis_decode_oer,
-	E_vis_encode_oer,
+asn_TYPE_descriptor_t asn_DEF_E_2_5 = {
+	"E-2-5",
+	"E-2-5",
+	E_2_5_free,
+	E_2_5_print,
+	E_2_5_constraint,
+	E_2_5_decode_ber,
+	E_2_5_encode_der,
+	E_2_5_decode_xer,
+	E_2_5_encode_xer,
+	E_2_5_decode_oer,
+	E_2_5_encode_oer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_E_vis_tags_1,
-	sizeof(asn_DEF_E_vis_tags_1)
-		/sizeof(asn_DEF_E_vis_tags_1[0]), /* 1 */
-	asn_DEF_E_vis_tags_1,	/* Same as above */
-	sizeof(asn_DEF_E_vis_tags_1)
-		/sizeof(asn_DEF_E_vis_tags_1[0]), /* 1 */
-	&asn_OER_type_E_vis_constr_1,
+	asn_DEF_E_2_5_tags_1,
+	sizeof(asn_DEF_E_2_5_tags_1)
+		/sizeof(asn_DEF_E_2_5_tags_1[0]), /* 1 */
+	asn_DEF_E_2_5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_E_2_5_tags_1)
+		/sizeof(asn_DEF_E_2_5_tags_1[0]), /* 1 */
+	&asn_OER_type_E_2_5_constr_1,
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -973,7 +973,7 @@ F_inv_encode_oer(asn_TYPE_descriptor_t *td,
 /*** <<< CTDEFS [F-inv] >>> ***/
 
 static asn_oer_constraints_t asn_OER_type_F_inv_constr_1 GCC_NOTUSED = {
-	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 2, 5 }	/* (2..5,...) */,
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 10 }	/* (0..10) */,
 	{ 0, 0, 0 }};
 
 /*** <<< STAT-DEFS [F-inv] >>> ***/
@@ -1008,31 +1008,31 @@ asn_TYPE_descriptor_t asn_DEF_F_inv = {
 };
 
 
-/*** <<< INCLUDES [G-vis] >>> ***/
+/*** <<< INCLUDES [G-3-3] >>> ***/
 
 #include <NativeInteger.h>
 
-/*** <<< TYPE-DECLS [G-vis] >>> ***/
+/*** <<< TYPE-DECLS [G-3-3] >>> ***/
 
-typedef long	 G_vis_t;
+typedef long	 G_3_3_t;
 
-/*** <<< FUNC-DECLS [G-vis] >>> ***/
+/*** <<< FUNC-DECLS [G-3-3] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_G_vis;
-asn_struct_free_f G_vis_free;
-asn_struct_print_f G_vis_print;
-asn_constr_check_f G_vis_constraint;
-ber_type_decoder_f G_vis_decode_ber;
-der_type_encoder_f G_vis_encode_der;
-xer_type_decoder_f G_vis_decode_xer;
-xer_type_encoder_f G_vis_encode_xer;
-oer_type_decoder_f G_vis_decode_oer;
-oer_type_encoder_f G_vis_encode_oer;
+extern asn_TYPE_descriptor_t asn_DEF_G_3_3;
+asn_struct_free_f G_3_3_free;
+asn_struct_print_f G_3_3_print;
+asn_constr_check_f G_3_3_constraint;
+ber_type_decoder_f G_3_3_decode_ber;
+der_type_encoder_f G_3_3_encode_der;
+xer_type_decoder_f G_3_3_decode_xer;
+xer_type_encoder_f G_3_3_encode_xer;
+oer_type_decoder_f G_3_3_decode_oer;
+oer_type_encoder_f G_3_3_encode_oer;
 
-/*** <<< CODE [G-vis] >>> ***/
+/*** <<< CODE [G-3-3] >>> ***/
 
 int
-G_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+G_3_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -1061,7 +1061,7 @@ G_vis_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static void
-G_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+G_3_3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 	td->free_struct    = asn_DEF_NativeInteger.free_struct;
 	td->print_struct   = asn_DEF_NativeInteger.print_struct;
 	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
@@ -1083,97 +1083,1473 @@ G_vis_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
 }
 
 void
-G_vis_free(asn_TYPE_descriptor_t *td,
+G_3_3_free(asn_TYPE_descriptor_t *td,
 		void *struct_ptr, int contents_only) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	td->free_struct(td, struct_ptr, contents_only);
 }
 
 int
-G_vis_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+G_3_3_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
 		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
 }
 
 asn_dec_rval_t
-G_vis_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+G_3_3_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
 }
 
 asn_enc_rval_t
-G_vis_encode_der(asn_TYPE_descriptor_t *td,
+G_3_3_encode_der(asn_TYPE_descriptor_t *td,
 		void *structure, int tag_mode, ber_tlv_tag_t tag,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
 }
 
 asn_dec_rval_t
-G_vis_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+G_3_3_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
 }
 
 asn_enc_rval_t
-G_vis_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+G_3_3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
 		int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
 }
 
 asn_dec_rval_t
-G_vis_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+G_3_3_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
 }
 
 asn_enc_rval_t
-G_vis_encode_oer(asn_TYPE_descriptor_t *td,
+G_3_3_encode_oer(asn_TYPE_descriptor_t *td,
 		asn_oer_constraints_t *constraints,
 		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
-	G_vis_1_inherit_TYPE_descriptor(td);
+	G_3_3_1_inherit_TYPE_descriptor(td);
 	return td->uper_encoder(td, constraints, structure, cb, app_key);
 }
 
 
-/*** <<< CTDEFS [G-vis] >>> ***/
+/*** <<< CTDEFS [G-3-3] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_G_vis_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_G_3_3_constr_1 GCC_NOTUSED = {
 	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 3, 3 }	/* (3..3) */,
 	{ 0, 0, 0 }};
 
-/*** <<< STAT-DEFS [G-vis] >>> ***/
+/*** <<< STAT-DEFS [G-3-3] >>> ***/
 
-static const ber_tlv_tag_t asn_DEF_G_vis_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_G_3_3_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_G_vis = {
-	"G-vis",
-	"G-vis",
-	G_vis_free,
-	G_vis_print,
-	G_vis_constraint,
-	G_vis_decode_ber,
-	G_vis_encode_der,
-	G_vis_decode_xer,
-	G_vis_encode_xer,
-	G_vis_decode_oer,
-	G_vis_encode_oer,
+asn_TYPE_descriptor_t asn_DEF_G_3_3 = {
+	"G-3-3",
+	"G-3-3",
+	G_3_3_free,
+	G_3_3_print,
+	G_3_3_constraint,
+	G_3_3_decode_ber,
+	G_3_3_encode_der,
+	G_3_3_decode_xer,
+	G_3_3_encode_xer,
+	G_3_3_decode_oer,
+	G_3_3_encode_oer,
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_G_vis_tags_1,
-	sizeof(asn_DEF_G_vis_tags_1)
-		/sizeof(asn_DEF_G_vis_tags_1[0]), /* 1 */
-	asn_DEF_G_vis_tags_1,	/* Same as above */
-	sizeof(asn_DEF_G_vis_tags_1)
-		/sizeof(asn_DEF_G_vis_tags_1[0]), /* 1 */
-	&asn_OER_type_G_vis_constr_1,
+	asn_DEF_G_3_3_tags_1,
+	sizeof(asn_DEF_G_3_3_tags_1)
+		/sizeof(asn_DEF_G_3_3_tags_1[0]), /* 1 */
+	asn_DEF_G_3_3_tags_1,	/* Same as above */
+	sizeof(asn_DEF_G_3_3_tags_1)
+		/sizeof(asn_DEF_G_3_3_tags_1[0]), /* 1 */
+	&asn_OER_type_G_3_3_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [H-4-5] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [H-4-5] >>> ***/
+
+typedef long	 H_4_5_t;
+
+/*** <<< FUNC-DECLS [H-4-5] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_H_4_5;
+asn_struct_free_f H_4_5_free;
+asn_struct_print_f H_4_5_print;
+asn_constr_check_f H_4_5_constraint;
+ber_type_decoder_f H_4_5_decode_ber;
+der_type_encoder_f H_4_5_encode_der;
+xer_type_decoder_f H_4_5_decode_xer;
+xer_type_encoder_f H_4_5_encode_xer;
+oer_type_decoder_f H_4_5_decode_oer;
+oer_type_encoder_f H_4_5_encode_oer;
+
+/*** <<< CODE [H-4-5] >>> ***/
+
+int
+H_4_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 4 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+H_4_5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+H_4_5_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+H_4_5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+H_4_5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+H_4_5_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+H_4_5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+H_4_5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+H_4_5_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+H_4_5_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	H_4_5_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [H-4-5] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_H_4_5_constr_1 GCC_NOTUSED = {
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 4, 5 }	/* (4..5) */,
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [H-4-5] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_H_4_5_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_H_4_5 = {
+	"H-4-5",
+	"H-4-5",
+	H_4_5_free,
+	H_4_5_print,
+	H_4_5_constraint,
+	H_4_5_decode_ber,
+	H_4_5_encode_der,
+	H_4_5_decode_xer,
+	H_4_5_encode_xer,
+	H_4_5_decode_oer,
+	H_4_5_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_H_4_5_tags_1,
+	sizeof(asn_DEF_H_4_5_tags_1)
+		/sizeof(asn_DEF_H_4_5_tags_1[0]), /* 1 */
+	asn_DEF_H_4_5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_H_4_5_tags_1)
+		/sizeof(asn_DEF_H_4_5_tags_1[0]), /* 1 */
+	&asn_OER_type_H_4_5_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [I-0-5] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [I-0-5] >>> ***/
+
+typedef long	 I_0_5_t;
+
+/*** <<< FUNC-DECLS [I-0-5] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_I_0_5;
+asn_struct_free_f I_0_5_free;
+asn_struct_print_f I_0_5_print;
+asn_constr_check_f I_0_5_constraint;
+ber_type_decoder_f I_0_5_decode_ber;
+der_type_encoder_f I_0_5_encode_der;
+xer_type_decoder_f I_0_5_decode_xer;
+xer_type_encoder_f I_0_5_encode_xer;
+oer_type_decoder_f I_0_5_decode_oer;
+oer_type_encoder_f I_0_5_encode_oer;
+
+/*** <<< CODE [I-0-5] >>> ***/
+
+int
+I_0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 4 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+I_0_5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+I_0_5_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+I_0_5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+I_0_5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+I_0_5_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+I_0_5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+I_0_5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+I_0_5_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+I_0_5_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	I_0_5_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [I-0-5] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_I_0_5_constr_1 GCC_NOTUSED = {
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 5 }	/* (0..5) */,
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [I-0-5] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_I_0_5_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_I_0_5 = {
+	"I-0-5",
+	"I-0-5",
+	I_0_5_free,
+	I_0_5_print,
+	I_0_5_constraint,
+	I_0_5_decode_ber,
+	I_0_5_encode_der,
+	I_0_5_decode_xer,
+	I_0_5_encode_xer,
+	I_0_5_decode_oer,
+	I_0_5_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_I_0_5_tags_1,
+	sizeof(asn_DEF_I_0_5_tags_1)
+		/sizeof(asn_DEF_I_0_5_tags_1[0]), /* 1 */
+	asn_DEF_I_0_5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_I_0_5_tags_1)
+		/sizeof(asn_DEF_I_0_5_tags_1[0]), /* 1 */
+	&asn_OER_type_I_0_5_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [J-4-9] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [J-4-9] >>> ***/
+
+typedef long	 J_4_9_t;
+
+/*** <<< FUNC-DECLS [J-4-9] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_J_4_9;
+asn_struct_free_f J_4_9_free;
+asn_struct_print_f J_4_9_print;
+asn_constr_check_f J_4_9_constraint;
+ber_type_decoder_f J_4_9_decode_ber;
+der_type_encoder_f J_4_9_encode_der;
+xer_type_decoder_f J_4_9_decode_xer;
+xer_type_encoder_f J_4_9_encode_xer;
+oer_type_decoder_f J_4_9_decode_oer;
+oer_type_encoder_f J_4_9_encode_oer;
+
+/*** <<< CODE [J-4-9] >>> ***/
+
+int
+J_4_9_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 4 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+J_4_9_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+J_4_9_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+J_4_9_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+J_4_9_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+J_4_9_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+J_4_9_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+J_4_9_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+J_4_9_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+J_4_9_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	J_4_9_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [J-4-9] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_J_4_9_constr_1 GCC_NOTUSED = {
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 4, 9 }	/* (4..9) */,
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [J-4-9] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_J_4_9_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_J_4_9 = {
+	"J-4-9",
+	"J-4-9",
+	J_4_9_free,
+	J_4_9_print,
+	J_4_9_constraint,
+	J_4_9_decode_ber,
+	J_4_9_encode_der,
+	J_4_9_decode_xer,
+	J_4_9_encode_xer,
+	J_4_9_decode_oer,
+	J_4_9_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_J_4_9_tags_1,
+	sizeof(asn_DEF_J_4_9_tags_1)
+		/sizeof(asn_DEF_J_4_9_tags_1[0]), /* 1 */
+	asn_DEF_J_4_9_tags_1,	/* Same as above */
+	sizeof(asn_DEF_J_4_9_tags_1)
+		/sizeof(asn_DEF_J_4_9_tags_1[0]), /* 1 */
+	&asn_OER_type_J_4_9_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [K-inv] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [K-inv] >>> ***/
+
+typedef long	 K_inv_t;
+
+/*** <<< FUNC-DECLS [K-inv] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_K_inv;
+asn_struct_free_f K_inv_free;
+asn_struct_print_f K_inv_print;
+asn_constr_check_f K_inv_constraint;
+ber_type_decoder_f K_inv_decode_ber;
+der_type_encoder_f K_inv_encode_der;
+xer_type_decoder_f K_inv_decode_xer;
+xer_type_encoder_f K_inv_encode_xer;
+oer_type_decoder_f K_inv_decode_oer;
+oer_type_encoder_f K_inv_encode_oer;
+
+/*** <<< CODE [K-inv] >>> ***/
+
+int
+K_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 4 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+K_inv_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+K_inv_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+K_inv_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+K_inv_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+K_inv_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+K_inv_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+K_inv_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+K_inv_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+K_inv_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	K_inv_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [K-inv] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_K_inv_constr_1 GCC_NOTUSED = {
+	{ 0, 0, 0 },
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [K-inv] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_K_inv_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_K_inv = {
+	"K-inv",
+	"K-inv",
+	K_inv_free,
+	K_inv_print,
+	K_inv_constraint,
+	K_inv_decode_ber,
+	K_inv_encode_der,
+	K_inv_decode_xer,
+	K_inv_encode_xer,
+	K_inv_decode_oer,
+	K_inv_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_K_inv_tags_1,
+	sizeof(asn_DEF_K_inv_tags_1)
+		/sizeof(asn_DEF_K_inv_tags_1[0]), /* 1 */
+	asn_DEF_K_inv_tags_1,	/* Same as above */
+	sizeof(asn_DEF_K_inv_tags_1)
+		/sizeof(asn_DEF_K_inv_tags_1[0]), /* 1 */
+	&asn_OER_type_K_inv_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [L-0-5] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [L-0-5] >>> ***/
+
+typedef long	 L_0_5_t;
+
+/*** <<< FUNC-DECLS [L-0-5] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_L_0_5;
+asn_struct_free_f L_0_5_free;
+asn_struct_print_f L_0_5_print;
+asn_constr_check_f L_0_5_constraint;
+ber_type_decoder_f L_0_5_decode_ber;
+der_type_encoder_f L_0_5_encode_der;
+xer_type_decoder_f L_0_5_decode_xer;
+xer_type_encoder_f L_0_5_encode_xer;
+oer_type_decoder_f L_0_5_decode_oer;
+oer_type_encoder_f L_0_5_encode_oer;
+
+/*** <<< CODE [L-0-5] >>> ***/
+
+int
+L_0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if(((value == 0) || (value == 5))) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+L_0_5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+L_0_5_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+L_0_5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+L_0_5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+L_0_5_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+L_0_5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+L_0_5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+L_0_5_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+L_0_5_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	L_0_5_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [L-0-5] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_L_0_5_constr_1 GCC_NOTUSED = {
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 5 }	/* (0..5) */,
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [L-0-5] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_L_0_5_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_L_0_5 = {
+	"L-0-5",
+	"L-0-5",
+	L_0_5_free,
+	L_0_5_print,
+	L_0_5_constraint,
+	L_0_5_decode_ber,
+	L_0_5_encode_der,
+	L_0_5_decode_xer,
+	L_0_5_encode_xer,
+	L_0_5_decode_oer,
+	L_0_5_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_L_0_5_tags_1,
+	sizeof(asn_DEF_L_0_5_tags_1)
+		/sizeof(asn_DEF_L_0_5_tags_1[0]), /* 1 */
+	asn_DEF_L_0_5_tags_1,	/* Same as above */
+	sizeof(asn_DEF_L_0_5_tags_1)
+		/sizeof(asn_DEF_L_0_5_tags_1[0]), /* 1 */
+	&asn_OER_type_L_0_5_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [M-inv] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [M-inv] >>> ***/
+
+typedef long	 M_inv_t;
+
+/*** <<< FUNC-DECLS [M-inv] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_M_inv;
+asn_struct_free_f M_inv_free;
+asn_struct_print_f M_inv_print;
+asn_constr_check_f M_inv_constraint;
+ber_type_decoder_f M_inv_decode_ber;
+der_type_encoder_f M_inv_encode_der;
+xer_type_decoder_f M_inv_decode_xer;
+xer_type_encoder_f M_inv_encode_xer;
+oer_type_decoder_f M_inv_decode_oer;
+oer_type_encoder_f M_inv_encode_oer;
+
+/*** <<< CODE [M-inv] >>> ***/
+
+int
+M_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if(((value == 0) || (value == 5))) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+M_inv_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+M_inv_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+M_inv_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+M_inv_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+M_inv_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+M_inv_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+M_inv_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+M_inv_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+M_inv_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	M_inv_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [M-inv] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_M_inv_constr_1 GCC_NOTUSED = {
+	{ 0, 0, 0 },
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [M-inv] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_M_inv_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_M_inv = {
+	"M-inv",
+	"M-inv",
+	M_inv_free,
+	M_inv_print,
+	M_inv_constraint,
+	M_inv_decode_ber,
+	M_inv_encode_der,
+	M_inv_decode_xer,
+	M_inv_encode_xer,
+	M_inv_decode_oer,
+	M_inv_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_M_inv_tags_1,
+	sizeof(asn_DEF_M_inv_tags_1)
+		/sizeof(asn_DEF_M_inv_tags_1[0]), /* 1 */
+	asn_DEF_M_inv_tags_1,	/* Same as above */
+	sizeof(asn_DEF_M_inv_tags_1)
+		/sizeof(asn_DEF_M_inv_tags_1[0]), /* 1 */
+	&asn_OER_type_M_inv_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [N-inv] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [N-inv] >>> ***/
+
+typedef long	 N_inv_t;
+
+/*** <<< FUNC-DECLS [N-inv] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_N_inv;
+asn_struct_free_f N_inv_free;
+asn_struct_print_f N_inv_print;
+asn_constr_check_f N_inv_constraint;
+ber_type_decoder_f N_inv_decode_ber;
+der_type_encoder_f N_inv_encode_der;
+xer_type_decoder_f N_inv_decode_xer;
+xer_type_encoder_f N_inv_encode_xer;
+oer_type_decoder_f N_inv_decode_oer;
+oer_type_encoder_f N_inv_encode_oer;
+
+/*** <<< CODE [N-inv] >>> ***/
+
+int
+N_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+N_inv_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+N_inv_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+N_inv_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+N_inv_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+N_inv_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+N_inv_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+N_inv_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+N_inv_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+N_inv_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	N_inv_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [N-inv] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_N_inv_constr_1 GCC_NOTUSED = {
+	{ 0, 0, 0 },
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [N-inv] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_N_inv_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_N_inv = {
+	"N-inv",
+	"N-inv",
+	N_inv_free,
+	N_inv_print,
+	N_inv_constraint,
+	N_inv_decode_ber,
+	N_inv_encode_der,
+	N_inv_decode_xer,
+	N_inv_encode_xer,
+	N_inv_decode_oer,
+	N_inv_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_N_inv_tags_1,
+	sizeof(asn_DEF_N_inv_tags_1)
+		/sizeof(asn_DEF_N_inv_tags_1[0]), /* 1 */
+	asn_DEF_N_inv_tags_1,	/* Same as above */
+	sizeof(asn_DEF_N_inv_tags_1)
+		/sizeof(asn_DEF_N_inv_tags_1[0]), /* 1 */
+	&asn_OER_type_N_inv_constr_1,
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [O-inv] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [O-inv] >>> ***/
+
+typedef long	 O_inv_t;
+
+/*** <<< FUNC-DECLS [O-inv] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_O_inv;
+asn_struct_free_f O_inv_free;
+asn_struct_print_f O_inv_print;
+asn_constr_check_f O_inv_constraint;
+ber_type_decoder_f O_inv_decode_ber;
+der_type_encoder_f O_inv_encode_der;
+xer_type_decoder_f O_inv_decode_xer;
+xer_type_encoder_f O_inv_encode_xer;
+oer_type_decoder_f O_inv_decode_oer;
+oer_type_encoder_f O_inv_encode_oer;
+
+/*** <<< CODE [O-inv] >>> ***/
+
+int
+O_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 5)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+static void
+O_inv_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
+	td->free_struct    = asn_DEF_NativeInteger.free_struct;
+	td->print_struct   = asn_DEF_NativeInteger.print_struct;
+	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
+	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
+	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
+	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
+	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
+	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
+	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
+	td->oer_decoder    = asn_DEF_NativeInteger.oer_decoder;
+	td->oer_encoder    = asn_DEF_NativeInteger.oer_encoder;
+	if(!td->oer_constraints)
+		td->oer_constraints = asn_DEF_NativeInteger.oer_constraints;
+	if(!td->per_constraints)
+		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
+	td->elements       = asn_DEF_NativeInteger.elements;
+	td->elements_count = asn_DEF_NativeInteger.elements_count;
+	td->specifics      = asn_DEF_NativeInteger.specifics;
+}
+
+void
+O_inv_free(asn_TYPE_descriptor_t *td,
+		void *struct_ptr, int contents_only) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	td->free_struct(td, struct_ptr, contents_only);
+}
+
+int
+O_inv_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
+		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
+}
+
+asn_dec_rval_t
+O_inv_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const void *bufptr, size_t size, int tag_mode) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
+}
+
+asn_enc_rval_t
+O_inv_encode_der(asn_TYPE_descriptor_t *td,
+		void *structure, int tag_mode, ber_tlv_tag_t tag,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
+}
+
+asn_dec_rval_t
+O_inv_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
+}
+
+asn_enc_rval_t
+O_inv_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
+		int ilevel, enum xer_encoder_flags_e flags,
+		asn_app_consume_bytes_f *cb, void *app_key) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
+}
+
+asn_dec_rval_t
+O_inv_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints, void **structure, const void *buffer, size_t size) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buffer, size);
+}
+
+asn_enc_rval_t
+O_inv_encode_oer(asn_TYPE_descriptor_t *td,
+		asn_oer_constraints_t *constraints,
+		void *structure, asn_app_consume_bytes_f *cb, void *app_key) {
+	O_inv_1_inherit_TYPE_descriptor(td);
+	return td->uper_encoder(td, constraints, structure, cb, app_key);
+}
+
+
+/*** <<< CTDEFS [O-inv] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_O_inv_constr_1 GCC_NOTUSED = {
+	{ 0, 0, 0 },
+	{ 0, 0, 0 }};
+
+/*** <<< STAT-DEFS [O-inv] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_O_inv_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_O_inv = {
+	"O-inv",
+	"O-inv",
+	O_inv_free,
+	O_inv_print,
+	O_inv_constraint,
+	O_inv_decode_ber,
+	O_inv_encode_der,
+	O_inv_decode_xer,
+	O_inv_encode_xer,
+	O_inv_decode_oer,
+	O_inv_encode_oer,
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_O_inv_tags_1,
+	sizeof(asn_DEF_O_inv_tags_1)
+		/sizeof(asn_DEF_O_inv_tags_1[0]), /* 1 */
+	asn_DEF_O_inv_tags_1,	/* Same as above */
+	sizeof(asn_DEF_O_inv_tags_1)
+		/sizeof(asn_DEF_O_inv_tags_1[0]), /* 1 */
+	&asn_OER_type_O_inv_constr_1,
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */

@@ -354,7 +354,7 @@ static asn_oer_constraints_t asn_OER_memb_unsigned16stack_constr_4 GCC_NOTUSED =
 	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 255 }	/* (0..255) */,
 	{ 0, 0, 0 }};
 static asn_oer_constraints_t asn_OER_memb_unsigned16stack_ext_constr_5 GCC_NOTUSED = {
-	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 255 }	/* (0..255,...) */,
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 32767 }	/* (0..32767) */,
 	{ 0, 0, 0 }};
 static asn_oer_constraints_t asn_OER_memb_unsigned33_constr_6 GCC_NOTUSED = {
 	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, 0, 5000000000 }	/* (0..5000000000) */,
@@ -372,13 +372,13 @@ static asn_oer_constraints_t asn_OER_memb_signed16stack_constr_11 GCC_NOTUSED = 
 	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, -128, 127 }	/* (-128..127) */,
 	{ 0, 0, 0 }};
 static asn_oer_constraints_t asn_OER_memb_signed16stack_ext_constr_12 GCC_NOTUSED = {
-	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, -128, 127 }	/* (-128..127,...) */,
+	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, -32768, 32767 }	/* (-32768..32767) */,
 	{ 0, 0, 0 }};
 static asn_oer_constraints_t asn_OER_memb_signed32_constr_13 GCC_NOTUSED = {
 	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, -2000000000, 2000000000 }	/* (-2000000000..2000000000) */,
 	{ 0, 0, 0 }};
 static asn_oer_constraints_t asn_OER_memb_signed33ext_constr_14 GCC_NOTUSED = {
-	{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, -4000000000, 4000000000 }	/* (-4000000000..4000000000,...) */,
+	{ 0, 0, 0 },
 	{ 0, 0, 0 }};
 
 /*** <<< STAT-DEFS [T] >>> ***/

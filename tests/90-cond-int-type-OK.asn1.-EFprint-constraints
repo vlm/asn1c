@@ -89,7 +89,7 @@ OK-IntegerInRange4 ::= INTEGER (-2147483648 | 2147483647)
 OK-IntegerInRange5 ::= INTEGER (-2147483648 | 2147483647,...)
 -- Combined constraints: (-2147483648 | 2147483647,...)
 -- Practical constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
--- OER-visible constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
+-- OER-visible constraints (OK-IntegerInRange5): (MIN..MAX)  
 -- PER-visible constraints (OK-IntegerInRange5): (-2147483648 | 2147483647,...)  
 
 NO-IntegerInRange6 ::= INTEGER (0..4294967295)
