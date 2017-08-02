@@ -40,7 +40,6 @@ static int compute_extensions_start(asn1p_expr_t *expr);
 static int expr_break_recursion(arg_t *arg, asn1p_expr_t *expr);
 static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
-static int emit_single_member_OER_constraint(arg_t *arg, asn1cnst_range_t *range, char *type);
 static int emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, char *type);
 static int emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range, char *type);
 static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, char *type);
@@ -2050,40 +2049,6 @@ emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range, char
             OUT("%" PRIdMAX "", range->left.value);
         } else {
             OUT("-1");
-        }
-    }
-
-	return 0;
-}
-
-static int
-emit_single_member_OER_constraint(arg_t *arg, asn1cnst_range_t *range, char *type) {
-    if(!range) {
-        /* oer_support.h: asn_oer_constraint_s */
-        OUT("{ 0, 0, 0 }");
-        return 0;
-    }
-
-    if(range->incompatible || range->not_OER_visible) {
-        OUT("{ 0, 0, 0 }");
-    } else {
-        if(range->left.type == ARE_VALUE) {
-            if(range->right.type == ARE_VALUE) {
-                OUT("{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, %" PRIdMAX
-                    ", %" PRIdMAX " }",
-                    range->left.value, range->right.value);
-            } else {
-                OUT("{ AOC_HAS_LOWER_BOUND, %" PRIdMAX ", %" PRIdMAX " }",
-                    range->left.value, range->right.value);
-            }
-        } else {
-            if(range->right.type == ARE_VALUE) {
-                OUT("{ AOC_HAS_UPPER_BOUND, %" PRIdMAX ", %" PRIdMAX " }",
-                    range->left.value, range->right.value);
-            } else {
-                OUT("{ 0, %" PRIdMAX ", %" PRIdMAX " }", range->left.value,
-                    range->right.value);
-            }
         }
     }
 
