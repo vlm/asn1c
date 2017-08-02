@@ -2047,7 +2047,7 @@ emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range) {
         if(range->left.type == ARE_VALUE && range->right.type == ARE_VALUE
            && range->left.value == range->right.value
            && range->left.value >= 0) {
-            OUT("%" PRIdMAX "", range->left.value);
+            OUT("%" PRIdASN "", range->left.value);
         } else {
             OUT("-1");
         }
