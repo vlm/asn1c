@@ -108,7 +108,6 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
      */
     switch(ctx->phase) {
     case 0: {
-        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 0", td->name);
         /*
          * Fetch preamble.
          */
@@ -117,6 +116,8 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         size_t preamble_bits = (has_extensions_bit + specs->roms_count);
         size_t preamble_bytes = ((7 + preamble_bits) >> 3);
         uint8_t *pbytes;
+
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 0", td->name);
 
         ASN_DEBUG(
             "Expecting preamble bits %zu for %s (including %d extension bits)",
@@ -140,10 +141,11 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         NEXT_PHASE(ctx);
         /* FALL THROUGH */
     case 1: {
-        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 1", td->name);
         /* Decode components of the extension root */
         asn_per_data_t *preamble = ctx->ptr;
         size_t edx;
+
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 1", td->name);
 
         for(edx = (ctx->step >> 1); edx < td->elements_count;
             edx++, ctx->step = (ctx->step & ~1) + 2) {
@@ -217,7 +219,6 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         NEXT_PHASE(ctx);
         /* FALL THROUGH */
     case 2: {
-        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 2", td->name);
         /* Cleanup preamble. */
         asn_per_data_t *preamble = ctx->ptr;
         asn_per_data_t *extadds;
@@ -233,6 +234,9 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
             const uint8_t *cptr;
             uint8_t *uptr;
         } unconst;
+
+        ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 2", td->name);
+
         unconst.cptr = preamble->buffer;
         FREEMEM(unconst.uptr);
         preamble->buffer = 0;
