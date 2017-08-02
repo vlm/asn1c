@@ -41,6 +41,8 @@ static int expr_break_recursion(arg_t *arg, asn1p_expr_t *expr);
 static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
 static int emit_single_member_OER_constraint(arg_t *arg, asn1cnst_range_t *range, char *type);
+static int emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, char *type);
+static int emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range, char *type);
 static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, char *type);
 static int emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
@@ -1954,17 +1956,117 @@ PER_FROM_alphabet_characters(asn1cnst_range_t *range) {
 	return numchars;
 }
 
+static void
+emit_single_member_OER_constraint_comment(arg_t *arg, asn1cnst_range_t *range, char *type) {
+
+	/*
+	 * Print some courtesy debug information.
+	 */
+    if(range
+       && (range->left.type == ARE_VALUE || range->right.type == ARE_VALUE)) {
+        OUT("\t/* ");
+		if(type) OUT("(%s", type);
+		OUT("(");
+		if(range->left.type == ARE_VALUE)
+			OUT("%" PRIdASN, range->left.value);
+		else
+			OUT("MIN");
+		OUT("..");
+		if(range->right.type == ARE_VALUE)
+			OUT("%" PRIdASN, range->right.value);
+		else
+			OUT("MAX");
+		if(range->extensible) OUT(",...");
+		if(type) OUT(")");
+		OUT(") */");
+	}
+}
+
+static int
+emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, char *type) {
+    if(!range) {
+        /* oer_support.h: asn_oer_constraint_s */
+        OUT("{ 0, 0 }");
+        return 0;
+    }
+
+	if(range->incompatible || range->not_OER_visible) {
+		OUT("{ 0, 0 }");
+	} else if(range->left.type == ARE_VALUE &&
+            range->right.type == ARE_VALUE) {
+        asn1c_integer_t lb = range->left.value;
+        asn1c_integer_t ub = range->right.value;
+        unsigned width = 0;
+        unsigned positive = 0;
+
+        if(lb >= 0) {
+            /* X.969 08/2015 10.2(a) */
+            if(ub <= 255) {
+                width = 1;
+            } else if(ub <= 65535) {
+                width = 2;
+            } else if(ub <= 4294967295UL) {
+                width = 4;
+            } else if(ub <= 18446744073709551615ULL) {
+                width = 8;
+            }
+            positive = 1;
+        } else {
+            positive = 0;
+            /* X.969 08/2015 10.2(b) - no lower bound or negative lower bound */
+            if(lb >= -128 && ub <= 127) {
+                width = 1;
+            } else if(lb >= -32768 && ub <= 32767) {
+                width = 2;
+            } else if(lb >= -2147483648L && ub <= 2147483647L) {
+                width = 4;
+            } else if(lb >= -9223372036854775808LL
+                      && ub <= 9223372036854775807LL) {
+                width = 8;
+            }
+        }
+        OUT("{ %u, %u }", width, positive);
+    } else {
+        OUT("{ 0, 0 }");
+    }
+
+    return 0;
+}
+
+static int
+emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range, char *type) {
+    if(!range) {
+        /* oer_support.h: asn_oer_constraint_s */
+		OUT("-1");
+		return 0;
+    }
+
+    if(range->incompatible || range->not_OER_visible) {
+        OUT("-1");
+    } else {
+        if(range->left.type == ARE_VALUE && range->right.type == ARE_VALUE
+           && range->left.value == range->right.value
+           && range->left.value >= 0) {
+            OUT("%" PRIdMAX "", range->left.value);
+        } else {
+            OUT("-1");
+        }
+    }
+
+	return 0;
+}
+
 static int
 emit_single_member_OER_constraint(arg_t *arg, asn1cnst_range_t *range, char *type) {
     if(!range) {
         /* oer_support.h: asn_oer_constraint_s */
-		OUT("{ 0, 0, 0 }");
-		return 0;
+        OUT("{ 0, 0, 0 }");
+        return 0;
     }
 
-	if(range->incompatible || range->not_OER_visible) {
-		OUT("{ 0, 0, 0 }");
-	} else {
+    if(range->incompatible || range->not_OER_visible) {
+        OUT("{ 0, 0, 0 }");
+    } else {
         if(range->left.type == ARE_VALUE) {
             if(range->right.type == ARE_VALUE) {
                 OUT("{ AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND, %" PRIdMAX
@@ -1985,39 +2087,17 @@ emit_single_member_OER_constraint(arg_t *arg, asn1cnst_range_t *range, char *typ
         }
     }
 
-	/*
-	 * Print some courtesy debug information.
-	 */
-	if(range->left.type == ARE_VALUE
-	|| range->right.type == ARE_VALUE) {
-		OUT("\t/* ");
-		if(type) OUT("(%s", type);
-		OUT("(");
-		if(range->left.type == ARE_VALUE)
-			OUT("%" PRIdASN, range->left.value);
-		else
-			OUT("MIN");
-		OUT("..");
-		if(range->right.type == ARE_VALUE)
-			OUT("%" PRIdASN, range->right.value);
-		else
-			OUT("MAX");
-		if(range->extensible) OUT(",...");
-		if(type) OUT(")");
-		OUT(") */");
-	}
-
 	return 0;
 }
 
 static int
 emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alphabetsize, char *type) {
-	if(!range || range->incompatible || range->not_PER_visible) {
-		OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
+    if(!range || range->incompatible || range->not_PER_visible) {
+        OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
 		return 0;
-	}
+    }
 
-	if(range->left.type == ARE_VALUE) {
+    if(range->left.type == ARE_VALUE) {
 		if(range->right.type == ARE_VALUE) {
 			asn1c_integer_t cover = 1;
 			asn1c_integer_t r = 1 + range->right.value
@@ -2151,22 +2231,26 @@ emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 
     INDENT(+1);
 
+    /* .value{.width,.positive} */
     range = asn1constraint_compute_OER_range(expr->Identifier, etype,
                                              expr->combined_constraints,
                                              ACT_EL_RANGE, 0, 0, 0);
-    if(emit_single_member_OER_constraint(arg, range, 0)) {
+    if(emit_single_member_OER_constraint_value(arg, range, 0)) {
         return -1;
     }
+    emit_single_member_OER_constraint_comment(arg, range, 0);
     asn1constraint_range_free(range);
 
 	OUT(",\n");
 
+    /* .size */
     range = asn1constraint_compute_OER_range(expr->Identifier, etype,
                                              expr->combined_constraints,
                                              ACT_CT_SIZE, 0, 0, 0);
-    if(emit_single_member_OER_constraint(arg, range, "SIZE")) {
+    if(emit_single_member_OER_constraint_size(arg, range, "SIZE")) {
         return -1;
     }
+    emit_single_member_OER_constraint_comment(arg, range, "SIZE");
     asn1constraint_range_free(range);
 
     INDENT(-1);

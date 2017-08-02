@@ -9,11 +9,6 @@
 #include <OCTET_STRING.h>
 #include <errno.h>
 
-static asn_oer_constraints_t asn_DEF_OCTET_STRING_oer_constraints = {
-        { 0, 0, 0 },
-        { AOC_HAS_LOWER_BOUND, 0, 0 }
-};
-
 asn_dec_rval_t
 OCTET_STRING_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
                          asn_TYPE_descriptor_t *td,
@@ -26,8 +21,7 @@ OCTET_STRING_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
     OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
     asn_oer_constraints_t *cts =
         constraints ? constraints : td->oer_constraints;
-    asn_oer_constraint_t *csiz =
-        cts ? &cts->size : &asn_DEF_OCTET_STRING_oer_constraints.size;
+    ssize_t ct_size = cts ? cts->size : -1;
     asn_dec_rval_t rval = {RC_OK, 0};
     size_t expected_length = 0;
 
@@ -57,11 +51,8 @@ OCTET_STRING_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
         if(!st) ASN__DECODE_FAILED;
     }
 
-    if((csiz->flags
-           & (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))
-                 == (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND)
-       && csiz->lower_bound == csiz->upper_bound) {
-        expected_length = unit_bytes * csiz->lower_bound;
+    if(ct_size >= 0) {
+        expected_length = unit_bytes * ct_size;
     } else {
         /*
          * X.696 (08/2015) #27.2
@@ -120,18 +111,14 @@ OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
     OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
     asn_oer_constraints_t *cts =
         constraints ? constraints : td->oer_constraints;
-    asn_oer_constraint_t *csiz =
-        cts ? &cts->size : &asn_DEF_OCTET_STRING_oer_constraints.size;
+    ssize_t ct_size = cts ? cts->size : -1;
     asn_enc_rval_t er = {0, 0, 0};
 
     if(!st) ASN__ENCODE_FAILED;
 
     ASN_DEBUG("Encoding %s %d as OCTET STRING", td ? td->name : "", st->size);
 
-    if((csiz->flags
-           & (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))
-                 == (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND)
-       && csiz->lower_bound == csiz->upper_bound) {
+    if(ct_size >= 0) {
         /*
          * Check that available data matches the constraint
          */
@@ -154,11 +141,11 @@ OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
             break;
         }
 
-        if(st->size != unit_bytes * csiz->lower_bound) {
+        if(st->size != unit_bytes * ct_size) {
             ASN_DEBUG(
                 "Trying to encode %s (%zu bytes) which doesn't fit SIZE "
                 "constraint (%d)",
-                td->name, st->size, csiz->lower_bound);
+                td->name, st->size, ct_size);
             ASN__ENCODE_FAILED;
         }
     } else {

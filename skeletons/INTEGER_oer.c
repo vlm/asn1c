@@ -16,8 +16,8 @@ INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     INTEGER_t *st = (INTEGER_t *)*sptr;
-    asn_oer_constraint_t *ct;
-    size_t req_bytes = 0; /* 0 = length determinant is required */
+    struct asn_oer_constraint_number_s ct = {0, 0};
+    size_t req_bytes;
 
     (void)opt_codec_ctx;
     (void)specs;
@@ -32,41 +32,32 @@ INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     st->size = 0;
 
     if(!constraints) constraints = td->oer_constraints;
-    ct = constraints ? &constraints->value : 0;
+    if(constraints) ct = constraints->value;
 
-    if(ct && (ct->flags & AOC_HAS_LOWER_BOUND) && ct->lower_bound >= 0) {
+    if(ct.width) {
+        req_bytes = ct.width;
+    } else {
+        /* No lower bound and no upper bound, effectively */
+
+        ssize_t consumed = oer_fetch_length(ptr, size, &req_bytes);
+        if(consumed == 0) {
+            ASN__DECODE_STARVED;
+        } else if(consumed == -1) {
+            ASN__DECODE_FAILED;
+        }
+        rval.consumed += consumed;
+        ptr = (const char *)ptr + consumed;
+        size -= consumed;
+    }
+
+    if(req_bytes > size) {
+        ASN__DECODE_STARVED;
+    }
+
+    if(ct.positive) {
         /* X.969 08/2015 10.2(a) */
         unsigned msb;   /* Most significant bit */
         size_t useful_size;
-
-        intmax_t ub = ct->upper_bound;
-        if(ct->flags & AOC_HAS_UPPER_BOUND) {
-            if(ub <= 255) {
-                req_bytes = 1;
-            } else if(ub <= 65535) {
-                req_bytes = 2;
-            } else if(ub <= 4294967295UL) {
-                req_bytes = 4;
-            } else if(ub <= 18446744073709551615ULL) {
-                req_bytes = 8;
-            }
-        }
-
-        if(req_bytes == 0) {    /* #8.6, using length determinant */
-            ssize_t consumed = oer_fetch_length(ptr, size, &req_bytes);
-            if(consumed == 0) {
-                ASN__DECODE_STARVED;
-            } else if(consumed == -1) {
-                ASN__DECODE_FAILED;
-            }
-            rval.consumed += consumed;
-            ptr = (const char *)ptr + consumed;
-            size -= consumed;
-        }
-
-        if(req_bytes > size) {
-            ASN__DECODE_STARVED;
-        }
 
         /* Check most significant bit */
         msb = *(const uint8_t *)ptr >> 7; /* yields 0 or 1 */
@@ -87,55 +78,20 @@ INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
         rval.consumed += req_bytes;
         return rval;
-    } else if(ct
-              && ((ct->flags
-                  & (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))
-                        == (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))) {
-        /* X.969 08/2015 10.2(b) - no lower bound or negative lower bound */
-
-        intmax_t lb = ct->lower_bound;
-        intmax_t ub = ct->upper_bound;
-
-        if(lb >= -128 && ub <= 127) {
-            req_bytes = 1;
-        } else if(lb >= -32768 && ub <= 32767) {
-            req_bytes = 2;
-        } else if(lb >= -2147483648L && ub <= 2147483647L) {
-            req_bytes = 4;
-        } else if(lb >= -9223372036854775808LL && ub <= 9223372036854775807LL) {
-            req_bytes = 8;
-        }
-    }
-
-    /* No lower bound and no upper bound, effectively */
-
-    if(req_bytes == 0) {    /* #8.6, using length determinant */
-        ssize_t consumed = oer_fetch_length(ptr, size, &req_bytes);
-        if(consumed == 0) {
-            ASN__DECODE_STARVED;
-        } else if(consumed == -1) {
+    } else {
+        /* X.969 08/2015 10.2(b) */
+        st->buf = (uint8_t *)MALLOC(req_bytes + 1);
+        if(!st->buf) {
             ASN__DECODE_FAILED;
         }
-        rval.consumed += consumed;
-        ptr = (const char *)ptr + consumed;
-        size -= consumed;
+
+        memcpy(st->buf, ptr, req_bytes);
+        st->buf[req_bytes] = '\0'; /* Just in case, 0-terminate */
+        st->size = req_bytes;
+
+        rval.consumed += req_bytes;
+        return rval;
     }
-
-    if(req_bytes > size) {
-        ASN__DECODE_STARVED;
-    }
-
-    st->buf = (uint8_t *)MALLOC(req_bytes + 1);
-    if(!st->buf) {
-        ASN__DECODE_FAILED;
-    }
-
-    memcpy(st->buf, ptr, req_bytes);
-    st->buf[req_bytes] = '\0'; /* Just in case, 0-terminate */
-    st->size = req_bytes;
-
-    rval.consumed += req_bytes;
-    return rval;
 }
 
 /*
@@ -147,31 +103,27 @@ INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
                    asn_app_consume_bytes_f *cb, void *app_key) {
     const INTEGER_t *st = sptr;
     asn_enc_rval_t er;
-    asn_oer_constraint_t *ct;
+    struct asn_oer_constraint_number_s ct = {0, 0};
     const uint8_t *buf;
     const uint8_t *end;
     size_t useful_bytes;
     size_t req_bytes = 0;
-    int encode_as_unsigned;
     int sign = 0;
 
     if(!st || st->size == 0) ASN__ENCODE_FAILED;
 
     if(!constraints) constraints = td->oer_constraints;
-    ct = constraints ? &constraints->value : 0;
+    if(constraints) ct = constraints->value;
 
     er.encoded = 0;
 
     buf = st->buf;
     end = buf + st->size;
 
-    encode_as_unsigned =
-        ct && (ct->flags & AOC_HAS_LOWER_BOUND) && ct->lower_bound >= 0;
-
     sign = (buf && buf < end) ? buf[0] & 0x80 : 0;
 
     /* Ignore 9 leading zeroes or ones */
-    if(encode_as_unsigned) {
+    if(ct.positive) {
         if(sign) {
             /* The value given is a signed value. Can't proceed. */
             ASN__ENCODE_FAILED;
@@ -192,46 +144,18 @@ INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
     }
 
     useful_bytes = end - buf;
-    if(encode_as_unsigned) {
-        intmax_t ub = ct->upper_bound;
-
-        if(ub <= 255) {
-            req_bytes = 1;
-        } else if(ub <= 65535) {
-            req_bytes = 2;
-        } else if(ub <= 4294967295UL) {
-            req_bytes = 4;
-        } else if(ub <= 18446744073709551615ULL) {
-            req_bytes = 8;
-        }
-    } else if(ct
-              && ((ct->flags
-                  & (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))
-                        == (AOC_HAS_LOWER_BOUND | AOC_HAS_UPPER_BOUND))) {
-        /* X.969 08/2015 10.2(b) - no lower bound or negative lower bound */
-
-        intmax_t lb = ct->lower_bound;
-        intmax_t ub = ct->upper_bound;
-
-        if(lb >= -128 && ub <= 127) {
-            req_bytes = 1;
-        } else if(lb >= -32768 && ub <= 32767) {
-            req_bytes = 2;
-        } else if(lb >= -2147483648L && ub <= 2147483647L) {
-            req_bytes = 4;
-        } else if(lb >= -9223372036854775808LL && ub <= 9223372036854775807LL) {
-            req_bytes = 8;
-        }
-    }
-
-    if(req_bytes == 0) {
+    if(ct.width) {
+        req_bytes = ct.width;
+    } else {
         ssize_t r = oer_serialize_length(useful_bytes, cb, app_key);
         if(r < 0) {
             ASN__ENCODE_FAILED;
         }
         er.encoded += r;
         req_bytes = useful_bytes;
-    } else if(req_bytes < useful_bytes) {
+    }
+
+    if(req_bytes < useful_bytes) {
         ASN__ENCODE_FAILED;
     }
 

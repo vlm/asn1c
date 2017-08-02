@@ -15,17 +15,13 @@ extern "C" {
 /*
  * Pre-computed OER constraints.
  */
-typedef const struct asn_oer_constraint_s {
-	enum asn_oer_constraint_flags {
-		AOC_HAS_LOWER_BOUND = 0x01,
-		AOC_HAS_UPPER_BOUND = 0x02
-	} flags;
-	intmax_t lower_bound;
-	intmax_t upper_bound;
-} asn_oer_constraint_t;
+typedef const struct asn_oer_constraint_number_s {
+    unsigned width;    /* ±8,4,2,1 fixed bytes */
+    unsigned positive; /* 1 for unsigned number, 0 for signed */
+} asn_oer_constraint_number_t;
 typedef const struct asn_oer_constraints_s {
-    struct asn_oer_constraint_s value;
-    struct asn_oer_constraint_s size;
+    asn_oer_constraint_number_t value;
+    ssize_t size;    /* -1 (no constraint) or >= 0 */
 } asn_oer_constraints_t;
 
 

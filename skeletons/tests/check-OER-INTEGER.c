@@ -9,53 +9,24 @@
 #define CHECK_ENCODE_OK(a, b, c) check_encode(__LINE__, 0, a, b, c)
 #define CHECK_ENCODE_BAD(a, b, c) check_encode(__LINE__, 1, a, b, c);
 
-static const intmax_t NoBound = -4200024;
-
 static asn_oer_constraints_t *
-setup_constraints(int lineno, const char *process, intmax_t lower_bound,
-                  intmax_t upper_bound) {
+setup_constraints(int lineno, const char *process, unsigned width,
+                  unsigned positive) {
     static struct asn_oer_constraints_s empty_constraints;
     struct asn_oer_constraints_s *constraints = &empty_constraints;
-    struct asn_oer_constraint_s *ct_value = &constraints->value;
+    struct asn_oer_constraint_number_s *ct_value = &constraints->value;
 
     memset(&empty_constraints, 0, sizeof(empty_constraints));
 
     /* Setup integer constraints as requested */
-    if(lower_bound == NoBound && upper_bound == NoBound) {
-        fprintf(stderr, "%d: OER %s without constraints\n", lineno,
-                process);
-        constraints = NULL;
-    } else {
-        if(lower_bound != NoBound) {
-            ct_value->flags |= AOC_HAS_LOWER_BOUND;
-            ct_value->lower_bound = lower_bound;
-        }
-        if(upper_bound != NoBound) {
-            ct_value->flags |= AOC_HAS_UPPER_BOUND;
-            ct_value->upper_bound = upper_bound;
-        }
-        if(lower_bound != NoBound && upper_bound != NoBound) {
-            fprintf(stderr,
-                    "%d: OER %s constraints %" PRIdMAX
-                    "..%" PRIdMAX "\n",
-                    lineno, process, lower_bound, upper_bound);
-        } else if(lower_bound != NoBound) {
-            fprintf(stderr,
-                    "%d: OER %s constraints %" PRIdMAX
-                    "..MAX\n",
-                    lineno, process, lower_bound);
-        } else if(upper_bound != NoBound) {
-            fprintf(stderr,
-                    "%d: OER %s constraints MIN..%" PRIdMAX "\n",
-                    lineno, process, upper_bound);
-        }
-    }
+    ct_value->width = width;
+    ct_value->positive = positive;
 
     return constraints;
 }
 
 static void
-check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const char *buf, size_t size, const char *dummy, intmax_t lower_bound, intmax_t upper_bound) {
+check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const char *buf, size_t size, const char *dummy, unsigned width, unsigned positive) {
     static char *code_s[] = { "RC_OK", "RC_WMORE", "RC_FAIL", "<error>" };
 
     fprintf(stderr, "\n%d: OER decode (control %" PRIdMAX ")\n", lineno, control);
@@ -63,7 +34,7 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
     INTEGER_t *st = NULL;
     asn_dec_rval_t ret;
     asn_oer_constraints_t *constraints =
-        setup_constraints(lineno, "decoding", lower_bound, upper_bound);
+        setup_constraints(lineno, "decoding", width, positive);
 
     fprintf(stderr, "%d: buf[%zu]={%d, %d, ...}\n", lineno, size,
             ((const uint8_t *)buf)[0],
@@ -186,7 +157,7 @@ check_roundtrip(int lineno, intmax_t value, intmax_t lower_bound, intmax_t upper
 }
 
 static void
-check_encode(int lineno, int bad, intmax_t value, intmax_t lower_bound, intmax_t upper_bound) {
+check_encode(int lineno, int bad, intmax_t value, unsigned width, unsigned positive) {
     uint8_t tmpbuf[32];
 
     fprintf(stderr, "\n%d: OER encode value %" PRIdMAX "\n", lineno, value);
@@ -194,7 +165,7 @@ check_encode(int lineno, int bad, intmax_t value, intmax_t lower_bound, intmax_t
     INTEGER_t *stOut = (INTEGER_t *)calloc(1, sizeof(*stOut));
     asn_enc_rval_t er;
     asn_oer_constraints_t *constraints =
-        setup_constraints(lineno, "encoding", lower_bound, upper_bound);
+        setup_constraints(lineno, "encoding", width, positive);
 
     if(asn_imax2INTEGER(stOut, value) == -1) {
         assert(!"Unreachable imax2INTEGER failure");
@@ -223,96 +194,104 @@ check_encode(int lineno, int bad, intmax_t value, intmax_t lower_bound, intmax_t
 
 int
 main() {
-	CHECK_DECODE(RC_WMORE, 0, "", 0, "bounds=", NoBound, NoBound);
-	CHECK_DECODE(RC_FAIL, 0, "\x00", 1, "bounds=", NoBound, NoBound);
 	CHECK_DECODE(RC_WMORE, 0, "", 0, "bounds=", 0, 0);
-	CHECK_DECODE(RC_WMORE, 0, "", 0, "bounds=", 0, 1);
-	CHECK_DECODE(RC_OK, 0, "\x00", 1, "bounds=", 0, 1);
-	CHECK_DECODE(RC_OK, 0, "\x00", 1, "bounds=", -1, 1);
+	CHECK_DECODE(RC_FAIL, 0, "\x00", 1, "bounds=", 0, 0);
+	CHECK_DECODE(RC_WMORE, 0, "", 0, "bounds=", 1, 0);
+	CHECK_DECODE(RC_WMORE, 0, "", 0, "bounds=", 1, 1);
+	CHECK_DECODE(RC_OK, 0, "\x00", 1, "bounds=", 1, 1);
+	CHECK_DECODE(RC_OK, 0, "\x00", 1, "bounds=", 1, 0);
 
-	CHECK_DECODE(RC_OK, 0, "\x00", 1, "bounds=", -1, 1);
-	CHECK_DECODE(RC_OK, 1, "\x01", 1, "bounds=", -1, 1);
-	CHECK_DECODE(RC_OK, -1, "\xff", 1, "bounds=", -1, 1);
-	CHECK_DECODE(RC_OK, -1, "\xff", 1, "bounds=", -1, 1);
-	CHECK_DECODE(RC_OK, 127, "\x7f", 1, "bounds=", 0, 127);
-	CHECK_DECODE(RC_OK, 255, "\xff", 1, "bounds=", 0, 127);
-	CHECK_DECODE(RC_OK, 255, "\xff", 1, "bounds=", 0, 255);
-	CHECK_DECODE(RC_WMORE, 0, "\xff", 1, "bounds=", 0, 256);
-	CHECK_DECODE(RC_OK, 65535, "\xff\xff", 2, "bounds=", 0, 256);
+	CHECK_DECODE(RC_OK, 0, "\x00", 1, "bounds=", 1, 0);
+	CHECK_DECODE(RC_OK, 1, "\x01", 1, "bounds=", 1, 0);
+	CHECK_DECODE(RC_OK, -1, "\xff", 1, "bounds=", 1, 0);
+	CHECK_DECODE(RC_OK, -1, "\xff", 1, "bounds=", 1, 0);
+	CHECK_DECODE(RC_OK, 127, "\x7f", 1, "bounds=", 1, 1);
+	CHECK_DECODE(RC_OK, 255, "\xff", 1, "bounds=", 1, 1);
+	CHECK_DECODE(RC_OK, 255, "\xff", 1, "bounds=", 1, 1);
+	CHECK_DECODE(RC_WMORE, 0, "\xff", 1, "bounds=", 2, 1);
+	CHECK_DECODE(RC_OK, 65535, "\xff\xff", 2, "bounds=", 2, 1);
 
-	CHECK_DECODE(RC_OK, 0, "\x01\x00", 2, "bounds=", NoBound, 1);
-	CHECK_DECODE(RC_OK, 1, "\x01\x01", 2, "bounds=", NoBound, 1);
-	CHECK_DECODE(RC_OK, -1, "\x1\xff", 2, "bounds=", NoBound, 1);
-	CHECK_DECODE(RC_OK, -1, "\x1\xff", 2, "bounds=", NoBound, 1);
-	CHECK_DECODE(RC_OK, -1, "\x1\xff", 2, "bounds=", NoBound, 255);
-	CHECK_DECODE(RC_WMORE, -1, "\x02\x00\xff", 2, "bounds=", NoBound, 200);
-	CHECK_DECODE(RC_OK, 255, "\x02\x00\xff", 3, "bounds=", NoBound, 200);
+	CHECK_DECODE(RC_OK, 0, "\x01\x00", 2, "bounds=", 0, 0);
+	CHECK_DECODE(RC_OK, 1, "\x01\x01", 2, "bounds=", 0, 0);
+	CHECK_DECODE(RC_OK, -1, "\x1\xff", 2, "bounds=", 0, 0);
+	CHECK_DECODE(RC_OK, -1, "\x1\xff", 2, "bounds=", 0, 0);
+	CHECK_DECODE(RC_OK, -1, "\x1\xff", 2, "bounds=", 0, 0);
+	CHECK_DECODE(RC_OK, 255, "\x1\xff", 2, "bounds=", 0, 1);
+	CHECK_DECODE(RC_WMORE, -1, "\x02\x00\xff", 2, "bounds=", 0, 0);
+	CHECK_DECODE(RC_OK, 255, "\x02\x00\xff", 3, "bounds=", 0, 0);
 
-    CHECK_ROUNDTRIP(0, NoBound, NoBound);
-    CHECK_ROUNDTRIP(1, NoBound, NoBound);
-    CHECK_ROUNDTRIP(-1, NoBound, NoBound);
-    CHECK_ROUNDTRIP(-65000, NoBound, NoBound);
-    CHECK_ROUNDTRIP(65000, NoBound, NoBound);
-    CHECK_ROUNDTRIP(65535, NoBound, NoBound);
-    CHECK_ROUNDTRIP(-65535, NoBound, NoBound);
-    CHECK_ROUNDTRIP(-65536, NoBound, NoBound);
-    CHECK_ROUNDTRIP(65536, NoBound, NoBound);
-    CHECK_ROUNDTRIP(0, -128, 127);
-    CHECK_ROUNDTRIP(1, -128, 127);
-    CHECK_ROUNDTRIP(-1, -128, 127);
-    CHECK_ROUNDTRIP(-127, -128, 127);
-    CHECK_ROUNDTRIP(-128, -128, 127);
-    CHECK_ROUNDTRIP(127, -128, 127);
-    CHECK_ROUNDTRIP(1, 32000, 32000);   /* Sic! */
-    CHECK_ROUNDTRIP(32000, 0, 32000);  /* Sic! */
-    CHECK_ROUNDTRIP(32000, -32000, 32000);  /* Sic! */
-    CHECK_ROUNDTRIP(1, 65000, 65000);   /* Sic! */
-    CHECK_ROUNDTRIP(65535, 0, 65000);  /* Sic! */
-    CHECK_ROUNDTRIP(65535, -65000, 65000);  /* Sic! */
+    CHECK_ROUNDTRIP(0, 0, 0);
+    CHECK_ROUNDTRIP(1, 0, 0);
+    CHECK_ROUNDTRIP(-1, 0, 0);
+    CHECK_ROUNDTRIP(-65000, 0, 0);
+    CHECK_ROUNDTRIP(65000, 0, 0);
+    CHECK_ROUNDTRIP(65535, 0, 0);
+    CHECK_ROUNDTRIP(-65535, 0, 0);
+    CHECK_ROUNDTRIP(-65536, 0, 0);
+    CHECK_ROUNDTRIP(65536, 0, 0);
+    CHECK_ROUNDTRIP(0, 1, 0);
+    CHECK_ROUNDTRIP(1, 1, 0);
+    CHECK_ROUNDTRIP(-1, 1, 0);
+    CHECK_ROUNDTRIP(-127, 1, 0);
+    CHECK_ROUNDTRIP(-128, 1, 0);
+    CHECK_ROUNDTRIP(127, 1, 0);
+    CHECK_ROUNDTRIP(1, 2, 1);
+    CHECK_ROUNDTRIP(32000, 2, 1);
+    CHECK_ROUNDTRIP(32000, 2, 0);
+    CHECK_ROUNDTRIP(1, 2, 1);
+    CHECK_ROUNDTRIP(65535, 2, 1);
+    CHECK_ROUNDTRIP(65535, 4, 0);
 
-    CHECK_ENCODE_OK(0, 0, 255);
-    CHECK_ENCODE_OK(255, 0, 255);
-    CHECK_ENCODE_BAD(256, 0, 255);
-    CHECK_ENCODE_OK(0, -128, 127);
-    CHECK_ENCODE_OK(127, -128, 127);
-    CHECK_ENCODE_OK(-128, -128, 127);
-    CHECK_ENCODE_BAD(-129, -128, 127);
-    CHECK_ENCODE_BAD(128, -128, 127);
-    CHECK_ENCODE_OK(-4900000000, -5000000000, 5000000000);
-    CHECK_ENCODE_OK(4900000000, -5000000000, 5000000000);
-    CHECK_ENCODE_OK(-2000000000, -4000000000, 0);
-    CHECK_ENCODE_OK(-4000000000, -4000000000, 0);
-    CHECK_ENCODE_BAD(-4900000000, 0, 4000000000);
+    CHECK_ENCODE_OK(0, 1, 1);
+    CHECK_ENCODE_OK(255, 1, 1);
+    CHECK_ENCODE_BAD(256, 1, 1);
+    CHECK_ENCODE_OK(0, 1, 0);
+    CHECK_ENCODE_OK(127, 1, 0);
+    CHECK_ENCODE_OK(-128, 1, 0);
+    CHECK_ENCODE_BAD(-129, 1, 0);
+    CHECK_ENCODE_BAD(128, 1, 0);
+    CHECK_ENCODE_OK(-4900000000, 8, 0);
+    CHECK_ENCODE_OK(4900000000, 8, 0);
+    CHECK_ENCODE_OK(-2000000000, 8, 0);
+    CHECK_ENCODE_OK(-4000000000, 8, 0);
+    CHECK_ENCODE_BAD(-4900000000, 4, 1);
     CHECK_ENCODE_BAD(-1, 0, 4000000000);
-    CHECK_ENCODE_BAD(4900000000, 0, 4000000000);
-    CHECK_ENCODE_OK(4100000000, 0, 4000000000); /* Sic! */
+    CHECK_ENCODE_BAD(4900000000, 4, 1);
+    CHECK_ENCODE_OK(4100000000, 4, 1);
 
     for(size_t i = 0; i < 7 ; i++) {
         intmax_t value = (intmax_t)1 << i;
-        CHECK_ROUNDTRIP(value, 0, 255);
+        CHECK_ROUNDTRIP(value, 1, 1);
         value = -value;
-        CHECK_ROUNDTRIP(value, -128, 127);
+        CHECK_ROUNDTRIP(value, 1, 0);
     }
 
     for(size_t i = 0; i < 16 ; i++) {
         intmax_t value = (intmax_t)1 << i;
-        CHECK_ROUNDTRIP(value, 0, 65535);
+        CHECK_ROUNDTRIP(value, 2, 1);
         value = -value;
-        CHECK_ROUNDTRIP(value, -32768, 32767);
+        CHECK_ROUNDTRIP(value, 2, 0);
     }
 
     for(size_t i = 0; i < 32 ; i++) {
         intmax_t value = (intmax_t)1 << i;
-        CHECK_ROUNDTRIP(value, 0, 4294967296UL);
+        CHECK_ROUNDTRIP(value, 4, 1);
         value = -value;
-        CHECK_ROUNDTRIP(value, -2147483648L, 2147483647L);
+        CHECK_ROUNDTRIP(value, 4, 0);
     }
 
     for(size_t i = 0; i < 8 * sizeof(intmax_t) ; i++) {
         intmax_t value = (intmax_t)1 << i;
-        CHECK_ROUNDTRIP(value, NoBound, NoBound);
+        CHECK_ROUNDTRIP(value, 8, 0);
         value = -value;
-        CHECK_ROUNDTRIP(value, NoBound, NoBound);
+        CHECK_ROUNDTRIP(value, 8, 0);
+    }
+
+    for(size_t i = 0; i < 8 * sizeof(intmax_t) ; i++) {
+        intmax_t value = (intmax_t)1 << i;
+        CHECK_ROUNDTRIP(value, 0, 0);
+        value = -value;
+        CHECK_ROUNDTRIP(value, 0, 0);
     }
 
 }

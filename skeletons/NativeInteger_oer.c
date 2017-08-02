@@ -17,21 +17,15 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
     asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     long *native = (long *)*nint_ptr;
-    asn_oer_constraint_t *ct;
     INTEGER_t tmpint;
     INTEGER_t *tmpintptr = &tmpint;
 
     memset(&tmpint, 0, sizeof(tmpint));
 
-    (void)opt_codec_ctx;
-
     if(!native) {
         native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
         if(!native) ASN__DECODE_FAILED;
     }
-
-    if(!constraints) constraints = td->oer_constraints;
-    ct = constraints ? &constraints->value : 0;
 
     /*
      * OPTIMIZATION: Encode directly rather than passing through INTEGER.
