@@ -407,7 +407,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 		});
 		OUT("};\n");
 
-		if((roms_count + aoms_count) && (arg->flags & A1C_GEN_PER)) {
+		if((roms_count + aoms_count) && ((arg->flags & A1C_GEN_PER)||(arg->flags & A1C_GEN_OER))) {
 			int elm = 0;
 			int comma = 0;
 			comp_mode = 0;
@@ -1053,7 +1053,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	}
 
 	/* Create a canonical elements map */
-	if(elements && (arg->flags & A1C_GEN_PER)) {
+	if(elements && ((arg->flags & A1C_GEN_PER) || (arg->flags & A1C_GEN_OER))) {
 		int i;
 		cmap = compute_canonical_members_order(arg, elements);
 		if(cmap) {
@@ -1340,6 +1340,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->xer_encoder    = asn_DEF_%s.xer_encoder;\n",    type_name);
 	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
 	OUT("td->uper_encoder   = asn_DEF_%s.uper_encoder;\n",   type_name);
+	OUT("td->oer_decoder   = asn_DEF_%s.oer_decoder;\n",   type_name);
+	OUT("td->oer_encoder   = asn_DEF_%s.oer_encoder;\n",   type_name);
 	if(!terminal && !tags_count) {
 	  OUT("/* The next four lines are here because of -fknown-extern-type */\n");
 	  OUT("td->tags           = asn_DEF_%s.tags;\n",         type_name);
@@ -1493,6 +1495,39 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("}\n");
 	OUT("\n");
   }
+  if(arg->flags & A1C_GEN_OER) {
+	p = MKID(expr);
+
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_dec_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tasn_per_constraints_t *constraints, void **structure, const void *buf_ptr, size_t size) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->oer_decoder(opt_codec_ctx, td, constraints, structure, buf_ptr, size);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+
+	p = MKID(expr);
+	if(HIDE_INNER_DEFS) OUT("static ");
+	OUT("asn_enc_rval_t\n");
+	OUT("%s", p);
+	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+	OUT("_encode_oer(asn_TYPE_descriptor_t *td,\n");
+	INDENTED(
+	OUT("\tasn_per_constraints_t *constraints,\n");
+	OUT("\tvoid *structure, asn_app_consume_bytes_f *cb, void *app_key) {\n");
+	OUT("%s_%d_inherit_TYPE_descriptor(td);\n",
+		p, expr->_type_unique_index);
+	OUT("return td->oer_encoder(td, constraints, structure, cb, app_key);\n");
+	);
+	OUT("}\n");
+	OUT("\n");
+  }
 
 	REDIR(OT_FUNC_DECLS);
 
@@ -1513,6 +1548,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		if(arg->flags & A1C_GEN_PER) {
 		OUT("per_type_decoder_f %s_decode_uper;\n", p);
 		OUT("per_type_encoder_f %s_encode_uper;\n", p);
+		}
+		if(arg->flags & A1C_GEN_OER) {
+		OUT("oer_type_decoder_f %s_decode_oer;\n", p);
+		OUT("oer_type_encoder_f %s_encode_oer;\n", p);
 		}
 	}
 
@@ -2034,7 +2073,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 
 	etype = expr_get_type(arg, expr);
 
-	if((arg->flags & A1C_GEN_PER)
+	if(((arg->flags & A1C_GEN_PER) || (arg->flags & A1C_GEN_OER))
 	&& (expr->constraints
 		|| etype == ASN_BASIC_ENUMERATED
 		|| etype == ASN_CONSTR_CHOICE)
@@ -2045,7 +2084,6 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	}
 
 	REDIR(OT_CTDEFS);
-
 	OUT("static asn_per_constraints_t "
 		"asn_PER_%s_%s_constr_%d GCC_NOTUSED = {\n",
 		pfx, MKID(expr), expr->_type_unique_index);
@@ -2440,7 +2478,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("0,\t/* Defer constraints checking to the member type */\n");
 	}
 	if(C99_MODE) OUT(".per_constraints = ");
-	if(arg->flags & A1C_GEN_PER) {
+	if((arg->flags & A1C_GEN_PER) || (arg->flags & A1C_GEN_OER)) {
 		if(expr->constraints) {
 			OUT("&asn_PER_memb_%s_constr_%d,\n",
 				MKID(expr),
@@ -2554,9 +2592,18 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		if(arg->flags & A1C_GEN_PER) {
 			FUNCREF(decode_uper);
 			FUNCREF(encode_uper);
-		} else {
+        } else {
 			OUT("0, 0,\t/* No PER support, "
 				"use \"-gen-PER\" to enable */\n");
+        }
+		if (arg->flags & A1C_GEN_OER) {
+			//OUT("0, 0,\t/* No PER support, "
+			//	"use \"-gen-PER\" to enable */\n");
+			FUNCREF(decode_oer);
+			FUNCREF(encode_oer);
+        }else {
+			OUT("0, 0,\t/* No OER support, "
+				"use \"-gen-OER\" to enable */\n");
 		}
 
 		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {
@@ -2602,7 +2649,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			OUT("0,\t/* No tags (count) */\n");
 		}
 
-		if(arg->flags & A1C_GEN_PER) {
+		if((arg->flags & A1C_GEN_PER) || (arg->flags & A1C_GEN_OER)) {
 			if(expr->constraints
 			|| expr->expr_type == ASN_BASIC_ENUMERATED
 			|| expr->expr_type == ASN_CONSTR_CHOICE) {
@@ -2613,8 +2660,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			}
 		} else {
 			OUT("0,\t/* No PER visible constraints */\n");
-		}
-
+		} 
 		if(elements_count) {
 			OUT("asn_MBR_%s_%d,\n", p, expr->_type_unique_index);
 			if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF
@@ -2670,8 +2716,6 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 	asn1p_expr_t *expr = arg->expr;
 	char *id;
 
-	assert(expr->Identifier);
-
 	if((arg->flags & A1C_COMPOUND_NAMES
 	   || onc_flags & ONC_force_compound_name)
 	&& ((expr->expr_type & ASN_CONSTR_MASK)
@@ -2680,8 +2724,7 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 	   	|| expr->expr_type == ASN_BASIC_BIT_STRING)
 		&& expr_elements_count(arg, expr))
 	   )
-	&& expr->parent_expr
-	&& expr->parent_expr->Identifier) {
+	&& expr->parent_expr) {
 		arg_t tmparg = *arg;
 
 		tmparg.expr = expr->parent_expr;
@@ -2689,7 +2732,7 @@ out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 
 		out_name_chain(&tmparg, onc_flags);
 
-		OUT("__");	/* a separator between id components */
+		if(expr->parent_expr->Identifier) OUT("__");	/* a separator between id components */
 
 		/* Fall through */
 	}

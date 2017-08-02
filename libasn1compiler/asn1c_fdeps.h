@@ -11,6 +11,7 @@ typedef struct asn1c_fdeps_s {
 	  FDEP_CONVERTER    =  2,	/* Name of the int main() file */
 	  FDEP_COMMON_FILES =  3,	/* Section for mandatory dependencies */
 	  FDEP_CODEC_PER    =  4,	/* Use contents only if -gen-PER */
+	  FDEP_CODEC_OER    =  5,	/* Use contents only if -gen-OER */
 	} usage;		/* Some file refers to it */
 
 	struct asn1c_fdeps_s **elements;

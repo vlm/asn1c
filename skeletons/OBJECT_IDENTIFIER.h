@@ -22,6 +22,8 @@ asn_constr_check_f OBJECT_IDENTIFIER_constraint;
 der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
 xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
+oer_type_decoder_f OBJECT_IDENTIFIER_decode_oer;
+oer_type_encoder_f OBJECT_IDENTIFIER_encode_oer;
 
 /**********************************
  * Some handy conversion routines *

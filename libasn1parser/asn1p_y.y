@@ -315,7 +315,7 @@ static asn1p_module_t *currentModule;
 %type	<a_constr>		optConstraints
 %type	<a_constr>		Constraint
 %type	<a_constr>		SubtypeConstraint
-%type	<a_constr>		ConstraintSpecs
+%type   <a_constr>      ConstraintSpecs
 %type	<a_constr>		GeneralConstraint
 %type	<a_constr>		SetOfConstraints
 %type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */

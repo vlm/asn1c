@@ -21,7 +21,10 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	ANY_encode_xer,
-	0, 0,
+    OCTET_STRING_decode_uper,
+    OCTET_STRING_encode_uper,
+    OCTET_STRING_decode_oer,
+    OCTET_STRING_encode_oer,
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
 	0,	/* No PER visible constraints */
@@ -46,6 +49,19 @@ ANY_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	return OCTET_STRING_encode_xer(td, sptr, ilevel, flags, cb, app_key);
 }
 
+#define RETURN(_code)   do {                        \
+        asn_dec_rval_t tmprval;                 \
+        tmprval.code = _code;                   \
+        tmprval.consumed = consumed_myself;         \
+        return tmprval;                     \
+    } while(0)
+
+#if 0
+asn_dec_rval_t ANY_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
+    asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+    void **sptr, const void *buf_ptr, size_t size) {
+}
+#endif
 struct _callback_arg {
 	uint8_t *buffer;
 	size_t offset;
@@ -138,6 +154,32 @@ ANY_to_type(ANY_t *st, asn_TYPE_descriptor_t *td, void **struct_ptr) {
 	}
 }
 
+int
+ANY_to_type_oer(ANY_t *st, asn_TYPE_descriptor_t *td, void **struct_ptr) {
+	asn_dec_rval_t rval;
+	void *newst = 0;
+
+	if(!st || !td || !struct_ptr) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	if(st->buf == 0) {
+		/* Nothing to convert, make it empty. */
+		*struct_ptr = (void *)0;
+		return 0;
+	}
+
+	rval = oer_decode(0, td, (void **)&newst, st->buf, st->size);
+	if(rval.code == RC_OK) {
+		*struct_ptr = newst;
+		return 0;
+	} else {
+		/* Remove possibly partially decoded data. */
+		ASN_STRUCT_FREE(*td, newst);
+		return -1;
+	}
+}
 static int ANY__consume_bytes(const void *buffer, size_t size, void *key) {
 	struct _callback_arg *arg = (struct _callback_arg *)key;
 

@@ -18,7 +18,7 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	resolver_arg_t rarg;	/* resolver argument */
 	asn1p_expr_t *exc;	/* expr clone */
 	asn1p_expr_t *rpc;	/* rhs_pspecs clone */
-	asn1p_expr_t *m;	/* expr members */
+    asn1p_expr_t *m; /* expr members */
 	void *p;
 	struct asn1p_pspec_s *pspec;
 	int npspecs;
@@ -69,8 +69,8 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	pspec->rhs_pspecs = rpc;
 	pspec->my_clone = exc;
 	exc->spec_index = npspecs;
-
-	/* Passing arguments to members and type references */
+	
+    /* Passing arguments to members and type references */
 	exc->rhs_pspecs = expr->rhs_pspecs ? expr->rhs_pspecs : rhs_pspecs;
 	if(exc->rhs_pspecs)
 		exc->rhs_pspecs->ref_cnt++;

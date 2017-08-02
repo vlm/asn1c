@@ -128,6 +128,9 @@ int uper_put_nslength(asn_per_outp_t *po, size_t length);
  */
 int uper_put_nsnnwn(asn_per_outp_t *po, int n);
 
+int per_flush_bytes(asn_per_outp_t *po);
+void per_skip_unused_bits(asn_per_data_t *pd);
+void per_skip_bytes(asn_per_data_t *pd, int nbytes);
 #ifdef __cplusplus
 }
 #endif

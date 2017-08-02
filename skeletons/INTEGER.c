@@ -31,6 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	INTEGER_decode_uper,	/* Unaligned PER decoder */
 	INTEGER_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+    INTEGER_decode_oer,
+    INTEGER_encode_oer,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
@@ -762,7 +764,174 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 }
 
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+static ssize_t INTEGER_oer_size(asn_per_constraint_t *ct)
+{
+    ssize_t size = 0;
+        
+    /* X.696 10.2 */
+    if ((ct->flags & APC_SEMI_CONSTRAINED) ||
+            (ct->flags & APC_CONSTRAINED)) {
 
+        if (ct->lower_bound == 0 && ct->upper_bound == 0)
+            return 0;   /* (0..MAX) */
+
+        if (ct->lower_bound >= 0) {
+            if (ct->upper_bound <= 255)
+                size = 1;
+            else if (ct->upper_bound <= 65535)
+                size = 2;
+            else if (ct->upper_bound <= UINT_MAX)
+                size = 4;
+            else if (ct->upper_bound <= LLONG_MAX) /* should be ULLONG_MAX, but asn1c doesn't handle it, so we limit the implementation here*/
+                size = 8;
+            else 
+                size = 0;   /* variable length is needed */
+        } else {
+            if (ct->lower_bound >= -128 && ct->upper_bound <= 127)
+                size = 1;
+            else if (ct->lower_bound >= -32768 && ct->upper_bound <= 32767)
+                size = 2;
+            else if (ct->lower_bound >= INT_MIN && ct->upper_bound <= INT_MAX)
+                size = 4;
+            else if (ct->lower_bound >= LLONG_MIN && ct->upper_bound <= LLONG_MIN)
+                size = 8;
+            else
+                size = 0;    /* variable length is needed */
+        }
+    }
+
+    return size;
+}
+asn_enc_rval_t
+INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, 
+    asn_app_consume_bytes_f *cb, void *app_key) {
+
+	asn_enc_rval_t rval;
+	INTEGER_t *st = (INTEGER_t *)sptr;
+	asn_per_constraint_t *ct;
+    ssize_t size = 0;
+
+	if(!st || st->size == 0) ASN__ENCODE_FAILED;
+
+	if(!constraints) constraints = td->per_constraints;
+	ct = constraints ? &constraints->value : 0;
+
+	rval.encoded = 0;
+	if(ct) {
+        /* X.696 10.2 */
+        size = INTEGER_oer_size(ct);
+    }
+    
+    if (cb && st->buf && size) {
+        if (cb(st->buf + (sizeof(long long) - size), size, app_key) < 0 ) {
+            rval.encoded = -1;
+            rval.failed_type = td;
+            rval.structure_ptr = sptr;
+            return rval;
+        }
+    } else if(size == 0) {
+        /* Variable size, COER encoding */
+		uint8_t *buf = st->buf;
+		uint8_t *end1 = buf + st->size - 1;
+        uint8_t *lenbuf[8];
+        size_t lenbytes;
+		int shift;
+
+		/* Compute the number of superfluous leading bytes */
+		for(; buf < end1; buf++) {
+			/*
+			 * If the contents octets of an integer value encoding
+			 * consist of more than one octet, then the bits of the
+			 * first octet and bit 8 of the second octet:
+			 * a) shall not all be ones; and
+			 * b) shall not all be zero.
+			 */
+			switch(*buf) {
+			case 0x00: if((buf[1] & 0x80) == 0)
+					continue;
+				break;
+			case 0xff: if((buf[1] & 0x80))
+					continue;
+				break;
+			}
+			break;
+		}
+
+		/* Remove leading superfluous bytes from the integer */
+		shift = buf - st->buf;
+		if(shift) {
+			uint8_t *nb = st->buf;
+			uint8_t *end;
+
+			st->size -= shift;	/* New size, minus bad bytes */
+			end = nb + st->size;
+
+			for(; nb < end; nb++, buf++)
+				*nb = *buf;
+		}
+        /* length bytes */
+        if((lenbytes = der_tlv_length_serialize(st->size, lenbuf, 8)) > 8) {
+            ASN_DEBUG("INTEGER length is too long!\n");
+            ASN__ENCODE_FAILED;
+        }
+        if (cb) {
+            if (cb(lenbuf, lenbytes, app_key) < 0 ) {
+                rval.encoded = -1;
+                rval.failed_type = td;
+                rval.structure_ptr = sptr;
+                return rval;
+            }
+        }
+        rval.encoded += lenbytes;
+        if (cb) {
+            if (cb(st->buf, st->size, app_key) < 0 ) {
+                rval.encoded = -1;
+                rval.failed_type = td;
+                rval.structure_ptr = sptr;
+                return rval;
+            }
+        }
+    } else {
+        assert(st->buf || st->size == 0);
+    }
+
+    rval.encoded += (size ?  size : st->size);
+	ASN__ENCODED_OK(rval);
+}
+asn_dec_rval_t
+INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, const void *buf_ptr, size_t buf_size) {
+	asn_dec_rval_t rval = {RC_OK, 0};
+	INTEGER_t *st = (INTEGER_t *)*sptr;
+	asn_per_constraint_t *ct;
+    ssize_t size = 0;
+
+	if(!st) {
+		st = (INTEGER_t *)(*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) ASN__DECODE_FAILED;
+    }
+
+	if(!constraints) constraints = td->per_constraints;
+	ct = constraints ? &constraints->value : 0;
+	if(ct) {
+        size = INTEGER_oer_size(ct);
+    }
+    if(!size) {
+        ssize_t lenbytes = 0;
+        if ((lenbytes = ber_fetch_length(0, buf_ptr, buf_size, &size)) < 0)
+            ASN__DECODE_FAILED;
+        rval.consumed += lenbytes;
+        buf_ptr += lenbytes;
+    }
+    st->buf = MALLOC(size + 1);
+    st->size = size;
+    memcpy(st->buf, buf_ptr, size);
+    st->buf[size] = '\0';
+    rval.code = RC_OK;
+    rval.consumed += size;
+    return rval;
+}
 int
 asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 	uint8_t *b, *end;
@@ -823,7 +992,6 @@ asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 	*lptr = value;
 	return 0;
 }
-
 /* FIXME: negative INTEGER values are silently interpreted as large unsigned ones. */
 int
 asn_INTEGER2umax(const INTEGER_t *iptr, uintmax_t *lptr) {
@@ -856,7 +1024,6 @@ asn_INTEGER2umax(const INTEGER_t *iptr, uintmax_t *lptr) {
 	*lptr = value;
 	return 0;
 }
-
 int
 asn_umax2INTEGER(INTEGER_t *st, uintmax_t value) {
     uint8_t *buf;
@@ -882,7 +1049,6 @@ asn_umax2INTEGER(INTEGER_t *st, uintmax_t value) {
 
 	return 0;
 }
-
 int
 asn_imax2INTEGER(INTEGER_t *st, intmax_t value) {
 	uint8_t *buf, *bp;
@@ -937,7 +1103,6 @@ asn_imax2INTEGER(INTEGER_t *st, intmax_t value) {
 
 	return 0;
 }
-
 int
 asn_INTEGER2long(const INTEGER_t *iptr, long *l) {
     intmax_t v;

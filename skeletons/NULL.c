@@ -30,6 +30,8 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	NULL_decode_uper,	/* Unaligned PER decoder */
 	NULL_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	NULL_decode_oer,	/* OER decoder */
+	NULL_encode_oer,	/* OER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
@@ -150,6 +152,30 @@ NULL_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
 	(void)constraints;
 	(void)sptr;
 	(void)po;
+
+	er.encoded = 0;
+	ASN__ENCODED_OK(er);
+}
+asn_dec_rval_t
+NULL_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, 
+    const void *buf_ptr, size_t size) {
+	asn_dec_rval_t rv;
+
+    (void)buf_ptr;
+    return NULL_decode_uper(opt_codec_ctx, td, constraints,
+            sptr, NULL);
+}
+
+asn_enc_rval_t
+NULL_encode_oer(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+		void *sptr, asn_app_consume_bytes_f *consume_bytes_cb, void *app_key) {
+	asn_enc_rval_t er;
+
+	(void)td;
+	(void)constraints;
+	(void)sptr;
+	(void)app_key;
 
 	er.encoded = 0;
 	ASN__ENCODED_OK(er);

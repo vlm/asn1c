@@ -310,3 +310,120 @@ xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
 	return rc;
 }
 
+/*
+ * Decode an always-primitive type using OER
+ */
+asn_dec_rval_t
+oer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	void **sptr, const void *buf_ptr, size_t size) {
+	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)*sptr;
+	asn_dec_rval_t rval;
+	ber_tlv_len_t length = 0; /* =0 to avoid [incorrect] warning. */
+    ssize_t lenbytes = 0;
+
+	/*
+	 * If the structure is not there, allocate it.
+	 */
+	if(st == NULL) {
+		st = (ASN__PRIMITIVE_TYPE_t *)CALLOC(1, sizeof(*st));
+		if(st == NULL) ASN__DECODE_FAILED;
+		*sptr = (void *)st;
+	}
+
+	ASN_DEBUG("Decoding %s as plain primitive with OER",
+		td->name);
+
+	/*
+	 * extract value length.
+	 */
+    if((lenbytes = ber_fetch_length(0, buf_ptr, size, &length)) < 0) {
+		ASN__DECODE_FAILED;
+    }
+
+	ASN_DEBUG("%s length is %d bytes", td->name, (int)length);
+
+	/*
+	 * Make sure we have this length.
+	 */
+	buf_ptr = ((const char *)buf_ptr) + lenbytes;
+	size -= lenbytes;
+	if(length > (ber_tlv_len_t)size) {
+		rval.code = RC_WMORE;
+		rval.consumed = 0;
+		return rval;
+	}
+
+    rval.consumed += lenbytes;
+	st->size = (int)length;
+	/* The following better be optimized away. */
+	if(sizeof(st->size) != sizeof(length)
+			&& (ber_tlv_len_t)st->size != length) {
+		st->size = 0;
+		ASN__DECODE_FAILED;
+	}
+
+	st->buf = (uint8_t *)MALLOC(length + 1);
+	if(!st->buf) {
+		st->size = 0;
+		ASN__DECODE_FAILED;
+	}
+
+	memcpy(st->buf, buf_ptr, length);
+	st->buf[length] = '\0';		/* Just in case */
+
+	rval.code = RC_OK;
+	rval.consumed += length;
+
+	ASN_DEBUG("Took %ld/%ld bytes to encode %s",
+		(long)rval.consumed,
+		(long)length, td->name);
+
+	return rval;
+}
+
+/*
+ * Encode an always-primitive type using OER.
+ */
+asn_enc_rval_t
+oer_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
+	asn_app_consume_bytes_f *cb, void *app_key) {
+	asn_enc_rval_t erval;
+    size_t lenbytes;
+    uint8_t len[16];
+	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)sptr;
+
+	ASN_DEBUG("%s %s as a primitive type with OER)",
+		cb?"Encoding":"Estimating", td->name);
+
+    lenbytes = der_tlv_length_serialize(st->size, (void *)len, 16);
+    if (lenbytes < 0) {
+        erval.failed_type = td;
+        erval.structure_ptr = sptr;
+        erval.encoded = -1;
+        return erval;
+    } else if(cb){
+        if (cb(len, lenbytes, app_key) < 0) {
+            erval.failed_type = td;
+            erval.structure_ptr = sptr;
+            erval.encoded = -1;
+            return erval;
+        }
+        erval.encoded += lenbytes;
+    }
+
+	if(cb && st->buf) {
+		if(cb(st->buf, st->size, app_key) < 0) {
+			erval.encoded = -1;
+			erval.failed_type = td;
+			erval.structure_ptr = sptr;
+			return erval;
+		}
+	} else {
+		assert(st->buf || st->size == 0);
+	}
+
+	erval.encoded += st->size;
+	ASN__ENCODED_OK(erval);
+}
+

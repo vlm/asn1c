@@ -41,6 +41,8 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	OCTET_STRING_decode_oer,	/* OER decoder */
+	OCTET_STRING_encode_oer,	/* OER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OCTET_STRING_tags,
 	sizeof(asn_DEF_OCTET_STRING_tags)
@@ -1655,6 +1657,192 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	ASN__ENCODED_OK(er);
 }
 
+asn_enc_rval_t
+OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
+        asn_per_constraints_t *constraints, void *sptr, 
+        asn_app_consume_bytes_f *cb, void *app_key) {
+    
+    asn_OCTET_STRING_specifics_t *specs = td->specifics
+		? (asn_OCTET_STRING_specifics_t *)td->specifics
+		: &asn_SPC_OCTET_STRING_specs;
+	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
+	asn_per_constraints_t *pc = constraints ? constraints
+				: td->per_constraints;
+	asn_per_constraint_t *cval;
+	asn_per_constraint_t *csiz;
+	asn_enc_rval_t er = { 0, 0, 0 };
+	enum asn_OS_Subvariant type_variant = specs->subvariant;
+	int fix_last_byte = 0, write_length = 1;
+    
+	if(pc) {
+		cval = &pc->value;
+		csiz = &pc->size;
+	} else {
+		cval = &asn_DEF_OCTET_STRING_constraints.value;
+		csiz = &asn_DEF_OCTET_STRING_constraints.size;
+	}
+    if ((type_variant != ASN_OSUBV_BIT) &&
+            (csiz->flags & APC_CONSTRAINED)) {
+        if (csiz->lower_bound == csiz->upper_bound)
+            write_length = 0;
+    }
+    if(write_length) {
+        uint8_t tmpbuf[16];
+        uint8_t *p = &tmpbuf[0];
+        size_t lensize;
+        if ((lensize = der_tlv_length_serialize(st->size, p, 16)) < 0)
+            ASN__ENCODE_FAILED;
+        else if (lensize > 16)
+            p = MALLOC(lensize);
+        ASN__CALLBACK(p, lensize);
+        er.encoded += lensize;
+    }
+	/*
+	 * Prepare to deal with the last octet of BIT STRING.
+	 */
+	if(type_variant == ASN_OSUBV_BIT) {
+		uint8_t b = st->bits_unused & 0x07;
+		if(b && st->size) fix_last_byte = 1;
+		ASN__CALLBACK(&b, 1);
+		er.encoded++;
+	}
+
+	/* Invoke callback for the main part of the buffer */
+	ASN__CALLBACK(st->buf, st->size - fix_last_byte);
+
+	/* The last octet should be stripped off the unused bits */
+	if(fix_last_byte) {
+		uint8_t b = st->buf[st->size-1] & (0xff << st->bits_unused);
+		ASN__CALLBACK(&b, 1);
+	}
+
+	er.encoded += st->size;
+	ASN__ENCODED_OK(er);
+cb_failed:
+	ASN__ENCODE_FAILED;
+}
+asn_dec_rval_t
+OCTET_STRING_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+	void **sptr, const void *buf_ptr, size_t size) {
+
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+		? (asn_OCTET_STRING_specifics_t *)td->specifics
+		: &asn_SPC_OCTET_STRING_specs;
+	asn_per_constraints_t *pc = constraints ? constraints
+				: td->per_constraints;
+	asn_per_constraint_t *cval;
+	asn_per_constraint_t *csiz;
+	asn_dec_rval_t rval = { RC_OK, 0 };
+	BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
+	ssize_t consumed_myself = 0;
+	int repeat;
+	enum {
+		OS__BPC_BIT	= 0,
+		OS__BPC_CHAR	= 1,
+		OS__BPC_U16	= 2,
+		OS__BPC_U32	= 4
+	} bpc;	/* Bytes per character */
+	unsigned int unit_bits;
+	unsigned int canonical_unit_bits;
+    ssize_t slen = 0;
+    ssize_t sslen = 0;
+
+	(void)opt_codec_ctx;
+
+	if(pc) {
+		cval = &pc->value;
+		csiz = &pc->size;
+	} else {
+		cval = &asn_DEF_OCTET_STRING_constraints.value;
+		csiz = &asn_DEF_OCTET_STRING_constraints.size;
+	}
+
+	switch(specs->subvariant) {
+	default:
+		ASN_DEBUG("Unrecognized subvariant %d", specs->subvariant);
+	    RETURN(RC_FAIL);
+	case ASN_OSUBV_BIT:
+		canonical_unit_bits = unit_bits = 1;
+		bpc = OS__BPC_BIT;
+		break;
+	case ASN_OSUBV_ANY:
+	case ASN_OSUBV_STR:
+		canonical_unit_bits = unit_bits = 8;
+		if(cval->flags & APC_CONSTRAINED)
+			unit_bits = cval->range_bits;
+		bpc = OS__BPC_CHAR;
+		break;
+	case ASN_OSUBV_U16:
+		canonical_unit_bits = unit_bits = 16;
+		if(cval->flags & APC_CONSTRAINED)
+			unit_bits = cval->range_bits;
+		bpc = OS__BPC_U16;
+		break;
+	case ASN_OSUBV_U32:
+		canonical_unit_bits = unit_bits = 32;
+		if(cval->flags & APC_CONSTRAINED)
+			unit_bits = cval->range_bits;
+		bpc = OS__BPC_U32;
+		break;
+	}
+
+	/*
+	 * Allocate the string.
+	 */
+	if(!st) {
+		st = (BIT_STRING_t *)(*sptr = CALLOC(1, specs->struct_size));
+		if(!st) RETURN(RC_FAIL);
+	}
+
+    if (csiz && cval) {
+	    ASN_DEBUG("OER Decoding %s size %ld .. %ld bits %d",
+		    csiz->flags & APC_EXTENSIBLE ? "extensible" : "non-extensible",
+		    csiz->lower_bound, csiz->upper_bound, csiz->effective_bits);
+    }
+	if(csiz->effective_bits >= 0) {
+		FREEMEM(st->buf);
+		if(bpc) {
+			st->size = csiz->upper_bound * bpc;
+		} else {
+			st->size = (csiz->upper_bound + 7) >> 3;
+		}
+		st->buf = (uint8_t *)MALLOC(st->size + 1);
+		if(!st->buf) { st->size = 0; RETURN(RC_FAIL); }
+	}
+    if (csiz->effective_bits == 0) {
+        /* x696, #14.1: no length prefix. */
+        memset(st->buf, 0, st->size);
+        if (bpc) {
+            memcpy(st->buf, buf_ptr, csiz->upper_bound * bpc);
+            consumed_myself += bpc * csiz->upper_bound;
+            RETURN(RC_OK);
+        } else {
+            int bytes = (csiz->upper_bound + 7) >> 3;
+            ASN_DEBUG("Decoding BIT STTRING size %ld\n", csiz->upper_bound);
+            memcpy(st->buf, buf_ptr, bytes);
+            consumed_myself +=  bytes;
+            RETURN(RC_OK);
+        }
+    }
+    sslen = ber_fetch_length(0, buf_ptr, size, &slen);
+    if (sslen < 0 || sslen > 8)
+        RETURN(RC_WMORE);
+    consumed_myself += sslen;
+    buf_ptr += sslen;
+    ASN_DEBUG("OER string length %d len_bytes=%d\n", slen, sslen);
+    size -= sslen;
+    if (!st->buf) {
+        st->buf = MALLOC(slen + 1);
+        st->size = slen;
+    }
+    /*TODO: call OCTET_STRING_per_get_characters ? */
+    memcpy(st->buf, buf_ptr, slen);
+    st->buf[st->size] = 0;
+	st->size = slen;
+    consumed_myself += slen;
+    RETURN(RC_OK);
+}
 int
 OCTET_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
