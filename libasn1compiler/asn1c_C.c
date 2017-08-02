@@ -40,9 +40,9 @@ static int compute_extensions_start(asn1p_expr_t *expr);
 static int expr_break_recursion(arg_t *arg, asn1p_expr_t *expr);
 static int expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr);
 static int expr_elements_count(arg_t *arg, asn1p_expr_t *expr);
-static int emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, char *type);
-static int emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range, char *type);
-static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, char *type);
+static int emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range);
+static int emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range);
+static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, const char *type);
 static int emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
@@ -1982,7 +1982,7 @@ emit_single_member_OER_constraint_comment(arg_t *arg, asn1cnst_range_t *range, c
 }
 
 static int
-emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, char *type) {
+emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range) {
     if(!range) {
         /* oer_support.h: asn_oer_constraint_s */
         OUT("{ 0, 0 }");
@@ -1998,15 +1998,16 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, cha
         unsigned width = 0;
         unsigned positive = 0;
 
+
         if(lb >= 0) {
             /* X.969 08/2015 10.2(a) */
             if(ub <= 255) {
                 width = 1;
             } else if(ub <= 65535) {
                 width = 2;
-            } else if(ub <= 4294967295UL) {
+            } else if((unsigned long long)ub <= 4294967295UL) {
                 width = 4;
-            } else if(ub <= 18446744073709551615ULL) {
+            } else if((unsigned long long)ub <= 18446744073709551615ULL) {
                 width = 8;
             }
             positive = 1;
@@ -2019,7 +2020,7 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, cha
                 width = 2;
             } else if(lb >= -2147483648L && ub <= 2147483647L) {
                 width = 4;
-            } else if(lb >= -9223372036854775808LL
+            } else if(lb >= (-9223372036854775807LL-1)
                       && ub <= 9223372036854775807LL) {
                 width = 8;
             }
@@ -2033,7 +2034,7 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range, cha
 }
 
 static int
-emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range, char *type) {
+emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range) {
     if(!range) {
         /* oer_support.h: asn_oer_constraint_s */
 		OUT("-1");
@@ -2056,7 +2057,7 @@ emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range, char
 }
 
 static int
-emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alphabetsize, char *type) {
+emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alphabetsize, const char *type) {
     if(!range || range->incompatible || range->not_PER_visible) {
         OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
 		return 0;
@@ -2200,7 +2201,7 @@ emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
     range = asn1constraint_compute_OER_range(expr->Identifier, etype,
                                              expr->combined_constraints,
                                              ACT_EL_RANGE, 0, 0, 0);
-    if(emit_single_member_OER_constraint_value(arg, range, 0)) {
+    if(emit_single_member_OER_constraint_value(arg, range)) {
         return -1;
     }
     emit_single_member_OER_constraint_comment(arg, range, 0);
@@ -2212,7 +2213,7 @@ emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
     range = asn1constraint_compute_OER_range(expr->Identifier, etype,
                                              expr->combined_constraints,
                                              ACT_CT_SIZE, 0, 0, 0);
-    if(emit_single_member_OER_constraint_size(arg, range, "SIZE")) {
+    if(emit_single_member_OER_constraint_size(arg, range)) {
         return -1;
     }
     emit_single_member_OER_constraint_comment(arg, range, "SIZE");
