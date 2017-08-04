@@ -36,7 +36,7 @@ the following line
 and end with the "END" token.
 Be careful not to copy any non-ASN.1 preambles from that .DOC file.
 
-After obtaining the tap3.asn1, type `make` in the directory containing
+After obtaining the ulp.asn1, type `make` in the directory containing
 this README file.
 
 ulp-dump USAGE
