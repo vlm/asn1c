@@ -312,7 +312,7 @@ char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *buf) {
 		break;
 	}
 	buf += snprintf(buf + strlen(buf), end - buf,
-		"%" PRIdASN "]", tag->tag_value);
+		"%s]", asn1p_itoa(tag->tag_value));
 	assert((unsigned int)(buf - end) > sizeof(" IMPLICIT "));
 
 	switch(tag->tag_mode) {

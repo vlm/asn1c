@@ -40,6 +40,7 @@
 #include <OBJECT_IDENTIFIER.c>
 #include <RELATIVE-OID.c>
 #include <asn_codecs_prim.c>
+#include <asn1p_integer.c>
 
 #undef COPYRIGHT
 #define COPYRIGHT "Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>\n"
@@ -164,10 +165,10 @@ typedef enum pd_code {
     PD_EOF = 1,
 } pd_code_e;
 static pd_code_e process_deeper(const char *fname, FILE *fp,
-                                asn1c_integer_t *offset, int level,
+                                size_t *offset, int level,
                                 ssize_t limit, ber_tlv_len_t *frame_size,
                                 ber_tlv_len_t effective_size, int expect_eoc);
-static void print_TL(int fin, asn1c_integer_t offset, int level, int constr,
+static void print_TL(int fin, size_t offset, int level, int constr,
                      ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t,
                      ber_tlv_len_t effective_frame_size);
 static int print_V(const char *fname, FILE *fp, ber_tlv_tag_t, ber_tlv_len_t);
@@ -179,7 +180,7 @@ static int
 process(const char *fname) {
     FILE *fp;
     pd_code_e pdc;
-    asn1c_integer_t offset = 0;   /* Stream decoding position */
+    size_t offset = 0;   /* Stream decoding position */
     ber_tlv_len_t frame_size = 0; /* Single frame size */
 
     if(strcmp(fname, "-")) {
@@ -197,8 +198,7 @@ process(const char *fname) {
      */
     for(; offset < skip_bytes; offset++) {
         if(fgetc(fp) == -1) {
-            fprintf(stderr, "%s: input source (%" PRIdASN
-                            " bytes) "
+            fprintf(stderr, "%s: input source (%zu bytes) "
                             "has less data than \"-s %d\" switch "
                             "wants to skip\n",
                     fname, offset, skip_bytes);
@@ -224,7 +224,7 @@ process(const char *fname) {
  * Process the TLV recursively.
  */
 static pd_code_e
-process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level,
+process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
                ssize_t limit, ber_tlv_len_t *frame_size,
                ber_tlv_len_t effective_size, int expect_eoc) {
     unsigned char tagbuf[32];
@@ -245,8 +245,7 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level,
         if(limit >= 0 && tblen >= limit) {
             fprintf(stderr,
                     "%s: Too long TL sequence (%ld >= %ld)"
-                    " at %" PRIdASN
-                    ". "
+                    " at %zu. "
                     "Broken or maliciously constructed file\n",
                     fname, (long)tblen, (long)limit, *offset);
             return PD_FAILED;
@@ -258,7 +257,7 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level,
             if(limit > 0 || expect_eoc) {
                 fprintf(stderr,
                         "%s: Unexpected end of file (TL)"
-                        " at %" PRIdASN "\n",
+                        " at %zu\n",
                         fname, *offset);
                 return PD_FAILED;
             } else {
@@ -276,7 +275,7 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level,
         case -1:
             fprintf(stderr,
                     "%s: Fatal error decoding tag"
-                    " at %" PRIdASN "+%ld\n",
+                    " at %zu+%ld\n",
                     fname, *offset, (long)tblen);
             return PD_FAILED;
         case 0:
@@ -294,7 +293,7 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level,
         case -1:
             fprintf(stderr,
                     "%s: Fatal error decoding value length"
-                    " at %" PRIdASN "\n",
+                    " at %zu\n",
                     fname, *offset + t_len);
             return PD_FAILED;
         case 0:
@@ -386,7 +385,7 @@ process_deeper(const char *fname, FILE *fp, asn1c_integer_t *offset, int level,
 }
 
 static void
-print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen,
+print_TL(int fin, size_t offset, int level, int constr, ssize_t tlen,
          ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len,
          ber_tlv_len_t effective_size) {
     if(fin && !constr) {
@@ -400,7 +399,7 @@ print_TL(int fin, asn1c_integer_t offset, int level, int constr, ssize_t tlen,
     printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
 
     /* Print out the offset of this boundary, even if closing tag */
-    if(!minimalistic) printf(" O=\"%" PRIdASN "\"", offset);
+    if(!minimalistic) printf(" O=\"%zu\"", offset);
 
     printf(" T=\"");
     ber_tlv_tag_fwrite(tlv_tag, stdout);
@@ -573,7 +572,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
     switch(etype) {
     case ASN_BASIC_INTEGER:
     case ASN_BASIC_ENUMERATED:
-        printf("%" PRIdASN, collector);
+        printf("%s", asn1p_itoa(collector));
         break;
     case ASN_BASIC_OBJECT_IDENTIFIER:
         if(vbuf) {
@@ -590,7 +589,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
                 printf(" F>");
                 for(i = 0; i < arcno; i++) {
                     if(i) printf(".");
-                    printf("%" PRIuASN, arcs[i]);
+                    printf("%s", asn1p_itoa(arcs[i]));
                 }
                 FREEMEM(vbuf);
                 vbuf = 0;
@@ -611,7 +610,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
                 printf(" F>");
                 for(i = 0; i < arcno; i++) {
                     if(i) printf(".");
-                    printf("%" PRIuASN, arcs[i]);
+                    printf("%s", asn1p_itoa(arcs[i]));
                 }
                 FREEMEM(vbuf);
                 vbuf = 0;

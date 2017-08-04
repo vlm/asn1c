@@ -9,6 +9,7 @@
 #include "asn1c_misc.h"
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
+#include <asn1parser.h>
 
 typedef struct tag2el_s {
 	struct asn1p_type_tag_s el_tag;
@@ -143,8 +144,8 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 				OUT("\t");
 				out_name_chain(arg, ONC_noflags);
 				OUT("_%s", MKID(v));
-				OUT("\t= %" PRIdASN "%s\n",
-					v->value->value.v_integer,
+				OUT("\t= %s%s\n",
+					asn1p_itoa(v->value->value.v_integer),
 					(eidx+1 < el_count) ? "," : "");
 				v2e[eidx].name = v->Identifier;
 				v2e[eidx].value = v->value->value.v_integer;
@@ -184,8 +185,8 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byValue);
 		for(eidx = 0; eidx < el_count; eidx++) {
 			v2e[eidx].idx = eidx;
-			OUT("\t{ %" PRIdASN ",\t%ld,\t\"%s\" }%s\n",
-				v2e[eidx].value,
+			OUT("\t{ %s,\t%ld,\t\"%s\" }%s\n",
+				asn1p_itoa(v2e[eidx].value),
 				(long)strlen(v2e[eidx].name), v2e[eidx].name,
 				(eidx + 1 < el_count) ? "," : "");
 		}
@@ -197,10 +198,10 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 			MKID(expr), expr->_type_unique_index);
 		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byName);
 		for(eidx = 0; eidx < el_count; eidx++) {
-			OUT("\t%d%s\t/* %s(%" PRIdASN ") */\n",
+			OUT("\t%d%s\t/* %s(%s) */\n",
 				v2e[eidx].idx,
 				(eidx + 1 < el_count) ? "," : "",
-				v2e[eidx].name, v2e[eidx].value);
+				v2e[eidx].name, asn1p_itoa(v2e[eidx].value));
 		}
 		if(map_extensions)
 			OUT("\t/* This list is extensible */\n");
@@ -282,8 +283,8 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 			OUT("\t");
 			out_name_chain(arg, ONC_noflags);
 			OUT("_%s", MKID(v));
-			OUT("\t= %" PRIdASN "%s\n",
-				v->value->value.v_integer,
+			OUT("\t= %s%s\n",
+				asn1p_itoa(v->value->value.v_integer),
 				(eidx < el_count) ? "," : "");
 		}
 		OUT("} e_");
@@ -1628,7 +1629,7 @@ _print_tag(arg_t *arg, struct asn1p_type_tag_s *tag) {
 	case TC_NOCLASS:
 		break;
 	}
-	OUT(" | (%" PRIdASN " << 2))", tag->tag_value);
+	OUT(" | (%s << 2))", asn1p_itoa(tag->tag_value));
 
 	return 0;
 }
@@ -1993,12 +1994,12 @@ emit_single_member_OER_constraint_comment(arg_t *arg, asn1cnst_range_t *range, c
 		if(type) OUT("(%s", type);
 		OUT("(");
 		if(range->left.type == ARE_VALUE)
-			OUT("%" PRIdASN, range->left.value);
+			OUT("%s", asn1p_itoa(range->left.value));
 		else
 			OUT("MIN");
 		OUT("..");
 		if(range->right.type == ARE_VALUE)
-			OUT("%" PRIdASN, range->right.value);
+			OUT("%s", asn1p_itoa(range->right.value));
 		else
 			OUT("MAX");
 		if(range->extensible) OUT(",...");
@@ -2073,7 +2074,7 @@ emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *range) {
         if(range->left.type == ARE_VALUE && range->right.type == ARE_VALUE
            && range->left.value == range->right.value
            && range->left.value >= 0) {
-            OUT("%" PRIdASN "", range->left.value);
+            OUT("%s", asn1p_itoa(range->left.value));
         } else {
             OUT("-1");
         }
@@ -2183,12 +2184,12 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 		if(type) OUT("(%s", type);
 		OUT("(");
 		if(range->left.type == ARE_VALUE)
-			OUT("%" PRIdASN, range->left.value);
+			OUT("%s", asn1p_itoa(range->left.value));
 		else
 			OUT("MIN");
 		OUT("..");
 		if(range->right.type == ARE_VALUE)
-			OUT("%" PRIdASN, range->right.value);
+			OUT("%s", asn1p_itoa(range->right.value));
 		else
 			OUT("MAX");
 		if(range->extensible) OUT(",...");
@@ -2462,17 +2463,17 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		if(fits_long && !expr->marker.default_value->value.v_integer)
 			expr->marker.flags &= ~EM_INDIRECT;
 		if(!out) {
-			OUT("asn_DFL_%d_set_%" PRIdASN
-				",\t/* DEFAULT %" PRIdASN " */\n",
+			OUT("asn_DFL_%d_set_%s,",
 				expr->_type_unique_index,
-				expr->marker.default_value->value.v_integer,
-				expr->marker.default_value->value.v_integer);
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
+            OUT("\t/* DEFAULT %s */\n",
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
 			return 1;
 		}
 		REDIR(OT_STAT_DEFS);
-		OUT("static int asn_DFL_%d_set_%" PRIdASN "(int set_value, void **sptr) {\n",
+		OUT("static int asn_DFL_%d_set_%s(int set_value, void **sptr) {\n",
 			expr->_type_unique_index,
-			expr->marker.default_value->value.v_integer);
+			asn1p_itoa(expr->marker.default_value->value.v_integer));
 		INDENT(+1);
 		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
 		OUT("\n");
@@ -2484,8 +2485,8 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		OUT("\n");
 		OUT("if(set_value) {\n");
 		INDENT(+1);
-		OUT("/* Install default value %" PRIdASN " */\n",
-			expr->marker.default_value->value.v_integer);
+		OUT("/* Install default value %s */\n",
+			asn1p_itoa(expr->marker.default_value->value.v_integer));
 		if(fits_long) {
 			OUT("*st = ");
 			OINT(expr->marker.default_value->value.v_integer);
@@ -2499,17 +2500,17 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		INDENT(-1);
 		OUT("} else {\n");
 		INDENT(+1);
-		OUT("/* Test default value %" PRIdASN " */\n",
-			expr->marker.default_value->value.v_integer);
+		OUT("/* Test default value %s */\n",
+			asn1p_itoa(expr->marker.default_value->value.v_integer));
 		if(fits_long) {
-			OUT("return (*st == %" PRIdASN ");\n",
-				expr->marker.default_value->value.v_integer);
+			OUT("return (*st == %s);\n",
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
 		} else {
 			OUT("long value;\n");
 			OUT("if(asn_INTEGER2long(st, &value))\n");
 			OUT("\treturn -1;\n");
-			OUT("return (value == %" PRIdASN ");\n",
-				expr->marker.default_value->value.v_integer);
+			OUT("return (value == %s);\n",
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
 		}
 		INDENT(-1);
 		OUT("}\n");

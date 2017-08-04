@@ -156,11 +156,11 @@ asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
 		if(arcname) {
 			accum += safe_printf("%s", arcname);
 			if(oid->arcs[ac].number >= 0) {
-				accum += safe_printf("(%" PRIdASN ")",
-					oid->arcs[ac].number);
+				accum += safe_printf("(%s)",
+					asn1p_itoa(oid->arcs[ac].number));
 			}
 		} else {
-			accum += safe_printf("%" PRIdASN, oid->arcs[ac].number);
+			accum += safe_printf("%s", asn1p_itoa(oid->arcs[ac].number));
 		}
 	}
 	safe_printf(" }");
@@ -214,7 +214,7 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 			val->value.v_type, flags, 0);
 		return 0;
 	case ATV_INTEGER:
-		safe_printf("%" PRIdASN, val->value.v_integer);
+		safe_printf("%s", asn1p_itoa(val->value.v_integer));
 		return 0;
 	case ATV_MIN: safe_printf("MIN"); return 0;
 	case ATV_MAX: safe_printf("MAX"); return 0;
@@ -476,7 +476,7 @@ asn1print_crange_value(asn1cnst_edge_t *edge, int as_char) {
 		if(as_char) {
 			safe_printf("\"%c\"", (unsigned char)edge->value);
 		} else {
-			safe_printf("%" PRIdASN, edge->value);
+			safe_printf("%s", asn1p_itoa(edge->value));
 		}
 	}
 	return 0;

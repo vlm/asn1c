@@ -19,6 +19,7 @@ libasn1parser_la_SOURCES =		\
 	asn1p_param.c asn1p_param.h	\
 	asn1p_class.c asn1p_class.h	\
 	asn1p_ref.c asn1p_ref.h		\
+	asn1p_integer.c asn1p_integer.h	\
 	asn1p_list.h
 
 asn1parser.h: asn1p_expr_str.h
