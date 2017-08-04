@@ -1,6 +1,6 @@
 /*
  * Generic converter template for a selected ASN.1 type.
- * Copyright (c) 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2005-2017 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * 
  * To compile with your own ASN.1 type, please redefine the PDU as shown:
@@ -50,6 +50,7 @@ static int opt_onepdu;	/* -1 (decode single PDU) */
 static enum input_format {
 	INP_BER,	/* -iber: BER input */
 	INP_XER,	/* -ixer: XER input */
+	INP_OER,	/* -ioer: OER input */
 	INP_PER		/* -iper: Unaligned PER input */
 } iform;	/* -i<format> */
 
@@ -57,6 +58,7 @@ static enum input_format {
 static enum output_format {
 	OUT_XER,	/* -oxer: XER (XML) output */
 	OUT_DER,	/* -oder: DER (BER) output */
+	OUT_OER,	/* -ooer: Canonical OER output */
 	OUT_PER,	/* -oper: Unaligned PER output */
 	OUT_TEXT,	/* -otext: semi-structured text */
 	OUT_NULL	/* -onull: No pretty-printing */
@@ -91,8 +93,10 @@ main(int ac, char *av[]) {
 	int num;
 	int ch;
 
-	/* Figure out if Unaligned PER needs to be default */
-	if(pduType->uper_decoder)
+	/* Figure out if specialty decoder needs to be default */
+	if(pduType->oer_decoder)
+		iform = INP_OER;
+	else if(pduType->uper_decoder)
 		iform = INP_PER;
 
 	/*
@@ -103,6 +107,8 @@ main(int ac, char *av[]) {
 	case 'i':
 		if(optarg[0] == 'b') { iform = INP_BER; break; }
 		if(optarg[0] == 'x') { iform = INP_XER; break; }
+		if(pduType->oer_decoder
+		&& optarg[0] == 'p') { iform = INP_OER; break; }
 		if(pduType->uper_decoder
 		&& optarg[0] == 'p') { iform = INP_PER; break; }
 		fprintf(stderr, "-i<format>: '%s': improper format selector\n",
@@ -110,6 +116,8 @@ main(int ac, char *av[]) {
 		exit(EX_UNAVAILABLE);
 	case 'o':
 		if(optarg[0] == 'd') { oform = OUT_DER; break; }
+		if(pduType->oer_encoder
+		&& optarg[0] == 'o') { oform = OUT_OER; break; }
 		if(pduType->uper_encoder
 		&& optarg[0] == 'p') { oform = OUT_PER; break; }
 		if(optarg[0] == 'x') { oform = OUT_XER; break; }
@@ -194,14 +202,22 @@ main(int ac, char *av[]) {
 #endif
 		fprintf(stderr, "Usage: %s [options] <data.ber> ...\n", av[0]);
 		fprintf(stderr, "Where options are:\n");
+		if(pduType->oer_decoder)
+		fprintf(stderr,
+		"  -ioer        Input is in OER (Octet Encoding Rules)%s\n",
+			iform == INP_OER ? " (DEFAULT)" : "");
 		if(pduType->uper_decoder)
 		fprintf(stderr,
-		"  -iper        Input is in Unaligned PER (Packed Encoding Rules) (DEFAULT)\n");
+		"  -iper        Input is in Unaligned PER (Packed Encoding Rules)%s\n",
+			iform == INP_PER ? " (DEFAULT)" : "");
 		fprintf(stderr,
 		"  -iber        Input is in BER (Basic Encoding Rules)%s\n",
-			iform == INP_PER ? "" : " (DEFAULT)");
+			iform == INP_BER ? " (DEFAULT)" : "");
 		fprintf(stderr,
 		"  -ixer        Input is in XER (XML Encoding Rules)\n");
+		if(pduType->oer_encoder)
+		fprintf(stderr,
+		"  -ooer        Output in Canonical OER (Octet Encoding Rules)\n");
 		if(pduType->uper_encoder)
 		fprintf(stderr,
 		"  -oper        Output in Unaligned PER (Packed Encoding Rules)\n");
@@ -311,6 +327,16 @@ main(int ac, char *av[]) {
 				exit(EX_UNAVAILABLE);
 			}
 			DEBUG("Encoded in %ld bytes of DER", (long)erv.encoded);
+			break;
+		case OUT_OER:
+			erv = oer_encode(pduType, structure, write_out, stdout);
+			if(erv.encoded < 0) {
+				fprintf(stderr,
+					"%s: Cannot convert %s into oER\n",
+					name, pduType->name);
+				exit(EX_UNAVAILABLE);
+			}
+			DEBUG("Encoded in %ld bytes of OER", (long)erv.encoded);
 			break;
 		case OUT_PER:
 			erv = uper_encode(pduType, structure, write_out, stdout);
@@ -629,6 +655,10 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
 		switch(iform) {
 		case INP_BER:
 			rval = ber_decode(opt_codec_ctx, pduType,
+				(void **)&structure, i_bptr, i_size);
+			break;
+		case INP_OER:
+			rval = oer_decode(opt_codec_ctx, pduType,
 				(void **)&structure, i_bptr, i_size);
 			break;
 		case INP_XER:
