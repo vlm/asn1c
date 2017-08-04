@@ -139,11 +139,12 @@
      TOK_VideotexString = 355,
      TOK_VisibleString = 356,
      TOK_WITH = 357,
-     TOK_EXCEPT = 358,
-     TOK_INTERSECTION = 359,
-     TOK_UNION = 360,
-     TOK_TwoDots = 361,
-     TOK_ThreeDots = 362
+     UTF8_BOM = 358,
+     TOK_EXCEPT = 359,
+     TOK_INTERSECTION = 360,
+     TOK_UNION = 361,
+     TOK_TwoDots = 362,
+     TOK_ThreeDots = 363
    };
 #endif
 /* Tokens.  */
@@ -247,11 +248,12 @@
 #define TOK_VideotexString 355
 #define TOK_VisibleString 356
 #define TOK_WITH 357
-#define TOK_EXCEPT 358
-#define TOK_INTERSECTION 359
-#define TOK_UNION 360
-#define TOK_TwoDots 361
-#define TOK_ThreeDots 362
+#define UTF8_BOM 358
+#define TOK_EXCEPT 359
+#define TOK_INTERSECTION 360
+#define TOK_UNION 361
+#define TOK_TwoDots 362
+#define TOK_ThreeDots 363
 
 
 
@@ -294,7 +296,7 @@ typedef union YYSTYPE
 	} tv_nametag;
 }
 /* Line 1529 of yacc.c.  */
-#line 298 "asn1p_y.h"
+#line 300 "asn1p_y.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
