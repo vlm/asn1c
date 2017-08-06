@@ -108,7 +108,7 @@ main(int ac, char *av[]) {
         if(optarg[0] == 'b') { iform = INP_BER; break; }
         if(optarg[0] == 'x') { iform = INP_XER; break; }
         if(pduType->oer_decoder
-        && optarg[0] == 'p') { iform = INP_OER; break; }
+        && optarg[0] == 'o') { iform = INP_OER; break; }
         if(pduType->uper_decoder
         && optarg[0] == 'p') { iform = INP_PER; break; }
         fprintf(stderr, "-i<format>: '%s': improper format selector\n",
@@ -169,6 +169,19 @@ main(int ac, char *av[]) {
             while(*pdu && strcmp((*pdu)->name, optarg)) pdu++;
             if(*pdu) { pduType = *pdu; break; }
             fprintf(stderr, "-p %s: Unrecognized PDU\n", optarg);
+            exit(EX_USAGE);
+        }
+#else   /* Without -pdu=auto there's just a single type */
+        if(strcmp(optarg, "list") == 0) {
+            fprintf(stderr, "Available PDU types:\n");
+            printf("%s\n", pduType->name);
+            exit(0);
+        } else if(optarg[0] >= 'A' && optarg[0] <= 'Z') {
+            if(strcmp(optarg, pduType->name) == 0) {
+                break;
+            }
+            fprintf(stderr, "-p %s: Unrecognized PDU\n", optarg);
+            exit(EX_USAGE);
         }
 #endif    /* ASN_PDU_COLLECTION */
         fprintf(stderr, "-p %s: Unrecognized option\n", optarg);
