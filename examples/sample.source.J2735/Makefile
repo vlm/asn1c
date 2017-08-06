@@ -1053,7 +1053,7 @@ OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 all: MessageFrame.c $(TARGET)
 
 $(TARGET): ${OBJS}
-	$(CC) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
 
 .SUFFIXES:
 .SUFFIXES: .c .o
@@ -1068,10 +1068,10 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=MessageFrame -fcompound-names -gen-PER ../j2735.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=MessageFrame -fcompound-names -gen-PER ../J2735_201603.asn1
 
 
-MessageFrame.c: ../sample.makefile.regen ../j2735.asn1
+MessageFrame.c: ../sample.makefile.regen ../J2735_201603.asn1
 	make regen-makefile
 	@touch MessageFrame.c
 	make
@@ -1079,7 +1079,7 @@ MessageFrame.c: ../sample.makefile.regen ../j2735.asn1
 regen-makefile:
 	TITLE="J2735 DSRC decoder" \
 	ASN1CMDOPTS="-fcompound-names -gen-PER" \
-	ASN1MODULES="../j2735.asn1" \
+	ASN1MODULES="../J2735_201603.asn1" \
 	ASN1PDU=MessageFrame \
 	PROGNAME=j2735-dump \
 	CPPFLAGS="" \
