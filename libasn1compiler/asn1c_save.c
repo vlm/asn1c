@@ -175,7 +175,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
         " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
         "\nall: $(TARGET)\n"
         "\n$(TARGET): ${OBJS}"
-        "\n\t$(CC) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)\n"
+        "\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)\n"
         "\n.SUFFIXES:"
         "\n.SUFFIXES: .c .o\n"
         "\n.c.o:"
