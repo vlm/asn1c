@@ -102,7 +102,7 @@ const char *asn1p_itoa(asn1c_integer_t v) {
     static char static_buf[128];
     int ret = asn1p_itoa_s(static_buf, sizeof(static_buf), v);
     if(ret > 0) {
-        assert(ret < sizeof(static_buf));
+        assert((size_t)ret < sizeof(static_buf));
         return static_buf;
     } else {
         return NULL;
