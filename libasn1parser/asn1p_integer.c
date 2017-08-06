@@ -114,7 +114,7 @@ int asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
 
     if(v >= LONG_MIN && v < LONG_MAX) {
         int ret = snprintf(buf, size, "%ld", (long)v);
-        if(ret < 0 || ret >= size) {
+        if(ret < 0 || (size_t)ret >= size) {
             return -1;
         }
         return ret;
@@ -155,9 +155,10 @@ int asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
     assert(head);
     int ret = snprintf(tmp_buf, sizeof(tmp_buf), "%s%s%s", sign ? "-" : "",
                        head, rest);
-    assert(ret > 0 && ret < sizeof(tmp_buf));
-    if(size <= ret)
+    if(ret < 0 || (size_t)ret >= size) {
+        assert(ret > 0 && (size_t)ret < sizeof(tmp_buf));
         return -1;
+    }
     memcpy(buf, tmp_buf, ret);
     buf[ret] = '\0';
     return ret;
