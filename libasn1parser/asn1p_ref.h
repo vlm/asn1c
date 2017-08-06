@@ -58,6 +58,6 @@ asn1p_ref_t *asn1p_ref_clone(asn1p_ref_t *ref);
  * -1/ENOMEM:	Memory allocation failed
  */
 int asn1p_ref_add_component(asn1p_ref_t *,
-	char *name, enum asn1p_ref_lex_type_e);
+	const char *name, enum asn1p_ref_lex_type_e);
 
 #endif	/* ASN1_PARSER_REFERENCE_H */

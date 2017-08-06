@@ -40,7 +40,7 @@ asn1p_ref_free(asn1p_ref_t *ref) {
 }
 
 static enum asn1p_ref_lex_type_e
-asn1p_ref_name2lextype(char *name) {
+asn1p_ref_name2lextype(const char *name) {
 	enum asn1p_ref_lex_type_e lex_type;
 	int has_lowercase = 0;
 
@@ -51,7 +51,7 @@ asn1p_ref_name2lextype(char *name) {
 			lex_type = RLT_Amplowercase;
 		}
 	} else if(*name >= 'A' && *name <= 'Z') {
-		char *p;
+		const char *p;
 
 		for(p = name; *p; p++) {
 			if(*p >= 'a' && *p <= 'z') {
@@ -78,7 +78,7 @@ asn1p_ref_name2lextype(char *name) {
 }
 
 int
-asn1p_ref_add_component(asn1p_ref_t *ref, char *name, enum asn1p_ref_lex_type_e lex_type) {
+asn1p_ref_add_component(asn1p_ref_t *ref, const char *name, enum asn1p_ref_lex_type_e lex_type) {
 
 	if(!ref || !name
 	|| (int)lex_type < RLT_UNKNOWN || lex_type >= RLT_MAX) {
