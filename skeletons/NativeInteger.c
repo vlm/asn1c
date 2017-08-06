@@ -244,6 +244,8 @@ NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	ASN__ENCODED_OK(er);
 }
 
+#ifndef  ASN_DISABLE_PER_SUPPORT
+
 asn_dec_rval_t
 NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
@@ -303,6 +305,8 @@ NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 	return er;
 }
+
+#endif  /* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * INTEGER specific human-readable output.

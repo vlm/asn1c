@@ -4722,6 +4722,12 @@ ASN_MODULE_HEADERS+=xer_decoder.h
 ASN_MODULE_SOURCES+=xer_decoder.c
 ASN_MODULE_HEADERS+=xer_encoder.h
 ASN_MODULE_SOURCES+=xer_encoder.c
+ASN_MODULE_HEADERS+=oer_decoder.h
+ASN_MODULE_SOURCES+=oer_decoder.c
+ASN_MODULE_HEADERS+=oer_encoder.h
+ASN_MODULE_SOURCES+=oer_encoder.c
+ASN_MODULE_HEADERS+=oer_support.h
+ASN_MODULE_SOURCES+=oer_support.c
 ASN_MODULE_HEADERS+=per_support.h
 ASN_MODULE_SOURCES+=per_support.c
 ASN_MODULE_HEADERS+=per_decoder.h
@@ -4740,19 +4746,19 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = rrc-dump
-CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DPDU=DL_DCCH_Message -DASN_PDU_COLLECTION -I.
+CPPFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DASN_DISABLE_OER_SUPPORT -DPDU=DL_DCCH_Message -DASN_PDU_COLLECTION -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: DL-DCCH-Message.c $(TARGET)
 
 $(TARGET): ${OBJS}
-	$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
+	$(CC) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
 
 .SUFFIXES:
 .SUFFIXES: .c .o
 
 .c.o:
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 clean:
 	rm -f $(TARGET)
@@ -4774,7 +4780,7 @@ regen-makefile:
 	ASN1MODULES="../rrc-7.1.0.asn1" \
 	ASN1PDU=DL-DCCH-Message \
 	PROGNAME=rrc-dump \
-	CFLAGS="" \
+	CPPFLAGS="" \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-per

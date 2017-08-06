@@ -1331,6 +1331,8 @@ OCTET_STRING_per_put_characters(asn_per_outp_t *po, const uint8_t *buf,
 	return 0;
 }
 
+#ifndef  ASN_DISABLE_PER_SUPPORT
+
 asn_dec_rval_t
 OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
@@ -1662,6 +1664,8 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+
+#endif  /* ASN_DISABLE_PER_SUPPORT */
 
 int
 OCTET_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
