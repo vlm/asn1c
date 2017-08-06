@@ -984,7 +984,6 @@ ASN_MODULE_SOURCES+=INTEGER.c
 ASN_MODULE_SOURCES+=NativeEnumerated.c
 ASN_MODULE_HEADERS+=NativeInteger.h
 ASN_MODULE_SOURCES+=NativeInteger.c
-ASN_MODULE_SOURCES+=NativeInteger_oer.c
 ASN_MODULE_HEADERS+=asn_SEQUENCE_OF.h
 ASN_MODULE_SOURCES+=asn_SEQUENCE_OF.c
 ASN_MODULE_HEADERS+=asn_SET_OF.h
@@ -1048,19 +1047,19 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = j2735-dump
-CFLAGS += -DASN_CONVERTER_TITLE="J2735 DSRC decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DPDU=MessageFrame -I.
+CPPFLAGS += -DASN_CONVERTER_TITLE="J2735 DSRC decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DASN_DISABLE_OER_SUPPORT -DPDU=MessageFrame -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: MessageFrame.c $(TARGET)
 
 $(TARGET): ${OBJS}
-	$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
+	$(CC) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
 
 .SUFFIXES:
 .SUFFIXES: .c .o
 
 .c.o:
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 clean:
 	rm -f $(TARGET)
@@ -1083,7 +1082,7 @@ regen-makefile:
 	ASN1MODULES="../j2735.asn1" \
 	ASN1PDU=MessageFrame \
 	PROGNAME=j2735-dump \
-	CFLAGS="" \
+	CPPFLAGS="" \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-per

@@ -16,7 +16,7 @@ INTEGER.h INTEGER.c
 ISO646String.h ISO646String.c
 NULL.h NULL.c BOOLEAN.h
 NativeEnumerated.h NativeEnumerated.c NativeInteger.h
-NativeInteger.h NativeInteger.c INTEGER.h                NativeInteger_oer.c
+NativeInteger.h NativeInteger.c INTEGER.h
 NativeReal.h NativeReal.c REAL.h
 NumericString.h NumericString.c
 OBJECT_IDENTIFIER.h OBJECT_IDENTIFIER.c INTEGER.h
