@@ -58,7 +58,8 @@ AX_CHECK_COMPILE_FLAG([-Wno-error=visibility],
 AX_CHECK_COMPILE_FLAG([-Wno-error=parentheses-equality],
       [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
 AX_CHECK_COMPILE_FLAG([-std=gnu99],
-      [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -std=gnu99"])
+      [CFLAGS="$CFLAGS-std=gnu99"
+TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -std=gnu99"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
       [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -Wno-error=unused-variable"])
 
