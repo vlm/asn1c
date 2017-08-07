@@ -2,14 +2,9 @@
 #include "asn1fix.h"
 
 char const *
-asn1f_printable_reference(asn1p_ref_t *ref) {
+asn1f_printable_reference(const asn1p_ref_t *ref) {
 	if(ref) {
-		asn1p_value_t v;
-
-		v.type = ATV_REFERENCED;
-		v.value.reference = ref;
-
-		return asn1f_printable_value(&v);
+		return asn1p_ref_string(ref);
 	} else {
 		return "<no ref>";
 	}

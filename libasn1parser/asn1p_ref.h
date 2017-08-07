@@ -49,6 +49,20 @@ void asn1p_ref_free(asn1p_ref_t *);
 
 asn1p_ref_t *asn1p_ref_clone(asn1p_ref_t *ref);
 
+void asn1p_ref_set_source(asn1p_ref_t *, asn1p_module_t *module, int lineno);
+
+
+/*
+ * Lexicographically compare references.
+ */
+int asn1p_ref_compare(const asn1p_ref_t *, const asn1p_ref_t *);
+
+/*
+ * Return a pointer to a statically allocated buffer representing the
+ * complete reference.
+ */
+const char *asn1p_ref_string(const asn1p_ref_t *);
+
 /*
  * Add a new reference component to the existing reference structure.
  *

@@ -339,15 +339,15 @@ phase_1_1(arg_t *arg, int prm2) {
 	RET2RVAL(ret, rvalue);
 
 	/*
-	 * Parse class objects and fill up the object class with data.
-	 */
-	ret = asn1f_parse_class_object(arg);
-	RET2RVAL(ret, rvalue);
-
-	/*
 	 * Resolve references in constraints.
 	 */
 	ret = asn1f_recurse_expr(arg, asn1f_resolve_constraints);
+	RET2RVAL(ret, rvalue);
+
+	/*
+	 * Parse class information object sets.
+	 */
+	ret = asn1f_parse_class_object(arg);
 	RET2RVAL(ret, rvalue);
 
 	/*

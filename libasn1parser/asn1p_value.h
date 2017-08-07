@@ -5,6 +5,7 @@
 #define	ASN1_PARSER_VALUE_H
 
 struct asn1p_constraint_s;	/* Forward declaration */
+struct asn1p_module_s;
 struct asn1p_expr_s;
 
 /*
@@ -76,5 +77,7 @@ asn1p_value_t *asn1p_value_clone(asn1p_value_t *);
 asn1p_value_t *asn1p_value_clone_with_resolver(asn1p_value_t *,
 		asn1p_value_t *(*resolver)(asn1p_value_t *, void *rarg),
 		void *rarg);
+int asn1p_value_compare(const asn1p_value_t *, const asn1p_value_t *);
+void asn1p_value_set_source(asn1p_value_t *, struct asn1p_module_s *, int line);
 
 #endif	/* ASN1_PARSER_VALUE_H */

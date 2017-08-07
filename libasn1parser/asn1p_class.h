@@ -20,6 +20,13 @@ typedef struct asn1p_ioc_row_s {
 
 asn1p_ioc_row_t *asn1p_ioc_row_new(struct asn1p_expr_s *oclass);
 void asn1p_ioc_row_delete(asn1p_ioc_row_t *);
+
+/*
+ * Match is similar to a comparison,
+ * but -1 means error and 1 means not equal. 0 is OK
+ */
+int asn1p_ioc_row_match(const asn1p_ioc_row_t *, const asn1p_ioc_row_t *);
+
 struct asn1p_ioc_cell_s *asn1p_ioc_row_cell_fetch(asn1p_ioc_row_t *,
 		const char *fieldname);
 

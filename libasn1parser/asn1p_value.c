@@ -4,7 +4,85 @@
 #include <assert.h>
 
 #include "asn1parser.h"
+#include "asn1p_expr.h"
 
+void
+asn1p_value_set_source(asn1p_value_t *value, asn1p_module_t *module,
+                       int lineno) {
+    if(value) {
+        switch(value->type) {
+        case ATV_TYPE:
+            asn1p_expr_set_source(value->value.v_type, module, lineno);
+            break;
+        case ATV_REFERENCED:
+            asn1p_ref_set_source(value->value.reference, module, lineno);
+            break;
+        case ATV_VALUESET:
+            asn1p_constraint_set_source(value->value.constraint, module,
+                                        lineno);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+int
+asn1p_value_compare(const asn1p_value_t *a, const asn1p_value_t *b) {
+    if(a->type != b->type) {
+        return -1;
+    }
+
+    switch(a->type) {
+    case ATV_NULL:
+    case ATV_NOVALUE:
+    case ATV_MAX:
+    case ATV_MIN:
+    case ATV_FALSE:
+    case ATV_TRUE:
+        break;
+    case ATV_TYPE:
+        return asn1p_expr_compare(a->value.v_type, b->value.v_type);
+    case ATV_REAL:
+        return (a->value.v_double == b->value.v_double) ? 0 : -1;
+    case ATV_INTEGER:
+    case ATV_TUPLE:
+    case ATV_QUADRUPLE:
+        return (a->value.v_integer == b->value.v_integer) ? 0 : -1;
+    case ATV_STRING:
+    case ATV_UNPARSED:
+        if(a->value.string.size != b->value.string.size
+           || memcmp(a->value.string.buf, b->value.string.buf,
+                     a->value.string.size)
+                  != 0) {
+            return -1;
+        }
+        return 0;
+    case ATV_BITVECTOR:
+        if(a->value.binary_vector.size_in_bits
+               != b->value.binary_vector.size_in_bits
+           || memcmp(a->value.binary_vector.bits, b->value.binary_vector.bits,
+                     (a->value.binary_vector.size_in_bits+7) >> 3)
+                  != 0) {
+            return -1;
+        }
+    case ATV_VALUESET:
+        return asn1p_constraint_compare(a->value.constraint,
+                                        b->value.constraint);
+    case ATV_REFERENCED:
+        return asn1p_ref_compare(a->value.reference, b->value.reference);
+    case ATV_CHOICE_IDENTIFIER:
+        if(strcmp(a->value.choice_identifier.identifier,
+                  b->value.choice_identifier.identifier)
+           != 0) {
+            return -1;
+        }
+        return asn1p_value_compare(a->value.choice_identifier.value,
+                                   b->value.choice_identifier.value);
+    }
+
+    return 0;
+}
 
 asn1p_value_t *
 asn1p_value_fromref(asn1p_ref_t *ref, int do_copy) {

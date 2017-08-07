@@ -80,7 +80,7 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 }
 
 asn1p_module_t *
-asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
+asn1f_lookup_module(arg_t *arg, const char *module_name, const asn1p_oid_t *oid) {
 	asn1p_module_t *mod;
 
 	assert(module_name);
@@ -147,7 +147,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 }
 
 static asn1p_expr_t *
-asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref, int recursion_depth) {
+asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref, int recursion_depth) {
 	asn1p_expr_t *ref_tc;			/* Referenced tc */
 	asn1p_module_t *imports_from;
 	char *modulename;
@@ -369,7 +369,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 
 asn1p_expr_t *
 asn1f_lookup_symbol(arg_t *arg,
-	asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref) {
+	asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref) {
 	return asn1f_lookup_symbol_impl(arg, mod, rhs_pspecs, ref, 0);
 }
 

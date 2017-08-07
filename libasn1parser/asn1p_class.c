@@ -62,6 +62,36 @@ asn1p_ioc_row_delete(asn1p_ioc_row_t *row) {
 	}
 }
 
+int
+asn1p_ioc_row_match(const asn1p_ioc_row_t *a, const asn1p_ioc_row_t *b) {
+    assert(a && b);
+
+    if(a->columns != b->columns)
+        return -1;  /* Bad! */
+
+    for(size_t i = 0; i < a->columns; i++) {
+        assert(a->column[i].field);
+        assert(b->column[i].field);
+        if(strcmp(a->column[i].field->Identifier,
+                  b->column[i].field->Identifier)
+           != 0) {
+            return -1;  /* Bad! */
+        }
+        if((a->column[i].value && !b->column[i].value)
+           || (!a->column[i].value && b->column[i].value)) {
+            return 1;   /* Not match */
+        }
+        if(a->column[i].value && b->column[i].value) {
+            if(asn1p_expr_compare(a->column[i].value, b->column[i].value)
+               != 0) {
+                return 1;   /* Not match */
+            }
+        }
+    }
+
+    return 0;
+}
+
 struct asn1p_ioc_cell_s *
 asn1p_ioc_row_cell_fetch(asn1p_ioc_row_t *row, const char *fieldname) {
 	int i;

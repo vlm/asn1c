@@ -1,0 +1,36 @@
+﻿
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .139
+
+ModuleComponentRelationConstraint
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 139 }
+	DEFINITIONS ::=
+BEGIN
+
+    Frame ::= SEQUENCE {
+        ident   FRAME-STRUCTURE.&id({FrameTypes}),
+        value   FRAME-STRUCTURE.&Type({FrameTypes}{@.ident}),
+        ...
+    }
+
+    FRAME-STRUCTURE ::= CLASS {
+        &id    INTEGER UNIQUE,
+        &Type
+    } WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+    FrameTypes FRAME-STRUCTURE ::= {
+        { PrimitiveMessage IDENTIFIED BY basicMessage } |
+        { ComplexMessage IDENTIFIED BY 2 },
+        ...
+    }
+
+    PrimitiveMessage ::= SEQUENCE {}
+    ComplexMessage ::= SEQUENCE {}
+
+    basicMessage INTEGER ::= 1
+
+END

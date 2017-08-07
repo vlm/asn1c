@@ -71,6 +71,14 @@ typedef struct asn1p_constraint_s {
 /* Human-readable constraint type description */
 const char *asn1p_constraint_type2str(enum asn1p_constraint_type_e);
 
+const asn1p_constraint_t *asn1p_get_component_relation_constraint(
+    asn1p_constraint_t *);
+
+int asn1p_constraint_compare(const asn1p_constraint_t *,
+                             const asn1p_constraint_t *);
+void asn1p_constraint_set_source(asn1p_constraint_t *,
+                                 struct asn1p_module_s *module, int lineno);
+
 /*
  * Constructors and a recursive destructor.
  */

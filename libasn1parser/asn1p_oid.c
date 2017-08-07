@@ -81,7 +81,7 @@ asn1p_oid_arc_free(asn1p_oid_arc_t *arc) {
 }
 
 int
-asn1p_oid_compare(asn1p_oid_t *a, asn1p_oid_t *b) {
+asn1p_oid_compare(const asn1p_oid_t *a, const asn1p_oid_t *b) {
 	int i;
 
 	for(i = 0; ; i++) {

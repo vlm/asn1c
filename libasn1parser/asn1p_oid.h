@@ -61,7 +61,7 @@ void asn1p_oid_free(asn1p_oid_t *);
  *	0: The specified OIDs are equal.
  *	-1 or 1 otherwise.
  */
-int asn1p_oid_compare(asn1p_oid_t *a, asn1p_oid_t *b);
+int asn1p_oid_compare(const asn1p_oid_t *a, const asn1p_oid_t *b);
 
 
 #endif	/* ASN1_PARSER_OID_H */

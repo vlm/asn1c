@@ -9,6 +9,82 @@
 static asn1p_expr_t *asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*)(asn1p_expr_t *, void *), void *);
 static asn1p_value_t *value_resolver(asn1p_value_t *, void *arg);
 
+void
+asn1p_expr_set_source(asn1p_expr_t *expr, asn1p_module_t *module, int lineno) {
+    if(expr) {
+        expr->module = module;
+        expr->_lineno = lineno;
+        asn1p_ref_set_source(expr->reference, module, lineno);
+        asn1p_value_set_source(expr->value, module, lineno);
+        asn1p_constraint_set_source(expr->constraints, module, lineno);
+        asn1p_constraint_set_source(expr->combined_constraints, module, lineno);
+        asn1p_expr_set_source(expr->rhs_pspecs, module, lineno);
+
+        asn1p_expr_t *memb;
+
+        TQ_FOR(memb, &(expr->members), next) {
+            asn1p_expr_set_source(memb, module, lineno);
+        }
+    }
+}
+
+int
+asn1p_expr_compare(const asn1p_expr_t *a, const asn1p_expr_t *b) {
+    if(a->meta_type != b->meta_type || a->expr_type != b->expr_type) {
+        return -1;
+    }
+
+    if((!a->Identifier && b->Identifier) || (a->Identifier && !b->Identifier)) {
+        return -1;
+    } else if(a->Identifier && strcmp(a->Identifier, b->Identifier)) {
+        return -1;
+    }
+
+    if((!a->reference && b->reference) || (a->reference && !b->reference)) {
+        return -1;
+    } else if(a->reference
+              && asn1p_ref_compare(a->reference, b->reference) != 0) {
+        return -1;
+    }
+
+    if((!a->value && b->value) || (a->value && !b->value)) {
+        return -1;
+    } else if(a->value && asn1p_value_compare(a->value, b->value)) {
+        return -1;
+    }
+
+    if((a->tag.tag_class != b->tag.tag_class)
+       || (a->tag.tag_mode != b->tag.tag_mode)
+       || (a->tag.tag_value != b->tag.tag_value)) {
+        return -1;
+    }
+
+    if((a->marker.flags != b->marker.flags)
+       || (a->marker.default_value && !b->marker.default_value)
+       || (!a->marker.default_value && b->marker.default_value)
+       || (a->marker.default_value
+           && asn1p_value_compare(a->marker.default_value,
+                                  b->marker.default_value))) {
+        return -1;
+    }
+
+    if(a->unique != b->unique) {
+        return -1;
+    }
+
+    const asn1p_expr_t *am = TQ_FIRST(&a->members);
+    const asn1p_expr_t *bm = TQ_FIRST(&b->members);
+    for(; am || bm; am = TQ_NEXT(am, next), bm = TQ_NEXT(bm, next)) {
+        if((am && !bm) || (!am && bm)) {
+            return -1;
+        } else if(asn1p_expr_compare(am, bm) != 0) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
 /*
  * Construct a new empty types collection.
  */

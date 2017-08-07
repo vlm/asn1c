@@ -1,7 +1,7 @@
 #include "asn1fix_internal.h"
 
 asn1p_expr_t *
-asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref) {
+asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref) {
 	asn1p_expr_t *ioclass;
 	asn1p_expr_t *classfield;
 	asn1p_expr_t *expr;

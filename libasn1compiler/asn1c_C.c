@@ -298,14 +298,90 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 
+/*
+ * Given the table constraint or component relation constraint
+ * ({ObjectSetName}{...}) returns "ObjectSetName" as a reference.
+ */
+static const asn1p_ref_t *
+asn1c_get_information_object_set_reference_from_constraint(
+    const asn1p_constraint_t *ct) {
+
+    if(!ct) return NULL;
+    assert(ct->type == ACT_CA_CRC);
+    assert(ct->el_count >= 1);
+
+    assert(ct->elements[0]->type == ACT_EL_VALUE);
+
+    asn1p_value_t *val = ct->elements[0]->value;
+    assert(val->type == ATV_REFERENCED);
+
+    return val->value.reference;
+}
+
+typedef struct asn1c_ioc_table_s {
+} asn1c_ioc_table_t;
+
+static asn1c_ioc_table_t *
+asn1c_construct_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref, asn1p_expr_t *objset) {
+    asn1c_ioc_table_t *itable = NULL;
+    itable = calloc(1, sizeof(*itable));
+    assert(itable);
+
+    return itable;
+};
+
+static asn1c_ioc_table_t *
+asn1c_construct_ioc_table(arg_t *arg) {
+    asn1p_expr_t *expr = arg->expr;
+	asn1p_expr_t *memb;
+    asn1p_expr_t *objset = 0;
+    const asn1p_ref_t *objset_ref = NULL;
+
+    TQ_FOR(memb, &(expr->members), next) {
+        const asn1p_ref_t *tmpref =
+            asn1c_get_information_object_set_reference_from_constraint(
+                asn1p_get_component_relation_constraint(memb->constraints));
+        if(tmpref) {
+            if(objset_ref && asn1p_ref_compare(objset_ref, tmpref) != 0) {
+                FATAL(
+                    "Object set reference on line %d differs from object set "
+                    "reference on line %d",
+                    objset_ref->_lineno, tmpref->_lineno);
+                errno = EINVAL;
+                return NULL;
+            }
+            objset_ref = tmpref;
+        }
+    }
+
+    if(!objset_ref) {
+        errno = 0;  /* "Safe" error. */
+        return NULL;
+    }
+
+    objset = asn1f_lookup_symbol_ex(arg->asn, arg->expr, objset_ref);
+    if(!objset) {
+        FATAL("Cannot found %s", asn1p_ref_string(objset_ref));
+        return NULL;
+    }
+
+    return asn1c_construct_ioc_table_from_objset(arg, objset_ref, objset);
+}
+
 int
 asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int saved_target = arg->target->target;
+    asn1c_ioc_table_t *itable = NULL;
 
 	DEPENDENCIES;
+
+    itable = asn1c_construct_ioc_table(arg);
+    if(!itable && errno != 0) {
+        return -1;
+    }
 
 	if(arg->embed) {
 
@@ -450,11 +526,13 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 				++elm;
 			}
 			OUT(" };\n");
-			if(roms_count > 65536)
+			if(roms_count > 65536) {
 				FATAL("Too many optional elements in %s "
 					"at line %d!",
 					arg->expr->Identifier,
 					arg->expr->_lineno);
+                return -1;
+            }
 		} else {
 			roms_count = 0;
 			aoms_count = 0;
