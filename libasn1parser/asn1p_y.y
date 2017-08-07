@@ -580,6 +580,7 @@ Assignment:
 	 * === EXAMPLE ===
 	 * EvenNumbers INTEGER ::= { 2 | 4 | 6 | 8 }
 	 * === EOF ===
+	 * Also ObjectClassSet.
 	 */
 	| ValueSetTypeAssignment {
 		$$ = asn1p_module_new();
