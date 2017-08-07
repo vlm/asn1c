@@ -323,6 +323,10 @@ typedef struct asn1c_ioc_table_s {
 
 static asn1c_ioc_table_t *
 asn1c_construct_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref, asn1p_expr_t *objset) {
+    (void)arg;
+    (void)objset_ref;
+    (void)objset;
+
     asn1c_ioc_table_t *itable = NULL;
     itable = calloc(1, sizeof(*itable));
     assert(itable);

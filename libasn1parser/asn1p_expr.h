@@ -181,8 +181,8 @@ typedef struct asn1p_expr_s {
 	/* Information Object Class matrix, specific for this class */
 	struct asn1p_ioc_matrix_s {
 		asn1p_ioc_row_t **row;
-		int rows;
-		int max_identifier_length;
+		size_t rows;
+		size_t max_identifier_length;
 	} object_class_matrix;
 
 	/*

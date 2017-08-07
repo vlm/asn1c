@@ -29,7 +29,7 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 
 	columns = 0;
 	TQ_FOR(field, &oclass->members, next) {
-		int fieldIdLen = strlen(field->Identifier);
+		size_t fieldIdLen = strlen(field->Identifier);
 		if(fieldIdLen > row->max_identifier_length)
 			row->max_identifier_length = fieldIdLen;
 		row->column[columns].field = field;
@@ -42,10 +42,9 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 
 void
 asn1p_ioc_row_delete(asn1p_ioc_row_t *row) {
-	int i;
 	if(row) {
 		if(row->column) {
-			for(i = 0; i < row->columns; i++) {
+			for(size_t i = 0; i < row->columns; i++) {
 				if(!row->column[i].new_ref && row->column[i].value) {
 					/* 
 					 * Field 'reference' comes from asn1fix_cws.c :
@@ -94,8 +93,7 @@ asn1p_ioc_row_match(const asn1p_ioc_row_t *a, const asn1p_ioc_row_t *b) {
 
 struct asn1p_ioc_cell_s *
 asn1p_ioc_row_cell_fetch(asn1p_ioc_row_t *row, const char *fieldname) {
-	int i;
-	for(i = 0; i < row->columns; i++) {
+	for(size_t i = 0; i < row->columns; i++) {
 		if(strcmp(row->column[i].field->Identifier, fieldname) == 0)
 			return &row->column[i];
 	}

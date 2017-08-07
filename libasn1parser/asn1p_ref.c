@@ -24,7 +24,7 @@ void
 asn1p_ref_free(asn1p_ref_t *ref) {
 	if(ref) {
 		if(ref->components) {
-			int i = ref->comp_count;
+			size_t i = ref->comp_count;
 			while(i--) {
 				free(ref->components[i].name);
 				ref->components[i].name = 0;
@@ -127,8 +127,7 @@ asn1p_ref_clone(asn1p_ref_t *ref) {
 
 	newref = asn1p_ref_new(ref->_lineno, ref->module);
 	if(newref) {
-		int i;
-		for(i = 0; i < ref->comp_count; i++) {
+		for(size_t i = 0; i < ref->comp_count; i++) {
 			if(asn1p_ref_add_component(newref,
 				ref->components[i].name,
 				ref->components[i].lex_type

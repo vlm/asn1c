@@ -346,9 +346,8 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 			free(expr->specializations.pspec);
 		}
 		if(expr->object_class_matrix.row) {
-			int row;
-			for(row = 0; row < expr->object_class_matrix.rows; row++) {
-				asn1p_ioc_row_delete(expr->object_class_matrix.row[row]);
+            for(size_t row = 0; row < expr->object_class_matrix.rows; row++) {
+                asn1p_ioc_row_delete(expr->object_class_matrix.row[row]);
 			}
 			free(expr->object_class_matrix.row);
 		}

@@ -170,11 +170,10 @@ asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
 
 static int
 asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags flags) {
-	int cc;
 
 	(void)flags;	/* Unused argument */
 
-	for(cc = 0; cc < ref->comp_count; cc++) {
+	for(size_t cc = 0; cc < ref->comp_count; cc++) {
 		if(cc) safe_printf(".");
 		safe_printf("%s", ref->components[cc].name);
 	}
@@ -777,7 +776,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 
 	if(flags & APF_PRINT_CLASS_MATRIX
 	&& tc->expr_type == A1TC_CLASSDEF) do {
-		int r, col, maxidlen;
+		size_t col, maxidlen;
 		if(tc->object_class_matrix.rows == 0) {
 			safe_printf("\n-- Class matrix is empty");
 			break;
@@ -786,7 +785,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 				tc->object_class_matrix.rows,
 				tc->object_class_matrix.rows==1 ? "y" : "ies");
 		maxidlen = tc->object_class_matrix.max_identifier_length;
-		for(r = -1; r < tc->object_class_matrix.rows; r++) {
+		for(ssize_t r = -1; r < (ssize_t)tc->object_class_matrix.rows; r++) {
 			struct asn1p_ioc_row_s *row;
 			row = tc->object_class_matrix.row[r<0?0:r];
 			if(r < 0) safe_printf("--    %s", r > 9 ? " " : "");

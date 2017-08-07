@@ -34,8 +34,8 @@ typedef struct asn1p_ref_s {
 		char *name;	/* An identifier */
 	} *components;
 
-	int comp_count;	/* Number of the components in the reference name. */
-	int comp_size;	/* Number of allocated structures */
+	size_t comp_count;	/* Number of the components in the reference name. */
+	size_t comp_size;	/* Number of allocated structures */
 
 	struct asn1p_module_s *module;	/* Defined in module */
 	int _lineno;	/* Number of line in the file */

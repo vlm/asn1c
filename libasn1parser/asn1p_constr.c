@@ -24,6 +24,8 @@ asn1p_constraint_set_source(asn1p_constraint_t *ct,
 
 int asn1p_constraint_compare(const asn1p_constraint_t *a,
                              const asn1p_constraint_t *b) {
+    (void)a;
+    (void)b;
     assert(!"Constraint comparison is not implemented");
     return -1;
 }

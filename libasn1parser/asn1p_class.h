@@ -14,8 +14,8 @@ typedef struct asn1p_ioc_row_s {
 		struct asn1p_expr_s *value;	/* may be left uninitialized */
 		int new_ref;
 	} *column;
-	int columns;
-	int max_identifier_length;
+	size_t columns;
+	size_t max_identifier_length;
 } asn1p_ioc_row_t;
 
 asn1p_ioc_row_t *asn1p_ioc_row_new(struct asn1p_expr_s *oclass);
