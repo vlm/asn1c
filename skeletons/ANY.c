@@ -190,6 +190,9 @@ ANY_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     int repeat;
     ANY_t *st = (ANY_t *)*sptr;
 
+    (void)opt_codec_ctx;
+    (void)constraints;
+
     /*
      * Allocate the structure.
      */
@@ -240,6 +243,8 @@ ANY_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
     const uint8_t *buf;
     size_t size;
     int ret;
+
+    (void)constraints;
 
     if(!st || (!st->buf && st->size)) ASN__ENCODE_FAILED;
 

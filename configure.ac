@@ -110,8 +110,6 @@ AX_CHECK_COMPILE_FLAG([-Wpedantic],
             [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
     ],
     [-Werror]) #clang 3.0 prints warning when the flag is not supported
-AX_CHECK_COMPILE_FLAG([-Wno-duplicate-decl-specifier],
-    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-duplicate-decl-specifier"])
 AC_SUBST(SKELETONS_CFLAGS)
 
 dnl Checks for header files.
