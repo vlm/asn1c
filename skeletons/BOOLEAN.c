@@ -254,6 +254,7 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	BOOLEAN_t *st = (BOOLEAN_t *)*sptr;
 
 	(void)opt_codec_ctx;
+    (void)td;
 	(void)constraints;
 
 	if(!st) {

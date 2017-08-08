@@ -141,7 +141,7 @@ OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
             break;
         }
 
-        if(st->size != unit_bytes * ct_size) {
+        if(st->size != unit_bytes * (size_t)ct_size) {
             ASN_DEBUG(
                 "Trying to encode %s (%zu bytes) which doesn't fit SIZE "
                 "constraint (%d)",
