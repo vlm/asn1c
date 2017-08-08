@@ -34,6 +34,7 @@ typedef const struct asn_INTEGER_specifics_s {
 	int field_unsigned;			/* Signed=0, unsigned=1 */
 } asn_INTEGER_specifics_t;
 
+#define INTEGER_free    ASN__PRIMITIVE_TYPE_free
 asn_struct_print_f INTEGER_print;
 ber_type_decoder_f INTEGER_decode_ber;
 der_type_encoder_f INTEGER_encode_der;
