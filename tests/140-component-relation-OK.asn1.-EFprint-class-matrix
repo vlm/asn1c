@@ -14,17 +14,30 @@ FRAME-STRUCTURE ::= CLASS {
     &Type	 ANY
 } WITH SYNTAX {&Type IDENTIFIED BY &id}
 
--- Class matrix has 2 entries:
+-- Information Object Set has 2 entries:
 --    [             &id][           &Type]
 -- [1]     basicMessage  PrimitiveMessage 
 -- [2]                2    ComplexMessage 
 
 
 FrameTypes FRAME-STRUCTURE ::= {{ PrimitiveMessage IDENTIFIED BY basicMessage } | { ComplexMessage IDENTIFIED BY 2 },...}
+-- Information Object Set has 2 entries:
+--    [             &id][           &Type]
+-- [1]     basicMessage  PrimitiveMessage 
+-- [2]                2    ComplexMessage 
+
 
 primType FRAME-STRUCTURE ::= { PrimitiveMessage IDENTIFIED BY basicMessage }
+-- Information Object Set has 1 entry:
+--    [             &id][           &Type]
+-- [1]     basicMessage  PrimitiveMessage 
+
 
 complexType FRAME-STRUCTURE ::= { ComplexMessage IDENTIFIED BY 2 }
+-- Information Object Set has 1 entry:
+--    [           &id][         &Type]
+-- [1]              2  ComplexMessage 
+
 
 PrimitiveMessage ::= SEQUENCE { }
 

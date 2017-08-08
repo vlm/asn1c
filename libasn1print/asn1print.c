@@ -774,14 +774,15 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		safe_printf("\n");
 	}
 
-	if(flags & APF_PRINT_CLASS_MATRIX
-	&& tc->expr_type == A1TC_CLASSDEF) do {
+	if(flags & APF_PRINT_CLASS_MATRIX) do {
 		size_t col, maxidlen;
 		if(tc->object_class_matrix.rows == 0) {
-			safe_printf("\n-- Class matrix is empty");
+            if(tc->expr_type == A1TC_CLASSDEF) {
+                safe_printf("\n-- Information Object Class table is empty");
+            }
 			break;
 		}
-		safe_printf("\n-- Class matrix has %d entr%s:\n",
+		safe_printf("\n-- Information Object Set has %d entr%s:\n",
 				tc->object_class_matrix.rows,
 				tc->object_class_matrix.rows==1 ? "y" : "ies");
 		maxidlen = tc->object_class_matrix.max_identifier_length;
