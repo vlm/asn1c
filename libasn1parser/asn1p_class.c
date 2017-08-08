@@ -5,6 +5,62 @@
 #include <assert.h>
 
 #include "asn1parser.h"
+#include "asn1p_class.h"
+
+asn1p_ioc_table_t *
+asn1p_ioc_table_new() {
+    asn1p_ioc_table_t *it = calloc(1, sizeof(*it));
+    assert(it);
+    return it;
+}
+
+void
+asn1p_ioc_table_add(asn1p_ioc_table_t *it, asn1p_ioc_row_t *row) {
+    assert(it);
+
+    asn1p_ioc_row_t **new_rows =
+        realloc(it->row, (it->rows + 1) * sizeof(it->row[0]));
+    assert(new_rows);
+    it->row = new_rows;
+    it->row[it->rows++] = row;
+}
+
+void
+asn1p_ioc_table_free(asn1p_ioc_table_t *it) {
+    if(it) {
+        for(size_t i = 0; i < it->rows; i++) {
+            asn1p_ioc_row_delete(it->row[i]);
+        }
+        free(it->row);
+        free(it);
+    }
+}
+
+size_t
+asn1p_ioc_table_max_identifier_length(asn1p_ioc_table_t *it) {
+    size_t max_length = 0;
+    if(it) {
+        for(size_t i = 0; i < it->rows; i++) {
+            size_t len = asn1p_ioc_row_max_identifier_length(it->row[i]);
+            if(len > max_length) max_length = len;
+        }
+    }
+    return max_length;
+}
+
+size_t
+asn1p_ioc_row_max_identifier_length(asn1p_ioc_row_t *row) {
+    size_t max_length = 0;
+    if(row) {
+        for(size_t i = 0; i < row->columns; i++) {
+            if(row->column[i].value) {
+                size_t len = strlen(row->column[i].value->Identifier);
+                if(len > max_length) max_length = len;
+            }
+        }
+    }
+    return max_length;
+}
 
 asn1p_ioc_row_t *
 asn1p_ioc_row_new(asn1p_expr_t *oclass) {
@@ -29,9 +85,6 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 
 	columns = 0;
 	TQ_FOR(field, &oclass->members, next) {
-		size_t fieldIdLen = strlen(field->Identifier);
-		if(fieldIdLen > row->max_identifier_length)
-			row->max_identifier_length = fieldIdLen;
 		row->column[columns].field = field;
 		row->column[columns].value = NULL;
 		columns++;

@@ -7,6 +7,11 @@ ATTRIBUTE ::= CLASS {
     &id	 RELATIVE-OID UNIQUE
 } WITH SYNTAX { ID &id }
 
+-- Information Object Set has 2 entries:
+--    [&id]
+-- [1] raf 
+-- [2] rcf 
+
 
 Attribute ::= SEQUENCE {
     identifier	 ATTRIBUTE.&id ({Attributes}),
@@ -14,10 +19,23 @@ Attribute ::= SEQUENCE {
 }
 
 Attributes ATTRIBUTE ::= {{ ID raf } | { ID rcf }}
+-- Information Object Set has 2 entries:
+--    [&id]
+-- [1] raf 
+-- [2] rcf 
+
 
 rafService ATTRIBUTE ::= { ID raf }
+-- Information Object Set has 1 entry:
+--    [&id]
+-- [1] raf 
+
 
 rcfService ATTRIBUTE ::= { ID rcf }
+-- Information Object Set has 1 entry:
+--    [&id]
+-- [1] rcf 
+
 
 raf RELATIVE-OID ::= {3 2 1}
 

@@ -5,7 +5,7 @@ static int _asn1f_parse_class_object_data(arg_t *, asn1p_expr_t *eclass,
 		struct asn1p_ioc_row_s *row, asn1p_wsyntx_t *syntax,
 		const uint8_t *buf, const uint8_t *bend,
 		int optional_mode, const uint8_t **newpos);
-static int _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row, struct asn1p_ioc_cell_s *cell, const uint8_t *buf, const uint8_t *bend);
+static int _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell, const uint8_t *buf, const uint8_t *bend);
 static asn1p_wsyntx_chunk_t *asn1f_next_literal_chunk(asn1p_wsyntx_t *syntax, asn1p_wsyntx_chunk_t *chunk, const uint8_t *buf);
 
 int
@@ -51,9 +51,13 @@ asn1f_check_class_object(arg_t *arg) {
 }
 
 static int
-_asn1f_is_ioc_row_duplicate(asn1p_ioc_row_t **rows, size_t count, asn1p_ioc_row_t *row) {
-    for(size_t i = 0; i < count; i++) {
-        switch(asn1p_ioc_row_match(rows[i], row)) {
+_asn1f_is_ioc_row_duplicate(asn1p_ioc_table_t *it, asn1p_ioc_row_t *row) {
+    if(!it) {
+        return 0;
+    }
+
+    for(size_t i = 0; i < it->rows; i++) {
+        switch(asn1p_ioc_row_match(it->row[i], row)) {
         default:
         case -1:
             return -1;
@@ -72,37 +76,33 @@ struct parse_object_key {
     asn1p_expr_t *eclass; /* CLASS */
 };
 
+/*
+ * Add to the IoC table if the row is unique.
+ */
 static int
-_asn1f_add_row(arg_t *arg, asn1p_expr_t *expr, asn1p_ioc_row_t *row) {
-	void *new_rows_ptr;
+_asn1f_add_unique_row(arg_t *arg, asn1p_expr_t *expr, asn1p_ioc_row_t *row) {
 
-    switch(_asn1f_is_ioc_row_duplicate(expr->object_class_matrix.row,
-                                       expr->object_class_matrix.rows, row)) {
-    case -1:
-        DEBUG("Found Information Object Duplicate in %s", expr->Identifier,
-              expr->_lineno);
-        return -1;
-    case 0:
-        /* Not a duplicate */
-        break;
-    case 1:
-        /* Proper duplicate detected; ignore */
-        asn1p_ioc_row_delete(row);
-        return 0;
+    if(expr->ioc_table == NULL) {
+        expr->ioc_table = asn1p_ioc_table_new();
+    } else {
+        /* Look for duplicates */
+
+        switch(_asn1f_is_ioc_row_duplicate(expr->ioc_table, row)) {
+        case -1:
+            DEBUG("Found Information Object Duplicate in %s", expr->Identifier,
+                  expr->_lineno);
+            return -1;
+        case 0:
+            /* Not a duplicate */
+            break;
+        case 1:
+            /* Proper duplicate detected; ignore */
+            asn1p_ioc_row_delete(row);
+            return 0;
+        }
     }
 
-	new_rows_ptr = realloc(expr->object_class_matrix.row,
-			(expr->object_class_matrix.rows + 1)
-			* sizeof(expr->object_class_matrix.row[0]));
-	assert(new_rows_ptr);
-	expr->object_class_matrix.row = new_rows_ptr;
-	expr->object_class_matrix.row[expr->object_class_matrix.rows] = row;
-	expr->object_class_matrix.rows++;
-	/* Propagate max identifier length */
-	if(expr->object_class_matrix.max_identifier_length
-			< row->max_identifier_length)
-		expr->object_class_matrix.max_identifier_length
-			= row->max_identifier_length;
+    asn1p_ioc_table_add(expr->ioc_table, row);
 
     return 0;
 }
@@ -134,7 +134,7 @@ _asn1f_parse_object_cb(const uint8_t *buf, size_t size, void *keyp) {
 	}
 
     /* Add object to a CLASS. */
-    if(_asn1f_add_row(arg, eclass, row) != 0)
+    if(_asn1f_add_unique_row(arg, eclass, row) != 0)
         return -1;
 
     /*
@@ -146,7 +146,7 @@ _asn1f_parse_object_cb(const uint8_t *buf, size_t size, void *keyp) {
                                          buf, buf + size, 0, 0);
     assert(ret == 0);
 
-    if(_asn1f_add_row(arg, expr, row) != 0)
+    if(_asn1f_add_unique_row(arg, expr, row) != 0)
         return -1;
 
     return 0;
@@ -342,7 +342,7 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 			DEBUG("Reference %s satisfied by %s (%d)",
 				chunk->content.token,
 				buf, p - buf);
-			ret = _asn1f_assign_cell_value(arg, row, cell, buf, p);
+			ret = _asn1f_assign_cell_value(arg, cell, buf, p);
 			if(ret) return ret;
 			buf = p;
 			if(newpos) *newpos = buf;
@@ -367,9 +367,8 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 
 
 static int
-_asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row,
-                         struct asn1p_ioc_cell_s *cell, const uint8_t *buf,
-                         const uint8_t *bend) {
+_asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
+                         const uint8_t *buf, const uint8_t *bend) {
     asn1p_expr_t *expr = (asn1p_expr_t *)NULL;
 	char *p;
 	int new_ref = 1;
@@ -481,12 +480,9 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_row_s *row,
 	cell->value = expr;
 	cell->new_ref = new_ref;
 
-	size_t idLength = strlen(expr->Identifier);
-	if(row->max_identifier_length < idLength)
-		row->max_identifier_length = idLength;
-
-	if(expr->Identifier != p)
+	if(expr->Identifier != p) {
 		free(p);
+    }
 
 	return 0;
 }

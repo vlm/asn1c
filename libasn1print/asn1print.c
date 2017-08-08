@@ -776,19 +776,19 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 
 	if(flags & APF_PRINT_CLASS_MATRIX) do {
 		size_t col, maxidlen;
-		if(tc->object_class_matrix.rows == 0) {
+		if(tc->ioc_table == NULL) {
             if(tc->expr_type == A1TC_CLASSDEF) {
                 safe_printf("\n-- Information Object Class table is empty");
             }
 			break;
 		}
 		safe_printf("\n-- Information Object Set has %d entr%s:\n",
-				tc->object_class_matrix.rows,
-				tc->object_class_matrix.rows==1 ? "y" : "ies");
-		maxidlen = tc->object_class_matrix.max_identifier_length;
-		for(ssize_t r = -1; r < (ssize_t)tc->object_class_matrix.rows; r++) {
-			struct asn1p_ioc_row_s *row;
-			row = tc->object_class_matrix.row[r<0?0:r];
+				tc->ioc_table->rows,
+				tc->ioc_table->rows==1 ? "y" : "ies");
+		maxidlen = asn1p_ioc_table_max_identifier_length(tc->ioc_table);
+		for(ssize_t r = -1; r < (ssize_t)tc->ioc_table->rows; r++) {
+			asn1p_ioc_row_t *row;
+			row = tc->ioc_table->row[r<0?0:r];
 			if(r < 0) safe_printf("--    %s", r > 9 ? " " : "");
 			else safe_printf("-- [%*d]", r > 9 ? 2 : 1, r+1);
 			for(col = 0; col < row->columns; col++) {

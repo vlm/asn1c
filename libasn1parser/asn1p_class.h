@@ -15,11 +15,21 @@ typedef struct asn1p_ioc_row_s {
 		int new_ref;
 	} *column;
 	size_t columns;
-	size_t max_identifier_length;
 } asn1p_ioc_row_t;
 
 asn1p_ioc_row_t *asn1p_ioc_row_new(struct asn1p_expr_s *oclass);
+size_t asn1p_ioc_row_max_identifier_length(asn1p_ioc_row_t *);
 void asn1p_ioc_row_delete(asn1p_ioc_row_t *);
+
+typedef struct asn1p_ioc_table_s {
+    asn1p_ioc_row_t **row;
+    size_t rows;
+} asn1p_ioc_table_t;
+
+asn1p_ioc_table_t *asn1p_ioc_table_new(void);
+void asn1p_ioc_table_add(asn1p_ioc_table_t *, asn1p_ioc_row_t *row);
+size_t asn1p_ioc_table_max_identifier_length(asn1p_ioc_table_t *);
+void asn1p_ioc_table_free(asn1p_ioc_table_t *);
 
 /*
  * Match is similar to a comparison,

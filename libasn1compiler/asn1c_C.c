@@ -318,24 +318,22 @@ asn1c_get_information_object_set_reference_from_constraint(
     return val->value.reference;
 }
 
-typedef struct asn1c_ioc_table_s {
-} asn1c_ioc_table_t;
-
-static asn1c_ioc_table_t *
-asn1c_construct_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref, asn1p_expr_t *objset) {
-    (void)arg;
+static asn1p_ioc_table_t *
+asn1c_get_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref, asn1p_expr_t *objset) {
     (void)objset_ref;
-    (void)objset;
 
-    asn1c_ioc_table_t *itable = NULL;
-    itable = calloc(1, sizeof(*itable));
-    assert(itable);
-
-    return itable;
+    if(objset->ioc_table) {
+        return objset->ioc_table;
+    } else {
+        FATAL("Information Object Set %s contains no objects at line %d",
+              objset->Identifier, objset->_lineno);
+        errno = EINVAL;
+        return NULL;
+    }
 };
 
-static asn1c_ioc_table_t *
-asn1c_construct_ioc_table(arg_t *arg) {
+static asn1p_ioc_table_t *
+asn1c_get_ioc_table(arg_t *arg) {
     asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *memb;
     asn1p_expr_t *objset = 0;
@@ -369,7 +367,7 @@ asn1c_construct_ioc_table(arg_t *arg) {
         return NULL;
     }
 
-    return asn1c_construct_ioc_table_from_objset(arg, objset_ref, objset);
+    return asn1c_get_ioc_table_from_objset(arg, objset_ref, objset);
 }
 
 int
@@ -378,11 +376,11 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	asn1p_expr_t *v;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int saved_target = arg->target->target;
-    asn1c_ioc_table_t *itable = NULL;
+    asn1p_ioc_table_t *itable = NULL;
 
 	DEPENDENCIES;
 
-    itable = asn1c_construct_ioc_table(arg);
+    itable = asn1c_get_ioc_table(arg);
     if(!itable && errno != 0) {
         return -1;
     }
