@@ -866,13 +866,14 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 asn_dec_rval_t
 SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-        asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_dec_rval_t rv;
+                   const asn_per_constraints_t *constraints, void **sptr,
+                   asn_per_data_t *pd) {
+    asn_dec_rval_t rv;
         asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elm = td->elements;	/* Single one */
 	void *st = *sptr;
 	asn_anonymous_set_ *list;
-	asn_per_constraint_t *ct;
+	const asn_per_constraint_t *ct;
 	int repeat = 0;
 	ssize_t nelems;
 

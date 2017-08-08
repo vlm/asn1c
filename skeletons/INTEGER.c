@@ -565,11 +565,12 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 asn_dec_rval_t
 INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+                    const asn_per_constraints_t *constraints, void **sptr,
+                    asn_per_data_t *pd) {
+    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_dec_rval_t rval = { RC_OK, 0 };
 	INTEGER_t *st = (INTEGER_t *)*sptr;
-	asn_per_constraint_t *ct;
+	const asn_per_constraint_t *ct;
 	int repeat;
 
 	(void)opt_codec_ctx;
@@ -676,13 +677,14 @@ INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 asn_enc_rval_t
 INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+                    const asn_per_constraints_t *constraints, void *sptr,
+                    asn_per_outp_t *po) {
+    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	const uint8_t *buf;
 	const uint8_t *end;
-	asn_per_constraint_t *ct;
+	const asn_per_constraint_t *ct;
 	long value = 0;
 	unsigned long v = 0;
 

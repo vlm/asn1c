@@ -248,10 +248,10 @@ NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 asn_dec_rval_t
 NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+                          asn_TYPE_descriptor_t *td,
+                          const asn_per_constraints_t *constraints, void **sptr,
+                          asn_per_data_t *pd) {
+    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_dec_rval_t rval;
 	long *native = (long *)*sptr;
 	INTEGER_t tmpint;
@@ -284,8 +284,9 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 asn_enc_rval_t
 NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+                          const asn_per_constraints_t *constraints, void *sptr,
+                          asn_per_outp_t *po) {
+    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	long native;
 	INTEGER_t tmpint;

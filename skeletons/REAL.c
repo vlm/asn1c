@@ -391,17 +391,18 @@ REAL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_dec_rval_t
-REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-	void **sptr, asn_per_data_t *pd) {
-	(void)constraints;	/* No PER visible constraints */
+REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void **sptr,
+                 asn_per_data_t *pd) {
+    (void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_decode_uper(opt_codec_ctx, td, 0, sptr, pd);
 }
 
 asn_enc_rval_t
 REAL_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	(void)constraints;	/* No PER visible constraints */
+                 const asn_per_constraints_t *constraints, void *sptr,
+                 asn_per_outp_t *po) {
+    (void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_encode_uper(td, 0, sptr, po);
 }
 
@@ -538,7 +539,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	sign = (octv & 0x40);	/* bit 7 */
 	scaleF = (octv & 0x0C) >> 2;	/* bits 4 to 3 */
 
-	if(st->size <= (int)(1 + (octv & 0x03))) {
+	if(st->size <= 1 + (octv & 0x03)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -546,7 +547,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	elen = (octv & 0x03);	/* bits 2 to 1; 8.5.6.4 */
 	if(elen == 0x03) {	/* bits 2 to 1 = 11; 8.5.6.4, case d) */
 		elen = st->buf[1];	/* unsigned binary number */
-		if(elen == 0 || st->size <= (int)(2 + elen)) {
+		if(elen == 0 || st->size <= (2 + elen)) {
 			errno = EINVAL;
 			return -1;
 		}

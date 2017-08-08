@@ -237,9 +237,9 @@ OBJECT_IDENTIFIER_print_arc(const uint8_t *arcbuf, int arclen, int add,
 static ssize_t
 OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 	ssize_t wrote_len = 0;
-	int startn;
+	size_t startn;
 	int add = 0;
-	int i;
+	size_t i;
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
@@ -379,7 +379,7 @@ OBJECT_IDENTIFIER_get_arcs(const OBJECT_IDENTIFIER_t *oid, void *arcs,
 	int num_arcs = 0;
 	int startn = 0;
 	int add = 0;
-	int i;
+	size_t i;
 
 	if(!oid || !oid->buf || (arc_slots && arc_type_size <= 1)) {
 		errno = EINVAL;

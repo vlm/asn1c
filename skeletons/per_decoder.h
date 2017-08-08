@@ -44,7 +44,7 @@ asn_dec_rval_t uper_decode(struct asn_codec_ctx_s *opt_codec_ctx,
  */
 typedef asn_dec_rval_t (per_type_decoder_f)(asn_codec_ctx_t *opt_codec_ctx,
 		struct asn_TYPE_descriptor_s *type_descriptor,
-		asn_per_constraints_t *constraints,
+		const asn_per_constraints_t *constraints,
 		void **struct_ptr,
 		asn_per_data_t *per_data
 	);

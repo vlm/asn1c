@@ -37,8 +37,8 @@
  * Check whether we are inside the extensions group.
  */
 #define IN_EXTENSION_GROUP(specs, memb_idx)     \
-        ( ((memb_idx) > (specs)->ext_after)     \
-        &&((memb_idx) < (specs)->ext_before))
+        ( (((ssize_t)(memb_idx)) > (specs)->ext_after)     \
+        &&(((ssize_t)(memb_idx)) < (specs)->ext_before))
 
 /*
  * Return a standardized complex structure.
@@ -70,8 +70,8 @@ static void *element_ptr(void *struct_ptr, asn_TYPE_member_t *elm) {
 
 asn_dec_rval_t
 SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                   asn_oer_constraints_t *constraints, void **struct_ptr,
-                   const void *ptr, size_t size) {
+                    const asn_oer_constraints_t *constraints, void **struct_ptr,
+                    const void *ptr, size_t size) {
     asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     void *st = *struct_ptr; /* Target structure */
@@ -80,6 +80,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 
     (void)opt_codec_ctx;
+    (void)constraints;
     (void)specs;
 
     /*
@@ -378,8 +379,8 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
  */
 asn_enc_rval_t
 SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
-                   asn_oer_constraints_t *constraints, void *sptr,
-                   asn_app_consume_bytes_f *cb, void *app_key) {
+                    const asn_oer_constraints_t *constraints, void *sptr,
+                    asn_app_consume_bytes_f *cb, void *app_key) {
     asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
     size_t computed_size = 0;
     int has_extensions_bit = (specs->ext_before >= 0);
@@ -387,6 +388,8 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
     uint32_t has_extensions = 0;
     size_t edx;
     int ret;
+
+    (void)constraints;
 
     if(preamble_bits) {
         asn_per_outp_t preamble;
@@ -396,8 +399,8 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
         preamble.op_key = app_key;
 
         if(has_extensions_bit) {
-            for(edx = specs->ext_after + 1; edx < specs->ext_before - 1;
-                edx++) {
+            for(edx = specs->ext_after + 1;
+                (ssize_t)edx < specs->ext_before - 1; edx++) {
                 asn_TYPE_member_t *elm = &td->elements[edx];
                 if(element_ptr(sptr, elm)) {
                     has_extensions = 1;
@@ -491,7 +494,8 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
         if(ret < 0) ASN__ENCODE_FAILED;
 
         /* Encode presence bitmap #16.4.3 */
-        for(edx = specs->ext_after + 1; edx < specs->ext_before - 1; edx++) {
+        for(edx = specs->ext_after + 1; (ssize_t)edx < specs->ext_before - 1;
+            edx++) {
             asn_TYPE_member_t *elm = &td->elements[edx];
             void *memb_ptr = element_ptr(sptr, elm);
             ret |= per_put_few_bits(&extadds, memb_ptr ? 1 : 0, 1);
@@ -502,7 +506,8 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
         computed_size += extadds.flushed_bytes;
 
         /* Now, encode extensions */
-        for(edx = specs->ext_after + 1; edx < specs->ext_before - 1; edx++) {
+        for(edx = specs->ext_after + 1; (ssize_t)edx < specs->ext_before - 1;
+            edx++) {
             asn_TYPE_member_t *elm = &td->elements[edx];
             void *memb_ptr = element_ptr(sptr, elm);
 

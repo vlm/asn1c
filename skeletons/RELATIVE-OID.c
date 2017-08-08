@@ -57,8 +57,8 @@ static ssize_t
 RELATIVE_OID__dump_body(const RELATIVE_OID_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 	ssize_t wrote = 0;
 	ssize_t ret;
-	int startn;
-	int i;
+	size_t startn;
+	size_t i;
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
@@ -179,8 +179,8 @@ RELATIVE_OID_get_arcs(const RELATIVE_OID_t *roid,
 	void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
 	void *arcs_end = (char *)arcs + (arc_slots * arc_type_size);
 	int num_arcs = 0;
-	int startn = 0;
-	int i;
+	size_t startn = 0;
+	size_t i;
 
 	if(!roid || !roid->buf) {
 		errno = EINVAL;

@@ -47,7 +47,7 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
  */
 asn_enc_rval_t
 oer_encode_to_buffer(struct asn_TYPE_descriptor_s *type_descriptor,
-                     asn_oer_constraints_t *constraints,
+                     const asn_oer_constraints_t *constraints,
                      void *struct_ptr,  /* Structure to be encoded */
                      void *buffer,      /* Pre-allocated buffer */
                      size_t buffer_size /* Initial buffer size (maximum) */

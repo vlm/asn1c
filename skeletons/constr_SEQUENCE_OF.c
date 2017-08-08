@@ -142,9 +142,10 @@ cb_failed:
 
 asn_enc_rval_t
 SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	asn_anonymous_sequence_ *list;
-	asn_per_constraint_t *ct;
+                        const asn_per_constraints_t *constraints, void *sptr,
+                        asn_per_outp_t *po) {
+    asn_anonymous_sequence_ *list;
+	const asn_per_constraint_t *ct;
 	asn_enc_rval_t er;
 	asn_TYPE_member_t *elm = td->elements;
 	int seq;

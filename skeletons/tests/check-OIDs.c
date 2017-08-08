@@ -30,7 +30,7 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	rval = ber_decode(0, &asn_DEF_OBJECT_IDENTIFIER, (void *)&oid, buf, len);
 	assert(rval.code == RC_OK);
 
-	assert(oid->size == (ssize_t)len - 2);
+	assert((ssize_t)oid->size == (ssize_t)len - 2);
 
 	/*
 	 * Print the contents for visual debugging.
@@ -77,7 +77,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	rval = ber_decode(0, &asn_DEF_RELATIVE_OID, (void *)&oid, buf, len);
 	assert(rval.code == RC_OK);
 
-	assert(oid->size == (ssize_t)len - 2);
+	assert((ssize_t)oid->size == (ssize_t)len - 2);
 
 	/*
 	 * Print the contents for visual debugging.

@@ -249,8 +249,9 @@ BOOLEAN_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 asn_dec_rval_t
 BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_dec_rval_t rv;
+                    const asn_per_constraints_t *constraints, void **sptr,
+                    asn_per_data_t *pd) {
+    asn_dec_rval_t rv;
 	BOOLEAN_t *st = (BOOLEAN_t *)*sptr;
 
 	(void)opt_codec_ctx;
@@ -281,8 +282,9 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 asn_enc_rval_t
 BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+                    const asn_per_constraints_t *constraints, void *sptr,
+                    asn_per_outp_t *po) {
+    const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
 	asn_enc_rval_t er = { 0, 0, 0 };
 
 	(void)constraints;

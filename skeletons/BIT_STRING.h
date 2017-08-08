@@ -13,7 +13,7 @@ extern "C" {
 
 typedef struct BIT_STRING_s {
 	uint8_t *buf;	/* BIT STRING body */
-	int size;	/* Size of the above buffer */
+	size_t size;	/* Size of the above buffer */
 
 	int bits_unused;/* Unused trailing bits in the last octet (0..7) */
 

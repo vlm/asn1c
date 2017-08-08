@@ -25,15 +25,15 @@ typedef const struct asn_CHOICE_specifics_s {
 	 * Tags to members mapping table.
 	 */
 	const asn_TYPE_tag2member_t *tag2el;
-	int tag2el_count;
+    unsigned tag2el_count;
 
-	/* Canonical ordering of CHOICE elements, for PER */
+    /* Canonical ordering of CHOICE elements, for PER */
 	int *canonical_order;
 
 	/*
 	 * Extensions-related stuff.
 	 */
-	int ext_start;		/* First member of extensions, or -1 */
+	signed ext_start;		/* First member of extensions, or -1 */
 } asn_CHOICE_specifics_t;
 
 /*

@@ -376,7 +376,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	 * If the structure was not initialized, it cannot be encoded:
 	 * can't deduce what to encode in the choice type.
 	 */
-	if(present <= 0 || present > td->elements_count) {
+	if(present <= 0 || (unsigned)present > td->elements_count) {
 		if(present == 0 && td->elements_count == 0) {
 			/* The CHOICE is empty?! */
 			erval.encoded = 0;
@@ -457,7 +457,7 @@ CHOICE_outmost_tag(const asn_TYPE_descriptor_t *td, const void *ptr, int tag_mod
 	 */
 	present = _fetch_present_idx(ptr, specs->pres_offset, specs->pres_size);
 
-	if(present > 0 || present <= td->elements_count) {
+	if(present > 0 && (unsigned)present <= td->elements_count) {
 		const asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
@@ -493,7 +493,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	 * Figure out which CHOICE element is encoded.
 	 */
 	present = _fetch_present_idx(sptr, specs->pres_offset,specs->pres_size);
-	if(present > 0 && present <= td->elements_count) {
+	if(present > 0 && (unsigned)present <= td->elements_count) {
 		asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
@@ -561,7 +561,7 @@ CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	asn_dec_rval_t rval;		/* Return value of a decoder */
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
-	int edx;			/* Element index */
+	size_t edx;			/* Element index */
 
 	/*
 	 * Create the target structure if it is not present already.
@@ -787,7 +787,7 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	 */
 	present = _fetch_present_idx(sptr, specs->pres_offset,specs->pres_size);
 
-	if(present <= 0 || present > td->elements_count) {
+	if(present <= 0 || (unsigned)present > td->elements_count) {
 		ASN__ENCODE_FAILED;
 	}  else {
 		asn_enc_rval_t tmper;
@@ -826,10 +826,11 @@ cb_failed:
 
 asn_dec_rval_t
 CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+                   const asn_per_constraints_t *constraints, void **sptr,
+                   asn_per_data_t *pd) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	asn_dec_rval_t rv;
-	asn_per_constraint_t *ct;
+	const asn_per_constraint_t *ct;
 	asn_TYPE_member_t *elm;	/* CHOICE's element */
 	void *memb_ptr;
 	void **memb_ptr2;
@@ -870,7 +871,7 @@ CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		value = uper_get_nsnnwn(pd);
 		if(value < 0) ASN__DECODE_STARVED;
 		value += specs->ext_start;
-		if(value >= td->elements_count)
+		if((unsigned)value >= td->elements_count)
 			ASN__DECODE_FAILED;
 	}
 
@@ -904,13 +905,14 @@ CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			elm->name, td->name, rv.code);
 	return rv;
 }
-   
+
 asn_enc_rval_t
 CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+                   const asn_per_constraints_t *constraints, void *sptr,
+                   asn_per_outp_t *po) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elm;	/* CHOICE's element */
-	asn_per_constraint_t *ct;
+	const asn_per_constraint_t *ct;
 	void *memb_ptr;
 	int present;
 	int present_enc;
@@ -930,7 +932,7 @@ CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 	 * If the structure was not initialized properly, it cannot be encoded:
 	 * can't deduce what to encode in the choice type.
 	 */
-	if(present <= 0 || present > td->elements_count)
+	if(present <= 0 || (unsigned)present > td->elements_count)
 		ASN__ENCODE_FAILED;
 	else
 		present--;
@@ -1005,7 +1007,7 @@ CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	/*
 	 * Print that element.
 	 */
-	if(present > 0 && present <= td->elements_count) {
+	if(present > 0 && (unsigned)present <= td->elements_count) {
 		asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
@@ -1048,7 +1050,7 @@ CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	/*
 	 * Free that element.
 	 */
-	if(present > 0 && present <= td->elements_count) {
+	if(present > 0 && (unsigned)present <= td->elements_count) {
 		asn_TYPE_member_t *elm = &td->elements[present-1];
 		void *memb_ptr;
 

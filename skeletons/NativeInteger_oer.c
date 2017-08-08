@@ -12,8 +12,8 @@
 asn_dec_rval_t
 NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
                          asn_TYPE_descriptor_t *td,
-                         asn_oer_constraints_t *constraints, void **nint_ptr,
-                         const void *ptr, size_t size) {
+                         const asn_oer_constraints_t *constraints,
+                         void **nint_ptr, const void *ptr, size_t size) {
     asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     long *native = (long *)*nint_ptr;
@@ -68,8 +68,8 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_enc_rval_t
 NativeInteger_encode_oer(asn_TYPE_descriptor_t *td,
-                   asn_oer_constraints_t *constraints, void *sptr,
-                   asn_app_consume_bytes_f *cb, void *app_key) {
+                         const asn_oer_constraints_t *constraints, void *sptr,
+                         asn_app_consume_bytes_f *cb, void *app_key) {
     asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
     INTEGER_t tmpint;
     long native;

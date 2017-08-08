@@ -123,8 +123,9 @@ NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 asn_dec_rval_t
 NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_dec_rval_t rv;
+                 const asn_per_constraints_t *constraints, void **sptr,
+                 asn_per_data_t *pd) {
+    asn_dec_rval_t rv;
 
 	(void)opt_codec_ctx;
 	(void)td;
@@ -150,9 +151,10 @@ NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-NULL_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-		void *sptr, asn_per_outp_t *po) {
-	asn_enc_rval_t er;
+NULL_encode_uper(asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void *sptr,
+                 asn_per_outp_t *po) {
+    asn_enc_rval_t er;
 
 	(void)td;
 	(void)constraints;

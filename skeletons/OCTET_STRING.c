@@ -124,14 +124,14 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
  * No, I am not going to explain what the following stuff is.
  */
 struct _stack_el {
-	ber_tlv_len_t	left;	/* What's left to read (or -1) */
-	ber_tlv_len_t	got;	/* What was actually processed */
-	int	cont_level;	/* Depth of subcontainment */
-	int	want_nulls;	/* Want null "end of content" octets? */
-	int	bits_chopped;	/* Flag in BIT STRING mode */
-	ber_tlv_tag_t	tag;	/* For debugging purposes */
-	struct _stack_el *prev;
-	struct _stack_el *next;
+    ber_tlv_len_t left;     /* What's left to read (or -1) */
+    ber_tlv_len_t got;      /* What was actually processed */
+    size_t cont_level;      /* Depth of subcontainment */
+    int want_nulls;         /* Want null "end of content" octets? */
+    int bits_chopped;       /* Flag in BIT STRING mode */
+    ber_tlv_tag_t tag;      /* For debugging purposes */
+    struct _stack_el *prev;
+    struct _stack_el *next;
 };
 struct _stack {
 	struct _stack_el *tail;
@@ -344,7 +344,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		case ASN_OSUBV_STR:
 		default:
 			if(sel) {
-				int level = sel->cont_level;
+				size_t level = sel->cont_level;
 				if(level < td->all_tags_count) {
 					expected_tag = td->all_tags[level];
 					break;
@@ -801,8 +801,8 @@ static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, const void *chunk_b
 	uint8_t *buf;
 
 	/* Reallocate buffer according to high cap estimation */
-	ssize_t _ns = st->size + (chunk_size + 1) / 2;
-	void *nptr = REALLOC(st->buf, _ns + 1);
+	size_t new_size = st->size + (chunk_size + 1) / 2;
+	void *nptr = REALLOC(st->buf, new_size + 1);
 	if(!nptr) return -1;
 	st->buf = (uint8_t *)nptr;
 	buf = st->buf + st->size;
@@ -859,7 +859,7 @@ static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, const void *chunk_b
 	}
 
 	st->size = buf - st->buf;	/* Adjust the buffer size */
-	assert(st->size <= _ns);
+	assert(st->size <= new_size);
 	st->buf[st->size] = 0;		/* Courtesy termination */
 
 	return (chunk_stop - (const char *)chunk_buf);	/* Converted size */
@@ -876,8 +876,8 @@ static ssize_t OCTET_STRING__convert_binary(void *sptr, const void *chunk_buf, s
 	uint8_t *buf;
 
 	/* Reallocate buffer according to high cap estimation */
-	ssize_t _ns = st->size + (chunk_size + 7) / 8;
-	void *nptr = REALLOC(st->buf, _ns + 1);
+	size_t new_size = st->size + (chunk_size + 7) / 8;
+	void *nptr = REALLOC(st->buf, new_size + 1);
 	if(!nptr) return -1;
 	st->buf = (uint8_t *)nptr;
 	buf = st->buf + st->size;
@@ -921,7 +921,7 @@ static ssize_t OCTET_STRING__convert_binary(void *sptr, const void *chunk_buf, s
 		st->bits_unused = bits_unused;
 	}
 
-	assert(st->size <= _ns);
+	assert(st->size <= new_size);
 	st->buf[st->size] = 0;		/* Courtesy termination */
 
 	return chunk_size;	/* Converted in full */
@@ -977,8 +977,8 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf, 
 	uint8_t *buf;
 
 	/* Reallocate buffer */
-	ssize_t _ns = st->size + chunk_size;
-	void *nptr = REALLOC(st->buf, _ns + 1);
+	size_t new_size = st->size + chunk_size;
+	void *nptr = REALLOC(st->buf, new_size + 1);
 	if(!nptr) return -1;
 	st->buf = (uint8_t *)nptr;
 	buf = st->buf + st->size;
@@ -1101,7 +1101,7 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf, 
 	}
 
 	st->size = buf - st->buf;
-	assert(st->size <= _ns);
+	assert(st->size <= new_size);
 	st->buf[st->size] = 0;		/* Courtesy termination */
 
 	return chunk_size;	/* Converted in full */
@@ -1205,7 +1205,7 @@ OCTET_STRING_decode_xer_utf8(asn_codec_ctx_t *opt_codec_ctx,
 static int
 OCTET_STRING_per_get_characters(asn_per_data_t *po, uint8_t *buf,
 		size_t units, unsigned int bpc, unsigned int unit_bits,
-		long lb, long ub, asn_per_constraints_t *pc) {
+		long lb, long ub, const asn_per_constraints_t *pc) {
 	uint8_t *end = buf + units * bpc;
 
 	ASN_DEBUG("Expanding %d characters into (%ld..%ld):%d",
@@ -1269,7 +1269,7 @@ OCTET_STRING_per_get_characters(asn_per_data_t *po, uint8_t *buf,
 static int
 OCTET_STRING_per_put_characters(asn_per_outp_t *po, const uint8_t *buf,
 		size_t units, unsigned int bpc, unsigned int unit_bits,
-		long lb, long ub, asn_per_constraints_t *pc) {
+		long lb, long ub, const asn_per_constraints_t *pc) {
 	const uint8_t *end = buf + units * bpc;
 
 	ASN_DEBUG("Squeezing %d characters into (%ld..%ld):%d (%d bpc)",
@@ -1335,16 +1335,16 @@ OCTET_STRING_per_put_characters(asn_per_outp_t *po, const uint8_t *buf,
 
 asn_dec_rval_t
 OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-	void **sptr, asn_per_data_t *pd) {
-
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
+                         asn_TYPE_descriptor_t *td,
+                         const asn_per_constraints_t *constraints, void **sptr,
+                         asn_per_data_t *pd) {
+    asn_OCTET_STRING_specifics_t *specs = td->specifics
 		? (asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_OCTET_STRING_specs;
-	asn_per_constraints_t *pc = constraints ? constraints
-				: td->per_constraints;
-	asn_per_constraint_t *cval;
-	asn_per_constraint_t *csiz;
+    const asn_per_constraints_t *pc =
+        constraints ? constraints : td->per_constraints;
+    const asn_per_constraint_t *cval;
+	const asn_per_constraint_t *csiz;
 	asn_dec_rval_t rval = { RC_OK, 0 };
 	BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
 	ssize_t consumed_myself = 0;
@@ -1507,15 +1507,15 @@ OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 asn_enc_rval_t
 OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
-        asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
+                         const asn_per_constraints_t *constraints, void *sptr,
+                         asn_per_outp_t *po) {
+    asn_OCTET_STRING_specifics_t *specs = td->specifics
 		? (asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_OCTET_STRING_specs;
-	asn_per_constraints_t *pc = constraints ? constraints
+	const asn_per_constraints_t *pc = constraints ? constraints
 				: td->per_constraints;
-	asn_per_constraint_t *cval;
-	asn_per_constraint_t *csiz;
+	const asn_per_constraint_t *cval;
+	const asn_per_constraint_t *csiz;
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	asn_enc_rval_t er = { 0, 0, 0 };
 	int inext = 0;		/* Lies not within extension root */

@@ -50,9 +50,11 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 };
 
 asn_dec_rval_t
-ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_dec_rval_t rval;
+ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+                       asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints, void **sptr,
+                       asn_per_data_t *pd) {
+    asn_dec_rval_t rval;
 	ENUMERATED_t *st = (ENUMERATED_t *)*sptr;
 	long value;
 	void *vptr = &value;
@@ -72,8 +74,9 @@ ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td
 
 asn_enc_rval_t
 ENUMERATED_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	ENUMERATED_t *st = (ENUMERATED_t *)sptr;
+                       const asn_per_constraints_t *constraints, void *sptr,
+                       asn_per_outp_t *po) {
+    ENUMERATED_t *st = (ENUMERATED_t *)sptr;
 	long value;
 
 	if(asn_INTEGER2long(st, &value))

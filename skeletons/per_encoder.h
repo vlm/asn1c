@@ -47,7 +47,7 @@ asn_enc_rval_t uper_encode_to_buffer(
  */
 ssize_t uper_encode_to_new_buffer(
 	struct asn_TYPE_descriptor_s *type_descriptor,
-	asn_per_constraints_t *constraints,
+	const asn_per_constraints_t *constraints,
 	void *struct_ptr,	/* Structure to be encoded */
 	void **buffer_r		/* Buffer allocated and returned */
 );
@@ -57,7 +57,7 @@ ssize_t uper_encode_to_new_buffer(
  */
 typedef asn_enc_rval_t (per_type_encoder_f)(
 	struct asn_TYPE_descriptor_s *type_descriptor,
-	asn_per_constraints_t *constraints,
+	const asn_per_constraints_t *constraints,
 	void *struct_ptr,
 	asn_per_outp_t *per_output
 );

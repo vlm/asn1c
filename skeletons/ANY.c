@@ -181,7 +181,7 @@ static int ANY__consume_bytes(const void *buffer, size_t size, void *key) {
 
 asn_dec_rval_t
 ANY_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                asn_per_constraints_t *constraints, void **sptr,
+                const asn_per_constraints_t *constraints, void **sptr,
                 asn_per_data_t *pd) {
     asn_OCTET_STRING_specifics_t *specs =
         td->specifics ? (asn_OCTET_STRING_specifics_t *)td->specifics
@@ -236,8 +236,9 @@ ANY_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-ANY_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-                void *sptr, asn_per_outp_t *po) {
+ANY_encode_uper(asn_TYPE_descriptor_t *td,
+                const asn_per_constraints_t *constraints, void *sptr,
+                asn_per_outp_t *po) {
     const ANY_t *st = (const ANY_t *)sptr;
     asn_enc_rval_t er = {0, 0, 0};
     const uint8_t *buf;

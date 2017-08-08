@@ -113,9 +113,9 @@ typedef struct asn_TYPE_descriptor_s {
 	 */
 	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
 	const ber_tlv_tag_t *tags;	/* Effective tags sequence for this type */
-	int tags_count;			/* Number of tags which are expected */
+	unsigned tags_count;			/* Number of tags which are expected */
 	const ber_tlv_tag_t *all_tags;	/* Every tag for BER/containment */
-	int all_tags_count;		/* Number of tags */
+	unsigned all_tags_count;		/* Number of tags */
 
 	asn_oer_constraints_t *oer_constraints;	/* OER constraints */
 	asn_per_constraints_t *per_constraints;	/* PER constraints */
@@ -124,7 +124,7 @@ typedef struct asn_TYPE_descriptor_s {
 	 * An ASN.1 production type members (members of SEQUENCE, SET, CHOICE).
 	 */
 	struct asn_TYPE_member_s *elements;
-	int elements_count;
+	unsigned elements_count;
 
 	/*
 	 * Additional information describing the type, used by appropriate
@@ -143,27 +143,27 @@ typedef struct asn_TYPE_descriptor_s {
 	ATF_OPEN_TYPE	= 0x02	/* ANY type, without meaningful tag */
   };
 typedef struct asn_TYPE_member_s {
-	enum asn_TYPE_flags_e flags;	/* Element's presentation flags */
-	int optional;	/* Following optional members, including current */
-	int memb_offset;		/* Offset of the element */
-	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
-	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
-	asn_TYPE_descriptor_t *type;	/* Member type descriptor */
-	asn_constr_check_f *memb_constraints;	/* Constraints validator */
-	asn_oer_constraints_t *oer_constraints;	/* OER compiled constraints */
-	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
-	int (*default_value)(int setval, void **sptr);	/* DEFAULT <value> */
-	const char *name;			/* ASN.1 identifier of the element */
+    enum asn_TYPE_flags_e flags; /* Element's presentation flags */
+    unsigned optional;      /* Following optional members, including current */
+    unsigned memb_offset;   /* Offset of the element */
+    ber_tlv_tag_t tag;      /* Outmost (most immediate) tag */
+    int tag_mode;           /* IMPLICIT/no/EXPLICIT tag at current level */
+    asn_TYPE_descriptor_t *type;            /* Member type descriptor */
+    asn_constr_check_f *memb_constraints;   /* Constraints validator */
+    asn_oer_constraints_t *oer_constraints; /* OER compiled constraints */
+    asn_per_constraints_t *per_constraints; /* PER compiled constraints */
+    int (*default_value)(int setval, void **sptr); /* DEFAULT <value> */
+    const char *name; /* ASN.1 identifier of the element */
 } asn_TYPE_member_t;
 
 /*
  * BER tag to element number mapping.
  */
 typedef struct asn_TYPE_tag2member_s {
-	ber_tlv_tag_t el_tag;	/* Outmost tag of the member */
-	int el_no;		/* Index of the associated member, base 0 */
-	int toff_first;		/* First occurence of the el_tag, relative */
-	int toff_last;		/* Last occurence of the el_tag, relatvie */
+    ber_tlv_tag_t el_tag;   /* Outmost tag of the member */
+    unsigned el_no;         /* Index of the associated member, base 0 */
+    unsigned toff_first;    /* First occurence of the el_tag, relative */
+    unsigned toff_last;		/* Last occurence of the el_tag, relative */
 } asn_TYPE_tag2member_t;
 
 /*

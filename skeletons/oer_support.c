@@ -47,7 +47,7 @@ oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
         /* Skip the leading 0-bytes */
     }
 
-    if((bend - b) > sizeof(size_t)) {
+    if((bend - b) > (ssize_t)sizeof(size_t)) {
         /* Length is not representable by the native size_t type */
         *len_r = 0;
         return -1;

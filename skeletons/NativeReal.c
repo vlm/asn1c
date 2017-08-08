@@ -206,9 +206,10 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
  */
 asn_dec_rval_t
 NativeReal_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-		void **dbl_ptr, asn_per_data_t *pd) {
-	double *Dbl = (double *)*dbl_ptr;
+                       asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints, void **dbl_ptr,
+                       asn_per_data_t *pd) {
+    double *Dbl = (double *)*dbl_ptr;
 	asn_dec_rval_t rval;
 	REAL_t tmp;
 	void *ptmp = &tmp;
@@ -246,8 +247,9 @@ NativeReal_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_enc_rval_t
 NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	double Dbl = *(const double *)sptr;
+                       const asn_per_constraints_t *constraints, void *sptr,
+                       asn_per_outp_t *po) {
+    double Dbl = *(const double *)sptr;
 	asn_enc_rval_t erval;
 	REAL_t tmp;
 

@@ -10,11 +10,10 @@
 #define CHECK_ENCODE_BAD(a, b, c) check_encode(__LINE__, 1, a, b, c);
 
 static asn_oer_constraints_t *
-setup_constraints(int lineno, const char *process, unsigned width,
-                  unsigned positive) {
+setup_constraints(unsigned width, unsigned positive) {
     static struct asn_oer_constraints_s empty_constraints;
-    struct asn_oer_constraints_s *constraints = &empty_constraints;
-    struct asn_oer_constraint_number_s *ct_value = &constraints->value;
+    asn_oer_constraints_t *constraints = &empty_constraints;
+    asn_oer_constraint_number_t *ct_value = &constraints->value;
 
     memset(&empty_constraints, 0, sizeof(empty_constraints));
 
@@ -33,8 +32,7 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
 
     INTEGER_t *st = NULL;
     asn_dec_rval_t ret;
-    asn_oer_constraints_t *constraints =
-        setup_constraints(lineno, "decoding", width, positive);
+    asn_oer_constraints_t *constraints = setup_constraints(width, positive);
 
     fprintf(stderr, "%d: buf[%zu]={%d, %d, ...}\n", lineno, size,
             ((const uint8_t *)buf)[0],
@@ -105,7 +103,7 @@ check_roundtrip(int lineno, intmax_t value, intmax_t lower_bound, intmax_t upper
     asn_enc_rval_t er;
     asn_dec_rval_t ret;
     asn_oer_constraints_t *constraints =
-        setup_constraints(lineno, "encoding", lower_bound, upper_bound);
+        setup_constraints(lower_bound, upper_bound);
 
     if(asn_imax2INTEGER(stOut, value) == -1) {
         assert(!"Unreachable imax2INTEGER failure");
@@ -164,8 +162,7 @@ check_encode(int lineno, int bad, intmax_t value, unsigned width, unsigned posit
 
     INTEGER_t *stOut = (INTEGER_t *)calloc(1, sizeof(*stOut));
     asn_enc_rval_t er;
-    asn_oer_constraints_t *constraints =
-        setup_constraints(lineno, "encoding", width, positive);
+    asn_oer_constraints_t *constraints = setup_constraints(width, positive);
 
     if(asn_imax2INTEGER(stOut, value) == -1) {
         assert(!"Unreachable imax2INTEGER failure");

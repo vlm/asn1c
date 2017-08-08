@@ -11,7 +11,7 @@
 
 asn_dec_rval_t
 INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                   asn_oer_constraints_t *constraints, void **sptr,
+                   const asn_oer_constraints_t *constraints, void **sptr,
                    const void *ptr, size_t size) {
     asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
@@ -99,7 +99,7 @@ INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
  */
 asn_enc_rval_t
 INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
-                   asn_oer_constraints_t *constraints, void *sptr,
+                   const asn_oer_constraints_t *constraints, void *sptr,
                    asn_app_consume_bytes_f *cb, void *app_key) {
     const INTEGER_t *st = sptr;
     asn_enc_rval_t er;

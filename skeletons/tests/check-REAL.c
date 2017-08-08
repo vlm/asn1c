@@ -90,7 +90,7 @@ check_impl(REAL_t *rn, double orig_dbl, const char *sample, const char *canonica
 	printf("converted into [");
 	for(p = rn->buf, end = p + rn->size; p < end; p++)
 		printf("%02x", *p);
-	printf("]: %d\n", rn->size);
+	printf("]: %zu\n", rn->size);
 
 	ret = asn_REAL2double(rn, &val);
 	assert(ret == 0);
