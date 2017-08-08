@@ -1,7 +1,7 @@
 /*
  * Run-time support for Information Object Classes.
  * Copyright (c) 2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
- * Redistribution and modifications are oermitted subject to BSD license.
+ * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	ASN_IOC_H
 #define	ASN_IOC_H
