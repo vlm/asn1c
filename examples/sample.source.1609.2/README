@@ -1,0 +1,46 @@
+
+GENERAL INFORMATION
+===================
+
+The IEEE 1609.2-2016 "Wireless Access in Vehicular Environments --
+Security Services for Applications and Management Messages" messages decoder.
+Invoking `make` will compile the ASN.1 specifications from the
+../IEEE-1609.2-2016.asn1 file.
+
+THERE IS NO IEEE-1609.2-2016.asn1 FILE THERE YET!
+
+OBTAINING THE IEEE 1609.2-2016 SPECIFICATION
+============================================
+
+Download the standard containing the ASN.1 module files from
+https://standards.ieee.org/findstds/standard/1609.2-2016.html
+
+You should extract the ASN.1 modules from there and save it
+into a single ../IEEE-1609.2-2016.asn1 file. This file should start with
+the following line
+
+    IEEE1609dot2BaseTypes {iso(1) identified-organization(3) ieee(111)
+
+or
+
+    IEEE1609dot2 {iso(1) identified-organization(3) ieee(111)
+
+(both of these modules should be present in the file; order is unimportant)
+and end with the "END" token.
+Be careful not to copy any non-ASN.1 preambles from that .DOC file.
+
+After obtaining the IEEE-1609.2-2016.asn1, type `make` in the directory
+containing this README file.
+
+1609-2-dump USAGE
+=================
+
+The 1609-2-dump utility may be used to dump the contents of the
+OER-encoded Certificate file:
+
+	./1609-2-dump 1609cert.oer	# Print as XML (BASIC-XER)
+
+The full list of recognized command line options may be obtained with
+
+	> ./1609-2-dump -h
+

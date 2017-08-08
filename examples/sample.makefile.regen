@@ -45,7 +45,7 @@ test -n "$TITLE" && EXTRA_CPPFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CPP
 set -x
 cat Makefile.am.sample						\
 	| sed -e "s/^CPPFLAGS += /CPPFLAGS += ${EXTRA_CPPFLAGS} /"	\
-	| sed -e "s/^all: /all: ${ASN1PDU}.c /"			\
+	| sed -e "s/^all: /all: maybe-wip-pause ${ASN1PDU}.c /"		\
 	| sed -e "s/progname/${PROGNAME}/"			\
 	> Makefile.$$
 set +x
@@ -126,6 +126,9 @@ set +x
 	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 7; \'
 	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 8; \'
 	echo '	done; done; fi'
+	echo
+	echo "maybe-wip-pause:"
+	echo "	@[ -f WIP ] && cat WIP && sleep 2"
 	echo
 	echo "distclean: clean"
 	echo '	rm -f $(ASN_MODULE_SOURCES)'
