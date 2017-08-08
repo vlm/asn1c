@@ -7,6 +7,7 @@
 #include "asn1c_constraint.h"
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
+#include "asn1c_ioc.h"
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
 #include <asn1parser.h>
@@ -298,90 +299,22 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 
-/*
- * Given the table constraint or component relation constraint
- * ({ObjectSetName}{...}) returns "ObjectSetName" as a reference.
- */
-static const asn1p_ref_t *
-asn1c_get_information_object_set_reference_from_constraint(
-    const asn1p_constraint_t *ct) {
-
-    if(!ct) return NULL;
-    assert(ct->type == ACT_CA_CRC);
-    assert(ct->el_count >= 1);
-
-    assert(ct->elements[0]->type == ACT_EL_VALUE);
-
-    asn1p_value_t *val = ct->elements[0]->value;
-    assert(val->type == ATV_REFERENCED);
-
-    return val->value.reference;
-}
-
-static asn1p_ioc_table_t *
-asn1c_get_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref, asn1p_expr_t *objset) {
-    (void)objset_ref;
-
-    if(objset->ioc_table) {
-        return objset->ioc_table;
-    } else {
-        FATAL("Information Object Set %s contains no objects at line %d",
-              objset->Identifier, objset->_lineno);
-        errno = EINVAL;
-        return NULL;
-    }
-};
-
-static asn1p_ioc_table_t *
-asn1c_get_ioc_table(arg_t *arg) {
-    asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *memb;
-    asn1p_expr_t *objset = 0;
-    const asn1p_ref_t *objset_ref = NULL;
-
-    TQ_FOR(memb, &(expr->members), next) {
-        const asn1p_ref_t *tmpref =
-            asn1c_get_information_object_set_reference_from_constraint(
-                asn1p_get_component_relation_constraint(memb->constraints));
-        if(tmpref) {
-            if(objset_ref && asn1p_ref_compare(objset_ref, tmpref) != 0) {
-                FATAL(
-                    "Object set reference on line %d differs from object set "
-                    "reference on line %d",
-                    objset_ref->_lineno, tmpref->_lineno);
-                errno = EINVAL;
-                return NULL;
-            }
-            objset_ref = tmpref;
-        }
-    }
-
-    if(!objset_ref) {
-        errno = 0;  /* "Safe" error. */
-        return NULL;
-    }
-
-    objset = asn1f_lookup_symbol_ex(arg->asn, arg->expr, objset_ref);
-    if(!objset) {
-        FATAL("Cannot found %s", asn1p_ref_string(objset_ref));
-        return NULL;
-    }
-
-    return asn1c_get_ioc_table_from_objset(arg, objset_ref, objset);
-}
-
 int
 asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int saved_target = arg->target->target;
-    asn1p_ioc_table_t *itable = NULL;
+    asn1c_ioc_table_and_objset_t ioc_tao;
 
 	DEPENDENCIES;
 
-    itable = asn1c_get_ioc_table(arg);
-    if(!itable && errno != 0) {
+    ioc_tao = asn1c_get_ioc_table(arg);
+    if(ioc_tao.ioct) {
+        if(emit_ioc_table(arg, expr, ioc_tao)) {
+            return -1;
+        }
+    } else if(ioc_tao.fatal_error) {
         return -1;
     }
 

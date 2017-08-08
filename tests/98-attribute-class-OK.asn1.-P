@@ -3,6 +3,7 @@
 
 #include <RELATIVE-OID.h>
 #include <IA5String.h>
+#include <asn_ioc.h>
 #include <constr_SEQUENCE.h>
 
 /*** <<< TYPE-DECLS [Attribute] >>> ***/
@@ -43,6 +44,15 @@ memb_identifier_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [Attribute] >>> ***/
 
+static const RELATIVE_OID_t asn_VAL_raf_0 = { "not supported", 0 };
+static const RELATIVE_OID_t asn_VAL_rcf_0 = { "not supported", 0 };
+static const asn_ioc_cell_t asn_IOS_Attributes_1_rows[] = {
+	{ "&id", aioc__value, &asn_DEF_RELATIVE_OID, &asn_VAL_raf_0 },
+	{ "&id", aioc__value, &asn_DEF_RELATIVE_OID, &asn_VAL_rcf_0 }
+};
+static asn_ioc_set_t asn_IOS_Attributes_1[] = {
+	2, 1, asn_IOS_Attributes_1_rows
+};
 static asn_TYPE_member_t asn_MBR_Attribute_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Attribute, identifier),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (13 << 2)),
