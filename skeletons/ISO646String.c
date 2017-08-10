@@ -22,6 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_ISO646String = {
 	"ISO646String",
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,	/* ASCII subset */
+	OCTET_STRING_compare,
 	VisibleString_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,

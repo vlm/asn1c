@@ -20,6 +20,7 @@ per_type_encoder_f ENUMERATED_encode_uper;
 
 #define ENUMERATED_free       ASN__PRIMITIVE_TYPE_free
 #define ENUMERATED_print      INTEGER_print
+#define ENUMERATED_compare    INTEGER_compare
 #define ENUMERATED_constraint asn_generic_no_constraint
 #define ENUMERATED_decode_ber ber_decode_primitive
 #define ENUMERATED_encode_der INTEGER_encode_der

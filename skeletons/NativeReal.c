@@ -13,6 +13,7 @@
 #include <NativeReal.h>
 #include <REAL.h>
 #include <OCTET_STRING.h>
+#include <math.h>
 
 /*
  * NativeReal basic type description.
@@ -25,6 +26,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	"REAL",
 	NativeReal_free,
 	NativeReal_print,
+	NativeReal_compare,
 	asn_generic_no_constraint,
 	NativeReal_decode_ber,
 	NativeReal_encode_der,
@@ -339,6 +341,39 @@ NativeReal_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(!Dbl) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	return (REAL__dump(*Dbl, 0, cb, app_key) < 0) ? -1 : 0;
+}
+
+int
+NativeReal_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                   const void *bptr) {
+    const double *a = aptr;
+    const double *b = bptr;
+    (void)td;
+
+    if(a && b) {
+        /* NaN sorted above everything else */
+        if(isnan(*a)) {
+            if(isnan(*b)) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } else if(isnan(*b)) {
+            return 1;
+        }
+        /* Value comparison. */
+        if(*a < *b) {
+            return -1;
+        } else if(*a > *b) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
 }
 
 void

@@ -45,6 +45,7 @@ typedef const struct asn_SEQUENCE_specifics_s {
  */
 asn_struct_free_f SEQUENCE_free;
 asn_struct_print_f SEQUENCE_print;
+asn_struct_compare_f SEQUENCE_compare;
 asn_constr_check_f SEQUENCE_constraint;
 ber_type_decoder_f SEQUENCE_decode_ber;
 der_type_encoder_f SEQUENCE_encode_der;

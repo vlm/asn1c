@@ -556,6 +556,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,

@@ -63,8 +63,11 @@
 /*
  * See the definitions.
  */
-static int _fetch_present_idx(const void *struct_ptr, int off, int size);
+static signed _fetch_present_idx(const void *struct_ptr, int off, int size);
 static void _set_present_idx(void *sptr, int offset, int size, int pres);
+static const void *_get_member_ptr(const asn_TYPE_descriptor_t *,
+                                   const void *sptr, asn_TYPE_member_t **elm,
+                                   signed *present);
 
 /*
  * Tags are canonically sorted in the tag to member table.
@@ -362,7 +365,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_enc_rval_t erval;
 	void *memb_ptr;
 	size_t computed_size = 0;
-	int present;
+	signed present;
 
 	if(!sptr) ASN__ENCODE_FAILED;
 
@@ -447,7 +450,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 ber_tlv_tag_t
 CHOICE_outmost_tag(const asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber_tlv_tag_t tag) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	int present;
+	signed present;
 
 	assert(tag_mode == 0); (void)tag_mode;
 	assert(tag == 0); (void)tag;
@@ -480,7 +483,7 @@ int
 CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	int present;
+	signed present;
 
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -777,7 +780,7 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_CHOICE_specifics_t *specs=(asn_CHOICE_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
-	int present;
+	signed present;
 
 	if(!sptr)
 		ASN__ENCODE_FAILED;
@@ -914,7 +917,7 @@ CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_TYPE_member_t *elm;	/* CHOICE's element */
 	const asn_per_constraint_t *ct;
 	void *memb_ptr;
-	int present;
+	signed present;
 	int present_enc;
 
 	if(!sptr) ASN__ENCODE_FAILED;
@@ -995,7 +998,7 @@ int
 CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	int present;
+	signed present;
 
 	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
@@ -1035,7 +1038,7 @@ CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 void
 CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	int present;
+	signed present;
 
 	if(!td || !ptr)
 		return;
@@ -1079,10 +1082,10 @@ CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
  * is guaranteed to be aligned properly. ASN.1 compiler itself does not
  * produce packed code.
  */
-static int
+static signed
 _fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
 	const void *present_ptr;
-	int present;
+	signed present;
 
 	present_ptr = ((const char *)struct_ptr) + pres_offset;
 
@@ -1112,4 +1115,70 @@ _set_present_idx(void *struct_ptr, int pres_offset, int pres_size, int present) 
 		/* ANSI C mandates enum to be equivalent to integer */
 		assert(pres_size != sizeof(int));
 	}
+}
+
+static const void *
+_get_member_ptr(const asn_TYPE_descriptor_t *td, const void *sptr,
+                asn_TYPE_member_t **elm_ptr, signed *present_out) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    signed present;
+
+    if(!sptr) {
+        *elm_ptr = NULL;
+        *present_out = 0;
+        return NULL;
+    }
+
+    /*
+	 * Figure out which CHOICE element is encoded.
+	 */
+	present = _fetch_present_idx(sptr, specs->pres_offset, specs->pres_size);
+    *present_out = present;
+
+    /*
+     * The presence index is intentionally 1-based to avoid
+     * treating zeroed structure as a valid one.
+     */
+	if(present > 0 && (unsigned)present <= td->elements_count) {
+        asn_TYPE_member_t *const elm = &td->elements[present - 1];
+        const void *memb_ptr;
+
+		if(elm->flags & ATF_POINTER) {
+            memb_ptr =
+                *(const void *const *)((const char *)sptr + elm->memb_offset);
+        } else {
+            memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
+        }
+        *elm_ptr = elm;
+        return memb_ptr;
+    } else {
+        *elm_ptr = NULL;
+        return NULL;
+    }
+
+}
+
+int
+CHOICE_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bptr) {
+    asn_TYPE_member_t *aelm;
+    asn_TYPE_member_t *belm;
+    signed apresent = 0;
+    signed bpresent = 0;
+    const void *amember = _get_member_ptr(td, aptr, &aelm, &apresent);
+    const void *bmember = _get_member_ptr(td, bptr, &belm, &apresent);
+
+    if(amember && bmember) {
+        if(apresent == bpresent) {
+            assert(aelm == belm);
+            return aelm->type->compare_struct(aelm->type, amember, bmember);
+        } else if(apresent < bpresent) {
+            return -1;
+        } else {
+            return 1;
+        }
+    } else if(!amember) {
+        return -1;
+    } else {
+        return 1;
+    }
 }

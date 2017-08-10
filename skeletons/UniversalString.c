@@ -28,6 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	"UniversalString",
 	OCTET_STRING_free,
 	UniversalString_print,      /* Convert into UTF8 and print */
+	OCTET_STRING_compare,
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,

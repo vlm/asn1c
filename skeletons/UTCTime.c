@@ -33,6 +33,7 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	"UTCTime",
 	OCTET_STRING_free,
 	UTCTime_print,
+	OCTET_STRING_compare,   /* Does not deal with time zones. */
 	UTCTime_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */

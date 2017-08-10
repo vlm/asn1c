@@ -18,6 +18,7 @@ asn_TYPE_descriptor_t asn_DEF_UTF8String = {
 	"UTF8String",
 	OCTET_STRING_free,
 	UTF8String_print,
+	OCTET_STRING_compare,
 	UTF8String_constraint,      /* Check for invalid codes, etc. */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,

@@ -42,6 +42,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	INTEGER_free,
 	INTEGER_print,
+	INTEGER_compare,
 	INTEGER_constraint,
 	INTEGER_decode_ber,
 	INTEGER_encode_der,

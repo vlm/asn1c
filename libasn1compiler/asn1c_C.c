@@ -2829,6 +2829,7 @@ do {				\
 
 		FUNCREF2(free);
 		FUNCREF2(print);
+		FUNCREF2(compare);
 		if (arg->flags & A1C_NO_CONSTRAINTS)
 			OUT("0,\t/* No check because of -fno-constraints */\n");
 		else

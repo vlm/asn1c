@@ -828,3 +828,12 @@ xer_whitespace_span(const void *chunk_buf, size_t chunk_size) {
     (void)chunk_size;
     return 0;
 }
+
+int
+OCTET_STRING_compare(const asn_TYPE_descriptor_t *td, const void *a,
+                     const void *b) {
+    (void)td;
+    (void)a;
+    (void)b;
+    return 0;
+}

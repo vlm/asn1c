@@ -23,6 +23,7 @@ extern asn_TYPE_descriptor_t asn_DEF_NativeInteger;
 
 asn_struct_free_f  NativeInteger_free;
 asn_struct_print_f NativeInteger_print;
+asn_struct_compare_f NativeInteger_compare;
 ber_type_decoder_f NativeInteger_decode_ber;
 der_type_encoder_f NativeInteger_encode_der;
 xer_type_decoder_f NativeInteger_decode_xer;

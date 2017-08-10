@@ -23,6 +23,7 @@ extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
 asn_struct_free_f OCTET_STRING_free;
 asn_struct_print_f OCTET_STRING_print;
 asn_struct_print_f OCTET_STRING_print_utf8;
+asn_struct_compare_f OCTET_STRING_compare;
 ber_type_decoder_f OCTET_STRING_decode_ber;
 der_type_encoder_f OCTET_STRING_encode_der;
 xer_type_decoder_f OCTET_STRING_decode_xer_hex;		/* Hexadecimal */

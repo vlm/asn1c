@@ -24,6 +24,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	"INTEGER",
 	NativeInteger_free,
 	NativeInteger_print,
+	NativeInteger_compare,
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
@@ -348,3 +349,37 @@ NativeInteger_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	}
 }
 
+int
+NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bptr) {
+    (void)td;
+
+    if(aptr && bptr) {
+        const asn_INTEGER_specifics_t *specs =
+            (const asn_INTEGER_specifics_t *)td->specifics;
+        if(specs->field_unsigned)  {
+            const unsigned long *a = aptr;
+            const unsigned long *b = bptr;
+            if(*a < *b) {
+                return -1;
+            } else if(*a > *b) {
+                return 1;
+            } else {
+                return 1;
+            }
+        } else {
+            const long *a = aptr;
+            const long *b = bptr;
+            if(*a < *b) {
+                return -1;
+            } else if(*a > *b) {
+                return 1;
+            } else {
+                return 1;
+            }
+        }
+    } else if(!aptr) {
+        return -1;
+    } else {
+        return 1;
+    }
+}

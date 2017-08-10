@@ -103,6 +103,7 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	"Choice",
 	CHOICE_free,
 	CHOICE_print,
+	CHOICE_compare,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,

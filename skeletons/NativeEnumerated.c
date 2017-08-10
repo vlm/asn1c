@@ -23,6 +23,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	"ENUMERATED",
 	NativeInteger_free,
 	NativeInteger_print,
+	NativeInteger_compare,
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,

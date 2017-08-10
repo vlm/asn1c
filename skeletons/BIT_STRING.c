@@ -22,6 +22,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	"BIT_STRING",
 	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
 	BIT_STRING_print,
+	BIT_STRING_compare,
 	BIT_STRING_constraint,
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
@@ -198,5 +199,48 @@ BIT_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	}
 
 	return 0;
+}
+
+/*
+ * Lexicographically compare the common prefix of both strings,
+ * and if it is the same return -1 for the smallest string.
+ */
+int
+BIT_STRING_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                   const void *bptr) {
+    const BIT_STRING_t *a = aptr;
+    const BIT_STRING_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        size_t common_prefix_size = a->size <= b->size ? a->size : b->size;
+        int ret = memcmp(a->buf, b->buf, common_prefix_size);
+        if(ret == 0) {
+            /* Figure out which string with equal prefixes is longer. */
+            if(a->size < b->size) {
+                return -1;
+            } else if(a->size > b->size) {
+                return 1;
+            } else {
+                /* Figure out how many unused bits */
+                if(a->bits_unused < b->bits_unused) {
+                    return -1;
+                } else if(a->bits_unused > b->bits_unused) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        } else {
+            return ret;
+        }
+    } else if(!a && !b) {
+        return 0;
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
 }
 

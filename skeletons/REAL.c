@@ -42,38 +42,40 @@ static const ber_tlv_tag_t asn_DEF_REAL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_REAL = {
-	"REAL",
-	"REAL",
-	ASN__PRIMITIVE_TYPE_free,
-	REAL_print,
-	asn_generic_no_constraint,
-	ber_decode_primitive,
-	der_encode_primitive,
-	REAL_decode_xer,
-	REAL_encode_xer,
+    "REAL",
+    "REAL",
+    ASN__PRIMITIVE_TYPE_free,
+    REAL_print,
+    REAL_compare,
+    asn_generic_no_constraint,
+    ber_decode_primitive,
+    der_encode_primitive,
+    REAL_decode_xer,
+    REAL_encode_xer,
 #ifdef	ASN_DISABLE_OER_SUPPORT
-	0,
-	0,
+    0,
+    0,
 #else
-	0,
-	0,
+    0,
+    0,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
-	0,
-	0,
+    0,
+    0,
 #else
-	REAL_decode_uper,
-	REAL_encode_uper,
+    REAL_decode_uper,
+    REAL_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
-	asn_DEF_REAL_tags,
-	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
-	asn_DEF_REAL_tags,	/* Same as above */
-	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
-	0, 0,	/* No members */
-	0	/* No specifics */
+    0,  /* Use generic outmost tag fetcher */
+    asn_DEF_REAL_tags,
+    sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
+    asn_DEF_REAL_tags, /* Same as above */
+    sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
+    0, /* No OER visible constraints */
+    0, /* No PER visible constraints */
+    0,
+    0, /* No members */
+    0  /* No specifics */
 };
 
 typedef enum specialRealValue {
@@ -290,6 +292,49 @@ REAL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		ret = REAL__dump(d, 0, cb, app_key);
 
 	return (ret < 0) ? -1 : 0;
+}
+
+int
+REAL_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+             const void *bptr) {
+    const REAL_t *a = aptr;
+    const REAL_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        double adbl, bdbl;
+        int ra, rb;
+        ra = asn_REAL2double(a, &adbl);
+        rb = asn_REAL2double(b, &bdbl);
+        if(ra == 0 && rb == 0) {
+            if(isnan(adbl)) {
+                if(isnan(bdbl)) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else if(isnan(bdbl)) {
+                return 1;
+            }
+            /* Value comparison. */
+            if(adbl < bdbl) {
+                return -1;
+            } else if(adbl > bdbl) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else if(ra) {
+            return -1;
+        } else {
+            return 1;
+        }
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
 }
 
 asn_enc_rval_t

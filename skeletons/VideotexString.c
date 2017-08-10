@@ -17,6 +17,7 @@ asn_TYPE_descriptor_t asn_DEF_VideotexString = {
 	"VideotexString",
 	OCTET_STRING_free,
 	OCTET_STRING_print,         /* non-ascii string */
+	OCTET_STRING_compare,
 	asn_generic_unknown_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,

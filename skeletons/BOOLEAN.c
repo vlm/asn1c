@@ -17,6 +17,7 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	"BOOLEAN",
 	BOOLEAN_free,
 	BOOLEAN_print,
+	BOOLEAN_compare,
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,
 	BOOLEAN_encode_der,
@@ -295,4 +296,28 @@ BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 		ASN__ENCODE_FAILED;
 
 	ASN__ENCODED_OK(er);
+}
+
+
+int
+BOOLEAN_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                const void *bptr) {
+    const BOOLEAN_t *a = aptr;
+    const BOOLEAN_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        if(*a == *b) {
+            return 0;
+        } else if(!*a) {
+            return -1;
+        } else {
+            return 1;
+        }
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
 }

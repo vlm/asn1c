@@ -28,7 +28,8 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	"OCTET STRING",		/* Canonical name */
 	"OCTET_STRING",		/* XML tag name */
 	OCTET_STRING_free,
-	OCTET_STRING_print,	/* non-ascii stuff, generally */
+	OCTET_STRING_print,	/* OCTET STRING generally means a non-ascii sequence */
+	OCTET_STRING_compare,
 	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
@@ -1818,5 +1819,42 @@ OCTET_STRING_new_fromBuf(asn_TYPE_descriptor_t *td, const char *str, int len) {
 	}
 
 	return st;
+}
+
+/*
+ * Lexicographically compare the common prefix of both strings,
+ * and if it is the same return -1 for the smallest string.
+ */
+int
+OCTET_STRING_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                     const void *bptr) {
+    const OCTET_STRING_t *a = aptr;
+    const OCTET_STRING_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        size_t common_prefix_size = a->size <= b->size ? a->size : b->size;
+        int ret = memcmp(a->buf, b->buf, common_prefix_size);
+        if(ret == 0) {
+            /* Figure out which string with equal prefixes is longer. */
+            if(a->size < b->size) {
+                return -1;
+            } else if(a->size > b->size) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return ret;
+        }
+    } else if(!a && !b) {
+        return 0;
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
+
 }
 

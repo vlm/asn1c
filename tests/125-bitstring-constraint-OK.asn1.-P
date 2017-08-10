@@ -66,6 +66,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	BIT_STRING_free,
 	BIT_STRING_print,
+	BIT_STRING_compare,
 	T_constraint,
 	BIT_STRING_decode_ber,
 	BIT_STRING_encode_der,

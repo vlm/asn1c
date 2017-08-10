@@ -103,6 +103,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	SET_free,
 	SET_print,
+	SET_compare,
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,

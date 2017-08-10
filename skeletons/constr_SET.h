@@ -47,6 +47,7 @@ typedef const struct asn_SET_specifics_s {
  */
 asn_struct_free_f SET_free;
 asn_struct_print_f SET_print;
+asn_struct_compare_f SET_compare;
 asn_constr_check_f SET_constraint;
 ber_type_decoder_f SET_decode_ber;
 der_type_encoder_f SET_encode_der;

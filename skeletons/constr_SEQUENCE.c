@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -1425,5 +1425,39 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 		ASN__ENCODE_FAILED;
 
 	ASN__ENCODED_OK(er);
+}
+
+int
+SEQUENCE_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                 const void *bptr) {
+    size_t edx;
+
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		const void *amemb;
+		const void *bmemb;
+        int ret;
+
+		if(elm->flags & ATF_POINTER) {
+            amemb =
+                *(const void *const *)((const char *)aptr + elm->memb_offset);
+            bmemb =
+                *(const void *const *)((const char *)bptr + elm->memb_offset);
+            if(!amemb) {
+                if(!bmemb) continue;
+                return -1;
+            } else if(!bmemb) {
+                return 1;
+            }
+		} else {
+            amemb = (const void *)((const char *)aptr + elm->memb_offset);
+            bmemb = (const void *)((const char *)bptr + elm->memb_offset);
+		}
+
+        ret = elm->type->compare_struct(elm->type, amemb, bmemb);
+        if(ret != 0) return ret;
+    }
+
+    return 0;
 }
 

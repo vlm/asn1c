@@ -953,3 +953,12 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	return rv;
 }
 
+int
+SET_OF_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+               const void *bptr) {
+    (void)td;
+    (void)aptr;
+    (void)bptr;
+    /* Not implemented yet. */
+    return 0;
+}

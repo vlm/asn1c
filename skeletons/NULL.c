@@ -18,6 +18,7 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	"NULL",
 	BOOLEAN_free,
 	NULL_print,
+	NULL_compare,
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,	/* Implemented in terms of BOOLEAN */
 	NULL_encode_der,	/* Special handling of DER encoding */
@@ -105,6 +106,14 @@ NULL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 	return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(NULL_t), opt_mname, buf_ptr, size,
 		NULL__xer_body_decode);
+}
+
+int
+NULL_compare(const asn_TYPE_descriptor_t *td, const void *a, const void *b) {
+    (void)td;
+    (void)a;
+    (void)b;
+    return 0;
 }
 
 int

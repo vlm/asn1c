@@ -28,6 +28,7 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	"BMPString",
 	OCTET_STRING_free,          /* Implemented in terms of OCTET STRING */
 	BMPString_print,
+	OCTET_STRING_compare,
 	asn_generic_no_constraint,  /* No constraint by default */
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,

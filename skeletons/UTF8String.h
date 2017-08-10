@@ -19,6 +19,7 @@ asn_struct_print_f UTF8String_print;
 asn_constr_check_f UTF8String_constraint;
 
 #define UTF8String_free         OCTET_STRING_free
+#define UTF8String_compare      OCTET_STRING_compare
 #define UTF8String_constraint   UTF8String_constraint
 #define UTF8String_decode_ber   OCTET_STRING_decode_ber
 #define UTF8String_encode_der   OCTET_STRING_encode_der

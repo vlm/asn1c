@@ -19,6 +19,7 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	"INTEGER",
 	INTEGER_free,
 	INTEGER_print,
+    INTEGER_compare,
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,
@@ -1082,5 +1083,48 @@ asn_strtol_lim(const char *str, const char **end, long *lp) {
 
     assert(!"Unreachable");
     return ASN_STRTOX_ERROR_INVAL;
+}
+
+int
+INTEGER_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                     const void *bptr) {
+    const INTEGER_t *a = aptr;
+    const INTEGER_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        if(a->size && b->size) {
+            int sign_a = (a->buf[0] & 0x80) ? -1 : 1;
+            int sign_b = (b->buf[0] & 0x80) ? -1 : 1;
+
+            if(sign_a < sign_b) return -1;
+            if(sign_a > sign_b) return 1;
+
+            /* The shortest integer wins, unless comparing negatives */
+            if(a->size < b->size) {
+                return -1 * sign_a;
+            } else if(a->size > b->size) {
+                return 1 * sign_b;
+            }
+
+            return sign_a * memcmp(a->buf, b->buf, a->size);
+        } else if(a->size) {
+            int sign = (a->buf[0] & 0x80) ? -1 : 1;
+            return (1) * sign;
+        } else if(b->size) {
+            int sign = (a->buf[0] & 0x80) ? -1 : 1;
+            return (-1) * sign;
+        } else {
+            return 0;
+        }
+    } else if(!a && !b) {
+        return 0;
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
+
 }
 

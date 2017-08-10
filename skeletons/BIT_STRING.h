@@ -24,6 +24,7 @@ extern asn_TYPE_descriptor_t asn_DEF_BIT_STRING;
 extern asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs;
 
 asn_struct_print_f BIT_STRING_print;	/* Human-readable output */
+asn_struct_compare_f BIT_STRING_compare;
 asn_constr_check_f BIT_STRING_constraint;
 xer_type_encoder_f BIT_STRING_encode_xer;
 

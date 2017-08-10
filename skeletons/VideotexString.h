@@ -17,6 +17,7 @@ extern asn_TYPE_descriptor_t asn_DEF_VideotexString;
 
 #define VideotexString_free         OCTET_STRING_free
 #define VideotexString_print        OCTET_STRING_print
+#define VideotexString_compare      OCTET_STRING_compare
 #define VideotexString_constraint   asn_generic_unknown_constraint
 #define VideotexString_decode_ber   OCTET_STRING_decode_ber
 #define VideotexString_encode_der   OCTET_STRING_encode_der

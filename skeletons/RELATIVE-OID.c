@@ -21,6 +21,7 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	"RELATIVE_OID",
 	ASN__PRIMITIVE_TYPE_free,
 	RELATIVE_OID_print,
+	OCTET_STRING_compare,   /* Implemented in terms of opaque comparison */
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
