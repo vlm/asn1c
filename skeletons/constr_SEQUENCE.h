@@ -15,8 +15,8 @@ typedef const struct asn_SEQUENCE_specifics_s {
 	/*
 	 * Target structure description.
 	 */
-	int struct_size;	/* Size of the target structure. */
-	int ctx_offset;		/* Offset of the asn_struct_ctx_t member */
+	unsigned struct_size;	/* Size of the target structure. */
+	unsigned ctx_offset;	/* Offset of the asn_struct_ctx_t member */
 
 	/*
 	 * Tags to members mapping table (sorted).
