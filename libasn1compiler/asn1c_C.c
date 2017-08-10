@@ -2626,7 +2626,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
             crc->el_count,
             crc->el_count >= 2 && crc->elements[1]->type == ACT_EL_VALUE
                     && crc->elements[1]->value->type == ATV_REFERENCED
-                ? crc->elements[1]->value->value.reference->comp_count
+                ? (signed)crc->elements[1]->value->value.reference->comp_count
                 : -1,
             crc->el_count >= 2 && crc->elements[1]->type == ACT_EL_VALUE
                     && crc->elements[1]->value->type == ATV_REFERENCED
