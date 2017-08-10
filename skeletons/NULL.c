@@ -18,11 +18,19 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	"NULL",
 	BOOLEAN_free,
 	NULL_print,
+	NULL_compare,
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,	/* Implemented in terms of BOOLEAN */
 	NULL_encode_der,	/* Special handling of DER encoding */
 	NULL_decode_xer,
 	NULL_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -35,6 +43,7 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
 	asn_DEF_NULL_tags,	/* Same as above */
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -100,6 +109,14 @@ NULL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 }
 
 int
+NULL_compare(const asn_TYPE_descriptor_t *td, const void *a, const void *b) {
+    (void)td;
+    (void)a;
+    (void)b;
+    return 0;
+}
+
+int
 NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 
@@ -115,8 +132,9 @@ NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 asn_dec_rval_t
 NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_dec_rval_t rv;
+                 const asn_per_constraints_t *constraints, void **sptr,
+                 asn_per_data_t *pd) {
+    asn_dec_rval_t rv;
 
 	(void)opt_codec_ctx;
 	(void)td;
@@ -142,9 +160,10 @@ NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-NULL_encode_uper(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-		void *sptr, asn_per_outp_t *po) {
-	asn_enc_rval_t er;
+NULL_encode_uper(asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void *sptr,
+                 asn_per_outp_t *po) {
+    asn_enc_rval_t er;
 
 	(void)td;
 	(void)constraints;

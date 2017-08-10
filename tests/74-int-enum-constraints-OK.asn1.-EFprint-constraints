@@ -7,30 +7,36 @@ BEGIN
 Enum ::= ENUMERATED {
     one(0)
 -- Practical constraints (one):   
+-- OER-visible constraints (one):   
 -- PER-visible constraints (one):   
 ,
     two(1)
 -- Practical constraints (two):   
+-- OER-visible constraints (two):   
 -- PER-visible constraints (two):   
 
 } (1 | 0)
 -- Combined constraints: (1 | 0)
 -- Practical constraints (Enum): (0..1)  
+-- OER-visible constraints (Enum): (0..1)  
 -- PER-visible constraints (Enum): (0..1)  
 
 Int ::= INTEGER {
     v1-0(123)
 -- Practical constraints (v1-0):   
+-- OER-visible constraints (v1-0):   
 -- PER-visible constraints (v1-0):   
 
 } (123)
 -- Combined constraints: (123)
 -- Practical constraints (Int): (123)  
+-- OER-visible constraints (Int): (123)  
 -- PER-visible constraints (Int): (123)  
 
 EnumRef ::= Enum (1)
 -- Combined constraints: (1 | 0)(1)
 -- Practical constraints (Enum): (1)  
+-- OER-visible constraints (Enum): (1)  
 -- PER-visible constraints (Enum): (1)  
 
 END

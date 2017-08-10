@@ -22,11 +22,19 @@ asn_TYPE_descriptor_t asn_DEF_VisibleString = {
 	"VisibleString",
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,   /* ASCII subset */
+	OCTET_STRING_compare,
 	VisibleString_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	OCTET_STRING_decode_oer,
+	OCTET_STRING_encode_oer,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -41,6 +49,7 @@ asn_TYPE_descriptor_t asn_DEF_VisibleString = {
 	asn_DEF_VisibleString_tags,
 	sizeof(asn_DEF_VisibleString_tags)
 	  / sizeof(asn_DEF_VisibleString_tags[0]),
+	0,	/* No OER visible constraints */
 	&asn_DEF_VisibleString_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */

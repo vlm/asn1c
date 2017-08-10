@@ -42,30 +42,40 @@ static const ber_tlv_tag_t asn_DEF_REAL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_REAL = {
-	"REAL",
-	"REAL",
-	ASN__PRIMITIVE_TYPE_free,
-	REAL_print,
-	asn_generic_no_constraint,
-	ber_decode_primitive,
-	der_encode_primitive,
-	REAL_decode_xer,
-	REAL_encode_xer,
-#ifdef	ASN_DISABLE_PER_SUPPORT
-	0,
-	0,
+    "REAL",
+    "REAL",
+    ASN__PRIMITIVE_TYPE_free,
+    REAL_print,
+    REAL_compare,
+    asn_generic_no_constraint,
+    ber_decode_primitive,
+    der_encode_primitive,
+    REAL_decode_xer,
+    REAL_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+    0,
+    0,
 #else
-	REAL_decode_uper,
-	REAL_encode_uper,
+    0,
+    0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
+#ifdef	ASN_DISABLE_PER_SUPPORT
+    0,
+    0,
+#else
+    REAL_decode_uper,
+    REAL_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
-	asn_DEF_REAL_tags,
-	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
-	asn_DEF_REAL_tags,	/* Same as above */
-	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
-	0,	/* No PER visible constraints */
-	0, 0,	/* No members */
-	0	/* No specifics */
+    0,  /* Use generic outmost tag fetcher */
+    asn_DEF_REAL_tags,
+    sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
+    asn_DEF_REAL_tags, /* Same as above */
+    sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
+    0, /* No OER visible constraints */
+    0, /* No PER visible constraints */
+    0,
+    0, /* No members */
+    0  /* No specifics */
 };
 
 typedef enum specialRealValue {
@@ -284,6 +294,49 @@ REAL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	return (ret < 0) ? -1 : 0;
 }
 
+int
+REAL_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+             const void *bptr) {
+    const REAL_t *a = aptr;
+    const REAL_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        double adbl, bdbl;
+        int ra, rb;
+        ra = asn_REAL2double(a, &adbl);
+        rb = asn_REAL2double(b, &bdbl);
+        if(ra == 0 && rb == 0) {
+            if(isnan(adbl)) {
+                if(isnan(bdbl)) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else if(isnan(bdbl)) {
+                return 1;
+            }
+            /* Value comparison. */
+            if(adbl < bdbl) {
+                return -1;
+            } else if(adbl > bdbl) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else if(ra) {
+            return -1;
+        } else {
+            return 1;
+        }
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
+
 asn_enc_rval_t
 REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
@@ -383,17 +436,18 @@ REAL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_dec_rval_t
-REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-	void **sptr, asn_per_data_t *pd) {
-	(void)constraints;	/* No PER visible constraints */
+REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void **sptr,
+                 asn_per_data_t *pd) {
+    (void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_decode_uper(opt_codec_ctx, td, 0, sptr, pd);
 }
 
 asn_enc_rval_t
 REAL_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	(void)constraints;	/* No PER visible constraints */
+                 const asn_per_constraints_t *constraints, void *sptr,
+                 asn_per_outp_t *po) {
+    (void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_encode_uper(td, 0, sptr, po);
 }
 
@@ -530,7 +584,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	sign = (octv & 0x40);	/* bit 7 */
 	scaleF = (octv & 0x0C) >> 2;	/* bits 4 to 3 */
 
-	if(st->size <= (int)(1 + (octv & 0x03))) {
+	if(st->size <= 1 + (octv & 0x03)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -538,7 +592,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	elen = (octv & 0x03);	/* bits 2 to 1; 8.5.6.4 */
 	if(elen == 0x03) {	/* bits 2 to 1 = 11; 8.5.6.4, case d) */
 		elen = st->buf[1];	/* unsigned binary number */
-		if(elen == 0 || st->size <= (int)(2 + elen)) {
+		if(elen == 0 || st->size <= (2 + elen)) {
 			errno = EINVAL;
 			return -1;
 		}

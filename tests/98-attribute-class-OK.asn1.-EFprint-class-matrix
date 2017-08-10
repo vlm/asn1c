@@ -1,0 +1,44 @@
+ModuleAttributeClass { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 98 }
+DEFINITIONS ::=
+BEGIN
+
+ATTRIBUTE ::= CLASS {
+    &id	 RELATIVE-OID UNIQUE
+} WITH SYNTAX { ID &id }
+
+-- Information Object Set has 2 entries:
+--    [&id]
+-- [1] raf 
+-- [2] rcf 
+
+
+Attribute ::= SEQUENCE {
+    identifier	 ATTRIBUTE.&id ({Attributes}),
+    siAttributeValue	 IA5String
+}
+
+Attributes ATTRIBUTE ::= {{ ID raf } | { ID rcf }}
+-- Information Object Set has 2 entries:
+--    [&id]
+-- [1] raf 
+-- [2] rcf 
+
+
+rafService ATTRIBUTE ::= { ID raf }
+-- Information Object Set has 1 entry:
+--    [&id]
+-- [1] raf 
+
+
+rcfService ATTRIBUTE ::= { ID rcf }
+-- Information Object Set has 1 entry:
+--    [&id]
+-- [1] rcf 
+
+
+raf RELATIVE-OID ::= {3 2 1}
+
+rcf RELATIVE-OID ::= {3 2 2}
+
+END

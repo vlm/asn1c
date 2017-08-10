@@ -18,6 +18,16 @@ extern asn_TYPE_descriptor_t asn_DEF_UTF8String;
 asn_struct_print_f UTF8String_print;
 asn_constr_check_f UTF8String_constraint;
 
+#define UTF8String_free         OCTET_STRING_free
+#define UTF8String_compare      OCTET_STRING_compare
+#define UTF8String_constraint   UTF8String_constraint
+#define UTF8String_decode_ber   OCTET_STRING_decode_ber
+#define UTF8String_encode_der   OCTET_STRING_encode_der
+#define UTF8String_decode_xer   OCTET_STRING_decode_xer_utf8
+#define UTF8String_encode_xer   OCTET_STRING_encode_xer_utf8
+#define UTF8String_decode_uper  OCTET_STRING_decode_uper
+#define UTF8String_encode_uper  OCTET_STRING_encode_uper
+
 /*
  * Returns length of the given UTF-8 string in characters,
  * or a negative error code:

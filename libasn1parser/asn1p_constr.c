@@ -6,6 +6,30 @@
 
 #include "asn1parser.h"
 
+void
+asn1p_constraint_set_source(asn1p_constraint_t *ct,
+                            struct asn1p_module_s *module, int lineno) {
+    if(ct) {
+        ct->module = module;
+        ct->_lineno = lineno;
+        asn1p_value_set_source(ct->containedSubtype,module,lineno);
+        asn1p_value_set_source(ct->value,module,lineno);
+        asn1p_value_set_source(ct->range_start,module,lineno);
+        asn1p_value_set_source(ct->range_stop,module,lineno);
+        for(size_t i = 0; i < ct->el_count; i++) {
+            asn1p_constraint_set_source(ct->elements[i], module, lineno);
+        }
+    }
+}
+
+int asn1p_constraint_compare(const asn1p_constraint_t *a,
+                             const asn1p_constraint_t *b) {
+    (void)a;
+    (void)b;
+    assert(!"Constraint comparison is not implemented");
+    return -1;
+}
+
 asn1p_constraint_t *
 asn1p_constraint_new(int _lineno, asn1p_module_t *mod) {
 	asn1p_constraint_t *ct;
@@ -142,7 +166,7 @@ asn1p_constraint_prepend(asn1p_constraint_t *before, asn1p_constraint_t *what) {
 }
 
 
-char *
+const char *
 asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
 	switch(type) {
 	case ACT_INVALID:
@@ -189,3 +213,20 @@ asn1p_constraint_type2str(enum asn1p_constraint_type_e type) {
 	}
 	return "UNKNOWN";
 }
+
+const asn1p_constraint_t *
+asn1p_get_component_relation_constraint(asn1p_constraint_t *ct) {
+    if(ct) {
+        if(ct->type == ACT_CA_CRC)
+            return ct;
+        if(ct->type == ACT_CA_SET) {
+            for(size_t i = 0; i < ct->el_count; i++) {
+                const asn1p_constraint_t *tmp =
+                    asn1p_get_component_relation_constraint(ct->elements[i]);
+                if(tmp) return tmp;
+            }
+        }
+    }
+    return NULL;
+}
+

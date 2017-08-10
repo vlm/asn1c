@@ -19,11 +19,19 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	"ENUMERATED",
 	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,			/* Implemented in terms of INTEGER */
+	INTEGER_compare,		/* Implemented in terms of INTEGER */
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,		/* Implemented in terms of INTEGER */
 	INTEGER_decode_xer,	/* This is temporary! */
 	INTEGER_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -36,15 +44,18 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
 	asn_DEF_ENUMERATED_tags,	/* Same as above */
 	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
 
 asn_dec_rval_t
-ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_dec_rval_t rval;
+ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+                       asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints, void **sptr,
+                       asn_per_data_t *pd) {
+    asn_dec_rval_t rval;
 	ENUMERATED_t *st = (ENUMERATED_t *)*sptr;
 	long value;
 	void *vptr = &value;
@@ -64,8 +75,9 @@ ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td
 
 asn_enc_rval_t
 ENUMERATED_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	ENUMERATED_t *st = (ENUMERATED_t *)sptr;
+                       const asn_per_constraints_t *constraints, void *sptr,
+                       asn_per_outp_t *po) {
+    ENUMERATED_t *st = (ENUMERATED_t *)sptr;
 	long value;
 
 	if(asn_INTEGER2long(st, &value))

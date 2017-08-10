@@ -20,9 +20,7 @@ BEGIN
 		siAttributeValue IA5String
 	}
 
-	Attributes ATTRIBUTE ::= { Names }
-
-	Names ATTRIBUTE ::= { rafService | rcfService }
+	Attributes ATTRIBUTE ::= { rafService | rcfService }
 
 	rafService ATTRIBUTE ::= { ID raf }
 	rcfService ATTRIBUTE ::= { ID rcf }

@@ -40,7 +40,9 @@ static asn_TYPE_member_t asn_MBR_collection_3[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_T2,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -60,11 +62,13 @@ asn_TYPE_descriptor_t asn_DEF_collection_3 = {
 	"collection",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
+	SEQUENCE_OF_compare,
 	SEQUENCE_OF_constraint,
 	SEQUENCE_OF_decode_ber,
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,
 	SEQUENCE_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_collection_tags_3,
@@ -73,6 +77,7 @@ asn_TYPE_descriptor_t asn_DEF_collection_3 = {
 	asn_DEF_collection_tags_3,	/* Same as above */
 	sizeof(asn_DEF_collection_tags_3)
 		/sizeof(asn_DEF_collection_tags_3[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_collection_3,
 	1,	/* Single element */
@@ -84,7 +89,9 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "int"
@@ -93,7 +100,9 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_collection_3,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "collection"
@@ -120,11 +129,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
@@ -133,6 +144,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_T_1,
 	2,	/* Elements count */
@@ -159,15 +171,19 @@ typedef struct T2 {
 /*** <<< FUNC-DECLS [T2] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_T2;
+extern asn_SEQUENCE_specifics_t asn_SPC_T2_specs_1;
+extern asn_TYPE_member_t asn_MBR_T2_1[2];
 
 /*** <<< STAT-DEFS [T2] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_T2_1[] = {
+asn_TYPE_member_t asn_MBR_T2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T2, flag),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "flag"
@@ -176,7 +192,9 @@ static asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_UTF8String,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "str"
@@ -189,7 +207,7 @@ static const asn_TYPE_tag2member_t asn_MAP_T2_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 0, 0, 0 }, /* flag */
     { (ASN_TAG_CLASS_UNIVERSAL | (12 << 2)), 1, 0, 0 } /* str */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_T2_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_T2_specs_1 = {
 	sizeof(struct T2),
 	offsetof(struct T2, _asn_ctx),
 	asn_MAP_T2_tag2el_1,
@@ -203,11 +221,13 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	"T2",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags_1,
@@ -216,6 +236,7 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	asn_DEF_T2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T2_tags_1)
 		/sizeof(asn_DEF_T2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_T2_1,
 	2,	/* Elements count */

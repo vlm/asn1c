@@ -161,30 +161,36 @@ per_get_many_bits(asn_per_data_t *pd, uint8_t *dst, int alright, int nbits) {
 }
 
 /*
- * Get the length "n" from the stream.
+ * X.691-201508 #10.9 General rules for encoding a length determinant.
+ * Get the optionally constrained length "n" from the stream.
  */
 ssize_t
 uper_get_length(asn_per_data_t *pd, int ebits, int *repeat) {
-	ssize_t value;
+    ssize_t value;
 
-	*repeat = 0;
+    *repeat = 0;
 
-	if(ebits >= 0) return per_get_few_bits(pd, ebits);
+    /* #11.9.4.1 Encoding if constrained (according to effective bits) */
+    if(ebits >= 0 && ebits <= 16) {
+        return per_get_few_bits(pd, ebits);
+    }
 
 	value = per_get_few_bits(pd, 8);
-	if(value < 0) return -1;
-	if((value & 128) == 0)	/* #10.9.3.6 */
-		return (value & 0x7F);
-	if((value & 64) == 0) {	/* #10.9.3.7 */
-		value = ((value & 63) << 8) | per_get_few_bits(pd, 8);
-		if(value < 0) return -1;
-		return value;
-	}
-	value &= 63;	/* this is "m" from X.691, #10.9.3.8 */
-	if(value < 1 || value > 4)
-		return -1;
-	*repeat = 1;
-	return (16384 * value);
+    if((value & 0x80) == 0) { /* #11.9.3.6 */
+        return (value & 0x7F);
+    } else if((value & 0x40) == 0) { /* #11.9.3.7 */
+        /* bit 8 ... set to 1 and bit 7 ... set to zero */
+        value = ((value & 0x3f) << 8) | per_get_few_bits(pd, 8);
+        return value; /* potential -1 from per_get_few_bits passes through. */
+    } else if(value < 0) {
+        return -1;
+    }
+    value &= 0x3f; /* this is "m" from X.691, #11.9.3.8 */
+    if(value < 1 || value > 4) {
+        return -1; /* Prohibited by #11.9.3.8 */
+    }
+    *repeat = 1;
+    return (16384 * value);
 }
 
 /*
@@ -316,6 +322,27 @@ int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int
 	}
 }
 
+int
+per_put_aligned_flush(asn_per_outp_t *po) {
+    uint32_t unused_bits = (0x7 & (8 - (po->nboff & 0x07)));
+    size_t complete_bytes =
+        (po->buffer ? po->buffer - po->tmpspace : 0) + ((po->nboff + 7) >> 3);
+
+    if(unused_bits) {
+        po->buffer[po->nboff >> 3] &= ~0 << unused_bits;
+    }
+
+    if(po->outper(po->tmpspace, complete_bytes, po->op_key) < 0) {
+        return -1;
+    } else {
+        po->buffer = po->tmpspace;
+        po->nboff = 0;
+        po->nbits = 8 * sizeof(po->tmpspace);
+        po->flushed_bytes += complete_bytes;
+        return 0;
+    }
+}
+
 /*
  * Put a small number of bits (<= 31).
  */
@@ -343,7 +370,9 @@ per_put_few_bits(asn_per_outp_t *po, uint32_t bits, int obits) {
 	 * Flush whole-bytes output, if necessary.
 	 */
 	if(po->nboff + obits > po->nbits) {
-		int complete_bytes = (po->buffer - po->tmpspace);
+		size_t complete_bytes;
+		if(!po->buffer) po->buffer = po->tmpspace;
+		complete_bytes = (po->buffer - po->tmpspace);
 		ASN_DEBUG("[PER output %ld complete + %ld]",
 			(long)complete_bytes, (long)po->flushed_bytes);
 		if(po->outper(po->tmpspace, complete_bytes, po->op_key) < 0)

@@ -10,8 +10,8 @@ enum encoding_type { HEX, BINARY, UTF8 };
 
 static void
 check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
-	int xmllen = strlen(xmlbuf);
-	int verlen = verify ? strlen(verify) : 0;
+	size_t xmllen = strlen(xmlbuf);
+	size_t verlen = verify ? strlen(verify) : 0;
 	asn_TYPE_descriptor_t *td = &asn_DEF_OCTET_STRING;
 	OCTET_STRING_t *st = 0;
 	OCTET_STRING_t **stp = &st;
@@ -32,7 +32,7 @@ check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 	}
 
 	rc = decoder(0, td, (void **)stp, tagname, xmlbuf, xmllen);
-	printf("[%s] => [%s]:%d vs [%s]:%d, code %d\n",
+	printf("[%s] => [%s]:%zu vs [%s]:%zu, code %d\n",
 		xmlbuf,
 		st ? (const char *)st->buf : "", st ? st->size : 0,
 		verify ? verify : "", verlen, rc.code);

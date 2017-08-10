@@ -43,8 +43,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 
 	etype = _find_terminal_type(arg);
 
-	r_value=asn1constraint_compute_PER_range(etype, ct, ACT_EL_RANGE,0,0,0);
-	r_size =asn1constraint_compute_PER_range(etype, ct, ACT_CT_SIZE, 0,0,0);
+	r_value=asn1constraint_compute_constraint_range(expr->Identifier, etype, ct, ACT_EL_RANGE,0,0,0);
+	r_size =asn1constraint_compute_constraint_range(expr->Identifier, etype, ct, ACT_CT_SIZE, 0,0,0);
 	if(r_value) {
 		if(r_value->incompatible
 		|| r_value->empty_constraint
@@ -251,7 +251,7 @@ asn1c_emit_constraint_tables(arg_t *arg, int got_size) {
 
 	etype = _find_terminal_type(arg);
 
-	range = asn1constraint_compute_PER_range(etype, ct, ACT_CT_FROM, 0,0,0);
+	range = asn1constraint_compute_constraint_range(arg->expr->Identifier, etype, ct, ACT_CT_FROM, 0,0,0);
 	if(!range) return 0;
 
 	if(range->incompatible

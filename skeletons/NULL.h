@@ -6,6 +6,7 @@
 #define	ASN_TYPE_NULL_H
 
 #include <asn_application.h>
+#include <BOOLEAN.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,11 +21,16 @@ typedef int NULL_t;
 extern asn_TYPE_descriptor_t asn_DEF_NULL;
 
 asn_struct_print_f NULL_print;
+asn_struct_compare_f NULL_compare;
 der_type_encoder_f NULL_encode_der;
 xer_type_decoder_f NULL_decode_xer;
 xer_type_encoder_f NULL_encode_xer;
 per_type_decoder_f NULL_decode_uper;
 per_type_encoder_f NULL_encode_uper;
+
+#define NULL_free		BOOLEAN_free
+#define NULL_decode_ber	BOOLEAN_decode_ber
+#define NULL_constraint	asn_generic_no_constraint
 
 #ifdef __cplusplus
 }

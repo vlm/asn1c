@@ -22,12 +22,15 @@ extern asn_TYPE_descriptor_t asn_DEF_BOOLEAN;
 
 asn_struct_free_f BOOLEAN_free;
 asn_struct_print_f BOOLEAN_print;
+asn_struct_compare_f BOOLEAN_compare;
 ber_type_decoder_f BOOLEAN_decode_ber;
 der_type_encoder_f BOOLEAN_encode_der;
 xer_type_decoder_f BOOLEAN_decode_xer;
 xer_type_encoder_f BOOLEAN_encode_xer;
 per_type_decoder_f BOOLEAN_decode_uper;
 per_type_encoder_f BOOLEAN_encode_uper;
+
+#define BOOLEAN_constraint     asn_generic_no_constraint
 
 #ifdef __cplusplus
 }

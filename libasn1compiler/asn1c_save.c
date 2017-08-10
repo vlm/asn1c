@@ -160,36 +160,37 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 			return -1;
 	}
 
-	safe_fprintf(mkf, "\n\n"
-		"lib_LTLIBRARIES=libsomething.la\n"
-		"libsomething_la_SOURCES="
-			"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
-		"\n"
-		"# This file may be used as an input for make(3)\n"
-		"# Remove the lines below to convert it into a pure .am file\n"
-		"TARGET = progname\n"
-		"CFLAGS +=%s%s -I.\n"
-		"OBJS=${ASN_MODULE_SOURCES:.c=.o}"
-		  " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
-		"\nall: $(TARGET)\n"
-		"\n$(TARGET): ${OBJS}"
-		"\n\t$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)\n"
-		"\n.SUFFIXES:"
-		"\n.SUFFIXES: .c .o\n"
-		"\n.c.o:"
-		"\n\t$(CC) $(CFLAGS) -o $@ -c $<\n"
-		"\nclean:"
-		"\n\trm -f $(TARGET)"
-		"\n\trm -f $(OBJS)\n"
-		"\nregen: regenerate-from-asn1-source\n"
-		"\nregenerate-from-asn1-source:\n\t"
-		, (arg->flags & A1C_PDU_TYPE)
-			? generate_pdu_C_definition() : ""
-		, need_to_generate_pdu_collection(arg)
-			? " -DASN_PDU_COLLECTION" : ""
-	);
+    safe_fprintf(
+        mkf,
+        "\n\n"
+        "lib_LTLIBRARIES=libsomething.la\n"
+        "libsomething_la_SOURCES="
+        "$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
+        "\n"
+        "# This file may be used as an input for make(3)\n"
+        "# Remove the lines below to convert it into a pure .am file\n"
+        "TARGET = progname\n"
+        "CPPFLAGS += %s%s%s%s-I.\n"
+        "OBJS=${ASN_MODULE_SOURCES:.c=.o}"
+        " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
+        "\nall: $(TARGET)\n"
+        "\n$(TARGET): ${OBJS}"
+        "\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)\n"
+        "\n.SUFFIXES:"
+        "\n.SUFFIXES: .c .o\n"
+        "\n.c.o:"
+        "\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<\n"
+        "\nclean:"
+        "\n\trm -f $(TARGET)"
+        "\n\trm -f $(OBJS)\n"
+        "\nregen: regenerate-from-asn1-source\n"
+        "\nregenerate-from-asn1-source:\n\t",
+        (arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
+        (arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ",
+        (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
+        need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
 
-	for(i = 0; i < argc; i++)
+    for(i = 0; i < argc; i++)
 		safe_fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
 	safe_fprintf(mkf, "\n\n");
 
@@ -302,6 +303,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	safe_fprintf(fp_c, "#include \"%s.h\"\n\n", filename);
 	if(arg->flags & A1C_NO_INCLUDE_DEPS)
 		SAVE_STREAM(fp_c, OT_POST_INCLUDE, "", 1);
+	TQ_FOR(ot, &(cs->destination[OT_IOC_TABLES].chunks), next)
+		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
 		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CODE].chunks), next)
@@ -311,7 +314,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
 		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 12);	/* Protection from reckless changes */
+	assert(OT_MAX == 13);	/* Protection from reckless changes */
 
 	fclose(fp_c);
 	fclose(fp_h);
@@ -568,18 +571,21 @@ static int pduTypes;
 
 static const char *
 generate_pdu_C_definition(void) {
-	const char *src;
-	char *def;
+    const char *src;
+    char *def;
 	char *dst;
-	if(pduTypes == 0) return "";
-	def = malloc(strlen(pduType[0].typename) + 20);
-	assert(def);
-	strcpy(def, " -DPDU=");
-	for(src = pduType[0].typename, dst = def + 7; *src; src++, dst++)
-		if((*dst = *src) == '-')
-			*dst = '_';
-	*dst = 0;
-	return def;
+    if(pduTypes == 0) return "";
+    def = malloc(strlen(pduType[0].typename) + 20);
+    assert(def);
+    strcpy(def, "-DPDU=");
+	for(src = pduType[0].typename, dst = def + 6; *src; src++, dst++) {
+        if((*dst = *src) == '-') {
+            *dst = '_';
+        }
+    }
+    *dst++ = ' ';
+    *dst = 0;
+    return def;
 }
 
 void

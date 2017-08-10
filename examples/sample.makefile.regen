@@ -38,14 +38,14 @@ if test ! -f Makefile.am.sample ; then
 	exit 1
 fi
 
-EXTRA_CFLAGS="-DJUNKTEST -D_DEFAULT_SOURCE ${CFLAGS}"
-test -f config.h && EXTRA_CFLAGS="-DHAVE_CONFIG_H ${EXTRA_CFLAGS}"
-test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAGS}"
+EXTRA_CPPFLAGS="-DJUNKTEST -D_DEFAULT_SOURCE ${CPPFLAGS}"
+test -f config.h && EXTRA_CPPFLAGS="-DHAVE_CONFIG_H ${EXTRA_CPPFLAGS}"
+test -n "$TITLE" && EXTRA_CPPFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CPPFLAGS}"
 
 set -x
 cat Makefile.am.sample						\
-	| sed -e "s/^CFLAGS += /CFLAGS += ${EXTRA_CFLAGS} /"	\
-	| sed -e "s/^all: /all: ${ASN1PDU}.c /"			\
+	| sed -e "s/^CPPFLAGS += /CPPFLAGS += ${EXTRA_CPPFLAGS} /"	\
+	| sed -e "s/^all: /all: maybe-wip-pause ${ASN1PDU}.c /"		\
 	| sed -e "s/progname/${PROGNAME}/"			\
 	> Makefile.$$
 set +x
@@ -62,7 +62,7 @@ set +x
 	echo "	ASN1MODULES=\"${ASN1MODULES}\" \\"
 	echo "	ASN1PDU=${ASN1PDU} \\"
 	echo "	PROGNAME=${PROGNAME} \\"
-	echo "	CFLAGS=\"${CFLAGS}\" \\"
+	echo "	CPPFLAGS=\"${CPPFLAGS}\" \\"
 	echo "	$0"
 	echo
 	echo 'check: ${TARGET} check-ber check-xer check-per'
@@ -126,6 +126,9 @@ set +x
 	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 7; \'
 	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 8; \'
 	echo '	done; done; fi'
+	echo
+	echo "maybe-wip-pause:"
+	echo "	@[ -f WIP ] && cat WIP && sleep 2"
 	echo
 	echo "distclean: clean"
 	echo '	rm -f $(ASN_MODULE_SOURCES)'

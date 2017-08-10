@@ -23,12 +23,17 @@ extern asn_TYPE_descriptor_t asn_DEF_NativeInteger;
 
 asn_struct_free_f  NativeInteger_free;
 asn_struct_print_f NativeInteger_print;
+asn_struct_compare_f NativeInteger_compare;
 ber_type_decoder_f NativeInteger_decode_ber;
 der_type_encoder_f NativeInteger_encode_der;
 xer_type_decoder_f NativeInteger_decode_xer;
 xer_type_encoder_f NativeInteger_encode_xer;
+oer_type_decoder_f NativeInteger_decode_oer;
+oer_type_encoder_f NativeInteger_encode_oer;
 per_type_decoder_f NativeInteger_decode_uper;
 per_type_encoder_f NativeInteger_encode_uper;
+
+#define NativeInteger_constraint  asn_generic_no_constraint
 
 #ifdef __cplusplus
 }

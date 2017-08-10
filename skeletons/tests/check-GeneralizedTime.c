@@ -54,7 +54,7 @@ encode(time_t tloc, const char *expect, int force_gmt) {
 		assert(expect);
 		printf("[%s] vs [%s] (%d)\n",
 			gt->buf, expect, force_gmt);
-		assert(gt->size == (int)strlen((char *)gt->buf));
+		assert(gt->size == strlen((char *)gt->buf));
 		assert(!strcmp((char *)gt->buf, expect));
 	} else {
 		assert(!expect);

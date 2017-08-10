@@ -8,7 +8,7 @@ asn1p_expr_t *
 asn1f_lookup_symbol_ex(
 		asn1p_t *asn,
 		asn1p_expr_t *expr,
-		asn1p_ref_t *ref) {
+		const asn1p_ref_t *ref) {
 	arg_t arg;
 
 	memset(&arg, 0, sizeof(arg));
@@ -28,7 +28,7 @@ asn1f_class_access_ex(asn1p_t *asn,
 		asn1p_module_t *mod,
 		asn1p_expr_t *expr,
 		asn1p_expr_t *rhs_pspecs,
-		asn1p_ref_t *ref) {
+		const asn1p_ref_t *ref) {
 	arg_t arg;
 
 	memset(&arg, 0, sizeof(arg));
@@ -55,6 +55,21 @@ asn1f_find_terminal_type_ex(asn1p_t *asn, asn1p_expr_t *expr) {
 	arg.debug = a1f_replace_me_with_proper_interface_arg.debug;
 
 	return asn1f_find_terminal_type(&arg, expr);
+}
+
+asn1p_expr_t *
+asn1f_find_ancestor_type_with_PER_constraint_ex(asn1p_t *asn, asn1p_expr_t *expr) {
+	arg_t arg;
+
+	memset(&arg, 0, sizeof(arg));
+
+	arg.asn = asn;
+	arg.mod = expr->module;
+	arg.expr = expr;
+	arg.eh = a1f_replace_me_with_proper_interface_arg.eh;
+	arg.debug = a1f_replace_me_with_proper_interface_arg.debug;
+
+	return asn1f_find_ancestor_type_with_PER_constraint(&arg, expr);
 }
 
 int

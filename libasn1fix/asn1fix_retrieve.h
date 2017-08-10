@@ -31,7 +31,7 @@ asn1p_module_t *asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const c
  */
 asn1p_module_t *asn1f_lookup_module(arg_t *arg,
 		const char *module_name,
-		asn1p_oid_t *module_oid);
+		const asn1p_oid_t *module_oid);
 
 /*
  * Return the reference to a destination of the given reference,
@@ -40,7 +40,7 @@ asn1p_module_t *asn1f_lookup_module(arg_t *arg,
 asn1p_expr_t *asn1f_lookup_symbol(arg_t *arg,
 		asn1p_module_t *mod,
 		asn1p_expr_t *rhs_pspecs,
-		asn1p_ref_t *ref);
+		const asn1p_ref_t *ref);
 
 /*
  * Recursively find the original type for the given expression.
@@ -67,5 +67,12 @@ asn1p_expr_t *asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *tc);
  * the v as an argment.
  */
 asn1p_expr_t *asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *tc);
+
+/*
+ * Recursively find the original type with constraint for the given
+ * expression.
+ */
+asn1p_expr_t *asn1f_find_ancestor_type_with_PER_constraint(arg_t *arg, asn1p_expr_t *tc);
+
 
 #endif	/* ASN1FIX_RETRIEVE_H */

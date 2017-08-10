@@ -17,11 +17,19 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	"BOOLEAN",
 	BOOLEAN_free,
 	BOOLEAN_print,
+	BOOLEAN_compare,
 	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,
 	BOOLEAN_encode_der,
 	BOOLEAN_decode_xer,
 	BOOLEAN_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -34,6 +42,7 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
 	asn_DEF_BOOLEAN_tags,	/* Same as above */
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -241,11 +250,13 @@ BOOLEAN_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 asn_dec_rval_t
 BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_dec_rval_t rv;
+                    const asn_per_constraints_t *constraints, void **sptr,
+                    asn_per_data_t *pd) {
+    asn_dec_rval_t rv;
 	BOOLEAN_t *st = (BOOLEAN_t *)*sptr;
 
 	(void)opt_codec_ctx;
+    (void)td;
 	(void)constraints;
 
 	if(!st) {
@@ -272,8 +283,9 @@ BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 asn_enc_rval_t
 BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+                    const asn_per_constraints_t *constraints, void *sptr,
+                    asn_per_outp_t *po) {
+    const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
 	asn_enc_rval_t er = { 0, 0, 0 };
 
 	(void)constraints;
@@ -284,4 +296,28 @@ BOOLEAN_encode_uper(asn_TYPE_descriptor_t *td,
 		ASN__ENCODE_FAILED;
 
 	ASN__ENCODED_OK(er);
+}
+
+
+int
+BOOLEAN_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                const void *bptr) {
+    const BOOLEAN_t *a = aptr;
+    const BOOLEAN_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        if(*a == *b) {
+            return 0;
+        } else if(!*a) {
+            return -1;
+        } else {
+            return 1;
+        }
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
 }

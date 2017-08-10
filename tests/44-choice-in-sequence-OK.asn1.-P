@@ -75,7 +75,9 @@ static asn_TYPE_member_t asn_MBR_e_6[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (7 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NULL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "f"
@@ -84,7 +86,9 @@ static asn_TYPE_member_t asn_MBR_e_6[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (8 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NULL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "g"
@@ -110,17 +114,20 @@ asn_TYPE_descriptor_t asn_DEF_e_6 = {
 	"e",
 	CHOICE_free,
 	CHOICE_print,
+	CHOICE_compare,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_e_6,
 	2,	/* Elements count */
@@ -132,7 +139,9 @@ static asn_TYPE_member_t asn_MBR_h_9[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NULL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "i"
@@ -141,7 +150,9 @@ static asn_TYPE_member_t asn_MBR_h_9[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NULL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "j"
@@ -167,17 +178,20 @@ asn_TYPE_descriptor_t asn_DEF_h_9 = {
 	"h",
 	CHOICE_free,
 	CHOICE_print,
+	CHOICE_compare,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_h_9,
 	2,	/* Elements count */
@@ -189,7 +203,9 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NULL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "c"
@@ -198,7 +214,9 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (6 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NULL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "d"
@@ -207,7 +225,9 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_e_6,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "e"
@@ -216,7 +236,9 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (9 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_h_9,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "h"
@@ -245,17 +267,20 @@ asn_TYPE_descriptor_t asn_DEF_b_3 = {
 	"b",
 	CHOICE_free,
 	CHOICE_print,
+	CHOICE_compare,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_b_3,
 	4,	/* Elements count */
@@ -267,7 +292,9 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = (ASN_TAG_CLASS_PRIVATE | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NULL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "a"
@@ -276,7 +303,9 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_b_3,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "b"
@@ -308,11 +337,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
@@ -321,6 +352,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_T_1,
 	2,	/* Elements count */

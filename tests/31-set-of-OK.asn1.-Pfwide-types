@@ -20,6 +20,8 @@ typedef struct Forest {
 /*** <<< FUNC-DECLS [Forest] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Forest;
+extern asn_SET_OF_specifics_t asn_SPC_Forest_specs_1;
+extern asn_TYPE_member_t asn_MBR_Forest_1[1];
 
 /*** <<< POST-INCLUDE [Forest] >>> ***/
 
@@ -27,12 +29,14 @@ extern asn_TYPE_descriptor_t asn_DEF_Forest;
 
 /*** <<< STAT-DEFS [Forest] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Forest_1[] = {
+asn_TYPE_member_t asn_MBR_Forest_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_Tree,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -41,7 +45,7 @@ static asn_TYPE_member_t asn_MBR_Forest_1[] = {
 static const ber_tlv_tag_t asn_DEF_Forest_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_Forest_specs_1 = {
+asn_SET_OF_specifics_t asn_SPC_Forest_specs_1 = {
 	sizeof(struct Forest),
 	offsetof(struct Forest, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -51,11 +55,13 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 	"Forest",
 	SET_OF_free,
 	SET_OF_print,
+	SET_OF_compare,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Forest_tags_1,
@@ -64,6 +70,7 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 	asn_DEF_Forest_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Forest_tags_1)
 		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Forest_1,
 	1,	/* Single element */
@@ -89,15 +96,19 @@ typedef struct Tree {
 /*** <<< FUNC-DECLS [Tree] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Tree;
+extern asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1;
+extern asn_TYPE_member_t asn_MBR_Tree_1[2];
 
 /*** <<< STAT-DEFS [Tree] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Tree_1[] = {
+asn_TYPE_member_t asn_MBR_Tree_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Tree, height),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "height"
@@ -106,7 +117,9 @@ static asn_TYPE_member_t asn_MBR_Tree_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "width"
@@ -119,7 +132,7 @@ static const asn_TYPE_tag2member_t asn_MAP_Tree_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* height */
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* width */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
 	sizeof(struct Tree),
 	offsetof(struct Tree, _asn_ctx),
 	asn_MAP_Tree_tag2el_1,
@@ -133,11 +146,13 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 	"Tree",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Tree_tags_1,
@@ -146,6 +161,7 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 	asn_DEF_Tree_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Tree_tags_1)
 		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Tree_1,
 	2,	/* Elements count */
@@ -250,7 +266,9 @@ static asn_TYPE_member_t asn_MBR_trees_2[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_Forest,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -271,11 +289,13 @@ asn_TYPE_descriptor_t asn_DEF_trees_2 = {
 	"trees",
 	SET_OF_free,
 	SET_OF_print,
+	SET_OF_compare,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_trees_tags_2,
@@ -284,6 +304,7 @@ asn_TYPE_descriptor_t asn_DEF_trees_2 = {
 	asn_DEF_trees_tags_2,	/* Same as above */
 	sizeof(asn_DEF_trees_tags_2)
 		/sizeof(asn_DEF_trees_tags_2[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_trees_2,
 	1,	/* Single element */
@@ -295,7 +316,9 @@ static asn_TYPE_member_t asn_MBR_Member_5[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "cup-of-coffee"
@@ -322,11 +345,13 @@ asn_TYPE_descriptor_t asn_DEF_Member_5 = {
 	"SEQUENCE",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Member_tags_5,
@@ -335,6 +360,7 @@ asn_TYPE_descriptor_t asn_DEF_Member_5 = {
 	asn_DEF_Member_tags_5,	/* Same as above */
 	sizeof(asn_DEF_Member_tags_5)
 		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Member_5,
 	1,	/* Elements count */
@@ -346,7 +372,9 @@ static asn_TYPE_member_t asn_MBR_anything_4[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_Member_5,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -367,11 +395,13 @@ asn_TYPE_descriptor_t asn_DEF_anything_4 = {
 	"anything",
 	SET_OF_free,
 	SET_OF_print,
+	SET_OF_compare,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_anything_tags_4,
@@ -380,6 +410,7 @@ asn_TYPE_descriptor_t asn_DEF_anything_4 = {
 	asn_DEF_anything_tags_4,	/* Same as above */
 	sizeof(asn_DEF_anything_tags_4)
 		/sizeof(asn_DEF_anything_tags_4[0]), /* 2 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_anything_4,
 	1,	/* Single element */
@@ -391,7 +422,9 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "a"
@@ -400,7 +433,9 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "b"
@@ -426,17 +461,20 @@ asn_TYPE_descriptor_t asn_DEF_other_9 = {
 	"other",
 	CHOICE_free,
 	CHOICE_print,
+	CHOICE_compare,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_other_9,
 	2,	/* Elements count */
@@ -448,7 +486,9 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_trees_2,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "trees"
@@ -457,7 +497,9 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_anything_4,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "anything"
@@ -466,7 +508,9 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag = -1 /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_other_9,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "other"
@@ -489,7 +533,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Stuff_tag2el_cxer_1[] = {
 static const uint8_t asn_MAP_Stuff_mmap_1[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(0 << 7) | (0 << 6) | (0 << 5)
 };
-static asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
+static 
+asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
 	sizeof(struct Stuff),
 	offsetof(struct Stuff, _asn_ctx),
 	offsetof(struct Stuff, _presence_map),
@@ -505,11 +550,13 @@ asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	"Stuff",
 	SET_free,
 	SET_print,
+	SET_compare,
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Stuff_tags_1,
@@ -518,6 +565,7 @@ asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	asn_DEF_Stuff_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Stuff_tags_1)
 		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Stuff_1,
 	3,	/* Elements count */

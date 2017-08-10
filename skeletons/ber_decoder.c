@@ -112,7 +112,7 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 		td->name, (long)size, tag_mode, step, tagno);
 	/* assert(td->tags_count >= 1) May not be the case for CHOICE or ANY */
 
-	if(tag_mode == 0 && tagno == td->tags_count) {
+	if(tag_mode == 0 && tagno == (int)td->tags_count) {
 		/*
 		 * This must be the _untagged_ ANY type,
 		 * which outermost tag isn't known in advance.
@@ -134,9 +134,9 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 			(long)(tag_len + len_len));
 		ADVANCE(tag_len + len_len);
 	} else {
-		assert(tagno < td->tags_count);	/* At least one loop */
+		assert(tagno < (int)td->tags_count);	/* At least one loop */
 	}
-	for((void)tagno; tagno < td->tags_count; tagno++, step++) {
+	for((void)tagno; tagno < (int)td->tags_count; tagno++, step++) {
 
 		/*
 		 * Fetch and process T from TLV.
@@ -186,7 +186,7 @@ ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
 		 * If this one is the last one, check that the tag form
 		 * matches the one given in descriptor.
 		 */
-		if(tagno < (td->tags_count - 1)) {
+		if(tagno < ((int)td->tags_count - 1)) {
 			if(tlv_constr == 0) {
 				ASN_DEBUG("tlv_constr = %d, expfail",
 					tlv_constr);

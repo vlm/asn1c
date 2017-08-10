@@ -1,0 +1,27 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .137
+
+ModuleOERString
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 137 }
+	DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+    T ::= SEQUENCE {
+        unconstrained SEQUENCE {
+            unc-ia5         IA5String,
+            unc-utf8        UTF8String,
+            unc-universal   UniversalString
+        },
+        constrained SEQUENCE {
+            con-ia5         IA5String (SIZE(2..2)),
+            con-utf8        UTF8String (SIZE(2)),
+            con-universal   UniversalString (SIZE(2 | 2))
+        }
+    }
+
+END

@@ -20,11 +20,19 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	"OBJECT_IDENTIFIER",
 	ASN__PRIMITIVE_TYPE_free,
 	OBJECT_IDENTIFIER_print,
+	OCTET_STRING_compare,   /* Implemented in terms of a string comparison */
 	OBJECT_IDENTIFIER_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
 	OBJECT_IDENTIFIER_decode_xer,
 	OBJECT_IDENTIFIER_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -39,6 +47,7 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	asn_DEF_OBJECT_IDENTIFIER_tags,	/* Same as above */
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -229,9 +238,9 @@ OBJECT_IDENTIFIER_print_arc(const uint8_t *arcbuf, int arclen, int add,
 static ssize_t
 OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 	ssize_t wrote_len = 0;
-	int startn;
+	size_t startn;
 	int add = 0;
-	int i;
+	size_t i;
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
@@ -371,7 +380,7 @@ OBJECT_IDENTIFIER_get_arcs(const OBJECT_IDENTIFIER_t *oid, void *arcs,
 	int num_arcs = 0;
 	int startn = 0;
 	int add = 0;
-	int i;
+	size_t i;
 
 	if(!oid || !oid->buf || (arc_slots && arc_type_size <= 1)) {
 		errno = EINVAL;

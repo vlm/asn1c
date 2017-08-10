@@ -13,7 +13,7 @@ SAMPLE-CLASS ::= CLASS {
     &Type	 OPTIONAL
 } WITH SYNTAX { [TYPE &Type] [WITH CODE &code] IDENTIFIED BY &id }
 
--- Class matrix has 4 entries:
+-- Information Object Set has 4 entries:
 --    [             &id][           &code][           &Type]
 -- [1] request-whatever        <no entry>        <no entry> 
 -- [2]   response-stuff                 1        <no entry> 
@@ -22,14 +22,37 @@ SAMPLE-CLASS ::= CLASS {
 
 
 SampleClassObjectSet SAMPLE-CLASS ::= {{ IDENTIFIED BY request-whatever } | { WITH CODE 1 IDENTIFIED BY response-stuff } | { TYPE SampleType WITH CODE 2 IDENTIFIED BY request-id } | { TYPE Salt IDENTIFIED BY request-salt }}
+-- Information Object Set has 4 entries:
+--    [             &id][           &code][           &Type]
+-- [1] request-whatever        <no entry>        <no entry> 
+-- [2]   response-stuff                 1        <no entry> 
+-- [3]       request-id                 2        SampleType 
+-- [4]     request-salt        <no entry>              Salt 
+
 
 request-Whatever SAMPLE-CLASS ::= { IDENTIFIED BY request-whatever }
+-- Information Object Set has 1 entry:
+--    [             &id][           &code][           &Type]
+-- [1] request-whatever        <no entry>        <no entry> 
+
 
 respond-Stuff SAMPLE-CLASS ::= { WITH CODE 1 IDENTIFIED BY response-stuff }
+-- Information Object Set has 1 entry:
+--    [           &id][         &code][         &Type]
+-- [1] response-stuff               1      <no entry> 
+
 
 request-Status SAMPLE-CLASS ::= { TYPE SampleType WITH CODE 2 IDENTIFIED BY request-id }
+-- Information Object Set has 1 entry:
+--    [       &id][     &code][     &Type]
+-- [1] request-id           2  SampleType 
+
 
 request-Salt SAMPLE-CLASS ::= { TYPE Salt IDENTIFIED BY request-salt }
+-- Information Object Set has 1 entry:
+--    [         &id][       &code][       &Type]
+-- [1] request-salt    <no entry>          Salt 
+
 
 request-id RELATIVE-OID ::= { 1 1 1 }
 

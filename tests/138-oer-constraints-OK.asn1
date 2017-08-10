@@ -1,0 +1,32 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .138
+
+ModuleOERConstraints
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 138 }
+	DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+    A-noc ::= INTEGER                           -- No constraints
+    B-0-0 ::= INTEGER (0)                       -- Value constraint
+    C-1-2 ::= INTEGER (1..2)                    -- Value range constraint
+    D-inv ::= INTEGER (0..10,...)               -- Extensible, not OER-visible
+    E-2-5 ::= INTEGER (0..10,...)(2..5)         -- OER-visible constraint 2..5
+    F-inv ::= INTEGER (0..10,...)(2..5,...)     -- Not OER-visible
+    G-3-3 ::= INTEGER (0..10,...)(2..5,...)(3)  -- OER-visible constraint 3
+    -- X.696 #8.2.4 Not OER-visible parts of INTERSECTION are ignored
+    H-4-5 ::= INTEGER ((0..5) ^ (4..9))         -- OER-visible constraint 4..5
+    I-0-5 ::= INTEGER ((0..5) ^ (4..12,...))    -- OER-visible constraint 0..5
+    J-4-9 ::= INTEGER ((0..5,...) ^ (4..9))     -- OER-visible constraint 4..9
+    K-inv ::= INTEGER ((0..5,...) ^ (4..9,...)) -- Not OER-visible
+    -- X.696 #8.2.5 UNION with exeptions are ignored
+    L-0-5 ::= INTEGER ((0) | (5))               -- OER-visible constraint 0..5
+    M-inv ::= INTEGER ((0) | (5,...))           -- Not OER-visible
+    N-inv ::= INTEGER ((0..4,...) | (5))        -- Not OER-visible
+    O-inv ::= INTEGER ((0..4,...) | (5,...))    -- Not OER-visible
+
+END

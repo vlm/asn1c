@@ -23,11 +23,19 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	"ENUMERATED",
 	NativeInteger_free,
 	NativeInteger_print,
+	NativeInteger_compare,
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,
 	NativeEnumerated_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -40,6 +48,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
 	asn_DEF_NativeEnumerated_tags,	/* Same as above */
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -77,12 +86,12 @@ NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 asn_dec_rval_t
 NativeEnumerated_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
+	asn_TYPE_descriptor_t *td, const asn_per_constraints_t *constraints,
 	void **sptr, asn_per_data_t *pd) {
 	asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
 	asn_dec_rval_t rval = { RC_OK, 0 };
 	long *native = (long *)*sptr;
-	asn_per_constraint_t *ct;
+	const asn_per_constraint_t *ct;
 	long value;
 
 	(void)opt_codec_ctx;
@@ -143,11 +152,12 @@ NativeEnumerated__compar_value2enum(const void *ap, const void *bp) {
 
 asn_enc_rval_t
 NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
+                             const asn_per_constraints_t *constraints,
+                             void *sptr, asn_per_outp_t *po) {
+    asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	long native, value;
-	asn_per_constraint_t *ct;
+	const asn_per_constraint_t *ct;
 	int inext = 0;
 	asn_INTEGER_enum_map_t key;
 	const asn_INTEGER_enum_map_t *kf;

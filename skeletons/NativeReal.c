@@ -13,6 +13,7 @@
 #include <NativeReal.h>
 #include <REAL.h>
 #include <OCTET_STRING.h>
+#include <math.h>
 
 /*
  * NativeReal basic type description.
@@ -25,11 +26,19 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	"REAL",
 	NativeReal_free,
 	NativeReal_print,
+	NativeReal_compare,
 	asn_generic_no_constraint,
 	NativeReal_decode_ber,
 	NativeReal_encode_der,
 	NativeReal_decode_xer,
 	NativeReal_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -42,6 +51,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
 	asn_DEF_NativeReal_tags,	/* Same as above */
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -198,9 +208,10 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
  */
 asn_dec_rval_t
 NativeReal_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints,
-		void **dbl_ptr, asn_per_data_t *pd) {
-	double *Dbl = (double *)*dbl_ptr;
+                       asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints, void **dbl_ptr,
+                       asn_per_data_t *pd) {
+    double *Dbl = (double *)*dbl_ptr;
 	asn_dec_rval_t rval;
 	REAL_t tmp;
 	void *ptmp = &tmp;
@@ -238,8 +249,9 @@ NativeReal_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_enc_rval_t
 NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	double Dbl = *(const double *)sptr;
+                       const asn_per_constraints_t *constraints, void *sptr,
+                       asn_per_outp_t *po) {
+    double Dbl = *(const double *)sptr;
 	asn_enc_rval_t erval;
 	REAL_t tmp;
 
@@ -329,6 +341,39 @@ NativeReal_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	if(!Dbl) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
 	return (REAL__dump(*Dbl, 0, cb, app_key) < 0) ? -1 : 0;
+}
+
+int
+NativeReal_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                   const void *bptr) {
+    const double *a = aptr;
+    const double *b = bptr;
+    (void)td;
+
+    if(a && b) {
+        /* NaN sorted above everything else */
+        if(isnan(*a)) {
+            if(isnan(*b)) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } else if(isnan(*b)) {
+            return 1;
+        }
+        /* Value comparison. */
+        if(*a < *b) {
+            return -1;
+        } else if(*a > *b) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
 }
 
 void

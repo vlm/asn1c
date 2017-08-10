@@ -1,0 +1,40 @@
+
+GENERAL INFORMATION
+===================
+
+The SAE J2735-201603 Dedicated Short Range Communications (DSRC)
+Message Set Dictionary decoder.
+Invoking `make` will compile the ASN.1 specifications from the
+../J2735_201603.asn1 file.
+
+THERE IS NO J2735_201603.asn1 FILE THERE YET!
+
+OBTAINING THE J2735 SPECIFICATION
+=================================
+
+Go to http://standards.sae.org/j2735_201603/ and download the files.
+
+You should extract the ASN.1 module from there and save it
+as the ../J2735_201603.asn1 file. This file should start with
+the following line
+
+	DSRC DEFINITIONS AUTOMATIC TAGS ::=
+
+and end with the "END" token.
+Be careful not to copy any non-ASN.1 preambles from that .DOC file.
+
+After obtaining the J2735_201603.asn1, type `make` in the directory
+containing this README file.
+
+j2735-dump USAGE
+================
+
+The j2735-dump utility may be used to dump the contents of the
+UPER-encoded DSRC message record file:
+
+	./j2735-dump j2735file.per	# Print as XML (BASIC-XER)
+
+The full list of recognized command line options may be obtained with
+
+	> ./j2735-dump -h
+

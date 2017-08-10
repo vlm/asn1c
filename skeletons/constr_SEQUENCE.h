@@ -15,28 +15,28 @@ typedef const struct asn_SEQUENCE_specifics_s {
 	/*
 	 * Target structure description.
 	 */
-	int struct_size;	/* Size of the target structure. */
-	int ctx_offset;		/* Offset of the asn_struct_ctx_t member */
+	unsigned struct_size;	/* Size of the target structure. */
+	unsigned ctx_offset;	/* Offset of the asn_struct_ctx_t member */
 
 	/*
 	 * Tags to members mapping table (sorted).
 	 */
 	const asn_TYPE_tag2member_t *tag2el;
-	int tag2el_count;
+    unsigned tag2el_count;
 
-	/*
+    /*
 	 * Optional members of the extensions root (roms) or additions (aoms).
 	 * Meaningful for PER.
 	 */
-	const int *oms;		/* Optional MemberS */
-	int  roms_count;	/* Root optional members count */
-	int  aoms_count;	/* Additions optional members count */
+    const int *oms;         /* Optional MemberS */
+    unsigned roms_count;    /* Root optional members count */
+    unsigned aoms_count;    /* Additions optional members count */
 
-	/*
+    /*
 	 * Description of an extensions group.
 	 */
-	int ext_after;		/* Extensions start after this member */
-	int ext_before;		/* Extensions stop before this member */
+    signed ext_after;       /* Extensions start after this member */
+    signed ext_before;      /* Extensions stop before this member */
 } asn_SEQUENCE_specifics_t;
 
 
@@ -45,11 +45,14 @@ typedef const struct asn_SEQUENCE_specifics_s {
  */
 asn_struct_free_f SEQUENCE_free;
 asn_struct_print_f SEQUENCE_print;
+asn_struct_compare_f SEQUENCE_compare;
 asn_constr_check_f SEQUENCE_constraint;
 ber_type_decoder_f SEQUENCE_decode_ber;
 der_type_encoder_f SEQUENCE_encode_der;
 xer_type_decoder_f SEQUENCE_decode_xer;
 xer_type_encoder_f SEQUENCE_encode_xer;
+oer_type_decoder_f SEQUENCE_decode_oer;
+oer_type_encoder_f SEQUENCE_encode_oer;
 per_type_decoder_f SEQUENCE_decode_uper;
 per_type_encoder_f SEQUENCE_encode_uper;
 

@@ -13,9 +13,7 @@ Attribute ::= SEQUENCE {
     siAttributeValue	 IA5String
 }
 
-Attributes ATTRIBUTE ::= {Names}
-
-Names ATTRIBUTE ::= {{ ID raf } | { ID rcf }}
+Attributes ATTRIBUTE ::= {{ ID raf } | { ID rcf }}
 
 rafService ATTRIBUTE ::= { ID raf }
 

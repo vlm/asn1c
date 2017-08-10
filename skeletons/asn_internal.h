@@ -59,7 +59,11 @@ void ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
 #endif	/* __GNUC__ */
 #else	/* EMIT_ASN_DEBUG != 1 */
+#if __STDC_VERSION__ >= 199901L
+#define ASN_DEBUG(...) do{}while(0)
+#else   /* not C99 */
 static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
+#endif  /* C99 or better */
 #endif	/* EMIT_ASN_DEBUG */
 #endif	/* ASN_DEBUG */
 

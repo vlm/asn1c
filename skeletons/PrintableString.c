@@ -41,7 +41,7 @@ static int asn_DEF_PrintableString_c2v(unsigned int code) {
 		return _PrintableString_code2value[code];
 	return -1;
 }
-static asn_per_constraints_t asn_DEF_PrintableString_constraints = {
+static asn_per_constraints_t asn_DEF_PrintableString_per_constraints = {
 	{ APC_CONSTRAINED, 4, 4, 0x20, 0x39 },	/* Value */
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
 	asn_DEF_PrintableString_v2c,
@@ -52,11 +52,19 @@ asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	"PrintableString",
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,	/* ASCII subset */
+	OCTET_STRING_compare,
 	PrintableString_constraint,
 	OCTET_STRING_decode_ber,      /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,
 	OCTET_STRING_encode_xer_utf8,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	OCTET_STRING_decode_oer,
+	OCTET_STRING_encode_oer,
+#endif	/* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -71,7 +79,8 @@ asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 	asn_DEF_PrintableString_tags,
 	sizeof(asn_DEF_PrintableString_tags)
 	  / sizeof(asn_DEF_PrintableString_tags[0]),
-	&asn_DEF_PrintableString_constraints,
+	0,	/* No OER visible constraints */
+	&asn_DEF_PrintableString_per_constraints,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

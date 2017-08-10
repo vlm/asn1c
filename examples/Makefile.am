@@ -26,15 +26,18 @@ $(ASN1_FILES_3): crfc2asn1.pl $(ASN1_SOURCE_3)
 	${srcdir}/crfc2asn1.pl ${srcdir}/$(ASN1_SOURCE_3)
 
 EXTRA_DIST = \
-	rfc3280.txt rfc3525.txt rfc4511.txt		\
-	sample.source.LDAP3				\
-	sample.source.MEGACO				\
-	sample.source.MHEG5				\
-	sample.source.RRC				\
-	sample.source.TAP3				\
-	sample.source.PKIX1				\
-	sample.source.LTE-RRC				\
-	sample.makefile.regen
+    rfc3280.txt rfc3525.txt rfc4511.txt \
+    sample.source.1609.2    \
+    sample.source.J2735     \
+    sample.source.LDAP3     \
+    sample.source.LTE-RRC   \
+    sample.source.MEGACO    \
+    sample.source.MHEG5     \
+    sample.source.PKIX1     \
+    sample.source.RRC       \
+    sample.source.TAP3      \
+    sample.source.ULP       \
+    sample.makefile.regen
 
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 

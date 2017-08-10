@@ -21,11 +21,19 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	"RELATIVE_OID",
 	ASN__PRIMITIVE_TYPE_free,
 	RELATIVE_OID_print,
+	OCTET_STRING_compare,   /* Implemented in terms of opaque comparison */
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
 	RELATIVE_OID_decode_xer,
 	RELATIVE_OID_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -40,6 +48,7 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	asn_DEF_RELATIVE_OID_tags,	/* Same as above */
 	sizeof(asn_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn_DEF_RELATIVE_OID_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -49,8 +58,8 @@ static ssize_t
 RELATIVE_OID__dump_body(const RELATIVE_OID_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
 	ssize_t wrote = 0;
 	ssize_t ret;
-	int startn;
-	int i;
+	size_t startn;
+	size_t i;
 
 	for(i = 0, startn = 0; i < st->size; i++) {
 		uint8_t b = st->buf[i];
@@ -171,8 +180,8 @@ RELATIVE_OID_get_arcs(const RELATIVE_OID_t *roid,
 	void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
 	void *arcs_end = (char *)arcs + (arc_slots * arc_type_size);
 	int num_arcs = 0;
-	int startn = 0;
-	int i;
+	size_t startn = 0;
+	size_t i;
 
 	if(!roid || !roid->buf) {
 		errno = EINVAL;

@@ -24,16 +24,22 @@ typedef struct Collection_16P1 {
 /*** <<< FUNC-DECLS [Collection] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Collection_16P0;
+extern asn_SET_OF_specifics_t asn_SPC_Collection_16P0_specs_1;
+extern asn_TYPE_member_t asn_MBR_Collection_16P0_1[1];
 extern asn_TYPE_descriptor_t asn_DEF_Collection_16P1;
+extern asn_SET_OF_specifics_t asn_SPC_Collection_16P1_specs_3;
+extern asn_TYPE_member_t asn_MBR_Collection_16P1_3[1];
 
 /*** <<< STAT-DEFS [Collection] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_Collection_16P0_1[] = {
+asn_TYPE_member_t asn_MBR_Collection_16P0_1[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (9 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_REAL,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -42,7 +48,7 @@ static asn_TYPE_member_t asn_MBR_Collection_16P0_1[] = {
 static const ber_tlv_tag_t asn_DEF_Collection_16P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_Collection_16P0_specs_1 = {
+asn_SET_OF_specifics_t asn_SPC_Collection_16P0_specs_1 = {
 	sizeof(struct Collection_16P0),
 	offsetof(struct Collection_16P0, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -52,11 +58,13 @@ asn_TYPE_descriptor_t asn_DEF_Collection_16P0 = {
 	"Collection",
 	SET_OF_free,
 	SET_OF_print,
+	SET_OF_compare,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Collection_16P0_tags_1,
@@ -65,18 +73,21 @@ asn_TYPE_descriptor_t asn_DEF_Collection_16P0 = {
 	asn_DEF_Collection_16P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Collection_16P0_tags_1)
 		/sizeof(asn_DEF_Collection_16P0_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Collection_16P0_1,
 	1,	/* Single element */
 	&asn_SPC_Collection_16P0_specs_1	/* Additional specs */
 };
 
-static asn_TYPE_member_t asn_MBR_Collection_16P1_3[] = {
+asn_TYPE_member_t asn_MBR_Collection_16P1_3[] = {
 	{ ATF_POINTER, 0, 0,
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = ""
@@ -85,7 +96,7 @@ static asn_TYPE_member_t asn_MBR_Collection_16P1_3[] = {
 static const ber_tlv_tag_t asn_DEF_Collection_16P1_tags_3[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_Collection_16P1_specs_3 = {
+asn_SET_OF_specifics_t asn_SPC_Collection_16P1_specs_3 = {
 	sizeof(struct Collection_16P1),
 	offsetof(struct Collection_16P1, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
@@ -95,11 +106,13 @@ asn_TYPE_descriptor_t asn_DEF_Collection_16P1 = {
 	"Collection",
 	SET_OF_free,
 	SET_OF_print,
+	SET_OF_compare,
 	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
 	SET_OF_decode_xer,
 	SET_OF_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Collection_16P1_tags_3,
@@ -108,6 +121,7 @@ asn_TYPE_descriptor_t asn_DEF_Collection_16P1 = {
 	asn_DEF_Collection_16P1_tags_3,	/* Same as above */
 	sizeof(asn_DEF_Collection_16P1_tags_3)
 		/sizeof(asn_DEF_Collection_16P1_tags_3[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Collection_16P1_3,
 	1,	/* Single element */
@@ -141,7 +155,9 @@ static asn_TYPE_member_t asn_MBR_Bunch_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_Collection_16P0,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "field-REAL"
@@ -150,7 +166,9 @@ static asn_TYPE_member_t asn_MBR_Bunch_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_Collection_16P1,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "field-IA5String"
@@ -177,11 +195,13 @@ asn_TYPE_descriptor_t asn_DEF_Bunch = {
 	"Bunch",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Bunch_tags_1,
@@ -190,6 +210,7 @@ asn_TYPE_descriptor_t asn_DEF_Bunch = {
 	asn_DEF_Bunch_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Bunch_tags_1)
 		/sizeof(asn_DEF_Bunch_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Bunch_1,
 	2,	/* Elements count */

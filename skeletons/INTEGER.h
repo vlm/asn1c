@@ -34,15 +34,17 @@ typedef const struct asn_INTEGER_specifics_s {
 	int field_unsigned;			/* Signed=0, unsigned=1 */
 } asn_INTEGER_specifics_t;
 
+#define INTEGER_free    ASN__PRIMITIVE_TYPE_free
 asn_struct_print_f INTEGER_print;
+asn_struct_compare_f INTEGER_compare;
 ber_type_decoder_f INTEGER_decode_ber;
 der_type_encoder_f INTEGER_encode_der;
 xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
+oer_type_decoder_f INTEGER_decode_oer;
+oer_type_encoder_f INTEGER_encode_oer;
 per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
-per_type_decoder_f INTEGER_decode_aper;
-per_type_encoder_f INTEGER_encode_aper;
 
 /***********************************
  * Some handy conversion routines. *

@@ -24,11 +24,19 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	"INTEGER",
 	NativeInteger_free,
 	NativeInteger_print,
+	NativeInteger_compare,
 	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,
 	NativeInteger_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	NativeInteger_decode_oer,	/* OER decoder */
+	NativeInteger_encode_oer,	/* Canonical OER encoder */
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -41,6 +49,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
 	asn_DEF_NativeInteger_tags,	/* Same as above */
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -236,12 +245,14 @@ NativeInteger_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	ASN__ENCODED_OK(er);
 }
 
+#ifndef  ASN_DISABLE_PER_SUPPORT
+
 asn_dec_rval_t
 NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+                          asn_TYPE_descriptor_t *td,
+                          const asn_per_constraints_t *constraints, void **sptr,
+                          asn_per_data_t *pd) {
+    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_dec_rval_t rval;
 	long *native = (long *)*sptr;
 	INTEGER_t tmpint;
@@ -274,8 +285,9 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 
 asn_enc_rval_t
 NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+                          const asn_per_constraints_t *constraints, void *sptr,
+                          asn_per_outp_t *po) {
+    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	long native;
 	INTEGER_t tmpint;
@@ -295,6 +307,8 @@ NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 	return er;
 }
+
+#endif  /* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * INTEGER specific human-readable output.
@@ -335,3 +349,37 @@ NativeInteger_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	}
 }
 
+int
+NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bptr) {
+    (void)td;
+
+    if(aptr && bptr) {
+        const asn_INTEGER_specifics_t *specs =
+            (const asn_INTEGER_specifics_t *)td->specifics;
+        if(specs->field_unsigned)  {
+            const unsigned long *a = aptr;
+            const unsigned long *b = bptr;
+            if(*a < *b) {
+                return -1;
+            } else if(*a > *b) {
+                return 1;
+            } else {
+                return 1;
+            }
+        } else {
+            const long *a = aptr;
+            const long *b = bptr;
+            if(*a < *b) {
+                return -1;
+            } else if(*a > *b) {
+                return 1;
+            } else {
+                return 1;
+            }
+        }
+    } else if(!aptr) {
+        return -1;
+    } else {
+        return 1;
+    }
+}

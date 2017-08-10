@@ -17,11 +17,19 @@ asn_TYPE_descriptor_t asn_DEF_T61String = {
 	"T61String",
 	OCTET_STRING_free,
 	OCTET_STRING_print,         /* non-ascii string */
+	OCTET_STRING_compare,
 	asn_generic_unknown_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
 	OCTET_STRING_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	OCTET_STRING_decode_oer,
+	OCTET_STRING_encode_oer,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
@@ -36,6 +44,7 @@ asn_TYPE_descriptor_t asn_DEF_T61String = {
 	asn_DEF_T61String_tags,
 	sizeof(asn_DEF_T61String_tags)
 	  / sizeof(asn_DEF_T61String_tags[0]),
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */

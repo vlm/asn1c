@@ -3,6 +3,7 @@
 enum ftt_what {
 	FTT_TYPE,	/* Find the type of the given expression */
 	FTT_VALUE,	/* Find the value of the given expression */
+	FTT_CONSTR_TYPE /* Find the type of the given expression having constraint */ 
 };
 
 static asn1p_expr_t *asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what);
@@ -79,7 +80,7 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 }
 
 asn1p_module_t *
-asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
+asn1f_lookup_module(arg_t *arg, const char *module_name, const asn1p_oid_t *oid) {
 	asn1p_module_t *mod;
 
 	assert(module_name);
@@ -146,7 +147,7 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, asn1p_oid_t *oid) {
 }
 
 static asn1p_expr_t *
-asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref, int recursion_depth) {
+asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref, int recursion_depth) {
 	asn1p_expr_t *ref_tc;			/* Referenced tc */
 	asn1p_module_t *imports_from;
 	char *modulename;
@@ -368,7 +369,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 
 asn1p_expr_t *
 asn1f_lookup_symbol(arg_t *arg,
-	asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, asn1p_ref_t *ref) {
+	asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref) {
 	return asn1f_lookup_symbol_impl(arg, mod, rhs_pspecs, ref, 0);
 }
 
@@ -382,6 +383,11 @@ asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *expr) {
 	return asn1f_find_terminal_thing(arg, expr, FTT_VALUE);
 }
 
+asn1p_expr_t *
+asn1f_find_ancestor_type_with_PER_constraint(arg_t *arg, asn1p_expr_t *expr) {
+	return asn1f_find_terminal_thing(arg, expr, FTT_CONSTR_TYPE);
+}
+
 static asn1p_expr_t *
 asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	asn1p_ref_t *ref = 0;
@@ -389,6 +395,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 
 	switch(what) {
 	case FTT_TYPE:
+	case FTT_CONSTR_TYPE:
 		/* Expression may be a terminal type itself */
 		if(expr->expr_type != A1TC_REFERENCE)
 			return expr;
@@ -455,6 +462,10 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	}
 
 	tc->_type_referenced = 1;
+
+	if((what == FTT_CONSTR_TYPE) && (tc->constraints))
+		return tc;
+
 	tc->_mark |= TM_RECURSION;
 	WITH_MODULE(tc->module,
 		expr = asn1f_find_terminal_thing(arg, tc, what));
@@ -462,6 +473,7 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 
 	return expr;
 }
+
 
 /*
  * Make sure that the specified name is present or otherwise does

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005, 2006, 2007 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -66,8 +66,8 @@
  * Check whether we are inside the extensions group.
  */
 #define	IN_EXTENSION_GROUP(specs, memb_idx)	\
-	( ((memb_idx) > (specs)->ext_after)	\
-	&&((memb_idx) < (specs)->ext_before))
+	( (((signed)(memb_idx)) > (specs)->ext_after)	\
+	&&(((signed)(memb_idx)) < (specs)->ext_before))
 
 
 /*
@@ -127,7 +127,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	asn_dec_rval_t rval;	/* Return code from subparsers */
 
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
-	int edx;			/* SEQUENCE element's index */
+	size_t edx;			/* SEQUENCE element's index */
 
 	ASN_DEBUG("Decoding %s as SEQUENCE", td->name);
 	
@@ -186,14 +186,14 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 * that member:
 		 * 	step = (<member_number> * 2 + <microphase>).
 		 */
-	  for(edx = (ctx->step >> 1); edx < td->elements_count;
+	  for(edx = ((size_t)ctx->step >> 1); edx < td->elements_count;
 			edx++, ctx->step = (ctx->step & ~1) + 2) {
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
 		ssize_t tag_len;	/* Length of TLV's T */
-		int opt_edx_end;	/* Next non-optional element */
+		size_t opt_edx_end;	/* Next non-optional element */
+		size_t n;
 		int use_bsearch;
-		int n;
 
 		if(ctx->step & 1)
 			goto microphase2;
@@ -215,7 +215,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			||
 			/* All extensions are optional */
 			(IN_EXTENSION_GROUP(specs, edx)
-				&& specs->ext_before > td->elements_count)
+				&& specs->ext_before > (signed)td->elements_count)
 		   )
 		) {
 			ASN_DEBUG("End of SEQUENCE %s", td->name);
@@ -247,14 +247,14 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				else
 					RETURN(RC_WMORE);
 			} else if(((const uint8_t *)ptr)[1] == 0) {
-			ASN_DEBUG("edx = %d, opt = %d, ec=%d",
+			ASN_DEBUG("edx = %zu, opt = %d, ec=%d",
 				edx, elements[edx].optional,
 				td->elements_count);
 				if((edx + elements[edx].optional
 					== td->elements_count)
 				|| (IN_EXTENSION_GROUP(specs, edx)
 					&& specs->ext_before
-						> td->elements_count)) {
+						> (signed)td->elements_count)) {
 					/*
 					 * Yeah, baby! Found the terminator
 					 * of the indefinite length structure.
@@ -320,7 +320,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			if(t2m) {
 				const asn_TYPE_tag2member_t *best = 0;
 				const asn_TYPE_tag2member_t *t2m_f, *t2m_l;
-				int edx_max = edx + elements[edx].optional;
+				size_t edx_max = edx + elements[edx].optional;
 				/*
 				 * Rewind to the first element with that tag,
 				 * `cause bsearch() does not guarantee order.
@@ -516,7 +516,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	size_t computed_size = 0;
 	asn_enc_rval_t erval;
 	ssize_t ret;
-	int edx;
+	size_t edx;
 
 	ASN_DEBUG("%s %s as SEQUENCE",
 		cb?"Encoding":"Estimating", td->name);
@@ -623,8 +623,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 	asn_dec_rval_t rval;		/* Return value from a decoder */
 	ssize_t consumed_myself = 0;	/* Consumed bytes from ptr */
-	int edx;			/* Element index */
-	int edx_end;
+	size_t edx;			/* Element index */
 
 	/*
 	 * Create the target structure if it is not present already.
@@ -653,7 +652,6 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
 		asn_TYPE_member_t *elm;
-		int n;
 
 		/*
 		 * Go inside the inner member of a sequence.
@@ -746,7 +744,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				   /* All extensions are optional */
 				   (IN_EXTENSION_GROUP(specs, edx)
 					&& specs->ext_before
-						> td->elements_count)
+						> (signed)td->elements_count)
 				) {
 					XER_ADVANCE(ch_size);
 					ctx->phase = 4;	/* Phase out */
@@ -777,7 +775,8 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				/*
 				 * Search which member corresponds to this tag.
 				 */
-				edx_end = edx + elements[edx].optional + 1;
+                size_t n;
+                size_t edx_end = edx + elements[edx].optional + 1;
 				if(edx_end > td->elements_count)
 					edx_end = td->elements_count;
 				for(n = edx; n < edx_end; n++) {
@@ -855,7 +854,7 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
 	int xcan = (flags & XER_F_CANONICAL);
-	int edx;
+	size_t edx;
 
 	if(!sptr)
 		ASN__ENCODE_FAILED;
@@ -903,7 +902,7 @@ cb_failed:
 int
 SEQUENCE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	int edx;
+	size_t edx;
 	int ret;
 
 	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
@@ -950,7 +949,7 @@ SEQUENCE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 void
 SEQUENCE_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
-	int edx;
+	size_t edx;
 
 	if(!td || !sptr)
 		return;
@@ -978,7 +977,7 @@ SEQUENCE_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 int
 SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	int edx;
+	size_t edx;
 
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -1029,14 +1028,15 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 asn_dec_rval_t
 SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
-	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+                     const asn_per_constraints_t *constraints, void **sptr,
+                     asn_per_data_t *pd) {
+    asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
 	void *st = *sptr;	/* Target structure. */
 	int extpresent;		/* Extension additions are present */
 	uint8_t *opres;		/* Presence of optional root members */
 	asn_per_data_t opmd;
 	asn_dec_rval_t rv;
-	int edx;
+	size_t edx;
 
 	(void)constraints;
 
@@ -1081,7 +1081,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
-		void *memb_ptr;		/* Pointer to the member */
+        void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
 
 		if(IN_EXTENSION_GROUP(specs, edx))
@@ -1119,9 +1119,19 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Fetch the member from the stream */
 		ASN_DEBUG("Decoding member %s in %s", elm->name, td->name);
-		rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
-			elm->per_constraints, memb_ptr2, pd);
-		if(rv.code != RC_OK) {
+
+        if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+            asn_TYPE_descriptor_t *et = elm->type_selector(td, st);
+            if(!et) {
+                FREEMEM(opres);
+                ASN__DECODE_FAILED;
+            }
+            rv = uper_open_type_get(opt_codec_ctx, et, NULL, memb_ptr2, pd);
+        } else {
+            rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
+                                        elm->per_constraints, memb_ptr2, pd);
+        }
+        if(rv.code != RC_OK) {
 			ASN_DEBUG("Failed decode %s in %s",
 				elm->name, td->name);
 			FREEMEM(opres);
@@ -1249,7 +1259,7 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 		= (asn_SEQUENCE_specifics_t *)td->specifics;
 	int exts_present = 0;
 	int exts_count = 0;
-	int edx;
+	size_t edx;
 
 	if(specs->ext_before < 0)
 		return 0;
@@ -1296,13 +1306,14 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 
 asn_enc_rval_t
 SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
-	asn_SEQUENCE_specifics_t *specs
+                     const asn_per_constraints_t *constraints, void *sptr,
+                     asn_per_outp_t *po) {
+    asn_SEQUENCE_specifics_t *specs
 		= (asn_SEQUENCE_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int n_extensions;
-	int edx;
-	int i;
+	size_t edx;
+	size_t i;
 
 	(void)constraints;
 
@@ -1320,7 +1331,10 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 	 */
 	if(specs->ext_before >= 0) {
 		n_extensions = SEQUENCE_handle_extensions(td, sptr, 0, 0);
-		per_put_few_bits(po, n_extensions ? 1 : 0, 1);
+        if(n_extensions < 0)
+			ASN__ENCODE_FAILED;
+		if(per_put_few_bits(po, n_extensions ? 1 : 0, 1))
+			ASN__ENCODE_FAILED;
 	} else {
 		n_extensions = 0;	/* There are no extensions to encode */
 	}
@@ -1421,5 +1435,39 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 		ASN__ENCODE_FAILED;
 
 	ASN__ENCODED_OK(er);
+}
+
+int
+SEQUENCE_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                 const void *bptr) {
+    size_t edx;
+
+	for(edx = 0; edx < td->elements_count; edx++) {
+		asn_TYPE_member_t *elm = &td->elements[edx];
+		const void *amemb;
+		const void *bmemb;
+        int ret;
+
+		if(elm->flags & ATF_POINTER) {
+            amemb =
+                *(const void *const *)((const char *)aptr + elm->memb_offset);
+            bmemb =
+                *(const void *const *)((const char *)bptr + elm->memb_offset);
+            if(!amemb) {
+                if(!bmemb) continue;
+                return -1;
+            } else if(!bmemb) {
+                return 1;
+            }
+		} else {
+            amemb = (const void *)((const char *)aptr + elm->memb_offset);
+            bmemb = (const void *)((const char *)bptr + elm->memb_offset);
+		}
+
+        ret = elm->type->compare_struct(elm->type, amemb, bmemb);
+        if(ret != 0) return ret;
+    }
+
+    return 0;
 }
 

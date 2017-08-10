@@ -5,6 +5,62 @@
 #include <assert.h>
 
 #include "asn1parser.h"
+#include "asn1p_class.h"
+
+asn1p_ioc_table_t *
+asn1p_ioc_table_new() {
+    asn1p_ioc_table_t *it = calloc(1, sizeof(*it));
+    assert(it);
+    return it;
+}
+
+void
+asn1p_ioc_table_add(asn1p_ioc_table_t *it, asn1p_ioc_row_t *row) {
+    assert(it);
+
+    asn1p_ioc_row_t **new_rows =
+        realloc(it->row, (it->rows + 1) * sizeof(it->row[0]));
+    assert(new_rows);
+    it->row = new_rows;
+    it->row[it->rows++] = row;
+}
+
+void
+asn1p_ioc_table_free(asn1p_ioc_table_t *it) {
+    if(it) {
+        for(size_t i = 0; i < it->rows; i++) {
+            asn1p_ioc_row_delete(it->row[i]);
+        }
+        free(it->row);
+        free(it);
+    }
+}
+
+size_t
+asn1p_ioc_table_max_identifier_length(asn1p_ioc_table_t *it) {
+    size_t max_length = 0;
+    if(it) {
+        for(size_t i = 0; i < it->rows; i++) {
+            size_t len = asn1p_ioc_row_max_identifier_length(it->row[i]);
+            if(len > max_length) max_length = len;
+        }
+    }
+    return max_length;
+}
+
+size_t
+asn1p_ioc_row_max_identifier_length(asn1p_ioc_row_t *row) {
+    size_t max_length = 0;
+    if(row) {
+        for(size_t i = 0; i < row->columns; i++) {
+            if(row->column[i].value) {
+                size_t len = strlen(row->column[i].value->Identifier);
+                if(len > max_length) max_length = len;
+            }
+        }
+    }
+    return max_length;
+}
 
 asn1p_ioc_row_t *
 asn1p_ioc_row_new(asn1p_expr_t *oclass) {
@@ -29,9 +85,6 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 
 	columns = 0;
 	TQ_FOR(field, &oclass->members, next) {
-		int fieldIdLen = strlen(field->Identifier);
-		if(fieldIdLen > row->max_identifier_length)
-			row->max_identifier_length = fieldIdLen;
 		row->column[columns].field = field;
 		row->column[columns].value = NULL;
 		columns++;
@@ -42,10 +95,9 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 
 void
 asn1p_ioc_row_delete(asn1p_ioc_row_t *row) {
-	int i;
 	if(row) {
 		if(row->column) {
-			for(i = 0; i < row->columns; i++) {
+			for(size_t i = 0; i < row->columns; i++) {
 				if(!row->column[i].new_ref && row->column[i].value) {
 					/* 
 					 * Field 'reference' comes from asn1fix_cws.c :
@@ -62,10 +114,39 @@ asn1p_ioc_row_delete(asn1p_ioc_row_t *row) {
 	}
 }
 
+int
+asn1p_ioc_row_match(const asn1p_ioc_row_t *a, const asn1p_ioc_row_t *b) {
+    assert(a && b);
+
+    if(a->columns != b->columns)
+        return -1;  /* Bad! */
+
+    for(size_t i = 0; i < a->columns; i++) {
+        assert(a->column[i].field);
+        assert(b->column[i].field);
+        if(strcmp(a->column[i].field->Identifier,
+                  b->column[i].field->Identifier)
+           != 0) {
+            return -1;  /* Bad! */
+        }
+        if((a->column[i].value && !b->column[i].value)
+           || (!a->column[i].value && b->column[i].value)) {
+            return 1;   /* Not match */
+        }
+        if(a->column[i].value && b->column[i].value) {
+            if(asn1p_expr_compare(a->column[i].value, b->column[i].value)
+               != 0) {
+                return 1;   /* Not match */
+            }
+        }
+    }
+
+    return 0;
+}
+
 struct asn1p_ioc_cell_s *
 asn1p_ioc_row_cell_fetch(asn1p_ioc_row_t *row, const char *fieldname) {
-	int i;
-	for(i = 0; i < row->columns; i++) {
+	for(size_t i = 0; i < row->columns; i++) {
 		if(strcmp(row->column[i].field->Identifier, fieldname) == 0)
 			return &row->column[i];
 	}

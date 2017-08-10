@@ -156,11 +156,11 @@ asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
 		if(arcname) {
 			accum += safe_printf("%s", arcname);
 			if(oid->arcs[ac].number >= 0) {
-				accum += safe_printf("(%" PRIdASN ")",
-					oid->arcs[ac].number);
+				accum += safe_printf("(%s)",
+					asn1p_itoa(oid->arcs[ac].number));
 			}
 		} else {
-			accum += safe_printf("%" PRIdASN, oid->arcs[ac].number);
+			accum += safe_printf("%s", asn1p_itoa(oid->arcs[ac].number));
 		}
 	}
 	safe_printf(" }");
@@ -170,11 +170,10 @@ asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
 
 static int
 asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags flags) {
-	int cc;
 
 	(void)flags;	/* Unused argument */
 
-	for(cc = 0; cc < ref->comp_count; cc++) {
+	for(size_t cc = 0; cc < ref->comp_count; cc++) {
 		if(cc) safe_printf(".");
 		safe_printf("%s", ref->components[cc].name);
 	}
@@ -214,7 +213,7 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 			val->value.v_type, flags, 0);
 		return 0;
 	case ATV_INTEGER:
-		safe_printf("%" PRIdASN, val->value.v_integer);
+		safe_printf("%s", asn1p_itoa(val->value.v_integer));
 		return 0;
 	case ATV_MIN: safe_printf("MIN"); return 0;
 	case ATV_MAX: safe_printf("MAX"); return 0;
@@ -476,24 +475,29 @@ asn1print_crange_value(asn1cnst_edge_t *edge, int as_char) {
 		if(as_char) {
 			safe_printf("\"%c\"", (unsigned char)edge->value);
 		} else {
-			safe_printf("%" PRIdASN, edge->value);
+			safe_printf("%s", asn1p_itoa(edge->value));
 		}
 	}
 	return 0;
 }
 
 static int
-asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, int strict_PER_visible) {
+asn1print_constraint_explain_type(const char *dbg_name, asn1p_expr_type_e expr_type, asn1p_constraint_t *ct, enum asn1p_constraint_type_e type, enum cpr_flags cpr) {
 	asn1cnst_range_t *range;
 	int as_char = (type==ACT_CT_FROM);
 	int i;
 
-	range = asn1constraint_compute_PER_range(expr_type, ct, type, 0, 0,
-			strict_PER_visible ? CPR_strict_PER_visibility : 0);
+	range = asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, type, 0, 0, cpr);
 	if(!range) return -1;
 
-	if(range->incompatible
-	|| (strict_PER_visible && range->not_PER_visible)) {
+	if(range->incompatible) return 0;
+
+	if((cpr & CPR_strict_OER_visibility) && range->not_OER_visible) {
+		asn1constraint_range_free(range);
+		return 0;
+	}
+
+	if((cpr & CPR_strict_PER_visibility) && range->not_PER_visible) {
 		asn1constraint_range_free(range);
 		return 0;
 	}
@@ -533,14 +537,14 @@ asn1print_constraint_explain_type(asn1p_expr_type_e expr_type, asn1p_constraint_
 }
 
 static int
-asn1print_constraint_explain(asn1p_expr_type_e expr_type,
-		asn1p_constraint_t *ct, int s_PV) {
+asn1print_constraint_explain(const char *dbg_name, asn1p_expr_type_e expr_type,
+		asn1p_constraint_t *ct, enum cpr_flags cpr) {
 
-	asn1print_constraint_explain_type(expr_type, ct, ACT_EL_RANGE, s_PV);
+	asn1print_constraint_explain_type(dbg_name, expr_type, ct, ACT_EL_RANGE, cpr);
 	safe_printf(" ");
-	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_SIZE, s_PV);
+	asn1print_constraint_explain_type(dbg_name, expr_type, ct, ACT_CT_SIZE, cpr);
 	safe_printf(" ");
-	asn1print_constraint_explain_type(expr_type, ct, ACT_CT_FROM, s_PV);
+	asn1print_constraint_explain_type(dbg_name, expr_type, ct, ACT_CT_FROM, cpr);
 
 	return 0;
 }
@@ -753,30 +757,38 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		if(top_parent) {
 			safe_printf("\n-- Practical constraints (%s): ",
 				top_parent->Identifier);
-			asn1print_constraint_explain(top_parent->expr_type,
+			asn1print_constraint_explain(top_parent->Identifier,
+				top_parent->expr_type,
 				tc->combined_constraints, 0);
+			safe_printf("\n-- OER-visible constraints (%s): ",
+				top_parent->Identifier);
+			asn1print_constraint_explain(top_parent->Identifier,
+				top_parent->expr_type,
+				tc->combined_constraints, CPR_strict_OER_visibility);
 			safe_printf("\n-- PER-visible constraints (%s): ",
 				top_parent->Identifier);
-			asn1print_constraint_explain(top_parent->expr_type,
-				tc->combined_constraints, 1);
+			asn1print_constraint_explain(top_parent->Identifier,
+				top_parent->expr_type,
+				tc->combined_constraints, CPR_strict_PER_visibility);
 		}
 		safe_printf("\n");
 	}
 
-	if(flags & APF_PRINT_CLASS_MATRIX
-	&& tc->expr_type == A1TC_CLASSDEF) do {
-		int r, col, maxidlen;
-		if(tc->object_class_matrix.rows == 0) {
-			safe_printf("\n-- Class matrix is empty");
+	if(flags & APF_PRINT_CLASS_MATRIX) do {
+		size_t col, maxidlen;
+		if(tc->ioc_table == NULL) {
+            if(tc->expr_type == A1TC_CLASSDEF) {
+                safe_printf("\n-- Information Object Class table is empty");
+            }
 			break;
 		}
-		safe_printf("\n-- Class matrix has %d entr%s:\n",
-				tc->object_class_matrix.rows,
-				tc->object_class_matrix.rows==1 ? "y" : "ies");
-		maxidlen = tc->object_class_matrix.max_identifier_length;
-		for(r = -1; r < tc->object_class_matrix.rows; r++) {
-			struct asn1p_ioc_row_s *row;
-			row = tc->object_class_matrix.row[r<0?0:r];
+		safe_printf("\n-- Information Object Set has %d entr%s:\n",
+				tc->ioc_table->rows,
+				tc->ioc_table->rows==1 ? "y" : "ies");
+		maxidlen = asn1p_ioc_table_max_identifier_length(tc->ioc_table);
+		for(ssize_t r = -1; r < (ssize_t)tc->ioc_table->rows; r++) {
+			asn1p_ioc_row_t *row;
+			row = tc->ioc_table->row[r<0?0:r];
 			if(r < 0) safe_printf("--    %s", r > 9 ? " " : "");
 			else safe_printf("-- [%*d]", r > 9 ? 2 : 1, r+1);
 			for(col = 0; col < row->columns; col++) {

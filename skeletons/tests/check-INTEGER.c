@@ -14,7 +14,7 @@ static int _print2buf(const void *buf, size_t size, void *key) {
 }
 
 static void
-check(uint8_t *buf, int size, long check_long, int check_ret) {
+check(uint8_t *buf, size_t size, long check_long, int check_ret) {
 	char scratch[128];
 	char verify[32];
 	INTEGER_t val;

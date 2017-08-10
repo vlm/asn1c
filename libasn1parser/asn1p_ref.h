@@ -34,8 +34,8 @@ typedef struct asn1p_ref_s {
 		char *name;	/* An identifier */
 	} *components;
 
-	int comp_count;	/* Number of the components in the reference name. */
-	int comp_size;	/* Number of allocated structures */
+	size_t comp_count;	/* Number of the components in the reference name. */
+	size_t comp_size;	/* Number of allocated structures */
 
 	struct asn1p_module_s *module;	/* Defined in module */
 	int _lineno;	/* Number of line in the file */
@@ -49,6 +49,20 @@ void asn1p_ref_free(asn1p_ref_t *);
 
 asn1p_ref_t *asn1p_ref_clone(asn1p_ref_t *ref);
 
+void asn1p_ref_set_source(asn1p_ref_t *, asn1p_module_t *module, int lineno);
+
+
+/*
+ * Lexicographically compare references.
+ */
+int asn1p_ref_compare(const asn1p_ref_t *, const asn1p_ref_t *);
+
+/*
+ * Return a pointer to a statically allocated buffer representing the
+ * complete reference.
+ */
+const char *asn1p_ref_string(const asn1p_ref_t *);
+
 /*
  * Add a new reference component to the existing reference structure.
  *
@@ -58,6 +72,6 @@ asn1p_ref_t *asn1p_ref_clone(asn1p_ref_t *ref);
  * -1/ENOMEM:	Memory allocation failed
  */
 int asn1p_ref_add_component(asn1p_ref_t *,
-	char *name, enum asn1p_ref_lex_type_e);
+	const char *name, enum asn1p_ref_lex_type_e);
 
 #endif	/* ASN1_PARSER_REFERENCE_H */

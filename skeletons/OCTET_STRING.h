@@ -13,7 +13,7 @@ extern "C" {
 
 typedef struct OCTET_STRING {
 	uint8_t *buf;	/* Buffer with consecutive OCTET_STRING bits */
-	int size;	/* Size of the buffer */
+	size_t size;	/* Size of the buffer */
 
 	asn_struct_ctx_t _asn_ctx;	/* Parsing across buffer boundaries */
 } OCTET_STRING_t;
@@ -23,6 +23,7 @@ extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
 asn_struct_free_f OCTET_STRING_free;
 asn_struct_print_f OCTET_STRING_print;
 asn_struct_print_f OCTET_STRING_print_utf8;
+asn_struct_compare_f OCTET_STRING_compare;
 ber_type_decoder_f OCTET_STRING_decode_ber;
 der_type_encoder_f OCTET_STRING_encode_der;
 xer_type_decoder_f OCTET_STRING_decode_xer_hex;		/* Hexadecimal */
@@ -30,8 +31,13 @@ xer_type_decoder_f OCTET_STRING_decode_xer_binary;	/* 01010111010 */
 xer_type_decoder_f OCTET_STRING_decode_xer_utf8;	/* ASCII/UTF-8 */
 xer_type_encoder_f OCTET_STRING_encode_xer;
 xer_type_encoder_f OCTET_STRING_encode_xer_utf8;
+oer_type_decoder_f OCTET_STRING_decode_oer;
+oer_type_encoder_f OCTET_STRING_encode_oer;
 per_type_decoder_f OCTET_STRING_decode_uper;
 per_type_encoder_f OCTET_STRING_encode_uper;
+
+#define OCTET_STRING_constraint  asn_generic_no_constraint
+#define OCTET_STRING_decode_xer  OCTET_STRING_decode_xer_hex
 
 /******************************
  * Handy conversion routines. *
@@ -78,6 +84,8 @@ typedef const struct asn_OCTET_STRING_specifics_s {
 		ASN_OSUBV_U32	/* 32-bit character (UniversalString) */
 	} subvariant;
 } asn_OCTET_STRING_specifics_t;
+
+extern asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs;
 
 #ifdef __cplusplus
 }

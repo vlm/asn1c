@@ -14,10 +14,8 @@ asn1p_ref_new(int _lineno, asn1p_module_t *mod) {
 	asn1p_ref_t *ref;
 
 	ref = calloc(1, sizeof *ref);
-	if(ref) {
-		ref->_lineno = _lineno;
-		ref->module = mod;
-	}
+    assert(ref);
+    asn1p_ref_set_source(ref, mod, _lineno);
 
 	return ref;
 }
@@ -26,7 +24,7 @@ void
 asn1p_ref_free(asn1p_ref_t *ref) {
 	if(ref) {
 		if(ref->components) {
-			int i = ref->comp_count;
+			size_t i = ref->comp_count;
 			while(i--) {
 				free(ref->components[i].name);
 				ref->components[i].name = 0;
@@ -39,8 +37,16 @@ asn1p_ref_free(asn1p_ref_t *ref) {
 	}
 }
 
+void
+asn1p_ref_set_source(asn1p_ref_t *ref, asn1p_module_t *module, int lineno) {
+    if(ref) {
+        ref->module = module;
+        ref->_lineno = lineno;
+    }
+}
+
 static enum asn1p_ref_lex_type_e
-asn1p_ref_name2lextype(char *name) {
+asn1p_ref_name2lextype(const char *name) {
 	enum asn1p_ref_lex_type_e lex_type;
 	int has_lowercase = 0;
 
@@ -51,7 +57,7 @@ asn1p_ref_name2lextype(char *name) {
 			lex_type = RLT_Amplowercase;
 		}
 	} else if(*name >= 'A' && *name <= 'Z') {
-		char *p;
+		const char *p;
 
 		for(p = name; *p; p++) {
 			if(*p >= 'a' && *p <= 'z') {
@@ -78,7 +84,7 @@ asn1p_ref_name2lextype(char *name) {
 }
 
 int
-asn1p_ref_add_component(asn1p_ref_t *ref, char *name, enum asn1p_ref_lex_type_e lex_type) {
+asn1p_ref_add_component(asn1p_ref_t *ref, const char *name, enum asn1p_ref_lex_type_e lex_type) {
 
 	if(!ref || !name
 	|| (int)lex_type < RLT_UNKNOWN || lex_type >= RLT_MAX) {
@@ -121,8 +127,7 @@ asn1p_ref_clone(asn1p_ref_t *ref) {
 
 	newref = asn1p_ref_new(ref->_lineno, ref->module);
 	if(newref) {
-		int i;
-		for(i = 0; i < ref->comp_count; i++) {
+		for(size_t i = 0; i < ref->comp_count; i++) {
 			if(asn1p_ref_add_component(newref,
 				ref->components[i].name,
 				ref->components[i].lex_type
@@ -136,3 +141,51 @@ asn1p_ref_clone(asn1p_ref_t *ref) {
 
 	return newref;
 }
+
+int
+asn1p_ref_compare(const asn1p_ref_t *a, const asn1p_ref_t *b) {
+    if(a->comp_count != b->comp_count)
+        return -1;
+    if(a->module != b->module)
+        return -1;
+
+    for(size_t i = 0; i < a->comp_count; i++) {
+        if(a->components[i].lex_type != b->components[i].lex_type
+           || strcmp(a->components[i].name, b->components[i].name) != 0) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+const char *
+asn1p_ref_string(const asn1p_ref_t *ref) {
+    static char static_buf[32];
+    static char *buf = static_buf;
+    static size_t buf_size = sizeof(static_buf);
+    char *p = buf;
+
+    for(size_t i = 0; i < ref->comp_count; i++) {
+        size_t space = buf_size - (p - buf);
+        int ret =
+            snprintf(p, space, "%s%s", i ? "." : "", ref->components[i].name);
+        if(ret < 0 || (size_t)ret >= space) {
+            i--;
+            char *tmp = malloc(buf_size * 2 + 1);
+            assert(tmp);
+            size_t p_offset = p - buf;
+            memcpy(tmp, buf, (p - buf));
+            if(buf != static_buf) free(buf);
+            buf_size *= 2;
+            buf = tmp;
+            p = tmp + p_offset;
+        } else {
+            p += ret;
+        }
+    }
+
+    *p = '\0';
+    return buf;
+}
+

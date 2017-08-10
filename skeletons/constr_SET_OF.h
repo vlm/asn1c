@@ -27,6 +27,7 @@ typedef const struct asn_SET_OF_specifics_s {
  */
 asn_struct_free_f SET_OF_free;
 asn_struct_print_f SET_OF_print;
+asn_struct_compare_f SET_OF_compare;
 asn_constr_check_f SET_OF_constraint;
 ber_type_decoder_f SET_OF_decode_ber;
 der_type_encoder_f SET_OF_encode_der;

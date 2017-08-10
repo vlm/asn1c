@@ -203,7 +203,7 @@ RectangleTest ASN.1 module defined in the beginning of this document).
 decoders and other useful routines. There will be quite a few of them, some
 of them are not even always necessary, but the overall amount of code
 after compilation will be rather small anyway.
-\item A \emph{converter-sample.c} file containing the \emph{int main()} function with a fully functioning decoder. It can convert a given PDU between BER, XER and possibly PER (if -gen-PER option to asn1c was in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
+\item A \emph{converter-sample.c} file containing the \emph{int main()} function with a fully functioning decoder. It can convert a given PDU between BER, XER and possibly OER and PER (if -gen-OER or -gen-PER options to asn1c were in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
 \item A \emph{Makefile.am.sample} file mentioning all the files created
 at the earlier steps. This file is suitable for either automake suite
 or the plain `make` utility. Just rename it into \emph{Makefile}.
@@ -270,6 +270,7 @@ may produce a shorter executable.}\\
 {\ttfamily -fwide-types} & {\small Use the wide integer types (INTEGER\_t, REAL\_t) instead of machine's native data types (long, double). }\\\\
 \textbf{Codecs Generation Options} & \textbf{Description}\\
 \midrule
+{\ttfamily -gen-OER} & {\small Generate the Octet Encoding Rules (OER) support code.}\\
 {\ttfamily -gen-PER} & {\small Generate the Packed Encoding Rules (PER) support code.}\\
 {\ttfamily -pdu=\{\textbf{all}|\textbf{auto}|\emph{Type}\}} & {\small Create a PDU table for specified types, or discover the Protocol Data Units automatically.
 In case of \texttt{-pdu=\textbf{all}}, all ASN.1 types defined in all modules wil form a PDU table. In case of \texttt{-pdu=\textbf{auto}}, all types not referenced by any other type will form a PDU table. If \texttt{\emph{Type}} is an ASN.1 type identifier, it is added to a PDU table. The last form may be specified multiple times.}\\ \\

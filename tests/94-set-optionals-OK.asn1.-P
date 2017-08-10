@@ -60,7 +60,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m0"
@@ -69,7 +71,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m1"
@@ -78,7 +82,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m2"
@@ -87,7 +93,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m3"
@@ -96,7 +104,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m4"
@@ -105,7 +115,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (5 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m5"
@@ -114,7 +126,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (6 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m6"
@@ -123,7 +137,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (7 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m7"
@@ -132,7 +148,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (8 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m8"
@@ -141,7 +159,9 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (9 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_VisibleString,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "m9"
@@ -166,7 +186,8 @@ static const uint8_t asn_MAP_TestSet_mmap_1[(10 + (8 * sizeof(unsigned int)) - 1
 	(1 << 7) | (0 << 6) | (1 << 5) | (1 << 4) | (0 << 3) | (1 << 2) | (1 << 1) | (1 << 0),
 	(0 << 7) | (1 << 6)
 };
-static asn_SET_specifics_t asn_SPC_TestSet_specs_1 = {
+static 
+asn_SET_specifics_t asn_SPC_TestSet_specs_1 = {
 	sizeof(struct TestSet),
 	offsetof(struct TestSet, _asn_ctx),
 	offsetof(struct TestSet, _presence_map),
@@ -182,11 +203,13 @@ asn_TYPE_descriptor_t asn_DEF_TestSet = {
 	"TestSet",
 	SET_free,
 	SET_print,
+	SET_compare,
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TestSet_tags_1,
@@ -195,6 +218,7 @@ asn_TYPE_descriptor_t asn_DEF_TestSet = {
 	asn_DEF_TestSet_tags_1,	/* Same as above */
 	sizeof(asn_DEF_TestSet_tags_1)
 		/sizeof(asn_DEF_TestSet_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_TestSet_1,
 	10,	/* Elements count */

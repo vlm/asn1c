@@ -41,6 +41,8 @@ typedef struct asn_struct_ctx_s {
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */
 #include <per_encoder.h>	/* Packet Encoding Rules encoder */
+#include <oer_decoder.h>	/* Octet Encoding Rules encoder */
+#include <oer_encoder.h>	/* Octet Encoding Rules encoder */
 #include <constraints.h>	/* Subtype constraints support */
 
 /*
@@ -67,6 +69,17 @@ typedef int (asn_struct_print_f)(
 		asn_app_consume_bytes_f *callback, void *app_key);
 
 /*
+ * Compare two structs between each other.
+ * Returns <0 if struct_A is "smaller" than struct_B, >0 if "greater",
+ * and =0 if "equal to", for some type-specific, stable definition of
+ * "smaller", "greater" and "equal to".
+ */
+typedef int (asn_struct_compare_f)(
+		const struct asn_TYPE_descriptor_s *type_descriptor,
+		const void *struct_A,
+		const void *struct_B);
+
+/*
  * Return the outmost tag of the type.
  * If the type is untagged CHOICE, the dynamic operation is performed.
  * NOTE: This function pointer type is only useful internally.
@@ -78,7 +91,14 @@ typedef ber_tlv_tag_t (asn_outmost_tag_f)(
 /* The instance of the above function type; used internally. */
 asn_outmost_tag_f asn_TYPE_outmost_tag;
 
-
+/*
+ * Fetch the desired type of the Open Type based on the
+ * Information Object Set driven constraints.
+ */
+typedef struct asn_TYPE_descriptor_s *(asn_type_selector_f)(
+    const struct asn_TYPE_descriptor_s *parent_type_descriptor,
+    const void *parent_structure_ptr);
+
 /*
  * The definitive description of the destination language's structure.
  */
@@ -92,11 +112,14 @@ typedef struct asn_TYPE_descriptor_s {
 	 */
 	asn_struct_free_f  *free_struct;	/* Free the structure */
 	asn_struct_print_f *print_struct;	/* Human readable output */
+	asn_struct_compare_f *compare_struct;	/* Compare two structures */
 	asn_constr_check_f *check_constraints;	/* Constraints validator */
 	ber_type_decoder_f *ber_decoder;	/* Generic BER decoder */
 	der_type_encoder_f *der_encoder;	/* Canonical DER encoder */
 	xer_type_decoder_f *xer_decoder;	/* Generic XER decoder */
 	xer_type_encoder_f *xer_encoder;	/* [Canonical] XER encoder */
+	oer_type_decoder_f *oer_decoder;	/* Generic OER decoder */
+	oer_type_encoder_f *oer_encoder;	/* Canonical OER encoder */
 	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
 	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
 
@@ -109,17 +132,18 @@ typedef struct asn_TYPE_descriptor_s {
 	 */
 	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
 	const ber_tlv_tag_t *tags;	/* Effective tags sequence for this type */
-	int tags_count;			/* Number of tags which are expected */
+	unsigned tags_count;			/* Number of tags which are expected */
 	const ber_tlv_tag_t *all_tags;	/* Every tag for BER/containment */
-	int all_tags_count;		/* Number of tags */
+	unsigned all_tags_count;		/* Number of tags */
 
-	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
+	asn_oer_constraints_t *oer_constraints;	/* OER constraints */
+	asn_per_constraints_t *per_constraints;	/* PER constraints */
 
 	/*
 	 * An ASN.1 production type members (members of SEQUENCE, SET, CHOICE).
 	 */
 	struct asn_TYPE_member_s *elements;
-	int elements_count;
+	unsigned elements_count;
 
 	/*
 	 * Additional information describing the type, used by appropriate
@@ -138,26 +162,28 @@ typedef struct asn_TYPE_descriptor_s {
 	ATF_OPEN_TYPE	= 0x02	/* ANY type, without meaningful tag */
   };
 typedef struct asn_TYPE_member_s {
-	enum asn_TYPE_flags_e flags;	/* Element's presentation flags */
-	int optional;	/* Following optional members, including current */
-	int memb_offset;		/* Offset of the element */
-	ber_tlv_tag_t tag;		/* Outmost (most immediate) tag */
-	int tag_mode;		/* IMPLICIT/no/EXPLICIT tag at current level */
-	asn_TYPE_descriptor_t *type;	/* Member type descriptor */
-	asn_constr_check_f *memb_constraints;	/* Constraints validator */
-	asn_per_constraints_t *per_constraints;	/* PER compiled constraints */
-	int (*default_value)(int setval, void **sptr);	/* DEFAULT <value> */
-	const char *name;			/* ASN.1 identifier of the element */
+    enum asn_TYPE_flags_e flags; /* Element's presentation flags */
+    unsigned optional;      /* Following optional members, including current */
+    unsigned memb_offset;   /* Offset of the element */
+    ber_tlv_tag_t tag;      /* Outmost (most immediate) tag */
+    int tag_mode;           /* IMPLICIT/no/EXPLICIT tag at current level */
+    asn_TYPE_descriptor_t *type;            /* Member type descriptor */
+    asn_type_selector_f *type_selector;     /* IoS selector */
+    asn_constr_check_f *memb_constraints;   /* Constraints validator */
+    asn_oer_constraints_t *oer_constraints; /* OER compiled constraints */
+    asn_per_constraints_t *per_constraints; /* PER compiled constraints */
+    int (*default_value)(int setval, void **sptr); /* DEFAULT <value> */
+    const char *name; /* ASN.1 identifier of the element */
 } asn_TYPE_member_t;
 
 /*
  * BER tag to element number mapping.
  */
 typedef struct asn_TYPE_tag2member_s {
-	ber_tlv_tag_t el_tag;	/* Outmost tag of the member */
-	int el_no;		/* Index of the associated member, base 0 */
-	int toff_first;		/* First occurence of the el_tag, relative */
-	int toff_last;		/* Last occurence of the el_tag, relatvie */
+    ber_tlv_tag_t el_tag;   /* Outmost tag of the member */
+    unsigned el_no;         /* Index of the associated member, base 0 */
+    unsigned toff_first;    /* First occurence of the el_tag, relative */
+    unsigned toff_last;		/* Last occurence of the el_tag, relative */
 } asn_TYPE_tag2member_t;
 
 /*

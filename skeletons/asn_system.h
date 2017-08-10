@@ -138,4 +138,12 @@ typedef	unsigned int	uint32_t;
 #endif /* __GNUC__ */
 #endif	/* MIN */
 
+#ifndef SIZE_MAX
+#define SIZE_MAX   ULONG_MAX
+#endif
+
+#ifndef RSIZE_MAX   /* C11, Annex K */
+#define RSIZE_MAX   (SIZE_MAX >> 1)
+#endif
+
 #endif	/* ASN_SYSTEM_H */

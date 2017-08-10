@@ -48,7 +48,9 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = (ASN_TAG_CLASS_APPLICATION | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "i"
@@ -57,7 +59,9 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "s"
@@ -66,7 +70,9 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_BOOLEAN,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
 		.default_value = 0,
 		.name = "b"
@@ -83,7 +89,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
 static const uint8_t asn_MAP_T_mmap_1[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
 	(1 << 7) | (1 << 6) | (0 << 5)
 };
-static asn_SET_specifics_t asn_SPC_T_specs_1 = {
+static 
+asn_SET_specifics_t asn_SPC_T_specs_1 = {
 	sizeof(struct T),
 	offsetof(struct T, _asn_ctx),
 	offsetof(struct T, _presence_map),
@@ -99,11 +106,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	SET_free,
 	SET_print,
+	SET_compare,
 	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	0, 0,	/* No PER support, use "-gen-PER" to enable */
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
@@ -112,6 +121,7 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_T_1,
 	3,	/* Elements count */

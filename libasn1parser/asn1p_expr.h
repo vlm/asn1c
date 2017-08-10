@@ -107,6 +107,7 @@ typedef enum asn1p_expr_type {
 #include "asn1p_expr2uclass.h"
 
 struct asn1p_module_s;	/* Forward declaration */
+struct asn1p_ioc_table_s;	/* Forward declaration */
 
 /*
  * A named collection of types.
@@ -178,12 +179,8 @@ typedef struct asn1p_expr_s {
 	 */
 	asn1p_wsyntx_t *with_syntax;
 
-	/* Information Object Class matrix, specific for this class */
-	struct asn1p_ioc_matrix_s {
-		asn1p_ioc_row_t **row;
-		int rows;
-		int max_identifier_length;
-	} object_class_matrix;
+	/* Information Object Class table, specific for a class or object set */
+    struct asn1p_ioc_table_s *ioc_table;
 
 	/*
 	 * A tag.
@@ -281,7 +278,10 @@ asn1p_expr_t *asn1p_expr_clone_with_resolver(asn1p_expr_t *,
 	void *resolver_arg);
 void asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what);
 void asn1p_expr_add_many(asn1p_expr_t *to, asn1p_expr_t *from_what);
+int asn1p_expr_compare(const asn1p_expr_t *, const asn1p_expr_t *);
 void asn1p_expr_free(asn1p_expr_t *expr);
+void asn1p_expr_set_source(asn1p_expr_t *, asn1p_module_t *, int lineno);
+
 
 #define	TAG2STRING_BUFFER_SIZE	64	/* buf should be at least this big */
 char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *opt_buf);

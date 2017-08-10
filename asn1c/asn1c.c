@@ -118,6 +118,8 @@ main(int ac, char **av) {
         case 'g':
             if(strcmp(optarg, "en-PER") == 0) {
                 asn1_compiler_flags |= A1C_GEN_PER;
+            } else if(strcmp(optarg, "en-OER") == 0) {
+                asn1_compiler_flags |= A1C_GEN_OER;
             } else {
                 fprintf(stderr, "-g%s: Invalid argument\n", optarg);
                 exit(EX_USAGE);
@@ -195,7 +197,14 @@ main(int ac, char **av) {
     /*
      * Validate the options combination.
      */
-    if(!print_arg__print_out) {
+    if(print_arg__print_out) {
+        if((asn1_printer_flags & APF_PRINT_CONSTRAINTS)
+           && !print_arg__fix_n_print) {
+            fprintf(stderr,
+                    "Error: -print-constraints argument requires -E -F\n");
+            exit(EX_USAGE);
+        }
+    } else {
         if(print_arg__fix_n_print) {
             fprintf(stderr, "Error: -F requires -E\n");
             exit(EX_USAGE);
@@ -487,7 +496,8 @@ usage(const char *av0) {
 "  -fwide-types          Use INTEGER_t instead of \"long\" by default, etc.\n"
 "\n"
 
-"  -gen-PER              Generate PER support code\n"
+"  -gen-OER              Generate OER (X.696) support code\n"
+"  -gen-PER              Generate PER (X.691) support code\n"
 "  -pdu={all|auto|Type}  Generate PDU table (discover PDUs automatically)\n"
 "\n"
 

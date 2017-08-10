@@ -2,14 +2,9 @@
 #include "asn1fix.h"
 
 char const *
-asn1f_printable_reference(asn1p_ref_t *ref) {
+asn1f_printable_reference(const asn1p_ref_t *ref) {
 	if(ref) {
-		asn1p_value_t v;
-
-		v.type = ATV_REFERENCED;
-		v.value.reference = ref;
-
-		return asn1f_printable_value(&v);
+		return asn1p_ref_string(ref);
 	} else {
 		return "<no ref>";
 	}
@@ -50,8 +45,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 			memcpy(buf + sizeof(buf) - 4, "...", 4);
 		return buf;
 	case ATV_INTEGER:
-		ret = snprintf(buf, sizeof(buf), "%" PRIdASN,
-			v->value.v_integer);
+		ret = snprintf(buf, sizeof(buf), "%s", asn1p_itoa(v->value.v_integer));
 		if(ret >= (ssize_t)sizeof(buf))
 			memcpy(buf + sizeof(buf) - 4, "...", 4);
 		return buf;
@@ -135,12 +129,11 @@ asn1f_printable_value(asn1p_value_t *v) {
 			asn1p_ref_t *ref;
 			size_t reflen;
 			char *ptr;
-			int i;
 
 			assert(v->value.reference);
 			ref = v->value.reference;
 			reflen = ref->comp_count;	/* Number of dots */
-			for(i = 0; i < ref->comp_count; i++)
+			for(size_t i = 0; i < ref->comp_count; i++)
 				reflen += strlen(ref->components[i].name);
 			/*
 			 * Make sure we have a buffer of this size.
@@ -151,7 +144,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 			 * Fill-up the buffer.
 			 */
 			ptr = managedptr;
-			for(i = 0; i < ref->comp_count; i++) {
+			for(size_t i = 0; i < ref->comp_count; i++) {
 				char *nc;
 				if(i) *ptr++ = '.';
 				for(nc = ref->components[i].name; *nc; nc++)

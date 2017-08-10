@@ -6,7 +6,9 @@ diff -u . . 2>/dev/null && diffArgs="$diffArgs -u"	# Unified diff output
 
 ec=0
 
-set -e
+if [ "$1" != "regenerate" ]; then
+    set -e
+fi
 
 PROCESSING=""
 print_status() {

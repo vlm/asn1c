@@ -22,95 +22,10 @@ per_type_encoder_f CN_IntegerUnlimited_encode_uper;
 
 /*** <<< CODE [CN-IntegerUnlimited] >>> ***/
 
-int
-CN_IntegerUnlimited_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-CN_IntegerUnlimited_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-CN_IntegerUnlimited_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-CN_IntegerUnlimited_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerUnlimited_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-CN_IntegerUnlimited_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerUnlimited_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-CN_IntegerUnlimited_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerUnlimited_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-CN_IntegerUnlimited_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	CN_IntegerUnlimited_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< STAT-DEFS [CN-IntegerUnlimited] >>> ***/
 
@@ -120,15 +35,17 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerUnlimited_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerUnlimited = {
 	"CN-IntegerUnlimited",
 	"CN-IntegerUnlimited",
-	CN_IntegerUnlimited_free,
-	CN_IntegerUnlimited_print,
-	CN_IntegerUnlimited_constraint,
-	CN_IntegerUnlimited_decode_ber,
-	CN_IntegerUnlimited_encode_der,
-	CN_IntegerUnlimited_decode_xer,
-	CN_IntegerUnlimited_encode_xer,
-	CN_IntegerUnlimited_decode_uper,
-	CN_IntegerUnlimited_encode_uper,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
+	NativeInteger_constraint,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerUnlimited_tags_1,
 	sizeof(asn_DEF_CN_IntegerUnlimited_tags_1)
@@ -136,6 +53,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerUnlimited = {
 	asn_DEF_CN_IntegerUnlimited_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerUnlimited_tags_1)
 		/sizeof(asn_DEF_CN_IntegerUnlimited_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -190,83 +108,6 @@ CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-CN_IntegerMinMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-CN_IntegerMinMax_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-CN_IntegerMinMax_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerMinMax_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-CN_IntegerMinMax_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerMinMax_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-CN_IntegerMinMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerMinMax_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-CN_IntegerMinMax_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	CN_IntegerMinMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [CN-IntegerMinMax] >>> ***/
 
@@ -284,15 +125,17 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerMinMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinMax = {
 	"CN-IntegerMinMax",
 	"CN-IntegerMinMax",
-	CN_IntegerMinMax_free,
-	CN_IntegerMinMax_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	CN_IntegerMinMax_constraint,
-	CN_IntegerMinMax_decode_ber,
-	CN_IntegerMinMax_encode_der,
-	CN_IntegerMinMax_decode_xer,
-	CN_IntegerMinMax_encode_xer,
-	CN_IntegerMinMax_decode_uper,
-	CN_IntegerMinMax_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerMinMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinMax_tags_1)
@@ -300,6 +143,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinMax = {
 	asn_DEF_CN_IntegerMinMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerMinMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinMax_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_CN_IntegerMinMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -358,83 +202,6 @@ CN_IntegerMinLow_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-CN_IntegerMinLow_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-CN_IntegerMinLow_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-CN_IntegerMinLow_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerMinLow_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-CN_IntegerMinLow_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerMinLow_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-CN_IntegerMinLow_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerMinLow_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-CN_IntegerMinLow_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	CN_IntegerMinLow_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [CN-IntegerMinLow] >>> ***/
 
@@ -452,15 +219,17 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerMinLow_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinLow = {
 	"CN-IntegerMinLow",
 	"CN-IntegerMinLow",
-	CN_IntegerMinLow_free,
-	CN_IntegerMinLow_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	CN_IntegerMinLow_constraint,
-	CN_IntegerMinLow_decode_ber,
-	CN_IntegerMinLow_encode_der,
-	CN_IntegerMinLow_decode_xer,
-	CN_IntegerMinLow_encode_xer,
-	CN_IntegerMinLow_decode_uper,
-	CN_IntegerMinLow_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerMinLow_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinLow_tags_1)
@@ -468,6 +237,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinLow = {
 	asn_DEF_CN_IntegerMinLow_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerMinLow_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinLow_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_CN_IntegerMinLow_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -532,83 +302,6 @@ NO_IntegerMinHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using INTEGER,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerMinHigh_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
-}
-
-void
-NO_IntegerMinHigh_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerMinHigh_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerMinHigh_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerMinHigh_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerMinHigh_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerMinHigh_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerMinHigh_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerMinHigh_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerMinHigh_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [NO-IntegerMinHigh] >>> ***/
 
@@ -626,15 +319,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerMinHigh_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
 	"NO-IntegerMinHigh",
 	"NO-IntegerMinHigh",
-	NO_IntegerMinHigh_free,
-	NO_IntegerMinHigh_print,
+	INTEGER_free,
+	INTEGER_print,
+	INTEGER_compare,
 	NO_IntegerMinHigh_constraint,
-	NO_IntegerMinHigh_decode_ber,
-	NO_IntegerMinHigh_encode_der,
-	NO_IntegerMinHigh_decode_xer,
-	NO_IntegerMinHigh_encode_xer,
-	NO_IntegerMinHigh_decode_uper,
-	NO_IntegerMinHigh_encode_uper,
+	INTEGER_decode_ber,
+	INTEGER_encode_der,
+	INTEGER_decode_xer,
+	INTEGER_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	INTEGER_decode_uper,
+	INTEGER_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerMinHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerMinHigh_tags_1)
@@ -642,6 +337,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
 	asn_DEF_NO_IntegerMinHigh_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerMinHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerMinHigh_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_NO_IntegerMinHigh_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -700,83 +396,6 @@ NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerLowHigh_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
-}
-
-void
-NO_IntegerLowHigh_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerLowHigh_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerLowHigh_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerLowHigh_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerLowHigh_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerLowHigh_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerLowHigh_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerLowHigh_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerLowHigh_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [NO-IntegerLowHigh] >>> ***/
 
@@ -788,7 +407,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerLowHigh_constr_1 GCC_NOTUSED
 
 /*** <<< STAT-DEFS [NO-IntegerLowHigh] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerLowHigh_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -799,15 +418,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerLowHigh_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 	"NO-IntegerLowHigh",
 	"NO-IntegerLowHigh",
-	NO_IntegerLowHigh_free,
-	NO_IntegerLowHigh_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	NO_IntegerLowHigh_constraint,
-	NO_IntegerLowHigh_decode_ber,
-	NO_IntegerLowHigh_encode_der,
-	NO_IntegerLowHigh_decode_xer,
-	NO_IntegerLowHigh_encode_xer,
-	NO_IntegerLowHigh_decode_uper,
-	NO_IntegerLowHigh_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerLowHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowHigh_tags_1)
@@ -815,6 +436,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 	asn_DEF_NO_IntegerLowHigh_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerLowHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowHigh_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_NO_IntegerLowHigh_constr_1,
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerLowHigh_specs_1	/* Additional specs */
@@ -873,83 +495,6 @@ CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-CN_IntegerLowMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-CN_IntegerLowMax_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-CN_IntegerLowMax_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerLowMax_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-CN_IntegerLowMax_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerLowMax_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-CN_IntegerLowMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerLowMax_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-CN_IntegerLowMax_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	CN_IntegerLowMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [CN-IntegerLowMax] >>> ***/
 
@@ -967,15 +512,17 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerLowMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
 	"CN-IntegerLowMax",
 	"CN-IntegerLowMax",
-	CN_IntegerLowMax_free,
-	CN_IntegerLowMax_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	CN_IntegerLowMax_constraint,
-	CN_IntegerLowMax_decode_ber,
-	CN_IntegerLowMax_encode_der,
-	CN_IntegerLowMax_decode_xer,
-	CN_IntegerLowMax_encode_xer,
-	CN_IntegerLowMax_decode_uper,
-	CN_IntegerLowMax_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerLowMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerLowMax_tags_1)
@@ -983,6 +530,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
 	asn_DEF_CN_IntegerLowMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerLowMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerLowMax_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_CN_IntegerLowMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1047,83 +595,6 @@ NO_IntegerHighMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using INTEGER,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerHighMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
-}
-
-void
-NO_IntegerHighMax_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerHighMax_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerHighMax_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerHighMax_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerHighMax_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerHighMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerHighMax_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerHighMax_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerHighMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [NO-IntegerHighMax] >>> ***/
 
@@ -1141,15 +612,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerHighMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerHighMax = {
 	"NO-IntegerHighMax",
 	"NO-IntegerHighMax",
-	NO_IntegerHighMax_free,
-	NO_IntegerHighMax_print,
+	INTEGER_free,
+	INTEGER_print,
+	INTEGER_compare,
 	NO_IntegerHighMax_constraint,
-	NO_IntegerHighMax_decode_ber,
-	NO_IntegerHighMax_encode_der,
-	NO_IntegerHighMax_decode_xer,
-	NO_IntegerHighMax_encode_xer,
-	NO_IntegerHighMax_decode_uper,
-	NO_IntegerHighMax_encode_uper,
+	INTEGER_decode_ber,
+	INTEGER_encode_der,
+	INTEGER_decode_xer,
+	INTEGER_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	INTEGER_decode_uper,
+	INTEGER_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerHighMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerHighMax_tags_1)
@@ -1157,6 +630,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerHighMax = {
 	asn_DEF_NO_IntegerHighMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerHighMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerHighMax_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_NO_IntegerHighMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1221,83 +695,6 @@ NO_IntegerLowestMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using INTEGER,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerLowestMax_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
-}
-
-void
-NO_IntegerLowestMax_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerLowestMax_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerLowestMax_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerLowestMax_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerLowestMax_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerLowestMax_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerLowestMax_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerLowestMax_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerLowestMax_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [NO-IntegerLowestMax] >>> ***/
 
@@ -1315,15 +712,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerLowestMax_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
 	"NO-IntegerLowestMax",
 	"NO-IntegerLowestMax",
-	NO_IntegerLowestMax_free,
-	NO_IntegerLowestMax_print,
+	INTEGER_free,
+	INTEGER_print,
+	INTEGER_compare,
 	NO_IntegerLowestMax_constraint,
-	NO_IntegerLowestMax_decode_ber,
-	NO_IntegerLowestMax_encode_der,
-	NO_IntegerLowestMax_decode_xer,
-	NO_IntegerLowestMax_encode_xer,
-	NO_IntegerLowestMax_decode_uper,
-	NO_IntegerLowestMax_encode_uper,
+	INTEGER_decode_ber,
+	INTEGER_encode_der,
+	INTEGER_decode_xer,
+	INTEGER_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	INTEGER_decode_uper,
+	INTEGER_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerLowestMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowestMax_tags_1)
@@ -1331,6 +730,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
 	asn_DEF_NO_IntegerLowestMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerLowestMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowestMax_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_NO_IntegerLowestMax_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1389,83 +789,6 @@ NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerOutRange_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
-}
-
-void
-NO_IntegerOutRange_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerOutRange_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerOutRange_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerOutRange_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerOutRange_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerOutRange_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerOutRange_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerOutRange_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerOutRange_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [NO-IntegerOutRange] >>> ***/
 
@@ -1477,7 +800,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerOutRange_constr_1 GCC_NOTUSE
 
 /*** <<< STAT-DEFS [NO-IntegerOutRange] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutRange_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -1488,15 +811,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerOutRange_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
 	"NO-IntegerOutRange",
 	"NO-IntegerOutRange",
-	NO_IntegerOutRange_free,
-	NO_IntegerOutRange_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	NO_IntegerOutRange_constraint,
-	NO_IntegerOutRange_decode_ber,
-	NO_IntegerOutRange_encode_der,
-	NO_IntegerOutRange_decode_xer,
-	NO_IntegerOutRange_encode_xer,
-	NO_IntegerOutRange_decode_uper,
-	NO_IntegerOutRange_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerOutRange_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutRange_tags_1)
@@ -1504,6 +829,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
 	asn_DEF_NO_IntegerOutRange_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerOutRange_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutRange_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_NO_IntegerOutRange_constr_1,
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerOutRange_specs_1	/* Additional specs */
@@ -1562,83 +888,6 @@ NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerOutValue_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
-}
-
-void
-NO_IntegerOutValue_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerOutValue_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerOutValue_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerOutValue_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerOutValue_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerOutValue_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerOutValue_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerOutValue_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerOutValue_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [NO-IntegerOutValue] >>> ***/
 
@@ -1650,7 +899,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerOutValue_constr_1 GCC_NOTUSE
 
 /*** <<< STAT-DEFS [NO-IntegerOutValue] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerOutValue_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -1661,15 +910,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerOutValue_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
 	"NO-IntegerOutValue",
 	"NO-IntegerOutValue",
-	NO_IntegerOutValue_free,
-	NO_IntegerOutValue_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	NO_IntegerOutValue_constraint,
-	NO_IntegerOutValue_decode_ber,
-	NO_IntegerOutValue_encode_der,
-	NO_IntegerOutValue_decode_xer,
-	NO_IntegerOutValue_encode_xer,
-	NO_IntegerOutValue_decode_uper,
-	NO_IntegerOutValue_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerOutValue_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutValue_tags_1)
@@ -1677,6 +928,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
 	asn_DEF_NO_IntegerOutValue_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerOutValue_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutValue_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_NO_IntegerOutValue_constr_1,
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerOutValue_specs_1	/* Additional specs */
@@ -1735,83 +987,6 @@ OK_IntegerInRange1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-OK_IntegerInRange1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-OK_IntegerInRange1_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-OK_IntegerInRange1_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange1_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange1_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange1_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange1_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange1_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	OK_IntegerInRange1_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [OK-IntegerInRange1] >>> ***/
 
@@ -1829,15 +1004,17 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange1 = {
 	"OK-IntegerInRange1",
 	"OK-IntegerInRange1",
-	OK_IntegerInRange1_free,
-	OK_IntegerInRange1_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	OK_IntegerInRange1_constraint,
-	OK_IntegerInRange1_decode_ber,
-	OK_IntegerInRange1_encode_der,
-	OK_IntegerInRange1_decode_xer,
-	OK_IntegerInRange1_encode_xer,
-	OK_IntegerInRange1_decode_uper,
-	OK_IntegerInRange1_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange1_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange1_tags_1)
@@ -1845,6 +1022,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange1 = {
 	asn_DEF_OK_IntegerInRange1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange1_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_OK_IntegerInRange1_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -1903,83 +1081,6 @@ OK_IntegerInRange2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-OK_IntegerInRange2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-OK_IntegerInRange2_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-OK_IntegerInRange2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange2_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange2_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange2_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange2_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	OK_IntegerInRange2_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [OK-IntegerInRange2] >>> ***/
 
@@ -1997,15 +1098,17 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange2 = {
 	"OK-IntegerInRange2",
 	"OK-IntegerInRange2",
-	OK_IntegerInRange2_free,
-	OK_IntegerInRange2_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	OK_IntegerInRange2_constraint,
-	OK_IntegerInRange2_decode_ber,
-	OK_IntegerInRange2_encode_der,
-	OK_IntegerInRange2_decode_xer,
-	OK_IntegerInRange2_encode_xer,
-	OK_IntegerInRange2_decode_uper,
-	OK_IntegerInRange2_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange2_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange2_tags_1)
@@ -2013,6 +1116,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange2 = {
 	asn_DEF_OK_IntegerInRange2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange2_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_OK_IntegerInRange2_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2071,83 +1175,6 @@ OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-OK_IntegerInRange3_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-OK_IntegerInRange3_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-OK_IntegerInRange3_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange3_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange3_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange3_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange3_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange3_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange3_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	OK_IntegerInRange3_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [OK-IntegerInRange3] >>> ***/
 
@@ -2165,15 +1192,17 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange3 = {
 	"OK-IntegerInRange3",
 	"OK-IntegerInRange3",
-	OK_IntegerInRange3_free,
-	OK_IntegerInRange3_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	OK_IntegerInRange3_constraint,
-	OK_IntegerInRange3_decode_ber,
-	OK_IntegerInRange3_encode_der,
-	OK_IntegerInRange3_decode_xer,
-	OK_IntegerInRange3_encode_xer,
-	OK_IntegerInRange3_decode_uper,
-	OK_IntegerInRange3_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange3_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange3_tags_1)
@@ -2181,6 +1210,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange3 = {
 	asn_DEF_OK_IntegerInRange3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange3_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange3_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_OK_IntegerInRange3_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2239,83 +1269,6 @@ OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-OK_IntegerInRange4_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-OK_IntegerInRange4_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-OK_IntegerInRange4_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange4_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange4_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange4_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange4_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange4_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange4_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	OK_IntegerInRange4_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [OK-IntegerInRange4] >>> ***/
 
@@ -2333,15 +1286,17 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange4 = {
 	"OK-IntegerInRange4",
 	"OK-IntegerInRange4",
-	OK_IntegerInRange4_free,
-	OK_IntegerInRange4_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	OK_IntegerInRange4_constraint,
-	OK_IntegerInRange4_decode_ber,
-	OK_IntegerInRange4_encode_der,
-	OK_IntegerInRange4_decode_xer,
-	OK_IntegerInRange4_encode_xer,
-	OK_IntegerInRange4_decode_uper,
-	OK_IntegerInRange4_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange4_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange4_tags_1)
@@ -2349,6 +1304,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange4 = {
 	asn_DEF_OK_IntegerInRange4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange4_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange4_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_OK_IntegerInRange4_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2407,83 +1363,6 @@ OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-OK_IntegerInRange5_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-OK_IntegerInRange5_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-OK_IntegerInRange5_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange5_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange5_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange5_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange5_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-OK_IntegerInRange5_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-OK_IntegerInRange5_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	OK_IntegerInRange5_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [OK-IntegerInRange5] >>> ***/
 
@@ -2501,15 +1380,17 @@ static const ber_tlv_tag_t asn_DEF_OK_IntegerInRange5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
 	"OK-IntegerInRange5",
 	"OK-IntegerInRange5",
-	OK_IntegerInRange5_free,
-	OK_IntegerInRange5_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	OK_IntegerInRange5_constraint,
-	OK_IntegerInRange5_decode_ber,
-	OK_IntegerInRange5_encode_der,
-	OK_IntegerInRange5_decode_xer,
-	OK_IntegerInRange5_encode_xer,
-	OK_IntegerInRange5_decode_uper,
-	OK_IntegerInRange5_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OK_IntegerInRange5_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange5_tags_1)
@@ -2517,6 +1398,7 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
 	asn_DEF_OK_IntegerInRange5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange5_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange5_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_OK_IntegerInRange5_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
@@ -2566,83 +1448,6 @@ NO_IntegerInRange6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerInRange6_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-     /* td->specifics      = asn_DEF_NativeInteger.specifics;	// Defined explicitly */
-}
-
-void
-NO_IntegerInRange6_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerInRange6_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerInRange6_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerInRange6_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerInRange6_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerInRange6_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerInRange6_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerInRange6_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerInRange6_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< CTDEFS [NO-IntegerInRange6] >>> ***/
 
@@ -2654,7 +1459,7 @@ static asn_per_constraints_t asn_PER_type_NO_IntegerInRange6_constr_1 GCC_NOTUSE
 
 /*** <<< STAT-DEFS [NO-IntegerInRange6] >>> ***/
 
-static asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
+static const asn_INTEGER_specifics_t asn_SPC_NO_IntegerInRange6_specs_1 = {
 	0,	0,	0,	0,	0,
 	0,	/* Native long size */
 	1	/* Unsigned representation */
@@ -2665,15 +1470,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerInRange6_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 	"NO-IntegerInRange6",
 	"NO-IntegerInRange6",
-	NO_IntegerInRange6_free,
-	NO_IntegerInRange6_print,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
 	NO_IntegerInRange6_constraint,
-	NO_IntegerInRange6_decode_ber,
-	NO_IntegerInRange6_encode_der,
-	NO_IntegerInRange6_decode_xer,
-	NO_IntegerInRange6_encode_xer,
-	NO_IntegerInRange6_decode_uper,
-	NO_IntegerInRange6_encode_uper,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerInRange6_tags_1,
 	sizeof(asn_DEF_NO_IntegerInRange6_tags_1)
@@ -2681,6 +1488,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 	asn_DEF_NO_IntegerInRange6_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerInRange6_tags_1)
 		/sizeof(asn_DEF_NO_IntegerInRange6_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_NO_IntegerInRange6_constr_1,
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerInRange6_specs_1	/* Additional specs */
@@ -2717,95 +1525,10 @@ per_type_encoder_f CN_IntegerEnumerated1_encode_uper;
 
 /*** <<< CODE [CN-IntegerEnumerated1] >>> ***/
 
-int
-CN_IntegerEnumerated1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using NativeInteger,
  * so here we adjust the DEF accordingly.
  */
-static void
-CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_NativeInteger.free_struct;
-	td->print_struct   = asn_DEF_NativeInteger.print_struct;
-	td->check_constraints = asn_DEF_NativeInteger.check_constraints;
-	td->ber_decoder    = asn_DEF_NativeInteger.ber_decoder;
-	td->der_encoder    = asn_DEF_NativeInteger.der_encoder;
-	td->xer_decoder    = asn_DEF_NativeInteger.xer_decoder;
-	td->xer_encoder    = asn_DEF_NativeInteger.xer_encoder;
-	td->uper_decoder   = asn_DEF_NativeInteger.uper_decoder;
-	td->uper_encoder   = asn_DEF_NativeInteger.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_NativeInteger.per_constraints;
-	td->elements       = asn_DEF_NativeInteger.elements;
-	td->elements_count = asn_DEF_NativeInteger.elements_count;
-	td->specifics      = asn_DEF_NativeInteger.specifics;
-}
-
-void
-CN_IntegerEnumerated1_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-CN_IntegerEnumerated1_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerEnumerated1_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-CN_IntegerEnumerated1_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerEnumerated1_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-CN_IntegerEnumerated1_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-CN_IntegerEnumerated1_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-CN_IntegerEnumerated1_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	CN_IntegerEnumerated1_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< STAT-DEFS [CN-IntegerEnumerated1] >>> ***/
 
@@ -2815,15 +1538,17 @@ static const ber_tlv_tag_t asn_DEF_CN_IntegerEnumerated1_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_CN_IntegerEnumerated1 = {
 	"CN-IntegerEnumerated1",
 	"CN-IntegerEnumerated1",
-	CN_IntegerEnumerated1_free,
-	CN_IntegerEnumerated1_print,
-	CN_IntegerEnumerated1_constraint,
-	CN_IntegerEnumerated1_decode_ber,
-	CN_IntegerEnumerated1_encode_der,
-	CN_IntegerEnumerated1_decode_xer,
-	CN_IntegerEnumerated1_encode_xer,
-	CN_IntegerEnumerated1_decode_uper,
-	CN_IntegerEnumerated1_encode_uper,
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
+	NativeInteger_constraint,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	NativeInteger_decode_uper,
+	NativeInteger_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_CN_IntegerEnumerated1_tags_1,
 	sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1)
@@ -2831,6 +1556,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerEnumerated1 = {
 	asn_DEF_CN_IntegerEnumerated1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1)
 		/sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
@@ -2867,95 +1593,10 @@ per_type_encoder_f NO_IntegerEnumerated2_encode_uper;
 
 /*** <<< CODE [NO-IntegerEnumerated2] >>> ***/
 
-int
-NO_IntegerEnumerated2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
-}
-
 /*
  * This type is implemented using INTEGER,
  * so here we adjust the DEF accordingly.
  */
-static void
-NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_INTEGER.free_struct;
-	td->print_struct   = asn_DEF_INTEGER.print_struct;
-	td->check_constraints = asn_DEF_INTEGER.check_constraints;
-	td->ber_decoder    = asn_DEF_INTEGER.ber_decoder;
-	td->der_encoder    = asn_DEF_INTEGER.der_encoder;
-	td->xer_decoder    = asn_DEF_INTEGER.xer_decoder;
-	td->xer_encoder    = asn_DEF_INTEGER.xer_encoder;
-	td->uper_decoder   = asn_DEF_INTEGER.uper_decoder;
-	td->uper_encoder   = asn_DEF_INTEGER.uper_encoder;
-	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_INTEGER.per_constraints;
-	td->elements       = asn_DEF_INTEGER.elements;
-	td->elements_count = asn_DEF_INTEGER.elements_count;
-	td->specifics      = asn_DEF_INTEGER.specifics;
-}
-
-void
-NO_IntegerEnumerated2_free(asn_TYPE_descriptor_t *td,
-		void *struct_ptr, int contents_only) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	td->free_struct(td, struct_ptr, contents_only);
-}
-
-int
-NO_IntegerEnumerated2_print(asn_TYPE_descriptor_t *td, const void *struct_ptr,
-		int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	return td->print_struct(td, struct_ptr, ilevel, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerEnumerated2_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const void *bufptr, size_t size, int tag_mode) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	return td->ber_decoder(opt_codec_ctx, td, structure, bufptr, size, tag_mode);
-}
-
-asn_enc_rval_t
-NO_IntegerEnumerated2_encode_der(asn_TYPE_descriptor_t *td,
-		void *structure, int tag_mode, ber_tlv_tag_t tag,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	return td->der_encoder(td, structure, tag_mode, tag, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerEnumerated2_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **structure, const char *opt_mname, const void *bufptr, size_t size) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	return td->xer_decoder(opt_codec_ctx, td, structure, opt_mname, bufptr, size);
-}
-
-asn_enc_rval_t
-NO_IntegerEnumerated2_encode_xer(asn_TYPE_descriptor_t *td, void *structure,
-		int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	return td->xer_encoder(td, structure, ilevel, flags, cb, app_key);
-}
-
-asn_dec_rval_t
-NO_IntegerEnumerated2_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints, void **structure, asn_per_data_t *per_data) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	return td->uper_decoder(opt_codec_ctx, td, constraints, structure, per_data);
-}
-
-asn_enc_rval_t
-NO_IntegerEnumerated2_encode_uper(asn_TYPE_descriptor_t *td,
-		asn_per_constraints_t *constraints,
-		void *structure, asn_per_outp_t *per_out) {
-	NO_IntegerEnumerated2_1_inherit_TYPE_descriptor(td);
-	return td->uper_encoder(td, constraints, structure, per_out);
-}
-
 
 /*** <<< STAT-DEFS [NO-IntegerEnumerated2] >>> ***/
 
@@ -2965,15 +1606,17 @@ static const ber_tlv_tag_t asn_DEF_NO_IntegerEnumerated2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NO_IntegerEnumerated2 = {
 	"NO-IntegerEnumerated2",
 	"NO-IntegerEnumerated2",
-	NO_IntegerEnumerated2_free,
-	NO_IntegerEnumerated2_print,
-	NO_IntegerEnumerated2_constraint,
-	NO_IntegerEnumerated2_decode_ber,
-	NO_IntegerEnumerated2_encode_der,
-	NO_IntegerEnumerated2_decode_xer,
-	NO_IntegerEnumerated2_encode_xer,
-	NO_IntegerEnumerated2_decode_uper,
-	NO_IntegerEnumerated2_encode_uper,
+	INTEGER_free,
+	INTEGER_print,
+	INTEGER_compare,
+	INTEGER_constraint,
+	INTEGER_decode_ber,
+	INTEGER_encode_der,
+	INTEGER_decode_xer,
+	INTEGER_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	INTEGER_decode_uper,
+	INTEGER_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NO_IntegerEnumerated2_tags_1,
 	sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1)
@@ -2981,6 +1624,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerEnumerated2 = {
 	asn_DEF_NO_IntegerEnumerated2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1)
 		/sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */

@@ -33,14 +33,17 @@ libasn1cskeletons_la_SOURCES = 				\
 	GraphicString.c GraphicString.h			\
 	IA5String.c IA5String.h				\
 	INTEGER.c INTEGER.h				\
+	INTEGER_oer.c \
 	ISO646String.c ISO646String.h			\
 	NULL.c NULL.h					\
 	NativeEnumerated.c NativeEnumerated.h		\
 	NativeInteger.c NativeInteger.h			\
+	NativeInteger_oer.c \
 	NativeReal.c NativeReal.h			\
 	NumericString.c NumericString.h			\
 	OBJECT_IDENTIFIER.c OBJECT_IDENTIFIER.h		\
-	OCTET_STRING.c OCTET_STRING.h			\
+	OCTET_STRING.c OCTET_STRING.h	\
+    OCTET_STRING_oer.c \
 	ObjectDescriptor.c ObjectDescriptor.h		\
 	PrintableString.c PrintableString.h		\
 	REAL.c REAL.h					\
@@ -62,12 +65,16 @@ libasn1cskeletons_la_SOURCES = 				\
 	ber_tlv_tag.c ber_tlv_tag.h			\
 	constr_CHOICE.c constr_CHOICE.h			\
 	constr_SEQUENCE.c constr_SEQUENCE.h		\
+	constr_SEQUENCE_oer.c \
 	constr_SEQUENCE_OF.c constr_SEQUENCE_OF.h	\
 	constr_SET.c constr_SET.h			\
 	constr_SET_OF.c constr_SET_OF.h			\
 	constr_TYPE.c constr_TYPE.h			\
 	constraints.c constraints.h			\
 	der_encoder.c der_encoder.h			\
+	oer_decoder.c oer_decoder.h			\
+	oer_encoder.c oer_encoder.h			\
+	oer_support.c oer_support.h			\
 	per_decoder.c per_decoder.h			\
 	per_encoder.c per_encoder.h			\
 	per_opentype.c per_opentype.h			\

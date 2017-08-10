@@ -226,6 +226,7 @@ static asn1p_module_t *currentModule;
 %token			TOK_VideotexString
 %token			TOK_VisibleString
 %token			TOK_WITH
+%token			UTF8_BOM    "UTF-8 byte order mark"
 
 %nonassoc		TOK_EXCEPT
 %left			'^' TOK_INTERSECTION
@@ -350,12 +351,14 @@ static asn1p_module_t *currentModule;
 %type	<tv_str>		ComponentIdList
 %type	<a_int>			NSTD_IndirectMarker
 
-
 %%
 
 
 ParsedGrammar:
-	ModuleList {
+	UTF8_BOM ModuleList {
+		*(void **)param = $2;
+	}
+	| ModuleList {
 		*(void **)param = $1;
 	}
 	;
@@ -577,6 +580,7 @@ Assignment:
 	 * === EXAMPLE ===
 	 * EvenNumbers INTEGER ::= { 2 | 4 | 6 | 8 }
 	 * === EOF ===
+	 * Also ObjectClassSet.
 	 */
 	| ValueSetTypeAssignment {
 		$$ = asn1p_module_new();

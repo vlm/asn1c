@@ -41,7 +41,9 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "str-o"
@@ -50,7 +52,9 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "str-m"
@@ -59,7 +63,9 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Singleton,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "singl"
@@ -68,7 +74,9 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_PDU_2,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "pdu-2"
@@ -99,11 +107,13 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
@@ -113,6 +123,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 	asn_DEF_PDU_tags_1,	/* Same as above */
 	sizeof(asn_DEF_PDU_tags_1)
 		/sizeof(asn_DEF_PDU_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_PDU_1,
 	4,	/* Elements count */
@@ -137,6 +148,8 @@ typedef struct Singleton {
 /*** <<< FUNC-DECLS [Singleton] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_Singleton;
+extern asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1;
+extern asn_TYPE_member_t asn_MBR_Singleton_1[1];
 
 /*** <<< STAT-DEFS [Singleton] >>> ***/
 
@@ -166,12 +179,14 @@ static int asn_DFL_2_set(int set_value, void **sptr) {
 	}
 	
 }
-static asn_TYPE_member_t asn_MBR_Singleton_1[] = {
+asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Singleton, opt_z),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_IA5String,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = asn_DFL_2_set,	/* DEFAULT "z" */
 		.name = "opt-z"
@@ -184,7 +199,7 @@ static const ber_tlv_tag_t asn_DEF_Singleton_tags_1[] = {
 static const asn_TYPE_tag2member_t asn_MAP_Singleton_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* opt-z */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
+asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
 	sizeof(struct Singleton),
 	offsetof(struct Singleton, _asn_ctx),
 	asn_MAP_Singleton_tag2el_1,
@@ -199,11 +214,13 @@ asn_TYPE_descriptor_t asn_DEF_Singleton = {
 	"Singleton",
 	SEQUENCE_free,
 	SEQUENCE_print,
+	SEQUENCE_compare,
 	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,
 	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
 	0,	/* Use generic outmost tag fetcher */
@@ -213,6 +230,7 @@ asn_TYPE_descriptor_t asn_DEF_Singleton = {
 	asn_DEF_Singleton_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Singleton_tags_1)
 		/sizeof(asn_DEF_Singleton_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
 	asn_MBR_Singleton_1,
 	1,	/* Elements count */
@@ -256,10 +274,13 @@ typedef struct PDU_2 {
 /*** <<< FUNC-DECLS [PDU-2] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_PDU_2;
+extern asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1;
+extern asn_TYPE_member_t asn_MBR_PDU_2_1[3];
+extern asn_per_constraints_t asn_PER_type_PDU_2_constr_1;
 
 /*** <<< CTDEFS [PDU-2] >>> ***/
 
-static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 GCC_NOTUSED = {
+asn_per_constraints_t asn_PER_type_PDU_2_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  0,  0,  0,  0 }	/* (0..0,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
@@ -267,12 +288,14 @@ static asn_per_constraints_t asn_PER_type_PDU_2_constr_1 GCC_NOTUSED = {
 
 /*** <<< STAT-DEFS [PDU-2] >>> ***/
 
-static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
+asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.main),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "main"
@@ -281,7 +304,9 @@ static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "ext1"
@@ -290,7 +315,9 @@ static asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* No PER visible constraints */
 		.default_value = 0,
 		.name = "ext0"
@@ -302,7 +329,7 @@ static const asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ext1 */
     { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 0, 0, 0 } /* main */
 };
-static asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
+asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 	sizeof(struct PDU_2),
 	offsetof(struct PDU_2, _asn_ctx),
 	offsetof(struct PDU_2, present),
@@ -317,11 +344,13 @@ asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	"PDU-2",
 	CHOICE_free,
 	CHOICE_print,
+	CHOICE_compare,
 	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
 	CHOICE_decode_xer,
 	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
 	CHOICE_decode_uper,
 	CHOICE_encode_uper,
 	CHOICE_outmost_tag,
@@ -329,6 +358,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
 	&asn_PER_type_PDU_2_constr_1,
 	asn_MBR_PDU_2_1,
 	3,	/* Elements count */

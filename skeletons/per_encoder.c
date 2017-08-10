@@ -2,7 +2,7 @@
 #include <asn_internal.h>
 #include <per_encoder.h>
 
-static asn_enc_rval_t uper_encode_internal(asn_TYPE_descriptor_t *td, asn_per_constraints_t *, void *sptr, asn_app_consume_bytes_f *cb, void *app_key);
+static asn_enc_rval_t uper_encode_internal(asn_TYPE_descriptor_t *td, const asn_per_constraints_t *, void *sptr, asn_app_consume_bytes_f *cb, void *app_key);
 
 asn_enc_rval_t
 uper_encode(asn_TYPE_descriptor_t *td, void *sptr, asn_app_consume_bytes_f *cb, void *app_key) {
@@ -65,8 +65,10 @@ encode_dyn_cb(const void *buffer, size_t size, void *key) {
 	return 0;
 }
 ssize_t
-uper_encode_to_new_buffer(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints, void *sptr, void **buffer_r) {
-	asn_enc_rval_t er;
+uper_encode_to_new_buffer(asn_TYPE_descriptor_t *td,
+                          const asn_per_constraints_t *constraints, void *sptr,
+                          void **buffer_r) {
+    asn_enc_rval_t er;
 	enc_dyn_arg key;
 
 	memset(&key, 0, sizeof(key));
@@ -116,8 +118,10 @@ _uper_encode_flush_outp(asn_per_outp_t *po) {
 }
 
 static asn_enc_rval_t
-uper_encode_internal(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints, void *sptr, asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_per_outp_t po;
+uper_encode_internal(asn_TYPE_descriptor_t *td,
+                     const asn_per_constraints_t *constraints, void *sptr,
+                     asn_app_consume_bytes_f *cb, void *app_key) {
+    asn_per_outp_t po;
 	asn_enc_rval_t er;
 
 	/*

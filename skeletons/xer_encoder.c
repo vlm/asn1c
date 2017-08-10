@@ -65,3 +65,169 @@ xer_fprint(FILE *stream, asn_TYPE_descriptor_t *td, void *sptr) {
 
 	return fflush(stream);
 }
+
+struct xer_buffer {
+    char *buffer;
+    size_t buffer_size;
+    size_t allocated_size;
+};
+
+static int
+xer__buffer_append(const void *buffer, size_t size, void *app_key) {
+    struct xer_buffer *xb = app_key;
+
+    while(xb->buffer_size + size + 1 > xb->allocated_size) {
+        size_t new_size = 2 * (xb->allocated_size ? xb->allocated_size : 64);
+        char *new_buf = MALLOC(new_size);
+        if(!new_buf) return -1;
+        memcpy(new_buf, xb->buffer, xb->buffer_size);
+        FREEMEM(xb->buffer);
+        xb->buffer = new_buf;
+        xb->allocated_size = new_size;
+    }
+
+    memcpy(xb->buffer + xb->buffer_size, buffer, size);
+    xb->buffer_size += size;
+    xb->buffer[xb->buffer_size] = '\0';
+    return 0;
+}
+
+enum xer_equivalence_e
+xer_equivalent(struct asn_TYPE_descriptor_s *td, void *struct1,
+               void *struct2, FILE *opt_debug_stream) {
+    struct xer_buffer xb1 = {0, 0, 0};
+    struct xer_buffer xb2 = {0, 0, 0};
+    asn_enc_rval_t e1, e2;
+    asn_dec_rval_t rval;
+    void *sptr = NULL;
+
+    if(!td || !struct1 || !struct2) {
+        if(opt_debug_stream) {
+            if(!td) fprintf(opt_debug_stream, "Type descriptor missing\n");
+            if(!struct1) fprintf(opt_debug_stream, "Structure 1 missing\n");
+            if(!struct2) fprintf(opt_debug_stream, "Structure 2 missing\n");
+        }
+        return XEQ_FAILURE;
+    }
+
+    e1 = xer_encode(td, struct1, XER_F_BASIC, xer__buffer_append, &xb1);
+    if(e1.encoded == -1) {
+        if(opt_debug_stream) {
+            fprintf(stderr, "XER Encoding of %s failed\n", td->name);
+        }
+        FREEMEM(xb1.buffer);
+        return XEQ_ENCODE1_FAILED;
+    }
+
+    e2 = xer_encode(td, struct2, XER_F_BASIC, xer__buffer_append, &xb2);
+    if(e2.encoded == -1) {
+        if(opt_debug_stream) {
+            fprintf(stderr, "XER Encoding of %s failed\n", td->name);
+        }
+        FREEMEM(xb1.buffer);
+        FREEMEM(xb2.buffer);
+        return XEQ_ENCODE1_FAILED;
+    }
+
+    if(xb1.buffer_size != xb2.buffer_size
+       || memcmp(xb1.buffer, xb2.buffer, xb1.buffer_size) != 0) {
+        if(opt_debug_stream) {
+            fprintf(opt_debug_stream,
+                    "Structures XER-encoded into different byte streams:\n=== "
+                    "Structure 1 ===\n%s\n=== Structure 2 ===\n%s\n",
+                    xb1.buffer, xb2.buffer);
+        }
+        FREEMEM(xb1.buffer);
+        FREEMEM(xb2.buffer);
+        return XEQ_DIFFERENT;
+    } else {
+        if(opt_debug_stream) {
+            fprintf(opt_debug_stream,
+                    "Both structures encoded into the same XER byte stream "
+                    "of size %zu:\n%s",
+                    xb1.buffer_size, xb1.buffer);
+        }
+    }
+
+    rval = xer_decode(NULL, td, (void **)&sptr, xb1.buffer,
+               xb1.buffer_size);
+    switch(rval.code) {
+    case RC_OK:
+        break;
+    case RC_WMORE:
+        if(opt_debug_stream) {
+            fprintf(opt_debug_stream,
+                    "Structure %s XER decode unexpectedly requires "
+                    "more data:\n%s\n",
+                    td->name, xb1.buffer);
+        }
+        /* Fall through */
+    case RC_FAIL:
+    default:
+        if(opt_debug_stream) {
+            fprintf(opt_debug_stream,
+                    "Structure %s XER decoding resulted in failure.\n",
+                    td->name);
+        }
+        ASN_STRUCT_FREE(*td, sptr);
+        FREEMEM(xb1.buffer);
+        FREEMEM(xb2.buffer);
+        return XEQ_DECODE_FAILED;
+    }
+
+    if(rval.consumed != xb1.buffer_size
+       && ((rval.consumed > xb1.buffer_size)
+           || xer_whitespace_span(xb1.buffer + rval.consumed,
+                                  xb1.buffer_size - rval.consumed)
+                  != (xb1.buffer_size - rval.consumed))) {
+        if(opt_debug_stream) {
+            fprintf(opt_debug_stream,
+                    "Round-trip decode of %s required less bytes (%zu) than "
+                    "encoded (%zu)\n",
+                    td->name, rval.consumed, xb1.buffer_size);
+        }
+        ASN_STRUCT_FREE(*td, sptr);
+        FREEMEM(xb1.buffer);
+        FREEMEM(xb2.buffer);
+        return XEQ_ROUND_TRIP_FAILED;
+    }
+
+    /*
+     * Reuse xb2 to encode newly decoded structure.
+     */
+    FREEMEM(xb2.buffer);
+    memset(&xb2, 0, sizeof(xb2));
+
+    e2 = xer_encode(td, sptr, XER_F_BASIC, xer__buffer_append, &xb2);
+    if(e2.encoded == -1) {
+        if(opt_debug_stream) {
+            fprintf(stderr, "XER Encoding of round-trip decode of %s failed\n",
+                    td->name);
+        }
+        ASN_STRUCT_FREE(*td, sptr);
+        FREEMEM(xb1.buffer);
+        FREEMEM(xb2.buffer);
+        return XEQ_ROUND_TRIP_FAILED;
+    }
+
+    ASN_STRUCT_FREE(*td, sptr);
+    sptr = 0;
+
+    if(xb1.buffer_size != xb2.buffer_size
+       || memcmp(xb1.buffer, xb2.buffer, xb1.buffer_size) != 0) {
+        if(opt_debug_stream) {
+            fprintf(opt_debug_stream,
+                    "XER Encoding of round-trip decode of %s resulted in "
+                    "different byte stream:\n"
+                    "=== Original ===\n%s\n"
+                    "=== Round-tripped ===\n%s\n",
+                    xb1.buffer, xb2.buffer, td->name);
+        }
+        FREEMEM(xb1.buffer);
+        FREEMEM(xb2.buffer);
+        return XEQ_ROUND_TRIP_FAILED;
+    }
+
+    return XEQ_SUCCESS;
+}
+

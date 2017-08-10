@@ -58,7 +58,8 @@ AX_CHECK_COMPILE_FLAG([-Wno-error=visibility],
 AX_CHECK_COMPILE_FLAG([-Wno-error=parentheses-equality],
       [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
 AX_CHECK_COMPILE_FLAG([-std=gnu99],
-      [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -std=gnu99"])
+      [CFLAGS="$CFLAGS -std=gnu99"
+TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -std=gnu99"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
       [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -Wno-error=unused-variable"])
 
@@ -109,8 +110,6 @@ AX_CHECK_COMPILE_FLAG([-Wpedantic],
             [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
     ],
     [-Werror]) #clang 3.0 prints warning when the flag is not supported
-AX_CHECK_COMPILE_FLAG([-Wno-duplicate-decl-specifier],
-    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-duplicate-decl-specifier"])
 AC_SUBST(SKELETONS_CFLAGS)
 
 dnl Checks for header files.
@@ -123,15 +122,13 @@ AC_C_BIGENDIAN
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 AC_STRUCT_TM
+AC_CHECK_TYPE([__int128],
+    [AC_DEFINE(HAVE_128_BIT_INT, 1, [Have 128-bit integer])])
 AC_CHECK_TYPE(intmax_t, int64_t)
 
-dnl Test if we should check features that depend on 64-bitness.
-AC_MSG_CHECKING(size of long is longer than 32 bit)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include "confdefs.h"
-#include <sys/types.h>
-]], [[switch (0) case 0: case (sizeof (long) >= 8):;]])],[ac_cv_wide_long=yes],[ac_cv_wide_long=no])
-AC_MSG_RESULT($ac_cv_wide_long)
-AM_CONDITIONAL([TEST_64BIT], [test x$ac_cv_wide_long = xyes])
+dnl Test if we should test features that depend on 64-bitness.
+AC_CHECK_SIZEOF([void *])
+AM_CONDITIONAL([TEST_64BIT], [test "$ac_cv_sizeof_void_p" -eq 8])
 
 dnl For mingw
 AC_SEARCH_LIBS(getopt, iberty)

@@ -356,7 +356,7 @@ constraint_object_resolve(arg_t *arg, asn1p_value_t *value) {
 	asn1p_expr_t tmp_expr = *arg->expr;
 	asn1p_expr_t *saved_expr = arg->expr;
 
-	tmp_expr.meta_type = AMT_VALUE;
+	tmp_expr.meta_type = AMT_VALUESET;
 	tmp_expr.expr_type = A1TC_REFERENCE;
 	tmp_expr.value = value;
 	arg->expr = &tmp_expr;

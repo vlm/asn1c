@@ -93,6 +93,8 @@ WSP	[\t\r\v\f\n ]
 
 %%
 
+<INITIAL>"\xef\xbb\xbf"		return UTF8_BOM;
+
 -{3,}/[\r\n]	/* Immediately terminated long comment */
 -{3,}/[^-\r\n]	yy_push_state(idash_comment);	/* Incorrect, but acceptable */
 <idash_comment>{
