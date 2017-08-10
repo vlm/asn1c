@@ -17,11 +17,10 @@ print_status() {
 
 trap print_status EXIT
 
-if [ "x${top_srcdir}" = "x" ]; then
-  top_srcdir=".."
-fi
+top_srcdir="${top_srcdir:-../..}"
+top_builddir="${top_builddir:-../..}"
 
-for ref in ${top_srcdir}/tests/*.asn1.-*; do
+for ref in ${top_srcdir}/tests/tests-asn1c-compiler/*.asn1.-*; do
 	# Figure out the initial source file used to generate this output.
 	src=$(echo "$ref" | sed -e 's/\.-[-a-zA-Z0-9=]*$//')
 	# Figure out compiler flags used to create the file.
@@ -32,13 +31,13 @@ for ref in ${top_srcdir}/tests/*.asn1.-*; do
 	newversion=${template}.new
 	PROCESSING="$ref (from $src)"
 	LANG=C sed -e 's/^found in .*/found in .../' < "$ref" > "$oldversion"
-	(./asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" | LANG=C sed -e 's/^found in .*/found in .../' > "$newversion") || ec=$?
+	(${top_builddir}/asn1c/asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" | LANG=C sed -e 's/^found in .*/found in .../' > "$newversion") || ec=$?
 	if [ $? = 0 ]; then
 		diff $diffArgs "$oldversion" "$newversion" || ec=$?
 	fi
 	rm -f $oldversion $newversion
 	if [ "$1" = "regenerate" ]; then
-		./asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" > "$ref"
+		${top_builddir}/asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" > "$ref"
 	fi
 done
 

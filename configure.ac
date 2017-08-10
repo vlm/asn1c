@@ -145,21 +145,22 @@ AC_PATH_PROG([PANDOC], pandoc)
 AM_CONDITIONAL([HAVE_PANDOC], [test -n "$PANDOC"])
 
 AC_CONFIG_FILES([\
-asn1c/tests/check-src/Makefile  \
-skeletons/tests/Makefile		\
-libasn1compiler/Makefile		\
-libasn1parser/Makefile			\
-libasn1print/Makefile			\
-asn1c/tests/Makefile			\
-libasn1fix/Makefile			\
-doc/docsrc/Makefile			\
-skeletons/Makefile			\
-examples/Makefile			\
-doc/man/Makefile			\
-tests/Makefile				\
-asn1c/Makefile				\
-doc/Makefile				\
-Makefile				\
+tests/tests-c-compiler/check-src/Makefile   \
+tests/tests-asn1c-compiler/Makefile         \
+tests/tests-c-compiler/Makefile             \
+skeletons/tests/Makefile                    \
+libasn1compiler/Makefile                    \
+libasn1parser/Makefile                      \
+libasn1print/Makefile                       \
+libasn1fix/Makefile                         \
+doc/docsrc/Makefile                         \
+skeletons/Makefile                          \
+examples/Makefile                           \
+doc/man/Makefile                            \
+tests/Makefile                              \
+asn1c/Makefile                              \
+doc/Makefile                                \
+Makefile                                    \
 ])
 AC_OUTPUT
 

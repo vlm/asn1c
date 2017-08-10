@@ -36,8 +36,8 @@ stamp-h*
 /asn1c/unber
 /asn1c/enber
 
-# /asn1c/tests/
-/asn1c/tests/test-*
+# /tests/
+/tests/tests-c-compiler/test-*
 
 # /doc/docsrc
 doc/docsrc/*.aux
