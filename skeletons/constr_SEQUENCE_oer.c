@@ -81,7 +81,6 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
     (void)opt_codec_ctx;
     (void)constraints;
-    (void)specs;
 
     /*
      * Create the target structure if it is not present already.
@@ -197,9 +196,33 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 memb_ptr2 = &memb_tmpptr; /* Ensure this & remains in scope! */
             }
 
-            rval = elm->type->oer_decoder(opt_codec_ctx, elm->type,
-                                          elm->oer_constraints, memb_ptr2, ptr,
-                                          size);
+            if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+                asn_TYPE_descriptor_t *et = elm->type_selector(td, st);
+                ssize_t ot_ret;
+                if(!et) {
+                    ASN__DECODE_FAILED;
+                }
+                ot_ret = oer_open_type_get(opt_codec_ctx, et, NULL, memb_ptr2,
+                                           ptr, size);
+                switch(ot_ret) {
+                case -1:
+                    rval.code = RC_FAIL;
+                    rval.consumed = 0;
+                    break;
+                case 0:
+                    rval.code = RC_WMORE;
+                    rval.consumed = 1;
+                    break;
+                default:
+                    rval.code = RC_OK;
+                    rval.consumed = ot_ret;
+                    break;
+                }
+            } else {
+                rval = elm->type->oer_decoder(opt_codec_ctx, elm->type,
+                                              elm->oer_constraints, memb_ptr2,
+                                              ptr, size);
+            }
             switch(rval.code) {
             case RC_OK:
                 ADVANCE(rval.consumed);
