@@ -21,6 +21,7 @@ typedef struct compiler_streams {
 		OT_TYPE_DECLS,	/* Type declarations */
 		OT_FUNC_DECLS,	/* Function declarations */
 		OT_POST_INCLUDE,/* #include after type definition */
+		OT_IOC_TABLES,	/* Information Object Class tables */
 		OT_CTABLES,	/* Constraint tables */
 		OT_CODE,	/* Some code */
 		OT_CTDEFS,	/* Constraint definitions */
@@ -36,7 +37,7 @@ typedef struct compiler_streams {
 } compiler_streams_t;
 
 static char *_compiler_stream2str[] __attribute__ ((unused))
-    = { "IGNORE", "INCLUDES", "DEPS", "FWD-DECLS", "FWD-DEFS", "TYPE-DECLS", "FUNC-DECLS", "POST-INCLUDE", "CTABLES", "CODE", "CTDEFS", "STAT-DEFS" };
+    = { "IGNORE", "INCLUDES", "DEPS", "FWD-DECLS", "FWD-DEFS", "TYPE-DECLS", "FUNC-DECLS", "POST-INCLUDE", "IOC-TABLES", "CTABLES", "CODE", "CTDEFS", "STAT-DEFS" };
 
 int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 
@@ -56,18 +57,27 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 		INDENT(-1);					\
 	} while(0)
 
-#define	EMBED(ev)	do {					\
-		arg->embed++;					\
-		INDENTED(arg_t _tmp = *arg;			\
-			_tmp.expr = ev;				\
-			_tmp.default_cb(&_tmp);			\
-		);						\
-		arg->embed--;					\
-		if(ev->expr_type != A1TC_EXTENSIBLE)		\
-			OUT(";\n");				\
-		assert(arg->target->target == OT_TYPE_DECLS ||	\
-			arg->target->target == OT_FWD_DEFS);	\
-	} while(0)
+#define EMBED(ev)                                        \
+    do {                                                 \
+        arg->embed++;                                    \
+        INDENTED(arg_t _tmp = *arg; _tmp.expr = ev;      \
+                 _tmp.default_cb(&_tmp, NULL););         \
+        arg->embed--;                                    \
+        if(ev->expr_type != A1TC_EXTENSIBLE) OUT(";\n"); \
+        assert(arg->target->target == OT_TYPE_DECLS      \
+               || arg->target->target == OT_FWD_DEFS);   \
+    } while(0)
+
+#define EMBED_WITH_IOCT(ev, ioc)                                   \
+    do {                                                           \
+        arg->embed++;                                              \
+        INDENTED(arg_t _tmp = *arg; _tmp.expr = ev;                \
+                 _tmp.default_cb(&_tmp, ((ioc).ioct ? &ioc : 0));); \
+        arg->embed--;                                              \
+        if(ev->expr_type != A1TC_EXTENSIBLE) OUT(";\n");           \
+        assert(arg->target->target == OT_TYPE_DECLS                \
+               || arg->target->target == OT_FWD_DEFS);             \
+    } while(0)
 
 /* Output a piece of text into a default stream */
 #define	OUT(fmt, args...)	asn1c_compiled_output(arg, fmt, ##args)

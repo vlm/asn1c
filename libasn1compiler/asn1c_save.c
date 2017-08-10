@@ -303,6 +303,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	safe_fprintf(fp_c, "#include \"%s.h\"\n\n", filename);
 	if(arg->flags & A1C_NO_INCLUDE_DEPS)
 		SAVE_STREAM(fp_c, OT_POST_INCLUDE, "", 1);
+	TQ_FOR(ot, &(cs->destination[OT_IOC_TABLES].chunks), next)
+		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CTABLES].chunks), next)
 		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 	TQ_FOR(ot, &(cs->destination[OT_CODE].chunks), next)
@@ -312,7 +314,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	TQ_FOR(ot, &(cs->destination[OT_STAT_DEFS].chunks), next)
 		safe_fwrite(ot->buf, ot->len, 1, fp_c);
 
-	assert(OT_MAX == 12);	/* Protection from reckless changes */
+	assert(OT_MAX == 13);	/* Protection from reckless changes */
 
 	fclose(fp_c);
 	fclose(fp_h);

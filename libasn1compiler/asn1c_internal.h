@@ -41,13 +41,15 @@
 
 #include "asn1compiler.h"
 
+struct asn1c_ioc_table_and_objset_s;
+
 typedef struct arg_s {
 
 	enum asn1c_flags flags;
 
 	void (*logger_cb)(int _severity, const char *fmt, ...);
 
-	int (*default_cb)(struct arg_s *);
+	int (*default_cb)(struct arg_s *, const struct asn1c_ioc_table_and_objset_s *opt);
 
 	struct compiler_streams *target;
 

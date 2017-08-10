@@ -91,7 +91,14 @@ typedef ber_tlv_tag_t (asn_outmost_tag_f)(
 /* The instance of the above function type; used internally. */
 asn_outmost_tag_f asn_TYPE_outmost_tag;
 
-
+/*
+ * Fetch the desired type of the Open Type based on the
+ * Information Object Set driven constraints.
+ */
+typedef struct asn_TYPE_descriptor_s *(asn_type_selector_f)(
+    const struct asn_TYPE_descriptor_s *parent_type_descriptor,
+    const void *parent_structure_ptr);
+
 /*
  * The definitive description of the destination language's structure.
  */
@@ -161,6 +168,7 @@ typedef struct asn_TYPE_member_s {
     ber_tlv_tag_t tag;      /* Outmost (most immediate) tag */
     int tag_mode;           /* IMPLICIT/no/EXPLICIT tag at current level */
     asn_TYPE_descriptor_t *type;            /* Member type descriptor */
+    asn_type_selector_f *type_selector;     /* IoS selector */
     asn_constr_check_f *memb_constraints;   /* Constraints validator */
     asn_oer_constraints_t *oer_constraints; /* OER compiled constraints */
     asn_per_constraints_t *per_constraints; /* PER compiled constraints */

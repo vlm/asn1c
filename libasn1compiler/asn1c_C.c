@@ -33,7 +33,8 @@ enum onc_flags {
 	ONC_force_compound_name	= 0x02,
 };
 static int out_name_chain(arg_t *arg, enum onc_flags);
-static int asn1c_lang_C_type_SEQUENCE_def(arg_t *arg);
+static int asn1c_lang_C_type_SEQUENCE_def(
+    arg_t *arg, asn1c_ioc_table_and_objset_t *);
 static int asn1c_lang_C_type_SET_def(arg_t *arg);
 static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
@@ -47,7 +48,8 @@ static int emit_single_member_OER_constraint_size(arg_t *arg, asn1cnst_range_t *
 static int emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int juscountvalues, const char *type);
 static int emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
 static int emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx);
-static int emit_member_table(arg_t *arg, asn1p_expr_t *expr);
+static int emit_member_table(arg_t *arg, asn1p_expr_t *expr,
+                             asn1c_ioc_table_and_objset_t *);
 static int emit_tag2member_map(arg_t *arg, tag2el_t *tag2el, int tag2el_count, const char *opt_modifier);
 static int emit_include_dependencies(arg_t *arg);
 static asn1p_expr_t *terminal_structable(arg_t *arg, asn1p_expr_t *expr);
@@ -341,7 +343,7 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 		if(comp_mode == 1)
 			v->marker.flags |= EM_OMITABLE | EM_INDIRECT;
 		try_inline_default(arg, v, 1);
-		EMBED(v);
+		EMBED_WITH_IOCT(v, ioc_tao);
 	}
 
 	PCTX_DEF;
@@ -364,11 +366,11 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 		arg->embed ? "" : "_t");
 	}
 
-	return asn1c_lang_C_type_SEQUENCE_def(arg);
+	return asn1c_lang_C_type_SEQUENCE_def(arg, ioc_tao.ioct ? &ioc_tao : 0);
 }
 
 static int
-asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
+asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int elements;	/* Number of elements */
@@ -420,7 +422,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg) {
 			}
 			if(v->marker.flags & EM_OMITABLE)
 			    comp_mode == 1 ? ++aoms_count : ++roms_count;
-			emit_member_table(arg, v);
+			emit_member_table(arg, v, opt_ioc);
 			elements++;
 		});
 		OUT("};\n");
@@ -675,7 +677,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				if(comp_mode < 3) comp_mode++;
 			} else {
-				emit_member_table(arg, v);
+				emit_member_table(arg, v, NULL);
 				elements++;
 			}
 		});
@@ -824,7 +826,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 						expr, "Member", 0));
 				assert(tmp_memb.Identifier);
 			}
-			tmp.default_cb(&tmp);
+			tmp.default_cb(&tmp, NULL);
 			if(tmp_memb.Identifier != memb->Identifier)
 				if(0) free(tmp_memb.Identifier);
 		arg->embed--;
@@ -901,7 +903,7 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 		}
 		v->_anonymous_type = 1;
 		arg->embed++;
-		emit_member_table(arg, v);
+		emit_member_table(arg, v, NULL);
 		arg->embed--;
 		free(v->Identifier);
 		v->Identifier = (char *)NULL;
@@ -1070,7 +1072,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE)
 				continue;
-			emit_member_table(arg, v);
+			emit_member_table(arg, v, NULL);
 			elements++;
 		});
 		OUT("};\n");
@@ -1184,7 +1186,7 @@ asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 		tmp.asn = arg->asn;
 		tmp.expr = extract;
 
-		ret = arg->default_cb(&tmp);
+		ret = arg->default_cb(&tmp, NULL);
 
 		asn1p_expr_free(extract);
 
@@ -2586,7 +2588,210 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 }
 
 static int
-emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
+emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *opt_ioc) {
+	int save_target = arg->target->target;
+    asn1p_expr_t *parent_expr = arg->expr;
+
+    const asn1p_constraint_t *crc =
+        asn1p_get_component_relation_constraint(expr->combined_constraints);
+    if(!crc || crc->el_count <= 1) {
+        /* Not an Open Type, it seems. */
+        OUT("0");
+        return 0;
+    }
+
+    if(crc->el_count <= 1 || crc->elements[0]->type != ACT_EL_VALUE
+       || crc->elements[0]->value->type != ATV_REFERENCED
+       || crc->elements[0]->value->value.reference->comp_count != 1) {
+        FATAL(
+            "Reference does not look like an object set");
+        return -1;
+    }
+
+    const char *objset_name =
+        crc->elements[0]->value->value.reference->components[0].name;
+    if(strcmp(objset_name, opt_ioc->objset->Identifier) != 0) {
+        FATAL("Object Set references do not match: %s != %s", objset_name,
+              opt_ioc->objset->Identifier);
+        return -1;
+    }
+
+    if(crc->el_count != 2 || crc->elements[1]->type != ACT_EL_VALUE
+       || crc->elements[1]->value->type != ATV_REFERENCED
+       || crc->elements[1]->value->value.reference->comp_count != 1) {
+        FATAL(
+            "Do not know how to handle complex IoS constraints (%d components "
+            "of constraint, %d components of reference %s) for %s at line "
+            "%d",
+            crc->el_count,
+            crc->el_count >= 2 && crc->elements[1]->type == ACT_EL_VALUE
+                    && crc->elements[1]->value->type == ATV_REFERENCED
+                ? crc->elements[1]->value->value.reference->comp_count
+                : -1,
+            crc->el_count >= 2 && crc->elements[1]->type == ACT_EL_VALUE
+                    && crc->elements[1]->value->type == ATV_REFERENCED
+                ? asn1p_ref_string(crc->elements[1]->value->value.reference)
+                : "?",
+            MKID(parent_expr), parent_expr->_lineno);
+        OUT("0");
+        return -1;
+    }
+
+    const asn1p_ref_t *cref = crc->elements[1]->value->value.reference;
+    const char *cname = cref->components[0].name;
+    if(cname[0] == '@' && cname[1] != '.') {
+        cname += 1;
+    } else if(cname[0] == '@' && cname[1] == '.' && cname[2] != '.') {
+        cname += 2;
+    } else {
+        FATAL("Complex IoS reference %s can not be processed",
+              asn1p_ref_string(cref));
+        OUT("0");
+        return -1;
+    }
+
+    assert(opt_ioc != NULL);
+
+	asn1p_expr_t *constraining_memb = NULL;
+	TQ_FOR(constraining_memb, &(parent_expr->members), next) {
+        if(strcmp(constraining_memb->Identifier, cname) == 0)
+            break;
+    }
+    if(!constraining_memb) {
+        FATAL("Can not find \"%s\" in %s at line %d", cname, MKID(parent_expr),
+              parent_expr->_lineno);
+        return -1;
+    }
+
+    if(constraining_memb->meta_type != AMT_TYPEREF
+       || constraining_memb->expr_type != A1TC_REFERENCE
+       || constraining_memb->reference->comp_count != 2
+       || constraining_memb->reference->components[1].lex_type
+              != RLT_Amplowercase) {
+        FATAL(
+            "Does not look like %s is a CLASS field reference (%s) on line "
+            "%d",
+            MKID(constraining_memb),
+            constraining_memb->reference
+                ? asn1p_ref_string(constraining_memb->reference)
+                : "<no reference>",
+            constraining_memb->_lineno);
+        return -1;
+    }
+    const char *cfield = constraining_memb->reference->components[1].name;
+
+    ssize_t constraining_column = -1;
+    for(size_t cn = 0; cn < opt_ioc->ioct->rows ? opt_ioc->ioct->row[0]->columns : 0;
+        cn++) {
+        if(strcmp(cfield, opt_ioc->ioct->row[0]->column[cn].field->Identifier)
+           == 0) {
+            constraining_column = cn;
+            break;
+        }
+    }
+    if(constraining_column < 0) {
+        FATAL("Can not find referenced object class column %s\n", cfield);
+        return -1;
+    }
+
+    if(expr->meta_type != AMT_TYPEREF
+       || expr->expr_type != A1TC_REFERENCE
+       || expr->reference->comp_count != 2
+       || expr->reference->components[1].lex_type
+              != RLT_AmpUppercase) {
+        FATAL(
+            "Does not look like %s is a CLASS field reference (%s) denoting a type on line "
+            "%d",
+            MKID(expr),
+            expr->reference
+                ? asn1p_ref_string(expr->reference)
+                : "<no reference>",
+            expr->_lineno);
+        return -1;
+    }
+    const char *for_field = expr->reference->components[1].name;
+
+    ssize_t for_column = -1;
+    for(size_t cn = 0; cn < opt_ioc->ioct->rows ? opt_ioc->ioct->row[0]->columns : 0;
+        cn++) {
+        if(strcmp(for_field,
+                  opt_ioc->ioct->row[0]->column[cn].field->Identifier)
+           == 0) {
+            for_column = cn;
+            break;
+        }
+    }
+    if(for_column < 0) {
+        FATAL("Can not find referenced object class column %s\n", for_field);
+        return -1;
+    }
+
+
+    REDIR(OT_CODE);
+    OUT("static asn_TYPE_descriptor_t *\n");
+    OUT("select_%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", MKID_safe(expr));
+    INDENT(+1);
+
+    OUT("asn_ioc_set_t *itable = asn_IOS_%s_%d;\n", MKID(opt_ioc->objset),
+        opt_ioc->objset->_type_unique_index);
+    OUT("size_t constraining_column = %zu; /* %s */\n", constraining_column, cfield);
+    OUT("size_t for_column = %zu; /* %s */\n", for_column, for_field);
+    OUT("size_t row;\n");
+
+    const char *tname = asn1c_type_name(arg, constraining_memb, TNF_SAFE);
+    if(constraining_memb->marker.flags & EM_INDIRECT) {
+        OUT("void *memb_ptr = *(const void **)");
+        OUT("((const char *)parent_sptr + offsetof(struct ");
+            out_name_chain(arg, ONC_avoid_keywords);
+        OUT(", %s));", MKID_safe(constraining_memb));
+        OUT("if(!memb_ptr) return NULL;\n");
+        OUT("\n");
+    }
+
+    switch(asn1c_type_fits_long(arg, constraining_memb)) {
+    case FL_NOTFIT:
+        OUT("const %s_t *constraining_value = (const %s_t *)", tname, tname);
+        break;
+    case FL_PRESUMED:
+    case FL_FITS_SIGNED:
+        OUT("const long *constraining_value = (const long *)");
+        break;
+    case FL_FITS_UNSIGN:
+        OUT("const unsigned long *constraining_value = (const unsigned long *)");
+        break;
+    }
+    if(constraining_memb->marker.flags & EM_INDIRECT) {
+        OUT("memb_ptr;\n");
+    } else {
+        OUT("((const char *)parent_sptr + offsetof(struct ");
+            out_name_chain(arg, ONC_avoid_keywords);
+        OUT(", %s));\n", MKID_safe(constraining_memb));
+    }
+    OUT("\n");
+
+    OUT("for(row=0; row < itable->rows_count; row++) {\n");
+    OUT("    asn_ioc_cell_s *constraining_cell = itable->rows[row * itable->columns_count + constraining_column];\n");
+    OUT("    asn_ioc_cell_s *type_cell = itable->rows[row * itable->columns_count + for_column];\n");
+    OUT("    if(constraining_cell->type_descriptor->struct_compare(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {\n");
+    OUT("        return type_cell->type_descriptor;\n");
+    OUT("    }\n");
+    OUT("}\n");
+
+
+    OUT("\n");
+    OUT("return NULL;\n");
+    INDENT(-1);
+    OUT("}\n");
+    OUT("\n");
+
+    REDIR(save_target);
+    OUT("select_%s_type", MKID_safe(expr));
+
+    return 0;
+}
+
+static int
+emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *opt_ioc) {
 	int save_target;
 	arg_t tmp_arg;
 	struct asn1p_type_tag_s outmost_tag_s;
@@ -2675,6 +2880,16 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr) {
 		OUT("%s", asn1c_type_name(arg, expr, TNF_SAFE));
 	}
 	OUT(",\n");
+
+
+    if(C99_MODE) OUT(".type_selector = ");
+    if(opt_ioc) {
+        emit_member_type_selector(arg, expr, opt_ioc);
+    } else {
+        OUT("0");
+    }
+	OUT(",\n");
+
 	if(C99_MODE) OUT(".memb_constraints = ");
 	if(expr->constraints) {
 		if(arg->flags & A1C_NO_CONSTRAINTS) {

@@ -1081,7 +1081,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
-		void *memb_ptr;		/* Pointer to the member */
+        void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
 
 		if(IN_EXTENSION_GROUP(specs, edx))
@@ -1119,9 +1119,19 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 		/* Fetch the member from the stream */
 		ASN_DEBUG("Decoding member %s in %s", elm->name, td->name);
-		rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
-			elm->per_constraints, memb_ptr2, pd);
-		if(rv.code != RC_OK) {
+
+        if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+            asn_TYPE_descriptor_t *et = elm->type_selector(td, st);
+            if(!et) {
+                FREEMEM(opres);
+                ASN__DECODE_FAILED;
+            }
+            rv = uper_open_type_get(opt_codec_ctx, et, NULL, memb_ptr2, pd);
+        } else {
+            rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
+                                        elm->per_constraints, memb_ptr2, pd);
+        }
+        if(rv.code != RC_OK) {
 			ASN_DEBUG("Failed decode %s in %s",
 				elm->name, td->name);
 			FREEMEM(opres);

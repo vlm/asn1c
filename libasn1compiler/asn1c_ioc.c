@@ -223,7 +223,7 @@ emit_ioc_table(arg_t *arg, asn1p_expr_t *context, asn1c_ioc_table_and_objset_t i
     (void)context;
     GEN_INCLUDE_STD("asn_ioc");
 
-    REDIR(OT_STAT_DEFS);
+    REDIR(OT_IOC_TABLES);
 
     /* Emit values that are used in the Information Object Set table first */
     for(size_t rn = 0; rn < ioc_tao.ioct->rows; rn++) {

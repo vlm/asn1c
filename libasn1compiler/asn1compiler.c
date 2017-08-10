@@ -2,9 +2,10 @@
 #include "asn1c_lang.h"
 #include "asn1c_out.h"
 #include "asn1c_save.h"
+#include "asn1c_ioc.h"
 
 static void default_logger_cb(int, const char *fmt, ...);
-static int asn1c_compile_expr(arg_t *arg);
+static int asn1c_compile_expr(arg_t *arg, const asn1c_ioc_table_and_objset_t *);
 static int asn1c_attach_streams(asn1p_expr_t *expr);
 static int asn1c_detach_streams(asn1p_expr_t *expr);
 
@@ -42,7 +43,7 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 			cs->target = OT_TYPE_DECLS;
 			arg->target = cs;
 
-			ret = asn1c_compile_expr(arg);
+			ret = asn1c_compile_expr(arg, NULL);
 			if(ret) {
 				FATAL("Cannot compile \"%s\" (%x:%x) at line %d",
 					arg->expr->Identifier,
@@ -72,7 +73,7 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 }
 
 static int
-asn1c_compile_expr(arg_t *arg) {
+asn1c_compile_expr(arg_t *arg, const asn1c_ioc_table_and_objset_t *opt_ioc) {
 	asn1p_expr_t *expr = arg->expr;
 	int (*type_cb)(arg_t *);
 	int ret;
@@ -99,7 +100,7 @@ asn1c_compile_expr(arg_t *arg) {
 			for(i = 0; i<expr->specializations.pspecs_count; i++) {
 				arg->expr = expr->specializations
 						.pspec[i].my_clone;
-				ret = asn1c_compile_expr(arg);
+				ret = asn1c_compile_expr(arg, opt_ioc);
 				if(ret) break;
 			}
 			arg->expr = expr;	/* Restore */
