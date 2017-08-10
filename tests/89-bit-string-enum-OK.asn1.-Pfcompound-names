@@ -38,6 +38,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
+		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */

@@ -26,6 +26,20 @@ typedef struct Frame {
 
 extern asn_TYPE_descriptor_t asn_DEF_Frame;
 
+/*** <<< IOC-TABLES [Frame] >>> ***/
+
+static const long asn_VAL_basicMessage_0 = 1;
+static const long asn_VAL_2_0 = 2;
+static const asn_ioc_cell_t asn_IOS_FrameTypes_1_rows[] = {
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_basicMessage_0 },
+	{ "&Type", aioc__type, &asn_DEF_PrimitiveMessage },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_0 },
+	{ "&Type", aioc__type, &asn_DEF_ComplexMessage }
+};
+static asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
+	2, 2, asn_IOS_FrameTypes_1_rows
+};
+
 /*** <<< CODE [Frame] >>> ***/
 
 static int
@@ -45,6 +59,25 @@ memb_ident_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+static asn_TYPE_descriptor_t *
+select_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+	asn_ioc_set_t *itable = asn_IOS_FrameTypes_1;
+	size_t constraining_column = 0; /* &id */
+	size_t for_column = 1; /* &Type */
+	size_t row;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Frame, ident));
+	
+	for(row=0; row < itable->rows_count; row++) {
+	    asn_ioc_cell_s *constraining_cell = itable->rows[row * itable->columns_count + constraining_column];
+	    asn_ioc_cell_s *type_cell = itable->rows[row * itable->columns_count + for_column];
+	    if(constraining_cell->type_descriptor->struct_compare(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	        return type_cell->type_descriptor;
+	    }
+	}
+	
+	return NULL;
 }
 
 static int
@@ -69,22 +102,12 @@ memb_value_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [Frame] >>> ***/
 
-static const long asn_VAL_basicMessage_0 = 1;
-static const long asn_VAL_2_0 = 2;
-static const asn_ioc_cell_t asn_IOS_FrameTypes_1_rows[] = {
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_basicMessage_0 },
-	{ "&Type", aioc__type, &asn_DEF_PrimitiveMessage },
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_0 },
-	{ "&Type", aioc__type, &asn_DEF_ComplexMessage }
-};
-static asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
-	2, 2, asn_IOS_FrameTypes_1_rows
-};
 static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Frame, ident),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
 		.memb_constraints = memb_ident_constraint_1,
 		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
@@ -95,6 +118,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_ANY,
+		.type_selector = select_value_type,
 		.memb_constraints = memb_value_constraint_1,
 		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
 		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
