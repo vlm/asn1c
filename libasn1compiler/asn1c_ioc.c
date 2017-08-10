@@ -4,6 +4,8 @@
 #include "asn1c_misc.h"
 #include <asn1fix_export.h>
 
+#define MKID(expr) asn1c_make_identifier(0, (expr), 0)
+
 /*
  * Given the table constraint or component relation constraint
  * ({ObjectSetName}{...}) returns "ObjectSetName" as a reference.
@@ -51,6 +53,13 @@ asn1c_get_ioc_table(arg_t *arg) {
     asn1c_ioc_table_and_objset_t safe_ioc_tao = {0, 0, 0};
     asn1c_ioc_table_and_objset_t failed_ioc_tao = { 0, 0, 1 };
 
+    if(expr->lhs_params) {
+        if(0) WARNING(
+            "Can not process Information Object Set on a parameterized type %s",
+            MKID(expr));
+        return safe_ioc_tao;
+    }
+
     TQ_FOR(memb, &(expr->members), next) {
         const asn1p_ref_t *tmpref =
             asn1c_get_information_object_set_reference_from_constraint(
@@ -80,8 +89,6 @@ asn1c_get_ioc_table(arg_t *arg) {
     return asn1c_get_ioc_table_from_objset(arg, objset_ref, objset);
 }
 
-#define MKID(expr) asn1c_make_identifier(0, (expr), 0)
-
 static int
 emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
 
@@ -89,10 +96,13 @@ emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
         const char *prim_type = NULL;
         int primitive_representation = 0;
 
-        switch(cell->value->expr_type) {
+        asn1p_expr_t *cv_type =
+            asn1f_find_terminal_type_ex(arg->asn, cell->value);
+
+        switch(cv_type->expr_type) {
         case ASN_BASIC_INTEGER:
         case ASN_BASIC_ENUMERATED:
-            switch(asn1c_type_fits_long(arg, cell->value)) {
+            switch(asn1c_type_fits_long(arg, cell->value /* sic */)) {
             case FL_NOTFIT:
                 GEN_INCLUDE_STD("INTEGER");
                 prim_type = "INTEGER_t";
