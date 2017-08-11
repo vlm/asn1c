@@ -40,6 +40,6 @@ check_crange_LDADD = $(noinst_LTLIBRARIES)		\
 
 check_PROGRAMS = check_crange check_fixer
 
-TESTS_ENVIRONMENT = ASN1_TESTS_DIR=${top_srcdir}/tests
+TESTS_ENVIRONMENT = ASN1_TESTS_DIR=${top_srcdir}/tests/tests-asn1c-compiler
 TESTS = ${check_PROGRAMS}
 

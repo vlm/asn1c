@@ -1,0 +1,375 @@
+
+/*** <<< INCLUDES [Frame] >>> ***/
+
+#include "ConstrainedInteger.h"
+#include <ANY.h>
+#include <asn_ioc.h>
+#include "PrimitiveMessage.h"
+#include "ComplexMessage.h"
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [Frame] >>> ***/
+
+typedef struct Frame {
+	ConstrainedInteger_t	 ident;
+	ANY_t	 value;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Frame_t;
+
+/*** <<< FUNC-DECLS [Frame] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Frame;
+
+/*** <<< IOC-TABLES [Frame] >>> ***/
+
+static const long asn_VAL_1_primMessage = 1;
+static const long asn_VAL_2_cplxMessage = 2;
+static const asn_ioc_cell_t asn_IOS_FrameTypes_1_rows[] = {
+	{ "&id", aioc__value, &asn_DEF_ConstrainedInteger, &asn_VAL_1_primMessage },
+	{ "&Type", aioc__type, &asn_DEF_PrimitiveMessage },
+	{ "&id", aioc__value, &asn_DEF_ConstrainedInteger, &asn_VAL_2_cplxMessage },
+	{ "&Type", aioc__type, &asn_DEF_ComplexMessage }
+};
+static asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
+	2, 2, asn_IOS_FrameTypes_1_rows
+};
+
+/*** <<< CODE [Frame] >>> ***/
+
+static int
+memb_ident_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 32767)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static asn_TYPE_descriptor_t *
+select_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+	asn_ioc_set_t *itable = asn_IOS_FrameTypes_1;
+	size_t constraining_column = 0; /* &id */
+	size_t for_column = 1; /* &Type */
+	size_t row;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Frame, ident));
+	
+	for(row=0; row < itable->rows_count; row++) {
+	    asn_ioc_cell_s *constraining_cell = itable->rows[row * itable->columns_count + constraining_column];
+	    asn_ioc_cell_s *type_cell = itable->rows[row * itable->columns_count + for_column];
+	    if(constraining_cell->type_descriptor->struct_compare(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	        return type_cell->type_descriptor;
+	    }
+	}
+	
+	return NULL;
+}
+
+static int
+memb_value_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [Frame] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Frame_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Frame, ident),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_ConstrainedInteger,
+		.type_selector = 0,
+		.memb_constraints = memb_ident_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "ident"
+		},
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct Frame, value),
+		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag_mode = 0,
+		.type = &asn_DEF_ANY,
+		.type_selector = select_value_type,
+		.memb_constraints = memb_value_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "value"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Frame_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Frame_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* ident */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Frame_specs_1 = {
+	sizeof(struct Frame),
+	offsetof(struct Frame, _asn_ctx),
+	asn_MAP_Frame_tag2el_1,
+	1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	1,	/* Start extensions */
+	3	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Frame = {
+	"Frame",
+	"Frame",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_compare,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_Frame_tags_1,
+	sizeof(asn_DEF_Frame_tags_1)
+		/sizeof(asn_DEF_Frame_tags_1[0]), /* 1 */
+	asn_DEF_Frame_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Frame_tags_1)
+		/sizeof(asn_DEF_Frame_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Frame_1,
+	2,	/* Elements count */
+	&asn_SPC_Frame_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [ConstrainedInteger] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [ConstrainedInteger] >>> ***/
+
+typedef long	 ConstrainedInteger_t;
+
+/*** <<< FUNC-DECLS [ConstrainedInteger] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ConstrainedInteger;
+asn_struct_free_f ConstrainedInteger_free;
+asn_struct_print_f ConstrainedInteger_print;
+asn_constr_check_f ConstrainedInteger_constraint;
+ber_type_decoder_f ConstrainedInteger_decode_ber;
+der_type_encoder_f ConstrainedInteger_encode_der;
+xer_type_decoder_f ConstrainedInteger_decode_xer;
+xer_type_encoder_f ConstrainedInteger_encode_xer;
+
+/*** <<< CODE [ConstrainedInteger] >>> ***/
+
+int
+ConstrainedInteger_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 32767)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< STAT-DEFS [ConstrainedInteger] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_ConstrainedInteger_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_ConstrainedInteger = {
+	"ConstrainedInteger",
+	"ConstrainedInteger",
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
+	ConstrainedInteger_constraint,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_ConstrainedInteger_tags_1,
+	sizeof(asn_DEF_ConstrainedInteger_tags_1)
+		/sizeof(asn_DEF_ConstrainedInteger_tags_1[0]), /* 1 */
+	asn_DEF_ConstrainedInteger_tags_1,	/* Same as above */
+	sizeof(asn_DEF_ConstrainedInteger_tags_1)
+		/sizeof(asn_DEF_ConstrainedInteger_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [PrimitiveMessage] >>> ***/
+
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [PrimitiveMessage] >>> ***/
+
+typedef struct PrimitiveMessage {
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} PrimitiveMessage_t;
+
+/*** <<< FUNC-DECLS [PrimitiveMessage] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_PrimitiveMessage;
+extern asn_SEQUENCE_specifics_t asn_SPC_PrimitiveMessage_specs_1;
+
+/*** <<< STAT-DEFS [PrimitiveMessage] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_PrimitiveMessage_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+asn_SEQUENCE_specifics_t asn_SPC_PrimitiveMessage_specs_1 = {
+	sizeof(struct PrimitiveMessage),
+	offsetof(struct PrimitiveMessage, _asn_ctx),
+	0,	/* No top level tags */
+	0,	/* No tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_PrimitiveMessage = {
+	"PrimitiveMessage",
+	"PrimitiveMessage",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_compare,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_PrimitiveMessage_tags_1,
+	sizeof(asn_DEF_PrimitiveMessage_tags_1)
+		/sizeof(asn_DEF_PrimitiveMessage_tags_1[0]), /* 1 */
+	asn_DEF_PrimitiveMessage_tags_1,	/* Same as above */
+	sizeof(asn_DEF_PrimitiveMessage_tags_1)
+		/sizeof(asn_DEF_PrimitiveMessage_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	&asn_SPC_PrimitiveMessage_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [ComplexMessage] >>> ***/
+
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [ComplexMessage] >>> ***/
+
+typedef struct ComplexMessage {
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} ComplexMessage_t;
+
+/*** <<< FUNC-DECLS [ComplexMessage] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ComplexMessage;
+extern asn_SEQUENCE_specifics_t asn_SPC_ComplexMessage_specs_1;
+
+/*** <<< STAT-DEFS [ComplexMessage] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_ComplexMessage_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+asn_SEQUENCE_specifics_t asn_SPC_ComplexMessage_specs_1 = {
+	sizeof(struct ComplexMessage),
+	offsetof(struct ComplexMessage, _asn_ctx),
+	0,	/* No top level tags */
+	0,	/* No tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_ComplexMessage = {
+	"ComplexMessage",
+	"ComplexMessage",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_compare,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_ComplexMessage_tags_1,
+	sizeof(asn_DEF_ComplexMessage_tags_1)
+		/sizeof(asn_DEF_ComplexMessage_tags_1[0]), /* 1 */
+	asn_DEF_ComplexMessage_tags_1,	/* Same as above */
+	sizeof(asn_DEF_ComplexMessage_tags_1)
+		/sizeof(asn_DEF_ComplexMessage_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	&asn_SPC_ComplexMessage_specs_1	/* Additional specs */
+};
+

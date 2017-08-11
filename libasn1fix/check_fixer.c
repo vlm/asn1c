@@ -60,7 +60,7 @@ main(int ac, char **av) {
 	if(ac <= 1) {
         const char *asn1_tests_dir = getenv("ASN1_TESTS_DIR");
         if(!asn1_tests_dir)
-            asn1_tests_dir = TOP_SRCDIR_S "/tests";
+            asn1_tests_dir = TOP_SRCDIR_S "/tests/tests-asn1c-compiler";
         fprintf(stderr, "Testing in %s...\n", asn1_tests_dir);
         ret = chdir(asn1_tests_dir);
         if(ret == -1)
@@ -196,7 +196,7 @@ check(const char *fname,
 
 	if(r_value == 0) {
 		asn1p_t *std_asn;
-		std_asn = asn1p_parse_file("../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
+		std_asn = asn1p_parse_file("../../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
 		if(std_asn) {
 			asn1p_module_t *mod;
 			while((mod = TQ_REMOVE(&(std_asn->modules), mod_next))) {

@@ -5,6 +5,7 @@
  */
 #include <asn_internal.h>
 #include <constr_SEQUENCE.h>
+#include <OPEN_TYPE.h>
 #include <per_opentype.h>
 
 /*
@@ -201,7 +202,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * MICROPHASE 1: Synchronize decoding.
 		 */
-		ASN_DEBUG("In %s SEQUENCE left %d, edx=%d flags=%d"
+		ASN_DEBUG("In %s SEQUENCE left %d, edx=%u flags=%d"
 				" opt=%d ec=%d",
 			td->name, (int)ctx->left, edx,
 			elements[edx].flags, elements[edx].optional,
@@ -948,8 +949,8 @@ SEQUENCE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-SEQUENCE_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
-	size_t edx;
+SEQUENCE_free(const asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
+    size_t edx;
 
 	if(!td || !sptr)
 		return;
@@ -1118,15 +1119,10 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		/* Fetch the member from the stream */
-		ASN_DEBUG("Decoding member %s in %s", elm->name, td->name);
+		ASN_DEBUG("Decoding member \"%s\" in %s", elm->name, td->name);
 
         if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
-            asn_TYPE_descriptor_t *et = elm->type_selector(td, st);
-            if(!et) {
-                FREEMEM(opres);
-                ASN__DECODE_FAILED;
-            }
-            rv = uper_open_type_get(opt_codec_ctx, et, NULL, memb_ptr2, pd);
+            rv = OPEN_TYPE_uper_get(opt_codec_ctx, td, st, elm, pd);
         } else {
             rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
                                         elm->per_constraints, memb_ptr2, pd);

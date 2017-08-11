@@ -28,12 +28,12 @@ extern asn_TYPE_descriptor_t asn_DEF_Frame;
 
 /*** <<< IOC-TABLES [Frame] >>> ***/
 
-static const long asn_VAL_basicMessage_0 = 1;
-static const long asn_VAL_2_0 = 2;
+static const long asn_VAL_1_basicMessage = 1;
+static const long asn_VAL_2_2 = 2;
 static const asn_ioc_cell_t asn_IOS_FrameTypes_1_rows[] = {
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_basicMessage_0 },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_basicMessage },
 	{ "&Type", aioc__type, &asn_DEF_PrimitiveMessage },
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_0 },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
 	{ "&Type", aioc__type, &asn_DEF_ComplexMessage }
 };
 static asn_ioc_set_t asn_IOS_FrameTypes_1[] = {

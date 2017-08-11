@@ -1,0 +1,25 @@
+
+This is a collection of various little ASN.1 modules, used independently
+by several different testing engines below the main tree (i.e. libasn1fix)
+for stressing various aspects of compiler operation.
+
+The files follow certain naming conventions:
+
+Source file:
+	<Index>-<arbitrary-name>-{OK|SE|NP}.asn1
+
+Regenerator test file:
+	<Index>-<arbitrary-name>-{OK|SE|NP}.asn1.[<compiler-flags>]
+
+Where
+	<Index> is arbitrary number (digits)
+	<arbitrary-name> is arbitrary string, without dots
+	OK	file syntax and semantics are absolutely correct
+	SE	file semantics is wrong
+	SW	file semantics is suspicious (warning)
+	NP	file syntax is incorrect, file not parseable
+	<compiler-flags>	command-line flags for compiler
+
+Example:
+	07-int-OK.asn1		# Correct ASN.1 file
+	07-int-OK.asn1.-EF	# Test of file regeneration with -E -F flags.

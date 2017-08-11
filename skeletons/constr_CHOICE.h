@@ -13,27 +13,27 @@ extern "C" {
 #endif
 
 typedef const struct asn_CHOICE_specifics_s {
-	/*
-	 * Target structure description.
-	 */
-	int struct_size;	/* Size of the target structure. */
-	int ctx_offset;		/* Offset of the asn_codec_ctx_t member */
-	int pres_offset;	/* Identifier of the present member */
-	int pres_size;		/* Size of the identifier (enum) */
+    /*
+     * Target structure description.
+     */
+    unsigned struct_size;       /* Size of the target structure. */
+    unsigned ctx_offset;        /* Offset of the asn_codec_ctx_t member */
+    unsigned pres_offset;       /* Identifier of the present member */
+    unsigned pres_size;         /* Size of the identifier (enum) */
 
-	/*
-	 * Tags to members mapping table.
-	 */
-	const asn_TYPE_tag2member_t *tag2el;
+    /*
+     * Tags to members mapping table.
+     */
+    const asn_TYPE_tag2member_t *tag2el;
     unsigned tag2el_count;
 
     /* Canonical ordering of CHOICE elements, for PER */
-	int *canonical_order;
+    const unsigned *canonical_order;
 
-	/*
-	 * Extensions-related stuff.
-	 */
-	signed ext_start;		/* First member of extensions, or -1 */
+    /*
+     * Extensions-related stuff.
+     */
+    signed ext_start; /* First member of extensions, or -1 */
 } asn_CHOICE_specifics_t;
 
 /*
@@ -50,6 +50,22 @@ xer_type_encoder_f CHOICE_encode_xer;
 per_type_decoder_f CHOICE_decode_uper;
 per_type_encoder_f CHOICE_encode_uper;
 asn_outmost_tag_f CHOICE_outmost_tag;
+
+/*
+ * Return the 1-based choice variant presence index.
+ * Returns 0 in case of error.
+ */
+unsigned CHOICE_variant_get_presence(const asn_TYPE_descriptor_t *td,
+                                     const void *structure_ptr);
+
+/*
+ * Sets or resets the 1-based choice variant presence index.
+ * In case a previous index is not zero, the currently selected structure
+ * member is freed and zeroed-out first.
+ * Returns 0 on success and -1 on error.
+ */
+int CHOICE_variant_set_presence(const asn_TYPE_descriptor_t *td,
+                                void *structure_ptr, unsigned present);
 
 #ifdef __cplusplus
 }

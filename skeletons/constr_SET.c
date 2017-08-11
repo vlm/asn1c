@@ -910,8 +910,8 @@ SET_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-SET_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	size_t edx;
+SET_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+    size_t edx;
 
 	if(!td || !ptr)
 		return;

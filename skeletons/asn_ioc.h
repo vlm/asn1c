@@ -18,10 +18,10 @@ struct asn_ioc_cell_s;
 /*
  * X.681, #13
  */
-struct asn_ioc_set_s {
+typedef struct asn_ioc_set_s {
     size_t rows_count;
     size_t columns_count;
-    struct asn_ioc_set_cell_s *rows;
+    const struct asn_ioc_cell_s *rows;
 } asn_ioc_set_t;
 
 
@@ -40,7 +40,7 @@ typedef struct asn_ioc_cell_s {
             unsigned choice_position;
         } *types;
     } open_type;
-} asn_ioc_cell_s;
+} asn_ioc_cell_t;
 
 
 #ifdef __cplusplus

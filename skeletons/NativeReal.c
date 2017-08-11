@@ -377,9 +377,8 @@ NativeReal_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
 }
 
 void
-NativeReal_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-
-	if(!td || !ptr)
+NativeReal_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+    if(!td || !ptr)
 		return;
 
 	ASN_DEBUG("Freeing %s as REAL (%d, %p, Native)",

@@ -1,3 +1,5 @@
 
+SUBDIRS = tests-asn1c-compiler tests-c-compiler
 
-EXTRA_DIST = README $(srcdir)/*asn1*
+EXTRA_DIST = README
+

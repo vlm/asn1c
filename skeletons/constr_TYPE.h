@@ -53,7 +53,7 @@ typedef struct asn_struct_ctx_s {
  * dynamically.)
  */
 typedef void (asn_struct_free_f)(
-		struct asn_TYPE_descriptor_s *type_descriptor,
+		const struct asn_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr, int free_contents_only);
 #define	ASN_STRUCT_FREE(asn_DEF, ptr)	(asn_DEF).free_struct(&(asn_DEF),ptr,0)
 #define	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr)	\
@@ -95,7 +95,11 @@ asn_outmost_tag_f asn_TYPE_outmost_tag;
  * Fetch the desired type of the Open Type based on the
  * Information Object Set driven constraints.
  */
-typedef struct asn_TYPE_descriptor_s *(asn_type_selector_f)(
+typedef struct asn_type_selector_result_s {
+    struct asn_TYPE_descriptor_s *type_descriptor; /* Type encoded. */
+    unsigned presence_index; /* Associated choice variant. */
+} asn_type_selector_result_t;
+typedef asn_type_selector_result_t(asn_type_selector_f)(
     const struct asn_TYPE_descriptor_s *parent_type_descriptor,
     const void *parent_structure_ptr);
 
@@ -168,7 +172,7 @@ typedef struct asn_TYPE_member_s {
     ber_tlv_tag_t tag;      /* Outmost (most immediate) tag */
     int tag_mode;           /* IMPLICIT/no/EXPLICIT tag at current level */
     asn_TYPE_descriptor_t *type;            /* Member type descriptor */
-    asn_type_selector_f *type_selector;     /* IoS selector */
+    asn_type_selector_f *type_selector;     /* IoS runtime type selector */
     asn_constr_check_f *memb_constraints;   /* Constraints validator */
     asn_oer_constraints_t *oer_constraints; /* OER compiled constraints */
     asn_per_constraints_t *per_constraints; /* PER compiled constraints */

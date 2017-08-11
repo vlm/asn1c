@@ -1,7 +1,5 @@
 @CODE_COVERAGE_RULES@
 
-SUBDIRS = . tests
-
 AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS = \
 	-I${top_srcdir}/libasn1compiler	\
@@ -21,7 +19,7 @@ bin_PROGRAMS = asn1c unber enber
 
 noinst_HEADERS = sys-common.h
 
-dist_check_SCRIPTS = check-xxber.sh check-parsing.sh
+dist_check_SCRIPTS = check-xxber.sh
 TESTS_ENVIRONMENT= top_srcdir=${top_srcdir}
 TESTS = $(dist_check_SCRIPTS)
-CLEANFILES = .check-xxber.*.tmp .check-parsing.*.tmp
+CLEANFILES = .check-xxber.*.tmp

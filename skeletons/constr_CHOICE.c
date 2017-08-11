@@ -63,11 +63,13 @@
 /*
  * See the definitions.
  */
-static signed _fetch_present_idx(const void *struct_ptr, int off, int size);
-static void _set_present_idx(void *sptr, int offset, int size, int pres);
+static unsigned _fetch_present_idx(const void *struct_ptr, unsigned off,
+                                   unsigned size);
+static void _set_present_idx(void *sptr, unsigned offset, unsigned size,
+                             unsigned pres);
 static const void *_get_member_ptr(const asn_TYPE_descriptor_t *,
                                    const void *sptr, asn_TYPE_member_t **elm,
-                                   signed *present);
+                                   unsigned *present);
 
 /*
  * Tags are canonically sorted in the tag to member table.
@@ -365,7 +367,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	asn_enc_rval_t erval;
 	void *memb_ptr;
 	size_t computed_size = 0;
-	signed present;
+	unsigned present;
 
 	if(!sptr) ASN__ENCODE_FAILED;
 
@@ -379,7 +381,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	 * If the structure was not initialized, it cannot be encoded:
 	 * can't deduce what to encode in the choice type.
 	 */
-	if(present <= 0 || (unsigned)present > td->elements_count) {
+	if(present == 0 || present > td->elements_count) {
 		if(present == 0 && td->elements_count == 0) {
 			/* The CHOICE is empty?! */
 			erval.encoded = 0;
@@ -450,7 +452,7 @@ CHOICE_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 ber_tlv_tag_t
 CHOICE_outmost_tag(const asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode, ber_tlv_tag_t tag) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	signed present;
+	unsigned present;
 
 	assert(tag_mode == 0); (void)tag_mode;
 	assert(tag == 0); (void)tag;
@@ -460,7 +462,7 @@ CHOICE_outmost_tag(const asn_TYPE_descriptor_t *td, const void *ptr, int tag_mod
 	 */
 	present = _fetch_present_idx(ptr, specs->pres_offset, specs->pres_size);
 
-	if(present > 0 && (unsigned)present <= td->elements_count) {
+	if(present > 0 && present <= td->elements_count) {
 		const asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
@@ -483,7 +485,7 @@ int
 CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	signed present;
+	unsigned present;
 
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -496,7 +498,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	 * Figure out which CHOICE element is encoded.
 	 */
 	present = _fetch_present_idx(sptr, specs->pres_offset,specs->pres_size);
-	if(present > 0 && (unsigned)present <= td->elements_count) {
+	if(present > 0 && present <= td->elements_count) {
 		asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
@@ -780,7 +782,7 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_CHOICE_specifics_t *specs=(asn_CHOICE_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
-	signed present;
+	unsigned present;
 
 	if(!sptr)
 		ASN__ENCODE_FAILED;
@@ -790,7 +792,7 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	 */
 	present = _fetch_present_idx(sptr, specs->pres_offset,specs->pres_size);
 
-	if(present <= 0 || (unsigned)present > td->elements_count) {
+	if(present == 0 || present > td->elements_count) {
 		ASN__ENCODE_FAILED;
 	}  else {
 		asn_enc_rval_t tmper;
@@ -917,7 +919,7 @@ CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_TYPE_member_t *elm;	/* CHOICE's element */
 	const asn_per_constraint_t *ct;
 	void *memb_ptr;
-	signed present;
+	unsigned present;
 	int present_enc;
 
 	if(!sptr) ASN__ENCODE_FAILED;
@@ -928,14 +930,13 @@ CHOICE_encode_uper(asn_TYPE_descriptor_t *td,
 	else if(td->per_constraints) ct = &td->per_constraints->value;
 	else ct = 0;
 
-	present = _fetch_present_idx(sptr,
-		specs->pres_offset, specs->pres_size);
+    present = _fetch_present_idx(sptr, specs->pres_offset, specs->pres_size);
 
-	/*
+    /*
 	 * If the structure was not initialized properly, it cannot be encoded:
 	 * can't deduce what to encode in the choice type.
 	 */
-	if(present <= 0 || (unsigned)present > td->elements_count)
+	if(present == 0 || present > td->elements_count)
 		ASN__ENCODE_FAILED;
 	else
 		present--;
@@ -998,7 +999,7 @@ int
 CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	signed present;
+	unsigned present;
 
 	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
@@ -1010,7 +1011,7 @@ CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	/*
 	 * Print that element.
 	 */
-	if(present > 0 && (unsigned)present <= td->elements_count) {
+	if(present > 0 && present <= td->elements_count) {
 		asn_TYPE_member_t *elm = &td->elements[present-1];
 		const void *memb_ptr;
 
@@ -1036,9 +1037,9 @@ CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-	signed present;
+CHOICE_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+	unsigned present;
 
 	if(!td || !ptr)
 		return;
@@ -1053,7 +1054,7 @@ CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	/*
 	 * Free that element.
 	 */
-	if(present > 0 && (unsigned)present <= td->elements_count) {
+	if(present > 0 && present <= td->elements_count) {
 		asn_TYPE_member_t *elm = &td->elements[present-1];
 		void *memb_ptr;
 
@@ -1082,17 +1083,18 @@ CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
  * is guaranteed to be aligned properly. ASN.1 compiler itself does not
  * produce packed code.
  */
-static signed
-_fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
-	const void *present_ptr;
-	signed present;
+static unsigned
+_fetch_present_idx(const void *struct_ptr, unsigned pres_offset,
+                   unsigned pres_size) {
+    const void *present_ptr;
+	unsigned present;
 
 	present_ptr = ((const char *)struct_ptr) + pres_offset;
 
 	switch(pres_size) {
-	case sizeof(int):	present =   *(const int *)present_ptr; break;
-	case sizeof(short):	present = *(const short *)present_ptr; break;
-	case sizeof(char):	present =  *(const char *)present_ptr; break;
+	case sizeof(int):	present = *(const unsigned int *)present_ptr; break;
+	case sizeof(short):	present = *(const unsigned short *)present_ptr; break;
+	case sizeof(char):	present = *(const unsigned char *)present_ptr; break;
 	default:
 		/* ANSI C mandates enum to be equivalent to integer */
 		assert(pres_size != sizeof(int));
@@ -1103,14 +1105,15 @@ _fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
 }
 
 static void
-_set_present_idx(void *struct_ptr, int pres_offset, int pres_size, int present) {
-	void *present_ptr;
+_set_present_idx(void *struct_ptr, unsigned pres_offset, unsigned pres_size,
+                 unsigned present) {
+    void *present_ptr;
 	present_ptr = ((char *)struct_ptr) + pres_offset;
 
 	switch(pres_size) {
-	case sizeof(int):	*(int *)present_ptr   = present; break;
-	case sizeof(short):	*(short *)present_ptr = present; break;
-	case sizeof(char):	*(char *)present_ptr  = present; break;
+	case sizeof(int):	*(unsigned int *)present_ptr   = present; break;
+	case sizeof(short):	*(unsigned short *)present_ptr = present; break;
+	case sizeof(char):	*(unsigned char *)present_ptr  = present; break;
 	default:
 		/* ANSI C mandates enum to be equivalent to integer */
 		assert(pres_size != sizeof(int));
@@ -1119,9 +1122,9 @@ _set_present_idx(void *struct_ptr, int pres_offset, int pres_size, int present) 
 
 static const void *
 _get_member_ptr(const asn_TYPE_descriptor_t *td, const void *sptr,
-                asn_TYPE_member_t **elm_ptr, signed *present_out) {
+                asn_TYPE_member_t **elm_ptr, unsigned *present_out) {
     asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
-    signed present;
+    unsigned present;
 
     if(!sptr) {
         *elm_ptr = NULL;
@@ -1139,7 +1142,7 @@ _get_member_ptr(const asn_TYPE_descriptor_t *td, const void *sptr,
      * The presence index is intentionally 1-based to avoid
      * treating zeroed structure as a valid one.
      */
-	if(present > 0 && (unsigned)present <= td->elements_count) {
+	if(present > 0 && present <= td->elements_count) {
         asn_TYPE_member_t *const elm = &td->elements[present - 1];
         const void *memb_ptr;
 
@@ -1162,8 +1165,8 @@ int
 CHOICE_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bptr) {
     asn_TYPE_member_t *aelm;
     asn_TYPE_member_t *belm;
-    signed apresent = 0;
-    signed bpresent = 0;
+    unsigned apresent = 0;
+    unsigned bpresent = 0;
     const void *amember = _get_member_ptr(td, aptr, &aelm, &apresent);
     const void *bmember = _get_member_ptr(td, bptr, &belm, &apresent);
 
@@ -1182,3 +1185,50 @@ CHOICE_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bp
         return 1;
     }
 }
+
+/*
+ * Return the 1-based choice variant presence index.
+ * Returns 0 in case of error.
+ */
+unsigned
+CHOICE_variant_get_presence(const asn_TYPE_descriptor_t *td, const void *sptr) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    return _fetch_present_idx(sptr, specs->pres_offset, specs->pres_size);
+}
+
+/*
+ * Sets or resets the 1-based choice variant presence index.
+ * In case a previous index is not zero, the currently selected structure
+ * member is freed and zeroed-out first.
+ * Returns 0 on success and -1 on error.
+ */
+int
+CHOICE_variant_set_presence(const asn_TYPE_descriptor_t *td, void *sptr,
+                            unsigned present) {
+    extern asn_CHOICE_specifics_t asn_SPC_value_specs_3;
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    unsigned old_present;
+
+    if(!sptr) {
+        return -1;
+    }
+
+    if(present > td->elements_count)
+        return -1;
+
+    old_present =
+        _fetch_present_idx(sptr, specs->pres_offset, specs->pres_size);
+    if(present == old_present)
+        return 0;
+
+    if(old_present != 0) {
+        assert(old_present <= td->elements_count);
+        ASN_STRUCT_FREE_CONTENTS_ONLY(*td, sptr);
+		memset(sptr, 0, specs->struct_size);
+    }
+
+    _set_present_idx(sptr, specs->pres_offset, specs->pres_size, present);
+
+    return 0;
+}
+

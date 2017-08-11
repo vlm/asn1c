@@ -22,11 +22,11 @@ extern asn_TYPE_descriptor_t asn_DEF_Attribute;
 
 /*** <<< IOC-TABLES [Attribute] >>> ***/
 
-static const RELATIVE_OID_t asn_VAL_raf_0 = { "not supported", 0 };
-static const RELATIVE_OID_t asn_VAL_rcf_0 = { "not supported", 0 };
+static const RELATIVE_OID_t asn_VAL_1_raf = { "not supported", 0 };
+static const RELATIVE_OID_t asn_VAL_2_rcf = { "not supported", 0 };
 static const asn_ioc_cell_t asn_IOS_Attributes_1_rows[] = {
-	{ "&id", aioc__value, &asn_DEF_RELATIVE_OID, &asn_VAL_raf_0 },
-	{ "&id", aioc__value, &asn_DEF_RELATIVE_OID, &asn_VAL_rcf_0 }
+	{ "&id", aioc__value, &asn_DEF_RELATIVE_OID, &asn_VAL_1_raf },
+	{ "&id", aioc__value, &asn_DEF_RELATIVE_OID, &asn_VAL_2_rcf }
 };
 static asn_ioc_set_t asn_IOS_Attributes_1[] = {
 	2, 1, asn_IOS_Attributes_1_rows

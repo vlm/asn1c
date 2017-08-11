@@ -5,7 +5,7 @@ BEGIN
 
 Frame ::= SEQUENCE {
     ident	 FRAME-STRUCTURE.&id ({FrameTypes}),
-    value	 FRAME-STRUCTURE.&Type ({FrameTypes}{@.ident}),
+    value	 FRAME-STRUCTURE.&Type ({FrameTypes}{@ident}),
     ...
 }
 
