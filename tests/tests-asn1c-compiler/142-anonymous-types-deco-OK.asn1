@@ -1,0 +1,28 @@
+-- OK: 
+
+ModuleTestAnonTypeDeco
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 142 }
+
+DEFINITIONS AUTOMATIC TAGS ::= BEGIN 
+ 
+CommonType ::= CHOICE  {
+    t1 Type1,
+    t2 Type2
+}
+
+Type1 ::= CHOICE  {
+    anonType SEQUENCE  {
+        x OCTET STRING (SIZE (32)),
+        y OCTET STRING (SIZE (32))
+    }
+}
+
+Type2 ::= CHOICE  {
+    anonType SEQUENCE  {
+        x OCTET STRING (SIZE (48)),
+        y OCTET STRING (SIZE (48))
+    }
+}
+
+END
