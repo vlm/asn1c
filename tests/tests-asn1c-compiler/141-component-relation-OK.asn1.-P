@@ -1,7 +1,7 @@
 
 /*** <<< INCLUDES [Frame] >>> ***/
 
-#include <NativeInteger.h>
+#include "ConstrainedInteger.h"
 #include <ANY.h>
 #include <asn_ioc.h>
 #include "PrimitiveMessage.h"
@@ -11,7 +11,7 @@
 /*** <<< TYPE-DECLS [Frame] >>> ***/
 
 typedef struct Frame {
-	long	 ident;
+	ConstrainedInteger_t	 ident;
 	ANY_t	 value;
 	/*
 	 * This type is extensible,
@@ -28,12 +28,12 @@ extern asn_TYPE_descriptor_t asn_DEF_Frame;
 
 /*** <<< IOC-TABLES [Frame] >>> ***/
 
-static const long asn_VAL_1_basicMessage = 1;
-static const long asn_VAL_2_2 = 2;
+static const long asn_VAL_1_primMessage = 1;
+static const long asn_VAL_2_cplxMessage = 2;
 static const asn_ioc_cell_t asn_IOS_FrameTypes_1_rows[] = {
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_basicMessage },
+	{ "&id", aioc__value, &asn_DEF_ConstrainedInteger, &asn_VAL_1_primMessage },
 	{ "&Type", aioc__type, &asn_DEF_PrimitiveMessage },
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
+	{ "&id", aioc__value, &asn_DEF_ConstrainedInteger, &asn_VAL_2_cplxMessage },
 	{ "&Type", aioc__type, &asn_DEF_ComplexMessage }
 };
 static asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
@@ -45,6 +45,7 @@ static asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
 static int
 memb_ident_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -53,12 +54,17 @@ memb_ident_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
+	value = *(const long *)sptr;
 	
-	if(1 /* No applicable constraints whatsoever */) {
-		/* Nothing is here. See below */
+	if((value >= 0 && value <= 32767)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
 	}
-	
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 static asn_TYPE_descriptor_t *
@@ -106,7 +112,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Frame, ident),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_NativeInteger,
+		.type = &asn_DEF_ConstrainedInteger,
 		.type_selector = 0,
 		.memb_constraints = memb_ident_constraint_1,
 		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
@@ -166,6 +172,89 @@ asn_TYPE_descriptor_t asn_DEF_Frame = {
 	asn_MBR_Frame_1,
 	2,	/* Elements count */
 	&asn_SPC_Frame_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [ConstrainedInteger] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [ConstrainedInteger] >>> ***/
+
+typedef long	 ConstrainedInteger_t;
+
+/*** <<< FUNC-DECLS [ConstrainedInteger] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ConstrainedInteger;
+asn_struct_free_f ConstrainedInteger_free;
+asn_struct_print_f ConstrainedInteger_print;
+asn_constr_check_f ConstrainedInteger_constraint;
+ber_type_decoder_f ConstrainedInteger_decode_ber;
+der_type_encoder_f ConstrainedInteger_encode_der;
+xer_type_decoder_f ConstrainedInteger_decode_xer;
+xer_type_encoder_f ConstrainedInteger_encode_xer;
+
+/*** <<< CODE [ConstrainedInteger] >>> ***/
+
+int
+ConstrainedInteger_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 32767)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< STAT-DEFS [ConstrainedInteger] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_ConstrainedInteger_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_ConstrainedInteger = {
+	"ConstrainedInteger",
+	"ConstrainedInteger",
+	NativeInteger_free,
+	NativeInteger_print,
+	NativeInteger_compare,
+	ConstrainedInteger_constraint,
+	NativeInteger_decode_ber,
+	NativeInteger_encode_der,
+	NativeInteger_decode_xer,
+	NativeInteger_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_ConstrainedInteger_tags_1,
+	sizeof(asn_DEF_ConstrainedInteger_tags_1)
+		/sizeof(asn_DEF_ConstrainedInteger_tags_1[0]), /* 1 */
+	asn_DEF_ConstrainedInteger_tags_1,	/* Same as above */
+	sizeof(asn_DEF_ConstrainedInteger_tags_1)
+		/sizeof(asn_DEF_ConstrainedInteger_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
 };
 
 

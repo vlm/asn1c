@@ -132,8 +132,8 @@ emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
             return -1;
         }
         }
-        OUT("static const %s asn_VAL_%s_%d = ", prim_type, MKID(cell->value),
-            cell->value->_type_unique_index);
+        OUT("static const %s asn_VAL_%d_%s = ", prim_type,
+            cell->value->_type_unique_index, MKID(cell->value));
 
         asn1p_expr_t *expr_value = cell->value;
         while(expr_value->value->type == ATV_REFERENCED) {
@@ -198,8 +198,8 @@ emit_ioc_cell(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
         GEN_INCLUDE(asn1c_type_name(arg, cell->value, TNF_INCLUDE));
         OUT("aioc__value, ");
         OUT("&asn_DEF_%s, ", asn1c_type_name(arg, cell->value, TNF_SAFE));
-        OUT("&asn_VAL_%s_%d", MKID(cell->value),
-            cell->value->_type_unique_index);
+        OUT("&asn_VAL_%d_%s", cell->value->_type_unique_index,
+            MKID(cell->value));
 
     } else if(cell->value->meta_type == AMT_TYPEREF) {
         GEN_INCLUDE(asn1c_type_name(arg, cell->value, TNF_INCLUDE));

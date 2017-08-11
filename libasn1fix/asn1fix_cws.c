@@ -4,8 +4,8 @@
 static int _asn1f_parse_class_object_data(arg_t *, asn1p_expr_t *eclass,
 		struct asn1p_ioc_row_s *row, asn1p_wsyntx_t *syntax,
 		const uint8_t *buf, const uint8_t *bend,
-		int optional_mode, const uint8_t **newpos);
-static int _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell, const uint8_t *buf, const uint8_t *bend);
+		int optional_mode, const uint8_t **newpos, int counter);
+static int _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell, const uint8_t *buf, const uint8_t *bend, int counter);
 static asn1p_wsyntx_chunk_t *asn1f_next_literal_chunk(asn1p_wsyntx_t *syntax, asn1p_wsyntx_chunk_t *chunk, const uint8_t *buf);
 
 int
@@ -43,7 +43,7 @@ asn1f_check_class_object(arg_t *arg) {
 		expr->value->value.string.buf + 1,
 		expr->value->value.string.buf
 			+ expr->value->value.string.size - 1,
-		0, 0);
+		0, 0, 0);
 
 	asn1p_ioc_row_delete(row);
 
@@ -74,6 +74,7 @@ struct parse_object_key {
     arg_t *arg;
     asn1p_expr_t *expr;   /* InformationObjectSet */
     asn1p_expr_t *eclass; /* CLASS */
+    int sequence;          /* Sequence counter */
 };
 
 /*
@@ -120,11 +121,13 @@ _asn1f_parse_object_cb(const uint8_t *buf, size_t size, void *keyp) {
 	asn1p_ioc_row_t *row;
     int ret;
 
+    key->sequence++;
+
 	row = asn1p_ioc_row_new(eclass);
 	assert(row);
 
     ret = _asn1f_parse_class_object_data(arg, eclass, row, eclass->with_syntax,
-                                         buf, buf + size, 0, 0);
+                                         buf, buf + size, 0, 0, key->sequence);
     if(ret) {
 		LOG((int)(ret < 0),
 			"Cannot parse %s of CLASS %s found at line %d",
@@ -143,7 +146,7 @@ _asn1f_parse_object_cb(const uint8_t *buf, size_t size, void *keyp) {
 	row = asn1p_ioc_row_new(eclass);
 	assert(row);
     ret = _asn1f_parse_class_object_data(arg, eclass, row, eclass->with_syntax,
-                                         buf, buf + size, 0, 0);
+                                         buf, buf + size, 0, 0, key->sequence);
     assert(ret == 0);
 
     if(_asn1f_add_unique_row(arg, expr, row) != 0)
@@ -261,6 +264,7 @@ asn1f_parse_class_object(arg_t *arg) {
         .arg = arg,
         .expr = expr,
         .eclass = eclass,
+        .sequence = 0
     };
 
     switch(source) {
@@ -288,7 +292,7 @@ static int
 _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 		struct asn1p_ioc_row_s *row, asn1p_wsyntx_t *syntax,
 		const uint8_t *buf, const uint8_t *bend,
-		int optional_mode, const uint8_t **newpos) {
+		int optional_mode, const uint8_t **newpos, int counter) {
 	struct asn1p_wsyntx_chunk_s *chunk;
 	int ret;
 
@@ -342,7 +346,7 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 			DEBUG("Reference %s satisfied by %s (%d)",
 				chunk->content.token,
 				buf, p - buf);
-			ret = _asn1f_assign_cell_value(arg, cell, buf, p);
+			ret = _asn1f_assign_cell_value(arg, cell, buf, p, counter);
 			if(ret) return ret;
 			buf = p;
 			if(newpos) *newpos = buf;
@@ -351,7 +355,7 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 			const uint8_t *np = 0;
 			SKIPSPACES;
 			ret = _asn1f_parse_class_object_data(arg, eclass, row,
-				chunk->content.syntax, buf, bend, 1, &np);
+				chunk->content.syntax, buf, bend, 1, &np, counter);
 			if(newpos) *newpos = np;
 			if(ret && np != buf)
 				return ret;
@@ -368,9 +372,9 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 
 static int
 _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
-                         const uint8_t *buf, const uint8_t *bend) {
+                         const uint8_t *buf, const uint8_t *bend, int counter) {
     asn1p_expr_t *expr = (asn1p_expr_t *)NULL;
-	char *p;
+	char *mivr; /* Most Immediate Value Representation */
 	int new_ref = 1;
 	asn1p_t *asn;
 	asn1p_module_t *mod;
@@ -385,19 +389,19 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 		return -1;
 	}
 
-	p = malloc(bend - buf + 1);
-	assert(p);
-	memcpy(p, buf, bend - buf);
-	p[bend - buf] = '\0';
+	mivr = malloc(bend - buf + 1);
+	assert(mivr);
+	memcpy(mivr, buf, bend - buf);
+	mivr[bend - buf] = '\0';
 	/* remove trailing space */
-	for (i = bend - buf - 1; (i > 0) && isspace(p[i]); i--)
-		p[i] = '\0';
+	for (i = bend - buf - 1; (i > 0) && isspace(mivr[i]); i--)
+		mivr[i] = '\0';
 
 	/* This value 100 should be larger than following formatting string */
 	psize = bend - buf + 100;
 	pp = malloc(psize);
 	if(pp == NULL) {
-		free(p);
+		free(mivr);
 		return -1;
 	}
 
@@ -406,7 +410,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 			"M DEFINITIONS ::=\nBEGIN\n"
 			"V ::= %s\n"
 			"END\n",
-			p
+			mivr
 		);
 	} else if(cell->field->expr_type == A1TC_CLASSFIELD_FTVFS) {
 		type_expr = TQ_FIRST(&(cell->field->members));
@@ -417,11 +421,11 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 				type_expr->reference ? 
 					type_expr->reference->components[0].name : 
 					_asn1p_expr_type2string(type_expr->expr_type),
-				p
+				mivr
 			);
 	} else {
-		WARNING("asn1c only be able to parse TypeFieldSpec and FixedTypeValueFieldSpec. Failed when parsing %s at line %d\n", p, arg->expr->_lineno);
-		free(p);
+		WARNING("asn1c only be able to parse TypeFieldSpec and FixedTypeValueFieldSpec. Failed when parsing %s at line %d\n", mivr, arg->expr->_lineno);
+		free(mivr);
 		free(pp);
 		return -1;
 	}
@@ -435,10 +439,10 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 	if(asn == NULL) {
 		FATAL("Cannot parse Setting token %s "
 			"at line %d",
-			p,
+			mivr,
 			arg->expr->_lineno
 		);
-		free(p);
+		free(mivr);
 		return -1;
 	} else {
 		mod = TQ_FIRST(&(asn->modules));
@@ -446,13 +450,19 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 		expr = TQ_REMOVE(&(mod->members), next);
 		assert(expr);
 
-		free(expr->Identifier);
         expr->parent_expr = NULL;
         asn1p_expr_set_source(expr, arg->expr->module, arg->expr->_lineno);
-		if (expr->reference) {
+        expr->_type_unique_index = counter;
+        DEBUG("Parsed identifier %s, mivr [%s], reference [%s] value [%s]",
+              expr->Identifier, mivr, asn1p_ref_string(expr->reference),
+              asn1f_printable_value(expr->value));
+        free(expr->Identifier);
+        if(expr->value) {
+			expr->Identifier = strdup(asn1f_printable_value(expr->value));
+        } else if (expr->reference) {
 			expr->Identifier = strdup(expr->reference->components[expr->reference->comp_count - 1].name);
 		} else {
-			expr->Identifier = p;
+			expr->Identifier = mivr;
 		}
 		asn1p_delete(asn);
 	}
@@ -467,21 +477,21 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 			expr->reference = 0;
 			asn1p_expr_free(expr);
 			FATAL("Cannot find %s referenced by %s at line %d",
-				p, arg->expr->Identifier,
+				mivr, arg->expr->Identifier,
 				arg->expr->_lineno);
-			free(p); /* freeing must happen *after* p was used in FATAL() */
+			free(mivr);
 			return -1;
 		}
 	}
 
 	DEBUG("Field %s assignment of %s got %s",
-		cell->field->Identifier, p, expr->Identifier);
+		cell->field->Identifier, mivr, expr->Identifier);
 
 	cell->value = expr;
 	cell->new_ref = new_ref;
 
-	if(expr->Identifier != p) {
-		free(p);
+	if(expr->Identifier != mivr) {
+		free(mivr);
     }
 
 	return 0;
