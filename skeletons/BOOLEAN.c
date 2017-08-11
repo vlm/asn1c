@@ -242,7 +242,7 @@ BOOLEAN_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-BOOLEAN_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+BOOLEAN_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr && !contents_only) {
 		FREEMEM(ptr);
 	}

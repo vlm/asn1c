@@ -63,8 +63,10 @@
 /*
  * See the definitions.
  */
-static signed _fetch_present_idx(const void *struct_ptr, int off, int size);
-static void _set_present_idx(void *sptr, int offset, int size, int pres);
+static unsigned _fetch_present_idx(const void *struct_ptr, unsigned off,
+                                   unsigned size);
+static void _set_present_idx(void *sptr, unsigned offset, unsigned size,
+                             unsigned pres);
 static const void *_get_member_ptr(const asn_TYPE_descriptor_t *,
                                    const void *sptr, asn_TYPE_member_t **elm,
                                    unsigned *present);
@@ -1035,8 +1037,8 @@ CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+CHOICE_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	unsigned present;
 
 	if(!td || !ptr)
@@ -1081,17 +1083,18 @@ CHOICE_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
  * is guaranteed to be aligned properly. ASN.1 compiler itself does not
  * produce packed code.
  */
-static signed
-_fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
-	const void *present_ptr;
+static unsigned
+_fetch_present_idx(const void *struct_ptr, unsigned pres_offset,
+                   unsigned pres_size) {
+    const void *present_ptr;
 	unsigned present;
 
 	present_ptr = ((const char *)struct_ptr) + pres_offset;
 
 	switch(pres_size) {
-	case sizeof(int):	present =   *(const int *)present_ptr; break;
-	case sizeof(short):	present = *(const short *)present_ptr; break;
-	case sizeof(char):	present =  *(const char *)present_ptr; break;
+	case sizeof(int):	present = *(const unsigned int *)present_ptr; break;
+	case sizeof(short):	present = *(const unsigned short *)present_ptr; break;
+	case sizeof(char):	present = *(const unsigned char *)present_ptr; break;
 	default:
 		/* ANSI C mandates enum to be equivalent to integer */
 		assert(pres_size != sizeof(int));
@@ -1102,14 +1105,15 @@ _fetch_present_idx(const void *struct_ptr, int pres_offset, int pres_size) {
 }
 
 static void
-_set_present_idx(void *struct_ptr, int pres_offset, int pres_size, int present) {
-	void *present_ptr;
+_set_present_idx(void *struct_ptr, unsigned pres_offset, unsigned pres_size,
+                 unsigned present) {
+    void *present_ptr;
 	present_ptr = ((char *)struct_ptr) + pres_offset;
 
 	switch(pres_size) {
-	case sizeof(int):	*(int *)present_ptr   = present; break;
-	case sizeof(short):	*(short *)present_ptr = present; break;
-	case sizeof(char):	*(char *)present_ptr  = present; break;
+	case sizeof(int):	*(unsigned int *)present_ptr   = present; break;
+	case sizeof(short):	*(unsigned short *)present_ptr = present; break;
+	case sizeof(char):	*(unsigned char *)present_ptr  = present; break;
 	default:
 		/* ANSI C mandates enum to be equivalent to integer */
 		assert(pres_size != sizeof(int));
@@ -1181,3 +1185,50 @@ CHOICE_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bp
         return 1;
     }
 }
+
+/*
+ * Return the 1-based choice variant presence index.
+ * Returns 0 in case of error.
+ */
+unsigned
+CHOICE_variant_get_presence(const asn_TYPE_descriptor_t *td, const void *sptr) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    return _fetch_present_idx(sptr, specs->pres_offset, specs->pres_size);
+}
+
+/*
+ * Sets or resets the 1-based choice variant presence index.
+ * In case a previous index is not zero, the currently selected structure
+ * member is freed and zeroed-out first.
+ * Returns 0 on success and -1 on error.
+ */
+int
+CHOICE_variant_set_presence(const asn_TYPE_descriptor_t *td, void *sptr,
+                            unsigned present) {
+    extern asn_CHOICE_specifics_t asn_SPC_value_specs_3;
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    unsigned old_present;
+
+    if(!sptr) {
+        return -1;
+    }
+
+    if(present > td->elements_count)
+        return -1;
+
+    old_present =
+        _fetch_present_idx(sptr, specs->pres_offset, specs->pres_size);
+    if(present == old_present)
+        return 0;
+
+    if(old_present == 0) {
+        assert(old_present <= td->elements_count);
+        ASN_STRUCT_FREE_CONTENTS_ONLY(*td, sptr);
+		memset(sptr, 0, specs->struct_size);
+    }
+
+    _set_present_idx(sptr, specs->pres_offset, specs->pres_size, present);
+
+    return 0;
+}
+

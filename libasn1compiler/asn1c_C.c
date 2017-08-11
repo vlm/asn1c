@@ -38,6 +38,7 @@ static int asn1c_lang_C_type_SEQUENCE_def(
 static int asn1c_lang_C_type_SET_def(arg_t *arg);
 static int asn1c_lang_C_type_CHOICE_def(arg_t *arg);
 static int asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of);
+static int asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc, const char *column_name);
 static int _print_tag(arg_t *arg, struct asn1p_type_tag_s *tag_p);
 static int compute_extensions_start(asn1p_expr_t *expr);
 static int expr_break_recursion(arg_t *arg, asn1p_expr_t *expr);
@@ -301,6 +302,30 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 
+/*
+ * Check if it is a true open type. That is, type is taken from
+ * the Information Object Set driven constraints.
+ */
+static int
+is_open_type(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *opt_ioc) {
+
+    (void)arg;
+
+    if(!opt_ioc) {
+        return 0;
+    }
+
+    if(expr->meta_type == AMT_TYPEREF
+       && expr->expr_type == A1TC_REFERENCE
+       && expr->reference->comp_count == 2
+       && expr->reference->components[1].lex_type
+              == RLT_AmpUppercase) {
+        return 1;
+    }
+
+    return 0;
+}
+
 int
 asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -343,7 +368,21 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 		if(comp_mode == 1)
 			v->marker.flags |= EM_OMITABLE | EM_INDIRECT;
 		try_inline_default(arg, v, 1);
-		EMBED_WITH_IOCT(v, ioc_tao);
+        if(is_open_type(arg, v, ioc_tao.ioct ? &ioc_tao : 0)) {
+            arg_t tmp_arg = *arg;
+            tmp_arg.embed++;
+            INDENT(+1);
+            tmp_arg.expr = v;
+            const char *column_name = v->reference->components[1].name;
+            if(asn1c_lang_C_OpenType(&tmp_arg, &ioc_tao, column_name)) {
+                return -1;
+            }
+            INDENT(-1);
+            tmp_arg.embed--;
+            if(v->expr_type != A1TC_EXTENSIBLE) OUT(";\n");
+        } else {
+            EMBED_WITH_IOCT(v, ioc_tao);
+        }
 	}
 
 	PCTX_DEF;
@@ -1032,6 +1071,62 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	return asn1c_lang_C_type_CHOICE_def(arg);
 }
 
+static ssize_t
+find_column_index(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc, const char *column_name) {
+    (void)arg;
+
+    if(!opt_ioc || !opt_ioc->ioct || !column_name) {
+        return -1;
+    }
+
+    if(opt_ioc->ioct->rows == 0) {
+        return 0;   /* No big deal. Just no data */
+    } else {
+        for(size_t clmn = 0; clmn < opt_ioc->ioct->row[0]->columns; clmn++) {
+            if(strcmp(opt_ioc->ioct->row[0]->column[clmn].field->Identifier,
+                      column_name) == 0) {
+                return clmn;
+            }
+        }
+        return -1;
+    }
+
+}
+
+static int
+asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc,
+                      const char *column_name) {
+    arg_t tmp_arg = *arg;
+
+    ssize_t column_index = find_column_index(arg, opt_ioc, column_name);
+    if(column_index < 0) {
+        FATAL("Open type generation attempted for %s, incomplete", column_name);
+        return -1;
+    }
+
+    asn1p_expr_t *open_type_choice =
+        asn1p_expr_new(arg->expr->_lineno, arg->expr->module);
+
+    open_type_choice->Identifier = strdup(arg->expr->Identifier);
+    open_type_choice->meta_type = AMT_TYPE;
+    open_type_choice->expr_type = ASN_CONSTR_OPEN_TYPE;
+    open_type_choice->_type_unique_index = arg->expr->_type_unique_index;
+
+    for(size_t row = 0; row < opt_ioc->ioct->rows; row++) {
+        struct asn1p_ioc_cell_s *cell =
+            &opt_ioc->ioct->row[row]->column[column_index];
+
+        asn1p_expr_t *m = asn1p_expr_clone(cell->value, 0);
+        asn1p_expr_add(open_type_choice, m);
+    }
+
+    tmp_arg.expr = open_type_choice;
+    GEN_INCLUDE_STD("OPEN_TYPE");
+    asn1c_lang_C_type_CHOICE(&tmp_arg);
+    asn1p_expr_free(tmp_arg.expr);
+    return 0;
+}
+
 static int
 asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -1085,7 +1180,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		int i;
 		cmap = compute_canonical_members_order(arg, elements);
 		if(cmap) {
-			OUT("static const int asn_MAP_%s_cmap_%d[] = {",
+			OUT("static const unsigned asn_MAP_%s_cmap_%d[] = {",
 				MKID(expr),
 				expr->_type_unique_index);
 			for(i = 0; i < elements; i++) {
@@ -2652,10 +2747,11 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
 
     assert(opt_ioc != NULL);
 
-	asn1p_expr_t *constraining_memb = NULL;
-	TQ_FOR(constraining_memb, &(parent_expr->members), next) {
-        if(strcmp(constraining_memb->Identifier, cname) == 0)
+    asn1p_expr_t *constraining_memb = NULL;
+    TQ_FOR(constraining_memb, &(parent_expr->members), next) {
+        if(strcmp(constraining_memb->Identifier, cname) == 0) {
             break;
+        }
     }
     if(!constraining_memb) {
         FATAL("Can not find \"%s\" in %s at line %d", cname, MKID(parent_expr),
@@ -2728,10 +2824,11 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
 
 
     REDIR(OT_CODE);
-    OUT("static asn_TYPE_descriptor_t *\n");
+    OUT("static asn_type_selector_result_t\n");
     OUT("select_%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", MKID_safe(expr));
     INDENT(+1);
 
+    OUT("asn_type_selector_result_t result = {0, 0};\n");
     OUT("const asn_ioc_set_t *itable = asn_IOS_%s_%d;\n", MKID(opt_ioc->objset),
         opt_ioc->objset->_type_unique_index);
     OUT("size_t constraining_column = %zu; /* %s */\n", constraining_column, cfield);
@@ -2744,7 +2841,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
         OUT("((const char *)parent_sptr + offsetof(struct ");
             out_name_chain(arg, ONC_avoid_keywords);
         OUT(", %s));", MKID_safe(constraining_memb));
-        OUT("if(!memb_ptr) return NULL;\n");
+        OUT("if(!memb_ptr) return result;\n");
         OUT("\n");
     }
 
@@ -2774,13 +2871,15 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];\n");
     OUT("\n");
     OUT("    if(constraining_cell->type_descriptor->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {\n");
-    OUT("        return type_cell->type_descriptor;\n");
+    OUT("        result.type_descriptor = type_cell->type_descriptor;\n");
+    OUT("        result.presence_index = row + 1;\n");
+    OUT("        break;\n");
     OUT("    }\n");
     OUT("}\n");
 
 
     OUT("\n");
-    OUT("return NULL;\n");
+    OUT("return result;\n");
     INDENT(-1);
     OUT("}\n");
     OUT("\n");
@@ -2810,9 +2909,11 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 
 	OUT("{ ");
 
-	if(outmost_tag && outmost_tag->tag_value == -1)
-		OUT("ATF_OPEN_TYPE | ");
-	OUT("%s, ",
+    if((outmost_tag && outmost_tag->tag_value == -1)
+       || is_open_type(arg, expr, opt_ioc)) {
+        OUT("ATF_OPEN_TYPE | ");
+    }
+    OUT("%s, ",
 		(expr->marker.flags & EM_INDIRECT)?"ATF_POINTER":"ATF_NOFLAGS");
 	if((expr->marker.flags & EM_OMITABLE) == EM_OMITABLE) {
 		asn1p_expr_t *tv;
@@ -2827,19 +2928,22 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	} else {
 		OUT("0, ");
 	}
-	if(expr->_anonymous_type) {
-		assert(arg->expr->expr_type == ASN_CONSTR_SET_OF
-			|| arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF);
-		OUT("0,\n");
-	} else {
-		OUT("offsetof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(", ");
-		if(arg->expr->expr_type == ASN_CONSTR_CHOICE
-			&& (!UNNAMED_UNIONS)) OUT("choice.");
-		OUT("%s),\n", MKID_safe(expr));
-	}
-	INDENT(+1);
+    if(expr->_anonymous_type) {
+        assert(arg->expr->expr_type == ASN_CONSTR_SET_OF
+               || arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF);
+        OUT("0,\n");
+    } else {
+        OUT("offsetof(struct ");
+        out_name_chain(arg, ONC_avoid_keywords);
+        OUT(", ");
+        if((arg->expr->expr_type == ASN_CONSTR_CHOICE
+            || arg->expr->expr_type == ASN_CONSTR_OPEN_TYPE)
+           && (!UNNAMED_UNIONS))
+            OUT("choice.");
+        OUT("%s),\n", MKID_safe(expr));
+    }
+
+    INDENT(+1);
 	if(C99_MODE) OUT(".tag = ");
 	if(outmost_tag) {
 		if(outmost_tag->tag_value == -1)
@@ -2864,7 +2968,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	}
 
 	complex_contents =
-		(expr->expr_type & ASN_CONSTR_MASK)
+		is_open_type(arg, expr, opt_ioc)
+		|| (expr->expr_type & ASN_CONSTR_MASK)
 		|| expr->expr_type == ASN_BASIC_ENUMERATED
 		|| (0 /* -- prohibited by X.693:8.3.4 */
 			&& expr->expr_type == ASN_BASIC_INTEGER
@@ -2872,15 +2977,16 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 		|| (expr->expr_type == ASN_BASIC_INTEGER
 			&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN);
 	if(C99_MODE) OUT(".type = ");
-	OUT("&asn_DEF_");
-	if(complex_contents) {
-		OUT("%s", MKID(expr));
-		if(!(arg->flags & A1C_ALL_DEFS_GLOBAL))
-			OUT("_%d", expr->_type_unique_index);
-	} else {
-		OUT("%s", asn1c_type_name(arg, expr, TNF_SAFE));
-	}
-	OUT(",\n");
+
+    OUT("&asn_DEF_");
+    if(complex_contents) {
+        OUT("%s", MKID(expr));
+        if(!(arg->flags & A1C_ALL_DEFS_GLOBAL))
+            OUT("_%d", expr->_type_unique_index);
+    } else {
+        OUT("%s", asn1c_type_name(arg, expr, TNF_SAFE));
+    }
+    OUT(",\n");
 
 
     if(C99_MODE) OUT(".type_selector = ");
@@ -3001,8 +3107,9 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	if(HIDE_INNER_DEFS)
 		OUT("static /* Use -fall-defs-global to expose */\n");
 	OUT("asn_TYPE_descriptor_t asn_DEF_%s", p);
-	if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
-	OUT(" = {\n");
+    if(HIDE_INNER_DEFS || (arg->flags & A1C_ALL_DEFS_GLOBAL))
+        OUT("_%d", expr->_type_unique_index);
+    OUT(" = {\n");
 	INDENT(+1);
 
 		if(expr->_anonymous_type) {

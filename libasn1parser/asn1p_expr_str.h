@@ -17,6 +17,7 @@ static char *asn1p_expr_type2str[] __attribute__ ((unused)) = {
 	[ ASN_CONSTR_SET ]	 = "SET",
 	[ ASN_CONSTR_SEQUENCE_OF ]	 = "SEQUENCE OF",
 	[ ASN_CONSTR_SET_OF ]	 = "SET OF",
+	[ ASN_CONSTR_OPEN_TYPE ]	 = "OPEN TYPE",
 	[ ASN_TYPE_ANY ]	 = "ANY",
 	[ ASN_BASIC_BOOLEAN ]	 = "BOOLEAN",
 	[ ASN_BASIC_NULL ]	 = "NULL",

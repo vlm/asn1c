@@ -1726,8 +1726,9 @@ OCTET_STRING_print_utf8(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 void
-OCTET_STRING_free(asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
-	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
+OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
+                  int contents_only) {
+    OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
 	asn_OCTET_STRING_specifics_t *specs;
 	asn_struct_ctx_t *ctx;
 	struct _stack *stck;

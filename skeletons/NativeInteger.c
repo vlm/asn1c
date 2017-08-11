@@ -336,9 +336,9 @@ NativeInteger_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-NativeInteger_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-
-	if(!td || !ptr)
+NativeInteger_free(const asn_TYPE_descriptor_t *td, void *ptr,
+                   int contents_only) {
+    if(!td || !ptr)
 		return;
 
 	ASN_DEBUG("Freeing %s as INTEGER (%d, %p, Native)",
@@ -356,7 +356,7 @@ NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const v
     if(aptr && bptr) {
         const asn_INTEGER_specifics_t *specs =
             (const asn_INTEGER_specifics_t *)td->specifics;
-        if(specs->field_unsigned)  {
+        if(specs && specs->field_unsigned) {
             const unsigned long *a = aptr;
             const unsigned long *b = bptr;
             if(*a < *b) {
@@ -364,7 +364,7 @@ NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const v
             } else if(*a > *b) {
                 return 1;
             } else {
-                return 1;
+                return 0;
             }
         } else {
             const long *a = aptr;
@@ -374,7 +374,7 @@ NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const v
             } else if(*a > *b) {
                 return 1;
             } else {
-                return 1;
+                return 0;
             }
         }
     } else if(!aptr) {

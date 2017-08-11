@@ -5,6 +5,7 @@
 #
 
 ANY.h ANY.c
+OPEN_TYPE.h OPEN_TYPE.c constr_CHOICE.h
 BMPString.h BMPString.c UTF8String.h
 BOOLEAN.h BOOLEAN.c
 ENUMERATED.h ENUMERATED.c INTEGER.h NativeEnumerated.h
@@ -34,7 +35,7 @@ VisibleString.h VisibleString.c
 asn_SEQUENCE_OF.h asn_SEQUENCE_OF.c asn_SET_OF.h
 asn_SET_OF.h asn_SET_OF.c
 constr_CHOICE.h constr_CHOICE.c
-constr_SEQUENCE.h constr_SEQUENCE.c
+constr_SEQUENCE.h constr_SEQUENCE.c OPEN_TYPE.h
 constr_SEQUENCE_OF.h constr_SEQUENCE_OF.c asn_SEQUENCE_OF.h constr_SET_OF.h
 constr_SET.h constr_SET.c
 constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h

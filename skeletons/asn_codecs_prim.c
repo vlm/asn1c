@@ -115,9 +115,9 @@ der_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
 }
 
 void
-ASN__PRIMITIVE_TYPE_free(asn_TYPE_descriptor_t *td, void *sptr,
-		int contents_only) {
-	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)sptr;
+ASN__PRIMITIVE_TYPE_free(const asn_TYPE_descriptor_t *td, void *sptr,
+                         int contents_only) {
+    ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)sptr;
 
 	if(!td || !sptr)
 		return;

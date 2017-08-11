@@ -7,6 +7,7 @@
 
 #include <asn_internal.h>
 #include <constr_SEQUENCE.h>
+#include <OPEN_TYPE.h>
 #include <errno.h>
 
 /*
@@ -150,8 +151,6 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         for(edx = (ctx->step >> 1); edx < td->elements_count;
             edx++, ctx->step = (ctx->step & ~1) + 2) {
             asn_TYPE_member_t *elm = &td->elements[edx];
-            void *memb_tmpptr;     /* Temporary reference. */
-            void **memb_ptr2;   /* Pointer to a pointer to a memmber */
 
             ASN_DEBUG("Decoding %s->%s", td->name, elm->name);
 
@@ -188,37 +187,20 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
              */
             ctx->step |= 1; /* Confirm entering next microphase */
         microphase2_decode_continues:
-            if(elm->flags & ATF_POINTER) {
-                /* Member is a pointer to another structure */
-                memb_ptr2 = (void **)((char *)st + elm->memb_offset);
-            } else {
-                memb_tmpptr = (char *)st + elm->memb_offset;
-                memb_ptr2 = &memb_tmpptr; /* Ensure this & remains in scope! */
-            }
-
             if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
-                asn_TYPE_descriptor_t *et = elm->type_selector(td, st);
-                ssize_t ot_ret;
-                if(!et) {
-                    ASN__DECODE_FAILED;
-                }
-                ot_ret = oer_open_type_get(opt_codec_ctx, et, NULL, memb_ptr2,
-                                           ptr, size);
-                switch(ot_ret) {
-                case -1:
-                    rval.code = RC_FAIL;
-                    rval.consumed = 0;
-                    break;
-                case 0:
-                    rval.code = RC_WMORE;
-                    rval.consumed = 1;
-                    break;
-                default:
-                    rval.code = RC_OK;
-                    rval.consumed = ot_ret;
-                    break;
-                }
+                rval = OPEN_TYPE_oer_get(opt_codec_ctx, td, st, elm, ptr, size);
             } else {
+                void *memb_tmpptr; /* Temporary reference. */
+                void **memb_ptr2;  /* Pointer to a pointer to a memmber */
+
+                if(elm->flags & ATF_POINTER) {
+                    /* Member is a pointer to another structure */
+                    memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+                } else {
+                    memb_tmpptr = (char *)st + elm->memb_offset;
+                    memb_ptr2 = &memb_tmpptr; /* Ensure remains in scope! */
+                }
+
                 rval = elm->type->oer_decoder(opt_codec_ctx, elm->type,
                                               elm->oer_constraints, memb_ptr2,
                                               ptr, size);

@@ -788,7 +788,7 @@ SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+SET_OF_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	if(td && ptr) {
 		asn_SET_OF_specifics_t *specs;
 		asn_TYPE_member_t *elm = td->elements;
