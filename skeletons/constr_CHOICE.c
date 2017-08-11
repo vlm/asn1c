@@ -1221,7 +1221,7 @@ CHOICE_variant_set_presence(const asn_TYPE_descriptor_t *td, void *sptr,
     if(present == old_present)
         return 0;
 
-    if(old_present == 0) {
+    if(old_present != 0) {
         assert(old_present <= td->elements_count);
         ASN_STRUCT_FREE_CONTENTS_ONLY(*td, sptr);
 		memset(sptr, 0, specs->struct_size);
