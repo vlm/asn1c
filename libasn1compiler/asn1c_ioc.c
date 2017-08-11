@@ -258,8 +258,8 @@ emit_ioc_table(arg_t *arg, asn1p_expr_t *context, asn1c_ioc_table_and_objset_t i
     INDENT(-1);
     OUT("};\n");
 
-    OUT("static asn_ioc_set_t asn_IOS_%s_%d[] = {\n", MKID(ioc_tao.objset),
-        ioc_tao.objset->_type_unique_index);
+    OUT("static const asn_ioc_set_t asn_IOS_%s_%d[] = {\n",
+        MKID(ioc_tao.objset), ioc_tao.objset->_type_unique_index);
     INDENT(+1);
     OUT("%zu, %zu, asn_IOS_%s_%d_rows\n", ioc_tao.ioct->rows, columns,
         MKID(ioc_tao.objset), ioc_tao.objset->_type_unique_index);

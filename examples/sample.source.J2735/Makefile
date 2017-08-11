@@ -997,6 +997,7 @@ ASN_MODULE_SOURCES+=constr_SEQUENCE_OF.c
 ASN_MODULE_HEADERS+=constr_SET_OF.h
 ASN_MODULE_SOURCES+=constr_SET_OF.c
 ASN_MODULE_HEADERS+=asn_application.h
+ASN_MODULE_HEADERS+=asn_ioc.h
 ASN_MODULE_HEADERS+=asn_system.h
 ASN_MODULE_HEADERS+=asn_codecs.h
 ASN_MODULE_HEADERS+=asn_internal.h
@@ -1050,7 +1051,7 @@ TARGET = j2735-dump
 CPPFLAGS += -DASN_CONVERTER_TITLE="J2735 DSRC decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DASN_DISABLE_OER_SUPPORT -DPDU=MessageFrame -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
-all: MessageFrame.c $(TARGET)
+all: maybe-wip-pause MessageFrame.c $(TARGET)
 
 $(TARGET): ${OBJS}
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
@@ -1146,6 +1147,9 @@ check-per:
 	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 7; \
 	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 8; \
 	done; done; fi
+
+maybe-wip-pause:
+	@if [ -f WIP ]; then cat WIP; sleep 2; fi
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES)

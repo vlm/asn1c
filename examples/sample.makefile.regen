@@ -128,7 +128,7 @@ set +x
 	echo '	done; done; fi'
 	echo
 	echo "maybe-wip-pause:"
-	echo "	@[ -f WIP ] && cat WIP && sleep 2"
+	echo "	@if [ -f WIP ]; then cat WIP; sleep 2; fi"
 	echo
 	echo "distclean: clean"
 	echo '	rm -f $(ASN_MODULE_SOURCES)'

@@ -2732,7 +2732,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("select_%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", MKID_safe(expr));
     INDENT(+1);
 
-    OUT("asn_ioc_set_t *itable = asn_IOS_%s_%d;\n", MKID(opt_ioc->objset),
+    OUT("const asn_ioc_set_t *itable = asn_IOS_%s_%d;\n", MKID(opt_ioc->objset),
         opt_ioc->objset->_type_unique_index);
     OUT("size_t constraining_column = %zu; /* %s */\n", constraining_column, cfield);
     OUT("size_t for_column = %zu; /* %s */\n", for_column, for_field);
@@ -2740,7 +2740,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
 
     const char *tname = asn1c_type_name(arg, constraining_memb, TNF_SAFE);
     if(constraining_memb->marker.flags & EM_INDIRECT) {
-        OUT("void *memb_ptr = *(const void **)");
+        OUT("const void *memb_ptr = *(const void **)");
         OUT("((const char *)parent_sptr + offsetof(struct ");
             out_name_chain(arg, ONC_avoid_keywords);
         OUT(", %s));", MKID_safe(constraining_memb));
@@ -2770,9 +2770,10 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("\n");
 
     OUT("for(row=0; row < itable->rows_count; row++) {\n");
-    OUT("    asn_ioc_cell_s *constraining_cell = itable->rows[row * itable->columns_count + constraining_column];\n");
-    OUT("    asn_ioc_cell_s *type_cell = itable->rows[row * itable->columns_count + for_column];\n");
-    OUT("    if(constraining_cell->type_descriptor->struct_compare(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {\n");
+    OUT("    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];\n");
+    OUT("    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];\n");
+    OUT("\n");
+    OUT("    if(constraining_cell->type_descriptor->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {\n");
     OUT("        return type_cell->type_descriptor;\n");
     OUT("    }\n");
     OUT("}\n");
