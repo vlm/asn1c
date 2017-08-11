@@ -127,7 +127,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 struct _stack_el {
     ber_tlv_len_t left;     /* What's left to read (or -1) */
     ber_tlv_len_t got;      /* What was actually processed */
-    size_t cont_level;      /* Depth of subcontainment */
+    unsigned cont_level;    /* Depth of subcontainment */
     int want_nulls;         /* Want null "end of content" octets? */
     int bits_chopped;       /* Flag in BIT STRING mode */
     ber_tlv_tag_t tag;      /* For debugging purposes */
@@ -345,7 +345,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		case ASN_OSUBV_STR:
 		default:
 			if(sel) {
-				size_t level = sel->cont_level;
+				unsigned level = sel->cont_level;
 				if(level < td->all_tags_count) {
 					expected_tag = td->all_tags[level];
 					break;
@@ -408,7 +408,7 @@ OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
 		sel->got += tlvl;
 		ADVANCE(tlvl);
 
-		ASN_DEBUG("+EXPECT2 got=%ld left=%ld, wn=%d, clvl=%d",
+		ASN_DEBUG("+EXPECT2 got=%ld left=%ld, wn=%d, clvl=%u",
 			(long)sel->got, (long)sel->left,
 			sel->want_nulls, sel->cont_level);
 
