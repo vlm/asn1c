@@ -37,7 +37,7 @@ for ref in ${top_srcdir}/tests/tests-asn1c-compiler/*.asn1.-*; do
 	fi
 	rm -f $oldversion $newversion
 	if [ "$1" = "regenerate" ]; then
-		${top_builddir}/asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" > "$ref"
+		${top_builddir}/asn1c/asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" > "$ref"
 	fi
 done
 
