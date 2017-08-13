@@ -6,13 +6,32 @@
 #include <asn_ioc.h>
 #include "PrimitiveMessage.h"
 #include "ComplexMessage.h"
+#include <OPEN_TYPE.h>
+#include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
+
+/*** <<< DEPS [Frame] >>> ***/
+
+typedef enum value_PR {
+	value_PR_NOTHING,	/* No components present */
+	value_PR_PrimitiveMessage,
+	value_PR_ComplexMessage
+} value_PR;
 
 /*** <<< TYPE-DECLS [Frame] >>> ***/
 
 typedef struct Frame {
 	long	 ident;
-	ANY_t	 value;
+	struct value {
+		value_PR present;
+		union value_u {
+			PrimitiveMessage_t	 PrimitiveMessage;
+			ComplexMessage_t	 ComplexMessage;
+		} choice;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} value;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
@@ -36,7 +55,7 @@ static const asn_ioc_cell_t asn_IOS_FrameTypes_1_rows[] = {
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
 	{ "&Type", aioc__type, &asn_DEF_ComplexMessage }
 };
-static asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
+static const asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
 	2, 2, asn_IOS_FrameTypes_1_rows
 };
 
@@ -61,23 +80,27 @@ memb_ident_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
-static asn_TYPE_descriptor_t *
+static asn_type_selector_result_t
 select_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
-	asn_ioc_set_t *itable = asn_IOS_FrameTypes_1;
+	asn_type_selector_result_t result = {0, 0};
+	const asn_ioc_set_t *itable = asn_IOS_FrameTypes_1;
 	size_t constraining_column = 0; /* &id */
 	size_t for_column = 1; /* &Type */
 	size_t row;
 	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Frame, ident));
 	
 	for(row=0; row < itable->rows_count; row++) {
-	    asn_ioc_cell_s *constraining_cell = itable->rows[row * itable->columns_count + constraining_column];
-	    asn_ioc_cell_s *type_cell = itable->rows[row * itable->columns_count + for_column];
-	    if(constraining_cell->type_descriptor->struct_compare(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
-	        return type_cell->type_descriptor;
+	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
+	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
+	
+	    if(constraining_cell->type_descriptor->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	        result.type_descriptor = type_cell->type_descriptor;
+	        result.presence_index = row + 1;
+	        break;
 	    }
 	}
 	
-	return NULL;
+	return result;
 }
 
 static int
@@ -102,6 +125,70 @@ memb_value_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [Frame] >>> ***/
 
+static asn_TYPE_member_t asn_MBR_value_3[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.PrimitiveMessage),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_PrimitiveMessage,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "PrimitiveMessage"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.ComplexMessage),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_ComplexMessage,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "ComplexMessage"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_value_tag2el_3[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* PrimitiveMessage */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 } /* ComplexMessage */
+};
+static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
+	sizeof(struct value),
+	offsetof(struct value, _asn_ctx),
+	offsetof(struct value, present),
+	sizeof(((struct value *)0)->present),
+	asn_MAP_value_tag2el_3,
+	2,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_value_3 = {
+	"value",
+	"value",
+	OPEN_TYPE_free,
+	OPEN_TYPE_print,
+	OPEN_TYPE_compare,
+	OPEN_TYPE_constraint,
+	OPEN_TYPE_decode_ber,
+	OPEN_TYPE_encode_der,
+	OPEN_TYPE_decode_xer,
+	OPEN_TYPE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_value_3,
+	2,	/* Elements count */
+	&asn_SPC_value_specs_3	/* Additional specs */
+};
+
 static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Frame, ident),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
@@ -117,7 +204,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct Frame, value),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
-		.type = &asn_DEF_ANY,
+		.type = &asn_DEF_value_3,
 		.type_selector = select_value_type,
 		.memb_constraints = memb_value_constraint_1,
 		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
