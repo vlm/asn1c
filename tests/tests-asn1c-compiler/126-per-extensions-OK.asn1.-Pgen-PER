@@ -323,7 +323,7 @@ asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 		.name = "ext0"
 		},
 };
-static const int asn_MAP_PDU_2_cmap_1[] = { 0, 2, 1 };
+static const unsigned asn_MAP_PDU_2_cmap_1[] = { 0, 2, 1 };
 static const asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* ext0 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ext1 */
