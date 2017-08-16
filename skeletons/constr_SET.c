@@ -467,14 +467,15 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		asn_enc_rval_t tmper;
-		void *memb_ptr;
+		void *memb_ptr_dontuse; /* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
 
 		/*
 		 * Compute the length of the encoding of this member.
 		 */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) {
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) {
 				if(!elm->optional)
 					/* Mandatory elements missing */
 					ASN__ENCODE_FAILED;
@@ -486,9 +487,21 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 				continue;
 			}
 		} else {
-			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr_dontuse = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr_dontuse; /* Only use of memb_ptr_dontuse */
 		}
-		tmper = elm->type->op->der_encoder(elm->type, memb_ptr,
+
+		/* Eliminate default values */
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1) {
+			if(t2m_build_own) {
+				t2m_build[t2m_count].el_no = edx;
+				t2m_build[t2m_count].el_tag = 0;
+				t2m_count++;
+			}
+			continue;
+		}
+
+		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			0, 0);
 		if(tmper.encoded == -1)
@@ -501,7 +514,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		if(t2m_build_own) {
 			t2m_build[t2m_count].el_no = edx;
 			t2m_build[t2m_count].el_tag = asn_TYPE_outmost_tag(
-				elm->type, memb_ptr, elm->tag_mode, elm->tag);
+				elm->type, *memb_ptr2, elm->tag_mode, elm->tag);
 			t2m_count++;
 		} else {
 			/*
@@ -544,20 +557,27 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm;
 		asn_enc_rval_t tmper;
-		void *memb_ptr;
+
+		void *memb_ptr_dontuse;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
 
 		/* Encode according to the tag order */
 		elm = &td->elements[t2m[edx].el_no];
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) continue;
 		} else {
-			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr_dontuse = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr_dontuse; /* Only use of memb_ptr_dontuse */
 		}
-		tmper = elm->type->op->der_encoder(elm->type, memb_ptr,
-			elm->tag_mode, elm->tag,
-			cb, app_key);
+
+		/* Eliminate default values */
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
+			continue;
+
+		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
+			elm->tag_mode, elm->tag, cb, app_key);
 		if(tmper.encoded == -1)
 			return tmper;
 		computed_size -= tmper.encoded;
@@ -637,7 +657,7 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 */
 		if(ctx->phase == 2) {
 			asn_dec_rval_t tmprval;
-			void *memb_ptr;		/* Pointer to the member */
+			void *memb_ptr_dontuse; /* Pointer to the member */
 			void **memb_ptr2;	/* Pointer to that pointer */
 
 			if(ASN_SET_ISPRESENT2((char *)st + specs->pres_offset,
@@ -653,8 +673,8 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				/* Member is a pointer to another structure */
 				memb_ptr2 = (void **)((char *)st + elm->memb_offset);
 			} else {
-				memb_ptr = (char *)st + elm->memb_offset;
-				memb_ptr2 = &memb_ptr;
+				memb_ptr_dontuse = (char *)st + elm->memb_offset;
+				memb_ptr2 = &memb_ptr_dontuse; /* Only use of memb_ptr_dontuse */
 			}
 
 			/* Invoke the inner type decoder, m.b. multiple times */
@@ -676,8 +696,8 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ch_size = xer_next_token(&ctx->context,
 			buf_ptr, size, &ch_type);
 		if(ch_size == -1) {
-            RETURN(RC_FAIL);
-        } else {
+			RETURN(RC_FAIL);
+		} else {
 			switch(ch_type) {
             case PXER_WMORE:
                 RETURN(RC_WMORE);
