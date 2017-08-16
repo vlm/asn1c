@@ -28,6 +28,7 @@ TESTS += check-src/check-131.-gen-PER.c
 TESTS += check-src/check-132.-gen-PER.c
 TESTS += check-src/check-133.-gen-PER.c
 TESTS += check-src/check-135.-gen-OER.c
+TESTS += check-src/check-143.c
 TESTS += check-src/check-19.c
 TESTS += check-src/check-22.-fwide-types.c
 TESTS += check-src/check-24.-fwide-types.c

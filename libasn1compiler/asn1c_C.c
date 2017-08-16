@@ -2566,7 +2566,9 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 		if(expr->marker.default_value == NULL
-		|| expr->marker.default_value->type != ATV_INTEGER)
+		|| (expr->marker.default_value->type != ATV_INTEGER &&
+		    expr->marker.default_value->type != ATV_TRUE &&
+		    expr->marker.default_value->type != ATV_FALSE))
 			break;
 		if(!fits_long)
 			fits_long = asn1c_type_fits_long(arg, expr)!=FL_NOTFIT;
