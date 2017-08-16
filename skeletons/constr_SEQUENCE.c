@@ -527,18 +527,30 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
-		void *memb_ptr;
+
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
+
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) {
-				if(elm->optional) continue;
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) {
+				ASN_DEBUG("Element %s %d not present",
+					elm->name, edx);
+				if(elm->optional)
+					continue;
 				/* Mandatory element is missing */
 				ASN__ENCODE_FAILED;
 			}
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr;
 		}
-		erval = elm->type->der_encoder(elm->type, memb_ptr,
+
+		/* Eliminate default values */
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
+			continue;
+
+		erval = elm->type->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			0, 0);
 		if(erval.encoded == -1)
@@ -565,15 +577,22 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		asn_enc_rval_t tmperval;
-		void *memb_ptr;
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) continue;
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr;
 		}
-		tmperval = elm->type->der_encoder(elm->type, memb_ptr,
+
+		/* Eliminate default values */
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
+			continue;
+
+		tmperval = elm->type->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			cb, app_key);
 		if(tmperval.encoded == -1)
