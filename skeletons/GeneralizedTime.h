@@ -21,6 +21,7 @@ der_type_encoder_f GeneralizedTime_encode_der;
 xer_type_encoder_f GeneralizedTime_encode_xer;
 
 #define GeneralizedTime_free           OCTET_STRING_free
+#define GeneralizedTime_compare        OCTET_STRING_compare
 #define GeneralizedTime_decode_ber     OCTET_STRING_decode_ber
 #define GeneralizedTime_decode_xer     OCTET_STRING_decode_xer_utf8
 #define GeneralizedTime_decode_uper    OCTET_STRING_decode_uper

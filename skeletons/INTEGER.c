@@ -19,7 +19,7 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	"INTEGER",
 	INTEGER_free,
 	INTEGER_print,
-    INTEGER_compare,
+	INTEGER_compare,
 	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,
