@@ -19,9 +19,7 @@
 static const ber_tlv_tag_t asn_DEF_NativeInteger_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
-	"INTEGER",			/* The ASN.1 type is still INTEGER */
-	"INTEGER",
+asn_TYPE_operation_t asn_OP_NativeInteger = {
 	NativeInteger_free,
 	NativeInteger_print,
 	NativeInteger_compare,
@@ -44,7 +42,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
 	NativeInteger_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
+	"INTEGER",			/* The ASN.1 type is still INTEGER */
+	"INTEGER",
+	&asn_OP_NativeInteger,
+	asn_generic_no_constraint,
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
 	asn_DEF_NativeInteger_tags,	/* Same as above */

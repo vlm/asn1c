@@ -22,6 +22,7 @@ extern "C" {
 #define OPEN_TYPE_decode_uper NULL
 #define OPEN_TYPE_encode_uper CHOICE_encode_uper
 
+extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
 
 /*
  * Decode an Open Type which is potentially constraiend

@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t BMPString_t;  /* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_BMPString;
+extern asn_TYPE_operation_t asn_OP_BMPString;
 extern asn_OCTET_STRING_specifics_t asn_SPC_BMPString_specs;
 
 asn_struct_print_f BMPString_print;	/* Human-readable output */

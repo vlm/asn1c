@@ -18,9 +18,7 @@
 static const ber_tlv_tag_t asn_DEF_NativeEnumerated_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
-	"ENUMERATED",			/* The ASN.1 type is still ENUMERATED */
-	"ENUMERATED",
+asn_TYPE_operation_t asn_OP_NativeEnumerated = {
 	NativeInteger_free,
 	NativeInteger_print,
 	NativeInteger_compare,
@@ -43,7 +41,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
+	"ENUMERATED",			/* The ASN.1 type is still ENUMERATED */
+	"ENUMERATED",
+	&asn_OP_NativeEnumerated,
+	asn_generic_no_constraint,
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
 	asn_DEF_NativeEnumerated_tags,	/* Same as above */

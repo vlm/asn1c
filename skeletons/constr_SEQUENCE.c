@@ -410,7 +410,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = elements[edx].type->ber_decoder(opt_codec_ctx,
+		rval = elements[edx].type->op->ber_decoder(opt_codec_ctx,
 				elements[edx].type,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
@@ -538,7 +538,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
-		erval = elm->type->der_encoder(elm->type, memb_ptr,
+		erval = elm->type->op->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
 			0, 0);
 		if(erval.encoded == -1)
@@ -573,7 +573,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
 		}
-		tmperval = elm->type->der_encoder(elm->type, memb_ptr,
+		tmperval = elm->type->op->der_encoder(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag,
 			cb, app_key);
 		if(tmperval.encoded == -1)
@@ -673,7 +673,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			}
 
 			/* Invoke the inner type decoder, m.b. multiple times */
-			tmprval = elm->type->xer_decoder(opt_codec_ctx,
+			tmprval = elm->type->op->xer_decoder(opt_codec_ctx,
 					elm->type, memb_ptr2, elm->name,
 					buf_ptr, size);
 			XER_ADVANCE(tmprval.consumed);
@@ -776,8 +776,8 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				/*
 				 * Search which member corresponds to this tag.
 				 */
-                size_t n;
-                size_t edx_end = edx + elements[edx].optional + 1;
+				size_t n;
+				size_t edx_end = edx + elements[edx].optional + 1;
 				if(edx_end > td->elements_count)
 					edx_end = td->elements_count;
 				for(n = edx; n < edx_end; n++) {
@@ -885,7 +885,7 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 
 		/* Print the member itself */
-		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
+		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
 			ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
 
@@ -937,7 +937,7 @@ SEQUENCE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 			return -1;
 
 		/* Print the member itself */
-		ret = elm->type->print_struct(elm->type, memb_ptr, ilevel + 1,
+		ret = elm->type->op->print_struct(elm->type, memb_ptr, ilevel + 1,
 			cb, app_key);
 		if(ret) return ret;
 	}
@@ -1031,7 +1031,7 @@ asn_dec_rval_t
 SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                      const asn_per_constraints_t *constraints, void **sptr,
                      asn_per_data_t *pd) {
-    asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
 	void *st = *sptr;	/* Target structure. */
 	int extpresent;		/* Extension additions are present */
 	uint8_t *opres;		/* Presence of optional root members */
@@ -1082,7 +1082,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	 */
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
-        void *memb_ptr;		/* Pointer to the member */
+		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
 
 		if(IN_EXTENSION_GROUP(specs, edx))
@@ -1121,13 +1121,13 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/* Fetch the member from the stream */
 		ASN_DEBUG("Decoding member \"%s\" in %s", elm->name, td->name);
 
-        if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
-            rv = OPEN_TYPE_uper_get(opt_codec_ctx, td, st, elm, pd);
-        } else {
-            rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
-                                        elm->per_constraints, memb_ptr2, pd);
-        }
-        if(rv.code != RC_OK) {
+		if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+			rv = OPEN_TYPE_uper_get(opt_codec_ctx, td, st, elm, pd);
+		} else {
+            		rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
+					elm->per_constraints, memb_ptr2, pd);
+		}
+		if(rv.code != RC_OK) {
 			ASN_DEBUG("Failed decode %s in %s",
 				elm->name, td->name);
 			FREEMEM(opres);
@@ -1304,7 +1304,7 @@ asn_enc_rval_t
 SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
                      const asn_per_constraints_t *constraints, void *sptr,
                      asn_per_outp_t *po) {
-    asn_SEQUENCE_specifics_t *specs
+	asn_SEQUENCE_specifics_t *specs
 		= (asn_SEQUENCE_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int n_extensions;
@@ -1327,7 +1327,7 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 	 */
 	if(specs->ext_before >= 0) {
 		n_extensions = SEQUENCE_handle_extensions(td, sptr, 0, 0);
-        if(n_extensions < 0)
+		if(n_extensions < 0)
 			ASN__ENCODE_FAILED;
 		if(per_put_few_bits(po, n_extensions ? 1 : 0, 1))
 			ASN__ENCODE_FAILED;
@@ -1405,7 +1405,7 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 			continue;
 
 		ASN_DEBUG("Encoding %s->%s", td->name, elm->name);
-		er = elm->type->uper_encoder(elm->type, elm->per_constraints,
+		er = elm->type->op->uper_encoder(elm->type, elm->per_constraints,
 			*memb_ptr2, po);
 		if(er.encoded == -1)
 			return er;
@@ -1460,10 +1460,36 @@ SEQUENCE_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
             bmemb = (const void *)((const char *)bptr + elm->memb_offset);
 		}
 
-        ret = elm->type->compare_struct(elm->type, amemb, bmemb);
+        ret = elm->type->op->compare_struct(elm->type, amemb, bmemb);
         if(ret != 0) return ret;
     }
 
     return 0;
 }
+
+asn_TYPE_operation_t asn_OP_SEQUENCE = {
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_compare,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	SEQUENCE_decode_oer,
+	SEQUENCE_encode_oer,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
+	SEQUENCE_decode_uper,
+	SEQUENCE_encode_uper,
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
 

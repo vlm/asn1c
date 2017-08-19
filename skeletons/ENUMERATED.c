@@ -14,9 +14,7 @@
 static const ber_tlv_tag_t asn_DEF_ENUMERATED_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
-	"ENUMERATED",
-	"ENUMERATED",
+asn_TYPE_operation_t asn_OP_ENUMERATED = {
 	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,			/* Implemented in terms of INTEGER */
 	INTEGER_compare,		/* Implemented in terms of INTEGER */
@@ -39,7 +37,13 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 	ENUMERATED_decode_uper,	/* Unaligned PER decoder */
 	ENUMERATED_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
+	"ENUMERATED",
+	"ENUMERATED",
+	&asn_OP_ENUMERATED,
+	asn_generic_no_constraint,
 	asn_DEF_ENUMERATED_tags,
 	sizeof(asn_DEF_ENUMERATED_tags) / sizeof(asn_DEF_ENUMERATED_tags[0]),
 	asn_DEF_ENUMERATED_tags,	/* Same as above */

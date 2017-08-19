@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t T61String_t;	/* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_T61String;
+extern asn_TYPE_operation_t asn_OP_T61String;
 
 #define T61String_free          OCTET_STRING_free
 #define T61String_print         OCTET_STRING_print

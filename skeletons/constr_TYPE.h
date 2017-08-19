@@ -55,9 +55,9 @@ typedef struct asn_struct_ctx_s {
 typedef void (asn_struct_free_f)(
 		const struct asn_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr, int free_contents_only);
-#define	ASN_STRUCT_FREE(asn_DEF, ptr)	(asn_DEF).free_struct(&(asn_DEF),ptr,0)
+#define	ASN_STRUCT_FREE(asn_DEF, ptr)	(asn_DEF).op->free_struct(&(asn_DEF),ptr,0)
 #define	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr)	\
-					(asn_DEF).free_struct(&(asn_DEF),ptr,1)
+					(asn_DEF).op->free_struct(&(asn_DEF),ptr,1)
 
 /*
  * Print the structure according to its specification.
@@ -104,16 +104,10 @@ typedef asn_type_selector_result_t(asn_type_selector_f)(
     const void *parent_structure_ptr);
 
 /*
- * The definitive description of the destination language's structure.
+ * Generalized functions for dealing with the speciic type.
+ * May be directly invoked by applications.
  */
-typedef struct asn_TYPE_descriptor_s {
-	const char *name;	/* A name of the ASN.1 type. "" in some cases. */
-	const char *xml_tag;	/* Name used in XML tag */
-
-	/*
-	 * Generalized functions for dealing with the specific type.
-	 * May be directly invoked by applications.
-	 */
+typedef struct asn_TYPE_operation_s {
 	asn_struct_free_f  *free_struct;	/* Free the structure */
 	asn_struct_print_f *print_struct;	/* Human readable output */
 	asn_struct_compare_f *compare_struct;	/* Compare two structures */
@@ -126,6 +120,22 @@ typedef struct asn_TYPE_descriptor_s {
 	oer_type_encoder_f *oer_encoder;	/* Canonical OER encoder */
 	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
 	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
+	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
+} asn_TYPE_operation_t;
+
+/*
+ * The definitive description of the destination language's structure.
+ */
+typedef struct asn_TYPE_descriptor_s {
+	const char *name;	/* A name of the ASN.1 type. "" in some cases. */
+	const char *xml_tag;	/* Name used in XML tag */
+
+	/*
+	 * Generalized functions for dealing with the specific type.
+	 * May be directly invoked by applications.
+	 */
+	asn_TYPE_operation_t *op;
+	asn_constr_check_f *check_constraints;	/* Constraints validator */
 
 	/***********************************************************************
 	 * Internally useful members. Not to be used by applications directly. *
@@ -134,7 +144,6 @@ typedef struct asn_TYPE_descriptor_s {
 	/*
 	 * Tags that are expected to occur.
 	 */
-	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
 	const ber_tlv_tag_t *tags;	/* Effective tags sequence for this type */
 	unsigned tags_count;			/* Number of tags which are expected */
 	const ber_tlv_tag_t *all_tags;	/* Every tag for BER/containment */

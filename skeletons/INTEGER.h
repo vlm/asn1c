@@ -16,6 +16,7 @@ extern "C" {
 typedef ASN__PRIMITIVE_TYPE_t INTEGER_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_INTEGER;
+extern asn_TYPE_operation_t asn_OP_INTEGER;
 
 /* Map with <tag> to integer value association */
 typedef struct asn_INTEGER_enum_map_s {

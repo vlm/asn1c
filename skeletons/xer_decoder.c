@@ -34,7 +34,7 @@ xer_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Invoke type-specific decoder.
 	 */
-	return td->xer_decoder(opt_codec_ctx, td, struct_ptr, 0, buffer, size);
+	return td->op->xer_decoder(opt_codec_ctx, td, struct_ptr, 0, buffer, size);
 }
 
 

@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t GraphicString_t;	/* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_GraphicString;
+extern asn_TYPE_operation_t asn_OP_GraphicString;
 
 #define GraphicString_free          OCTET_STRING_free
 #define GraphicString_print         OCTET_STRING_print

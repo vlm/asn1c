@@ -114,18 +114,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_ch_4 = {
 	"ch",
 	"ch",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -204,18 +194,8 @@ static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice = {
 	"Choice",
 	"Choice",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -310,18 +290,8 @@ static asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",
 	"Choice2",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

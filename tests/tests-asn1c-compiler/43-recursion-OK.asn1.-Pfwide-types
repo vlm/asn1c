@@ -71,17 +71,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_t_member1_2 = {
 	"t-member1",
 	"t-member1",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_t_member1_tags_2,
 	sizeof(asn_DEF_t_member1_tags_2)
 		/sizeof(asn_DEF_t_member1_tags_2[0]), /* 1 */
@@ -120,17 +111,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_t_member2_4 = {
 	"t-member2",
 	"t-member2",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
-	SEQUENCE_OF_compare,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_t_member2_tags_4,
 	sizeof(asn_DEF_t_member2_tags_4)
 		/sizeof(asn_DEF_t_member2_tags_4[0]), /* 1 */
@@ -211,17 +193,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Test_structure_1_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Test_structure_1 = {
 	"Test-structure-1",
 	"Test-structure-1",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Test_structure_1_tags_1,
 	sizeof(asn_DEF_Test_structure_1_tags_1)
 		/sizeof(asn_DEF_Test_structure_1_tags_1[0]), /* 1 */
@@ -315,17 +288,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_or_3 = {
 	"or",
 	"or",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_or_tags_3,
 	sizeof(asn_DEF_or_tags_3)
 		/sizeof(asn_DEF_or_tags_3[0]) - 1, /* 1 */
@@ -404,17 +368,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice_1_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Choice_1 = {
 	"Choice-1",
 	"Choice-1",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -506,17 +461,8 @@ asn_SET_specifics_t asn_SPC_Test_structure_2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Test_structure_2 = {
 	"Test-structure-2",
 	"Test-structure-2",
-	SET_free,
-	SET_print,
-	SET_compare,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Test_structure_2_tags_1,
 	sizeof(asn_DEF_Test_structure_2_tags_1)
 		/sizeof(asn_DEF_Test_structure_2_tags_1[0]), /* 1 */
@@ -610,17 +556,8 @@ asn_SET_specifics_t asn_SPC_Test_structure_3_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Test_structure_3 = {
 	"Test-structure-3",
 	"Test-structure-3",
-	SET_free,
-	SET_print,
-	SET_compare,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Test_structure_3_tags_1,
 	sizeof(asn_DEF_Test_structure_3_tags_1)
 		/sizeof(asn_DEF_Test_structure_3_tags_1[0]), /* 1 */

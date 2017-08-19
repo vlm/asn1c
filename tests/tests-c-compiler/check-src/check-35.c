@@ -265,7 +265,7 @@ partial_read(uint8_t *data, size_t size) {
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
-			asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+			ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_T, &t);
 		}
 	}
 }
@@ -315,12 +315,12 @@ main(int ac, char **av) {
 
 	check(&t, buf1, sizeof(buf1) + 10, sizeof(buf1));
 	compare(&t, buf1_reconstr, sizeof(buf1_reconstr));
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_T, &t);
 	check_xer(buf1, sizeof(buf1), "<T><c><false/></c><b><b2>z</b2></b><a>=&lt;&amp;&gt;</a><d><r-oid>85.79</r-oid></d></T>");
 
 	check(&t, buf2, sizeof(buf2) + 10, sizeof(buf2));
 	compare(&t, buf2_reconstr, sizeof(buf2_reconstr));
-	asn_DEF_T.free_struct(&asn_DEF_T, &t, 1);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_T, &t);
 	check_xer(buf2, sizeof(buf2), "<T><c><true/></c><b><b1>z</b1></b><a>=&lt;&amp;&gt;</a><d><oid>2.1</oid></d></T>");
 
 	/* Split the buffer in parts and check decoder restartability */

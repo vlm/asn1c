@@ -129,7 +129,7 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 			" chunks %zd\n",
 			size, fname, how==AS_PER?"PER":"XER", csize);
 
-		if(st) asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
+		if(st) ASN_STRUCT_FREE(asn_DEF_PDU, st);
 		st = 0;
 
 		do {
@@ -200,7 +200,7 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 		} else {
 			assert(rval.code != RC_OK);
 			fprintf(stderr, "Failed, but this was expected\n");
-			asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
+			ASN_STRUCT_FREE(asn_DEF_PDU, st);
 			st = 0;	/* ignore leak for now */
 		}
 	}
@@ -289,7 +289,7 @@ process_XER_data(const char *fname, enum expectation expectation, unsigned char 
 		break;
 	}
 
-	asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
+	ASN_STRUCT_FREE(asn_DEF_PDU, st);
 }
 
 /*

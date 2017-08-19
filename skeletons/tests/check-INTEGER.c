@@ -166,7 +166,7 @@ check_xer(int tofail, char *xmldata, long orig_value) {
 
 	assert(value == orig_value);
 
-	asn_DEF_INTEGER.free_struct(&asn_DEF_INTEGER, st, 0);
+	ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
 }
 
 int
