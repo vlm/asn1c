@@ -1,3 +1,6 @@
+@CODE_COVERAGE_RULES@
+
+AM_CFLAGS = @ADD_CFLAGS@
 
 noinst_LTLIBRARIES = libasn1common.la
 
