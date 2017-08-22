@@ -85,7 +85,8 @@ enum asn_strtox_result_e asn_strtoimax_lim(const char *str, const char **end, in
 /*
  * Convert the integer value into the corresponding enumeration map entry.
  */
-const asn_INTEGER_enum_map_t *INTEGER_map_value2enum(asn_INTEGER_specifics_t *specs, long value);
+const asn_INTEGER_enum_map_t *INTEGER_map_value2enum(
+    const asn_INTEGER_specifics_t *specs, long value);
 
 #ifdef __cplusplus
 }

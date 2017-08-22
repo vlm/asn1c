@@ -109,15 +109,18 @@ INTEGER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	return der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
 }
 
-static const asn_INTEGER_enum_map_t *INTEGER_map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop);
+static const asn_INTEGER_enum_map_t *INTEGER_map_enum2value(
+    const asn_INTEGER_specifics_t *specs, const char *lstart,
+    const char *lstop);
 
 /*
  * INTEGER specific human-readable output.
  */
 static ssize_t
 INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key, int plainOrXER) {
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
-	char scratch[32];	/* Enough for 64-bit integer */
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    char scratch[32];	/* Enough for 64-bit integer */
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
 	intmax_t value;
@@ -241,8 +244,9 @@ INTEGER__compar_enum2value(const void *kp, const void *am) {
 }
 
 static const asn_INTEGER_enum_map_t *
-INTEGER_map_enum2value(asn_INTEGER_specifics_t *specs, const char *lstart, const char *lstop) {
-	const asn_INTEGER_enum_map_t *el_found;
+INTEGER_map_enum2value(const asn_INTEGER_specifics_t *specs, const char *lstart,
+                       const char *lstop) {
+    const asn_INTEGER_enum_map_t *el_found;
 	int count = specs ? specs->map_count : 0;
 	struct e2v_key key;
 	const char *lp;
@@ -289,7 +293,7 @@ INTEGER__compar_value2enum(const void *kp, const void *am) {
 }
 
 const asn_INTEGER_enum_map_t *
-INTEGER_map_value2enum(asn_INTEGER_specifics_t *specs, long value) {
+INTEGER_map_value2enum(const asn_INTEGER_specifics_t *specs, long value) {
 	int count = specs ? specs->map_count : 0;
 	if(!count) return 0;
 	return (asn_INTEGER_enum_map_t *)bsearch(&value, specs->value2enum,
@@ -417,7 +421,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 			if(state == ST_LEADSPACE) {
 				const asn_INTEGER_enum_map_t *el;
 				el = INTEGER_map_enum2value(
-					(asn_INTEGER_specifics_t *)
+					(const asn_INTEGER_specifics_t *)
 					td->specifics, lstart, lstop);
 				if(el) {
 					ASN_DEBUG("Found \"%s\" => %ld",
@@ -568,8 +572,9 @@ asn_dec_rval_t
 INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                     const asn_per_constraints_t *constraints, void **sptr,
                     asn_per_data_t *pd) {
-    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
-	asn_dec_rval_t rval = { RC_OK, 0 };
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_dec_rval_t rval = { RC_OK, 0 };
 	INTEGER_t *st = (INTEGER_t *)*sptr;
 	const asn_per_constraint_t *ct;
 	int repeat;
@@ -680,8 +685,9 @@ asn_enc_rval_t
 INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
                     const asn_per_constraints_t *constraints, void *sptr,
                     asn_per_outp_t *po) {
-    asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
-	asn_enc_rval_t er;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_enc_rval_t er;
 	INTEGER_t *st = (INTEGER_t *)sptr;
 	const uint8_t *buf;
 	const uint8_t *end;

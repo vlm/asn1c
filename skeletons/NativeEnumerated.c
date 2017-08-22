@@ -58,9 +58,10 @@ asn_enc_rval_t
 NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
         int ilevel, enum xer_encoder_flags_e flags,
                 asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
-        asn_enc_rval_t er;
-        const long *native = (const long *)sptr;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_enc_rval_t er;
+    const long *native = (const long *)sptr;
 	const asn_INTEGER_enum_map_t *el;
 
         (void)ilevel;
@@ -88,8 +89,9 @@ asn_dec_rval_t
 NativeEnumerated_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, const asn_per_constraints_t *constraints,
 	void **sptr, asn_per_data_t *pd) {
-	asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
-	asn_dec_rval_t rval = { RC_OK, 0 };
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_dec_rval_t rval = { RC_OK, 0 };
 	long *native = (long *)*sptr;
 	const asn_per_constraint_t *ct;
 	long value;
@@ -154,8 +156,9 @@ asn_enc_rval_t
 NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
                              const asn_per_constraints_t *constraints,
                              void *sptr, asn_per_outp_t *po) {
-    asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
-	asn_enc_rval_t er;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_enc_rval_t er;
 	long native, value;
 	const asn_per_constraint_t *ct;
 	int inext = 0;
