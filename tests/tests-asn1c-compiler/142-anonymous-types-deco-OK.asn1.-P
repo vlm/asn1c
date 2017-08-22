@@ -1,0 +1,527 @@
+
+/*** <<< INCLUDES [CommonType] >>> ***/
+
+#include "Type1.h"
+#include "Type2.h"
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [CommonType] >>> ***/
+
+typedef enum CommonType_PR {
+	CommonType_PR_NOTHING,	/* No components present */
+	CommonType_PR_t1,
+	CommonType_PR_t2
+} CommonType_PR;
+
+/*** <<< TYPE-DECLS [CommonType] >>> ***/
+
+typedef struct CommonType {
+	CommonType_PR present;
+	union CommonType_u {
+		Type1_t	 t1;
+		Type2_t	 t2;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} CommonType_t;
+
+/*** <<< FUNC-DECLS [CommonType] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_CommonType;
+
+/*** <<< STAT-DEFS [CommonType] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_CommonType_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct CommonType, choice.t1),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_Type1,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "t1"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct CommonType, choice.t2),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_Type2,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "t2"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_CommonType_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* t1 */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* t2 */
+};
+static asn_CHOICE_specifics_t asn_SPC_CommonType_specs_1 = {
+	sizeof(struct CommonType),
+	offsetof(struct CommonType, _asn_ctx),
+	offsetof(struct CommonType, present),
+	sizeof(((struct CommonType *)0)->present),
+	asn_MAP_CommonType_tag2el_1,
+	2,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_CommonType = {
+	"CommonType",
+	"CommonType",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_compare,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_CommonType_1,
+	2,	/* Elements count */
+	&asn_SPC_CommonType_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Type1] >>> ***/
+
+#include <OCTET_STRING.h>
+#include <constr_SEQUENCE.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Type1] >>> ***/
+
+typedef enum Type1_PR {
+	Type1_PR_NOTHING,	/* No components present */
+	Type1_PR_anonType
+} Type1_PR;
+
+/*** <<< TYPE-DECLS [Type1] >>> ***/
+
+typedef struct Type1 {
+	Type1_PR present;
+	union Type1_u {
+		struct anonType {
+			OCTET_STRING_t	 x;
+			OCTET_STRING_t	 y;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} anonType;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Type1_t;
+
+/*** <<< FUNC-DECLS [Type1] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Type1;
+extern asn_CHOICE_specifics_t asn_SPC_Type1_specs_1;
+extern asn_TYPE_member_t asn_MBR_Type1_1[1];
+
+/*** <<< CODE [Type1] >>> ***/
+
+static int
+memb_x_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = st->size;
+	
+	if((size == 32)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_y_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = st->size;
+	
+	if((size == 32)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< STAT-DEFS [Type1] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_anonType_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct anonType, x),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_OCTET_STRING,
+		.type_selector = 0,
+		.memb_constraints = memb_x_constraint_2,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "x"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct anonType, y),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_OCTET_STRING,
+		.type_selector = 0,
+		.memb_constraints = memb_y_constraint_2,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "y"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_anonType_tags_2[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_anonType_tag2el_2[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* x */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* y */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
+	sizeof(struct anonType),
+	offsetof(struct anonType, _asn_ctx),
+	asn_MAP_anonType_tag2el_2,
+	2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_anonType_2 = {
+	"anonType",
+	"anonType",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_compare,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_anonType_tags_2,
+	sizeof(asn_DEF_anonType_tags_2)
+		/sizeof(asn_DEF_anonType_tags_2[0]) - 1, /* 1 */
+	asn_DEF_anonType_tags_2,	/* Same as above */
+	sizeof(asn_DEF_anonType_tags_2)
+		/sizeof(asn_DEF_anonType_tags_2[0]), /* 2 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_anonType_2,
+	2,	/* Elements count */
+	&asn_SPC_anonType_specs_2	/* Additional specs */
+};
+
+asn_TYPE_member_t asn_MBR_Type1_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Type1, choice.anonType),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_anonType_2,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "anonType"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_Type1_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* anonType */
+};
+asn_CHOICE_specifics_t asn_SPC_Type1_specs_1 = {
+	sizeof(struct Type1),
+	offsetof(struct Type1, _asn_ctx),
+	offsetof(struct Type1, present),
+	sizeof(((struct Type1 *)0)->present),
+	asn_MAP_Type1_tag2el_1,
+	1,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_Type1 = {
+	"Type1",
+	"Type1",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_compare,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Type1_1,
+	1,	/* Elements count */
+	&asn_SPC_Type1_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Type2] >>> ***/
+
+#include <OCTET_STRING.h>
+#include <constr_SEQUENCE.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [Type2] >>> ***/
+
+typedef enum Type2_PR {
+	Type2_PR_NOTHING,	/* No components present */
+	Type2_PR_anonType
+} Type2_PR;
+
+/*** <<< TYPE-DECLS [Type2] >>> ***/
+
+typedef struct Type2 {
+	Type2_PR present;
+	union Type2_u {
+		struct anonType {
+			OCTET_STRING_t	 x;
+			OCTET_STRING_t	 y;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} anonType;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Type2_t;
+
+/*** <<< FUNC-DECLS [Type2] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Type2;
+extern asn_CHOICE_specifics_t asn_SPC_Type2_specs_1;
+extern asn_TYPE_member_t asn_MBR_Type2_1[1];
+
+/*** <<< CODE [Type2] >>> ***/
+
+static int
+memb_x_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = st->size;
+	
+	if((size == 48)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+static int
+memb_y_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	size = st->size;
+	
+	if((size == 48)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< STAT-DEFS [Type2] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_anonType_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct anonType, x),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_OCTET_STRING,
+		.type_selector = 0,
+		.memb_constraints = memb_x_constraint_2,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "x"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct anonType, y),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_OCTET_STRING,
+		.type_selector = 0,
+		.memb_constraints = memb_y_constraint_2,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "y"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_anonType_tags_2[] = {
+	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_anonType_tag2el_2[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* x */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* y */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
+	sizeof(struct anonType),
+	offsetof(struct anonType, _asn_ctx),
+	asn_MAP_anonType_tag2el_2,
+	2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_anonType_2 = {
+	"anonType",
+	"anonType",
+	SEQUENCE_free,
+	SEQUENCE_print,
+	SEQUENCE_compare,
+	SEQUENCE_constraint,
+	SEQUENCE_decode_ber,
+	SEQUENCE_encode_der,
+	SEQUENCE_decode_xer,
+	SEQUENCE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_anonType_tags_2,
+	sizeof(asn_DEF_anonType_tags_2)
+		/sizeof(asn_DEF_anonType_tags_2[0]) - 1, /* 1 */
+	asn_DEF_anonType_tags_2,	/* Same as above */
+	sizeof(asn_DEF_anonType_tags_2)
+		/sizeof(asn_DEF_anonType_tags_2[0]), /* 2 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_anonType_2,
+	2,	/* Elements count */
+	&asn_SPC_anonType_specs_2	/* Additional specs */
+};
+
+asn_TYPE_member_t asn_MBR_Type2_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Type2, choice.anonType),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_anonType_2,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "anonType"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_Type2_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* anonType */
+};
+asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
+	sizeof(struct Type2),
+	offsetof(struct Type2, _asn_ctx),
+	offsetof(struct Type2, present),
+	sizeof(((struct Type2 *)0)->present),
+	asn_MAP_Type2_tag2el_1,
+	1,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_Type2 = {
+	"Type2",
+	"Type2",
+	CHOICE_free,
+	CHOICE_print,
+	CHOICE_compare,
+	CHOICE_constraint,
+	CHOICE_decode_ber,
+	CHOICE_encode_der,
+	CHOICE_decode_xer,
+	CHOICE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	0, 0,	/* No PER support, use "-gen-PER" to enable */
+	CHOICE_outmost_tag,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Type2_1,
+	1,	/* Elements count */
+	&asn_SPC_Type2_specs_1	/* Additional specs */
+};
+
