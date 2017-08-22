@@ -195,16 +195,21 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			 * This is a reference to a type defined in a class.
 			 * Resolve it and use instead.
 			 */
-			tmp.expr = asn1f_class_access_ex(arg->asn,
-				arg->expr->module, arg->expr, expr->rhs_pspecs, expr->reference);
-			if(!tmp.expr) return NULL;
+            tmp.expr = WITH_MODULE_NAMESPACE(
+                arg->expr->module, expr_ns,
+                asn1f_class_access_ex(arg->asn, arg->expr->module, expr_ns,
+                                      arg->expr, expr->rhs_pspecs,
+                                      expr->reference));
+            if(!tmp.expr) return NULL;
 
 			return asn1c_type_name(&tmp, tmp.expr, _format);
 		}
 
-		terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+        terminal = WITH_MODULE_NAMESPACE(
+            expr->module, expr_ns,
+            asn1f_find_terminal_type_ex(arg->asn, expr_ns, expr));
 
-		if(_format == TNF_RSAFE) {
+        if(_format == TNF_RSAFE) {
 			if(terminal && terminal->expr_type & ASN_CONSTR_MASK) {
 				typename = terminal->Identifier;
 			}
@@ -327,8 +332,10 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 #define	LEFTMIN		(-RIGHTMAX-1)	/* of 32-bit integer type */
 
 	/* Descend to the terminal type */
-	expr = asn1f_find_terminal_type_ex(arg->asn, expr);
-	if(expr == 0) return FL_NOTFIT;
+    expr = WITH_MODULE_NAMESPACE(
+        expr->module, expr_ns,
+        asn1f_find_terminal_type_ex(arg->asn, expr_ns, expr));
+    if(expr == 0) return FL_NOTFIT;
 
 	/* The "fits into long" operation is relevant only for integer types */
 	switch(expr->expr_type) {

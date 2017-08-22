@@ -376,7 +376,7 @@ _asn1f_check_if_tag_must_be_explicit(arg_t *arg, asn1p_expr_t *v) {
 	 */
 	save_tag = v->tag;			/* Save existing tag */
 	memset(&v->tag, 0, sizeof(v->tag));	/* Remove it temporarily */
-	ret = asn1f_fetch_outmost_tag(arg->asn, arg->mod, v, &tag, 0);
+	ret = asn1f_fetch_outmost_tag(arg->asn, arg->ns, arg->mod, v, &tag, 0);
 	v->tag = save_tag;			/* Restore the tag back */
 
 	if(ret == 0) return 0;	/* If found tag, it's okay */
@@ -404,9 +404,9 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 	int ra, rb;
 	int ret;
 
-	ra = asn1f_fetch_outmost_tag(arg->asn, arg->mod, a,
+	ra = asn1f_fetch_outmost_tag(arg->asn, arg->ns, arg->mod, a,
 			&ta, AFT_IMAGINARY_ANY);
-	rb = asn1f_fetch_outmost_tag(arg->asn, arg->mod, b,
+	rb = asn1f_fetch_outmost_tag(arg->asn, arg->ns, arg->mod, b,
 			&tb, AFT_IMAGINARY_ANY);
 
 	/*
@@ -475,12 +475,10 @@ _asn1f_compare_tags(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 
 		DEBUG(" %s is a type reference", a->Identifier);
 
-		a = asn1f_lookup_symbol(arg,
-			a->module, a->rhs_pspecs, a->reference);
-		if(!a) return 0;	/* Already FATAL()'ed somewhere else */
-		WITH_MODULE(a->module, ret = _asn1f_compare_tags(arg, a, b));
-		return ret;
-	}
+        a = asn1f_lookup_symbol(arg, a->rhs_pspecs, a->reference);
+        if(!a) return 0;	/* Already FATAL()'ed somewhere else */
+        return WITH_MODULE(a->module, _asn1f_compare_tags(arg, a, b));
+    }
 
 	if(ra && a->expr_type == ASN_CONSTR_CHOICE) {
 		asn1p_expr_t *v;

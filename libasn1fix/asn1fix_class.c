@@ -1,7 +1,7 @@
 #include "asn1fix_internal.h"
 
 asn1p_expr_t *
-asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref) {
+asn1f_class_access(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref) {
 	asn1p_expr_t *ioclass;
 	asn1p_expr_t *classfield;
 	asn1p_expr_t *expr;
@@ -9,9 +9,11 @@ asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, co
 
 	assert(ref->comp_count > 1);
 
-	DEBUG("ClassAccess lookup (%s) for line %d", asn1f_printable_reference(ref), ref->_lineno);
+    DEBUG("ClassAccess lookup (%s%s) for line %d",
+          asn1f_printable_reference(ref), rhs_pspecs ? ", parameterized" : "",
+          ref->_lineno);
 
-	/*
+    /*
 	 * Fetch the first part of the reference (OBJECT or ObjectSet).
 	 * OBJECT.&<something>...
 	 * ObjectSet.&<something>...
@@ -20,17 +22,18 @@ asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, co
 
 	tmpref = *ref;
 	tmpref.comp_count = 1;
-	ioclass = asn1f_lookup_symbol(arg, mod, rhs_pspecs, &tmpref);
+	ioclass = asn1f_lookup_symbol(arg, rhs_pspecs, &tmpref);
 	if(ioclass == NULL) {
-		errno = ESRCH;
+        DEBUG("ClassAccess lookup (%s) failed",
+              asn1f_printable_reference(&tmpref));
+        errno = ESRCH;
 		return NULL;
 	}
 	if(ioclass->expr_type == A1TC_REFERENCE) {
-		ioclass = asn1f_lookup_symbol(arg,
-				ioclass->module,
-				ioclass->rhs_pspecs,
-				ioclass->reference);
-		if(ioclass == NULL) {
+        ioclass = WITH_MODULE(
+            ioclass->module,
+            asn1f_lookup_symbol(arg, ioclass->rhs_pspecs, ioclass->reference));
+        if(ioclass == NULL) {
 			errno = ESRCH;
 			return NULL;
 		}
@@ -65,7 +68,7 @@ asn1f_class_access(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, co
 		if(TQ_FIRST(&classfield->members)) {
 			/* Already have something */
 		} else {
-			expr = asn1p_expr_new(classfield->_lineno, mod);
+			expr = asn1p_expr_new(classfield->_lineno, arg->mod);
 			expr->expr_type = ASN_TYPE_ANY;
 			expr->meta_type = AMT_TYPE;
 			asn1p_expr_add(classfield, expr);

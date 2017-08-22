@@ -1,4 +1,5 @@
 #include "asn1fix_internal.h"
+#include <asn1_namespace.h>
 
 #define	ADD_TAG(skip, newtag)	do {					\
 	void *__p;							\
@@ -66,7 +67,7 @@ asn1f_fetch_tags_impl(arg_t *arg, struct asn1p_type_tag_s **tags, int count, int
 	if(expr->meta_type == AMT_TYPEREF) {
 		asn1p_expr_t *nexpr;
 		DEBUG("Following the reference %s", expr->Identifier);
-		nexpr = asn1f_lookup_symbol(arg, expr->module, expr->rhs_pspecs, expr->reference);
+		nexpr = asn1f_lookup_symbol(arg, expr->rhs_pspecs, expr->reference);
 		if(nexpr == NULL) {
 			if(errno != EEXIST)	/* -fknown-extern-type */
 				return -1;
@@ -139,13 +140,13 @@ asn1f_fetch_minimal_choice_root_tag(arg_t *arg, struct asn1p_type_tag_s *tag, en
 }
 
 int
-asn1f_fetch_outmost_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, enum asn1f_aft_flags_e flags) {
+asn1f_fetch_outmost_tag(asn1p_t *asn, asn1_namespace_t *ns, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s *tag, enum asn1f_aft_flags_e flags) {
 	struct asn1p_type_tag_s *tags;
 	int count;
 
 	flags |= AFT_FETCH_OUTMOST;
 
-	count = asn1f_fetch_tags(asn, mod, expr, &tags, flags);
+	count = asn1f_fetch_tags(asn, ns, mod, expr, &tags, flags);
 	if(count <= 0) return count;
 
 	*tag = tags[0];
@@ -155,13 +156,14 @@ asn1f_fetch_outmost_tag(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, s
 }
 
 int
-asn1f_fetch_tags(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s **tags_r, enum asn1f_aft_flags_e flags) {
+asn1f_fetch_tags(asn1p_t *asn, asn1_namespace_t *ns, asn1p_module_t *mod, asn1p_expr_t *expr, struct asn1p_type_tag_s **tags_r, enum asn1f_aft_flags_e flags) {
 	arg_t arg;
 	struct asn1p_type_tag_s *tags = 0;
 	int count;
 
 	memset(&arg, 0, sizeof(arg));
 	arg.asn = asn;
+	arg.ns = ns;
 	arg.mod = mod;
 	arg.expr = expr;
 

@@ -468,7 +468,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 	}
 
 	if(expr->reference &&
-		!asn1f_lookup_symbol(arg, arg->mod, expr->rhs_pspecs, expr->reference)) {
+		!asn1f_lookup_symbol(arg, expr->rhs_pspecs, expr->reference)) {
 
 		asn1p_ref_free(expr->reference);
 		new_ref = 0;

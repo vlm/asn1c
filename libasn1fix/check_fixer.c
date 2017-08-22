@@ -10,8 +10,11 @@
 #include <sysexits.h>
 #endif
 #include <errno.h>
+#include <libgen.h>
 
 #include "asn1fix.h"
+#include "asn1_buffer.h"
+#include "asn1_namespace.h"
 
 #ifndef TOP_SRCDIR
 #define TOP_SRCDIR_S    ".."
@@ -58,13 +61,18 @@ main(int ac, char **av) {
 	 * Go into a directory with tests.
 	 */
 	if(ac <= 1) {
-        const char *asn1_tests_dir = getenv("ASN1_TESTS_DIR");
-        if(!asn1_tests_dir)
-            asn1_tests_dir = TOP_SRCDIR_S "/tests/tests-asn1c-compiler";
-        fprintf(stderr, "Testing in %s...\n", asn1_tests_dir);
-        ret = chdir(asn1_tests_dir);
+        abuf *asn1_tests_dirname = abuf_new();
+        const char *top_srcdir = getenv("top_srcdir");
+        if(!top_srcdir) top_srcdir = TOP_SRCDIR_S;
+
+        abuf_printf(asn1_tests_dirname, "%s/tests/tests-asn1c-compiler",
+                    top_srcdir);
+
+        fprintf(stderr, "Testing in %s...\n", top_srcdir);
+        ret = chdir(asn1_tests_dirname->buffer);
         if(ret == -1)
-            fprintf(stderr, "%s: %s\n", asn1_tests_dir, strerror(errno));
+            fprintf(stderr, "%s: %s\n", asn1_tests_dirname->buffer,
+                    strerror(errno));
         assert(ret == 0);
         /* For some reasons, tests could be hidden under extra tests dir. */
 #ifdef	_WIN32
@@ -195,17 +203,35 @@ check(const char *fname,
 	if(!asn) return r_value;
 
 	if(r_value == 0) {
+        char *fname_copy = strdup(fname);
+        char *test_dir = dirname(fname_copy);
+        abuf *skeletons_dirname = abuf_new();
 		asn1p_t *std_asn;
-		std_asn = asn1p_parse_file("../../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1", A1P_NOFLAGS);
-		if(std_asn) {
+
+        abuf_printf(skeletons_dirname,
+                    "%s/../../skeletons/standard-modules/"
+                    "ASN1C-UsefulInformationObjectClasses.asn1",
+                    test_dir);
+        free(fname_copy);
+
+        std_asn = asn1p_parse_file(skeletons_dirname->buffer, A1P_NOFLAGS);
+        if(std_asn) {
 			asn1p_module_t *mod;
 			while((mod = TQ_REMOVE(&(std_asn->modules), mod_next))) {
 				mod->_tags |= MT_STANDARD_MODULE;
 				TQ_ADD(&(asn->modules), mod, mod_next);
 			}
 			asn1p_delete(std_asn);
-		}
-	}
+
+            /* Allow referencing imported modules. */
+            asn1f_use_standard_namespaces(asn);
+		} else {
+            fprintf(stderr, "%s: %s\n", skeletons_dirname->buffer,
+                    strerror(errno));
+        }
+
+        abuf_free(skeletons_dirname);
+    }
 
 	/*
 	 * Perform semantical checks and fixes.
@@ -363,8 +389,6 @@ post_fix_check_element(asn1p_module_t *mod, asn1p_expr_t *check_expr) {
 		);
 		return -1;
 	}
-
-	assert(value->type = ATV_INTEGER);
 
 	return 0;
 }

@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <assert.h>
 
+#include <asn1_namespace.h>
 #include <asn1parser.h>
 #include <asn1fix_export.h>
 #include <asn1fix_crange.h>
@@ -753,8 +754,9 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			asn1print_constraint(tc->combined_constraints, flags);
 		}
 
-		top_parent = asn1f_find_terminal_type_ex(asn, tc);
-		if(top_parent) {
+        top_parent = WITH_MODULE_NAMESPACE(
+            tc->module, tc_ns, asn1f_find_terminal_type_ex(asn, tc_ns, tc));
+        if(top_parent) {
 			safe_printf("\n-- Practical constraints (%s): ",
 				top_parent->Identifier);
 			asn1print_constraint_explain(top_parent->Identifier,
@@ -859,7 +861,7 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 	INDENT("<!ELEMENT %s", expr->Identifier);
 
 	if(expr->expr_type == A1TC_REFERENCE) {
-		se = asn1f_find_terminal_type_ex(asn, expr);
+		se = WITH_MODULE_NAMESPACE(expr->module, expr_ns, asn1f_find_terminal_type_ex(asn, expr_ns, expr));
 		if(!se) {
 			safe_printf(" (ANY)");
 			return 0;

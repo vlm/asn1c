@@ -4,6 +4,8 @@
 #ifndef	ASN1FIX_VALUE_H
 #define	ASN1FIX_VALUE_H
 
+struct asn1p_namespace_s;   /* Forward declaration */
+
 /*
  * Resolve the value given by reference.
  * This function also takes a parameter which specifies the desired
@@ -16,7 +18,7 @@
  * -1/ESRCH:	Cannot find the terminal reference.
  */
 int asn1f_value_resolve(arg_t *arg, asn1p_expr_t *tc,
-	const enum asn1p_constraint_type_e *opt_constr_type);
+                        const enum asn1p_constraint_type_e *opt_constr_type);
 
 /*
  * Check if a value in value_expr refers to the enumeration or integer element

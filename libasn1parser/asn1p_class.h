@@ -4,8 +4,6 @@
 #ifndef	ASN1_PARSER_CLASS_H
 #define	ASN1_PARSER_CLASS_H
 
-#include "asn1p_ref.h"
-
 struct asn1p_expr_s;	/* Forward declaration */
 
 typedef struct asn1p_ioc_row_s {

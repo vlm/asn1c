@@ -64,8 +64,8 @@ asn1f_fix_bit_string_type(arg_t *arg) {
 			return -1;
 		} else if(v->value->type == ATV_REFERENCED) {
 			/* Resolve the value */
-			if(asn1f_value_resolve(arg, v, 0))
-				return -1;
+            if(asn1f_value_resolve(arg, v, 0))
+                return -1;
 		}
 		if(v->value->type != ATV_INTEGER
 		|| v->value->value.v_integer < 0) {

@@ -34,6 +34,8 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 	 */
 	TQ_FOR(mod, &(asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
+			arg->ns = asn1_namespace_new_from_module(mod, 0);
+
 			compiler_streams_t *cs = NULL;
 
 			if(asn1c_attach_streams(arg->expr))
@@ -52,6 +54,9 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 					arg->expr->_lineno);
 				return ret;
 			}
+
+			asn1_namespace_free(arg->ns);
+			arg->ns = 0;
 		}
 	}
 

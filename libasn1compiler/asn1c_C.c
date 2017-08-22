@@ -1260,9 +1260,11 @@ asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 		arg_t tmp;
 		int ret;
 
-		extract = asn1f_class_access_ex(arg->asn, arg->expr->module,
-			arg->expr, arg->expr->rhs_pspecs, ref);
-		if(extract == NULL)
+        extract = WITH_MODULE_NAMESPACE(
+            arg->expr->module, expr_ns,
+            asn1f_class_access_ex(arg->asn, arg->expr->module, expr_ns,
+                                  arg->expr, arg->expr->rhs_pspecs, ref));
+        if(extract == NULL)
 			return -1;
 
 		extract = asn1p_expr_clone(extract, 0);
@@ -1455,7 +1457,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		MKID(expr), expr->_type_unique_index);
 	INDENT(+1);
   {
-	asn1p_expr_t *terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+	asn1p_expr_t *terminal = asn1f_find_terminal_type_ex(arg->asn, asn->ns, expr);
 	char *type_name = asn1c_type_name(arg, expr, TNF_SAFE);
 	OUT("td->free_struct    = asn_DEF_%s.free_struct;\n",    type_name);
 	OUT("td->print_struct   = asn_DEF_%s.print_struct;\n",   type_name);
@@ -1676,9 +1678,11 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 						"asn_SPC_%s_specs_%d;\n", p, expr->_type_unique_index);
 				}
 			} else {
-				asn1p_expr_t *terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+                asn1p_expr_t *terminal = WITH_MODULE_NAMESPACE(
+                    expr->module, expr_ns,
+                    asn1f_find_terminal_type_ex(arg->asn, expr_ns, expr));
 
-				OUT("extern asn_%s_specifics_t ", asn1c_type_name(arg, terminal, TNF_SAFE));
+                OUT("extern asn_%s_specifics_t ", asn1c_type_name(arg, terminal, TNF_SAFE));
 				OUT("asn_SPC_%s_specs_%d;\n", MKID(expr), expr->_type_unique_index);
 			}
 		}
@@ -1868,9 +1872,11 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no, fte_e f
 
 	assert(el_no >= 0);
 
-	ret = asn1f_fetch_outmost_tag(arg->asn, arg->expr->module,
-			arg->expr, &tag, AFT_IMAGINARY_ANY);
-	if(ret == 0) {
+    ret = WITH_MODULE_NAMESPACE(
+        arg->expr->module, expr_ns,
+        asn1f_fetch_outmost_tag(arg->asn, expr_ns, arg->expr->module, arg->expr,
+                                &tag, AFT_IMAGINARY_ANY));
+    if(ret == 0) {
 		tag2el_t *te;
 		int new_count = (*count) + 1;
 		void *p;
@@ -1914,9 +1920,11 @@ _add_tag2el_member(arg_t *arg, tag2el_t **tag2el, int *count, int el_no, fte_e f
 	if(arg->expr->expr_type == A1TC_REFERENCE) {
 		arg_t tmp = *arg;
 		asn1p_expr_t *expr;
-		expr = asn1f_lookup_symbol_ex(tmp.asn, tmp.expr,
-			arg->expr->reference);
-		if(expr) {
+        expr = WITH_MODULE_NAMESPACE(
+            tmp.expr->module, expr_ns,
+            asn1f_lookup_symbol_ex(tmp.asn, expr_ns, tmp.expr,
+                                   arg->expr->reference));
+        if(expr) {
 			tmp.expr = expr;
 			return _add_tag2el_member(&tmp, tag2el, count, el_no, flags);
 		} else {
@@ -1977,16 +1985,20 @@ emit_tags_vectors(arg_t *arg, asn1p_expr_t *expr, int *tags_count_r, int *all_ta
 	*all_tags_count_r = 0;
 
 	/* Fetch a chain of tags */
-	tags_count = asn1f_fetch_tags(arg->asn, expr->module, expr, &tags, 0);
-	if(tags_count < 0) {
+    tags_count = WITH_MODULE_NAMESPACE(
+        expr->module, expr_ns,
+        asn1f_fetch_tags(arg->asn, expr_ns, expr->module, expr, &tags, 0));
+    if(tags_count < 0) {
 		DEBUG("fail to fetch tags for %s", expr->Identifier);
 		return -1;
 	}
 
 	/* Fetch a chain of tags */
-	all_tags_count = asn1f_fetch_tags(arg->asn, expr->module, expr,
-		&all_tags, AFT_FULL_COLLECT);
-	if(all_tags_count < 0) {
+    all_tags_count = WITH_MODULE_NAMESPACE(
+        expr->module, expr_ns,
+        asn1f_fetch_tags(arg->asn, expr_ns, expr->module, expr, &all_tags,
+                         AFT_FULL_COLLECT));
+    if(all_tags_count < 0) {
 		free(tags);
 		DEBUG("fail to fetch tags chain for %s", expr->Identifier);
 		return -1;
@@ -2051,8 +2063,10 @@ expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 	asn1p_expr_t *v;
 	int elements = 0;
 
-	topmost_parent = asn1f_find_terminal_type_ex(arg->asn, expr);
-	if(!topmost_parent) return 0;
+    topmost_parent = WITH_MODULE_NAMESPACE(
+        expr->module, expr_ns,
+        asn1f_find_terminal_type_ex(arg->asn, expr_ns, expr));
+    if(!topmost_parent) return 0;
 
 	if(!(topmost_parent->expr_type & ASN_CONSTR_MASK)
 	&& !(topmost_parent->expr_type == ASN_BASIC_INTEGER)
@@ -2071,7 +2085,7 @@ expr_elements_count(arg_t *arg, asn1p_expr_t *expr) {
 static asn1p_expr_type_e
 expr_get_type(arg_t *arg, asn1p_expr_t *expr) {
 	asn1p_expr_t *terminal;
-	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->ns, expr);
 	if(terminal) return terminal->expr_type;
 	return A1TC_INVALID;
 }
@@ -2410,7 +2424,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 		int extensible = 0;
 		int eidx = -1;
 
-		expr = asn1f_find_terminal_type_ex(arg->asn, expr);
+		expr = asn1f_find_terminal_type_ex(arg->asn, arg->ns, expr);
 		assert(expr);
 
 		TQ_FOR(v, &(expr->members), next) {
@@ -2899,10 +2913,11 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	int complex_contents;
 	char *p;
 
-	if(asn1f_fetch_outmost_tag(arg->asn,
-			expr->module, expr, &outmost_tag_s,
-			AFT_IMAGINARY_ANY)) {
-		outmost_tag = 0;
+    if(WITH_MODULE_NAMESPACE(
+           expr->module, expr_ns,
+           asn1f_fetch_outmost_tag(arg->asn, expr_ns, expr->module, expr,
+                                   &outmost_tag_s, AFT_IMAGINARY_ANY))) {
+        outmost_tag = 0;
 	} else {
 		outmost_tag = &outmost_tag_s;
 	}
@@ -3096,7 +3111,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 	char *p = MKID(expr);
 	char *p2 = (char *)0;
 
-	terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
+	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->ns, expr);
 
 	if(emit_member_OER_constraints(arg, expr, "type"))
 		return -1;
@@ -3476,8 +3491,9 @@ expr_break_recursion(arg_t *arg, asn1p_expr_t *expr) {
  */
 static asn1p_expr_t *
 terminal_structable(arg_t *arg, asn1p_expr_t *expr) {
-	asn1p_expr_t *terminal = asn1f_find_terminal_type_ex(arg->asn, expr);
-	if(terminal
+    asn1p_expr_t *terminal =
+        asn1f_find_terminal_type_ex(arg->asn, arg->ns, expr);
+    if(terminal
 	&& !terminal->parent_expr
 	&& (terminal->expr_type & ASN_CONSTR_MASK)) {
 		return terminal;
@@ -3612,13 +3628,17 @@ static int compar_cameo(const void *ap, const void *bp) {
 	struct asn1p_type_tag_s atag, btag;
 	arg_t *arg = cameo_arg;
 
-	if(asn1f_fetch_outmost_tag(arg->asn, a->expr->module, a->expr,
-			&atag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE))
-		return 1;
+    if(WITH_MODULE_NAMESPACE(a->expr->module, expr_ns,
+                             asn1f_fetch_outmost_tag(
+                                 arg->asn, expr_ns, a->expr->module, a->expr,
+                                 &atag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE)))
+        return 1;
 
-	if(asn1f_fetch_outmost_tag(arg->asn, b->expr->module, b->expr,
-			&btag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE))
-		return -1;
+    if(WITH_MODULE_NAMESPACE(b->expr->module, expr_ns,
+                             asn1f_fetch_outmost_tag(
+                                 arg->asn, expr_ns, b->expr->module, b->expr,
+                                 &btag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE)))
+        return -1;
 
 	if(atag.tag_class < btag.tag_class)
 		return -1;

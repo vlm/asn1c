@@ -429,7 +429,7 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	asn1p_expr_t *terminal;
 	char *tname;
 
-	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->expr);
+	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->ns, arg->expr);
 	if(terminal) {
 		OUT("/* The underlying type is %s */\n",
 			ASN_EXPR_TYPE2STR(terminal->expr_type));
@@ -704,7 +704,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 static asn1p_expr_type_e
 _find_terminal_type(arg_t *arg) {
 	asn1p_expr_t *expr;
-	expr = asn1f_find_terminal_type_ex(arg->asn, arg->expr);
+	expr = asn1f_find_terminal_type_ex(arg->asn, arg->ns, arg->expr);
 	if(expr) return expr->expr_type;
 	return A1TC_INVALID;
 }

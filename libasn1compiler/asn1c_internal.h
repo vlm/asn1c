@@ -40,6 +40,7 @@
 #endif
 
 #include "asn1compiler.h"
+#include "asn1_namespace.h"
 
 struct asn1c_ioc_table_and_objset_s;
 
@@ -53,17 +54,18 @@ typedef struct arg_s {
 
 	struct compiler_streams *target;
 
-	asn1p_t		*asn;
-	asn1p_expr_t	*expr;
+    asn1p_t *asn;
+    asn1_namespace_t *ns;
+    asn1p_expr_t *expr;
 
-	int embed;
+    int embed;
 } arg_t;
 
 /*
  * Logging.
  */
 #define	LOG(ll, fmt, args...)	do {			\
-		arg->logger_cb(ll, fmt, ##args);	\
+		arg->logger_cb(ll, fmt " @ line %d", ##args, __LINE__);	\
 	} while(0)
 #define	DEBUG(fmt, args...)	do {		\
 		if(arg->flags & A1C_DEBUG)	\

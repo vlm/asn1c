@@ -111,17 +111,19 @@ compare_specializations(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
 			continue;
 
 		if(ac->reference) {
-			ac = asn1f_lookup_symbol(arg,
-				ac->module, ac->rhs_pspecs, ac->reference);
-			if(!ac) break;
+            ac = WITH_MODULE(
+                ac->module,
+                asn1f_lookup_symbol(arg, ac->rhs_pspecs, ac->reference));
+            if(!ac) break;
 		}
 		if(bc->reference) {
-			bc = asn1f_lookup_symbol(arg,
-				bc->module, bc->rhs_pspecs, bc->reference);
-			if(!bc) break;
+            bc = WITH_MODULE(
+                bc->module,
+                asn1f_lookup_symbol(arg, bc->rhs_pspecs, bc->reference));
+            if(!bc) break;
 		}
-	  goto retry;
-	}
+        goto retry;
+    }
 
 	if(ac || bc)
 		/* Specializations do not match: different size option sets */

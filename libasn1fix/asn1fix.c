@@ -75,27 +75,33 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 		return -1;
 	}
 
-	/*
-	 * Process each module in the list.
-	 * PHASE I.
-	 */
-	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
-		ret = asn1f_fix_module__phase_1(&arg);
-		/*
-		 * These lines are used for illustration purposes.
-		 * RET2RVAL() is used everywhere else.
-		 */
-		if(ret == -1) fatals++;
-		if(ret == 1) warnings++;
-	}
-	/* PHASE II. */
-	TQ_FOR(arg.mod, &(asn->modules), mod_next) {
-		ret = asn1f_fix_module__phase_2(&arg);
-		if(ret == -1) fatals++;
-		if(ret == 1) warnings++;
-	}
+    /*
+     * Process each module in the list.
+     * PHASE I.
+     */
+    TQ_FOR(arg.mod, &(asn->modules), mod_next) {
+        arg.ns = asn1_namespace_new_from_module(arg.mod, 0);
+        ret = asn1f_fix_module__phase_1(&arg);
+        /*
+         * These lines are used for illustration purposes.
+         * RET2RVAL() is used everywhere else.
+         */
+        if(ret == -1) fatals++;
+        if(ret == 1) warnings++;
+        asn1_namespace_free(arg.ns);
+        arg.ns = 0;
+    }
+    /* PHASE II. */
+    TQ_FOR(arg.mod, &(asn->modules), mod_next) {
+        arg.ns = asn1_namespace_new_from_module(arg.mod, 0);
+        ret = asn1f_fix_module__phase_2(&arg);
+        if(ret == -1) fatals++;
+        if(ret == 1) warnings++;
+        asn1_namespace_free(arg.ns);
+        arg.ns = 0;
+    }
 
-	memset(&a1f_replace_me_with_proper_interface_arg, 0, sizeof(arg_t));
+    memset(&a1f_replace_me_with_proper_interface_arg, 0, sizeof(arg_t));
 
 	/*
 	 * Compute a return value.
@@ -418,8 +424,8 @@ asn1f_resolve_constraints(arg_t *arg) {
 
 	DEBUG("(%s)", arg->expr->Identifier);
 
-	ret = asn1constraint_resolve(arg, arg->expr->constraints, etype, 0);
-	RET2RVAL(ret, rvalue);
+    ret = asn1constraint_resolve(arg, arg->expr->constraints, etype, 0);
+    RET2RVAL(ret, rvalue);
 
 	return rvalue;
 }

@@ -80,7 +80,9 @@ asn1c_get_ioc_table(arg_t *arg) {
         return safe_ioc_tao;
     }
 
-    objset = asn1f_lookup_symbol_ex(arg->asn, arg->expr, objset_ref);
+    objset = WITH_MODULE_NAMESPACE(
+        arg->expr->module, expr_ns,
+        asn1f_lookup_symbol_ex(arg->asn, expr_ns, arg->expr, objset_ref));
     if(!objset) {
         FATAL("Cannot found %s", asn1p_ref_string(objset_ref));
         return failed_ioc_tao;
@@ -97,7 +99,7 @@ emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
         int primitive_representation = 0;
 
         asn1p_expr_t *cv_type =
-            asn1f_find_terminal_type_ex(arg->asn, cell->value);
+            asn1f_find_terminal_type_ex(arg->asn, arg->ns, cell->value);
 
         switch(cv_type->expr_type) {
         case ASN_BASIC_INTEGER:
@@ -137,8 +139,10 @@ emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
 
         asn1p_expr_t *expr_value = cell->value;
         while(expr_value->value->type == ATV_REFERENCED) {
-            expr_value = asn1f_lookup_symbol_ex(
-                arg->asn, expr_value, expr_value->value->value.reference);
+            expr_value = WITH_MODULE_NAMESPACE(
+                expr_value->module, expr_ns,
+                asn1f_lookup_symbol_ex(arg->asn, expr_ns, expr_value,
+                                       expr_value->value->value.reference));
             if(!expr_value) {
                 FATAL("Unrecognized value type for %s", MKID(cell->value));
                 return -1;
