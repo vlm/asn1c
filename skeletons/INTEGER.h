@@ -24,7 +24,7 @@ typedef struct asn_INTEGER_enum_map_s {
 } asn_INTEGER_enum_map_t;
 
 /* This type describes an enumeration for INTEGER and ENUMERATED types */
-typedef const struct asn_INTEGER_specifics_s {
+typedef struct asn_INTEGER_specifics_s {
 	const asn_INTEGER_enum_map_t *value2enum;	/* N -> "tag"; sorted by N */
 	const unsigned int *enum2value;		/* "tag" => N; sorted by tag */
 	int map_count;				/* Elements in either map */
