@@ -9,7 +9,7 @@ typedef struct resolver_arg {
 } resolver_arg_t;
 
 static asn1p_expr_t *resolve_expr(asn1p_expr_t *, void *resolver_arg);
-static int compare_specializations(arg_t *, asn1p_expr_t *a, asn1p_expr_t *b);
+static int compare_specializations(const asn1p_expr_t *a, const asn1p_expr_t *b);
 static asn1p_expr_t *find_target_specialization_byref(resolver_arg_t *rarg, asn1p_ref_t *ref);
 static asn1p_expr_t *find_target_specialization_bystr(resolver_arg_t *rarg, char *str);
 
@@ -37,7 +37,7 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	for(npspecs = 0;
 		npspecs < expr->specializations.pspecs_count;
 			npspecs++) {
-		if(compare_specializations(arg, rhs_pspecs,
+		if(compare_specializations(rhs_pspecs,
 			expr->specializations.pspec[npspecs].rhs_pspecs) == 0) {
 			DEBUG("Reused parameterization for %s",
 				expr->Identifier);
@@ -89,47 +89,8 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 }
 
 static int
-compare_specializations(arg_t *arg, asn1p_expr_t *a, asn1p_expr_t *b) {
-	asn1p_expr_t *ac = TQ_FIRST(&a->members);
-	asn1p_expr_t *bc = TQ_FIRST(&b->members);
-
-	for(;ac && bc; ac = TQ_NEXT(ac, next), bc = TQ_NEXT(bc, next)) {
-	  retry:
-		if(ac == bc) continue;
-		if(ac->meta_type != bc->meta_type) break;
-		if(ac->expr_type != bc->expr_type) break;
-		/* Maybe different object sets */
-		if(ac->constraints && bc->constraints
-				&& ac->constraints->containedSubtype
-				&& bc->constraints->containedSubtype
-				&& ac->constraints->containedSubtype->type == ATV_REFERENCED
-				&& bc->constraints->containedSubtype->type == ATV_REFERENCED
-				&& strcmp(ac->constraints->containedSubtype->value.reference->components[0].name,
-						bc->constraints->containedSubtype->value.reference->components[0].name))
-			break;
-		if(!ac->reference && !bc->reference)
-			continue;
-
-		if(ac->reference) {
-            ac = WITH_MODULE(
-                ac->module,
-                asn1f_lookup_symbol(arg, ac->rhs_pspecs, ac->reference));
-            if(!ac) break;
-		}
-		if(bc->reference) {
-            bc = WITH_MODULE(
-                bc->module,
-                asn1f_lookup_symbol(arg, bc->rhs_pspecs, bc->reference));
-            if(!bc) break;
-		}
-        goto retry;
-    }
-
-	if(ac || bc)
-		/* Specializations do not match: different size option sets */
-		return -1;
-
-	return 0;
+compare_specializations(const asn1p_expr_t *a, const asn1p_expr_t *b) {
+    return asn1p_expr_compare(a, b);
 }
 
 static asn1p_expr_t *
