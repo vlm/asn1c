@@ -88,7 +88,7 @@ typedef ENUMERATED_t	 SimpleType_t;
 /*** <<< FUNC-DECLS [SimpleType] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_SimpleType;
-extern asn_INTEGER_specifics_t asn_SPC_SimpleType_specs_1;
+extern const asn_INTEGER_specifics_t asn_SPC_SimpleType_specs_1;
 asn_struct_free_f SimpleType_free;
 asn_struct_print_f SimpleType_print;
 asn_constr_check_f SimpleType_constraint;

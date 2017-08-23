@@ -705,7 +705,7 @@ typedef ENUMERATED_t	 EnumType_t;
 /*** <<< FUNC-DECLS [EnumType] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_EnumType;
-extern asn_INTEGER_specifics_t asn_SPC_EnumType_specs_1;
+extern const asn_INTEGER_specifics_t asn_SPC_EnumType_specs_1;
 asn_struct_free_f EnumType_free;
 asn_struct_print_f EnumType_print;
 asn_constr_check_f EnumType_constraint;
