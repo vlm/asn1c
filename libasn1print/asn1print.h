@@ -15,5 +15,6 @@ enum asn1print_flags {
  */
 int asn1print(asn1p_t *asn, enum asn1print_flags flags);
 
+const char *asn1p_constraint_string(const asn1p_constraint_t *ct);
 
 #endif	/* ASN1PRINT_H */
