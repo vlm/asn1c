@@ -1,8 +1,6 @@
 #include "asn1fix_internal.h"
 #include "asn1fix_cws.h"
 
-const char *asn1p_constraint_string(const asn1p_constraint_t *);
-
 static int _asn1f_parse_class_object_data(arg_t *, asn1p_expr_t *eclass,
 		struct asn1p_ioc_row_s *row, asn1p_wsyntx_t *syntax,
 		const uint8_t *buf, const uint8_t *bend,
@@ -181,25 +179,28 @@ static int
 _asn1f_foreach_unparsed(arg_t *arg, const asn1p_constraint_t *ct,
                         int (*process)(const uint8_t *buf, size_t size,
                                        void *key),
-                        void *key) {
+                        void *keyp) {
+    struct parse_object_key *key = keyp;
     if(!ct) return -1;
 
     switch(ct->type) {
     default:
-        DEBUG("Constraint %s is of unknown type for CWS",
-              asn1p_constraint_string(ct));
+        DEBUG("Constraint is of unknown type %d for CWS", ct->type);
         return -1;
     case ACT_EL_EXT:    /* ... */
+        if(key) {
+            key->expr->ioc_table->extensible = 1;
+        }
         return 0;
     case ACT_CA_UNI:    /* | */
-        return _asn1f_foreach_unparsed_union(ct, process, key);
+        return _asn1f_foreach_unparsed_union(ct, process, keyp);
     case ACT_CA_CSV:    /* , */
         break;
     }
 
     for(size_t i = 0; i < ct->el_count; i++) {
         const asn1p_constraint_t *ct1 = ct->elements[i];
-        if(_asn1f_foreach_unparsed(arg, ct1, process, key) != 0) {
+        if(_asn1f_foreach_unparsed(arg, ct1, process, keyp) != 0) {
             return -1;
         }
     }

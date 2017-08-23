@@ -410,6 +410,20 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	return asn1c_lang_C_type_SEQUENCE_def(arg, ioc_tao.ioct ? &ioc_tao : 0);
 }
 
+static void
+emit_tag2member_reference(arg_t *arg, asn1p_expr_t *expr,
+                          unsigned tag2el_count) {
+    if(tag2el_count) {
+        if(C99_MODE) OUT(".tag2el = ");
+        OUT("asn_MAP_%s_tag2el_%d,\n", MKID(expr), expr->_type_unique_index);
+        if(C99_MODE) OUT(".tag2el_count = ");
+        OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
+    } else {
+        OUT("0,\t/* No top level tags */\n");
+        OUT("0,\t/* No tags in the map */\n");
+    }
+}
+
 static int
 asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc) {
 	asn1p_expr_t *expr = arg->expr;
@@ -540,16 +554,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 		out_name_chain(arg, ONC_avoid_keywords); OUT("),\n");
 	OUT("offsetof(struct ");
 		out_name_chain(arg, ONC_avoid_keywords); OUT(", _asn_ctx),\n");
-
-	if(tag2el_count) {
-		OUT("asn_MAP_%s_tag2el_%d,\n",
-			MKID(expr),
-			expr->_type_unique_index);
-		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
-	} else {
-		OUT("0,\t/* No top level tags */\n");
-		OUT("0,\t/* No tags in the map */\n");
-	}
+    emit_tag2member_reference(arg, expr, tag2el_count);
 	if(roms_count + aoms_count) {
 		OUT("asn_MAP_%s_oms_%d,\t/* Optional members */\n",
 			MKID(expr), expr->_type_unique_index);
@@ -784,9 +789,8 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 		OUT("offsetof(struct ");
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(", _presence_map),\n");
+		emit_tag2member_reference(arg, expr, tag2el_count);
 		p = MKID(expr);
-		OUT("asn_MAP_%s_tag2el_%d,\n", p, expr->_type_unique_index);
-		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
 		if(tag2el_cxer)
 			OUT("asn_MAP_%s_tag2el_cxer_%d,\n",
 				p, expr->_type_unique_index);
@@ -1227,9 +1231,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		OUT("sizeof(((struct ");
 			out_name_chain(arg, ONC_avoid_keywords);
 		OUT(" *)0)->present),\n");
-		OUT("asn_MAP_%s_tag2el_%d,\n",
-			MKID(expr), expr->_type_unique_index);
-		OUT("%d,\t/* Count of tags in the map */\n", tag2el_count);
+		emit_tag2member_reference(arg, expr, tag2el_count);
 		if(C99_MODE) OUT(".canonical_order = ");
 		if(cmap) OUT("asn_MAP_%s_cmap_%d,\t/* Canonically sorted */\n",
 			MKID(expr), expr->_type_unique_index);
@@ -2715,13 +2717,35 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     const asn1p_ref_t *objset_ref =
         asn1c_get_information_object_set_reference_from_constraint(arg, crc);
 
-    if(!objset_ref || objset_ref->comp_count != 1) {
-        FATAL("Reference %s does not look like an object set type %s",
-              asn1p_constraint_string(crc), asn1p_ref_string(objset_ref));
+    if(!objset_ref) {
+        FATAL("Constraint %s does not look like it referst to a set type %s",
+              asn1p_constraint_string(crc),
+              opt_ioc->objset->Identifier);
         return -1;
     }
 
-    const char *objset_name = objset_ref->components[0].name;
+    const char *objset_name;
+    if(objset_ref->comp_count == 1) {
+        objset_name = objset_ref->components[0].name;
+    } else if(objset_ref->comp_count == 2) {
+        if(strcmp(objset_ref->components[0].name,
+                  opt_ioc->objset->module->ModuleName)
+           != 0) {
+            FATAL(
+                "Composite reference %s (from %s) does not look like it refers "
+                "to the same module as %s from an object set type %s",
+                asn1p_ref_string(objset_ref), asn1p_constraint_string(crc),
+                opt_ioc->objset->module->ModuleName,
+                opt_ioc->objset->Identifier);
+            return -1;
+        }
+        objset_name = objset_ref->components[1].name;
+    } else {
+        FATAL("Reference %s (from %s) does not look like an object set type %s",
+              asn1p_ref_string(objset_ref), asn1p_constraint_string(crc),
+              opt_ioc->objset->Identifier);
+        return -1;
+    }
     if(strcmp(objset_name, opt_ioc->objset->Identifier) != 0) {
         FATAL("Object Set references do not match: %s != %s", objset_name,
               opt_ioc->objset->Identifier);
