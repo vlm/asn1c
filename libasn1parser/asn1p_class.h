@@ -22,6 +22,7 @@ void asn1p_ioc_row_delete(asn1p_ioc_row_t *);
 typedef struct asn1p_ioc_table_s {
     asn1p_ioc_row_t **row;
     size_t rows;
+    int extensible; /* 0 if non-extensible (sealed). Otherwise, extensible. */
 } asn1p_ioc_table_t;
 
 asn1p_ioc_table_t *asn1p_ioc_table_new(void);

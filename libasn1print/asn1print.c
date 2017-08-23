@@ -830,8 +830,9 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			asn1p_ioc_row_t *row;
 			row = tc->ioc_table->row[r<0?0:r];
 			if(r < 0) safe_printf("--    %s", r > 9 ? " " : "");
-			else safe_printf("-- [%*d]", r > 9 ? 2 : 1, r+1);
-			for(col = 0; col < row->columns; col++) {
+            else
+                safe_printf("-- [%*d]", (tc->ioc_table->rows > 9) + 1, r + 1);
+            for(col = 0; col < row->columns; col++) {
 				struct asn1p_ioc_cell_s *cell;
 				cell = &row->column[col];
 				if(r < 0) {
@@ -848,7 +849,10 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			}
 			safe_printf("\n");
 		}
-	} while(0);
+        if(tc->ioc_table->extensible) {
+            safe_printf("-- [%*s] ...\n", (tc->ioc_table->rows>9)+1, "");
+        }
+    } while(0);
 
 	if(flags & APF_PRINT_CLASS_MATRIX
 	&& tc->lhs_params) do {
