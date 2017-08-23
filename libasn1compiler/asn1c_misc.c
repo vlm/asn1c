@@ -168,13 +168,13 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	return storage;
 }
 
-char *
+const char *
 asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	asn1p_expr_t *exprid = 0;
 	asn1p_expr_t *top_parent;
 	asn1p_expr_t *terminal = 0;
 	int stdname = 0;
-	char *typename;
+	const char *typename;
 
 	/* Rewind to the topmost parent expression */
 	if((top_parent = expr->parent_expr))

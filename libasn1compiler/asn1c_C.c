@@ -1375,7 +1375,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	&& etd_spec == ETD_NO_SPECIFICS
 	&& 0	/* This shortcut is incompatible with XER */
 	) {
-		char *type_name;
+		const char *type_name;
 		REDIR(OT_FUNC_DECLS);
 		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
 		OUT("/* This type is equivalent to %s */\n", type_name);
@@ -2911,7 +2911,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	struct asn1p_type_tag_s outmost_tag_s;
 	struct asn1p_type_tag_s *outmost_tag;
 	int complex_contents;
-	char *p;
+	const char *p;
 
     if(WITH_MODULE_NAMESPACE(
            expr->module, expr_ns,
@@ -3017,7 +3017,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 		if(arg->flags & A1C_NO_CONSTRAINTS) {
 			OUT("0,\t/* No check because of -fno-constraints */\n");
 		} else {
-			char *id = MKID(expr);
+			const char *id = MKID(expr);
 			if(expr->_anonymous_type
 					&& !strcmp(expr->Identifier, "Member"))
 				id = asn1c_type_name(arg, expr, TNF_SAFE);
@@ -3108,7 +3108,7 @@ static int
 emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
 	asn1p_expr_t *terminal;
 	int using_type_name = 0;
-	char *p = MKID(expr);
+	const char *p = MKID(expr);
 	char *p2 = (char *)0;
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->ns, expr);

@@ -16,6 +16,8 @@ char *asn1c_make_identifier(enum ami_flags_e, asn1p_expr_t *expr, ...);
 
 /*
  * Return the type name of the specified expression.
+ * The returned string is a pointer to a statically allocated buffer which is
+ * going to be clobbered by the subsequent invocation of this function.
  */
 enum tnfmt {
 	TNF_UNMODIFIED	= 0x10,	/* Return unmodified type name */
@@ -24,7 +26,7 @@ enum tnfmt {
 	TNF_SAFE	= 0x40, /* Replace unsafe characters with _ */
 	TNF_RSAFE	= 0x50,	/* Recursion-safe C type format */
 };
-char *asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format);
+const char *asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format);
 
 /*
  * Check whether the specified INTEGER or ENUMERATED type can be represented
