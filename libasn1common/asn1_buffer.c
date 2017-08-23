@@ -53,32 +53,48 @@ abuf_clear(abuf *ab) {
 }
 
 static void
-abuf_resize_by(abuf *ab, size_t add_bytes) {
+abuf_resize_by(abuf *ab, size_t size) {
     union {
         const char *c_buf;
         char *nc_buf;
     } const_cast;
     const_cast.c_buf = ab->buffer;
 
-    assert(ab->buffer[ab->length] == '\0');
+    assert(!ab->buffer || ab->buffer[ab->length] == '\0');
 
-    size_t new_size = ab->length + add_bytes;
+    size_t new_size = ab->length + size;
     char *p = realloc(const_cast.nc_buf, new_size);
     assert(p);
+    if(!ab->buffer) {
+        assert(ab->length == 0);
+        *p = '\0';
+    }
     ab->buffer = p;
     assert(ab->buffer[ab->length] == '\0');
     ab->size = new_size;
 }
 
+void abuf_add_bytes(abuf *ab, const char *str, size_t size) {
+    abuf_resize_by(ab, size + 1);
+    union {
+        const char *c_buf;
+        char *nc_buf;
+    } const_cast;
+    const_cast.c_buf = ab->buffer;
+    memcpy(&const_cast.nc_buf[ab->length], str, size);
+    ab->length += size;
+    const_cast.nc_buf[ab->length] = '\0';
+}
+
 void abuf_str(abuf *ab, const char *str) {
-    abuf_printf(ab, "%s", str);
+    abuf_add_bytes(ab, str, strlen(str));
 }
 
 void abuf_buf(abuf *ab, const abuf *buf) {
-    abuf_printf(ab, "%s", buf->buffer);
+    abuf_add_bytes(ab, buf->buffer, buf->length);
 }
 
-void abuf_printf(abuf *ab, const char *fmt, ...) {
+int abuf_printf(abuf *ab, const char *fmt, ...) {
     va_list ap;
 
     for(;;) {
@@ -95,10 +111,25 @@ void abuf_printf(abuf *ab, const char *fmt, ...) {
         if((size_t)ret < ab->size - ab->length) {
             ab->length += ret;
             assert(ab->buffer[ab->length] == '\0');
-            break;
+            return ret;
         }
         const_cast.nc_buf[ab->length] = '\0'; /* Restore order */
         abuf_resize_by(ab, ret + 1);
     }
+}
+
+int abuf_vprintf(abuf *ab, const char *fmt, va_list ap) {
+    int ret;
+    char *str = 0;
+
+    ret = vasprintf(&str, fmt, ap);
+    assert(ret >= 0);
+    assert(str != NULL);
+
+    abuf_add_bytes(ab, str, ret);
+
+    free(str);
+
+    return ret;
 }
 
