@@ -1674,7 +1674,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			if((expr->expr_type == ASN_BASIC_ENUMERATED) ||
 				(expr->expr_type == ASN_BASIC_INTEGER)) {
 				if(expr->_type_referenced) {
-					OUT("extern asn_INTEGER_specifics_t "
+					OUT("extern const asn_INTEGER_specifics_t "
 						"asn_SPC_%s_specs_%d;\n", p, expr->_type_unique_index);
 				}
 			} else {
