@@ -135,8 +135,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Tree_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
 	sizeof(struct Tree),
 	offsetof(struct Tree, _asn_ctx),
-	asn_MAP_Tree_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Tree_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -333,8 +333,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Member_tag2el_5[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_5 = {
 	sizeof(struct Member),
 	offsetof(struct Member, _asn_ctx),
-	asn_MAP_Member_tag2el_5,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Member_tag2el_5,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	0,	/* Start extensions */
 	2	/* Stop extensions */
@@ -450,8 +450,8 @@ static asn_CHOICE_specifics_t asn_SPC_other_specs_9 = {
 	offsetof(struct other, _asn_ctx),
 	offsetof(struct other, present),
 	sizeof(((struct other *)0)->present),
-	asn_MAP_other_tag2el_9,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_other_tag2el_9,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -538,8 +538,8 @@ asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
 	sizeof(struct Stuff),
 	offsetof(struct Stuff, _asn_ctx),
 	offsetof(struct Stuff, _presence_map),
-	asn_MAP_Stuff_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Stuff_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	asn_MAP_Stuff_tag2el_cxer_1,
 	3,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */

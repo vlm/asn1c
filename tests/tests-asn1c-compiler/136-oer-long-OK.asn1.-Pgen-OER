@@ -556,8 +556,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
 	sizeof(struct T),
 	offsetof(struct T, _asn_ctx),
-	asn_MAP_T_tag2el_1,
-	12,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T_tag2el_1,
+	.tag2el_count = 12,	/* Count of tags in the map */
 	asn_MAP_T_oms_1,	/* Optional members */
 	1, 6,	/* Root/Additions */
 	5,	/* Start extensions */

@@ -95,8 +95,8 @@ static const asn_TYPE_tag2member_t asn_MAP_PDU_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 	sizeof(struct PDU),
 	offsetof(struct PDU, _asn_ctx),
-	asn_MAP_PDU_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_PDU_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	asn_MAP_PDU_oms_1,	/* Optional members */
 	0, 4,	/* Root/Additions */
 	-1,	/* Start extensions */
@@ -202,8 +202,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Singleton_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
 	sizeof(struct Singleton),
 	offsetof(struct Singleton, _asn_ctx),
-	asn_MAP_Singleton_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Singleton_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_Singleton_oms_1,	/* Optional members */
 	1, 0,	/* Root/Additions */
 	-1,	/* Start extensions */
@@ -334,8 +334,8 @@ asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 	offsetof(struct PDU_2, _asn_ctx),
 	offsetof(struct PDU_2, present),
 	sizeof(((struct PDU_2 *)0)->present),
-	asn_MAP_PDU_2_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_PDU_2_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	.canonical_order = asn_MAP_PDU_2_cmap_1,	/* Canonically sorted */
 	.ext_start = 1	/* Extensions start */
 };

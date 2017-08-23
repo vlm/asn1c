@@ -165,8 +165,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Narrow_15P0_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Narrow_15P0_specs_1 = {
 	sizeof(struct Narrow_15P0),
 	offsetof(struct Narrow_15P0, _asn_ctx),
-	asn_MAP_Narrow_15P0_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Narrow_15P0_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */

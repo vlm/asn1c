@@ -54,8 +54,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Message_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_Message_specs_1 = {
 	sizeof(struct Message),
 	offsetof(struct Message, _asn_ctx),
-	asn_MAP_Message_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Message_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -194,8 +194,8 @@ static const asn_TYPE_tag2member_t asn_MAP_SpecializedContent_21P0_tag2el_1[] = 
 asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_21P0_specs_1 = {
 	sizeof(struct SpecializedContent_21P0),
 	offsetof(struct SpecializedContent_21P0, _asn_ctx),
-	asn_MAP_SpecializedContent_21P0_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_SpecializedContent_21P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -249,8 +249,8 @@ static const asn_TYPE_tag2member_t asn_MAP_SpecializedContent_21P1_tag2el_3[] = 
 asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_21P1_specs_3 = {
 	sizeof(struct SpecializedContent_21P1),
 	offsetof(struct SpecializedContent_21P1, _asn_ctx),
-	asn_MAP_SpecializedContent_21P1_tag2el_3,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_SpecializedContent_21P1_tag2el_3,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */

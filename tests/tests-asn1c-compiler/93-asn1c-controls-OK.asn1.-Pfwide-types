@@ -56,8 +56,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	sizeof(struct Sequence),
 	offsetof(struct Sequence, _asn_ctx),
-	asn_MAP_Sequence_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Sequence_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -173,8 +173,8 @@ asn_SET_specifics_t asn_SPC_Set_specs_1 = {
 	sizeof(struct Set),
 	offsetof(struct Set, _asn_ctx),
 	offsetof(struct Set, _presence_map),
-	asn_MAP_Set_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Set_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	asn_MAP_Set_tag2el_1,	/* Same as above */
 	2,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
@@ -353,8 +353,8 @@ static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	offsetof(struct Choice, _asn_ctx),
 	offsetof(struct Choice, present),
 	sizeof(((struct Choice *)0)->present),
-	asn_MAP_Choice_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };

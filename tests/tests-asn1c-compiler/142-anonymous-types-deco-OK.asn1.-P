@@ -65,8 +65,8 @@ static asn_CHOICE_specifics_t asn_SPC_CommonType_specs_1 = {
 	offsetof(struct CommonType, _asn_ctx),
 	offsetof(struct CommonType, present),
 	sizeof(((struct CommonType *)0)->present),
-	asn_MAP_CommonType_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_CommonType_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -225,8 +225,8 @@ static const asn_TYPE_tag2member_t asn_MAP_anonType_tag2el_2[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
 	sizeof(struct anonType),
 	offsetof(struct anonType, _asn_ctx),
-	asn_MAP_anonType_tag2el_2,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_anonType_tag2el_2,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -280,8 +280,8 @@ asn_CHOICE_specifics_t asn_SPC_Type1_specs_1 = {
 	offsetof(struct Type1, _asn_ctx),
 	offsetof(struct Type1, present),
 	sizeof(((struct Type1 *)0)->present),
-	asn_MAP_Type1_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Type1_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -440,8 +440,8 @@ static const asn_TYPE_tag2member_t asn_MAP_anonType_tag2el_2[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
 	sizeof(struct anonType),
 	offsetof(struct anonType, _asn_ctx),
-	asn_MAP_anonType_tag2el_2,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_anonType_tag2el_2,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -495,8 +495,8 @@ asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
 	offsetof(struct Type2, _asn_ctx),
 	offsetof(struct Type2, present),
 	sizeof(((struct Type2 *)0)->present),
-	asn_MAP_Type2_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Type2_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };

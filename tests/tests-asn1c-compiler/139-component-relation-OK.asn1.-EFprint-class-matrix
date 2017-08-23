@@ -25,6 +25,7 @@ FrameTypes FRAME-STRUCTURE ::= {{ PrimitiveMessage IDENTIFIED BY basicMessage } 
 --    [             &id][           &Type]
 -- [1]     basicMessage  PrimitiveMessage 
 -- [2]                2    ComplexMessage 
+-- [ ] ...
 
 
 PrimitiveMessage ::= SEQUENCE { }

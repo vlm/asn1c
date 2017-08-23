@@ -191,8 +191,8 @@ asn_SET_specifics_t asn_SPC_TestSet_specs_1 = {
 	sizeof(struct TestSet),
 	offsetof(struct TestSet, _asn_ctx),
 	offsetof(struct TestSet, _presence_map),
-	asn_MAP_TestSet_tag2el_1,
-	10,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TestSet_tag2el_1,
+	.tag2el_count = 10,	/* Count of tags in the map */
 	asn_MAP_TestSet_tag2el_1,	/* Same as above */
 	10,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */

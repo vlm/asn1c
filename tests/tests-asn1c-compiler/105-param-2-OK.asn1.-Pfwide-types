@@ -73,8 +73,8 @@ static const asn_TYPE_tag2member_t asn_MAP_SIGNED_16P0_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_SIGNED_16P0_specs_1 = {
 	sizeof(struct SIGNED_16P0),
 	offsetof(struct SIGNED_16P0, _asn_ctx),
-	asn_MAP_SIGNED_16P0_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_SIGNED_16P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -133,8 +133,8 @@ asn_SET_specifics_t asn_SPC_signed_specs_4 = {
 	sizeof(struct Signed),
 	offsetof(struct Signed, _asn_ctx),
 	offsetof(struct Signed, _presence_map),
-	asn_MAP_signed_tag2el_4,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_signed_tag2el_4,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_signed_tag2el_4,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
@@ -190,8 +190,8 @@ static const asn_TYPE_tag2member_t asn_MAP_SIGNED_16P1_tag2el_3[] = {
 asn_SEQUENCE_specifics_t asn_SPC_SIGNED_16P1_specs_3 = {
 	sizeof(struct SIGNED_16P1),
 	offsetof(struct SIGNED_16P1, _asn_ctx),
-	asn_MAP_SIGNED_16P1_tag2el_3,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_SIGNED_16P1_tag2el_3,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */

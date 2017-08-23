@@ -95,8 +95,8 @@ static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
 	offsetof(struct T, _asn_ctx),
 	offsetof(struct T, present),
 	sizeof(((struct T *)0)->present),
-	asn_MAP_T_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -194,8 +194,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 	offsetof(struct Choice1, _asn_ctx),
 	offsetof(struct Choice1, present),
 	sizeof(((struct Choice1 *)0)->present),
-	asn_MAP_Choice1_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice1_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -325,8 +325,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	offsetof(struct Choice2, _asn_ctx),
 	offsetof(struct Choice2, present),
 	sizeof(((struct Choice2 *)0)->present),
-	asn_MAP_Choice2_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice2_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };

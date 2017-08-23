@@ -106,8 +106,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Type_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Type_specs_1 = {
 	sizeof(struct Type),
 	offsetof(struct Type, _asn_ctx),
-	asn_MAP_Type_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Type_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -334,8 +334,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Epyt_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Epyt_specs_1 = {
 	sizeof(struct Epyt),
 	offsetof(struct Epyt, _asn_ctx),
-	asn_MAP_Epyt_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Epyt_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -652,8 +652,8 @@ asn_SET_specifics_t asn_SPC_Ypet_specs_1 = {
 	sizeof(struct Ypet),
 	offsetof(struct Ypet, _asn_ctx),
 	offsetof(struct Ypet, _presence_map),
-	asn_MAP_Ypet_tag2el_1,
-	5,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Ypet_tag2el_1,
+	.tag2el_count = 5,	/* Count of tags in the map */
 	asn_MAP_Ypet_tag2el_1,	/* Same as above */
 	5,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */

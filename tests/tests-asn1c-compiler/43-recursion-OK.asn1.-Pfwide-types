@@ -202,8 +202,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Test_structure_1_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Test_structure_1_specs_1 = {
 	sizeof(struct Test_structure_1),
 	offsetof(struct Test_structure_1, _asn_ctx),
-	asn_MAP_Test_structure_1_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Test_structure_1_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -396,8 +396,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice_1_specs_1 = {
 	offsetof(struct Choice_1, _asn_ctx),
 	offsetof(struct Choice_1, present),
 	sizeof(((struct Choice_1 *)0)->present),
-	asn_MAP_Choice_1_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice_1_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -496,8 +496,8 @@ asn_SET_specifics_t asn_SPC_Test_structure_2_specs_1 = {
 	sizeof(struct Test_structure_2),
 	offsetof(struct Test_structure_2, _asn_ctx),
 	offsetof(struct Test_structure_2, _presence_map),
-	asn_MAP_Test_structure_2_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Test_structure_2_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_Test_structure_2_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
@@ -600,8 +600,8 @@ asn_SET_specifics_t asn_SPC_Test_structure_3_specs_1 = {
 	sizeof(struct Test_structure_3),
 	offsetof(struct Test_structure_3, _asn_ctx),
 	offsetof(struct Test_structure_3, _presence_map),
-	asn_MAP_Test_structure_3_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Test_structure_3_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_Test_structure_3_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */

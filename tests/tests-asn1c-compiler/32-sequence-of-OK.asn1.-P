@@ -337,8 +337,8 @@ static const asn_TYPE_tag2member_t asn_MAP_SeqWithMandatory_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_SeqWithMandatory_specs_1 = {
 	sizeof(struct SeqWithMandatory),
 	offsetof(struct SeqWithMandatory, _asn_ctx),
-	asn_MAP_SeqWithMandatory_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_SeqWithMandatory_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -491,8 +491,8 @@ static const asn_TYPE_tag2member_t asn_MAP_SeqWithOptional_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_SeqWithOptional_specs_1 = {
 	sizeof(struct SeqWithOptional),
 	offsetof(struct SeqWithOptional, _asn_ctx),
-	asn_MAP_SeqWithOptional_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_SeqWithOptional_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */

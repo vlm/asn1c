@@ -101,8 +101,8 @@ static const asn_TYPE_tag2member_t asn_MAP_ConstructedType_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_ConstructedType_specs_1 = {
 	sizeof(struct ConstructedType),
 	offsetof(struct ConstructedType, _asn_ctx),
-	asn_MAP_ConstructedType_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_ConstructedType_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */

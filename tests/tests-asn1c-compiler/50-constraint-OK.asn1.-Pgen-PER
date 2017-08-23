@@ -2690,8 +2690,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	sizeof(struct Sequence),
 	offsetof(struct Sequence, _asn_ctx),
-	asn_MAP_Sequence_tag2el_1,
-	7,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Sequence_tag2el_1,
+	.tag2el_count = 7,	/* Count of tags in the map */
 	asn_MAP_Sequence_oms_1,	/* Optional members */
 	3, 1,	/* Root/Additions */
 	5,	/* Start extensions */

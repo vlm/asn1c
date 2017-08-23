@@ -99,8 +99,8 @@ static const asn_TYPE_tag2member_t asn_MAP_TestType_16P0_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_TestType_16P0_specs_1 = {
 	sizeof(struct TestType_16P0),
 	offsetof(struct TestType_16P0, _asn_ctx),
-	asn_MAP_TestType_16P0_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TestType_16P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -172,8 +172,8 @@ static const asn_TYPE_tag2member_t asn_MAP_TestType_16P1_tag2el_3[] = {
 asn_SEQUENCE_specifics_t asn_SPC_TestType_16P1_specs_3 = {
 	sizeof(struct TestType_16P1),
 	offsetof(struct TestType_16P1, _asn_ctx),
-	asn_MAP_TestType_16P1_tag2el_3,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TestType_16P1_tag2el_3,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -271,8 +271,8 @@ static asn_CHOICE_specifics_t asn_SPC_TestChoice_specs_1 = {
 	offsetof(struct TestChoice, _asn_ctx),
 	offsetof(struct TestChoice, present),
 	sizeof(((struct TestChoice *)0)->present),
-	asn_MAP_TestChoice_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TestChoice_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -409,8 +409,8 @@ static const asn_TYPE_tag2member_t asn_MAP_AutoType_34P0_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P0_specs_1 = {
 	sizeof(struct AutoType_34P0),
 	offsetof(struct AutoType_34P0, _asn_ctx),
-	asn_MAP_AutoType_34P0_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_AutoType_34P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -464,8 +464,8 @@ static const asn_TYPE_tag2member_t asn_MAP_AutoType_34P1_tag2el_3[] = {
 asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P1_specs_3 = {
 	sizeof(struct AutoType_34P1),
 	offsetof(struct AutoType_34P1, _asn_ctx),
-	asn_MAP_AutoType_34P1_tag2el_3,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_AutoType_34P1_tag2el_3,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -563,8 +563,8 @@ static asn_CHOICE_specifics_t asn_SPC_AutoChoice_specs_1 = {
 	offsetof(struct AutoChoice, _asn_ctx),
 	offsetof(struct AutoChoice, present),
 	sizeof(((struct AutoChoice *)0)->present),
-	asn_MAP_AutoChoice_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_AutoChoice_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };

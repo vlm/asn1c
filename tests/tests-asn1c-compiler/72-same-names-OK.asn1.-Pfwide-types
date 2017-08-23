@@ -67,8 +67,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Member_tag2el_2[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_2 = {
 	sizeof(struct Member),
 	offsetof(struct Member, _asn_ctx),
-	asn_MAP_Member_tag2el_2,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Member_tag2el_2,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -228,8 +228,8 @@ static const asn_TYPE_tag2member_t asn_MAP_another_name_tag2el_3[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_another_name_specs_3 = {
 	sizeof(struct another_name),
 	offsetof(struct another_name, _asn_ctx),
-	asn_MAP_another_name_tag2el_3,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_another_name_tag2el_3,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -283,8 +283,8 @@ static asn_CHOICE_specifics_t asn_SPC_one_name_specs_2 = {
 	offsetof(struct one_name, _asn_ctx),
 	offsetof(struct one_name, present),
 	sizeof(((struct one_name *)0)->present),
-	asn_MAP_one_name_tag2el_2,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_one_name_tag2el_2,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -336,8 +336,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Type1_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Type1_specs_1 = {
 	sizeof(struct Type1),
 	offsetof(struct Type1, _asn_ctx),
-	asn_MAP_Type1_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Type1_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -545,8 +545,8 @@ static const asn_TYPE_tag2member_t asn_MAP_another_name_tag2el_3[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_another_name_specs_3 = {
 	sizeof(struct another_name),
 	offsetof(struct another_name, _asn_ctx),
-	asn_MAP_another_name_tag2el_3,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_another_name_tag2el_3,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -601,8 +601,8 @@ static const asn_TYPE_tag2member_t asn_MAP_one_name_tag2el_2[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_one_name_specs_2 = {
 	sizeof(struct one_name),
 	offsetof(struct one_name, _asn_ctx),
-	asn_MAP_one_name_tag2el_2,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_one_name_tag2el_2,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -669,8 +669,8 @@ static const asn_TYPE_tag2member_t asn_MAP_another_name_tag2el_8[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_another_name_specs_8 = {
 	sizeof(struct another_name),
 	offsetof(struct another_name, _asn_ctx),
-	asn_MAP_another_name_tag2el_8,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_another_name_tag2el_8,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -730,8 +730,8 @@ asn_SET_specifics_t asn_SPC_two_name_specs_7 = {
 	sizeof(struct two_name),
 	offsetof(struct two_name, _asn_ctx),
 	offsetof(struct two_name, _presence_map),
-	asn_MAP_two_name_tag2el_7,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_two_name_tag2el_7,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_two_name_tag2el_7,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
@@ -798,8 +798,8 @@ asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
 	offsetof(struct Type2, _asn_ctx),
 	offsetof(struct Type2, present),
 	sizeof(((struct Type2 *)0)->present),
-	asn_MAP_Type2_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Type2_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };

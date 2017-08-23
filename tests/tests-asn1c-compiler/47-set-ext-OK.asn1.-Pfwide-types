@@ -64,8 +64,8 @@ asn_SET_specifics_t asn_SPC_T1_specs_1 = {
 	sizeof(struct T1),
 	offsetof(struct T1, _asn_ctx),
 	offsetof(struct T1, _presence_map),
-	asn_MAP_T1_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T1_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_T1_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
@@ -164,8 +164,8 @@ asn_SET_specifics_t asn_SPC_T2_specs_1 = {
 	sizeof(struct T2),
 	offsetof(struct T2, _asn_ctx),
 	offsetof(struct T2, _presence_map),
-	asn_MAP_T2_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T2_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_T2_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	1,	/* Whether extensible */
@@ -256,8 +256,8 @@ static asn_CHOICE_specifics_t asn_SPC_T3_specs_1 = {
 	offsetof(struct T3, _asn_ctx),
 	offsetof(struct T3, present),
 	sizeof(((struct T3 *)0)->present),
-	asn_MAP_T3_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T3_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = 1	/* Extensions start */
 };
@@ -344,8 +344,8 @@ static asn_CHOICE_specifics_t asn_SPC_T4_specs_1 = {
 	offsetof(struct T4, _asn_ctx),
 	offsetof(struct T4, present),
 	sizeof(((struct T4 *)0)->present),
-	asn_MAP_T4_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T4_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = 1	/* Extensions start */
 };

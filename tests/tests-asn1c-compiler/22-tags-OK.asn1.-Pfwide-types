@@ -74,8 +74,8 @@ static asn_CHOICE_specifics_t asn_SPC_b_specs_3 = {
 	offsetof(struct b, _asn_ctx),
 	offsetof(struct b, present),
 	sizeof(((struct b *)0)->present),
-	asn_MAP_b_tag2el_3,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_b_tag2el_3,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -151,8 +151,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T1_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_T1_specs_1 = {
 	sizeof(struct T1),
 	offsetof(struct T1, _asn_ctx),
-	asn_MAP_T1_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T1_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */

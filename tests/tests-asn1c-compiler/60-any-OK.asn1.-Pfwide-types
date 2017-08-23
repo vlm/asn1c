@@ -54,8 +54,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T1_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_T1_specs_1 = {
 	sizeof(struct T1),
 	offsetof(struct T1, _asn_ctx),
-	asn_MAP_T1_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T1_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -144,8 +144,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T2_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_T2_specs_1 = {
 	sizeof(struct T2),
 	offsetof(struct T2, _asn_ctx),
-	asn_MAP_T2_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T2_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */

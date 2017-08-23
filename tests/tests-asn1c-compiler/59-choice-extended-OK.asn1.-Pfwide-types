@@ -96,8 +96,8 @@ asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	offsetof(struct Choice, _asn_ctx),
 	offsetof(struct Choice, present),
 	sizeof(((struct Choice *)0)->present),
-	asn_MAP_Choice_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = 1	/* Extensions start */
 };

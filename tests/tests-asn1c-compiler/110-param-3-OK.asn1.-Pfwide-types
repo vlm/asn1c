@@ -94,8 +94,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Flag_16P0_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Flag_16P0_specs_1 = {
 	sizeof(struct Flag_16P0),
 	offsetof(struct Flag_16P0, _asn_ctx),
-	asn_MAP_Flag_16P0_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Flag_16P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -218,8 +218,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Flag_16P1_tag2el_6[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Flag_16P1_specs_6 = {
 	sizeof(struct Flag_16P1),
 	offsetof(struct Flag_16P1, _asn_ctx),
-	asn_MAP_Flag_16P1_tag2el_6,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Flag_16P1_tag2el_6,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
