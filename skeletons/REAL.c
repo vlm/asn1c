@@ -518,7 +518,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		 * However, strtod() can't always deal with COMMA.
 		 * So her we fix both by reallocating, copying and fixing.
 		 */
-		if(st->buf[st->size] || memchr(st->buf, ',', st->size)) {
+		if(st->buf[st->size-1] || memchr(st->buf, ',', st->size)) {
 			uint8_t *p, *end;
 			char *b;
 			if(st->size > 100) {
