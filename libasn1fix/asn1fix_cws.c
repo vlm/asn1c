@@ -1,6 +1,8 @@
 #include "asn1fix_internal.h"
 #include "asn1fix_cws.h"
 
+const char *asn1p_constraint_string(const asn1p_constraint_t *);
+
 static int _asn1f_parse_class_object_data(arg_t *, asn1p_expr_t *eclass,
 		struct asn1p_ioc_row_s *row, asn1p_wsyntx_t *syntax,
 		const uint8_t *buf, const uint8_t *bend,
@@ -82,26 +84,22 @@ struct parse_object_key {
  */
 static int
 _asn1f_add_unique_row(arg_t *arg, asn1p_expr_t *expr, asn1p_ioc_row_t *row) {
+    assert(expr->ioc_table);
 
-    if(expr->ioc_table == NULL) {
-        expr->ioc_table = asn1p_ioc_table_new();
-    } else {
-        /* Look for duplicates */
-
-        switch(_asn1f_is_ioc_row_duplicate(expr->ioc_table, row)) {
-        case -1:
-            DEBUG("Found Information Object Duplicate in %s", expr->Identifier,
-                  expr->_lineno);
-            return -1;
-        case 0:
-            /* Not a duplicate */
-            break;
-        case 1:
-            /* Proper duplicate detected; ignore */
-            asn1p_ioc_row_delete(row);
-            return 0;
+    /* Look for duplicates */
+    switch(_asn1f_is_ioc_row_duplicate(expr->ioc_table, row)) {
+    case -1:
+        DEBUG("Found Information Object Duplicate in %s", expr->Identifier,
+              expr->_lineno);
+        return -1;
+    case 0:
+        /* Not a duplicate */
+        break;
+    case 1:
+        /* Proper duplicate detected; ignore */
+        asn1p_ioc_row_delete(row);
+        return 0;
         }
-    }
 
     asn1p_ioc_table_add(expr->ioc_table, row);
 
@@ -180,27 +178,28 @@ _asn1f_foreach_unparsed_union(const asn1p_constraint_t *ct_union,
 }
 
 static int
-_asn1f_foreach_unparsed(const asn1p_constraint_t *ct,
+_asn1f_foreach_unparsed(arg_t *arg, const asn1p_constraint_t *ct,
                         int (*process)(const uint8_t *buf, size_t size,
                                        void *key),
                         void *key) {
     if(!ct) return -1;
-    if(ct->type == ACT_CA_UNI) {
+
+    switch(ct->type) {
+    default:
+        DEBUG("Constraint %s is of unknown type for CWS",
+              asn1p_constraint_string(ct));
+        return -1;
+    case ACT_EL_EXT:    /* ... */
+        return 0;
+    case ACT_CA_UNI:    /* | */
         return _asn1f_foreach_unparsed_union(ct, process, key);
+    case ACT_CA_CSV:    /* , */
+        break;
     }
-    if(ct->type != ACT_CA_CSV) return -1;
 
     for(size_t i = 0; i < ct->el_count; i++) {
         const asn1p_constraint_t *ct1 = ct->elements[i];
-        switch(ct1->type) {
-        case ACT_EL_EXT:
-            break;
-        case ACT_CA_UNI:
-            if(_asn1f_foreach_unparsed_union(ct1, process, key) != 0) {
-                return -1;
-            }
-            break;
-        default:
+        if(_asn1f_foreach_unparsed(arg, ct1, process, key) != 0) {
             return -1;
         }
     }
@@ -209,8 +208,9 @@ _asn1f_foreach_unparsed(const asn1p_constraint_t *ct,
 }
 
 static int
-_asn1f_constraint_looks_like_object_set(const asn1p_constraint_t *ct) {
-    return 0 == _asn1f_foreach_unparsed(ct, NULL, NULL);
+_asn1f_constraint_looks_like_object_set(arg_t *arg,
+                                        const asn1p_constraint_t *ct) {
+    return 0 == _asn1f_foreach_unparsed(arg, ct, NULL, NULL);
 }
 
 int
@@ -232,7 +232,7 @@ asn1f_parse_class_object(arg_t *arg) {
     } else if(expr->value && expr->value->type == ATV_UNPARSED) {
         source = FROM_VALUE;
     } else if(!expr->value) {
-        if(_asn1f_constraint_looks_like_object_set(expr->constraints)) {
+        if(_asn1f_constraint_looks_like_object_set(arg, expr->constraints)) {
             source = FROM_CONSTRAINT;
         } else {
             return 0;
@@ -267,6 +267,14 @@ asn1f_parse_class_object(arg_t *arg) {
         .sequence = 0
     };
 
+    if(!expr->ioc_table) {
+        expr->ioc_table = asn1p_ioc_table_new();
+    }
+
+    if(!eclass->ioc_table) {
+        eclass->ioc_table = asn1p_ioc_table_new();
+    }
+
     switch(source) {
     case FROM_VALUE:
         if(_asn1f_parse_object_cb(expr->value->value.string.buf + 1,
@@ -276,8 +284,8 @@ asn1f_parse_class_object(arg_t *arg) {
         }
         break;
     case FROM_CONSTRAINT:
-        if(_asn1f_foreach_unparsed(expr->constraints, _asn1f_parse_object_cb,
-                                   &key)
+        if(_asn1f_foreach_unparsed(arg, expr->constraints,
+                                   _asn1f_parse_object_cb, &key)
            != 0) {
             return -1;
         }

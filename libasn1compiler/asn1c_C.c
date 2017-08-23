@@ -2803,8 +2803,14 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
         }
     }
     if(constraining_column < 0) {
-        FATAL("Can not find referenced object class column %s\n", cfield);
-        return -1;
+        if(opt_ioc->ioct->rows == 0) {
+            OUT("0");
+            return 0;
+        } else {
+            FATAL("Can not find referenced object class %s column %s\n",
+                  asn1p_ref_string(objset_ref), cfield);
+            return -1;
+        }
     }
 
     if(expr->meta_type != AMT_TYPEREF
