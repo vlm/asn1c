@@ -7,6 +7,7 @@
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
+#include <NativeInteger.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,9 +36,10 @@ typedef struct asn_INTEGER_specifics_s {
 } asn_INTEGER_specifics_t;
 
 #define INTEGER_free    ASN__PRIMITIVE_TYPE_free
+#define INTEGER_decode_ber	ber_decode_primitive
+#define INTEGER_constraint	asn_generic_no_constraint
 asn_struct_print_f INTEGER_print;
 asn_struct_compare_f INTEGER_compare;
-ber_type_decoder_f INTEGER_decode_ber;
 der_type_encoder_f INTEGER_encode_der;
 xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;

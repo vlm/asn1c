@@ -31,6 +31,7 @@ per_type_encoder_f ANY_encode_uper;
 
 #define ANY_free         OCTET_STRING_free
 #define ANY_print        OCTET_STRING_print
+#define ANY_compare      OCTET_STRING_compare
 #define ANY_constraint   asn_generic_no_constraint
 #define ANY_decode_ber   OCTET_STRING_decode_ber
 #define ANY_encode_der   OCTET_STRING_encode_der
