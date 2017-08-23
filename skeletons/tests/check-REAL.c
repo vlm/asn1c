@@ -167,7 +167,7 @@ check_xer(int fuzzy, double orig_value) {
 }
 
 static void
-check_ber_buffer_twoway(double d, const char *sample, const char *canonical_sample, uint8_t *inbuf, size_t insize, uint8_t *outbuf, size_t outsize, int lineno) {
+check_ber_buffer_twoway(double d, const char *sample, const char *canonical_sample, const uint8_t *inbuf, size_t insize, uint8_t *outbuf, size_t outsize, int lineno) {
 	REAL_t rn;
 	double val;
 	int ret;
@@ -175,7 +175,9 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	/*
 	 * Decode our expected buffer and check that it matches the given (d).
 	 */
-	rn.buf = inbuf;
+	rn.buf = calloc(1, insize + 1); /* By convention, buffers have extra \0 */
+	assert(rn.buf);
+	memcpy(rn.buf, inbuf, insize);
 	rn.size = insize;
 	asn_REAL2double(&rn, &val);
 	if(isnan(val)) assert(isnan(d));
@@ -188,6 +190,7 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 	/*
 	 * Encode value and check that it matches our expected buffer.
 	 */
+	free(rn.buf);
 	memset(&rn, 0, sizeof(rn));
 	ret = asn_double2REAL(&rn, d);
 	assert(ret == 0);

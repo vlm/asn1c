@@ -512,13 +512,13 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		}
 
 
-		/* 1. By contract, an input buffer should be null-terminated.
+		/* 1. By contract, an input buffer should be '\0'-terminated.
 		 * OCTET STRING decoder ensures that, as is asn_double2REAL().
 		 * 2. ISO 6093 specifies COMMA as a possible decimal separator.
 		 * However, strtod() can't always deal with COMMA.
 		 * So her we fix both by reallocating, copying and fixing.
 		 */
-		if(st->buf[st->size] || memchr(st->buf, ',', st->size)) {
+		if(st->buf[st->size] != '\0' || memchr(st->buf, ',', st->size)) {
 			uint8_t *p, *end;
 			char *b;
 			if(st->size > 100) {
