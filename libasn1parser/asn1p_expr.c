@@ -356,7 +356,7 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 }
 
 
-char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *buf) {
+const char *asn1p_tag2string(const struct asn1p_type_tag_s *tag, char *buf) {
 	static char buf_stat[TAG2STRING_BUFFER_SIZE];
 	char *start;
 	char *end;

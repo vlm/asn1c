@@ -286,7 +286,7 @@ void asn1p_expr_set_source(asn1p_expr_t *, asn1p_module_t *, int lineno);
 asn1p_paramlist_t *asn1p_get_namespace(asn1p_expr_t *);
 
 #define	TAG2STRING_BUFFER_SIZE	64	/* buf should be at least this big */
-char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *opt_buf);
+const char *asn1p_tag2string(const struct asn1p_type_tag_s *tag, char *opt_buf);
 
 #define MODULE_NAME_OF(expr) \
 		((!expr) ? "" : \
