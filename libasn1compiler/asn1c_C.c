@@ -8,6 +8,7 @@
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
 #include "asn1c_ioc.h"
+#include <asn1print.h>
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
 #include <asn1parser.h>
@@ -320,6 +321,7 @@ is_open_type(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *opt_i
        && expr->reference->comp_count == 2
        && expr->reference->components[1].lex_type
               == RLT_AmpUppercase) {
+        DEBUG("%s is a true open type", MKID(expr));
         return 1;
     }
 
@@ -461,7 +463,8 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 			}
 			if(v->marker.flags & EM_OMITABLE)
 			    comp_mode == 1 ? ++aoms_count : ++roms_count;
-			emit_member_table(arg, v, opt_ioc);
+			if(emit_member_table(arg, v, opt_ioc) < 0)
+				return -1;
 			elements++;
 		});
 		OUT("};\n");
@@ -2709,16 +2712,16 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
         return 0;
     }
 
-    if(crc->el_count <= 1 || crc->elements[0]->type != ACT_EL_VALUE
-       || crc->elements[0]->value->type != ATV_REFERENCED
-       || crc->elements[0]->value->value.reference->comp_count != 1) {
-        FATAL(
-            "Reference does not look like an object set");
+    const asn1p_ref_t *objset_ref =
+        asn1c_get_information_object_set_reference_from_constraint(arg, crc);
+
+    if(!objset_ref || objset_ref->comp_count != 1) {
+        FATAL("Reference %s does not look like an object set type %s",
+              asn1p_constraint_string(crc), asn1p_ref_string(objset_ref));
         return -1;
     }
 
-    const char *objset_name =
-        crc->elements[0]->value->value.reference->components[0].name;
+    const char *objset_name = objset_ref->components[0].name;
     if(strcmp(objset_name, opt_ioc->objset->Identifier) != 0) {
         FATAL("Object Set references do not match: %s != %s", objset_name,
               opt_ioc->objset->Identifier);
@@ -3006,7 +3009,8 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 
     if(C99_MODE) OUT(".type_selector = ");
     if(opt_ioc) {
-        emit_member_type_selector(arg, expr, opt_ioc);
+        if(emit_member_type_selector(arg, expr, opt_ioc) < 0)
+            return -1;
     } else {
         OUT("0");
     }

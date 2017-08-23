@@ -4,6 +4,7 @@ AM_CFLAGS = @ADD_CFLAGS@
 AM_CPPFLAGS =                       \
     -I$(top_srcdir)/libasn1common   \
     -I$(top_srcdir)/libasn1parser   \
+    -I$(top_srcdir)/libasn1print    \
     -I$(top_srcdir)/libasn1fix
 
 noinst_LTLIBRARIES = libasn1compiler.la

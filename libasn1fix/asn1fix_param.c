@@ -27,10 +27,6 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	assert(expr->lhs_params);
 	assert(expr->parent_expr == 0);
 
-	DEBUG("Forking parameterization at %d for %s (%d alr)",
-		rhs_pspecs->_lineno, expr->Identifier,
-		expr->specializations.pspecs_count);
-
 	/*
 	 * Find if this exact specialization has been used already.
 	 */
@@ -44,6 +40,10 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 			return expr->specializations.pspec[npspecs].my_clone;
 		}
 	}
+
+	DEBUG("Forking parameterization at %d for %s (%d alr)",
+		rhs_pspecs->_lineno, expr->Identifier,
+		expr->specializations.pspecs_count);
 
 	rarg.resolver = resolve_expr;
 	rarg.arg = arg;

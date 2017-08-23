@@ -3,6 +3,7 @@
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
 #include <asn1fix_export.h>
+#include <asn1print.h>
 
 #define MKID(expr) asn1c_make_identifier(0, (expr), 0)
 
@@ -10,18 +11,26 @@
  * Given the table constraint or component relation constraint
  * ({ObjectSetName}{...}) returns "ObjectSetName" as a reference.
  */
-static const asn1p_ref_t *
-asn1c_get_information_object_set_reference_from_constraint(
+const asn1p_ref_t *
+asn1c_get_information_object_set_reference_from_constraint(arg_t *arg,
     const asn1p_constraint_t *ct) {
 
     if(!ct) return NULL;
     assert(ct->type == ACT_CA_CRC);
     assert(ct->el_count >= 1);
 
+    DEBUG("Component Relation Constraint: %s", asn1p_constraint_string(ct));
+
     assert(ct->elements[0]->type == ACT_EL_VALUE);
 
     asn1p_value_t *val = ct->elements[0]->value;
-    assert(val->type == ATV_REFERENCED);
+    if(val->type == ATV_VALUESET && val->value.constraint->type == ACT_EL_TYPE && val->value.constraint->containedSubtype && val->value.constraint->containedSubtype->type == ATV_REFERENCED) {
+        return val->value.constraint->containedSubtype->value.reference;
+    }
+    if(val->type != ATV_REFERENCED) {
+        FATAL("Set reference: %s", asn1f_printable_value(val));
+        assert(val->type == ATV_REFERENCED);
+    }
 
     return val->value.reference;
 }
@@ -53,17 +62,12 @@ asn1c_get_ioc_table(arg_t *arg) {
     asn1c_ioc_table_and_objset_t safe_ioc_tao = {0, 0, 0};
     asn1c_ioc_table_and_objset_t failed_ioc_tao = { 0, 0, 1 };
 
-    if(expr->lhs_params) {
-        if(0) WARNING(
-            "Can not process Information Object Set on a parameterized type %s",
-            MKID(expr));
-        return safe_ioc_tao;
-    }
-
     TQ_FOR(memb, &(expr->members), next) {
+        const asn1p_constraint_t *cr_ct =
+            asn1p_get_component_relation_constraint(memb->constraints);
         const asn1p_ref_t *tmpref =
-            asn1c_get_information_object_set_reference_from_constraint(
-                asn1p_get_component_relation_constraint(memb->constraints));
+            asn1c_get_information_object_set_reference_from_constraint(arg,
+                                                                       cr_ct);
         if(tmpref) {
             if(objset_ref && asn1p_ref_compare(objset_ref, tmpref) != 0) {
                 FATAL(
@@ -74,6 +78,7 @@ asn1c_get_ioc_table(arg_t *arg) {
             }
             objset_ref = tmpref;
         }
+
     }
 
     if(!objset_ref) {
