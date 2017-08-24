@@ -1,4 +1,5 @@
 
 tests-asn1c-compiler    - tests behavior of asn1c compiler, textually
 tests-c-compiler        - attempts to compile C results of asn1c output
+tests-skeletons         - verify correctness of "skeletons" code
 

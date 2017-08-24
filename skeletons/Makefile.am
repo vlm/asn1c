@@ -1,5 +1,4 @@
 
-SUBDIRS = . tests
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
 
 dist_pkgdata_DATA =				\

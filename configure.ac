@@ -171,7 +171,7 @@ AC_CONFIG_FILES([\
 tests/tests-c-compiler/check-src/Makefile   \
 tests/tests-asn1c-compiler/Makefile         \
 tests/tests-c-compiler/Makefile             \
-skeletons/tests/Makefile                    \
+tests/tests-skeletons/Makefile              \
 libasn1compiler/Makefile                    \
 libasn1common/Makefile                      \
 libasn1parser/Makefile                      \
