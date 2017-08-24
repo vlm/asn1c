@@ -14,6 +14,7 @@ extern "C" {
 typedef GraphicString_t ObjectDescriptor_t;  /* Implemented via GraphicString */
 
 extern asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor;
+extern asn_TYPE_operation_t asn_OP_ObjectDescriptor;
 
 #define ObjectDescriptor_free         OCTET_STRING_free
 #define ObjectDescriptor_print        OCTET_STRING_print_utf8

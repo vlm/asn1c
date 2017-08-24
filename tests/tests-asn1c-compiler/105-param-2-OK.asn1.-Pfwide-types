@@ -82,17 +82,8 @@ asn_SEQUENCE_specifics_t asn_SPC_SIGNED_16P0_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_SIGNED_16P0 = {
 	"SIGNED",
 	"SIGNED",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIGNED_16P0_tags_1,
 	sizeof(asn_DEF_SIGNED_16P0_tags_1)
 		/sizeof(asn_DEF_SIGNED_16P0_tags_1[0]), /* 1 */
@@ -144,17 +135,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_signed_4 = {
 	"signed",
 	"signed",
-	SET_free,
-	SET_print,
-	SET_compare,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_signed_tags_4,
 	sizeof(asn_DEF_signed_tags_4)
 		/sizeof(asn_DEF_signed_tags_4[0]), /* 1 */
@@ -199,17 +181,8 @@ asn_SEQUENCE_specifics_t asn_SPC_SIGNED_16P1_specs_3 = {
 asn_TYPE_descriptor_t asn_DEF_SIGNED_16P1 = {
 	"SIGNED",
 	"SIGNED",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SIGNED_16P1_tags_3,
 	sizeof(asn_DEF_SIGNED_16P1_tags_3)
 		/sizeof(asn_DEF_SIGNED_16P1_tags_3[0]), /* 1 */
@@ -258,17 +231,8 @@ static const ber_tlv_tag_t asn_DEF_SignedREAL_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_SignedREAL = {
 	"SignedREAL",
 	"SignedREAL",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SignedREAL_tags_1,
 	sizeof(asn_DEF_SignedREAL_tags_1)
 		/sizeof(asn_DEF_SignedREAL_tags_1[0]), /* 1 */
@@ -317,17 +281,8 @@ static const ber_tlv_tag_t asn_DEF_SignedSET_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_SignedSET = {
 	"SignedSET",
 	"SignedSET",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_SignedSET_tags_1,
 	sizeof(asn_DEF_SignedSET_tags_1)
 		/sizeof(asn_DEF_SignedSET_tags_1[0]), /* 1 */

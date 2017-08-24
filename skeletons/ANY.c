@@ -11,9 +11,7 @@ asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs = {
 	offsetof(ANY_t, _asn_ctx),
 	ASN_OSUBV_ANY
 };
-asn_TYPE_descriptor_t asn_DEF_ANY = {
-	"ANY",
-	"ANY",
+asn_TYPE_operation_t asn_OP_ANY = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,
 	OCTET_STRING_compare,
@@ -32,10 +30,16 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0, 0,
 #else
-    ANY_decode_uper,
-    ANY_encode_uper,
+	ANY_decode_uper,
+	ANY_encode_uper,
 #endif  /* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_ANY = {
+	"ANY",
+	"ANY",
+	&asn_OP_ANY,
+	asn_generic_no_constraint,
 	0, 0, 0, 0,
 	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */

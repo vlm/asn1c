@@ -78,7 +78,7 @@ load_object(enum expectation expectation, unsigned char *fbuf, size_t size) {
 		int fbuf_left = size;
 		int fbuf_chunk = csize;
 
-		if(st) asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
+		if(st) ASN_STRUCT_FREE(asn_DEF_T, st);
 		st = 0;
 
 		do {
@@ -102,7 +102,7 @@ load_object(enum expectation expectation, unsigned char *fbuf, size_t size) {
 		} else {
 			assert(rval.code != RC_OK);
 			fprintf(stderr, "Failed, but this was expected\n");
-			asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
+			ASN_STRUCT_FREE(asn_DEF_T, st);
 			st = 0;	/* ignore leak for now */
 		}
 	}
@@ -142,7 +142,7 @@ process_data(enum expectation expectation, unsigned char *fbuf, ssize_t size) {
 		break;
 	}
 
-	asn_DEF_T.free_struct(&asn_DEF_T, st, 0);
+	ASN_STRUCT_FREE(asn_DEF_T, st);
 }
 
 /*

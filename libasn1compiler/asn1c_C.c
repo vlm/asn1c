@@ -1416,10 +1416,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		DEBUG("expr constraint checking code for %s", p);
 		if(asn1c_emit_constraint_checking_code(arg) == 1) {
 			OUT("/* Replace with underlying type checker */\n");
-			OUT("td->check_constraints "
-				"= asn_DEF_%s.check_constraints;\n",
-				asn1c_type_name(arg, expr, TNF_SAFE));
-			OUT("return td->check_constraints"
+			// OUT("td->check_constraints "
+			//	"= asn_DEF_%s.check_constraints;\n",
+			//	asn1c_type_name(arg, expr, TNF_SAFE));
+			OUT("return td->op->check_constraints"
 				"(td, sptr, ctfailcb, app_key);\n");
 		}
 		INDENT(-1);
@@ -2917,7 +2917,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];\n");
     OUT("    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];\n");
     OUT("\n");
-    OUT("    if(constraining_cell->type_descriptor->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {\n");
+    OUT("    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {\n");
     OUT("        result.type_descriptor = type_cell->type_descriptor;\n");
     OUT("        result.presence_index = row + 1;\n");
     OUT("        break;\n");
@@ -3199,9 +3199,7 @@ do {				\
 	OUT("_" #foo ",\n");	\
 } while(0)
 
-		FUNCREF2(free);
-		FUNCREF2(print);
-		FUNCREF2(compare);
+		OUT("&asn_OP_%s,\n", p2);
 		if (arg->flags & A1C_NO_CONSTRAINTS)
 			OUT("0,\t/* No check because of -fno-constraints */\n");
 		else
@@ -3211,33 +3209,7 @@ do {				\
 			else
 				FUNCREF(constraint);
 		}
-		FUNCREF2(decode_ber);
-		FUNCREF2(encode_der);
-		FUNCREF2(decode_xer);
-		FUNCREF2(encode_xer);
-
-		if(arg->flags & A1C_GEN_OER) {
-			FUNCREF2(decode_oer);
-			FUNCREF2(encode_oer);
-		} else {
-			OUT("0, 0,\t/* No OER support, "
-				"use \"-gen-OER\" to enable */\n");
-		}
-		if(arg->flags & A1C_GEN_PER) {
-			FUNCREF2(decode_uper);
-			FUNCREF2(encode_uper);
-		} else {
-			OUT("0, 0,\t/* No PER support, "
-				"use \"-gen-PER\" to enable */\n");
-		}
 		if (p2) free(p2);
-
-		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {
-		//if(expr->expr_type == ASN_CONSTR_CHOICE) {
-			OUT("CHOICE_outmost_tag,\n");
-		} else {
-			OUT("0,\t/* Use generic outmost tag fetcher */\n");
-		}
 
 		p = MKID(expr);
 		if(tags_count) {

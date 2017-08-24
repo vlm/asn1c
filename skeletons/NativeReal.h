@@ -18,6 +18,7 @@ extern "C" {
 #endif
 
 extern asn_TYPE_descriptor_t asn_DEF_NativeReal;
+extern asn_TYPE_operation_t asn_OP_NativeReal;
 
 asn_struct_free_f  NativeReal_free;
 asn_struct_print_f NativeReal_print;

@@ -121,13 +121,13 @@ static asn_enc_rval_t
 uper_encode_internal(asn_TYPE_descriptor_t *td,
                      const asn_per_constraints_t *constraints, void *sptr,
                      asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_per_outp_t po;
+	asn_per_outp_t po;
 	asn_enc_rval_t er;
 
 	/*
 	 * Invoke type-specific encoder.
 	 */
-	if(!td || !td->uper_encoder)
+	if(!td || !td->op->uper_encoder)
 		ASN__ENCODE_FAILED;	/* PER is not compiled in */
 
 	po.buffer = po.tmpspace;
@@ -137,7 +137,7 @@ uper_encode_internal(asn_TYPE_descriptor_t *td,
 	po.op_key = app_key;
 	po.flushed_bytes = 0;
 
-	er = td->uper_encoder(td, constraints, sptr, &po);
+	er = td->op->uper_encoder(td, constraints, sptr, &po);
 	if(er.encoded != -1) {
 		size_t bits_to_flush;
 

@@ -21,9 +21,7 @@
 static const ber_tlv_tag_t asn_DEF_NativeReal_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_NativeReal = {
-	"REAL",			/* The ASN.1 type is still REAL */
-	"REAL",
+asn_TYPE_operation_t asn_OP_NativeReal = {
 	NativeReal_free,
 	NativeReal_print,
 	NativeReal_compare,
@@ -46,7 +44,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	NativeReal_decode_uper,
 	NativeReal_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NativeReal = {
+	"REAL",			/* The ASN.1 type is still REAL */
+	"REAL",
+	&asn_OP_NativeReal,
+	asn_generic_no_constraint,
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
 	asn_DEF_NativeReal_tags,	/* Same as above */

@@ -17,9 +17,7 @@ asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs = {
 	offsetof(BIT_STRING_t, _asn_ctx),
 	ASN_OSUBV_BIT
 };
-asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
-	"BIT STRING",
-	"BIT_STRING",
+asn_TYPE_operation_t asn_OP_BIT_STRING = {
 	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
 	BIT_STRING_print,
 	BIT_STRING_compare,
@@ -42,7 +40,13 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 #endif  /* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
+	"BIT STRING",
+	"BIT_STRING",
+	&asn_OP_BIT_STRING,
+	BIT_STRING_constraint,
 	asn_DEF_BIT_STRING_tags,
 	sizeof(asn_DEF_BIT_STRING_tags)
 	  / sizeof(asn_DEF_BIT_STRING_tags[0]),

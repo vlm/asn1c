@@ -23,9 +23,7 @@ static asn_per_constraints_t asn_DEF_BMPString_per_constraints = {
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_BMPString = {
-	"BMPString",
-	"BMPString",
+asn_TYPE_operation_t asn_OP_BMPString = {
 	OCTET_STRING_free,          /* Implemented in terms of OCTET STRING */
 	BMPString_print,
 	OCTET_STRING_compare,
@@ -48,7 +46,13 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_BMPString = {
+	"BMPString",
+	"BMPString",
+	&asn_OP_BMPString,
+	asn_generic_no_constraint,  /* No constraint by default */
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
 	  / sizeof(asn_DEF_BMPString_tags[0]) - 1,

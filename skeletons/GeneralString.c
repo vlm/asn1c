@@ -12,9 +12,7 @@ static const ber_tlv_tag_t asn_DEF_GeneralString_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (27 << 2)),	/* [UNIVERSAL 27] IMPLICIT ...*/
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))	/* ... OCTET STRING */
 };
-asn_TYPE_descriptor_t asn_DEF_GeneralString = {
-	"GeneralString",
-	"GeneralString",
+asn_TYPE_operation_t asn_OP_GeneralString = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,         /* non-ascii string */
 	OCTET_STRING_compare,
@@ -37,7 +35,13 @@ asn_TYPE_descriptor_t asn_DEF_GeneralString = {
 	OCTET_STRING_decode_uper,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_GeneralString = {
+	"GeneralString",
+	"GeneralString",
+	&asn_OP_GeneralString,
+	asn_generic_unknown_constraint,
 	asn_DEF_GeneralString_tags,
 	sizeof(asn_DEF_GeneralString_tags)
 	  / sizeof(asn_DEF_GeneralString_tags[0]) - 1,

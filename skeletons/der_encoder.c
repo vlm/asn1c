@@ -21,7 +21,7 @@ der_encode(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
 	/*
 	 * Invoke type-specific encoder.
 	 */
-	return type_descriptor->der_encoder(type_descriptor,
+	return type_descriptor->op->der_encoder(type_descriptor,
 		struct_ptr,	/* Pointer to the destination structure */
 		0, 0,
 		consume_bytes, app_key);
@@ -59,7 +59,7 @@ der_encode_to_buffer(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
 	arg.buffer = buffer;
 	arg.left = buffer_size;
 
-	ec = type_descriptor->der_encoder(type_descriptor,
+	ec = type_descriptor->op->der_encoder(type_descriptor,
 		struct_ptr,	/* Pointer to the destination structure */
 		0, 0, encode_to_buffer_cb, &arg);
 	if(ec.encoded != -1) {

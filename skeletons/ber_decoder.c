@@ -51,7 +51,7 @@ ber_decode(asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Invoke type-specific decoder.
 	 */
-	return type_descriptor->ber_decoder(opt_codec_ctx, type_descriptor,
+	return type_descriptor->op->ber_decoder(opt_codec_ctx, type_descriptor,
 		struct_ptr,	/* Pointer to the destination structure */
 		ptr, size,	/* Buffer and its size */
 		0		/* Default tag mode is 0 */

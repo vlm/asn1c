@@ -20,6 +20,7 @@ extern "C" {
 #endif
 
 extern asn_TYPE_descriptor_t asn_DEF_NativeEnumerated;
+extern asn_TYPE_operation_t asn_OP_NativeEnumerated;
 
 xer_type_encoder_f NativeEnumerated_encode_xer;
 per_type_decoder_f NativeEnumerated_decode_uper;

@@ -53,17 +53,8 @@ asn_SET_OF_specifics_t asn_SPC_Forest_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Forest = {
 	"Forest",
 	"Forest",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Forest_tags_1,
 	sizeof(asn_DEF_Forest_tags_1)
 		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
@@ -144,17 +135,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Tree = {
 	"Tree",
 	"Tree",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Tree_tags_1,
 	sizeof(asn_DEF_Tree_tags_1)
 		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
@@ -287,17 +269,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_trees_2 = {
 	"trees",
 	"trees",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_trees_tags_2,
 	sizeof(asn_DEF_trees_tags_2)
 		/sizeof(asn_DEF_trees_tags_2[0]) - 1, /* 1 */
@@ -343,17 +316,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_Member_5 = {
 	"SEQUENCE",
 	"SEQUENCE",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Member_tags_5,
 	sizeof(asn_DEF_Member_tags_5)
 		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
@@ -393,17 +357,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_anything_4 = {
 	"anything",
 	"anything",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_anything_tags_4,
 	sizeof(asn_DEF_anything_tags_4)
 		/sizeof(asn_DEF_anything_tags_4[0]) - 1, /* 1 */
@@ -459,17 +414,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_other_9 = {
 	"other",
 	"other",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -548,17 +494,8 @@ asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	"Stuff",
 	"Stuff",
-	SET_free,
-	SET_print,
-	SET_compare,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Stuff_tags_1,
 	sizeof(asn_DEF_Stuff_tags_1)
 		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
