@@ -1032,6 +1032,8 @@ asn_TYPE_operation_t asn_OP_SET = {
 	SET_encode_der,
 	SET_decode_xer,
 	SET_encode_xer,
+	0,	/* SET_decode_oer */
+	0,	/* SET_encode_oer */
 	0,	/* SET_decode_uper */
 	0,	/* SET_encode_uper */
 	0	/* Use generic outmost tag fetcher */
