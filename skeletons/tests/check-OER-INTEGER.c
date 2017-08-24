@@ -35,8 +35,8 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
     asn_oer_constraints_t *constraints = setup_constraints(width, positive);
 
     fprintf(stderr, "%d: buf[%zu]={%d, %d, ...}\n", lineno, size,
-            ((const uint8_t *)buf)[0],
-            ((const uint8_t *)buf)[1]);
+            size <= 0 ? -1 : ((const uint8_t *)buf)[0],
+            size <= 1 ? -1 : ((const uint8_t *)buf)[1]);
 
     (void)dummy;
 
