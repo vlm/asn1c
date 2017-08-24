@@ -29,7 +29,7 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		if(!memb_ptr) continue;
-		erval = elm->type->der_encoder(elm->type, memb_ptr,
+		erval = elm->type->op->der_encoder(elm->type, memb_ptr,
 			0, elm->tag,
 			0, 0);
 		if(erval.encoded == -1)
@@ -63,7 +63,7 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	for(edx = 0; edx < list->count; edx++) {
 		void *memb_ptr = list->array[edx];
 		if(!memb_ptr) continue;
-		erval = elm->type->der_encoder(elm->type, memb_ptr,
+		erval = elm->type->op->der_encoder(elm->type, memb_ptr,
 			0, elm->tag,
 			cb, app_key);
 		if(erval.encoded == -1)
@@ -115,7 +115,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 		}
 
-		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
+		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
                 if(tmper.encoded == 0 && specs->as_XMLValueList) {
@@ -144,7 +144,7 @@ asn_enc_rval_t
 SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
                         const asn_per_constraints_t *constraints, void *sptr,
                         asn_per_outp_t *po) {
-    asn_anonymous_sequence_ *list;
+	asn_anonymous_sequence_ *list;
 	const asn_per_constraint_t *ct;
 	asn_enc_rval_t er;
 	asn_TYPE_member_t *elm = td->elements;
@@ -197,7 +197,7 @@ SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
 		while(mayEncode--) {
 			void *memb_ptr = list->array[seq++];
 			if(!memb_ptr) ASN__ENCODE_FAILED;
-			er = elm->type->uper_encoder(elm->type,
+			er = elm->type->op->uper_encoder(elm->type,
 				elm->per_constraints, memb_ptr, po);
 			if(er.encoded == -1)
 				ASN__ENCODE_FAILED;
@@ -206,4 +206,30 @@ SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+
+asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
+	SEQUENCE_OF_free,
+	SEQUENCE_OF_print,
+	SEQUENCE_OF_compare,
+	SEQUENCE_OF_constraint,
+	SEQUENCE_OF_decode_ber,
+	SEQUENCE_OF_encode_der,
+	SEQUENCE_OF_decode_xer,
+	SEQUENCE_OF_encode_xer,
+#ifdef	ASN_DISABLE_OER_SUPPORT
+	0,
+	0,
+#else
+	0,
+	0,
+#endif  /* ASN_DISABLE_OER_SUPPORT */
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
+	SEQUENCE_OF_decode_uper,
+	SEQUENCE_OF_encode_uper,
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
 

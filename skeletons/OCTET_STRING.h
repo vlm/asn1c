@@ -19,6 +19,7 @@ typedef struct OCTET_STRING {
 } OCTET_STRING_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
+extern asn_TYPE_operation_t asn_OP_OCTET_STRING;
 
 asn_struct_free_f OCTET_STRING_free;
 asn_struct_print_f OCTET_STRING_print;

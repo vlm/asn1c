@@ -16,9 +16,7 @@
 static const ber_tlv_tag_t asn_DEF_RELATIVE_OID_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (13 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
-	"RELATIVE-OID",
-	"RELATIVE_OID",
+asn_TYPE_operation_t asn_OP_RELATIVE_OID = {
 	ASN__PRIMITIVE_TYPE_free,
 	RELATIVE_OID_print,
 	OCTET_STRING_compare,   /* Implemented in terms of opaque comparison */
@@ -41,7 +39,13 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
+	"RELATIVE-OID",
+	"RELATIVE_OID",
+	&asn_OP_RELATIVE_OID,
+	asn_generic_no_constraint,
 	asn_DEF_RELATIVE_OID_tags,
 	sizeof(asn_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn_DEF_RELATIVE_OID_tags[0]),

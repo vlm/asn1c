@@ -99,7 +99,7 @@ select_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_s
 	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
 	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
 	
-	    if(constraining_cell->type_descriptor->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
 	        result.type_descriptor = type_cell->type_descriptor;
 	        result.presence_index = row + 1;
 	        break;
@@ -173,17 +173,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_value_3 = {
 	"value",
 	"value",
-	OPEN_TYPE_free,
-	OPEN_TYPE_print,
-	OPEN_TYPE_compare,
+	&asn_OP_OPEN_TYPE,
 	OPEN_TYPE_constraint,
-	OPEN_TYPE_decode_ber,
-	OPEN_TYPE_encode_der,
-	OPEN_TYPE_decode_xer,
-	OPEN_TYPE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -238,17 +229,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_Frame_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Frame = {
 	"Frame",
 	"Frame",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Frame_tags_1,
 	sizeof(asn_DEF_Frame_tags_1)
 		/sizeof(asn_DEF_Frame_tags_1[0]), /* 1 */
@@ -322,17 +304,8 @@ static const ber_tlv_tag_t asn_DEF_ConstrainedInteger_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_ConstrainedInteger = {
 	"ConstrainedInteger",
 	"ConstrainedInteger",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	ConstrainedInteger_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ConstrainedInteger_tags_1,
 	sizeof(asn_DEF_ConstrainedInteger_tags_1)
 		/sizeof(asn_DEF_ConstrainedInteger_tags_1[0]), /* 1 */
@@ -380,17 +353,8 @@ asn_SEQUENCE_specifics_t asn_SPC_PrimitiveMessage_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_PrimitiveMessage = {
 	"PrimitiveMessage",
 	"PrimitiveMessage",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PrimitiveMessage_tags_1,
 	sizeof(asn_DEF_PrimitiveMessage_tags_1)
 		/sizeof(asn_DEF_PrimitiveMessage_tags_1[0]), /* 1 */
@@ -438,17 +402,8 @@ asn_SEQUENCE_specifics_t asn_SPC_ComplexMessage_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_ComplexMessage = {
 	"ComplexMessage",
 	"ComplexMessage",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ComplexMessage_tags_1,
 	sizeof(asn_DEF_ComplexMessage_tags_1)
 		/sizeof(asn_DEF_ComplexMessage_tags_1[0]), /* 1 */

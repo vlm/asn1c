@@ -201,7 +201,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                     memb_ptr2 = &memb_tmpptr; /* Ensure remains in scope! */
                 }
 
-                rval = elm->type->oer_decoder(opt_codec_ctx, elm->type,
+                rval = elm->type->op->oer_decoder(opt_codec_ctx, elm->type,
                                               elm->oer_constraints, memb_ptr2,
                                               ptr, size);
             }
@@ -458,11 +458,11 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
             /* Mandatory element is missing */
             ASN__ENCODE_FAILED;
         }
-        if(!elm->type->oer_encoder) {
+        if(!elm->type->op->oer_encoder) {
             ASN_DEBUG("OER encoder is not defined for type %s", elm->type->name);
             ASN__ENCODE_FAILED;
         }
-        er = elm->type->oer_encoder(elm->type, elm->oer_constraints, memb_ptr,
+        er = elm->type->op->oer_encoder(elm->type, elm->oer_constraints, memb_ptr,
                                     cb, app_key);
         if(er.encoded == -1) {
             ASN_DEBUG("... while encoding %s member \"%s\"\n", td->name,
@@ -517,7 +517,7 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
             void *memb_ptr = element_ptr(sptr, elm);
 
             if(memb_ptr) {
-                asn_enc_rval_t er = elm->type->oer_encoder(
+                asn_enc_rval_t er = elm->type->op->oer_encoder(
                     elm->type, elm->oer_constraints, memb_ptr, cb, app_key);
                 if(er.encoded == -1) {
                     return er;

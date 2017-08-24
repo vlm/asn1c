@@ -35,18 +35,8 @@ static const ber_tlv_tag_t asn_DEF_A_noc_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_A_noc = {
 	"A-noc",
 	"A-noc",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	NativeInteger_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_A_noc_tags_1,
 	sizeof(asn_DEF_A_noc_tags_1)
 		/sizeof(asn_DEF_A_noc_tags_1[0]), /* 1 */
@@ -127,18 +117,8 @@ static const ber_tlv_tag_t asn_DEF_B_0_0_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_B_0_0 = {
 	"B-0-0",
 	"B-0-0",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	B_0_0_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_B_0_0_tags_1,
 	sizeof(asn_DEF_B_0_0_tags_1)
 		/sizeof(asn_DEF_B_0_0_tags_1[0]), /* 1 */
@@ -219,18 +199,8 @@ static const ber_tlv_tag_t asn_DEF_C_1_2_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_C_1_2 = {
 	"C-1-2",
 	"C-1-2",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	C_1_2_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_C_1_2_tags_1,
 	sizeof(asn_DEF_C_1_2_tags_1)
 		/sizeof(asn_DEF_C_1_2_tags_1[0]), /* 1 */
@@ -311,18 +281,8 @@ static const ber_tlv_tag_t asn_DEF_D_inv_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_D_inv = {
 	"D-inv",
 	"D-inv",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	D_inv_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_D_inv_tags_1,
 	sizeof(asn_DEF_D_inv_tags_1)
 		/sizeof(asn_DEF_D_inv_tags_1[0]), /* 1 */
@@ -403,18 +363,8 @@ static const ber_tlv_tag_t asn_DEF_E_2_5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_E_2_5 = {
 	"E-2-5",
 	"E-2-5",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	E_2_5_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_E_2_5_tags_1,
 	sizeof(asn_DEF_E_2_5_tags_1)
 		/sizeof(asn_DEF_E_2_5_tags_1[0]), /* 1 */
@@ -495,18 +445,8 @@ static const ber_tlv_tag_t asn_DEF_F_inv_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_F_inv = {
 	"F-inv",
 	"F-inv",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	F_inv_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_F_inv_tags_1,
 	sizeof(asn_DEF_F_inv_tags_1)
 		/sizeof(asn_DEF_F_inv_tags_1[0]), /* 1 */
@@ -587,18 +527,8 @@ static const ber_tlv_tag_t asn_DEF_G_3_3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_G_3_3 = {
 	"G-3-3",
 	"G-3-3",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	G_3_3_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_G_3_3_tags_1,
 	sizeof(asn_DEF_G_3_3_tags_1)
 		/sizeof(asn_DEF_G_3_3_tags_1[0]), /* 1 */
@@ -679,18 +609,8 @@ static const ber_tlv_tag_t asn_DEF_H_4_5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_H_4_5 = {
 	"H-4-5",
 	"H-4-5",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	H_4_5_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_H_4_5_tags_1,
 	sizeof(asn_DEF_H_4_5_tags_1)
 		/sizeof(asn_DEF_H_4_5_tags_1[0]), /* 1 */
@@ -771,18 +691,8 @@ static const ber_tlv_tag_t asn_DEF_I_0_5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_I_0_5 = {
 	"I-0-5",
 	"I-0-5",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	I_0_5_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_I_0_5_tags_1,
 	sizeof(asn_DEF_I_0_5_tags_1)
 		/sizeof(asn_DEF_I_0_5_tags_1[0]), /* 1 */
@@ -863,18 +773,8 @@ static const ber_tlv_tag_t asn_DEF_J_4_9_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_J_4_9 = {
 	"J-4-9",
 	"J-4-9",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	J_4_9_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_J_4_9_tags_1,
 	sizeof(asn_DEF_J_4_9_tags_1)
 		/sizeof(asn_DEF_J_4_9_tags_1[0]), /* 1 */
@@ -955,18 +855,8 @@ static const ber_tlv_tag_t asn_DEF_K_inv_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_K_inv = {
 	"K-inv",
 	"K-inv",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	K_inv_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_K_inv_tags_1,
 	sizeof(asn_DEF_K_inv_tags_1)
 		/sizeof(asn_DEF_K_inv_tags_1[0]), /* 1 */
@@ -1047,18 +937,8 @@ static const ber_tlv_tag_t asn_DEF_L_0_5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_L_0_5 = {
 	"L-0-5",
 	"L-0-5",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	L_0_5_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_L_0_5_tags_1,
 	sizeof(asn_DEF_L_0_5_tags_1)
 		/sizeof(asn_DEF_L_0_5_tags_1[0]), /* 1 */
@@ -1139,18 +1019,8 @@ static const ber_tlv_tag_t asn_DEF_M_inv_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_M_inv = {
 	"M-inv",
 	"M-inv",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	M_inv_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_M_inv_tags_1,
 	sizeof(asn_DEF_M_inv_tags_1)
 		/sizeof(asn_DEF_M_inv_tags_1[0]), /* 1 */
@@ -1231,18 +1101,8 @@ static const ber_tlv_tag_t asn_DEF_N_inv_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_N_inv = {
 	"N-inv",
 	"N-inv",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	N_inv_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_N_inv_tags_1,
 	sizeof(asn_DEF_N_inv_tags_1)
 		/sizeof(asn_DEF_N_inv_tags_1[0]), /* 1 */
@@ -1323,18 +1183,8 @@ static const ber_tlv_tag_t asn_DEF_O_inv_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_O_inv = {
 	"O-inv",
 	"O-inv",
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
+	&asn_OP_NativeInteger,
 	O_inv_constraint,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-	NativeInteger_decode_oer,
-	NativeInteger_encode_oer,
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_O_inv_tags_1,
 	sizeof(asn_DEF_O_inv_tags_1)
 		/sizeof(asn_DEF_O_inv_tags_1[0]), /* 1 */

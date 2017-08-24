@@ -8,6 +8,20 @@
 #include <per_opentype.h>
 #include <errno.h>
 
+asn_TYPE_operation_t asn_OP_OPEN_TYPE = {
+	OPEN_TYPE_free,
+	OPEN_TYPE_print,
+	OPEN_TYPE_compare,
+	OPEN_TYPE_constraint,
+	OPEN_TYPE_decode_ber,
+	OPEN_TYPE_encode_der,
+	OPEN_TYPE_decode_xer,
+	OPEN_TYPE_encode_xer,
+	0, 0,	/* No OER support, use "-gen-OER" to enable */
+	OPEN_TYPE_decode_uper,
+	OPEN_TYPE_encode_uper,
+	0,	/* Use generic outmost tag fetcher */
+};
 
 asn_dec_rval_t
 OPEN_TYPE_uper_get(asn_codec_ctx_t *opt_codec_ctx,

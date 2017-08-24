@@ -19,6 +19,7 @@ typedef struct ANY {
 } ANY_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_ANY;
+extern asn_TYPE_operation_t asn_OP_ANY;
 extern asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs;
 
 asn_struct_free_f ANY_free;

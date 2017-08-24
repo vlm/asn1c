@@ -13,9 +13,7 @@
 static const ber_tlv_tag_t asn_DEF_NULL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (5 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_NULL = {
-	"NULL",
-	"NULL",
+asn_TYPE_operation_t asn_OP_NULL = {
 	BOOLEAN_free,
 	NULL_print,
 	NULL_compare,
@@ -38,7 +36,13 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 	NULL_decode_uper,	/* Unaligned PER decoder */
 	NULL_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NULL = {
+	"NULL",
+	"NULL",
+	&asn_OP_NULL,
+	asn_generic_no_constraint,
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
 	asn_DEF_NULL_tags,	/* Same as above */

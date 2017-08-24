@@ -17,7 +17,7 @@ oer_encode(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
         /*
          * Invoke type-specific encoder.
          */
-        return type_descriptor->oer_encoder(type_descriptor, 0,
+        return type_descriptor->op->oer_encoder(type_descriptor, 0,
                 struct_ptr,     /* Pointer to the destination structure */
                 consume_bytes, app_key);
 }
@@ -58,14 +58,14 @@ oer_encode_to_buffer(struct asn_TYPE_descriptor_s *type_descriptor,
     arg.buffer = buffer;
     arg.left = buffer_size;
 
-    if(type_descriptor->oer_encoder == NULL) {
+    if(type_descriptor->op->oer_encoder == NULL) {
         ec.encoded = -1;
         ec.failed_type = type_descriptor;
         ec.structure_ptr = struct_ptr;
         ASN_DEBUG("OER encoder is not defined for %s",
                 type_descriptor->name);
     } else {
-        ec = type_descriptor->oer_encoder(
+        ec = type_descriptor->op->oer_encoder(
             type_descriptor, constraints,
             struct_ptr, /* Pointer to the destination structure */
             encode_to_buffer_cb, &arg);

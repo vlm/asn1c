@@ -174,17 +174,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Narrow_15P0_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Narrow_15P0 = {
 	"Narrow",
 	"Narrow",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Narrow_15P0_tags_1,
 	sizeof(asn_DEF_Narrow_15P0_tags_1)
 		/sizeof(asn_DEF_Narrow_15P0_tags_1[0]), /* 1 */
@@ -233,17 +224,8 @@ static const ber_tlv_tag_t asn_DEF_NarrowInteger_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_NarrowInteger = {
 	"NarrowInteger",
 	"NarrowInteger",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_NarrowInteger_tags_1,
 	sizeof(asn_DEF_NarrowInteger_tags_1)
 		/sizeof(asn_DEF_NarrowInteger_tags_1[0]), /* 1 */

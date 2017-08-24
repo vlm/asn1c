@@ -94,9 +94,9 @@ main(int ac, char *av[]) {
     int ch;
 
     /* Figure out if specialty decoder needs to be default */
-    if(pduType->oer_decoder)
+    if(pduType->op->oer_decoder)
         iform = INP_OER;
-    else if(pduType->uper_decoder)
+    else if(pduType->op->uper_decoder)
         iform = INP_PER;
 
     /*
@@ -107,18 +107,18 @@ main(int ac, char *av[]) {
     case 'i':
         if(optarg[0] == 'b') { iform = INP_BER; break; }
         if(optarg[0] == 'x') { iform = INP_XER; break; }
-        if(pduType->oer_decoder
+        if(pduType->op->oer_decoder
         && optarg[0] == 'o') { iform = INP_OER; break; }
-        if(pduType->uper_decoder
+        if(pduType->op->uper_decoder
         && optarg[0] == 'p') { iform = INP_PER; break; }
         fprintf(stderr, "-i<format>: '%s': improper format selector\n",
             optarg);
         exit(EX_UNAVAILABLE);
     case 'o':
         if(optarg[0] == 'd') { oform = OUT_DER; break; }
-        if(pduType->oer_encoder
+        if(pduType->op->oer_encoder
         && optarg[0] == 'o') { oform = OUT_OER; break; }
-        if(pduType->uper_encoder
+        if(pduType->op->uper_encoder
         && optarg[0] == 'p') { oform = OUT_PER; break; }
         if(optarg[0] == 'x') { oform = OUT_XER; break; }
         if(optarg[0] == 't') { oform = OUT_TEXT; break; }
@@ -215,11 +215,11 @@ main(int ac, char *av[]) {
 #endif
         fprintf(stderr, "Usage: %s [options] <data.ber> ...\n", av[0]);
         fprintf(stderr, "Where options are:\n");
-        if(pduType->oer_decoder)
+        if(pduType->op->oer_decoder)
         fprintf(stderr,
         "  -ioer        Input is in OER (Octet Encoding Rules)%s\n",
             iform == INP_OER ? " (DEFAULT)" : "");
-        if(pduType->uper_decoder)
+        if(pduType->op->uper_decoder)
         fprintf(stderr,
         "  -iper        Input is in Unaligned PER (Packed Encoding Rules)%s\n",
             iform == INP_PER ? " (DEFAULT)" : "");
@@ -228,10 +228,10 @@ main(int ac, char *av[]) {
             iform == INP_BER ? " (DEFAULT)" : "");
         fprintf(stderr,
         "  -ixer        Input is in XER (XML Encoding Rules)\n");
-        if(pduType->oer_encoder)
+        if(pduType->op->oer_encoder)
         fprintf(stderr,
         "  -ooer        Output in Canonical OER (Octet Encoding Rules)\n");
-        if(pduType->uper_encoder)
+        if(pduType->op->uper_encoder)
         fprintf(stderr,
         "  -oper        Output in Unaligned PER (Packed Encoding Rules)\n");
         fprintf(stderr,
@@ -239,7 +239,7 @@ main(int ac, char *av[]) {
         "  -oxer        Output in XER (XML Encoding Rules) (DEFAULT)\n"
         "  -otext       Output in plain semi-structured text (dump)\n"
         "  -onull       Verify (decode) input, but do not output\n");
-        if(pduType->uper_decoder)
+        if(pduType->op->uper_decoder)
         fprintf(stderr,
         "  -per-nopad   Assume PER PDUs are not padded (-iper)\n");
 #ifdef    ASN_PDU_COLLECTION

@@ -205,7 +205,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = elm->type->ber_decoder(opt_codec_ctx,
+		rval = elm->type->op->ber_decoder(opt_codec_ctx,
 				elm->type, &ctx->ptr, ptr, LEFT, 0);
 		ASN_DEBUG("In %s SET OF %s code %d consumed %d",
 			td->name, elm->type->name,
@@ -315,7 +315,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_TYPE_member_t *elm = td->elements;
 	asn_TYPE_descriptor_t *elm_type = elm->type;
-	der_type_encoder_f *der_encoder = elm_type->der_encoder;
+	der_type_encoder_f *der_encoder = elm_type->op->der_encoder;
 	asn_anonymous_set_ *list = _A_SET_FROM_VOID(ptr);
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
@@ -526,7 +526,7 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			/* Invoke the inner type decoder, m.b. multiple times */
 			ASN_DEBUG("XER/SET OF element [%s]", elm_tag);
-			tmprval = element->type->xer_decoder(opt_codec_ctx,
+			tmprval = element->type->op->xer_decoder(opt_codec_ctx,
 					element->type, &ctx->ptr, elm_tag,
 					buf_ptr, size);
 			if(tmprval.code == RC_OK) {
@@ -697,7 +697,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		if(!xcan && specs->as_XMLValueList == 1)
 			ASN__TEXT_INDENT(1, ilevel + 1);
-		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
+		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
 				ilevel + (specs->as_XMLValueList != 2),
 				flags, cb, app_key);
 		if(tmper.encoded == -1) {
@@ -776,7 +776,7 @@ SET_OF_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 		_i_INDENT(1);
 
-		ret = elm->type->print_struct(elm->type, memb_ptr,
+		ret = elm->type->op->print_struct(elm->type, memb_ptr,
 			ilevel + 1, cb, app_key);
 		if(ret) return ret;
 	}
@@ -868,7 +868,7 @@ asn_dec_rval_t
 SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                    const asn_per_constraints_t *constraints, void **sptr,
                    asn_per_data_t *pd) {
-    asn_dec_rval_t rv;
+	asn_dec_rval_t rv;
         asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elm = td->elements;	/* Single one */
 	void *st = *sptr;
@@ -924,7 +924,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		for(i = 0; i < nelems; i++) {
 			void *ptr = 0;
 			ASN_DEBUG("SET OF %s decoding", elm->type->name);
-			rv = elm->type->uper_decoder(opt_codec_ctx, elm->type,
+			rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
 				elm->per_constraints, &ptr, pd);
 			ASN_DEBUG("%s SET OF %s decoded %d, %p",
 				td->name, elm->type->name, rv.code, ptr);
@@ -956,9 +956,31 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 int
 SET_OF_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
                const void *bptr) {
-    (void)td;
-    (void)aptr;
-    (void)bptr;
-    /* Not implemented yet. */
-    return 0;
+	(void)td;
+	(void)aptr;
+	(void)bptr;
+	/* Not implemented yet. */
+	return 0;
 }
+
+
+asn_TYPE_operation_t asn_OP_SET_OF = {
+	SET_OF_free,
+	SET_OF_print,
+	SET_OF_compare,
+	SET_OF_constraint,
+	SET_OF_decode_ber,
+	SET_OF_encode_der,
+	SET_OF_decode_xer,
+	SET_OF_encode_xer,
+	0,
+	0,
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0,
+	0,
+#else
+	SET_OF_decode_uper,
+	0,	/* SET_OF_encode_uper */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+	0	/* Use generic outmost tag fetcher */
+};
