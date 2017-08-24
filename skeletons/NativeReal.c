@@ -203,6 +203,8 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
+
 /*
  * Decode REAL type using PER.
  */
@@ -273,6 +275,8 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
 
 	return erval;
 }
+
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * Decode the chunk of XML text encoding REAL.

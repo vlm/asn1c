@@ -435,22 +435,6 @@ REAL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		buf_ptr, size, REAL__xer_body_decode);
 }
 
-asn_dec_rval_t
-REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                 const asn_per_constraints_t *constraints, void **sptr,
-                 asn_per_data_t *pd) {
-    (void)constraints;	/* No PER visible constraints */
-	return OCTET_STRING_decode_uper(opt_codec_ctx, td, 0, sptr, pd);
-}
-
-asn_enc_rval_t
-REAL_encode_uper(asn_TYPE_descriptor_t *td,
-                 const asn_per_constraints_t *constraints, void *sptr,
-                 asn_per_outp_t *po) {
-    (void)constraints;	/* No PER visible constraints */
-	return OCTET_STRING_encode_uper(td, 0, sptr, po);
-}
-
 int
 asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	unsigned int octv;
@@ -814,3 +798,23 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 
 	return 0;
 }
+
+#ifndef ASN_DISABLE_PER_SUPPORT
+
+asn_dec_rval_t
+REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void **sptr,
+                 asn_per_data_t *pd) {
+    (void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_decode_uper(opt_codec_ctx, td, 0, sptr, pd);
+}
+
+asn_enc_rval_t
+REAL_encode_uper(asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void *sptr,
+                 asn_per_outp_t *po) {
+    (void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_encode_uper(td, 0, sptr, po);
+}
+
+#endif  /* ASN_DISABLE_PER_SUPPORT */
