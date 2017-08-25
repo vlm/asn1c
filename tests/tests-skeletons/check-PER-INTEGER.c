@@ -60,7 +60,7 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 	po.buffer = po.tmpspace;
 	po.nboff = 0;
 	po.nbits = 8 * sizeof(po.tmpspace);
-	po.outper = FailOut;
+	po.output = FailOut;
 
 	specs.field_width = sizeof(long);
 	specs.field_unsigned = unsigned_;

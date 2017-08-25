@@ -144,7 +144,7 @@ uper_open_type_get_complex(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	ASN__STACK_OVERFLOW_CHECK(ctx);
 
 	ASN_DEBUG("Getting open type %s from %s", td->name,
-		per_data_string(pd));
+		asn_bit_data_string(pd));
 	arg.oldpd = *pd;
 	arg.unclaimed = 0;
 	arg.ot_moved = 0;
@@ -172,8 +172,8 @@ uper_open_type_get_complex(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	}
 
 	ASN_DEBUG("OpenType %s pd%s old%s unclaimed=%d, repeat=%d", td->name,
-		per_data_string(pd),
-		per_data_string(&arg.oldpd),
+		asn_bit_data_string(pd),
+		asn_bit_data_string(&arg.oldpd),
 		(int)arg.unclaimed, (int)arg.repeat);
 
 	padding = pd->moved % 8;
@@ -204,7 +204,7 @@ uper_open_type_get_complex(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	}
 	if(pd->nboff != pd->nbits) {
 		ASN_DEBUG("Open type %s overhead pd%s old%s", td->name,
-			per_data_string(pd), per_data_string(&arg.oldpd));
+			asn_bit_data_string(pd), asn_bit_data_string(&arg.oldpd));
 		if(1) {
 			UPDRESTOREPD;
 			ASN__DECODE_FAILED;
@@ -354,7 +354,7 @@ uper_ugot_refill(asn_per_data_t *pd) {
 	pd->buffer = oldpd->buffer;
 	pd->nboff = oldpd->nboff;
 	ASN_DEBUG("Refilled pd%s old%s",
-		per_data_string(pd), per_data_string(oldpd));
+		asn_bit_data_string(pd), asn_bit_data_string(oldpd));
 	return 0;
 }
 

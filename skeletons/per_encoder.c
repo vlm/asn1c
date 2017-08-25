@@ -114,7 +114,7 @@ _uper_encode_flush_outp(asn_per_outp_t *po) {
 		buf++;
 	}
 
-	return po->outper(po->tmpspace, buf - po->tmpspace, po->op_key);
+	return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
 }
 
 static asn_enc_rval_t
@@ -133,7 +133,7 @@ uper_encode_internal(asn_TYPE_descriptor_t *td,
 	po.buffer = po.tmpspace;
 	po.nboff = 0;
 	po.nbits = 8 * sizeof(po.tmpspace);
-	po.outper = cb;
+	po.output = cb;
 	po.op_key = app_key;
 	po.flushed_bytes = 0;
 

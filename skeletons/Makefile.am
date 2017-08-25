@@ -59,6 +59,7 @@ libasn1cskeletons_la_SOURCES = 				\
 	asn_application.h asn_codecs.h			\
 	asn_codecs_prim.c asn_codecs_prim.h		\
 	asn_internal.h asn_system.h			\
+	asn_bit_data.c asn_bit_data.h			\
 	ber_decoder.c ber_decoder.h			\
 	ber_tlv_length.c ber_tlv_length.h		\
 	ber_tlv_tag.c ber_tlv_tag.h			\
