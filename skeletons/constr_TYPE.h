@@ -41,9 +41,16 @@ typedef struct asn_struct_ctx_s {
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */
 #include <per_encoder.h>	/* Packet Encoding Rules encoder */
+#include <constraints.h>	/* Subtype constraints support */
+
+#ifdef  ASN_DISABLE_OER_SUPPORT
+typedef void (*oer_type_decoder_f)();
+typedef void (*oer_type_encoder_f)();
+typedef struct{} asn_oer_constraints_t;
+#else
 #include <oer_decoder.h>	/* Octet Encoding Rules encoder */
 #include <oer_encoder.h>	/* Octet Encoding Rules encoder */
-#include <constraints.h>	/* Subtype constraints support */
+#endif
 
 /*
  * Free the structure according to its specification.

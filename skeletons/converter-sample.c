@@ -341,7 +341,11 @@ main(int ac, char *av[]) {
                 DEBUG("Encoded in %ld bytes of DER", (long)erv.encoded);
                 break;
             case OUT_OER:
+#ifdef  ASN_DISABLE_OER_SUPPORT
+                erv.encoded = -1;
+#else
                 erv = oer_encode(pduType, structure, write_out, stdout);
+#endif
                 if(erv.encoded < 0) {
                     fprintf(stderr, "%s: Cannot convert %s into oER\n", name,
                             pduType->name);
@@ -350,7 +354,11 @@ main(int ac, char *av[]) {
                 DEBUG("Encoded in %ld bytes of OER", (long)erv.encoded);
                 break;
             case OUT_PER:
+#ifdef  ASN_DISABLE_PER_SUPPORT
+                erv.encoded = -1;
+#else
                 erv = uper_encode(pduType, structure, write_out, stdout);
+#endif
                 if(erv.encoded < 0) {
                     fprintf(stderr,
                             "%s: Cannot convert %s into Unaligned PER\n", name,
@@ -670,14 +678,23 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
                 (void **)&structure, i_bptr, i_size);
             break;
         case INP_OER:
+#ifdef ASN_DISABLE_OER_SUPPORT
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+#else
             rval = oer_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
+#endif
             break;
         case INP_XER:
             rval = xer_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
             break;
         case INP_PER:
+#ifdef ASN_DISABLE_PER_SUPPORT
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+#else
             if(opt_nopad)
             rval = uper_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size, 0,
@@ -685,6 +702,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
             else
             rval = uper_decode_complete(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
+#endif
             switch(rval.code) {
             case RC_OK:
                 /* Fall through */

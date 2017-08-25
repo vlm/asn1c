@@ -5,7 +5,6 @@
 #include <asn_internal.h>
 #include <OPEN_TYPE.h>
 #include <constr_CHOICE.h>
-#include <oer_opentype.h>
 #include <errno.h>
 
 asn_dec_rval_t
