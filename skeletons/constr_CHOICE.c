@@ -1070,6 +1070,8 @@ CHOICE_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 
 	if(!contents_only) {
 		FREEMEM(ptr);
+	} else if(td->specifics) {
+		memset(ptr, 0, ((asn_CHOICE_specifics_t *)(td->specifics))->struct_size);
 	}
 }
 
