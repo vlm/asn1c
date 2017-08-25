@@ -138,7 +138,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	asn_fprint(stderr, &asn_DEF_Forest, &t);
 	xer_fprint(stderr, &asn_DEF_Forest, &t);
 
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_Forest, &t);
+	ASN_STRUCT_RESET(asn_DEF_Forest, &t);
 }
 
 static char xer_buf[512];

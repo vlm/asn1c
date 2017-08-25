@@ -1731,8 +1731,8 @@ OCTET_STRING_print_utf8(asn_TYPE_descriptor_t *td, const void *sptr,
 
 void
 OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
-                  int contents_only) {
-    OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
+                  enum asn_struct_free_method method) {
+	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
 	asn_OCTET_STRING_specifics_t *specs;
 	asn_struct_ctx_t *ctx;
 	struct _stack *stck;
@@ -1765,9 +1765,17 @@ OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
 		FREEMEM(stck);
 	}
 
-	if(!contents_only) {
-		FREEMEM(st);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(sptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(sptr, 0,
+               ((asn_OCTET_STRING_specifics_t *)(td->specifics))->struct_size);
+        break;
+    }
 }
 
 /*

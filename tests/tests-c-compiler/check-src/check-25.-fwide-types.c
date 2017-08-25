@@ -136,7 +136,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 		assert(rval.consumed <= consumed);
 	}
 
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_T, &t);
+	ASN_STRUCT_RESET(asn_DEF_T, &t);
 }
 
 static void
@@ -237,7 +237,7 @@ partial_read(uint8_t *buf, size_t size) {
 			assert(rval.code == RC_OK);
 			assert(rval.consumed == size3);
 
-			ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_T, &t);
+			ASN_STRUCT_RESET(asn_DEF_T, &t);
 		}
 	}
 }

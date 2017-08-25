@@ -246,10 +246,20 @@ BOOLEAN_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-BOOLEAN_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	if(td && ptr && !contents_only) {
-		FREEMEM(ptr);
-	}
+BOOLEAN_free(const asn_TYPE_descriptor_t *td, void *ptr,
+             enum asn_struct_free_method method) {
+    if(td && ptr) {
+        switch(method) {
+        case ASFM_FREE_EVERYTHING:
+            FREEMEM(ptr);
+            break;
+        case ASFM_FREE_UNDERLYING:
+            break;
+        case ASFM_FREE_UNDERLYING_AND_RESET:
+            memset(ptr, 0, sizeof(BOOLEAN_t));
+            break;
+        }
+    }
 }
 
 asn_dec_rval_t

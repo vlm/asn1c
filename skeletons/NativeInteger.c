@@ -347,16 +347,23 @@ NativeInteger_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 
 void
 NativeInteger_free(const asn_TYPE_descriptor_t *td, void *ptr,
-                   int contents_only) {
+                   enum asn_struct_free_method method) {
     if(!td || !ptr)
 		return;
 
 	ASN_DEBUG("Freeing %s as INTEGER (%d, %p, Native)",
-		td->name, contents_only, ptr);
+		td->name, method, ptr);
 
-	if(!contents_only) {
-		FREEMEM(ptr);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(ptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(ptr, 0, sizeof(long));
+        break;
+    }
 }
 
 int

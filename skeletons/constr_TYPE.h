@@ -47,17 +47,44 @@ typedef struct asn_struct_ctx_s {
 
 /*
  * Free the structure according to its specification.
- * If (free_contents_only) is set, the wrapper structure itself (struct_ptr)
- * will not be freed. (It may be useful in case the structure is allocated
- * statically or arranged on the stack, yet its elements are allocated
- * dynamically.)
+ * Use one of ASN_STRUCT_{FREE,RESET,CONTENTS_ONLY} macros instead.
+ * Do not use directly.
  */
+enum asn_struct_free_method {
+    ASFM_FREE_EVERYTHING,   /* free(struct_ptr) and underlying members */
+    ASFM_FREE_UNDERLYING,   /* free underlying members */
+    ASFM_FREE_UNDERLYING_AND_RESET   /* FREE_UNDERLYING + memset(0) */
+};
 typedef void (asn_struct_free_f)(
 		const struct asn_TYPE_descriptor_s *type_descriptor,
-		void *struct_ptr, int free_contents_only);
-#define	ASN_STRUCT_FREE(asn_DEF, ptr)	(asn_DEF).op->free_struct(&(asn_DEF),ptr,0)
-#define	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr)	\
-					(asn_DEF).op->free_struct(&(asn_DEF),ptr,1)
+		void *struct_ptr, enum asn_struct_free_method);
+
+/*
+ * Free the structure including freeing the memory pointed to by ptr itself.
+ */
+#define ASN_STRUCT_FREE(asn_DEF, ptr) \
+    (asn_DEF).op->free_struct(&(asn_DEF), (ptr), ASFM_FREE_EVERYTHING)
+
+/*
+ * Free the memory used by the members of the structure without freeing the
+ * the structure pointer itself.
+ * ZERO-OUT the structure to the safe clean state.
+ * (Retaining the pointer may be useful in case the structure is allocated
+ *  statically or arranged on the stack, yet its elements are dynamic.)
+ */
+#define ASN_STRUCT_RESET(asn_DEF, ptr) \
+    (asn_DEF).op->free_struct(&(asn_DEF), (ptr), ASFM_FREE_UNDERLYING_AND_RESET)
+
+/*
+ * Free memory used by the members of the structure without freeing
+ * the structure pointer itself.
+ * (Retaining the pointer may be useful in case the structure is allocated
+ *  statically or arranged on the stack, yet its elements are dynamic.)
+ * AVOID using it in the application code;
+ * Use a safer ASN_STRUCT_RESET() instead.
+ */
+#define ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr) \
+    (asn_DEF).op->free_struct(&(asn_DEF), (ptr), ASFM_FREE_UNDERLYING)
 
 /*
  * Print the structure according to its specification.

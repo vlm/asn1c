@@ -116,7 +116,7 @@ der_encode_primitive(asn_TYPE_descriptor_t *td, void *sptr,
 
 void
 ASN__PRIMITIVE_TYPE_free(const asn_TYPE_descriptor_t *td, void *sptr,
-                         int contents_only) {
+                         enum asn_struct_free_method method) {
     ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)sptr;
 
 	if(!td || !sptr)
@@ -127,8 +127,16 @@ ASN__PRIMITIVE_TYPE_free(const asn_TYPE_descriptor_t *td, void *sptr,
 	if(st->buf)
 		FREEMEM(st->buf);
 
-	if(!contents_only)
-		FREEMEM(st);
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(sptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(sptr, 0, sizeof(ASN__PRIMITIVE_TYPE_t));
+        break;
+    }
 }
 
 

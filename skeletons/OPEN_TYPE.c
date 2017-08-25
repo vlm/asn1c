@@ -97,6 +97,7 @@ OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     asn_type_selector_result_t selected;
     void *memb_ptr;   /* Pointer to the member */
     void **memb_ptr2; /* Pointer to that pointer */
+    void *inner_value;
     asn_dec_rval_t rv;
     size_t ot_ret;
 
@@ -124,8 +125,12 @@ OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         }
     }
 
+    inner_value =
+        (char *)*memb_ptr2
+        + elm->type->elements[selected.presence_index - 1].memb_offset;
+
     ot_ret = oer_open_type_get(opt_codec_ctx, selected.type_descriptor, NULL,
-                               memb_ptr2, ptr, size);
+                               &inner_value, ptr, size);
     switch(ot_ret) {
     default:
         if(CHOICE_variant_set_presence(selected.type_descriptor, *memb_ptr2,
@@ -151,11 +156,11 @@ OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     if(*memb_ptr2) {
         asn_CHOICE_specifics_t *specs = selected.type_descriptor->specifics;
         if(elm->flags & ATF_POINTER) {
-            ASN_STRUCT_FREE(*selected.type_descriptor, *memb_ptr2);
+            ASN_STRUCT_FREE(*selected.type_descriptor, inner_value);
             *memb_ptr2 = NULL;
         } else {
             ASN_STRUCT_FREE_CONTENTS_ONLY(*selected.type_descriptor,
-                                          *memb_ptr2);
+                                          inner_value);
             memset(*memb_ptr2, 0, specs->struct_size);
         }
     }

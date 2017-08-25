@@ -910,8 +910,9 @@ SET_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-SET_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
-	size_t edx;
+SET_free(const asn_TYPE_descriptor_t *td, void *ptr,
+         enum asn_struct_free_method method) {
+    size_t edx;
 
 	if(!td || !ptr)
 		return;
@@ -931,9 +932,16 @@ SET_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		}
 	}
 
-	if(!contents_only) {
-		FREEMEM(ptr);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(ptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(ptr, 0, ((asn_SET_specifics_t *)(td->specifics))->struct_size);
+        break;
+    }
 }
 
 int

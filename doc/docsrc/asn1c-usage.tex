@@ -304,14 +304,14 @@ structure:
 \begin{codesample}
 Rectangle_t *rect = ...;
 
-asn_DEF_Rectangle.free_struct(&asn_DEF_Rectangle, rect, 0);
+ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
 \end{codesample}
 This code defines a \emph{rect} pointer which points to the Rectangle\_t
-structure which needs to be freed. The second line invokes the generic
-\emph{free\_struct()} routine created specifically for this Rectangle\_t
-structure. The \emph{asn\_DEF\_Rectangle} is the type descriptor,
-which holds a collection of routines to deal with the Rectangle\_t
-structure.
+structure which needs to be freed. The second line uses the generic
+ASN\_STRUCT\_FREE() macro which invokes the memory deallocation routine
+created specifically for this Rectangle\_t structure.
+The \emph{asn\_DEF\_Rectangle} is the type descriptor which holds
+a collection of routines and operations defined for the Rectangle\_t structure.
 
 The following member functions of the asn\_DEF\_Rectangle type descriptor
 are of interest:
@@ -400,7 +400,7 @@ simple_deserializer(const void *buffer, size_t buf_size) {
         return rect;          /* Decoding succeeded */
     } else {
         /* Free partially decoded rect */
-        asn_DEF_Rectangle.free_struct(&asn_DEF_Rectangle, rect, 0);
+        ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
         return 0;
     }
 }
@@ -554,7 +554,7 @@ XML_to_Rectangle(const void *buffer, size_t buf_size) {
         return rect;          /* Decoding succeeded */
     } else {
         /* Free partially decoded rect */
-        asn_DEF_Rectangle.free_struct(&asn_DEF_Rectangle, rect, 0);
+        ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
         return 0;
     }
 }
@@ -626,7 +626,7 @@ struct my_figure {       /* The custom structure */
     /* other members of the structure */
 };
 \end{codesample}
-In this example, the application programmer defined a custom structure
+In this example, the application programmer defines a custom structure
 with one ASN.1-derived member (rect). This member is not a reference
 to the Rectangle\_t, but an in-place inclusion of the Rectangle\_t
 structure. If the freeing is necessary, the usual procedure of freeing
@@ -635,11 +635,9 @@ it does not point to the memory block directly allocated by the memory
 allocation routine, but instead lies within a block allocated for
 the my\_figure structure.
 
-To solve this problem, the free\_struct routine has the additional
-argument (besides the obvious type descriptor and target structure
-pointers), which is the flag specifying whether the outer pointer
-itself must be freed (0, default) or it should be left intact (non-zero
-value).
+To solve this problem, in addition to ASN\_STRUCT\_FREE macro, the asn1c
+skeletons define the ASN\_STRUCT\_RESET macro which doesn't free the passed
+pointer and instead resets the structure into the clean and safe state.
 \begin{codesample}
 /* %\textbf{1. Rectangle\_t is defined within my\_figure}% */
 struct my_figure {
@@ -649,8 +647,7 @@ struct my_figure {
  * Freeing the Rectangle_t
  * without freeing the mf->rect area.
  */
-asn_DEF_Rectangle.free_struct(
-    &asn_DEF_Rectangle, &mf->rect, %\textbf{1 /* !free */}%);
+ASN_STRUCT_RESET(asn_DEF_Rectangle, &mf->rect);
   
 /* %\textbf{2. Rectangle\_t is a stand-alone pointer}% */
 Rectangle_t *rect = ...;
@@ -658,20 +655,10 @@ Rectangle_t *rect = ...;
  * Freeing the Rectangle_t
  * and freeing the rect pointer.
  */
-asn_DEF_Rectangle.free_struct(
-    &asn_DEF_Rectangle, rect, %\textbf{0 /* free the pointer too */}%);
+ASN_STRUCT_FREE(asn_DEF_Rectangle, &mf->rect);
 \end{codesample}
-It is safe to invoke the \emph{free\_struct} function with the target
-structure pointer set to 0 (NULL), the function will do nothing.
-
-For the programmer's convenience, the following macros are available:
-\begin{codesample}
-ASN_STRUCT_FREE(asn_DEF, ptr);
-ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr);
-\end{codesample}
-These macros bear the same semantics as the \emph{free\_struct} function
-invocation, discussed above.
-
+It is safe to invoke both macros with the target structure pointer
+set to 0 (NULL). In this case, the function will do nothing.
 
 \chapter{\label{cha:Step-by-step-examples}Step by step examples}
 

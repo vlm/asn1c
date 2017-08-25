@@ -949,7 +949,8 @@ SEQUENCE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-SEQUENCE_free(const asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
+SEQUENCE_free(const asn_TYPE_descriptor_t *td, void *sptr,
+              enum asn_struct_free_method method) {
     size_t edx;
 
 	if(!td || !sptr)
@@ -970,9 +971,17 @@ SEQUENCE_free(const asn_TYPE_descriptor_t *td, void *sptr, int contents_only) {
 		}
 	}
 
-	if(!contents_only) {
-		FREEMEM(sptr);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(sptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(sptr, 0,
+               ((asn_SEQUENCE_specifics_t *)(td->specifics))->struct_size);
+        break;
+    }
 }
 
 int

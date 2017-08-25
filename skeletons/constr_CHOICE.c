@@ -1037,7 +1037,8 @@ CHOICE_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-CHOICE_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+CHOICE_free(const asn_TYPE_descriptor_t *td, void *ptr,
+            enum asn_struct_free_method method) {
     asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
 	unsigned present;
 
@@ -1068,9 +1069,16 @@ CHOICE_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		}
 	}
 
-	if(!contents_only) {
-		FREEMEM(ptr);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(ptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(ptr, 0, specs->struct_size);
+        break;
+    }
 }
 
 
@@ -1223,8 +1231,7 @@ CHOICE_variant_set_presence(const asn_TYPE_descriptor_t *td, void *sptr,
 
     if(old_present != 0) {
         assert(old_present <= td->elements_count);
-        ASN_STRUCT_FREE_CONTENTS_ONLY(*td, sptr);
-		memset(sptr, 0, specs->struct_size);
+        ASN_STRUCT_RESET(*td, sptr);
     }
 
     _set_present_idx(sptr, specs->pres_offset, specs->pres_size, present);
