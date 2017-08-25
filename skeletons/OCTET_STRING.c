@@ -1616,7 +1616,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	/* X.691, #16.6: short fixed length encoding (up to 2 octets) */
 	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
 	if(csiz->effective_bits >= 0) {
-		ASN_DEBUG("Encoding %d bytes (%ld), length in %d bits",
+		ASN_DEBUG("Encoding %zu bytes (%ld), length in %d bits",
 				st->size, sizeinunits - csiz->lower_bound,
 				csiz->effective_bits);
 		ret = per_put_few_bits(po, sizeinunits - csiz->lower_bound,
@@ -1634,7 +1634,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		ASN__ENCODED_OK(er);
 	}
 
-	ASN_DEBUG("Encoding %d bytes", st->size);
+	ASN_DEBUG("Encoding %zu bytes", st->size);
 
 	if(sizeinunits == 0) {
 		if(uper_put_length(po, 0))
