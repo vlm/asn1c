@@ -36,8 +36,7 @@ OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     }
     if(*memb_ptr2 != NULL) {
         /* Make sure we reset the structure first before encoding */
-        if(CHOICE_variant_set_presence(selected.type_descriptor, *memb_ptr2, 0)
-           != 0) {
+        if(CHOICE_variant_set_presence(elm->type, *memb_ptr2, 0) != 0) {
             ASN__DECODE_FAILED;
         }
     }
@@ -50,7 +49,7 @@ OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                                &inner_value, ptr, size);
     switch(ot_ret) {
     default:
-        if(CHOICE_variant_set_presence(selected.type_descriptor, *memb_ptr2,
+        if(CHOICE_variant_set_presence(elm->type, *memb_ptr2,
                                        selected.presence_index)
            == 0) {
             rv.code = RC_OK;
@@ -62,7 +61,7 @@ OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         /* Fall through */
     case -1:
         rv.code = RC_FAIL;
-        rv.consumed = 0;
+        rv.consumed = ot_ret;
         break;
     case 0:
         rv.code = RC_WMORE;
