@@ -213,7 +213,7 @@ main(int ac, char *av[]) {
 #define    _ASX(x)    _AXS(x)
         fprintf(stderr, "%s\n", _ASX(ASN_CONVERTER_TITLE));
 #endif
-        fprintf(stderr, "Usage: %s [options] <data.ber> ...\n", av[0]);
+        fprintf(stderr, "Usage: %s [options] <datafile> ...\n", av[0]);
         fprintf(stderr, "Where options are:\n");
         if(pduType->op->oer_decoder)
         fprintf(stderr,
