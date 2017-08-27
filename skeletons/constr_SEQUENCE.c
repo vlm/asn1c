@@ -410,10 +410,14 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = elements[edx].type->op->ber_decoder(opt_codec_ctx,
-				elements[edx].type,
-				memb_ptr2, ptr, LEFT,
-				elements[edx].tag_mode);
+		if((elements[edx].flags & ATF_OPEN_TYPE) && elements[edx].type_selector) {
+			rval = OPEN_TYPE_ber_get(opt_codec_ctx, td, st, &elements[edx], ptr, LEFT);
+        } else {
+			rval = elements[edx].type->op->ber_decoder(opt_codec_ctx,
+					elements[edx].type,
+					memb_ptr2, ptr, LEFT,
+					elements[edx].tag_mode);
+		}
 		ASN_DEBUG("In %s SEQUENCE decoded %zu %s of %d "
 			"in %d bytes rval.code %d, size=%d",
 			td->name, edx, elements[edx].type->name,

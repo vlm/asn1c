@@ -27,6 +27,12 @@ extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
  * Decode an Open Type which is potentially constraiend
  * by the other members of the parent structure.
  */
+asn_dec_rval_t OPEN_TYPE_ber_get(asn_codec_ctx_t *opt_codec_ctx,
+                                 asn_TYPE_descriptor_t *parent_type,
+                                 void *parent_structure,
+                                 asn_TYPE_member_t *element, const void *ptr,
+                                 size_t size);
+
 asn_dec_rval_t OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx,
                                  asn_TYPE_descriptor_t *parent_type,
                                  void *parent_structure,
