@@ -18,7 +18,14 @@ OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     asn_dec_rval_t rv;
     size_t ot_ret;
 
-    if(!(elm->flags & ATF_OPEN_TYPE) || !elm->type_selector) {
+
+    if(!(elm->flags & ATF_OPEN_TYPE)) {
+        ASN__DECODE_FAILED;
+    }
+
+    if(!elm->type_selector) {
+        ASN_DEBUG("Type selector is not defined for Open Type %s->%s->%s",
+                  td->name, elm->name, elm->type->name);
         ASN__DECODE_FAILED;
     }
 

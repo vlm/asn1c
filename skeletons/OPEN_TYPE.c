@@ -43,7 +43,13 @@ OPEN_TYPE_ber_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     void *inner_value;
     asn_dec_rval_t rv;
 
-    if(!(elm->flags & ATF_OPEN_TYPE) || !elm->type_selector) {
+    if(!(elm->flags & ATF_OPEN_TYPE)) {
+        ASN__DECODE_FAILED;
+    }
+
+    if(!elm->type_selector) {
+        ASN_DEBUG("Type selector is not defined for Open Type %s->%s->%s",
+                  td->name, elm->name, elm->type->name);
         ASN__DECODE_FAILED;
     }
 
@@ -126,7 +132,13 @@ OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     ssize_t ch_size;
     pxer_chunk_type_e ch_type;
 
-    if(!(elm->flags & ATF_OPEN_TYPE) || !elm->type_selector) {
+    if(!(elm->flags & ATF_OPEN_TYPE)) {
+        ASN__DECODE_FAILED;
+    }
+
+    if(!elm->type_selector) {
+        ASN_DEBUG("Type selector is not defined for Open Type %s->%s->%s",
+                  td->name, elm->name, elm->type->name);
         ASN__DECODE_FAILED;
     }
 
@@ -278,7 +290,13 @@ OPEN_TYPE_uper_get(asn_codec_ctx_t *opt_codec_ctx,
     void *inner_value;
     asn_dec_rval_t rv;
 
-    if(!(elm->flags & ATF_OPEN_TYPE) || !elm->type_selector) {
+    if(!(elm->flags & ATF_OPEN_TYPE)) {
+        ASN__DECODE_FAILED;
+    }
+
+    if(!elm->type_selector) {
+        ASN_DEBUG("Type selector is not defined for Open Type %s->%s->%s",
+                  td->name, elm->name, elm->type->name);
         ASN__DECODE_FAILED;
     }
 

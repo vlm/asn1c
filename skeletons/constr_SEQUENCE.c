@@ -410,7 +410,7 @@ SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		if((elements[edx].flags & ATF_OPEN_TYPE) && elements[edx].type_selector) {
+		if(elements[edx].flags & ATF_OPEN_TYPE) {
 			rval = OPEN_TYPE_ber_get(opt_codec_ctx, td, st, &elements[edx], ptr, LEFT);
         } else {
 			rval = elements[edx].type->op->ber_decoder(opt_codec_ctx,
@@ -677,7 +677,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				memb_ptr2 = &memb_ptr;
 			}
 
-			if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+			if(elm->flags & ATF_OPEN_TYPE) {
 				tmprval = OPEN_TYPE_xer_get(opt_codec_ctx, td, st, elm, ptr, size);
 			} else {
 				/* Invoke the inner type decoder, m.b. multiple times */
@@ -1140,7 +1140,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/* Fetch the member from the stream */
 		ASN_DEBUG("Decoding member \"%s\" in %s", elm->name, td->name);
 
-		if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+		if(elm->flags & ATF_OPEN_TYPE) {
 			rv = OPEN_TYPE_uper_get(opt_codec_ctx, td, st, elm, pd);
 		} else {
 			rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,

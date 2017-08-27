@@ -254,10 +254,12 @@ uper_open_type_get(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 int
 uper_open_type_skip(asn_codec_ctx_t *ctx, asn_per_data_t *pd) {
 	asn_TYPE_descriptor_t s_td;
+    asn_TYPE_operation_t s_op;
 	asn_dec_rval_t rv;
 
 	s_td.name = "<unknown extension>";
-	s_td.op->uper_decoder = uper_sot_suck;
+	s_td.op = &s_op;
+    s_op.uper_decoder = uper_sot_suck;
 
 	rv = uper_open_type_get(ctx, &s_td, 0, 0, pd);
 	if(rv.code != RC_OK)
