@@ -1038,6 +1038,7 @@ ASN_MODULE_SOURCES+=per_encoder.c
 ASN_MODULE_HEADERS+=per_opentype.h
 ASN_MODULE_SOURCES+=per_opentype.c
 ASN_CONVERTER_SOURCES+=converter-sample.c
+ASN_CONVERTER_SOURCES+=pdu_collection.c
 
 
 lib_LTLIBRARIES=libsomething.la
@@ -1046,7 +1047,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = j2735-dump
-CPPFLAGS += -DASN_CONVERTER_TITLE="J2735 DSRC decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DASN_DISABLE_OER_SUPPORT -DPDU=MessageFrame -I.
+CPPFLAGS += -DASN_CONVERTER_TITLE="J2735 DSRC decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DASN_DISABLE_OER_SUPPORT -DPDU=MessageFrame -DASN_PDU_COLLECTION -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: maybe-wip-pause MessageFrame.c $(TARGET)
@@ -1067,7 +1068,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=MessageFrame -fcompound-names -gen-PER ../J2735_201603.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=MessageFrame -fcompound-names -gen-PER -pdu=all ../J2735_201603.asn1
 
 
 MessageFrame.c: ../sample.makefile.regen ../J2735_201603.asn1
@@ -1077,7 +1078,7 @@ MessageFrame.c: ../sample.makefile.regen ../J2735_201603.asn1
 
 regen-makefile:
 	TITLE="J2735 DSRC decoder" \
-	ASN1CMDOPTS="-fcompound-names -gen-PER" \
+	ASN1CMDOPTS="-fcompound-names -gen-PER -pdu=all" \
 	ASN1MODULES="../J2735_201603.asn1" \
 	ASN1PDU=MessageFrame \
 	PROGNAME=j2735-dump \
