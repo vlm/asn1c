@@ -258,4 +258,43 @@ OPEN_TYPE_uper_get(asn_codec_ctx_t *opt_codec_ctx,
     return rv;
 }
 
+asn_enc_rval_t
+OPEN_TYPE_encode_uper(asn_TYPE_descriptor_t *td,
+                      const asn_per_constraints_t *constraints, void *sptr,
+                      asn_per_outp_t *po) {
+    asn_type_selector_result_t selected;
+    void *memb_ptr;   /* Pointer to the member */
+    asn_TYPE_member_t *elm; /* CHOICE's element */
+    asn_enc_rval_t er;
+    unsigned present;
+
+    (void)constraints;
+
+    present = CHOICE_variant_get_presence(td, sptr);
+    if(present == 0 || present > td->elements_count) {
+        ASN__ENCODE_FAILED;
+    } else {
+        present--;
+    }
+
+    ASN_DEBUG("Encoding %s OPEN TYPE element %d", td->name, present);
+
+    elm = &td->elements[present];
+    if(elm->flags & ATF_POINTER) {
+        /* Member is a pointer to another structure */
+        memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+        if(!memb_ptr) ASN__ENCODE_FAILED;
+    } else {
+        memb_ptr = (char *)sptr + elm->memb_offset;
+    }
+
+    if(uper_open_type_put(elm->type, NULL, memb_ptr, po) < 0) {
+        ASN__ENCODE_FAILED;
+    }
+
+    er.encoded = 0;
+    ASN__ENCODED_OK(er);
+}
+
+
 #endif  /* ASN_DISABLE_PER_SUPPORT */
