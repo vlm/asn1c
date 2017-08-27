@@ -87,6 +87,7 @@ DEBUG(const char *fmt, ...) {
 
 int
 main(int ac, char *av[]) {
+    FILE *binary_out;
     static asn_TYPE_descriptor_t *pduType = &PDU_Type;
     ssize_t suggested_bufsize = 8192;  /* close or equal to stdio buffer */
     int number_of_iterations = 1;
@@ -271,6 +272,21 @@ main(int ac, char *av[]) {
         exit(EX_USAGE);
     }
 
+    if(isatty(1)) {
+        const int is_text_output = oform == OUT_TEXT || oform == OUT_XER;
+        if(is_text_output) {
+            binary_out = stdout;
+        } else {
+            fprintf(stderr, "(Suppressing binary output to a terminal.)\n");
+            binary_out = fopen("/dev/null", "wb");
+            if(!binary_out) {
+                fprintf(stderr, "Can't open /dev/null: %s\n", strerror(errno));
+                exit(EX_OSERR);
+            }
+        }
+    } else {
+        binary_out = stdout;
+    }
     setvbuf(stdout, 0, _IOLBF, 0);
 
     for(num = 0; num < number_of_iterations; num++) {
@@ -332,7 +348,7 @@ main(int ac, char *av[]) {
                 }
                 break;
             case OUT_DER:
-                erv = der_encode(pduType, structure, write_out, stdout);
+                erv = der_encode(pduType, structure, write_out, binary_out);
                 if(erv.encoded < 0) {
                     fprintf(stderr, "%s: Cannot convert %s into DER\n", name,
                             pduType->name);
@@ -344,7 +360,7 @@ main(int ac, char *av[]) {
 #ifdef  ASN_DISABLE_OER_SUPPORT
                 erv.encoded = -1;
 #else
-                erv = oer_encode(pduType, structure, write_out, stdout);
+                erv = oer_encode(pduType, structure, write_out, binary_out);
 #endif
                 if(erv.encoded < 0) {
                     fprintf(stderr, "%s: Cannot convert %s into oER\n", name,
@@ -357,7 +373,7 @@ main(int ac, char *av[]) {
 #ifdef  ASN_DISABLE_PER_SUPPORT
                 erv.encoded = -1;
 #else
-                erv = uper_encode(pduType, structure, write_out, stdout);
+                erv = uper_encode(pduType, structure, write_out, binary_out);
 #endif
                 if(erv.encoded < 0) {
                     fprintf(stderr,
@@ -367,9 +383,9 @@ main(int ac, char *av[]) {
                 }
                 DEBUG("Encoded in %ld bits of UPER", (long)erv.encoded);
                 break;
-        }
+            }
 
-        ASN_STRUCT_FREE(*pduType, structure);
+            ASN_STRUCT_FREE(*pduType, structure);
         }
 
         if(file && file != stdin) {
