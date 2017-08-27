@@ -2957,9 +2957,10 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 
 	OUT("{ ");
 
-    if((outmost_tag && outmost_tag->tag_value == -1)
-       || is_open_type(arg, expr, opt_ioc)) {
+    if(is_open_type(arg, expr, opt_ioc)) {
         OUT("ATF_OPEN_TYPE | ");
+    } else if(outmost_tag && outmost_tag->tag_value == -1) {
+        OUT("ATF_ANY_TYPE | ");
     }
     OUT("%s, ",
 		(expr->marker.flags & EM_INDIRECT)?"ATF_POINTER":"ATF_NOFLAGS");

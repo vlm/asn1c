@@ -187,7 +187,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
              */
             ctx->step |= 1; /* Confirm entering next microphase */
         microphase2_decode_continues:
-            if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+            if(elm->flags & ATF_OPEN_TYPE) {
                 rval = OPEN_TYPE_oer_get(opt_codec_ctx, td, st, elm, ptr, size);
             } else {
                 void *memb_tmpptr; /* Temporary reference. */
