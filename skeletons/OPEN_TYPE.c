@@ -18,8 +18,12 @@ asn_TYPE_operation_t asn_OP_OPEN_TYPE = {
 	OPEN_TYPE_decode_xer,
 	OPEN_TYPE_encode_xer,
 	0, 0,	/* No OER support, use "-gen-OER" to enable */
+#ifdef ASN_DISABLE_PER_SUPPORT
+	0, 0,
+#else
 	OPEN_TYPE_decode_uper,
 	OPEN_TYPE_encode_uper,
+#endif
 	0,	/* Use generic outmost tag fetcher */
 };
 
