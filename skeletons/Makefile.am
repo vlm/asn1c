@@ -42,7 +42,8 @@ libasn1cskeletons_la_SOURCES = 				\
 	NumericString.c NumericString.h			\
 	OBJECT_IDENTIFIER.c OBJECT_IDENTIFIER.h		\
 	OCTET_STRING.c OCTET_STRING.h	\
-    OCTET_STRING_oer.c \
+	OCTET_STRING_oer.c \
+	OPEN_TYPE.c OPEN_TYPE.h					\
 	ObjectDescriptor.c ObjectDescriptor.h		\
 	PrintableString.c PrintableString.h		\
 	REAL.c REAL.h					\

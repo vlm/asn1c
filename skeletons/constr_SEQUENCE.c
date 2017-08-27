@@ -594,12 +594,13 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 
 
 #undef	XER_ADVANCE
-#define	XER_ADVANCE(num_bytes)	do {			\
-		size_t num = num_bytes;			\
-		buf_ptr = ((const char *)buf_ptr) + num;\
-		size -= num;				\
-		consumed_myself += num;			\
-	} while(0)
+#define XER_ADVANCE(num_bytes)           \
+    do {                                 \
+        size_t num = (num_bytes);        \
+        ptr = ((const char *)ptr) + num; \
+        size -= num;                     \
+        consumed_myself += num;          \
+    } while(0)
 
 /*
  * Decode the XER (XML) data.
@@ -607,7 +608,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 asn_dec_rval_t
 SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
+		const void *ptr, size_t size) {
 	/*
 	 * Bring closer parts of structure description.
 	 */
@@ -672,10 +673,14 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 				memb_ptr2 = &memb_ptr;
 			}
 
-			/* Invoke the inner type decoder, m.b. multiple times */
-			tmprval = elm->type->op->xer_decoder(opt_codec_ctx,
-					elm->type, memb_ptr2, elm->name,
-					buf_ptr, size);
+			if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
+				tmprval = OPEN_TYPE_xer_get(opt_codec_ctx, td, st, elm, ptr, size);
+			} else {
+				/* Invoke the inner type decoder, m.b. multiple times */
+				tmprval = elm->type->op->xer_decoder(opt_codec_ctx,
+						elm->type, memb_ptr2, elm->name,
+						ptr, size);
+			}
 			XER_ADVANCE(tmprval.consumed);
 			if(tmprval.code != RC_OK)
 				RETURN(tmprval.code);
@@ -689,14 +694,14 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Get the next part of the XML stream.
 		 */
-		ch_size = xer_next_token(&ctx->context, buf_ptr, size,
+		ch_size = xer_next_token(&ctx->context, ptr, size,
 			&ch_type);
 		if(ch_size == -1) {
 		    RETURN(RC_FAIL);
-        } else {
+		} else {
 			switch(ch_type) {
-            case PXER_WMORE:
-                RETURN(RC_WMORE);
+			case PXER_WMORE:
+				RETURN(RC_WMORE);
 			case PXER_COMMENT:	/* Got XML comment */
 			case PXER_TEXT:		/* Ignore free-standing text */
 				XER_ADVANCE(ch_size);	/* Skip silently */
@@ -706,7 +711,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			}
 		}
 
-		tcv = xer_check_tag(buf_ptr, ch_size, xml_tag);
+		tcv = xer_check_tag(ptr, ch_size, xml_tag);
 		ASN_DEBUG("XER/SEQUENCE: tcv = %d, ph=%d [%s]",
 			tcv, ctx->phase, xml_tag);
 
@@ -782,8 +787,7 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 					edx_end = td->elements_count;
 				for(n = edx; n < edx_end; n++) {
 					elm = &td->elements[n];
-					tcv = xer_check_tag(buf_ptr,
-						ch_size, elm->name);
+					tcv = xer_check_tag(ptr, ch_size, elm->name);
 					switch(tcv) {
 					case XCT_BOTH:
 					case XCT_OPENING:
@@ -836,12 +840,12 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		ASN_DEBUG("Unexpected XML tag in SEQUENCE [%c%c%c%c%c%c]",
-			size>0?((const char *)buf_ptr)[0]:'.',
-			size>1?((const char *)buf_ptr)[1]:'.',
-			size>2?((const char *)buf_ptr)[2]:'.',
-			size>3?((const char *)buf_ptr)[3]:'.',
-			size>4?((const char *)buf_ptr)[4]:'.',
-			size>5?((const char *)buf_ptr)[5]:'.');
+			size>0?((const char *)ptr)[0]:'.',
+			size>1?((const char *)ptr)[1]:'.',
+			size>2?((const char *)ptr)[2]:'.',
+			size>3?((const char *)ptr)[3]:'.',
+			size>4?((const char *)ptr)[4]:'.',
+			size>5?((const char *)ptr)[5]:'.');
 		break;
 	}
 
@@ -1135,7 +1139,7 @@ SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		if((elm->flags & ATF_OPEN_TYPE) && elm->type_selector) {
 			rv = OPEN_TYPE_uper_get(opt_codec_ctx, td, st, elm, pd);
 		} else {
-            		rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
+			rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
 					elm->per_constraints, memb_ptr2, pd);
 		}
 		if(rv.code != RC_OK) {
