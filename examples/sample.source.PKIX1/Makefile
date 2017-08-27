@@ -256,6 +256,9 @@ ASN_MODULE_HEADERS=	\
 
 ASN_MODULE_HEADERS+=ANY.h
 ASN_MODULE_SOURCES+=ANY.c
+ASN_MODULE_HEADERS+=OPEN_TYPE.h
+ASN_MODULE_SOURCES+=OPEN_TYPE.c
+ASN_MODULE_HEADERS+=constr_CHOICE.h
 ASN_MODULE_HEADERS+=BMPString.h
 ASN_MODULE_SOURCES+=BMPString.c
 ASN_MODULE_HEADERS+=UTF8String.h
@@ -292,7 +295,6 @@ ASN_MODULE_HEADERS+=asn_SEQUENCE_OF.h
 ASN_MODULE_SOURCES+=asn_SEQUENCE_OF.c
 ASN_MODULE_HEADERS+=asn_SET_OF.h
 ASN_MODULE_SOURCES+=asn_SET_OF.c
-ASN_MODULE_HEADERS+=constr_CHOICE.h
 ASN_MODULE_SOURCES+=constr_CHOICE.c
 ASN_MODULE_HEADERS+=constr_SEQUENCE.h
 ASN_MODULE_SOURCES+=constr_SEQUENCE.c
@@ -303,9 +305,12 @@ ASN_MODULE_HEADERS+=constr_SET.h
 ASN_MODULE_SOURCES+=constr_SET.c
 ASN_MODULE_SOURCES+=constr_SET_OF.c
 ASN_MODULE_HEADERS+=asn_application.h
+ASN_MODULE_HEADERS+=asn_ioc.h
 ASN_MODULE_HEADERS+=asn_system.h
 ASN_MODULE_HEADERS+=asn_codecs.h
 ASN_MODULE_HEADERS+=asn_internal.h
+ASN_MODULE_HEADERS+=asn_bit_data.h
+ASN_MODULE_SOURCES+=asn_bit_data.c
 ASN_MODULE_HEADERS+=OCTET_STRING.h
 ASN_MODULE_SOURCES+=OCTET_STRING.c
 ASN_MODULE_HEADERS+=BIT_STRING.h
@@ -347,19 +352,19 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = x509dump
-CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DPDU=Certificate -I.
+CPPFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DASN_DISABLE_OER_SUPPORT -DASN_DISABLE_PER_SUPPORT -DPDU=Certificate -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
-all: Certificate.c $(TARGET)
+all: maybe-wip-pause Certificate.c $(TARGET)
 
 $(TARGET): ${OBJS}
-	$(CC) $(CFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)
 
 .SUFFIXES:
 .SUFFIXES: .c .o
 
 .c.o:
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 clean:
 	rm -f $(TARGET)
@@ -381,7 +386,7 @@ regen-makefile:
 	ASN1MODULES="../rfc3280-*.asn1" \
 	ASN1PDU=Certificate \
 	PROGNAME=x509dump \
-	CFLAGS="" \
+	CPPFLAGS="" \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-per
@@ -445,6 +450,9 @@ check-per:
 	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 7; \
 	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 8; \
 	done; done; fi
+
+maybe-wip-pause:
+	@if [ -f WIP ]; then cat WIP; sleep 2; fi
 
 distclean: clean
 	rm -f $(ASN_MODULE_SOURCES)
