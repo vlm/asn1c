@@ -85,8 +85,8 @@ xer_next_token(int *stateContext, const void *buffer, size_t size, pxer_chunk_ty
 		*ch_type = PXER_TEXT;
 		break;
 	case PXML_TAG:
-        *ch_type = PXER_WMORE;
-        return 0;	/* Want more */
+		*ch_type = PXER_WMORE;
+		return 0;	/* Want more */
 	case PXML_TAG_END:
 		*ch_type = PXER_TAG;
 		break;
