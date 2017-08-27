@@ -640,6 +640,10 @@ include_type_to_pdu_collection(arg_t *arg) {
 		[arg->expr->expr_type].type_cb)
 		return 0;
 
+    /* Parameterized types can't serve as PDU's without instantiation. */
+    if(arg->expr->lhs_params)
+        return 0;
+
 	if((arg->flags & A1C_PDU_ALL)
 	|| ((arg->flags & A1C_PDU_AUTO) && !arg->expr->_type_referenced)
 	|| asn1c__pdu_type_lookup(arg->expr->Identifier)) {
