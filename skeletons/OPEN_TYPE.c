@@ -125,7 +125,6 @@ OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     void *memb_ptr;   /* Pointer to the member */
     void **memb_ptr2; /* Pointer to that pointer */
     void *inner_value;
-    const char *xml_tag;
     asn_dec_rval_t rv;
 
     int xer_context = 0;
@@ -358,7 +357,6 @@ asn_enc_rval_t
 OPEN_TYPE_encode_uper(asn_TYPE_descriptor_t *td,
                       const asn_per_constraints_t *constraints, void *sptr,
                       asn_per_outp_t *po) {
-    asn_type_selector_result_t selected;
     void *memb_ptr;   /* Pointer to the member */
     asn_TYPE_member_t *elm; /* CHOICE's element */
     asn_enc_rval_t er;
