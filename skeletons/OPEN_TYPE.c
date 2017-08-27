@@ -156,7 +156,7 @@ OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
      */
     for(;;) {
         ch_size = xer_next_token(&xer_context, ptr, size, &ch_type);
-        if(ch_size <= 0) {
+        if(ch_size < 0) {
             ASN__DECODE_FAILED;
         } else {
             switch(ch_type) {
@@ -231,7 +231,7 @@ OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
      */
     for(;;) {
         ch_size = xer_next_token(&xer_context, ptr, size, &ch_type);
-        if(ch_size <= 0) {
+        if(ch_size < 0) {
             ASN__DECODE_FAILED;
         } else {
             switch(ch_type) {
