@@ -32,7 +32,7 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
      * OPTIMIZATION: Encode directly rather than passing through INTEGER.
      * Saves a memory allocation.
      */
-    rval = INTEGER_decode_oer(opt_codec_ctx, &asn_DEF_INTEGER, constraints,
+    rval = INTEGER_decode_oer(opt_codec_ctx, td, constraints,
                               (void **)&tmpintptr, ptr, size);
     if(rval.code != RC_OK) {
         ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
