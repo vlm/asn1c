@@ -47,6 +47,8 @@ oer_type_decoder_f INTEGER_decode_oer;
 oer_type_encoder_f INTEGER_encode_oer;
 per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
+per_type_decoder_f INTEGER_decode_aper;
+per_type_encoder_f INTEGER_encode_aper;
 asn_random_fill_f  INTEGER_random_fill;
 
 /***********************************
@@ -73,6 +75,8 @@ int asn_INTEGER2long(const INTEGER_t *i, long *l);
 int asn_INTEGER2ulong(const INTEGER_t *i, unsigned long *l);
 int asn_long2INTEGER(INTEGER_t *i, long l);
 int asn_ulong2INTEGER(INTEGER_t *i, unsigned long l);
+int asn_int642INTEGER(INTEGER_t *i, int64_t l);
+int asn_uint642INTEGER(INTEGER_t *i, uint64_t l);
 
 /* A version of strtol/strtoimax(3) with nicer error reporting. */
 enum asn_strtox_result_e {

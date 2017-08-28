@@ -20,6 +20,8 @@ xer_type_decoder_f PacketId_decode_xer;
 xer_type_encoder_f PacketId_encode_xer;
 per_type_decoder_f PacketId_decode_uper;
 per_type_encoder_f PacketId_encode_uper;
+per_type_decoder_f PacketId_decode_aper;
+per_type_encoder_f PacketId_encode_aper;
 
 /*** <<< CODE [PacketId] >>> ***/
 
@@ -112,6 +114,8 @@ xer_type_decoder_f Color_decode_xer;
 xer_type_encoder_f Color_encode_xer;
 per_type_decoder_f Color_decode_uper;
 per_type_encoder_f Color_encode_uper;
+per_type_decoder_f Color_decode_aper;
+per_type_encoder_f Color_encode_aper;
 
 /*** <<< CODE [Color] >>> ***/
 
@@ -197,6 +201,8 @@ xer_type_decoder_f Valid_decode_xer;
 xer_type_encoder_f Valid_encode_xer;
 per_type_decoder_f Valid_decode_uper;
 per_type_encoder_f Valid_encode_uper;
+per_type_decoder_f Valid_decode_aper;
+per_type_encoder_f Valid_encode_aper;
 
 /*** <<< CODE [Valid] >>> ***/
 
@@ -271,6 +277,8 @@ xer_type_decoder_f Packet_List_decode_xer;
 xer_type_encoder_f Packet_List_encode_xer;
 per_type_decoder_f Packet_List_decode_uper;
 per_type_encoder_f Packet_List_encode_uper;
+per_type_decoder_f Packet_List_decode_aper;
+per_type_encoder_f Packet_List_encode_aper;
 
 /*** <<< CODE [Packet-List] >>> ***/
 
@@ -356,6 +364,8 @@ xer_type_decoder_f UpperLayer_List_41P0_decode_xer;
 xer_type_encoder_f UpperLayer_List_41P0_encode_xer;
 per_type_decoder_f UpperLayer_List_41P0_decode_uper;
 per_type_encoder_f UpperLayer_List_41P0_encode_uper;
+per_type_decoder_f UpperLayer_List_41P0_decode_aper;
+per_type_encoder_f UpperLayer_List_41P0_encode_aper;
 
 /*** <<< CODE [UpperLayer-List] >>> ***/
 
@@ -515,6 +525,8 @@ xer_type_decoder_f SinglePacket_48P0_decode_xer;
 xer_type_encoder_f SinglePacket_48P0_encode_xer;
 per_type_decoder_f SinglePacket_48P0_decode_uper;
 per_type_encoder_f SinglePacket_48P0_encode_uper;
+per_type_decoder_f SinglePacket_48P0_decode_aper;
+per_type_encoder_f SinglePacket_48P0_encode_aper;
 
 /*** <<< CODE [SinglePacket] >>> ***/
 

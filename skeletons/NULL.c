@@ -31,9 +31,13 @@ asn_TYPE_operation_t asn_OP_NULL = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	NULL_decode_uper,	/* Unaligned PER decoder */
 	NULL_encode_uper,	/* Unaligned PER encoder */
+	NULL_decode_aper,	/* Aligned PER decoder */
+	NULL_encode_aper,	/* Aligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	NULL_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -212,6 +216,51 @@ NULL_encode_uper(const asn_TYPE_descriptor_t *td,
                  const asn_per_constraints_t *constraints, const void *sptr,
                  asn_per_outp_t *po) {
     asn_enc_rval_t er;
+
+	(void)td;
+	(void)constraints;
+	(void)sptr;
+	(void)po;
+
+	er.encoded = 0;
+	ASN__ENCODED_OK(er);
+}
+
+asn_dec_rval_t
+NULL_decode_aper(const asn_codec_ctx_t *opt_codec_ctx,
+                 const asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+
+	(void)opt_codec_ctx;
+	(void)td;
+	(void)constraints;
+	(void)pd;
+
+	if(!*sptr) {
+		*sptr = MALLOC(sizeof(NULL_t));
+		if(*sptr) {
+			*(NULL_t *)*sptr = 0;
+		} else {
+			ASN__DECODE_FAILED;
+		}
+	}
+
+	/*
+	 * NULL type does not have content octets.
+	 */
+
+	rv.code = RC_OK;
+	rv.consumed = 0;
+	return rv;
+}
+
+
+asn_enc_rval_t
+NULL_encode_aper(const asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints,
+                 const void *sptr, asn_per_outp_t *po) {
+	asn_enc_rval_t er;
 
 	(void)td;
 	(void)constraints;

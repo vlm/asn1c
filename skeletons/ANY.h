@@ -29,6 +29,8 @@ der_type_encoder_f ANY_encode_der;
 xer_type_encoder_f ANY_encode_xer;
 per_type_decoder_f ANY_decode_uper;
 per_type_encoder_f ANY_encode_uper;
+per_type_decoder_f ANY_decode_aper;
+per_type_encoder_f ANY_encode_aper;
 
 #define ANY_free         OCTET_STRING_free
 #define ANY_print        OCTET_STRING_print

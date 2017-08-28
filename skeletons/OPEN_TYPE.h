@@ -20,6 +20,8 @@ extern "C" {
 #define OPEN_TYPE_decode_xer NULL
 #define OPEN_TYPE_encode_xer CHOICE_encode_xer
 #define OPEN_TYPE_decode_uper NULL
+#define OPEN_TYPE_decode_aper NULL
+#define OPEN_TYPE_encode_aper CHOICE_encode_aper
 
 extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
 

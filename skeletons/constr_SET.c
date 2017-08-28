@@ -1073,6 +1073,8 @@ asn_TYPE_operation_t asn_OP_SET = {
 	0,	/* SET_encode_oer */
 	0,	/* SET_decode_uper */
 	0,	/* SET_encode_uper */
+	0,	/* SET_decode_aper */
+	0,	/* SET_encode_aper */
 	SET_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
