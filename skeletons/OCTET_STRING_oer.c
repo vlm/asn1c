@@ -17,7 +17,7 @@ OCTET_STRING_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
     asn_OCTET_STRING_specifics_t *specs =
         td->specifics
             ? (asn_OCTET_STRING_specifics_t *)td->specifics
-            : (asn_OCTET_STRING_specifics_t *)&asn_DEF_OCTET_STRING.specifics;
+            : (asn_OCTET_STRING_specifics_t *)&asn_SPC_OCTET_STRING_specs;
     OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
     const asn_oer_constraints_t *cts =
         constraints ? constraints : td->oer_constraints;
@@ -107,7 +107,7 @@ OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
     asn_OCTET_STRING_specifics_t *specs =
         td->specifics
             ? (asn_OCTET_STRING_specifics_t *)td->specifics
-            : (asn_OCTET_STRING_specifics_t *)&asn_DEF_OCTET_STRING.specifics;
+            : (asn_OCTET_STRING_specifics_t *)&asn_SPC_OCTET_STRING_specs;
     OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
     const asn_oer_constraints_t *cts =
         constraints ? constraints : td->oer_constraints;
