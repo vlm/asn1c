@@ -467,14 +467,15 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		asn_enc_rval_t tmper;
-		void *memb_ptr;
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
 
 		/*
 		 * Compute the length of the encoding of this member.
 		 */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) {
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) {
 				if(!elm->optional)
 					/* Mandatory elements missing */
 					ASN__ENCODE_FAILED;
@@ -487,8 +488,20 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 			}
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr;
 		}
-		tmper = elm->type->op->der_encoder(elm->type, memb_ptr,
+
+		/* Eliminate default values */
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1) {
+			if(t2m_build_own) {
+				t2m_build[t2m_count].el_no = edx;
+				t2m_build[t2m_count].el_tag = 0;
+				t2m_count++;
+			}
+			continue;
+		}
+
+		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			0, 0);
 		if(tmper.encoded == -1)
@@ -501,7 +514,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		if(t2m_build_own) {
 			t2m_build[t2m_count].el_no = edx;
 			t2m_build[t2m_count].el_tag = asn_TYPE_outmost_tag(
-				elm->type, memb_ptr, elm->tag_mode, elm->tag);
+				elm->type, *memb_ptr2, elm->tag_mode, elm->tag);
 			t2m_count++;
 		} else {
 			/*
@@ -544,18 +557,26 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm;
 		asn_enc_rval_t tmper;
-		void *memb_ptr;
+
+		void *memb_ptr;		/* Pointer to the member */
+		void **memb_ptr2;	/* Pointer to that pointer */
 
 		/* Encode according to the tag order */
 		elm = &td->elements[t2m[edx].el_no];
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) continue;
+			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
+			if(!*memb_ptr2) continue;
 		} else {
 			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+			memb_ptr2 = &memb_ptr;
 		}
-		tmper = elm->type->op->der_encoder(elm->type, memb_ptr,
+
+		/* Eliminate default values */
+		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
+			continue;
+
+		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			cb, app_key);
 		if(tmper.encoded == -1)
