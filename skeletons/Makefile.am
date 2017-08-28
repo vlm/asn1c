@@ -36,6 +36,7 @@ libasn1cskeletons_la_SOURCES = 				\
 	ISO646String.c ISO646String.h			\
 	NULL.c NULL.h					\
 	NativeEnumerated.c NativeEnumerated.h		\
+	NativeEnumerated_oer.c 		\
 	NativeInteger.c NativeInteger.h			\
 	NativeInteger_oer.c \
 	NativeReal.c NativeReal.h			\

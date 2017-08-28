@@ -75,6 +75,7 @@ OPEN_TYPE.h OPEN_TYPE_oer.c
 INTEGER_oer.c
 OCTET_STRING_oer.c
 NativeInteger_oer.c
+NativeEnumerated_oer.c
 constr_SEQUENCE_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION

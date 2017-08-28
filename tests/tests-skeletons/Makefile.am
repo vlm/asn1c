@@ -1,19 +1,20 @@
 @CODE_COVERAGE_RULES@
 
-check_PROGRAMS = \
-	check-ber_tlv_tag	\
-	check-length		\
-	check-OIDs		\
-	check-GeneralizedTime	\
-	check-OCTET_STRING	\
-	check-UTF8String	\
-	check-UTCTime		\
-	check-INTEGER		\
-	check-REAL		\
-	check-XER		\
-	check-OER-INTEGER	\
-	check-PER		\
-	check-PER-INTEGER
+check_PROGRAMS =            \
+    check-ber_tlv_tag       \
+    check-length            \
+    check-OIDs              \
+    check-GeneralizedTime   \
+    check-OCTET_STRING      \
+    check-UTF8String        \
+    check-UTCTime           \
+    check-INTEGER           \
+    check-REAL              \
+    check-XER               \
+    check-OER-INTEGER       \
+    check-OER-NativeEnumerated \
+    check-PER               \
+    check-PER-INTEGER
 
 #Filter out the coverage options from CFLAGS as we don't need
 #code coverage data for the tests executables
