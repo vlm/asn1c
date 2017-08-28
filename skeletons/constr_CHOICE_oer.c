@@ -85,8 +85,6 @@ oer_fetch_tag(const void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
     if((val & 0x3F) != 0x3F) {
         /* #8.7.1 */
         *tag_r = ((val & 0x3F) << 2) | tclass;
-        fprintf(stderr, "byte %02x, tag_r = %d, %s", *(const uint8_t *)ptr,
-                *tag_r, ber_tlv_tag_string(*tag_r));
         return 1;
     }
 
@@ -198,6 +196,7 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 RETURN(RC_FAIL);
             } else {
                 /* Skip open type extension */
+                ASN_DEBUG("Not implemented skipping open type extension");
                 RETURN(RC_FAIL);
             }
         } while(0);
@@ -230,8 +229,10 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         /* Set presence to be able to free it properly at any time */
         (void)CHOICE_variant_set_presence(td, st, ctx->step + 1);
 
-        if(specs->ext_start <= ctx->step) {
+        if(specs->ext_start >= 0 && specs->ext_start <= ctx->step) {
             /* We're in the extensions group. #20.2 requires Open Type */
+            ASN_DEBUG("Not implemented %s es=%d, edx=%u at %s:%d", td->name,
+                      specs->ext_start, ctx->step, __FILE__, __LINE__);
             RETURN(RC_FAIL);
         }
 
