@@ -2095,10 +2095,29 @@ VisibleIdentifier_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 }
 
+static int asn_PER_MAP_VisibleIdentifier_1_v2c(unsigned int value) {
+	if(value >= sizeof(permitted_alphabet_table_1)/sizeof(permitted_alphabet_table_1[0]))
+		return -1;
+	return permitted_alphabet_table_1[value] - 1;
+}
+static int asn_PER_MAP_VisibleIdentifier_1_c2v(unsigned int code) {
+	if(code >= sizeof(permitted_alphabet_code2value_1)/sizeof(permitted_alphabet_code2value_1[0]))
+		return -1;
+	return permitted_alphabet_code2value_1[code];
+}
 /*
  * This type is implemented using Identifier,
  * so here we adjust the DEF accordingly.
  */
+
+/*** <<< CTDEFS [VisibleIdentifier] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_VisibleIdentifier_constr_1 GCC_NOTUSED = {
+	{ APC_CONSTRAINED,	 6,  6,  36,  122 }	/* (36..122) */,
+	{ APC_CONSTRAINED,	 5,  5,  1,  32 }	/* (SIZE(1..32)) */,
+	asn_PER_MAP_VisibleIdentifier_1_v2c,	/* Value to PER code map */
+	asn_PER_MAP_VisibleIdentifier_1_c2v	/* PER code to value map */
+};
 
 /*** <<< STAT-DEFS [VisibleIdentifier] >>> ***/
 
@@ -2117,7 +2136,7 @@ asn_TYPE_descriptor_t asn_DEF_VisibleIdentifier = {
 	sizeof(asn_DEF_VisibleIdentifier_tags_1)
 		/sizeof(asn_DEF_VisibleIdentifier_tags_1[0]), /* 1 */
 	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	&asn_PER_type_VisibleIdentifier_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

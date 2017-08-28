@@ -94,6 +94,7 @@ typedef Short_t	 Alias_t;
 
 /*** <<< FUNC-DECLS [Alias] >>> ***/
 
+extern asn_per_constraints_t asn_PER_type_Alias_constr_1;
 extern asn_TYPE_descriptor_t asn_DEF_Alias;
 asn_struct_free_f Alias_free;
 asn_struct_print_f Alias_print;
@@ -137,6 +138,14 @@ Alias_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 
+/*** <<< CTDEFS [Alias] >>> ***/
+
+asn_per_constraints_t asn_PER_type_Alias_constr_1 GCC_NOTUSED = {
+	{ APC_CONSTRAINED,	 16,  16,  0,  65535 }	/* (0..65535) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
 /*** <<< STAT-DEFS [Alias] >>> ***/
 
 static const ber_tlv_tag_t asn_DEF_Alias_tags_1[] = {
@@ -154,7 +163,7 @@ asn_TYPE_descriptor_t asn_DEF_Alias = {
 	sizeof(asn_DEF_Alias_tags_1)
 		/sizeof(asn_DEF_Alias_tags_1[0]), /* 1 */
 	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	&asn_PER_type_Alias_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

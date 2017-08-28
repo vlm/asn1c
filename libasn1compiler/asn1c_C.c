@@ -2338,7 +2338,7 @@ emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
     etype = expr_get_type(arg, expr);
 
     if((arg->flags & A1C_GEN_OER)
-       && (expr->constraints || etype == ASN_BASIC_ENUMERATED
+       && (expr->combined_constraints || etype == ASN_BASIC_ENUMERATED
            || etype == ASN_CONSTR_CHOICE)) {
         /* Fall through */
     } else {
@@ -2393,7 +2393,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	etype = expr_get_type(arg, expr);
 
 	if((arg->flags & A1C_GEN_PER)
-	&& (expr->constraints
+	&& (expr->combined_constraints
 		|| etype == ASN_BASIC_ENUMERATED
 		|| etype == ASN_CONSTR_CHOICE)
 	) {
@@ -3249,7 +3249,7 @@ do {				\
 		}
 
 		if(arg->flags & A1C_GEN_OER) {
-			if(expr->constraints
+			if(expr->combined_constraints
 			|| expr->expr_type == ASN_BASIC_ENUMERATED
 			|| expr->expr_type == ASN_CONSTR_CHOICE) {
 				OUT("&asn_OER_type_%s_constr_%d,\n",
@@ -3262,7 +3262,7 @@ do {				\
 		}
 
 		if(arg->flags & A1C_GEN_PER) {
-			if(expr->constraints
+			if(expr->combined_constraints
 			|| expr->expr_type == ASN_BASIC_ENUMERATED
 			|| expr->expr_type == ASN_CONSTR_CHOICE) {
 				OUT("&asn_PER_type_%s_constr_%d,\n",

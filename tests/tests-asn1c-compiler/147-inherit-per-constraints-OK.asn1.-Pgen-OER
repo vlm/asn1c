@@ -134,6 +134,12 @@ Alias_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 
+/*** <<< CTDEFS [Alias] >>> ***/
+
+static asn_oer_constraints_t asn_OER_type_Alias_constr_1 GCC_NOTUSED = {
+	{ 2, 1 }	/* (0..65535) */,
+	-1};
+
 /*** <<< STAT-DEFS [Alias] >>> ***/
 
 static const ber_tlv_tag_t asn_DEF_Alias_tags_1[] = {
@@ -150,7 +156,7 @@ asn_TYPE_descriptor_t asn_DEF_Alias = {
 	asn_DEF_Alias_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Alias_tags_1)
 		/sizeof(asn_DEF_Alias_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
+	&asn_OER_type_Alias_constr_1,
 	0,	/* No PER visible constraints */
 	0, 0,	/* No members */
 	0	/* No specifics */
