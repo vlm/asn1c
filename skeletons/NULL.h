@@ -19,6 +19,7 @@ extern "C" {
 typedef int NULL_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_NULL;
+extern asn_TYPE_operation_t asn_OP_NULL;
 
 asn_struct_print_f NULL_print;
 asn_struct_compare_f NULL_compare;
@@ -28,7 +29,7 @@ xer_type_encoder_f NULL_encode_xer;
 per_type_decoder_f NULL_decode_uper;
 per_type_encoder_f NULL_encode_uper;
 
-#define NULL_free		BOOLEAN_free
+#define NULL_free	BOOLEAN_free
 #define NULL_decode_ber	BOOLEAN_decode_ber
 #define NULL_constraint	asn_generic_no_constraint
 

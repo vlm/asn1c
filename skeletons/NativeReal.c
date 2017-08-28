@@ -21,9 +21,7 @@
 static const ber_tlv_tag_t asn_DEF_NativeReal_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_NativeReal = {
-	"REAL",			/* The ASN.1 type is still REAL */
-	"REAL",
+asn_TYPE_operation_t asn_OP_NativeReal = {
 	NativeReal_free,
 	NativeReal_print,
 	NativeReal_compare,
@@ -46,7 +44,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	NativeReal_decode_uper,
 	NativeReal_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NativeReal = {
+	"REAL",			/* The ASN.1 type is still REAL */
+	"REAL",
+	&asn_OP_NativeReal,
+	asn_generic_no_constraint,
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
 	asn_DEF_NativeReal_tags,	/* Same as above */
@@ -203,6 +207,8 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	return erval;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
+
 /*
  * Decode REAL type using PER.
  */
@@ -273,6 +279,8 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
 
 	return erval;
 }
+
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * Decode the chunk of XML text encoding REAL.
@@ -377,15 +385,23 @@ NativeReal_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
 }
 
 void
-NativeReal_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+NativeReal_free(const asn_TYPE_descriptor_t *td, void *ptr,
+                enum asn_struct_free_method method) {
     if(!td || !ptr)
 		return;
 
 	ASN_DEBUG("Freeing %s as REAL (%d, %p, Native)",
-		td->name, contents_only, ptr);
+		td->name, method, ptr);
 
-	if(!contents_only) {
-		FREEMEM(ptr);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(ptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(ptr, 0, sizeof(double));
+        break;
+    }
 }
 

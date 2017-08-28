@@ -13,7 +13,8 @@ asn_dec_rval_t
 INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                    const asn_oer_constraints_t *constraints, void **sptr,
                    const void *ptr, size_t size) {
-    asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     INTEGER_t *st = (INTEGER_t *)*sptr;
     struct asn_oer_constraint_number_s ct = {0, 0};

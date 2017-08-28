@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t GeneralizedTime_t;  /* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_GeneralizedTime;
+extern asn_TYPE_operation_t asn_OP_GeneralizedTime;
 
 asn_struct_print_f GeneralizedTime_print;
 asn_constr_check_f GeneralizedTime_constraint;
@@ -21,6 +22,7 @@ der_type_encoder_f GeneralizedTime_encode_der;
 xer_type_encoder_f GeneralizedTime_encode_xer;
 
 #define GeneralizedTime_free           OCTET_STRING_free
+#define GeneralizedTime_compare        OCTET_STRING_compare
 #define GeneralizedTime_decode_ber     OCTET_STRING_decode_ber
 #define GeneralizedTime_decode_xer     OCTET_STRING_decode_xer_utf8
 #define GeneralizedTime_decode_uper    OCTET_STRING_decode_uper

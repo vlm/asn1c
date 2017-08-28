@@ -43,14 +43,14 @@ typedef enum asn1p_module_flags {
 typedef struct asn1p_module_s {
 
 	/*
+	 * Human-readable module reference.
+	 */
+	char *ModuleName;   /* Must be the first field */
+
+	/*
 	 * Name of the source file.
 	 */
 	char *source_file_name;
-
-	/*
-	 * Human-readable module reference.
-	 */
-	char *ModuleName;
 
 	/*
 	 * Unique module identifier, OID.

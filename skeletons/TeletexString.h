@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t TeletexString_t;	/* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_TeletexString;
+extern asn_TYPE_operation_t asn_OP_TeletexString;
 
 #define TeletexString_free          OCTET_STRING_free
 #define TeletexString_print         OCTET_STRING_print

@@ -178,8 +178,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Everything_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Everything_specs_1 = {
 	sizeof(struct Everything),
 	offsetof(struct Everything, _asn_ctx),
-	asn_MAP_Everything_tag2el_1,
-	10,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Everything_tag2el_1,
+	.tag2el_count = 10,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -187,17 +187,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Everything_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Everything = {
 	"Everything",
 	"Everything",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Everything_tags_1,
 	sizeof(asn_DEF_Everything_tags_1)
 		/sizeof(asn_DEF_Everything_tags_1[0]), /* 1 */
@@ -291,25 +282,16 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 	offsetof(struct Choice1, _asn_ctx),
 	offsetof(struct Choice1, present),
 	sizeof(((struct Choice1 *)0)->present),
-	asn_MAP_Choice1_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice1_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	"Choice1",
 	"Choice1",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -403,25 +385,16 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	offsetof(struct Choice2, _asn_ctx),
 	offsetof(struct Choice2, present),
 	sizeof(((struct Choice2 *)0)->present),
-	asn_MAP_Choice2_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice2_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",
 	"Choice2",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -515,8 +488,8 @@ static const asn_TYPE_tag2member_t asn_MAP_a_tag2el_2[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_a_specs_2 = {
 	sizeof(struct a),
 	offsetof(struct a, _asn_ctx),
-	asn_MAP_a_tag2el_2,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_a_tag2el_2,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -525,17 +498,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_a_2 = {
 	"a",
 	"a",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_a_tags_2,
 	sizeof(asn_DEF_a_tags_2)
 		/sizeof(asn_DEF_a_tags_2[0]) - 1, /* 1 */
@@ -575,17 +539,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_c_5 = {
 	"c",
 	"c",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
-	SEQUENCE_OF_compare,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_c_tags_5,
 	sizeof(asn_DEF_c_tags_5)
 		/sizeof(asn_DEF_c_tags_5[0]) - 1, /* 1 */
@@ -644,25 +599,16 @@ asn_CHOICE_specifics_t asn_SPC_Choice3_specs_1 = {
 	offsetof(struct Choice3, _asn_ctx),
 	offsetof(struct Choice3, present),
 	sizeof(((struct Choice3 *)0)->present),
-	asn_MAP_Choice3_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice3_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	"Choice3",
 	"Choice3",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -796,8 +742,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Member_tag2el_2[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_2 = {
 	sizeof(struct Member),
 	offsetof(struct Member, _asn_ctx),
-	asn_MAP_Member_tag2el_2,
-	5,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Member_tag2el_2,
+	.tag2el_count = 5,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	3,	/* Start extensions */
 	6	/* Stop extensions */
@@ -806,17 +752,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_Member_2 = {
 	"SEQUENCE",
 	"SEQUENCE",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Member_tags_2,
 	sizeof(asn_DEF_Member_tags_2)
 		/sizeof(asn_DEF_Member_tags_2[0]), /* 1 */
@@ -854,17 +791,8 @@ asn_SET_OF_specifics_t asn_SPC_Set_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Set = {
 	"Set",
 	"Set",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Set_tags_1,
 	sizeof(asn_DEF_Set_tags_1)
 		/sizeof(asn_DEF_Set_tags_1[0]), /* 1 */
@@ -976,8 +904,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Sequence_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	sizeof(struct Sequence),
 	offsetof(struct Sequence, _asn_ctx),
-	asn_MAP_Sequence_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Sequence_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	1,	/* Start extensions */
 	5	/* Stop extensions */
@@ -985,17 +913,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	"Sequence",
 	"Sequence",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Sequence_tags_1,
 	sizeof(asn_DEF_Sequence_tags_1)
 		/sizeof(asn_DEF_Sequence_tags_1[0]), /* 1 */
@@ -1044,17 +963,8 @@ static const ber_tlv_tag_t asn_DEF_TypeRef_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_TypeRef = {
 	"TypeRef",
 	"TypeRef",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TypeRef_tags_1,
 	sizeof(asn_DEF_TypeRef_tags_1)
 		/sizeof(asn_DEF_TypeRef_tags_1[0]), /* 1 */
@@ -1127,8 +1037,8 @@ static const asn_TYPE_tag2member_t asn_MAP_b_tag2el_3[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_b_specs_3 = {
 	sizeof(struct b),
 	offsetof(struct b, _asn_ctx),
-	asn_MAP_b_tag2el_3,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_b_tag2el_3,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -1137,17 +1047,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_b_3 = {
 	"b",
 	"b",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_b_tags_3,
 	sizeof(asn_DEF_b_tags_3)
 		/sizeof(asn_DEF_b_tags_3[0]) - 1, /* 1 */
@@ -1195,8 +1096,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Alpha_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Alpha_specs_1 = {
 	sizeof(struct Alpha),
 	offsetof(struct Alpha, _asn_ctx),
-	asn_MAP_Alpha_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Alpha_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -1204,17 +1105,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Alpha_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Alpha = {
 	"Alpha",
 	"Alpha",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Alpha_tags_1,
 	sizeof(asn_DEF_Alpha_tags_1)
 		/sizeof(asn_DEF_Alpha_tags_1[0]), /* 1 */
@@ -1295,8 +1187,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Beta_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Beta_specs_1 = {
 	sizeof(struct Beta),
 	offsetof(struct Beta, _asn_ctx),
-	asn_MAP_Beta_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Beta_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -1304,17 +1196,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Beta_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Beta = {
 	"Beta",
 	"Beta",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Beta_tags_1,
 	sizeof(asn_DEF_Beta_tags_1)
 		/sizeof(asn_DEF_Beta_tags_1[0]), /* 1 */
@@ -1410,8 +1293,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Gamma_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Gamma_specs_1 = {
 	sizeof(struct Gamma),
 	offsetof(struct Gamma, _asn_ctx),
-	asn_MAP_Gamma_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Gamma_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -1419,17 +1302,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Gamma_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Gamma = {
 	"Gamma",
 	"Gamma",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Gamma_tags_1,
 	sizeof(asn_DEF_Gamma_tags_1)
 		/sizeof(asn_DEF_Gamma_tags_1[0]), /* 1 */
@@ -1513,8 +1387,8 @@ asn_SET_specifics_t asn_SPC_OneTwo_specs_1 = {
 	sizeof(struct OneTwo),
 	offsetof(struct OneTwo, _asn_ctx),
 	offsetof(struct OneTwo, _presence_map),
-	asn_MAP_OneTwo_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_OneTwo_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_OneTwo_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
@@ -1523,17 +1397,8 @@ asn_SET_specifics_t asn_SPC_OneTwo_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_OneTwo = {
 	"OneTwo",
 	"OneTwo",
-	SET_free,
-	SET_print,
-	SET_compare,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_OneTwo_tags_1,
 	sizeof(asn_DEF_OneTwo_tags_1)
 		/sizeof(asn_DEF_OneTwo_tags_1[0]), /* 1 */
@@ -1617,8 +1482,8 @@ asn_SET_specifics_t asn_SPC_TwoThree_specs_1 = {
 	sizeof(struct TwoThree),
 	offsetof(struct TwoThree, _asn_ctx),
 	offsetof(struct TwoThree, _presence_map),
-	asn_MAP_TwoThree_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TwoThree_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_TwoThree_tag2el_1,	/* Same as above */
 	1,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
@@ -1627,17 +1492,8 @@ asn_SET_specifics_t asn_SPC_TwoThree_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_TwoThree = {
 	"TwoThree",
 	"TwoThree",
-	SET_free,
-	SET_print,
-	SET_compare,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TwoThree_tags_1,
 	sizeof(asn_DEF_TwoThree_tags_1)
 		/sizeof(asn_DEF_TwoThree_tags_1[0]), /* 1 */
@@ -1737,8 +1593,8 @@ asn_SET_specifics_t asn_SPC_ThreeOne_specs_1 = {
 	sizeof(struct ThreeOne),
 	offsetof(struct ThreeOne, _asn_ctx),
 	offsetof(struct ThreeOne, _presence_map),
-	asn_MAP_ThreeOne_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_ThreeOne_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	asn_MAP_ThreeOne_tag2el_1,	/* Same as above */
 	2,	/* Count of tags in the CXER map */
 	0,	/* Whether extensible */
@@ -1747,17 +1603,8 @@ asn_SET_specifics_t asn_SPC_ThreeOne_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_ThreeOne = {
 	"ThreeOne",
 	"ThreeOne",
-	SET_free,
-	SET_print,
-	SET_compare,
+	&asn_OP_SET,
 	SET_constraint,
-	SET_decode_ber,
-	SET_encode_der,
-	SET_decode_xer,
-	SET_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ThreeOne_tags_1,
 	sizeof(asn_DEF_ThreeOne_tags_1)
 		/sizeof(asn_DEF_ThreeOne_tags_1[0]), /* 1 */

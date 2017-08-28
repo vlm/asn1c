@@ -4,11 +4,21 @@
 #include <errno.h>
 #include <assert.h>
 
+#include <asn1_buffer.h>
+#include <asn1_namespace.h>
 #include <asn1parser.h>
 #include <asn1fix_export.h>
 #include <asn1fix_crange.h>
 
 #include "asn1print.h"
+
+static abuf all_output_;
+
+typedef enum {
+    PRINT_STDOUT,
+    GLOBAL_BUFFER,
+} print_method_e;
+static print_method_e print_method_;
 
 #define	INDENT(fmt, args...)    do {        \
         if(!(flags & APF_NOINDENT)) {       \
@@ -20,29 +30,50 @@
 
 static int asn1print_module(asn1p_t *asn, asn1p_module_t *mod, enum asn1print_flags flags);
 static int asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags);
-static int asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags flags);
-static int asn1print_tag(asn1p_expr_t *tc, enum asn1print_flags flags);
-static int asn1print_params(asn1p_paramlist_t *pl,enum asn1print_flags flags);
-static int asn1print_with_syntax(asn1p_wsyntx_t *wx, enum asn1print_flags flags);
-static int asn1print_constraint(asn1p_constraint_t *, enum asn1print_flags);
-static int asn1print_value(asn1p_value_t *val, enum asn1print_flags flags);
+static int asn1print_ref(const asn1p_ref_t *ref, enum asn1print_flags flags);
+static int asn1print_tag(const asn1p_expr_t *tc, enum asn1print_flags flags);
+static int asn1print_params(const asn1p_paramlist_t *pl,enum asn1print_flags flags);
+static int asn1print_with_syntax(const asn1p_wsyntx_t *wx, enum asn1print_flags flags);
+static int asn1print_constraint(const asn1p_constraint_t *, enum asn1print_flags);
+static int asn1print_value(const asn1p_value_t *val, enum asn1print_flags flags);
 static int asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1print_flags flags, int level);
 static int asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1print_flags flags, int level);
 
 /* Check printf's error code, to be pedantic. */
 static int safe_printf(const char *fmt, ...) {
+    int ret;
     va_list ap;
     va_start(ap, fmt);
-    int ret = vprintf(fmt, ap);
+
+    switch(print_method_) {
+    case PRINT_STDOUT:
+        ret = vprintf(fmt, ap);
+        break;
+    case GLOBAL_BUFFER:
+        ret = abuf_vprintf(&all_output_, fmt, ap);
+        break;
+    }
     assert(ret >= 0);
     va_end(ap);
+
     return ret;
 }
 
 /* Pedantically check fwrite's return value. */
-static size_t safe_fwrite(const void *ptr, size_t size, size_t nitems, FILE *stream) {
-    size_t ret = fwrite(ptr, 1, size * nitems, stream);
-    assert(ret == size * nitems);
+static size_t safe_fwrite(const void *ptr, size_t size) {
+    size_t ret;
+
+    switch(print_method_) {
+    case PRINT_STDOUT:
+        ret = fwrite(ptr, 1, size, stdout);
+        assert(ret == size);
+        break;
+    case GLOBAL_BUFFER:
+        abuf_add_bytes(&all_output_, ptr, size);
+        ret = size;
+        break;
+    }
+
     return ret;
 }
 
@@ -169,7 +200,7 @@ asn1print_oid(int prior_len, asn1p_oid_t *oid, enum asn1print_flags flags) {
 }
 
 static int
-asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags flags) {
+asn1print_ref(const asn1p_ref_t *ref, enum asn1print_flags flags) {
 
 	(void)flags;	/* Unused argument */
 
@@ -182,8 +213,8 @@ asn1print_ref(asn1p_ref_t *ref, enum asn1print_flags flags) {
 }
 
 static int
-asn1print_tag(asn1p_expr_t *tc, enum asn1print_flags flags) {
-	struct asn1p_type_tag_s *tag = &tc->tag;
+asn1print_tag(const asn1p_expr_t *tc, enum asn1print_flags flags) {
+	const struct asn1p_type_tag_s *tag = &tc->tag;
 
 	(void)flags;	/* Unused argument */
 
@@ -193,7 +224,7 @@ asn1print_tag(asn1p_expr_t *tc, enum asn1print_flags flags) {
 }
 
 static int
-asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
+asn1print_value(const asn1p_value_t *val, enum asn1print_flags flags) {
 
 	if(val == NULL)
 		return 0;
@@ -235,22 +266,22 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 	case ATV_STRING:
 		{
 			char *p = (char *)val->value.string.buf;
-			putchar('"');
+			safe_printf("\"");
 			if(strchr(p, '"')) {
 				/* Mask quotes */
 				for(; *p; p++) {
 					if(*p == '"')
-						putchar(*p);
-					putchar(*p);
+						safe_printf("%c", *p);
+                    safe_printf("%c", *p);
 				}
 			} else {
-				fputs(p, stdout);
+				safe_printf("%s", p);
 			}
-			putchar('"');
+			safe_printf("\"");
 		}
 		return 0;
 	case ATV_UNPARSED:
-		fputs((char *)val->value.string.buf, stdout);
+		safe_printf("%s", (char *)val->value.string.buf);
 		return 0;
 	case ATV_BITVECTOR:
 		{
@@ -266,14 +297,14 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 				for(i = 0; i < bits; i++) {
 					uint8_t uc;
 					uc = bitvector[i>>3];
-					putchar(((uc >> (7-(i%8)))&1)?'1':'0');
+					safe_printf("%c", ((uc >> (7-(i%8)))&1)?'1':'0');
 				}
 				safe_printf("'B");
 			} else {
 				char hextable[16] = "0123456789ABCDEF";
 				for(i = 0; i < (bits>>3); i++) {
-					putchar(hextable[bitvector[i] >> 4]);
-					putchar(hextable[bitvector[i] & 0x0f]);
+					safe_printf("%c", hextable[bitvector[i] >> 4]);
+					safe_printf("%c", hextable[bitvector[i] & 0x0f]);
 				}
 				safe_printf("'H");
 			}
@@ -293,8 +324,18 @@ asn1print_value(asn1p_value_t *val, enum asn1print_flags flags) {
 	return 0;
 }
 
+const char *
+asn1p_constraint_string(const asn1p_constraint_t *ct) {
+    size_t old_len = all_output_.length;
+    print_method_e old_method = print_method_;
+    print_method_ = GLOBAL_BUFFER;
+    asn1print_constraint(ct, APF_NOINDENT);
+    print_method_ = old_method;
+    return &all_output_.buffer[old_len];
+}
+
 static int
-asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
+asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 	int symno = 0;
 
 	if(ct == 0) return 0;
@@ -352,8 +393,7 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 				asn1p_constraint_t *cel = ct->elements[i];
 				if(i) safe_printf(", ");
 				safe_fwrite(cel->value->value.string.buf,
-					1, cel->value->value.string.size,
-					stdout);
+					cel->value->value.string.size);
 				if(cel->el_count) {
 					assert(cel->el_count == 1);
 					safe_printf(" ");
@@ -373,8 +413,7 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 	case ACT_CT_CTDBY:
 		safe_printf("CONSTRAINED BY ");
 		assert(ct->value->type == ATV_UNPARSED);
-		safe_fwrite(ct->value->value.string.buf,
-			1, ct->value->value.string.size, stdout);
+		safe_fwrite(ct->value->value.string.buf, ct->value->value.string.size);
 		break;
 	case ACT_CT_CTNG:
 		safe_printf("CONTAINING ");
@@ -398,13 +437,13 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 					"", "(" };
 			unsigned int i;
 			for(i = 0; i < ct->el_count; i++) {
-				if(i) fputs(symtable[symno], stdout);
-				if(ct->type == ACT_CA_CRC) fputs("{", stdout);
+				if(i) safe_printf("%s", symtable[symno]);
+				if(ct->type == ACT_CA_CRC) safe_printf("{");
 				asn1print_constraint(ct->elements[i], flags);
-				if(ct->type == ACT_CA_CRC) fputs("}", stdout);
+				if(ct->type == ACT_CA_CRC) safe_printf("}");
 				if(i+1 < ct->el_count
 				&& ct->type == ACT_CA_SET)
-					fputs(")", stdout);
+					safe_printf(")");
 			}
 		}
 		break;
@@ -425,7 +464,7 @@ asn1print_constraint(asn1p_constraint_t *ct, enum asn1print_flags flags) {
 }
 
 static int
-asn1print_params(asn1p_paramlist_t *pl, enum asn1print_flags flags) {
+asn1print_params(const asn1p_paramlist_t *pl, enum asn1print_flags flags) {
 	if(pl) {
 		int i;
 		safe_printf("{");
@@ -444,9 +483,9 @@ asn1print_params(asn1p_paramlist_t *pl, enum asn1print_flags flags) {
 }
 
 static int
-asn1print_with_syntax(asn1p_wsyntx_t *wx, enum asn1print_flags flags) {
+asn1print_with_syntax(const asn1p_wsyntx_t *wx, enum asn1print_flags flags) {
 	if(wx) {
-		asn1p_wsyntx_chunk_t *wc;
+		const asn1p_wsyntx_chunk_t *wc;
 		TQ_FOR(wc, &(wx->chunks), next) {
 		  switch(wc->type) {
 		  case WC_LITERAL:
@@ -467,7 +506,7 @@ asn1print_with_syntax(asn1p_wsyntx_t *wx, enum asn1print_flags flags) {
 }
 
 static int
-asn1print_crange_value(asn1cnst_edge_t *edge, int as_char) {
+asn1print_crange_value(const asn1cnst_edge_t *edge, int as_char) {
 	switch(edge->type) {
 	case ARE_MIN: safe_printf("MIN"); break;
 	case ARE_MAX: safe_printf("MAX"); break;
@@ -753,8 +792,9 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			asn1print_constraint(tc->combined_constraints, flags);
 		}
 
-		top_parent = asn1f_find_terminal_type_ex(asn, tc);
-		if(top_parent) {
+        top_parent = WITH_MODULE_NAMESPACE(
+            tc->module, tc_ns, asn1f_find_terminal_type_ex(asn, tc_ns, tc));
+        if(top_parent) {
 			safe_printf("\n-- Practical constraints (%s): ",
 				top_parent->Identifier);
 			asn1print_constraint_explain(top_parent->Identifier,
@@ -790,8 +830,9 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			asn1p_ioc_row_t *row;
 			row = tc->ioc_table->row[r<0?0:r];
 			if(r < 0) safe_printf("--    %s", r > 9 ? " " : "");
-			else safe_printf("-- [%*d]", r > 9 ? 2 : 1, r+1);
-			for(col = 0; col < row->columns; col++) {
+            else
+                safe_printf("-- [%*d]", (tc->ioc_table->rows > 9) + 1, r + 1);
+            for(col = 0; col < row->columns; col++) {
 				struct asn1p_ioc_cell_s *cell;
 				cell = &row->column[col];
 				if(r < 0) {
@@ -808,7 +849,10 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 			}
 			safe_printf("\n");
 		}
-	} while(0);
+        if(tc->ioc_table->extensible) {
+            safe_printf("-- [%*s] ...\n", (tc->ioc_table->rows>9)+1, "");
+        }
+    } while(0);
 
 	if(flags & APF_PRINT_CLASS_MATRIX
 	&& tc->lhs_params) do {
@@ -859,7 +903,7 @@ asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *expr, enum a
 	INDENT("<!ELEMENT %s", expr->Identifier);
 
 	if(expr->expr_type == A1TC_REFERENCE) {
-		se = asn1f_find_terminal_type_ex(asn, expr);
+		se = WITH_MODULE_NAMESPACE(expr->module, expr_ns, asn1f_find_terminal_type_ex(asn, expr_ns, expr));
 		if(!se) {
 			safe_printf(" (ANY)");
 			return 0;

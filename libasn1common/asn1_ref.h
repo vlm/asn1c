@@ -1,8 +1,10 @@
 /*
  * Generic reference to the yet unknown type defined elsewhere.
  */
-#ifndef	ASN1_PARSER_REFERENCE_H
-#define	ASN1_PARSER_REFERENCE_H
+#ifndef	ASN1_REFERENCE_H
+#define	ASN1_REFERENCE_H
+
+struct asn1p_module_s;
 
 typedef struct asn1p_ref_s {
 
@@ -44,12 +46,13 @@ typedef struct asn1p_ref_s {
 /*
  * Constructor and destructor.
  */
-asn1p_ref_t *asn1p_ref_new(int _lineno, asn1p_module_t *mod);
+asn1p_ref_t *asn1p_ref_new(int _lineno, struct asn1p_module_s *mod);
 void asn1p_ref_free(asn1p_ref_t *);
 
 asn1p_ref_t *asn1p_ref_clone(asn1p_ref_t *ref);
 
-void asn1p_ref_set_source(asn1p_ref_t *, asn1p_module_t *module, int lineno);
+void asn1p_ref_set_source(asn1p_ref_t *, struct asn1p_module_s *module,
+                          int lineno);
 
 
 /*
@@ -74,4 +77,4 @@ const char *asn1p_ref_string(const asn1p_ref_t *);
 int asn1p_ref_add_component(asn1p_ref_t *,
 	const char *name, enum asn1p_ref_lex_type_e);
 
-#endif	/* ASN1_PARSER_REFERENCE_H */
+#endif	/* ASN1_REFERENCE_H */

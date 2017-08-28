@@ -37,9 +37,7 @@ static asn_per_constraints_t asn_DEF_NumericString_per_constraints = {
 	asn_DEF_NumericString_v2c,
 	asn_DEF_NumericString_c2v
 };
-asn_TYPE_descriptor_t asn_DEF_NumericString = {
-	"NumericString",
-	"NumericString",
+asn_TYPE_operation_t asn_OP_NumericString = {
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,   /* ASCII subset */
 	OCTET_STRING_compare,
@@ -62,7 +60,13 @@ asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NumericString = {
+	"NumericString",
+	"NumericString",
+	&asn_OP_NumericString,
+	NumericString_constraint,
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)
 	  / sizeof(asn_DEF_NumericString_tags[0]) - 1,

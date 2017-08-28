@@ -13,33 +13,33 @@ extern "C" {
 
 
 typedef const struct asn_SET_specifics_s {
-    /*
-     * Target structure description.
-     */
-    unsigned struct_size;       /* Size of the target structure. */
-    unsigned ctx_offset;        /* Offset of the asn_struct_ctx_t member */
-    unsigned pres_offset;       /* Offset of _presence_map member */
+	/*
+	 * Target structure description.
+	 */
+	unsigned struct_size;       /* Size of the target structure. */
+	unsigned ctx_offset;        /* Offset of the asn_struct_ctx_t member */
+	unsigned pres_offset;       /* Offset of _presence_map member */
 
-    /*
-     * Tags to members mapping table (sorted).
-     * Sometimes suitable for DER encoding (untagged CHOICE is present);
-     * if so, tag2el_count will be greater than td->elements_count.
-     */
-    const asn_TYPE_tag2member_t *tag2el;
-    unsigned tag2el_count;
+	/*
+	 * Tags to members mapping table (sorted).
+	 * Sometimes suitable for DER encoding (untagged CHOICE is present);
+	 * if so, tag2el_count will be greater than td->elements_count.
+	 */
+	const asn_TYPE_tag2member_t *tag2el;
+	unsigned tag2el_count;
 
-    /*
-     * Tags to members mapping table, second edition.
-     * Suitable for CANONICAL-XER encoding.
-     */
-    const asn_TYPE_tag2member_t *tag2el_cxer;
-    unsigned tag2el_cxer_count;
+	/*
+	 * Tags to members mapping table, second edition.
+	 * Suitable for CANONICAL-XER encoding.
+	 */
+	const asn_TYPE_tag2member_t *tag2el_cxer;
+	unsigned tag2el_cxer_count;
 
-    /*
-     * Extensions-related stuff.
-     */
-    int extensible;                             /* Whether SET is extensible */
-    const unsigned int *_mandatory_elements;    /* Bitmask of mandatory ones */
+	/*
+	 * Extensions-related stuff.
+	 */
+	int extensible;                             /* Whether SET is extensible */
+	const unsigned int *_mandatory_elements;    /* Bitmask of mandatory ones */
 } asn_SET_specifics_t;
 
 /*
@@ -55,6 +55,7 @@ xer_type_decoder_f SET_decode_xer;
 xer_type_encoder_f SET_encode_xer;
 per_type_decoder_f SET_decode_uper;
 per_type_encoder_f SET_encode_uper;
+extern asn_TYPE_operation_t asn_OP_SET;
 
 /***********************
  * Some handy helpers. *

@@ -21,6 +21,7 @@
 #endif
 
 #include <asn1parser.h>		/* Our lovely ASN.1 parser module */
+#include <asn1_namespace.h>
 #include "asn1fix.h"
 
 #ifdef	_WIN32
@@ -45,13 +46,14 @@ typedef void (*error_logger_f)(int _is_fatal, const char *fmt, ...);
  * Universal argument.
  */
 typedef struct arg_s {
-	asn1p_t         *asn;
-	asn1p_module_t  *mod;
-	asn1p_expr_t    *expr;
-	error_logger_f   eh;
-	error_logger_f   debug;
-	void            *key;           /* The next level key */
-	enum asn1f_flags flags;
+    asn1p_t *asn;
+    asn1_namespace_t *ns;
+    asn1p_module_t *mod;
+    asn1p_expr_t *expr;
+    error_logger_f eh;
+    error_logger_f debug;
+    void *key; /* The next level key */
+    enum asn1f_flags flags;
 } arg_t;
 
 /*
@@ -96,28 +98,38 @@ typedef struct arg_s {
 /*
  * Temporary substitute module for the purposes of evaluating expression.
  */
-#define	WITH_MODULE(tmp_mod, expr)	do {			\
-		void *_saved_mod = arg->mod;			\
-		arg->mod = tmp_mod;				\
-		do { expr; } while(0);				\
-		arg->mod = _saved_mod;				\
-	} while(0)
+#define WITH_MODULE(tmp_mod, code)                            \
+    ({                                                        \
+        void *_saved_mod = arg->mod;                          \
+        asn1_namespace_t *_saved_ns = arg->ns;                \
+        arg->mod = tmp_mod;                                   \
+        arg->ns = asn1_namespace_new_from_module(tmp_mod, 1); \
+        typeof(code) ret = code;                              \
+        arg->ns = _saved_ns;                                  \
+        arg->mod = _saved_mod;                                \
+        ret;                                                  \
+    })
 
-#define	LOG(code, fmt, args...) do {				\
-		int _save_errno = errno;			\
-		if(code < 0) {					\
-			if(arg->debug)				\
-				arg->debug(code,		\
-				"%s: " fmt " in %s (%s:%d)",	\
-				__func__, ##args,		\
-				arg->mod->source_file_name,	\
-				__FILE__, __LINE__);		\
-		} else if(arg->eh) {				\
-			arg->eh(code, fmt " in %s", ##args,	\
-				arg->mod->source_file_name);	\
-		}						\
-		errno = _save_errno;				\
-	} while(0)
+#define LOG(code, fmt, args...)                                          \
+    do {                                                                 \
+        int _save_errno = errno;                                         \
+        if(code < 0) {                                                   \
+            if(arg->debug) {                                             \
+                arg->debug(code, "%s: " fmt " in %s (%s:%d)", __func__,  \
+                           ##args, arg->mod->source_file_name, __FILE__, \
+                           __LINE__);                                    \
+            }                                                            \
+        } else if(arg->eh) {                                             \
+            if(arg->debug) {                                             \
+                arg->eh(code, fmt " in %s (%s:%d)", ##args,              \
+                        arg->mod->source_file_name, __FILE__, __LINE__); \
+            } else {                                                     \
+                arg->eh(code, fmt " in %s", ##args,                      \
+                        arg->mod->source_file_name);                     \
+            }                                                            \
+            errno = _save_errno;                                         \
+        }                                                                \
+    } while(0)
 
 #define	DEBUG(fmt, args...)	LOG(-1, fmt, ##args)
 #define	FATAL(fmt, args...)	LOG( 1, fmt, ##args)

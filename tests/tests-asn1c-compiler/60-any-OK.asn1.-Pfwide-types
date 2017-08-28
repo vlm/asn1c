@@ -33,7 +33,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.default_value = 0,
 		.name = "i"
 		},
-	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct T1, any),
+	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T1, any),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_ANY,
@@ -54,8 +54,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T1_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_T1_specs_1 = {
 	sizeof(struct T1),
 	offsetof(struct T1, _asn_ctx),
-	asn_MAP_T1_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T1_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -63,17 +63,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_T1_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
 	"T1",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
 		/sizeof(asn_DEF_T1_tags_1[0]), /* 1 */
@@ -144,8 +135,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T2_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_T2_specs_1 = {
 	sizeof(struct T2),
 	offsetof(struct T2, _asn_ctx),
-	asn_MAP_T2_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T2_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -153,17 +144,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_T2_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_T2 = {
 	"T2",
 	"T2",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags_1,
 	sizeof(asn_DEF_T2_tags_1)
 		/sizeof(asn_DEF_T2_tags_1[0]), /* 1 */
@@ -200,7 +182,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T3;
 /*** <<< STAT-DEFS [T3] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_T3_1[] = {
-	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any1),
+	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any1),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_ANY,
@@ -211,7 +193,7 @@ static asn_TYPE_member_t asn_MBR_T3_1[] = {
 		.default_value = 0,
 		.name = "any1"
 		},
-	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any2),
+	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any2),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_ANY,
@@ -238,17 +220,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_T3_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_T3 = {
 	"T3",
 	"T3",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T3_tags_1,
 	sizeof(asn_DEF_T3_tags_1)
 		/sizeof(asn_DEF_T3_tags_1[0]), /* 1 */

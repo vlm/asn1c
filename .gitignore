@@ -39,6 +39,9 @@ stamp-h*
 # /tests/
 /tests/tests-c-compiler/test-*
 
+# /tests/tests-skeletons
+/tests/tests-skeletons/check-*
+
 # /doc/docsrc
 doc/docsrc/*.aux
 doc/docsrc/*.dvi
@@ -66,9 +69,6 @@ doc/docsrc/*.xdv
 
 # /libasn1parser/
 /libasn1parser/check_parser
-
-# /skeletons/tests/
-/skeletons/tests/check-*
 
 #code coverage
 *.gcno

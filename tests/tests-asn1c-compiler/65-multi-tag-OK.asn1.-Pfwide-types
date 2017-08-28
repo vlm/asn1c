@@ -44,17 +44,8 @@ static const ber_tlv_tag_t asn_DEF_T1_all_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
 	"T1",
-	REAL_free,
-	REAL_print,
-	REAL_compare,
+	&asn_OP_REAL,
 	REAL_constraint,
-	REAL_decode_ber,
-	REAL_encode_der,
-	REAL_decode_xer,
-	REAL_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
 		/sizeof(asn_DEF_T1_tags_1[0]), /* 4 */
@@ -111,17 +102,8 @@ static const ber_tlv_tag_t asn_DEF_T2_all_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T2 = {
 	"T2",
 	"T2",
-	REAL_free,
-	REAL_print,
-	REAL_compare,
+	&asn_OP_REAL,
 	REAL_constraint,
-	REAL_decode_ber,
-	REAL_encode_der,
-	REAL_decode_xer,
-	REAL_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T2_tags_1,
 	sizeof(asn_DEF_T2_tags_1)
 		/sizeof(asn_DEF_T2_tags_1[0]), /* 3 */
@@ -176,17 +158,8 @@ static const ber_tlv_tag_t asn_DEF_T3_all_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T3 = {
 	"T3",
 	"T3",
-	REAL_free,
-	REAL_print,
-	REAL_compare,
+	&asn_OP_REAL,
 	REAL_constraint,
-	REAL_decode_ber,
-	REAL_encode_der,
-	REAL_decode_xer,
-	REAL_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T3_tags_1,
 	sizeof(asn_DEF_T3_tags_1)
 		/sizeof(asn_DEF_T3_tags_1[0]), /* 2 */
@@ -236,17 +209,8 @@ static const ber_tlv_tag_t asn_DEF_T4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T4 = {
 	"T4",
 	"T4",
-	REAL_free,
-	REAL_print,
-	REAL_compare,
+	&asn_OP_REAL,
 	REAL_constraint,
-	REAL_decode_ber,
-	REAL_encode_der,
-	REAL_decode_xer,
-	REAL_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T4_tags_1,
 	sizeof(asn_DEF_T4_tags_1)
 		/sizeof(asn_DEF_T4_tags_1[0]) - 1, /* 2 */
@@ -295,17 +259,8 @@ static const ber_tlv_tag_t asn_DEF_T5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T5 = {
 	"T5",
 	"T5",
-	REAL_free,
-	REAL_print,
-	REAL_compare,
+	&asn_OP_REAL,
 	REAL_constraint,
-	REAL_decode_ber,
-	REAL_encode_der,
-	REAL_decode_xer,
-	REAL_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T5_tags_1,
 	sizeof(asn_DEF_T5_tags_1)
 		/sizeof(asn_DEF_T5_tags_1[0]) - 1, /* 1 */
@@ -353,17 +308,8 @@ static const ber_tlv_tag_t asn_DEF_T6_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T6 = {
 	"T6",
 	"T6",
-	REAL_free,
-	REAL_print,
-	REAL_compare,
+	&asn_OP_REAL,
 	REAL_constraint,
-	REAL_decode_ber,
-	REAL_encode_der,
-	REAL_decode_xer,
-	REAL_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T6_tags_1,
 	sizeof(asn_DEF_T6_tags_1)
 		/sizeof(asn_DEF_T6_tags_1[0]), /* 1 */
@@ -413,17 +359,8 @@ static const ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]) - 2, /* 1 */
@@ -510,8 +447,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Ts_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_Ts_specs_1 = {
 	sizeof(struct Ts),
 	offsetof(struct Ts, _asn_ctx),
-	asn_MAP_Ts_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Ts_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -519,17 +456,8 @@ asn_SEQUENCE_specifics_t asn_SPC_Ts_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Ts = {
 	"Ts",
 	"Ts",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Ts_tags_1,
 	sizeof(asn_DEF_Ts_tags_1)
 		/sizeof(asn_DEF_Ts_tags_1[0]) - 1, /* 1 */

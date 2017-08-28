@@ -31,8 +31,8 @@ asn1constraint_pullup(arg_t *arg) {
 		asn1p_expr_t *parent_expr;
 
 		assert(ref);
-		parent_expr = asn1f_lookup_symbol(arg, expr->module, expr->rhs_pspecs, ref);
-		if(!parent_expr) {
+        parent_expr = asn1f_lookup_symbol(arg, expr->rhs_pspecs, ref);
+        if(!parent_expr) {
 			if(errno != EEXIST) {
 				DEBUG("\tWhile fetching parent constraints: "
 					"type \"%s\" not found: %s",
@@ -57,7 +57,7 @@ asn1constraint_pullup(arg_t *arg) {
 
 			ct_parent = parent_expr->combined_constraints;
 		}
-	} else {
+    } else {
 		ct_parent = 0;
 	}
 
@@ -70,9 +70,9 @@ asn1constraint_pullup(arg_t *arg) {
 	 * Resolve constraints, if not already resolved.
 	 */
 	top_parent = asn1f_find_terminal_type(arg, arg->expr);
-	ret = asn1constraint_resolve(arg, ct_expr,
-		top_parent ? top_parent->expr_type : A1TC_INVALID, 0);
-	if(ret) return ret;
+    ret = asn1constraint_resolve(
+        arg, ct_expr, top_parent ? top_parent->expr_type : A1TC_INVALID, 0);
+    if(ret) return ret;
 
 	/*
 	 * Copy parent type constraints.
@@ -201,35 +201,34 @@ asn1constraint_resolve(arg_t *arg, asn1p_constraint_t *ct, asn1p_expr_type_e ety
 		RET2RVAL(ret, rvalue);
 	}
 	if(ct->value && ct->value->type == ATV_REFERENCED) {
-		ret = constraint_value_resolve(arg,
-			&ct->value, real_constraint_type);
-		RET2RVAL(ret, rvalue);
+        ret = constraint_value_resolve(arg, &ct->value, real_constraint_type);
+        RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_start && ct->range_start->type == ATV_REFERENCED) {
-		ret = constraint_value_resolve(arg,
-			&ct->range_start, real_constraint_type);
-		RET2RVAL(ret, rvalue);
+        ret = constraint_value_resolve(arg, &ct->range_start,
+                                       real_constraint_type);
+        RET2RVAL(ret, rvalue);
 	}
 	if(ct->range_stop && ct->range_stop->type == ATV_REFERENCED) {
-		ret = constraint_value_resolve(arg,
-			&ct->range_stop, real_constraint_type);
-		RET2RVAL(ret, rvalue);
+        ret = constraint_value_resolve(arg, &ct->range_stop,
+                                       real_constraint_type);
+        RET2RVAL(ret, rvalue);
 	}
 	if (ct->value && ct->value->type == ATV_UNPARSED && etype == A1TC_CLASSDEF) {
 		ret = constraint_object_resolve(arg, ct->value);
 		RET2RVAL(ret, rvalue);
 	}
 
-	/*
-	 * Proceed recursively.
-	 */
-	for(el = 0; el < ct->el_count; el++) {
-		ret = asn1constraint_resolve(arg, ct->elements[el],
-			etype, effective_type);
-		RET2RVAL(ret, rvalue);
-	}
+    /*
+     * Proceed recursively.
+     */
+    for(el = 0; el < ct->el_count; el++) {
+        ret = asn1constraint_resolve(arg, ct->elements[el], etype,
+                                     effective_type);
+        RET2RVAL(ret, rvalue);
+    }
 
-	return rvalue;
+    return rvalue;
 }
 
 static void
@@ -272,10 +271,9 @@ constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 		asn1p_expr_t *rtype;
 		arg_t tmparg;
 
-		rtype = asn1f_lookup_symbol(arg, arg->expr->module,
-			arg->expr->rhs_pspecs,
-			ct->containedSubtype->value.reference);
-		if(!rtype) {
+        rtype = asn1f_lookup_symbol(arg, arg->expr->rhs_pspecs,
+                                    ct->containedSubtype->value.reference);
+        if(!rtype) {
 			FATAL("Cannot find type \"%s\" in constraints "
 				"at line %d",
 				asn1f_printable_value(ct->containedSubtype),
@@ -326,10 +324,10 @@ constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
 }
 
 static int
-constraint_value_resolve(arg_t *arg,
-	asn1p_value_t **value, enum asn1p_constraint_type_e real_ctype) {
-	asn1p_expr_t static_expr;
-	arg_t tmp_arg;
+constraint_value_resolve(arg_t *arg, asn1p_value_t **value,
+                         enum asn1p_constraint_type_e real_ctype) {
+    asn1p_expr_t static_expr;
+	arg_t tmparg;
 	int rvalue = 0;
 	int ret;
 
@@ -340,10 +338,10 @@ constraint_value_resolve(arg_t *arg,
 	static_expr = *arg->expr;
 	static_expr.value = *value;
 	static_expr.meta_type = AMT_VALUE;
-	tmp_arg = *arg;
-	tmp_arg.mod = arg->expr->module;
-	tmp_arg.expr = &static_expr;
-	ret = asn1f_value_resolve(&tmp_arg, &static_expr, &real_ctype);
+	tmparg = *arg;
+	tmparg.mod = arg->expr->module;
+	tmparg.expr = &static_expr;
+	ret = asn1f_value_resolve(&tmparg, &static_expr, &real_ctype);
 	RET2RVAL(ret, rvalue);
 	assert(static_expr.value);
 	*value = static_expr.value;
@@ -353,7 +351,7 @@ constraint_value_resolve(arg_t *arg,
 
 static int
 constraint_object_resolve(arg_t *arg, asn1p_value_t *value) {
-	asn1p_expr_t tmp_expr = *arg->expr;
+    asn1p_expr_t tmp_expr = *arg->expr;
 	asn1p_expr_t *saved_expr = arg->expr;
 
 	tmp_expr.meta_type = AMT_VALUESET;

@@ -147,11 +147,18 @@ asn1f_lookup_module(arg_t *arg, const char *module_name, const asn1p_oid_t *oid)
 }
 
 static asn1p_expr_t *
-asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref, int recursion_depth) {
-	asn1p_expr_t *ref_tc;			/* Referenced tc */
+asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref, int recursion_depth) {
+    asn1_namespace_t *initial_namespace = arg->ns;
+	asn1p_ref_t tmp_ref;
 	asn1p_module_t *imports_from;
 	char *modulename;
 	char *identifier;
+
+    if(ref->module && arg->mod != ref->module) {
+        return WITH_MODULE(
+            ref->module,
+            asn1f_lookup_symbol_impl(arg, rhs_pspecs, ref, recursion_depth));
+    }
 
 	/*
 	 * First of all, a reference to a symbol may be specified
@@ -165,17 +172,18 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 	 * All other forms are not implemented at this moment.
 	 */
 
-	DEBUG("(%s) in %s for line %d",
+	DEBUG("Lookup (%s) in %s for line %d",
 		asn1f_printable_reference(ref),
-		mod->ModuleName,
+		asn1_namespace_string(initial_namespace),
 		ref->_lineno);
 
 	if(recursion_depth++ > 30 /* Arbitrary constant */) {
-		FATAL("Excessive circular referencing detected in module %s for %s at line %d",
-			mod->ModuleName,
-			asn1f_printable_reference(ref),
-			ref->_lineno);
-		errno = ETOOMANYREFS;
+        FATAL(
+            "Excessive circular referencing detected in namespace %s for %s at "
+            "line %d",
+            asn1_namespace_string(initial_namespace),
+            asn1f_printable_reference(ref), ref->_lineno);
+        errno = ETOOMANYREFS;
 		return NULL;
 	}
 
@@ -194,7 +202,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 		 * This is a reference to a CLASS-related stuff.
 		 * Employ a separate function for that.
 		 */
-		extract = asn1f_class_access(arg, mod, rhs_pspecs, ref);
+		extract = asn1f_class_access(arg, rhs_pspecs, ref);
 		
 		return extract;
 	} else {
@@ -203,162 +211,199 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 		return NULL;
 	}
 
-	/*
-	 * If module name is specified explicitly
-	 * OR the current module's IMPORTS clause contains the identifier,
-	 * fetch that module.
-	 */
-	if(modulename) {
-		imports_from = asn1f_lookup_module(arg, modulename, 0);
-		if(imports_from == NULL) {
-			FATAL("Module \"%s\" "
-				"mentioned at line %d is not found",
-				modulename, ref->_lineno);
-			return NULL;
-		}
+    if(modulename) {
+        /*
+         * The modulename is specified inside this reference.
+         * To avoid recursion, reformat the reference
+         * as it were local to that module.
+         */
+        tmp_ref = *ref;
+        tmp_ref.components++; /* Hide the first element */
+        tmp_ref.comp_count--;
+        assert(tmp_ref.comp_count > 0);
+        ref = &tmp_ref;
+    }
 
-		/*
-		 * Check that the EXPORTS section of this module contains
-		 * the symbol we care about, or it is EXPORTS ALL.
-		 */
-		if(asn1f_compatible_with_exports(arg,imports_from,identifier)) {
-			errno = EPERM;
-			return NULL;
-		}
-	} else {
-		/* Search inside the IMPORTS section of the current module */
-		imports_from = asn1f_lookup_in_imports(arg, mod, identifier);
-		if(imports_from == NULL && errno != ESRCH) {
-			/*
-			 * Return only of the name was not found.
-			 * If module was not found or more serious error
-			 * encountered, just return preserving the errno.
-			 */
-			return NULL;
-		}
-	}
+    asn1_namespace_t *my_namespace = initial_namespace;
 
-	/*
-	 * The symbol is being imported from another module.
-	 */
-  importing:
-	if(imports_from) {
-		asn1p_ref_t tmpref = *ref;
-		asn1p_expr_t *expr;
-		if(modulename) {
-			/*
-			 * The modulename is specified inside this reference.
-			 * To avoid recursion, reformat the reference
-			 * as it were local to that module.
-			 */
-			tmpref.components++;	/* Hide the first element */
-			tmpref.comp_count--;
-			assert(tmpref.comp_count > 0);
-		}
+#define DISPOSE_OF_MY_NAMESPACE()               \
+    do {                                        \
+        int tmp_errno = errno;                  \
+        if(my_namespace != initial_namespace) { \
+            asn1_namespace_free(my_namespace);  \
+            my_namespace = NULL;                \
+        }                                       \
+        errno = tmp_errno;                      \
+    } while(0)
 
-		expr = asn1f_lookup_symbol_impl(arg, imports_from,
-				rhs_pspecs, &tmpref, recursion_depth);
-		if(!expr && !(arg->expr->_mark & TM_BROKEN)
-		&& !(imports_from->_tags & MT_STANDARD_MODULE)) {
-			arg->expr->_mark |= TM_BROKEN;
-			if(modulename) {
-				FATAL("Module %s referred by %s in module %s "
-					"does not contain the requested symbol",
-				imports_from->ModuleName,
-				asn1f_printable_reference(ref),
-				mod->ModuleName);
-			} else {
-				FATAL("Module %s referred in IMPORTS section "
-				"for %s of module %s does not contain "
-				"the requested symbol",
-				imports_from->ModuleName,
-				asn1f_printable_reference(ref),
-				mod->ModuleName);
-			}
-		}
-		return expr;
-	}
+    /*
+     * If module name is specified explicitly
+     * OR the current module's IMPORTS clause contains the identifier,
+     * switch namespace to that module.
+     */
+    if(modulename) {
+        imports_from = asn1f_lookup_module(arg, modulename, 0);
+        if(imports_from == NULL) {
+            FATAL(
+                "Module \"%s\" "
+                "mentioned at line %d is not found",
+                modulename, ref->_lineno);
+            return NULL;
+        }
 
-	/*
-	 * Now we know where to search for a value: in the current module.
-	 */
-	TQ_FOR(ref_tc, &(mod->members), next) {
-		if(ref_tc->Identifier)
-		if(strcmp(ref_tc->Identifier, identifier) == 0)
-			break;
-	}
-	if(ref_tc) {
-		/* It is acceptable that we don't use input parameters */
-		if(rhs_pspecs && !ref_tc->lhs_params) {
-			WARNING("Parameterized type %s expected "
-				"for %s at line %d",
-				ref_tc->Identifier,
-				asn1f_printable_reference(ref),
-				ref->_lineno);
-		}
-		if(!rhs_pspecs && ref_tc->lhs_params) {
-			FATAL("Type %s expects specialization "
-				"from %s at line %d",
-				ref_tc->Identifier,
-				asn1f_printable_reference(ref),
-				ref->_lineno);
-			errno = EPERM;
-			return NULL;
-		}
-		if(rhs_pspecs && ref_tc->lhs_params) {
-			/* Specialize the target */
-			ref_tc = asn1f_parameterization_fork(arg,
-				ref_tc, rhs_pspecs);
-		}
+        /*
+         * Check that the EXPORTS section of this module contains
+         * the symbol we care about, or it is EXPORTS ALL.
+         */
+        if(asn1f_compatible_with_exports(arg, imports_from, identifier)) {
+            errno = EPERM;
+            return NULL;
+        }
 
-		return ref_tc;
-	}
+        my_namespace = asn1_namespace_new_from_module(imports_from, 1);
+        DEBUG("Lookup (%s) in %s for line %d", asn1f_printable_reference(ref),
+              asn1_namespace_string(my_namespace), ref->_lineno);
+    }
 
-	/*
-	 * Not found in the current module.
-	 * Search in our default standard module.
-	 */
-	{
-		/* Search inside standard module */
-		asn1p_oid_t *uioc_oid;
-		asn1p_oid_arc_t arcs[] = {
-			{ 1, "iso" },
-			{ 3, "org" },
-			{ 6, "dod" },
-			{ 1, "internet" },
-			{ 4, "private" },
-			{ 1, "enterprise" },
-			{ 9363, "spelio" },
-			{ 1, "software" },
-			{ 5, "asn1c" },
-			{ 3, "standard-modules" },
-			{ 0, "auto-imported" },
-			{ 1, 0 }
-		};
+    size_t namespace_switches = 0;
 
-		if(!imports_from) {
-			uioc_oid = asn1p_oid_construct(arcs,
-				sizeof(arcs)/sizeof(arcs[0]));
+    /*
+     * Search through all layers of the namespace.
+     */
+    for(ssize_t ns_item = my_namespace->elements_count - 1; ns_item >= 0;
+        ns_item--) {
+        struct asn1_namespace_element_s *ns_el =
+            &my_namespace->elements[ns_item];
+        asn1p_expr_t *ref_tc; /* Referenced tc */
 
-			if(!mod->module_oid
-				|| asn1p_oid_compare(mod->module_oid, uioc_oid))
-				imports_from = asn1f_lookup_module(arg,
-					"ASN1C-UsefulInformationObjectClasses",
-					uioc_oid);
+        switch(ns_el->selector) {
+        case NAM_SYMBOL:
+            if(modulename) {
+                /*
+                 * Trying to match a fully specified "Module.Symbol"
+                 * against the "Symbol" parameter. Doesn't match.
+                 */
+                continue;
+            }
+            if(strcmp(ns_el->u.symbol.identifier, identifier) != 0) {
+                continue;
+            } else {
+                DEBUG("Lookup (%s) in %s for line %d => found as parameter",
+                      asn1f_printable_reference(ref),
+                      asn1_namespace_string(my_namespace), ref->_lineno);
+                DISPOSE_OF_MY_NAMESPACE();
+                return ns_el->u.symbol.resolution;
+            }
+        case NAM_SPACE:
+            /*
+             * Do a direct symbol search in the given module.
+             */
+            TQ_FOR(ref_tc, &(ns_el->u.space.module->members), next) {
+                if(ref_tc->Identifier)
+                    if(strcmp(ref_tc->Identifier, identifier) == 0) break;
+            }
+            if(ref_tc) {
+                /* It is acceptable that we don't use input parameters */
+                if(rhs_pspecs && !ref_tc->lhs_params) {
+                    WARNING(
+                        "Parameterized type %s expected "
+                        "for %s at line %d",
+                        ref_tc->Identifier, asn1f_printable_reference(ref),
+                        ref->_lineno);
+                }
+                if(!rhs_pspecs && ref_tc->lhs_params) {
+                    FATAL(
+                        "Type %s expects specialization "
+                        "from %s at line %d",
+                        ref_tc->Identifier, asn1f_printable_reference(ref),
+                        ref->_lineno);
+                    errno = EPERM;
+                    return NULL;
+                }
+                if(rhs_pspecs && ref_tc->lhs_params) {
+                    /* Specialize the target */
+                    ref_tc =
+                        asn1f_parameterization_fork(arg, ref_tc, rhs_pspecs);
+                }
 
-			asn1p_oid_free(uioc_oid);
-			if(imports_from) goto importing;
-		}
-	}
+                DISPOSE_OF_MY_NAMESPACE();
+                return ref_tc;
+            }
 
-	DEBUG("Module \"%s\" does not contain \"%s\" "
-		"mentioned at line %d: %s",
-		mod->ModuleName,
-		identifier,
-		ref->_lineno,
-		strerror(errno));
+    /*
+            if(!expr && !(arg->expr->_mark & TM_BROKEN)
+               && !(imports_from->_tags & MT_STANDARD_MODULE)) {
+                arg->expr->_mark |= TM_BROKEN;
+                if(modulename) {
+                } else {
+                    FATAL(
+                        "Module %s referred in IMPORTS section "
+                        "for %s of module %s does not contain "
+                        "the requested symbol",
+                        imports_from->ModuleName,
+                        asn1f_printable_reference(ref), mod->ModuleName);
+                }
+            }
+        */
 
-	if(asn1f_check_known_external_type(identifier) == 0) {
+            /* Search inside the IMPORTS section of the given module */
+            imports_from =
+                asn1f_lookup_in_imports(arg, ns_el->u.space.module, identifier);
+            if(imports_from) {
+
+                if(namespace_switches++ > 10 /* Arbitrary constant */) {
+                    FATAL(
+                        "Excessive circular referencing detected in namespace "
+                        "%s for %s at "
+                        "line %d",
+                        asn1_namespace_string(arg->ns),
+                        asn1f_printable_reference(ref), ref->_lineno);
+                    errno = ETOOMANYREFS;
+                    return NULL;
+                }
+
+                /* Switch namespace */
+                DISPOSE_OF_MY_NAMESPACE();
+                my_namespace = asn1_namespace_new_from_module(imports_from, 1);
+                DEBUG("Lookup (%s) in %s for line %d",
+                      asn1f_printable_reference(ref),
+                      asn1_namespace_string(my_namespace), ref->_lineno);
+                ns_item = my_namespace->elements_count;
+
+                continue;
+            } else if(errno != ESRCH) {
+                /*
+                 * Return only if the name was not found.
+                 * If module was not found or more serious error
+                 * encountered, just return preserving the errno.
+                 */
+                DISPOSE_OF_MY_NAMESPACE();
+                return NULL;
+            }
+
+            if(modulename) {
+                FATAL(
+                    "Module %s referred by %s in module %s "
+                    "does not contain the requested symbol",
+                    ns_el->u.space.module->ModuleName,
+                    asn1f_printable_reference(ref), modulename);
+                break;
+            }
+
+            /* Search failed in the given namespace */
+            continue;
+        }
+    }
+
+    DEBUG(
+        "Namespace %s does not contain \"%s\" "
+        "mentioned at line %d: %s",
+        asn1_namespace_string(my_namespace), identifier, ref->_lineno,
+        strerror(errno));
+
+    DISPOSE_OF_MY_NAMESPACE();
+
+    if(asn1f_check_known_external_type(identifier) == 0) {
 		errno = EEXIST; /* Exists somewhere */
 	} else {
 		errno = ESRCH;
@@ -368,9 +413,9 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_module_t *mod, asn1p_expr_t *rhs_pspe
 
 
 asn1p_expr_t *
-asn1f_lookup_symbol(arg_t *arg,
-	asn1p_module_t *mod, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t *ref) {
-	return asn1f_lookup_symbol_impl(arg, mod, rhs_pspecs, ref, 0);
+asn1f_lookup_symbol(arg_t *arg, asn1p_expr_t *rhs_pspecs,
+                    const asn1p_ref_t *ref) {
+    return asn1f_lookup_symbol_impl(arg, rhs_pspecs, ref, 0);
 }
 
 asn1p_expr_t *
@@ -393,23 +438,30 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	asn1p_ref_t *ref = 0;
 	asn1p_expr_t *tc;
 
-	switch(what) {
-	case FTT_TYPE:
-	case FTT_CONSTR_TYPE:
-		/* Expression may be a terminal type itself */
-		if(expr->expr_type != A1TC_REFERENCE)
-			return expr;
-		ref = expr->reference;
-		break;
-	case FTT_VALUE:
-		assert(expr->meta_type == AMT_VALUE);
-		assert(expr->value);
-		/* Expression may be a terminal type itself */
-		if(expr->value->type != ATV_REFERENCED)
-			return expr;
-		ref = expr->value->value.reference;
-		break;
-	}
+    if(arg->mod != expr->module) {
+        return WITH_MODULE(expr->module,
+                           asn1f_find_terminal_thing(arg, expr, what));
+    }
+
+    switch(what) {
+    case FTT_TYPE:
+    case FTT_CONSTR_TYPE:
+        /* Expression may be a terminal type itself */
+        if(expr->expr_type != A1TC_REFERENCE) {
+            return expr;
+        }
+        ref = expr->reference;
+        break;
+    case FTT_VALUE:
+        assert(expr->meta_type == AMT_VALUE);
+        assert(expr->value);
+        /* Expression may be a terminal type itself */
+        if(expr->value->type != ATV_REFERENCED) {
+            return expr;
+        }
+        ref = expr->value->value.reference;
+        break;
+    }
 
 	DEBUG("%s(%s->%s) for line %d",
 		(what == FTT_VALUE)?"VALUE":"TYPE",
@@ -424,11 +476,13 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	if(what == FTT_VALUE) {
 		asn1p_expr_t *val_type_tc;
 		val_type_tc = asn1f_find_terminal_type(arg, expr);
-		if(val_type_tc
-		&& asn1f_look_value_in_type(arg, val_type_tc, expr))
-			return NULL;
+        if(val_type_tc
+           && WITH_MODULE(val_type_tc->module,
+                          asn1f_look_value_in_type(arg, val_type_tc, expr))) {
+            return expr;
+        }
 		if(expr->value->type != ATV_REFERENCED) {
-			return expr;
+            return expr;
 		}
 		assert(ref == expr->value->value.reference);
 		ref = expr->value->value.reference;
@@ -437,41 +491,42 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
 	/*
 	 * Lookup inside the default module and its IMPORTS section.
 	 */
-	tc = asn1f_lookup_symbol(arg, expr->module, expr->rhs_pspecs, ref);
-	if(tc == NULL) {
+    tc = asn1f_lookup_symbol(arg, expr->rhs_pspecs, ref);
+    if(tc == NULL) {
 		/*
 	 	 * Lookup inside the ref's module and its IMPORTS section.
 	 	 */
-		tc = asn1f_lookup_symbol(arg, ref->module, expr->rhs_pspecs, ref);
-		if(tc == NULL) {
+        tc = WITH_MODULE(ref->module,
+                         asn1f_lookup_symbol(arg, expr->rhs_pspecs, ref));
+        if(tc == NULL) {
 			DEBUG("\tSymbol \"%s\" not found: %s",
 				asn1f_printable_reference(ref),
 				strerror(errno));
-			return NULL;
+            return NULL;
 		}
 	}
 
 	/*
 	 * Recursive loops detection.
 	 */
-	if(tc->_mark & TM_RECURSION) {
-		DEBUG("Recursion loop detected for %s at line %d",
-			asn1f_printable_reference(ref), ref->_lineno);
-		errno = EPERM;
-		return NULL;
-	}
+    if(tc->_mark & TM_RECURSION) {
+        DEBUG("Recursion loop detected for %s at line %d",
+              asn1f_printable_reference(ref), ref->_lineno);
+        errno = EPERM;
+        return NULL;
+    }
 
-	tc->_type_referenced = 1;
+    tc->_type_referenced = 1;
 
-	if((what == FTT_CONSTR_TYPE) && (tc->constraints))
-		return tc;
+    if((what == FTT_CONSTR_TYPE) && (tc->constraints)) {
+        return tc;
+    }
 
-	tc->_mark |= TM_RECURSION;
-	WITH_MODULE(tc->module,
-		expr = asn1f_find_terminal_thing(arg, tc, what));
-	tc->_mark &= ~TM_RECURSION;
+    tc->_mark |= TM_RECURSION;
+    expr = WITH_MODULE(tc->module, asn1f_find_terminal_thing(arg, tc, what));
+    tc->_mark &= ~TM_RECURSION;
 
-	return expr;
+    return expr;
 }
 
 

@@ -356,7 +356,7 @@ asn1p_expr_free(asn1p_expr_t *expr) {
 }
 
 
-char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *buf) {
+const char *asn1p_tag2string(const struct asn1p_type_tag_s *tag, char *buf) {
 	static char buf_stat[TAG2STRING_BUFFER_SIZE];
 	char *start;
 	char *end;
@@ -392,4 +392,11 @@ char *asn1p_tag2string(struct asn1p_type_tag_s *tag, char *buf) {
 	}
 
 	return start;
+}
+
+asn1p_paramlist_t *
+asn1p_get_namespace(asn1p_expr_t *expr) {
+    if(!expr) return NULL;
+    if(expr->lhs_params) return expr->lhs_params;
+    return asn1p_get_namespace(expr->parent_expr);
 }

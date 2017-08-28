@@ -28,9 +28,7 @@ static asn_per_constraints_t asn_DEF_UTCTime_constraints = {
         { APC_SEMI_CONSTRAINED, -1, -1, 0, 0 }, /* Size */
         0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_UTCTime = {
-	"UTCTime",
-	"UTCTime",
+asn_TYPE_operation_t asn_OP_UTCTime = {
 	OCTET_STRING_free,
 	UTCTime_print,
 	OCTET_STRING_compare,   /* Does not deal with time zones. */
@@ -53,7 +51,13 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_UTCTime = {
+	"UTCTime",
+	"UTCTime",
+	&asn_OP_UTCTime,
+	UTCTime_constraint,
 	asn_DEF_UTCTime_tags,
 	sizeof(asn_DEF_UTCTime_tags)
 	  / sizeof(asn_DEF_UTCTime_tags[0]) - 2,

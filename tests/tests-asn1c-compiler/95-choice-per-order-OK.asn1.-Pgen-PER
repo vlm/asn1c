@@ -105,8 +105,8 @@ static asn_CHOICE_specifics_t asn_SPC_ch_specs_4 = {
 	offsetof(struct ch, _asn_ctx),
 	offsetof(struct ch, present),
 	sizeof(((struct ch *)0)->present),
-	asn_MAP_ch_tag2el_4,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_ch_tag2el_4,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = asn_MAP_ch_cmap_4,	/* Canonically sorted */
 	.ext_start = -1	/* Extensions start */
 };
@@ -114,18 +114,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_ch_4 = {
 	"ch",
 	"ch",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -196,26 +186,16 @@ static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	offsetof(struct Choice, _asn_ctx),
 	offsetof(struct Choice, present),
 	sizeof(((struct Choice *)0)->present),
-	asn_MAP_Choice_tag2el_1,
-	5,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice_tag2el_1,
+	.tag2el_count = 5,	/* Count of tags in the map */
 	.canonical_order = asn_MAP_Choice_cmap_1,	/* Canonically sorted */
 	.ext_start = 3	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice = {
 	"Choice",
 	"Choice",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -302,26 +282,16 @@ static asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	offsetof(struct Choice2, _asn_ctx),
 	offsetof(struct Choice2, present),
 	sizeof(((struct Choice2 *)0)->present),
-	asn_MAP_Choice2_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice2_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",
 	"Choice2",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	CHOICE_decode_uper,
-	CHOICE_encode_uper,
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

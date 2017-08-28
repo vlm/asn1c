@@ -17,7 +17,7 @@ OCTET_STRING_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
     asn_OCTET_STRING_specifics_t *specs =
         td->specifics
             ? (asn_OCTET_STRING_specifics_t *)td->specifics
-            : (asn_OCTET_STRING_specifics_t *)&asn_DEF_OCTET_STRING.specifics;
+            : (asn_OCTET_STRING_specifics_t *)&asn_SPC_OCTET_STRING_specs;
     OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
     const asn_oer_constraints_t *cts =
         constraints ? constraints : td->oer_constraints;
@@ -107,7 +107,7 @@ OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
     asn_OCTET_STRING_specifics_t *specs =
         td->specifics
             ? (asn_OCTET_STRING_specifics_t *)td->specifics
-            : (asn_OCTET_STRING_specifics_t *)&asn_DEF_OCTET_STRING.specifics;
+            : (asn_OCTET_STRING_specifics_t *)&asn_SPC_OCTET_STRING_specs;
     OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
     const asn_oer_constraints_t *cts =
         constraints ? constraints : td->oer_constraints;
@@ -116,7 +116,7 @@ OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
 
     if(!st) ASN__ENCODE_FAILED;
 
-    ASN_DEBUG("Encoding %s %d as OCTET STRING", td ? td->name : "", st->size);
+    ASN_DEBUG("Encoding %s %zu as OCTET STRING", td ? td->name : "", st->size);
 
     if(ct_size >= 0) {
         /*
@@ -144,7 +144,7 @@ OCTET_STRING_encode_oer(asn_TYPE_descriptor_t *td,
         if(st->size != unit_bytes * (size_t)ct_size) {
             ASN_DEBUG(
                 "Trying to encode %s (%zu bytes) which doesn't fit SIZE "
-                "constraint (%d)",
+                "constraint (%zu)",
                 td->name, st->size, ct_size);
             ASN__ENCODE_FAILED;
         }

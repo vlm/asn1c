@@ -296,7 +296,7 @@ SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		/*
 		 * Invoke the member fetch routine according to member's type
 		 */
-		rval = elements[edx].type->ber_decoder(opt_codec_ctx,
+		rval = elements[edx].type->op->ber_decoder(opt_codec_ctx,
 				elements[edx].type,
 				memb_ptr2, ptr, LEFT,
 				elements[edx].tag_mode);
@@ -501,7 +501,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 			continue;
 		}
 
-		tmper = elm->type->der_encoder(elm->type, *memb_ptr2,
+		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			0, 0);
 		if(tmper.encoded == -1)
@@ -576,7 +576,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
 			continue;
 
-		tmper = elm->type->der_encoder(elm->type, *memb_ptr2,
+		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			cb, app_key);
 		if(tmper.encoded == -1)
@@ -679,7 +679,7 @@ SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			}
 
 			/* Invoke the inner type decoder, m.b. multiple times */
-			tmprval = elm->type->xer_decoder(opt_codec_ctx,
+			tmprval = elm->type->op->xer_decoder(opt_codec_ctx,
 					elm->type, memb_ptr2, elm->name,
 					buf_ptr, size);
 			XER_ADVANCE(tmprval.consumed);
@@ -867,7 +867,7 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 
 		/* Print the member itself */
-		tmper = elm->type->xer_encoder(elm->type, memb_ptr,
+		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
 
@@ -919,7 +919,7 @@ SET_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 			return -1;
 
 		/* Print the member itself */
-		ret = elm->type->print_struct(elm->type, memb_ptr, ilevel + 1,
+		ret = elm->type->op->print_struct(elm->type, memb_ptr, ilevel + 1,
 			cb, app_key);
 		if(ret) return ret;
 	}
@@ -931,7 +931,8 @@ SET_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 void
-SET_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
+SET_free(const asn_TYPE_descriptor_t *td, void *ptr,
+         enum asn_struct_free_method method) {
     size_t edx;
 
 	if(!td || !ptr)
@@ -952,9 +953,16 @@ SET_free(const asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		}
 	}
 
-	if(!contents_only) {
-		FREEMEM(ptr);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(ptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(ptr, 0, ((asn_SET_specifics_t *)(td->specifics))->struct_size);
+        break;
+    }
 }
 
 int
@@ -1018,7 +1026,7 @@ SET_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		const void *amemb;
 		const void *bmemb;
-        int ret;
+		int ret;
 
 		if(elm->flags & ATF_POINTER) {
             amemb =
@@ -1036,10 +1044,27 @@ SET_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
             bmemb = (const void *)((const char *)bptr + elm->memb_offset);
 		}
 
-        ret = elm->type->compare_struct(elm->type, amemb, bmemb);
+        ret = elm->type->op->compare_struct(elm->type, amemb, bmemb);
         if(ret != 0) return ret;
     }
 
     return 0;
 }
+
+
+asn_TYPE_operation_t asn_OP_SET = {
+	SET_free,
+	SET_print,
+	SET_compare,
+	SET_constraint,
+	SET_decode_ber,
+	SET_encode_der,
+	SET_decode_xer,
+	SET_encode_xer,
+	0,	/* SET_decode_oer */
+	0,	/* SET_encode_oer */
+	0,	/* SET_decode_uper */
+	0,	/* SET_encode_uper */
+	0	/* Use generic outmost tag fetcher */
+};
 

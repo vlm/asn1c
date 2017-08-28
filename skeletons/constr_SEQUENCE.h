@@ -22,21 +22,21 @@ typedef const struct asn_SEQUENCE_specifics_s {
 	 * Tags to members mapping table (sorted).
 	 */
 	const asn_TYPE_tag2member_t *tag2el;
-    unsigned tag2el_count;
+	unsigned tag2el_count;
 
-    /*
+	/*
 	 * Optional members of the extensions root (roms) or additions (aoms).
 	 * Meaningful for PER.
 	 */
-    const int *oms;         /* Optional MemberS */
-    unsigned roms_count;    /* Root optional members count */
-    unsigned aoms_count;    /* Additions optional members count */
+	const int *oms;         /* Optional MemberS */
+	unsigned roms_count;    /* Root optional members count */
+	unsigned aoms_count;    /* Additions optional members count */
 
-    /*
+	/*
 	 * Description of an extensions group.
 	 */
-    signed ext_after;       /* Extensions start after this member */
-    signed ext_before;      /* Extensions stop before this member */
+	signed ext_after;       /* Extensions start after this member */
+	signed ext_before;      /* Extensions stop before this member */
 } asn_SEQUENCE_specifics_t;
 
 
@@ -55,6 +55,7 @@ oer_type_decoder_f SEQUENCE_decode_oer;
 oer_type_encoder_f SEQUENCE_encode_oer;
 per_type_decoder_f SEQUENCE_decode_uper;
 per_type_encoder_f SEQUENCE_encode_uper;
+extern asn_TYPE_operation_t asn_OP_SEQUENCE;
 
 #ifdef __cplusplus
 }

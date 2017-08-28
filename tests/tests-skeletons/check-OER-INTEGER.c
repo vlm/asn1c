@@ -35,12 +35,12 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
     asn_oer_constraints_t *constraints = setup_constraints(width, positive);
 
     fprintf(stderr, "%d: buf[%zu]={%d, %d, ...}\n", lineno, size,
-            ((const uint8_t *)buf)[0],
-            ((const uint8_t *)buf)[1]);
+            size <= 0 ? -1 : ((const uint8_t *)buf)[0],
+            size <= 1 ? -1 : ((const uint8_t *)buf)[1]);
 
     (void)dummy;
 
-    ret = asn_DEF_INTEGER.oer_decoder(0, &asn_DEF_INTEGER, constraints,
+    ret = asn_DEF_INTEGER.op->oer_decoder(0, &asn_DEF_INTEGER, constraints,
                                       (void **)&st, buf, size);
     if(ret.code != RC_OK) {
         /* Basic OER decode does not work */
@@ -124,7 +124,7 @@ check_roundtrip(int lineno, intmax_t value, intmax_t lower_bound, intmax_t upper
 
     dump_data(lineno, tmpbuf, tmpbuf_size);
 
-    ret = asn_DEF_INTEGER.oer_decoder(0, &asn_DEF_INTEGER, constraints,
+    ret = asn_DEF_INTEGER.op->oer_decoder(0, &asn_DEF_INTEGER, constraints,
                                       (void **)&stIn, tmpbuf, tmpbuf_size);
     if(ret.code != RC_OK) {
         /* Basic OER decode does not work */

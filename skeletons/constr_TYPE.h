@@ -41,23 +41,57 @@ typedef struct asn_struct_ctx_s {
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */
 #include <per_encoder.h>	/* Packet Encoding Rules encoder */
+#include <constraints.h>	/* Subtype constraints support */
+
+#ifdef  ASN_DISABLE_OER_SUPPORT
+typedef void (oer_type_decoder_f)();
+typedef void (oer_type_encoder_f)();
+typedef struct{} asn_oer_constraints_t;
+#else
 #include <oer_decoder.h>	/* Octet Encoding Rules encoder */
 #include <oer_encoder.h>	/* Octet Encoding Rules encoder */
-#include <constraints.h>	/* Subtype constraints support */
+#endif
 
 /*
  * Free the structure according to its specification.
- * If (free_contents_only) is set, the wrapper structure itself (struct_ptr)
- * will not be freed. (It may be useful in case the structure is allocated
- * statically or arranged on the stack, yet its elements are allocated
- * dynamically.)
+ * Use one of ASN_STRUCT_{FREE,RESET,CONTENTS_ONLY} macros instead.
+ * Do not use directly.
  */
+enum asn_struct_free_method {
+    ASFM_FREE_EVERYTHING,   /* free(struct_ptr) and underlying members */
+    ASFM_FREE_UNDERLYING,   /* free underlying members */
+    ASFM_FREE_UNDERLYING_AND_RESET   /* FREE_UNDERLYING + memset(0) */
+};
 typedef void (asn_struct_free_f)(
 		const struct asn_TYPE_descriptor_s *type_descriptor,
-		void *struct_ptr, int free_contents_only);
-#define	ASN_STRUCT_FREE(asn_DEF, ptr)	(asn_DEF).free_struct(&(asn_DEF),ptr,0)
-#define	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr)	\
-					(asn_DEF).free_struct(&(asn_DEF),ptr,1)
+		void *struct_ptr, enum asn_struct_free_method);
+
+/*
+ * Free the structure including freeing the memory pointed to by ptr itself.
+ */
+#define ASN_STRUCT_FREE(asn_DEF, ptr) \
+    (asn_DEF).op->free_struct(&(asn_DEF), (ptr), ASFM_FREE_EVERYTHING)
+
+/*
+ * Free the memory used by the members of the structure without freeing the
+ * the structure pointer itself.
+ * ZERO-OUT the structure to the safe clean state.
+ * (Retaining the pointer may be useful in case the structure is allocated
+ *  statically or arranged on the stack, yet its elements are dynamic.)
+ */
+#define ASN_STRUCT_RESET(asn_DEF, ptr) \
+    (asn_DEF).op->free_struct(&(asn_DEF), (ptr), ASFM_FREE_UNDERLYING_AND_RESET)
+
+/*
+ * Free memory used by the members of the structure without freeing
+ * the structure pointer itself.
+ * (Retaining the pointer may be useful in case the structure is allocated
+ *  statically or arranged on the stack, yet its elements are dynamic.)
+ * AVOID using it in the application code;
+ * Use a safer ASN_STRUCT_RESET() instead.
+ */
+#define ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF, ptr) \
+    (asn_DEF).op->free_struct(&(asn_DEF), (ptr), ASFM_FREE_UNDERLYING)
 
 /*
  * Print the structure according to its specification.
@@ -104,16 +138,10 @@ typedef asn_type_selector_result_t(asn_type_selector_f)(
     const void *parent_structure_ptr);
 
 /*
- * The definitive description of the destination language's structure.
+ * Generalized functions for dealing with the speciic type.
+ * May be directly invoked by applications.
  */
-typedef struct asn_TYPE_descriptor_s {
-	const char *name;	/* A name of the ASN.1 type. "" in some cases. */
-	const char *xml_tag;	/* Name used in XML tag */
-
-	/*
-	 * Generalized functions for dealing with the specific type.
-	 * May be directly invoked by applications.
-	 */
+typedef struct asn_TYPE_operation_s {
 	asn_struct_free_f  *free_struct;	/* Free the structure */
 	asn_struct_print_f *print_struct;	/* Human readable output */
 	asn_struct_compare_f *compare_struct;	/* Compare two structures */
@@ -126,6 +154,22 @@ typedef struct asn_TYPE_descriptor_s {
 	oer_type_encoder_f *oer_encoder;	/* Canonical OER encoder */
 	per_type_decoder_f *uper_decoder;	/* Unaligned PER decoder */
 	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
+	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
+} asn_TYPE_operation_t;
+
+/*
+ * The definitive description of the destination language's structure.
+ */
+typedef struct asn_TYPE_descriptor_s {
+	const char *name;	/* A name of the ASN.1 type. "" in some cases. */
+	const char *xml_tag;	/* Name used in XML tag */
+
+	/*
+	 * Generalized functions for dealing with the specific type.
+	 * May be directly invoked by applications.
+	 */
+	asn_TYPE_operation_t *op;
+	asn_constr_check_f *check_constraints;	/* Constraints validator */
 
 	/***********************************************************************
 	 * Internally useful members. Not to be used by applications directly. *
@@ -134,7 +178,6 @@ typedef struct asn_TYPE_descriptor_s {
 	/*
 	 * Tags that are expected to occur.
 	 */
-	asn_outmost_tag_f  *outmost_tag;	/* <optional, internal> */
 	const ber_tlv_tag_t *tags;	/* Effective tags sequence for this type */
 	unsigned tags_count;			/* Number of tags which are expected */
 	const ber_tlv_tag_t *all_tags;	/* Every tag for BER/containment */
@@ -161,9 +204,10 @@ typedef struct asn_TYPE_descriptor_s {
  * i.e. SEQUENCE, SET, CHOICE, etc.
  */
   enum asn_TYPE_flags_e {
-	ATF_NOFLAGS,
-	ATF_POINTER	= 0x01,	/* Represented by the pointer */
-	ATF_OPEN_TYPE	= 0x02	/* ANY type, without meaningful tag */
+    ATF_NOFLAGS,
+    ATF_POINTER = 0x01,   /* Represented by the pointer */
+    ATF_OPEN_TYPE = 0x02, /* Open Type */
+    ATF_ANY_TYPE = 0x04   /* ANY type (deprecated!) */
   };
 typedef struct asn_TYPE_member_s {
     enum asn_TYPE_flags_e flags; /* Element's presentation flags */
@@ -186,8 +230,8 @@ typedef struct asn_TYPE_member_s {
 typedef struct asn_TYPE_tag2member_s {
     ber_tlv_tag_t el_tag;   /* Outmost tag of the member */
     unsigned el_no;         /* Index of the associated member, base 0 */
-    unsigned toff_first;    /* First occurence of the el_tag, relative */
-    unsigned toff_last;		/* Last occurence of the el_tag, relative */
+    int toff_first;         /* First occurence of the el_tag, relative */
+    int toff_last;          /* Last occurence of the el_tag, relative */
 } asn_TYPE_tag2member_t;
 
 /*

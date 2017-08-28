@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t NumericString_t;	/* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_NumericString;
+extern asn_TYPE_operation_t asn_OP_NumericString;
 
 asn_constr_check_f NumericString_constraint;
 

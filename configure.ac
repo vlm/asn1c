@@ -93,9 +93,6 @@ AS_IF([test x$enable_code_coverage != xno], [
 	AC_SEARCH_LIBS(gcov_open, gcov, [LDFLAGS="$LDFLAGS $CODE_COVERAGE_LDFLAGS"])
 ])
 
-AC_SUBST(ADD_CFLAGS)
-AC_SUBST(TESTSUITE_CFLAGS)
-
 dnl Skeletons should be very compatible with most of the compilers, hence
 dnl very strict backward compatibility flags.
 SKELETONS_CFLAGS="${ADD_CFLAGS} ${SKELETONS_CFLAGS}"
@@ -110,6 +107,32 @@ AX_CHECK_COMPILE_FLAG([-Wpedantic],
             [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
     ],
     [-Werror]) #clang 3.0 prints warning when the flag is not supported
+dnl Enable Address Sanitizer, if supported by gcc (4.8+) or clang.
+dnl http://clang.llvm.org/docs/AddressSanitizer.html
+dnl https://code.google.com/p/address-sanitizer/wiki/HowToBuild
+AC_ARG_ENABLE([test-asan],
+    [AS_HELP_STRING([--enable-test-asan], [Enable Address Sanitizer for tests of generated code])],
+    [enable_test_asan=$enableval], [enable_test_asan=no])
+  AS_IF([test "x$enable_asan" != xno], [
+    AX_CHECK_COMPILE_FLAG([-fsanitize=address],
+              [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fsanitize=address"
+              TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fsanitize=address"],
+                          [enable_test_asan=no], [])
+    AS_IF([test "x$enable_asan" = xno], [
+        AC_MSG_FAILURE(
+            [--enable-test-asan is given, but not supported on this platform.
+ Check out https://code.google.com/p/address-sanitizer/wiki/HowToBuild])])
+    dnl Keep error messages nice. Also consider:
+    dnl export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
+    dnl export ASAN_OPTIONS=symbolize=1
+    AX_CHECK_COMPILE_FLAG([-fno-omit-frame-pointer],
+              [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fno-omit-frame-pointer"
+              TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fno-omit-frame-pointer"],
+              [], [])
+  ])
+
+AC_SUBST(ADD_CFLAGS)
+AC_SUBST(TESTSUITE_CFLAGS)
 AC_SUBST(SKELETONS_CFLAGS)
 
 dnl Checks for header files.
@@ -148,8 +171,9 @@ AC_CONFIG_FILES([\
 tests/tests-c-compiler/check-src/Makefile   \
 tests/tests-asn1c-compiler/Makefile         \
 tests/tests-c-compiler/Makefile             \
-skeletons/tests/Makefile                    \
+tests/tests-skeletons/Makefile              \
 libasn1compiler/Makefile                    \
+libasn1common/Makefile                      \
 libasn1parser/Makefile                      \
 libasn1print/Makefile                       \
 libasn1fix/Makefile                         \

@@ -19,6 +19,7 @@ extern "C" {
 typedef int BOOLEAN_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_BOOLEAN;
+extern asn_TYPE_operation_t asn_OP_BOOLEAN;
 
 asn_struct_free_f BOOLEAN_free;
 asn_struct_print_f BOOLEAN_print;

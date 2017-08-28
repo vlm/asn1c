@@ -14,7 +14,8 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
                          asn_TYPE_descriptor_t *td,
                          const asn_oer_constraints_t *constraints,
                          void **nint_ptr, const void *ptr, size_t size) {
-    asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     long *native = (long *)*nint_ptr;
     INTEGER_t tmpint;
@@ -31,7 +32,7 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
      * OPTIMIZATION: Encode directly rather than passing through INTEGER.
      * Saves a memory allocation.
      */
-    rval = INTEGER_decode_oer(opt_codec_ctx, &asn_DEF_INTEGER, constraints,
+    rval = INTEGER_decode_oer(opt_codec_ctx, td, constraints,
                               (void **)&tmpintptr, ptr, size);
     if(rval.code != RC_OK) {
         ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
@@ -70,7 +71,8 @@ asn_enc_rval_t
 NativeInteger_encode_oer(asn_TYPE_descriptor_t *td,
                          const asn_oer_constraints_t *constraints, void *sptr,
                          asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
     INTEGER_t tmpint;
     long native;
 

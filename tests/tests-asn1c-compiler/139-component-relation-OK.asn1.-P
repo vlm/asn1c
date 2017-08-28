@@ -93,7 +93,7 @@ select_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_s
 	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
 	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
 	
-	    if(constraining_cell->type_descriptor->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
 	        result.type_descriptor = type_cell->type_descriptor;
 	        result.presence_index = row + 1;
 	        break;
@@ -158,8 +158,8 @@ static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	offsetof(struct value, _asn_ctx),
 	offsetof(struct value, present),
 	sizeof(((struct value *)0)->present),
-	asn_MAP_value_tag2el_3,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_value_tag2el_3,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -167,17 +167,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_value_3 = {
 	"value",
 	"value",
-	OPEN_TYPE_free,
-	OPEN_TYPE_print,
-	OPEN_TYPE_compare,
+	&asn_OP_OPEN_TYPE,
 	OPEN_TYPE_constraint,
-	OPEN_TYPE_decode_ber,
-	OPEN_TYPE_encode_der,
-	OPEN_TYPE_decode_xer,
-	OPEN_TYPE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -222,8 +213,8 @@ static const asn_TYPE_tag2member_t asn_MAP_Frame_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_Frame_specs_1 = {
 	sizeof(struct Frame),
 	offsetof(struct Frame, _asn_ctx),
-	asn_MAP_Frame_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Frame_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
@@ -231,17 +222,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_Frame_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_Frame = {
 	"Frame",
 	"Frame",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_Frame_tags_1,
 	sizeof(asn_DEF_Frame_tags_1)
 		/sizeof(asn_DEF_Frame_tags_1[0]), /* 1 */
@@ -290,17 +272,8 @@ asn_SEQUENCE_specifics_t asn_SPC_PrimitiveMessage_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_PrimitiveMessage = {
 	"PrimitiveMessage",
 	"PrimitiveMessage",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PrimitiveMessage_tags_1,
 	sizeof(asn_DEF_PrimitiveMessage_tags_1)
 		/sizeof(asn_DEF_PrimitiveMessage_tags_1[0]), /* 1 */
@@ -348,17 +321,8 @@ asn_SEQUENCE_specifics_t asn_SPC_ComplexMessage_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_ComplexMessage = {
 	"ComplexMessage",
 	"ComplexMessage",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ComplexMessage_tags_1,
 	sizeof(asn_DEF_ComplexMessage_tags_1)
 		/sizeof(asn_DEF_ComplexMessage_tags_1[0]), /* 1 */

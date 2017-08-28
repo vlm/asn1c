@@ -24,9 +24,7 @@ static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
 	0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
-	"OCTET STRING",		/* Canonical name */
-	"OCTET_STRING",		/* XML tag name */
+asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,	/* OCTET STRING generally means a non-ascii sequence */
 	OCTET_STRING_compare,
@@ -39,8 +37,8 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	0,
 	0,
 #else
-	0,
-	0,
+	OCTET_STRING_decode_oer,
+	OCTET_STRING_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -49,7 +47,13 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
+	"OCTET STRING",		/* Canonical name */
+	"OCTET_STRING",		/* XML tag name */
+	&asn_OP_OCTET_STRING,
+	asn_generic_no_constraint,
 	asn_DEF_OCTET_STRING_tags,
 	sizeof(asn_DEF_OCTET_STRING_tags)
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
@@ -1612,7 +1616,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	/* X.691, #16.6: short fixed length encoding (up to 2 octets) */
 	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
 	if(csiz->effective_bits >= 0) {
-		ASN_DEBUG("Encoding %d bytes (%ld), length in %d bits",
+		ASN_DEBUG("Encoding %zu bytes (%ld), length in %d bits",
 				st->size, sizeinunits - csiz->lower_bound,
 				csiz->effective_bits);
 		ret = per_put_few_bits(po, sizeinunits - csiz->lower_bound,
@@ -1630,7 +1634,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		ASN__ENCODED_OK(er);
 	}
 
-	ASN_DEBUG("Encoding %d bytes", st->size);
+	ASN_DEBUG("Encoding %zu bytes", st->size);
 
 	if(sizeinunits == 0) {
 		if(uper_put_length(po, 0))
@@ -1727,8 +1731,8 @@ OCTET_STRING_print_utf8(asn_TYPE_descriptor_t *td, const void *sptr,
 
 void
 OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
-                  int contents_only) {
-    OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
+                  enum asn_struct_free_method method) {
+	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
 	asn_OCTET_STRING_specifics_t *specs;
 	asn_struct_ctx_t *ctx;
 	struct _stack *stck;
@@ -1761,9 +1765,17 @@ OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
 		FREEMEM(stck);
 	}
 
-	if(!contents_only) {
-		FREEMEM(st);
-	}
+    switch(method) {
+    case ASFM_FREE_EVERYTHING:
+        FREEMEM(sptr);
+        break;
+    case ASFM_FREE_UNDERLYING:
+        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET:
+        memset(sptr, 0,
+               ((asn_OCTET_STRING_specifics_t *)(td->specifics))->struct_size);
+        break;
+    }
 }
 
 /*

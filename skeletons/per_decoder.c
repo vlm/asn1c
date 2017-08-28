@@ -74,9 +74,9 @@ uper_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td, void **sp
 	/*
 	 * Invoke type-specific decoder.
 	 */
-	if(!td->uper_decoder)
+	if(!td->op->uper_decoder)
 		ASN__DECODE_FAILED;	/* PER is not compiled in */
-	rval = td->uper_decoder(opt_codec_ctx, td, 0, sptr, &pd);
+	rval = td->op->uper_decoder(opt_codec_ctx, td, 0, sptr, &pd);
 	if(rval.code == RC_OK) {
 		/* Return the number of consumed bits */
 		rval.consumed = ((pd.buffer - (const uint8_t *)buffer) << 3)

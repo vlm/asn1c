@@ -4,8 +4,6 @@
 #ifndef	ASN1_PARSER_CLASS_H
 #define	ASN1_PARSER_CLASS_H
 
-#include "asn1p_ref.h"
-
 struct asn1p_expr_s;	/* Forward declaration */
 
 typedef struct asn1p_ioc_row_s {
@@ -24,6 +22,7 @@ void asn1p_ioc_row_delete(asn1p_ioc_row_t *);
 typedef struct asn1p_ioc_table_s {
     asn1p_ioc_row_t **row;
     size_t rows;
+    int extensible; /* 0 if non-extensible (sealed). Otherwise, extensible. */
 } asn1p_ioc_table_t;
 
 asn1p_ioc_table_t *asn1p_ioc_table_new(void);

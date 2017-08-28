@@ -1,0 +1,23 @@
+﻿
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .143
+
+ModuleInnerParameterization
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 143 }
+	DEFINITIONS ::=
+BEGIN
+
+    Message ::= SEQUENCE {
+        content13 SpecializedContent {13},
+        content42 SpecializedContent {42}
+    }
+
+    SpecializedContent {INTEGER:constraint} ::= SEQUENCE {
+        id      INTEGER (constraint)
+    }
+
+END

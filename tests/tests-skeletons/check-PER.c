@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include <asn_bit_data.c>
 #include <per_support.c>
 #include <per_support.h>
 
@@ -192,7 +193,7 @@ check_per_encoding() {
 	po.buffer = po.tmpspace;
 	po.nboff = 0;
 	po.nbits = 0;
-	po.outper = Ignore;
+	po.output = Ignore;
 	po.op_key = 0;
 	po.tmpspace[0] = 0xff;
 
@@ -285,7 +286,7 @@ check_per_encoding_auto() {
         po.buffer = po.tmpspace;
         po.nboff = 0;
         po.nbits = 0;
-        po.outper = Ignore;
+        po.output = Ignore;
         po.op_key = 0;
         po.tmpspace[0] = 0xff;
 

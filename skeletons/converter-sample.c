@@ -87,6 +87,7 @@ DEBUG(const char *fmt, ...) {
 
 int
 main(int ac, char *av[]) {
+    FILE *binary_out;
     static asn_TYPE_descriptor_t *pduType = &PDU_Type;
     ssize_t suggested_bufsize = 8192;  /* close or equal to stdio buffer */
     int number_of_iterations = 1;
@@ -94,9 +95,9 @@ main(int ac, char *av[]) {
     int ch;
 
     /* Figure out if specialty decoder needs to be default */
-    if(pduType->oer_decoder)
+    if(pduType->op->oer_decoder)
         iform = INP_OER;
-    else if(pduType->uper_decoder)
+    else if(pduType->op->uper_decoder)
         iform = INP_PER;
 
     /*
@@ -107,18 +108,18 @@ main(int ac, char *av[]) {
     case 'i':
         if(optarg[0] == 'b') { iform = INP_BER; break; }
         if(optarg[0] == 'x') { iform = INP_XER; break; }
-        if(pduType->oer_decoder
+        if(pduType->op->oer_decoder
         && optarg[0] == 'o') { iform = INP_OER; break; }
-        if(pduType->uper_decoder
+        if(pduType->op->uper_decoder
         && optarg[0] == 'p') { iform = INP_PER; break; }
         fprintf(stderr, "-i<format>: '%s': improper format selector\n",
             optarg);
         exit(EX_UNAVAILABLE);
     case 'o':
         if(optarg[0] == 'd') { oform = OUT_DER; break; }
-        if(pduType->oer_encoder
+        if(pduType->op->oer_encoder
         && optarg[0] == 'o') { oform = OUT_OER; break; }
-        if(pduType->uper_encoder
+        if(pduType->op->uper_encoder
         && optarg[0] == 'p') { oform = OUT_PER; break; }
         if(optarg[0] == 'x') { oform = OUT_XER; break; }
         if(optarg[0] == 't') { oform = OUT_TEXT; break; }
@@ -213,13 +214,13 @@ main(int ac, char *av[]) {
 #define    _ASX(x)    _AXS(x)
         fprintf(stderr, "%s\n", _ASX(ASN_CONVERTER_TITLE));
 #endif
-        fprintf(stderr, "Usage: %s [options] <data.ber> ...\n", av[0]);
+        fprintf(stderr, "Usage: %s [options] <datafile> ...\n", av[0]);
         fprintf(stderr, "Where options are:\n");
-        if(pduType->oer_decoder)
+        if(pduType->op->oer_decoder)
         fprintf(stderr,
         "  -ioer        Input is in OER (Octet Encoding Rules)%s\n",
             iform == INP_OER ? " (DEFAULT)" : "");
-        if(pduType->uper_decoder)
+        if(pduType->op->uper_decoder)
         fprintf(stderr,
         "  -iper        Input is in Unaligned PER (Packed Encoding Rules)%s\n",
             iform == INP_PER ? " (DEFAULT)" : "");
@@ -228,10 +229,10 @@ main(int ac, char *av[]) {
             iform == INP_BER ? " (DEFAULT)" : "");
         fprintf(stderr,
         "  -ixer        Input is in XER (XML Encoding Rules)\n");
-        if(pduType->oer_encoder)
+        if(pduType->op->oer_encoder)
         fprintf(stderr,
         "  -ooer        Output in Canonical OER (Octet Encoding Rules)\n");
-        if(pduType->uper_encoder)
+        if(pduType->op->uper_encoder)
         fprintf(stderr,
         "  -oper        Output in Unaligned PER (Packed Encoding Rules)\n");
         fprintf(stderr,
@@ -239,7 +240,7 @@ main(int ac, char *av[]) {
         "  -oxer        Output in XER (XML Encoding Rules) (DEFAULT)\n"
         "  -otext       Output in plain semi-structured text (dump)\n"
         "  -onull       Verify (decode) input, but do not output\n");
-        if(pduType->uper_decoder)
+        if(pduType->op->uper_decoder)
         fprintf(stderr,
         "  -per-nopad   Assume PER PDUs are not padded (-iper)\n");
 #ifdef    ASN_PDU_COLLECTION
@@ -271,6 +272,21 @@ main(int ac, char *av[]) {
         exit(EX_USAGE);
     }
 
+    if(isatty(1)) {
+        const int is_text_output = oform == OUT_TEXT || oform == OUT_XER;
+        if(is_text_output) {
+            binary_out = stdout;
+        } else {
+            fprintf(stderr, "(Suppressing binary output to a terminal.)\n");
+            binary_out = fopen("/dev/null", "wb");
+            if(!binary_out) {
+                fprintf(stderr, "Can't open /dev/null: %s\n", strerror(errno));
+                exit(EX_OSERR);
+            }
+        }
+    } else {
+        binary_out = stdout;
+    }
     setvbuf(stdout, 0, _IOLBF, 0);
 
     for(num = 0; num < number_of_iterations; num++) {
@@ -332,7 +348,7 @@ main(int ac, char *av[]) {
                 }
                 break;
             case OUT_DER:
-                erv = der_encode(pduType, structure, write_out, stdout);
+                erv = der_encode(pduType, structure, write_out, binary_out);
                 if(erv.encoded < 0) {
                     fprintf(stderr, "%s: Cannot convert %s into DER\n", name,
                             pduType->name);
@@ -341,7 +357,11 @@ main(int ac, char *av[]) {
                 DEBUG("Encoded in %ld bytes of DER", (long)erv.encoded);
                 break;
             case OUT_OER:
-                erv = oer_encode(pduType, structure, write_out, stdout);
+#ifdef  ASN_DISABLE_OER_SUPPORT
+                erv.encoded = -1;
+#else
+                erv = oer_encode(pduType, structure, write_out, binary_out);
+#endif
                 if(erv.encoded < 0) {
                     fprintf(stderr, "%s: Cannot convert %s into oER\n", name,
                             pduType->name);
@@ -350,7 +370,11 @@ main(int ac, char *av[]) {
                 DEBUG("Encoded in %ld bytes of OER", (long)erv.encoded);
                 break;
             case OUT_PER:
-                erv = uper_encode(pduType, structure, write_out, stdout);
+#ifdef  ASN_DISABLE_PER_SUPPORT
+                erv.encoded = -1;
+#else
+                erv = uper_encode(pduType, structure, write_out, binary_out);
+#endif
                 if(erv.encoded < 0) {
                     fprintf(stderr,
                             "%s: Cannot convert %s into Unaligned PER\n", name,
@@ -359,9 +383,9 @@ main(int ac, char *av[]) {
                 }
                 DEBUG("Encoded in %ld bits of UPER", (long)erv.encoded);
                 break;
-        }
+            }
 
-        ASN_STRUCT_FREE(*pduType, structure);
+            ASN_STRUCT_FREE(*pduType, structure);
         }
 
         if(file && file != stdin) {
@@ -670,14 +694,23 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
                 (void **)&structure, i_bptr, i_size);
             break;
         case INP_OER:
+#ifdef ASN_DISABLE_OER_SUPPORT
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+#else
             rval = oer_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
+#endif
             break;
         case INP_XER:
             rval = xer_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
             break;
         case INP_PER:
+#ifdef ASN_DISABLE_PER_SUPPORT
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+#else
             if(opt_nopad)
             rval = uper_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size, 0,
@@ -685,6 +718,7 @@ data_decode_from_file(asn_TYPE_descriptor_t *pduType, FILE *file, const char *na
             else
             rval = uper_decode_complete(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
+#endif
             switch(rval.code) {
             case RC_OK:
                 /* Fall through */

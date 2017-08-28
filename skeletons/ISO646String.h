@@ -15,6 +15,7 @@ extern "C" {
 typedef VisibleString_t ISO646String_t;	/* Implemented using VisibleString */
 
 extern asn_TYPE_descriptor_t asn_DEF_ISO646String;
+extern asn_TYPE_operation_t asn_OP_ISO646String;
 
 #define ISO646String_free           OCTET_STRING_free
 #define ISO646String_print          OCTET_STRING_print_utf8

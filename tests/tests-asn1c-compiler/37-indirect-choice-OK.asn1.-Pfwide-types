@@ -95,25 +95,16 @@ static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
 	offsetof(struct T, _asn_ctx),
 	offsetof(struct T, present),
 	sizeof(((struct T *)0)->present),
-	asn_MAP_T_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -194,25 +185,16 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 	offsetof(struct Choice1, _asn_ctx),
 	offsetof(struct Choice1, present),
 	sizeof(((struct Choice1 *)0)->present),
-	asn_MAP_Choice1_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice1_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	"Choice1",
 	"Choice1",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -325,25 +307,16 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	offsetof(struct Choice2, _asn_ctx),
 	offsetof(struct Choice2, present),
 	sizeof(((struct Choice2 *)0)->present),
-	asn_MAP_Choice2_tag2el_1,
-	4,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice2_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",
 	"Choice2",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice2_tags_1,
 	sizeof(asn_DEF_Choice2_tags_1)
 		/sizeof(asn_DEF_Choice2_tags_1[0]), /* 1 */
@@ -393,17 +366,8 @@ static const ber_tlv_tag_t asn_DEF_Choice3_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	"Choice3",
 	"Choice3",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice3_tags_1,
 	sizeof(asn_DEF_Choice3_tags_1)
 		/sizeof(asn_DEF_Choice3_tags_1[0]), /* 2 */
@@ -453,17 +417,8 @@ static const ber_tlv_tag_t asn_DEF_Choice4_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Choice4 = {
 	"Choice4",
 	"Choice4",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice4_tags_1,
 	sizeof(asn_DEF_Choice4_tags_1)
 		/sizeof(asn_DEF_Choice4_tags_1[0]) - 1, /* 1 */
@@ -512,17 +467,8 @@ static const ber_tlv_tag_t asn_DEF_Choice5_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_Choice5 = {
 	"Choice5",
 	"Choice5",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice5_tags_1,
 	sizeof(asn_DEF_Choice5_tags_1)
 		/sizeof(asn_DEF_Choice5_tags_1[0]), /* 1 */
@@ -568,17 +514,8 @@ xer_type_encoder_f Choice6_encode_xer;
 asn_TYPE_descriptor_t asn_DEF_Choice6 = {
 	"Choice6",
 	"Choice6",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

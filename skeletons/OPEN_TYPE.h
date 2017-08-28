@@ -20,18 +20,24 @@ extern "C" {
 #define OPEN_TYPE_decode_xer NULL
 #define OPEN_TYPE_encode_xer CHOICE_encode_xer
 #define OPEN_TYPE_decode_uper NULL
-#define OPEN_TYPE_encode_uper CHOICE_encode_uper
 
+extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
 
 /*
  * Decode an Open Type which is potentially constraiend
  * by the other members of the parent structure.
  */
-asn_dec_rval_t OPEN_TYPE_uper_get(asn_codec_ctx_t *opt_codec_ctx,
-                                  asn_TYPE_descriptor_t *parent_type,
-                                  void *parent_structure,
-                                  asn_TYPE_member_t *element,
-                                  asn_per_data_t *pd);
+asn_dec_rval_t OPEN_TYPE_ber_get(asn_codec_ctx_t *opt_codec_ctx,
+                                 asn_TYPE_descriptor_t *parent_type,
+                                 void *parent_structure,
+                                 asn_TYPE_member_t *element, const void *ptr,
+                                 size_t size);
+
+asn_dec_rval_t OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx,
+                                 asn_TYPE_descriptor_t *parent_type,
+                                 void *parent_structure,
+                                 asn_TYPE_member_t *element, const void *ptr,
+                                 size_t size);
 
 asn_dec_rval_t OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx,
                                   asn_TYPE_descriptor_t *parent_type,
@@ -39,6 +45,16 @@ asn_dec_rval_t OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx,
                                   asn_TYPE_member_t *element,
                                   const void *ptr, size_t size);
 
+asn_dec_rval_t OPEN_TYPE_uper_get(asn_codec_ctx_t *opt_codec_ctx,
+                                  asn_TYPE_descriptor_t *parent_type,
+                                  void *parent_structure,
+                                  asn_TYPE_member_t *element,
+                                  asn_per_data_t *pd);
+
+asn_enc_rval_t OPEN_TYPE_encode_uper(asn_TYPE_descriptor_t *type_descriptor,
+                                     const asn_per_constraints_t *constraints,
+                                     void *struct_ptr,
+                                     asn_per_outp_t *per_output);
 
 #ifdef __cplusplus
 }

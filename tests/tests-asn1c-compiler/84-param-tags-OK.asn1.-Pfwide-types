@@ -99,8 +99,8 @@ static const asn_TYPE_tag2member_t asn_MAP_TestType_16P0_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_TestType_16P0_specs_1 = {
 	sizeof(struct TestType_16P0),
 	offsetof(struct TestType_16P0, _asn_ctx),
-	asn_MAP_TestType_16P0_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TestType_16P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -108,17 +108,8 @@ asn_SEQUENCE_specifics_t asn_SPC_TestType_16P0_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_TestType_16P0 = {
 	"TestType",
 	"TestType",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TestType_16P0_tags_1,
 	sizeof(asn_DEF_TestType_16P0_tags_1)
 		/sizeof(asn_DEF_TestType_16P0_tags_1[0]), /* 1 */
@@ -172,8 +163,8 @@ static const asn_TYPE_tag2member_t asn_MAP_TestType_16P1_tag2el_3[] = {
 asn_SEQUENCE_specifics_t asn_SPC_TestType_16P1_specs_3 = {
 	sizeof(struct TestType_16P1),
 	offsetof(struct TestType_16P1, _asn_ctx),
-	asn_MAP_TestType_16P1_tag2el_3,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TestType_16P1_tag2el_3,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -181,17 +172,8 @@ asn_SEQUENCE_specifics_t asn_SPC_TestType_16P1_specs_3 = {
 asn_TYPE_descriptor_t asn_DEF_TestType_16P1 = {
 	"TestType",
 	"TestType",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_TestType_16P1_tags_3,
 	sizeof(asn_DEF_TestType_16P1_tags_3)
 		/sizeof(asn_DEF_TestType_16P1_tags_3[0]), /* 1 */
@@ -271,25 +253,16 @@ static asn_CHOICE_specifics_t asn_SPC_TestChoice_specs_1 = {
 	offsetof(struct TestChoice, _asn_ctx),
 	offsetof(struct TestChoice, present),
 	sizeof(((struct TestChoice *)0)->present),
-	asn_MAP_TestChoice_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_TestChoice_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_TestChoice = {
 	"TestChoice",
 	"TestChoice",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -409,8 +382,8 @@ static const asn_TYPE_tag2member_t asn_MAP_AutoType_34P0_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P0_specs_1 = {
 	sizeof(struct AutoType_34P0),
 	offsetof(struct AutoType_34P0, _asn_ctx),
-	asn_MAP_AutoType_34P0_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_AutoType_34P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -418,17 +391,8 @@ asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P0_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_AutoType_34P0 = {
 	"AutoType",
 	"AutoType",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_AutoType_34P0_tags_1,
 	sizeof(asn_DEF_AutoType_34P0_tags_1)
 		/sizeof(asn_DEF_AutoType_34P0_tags_1[0]), /* 1 */
@@ -464,8 +428,8 @@ static const asn_TYPE_tag2member_t asn_MAP_AutoType_34P1_tag2el_3[] = {
 asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P1_specs_3 = {
 	sizeof(struct AutoType_34P1),
 	offsetof(struct AutoType_34P1, _asn_ctx),
-	asn_MAP_AutoType_34P1_tag2el_3,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_AutoType_34P1_tag2el_3,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -473,17 +437,8 @@ asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P1_specs_3 = {
 asn_TYPE_descriptor_t asn_DEF_AutoType_34P1 = {
 	"AutoType",
 	"AutoType",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_AutoType_34P1_tags_3,
 	sizeof(asn_DEF_AutoType_34P1_tags_3)
 		/sizeof(asn_DEF_AutoType_34P1_tags_3[0]), /* 1 */
@@ -563,25 +518,16 @@ static asn_CHOICE_specifics_t asn_SPC_AutoChoice_specs_1 = {
 	offsetof(struct AutoChoice, _asn_ctx),
 	offsetof(struct AutoChoice, present),
 	sizeof(((struct AutoChoice *)0)->present),
-	asn_MAP_AutoChoice_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_AutoChoice_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_AutoChoice = {
 	"AutoChoice",
 	"AutoChoice",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

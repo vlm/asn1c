@@ -54,25 +54,16 @@ static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
 	offsetof(struct T, _asn_ctx),
 	offsetof(struct T, present),
 	sizeof(((struct T *)0)->present),
-	asn_MAP_T_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */

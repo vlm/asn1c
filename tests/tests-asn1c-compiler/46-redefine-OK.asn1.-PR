@@ -33,17 +33,8 @@ static const ber_tlv_tag_t asn_DEF_PrimitiveType_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_PrimitiveType = {
 	"PrimitiveType",
 	"PrimitiveType",
-	OCTET_STRING_free,
-	OCTET_STRING_print,
-	OCTET_STRING_compare,
+	&asn_OP_OCTET_STRING,
 	OCTET_STRING_constraint,
-	OCTET_STRING_decode_ber,
-	OCTET_STRING_encode_der,
-	OCTET_STRING_decode_xer,
-	OCTET_STRING_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_PrimitiveType_tags_1,
 	sizeof(asn_DEF_PrimitiveType_tags_1)
 		/sizeof(asn_DEF_PrimitiveType_tags_1[0]), /* 1 */
@@ -101,8 +92,8 @@ static const asn_TYPE_tag2member_t asn_MAP_ConstructedType_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_ConstructedType_specs_1 = {
 	sizeof(struct ConstructedType),
 	offsetof(struct ConstructedType, _asn_ctx),
-	asn_MAP_ConstructedType_tag2el_1,
-	1,	/* Count of tags in the map */
+	.tag2el = asn_MAP_ConstructedType_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -110,17 +101,8 @@ asn_SEQUENCE_specifics_t asn_SPC_ConstructedType_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_ConstructedType = {
 	"ConstructedType",
 	"ConstructedType",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ConstructedType_tags_1,
 	sizeof(asn_DEF_ConstructedType_tags_1)
 		/sizeof(asn_DEF_ConstructedType_tags_1[0]), /* 1 */
@@ -170,17 +152,8 @@ static const ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]) - 1, /* 1 */

@@ -4,20 +4,20 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "asn1parser.h"
+#include "asn1_ref.h"
 
 /*
  * Construct a new empty reference.
  */
 asn1p_ref_t *
-asn1p_ref_new(int _lineno, asn1p_module_t *mod) {
+asn1p_ref_new(int _lineno, struct asn1p_module_s *mod) {
 	asn1p_ref_t *ref;
 
-	ref = calloc(1, sizeof *ref);
+    ref = calloc(1, sizeof *ref);
     assert(ref);
     asn1p_ref_set_source(ref, mod, _lineno);
 
-	return ref;
+    return ref;
 }
 
 void
@@ -38,7 +38,8 @@ asn1p_ref_free(asn1p_ref_t *ref) {
 }
 
 void
-asn1p_ref_set_source(asn1p_ref_t *ref, asn1p_module_t *module, int lineno) {
+asn1p_ref_set_source(asn1p_ref_t *ref, struct asn1p_module_s *module,
+                     int lineno) {
     if(ref) {
         ref->module = module;
         ref->_lineno = lineno;
@@ -165,6 +166,8 @@ asn1p_ref_string(const asn1p_ref_t *ref) {
     static char *buf = static_buf;
     static size_t buf_size = sizeof(static_buf);
     char *p = buf;
+
+    if(!ref) return "<no-ref>";
 
     for(size_t i = 0; i < ref->comp_count; i++) {
         size_t space = buf_size - (p - buf);

@@ -14,6 +14,7 @@ extern "C" {
 typedef OCTET_STRING_t GeneralString_t;	/* Implemented via OCTET STRING */
 
 extern asn_TYPE_descriptor_t asn_DEF_GeneralString;
+extern asn_TYPE_operation_t asn_OP_GeneralString;
 
 #define GeneralString_free          OCTET_STRING_free
 #define GeneralString_print         OCTET_STRING_print

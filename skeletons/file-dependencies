@@ -46,6 +46,7 @@ asn_ioc.h			# Information Object Classes, runtime support
 asn_system.h			# Platform-dependent types
 asn_codecs.h			# Return types of encoders and decoders
 asn_internal.h			# Internal stuff
+asn_bit_data.h asn_bit_data.c         # Bit streaming support
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
 BIT_STRING.h BIT_STRING.c	# This one is necessary for the above one
 asn_codecs_prim.c asn_codecs_prim.h	# enc/decoders for primitive types
@@ -58,9 +59,6 @@ constraints.h constraints.c	# Subtype constraints support
 xer_support.h xer_support.c	# XML parsing
 xer_decoder.h xer_decoder.c	# XER decoding support
 xer_encoder.h xer_encoder.c	# XER encoding support
-oer_decoder.h oer_decoder.c # OER decoding support
-oer_encoder.h oer_encoder.c # OER encoding support
-oer_support.h oer_support.c # OER support
 per_support.h per_support.c	# PER parsing
 per_decoder.h per_decoder.c	# PER decoding support
 per_encoder.h per_encoder.c	# PER encoding support
@@ -70,9 +68,15 @@ CONVERTER:			# THIS IS A SPECIAL SECTION
 converter-sample.c		# A default name for sample transcoder
 
 CODEC-OER:			# THIS IS A SPECIAL SECTION
+oer_decoder.h oer_decoder.c # OER decoding support
+oer_encoder.h oer_encoder.c # OER encoding support
+oer_support.h oer_support.c # OER support
+OPEN_TYPE.h OPEN_TYPE_oer.c
 INTEGER_oer.c
 OCTET_STRING_oer.c
 NativeInteger_oer.c
+NativeEnumerated_oer.c
 constr_SEQUENCE_oer.c
+constr_CHOICE_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION

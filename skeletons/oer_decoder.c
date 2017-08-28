@@ -32,7 +32,7 @@ oer_decode(asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Invoke type-specific decoder.
 	 */
-	return type_descriptor->oer_decoder(opt_codec_ctx, type_descriptor, 0,
+	return type_descriptor->op->oer_decoder(opt_codec_ctx, type_descriptor, 0,
 		struct_ptr,	/* Pointer to the destination structure */
 		ptr, size	/* Buffer and its size */
 		);
@@ -80,7 +80,7 @@ oer_open_type_get(asn_codec_ctx_t *opt_codec_ctx,
         return 0;
     }
 
-    dr = td->oer_decoder(opt_codec_ctx, td, constraints, struct_ptr,
+    dr = td->op->oer_decoder(opt_codec_ctx, td, constraints, struct_ptr,
                          (const uint8_t *)bufptr + len_len, container_len);
     if(dr.code == RC_OK) {
         return len_len + container_len;

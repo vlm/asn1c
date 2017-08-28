@@ -93,17 +93,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_varsets_3 = {
 	"varsets",
 	"varsets",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
-	SEQUENCE_OF_compare,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_varsets_tags_3,
 	sizeof(asn_DEF_varsets_tags_3)
 		/sizeof(asn_DEF_varsets_tags_3[0]), /* 1 */
@@ -151,8 +142,8 @@ static const asn_TYPE_tag2member_t asn_MAP_LogLine_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_LogLine_specs_1 = {
 	sizeof(struct LogLine),
 	offsetof(struct LogLine, _asn_ctx),
-	asn_MAP_LogLine_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_LogLine_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
@@ -160,17 +151,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_LogLine_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_LogLine = {
 	"LogLine",
 	"LogLine",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_LogLine_tags_1,
 	sizeof(asn_DEF_LogLine_tags_1)
 		/sizeof(asn_DEF_LogLine_tags_1[0]), /* 1 */
@@ -274,17 +256,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vparts_2 = {
 	"vparts",
 	"vparts",
-	SEQUENCE_OF_free,
-	SEQUENCE_OF_print,
-	SEQUENCE_OF_compare,
+	&asn_OP_SEQUENCE_OF,
 	SEQUENCE_OF_constraint,
-	SEQUENCE_OF_decode_ber,
-	SEQUENCE_OF_encode_der,
-	SEQUENCE_OF_decode_xer,
-	SEQUENCE_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_vparts_tags_2,
 	sizeof(asn_DEF_vparts_tags_2)
 		/sizeof(asn_DEF_vparts_tags_2[0]), /* 1 */
@@ -332,8 +305,8 @@ static const asn_TYPE_tag2member_t asn_MAP_VariablePartSet_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_VariablePartSet_specs_1 = {
 	sizeof(struct VariablePartSet),
 	offsetof(struct VariablePartSet, _asn_ctx),
-	asn_MAP_VariablePartSet_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_VariablePartSet_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
@@ -341,17 +314,8 @@ asn_SEQUENCE_specifics_t asn_SPC_VariablePartSet_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
 	"VariablePartSet",
 	"VariablePartSet",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_VariablePartSet_tags_1,
 	sizeof(asn_DEF_VariablePartSet_tags_1)
 		/sizeof(asn_DEF_VariablePartSet_tags_1[0]), /* 1 */
@@ -478,17 +442,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vset_2 = {
 	"vset",
 	"vset",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_vset_tags_2,
 	sizeof(asn_DEF_vset_tags_2)
 		/sizeof(asn_DEF_vset_tags_2[0]), /* 1 */
@@ -536,8 +491,8 @@ static const asn_TYPE_tag2member_t asn_MAP_vrange_tag2el_4[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_vrange_specs_4 = {
 	sizeof(struct vrange),
 	offsetof(struct vrange, _asn_ctx),
-	asn_MAP_vrange_tag2el_4,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_vrange_tag2el_4,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
@@ -546,17 +501,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vrange_4 = {
 	"vrange",
 	"vrange",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_vrange_tags_4,
 	sizeof(asn_DEF_vrange_tags_4)
 		/sizeof(asn_DEF_vrange_tags_4[0]), /* 1 */
@@ -603,25 +549,16 @@ asn_CHOICE_specifics_t asn_SPC_VariablePart_specs_1 = {
 	offsetof(struct VariablePart, _asn_ctx),
 	offsetof(struct VariablePart, present),
 	sizeof(((struct VariablePart *)0)->present),
-	asn_MAP_VariablePart_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_VariablePart_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = 2	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_VariablePart = {
 	"VariablePart",
 	"VariablePart",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -727,17 +664,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_accept_as_2 = {
 	"accept-as",
 	"accept-as",
-	NativeEnumerated_free,
-	NativeEnumerated_print,
-	NativeEnumerated_compare,
+	&asn_OP_NativeEnumerated,
 	NativeEnumerated_constraint,
-	NativeEnumerated_decode_ber,
-	NativeEnumerated_encode_der,
-	NativeEnumerated_decode_xer,
-	NativeEnumerated_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_accept_as_tags_2,
 	sizeof(asn_DEF_accept_as_tags_2)
 		/sizeof(asn_DEF_accept_as_tags_2[0]), /* 1 */
@@ -775,17 +703,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_email_9 = {
 	"email",
 	"email",
-	SET_OF_free,
-	SET_OF_print,
-	SET_OF_compare,
+	&asn_OP_SET_OF,
 	SET_OF_constraint,
-	SET_OF_decode_ber,
-	SET_OF_encode_der,
-	SET_OF_decode_xer,
-	SET_OF_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_email_tags_9,
 	sizeof(asn_DEF_email_tags_9)
 		/sizeof(asn_DEF_email_tags_9[0]), /* 1 */
@@ -833,8 +752,8 @@ static const asn_TYPE_tag2member_t asn_MAP_notify_tag2el_7[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_notify_specs_7 = {
 	sizeof(struct notify),
 	offsetof(struct notify, _asn_ctx),
-	asn_MAP_notify_tag2el_7,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_notify_tag2el_7,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
@@ -843,17 +762,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_notify_7 = {
 	"notify",
 	"notify",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_notify_tags_7,
 	sizeof(asn_DEF_notify_tags_7)
 		/sizeof(asn_DEF_notify_tags_7[0]), /* 1 */
@@ -901,8 +811,8 @@ static const asn_TYPE_tag2member_t asn_MAP_ActionItem_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_ActionItem_specs_1 = {
 	sizeof(struct ActionItem),
 	offsetof(struct ActionItem, _asn_ctx),
-	asn_MAP_ActionItem_tag2el_1,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_ActionItem_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	1,	/* Start extensions */
 	3	/* Stop extensions */
@@ -910,17 +820,8 @@ asn_SEQUENCE_specifics_t asn_SPC_ActionItem_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_ActionItem = {
 	"ActionItem",
 	"ActionItem",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_ActionItem_tags_1,
 	sizeof(asn_DEF_ActionItem_tags_1)
 		/sizeof(asn_DEF_ActionItem_tags_1[0]), /* 1 */

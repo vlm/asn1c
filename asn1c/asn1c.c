@@ -38,6 +38,7 @@
 #include <asn1fix.h>      /* Fix the ASN.1 tree */
 #include <asn1print.h>    /* Print the ASN.1 tree */
 #include <asn1compiler.h> /* Compile the ASN.1 tree */
+#include <asn1fix_export.h>
 
 #include <asn1c_compat.h> /* Portable basename(3) and dirname(3) */
 
@@ -312,6 +313,8 @@ main(int ac, char **av) {
             exit_code = EX_DATAERR;
             goto cleanup;
         }
+    } else {
+        asn1f_use_standard_namespaces(asn);
     }
 
     /*

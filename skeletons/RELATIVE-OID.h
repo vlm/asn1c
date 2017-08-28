@@ -15,12 +15,14 @@ extern "C" {
 typedef OBJECT_IDENTIFIER_t RELATIVE_OID_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID;
+extern asn_TYPE_operation_t asn_OP_RELATIVE_OID;
 
 asn_struct_print_f RELATIVE_OID_print;
 xer_type_decoder_f RELATIVE_OID_decode_xer;
 xer_type_encoder_f RELATIVE_OID_encode_xer;
 
 #define RELATIVE_OID_free         ASN__PRIMITIVE_TYPE_free
+#define RELATIVE_OID_compare      OCTET_STRING_compare
 #define RELATIVE_OID_constraint   asn_generic_no_constraint
 #define RELATIVE_OID_decode_ber   ber_decode_primitive
 #define RELATIVE_OID_encode_der   der_encode_primitive

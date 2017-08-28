@@ -65,66 +65,84 @@ set +x
 	echo "	CPPFLAGS=\"${CPPFLAGS}\" \\"
 	echo "	$0"
 	echo
-	echo 'check: ${TARGET} check-ber check-xer check-per'
+	echo 'check: ${TARGET} check-ber check-xer check-oer check-per'
 	echo '	@echo ================'
 	echo '	@echo All tests passed'
 	echo '	@echo ================'
 	echo
 	echo 'check-ber:'
 	echo "	@if test -f sample-${ASN1PDU}-1.[db]er ; then \\"
-	echo "	for f in sample-${ASN1PDU}-*.[db]er; do \\"
+	echo "	for f in sample-*-*.[db]er; do \\"
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
-	echo '	echo "Recoding $$f into XER and back ($$b)..."; \'
-	echo '	./${TARGET} -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -b $$b -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 4; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -iber -onull $$f || exit 5; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -iber -onull $$f || exit 6; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -iber -onull $$f || exit 5; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -iber -onull $$f || exit 6; \'
 	echo '	done; done; fi'
 	echo
 	echo 'check-xer:'
 	echo "	@if test -f sample-${ASN1PDU}-1.xer ; then \\"
-	echo "	for f in sample-${ASN1PDU}-*.xer; do \\"
+	echo "	for f in sample-*-*.xer; do \\"
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
-	echo '	echo "Recoding $$f into DER and back ($$b)..."; \'
-	echo '	./${TARGET} -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	echo "Recoding $$f ($$pdu) into DER and back ($$b)..."; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
 	echo '	diff $$f ./.tmp.2.$$$$ || exit 4; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -ixer -onull $$f || exit 5; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -ixer -onull $$f || exit 6; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -ixer -onull $$f || exit 5; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -ixer -onull $$f || exit 6; \'
+	echo '	done; done; fi'
+	echo
+	echo 'check-oer:'
+	echo "	@if test -f sample-${ASN1PDU}-1.*oer ; then \\"
+	echo "	for f in sample-*-*.{c,}oer; do \\"
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
+	echo '	for b in 1 17 33 980 8192; do \'
+	echo '	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -ioer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 4; \'
+	echo '	rm -f ./.tmp.[12].$$$$; \'
+	echo '	echo "Test junking $$f (please wait)..."; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 5; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 6; \'
 	echo '	done; done; fi'
 	echo
 	echo 'check-per:'
 	echo "	@if test -f sample-${ASN1PDU}-1-nopad.per ; then \\"
-	echo "	for f in sample-${ASN1PDU}-[1-9]-nopad.per; do \\"
+	echo "	for f in sample-*-[1-9]-nopad.per; do \\"
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
-	echo '	echo "Recoding non-padded $$f into DER into XER and back ($$b)..."; \'
-	echo '	./${TARGET} -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
-	echo '	./${TARGET} -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 4; \'
+	echo '	echo "Recoding non-padded $$f ($$pdu) into DER into XER and back ($$b)..."; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 4; \'
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 5; \'
 	echo '	rm -f ./.tmp.[123].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -per-nopad -iper -onull $$f || exit 6; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -per-nopad -iper -onull $$f || exit 7; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 6; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 7; \'
 	echo '	done; done; fi'
 	echo "	@if test -f sample-${ASN1PDU}-1.per ; then \\"
 	echo "	for f in sample-*-[1-9].per; do \\"
 	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
-	echo '	echo "Recoding $$f into DER into XER and back ($$b)..."; \'
-	echo '	./${TARGET} -b $$b -p $$pdu -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \'
-	echo '	./${TARGET} -b $$b -p $$pdu -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 4; \'
-	echo '	./${TARGET} -b $$b -p $$pdu -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 5; \'
+	echo '	echo "Recoding $$f ($$pdu) into DER into XER and back ($$b)..."; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 4; \'
+	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 5; \'
 	echo '	diff $$f ./.tmp.1.$$$$ || exit 6; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -b $$b -iper -onull $$f || exit 7; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -b $$b -iper -onull $$f || exit 8; \'
+	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 7; \'
+	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 8; \'
 	echo '	done; done; fi'
 	echo
 	echo "maybe-wip-pause:"

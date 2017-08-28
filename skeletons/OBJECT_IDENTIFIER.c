@@ -15,9 +15,7 @@
 static const ber_tlv_tag_t asn_DEF_OBJECT_IDENTIFIER_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (6 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
-	"OBJECT IDENTIFIER",
-	"OBJECT_IDENTIFIER",
+asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER = {
 	ASN__PRIMITIVE_TYPE_free,
 	OBJECT_IDENTIFIER_print,
 	OCTET_STRING_compare,   /* Implemented in terms of a string comparison */
@@ -40,7 +38,13 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
+	"OBJECT IDENTIFIER",
+	"OBJECT_IDENTIFIER",
+	&asn_OP_OBJECT_IDENTIFIER,
+	OBJECT_IDENTIFIER_constraint,
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),

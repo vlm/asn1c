@@ -18,9 +18,7 @@
 static const ber_tlv_tag_t asn_DEF_NativeEnumerated_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
-	"ENUMERATED",			/* The ASN.1 type is still ENUMERATED */
-	"ENUMERATED",
+asn_TYPE_operation_t asn_OP_NativeEnumerated = {
 	NativeInteger_free,
 	NativeInteger_print,
 	NativeInteger_compare,
@@ -33,8 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	0,
 	0,
 #else
-	0,
-	0,
+	NativeEnumerated_decode_oer,
+	NativeEnumerated_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -43,7 +41,13 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
+	"ENUMERATED",			/* The ASN.1 type is still ENUMERATED */
+	"ENUMERATED",
+	&asn_OP_NativeEnumerated,
+	asn_generic_no_constraint,
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
 	asn_DEF_NativeEnumerated_tags,	/* Same as above */
@@ -58,9 +62,10 @@ asn_enc_rval_t
 NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
         int ilevel, enum xer_encoder_flags_e flags,
                 asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
-        asn_enc_rval_t er;
-        const long *native = (const long *)sptr;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_enc_rval_t er;
+    const long *native = (const long *)sptr;
 	const asn_INTEGER_enum_map_t *el;
 
         (void)ilevel;
@@ -88,8 +93,9 @@ asn_dec_rval_t
 NativeEnumerated_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, const asn_per_constraints_t *constraints,
 	void **sptr, asn_per_data_t *pd) {
-	asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
-	asn_dec_rval_t rval = { RC_OK, 0 };
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_dec_rval_t rval = { RC_OK, 0 };
 	long *native = (long *)*sptr;
 	const asn_per_constraint_t *ct;
 	long value;
@@ -154,8 +160,9 @@ asn_enc_rval_t
 NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
                              const asn_per_constraints_t *constraints,
                              void *sptr, asn_per_outp_t *po) {
-    asn_INTEGER_specifics_t *specs = (asn_INTEGER_specifics_t *)td->specifics;
-	asn_enc_rval_t er;
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
+    asn_enc_rval_t er;
 	long native, value;
 	const asn_per_constraint_t *ct;
 	int inext = 0;

@@ -8,6 +8,7 @@
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
+#include <OCTET_STRING.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,6 +17,7 @@ extern "C" {
 typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER;
+extern asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER;
 
 asn_struct_print_f OBJECT_IDENTIFIER_print;
 asn_constr_check_f OBJECT_IDENTIFIER_constraint;
@@ -24,6 +26,7 @@ xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
 
 #define OBJECT_IDENTIFIER_free           ASN__PRIMITIVE_TYPE_free
+#define OBJECT_IDENTIFIER_compare        OCTET_STRING_compare
 #define OBJECT_IDENTIFIER_decode_ber     ber_decode_primitive
 #define OBJECT_IDENTIFIER_encode_der     der_encode_primitive
 #define OBJECT_IDENTIFIER_decode_uper    OCTET_STRING_decode_uper

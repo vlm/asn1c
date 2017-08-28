@@ -17,9 +17,7 @@ static asn_per_constraints_t asn_DEF_VisibleString_constraints = {
 	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },	/* Size */
 	0, 0
 };
-asn_TYPE_descriptor_t asn_DEF_VisibleString = {
-	"VisibleString",
-	"VisibleString",
+asn_TYPE_operation_t asn_OP_VisibleString = {
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,   /* ASCII subset */
 	OCTET_STRING_compare,
@@ -42,7 +40,13 @@ asn_TYPE_descriptor_t asn_DEF_VisibleString = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-	0, /* Use generic outmost tag fetcher */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_VisibleString = {
+	"VisibleString",
+	"VisibleString",
+	&asn_OP_VisibleString,
+	VisibleString_constraint,
 	asn_DEF_VisibleString_tags,
 	sizeof(asn_DEF_VisibleString_tags)
 	  / sizeof(asn_DEF_VisibleString_tags[0]) - 1,

@@ -41,41 +41,45 @@ static volatile double real_zero GCC_NOTUSED = 0.0;
 static const ber_tlv_tag_t asn_DEF_REAL_tags[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_REAL = {
-    "REAL",
-    "REAL",
-    ASN__PRIMITIVE_TYPE_free,
-    REAL_print,
-    REAL_compare,
-    asn_generic_no_constraint,
-    ber_decode_primitive,
-    der_encode_primitive,
-    REAL_decode_xer,
-    REAL_encode_xer,
+asn_TYPE_operation_t asn_OP_REAL = {
+	ASN__PRIMITIVE_TYPE_free,
+	REAL_print,
+	REAL_compare,
+	asn_generic_no_constraint,
+	ber_decode_primitive,
+	der_encode_primitive,
+	REAL_decode_xer,
+	REAL_encode_xer,
 #ifdef	ASN_DISABLE_OER_SUPPORT
-    0,
-    0,
+	0,
+	0,
 #else
-    0,
-    0,
+	0,
+	0,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
-    0,
-    0,
+	0,
+	0,
 #else
-    REAL_decode_uper,
-    REAL_encode_uper,
+	REAL_decode_uper,
+	REAL_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
-    0,  /* Use generic outmost tag fetcher */
-    asn_DEF_REAL_tags,
-    sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
-    asn_DEF_REAL_tags, /* Same as above */
-    sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
-    0, /* No OER visible constraints */
-    0, /* No PER visible constraints */
-    0,
-    0, /* No members */
-    0  /* No specifics */
+	0	/* Use generic outmost tag fetcher */
+};
+asn_TYPE_descriptor_t asn_DEF_REAL = {
+	"REAL",
+	"REAL",
+	&asn_OP_REAL,
+	asn_generic_no_constraint,
+	asn_DEF_REAL_tags,
+	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
+	asn_DEF_REAL_tags, /* Same as above */
+	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	0,
+	0,	/* No members */
+	0	/* No specifics */
 };
 
 typedef enum specialRealValue {
@@ -435,22 +439,6 @@ REAL_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
 		buf_ptr, size, REAL__xer_body_decode);
 }
 
-asn_dec_rval_t
-REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                 const asn_per_constraints_t *constraints, void **sptr,
-                 asn_per_data_t *pd) {
-    (void)constraints;	/* No PER visible constraints */
-	return OCTET_STRING_decode_uper(opt_codec_ctx, td, 0, sptr, pd);
-}
-
-asn_enc_rval_t
-REAL_encode_uper(asn_TYPE_descriptor_t *td,
-                 const asn_per_constraints_t *constraints, void *sptr,
-                 asn_per_outp_t *po) {
-    (void)constraints;	/* No PER visible constraints */
-	return OCTET_STRING_encode_uper(td, 0, sptr, po);
-}
-
 int
 asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	unsigned int octv;
@@ -512,13 +500,13 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		}
 
 
-		/* 1. By contract, an input buffer should be null-terminated.
+		/* 1. By contract, an input buffer should be '\0'-terminated.
 		 * OCTET STRING decoder ensures that, as is asn_double2REAL().
 		 * 2. ISO 6093 specifies COMMA as a possible decimal separator.
 		 * However, strtod() can't always deal with COMMA.
 		 * So her we fix both by reallocating, copying and fixing.
 		 */
-		if(st->buf[st->size] || memchr(st->buf, ',', st->size)) {
+		if(st->buf[st->size] != '\0' || memchr(st->buf, ',', st->size)) {
 			uint8_t *p, *end;
 			char *b;
 			if(st->size > 100) {
@@ -814,3 +802,23 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 
 	return 0;
 }
+
+#ifndef ASN_DISABLE_PER_SUPPORT
+
+asn_dec_rval_t
+REAL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void **sptr,
+                 asn_per_data_t *pd) {
+    (void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_decode_uper(opt_codec_ctx, td, 0, sptr, pd);
+}
+
+asn_enc_rval_t
+REAL_encode_uper(asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, void *sptr,
+                 asn_per_outp_t *po) {
+    (void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_encode_uper(td, 0, sptr, po);
+}
+
+#endif  /* ASN_DISABLE_PER_SUPPORT */

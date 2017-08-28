@@ -7,6 +7,7 @@
 #define	_PER_SUPPORT_H_
 
 #include <asn_system.h>		/* Platform-specific types */
+#include <asn_bit_data.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,35 +35,12 @@ typedef struct asn_per_constraints_s {
 	int (*code2value)(unsigned int code);
 } asn_per_constraints_t;
 
-/*
- * This structure describes a position inside an incoming PER bit stream.
- */
-typedef struct asn_per_data_s {
-  const uint8_t *buffer;  /* Pointer to the octet stream */
-         size_t  nboff;   /* Bit offset to the meaningful bit */
-         size_t  nbits;   /* Number of bits in the stream */
-         size_t  moved;   /* Number of bits moved through this bit stream */
-  int (*refill)(struct asn_per_data_s *);
-  void *refill_key;
-} asn_per_data_t;
-
-/*
- * Extract a small number of bits (<= 31) from the specified PER data pointer.
- * This function returns -1 if the specified number of bits could not be
- * extracted due to EOD or other conditions.
- */
-int32_t per_get_few_bits(asn_per_data_t *per_data, int get_nbits);
-
-/* Undo the immediately preceeding "get_few_bits" operation */
-void per_get_undo(asn_per_data_t *per_data, int get_nbits);
-
-/*
- * Extract a large number of bits from the specified PER data pointer.
- * This function returns -1 if the specified number of bits could not be
- * extracted due to EOD or other conditions.
- */
-int per_get_many_bits(asn_per_data_t *pd, uint8_t *dst, int right_align,
-			int get_nbits);
+/* Temporary compatibility layer. Will get removed. */
+typedef struct asn_bit_data_s asn_per_data_t;
+#define per_get_few_bits(data, bits)   asn_get_few_bits(data, bits)
+#define per_get_undo(data, bits)   asn_get_undo(data, bits)
+#define per_get_many_bits(data, dst, align, bits) \
+    asn_get_many_bits(data, dst, align, bits)
 
 /*
  * Get the length "n" from the Unaligned PER stream.
@@ -84,34 +62,12 @@ ssize_t uper_get_nsnnwn(asn_per_data_t *pd);
 /* X.691-2008/11, #11.5.6 */
 int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *v, int nbits);
 
-/* Non-thread-safe debugging function, don't use it */
-char *per_data_string(asn_per_data_t *pd);
 
-/*
- * This structure supports forming PER output.
- */
-typedef struct asn_per_outp_s {
-	uint8_t *buffer;	/* Pointer into the (tmpspace) */
-	size_t nboff;		/* Bit offset to the meaningful bit */
-	size_t nbits;		/* Number of bits left in (tmpspace) */
-	uint8_t tmpspace[32];	/* Preliminary storage to hold data */
-	int (*outper)(const void *data, size_t size, void *op_key);
-	void *op_key;		/* Key for (outper) data callback */
-	size_t flushed_bytes;	/* Bytes already flushed through (outper) */
-} asn_per_outp_t;
-
-/* Output a small number of bits (<= 31) */
-int per_put_few_bits(asn_per_outp_t *per_data, uint32_t bits, int obits);
-
-/* Output a large number of bits */
-int per_put_many_bits(asn_per_outp_t *po, const uint8_t *src, int put_nbits);
-
-/*
- * Flush whole bytes (0 or more) through (outper) member.
- * The least significant bits which are not used are guaranteed to be set to 0.
- * Returns -1 if callback returns -1. Otherwise, 0.
- */
-int per_put_aligned_flush(asn_per_outp_t *po);
+/* Temporary compatibility layer. Will get removed. */
+typedef struct asn_bit_outp_s asn_per_outp_t;
+#define per_put_few_bits(out, bits, obits) asn_put_few_bits(out, bits, obits)
+#define per_put_many_bits(out, src, nbits) asn_put_many_bits(out, src, nbits)
+#define per_put_aligned_flush(out) asn_put_aligned_flush(out)
 
 /* X.691-2008/11, #11.5 */
 int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits);

@@ -92,7 +92,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		break;
 	}
 	if(produce_st) {
-		char *tname = asn1c_type_name(arg, arg->expr, TNF_SAFE);
+		const char *tname = asn1c_type_name(arg, arg->expr, TNF_SAFE);
 		OUT("const %s_t *st = (const %s_t *)sptr;\n", tname, tname);
 	}
 
@@ -427,9 +427,9 @@ static int
 emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	asn1c_integer_t natural_stop;
 	asn1p_expr_t *terminal;
-	char *tname;
+	const char *tname;
 
-	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->expr);
+	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->ns, arg->expr);
 	if(terminal) {
 		OUT("/* The underlying type is %s */\n",
 			ASN_EXPR_TYPE2STR(terminal->expr_type));
@@ -704,7 +704,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 static asn1p_expr_type_e
 _find_terminal_type(arg_t *arg) {
 	asn1p_expr_t *expr;
-	expr = asn1f_find_terminal_type_ex(arg->asn, arg->expr);
+	expr = asn1f_find_terminal_type_ex(arg->asn, arg->ns, arg->expr);
 	if(expr) return expr->expr_type;
 	return A1TC_INVALID;
 }

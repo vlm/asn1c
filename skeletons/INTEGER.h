@@ -7,6 +7,7 @@
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
+#include <NativeInteger.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,6 +16,7 @@ extern "C" {
 typedef ASN__PRIMITIVE_TYPE_t INTEGER_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_INTEGER;
+extern asn_TYPE_operation_t asn_OP_INTEGER;
 
 /* Map with <tag> to integer value association */
 typedef struct asn_INTEGER_enum_map_s {
@@ -24,7 +26,7 @@ typedef struct asn_INTEGER_enum_map_s {
 } asn_INTEGER_enum_map_t;
 
 /* This type describes an enumeration for INTEGER and ENUMERATED types */
-typedef const struct asn_INTEGER_specifics_s {
+typedef struct asn_INTEGER_specifics_s {
 	const asn_INTEGER_enum_map_t *value2enum;	/* N -> "tag"; sorted by N */
 	const unsigned int *enum2value;		/* "tag" => N; sorted by tag */
 	int map_count;				/* Elements in either map */
@@ -35,9 +37,10 @@ typedef const struct asn_INTEGER_specifics_s {
 } asn_INTEGER_specifics_t;
 
 #define INTEGER_free    ASN__PRIMITIVE_TYPE_free
+#define INTEGER_decode_ber	ber_decode_primitive
+#define INTEGER_constraint	asn_generic_no_constraint
 asn_struct_print_f INTEGER_print;
 asn_struct_compare_f INTEGER_compare;
-ber_type_decoder_f INTEGER_decode_ber;
 der_type_encoder_f INTEGER_encode_der;
 xer_type_decoder_f INTEGER_decode_xer;
 xer_type_encoder_f INTEGER_encode_xer;
@@ -85,7 +88,8 @@ enum asn_strtox_result_e asn_strtoimax_lim(const char *str, const char **end, in
 /*
  * Convert the integer value into the corresponding enumeration map entry.
  */
-const asn_INTEGER_enum_map_t *INTEGER_map_value2enum(asn_INTEGER_specifics_t *specs, long value);
+const asn_INTEGER_enum_map_t *INTEGER_map_value2enum(
+    const asn_INTEGER_specifics_t *specs, long value);
 
 #ifdef __cplusplus
 }

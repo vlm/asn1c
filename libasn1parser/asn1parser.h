@@ -8,11 +8,14 @@
 #include "config.h"
 #endif	/* HAVE_CONFIG_H */
 
+#include "asn1_ref.h"
+#include "asn1_buffer.h"
+#include "asn1_namespace.h"
+
 #include "asn1p_integer.h"
 #include "asn1p_list.h"
 #include "asn1p_oid.h"		/* Object identifiers (OIDs) */
 #include "asn1p_module.h"	/* ASN.1 definition module */
-#include "asn1p_ref.h"		/* References to custom types */
 #include "asn1p_value.h"	/* Value definition */
 #include "asn1p_param.h"	/* Parameterization */
 #include "asn1p_constr.h"	/* Type Constraints */

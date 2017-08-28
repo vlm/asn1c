@@ -74,8 +74,8 @@ static asn_CHOICE_specifics_t asn_SPC_b_specs_3 = {
 	offsetof(struct b, _asn_ctx),
 	offsetof(struct b, present),
 	sizeof(((struct b *)0)->present),
-	asn_MAP_b_tag2el_3,
-	2,	/* Count of tags in the map */
+	.tag2el = asn_MAP_b_tag2el_3,
+	.tag2el_count = 2,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = -1	/* Extensions start */
 };
@@ -83,17 +83,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_b_3 = {
 	"b",
 	"b",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
@@ -151,8 +142,8 @@ static const asn_TYPE_tag2member_t asn_MAP_T1_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_T1_specs_1 = {
 	sizeof(struct T1),
 	offsetof(struct T1, _asn_ctx),
-	asn_MAP_T1_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_T1_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
@@ -160,17 +151,8 @@ static asn_SEQUENCE_specifics_t asn_SPC_T1_specs_1 = {
 asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
 	"T1",
-	SEQUENCE_free,
-	SEQUENCE_print,
-	SEQUENCE_compare,
+	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	SEQUENCE_decode_ber,
-	SEQUENCE_encode_der,
-	SEQUENCE_decode_xer,
-	SEQUENCE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	0,	/* Use generic outmost tag fetcher */
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
 		/sizeof(asn_DEF_T1_tags_1[0]), /* 1 */

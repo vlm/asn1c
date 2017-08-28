@@ -96,25 +96,16 @@ asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	offsetof(struct Choice, _asn_ctx),
 	offsetof(struct Choice, present),
 	sizeof(((struct Choice *)0)->present),
-	asn_MAP_Choice_tag2el_1,
-	3,	/* Count of tags in the map */
+	.tag2el = asn_MAP_Choice_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
 	.canonical_order = 0,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice = {
 	"Choice",
 	"Choice",
-	CHOICE_free,
-	CHOICE_print,
-	CHOICE_compare,
+	&asn_OP_CHOICE,
 	CHOICE_constraint,
-	CHOICE_decode_ber,
-	CHOICE_encode_der,
-	CHOICE_decode_xer,
-	CHOICE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
-	0, 0,	/* No PER support, use "-gen-PER" to enable */
-	CHOICE_outmost_tag,
 	asn_DEF_Choice_tags_1,
 	sizeof(asn_DEF_Choice_tags_1)
 		/sizeof(asn_DEF_Choice_tags_1[0]), /* 1 */

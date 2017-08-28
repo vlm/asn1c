@@ -110,7 +110,7 @@ load_object_from(const char *fname, unsigned char *fbuf, size_t size, enum encty
 			" chunks %zd\n",
 			size, fname, how==AS_PER?"PER":"XER", csize);
 
-		if(st) asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
+		if(st) ASN_STRUCT_FREE(asn_DEF_PDU, st);
 		st = 0;
 
 		do {
@@ -308,7 +308,7 @@ process_XER_data(const char *fname, unsigned char *fbuf, size_t size) {
 	else
 		assert(xer_encoding_equal((char *)fbuf, size, (char *)buf, buf_offset));
 
-	asn_DEF_PDU.free_struct(&asn_DEF_PDU, st, 0);
+	ASN_STRUCT_FREE(asn_DEF_PDU, st);
 }
 
 /*
