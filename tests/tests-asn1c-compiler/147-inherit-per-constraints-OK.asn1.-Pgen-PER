@@ -1,0 +1,292 @@
+
+/*** <<< INCLUDES [Short] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [Short] >>> ***/
+
+typedef long	 Short_t;
+
+/*** <<< FUNC-DECLS [Short] >>> ***/
+
+extern asn_per_constraints_t asn_PER_type_Short_constr_1;
+extern asn_TYPE_descriptor_t asn_DEF_Short;
+asn_struct_free_f Short_free;
+asn_struct_print_f Short_print;
+asn_constr_check_f Short_constraint;
+ber_type_decoder_f Short_decode_ber;
+der_type_encoder_f Short_encode_der;
+xer_type_decoder_f Short_decode_xer;
+xer_type_encoder_f Short_encode_xer;
+per_type_decoder_f Short_decode_uper;
+per_type_encoder_f Short_encode_uper;
+
+/*** <<< CODE [Short] >>> ***/
+
+int
+Short_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 65535)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [Short] >>> ***/
+
+asn_per_constraints_t asn_PER_type_Short_constr_1 GCC_NOTUSED = {
+	{ APC_CONSTRAINED,	 16,  16,  0,  65535 }	/* (0..65535) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [Short] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_Short_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Short = {
+	"Short",
+	"Short",
+	&asn_OP_NativeInteger,
+	Short_constraint,
+	asn_DEF_Short_tags_1,
+	sizeof(asn_DEF_Short_tags_1)
+		/sizeof(asn_DEF_Short_tags_1[0]), /* 1 */
+	asn_DEF_Short_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Short_tags_1)
+		/sizeof(asn_DEF_Short_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	&asn_PER_type_Short_constr_1,
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [Alias] >>> ***/
+
+#include "Short.h"
+
+/*** <<< TYPE-DECLS [Alias] >>> ***/
+
+typedef Short_t	 Alias_t;
+
+/*** <<< FUNC-DECLS [Alias] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Alias;
+asn_struct_free_f Alias_free;
+asn_struct_print_f Alias_print;
+asn_constr_check_f Alias_constraint;
+ber_type_decoder_f Alias_decode_ber;
+der_type_encoder_f Alias_encode_der;
+xer_type_decoder_f Alias_decode_xer;
+xer_type_encoder_f Alias_encode_xer;
+per_type_decoder_f Alias_decode_uper;
+per_type_encoder_f Alias_encode_uper;
+
+/*** <<< CODE [Alias] >>> ***/
+
+int
+Alias_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 65535)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using Short,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< STAT-DEFS [Alias] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_Alias_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_Alias = {
+	"Alias",
+	"Alias",
+	&asn_OP_NativeInteger,
+	Alias_constraint,
+	asn_DEF_Alias_tags_1,
+	sizeof(asn_DEF_Alias_tags_1)
+		/sizeof(asn_DEF_Alias_tags_1[0]), /* 1 */
+	asn_DEF_Alias_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Alias_tags_1)
+		/sizeof(asn_DEF_Alias_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [Soo] >>> ***/
+
+#include <NativeInteger.h>
+#include "Short.h"
+#include "Alias.h"
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [Soo] >>> ***/
+
+typedef struct Soo {
+	long	 foo;
+	Short_t	 bar;
+	Alias_t	 baz;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Soo_t;
+
+/*** <<< FUNC-DECLS [Soo] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Soo;
+
+/*** <<< CODE [Soo] >>> ***/
+
+static int
+memb_foo_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 65535)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+
+/*** <<< CTDEFS [Soo] >>> ***/
+
+static asn_per_constraints_t asn_PER_memb_foo_constr_2 GCC_NOTUSED = {
+	{ APC_CONSTRAINED,	 16,  16,  0,  65535 }	/* (0..65535) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [Soo] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Soo_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Soo, foo),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		.memb_constraints = memb_foo_constraint_1,
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = &asn_PER_memb_foo_constr_2,
+		.default_value = 0,
+		.name = "foo"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Soo, bar),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Short,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "bar"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Soo, baz),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Alias,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* No PER visible constraints */
+		.default_value = 0,
+		.name = "baz"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Soo_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Soo_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 2 }, /* foo */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 1 }, /* bar */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 2, -2, 0 } /* baz */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Soo_specs_1 = {
+	sizeof(struct Soo),
+	offsetof(struct Soo, _asn_ctx),
+	.tag2el = asn_MAP_Soo_tag2el_1,
+	.tag2el_count = 3,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Soo = {
+	"Soo",
+	"Soo",
+	&asn_OP_SEQUENCE,
+	SEQUENCE_constraint,
+	asn_DEF_Soo_tags_1,
+	sizeof(asn_DEF_Soo_tags_1)
+		/sizeof(asn_DEF_Soo_tags_1[0]), /* 1 */
+	asn_DEF_Soo_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Soo_tags_1)
+		/sizeof(asn_DEF_Soo_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Soo_1,
+	3,	/* Elements count */
+	&asn_SPC_Soo_specs_1	/* Additional specs */
+};
+
