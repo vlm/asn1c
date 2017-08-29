@@ -918,7 +918,7 @@ asn_imax2INTEGER(INTEGER_t *st, intmax_t value) {
 		return -1;
 	}
 
-	buf = (uint8_t *)MALLOC(sizeof(value));
+	buf = (uint8_t *)(long *)MALLOC(sizeof(value));
 	if(!buf) return -1;
 
 	if(*(char *)&littleEndian) {
