@@ -220,8 +220,8 @@ asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
 	0,
 	0,
 #else
-	0,
-	0,
+	SEQUENCE_OF_decode_oer,
+	SEQUENCE_OF_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef ASN_DISABLE_PER_SUPPORT
 	0,

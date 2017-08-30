@@ -287,6 +287,7 @@ ASN_MODULE_SOURCES+=NativeInteger_oer.c
 ASN_MODULE_SOURCES+=NativeEnumerated_oer.c
 ASN_MODULE_SOURCES+=constr_SEQUENCE_oer.c
 ASN_MODULE_SOURCES+=constr_CHOICE_oer.c
+ASN_MODULE_SOURCES+=constr_SET_OF_oer.c
 ASN_CONVERTER_SOURCES+=pdu_collection.c
 
 

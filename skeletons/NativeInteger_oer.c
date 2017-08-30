@@ -41,23 +41,23 @@ NativeInteger_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
 
     if(specs && specs->field_unsigned) {
         unsigned long ul;
-        if(asn_INTEGER2ulong(&tmpint, &ul) != 0) {
-            ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
-            rval.code = RC_FAIL;
-            rval.consumed = 0;
-            return rval;
-        } else {
+        int ok = asn_INTEGER2ulong(&tmpint, &ul) == 0;
+        ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+        if(ok) {
             *native = ul;
+        } else {
+            rval.code = RC_FAIL;
+            return rval;
         }
     } else {
         long l;
-        if(asn_INTEGER2long(&tmpint, &l) != 0) {
-            ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
-            rval.code = RC_FAIL;
-            rval.consumed = 0;
-            return rval;
-        } else {
+        int ok = asn_INTEGER2long(&tmpint, &l) == 0;
+        ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+        if(ok) {
             *native = l;
+        } else {
+            rval.code = RC_FAIL;
+            return rval;
         }
     }
 

@@ -78,5 +78,6 @@ NativeInteger_oer.c
 NativeEnumerated_oer.c
 constr_SEQUENCE_oer.c
 constr_CHOICE_oer.c
+constr_SET_OF_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION

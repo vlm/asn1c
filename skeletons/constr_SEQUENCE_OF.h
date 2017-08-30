@@ -23,6 +23,8 @@ extern "C" {
 #define	SEQUENCE_OF_decode_ber	SET_OF_decode_ber
 #define	SEQUENCE_OF_decode_xer	SET_OF_decode_xer
 #define	SEQUENCE_OF_decode_uper	SET_OF_decode_uper
+#define	SEQUENCE_OF_decode_oer  SET_OF_decode_oer
+#define	SEQUENCE_OF_encode_oer  SET_OF_encode_oer
 der_type_encoder_f SEQUENCE_OF_encode_der;
 xer_type_encoder_f SEQUENCE_OF_encode_xer;
 per_type_encoder_f SEQUENCE_OF_encode_uper;

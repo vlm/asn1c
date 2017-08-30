@@ -15,6 +15,7 @@
 #undef  RETURN
 #define RETURN(_code)                    \
     do {                                 \
+        asn_dec_rval_t rval;             \
         rval.code = _code;               \
         rval.consumed = consumed_myself; \
         return rval;                     \
@@ -38,7 +39,12 @@
         ctx->phase++;   \
         ctx->step = 0;  \
     } while(0)
-
+#undef  SET_PHASE
+#define SET_PHASE(ctx, value) \
+    do {                      \
+        ctx->phase = value;   \
+        ctx->step = 0;        \
+    } while(0)
 
 /*
  * Tags are canonically sorted in the tag to member table.
@@ -136,8 +142,6 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     void *st = *struct_ptr; /* Target structure. */
     asn_struct_ctx_t *ctx;  /* Decoder context */
 
-    asn_dec_rval_t rval;   /* Return code from subparsers */
-
     ssize_t consumed_myself = 0; /* Consumed bytes from ptr */
 
     (void)constraints;
@@ -196,7 +200,9 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 RETURN(RC_FAIL);
             } else {
                 /* Skip open type extension */
-                ASN_DEBUG("Not implemented skipping open type extension");
+                ASN_DEBUG(
+                    "Not implemented skipping open type extension for tag %s",
+                    ber_tlv_tag_string(tlv_tag));
                 RETURN(RC_FAIL);
             }
         } while(0);
@@ -204,10 +210,12 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
         ADVANCE(tag_len);
     }
+        /* Fall through */
     case 1: {
         asn_TYPE_member_t *elm = &elements[ctx->step]; /* CHOICE's element */
         void *memb_ptr;         /* Pointer to the member */
         void **memb_ptr2;       /* Pointer to that pointer */
+        asn_dec_rval_t rval;
 
         /*
          * Compute the position of the member inside a structure,
@@ -240,8 +248,22 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                                           elm->oer_constraints, memb_ptr2, ptr,
                                           size);
         rval.consumed += consumed_myself;
+        switch(rval.code) {
+        case RC_OK:
+            NEXT_PHASE(ctx);
+        case RC_WMORE:
+            break;
+        case RC_FAIL:
+            SET_PHASE(ctx, 3);  /* => 3 */
+        }
         return rval;
     }
+    case 2:
+        /* Already decoded everything */
+        RETURN(RC_OK);
+    case 3:
+        /* Failed to decode, after all */
+        RETURN(RC_FAIL);
     }
 
     RETURN(RC_FAIL);
