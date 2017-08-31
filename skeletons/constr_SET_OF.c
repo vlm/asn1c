@@ -986,7 +986,7 @@ asn_TYPE_operation_t asn_OP_SET_OF = {
 	0,
 #else
 	SET_OF_decode_oer,
-	SET_OF_decode_oer,
+	SET_OF_encode_oer,
 #endif
 #ifdef ASN_DISABLE_PER_SUPPORT
 	0,
