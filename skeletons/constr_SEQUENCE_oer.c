@@ -198,20 +198,14 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
             if(elm->flags & ATF_OPEN_TYPE) {
                 rval = OPEN_TYPE_oer_get(opt_codec_ctx, td, st, elm, ptr, size);
             } else {
-                void *memb_tmpptr; /* Temporary reference. */
+                void *save_memb_ptr; /* Temporary reference. */
                 void **memb_ptr2;  /* Pointer to a pointer to a memmber */
 
-                if(elm->flags & ATF_POINTER) {
-                    /* Member is a pointer to another structure */
-                    memb_ptr2 = (void **)((char *)st + elm->memb_offset);
-                } else {
-                    memb_tmpptr = (char *)st + elm->memb_offset;
-                    memb_ptr2 = &memb_tmpptr; /* Ensure remains in scope! */
-                }
+                memb_ptr2 = element_ptrptr(st, elm, &save_memb_ptr);
 
                 rval = elm->type->op->oer_decoder(opt_codec_ctx, elm->type,
-                                              elm->oer_constraints, memb_ptr2,
-                                              ptr, size);
+                                                  elm->oer_constraints,
+                                                  memb_ptr2, ptr, size);
             }
             switch(rval.code) {
             case RC_OK:
@@ -415,9 +409,15 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
             for(edx = specs->ext_after + 1;
                 (ssize_t)edx < specs->ext_before - 1; edx++) {
                 asn_TYPE_member_t *elm = &td->elements[edx];
-                if(element_ptr(sptr, elm)) {
-                    has_extensions = 1;
-                    break;
+                void *memb_ptr = element_ptr(sptr, elm);
+                if(memb_ptr) {
+                    if(elm->default_value
+                       && elm->default_value(0, &memb_ptr) == 1) {
+                        /* Do not encode default values in extensions */
+                    } else {
+                        has_extensions = 1;
+                        break;
+                    }
                 }
             }
             ret = asn_put_few_bits(&preamble, has_extensions, 1);
@@ -437,7 +437,12 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
                 if(IN_EXTENSION_GROUP(specs, edx)) break;
 
                 if(elm->optional) {
-                    uint32_t has_component = (element_ptr(sptr, elm) != NULL);
+                    void *memb_ptr = element_ptr(sptr, elm);
+                    uint32_t has_component = memb_ptr != NULL;
+                    if(has_component && elm->default_value
+                       && elm->default_value(0, &memb_ptr) == 1) {
+                        has_component = 0;
+                    }
                     ret = asn_put_few_bits(&preamble, has_component, 1);
                     if(ret < 0) {
                         ASN__ENCODE_FAILED;
@@ -461,7 +466,12 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
         if(IN_EXTENSION_GROUP(specs, edx)) break;
 
         memb_ptr = element_ptr(sptr, elm);
-        if(!memb_ptr) {
+        if(memb_ptr) {
+            if(elm->default_value && elm->default_value(0, &memb_ptr) == 1) {
+                /* Skip default values in encoding */
+                continue;
+            }
+        } else {
             if(elm->optional) continue;
             /* Mandatory element is missing */
             ASN__ENCODE_FAILED;
@@ -489,7 +499,7 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
 
         /* Special case allowing us to use exactly one byte for #8.6 */
         size_t aoms_length_bits = specs->aoms_count;
-        size_t aoms_length_bytes = (7 + specs->aoms_count) >> 3;
+        size_t aoms_length_bytes = (7 + aoms_length_bits) >> 3;
         uint8_t unused_bits = 0x07 & (8 - (aoms_length_bits & 0x07));
 
         assert(1 + aoms_length_bytes <= 127);
@@ -511,6 +521,10 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
             edx++) {
             asn_TYPE_member_t *elm = &td->elements[edx];
             void *memb_ptr = element_ptr(sptr, elm);
+            if(memb_ptr && elm->default_value
+               && elm->default_value(0, &memb_ptr) == 1) {
+                memb_ptr = 0;   /* Do not encode default value. */
+            }
             ret |= asn_put_few_bits(&extadds, memb_ptr ? 1 : 0, 1);
         }
         if(ret < 0) ASN__ENCODE_FAILED;
@@ -525,12 +539,17 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
             void *memb_ptr = element_ptr(sptr, elm);
 
             if(memb_ptr) {
-                asn_enc_rval_t er = elm->type->op->oer_encoder(
-                    elm->type, elm->oer_constraints, memb_ptr, cb, app_key);
-                if(er.encoded == -1) {
-                    return er;
+                if(elm->default_value
+                   && elm->default_value(0, &memb_ptr) == 1) {
+                    /* Do not encode default value. */
+                } else {
+                    asn_enc_rval_t er = elm->type->op->oer_encoder(
+                        elm->type, elm->oer_constraints, memb_ptr, cb, app_key);
+                    if(er.encoded == -1) {
+                        return er;
+                    }
+                    computed_size += er.encoded;
                 }
-                computed_size += er.encoded;
             } else if(!elm->optional) {
                 ASN__ENCODE_FAILED;
             }
