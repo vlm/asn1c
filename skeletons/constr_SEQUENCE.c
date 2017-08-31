@@ -536,7 +536,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
 			if(!*memb_ptr2) {
-				ASN_DEBUG("Element %s %d not present",
+				ASN_DEBUG("Element %s %zu not present",
 					elm->name, edx);
 				if(elm->optional)
 					continue;
@@ -874,59 +874,70 @@ SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t er;
-	int xcan = (flags & XER_F_CANONICAL);
+SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr, int ilevel,
+                    enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb,
+                    void *app_key) {
+    asn_enc_rval_t er;
+    int xcan = (flags & XER_F_CANONICAL);
+    asn_TYPE_descriptor_t *tmp_def_val_td = 0;
+    void *tmp_def_val = 0;
 	size_t edx;
 
-	if(!sptr)
-		ASN__ENCODE_FAILED;
+    if(!sptr) ASN__ENCODE_FAILED;
 
-	er.encoded = 0;
+    er.encoded = 0;
 
-	for(edx = 0; edx < td->elements_count; edx++) {
-		asn_enc_rval_t tmper;
-		asn_TYPE_member_t *elm = &td->elements[edx];
-		void *memb_ptr;
-		const char *mname = elm->name;
-		unsigned int mlen = strlen(mname);
+    for(edx = 0; edx < td->elements_count; edx++) {
+        asn_enc_rval_t tmper;
+        asn_TYPE_member_t *elm = &td->elements[edx];
+        void *memb_ptr;
+        const char *mname = elm->name;
+        unsigned int mlen = strlen(mname);
 
-		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) {
-				if(elm->optional)
-					continue;
-				/* Mandatory element is missing */
-				ASN__ENCODE_FAILED;
-			}
-		} else {
-			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
-		}
+        if(elm->flags & ATF_POINTER) {
+            memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+            if(!memb_ptr) {
+                assert(tmp_def_val == 0);
+                if(elm->default_value) {
+                    if(elm->default_value(1, &tmp_def_val)) {
+                        ASN__ENCODE_FAILED;
+                    } else {
+                        memb_ptr = tmp_def_val;
+                        tmp_def_val_td = elm->type;
+                    }
+                } else if(elm->optional) {
+                    continue;
+                } else {
+                    /* Mandatory element is missing */
+                    ASN__ENCODE_FAILED;
+                }
+            }
+        } else {
+            memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+        }
 
-		/*
-		 * X.693 (0112) #9.5.
-		 * TODO: Default values' encodings shall always be present.
-		 */
+        if(!xcan) ASN__TEXT_INDENT(1, ilevel);
+        ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 
-		if(!xcan) ASN__TEXT_INDENT(1, ilevel);
-		ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
+        /* Print the member itself */
+        tmper = elm->type->op->xer_encoder(elm->type, memb_ptr, ilevel + 1,
+                                           flags, cb, app_key);
+        if(tmp_def_val) {
+            ASN_STRUCT_FREE(*tmp_def_val_td, tmp_def_val);
+            tmp_def_val = 0;
+        }
+        if(tmper.encoded == -1) return tmper;
 
-		/* Print the member itself */
-		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
-			ilevel + 1, flags, cb, app_key);
-		if(tmper.encoded == -1) return tmper;
+        ASN__CALLBACK3("</", 2, mname, mlen, ">", 1);
+        er.encoded += 5 + (2 * mlen) + tmper.encoded;
+    }
 
-		ASN__CALLBACK3("</", 2, mname, mlen, ">", 1);
-		er.encoded += 5 + (2 * mlen) + tmper.encoded;
-	}
+    if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
 
-	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
-
-	ASN__ENCODED_OK(er);
+    ASN__ENCODED_OK(er);
 cb_failed:
-	ASN__ENCODE_FAILED;
+    if(tmp_def_val) ASN_STRUCT_FREE(*tmp_def_val_td, tmp_def_val);
+    ASN__ENCODE_FAILED;
 }
 
 int
