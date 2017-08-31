@@ -232,7 +232,9 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         asn_bit_data_t *extadds;
         int has_extensions_bit = (specs->ext_before >= 0);
         int extensions_present =
-            has_extensions_bit && (((const uint8_t *)preamble->buffer)[0] & 0x80);
+            has_extensions_bit
+            && (preamble->buffer == NULL
+                || (((const uint8_t *)preamble->buffer)[0] & 0x80));
         uint8_t unused_bits;
         size_t len = 0;
         ssize_t len_len;
@@ -247,7 +249,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
         unconst.cptr = preamble->buffer;
         FREEMEM(unconst.uptr);
-        preamble->buffer = 0;
+        preamble->buffer = 0; /* Will do extensions_present==1 next time. */
 
         if(!extensions_present) {
             ctx->phase = 10;
