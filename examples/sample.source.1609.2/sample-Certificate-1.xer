@@ -1,0 +1,95 @@
+<Certificate>
+    <version>3</version>
+    <type><explicit/></type>
+    <issuer>
+        <sha256AndDigest>AF 23 26 18 BE 5E 6F 55</sha256AndDigest>
+    </issuer>
+    <toBeSigned>
+        <id>
+            <name>vehicle-test.example.com</name>
+        </id>
+        <cracaId>5E 6F 5B</cracaId>
+        <crlSeries>2</crlSeries>
+        <validityPeriod>
+            <start>17469212</start>
+            <duration>
+                <years>10</years>
+            </duration>
+        </validityPeriod>
+        <region>
+            <identifiedRegion>
+                    <countryOnly>12</countryOnly>
+                
+                    <countryOnly>34</countryOnly>
+                
+            </identifiedRegion>
+        </region>
+        <appPermissions>
+            <PsidSsp>
+                <psid>35</psid>
+                <ssp>
+                    <opaque>83 00 01</opaque>
+                </ssp>
+            </PsidSsp>
+        </appPermissions>
+        <certIssuePermissions>
+            <PsidGroupPermissions>
+                <subjectPermissions>
+                    <all></all>
+                </subjectPermissions>
+                <minChainDepth>2</minChainDepth>
+                <chainDepthRange>0</chainDepthRange>
+                <eeType>
+                    11000000
+                </eeType>
+            </PsidGroupPermissions>
+            <PsidGroupPermissions>
+                <subjectPermissions>
+                    <explicit>
+                        <PsidSspRange>
+                            <psid>35</psid>
+                            <sspRange>
+                                <all></all>
+                            </sspRange>
+                        </PsidSspRange>
+                        <PsidSspRange>
+                            <psid>256</psid>
+                            <sspRange>
+                                <all></all>
+                            </sspRange>
+                        </PsidSspRange>
+                    </explicit>
+                </subjectPermissions>
+                <minChainDepth>1</minChainDepth>
+                <chainDepthRange>-1</chainDepthRange>
+                <eeType>
+                    11000000
+                </eeType>
+            </PsidGroupPermissions>
+        </certIssuePermissions>
+        <verifyKeyIndicator>
+            <verificationKey>
+                <ecdsaNistP256>
+                    <compressed-y-0>
+                        08 C3 C0 70 B0 40 C0 40 10 80 33 07 0D 05 01 CE 
+                        0C 0A 08 06 01 7B 00 F0 30 D2 03 EA 04 BE 09 03
+                    </compressed-y-0>
+                </ecdsaNistP256>
+            </verificationKey>
+        </verifyKeyIndicator>
+    </toBeSigned>
+    <signature>
+        <ecdsaNistP256Signature>
+            <r>
+                <x-only>
+                    08 B2 03 01 04 02 0A 0D 01 0C 01 05 C0 F8 0B B1 
+                    46 02 39 34 8D 17 40 5C 1A 84 51 51 D4 06 12 00
+                </x-only>
+            </r>
+            <s>
+                26 17 CF 4E 6B 25 09 7F 03 F5 02 AD 0C 6F 2F 12 
+                59 74 70 0D 31 A6 0F D1 EF 12 04 0E 4D 82 31 AB
+            </s>
+        </ecdsaNistP256Signature>
+    </signature>
+</Certificate>

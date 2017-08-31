@@ -1,0 +1,46 @@
+<Certificate>
+    <version>3</version>
+    <type><implicit/></type>
+    <issuer>
+        <sha256AndDigest>90 E3 08 2D A8 0E 64 01</sha256AndDigest>
+    </issuer>
+    <toBeSigned>
+        <id>
+            <binaryId>90 77 72 1D 06 CB 01 60</binaryId>
+        </id>
+        <cracaId>5E 6F 5B</cracaId>
+        <crlSeries>3</crlSeries>
+        <validityPeriod>
+            <start>20493427</start>
+            <duration>
+                <hours>69</hours>
+            </duration>
+        </validityPeriod>
+        <region>
+            <identifiedRegion>
+                    <countryOnly>12</countryOnly>
+                
+                    <countryOnly>34</countryOnly>
+                
+                    <countryOnly>56</countryOnly>
+                
+            </identifiedRegion>
+        </region>
+        <appPermissions>
+            <PsidSsp>
+                <psid>135</psid>
+                <ssp>
+                    <opaque></opaque>
+                </ssp>
+            </PsidSsp>
+        </appPermissions>
+        <verifyKeyIndicator>
+            <reconstructionValue>
+                <compressed-y-0>
+                    03 10 8D FB BB 7A 77 77 70 76 74 7F 35 3E 56 99 
+                    05 0F 02 02 03 04 03 0B 0E 68 64 6E 65 6B 61 E1
+                </compressed-y-0>
+            </reconstructionValue>
+        </verifyKeyIndicator>
+    </toBeSigned>
+</Certificate>
