@@ -2147,6 +2147,9 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range) {
 
 	if(range->incompatible || range->not_OER_visible) {
 		OUT("{ 0, 0 }");
+    } else if(range->left.type == ARE_VALUE && range->left.value >= 0
+              && range->right.type == ARE_MAX) {
+        OUT("{ 0, 1 }");
 	} else if(range->left.type == ARE_VALUE &&
             range->right.type == ARE_VALUE) {
         asn1c_integer_t lb = range->left.value;
