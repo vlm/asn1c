@@ -78,7 +78,7 @@ oer_fetch_quantity(const void *ptr, size_t size, size_t *qty_r) {
     }
 
     const uint8_t *b = (const uint8_t *)ptr + len_len;
-    const uint8_t *bend = b + len_len;
+    const uint8_t *bend = b + len;
 
 
     /* Skip the leading 0-bytes */
@@ -204,6 +204,24 @@ SET_OF_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     return rval;
 }
 
+static ssize_t
+oer_put_quantity(size_t qty, asn_app_consume_bytes_f *cb, void *app_key) {
+    uint8_t buf[1 + sizeof(size_t)];
+    uint8_t *b = &buf[sizeof(size_t)]; /* Last addressable */
+    size_t encoded;
+
+    do {
+        *b-- = qty;
+        qty >>= 8;
+    } while(qty);
+
+    *b = sizeof(buf) - (b-buf) - 1;
+    encoded = sizeof(buf) - (b-buf);
+    if(cb(b, encoded, app_key) < 0)
+        return -1;
+    return encoded;
+}
+
 /*
  * Encode as Canonical OER.
  */
@@ -212,14 +230,39 @@ SET_OF_encode_oer(asn_TYPE_descriptor_t *td,
                     const asn_oer_constraints_t *constraints, void *sptr,
                     asn_app_consume_bytes_f *cb, void *app_key) {
     size_t computed_size = 0;
+    ssize_t qty_len;
+    asn_TYPE_member_t *elm;
+    asn_anonymous_set_ *list;
+    size_t n;
 
     (void)constraints;
-    (void)cb;
-    (void)app_key;
+
+    if(!sptr) ASN__ENCODE_FAILED;
+
+    elm = td->elements;
+    list = _A_SET_FROM_VOID(sptr);
+
+    qty_len = oer_put_quantity(list->count, cb, app_key);
+    if(qty_len < 0) {
+        ASN__ENCODE_FAILED;
+    }
+    computed_size += qty_len;
+
+    for(n = 0; n < list->count; n++) {
+        void *memb_ptr = list->array[n];
+        asn_enc_rval_t er;
+        er = elm->type->op->oer_encoder(elm->type, elm->oer_constraints,
+                                        memb_ptr, cb, app_key);
+        if(er.encoded < 0) {
+            return er;
+        } else {
+            computed_size += er.encoded;
+        }
+    }
 
     {
-        asn_enc_rval_t er = {computed_size, td, sptr};
-        ASN__ENCODED_OK(er);
+        asn_enc_rval_t erval = {computed_size, 0, 0};
+        return erval;
     }
 }
 

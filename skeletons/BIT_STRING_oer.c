@@ -90,11 +90,81 @@ asn_enc_rval_t
 BIT_STRING_encode_oer(asn_TYPE_descriptor_t *td,
                         const asn_oer_constraints_t *constraints, void *sptr,
                         asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_enc_rval_t er = {-1,td,sptr};
-    (void)constraints;
-    (void)cb;
-    (void)app_key;
-    return er;
+    BIT_STRING_t *st = (BIT_STRING_t *)sptr;
+    asn_enc_rval_t erval = {0, 0, 0};
+    const asn_oer_constraints_t *cts =
+        constraints ? constraints : td->oer_constraints;
+    ssize_t ct_size = cts ? cts->size : -1;
+    size_t effective_size;
+    size_t trailing_zeros = 0;
+    int fix_last_byte = 0;
+
+    if(!st) ASN__ENCODE_FAILED;
+
+    if(st->bits_unused & ~7) {
+        ASN_DEBUG("BIT STRING unused bits %d out of 0..7 range",
+                  st->bits_unused);
+        ASN__ENCODE_FAILED;
+    }
+    if(st->bits_unused && !(st->size && st->buf)) {
+        ASN_DEBUG("BIT STRING %s size 0 can't support unused bits %d", td->name,
+                  st->bits_unused);
+        ASN__ENCODE_FAILED;
+    }
+
+    if(ct_size >= 0) {
+        size_t ct_bytes = (ct_size + 7) >> 3;
+        if(st->size > ct_bytes) {
+            ASN_DEBUG("More bits in BIT STRING %s (%zd) than constrained %zd",
+                      td->name, 8 * st->size - st->bits_unused, ct_size);
+            ASN__ENCODE_FAILED;
+        }
+        trailing_zeros = ct_bytes - st->size;   /* Allow larger constraint */
+    } else {
+        uint8_t ub = st->bits_unused & 7;
+        size_t len_len = oer_serialize_length(1 + st->size, cb, app_key);
+        if(len_len < 0) ASN__ENCODE_FAILED;
+        if(cb(&ub, 1, app_key) < 0) {
+            ASN__ENCODE_FAILED;
+        }
+        erval.encoded += len_len + 1;
+    }
+
+    if(st->bits_unused) {
+        if(st->buf[st->size - 1] & (0xff << st->bits_unused)) {
+            fix_last_byte = 1;
+        }
+    }
+
+    if(cb(st->buf, st->size - fix_last_byte, app_key) < 0) {
+        ASN__ENCODE_FAILED;
+    }
+
+    if(fix_last_byte) {
+        uint8_t b = st->buf[st->size - 1] & (0xff << st->bits_unused);
+        if(cb(&b, 1, app_key) < 0) {
+            ASN__ENCODE_FAILED;
+        }
+    }
+
+    erval.encoded += st->size;
+
+    if(trailing_zeros) {
+        static uint8_t zeros[16];
+        while(trailing_zeros > 0) {
+            int ret;
+            if(trailing_zeros < sizeof(zeros)) {
+                ret = cb(zeros, trailing_zeros, app_key);
+                erval.encoded += trailing_zeros;
+            } else {
+                ret = cb(zeros, sizeof(zeros), app_key);
+                erval.encoded += sizeof(zeros);
+            }
+            if(ret < 0) ASN__ENCODE_FAILED;
+        }
+    }
+
+    return erval;
 }
 
 

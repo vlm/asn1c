@@ -121,10 +121,8 @@ oer_fetch_tag(const void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
         }
     }
 
-
     return 0; /* Want more */
 }
-
 
 asn_dec_rval_t
 CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
@@ -270,18 +268,95 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 /*
+ * X.696 (08/2015) #8.7 Encoding of tags
+ */
+static ssize_t
+oer_put_tag(ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
+    uint8_t tclass = BER_TAG_CLASS(tag);
+    ber_tlv_tag_t tval = BER_TAG_VALUE(tag);
+
+    if(tval < 0x3F) {
+        uint8_t b = (uint8_t)((tclass << 6) | tval);
+        if(cb(&b, 1, app_key) < 0) {
+            return -1;
+        }
+        return 1;
+    } else {
+        uint8_t buf[1 + 2 * sizeof(tval)];
+        uint8_t *b = &buf[sizeof(buf)-1]; /* Last addressable */
+        size_t encoded;
+        for(; ; tval >>= 7) {
+            if(tval >> 7) {
+                *b-- = 0x80 | (tval & 0x7f);
+            } else {
+                *b-- = tval & 0x7f;
+                break;
+            }
+        }
+        *b = (uint8_t)((tclass << 6) | 0x3F);
+        encoded = sizeof(buf) - (b - buf);
+        if(cb(b, encoded, app_key) < 0) {
+            return -1;
+        }
+        return encoded;
+    }
+
+}
+
+/*
  * Encode as Canonical OER.
  */
 asn_enc_rval_t
 CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
                   const asn_oer_constraints_t *constraints, void *sptr,
                   asn_app_consume_bytes_f *cb, void *app_key) {
+    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    asn_TYPE_member_t *elm; /* CHOICE element */
+    unsigned present;
+    void *memb_ptr;
+    ber_tlv_tag_t tag;
+    ssize_t tag_len;
+    asn_enc_rval_t er;
 
     (void)constraints;
-    (void)cb;
-    (void)app_key;
 
-    ASN__ENCODE_FAILED;
+    if(!sptr) ASN__ENCODE_FAILED;
+
+    ASN_DEBUG("OER %s encoding as CHOICE", td->name);
+
+    present = CHOICE_variant_get_presence(td, sptr);
+    if(present == 0 || present > td->elements_count) {
+        ASN_DEBUG("CHOICE %s member is not selected", td->name);
+        ASN__ENCODE_FAILED;
+    }
+
+    elm = &td->elements[present-1];
+    if(elm->flags & ATF_POINTER) {
+        memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+        if(memb_ptr == 0) {
+            /* Mandatory element absent */
+            ASN__ENCODE_FAILED;
+        }
+    } else {
+        memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+    }
+
+    tag = asn_TYPE_outmost_tag(elm->type, memb_ptr, elm->tag_mode, elm->tag);
+    if(tag == 0) {
+        ASN__ENCODE_FAILED;
+    }
+
+    tag_len = oer_put_tag(tag, cb, app_key);
+    if(tag_len < 0) {
+        ASN__ENCODE_FAILED;
+    }
+
+    er = elm->type->op->oer_encoder(elm->type, elm->oer_constraints, memb_ptr,
+                                    cb, app_key);
+    if(er.encoded > 0)
+        er.encoded += tag_len;
+
+    return er;
 }
 
 #endif  /* ASN_DISABLE_OER_SUPPORT */
