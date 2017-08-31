@@ -26,8 +26,8 @@ asn_TYPE_operation_t asn_OP_NULL = {
 	0,
 	0,
 #else
-	0,
-	0,
+	NULL_decode_oer,
+	NULL_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -134,6 +134,39 @@ NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	}
 }
 
+#ifndef ASN_DISABLE_OER_SUPPORT
+
+asn_dec_rval_t
+NULL_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+                  const asn_oer_constraints_t *constraints, void **struct_ptr,
+                  const void *ptr, size_t size) {
+    asn_dec_rval_t rv = {RC_OK, 0};
+    (void)opt_codec_ctx;
+    (void)td;
+    (void)constraints;
+    (void)struct_ptr;
+    (void)ptr;
+    (void)size;
+    return rv;
+}
+
+asn_enc_rval_t
+NULL_encode_oer(asn_TYPE_descriptor_t *td,
+                const asn_oer_constraints_t *constraints, void *sptr,
+                asn_app_consume_bytes_f *cb, void *app_key) {
+    asn_enc_rval_t er = {0, td, sptr};
+
+    (void)constraints;
+    (void)cb;
+    (void)app_key;
+
+    return er;
+}
+
+#endif /* ASN_DISABLE_OER_SUPPORT */
+
+#ifndef ASN_DISABLE_PER_SUPPORT
+
 asn_dec_rval_t
 NULL_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                  const asn_per_constraints_t *constraints, void **sptr,
@@ -177,3 +210,5 @@ NULL_encode_uper(asn_TYPE_descriptor_t *td,
 	er.encoded = 0;
 	ASN__ENCODED_OK(er);
 }
+
+#endif  /* ASN_DISABLE_PER_SUPPORT */

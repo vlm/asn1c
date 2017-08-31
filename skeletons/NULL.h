@@ -26,6 +26,8 @@ asn_struct_compare_f NULL_compare;
 der_type_encoder_f NULL_encode_der;
 xer_type_decoder_f NULL_decode_xer;
 xer_type_encoder_f NULL_encode_xer;
+oer_type_decoder_f NULL_decode_oer;
+oer_type_encoder_f NULL_encode_oer;
 per_type_decoder_f NULL_decode_uper;
 per_type_encoder_f NULL_encode_uper;
 
