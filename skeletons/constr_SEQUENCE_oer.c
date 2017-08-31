@@ -54,10 +54,16 @@
 /*
  * Return pointer to a member.
  */
-static void **element_ptrptr(void *struct_ptr, asn_TYPE_member_t *elm) {
-    assert(elm->flags & ATF_POINTER);
-    /* Member is a pointer to another structure */
-    return (void **)((char *)struct_ptr + elm->memb_offset);
+static void **
+element_ptrptr(void *struct_ptr, asn_TYPE_member_t *elm, void **tmp_save_ptr) {
+    if(elm->flags & ATF_POINTER) {
+        /* Member is a pointer to another structure */
+        return (void **)((char *)struct_ptr + elm->memb_offset);
+    } else {
+        assert(tmp_save_ptr);
+        *tmp_save_ptr = (void *)((char *)struct_ptr + elm->memb_offset);
+        return tmp_save_ptr;
+    }
 }
 
 static void *element_ptr(void *struct_ptr, asn_TYPE_member_t *elm) {
@@ -172,7 +178,9 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 } else if(present == 0) {
                     if(elm->default_value) {
                         /* Fill-in DEFAULT */
-                        if(elm->default_value(1, element_ptrptr(st, elm))) {
+                        void *tmp;
+                        if(elm->default_value(1,
+                                              element_ptrptr(st, elm, &tmp))) {
                             RETURN(RC_FAIL);
                         }
                     }
@@ -306,7 +314,7 @@ SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
             asn_bit_data_t *extadds = ctx->ptr;
             size_t edx = ctx->step;
             asn_TYPE_member_t *elm = &td->elements[edx];
-            void **memb_ptr2 = element_ptrptr(st, elm);
+            void **memb_ptr2 = element_ptrptr(st, elm, 0);
 
             switch(asn_get_few_bits(extadds, 1)) {
             case -1:

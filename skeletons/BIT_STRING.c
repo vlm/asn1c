@@ -30,8 +30,8 @@ asn_TYPE_operation_t asn_OP_BIT_STRING = {
 	0,
 	0,
 #else
-	0,
-	0,
+	BIT_STRING_decode_oer,
+	BIT_STRING_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,

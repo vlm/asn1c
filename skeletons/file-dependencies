@@ -79,5 +79,6 @@ NativeEnumerated_oer.c
 constr_SEQUENCE_oer.c
 constr_CHOICE_oer.c
 constr_SET_OF_oer.c constr_SET_OF.h asn_SET_OF.h asn_SET_OF.c
+BIT_STRING_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION

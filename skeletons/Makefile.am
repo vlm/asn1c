@@ -24,6 +24,7 @@ libasn1cskeletons_la_CFLAGS = $(SKELETONS_CFLAGS)
 libasn1cskeletons_la_SOURCES = 				\
 	ANY.c ANY.h					\
 	BIT_STRING.c BIT_STRING.h			\
+	BIT_STRING_oer.c 			\
 	BMPString.c BMPString.h				\
 	BOOLEAN.c BOOLEAN.h				\
 	ENUMERATED.c ENUMERATED.h			\
