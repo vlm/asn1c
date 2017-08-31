@@ -363,7 +363,7 @@ main(int ac, char *av[]) {
                 erv = oer_encode(pduType, structure, write_out, binary_out);
 #endif
                 if(erv.encoded < 0) {
-                    fprintf(stderr, "%s: Cannot convert %s into oER\n", name,
+                    fprintf(stderr, "%s: Cannot convert %s into OER\n", name,
                             pduType->name);
                     exit(EX_UNAVAILABLE);
                 }
