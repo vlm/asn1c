@@ -12,16 +12,16 @@ static int emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, as
 static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
 static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop);
-static int native_long_sign(asn1cnst_range_t *r);	/* -1, 0, 1 */
+static int native_long_sign(arg_t *arg, asn1cnst_range_t *r);	/* -1, 0, 1 */
 
 static int
-ulong_optimization(asn1p_expr_type_e etype, asn1cnst_range_t *r_size,
+ulong_optimization(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_range_t *r_size,
 						asn1cnst_range_t *r_value)
 {
 	return (!r_size && r_value
 		&& (etype == ASN_BASIC_INTEGER
 		|| etype == ASN_BASIC_ENUMERATED)
-		&& native_long_sign(r_value) == 0);
+		&& native_long_sign(arg, r_value) == 0);
 }
 
 int
@@ -104,8 +104,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			switch(etype) {
 			case ASN_BASIC_INTEGER:
 			case ASN_BASIC_ENUMERATED:
-				if(native_long_sign(r_value) >= 0) {
-					ulong_optimize = ulong_optimization(etype, r_size, r_value);
+				if(native_long_sign(arg, r_value) >= 0) {
+					ulong_optimize = ulong_optimization(arg, etype, r_size, r_value);
 					if(!ulong_optimize) {
 						OUT("unsigned long value;\n");
 					}
@@ -643,7 +643,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 				break;
 			}
 
-			if(native_long_sign(r_value) >= 0) {
+			if(native_long_sign(arg, r_value) >= 0) {
 				/* Special case for treating unsigned longs */
 				OUT("if(asn_INTEGER2ulong(st, &value)) {\n");
 				INDENT(+1);
@@ -710,7 +710,12 @@ _find_terminal_type(arg_t *arg) {
 }
 
 static int
-native_long_sign(asn1cnst_range_t *r) {
+native_long_sign(arg_t *arg, asn1cnst_range_t *r) {
+    if(!(arg->flags & A1C_USE_WIDE_TYPES) && r->left.type == ARE_VALUE
+       && r->left.value >= 0 && r->left.value <= 2147483647
+        && r->right.type == ARE_MAX) {
+        return 1;
+    }
 	if(r->left.type == ARE_VALUE
 	&& r->left.value >= 0
 	&& r->right.type == ARE_VALUE

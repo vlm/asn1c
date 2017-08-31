@@ -398,7 +398,7 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 
 /*** <<< TYPE-DECLS [CN-IntegerLowMax] >>> ***/
 
-typedef long	 CN_IntegerLowMax_t;
+typedef unsigned long	 CN_IntegerLowMax_t;
 
 /*** <<< FUNC-DECLS [CN-IntegerLowMax] >>> ***/
 
@@ -418,7 +418,7 @@ per_type_encoder_f CN_IntegerLowMax_encode_uper;
 int
 CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	long value;
+	unsigned long value;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -427,7 +427,7 @@ CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	value = *(const long *)sptr;
+	value = *(const unsigned long *)sptr;
 	
 	if((value >= 1)) {
 		/* Constraint check succeeded */
@@ -455,6 +455,11 @@ static asn_per_constraints_t asn_PER_type_CN_IntegerLowMax_constr_1 GCC_NOTUSED 
 
 /*** <<< STAT-DEFS [CN-IntegerLowMax] >>> ***/
 
+static const asn_INTEGER_specifics_t asn_SPC_CN_IntegerLowMax_specs_1 = {
+	0,	0,	0,	0,	0,
+	0,	/* Native long size */
+	1	/* Unsigned representation */
+};
 static const ber_tlv_tag_t asn_DEF_CN_IntegerLowMax_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
@@ -472,7 +477,7 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
 	0,	/* No OER visible constraints */
 	&asn_PER_type_CN_IntegerLowMax_constr_1,
 	0, 0,	/* No members */
-	0	/* No specifics */
+	&asn_SPC_CN_IntegerLowMax_specs_1	/* Additional specs */
 };
 
 
