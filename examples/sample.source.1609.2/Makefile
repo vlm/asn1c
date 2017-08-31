@@ -373,15 +373,15 @@ check-xer:
 
 check-oer:
 	@if test -f sample-Certificate-1.*oer ; then \
-	for f in sample-*-*.{c,}oer; do \
+	for f in sample-*-*.*oer; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
-	./${TARGET} -p $$pdu -b $$b -ioer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \
-	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 4; \
+	./${TARGET} -p $$pdu -b $$b -ixer -ooer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \
+	diff $$f ./.tmp.2.$$$$ || exit 4; \
 	rm -f ./.tmp.[12].$$$$; \
-	echo "Test junking $$f (please wait)..."; \
+	echo "Test junking $$f (please wait) ($$b) ..."; \
 	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 5; \
 	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 6; \
 	done; done; fi
