@@ -233,7 +233,7 @@ SET_OF_encode_oer(asn_TYPE_descriptor_t *td,
     ssize_t qty_len;
     asn_TYPE_member_t *elm;
     asn_anonymous_set_ *list;
-    size_t n;
+    int n;
 
     (void)constraints;
 

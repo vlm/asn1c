@@ -95,7 +95,6 @@ BIT_STRING_encode_oer(asn_TYPE_descriptor_t *td,
     const asn_oer_constraints_t *cts =
         constraints ? constraints : td->oer_constraints;
     ssize_t ct_size = cts ? cts->size : -1;
-    size_t effective_size;
     size_t trailing_zeros = 0;
     int fix_last_byte = 0;
 
@@ -122,7 +121,7 @@ BIT_STRING_encode_oer(asn_TYPE_descriptor_t *td,
         trailing_zeros = ct_bytes - st->size;   /* Allow larger constraint */
     } else {
         uint8_t ub = st->bits_unused & 7;
-        size_t len_len = oer_serialize_length(1 + st->size, cb, app_key);
+        ssize_t len_len = oer_serialize_length(1 + st->size, cb, app_key);
         if(len_len < 0) ASN__ENCODE_FAILED;
         if(cb(&ub, 1, app_key) < 0) {
             ASN__ENCODE_FAILED;

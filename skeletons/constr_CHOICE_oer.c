@@ -134,6 +134,8 @@ CHOICE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
     asn_TYPE_member_t *elements = td->elements;
 
+    (void)specs;
+
     /*
      * Parts of the structure being constructed.
      */
@@ -319,6 +321,7 @@ CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
     asn_enc_rval_t er;
 
     (void)constraints;
+    (void)specs;
 
     if(!sptr) ASN__ENCODE_FAILED;
 
