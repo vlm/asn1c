@@ -12,7 +12,7 @@ in multiple contexts, the -fcompound-names command line option must
 be specified on the asn1c command. The provided sample Makefile 
 already has the option included but if you are not using that
 Makefile, you must ensure that it is provided in your command line
-in order to avoid getting 'redefinition' erros during the build
+in order to avoid getting 'redefinition' errors during the build
 process.
 
 THERE IS NO J2735_201603.asn1 FILE THERE YET!

@@ -13,7 +13,7 @@ line option must be specified on the asn1c command. The provided
 sample Makefile already has the option included but if you are
 not using that Makefile, you must ensure that it is provided
 in your command line in order to avoid getting 'redefinition'
-erros during the build process.
+errors during the build process.
 
 THERE IS NO IEEE-1609.2-2016.asn1 FILE THERE YET!
 
