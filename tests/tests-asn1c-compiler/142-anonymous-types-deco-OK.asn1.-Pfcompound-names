@@ -105,7 +105,7 @@ typedef enum Type1_PR {
 typedef struct Type1 {
 	Type1_PR present;
 	union Type1_u {
-		struct anonType {
+		struct Type1__anonType {
 			OCTET_STRING_t	 x;
 			OCTET_STRING_t	 y;
 			
@@ -182,7 +182,7 @@ memb_y_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [Type1] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_anonType_2[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct anonType, x),
+	{ ATF_NOFLAGS, 0, offsetof(struct Type1__anonType, x),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
@@ -193,7 +193,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.default_value = 0,
 		.name = "x"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct anonType, y),
+	{ ATF_NOFLAGS, 0, offsetof(struct Type1__anonType, y),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
@@ -214,8 +214,8 @@ static const asn_TYPE_tag2member_t asn_MAP_anonType_tag2el_2[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* y */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
-	sizeof(struct anonType),
-	offsetof(struct anonType, _asn_ctx),
+	sizeof(struct Type1__anonType),
+	offsetof(struct Type1__anonType, _asn_ctx),
 	.tag2el = asn_MAP_anonType_tag2el_2,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
@@ -302,7 +302,7 @@ typedef enum Type2_PR {
 typedef struct Type2 {
 	Type2_PR present;
 	union Type2_u {
-		struct anonType {
+		struct Type2__anonType {
 			OCTET_STRING_t	 x;
 			OCTET_STRING_t	 y;
 			
@@ -379,7 +379,7 @@ memb_y_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
 /*** <<< STAT-DEFS [Type2] >>> ***/
 
 static asn_TYPE_member_t asn_MBR_anonType_2[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct anonType, x),
+	{ ATF_NOFLAGS, 0, offsetof(struct Type2__anonType, x),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
@@ -390,7 +390,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.default_value = 0,
 		.name = "x"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct anonType, y),
+	{ ATF_NOFLAGS, 0, offsetof(struct Type2__anonType, y),
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
@@ -411,8 +411,8 @@ static const asn_TYPE_tag2member_t asn_MAP_anonType_tag2el_2[] = {
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* y */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
-	sizeof(struct anonType),
-	offsetof(struct anonType, _asn_ctx),
+	sizeof(struct Type2__anonType),
+	offsetof(struct Type2__anonType, _asn_ctx),
 	.tag2el = asn_MAP_anonType_tag2el_2,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */

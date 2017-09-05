@@ -3,6 +3,7 @@
 #include "asn1c_out.h"
 #include "asn1c_save.h"
 #include "asn1c_ioc.h"
+#include "asn1c_naming.h"
 
 static void default_logger_cb(int, const char *fmt, ...);
 static int asn1c_compile_expr(arg_t *arg, const asn1c_ioc_table_and_objset_t *);
@@ -16,6 +17,8 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 	arg_t *arg = &arg_s;
 	asn1p_module_t *mod;
 	int ret;
+
+	c_name_clash_finder_init();
 
 	/*
 	 * Initialize target language.
@@ -57,6 +60,20 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 
 			asn1_namespace_free(arg->ns);
 			arg->ns = 0;
+		}
+	}
+
+	if(c_name_clash(arg)) {
+		if(arg->flags & A1C_COMPOUND_NAMES) {
+			FATAL("Name clashes encountered even with -fcompound-names flag");
+			/* Proceed further for better debugging. */
+		} else {
+			FATAL("Use \"-fcompound-names\" flag to asn1c to resolve name clashes");
+			if(arg->flags & A1C_PRINT_COMPILED) {
+				/* Proceed further for better debugging. */
+			} else {
+				return -1;
+			}
 		}
 	}
 

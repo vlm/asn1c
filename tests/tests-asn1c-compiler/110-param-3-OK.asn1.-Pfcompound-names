@@ -1,33 +1,33 @@
 
 /*** <<< INCLUDES [Flag] >>> ***/
 
-#include <INTEGER.h>
+#include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
-#include <ENUMERATED.h>
+#include <NativeEnumerated.h>
 
 /*** <<< DEPS [Flag] >>> ***/
 
-typedef enum field {
-	field_red	= 0,
-	field_green	= 1,
-	field_blue	= 5
-} e_field;
-typedef enum field {
-	field_red	= 3,
-	field_green	= 4,
-	field_blue	= 5
-} e_field;
+typedef enum Flag_16P0__field {
+	Flag_16P0__field_red	= 0,
+	Flag_16P0__field_green	= 1,
+	Flag_16P0__field_blue	= 5
+} e_Flag_16P0__field;
+typedef enum Flag_16P1__field {
+	Flag_16P1__field_red	= 3,
+	Flag_16P1__field_green	= 4,
+	Flag_16P1__field_blue	= 5
+} e_Flag_16P1__field;
 
 /*** <<< TYPE-DECLS [Flag] >>> ***/
 
 typedef struct Flag_16P0 {
-	INTEGER_t	*field	/* DEFAULT 5 */;
+	long	*field	/* DEFAULT 5 */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Flag_16P0_t;
 typedef struct Flag_16P1 {
-	ENUMERATED_t	*field	/* DEFAULT 5 */;
+	long	*field	/* DEFAULT 5 */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -46,14 +46,14 @@ extern asn_TYPE_member_t asn_MBR_Flag_16P1_6[1];
 /*** <<< CODE [Flag] >>> ***/
 
 /*
- * This type is implemented using ENUMERATED,
+ * This type is implemented using NativeEnumerated,
  * so here we adjust the DEF accordingly.
  */
 
 /*** <<< STAT-DEFS [Flag] >>> ***/
 
 static int asn_DFL_2_set_5(int set_value, void **sptr) {
-	INTEGER_t *st = *sptr;
+	long *st = *sptr;
 	
 	if(!st) {
 		if(!set_value) return -1;	/* Not a default value */
@@ -63,20 +63,18 @@ static int asn_DFL_2_set_5(int set_value, void **sptr) {
 	
 	if(set_value) {
 		/* Install default value 5 */
-		return asn_long2INTEGER(st, 5);
+		*st = 5;
+		return 0;
 	} else {
 		/* Test default value 5 */
-		long value;
-		if(asn_INTEGER2long(st, &value))
-			return -1;
-		return (value == 5);
+		return (*st == 5);
 	}
 }
 asn_TYPE_member_t asn_MBR_Flag_16P0_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Flag_16P0, field),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_INTEGER,
+		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		.memb_constraints = 0,	/* Defer constraints checking to the member type */
 		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
@@ -119,7 +117,7 @@ asn_TYPE_descriptor_t asn_DEF_Flag_16P0 = {
 };
 
 static int asn_DFL_7_set_5(int set_value, void **sptr) {
-	ENUMERATED_t *st = *sptr;
+	long *st = *sptr;
 	
 	if(!st) {
 		if(!set_value) return -1;	/* Not a default value */
@@ -129,13 +127,11 @@ static int asn_DFL_7_set_5(int set_value, void **sptr) {
 	
 	if(set_value) {
 		/* Install default value 5 */
-		return asn_long2INTEGER(st, 5);
+		*st = 5;
+		return 0;
 	} else {
 		/* Test default value 5 */
-		long value;
-		if(asn_INTEGER2long(st, &value))
-			return -1;
-		return (value == 5);
+		return (*st == 5);
 	}
 }
 static const asn_INTEGER_enum_map_t asn_MAP_field_value2enum_7[] = {
@@ -164,8 +160,8 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_field_7 = {
 	"field",
 	"field",
-	&asn_OP_ENUMERATED,
-	ENUMERATED_constraint,
+	&asn_OP_NativeEnumerated,
+	NativeEnumerated_constraint,
 	asn_DEF_field_tags_7,
 	sizeof(asn_DEF_field_tags_7)
 		/sizeof(asn_DEF_field_tags_7[0]), /* 1 */
