@@ -8,6 +8,7 @@
 #include "asn1c_out.h"
 #include "asn1c_misc.h"
 #include "asn1c_ioc.h"
+#include "asn1c_naming.h"
 #include <asn1print.h>
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
@@ -140,15 +141,12 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	if(expr->expr_type == ASN_BASIC_ENUMERATED || el_count) {
 		eidx = 0;
 		REDIR(OT_DEPS);
-		OUT("typedef enum ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(" {\n");
+		OUT("typedef %s {\n", c_name(arg).members_enum);
 		TQ_FOR(v, &(expr->members), next) {
 			switch(v->expr_type) {
 			case A1TC_UNIVERVAL:
 				OUT("\t");
-				out_name_chain(arg, ONC_noflags);
-				OUT("_%s", MKID(v));
+				OUT("%s", c_member_name(arg, v));
 				OUT("\t= %s%s\n",
 					asn1p_itoa(v->value->value.v_integer),
 					(eidx+1 < el_count) ? "," : "");
@@ -167,9 +165,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 				return -1;
 			}
 		}
-		OUT("} e_");
-			out_name_chain(arg, ONC_noflags);
-		OUT(";\n");
+		OUT("} %s;\n", c_name(arg).members_name);
 		assert(eidx == el_count);
 	}
 
@@ -275,9 +271,7 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 	if(el_count) {
 		int eidx = 0;
 		REDIR(OT_DEPS);
-		OUT("typedef enum ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(" {\n");
+		OUT("typedef %s {\n", c_name(arg).members_enum);
 		TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type != A1TC_UNIVERVAL) {
 				OUT("/* Unexpected BIT STRING element: %s */\n",
@@ -286,15 +280,12 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 			}
 			eidx++;
 			OUT("\t");
-			out_name_chain(arg, ONC_noflags);
-			OUT("_%s", MKID(v));
+			OUT("%s", c_member_name(arg, v));
 			OUT("\t= %s%s\n",
 				asn1p_itoa(v->value->value.v_integer),
 				(eidx < el_count) ? "," : "");
 		}
-		OUT("} e_");
-			out_name_chain(arg, ONC_noflags);
-		OUT(";\n");
+		OUT("} %s;\n", c_name(arg).members_name);
 		assert(eidx == el_count);
 	}
 
@@ -355,13 +346,10 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 			REDIR(OT_FWD_DEFS);
 			OUT("typedef ");
 		}
-		OUT("struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(" {\n");
+		OUT("%s {\n", c_name(arg).full_name);
 	} else {
 		REDIR(OT_TYPE_DECLS);
-		OUT("typedef struct %s {\n",
-			MKID_safe(expr));
+		OUT("typedef %s {\n", c_name(arg).full_name);
 	}
 
 	TQ_FOR(v, &(expr->members), next) {
@@ -390,21 +378,16 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	PCTX_DEF;
 
 	if (arg->embed && expr->_anonymous_type) {
-		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-		out_name_chain(arg, ONC_avoid_keywords);
-		OUT("%s;\n", arg->embed ? "" : "_t");
+		OUT("} %s%s;\n", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 
 		REDIR(saved_target);
 
-		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-			out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 	} else {
-		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-		expr->_anonymous_type ? "" :
-			arg->embed
-				? MKID_safe(expr)
-				: MKID(expr),
-		arg->embed ? "" : "_t");
+		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).short_name);
 	}
 
 	return asn1c_lang_C_type_SEQUENCE_def(arg, ioc_tao.ioct ? &ioc_tao : 0);
@@ -550,10 +533,8 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 	OUT("asn_SEQUENCE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENT(+1);
-	OUT("sizeof(struct ");
-		out_name_chain(arg, ONC_avoid_keywords); OUT("),\n");
-	OUT("offsetof(struct ");
-		out_name_chain(arg, ONC_avoid_keywords); OUT(", _asn_ctx),\n");
+	OUT("sizeof(%s),\n", c_name(arg).full_name);
+	OUT("offsetof(%s, _asn_ctx),\n", c_name(arg).full_name);
     emit_tag2member_reference(arg, expr, tag2el_count);
 	if(roms_count + aoms_count) {
 		OUT("asn_MAP_%s_oms_%d,\t/* Optional members */\n",
@@ -587,7 +568,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	long mcount;
-	char *id;
+	const char *id;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int saved_target = arg->target->target;
 
@@ -600,21 +581,16 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	OUT(" * Method of determining the components presence\n");
 	OUT(" */\n");
 	mcount = 0;
-	OUT("typedef enum ");
-		out_name_chain(arg, ONC_noflags);
-	OUT("_PR {\n");
+	OUT("typedef %s {\n", c_name(arg).presence_enum);
 	TQ_FOR(v, &(expr->members), next) {
 		if(v->expr_type == A1TC_EXTENSIBLE) continue;
 		INDENTED(
-			out_name_chain(arg, ONC_noflags);
-			OUT("_PR_");
-			id = MKID(v);
-			OUT("%s,\t/* Member %s is present */\n",
-				id, id)
+			OUT("%s,", c_presence_name(arg, v));
+			OUT("\t/* Member %s is present */\n", MKID(v));
 		);
 		mcount++;
 	}
-	OUT("} "); out_name_chain(arg, ONC_noflags); OUT("_PR;\n");
+	OUT("} %s;\n", c_name(arg).presence_name);
 
 	REDIR(saved_target);
 
@@ -623,13 +599,10 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 			REDIR(OT_FWD_DEFS);
 			OUT("typedef ");
 		}
-		OUT("struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(" {\n");
+		OUT("%s {\n", c_name(arg).full_name);
 	} else {
 		REDIR(OT_TYPE_DECLS);
-		OUT("typedef struct %s {\n",
-			MKID_safe(expr));
+		OUT("typedef %s {\n", c_name(arg).full_name);
 	}
 
 	TQ_FOR(v, &(expr->members), next) {
@@ -653,18 +626,16 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	PCTX_DEF;
 
 	if (arg->embed && expr->_anonymous_type) {
-		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-		out_name_chain(arg, ONC_avoid_keywords);
-		OUT("%s;\n", arg->embed ? "" : "_t");
+		OUT("} %s%s;\n", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 
 		REDIR(saved_target);
 
-		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-			out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 	} else {
-		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-			expr->_anonymous_type ? "" : MKID_safe(expr),
-			arg->embed ? "" : "_t");
+		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).short_name);
 	}
 
 	return asn1c_lang_C_type_SET_def(arg);
@@ -682,7 +653,7 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	int tags_count;
 	int all_tags_count;
 	enum tvm_compat tv_mode;
-	char *p;
+	const char *p;
 	int saved_target = arg->target->target;
 
 	/*
@@ -780,15 +751,9 @@ asn1c_lang_C_type_SET_def(arg_t *arg) {
 	OUT("asn_SET_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
-		OUT("sizeof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT("),\n");
-		OUT("offsetof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(", _asn_ctx),\n");
-		OUT("offsetof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(", _presence_map),\n");
+		OUT("sizeof(%s),\n", c_name(arg).full_name);
+		OUT("offsetof(%s, _asn_ctx),\n", c_name(arg).full_name);
+		OUT("offsetof(%s, _presence_map),\n", c_name(arg).full_name);
 		emit_tag2member_reference(arg, expr, tag2el_count);
 		p = MKID(expr);
 		if(tag2el_cxer)
@@ -833,11 +798,9 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			REDIR(OT_FWD_DEFS);
 			OUT("typedef ");
 		}
-		OUT("struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(" {\n");
+		OUT("%s {\n", c_name(arg).full_name);
 	} else {
-		OUT("typedef struct %s {\n", MKID_safe(expr));
+		OUT("typedef %s {\n", c_name(arg).full_name);
 	}
 
 	INDENT(+1);
@@ -892,18 +855,16 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	PCTX_DEF;
 
 	if (arg->embed && expr->_anonymous_type) {
-		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-		out_name_chain(arg, ONC_avoid_keywords);
-		OUT("%s;\n", arg->embed ? "" : "_t");
+		OUT("} %s%s;\n", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 
 		REDIR(saved_target);
 
-		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-			out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 	} else {
-		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-			expr->_anonymous_type ? "" : MKID_safe(expr),
-			arg->embed ? "" : "_t");
+		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).short_name);
 	}
 
 	/*
@@ -965,12 +926,8 @@ asn1c_lang_C_type_SEx_OF_def(arg_t *arg, int seq_of) {
 	OUT("asn_SET_OF_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
-		OUT("sizeof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT("),\n");
-		OUT("offsetof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(", _asn_ctx),\n");
+		OUT("sizeof(%s),\n", c_name(arg).full_name);
+		OUT("offsetof(%s, _asn_ctx),\n", c_name(arg).full_name);
 		{
 		int as_xvl = expr_as_xmlvaluelist(arg, v);
 		OUT("%d,\t/* XER encoding is %s */\n",
@@ -995,20 +952,16 @@ int
 asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
-	char *id;
 	int saved_target = arg->target->target;
 
 	DEPENDENCIES;
 
 	REDIR(OT_DEPS);
 
-	OUT("typedef enum ");
-		out_name_chain(arg, ONC_noflags);
-	OUT("_PR {\n");
+	OUT("typedef %s {\n", c_name(arg).presence_enum);
 	INDENTED(
 		int skipComma = 1;
-		out_name_chain(arg, ONC_noflags);
-		OUT("_PR_NOTHING,\t/* No components present */\n");
+        OUT("%s,\t/* No components present */\n", c_presence_name(arg, 0));
 		TQ_FOR(v, &(expr->members), next) {
 			if(skipComma) skipComma = 0;
 			else if (v->expr_type == A1TC_EXTENSIBLE && !TQ_NEXT(v, next)) OUT("\n");
@@ -1018,13 +971,11 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 				skipComma = 1;
 				continue;
 			}
-			out_name_chain(arg, ONC_noflags);
-			id = MKID(v);
-			OUT("_PR_%s", id);
+            OUT("%s", c_presence_name(arg, v));
 		}
 		OUT("\n");
 	);
-	OUT("} "); out_name_chain(arg, ONC_noflags); OUT("_PR;\n");
+	OUT("} %s;\n", c_name(arg).presence_name);
 
 	REDIR(saved_target);
 
@@ -1033,15 +984,14 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 			REDIR(OT_FWD_DEFS);
 			OUT("typedef ");
 		}
-		OUT("struct "); out_name_chain(arg, ONC_avoid_keywords); OUT(" {\n");
+		OUT("%s {\n", c_name(arg).full_name);
 	} else {
 		REDIR(OT_TYPE_DECLS);
-		OUT("typedef struct %s {\n", MKID_safe(expr));
+		OUT("typedef %s {\n", c_name(arg).full_name);
 	}
 
 	INDENTED(
-		out_name_chain(arg, ONC_noflags);
-		OUT("_PR present;\n");
+		OUT("%s present;\n", c_name(arg).presence_name);
 		OUT("union ");
 		if(UNNAMED_UNIONS == 0) {
 			out_name_chain(arg, ONC_force_compound_name);
@@ -1058,21 +1008,16 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	PCTX_DEF;
 
 	if (arg->embed && expr->_anonymous_type) {
-		OUT("} %s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-		out_name_chain(arg, ONC_avoid_keywords);
-		OUT("%s;\n", arg->embed ? "" : "_t");
+		OUT("} %s%s;\n", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 
 		REDIR(saved_target);
 
-		OUT("%s", (expr->marker.flags & EM_INDIRECT)?"*":"");
-			out_name_chain(arg, ONC_avoid_keywords);
+		OUT("%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).base_name);
 	} else {
-		OUT("} %s%s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-			expr->_anonymous_type ? "" :
-				arg->embed
-					? MKID_safe(expr)
-					: MKID(expr),
-			arg->embed ? "" : "_t");
+		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
+			c_name(arg).short_name);
 	}
 
 	return asn1c_lang_C_type_CHOICE_def(arg);
@@ -1219,18 +1164,10 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	OUT("asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
 		MKID(expr), expr->_type_unique_index);
 	INDENTED(
-		OUT("sizeof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT("),\n");
-		OUT("offsetof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(", _asn_ctx),\n");
-		OUT("offsetof(struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(", present),\n");
-		OUT("sizeof(((struct ");
-			out_name_chain(arg, ONC_avoid_keywords);
-		OUT(" *)0)->present),\n");
+		OUT("sizeof(%s),\n", c_name(arg).full_name);
+		OUT("offsetof(%s, _asn_ctx),\n", c_name(arg).full_name);
+		OUT("offsetof(%s, present),\n", c_name(arg).full_name);
+		OUT("sizeof(((%s *)0)->present),\n", c_name(arg).full_name);
 		emit_tag2member_reference(arg, expr, tag2el_count);
 		if(C99_MODE) OUT(".canonical_order = ");
 		if(cmap) OUT("asn_MAP_%s_cmap_%d,\t/* Canonically sorted */\n",
@@ -1306,7 +1243,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	int all_tags_count;
 	enum tvm_compat tv_mode;
 	enum etd_spec etd_spec;
-	char *p;
+	const char *p;
 	int saved_target = arg->target->target;
 
 	if(arg->embed) {
@@ -2890,8 +2827,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     const char *tname = asn1c_type_name(arg, constraining_memb, TNF_SAFE);
     if(constraining_memb->marker.flags & EM_INDIRECT) {
         OUT("const void *memb_ptr = *(const void **)");
-        OUT("((const char *)parent_sptr + offsetof(struct ");
-            out_name_chain(arg, ONC_avoid_keywords);
+        OUT("((const char *)parent_sptr + offsetof(%s", c_name(arg).full_name);
         OUT(", %s));", MKID_safe(constraining_memb));
         OUT("if(!memb_ptr) return result;\n");
         OUT("\n");
@@ -2912,8 +2848,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     if(constraining_memb->marker.flags & EM_INDIRECT) {
         OUT("memb_ptr;\n");
     } else {
-        OUT("((const char *)parent_sptr + offsetof(struct ");
-            out_name_chain(arg, ONC_avoid_keywords);
+        OUT("((const char *)parent_sptr + offsetof(%s", c_name(arg).full_name);
         OUT(", %s));\n", MKID_safe(constraining_memb));
     }
     OUT("\n");
@@ -2987,9 +2922,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
                || arg->expr->expr_type == ASN_CONSTR_SEQUENCE_OF);
         OUT("0,\n");
     } else {
-        OUT("offsetof(struct ");
-        out_name_chain(arg, ONC_avoid_keywords);
-        OUT(", ");
+        OUT("offsetof(%s, ", c_name(arg).full_name);
         if((arg->expr->expr_type == ASN_CONSTR_CHOICE
             || arg->expr->expr_type == ASN_CONSTR_OPEN_TYPE)
            && (!UNNAMED_UNIONS))
@@ -3372,7 +3305,7 @@ expr_as_xmlvaluelist(arg_t *arg, asn1p_expr_t *expr) {
 static int
 out_name_chain(arg_t *arg, enum onc_flags onc_flags) {
 	asn1p_expr_t *expr = arg->expr;
-	char *id;
+	const char *id;
 
 	if((arg->flags & A1C_COMPOUND_NAMES
 	   || onc_flags & ONC_force_compound_name

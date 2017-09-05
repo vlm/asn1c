@@ -1,0 +1,511 @@
+
+/*** <<< INCLUDES [Forest] >>> ***/
+
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+
+/*** <<< FWD-DECLS [Forest] >>> ***/
+
+struct Tree;
+
+/*** <<< TYPE-DECLS [Forest] >>> ***/
+
+typedef struct Forest {
+	A_SET_OF(struct Tree) list;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Forest_t;
+
+/*** <<< FUNC-DECLS [Forest] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Forest;
+extern asn_SET_OF_specifics_t asn_SPC_Forest_specs_1;
+extern asn_TYPE_member_t asn_MBR_Forest_1[1];
+
+/*** <<< POST-INCLUDE [Forest] >>> ***/
+
+#include "Tree.h"
+
+/*** <<< STAT-DEFS [Forest] >>> ***/
+
+asn_TYPE_member_t asn_MBR_Forest_1[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Tree,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Forest_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+asn_SET_OF_specifics_t asn_SPC_Forest_specs_1 = {
+	sizeof(struct Forest),
+	offsetof(struct Forest, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+asn_TYPE_descriptor_t asn_DEF_Forest = {
+	"Forest",
+	"Forest",
+	&asn_OP_SET_OF,
+	SET_OF_constraint,
+	asn_DEF_Forest_tags_1,
+	sizeof(asn_DEF_Forest_tags_1)
+		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
+	asn_DEF_Forest_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Forest_tags_1)
+		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Forest_1,
+	1,	/* Single element */
+	&asn_SPC_Forest_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Tree] >>> ***/
+
+#include <NativeInteger.h>
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [Tree] >>> ***/
+
+typedef struct Tree {
+	long	 height;
+	long	 width;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Tree_t;
+
+/*** <<< FUNC-DECLS [Tree] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Tree;
+extern asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1;
+extern asn_TYPE_member_t asn_MBR_Tree_1[2];
+
+/*** <<< STAT-DEFS [Tree] >>> ***/
+
+asn_TYPE_member_t asn_MBR_Tree_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Tree, height),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "height"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Tree, width),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "width"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Tree_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Tree_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* height */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, -1, 0 } /* width */
+};
+asn_SEQUENCE_specifics_t asn_SPC_Tree_specs_1 = {
+	sizeof(struct Tree),
+	offsetof(struct Tree, _asn_ctx),
+	.tag2el = asn_MAP_Tree_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* Start extensions */
+	-1	/* Stop extensions */
+};
+asn_TYPE_descriptor_t asn_DEF_Tree = {
+	"Tree",
+	"Tree",
+	&asn_OP_SEQUENCE,
+	SEQUENCE_constraint,
+	asn_DEF_Tree_tags_1,
+	sizeof(asn_DEF_Tree_tags_1)
+		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
+	asn_DEF_Tree_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Tree_tags_1)
+		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Tree_1,
+	2,	/* Elements count */
+	&asn_SPC_Tree_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [Stuff] >>> ***/
+
+#include <asn_SET_OF.h>
+#include <constr_SET_OF.h>
+#include <BIT_STRING.h>
+#include <constr_SEQUENCE.h>
+#include <NativeInteger.h>
+#include <constr_CHOICE.h>
+#include <constr_SET.h>
+
+/*** <<< DEPS [Stuff] >>> ***/
+
+
+/*
+ * Method of determining the components presence
+ */
+typedef enum Stuff_PR {
+	Stuff_PR_trees,	/* Member trees is present */
+	Stuff_PR_anything,	/* Member anything is present */
+	Stuff_PR_other,	/* Member other is present */
+} Stuff_PR;
+typedef enum Stuff__other_PR {
+	Stuff__other_PR_NOTHING,	/* No components present */
+	Stuff__other_PR_a,
+	Stuff__other_PR_b
+} Stuff__other_PR;
+
+/*** <<< FWD-DECLS [Stuff] >>> ***/
+
+struct Forest;
+
+/*** <<< FWD-DEFS [Stuff] >>> ***/
+
+typedef struct Stuff__anything__Member {
+	BIT_STRING_t	 cup_of_coffee;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Stuff__anything__Member;
+
+/*** <<< TYPE-DECLS [Stuff] >>> ***/
+
+typedef struct Stuff {
+	struct Stuff__trees {
+		A_SET_OF(struct Forest) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} *trees;
+	struct Stuff__anything {
+		A_SET_OF(Stuff__anything__Member) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} *anything;
+	/*
+	 * This type is extensible,
+	 * possible extensions are below.
+	 */
+	struct Stuff__other {
+		Stuff__other_PR present;
+		union Stuff__other_u {
+			long	 a;
+			long	 b;
+		} choice;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} *other;
+	
+	/* Presence bitmask: ASN_SET_ISPRESENT(pStuff, Stuff_PR_x) */
+	unsigned int _presence_map
+		[((3+(8*sizeof(unsigned int))-1)/(8*sizeof(unsigned int)))];
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Stuff_t;
+
+/*** <<< FUNC-DECLS [Stuff] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Stuff;
+
+/*** <<< POST-INCLUDE [Stuff] >>> ***/
+
+#include "Forest.h"
+
+/*** <<< STAT-DEFS [Stuff] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_trees_2[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (17 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Forest,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static const ber_tlv_tag_t asn_DEF_trees_tags_2[] = {
+	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_trees_specs_2 = {
+	sizeof(struct Stuff__trees),
+	offsetof(struct Stuff__trees, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_trees_2 = {
+	"trees",
+	"trees",
+	&asn_OP_SET_OF,
+	SET_OF_constraint,
+	asn_DEF_trees_tags_2,
+	sizeof(asn_DEF_trees_tags_2)
+		/sizeof(asn_DEF_trees_tags_2[0]) - 1, /* 1 */
+	asn_DEF_trees_tags_2,	/* Same as above */
+	sizeof(asn_DEF_trees_tags_2)
+		/sizeof(asn_DEF_trees_tags_2[0]), /* 2 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_trees_2,
+	1,	/* Single element */
+	&asn_SPC_trees_specs_2	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Member_5[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Stuff__anything__Member, cup_of_coffee),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_BIT_STRING,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "cup-of-coffee"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Member_tags_5[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Member_tag2el_5[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)), 0, 0, 0 } /* cup-of-coffee */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_5 = {
+	sizeof(struct Stuff__anything__Member),
+	offsetof(struct Stuff__anything__Member, _asn_ctx),
+	.tag2el = asn_MAP_Member_tag2el_5,
+	.tag2el_count = 1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	0,	/* Start extensions */
+	2	/* Stop extensions */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_Member_5 = {
+	"SEQUENCE",
+	"SEQUENCE",
+	&asn_OP_SEQUENCE,
+	SEQUENCE_constraint,
+	asn_DEF_Member_tags_5,
+	sizeof(asn_DEF_Member_tags_5)
+		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
+	asn_DEF_Member_tags_5,	/* Same as above */
+	sizeof(asn_DEF_Member_tags_5)
+		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Member_5,
+	1,	/* Elements count */
+	&asn_SPC_Member_specs_5	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_anything_4[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Member_5,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = ""
+		},
+};
+static const ber_tlv_tag_t asn_DEF_anything_tags_4[] = {
+	(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_anything_specs_4 = {
+	sizeof(struct Stuff__anything),
+	offsetof(struct Stuff__anything, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_anything_4 = {
+	"anything",
+	"anything",
+	&asn_OP_SET_OF,
+	SET_OF_constraint,
+	asn_DEF_anything_tags_4,
+	sizeof(asn_DEF_anything_tags_4)
+		/sizeof(asn_DEF_anything_tags_4[0]) - 1, /* 1 */
+	asn_DEF_anything_tags_4,	/* Same as above */
+	sizeof(asn_DEF_anything_tags_4)
+		/sizeof(asn_DEF_anything_tags_4[0]), /* 2 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_anything_4,
+	1,	/* Single element */
+	&asn_SPC_anything_specs_4	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_other_9[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Stuff__other, choice.a),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "a"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Stuff__other, choice.b),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "b"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_other_tag2el_9[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* a */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 1, 0, 0 } /* b */
+};
+static asn_CHOICE_specifics_t asn_SPC_other_specs_9 = {
+	sizeof(struct Stuff__other),
+	offsetof(struct Stuff__other, _asn_ctx),
+	offsetof(struct Stuff__other, present),
+	sizeof(((struct Stuff__other *)0)->present),
+	.tag2el = asn_MAP_other_tag2el_9,
+	.tag2el_count = 2,	/* Count of tags in the map */
+	.canonical_order = 0,
+	.ext_start = -1	/* Extensions start */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_other_9 = {
+	"other",
+	"other",
+	&asn_OP_CHOICE,
+	CHOICE_constraint,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_other_9,
+	2,	/* Elements count */
+	&asn_SPC_other_specs_9	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
+	{ ATF_POINTER, 3, offsetof(struct Stuff, trees),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_trees_2,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "trees"
+		},
+	{ ATF_POINTER, 2, offsetof(struct Stuff, anything),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_anything_4,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "anything"
+		},
+	{ ATF_POINTER, 1, offsetof(struct Stuff, other),
+		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag_mode = 0,
+		.type = &asn_DEF_other_9,
+		.type_selector = 0,
+		.memb_constraints = 0,	/* Defer constraints checking to the member type */
+		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
+		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		.default_value = 0,
+		.name = "other"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Stuff_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (17 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Stuff_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* a */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 2, 0, 0 } /* b */
+};
+static const asn_TYPE_tag2member_t asn_MAP_Stuff_tag2el_cxer_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 0, 0, 0 }, /* trees */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 1, 0, 0 }, /* anything */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 } /* a */
+};
+static const uint8_t asn_MAP_Stuff_mmap_1[(3 + (8 * sizeof(unsigned int)) - 1) / 8] = {
+	(0 << 7) | (0 << 6) | (0 << 5)
+};
+static 
+asn_SET_specifics_t asn_SPC_Stuff_specs_1 = {
+	sizeof(struct Stuff),
+	offsetof(struct Stuff, _asn_ctx),
+	offsetof(struct Stuff, _presence_map),
+	.tag2el = asn_MAP_Stuff_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
+	asn_MAP_Stuff_tag2el_cxer_1,
+	3,	/* Count of tags in the CXER map */
+	1,	/* Whether extensible */
+	(const unsigned int *)asn_MAP_Stuff_mmap_1	/* Mandatory elements map */
+};
+asn_TYPE_descriptor_t asn_DEF_Stuff = {
+	"Stuff",
+	"Stuff",
+	&asn_OP_SET,
+	SET_constraint,
+	asn_DEF_Stuff_tags_1,
+	sizeof(asn_DEF_Stuff_tags_1)
+		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
+	asn_DEF_Stuff_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Stuff_tags_1)
+		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
+	0,	/* No OER visible constraints */
+	0,	/* No PER visible constraints */
+	asn_MBR_Stuff_1,
+	3,	/* Elements count */
+	&asn_SPC_Stuff_specs_1	/* Additional specs */
+};
+

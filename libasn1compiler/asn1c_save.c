@@ -243,7 +243,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	FILE *fp_c, *fp_h;
 	char *tmpname_c, *tmpname_h;
 	char *name_buf;
-	char *header_id;
+	const char *header_id;
 	const char *c_retained = "";
 	const char *h_retained = "";
 	char *filename;

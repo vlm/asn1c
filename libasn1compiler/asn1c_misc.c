@@ -42,7 +42,7 @@ reserved_keyword(const char *str) {
  * Construct identifier from multiple parts.
  * Convert unsafe characters to underscores.
  */
-char *
+const char *
 asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	static char *storage;
 	static int storage_size;
