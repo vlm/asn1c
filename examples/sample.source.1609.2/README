@@ -7,6 +7,14 @@ Security Services for Applications and Management Messages" messages decoder.
 Invoking `make` will compile the ASN.1 specifications from the
 ../IEEE-1609.2-2016.asn1 file.
 
+Due to the fact that IEEE1609dot2 ASN.1 module reuses the same 
+identifiers in multiple contexts, the -fcompound-names command
+line option must be specified on the asn1c command. The provided
+sample Makefile already has the option included but if you are
+not using that Makefile, you must ensure that it is provided
+in your command line in order to avoid getting 'redefinition'
+errors during the build process.
+
 THERE IS NO IEEE-1609.2-2016.asn1 FILE THERE YET!
 
 OBTAINING THE IEEE 1609.2-2016 SPECIFICATION
