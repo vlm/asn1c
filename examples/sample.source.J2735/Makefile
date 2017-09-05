@@ -1085,7 +1085,7 @@ regen-makefile:
 	CPPFLAGS="" \
 	../sample.makefile.regen
 
-check: ${TARGET} check-ber check-xer check-per
+check: ${TARGET} check-ber check-xer check-oer check-per
 	@echo ================
 	@echo All tests passed
 	@echo ================
@@ -1093,7 +1093,7 @@ check: ${TARGET} check-ber check-xer check-per
 check-ber:
 	@if test -f sample-MessageFrame-1.[db]er ; then \
 	for f in sample-*-*.[db]er; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -1108,7 +1108,7 @@ check-ber:
 check-xer:
 	@if test -f sample-MessageFrame-1.xer ; then \
 	for f in sample-*-*.xer; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into DER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -1120,10 +1120,25 @@ check-xer:
 	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -ixer -onull $$f || exit 6; \
 	done; done; fi
 
+check-oer:
+	@if test -f sample-MessageFrame-1.*oer ; then \
+	for f in sample-*-*.*oer; do \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
+	for b in 1 17 33 980 8192; do \
+	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \
+	./${TARGET} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -p $$pdu -b $$b -ixer -ooer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \
+	diff $$f ./.tmp.2.$$$$ || exit 4; \
+	rm -f ./.tmp.[12].$$$$; \
+	echo "Test junking $$f (please wait) ($$b) ..."; \
+	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 5; \
+	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 6; \
+	done; done; fi
+
 check-per:
 	@if test -f sample-MessageFrame-1-nopad.per ; then \
 	for f in sample-*-[1-9]-nopad.per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding non-padded $$f ($$pdu) into DER into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -1137,7 +1152,7 @@ check-per:
 	done; done; fi
 	@if test -f sample-MessageFrame-1.per ; then \
 	for f in sample-*-[1-9].per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into DER into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \
