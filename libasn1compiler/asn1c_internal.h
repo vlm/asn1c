@@ -65,7 +65,7 @@ typedef struct arg_s {
  * Logging.
  */
 #define	LOG(ll, fmt, args...)	do {			\
-		arg->logger_cb(ll, fmt " @ line %d", ##args, __LINE__);	\
+		arg->logger_cb(ll, fmt, ##args);	\
 	} while(0)
 #define	DEBUG(fmt, args...)	do {		\
 		if(arg->flags & A1C_DEBUG)	\
