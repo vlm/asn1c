@@ -73,7 +73,7 @@ set +x
 	echo 'check-ber:'
 	echo "	@if test -f sample-${ASN1PDU}-1.[db]er ; then \\"
 	echo "	for f in sample-*-*.[db]er; do \\"
-	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \'
 	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
@@ -88,7 +88,7 @@ set +x
 	echo 'check-xer:'
 	echo "	@if test -f sample-${ASN1PDU}-1.xer ; then \\"
 	echo "	for f in sample-*-*.xer; do \\"
-	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into DER and back ($$b)..."; \'
 	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
@@ -103,7 +103,7 @@ set +x
 	echo 'check-oer:'
 	echo "	@if test -f sample-${ASN1PDU}-1.*oer ; then \\"
 	echo "	for f in sample-*-*.*oer; do \\"
-	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \'
 	echo '	./${TARGET} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
@@ -118,7 +118,7 @@ set +x
 	echo 'check-per:'
 	echo "	@if test -f sample-${ASN1PDU}-1-nopad.per ; then \\"
 	echo "	for f in sample-*-[1-9]-nopad.per; do \\"
-	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding non-padded $$f ($$pdu) into DER into XER and back ($$b)..."; \'
 	echo '	./${TARGET} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
@@ -132,7 +132,7 @@ set +x
 	echo '	done; done; fi'
 	echo "	@if test -f sample-${ASN1PDU}-1.per ; then \\"
 	echo "	for f in sample-*-[1-9].per; do \\"
-	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\\1/"`; \'
+	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into DER into XER and back ($$b)..."; \'
 	echo '	./${TARGET} -p $$pdu -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \'

@@ -319,7 +319,7 @@ clean:
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	../../asn1c/asn1c -S ../../skeletons -pdu=Certificate -pdu=auto -fcompound-names -gen-OER ../IEEE-1609.2-2016.asn1
+	../../asn1c/asn1c -S ../../skeletons -pdu=Certificate -pdu=auto -pdu=Ieee1609Dot2Data -fcompound-names -gen-OER ../IEEE-1609.2-2016.asn1
 
 
 Certificate.c: ../sample.makefile.regen ../IEEE-1609.2-2016.asn1
@@ -329,7 +329,7 @@ Certificate.c: ../sample.makefile.regen ../IEEE-1609.2-2016.asn1
 
 regen-makefile:
 	TITLE="IEEE 1609.2-2016 decoder" \
-	ASN1CMDOPTS="-pdu=auto -fcompound-names -gen-OER" \
+	ASN1CMDOPTS="-pdu=auto -pdu=Ieee1609Dot2Data -fcompound-names -gen-OER" \
 	ASN1MODULES="../IEEE-1609.2-2016.asn1" \
 	ASN1PDU=Certificate \
 	PROGNAME=1609-2-dump \
@@ -344,7 +344,7 @@ check: ${TARGET} check-ber check-xer check-oer check-per
 check-ber:
 	@if test -f sample-Certificate-1.[db]er ; then \
 	for f in sample-*-*.[db]er; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -359,7 +359,7 @@ check-ber:
 check-xer:
 	@if test -f sample-Certificate-1.xer ; then \
 	for f in sample-*-*.xer; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into DER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -374,7 +374,7 @@ check-xer:
 check-oer:
 	@if test -f sample-Certificate-1.*oer ; then \
 	for f in sample-*-*.*oer; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -389,7 +389,7 @@ check-oer:
 check-per:
 	@if test -f sample-Certificate-1-nopad.per ; then \
 	for f in sample-*-[1-9]-nopad.per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding non-padded $$f ($$pdu) into DER into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -403,7 +403,7 @@ check-per:
 	done; done; fi
 	@if test -f sample-Certificate-1.per ; then \
 	for f in sample-*-[1-9].per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into DER into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \
