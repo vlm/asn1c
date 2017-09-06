@@ -29,7 +29,7 @@ conforming to the standard specified in the column 1,
 use the API function in the column 2.
 If you need to _process_ data conforming to the standard(s) specified in the
 column 3, use the API function specified in column 4.
-See the `asn1c-usage.pdf` for details.
+See the [doc/asn1c-usage.pdf](doc/asn1c-usage.pdf) for details.
 
 Encoding       | API function       | Understood by | API function
 -------------- | ------------------ | ------------- | -------------
