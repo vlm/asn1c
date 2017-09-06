@@ -1,6 +1,6 @@
 % asn1c(1) ASN.1 Compiler
 % Lev Walkin <vlm@lionet.info>
-% 2016-01-23
+% 2017-09-01
 
 # NAME
 
@@ -18,7 +18,7 @@ asn1c [**-E** [**-F**] | **-P** | **-R**] \
 # DESCRIPTION
 
 asn1c compiles ASN.1 specifications into a set of
-target language (C/C++) encoders and decoders for BER, DER, PER, XER
+target language (C/C++) encoders and decoders for BER, DER, PER, XER, OER
 and other encoding rules.
 
 # OPTIONS
@@ -111,6 +111,9 @@ and other encoding rules.
 
 ## Codecs Generation Options
 
+-gen-OER
+:   Generate the Octet Encoding Rules (OER) support code.
+
 -gen-PER
 :   Generate the Packed Encoding Rules (PER) support code.
 
@@ -133,6 +136,49 @@ and other encoding rules.
 
 -print-lines
 :   Generate "`-- #line`" comments in **-E** output.
+
+# TRANSFER SYNTAXES
+
+The ASN.1 family of standards define a number of ways to encode data,
+including byte-oriented (e.g., BER), bit-oriented (e.g., PER),
+and textual (e.g., XER). Some encoding variants (e.g., DER) are just stricter
+variants of the more general encodings (e.g., BER).
+
+The interoperability table below specifies which API functions can be used
+to exchange data in a compatible manner. If you need to _produce_ data
+conforming to the standard specified in the column 1,
+use the API function in the column 2.
+If you need to _process_ data conforming to the standard(s) specified in the
+column 3, use the API function specified in column 4.
+See the `asn1c-usage.pdf` for details.
+
+-------------------------------------------------------------
+Encoding       API function       Understood by API function
+-------------- ------------------ ------------- -------------
+BER            der_encode()       BER           ber_decode()
+
+DER            der_encode()       DER, BER      ber_decode()
+
+CER            _not supported_    CER, BER      ber_decode()
+
+BASIC-OER      oer_encode()       *-OER         oer_decode()
+
+CANONICAL-OER  oer_encode()       *-OER         oer_decode()
+
+BASIC-UPER     uper_encode()      *-UPER        uper_decode()
+
+CANONICAL-UPER uper_encode()      *-UPER        uper_decode()
+
+*-APER         _not supported_    *-APER        _not supported_
+
+BASIC-XER      xer_encode(...)    *-XER,        xer_decode()
+
+CANONICAL-XER  xer_encode         *-XER,        xer_decode()
+               (XER_F_CANONICAL)
+-------------------------------------------------------------
+
+*) Asterisk means both BASIC and CANONICAL variants.
+
 
 # SEE ALSO
 
