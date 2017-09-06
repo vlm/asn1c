@@ -2,17 +2,17 @@
 
 ASN.1 to C compiler takes the ASN.1 module files (example) and generates
 the C++ compatible C source code. That code can be used to serialize
-the native C structures into compact and unambiguous BER/XER/PER-based
+the native C structures into compact and unambiguous BER/OER/PER/XER-based
 data files, and deserialize the files back.
 
 Various ASN.1 based formats are widely used in the industry,
 such as to encode the X.509 certificates employed in the HTTPS handshake,
 to exchange control data between mobile phones and cellular networks,
-to car-to-car communication in intelligent transportation networks.
+to perform car-to-car communication in intelligent transportation networks.
 
-The ASN.1 standard is large and complex and no open source compiler supports
-it in its entirety. The asn1c is arguably the most evolved open source
-ASN.1 compiler.
+The ASN.1 family of standards is large and complex, and no open source
+compiler supports it in its entirety.
+The asn1c is arguably the most evolved open source ASN.1 compiler.
 
 # ASN.1 Transfer Syntaxes
 <details>
