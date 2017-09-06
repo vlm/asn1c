@@ -171,9 +171,9 @@ CANONICAL-UPER uper_encode()      *-UPER        uper_decode()
 
 *-APER         _not supported_    *-APER        _not supported_
 
-BASIC-XER      xer_encode(...)    *-XER,        xer_decode()
+BASIC-XER      xer_encode(...)    *-XER         xer_decode()
 
-CANONICAL-XER  xer_encode         *-XER,        xer_decode()
+CANONICAL-XER  xer_encode         *-XER         xer_decode()
                (XER_F_CANONICAL)
 -------------------------------------------------------------
 

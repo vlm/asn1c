@@ -14,6 +14,39 @@ The ASN.1 standard is large and complex and no open source compiler supports
 it in its entirety. The asn1c is arguably the most evolved open source
 ASN.1 compiler.
 
+# ASN.1 Transfer Syntaxes
+<details>
+<summary>ASN.1 encodings interoperability table</summary>
+
+The ASN.1 family of standards define a number of ways to encode data,
+including byte-oriented (e.g., BER), bit-oriented (e.g., PER),
+and textual (e.g., XER). Some encoding variants (e.g., DER) are just stricter
+variants of the more general encodings (e.g., BER).
+
+The interoperability table below specifies which API functions can be used
+to exchange data in a compatible manner. If you need to _produce_ data
+conforming to the standard specified in the column 1,
+use the API function in the column 2.
+If you need to _process_ data conforming to the standard(s) specified in the
+column 3, use the API function specified in column 4.
+See the `asn1c-usage.pdf` for details.
+
+Encoding       | API function       | Understood by | API function
+-------------- | ------------------ | ------------- | -------------
+BER            | der_encode()       | BER           | ber_decode()
+DER            | der_encode()       | DER, BER      | ber_decode()
+CER            | _not supported_    | CER, BER      | ber_decode()
+BASIC-OER      | oer_encode()       | *-OER         | oer_decode()
+CANONICAL-OER  | oer_encode()       | *-OER         | oer_decode()
+BASIC-UPER     | uper_encode()      | *-UPER        | uper_decode()
+CANONICAL-UPER | uper_encode()      | *-UPER        | uper_decode()
+*-APER         | _not supported_    | *-APER        | _not supported_
+BASIC-XER      | xer_encode(XER_F_BASIC)    | *-XER | xer_decode()
+CANONICAL-XER  | xer_encode(XER_F_CANONICAL)| *-XER | xer_decode()
+
+*) Asterisk means both BASIC and CANONICAL variants.
+</details>
+
 # Build and Install
 
 If you haven't installed the asn1c yet, read the [INSTALL.md](INSTALL.md) file
