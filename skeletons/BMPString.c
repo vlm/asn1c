@@ -27,7 +27,7 @@ asn_TYPE_operation_t asn_OP_BMPString = {
 	OCTET_STRING_free,          /* Implemented in terms of OCTET STRING */
 	BMPString_print,
 	OCTET_STRING_compare,
-	asn_generic_no_constraint,  /* No constraint by default */
+	BMPString_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
 	BMPString_decode_xer,		/* Convert from UTF-8 */
@@ -52,7 +52,7 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	"BMPString",
 	"BMPString",
 	&asn_OP_BMPString,
-	asn_generic_no_constraint,  /* No constraint by default */
+	BMPString_constraint,
 	asn_DEF_BMPString_tags,
 	sizeof(asn_DEF_BMPString_tags)
 	  / sizeof(asn_DEF_BMPString_tags[0]) - 1,
@@ -64,6 +64,28 @@ asn_TYPE_descriptor_t asn_DEF_BMPString = {
 	0, 0,	/* No members */
 	&asn_SPC_BMPString_specs
 };
+
+int
+BMPString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+                           asn_app_constraint_failed_f *ctfailcb,
+                           void *app_key) {
+    const BMPString_t *st = (const BMPString_t *)sptr;
+
+    if(st && st->buf) {
+        if(st->size & 1) {
+            ASN__CTFAIL(app_key, td, sptr,
+                        "%s: invalid size %zu not divisible by 2 (%s:%d)",
+                        td->name, st->size, __FILE__, __LINE__);
+            return -1;
+        }
+    } else {
+        ASN__CTFAIL(app_key, td, sptr, "%s: value not given (%s:%d)", td->name,
+                    __FILE__, __LINE__);
+        return -1;
+    }
+
+    return 0;
+}
 
 /*
  * BMPString specific contents printer.

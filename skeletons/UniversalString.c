@@ -27,7 +27,7 @@ asn_TYPE_operation_t asn_OP_UniversalString = {
 	OCTET_STRING_free,
 	UniversalString_print,      /* Convert into UTF8 and print */
 	OCTET_STRING_compare,
-	asn_generic_no_constraint,
+	UniversalString_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
 	UniversalString_decode_xer,	/* Convert from UTF-8 */
@@ -52,7 +52,7 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	"UniversalString",
 	"UniversalString",
 	&asn_OP_UniversalString,
-	asn_generic_no_constraint,
+	UniversalString_constraint,
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
 	  / sizeof(asn_DEF_UniversalString_tags[0]) - 1,
@@ -65,6 +65,27 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	&asn_SPC_UniversalString_specs
 };
 
+int
+UniversalString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+                           asn_app_constraint_failed_f *ctfailcb,
+                           void *app_key) {
+    const UniversalString_t *st = (const UniversalString_t *)sptr;
+
+    if(st && st->buf) {
+        if(st->size & 3) {
+            ASN__CTFAIL(app_key, td, sptr,
+                        "%s: invalid size %zu not divisible by 4 (%s:%d)",
+                        td->name, st->size, __FILE__, __LINE__);
+            return -1;
+        }
+    } else {
+        ASN__CTFAIL(app_key, td, sptr, "%s: value not given (%s:%d)", td->name,
+                    __FILE__, __LINE__);
+        return -1;
+    }
+
+    return 0;
+}
 
 static ssize_t
 UniversalString__dump(const UniversalString_t *st,

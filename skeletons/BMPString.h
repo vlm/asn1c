@@ -18,6 +18,7 @@ extern asn_TYPE_operation_t asn_OP_BMPString;
 extern asn_OCTET_STRING_specifics_t asn_SPC_BMPString_specs;
 
 asn_struct_print_f BMPString_print;	/* Human-readable output */
+asn_constr_check_f BMPString_constraint;
 xer_type_decoder_f BMPString_decode_xer;
 xer_type_encoder_f BMPString_encode_xer;
 

@@ -18,6 +18,7 @@ extern asn_TYPE_operation_t asn_OP_UniversalString;
 extern asn_OCTET_STRING_specifics_t asn_SPC_UniversalString_specs;
 
 asn_struct_print_f UniversalString_print;	/* Human-readable output */
+asn_constr_check_f UniversalString_constraint;
 xer_type_decoder_f UniversalString_decode_xer;
 xer_type_encoder_f UniversalString_encode_xer;
 
