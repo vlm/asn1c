@@ -443,7 +443,8 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 	assert(ret < psize);
 	psize = ret;
 
-	asn = asn1p_parse_buffer(pp, psize, A1P_NOFLAGS);
+	asn = asn1p_parse_buffer(pp, psize,
+		arg->expr->module->source_file_name, arg->expr->_lineno, A1P_NOFLAGS);
 	free(pp);
 	if(asn == NULL) {
 		FATAL("Cannot parse Setting token %s "

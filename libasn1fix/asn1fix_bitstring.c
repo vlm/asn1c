@@ -174,21 +174,22 @@ asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype)
 
 	assert(value->type == ATV_UNPARSED);
 
-	psize = value->value.string.size + 64;
+	psize = value->value.string.size + sizeof("M DEFINITIONS ::= BEGIN V ::= BIT STRING END") + 32;
 	p = malloc(psize);
 	if(p == NULL)
 		return -1;
 
 	ret = snprintf(p, psize,
 		"M DEFINITIONS ::=\nBEGIN\n"
-		"V ::= INTEGER %s\n"
+		"V ::= #BIT STRING %s\n"
 		"END\n",
 		value->value.string.buf
 	);
 	assert(ret < psize);
 	psize = ret;
 
-	asn = asn1p_parse_buffer(p, psize, A1P_NOFLAGS);
+	asn = asn1p_parse_buffer(p, psize, arg->expr->module->source_file_name,
+                             arg->expr->_lineno, A1P_EXTENDED_VALUES);
 	free(p);
 	if(asn == NULL) {
 		FATAL("Cannot parse BIT STRING value %s "
@@ -205,7 +206,6 @@ asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype)
 	V = TQ_FIRST(&(mod->members));
 	assert(V);
 	assert(strcmp(V->Identifier, "V") == 0);
-	assert(TQ_FIRST(&(V->members)));
 
 	/*
 	 * Simple loop just to fetch the maximal bit position
@@ -250,6 +250,7 @@ asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype)
 				bit->Identifier, bit->_lineno);
 			RET2RVAL(1, r_value);
 		}
+    fprintf(stderr, "Referencing bit %s\n", bit->Identifier);
 		bitdef = asn1f_lookup_child(ttype, bit->Identifier);
 		if(bitdef == NULL) {
 			FATAL("Identifier \"%s\" at line %d is not defined "

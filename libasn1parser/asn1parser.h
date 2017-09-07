@@ -27,11 +27,15 @@
  * Parser flags.
  */
 enum asn1p_flags {
-	A1P_NOFLAGS,
-	/*
-	 * Enable verbose debugging output from lexer.
-	 */
-	A1P_LEXER_DEBUG			= 0x0001
+    A1P_NOFLAGS,
+    /*
+     * Enable verbose debugging output from lexer.
+     */
+    A1P_LEXER_DEBUG = 0x01,
+    /*
+     * Unlock internal helper value types.
+     */
+    A1P_EXTENDED_VALUES = 0x02
 };
 
 /*
@@ -41,6 +45,7 @@ enum asn1p_flags {
 asn1p_t	*asn1p_parse_file(const char *filename,
 	enum asn1p_flags);
 asn1p_t	*asn1p_parse_buffer(const char *buffer, int size /* = -1 */,
+	const char *debug_filename, int initial_lineno,
 	enum asn1p_flags);
 
 extern const char *asn1p_parse_debug_filename;

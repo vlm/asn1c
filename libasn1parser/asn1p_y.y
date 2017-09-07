@@ -132,9 +132,9 @@ static asn1p_module_t *currentModule;
 %token	<tv_str>	TOK_bstring
 %token	<tv_opaque>	TOK_cstring
 %token	<tv_str>	TOK_hstring
-%token	<tv_str>	TOK_identifier
-%token	<a_int>		TOK_number
-%token	<a_int>		TOK_number_negative
+%token	<tv_str>	TOK_identifier "identifier"
+%token	<a_int>		TOK_number "number"
+%token	<a_int>		TOK_number_negative "negative number"
 %token	<a_dbl>		TOK_realnumber
 %token	<a_int>		TOK_tuple
 %token	<a_int>		TOK_quadruple
@@ -143,6 +143,11 @@ static asn1p_module_t *currentModule;
 %token	<tv_str>	TOK_typefieldreference		/* "&Pork" */
 %token	<tv_str>	TOK_valuefieldreference		/* "&id" */
 %token	<tv_str>	TOK_Literal			/* "BY" */
+
+/*
+ * Tokens available with asn1p_lexer_hack_push_extended_values().
+ */
+%token              TOK_ExtValue_BIT_STRING
 
 /*
  * Token types representing ASN.1 standard keywords.
@@ -235,8 +240,8 @@ static asn1p_module_t *currentModule;
 %left			'|' TOK_UNION
 
 /* Misc tags */
-%token			TOK_TwoDots		/* .. */
-%token			TOK_ThreeDots		/* ... */
+%token			TOK_TwoDots		".."
+%token			TOK_ThreeDots	"..."
 
 
 /*
@@ -291,8 +296,14 @@ static asn1p_module_t *currentModule;
 %type	<a_expr>		ComponentType
 %type	<a_expr>		AlternativeTypeLists
 %type	<a_expr>		AlternativeType
-%type	<a_expr>		UniverationDefinition
 %type	<a_expr>		UniverationList
+%type	<a_expr>		Enumerations
+%type	<a_expr>		NamedBitList
+%type	<a_expr>		NamedBit
+%type	<a_expr>		NamedNumberList
+%type	<a_expr>		NamedNumber
+%type	<a_expr>		IdentifierList
+%type	<a_expr>		IdentifierElement
 %type	<a_expr>		UniverationElement
 %type	<tv_str>		TypeRefName
 %type	<tv_str>		ObjectClassReference
@@ -1638,7 +1649,6 @@ BasicTypeId:
 	TOK_BOOLEAN { $$ = ASN_BASIC_BOOLEAN; }
 	| TOK_NULL { $$ = ASN_BASIC_NULL; }
 	| TOK_REAL { $$ = ASN_BASIC_REAL; }
-	| BasicTypeId_UniverationCompatible { $$ = $1; }
 	| TOK_OCTET TOK_STRING { $$ = ASN_BASIC_OCTET_STRING; }
 	| TOK_OBJECT TOK_IDENTIFIER { $$ = ASN_BASIC_OBJECT_IDENTIFIER; }
 	| TOK_RELATIVE_OID { $$ = ASN_BASIC_RELATIVE_OID; }
@@ -1647,7 +1657,8 @@ BasicTypeId:
 	| TOK_CHARACTER TOK_STRING { $$ = ASN_BASIC_CHARACTER_STRING; }
 	| TOK_UTCTime { $$ = ASN_BASIC_UTCTime; }
 	| TOK_GeneralizedTime { $$ = ASN_BASIC_GeneralizedTime; }
-	| BasicString { $$ = $1; }
+	| BasicString
+	| BasicTypeId_UniverationCompatible
 	;
 
 /*
@@ -1655,7 +1666,7 @@ BasicTypeId:
  */
 BasicTypeId_UniverationCompatible:
 	TOK_INTEGER { $$ = ASN_BASIC_INTEGER; }
-	| TOK_ENUMERATED { $$ = ASN_BASIC_ENUMERATED; }
+	| TOK_ENUMERATED { $$ = ASN_BASIC_INTEGER; }
 	| TOK_BIT TOK_STRING { $$ = ASN_BASIC_BIT_STRING; }
 	;
 
@@ -1666,16 +1677,32 @@ BasicType:
 		$$->expr_type = $1;
 		$$->meta_type = AMT_TYPE;
 	}
-	| BasicTypeId_UniverationCompatible UniverationDefinition {
-		if($2) {
-			$$ = $2;
-		} else {
-			$$ = NEW_EXPR();
-			checkmem($$);
-		}
-		$$->expr_type = $1;
-		$$->meta_type = AMT_TYPE;
-	}
+    | TOK_INTEGER '{' NamedNumberList '}' {
+        $$ = $3;
+        $$->expr_type = ASN_BASIC_INTEGER;
+        $$->meta_type = AMT_TYPE;
+    }
+    | TOK_ENUMERATED '{' Enumerations '}' {
+        $$ = $3;
+        $$->expr_type = ASN_BASIC_ENUMERATED;
+        $$->meta_type = AMT_TYPE;
+    }
+    | TOK_BIT TOK_STRING '{' NamedBitList '}' {
+        $$ = $4;
+        $$->expr_type = ASN_BASIC_BIT_STRING;
+        $$->meta_type = AMT_TYPE;
+    }
+    | TOK_ExtValue_BIT_STRING '{' IdentifierList '}' {
+        $$ = $3;
+        $$->expr_type = ASN_BASIC_BIT_STRING;
+        $$->meta_type = AMT_TYPE;
+    }
+    | TOK_ExtValue_BIT_STRING '{' '}' {
+		$$ = NEW_EXPR();
+		checkmem($$);
+        $$->expr_type = ASN_BASIC_BIT_STRING;
+        $$->meta_type = AMT_TYPE;
+    }
 	;
 
 BasicString:
@@ -2173,31 +2200,100 @@ Marker:
 	}
 	;
 
-/*
- * Universal enumeration definition to use in INTEGER and ENUMERATED.
- * === EXAMPLE ===
- * Gender ::= ENUMERATED { unknown(0), male(1), female(2) }
- * Temperature ::= INTEGER { absolute-zero(-273), freezing(0), boiling(100) }
- * === EOF ===
- */
-/*
-optUniverationDefinition:
-	{ $$ = 0; }
-	| UniverationDefinition {
-		$$ = $1;
-	}
-	;
-*/
-
-UniverationDefinition:
-	'{' '}' {
+IdentifierList:
+    IdentifierElement {
 		$$ = NEW_EXPR();
 		checkmem($$);
+		asn1p_expr_add($$, $1);
+    }
+    | IdentifierList ',' IdentifierElement {
+		$$ = $1;
+		asn1p_expr_add($$, $3);
+    };
+
+IdentifierElement:
+    Identifier {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		$$->expr_type = A1TC_UNIVERVAL;
+		$$->meta_type = AMT_VALUE;
+		$$->Identifier = $1;
+    }
+
+NamedNumberList:
+	NamedNumber {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		asn1p_expr_add($$, $1);
 	}
-	| '{' UniverationList '}' {
-		$$ = $2;
+	| NamedNumberList ',' NamedNumber {
+		$$ = $1;
+		asn1p_expr_add($$, $3);
 	}
 	;
+
+NamedNumber:
+	Identifier '(' SignedNumber ')' {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		$$->expr_type = A1TC_UNIVERVAL;
+		$$->meta_type = AMT_VALUE;
+		$$->Identifier = $1;
+		$$->value = $3;
+	}
+	| Identifier '(' DefinedValue ')' {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		$$->expr_type = A1TC_UNIVERVAL;
+		$$->meta_type = AMT_VALUE;
+		$$->Identifier = $1;
+		$$->value = $3;
+	};
+
+NamedBitList:
+	NamedBit {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		asn1p_expr_add($$, $1);
+	}
+	| NamedBitList ',' NamedBit {
+		$$ = $1;
+		asn1p_expr_add($$, $3);
+	}
+	;
+
+NamedBit:
+	Identifier '(' TOK_number ')' {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		$$->expr_type = A1TC_UNIVERVAL;
+		$$->meta_type = AMT_VALUE;
+		$$->Identifier = $1;
+		$$->value = asn1p_value_fromint($3);
+	}
+	| Identifier '(' DefinedValue ')' {
+		$$ = NEW_EXPR();
+		checkmem($$);
+		$$->expr_type = A1TC_UNIVERVAL;
+		$$->meta_type = AMT_VALUE;
+		$$->Identifier = $1;
+		$$->value = $3;
+	};
+
+Enumerations:
+    UniverationList {
+		$$ = $1;
+        asn1p_expr_t *first_memb = TQ_FIRST(&($$->members));
+        if(first_memb) {
+            if(first_memb->expr_type == A1TC_EXTENSIBLE) {
+                return yyerror(
+                    "The ENUMERATION cannot start with extension (...).");
+            }
+        } else {
+            return yyerror(
+                "The ENUMERATION list cannot be empty.");
+        }
+    }
 
 UniverationList:
 	UniverationElement {

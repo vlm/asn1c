@@ -24,7 +24,7 @@ static int _asn1p_fix_modules(asn1p_t *a, const char *fname);
  * Parse the given buffer.
  */
 asn1p_t *
-asn1p_parse_buffer(const char *buffer, int size /* = -1 */, enum asn1p_flags flags) {
+asn1p_parse_buffer(const char *buffer, int size /* = -1 */, const char *debug_filename, int initial_lineno, enum asn1p_flags flags) {
 	asn1p_t *a = 0;
 	void *ap;
 	void *ybuf;
@@ -38,18 +38,18 @@ asn1p_parse_buffer(const char *buffer, int size /* = -1 */, enum asn1p_flags fla
 	if(size < 0)
 		size = (int)strlen(buffer);
 
-	asn1p_parse_debug_filename = "<stdin>";
 	ybuf = asn1p__scan_bytes(buffer, size);
-	asn1p_parse_debug_filename = NULL;
 	if(!ybuf) {
 		assert(ybuf);
 		return 0;
 	}
 
-	asn1p_lineno = 1;
+	asn1p_lineno = initial_lineno;
 
 	ap = (void *)&a;
+	asn1p_parse_debug_filename = debug_filename;
 	ret = asn1p_parse(ap);
+	asn1p_parse_debug_filename = NULL;
 
 	asn1p__delete_buffer(ybuf);
 
@@ -130,6 +130,7 @@ asn1p_parse_file(const char *filename, enum asn1p_flags flags) {
 
 extern int asn1p_lexer_types_year;
 extern int asn1p_lexer_constructs_year;
+extern int asn1p_lexer_extended_values;
 extern int asn1p__flex_debug;
 
 static int
@@ -145,9 +146,16 @@ _asn1p_set_flags(enum asn1p_flags flags) {
 	if(flags & A1P_LEXER_DEBUG) {
 		flags &= ~A1P_LEXER_DEBUG;
 		asn1p__flex_debug = 1;
-	}
+    }
 
-	/*
+    if(flags & A1P_EXTENDED_VALUES) {
+        flags &= ~A1P_EXTENDED_VALUES;
+        asn1p_lexer_extended_values = 1;
+    } else {
+        asn1p_lexer_extended_values = 0;
+    }
+
+    /*
 	 * Check that we haven't missed an unknown flag.
 	 */
 	if(flags) {

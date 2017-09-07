@@ -23,6 +23,7 @@ void asn1p_lexer_hack_push_encoding_control(void);	/* Used in .y */
 int asn1p_lexer_pedantic_1990 = 0;
 int asn1p_lexer_types_year = 0;
 int asn1p_lexer_constructs_year = 0;
+int asn1p_lexer_extended_values = 0;
 
 int asn1p_as_pointer;
 
@@ -85,6 +86,7 @@ static double          _lex_atod(const char *ptr);
 %x opaque
 %x encoding_control
 %x with_syntax
+%x extended_values
 
 /* Newline */
 NL	[\r\v\f\n]
@@ -102,6 +104,13 @@ WSP	[\t\r\v\f\n ]
 }
 
 --<[ \t]*ASN1C.RepresentAsPointer[ \t]*>--	asn1p_as_pointer = 1;
+
+<extended_values>{
+    "#BIT STRING"    {
+        yy_pop_state();
+        return TOK_ExtValue_BIT_STRING;
+    }
+}
 
 <INITIAL,with_syntax>--		yy_push_state(dash_comment);
 <dash_comment,idash_comment>{
@@ -262,7 +271,12 @@ ANY			{
 			}
 APPLICATION		return TOK_APPLICATION;
 AUTOMATIC		return TOK_AUTOMATIC;
-BEGIN			return TOK_BEGIN;
+BEGIN			{
+        if(asn1p_lexer_extended_values) {
+            yy_push_state(extended_values);
+        }
+        return TOK_BEGIN;
+    }
 BIT			return TOK_BIT;
 BMPString		{
 				if(TYPE_LIFETIME(1994, 0))
@@ -292,7 +306,12 @@ DEFINITIONS		return TOK_DEFINITIONS;
 EMBEDDED		return TOK_EMBEDDED;
 ENCODED			return TOK_ENCODED;
 ENCODING-CONTROL	return TOK_ENCODING_CONTROL;
-END			return TOK_END;
+END			{
+		    if(YYSTATE == extended_values) {
+                yy_pop_state();
+            }
+            return TOK_END;
+        }
 ENUMERATED		return TOK_ENUMERATED;
 EXCEPT			return TOK_EXCEPT;
 EXPLICIT		return TOK_EXPLICIT;
@@ -380,7 +399,7 @@ WITH			return TOK_WITH;
 	/*
 	 * objectclassreference
 	 */
-[A-Z][A-Z0-9]*([-][A-Z0-9]+)*	{
+<INITIAL,extended_values>[A-Z][A-Z0-9]*([-][A-Z0-9]+)*	{
 		asn1p_lval.tv_str = strdup(yytext);
 		return TOK_capitalreference;
 	}
@@ -395,7 +414,7 @@ WITH			return TOK_WITH;
 		return TOK_typereference;
 	}
 
-"::="		return TOK_PPEQ;
+<INITIAL,extended_values>"::="		return TOK_PPEQ;
 
 "..."		return TOK_ThreeDots;
 ".."		return TOK_TwoDots;
@@ -440,7 +459,7 @@ WITH			return TOK_WITH;
 }
 
 
-{WSP}+	/* Ignore whitespace */
+<INITIAL,extended_values>{WSP}+	/* Ignore whitespace */
 
 
 [{][\t\r\v\f\n ]*[0-7][,][\t\r\v\f\n ]*[0-9]+[\t\r\v\f\n ]*[}]	{

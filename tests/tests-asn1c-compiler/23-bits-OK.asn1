@@ -19,4 +19,6 @@ BEGIN
 
 	one0one BS1 ::= '1010000'B		-- Equivalent to '101'B
 
+	empty BS1 ::= { }	-- Equivalent to ''B
+
 END
