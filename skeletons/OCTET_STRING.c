@@ -1572,14 +1572,22 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		if(cval->flags & APC_CONSTRAINED)
 			unit_bits = cval->range_bits;
 		bpc = OS__BPC_U16;
-		sizeinunits = st->size / 2;
+		sizeinunits = st->size >> 1;
+		if(st->size & 1) {
+			ASN_DEBUG("%s string size is not modulo 2", td->name);
+			ASN__ENCODE_FAILED;
+		}
 		break;
 	case ASN_OSUBV_U32:
 		canonical_unit_bits = unit_bits = 32;
 		if(cval->flags & APC_CONSTRAINED)
 			unit_bits = cval->range_bits;
 		bpc = OS__BPC_U32;
-		sizeinunits = st->size / 4;
+		sizeinunits = st->size >> 2;
+		if(st->size & 3) {
+			ASN_DEBUG("%s string size is not modulo 4", td->name);
+			ASN__ENCODE_FAILED;
+		}
 		break;
 	}
 
@@ -1599,8 +1607,9 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 				csiz = &asn_DEF_OCTET_STRING_constraints.size;
 				unit_bits = canonical_unit_bits;
 				inext = 1;
-			} else
+			} else {
 				ASN__ENCODE_FAILED;
+			}
 		}
 	} else {
 		inext = 0;

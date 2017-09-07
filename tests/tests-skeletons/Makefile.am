@@ -13,6 +13,7 @@ check_PROGRAMS =            \
     check-XER               \
     check-OER-INTEGER       \
     check-OER-NativeEnumerated \
+    check-PER-UniversalString  \
     check-PER               \
     check-PER-INTEGER
 
