@@ -27,7 +27,6 @@ asn_TYPE_operation_t asn_OP_UniversalString = {
 	OCTET_STRING_free,
 	UniversalString_print,      /* Convert into UTF8 and print */
 	OCTET_STRING_compare,
-	UniversalString_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
 	UniversalString_decode_xer,	/* Convert from UTF-8 */

@@ -25,7 +25,6 @@ xer_type_encoder_f BMPString_encode_xer;
 #define BMPString_free          OCTET_STRING_free
 #define BMPString_print         BMPString_print
 #define BMPString_compare       OCTET_STRING_compare
-#define BMPString_constraint    asn_generic_no_constraint
 #define BMPString_decode_ber    OCTET_STRING_decode_ber
 #define BMPString_encode_der    OCTET_STRING_encode_der
 #define BMPString_decode_uper   OCTET_STRING_decode_uper

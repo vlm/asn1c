@@ -17,7 +17,6 @@ asn_TYPE_operation_t asn_OP_NULL = {
 	BOOLEAN_free,
 	NULL_print,
 	NULL_compare,
-	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,	/* Implemented in terms of BOOLEAN */
 	NULL_encode_der,	/* Special handling of DER encoding */
 	NULL_decode_xer,

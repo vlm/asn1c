@@ -86,7 +86,7 @@ CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	return td->op->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*

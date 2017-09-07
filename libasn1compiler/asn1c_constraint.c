@@ -211,7 +211,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		case ASN_CONSTR_SEQUENCE_OF:
 		case ASN_CONSTR_SET_OF:
 			OUT("/* Perform validation of the inner elements */\n");
-			OUT("return td->op->check_constraints(td, sptr, ctfailcb, app_key);\n");
+			OUT("return td->check_constraints(td, sptr, ctfailcb, app_key);\n");
 			break;
 		default:
 			OUT("/* Constraint check succeeded */\n");

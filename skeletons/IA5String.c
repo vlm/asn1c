@@ -21,7 +21,6 @@ asn_TYPE_operation_t asn_OP_IA5String = {
 	OCTET_STRING_free,
 	OCTET_STRING_print_utf8,	/* ASCII subset */
 	OCTET_STRING_compare,
-	IA5String_constraint,       /* Constraint on the alphabet */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,

@@ -16,7 +16,6 @@ asn_TYPE_operation_t asn_OP_BOOLEAN = {
 	BOOLEAN_free,
 	BOOLEAN_print,
 	BOOLEAN_compare,
-	asn_generic_no_constraint,
 	BOOLEAN_decode_ber,
 	BOOLEAN_encode_der,
 	BOOLEAN_decode_xer,

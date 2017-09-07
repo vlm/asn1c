@@ -145,7 +145,6 @@ typedef struct asn_TYPE_operation_s {
 	asn_struct_free_f  *free_struct;	/* Free the structure */
 	asn_struct_print_f *print_struct;	/* Human readable output */
 	asn_struct_compare_f *compare_struct;	/* Compare two structures */
-	asn_constr_check_f *check_constraints;	/* Constraints validator */
 	ber_type_decoder_f *ber_decoder;	/* Generic BER decoder */
 	der_type_encoder_f *der_encoder;	/* Canonical DER encoder */
 	xer_type_decoder_f *xer_decoder;	/* Generic XER decoder */

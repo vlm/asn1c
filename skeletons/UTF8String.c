@@ -17,7 +17,6 @@ asn_TYPE_operation_t asn_OP_UTF8String = {
 	OCTET_STRING_free,
 	UTF8String_print,
 	OCTET_STRING_compare,
-	UTF8String_constraint,      /* Check for invalid codes, etc. */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_utf8,

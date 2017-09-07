@@ -15,7 +15,6 @@ asn_TYPE_operation_t asn_OP_ANY = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,
 	OCTET_STRING_compare,
-	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,

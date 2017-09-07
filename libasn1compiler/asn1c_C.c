@@ -1356,7 +1356,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			// OUT("td->check_constraints "
 			//	"= asn_DEF_%s.check_constraints;\n",
 			//	asn1c_type_name(arg, expr, TNF_SAFE));
-			OUT("return td->op->check_constraints"
+			OUT("return td->check_constraints"
 				"(td, sptr, ctfailcb, app_key);\n");
 		}
 		INDENT(-1);

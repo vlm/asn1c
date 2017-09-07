@@ -27,7 +27,6 @@ asn_TYPE_operation_t asn_OP_BMPString = {
 	OCTET_STRING_free,          /* Implemented in terms of OCTET STRING */
 	BMPString_print,
 	OCTET_STRING_compare,
-	BMPString_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
 	BMPString_decode_xer,		/* Convert from UTF-8 */

@@ -37,7 +37,7 @@ OK_Integer1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	return td->op->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -106,7 +106,7 @@ OK_Integer2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	return td->op->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -175,7 +175,7 @@ OK_Integer3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	return td->op->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -244,7 +244,7 @@ OK_Integer4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	return td->op->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -313,7 +313,7 @@ NO_Integer5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	/* Replace with underlying type checker */
-	return td->op->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*

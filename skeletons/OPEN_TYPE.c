@@ -12,7 +12,6 @@ asn_TYPE_operation_t asn_OP_OPEN_TYPE = {
 	OPEN_TYPE_free,
 	OPEN_TYPE_print,
 	OPEN_TYPE_compare,
-	OPEN_TYPE_constraint,
 	OPEN_TYPE_decode_ber,
 	OPEN_TYPE_encode_der,
 	OPEN_TYPE_decode_xer,

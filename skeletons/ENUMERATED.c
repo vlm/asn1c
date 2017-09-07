@@ -18,7 +18,6 @@ asn_TYPE_operation_t asn_OP_ENUMERATED = {
 	ASN__PRIMITIVE_TYPE_free,
 	INTEGER_print,			/* Implemented in terms of INTEGER */
 	INTEGER_compare,		/* Implemented in terms of INTEGER */
-	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,		/* Implemented in terms of INTEGER */
 	INTEGER_decode_xer,	/* This is temporary! */

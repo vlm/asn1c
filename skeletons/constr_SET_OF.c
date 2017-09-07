@@ -976,7 +976,6 @@ asn_TYPE_operation_t asn_OP_SET_OF = {
 	SET_OF_free,
 	SET_OF_print,
 	SET_OF_compare,
-	SET_OF_constraint,
 	SET_OF_decode_ber,
 	SET_OF_encode_der,
 	SET_OF_decode_xer,

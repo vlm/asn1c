@@ -25,7 +25,6 @@ asn_TYPE_operation_t asn_OP_NativeReal = {
 	NativeReal_free,
 	NativeReal_print,
 	NativeReal_compare,
-	asn_generic_no_constraint,
 	NativeReal_decode_ber,
 	NativeReal_encode_der,
 	NativeReal_decode_xer,

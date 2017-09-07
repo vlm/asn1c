@@ -175,7 +175,6 @@ asn_TYPE_operation_t asn_OP_GeneralizedTime = {
 	OCTET_STRING_free,
 	GeneralizedTime_print,
 	OCTET_STRING_compare,   /* Does not normalize time zones! */
-	GeneralizedTime_constraint, /* Check validity of time */
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	GeneralizedTime_encode_der,
 	OCTET_STRING_decode_xer_utf8,

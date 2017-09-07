@@ -1243,7 +1243,6 @@ asn_TYPE_operation_t asn_OP_CHOICE = {
 	CHOICE_free,
 	CHOICE_print,
 	CHOICE_compare,
-	CHOICE_constraint,
 	CHOICE_decode_ber,
 	CHOICE_encode_der,
 	CHOICE_decode_xer,

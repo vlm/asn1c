@@ -45,7 +45,6 @@ asn_TYPE_operation_t asn_OP_REAL = {
 	ASN__PRIMITIVE_TYPE_free,
 	REAL_print,
 	REAL_compare,
-	asn_generic_no_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
 	REAL_decode_xer,

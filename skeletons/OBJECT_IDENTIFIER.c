@@ -19,7 +19,6 @@ asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER = {
 	ASN__PRIMITIVE_TYPE_free,
 	OBJECT_IDENTIFIER_print,
 	OCTET_STRING_compare,   /* Implemented in terms of a string comparison */
-	OBJECT_IDENTIFIER_constraint,
 	ber_decode_primitive,
 	der_encode_primitive,
 	OBJECT_IDENTIFIER_decode_xer,

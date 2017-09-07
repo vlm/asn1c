@@ -1055,7 +1055,6 @@ asn_TYPE_operation_t asn_OP_SET = {
 	SET_free,
 	SET_print,
 	SET_compare,
-	SET_constraint,
 	SET_decode_ber,
 	SET_encode_der,
 	SET_decode_xer,

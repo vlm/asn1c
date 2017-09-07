@@ -21,7 +21,6 @@ asn_TYPE_operation_t asn_OP_BIT_STRING = {
 	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
 	BIT_STRING_print,
 	BIT_STRING_compare,
-	BIT_STRING_constraint,
 	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_decode_xer_binary,

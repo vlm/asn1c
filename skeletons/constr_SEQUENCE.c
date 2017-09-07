@@ -1524,7 +1524,6 @@ asn_TYPE_operation_t asn_OP_SEQUENCE = {
 	SEQUENCE_free,
 	SEQUENCE_print,
 	SEQUENCE_compare,
-	SEQUENCE_constraint,
 	SEQUENCE_decode_ber,
 	SEQUENCE_encode_der,
 	SEQUENCE_decode_xer,

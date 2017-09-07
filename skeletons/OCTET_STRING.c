@@ -28,7 +28,6 @@ asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,	/* OCTET STRING generally means a non-ascii sequence */
 	OCTET_STRING_compare,
-	asn_generic_no_constraint,
 	OCTET_STRING_decode_ber,
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,

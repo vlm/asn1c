@@ -211,7 +211,6 @@ asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_compare,
-	SEQUENCE_OF_constraint,
 	SEQUENCE_OF_decode_ber,
 	SEQUENCE_OF_encode_der,
 	SEQUENCE_OF_decode_xer,

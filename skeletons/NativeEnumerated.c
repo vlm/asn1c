@@ -22,7 +22,6 @@ asn_TYPE_operation_t asn_OP_NativeEnumerated = {
 	NativeInteger_free,
 	NativeInteger_print,
 	NativeInteger_compare,
-	asn_generic_no_constraint,
 	NativeInteger_decode_ber,
 	NativeInteger_encode_der,
 	NativeInteger_decode_xer,

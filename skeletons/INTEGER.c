@@ -18,7 +18,6 @@ asn_TYPE_operation_t asn_OP_INTEGER = {
 	INTEGER_free,
 	INTEGER_print,
 	INTEGER_compare,
-	asn_generic_no_constraint,
 	ber_decode_primitive,
 	INTEGER_encode_der,
 	INTEGER_decode_xer,

@@ -16,7 +16,6 @@ asn_TYPE_operation_t asn_OP_GeneralString = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,         /* non-ascii string */
 	OCTET_STRING_compare,
-	asn_generic_unknown_constraint,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,
 	OCTET_STRING_decode_xer_hex,
