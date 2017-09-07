@@ -170,6 +170,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
         "# This file may be used as an input for make(3)\n"
         "# Remove the lines below to convert it into a pure .am file\n"
         "TARGET = progname\n"
+        "LIBS += -lm\n"
         "CPPFLAGS += %s%s%s%s-I.\n"
         "OBJS=${ASN_MODULE_SOURCES:.c=.o}"
         " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
