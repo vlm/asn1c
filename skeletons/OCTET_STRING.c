@@ -1865,6 +1865,18 @@ OCTET_STRING_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
             } else if(a->size > b->size) {
                 return 1;
             } else {
+                asn_OCTET_STRING_specifics_t *specs = td->specifics;
+                if(specs && specs->subvariant == ASN_OSUBV_BIT) {
+                    const BIT_STRING_t *ba = aptr;
+                    const BIT_STRING_t *bb = bptr;
+                    if(ba->bits_unused > bb->bits_unused) {
+                        return -1;
+                    } else if(ba->bits_unused < bb->bits_unused) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
                 return 0;
             }
         } else {
