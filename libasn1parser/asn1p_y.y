@@ -22,6 +22,8 @@ void asn1p_lexer_hack_enable_with_syntax(void);
 void asn1p_lexer_hack_push_encoding_control(void);
 #define	yylineno	asn1p_lineno
 extern int asn1p_lineno;
+const char *asn1p_parse_debug_filename;
+#define ASN_FILENAME asn1p_parse_debug_filename
 
 /*
  * Process directives as <ASN1C:RepresentAsPointer>
@@ -295,6 +297,8 @@ static asn1p_module_t *currentModule;
 %type	<tv_str>		TypeRefName
 %type	<tv_str>		ObjectClassReference
 %type	<tv_str>		Identifier
+%type	<a_ref>		    IdentifierAsReference
+%type	<a_value>		IdentifierAsValue
 %type	<tv_str>		optIdentifier
 %type	<a_parg>		ParameterArgumentName
 %type	<a_plist>		ParameterArgumentList
@@ -314,9 +318,16 @@ static asn1p_module_t *currentModule;
 %type	<a_tag>			TagClass TagTypeValue TagPlicit
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_constr>		optConstraints
+%type	<a_constr>		optSizeConstraints
 %type	<a_constr>		Constraint
+%type	<a_constr>		SingleTypeConstraint
+%type	<a_constr>		MultipleTypeConstraints
+%type	<a_constr>		NamedConstraint
+%type	<a_constr>		FullSpecification
+%type	<a_constr>		PartialSpecification
+%type	<a_constr>		TypeConstraints
+%type	<a_constr>		ConstraintSpec
 %type	<a_constr>		SubtypeConstraint
-%type	<a_constr>		ConstraintSpecs
 %type	<a_constr>		GeneralConstraint
 %type	<a_constr>		SetOfConstraints
 %type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */
@@ -331,14 +342,12 @@ static asn1p_module_t *currentModule;
 %type	<a_constr>		ContentsConstraint
 %type	<a_constr>		PatternConstraint
 %type	<a_constr>		InnerTypeConstraint
-%type	<a_constr>		WithComponentsList
-%type	<a_constr>		WithComponentsElement
 %type	<a_constr>		ComponentRelationConstraint
 %type	<a_constr>		AtNotationList
 %type	<a_ref>			AtNotationElement
 %type	<a_value>		SingleValue
 %type	<a_value>		ContainedSubtype
-%type	<a_ctype>		ConstraintSpec
+%type	<a_ctype>		ConstraintType
 %type	<a_ctype>		ConstraintRangeSpec
 %type	<a_value>		RestrictedCharacterStringValue
 %type	<a_wsynt>		optWithSyntax
@@ -505,9 +514,9 @@ ModuleDefinitionFlag:
 		 	$$ = MSF_XER_INSTRUCTIONS;
 		} else {
 			fprintf(stderr,
-				"WARNING: %s INSTRUCTIONS at line %d: "
+				"WARNING: %s INSTRUCTIONS at %s:%d: "
 				"Unrecognized encoding reference\n",
-				$1, yylineno);
+				$1, ASN_FILENAME, yylineno);
 		 	$$ = MSF_unk_INSTRUCTIONS;
 		}
 		free($1);
@@ -594,8 +603,8 @@ Assignment:
 			{
 		fprintf(stderr,
 			"WARNING: ENCODING-CONTROL %s "
-			"specification at line %d ignored\n",
-			$2, yylineno);
+			"specification at %s:%d ignored\n",
+			$2, ASN_FILENAME, yylineno);
 		free($2);
 		$$ = 0;
 	}
@@ -1263,11 +1272,11 @@ TypeDeclaration:
 		&& ($$->marker.flags & EM_OPTIONAL) != EM_OPTIONAL) {
 			fprintf(stderr,
 				"INFO: Directive <ASN1C:RepresentAsPointer> "
-				"applied to %s at line %d\n",
+				"applied to %s at %s:%d\n",
 				ASN_EXPR_TYPE2STR($$->expr_type)
 					?  ASN_EXPR_TYPE2STR($$->expr_type)
 					: "member",
-				$$->_lineno
+				ASN_FILENAME, $$->_lineno
 			);
 		}
 	}
@@ -1295,7 +1304,7 @@ TypeDeclarationSet:
 		$$->expr_type = ASN_CONSTR_SET;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE optConstraints TOK_OF optIdentifier optTag TypeDeclaration {
+	| TOK_SEQUENCE optSizeConstraints TOK_OF optIdentifier optTag TypeDeclaration {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
@@ -1305,7 +1314,7 @@ TypeDeclarationSet:
 		$6->tag = $5;
 		asn1p_expr_add($$, $6);
 	}
-	| TOK_SET optConstraints TOK_OF optIdentifier optTag TypeDeclaration {
+	| TOK_SET optSizeConstraints TOK_OF optIdentifier optTag TypeDeclaration {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
@@ -1705,56 +1714,45 @@ BasicString:
 UnionMark:		'|' | TOK_UNION;
 IntersectionMark:	'^' | TOK_INTERSECTION;
 
+/* empty | Constraint */
 optConstraints:
 	{ $$ = 0; }
-	| Constraint {
-		$$ = $1;
-	}
-	;
+	| Constraint;
 
-Constraint:
-	SubtypeConstraint
-	;
-
-SubtypeConstraint:
-	SetOfConstraints {
-		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
-	}
-	| TOK_SIZE '('  ConstraintSpecs ')' {
-		/*
-		 * This is a special case, for compatibility purposes.
-		 * It goes without parentheses.
-		 */
+/* empty | Constraint | SIZE(...) */
+optSizeConstraints:
+	{ $$ = 0; }
+	| Constraint
+	| TOK_SIZE '('  ConstraintSpec ')' {
 		CONSTRAINT_INSERT($$, ACT_CT_SIZE, $3, 0);
 	}
 	;
 
+Constraint:
+    SetOfConstraints {
+		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
+    }
+    ;
+
 SetOfConstraints:
-	'(' ConstraintSpecs ')' {
+	'(' ConstraintSpec ')' {
 		$$ = $2;
 	}
-	| SetOfConstraints '(' ConstraintSpecs ')' {
+	| SetOfConstraints '(' ConstraintSpec ')' {
 		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $3);
 	}
 	;
 
-ConstraintSpecs:
-	ElementSetSpecs {
-		$$ = $1;
-	}
-	| GeneralConstraint {
-		$$ = $1;
-	}
-	;
+ConstraintSpec: SubtypeConstraint | GeneralConstraint;
+
+SubtypeConstraint: ElementSetSpecs;
 
 ElementSetSpecs:
 	TOK_ThreeDots  {
 		$$ = asn1p_constraint_new(yylineno, currentModule);
 		$$->type = ACT_EL_EXT;
 	}
-	| ElementSetSpec {
-		$$ = $1;
-	}
+	| ElementSetSpec
 	| ElementSetSpec ',' TOK_ThreeDots {
 		asn1p_constraint_t *ct;
 		ct = asn1p_constraint_new(yylineno, currentModule);
@@ -1801,7 +1799,7 @@ IntersectionElements:
 	;
 
 ConstraintSubtypeElement:
-	ConstraintSpec '(' ElementSetSpecs ')' {
+	ConstraintType '(' ElementSetSpecs ')' {
 		int ret;
 		$$ = asn1p_constraint_new(yylineno, currentModule);
 		checkmem($$);
@@ -1861,12 +1859,8 @@ ConstraintSubtypeElement:
 		$$->range_start->type = ATV_MIN;
 		$$->range_stop->type = ATV_MAX;
 	}
-	| InnerTypeConstraint {
-		$$ = $1;
-	}
-	| PatternConstraint {
-		$$ = $1;
-	}
+	| InnerTypeConstraint
+	| PatternConstraint
 	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
 		$$ = asn1p_constraint_new(yylineno, currentModule);
 		checkmem($$);
@@ -1893,7 +1887,7 @@ PatternConstraint:
 	}
 	;
 
-ConstraintSpec:
+ConstraintType:
 	TOK_SIZE {
 		$$ = ACT_CT_SIZE;
 	}
@@ -1943,62 +1937,66 @@ BitStringValue:
 	;
 
 ContainedSubtype:
-	ComplexTypeReference {
-		$$ = asn1p_value_fromref($1, 0);
+    Type {
+		$$ = asn1p_value_fromtype($1);
 		checkmem($$);
-	}
-/*
-	TypeRefName {
-		asn1p_ref_t *ref;
-		int ret;
-		ref = asn1p_ref_new(yylineno, currentModule);
-		checkmem(ref);
-		ret = asn1p_ref_add_component(ref, $1, RLT_UNKNOWN);
-		checkmem(ret == 0);
-		$$ = asn1p_value_fromref(ref, 0);
-		checkmem($$);
-		free($1);
-	}
-*/
+    }
 	;
 
+/*
+ * X.680 08/2015
+ * #51.8.5
+ */
 InnerTypeConstraint:
-	TOK_WITH TOK_COMPONENT SetOfConstraints {
+	TOK_WITH TOK_COMPONENT SingleTypeConstraint {
 		CONSTRAINT_INSERT($$, ACT_CT_WCOMP, $3, 0);
 	}
-	| TOK_WITH TOK_COMPONENTS '{' WithComponentsList '}' {
-		CONSTRAINT_INSERT($$, ACT_CT_WCOMPS, $4, 0);
+	| TOK_WITH TOK_COMPONENTS MultipleTypeConstraints {
+        assert($3->type == ACT_CA_CSV);
+        $3->type = ACT_CT_WCOMPS;
+        $$ = $3;
 	}
 	;
-
-WithComponentsList:
-	WithComponentsElement {
-		$$ = $1;
-	}
-	| WithComponentsList ',' WithComponentsElement {
-		CONSTRAINT_INSERT($$, ACT_CT_WCOMPS, $1, $3);
-	}
-	;
-
-WithComponentsElement:
-	TOK_ThreeDots {
+SingleTypeConstraint: Constraint;
+MultipleTypeConstraints: FullSpecification | PartialSpecification;
+FullSpecification: '{' TypeConstraints '}' { $$ = $2; };
+PartialSpecification:
+    '{' TOK_ThreeDots ',' TypeConstraints '}' {
+        assert($4->type == ACT_CA_CSV);
 		$$ = asn1p_constraint_new(yylineno, currentModule);
+        $$->type = ACT_CA_CSV;
+		asn1p_constraint_t *ct = asn1p_constraint_new(yylineno, currentModule);
 		checkmem($$);
-		$$->type = ACT_EL_EXT;
-		$$->value = asn1p_value_frombuf("...", 3, 1);
-	}
-	| Identifier optConstraints optPresenceConstraint {
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = ACT_EL_VALUE;
-		$$->value = asn1p_value_frombuf($1, strlen($1), 0);
-		$$->presence = $3;
-		if($2) asn1p_constraint_insert($$, $2);
+		ct->type = ACT_EL_EXT;
+        asn1p_constraint_insert($$, ct);
+        for(unsigned i = 0; i < $4->el_count; i++) {
+            asn1p_constraint_insert($$, $4->elements[i]);
+        }
+    };
+TypeConstraints:
+    NamedConstraint {
+        $$ = asn1p_constraint_new(yylineno, currentModule);
+        $$->type = ACT_CA_CSV;
+        asn1p_constraint_insert($$, $1);
+    }
+    | TypeConstraints ',' NamedConstraint {
+        $$ = $1;
+        asn1p_constraint_insert($$, $3);
 	}
 	;
+NamedConstraint:
+	IdentifierAsValue optConstraints optPresenceConstraint {
+        $$ = asn1p_constraint_new(yylineno, currentModule);
+        checkmem($$);
+        $$->type = ACT_EL_VALUE;
+        $$->value = $1;
+        if($2) asn1p_constraint_insert($$, $2);
+        $$->presence = $3;
+    }
+    ;
 
 /*
- * presence constraint for WithComponents
+ * presence constraint for NamedConstraint
  */
 optPresenceConstraint:
 	{ $$ = ACPRES_DEFAULT; }
@@ -2361,6 +2359,17 @@ Identifier:
 	}
 	;
 
+IdentifierAsReference:
+    Identifier {
+		$$ = asn1p_ref_new(yylineno, currentModule);
+		asn1p_ref_add_component($$, $1, RLT_lowercase);
+    };
+
+IdentifierAsValue:
+    IdentifierAsReference {
+		$$ = asn1p_value_fromref($1, 0);
+    };
+
 %%
 
 
@@ -2505,8 +2514,8 @@ yyerror(const char *msg) {
 	extern char *asn1p_text;
 	fprintf(stderr,
 		"ASN.1 grammar parse error "
-		"near line %d (token \"%s\"): %s\n",
-		yylineno, asn1p_text, msg);
+		"near %s:%d (token \"%s\"): %s\n",
+		ASN_FILENAME, yylineno, asn1p_text, msg);
 	return -1;
 }
 

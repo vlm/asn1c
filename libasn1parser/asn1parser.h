@@ -43,6 +43,8 @@ asn1p_t	*asn1p_parse_file(const char *filename,
 asn1p_t	*asn1p_parse_buffer(const char *buffer, int size /* = -1 */,
 	enum asn1p_flags);
 
+extern const char *asn1p_parse_debug_filename;
+
 int asn1p_lex_destroy();
 
 #endif	/* ASN1PARSER_H */

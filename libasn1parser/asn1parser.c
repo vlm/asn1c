@@ -38,7 +38,9 @@ asn1p_parse_buffer(const char *buffer, int size /* = -1 */, enum asn1p_flags fla
 	if(size < 0)
 		size = (int)strlen(buffer);
 
+	asn1p_parse_debug_filename = "<stdin>";
 	ybuf = asn1p__scan_bytes(buffer, size);
+	asn1p_parse_debug_filename = NULL;
 	if(!ybuf) {
 		assert(ybuf);
 		return 0;
@@ -106,7 +108,9 @@ asn1p_parse_file(const char *filename, enum asn1p_flags flags) {
 	asn1p_restart(fp);
 
 	ap = (void *)&a;
+	asn1p_parse_debug_filename = filename;
 	ret = asn1p_parse(ap);
+	asn1p_parse_debug_filename = NULL;
 
 	fclose(fp);
 

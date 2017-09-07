@@ -14,7 +14,7 @@ BEGIN
 	PCLASS {Type, INTEGER:value, INTEGER:ValueSet} ::= CLASS {
 		&valueField1	Type,
 		&valueField2	INTEGER DEFAULT value,
-		&valueField3	INTEGER (ValueSet),
+		&valueField3	INTEGER ({ValueSet}),
 		&ValueSetField	INTEGER DEFAULT {ValueSet}
 	} WITH SYNTAX {
 		&valueField1, &valueField2, &valueField3, &ValueSetField }

@@ -11,10 +11,10 @@ ModuleTestWithComponents2
 	DEFINITIONS ::=
 BEGIN
 
-	Type1 ::= SET {}
+	Type1 ::= SET { foo INTEGER OPTIONAL }
 
 	Type2 ::= SET {
-		COMPONENTS OF Type1 (WITH COMPONENTS { ... })
+		COMPONENTS OF Type1 (WITH COMPONENTS { ..., foo ABSENT })
 	}
 
 END

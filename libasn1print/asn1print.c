@@ -337,6 +337,7 @@ asn1p_constraint_string(const asn1p_constraint_t *ct) {
 static int
 asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 	int symno = 0;
+	int perhaps_subconstraints = 0;
 
 	if(ct == 0) return 0;
 
@@ -346,9 +347,11 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 	switch(ct->type) {
 	case ACT_EL_TYPE:
 		asn1print_value(ct->containedSubtype, flags);
+		perhaps_subconstraints = 1;
 		break;
 	case ACT_EL_VALUE:
 		asn1print_value(ct->value, flags);
+		perhaps_subconstraints = 1;
 		break;
 	case ACT_EL_RANGE:
 	case ACT_EL_LLRANGE:
@@ -382,9 +385,8 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 	case ACT_CT_WCOMP:
 		assert(ct->el_count != 0);
 		assert(ct->el_count == 1);
-		safe_printf("WITH COMPONENT (");
-		asn1print_constraint(ct->elements[0], flags);
-		safe_printf(")");
+		safe_printf("WITH COMPONENT");
+		perhaps_subconstraints = 1;
 		break;
 	case ACT_CT_WCOMPS: {
 			unsigned int i;
@@ -392,14 +394,7 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 			for(i = 0; i < ct->el_count; i++) {
 				asn1p_constraint_t *cel = ct->elements[i];
 				if(i) safe_printf(", ");
-				safe_fwrite(cel->value->value.string.buf,
-					cel->value->value.string.size);
-				if(cel->el_count) {
-					assert(cel->el_count == 1);
-					safe_printf(" ");
-					asn1print_constraint(cel->elements[0],
-						flags);
-				}
+				asn1print_constraint(cel, flags);
 				switch(cel->presence) {
 				case ACPRES_DEFAULT: break;
 				case ACPRES_PRESENT: safe_printf(" PRESENT"); break;
@@ -441,21 +436,26 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 				if(ct->type == ACT_CA_CRC) safe_printf("{");
 				asn1print_constraint(ct->elements[i], flags);
 				if(ct->type == ACT_CA_CRC) safe_printf("}");
-				if(i+1 < ct->el_count
-				&& ct->type == ACT_CA_SET)
-					safe_printf(")");
+				if(ct->type == ACT_CA_SET && i+1 < ct->el_count)
+					safe_printf(") ");
 			}
 		}
 		break;
 	case ACT_CA_AEX:
 		assert(ct->el_count == 1);
-		safe_printf("ALL EXCEPT ");
-		asn1print_constraint(ct->elements[0], flags);
+		safe_printf("ALL EXCEPT");
+		perhaps_subconstraints = 1;
 		break;
 	case ACT_INVALID:
 		assert(ct->type != ACT_INVALID);
 		break;
 	}
+
+    if(perhaps_subconstraints && ct->el_count) {
+        safe_printf(" ");
+        assert(ct->el_count == 1);
+        asn1print_constraint(ct->elements[0], flags);
+    }
 
 	if(ct->type == ACT_CA_SET)
 		safe_printf(")");
@@ -591,8 +591,25 @@ asn1print_constraint_explain(const char *dbg_name, asn1p_expr_type_e expr_type,
 static int
 asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1print_flags flags, int level) {
 	int SEQ_OF = 0;
+    int has_space = 0;
 
-	if(flags & APF_LINE_COMMENTS && !(flags & APF_NOINDENT))
+#define HAS_SPACE()    \
+    do {               \
+        has_space = 1; \
+    } while(0)
+#define ENSURE_SPACE()        \
+    do {                      \
+        if(!has_space) {      \
+            has_space = 1;    \
+            safe_printf(" "); \
+        }                     \
+    } while(0)
+#define WANT_SPACE()   \
+    do {               \
+        has_space = 0; \
+    } while(0)
+
+    if(flags & APF_LINE_COMMENTS && !(flags & APF_NOINDENT))
 		INDENT("-- #line %d\n", tc->_lineno);
 
 	/* Reconstruct compiler directive information */
@@ -606,8 +623,10 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 
 	if(tc->Identifier
 	&& (!(tc->meta_type == AMT_VALUE && tc->expr_type == A1TC_REFERENCE)
-	 || level == 0))
+	 || level == 0)) {
 		INDENT("%s", tc->Identifier);
+		WANT_SPACE();
+    }
 
 	if(tc->lhs_params) {
 		asn1print_params(tc->lhs_params, flags);
@@ -619,14 +638,17 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 		if(level) {
 			if(tc->Identifier && !(flags & APF_NOINDENT))
 				safe_printf("\t");
-		} else {
-			safe_printf(" ::=");
+		} else if(tc->Identifier) {
+			ENSURE_SPACE();
+			safe_printf("::=");
+			WANT_SPACE();
 		}
 	}
 
 	if(tc->tag.tag_class) {
-		safe_printf(" ");
+		ENSURE_SPACE();
 		asn1print_tag(tc, flags);
+        WANT_SPACE();
 	}
 
 	switch(tc->expr_type) {
@@ -639,12 +661,14 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	case A1TC_COMPONENTS_OF:
 		SEQ_OF = 1; /* Equivalent to SET OF for printint purposes */
 		safe_printf("    COMPONENTS OF");
+		WANT_SPACE();
 		break;
 	case A1TC_REFERENCE:
 	case A1TC_UNIVERVAL:
 		break;
 	case A1TC_CLASSDEF:
 		safe_printf(" CLASS");
+		WANT_SPACE();
 		break;
 	case A1TC_CLASSFIELD_TFS ... A1TC_CLASSFIELD_OSFS:
 		/* Nothing to print here */
@@ -652,22 +676,26 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	case ASN_CONSTR_SET_OF:
 	case ASN_CONSTR_SEQUENCE_OF:
 		SEQ_OF = 1;
+		ENSURE_SPACE();
 		if(tc->expr_type == ASN_CONSTR_SET_OF)
-			safe_printf(" SET");
+			safe_printf("SET");
 		else
-			safe_printf(" SEQUENCE");
+			safe_printf("SEQUENCE");
 		if(tc->constraints) {
 			safe_printf(" ");
 			asn1print_constraint(tc->constraints, flags);
 		}
 		safe_printf(" OF");
+        WANT_SPACE();
 		break;
 	case A1TC_VALUESET:
 		break;
 	default:
 		{
 			char *p = ASN_EXPR_TYPE2STR(tc->expr_type);
-			safe_printf(" %s", p?p:"<unknown type!>");
+			ENSURE_SPACE();
+			safe_printf("%s", p?p:"<unknown type!>");
+			WANT_SPACE();
 		}
 		break;
 	}
@@ -676,12 +704,16 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 	 * Put the name of the referred type.
 	 */
 	if(tc->reference) {
-		safe_printf(" ");
+		ENSURE_SPACE();
 		asn1print_ref(tc->reference, flags);
+		WANT_SPACE();
 	}
 
-	if(tc->meta_type == AMT_VALUESET && level == 0)
-		safe_printf(" ::=");
+	if(tc->meta_type == AMT_VALUESET && level == 0) {
+		ENSURE_SPACE();
+		safe_printf("::=");
+		WANT_SPACE();
+	}
 
 	/*
 	 * Display the descendants (children) of the current type.
@@ -775,7 +807,7 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 				safe_printf(")");
 			}
 		} else {
-			if(level == 0) safe_printf(" ::= ");
+			if(level == 0 && tc->Identifier) safe_printf(" ::= ");
 			asn1print_value(tc->value, flags);
 		}
 	}

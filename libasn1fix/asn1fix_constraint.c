@@ -257,70 +257,83 @@ _remove_extensions(arg_t *arg, asn1p_constraint_t *ct, int forgive_last) {
 		ct->elements[i] = 0;
 }
 
+static asn1p_ref_t *
+get_reference_from(asn1p_constraint_t *ct) {
+    if(ct->containedSubtype->type == ATV_REFERENCED) {
+        return ct->containedSubtype->value.reference;
+    } else if(ct->containedSubtype->type == ATV_TYPE) {
+        if(ct->containedSubtype->value.v_type->expr_type == A1TC_REFERENCE) {
+            return ct->containedSubtype->value.v_type->reference;
+        }
+    }
+    return NULL;
+}
+
 static int
 constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
-	asn1p_constraint_t *ct_expr;
-	int ret;
+    asn1p_constraint_t *ct_expr;
+    int ret;
 
-	DEBUG("(\"%s\")", asn1f_printable_value(ct->containedSubtype));
+    DEBUG("(\"%s\")", asn1f_printable_value(ct->containedSubtype));
 
-	if(ct->containedSubtype->type == ATV_VALUESET) {
-		ct_expr = ct->containedSubtype->value.constraint;
-		DEBUG("Found %s in constraints", "ValueSet");
-	} else if(ct->containedSubtype->type == ATV_REFERENCED) {
-		asn1p_expr_t *rtype;
-		arg_t tmparg;
+    if(ct->containedSubtype->type == ATV_VALUESET) {
+        ct_expr = ct->containedSubtype->value.constraint;
+        DEBUG("Found %s in constraints", "ValueSet");
+    } else if(get_reference_from(ct)) {
+        asn1p_expr_t *rtype;
+        arg_t tmparg;
 
         rtype = asn1f_lookup_symbol(arg, arg->expr->rhs_pspecs,
-                                    ct->containedSubtype->value.reference);
+                                    get_reference_from(ct));
         if(!rtype) {
-			FATAL("Cannot find type \"%s\" in constraints "
-				"at line %d",
-				asn1f_printable_value(ct->containedSubtype),
-				ct->_lineno);
-			return -1;
-		}
+            FATAL(
+                "Cannot find type \"%s\" in constraints "
+                "at line %d",
+                asn1f_printable_value(ct->containedSubtype), ct->_lineno);
+            return -1;
+        }
 
-		tmparg = *arg;
-		tmparg.expr = rtype;
-		tmparg.mod = rtype->module;
-		ret = asn1constraint_pullup(&tmparg);
-		if(ret) return ret;
-	
-		ct_expr = rtype->combined_constraints;
-		if(!ct_expr) return 0;
-	} else {
-		FATAL("Unsupported feature at line %d", ct->_lineno);
-		return -1;
-	}
+        tmparg = *arg;
+        tmparg.expr = rtype;
+        tmparg.mod = rtype->module;
+        ret = asn1constraint_pullup(&tmparg);
+        if(ret) return ret;
 
-	ct_expr = asn1p_constraint_clone(ct_expr);
-	assert(ct_expr);
+        ct_expr = rtype->combined_constraints;
+        if(!ct_expr) return 0;
+    } else {
+        FATAL("Unsupported constraint kind %s at line %d",
+              asn1f_printable_value(ct->containedSubtype), ct->_lineno);
+        return -1;
+    }
 
-	_remove_extensions(arg, ct_expr, 0);
+    ct_expr = asn1p_constraint_clone(ct_expr);
+    assert(ct_expr);
 
-	if(ct_expr->type == ACT_CA_SET) {
-		unsigned int i;
-		for(i = 0; i < ct_expr->el_count; i++) {
-			if(asn1p_constraint_insert(
-				ct, ct_expr->elements[i])) {
-				asn1p_constraint_free(ct_expr);
-				return -1;
-			} else {
-				ct_expr->elements[i] = 0;
-			}
-		}
-		asn1p_constraint_free(ct_expr);
-	} else {
-		ret = asn1p_constraint_insert(ct, ct_expr);
-		assert(ret == 0);
-	}
+    _remove_extensions(arg, ct_expr, 0);
 
-	ct->type = ACT_CA_SET;
-	asn1p_value_free(ct->containedSubtype);
-	ct->containedSubtype = NULL;
+    if(ct_expr->type == ACT_CA_SET) {
+        unsigned int i;
+        for(i = 0; i < ct_expr->el_count; i++) {
+            if(asn1p_constraint_insert(
+                ct, ct_expr->elements[i])) {
+                asn1p_constraint_free(ct_expr);
+                return -1;
+            } else {
+                ct_expr->elements[i] = 0;
+            }
+        }
+        asn1p_constraint_free(ct_expr);
+    } else {
+        ret = asn1p_constraint_insert(ct, ct_expr);
+        assert(ret == 0);
+    }
 
-	return 0;
+    ct->type = ACT_CA_SET;
+    asn1p_value_free(ct->containedSubtype);
+    ct->containedSubtype = NULL;
+
+    return 0;
 }
 
 static int

@@ -31,13 +31,13 @@ BEGIN
 	Type2 ::= CHOICE {
 		one-name SEQUENCE {
 			another-name SEQUENCE {
-				a BIT STRING { one(0) } SIZE(2),
+				a BIT STRING { one(0) } (SIZE(2)),
 				b INTEGER
 			}
 		},
 		two-name SET {
 			another-name SEQUENCE {
-				a BIT STRING { one(0) } SIZE(2),
+				a BIT STRING { one(0) } (SIZE(2)),
 				b INTEGER
 			}
 		}

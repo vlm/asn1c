@@ -34,7 +34,7 @@ Int ::= INTEGER {
 -- PER-visible constraints (Int): (123)  
 
 EnumRef ::= Enum (1)
--- Combined constraints: (1 | 0)(1)
+-- Combined constraints: (1 | 0) (1)
 -- Practical constraints (Enum): (1)  
 -- OER-visible constraints (Enum): (1)  
 -- PER-visible constraints (Enum): (1)  

@@ -3,9 +3,9 @@ ModuleTestConstraint1 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
 DEFINITIONS ::=
 BEGIN
 
-Type0 ::= IA5String (((SIZE(1..10))(FROM("a".."z" | "#"))))
+Type0 ::= IA5String (((SIZE(1..10)) (FROM("a".."z" | "#"))))
 
-Type6 ::= IA5String ((SIZE(1..10))(FROM("a".."z" | "#")))
+Type6 ::= IA5String ((SIZE(1..10)) (FROM("a".."z" | "#")))
 
 END
 
@@ -14,7 +14,7 @@ ModuleTestConstraint2 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
 DEFINITIONS ::=
 BEGIN
 
-Type1 ::= IA5String (SIZE(1..10,...))(FROM("a".."z" | "#",...))
+Type1 ::= IA5String (SIZE(1..10,...)) (FROM("a".."z" | "#",...))
 
 Type2 ::= IA5String (SIZE(MIN..4) | FROM("abc"))
 

@@ -5,7 +5,7 @@ BEGIN
 
 BunchOfStrings ::= SEQUENCE OF VisibleString
 
-Address ::= BunchOfStrings (SIZE(1..6))(WITH COMPONENT (SIZE(1..32)))
+Address ::= BunchOfStrings (SIZE(1..6)) (WITH COMPONENT (SIZE(1..32)))
 
 Type ::= SEQUENCE {
     one	 INTEGER DEFAULT 1

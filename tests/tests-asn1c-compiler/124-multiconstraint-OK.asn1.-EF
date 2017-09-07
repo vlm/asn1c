@@ -3,6 +3,6 @@ ModuleMultiConstraint { iso org(3) dod(6) internet(1) private(4) enterprise(1)
 DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 
-T ::= VisibleString (PATTERN "^[a-z]+$")(CONSTRAINED BY { ... })
+T ::= VisibleString (PATTERN "^[a-z]+$") (CONSTRAINED BY { ... })
 
 END

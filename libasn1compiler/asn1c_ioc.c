@@ -24,8 +24,18 @@ asn1c_get_information_object_set_reference_from_constraint(arg_t *arg,
     assert(ct->elements[0]->type == ACT_EL_VALUE);
 
     asn1p_value_t *val = ct->elements[0]->value;
-    if(val->type == ATV_VALUESET && val->value.constraint->type == ACT_EL_TYPE && val->value.constraint->containedSubtype && val->value.constraint->containedSubtype->type == ATV_REFERENCED) {
-        return val->value.constraint->containedSubtype->value.reference;
+    if(val->type == ATV_VALUESET && val->value.constraint->type == ACT_EL_TYPE) {
+        asn1p_value_t *csub = val->value.constraint->containedSubtype;
+        if(!csub) {
+            /* Ignore */
+        } else if(csub->type == ATV_REFERENCED) {
+            return csub->value.reference;
+        } else if(csub->type == ATV_TYPE) {
+            if(csub->value.v_type->expr_type == A1TC_REFERENCE) {
+                assert(csub->value.v_type->reference);
+                return csub->value.v_type->reference;
+            }
+        }
     }
     if(val->type != ATV_REFERENCED) {
         FATAL("Set reference: %s", asn1f_printable_value(val));
