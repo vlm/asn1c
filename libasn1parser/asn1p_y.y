@@ -350,6 +350,7 @@ static asn1p_module_t *currentModule;
 %type	<a_type>		BasicTypeId_UniverationCompatible
 %type	<a_type>		BasicString
 %type	<tv_opaque>		Opaque
+%type	<tv_opaque>		OpaqueFirstToken
 %type	<a_tag>			Tag 		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_tag>			TagClass TagTypeValue TagPlicit
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
@@ -1566,7 +1567,7 @@ Value:
 		$$->value.choice_identifier.identifier = $1;
 		$$->value.choice_identifier.value = $3;
 	}
-	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque {
 		$$ = asn1p_value_frombuf($3.buf, $3.len, 0);
 		checkmem($$);
 		$$->type = ATV_UNPARSED;
@@ -1654,15 +1655,15 @@ RestrictedCharacterStringValue:
 	;
 
 Opaque:
-	TOK_opaque {
+    OpaqueFirstToken {
 		$$.len = $1.len + 1;
-		$$.buf = malloc($$.len + 1);
+		$$.buf = malloc(1 + $$.len + 1);
 		checkmem($$.buf);
 		$$.buf[0] = '{';
 		memcpy($$.buf + 1, $1.buf, $1.len);
 		$$.buf[$$.len] = '\0';
 		free($1.buf);
-	}
+    }
 	| Opaque TOK_opaque {
 		int newsize = $1.len + $2.len;
 		char *p = malloc(newsize + 1);
@@ -1676,6 +1677,13 @@ Opaque:
 		$$.len = newsize;
 	}
 	;
+
+OpaqueFirstToken:
+    TOK_opaque
+    | Identifier {
+        $$.len = strlen($1);
+        $$.buf = $1;
+    };
 
 BasicTypeId:
 	TOK_BOOLEAN { $$ = ASN_BASIC_BOOLEAN; }
@@ -1893,7 +1901,7 @@ SubtypeElements:
 	| InnerTypeConstraints  /* WITH COMPONENT[S] ... */
 	| PatternConstraint     /* PATTERN ... */
 	| ValueRange
-	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
+	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque {
 		$$ = asn1p_constraint_new(yylineno, currentModule);
 		checkmem($$);
 		$$->type = ACT_EL_VALUE;

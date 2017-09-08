@@ -160,7 +160,7 @@ WSP	[\t\r\v\f\n ]
 
 	"::="	{
 			fprintf(stderr,
-				"ASN.1 Parser syncronization failure: "
+				"ASN.1 Parser synchronization failure: "
 				"\"%s\" at line %d must not appear "
 				"inside value definition\n",
 				yytext, yylineno);
