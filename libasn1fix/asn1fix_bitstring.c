@@ -250,7 +250,6 @@ asn1f_BS_unparsed_convert(arg_t *arg, asn1p_value_t *value, asn1p_expr_t *ttype)
 				bit->Identifier, bit->_lineno);
 			RET2RVAL(1, r_value);
 		}
-    fprintf(stderr, "Referencing bit %s\n", bit->Identifier);
 		bitdef = asn1f_lookup_child(ttype, bit->Identifier);
 		if(bitdef == NULL) {
 			FATAL("Identifier \"%s\" at line %d is not defined "
