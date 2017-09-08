@@ -341,9 +341,6 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 
 	if(ct == 0) return 0;
 
-	if(ct->type == ACT_CA_SET)
-		safe_printf("(");
-
 	switch(ct->type) {
 	case ACT_EL_TYPE:
 		asn1print_value(ct->containedSubtype, flags);
@@ -373,14 +370,13 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 	case ACT_CT_SIZE:
 	case ACT_CT_FROM:
 		switch(ct->type) {
-		case ACT_CT_SIZE: safe_printf("SIZE("); break;
-		case ACT_CT_FROM: safe_printf("FROM("); break;
-		default: safe_printf("??? ("); break;
+		case ACT_CT_SIZE: safe_printf("SIZE"); break;
+		case ACT_CT_FROM: safe_printf("FROM"); break;
+		default: safe_printf("??? "); break;
 		}
 		assert(ct->el_count != 0);
 		assert(ct->el_count == 1);
 		asn1print_constraint(ct->elements[0], flags);
-		safe_printf(")");
 		break;
 	case ACT_CT_WCOMP:
 		assert(ct->el_count != 0);
@@ -431,6 +427,7 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 			char *symtable[] = { " EXCEPT ", " ^ ", " | ", ",",
 					"", "(" };
 			unsigned int i;
+            if(ct->type == ACT_CA_SET) safe_printf("(");
 			for(i = 0; i < ct->el_count; i++) {
 				if(i) safe_printf("%s", symtable[symno]);
 				if(ct->type == ACT_CA_CRC) safe_printf("{");
@@ -439,6 +436,7 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 				if(ct->type == ACT_CA_SET && i+1 < ct->el_count)
 					safe_printf(") ");
 			}
+            if(ct->type == ACT_CA_SET) safe_printf(")");
 		}
 		break;
 	case ACT_CA_AEX:
@@ -456,9 +454,6 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
         assert(ct->el_count == 1);
         asn1print_constraint(ct->elements[0], flags);
     }
-
-	if(ct->type == ACT_CA_SET)
-		safe_printf(")");
 
 	return 0;
 }

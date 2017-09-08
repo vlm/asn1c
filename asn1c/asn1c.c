@@ -173,7 +173,10 @@ main(int ac, char **av) {
                 warnings_as_errors = 1;
                 break;
             } else if(strcmp(optarg, "debug-lexer") == 0) {
-                asn1_parser_flags |= A1P_LEXER_DEBUG;
+                asn1_parser_flags |= A1P_DEBUG_LEXER;
+                break;
+            } else if(strcmp(optarg, "debug-parser") == 0) {
+                asn1_parser_flags |= A1P_DEBUG_PARSER;
                 break;
             } else if(strcmp(optarg, "debug-fixer") == 0) {
                 asn1_fixer_flags |= A1F_DEBUG;
@@ -483,6 +486,7 @@ usage(const char *av0) {
 
 "  -Werror               Treat warnings as errors; abort if any warning\n"
 "  -Wdebug-lexer         Enable verbose debugging output from lexer\n"
+"  -Wdebug-parser        Enable verbose debugging output from parser\n"
 "  -Wdebug-fixer         --//-- semantics processor\n"
 "  -Wdebug-compiler      --//-- compiler\n"
 "\n"

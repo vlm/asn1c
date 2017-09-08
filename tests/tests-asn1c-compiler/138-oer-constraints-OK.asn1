@@ -20,13 +20,16 @@ BEGIN
     G-3-3 ::= INTEGER (0..10,...)(2..5,...)(3)  -- OER-visible constraint 3
     -- X.696 #8.2.4 Not OER-visible parts of INTERSECTION are ignored
     H-4-5 ::= INTEGER ((0..5) ^ (4..9))         -- OER-visible constraint 4..5
-    I-0-5 ::= INTEGER ((0..5) ^ (4..12,...))    -- OER-visible constraint 0..5
-    J-4-9 ::= INTEGER ((0..5,...) ^ (4..9))     -- OER-visible constraint 4..9
-    K-inv ::= INTEGER ((0..5,...) ^ (4..9,...)) -- Not OER-visible
+    I-1-5 ::= INTEGER ((0..5) ^ (EConstr))      -- OER-visible constraint 1..5
+    J-4-5 ::= INTEGER ((EConstr) ^ (4..9))      -- OER-visible constraint 4..5
+    K-1-4 ::= INTEGER ((FConstr) ^ (EConstr))   -- OER-visible constraint 1..4
     -- X.696 #8.2.5 UNION with exeptions are ignored
     L-0-5 ::= INTEGER ((0) | (5))               -- OER-visible constraint 0..5
-    M-inv ::= INTEGER ((0) | (5,...))           -- Not OER-visible
-    N-inv ::= INTEGER ((0..4,...) | (5))        -- Not OER-visible
-    O-inv ::= INTEGER ((0..4,...) | (5,...))    -- Not OER-visible
+    M-inv ::= INTEGER ((0) | (EConstr),...)     -- Not OER-visible
+    N-0-5 ::= INTEGER ((FConstr) | (5))         -- OER-visible constraint 0..5
+    O-inv ::= INTEGER ((FConstr) | (5), ...)    -- Not OER-visible
+
+    EConstr ::= INTEGER (1..5,...)
+    FConstr ::= INTEGER (0..4)
 
 END

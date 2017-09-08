@@ -29,13 +29,14 @@
 enum asn1p_flags {
     A1P_NOFLAGS,
     /*
-     * Enable verbose debugging output from lexer.
+     * Enable verbose debugging output from lexer and parser.
      */
-    A1P_LEXER_DEBUG = 0x01,
+    A1P_DEBUG_LEXER = 0x01,
+    A1P_DEBUG_PARSER = 0x02,
     /*
      * Unlock internal helper value types.
      */
-    A1P_EXTENDED_VALUES = 0x02
+    A1P_EXTENDED_VALUES = 0x04
 };
 
 /*

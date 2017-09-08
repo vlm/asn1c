@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include <errno.h>
 #include <assert.h>
 
@@ -11,6 +12,30 @@
 #define YYPARSE_PARAM	param
 #define YYPARSE_PARAM_TYPE	void **
 #define YYERROR_VERBOSE
+#define YYDEBUG 1
+#define YYFPRINTF   prefixed_fprintf
+
+/*
+ * Prefix parser debug with "PARSER: " for easier human eye scanning.
+ */
+static int
+__attribute__((format(printf, 2, 3)))
+prefixed_fprintf(FILE *f, const char *fmt, ...) {
+    static int line_ended = 1;
+    va_list ap;
+    va_start(ap, fmt);
+    if(line_ended) {
+        fprintf(f, "PARSER: ");
+        line_ended = 0;
+    }
+    size_t len = strlen(fmt);
+    if(len && fmt[len-1] == '\n') {
+        line_ended = 1;
+    }
+    int ret = vfprintf(f, fmt, ap);
+    va_end(ap);
+    return ret;
+}
 
 int yylex(void);
 int yyerror(const char *msg);
@@ -328,9 +353,13 @@ static asn1p_module_t *currentModule;
 %type	<a_tag>			Tag 		/* [UNIVERSAL 0] IMPLICIT */
 %type	<a_tag>			TagClass TagTypeValue TagPlicit
 %type	<a_tag>			optTag		/* [UNIVERSAL 0] IMPLICIT */
-%type	<a_constr>		optConstraints
-%type	<a_constr>		optSizeConstraints
+%type	<a_constr>		optConstraint
+%type	<a_constr>		optManyConstraints  /* Only for Type */
+%type	<a_constr>		ManyConstraints
+%type	<a_constr>		optSizeOrConstraint
 %type	<a_constr>		Constraint
+%type	<a_constr>		PermittedAlphabet
+%type	<a_constr>		SizeConstraint
 %type	<a_constr>		SingleTypeConstraint
 %type	<a_constr>		MultipleTypeConstraints
 %type	<a_constr>		NamedConstraint
@@ -340,25 +369,27 @@ static asn1p_module_t *currentModule;
 %type	<a_constr>		ConstraintSpec
 %type	<a_constr>		SubtypeConstraint
 %type	<a_constr>		GeneralConstraint
-%type	<a_constr>		SetOfConstraints
 %type	<a_constr>		ElementSetSpecs		/* 1..2,...,3 */
-%type	<a_constr>		ElementSetSpec		/* 1..2,...,3 */
+%type	<a_constr>		ElementSetSpec		/* 1..2 */
 %type	<a_constr>		Unions
 %type	<a_constr>		Intersections
 %type	<a_constr>		IntersectionElements
-%type	<a_constr>		ConstraintSubtypeElement /* 1..2 */
+%type	<a_constr>		Elements
+%type	<a_constr>		SubtypeElements /* 1..2 */
 %type	<a_constr>		SimpleTableConstraint
 %type	<a_constr>		UserDefinedConstraint
 %type	<a_constr>		TableConstraint
 %type	<a_constr>		ContentsConstraint
 %type	<a_constr>		PatternConstraint
-%type	<a_constr>		InnerTypeConstraint
+%type	<a_constr>		InnerTypeConstraints
+%type	<a_constr>		ValueRange
 %type	<a_constr>		ComponentRelationConstraint
 %type	<a_constr>		AtNotationList
 %type	<a_ref>			AtNotationElement
 %type	<a_value>		SingleValue
+%type	<a_value>		LowerEndValue
+%type	<a_value>		UpperEndValue
 %type	<a_value>		ContainedSubtype
-%type	<a_ctype>		ConstraintType
 %type	<a_ctype>		ConstraintRangeSpec
 %type	<a_value>		RestrictedCharacterStringValue
 %type	<a_wsynt>		optWithSyntax
@@ -366,7 +397,8 @@ static asn1p_module_t *currentModule;
 %type	<a_wsynt>		WithSyntaxList
 %type	<a_wchunk>		WithSyntaxToken
 %type	<a_marker>		optMarker Marker
-%type	<a_int>			optUnique
+%type	<a_int>			optUNIQUE
+%type	<a_int>			optINCLUDES
 %type	<a_pres>		optPresenceConstraint PresenceConstraint
 %type	<tv_str>		ComponentIdList
 %type	<a_int>			NSTD_IndirectMarker
@@ -1073,7 +1105,7 @@ ObjectClass:
 	}
 	;
 
-optUnique:
+optUNIQUE:
 	{ $$ = 0; }
 	| TOK_UNIQUE { $$ = 1; }
 	;
@@ -1106,7 +1138,7 @@ ClassField:
 	}
 
 	/* FixedTypeValueFieldSpec ::= valuefieldreference Type UNIQUE ? ValueOptionalitySpec ? */
-	| TOK_valuefieldreference Type optUnique optMarker {
+	| TOK_valuefieldreference Type optUNIQUE optMarker {
 		$$ = NEW_EXPR();
 		$$->Identifier = $1;
 		$$->meta_type = AMT_OBJECTFIELD;
@@ -1244,7 +1276,7 @@ ExtensionAndException:
 	;
 
 Type:
-	optTag TypeDeclaration optConstraints {
+	optTag TypeDeclaration optManyConstraints {
 		$$ = $2;
 		$$->tag = $1;
 		/*
@@ -1258,7 +1290,7 @@ Type:
 		} else {
 			if($$->constraints) {
 				assert(!$2);
-				/* Check this : optConstraints is not used ?! */
+				/* Check this : optManyConstraints is not used ?! */
 				asn1p_constraint_free($3);
 			} else {
 				$$->constraints = $3;
@@ -1315,7 +1347,7 @@ TypeDeclarationSet:
 		$$->expr_type = ASN_CONSTR_SET;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE optSizeConstraints TOK_OF optIdentifier optTag TypeDeclaration {
+	| TOK_SEQUENCE optSizeOrConstraint TOK_OF optIdentifier optTag TypeDeclaration {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
@@ -1325,7 +1357,7 @@ TypeDeclarationSet:
 		$6->tag = $5;
 		asn1p_expr_add($$, $6);
 	}
-	| TOK_SET optSizeConstraints TOK_OF optIdentifier optTag TypeDeclaration {
+	| TOK_SET optSizeOrConstraint TOK_OF optIdentifier optTag TypeDeclaration {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
@@ -1742,31 +1774,36 @@ UnionMark:		'|' | TOK_UNION;
 IntersectionMark:	'^' | TOK_INTERSECTION;
 
 /* empty | Constraint */
-optConstraints:
+optConstraint:
 	{ $$ = 0; }
 	| Constraint;
 
+/* empty | Constraint... */
+optManyConstraints:
+	{ $$ = 0; }
+	| ManyConstraints;
+
 /* empty | Constraint | SIZE(...) */
-optSizeConstraints:
+optSizeOrConstraint:
 	{ $$ = 0; }
 	| Constraint
-	| TOK_SIZE '('  ConstraintSpec ')' {
-		CONSTRAINT_INSERT($$, ACT_CT_SIZE, $3, 0);
-	}
+	| SizeConstraint
 	;
 
 Constraint:
-    SetOfConstraints {
-		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, 0);
+    '(' ConstraintSpec ')' {
+		CONSTRAINT_INSERT($$, ACT_CA_SET, $2, 0);
     }
     ;
 
-SetOfConstraints:
-	'(' ConstraintSpec ')' {
-		$$ = $2;
-	}
-	| SetOfConstraints '(' ConstraintSpec ')' {
-		CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $3);
+ManyConstraints:
+    Constraint
+	| ManyConstraints Constraint {
+        if($2->type == ACT_CA_SET && $2->el_count == 1) {
+            CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $2->elements[0]);
+        } else {
+            CONSTRAINT_INSERT($$, ACT_CA_SET, $1, $2);
+        }
 	}
 	;
 
@@ -1779,26 +1816,26 @@ ElementSetSpecs:
 		$$ = asn1p_constraint_new(yylineno, currentModule);
 		$$->type = ACT_EL_EXT;
 	}
-	| ElementSetSpec
-	| ElementSetSpec ',' TOK_ThreeDots {
-		asn1p_constraint_t *ct;
-		ct = asn1p_constraint_new(yylineno, currentModule);
-		ct->type = ACT_EL_EXT;
-		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
-	}
-	| ElementSetSpec ',' TOK_ThreeDots ',' ElementSetSpec {
-		asn1p_constraint_t *ct;
-		ct = asn1p_constraint_new(yylineno, currentModule);
-		ct->type = ACT_EL_EXT;
-		CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
-		ct = $$;
-		CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $5);
-	}
-	;
+   | ElementSetSpec
+   | ElementSetSpec ',' TOK_ThreeDots {
+       asn1p_constraint_t *ct;
+       ct = asn1p_constraint_new(yylineno, currentModule);
+       ct->type = ACT_EL_EXT;
+       CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
+   }
+   | ElementSetSpec ',' TOK_ThreeDots ',' ElementSetSpec {
+       asn1p_constraint_t *ct;
+       ct = asn1p_constraint_new(yylineno, currentModule);
+       ct->type = ACT_EL_EXT;
+       CONSTRAINT_INSERT($$, ACT_CA_CSV, $1, ct);
+       ct = $$;
+       CONSTRAINT_INSERT($$, ACT_CA_CSV, ct, $5);
+   }
+;
 
 ElementSetSpec:
 	Unions
-	| TOK_ALL TOK_EXCEPT ConstraintSubtypeElement {
+	| TOK_ALL TOK_EXCEPT Elements {
 		CONSTRAINT_INSERT($$, ACT_CA_AEX, $3, 0);
 	}
 	;
@@ -1819,30 +1856,26 @@ Intersections:
 
 
 IntersectionElements:
-	ConstraintSubtypeElement
-	| ConstraintSubtypeElement TOK_EXCEPT ConstraintSubtypeElement {
+	Elements
+	| Elements TOK_EXCEPT Elements {
 		CONSTRAINT_INSERT($$, ACT_CA_EXC, $1, $3);
 	}
 	;
 
-ConstraintSubtypeElement:
-	ConstraintType '(' ElementSetSpecs ')' {
-		int ret;
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = $1;
-		ret = asn1p_constraint_insert($$, $3);
-		checkmem(ret == 0);
-	}
-	| '(' ElementSetSpecs ')' {
-		int ret;
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = ACT_CA_SET;
-		ret = asn1p_constraint_insert($$, $2);
-		checkmem(ret == 0);
-	}
-	| SingleValue {
+Elements:
+    SubtypeElements
+    | '(' ElementSetSpec ')' {
+        int ret;
+        $$ = asn1p_constraint_new(yylineno, currentModule);
+        checkmem($$);
+        $$->type = ACT_CA_SET;
+        ret = asn1p_constraint_insert($$, $2);
+        checkmem(ret == 0);
+    }
+    ;
+
+SubtypeElements:
+	SingleValue {
 		$$ = asn1p_constraint_new(yylineno, currentModule);
 		checkmem($$);
 		$$->type = ACT_EL_VALUE;
@@ -1854,40 +1887,12 @@ ConstraintSubtypeElement:
 		$$->type = ACT_EL_TYPE;
 		$$->containedSubtype = $1;
 	}
-	| SingleValue ConstraintRangeSpec SingleValue {
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = $2;
-		$$->range_start = $1;
-		$$->range_stop = $3;
-	}
-	| TOK_MIN ConstraintRangeSpec SingleValue {
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = $2;
-		$$->range_start = asn1p_value_fromint(-123);
-		$$->range_stop = $3;
-		$$->range_start->type = ATV_MIN;
-	}
-	| SingleValue ConstraintRangeSpec TOK_MAX {
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = $2;
-		$$->range_start = $1;
-		$$->range_stop = asn1p_value_fromint(321);
-		$$->range_stop->type = ATV_MAX;
-	}
-	| TOK_MIN ConstraintRangeSpec TOK_MAX {
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = $2;
-		$$->range_start = asn1p_value_fromint(-123);
-		$$->range_stop = asn1p_value_fromint(321);
-		$$->range_start->type = ATV_MIN;
-		$$->range_stop->type = ATV_MAX;
-	}
-	| InnerTypeConstraint
-	| PatternConstraint
+    | PermittedAlphabet /* FROM ... */
+    | SizeConstraint    /* SIZE ... */
+    /* | TypeConstraint is via ContainedSubtype */
+	| InnerTypeConstraints  /* WITH COMPONENT[S] ... */
+	| PatternConstraint     /* PATTERN ... */
+	| ValueRange
 	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque /* '}' */ {
 		$$ = asn1p_constraint_new(yylineno, currentModule);
 		checkmem($$);
@@ -1896,6 +1901,17 @@ ConstraintSubtypeElement:
 		$$->value->type = ATV_UNPARSED;
 	}
 	;
+
+
+PermittedAlphabet:
+	TOK_FROM Constraint {
+		CONSTRAINT_INSERT($$, ACT_CT_FROM, $2, 0);
+	};
+
+SizeConstraint:
+	TOK_SIZE Constraint {
+		CONSTRAINT_INSERT($$, ACT_CT_SIZE, $2, 0);
+	};
 
 PatternConstraint:
 	TOK_PATTERN TOK_cstring {
@@ -1914,14 +1930,28 @@ PatternConstraint:
 	}
 	;
 
-ConstraintType:
-	TOK_SIZE {
-		$$ = ACT_CT_SIZE;
-	}
-	| TOK_FROM {
-		$$ = ACT_CT_FROM;
-	}
-	;
+ValueRange:
+    LowerEndValue ConstraintRangeSpec UpperEndValue {
+		$$ = asn1p_constraint_new(yylineno, currentModule);
+		checkmem($$);
+		$$->type = $2;
+		$$->range_start = $1;
+		$$->range_stop = $3;
+    };
+
+LowerEndValue:
+    SingleValue
+    | TOK_MIN {
+		$$ = asn1p_value_fromint(-123);
+		$$->type = ATV_MIN;
+    };
+
+UpperEndValue:
+    SingleValue
+    | TOK_MAX {
+		$$ = asn1p_value_fromint(321);
+		$$->type = ATV_MAX;
+    };
 
 SingleValue:
 	TOK_FALSE {
@@ -1964,17 +1994,22 @@ BitStringValue:
 	;
 
 ContainedSubtype:
-    Type {
-		$$ = asn1p_value_fromtype($1);
+    optINCLUDES Type {
+		$$ = asn1p_value_fromtype($2);
 		checkmem($$);
     }
+	;
+
+optINCLUDES:
+	{ $$ = 0; }
+	| TOK_INCLUDES { $$ = 1; }
 	;
 
 /*
  * X.680 08/2015
  * #51.8.5
  */
-InnerTypeConstraint:
+InnerTypeConstraints:
 	TOK_WITH TOK_COMPONENT SingleTypeConstraint {
 		CONSTRAINT_INSERT($$, ACT_CT_WCOMP, $3, 0);
 	}
@@ -2012,7 +2047,7 @@ TypeConstraints:
 	}
 	;
 NamedConstraint:
-	IdentifierAsValue optConstraints optPresenceConstraint {
+	IdentifierAsValue optConstraint optPresenceConstraint {
         $$ = asn1p_constraint_new(yylineno, currentModule);
         checkmem($$);
         $$->type = ACT_EL_VALUE;

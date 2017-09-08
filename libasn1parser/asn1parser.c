@@ -132,6 +132,7 @@ extern int asn1p_lexer_types_year;
 extern int asn1p_lexer_constructs_year;
 extern int asn1p_lexer_extended_values;
 extern int asn1p__flex_debug;
+extern int asn1p_debug;
 
 static int
 _asn1p_set_flags(enum asn1p_flags flags) {
@@ -139,13 +140,16 @@ _asn1p_set_flags(enum asn1p_flags flags) {
 	asn1p_lexer_types_year = 0;
 	asn1p_lexer_constructs_year = 0;
 	asn1p__flex_debug = 0;
+	asn1p_debug = 0;
 
-	/*
-	 * Enable debugging in lexer.
-	 */
-	if(flags & A1P_LEXER_DEBUG) {
-		flags &= ~A1P_LEXER_DEBUG;
+	if(flags & A1P_DEBUG_LEXER) {
+		flags &= ~A1P_DEBUG_LEXER;
 		asn1p__flex_debug = 1;
+    }
+
+	if(flags & A1P_DEBUG_PARSER) {
+		flags &= ~A1P_DEBUG_PARSER;
+		asn1p_debug = 1;
     }
 
     if(flags & A1P_EXTENDED_VALUES) {

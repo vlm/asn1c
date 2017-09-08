@@ -24,7 +24,7 @@ BEGIN
 	other-ten Int2 ::= 10
 
 	-- G.4.3.4
-	ExtensibleExtensions ::= INTEGER ((1..256,...) INTERSECTION (1..256))  
+	ExtensibleExtensions ::= INTEGER (1..256) (1..255,...)
 
 	Str1 ::= IA5String
 	Str2 ::= Str1 (SIZE(MIN..20 | 25..30))	

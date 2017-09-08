@@ -405,7 +405,7 @@ ExtensibleExtensions_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if((value >= 1 && value <= 256)) {
+	if((value >= 1 && value <= 255)) {
 		/* Constraint check succeeded */
 		return 0;
 	} else {

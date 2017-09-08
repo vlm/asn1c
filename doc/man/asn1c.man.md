@@ -54,6 +54,9 @@ and other encoding rules.
 :   Treat warnings as errors; abort if any warning is produced.
 
 -Wdebug-lexer
+:   Enable lexer debugging during the ASN.1 lexing stage.
+
+-Wdebug-parser
 :   Enable lexer debugging during the ASN.1 parsing stage.
 
 -Wdebug-fixer
