@@ -183,8 +183,9 @@ c_member_name(arg_t *arg, asn1p_expr_t *expr) {
 
     abuf_clear(&ab);
 
-    abuf_printf(&ab, "%s_%s", c_name_impl(arg, 0).base_name,
-                asn1c_make_identifier(0, expr, 0));
+    abuf_str(&ab, c_name_impl(arg, 0).base_name);
+    abuf_str(&ab, "_");
+    abuf_str(&ab, asn1c_make_identifier(0, expr, 0));
 
     return ab.buffer;
 }
@@ -197,8 +198,9 @@ c_presence_name(arg_t *arg, asn1p_expr_t *expr) {
     abuf_clear(&ab);
 
     if(expr) {
-        abuf_printf(&ab, "%s_PR_", c_name_impl(arg, 0).base_name);
-        abuf_printf(&ab, "%s", asn1c_make_identifier(0, expr, 0));
+        abuf_str(&ab, c_name_impl(arg, 0).base_name);
+        abuf_str(&ab, "_PR_");
+        abuf_str(&ab, asn1c_make_identifier(0, expr, 0));
     } else {
         abuf_printf(&ab, "%s_PR_NOTHING", c_name_impl(arg, 0).base_name);
     }
