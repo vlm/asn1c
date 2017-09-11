@@ -2625,8 +2625,10 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     if(expr->meta_type != AMT_TYPEREF
        || expr->expr_type != A1TC_REFERENCE
        || expr->reference->comp_count != 2
-       || expr->reference->components[1].lex_type
-              != RLT_AmpUppercase) {
+       || ((expr->reference->components[1].lex_type
+              != RLT_AmpUppercase)
+            && (expr->reference->components[1].lex_type
+                   != RLT_Amplowercase))) {
         FATAL(
             "Does not look like %s is a CLASS field reference (%s) denoting a type on line "
             "%d",
