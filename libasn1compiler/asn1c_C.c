@@ -1070,6 +1070,8 @@ asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc,
         struct asn1p_ioc_cell_s *cell =
             &opt_ioc->ioct->row[row]->column[column_index];
 
+        if(!cell->value) continue;
+
         asn1p_expr_t *m = asn1p_expr_clone(cell->value, 0);
         asn1p_expr_add(open_type_choice, m);
     }
