@@ -85,7 +85,7 @@ NativeEnumerated_encode_oer(asn_TYPE_descriptor_t *td,
                             const asn_oer_constraints_t *constraints,
                             void *sptr, asn_app_consume_bytes_f *cb,
                             void *app_key) {
-    asn_enc_rval_t er = {0, td, sptr};
+    asn_enc_rval_t er;
     long native;
 
     (void)constraints;
