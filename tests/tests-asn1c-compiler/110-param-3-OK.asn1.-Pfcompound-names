@@ -7,41 +7,41 @@
 
 /*** <<< DEPS [Flag] >>> ***/
 
-typedef enum Flag_16P0__field {
-	Flag_16P0__field_red	= 0,
-	Flag_16P0__field_green	= 1,
-	Flag_16P0__field_blue	= 5
-} e_Flag_16P0__field;
-typedef enum Flag_16P1__field {
-	Flag_16P1__field_red	= 3,
-	Flag_16P1__field_green	= 4,
-	Flag_16P1__field_blue	= 5
-} e_Flag_16P1__field;
+typedef enum Flag_15P0__field {
+	Flag_15P0__field_red	= 0,
+	Flag_15P0__field_green	= 1,
+	Flag_15P0__field_blue	= 5
+} e_Flag_15P0__field;
+typedef enum Flag_15P1__field {
+	Flag_15P1__field_red	= 3,
+	Flag_15P1__field_green	= 4,
+	Flag_15P1__field_blue	= 5
+} e_Flag_15P1__field;
 
 /*** <<< TYPE-DECLS [Flag] >>> ***/
 
-typedef struct Flag_16P0 {
+typedef struct Flag_15P0 {
 	long	*field	/* DEFAULT 5 */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} Flag_16P0_t;
-typedef struct Flag_16P1 {
+} Flag_15P0_t;
+typedef struct Flag_15P1 {
 	long	*field	/* DEFAULT 5 */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} Flag_16P1_t;
+} Flag_15P1_t;
 
 /*** <<< FUNC-DECLS [Flag] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Flag_16P0;
-extern asn_SEQUENCE_specifics_t asn_SPC_Flag_16P0_specs_1;
-extern asn_TYPE_member_t asn_MBR_Flag_16P0_1[1];
+extern asn_TYPE_descriptor_t asn_DEF_Flag_15P0;
+extern asn_SEQUENCE_specifics_t asn_SPC_Flag_15P0_specs_1;
+extern asn_TYPE_member_t asn_MBR_Flag_15P0_1[1];
 /* extern asn_TYPE_descriptor_t asn_DEF_field_7;	// (Use -fall-defs-global to expose) */
-extern asn_TYPE_descriptor_t asn_DEF_Flag_16P1;
-extern asn_SEQUENCE_specifics_t asn_SPC_Flag_16P1_specs_6;
-extern asn_TYPE_member_t asn_MBR_Flag_16P1_6[1];
+extern asn_TYPE_descriptor_t asn_DEF_Flag_15P1;
+extern asn_SEQUENCE_specifics_t asn_SPC_Flag_15P1_specs_6;
+extern asn_TYPE_member_t asn_MBR_Flag_15P1_6[1];
 
 /*** <<< CODE [Flag] >>> ***/
 
@@ -70,8 +70,8 @@ static int asn_DFL_2_set_5(int set_value, void **sptr) {
 		return (*st == 5);
 	}
 }
-asn_TYPE_member_t asn_MBR_Flag_16P0_1[] = {
-	{ ATF_POINTER, 1, offsetof(struct Flag_16P0, field),
+asn_TYPE_member_t asn_MBR_Flag_15P0_1[] = {
+	{ ATF_POINTER, 1, offsetof(struct Flag_15P0, field),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
@@ -83,37 +83,37 @@ asn_TYPE_member_t asn_MBR_Flag_16P0_1[] = {
 		.name = "field"
 		},
 };
-static const ber_tlv_tag_t asn_DEF_Flag_16P0_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_Flag_15P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_Flag_16P0_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Flag_15P0_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* field */
 };
-asn_SEQUENCE_specifics_t asn_SPC_Flag_16P0_specs_1 = {
-	sizeof(struct Flag_16P0),
-	offsetof(struct Flag_16P0, _asn_ctx),
-	.tag2el = asn_MAP_Flag_16P0_tag2el_1,
+asn_SEQUENCE_specifics_t asn_SPC_Flag_15P0_specs_1 = {
+	sizeof(struct Flag_15P0),
+	offsetof(struct Flag_15P0, _asn_ctx),
+	.tag2el = asn_MAP_Flag_15P0_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-asn_TYPE_descriptor_t asn_DEF_Flag_16P0 = {
+asn_TYPE_descriptor_t asn_DEF_Flag_15P0 = {
 	"Flag",
 	"Flag",
 	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	asn_DEF_Flag_16P0_tags_1,
-	sizeof(asn_DEF_Flag_16P0_tags_1)
-		/sizeof(asn_DEF_Flag_16P0_tags_1[0]), /* 1 */
-	asn_DEF_Flag_16P0_tags_1,	/* Same as above */
-	sizeof(asn_DEF_Flag_16P0_tags_1)
-		/sizeof(asn_DEF_Flag_16P0_tags_1[0]), /* 1 */
+	asn_DEF_Flag_15P0_tags_1,
+	sizeof(asn_DEF_Flag_15P0_tags_1)
+		/sizeof(asn_DEF_Flag_15P0_tags_1[0]), /* 1 */
+	asn_DEF_Flag_15P0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Flag_15P0_tags_1)
+		/sizeof(asn_DEF_Flag_15P0_tags_1[0]), /* 1 */
 	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
-	asn_MBR_Flag_16P0_1,
+	asn_MBR_Flag_15P0_1,
 	1,	/* Elements count */
-	&asn_SPC_Flag_16P0_specs_1	/* Additional specs */
+	&asn_SPC_Flag_15P0_specs_1	/* Additional specs */
 };
 
 static int asn_DFL_7_set_5(int set_value, void **sptr) {
@@ -174,8 +174,8 @@ asn_TYPE_descriptor_t asn_DEF_field_7 = {
 	&asn_SPC_field_specs_7	/* Additional specs */
 };
 
-asn_TYPE_member_t asn_MBR_Flag_16P1_6[] = {
-	{ ATF_POINTER, 1, offsetof(struct Flag_16P1, field),
+asn_TYPE_member_t asn_MBR_Flag_15P1_6[] = {
+	{ ATF_POINTER, 1, offsetof(struct Flag_15P1, field),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_field_7,
@@ -187,37 +187,37 @@ asn_TYPE_member_t asn_MBR_Flag_16P1_6[] = {
 		.name = "field"
 		},
 };
-static const ber_tlv_tag_t asn_DEF_Flag_16P1_tags_6[] = {
+static const ber_tlv_tag_t asn_DEF_Flag_15P1_tags_6[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_Flag_16P1_tag2el_6[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Flag_15P1_tag2el_6[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 0, 0, 0 } /* field */
 };
-asn_SEQUENCE_specifics_t asn_SPC_Flag_16P1_specs_6 = {
-	sizeof(struct Flag_16P1),
-	offsetof(struct Flag_16P1, _asn_ctx),
-	.tag2el = asn_MAP_Flag_16P1_tag2el_6,
+asn_SEQUENCE_specifics_t asn_SPC_Flag_15P1_specs_6 = {
+	sizeof(struct Flag_15P1),
+	offsetof(struct Flag_15P1, _asn_ctx),
+	.tag2el = asn_MAP_Flag_15P1_tag2el_6,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* Start extensions */
 	-1	/* Stop extensions */
 };
-asn_TYPE_descriptor_t asn_DEF_Flag_16P1 = {
+asn_TYPE_descriptor_t asn_DEF_Flag_15P1 = {
 	"Flag",
 	"Flag",
 	&asn_OP_SEQUENCE,
 	SEQUENCE_constraint,
-	asn_DEF_Flag_16P1_tags_6,
-	sizeof(asn_DEF_Flag_16P1_tags_6)
-		/sizeof(asn_DEF_Flag_16P1_tags_6[0]), /* 1 */
-	asn_DEF_Flag_16P1_tags_6,	/* Same as above */
-	sizeof(asn_DEF_Flag_16P1_tags_6)
-		/sizeof(asn_DEF_Flag_16P1_tags_6[0]), /* 1 */
+	asn_DEF_Flag_15P1_tags_6,
+	sizeof(asn_DEF_Flag_15P1_tags_6)
+		/sizeof(asn_DEF_Flag_15P1_tags_6[0]), /* 1 */
+	asn_DEF_Flag_15P1_tags_6,	/* Same as above */
+	sizeof(asn_DEF_Flag_15P1_tags_6)
+		/sizeof(asn_DEF_Flag_15P1_tags_6[0]), /* 1 */
 	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
-	asn_MBR_Flag_16P1_6,
+	asn_MBR_Flag_15P1_6,
 	1,	/* Elements count */
-	&asn_SPC_Flag_16P1_specs_6	/* Additional specs */
+	&asn_SPC_Flag_15P1_specs_6	/* Additional specs */
 };
 
 
@@ -227,7 +227,7 @@ asn_TYPE_descriptor_t asn_DEF_Flag_16P1 = {
 
 /*** <<< TYPE-DECLS [IntegerColorFlag] >>> ***/
 
-typedef Flag_16P0_t	 IntegerColorFlag_t;
+typedef Flag_15P0_t	 IntegerColorFlag_t;
 
 /*** <<< FUNC-DECLS [IntegerColorFlag] >>> ***/
 
@@ -243,7 +243,7 @@ xer_type_encoder_f IntegerColorFlag_encode_xer;
 /*** <<< CODE [IntegerColorFlag] >>> ***/
 
 /*
- * This type is implemented using Flag_16P0,
+ * This type is implemented using Flag_15P0,
  * so here we adjust the DEF accordingly.
  */
 
@@ -265,9 +265,9 @@ asn_TYPE_descriptor_t asn_DEF_IntegerColorFlag = {
 		/sizeof(asn_DEF_IntegerColorFlag_tags_1[0]), /* 1 */
 	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
-	asn_MBR_Flag_16P0_1,
+	asn_MBR_Flag_15P0_1,
 	1,	/* Elements count */
-	&asn_SPC_Flag_16P0_specs_1	/* Additional specs */
+	&asn_SPC_Flag_15P0_specs_1	/* Additional specs */
 };
 
 
@@ -277,7 +277,7 @@ asn_TYPE_descriptor_t asn_DEF_IntegerColorFlag = {
 
 /*** <<< TYPE-DECLS [EnumeratedColorFlag] >>> ***/
 
-typedef Flag_16P1_t	 EnumeratedColorFlag_t;
+typedef Flag_15P1_t	 EnumeratedColorFlag_t;
 
 /*** <<< FUNC-DECLS [EnumeratedColorFlag] >>> ***/
 
@@ -293,7 +293,7 @@ xer_type_encoder_f EnumeratedColorFlag_encode_xer;
 /*** <<< CODE [EnumeratedColorFlag] >>> ***/
 
 /*
- * This type is implemented using Flag_16P1,
+ * This type is implemented using Flag_15P1,
  * so here we adjust the DEF accordingly.
  */
 
@@ -315,8 +315,8 @@ asn_TYPE_descriptor_t asn_DEF_EnumeratedColorFlag = {
 		/sizeof(asn_DEF_EnumeratedColorFlag_tags_1[0]), /* 1 */
 	0,	/* No OER visible constraints */
 	0,	/* No PER visible constraints */
-	asn_MBR_Flag_16P1_6,
+	asn_MBR_Flag_15P1_6,
 	1,	/* Elements count */
-	&asn_SPC_Flag_16P1_specs_6	/* Additional specs */
+	&asn_SPC_Flag_15P1_specs_6	/* Additional specs */
 };
 

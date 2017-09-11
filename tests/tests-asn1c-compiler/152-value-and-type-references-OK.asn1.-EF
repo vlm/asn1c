@@ -1,0 +1,40 @@
+ModuleValueAndTypeReferences { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 152 }
+DEFINITIONS ::=
+BEGIN
+
+value INTEGER ::= 3
+
+valueAssignment3 INTEGER ::= 3
+
+valueAssignment4 INTEGER ::= 4
+
+Foo ::= Extension{ { CAPS.SomeType}}
+
+Bar ::= Extension{ { Uppercase.SomeType}}
+
+Extension{Foo} ::= SEQUENCE { }
+
+MTYPE ::= CLASS {
+    &id	 INTEGER UNIQUE,
+    &Type	 ANY
+} WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+
+MessageFrame ::= SEQUENCE {
+    messageIdE	 MTYPE.&id,
+    messageIdF	 MTYPE.&id ({MessageTypes}),
+    valueE	 MTYPE.&Type,
+    valueF	 MTYPE.&Type ({MessageTypes}{@.messageId})
+}
+
+END
+
+MOD-CAPITALS { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+	spelio(9363) software(1) asn1c(5) test(1) 152 1 }
+DEFINITIONS ::=
+BEGIN
+
+value4 INTEGER ::= 4
+
+END

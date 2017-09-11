@@ -262,7 +262,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 115 "asn1p_y.y"
+#line 116 "asn1p_y.y"
 {
 	asn1p_t			*a_grammar;
 	asn1p_module_flags_e	 a_module_flags;

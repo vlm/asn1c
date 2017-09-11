@@ -7,6 +7,6 @@ Certificate ::= ExplicitCertificate (WITH COMPONENTS { ..., issuer (WITH COMPONE
         IdentifiedRegion ( WITH COMPONENTS { countryOnly(Canada) }),
         IdentifiedRegion ( WITH COMPONENTS { countryOnly(Mexico) }),
         IdentifiedRegion ( WITH COMPONENTS { countryOnly(USA) })
-      })) }), canRequestRollover ( NULL), encryptionKey ABSENT, verifyKeyIndicator (WITH COMPONENTS { verificationKey (WITH COMPONENTS { ecdsaNistP256 (WITH COMPONENTS { compressed-y-0, compressed-y-1 }) }) }) }) })
+      })) }), canRequestRollover (NULL), encryptionKey ABSENT, verifyKeyIndicator (WITH COMPONENTS { verificationKey (WITH COMPONENTS { ecdsaNistP256 (WITH COMPONENTS { compressed-y-0, compressed-y-1 }) }) }) }) })
 
 END

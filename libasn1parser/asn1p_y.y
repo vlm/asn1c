@@ -38,7 +38,8 @@ prefixed_fprintf(FILE *f, const char *fmt, ...) {
 }
 
 int yylex(void);
-int yyerror(const char *msg);
+static int yyerror(const char *msg);
+
 #ifdef	YYBYACC
 int yyparse(void **param);	/* byacc does not produce a prototype */
 #endif
@@ -294,8 +295,13 @@ static asn1p_module_t *currentModule;
 %type	<a_expr>		ExportsElement
 %type	<a_expr>		ExtensionAndException
 %type	<a_expr>		Type
+%type	<a_expr>		TaggedType
+%type	<a_expr>		MaybeIndirectTaggedType
+%type	<a_expr>		UntaggedType
+%type	<a_expr>		DefinedUntaggedType
+%type	<a_expr>		ConcreteTypeDeclaration "concrete TypeDeclaration"
 %type	<a_expr>		TypeDeclaration
-%type	<a_expr>		TypeDeclarationSet
+%type	<a_expr>		MaybeIndirectTypeDeclaration
 %type	<a_ref>			ComplexTypeReference
 %type	<a_ref>			ComplexTypeReferenceAmpList
 %type	<a_refcomp>		ComplexTypeReferenceElement
@@ -331,7 +337,6 @@ static asn1p_module_t *currentModule;
 %type	<a_expr>		IdentifierElement
 %type	<a_expr>		UniverationElement
 %type	<tv_str>		TypeRefName
-%type	<tv_str>		ObjectClassReference
 %type	<tv_str>		Identifier
 %type	<a_ref>		    IdentifierAsReference
 %type	<a_value>		IdentifierAsValue
@@ -345,7 +350,7 @@ static asn1p_module_t *currentModule;
 %type	<a_oid>			optObjectIdentifier	/* Optional OID */
 %type	<a_oid>			ObjectIdentifierBody
 %type	<a_oid_arc>		ObjectIdentifierElement
-%type	<a_expr>		BasicType
+%type	<a_expr>		BuiltinType
 %type	<a_type>		BasicTypeId
 %type	<a_type>		BasicTypeId_UniverationCompatible
 %type	<a_type>		BasicString
@@ -399,7 +404,6 @@ static asn1p_module_t *currentModule;
 %type	<a_wchunk>		WithSyntaxToken
 %type	<a_marker>		optMarker Marker
 %type	<a_int>			optUNIQUE
-%type	<a_int>			optINCLUDES
 %type	<a_pres>		optPresenceConstraint PresenceConstraint
 %type	<tv_str>		ComponentIdList
 %type	<a_int>			NSTD_IndirectMarker
@@ -818,7 +822,7 @@ ExportsElement:
 ValueSet: '{' ElementSetSpecs '}' { $$ = $2; };
 
 ValueSetTypeAssignment:
-	TypeRefName DefinedType TOK_PPEQ ValueSet {
+	TypeRefName Type TOK_PPEQ ValueSet {
 		$$ = $2;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
@@ -828,9 +832,6 @@ ValueSetTypeAssignment:
 	;
 
 DefinedType:
-	BasicType {
-		$$ = $1;
-	}
 	/*
 	 * A DefinedType reference.
 	 * "CLASS1.&id.&id2"
@@ -841,7 +842,7 @@ DefinedType:
 	 * or
 	 * "Type"
 	 */
-	| ComplexTypeReference {
+	ComplexTypeReference {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->reference = $1;
@@ -978,9 +979,7 @@ ActualParameterList:
 	;
 
 ActualParameter:
-	Type {
-		$$ = $1;
-	}
+	UntaggedType    /* act. Type */
 	| SimpleValue {
 		$$ = NEW_EXPR();
 		checkmem($$);
@@ -989,16 +988,13 @@ ActualParameter:
 		$$->meta_type = AMT_VALUE;
 		$$->value = $1;
 	}
-	| Identifier {
-		asn1p_ref_t *ref;
+	| DefinedValue {
 		$$ = NEW_EXPR();
 		checkmem($$);
-		$$->Identifier = $1;
+		$$->Identifier = strdup("?");
 		$$->expr_type = A1TC_REFERENCE;
 		$$->meta_type = AMT_VALUE;
-		ref = asn1p_ref_new(yylineno, currentModule);
-		asn1p_ref_add_component(ref, $1, RLT_lowercase);
-		$$->value = asn1p_value_fromref(ref, 0);
+		$$->value = $1;
 	}
 	| ValueSet {
 		$$ = NEW_EXPR();
@@ -1044,20 +1040,20 @@ ComponentTypeLists:
 	;
 
 ComponentType:
-	Identifier Type optMarker {
+	Identifier MaybeIndirectTaggedType optMarker {
 		$$ = $2;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
 		$3.flags |= $$->marker.flags;
 		$$->marker = $3;
 	}
-	| Type optMarker {
+	| MaybeIndirectTaggedType optMarker {
 		$$ = $1;
 		$2.flags |= $$->marker.flags;
 		$$->marker = $2;
 		_fixup_anonymous_identifier($$);
 	}
-	| TOK_COMPONENTS TOK_OF Type {
+	| TOK_COMPONENTS TOK_OF MaybeIndirectTaggedType {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->meta_type = $3->meta_type;
@@ -1082,7 +1078,7 @@ AlternativeTypeLists:
 	;
 
 AlternativeType:
-	Identifier Type {
+	Identifier MaybeIndirectTaggedType {
 		$$ = $2;
 		assert($$->Identifier == 0);
 		$$->Identifier = $1;
@@ -1090,7 +1086,7 @@ AlternativeType:
 	| ExtensionAndException {
 		$$ = $1;
 	}
-	| Type {
+	| MaybeIndirectTaggedType {
 		$$ = $1;
 		_fixup_anonymous_identifier($$);
 	}
@@ -1276,8 +1272,63 @@ ExtensionAndException:
 	}
 	;
 
-Type:
-	optTag TypeDeclaration optManyConstraints {
+Type: TaggedType;
+
+TaggedType:
+    optTag UntaggedType {
+        $$ = $2;
+        $$->tag = $1;
+    }
+    ;
+
+DefinedUntaggedType:
+	DefinedType optManyConstraints {
+		$$ = $1;
+		/*
+		 * Outer constraint for SEQUENCE OF and SET OF applies
+		 * to the inner type.
+		 */
+		if($$->expr_type == ASN_CONSTR_SEQUENCE_OF
+		|| $$->expr_type == ASN_CONSTR_SET_OF) {
+			assert(!TQ_FIRST(&($$->members))->constraints);
+			TQ_FIRST(&($$->members))->constraints = $2;
+		} else {
+			if($$->constraints) {
+				assert(!$2);
+				/* Check this : optManyConstraints is not used ?! */
+				asn1p_constraint_free($2);
+			} else {
+				$$->constraints = $2;
+			}
+		}
+	}
+	;
+
+UntaggedType:
+	TypeDeclaration optManyConstraints {
+		$$ = $1;
+		/*
+		 * Outer constraint for SEQUENCE OF and SET OF applies
+		 * to the inner type.
+		 */
+		if($$->expr_type == ASN_CONSTR_SEQUENCE_OF
+		|| $$->expr_type == ASN_CONSTR_SET_OF) {
+			assert(!TQ_FIRST(&($$->members))->constraints);
+			TQ_FIRST(&($$->members))->constraints = $2;
+		} else {
+			if($$->constraints) {
+				assert(!$2);
+				/* Check this : optManyConstraints is not used ?! */
+				asn1p_constraint_free($2);
+			} else {
+				$$->constraints = $2;
+			}
+		}
+	}
+	;
+
+MaybeIndirectTaggedType:
+    optTag MaybeIndirectTypeDeclaration optManyConstraints {
 		$$ = $2;
 		$$->tag = $1;
 		/*
@@ -1298,7 +1349,7 @@ Type:
 			}
 		}
 	}
-	;
+    ;
 
 NSTD_IndirectMarker:
 	{
@@ -1307,9 +1358,9 @@ NSTD_IndirectMarker:
 	}
 	;
 
-TypeDeclaration:
-	NSTD_IndirectMarker TypeDeclarationSet {
-		$$ = $2;
+MaybeIndirectTypeDeclaration:
+    NSTD_IndirectMarker TypeDeclaration {
+        $$ = $2;
 		$$->marker.flags |= $1;
 
 		if(($$->marker.flags & EM_INDIRECT)
@@ -1323,13 +1374,15 @@ TypeDeclaration:
 				ASN_FILENAME, $$->_lineno
 			);
 		}
-	}
-	;
+    }
+    ;
 
-TypeDeclarationSet:
-	DefinedType {
-		$$ = $1;
-	}
+TypeDeclaration:
+    ConcreteTypeDeclaration
+    | DefinedType;
+
+ConcreteTypeDeclaration:
+	BuiltinType
 	| TOK_CHOICE '{' AlternativeTypeLists '}' {
 		$$ = $3;
 		assert($$->expr_type == A1TC_INVALID);
@@ -1348,7 +1401,7 @@ TypeDeclarationSet:
 		$$->expr_type = ASN_CONSTR_SET;
 		$$->meta_type = AMT_TYPE;
 	}
-	| TOK_SEQUENCE optSizeOrConstraint TOK_OF optIdentifier optTag TypeDeclaration {
+	| TOK_SEQUENCE optSizeOrConstraint TOK_OF optIdentifier optTag MaybeIndirectTypeDeclaration {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
@@ -1358,7 +1411,7 @@ TypeDeclarationSet:
 		$6->tag = $5;
 		asn1p_expr_add($$, $6);
 	}
-	| TOK_SET optSizeOrConstraint TOK_OF optIdentifier optTag TypeDeclaration {
+	| TOK_SET optSizeOrConstraint TOK_OF optIdentifier optTag MaybeIndirectTypeDeclaration {
 		$$ = NEW_EXPR();
 		checkmem($$);
 		$$->constraints = $2;
@@ -1409,6 +1462,14 @@ ComplexTypeReference:
 		checkmem(ret == 0);
 		free($1);
 	}
+	| TOK_capitalreference {
+		int ret;
+		$$ = asn1p_ref_new(yylineno, currentModule);
+		checkmem($$);
+		ret = asn1p_ref_add_component($$, $1, RLT_CAPITALS);
+		free($1);
+		checkmem(ret == 0);
+	}
 	| TOK_typereference '.' TypeRefName {
 		int ret;
 		$$ = asn1p_ref_new(yylineno, currentModule);
@@ -1420,7 +1481,7 @@ ComplexTypeReference:
 		free($1);
 		free($3);
 	}
-	| ObjectClassReference '.' TypeRefName {
+	| TOK_capitalreference '.' TypeRefName {
 		int ret;
 		$$ = asn1p_ref_new(yylineno, currentModule);
 		checkmem($$);
@@ -1431,26 +1492,7 @@ ComplexTypeReference:
 		free($1);
 		free($3);
 	}
-	| TOK_typereference '.' Identifier {
-		int ret;
-		$$ = asn1p_ref_new(yylineno, currentModule);
-		checkmem($$);
-		ret = asn1p_ref_add_component($$, $1, RLT_UNKNOWN);
-		checkmem(ret == 0);
-		ret = asn1p_ref_add_component($$, $3, RLT_lowercase);
-		checkmem(ret == 0);
-		free($1);
-		free($3);
-	}
-	| ObjectClassReference {
-		int ret;
-		$$ = asn1p_ref_new(yylineno, currentModule);
-		checkmem($$);
-		ret = asn1p_ref_add_component($$, $1, RLT_CAPITALS);
-		free($1);
-		checkmem(ret == 0);
-	}
-	| ObjectClassReference '.' ComplexTypeReferenceAmpList {
+	| TOK_capitalreference '.' ComplexTypeReferenceAmpList {
 		int ret;
 		$$ = $3;
 		ret = asn1p_ref_add_component($$, $1, RLT_CAPITALS);
@@ -1560,66 +1602,37 @@ ValueAssignment:
 Value:
 	SimpleValue
 	| DefinedValue
-	| Identifier ':' Value {
-		$$ = asn1p_value_fromint(0);
-		checkmem($$);
-		$$->type = ATV_CHOICE_IDENTIFIER;
-		$$->value.choice_identifier.identifier = $1;
-		$$->value.choice_identifier.value = $3;
-	}
 	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque {
 		$$ = asn1p_value_frombuf($3.buf, $3.len, 0);
 		checkmem($$);
 		$$->type = ATV_UNPARSED;
 	}
-	| TOK_NULL {
+    ;
+
+SimpleValue:
+	TOK_NULL {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
 		$$->type = ATV_NULL;
 	}
-	;
-
-SimpleValue:
-	TOK_FALSE {
+	| TOK_FALSE {
 		$$ = asn1p_value_fromint(0);
 		checkmem($$);
 		$$->type = ATV_FALSE;
 	}
 	| TOK_TRUE {
-		$$ = asn1p_value_fromint(0);
+		$$ = asn1p_value_fromint(1);
 		checkmem($$);
 		$$->type = ATV_TRUE;
 	}
-	| TOK_bstring {
-		$$ = _convert_bitstring2binary($1, 'B');
-		checkmem($$);
-		free($1);
-	}
-	| TOK_hstring {
-		$$ = _convert_bitstring2binary($1, 'H');
-		checkmem($$);
-		free($1);
-	}
-	| RestrictedCharacterStringValue {
-		$$ = $$;
-	}
-	| SignedNumber {
-		$$ = $1;
-	}
+	| SignedNumber
+	| RealValue
+	| RestrictedCharacterStringValue
+	| BitStringValue
 	;
 
 DefinedValue:
-	Identifier {
-		asn1p_ref_t *ref;
-		int ret;
-		ref = asn1p_ref_new(yylineno, currentModule);
-		checkmem(ref);
-		ret = asn1p_ref_add_component(ref, $1, RLT_lowercase);
-		checkmem(ret == 0);
-		$$ = asn1p_value_fromref(ref, 0);
-		checkmem($$);
-		free($1);
-	}
+	IdentifierAsValue
 	| TypeRefName '.' Identifier {
 		asn1p_ref_t *ref;
 		int ret;
@@ -1710,7 +1723,7 @@ BasicTypeId_UniverationCompatible:
 	| TOK_BIT TOK_STRING { $$ = ASN_BASIC_BIT_STRING; }
 	;
 
-BasicType:
+BuiltinType:
 	BasicTypeId {
 		$$ = NEW_EXPR();
 		checkmem($$);
@@ -1901,13 +1914,6 @@ SubtypeElements:
 	| InnerTypeConstraints  /* WITH COMPONENT[S] ... */
 	| PatternConstraint     /* PATTERN ... */
 	| ValueRange
-	| '{' { asn1p_lexer_hack_push_opaque_state(); } Opaque {
-		$$ = asn1p_constraint_new(yylineno, currentModule);
-		checkmem($$);
-		$$->type = ACT_EL_VALUE;
-		$$->value = asn1p_value_frombuf($3.buf, $3.len, 0);
-		$$->value->type = ATV_UNPARSED;
-	}
 	;
 
 
@@ -1961,32 +1967,7 @@ UpperEndValue:
 		$$->type = ATV_MAX;
     };
 
-SingleValue:
-	TOK_FALSE {
-		$$ = asn1p_value_fromint(0);
-		checkmem($$);
-		$$->type = ATV_FALSE;
-	}
-	| TOK_TRUE {
-		$$ = asn1p_value_fromint(1);
-		checkmem($$);
-		$$->type = ATV_TRUE;
-	}
-	| RealValue
-	| RestrictedCharacterStringValue
-	| BitStringValue
-	| Identifier {
-		asn1p_ref_t *ref;
-		int ret;
-		ref = asn1p_ref_new(yylineno, currentModule);
-		checkmem(ref);
-		ret = asn1p_ref_add_component(ref, $1, RLT_lowercase);
-		checkmem(ret == 0);
-		$$ = asn1p_value_fromref(ref, 0);
-		checkmem($$);
-		free($1);
-	}
-	;
+SingleValue: Value;
 
 BitStringValue:
 	TOK_bstring {
@@ -2002,15 +1983,15 @@ BitStringValue:
 	;
 
 ContainedSubtype:
-    optINCLUDES Type {
+    TOK_INCLUDES Type {
 		$$ = asn1p_value_fromtype($2);
 		checkmem($$);
     }
-	;
-
-optINCLUDES:
-	{ $$ = 0; }
-	| TOK_INCLUDES { $$ = 1; }
+    /* Can't put Type here because of conflicts. Simplified subset */
+    | DefinedUntaggedType {
+		$$ = asn1p_value_fromtype($1);
+		checkmem($$);
+    }
 	;
 
 /*
@@ -2403,8 +2384,7 @@ SignedNumber:
 	;
 
 RealValue:
-	SignedNumber
-	| TOK_realnumber {
+	TOK_realnumber {
 		$$ = asn1p_value_fromdouble($1);
 		checkmem($$);
 	}
@@ -2476,13 +2456,6 @@ TypeRefName:
 	}
 	;
 
-
-ObjectClassReference:
-	TOK_capitalreference {
-		checkmem($1);
-		$$ = $1;
-	}
-	;
 
 optIdentifier:
 	{ $$ = 0; }
@@ -2648,7 +2621,7 @@ _fixup_anonymous_identifier(asn1p_expr_t *expr) {
 		expr->Identifier);
 }
 
-int
+static int
 yyerror(const char *msg) {
 	extern char *asn1p_text;
 	fprintf(stderr,

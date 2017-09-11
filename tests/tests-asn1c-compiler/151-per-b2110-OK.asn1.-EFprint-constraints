@@ -1,0 +1,12 @@
+ModulePerEffectiveConstraint { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 151 }
+DEFINITIONS ::=
+BEGIN
+
+B ::= VisibleString (SIZE(20) ^ FROM("A".."F") | SIZE(3) ^ FROM("F".."K"))
+-- Combined constraints: (SIZE(20) ^ FROM("A".."F") | SIZE(3) ^ FROM("F".."K"))
+-- Practical constraints (B): (MIN..MAX) (SIZE(3 | 20)) (FROM("A".."K"))
+-- OER-visible constraints (B): (MIN..MAX) (SIZE(3 | 20)) 
+-- PER-visible constraints (B): (MIN..MAX) (SIZE(3 | 20)) (FROM("A".."K"))
+
+END

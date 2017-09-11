@@ -1,0 +1,43 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .152
+
+ModuleValueAndTypeReferences
+        { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+                spelio(9363) software(1) asn1c(5) test(1) 152 }
+DEFINITIONS ::= BEGIN
+
+    value INTEGER ::= 3
+
+    valueAssignment3 INTEGER ::= value
+    valueAssignment4 INTEGER ::= MOD-CAPITALS.value4
+
+    Foo ::= Extension {{CAPS.SomeType}}
+    Bar ::= Extension {{Uppercase.SomeType}}
+
+    Extension {Foo} ::= SEQUENCE {
+    }
+
+    MTYPE ::= CLASS {
+        &id    INTEGER UNIQUE,
+        &Type
+    } WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+    MessageFrame ::= SEQUENCE {
+        messageIdE   MTYPE.&id,
+        messageIdF   MTYPE.&id({MessageTypes}),
+        valueE       MTYPE.&Type,
+        valueF       MTYPE.&Type({MessageTypes}{@.messageId})
+    }
+
+END
+
+MOD-CAPITALS
+        { iso org(3) dod(6) internet(1) private(4) enterprise(1)
+                spelio(9363) software(1) asn1c(5) test(1) 152 1 }
+DEFINITIONS ::= BEGIN
+    value4 INTEGER ::= 4
+END
