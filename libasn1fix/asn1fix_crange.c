@@ -250,7 +250,12 @@ static int _range_merge_in(asn1cnst_range_t *into, asn1cnst_range_t *cr) {
 	return 0;
 }
 
-static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1cnst_edge_t *edge, asn1cnst_range_t *range, enum asn1p_constraint_type_e type, int lineno) {
+enum range_fill_result {
+    RFR_OK,
+    RFR_FAIL,
+    RFR_INCOMPATIBLE
+};
+static enum range_fill_result _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1cnst_edge_t *edge, asn1cnst_range_t *range, enum asn1p_constraint_type_e type, int lineno) {
 	unsigned char *p, *pend;
 
 	edge->lineno = lineno;
@@ -262,31 +267,31 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 				"for %s constraint at line %d",
 				asn1p_itoa(val->value.v_integer),
 				asn1p_constraint_type2str(type), lineno);
-			return -1;
+			return RFR_FAIL;
 		}
 		edge->type = ARE_VALUE;
 		edge->value = val->value.v_integer;
-		return 0;
+		return RFR_OK;
 	case ATV_MIN:
 		if(type != ACT_EL_RANGE && type != ACT_CT_SIZE) {
 			FATAL("MIN invalid for %s constraint at line %d",
 				asn1p_constraint_type2str(type), lineno);
-			return -1;
+			return RFR_FAIL;
 		}
 		edge->type = ARE_MIN;
 		if(minmax) *edge = minmax->left;
 		edge->lineno = lineno;	/* Restore lineno */
-		return 0;
+		return RFR_OK;
 	case ATV_MAX:
 		if(type != ACT_EL_RANGE && type != ACT_CT_SIZE) {
 			FATAL("MAX invalid for %s constraint at line %d",
 				asn1p_constraint_type2str(type), lineno);
-			return -1;
+			return RFR_FAIL;
 		}
 		edge->type = ARE_MAX;
 		if(minmax) *edge = minmax->right;
 		edge->lineno = lineno;	/* Restore lineno */
-		return 0;
+		return RFR_OK;
 	case ATV_FALSE:
 	case ATV_TRUE:
 		if(type != ACT_EL_RANGE) {
@@ -294,36 +299,40 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 				val->type==ATV_TRUE?"TRUE":"FALSE",
 				asn1p_constraint_type2str(type),
 				lineno);
-			return -1;
+			return RFR_FAIL;
 		}
 		edge->type = ARE_VALUE;
 		edge->value = (val->type==ATV_TRUE);
-		return 0;
+		return RFR_OK;
 	case ATV_TUPLE:
 	case ATV_QUADRUPLE:
 		edge->type = ARE_VALUE;
 		edge->value = val->value.v_integer;
-		return 0;
+		return RFR_OK;
 	case ATV_STRING:
 		if(type != ACT_CT_FROM)
-			return 0;
+			return RFR_OK;
 		break;
 	case ATV_REFERENCED:
 		FATAL("Unresolved constraint element \"%s\" at line %d",
 			asn1f_printable_reference(val->value.reference),
 			lineno);
-		return -1;
+		return RFR_FAIL;
+	case ATV_BITVECTOR:
+        /* Value constraint... not supported yet. */
+        /* OER: X.696 (08/2015) #8.2.2i */
+        return RFR_INCOMPATIBLE;
 	default:
-		FATAL("Unrecognized constraint element at line %d",
-			lineno);
-		return -1;
+		FATAL("Unrecognized constraint range element type %d at line %d",
+			val->type, lineno);
+		return RFR_FAIL;
 	}
 
 	assert(val->type == ATV_STRING);
 
 	p = val->value.string.buf;
 	pend = p + val->value.string.size;
-	if(p == pend) return 0;
+	if(p == pend) return RFR_OK;
 
 	edge->type = ARE_VALUE;
 	if(val->value.string.size == 1) {
@@ -356,7 +365,7 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 		edge->value = (edge == &range->right) ? vmin : vmax;
 	}
 
-	return 0;
+	return RFR_OK;
 }
 
 /*
@@ -1085,7 +1094,6 @@ asn1constraint_compute_constraint_range(
 		return range;
 	}
 
-
 	if(!*exmet) {
 		/*
 		 * Expectation is not met. Return the default range.
@@ -1097,15 +1105,23 @@ asn1constraint_compute_constraint_range(
 	_range_free(range);
 	range = _range_new();
 
-	ret  = _range_fill(vmin, minmax, &range->left,
+    enum range_fill_result rfr;
+	rfr = _range_fill(vmin, minmax, &range->left,
 				range, requested_ct_type, ct->_lineno);
-	if(!ret)
-	ret = _range_fill(vmax, minmax, &range->right,
-				range, requested_ct_type, ct->_lineno);
-	if(ret) {
-		_range_free(range);
-		errno = EPERM;
-		return NULL;
+    if(rfr == RFR_OK) {
+        rfr = _range_fill(vmax, minmax, &range->right,
+                    range, requested_ct_type, ct->_lineno);
+    }
+    switch(rfr) {
+    case RFR_OK:
+        break;
+    case RFR_FAIL:
+        _range_free(range);
+        errno = EPERM;
+        return NULL;
+    case RFR_INCOMPATIBLE:
+		range->incompatible = 1;
+		return range;
 	}
 
 	if(minmax) {
