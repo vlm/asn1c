@@ -263,6 +263,12 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 		RET2RVAL(ret, rvalue);
 
 		/*
+		 * Resolve references in constraints (the second pass).
+		 */
+		ret = asn1f_recurse_expr(arg, asn1f_resolve_constraints);
+		RET2RVAL(ret, rvalue);
+
+		/*
 		 * Check semantic validity of constraints.
 		 */
 		ret = asn1f_recurse_expr(arg, asn1f_check_constraints);

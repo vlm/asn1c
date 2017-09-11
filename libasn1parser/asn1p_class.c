@@ -26,6 +26,16 @@ asn1p_ioc_table_add(asn1p_ioc_table_t *it, asn1p_ioc_row_t *row) {
 }
 
 void
+asn1p_ioc_table_append(asn1p_ioc_table_t *it, asn1p_ioc_table_t *src) {
+
+    if(!src) return;
+
+    for(size_t i = 0; i < src->rows; i++) {
+        asn1p_ioc_table_add(it, asn1p_ioc_row_clone(src->row[i]));
+    }
+}
+
+void
 asn1p_ioc_table_free(asn1p_ioc_table_t *it) {
     if(it) {
         for(size_t i = 0; i < it->rows; i++) {
@@ -88,6 +98,29 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 		row->column[columns].field = field;
 		row->column[columns].value = NULL;
 		columns++;
+	}
+
+	return row;
+}
+
+asn1p_ioc_row_t *
+asn1p_ioc_row_clone(asn1p_ioc_row_t *src) {
+	asn1p_ioc_row_t *row;
+
+	row = calloc(1, sizeof *row);
+	if(!row) return NULL;
+
+	row->column = calloc(src->columns, sizeof *src->column);
+	if(!row->column) {
+		free(row);
+		return NULL;
+	}
+	row->columns = src->columns;
+
+	for(size_t i = 0; i < src->columns; i++) {
+		row->column[i].field = src->column[i].field;
+		row->column[i].value = src->column[i].value ? asn1p_expr_clone(src->column[i].value, 0) : 0;
+		row->column[i].new_ref = 1;
 	}
 
 	return row;

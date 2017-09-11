@@ -21,6 +21,7 @@ asn1constraint_pullup(arg_t *arg) {
 	switch(expr->meta_type) {
 	case AMT_TYPE:
 	case AMT_TYPEREF:
+	case AMT_VALUESET:
 		break;
 	default:
 		return 0;	/* Nothing to do */
@@ -273,6 +274,7 @@ static int
 constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
     asn1p_constraint_t *ct_expr;
     int ret;
+    asn1p_expr_t *rtype = (asn1p_expr_t *)0;
 
     DEBUG("(\"%s\")", asn1f_printable_value(ct->containedSubtype));
 
@@ -280,7 +282,6 @@ constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
         ct_expr = ct->containedSubtype->value.constraint;
         DEBUG("Found %s in constraints", "ValueSet");
     } else if(get_reference_from(ct)) {
-        asn1p_expr_t *rtype;
         arg_t tmparg;
 
         rtype = asn1f_lookup_symbol(arg, arg->expr->rhs_pspecs,
@@ -298,6 +299,14 @@ constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
         tmparg.mod = rtype->module;
         ret = asn1constraint_pullup(&tmparg);
         if(ret) return ret;
+
+        if(rtype->ioc_table) {
+            if(!arg->expr->ioc_table)
+                arg->expr->ioc_table = asn1p_ioc_table_new();
+            asn1p_ioc_table_append(arg->expr->ioc_table, rtype->ioc_table);
+            asn1p_value_free(ct->containedSubtype);
+            ct->containedSubtype = NULL;
+        }
 
         ct_expr = rtype->combined_constraints;
         if(!ct_expr) return 0;
@@ -330,6 +339,14 @@ constraint_type_resolve(arg_t *arg, asn1p_constraint_t *ct) {
     }
 
     ct->type = ACT_CA_SET;
+
+    /* keep constrainedSubtype field for future usage,
+       if valueset has not been resolved yet. */
+    if(rtype &&
+        (rtype->meta_type == AMT_VALUESET) &&
+        (!rtype->ioc_table))
+        return 0;
+
     asn1p_value_free(ct->containedSubtype);
     ct->containedSubtype = NULL;
 
