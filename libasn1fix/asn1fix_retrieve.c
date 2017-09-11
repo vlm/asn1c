@@ -31,15 +31,32 @@ asn1f_lookup_child(asn1p_expr_t *tc, const char *name) {
 asn1p_module_t *
 asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 	asn1p_xports_t *xp;
-	asn1p_expr_t *tc;
+	asn1p_module_t *fromModule;
+	asn1p_expr_t *tc = (asn1p_expr_t *)0;
+	asn1p_expr_t *memb = (asn1p_expr_t *)0;
+	asn1p_expr_t *v = (asn1p_expr_t *)0;
 
 	/*
 	 * Search in which exactly module this name is defined.
 	 */
 	TQ_FOR(xp, &(mod->imports), xp_next) {
+		fromModule = asn1f_lookup_module(arg, xp->fromModuleName, NULL);
 		TQ_FOR(tc, &(xp->members), next) {
 			if(strcmp(name, tc->Identifier) == 0)
 				break;
+
+			if(!fromModule)
+				continue;
+
+			TQ_FOR(memb, &(fromModule->members), next) {
+				if((memb->expr_type != ASN_BASIC_ENUMERATED) ||
+					(strcmp(memb->Identifier, tc->Identifier) != 0))
+					continue;
+
+				v = asn1f_lookup_child(memb, name);
+				if (v) break;
+			}
+			if(v) break;
 		}
 		if(tc) break;
 	}
@@ -275,6 +292,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
         struct asn1_namespace_element_s *ns_el =
             &my_namespace->elements[ns_item];
         asn1p_expr_t *ref_tc; /* Referenced tc */
+        asn1p_expr_t *v = (asn1p_expr_t *)0;
 
         switch(ns_el->selector) {
         case NAM_SYMBOL:
@@ -301,6 +319,14 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
             TQ_FOR(ref_tc, &(ns_el->u.space.module->members), next) {
                 if(ref_tc->Identifier)
                     if(strcmp(ref_tc->Identifier, identifier) == 0) break;
+
+                if(ref_tc->expr_type == ASN_BASIC_ENUMERATED) {
+                    v = asn1f_lookup_child(ref_tc, identifier);
+                    if(v) {
+                        ref_tc = v;
+                        break;
+                    }
+                }
             }
             if(ref_tc) {
                 /* It is acceptable that we don't use input parameters */
