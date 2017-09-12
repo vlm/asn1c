@@ -22,6 +22,7 @@ enum xer_encoder_flags_e {
 
 /*
  * The XER encoder of any type. May be invoked by the application.
+ * Produces CANONICAL-XER and BASIC-XER depending on the (xer_flags).
  */
 asn_enc_rval_t xer_encode(struct asn_TYPE_descriptor_s *type_descriptor,
 		void *struct_ptr,	/* Structure to be encoded */

@@ -15,6 +15,7 @@ struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /*
  * The XER decoder of any ASN.1 type. May be invoked by the application.
+ * Decodes CANONICAL-XER and BASIC-XER.
  */
 asn_dec_rval_t xer_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,

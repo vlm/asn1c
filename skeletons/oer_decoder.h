@@ -18,6 +18,7 @@ struct asn_codec_ctx_s;		/* Forward declaration */
 /*
  * The Octet Encoding Rules (OER, X.696 08/2015) decoder for any given type.
  * This function may be invoked directly by the application.
+ * Parses CANONICAL-OER and BASIC-OER.
  */
 asn_dec_rval_t oer_decode(struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,

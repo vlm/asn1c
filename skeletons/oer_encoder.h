@@ -16,6 +16,8 @@ struct asn_TYPE_descriptor_s;	/* Forward declaration */
 /*
  * The Octet Encoding Rules (OER, X.696 08/2015) encoder for any type.
  * This function may be invoked directly by the application.
+ * Produces CANONICAL-OER output compatible with CANONICAL-OER
+ * and BASIC-OER decoders.
  */
 asn_enc_rval_t oer_encode(struct asn_TYPE_descriptor_s *type_descriptor,
                           void *struct_ptr, /* Structure to be encoded */
