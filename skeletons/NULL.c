@@ -153,13 +153,12 @@ asn_enc_rval_t
 NULL_encode_oer(asn_TYPE_descriptor_t *td,
                 const asn_oer_constraints_t *constraints, void *sptr,
                 asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_enc_rval_t er = {0, td, sptr};
 
     (void)constraints;
     (void)cb;
     (void)app_key;
 
-    return er;
+    ASN__ENCODE_FAILED;
 }
 
 #endif /* ASN_DISABLE_OER_SUPPORT */
