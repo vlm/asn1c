@@ -51,10 +51,11 @@ static int write_out(const void *buffer, size_t size, void *key);
 static FILE *argument_to_file(char *av[], int idx);
 static char *argument_to_name(char *av[], int idx);
 
-       int opt_debug;    /* -d (or -dd) */
-static int opt_check;    /* -c (constraints checking) */
-static int opt_stack;    /* -s (maximum stack size) */
-static int opt_onepdu;    /* -1 (decode single PDU) */
+       int opt_debug;   /* -d (or -dd) */
+static int opt_check;   /* -c (constraints checking) */
+static int opt_stack;   /* -s (maximum stack size) */
+static int opt_nopad;   /* -per-nopad (PER input is not padded between msgs) */
+static int opt_onepdu;  /* -1 (decode single PDU) */
 
 #ifdef    JUNKTEST        /* Enable -J <probability> */
 #define    JUNKOPT    "J:"
@@ -241,6 +242,10 @@ main(int ac, char *av[]) {
         }
         break;
     case 'p':
+        if(strcmp(optarg, "er-nopad") == 0) {
+            opt_nopad = 1;
+            break;
+        }
 #ifdef    ASN_PDU_COLLECTION
         if(strcmp(optarg, "list") == 0) {
             asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
@@ -312,6 +317,10 @@ main(int ac, char *av[]) {
                         sel->full_name,
                         (sel->syntax == osyntax) ? " (DEFAULT)" : "");
             }
+        }
+        if(pduType->op->uper_decoder) {
+            fprintf(stderr,
+                    "  -per-nopad   Assume PER PDUs are not padded (-iper)\n");
         }
 #ifdef    ASN_PDU_COLLECTION
         fprintf(stderr,
@@ -648,9 +657,14 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
 }
 
 static int
-restartability_supported(enum asn_transfer_syntax syntax) {
+is_syntax_PER(enum asn_transfer_syntax syntax) {
     return (syntax != ATS_UNALIGNED_BASIC_PER
             && syntax != ATS_UNALIGNED_CANONICAL_PER);
+}
+
+static int
+restartability_supported(enum asn_transfer_syntax syntax) {
+    return is_syntax_PER(syntax);
 }
 
 static void *
@@ -732,8 +746,22 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
         junk_bytes_with_probability(i_bptr, i_size, opt_jprob);
 #endif
 
-        rval = asn_decode(opt_codec_ctx, isyntax, pduType, (void **)&structure,
-                          i_bptr, i_size);
+        if(is_syntax_PER(isyntax) && opt_nopad) {
+#ifdef  ASN_DISABLE_PER_SUPPORT
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+#else
+            rval = uper_decode(opt_codec_ctx, pduType, (void **)&structure,
+                               i_bptr, i_size, 0, DynamicBuffer.unbits);
+            /* uper_decode() returns bits! */
+            ecbits = rval.consumed % 8; /* Bits consumed from the last byte */
+            rval.consumed >>= 3;    /* Convert bits into bytes. */
+#endif
+            /* Non-padded PER decoder */
+        } else {
+            rval = asn_decode(opt_codec_ctx, isyntax, pduType,
+                              (void **)&structure, i_bptr, i_size);
+        }
         if(rval.code == RC_WMORE && !restartability_supported(isyntax)) {
             /* PER does not support restartability */
             ASN_STRUCT_FREE(*pduType, structure);
