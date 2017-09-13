@@ -4835,6 +4835,20 @@ check-oer:
 	done; done; fi
 
 check-per:
+	@if test -f sample-DL-DCCH-Message-1-nopad.per ; then \
+	for f in sample-*-[1-9]-nopad.per; do \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
+	for b in 1 17 33 980 8192; do \
+	echo "Recoding non-padded $$f ($$pdu) into DER into XER and back ($$b)..."; \
+	./${TARGET} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
+	./${TARGET} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \
+	./${TARGET} -p $$pdu -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 4; \
+	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 5; \
+	rm -f ./.tmp.[123].$$$$; \
+	echo "Test junking $$f (please wait)..."; \
+	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 6; \
+	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 7; \
+	done; done; fi
 	@if test -f sample-DL-DCCH-Message-1.per ; then \
 	for f in sample-*-[1-9].per; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
