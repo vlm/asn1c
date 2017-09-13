@@ -118,11 +118,10 @@ AC_ARG_ENABLE([test-asan],
     [AS_HELP_STRING([--enable-test-asan], [Enable Address Sanitizer for tests of generated code])],
     [enable_test_asan=$enableval], [enable_test_asan=no])
   AS_IF([test "x$enable_test_asan" != xno], [
-echo test asan1 [${enable_test_asan}]
     AX_CHECK_COMPILE_FLAG([-fsanitize=address],
       [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fsanitize=address"
-      TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fsanitize=address"]
-                          [enable_test_asan=no])
+      TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fsanitize=address"],
+                          [echo disabling; enable_test_asan=no])
     AS_IF([test "x$enable_test_asan" = xno], [
         AC_MSG_FAILURE(
             [--enable-test-asan is given, but not supported on this platform.
