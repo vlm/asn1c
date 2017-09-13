@@ -63,22 +63,6 @@ TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -std=gnu99"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
       [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -Wno-error=unused-variable"])
 
-AC_ARG_ENABLE(Werror,
-  [AS_HELP_STRING([--enable-Werror],
-                  [abort compilation after any C compiler warning])],
-  [enable_werror=$enableval], [enable_werror=no])
-  AS_IF([test x$enable_werror != xno], [
-      ADD_CFLAGS="-Werror -W -Wpointer-arith"
-  ])
-
-AC_ARG_ENABLE(test-Werror,
-  [AS_HELP_STRING([--enable-test-Werror],
-                  [abort compiling tests after any C compiler warning])],
-  [enable_test_werror=$enableval], [enable_test_werror=no])
-  AS_IF([test x$enable_test_werror != xno], [
-      TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
-  ])
-
 AX_CODE_COVERAGE
 AS_IF([test x$enable_code_coverage != xno], [
 	CFLAGS="$CFLAGS $CODE_COVERAGE_CFLAGS"
@@ -107,18 +91,39 @@ AX_CHECK_COMPILE_FLAG([-Wpedantic],
             [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
     ],
     [-Werror]) #clang 3.0 prints warning when the flag is not supported
+
+AC_ARG_ENABLE(Werror,
+  [AS_HELP_STRING([--enable-Werror],
+                  [abort compilation after any C compiler warning])],
+  [enable_werror=$enableval], [enable_werror=no])
+  AS_IF([test x$enable_werror != xno], [
+      ADD_CFLAGS="${ADD_CFLAGS} -Werror -W -Wall -Wpointer-arith"
+      SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -Werror -W -Wall -Wpointer-arith"
+      AX_CHECK_COMPILE_FLAG([-Wgnu],
+        [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -Wgnu"])
+  ])
+
+AC_ARG_ENABLE(test-Werror,
+  [AS_HELP_STRING([--enable-test-Werror],
+                  [abort compiling tests after any C compiler warning])],
+  [enable_test_werror=$enableval], [enable_test_werror=no])
+  AS_IF([test x$enable_test_werror != xno], [
+      TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Werror -W -Wpointer-arith"
+  ])
+
 dnl Enable Address Sanitizer, if supported by gcc (4.8+) or clang.
 dnl http://clang.llvm.org/docs/AddressSanitizer.html
 dnl https://code.google.com/p/address-sanitizer/wiki/HowToBuild
 AC_ARG_ENABLE([test-asan],
     [AS_HELP_STRING([--enable-test-asan], [Enable Address Sanitizer for tests of generated code])],
     [enable_test_asan=$enableval], [enable_test_asan=no])
-  AS_IF([test "x$enable_asan" != xno], [
+  AS_IF([test "x$enable_test_asan" != xno], [
+echo test asan1 [${enable_test_asan}]
     AX_CHECK_COMPILE_FLAG([-fsanitize=address],
-              [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fsanitize=address"
-              TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fsanitize=address"],
-                          [enable_test_asan=no], [])
-    AS_IF([test "x$enable_asan" = xno], [
+      [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fsanitize=address"
+      TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fsanitize=address"]
+                          [enable_test_asan=no])
+    AS_IF([test "x$enable_test_asan" = xno], [
         AC_MSG_FAILURE(
             [--enable-test-asan is given, but not supported on this platform.
  Check out https://code.google.com/p/address-sanitizer/wiki/HowToBuild])])
