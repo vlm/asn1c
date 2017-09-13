@@ -15,8 +15,8 @@ extern "C" {
 struct asn_TYPE_descriptor_s;	/* Forward declaration */
 
 /*
- * Unaligned PER decoder of a "complete encoding" as per X.691#10.1.
- * On success, this call always returns (.consumed >= 1), as per X.691#10.1.3.
+ * Unaligned PER decoder of a "complete encoding" as per X.691 (08/2015) #11.1.
+ * On success, this call always returns (.consumed >= 1), as per #11.1.3.
  */
 asn_dec_rval_t uper_decode_complete(struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,	/* Type to decode */

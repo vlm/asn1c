@@ -59,7 +59,8 @@ libasn1cskeletons_la_SOURCES = 				\
 	VisibleString.c VisibleString.h			\
 	asn_SEQUENCE_OF.c asn_SEQUENCE_OF.h		\
 	asn_SET_OF.c asn_SET_OF.h			\
-	asn_application.h asn_codecs.h			\
+	asn_application.c asn_application.h			\
+	asn_codecs.h			\
 	asn_codecs_prim.c asn_codecs_prim.h		\
 	asn_internal.h asn_system.h			\
 	asn_bit_data.c asn_bit_data.h			\
@@ -88,3 +89,9 @@ libasn1cskeletons_la_SOURCES = 				\
 	xer_encoder.c xer_encoder.h			\
 	xer_support.c xer_support.h
 
+check_PROGRAMS = check-converter_sample
+LDADD = -lm
+
+check_converter_sample_CFLAGS = $(SKELETONS_CFLAGS) -DNO_ASN_PDU
+check_converter_sample_SOURCES = converter-sample.c
+check_converter_sample_LDADD = libasn1cskeletons.la

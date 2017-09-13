@@ -41,7 +41,7 @@ constr_SET.h constr_SET.c
 constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h
 
 COMMON-FILES:			# THIS IS A SPECIAL SECTION
-asn_application.h		# Applications should include this file
+asn_application.h asn_application.c		# Applications should include this file
 asn_ioc.h			# Information Object Classes, runtime support
 asn_system.h			# Platform-dependent types
 asn_codecs.h			# Return types of encoders and decoders
