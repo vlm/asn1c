@@ -244,8 +244,9 @@ creating the target language files on disk.}\\
 \textbf{Warning Options} & \textbf{Description}\\
 \midrule
 {\ttfamily -Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\\
-{\ttfamily -Wdebug-lexer} & {\small Enable lexer debugging during the ASN.1 parsing stage.}\\
-{\ttfamily -Wdebug-fixer} & {\small Enable ASN.1 syntax  tree  fixer  debugging  during  the fixing stage.}\\
+{\ttfamily -Wdebug-parser} & {\small Enable the parser debugging during the ASN.1 parsing stage.}\\
+{\ttfamily -Wdebug-lexer} & {\small Enable the lexer debugging during the ASN.1 parsing stage.}\\
+{\ttfamily -Wdebug-fixer} & {\small Enable the ASN.1 syntax tree fixer debugging during the fixing stage.}\\
 {\ttfamily -Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\\  \\
 \textbf{Language Options} & \textbf{Description}\\
 \midrule
@@ -325,7 +326,14 @@ fill the target structure for you. See Section~\ref{sub:Decoding-BER}.
 Rules). This encoder will take the target structure and encode it
 into a series of bytes. See Section~\ref{sub:Encoding-DER}. NOTE:
 DER encoding is a subset of BER. Any BER decoder should be able to
-handle DER input.
+handle any DER input.
+\item [{oer\_decoder}] This is the OER (Octet Encoding Rules) decoder.
+\item [{oer\_encoder}] This is the Canonical OER encoder. This encoder
+will take the target structure and encode it into a series of bytes compatible
+with all BASIC-OER and CANONICAL-OER decoders.
+\item [{uper\_decoder}] This is the Unaligned PER decoder.
+\item [{uper\_encoder}] This is the Unaligned Basic PER encoder. This encoder
+will take the target structure and encode it into a series of bytes.
 \item [{xer\_decoder}] This is the generic XER decoder. It takes both BASIC-XER
 or CANONICAL-XER encodings and deserializes the data into a local,
 machine-dependent representation. See Section~\ref{sub:Decoding-XER}.
@@ -333,9 +341,7 @@ machine-dependent representation. See Section~\ref{sub:Decoding-XER}.
 encoder will take the target structure and represent it as an XML
 (text) document using either BASIC-XER or CANONICAL-XER encoding rules.
 See Section~\ref{sub:Encoding-XER}.
-\item [{uper\_decoder}] This is the Unaligned PER decoder.
-\item [{uper\_encoder}] This is the Unaligned Basic PER encoder. This encoder
-will take the target structure and encode it into a series of bytes.
+
 \item [{check\_constraints}] Check that the contents of the target structure
 are semantically valid and constrained to appropriate implicit or
 explicit subtype constraints. See Section~\ref{sub:Validating-the-target}.
@@ -349,6 +355,57 @@ structure. See Section~\ref{sub:Freeing-the-target}.
 Each of the above function takes the type descriptor (\emph{asn\_DEF\_\ldots{}})
 and the target structure (\emph{rect}, in the above example).
 
+\subsection{\label{sub:Generic-Encoding}Generic encoders and decoders}
+
+Before we start describing specific encoders and decoders, let's step back
+a little and check out a simple high level way.
+
+The asn1c runtime supplies (see asn\_application.h) two sets of high level functions, \emph{asn\_encode*} and \emph{asn\_decode*}, which take a transfer syntax selector as the argument. The transfer syntax selector is defined as this:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+/*
+ * A selection of ASN.1 Transfer Syntaxes to use with generalized encoders and decoders.
+ */
+enum asn_transfer_syntax {
+    ATS_INVALID,
+    ATS_NONSTANDARD_PLAINTEXT,
+    ATS_BER,
+    ATS_DER,
+    ATS_CER,
+    ATS_BASIC_OER,
+    ATS_CANONICAL_OER,
+    ATS_UNALIGNED_BASIC_PER,
+    ATS_UNALIGNED_CANONICAL_PER,
+    ATS_BASIC_XER,
+    ATS_CANONICAL_XER,
+};
+\end{codesample}
+
+Using this encoding selector, encoding and decoding becomes very generic:
+
+\noindent{}Encoding:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+uint8_t buffer[128];
+size_t buf_size = sizeof(buffer);
+asn_enc_rval_t er;
+
+er = %\textbf{asn\_encode\emph{\_to\_buffer}}%(0, %\textbf{ATS\_BER}%, &asn_DEF_Rectangle, buffer, buf_size);
+
+if(er.encoded > buf_size) {
+    fprintf(stderr, "Buffer of size %\%%zu is too small for %\%%s, need %\%%zu\n",
+        buf_size, asn_DEF_Rectangle.name, er.encoded);
+    ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
+}
+\end{codesample}
+
+\noindent{}Decoding:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+
+... = %\textbf{asn\_decode}%(0, %\textbf{ATS\_BER}%, &asn_DEF_Rectangle, (void **)%$\underbracket{\textrm{\listingfont \&rect}}$%, buffer, buf_size);
+\end{codesample}
 
 \subsection{\label{sub:Decoding-BER}Decoding BER}
 
@@ -356,7 +413,7 @@ The Basic Encoding Rules describe the most widely used (by the ASN.1
 community) way to encode and decode a given structure in a machine-independent
 way. Several other encoding rules (CER, DER) define a more restrictive
 versions of BER, so the generic BER parser is also capable of decoding
-the data encoded by CER and DER encoders. The opposite is not true.
+the data encoded by the CER and DER encoders. The opposite is not true.
 
 \emph{The ASN.1 compiler provides the generic BER decoder which is
 capable of decoding BER, CER and DER encoded data.}
@@ -383,7 +440,7 @@ consume the whole 100 bytes and keep these 5 bytes in some temporary
 storage), but in case of existing stream based processing it might
 actually fit well into existing algorithm. Suggestions are welcome.
 
-Here is the simplest example of BER decoding:
+Here is the example of BER decoding of a simple structure:
 
 \begin{codesample}
 Rectangle_t *
@@ -391,20 +448,21 @@ simple_deserializer(const void *buffer, size_t buf_size) {
     asn_dec_rval_t rval;
     Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
 
-    rval = %\textbf{asn\_DEF\_Rectangle.ber\_decoder}%(0,
+    rval = %\textbf{asn\_DEF\_Rectangle.op->ber\_decoder}%(0,
           &asn_DEF_Rectangle,
-          (void **) %$\underbracket{\textrm{\listingfont \&rect}}$%,    /* Decoder %\emph{moves}% the pointer */
+          (void **)%$\underbracket{\textrm{\listingfont \&rect}}$%,    /* Decoder %\emph{changes}% the pointer */
           buffer, buf_size, 0);
 
     if(rval%\textbf{.code}% == RC_OK) {
         return rect;          /* Decoding succeeded */
     } else {
-        /* Free partially decoded rect */
+        /* Free the partially decoded rectangle */
         ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
         return 0;
     }
 }
 \end{codesample}
+
 The code above defines a function, \emph{simple\_deserializer}, which
 takes a buffer and its length and is expected to return a pointer
 to the Rectangle\_t structure. Inside, it tries to convert the bytes
@@ -424,7 +482,7 @@ function instead of dereferencing the asn\_DEF\_Rectangle type descriptor:
 \begin{codesample}
 rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
 \end{codesample}
-Note that the initial (asn\_DEF\_Rectangle.ber\_decoder) reference
+Note that the initial (asn\_DEF\_Rectangle.op->ber\_decoder) reference
 is gone, and also the last argument (0) is no longer necessary.
 
 These two ways of BER decoder invocations are fully equivalent.
@@ -513,12 +571,12 @@ to the DER one, described in Section~\ref{sub:Encoding-DER}. The
 following example uses the definition of write\_stream() from up there.
 \begin{codesample}
 /*
- * This procedure generates the XML document
+ * This procedure generates an XML document
  * by invoking the XER encoder.
  * NOTE: Do not copy this code verbatim!
  *       If the stdio output is necessary,
  *       use the xer_fprint() procedure instead.
- *       See Section~%\ref{sub:Printing-the-target}%.
+ *       See Section %\ref{sub:Printing-the-target}%.
  */
 int
 print_as_XML(FILE *ostream, Rectangle_t *rect) {
@@ -655,7 +713,7 @@ Rectangle_t *rect = ...;
  * Freeing the Rectangle_t
  * and freeing the rect pointer.
  */
-ASN_STRUCT_FREE(asn_DEF_Rectangle, &mf->rect);
+ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
 \end{codesample}
 It is safe to invoke both macros with the target structure pointer
 set to 0 (NULL). In this case, the function will do nothing.
