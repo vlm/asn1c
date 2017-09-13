@@ -155,6 +155,8 @@ NULL_encode_oer(asn_TYPE_descriptor_t *td,
                 asn_app_consume_bytes_f *cb, void *app_key) {
     asn_enc_rval_t er;
 
+    (void)td;
+    (void)sptr;
     (void)constraints;
     (void)cb;
     (void)app_key;
