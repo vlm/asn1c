@@ -312,7 +312,9 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
 			 * sorted array of tags.
 			 */
 			const asn_TYPE_tag2member_t *t2m;
-			asn_TYPE_tag2member_t key = {tlv_tag, edx, 0, 0};
+			asn_TYPE_tag2member_t key = {0, 0, 0, 0};
+			key.el_tag = tlv_tag;
+			key.el_no = edx;
 			t2m = (const asn_TYPE_tag2member_t *)bsearch(&key,
 				specs->tag2el, specs->tag2el_count,
 				sizeof(specs->tag2el[0]), _t2e_cmp);

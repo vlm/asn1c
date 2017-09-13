@@ -29,11 +29,36 @@ static volatile double real_zero GCC_NOTUSED = 0.0;
 #define	INFINITY	(1.0/real_zero)
 #endif
 
+#if defined(__clang__)
+/*
+ * isnan() is defined using generic selections and won't compile in
+ * strict C89 mode because of too fancy system's standard library.
+ * However, prior to C11 the math had a perfectly working isnan()
+ * in the math library.
+ * Disable generic selection warning so we can test C89 mode with newer libc.
+ */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc11-extensions"
+static int asn_isnan(double d) {
+    return isnan(d);
+}
+static int asn_isfinite(double d) {
 #ifdef isfinite
-#define _asn_isfinite(d)   isfinite(d)  /* ISO C99 */
+    return isfinite(d);  /* ISO C99 */
 #else
-#define _asn_isfinite(d)   finite(d)    /* Deprecated on Mac OS X 10.9 */
+    return finite(d);    /* Deprecated on Mac OS X 10.9 */
 #endif
+}
+#pragma clang diagnostic pop
+#else   /* !clang */
+#define asn_isnan(v)    isnan(v)
+#ifdef isfinite
+#define asn_isfinite(d)   isfinite(d)  /* ISO C99 */
+#else
+#define asn_isfinite(d)   finite(d)    /* Deprecated on Mac OS X 10.9 */
+#endif
+#endif  /* clang */
+
 
 /*
  * REAL basic type description.
@@ -110,11 +135,11 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 	 * Check whether it is a special value.
 	 */
 	/* fpclassify(3) is not portable yet */
-	if(isnan(d)) {
+	if(asn_isnan(d)) {
 		buf = specialRealValue[SRV__NOT_A_NUMBER].string;
 		buflen = specialRealValue[SRV__NOT_A_NUMBER].length;
 		return (cb(buf, buflen, app_key) < 0) ? -1 : buflen;
-	} else if(!_asn_isfinite(d)) {
+	} else if(!asn_isfinite(d)) {
 		if(copysign(1.0, d) < 0.0) {
 			buf = specialRealValue[SRV__MINUS_INFINITY].string;
 			buflen = specialRealValue[SRV__MINUS_INFINITY].length;
@@ -311,13 +336,13 @@ REAL_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
         ra = asn_REAL2double(a, &adbl);
         rb = asn_REAL2double(b, &bdbl);
         if(ra == 0 && rb == 0) {
-            if(isnan(adbl)) {
-                if(isnan(bdbl)) {
+            if(asn_isnan(adbl)) {
+                if(asn_isnan(bdbl)) {
                     return 0;
                 } else {
                     return -1;
                 }
-            } else if(isnan(bdbl)) {
+            } else if(asn_isnan(bdbl)) {
                 return 1;
             }
             /* Value comparison. */
@@ -535,7 +560,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 			return -1;
 		}
 		if(used_malloc) FREEMEM(buf);
-		if(_asn_isfinite(d)) {
+		if(asn_isfinite(d)) {
 			*dbl_value = d;
 			return 0;
 		} else {
@@ -615,7 +640,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	m = ldexp(m, scaleF) * pow(pow(2, base), expval);
 	 */
 	m = ldexp(m, expval * baseF + scaleF);
-	if(_asn_isfinite(m)) {
+	if(asn_isfinite(m)) {
 		*dbl_value = sign ? -m : m;
 	} else {
 		errno = ERANGE;
@@ -672,11 +697,11 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 			st->buf = ptr;
 		}
 		/* fpclassify(3) is not portable yet */
-		if(isnan(dbl_value)) {
+		if(asn_isnan(dbl_value)) {
 			st->buf[0] = 0x42;	/* NaN */
 			st->buf[1] = 0;
 			st->size = 1;
-		} else if(!_asn_isfinite(dbl_value)) {
+		} else if(!asn_isfinite(dbl_value)) {
 			if(copysign(1.0, dbl_value) < 0.0) {
 				st->buf[0] = 0x41;	/* MINUS-INFINITY */
 			} else {

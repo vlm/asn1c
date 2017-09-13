@@ -67,7 +67,7 @@ static void   junk_bytes_with_probability(uint8_t *, size_t, double prob);
 #endif
 
 /* Debug output function */
-static inline void
+static void
 DEBUG(const char *fmt, ...) {
     va_list ap;
     if(!opt_debug) return;
