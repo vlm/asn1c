@@ -105,6 +105,61 @@ ats_simple_name(enum asn_transfer_syntax syntax) {
     }
 }
 
+
+#define OP_OFFSET(fname)  (unsigned)(&(((asn_TYPE_operation_t *)0)->fname))
+typedef struct {
+    const char *name;
+    enum asn_transfer_syntax syntax;
+    unsigned codec_offset;
+    const char *full_name;
+} syntax_selector;
+
+static syntax_selector input_encodings[] = {
+    {"ber", ATS_BER, OP_OFFSET(ber_decoder),
+     "Input is in BER (Basic Encoding Rules) or DER"},
+    {"oer", ATS_BASIC_OER, OP_OFFSET(oer_decoder),
+     "Input is in OER (Octet Encoding Rules)"},
+    {"per", ATS_UNALIGNED_BASIC_PER, OP_OFFSET(uper_decoder),
+     "Input is in Unaligned PER (Packed Encoding Rules)"},
+    {"xer", ATS_BASIC_XER, OP_OFFSET(xer_decoder),
+     "Input is in XER (XML Encoding Rules)"},
+    {0, ATS_INVALID, 0, 0}};
+
+static syntax_selector output_encodings[] = {
+    {"der", ATS_DER, OP_OFFSET(der_encoder),
+     "Output as DER (Distinguished Encoding Rules)"},
+    {"oer", ATS_CANONICAL_OER, OP_OFFSET(oer_encoder),
+     "Output as Canonical OER (Octet Encoding Rules)"},
+    {"per", ATS_UNALIGNED_CANONICAL_PER, OP_OFFSET(uper_encoder),
+     "Output as Unaligned PER (Packed Encoding Rules)"},
+    {"xer", ATS_BASIC_XER, OP_OFFSET(xer_encoder),
+     "Output as XER (XML Encoding Rules)"},
+    {"text", ATS_NONSTANDARD_PLAINTEXT, OP_OFFSET(print_struct),
+     "Output as plain semi-structured text"},
+    {"null", ATS_INVALID, OP_OFFSET(print_struct),
+     "Verify (decode) input, but do not output"},
+    {0, ATS_INVALID, 0, 0}};
+
+/*
+ * Select ASN.1 Transfer Enocoding Syntax by command line name.
+ */
+static const syntax_selector *
+ats_by_name(const char *name, const asn_TYPE_descriptor_t *td,
+            const syntax_selector *first_element) {
+    const syntax_selector *element;
+    for(element = first_element; element->name; element++) {
+        if(strcmp(element->name, name) == 0) {
+            if(td && td->op
+               && *(const void *const *)(const void *)((const char *)td->op
+                                                       + element
+                                                             ->codec_offset)) {
+                return element;
+            }
+        }
+    }
+    return NULL;
+}
+
 int
 main(int ac, char *av[]) {
     FILE *binary_out;
@@ -113,8 +168,9 @@ main(int ac, char *av[]) {
     int number_of_iterations = 1;
     int num;
     int ch;
+    const syntax_selector *sel;
     enum asn_transfer_syntax isyntax = ATS_INVALID;
-    enum asn_transfer_syntax osyntax = ATS_INVALID;
+    enum asn_transfer_syntax osyntax = ATS_BASIC_XER;
 
 #ifndef  PDU
     if(!pduType) {
@@ -128,9 +184,9 @@ main(int ac, char *av[]) {
 #endif
 
     /* Figure out if specialty decoder needs to be default */
-    if(pduType->op->oer_decoder)
+    if(ats_by_name("oer", pduType, input_encodings))
         isyntax = ATS_BASIC_OER;
-    else if(pduType->op->uper_decoder)
+    if(ats_by_name("per", pduType, input_encodings))
         isyntax = ATS_UNALIGNED_BASIC_PER;
 
     /*
@@ -139,27 +195,25 @@ main(int ac, char *av[]) {
     while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:" JUNKOPT)) != -1)
     switch(ch) {
     case 'i':
-        if(optarg[0] == 'b') { isyntax = ATS_BER; break; }
-        if(optarg[0] == 'x') { isyntax = ATS_BASIC_XER; break; }
-        if(pduType->op->oer_decoder
-        && optarg[0] == 'o') { isyntax = ATS_BASIC_OER; break; }
-        if(pduType->op->uper_decoder
-        && optarg[0] == 'p') { isyntax = ATS_UNALIGNED_BASIC_PER; break; }
-        fprintf(stderr, "-i<format>: '%s': improper format selector\n",
-            optarg);
-        exit(EX_UNAVAILABLE);
+        sel = ats_by_name(optarg, pduType, input_encodings);
+        if(sel) {
+            isyntax = sel->syntax;
+        } else {
+            fprintf(stderr, "-i<format>: '%s': improper format selector\n",
+                    optarg);
+            exit(EX_UNAVAILABLE);
+        }
+        break;
     case 'o':
-        if(optarg[0] == 'd') { osyntax = ATS_DER; break; }
-        if(pduType->op->oer_encoder
-        && optarg[0] == 'o') { osyntax = ATS_CANONICAL_OER; break; }
-        if(pduType->op->uper_encoder
-        && optarg[0] == 'p') { osyntax = ATS_UNALIGNED_CANONICAL_PER; break; }
-        if(optarg[0] == 'x') { osyntax = ATS_BASIC_XER; break; }
-        if(optarg[0] == 't') { osyntax = ATS_NONSTANDARD_PLAINTEXT; break; }
-        if(optarg[0] == 'n') { osyntax = ATS_INVALID; break; }
-        fprintf(stderr, "-o<format>: '%s': improper format selector\n",
-            optarg);
-        exit(EX_UNAVAILABLE);
+        sel = ats_by_name(optarg, pduType, output_encodings);
+        if(sel) {
+            osyntax = sel->syntax;
+        } else {
+            fprintf(stderr, "-o<format>: '%s': improper format selector\n",
+                    optarg);
+            exit(EX_UNAVAILABLE);
+        }
+        break;
     case '1':
         opt_onepdu = 1;
         break;
@@ -249,30 +303,21 @@ main(int ac, char *av[]) {
 #endif
         fprintf(stderr, "Usage: %s [options] <datafile> ...\n", av[0]);
         fprintf(stderr, "Where options are:\n");
-        if(pduType->op->oer_decoder)
-        fprintf(stderr,
-        "  -ioer        Input is in OER (Octet Encoding Rules)%s\n",
-            isyntax == ATS_BASIC_OER ? " (DEFAULT)" : "");
-        if(pduType->op->uper_decoder)
-        fprintf(stderr,
-        "  -iper        Input is in Unaligned PER (Packed Encoding Rules)%s\n",
-            isyntax == ATS_UNALIGNED_BASIC_PER ? " (DEFAULT)" : "");
-        fprintf(stderr,
-        "  -iber        Input is in BER (Basic Encoding Rules)%s\n",
-            isyntax == ATS_BER ? " (DEFAULT)" : "");
-        fprintf(stderr,
-        "  -ixer        Input is in XER (XML Encoding Rules)\n");
-        if(pduType->op->oer_encoder)
-        fprintf(stderr,
-        "  -ooer        Output in Canonical OER (Octet Encoding Rules)\n");
-        if(pduType->op->uper_encoder)
-        fprintf(stderr,
-        "  -oper        Output in Unaligned PER (Packed Encoding Rules)\n");
-        fprintf(stderr,
-        "  -oder        Output in DER (Distinguished Encoding Rules)\n"
-        "  -oxer        Output in XER (XML Encoding Rules) (DEFAULT)\n"
-        "  -otext       Output in plain semi-structured text (dump)\n"
-        "  -onull       Verify (decode) input, but do not output\n");
+        for(sel = input_encodings; sel->name; sel++) {
+            if(ats_by_name(sel->name, pduType, sel)) {
+                fprintf(stderr, "  -i%s        %s%s\n", sel->name,
+                        sel->full_name,
+                        (sel->syntax == isyntax) ? " (DEFAULT)" : "");
+            }
+        }
+        for(sel = output_encodings; sel->name; sel++) {
+            if(ats_by_name(sel->name, pduType, sel)) {
+                fprintf(stderr, "  -o%s%s       %s%s\n", sel->name,
+                        strlen(sel->name) > 3 ? "" : " ",
+                        sel->full_name,
+                        (sel->syntax == osyntax) ? " (DEFAULT)" : "");
+            }
+        }
         if(pduType->op->uper_decoder)
         fprintf(stderr,
         "  -per-nopad   Assume PER PDUs are not padded (-iper)\n");
@@ -306,7 +351,9 @@ main(int ac, char *av[]) {
     }
 
     if(isatty(1)) {
-        const int is_text_output = osyntax == ATS_NONSTANDARD_PLAINTEXT || osyntax == ATS_CANONICAL_XER || osyntax == ATS_BASIC_XER;
+        const int is_text_output = osyntax == ATS_NONSTANDARD_PLAINTEXT
+                                   || osyntax == ATS_BASIC_XER
+                                   || osyntax == ATS_CANONICAL_XER;
         if(is_text_output) {
             binary_out = stdout;
         } else {
@@ -372,7 +419,8 @@ main(int ac, char *av[]) {
                 fprintf(stderr, "%s: decoded successfully\n", name);
 #endif
             } else {
-                erv = asn_encode(NULL, osyntax, pduType, structure, write_out, binary_out);
+                erv = asn_encode(NULL, osyntax, pduType, structure, write_out,
+                                 binary_out);
 
                 if(erv.encoded == -1) {
                     fprintf(stderr, "%s: Cannot convert %s into %s\n", name,
@@ -688,10 +736,12 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
 
         switch(isyntax) {
         case ATS_BER:
+        case ATS_DER:
             rval = ber_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
             break;
         case ATS_BASIC_OER:
+        case ATS_CANONICAL_OER:
 #ifdef ASN_DISABLE_OER_SUPPORT
             rval.code = RC_FAIL;
             rval.consumed = 0;
@@ -701,10 +751,12 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
 #endif
             break;
         case ATS_BASIC_XER:
+        case ATS_CANONICAL_XER:
             rval = xer_decode(opt_codec_ctx, pduType,
                 (void **)&structure, i_bptr, i_size);
             break;
         case ATS_UNALIGNED_BASIC_PER:
+        case ATS_UNALIGNED_CANONICAL_PER:
 #ifdef ASN_DISABLE_PER_SUPPORT
             rval.code = RC_FAIL;
             rval.consumed = 0;
@@ -794,7 +846,7 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
         break;
     }
 
-    DEBUG("Clean up partially decoded structure");
+    DEBUG("Clean up partially decoded %s", pduType->name);
     ASN_STRUCT_FREE(*pduType, structure);
 
     new_offset = DynamicBuffer.bytes_shifted + DynamicBuffer.offset;
