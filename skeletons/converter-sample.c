@@ -54,7 +54,6 @@ static char *argument_to_name(char *av[], int idx);
        int opt_debug;    /* -d (or -dd) */
 static int opt_check;    /* -c (constraints checking) */
 static int opt_stack;    /* -s (maximum stack size) */
-static int opt_nopad;    /* -per-nopad (PER input is not padded) */
 static int opt_onepdu;    /* -1 (decode single PDU) */
 
 #ifdef    JUNKTEST        /* Enable -J <probability> */
@@ -242,10 +241,6 @@ main(int ac, char *av[]) {
         }
         break;
     case 'p':
-        if(strcmp(optarg, "er-nopad") == 0) {
-            opt_nopad = 1;
-            break;
-        }
 #ifdef    ASN_PDU_COLLECTION
         if(strcmp(optarg, "list") == 0) {
             asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
@@ -318,9 +313,6 @@ main(int ac, char *av[]) {
                         (sel->syntax == osyntax) ? " (DEFAULT)" : "");
             }
         }
-        if(pduType->op->uper_decoder)
-        fprintf(stderr,
-        "  -per-nopad   Assume PER PDUs are not padded (-iper)\n");
 #ifdef    ASN_PDU_COLLECTION
         fprintf(stderr,
         "  -p <PDU>     Specify PDU type to decode\n"
@@ -655,6 +647,12 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
         (long)DynamicBuffer.allocated);
 }
 
+static int
+restartability_supported(enum asn_transfer_syntax syntax) {
+    return (syntax != ATS_UNALIGNED_BASIC_PER
+            && syntax != ATS_UNALIGNED_CANONICAL_PER);
+}
+
 static void *
 data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *pduType, FILE *file, const char *name, ssize_t suggested_bufsize, int on_first_pdu) {
     static uint8_t *fbuf;
@@ -734,66 +732,16 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
         junk_bytes_with_probability(i_bptr, i_size, opt_jprob);
 #endif
 
-        switch(isyntax) {
-        case ATS_BER:
-        case ATS_DER:
-            rval = ber_decode(opt_codec_ctx, pduType,
-                (void **)&structure, i_bptr, i_size);
-            break;
-        case ATS_BASIC_OER:
-        case ATS_CANONICAL_OER:
-#ifdef ASN_DISABLE_OER_SUPPORT
-            rval.code = RC_FAIL;
+        rval = asn_decode(opt_codec_ctx, isyntax, pduType, (void **)&structure,
+                          i_bptr, i_size);
+        if(rval.code == RC_WMORE && !restartability_supported(isyntax)) {
+            /* PER does not support restartability */
+            ASN_STRUCT_FREE(*pduType, structure);
+            structure = 0;
             rval.consumed = 0;
-#else
-            rval = oer_decode(opt_codec_ctx, pduType,
-                (void **)&structure, i_bptr, i_size);
-#endif
-            break;
-        case ATS_BASIC_XER:
-        case ATS_CANONICAL_XER:
-            rval = xer_decode(opt_codec_ctx, pduType,
-                (void **)&structure, i_bptr, i_size);
-            break;
-        case ATS_UNALIGNED_BASIC_PER:
-        case ATS_UNALIGNED_CANONICAL_PER:
-#ifdef ASN_DISABLE_PER_SUPPORT
-            rval.code = RC_FAIL;
-            rval.consumed = 0;
-#else
-            if(opt_nopad)
-            rval = uper_decode(opt_codec_ctx, pduType,
-                (void **)&structure, i_bptr, i_size, 0,
-                DynamicBuffer.unbits);
-            else
-            rval = uper_decode_complete(opt_codec_ctx, pduType,
-                (void **)&structure, i_bptr, i_size);
-#endif
-            switch(rval.code) {
-            case RC_OK:
-                /* Fall through */
-            case RC_FAIL:
-                if(opt_nopad) {
-                    /* uper_decode() returns bits! */
-                    /* Extra bits */
-                    ecbits = rval.consumed % 8;
-                    /* Convert into bytes! */
-                    rval.consumed /= 8;
-                }
-                break;
-            case RC_WMORE:
-                /* PER does not support restartability */
-                ASN_STRUCT_FREE(*pduType, structure);
-                structure = 0;
-                rval.consumed = 0;
-                /* Continue accumulating data */
-                break;
-            }
-            break;
-        default:
-            rval.consumed = 0;
-            /* Fall through */
+            /* Continue accumulating data */
         }
+
         DEBUG("decode(%ld) consumed %ld+%db (%ld), code %d",
             (long)DynamicBuffer.length,
             (long)rval.consumed, ecbits, (long)i_size,

@@ -292,3 +292,51 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_parameters,
 
     return er;
 }
+
+asn_dec_rval_t
+asn_decode(const asn_codec_ctx_t *opt_codec_parameters,
+           enum asn_transfer_syntax syntax, struct asn_TYPE_descriptor_s *td,
+           void **sptr, const void *buffer, size_t size) {
+
+    (void)opt_codec_parameters;
+    asn_codec_ctx_t *opt_ctx = 0;
+
+    if(!td || !sptr || (size && !buffer)) {
+        ASN__DECODE_FAILED;
+    }
+
+    switch(syntax) {
+    case ATS_CER:
+    case ATS_NONSTANDARD_PLAINTEXT:
+    default:
+        errno = ENOENT;
+        ASN__DECODE_FAILED;
+
+    case ATS_DER:
+    case ATS_BER:
+        return ber_decode(opt_ctx, td, sptr, buffer, size);
+
+    case ATS_BASIC_OER:
+    case ATS_CANONICAL_OER:
+#ifdef  ASN_DISABLE_OER_SUPPORT
+        errno = ENOENT;
+        ASN__DECODE_FAILED;
+#else
+        return oer_decode(opt_ctx, td, sptr, buffer, size);
+#endif
+
+    case ATS_UNALIGNED_BASIC_PER:
+    case ATS_UNALIGNED_CANONICAL_PER:
+#ifdef  ASN_DISABLE_PER_SUPPORT
+        errno = ENOENT;
+        ASN__DECODE_FAILED;
+#else
+        return uper_decode_complete(opt_ctx, td, sptr, buffer, size);
+#endif
+
+    case ATS_BASIC_XER:
+    case ATS_CANONICAL_XER:
+        return xer_decode(opt_ctx, td, sptr, buffer, size);
+    }
+}
+
