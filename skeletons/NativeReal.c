@@ -64,7 +64,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
  * Decode REAL type.
  */
 asn_dec_rval_t
-NativeReal_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
+NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **dbl_ptr, const void *buf_ptr, size_t size, int tag_mode) {
 	double *Dbl = (double *)*dbl_ptr;
@@ -212,7 +212,7 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
  * Decode REAL type using PER.
  */
 asn_dec_rval_t
-NativeReal_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+NativeReal_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                        asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints, void **dbl_ptr,
                        asn_per_data_t *pd) {
@@ -285,7 +285,7 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
  * Decode the chunk of XML text encoding REAL.
  */
 asn_dec_rval_t
-NativeReal_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+NativeReal_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 	asn_dec_rval_t rval;

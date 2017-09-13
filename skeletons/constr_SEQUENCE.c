@@ -110,7 +110,7 @@ _t2e_cmp(const void *ap, const void *bp) {
  * The decoder of the SEQUENCE type.
  */
 asn_dec_rval_t
-SEQUENCE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
@@ -626,7 +626,7 @@ SEQUENCE_encode_der(asn_TYPE_descriptor_t *td,
  * Decode the XER (XML) data.
  */
 asn_dec_rval_t
-SEQUENCE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SEQUENCE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
 		const void *ptr, size_t size) {
 	/*
@@ -1079,7 +1079,7 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 #ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-SEQUENCE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SEQUENCE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                      const asn_per_constraints_t *constraints, void **sptr,
                      asn_per_data_t *pd) {
 	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;

@@ -7,7 +7,7 @@
 #include <errno.h>
 
 static asn_enc_rval_t asn_encode_internal(
-    const asn_codec_ctx_t *opt_codec_parameters,
+    const asn_codec_ctx_t *opt_codec_ctx,
     enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
     void *sptr, asn_app_consume_bytes_f *callback, void *callback_key);
 
@@ -85,7 +85,7 @@ callback_failure_catch_cb(const void *data, size_t size, void *keyp) {
 }
 
 asn_enc_rval_t
-asn_encode(const asn_codec_ctx_t *opt_codec_parameters,
+asn_encode(const asn_codec_ctx_t *opt_codec_ctx,
            enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
            void *sptr, asn_app_consume_bytes_f *callback, void *callback_key) {
     struct callback_failure_catch_key cb_key;
@@ -100,7 +100,7 @@ asn_encode(const asn_codec_ctx_t *opt_codec_parameters,
     cb_key.callback_key = callback_key;
     cb_key.callback_failed = 0;
 
-    er = asn_encode_internal(opt_codec_parameters, syntax, td, sptr,
+    er = asn_encode_internal(opt_codec_ctx, syntax, td, sptr,
                              callback_failure_catch_cb, &cb_key);
     if(cb_key.callback_failed) {
         assert(er.encoded == -1);
@@ -112,7 +112,7 @@ asn_encode(const asn_codec_ctx_t *opt_codec_parameters,
 }
 
 asn_enc_rval_t
-asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_parameters,
+asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_ctx,
                      enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
                      void *sptr, void *buffer, size_t buffer_size) {
     struct overrun_encoder_key buf_key;
@@ -127,7 +127,7 @@ asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_parameters,
     buf_key.buffer_size = buffer_size;
     buf_key.computed_size = 0;
 
-    er = asn_encode_internal(opt_codec_parameters, syntax, td, sptr,
+    er = asn_encode_internal(opt_codec_ctx, syntax, td, sptr,
                              overrun_encoder_cb, &buf_key);
 
     assert(er.encoded < 0 || (size_t)er.encoded == buf_key.computed_size);
@@ -136,14 +136,14 @@ asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_parameters,
 }
 
 static asn_enc_rval_t
-asn_encode_internal(const asn_codec_ctx_t *opt_codec_parameters,
+asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
                     enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
                     void *sptr, asn_app_consume_bytes_f *callback,
                     void *callback_key) {
     asn_enc_rval_t er;
     enum xer_encoder_flags_e xer_flags = XER_F_CANONICAL;
 
-    (void)opt_codec_parameters; /* Parameters are not checked on encode yet. */
+    (void)opt_codec_ctx; /* Parameters are not checked on encode yet. */
 
     if(!td || !sptr) {
         errno = EINVAL;
@@ -294,12 +294,9 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_parameters,
 }
 
 asn_dec_rval_t
-asn_decode(const asn_codec_ctx_t *opt_codec_parameters,
+asn_decode(const asn_codec_ctx_t *opt_codec_ctx,
            enum asn_transfer_syntax syntax, struct asn_TYPE_descriptor_s *td,
            void **sptr, const void *buffer, size_t size) {
-
-    (void)opt_codec_parameters;
-    asn_codec_ctx_t *opt_ctx = 0;
 
     if(!td || !sptr || (size && !buffer)) {
         ASN__DECODE_FAILED;
@@ -314,7 +311,7 @@ asn_decode(const asn_codec_ctx_t *opt_codec_parameters,
 
     case ATS_DER:
     case ATS_BER:
-        return ber_decode(opt_ctx, td, sptr, buffer, size);
+        return ber_decode(opt_codec_ctx, td, sptr, buffer, size);
 
     case ATS_BASIC_OER:
     case ATS_CANONICAL_OER:
@@ -322,7 +319,7 @@ asn_decode(const asn_codec_ctx_t *opt_codec_parameters,
         errno = ENOENT;
         ASN__DECODE_FAILED;
 #else
-        return oer_decode(opt_ctx, td, sptr, buffer, size);
+        return oer_decode(opt_codec_ctx, td, sptr, buffer, size);
 #endif
 
     case ATS_UNALIGNED_BASIC_PER:
@@ -331,12 +328,12 @@ asn_decode(const asn_codec_ctx_t *opt_codec_parameters,
         errno = ENOENT;
         ASN__DECODE_FAILED;
 #else
-        return uper_decode_complete(opt_ctx, td, sptr, buffer, size);
+        return uper_decode_complete(opt_codec_ctx, td, sptr, buffer, size);
 #endif
 
     case ATS_BASIC_XER:
     case ATS_CANONICAL_XER:
-        return xer_decode(opt_ctx, td, sptr, buffer, size);
+        return xer_decode(opt_codec_ctx, td, sptr, buffer, size);
     }
 }
 

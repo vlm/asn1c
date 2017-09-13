@@ -27,7 +27,7 @@
  * The BER decoder of any type.
  */
 asn_dec_rval_t
-ber_decode(asn_codec_ctx_t *opt_codec_ctx,
+ber_decode(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *type_descriptor,
 	void **struct_ptr, const void *ptr, size_t size) {
 	asn_codec_ctx_t s_codec_ctx;
@@ -62,7 +62,7 @@ ber_decode(asn_codec_ctx_t *opt_codec_ctx,
  * Check the set of <TL<TL<TL...>>> tags matches the definition.
  */
 asn_dec_rval_t
-ber_check_tags(asn_codec_ctx_t *opt_codec_ctx,
+ber_check_tags(const asn_codec_ctx_t *opt_codec_ctx,
 		asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx,
 		const void *ptr, size_t size, int tag_mode, int last_tag_form,
 		ber_tlv_len_t *last_length, int *opt_tlv_form) {

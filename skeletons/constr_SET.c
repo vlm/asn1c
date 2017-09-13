@@ -94,7 +94,7 @@ _t2e_cmp(const void *ap, const void *bp) {
  * The decoder of the SET type.
  */
 asn_dec_rval_t
-SET_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
@@ -605,7 +605,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
  * Decode the XER (XML) data.
  */
 asn_dec_rval_t
-SET_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 	/*

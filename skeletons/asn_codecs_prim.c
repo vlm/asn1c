@@ -10,7 +10,7 @@
  * Decode an always-primitive type.
  */
 asn_dec_rval_t
-ber_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
+ber_decode_primitive(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
 	ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)*sptr;
@@ -248,7 +248,7 @@ xer_decode__primitive_body(void *key, const void *chunk_buf, size_t chunk_size, 
 
 
 asn_dec_rval_t
-xer_decode_primitive(asn_codec_ctx_t *opt_codec_ctx,
+xer_decode_primitive(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **sptr,
 	size_t struct_size,

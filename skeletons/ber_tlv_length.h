@@ -32,7 +32,7 @@ ssize_t ber_fetch_length(int _is_constructed, const void *bufptr, size_t size,
  * 	Standard {-1,0,>0} convention.
  */
 ssize_t ber_skip_length(
-	struct asn_codec_ctx_s *opt_codec_ctx,	/* optional context */
+	const struct asn_codec_ctx_s *opt_codec_ctx,	/* optional context */
 	int _is_constructed, const void *bufptr, size_t size);
 
 /*

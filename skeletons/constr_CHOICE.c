@@ -103,7 +103,7 @@ _search4tag(const void *ap, const void *bp) {
  * The decoder of the CHOICE type.
  */
 asn_dec_rval_t
-CHOICE_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+CHOICE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
@@ -549,7 +549,7 @@ CHOICE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * Decode the XER (XML) data.
  */
 asn_dec_rval_t
-CHOICE_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+CHOICE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 	/*
@@ -830,7 +830,7 @@ cb_failed:
 }
 
 asn_dec_rval_t
-CHOICE_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+CHOICE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                    const asn_per_constraints_t *constraints, void **sptr,
                    asn_per_data_t *pd) {
     asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;

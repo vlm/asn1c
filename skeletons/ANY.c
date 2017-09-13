@@ -184,7 +184,7 @@ static int ANY__consume_bytes(const void *buffer, size_t size, void *key) {
 #ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-ANY_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 const asn_per_constraints_t *constraints, void **sptr,
                 asn_per_data_t *pd) {
     asn_OCTET_STRING_specifics_t *specs =

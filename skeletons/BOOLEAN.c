@@ -55,7 +55,7 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
  * Decode BOOLEAN type.
  */
 asn_dec_rval_t
-BOOLEAN_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
+BOOLEAN_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		asn_TYPE_descriptor_t *td,
 		void **bool_value, const void *buf_ptr, size_t size,
 		int tag_mode) {
@@ -184,7 +184,7 @@ BOOLEAN__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 
 
 asn_dec_rval_t
-BOOLEAN_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+BOOLEAN_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 
@@ -262,7 +262,7 @@ BOOLEAN_free(const asn_TYPE_descriptor_t *td, void *ptr,
 }
 
 asn_dec_rval_t
-BOOLEAN_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+BOOLEAN_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                     const asn_per_constraints_t *constraints, void **sptr,
                     asn_per_data_t *pd) {
     asn_dec_rval_t rv;

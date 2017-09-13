@@ -8,7 +8,7 @@
  * The OER decoder of any type.
  */
 asn_dec_rval_t
-oer_decode(asn_codec_ctx_t *opt_codec_ctx,
+oer_decode(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *type_descriptor,
 	void **struct_ptr, const void *ptr, size_t size) {
 	asn_codec_ctx_t s_codec_ctx;
@@ -56,7 +56,7 @@ oer_open_type_skip(const void *bufptr, size_t size) {
  *      >0:     Number of bytes used from bufptr.
  */
 ssize_t
-oer_open_type_get(asn_codec_ctx_t *opt_codec_ctx,
+oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
                   struct asn_TYPE_descriptor_s *td,
                   asn_oer_constraints_t *constraints, void **struct_ptr,
                   const void *bufptr, size_t size) {

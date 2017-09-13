@@ -89,7 +89,7 @@ NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 }
 
 asn_dec_rval_t
-NativeEnumerated_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+NativeEnumerated_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, const asn_per_constraints_t *constraints,
 	void **sptr, asn_per_data_t *pd) {
     const asn_INTEGER_specifics_t *specs =

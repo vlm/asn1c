@@ -36,7 +36,7 @@ asn_TYPE_operation_t asn_OP_OPEN_TYPE = {
     } while(0)
 
 asn_dec_rval_t
-OPEN_TYPE_ber_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+OPEN_TYPE_ber_get(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                   void *sptr, asn_TYPE_member_t *elm, const void *ptr,
                   size_t size) {
     size_t consumed_myself = 0;
@@ -120,7 +120,7 @@ OPEN_TYPE_ber_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_dec_rval_t
-OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+OPEN_TYPE_xer_get(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                   void *sptr, asn_TYPE_member_t *elm, const void *ptr,
                   size_t size) {
     size_t consumed_myself = 0;
@@ -283,7 +283,7 @@ OPEN_TYPE_xer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 #ifndef  ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-OPEN_TYPE_uper_get(asn_codec_ctx_t *opt_codec_ctx,
+OPEN_TYPE_uper_get(const asn_codec_ctx_t *opt_codec_ctx,
                    asn_TYPE_descriptor_t *td, void *sptr,
                    asn_TYPE_member_t *elm, asn_per_data_t *pd) {
     asn_type_selector_result_t selected;

@@ -76,7 +76,7 @@ static void *element_ptr(void *struct_ptr, asn_TYPE_member_t *elm) {
 }
 
 asn_dec_rval_t
-SEQUENCE_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                     const asn_oer_constraints_t *constraints, void **struct_ptr,
                     const void *ptr, size_t size) {
     asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;

@@ -108,11 +108,11 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
  */
 #define	ASN__DEFAULT_STACK_MAX	(30000)
 static int GCC_NOTUSED
-ASN__STACK_OVERFLOW_CHECK(asn_codec_ctx_t *ctx) {
+ASN__STACK_OVERFLOW_CHECK(const asn_codec_ctx_t *ctx) {
 	if(ctx && ctx->max_stack_size) {
 
 		/* ctx MUST be allocated on the stack */
-		ptrdiff_t usedstack = ((char *)ctx - (char *)&ctx);
+		ptrdiff_t usedstack = ((const char *)ctx - (const char *)&ctx);
 		if(usedstack > 0) usedstack = -usedstack; /* grows up! */
 
 		/* double negative required to avoid int wrap-around */

@@ -8,7 +8,7 @@
 #include <errno.h>
 
 asn_dec_rval_t
-OPEN_TYPE_oer_get(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+OPEN_TYPE_oer_get(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                   void *sptr, asn_TYPE_member_t *elm, const void *ptr,
                   size_t size) {
     asn_type_selector_result_t selected;

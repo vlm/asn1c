@@ -150,7 +150,7 @@ RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void 
 }
 
 asn_dec_rval_t
-RELATIVE_OID_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+RELATIVE_OID_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 

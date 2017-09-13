@@ -20,7 +20,7 @@ struct asn_codec_ctx_s;		/* Forward declaration */
  * This function may be invoked directly by the application.
  * Parses CANONICAL-OER and BASIC-OER.
  */
-asn_dec_rval_t oer_decode(struct asn_codec_ctx_s *opt_codec_ctx,
+asn_dec_rval_t oer_decode(const struct asn_codec_ctx_s *opt_codec_ctx,
 	struct asn_TYPE_descriptor_s *type_descriptor,
 	void **struct_ptr,	/* Pointer to a target structure's pointer */
 	const void *buffer,	/* Data to be decoded */
@@ -31,7 +31,7 @@ asn_dec_rval_t oer_decode(struct asn_codec_ctx_s *opt_codec_ctx,
  * Type of generic function which decodes the byte stream into the structure.
  */
 typedef asn_dec_rval_t(oer_type_decoder_f)(
-    struct asn_codec_ctx_s *opt_codec_ctx,
+    const struct asn_codec_ctx_s *opt_codec_ctx,
     struct asn_TYPE_descriptor_s *type_descriptor,
     const asn_oer_constraints_t *constraints,
     void **struct_ptr,
@@ -54,7 +54,7 @@ ssize_t oer_open_type_skip(const void *bufptr, size_t size);
  *      -1:     Fatal error deciphering length.
  *      >0:     Number of bytes used from bufptr.
  */
-ssize_t oer_open_type_get(asn_codec_ctx_t *opt_codec_ctx,
+ssize_t oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
                           struct asn_TYPE_descriptor_s *td,
                           asn_oer_constraints_t *constraints, void **struct_ptr,
                           const void *bufptr, size_t size);

@@ -107,7 +107,7 @@ oer_fetch_quantity(const void *ptr, size_t size, size_t *qty_r) {
 }
 
 asn_dec_rval_t
-SET_OF_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                     const asn_oer_constraints_t *constraints, void **struct_ptr,
                     const void *ptr, size_t size) {
     asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;

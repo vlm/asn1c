@@ -11,7 +11,7 @@
  * Decode the XER encoding of a given type.
  */
 asn_dec_rval_t
-xer_decode(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+xer_decode(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		void **struct_ptr, const void *buffer, size_t size) {
 	asn_codec_ctx_t s_codec_ctx;
 
@@ -201,7 +201,7 @@ xer_check_tag(const void *buf_ptr, int size, const char *need_tag) {
  * Generalized function for decoding the primitive values.
  */
 asn_dec_rval_t
-xer_decode_general(asn_codec_ctx_t *opt_codec_ctx,
+xer_decode_general(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_struct_ctx_t *ctx,	/* Type decoder context */
 	void *struct_key,
 	const char *xml_tag,	/* Expected XML tag */

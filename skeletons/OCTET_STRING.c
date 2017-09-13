@@ -182,7 +182,7 @@ _new_stack(void) {
  * Decode OCTET STRING type.
  */
 asn_dec_rval_t
-OCTET_STRING_decode_ber(asn_codec_ctx_t *opt_codec_ctx,
+OCTET_STRING_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
 	asn_OCTET_STRING_specifics_t *specs = td->specifics
@@ -1115,7 +1115,7 @@ static ssize_t OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf, 
  * Decode OCTET STRING from the XML element's body.
  */
 static asn_dec_rval_t
-OCTET_STRING__decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+OCTET_STRING__decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
 	const char *opt_mname, const void *buf_ptr, size_t size,
 	int (*opt_unexpected_tag_decoder)
@@ -1175,7 +1175,7 @@ sta_failed:
  * Decode OCTET STRING from the hexadecimal data.
  */
 asn_dec_rval_t
-OCTET_STRING_decode_xer_hex(asn_codec_ctx_t *opt_codec_ctx,
+OCTET_STRING_decode_xer_hex(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
 		const char *opt_mname, const void *buf_ptr, size_t size) {
 	return OCTET_STRING__decode_xer(opt_codec_ctx, td, sptr, opt_mname,
@@ -1186,7 +1186,7 @@ OCTET_STRING_decode_xer_hex(asn_codec_ctx_t *opt_codec_ctx,
  * Decode OCTET STRING from the binary (0/1) data.
  */
 asn_dec_rval_t
-OCTET_STRING_decode_xer_binary(asn_codec_ctx_t *opt_codec_ctx,
+OCTET_STRING_decode_xer_binary(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
 		const char *opt_mname, const void *buf_ptr, size_t size) {
 	return OCTET_STRING__decode_xer(opt_codec_ctx, td, sptr, opt_mname,
@@ -1197,7 +1197,7 @@ OCTET_STRING_decode_xer_binary(asn_codec_ctx_t *opt_codec_ctx,
  * Decode OCTET STRING from the string (ASCII/UTF-8) data.
  */
 asn_dec_rval_t
-OCTET_STRING_decode_xer_utf8(asn_codec_ctx_t *opt_codec_ctx,
+OCTET_STRING_decode_xer_utf8(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr,
 		const char *opt_mname, const void *buf_ptr, size_t size) {
 	return OCTET_STRING__decode_xer(opt_codec_ctx, td, sptr, opt_mname,
@@ -1338,7 +1338,7 @@ OCTET_STRING_per_put_characters(asn_per_outp_t *po, const uint8_t *buf,
 #ifndef  ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-OCTET_STRING_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                          asn_TYPE_descriptor_t *td,
                          const asn_per_constraints_t *constraints, void **sptr,
                          asn_per_data_t *pd) {

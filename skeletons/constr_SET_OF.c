@@ -66,7 +66,7 @@
  * The decoder of the SET OF type.
  */
 asn_dec_rval_t
-SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SET_OF_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
 	/*
 	 * Bring closer parts of structure description.
@@ -466,7 +466,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
  * Decode the XER (XML) data.
  */
 asn_dec_rval_t
-SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SET_OF_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	void **struct_ptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 	/*
@@ -873,7 +873,7 @@ SET_OF_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 asn_dec_rval_t
-SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                    const asn_per_constraints_t *constraints, void **sptr,
                    asn_per_data_t *pd) {
 	asn_dec_rval_t rv;

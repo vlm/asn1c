@@ -10,7 +10,7 @@
 #include <errno.h>
 
 asn_dec_rval_t
-NativeEnumerated_decode_oer(asn_codec_ctx_t *opt_codec_ctx,
+NativeEnumerated_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                             asn_TYPE_descriptor_t *td,
                             const asn_oer_constraints_t *constraints,
                             void **nint_ptr, const void *ptr, size_t size) {

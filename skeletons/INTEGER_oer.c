@@ -10,7 +10,7 @@
 #include <errno.h>
 
 asn_dec_rval_t
-INTEGER_decode_oer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+INTEGER_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                    const asn_oer_constraints_t *constraints, void **sptr,
                    const void *ptr, size_t size) {
     const asn_INTEGER_specifics_t *specs =

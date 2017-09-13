@@ -54,7 +54,7 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 };
 
 asn_dec_rval_t
-ENUMERATED_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+ENUMERATED_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                        asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints, void **sptr,
                        asn_per_data_t *pd) {

@@ -541,7 +541,7 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 }
 
 asn_dec_rval_t
-INTEGER_decode_xer(asn_codec_ctx_t *opt_codec_ctx,
+INTEGER_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
 
@@ -572,7 +572,7 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 #ifndef	ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-INTEGER_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+INTEGER_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                     const asn_per_constraints_t *constraints, void **sptr,
                     asn_per_data_t *pd) {
     const asn_INTEGER_specifics_t *specs =

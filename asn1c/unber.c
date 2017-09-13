@@ -771,7 +771,7 @@ decode_tlv_from_string(const char *datastring) {
  * Dummy functions.
  */
 asn_dec_rval_t
-ber_check_tags(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+ber_check_tags(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                asn_struct_ctx_t *opt_ctx, const void *ptr, size_t size,
                int tag_mode, int last_tag_form, ber_tlv_len_t *last_length,
                int *opt_tlv_form) {
@@ -803,7 +803,7 @@ der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode,
 }
 
 asn_dec_rval_t
-xer_decode_general(asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx,
+xer_decode_general(const asn_codec_ctx_t *opt_codec_ctx, asn_struct_ctx_t *ctx,
                    void *struct_key, const char *xml_tag, const void *buf_ptr,
                    size_t size,
                    int (*otd)(void *struct_key, const void *chunk_buf,
