@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
@@ -17,7 +17,7 @@ extern "C" {
 
 /*
  * A selection of ASN.1 Transfer Syntaxes to use with generalized
- * encoder and decoders declared further in this .h file.
+ * encoders and decoders declared further in this .h file.
  */
 enum asn_transfer_syntax {
     /* Avoid appearance of a default transfer syntax. */
