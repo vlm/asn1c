@@ -999,6 +999,7 @@ ASN_MODULE_SOURCES+=constr_SEQUENCE_OF.c
 ASN_MODULE_HEADERS+=constr_SET_OF.h
 ASN_MODULE_SOURCES+=constr_SET_OF.c
 ASN_MODULE_HEADERS+=asn_application.h
+ASN_MODULE_SOURCES+=asn_application.c
 ASN_MODULE_HEADERS+=asn_ioc.h
 ASN_MODULE_HEADERS+=asn_system.h
 ASN_MODULE_HEADERS+=asn_codecs.h
@@ -1047,6 +1048,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = j2735-dump
+LIBS += -lm
 CPPFLAGS += -DASN_CONVERTER_TITLE="J2735 DSRC decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DASN_DISABLE_OER_SUPPORT -DPDU=MessageFrame -DASN_PDU_COLLECTION -I.
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
