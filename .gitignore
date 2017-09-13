@@ -36,6 +36,9 @@ stamp-h*
 /asn1c/unber
 /asn1c/enber
 
+# /skeletons
+/skeletons/check-*
+
 # /tests/
 /tests/tests-c-compiler/test-*
 
