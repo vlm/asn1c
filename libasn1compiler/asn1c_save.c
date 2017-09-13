@@ -166,9 +166,20 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
         "lib_LTLIBRARIES=libsomething.la\n"
         "libsomething_la_SOURCES="
         "$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
-        "\n"
-        "# This file may be used as an input for make(3)\n"
-        "# Remove the lines below to convert it into a pure .am file\n"
+        "libsomething_la_CFLAGS=%s%s\n",
+        (arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
+        (arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ");
+    fclose(mkf);
+    safe_fprintf(stderr, "Generated Makefile.am.sample\n");
+    
+    mkf = asn1c_open_file("Makefile", ".sample", 0);
+    if(mkf == NULL) {
+        perror("Makefile.sample");
+        return -1;
+    }
+    safe_fprintf(
+        mkf,
+        "include Makefile.am.sample\n\n"
         "TARGET = progname\n"
         "LIBS += -lm\n"
         "CPPFLAGS += %s%s%s%s-I.\n"
@@ -196,7 +207,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	safe_fprintf(mkf, "\n\n");
 
 	fclose(mkf);
-	safe_fprintf(stderr, "Generated Makefile.am.sample\n");
+	safe_fprintf(stderr, "Generated Makefile.sample\n");
 
 	return 0;
 }
