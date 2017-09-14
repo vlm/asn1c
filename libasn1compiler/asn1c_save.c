@@ -133,7 +133,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 				return -1;
 			}
 
-			/* MODULE data versus CONVERTER data */
+			/* no CONVERTER data in Makefile.am */
 			if(dlist->elements[i]->usage != FDEP_CONVERTER) {
 				/* HEADERS versus SOURCES */
 				dotH = strrchr(fname, 'h');
@@ -149,13 +149,18 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 
 	safe_fprintf(
 		mkf,
-		"\n\n"
-		"lib_LTLIBRARIES=libsomething.la\n"
-		"libsomething_la_SOURCES="
-		"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
-		"libsomething_la_CFLAGS=%s%s\n",
+		"\n"
+		"ASN_MODULE_CFLAGS=%s%s",
 		(arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
 		(arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ");
+
+	safe_fprintf(
+		mkf,
+		"\n\n"
+		"lib_LTLIBRARIES=libasncodec.la\n"
+		"libasncodec_la_SOURCES="
+		"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
+		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n");
 	fclose(mkf);
 	safe_fprintf(stderr, "Generated Makefile.am\n");
     
@@ -173,14 +178,13 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		"TARGET = asn_converter\n"
 		"ASN_LIBRARY=libasncodec.a\n"
 		"LIBS += -lm\n"
-		"CFLAGS += %s%s%s%s-I.\n"
+		"CFLAGS += $(ASN_MODULE_CFLAGS) %s%s-I.\n"
 		"ASN_CONVERTER_SOURCES := ",
-		(arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
-		(arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ",
 		(arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
 		need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
 
 	if(dlist) {
+		/* only CONVERTER data in Makefile.am */
 		for(i = 0; i < dlist->el_count; i++) {
 			if(dlist->elements[i]->usage == FDEP_CONVERTER) {
 				safe_fprintf(mkf, "\\\n\t%s", dlist->elements[i]->filename);
