@@ -111,31 +111,53 @@ AC_ARG_ENABLE(test-Werror,
       TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Werror -W -Wpointer-arith"
   ])
 
+
+SANITIZER_CFLAGS=""
+
+dnl Enable Undefined Behavior Sanitizer, if supported.
+AC_ARG_ENABLE([test-ubsan],
+    [AS_HELP_STRING([--disable-test-ubsan],
+        [Disable Undefined Behavior Sanitizer for tests])],
+    [disable_test_ubsan=$enableval], [disable_test_ubsan=maybe])
+AS_IF([test "x$disable_test_ubsan" != xno], [
+    AX_CHECK_COMPILE_FLAG([-fsanitize=undefined],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=undefined"],
+      [
+        AS_IF([test "x$disable_test_ubsan" != xmaybe], [
+            AC_MSG_FAILURE(
+[--disable-test-ubsan=$disable_test_ubsan is given, but not supported on target.
+https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#how-to-build])])
+      ])
+])
+
 dnl Enable Address Sanitizer, if supported by gcc (4.8+) or clang.
 dnl http://clang.llvm.org/docs/AddressSanitizer.html
-dnl https://code.google.com/p/address-sanitizer/wiki/HowToBuild
 AC_ARG_ENABLE([test-asan],
-    [AS_HELP_STRING([--enable-test-asan], [Enable Address Sanitizer for tests of generated code])],
-    [enable_test_asan=$enableval], [enable_test_asan=no])
-  AS_IF([test "x$enable_test_asan" != xno], [
+    [AS_HELP_STRING([--disable-test-asan],
+        [Disable Address Sanitizer for tests])],
+    [disable_test_asan=$enableval], [disable_test_asan=maybe])
+AS_IF([test "x$disable_test_asan" != xno], [
     AX_CHECK_COMPILE_FLAG([-fsanitize=address],
-      [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fsanitize=address"
-      TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fsanitize=address"],
-                          [echo disabling; enable_test_asan=no])
-    AS_IF([test "x$enable_test_asan" = xno], [
-        AC_MSG_FAILURE(
-            [--enable-test-asan is given, but not supported on this platform.
- Check out https://code.google.com/p/address-sanitizer/wiki/HowToBuild])])
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=address"],
+      [
+        AS_IF([test "x$disable_test_asan" != xmaybe], [
+            AC_MSG_FAILURE(
+[--disable-test-asan=$disable_test_asan is given, but not supported on target.
+Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
+      ])
     dnl Keep error messages nice. Also consider:
     dnl export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
     dnl export ASAN_OPTIONS=symbolize=1
     AX_CHECK_COMPILE_FLAG([-fno-omit-frame-pointer],
-              [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fno-omit-frame-pointer"
-              TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fno-omit-frame-pointer"],
-              [], [])
-  ])
+          [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-omit-frame-pointer"])
+])
+
+
+TESTSUITE_CFLAGS="${TESTSUICE_CFLAGS} ${SANITIZER_CFLAGS}"
+SKELETONS_CFLAGS="${SKELETONS_CFLAGS} ${SANITIZER_CFLAGS}"
 
 AC_SUBST(ADD_CFLAGS)
+AC_SUBST(SANITIZER_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 AC_SUBST(SKELETONS_CFLAGS)
 
