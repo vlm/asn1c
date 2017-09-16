@@ -164,7 +164,7 @@ AC_ARG_ENABLE([test-fuzzer],
     [enable_test_fuzzer=$enableval], [enable_test_fuzzer=no])
 AS_IF([test "x$enable_test_fuzzer" != xno], [
     AX_CHECK_COMPILE_FLAG([-fsanitize=fuzzer],
-      [LIBFUZZER_CFLAGS="${FUZZER_CFLAGS} -fsanitize=fuzzer"],
+      [LIBFUZZER_CFLAGS="${FUZZER_CFLAGS} -fsanitize=fuzzer -DENABLE_LIBFUZZER"],
       [
             AC_MSG_FAILURE(
 [--enable-test-fuzzer=$enable_test_fuzzer is not supported on a target system.
