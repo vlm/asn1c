@@ -18,6 +18,9 @@ m4_ifdef([AM_PROG_AR],
          [AM_PROG_AR],
          [AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)])
 
+AC_PROG_CXX
+CXXFLAGS="-std=c++11"
+
 LT_INIT
 
 dnl If you need to see the details, just run make V=1.
@@ -125,7 +128,7 @@ AS_IF([test "x$disable_test_ubsan" != xno], [
       [
         AS_IF([test "x$disable_test_ubsan" != xmaybe], [
             AC_MSG_FAILURE(
-[--disable-test-ubsan=$disable_test_ubsan is given, but not supported on target.
+[--disable-test-ubsan=$disable_test_ubsan is not supported on a target system.
 https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#how-to-build])])
       ])
 ])
@@ -142,7 +145,7 @@ AS_IF([test "x$disable_test_asan" != xno], [
       [
         AS_IF([test "x$disable_test_asan" != xmaybe], [
             AC_MSG_FAILURE(
-[--disable-test-asan=$disable_test_asan is given, but not supported on target.
+[--disable-test-asan=$disable_test_asan is not supported on a target system.
 Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
       ])
     dnl Keep error messages nice. Also consider:
@@ -153,10 +156,27 @@ Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
 ])
 
 
+dnl Enable LibFuzzer, if supported.
+LIBFUZZER_CFLAGS=""
+AC_ARG_ENABLE([test-fuzzer],
+    [AS_HELP_STRING([--enable-test-fuzzer],
+        [Enable LLVM LibFuzzer for randomized testing])],
+    [enable_test_fuzzer=$enableval], [enable_test_fuzzer=no])
+AS_IF([test "x$enable_test_fuzzer" != xno], [
+    AX_CHECK_COMPILE_FLAG([-fsanitize=fuzzer],
+      [LIBFUZZER_CFLAGS="${FUZZER_CFLAGS} -fsanitize=fuzzer"],
+      [
+            AC_MSG_FAILURE(
+[--enable-test-fuzzer=$enable_test_fuzzer is not supported on a target system.
+Check out http://llvm.org/docs/LibFuzzer.html])
+      ])
+])
+
 TESTSUITE_CFLAGS="${TESTSUICE_CFLAGS} ${SANITIZER_CFLAGS}"
 SKELETONS_CFLAGS="${SKELETONS_CFLAGS} ${SANITIZER_CFLAGS}"
 
 AC_SUBST(ADD_CFLAGS)
+AC_SUBST(LIBFUZZER_CFLAGS)
 AC_SUBST(SANITIZER_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 AC_SUBST(SKELETONS_CFLAGS)
