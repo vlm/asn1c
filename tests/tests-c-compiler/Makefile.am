@@ -14,6 +14,7 @@ TESTS_ENVIRONMENT= \
 				   CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}" \
 				   CXXFLAGS="${CXXFLAGS}" \
 				   LDFLAGS="${LDFLAGS}" \
+				   LIBFUZZER_CFLAGS="${LIBFUZZER_CFLAGS}" \
 				   srcdir=${srcdir} \
 				   abs_top_srcdir=${abs_top_srcdir} \
 				   abs_top_builddir=${abs_top_builddir} \

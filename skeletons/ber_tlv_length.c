@@ -40,28 +40,18 @@ ber_fetch_length(int _is_constructed, const void *bufptr, size_t size,
 		for(len = 0, buf++, skipped = 1;
 			oct && (++skipped <= size); buf++, oct--) {
 
-			len = (len << 8) | *buf;
-			if(len < 0
-			|| (len >> ((8 * sizeof(len)) - 8) && oct > 1)) {
-				/*
-				 * Too large length value.
-				 */
+			/* Verify that we won't overflow. */
+			if(!(len >> ((8 * sizeof(len)) - (8+1)))) {
+				len = (len << 8) | *buf;
+			} else {
+				/* Too large length value. */
 				return -1;
 			}
 		}
 
 		if(oct == 0) {
-			ber_tlv_len_t lenplusepsilon = (size_t)len + 1024;
-			/*
-			 * Here length may be very close or equal to 2G.
-			 * However, the arithmetics used in some decoders
-			 * may add some (small) quantities to the length,
-			 * to check the resulting value against some limits.
-			 * This may result in integer wrap-around, which
-			 * we try to avoid by checking it earlier here.
-			 */
-			if(lenplusepsilon < 0) {
-				/* Too large length value */
+			if(len < 0 || len > RSIZE_MAX) {
+				/* Length value out of sane range. */
 				return -1;
 			}
 
