@@ -106,7 +106,7 @@ ats_simple_name(enum asn_transfer_syntax syntax) {
 }
 
 
-#define OP_OFFSET(fname)  (unsigned)(&(((asn_TYPE_operation_t *)0)->fname))
+#define OP_OFFSET(fname)  (ptrdiff_t)(&(((asn_TYPE_operation_t *)0)->fname))
 typedef struct {
     const char *name;
     enum asn_transfer_syntax syntax;
