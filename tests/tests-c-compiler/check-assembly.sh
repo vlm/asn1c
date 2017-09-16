@@ -109,7 +109,7 @@ cat <<TARGETS >> "${testdir}/Makefile.targets"
 check-fuzzer:
 TARGETS
 else
-    CHECK_FUZZER="./check-fuzzer -timeout=3 -max_total_time=60 -max-len 512 -detect_leaks=1"
+    CHECK_FUZZER="./check-fuzzer -timeout=3 -max_total_time=60 -max_len=512 -detect_leaks=1"
 cat <<TARGETS >> "${testdir}/Makefile.targets"
 check-fuzzer: \$(OBJS)
 	rm -f ${source_obj}
