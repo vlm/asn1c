@@ -40,6 +40,13 @@ fi
 
 args=$(echo "$source_short" | sed -E -e 's/\.c+$//')
 source_obj=$(echo "$source_short" | sed -E -e 's/\.c+$/.o/')
+ext=$(echo "$source_short" | sed -E -e 's/.*\.(c+)$/\1/')
+
+if [ "$ext" = "cc" ]; then
+    COMPILER='$(CXX) $(CXX_CFLAGS)'
+else
+    COMPILER='$(CC)'
+fi
 
 OFS=$IFS
 IFS="."
@@ -88,7 +95,7 @@ all: compiled-module
 
 check-executable: \$(OBJS)
 	@rm -f *.core
-	\$(CC) \$(CFLAGS) \$(LDFLAGS) -o check-executable \$(OBJS) -lm
+	${COMPILER} \$(CFLAGS) \$(LDFLAGS) -o check-executable \$(OBJS) -lm
 
 # Compile the corresponding .asn1 spec.
 compiled-module: ${asn_module} ${abs_top_builddir}/asn1c/asn1c
@@ -113,8 +120,8 @@ else
 cat <<TARGETS >> "${testdir}/Makefile.targets"
 check-fuzzer: \$(OBJS)
 	rm -f ${source_obj}
-	\$(CC) \$(CFLAGS) \$(LIBFUZZER_CFLAGS) -c -o ${source_obj} ${source_short}
-	\$(CC) \$(CFLAGS) \$(LIBFUZZER_CFLAGS) \$(LDFLAGS) -o check-fuzzer \$(OBJS)
+	${COMPILER} \$(CFLAGS) \$(LIBFUZZER_CFLAGS) -c -o ${source_obj} ${source_short}
+	${COMPILER} \$(CFLAGS) \$(LIBFUZZER_CFLAGS) \$(LDFLAGS) -o check-fuzzer \$(OBJS)
 	rm -f ${source_obj}
 TARGETS
 fi
