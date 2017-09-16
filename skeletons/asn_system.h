@@ -145,5 +145,8 @@ typedef	unsigned int	uint32_t;
 #ifndef RSIZE_MAX   /* C11, Annex K */
 #define RSIZE_MAX   (SIZE_MAX >> 1)
 #endif
+#ifndef RSSIZE_MAX   /* Halve signed size even further than unsigned */
+#define RSSIZE_MAX   ((ssize_t)(RSIZE_MAX >> 1))
+#endif
 
 #endif	/* ASN_SYSTEM_H */

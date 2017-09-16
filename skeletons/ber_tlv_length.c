@@ -50,7 +50,7 @@ ber_fetch_length(int _is_constructed, const void *bufptr, size_t size,
 		}
 
 		if(oct == 0) {
-			if(len < 0 || len > RSIZE_MAX) {
+			if(len < 0 || len > RSSIZE_MAX) {
 				/* Length value out of sane range. */
 				return -1;
 			}
