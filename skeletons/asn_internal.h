@@ -70,28 +70,29 @@ static void ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 /*
  * Invoke the application-supplied callback and fail, if something is wrong.
  */
-#define	ASN__E_cbc(buf, size)	(cb((buf), (size), app_key) < 0)
-#define	ASN__E_CALLBACK(foo)	do {					\
-		if(foo)	goto cb_failed;					\
-	} while(0)
-#define	ASN__CALLBACK(buf, size)					\
-	ASN__E_CALLBACK(ASN__E_cbc(buf, size))
-#define	ASN__CALLBACK2(buf1, size1, buf2, size2)			\
-	ASN__E_CALLBACK(ASN__E_cbc(buf1, size1) || ASN__E_cbc(buf2, size2))
-#define	ASN__CALLBACK3(buf1, size1, buf2, size2, buf3, size3)		\
-	ASN__E_CALLBACK(ASN__E_cbc(buf1, size1)			\
-		|| ASN__E_cbc(buf2, size2)				\
-		|| ASN__E_cbc(buf3, size3))
+#define ASN__E_cbc(buf, size) (cb((buf), (size), app_key) < 0)
+#define ASN__E_CALLBACK(size, foo) \
+    do {                           \
+        if(foo) goto cb_failed;    \
+        er.encoded += (size);      \
+    } while(0)
+#define ASN__CALLBACK(buf, size) ASN__E_CALLBACK(size, ASN__E_cbc(buf, size))
+#define ASN__CALLBACK2(buf1, size1, buf2, size2) \
+    ASN__E_CALLBACK((size1) + (size2),           \
+                    ASN__E_cbc(buf1, size1) || ASN__E_cbc(buf2, size2))
+#define ASN__CALLBACK3(buf1, size1, buf2, size2, buf3, size3)          \
+    ASN__E_CALLBACK((size1) + (size2) + (size3),                       \
+                    ASN__E_cbc(buf1, size1) || ASN__E_cbc(buf2, size2) \
+                        || ASN__E_cbc(buf3, size3))
 
-#define	ASN__TEXT_INDENT(nl, level) do {            \
-        int tmp_level = (level);                    \
-        int tmp_nl = ((nl) != 0);                   \
-        int tmp_i;                                  \
-        if(tmp_nl) ASN__CALLBACK("\n", 1);          \
-        if(tmp_level < 0) tmp_level = 0;            \
-        for(tmp_i = 0; tmp_i < tmp_level; tmp_i++)  \
-            ASN__CALLBACK("    ", 4);               \
-        er.encoded += tmp_nl + 4 * tmp_level;       \
+#define ASN__TEXT_INDENT(nl, level)                                          \
+    do {                                                                     \
+        int tmp_level = (level);                                             \
+        int tmp_nl = ((nl) != 0);                                            \
+        int tmp_i;                                                           \
+        if(tmp_nl) ASN__CALLBACK("\n", 1);                                   \
+        if(tmp_level < 0) tmp_level = 0;                                     \
+        for(tmp_i = 0; tmp_i < tmp_level; tmp_i++) ASN__CALLBACK("    ", 4); \
     } while(0)
 
 #define	_i_INDENT(nl)	do {                        \

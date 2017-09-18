@@ -67,7 +67,7 @@ static void   junk_bytes_with_probability(uint8_t *, size_t, double prob);
 #endif
 
 /* Debug output function */
-static inline void
+static void
 DEBUG(const char *fmt, ...) {
     va_list ap;
     if(!opt_debug) return;
@@ -106,37 +106,37 @@ ats_simple_name(enum asn_transfer_syntax syntax) {
 }
 
 
-#define OP_OFFSET(fname)  (unsigned)(&(((asn_TYPE_operation_t *)0)->fname))
+#define HAS_CODEC(fname)  ((&(((asn_TYPE_operation_t *)0)->fname)) != 0)
 typedef struct {
     const char *name;
     enum asn_transfer_syntax syntax;
-    unsigned codec_offset;
+    int has_codec;
     const char *full_name;
 } syntax_selector;
 
 static syntax_selector input_encodings[] = {
-    {"ber", ATS_BER, OP_OFFSET(ber_decoder),
+    {"ber", ATS_BER, HAS_CODEC(ber_decoder),
      "Input is in BER (Basic Encoding Rules) or DER"},
-    {"oer", ATS_BASIC_OER, OP_OFFSET(oer_decoder),
+    {"oer", ATS_BASIC_OER, HAS_CODEC(oer_decoder),
      "Input is in OER (Octet Encoding Rules)"},
-    {"per", ATS_UNALIGNED_BASIC_PER, OP_OFFSET(uper_decoder),
+    {"per", ATS_UNALIGNED_BASIC_PER, HAS_CODEC(uper_decoder),
      "Input is in Unaligned PER (Packed Encoding Rules)"},
-    {"xer", ATS_BASIC_XER, OP_OFFSET(xer_decoder),
+    {"xer", ATS_BASIC_XER, HAS_CODEC(xer_decoder),
      "Input is in XER (XML Encoding Rules)"},
     {0, ATS_INVALID, 0, 0}};
 
 static syntax_selector output_encodings[] = {
-    {"der", ATS_DER, OP_OFFSET(der_encoder),
+    {"der", ATS_DER, HAS_CODEC(der_encoder),
      "Output as DER (Distinguished Encoding Rules)"},
-    {"oer", ATS_CANONICAL_OER, OP_OFFSET(oer_encoder),
+    {"oer", ATS_CANONICAL_OER, HAS_CODEC(oer_encoder),
      "Output as Canonical OER (Octet Encoding Rules)"},
-    {"per", ATS_UNALIGNED_CANONICAL_PER, OP_OFFSET(uper_encoder),
+    {"per", ATS_UNALIGNED_CANONICAL_PER, HAS_CODEC(uper_encoder),
      "Output as Unaligned PER (Packed Encoding Rules)"},
-    {"xer", ATS_BASIC_XER, OP_OFFSET(xer_encoder),
+    {"xer", ATS_BASIC_XER, HAS_CODEC(xer_encoder),
      "Output as XER (XML Encoding Rules)"},
-    {"text", ATS_NONSTANDARD_PLAINTEXT, OP_OFFSET(print_struct),
+    {"text", ATS_NONSTANDARD_PLAINTEXT, HAS_CODEC(print_struct),
      "Output as plain semi-structured text"},
-    {"null", ATS_INVALID, OP_OFFSET(print_struct),
+    {"null", ATS_INVALID, HAS_CODEC(print_struct),
      "Verify (decode) input, but do not output"},
     {0, ATS_INVALID, 0, 0}};
 
@@ -151,8 +151,7 @@ ats_by_name(const char *name, const asn_TYPE_descriptor_t *td,
         if(strcmp(element->name, name) == 0) {
             if(td && td->op
                && *(const void *const *)(const void *)((const char *)td->op
-                                                       + element
-                                                             ->codec_offset)) {
+                                                       + element->has_codec)) {
                 return element;
             }
         }

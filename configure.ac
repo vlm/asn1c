@@ -18,6 +18,9 @@ m4_ifdef([AM_PROG_AR],
          [AM_PROG_AR],
          [AC_PATH_PROG(AR, ar, ar, $PATH:/usr/ucb:/usr/ccs/bin)])
 
+AC_PROG_CXX
+CXXFLAGS="-std=c++11"
+
 LT_INIT
 
 dnl If you need to see the details, just run make V=1.
@@ -59,25 +62,15 @@ AX_CHECK_COMPILE_FLAG([-Wno-error=parentheses-equality],
       [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
 AX_CHECK_COMPILE_FLAG([-std=gnu99],
       [CFLAGS="$CFLAGS -std=gnu99"
-TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -std=gnu99"])
+       TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -std=gnu99"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
-      [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -Wno-error=unused-variable"])
+      [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Wno-error=unused-variable"])
 
-AC_ARG_ENABLE(Werror,
-  [AS_HELP_STRING([--enable-Werror],
-                  [abort compilation after any C compiler warning])],
-  [enable_werror=$enableval], [enable_werror=no])
-  AS_IF([test x$enable_werror != xno], [
-      ADD_CFLAGS="-Werror -W -Wpointer-arith"
-  ])
-
-AC_ARG_ENABLE(test-Werror,
-  [AS_HELP_STRING([--enable-test-Werror],
-                  [abort compiling tests after any C compiler warning])],
-  [enable_test_werror=$enableval], [enable_test_werror=no])
-  AS_IF([test x$enable_test_werror != xno], [
-      TESTSUITE_CFLAGS="-Werror -W -Wpointer-arith"
-  ])
+dnl Lower the optimization level in tests to aid debugging.
+dnl AX_CHECK_COMPILE_FLAG([-O1],
+dnl    [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -O1"])
+dnl AX_CHECK_COMPILE_FLAG([-fno-inline],
+dnl     [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fno-inline"])
 
 AX_CODE_COVERAGE
 AS_IF([test x$enable_code_coverage != xno], [
@@ -107,31 +100,110 @@ AX_CHECK_COMPILE_FLAG([-Wpedantic],
             [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -pedantic"], [], [-Werror])
     ],
     [-Werror]) #clang 3.0 prints warning when the flag is not supported
+
+AC_ARG_ENABLE(Werror,
+  [AS_HELP_STRING([--enable-Werror],
+                  [abort compilation after any C compiler warning])],
+  [enable_werror=$enableval], [enable_werror=no])
+  AS_IF([test x$enable_werror != xno], [
+      ADD_CFLAGS="${ADD_CFLAGS} -Werror -W -Wall -Wpointer-arith"
+      SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -Werror -W -Wall -Wpointer-arith"
+      AX_CHECK_COMPILE_FLAG([-Wgnu],
+        [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -Wgnu"])
+  ])
+
+AC_ARG_ENABLE(test-Werror,
+  [AS_HELP_STRING([--enable-test-Werror],
+                  [abort compiling tests after any C compiler warning])],
+  [enable_test_werror=$enableval], [enable_test_werror=no])
+  AS_IF([test x$enable_test_werror != xno], [
+      TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Werror -W -Wpointer-arith"
+  ])
+
+
+SANITIZER_CFLAGS=""
+
+dnl Enable Undefined Behavior Sanitizer, if supported.
+AC_ARG_ENABLE([test-ubsan],
+    [AS_HELP_STRING([--disable-test-ubsan],
+        [Disable Undefined Behavior Sanitizer for tests])],
+    [disable_test_ubsan=$enableval], [disable_test_ubsan=maybe])
+AS_IF([test "x$disable_test_ubsan" != xno], [
+    AX_CHECK_COMPILE_FLAG([-fsanitize=undefined],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=undefined"],
+      [
+        AS_IF([test "x$disable_test_ubsan" != xmaybe], [
+            AC_MSG_FAILURE(
+[--disable-test-ubsan=$disable_test_ubsan is not supported on a target system.
+https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#how-to-build])])
+      ])
+    AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=undefined],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=undefined"])
+
+    dnl Unsigned integer overflow is enabled separately.
+    AX_CHECK_COMPILE_FLAG([-fsanitize=unsigned-integer-overflow],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=unsigned-integer-overflow"])
+    AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=unsigned-integer-overflow],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=unsigned-integer-overflow"])
+
+    dnl Nullability is enabled separately.
+    AX_CHECK_COMPILE_FLAG([-fsanitize=nullability],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=nullability"])
+    AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=nullability],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=nullability"])
+
+    dnl Keep error messages nice. Also consider:
+    dnl export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
+    dnl export UBSAN_OPTIONS=print_stacktrace=1
+    AX_CHECK_COMPILE_FLAG([-fno-omit-frame-pointer],
+          [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-omit-frame-pointer"])
+])
+
 dnl Enable Address Sanitizer, if supported by gcc (4.8+) or clang.
 dnl http://clang.llvm.org/docs/AddressSanitizer.html
-dnl https://code.google.com/p/address-sanitizer/wiki/HowToBuild
 AC_ARG_ENABLE([test-asan],
-    [AS_HELP_STRING([--enable-test-asan], [Enable Address Sanitizer for tests of generated code])],
-    [enable_test_asan=$enableval], [enable_test_asan=no])
-  AS_IF([test "x$enable_asan" != xno], [
+    [AS_HELP_STRING([--disable-test-asan],
+        [Disable Address Sanitizer for tests])],
+    [disable_test_asan=$enableval], [disable_test_asan=maybe])
+AS_IF([test "x$disable_test_asan" != xno], [
     AX_CHECK_COMPILE_FLAG([-fsanitize=address],
-              [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fsanitize=address"
-              TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fsanitize=address"],
-                          [enable_test_asan=no], [])
-    AS_IF([test "x$enable_asan" = xno], [
-        AC_MSG_FAILURE(
-            [--enable-test-asan is given, but not supported on this platform.
- Check out https://code.google.com/p/address-sanitizer/wiki/HowToBuild])])
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=address"],
+      [
+        AS_IF([test "x$disable_test_asan" != xmaybe], [
+            AC_MSG_FAILURE(
+[--disable-test-asan=$disable_test_asan is not supported on a target system.
+Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
+      ])
     dnl Keep error messages nice. Also consider:
     dnl export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
     dnl export ASAN_OPTIONS=symbolize=1
     AX_CHECK_COMPILE_FLAG([-fno-omit-frame-pointer],
-              [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -fno-omit-frame-pointer"
-              TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fno-omit-frame-pointer"],
-              [], [])
-  ])
+          [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-omit-frame-pointer"])
+])
+
+
+dnl Enable LibFuzzer, if supported.
+LIBFUZZER_CFLAGS=""
+AC_ARG_ENABLE([test-fuzzer],
+    [AS_HELP_STRING([--enable-test-fuzzer],
+        [Enable LLVM LibFuzzer for randomized testing])],
+    [enable_test_fuzzer=$enableval], [enable_test_fuzzer=no])
+AS_IF([test "x$enable_test_fuzzer" != xno], [
+    AX_CHECK_COMPILE_FLAG([-fsanitize=fuzzer],
+      [LIBFUZZER_CFLAGS="${FUZZER_CFLAGS} -fsanitize=fuzzer -DENABLE_LIBFUZZER"],
+      [
+            AC_MSG_FAILURE(
+[--enable-test-fuzzer=$enable_test_fuzzer is not supported on a target system.
+Check out http://llvm.org/docs/LibFuzzer.html])
+      ])
+])
+
+TESTSUITE_CFLAGS="${TESTSUICE_CFLAGS} ${SANITIZER_CFLAGS}"
+SKELETONS_CFLAGS="${SKELETONS_CFLAGS} ${SANITIZER_CFLAGS}"
 
 AC_SUBST(ADD_CFLAGS)
+AC_SUBST(LIBFUZZER_CFLAGS)
+AC_SUBST(SANITIZER_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 AC_SUBST(SKELETONS_CFLAGS)
 

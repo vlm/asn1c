@@ -13,7 +13,8 @@ asn_enc_rval_t
 xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 	enum xer_encoder_flags_e xer_flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t er, tmper;
+	asn_enc_rval_t er = {0, 0, 0};
+	asn_enc_rval_t tmper;
 	const char *mname;
 	size_t mlen;
 	int xcan = (xer_flags & XER_F_CANONICAL) ? 1 : 2;
@@ -27,10 +28,9 @@ xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
 
 	tmper = td->op->xer_encoder(td, sptr, 1, xer_flags, cb, app_key);
 	if(tmper.encoded == -1) return tmper;
+	er.encoded += tmper.encoded;
 
 	ASN__CALLBACK3("</", 2, mname, mlen, ">\n", xcan);
-
-	er.encoded = 4 + xcan + (2 * mlen) + tmper.encoded;
 
 	ASN__ENCODED_OK(er);
 cb_failed:

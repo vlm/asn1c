@@ -63,6 +63,8 @@
  */
 static ssize_t
 oer_fetch_quantity(const void *ptr, size_t size, size_t *qty_r) {
+    const uint8_t *b;
+    const uint8_t *bend;
     size_t len = 0;
     size_t qty;
 
@@ -77,14 +79,12 @@ oer_fetch_quantity(const void *ptr, size_t size, size_t *qty_r) {
         return 0;
     }
 
-    const uint8_t *b = (const uint8_t *)ptr + len_len;
-    const uint8_t *bend = b + len;
-
+    b = (const uint8_t *)ptr + len_len;
+    bend = b + len;
 
     /* Skip the leading 0-bytes */
     for(; b < bend && *b == 0; b++) {
     }
-
 
     if((bend - b) > (ssize_t)sizeof(size_t)) {
         /* Length is not representable by the native size_t type */
@@ -261,8 +261,9 @@ SET_OF_encode_oer(asn_TYPE_descriptor_t *td,
     }
 
     {
-        asn_enc_rval_t erval = {computed_size, 0, 0};
-        return erval;
+        asn_enc_rval_t erval;
+        erval.encoded = computed_size;
+        ASN__ENCODED_OK(erval);
     }
 }
 

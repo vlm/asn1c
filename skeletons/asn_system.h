@@ -104,7 +104,7 @@ typedef	unsigned int	uint32_t;
 
 #endif	/* _WIN32 */
 
-#if	__GNUC__ >= 3
+#if	__GNUC__ >= 3 || defined(__clang__)
 #ifndef	GCC_PRINTFLIKE
 #define	GCC_PRINTFLIKE(fmt,var)	__attribute__((format(printf,fmt,var)))
 #endif
@@ -118,6 +118,12 @@ typedef	unsigned int	uint32_t;
 #ifndef	GCC_NOTUSED
 #define	GCC_NOTUSED
 #endif
+#endif
+
+#if defined(__clang__)
+#define CLANG_NO_SANITIZE(what)    __attribute__((no_sanitize(what)))
+#else
+#define CLANG_NO_SANITIZE(what)
 #endif
 
 /* Figure out if thread safety is requested */
@@ -144,6 +150,9 @@ typedef	unsigned int	uint32_t;
 
 #ifndef RSIZE_MAX   /* C11, Annex K */
 #define RSIZE_MAX   (SIZE_MAX >> 1)
+#endif
+#ifndef RSSIZE_MAX   /* Halve signed size even further than unsigned */
+#define RSSIZE_MAX   ((ssize_t)(RSIZE_MAX >> 1))
 #endif
 
 #endif	/* ASN_SYSTEM_H */

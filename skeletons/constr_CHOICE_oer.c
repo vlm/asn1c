@@ -134,8 +134,6 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
     asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
     asn_TYPE_member_t *elements = td->elements;
 
-    (void)specs;
-
     /*
      * Parts of the structure being constructed.
      */
@@ -180,7 +178,8 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
 
         do {
             const asn_TYPE_tag2member_t *t2m;
-            asn_TYPE_tag2member_t key = {tlv_tag, 0, 0, 0};
+            asn_TYPE_tag2member_t key = {0, 0, 0, 0};
+            key.el_tag = tlv_tag;
 
             t2m = (const asn_TYPE_tag2member_t *)bsearch(
                 &key, specs->tag2el, specs->tag2el_count,
