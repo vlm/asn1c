@@ -50,53 +50,32 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	return 0;
 }
 
-enum der_or_xer {
-	AS_DER,
-	AS_XER,
-};
-
 static void
-save_object_as(PDU_t *st, enum der_or_xer how) {
-	asn_enc_rval_t rval; /* Return value */
+save_object_as(PDU_t *st, enum asn_transfer_syntax syntax) {
+    asn_enc_rval_t rval; /* Return value */
 
-	buf_offset = 0;
+    buf_offset = 0;
 
-	/*
-	 * Save object using specified method.
-	 */
-	switch(how) {
-	case AS_DER:
-		rval = der_encode(&asn_DEF_PDU, st,
-			_buf_writer, 0);
-		break;
-	case AS_XER:
-		rval = xer_encode(&asn_DEF_PDU, st, XER_F_BASIC,
-			_buf_writer, 0);
-		break;
-	}
-	if (rval.encoded == -1) {
+    rval = asn_encode(0, syntax, &asn_DEF_PDU, st, _buf_writer, 0);
+
+    if (rval.encoded == -1) {
 		fprintf(stderr,
 			"Cannot encode %s: %s\n",
 			rval.failed_type->name, strerror(errno));
 		assert(rval.encoded != -1);
 		return;
-	}
+    }
 
-	fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
+    fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
+
+    // assert(buf_offset == rval.encoded);
 }
 
 static PDU_t *
-load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size, enum der_or_xer how) {
+load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size, enum asn_transfer_syntax syntax) {
 	asn_dec_rval_t rval;
-	asn_dec_rval_t (*zer_decode)(struct asn_codec_ctx_s *,
-		asn_TYPE_descriptor_t *, void **, const void *, size_t);
 	PDU_t *st = 0;
 	size_t csize = 1;
-
-	if(how == AS_DER)
-		zer_decode = ber_decode;
-	else
-		zer_decode = xer_decode;
 
 	if(getenv("INITIAL_CHUNK_SIZE"))
 		csize = atoi(getenv("INITIAL_CHUNK_SIZE"));
@@ -126,7 +105,7 @@ load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size,
 				fprintf(stderr, "=== end ===\n");
 			}
 #endif
-			rval = zer_decode(0, &asn_DEF_PDU, (void **)&st,
+			rval = asn_decode(0, syntax, &asn_DEF_PDU, (void **)&st,
 				fbuf + fbuf_offset,
 					fbuf_chunk < fbuf_left 
 					? fbuf_chunk : fbuf_left);
@@ -140,7 +119,7 @@ load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size,
 
 		if(expectation != EXP_BROKEN) {
 			assert(rval.code == RC_OK);
-			if(how == AS_DER) {
+			if(syntax == ATS_BER) {
 				assert(fbuf_offset == (ssize_t)size);
 			} else {
 				assert((fbuf_offset + 1 /* "\n" */  == (ssize_t)size
@@ -200,15 +179,15 @@ static void
 process_XER_data(enum expectation expectation, unsigned char *fbuf, size_t size) {
 	PDU_t *st;
 
-	st = load_object_from(expectation, fbuf, size, AS_XER);
+	st = load_object_from(expectation, fbuf, size, ATS_BASIC_XER);
 	if(!st) return;
 
 	/* Save and re-load as DER */
-	save_object_as(st, AS_DER);
-	st = load_object_from(expectation, buf, buf_offset, AS_DER);
+	save_object_as(st, ATS_DER);
+	st = load_object_from(expectation, buf, buf_offset, ATS_BER);
 	assert(st);
 
-	save_object_as(st, AS_XER);
+	save_object_as(st, ATS_BASIC_XER);
 	fprintf(stderr, "=== original ===\n");
 	fwrite(fbuf, 1, size, stderr);
 	fprintf(stderr, "=== re-encoded ===\n");
