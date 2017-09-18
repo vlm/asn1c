@@ -277,14 +277,14 @@ main() {
         CHECK_ROUNDTRIP(value, 4, 0);
     }
 
-    for(size_t i = 0; i < 8 * sizeof(intmax_t) ; i++) {
+    for(size_t i = 0; i < 8 * sizeof(intmax_t) - 1; i++) {
         intmax_t value = (intmax_t)1 << i;
         CHECK_ROUNDTRIP(value, 8, 0);
         value = -value;
         CHECK_ROUNDTRIP(value, 8, 0);
     }
 
-    for(size_t i = 0; i < 8 * sizeof(intmax_t) ; i++) {
+    for(size_t i = 0; i < 8 * sizeof(intmax_t) - 1; i++) {
         intmax_t value = (intmax_t)1 << i;
         CHECK_ROUNDTRIP(value, 0, 0);
         value = -value;
