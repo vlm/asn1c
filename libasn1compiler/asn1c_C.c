@@ -2642,7 +2642,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     const char *for_field = expr->reference->components[1].name;
 
     ssize_t for_column = -1;
-    for(size_t cn = 0; cn < opt_ioc->ioct->rows ? opt_ioc->ioct->row[0]->columns : 0;
+    for(size_t cn = 0; cn < (opt_ioc->ioct->rows ? opt_ioc->ioct->row[0]->columns : 0);
         cn++) {
         if(strcmp(for_field,
                   opt_ioc->ioct->row[0]->column[cn].field->Identifier)
