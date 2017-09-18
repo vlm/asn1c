@@ -746,9 +746,9 @@ cb_failed:
 	er.structure_ptr = sptr;
 cleanup:
 	if(encs) {
-		while(encs_count-- > 0) {
-			if(encs[encs_count].buffer)
-				FREEMEM(encs[encs_count].buffer);
+		size_t n;
+		for(n = 0; n < encs_count; n++) {
+			FREEMEM(encs[n].buffer);
 		}
 		FREEMEM(encs);
 	}
