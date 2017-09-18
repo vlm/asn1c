@@ -51,9 +51,23 @@ fi
 OFS=$IFS
 IFS="."
 set $args
+data_dir=$(echo "$1" | sed -e s/check-/data-/)
 shift
 IFS=$OFS
 AFLAGS="$*"
+
+if [ -d ${data_dir} ]; then
+    OPT_DATA_DIR="../${data_dir}"
+else
+    OPT_DATA_DIR=""
+fi
+
+if test "${LIBFUZZER_CFLAGS}" && grep LLVMFuzzer ${source_full} > /dev/null;
+then
+    MAKE_FUZZER=yes
+else
+    MAKE_FUZZER=no
+fi
 
 # Assume the test fails. Will be removed when it passes well.
 testdir=test-${args}
@@ -64,13 +78,6 @@ touch "${testdir}-FAILED"
 
 mkdir -p "${testdir}"
 ln -fns "../${source_full}" "${testdir}"
-
-if test "${LIBFUZZER_CFLAGS}" && grep LLVMFuzzer ${source_full} > /dev/null;
-then
-    MAKE_FUZZER=yes
-else
-    MAKE_FUZZER=no
-fi
 
 asn_module=$(echo "${abs_top_srcdir}/tests/tests-asn1c-compiler/${testno}"-*.asn1)
 
@@ -116,7 +123,7 @@ cat <<TARGETS >> "${testdir}/Makefile.targets"
 check-fuzzer:
 TARGETS
 else
-    CHECK_FUZZER="UBSAN_OPTIONS=print_stacktrace=1 ./check-fuzzer -timeout=3 -max_total_time=60 -max_len=512 -detect_leaks=1"
+    CHECK_FUZZER="UBSAN_OPTIONS=print_stacktrace=1 ./check-fuzzer -timeout=3 -max_total_time=60 -max_len=512 -detect_leaks=1 ${OPT_DATA_DIR}"
 cat <<TARGETS >> "${testdir}/Makefile.targets"
 check-fuzzer: \$(OBJS)
 	rm -f ${source_obj}
