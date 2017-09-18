@@ -133,7 +133,7 @@ der_tlv_length_serialize(ber_tlv_len_t len, void *bufp, size_t size) {
 	size_t required_size;	/* Size of len encoding */
 	uint8_t *buf = (uint8_t *)bufp;
 	uint8_t *end;
-	size_t i;
+	int i;
 
 	if(len <= 127) {
 		/* Encoded in 1 octet */
@@ -144,7 +144,7 @@ der_tlv_length_serialize(ber_tlv_len_t len, void *bufp, size_t size) {
 	/*
 	 * Compute the size of the subsequent bytes.
 	 */
-	for(required_size = 1, i = 8; i < 8 * sizeof(len); i += 8) {
+	for(required_size = 1, i = 8; i < 8 * (int)sizeof(len); i += 8) {
 		if(len >> i)
 			required_size++;
 		else
