@@ -345,8 +345,6 @@ check_ber_857_encoding(int base, int sign, int scaling_factor, int exponent, int
 
 static void
 check_ber_encoding() {
-	static const double zero = 0.0;
-
 #define CHECK_BER_STRICT(v, nocan, can, inbuf, outbuf)			\
 	check_ber_buffer_twoway(v, nocan, can, inbuf, sizeof(inbuf),	\
 				outbuf, sizeof(outbuf), __LINE__)
@@ -382,9 +380,9 @@ check_ber_encoding() {
 	{ uint8_t b_pinf[] = { 0x40 };
 	  uint8_t b_minf[] = { 0x41 };
 	  uint8_t b_nan[]  = { 0x42 };
-	  CHECK_BER_STRICT(1.0/zero, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>", b_pinf, b_pinf);
-	  CHECK_BER_STRICT(-1.0/zero, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>", b_minf, b_minf);
-	  CHECK_BER_STRICT(zero/zero, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>", b_nan, b_nan); }
+	  CHECK_BER_STRICT(INFINITY, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>", b_pinf, b_pinf);
+	  CHECK_BER_STRICT(-INFINITY, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>", b_minf, b_minf);
+	  CHECK_BER_STRICT(NAN, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>", b_nan, b_nan); }
 
 	/* 8.5.6 b) => 8.5.8 Decimal encoding is used; NR1 form */
 	{ uint8_t b_0_nr1[] = { 0x01, '0' };
@@ -618,16 +616,15 @@ check_ber_encoding() {
 int
 main() {
 	REAL_t rn;
-	static const double zero = 0.0;
 	memset(&rn, 0, sizeof(rn));
 
 	check_ber_encoding();
 
 	check(&rn, 0.0, "0", "0");
 	check(&rn, -0.0, "-0", "-0");	/* minus-zero */
-	check(&rn, zero/zero, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>");
-	check(&rn, 1.0/zero, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>");
-	check(&rn, -1.0/zero, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>");
+	check(&rn, NAN, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>");
+	check(&rn, INFINITY, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>");
+	check(&rn, -INFINITY, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>");
 	check(&rn, 1.0, "1.0", "1.0E0");
 	check(&rn, -1.0, "-1.0", "-1.0E0");
 	check(&rn, 0.1, "0.1", "1.0E-1");

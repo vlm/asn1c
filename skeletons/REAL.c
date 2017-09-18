@@ -577,8 +577,8 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 	double m;
 	int expval;		/* exponent value */
 	unsigned int elen;	/* exponent value length, in octets */
-	unsigned int scaleF;
-	unsigned int baseF;
+	int scaleF;
+	int baseF;
 	uint8_t *ptr;
 	uint8_t *end;
 	int sign;
@@ -754,8 +754,8 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 	/* This loop ensures DER conformance by forcing mantissa odd: 11.3.1 */
 	mval = *mstop;
 	if(mval && !(mval & 1)) {
-		unsigned int shift_count = 1;
-		unsigned int ishift;
+		int shift_count = 1;
+		int ishift;
 		uint8_t *mptr;
 
 		/*
