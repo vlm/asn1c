@@ -783,11 +783,34 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 
+
+/*
+ * This function is only to get rid of Undefined Behavior Sanitizer warning.
+ */
+static intmax_t CLANG_NO_SANITIZE("shift-base")
+asn__safe_integer_convert_helper(const uint8_t *b, const uint8_t *end) {
+    intmax_t value;
+
+	/* Perform the sign initialization */
+	/* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
+	if((*b >> 7)) {
+        value = -1;
+    } else {
+        value = 0;
+    }
+
+    /* Conversion engine */
+	for(; b < end; b++) {
+		value = (value << 8) | *b;
+    }
+
+    return value;
+}
+
 int
 asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 	uint8_t *b, *end;
 	size_t size;
-	intmax_t value;
 
 	/* Sanity checking */
 	if(!iptr || !iptr->buf || !lptr) {
@@ -800,11 +823,11 @@ asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 	size = iptr->size;
 	end = b + size;	/* Where to stop */
 
-	if(size > sizeof(value)) {
+	if(size > sizeof(intmax_t)) {
 		uint8_t *end1 = end - 1;
 		/*
 		 * Slightly more advanced processing,
-		 * able to process INTEGERs with >sizeof(value) bytes
+		 * able to process INTEGERs with >sizeof(intmax_t) bytes
 		 * when the actual value is small, e.g. for intmax_t == int32_t
 		 * (0x0000000000abcdef INTEGER would yield a fine 0x00abcdef int32_t)
 		 */
@@ -818,8 +841,8 @@ asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 		}
 
 		size = end - b;
-		if(size > sizeof(value)) {
-			/* Still cannot fit the sizeof(value) */
+		if(size > sizeof(intmax_t)) {
+			/* Still cannot fit the sizeof(intmax_t) */
 			errno = ERANGE;
 			return -1;
 		}
@@ -831,16 +854,7 @@ asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 		return 0;
 	}
 
-	/* Perform the sign initialization */
-	/* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
-	if((*b >> 7)) value = -1; else value = 0;
-
-	/* Conversion engine */
-	for(; b < end; b++) {
-		value = (value << 8) | *b;
-    }
-
-	*lptr = value;
+	*lptr = asn__safe_integer_convert_helper(b, end);
 	return 0;
 }
 
