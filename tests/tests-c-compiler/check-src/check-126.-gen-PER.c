@@ -190,8 +190,7 @@ load_object_from(const char *fname, unsigned char *fbuf, size_t size, enum encty
 				fbuf_left, fbuf_offset, size);
 			assert(fbuf_offset == (ssize_t)size);
 		} else {
-			assert(fbuf_offset - size < 2
-			|| (fbuf_offset + 1 /* "\n" */  == (ssize_t)size
+			assert((fbuf_offset + 1 /* "\n" */  == (ssize_t)size
 				&& fbuf[size - 1] == '\n')
 			|| (fbuf_offset + 2 /* "\r\n" */  == (ssize_t)size
 				&& fbuf[size - 2] == '\r'

@@ -143,8 +143,7 @@ load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size,
 			if(how == AS_DER) {
 				assert(fbuf_offset == (ssize_t)size);
 			} else {
-				assert(fbuf_offset - size < 2
-				|| (fbuf_offset + 1 /* "\n" */  == (ssize_t)size
+				assert((fbuf_offset + 1 /* "\n" */  == (ssize_t)size
 					&& fbuf[size - 1] == '\n')
 				|| (fbuf_offset + 2 /* "\r\n" */  == (ssize_t)size
 					&& fbuf[size - 2] == '\r'
