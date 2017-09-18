@@ -292,7 +292,7 @@ asn_put_aligned_flush(asn_bit_outp_t *po) {
         (po->buffer ? po->buffer - po->tmpspace : 0) + ((po->nboff + 7) >> 3);
 
     if(unused_bits) {
-        po->buffer[po->nboff >> 3] &= ~0 << unused_bits;
+        po->buffer[po->nboff >> 3] &= ~0u << unused_bits;
     }
 
     if(po->output(po->tmpspace, complete_bytes, po->op_key) < 0) {

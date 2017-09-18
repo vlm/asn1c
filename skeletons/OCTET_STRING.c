@@ -19,11 +19,7 @@ asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs = {
 	offsetof(OCTET_STRING_t, _asn_ctx),
 	ASN_OSUBV_STR
 };
-static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
-	{ APC_CONSTRAINED, 8, 8, 0, 255 },
-	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
-	0, 0
-};
+
 asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,	/* OCTET STRING generally means a non-ascii sequence */
@@ -510,9 +506,18 @@ OCTET_STRING_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * BIT STRING-specific processing.
 	 */
-	if(type_variant == ASN_OSUBV_BIT && st->size) {
-		/* Finalize BIT STRING: zero out unused bits. */
-		st->buf[st->size-1] &= 0xff << st->bits_unused;
+	if(type_variant == ASN_OSUBV_BIT) {
+        if(st->size) {
+			if(st->bits_unused < 0 || st->bits_unused > 7) {
+				RETURN(RC_FAIL);
+			}
+			/* Finalize BIT STRING: zero out unused bits. */
+			st->buf[st->size-1] &= 0xff << st->bits_unused;
+		} else {
+			if(st->bits_unused) {
+				RETURN(RC_FAIL);
+			}
+		}
 	}
 
 	ASN_DEBUG("Took %ld bytes to encode %s: [%s]:%ld",
@@ -1208,6 +1213,8 @@ OCTET_STRING_decode_xer_utf8(const asn_codec_ctx_t *opt_codec_ctx,
 		OCTET_STRING__convert_entrefs);
 }
 
+#ifndef  ASN_DISABLE_PER_SUPPORT
+
 static int
 OCTET_STRING_per_get_characters(asn_per_data_t *po, uint8_t *buf,
 		size_t units, unsigned int bpc, unsigned int unit_bits,
@@ -1337,7 +1344,11 @@ OCTET_STRING_per_put_characters(asn_per_outp_t *po, const uint8_t *buf,
 	return 0;
 }
 
-#ifndef  ASN_DISABLE_PER_SUPPORT
+static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
+	{ APC_CONSTRAINED, 8, 8, 0, 255 },
+	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
+	0, 0
+};
 
 asn_dec_rval_t
 OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
