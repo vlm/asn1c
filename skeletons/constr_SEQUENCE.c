@@ -929,9 +929,9 @@ SEQUENCE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr, int ilevel,
             tmp_def_val = 0;
         }
         if(tmper.encoded == -1) return tmper;
+        er.encoded += tmper.encoded;
 
         ASN__CALLBACK3("</", 2, mname, mlen, ">", 1);
-        er.encoded += 5 + (2 * mlen) + tmper.encoded;
     }
 
     if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);

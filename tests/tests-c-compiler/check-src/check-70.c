@@ -66,9 +66,9 @@ save_object_as(PDU_t *st, enum asn_transfer_syntax syntax) {
 		return;
     }
 
-    fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
+    fprintf(stderr, "SAVED OBJECT IN SIZE %d/%zu\n", buf_offset, rval.encoded);
 
-    // assert(buf_offset == rval.encoded);
+    assert(buf_offset == rval.encoded);
 }
 
 static PDU_t *

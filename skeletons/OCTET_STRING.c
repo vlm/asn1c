@@ -578,7 +578,6 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 		uint8_t b = st->bits_unused & 0x07;
 		if(b && st->size) fix_last_byte = 1;
 		ASN__CALLBACK(&b, 1);
-		er.encoded++;
 	}
 
 	/* Invoke callback for the main part of the buffer */
@@ -590,7 +589,6 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 		ASN__CALLBACK(&b, 1);
 	}
 
-	er.encoded += st->size;
 	ASN__ENCODED_OK(er);
 cb_failed:
 	ASN__ENCODE_FAILED;
@@ -624,7 +622,6 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		for(; buf < end; buf++) {
 			if(p >= scend) {
 				ASN__CALLBACK(scratch, p - scratch);
-				er.encoded += p - scratch;
 				p = scratch;
 			}
 			*p++ = h2c[(*buf >> 4) & 0x0F];
@@ -632,12 +629,10 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		}
 
 		ASN__CALLBACK(scratch, p-scratch);	/* Dump the rest */
-		er.encoded += p - scratch;
 	} else {
 		for(i = 0; buf < end; buf++, i++) {
 			if(!(i % 16) && (i || st->size > 16)) {
 				ASN__CALLBACK(scratch, p-scratch);
-				er.encoded += (p-scratch);
 				p = scratch;
 				ASN__TEXT_INDENT(1, ilevel);
 			}
@@ -648,7 +643,6 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		if(p - scratch) {
 			p--;	/* Remove the tail space */
 			ASN__CALLBACK(scratch, p-scratch); /* Dump the rest */
-			er.encoded += p - scratch;
 			if(st->size > 16)
 				ASN__TEXT_INDENT(1, ilevel-1);
 		}

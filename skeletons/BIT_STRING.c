@@ -117,7 +117,6 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		int v = *buf;
 		int nline = xcan?0:(((buf - st->buf) % 8) == 0);
 		if(p >= scend || nline) {
-			er.encoded += p - scratch;
 			ASN__CALLBACK(scratch, p - scratch);
 			p = scratch;
 			if(nline) ASN__TEXT_INDENT(1, ilevel);
@@ -129,7 +128,6 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	if(!xcan && ((buf - st->buf) % 8) == 0)
 		ASN__TEXT_INDENT(1, ilevel);
-	er.encoded += p - scratch;
 	ASN__CALLBACK(scratch, p - scratch);
 	p = scratch;
 
@@ -139,7 +137,6 @@ BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		int i;
 		for(i = 7; i >= ubits; i--)
 			*p++ = (v & (1 << i)) ? 0x31 : 0x30;
-		er.encoded += p - scratch;
 		ASN__CALLBACK(scratch, p - scratch);
 	}
 

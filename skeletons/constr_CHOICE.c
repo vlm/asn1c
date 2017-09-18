@@ -810,16 +810,15 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		er.encoded = 0;
 
-                if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel);
+		if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel);
 		ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 
 		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
+		er.encoded += tmper.encoded;
 
 		ASN__CALLBACK3("</", 2, mname, mlen, ">", 1);
-
-		er.encoded += 5 + (2 * mlen) + tmper.encoded;
 	}
 
 	if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel - 1);

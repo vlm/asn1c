@@ -700,11 +700,8 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
 				ilevel + (specs->as_XMLValueList != 2),
 				flags, cb, app_key);
-		if(tmper.encoded == -1) {
-			td = tmper.failed_type;
-			sptr = tmper.structure_ptr;
-			goto cb_failed;
-		}
+		if(tmper.encoded == -1) return tmper;
+		er.encoded += tmper.encoded;
 		if(tmper.encoded == 0 && specs->as_XMLValueList) {
 			const char *name = elm->type->xml_tag;
 			size_t len = strlen(name);
@@ -713,10 +710,8 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		if(mname) {
 			ASN__CALLBACK3("</", 2, mname, mlen, ">", 1);
-			er.encoded += 5;
 		}
 
-		er.encoded += (2 * mlen) + tmper.encoded;
 	}
 
 	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
@@ -726,6 +721,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		xer_tmp_enc_t *end = encs + encs_count;
 		ssize_t control_size = 0;
 
+		er.encoded = 0;
 		cb = original_cb;
 		app_key = original_app_key;
 		qsort(encs, encs_count, sizeof(encs[0]), SET_OF_xer_order);
@@ -741,9 +737,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 	goto cleanup;
 cb_failed:
-	er.encoded = -1;
-	er.failed_type = td;
-	er.structure_ptr = sptr;
+	ASN__ENCODE_FAILED;
 cleanup:
 	if(encs) {
 		size_t n;
