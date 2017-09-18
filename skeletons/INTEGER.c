@@ -633,13 +633,14 @@ INTEGER_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
 				if(asn_ulong2INTEGER(st, uvalue))
 					ASN__DECODE_FAILED;
 			} else {
-				unsigned long svalue = 0;
+				unsigned long uvalue = 0;
+				long svalue;
 				if(uper_get_constrained_whole_number(pd,
-					&svalue, ct->range_bits))
+					&uvalue, ct->range_bits))
 					ASN__DECODE_STARVED;
-				ASN_DEBUG("Got value %ld + low %ld",
-					svalue, ct->lower_bound);
-				svalue += ct->lower_bound;
+				ASN_DEBUG("Got value %lu + low %ld",
+					uvalue, ct->lower_bound);
+				svalue = ct->lower_bound + (long)uvalue;
 				if(asn_long2INTEGER(st, svalue))
 					ASN__DECODE_FAILED;
 			}
