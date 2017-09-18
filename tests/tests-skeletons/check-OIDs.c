@@ -13,14 +13,14 @@ _print(const void *buffer, size_t size, void *app_key) {
 }
 
 static void
-check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
+check_OID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	OBJECT_IDENTIFIER_t *oid;
 	asn_dec_rval_t rval;
 	unsigned long arcs[10];
 	int alen;
 	int i;
 
-	printf("Checking {");
+	printf("%03d: Checking {", lineno);
 	for(i = 0; i < (int)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
 	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
@@ -60,14 +60,14 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 }
 
 static void
-check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
+check_ROID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	RELATIVE_OID_t *oid;
 	asn_dec_rval_t rval;
 	unsigned long arcs[10];
 	int alen;
 	int i;
 
-	printf("Checking {");
+	printf("%03d: Checking {", lineno);
 	for(i = 0; i < (ssize_t)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
 	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
@@ -107,7 +107,7 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
  * Encode the specified array of arcs as RELATIVE-OID, decode it and compare.
  */
 static void
-check_REGEN(int *arcs, int acount) {
+check_REGEN(int lineno, int *arcs, int acount) {
 	static RELATIVE_OID_t oid;
 	unsigned long tmp_arcs[10];
 	int tmp_alen = 10;
@@ -116,7 +116,7 @@ check_REGEN(int *arcs, int acount) {
 	int i;
 
 	if(0) {
-		fprintf(stderr, "Encoding (R) {");
+		fprintf(stderr, "%03d: Encoding (R) {", lineno);
 		for(i = 0; i < acount; i++) {
 			fprintf(stderr, " %u", arcs[i]);
 		}
@@ -149,7 +149,7 @@ check_REGEN(int *arcs, int acount) {
  * decode it and compare.
  */
 static void
-check_REGEN_OID(int *arcs, int acount) {
+check_REGEN_OID(int lineno, int *arcs, int acount) {
 	static OBJECT_IDENTIFIER_t oid;
 	unsigned long tmp_arcs[10];
 	int tmp_alen = 10;
@@ -158,7 +158,7 @@ check_REGEN_OID(int *arcs, int acount) {
 	int i;
 
 	if(0) {
-		fprintf(stderr, "Encoding (O) {");
+		fprintf(stderr, "%03d: Encoding (O) {", lineno);
 		for(i = 0; i < acount; i++) {
 			fprintf(stderr, " %u", arcs[i]);
 		}
@@ -274,16 +274,18 @@ static void check_xer(int expect_arcs, char *xer) {
 	assert(ret == expect_arcs);
 }
 
-#define	CHECK_OID(n)	check_OID(buf ## n, sizeof(buf ## n),		\
-		buf ## n ## _check,					\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
-#define	CHECK_ROID(n)	check_ROID(buf ## n, sizeof(buf ## n),		\
-		buf ## n ## _check,					\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
-#define	CHECK_REGEN(n) check_REGEN(buf ## n ## _check,			\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
-#define	CHECK_REGEN_OID(n) check_REGEN_OID(buf ## n ## _check,		\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
+#define CHECK_OID(n)                                            \
+    check_OID(__LINE__, buf##n, sizeof(buf##n), buf##n##_check, \
+              sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
+#define CHECK_ROID(n)                                            \
+    check_ROID(__LINE__, buf##n, sizeof(buf##n), buf##n##_check, \
+               sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
+#define CHECK_REGEN(n)                    \
+    check_REGEN(__LINE__, buf##n##_check, \
+                sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
+#define CHECK_REGEN_OID(n)                    \
+    check_REGEN_OID(__LINE__, buf##n##_check, \
+                    sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
 
 int
 main() {

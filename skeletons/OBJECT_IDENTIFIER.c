@@ -80,7 +80,6 @@ OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
-
 int
 OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbufp, unsigned int rvsize) {
 	unsigned LE GCC_NOTUSED = 1; /* Little endian (x86) */
@@ -92,6 +91,8 @@ OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, sig
 
 	rvsize *= CHAR_BIT;	/* bytes to bits */
 	arclen *= 7;		/* bytes to bits */
+
+	assert(add <= 0);
 
 	/*
 	 * The arc has the number of bits
@@ -133,11 +134,13 @@ OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, sig
 		/* Gather all bits into the accumulator */
 		for(accum = cache; arcbuf < arcend; arcbuf++)
 			accum = (accum << 7) | (*arcbuf & ~0x80);
-		if(accum < (unsigned)-add) {
+		if(accum < (unsigned)-add
+		|| accum > (ULONG_MAX-(unsigned long)(-add))) {
 			errno = ERANGE;	/* Overflow */
 			return -1;
 		}
-		*(unsigned long *)(void *)rvbuf = accum + add;	/* alignment OK! */
+		*(unsigned long *)(void *)rvbuf =
+			accum - (unsigned long)(-add); /* alignment OK! */
 		return 0;
 	}
 
