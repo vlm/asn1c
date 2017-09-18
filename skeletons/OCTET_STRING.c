@@ -936,15 +936,12 @@ static ssize_t OCTET_STRING__convert_binary(void *sptr, const void *chunk_buf, s
  */
 static int
 OS__strtoent(int base, const char *buf, const char *end, int32_t *ret_value) {
+	const int32_t last_unicode_codepoint = 0x10ffff;
 	int32_t val = 0;
 	const char *p;
 
 	for(p = buf; p < end; p++) {
 		int ch = *p;
-
-		/* Strange huge value */
-		if((val * base + base) < 0)
-			return -1;
 
 		switch(ch) {
 		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: /*01234*/
@@ -964,6 +961,11 @@ OS__strtoent(int base, const char *buf, const char *end, int32_t *ret_value) {
 			return (p - buf) + 1;
 		default:
 			return -1;	/* Character set error */
+		}
+
+		/* Value exceeds the Unicode range. */
+		if(val > last_unicode_codepoint) {
+			return -1;
 		}
 	}
 
