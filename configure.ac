@@ -62,9 +62,15 @@ AX_CHECK_COMPILE_FLAG([-Wno-error=parentheses-equality],
       [CFLAGS="$CFLAGS -Wno-error=parentheses-equality"])
 AX_CHECK_COMPILE_FLAG([-std=gnu99],
       [CFLAGS="$CFLAGS -std=gnu99"
-TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -std=gnu99"])
+       TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -std=gnu99"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
-      [TESTSUITE_CFLAGS="$TESTSUITE_CFLAGS -Wno-error=unused-variable"])
+      [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Wno-error=unused-variable"])
+
+dnl Lower the optimization level in tests to aid debugging.
+dnl AX_CHECK_COMPILE_FLAG([-O1],
+dnl    [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -O1"])
+dnl AX_CHECK_COMPILE_FLAG([-fno-inline],
+dnl     [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -fno-inline"])
 
 AX_CODE_COVERAGE
 AS_IF([test x$enable_code_coverage != xno], [
@@ -131,6 +137,26 @@ AS_IF([test "x$disable_test_ubsan" != xno], [
 [--disable-test-ubsan=$disable_test_ubsan is not supported on a target system.
 https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#how-to-build])])
       ])
+    AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=undefined],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=undefined"])
+
+    dnl Unsigned integer overflow is enabled separately.
+    AX_CHECK_COMPILE_FLAG([-fsanitize=unsigned-integer-overflow],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=unsigned-integer-overflow"])
+    AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=unsigned-integer-overflow],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=unsigned-integer-overflow"])
+
+    dnl Nullability is enabled separately.
+    AX_CHECK_COMPILE_FLAG([-fsanitize=nullability],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=nullability"])
+    AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=nullability],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=nullability"])
+
+    dnl Keep error messages nice. Also consider:
+    dnl export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
+    dnl export UBSAN_OPTIONS=print_stacktrace=1
+    AX_CHECK_COMPILE_FLAG([-fno-omit-frame-pointer],
+          [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-omit-frame-pointer"])
 ])
 
 dnl Enable Address Sanitizer, if supported by gcc (4.8+) or clang.
