@@ -48,6 +48,7 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
                 lineno, control, size);
         if(ret.code == code) {
             fprintf(stderr, "  (That was expected)\n");
+            ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
             return;
         } else {
             fprintf(
@@ -76,6 +77,7 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
     }
 
     fprintf(stderr, "%d: Decode result %" PRIdMAX "\n", lineno, control);
+    ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
 }
 
 static void
