@@ -58,34 +58,35 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 };
 
 asn_enc_rval_t
-NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-        int ilevel, enum xer_encoder_flags_e flags,
-                asn_app_consume_bytes_f *cb, void *app_key) {
+NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr, int ilevel,
+                            enum xer_encoder_flags_e flags,
+                            asn_app_consume_bytes_f *cb, void *app_key) {
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     asn_enc_rval_t er;
     const long *native = (const long *)sptr;
-	const asn_INTEGER_enum_map_t *el;
+    const asn_INTEGER_enum_map_t *el;
 
-        (void)ilevel;
-        (void)flags;
+    (void)ilevel;
+    (void)flags;
 
-        if(!native) ASN__ENCODE_FAILED;
+    if(!native) ASN__ENCODE_FAILED;
 
-	el = INTEGER_map_value2enum(specs, *native);
-	if(el) {
-		size_t srcsize = el->enum_len + 5;
-		char *src = (char *)alloca(srcsize);
+    el = INTEGER_map_value2enum(specs, *native);
+    if(el) {
+        size_t srcsize = el->enum_len + 5;
+        char *src = (char *)alloca(srcsize);
 
-		er.encoded = snprintf(src, srcsize, "<%s/>", el->enum_name);
-		assert(er.encoded > 0 && (size_t)er.encoded < srcsize);
-		if(cb(src, er.encoded, app_key) < 0) ASN__ENCODE_FAILED;
-		ASN__ENCODED_OK(er);
-	} else {
-		ASN_DEBUG("ASN.1 forbids dealing with "
-			"unknown value of ENUMERATED type");
-		ASN__ENCODE_FAILED;
-	}
+        er.encoded = snprintf(src, srcsize, "<%s/>", el->enum_name);
+        assert(er.encoded > 0 && (size_t)er.encoded < srcsize);
+        if(cb(src, er.encoded, app_key) < 0) ASN__ENCODE_FAILED;
+        ASN__ENCODED_OK(er);
+    } else {
+        ASN_DEBUG(
+            "ASN.1 forbids dealing with "
+            "unknown value of ENUMERATED type");
+        ASN__ENCODE_FAILED;
+    }
 }
 
 asn_dec_rval_t
