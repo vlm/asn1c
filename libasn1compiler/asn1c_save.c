@@ -43,6 +43,7 @@ static int generate_preamble(arg_t *, FILE *, int optc, char **argv);
 static int include_type_to_pdu_collection(arg_t *arg);
 static void pdu_collection_print_unused_types(arg_t *arg);
 static const char *generate_pdu_C_definition(void);
+static void asn1c__cleanup_pdu_type(void);
 
 int
 asn1c_save_compiled_output(arg_t *arg, const char *datadir,
@@ -197,6 +198,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 
 	fclose(mkf);
 	safe_fprintf(stderr, "Generated Makefile.am.sample\n");
+
+        asn1c__cleanup_pdu_type();
 
 	return 0;
 }
@@ -599,6 +602,14 @@ asn1c__add_pdu_type(const char *ctypename) {
 	pduType[pduTypes].used = 0;
 	pduType[pduTypes].typename = typename;
 	pduTypes++;
+}
+
+static void
+asn1c__cleanup_pdu_type() {
+	int i;
+	for (i = 0; i < pduTypes; i++)
+		free(pduType[i].typename);
+	free(pduType);
 }
 
 static int

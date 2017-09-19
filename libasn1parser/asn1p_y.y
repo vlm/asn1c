@@ -1986,11 +1986,13 @@ ContainedSubtype:
     TOK_INCLUDES Type {
 		$$ = asn1p_value_fromtype($2);
 		checkmem($$);
+		asn1p_expr_free($2);
     }
     /* Can't put Type here because of conflicts. Simplified subset */
     | DefinedUntaggedType {
 		$$ = asn1p_value_fromtype($1);
 		checkmem($$);
+		asn1p_expr_free($1);
     }
 	;
 
@@ -2475,6 +2477,7 @@ IdentifierAsReference:
     Identifier {
 		$$ = asn1p_ref_new(yylineno, currentModule);
 		asn1p_ref_add_component($$, $1, RLT_lowercase);
+		free($1);
     };
 
 IdentifierAsValue:

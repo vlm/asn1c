@@ -17,6 +17,24 @@ c_name_clash_finder_init() {
     TQ_INIT(&used_names);
 }
 
+void
+c_name_clash_finder_destroy() {
+    struct intl_name *n;
+
+    while((n = TQ_REMOVE(&used_names, next))) {
+        union {
+            const char *c_buf;
+            char *nc_buf;
+        } const_cast;
+
+        asn1p_expr_free(n->expr);
+        asn1p_expr_free(n->clashes_with);
+        const_cast.c_buf = n->name;
+        free(const_cast.nc_buf);
+        free(n);
+    }
+}
+
 static void
 register_global_name(arg_t *arg, const char *name) {
     struct intl_name *n;
@@ -25,14 +43,19 @@ register_global_name(arg_t *arg, const char *name) {
         if(strcmp(n->name, name) == 0) {
             if(!(arg->expr->_mark & TM_NAMEGIVEN) && arg->expr != n->expr) {
                 n->clashes_with = arg->expr;
+                arg->expr->ref_cnt++;
                 return;
             }
         }
     }
 
+    if(arg->expr->_mark & TM_NAMEGIVEN)
+        return;
+
     n = calloc(1, sizeof(*n));
     assert(n);
     n->expr = arg->expr;
+    arg->expr->ref_cnt++;
     n->name = strdup(name);
     TQ_ADD(&used_names, n, next);
 }

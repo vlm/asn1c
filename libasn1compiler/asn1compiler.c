@@ -79,6 +79,8 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 
 	DEBUG("Saving compiled data");
 
+	c_name_clash_finder_destroy();
+
 	/*
 	 * Save or print out the compiled result.
 	 */

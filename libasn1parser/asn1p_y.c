@@ -4314,6 +4314,7 @@ yyreduce:
     {
 		(yyval.a_value) = asn1p_value_fromtype((yyvsp[(2) - (2)].a_expr));
 		checkmem((yyval.a_value));
+		asn1p_expr_free((yyvsp[(2) - (2)].a_expr));
     }
     break;
 
@@ -4322,6 +4323,7 @@ yyreduce:
     {
 		(yyval.a_value) = asn1p_value_fromtype((yyvsp[(1) - (1)].a_expr));
 		checkmem((yyval.a_value));
+		asn1p_expr_free((yyvsp[(1) - (1)].a_expr));
     }
     break;
 
@@ -4939,6 +4941,7 @@ yyreduce:
     {
 		(yyval.a_ref) = asn1p_ref_new(yylineno, currentModule);
 		asn1p_ref_add_component((yyval.a_ref), (yyvsp[(1) - (1)].tv_str), RLT_lowercase);
+		free((yyvsp[(1) - (1)].tv_str));
     }
     break;
 
