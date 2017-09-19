@@ -694,6 +694,7 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 		if(!st->buf || st->size < 2) {
 			ptr = (uint8_t *)MALLOC(2);
 			if(!ptr) return -1;
+			if(st->buf) FREEMEM(st->buf);
 			st->buf = ptr;
 		}
 		/* fpclassify(3) is not portable yet */
@@ -717,6 +718,7 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 			} else {
 				/* Negative zero. #8.5.3, 8.5.9 */
 				st->buf[0] = 0x43;
+				st->buf[1] = 0;
 				st->size = 1;
 			}
 		}
