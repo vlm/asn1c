@@ -385,7 +385,7 @@ main(int ac, char *av[]) {
         char *name = argument_to_name(av, ac_i);
         int first_pdu;
 
-        for(first_pdu = 1; file && (first_pdu || !opt_onepdu); first_pdu = 0) {
+        for(first_pdu = 1; (first_pdu || !opt_onepdu); first_pdu = 0) {
             /*
              * Decode the encoded structure from file.
              */
