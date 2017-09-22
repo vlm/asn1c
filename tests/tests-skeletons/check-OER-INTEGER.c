@@ -48,6 +48,7 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
                 lineno, control, size);
         if(ret.code == code) {
             fprintf(stderr, "  (That was expected)\n");
+            ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
             return;
         } else {
             fprintf(
@@ -76,6 +77,7 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
     }
 
     fprintf(stderr, "%d: Decode result %" PRIdMAX "\n", lineno, control);
+    ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
 }
 
 static void
@@ -277,14 +279,14 @@ main() {
         CHECK_ROUNDTRIP(value, 4, 0);
     }
 
-    for(size_t i = 0; i < 8 * sizeof(intmax_t) ; i++) {
+    for(size_t i = 0; i < 8 * sizeof(intmax_t) - 1; i++) {
         intmax_t value = (intmax_t)1 << i;
         CHECK_ROUNDTRIP(value, 8, 0);
         value = -value;
         CHECK_ROUNDTRIP(value, 8, 0);
     }
 
-    for(size_t i = 0; i < 8 * sizeof(intmax_t) ; i++) {
+    for(size_t i = 0; i < 8 * sizeof(intmax_t) - 1; i++) {
         intmax_t value = (intmax_t)1 << i;
         CHECK_ROUNDTRIP(value, 0, 0);
         value = -value;

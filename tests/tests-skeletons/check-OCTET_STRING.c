@@ -8,8 +8,10 @@
 
 enum encoding_type { HEX, BINARY, UTF8 };
 
+#define check(t, tag, buf, verify)  check_impl(__LINE__, t, tag, buf, verify)
+
 static void
-check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
+check_impl(int lineno, enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 	size_t xmllen = strlen(xmlbuf);
 	size_t verlen = verify ? strlen(verify) : 0;
 	asn_TYPE_descriptor_t *td = &asn_DEF_OCTET_STRING;
@@ -32,8 +34,8 @@ check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 	}
 
 	rc = decoder(0, td, (void **)stp, tagname, xmlbuf, xmllen);
-	printf("[%s] => [%s]:%zu vs [%s]:%zu, code %d\n",
-		xmlbuf,
+	printf("%03d: [%s] => [%s]:%zu vs [%s]:%zu, code %d\n",
+		lineno, xmlbuf,
 		st ? (const char *)st->buf : "", st ? st->size : 0,
 		verify ? verify : "", verlen, rc.code);
 
@@ -46,6 +48,8 @@ check(enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
 	} else {
 		assert(rc.code != RC_OK);
 	}
+
+	ASN_STRUCT_FREE(*td, st);
 }
 
 static char buf[1024];
@@ -76,6 +80,7 @@ encode(char *orig, char *encoded) {
 	printf("Orig: [%s], encoded: [%s], check [%s]\n",
 		orig, buf, encoded);
 	assert(strcmp(buf, encoded) == 0);
+	ASN_STRUCT_RESET(asn_DEF_OCTET_STRING, &os);
 }
 
 int
@@ -123,6 +128,13 @@ main() {
 	check(UTF8, "z", "<z z z>a&#x20;b</z z z>", "a b");
 	check(UTF8, "z", "<z z z>a&#32;b</z z z>", "a b");
 	check(UTF8, "z", "<z>a&#32323;b</z>", "a\347\271\203b");
+	check(UTF8, "z", "<z>a&#x4fc4;|</z>", "a\xe4\xbf\x84|");
+    /* Last unicode point */
+	check(UTF8, "z", "<z>a&#x10ffff;|</z>", "a\xf4\x8f\xbf\xbf|");
+	check(UTF8, "z", "<z>a&#1114111;|</z>", "a\xf4\x8f\xbf\xbf|");
+    /* One past the last unicode point */
+	check(UTF8, "z", "<z>a&#x110000;|</z>", "a&#x110000;|");
+	check(UTF8, "z", "<z>a&#1114112;|</z>", "a&#1114112;|");
 	check(UTF8, "z", "<z>a&#3000000000;b</z>", "a&#3000000000;b");
 	check(UTF8, "z", "<z>a&#5000000000;b</z>", "a&#5000000000;b");
 	check(UTF8, "z", "<z>a&#300</z>", "a&#300");

@@ -9,6 +9,30 @@
 #include <NativeEnumerated.h>
 #include <errno.h>
 
+/*
+ * This function is only to get rid of Undefined Behavior Sanitizer warning.
+ */
+static intmax_t CLANG_NO_SANITIZE("shift-base")
+asn__safe_nativeenumerated_convert_helper(const uint8_t *b,
+                                          const uint8_t *end) {
+    intmax_t value;
+
+    /* Perform the sign initialization */
+    /* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
+    if((*b >> 7)) {
+        value = -1;
+    } else {
+        value = 0;
+    }
+
+    /* Conversion engine */
+    for(; b < end; b++) {
+        value = (value << 8) | *b;
+    }
+
+    return value;
+}
+
 asn_dec_rval_t
 NativeEnumerated_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                             asn_TYPE_descriptor_t *td,
@@ -42,7 +66,7 @@ NativeEnumerated_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
          */
         size_t length = *b & 0x7f;
         const uint8_t *bend;
-        long value;
+        intmax_t value;
 
         if(length < 1 || length > sizeof(*native)) {
             ASN__DECODE_FAILED;
@@ -52,10 +76,8 @@ NativeEnumerated_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         }
         b++;
         bend = b + length;
-        value = (*b & 0x80) ? -1 : 0; /* Determine sign */
-        for(; b < bend; b++)
-            value = (value << 8) | *b;
 
+        value = asn__safe_nativeenumerated_convert_helper(b, bend);
         if(value < 0) {
             const asn_INTEGER_specifics_t *specs =
                 (const asn_INTEGER_specifics_t *)td->specifics;

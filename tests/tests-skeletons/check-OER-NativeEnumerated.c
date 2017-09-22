@@ -182,7 +182,7 @@ main() {
         CHECK_ROUNDTRIP(value);
     }
 
-    for(size_t i = 0; i < 8 * sizeof(intmax_t) ; i++) {
+    for(size_t i = 0; i < 8 * sizeof(intmax_t) - 1; i++) {
         intmax_t value = (intmax_t)1 << i;
         CHECK_ROUNDTRIP(value);
         value = -value;

@@ -15,6 +15,24 @@
 #include <OCTET_STRING.h>
 #include <math.h>
 
+#if defined(__clang__)
+/*
+ * isnan() is defined using generic selections and won't compile in
+ * strict C89 mode because of too fancy system's standard library.
+ * However, prior to C11 the math had a perfectly working isnan()
+ * in the math library.
+ * Disable generic selection warning so we can test C89 mode with newer libc.
+ */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc11-extensions"
+static int asn_isnan(double d) {
+    return isnan(d);
+}
+#pragma clang diagnostic pop
+#else
+#define asn_isnan(v)    isnan(v)
+#endif  /* generic selections */
+
 /*
  * NativeReal basic type description.
  */
@@ -359,13 +377,13 @@ NativeReal_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
 
     if(a && b) {
         /* NaN sorted above everything else */
-        if(isnan(*a)) {
-            if(isnan(*b)) {
+        if(asn_isnan(*a)) {
+            if(asn_isnan(*b)) {
                 return 0;
             } else {
                 return -1;
             }
-        } else if(isnan(*b)) {
+        } else if(asn_isnan(*b)) {
             return 1;
         }
         /* Value comparison. */

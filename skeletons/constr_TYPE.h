@@ -46,7 +46,7 @@ typedef struct asn_struct_ctx_s {
 #ifdef  ASN_DISABLE_OER_SUPPORT
 typedef void (oer_type_decoder_f)();
 typedef void (oer_type_encoder_f)();
-typedef struct{} asn_oer_constraints_t;
+typedef void asn_oer_constraints_t;
 #else
 #include <oer_decoder.h>	/* Octet Encoding Rules encoder */
 #include <oer_encoder.h>	/* Octet Encoding Rules encoder */

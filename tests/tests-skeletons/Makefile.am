@@ -26,3 +26,4 @@ AM_LDFLAGS = $(top_builddir)/skeletons/libasn1cskeletons.la
 LDADD = -lm
 
 TESTS = $(check_PROGRAMS)
+TESTS_ENVIRONMENT= ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1

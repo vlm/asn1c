@@ -126,6 +126,17 @@ check_serialize() {
 	assert(memcmp(buf0, buf, sizeof(buf0)) == 0);
 }
 
+#ifdef ENABLE_LIBFUZZER
+
+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+	LogLine_t *lp = 0;
+	(void)ber_decode(0, &asn_DEF_LogLine, (void **)&lp, Data, Size);
+    ASN_STRUCT_FREE(asn_DEF_LogLine, lp);
+    return 0;
+}
+
+#else
+
 int
 main(int ac, char **av) {
 	LogLine_t t;
@@ -140,3 +151,5 @@ main(int ac, char **av) {
 
 	return 0;
 }
+
+#endif

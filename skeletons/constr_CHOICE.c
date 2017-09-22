@@ -605,6 +605,7 @@ CHOICE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
 			asn_dec_rval_t tmprval;
 			void *memb_ptr;		/* Pointer to the member */
 			void **memb_ptr2;	/* Pointer to that pointer */
+			unsigned old_present;
 
 			elm = &td->elements[edx];
 
@@ -624,13 +625,14 @@ CHOICE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
 			XER_ADVANCE(tmprval.consumed);
 			ASN_DEBUG("XER/CHOICE: itdf: [%s] code=%d",
 				elm->type->name, tmprval.code);
-			if(tmprval.code != RC_OK)
-				RETURN(tmprval.code);
-			assert(_fetch_present_idx(st,
-				specs->pres_offset, specs->pres_size) == 0);
+			old_present = _fetch_present_idx(st,
+				specs->pres_offset, specs->pres_size);
+			assert(old_present == 0 || old_present == edx + 1);
 			/* Record what we've got */
 			_set_present_idx(st,
 				specs->pres_offset, specs->pres_size, edx + 1);
+			if(tmprval.code != RC_OK)
+				RETURN(tmprval.code);
 			ctx->phase = 3;
 			/* Fall through */
 		}
@@ -810,16 +812,15 @@ CHOICE_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 		er.encoded = 0;
 
-                if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel);
+		if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel);
 		ASN__CALLBACK3("<", 1, mname, mlen, ">", 1);
 
 		tmper = elm->type->op->xer_encoder(elm->type, memb_ptr,
 				ilevel + 1, flags, cb, app_key);
 		if(tmper.encoded == -1) return tmper;
+		er.encoded += tmper.encoded;
 
 		ASN__CALLBACK3("</", 2, mname, mlen, ">", 1);
-
-		er.encoded += 5 + (2 * mlen) + tmper.encoded;
 	}
 
 	if(!(flags & XER_F_CANONICAL)) ASN__TEXT_INDENT(1, ilevel - 1);

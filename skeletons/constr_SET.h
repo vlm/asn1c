@@ -70,13 +70,13 @@ extern asn_TYPE_operation_t asn_OP_SET;
 #define	ASN_SET_ISPRESENT2(map_ptr, PR_x)				\
 	(((unsigned int *)(map_ptr))					\
 		[(PR_x)	/ (8 * sizeof(unsigned int))]			\
-		& (1 << ((8 * sizeof(unsigned int)) - 1			\
+		& (1u << ((8 * sizeof(unsigned int)) - 1			\
 		- ((PR_x) % (8 * sizeof(unsigned int))))))
 
 #define	ASN_SET_MKPRESENT(map_ptr, PR_x)				\
 	(((unsigned int *)(map_ptr))					\
 		[(PR_x)	/ (8 * sizeof(unsigned int))]			\
-		|= (1 << ((8 * sizeof(unsigned int)) - 1		\
+		|= (1u << ((8 * sizeof(unsigned int)) - 1		\
 		- ((PR_x) % (8 * sizeof(unsigned int))))))
 
 #ifdef __cplusplus

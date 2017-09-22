@@ -1,6 +1,8 @@
 
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
 
+AM_CFLAGS = $(SKELETONS_CFLAGS)
+
 dist_pkgdata_DATA =				\
 		${srcdir}/README		\
 		${srcdir}/*.[ch]		\
@@ -20,7 +22,6 @@ uninstall-local:
 
 check_LTLIBRARIES = libasn1cskeletons.la
 
-libasn1cskeletons_la_CFLAGS = $(SKELETONS_CFLAGS)
 libasn1cskeletons_la_SOURCES = 				\
 	ANY.c ANY.h					\
 	BIT_STRING.c BIT_STRING.h			\
@@ -92,6 +93,6 @@ libasn1cskeletons_la_SOURCES = 				\
 check_PROGRAMS = check-converter_sample
 LDADD = -lm
 
-check_converter_sample_CFLAGS = $(SKELETONS_CFLAGS) -DNO_ASN_PDU
+check_converter_sample_CFLAGS = -DNO_ASN_PDU
 check_converter_sample_SOURCES = converter-sample.c
 check_converter_sample_LDADD = libasn1cskeletons.la

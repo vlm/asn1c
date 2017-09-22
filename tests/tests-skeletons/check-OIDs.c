@@ -13,14 +13,14 @@ _print(const void *buffer, size_t size, void *app_key) {
 }
 
 static void
-check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
+check_OID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	OBJECT_IDENTIFIER_t *oid;
 	asn_dec_rval_t rval;
 	unsigned long arcs[10];
 	int alen;
 	int i;
 
-	printf("Checking {");
+	printf("%03d: Checking {", lineno);
 	for(i = 0; i < (int)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
 	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
@@ -57,17 +57,18 @@ check_OID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf(" }\n");
 	assert(alen == ck_len);
 
+	ASN_STRUCT_FREE(asn_DEF_OBJECT_IDENTIFIER, oid);
 }
 
 static void
-check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
+check_ROID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	RELATIVE_OID_t *oid;
 	asn_dec_rval_t rval;
 	unsigned long arcs[10];
 	int alen;
 	int i;
 
-	printf("Checking {");
+	printf("%03d: Checking {", lineno);
 	for(i = 0; i < (ssize_t)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
 	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
@@ -101,13 +102,14 @@ check_ROID(uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 		assert(arcs[i] == (unsigned long)ck_buf[i]);
 	}
 	printf(" }\n");
+	ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, oid);
 }
 
 /*
  * Encode the specified array of arcs as RELATIVE-OID, decode it and compare.
  */
 static void
-check_REGEN(int *arcs, int acount) {
+check_REGEN(int lineno, int *arcs, int acount) {
 	static RELATIVE_OID_t oid;
 	unsigned long tmp_arcs[10];
 	int tmp_alen = 10;
@@ -116,7 +118,7 @@ check_REGEN(int *arcs, int acount) {
 	int i;
 
 	if(0) {
-		fprintf(stderr, "Encoding (R) {");
+		fprintf(stderr, "%03d: Encoding (R) {", lineno);
 		for(i = 0; i < acount; i++) {
 			fprintf(stderr, " %u", arcs[i]);
 		}
@@ -142,6 +144,7 @@ check_REGEN(int *arcs, int acount) {
 		fprintf(stderr, "}\n");
 	}
 
+	ASN_STRUCT_RESET(asn_DEF_RELATIVE_OID, &oid);
 }
 
 /*
@@ -149,7 +152,7 @@ check_REGEN(int *arcs, int acount) {
  * decode it and compare.
  */
 static void
-check_REGEN_OID(int *arcs, int acount) {
+check_REGEN_OID(int lineno, int *arcs, int acount) {
 	static OBJECT_IDENTIFIER_t oid;
 	unsigned long tmp_arcs[10];
 	int tmp_alen = 10;
@@ -158,7 +161,7 @@ check_REGEN_OID(int *arcs, int acount) {
 	int i;
 
 	if(0) {
-		fprintf(stderr, "Encoding (O) {");
+		fprintf(stderr, "%03d: Encoding (O) {", lineno);
 		for(i = 0; i < acount; i++) {
 			fprintf(stderr, " %u", arcs[i]);
 		}
@@ -183,7 +186,10 @@ check_REGEN_OID(int *arcs, int acount) {
 		}
 		fprintf(stderr, "}\n");
 	}
+
+	ASN_STRUCT_RESET(asn_DEF_RELATIVE_OID, &oid);
 }
+
 static int
 check_speed() {
 	uint8_t buf[] = { 0x80 | 7, 0x80 | 2, 0x80 | 3, 0x80 | 4, 13 };
@@ -240,18 +246,18 @@ static void check_parse(const char *oid_txt, int retval) {
 static void check_xer(int expect_arcs, char *xer) {
 	asn_dec_rval_t rc;
 	RELATIVE_OID_t *st = 0;
-	RELATIVE_OID_t **stp = &st;
 	long arcs[10];
 	int ret;
 	int i;
 
 	printf("[%s] => ", xer); fflush(stdout);
 	rc = asn_DEF_RELATIVE_OID.op->xer_decoder(0,
-		&asn_DEF_RELATIVE_OID, (void **)stp, "t",
+		&asn_DEF_RELATIVE_OID, (void **)&st, "t",
 			xer, strlen(xer));
 	if(expect_arcs == -1) {
 		if(rc.code != RC_OK) {
 			printf("-1\n");
+			ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, st);
 			return;
 		}
 	}
@@ -262,6 +268,7 @@ static void check_xer(int expect_arcs, char *xer) {
 	assert(ret < 10);
 	if(expect_arcs == -1) {
 		assert(ret == -1);
+		ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, st);
 		return;
 	}
 	for(i = 0; i < ret; i++) {
@@ -272,18 +279,21 @@ static void check_xer(int expect_arcs, char *xer) {
 	}
 	printf(": %d == %d\n", ret, expect_arcs);
 	assert(ret == expect_arcs);
+	ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, st);
 }
 
-#define	CHECK_OID(n)	check_OID(buf ## n, sizeof(buf ## n),		\
-		buf ## n ## _check,					\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
-#define	CHECK_ROID(n)	check_ROID(buf ## n, sizeof(buf ## n),		\
-		buf ## n ## _check,					\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
-#define	CHECK_REGEN(n) check_REGEN(buf ## n ## _check,			\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
-#define	CHECK_REGEN_OID(n) check_REGEN_OID(buf ## n ## _check,		\
-		sizeof(buf ## n ## _check)/sizeof(buf ## n ## _check[0]))
+#define CHECK_OID(n)                                            \
+    check_OID(__LINE__, buf##n, sizeof(buf##n), buf##n##_check, \
+              sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
+#define CHECK_ROID(n)                                            \
+    check_ROID(__LINE__, buf##n, sizeof(buf##n), buf##n##_check, \
+               sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
+#define CHECK_REGEN(n)                    \
+    check_REGEN(__LINE__, buf##n##_check, \
+                sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
+#define CHECK_REGEN_OID(n)                    \
+    check_REGEN_OID(__LINE__, buf##n##_check, \
+                    sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
 
 int
 main() {

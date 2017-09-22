@@ -124,11 +124,9 @@ check_xer(int fuzzy, double orig_value) {
 
 	reconstr_lens[0] = 0;
 	reconstr_lens[1] = 0;
-	er = xer_encode(&asn_DEF_REAL, &st,
-		XER_F_BASIC, callback, 0);
+	er = xer_encode(&asn_DEF_REAL, &st, XER_F_BASIC, callback, 0);
 	assert(er.encoded == reconstr_lens[0]);
-	er = xer_encode(&asn_DEF_REAL, &st,
-		XER_F_CANONICAL, callback, (void *)1);
+	er = xer_encode(&asn_DEF_REAL, &st, XER_F_CANONICAL, callback, (void *)1);
 	assert(er.encoded == reconstr_lens[1]);
 	reconstructed[0][reconstr_lens[0]] = 0;
 	reconstructed[1][reconstr_lens[1]] = 0;
@@ -164,6 +162,9 @@ check_xer(int fuzzy, double orig_value) {
 	assert(newst1->size == st.size);
 	assert(fuzzy || memcmp(newst0->buf, st.buf, st.size) == 0);
 	assert(memcmp(newst1->buf, st.buf, st.size) == 0);
+	ASN_STRUCT_RESET(asn_DEF_REAL, &st);
+	ASN_STRUCT_FREE(asn_DEF_REAL, newst0);
+	ASN_STRUCT_FREE(asn_DEF_REAL, newst1);
 }
 
 static void
@@ -200,49 +201,56 @@ check_ber_buffer_twoway(double d, const char *sample, const char *canonical_samp
 		assert((size_t)rn.size == outsize);
 	}
 	assert(memcmp(rn.buf, outbuf, rn.size) == 0);
+	ASN_STRUCT_RESET(asn_DEF_REAL, &rn);
 
 	check_str_representation(d, sample, canonical_sample, lineno);
 }
 
 static void
 check_ber_buffer_oneway(double d, const char *sample, const char *canonical_sample, uint8_t *buf, size_t bufsize, int lineno) {
-	REAL_t rn;
-	double val;
+	REAL_t rn0;
+	REAL_t rn1;
+	double val0;
+	double val1;
 	uint8_t *p, *end;
 	int ret;
 
-	memset(&rn, 0, sizeof(rn));
+	memset(&rn0, 0, sizeof(rn0));
+	memset(&rn1, 0, sizeof(rn1));
 
 	printf("verify double value %.12f [", d);
 	for(p = (uint8_t *)&d, end = p + sizeof(double); p < end ; p++)
 		printf("%02x", *p);
 	printf("] (ilogb %d)\n", ilogb(d));
 
-
-	ret = asn_double2REAL(&rn, d);
+	ret = asn_double2REAL(&rn0, d);
 	assert(ret == 0);
 
 	printf("canonical DER: [");
-	for(p = rn.buf, end = p + rn.size; p < end; p++)
+	for(p = rn0.buf, end = p + rn0.size; p < end; p++)
 		printf("%02x", *p);
-	printf("]\n");
+	ret = asn_REAL2double(&rn0, &val0);
+	assert(ret == 0);
+	printf("] => %f\n", val0);
 
-	rn.buf = buf;
-	rn.size = bufsize;
+	rn1.buf = buf;
+	rn1.size = bufsize;
 
 	printf("received as:   [");
-	for(p = rn.buf, end = p + rn.size; p < end; p++)
+	for(p = rn1.buf, end = p + rn1.size; p < end; p++)
 		printf("%02x", *p);
-	printf("]\n");
-
-	ret = asn_REAL2double(&rn, &val);
+	ret = asn_REAL2double(&rn1, &val1);
 	assert(ret == 0);
+	printf("] => %f\n", val1);
 
-	printf("%.12f vs %.12f\n", d, val);
+	printf("%.12f vs %.12f vs %.12f\n", d, val0, val1);
 
-	assert(val == d);
+	assert(val0 == d);
+	assert(val1 == d);
 
-	check_str_representation(val, sample, canonical_sample, lineno);
+	ASN_STRUCT_RESET(asn_DEF_REAL, &rn0);
+
+	check_str_representation(val1, sample, canonical_sample, lineno);
 }
 
 /*
@@ -345,8 +353,6 @@ check_ber_857_encoding(int base, int sign, int scaling_factor, int exponent, int
 
 static void
 check_ber_encoding() {
-	static const double zero = 0.0;
-
 #define CHECK_BER_STRICT(v, nocan, can, inbuf, outbuf)			\
 	check_ber_buffer_twoway(v, nocan, can, inbuf, sizeof(inbuf),	\
 				outbuf, sizeof(outbuf), __LINE__)
@@ -382,9 +388,9 @@ check_ber_encoding() {
 	{ uint8_t b_pinf[] = { 0x40 };
 	  uint8_t b_minf[] = { 0x41 };
 	  uint8_t b_nan[]  = { 0x42 };
-	  CHECK_BER_STRICT(1.0/zero, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>", b_pinf, b_pinf);
-	  CHECK_BER_STRICT(-1.0/zero, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>", b_minf, b_minf);
-	  CHECK_BER_STRICT(zero/zero, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>", b_nan, b_nan); }
+	  CHECK_BER_STRICT(INFINITY, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>", b_pinf, b_pinf);
+	  CHECK_BER_STRICT(-INFINITY, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>", b_minf, b_minf);
+	  CHECK_BER_STRICT(NAN, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>", b_nan, b_nan); }
 
 	/* 8.5.6 b) => 8.5.8 Decimal encoding is used; NR1 form */
 	{ uint8_t b_0_nr1[] = { 0x01, '0' };
@@ -618,16 +624,15 @@ check_ber_encoding() {
 int
 main() {
 	REAL_t rn;
-	static const double zero = 0.0;
 	memset(&rn, 0, sizeof(rn));
 
 	check_ber_encoding();
 
 	check(&rn, 0.0, "0", "0");
 	check(&rn, -0.0, "-0", "-0");	/* minus-zero */
-	check(&rn, zero/zero, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>");
-	check(&rn, 1.0/zero, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>");
-	check(&rn, -1.0/zero, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>");
+	check(&rn, NAN, "<NOT-A-NUMBER/>", "<NOT-A-NUMBER/>");
+	check(&rn, INFINITY, "<PLUS-INFINITY/>", "<PLUS-INFINITY/>");
+	check(&rn, -INFINITY, "<MINUS-INFINITY/>", "<MINUS-INFINITY/>");
 	check(&rn, 1.0, "1.0", "1.0E0");
 	check(&rn, -1.0, "-1.0", "-1.0E0");
 	check(&rn, 0.1, "0.1", "1.0E-1");
@@ -699,5 +704,6 @@ main() {
 	check_xer(1, 0.0000000000000000000001);
 	check_xer(1, -0.0000000000000000000001);
 
+	ASN_STRUCT_RESET(asn_DEF_REAL, &rn);
 	return 0;
 }

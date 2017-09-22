@@ -5,6 +5,10 @@
     * Added IEEE 1609.2 example.
     * Added SAE J2735 example.
     * CVE-2017-12966 verified not present.
+    * Fix incomplete (failed) CHOICE XER decoding memory leak.
+      (Severity: medium; Security impact: medium)
+    * Fix REAL type overwrite conversion memory leak.
+      (Severity: low; Security impact: medium)
 
 0.9.28: 2017-03-26
     * PER decoding: avoid memory leak on error. By github.com/simo5

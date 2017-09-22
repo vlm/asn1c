@@ -19,11 +19,7 @@ asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs = {
 	offsetof(OCTET_STRING_t, _asn_ctx),
 	ASN_OSUBV_STR
 };
-static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
-	{ APC_CONSTRAINED, 8, 8, 0, 255 },
-	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
-	0, 0
-};
+
 asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_free,
 	OCTET_STRING_print,	/* OCTET STRING generally means a non-ascii sequence */
@@ -510,9 +506,18 @@ OCTET_STRING_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * BIT STRING-specific processing.
 	 */
-	if(type_variant == ASN_OSUBV_BIT && st->size) {
-		/* Finalize BIT STRING: zero out unused bits. */
-		st->buf[st->size-1] &= 0xff << st->bits_unused;
+	if(type_variant == ASN_OSUBV_BIT) {
+        if(st->size) {
+			if(st->bits_unused < 0 || st->bits_unused > 7) {
+				RETURN(RC_FAIL);
+			}
+			/* Finalize BIT STRING: zero out unused bits. */
+			st->buf[st->size-1] &= 0xff << st->bits_unused;
+		} else {
+			if(st->bits_unused) {
+				RETURN(RC_FAIL);
+			}
+		}
 	}
 
 	ASN_DEBUG("Took %ld bytes to encode %s: [%s]:%ld",
@@ -573,7 +578,6 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 		uint8_t b = st->bits_unused & 0x07;
 		if(b && st->size) fix_last_byte = 1;
 		ASN__CALLBACK(&b, 1);
-		er.encoded++;
 	}
 
 	/* Invoke callback for the main part of the buffer */
@@ -585,7 +589,6 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 		ASN__CALLBACK(&b, 1);
 	}
 
-	er.encoded += st->size;
 	ASN__ENCODED_OK(er);
 cb_failed:
 	ASN__ENCODE_FAILED;
@@ -619,7 +622,6 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		for(; buf < end; buf++) {
 			if(p >= scend) {
 				ASN__CALLBACK(scratch, p - scratch);
-				er.encoded += p - scratch;
 				p = scratch;
 			}
 			*p++ = h2c[(*buf >> 4) & 0x0F];
@@ -627,12 +629,10 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		}
 
 		ASN__CALLBACK(scratch, p-scratch);	/* Dump the rest */
-		er.encoded += p - scratch;
 	} else {
 		for(i = 0; buf < end; buf++, i++) {
 			if(!(i % 16) && (i || st->size > 16)) {
 				ASN__CALLBACK(scratch, p-scratch);
-				er.encoded += (p-scratch);
 				p = scratch;
 				ASN__TEXT_INDENT(1, ilevel);
 			}
@@ -643,7 +643,6 @@ OCTET_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 		if(p - scratch) {
 			p--;	/* Remove the tail space */
 			ASN__CALLBACK(scratch, p-scratch); /* Dump the rest */
-			er.encoded += p - scratch;
 			if(st->size > 16)
 				ASN__TEXT_INDENT(1, ilevel-1);
 		}
@@ -936,15 +935,12 @@ static ssize_t OCTET_STRING__convert_binary(void *sptr, const void *chunk_buf, s
  */
 static int
 OS__strtoent(int base, const char *buf, const char *end, int32_t *ret_value) {
+	const int32_t last_unicode_codepoint = 0x10ffff;
 	int32_t val = 0;
 	const char *p;
 
 	for(p = buf; p < end; p++) {
 		int ch = *p;
-
-		/* Strange huge value */
-		if((val * base + base) < 0)
-			return -1;
 
 		switch(ch) {
 		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: /*01234*/
@@ -964,6 +960,11 @@ OS__strtoent(int base, const char *buf, const char *end, int32_t *ret_value) {
 			return (p - buf) + 1;
 		default:
 			return -1;	/* Character set error */
+		}
+
+		/* Value exceeds the Unicode range. */
+		if(val > last_unicode_codepoint) {
+			return -1;
 		}
 	}
 
@@ -1206,6 +1207,8 @@ OCTET_STRING_decode_xer_utf8(const asn_codec_ctx_t *opt_codec_ctx,
 		OCTET_STRING__convert_entrefs);
 }
 
+#ifndef  ASN_DISABLE_PER_SUPPORT
+
 static int
 OCTET_STRING_per_get_characters(asn_per_data_t *po, uint8_t *buf,
 		size_t units, unsigned int bpc, unsigned int unit_bits,
@@ -1335,7 +1338,11 @@ OCTET_STRING_per_put_characters(asn_per_outp_t *po, const uint8_t *buf,
 	return 0;
 }
 
-#ifndef  ASN_DISABLE_PER_SUPPORT
+static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
+	{ APC_CONSTRAINED, 8, 8, 0, 255 },
+	{ APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
+	0, 0
+};
 
 asn_dec_rval_t
 OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
