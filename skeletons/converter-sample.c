@@ -105,40 +105,46 @@ ats_simple_name(enum asn_transfer_syntax syntax) {
     }
 }
 
-
-#define HAS_CODEC(fname)  ((&(((asn_TYPE_operation_t *)0)->fname)) != 0)
+#define CODEC_OFFSET(fname)  ((ptrdiff_t)&(((asn_TYPE_operation_t *)0)->fname))
 typedef struct {
     const char *name;
     enum asn_transfer_syntax syntax;
-    int has_codec;
+    ptrdiff_t codec_offset;
     const char *full_name;
 } syntax_selector;
 
 static syntax_selector input_encodings[] = {
-    {"ber", ATS_BER, HAS_CODEC(ber_decoder),
+    {"ber", ATS_BER, CODEC_OFFSET(ber_decoder),
      "Input is in BER (Basic Encoding Rules) or DER"},
-    {"oer", ATS_BASIC_OER, HAS_CODEC(oer_decoder),
+    {"oer", ATS_BASIC_OER, CODEC_OFFSET(oer_decoder),
      "Input is in OER (Octet Encoding Rules)"},
-    {"per", ATS_UNALIGNED_BASIC_PER, HAS_CODEC(uper_decoder),
+    {"per", ATS_UNALIGNED_BASIC_PER, CODEC_OFFSET(uper_decoder),
      "Input is in Unaligned PER (Packed Encoding Rules)"},
-    {"xer", ATS_BASIC_XER, HAS_CODEC(xer_decoder),
+    {"xer", ATS_BASIC_XER, CODEC_OFFSET(xer_decoder),
      "Input is in XER (XML Encoding Rules)"},
     {0, ATS_INVALID, 0, 0}};
 
 static syntax_selector output_encodings[] = {
-    {"der", ATS_DER, HAS_CODEC(der_encoder),
+    {"der", ATS_DER, CODEC_OFFSET(der_encoder),
      "Output as DER (Distinguished Encoding Rules)"},
-    {"oer", ATS_CANONICAL_OER, HAS_CODEC(oer_encoder),
+    {"oer", ATS_CANONICAL_OER, CODEC_OFFSET(oer_encoder),
      "Output as Canonical OER (Octet Encoding Rules)"},
-    {"per", ATS_UNALIGNED_CANONICAL_PER, HAS_CODEC(uper_encoder),
+    {"per", ATS_UNALIGNED_CANONICAL_PER, CODEC_OFFSET(uper_encoder),
      "Output as Unaligned PER (Packed Encoding Rules)"},
-    {"xer", ATS_BASIC_XER, HAS_CODEC(xer_encoder),
+    {"xer", ATS_BASIC_XER, CODEC_OFFSET(xer_encoder),
      "Output as XER (XML Encoding Rules)"},
-    {"text", ATS_NONSTANDARD_PLAINTEXT, HAS_CODEC(print_struct),
+    {"text", ATS_NONSTANDARD_PLAINTEXT, CODEC_OFFSET(print_struct),
      "Output as plain semi-structured text"},
-    {"null", ATS_INVALID, HAS_CODEC(print_struct),
+    {"null", ATS_INVALID, CODEC_OFFSET(print_struct),
      "Verify (decode) input, but do not output"},
     {0, ATS_INVALID, 0, 0}};
+
+static int
+has_codec_defined(const asn_TYPE_descriptor_t *td,
+                  const syntax_selector *element) {
+    return *(const void *const *)(const void *)((const char *)td->op
+                                                + element->codec_offset) != 0;
+}
 
 /*
  * Select ASN.1 Transfer Enocoding Syntax by command line name.
@@ -149,9 +155,7 @@ ats_by_name(const char *name, const asn_TYPE_descriptor_t *td,
     const syntax_selector *element;
     for(element = first_element; element->name; element++) {
         if(strcmp(element->name, name) == 0) {
-            if(td && td->op
-               && *(const void *const *)(const void *)((const char *)td->op
-                                                       + element->has_codec)) {
+            if(td && td->op && has_codec_defined(td, element)) {
                 return element;
             }
         }
@@ -381,7 +385,7 @@ main(int ac, char *av[]) {
         char *name = argument_to_name(av, ac_i);
         int first_pdu;
 
-        for(first_pdu = 1; file && (first_pdu || !opt_onepdu); first_pdu = 0) {
+        for(first_pdu = 1; (first_pdu || !opt_onepdu); first_pdu = 0) {
             /*
              * Decode the encoded structure from file.
              */

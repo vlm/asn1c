@@ -57,6 +57,7 @@ check_OID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf(" }\n");
 	assert(alen == ck_len);
 
+	ASN_STRUCT_FREE(asn_DEF_OBJECT_IDENTIFIER, oid);
 }
 
 static void
@@ -101,6 +102,7 @@ check_ROID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 		assert(arcs[i] == (unsigned long)ck_buf[i]);
 	}
 	printf(" }\n");
+	ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, oid);
 }
 
 /*
@@ -142,6 +144,7 @@ check_REGEN(int lineno, int *arcs, int acount) {
 		fprintf(stderr, "}\n");
 	}
 
+	ASN_STRUCT_RESET(asn_DEF_RELATIVE_OID, &oid);
 }
 
 /*
@@ -183,7 +186,10 @@ check_REGEN_OID(int lineno, int *arcs, int acount) {
 		}
 		fprintf(stderr, "}\n");
 	}
+
+	ASN_STRUCT_RESET(asn_DEF_RELATIVE_OID, &oid);
 }
+
 static int
 check_speed() {
 	uint8_t buf[] = { 0x80 | 7, 0x80 | 2, 0x80 | 3, 0x80 | 4, 13 };
@@ -240,18 +246,18 @@ static void check_parse(const char *oid_txt, int retval) {
 static void check_xer(int expect_arcs, char *xer) {
 	asn_dec_rval_t rc;
 	RELATIVE_OID_t *st = 0;
-	RELATIVE_OID_t **stp = &st;
 	long arcs[10];
 	int ret;
 	int i;
 
 	printf("[%s] => ", xer); fflush(stdout);
 	rc = asn_DEF_RELATIVE_OID.op->xer_decoder(0,
-		&asn_DEF_RELATIVE_OID, (void **)stp, "t",
+		&asn_DEF_RELATIVE_OID, (void **)&st, "t",
 			xer, strlen(xer));
 	if(expect_arcs == -1) {
 		if(rc.code != RC_OK) {
 			printf("-1\n");
+			ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, st);
 			return;
 		}
 	}
@@ -262,6 +268,7 @@ static void check_xer(int expect_arcs, char *xer) {
 	assert(ret < 10);
 	if(expect_arcs == -1) {
 		assert(ret == -1);
+		ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, st);
 		return;
 	}
 	for(i = 0; i < ret; i++) {
@@ -272,6 +279,7 @@ static void check_xer(int expect_arcs, char *xer) {
 	}
 	printf(": %d == %d\n", ret, expect_arcs);
 	assert(ret == expect_arcs);
+	ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, st);
 }
 
 #define CHECK_OID(n)                                            \

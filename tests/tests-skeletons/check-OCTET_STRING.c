@@ -48,6 +48,8 @@ check_impl(int lineno, enum encoding_type type, char *tagname, char *xmlbuf, cha
 	} else {
 		assert(rc.code != RC_OK);
 	}
+
+	ASN_STRUCT_FREE(*td, st);
 }
 
 static char buf[1024];
@@ -78,6 +80,7 @@ encode(char *orig, char *encoded) {
 	printf("Orig: [%s], encoded: [%s], check [%s]\n",
 		orig, buf, encoded);
 	assert(strcmp(buf, encoded) == 0);
+	ASN_STRUCT_RESET(asn_DEF_OCTET_STRING, &os);
 }
 
 int

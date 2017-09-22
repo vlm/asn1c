@@ -54,6 +54,7 @@ check(uint8_t *buf, size_t size, long check_long, int check_ret) {
 		ret = asn_INTEGER2long(&val, &rlong2);
 		assert(ret == 0);
 		assert(rlong == rlong2);
+		ASN_STRUCT_RESET(asn_DEF_INTEGER, &val2);
 	}
 
 	shared_scratch_start = scratch;
@@ -119,6 +120,7 @@ check_unsigned(uint8_t *buf, int size, unsigned long check_long, int check_ret) 
 		ret = asn_INTEGER2ulong(&val, &rlong2);
 		assert(ret == 0);
 		assert(rlong == rlong2);
+		ASN_STRUCT_RESET(asn_DEF_INTEGER, &val2);
 	}
 
 	return;
@@ -155,6 +157,7 @@ check_xer(int tofail, char *xmldata, long orig_value) {
 	if(rc.code != RC_OK) {
 		assert(tofail);
 		printf("\tfailed, as expected\n");
+		ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
 		return;
 	}
 	assert(!tofail);

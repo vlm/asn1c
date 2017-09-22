@@ -112,6 +112,8 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 		asn_INTEGER2long(reconstructed_st, &reconstructed_value);
 		assert(reconstructed_value == value);
 	}
+	ASN_STRUCT_RESET(asn_DEF_INTEGER, &st);
+	ASN_STRUCT_FREE(asn_DEF_INTEGER, reconstructed_st);
 }
 
 #define	CHECK(u, v, l, r, b)	\

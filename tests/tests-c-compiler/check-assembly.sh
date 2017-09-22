@@ -123,7 +123,7 @@ cat <<TARGETS >> "${testdir}/Makefile.targets"
 check-fuzzer:
 TARGETS
 else
-    CHECK_FUZZER="UBSAN_OPTIONS=print_stacktrace=1 ./check-fuzzer -timeout=3 -max_total_time=60 -max_len=512 -detect_leaks=1 ${OPT_DATA_DIR}"
+    CHECK_FUZZER="ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1 ./check-fuzzer -timeout=3 -max_total_time=60 -max_len=512 ${OPT_DATA_DIR}"
 cat <<TARGETS >> "${testdir}/Makefile.targets"
 check-fuzzer: \$(OBJS)
 	rm -f ${source_obj}
@@ -140,8 +140,12 @@ check-succeeded: compiled-module
 	\$(MAKE) check-fuzzer
 	@rm -f check-succeeded
 	./check-executable
-	${CHECK_FUZZER}
+	\$(MAKE) fuzz
 	@touch check-succeeded
+
+.PHONY: fuzz
+fuzz:
+	${CHECK_FUZZER}
 
 check: check-succeeded
 

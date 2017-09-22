@@ -59,6 +59,7 @@ encode(time_t tloc, const char *expect, int force_gmt) {
 	} else {
 		assert(!expect);
 	}
+	ASN_STRUCT_FREE(asn_DEF_GeneralizedTime, gt);
 }
 
 #define	RECODE(foo, bar)	recode(__LINE__, foo, bar)
