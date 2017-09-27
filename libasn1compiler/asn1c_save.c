@@ -78,9 +78,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		return 0;	/* Finished */
 	}
 
-	mkf = asn1c_open_file("Makefile.am", ".sample", 0);
+	mkf = asn1c_open_file("Makefile", ".am", 0);
 	if(mkf == NULL) {
-		perror("Makefile.am.sample");
+		perror("Makefile.am");
 		return -1;
 	}
 
@@ -121,7 +121,6 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		*dir_end++ = '/';
 
 		for(i = 0; i < dlist->el_count; i++) {
-			char *what_class;	/* MODULE or CONVERTER */
 			char *what_kind;	/* HEADERS or SOURCES */
 			char *fname = dlist->elements[i]->filename;
 			char *dotH;
@@ -135,69 +134,96 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 				return -1;
 			}
 
-			/* MODULE data versus CONVERTER data */
-			switch(dlist->elements[i]->usage) {
-			case FDEP_CONVERTER: what_class = "CONVERTER"; break;
-			default: what_class= "MODULE"; break;
+			/* no CONVERTER data in Makefile.am */
+			if(dlist->elements[i]->usage != FDEP_CONVERTER) {
+				/* HEADERS versus SOURCES */
+				dotH = strrchr(fname, 'h');
+				if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1])
+					what_kind = "HEADERS";
+				else
+					what_kind = "SOURCES";
+				safe_fprintf(mkf, "ASN_MODULE_%s+=%s\n",
+					what_kind, fname);
 			}
-
-			/* HEADERS versus SOURCES */
-			dotH = strrchr(fname, 'h');
-			if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1])
-				what_kind = "HEADERS";
-			else
-				what_kind = "SOURCES";
-			safe_fprintf(mkf, "ASN_%s_%s+=%s\n",
-				what_class, what_kind, fname);
 		}
+	}
 
+	safe_fprintf(
+		mkf,
+		"\n"
+		"ASN_MODULE_CFLAGS=%s%s",
+		(arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
+		(arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ");
+
+	safe_fprintf(
+		mkf,
+		"\n\n"
+		"lib_LTLIBRARIES=libasncodec.la\n"
+		"libasncodec_la_SOURCES="
+		"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
+		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n");
+	fclose(mkf);
+	safe_fprintf(stderr, "Generated Makefile.am\n");
+    
+	/*
+	 *   ---- Generate Makefile.sample   ---- 
+	 */
+	mkf = asn1c_open_file("Makefile", ".sample", 0);
+	if(mkf == NULL) {
+		perror("Makefile.sample");
+		return -1;
+	}
+	safe_fprintf(
+		mkf,
+		"include Makefile.am\n\n"
+		"TARGET = asn_converter\n"
+		"ASN_LIBRARY=libasncodec.a\n"
+		"LIBS += -lm\n"
+		"CFLAGS += $(ASN_MODULE_CFLAGS) %s%s-I.\n"
+		"ASN_CONVERTER_SOURCES := ",
+		(arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
+		need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
+
+	if(dlist) {
+		/* only CONVERTER data in Makefile.am */
+		for(i = 0; i < dlist->el_count; i++) {
+			if(dlist->elements[i]->usage == FDEP_CONVERTER) {
+				safe_fprintf(mkf, "\\\n\t%s", dlist->elements[i]->filename);
+			}
+		}
 		asn1c_deps_freelist(deps);
 		asn1c_deps_freelist(dlist);
 	}
 
 	if(need_to_generate_pdu_collection(arg)) {
-		safe_fprintf(mkf, "ASN_CONVERTER_SOURCES+=pdu_collection.c\n");
+		safe_fprintf(mkf, "\\\n\tpdu_collection.c");
 		if(generate_pdu_collection_file(arg))
 			return -1;
 	}
 
-    safe_fprintf(
-        mkf,
-        "\n\n"
-        "lib_LTLIBRARIES=libsomething.la\n"
-        "libsomething_la_SOURCES="
-        "$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
-        "\n"
-        "# This file may be used as an input for make(3)\n"
-        "# Remove the lines below to convert it into a pure .am file\n"
-        "TARGET = progname\n"
-        "LIBS += -lm\n"
-        "CPPFLAGS += %s%s%s%s-I.\n"
-        "OBJS=${ASN_MODULE_SOURCES:.c=.o}"
-        " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
-        "\nall: $(TARGET)\n"
-        "\n$(TARGET): ${OBJS}"
-        "\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)\n"
-        "\n.SUFFIXES:"
-        "\n.SUFFIXES: .c .o\n"
-        "\n.c.o:"
-        "\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<\n"
-        "\nclean:"
-        "\n\trm -f $(TARGET)"
-        "\n\trm -f $(OBJS)\n"
-        "\nregen: regenerate-from-asn1-source\n"
-        "\nregenerate-from-asn1-source:\n\t",
-        (arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
-        (arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ",
-        (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
-        need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
+	safe_fprintf(
+		mkf,
+		"\n\nall: $(TARGET)\n"
+		"\n$(TARGET): $(ASN_LIBRARY) $(ASN_CONVERTER_SOURCES:.c=.o)"
+		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) $(ASN_CONVERTER_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
+		"\n$(ASN_LIBRARY): $(ASN_MODULE_SOURCES:.c=.o)"
+		"\n\t$(AR) rcs $@ $^\n"
+		"\n.SUFFIXES:"
+		"\n.SUFFIXES: .c .o\n"
+		"\n.c.o:"
+		"\n\t$(CC) $(CFLAGS) -o $@ -c $<\n"
+		"\nclean:"
+		"\n\trm -f $(TARGET) $(ASN_LIBRARY)"
+		"\n\trm -f $(ASN_MODULE_SOURCES:.c=.o) $(ASN_CONVERTER_SOURCES:.c=.o)\n"
+		"\nregen: regenerate-from-asn1-source\n"
+		"\nregenerate-from-asn1-source:\n\t");
 
-    for(i = 0; i < argc; i++)
+	for(i = 0; i < argc; i++)
 		safe_fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
 	safe_fprintf(mkf, "\n\n");
 
 	fclose(mkf);
-	safe_fprintf(stderr, "Generated Makefile.am.sample\n");
+	safe_fprintf(stderr, "Generated Makefile.sample\n");
 
 	asn1c__cleanup_pdu_type();
 
