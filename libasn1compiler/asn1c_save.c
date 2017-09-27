@@ -199,7 +199,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	fclose(mkf);
 	safe_fprintf(stderr, "Generated Makefile.am.sample\n");
 
-        asn1c__cleanup_pdu_type();
+	asn1c__cleanup_pdu_type();
 
 	return 0;
 }
@@ -606,10 +606,13 @@ asn1c__add_pdu_type(const char *ctypename) {
 
 static void
 asn1c__cleanup_pdu_type() {
-	int i;
-	for (i = 0; i < pduTypes; i++)
-		free(pduType[i].typename);
-	free(pduType);
+    int i;
+    for(i = 0; i < pduTypes; i++) {
+        free(pduType[i].typename);
+    }
+    free(pduType);
+	pduType = NULL;
+    pduTypes = 0;
 }
 
 static int
