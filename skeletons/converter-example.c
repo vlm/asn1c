@@ -3,9 +3,9 @@
  * Copyright (c) 2005-2017 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * 
- * To compile with your own ASN.1 type, please redefine the PDU as shown:
+ * To compile with your own ASN.1 type, redefine the PDU as shown:
  * 
- * cc -DPDU=MyCustomType -o myDecoder.o -c converter-sample.c
+ * cc -DPDU=MyCustomType -o myDecoder.o -c converter-example.c
  */
 #ifdef    HAVE_CONFIG_H
 #include <config.h>

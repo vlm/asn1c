@@ -90,9 +90,9 @@ libasn1cskeletons_la_SOURCES = 				\
 	xer_encoder.c xer_encoder.h			\
 	xer_support.c xer_support.h
 
-check_PROGRAMS = check-converter_sample
+check_PROGRAMS = check-converter_example
 LDADD = -lm
 
-check_converter_sample_CFLAGS = -DNO_ASN_PDU
-check_converter_sample_SOURCES = converter-sample.c
-check_converter_sample_LDADD = libasn1cskeletons.la
+check_converter_example_CFLAGS = -DNO_ASN_PDU
+check_converter_example_SOURCES = converter-example.c
+check_converter_example_LDADD = libasn1cskeletons.la

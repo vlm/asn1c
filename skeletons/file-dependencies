@@ -65,7 +65,7 @@ per_encoder.h per_encoder.c	# PER encoding support
 per_opentype.h per_opentype.c	# PER "open type" handling
 
 CONVERTER:			# THIS IS A SPECIAL SECTION
-converter-sample.c		# A default name for sample transcoder
+converter-example.c		# A default name for the example transcoder
 
 CODEC-OER:			# THIS IS A SPECIAL SECTION
 oer_decoder.h oer_decoder.c # OER decoding support
