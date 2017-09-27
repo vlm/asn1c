@@ -165,7 +165,7 @@ produce_specific_makefile() {
 			SRCS_CXX!=find . -name \*.cc
 			SRCS=\$(SRCS_C) \$(SRCS_CXX)
 			OBJS=\${SRCS_C:.c=.o} ${SRCS_CXX:.cc=.o}
-			.sinclude <Makefile.targets>
+			include Makefile.targets
 		OBJECTS
 	else
 		cat <<-OBJECTS > ${make_file}
@@ -175,7 +175,7 @@ produce_specific_makefile() {
 			SRCS = \$(SRCS_C) \$(SRCS_CXX)
 			OBJS =\$(patsubst %.c,%.o,\$(SRCS_C))
 			OBJS+=\$(patsubst %.cc,%.o,\$(SRCS_CXX))
-			-include Makefile.targets
+			include Makefile.targets
 		OBJECTS
     fi
 
