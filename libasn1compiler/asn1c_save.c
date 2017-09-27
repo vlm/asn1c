@@ -45,42 +45,15 @@ static void pdu_collection_print_unused_types(arg_t *arg);
 static const char *generate_pdu_C_definition(void);
 static void asn1c__cleanup_pdu_type(void);
 
-int
-asn1c_save_compiled_output(arg_t *arg, const char *datadir,
-		int argc, int optc, char **argv) {
-	asn1c_fdeps_t *deps = 0;
+static int
+asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *datadir, const char *makefile_name) {
 	asn1c_fdeps_t *dlist;
 	asn1p_module_t *mod;
-	FILE *mkf;	/* Makefile.am.sample */
-	int i;
+    FILE *mkf;
 
-	deps = asn1c_read_file_dependencies(arg, datadir);
-	if(!deps && datadir) {
-		WARNING("Cannot read file-dependencies information "
-			"from %s\n", datadir);
-	}
-
-	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
-		TQ_FOR(arg->expr, &(mod->members), next) {
-			if(asn1_lang_map[arg->expr->meta_type]
-				[arg->expr->expr_type].type_cb) {
-				if(asn1c_dump_streams(arg, deps, optc, argv))
-					return -1;
-			}
-		}
-	}
-
-	/*
-	 * Dump out the Makefile template and the rest of the support code.
-	 */
-	if((arg->flags & A1C_PRINT_COMPILED)
-	|| (arg->flags & A1C_OMIT_SUPPORT_CODE)) {
-		return 0;	/* Finished */
-	}
-
-	mkf = asn1c_open_file("Makefile.am", ".sample", 0);
+	mkf = asn1c_open_file(makefile_name, "", 0);
 	if(mkf == NULL) {
-		perror("Makefile.am.sample");
+		perror(makefile_name);
 		return -1;
 	}
 
@@ -107,9 +80,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 	safe_fprintf(mkf, "\n\n");
 
 	/*
-	 * Move necessary skeleton files and add them to Makefile.am.sample.
+	 * Move necessary skeleton files and add them to Makefile.am.targets.
 	 */
-	dlist = asn1c_deps_makelist(deps);
+	dlist = asn1c_deps_flatten(deps);
 	if(dlist) {
 		char buf[8129];
 		char *dir_end;
@@ -120,8 +93,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		dir_end = buf + dlen;
 		*dir_end++ = '/';
 
-		for(i = 0; i < dlist->el_count; i++) {
-			char *what_class;	/* MODULE or CONVERTER */
+		for(int i = 0; i < dlist->el_count; i++) {
 			char *what_kind;	/* HEADERS or SOURCES */
 			char *fname = dlist->elements[i]->filename;
 			char *dotH;
@@ -135,73 +107,157 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 				return -1;
 			}
 
-			/* MODULE data versus CONVERTER data */
-			switch(dlist->elements[i]->usage) {
-			case FDEP_CONVERTER: what_class = "CONVERTER"; break;
-			default: what_class= "MODULE"; break;
+			/* no CONVERTER data in Makefile.am.targets */
+			if(dlist->elements[i]->usage != FDEP_CONVERTER) {
+				/* HEADERS versus SOURCES */
+				dotH = strrchr(fname, 'h');
+				if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1])
+					what_kind = "HEADERS";
+				else
+					what_kind = "SOURCES";
+				safe_fprintf(mkf, "ASN_MODULE_%s+=%s\n",
+					what_kind, fname);
 			}
-
-			/* HEADERS versus SOURCES */
-			dotH = strrchr(fname, 'h');
-			if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1])
-				what_kind = "HEADERS";
-			else
-				what_kind = "SOURCES";
-			safe_fprintf(mkf, "ASN_%s_%s+=%s\n",
-				what_class, what_kind, fname);
 		}
 
-		asn1c_deps_freelist(deps);
+		asn1c_deps_freelist(dlist);
+	}
+
+	safe_fprintf(
+		mkf,
+		"\n"
+		"ASN_MODULE_CFLAGS=%s%s",
+		(arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
+		(arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ");
+
+	safe_fprintf(
+		mkf,
+		"\n\n"
+		"lib_LTLIBRARIES=libasncodec.la\n"
+		"libasncodec_la_SOURCES="
+		"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
+		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n");
+	fclose(mkf);
+	safe_fprintf(stderr, "Generated Makefile.am.targets\n");
+
+    return 0;
+}
+
+static int
+asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
+                             const char *makefile_name,
+                             const char *library_makefile_name, int argc,
+                             char **argv) {
+    asn1c_fdeps_t *dlist;
+    FILE *mkf;
+
+	mkf = asn1c_open_file(makefile_name, "", 0);
+	if(mkf == NULL) {
+		perror(makefile_name);
+		return -1;
+	}
+    safe_fprintf(
+        mkf,
+        "include %s\n\n"
+        "TARGET = converter-example\n"
+        "ASN_LIBRARY=libasncodec.a\n"
+        "LIBS += -lm\n"
+        "CFLAGS += $(ASN_MODULE_CFLAGS) %s%s-I.\n"
+        "ASN_CONVERTER_SOURCES = ",
+        library_makefile_name,
+        (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
+        need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
+
+	dlist = asn1c_deps_flatten(deps);
+    if(dlist) {
+		/* only CONVERTER data in the makefile */
+		for(int i = 0; i < dlist->el_count; i++) {
+			if(dlist->elements[i]->usage == FDEP_CONVERTER) {
+				safe_fprintf(mkf, "\\\n\t%s", dlist->elements[i]->filename);
+			}
+		}
 		asn1c_deps_freelist(dlist);
 	}
 
 	if(need_to_generate_pdu_collection(arg)) {
-		safe_fprintf(mkf, "ASN_CONVERTER_SOURCES+=pdu_collection.c\n");
+		safe_fprintf(mkf, "\\\n\tpdu_collection.c");
 		if(generate_pdu_collection_file(arg))
 			return -1;
 	}
 
-    safe_fprintf(
-        mkf,
-        "\n\n"
-        "lib_LTLIBRARIES=libsomething.la\n"
-        "libsomething_la_SOURCES="
-        "$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
-        "\n"
-        "# This file may be used as an input for make(3)\n"
-        "# Remove the lines below to convert it into a pure .am file\n"
-        "TARGET = progname\n"
-        "LIBS += -lm\n"
-        "CPPFLAGS += %s%s%s%s-I.\n"
-        "OBJS=${ASN_MODULE_SOURCES:.c=.o}"
-        " ${ASN_CONVERTER_SOURCES:.c=.o}\n"
-        "\nall: $(TARGET)\n"
-        "\n$(TARGET): ${OBJS}"
-        "\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) ${OBJS} $(LDFLAGS) $(LIBS)\n"
-        "\n.SUFFIXES:"
-        "\n.SUFFIXES: .c .o\n"
-        "\n.c.o:"
-        "\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<\n"
-        "\nclean:"
-        "\n\trm -f $(TARGET)"
-        "\n\trm -f $(OBJS)\n"
-        "\nregen: regenerate-from-asn1-source\n"
-        "\nregenerate-from-asn1-source:\n\t",
-        (arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
-        (arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ",
-        (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
-        need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
+	safe_fprintf(
+		mkf,
+		"\n\nall: $(TARGET)\n"
+		"\n$(TARGET): $(ASN_LIBRARY) $(ASN_CONVERTER_SOURCES:.c=.o)"
+		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) $(ASN_CONVERTER_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
+		"\n$(ASN_LIBRARY): $(ASN_MODULE_SOURCES:.c=.o)"
+		"\n\t$(AR) rcs $@ $^\n"
+		"\n.SUFFIXES:"
+		"\n.SUFFIXES: .c .o\n"
+		"\n.c.o:"
+		"\n\t$(CC) $(CFLAGS) -o $@ -c $<\n"
+		"\nclean:"
+		"\n\trm -f $(TARGET) $(ASN_LIBRARY)"
+		"\n\trm -f $(ASN_MODULE_SOURCES:.c=.o) $(ASN_CONVERTER_SOURCES:.c=.o)\n"
+		"\nregen: regenerate-from-asn1-source\n"
+		"\nregenerate-from-asn1-source:\n\t");
 
-    for(i = 0; i < argc; i++)
+	for(int i = 0; i < argc; i++)
 		safe_fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
 	safe_fprintf(mkf, "\n\n");
 
 	fclose(mkf);
-	safe_fprintf(stderr, "Generated Makefile.am.sample\n");
+	safe_fprintf(stderr, "Generated %s\n", makefile_name);
+    return 0;
+}
 
-	asn1c__cleanup_pdu_type();
+int
+asn1c_save_compiled_output(arg_t *arg, const char *datadir,
+		int argc, int optc, char **argv) {
+    asn1c_fdeps_t *deps = 0;
+    int ret = -1;
 
-	return 0;
+    do {
+        asn1p_module_t *mod;
+
+        deps = asn1c_read_file_dependencies(arg, datadir);
+        if(!deps && datadir) {
+            WARNING(
+                "Cannot read file-dependencies information "
+                "from %s\n",
+                datadir);
+        }
+
+        TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+            TQ_FOR(arg->expr, &(mod->members), next) {
+                if(asn1_lang_map[arg->expr->meta_type][arg->expr->expr_type]
+                       .type_cb) {
+                    if(asn1c_dump_streams(arg, deps, optc, argv)) break;
+                }
+            }
+        }
+
+        /*
+         * Dump out the Makefile template and the rest of the support code.
+         */
+        if((arg->flags & A1C_PRINT_COMPILED)
+           || (arg->flags & A1C_OMIT_SUPPORT_CODE)) {
+            ret = 0;    /* Success */
+            break;
+        }
+
+        ret = asn1c__save_library_makefile(arg, deps, datadir,
+                                           "Makefile.am.libasncodec");
+        if(ret) break;
+        ret = asn1c__save_example_makefile(arg, deps, "Makefile.am.example",
+                                         "Makefile.am.libasncodec", argc, argv);
+        if(ret) break;
+    } while(0);
+
+    asn1c_deps_freelist(deps);
+    asn1c__cleanup_pdu_type();
+
+    return ret;
 }
 
 /*

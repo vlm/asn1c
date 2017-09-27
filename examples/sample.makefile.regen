@@ -1,14 +1,11 @@
 #!/bin/sh
 #
 # This script attempts to compile the given ASN.1 specification and then
-# transforms the resulting Makefile.am.sample tailored to that specification
+# transforms the resulting Makefile.am.example tailored to that specification
 # into a customized Makefile.
 #
 # The information which is necessary for this script is passed from the
 # Makefile which is going to be replaced with an updated Makefile.
-# This is called "boot-strapping" and is frequently the source of inside jokes.
-#
-# $Id$
 #
 
 if test -z "$ASN1PDU"	\
@@ -33,20 +30,21 @@ else
   asn1c ${CMDOPTS} || exit $?
 fi
 
-if test ! -f Makefile.am.sample ; then
-	echo "Makefile.am.sample is missing"
+if test ! -f Makefile.am.example ; then
+	echo "Makefile.am.example is missing"
 	exit 1
 fi
 
-EXTRA_CPPFLAGS="-DJUNKTEST -D_DEFAULT_SOURCE ${CPPFLAGS}"
-test -f config.h && EXTRA_CPPFLAGS="-DHAVE_CONFIG_H ${EXTRA_CPPFLAGS}"
-test -n "$TITLE" && EXTRA_CPPFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CPPFLAGS}"
+EXTRA_CFLAGS="-DJUNKTEST -D_DEFAULT_SOURCE"
+test -f config.h && EXTRA_CFLAGS="-DHAVE_CONFIG_H ${EXTRA_CFLAGS}"
+test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAGS}"
 
 set -x
-cat Makefile.am.sample						\
-	| sed -e "s/^CPPFLAGS += /CPPFLAGS += ${EXTRA_CPPFLAGS} /"	\
-	| sed -e "s/^all: /all: maybe-wip-pause ${ASN1PDU}.c /"		\
-	| sed -e "s/progname/${PROGNAME}/"			\
+cat Makefile.am.example                                             \
+	| sed -e "s/^include /-include /"                               \
+	| sed -e "s/^TARGET = converter-example/TARGET = ${PROGNAME}/"  \
+	| sed -e "s/^CFLAGS += /CFLAGS += ${EXTRA_CFLAGS} /"            \
+	| sed -e "s/^all: /all: maybe-wip-pause ${ASN1PDU}.c /"         \
 	> Makefile.$$
 set +x
 
@@ -62,7 +60,6 @@ set +x
 	echo "	ASN1MODULES=\"${ASN1MODULES}\" \\"
 	echo "	ASN1PDU=${ASN1PDU} \\"
 	echo "	PROGNAME=${PROGNAME} \\"
-	echo "	CPPFLAGS=\"${CPPFLAGS}\" \\"
 	echo "	$0"
 	echo
 	echo 'check: ${TARGET} check-ber check-xer check-oer check-per'
@@ -152,12 +149,12 @@ set +x
 	echo '	rm -f $(ASN_MODULE_SOURCES)'
 	echo '	rm -f $(ASN_MODULE_HEADERS)'
 	echo '	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)'
-	echo "	rm -f Makefile.am.sample"
+	echo "	rm -f Makefile.am.example"
 ) >> Makefile.$$
 
 set -x
 mv Makefile.$$ Makefile || exit $?
-rm Makefile.am.sample || exit $?
+rm Makefile.am.example || exit $?
 set +x
 
 echo

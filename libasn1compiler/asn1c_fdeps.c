@@ -178,10 +178,9 @@ asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d) {
 }
 
 asn1c_fdeps_t *
-asn1c_deps_makelist(asn1c_fdeps_t *deps) {
+asn1c_deps_flatten(const asn1c_fdeps_t *deps) {
 	asn1c_fdeps_t *dlist;
 	asn1c_fdeps_t *d;
-	int i;
 
 	if(!deps) {
 		errno = EINVAL;
@@ -198,11 +197,10 @@ asn1c_deps_makelist(asn1c_fdeps_t *deps) {
 		}
 	}
 
-	for(i = 0; i < deps->el_count; i++) {
-		int j;
-		d = asn1c_deps_makelist(deps->elements[i]);
+	for(int i = 0; i < deps->el_count; i++) {
+		d = asn1c_deps_flatten(deps->elements[i]);
 		assert(!d->filename);
-		for(j = 0; j < d->el_count; j++) {
+		for(int j = 0; j < d->el_count; j++) {
 			if(asn1c_dep_add(dlist, d->elements[j])) {
 				d->elements[j] = 0;
 			}

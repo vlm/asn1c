@@ -60,7 +60,9 @@ doc/docsrc/*.xdv
 /examples/*/*.c
 /examples/*/*.h
 /examples/*/*dump
+/examples/*/lib*.a
 /examples/*/.tmp.*
+/examples/*/Makefile.am.libasncodec
 !/examples/*/Makefile
 !/examples/*/config.h
 
