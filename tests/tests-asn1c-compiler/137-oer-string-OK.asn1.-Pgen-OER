@@ -158,13 +158,13 @@ memb_con_universal_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [T] >>> ***/
 
-static asn_oer_constraints_t asn_OER_memb_con_ia5_constr_7 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_memb_con_ia5_constr_7 CC_NOTUSED = {
 	{ 0, 0 },
 	2	/* (SIZE(2..2)) */};
-static asn_oer_constraints_t asn_OER_memb_con_utf8_constr_8 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_memb_con_utf8_constr_8 CC_NOTUSED = {
 	{ 0, 0 },
 	-1	/* (SIZE(0..MAX)) */};
-static asn_oer_constraints_t asn_OER_memb_con_universal_constr_9 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_memb_con_universal_constr_9 CC_NOTUSED = {
 	{ 0, 0 },
 	2	/* (SIZE(2..2)) */};
 

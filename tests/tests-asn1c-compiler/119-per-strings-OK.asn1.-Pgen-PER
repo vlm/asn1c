@@ -1063,118 +1063,118 @@ static int asn_PER_MAP_us_ir_31_c2v(unsigned int code) {
 
 /*** <<< CTDEFS [PDU] >>> ***/
 
-static asn_per_constraints_t asn_PER_memb_ia5_c_constr_5 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ia5_c_constr_5 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_ia5_ce_constr_6 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ia5_ce_constr_6 CC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_ia5_ir_constr_7 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ia5_ir_constr_7 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	asn_PER_MAP_ia5_ir_7_v2c,	/* Value to PER code map */
 	asn_PER_MAP_ia5_ir_7_c2v	/* PER code to value map */
 };
-static asn_per_constraints_t asn_PER_memb_vs_c_constr_9 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_vs_c_constr_9 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_vs_ce_constr_10 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_vs_ce_constr_10 CC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_vs_ir_constr_11 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_vs_ir_constr_11 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	asn_PER_MAP_vs_ir_11_v2c,	/* Value to PER code map */
 	asn_PER_MAP_vs_ir_11_c2v	/* PER code to value map */
 };
-static asn_per_constraints_t asn_PER_memb_pr_c_constr_13 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_pr_c_constr_13 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_pr_ir_constr_14 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_pr_ir_constr_14 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	asn_PER_MAP_pr_ir_14_v2c,	/* Value to PER code map */
 	asn_PER_MAP_pr_ir_14_c2v	/* PER code to value map */
 };
-static asn_per_constraints_t asn_PER_memb_ns_c_constr_16 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ns_c_constr_16 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 3,  3,  53,  57 }	/* (53..57) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_ns_ce_constr_17 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ns_ce_constr_17 CC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_ns_ir_constr_18 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ns_ir_constr_18 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 1,  1,  49,  57 }	/* (49..57) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	asn_PER_MAP_ns_ir_18_v2c,	/* Value to PER code map */
 	asn_PER_MAP_ns_ir_18_c2v	/* PER code to value map */
 };
-static asn_per_constraints_t asn_PER_memb_ut_c_constr_19 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ut_c_constr_19 CC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_ut_ce_constr_20 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ut_ce_constr_20 CC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_ut_ir_constr_21 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_ut_ir_constr_21 CC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_bm_c_constr_23 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_bm_c_constr_23 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_bm_cs_constr_24 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_bm_cs_constr_24 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 16,  16,  0,  65533 }	/* (0..65533) */,
 	{ APC_CONSTRAINED,	 0,  0,  6,  6 }	/* (SIZE(6..6)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_bm_ce_constr_25 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_bm_ce_constr_25 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 16,  16,  0,  65535 }	/* (0..65535) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_bm_ir_constr_26 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_bm_ir_constr_26 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	asn_PER_MAP_bm_ir_26_v2c,	/* Value to PER code map */
 	asn_PER_MAP_bm_ir_26_c2v	/* PER code to value map */
 };
-static asn_per_constraints_t asn_PER_memb_us_c_constr_28 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_us_c_constr_28 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 5,  5,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_us_cs_constr_29 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_us_cs_constr_29 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 32,  32,  0,  2147483647 }	/* (0..4294967295) */,
 	{ APC_CONSTRAINED,	 0,  0,  6,  6 }	/* (SIZE(6..6)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_us_ce_constr_30 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_us_ce_constr_30 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	32, 32, 0, 2147483647 } /* special case 1 */
 	,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	0, 0	/* No PER character map necessary */
 };
-static asn_per_constraints_t asn_PER_memb_us_ir_constr_31 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_us_ir_constr_31 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 3,  3,  65,  90 }	/* (65..90) */,
 	{ APC_SEMI_CONSTRAINED,	-1, -1,  0,  0 }	/* (SIZE(0..MAX)) */,
 	asn_PER_MAP_us_ir_31_v2c,	/* Value to PER code map */

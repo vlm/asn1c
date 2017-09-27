@@ -105,7 +105,7 @@ B_0_0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [B-0-0] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_B_0_0_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_B_0_0_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (0..0) */,
 	-1};
 
@@ -187,7 +187,7 @@ C_1_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [C-1-2] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_C_1_2_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_C_1_2_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (1..2) */,
 	-1};
 
@@ -269,7 +269,7 @@ D_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [D-inv] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_D_inv_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_D_inv_constr_1 CC_NOTUSED = {
 	{ 0, 0 },
 	-1};
 
@@ -351,7 +351,7 @@ E_2_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [E-2-5] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_E_2_5_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_E_2_5_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (2..5) */,
 	-1};
 
@@ -433,7 +433,7 @@ F_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [F-inv] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_F_inv_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_F_inv_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (0..10) */,
 	-1};
 
@@ -515,7 +515,7 @@ G_3_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [G-3-3] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_G_3_3_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_G_3_3_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (3..3) */,
 	-1};
 
@@ -597,7 +597,7 @@ H_4_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [H-4-5] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_H_4_5_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_H_4_5_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (4..5) */,
 	-1};
 
@@ -679,7 +679,7 @@ I_1_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [I-1-5] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_I_1_5_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_I_1_5_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (1..5) */,
 	-1};
 
@@ -761,7 +761,7 @@ J_4_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [J-4-5] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_J_4_5_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_J_4_5_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (4..5) */,
 	-1};
 
@@ -843,7 +843,7 @@ K_1_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [K-1-4] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_K_1_4_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_K_1_4_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (1..4) */,
 	-1};
 
@@ -925,7 +925,7 @@ L_0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [L-0-5] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_L_0_5_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_L_0_5_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (0..5) */,
 	-1};
 
@@ -1007,7 +1007,7 @@ M_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [M-inv] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_M_inv_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_M_inv_constr_1 CC_NOTUSED = {
 	{ 0, 0 },
 	-1};
 
@@ -1089,7 +1089,7 @@ N_0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [N-0-5] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_N_0_5_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_N_0_5_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (0..5) */,
 	-1};
 
@@ -1171,7 +1171,7 @@ O_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [O-inv] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_O_inv_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_O_inv_constr_1 CC_NOTUSED = {
 	{ 0, 0 },
 	-1};
 
@@ -1253,7 +1253,7 @@ EConstr_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [EConstr] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_EConstr_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_EConstr_constr_1 CC_NOTUSED = {
 	{ 0, 0 },
 	-1};
 
@@ -1335,7 +1335,7 @@ FConstr_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< CTDEFS [FConstr] >>> ***/
 
-static asn_oer_constraints_t asn_OER_type_FConstr_constr_1 GCC_NOTUSED = {
+static asn_oer_constraints_t asn_OER_type_FConstr_constr_1 CC_NOTUSED = {
 	{ 1, 1 }	/* (0..4) */,
 	-1};
 
