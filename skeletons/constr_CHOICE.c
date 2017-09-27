@@ -1214,7 +1214,6 @@ CHOICE_variant_get_presence(const asn_TYPE_descriptor_t *td, const void *sptr) {
 int
 CHOICE_variant_set_presence(const asn_TYPE_descriptor_t *td, void *sptr,
                             unsigned present) {
-    extern asn_CHOICE_specifics_t asn_SPC_value_specs_3;
     asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
     unsigned old_present;
 
