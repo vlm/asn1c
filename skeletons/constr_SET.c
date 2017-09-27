@@ -234,7 +234,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 			 */
 			edx = t2m->el_no;
 			ctx->step = (edx << 1) + 1;
-			ASN_DEBUG("Got tag %s (%s), edx %d",
+			ASN_DEBUG("Got tag %s (%s), edx %zd",
 				ber_tlv_tag_string(tlv_tag), td->name, edx);
 		} else if(specs->extensible == 0) {
 			ASN_DEBUG("Unexpected tag %s "
@@ -272,7 +272,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		 * already decoded elements.
 		 */
 		if(ASN_SET_ISPRESENT2((char *)st + specs->pres_offset, edx)) {
-			ASN_DEBUG("SET %s: Duplicate element %s (%d)",
+			ASN_DEBUG("SET %s: Duplicate element %s (%zd)",
 				td->name, elements[edx].name, edx);
 			RETURN(RC_FAIL);
 		}
@@ -662,7 +662,7 @@ SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 			if(ASN_SET_ISPRESENT2((char *)st + specs->pres_offset,
 					edx)) {
-				ASN_DEBUG("SET %s: Duplicate element %s (%d)",
+				ASN_DEBUG("SET %s: Duplicate element %s (%zd)",
 				td->name, elements[edx].name, edx);
 				RETURN(RC_FAIL);
 			}
