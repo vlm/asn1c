@@ -20,10 +20,9 @@ check_PROGRAMS =            \
 #Filter out the coverage options from CFLAGS as we don't need
 #code coverage data for the tests executables
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
-AM_CPPFLAGS = -I$(top_srcdir)/skeletons $(TESTSUITE_CFLAGS)
-AM_CFLAGS = $(TESTSUITE_CFLAGS)
+AM_CFLAGS = -I$(top_srcdir)/skeletons $(TESTSUITE_CFLAGS)
 AM_LDFLAGS = $(top_builddir)/skeletons/libasn1cskeletons.la
 LDADD = -lm
 
 TESTS = $(check_PROGRAMS)
-TESTS_ENVIRONMENT= ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1
+TESTS_ENVIRONMENT= @ASAN_ENV_FLAGS@ UBSAN_OPTIONS=print_stacktrace=1

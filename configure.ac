@@ -161,6 +161,7 @@ https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#how-to-build])])
 
 dnl Enable Address Sanitizer, if supported by gcc (4.8+) or clang.
 dnl http://clang.llvm.org/docs/AddressSanitizer.html
+ASAN_ENV_FLAGS=""
 AC_ARG_ENABLE([test-asan],
     [AS_HELP_STRING([--disable-test-asan],
         [Disable Address Sanitizer for tests])],
@@ -174,6 +175,13 @@ AS_IF([test "x$disable_test_asan" != xno], [
 [--disable-test-asan=$disable_test_asan is not supported on a target system.
 Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
       ])
+    dnl Address sanitizer sometimes is equipped with the leak sanitizer,
+    dnl so we use -fsanitize=leak to permit ASAN_OPTIONS environment.
+    dnl If address sanitizer is not equipped with a leak sanitizer,
+    dnl invoking programs with ASAN_OPTIONS=detect_leaks=1 will break them.
+    AX_CHECK_COMPILE_FLAG([-fsanitize=leak], [
+        ASAN_ENV_FLAGS="${ASAN_ENV_FLAGS} ASAN_OPTIONS=detect_leaks=1"
+    ])
     dnl Keep error messages nice. Also consider:
     dnl export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
     dnl export ASAN_OPTIONS=symbolize=1
@@ -206,6 +214,7 @@ AC_SUBST(LIBFUZZER_CFLAGS)
 AC_SUBST(SANITIZER_CFLAGS)
 AC_SUBST(TESTSUITE_CFLAGS)
 AC_SUBST(SKELETONS_CFLAGS)
+AC_SUBST(ASAN_ENV_FLAGS)
 
 dnl Checks for header files.
 AC_HEADER_STDC
