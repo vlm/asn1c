@@ -117,9 +117,9 @@ TARGETS
 
 
 if [ "${MAKE_FUZZER}" != "yes" ]; then
-    CHECK_FUZZER=": # No fuzzer defined"
+    CHECK_FUZZER="@echo \"No fuzzer defined, skipping.\""
 cat <<TARGETS >> "${testdir}/Makefile.targets"
-.PHONY check-fuzzer:
+.PHONY: check-fuzzer
 check-fuzzer:
 TARGETS
 else
@@ -142,6 +142,7 @@ check-succeeded: compiled-module
 	./check-executable
 	\$(MAKE) fuzz
 	@touch check-succeeded
+	@echo "OK: ${source_full}"
 
 .PHONY: fuzz
 fuzz:
@@ -164,7 +165,7 @@ produce_specific_makefile() {
 			SRCS_C!=find . -name \*.c
 			SRCS_CXX!=find . -name \*.cc
 			SRCS=\$(SRCS_C) \$(SRCS_CXX)
-			OBJS=\${SRCS_C:.c=.o} ${SRCS_CXX:.cc=.o}
+			OBJS=\${SRCS_C:.c=.o} \${SRCS_CXX:.cc=.o}
 			include Makefile.targets
 		OBJECTS
 	else
