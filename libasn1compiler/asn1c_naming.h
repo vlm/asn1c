@@ -25,4 +25,6 @@ int c_name_clash(arg_t *arg);
 
 void c_name_clash_finder_init(void);
 
+void c_name_clash_finder_destroy(void);
+
 #endif	/* ASN1_COMPILER_NAMING_H */
