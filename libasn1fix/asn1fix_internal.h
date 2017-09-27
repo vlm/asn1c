@@ -105,6 +105,7 @@ typedef struct arg_s {
         arg->mod = tmp_mod;                                   \
         arg->ns = asn1_namespace_new_from_module(tmp_mod, 1); \
         typeof(code) ret = code;                              \
+        asn1_namespace_free(arg->ns);                         \
         arg->ns = _saved_ns;                                  \
         arg->mod = _saved_mod;                                \
         ret;                                                  \
