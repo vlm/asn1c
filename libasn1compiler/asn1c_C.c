@@ -820,24 +820,23 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			&& memb->expr_type == ASN_BASIC_INTEGER))
 	    	&& expr_elements_count(arg, memb))) {
 		arg_t tmp;
-		asn1p_expr_t tmp_memb;
+		asn1p_expr_t *tmp_memb = memb;
+		enum asn1p_expr_marker_e flags = memb->marker.flags;
 		arg->embed++;
 			tmp = *arg;
-			tmp.expr = &tmp_memb;
-			tmp_memb = *memb;
-			tmp_memb.marker.flags &= ~EM_INDIRECT;
-			tmp_memb._anonymous_type = 1;
-			if(tmp_memb.Identifier == 0) {
-				tmp_memb.Identifier = "Member";
+			tmp.expr = tmp_memb;
+			tmp_memb->marker.flags &= ~EM_INDIRECT;
+			tmp_memb->_anonymous_type = 1;
+			if(tmp_memb->Identifier == 0) {
+				tmp_memb->Identifier = strdup("Member");
 				if(0)
-				tmp_memb.Identifier = strdup(
+				tmp_memb->Identifier = strdup(
 					asn1c_make_identifier(0,
 						expr, "Member", 0));
-				assert(tmp_memb.Identifier);
+				assert(tmp_memb->Identifier);
 			}
 			tmp.default_cb(&tmp, NULL);
-			if(tmp_memb.Identifier != memb->Identifier)
-				if(0) free(tmp_memb.Identifier);
+			tmp_memb->marker.flags = flags;
 		arg->embed--;
 		assert(arg->target->target == OT_TYPE_DECLS ||
 				arg->target->target == OT_FWD_DEFS);
