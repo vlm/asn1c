@@ -54,6 +54,8 @@ AX_CHECK_COMPILE_FLAG([-Wmissing-declarations],
       [CFLAGS="$CFLAGS -Wmissing-declarations"])
 
 dnl There are legitimate uses for these features, disable warnings/errors.
+AX_CHECK_COMPILE_FLAG([-Wno-error=attributes],
+      [CFLAGS="$CFLAGS -Wno-error=attributes"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=cast-align],
       [CFLAGS="$CFLAGS -Wno-error=cast-align"])
 AX_CHECK_COMPILE_FLAG([-Wno-error=visibility],
