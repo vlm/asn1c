@@ -134,7 +134,7 @@ uper_open_type_get_simple(const asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	return rv;
 }
 
-static asn_dec_rval_t GCC_NOTUSED
+static asn_dec_rval_t CC_NOTUSED
 uper_open_type_get_complex(const asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
 	uper_ugot_key arg;

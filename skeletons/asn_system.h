@@ -105,26 +105,13 @@ typedef	unsigned int	uint32_t;
 #endif	/* _WIN32 */
 
 #if	__GNUC__ >= 3 || defined(__clang__)
-#ifndef	GCC_PRINTFLIKE
-#define	GCC_PRINTFLIKE(fmt,var)	__attribute__((format(printf,fmt,var)))
-#endif
-#ifndef	GCC_NOTUSED
-#define	GCC_NOTUSED		__attribute__((unused))
-#endif
+#define CC_ATTRIBUTE(attr)    __attribute__((attr))
 #else
-#ifndef	GCC_PRINTFLIKE
-#define	GCC_PRINTFLIKE(fmt,var)	/* nothing */
+#define CC_ATTRIBUTE(attr)
 #endif
-#ifndef	GCC_NOTUSED
-#define	GCC_NOTUSED
-#endif
-#endif
-
-#if defined(__clang__)
-#define CLANG_NO_SANITIZE(what)    __attribute__((no_sanitize(what)))
-#else
-#define CLANG_NO_SANITIZE(what)
-#endif
+#define CC_PRINTFLIKE(fmt, var) CC_ATTRIBUTE(format(printf, fmt, var))
+#define	CC_NOTUSED              CC_ATTRIBUTE(unused)
+#define CC_NO_SANITIZE(what)    CC_ATTRIBUTE(no_sanitize(what))
 
 /* Figure out if thread safety is requested */
 #if !defined(ASN_THREAD_SAFE) && (defined(THREAD_SAFE) || defined(_REENTRANT))

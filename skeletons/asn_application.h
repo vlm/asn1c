@@ -134,7 +134,7 @@ asn_dec_rval_t asn_decode(
 typedef void (asn_app_constraint_failed_f)(void *application_specific_key,
 	struct asn_TYPE_descriptor_s *type_descriptor_which_failed,
 	const void *structure_which_failed_ptr,
-	const char *error_message_format, ...) GCC_PRINTFLIKE(4, 5);
+	const char *error_message_format, ...) CC_PRINTFLIKE(4, 5);
 
 
 #ifdef __cplusplus

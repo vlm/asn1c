@@ -788,7 +788,7 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 /*
  * This function is only to get rid of Undefined Behavior Sanitizer warning.
  */
-static intmax_t CLANG_NO_SANITIZE("shift-base")
+static intmax_t CC_NO_SANITIZE("shift-base")
 asn__safe_integer_convert_helper(const uint8_t *b, const uint8_t *end) {
     intmax_t value;
 
