@@ -203,15 +203,16 @@ RectangleTest ASN.1 module defined in the beginning of this document).
 decoders and other useful routines. There will be quite a few of them, some
 of them are not even always necessary, but the overall amount of code
 after compilation will be rather small anyway.
-\item A \emph{converter-sample.c} file containing the \emph{int main()} function with a fully functioning decoder. It can convert a given PDU between BER, XER and possibly OER and PER (if -gen-OER or -gen-PER options to asn1c were in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
-\item A \emph{Makefile.am.sample} file mentioning all the files created
-at the earlier steps. This file is suitable for either automake suite
-or the plain `make` utility. Just rename it into \emph{Makefile}.
+\item A \emph{converter-example.c} file containing the \emph{int main()} function with a fully functioning decoder. It can convert a given PDU between BER, XER and possibly OER and PER (if -gen-OER or -gen-PER options to asn1c were in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
+\item A \emph{Makefile.am.libasncodecs} file mentioning all the files created
+at the earlier steps. The accompanying \emph{Makefile.am.example} file is
+suitable for either automake suite or the plain `make` utility.
+Just rename it into \emph{Makefile}.
 \end{itemize}
 It is possible to compile everything with just a couple of instructions:
 \begin{bash}
 asn1c -pdu=%\emph{Rectangle}% *.asn1
-make -f Makefile.am.sample                    # If you use `make`
+make -f Makefile.am.example                    # If you use `make`
 \end{bash}
 or
 \begin{bash}
@@ -220,7 +221,7 @@ cc -I. -DPDU=%\emph{Rectangle}% -o rectangle.exe *.c   # ... or like this
 \end{bash}
 Refer to the Chapter \ref{cha:Step-by-step-examples} for a sample
 \emph{int main()} function if you want some custom logic and not satisfied
-with the supplied \emph{converter-sample.c}.
+with the supplied \emph{converter-example.c}.
 
 \clearpage{}
 \section{\label{sec:Command-line-options}Command line options}

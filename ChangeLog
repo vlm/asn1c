@@ -4,6 +4,7 @@
     * Added LTE RRC example (Bi-Ruei, Chiu).
     * Added IEEE 1609.2 example.
     * Added SAE J2735 example.
+    * converter-sample.c renamed into converter-example.c
     * CVE-2017-12966 verified not present.
     * Fix incomplete (failed) CHOICE XER decoding memory leak.
       (Severity: medium; Security impact: medium)
