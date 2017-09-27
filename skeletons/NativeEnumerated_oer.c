@@ -12,7 +12,7 @@
 /*
  * This function is only to get rid of Undefined Behavior Sanitizer warning.
  */
-static intmax_t CC_NO_SANITIZE("shift-base")
+static intmax_t CC_ATTR_NO_SANITIZE("shift-base")
 asn__safe_nativeenumerated_convert_helper(const uint8_t *b,
                                           const uint8_t *end) {
     intmax_t value;
