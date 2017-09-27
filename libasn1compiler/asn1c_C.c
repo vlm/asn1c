@@ -2288,7 +2288,7 @@ emit_member_OER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
     REDIR(OT_CTDEFS);
 
     OUT("static asn_oer_constraints_t "
-        "asn_OER_%s_%s_constr_%d GCC_NOTUSED = {\n",
+        "asn_OER_%s_%s_constr_%d CC_NOTUSED = {\n",
         pfx, MKID(expr), expr->_type_unique_index);
 
     INDENT(+1);
@@ -2354,7 +2354,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 
 	if(!(expr->_type_referenced)) OUT("static ");
 	OUT("asn_per_constraints_t "
-		"asn_PER_%s_%s_constr_%d GCC_NOTUSED = {\n",
+		"asn_PER_%s_%s_constr_%d CC_NOTUSED = {\n",
 		pfx, MKID(expr), expr->_type_unique_index);
 
 	INDENT(+1);
