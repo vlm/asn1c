@@ -42,21 +42,20 @@ asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	"OCTET STRING",		/* Canonical name */
 	"OCTET_STRING",		/* XML tag name */
 	&asn_OP_OCTET_STRING,
-	asn_generic_no_constraint,
 	asn_DEF_OCTET_STRING_tags,
 	sizeof(asn_DEF_OCTET_STRING_tags)
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
 	asn_DEF_OCTET_STRING_tags,	/* Same as above */
 	sizeof(asn_DEF_OCTET_STRING_tags)
 	  / sizeof(asn_DEF_OCTET_STRING_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_OCTET_STRING_specs
 };
@@ -1353,7 +1352,7 @@ OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		? (asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_OCTET_STRING_specs;
     const asn_per_constraints_t *pc =
-        constraints ? constraints : td->per_constraints;
+        constraints ? constraints : td->encoding_constraints.per_constraints;
     const asn_per_constraint_t *cval;
 	const asn_per_constraint_t *csiz;
 	asn_dec_rval_t rval = { RC_OK, 0 };
@@ -1524,7 +1523,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		? (asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_OCTET_STRING_specs;
 	const asn_per_constraints_t *pc = constraints ? constraints
-				: td->per_constraints;
+				: td->encoding_constraints.per_constraints;
 	const asn_per_constraint_t *cval;
 	const asn_per_constraint_t *csiz;
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
@@ -1834,11 +1833,12 @@ OCTET_STRING_fromBuf(OCTET_STRING_t *st, const char *str, int len) {
 }
 
 OCTET_STRING_t *
-OCTET_STRING_new_fromBuf(asn_TYPE_descriptor_t *td, const char *str, int len) {
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
-				? (asn_OCTET_STRING_specifics_t *)td->specifics
-				: &asn_SPC_OCTET_STRING_specs;
-	OCTET_STRING_t *st;
+OCTET_STRING_new_fromBuf(const asn_TYPE_descriptor_t *td, const char *str,
+                         int len) {
+    const asn_OCTET_STRING_specifics_t *specs =
+        td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
+                      : &asn_SPC_OCTET_STRING_specs;
+    OCTET_STRING_t *st;
 
 	st = (OCTET_STRING_t *)CALLOC(1, specs->struct_size);
 	if(st && str && OCTET_STRING_fromBuf(st, str, len)) {
@@ -1898,3 +1898,146 @@ OCTET_STRING_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
 
 }
 
+/*
+ * Biased function for randomizing character values around their limits.
+ */
+static uint32_t
+OCTET_STRING__random_char(unsigned long lb, unsigned long ub) {
+    assert(lb <= ub);
+    switch(asn_random_between(0, 16)) {
+    case 0:
+        if(lb < ub) return lb + 1;
+        /* Fall through */
+    case 1:
+        return lb;
+    case 2:
+        if(lb < ub) return ub - 1;
+        /* Fall through */
+    case 3:
+        return ub;
+    default:
+        return asn_random_between(lb, ub);
+    }
+}
+
+asn_random_fill_result_t
+OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                         const asn_encoding_constraints_t *constraints,
+                         size_t max_length) {
+	asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? (asn_OCTET_STRING_specifics_t *)td->specifics
+				: &asn_SPC_OCTET_STRING_specs;
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    static unsigned lengths[] = {0,     1,     2,     3,     4,     8,
+                                 126,   127,   128,   16383, 16384, 16385,
+                                 65534, 65535, 65536, 65537};
+    unsigned int unit_bytes = 1;
+    unsigned long clb = 0;  /* Lower bound on char */
+    unsigned long cub = 255;  /* Higher bound on char value */
+    uint8_t *buf;
+    uint8_t *bend;
+    uint8_t *b;
+    size_t rnd_len;
+    OCTET_STRING_t *st;
+
+    if(max_length == 0) return result_skipped;
+
+    switch(specs->subvariant) {
+    default:
+    case ASN_OSUBV_ANY:
+        return result_failed;
+    case ASN_OSUBV_BIT:
+        /* Handled by BIT_STRING itself. */
+        return result_failed;
+	case ASN_OSUBV_STR:
+        unit_bytes = 1;
+        clb = 0;
+        cub = 255;
+		break;
+	case ASN_OSUBV_U16:
+        unit_bytes = 2;
+        clb = 0;
+        cub = 65535;
+		break;
+	case ASN_OSUBV_U32:
+        unit_bytes = 4;
+        clb = 0;
+        cub = 0x10FFFF;
+		break;
+	}
+
+    if(!constraints) constraints = &td->encoding_constraints;
+    if(constraints->per_constraints) {
+        const asn_per_constraint_t *pc =
+            &td->encoding_constraints.per_constraints->value;
+        if(pc->flags & APC_SEMI_CONSTRAINED) {
+            clb = pc->lower_bound;
+        } else if(pc->flags & APC_CONSTRAINED) {
+            clb = pc->lower_bound;
+            cub = pc->upper_bound;
+        }
+    }
+
+    /* Figure out how far we should go */
+    rnd_len = lengths[asn_random_between(
+        0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
+    if(constraints->per_constraints) {
+        const asn_per_constraint_t *pc =
+            &td->encoding_constraints.per_constraints->size;
+        if(pc->flags & APC_CONSTRAINED) {
+            if(max_length < (size_t)pc->lower_bound) {
+                return result_skipped;
+            }
+            rnd_len = asn_random_between(pc->lower_bound, pc->upper_bound);
+        } else {
+            rnd_len = asn_random_between(0, max_length - 1);
+        }
+    } else if(rnd_len >= max_length) {
+        rnd_len = asn_random_between(0, max_length - 1);
+    }
+
+    buf = CALLOC(unit_bytes, rnd_len + 1);
+    if(!buf) return result_failed;
+
+    bend = &buf[unit_bytes * rnd_len];
+
+    switch(unit_bytes) {
+    case 1:
+        for(b = buf; b < bend; b += unit_bytes) {
+            *(uint8_t *)b = OCTET_STRING__random_char(clb, cub);
+        }
+        *(uint8_t *)b = 0;
+        break;
+    case 2:
+        for(b = buf; b < bend; b += unit_bytes) {
+            *(uint16_t *)b = OCTET_STRING__random_char(clb, cub);
+        }
+        *(uint16_t *)b = 0;
+        break;
+    case 4:
+        for(b = buf; b < bend; b += unit_bytes) {
+            *(uint32_t *)b = OCTET_STRING__random_char(clb, cub);
+        }
+        *(uint32_t *)b = 0;
+        break;
+    }
+
+    if(*sptr) {
+        st = *sptr;
+        FREEMEM(st->buf);
+    } else {
+        st = (OCTET_STRING_t *)(*sptr = CALLOC(1, specs->struct_size));
+        if(!st) {
+            FREEMEM(buf);
+            return result_failed;
+        }
+    }
+
+    st->buf = buf;
+    st->size = unit_bytes * rnd_len;
+
+    result_ok.length = st->size;
+    return result_ok;
+}

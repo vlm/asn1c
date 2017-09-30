@@ -204,7 +204,7 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
                 memb_ptr2 = element_ptrptr(st, elm, &save_memb_ptr);
 
                 rval = elm->type->op->oer_decoder(opt_codec_ctx, elm->type,
-                                                  elm->oer_constraints,
+                                                  elm->encoding_constraints.oer_constraints,
                                                   memb_ptr2, ptr, size);
             }
             switch(rval.code) {
@@ -328,7 +328,7 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
             case 1: {
                 /* Read OER open type */
                 ssize_t ot_size = oer_open_type_get(opt_codec_ctx, elm->type,
-                                                    elm->oer_constraints,
+                                                    elm->encoding_constraints.oer_constraints,
                                                     memb_ptr2, ptr, size);
                 if(ot_size > 0) {
                     ADVANCE(ot_size);
@@ -482,8 +482,9 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
             ASN_DEBUG("OER encoder is not defined for type %s", elm->type->name);
             ASN__ENCODE_FAILED;
         }
-        er = elm->type->op->oer_encoder(elm->type, elm->oer_constraints, memb_ptr,
-                                    cb, app_key);
+        er = elm->type->op->oer_encoder(
+            elm->type, elm->encoding_constraints.oer_constraints, memb_ptr, cb,
+            app_key);
         if(er.encoded == -1) {
             ASN_DEBUG("... while encoding %s member \"%s\"\n", td->name,
                       elm->name);
@@ -546,7 +547,8 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
                     /* Do not encode default value. */
                 } else {
                     asn_enc_rval_t er = elm->type->op->oer_encoder(
-                        elm->type, elm->oer_constraints, memb_ptr, cb, app_key);
+                        elm->type, elm->encoding_constraints.oer_constraints,
+                        memb_ptr, cb, app_key);
                     if(er.encoded == -1) {
                         return er;
                     }

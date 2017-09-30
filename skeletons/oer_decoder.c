@@ -58,9 +58,8 @@ oer_open_type_skip(const void *bufptr, size_t size) {
 ssize_t
 oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
                   struct asn_TYPE_descriptor_s *td,
-                  asn_oer_constraints_t *constraints, void **struct_ptr,
+                  const asn_oer_constraints_t *constraints, void **struct_ptr,
                   const void *bufptr, size_t size) {
-
     asn_dec_rval_t dr;
     size_t container_len = 0;
     ssize_t len_len;

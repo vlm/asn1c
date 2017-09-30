@@ -74,20 +74,19 @@ _asn_i_ctfailcb(void *key, asn_TYPE_descriptor_t *td, const void *sptr, const ch
 
 int
 asn_check_constraints(asn_TYPE_descriptor_t *type_descriptor,
-		const void *struct_ptr, char *errbuf, size_t *errlen) {
-	struct errbufDesc arg;
-	int ret;
+                      const void *struct_ptr, char *errbuf, size_t *errlen) {
+    struct errbufDesc arg;
+    int ret;
 
-	arg.failed_type = 0;
-	arg.failed_struct_ptr = 0;
-	arg.errbuf = errbuf;
-	arg.errlen = errlen ? *errlen : 0;
+    arg.failed_type = 0;
+    arg.failed_struct_ptr = 0;
+    arg.errbuf = errbuf;
+    arg.errlen = errlen ? *errlen : 0;
 
-	ret = type_descriptor->check_constraints(type_descriptor,
-		struct_ptr, _asn_i_ctfailcb, &arg);
-	if(ret == -1 && errlen)
-		*errlen = arg.errlen;
+    ret = type_descriptor->encoding_constraints.general_constraints(
+        type_descriptor, struct_ptr, _asn_i_ctfailcb, &arg);
+    if(ret == -1 && errlen) *errlen = arg.errlen;
 
-	return ret;
+    return ret;
 }
 

@@ -168,7 +168,8 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
 
         for(; ctx->left > 0; ctx->left--) {
             asn_dec_rval_t rv = elm->type->op->oer_decoder(
-                opt_codec_ctx, elm->type, elm->oer_constraints, &ctx->ptr, ptr,
+                opt_codec_ctx, elm->type,
+                elm->encoding_constraints.oer_constraints, &ctx->ptr, ptr,
                 size);
             ADVANCE(rv.consumed);
             switch(rv.code) {
@@ -251,8 +252,9 @@ SET_OF_encode_oer(asn_TYPE_descriptor_t *td,
     for(n = 0; n < list->count; n++) {
         void *memb_ptr = list->array[n];
         asn_enc_rval_t er;
-        er = elm->type->op->oer_encoder(elm->type, elm->oer_constraints,
-                                        memb_ptr, cb, app_key);
+        er = elm->type->op->oer_encoder(
+            elm->type, elm->encoding_constraints.oer_constraints, memb_ptr, cb,
+            app_key);
         if(er.encoded < 0) {
             return er;
         } else {

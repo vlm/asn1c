@@ -32,7 +32,7 @@ INTEGER_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *
     st->buf = 0;
     st->size = 0;
 
-    if(!constraints) constraints = td->oer_constraints;
+    if(!constraints) constraints = td->encoding_constraints.oer_constraints;
     if(constraints) ct = constraints->value;
 
     if(ct.width) {
@@ -113,7 +113,7 @@ INTEGER_encode_oer(asn_TYPE_descriptor_t *td,
 
     if(!st || st->size == 0) ASN__ENCODE_FAILED;
 
-    if(!constraints) constraints = td->oer_constraints;
+    if(!constraints) constraints = td->encoding_constraints.oer_constraints;
     if(constraints) ct = constraints->value;
 
     er.encoded = 0;

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004-2013 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #define	_ISOC99_SOURCE		/* For ilogb() and quiet NAN */
@@ -88,19 +88,18 @@ asn_TYPE_operation_t asn_OP_REAL = {
 	REAL_decode_uper,
 	REAL_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	REAL_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_REAL = {
 	"REAL",
 	"REAL",
 	&asn_OP_REAL,
-	asn_generic_no_constraint,
 	asn_DEF_REAL_tags,
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
 	asn_DEF_REAL_tags, /* Same as above */
 	sizeof(asn_DEF_REAL_tags) / sizeof(asn_DEF_REAL_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },
 	0,
 	0,	/* No members */
 	0	/* No specifics */
@@ -848,3 +847,43 @@ REAL_encode_uper(asn_TYPE_descriptor_t *td,
 }
 
 #endif  /* ASN_DISABLE_PER_SUPPORT */
+
+
+asn_random_fill_result_t
+REAL_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                       const asn_encoding_constraints_t *constraints,
+                       size_t max_length) {
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    static const double values[] = {0, -0.0, -1, 1, INFINITY, -INFINITY, NAN};
+    REAL_t *st;
+    double d;
+
+    (void)constraints;
+
+    if(max_length == 0) return result_skipped;
+
+    d = values[asn_random_between(0, sizeof(values) / sizeof(values[0]) - 1)];
+
+    if(*sptr) {
+        st = *sptr;
+    } else {
+        st = (REAL_t*)(*sptr = CALLOC(1, sizeof(REAL_t)));
+        if(!st) {
+            return result_failed;
+        }
+    }
+
+    if(asn_double2REAL(st, d)) {
+        if(st == *sptr) {
+            ASN_STRUCT_RESET(*td, st);
+        } else {
+            ASN_STRUCT_FREE(*td, st);
+        }
+        return result_failed;
+    }
+
+    result_ok.length = st->size;
+    return result_ok;
+}

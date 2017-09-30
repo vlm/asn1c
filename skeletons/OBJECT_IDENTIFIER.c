@@ -37,21 +37,20 @@ asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	OBJECT_IDENTIFIER_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 	"OBJECT IDENTIFIER",
 	"OBJECT_IDENTIFIER",
 	&asn_OP_OBJECT_IDENTIFIER,
-	OBJECT_IDENTIFIER_constraint,
 	asn_DEF_OBJECT_IDENTIFIER_tags,
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
 	asn_DEF_OBJECT_IDENTIFIER_tags,	/* Same as above */
 	sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
 	    / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OBJECT_IDENTIFIER_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -781,4 +780,61 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
 	return -1;
 }
 
+/*
+ * Generate values from the list of interesting values, or just a random
+ * value up to the upper limit.
+ */
+static uint32_t
+OBJECT_IDENTIFIER__biased_random_arc(int32_t upper_bound) {
+    static const uint16_t values[] = {0, 1, 127, 128, 129, 254, 255, 256};
 
+    size_t idx = asn_random_between(0, 2 * sizeof(values)/sizeof(values[0]));
+    if(idx < sizeof(values) / sizeof(values[0])) {
+        if(values[idx] < upper_bound) {
+            return values[idx];
+        }
+    }
+
+    return asn_random_between(0, upper_bound);
+}
+
+asn_random_fill_result_t
+OBJECT_IDENTIFIER_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                              const asn_encoding_constraints_t *constraints,
+                              size_t max_length) {
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    OBJECT_IDENTIFIER_t *st;
+    uint32_t arcs[5];
+    size_t arcs_len = asn_random_between(2, 5);
+    size_t i;
+
+    (void)constraints;
+
+    if(max_length < arcs_len) return result_skipped;
+
+    if(*sptr) {
+        st = *sptr;
+    } else {
+        st = CALLOC(1, sizeof(*st));
+    }
+
+    arcs[0] = asn_random_between(0, 2);
+    arcs[1] =
+        OBJECT_IDENTIFIER__biased_random_arc(arcs[0] <= 1 ? 39 : INT32_MAX);
+    for(i = 2; i < arcs_len; i++) {
+        arcs[i] = OBJECT_IDENTIFIER__biased_random_arc(INT32_MAX);
+    }
+
+    if(OBJECT_IDENTIFIER_set_arcs(st, arcs, sizeof(arcs[0]), arcs_len)) {
+        if(st != *sptr) {
+            ASN_STRUCT_FREE(*td, st);
+        }
+        return result_failed;
+    }
+
+    *sptr = st;
+
+    return result_ok;
+}

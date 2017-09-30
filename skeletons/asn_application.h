@@ -22,8 +22,10 @@ extern "C" {
 enum asn_transfer_syntax {
     /* Avoid appearance of a default transfer syntax. */
     ATS_INVALID = 0,
-    /* Plaintext output, useful for debugging. */
+    /* Plaintext output (not conforming to any standard), for debugging. */
     ATS_NONSTANDARD_PLAINTEXT,
+    /* Returns a randomly generatede structure. */
+    ATS_RANDOM,
     /*
      * X.690:
      * BER: Basic Encoding Rules.

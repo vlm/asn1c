@@ -34,19 +34,18 @@ asn_TYPE_operation_t asn_OP_BOOLEAN = {
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
 	BOOLEAN_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	BOOLEAN_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	"BOOLEAN",
 	"BOOLEAN",
 	&asn_OP_BOOLEAN,
-	asn_generic_no_constraint,
 	asn_DEF_BOOLEAN_tags,
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
 	asn_DEF_BOOLEAN_tags,	/* Same as above */
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -331,4 +330,30 @@ BOOLEAN_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
     } else {
         return 1;
     }
+}
+
+asn_random_fill_result_t
+BOOLEAN_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                    const asn_encoding_constraints_t *constr,
+                    size_t max_length) {
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    BOOLEAN_t *st = *sptr;
+
+    (void)td;
+    (void)constr;
+
+    if(max_length == 0) return result_skipped;
+
+    if(st == NULL) {
+        st = (BOOLEAN_t *)(*sptr = CALLOC(1, sizeof(*st)));
+        if(st == NULL) {
+            return result_failed;
+        }
+    }
+
+    *st = asn_random_between(0, 1);
+
+    return result_ok;
 }

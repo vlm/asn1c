@@ -1059,19 +1059,13 @@ SEQUENCE_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
 		}
 
-		if(elm->memb_constraints) {
-			int ret = elm->memb_constraints(elm->type, memb_ptr,
+		if(elm->encoding_constraints.general_constraints) {
+			int ret = elm->encoding_constraints.general_constraints(elm->type, memb_ptr,
 				ctfailcb, app_key);
 			if(ret) return ret;
 		} else {
-			int ret = elm->type->check_constraints(elm->type,
+			return elm->type->encoding_constraints.general_constraints(elm->type,
 				memb_ptr, ctfailcb, app_key);
-			if(ret) return ret;
-			/*
-			 * Cannot inherit it earlier:
-			 * need to make sure we get the updated version.
-			 */
-			elm->memb_constraints = elm->type->check_constraints;
 		}
 	}
 
@@ -1178,7 +1172,7 @@ SEQUENCE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t
 			rv = OPEN_TYPE_uper_get(opt_codec_ctx, td, st, elm, pd);
 		} else {
 			rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
-					elm->per_constraints, memb_ptr2, pd);
+					elm->encoding_constraints.per_constraints, memb_ptr2, pd);
 		}
 		if(rv.code != RC_OK) {
 			ASN_DEBUG("Failed decode %s in %s",
@@ -1247,7 +1241,7 @@ SEQUENCE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t
 
 		ASN_DEBUG("Decoding member %s in %s %p", elm->name, td->name, *memb_ptr2);
 		rv = uper_open_type_get(opt_codec_ctx, elm->type,
-			elm->per_constraints, memb_ptr2, pd);
+			elm->encoding_constraints.per_constraints, memb_ptr2, pd);
 		if(rv.code != RC_OK) {
 			FREEMEM(epres);
 			return rv;
@@ -1345,7 +1339,7 @@ SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 			return -1;
 		/* Encode as open type field */
 		if(po2 && present && uper_open_type_put(elm->type,
-				elm->per_constraints, *memb_ptr2, po2))
+				elm->encoding_constraints.per_constraints, *memb_ptr2, po2))
 			return -1;
 
 	}
@@ -1458,7 +1452,7 @@ SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
 			continue;
 
 		ASN_DEBUG("Encoding %s->%s", td->name, elm->name);
-		er = elm->type->op->uper_encoder(elm->type, elm->per_constraints,
+		er = elm->type->op->uper_encoder(elm->type, elm->encoding_constraints.per_constraints,
 			*memb_ptr2, po);
 		if(er.encoded == -1)
 			return er;
@@ -1544,6 +1538,75 @@ asn_TYPE_operation_t asn_OP_SEQUENCE = {
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
 #endif /* ASN_DISABLE_PER_SUPPORT */
+	SEQUENCE_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
+
+
+asn_random_fill_result_t
+SEQUENCE_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                   const asn_encoding_constraints_t *constr,
+                   size_t max_length) {
+    const asn_SEQUENCE_specifics_t *specs =
+        (const asn_SEQUENCE_specifics_t *)td->specifics;
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 0};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    void *st = *sptr;
+    size_t edx;
+
+    if(max_length == 0) return result_skipped;
+
+    (void)constr;
+
+    if(st == NULL) {
+        st = CALLOC(1, specs->struct_size);
+        if(st == NULL) {
+            return result_failed;
+        }
+    }
+
+    for(edx = 0; edx < td->elements_count; edx++) {
+        const asn_TYPE_member_t *elm = &td->elements[edx];
+        void *memb_ptr;   /* Pointer to the member */
+        void **memb_ptr2; /* Pointer to that pointer */
+        asn_random_fill_result_t tmpres;
+
+        if(elm->optional && asn_random_between(0, 4) == 2) {
+            /* Sometimes decide not to fill the optional value */
+            continue;
+        }
+
+        if(elm->flags & ATF_POINTER) {
+            /* Member is a pointer to another structure */
+            memb_ptr2 = (void **)((char *)st + elm->memb_offset);
+        } else {
+            memb_ptr = (char *)st + elm->memb_offset;
+            memb_ptr2 = &memb_ptr;
+        }
+
+        tmpres = elm->type->op->random_fill(
+            elm->type, memb_ptr2, &elm->encoding_constraints,
+            max_length > result_ok.length ? max_length - result_ok.length : 0);
+        switch(tmpres.code) {
+        case ARFILL_OK:
+            result_ok.length += tmpres.length;
+            continue;
+        case ARFILL_SKIPPED:
+            assert(!(elm->flags & ATF_POINTER) || *memb_ptr2 == NULL);
+            continue;
+        case ARFILL_FAILED:
+            if(st == *sptr) {
+                ASN_STRUCT_RESET(*td, st);
+            } else {
+                ASN_STRUCT_FREE(*td, st);
+            }
+            return tmpres;
+        }
+    }
+
+    *sptr = st;
+
+    return result_ok;
+}
 

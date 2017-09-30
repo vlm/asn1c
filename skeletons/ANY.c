@@ -32,16 +32,15 @@ asn_TYPE_operation_t asn_OP_ANY = {
 	ANY_decode_uper,
 	ANY_encode_uper,
 #endif  /* ASN_DISABLE_PER_SUPPORT */
+	0,	/* Random fill is not defined for ANY type */
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_ANY = {
 	"ANY",
 	"ANY",
 	&asn_OP_ANY,
-	asn_generic_no_constraint,
 	0, 0, 0, 0,
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },	/* No constraints */
 	0, 0,	/* No members */
 	&asn_SPC_ANY_specs,
 };

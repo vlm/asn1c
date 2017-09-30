@@ -36,6 +36,7 @@ oer_type_decoder_f OCTET_STRING_decode_oer;
 oer_type_encoder_f OCTET_STRING_encode_oer;
 per_type_decoder_f OCTET_STRING_decode_uper;
 per_type_encoder_f OCTET_STRING_encode_uper;
+asn_random_fill_f  OCTET_STRING_random_fill;
 
 #define OCTET_STRING_constraint  asn_generic_no_constraint
 #define OCTET_STRING_decode_xer  OCTET_STRING_decode_xer_hex
@@ -63,8 +64,8 @@ int OCTET_STRING_fromBuf(OCTET_STRING_t *s, const char *str, int size);
  * allocated object. NULL is permitted in str: the function will just allocate
  * empty OCTET STRING.
  */
-OCTET_STRING_t *OCTET_STRING_new_fromBuf(asn_TYPE_descriptor_t *td,
-	const char *str, int size);
+OCTET_STRING_t *OCTET_STRING_new_fromBuf(const asn_TYPE_descriptor_t *td,
+                                         const char *str, int size);
 
 /****************************
  * Internally useful stuff. *

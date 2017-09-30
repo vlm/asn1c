@@ -22,7 +22,7 @@ int uper_open_type_skip(const asn_codec_ctx_t *opt_codec_ctx,
  * Returns -1 if error is encountered. 0 if all OK.
  */
 int uper_open_type_put(asn_TYPE_descriptor_t *td,
-                       asn_per_constraints_t *constraints, void *sptr,
+                       const asn_per_constraints_t *constraints, void *sptr,
                        asn_per_outp_t *po);
 
 #ifdef __cplusplus

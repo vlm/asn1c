@@ -24,6 +24,7 @@ asn_constr_check_f OBJECT_IDENTIFIER_constraint;
 der_type_encoder_f OBJECT_IDENTIFIER_encode_der;
 xer_type_decoder_f OBJECT_IDENTIFIER_decode_xer;
 xer_type_encoder_f OBJECT_IDENTIFIER_encode_xer;
+asn_random_fill_f  OBJECT_IDENTIFIER_random_fill;
 
 #define OBJECT_IDENTIFIER_free           ASN__PRIMITIVE_TYPE_free
 #define OBJECT_IDENTIFIER_compare        OCTET_STRING_compare

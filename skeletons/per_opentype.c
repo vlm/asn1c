@@ -26,7 +26,7 @@ static asn_dec_rval_t uper_sot_suck(const asn_codec_ctx_t *,
  * #10.1, #10.2
  */
 int
-uper_open_type_put(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+uper_open_type_put(asn_TYPE_descriptor_t *td, const asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
 	void *buf;
 	void *bptr;
 	ssize_t size;

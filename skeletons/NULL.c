@@ -35,19 +35,18 @@ asn_TYPE_operation_t asn_OP_NULL = {
 	NULL_decode_uper,	/* Unaligned PER decoder */
 	NULL_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	NULL_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_NULL = {
 	"NULL",
 	"NULL",
 	&asn_OP_NULL,
-	asn_generic_no_constraint,
 	asn_DEF_NULL_tags,
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
 	asn_DEF_NULL_tags,	/* Same as above */
 	sizeof(asn_DEF_NULL_tags) / sizeof(asn_DEF_NULL_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -215,3 +214,28 @@ NULL_encode_uper(asn_TYPE_descriptor_t *td,
 }
 
 #endif  /* ASN_DISABLE_PER_SUPPORT */
+
+asn_random_fill_result_t
+NULL_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                    const asn_encoding_constraints_t *constr,
+                    size_t max_length) {
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    NULL_t *st = *sptr;
+
+    (void)td;
+    (void)constr;
+
+    if(max_length == 0) return result_skipped;
+
+    if(st == NULL) {
+        st = (NULL_t *)(*sptr = CALLOC(1, sizeof(*st)));
+        if(st == NULL) {
+            return result_failed;
+        }
+    }
+
+    return result_ok;
+}
+

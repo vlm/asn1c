@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>.
  * 	All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -38,21 +38,20 @@ asn_TYPE_operation_t asn_OP_RELATIVE_OID = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	RELATIVE_OID_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 	"RELATIVE-OID",
 	"RELATIVE_OID",
 	&asn_OP_RELATIVE_OID,
-	asn_generic_no_constraint,
 	asn_DEF_RELATIVE_OID_tags,
 	sizeof(asn_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn_DEF_RELATIVE_OID_tags[0]),
 	asn_DEF_RELATIVE_OID_tags,	/* Same as above */
 	sizeof(asn_DEF_RELATIVE_OID_tags)
 	    / sizeof(asn_DEF_RELATIVE_OID_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -255,3 +254,56 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	return 0;
 }
 
+
+/*
+ * Generate values from the list of interesting values, or just a random value.
+ */
+static uint32_t
+RELATIVE_OID__biased_random_arc() {
+    static const uint16_t values[] = {0, 1, 127, 128, 129, 254, 255, 256};
+
+    size_t idx = asn_random_between(0, 2 * sizeof(values)/sizeof(values[0]));
+    if(idx < sizeof(values) / sizeof(values[0])) {
+        return values[idx];
+    }
+
+    return asn_random_between(0, INT32_MAX);
+}
+
+asn_random_fill_result_t
+RELATIVE_OID_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                              const asn_encoding_constraints_t *constraints,
+                              size_t max_length) {
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    RELATIVE_OID_t *st;
+    uint32_t arcs[3];
+    size_t arcs_len = asn_random_between(0, 3);
+    size_t i;
+
+    (void)constraints;
+
+    if(max_length < arcs_len) return result_skipped;
+
+    if(*sptr) {
+        st = *sptr;
+    } else {
+        st = CALLOC(1, sizeof(*st));
+    }
+
+    for(i = 0; i < arcs_len; i++) {
+        arcs[i] = RELATIVE_OID__biased_random_arc();
+    }
+
+    if(RELATIVE_OID_set_arcs(st, arcs, sizeof(arcs[0]), arcs_len)) {
+        if(st != *sptr) {
+            ASN_STRUCT_FREE(*td, st);
+        }
+        return result_failed;
+    }
+
+    *sptr = st;
+
+    return result_ok;
+}

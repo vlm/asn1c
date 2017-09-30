@@ -61,19 +61,18 @@ asn_TYPE_operation_t asn_OP_NativeReal = {
 	NativeReal_decode_uper,
 	NativeReal_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	NativeReal_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	"REAL",			/* The ASN.1 type is still REAL */
 	"REAL",
 	&asn_OP_NativeReal,
-	asn_generic_no_constraint,
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
 	asn_DEF_NativeReal_tags,	/* Same as above */
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -422,3 +421,36 @@ NativeReal_free(const asn_TYPE_descriptor_t *td, void *ptr,
     }
 }
 
+
+asn_random_fill_result_t
+NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
+                       const asn_encoding_constraints_t *constraints,
+                       size_t max_length) {
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
+    asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+    static const double values[] = {0, -0.0, -1, 1, INFINITY, -INFINITY, NAN};
+    double *st;
+    double d;
+
+    (void)td;
+    (void)constraints;
+
+    if(max_length == 0) return result_skipped;
+
+    d = values[asn_random_between(0, sizeof(values) / sizeof(values[0]) - 1)];
+
+    if(*sptr) {
+        st = *sptr;
+    } else {
+        st = (double *)(*sptr = CALLOC(1, sizeof(double)));
+        if(!st) {
+            return result_failed;
+        }
+    }
+
+    *st = d;
+
+    result_ok.length = sizeof(double);
+    return result_ok;
+}

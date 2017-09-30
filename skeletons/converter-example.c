@@ -58,13 +58,34 @@ static int opt_nopad;   /* -per-nopad (PER input is not padded between msgs) */
 static int opt_onepdu;  /* -1 (decode single PDU) */
 
 #ifdef    JUNKTEST        /* Enable -J <probability> */
-#define    JUNKOPT    "J:"
+#define JUNKOPT "J:"
 static double opt_jprob;    /* Junk bit probability */
 static int    junk_failures;
 static void   junk_bytes_with_probability(uint8_t *, size_t, double prob);
-#else
-#define    JUNKOPT
+
+#define RANDOPT "R:"
+static ssize_t random_max_size = 0; /* Size of the random data */
+
+#if !defined(__FreeBSD__) && !(defined(__APPLE__) && defined(__MACH__))
+static void
+srandomdev(void) {
+    FILE *f = fopen("/dev/urandom", "rb");
+    unsigned seed;
+    if(f) {
+        if(fread(&seed, 1, sizeof(seed), f) != sizeof(seed)) {
+            seed = time(NULL);
+        }
+        fclose(f);
+    } else {
+        seed = time(NULL);
+    }
+    srandom(seed);
+}
 #endif
+
+#else   /* !JUNKTEST */
+#define    JUNKOPT
+#endif  /* JUNKTEST */
 
 /* Debug output function */
 static void
@@ -195,7 +216,7 @@ main(int ac, char *av[]) {
     /*
      * Pocess the command-line argments.
      */
-    while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:" JUNKOPT)) != -1)
+    while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:" JUNKOPT RANDOPT)) != -1)
     switch(ch) {
     case 'i':
         sel = ats_by_name(optarg, pduType, input_encodings);
@@ -296,6 +317,17 @@ main(int ac, char *av[]) {
             exit(EX_UNAVAILABLE);
         }
         break;
+    case 'R':
+        isyntax = ATS_RANDOM;
+        random_max_size = atoi(optarg);
+        if(random_max_size < 0) {
+            fprintf(stderr,
+                "-R %s: Non-negative value expected\n",
+                optarg);
+            exit(EX_UNAVAILABLE);
+        }
+        srandomdev();
+        break;
 #endif    /* JUNKTEST */
     case 'h':
     default:
@@ -339,6 +371,8 @@ main(int ac, char *av[]) {
         "  -s <size>    Set the stack usage limit (default is %d)\n"
 #ifdef    JUNKTEST
         "  -J <prob>    Set random junk test bit garbaging probability\n"
+        "  -R <size>    Generate a random value of roughly the given size,\n"
+        "               instead of parsing the value from file.\n"
 #endif
         , (long)suggested_bufsize, ASN__DEFAULT_STACK_MAX);
         exit(EX_USAGE);
@@ -347,7 +381,7 @@ main(int ac, char *av[]) {
     ac -= optind;
     av += optind;
 
-    if(ac < 1) {
+    if(ac < 1 && isyntax != ATS_RANDOM) {
         fprintf(stderr, "%s: No input files specified. "
                 "Try '-h' for more information\n",
                 av[-optind]);
@@ -378,19 +412,39 @@ main(int ac, char *av[]) {
       /*
        * Process all files in turn.
        */
-      for(ac_i = 0; ac_i < ac; ac_i++) {
+      for(ac_i = (isyntax == ATS_RANDOM) ? -1 : 0; ac_i < ac; ac_i++) {
         asn_enc_rval_t erv;
         void *structure;    /* Decoded structure */
-        FILE *file = argument_to_file(av, ac_i);
-        char *name = argument_to_name(av, ac_i);
+        FILE *file;
+        char *name;
         int first_pdu;
+
+        if(ac_i == -1) {
+            file = NULL;
+            name = "<random value generator>";
+            opt_onepdu = 1;
+        } else {
+            file = argument_to_file(av, ac_i);
+            name = argument_to_name(av, ac_i);
+        }
 
         for(first_pdu = 1; (first_pdu || !opt_onepdu); first_pdu = 0) {
             /*
              * Decode the encoded structure from file.
              */
-            structure = data_decode_from_file(isyntax, pduType, file, name,
-                                              suggested_bufsize, first_pdu);
+            if(isyntax == ATS_RANDOM) {
+                structure = NULL;
+                if(asn_random_fill(pduType, &structure, random_max_size) != 0) {
+                    fprintf(stderr,
+                            "Cannot generate a random value.\n",
+                            random_max_size);
+                    assert(structure == NULL);
+                    errno = EINVAL;
+                }
+            } else {
+                structure = data_decode_from_file(isyntax, pduType, file, name,
+                                                  suggested_bufsize, first_pdu);
+            }
             if(!structure) {
                 if(errno) {
                     /* Error message is already printed */
@@ -429,6 +483,8 @@ main(int ac, char *av[]) {
                 if(erv.encoded == -1) {
                     fprintf(stderr, "%s: Cannot convert %s into %s\n", name,
                             pduType->name, ats_simple_name(osyntax));
+                    DEBUG("Conversion failed for %s:\n", pduType->name);
+                    asn_fprint(stderr, pduType, structure);
                     exit(EX_UNAVAILABLE);
                 }
                 DEBUG("Encoded in %zd bytes of %s", erv.encoded,

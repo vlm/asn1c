@@ -45,21 +45,20 @@ asn_TYPE_operation_t asn_OP_UniversalString = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	"UniversalString",
 	"UniversalString",
 	&asn_OP_UniversalString,
-	UniversalString_constraint,
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
 	  / sizeof(asn_DEF_UniversalString_tags[0]) - 1,
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)
 	  / sizeof(asn_DEF_UniversalString_tags[0]),
-	0,	/* No OER visible constraints */
-	&asn_DEF_UniversalString_per_constraints,
+	{ 0, &asn_DEF_UniversalString_per_constraints, UniversalString_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_UniversalString_specs
 };

@@ -59,21 +59,20 @@ asn_TYPE_operation_t asn_OP_NumericString = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_NumericString = {
 	"NumericString",
 	"NumericString",
 	&asn_OP_NumericString,
-	NumericString_constraint,
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)
 	  / sizeof(asn_DEF_NumericString_tags[0]) - 1,
 	asn_DEF_NumericString_tags,
 	sizeof(asn_DEF_NumericString_tags)
 	  / sizeof(asn_DEF_NumericString_tags[0]),
-	0,	/* No OER visible constraints */
-	&asn_DEF_NumericString_per_constraints,
+	{ 0, &asn_DEF_NumericString_per_constraints, NumericString_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

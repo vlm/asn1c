@@ -23,6 +23,7 @@ xer_type_decoder_f REAL_decode_xer;
 xer_type_encoder_f REAL_encode_xer;
 per_type_decoder_f REAL_decode_uper;
 per_type_encoder_f REAL_encode_uper;
+asn_random_fill_f  REAL_random_fill;
 
 #define REAL_free          ASN__PRIMITIVE_TYPE_free,
 #define REAL_constraint    asn_generic_no_constraint

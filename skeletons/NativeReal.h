@@ -29,6 +29,7 @@ xer_type_decoder_f NativeReal_decode_xer;
 xer_type_encoder_f NativeReal_encode_xer;
 per_type_decoder_f NativeReal_decode_uper;
 per_type_encoder_f NativeReal_encode_uper;
+asn_random_fill_f  NativeReal_random_fill;
 
 #define NativeReal_constraint  asn_generic_no_constraint
 

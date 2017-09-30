@@ -19,6 +19,7 @@ extern asn_TYPE_operation_t asn_OP_UTCTime;
 asn_struct_print_f UTCTime_print;
 asn_constr_check_f UTCTime_constraint;
 xer_type_encoder_f UTCTime_encode_xer;
+asn_random_fill_f  UTCTime_random_fill;
 
 #define UTCTime_free         OCTET_STRING_free
 #define UTCTime_compare      OCTET_STRING_compare

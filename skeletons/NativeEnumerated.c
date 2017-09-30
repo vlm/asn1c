@@ -40,19 +40,18 @@ asn_TYPE_operation_t asn_OP_NativeEnumerated = {
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	NativeEnumerated_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	"ENUMERATED",			/* The ASN.1 type is still ENUMERATED */
 	"ENUMERATED",
 	&asn_OP_NativeEnumerated,
-	asn_generic_no_constraint,
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
 	asn_DEF_NativeEnumerated_tags,	/* Same as above */
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_no_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -103,7 +102,8 @@ NativeEnumerated_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	(void)opt_codec_ctx;
 
 	if(constraints) ct = &constraints->value;
-	else if(td->per_constraints) ct = &td->per_constraints->value;
+	else if(td->encoding_constraints.per_constraints)
+		ct = &td->encoding_constraints.per_constraints->value;
 	else ASN__DECODE_FAILED;	/* Mandatory! */
 	if(!specs) ASN__DECODE_FAILED;
 
@@ -173,7 +173,8 @@ NativeEnumerated_encode_uper(asn_TYPE_descriptor_t *td,
 	if(!specs) ASN__ENCODE_FAILED;
 
 	if(constraints) ct = &constraints->value;
-	else if(td->per_constraints) ct = &td->per_constraints->value;
+	else if(td->encoding_constraints.per_constraints)
+		ct = &td->encoding_constraints.per_constraints->value;
 	else ASN__ENCODE_FAILED;	/* Mandatory! */
 
 	ASN_DEBUG("Encoding %s as NativeEnumerated", td->name);

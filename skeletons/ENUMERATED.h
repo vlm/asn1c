@@ -27,6 +27,7 @@ per_type_encoder_f ENUMERATED_encode_uper;
 #define ENUMERATED_encode_der INTEGER_encode_der
 #define ENUMERATED_decode_xer INTEGER_decode_xer
 #define ENUMERATED_encode_xer INTEGER_encode_xer
+#define ENUMERATED_random_fill INTEGER_random_fill
 
 #ifdef __cplusplus
 }

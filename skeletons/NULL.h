@@ -30,6 +30,7 @@ oer_type_decoder_f NULL_decode_oer;
 oer_type_encoder_f NULL_encode_oer;
 per_type_decoder_f NULL_decode_uper;
 per_type_encoder_f NULL_encode_uper;
+asn_random_fill_f  NULL_random_fill;
 
 #define NULL_free	BOOLEAN_free
 #define NULL_decode_ber	BOOLEAN_decode_ber

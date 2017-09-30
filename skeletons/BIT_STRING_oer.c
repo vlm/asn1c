@@ -15,7 +15,7 @@ BIT_STRING_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_
                       const void *ptr, size_t size) {
     BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
     const asn_oer_constraints_t *cts =
-        constraints ? constraints : td->oer_constraints;
+        constraints ? constraints : td->encoding_constraints.oer_constraints;
     ssize_t ct_size = cts ? cts->size : -1;
     asn_dec_rval_t rval = {RC_OK, 0};
     size_t expected_length = 0;
@@ -93,7 +93,7 @@ BIT_STRING_encode_oer(asn_TYPE_descriptor_t *td,
     BIT_STRING_t *st = (BIT_STRING_t *)sptr;
     asn_enc_rval_t erval = {0, 0, 0};
     const asn_oer_constraints_t *cts =
-        constraints ? constraints : td->oer_constraints;
+        constraints ? constraints : td->encoding_constraints.oer_constraints;
     ssize_t ct_size = cts ? cts->size : -1;
     size_t trailing_zeros = 0;
     int fix_last_byte = 0;

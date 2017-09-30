@@ -244,7 +244,7 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
         }
 
         rval = elm->type->op->oer_decoder(opt_codec_ctx, elm->type,
-                                          elm->oer_constraints, memb_ptr2, ptr,
+                                          elm->encoding_constraints.oer_constraints, memb_ptr2, ptr,
                                           size);
         rval.consumed += consumed_myself;
         switch(rval.code) {
@@ -353,7 +353,7 @@ CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
         ASN__ENCODE_FAILED;
     }
 
-    er = elm->type->op->oer_encoder(elm->type, elm->oer_constraints, memb_ptr,
+    er = elm->type->op->oer_encoder(elm->type, elm->encoding_constraints.oer_constraints, memb_ptr,
                                     cb, app_key);
     if(er.encoded > 0)
         er.encoded += tag_len;

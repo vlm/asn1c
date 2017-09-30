@@ -34,21 +34,20 @@ asn_TYPE_operation_t asn_OP_GeneralString = {
 	OCTET_STRING_decode_uper,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_GeneralString = {
 	"GeneralString",
 	"GeneralString",
 	&asn_OP_GeneralString,
-	asn_generic_unknown_constraint,
 	asn_DEF_GeneralString_tags,
 	sizeof(asn_DEF_GeneralString_tags)
 	  / sizeof(asn_DEF_GeneralString_tags[0]) - 1,
 	asn_DEF_GeneralString_tags,
 	sizeof(asn_DEF_GeneralString_tags)
 	  / sizeof(asn_DEF_GeneralString_tags[0]),
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, asn_generic_unknown_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

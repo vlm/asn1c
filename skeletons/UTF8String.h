@@ -18,6 +18,7 @@ extern asn_TYPE_operation_t asn_OP_UTF8String;
 
 asn_struct_print_f UTF8String_print;
 asn_constr_check_f UTF8String_constraint;
+asn_random_fill_f  UTF8String_random_fill;
 
 #define UTF8String_free         OCTET_STRING_free
 #define UTF8String_compare      OCTET_STRING_compare
