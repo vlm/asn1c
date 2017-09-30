@@ -837,3 +837,10 @@ OCTET_STRING_compare(const asn_TYPE_descriptor_t *td, const void *a,
     (void)b;
     return 0;
 }
+
+intmax_t
+asn_random_between(intmax_t a, intmax_t b) {
+    (void)b;
+    return a;
+};
+
