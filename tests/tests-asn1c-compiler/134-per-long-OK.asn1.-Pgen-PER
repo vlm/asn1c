@@ -178,9 +178,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = memb_unsigned33_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_unsigned33_constr_2,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_unsigned33_constr_2, .general_constraints =  memb_unsigned33_constraint_1 },
 		.default_value = 0,
 		.name = "unsigned33"
 		},
@@ -189,9 +187,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = memb_unsigned42_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_unsigned42_constr_3,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_unsigned42_constr_3, .general_constraints =  memb_unsigned42_constraint_1 },
 		.default_value = 0,
 		.name = "unsigned42"
 		},
@@ -200,9 +196,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = memb_signed33_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_signed33_constr_4,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_signed33_constr_4, .general_constraints =  memb_signed33_constraint_1 },
 		.default_value = 0,
 		.name = "signed33"
 		},
@@ -211,9 +205,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = memb_signed33ext_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_signed33ext_constr_5,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_signed33ext_constr_5, .general_constraints =  memb_signed33ext_constraint_1 },
 		.default_value = 0,
 		.name = "signed33ext"
 		},
@@ -240,15 +232,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_T_1,
 	4,	/* Elements count */
 	&asn_SPC_T_specs_1	/* Additional specs */

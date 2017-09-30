@@ -50,7 +50,7 @@ memb_identifier_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 
@@ -62,9 +62,7 @@ static asn_TYPE_member_t asn_MBR_Attribute_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_RELATIVE_OID,
 		.type_selector = 0,
-		.memb_constraints = memb_identifier_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_identifier_constraint_1 },
 		.default_value = 0,
 		.name = "identifier"
 		},
@@ -73,9 +71,7 @@ static asn_TYPE_member_t asn_MBR_Attribute_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "siAttributeValue"
 		},
@@ -100,15 +96,13 @@ asn_TYPE_descriptor_t asn_DEF_Attribute = {
 	"Attribute",
 	"Attribute",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Attribute_tags_1,
 	sizeof(asn_DEF_Attribute_tags_1)
 		/sizeof(asn_DEF_Attribute_tags_1[0]), /* 1 */
 	asn_DEF_Attribute_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Attribute_tags_1)
 		/sizeof(asn_DEF_Attribute_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Attribute_1,
 	2,	/* Elements count */
 	&asn_SPC_Attribute_specs_1	/* Additional specs */

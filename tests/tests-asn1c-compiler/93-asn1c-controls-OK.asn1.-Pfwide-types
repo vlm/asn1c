@@ -28,9 +28,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "ainl"
 		},
@@ -39,9 +37,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "aptr"
 		},
@@ -66,15 +62,13 @@ asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	"Sequence",
 	"Sequence",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Sequence_tags_1,
 	sizeof(asn_DEF_Sequence_tags_1)
 		/sizeof(asn_DEF_Sequence_tags_1[0]), /* 1 */
 	asn_DEF_Sequence_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Sequence_tags_1)
 		/sizeof(asn_DEF_Sequence_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Sequence_1,
 	2,	/* Elements count */
 	&asn_SPC_Sequence_specs_1	/* Additional specs */
@@ -131,9 +125,7 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "ainl"
 		},
@@ -142,9 +134,7 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "aptr"
 		},
@@ -175,15 +165,13 @@ asn_TYPE_descriptor_t asn_DEF_Set = {
 	"Set",
 	"Set",
 	&asn_OP_SET,
-	SET_constraint,
 	asn_DEF_Set_tags_1,
 	sizeof(asn_DEF_Set_tags_1)
 		/sizeof(asn_DEF_Set_tags_1[0]), /* 1 */
 	asn_DEF_Set_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Set_tags_1)
 		/sizeof(asn_DEF_Set_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_constraint },
 	asn_MBR_Set_1,
 	2,	/* Elements count */
 	&asn_SPC_Set_specs_1	/* Additional specs */
@@ -246,9 +234,7 @@ static asn_TYPE_member_t asn_MBR_setof_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -267,15 +253,13 @@ asn_TYPE_descriptor_t asn_DEF_setof_2 = {
 	"setof",
 	"setof",
 	&asn_OP_SET_OF,
-	SET_OF_constraint,
 	asn_DEF_setof_tags_2,
 	sizeof(asn_DEF_setof_tags_2)
 		/sizeof(asn_DEF_setof_tags_2[0]) - 1, /* 1 */
 	asn_DEF_setof_tags_2,	/* Same as above */
 	sizeof(asn_DEF_setof_tags_2)
 		/sizeof(asn_DEF_setof_tags_2[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_OF_constraint },
 	asn_MBR_setof_2,
 	1,	/* Single element */
 	&asn_SPC_setof_specs_2	/* Additional specs */
@@ -287,9 +271,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_setof_2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "setof"
 		},
@@ -298,9 +280,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "aptr"
 		},
@@ -309,9 +289,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "ainl"
 		},
@@ -335,13 +313,11 @@ asn_TYPE_descriptor_t asn_DEF_Choice = {
 	"Choice",
 	"Choice",
 	&asn_OP_CHOICE,
-	CHOICE_constraint,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CHOICE_constraint },
 	asn_MBR_Choice_1,
 	3,	/* Elements count */
 	&asn_SPC_Choice_specs_1	/* Additional specs */

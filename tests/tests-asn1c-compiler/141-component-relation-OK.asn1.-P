@@ -125,7 +125,7 @@ memb_value_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 
@@ -137,9 +137,7 @@ static asn_TYPE_member_t asn_MBR_value_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_PrimitiveMessage,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "PrimitiveMessage"
 		},
@@ -148,9 +146,7 @@ static asn_TYPE_member_t asn_MBR_value_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_ComplexMessage,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "ComplexMessage"
 		},
@@ -174,13 +170,11 @@ asn_TYPE_descriptor_t asn_DEF_value_3 = {
 	"value",
 	"value",
 	&asn_OP_OPEN_TYPE,
-	OPEN_TYPE_constraint,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OPEN_TYPE_constraint },
 	asn_MBR_value_3,
 	2,	/* Elements count */
 	&asn_SPC_value_specs_3	/* Additional specs */
@@ -192,9 +186,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_ConstrainedInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_ident_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_ident_constraint_1 },
 		.default_value = 0,
 		.name = "ident"
 		},
@@ -203,9 +195,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_value_3,
 		.type_selector = select_value_type,
-		.memb_constraints = memb_value_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_value_constraint_1 },
 		.default_value = 0,
 		.name = "value"
 		},
@@ -230,15 +220,13 @@ asn_TYPE_descriptor_t asn_DEF_Frame = {
 	"Frame",
 	"Frame",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Frame_tags_1,
 	sizeof(asn_DEF_Frame_tags_1)
 		/sizeof(asn_DEF_Frame_tags_1[0]), /* 1 */
 	asn_DEF_Frame_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Frame_tags_1)
 		/sizeof(asn_DEF_Frame_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Frame_1,
 	2,	/* Elements count */
 	&asn_SPC_Frame_specs_1	/* Additional specs */
@@ -305,15 +293,13 @@ asn_TYPE_descriptor_t asn_DEF_ConstrainedInteger = {
 	"ConstrainedInteger",
 	"ConstrainedInteger",
 	&asn_OP_NativeInteger,
-	ConstrainedInteger_constraint,
 	asn_DEF_ConstrainedInteger_tags_1,
 	sizeof(asn_DEF_ConstrainedInteger_tags_1)
 		/sizeof(asn_DEF_ConstrainedInteger_tags_1[0]), /* 1 */
 	asn_DEF_ConstrainedInteger_tags_1,	/* Same as above */
 	sizeof(asn_DEF_ConstrainedInteger_tags_1)
 		/sizeof(asn_DEF_ConstrainedInteger_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, ConstrainedInteger_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -354,15 +340,13 @@ asn_TYPE_descriptor_t asn_DEF_PrimitiveMessage = {
 	"PrimitiveMessage",
 	"PrimitiveMessage",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_PrimitiveMessage_tags_1,
 	sizeof(asn_DEF_PrimitiveMessage_tags_1)
 		/sizeof(asn_DEF_PrimitiveMessage_tags_1[0]), /* 1 */
 	asn_DEF_PrimitiveMessage_tags_1,	/* Same as above */
 	sizeof(asn_DEF_PrimitiveMessage_tags_1)
 		/sizeof(asn_DEF_PrimitiveMessage_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_PrimitiveMessage_specs_1	/* Additional specs */
 };
@@ -403,15 +387,13 @@ asn_TYPE_descriptor_t asn_DEF_ComplexMessage = {
 	"ComplexMessage",
 	"ComplexMessage",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_ComplexMessage_tags_1,
 	sizeof(asn_DEF_ComplexMessage_tags_1)
 		/sizeof(asn_DEF_ComplexMessage_tags_1[0]), /* 1 */
 	asn_DEF_ComplexMessage_tags_1,	/* Same as above */
 	sizeof(asn_DEF_ComplexMessage_tags_1)
 		/sizeof(asn_DEF_ComplexMessage_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_ComplexMessage_specs_1	/* Additional specs */
 };

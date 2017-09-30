@@ -26,9 +26,7 @@ static asn_TYPE_member_t asn_MBR_Message_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_SpecializedContent_21P0,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "content13"
 		},
@@ -37,9 +35,7 @@ static asn_TYPE_member_t asn_MBR_Message_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_SpecializedContent_21P1,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "content42"
 		},
@@ -64,15 +60,13 @@ asn_TYPE_descriptor_t asn_DEF_Message = {
 	"Message",
 	"Message",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Message_tags_1,
 	sizeof(asn_DEF_Message_tags_1)
 		/sizeof(asn_DEF_Message_tags_1[0]), /* 1 */
 	asn_DEF_Message_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Message_tags_1)
 		/sizeof(asn_DEF_Message_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Message_1,
 	2,	/* Elements count */
 	&asn_SPC_Message_specs_1	/* Additional specs */
@@ -169,9 +163,7 @@ asn_TYPE_member_t asn_MBR_SpecializedContent_21P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_id_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_id_constraint_1 },
 		.default_value = 0,
 		.name = "id"
 		},
@@ -195,15 +187,13 @@ asn_TYPE_descriptor_t asn_DEF_SpecializedContent_21P0 = {
 	"SpecializedContent",
 	"SpecializedContent",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_SpecializedContent_21P0_tags_1,
 	sizeof(asn_DEF_SpecializedContent_21P0_tags_1)
 		/sizeof(asn_DEF_SpecializedContent_21P0_tags_1[0]), /* 1 */
 	asn_DEF_SpecializedContent_21P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SpecializedContent_21P0_tags_1)
 		/sizeof(asn_DEF_SpecializedContent_21P0_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SpecializedContent_21P0_1,
 	1,	/* Elements count */
 	&asn_SPC_SpecializedContent_21P0_specs_1	/* Additional specs */
@@ -215,9 +205,7 @@ asn_TYPE_member_t asn_MBR_SpecializedContent_21P1_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_id_constraint_3,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_id_constraint_3 },
 		.default_value = 0,
 		.name = "id"
 		},
@@ -241,15 +229,13 @@ asn_TYPE_descriptor_t asn_DEF_SpecializedContent_21P1 = {
 	"SpecializedContent",
 	"SpecializedContent",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_SpecializedContent_21P1_tags_3,
 	sizeof(asn_DEF_SpecializedContent_21P1_tags_3)
 		/sizeof(asn_DEF_SpecializedContent_21P1_tags_3[0]), /* 1 */
 	asn_DEF_SpecializedContent_21P1_tags_3,	/* Same as above */
 	sizeof(asn_DEF_SpecializedContent_21P1_tags_3)
 		/sizeof(asn_DEF_SpecializedContent_21P1_tags_3[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SpecializedContent_21P1_3,
 	1,	/* Elements count */
 	&asn_SPC_SpecializedContent_21P1_specs_3	/* Additional specs */

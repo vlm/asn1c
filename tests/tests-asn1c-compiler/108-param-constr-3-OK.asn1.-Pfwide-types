@@ -65,15 +65,13 @@ asn_TYPE_descriptor_t asn_DEF_MinMax_16P0 = {
 	"MinMax",
 	"MinMax",
 	&asn_OP_INTEGER,
-	MinMax_16P0_constraint,
 	asn_DEF_MinMax_16P0_tags_1,
 	sizeof(asn_DEF_MinMax_16P0_tags_1)
 		/sizeof(asn_DEF_MinMax_16P0_tags_1[0]), /* 1 */
 	asn_DEF_MinMax_16P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_MinMax_16P0_tags_1)
 		/sizeof(asn_DEF_MinMax_16P0_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, MinMax_16P0_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -145,15 +143,13 @@ asn_TYPE_descriptor_t asn_DEF_ThreePlus = {
 	"ThreePlus",
 	"ThreePlus",
 	&asn_OP_INTEGER,
-	ThreePlus_constraint,
 	asn_DEF_ThreePlus_tags_1,
 	sizeof(asn_DEF_ThreePlus_tags_1)
 		/sizeof(asn_DEF_ThreePlus_tags_1[0]), /* 1 */
 	asn_DEF_ThreePlus_tags_1,	/* Same as above */
 	sizeof(asn_DEF_ThreePlus_tags_1)
 		/sizeof(asn_DEF_ThreePlus_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, ThreePlus_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

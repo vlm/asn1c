@@ -56,7 +56,7 @@ memb_varsets_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	if((size >= 1)) {
 		/* Perform validation of the inner elements */
-		return td->check_constraints(td, sptr, ctfailcb, app_key);
+		return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 	} else {
 		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
@@ -74,9 +74,7 @@ static asn_TYPE_member_t asn_MBR_varsets_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_VariablePartSet,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -94,15 +92,13 @@ asn_TYPE_descriptor_t asn_DEF_varsets_3 = {
 	"varsets",
 	"varsets",
 	&asn_OP_SEQUENCE_OF,
-	SEQUENCE_OF_constraint,
 	asn_DEF_varsets_tags_3,
 	sizeof(asn_DEF_varsets_tags_3)
 		/sizeof(asn_DEF_varsets_tags_3[0]), /* 1 */
 	asn_DEF_varsets_tags_3,	/* Same as above */
 	sizeof(asn_DEF_varsets_tags_3)
 		/sizeof(asn_DEF_varsets_tags_3[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_OF_constraint },
 	asn_MBR_varsets_3,
 	1,	/* Single element */
 	&asn_SPC_varsets_specs_3	/* Additional specs */
@@ -114,9 +110,7 @@ static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "line-digest"
 		},
@@ -125,9 +119,7 @@ static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_varsets_3,
 		.type_selector = 0,
-		.memb_constraints = memb_varsets_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_varsets_constraint_1 },
 		.default_value = 0,
 		.name = "varsets"
 		},
@@ -152,15 +144,13 @@ asn_TYPE_descriptor_t asn_DEF_LogLine = {
 	"LogLine",
 	"LogLine",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_LogLine_tags_1,
 	sizeof(asn_DEF_LogLine_tags_1)
 		/sizeof(asn_DEF_LogLine_tags_1[0]), /* 1 */
 	asn_DEF_LogLine_tags_1,	/* Same as above */
 	sizeof(asn_DEF_LogLine_tags_1)
 		/sizeof(asn_DEF_LogLine_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_LogLine_1,
 	2,	/* Elements count */
 	&asn_SPC_LogLine_specs_1	/* Additional specs */
@@ -225,7 +215,7 @@ memb_vparts_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 
@@ -237,9 +227,7 @@ static asn_TYPE_member_t asn_MBR_vparts_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_VariablePart,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -257,15 +245,13 @@ asn_TYPE_descriptor_t asn_DEF_vparts_2 = {
 	"vparts",
 	"vparts",
 	&asn_OP_SEQUENCE_OF,
-	SEQUENCE_OF_constraint,
 	asn_DEF_vparts_tags_2,
 	sizeof(asn_DEF_vparts_tags_2)
 		/sizeof(asn_DEF_vparts_tags_2[0]), /* 1 */
 	asn_DEF_vparts_tags_2,	/* Same as above */
 	sizeof(asn_DEF_vparts_tags_2)
 		/sizeof(asn_DEF_vparts_tags_2[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_OF_constraint },
 	asn_MBR_vparts_2,
 	1,	/* Single element */
 	&asn_SPC_vparts_specs_2	/* Additional specs */
@@ -277,9 +263,7 @@ asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_vparts_2,
 		.type_selector = 0,
-		.memb_constraints = memb_vparts_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_vparts_constraint_1 },
 		.default_value = 0,
 		.name = "vparts"
 		},
@@ -288,9 +272,7 @@ asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_ActionItem,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "resolution"
 		},
@@ -315,15 +297,13 @@ asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
 	"VariablePartSet",
 	"VariablePartSet",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_VariablePartSet_tags_1,
 	sizeof(asn_DEF_VariablePartSet_tags_1)
 		/sizeof(asn_DEF_VariablePartSet_tags_1[0]), /* 1 */
 	asn_DEF_VariablePartSet_tags_1,	/* Same as above */
 	sizeof(asn_DEF_VariablePartSet_tags_1)
 		/sizeof(asn_DEF_VariablePartSet_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_VariablePartSet_1,
 	2,	/* Elements count */
 	&asn_SPC_VariablePartSet_specs_1	/* Additional specs */
@@ -405,7 +385,7 @@ memb_vset_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	if((size >= 1)) {
 		/* Perform validation of the inner elements */
-		return td->check_constraints(td, sptr, ctfailcb, app_key);
+		return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 	} else {
 		ASN__CTFAIL(app_key, td, sptr,
 			"%s: constraint failed (%s:%d)",
@@ -423,9 +403,7 @@ static asn_TYPE_member_t asn_MBR_vset_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -443,15 +421,13 @@ asn_TYPE_descriptor_t asn_DEF_vset_2 = {
 	"vset",
 	"vset",
 	&asn_OP_SET_OF,
-	SET_OF_constraint,
 	asn_DEF_vset_tags_2,
 	sizeof(asn_DEF_vset_tags_2)
 		/sizeof(asn_DEF_vset_tags_2[0]), /* 1 */
 	asn_DEF_vset_tags_2,	/* Same as above */
 	sizeof(asn_DEF_vset_tags_2)
 		/sizeof(asn_DEF_vset_tags_2[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_OF_constraint },
 	asn_MBR_vset_2,
 	1,	/* Single element */
 	&asn_SPC_vset_specs_2	/* Additional specs */
@@ -463,9 +439,7 @@ static asn_TYPE_member_t asn_MBR_vrange_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "from"
 		},
@@ -474,9 +448,7 @@ static asn_TYPE_member_t asn_MBR_vrange_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "to"
 		},
@@ -502,15 +474,13 @@ asn_TYPE_descriptor_t asn_DEF_vrange_4 = {
 	"vrange",
 	"vrange",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_vrange_tags_4,
 	sizeof(asn_DEF_vrange_tags_4)
 		/sizeof(asn_DEF_vrange_tags_4[0]), /* 1 */
 	asn_DEF_vrange_tags_4,	/* Same as above */
 	sizeof(asn_DEF_vrange_tags_4)
 		/sizeof(asn_DEF_vrange_tags_4[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_vrange_4,
 	2,	/* Elements count */
 	&asn_SPC_vrange_specs_4	/* Additional specs */
@@ -522,9 +492,7 @@ asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_vset_2,
 		.type_selector = 0,
-		.memb_constraints = memb_vset_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_vset_constraint_1 },
 		.default_value = 0,
 		.name = "vset"
 		},
@@ -533,9 +501,7 @@ asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_vrange_4,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "vrange"
 		},
@@ -558,13 +524,11 @@ asn_TYPE_descriptor_t asn_DEF_VariablePart = {
 	"VariablePart",
 	"VariablePart",
 	&asn_OP_CHOICE,
-	CHOICE_constraint,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CHOICE_constraint },
 	asn_MBR_VariablePart_1,
 	2,	/* Elements count */
 	&asn_SPC_VariablePart_specs_1	/* Additional specs */
@@ -665,15 +629,13 @@ asn_TYPE_descriptor_t asn_DEF_accept_as_2 = {
 	"accept-as",
 	"accept-as",
 	&asn_OP_NativeEnumerated,
-	NativeEnumerated_constraint,
 	asn_DEF_accept_as_tags_2,
 	sizeof(asn_DEF_accept_as_tags_2)
 		/sizeof(asn_DEF_accept_as_tags_2[0]), /* 1 */
 	asn_DEF_accept_as_tags_2,	/* Same as above */
 	sizeof(asn_DEF_accept_as_tags_2)
 		/sizeof(asn_DEF_accept_as_tags_2[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NativeEnumerated_constraint },
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_accept_as_specs_2	/* Additional specs */
 };
@@ -684,9 +646,7 @@ static asn_TYPE_member_t asn_MBR_email_9[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -704,15 +664,13 @@ asn_TYPE_descriptor_t asn_DEF_email_9 = {
 	"email",
 	"email",
 	&asn_OP_SET_OF,
-	SET_OF_constraint,
 	asn_DEF_email_tags_9,
 	sizeof(asn_DEF_email_tags_9)
 		/sizeof(asn_DEF_email_tags_9[0]), /* 1 */
 	asn_DEF_email_tags_9,	/* Same as above */
 	sizeof(asn_DEF_email_tags_9)
 		/sizeof(asn_DEF_email_tags_9[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_OF_constraint },
 	asn_MBR_email_9,
 	1,	/* Single element */
 	&asn_SPC_email_specs_9	/* Additional specs */
@@ -724,9 +682,7 @@ static asn_TYPE_member_t asn_MBR_notify_7[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "critical"
 		},
@@ -735,9 +691,7 @@ static asn_TYPE_member_t asn_MBR_notify_7[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_email_9,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "email"
 		},
@@ -763,15 +717,13 @@ asn_TYPE_descriptor_t asn_DEF_notify_7 = {
 	"notify",
 	"notify",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_notify_tags_7,
 	sizeof(asn_DEF_notify_tags_7)
 		/sizeof(asn_DEF_notify_tags_7[0]), /* 1 */
 	asn_DEF_notify_tags_7,	/* Same as above */
 	sizeof(asn_DEF_notify_tags_7)
 		/sizeof(asn_DEF_notify_tags_7[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_notify_7,
 	2,	/* Elements count */
 	&asn_SPC_notify_specs_7	/* Additional specs */
@@ -783,9 +735,7 @@ asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_accept_as_2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "accept-as"
 		},
@@ -794,9 +744,7 @@ asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_notify_7,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "notify"
 		},
@@ -821,15 +769,13 @@ asn_TYPE_descriptor_t asn_DEF_ActionItem = {
 	"ActionItem",
 	"ActionItem",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_ActionItem_tags_1,
 	sizeof(asn_DEF_ActionItem_tags_1)
 		/sizeof(asn_DEF_ActionItem_tags_1[0]), /* 1 */
 	asn_DEF_ActionItem_tags_1,	/* Same as above */
 	sizeof(asn_DEF_ActionItem_tags_1)
 		/sizeof(asn_DEF_ActionItem_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_ActionItem_1,
 	2,	/* Elements count */
 	&asn_SPC_ActionItem_specs_1	/* Additional specs */

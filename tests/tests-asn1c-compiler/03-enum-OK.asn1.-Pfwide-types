@@ -69,15 +69,13 @@ asn_TYPE_descriptor_t asn_DEF_Enum1 = {
 	"Enum1",
 	"Enum1",
 	&asn_OP_ENUMERATED,
-	ENUMERATED_constraint,
 	asn_DEF_Enum1_tags_1,
 	sizeof(asn_DEF_Enum1_tags_1)
 		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
 	asn_DEF_Enum1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum1_tags_1)
 		/sizeof(asn_DEF_Enum1_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, ENUMERATED_constraint },
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum1_specs_1	/* Additional specs */
 };
@@ -162,15 +160,13 @@ asn_TYPE_descriptor_t asn_DEF_Enum2 = {
 	"Enum2",
 	"Enum2",
 	&asn_OP_ENUMERATED,
-	ENUMERATED_constraint,
 	asn_DEF_Enum2_tags_1,
 	sizeof(asn_DEF_Enum2_tags_1)
 		/sizeof(asn_DEF_Enum2_tags_1[0]), /* 1 */
 	asn_DEF_Enum2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum2_tags_1)
 		/sizeof(asn_DEF_Enum2_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, ENUMERATED_constraint },
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum2_specs_1	/* Additional specs */
 };
@@ -243,15 +239,13 @@ asn_TYPE_descriptor_t asn_DEF_Enum3 = {
 	"Enum3",
 	"Enum3",
 	&asn_OP_ENUMERATED,
-	ENUMERATED_constraint,
 	asn_DEF_Enum3_tags_1,
 	sizeof(asn_DEF_Enum3_tags_1)
 		/sizeof(asn_DEF_Enum3_tags_1[0]), /* 1 */
 	asn_DEF_Enum3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum3_tags_1)
 		/sizeof(asn_DEF_Enum3_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, ENUMERATED_constraint },
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum3_specs_1	/* Additional specs */
 };
@@ -327,15 +321,13 @@ asn_TYPE_descriptor_t asn_DEF_Enum4 = {
 	"Enum4",
 	"Enum4",
 	&asn_OP_ENUMERATED,
-	ENUMERATED_constraint,
 	asn_DEF_Enum4_tags_1,
 	sizeof(asn_DEF_Enum4_tags_1)
 		/sizeof(asn_DEF_Enum4_tags_1[0]), /* 1 */
 	asn_DEF_Enum4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum4_tags_1)
 		/sizeof(asn_DEF_Enum4_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, ENUMERATED_constraint },
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum4_specs_1	/* Additional specs */
 };
@@ -408,15 +400,13 @@ asn_TYPE_descriptor_t asn_DEF_Enum5 = {
 	"Enum5",
 	"Enum5",
 	&asn_OP_ENUMERATED,
-	ENUMERATED_constraint,
 	asn_DEF_Enum5_tags_1,
 	sizeof(asn_DEF_Enum5_tags_1)
 		/sizeof(asn_DEF_Enum5_tags_1[0]), /* 1 */
 	asn_DEF_Enum5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Enum5_tags_1)
 		/sizeof(asn_DEF_Enum5_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, ENUMERATED_constraint },
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_Enum5_specs_1	/* Additional specs */
 };

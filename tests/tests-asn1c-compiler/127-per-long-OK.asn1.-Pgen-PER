@@ -214,15 +214,13 @@ asn_TYPE_descriptor_t asn_DEF_unsigned32_4 = {
 	"unsigned32",
 	"unsigned32",
 	&asn_OP_NativeInteger,
-	unsigned32_4_constraint,
 	asn_DEF_unsigned32_tags_4,
 	sizeof(asn_DEF_unsigned32_tags_4)
 		/sizeof(asn_DEF_unsigned32_tags_4[0]) - 1, /* 1 */
 	asn_DEF_unsigned32_tags_4,	/* Same as above */
 	sizeof(asn_DEF_unsigned32_tags_4)
 		/sizeof(asn_DEF_unsigned32_tags_4[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	&asn_PER_type_unsigned32_constr_4,
+	{ 0, &asn_PER_type_unsigned32_constr_4, unsigned32_4_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_unsigned32_specs_4	/* Additional specs */
 };
@@ -241,15 +239,13 @@ asn_TYPE_descriptor_t asn_DEF_unsplit32_5 = {
 	"unsplit32",
 	"unsplit32",
 	&asn_OP_NativeInteger,
-	unsplit32_5_constraint,
 	asn_DEF_unsplit32_tags_5,
 	sizeof(asn_DEF_unsplit32_tags_5)
 		/sizeof(asn_DEF_unsplit32_tags_5[0]) - 1, /* 1 */
 	asn_DEF_unsplit32_tags_5,	/* Same as above */
 	sizeof(asn_DEF_unsplit32_tags_5)
 		/sizeof(asn_DEF_unsplit32_tags_5[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	&asn_PER_type_unsplit32_constr_5,
+	{ 0, &asn_PER_type_unsplit32_constr_5, unsplit32_5_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_unsplit32_specs_5	/* Additional specs */
 };
@@ -260,9 +256,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_small32range_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_small32range_constr_2,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_small32range_constr_2, .general_constraints =  memb_small32range_constraint_1 },
 		.default_value = 0,
 		.name = "small32range"
 		},
@@ -271,9 +265,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_full32range_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_full32range_constr_3,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_full32range_constr_3, .general_constraints =  memb_full32range_constraint_1 },
 		.default_value = 0,
 		.name = "full32range"
 		},
@@ -282,9 +274,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_unsigned32_4,
 		.type_selector = 0,
-		.memb_constraints = memb_unsigned32_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_unsigned32_constr_4,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_unsigned32_constr_4, .general_constraints =  memb_unsigned32_constraint_1 },
 		.default_value = 0,
 		.name = "unsigned32"
 		},
@@ -293,9 +283,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_unsplit32_5,
 		.type_selector = 0,
-		.memb_constraints = memb_unsplit32_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = &asn_PER_memb_unsplit32_constr_5,
+		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_unsplit32_constr_5, .general_constraints =  memb_unsplit32_constraint_1 },
 		.default_value = 0,
 		.name = "unsplit32"
 		},
@@ -322,15 +310,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_T_1,
 	4,	/* Elements count */
 	&asn_SPC_T_specs_1	/* Additional specs */

@@ -73,9 +73,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "version"
 		},
@@ -84,9 +82,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "signature"
 		},
@@ -95,9 +91,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Name,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "issuer"
 		},
@@ -124,15 +118,13 @@ asn_TYPE_descriptor_t asn_DEF_toBeSigned_2 = {
 	"toBeSigned",
 	"toBeSigned",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_toBeSigned_tags_2,
 	sizeof(asn_DEF_toBeSigned_tags_2)
 		/sizeof(asn_DEF_toBeSigned_tags_2[0]), /* 1 */
 	asn_DEF_toBeSigned_tags_2,	/* Same as above */
 	sizeof(asn_DEF_toBeSigned_tags_2)
 		/sizeof(asn_DEF_toBeSigned_tags_2[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_toBeSigned_2,
 	3,	/* Elements count */
 	&asn_SPC_toBeSigned_specs_2	/* Additional specs */
@@ -144,9 +136,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_toBeSigned_2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "toBeSigned"
 		},
@@ -155,9 +145,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "algorithm"
 		},
@@ -166,9 +154,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
 		.type_selector = 0,
-		.memb_constraints = memb_signature_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_signature_constraint_1 },
 		.default_value = 0,
 		.name = "signature"
 		},
@@ -194,15 +180,13 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0 = {
 	"SIGNED",
 	"SIGNED",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_SIGNED_15P0_tags_1,
 	sizeof(asn_DEF_SIGNED_15P0_tags_1)
 		/sizeof(asn_DEF_SIGNED_15P0_tags_1[0]), /* 1 */
 	asn_DEF_SIGNED_15P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SIGNED_15P0_tags_1)
 		/sizeof(asn_DEF_SIGNED_15P0_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SIGNED_15P0_1,
 	3,	/* Elements count */
 	&asn_SPC_SIGNED_15P0_specs_1	/* Additional specs */
@@ -244,15 +228,13 @@ asn_TYPE_descriptor_t asn_DEF_Certificate = {
 	"Certificate",
 	"Certificate",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Certificate_tags_1,
 	sizeof(asn_DEF_Certificate_tags_1)
 		/sizeof(asn_DEF_Certificate_tags_1[0]), /* 1 */
 	asn_DEF_Certificate_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Certificate_tags_1)
 		/sizeof(asn_DEF_Certificate_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SIGNED_15P0_1,
 	3,	/* Elements count */
 	&asn_SPC_SIGNED_15P0_specs_1	/* Additional specs */
@@ -295,9 +277,7 @@ asn_TYPE_member_t asn_MBR_Name_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_RelativeDistinguishedName,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -314,15 +294,13 @@ asn_TYPE_descriptor_t asn_DEF_Name = {
 	"Name",
 	"Name",
 	&asn_OP_SEQUENCE_OF,
-	SEQUENCE_OF_constraint,
 	asn_DEF_Name_tags_1,
 	sizeof(asn_DEF_Name_tags_1)
 		/sizeof(asn_DEF_Name_tags_1[0]), /* 1 */
 	asn_DEF_Name_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Name_tags_1)
 		/sizeof(asn_DEF_Name_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_OF_constraint },
 	asn_MBR_Name_1,
 	1,	/* Single element */
 	&asn_SPC_Name_specs_1	/* Additional specs */
@@ -413,9 +391,7 @@ asn_TYPE_member_t asn_MBR_RelativeDistinguishedName_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
-		.memb_constraints = memb_IA5String_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_IA5String_constraint_1 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -432,15 +408,13 @@ asn_TYPE_descriptor_t asn_DEF_RelativeDistinguishedName = {
 	"RelativeDistinguishedName",
 	"RelativeDistinguishedName",
 	&asn_OP_SET_OF,
-	SET_OF_constraint,
 	asn_DEF_RelativeDistinguishedName_tags_1,
 	sizeof(asn_DEF_RelativeDistinguishedName_tags_1)
 		/sizeof(asn_DEF_RelativeDistinguishedName_tags_1[0]), /* 1 */
 	asn_DEF_RelativeDistinguishedName_tags_1,	/* Same as above */
 	sizeof(asn_DEF_RelativeDistinguishedName_tags_1)
 		/sizeof(asn_DEF_RelativeDistinguishedName_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_OF_constraint },
 	asn_MBR_RelativeDistinguishedName_1,
 	1,	/* Single element */
 	&asn_SPC_RelativeDistinguishedName_specs_1	/* Additional specs */

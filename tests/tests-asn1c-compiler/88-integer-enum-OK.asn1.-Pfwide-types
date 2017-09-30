@@ -41,15 +41,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
 	&asn_OP_INTEGER,
-	INTEGER_constraint,
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, INTEGER_constraint },
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };

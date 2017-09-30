@@ -38,9 +38,7 @@ static asn_TYPE_member_t asn_MBR_CommonType_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Type1,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "t1"
 		},
@@ -49,9 +47,7 @@ static asn_TYPE_member_t asn_MBR_CommonType_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_Type2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "t2"
 		},
@@ -74,13 +70,11 @@ asn_TYPE_descriptor_t asn_DEF_CommonType = {
 	"CommonType",
 	"CommonType",
 	&asn_OP_CHOICE,
-	CHOICE_constraint,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CHOICE_constraint },
 	asn_MBR_CommonType_1,
 	2,	/* Elements count */
 	&asn_SPC_CommonType_specs_1	/* Additional specs */
@@ -187,9 +181,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
-		.memb_constraints = memb_x_constraint_2,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_x_constraint_2 },
 		.default_value = 0,
 		.name = "x"
 		},
@@ -198,9 +190,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
-		.memb_constraints = memb_y_constraint_2,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_y_constraint_2 },
 		.default_value = 0,
 		.name = "y"
 		},
@@ -227,15 +217,13 @@ asn_TYPE_descriptor_t asn_DEF_anonType_2 = {
 	"anonType",
 	"anonType",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_anonType_tags_2,
 	sizeof(asn_DEF_anonType_tags_2)
 		/sizeof(asn_DEF_anonType_tags_2[0]) - 1, /* 1 */
 	asn_DEF_anonType_tags_2,	/* Same as above */
 	sizeof(asn_DEF_anonType_tags_2)
 		/sizeof(asn_DEF_anonType_tags_2[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_anonType_2,
 	2,	/* Elements count */
 	&asn_SPC_anonType_specs_2	/* Additional specs */
@@ -247,9 +235,7 @@ asn_TYPE_member_t asn_MBR_Type1_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_anonType_2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "anonType"
 		},
@@ -271,13 +257,11 @@ asn_TYPE_descriptor_t asn_DEF_Type1 = {
 	"Type1",
 	"Type1",
 	&asn_OP_CHOICE,
-	CHOICE_constraint,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CHOICE_constraint },
 	asn_MBR_Type1_1,
 	1,	/* Elements count */
 	&asn_SPC_Type1_specs_1	/* Additional specs */
@@ -384,9 +368,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
-		.memb_constraints = memb_x_constraint_2,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_x_constraint_2 },
 		.default_value = 0,
 		.name = "x"
 		},
@@ -395,9 +377,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
-		.memb_constraints = memb_y_constraint_2,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_y_constraint_2 },
 		.default_value = 0,
 		.name = "y"
 		},
@@ -424,15 +404,13 @@ asn_TYPE_descriptor_t asn_DEF_anonType_2 = {
 	"anonType",
 	"anonType",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_anonType_tags_2,
 	sizeof(asn_DEF_anonType_tags_2)
 		/sizeof(asn_DEF_anonType_tags_2[0]) - 1, /* 1 */
 	asn_DEF_anonType_tags_2,	/* Same as above */
 	sizeof(asn_DEF_anonType_tags_2)
 		/sizeof(asn_DEF_anonType_tags_2[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_anonType_2,
 	2,	/* Elements count */
 	&asn_SPC_anonType_specs_2	/* Additional specs */
@@ -444,9 +422,7 @@ asn_TYPE_member_t asn_MBR_Type2_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_anonType_2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "anonType"
 		},
@@ -468,13 +444,11 @@ asn_TYPE_descriptor_t asn_DEF_Type2 = {
 	"Type2",
 	"Type2",
 	&asn_OP_CHOICE,
-	CHOICE_constraint,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CHOICE_constraint },
 	asn_MBR_Type2_1,
 	1,	/* Elements count */
 	&asn_SPC_Type2_specs_1	/* Additional specs */

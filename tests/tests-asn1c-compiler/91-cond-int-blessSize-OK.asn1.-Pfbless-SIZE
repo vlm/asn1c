@@ -36,8 +36,7 @@ OK_Integer1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	/* Replace with underlying type checker */
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -54,15 +53,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer1 = {
 	"OK-Integer1",
 	"OK-Integer1",
 	&asn_OP_NativeInteger,
-	OK_Integer1_constraint,
 	asn_DEF_OK_Integer1_tags_1,
 	sizeof(asn_DEF_OK_Integer1_tags_1)
 		/sizeof(asn_DEF_OK_Integer1_tags_1[0]), /* 1 */
 	asn_DEF_OK_Integer1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer1_tags_1)
 		/sizeof(asn_DEF_OK_Integer1_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_Integer1_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -105,8 +102,7 @@ OK_Integer2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	/* Replace with underlying type checker */
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -123,15 +119,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer2 = {
 	"OK-Integer2",
 	"OK-Integer2",
 	&asn_OP_NativeInteger,
-	OK_Integer2_constraint,
 	asn_DEF_OK_Integer2_tags_1,
 	sizeof(asn_DEF_OK_Integer2_tags_1)
 		/sizeof(asn_DEF_OK_Integer2_tags_1[0]), /* 1 */
 	asn_DEF_OK_Integer2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer2_tags_1)
 		/sizeof(asn_DEF_OK_Integer2_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_Integer2_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -174,8 +168,7 @@ OK_Integer3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	/* Replace with underlying type checker */
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -192,15 +185,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer3 = {
 	"OK-Integer3",
 	"OK-Integer3",
 	&asn_OP_NativeInteger,
-	OK_Integer3_constraint,
 	asn_DEF_OK_Integer3_tags_1,
 	sizeof(asn_DEF_OK_Integer3_tags_1)
 		/sizeof(asn_DEF_OK_Integer3_tags_1[0]), /* 1 */
 	asn_DEF_OK_Integer3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer3_tags_1)
 		/sizeof(asn_DEF_OK_Integer3_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_Integer3_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -243,8 +234,7 @@ OK_Integer4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	/* Replace with underlying type checker */
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -261,15 +251,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_Integer4 = {
 	"OK-Integer4",
 	"OK-Integer4",
 	&asn_OP_NativeInteger,
-	OK_Integer4_constraint,
 	asn_DEF_OK_Integer4_tags_1,
 	sizeof(asn_DEF_OK_Integer4_tags_1)
 		/sizeof(asn_DEF_OK_Integer4_tags_1[0]), /* 1 */
 	asn_DEF_OK_Integer4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_Integer4_tags_1)
 		/sizeof(asn_DEF_OK_Integer4_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_Integer4_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -312,8 +300,7 @@ NO_Integer5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	/* Replace with underlying type checker */
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -330,15 +317,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_Integer5 = {
 	"NO-Integer5",
 	"NO-Integer5",
 	&asn_OP_NativeInteger,
-	NO_Integer5_constraint,
 	asn_DEF_NO_Integer5_tags_1,
 	sizeof(asn_DEF_NO_Integer5_tags_1)
 		/sizeof(asn_DEF_NO_Integer5_tags_1[0]), /* 1 */
 	asn_DEF_NO_Integer5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_Integer5_tags_1)
 		/sizeof(asn_DEF_NO_Integer5_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_Integer5_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };

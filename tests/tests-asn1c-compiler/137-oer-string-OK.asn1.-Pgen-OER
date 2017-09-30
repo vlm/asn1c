@@ -176,9 +176,7 @@ static asn_TYPE_member_t asn_MBR_unconstrained_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* No OER visible constraints */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "unc-ia5"
 		},
@@ -187,9 +185,7 @@ static asn_TYPE_member_t asn_MBR_unconstrained_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* No OER visible constraints */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "unc-utf8"
 		},
@@ -198,9 +194,7 @@ static asn_TYPE_member_t asn_MBR_unconstrained_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* No OER visible constraints */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "unc-universal"
 		},
@@ -227,15 +221,13 @@ asn_TYPE_descriptor_t asn_DEF_unconstrained_2 = {
 	"unconstrained",
 	"unconstrained",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_unconstrained_tags_2,
 	sizeof(asn_DEF_unconstrained_tags_2)
 		/sizeof(asn_DEF_unconstrained_tags_2[0]), /* 1 */
 	asn_DEF_unconstrained_tags_2,	/* Same as above */
 	sizeof(asn_DEF_unconstrained_tags_2)
 		/sizeof(asn_DEF_unconstrained_tags_2[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_unconstrained_2,
 	3,	/* Elements count */
 	&asn_SPC_unconstrained_specs_2	/* Additional specs */
@@ -247,9 +239,7 @@ static asn_TYPE_member_t asn_MBR_constrained_6[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
-		.memb_constraints = memb_con_ia5_constraint_6,
-		.oer_constraints = &asn_OER_memb_con_ia5_constr_7,
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = &asn_OER_memb_con_ia5_constr_7, .per_constraints = 0, .general_constraints =  memb_con_ia5_constraint_6 },
 		.default_value = 0,
 		.name = "con-ia5"
 		},
@@ -258,9 +248,7 @@ static asn_TYPE_member_t asn_MBR_constrained_6[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
-		.memb_constraints = memb_con_utf8_constraint_6,
-		.oer_constraints = &asn_OER_memb_con_utf8_constr_8,
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = &asn_OER_memb_con_utf8_constr_8, .per_constraints = 0, .general_constraints =  memb_con_utf8_constraint_6 },
 		.default_value = 0,
 		.name = "con-utf8"
 		},
@@ -269,9 +257,7 @@ static asn_TYPE_member_t asn_MBR_constrained_6[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
-		.memb_constraints = memb_con_universal_constraint_6,
-		.oer_constraints = &asn_OER_memb_con_universal_constr_9,
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = &asn_OER_memb_con_universal_constr_9, .per_constraints = 0, .general_constraints =  memb_con_universal_constraint_6 },
 		.default_value = 0,
 		.name = "con-universal"
 		},
@@ -298,15 +284,13 @@ asn_TYPE_descriptor_t asn_DEF_constrained_6 = {
 	"constrained",
 	"constrained",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_constrained_tags_6,
 	sizeof(asn_DEF_constrained_tags_6)
 		/sizeof(asn_DEF_constrained_tags_6[0]), /* 1 */
 	asn_DEF_constrained_tags_6,	/* Same as above */
 	sizeof(asn_DEF_constrained_tags_6)
 		/sizeof(asn_DEF_constrained_tags_6[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_constrained_6,
 	3,	/* Elements count */
 	&asn_SPC_constrained_specs_6	/* Additional specs */
@@ -318,9 +302,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_unconstrained_2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* No OER visible constraints */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "unconstrained"
 		},
@@ -329,9 +311,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_constrained_6,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* No OER visible constraints */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "constrained"
 		},
@@ -356,15 +336,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_T_1,
 	2,	/* Elements count */
 	&asn_SPC_T_specs_1	/* Additional specs */

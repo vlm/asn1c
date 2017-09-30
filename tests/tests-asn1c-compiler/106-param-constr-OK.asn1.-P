@@ -125,9 +125,7 @@ asn_TYPE_member_t asn_MBR_Narrow_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_narrow1_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_narrow1_constraint_1 },
 		.default_value = asn_DFL_2_set_3,	/* DEFAULT 3 */
 		.name = "narrow1"
 		},
@@ -136,9 +134,7 @@ asn_TYPE_member_t asn_MBR_Narrow_15P0_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_narrow2_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_narrow2_constraint_1 },
 		.default_value = 0,
 		.name = "narrow2"
 		},
@@ -147,9 +143,7 @@ asn_TYPE_member_t asn_MBR_Narrow_15P0_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = memb_narrow3_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_narrow3_constraint_1 },
 		.default_value = 0,
 		.name = "narrow3"
 		},
@@ -175,15 +169,13 @@ asn_TYPE_descriptor_t asn_DEF_Narrow_15P0 = {
 	"Narrow",
 	"Narrow",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Narrow_15P0_tags_1,
 	sizeof(asn_DEF_Narrow_15P0_tags_1)
 		/sizeof(asn_DEF_Narrow_15P0_tags_1[0]), /* 1 */
 	asn_DEF_Narrow_15P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Narrow_15P0_tags_1)
 		/sizeof(asn_DEF_Narrow_15P0_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Narrow_15P0_1,
 	3,	/* Elements count */
 	&asn_SPC_Narrow_15P0_specs_1	/* Additional specs */
@@ -225,15 +217,13 @@ asn_TYPE_descriptor_t asn_DEF_NarrowInteger = {
 	"NarrowInteger",
 	"NarrowInteger",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_NarrowInteger_tags_1,
 	sizeof(asn_DEF_NarrowInteger_tags_1)
 		/sizeof(asn_DEF_NarrowInteger_tags_1[0]), /* 1 */
 	asn_DEF_NarrowInteger_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NarrowInteger_tags_1)
 		/sizeof(asn_DEF_NarrowInteger_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Narrow_15P0_1,
 	3,	/* Elements count */
 	&asn_SPC_Narrow_15P0_specs_1	/* Additional specs */

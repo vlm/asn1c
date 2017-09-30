@@ -34,15 +34,13 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerUnlimited = {
 	"CN-IntegerUnlimited",
 	"CN-IntegerUnlimited",
 	&asn_OP_NativeInteger,
-	NativeInteger_constraint,
 	asn_DEF_CN_IntegerUnlimited_tags_1,
 	sizeof(asn_DEF_CN_IntegerUnlimited_tags_1)
 		/sizeof(asn_DEF_CN_IntegerUnlimited_tags_1[0]), /* 1 */
 	asn_DEF_CN_IntegerUnlimited_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerUnlimited_tags_1)
 		/sizeof(asn_DEF_CN_IntegerUnlimited_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NativeInteger_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -85,8 +83,7 @@ CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		/* Nothing is here. See below */
 	}
 	
-	/* Replace with underlying type checker */
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
@@ -103,15 +100,13 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinMax = {
 	"CN-IntegerMinMax",
 	"CN-IntegerMinMax",
 	&asn_OP_NativeInteger,
-	CN_IntegerMinMax_constraint,
 	asn_DEF_CN_IntegerMinMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinMax_tags_1[0]), /* 1 */
 	asn_DEF_CN_IntegerMinMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerMinMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinMax_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CN_IntegerMinMax_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -177,15 +172,13 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerMinLow = {
 	"CN-IntegerMinLow",
 	"CN-IntegerMinLow",
 	&asn_OP_NativeInteger,
-	CN_IntegerMinLow_constraint,
 	asn_DEF_CN_IntegerMinLow_tags_1,
 	sizeof(asn_DEF_CN_IntegerMinLow_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinLow_tags_1[0]), /* 1 */
 	asn_DEF_CN_IntegerMinLow_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerMinLow_tags_1)
 		/sizeof(asn_DEF_CN_IntegerMinLow_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CN_IntegerMinLow_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -257,15 +250,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerMinHigh = {
 	"NO-IntegerMinHigh",
 	"NO-IntegerMinHigh",
 	&asn_OP_INTEGER,
-	NO_IntegerMinHigh_constraint,
 	asn_DEF_NO_IntegerMinHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerMinHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerMinHigh_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerMinHigh_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerMinHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerMinHigh_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_IntegerMinHigh_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -336,15 +327,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowHigh = {
 	"NO-IntegerLowHigh",
 	"NO-IntegerLowHigh",
 	&asn_OP_NativeInteger,
-	NO_IntegerLowHigh_constraint,
 	asn_DEF_NO_IntegerLowHigh_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowHigh_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerLowHigh_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerLowHigh_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowHigh_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_IntegerLowHigh_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerLowHigh_specs_1	/* Additional specs */
 };
@@ -415,15 +404,13 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerLowMax = {
 	"CN-IntegerLowMax",
 	"CN-IntegerLowMax",
 	&asn_OP_NativeInteger,
-	CN_IntegerLowMax_constraint,
 	asn_DEF_CN_IntegerLowMax_tags_1,
 	sizeof(asn_DEF_CN_IntegerLowMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerLowMax_tags_1[0]), /* 1 */
 	asn_DEF_CN_IntegerLowMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerLowMax_tags_1)
 		/sizeof(asn_DEF_CN_IntegerLowMax_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CN_IntegerLowMax_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_CN_IntegerLowMax_specs_1	/* Additional specs */
 };
@@ -495,15 +482,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerHighMax = {
 	"NO-IntegerHighMax",
 	"NO-IntegerHighMax",
 	&asn_OP_INTEGER,
-	NO_IntegerHighMax_constraint,
 	asn_DEF_NO_IntegerHighMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerHighMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerHighMax_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerHighMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerHighMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerHighMax_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_IntegerHighMax_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -575,15 +560,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerLowestMax = {
 	"NO-IntegerLowestMax",
 	"NO-IntegerLowestMax",
 	&asn_OP_INTEGER,
-	NO_IntegerLowestMax_constraint,
 	asn_DEF_NO_IntegerLowestMax_tags_1,
 	sizeof(asn_DEF_NO_IntegerLowestMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowestMax_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerLowestMax_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerLowestMax_tags_1)
 		/sizeof(asn_DEF_NO_IntegerLowestMax_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_IntegerLowestMax_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -654,15 +637,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutRange = {
 	"NO-IntegerOutRange",
 	"NO-IntegerOutRange",
 	&asn_OP_NativeInteger,
-	NO_IntegerOutRange_constraint,
 	asn_DEF_NO_IntegerOutRange_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutRange_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutRange_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerOutRange_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerOutRange_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutRange_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_IntegerOutRange_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerOutRange_specs_1	/* Additional specs */
 };
@@ -733,15 +714,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerOutValue = {
 	"NO-IntegerOutValue",
 	"NO-IntegerOutValue",
 	&asn_OP_NativeInteger,
-	NO_IntegerOutValue_constraint,
 	asn_DEF_NO_IntegerOutValue_tags_1,
 	sizeof(asn_DEF_NO_IntegerOutValue_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutValue_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerOutValue_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerOutValue_tags_1)
 		/sizeof(asn_DEF_NO_IntegerOutValue_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_IntegerOutValue_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerOutValue_specs_1	/* Additional specs */
 };
@@ -807,15 +786,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange1 = {
 	"OK-IntegerInRange1",
 	"OK-IntegerInRange1",
 	&asn_OP_NativeInteger,
-	OK_IntegerInRange1_constraint,
 	asn_DEF_OK_IntegerInRange1_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange1_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange1_tags_1[0]), /* 1 */
 	asn_DEF_OK_IntegerInRange1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange1_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange1_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_IntegerInRange1_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -881,15 +858,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange2 = {
 	"OK-IntegerInRange2",
 	"OK-IntegerInRange2",
 	&asn_OP_NativeInteger,
-	OK_IntegerInRange2_constraint,
 	asn_DEF_OK_IntegerInRange2_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange2_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange2_tags_1[0]), /* 1 */
 	asn_DEF_OK_IntegerInRange2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange2_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange2_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_IntegerInRange2_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -955,15 +930,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange3 = {
 	"OK-IntegerInRange3",
 	"OK-IntegerInRange3",
 	&asn_OP_NativeInteger,
-	OK_IntegerInRange3_constraint,
 	asn_DEF_OK_IntegerInRange3_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange3_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange3_tags_1[0]), /* 1 */
 	asn_DEF_OK_IntegerInRange3_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange3_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange3_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_IntegerInRange3_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1029,15 +1002,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange4 = {
 	"OK-IntegerInRange4",
 	"OK-IntegerInRange4",
 	&asn_OP_NativeInteger,
-	OK_IntegerInRange4_constraint,
 	asn_DEF_OK_IntegerInRange4_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange4_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange4_tags_1[0]), /* 1 */
 	asn_DEF_OK_IntegerInRange4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange4_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange4_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_IntegerInRange4_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1103,15 +1074,13 @@ asn_TYPE_descriptor_t asn_DEF_OK_IntegerInRange5 = {
 	"OK-IntegerInRange5",
 	"OK-IntegerInRange5",
 	&asn_OP_NativeInteger,
-	OK_IntegerInRange5_constraint,
 	asn_DEF_OK_IntegerInRange5_tags_1,
 	sizeof(asn_DEF_OK_IntegerInRange5_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange5_tags_1[0]), /* 1 */
 	asn_DEF_OK_IntegerInRange5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_OK_IntegerInRange5_tags_1)
 		/sizeof(asn_DEF_OK_IntegerInRange5_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, OK_IntegerInRange5_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -1173,15 +1142,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerInRange6 = {
 	"NO-IntegerInRange6",
 	"NO-IntegerInRange6",
 	&asn_OP_NativeInteger,
-	NO_IntegerInRange6_constraint,
 	asn_DEF_NO_IntegerInRange6_tags_1,
 	sizeof(asn_DEF_NO_IntegerInRange6_tags_1)
 		/sizeof(asn_DEF_NO_IntegerInRange6_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerInRange6_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerInRange6_tags_1)
 		/sizeof(asn_DEF_NO_IntegerInRange6_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NO_IntegerInRange6_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_NO_IntegerInRange6_specs_1	/* Additional specs */
 };
@@ -1229,15 +1196,13 @@ asn_TYPE_descriptor_t asn_DEF_CN_IntegerEnumerated1 = {
 	"CN-IntegerEnumerated1",
 	"CN-IntegerEnumerated1",
 	&asn_OP_NativeInteger,
-	NativeInteger_constraint,
 	asn_DEF_CN_IntegerEnumerated1_tags_1,
 	sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1)
 		/sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1[0]), /* 1 */
 	asn_DEF_CN_IntegerEnumerated1_tags_1,	/* Same as above */
 	sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1)
 		/sizeof(asn_DEF_CN_IntegerEnumerated1_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NativeInteger_constraint },
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };
@@ -1285,15 +1250,13 @@ asn_TYPE_descriptor_t asn_DEF_NO_IntegerEnumerated2 = {
 	"NO-IntegerEnumerated2",
 	"NO-IntegerEnumerated2",
 	&asn_OP_INTEGER,
-	INTEGER_constraint,
 	asn_DEF_NO_IntegerEnumerated2_tags_1,
 	sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1)
 		/sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1[0]), /* 1 */
 	asn_DEF_NO_IntegerEnumerated2_tags_1,	/* Same as above */
 	sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1)
 		/sizeof(asn_DEF_NO_IntegerEnumerated2_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, INTEGER_constraint },
 	0, 0,	/* Defined elsewhere */
 	0	/* No specifics */
 };

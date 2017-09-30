@@ -76,9 +76,7 @@ asn_TYPE_member_t asn_MBR_Flag_15P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = asn_DFL_2_set_5,	/* DEFAULT 5 */
 		.name = "field"
 		},
@@ -102,15 +100,13 @@ asn_TYPE_descriptor_t asn_DEF_Flag_15P0 = {
 	"Flag",
 	"Flag",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Flag_15P0_tags_1,
 	sizeof(asn_DEF_Flag_15P0_tags_1)
 		/sizeof(asn_DEF_Flag_15P0_tags_1[0]), /* 1 */
 	asn_DEF_Flag_15P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Flag_15P0_tags_1)
 		/sizeof(asn_DEF_Flag_15P0_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Flag_15P0_1,
 	1,	/* Elements count */
 	&asn_SPC_Flag_15P0_specs_1	/* Additional specs */
@@ -161,15 +157,13 @@ asn_TYPE_descriptor_t asn_DEF_field_7 = {
 	"field",
 	"field",
 	&asn_OP_NativeEnumerated,
-	NativeEnumerated_constraint,
 	asn_DEF_field_tags_7,
 	sizeof(asn_DEF_field_tags_7)
 		/sizeof(asn_DEF_field_tags_7[0]), /* 1 */
 	asn_DEF_field_tags_7,	/* Same as above */
 	sizeof(asn_DEF_field_tags_7)
 		/sizeof(asn_DEF_field_tags_7[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, NativeEnumerated_constraint },
 	0, 0,	/* Defined elsewhere */
 	&asn_SPC_field_specs_7	/* Additional specs */
 };
@@ -180,9 +174,7 @@ asn_TYPE_member_t asn_MBR_Flag_15P1_6[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_field_7,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = asn_DFL_7_set_5,	/* DEFAULT 5 */
 		.name = "field"
 		},
@@ -206,15 +198,13 @@ asn_TYPE_descriptor_t asn_DEF_Flag_15P1 = {
 	"Flag",
 	"Flag",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Flag_15P1_tags_6,
 	sizeof(asn_DEF_Flag_15P1_tags_6)
 		/sizeof(asn_DEF_Flag_15P1_tags_6[0]), /* 1 */
 	asn_DEF_Flag_15P1_tags_6,	/* Same as above */
 	sizeof(asn_DEF_Flag_15P1_tags_6)
 		/sizeof(asn_DEF_Flag_15P1_tags_6[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Flag_15P1_6,
 	1,	/* Elements count */
 	&asn_SPC_Flag_15P1_specs_6	/* Additional specs */
@@ -256,15 +246,13 @@ asn_TYPE_descriptor_t asn_DEF_IntegerColorFlag = {
 	"IntegerColorFlag",
 	"IntegerColorFlag",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_IntegerColorFlag_tags_1,
 	sizeof(asn_DEF_IntegerColorFlag_tags_1)
 		/sizeof(asn_DEF_IntegerColorFlag_tags_1[0]), /* 1 */
 	asn_DEF_IntegerColorFlag_tags_1,	/* Same as above */
 	sizeof(asn_DEF_IntegerColorFlag_tags_1)
 		/sizeof(asn_DEF_IntegerColorFlag_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Flag_15P0_1,
 	1,	/* Elements count */
 	&asn_SPC_Flag_15P0_specs_1	/* Additional specs */
@@ -306,15 +294,13 @@ asn_TYPE_descriptor_t asn_DEF_EnumeratedColorFlag = {
 	"EnumeratedColorFlag",
 	"EnumeratedColorFlag",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_EnumeratedColorFlag_tags_1,
 	sizeof(asn_DEF_EnumeratedColorFlag_tags_1)
 		/sizeof(asn_DEF_EnumeratedColorFlag_tags_1[0]), /* 1 */
 	asn_DEF_EnumeratedColorFlag_tags_1,	/* Same as above */
 	sizeof(asn_DEF_EnumeratedColorFlag_tags_1)
 		/sizeof(asn_DEF_EnumeratedColorFlag_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Flag_15P1_6,
 	1,	/* Elements count */
 	&asn_SPC_Flag_15P1_specs_6	/* Additional specs */

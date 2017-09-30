@@ -98,15 +98,13 @@ asn_TYPE_descriptor_t asn_DEF_class_4 = {
 	"class",
 	"class",
 	&asn_OP_SET,
-	SET_constraint,
 	asn_DEF_class_tags_4,
 	sizeof(asn_DEF_class_tags_4)
 		/sizeof(asn_DEF_class_tags_4[0]), /* 1 */
 	asn_DEF_class_tags_4,	/* Same as above */
 	sizeof(asn_DEF_class_tags_4)
 		/sizeof(asn_DEF_class_tags_4[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_constraint },
 	0, 0,	/* No members */
 	&asn_SPC_class_specs_4	/* Additional specs */
 };
@@ -117,9 +115,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "int"
 		},
@@ -128,9 +124,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
-		.memb_constraints = memb_char_constraint_1,
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_char_constraint_1 },
 		.default_value = 0,
 		.name = "char"
 		},
@@ -139,9 +133,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_class_4,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "class"
 		},
@@ -150,9 +142,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_REAL,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "double"
 		},
@@ -179,15 +169,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_T_1,
 	4,	/* Elements count */
 	&asn_SPC_T_specs_1	/* Additional specs */

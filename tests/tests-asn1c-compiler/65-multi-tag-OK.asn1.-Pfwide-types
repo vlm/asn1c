@@ -45,15 +45,13 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 	"T1",
 	"T1",
 	&asn_OP_REAL,
-	REAL_constraint,
 	asn_DEF_T1_tags_1,
 	sizeof(asn_DEF_T1_tags_1)
 		/sizeof(asn_DEF_T1_tags_1[0]), /* 4 */
 	asn_DEF_T1_all_tags_1,
 	sizeof(asn_DEF_T1_all_tags_1)
 		/sizeof(asn_DEF_T1_all_tags_1[0]), /* 6 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, REAL_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -103,15 +101,13 @@ asn_TYPE_descriptor_t asn_DEF_T2 = {
 	"T2",
 	"T2",
 	&asn_OP_REAL,
-	REAL_constraint,
 	asn_DEF_T2_tags_1,
 	sizeof(asn_DEF_T2_tags_1)
 		/sizeof(asn_DEF_T2_tags_1[0]), /* 3 */
 	asn_DEF_T2_all_tags_1,
 	sizeof(asn_DEF_T2_all_tags_1)
 		/sizeof(asn_DEF_T2_all_tags_1[0]), /* 5 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, REAL_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -159,15 +155,13 @@ asn_TYPE_descriptor_t asn_DEF_T3 = {
 	"T3",
 	"T3",
 	&asn_OP_REAL,
-	REAL_constraint,
 	asn_DEF_T3_tags_1,
 	sizeof(asn_DEF_T3_tags_1)
 		/sizeof(asn_DEF_T3_tags_1[0]), /* 2 */
 	asn_DEF_T3_all_tags_1,
 	sizeof(asn_DEF_T3_all_tags_1)
 		/sizeof(asn_DEF_T3_all_tags_1[0]), /* 4 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, REAL_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -210,15 +204,13 @@ asn_TYPE_descriptor_t asn_DEF_T4 = {
 	"T4",
 	"T4",
 	&asn_OP_REAL,
-	REAL_constraint,
 	asn_DEF_T4_tags_1,
 	sizeof(asn_DEF_T4_tags_1)
 		/sizeof(asn_DEF_T4_tags_1[0]) - 1, /* 2 */
 	asn_DEF_T4_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T4_tags_1)
 		/sizeof(asn_DEF_T4_tags_1[0]), /* 3 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, REAL_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -260,15 +252,13 @@ asn_TYPE_descriptor_t asn_DEF_T5 = {
 	"T5",
 	"T5",
 	&asn_OP_REAL,
-	REAL_constraint,
 	asn_DEF_T5_tags_1,
 	sizeof(asn_DEF_T5_tags_1)
 		/sizeof(asn_DEF_T5_tags_1[0]) - 1, /* 1 */
 	asn_DEF_T5_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T5_tags_1)
 		/sizeof(asn_DEF_T5_tags_1[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, REAL_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -309,15 +299,13 @@ asn_TYPE_descriptor_t asn_DEF_T6 = {
 	"T6",
 	"T6",
 	&asn_OP_REAL,
-	REAL_constraint,
 	asn_DEF_T6_tags_1,
 	sizeof(asn_DEF_T6_tags_1)
 		/sizeof(asn_DEF_T6_tags_1[0]), /* 1 */
 	asn_DEF_T6_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T6_tags_1)
 		/sizeof(asn_DEF_T6_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, REAL_constraint },
 	0, 0,	/* No members */
 	0	/* No specifics */
 };
@@ -360,15 +348,13 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
 	"T",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_T_tags_1,
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]) - 2, /* 1 */
 	asn_DEF_T_tags_1,	/* Same as above */
 	sizeof(asn_DEF_T_tags_1)
 		/sizeof(asn_DEF_T_tags_1[0]), /* 3 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Ts_1,
 	3,	/* Elements count */
 	&asn_SPC_Ts_specs_1	/* Additional specs */
@@ -406,9 +392,7 @@ asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_T2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "m1"
 		},
@@ -417,9 +401,7 @@ asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_T3,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "m2"
 		},
@@ -428,9 +410,7 @@ asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_T3,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "m3"
 		},
@@ -457,15 +437,13 @@ asn_TYPE_descriptor_t asn_DEF_Ts = {
 	"Ts",
 	"Ts",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Ts_tags_1,
 	sizeof(asn_DEF_Ts_tags_1)
 		/sizeof(asn_DEF_Ts_tags_1[0]) - 1, /* 1 */
 	asn_DEF_Ts_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Ts_tags_1)
 		/sizeof(asn_DEF_Ts_tags_1[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Ts_1,
 	3,	/* Elements count */
 	&asn_SPC_Ts_specs_1	/* Additional specs */

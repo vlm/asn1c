@@ -57,9 +57,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_16P0_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_REAL,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "signed"
 		},
@@ -83,15 +81,13 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_16P0 = {
 	"SIGNED",
 	"SIGNED",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_SIGNED_16P0_tags_1,
 	sizeof(asn_DEF_SIGNED_16P0_tags_1)
 		/sizeof(asn_DEF_SIGNED_16P0_tags_1[0]), /* 1 */
 	asn_DEF_SIGNED_16P0_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SIGNED_16P0_tags_1)
 		/sizeof(asn_DEF_SIGNED_16P0_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SIGNED_16P0_1,
 	1,	/* Elements count */
 	&asn_SPC_SIGNED_16P0_specs_1	/* Additional specs */
@@ -103,9 +99,7 @@ static asn_TYPE_member_t asn_MBR_signed_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "a"
 		},
@@ -136,15 +130,13 @@ asn_TYPE_descriptor_t asn_DEF_signed_4 = {
 	"signed",
 	"signed",
 	&asn_OP_SET,
-	SET_constraint,
 	asn_DEF_signed_tags_4,
 	sizeof(asn_DEF_signed_tags_4)
 		/sizeof(asn_DEF_signed_tags_4[0]), /* 1 */
 	asn_DEF_signed_tags_4,	/* Same as above */
 	sizeof(asn_DEF_signed_tags_4)
 		/sizeof(asn_DEF_signed_tags_4[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_constraint },
 	asn_MBR_signed_4,
 	1,	/* Elements count */
 	&asn_SPC_signed_specs_4	/* Additional specs */
@@ -156,9 +148,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_16P1_3[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_signed_4,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "signed"
 		},
@@ -182,15 +172,13 @@ asn_TYPE_descriptor_t asn_DEF_SIGNED_16P1 = {
 	"SIGNED",
 	"SIGNED",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_SIGNED_16P1_tags_3,
 	sizeof(asn_DEF_SIGNED_16P1_tags_3)
 		/sizeof(asn_DEF_SIGNED_16P1_tags_3[0]), /* 1 */
 	asn_DEF_SIGNED_16P1_tags_3,	/* Same as above */
 	sizeof(asn_DEF_SIGNED_16P1_tags_3)
 		/sizeof(asn_DEF_SIGNED_16P1_tags_3[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SIGNED_16P1_3,
 	1,	/* Elements count */
 	&asn_SPC_SIGNED_16P1_specs_3	/* Additional specs */
@@ -232,15 +220,13 @@ asn_TYPE_descriptor_t asn_DEF_SignedREAL = {
 	"SignedREAL",
 	"SignedREAL",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_SignedREAL_tags_1,
 	sizeof(asn_DEF_SignedREAL_tags_1)
 		/sizeof(asn_DEF_SignedREAL_tags_1[0]), /* 1 */
 	asn_DEF_SignedREAL_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SignedREAL_tags_1)
 		/sizeof(asn_DEF_SignedREAL_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SIGNED_16P0_1,
 	1,	/* Elements count */
 	&asn_SPC_SIGNED_16P0_specs_1	/* Additional specs */
@@ -282,15 +268,13 @@ asn_TYPE_descriptor_t asn_DEF_SignedSET = {
 	"SignedSET",
 	"SignedSET",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_SignedSET_tags_1,
 	sizeof(asn_DEF_SignedSET_tags_1)
 		/sizeof(asn_DEF_SignedSET_tags_1[0]), /* 1 */
 	asn_DEF_SignedSET_tags_1,	/* Same as above */
 	sizeof(asn_DEF_SignedSET_tags_1)
 		/sizeof(asn_DEF_SignedSET_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_SIGNED_16P1_3,
 	1,	/* Elements count */
 	&asn_SPC_SIGNED_16P1_specs_3	/* Additional specs */

@@ -35,9 +35,7 @@ asn_TYPE_member_t asn_MBR_Forest_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Tree,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -54,15 +52,13 @@ asn_TYPE_descriptor_t asn_DEF_Forest = {
 	"Forest",
 	"Forest",
 	&asn_OP_SET_OF,
-	SET_OF_constraint,
 	asn_DEF_Forest_tags_1,
 	sizeof(asn_DEF_Forest_tags_1)
 		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
 	asn_DEF_Forest_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Forest_tags_1)
 		/sizeof(asn_DEF_Forest_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_OF_constraint },
 	asn_MBR_Forest_1,
 	1,	/* Single element */
 	&asn_SPC_Forest_specs_1	/* Additional specs */
@@ -98,9 +94,7 @@ asn_TYPE_member_t asn_MBR_Tree_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "height"
 		},
@@ -109,9 +103,7 @@ asn_TYPE_member_t asn_MBR_Tree_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "width"
 		},
@@ -136,15 +128,13 @@ asn_TYPE_descriptor_t asn_DEF_Tree = {
 	"Tree",
 	"Tree",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Tree_tags_1,
 	sizeof(asn_DEF_Tree_tags_1)
 		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
 	asn_DEF_Tree_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Tree_tags_1)
 		/sizeof(asn_DEF_Tree_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Tree_1,
 	2,	/* Elements count */
 	&asn_SPC_Tree_specs_1	/* Additional specs */
@@ -249,9 +239,7 @@ static asn_TYPE_member_t asn_MBR_trees_2[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Forest,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -270,15 +258,13 @@ asn_TYPE_descriptor_t asn_DEF_trees_2 = {
 	"trees",
 	"trees",
 	&asn_OP_SET_OF,
-	SET_OF_constraint,
 	asn_DEF_trees_tags_2,
 	sizeof(asn_DEF_trees_tags_2)
 		/sizeof(asn_DEF_trees_tags_2[0]) - 1, /* 1 */
 	asn_DEF_trees_tags_2,	/* Same as above */
 	sizeof(asn_DEF_trees_tags_2)
 		/sizeof(asn_DEF_trees_tags_2[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_OF_constraint },
 	asn_MBR_trees_2,
 	1,	/* Single element */
 	&asn_SPC_trees_specs_2	/* Additional specs */
@@ -290,9 +276,7 @@ static asn_TYPE_member_t asn_MBR_Member_5[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_BIT_STRING,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "cup-of-coffee"
 		},
@@ -317,15 +301,13 @@ asn_TYPE_descriptor_t asn_DEF_Member_5 = {
 	"SEQUENCE",
 	"SEQUENCE",
 	&asn_OP_SEQUENCE,
-	SEQUENCE_constraint,
 	asn_DEF_Member_tags_5,
 	sizeof(asn_DEF_Member_tags_5)
 		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
 	asn_DEF_Member_tags_5,	/* Same as above */
 	sizeof(asn_DEF_Member_tags_5)
 		/sizeof(asn_DEF_Member_tags_5[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SEQUENCE_constraint },
 	asn_MBR_Member_5,
 	1,	/* Elements count */
 	&asn_SPC_Member_specs_5	/* Additional specs */
@@ -337,9 +319,7 @@ static asn_TYPE_member_t asn_MBR_anything_4[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_Member_5,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = ""
 		},
@@ -358,15 +338,13 @@ asn_TYPE_descriptor_t asn_DEF_anything_4 = {
 	"anything",
 	"anything",
 	&asn_OP_SET_OF,
-	SET_OF_constraint,
 	asn_DEF_anything_tags_4,
 	sizeof(asn_DEF_anything_tags_4)
 		/sizeof(asn_DEF_anything_tags_4[0]) - 1, /* 1 */
 	asn_DEF_anything_tags_4,	/* Same as above */
 	sizeof(asn_DEF_anything_tags_4)
 		/sizeof(asn_DEF_anything_tags_4[0]), /* 2 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_OF_constraint },
 	asn_MBR_anything_4,
 	1,	/* Single element */
 	&asn_SPC_anything_specs_4	/* Additional specs */
@@ -378,9 +356,7 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "a"
 		},
@@ -389,9 +365,7 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.tag_mode = -1,	/* IMPLICIT tag at current level */
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "b"
 		},
@@ -415,13 +389,11 @@ asn_TYPE_descriptor_t asn_DEF_other_9 = {
 	"other",
 	"other",
 	&asn_OP_CHOICE,
-	CHOICE_constraint,
 	0,	/* No effective tags (pointer) */
 	0,	/* No effective tags (count) */
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, CHOICE_constraint },
 	asn_MBR_other_9,
 	2,	/* Elements count */
 	&asn_SPC_other_specs_9	/* Additional specs */
@@ -433,9 +405,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_trees_2,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "trees"
 		},
@@ -444,9 +414,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_anything_4,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "anything"
 		},
@@ -455,9 +423,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.tag_mode = 0,
 		.type = &asn_DEF_other_9,
 		.type_selector = 0,
-		.memb_constraints = 0,	/* Defer constraints checking to the member type */
-		.oer_constraints = 0,	/* OER is not compiled, use -gen-OER */
-		.per_constraints = 0,	/* PER is not compiled, use -gen-PER */
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		.default_value = 0,
 		.name = "other"
 		},
@@ -495,15 +461,13 @@ asn_TYPE_descriptor_t asn_DEF_Stuff = {
 	"Stuff",
 	"Stuff",
 	&asn_OP_SET,
-	SET_constraint,
 	asn_DEF_Stuff_tags_1,
 	sizeof(asn_DEF_Stuff_tags_1)
 		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
 	asn_DEF_Stuff_tags_1,	/* Same as above */
 	sizeof(asn_DEF_Stuff_tags_1)
 		/sizeof(asn_DEF_Stuff_tags_1[0]), /* 1 */
-	0,	/* No OER visible constraints */
-	0,	/* No PER visible constraints */
+	{ 0, 0, SET_constraint },
 	asn_MBR_Stuff_1,
 	3,	/* Elements count */
 	&asn_SPC_Stuff_specs_1	/* Additional specs */
