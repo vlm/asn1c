@@ -85,6 +85,7 @@ srandomdev(void) {
 
 #else   /* !JUNKTEST */
 #define    JUNKOPT
+#define    RANDOPT
 #endif  /* JUNKTEST */
 
 /* Debug output function */
@@ -432,6 +433,7 @@ main(int ac, char *av[]) {
             /*
              * Decode the encoded structure from file.
              */
+#ifdef  JUNKTEST
             if(isyntax == ATS_RANDOM) {
                 structure = NULL;
                 if(asn_random_fill(pduType, &structure, random_max_size) != 0) {
@@ -442,9 +444,12 @@ main(int ac, char *av[]) {
                     errno = EINVAL;
                 }
             } else {
+#endif
                 structure = data_decode_from_file(isyntax, pduType, file, name,
                                                   suggested_bufsize, first_pdu);
+#ifdef  JUNKTEST
             }
+#endif
             if(!structure) {
                 if(errno) {
                     /* Error message is already printed */
