@@ -3,7 +3,7 @@ GENERAL INFORMATION
 ===================
 
 The LDAPv3 (Lightweight Directory Access Protocol) PDU decoder.
-Invoking `make` will compile the ASN.1 specifications from the rfc4211.txt
+Invoking `make` will compile the ASN.1 specifications from the rfc4511.txt
 in the above directory.
 
 This LDAP decoder has been successfully tested against the PROTOS c06-ldapv3
