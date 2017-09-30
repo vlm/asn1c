@@ -8,8 +8,8 @@
 set -e
 
 if [ "x$1" = "x" ]; then
-	echo "Usage: $0 <check-NN.c>"
-	exit
+	echo "Usage: $0 check-src/<check-NN.c>"
+	exit 1
 fi
 
 srcdir="${srcdir:-.}"
