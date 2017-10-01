@@ -437,9 +437,7 @@ main(int ac, char *av[]) {
             if(isyntax == ATS_RANDOM) {
                 structure = NULL;
                 if(asn_random_fill(pduType, &structure, random_max_size) != 0) {
-                    fprintf(stderr,
-                            "Cannot generate a random value.\n",
-                            random_max_size);
+                    fprintf(stderr, "Cannot generate a random value.\n");
                     assert(structure == NULL);
                     errno = EINVAL;
                 }
