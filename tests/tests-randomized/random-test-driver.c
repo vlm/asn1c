@@ -135,6 +135,7 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, i
         exit(2);
     }
 
+    size_t generated_ok = 0;
     for(int i = 0; i < iterations; i++) {
         T_t *structure = 0;
         FILE *f;
@@ -176,6 +177,13 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, i
         }
 
         ASN_STRUCT_FREE(asn_DEF_T, structure);
+        generated_ok++;
+    }
+
+    if(!generated_ok) {
+        fprintf(stderr, "Requested to generate %d values, but failed.\n",
+                iterations);
+        exit(EX_SOFTWARE);
     }
 
 }
