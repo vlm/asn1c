@@ -6,15 +6,16 @@ dist_check_SCRIPTS = check-bundles.sh
 #code coverage data for the tests executables
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
 
-TESTS_ENVIRONMENT= \
-				   CC="${CC}" \
-				   CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}" \
-				   LDFLAGS="${LDFLAGS}" \
-				   LIBFUZZER_CFLAGS="${LIBFUZZER_CFLAGS}" \
-				   ASAN_ENV_FLAGS="@ASAN_ENV_FLAGS@" \
-				   srcdir=${srcdir} \
-				   abs_top_srcdir=${abs_top_srcdir} \
-				   abs_top_builddir=${abs_top_builddir}
+TESTS_ENVIRONMENT=                          \
+    CC="${CC}"                              \
+    CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}"  \
+    LDFLAGS="${LDFLAGS}"                    \
+    LIBFUZZER_CFLAGS="${LIBFUZZER_CFLAGS}"  \
+    ASAN_ENV_FLAGS="@ASAN_ENV_FLAGS@"       \
+    srcdir=${srcdir}                        \
+    abs_top_srcdir=${abs_top_srcdir}        \
+    abs_top_builddir=${abs_top_builddir}
+
 
 TESTS = $(dist_check_SCRIPTS)
 
