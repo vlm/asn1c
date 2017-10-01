@@ -6,12 +6,72 @@
 #include <sys/stat.h>
 #include <sysexits.h>
 
+#ifdef ASN1_TEXT
+#define STRINGIFY(x)    #x
+#define ASN1_STR    STRINGIFY(ASN1_TEXT)
+#else
+#define ASN1_STR    "T"
+#endif
+
+static const struct encoding_map {
+    const char *name;
+    const char *dir_name;
+    enum asn_transfer_syntax syntax;
+} encodings[] = {
+    {"DER", "der", ATS_DER},
+    {"OER", "oer", ATS_CANONICAL_OER},
+    {"UPER", "uper", ATS_UNALIGNED_CANONICAL_PER},
+    {"XER", "xer", ATS_CANONICAL_XER},
+};
+
+static enum asn_transfer_syntax
+lookup_syntax(const char *name) {
+    if(name) {
+        for(size_t i = 0; i < sizeof(encodings) / sizeof(encodings[0]); i++) {
+            struct encoding_map enc = encodings[i];
+            if(strcasecmp(name, enc.name) == 0) {
+                return enc.syntax;
+            }
+        }
+    }
+    return ATS_INVALID;
+}
+
+
 #ifdef  ENABLE_LIBFUZZER
+
+static int initialized;
+static enum asn_transfer_syntax syntax;
+static void __attribute__((constructor)) initialize() {
+    initialized = 1;
+    const char *data_dir = getenv("ASN1_DATA_DIR");
+    if(data_dir && strrchr(data_dir, '/')) {
+        data_dir = strrchr(data_dir, '/') + 1;
+    }
+    syntax = lookup_syntax(data_dir);
+    if(syntax == ATS_INVALID) {
+        fprintf(stderr,
+                "Expected ASN1_DATA_DIR={der,oer,uper,xer} environment "
+                "variable.\n");
+        exit(EX_UNAVAILABLE);
+    }
+}
 
 int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size);
 
 int
 LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+    if(!initialized) exit(0);
+
+    /*
+     * Try to decode whatever garbage that comes in Data/Size.
+     * The idea is that we should not crash, and we should not leak memory,
+     * no matter what garbage we're dealing with.
+     */
+    T_t *structure = 0;
+    (void)asn_decode(0, syntax, &asn_DEF_T, (void **)&structure, Data, Size);
+    ASN_STRUCT_FREE(asn_DEF_T, structure);
+
     return 0;
 }
 
@@ -35,27 +95,6 @@ usage(const char *progname) {
             progname);
 }
 
-static const struct encoding_map {
-    const char *name;
-    enum asn_transfer_syntax syntax;
-} encodings[] = {
-    {"der", ATS_DER},
-    {"oer", ATS_CANONICAL_OER},
-    {"uper", ATS_UNALIGNED_CANONICAL_PER},
-    {"xer", ATS_CANONICAL_XER},
-};
-
-static enum asn_transfer_syntax
-lookup_encoding(const char *name) {
-    for(size_t i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
-        struct encoding_map enc = encodings[i];
-        if(strcasecmp(name, enc.name) == 0) {
-            return enc.syntax;
-        }
-    }
-    return ATS_INVALID;
-}
-
 static int
 file_write_cb(const void *data, size_t size, void *key) {
     return fwrite(data, 1, size, (FILE *)key) == size ? 0 : -1;
@@ -71,7 +110,7 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, i
         struct encoding_map enc = encodings[i];
         if(enc.syntax == syntax) {
             int r = snprintf(dirname, sizeof(dirname), "%s/%s", top_dirname,
-                             enc.name);
+                             enc.dir_name);
             if(r >= sizeof(dirname) - sizeof("filename.bin")) {
                 fprintf(stderr, "Too long filenames\n");
                 exit(EX_SOFTWARE);
@@ -172,6 +211,14 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
         for(;;) {
             er = asn_encode_to_buffer(
                 0, syntax, &asn_DEF_T, structure, buffer, buffer_size);
+            if(er.encoded == -1) {
+                fprintf(stderr, "Encoded T into %zd bytes\n", er.encoded);
+                fprintf(stderr, "Structure %s:\n",
+                        sizeof(ASN1_STR) > 60 ? "T" : ASN1_STR);
+                asn_fprint(stderr, &asn_DEF_T, structure);
+                assert(er.encoded >= 0);
+                exit(EX_SOFTWARE);
+            }
             if(er.encoded > buffer_size && buffer == tmp_buffer) {
                 buffer = malloc(er.encoded + 1);
                 assert(buffer);
@@ -187,8 +234,15 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
             asn_decode(0, syntax, &asn_DEF_T, (void **)&decoded_structure,
                        buffer, er.encoded);
         if(rval.code == RC_OK) {
-            assert(rval.consumed == er.encoded);
-            /* Everything's cool */
+            /* Everything's cool... or is it? Expecting a proper consumed */
+            if(rval.consumed != er.encoded) {
+                fprintf(stderr, "Encoded into %zd, yet consumed %zu",
+                        er.encoded, rval.consumed);
+                fprintf(stderr, "Structure:\n");
+                asn_fprint(stderr, &asn_DEF_T, structure);
+                assert(rval.consumed == er.encoded);
+                exit(EX_SOFTWARE);
+            }
         } else {
             fprintf(stderr,
                     "Decoding %zu bytes of T yielded %s after byte %zu\n",
@@ -199,6 +253,20 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
             exit(EX_SOFTWARE);
         }
 
+        /*
+         * Confirm that we decoded the same data.
+         */
+        int cmp = asn_DEF_T.op->compare_struct(&asn_DEF_T, structure,
+                                               decoded_structure);
+        if(cmp != 0) {
+            fprintf(stderr, "Random %s value:\n", ASN1_STR);
+            asn_fprint(stderr, &asn_DEF_T, structure);
+            fprintf(stderr, "Decoded %s value:\n", ASN1_STR);
+            asn_fprint(stderr, &asn_DEF_T, decoded_structure);
+            assert(cmp == 0);
+        }
+        ASN_STRUCT_FREE(asn_DEF_T, structure);
+        ASN_STRUCT_FREE(asn_DEF_T, decoded_structure);
 
         if(buffer != tmp_buffer) {
             free(buffer);
@@ -235,7 +303,7 @@ int main(int argc, char **argv) {
             mode = MODE_CHECK_RANDOM_ROUNDTRIP;
             break;
         case 'e':
-            enabled_encodings |= 1 << lookup_encoding(optarg);
+            enabled_encodings |= 1 << lookup_syntax(optarg);
             if(enabled_encodings & (1 << ATS_INVALID)) {
                 fprintf(stderr, "-e %s: Unknown (unsupported?) encoding\n",
                         optarg);

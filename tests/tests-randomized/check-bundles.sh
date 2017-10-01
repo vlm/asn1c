@@ -8,7 +8,6 @@
 
 set -e
 
-
 usage() {
     echo "Usage:"
     echo "  $0 -h"
@@ -21,8 +20,15 @@ usage() {
     exit 1
 }
 
+RNDTEMP=.tmp.random
+
+srcdir="${srcdir:-.}"
+abs_top_srcdir="${abs_top_srcdir:-$(pwd)/../../}"
+abs_top_builddir="${abs_top_builddir:-$(pwd)/../../}"
+
 tests_succeeded=0
 tests_failed=0
+stop_after_failed=1  # We stop after 3 failures.
 
 # Get all the type-bearding lines in file and process them individually
 verify_asn_types_in_file() {
@@ -42,6 +48,10 @@ verify_asn_types_in_file() {
             continue;
         fi
         verify_asn_type "$asn" "in $filename $line"
+        if [ "${tests_failed}" = "${stop_after_failed}" ]; then
+            echo "STOP after ${tests_failed} failures, OK ${tests_succeeded}"
+            exit 1
+        fi
     done < "$filename"
 }
 
@@ -55,8 +65,8 @@ verify_asn_type() {
     fi
     echo "Testing [$asn] ${where}"
 
-    mkdir -p .tmp.random
-    if (cd .tmp.random && compile_and_test "$asn" "$@"); then
+    mkdir -p ${RNDTEMP}
+    if (cd ${RNDTEMP} && compile_and_test "$asn" "$@"); then
         echo "OK [$asn] ${where}"
         tests_succeeded=$((tests_succeeded+1))
     else
@@ -77,20 +87,29 @@ compile_and_test() {
     rm -f random-test-driver.o
     rm -f random-test-driver
     if ! make -j4; then
-        echo "Cannot compile C for $asn in .tmp.random"
+        echo "Cannot compile C for $asn in ${RNDTEMP}"
         return 2
     fi
 
     echo "Checking random data encode-decode"
     if ! eval ${ASAN_ENV_FLAGS} ./random-test-driver -c; then
+        echo "RETRY:"
+        echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -c)"
         return 3
+    fi
+
+    echo "Generating new random data"
+    rm -rf random-data
+    cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
+    cmd+=" ./random-test-driver -g random-data"
+    if ! eval "$cmd" ; then
+        echo "RETRY:"
+        echo "(cd ${RNDTEMP} && $cmd)"
+        return 4
     fi
 
     # If LIBFUZZER_CFLAGS are properly defined, do the fuzz test as well
     if echo "${LIBFUZZER_CFLAGS}" | grep -qi "[a-z]"; then
-        echo "Generating new random data"
-        rm -rf random-data
-        ./random-test-driver -g random-data
 
         echo "Recompiling for fuzzing..."
         rm -f random-test-driver.o
@@ -99,23 +118,35 @@ compile_and_test() {
 
         # Do a LibFuzzer based testing
         fuzz_time=10
-        echo "Fuzzing will take $fuzz_time seconds..."
-        set -x
-        eval ${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1 \
-        ./random-test-driver \
-        -timeout=3 -max_total_time=${fuzz_time} -max_len=128
+        for data_dir in random-data/*; do
+            echo "Fuzzing $data_dir will take $fuzz_time seconds..."
+            local cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
+            cmd+=" ASN1_DATA_DIR=$data_dir" # Dir for our code
+            cmd+=" ./random-test-driver"
+            cmd+=" -timeout=3 -max_total_time=${fuzz_time} -max_len=128"
+            cmd+=" $data_dir"               # Dir for LLVM fuzzer driver
+            echo "$cmd"
+            if ! eval "$cmd" ; then
+                echo "RETRY $data_dir:"
+                echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && $cmd)"
+                return 5
+            fi
+        done
     fi
 
     return 0;
 }
 
-srcdir="${srcdir:-.}"
-abs_top_srcdir="${abs_top_srcdir:-$(pwd)/../../}"
-abs_top_builddir="${abs_top_builddir:-$(pwd)/../../}"
-
 asn_compile() {
     local asn="$1"
     shift
+
+    # Create "INTEGER (1..2)" from "T ::= INTEGER (1..2) -- Comment"
+    local short_asn=$(echo "$asn" | sed -e 's/ *--.*//')
+    if [ $(echo "$short_asn" | grep -c "::=") = 1 ]; then
+        short_asn=$(echo "$short_asn" | sed -e 's/.*::= *//')
+    fi
+
     test ! -f Makefile.am   # Protection from accidental clobbering
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
     echo "END" >> test.asn1
@@ -123,8 +154,9 @@ asn_compile() {
         -gen-OER -gen-PER test.asn1
     rm -f converter-example.c
     ln -sf ../random-test-driver.c || cp ../random-test-driver.c .
+    echo "CFLAGS+= -DASN1_TEXT='$short_asn'" > Makefile
     sed -e 's/converter-example/random-test-driver/' \
-        < Makefile.am.example > Makefile
+        < Makefile.am.example >> Makefile
     echo "Makefile.am.example -> Makefile"
 }
 
