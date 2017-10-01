@@ -1719,7 +1719,7 @@ BasicTypeId:
  */
 BasicTypeId_UniverationCompatible:
 	TOK_INTEGER { $$ = ASN_BASIC_INTEGER; }
-	| TOK_ENUMERATED { $$ = ASN_BASIC_INTEGER; }
+	| TOK_ENUMERATED { $$ = ASN_BASIC_ENUMERATED; }
 	| TOK_BIT TOK_STRING { $$ = ASN_BASIC_BIT_STRING; }
 	;
 
