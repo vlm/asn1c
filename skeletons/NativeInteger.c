@@ -473,6 +473,7 @@ NativeInteger_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         (void)ct;
     }
 
+    *sptr = st;
     *st = value;
     return result_ok;
 }
