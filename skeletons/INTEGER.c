@@ -1193,7 +1193,7 @@ INTEGER_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         assert(emap_len > 0);
         value = emap[asn_random_between(0, emap_len - 1)].nat_value;
     } else {
-        const asn_per_constraint_t *ct;
+        const asn_per_constraints_t *ct;
 
         static const long variants[] = {
             -65536, -65535, -65534, -32769, -32768, -32767, -16385, -16384,
@@ -1211,10 +1211,14 @@ INTEGER_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         }
 
         if(!constraints) constraints = &td->encoding_constraints;
-        ct = constraints ? &constraints->per_constraints->value : 0;
-        (void)ct;
+        ct = constraints ? constraints->per_constraints : 0;
+        if(ct && (ct->value.flags & APC_CONSTRAINED)) {
+            if(value < ct->value.lower_bound || value > ct->value.upper_bound) {
+                value = asn_random_between(ct->value.lower_bound,
+                                           ct->value.upper_bound);
+            }
+        }
     }
-
 
     if(asn_imax2INTEGER(st, value)) {
         if(st == *sptr) {
@@ -1224,6 +1228,7 @@ INTEGER_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         }
         return result_failed;
     } else {
+        *sptr = st;
         result_ok.length = st->size;
         return result_ok;
     }
