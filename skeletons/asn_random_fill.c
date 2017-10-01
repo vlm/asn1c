@@ -26,5 +26,5 @@ asn_random_between(intmax_t a, intmax_t b) {
     assert(a <= b);
     assert((b-a) < RAND_MAX);
     if(a == b) return a;
-    return a + (random() % (b - a));
+    return a + (random() % (b - a + 1));
 }
