@@ -1,0 +1,10 @@
+-- Test encoding/decoding/transcoding of everything concerning the integer.
+T ::= INTEGER
+T ::= [1] INTEGER -- Tagged integer test
+T ::= [300] INTEGER -- Large tag integer
+T ::= INTEGER (MIN..MAX)  -- Constrained integer
+T ::= INTEGER (0..1)  -- Constrained integer
+T ::= INTEGER (0..255)  -- Constrained integer
+T ::= INTEGER (-128..127)  -- Constrained integer
+T ::= INTEGER (-128..127,...)  -- Extensible constrained integer
+T ::= INTEGER { foo(0), bar(1), baz(2) }

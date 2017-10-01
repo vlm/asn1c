@@ -1,0 +1,295 @@
+#include <T.h>
+
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sysexits.h>
+
+#ifdef  ENABLE_LIBFUZZER
+
+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size);
+
+int
+LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+    return 0;
+}
+
+#else   /* The usual check */
+
+static void
+usage(const char *progname) {
+    fprintf(stderr,
+            "Usage: %s {-c|-g <dir>} [-n <number>] [-e <encoding> ...]\n"
+            "OPTIONS:\n"
+            "  -c               Check encode-decode round-trip on random data\n"
+            "  -g <dir>         Generate random data for selected encodings\n"
+            "  -n <number>      Number of iterations for -c and -g\n"
+            "  -e <encoding>    Encodings to test or generate random data for\n"
+            "Encodings (ASN.1 Transfer Syntaxes):\n"
+            "   DER             Distinguished Encoding Rules (compatible with "
+            "BER)\n"
+            "   OER             Canonical Octet Encoding Rules\n"
+            "   UPER            Canonical Unaligned Packed Encoding Rules\n"
+            "   XER             XML Encoding Rules\n",
+            progname);
+}
+
+static const struct encoding_map {
+    const char *name;
+    enum asn_transfer_syntax syntax;
+} encodings[] = {
+    {"der", ATS_DER},
+    {"oer", ATS_CANONICAL_OER},
+    {"uper", ATS_UNALIGNED_CANONICAL_PER},
+    {"xer", ATS_CANONICAL_XER},
+};
+
+static enum asn_transfer_syntax
+lookup_encoding(const char *name) {
+    for(size_t i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
+        struct encoding_map enc = encodings[i];
+        if(strcasecmp(name, enc.name) == 0) {
+            return enc.syntax;
+        }
+    }
+    return ATS_INVALID;
+}
+
+static int
+file_write_cb(const void *data, size_t size, void *key) {
+    return fwrite(data, 1, size, (FILE *)key) == size ? 0 : -1;
+}
+
+static void
+generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, int iterations) {
+    char dirname[PATH_MAX];
+    size_t dirname_len = 0;
+    dirname[dirname_len] = '\0';
+
+    for(size_t i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
+        struct encoding_map enc = encodings[i];
+        if(enc.syntax == syntax) {
+            int r = snprintf(dirname, sizeof(dirname), "%s/%s", top_dirname,
+                             enc.name);
+            if(r >= sizeof(dirname) - sizeof("filename.bin")) {
+                fprintf(stderr, "Too long filenames\n");
+                exit(EX_SOFTWARE);
+            }
+            dirname_len = r;
+            fprintf(stderr, "Generating %d random %s values of %s into %s\n",
+                    iterations, enc.name, asn_DEF_T.name, dirname);
+            break;
+        }
+    }
+    assert(dirname[0]);
+
+    (void)mkdir(top_dirname, 0777);
+
+    if(mkdir(dirname, 0777) == -1) {
+        if(errno == EEXIST) {
+            fprintf(stderr, "%s: is already present, remove.\n", dirname);
+            fprintf(stderr, "%s: not overwriting potentially valuable data.\n",
+                    dirname);
+        }
+        perror(dirname);
+        exit(2);
+    }
+
+    for(int i = 0; i < iterations; i++) {
+        T_t *structure = 0;
+        FILE *f;
+        snprintf(&dirname[dirname_len], sizeof(dirname) - dirname_len,
+                 "/%03d.bin", i);
+
+        if(asn_random_fill(&asn_DEF_T, (void **)&structure, 128) == -1) {
+            assert(structure == 0);
+            fprintf(stderr, "Can't generate %d'th value, skipping\n", i);
+            continue;
+        }
+        assert(structure != 0);
+
+        const char *filename = dirname;
+        f = fopen(filename, "wb");
+        if(!f) {
+            perror(filename);
+            assert(f);
+            exit(EX_SOFTWARE);
+        }
+        asn_enc_rval_t rval =
+            asn_encode(0, syntax, &asn_DEF_T, structure, file_write_cb, f);
+        fclose(f);
+        if(rval.encoded == -1) {
+            fprintf(stderr, "Cannot encode a random value of T into %s:\n",
+                    filename);
+            if(rval.failed_type) {
+                fprintf(stderr, "(Failed type: %s)\n", rval.failed_type->name);
+            }
+            asn_fprint(stderr, &asn_DEF_T, structure);
+            exit(EX_SOFTWARE);
+        }
+
+        if(i < 5) {
+            fprintf(stderr, "[%s] ", &filename[dirname_len+1]);
+            asn_fprint(stderr, &asn_DEF_T, structure);
+        } else if(i == 5) {
+            fprintf(stderr, "... and so on\n");
+        }
+
+        ASN_STRUCT_FREE(asn_DEF_T, structure);
+    }
+
+}
+
+static void
+check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
+    char tmp_buffer[512];
+    char *buffer = tmp_buffer;
+    size_t buffer_size = sizeof(tmp_buffer);
+    struct encoding_map enc;
+
+    for(size_t i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
+        enc = encodings[i];
+        if(enc.syntax == syntax) {
+            fprintf(stderr, "Testing %d iterations of round-trip for %s\n",
+                    iterations, enc.name);
+            break;
+        }
+    }
+
+    for(int i = 0; i < iterations; i++) {
+        T_t *structure = 0;
+        T_t *decoded_structure = 0;
+
+        if(asn_random_fill(&asn_DEF_T, (void **)&structure, 128) == -1) {
+            assert(structure == 0);
+            fprintf(stderr, "Can't generate %d'th value, skipping\n", i);
+            continue;
+        }
+        assert(structure != 0);
+
+        asn_enc_rval_t er;
+        for(;;) {
+            er = asn_encode_to_buffer(
+                0, syntax, &asn_DEF_T, structure, buffer, buffer_size);
+            if(er.encoded > buffer_size && buffer == tmp_buffer) {
+                buffer = malloc(er.encoded + 1);
+                assert(buffer);
+                buffer[er.encoded] = '\0';
+                buffer_size = er.encoded;
+                continue;
+            }
+            break;
+        }
+        assert(er.encoded <= buffer_size);
+
+        asn_dec_rval_t rval =
+            asn_decode(0, syntax, &asn_DEF_T, (void **)&decoded_structure,
+                       buffer, er.encoded);
+        if(rval.code == RC_OK) {
+            assert(rval.consumed == er.encoded);
+            /* Everything's cool */
+        } else {
+            fprintf(stderr,
+                    "Decoding %zu bytes of T yielded %s after byte %zu\n",
+                    er.encoded, rval.code == RC_FAIL ? "RC_FAIL" : "RC_WMORE",
+                    rval.consumed);
+            fprintf(stderr, "Structure:\n");
+            asn_fprint(stderr, &asn_DEF_T, structure);
+            exit(EX_SOFTWARE);
+        }
+
+
+        if(buffer != tmp_buffer) {
+            free(buffer);
+            buffer = tmp_buffer;
+            buffer_size = sizeof(tmp_buffer);
+        }
+
+        if(i < 5) {
+            fprintf(stderr, "[%03d] round-trip in %zd bytes OK\n", i,
+                    er.encoded);
+        } else if(i == 5) {
+            fprintf(stderr, "... and so on\n");
+        }
+    }
+
+    fprintf(stderr, "OK %d iterations of round-trip for %s\n", iterations,
+            enc.name);
+}
+
+int main(int argc, char **argv) {
+    uint32_t enabled_encodings = 0;
+    enum {
+        MODE_UNKNOWN,
+        MODE_GENERATE_RANDOM_DATA,
+        MODE_CHECK_RANDOM_ROUNDTRIP
+    } mode = MODE_UNKNOWN;
+    const char *generate_into_dir = NULL;
+    int iterations = 100;
+    int c;
+
+    while((c = getopt(argc, argv, "ce:g:hn:")) != -1) {
+        switch(c) {
+        case 'c':
+            mode = MODE_CHECK_RANDOM_ROUNDTRIP;
+            break;
+        case 'e':
+            enabled_encodings |= 1 << lookup_encoding(optarg);
+            if(enabled_encodings & (1 << ATS_INVALID)) {
+                fprintf(stderr, "-e %s: Unknown (unsupported?) encoding\n",
+                        optarg);
+                exit(EX_UNAVAILABLE);
+            }
+            break;
+        case 'g':
+            mode = MODE_GENERATE_RANDOM_DATA;
+            generate_into_dir = optarg;
+            break;
+        case 'h':
+            usage(argv[0]);
+            exit(0);
+        case 'n':
+            iterations = atoi(optarg);
+            if(iterations <= 0) {
+                fprintf(stderr, "-n %s: positive value expected\n", optarg);
+                exit(EX_DATAERR);
+            }
+            break;
+        default:
+            usage(argv[0]);
+            exit(2);
+        }
+    }
+
+    if(mode == MODE_UNKNOWN) {
+        usage(argv[0]);
+        exit(2);
+    } else if(!enabled_encodings) {
+        for(size_t i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
+            enabled_encodings |= 1 << encodings[i].syntax;
+        }
+    }
+
+    /* Enumerate requested encodings (-e ...) */
+    for(unsigned i = 0; i < 8*sizeof(enabled_encodings)-1; i++) {
+        if(enabled_encodings & (1 << i)) {
+            enum asn_transfer_syntax syntax = i;
+            switch(mode) {
+            case MODE_UNKNOWN:
+                assert(mode != MODE_UNKNOWN);
+                break;
+            case MODE_GENERATE_RANDOM_DATA:
+                generate_random_data(syntax, generate_into_dir, iterations);
+                break;
+            case MODE_CHECK_RANDOM_ROUNDTRIP:
+                check_random_roundtrip(syntax, iterations);
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
+
+#endif
