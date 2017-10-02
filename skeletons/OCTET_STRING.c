@@ -1424,7 +1424,6 @@ OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		if(inext < 0) RETURN(RC_WMORE);
 		if(inext) {
 			csiz = &asn_DEF_OCTET_STRING_constraints.size;
-			cval = &asn_DEF_OCTET_STRING_constraints.value;
 			unit_bits = canonical_unit_bits;
 		}
 	}
@@ -1477,9 +1476,9 @@ OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		int ret;
 
 		/* Get the PER length */
-		raw_len = uper_get_length(pd, csiz->effective_bits, &repeat);
+		raw_len = uper_get_length(pd, csiz->effective_bits, csiz->lower_bound,
+		                          &repeat);
 		if(raw_len < 0) RETURN(RC_WMORE);
-		raw_len += csiz->lower_bound;
 
 		ASN_DEBUG("Got PER length eb %ld, len %ld, %s (%s)",
 			(long)csiz->effective_bits, (long)raw_len,
@@ -1531,7 +1530,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	int inext = 0;		/* Lies not within extension root */
 	unsigned int unit_bits;
 	unsigned int canonical_unit_bits;
-	unsigned int sizeinunits;
+	size_t size_in_units;
 	const uint8_t *buf;
 	int ret;
 	enum {
@@ -1561,23 +1560,23 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	case ASN_OSUBV_BIT:
 		canonical_unit_bits = unit_bits = 1;
 		bpc = OS__BPC_BIT;
-		sizeinunits = st->size * 8 - (st->bits_unused & 0x07);
-		ASN_DEBUG("BIT STRING of %d bytes, %d bits unused",
-				sizeinunits, st->bits_unused);
+		size_in_units = st->size * 8 - (st->bits_unused & 0x07);
+		ASN_DEBUG("BIT STRING of %zu bytes, %d bits unused",
+				size_in_units, st->bits_unused);
 		break;
 	case ASN_OSUBV_STR:
 		canonical_unit_bits = unit_bits = 8;
 		if(cval->flags & APC_CONSTRAINED)
 			unit_bits = cval->range_bits;
 		bpc = OS__BPC_CHAR;
-		sizeinunits = st->size;
+		size_in_units = st->size;
 		break;
 	case ASN_OSUBV_U16:
 		canonical_unit_bits = unit_bits = 16;
 		if(cval->flags & APC_CONSTRAINED)
 			unit_bits = cval->range_bits;
 		bpc = OS__BPC_U16;
-		sizeinunits = st->size >> 1;
+		size_in_units = st->size >> 1;
 		if(st->size & 1) {
 			ASN_DEBUG("%s string size is not modulo 2", td->name);
 			ASN__ENCODE_FAILED;
@@ -1588,7 +1587,7 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		if(cval->flags & APC_CONSTRAINED)
 			unit_bits = cval->range_bits;
 		bpc = OS__BPC_U32;
-		sizeinunits = st->size >> 2;
+		size_in_units = st->size >> 2;
 		if(st->size & 3) {
 			ASN_DEBUG("%s string size is not modulo 4", td->name);
 			ASN__ENCODE_FAILED;
@@ -1596,92 +1595,85 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 		break;
 	}
 
-	ASN_DEBUG("Encoding %s into %d units of %d bits"
+	ASN_DEBUG("Encoding %s into %zu units of %d bits"
 		" (%ld..%ld, effective %d)%s",
-		td->name, sizeinunits, unit_bits,
+		td->name, size_in_units, unit_bits,
 		csiz->lower_bound, csiz->upper_bound,
 		csiz->effective_bits, ct_extensible ? " EXT" : "");
 
 	/* Figure out whether size lies within PER visible constraint */
 
-	if(csiz->effective_bits >= 0) {
-		if((int)sizeinunits < csiz->lower_bound
-		|| (int)sizeinunits > csiz->upper_bound) {
-			if(ct_extensible) {
-				cval = &asn_DEF_OCTET_STRING_constraints.value;
-				csiz = &asn_DEF_OCTET_STRING_constraints.size;
-				unit_bits = canonical_unit_bits;
-				inext = 1;
-			} else {
-				ASN__ENCODE_FAILED;
-			}
-		}
-	} else {
-		inext = 0;
-	}
+    if(csiz->effective_bits >= 0) {
+        if((ssize_t)size_in_units < csiz->lower_bound
+           || (ssize_t)size_in_units > csiz->upper_bound) {
+            if(ct_extensible) {
+                csiz = &asn_DEF_OCTET_STRING_constraints.size;
+                unit_bits = canonical_unit_bits;
+                inext = 1;
+            } else {
+                ASN__ENCODE_FAILED;
+            }
+        }
+    } else {
+        inext = 0;
+    }
 
-	if(ct_extensible) {
+    if(ct_extensible) {
 		/* Declare whether length is [not] within extension root */
 		if(per_put_few_bits(po, inext, 1))
 			ASN__ENCODE_FAILED;
 	}
 
-	/* X.691, #16.5: zero-length encoding */
-	/* X.691, #16.6: short fixed length encoding (up to 2 octets) */
-	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
-	if(csiz->effective_bits >= 0) {
-		ASN_DEBUG("Encoding %zu bytes (%ld), length in %d bits",
-				st->size, sizeinunits - csiz->lower_bound,
-				csiz->effective_bits);
-		ret = per_put_few_bits(po, sizeinunits - csiz->lower_bound,
-				csiz->effective_bits);
-		if(ret) ASN__ENCODE_FAILED;
-		if(bpc) {
-			ret = OCTET_STRING_per_put_characters(po, st->buf,
-				sizeinunits, bpc, unit_bits,
-				cval->lower_bound, cval->upper_bound, pc);
-		} else {
-			ret = per_put_many_bits(po, st->buf,
-				sizeinunits * unit_bits);
-		}
-		if(ret) ASN__ENCODE_FAILED;
-		ASN__ENCODED_OK(er);
-	}
+    if(csiz->effective_bits >= 0 && !inext) {
+        ASN_DEBUG("Encoding %zu bytes (%ld), length in %d bits", st->size,
+                  size_in_units - csiz->lower_bound, csiz->effective_bits);
+        ret = per_put_few_bits(po, size_in_units - csiz->lower_bound,
+                               csiz->effective_bits);
+        if(ret) ASN__ENCODE_FAILED;
+        if(bpc) {
+            ret = OCTET_STRING_per_put_characters(
+                po, st->buf, size_in_units, bpc, unit_bits, cval->lower_bound,
+                cval->upper_bound, pc);
+        } else {
+            assert(unit_bits == 1);
+            ret = per_put_many_bits(po, st->buf, size_in_units);
+        }
+        if(ret) ASN__ENCODE_FAILED;
+        ASN__ENCODED_OK(er);
+    }
 
-	ASN_DEBUG("Encoding %zu bytes", st->size);
+    ASN_DEBUG("Encoding %zu bytes", st->size);
 
-	if(sizeinunits == 0) {
-		if(uper_put_length(po, 0))
-			ASN__ENCODE_FAILED;
-		ASN__ENCODED_OK(er);
-	}
+    if(size_in_units == 0) {
+        if(uper_put_length(po, 0)) ASN__ENCODE_FAILED;
+        ASN__ENCODED_OK(er);
+    }
 
-	buf = st->buf;
-	while(sizeinunits) {
-		ssize_t maySave = uper_put_length(po, sizeinunits);
-		if(maySave < 0) ASN__ENCODE_FAILED;
+    buf = st->buf;
+    while(size_in_units) {
+        ssize_t maySave = uper_put_length(po, size_in_units);
+        if(maySave < 0) ASN__ENCODE_FAILED;
 
-		ASN_DEBUG("Encoding %ld of %ld",
-			(long)maySave, (long)sizeinunits);
+        ASN_DEBUG("Encoding %ld of %ld", (long)maySave, (long)sizeinunits);
 
-		if(bpc) {
-			ret = OCTET_STRING_per_put_characters(po, buf,
-				maySave, bpc, unit_bits,
-				cval->lower_bound, cval->upper_bound, pc);
-		} else {
-			ret = per_put_many_bits(po, buf, maySave * unit_bits);
-		}
-		if(ret) ASN__ENCODE_FAILED;
+        if(bpc) {
+            ret = OCTET_STRING_per_put_characters(po, buf, maySave, bpc,
+                                                  unit_bits, cval->lower_bound,
+                                                  cval->upper_bound, pc);
+        } else {
+            ret = per_put_many_bits(po, buf, maySave);
+        }
+        if(ret) ASN__ENCODE_FAILED;
 
-		if(bpc)
-			buf += maySave * bpc;
-		else
-			buf += maySave >> 3;
-		sizeinunits -= maySave;
-		assert(!(maySave & 0x07) || !sizeinunits);
-	}
+        if(bpc)
+            buf += maySave * bpc;
+        else
+            buf += maySave >> 3;
+        size_in_units -= maySave;
+        assert(!(maySave & 0x07) || !size_in_units);
+    }
 
-	ASN__ENCODED_OK(er);
+    ASN__ENCODED_OK(er);
 }
 
 #endif  /* ASN_DISABLE_PER_SUPPORT */
@@ -1987,10 +1979,36 @@ OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         const asn_per_constraint_t *pc =
             &td->encoding_constraints.per_constraints->size;
         if(pc->flags & APC_CONSTRAINED) {
+            long suggested_upper_bound =
+                pc->upper_bound < max_length ? pc->upper_bound : max_length;
             if(max_length < (size_t)pc->lower_bound) {
                 return result_skipped;
             }
-            rnd_len = asn_random_between(pc->lower_bound, pc->upper_bound);
+            if(pc->flags & APC_EXTENSIBLE) {
+                switch(asn_random_between(0, 5)) {
+                case 0:
+                    if(pc->lower_bound > 0) {
+                        rnd_len = pc->lower_bound - 1;
+                        break;
+                    }
+                    /* Fall through */
+                case 1:
+                    rnd_len = pc->upper_bound + 1;
+                    break;
+                case 2:
+                    /* Keep rnd_len from the table */
+                    if(rnd_len < max_length) {
+                        break;
+                    }
+                    /* Fall through */
+                default:
+                    rnd_len = asn_random_between(pc->lower_bound,
+                                                 suggested_upper_bound);
+                }
+            } else {
+                rnd_len =
+                    asn_random_between(pc->lower_bound, suggested_upper_bound);
+            }
         } else {
             rnd_len = asn_random_between(0, max_length - 1);
         }

@@ -910,8 +910,7 @@ SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *
 	do {
 		int i;
 		if(nelems < 0) {
-			nelems = uper_get_length(pd,
-				ct ? ct->effective_bits : -1, &repeat);
+			nelems = uper_get_length(pd, -1, 0, &repeat);
 			ASN_DEBUG("Got to decode %d elements (eff %d)",
 				(int)nelems, (int)(ct ? ct->effective_bits : -1));
 			if(nelems < 0) ASN__DECODE_STARVED;

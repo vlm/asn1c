@@ -10,6 +10,8 @@
       (Severity: medium; Security impact: medium)
     * Fix REAL type overwrite conversion memory leak.
       (Severity: low; Security impact: medium)
+    * Fix UPER string decoding constrained only by lower bound > 0
+      (Severity: low; Security impact: none)
 
 0.9.28: 2017-03-26
     * PER decoding: avoid memory leak on error. By github.com/simo5

@@ -73,7 +73,7 @@ uper_open_type_get_simple(const asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	ASN_DEBUG("Getting open type %s...", td->name);
 
 	do {
-		chunk_bytes = uper_get_length(pd, -1, &repeat);
+		chunk_bytes = uper_get_length(pd, -1, 0, &repeat);
 		if(chunk_bytes < 0) {
 			FREEMEM(buf);
 			ASN__DECODE_STARVED;
@@ -329,7 +329,7 @@ uper_ugot_refill(asn_per_data_t *pd) {
 		return -1;
 	}
 
-	next_chunk_bytes = uper_get_length(oldpd, -1, &arg->repeat);
+	next_chunk_bytes = uper_get_length(oldpd, -1, 0, &arg->repeat);
 	ASN_DEBUG("Open type LENGTH %ld bytes at off %ld, repeat %ld",
 		(long)next_chunk_bytes, (long)oldpd->moved, (long)arg->repeat);
 	if(next_chunk_bytes < 0) return -1;

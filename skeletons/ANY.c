@@ -216,7 +216,7 @@ ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         int ret;
 
         /* Get the PER length */
-        raw_len = uper_get_length(pd, -1, &repeat);
+        raw_len = uper_get_length(pd, -1, 0, &repeat);
         if(raw_len < 0) RETURN(RC_WMORE);
 
         ASN_DEBUG("Got PER length len %zu, %s (%s)", raw_len,
