@@ -4,7 +4,7 @@ TARGET = ldap3dump
 ASN_LIBRARY=libasncodec.a
 LIBS += -lm
 CFLAGS += -DASN_CONVERTER_TITLE="Lightweight Directory Access Protocol V3 decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE $(ASN_MODULE_CFLAGS) -DPDU=LDAPMessage -I.
-ASN_CONVERTER_SOURCES := \
+ASN_CONVERTER_SOURCES = \
 	converter-example.c
 
 all: maybe-wip-pause LDAPMessage.c $(TARGET)
@@ -13,7 +13,7 @@ $(TARGET): $(ASN_LIBRARY) $(ASN_CONVERTER_SOURCES:.c=.o)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) $(ASN_CONVERTER_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)
 
 $(ASN_LIBRARY): $(ASN_MODULE_SOURCES:.c=.o)
-	$(AR) rcs $@ $^
+	$(AR) rcs $@ $(ASN_MODULE_SOURCES:.c=.o)
 
 .SUFFIXES:
 .SUFFIXES: .c .o
@@ -52,7 +52,7 @@ check: ${TARGET} check-ber check-xer check-oer check-per
 check-ber:
 	@if test -f sample-LDAPMessage-1.[db]er ; then \
 	for f in sample-*-*.[db]er; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -67,7 +67,7 @@ check-ber:
 check-xer:
 	@if test -f sample-LDAPMessage-1.xer ; then \
 	for f in sample-*-*.xer; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into DER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -82,7 +82,7 @@ check-xer:
 check-oer:
 	@if test -f sample-LDAPMessage-1.*oer ; then \
 	for f in sample-*-*.*oer; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -97,7 +97,7 @@ check-oer:
 check-per:
 	@if test -f sample-LDAPMessage-1-nopad.per ; then \
 	for f in sample-*-[1-9]-nopad.per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding non-padded $$f ($$pdu) into DER into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \
@@ -111,7 +111,7 @@ check-per:
 	done; done; fi
 	@if test -f sample-LDAPMessage-1.per ; then \
 	for f in sample-*-[1-9].per; do \
-	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
+	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \
 	for b in 1 17 33 980 8192; do \
 	echo "Recoding $$f ($$pdu) into DER into XER and back ($$b)..."; \
 	./${TARGET} -p $$pdu -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \
