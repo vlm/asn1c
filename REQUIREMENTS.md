@@ -1,9 +1,11 @@
 
 ## To compile asn1c compiler itself
 
-Compiler:
+A 64-bit build system is strongly recommended for asn1c operation.
 
-A working C99 compiler or better, such as gcc-4.x or clang-3.4.
+A working C99 compiler is required to compile asn1c itself,
+such as gcc-4.x or clang-3.4. The asn1c compiler produces C90-compatible code,
+which is also upward compatible with C++.
 
 ### Packages
 
