@@ -108,30 +108,33 @@ compile_and_test() {
         return 4
     fi
 
+    # Do a LibFuzzer based testing
+    local fuzz_time=10
+    local fuzz_cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
+    fuzz_cmd+=" ./random-test-driver"
+    fuzz_cmd+=" -timeout=3 -max_total_time=${fuzz_time} -max_len=128"
+
+    if ! grep -q "^fuzz:" Makefile ; then
+        local fuzz_targets=$(echo random-data/* | sed -e 's/random-data./fuzz-/g')
+        echo "fuzz: $fuzz_targets" >> Makefile
+        echo "fuzz-%: random-data/% random-test-driver" >> Makefile
+        echo "	ASN1_DATA_DIR=\$< ${fuzz_cmd} \$<" >> Makefile
+    fi
+
     # If LIBFUZZER_CFLAGS are properly defined, do the fuzz test as well
     if echo "${LIBFUZZER_CFLAGS}" | grep -qi "[a-z]"; then
 
         echo "Recompiling for fuzzing..."
         rm -f random-test-driver.o
         rm -f random-test-driver
-        CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" make
+        CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" make -j4
 
-        # Do a LibFuzzer based testing
-        fuzz_time=10
-        for data_dir in random-data/*; do
-            echo "Fuzzing $data_dir will take $fuzz_time seconds..."
-            local cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
-            cmd+=" ASN1_DATA_DIR=$data_dir" # Dir for our code
-            cmd+=" ./random-test-driver"
-            cmd+=" -timeout=3 -max_total_time=${fuzz_time} -max_len=128"
-            cmd+=" $data_dir"               # Dir for LLVM fuzzer driver
-            echo "$cmd"
-            if ! eval "$cmd" ; then
-                echo "RETRY $data_dir:"
-                echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && $cmd)"
-                return 5
-            fi
-        done
+        echo "Fuzzing $data_dir will take $fuzz_time seconds..."
+        if ! make -j4 fuzz ; then
+            echo "RETRY:"
+            echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make fuzz)"
+            return 5
+        fi
     fi
 
     return 0
