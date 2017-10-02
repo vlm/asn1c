@@ -1,13 +1,21 @@
 
 0.9.??:
     FEATURES:
+    * Added support for basic Information Object Sets driven code generation.
     * Added OER support.
     * Added LTE RRC example (Bi-Ruei, Chiu).
     * Added IEEE 1609.2 example.
     * Added SAE J2735 example.
 
     NOTABLE:
-    * converter-sample.c renamed into converter-example.c
+    * converter-sample.c renamed into converter-example.c.
+    * Added random value generation (-R option to converter-example).
+    * Added LibFuzzer-based randomized tests for supported transfer syntaxes
+      (DER, OER, UPER, XER) into tests/tests-randomized. See the following
+      article to get the latest LibFuzzer-enabled clang on macOS:
+        https://medium.com/@levwalkin/compile-llvm-clang-libfuzzer-b61e82718430
+      then ensure the new clang is in the way:
+        CC=clang CXX=clang++ ./configure --enable-Werror --enable-test-fuzzer
 
     FIXES:
     * CVE-2017-12966 verified not present.
