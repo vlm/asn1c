@@ -238,7 +238,7 @@ INTEGER__compar_enum2value(const void *kp, const void *am) {
 	/* Compare strings */
 	for(ptr = key->start, end = key->stop, name = el->enum_name;
 			ptr < end; ptr++, name++) {
-		if(*ptr != *name)
+		if(*ptr != *name || !*name)
 			return *(const unsigned char *)ptr
 				- *(const unsigned char *)name;
 	}
