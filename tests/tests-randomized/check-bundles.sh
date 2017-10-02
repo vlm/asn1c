@@ -66,7 +66,7 @@ verify_asn_type() {
     echo "Testing [$asn] ${where}"
 
     mkdir -p ${RNDTEMP}
-    if (set -e && cd ${RNDTEMP} && compile_and_test "$asn" "$@"); then
+    if (set -e && cd ${RNDTEMP} && compile_and_test "$asn" "${where}"); then
         echo "OK [$asn] ${where}"
         tests_succeeded=$((tests_succeeded+1))
     else
@@ -79,7 +79,7 @@ compile_and_test() {
     local asn="$1"
     shift
 
-    if ! asn_compile "$asn" "$@"; then
+    if ! asn_compile "$asn" "$*"; then
         echo "Cannot compile ASN.1 $asn"
         return 1
     fi
@@ -91,17 +91,21 @@ compile_and_test() {
         return 2
     fi
 
+    # Maximum size of the random data
+    local rmax=$(echo "$asn" | sed -Ee '/RMAX/!d;s/.*RMAX=([0-9]+).*/\1/')
+    if [ "0${rmax}" -lt 1 ]; then rmax=128; fi
+
     echo "Checking random data encode-decode"
-    if ! eval ${ASAN_ENV_FLAGS} ./random-test-driver -c; then
+    if ! eval ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} -c; then
         echo "RETRY:"
-        echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -c)"
+        echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} -c)"
         return 3
     fi
 
     echo "Generating new random data"
     rm -rf random-data
     cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
-    cmd+=" ./random-test-driver -g random-data"
+    cmd+=" ./random-test-driver -s ${rmax} -g random-data"
     if ! eval "$cmd" ; then
         echo "RETRY:"
         echo "(cd ${RNDTEMP} && $cmd)"
@@ -144,14 +148,16 @@ asn_compile() {
     local asn="$1"
     shift
 
-    # Create "INTEGER (1..2)" from "T ::= INTEGER (1..2) -- Comment"
-    local short_asn=$(echo "$asn" | sed -e 's/ *--.*//')
+    # Create "INTEGER (1..2)" from "RMAX=5 T ::= INTEGER (1..2) -- Comment"
+    local short_asn=$(echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[^ ]* //;')
     if [ $(echo "$short_asn" | grep -c "::=") = 1 ]; then
         short_asn=$(echo "$short_asn" | sed -e 's/.*::= *//')
     fi
+    asn=$(echo "$asn" | sed -e 's/RMAX=[^ ]* //;')
 
     test ! -f Makefile.am   # Protection from accidental clobbering
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
+    echo "-- $*" >> test.asn1
     echo "END" >> test.asn1
     if ! ${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons \
         -gen-OER -gen-PER test.asn1

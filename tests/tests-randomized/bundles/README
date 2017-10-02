@@ -1,0 +1,22 @@
+
+This directory contains test bundles for randomized testing.
+Each file contains a number of related ASN.1 types with variations in
+contstraints that are intended to affect encoding and parsing.
+
+ * Lines consisting of comments only are ignored.
+
+ * The ASN.1 type can be written with "T ::=" prefix or without it, in which
+   case it will be added automatically. It is done to simplify manual
+   testing with ./check-bundles.sh -t <type>. For example,
+        ./check-bundles.sh -t INTEGER
+   is equivalent to
+        ./check-bundles.sh -t "T ::= INTEGER"
+
+ * By default, the random value generator attempts to generate values
+   limited to very roughly to around 128 bytes. If huge values are desired
+   (perhaps due to large constraints), the RMAX=<size> prefix can be specified
+   on a line:
+
+        RMAX=64000 T ::= VisibleString (SIZE(64000))
+   
+

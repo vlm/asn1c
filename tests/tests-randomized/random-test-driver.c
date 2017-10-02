@@ -84,6 +84,7 @@ usage(const char *progname) {
             "OPTIONS:\n"
             "  -c               Check encode-decode round-trip on random data\n"
             "  -g <dir>         Generate random data for selected encodings\n"
+            "  -s <size>        Approximate max random value size for -c and -g\n"
             "  -n <number>      Number of iterations for -c and -g\n"
             "  -e <encoding>    Encodings to test or generate random data for\n"
             "Encodings (ASN.1 Transfer Syntaxes):\n"
@@ -101,7 +102,7 @@ file_write_cb(const void *data, size_t size, void *key) {
 }
 
 static void
-generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, int iterations) {
+generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, size_t max_random_value_size, int iterations, int debug) {
     char dirname[PATH_MAX];
     size_t dirname_len = 0;
     dirname[dirname_len] = '\0';
@@ -142,7 +143,9 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, i
         snprintf(&dirname[dirname_len], sizeof(dirname) - dirname_len,
                  "/%03d.bin", i);
 
-        if(asn_random_fill(&asn_DEF_T, (void **)&structure, 128) == -1) {
+        if(asn_random_fill(&asn_DEF_T, (void **)&structure,
+                           max_random_value_size)
+           == -1) {
             assert(structure == 0);
             fprintf(stderr, "Can't generate %d'th value, skipping\n", i);
             continue;
@@ -169,11 +172,13 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, i
             exit(EX_SOFTWARE);
         }
 
-        if(i < 5) {
-            fprintf(stderr, "[%s] ", &filename[dirname_len+1]);
-            asn_fprint(stderr, &asn_DEF_T, structure);
-        } else if(i == 5) {
-            fprintf(stderr, "... and so on\n");
+        if(debug) {
+            if(i < 5 || debug > 1) {
+                fprintf(stderr, "[%s] ", &filename[dirname_len+1]);
+                asn_fprint(stderr, &asn_DEF_T, structure);
+            } else if(i == 5) {
+                fprintf(stderr, "... and so on\n");
+            }
         }
 
         ASN_STRUCT_FREE(asn_DEF_T, structure);
@@ -189,7 +194,7 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, i
 }
 
 static void
-check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
+check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_size, int iterations, int debug) {
     struct encoding_map enc;
 
     for(size_t i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
@@ -208,7 +213,9 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
         T_t *structure = 0;
         T_t *decoded_structure = 0;
 
-        if(asn_random_fill(&asn_DEF_T, (void **)&structure, 128) == -1) {
+        if(asn_random_fill(&asn_DEF_T, (void **)&structure,
+                           max_random_value_size)
+           == -1) {
             assert(structure == 0);
             fprintf(stderr, "Can't generate %d'th value, skipping\n", i);
             continue;
@@ -228,8 +235,12 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
                 exit(EX_SOFTWARE);
             }
             if(er.encoded > buffer_size && buffer == tmp_buffer) {
-                fprintf(stderr, "Reallocate output buffer %zu -> %zu\n",
-                        buffer_size, er.encoded);
+                if(debug) {
+                    fprintf(
+                        stderr,
+                        "Reallocate output buffer %zu -> %zu (iteration %d)\n",
+                        buffer_size, er.encoded, i);
+                }
                 buffer = malloc(er.encoded + 1);
                 assert(buffer);
                 buffer[er.encoded] = '\0';
@@ -307,12 +318,17 @@ int main(int argc, char **argv) {
     } mode = MODE_UNKNOWN;
     const char *generate_into_dir = NULL;
     int iterations = 100;
+    size_t max_random_value_size = 128;
+    int debug = 0;
     int c;
 
-    while((c = getopt(argc, argv, "ce:g:hn:")) != -1) {
+    while((c = getopt(argc, argv, "cde:g:hn:s:")) != -1) {
         switch(c) {
         case 'c':
             mode = MODE_CHECK_RANDOM_ROUNDTRIP;
+            break;
+        case 'd':
+            debug = 1;
             break;
         case 'e':
             enabled_encodings |= 1 << lookup_syntax(optarg);
@@ -335,6 +351,13 @@ int main(int argc, char **argv) {
                 fprintf(stderr, "-n %s: positive value expected\n", optarg);
                 exit(EX_DATAERR);
             }
+            break;
+        case 's':
+            if(atoi(optarg) <= 0) {
+                fprintf(stderr, "-s %s: positive value expected\n", optarg);
+                exit(EX_DATAERR);
+            }
+            max_random_value_size = atoi(optarg);
             break;
         default:
             usage(argv[0]);
@@ -360,10 +383,12 @@ int main(int argc, char **argv) {
                 assert(mode != MODE_UNKNOWN);
                 break;
             case MODE_GENERATE_RANDOM_DATA:
-                generate_random_data(syntax, generate_into_dir, iterations);
+                generate_random_data(syntax, generate_into_dir,
+                                     max_random_value_size, iterations, debug);
                 break;
             case MODE_CHECK_RANDOM_ROUNDTRIP:
-                check_random_roundtrip(syntax, iterations);
+                check_random_roundtrip(syntax, max_random_value_size,
+                                       iterations, debug);
                 break;
             }
         }
