@@ -66,7 +66,7 @@ verify_asn_type() {
     echo "Testing [$asn] ${where}"
 
     mkdir -p ${RNDTEMP}
-    if (cd ${RNDTEMP} && compile_and_test "$asn" "$@"); then
+    if (set -e && cd ${RNDTEMP} && compile_and_test "$asn" "$@"); then
         echo "OK [$asn] ${where}"
         tests_succeeded=$((tests_succeeded+1))
     else
@@ -134,7 +134,7 @@ compile_and_test() {
         done
     fi
 
-    return 0;
+    return 0
 }
 
 asn_compile() {
@@ -150,8 +150,11 @@ asn_compile() {
     test ! -f Makefile.am   # Protection from accidental clobbering
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
     echo "END" >> test.asn1
-    ${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons \
+    if ! ${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons \
         -gen-OER -gen-PER test.asn1
+    then
+        return 1
+    fi
     rm -f converter-example.c
     ln -sf ../random-test-driver.c || cp ../random-test-driver.c .
     echo "CFLAGS+= -DASN1_TEXT='$short_asn'" > Makefile

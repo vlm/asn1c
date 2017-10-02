@@ -190,9 +190,6 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, i
 
 static void
 check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
-    char tmp_buffer[512];
-    char *buffer = tmp_buffer;
-    size_t buffer_size = sizeof(tmp_buffer);
     struct encoding_map enc;
 
     for(size_t i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
@@ -205,6 +202,9 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
     }
 
     for(int i = 0; i < iterations; i++) {
+        char tmp_buffer[512];
+        char *buffer = tmp_buffer;
+        size_t buffer_size = sizeof(tmp_buffer);
         T_t *structure = 0;
         T_t *decoded_structure = 0;
 
@@ -228,6 +228,8 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
                 exit(EX_SOFTWARE);
             }
             if(er.encoded > buffer_size && buffer == tmp_buffer) {
+                fprintf(stderr, "Reallocate output buffer %zu -> %zu\n",
+                        buffer_size, er.encoded);
                 buffer = malloc(er.encoded + 1);
                 assert(buffer);
                 buffer[er.encoded] = '\0';
@@ -236,7 +238,11 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
             }
             break;
         }
-        assert(er.encoded <= buffer_size);
+        if(er.encoded > buffer_size) {
+            fprintf(stderr, "Data %zd does not fit into buffer %zu\n",
+                    er.encoded, buffer_size);
+            assert(er.encoded <= buffer_size);
+        }
 
         asn_dec_rval_t rval =
             asn_decode(0, syntax, &asn_DEF_T, (void **)&decoded_structure,
@@ -244,9 +250,9 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
         if(rval.code == RC_OK) {
             /* Everything's cool... or is it? Expecting a proper consumed */
             if(rval.consumed != er.encoded) {
-                fprintf(stderr, "Encoded into %zd, yet consumed %zu",
+                fprintf(stderr, "Encoded into %zd, yet consumed %zu\n",
                         er.encoded, rval.consumed);
-                fprintf(stderr, "Structure:\n");
+                fprintf(stderr, "Original random structure:\n");
                 asn_fprint(stderr, &asn_DEF_T, structure);
                 assert(rval.consumed == er.encoded);
                 exit(EX_SOFTWARE);
@@ -256,7 +262,7 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
                     "Decoding %zu bytes of T yielded %s after byte %zu\n",
                     er.encoded, rval.code == RC_FAIL ? "RC_FAIL" : "RC_WMORE",
                     rval.consumed);
-            fprintf(stderr, "Structure:\n");
+            fprintf(stderr, "Original random structure:\n");
             asn_fprint(stderr, &asn_DEF_T, structure);
             exit(EX_SOFTWARE);
         }
@@ -278,8 +284,6 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, int iterations) {
 
         if(buffer != tmp_buffer) {
             free(buffer);
-            buffer = tmp_buffer;
-            buffer_size = sizeof(tmp_buffer);
         }
 
         if(i < 5) {

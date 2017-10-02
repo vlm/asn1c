@@ -62,8 +62,8 @@ overrun_encoder_cb(const void *data, size_t size, void *keyp) {
         key->buffer_size = 0;
     } else {
         memcpy((char *)key->buffer + key->computed_size, data, size);
-        key->computed_size += size;
     }
+    key->computed_size += size;
 
     return 0;
 }
@@ -130,6 +130,10 @@ asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_ctx,
     er = asn_encode_internal(opt_codec_ctx, syntax, td, sptr,
                              overrun_encoder_cb, &buf_key);
 
+    if(er.encoded >= 0 && (size_t)er.encoded != buf_key.computed_size) {
+        ASN_DEBUG("asn_encode returned %zd yet wrote %zu bytes",
+                  er.encoded, buf_key.computed_size);
+    }
     assert(er.encoded < 0 || (size_t)er.encoded == buf_key.computed_size);
 
     return er;

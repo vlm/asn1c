@@ -47,6 +47,8 @@ BIT_STRING_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_
         }
 
         if(expected_length < 1) {
+            ASN__DECODE_FAILED;
+        } else if(expected_length > size) {
             ASN__DECODE_STARVED;
         }
 
