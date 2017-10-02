@@ -191,7 +191,7 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
 		"\n$(TARGET): $(ASN_LIBRARY) $(ASN_CONVERTER_SOURCES:.c=.o)"
 		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) $(ASN_CONVERTER_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
 		"\n$(ASN_LIBRARY): $(ASN_MODULE_SOURCES:.c=.o)"
-		"\n\t$(AR) rcs $@ $^\n"
+		"\n\t$(AR) rcs $@ $(ASN_MODULE_SOURCES:.c=.o)\n"
 		"\n.SUFFIXES:"
 		"\n.SUFFIXES: .c .o\n"
 		"\n.c.o:"
