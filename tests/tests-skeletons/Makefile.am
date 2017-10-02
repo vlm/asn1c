@@ -11,6 +11,7 @@ check_PROGRAMS =            \
     check-INTEGER           \
     check-REAL              \
     check-XER               \
+    check-OER-support       \
     check-OER-INTEGER       \
     check-OER-NativeEnumerated \
     check-PER-UniversalString  \

@@ -92,7 +92,7 @@ oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb,
     }
 
     if(*(char *)&littleEndian) {
-        pstart = (const uint8_t *)&length + sizeof(length);
+        pstart = (const uint8_t *)&length + sizeof(length) - 1;
         pend = (const uint8_t *)&length;
         add = -1;
     } else {
@@ -106,8 +106,9 @@ oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb,
         if(*p) break;
     }
 
-    for(sp = scratch + 1; p != pend; p += add, sp++) {
-        *sp = *p;
+    for(sp = scratch + 1; ; p += add) {
+        *sp++ = *p;
+        if(p == pend) break;
     }
     assert((sp - scratch) - 1 <= 0x7f);
     scratch[0] = 0x80 + ((sp - scratch) - 1);
