@@ -25,6 +25,8 @@
       (Severity: low; Security impact: medium)
     * Fix UPER string decoding constrained only by lower bound > 0
       (Severity: low; Security impact: none)
+    * Fix UPER decoding of large [bit-]strings of size a multiple of 16K
+      (Severity: low; Security impact: none)
     * Fix XER decoder crash on maliciously constructed ENUMERATED input.
       (Severity: medium; Security impact: medium)
 

@@ -770,13 +770,15 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 	}
 
 	for(buf = st->buf, end = st->buf + st->size; buf < end;) {
-		ssize_t mayEncode = uper_put_length(po, end - buf);
-		if(mayEncode < 0)
+        int need_eom = 0;
+        ssize_t mayEncode = uper_put_length(po, end - buf, &need_eom);
+        if(mayEncode < 0)
 			ASN__ENCODE_FAILED;
 		if(per_put_many_bits(po, buf, 8 * mayEncode))
 			ASN__ENCODE_FAILED;
 		buf += mayEncode;
-	}
+        if(need_eom && uper_put_length(po, 0, 0)) ASN__ENCODE_FAILED;
+    }
 
 	ASN__ENCODED_OK(er);
 }

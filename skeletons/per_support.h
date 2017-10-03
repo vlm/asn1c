@@ -75,11 +75,14 @@ int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int
 
 /*
  * X.691 (08/2015) #11.9 "General rules for encoding a length determinant"
- * Put the length "n" to the Unaligned PER stream.
+ * Put the length "whole_length" to the Unaligned PER stream.
+ * If (opt_need_eom) is given, it will be set to 1 if final 0-length is needed.
+ * In that case, invoke uper_put_length(po, 0, 0) after encoding the last block.
  * This function returns the number of units which may be flushed
  * in the next units saving iteration.
  */
-ssize_t uper_put_length(asn_per_outp_t *po, size_t whole_length);
+ssize_t uper_put_length(asn_per_outp_t *po, size_t whole_length,
+                        int *opt_need_eom);
 
 /*
  * Put the normally small length "n" to the Unaligned PER stream.

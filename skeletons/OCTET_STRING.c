@@ -1253,8 +1253,8 @@ OCTET_STRING_per_get_characters(asn_per_data_t *po, uint8_t *buf,
 	}
 
 	for(; buf < end; buf += bpc) {
-		int code = per_get_few_bits(po, unit_bits);
-		int ch = code + lb;
+		int32_t code = per_get_few_bits(po, unit_bits);
+		int32_t ch = code + lb;
 		if(code < 0) return -1;	/* WMORE */
 		if(ch > ub) {
 			ASN_DEBUG("Code %d is out of range (%ld..%ld)",
@@ -1471,6 +1471,7 @@ OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		raw_len = uper_get_length(pd, csiz->effective_bits, csiz->lower_bound,
 		                          &repeat);
 		if(raw_len < 0) RETURN(RC_WMORE);
+		if(raw_len == 0 && st->buf) break;
 
 		ASN_DEBUG("Got PER length eb %ld, len %ld, %s (%s)",
 			(long)csiz->effective_bits, (long)raw_len,
@@ -1610,27 +1611,27 @@ OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 
     ASN_DEBUG("Encoding %zu bytes", st->size);
 
-    if(size_in_units == 0) {
-        if(uper_put_length(po, 0)) ASN__ENCODE_FAILED;
-        ASN__ENCODED_OK(er);
-    }
-
     buf = st->buf;
-    while(size_in_units) {
-        ssize_t maySave = uper_put_length(po, size_in_units);
-        if(maySave < 0) ASN__ENCODE_FAILED;
+    ASN_DEBUG("Encoding %zu in units", size_in_units);
+    do {
+        int need_eom = 0;
+        ssize_t may_save = uper_put_length(po, size_in_units, &need_eom);
+        if(may_save < 0) ASN__ENCODE_FAILED;
 
-        ASN_DEBUG("Encoding %zd of %zu", maySave, size_in_units);
+        ASN_DEBUG("Encoding %zd of %zu%s", may_save, size_in_units,
+                  need_eom ? ",+EOM" : "");
 
-        ret = OCTET_STRING_per_put_characters(po, buf, maySave, bpc, unit_bits,
+        ret = OCTET_STRING_per_put_characters(po, buf, may_save, bpc, unit_bits,
                                               cval->lower_bound,
                                               cval->upper_bound, pc);
         if(ret) ASN__ENCODE_FAILED;
 
-        buf += maySave * bpc;
-        size_in_units -= maySave;
-        assert(!(maySave & 0x07) || !size_in_units);
-    }
+        buf += may_save * bpc;
+        size_in_units -= may_save;
+        assert(!(may_save & 0x07) || !size_in_units);
+        if(need_eom && uper_put_length(po, 0, 0))
+            ASN__ENCODE_FAILED; /* End of Message length */
+    } while(size_in_units);
 
     ASN__ENCODED_OK(er);
 }

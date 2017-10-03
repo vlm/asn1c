@@ -396,6 +396,7 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		raw_len = uper_get_length(pd, csiz->effective_bits, csiz->lower_bound,
 		                          &repeat);
 		if(raw_len < 0) RETURN(RC_WMORE);
+        if(raw_len == 0 && st->buf) break;
 
 		ASN_DEBUG("Got PER length eb %ld, len %ld, %s (%s)",
 			(long)csiz->effective_bits, (long)raw_len,
@@ -442,8 +443,6 @@ BIT_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	if(specs->subvariant == ASN_OSUBV_BIT) {
         if((st->size == 0 && st->bits_unused) || (st->bits_unused & ~7))
             ASN__ENCODE_FAILED;
-        ASN_DEBUG("BIT STRING of %zu bytes, %d bits unused", size_in_bits,
-                  st->bits_unused);
     } else {
 		ASN__ENCODE_FAILED;
     }
@@ -518,7 +517,8 @@ BIT_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 
     buf = st->buf;
     do {
-        ssize_t maySave = uper_put_length(po, size_in_bits);
+        int need_eom = 0;
+        ssize_t maySave = uper_put_length(po, size_in_bits, &need_eom);
         if(maySave < 0) ASN__ENCODE_FAILED;
 
         ASN_DEBUG("Encoding %zd of %zu", maySave, size_in_bits);
@@ -529,6 +529,8 @@ BIT_STRING_encode_uper(asn_TYPE_descriptor_t *td,
         buf += maySave >> 3;
         size_in_bits -= maySave;
         assert(!(maySave & 0x07) || !size_in_bits);
+        if(need_eom && uper_put_length(po, 0, 0))
+            ASN__ENCODE_FAILED; /* End of Message length */
     } while(size_in_bits);
 
     ASN__ENCODED_OK(er);

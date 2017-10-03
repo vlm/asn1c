@@ -44,6 +44,7 @@ stamp-h*
 
 # /tests/tests-skeletons
 /tests/tests-skeletons/check-*
+!/tests/tests-skeletons/check-*.c
 
 # /doc/docsrc
 doc/docsrc/*.aux

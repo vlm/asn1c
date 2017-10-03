@@ -15,6 +15,7 @@ check_PROGRAMS =            \
     check-OER-support       \
     check-OER-INTEGER       \
     check-OER-NativeEnumerated \
+    check-PER-support       \
     check-PER-UniversalString  \
     check-PER-INTEGER
 

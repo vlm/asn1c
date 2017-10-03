@@ -14,9 +14,9 @@ contstraints that are intended to affect encoding and parsing.
 
  * By default, the random value generator attempts to generate values
    limited to very roughly to around 128 bytes. If huge values are desired
-   (perhaps due to large constraints), the RMAX=<size> prefix can be specified
-   on a line:
+   (perhaps due to large constraints), the RMAX=<size> setting can be specified
+   in the ASN.1 comments:
 
-        RMAX=64000 T ::= VisibleString (SIZE(64000))
+        T ::= VisibleString (SIZE(64000))    -- RMAX=64000
    
 

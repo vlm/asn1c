@@ -218,6 +218,7 @@ ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
         /* Get the PER length */
         raw_len = uper_get_length(pd, -1, 0, &repeat);
         if(raw_len < 0) RETURN(RC_WMORE);
+        if(raw_len == 0 && st->buf) break;
 
         ASN_DEBUG("Got PER length len %zu, %s (%s)", raw_len,
                   repeat ? "repeat" : "once", td->name);
@@ -254,8 +255,9 @@ ANY_encode_uper(asn_TYPE_descriptor_t *td,
 
     buf = st->buf;
     size = st->size;
-    while(size) {
-        ssize_t may_save = uper_put_length(po, size);
+    do {
+        int need_eom = 0;
+        ssize_t may_save = uper_put_length(po, size, &need_eom);
         if(may_save < 0) ASN__ENCODE_FAILED;
 
         ret = per_put_many_bits(po, buf, may_save * 8);
@@ -264,7 +266,9 @@ ANY_encode_uper(asn_TYPE_descriptor_t *td,
         buf += may_save;
         size -= may_save;
         assert(!(may_save & 0x07) || !size);
-    }
+        if(need_eom && uper_put_length(po, 0, 0))
+            ASN__ENCODE_FAILED; /* End of Message length */
+    } while(size);
 
     ASN__ENCODED_OK(er);
 }

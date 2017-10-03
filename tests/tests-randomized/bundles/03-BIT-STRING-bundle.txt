@@ -17,3 +17,9 @@ T ::= BIT STRING { foo(2147483648), baz(2147483647) } (SIZE(32))
 T ::= BIT STRING { foo(2147483648), baz(2147483647) } (SIZE(31,...))
 T ::= BIT STRING { foo(2147483648), baz(2147483647) } (SIZE(0..32))
 T ::= BIT STRING { foo(2147483648), baz(2147483647) } (SIZE(0..31,...))
+T ::= BIT STRING { foo(0) } (SIZE(65535))       -- RMAX=65540
+T ::= BIT STRING { foo(0) } (SIZE(65536))       -- RMAX=65540
+T ::= BIT STRING { foo(0) } (SIZE(65537))       -- RMAX=65540
+T ::= BIT STRING { foo(0) } (SIZE(65535,...))   -- RMAX=65540
+T ::= BIT STRING { foo(0) } (SIZE(65536,...))   -- RMAX=65540
+T ::= BIT STRING { foo(0) } (SIZE(65537,...))   -- RMAX=65540

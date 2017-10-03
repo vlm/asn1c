@@ -148,12 +148,11 @@ asn_compile() {
     local asn="$1"
     shift
 
-    # Create "INTEGER (1..2)" from "RMAX=5 T ::= INTEGER (1..2) -- Comment"
+    # Create "INTEGER (1..2)" from "T ::= INTEGER (1..2) -- RMAX=5"
     local short_asn=$(echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[^ ]* //;')
     if [ $(echo "$short_asn" | grep -c "::=") = 1 ]; then
         short_asn=$(echo "$short_asn" | sed -e 's/.*::= *//')
     fi
-    asn=$(echo "$asn" | sed -e 's/RMAX=[^ ]* //;')
 
     test ! -f Makefile.am   # Protection from accidental clobbering
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1

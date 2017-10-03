@@ -190,7 +190,7 @@ SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
 		if(ct && ct->effective_bits >= 0) {
 			mayEncode = list->count;
 		} else {
-			mayEncode = uper_put_length(po, list->count - seq);
+			mayEncode = uper_put_length(po, list->count - seq, 0);
 			if(mayEncode < 0) ASN__ENCODE_FAILED;
 		}
 
