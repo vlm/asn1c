@@ -1,0 +1,8 @@
+-- Test boolean. Should be easy
+T ::= BOOLEAN
+T ::= BOOLEAN (FALSE)
+T ::= BOOLEAN (TRUE)
+T ::= BOOLEAN (FALSE,...)
+T ::= BOOLEAN (TRUE,...)
+T ::= BOOLEAN (FALSE..TRUE)
+T ::= BOOLEAN (FALSE..TRUE,...)
