@@ -11,8 +11,8 @@ set -e
 usage() {
     echo "Usage:"
     echo "  $0 -h"
-    echo "  $0 -t \"<ASN.1 definition for type T, in string form>\""
-    echo "  $0 bundles/<bundle-name.txt> [<line>]"
+    echo "  $0 [--dirty] -t \"<ASN.1 text defining type T, in string form>\""
+    echo "  $0 [--dirty] bundles/<bundle-name.txt> [<line>]"
     echo "Where options are:"
     echo "  -h          Show this help screen"
     echo "  --dirty     Reuse compile results from the previous run(s)"
