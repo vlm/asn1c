@@ -115,7 +115,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+	const asn_SEQUENCE_specifics_t *specs = (const asn_SEQUENCE_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elements = td->elements;
 
 	/*
@@ -634,8 +634,8 @@ SEQUENCE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn_SEQUENCE_specifics_t *specs
-		= (asn_SEQUENCE_specifics_t *)td->specifics;
+	const asn_SEQUENCE_specifics_t *specs
+		= (const asn_SEQUENCE_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elements = td->elements;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 
@@ -1020,8 +1020,9 @@ SEQUENCE_free(const asn_TYPE_descriptor_t *td, void *sptr,
     case ASFM_FREE_UNDERLYING:
         break;
     case ASFM_FREE_UNDERLYING_AND_RESET:
-        memset(sptr, 0,
-               ((asn_SEQUENCE_specifics_t *)(td->specifics))->struct_size);
+        memset(
+            sptr, 0,
+            ((const asn_SEQUENCE_specifics_t *)(td->specifics))->struct_size);
         break;
     }
 }
@@ -1078,7 +1079,7 @@ asn_dec_rval_t
 SEQUENCE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                      const asn_per_constraints_t *constraints, void **sptr,
                      asn_per_data_t *pd) {
-	asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+	const asn_SEQUENCE_specifics_t *specs = (const asn_SEQUENCE_specifics_t *)td->specifics;
 	void *st = *sptr;	/* Target structure. */
 	int extpresent;		/* Extension additions are present */
 	uint8_t *opres;		/* Presence of optional root members */
@@ -1298,8 +1299,8 @@ SEQUENCE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t
 static int
 SEQUENCE_handle_extensions(asn_TYPE_descriptor_t *td, void *sptr,
 		asn_per_outp_t *po1, asn_per_outp_t *po2) {
-	asn_SEQUENCE_specifics_t *specs
-		= (asn_SEQUENCE_specifics_t *)td->specifics;
+	const asn_SEQUENCE_specifics_t *specs
+		= (const asn_SEQUENCE_specifics_t *)td->specifics;
 	int exts_present = 0;
 	int exts_count = 0;
 	size_t edx;
@@ -1351,8 +1352,8 @@ asn_enc_rval_t
 SEQUENCE_encode_uper(asn_TYPE_descriptor_t *td,
                      const asn_per_constraints_t *constraints, void *sptr,
                      asn_per_outp_t *po) {
-	asn_SEQUENCE_specifics_t *specs
-		= (asn_SEQUENCE_specifics_t *)td->specifics;
+	const asn_SEQUENCE_specifics_t *specs
+		= (const asn_SEQUENCE_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int n_extensions;
 	size_t edx;

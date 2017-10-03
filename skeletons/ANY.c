@@ -186,8 +186,8 @@ asn_dec_rval_t
 ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                 const asn_per_constraints_t *constraints, void **sptr,
                 asn_per_data_t *pd) {
-    asn_OCTET_STRING_specifics_t *specs =
-        td->specifics ? (asn_OCTET_STRING_specifics_t *)td->specifics
+    const asn_OCTET_STRING_specifics_t *specs =
+        td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
                       : &asn_SPC_ANY_specs;
     size_t consumed_myself = 0;
     int repeat;

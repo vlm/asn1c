@@ -79,7 +79,8 @@ asn_dec_rval_t
 SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
                     const asn_oer_constraints_t *constraints, void **struct_ptr,
                     const void *ptr, size_t size) {
-    asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+    const asn_SEQUENCE_specifics_t *specs =
+        (const asn_SEQUENCE_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     void *st = *struct_ptr; /* Target structure */
     asn_struct_ctx_t *ctx; /* Decoder context */
@@ -390,7 +391,7 @@ asn_enc_rval_t
 SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
                     const asn_oer_constraints_t *constraints, void *sptr,
                     asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_SEQUENCE_specifics_t *specs = (asn_SEQUENCE_specifics_t *)td->specifics;
+    const asn_SEQUENCE_specifics_t *specs = (const asn_SEQUENCE_specifics_t *)td->specifics;
     size_t computed_size = 0;
     int has_extensions_bit = (specs->ext_before >= 0);
     size_t preamble_bits = (has_extensions_bit + specs->roms_count);

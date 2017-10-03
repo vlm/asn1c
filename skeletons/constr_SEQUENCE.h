@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-typedef const struct asn_SEQUENCE_specifics_s {
+typedef struct asn_SEQUENCE_specifics_s {
 	/*
 	 * Target structure description.
 	 */

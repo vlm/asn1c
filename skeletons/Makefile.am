@@ -1,7 +1,6 @@
 
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
-
-AM_CFLAGS = $(SKELETONS_CFLAGS)
+CFLAGS += ${SKELETONS_CFLAGS}   # Put -std=c89 at the end!
 
 dist_pkgdata_DATA =				\
 		${srcdir}/README		\

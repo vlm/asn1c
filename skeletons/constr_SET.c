@@ -99,7 +99,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elements = td->elements;
 
 	/*
@@ -393,7 +393,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 
 static int
 _SET_is_populated(asn_TYPE_descriptor_t *td, void *st) {
-	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	size_t edx;
 
 	/*
@@ -435,7 +435,7 @@ asn_enc_rval_t
 SET_encode_der(asn_TYPE_descriptor_t *td,
 	void *sptr, int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	size_t computed_size = 0;
 	asn_enc_rval_t er;
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
@@ -611,7 +611,7 @@ SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elements = td->elements;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 
@@ -824,7 +824,7 @@ asn_enc_rval_t
 SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_SET_specifics_t *specs = (asn_SET_specifics_t *)td->specifics;
+	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int xcan = (flags & XER_F_CANONICAL);
 	const asn_TYPE_tag2member_t *t2m = specs->tag2el_cxer;
@@ -958,7 +958,8 @@ SET_free(const asn_TYPE_descriptor_t *td, void *ptr,
     case ASFM_FREE_UNDERLYING:
         break;
     case ASFM_FREE_UNDERLYING_AND_RESET:
-        memset(ptr, 0, ((asn_SET_specifics_t *)(td->specifics))->struct_size);
+        memset(ptr, 0,
+               ((const asn_SET_specifics_t *)(td->specifics))->struct_size);
         break;
     }
 }

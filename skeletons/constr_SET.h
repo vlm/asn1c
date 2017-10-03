@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 
-typedef const struct asn_SET_specifics_s {
+typedef struct asn_SET_specifics_s {
 	/*
 	 * Target structure description.
 	 */

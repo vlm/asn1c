@@ -319,8 +319,8 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                          asn_TYPE_descriptor_t *td,
                          const asn_per_constraints_t *constraints, void **sptr,
                          asn_per_data_t *pd) {
-    asn_OCTET_STRING_specifics_t *specs = td->specifics
-		? (asn_OCTET_STRING_specifics_t *)td->specifics
+    const asn_OCTET_STRING_specifics_t *specs = td->specifics
+		? (const asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_BIT_STRING_specs;
     const asn_per_constraints_t *pc =
         constraints ? constraints : td->encoding_constraints.per_constraints;
@@ -422,8 +422,8 @@ asn_enc_rval_t
 BIT_STRING_encode_uper(asn_TYPE_descriptor_t *td,
                          const asn_per_constraints_t *constraints, void *sptr,
                          asn_per_outp_t *po) {
-    asn_OCTET_STRING_specifics_t *specs =
-        td->specifics ? (asn_OCTET_STRING_specifics_t *)td->specifics
+    const asn_OCTET_STRING_specifics_t *specs =
+        td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
                       : &asn_SPC_BIT_STRING_specs;
     const asn_per_constraints_t *pc =
         constraints ? constraints : td->encoding_constraints.per_constraints;
@@ -486,9 +486,9 @@ BIT_STRING_encode_uper(asn_TYPE_descriptor_t *td,
 	}
 
     if(csiz->effective_bits >= 0 && !inext) {
+        int add_trailer = (ssize_t)size_in_bits < csiz->lower_bound;
         ASN_DEBUG("Encoding %zu bytes (%ld), length in %d bits", st->size,
                   size_in_bits - csiz->lower_bound, csiz->effective_bits);
-        int add_trailer = (ssize_t)size_in_bits < csiz->lower_bound;
         ret = per_put_few_bits(
             po,
             add_trailer ? csiz->lower_bound : size_in_bits - csiz->lower_bound,
@@ -542,8 +542,8 @@ asn_random_fill_result_t
 BIT_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
                        const asn_encoding_constraints_t *constraints,
                        size_t max_length) {
-    asn_OCTET_STRING_specifics_t *specs =
-        td->specifics ? (asn_OCTET_STRING_specifics_t *)td->specifics
+    const asn_OCTET_STRING_specifics_t *specs =
+        td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
                       : &asn_SPC_BIT_STRING_specs;
     asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};

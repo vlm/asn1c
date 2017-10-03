@@ -131,7 +131,8 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
     /*
      * Bring closer parts of structure description.
      */
-    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    const asn_CHOICE_specifics_t *specs =
+        (const asn_CHOICE_specifics_t *)td->specifics;
     asn_TYPE_member_t *elements = td->elements;
 
     /*
@@ -311,7 +312,8 @@ asn_enc_rval_t
 CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
                   const asn_oer_constraints_t *constraints, void *sptr,
                   asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_CHOICE_specifics_t *specs = (asn_CHOICE_specifics_t *)td->specifics;
+    const asn_CHOICE_specifics_t *specs =
+        (const asn_CHOICE_specifics_t *)td->specifics;
     asn_TYPE_member_t *elm; /* CHOICE element */
     unsigned present;
     void *memb_ptr;

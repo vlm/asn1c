@@ -71,7 +71,7 @@ SET_OF_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elm = td->elements;	/* Single one */
 
 	/*
@@ -472,7 +472,7 @@ SET_OF_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
 	/*
 	 * Bring closer parts of structure description.
 	 */
-	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *element = td->elements;
 	const char *elm_tag;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
@@ -655,7 +655,7 @@ SET_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
-	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elm = td->elements;
 	asn_anonymous_set_ *list = _A_SET_FROM_VOID(sptr);
 	const char *mname = specs->as_XMLValueList
@@ -785,7 +785,7 @@ void
 SET_OF_free(const asn_TYPE_descriptor_t *td, void *ptr,
             enum asn_struct_free_method method) {
     if(td && ptr) {
-		asn_SET_OF_specifics_t *specs;
+		const asn_SET_OF_specifics_t *specs;
 		asn_TYPE_member_t *elm = td->elements;
 		asn_anonymous_set_ *list = _A_SET_FROM_VOID(ptr);
 		asn_struct_ctx_t *ctx;	/* Decoder context */
@@ -804,7 +804,7 @@ SET_OF_free(const asn_TYPE_descriptor_t *td, void *ptr,
 
 		asn_set_empty(list);	/* Remove (list->array) */
 
-		specs = (asn_SET_OF_specifics_t *)td->specifics;
+		specs = (const asn_SET_OF_specifics_t *)td->specifics;
 		ctx = (asn_struct_ctx_t *)((char *)ptr + specs->ctx_offset);
 		if(ctx->ptr) {
 			ASN_STRUCT_FREE(*elm->type, ctx->ptr);
@@ -864,7 +864,7 @@ SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *
                    const asn_per_constraints_t *constraints, void **sptr,
                    asn_per_data_t *pd) {
 	asn_dec_rval_t rv;
-        asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
 	asn_TYPE_member_t *elm = td->elements;	/* Single one */
 	void *st = *sptr;
 	asn_anonymous_set_ *list;

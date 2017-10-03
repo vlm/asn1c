@@ -133,14 +133,23 @@ typedef	unsigned int	uint32_t;
 #endif /* __GNUC__ */
 #endif	/* MIN */
 
+#if __STDC_VERSION__ >= 199901L
 #ifndef SIZE_MAX
-#define SIZE_MAX   ULONG_MAX
+#define SIZE_MAX   ((~((size_t)0)) >> 1)
 #endif
 
 #ifndef RSIZE_MAX   /* C11, Annex K */
 #define RSIZE_MAX   (SIZE_MAX >> 1)
 #endif
 #ifndef RSSIZE_MAX   /* Halve signed size even further than unsigned */
+#define RSSIZE_MAX   ((ssize_t)(RSIZE_MAX >> 1))
+#endif
+#else   /* Old compiler */
+#undef  SIZE_MAX
+#undef  RSIZE_MAX
+#undef  RSSIZE_MAX
+#define SIZE_MAX   ((~((size_t)0)) >> 1)
+#define RSIZE_MAX   (SIZE_MAX >> 1)
 #define RSSIZE_MAX   ((ssize_t)(RSIZE_MAX >> 1))
 #endif
 

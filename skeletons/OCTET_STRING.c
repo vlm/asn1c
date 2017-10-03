@@ -180,8 +180,8 @@ asn_dec_rval_t
 OCTET_STRING_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td,
 	void **sptr, const void *buf_ptr, size_t size, int tag_mode) {
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
-				? (asn_OCTET_STRING_specifics_t *)td->specifics
+	const asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? (const asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_SPC_OCTET_STRING_specs;
 	BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
 	asn_dec_rval_t rval;
@@ -258,7 +258,7 @@ OCTET_STRING_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 					?size:(size_t)sel->left);
 
 
-		ASN_DEBUG("%p, s->l=%ld, s->wn=%ld, s->g=%ld\n", sel,
+		ASN_DEBUG("%p, s->l=%ld, s->wn=%ld, s->g=%ld\n", (void *)sel,
 			(long)(sel?sel->left:0),
 			(long)(sel?sel->want_nulls:0),
 			(long)(sel?sel->got:0)
@@ -495,7 +495,7 @@ OCTET_STRING_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 
 	if(sel) {
 		ASN_DEBUG("3sel p=%p, wn=%d, l=%ld, g=%ld, size=%ld",
-			sel->prev, sel->want_nulls,
+			(void *)sel->prev, sel->want_nulls,
 			(long)sel->left, (long)sel->got, (long)size);
 		if(sel->prev || sel->want_nulls > 1 || sel->left > 0) {
 			RETURN(RC_WMORE);
@@ -536,8 +536,8 @@ OCTET_STRING_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_enc_rval_t er;
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
-				? (asn_OCTET_STRING_specifics_t *)td->specifics
+	const asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? (const asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_SPC_OCTET_STRING_specs;
 	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
 	enum asn_OS_Subvariant type_variant = specs->subvariant;
@@ -1125,8 +1125,8 @@ OCTET_STRING__decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 			int have_more)
 ) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
-				? (asn_OCTET_STRING_specifics_t *)td->specifics
+	const asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? (const asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_SPC_OCTET_STRING_specs;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 	asn_struct_ctx_t *ctx;		/* Per-structure parser context */
@@ -1348,8 +1348,8 @@ OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                          asn_TYPE_descriptor_t *td,
                          const asn_per_constraints_t *constraints, void **sptr,
                          asn_per_data_t *pd) {
-    asn_OCTET_STRING_specifics_t *specs = td->specifics
-		? (asn_OCTET_STRING_specifics_t *)td->specifics
+    const asn_OCTET_STRING_specifics_t *specs = td->specifics
+		? (const asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_OCTET_STRING_specs;
     const asn_per_constraints_t *pc =
         constraints ? constraints : td->encoding_constraints.per_constraints;
@@ -1497,8 +1497,8 @@ asn_enc_rval_t
 OCTET_STRING_encode_uper(asn_TYPE_descriptor_t *td,
                          const asn_per_constraints_t *constraints, void *sptr,
                          asn_per_outp_t *po) {
-    asn_OCTET_STRING_specifics_t *specs = td->specifics
-		? (asn_OCTET_STRING_specifics_t *)td->specifics
+    const asn_OCTET_STRING_specifics_t *specs = td->specifics
+		? (const asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_OCTET_STRING_specs;
 	const asn_per_constraints_t *pc = constraints ? constraints
 				: td->encoding_constraints.per_constraints;
@@ -1699,7 +1699,7 @@ void
 OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
                   enum asn_struct_free_method method) {
 	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
-	asn_OCTET_STRING_specifics_t *specs;
+	const asn_OCTET_STRING_specifics_t *specs;
 	asn_struct_ctx_t *ctx;
 	struct _stack *stck;
 
@@ -1707,7 +1707,7 @@ OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
 		return;
 
 	specs = td->specifics
-		    ? (asn_OCTET_STRING_specifics_t *)td->specifics
+		    ? (const asn_OCTET_STRING_specifics_t *)td->specifics
 		    : &asn_SPC_OCTET_STRING_specs;
 	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 
@@ -1739,7 +1739,8 @@ OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
         break;
     case ASFM_FREE_UNDERLYING_AND_RESET:
         memset(sptr, 0,
-               ((asn_OCTET_STRING_specifics_t *)(td->specifics))->struct_size);
+               ((const asn_OCTET_STRING_specifics_t *)(td->specifics))
+                   ->struct_size);
         break;
     }
 }
@@ -1865,8 +1866,8 @@ asn_random_fill_result_t
 OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
                          const asn_encoding_constraints_t *constraints,
                          size_t max_length) {
-	asn_OCTET_STRING_specifics_t *specs = td->specifics
-				? (asn_OCTET_STRING_specifics_t *)td->specifics
+	const asn_OCTET_STRING_specifics_t *specs = td->specifics
+				? (const asn_OCTET_STRING_specifics_t *)td->specifics
 				: &asn_SPC_OCTET_STRING_specs;
     asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};

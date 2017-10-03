@@ -92,7 +92,7 @@ SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr, int ilevel,
                        enum xer_encoder_flags_e flags,
                        asn_app_consume_bytes_f *cb, void *app_key) {
     asn_enc_rval_t er;
-    asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+    const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
     asn_TYPE_member_t *elm = td->elements;
     asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
     const char *mname = specs->as_XMLValueList
