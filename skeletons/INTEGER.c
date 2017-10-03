@@ -900,7 +900,7 @@ asn_umax2INTEGER(INTEGER_t *st, uintmax_t value) {
     uint8_t *b;
     int shr;
 
-    if(value <= INTMAX_MAX) {
+    if(value <= ((~(uintmax_t)0) >> 1)) {
         return asn_imax2INTEGER(st, value);
     }
 
@@ -1025,8 +1025,10 @@ asn_strtoimax_lim(const char *str, const char **end, intmax_t *intp) {
 	int sign = 1;
 	intmax_t value;
 
-	const intmax_t upper_boundary = INTMAX_MAX / 10;
-	intmax_t last_digit_max = INTMAX_MAX % 10;
+#define ASN1_INTMAX_MAX ((~(uintmax_t)0) >> 1)
+
+    const intmax_t upper_boundary = ASN1_INTMAX_MAX / 10;
+	intmax_t last_digit_max = ASN1_INTMAX_MAX % 10;
 
 	if(str >= *end) return ASN_STRTOX_ERROR_INVAL;
 
