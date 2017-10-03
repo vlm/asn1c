@@ -13,6 +13,10 @@ usage() {
     echo "  $0 -h"
     echo "  $0 -t \"<ASN.1 definition for type T, in string form>\""
     echo "  $0 bundles/<bundle-name.txt> [<line>]"
+    echo "Where options are:"
+    echo "  -h          Show this help screen"
+    echo "  --dirty     Reuse compile results from the previous run(s)"
+    echo "  -t <ASN.1>  Run this particular typel"
     echo "Examples:"
     echo "  $0 -t UTF8String"
     echo "  $0 -t \"T ::= INTEGER (0..1)\""
@@ -29,12 +33,25 @@ abs_top_builddir="${abs_top_builddir:-$(pwd)/../../}"
 tests_succeeded=0
 tests_failed=0
 stop_after_failed=1  # We stop after 3 failures.
+need_clean_before_bundle=1  # Clean before testing a bundle file
+need_clean_before_test=1    # Before each line in a bundle file
+
+make_clean_before_bundle() {
+    test "${need_clean_before_bundle}" = "1" && make clean
+}
+
+make_clean_before_test() {
+    test "${need_clean_before_test}" = "1" && make clean
+}
 
 # Get all the type-bearding lines in file and process them individually
 verify_asn_types_in_file() {
     local filename="$1"
     local need_line="$2"
     test "x$filename" != "x" || usage
+
+    make_clean_before_bundle
+
     echo "Open [$filename]"
     local line=0
     while read asn; do
@@ -60,6 +77,9 @@ verify_asn_type() {
     shift
     local where="$*"
     test "x$asn" != "x" || usage
+
+    make_clean_before_test
+
     if echo "$asn" | grep -qv "::="; then
         asn="T ::= $asn"
     fi
@@ -174,9 +194,10 @@ asn_compile() {
 # Command line parsing
 case "$1" in
     -h) usage ;;
+    --dirty) need_clean_before_bundle=0; need_clean_before_test=0 ;;
     -t) verify_asn_type "$2" || exit 1;;
     "")
-        for bundle in bundles/*txt; do
+        for bundle in $(echo bundles/*txt | sort -nr); do
             verify_asn_types_in_file "$bundle"
         done
     ;;
