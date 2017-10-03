@@ -117,8 +117,9 @@ compile_and_test() {
 
     echo "Checking random data encode-decode"
     if ! eval ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} -c; then
+        if [ "x$CC" = "x" ]; then CCSTR=""; else CCSTR="CC=${CC} "; fi
         echo "RETRY:"
-        echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} -c)"
+        echo "(cd ${RNDTEMP} && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} -c)"
         return 3
     fi
 
