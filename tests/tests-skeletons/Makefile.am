@@ -3,6 +3,7 @@
 check_PROGRAMS =            \
     check-ber_tlv_tag       \
     check-length            \
+    check-bits              \
     check-OIDs              \
     check-GeneralizedTime   \
     check-OCTET_STRING      \
@@ -15,7 +16,6 @@ check_PROGRAMS =            \
     check-OER-INTEGER       \
     check-OER-NativeEnumerated \
     check-PER-UniversalString  \
-    check-PER               \
     check-PER-INTEGER
 
 #Filter out the coverage options from CFLAGS as we don't need
