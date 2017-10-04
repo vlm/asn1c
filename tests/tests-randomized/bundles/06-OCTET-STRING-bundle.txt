@@ -1,0 +1,19 @@
+-- Test encoding/decoding/transcoding of a primitive byte string type
+T ::= OCTET STRING
+T ::= OCTET STRING ("Value Constraint")
+T ::= OCTET STRING (SIZE(0))
+T ::= OCTET STRING (SIZE(0,...))
+T ::= OCTET STRING (SIZE(1))
+T ::= OCTET STRING (SIZE(1,...))
+T ::= OCTET STRING (SIZE(2))
+T ::= OCTET STRING (SIZE(2,...))
+T ::= OCTET STRING (SIZE(1..2))
+T ::= OCTET STRING (SIZE(1..2,...))
+T ::= OCTET STRING (SIZE(1..127))
+T ::= OCTET STRING (SIZE(1..128))
+T ::= OCTET STRING (SIZE(1..129))
+T ::= OCTET STRING (SIZE(64000))           -- RMAX=64000, #11.9.3.3
+T ::= OCTET STRING (SIZE(32000..32002))    -- RMAX=33000
+T ::= OCTET STRING (SIZE(65530..65535))    -- RMAX=65536
+T ::= OCTET STRING (SIZE(65530..65536))    -- RMAX=65536
+T ::= OCTET STRING (SIZE(65535..65550))    -- RMAX=66000

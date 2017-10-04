@@ -1,0 +1,2 @@
+-- Test the REAL (floating point) type.
+T ::= REAL

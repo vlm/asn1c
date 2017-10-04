@@ -1,0 +1,27 @@
+-- Test encoding/decoding/transcoding of a simple string type
+T ::= VisibleString
+T ::= VisibleString ("Value Constraint")
+T ::= VisibleString (SIZE(0))
+T ::= VisibleString (SIZE(0,...))
+T ::= VisibleString (SIZE(1))
+T ::= VisibleString (SIZE(1)) (FROM("A".."B"))
+T ::= VisibleString (SIZE(1,...))
+T ::= VisibleString (SIZE(2))
+T ::= VisibleString (SIZE(2,...))
+T ::= VisibleString (SIZE(1..2))
+T ::= VisibleString (SIZE(1..2,...))
+T ::= VisibleString (SIZE(4..6,...)) (FROM("A".."B"))
+T ::= VisibleString (SIZE(1..MAX)) (FROM("A".."B"))
+T ::= VisibleString (SIZE(1..127))
+T ::= VisibleString (SIZE(1..128))
+T ::= VisibleString (SIZE(1..129))
+T ::= VisibleString (SIZE(5) INTERSECTION FROM("A".."Z"))
+T ::= VisibleString (SIZE(4..6) INTERSECTION (FROM("A".."B")))
+T ::= VisibleString (SIZE(4..6,...) INTERSECTION (FROM("A".."B")))
+T ::= VisibleString (SIZE(64000))           -- RMAX=64000, #11.9.3.3
+T ::= VisibleString (SIZE(32000..32002))    -- RMAX=33000
+T ::= VisibleString (SIZE(32000..32002)) (FROM("A".."B"))       -- RMAX=33000
+T ::= VisibleString (SIZE(32000..32002,...)) (FROM("A".."B"))   -- RMAX=33000
+T ::= VisibleString (SIZE(65530..65535))    -- RMAX=65536
+T ::= VisibleString (SIZE(65530..65536))    -- RMAX=65536
+T ::= VisibleString (SIZE(65535..65550))    -- RMAX=66000

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004, 2006 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
@@ -51,8 +51,8 @@ asn_TYPE_operation_t asn_OP_NativeReal = {
 	0,
 	0,
 #else
-	0,
-	0,
+	NativeReal_decode_oer,
+	NativeReal_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -82,111 +82,93 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
  */
 asn_dec_rval_t
 NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td,
-	void **dbl_ptr, const void *buf_ptr, size_t size, int tag_mode) {
-	double *Dbl = (double *)*dbl_ptr;
-	asn_dec_rval_t rval;
-	ber_tlv_len_t length;
+                      asn_TYPE_descriptor_t *td, void **dbl_ptr,
+                      const void *buf_ptr, size_t size, int tag_mode) {
+    double *Dbl = (double *)*dbl_ptr;
+    asn_dec_rval_t rval;
+    ber_tlv_len_t length;
 
-	/*
-	 * If the structure is not there, allocate it.
-	 */
-	if(Dbl == NULL) {
-		*dbl_ptr = CALLOC(1, sizeof(*Dbl));
-		Dbl = (double *)*dbl_ptr;
-		if(Dbl == NULL) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
-	}
+    /*
+     * If the structure is not there, allocate it.
+     */
+    if(Dbl == NULL) {
+        *dbl_ptr = CALLOC(1, sizeof(*Dbl));
+        Dbl = (double *)*dbl_ptr;
+        if(Dbl == NULL) {
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+            return rval;
+        }
+    }
 
-	ASN_DEBUG("Decoding %s as REAL (tm=%d)",
-		td->name, tag_mode);
+    ASN_DEBUG("Decoding %s as REAL (tm=%d)", td->name, tag_mode);
 
-	/*
-	 * Check tags.
-	 */
-	rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size,
-			tag_mode, 0, &length, 0);
-	if(rval.code != RC_OK)
-		return rval;
+    /*
+     * Check tags.
+     */
+    rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size, tag_mode, 0,
+                          &length, 0);
+    if(rval.code != RC_OK) return rval;
 
-	ASN_DEBUG("%s length is %d bytes", td->name, (int)length);
+    ASN_DEBUG("%s length is %d bytes", td->name, (int)length);
 
-	/*
-	 * Make sure we have this length.
-	 */
-	buf_ptr = ((const char *)buf_ptr) + rval.consumed;
-	size -= rval.consumed;
-	if(length > (ber_tlv_len_t)size) {
-		rval.code = RC_WMORE;
-		rval.consumed = 0;
-		return rval;
-	}
+    /*
+     * Make sure we have this length.
+     */
+    buf_ptr = ((const char *)buf_ptr) + rval.consumed;
+    size -= rval.consumed;
+    if(length > (ber_tlv_len_t)size) {
+        rval.code = RC_WMORE;
+        rval.consumed = 0;
+        return rval;
+    }
 
-	/*
-	 * ASN.1 encoded REAL: buf_ptr, length
-	 * Fill the Dbl, at the same time checking for overflow.
-	 * If overflow occured, return with RC_FAIL.
-	 */
-	{
-		REAL_t tmp;
-		union {
-			const void *constbuf;
-			void *nonconstbuf;
-		} unconst_buf;
-		double d;
+    /*
+     * ASN.1 encoded REAL: buf_ptr, length
+     * Fill the Dbl, at the same time checking for overflow.
+     * If overflow occured, return with RC_FAIL.
+     */
+    {
+        uint8_t scratch[24]; /* Longer than %.16f in decimal */
+        REAL_t tmp;
+        double d;
+        int ret;
 
-		unconst_buf.constbuf = buf_ptr;
-		tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
-		tmp.size = length;
+        if(length < sizeof(scratch)) {
+            tmp.buf = scratch;
+            tmp.size = length;
+        } else {
+            /* This rarely happens: impractically long value */
+            tmp.buf = CALLOC(1, length + 1);
+            tmp.size = length;
+            if(!tmp.buf) {
+                rval.code = RC_FAIL;
+                rval.consumed = 0;
+                return rval;
+            }
+        }
 
-		if(length < (ber_tlv_len_t)size) {
-			int ret;
-			uint8_t saved_byte = tmp.buf[tmp.size];
-			tmp.buf[tmp.size] = '\0';
-			ret = asn_REAL2double(&tmp, &d);
-			tmp.buf[tmp.size] = saved_byte;
-			if(ret) {
-				rval.code = RC_FAIL;
-				rval.consumed = 0;
-				return rval;
-			}
-		} else if(length < 48 /* Enough for longish %f value. */) {
-			tmp.buf = alloca(length + 1);
-			tmp.size = length;
-			memcpy(tmp.buf, buf_ptr, length);
-			tmp.buf[tmp.size] = '\0';
-			if(asn_REAL2double(&tmp, &d)) {
-				rval.code = RC_FAIL;
-				rval.consumed = 0;
-				return rval;
-			}
-		} else {
-			/* This should probably never happen: impractically long value */
-			tmp.buf = CALLOC(1, length + 1);
-			tmp.size = length;
-			if(tmp.buf) memcpy(tmp.buf, buf_ptr, length);
-			if(!tmp.buf || asn_REAL2double(&tmp, &d)) {
-				FREEMEM(tmp.buf);
-				rval.code = RC_FAIL;
-				rval.consumed = 0;
-				return rval;
-			}
-			FREEMEM(tmp.buf);
-		}
+        memcpy(tmp.buf, buf_ptr, length);
+        tmp.buf[length] = '\0';
 
-		*Dbl = d;
-	}
+        ret = asn_REAL2double(&tmp, &d);
+        if(tmp.buf != scratch) FREEMEM(tmp.buf);
+        if(ret) {
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+            return rval;
+        }
 
-	rval.code = RC_OK;
-	rval.consumed += length;
+        *Dbl = d;
+    }
 
-	ASN_DEBUG("Took %ld/%ld bytes to encode %s (%f)",
-		(long)rval.consumed, (long)length, td->name, *Dbl);
+    rval.code = RC_OK;
+    rval.consumed += length;
 
-	return rval;
+    ASN_DEBUG("Took %ld/%ld bytes to encode %s (%f)", (long)rval.consumed,
+              (long)length, td->name, *Dbl);
+
+    return rval;
 }
 
 /*
@@ -297,6 +279,107 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
 }
 
 #endif /* ASN_DISABLE_PER_SUPPORT */
+
+#ifndef ASN_DISABLE_OER_SUPPORT
+
+/*
+ * Encode as Canonical OER.
+ */
+asn_enc_rval_t
+NativeReal_encode_oer(asn_TYPE_descriptor_t *td,
+                   const asn_oer_constraints_t *constraints, void *sptr,
+                   asn_app_consume_bytes_f *cb, void *app_key) {
+    asn_enc_rval_t er = { 0, 0, 0 };
+    ssize_t len_len;
+    const double *d = sptr;
+    REAL_t tmp;
+
+	/* Prepare a temporary clean structure */
+	memset(&tmp, 0, sizeof(tmp));
+
+    (void)td;
+    (void)constraints;  /* Constraints are unused in OER */
+
+    if(asn_double2REAL(&tmp, *d)) {
+        ASN__ENCODE_FAILED;
+	}
+
+    /* Encode a fake REAL */
+    len_len = oer_serialize_length(tmp.size, cb, app_key);
+    if(len_len < 0 || cb(tmp.buf, tmp.size, app_key) < 0) {
+        ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
+        ASN__ENCODE_FAILED;
+    } else {
+        er.encoded = len_len + tmp.size;
+        ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
+        ASN__ENCODED_OK(er);
+    }
+}
+
+asn_dec_rval_t
+NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
+                        asn_TYPE_descriptor_t *td,
+                        const asn_oer_constraints_t *constraints, void **sptr,
+                        const void *ptr, size_t size) {
+    asn_dec_rval_t ok = {RC_OK, 0};
+    double *st;
+    double d;
+    ssize_t len_len;
+    size_t real_body_len;
+
+    (void)opt_codec_ctx;
+    (void)td;
+    (void)constraints; /* Constraints are unused in OER */
+
+    len_len = oer_fetch_length(ptr, size, &real_body_len);
+    if(len_len < 0) ASN__DECODE_FAILED;
+    if(len_len == 0) ASN__DECODE_STARVED;
+
+    ptr = (const char *)ptr + len_len;
+    size -= len_len;
+
+    if(real_body_len > size) ASN__DECODE_STARVED;
+
+    {
+        uint8_t scratch[24]; /* Longer than %.16f in decimal */
+        REAL_t tmp;
+        int ret;
+
+        if(real_body_len < sizeof(scratch)) {
+            tmp.buf = scratch;
+            tmp.size = real_body_len;
+        } else {
+            /* This rarely happens: impractically long value */
+            tmp.buf = CALLOC(1, real_body_len + 1);
+            tmp.size = real_body_len;
+            if(!tmp.buf) {
+                ASN__DECODE_FAILED;
+            }
+        }
+
+        memcpy(tmp.buf, ptr, real_body_len);
+        tmp.buf[real_body_len] = '\0';
+
+        ret = asn_REAL2double(&tmp, &d);
+        if(tmp.buf != scratch) FREEMEM(tmp.buf);
+        if(ret) {
+            ASN_DEBUG("REAL decoded in %zu bytes, but can't convert t double",
+                      real_body_len);
+            ASN__DECODE_FAILED;
+        }
+    }
+
+    if(!(st = *sptr)) {
+        st = (double *)(*sptr = CALLOC(1, sizeof(*st)));
+        if(!st) ASN__DECODE_FAILED;
+    }
+
+    *st = d;
+    ok.consumed = len_len + real_body_len;
+    return ok;
+}
+
+#endif /* ASN_DISABLE_OER_SUPPORT */
 
 /*
  * Decode the chunk of XML text encoding REAL.
@@ -426,10 +509,18 @@ asn_random_fill_result_t
 NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
                        const asn_encoding_constraints_t *constraints,
                        size_t max_length) {
-    asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
+    asn_random_fill_result_t result_ok = {ARFILL_OK, sizeof(double)};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
-    static const double values[] = {0, -0.0, -1, 1, INFINITY, -INFINITY, NAN};
+    static const double values[] = {
+        0, -0.0, -1, 1, -M_E, M_E, -3.14, 3.14, -M_PI, M_PI, -255, 255,
+        /* 2^51 */
+        -2251799813685248.0, 2251799813685248.0,
+        /* 2^52 */
+        -4503599627370496.0, 4503599627370496.0,
+        /* 2^100 */
+        -1267650600228229401496703205376.0, 1267650600228229401496703205376.0,
+        -MAXFLOAT, MAXFLOAT, INFINITY, -INFINITY, NAN};
     double *st;
     double d;
 
@@ -451,6 +542,5 @@ NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     *st = d;
 
-    result_ok.length = sizeof(double);
     return result_ok;
 }
