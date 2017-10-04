@@ -15,6 +15,7 @@ usage() {
     echo "  $0 [--dirty] bundles/<bundle-name.txt> [<line>]"
     echo "Where options are:"
     echo "  -h          Show this help screen"
+    echo "  -e <syntax> Verify a given encoding explicitly (default is ALL)"
     echo "  --dirty     Reuse compile results from the previous run(s)"
     echo "  -t <ASN.1>  Run this particular typel"
     echo "Examples:"
@@ -35,6 +36,8 @@ tests_failed=0
 stop_after_failed=1  # We stop after 3 failures.
 need_clean_before_bundle=1  # Clean before testing a bundle file
 need_clean_before_test=1    # Before each line in a bundle file
+encodings=""    # Default is to verify all supported ASN.1 transfer syntaxes
+parallelism=4
 
 make_clean_before_bundle() {
     test "${need_clean_before_bundle}" = "1" && make clean
@@ -106,7 +109,7 @@ compile_and_test() {
 
     rm -f random-test-driver.o
     rm -f random-test-driver
-    if ! make -j4; then
+    if ! make -j${parallelism}; then
         echo "Cannot compile C for $asn in ${RNDTEMP}"
         return 2
     fi
@@ -116,17 +119,17 @@ compile_and_test() {
     if [ "0${rmax}" -lt 1 ]; then rmax=128; fi
 
     echo "Checking random data encode-decode"
-    if ! eval ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} -c; then
+    if ! eval ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c; then
         if [ "x$CC" = "x" ]; then CCSTR=""; else CCSTR="CC=${CC} "; fi
         echo "RETRY:"
-        echo "(cd ${RNDTEMP} && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} -c)"
+        echo "(cd ${RNDTEMP} && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c)"
         return 3
     fi
 
     echo "Generating new random data"
     rm -rf random-data
     cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
-    cmd+=" ./random-test-driver -s ${rmax} -g random-data"
+    cmd+=" ./random-test-driver -s ${rmax} ${encodings} -g random-data"
     if ! eval "$cmd" ; then
         echo "RETRY:"
         echo "(cd ${RNDTEMP} && $cmd)"
@@ -152,10 +155,10 @@ compile_and_test() {
         echo "Recompiling for fuzzing..."
         rm -f random-test-driver.o
         rm -f random-test-driver
-        CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" make -j4
+        CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" make -j${parallelism}
 
         echo "Fuzzing $data_dir will take $fuzz_time seconds..."
-        if ! make -j4 fuzz ; then
+        if ! make -j${parallelism} fuzz ; then
             echo "RETRY:"
             echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make fuzz)"
             return 5
@@ -193,19 +196,31 @@ asn_compile() {
 }
 
 # Command line parsing
-case "$1" in
-    -h) usage ;;
-    --dirty) need_clean_before_bundle=0; need_clean_before_test=0 ;;
-    -t) verify_asn_type "$2" || exit 1;;
-    "")
-        for bundle in $(echo bundles/*txt | sort -nr); do
-            verify_asn_types_in_file "$bundle"
-        done
-    ;;
-    *)
-        verify_asn_types_in_file "$@"
-    ;;
-esac
+while :; do
+    case "$1" in
+        -h) usage ;;
+        --dirty)
+            need_clean_before_bundle=0
+            need_clean_before_test=0
+            shift
+            continue
+            ;;
+        -e) encodings+=" -e $2"; shift 2; continue;;
+        -j) parallelism="$1"; shift 2; continue;;
+        -t)
+            parallelism=1   # Better for debuggability
+            verify_asn_type "$2" || exit 1 ;;
+        "")
+            for bundle in $(echo bundles/*txt | sort -nr); do
+                verify_asn_types_in_file "$bundle"
+            done
+        ;;
+        *)
+            verify_asn_types_in_file "$@"
+        ;;
+    esac
+    break
+done
 
 if [ "$tests_succeeded" != "0" -a "$tests_failed" = "0" ]; then
     echo "OK $tests_succeeded tests"
