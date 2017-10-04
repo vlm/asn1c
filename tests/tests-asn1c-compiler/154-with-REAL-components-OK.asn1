@@ -16,35 +16,35 @@ DEFINITIONS ::= BEGIN
 
     Indirect-IEEE-binary32 ::= UnconstrainedREAL (WITH COMPONENTS {
                                     mantissa (-16777215..16777215),
-                                    base (2), exponent (-126..126)})
+                                    base (2), exponent (-323..292)})
 
     -- X.696 (08/2005) #12.2 and #12.3
 
     -- IEEE 754 encoding single precision 
     IEEE-binary32-w ::= REAL (WITH COMPONENTS { 
                 mantissa (-16777215..16777215),
-                base (2), exponent (-126..126)})
+                base (2), exponent (-323..292)})
 
     IEEE-binary32-0w ::= REAL (0 | WITH COMPONENTS { 
                 mantissa (-16777215..16777215),
-                base (2), exponent (-126..126)})
+                base (2), exponent (-323..292)})
 
     IEEE-binary32-w0 ::= REAL (WITH COMPONENTS { 
                 mantissa (-16777215..16777215),
-                base (2), exponent (-126..126)} | 0)
+                base (2), exponent (-323..292)} | 0)
 
     -- IEEE 754 encoding double precision 
     IEEE-binary64-w ::= REAL (WITH COMPONENTS { 
                 mantissa (-9007199254740991..9007199254740991),
-                base (2), exponent (-1022..1023)})
+                base (2), exponent (-1074..971)})
 
     IEEE-binary64-0w ::= REAL (0 | WITH COMPONENTS { 
                 mantissa (-9007199254740991..9007199254740991),
-                base (2), exponent (-1022..1023)})
+                base (2), exponent (-1074..971)})
 
     IEEE-binary64-w0 ::= REAL (WITH COMPONENTS { 
                 mantissa (-9007199254740991..9007199254740991),
-                base (2), exponent (-1022..1023)} | 0)
+                base (2), exponent (-1074..971)} | 0)
 
     Test ::= SEQUENCE {
         indirect-ieee-binary32 Indirect-IEEE-binary32,

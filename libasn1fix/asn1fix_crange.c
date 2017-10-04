@@ -933,7 +933,7 @@ asn1f_real_range_from_WCOMPS(const char *dbg_name,
        && base->left.type == ARE_VALUE && base->right.type == ARE_VALUE
        && base->left.value == 2 && base->right.value == 2
        && exponent->left.type == ARE_VALUE && exponent->right.type == ARE_VALUE
-       && exponent->left.value >= -126 && exponent->right.value <= 127) {
+       && exponent->left.value >= -323 && exponent->right.value <= 292) {
         range->narrowing = NARROW_FLOAT32;
     } else /* X.696 #12.3 */
     if(mantissa->left.type == ARE_VALUE && mantissa->right.type == ARE_VALUE
@@ -942,7 +942,7 @@ asn1f_real_range_from_WCOMPS(const char *dbg_name,
        && base->left.type == ARE_VALUE && base->right.type == ARE_VALUE
        && base->left.value == 2 && base->right.value == 2
        && exponent->left.type == ARE_VALUE && exponent->right.type == ARE_VALUE
-       && exponent->left.value >= -1022 && exponent->right.value <= 1023) {
+       && exponent->left.value >= -1074 && exponent->right.value <= 971) {
         range->narrowing = NARROW_FLOAT64;
     }
 
