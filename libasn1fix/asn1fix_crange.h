@@ -15,7 +15,14 @@ typedef struct asn1cnst_range_s {
 	asn1cnst_edge_t left;	/* MIN from (MIN..10) */
 	asn1cnst_edge_t right;	/* 10 from (MIN..10) */
 
-	/* If range is split in parts, these are the parts */
+    enum asn1cnst_range_narrowing {
+        /* Sorted from softest to hardest narrowing */
+        NOT_NARROW,
+        NARROW_FLOAT64,
+        NARROW_FLOAT32,
+    } narrowing; /* Constrained to a known narrow type */
+
+    /* If range is split in parts, these are the parts */
 	struct asn1cnst_range_s **elements;
 	int el_count;
 	int el_size;

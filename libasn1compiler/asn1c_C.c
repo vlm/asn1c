@@ -1311,28 +1311,6 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		REDIR(saved_target);
 		return 0;
 	}
-	if((!expr->constraints || (arg->flags & A1C_NO_CONSTRAINTS))
-	&& (arg->embed || expr->tag.tag_class == TC_NOCLASS)
-	&& etd_spec == ETD_NO_SPECIFICS
-	&& 0	/* This shortcut is incompatible with XER */
-	) {
-		const char *type_name;
-		REDIR(OT_FUNC_DECLS);
-		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
-		OUT("/* This type is equivalent to %s */\n", type_name);
-		if(HIDE_INNER_DEFS) OUT("/* ");
-		OUT("#define\tasn_DEF_%s\t", MKID(expr));
-		type_name = asn1c_type_name(arg, expr, TNF_SAFE);
-		OUT("asn_DEF_%s", type_name);
-		if(HIDE_INNER_DEFS)
-			OUT("\t// (Use -fall-defs-global to expose) */");
-		OUT("\n");
-		REDIR(OT_CODE);
-		OUT("/* This type is equivalent to %s */\n", type_name);
-		OUT("\n");
-		REDIR(saved_target);
-		return 0;
-	}
 
 	REDIR(OT_CODE);
 
@@ -1383,8 +1361,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	 * (from which the current type is inherited).
 	 */
 	OUT("/*\n");
-	OUT(" * This type is implemented using %s,\n",
-		asn1c_type_name(arg, expr, TNF_SAFE));
+	OUT(" * This type is implemented using %s,\n", c_name(arg).type.base_name);
 	OUT(" * so here we adjust the DEF accordingly.\n");
 	OUT(" */\n");
 
@@ -1869,6 +1846,14 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range) {
 
 	if(range->incompatible || range->not_OER_visible) {
 		OUT("{ 0, 0 }");
+    } else if(expr_get_type(arg, arg->expr) == ASN_BASIC_REAL) {
+        if(range->narrowing == NARROW_FLOAT32) {
+            OUT("{ 4, 0 }");
+        } else if(range->narrowing == NARROW_FLOAT64) {
+            OUT("{ 8, 0 }");
+        } else {
+            OUT("{ 0, 0 }");
+        }
     } else if(range->left.type == ARE_VALUE && range->left.value >= 0
               && range->right.type == ARE_MAX) {
         OUT("{ 0, 1 }");
@@ -1942,6 +1927,12 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
     if(!range || range->incompatible || range->not_PER_visible) {
         OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
 		return 0;
+    }
+
+    if(expr_get_type(arg, arg->expr) == ASN_BASIC_REAL) {
+        /* Unsupported */
+        OUT("{ APC_UNCONSTRAINED,\t-1, -1,  0,  0 }");
+        return 0;
     }
 
     if(range->left.type == ARE_VALUE) {

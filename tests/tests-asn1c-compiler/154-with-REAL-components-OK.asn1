@@ -1,0 +1,45 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .154
+
+ModuleREALWithComponents
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 154 }
+DEFINITIONS ::= BEGIN
+
+    UnconstrainedREAL ::= REAL
+
+    WeirdlyConstrainedREAL ::= REAL (3, ...)    -- Not really constrained
+
+    -- X.696 (08/2005) #12.2 and #12.3
+
+    -- IEEE 754 encoding single precision 
+    IEEE-binary32-w ::= REAL (WITH COMPONENTS { 
+                mantissa (-16777215..16777215),
+                base (2), exponent (-126..126)})
+
+    IEEE-binary32-0w ::= REAL (0 | WITH COMPONENTS { 
+                mantissa (-16777215..16777215),
+                base (2), exponent (-126..126)})
+
+    IEEE-binary32-w0 ::= REAL (WITH COMPONENTS { 
+                mantissa (-16777215..16777215),
+                base (2), exponent (-126..126)} | 0)
+
+    -- IEEE 754 encoding double precision 
+    IEEE-binary64-w ::= REAL (WITH COMPONENTS { 
+                mantissa (-9007199254740991..9007199254740991),
+                base (2), exponent (-1022..1023)})
+
+    IEEE-binary64-0w ::= REAL (0 | WITH COMPONENTS { 
+                mantissa (-9007199254740991..9007199254740991),
+                base (2), exponent (-1022..1023)})
+
+    IEEE-binary64-w0 ::= REAL (WITH COMPONENTS { 
+                mantissa (-9007199254740991..9007199254740991),
+                base (2), exponent (-1022..1023)} | 0)
+
+END

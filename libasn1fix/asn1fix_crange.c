@@ -9,8 +9,8 @@
 		fprintf(stderr, "\n");			\
 	} while(0)
 
-void
-asn1constraint_range_free(asn1cnst_range_t *cr) {
+static void
+asn1constraint_range_free_outer(asn1cnst_range_t *cr) {
 	if(cr) {
 		int i;
 		if(cr->elements) {
@@ -18,9 +18,16 @@ asn1constraint_range_free(asn1cnst_range_t *cr) {
 				asn1constraint_range_free(cr->elements[i]);
 			free(cr->elements);
 		}
-		free(cr);
-	}
+        memset(cr, 0, sizeof(*cr));
+    }
 }
+
+void
+asn1constraint_range_free(asn1cnst_range_t *cr) {
+    asn1constraint_range_free_outer(cr);
+    free(cr);
+}
+
 #define	_range_free(foo)	asn1constraint_range_free(foo)
 
 static asn1cnst_range_t *_range_new() {
@@ -149,20 +156,37 @@ _range_compare(const void *a, const void *b) {
 	return ret;
 }
 
-static char *
-_edge_value(const asn1cnst_edge_t *edge) {
-	static char buf[128];
+static const char *
+_edge_print(const asn1cnst_edge_t *edge, char *buf, size_t size) {
 	*buf = '\0';
+    assert(size > 4);
 	switch(edge->type) {
 	case ARE_MIN:	strcpy(buf, "MIN"); break;
 	case ARE_MAX:	strcpy(buf, "MAX"); break;
 	case ARE_VALUE:
-		snprintf(buf, sizeof(buf), "%s", asn1p_itoa(edge->value));
+		snprintf(buf, size, "%s", asn1p_itoa(edge->value));
         break;
     default:
         assert(!"edge->type");
 	}
 	return buf;
+}
+
+static const char *
+_edge_string(const asn1cnst_edge_t *edge) {
+	static char buf[128];
+    return _edge_print(edge, buf, sizeof(buf));
+}
+
+static const char *
+_range_string(const asn1cnst_range_t *range) {
+    static char buf[128];
+    char buf0[128];
+    char buf1[128];
+    snprintf(buf, sizeof(buf), "(%s..%s)",
+             _edge_print(&range->left, buf0, sizeof(buf0)),
+             _edge_print(&range->right, buf1, sizeof(buf1)));
+    return buf;
 }
 
 static int
@@ -191,9 +215,10 @@ _check_edges_within(const asn1cnst_range_t *range, const asn1cnst_range_t *r) {
 	if(!_edge_is_within(range, &r->left)) {
 		FATAL("Constraint value %s at line %d "
 			"is not within "
-			"a parent constraint range",
-			_edge_value(&r->left),
-			r->left.lineno
+			"a parent constraint range %s",
+			_edge_string(&r->left),
+			r->left.lineno,
+			_range_string(range)
 		);
 		return -1;
 	}
@@ -201,14 +226,62 @@ _check_edges_within(const asn1cnst_range_t *range, const asn1cnst_range_t *r) {
 	if(!_edge_is_within(range, &r->right)) {
 		FATAL("Constraint value %s at line %d "
 			"is not within "
-			"a parent constraint range",
-			_edge_value(&r->right),
-			r->right.lineno
+			"a parent constraint range %s",
+			_edge_string(&r->right),
+			r->left.lineno,
+			_range_string(range)
 		);
 		return -1;
 	}
 
 	return 0;
+}
+
+/*
+ * Combine narrowings to get the strongest (most specific).
+ */
+static enum asn1cnst_range_narrowing
+_strongest_narrowing(const asn1cnst_range_t *ar, const asn1cnst_range_t *br) {
+    enum asn1cnst_range_narrowing an = ar->narrowing;
+    enum asn1cnst_range_narrowing bn = br->narrowing;
+
+    if(!an) {
+        return bn;
+    } else if(!bn) {
+        return an;
+    } else {
+        return an > bn ? an : bn;
+    }
+}
+
+/*
+ * Combine narrowings to get the softest one.
+ */
+static enum asn1cnst_range_narrowing
+_softest_narrowing(const asn1cnst_range_t *ar, const asn1cnst_range_t *br) {
+    enum asn1cnst_range_narrowing an = ar->narrowing;
+    enum asn1cnst_range_narrowing bn = br->narrowing;
+
+    if(an) {
+        if(bn) {
+            return an < bn ? an : bn;
+        } else {
+            assert(bn == NOT_NARROW);
+            if(br->left.type == ARE_VALUE && br->right.type == ARE_VALUE) {
+                return an;
+            } else {
+                return NOT_NARROW;
+            }
+        }
+    } else if(bn) {
+        if(ar->left.type == ARE_VALUE && ar->right.type == ARE_VALUE) {
+            return bn;
+        } else {
+            return NOT_NARROW;
+        }
+    } else {
+        return NOT_NARROW;
+    }
 }
 
 static int _range_merge_in(asn1cnst_range_t *into, asn1cnst_range_t *cr) {
@@ -221,6 +294,8 @@ static int _range_merge_in(asn1cnst_range_t *into, asn1cnst_range_t *cr) {
 	into->extensible |= cr->extensible;
 	if(into->extensible)
 		into->not_OER_visible = 1;
+
+    into->narrowing = _softest_narrowing(into, cr);
 
 	/*
 	 * Add the element OR all its children "into".
@@ -548,6 +623,8 @@ _range_intersection(asn1cnst_range_t *range, const asn1cnst_range_t *with, int s
     }
 	range->empty_constraint |= with->empty_constraint;
 
+    range->narrowing = _strongest_narrowing(range, with);
+
 	if(range->empty_constraint) {
 		/* No use in intersecting empty constraints */
 		return 0;
@@ -751,6 +828,128 @@ asn1constraint_compute_PER_range(const char *dbg_name, asn1p_expr_type_e expr_ty
     return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags);
 }
 
+static asn1cnst_range_t *
+asn1f_real_range_from_WCOMPS(const char *dbg_name,
+                             const asn1p_constraint_t *ct) {
+    asn1cnst_range_t two = {
+        {ARE_VALUE, 0, 2}, {ARE_VALUE, 0, 2}, 0, NULL, 0, 0, 0, 0, 0, 0, 0};
+    asn1cnst_range_t ten = {
+        {ARE_VALUE, 0, 10}, {ARE_VALUE, 0, 10}, 0, NULL, 0, 0, 0, 0, 0, 0, 0};
+    asn1cnst_range_t *two_ten[] = {&two, &ten};
+    /* Interpretation of X.680 #21.5 */
+    asn1cnst_range_t mantissa_default_range = {
+        {ARE_MIN, 0, 0}, {ARE_MAX, 0, 0}, 0, NULL, 0, 0, 0, 0, 0, 0, 0};
+    asn1cnst_range_t exponent_default_range = {
+        {ARE_MIN, 0, 0}, {ARE_MAX, 0, 0}, 0, NULL, 0, 0, 0, 0, 0, 0, 0};
+    asn1cnst_range_t base_default_range = {
+        {ARE_VALUE, 0, 2}, {ARE_MAX, 0, 10}, 0, two_ten, 2, 0, 0, 0, 0, 0, 0};
+
+    asn1cnst_range_t *mantissa = _range_clone(&mantissa_default_range);
+    asn1cnst_range_t *exponent = _range_clone(&exponent_default_range);
+    asn1cnst_range_t *base = _range_clone(&base_default_range);
+    asn1cnst_range_t *range;
+
+#define FREE_MEB()             \
+    do {                       \
+        _range_free(mantissa); \
+        _range_free(exponent); \
+        _range_free(base);     \
+    } while(0)
+
+    (void)dbg_name;
+
+    assert(ct->type == ACT_CT_WCOMPS);
+
+    range = _range_new();
+    range->incompatible = 1;
+
+    for(unsigned i = 0; i < ct->el_count; i++) {
+        struct asn1p_constraint_s *el = ct->elements[i];
+        asn1p_value_t *value = 0;
+        asn1cnst_range_t **dst_range = 0;
+
+        switch(el->type) {
+        case ACT_EL_EXT:
+            /* Some components might not be defined. */
+            assert(range->incompatible);
+            FREE_MEB();
+            return range;
+        default:
+            assert(range->incompatible);
+            FREE_MEB();
+            return range;
+        case ACT_EL_VALUE:
+            value = el->value;
+            if(value->type != ATV_REFERENCED) {
+                FREE_MEB();
+                return range;
+            }
+            break;
+        }
+
+        if(strcmp(asn1p_ref_string(value->value.reference), "mantissa") == 0) {
+            dst_range = &mantissa;
+        } else if(strcmp(asn1p_ref_string(value->value.reference), "exponent")
+                  == 0) {
+            dst_range = &exponent;
+        } else if(strcmp(asn1p_ref_string(value->value.reference), "base")
+                  == 0) {
+            dst_range = &base;
+        } else {
+            FATAL("Invalid specification \"%s\" for REAL",
+                  asn1p_ref_string(value->value.reference));
+            FREE_MEB();
+            return range;
+        }
+
+        switch(el->el_count) {
+        case 0: continue;
+        case 1: break;
+        default:
+            FATAL("Too many constraints (%u) for \"%s\" for REAL", el->el_count,
+                  asn1p_ref_string(value->value.reference));
+            FREE_MEB();
+            return range;
+        }
+
+        asn1cnst_range_t *tmprange = asn1constraint_compute_constraint_range(
+            dbg_name, ASN_BASIC_INTEGER, el->elements[0], ACT_EL_RANGE,
+            *dst_range, 0, CPR_noflags);
+        assert(tmprange);
+        if(tmprange->incompatible) {
+            _range_free(tmprange);
+            FREE_MEB();
+            return range;
+        }
+        asn1constraint_range_free(*dst_range);
+        *dst_range = tmprange;
+    }
+
+    range->incompatible = 0;
+
+    /* X.696 #12.2 */
+    if(mantissa->left.type == ARE_VALUE && mantissa->right.type == ARE_VALUE
+       && mantissa->left.value >= -16777215 && mantissa->right.value <= 16777215
+       && base->left.type == ARE_VALUE && base->right.type == ARE_VALUE
+       && base->left.value == 2 && base->right.value == 2
+       && exponent->left.type == ARE_VALUE && exponent->right.type == ARE_VALUE
+       && exponent->left.value >= -126 && exponent->right.value <= 127) {
+        range->narrowing = NARROW_FLOAT32;
+    } else /* X.696 #12.3 */
+    if(mantissa->left.type == ARE_VALUE && mantissa->right.type == ARE_VALUE
+       && mantissa->left.value >= -9007199254740991ll
+       && mantissa->right.value <= 9007199254740991ull
+       && base->left.type == ARE_VALUE && base->right.type == ARE_VALUE
+       && base->left.value == 2 && base->right.value == 2
+       && exponent->left.type == ARE_VALUE && exponent->right.type == ARE_VALUE
+       && exponent->left.value >= -1022 && exponent->right.value <= 1023) {
+        range->narrowing = NARROW_FLOAT64;
+    }
+
+    FREE_MEB();
+    return range;
+}
+
 asn1cnst_range_t *
 asn1constraint_compute_constraint_range(
     const char *dbg_name, asn1p_expr_type_e expr_type,
@@ -857,7 +1056,6 @@ asn1constraint_compute_constraint_range(
 		break;
 	case ACT_EL_EXT:
 		if(!*exmet) {
-			range->incompatible = 1;
 			range->extensible = 1;
 			range->not_OER_visible = 1;
 		} else {
@@ -1089,6 +1287,12 @@ asn1constraint_compute_constraint_range(
 		range = asn1constraint_compute_constraint_range(dbg_name, expr_type,
 			ct->elements[0], requested_ct_type, minmax, exmet, cpr_flags);
 		return range;
+	case ACT_CT_WCOMPS:
+        if(expr_type == ASN_BASIC_REAL) {
+            return asn1f_real_range_from_WCOMPS(dbg_name, ct);
+        }
+		range->incompatible = 1;
+		return range;
 	default:
 		range->incompatible = 1;
 		return range;
@@ -1102,7 +1306,13 @@ asn1constraint_compute_constraint_range(
 		return range;
 	}
 
-	_range_free(range);
+    if(expr_type == ASN_BASIC_REAL
+       && (vmin->type == ATV_REAL || vmax->type == ATV_REAL)) {
+        range->incompatible = 1;
+        return range;
+    }
+
+    _range_free(range);
 	range = _range_new();
 
     enum range_fill_result rfr;
@@ -1178,23 +1388,23 @@ int main() {
     assert(r->elements[2]->elements == NULL);
 
     /* (MIN..9) */
-    fprintf(stderr, "[0].left = %s\n", _edge_value(&r->elements[0]->left));
-    fprintf(stderr, "[0].right = %s\n", _edge_value(&r->elements[0]->right));
+    fprintf(stderr, "[0].left = %s\n", _edge_string(&r->elements[0]->left));
+    fprintf(stderr, "[0].right = %s\n", _edge_string(&r->elements[0]->right));
     assert(r->elements[0]->left.type == ARE_MIN);
     assert(r->elements[0]->right.type == ARE_VALUE);
     assert(r->elements[0]->right.value == 9);
 
     /* (10..15) */
-    fprintf(stderr, "[1].left = %s\n", _edge_value(&r->elements[1]->left));
-    fprintf(stderr, "[1].right = %s\n", _edge_value(&r->elements[1]->right));
+    fprintf(stderr, "[1].left = %s\n", _edge_string(&r->elements[1]->left));
+    fprintf(stderr, "[1].right = %s\n", _edge_string(&r->elements[1]->right));
     assert(r->elements[1]->left.type == ARE_VALUE);
     assert(r->elements[1]->left.value == 10);
     assert(r->elements[1]->right.type == ARE_VALUE);
     assert(r->elements[1]->right.value == 15);
 
     /* (16..20) */
-    fprintf(stderr, "[2].left = %s\n", _edge_value(&r->elements[2]->left));
-    fprintf(stderr, "[2].right = %s\n", _edge_value(&r->elements[2]->right));
+    fprintf(stderr, "[2].left = %s\n", _edge_string(&r->elements[2]->left));
+    fprintf(stderr, "[2].right = %s\n", _edge_string(&r->elements[2]->right));
     assert(r->elements[2]->left.type == ARE_VALUE);
     assert(r->elements[2]->left.value == 16);
     assert(r->elements[2]->right.type == ARE_VALUE);
@@ -1224,16 +1434,16 @@ int main() {
     assert(r->elements[1]->elements == NULL);
 
     /* (<min>..16) */
-    fprintf(stderr, "[0].left = %s\n", _edge_value(&r->elements[0]->left));
-    fprintf(stderr, "[0].right = %s\n", _edge_value(&r->elements[0]->right));
+    fprintf(stderr, "[0].left = %s\n", _edge_string(&r->elements[0]->left));
+    fprintf(stderr, "[0].right = %s\n", _edge_string(&r->elements[0]->right));
     assert(r->elements[0]->left.type == ARE_VALUE);
     assert(r->elements[0]->left.value == INTMAX_MIN);
     assert(r->elements[0]->right.type == ARE_VALUE);
     assert(r->elements[0]->right.value == 15);
 
     /* (16..20) */
-    fprintf(stderr, "[1].left = %s\n", _edge_value(&r->elements[1]->left));
-    fprintf(stderr, "[1].right = %s\n", _edge_value(&r->elements[1]->right));
+    fprintf(stderr, "[1].left = %s\n", _edge_string(&r->elements[1]->left));
+    fprintf(stderr, "[1].right = %s\n", _edge_string(&r->elements[1]->right));
     assert(r->elements[1]->left.type == ARE_VALUE);
     assert(r->elements[1]->left.value == 16);
     assert(r->elements[1]->right.type == ARE_VALUE);

@@ -9,9 +9,6 @@ int
 asn1constraint_compatible(asn1p_expr_type_e expr_type,
 	enum asn1p_constraint_type_e constr_type, int fbless_SIZE) {
 
-	if(expr_type == ASN_BASIC_REAL)
-		return -1;	/* Not yet supported */
-
 	/*
 	 * X.680-0207, Table 9.
 	 */
@@ -115,7 +112,7 @@ asn1constraint_compatible(asn1p_expr_type_e expr_type,
 
 #define DECL_RANGE(foo, lb, ub, ov, pv)     \
     static asn1cnst_range_t range_##foo = { \
-        {ARE_VALUE, 0, lb}, {ARE_VALUE, 0, ub}, 0, 0, 0, 0, 0, 0, ov, pv}
+        {ARE_VALUE, 0, lb}, {ARE_VALUE, 0, ub}, 0, 0, 0, 0, 0, 0, 0, ov, pv}
 
 #define DECL(name, lb, ub) DECL_RANGE(name, lb, ub, 0, 0)
 #define DECL_notOPV(name, lb, ub) DECL_RANGE(name, lb, ub, 1, 1)
@@ -158,10 +155,11 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 	static asn1cnst_range_t range_notPERVisible = {
 			{ ARE_MIN, 0, 0 },
 			{ ARE_MAX, 0, 0 },
-			0, 0, 0, 0, 0, 0, 0, 1 };
+			0, 0, 0, 0, 0, 0, 0, 0, 1 };
 	static asn1cnst_range_t range_NumericString = {
 			{ ARE_VALUE, 0, 0x20 },
 			{ ARE_VALUE, 0, 0x39 },
+			NOT_NARROW,
 			range_NumericString_array,
 			sizeof(range_NumericString_array)
 				/sizeof(range_NumericString_array[0]),
@@ -169,6 +167,7 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 	static asn1cnst_range_t range_PrintableString = {
 			{ ARE_VALUE, 0, 0x20 },
 			{ ARE_VALUE, 0, 0x7a },
+			NOT_NARROW,
 			range_PrintableString_array,
 			sizeof(range_PrintableString_array)
 				/sizeof(range_PrintableString_array[0]),
@@ -176,10 +175,11 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 	static asn1cnst_range_t range_VisibleString = {
 			{ ARE_VALUE, 0, 0x20 },
 			{ ARE_VALUE, 0, 0x7e },
-			0, 0, 0, 0, 0, 0, 0, 0 };
+			NOT_NARROW, 0, 0, 0, 0, 0, 0, 0, 0 };
 	static asn1cnst_range_t range_UTCTime = {
 			{ ARE_VALUE, 0, 0x2b },
 			{ ARE_VALUE, 0, 0x5a },
+			NOT_NARROW,
 			range_UTCTime_array,
 			sizeof(range_UTCTime_array)
 				/sizeof(range_UTCTime_array[0]),
@@ -187,6 +187,7 @@ asn1constraint_default_alphabet(asn1p_expr_type_e expr_type) {
 	static asn1cnst_range_t range_GeneralizedTime = {
 			{ ARE_VALUE, 0, 0x2b },
 			{ ARE_VALUE, 0, 0x5a },
+			NOT_NARROW,
 			range_GeneralizedTime_array,
 			sizeof(range_GeneralizedTime_array)
 				/sizeof(range_GeneralizedTime_array[0]),

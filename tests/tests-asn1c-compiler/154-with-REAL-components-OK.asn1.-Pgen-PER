@@ -1,0 +1,587 @@
+
+/*** <<< INCLUDES [UnconstrainedREAL] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [UnconstrainedREAL] >>> ***/
+
+typedef double	 UnconstrainedREAL_t;
+
+/*** <<< FUNC-DECLS [UnconstrainedREAL] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_UnconstrainedREAL;
+asn_struct_free_f UnconstrainedREAL_free;
+asn_struct_print_f UnconstrainedREAL_print;
+asn_constr_check_f UnconstrainedREAL_constraint;
+ber_type_decoder_f UnconstrainedREAL_decode_ber;
+der_type_encoder_f UnconstrainedREAL_encode_der;
+xer_type_decoder_f UnconstrainedREAL_decode_xer;
+xer_type_encoder_f UnconstrainedREAL_encode_xer;
+per_type_decoder_f UnconstrainedREAL_decode_uper;
+per_type_encoder_f UnconstrainedREAL_encode_uper;
+
+/*** <<< CODE [UnconstrainedREAL] >>> ***/
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< STAT-DEFS [UnconstrainedREAL] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_UnconstrainedREAL_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_UnconstrainedREAL = {
+	"UnconstrainedREAL",
+	"UnconstrainedREAL",
+	&asn_OP_NativeReal,
+	asn_DEF_UnconstrainedREAL_tags_1,
+	sizeof(asn_DEF_UnconstrainedREAL_tags_1)
+		/sizeof(asn_DEF_UnconstrainedREAL_tags_1[0]), /* 1 */
+	asn_DEF_UnconstrainedREAL_tags_1,	/* Same as above */
+	sizeof(asn_DEF_UnconstrainedREAL_tags_1)
+		/sizeof(asn_DEF_UnconstrainedREAL_tags_1[0]), /* 1 */
+	{ 0, 0, NativeReal_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [WeirdlyConstrainedREAL] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [WeirdlyConstrainedREAL] >>> ***/
+
+typedef double	 WeirdlyConstrainedREAL_t;
+
+/*** <<< FUNC-DECLS [WeirdlyConstrainedREAL] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_WeirdlyConstrainedREAL;
+asn_struct_free_f WeirdlyConstrainedREAL_free;
+asn_struct_print_f WeirdlyConstrainedREAL_print;
+asn_constr_check_f WeirdlyConstrainedREAL_constraint;
+ber_type_decoder_f WeirdlyConstrainedREAL_decode_ber;
+der_type_encoder_f WeirdlyConstrainedREAL_encode_der;
+xer_type_decoder_f WeirdlyConstrainedREAL_decode_xer;
+xer_type_encoder_f WeirdlyConstrainedREAL_encode_xer;
+per_type_decoder_f WeirdlyConstrainedREAL_decode_uper;
+per_type_encoder_f WeirdlyConstrainedREAL_encode_uper;
+
+/*** <<< CODE [WeirdlyConstrainedREAL] >>> ***/
+
+int
+WeirdlyConstrainedREAL_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	double value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const double *)sptr;
+	
+	if((value == 3)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [WeirdlyConstrainedREAL] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_WeirdlyConstrainedREAL_constr_1 CC_NOTUSED = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [WeirdlyConstrainedREAL] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_WeirdlyConstrainedREAL_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_WeirdlyConstrainedREAL = {
+	"WeirdlyConstrainedREAL",
+	"WeirdlyConstrainedREAL",
+	&asn_OP_NativeReal,
+	asn_DEF_WeirdlyConstrainedREAL_tags_1,
+	sizeof(asn_DEF_WeirdlyConstrainedREAL_tags_1)
+		/sizeof(asn_DEF_WeirdlyConstrainedREAL_tags_1[0]), /* 1 */
+	asn_DEF_WeirdlyConstrainedREAL_tags_1,	/* Same as above */
+	sizeof(asn_DEF_WeirdlyConstrainedREAL_tags_1)
+		/sizeof(asn_DEF_WeirdlyConstrainedREAL_tags_1[0]), /* 1 */
+	{ 0, &asn_PER_type_WeirdlyConstrainedREAL_constr_1, WeirdlyConstrainedREAL_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [IEEE-binary32-w] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [IEEE-binary32-w] >>> ***/
+
+typedef double	 IEEE_binary32_w_t;
+
+/*** <<< FUNC-DECLS [IEEE-binary32-w] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w;
+asn_struct_free_f IEEE_binary32_w_free;
+asn_struct_print_f IEEE_binary32_w_print;
+asn_constr_check_f IEEE_binary32_w_constraint;
+ber_type_decoder_f IEEE_binary32_w_decode_ber;
+der_type_encoder_f IEEE_binary32_w_encode_der;
+xer_type_decoder_f IEEE_binary32_w_decode_xer;
+xer_type_encoder_f IEEE_binary32_w_encode_xer;
+per_type_decoder_f IEEE_binary32_w_decode_uper;
+per_type_encoder_f IEEE_binary32_w_encode_uper;
+
+/*** <<< CODE [IEEE-binary32-w] >>> ***/
+
+int
+IEEE_binary32_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [IEEE-binary32-w] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_IEEE_binary32_w_constr_1 CC_NOTUSED = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [IEEE-binary32-w] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_IEEE_binary32_w_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w = {
+	"IEEE-binary32-w",
+	"IEEE-binary32-w",
+	&asn_OP_NativeReal,
+	asn_DEF_IEEE_binary32_w_tags_1,
+	sizeof(asn_DEF_IEEE_binary32_w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary32_w_tags_1[0]), /* 1 */
+	asn_DEF_IEEE_binary32_w_tags_1,	/* Same as above */
+	sizeof(asn_DEF_IEEE_binary32_w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary32_w_tags_1[0]), /* 1 */
+	{ 0, &asn_PER_type_IEEE_binary32_w_constr_1, IEEE_binary32_w_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [IEEE-binary32-0w] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [IEEE-binary32-0w] >>> ***/
+
+typedef double	 IEEE_binary32_0w_t;
+
+/*** <<< FUNC-DECLS [IEEE-binary32-0w] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_0w;
+asn_struct_free_f IEEE_binary32_0w_free;
+asn_struct_print_f IEEE_binary32_0w_print;
+asn_constr_check_f IEEE_binary32_0w_constraint;
+ber_type_decoder_f IEEE_binary32_0w_decode_ber;
+der_type_encoder_f IEEE_binary32_0w_encode_der;
+xer_type_decoder_f IEEE_binary32_0w_decode_xer;
+xer_type_encoder_f IEEE_binary32_0w_encode_xer;
+per_type_decoder_f IEEE_binary32_0w_decode_uper;
+per_type_encoder_f IEEE_binary32_0w_encode_uper;
+
+/*** <<< CODE [IEEE-binary32-0w] >>> ***/
+
+int
+IEEE_binary32_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [IEEE-binary32-0w] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_IEEE_binary32_0w_constr_1 CC_NOTUSED = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [IEEE-binary32-0w] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_IEEE_binary32_0w_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_0w = {
+	"IEEE-binary32-0w",
+	"IEEE-binary32-0w",
+	&asn_OP_NativeReal,
+	asn_DEF_IEEE_binary32_0w_tags_1,
+	sizeof(asn_DEF_IEEE_binary32_0w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary32_0w_tags_1[0]), /* 1 */
+	asn_DEF_IEEE_binary32_0w_tags_1,	/* Same as above */
+	sizeof(asn_DEF_IEEE_binary32_0w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary32_0w_tags_1[0]), /* 1 */
+	{ 0, &asn_PER_type_IEEE_binary32_0w_constr_1, IEEE_binary32_0w_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [IEEE-binary32-w0] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [IEEE-binary32-w0] >>> ***/
+
+typedef double	 IEEE_binary32_w0_t;
+
+/*** <<< FUNC-DECLS [IEEE-binary32-w0] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w0;
+asn_struct_free_f IEEE_binary32_w0_free;
+asn_struct_print_f IEEE_binary32_w0_print;
+asn_constr_check_f IEEE_binary32_w0_constraint;
+ber_type_decoder_f IEEE_binary32_w0_decode_ber;
+der_type_encoder_f IEEE_binary32_w0_encode_der;
+xer_type_decoder_f IEEE_binary32_w0_decode_xer;
+xer_type_encoder_f IEEE_binary32_w0_encode_xer;
+per_type_decoder_f IEEE_binary32_w0_decode_uper;
+per_type_encoder_f IEEE_binary32_w0_encode_uper;
+
+/*** <<< CODE [IEEE-binary32-w0] >>> ***/
+
+int
+IEEE_binary32_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [IEEE-binary32-w0] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_IEEE_binary32_w0_constr_1 CC_NOTUSED = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [IEEE-binary32-w0] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_IEEE_binary32_w0_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w0 = {
+	"IEEE-binary32-w0",
+	"IEEE-binary32-w0",
+	&asn_OP_NativeReal,
+	asn_DEF_IEEE_binary32_w0_tags_1,
+	sizeof(asn_DEF_IEEE_binary32_w0_tags_1)
+		/sizeof(asn_DEF_IEEE_binary32_w0_tags_1[0]), /* 1 */
+	asn_DEF_IEEE_binary32_w0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_IEEE_binary32_w0_tags_1)
+		/sizeof(asn_DEF_IEEE_binary32_w0_tags_1[0]), /* 1 */
+	{ 0, &asn_PER_type_IEEE_binary32_w0_constr_1, IEEE_binary32_w0_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [IEEE-binary64-w] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [IEEE-binary64-w] >>> ***/
+
+typedef double	 IEEE_binary64_w_t;
+
+/*** <<< FUNC-DECLS [IEEE-binary64-w] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_w;
+asn_struct_free_f IEEE_binary64_w_free;
+asn_struct_print_f IEEE_binary64_w_print;
+asn_constr_check_f IEEE_binary64_w_constraint;
+ber_type_decoder_f IEEE_binary64_w_decode_ber;
+der_type_encoder_f IEEE_binary64_w_encode_der;
+xer_type_decoder_f IEEE_binary64_w_decode_xer;
+xer_type_encoder_f IEEE_binary64_w_encode_xer;
+per_type_decoder_f IEEE_binary64_w_decode_uper;
+per_type_encoder_f IEEE_binary64_w_encode_uper;
+
+/*** <<< CODE [IEEE-binary64-w] >>> ***/
+
+int
+IEEE_binary64_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [IEEE-binary64-w] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_IEEE_binary64_w_constr_1 CC_NOTUSED = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [IEEE-binary64-w] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_IEEE_binary64_w_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_w = {
+	"IEEE-binary64-w",
+	"IEEE-binary64-w",
+	&asn_OP_NativeReal,
+	asn_DEF_IEEE_binary64_w_tags_1,
+	sizeof(asn_DEF_IEEE_binary64_w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary64_w_tags_1[0]), /* 1 */
+	asn_DEF_IEEE_binary64_w_tags_1,	/* Same as above */
+	sizeof(asn_DEF_IEEE_binary64_w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary64_w_tags_1[0]), /* 1 */
+	{ 0, &asn_PER_type_IEEE_binary64_w_constr_1, IEEE_binary64_w_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [IEEE-binary64-0w] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [IEEE-binary64-0w] >>> ***/
+
+typedef double	 IEEE_binary64_0w_t;
+
+/*** <<< FUNC-DECLS [IEEE-binary64-0w] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_0w;
+asn_struct_free_f IEEE_binary64_0w_free;
+asn_struct_print_f IEEE_binary64_0w_print;
+asn_constr_check_f IEEE_binary64_0w_constraint;
+ber_type_decoder_f IEEE_binary64_0w_decode_ber;
+der_type_encoder_f IEEE_binary64_0w_encode_der;
+xer_type_decoder_f IEEE_binary64_0w_decode_xer;
+xer_type_encoder_f IEEE_binary64_0w_encode_xer;
+per_type_decoder_f IEEE_binary64_0w_decode_uper;
+per_type_encoder_f IEEE_binary64_0w_encode_uper;
+
+/*** <<< CODE [IEEE-binary64-0w] >>> ***/
+
+int
+IEEE_binary64_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [IEEE-binary64-0w] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_IEEE_binary64_0w_constr_1 CC_NOTUSED = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [IEEE-binary64-0w] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_IEEE_binary64_0w_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_0w = {
+	"IEEE-binary64-0w",
+	"IEEE-binary64-0w",
+	&asn_OP_NativeReal,
+	asn_DEF_IEEE_binary64_0w_tags_1,
+	sizeof(asn_DEF_IEEE_binary64_0w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary64_0w_tags_1[0]), /* 1 */
+	asn_DEF_IEEE_binary64_0w_tags_1,	/* Same as above */
+	sizeof(asn_DEF_IEEE_binary64_0w_tags_1)
+		/sizeof(asn_DEF_IEEE_binary64_0w_tags_1[0]), /* 1 */
+	{ 0, &asn_PER_type_IEEE_binary64_0w_constr_1, IEEE_binary64_0w_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [IEEE-binary64-w0] >>> ***/
+
+#include <NativeReal.h>
+
+/*** <<< TYPE-DECLS [IEEE-binary64-w0] >>> ***/
+
+typedef double	 IEEE_binary64_w0_t;
+
+/*** <<< FUNC-DECLS [IEEE-binary64-w0] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_w0;
+asn_struct_free_f IEEE_binary64_w0_free;
+asn_struct_print_f IEEE_binary64_w0_print;
+asn_constr_check_f IEEE_binary64_w0_constraint;
+ber_type_decoder_f IEEE_binary64_w0_decode_ber;
+der_type_encoder_f IEEE_binary64_w0_encode_der;
+xer_type_decoder_f IEEE_binary64_w0_decode_xer;
+xer_type_encoder_f IEEE_binary64_w0_encode_xer;
+per_type_decoder_f IEEE_binary64_w0_decode_uper;
+per_type_encoder_f IEEE_binary64_w0_encode_uper;
+
+/*** <<< CODE [IEEE-binary64-w0] >>> ***/
+
+int
+IEEE_binary64_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+/*
+ * This type is implemented using NativeReal,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< CTDEFS [IEEE-binary64-w0] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_IEEE_binary64_w0_constr_1 CC_NOTUSED = {
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [IEEE-binary64-w0] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_IEEE_binary64_w0_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (9 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_w0 = {
+	"IEEE-binary64-w0",
+	"IEEE-binary64-w0",
+	&asn_OP_NativeReal,
+	asn_DEF_IEEE_binary64_w0_tags_1,
+	sizeof(asn_DEF_IEEE_binary64_w0_tags_1)
+		/sizeof(asn_DEF_IEEE_binary64_w0_tags_1[0]), /* 1 */
+	asn_DEF_IEEE_binary64_w0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_IEEE_binary64_w0_tags_1)
+		/sizeof(asn_DEF_IEEE_binary64_w0_tags_1[0]), /* 1 */
+	{ 0, &asn_PER_type_IEEE_binary64_w0_constr_1, IEEE_binary64_w0_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
