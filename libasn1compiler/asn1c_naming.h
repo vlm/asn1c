@@ -11,6 +11,7 @@ struct c_names {
         const char *part_name;      /* "T_Rex" */
         const char *base_name;      /* "T_Rex" */
         const char *c_name;         /* "T_Rex_t" */
+        const char *constrained_c_name; /* "long" */
     } type;
     const char *asn_name;      /* "foo" */
     const char *part_name;     /* "foo", "signed" */

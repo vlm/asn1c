@@ -2,6 +2,7 @@
 #include "asn1c_constraint.h"
 #include "asn1c_misc.h"
 #include "asn1c_out.h"
+#include "asn1c_naming.h"
 
 #include <asn1fix_crange.h>	/* constraint groker from libasn1fix */
 #include <asn1fix_export.h>	/* other exportables from libasn1fix */
@@ -114,7 +115,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 				}
 				break;
 			case ASN_BASIC_REAL:
-				OUT("double value;\n");
+				OUT("%s value;\n", c_name(arg).type.constrained_c_name);
 				break;
 			case ASN_BASIC_BOOLEAN:
 				OUT("BOOLEAN_t value;\n");
@@ -676,7 +677,7 @@ emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_rang
 				INDENT(-1);
 			OUT("}\n");
 		} else {
-			OUT("value = *(const double *)sptr;\n");
+			OUT("value = *(const %s *)sptr;\n", c_name(arg).type.c_name);
 		}
 		break;
 	case ASN_BASIC_BOOLEAN:

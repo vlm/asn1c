@@ -14,6 +14,10 @@ DEFINITIONS ::= BEGIN
 
     WeirdlyConstrainedREAL ::= REAL (3, ...)    -- Not really constrained
 
+    Indirect-IEEE-binary32 ::= UnconstrainedREAL (WITH COMPONENTS {
+                                    mantissa (-16777215..16777215),
+                                    base (2), exponent (-126..126)})
+
     -- X.696 (08/2005) #12.2 and #12.3
 
     -- IEEE 754 encoding single precision 
@@ -41,5 +45,15 @@ DEFINITIONS ::= BEGIN
     IEEE-binary64-w0 ::= REAL (WITH COMPONENTS { 
                 mantissa (-9007199254740991..9007199254740991),
                 base (2), exponent (-1022..1023)} | 0)
+
+    Test ::= SEQUENCE {
+        indirect-ieee-binary32 Indirect-IEEE-binary32,
+        ieee-binary32-w     IEEE-binary32-w,
+        ieee-binary32-0w    IEEE-binary32-0w,
+        ieee-binary32-w0    IEEE-binary32-w0,
+        ieee-binary64-w     IEEE-binary64-w,
+        ieee-binary64-0w    IEEE-binary64-0w,
+        ieee-binary64-w0    IEEE-binary64-w0
+    }
 
 END

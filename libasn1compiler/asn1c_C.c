@@ -122,6 +122,21 @@ static int compar_enumMap_byValue(const void *ap, const void *bp) {
 	return 1;
 }
 
+static int
+REAL_fits_float32(arg_t *arg, asn1p_expr_t *expr) {
+	asn1p_expr_type_e etype = expr_get_type(arg, arg->expr);
+    if(etype == ASN_BASIC_REAL) {
+        asn1cnst_range_t *range = asn1constraint_compute_OER_range(
+            expr->Identifier, etype, expr->combined_constraints, ACT_EL_RANGE,
+            0, 0, 0);
+        int fits = range->narrowing == NARROW_FLOAT32;
+        asn1constraint_range_free(range);
+        return fits;
+    } else {
+        return 0;
+    }
+}
+
 int
 asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -1298,6 +1313,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		&& expr_elements_count(arg, expr))
 	|| (expr->expr_type == ASN_BASIC_INTEGER
 		&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN)
+	|| REAL_fits_float32(arg, expr)
 	)
 		etd_spec = ETD_HAS_SPECIFICS;
 	else
@@ -1339,6 +1355,16 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 	REDIR(OT_STAT_DEFS);
 
+	if(REAL_fits_float32(arg, expr)) {
+		if(!(expr->_type_referenced)) OUT("static ");
+		OUT("const asn_NativeReal_specifics_t asn_SPC_%s_specs_%d = {\n",
+			MKID(expr), expr->_type_unique_index);
+		INDENT(+1);
+		OUT("4\t/* Use 'float' type. */\n");
+		INDENT(-1);
+		OUT("};\n");
+	}
+
 	/*
 	 * Print out asn_DEF_<type>_[all_]tags[] vectors.
 	 */
@@ -1374,22 +1400,22 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			p, expr->_type_unique_index);
 	} else {
 		OUT("extern asn_TYPE_descriptor_t asn_DEF_%s;\n", p);
-		if (etd_spec == ETD_HAS_SPECIFICS) {
-			if((expr->expr_type == ASN_BASIC_ENUMERATED) ||
-				(expr->expr_type == ASN_BASIC_INTEGER)) {
-				if(expr->_type_referenced) {
-					OUT("extern const asn_INTEGER_specifics_t "
-						"asn_SPC_%s_specs_%d;\n", c_name(arg).base_name, expr->_type_unique_index);
-				}
-			} else {
+        if(etd_spec == ETD_HAS_SPECIFICS && expr->_type_referenced) {
+            if((expr->expr_type == ASN_BASIC_ENUMERATED)
+               || (expr->expr_type == ASN_BASIC_INTEGER)) {
+                OUT("extern const asn_INTEGER_specifics_t "
+                    "asn_SPC_%s_specs_%d;\n",
+                    c_name(arg).base_name, expr->_type_unique_index);
+            } else {
                 asn1p_expr_t *terminal = WITH_MODULE_NAMESPACE(
                     expr->module, expr_ns,
                     asn1f_find_terminal_type_ex(arg->asn, expr_ns, expr));
-
-                OUT("extern asn_%s_specifics_t ", asn1c_type_name(arg, terminal, TNF_SAFE));
-				OUT("asn_SPC_%s_specs_%d;\n", MKID(expr), expr->_type_unique_index);
-			}
-		}
+                OUT("extern const asn_%s_specifics_t ",
+                    asn1c_type_name(arg, terminal, TNF_SAFE));
+                OUT("asn_SPC_%s_specs_%d;\n", MKID(expr),
+                    expr->_type_unique_index);
+            }
+        }
 		OUT("asn_struct_free_f %s_free;\n", p);
 		OUT("asn_struct_print_f %s_print;\n", p);
 		OUT("asn_constr_check_f %s_constraint;\n", p);
@@ -1846,14 +1872,6 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range) {
 
 	if(range->incompatible || range->not_OER_visible) {
 		OUT("{ 0, 0 }");
-    } else if(expr_get_type(arg, arg->expr) == ASN_BASIC_REAL) {
-        if(range->narrowing == NARROW_FLOAT32) {
-            OUT("{ 4, 0 }");
-        } else if(range->narrowing == NARROW_FLOAT64) {
-            OUT("{ 8, 0 }");
-        } else {
-            OUT("{ 0, 0 }");
-        }
     } else if(range->left.type == ARE_VALUE && range->left.value >= 0
               && range->right.type == ARE_MAX) {
         OUT("{ 0, 1 }");

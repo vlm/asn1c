@@ -121,6 +121,7 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
     static abuf b_type_part_name;
     static abuf b_type_base_name;
     static abuf b_type_c_name;
+    static abuf b_type_constrained_c_name;
     static abuf b_asn_name;
     static abuf b_part_name;
     static abuf b_base_name;
@@ -136,6 +137,7 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
     abuf_clear(&b_type_part_name);
     abuf_clear(&b_type_base_name);
     abuf_clear(&b_type_c_name);
+    abuf_clear(&b_type_constrained_c_name);
     abuf_clear(&b_asn_name);
     abuf_clear(&b_base_name);
     abuf_clear(&b_part_name);
@@ -152,6 +154,8 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
     abuf_str(&b_type_part_name, asn1c_type_name(arg, expr, TNF_SAFE));
     abuf_str(&b_type_base_name, asn1c_type_name(arg, expr, TNF_SAFE));
     abuf_str(&b_type_c_name, asn1c_type_name(arg, expr, TNF_CTYPE));
+    abuf_str(&b_type_constrained_c_name,
+             asn1c_type_name(arg, expr, TNF_CONSTYPE));
 
 
     if((arg->flags & A1C_COMPOUND_NAMES)) {
@@ -189,6 +193,7 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
     names.type.base_name = b_type_base_name.buffer;
     names.type.part_name = b_type_part_name.buffer;
     names.type.c_name = b_type_c_name.buffer;
+    names.type.constrained_c_name = b_type_constrained_c_name.buffer;
     names.asn_name = b_asn_name.buffer;
     names.part_name = b_part_name.buffer;
     names.base_name = b_base_name.buffer;
@@ -269,6 +274,7 @@ c_names_format(struct c_names ns) {
     FMT_COMPONENT(type.part_name);
     FMT_COMPONENT(type.base_name);
     FMT_COMPONENT(type.c_name);
+    FMT_COMPONENT(type.constrained_c_name);
     FMT_COMPONENT(asn_name);
     FMT_COMPONENT(part_name);
     FMT_COMPONENT(base_name);

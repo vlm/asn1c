@@ -77,28 +77,38 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	0	/* No specifics */
 };
 
+static double
+NativeReal__get_double(const asn_TYPE_descriptor_t *td, const void *ptr) {
+    const asn_NativeReal_specifics_t *specs =
+        (const asn_NativeReal_specifics_t *)td->specifics;
+    size_t float_size = specs ? specs->float_size : sizeof(double);
+    if(float_size == sizeof(float)) {
+        return *(const float *)ptr;
+    } else {
+        return *(const double *)ptr;
+    }
+}
+
 /*
  * Decode REAL type.
  */
 asn_dec_rval_t
 NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
-                      asn_TYPE_descriptor_t *td, void **dbl_ptr,
+                      asn_TYPE_descriptor_t *td, void **sptr,
                       const void *buf_ptr, size_t size, int tag_mode) {
-    double *Dbl = (double *)*dbl_ptr;
+    const asn_NativeReal_specifics_t *specs =
+        (const asn_NativeReal_specifics_t *)td->specifics;
+    size_t float_size = specs ? specs->float_size : sizeof(double);
+    void *native = *sptr;
     asn_dec_rval_t rval;
     ber_tlv_len_t length;
 
     /*
      * If the structure is not there, allocate it.
      */
-    if(Dbl == NULL) {
-        *dbl_ptr = CALLOC(1, sizeof(*Dbl));
-        Dbl = (double *)*dbl_ptr;
-        if(Dbl == NULL) {
-            rval.code = RC_FAIL;
-            rval.consumed = 0;
-            return rval;
-        }
+    if(!native) {
+        native = (*sptr = CALLOC(1, float_size));
+        if(!native) ASN__DECODE_FAILED;
     }
 
     ASN_DEBUG("Decoding %s as REAL (tm=%d)", td->name, tag_mode);
@@ -160,14 +170,18 @@ NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
             return rval;
         }
 
-        *Dbl = d;
+        if(float_size == sizeof(float)) {
+            *(float *)native = d;
+        } else {
+            *(double *)native = d;
+        }
     }
 
     rval.code = RC_OK;
     rval.consumed += length;
 
-    ASN_DEBUG("Took %ld/%ld bytes to encode %s (%f)", (long)rval.consumed,
-              (long)length, td->name, *Dbl);
+    ASN_DEBUG("Took %ld/%ld bytes to encode %s", (long)rval.consumed,
+              (long)length, td->name);
 
     return rval;
 }
@@ -179,14 +193,14 @@ asn_enc_rval_t
 NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	double Dbl = *(const double *)ptr;
-	asn_enc_rval_t erval;
+    double d = NativeReal__get_double(td, ptr);
+    asn_enc_rval_t erval;
 	REAL_t tmp;
 
 	/* Prepare a temporary clean structure */
 	memset(&tmp, 0, sizeof(tmp));
 
-	if(asn_double2REAL(&tmp, Dbl)) {
+	if(asn_double2REAL(&tmp, d)) {
 		erval.encoded = -1;
 		erval.failed_type = td;
 		erval.structure_ptr = ptr;
@@ -214,9 +228,13 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 asn_dec_rval_t
 NativeReal_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                        asn_TYPE_descriptor_t *td,
-                       const asn_per_constraints_t *constraints, void **dbl_ptr,
+                       const asn_per_constraints_t *constraints, void **sptr,
                        asn_per_data_t *pd) {
-    double *Dbl = (double *)*dbl_ptr;
+    const asn_NativeReal_specifics_t *specs =
+        (const asn_NativeReal_specifics_t *)td->specifics;
+    size_t float_size = specs ? specs->float_size : sizeof(double);
+    void *native = (void *)*sptr;
+    double d;
 	asn_dec_rval_t rval;
 	REAL_t tmp;
 	void *ptmp = &tmp;
@@ -227,24 +245,28 @@ NativeReal_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * If the structure is not there, allocate it.
 	 */
-	if(Dbl == NULL) {
-		*dbl_ptr = CALLOC(1, sizeof(*Dbl));
-		Dbl = (double *)*dbl_ptr;
-		if(Dbl == NULL)
-			ASN__DECODE_FAILED;
+	if(!native) {
+        native = (*sptr = CALLOC(1, float_size));
+		if(!native) ASN__DECODE_FAILED;
 	}
 
 	memset(&tmp, 0, sizeof(tmp));
-	rval = OCTET_STRING_decode_uper(opt_codec_ctx, td, NULL,
-			&ptmp, pd);
-	if(rval.code != RC_OK) {
+    rval = OCTET_STRING_decode_uper(opt_codec_ctx, &asn_DEF_REAL,
+                                    NULL, &ptmp, pd);
+    if(rval.code != RC_OK) {
 		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
 		return rval;
 	}
 
-	ret = asn_REAL2double(&tmp, Dbl);
+	ret = asn_REAL2double(&tmp, &d);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
 	if(ret) ASN__DECODE_FAILED;
+
+    if(float_size == sizeof(float)) {
+        *(float *)native = d;
+    } else {
+        *(double *)native = d;
+    }
 
 	return rval;
 }
@@ -256,7 +278,7 @@ asn_enc_rval_t
 NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints, void *sptr,
                        asn_per_outp_t *po) {
-    double Dbl = *(const double *)sptr;
+    double d = NativeReal__get_double(td, sptr);
 	asn_enc_rval_t erval;
 	REAL_t tmp;
 
@@ -265,12 +287,12 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
 	/* Prepare a temporary clean structure */
 	memset(&tmp, 0, sizeof(tmp));
 
-	if(asn_double2REAL(&tmp, Dbl))
+	if(asn_double2REAL(&tmp, d))
 		ASN__ENCODE_FAILED;
 	
 	/* Encode a DER REAL */
-	erval = OCTET_STRING_encode_uper(td, NULL, &tmp, po);
-	if(erval.encoded == -1)
+    erval = OCTET_STRING_encode_uper(&asn_DEF_REAL, NULL, &tmp, po);
+    if(erval.encoded == -1)
 		erval.structure_ptr = sptr;
 
 	/* Free possibly allocated members of the temporary structure */
@@ -290,9 +312,9 @@ asn_enc_rval_t
 NativeReal_encode_oer(asn_TYPE_descriptor_t *td,
                    const asn_oer_constraints_t *constraints, void *sptr,
                    asn_app_consume_bytes_f *cb, void *app_key) {
+    double d = NativeReal__get_double(td, sptr);
     asn_enc_rval_t er = { 0, 0, 0 };
     ssize_t len_len;
-    const double *d = sptr;
     REAL_t tmp;
 
 	/* Prepare a temporary clean structure */
@@ -301,7 +323,7 @@ NativeReal_encode_oer(asn_TYPE_descriptor_t *td,
     (void)td;
     (void)constraints;  /* Constraints are unused in OER */
 
-    if(asn_double2REAL(&tmp, *d)) {
+    if(asn_double2REAL(&tmp, d)) {
         ASN__ENCODE_FAILED;
 	}
 
@@ -322,9 +344,12 @@ NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                         asn_TYPE_descriptor_t *td,
                         const asn_oer_constraints_t *constraints, void **sptr,
                         const void *ptr, size_t size) {
+    const asn_NativeReal_specifics_t *specs =
+        (const asn_NativeReal_specifics_t *)td->specifics;
+    size_t float_size = specs ? specs->float_size : sizeof(double);
     asn_dec_rval_t ok = {RC_OK, 0};
-    double *st;
     double d;
+    void *native;
     ssize_t len_len;
     size_t real_body_len;
 
@@ -370,12 +395,16 @@ NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         }
     }
 
-    if(!(st = *sptr)) {
-        st = (double *)(*sptr = CALLOC(1, sizeof(*st)));
-        if(!st) ASN__DECODE_FAILED;
+    if(!(native = *sptr)) {
+        native = (*sptr = CALLOC(1, float_size));
+        if(!native) ASN__DECODE_FAILED;
     }
 
-    *st = d;
+    if(float_size == sizeof(float)) {
+        *(float *)native = d;
+    } else {
+        *(double *)native = d;
+    }
     ok.consumed = len_len + real_body_len;
     return ok;
 }
@@ -389,32 +418,37 @@ asn_dec_rval_t
 NativeReal_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
+    const asn_NativeReal_specifics_t *specs =
+        (const asn_NativeReal_specifics_t *)td->specifics;
+    size_t float_size = specs ? specs->float_size : sizeof(double);
 	asn_dec_rval_t rval;
-	REAL_t *st = 0;
-	REAL_t **stp = &st;
-	double *Dbl = (double *)*sptr;
+	REAL_t st = { 0, 0 };
+	REAL_t *stp = &st;
+	void *native = *sptr;
 
-	if(!Dbl) {
-		*sptr = CALLOC(1, sizeof(double));
-		Dbl = (double *)*sptr;
-		if(!Dbl) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
-	}
+	if(!native) {
+		native = (*sptr = CALLOC(1, float_size));
+        if(!native) ASN__DECODE_FAILED;
+    }
 
-	rval = REAL_decode_xer(opt_codec_ctx, td, (void **)stp, opt_mname,
+	rval = REAL_decode_xer(opt_codec_ctx, td, (void **)&stp, opt_mname,
 		buf_ptr, size);
 	if(rval.code == RC_OK) {
-		if(asn_REAL2double(st, Dbl)) {
+        double d;
+		if(asn_REAL2double(&st, &d)) {
 			rval.code = RC_FAIL;
 			rval.consumed = 0;
-		}
+		} else {
+            if(float_size == sizeof(float)) {
+                *(float *)native = d;
+            } else {
+                *(double *)native = d;
+            }
+        }
 	} else {
 		rval.consumed = 0;
 	}
-	ASN_STRUCT_FREE(asn_DEF_REAL, st);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &st);
 	return rval;
 }
 
@@ -422,15 +456,13 @@ asn_enc_rval_t
 NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	int ilevel, enum xer_encoder_flags_e flags,
 		asn_app_consume_bytes_f *cb, void *app_key) {
-	const double *Dbl = (const double *)sptr;
+    double d = NativeReal__get_double(td, sptr);
 	asn_enc_rval_t er;
 
 	(void)ilevel;
 
-	if(!Dbl) ASN__ENCODE_FAILED;
-
-	er.encoded = REAL__dump(*Dbl, flags & XER_F_CANONICAL, cb, app_key);
-	if(er.encoded < 0) ASN__ENCODE_FAILED;
+    er.encoded = REAL__dump(d, flags & XER_F_CANONICAL, cb, app_key);
+    if(er.encoded < 0) ASN__ENCODE_FAILED;
 
 	ASN__ENCODED_OK(er);
 }
@@ -441,43 +473,44 @@ NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 int
 NativeReal_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-	const double *Dbl = (const double *)sptr;
 
-	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
-	if(!Dbl) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
-
-	return (REAL__dump(*Dbl, 0, cb, app_key) < 0) ? -1 : 0;
+	if(sptr) {
+        double d = NativeReal__get_double(td, sptr);
+        return (REAL__dump(d, 0, cb, app_key) < 0) ? -1 : 0;
+    } else {
+        return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
+    }
 }
 
 int
 NativeReal_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
                    const void *bptr) {
-    const double *a = aptr;
-    const double *b = bptr;
-    (void)td;
 
-    if(a && b) {
+    if(aptr && bptr) {
+        double a = NativeReal__get_double(td, aptr);
+        double b = NativeReal__get_double(td, bptr);
+
         /* NaN sorted above everything else */
-        if(asn_isnan(*a)) {
-            if(asn_isnan(*b)) {
+        if(asn_isnan(a)) {
+            if(asn_isnan(b)) {
                 return 0;
             } else {
                 return -1;
             }
-        } else if(asn_isnan(*b)) {
+        } else if(asn_isnan(b)) {
             return 1;
         }
         /* Value comparison. */
-        if(*a < *b) {
+        if(a < b) {
             return -1;
-        } else if(*a > *b) {
+        } else if(a > b) {
             return 1;
         } else {
             return 0;
         }
-    } else if(!a) {
+    } else if(!aptr) {
         return -1;
     } else {
         return 1;
