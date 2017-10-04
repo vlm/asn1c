@@ -44,24 +44,43 @@ d2s(double d, int canonical) {
  * is as given in the (sample) and (canonical_sample) arguments.
  */
 static void
-check_str_representation(double d, const char *sample, const char *canonical_sample, int lineno) {
-	char *s0, *s1;
+check_str_representation(double d, const char *sample,
+                         const char *canonical_sample, int lineno) {
+    char *s0, *s1;
 
-	s0 = d2s(d, 0);
-	s1 = d2s(d, 1);
+    s0 = d2s(d, 0);
+    s1 = d2s(d, 1);
 
-	if(sample) {
-		printf("%03d: Checking %g->[\"%s\"] against [\"%s\"]%s\n",
-			lineno, d, s0, sample,
-			canonical_sample ? " (canonical follows...)" : ""
-		);
-		assert(!strcmp(s0, sample));
-	}
-	if(canonical_sample) {
-		printf("%03d: Checking %g->[\"%s\"] against [\"%s\"] (canonical)\n",
-			lineno, d, s1, canonical_sample);
-		assert(!strcmp(s1, canonical_sample));
-	}
+    if(sample) {
+        printf("%03d: Checking %g->[\"%s\"] against [\"%s\"]%s\n", lineno, d,
+               s0, sample, canonical_sample ? " (canonical follows...)" : "");
+        assert(!strcmp(s0, sample));
+    }
+    if(canonical_sample) {
+        if(*s1 == '<') {
+            printf(
+                "%03d: Checking %g->[\"%s\"] against [\"%s\"] "
+                "(canonical)\n",
+                lineno, d, s1, canonical_sample);
+            assert(!strcmp(s1, canonical_sample));
+        } else {
+            double reconstructed = strtod(s1, 0);
+            printf(
+                "%03d: Checking %g->[\"%s\"] against [\"%s\"]->%g "
+                "(canonical, 𝟄=%.17g %g)\n",
+                lineno, d, s1, canonical_sample, reconstructed,
+                fabs(reconstructed - d), 1e-52);
+            if(d != reconstructed) {
+                printf(
+                    "WARNING: Difference in a small epsilon (given "
+                    "%%.15g=%.15g, %%.17g=%.17g, %%.20g=%.20g, "
+                    "reconstructed %%.15g=%.15g, %%.17g=%.17g, "
+                    "%%.20g=%.20g)!\n",
+                    d, d, d, reconstructed, reconstructed, reconstructed);
+            }
+            assert(fabs(d - reconstructed) < 1e-52);
+        }
+    }
 }
 
 #define	check(rn, d, str1, str2)	\
