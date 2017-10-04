@@ -867,7 +867,10 @@ REAL_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         -4503599627370496.0, 4503599627370496.0,
         /* 2^100 */
         -1267650600228229401496703205376.0, 1267650600228229401496703205376.0,
-        -MAXFLOAT, MAXFLOAT, INFINITY, -INFINITY, NAN};
+#if __STDC_VERSION__ >= 199901L
+        -MAXFLOAT, MAXFLOAT,
+#endif
+        INFINITY, -INFINITY, NAN};
     REAL_t *st;
     double d;
 

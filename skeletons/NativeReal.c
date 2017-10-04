@@ -109,6 +109,7 @@ NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
     rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size, tag_mode, 0,
                           &length, 0);
     if(rval.code != RC_OK) return rval;
+    assert(length >= 0);    /* Ensured by ber_check_tags */
 
     ASN_DEBUG("%s length is %d bytes", td->name, (int)length);
 
@@ -134,7 +135,7 @@ NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
         double d;
         int ret;
 
-        if(length < sizeof(scratch)) {
+        if((size_t)length < sizeof(scratch)) {
             tmp.buf = scratch;
             tmp.size = length;
         } else {
@@ -520,7 +521,10 @@ NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         -4503599627370496.0, 4503599627370496.0,
         /* 2^100 */
         -1267650600228229401496703205376.0, 1267650600228229401496703205376.0,
-        -MAXFLOAT, MAXFLOAT, INFINITY, -INFINITY, NAN};
+#if __STDC_VERSION__ >= 199901L
+        -MAXFLOAT, MAXFLOAT,
+#endif
+        INFINITY, -INFINITY, NAN};
     double *st;
     double d;
 
