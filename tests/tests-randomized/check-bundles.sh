@@ -42,11 +42,11 @@ parallelism=4
 asn1c_flags=""
 
 make_clean_before_bundle() {
-    test "${need_clean_before_bundle}" = "1" && make clean
+    test "${need_clean_before_bundle}" = "1" && rm -rf ${RNDTEMP}
 }
 
 make_clean_before_test() {
-    test "${need_clean_before_test}" = "1" && make clean
+    test "${need_clean_before_test}" = "1" && rm -rf ${RNDTEMP}
 }
 
 # Get all the type-bearding lines in file and process them individually
