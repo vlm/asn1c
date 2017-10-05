@@ -90,6 +90,29 @@ NativeReal__get_double(const asn_TYPE_descriptor_t *td, const void *ptr) {
     }
 }
 
+static ssize_t  /* Returns -1 or float size. */
+NativeReal__set(const asn_TYPE_descriptor_t *td, void **sptr, double d) {
+    const asn_NativeReal_specifics_t *specs =
+        (const asn_NativeReal_specifics_t *)td->specifics;
+    size_t float_size = specs ? specs->float_size : sizeof(double);
+    void *native;
+
+    if(!(native = *sptr)) {
+        native = (*sptr = CALLOC(1, float_size));
+        if(!native) {
+            return -1;
+        }
+    }
+
+    if(float_size == sizeof(float)) {
+        *(float *)native = d;
+    } else {
+        *(double *)native = d;
+    }
+
+    return float_size;
+}
+
 /*
  * Decode REAL type.
  */
@@ -97,20 +120,8 @@ asn_dec_rval_t
 NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
                       asn_TYPE_descriptor_t *td, void **sptr,
                       const void *buf_ptr, size_t size, int tag_mode) {
-    const asn_NativeReal_specifics_t *specs =
-        (const asn_NativeReal_specifics_t *)td->specifics;
-    size_t float_size = specs ? specs->float_size : sizeof(double);
-    void *native = *sptr;
     asn_dec_rval_t rval;
     ber_tlv_len_t length;
-
-    /*
-     * If the structure is not there, allocate it.
-     */
-    if(!native) {
-        native = (*sptr = CALLOC(1, float_size));
-        if(!native) ASN__DECODE_FAILED;
-    }
 
     ASN_DEBUG("Decoding %s as REAL (tm=%d)", td->name, tag_mode);
 
@@ -171,11 +182,8 @@ NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
             return rval;
         }
 
-        if(float_size == sizeof(float)) {
-            *(float *)native = d;
-        } else {
-            *(double *)native = d;
-        }
+        if(NativeReal__set(td, sptr, d) < 0)
+            ASN__DECODE_FAILED;
     }
 
     rval.code = RC_OK;
@@ -191,34 +199,30 @@ NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
  * Encode the NativeReal using the standard REAL type DER encoder.
  */
 asn_enc_rval_t
-NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
+NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	int tag_mode, ber_tlv_tag_t tag,
 	asn_app_consume_bytes_f *cb, void *app_key) {
-    double d = NativeReal__get_double(td, ptr);
+    double d = NativeReal__get_double(td, sptr);
     asn_enc_rval_t erval;
 	REAL_t tmp;
 
 	/* Prepare a temporary clean structure */
 	memset(&tmp, 0, sizeof(tmp));
 
-	if(asn_double2REAL(&tmp, d)) {
-		erval.encoded = -1;
-		erval.failed_type = td;
-		erval.structure_ptr = ptr;
-		return erval;
-	}
-	
-	/* Encode a fake REAL */
-	erval = der_encode_primitive(td, &tmp, tag_mode, tag, cb, app_key);
-	if(erval.encoded == -1) {
+    if(asn_double2REAL(&tmp, d))
+        ASN__ENCODE_FAILED;
+
+    /* Encode a fake REAL */
+    erval = der_encode_primitive(td, &tmp, tag_mode, tag, cb, app_key);
+    if(erval.encoded == -1) {
 		assert(erval.structure_ptr == &tmp);
-		erval.structure_ptr = ptr;
+		erval.structure_ptr = sptr;
 	}
 
 	/* Free possibly allocated members of the temporary structure */
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
+    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
 
-	return erval;
+    return erval;
 }
 
 #ifndef ASN_DISABLE_PER_SUPPORT
@@ -231,25 +235,13 @@ NativeReal_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                        asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints, void **sptr,
                        asn_per_data_t *pd) {
-    const asn_NativeReal_specifics_t *specs =
-        (const asn_NativeReal_specifics_t *)td->specifics;
-    size_t float_size = specs ? specs->float_size : sizeof(double);
-    void *native = (void *)*sptr;
-    double d;
 	asn_dec_rval_t rval;
+    double d;
 	REAL_t tmp;
 	void *ptmp = &tmp;
 	int ret;
 
 	(void)constraints;
-
-	/*
-	 * If the structure is not there, allocate it.
-	 */
-	if(!native) {
-        native = (*sptr = CALLOC(1, float_size));
-		if(!native) ASN__DECODE_FAILED;
-	}
 
 	memset(&tmp, 0, sizeof(tmp));
     rval = OCTET_STRING_decode_uper(opt_codec_ctx, &asn_DEF_REAL,
@@ -263,11 +255,8 @@ NativeReal_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &tmp);
 	if(ret) ASN__DECODE_FAILED;
 
-    if(float_size == sizeof(float)) {
-        *(float *)native = d;
-    } else {
-        *(double *)native = d;
-    }
+    if(NativeReal__set(td, sptr, d) < 0 )
+        ASN__DECODE_FAILED;
 
 	return rval;
 }
@@ -345,17 +334,12 @@ NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                         asn_TYPE_descriptor_t *td,
                         const asn_oer_constraints_t *constraints, void **sptr,
                         const void *ptr, size_t size) {
-    const asn_NativeReal_specifics_t *specs =
-        (const asn_NativeReal_specifics_t *)td->specifics;
-    size_t float_size = specs ? specs->float_size : sizeof(double);
     asn_dec_rval_t ok = {RC_OK, 0};
     double d;
-    void *native;
     ssize_t len_len;
     size_t real_body_len;
 
     (void)opt_codec_ctx;
-    (void)td;
     (void)constraints; /* Constraints are unused in OER */
 
     len_len = oer_fetch_length(ptr, size, &real_body_len);
@@ -396,16 +380,9 @@ NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         }
     }
 
-    if(!(native = *sptr)) {
-        native = (*sptr = CALLOC(1, float_size));
-        if(!native) ASN__DECODE_FAILED;
-    }
+    if(NativeReal__set(td, sptr, d) < 0)
+        ASN__DECODE_FAILED;
 
-    if(float_size == sizeof(float)) {
-        *(float *)native = d;
-    } else {
-        *(double *)native = d;
-    }
     ok.consumed = len_len + real_body_len;
     return ok;
 }
@@ -419,35 +396,21 @@ asn_dec_rval_t
 NativeReal_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
 		const void *buf_ptr, size_t size) {
-    const asn_NativeReal_specifics_t *specs =
-        (const asn_NativeReal_specifics_t *)td->specifics;
-    size_t float_size = specs ? specs->float_size : sizeof(double);
 	asn_dec_rval_t rval;
 	REAL_t st = { 0, 0 };
 	REAL_t *stp = &st;
-	void *native = *sptr;
-
-	if(!native) {
-		native = (*sptr = CALLOC(1, float_size));
-        if(!native) ASN__DECODE_FAILED;
-    }
 
 	rval = REAL_decode_xer(opt_codec_ctx, td, (void **)&stp, opt_mname,
 		buf_ptr, size);
 	if(rval.code == RC_OK) {
         double d;
-		if(asn_REAL2double(&st, &d)) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-		} else {
-            if(float_size == sizeof(float)) {
-                *(float *)native = d;
-            } else {
-                *(double *)native = d;
-            }
+        if(asn_REAL2double(&st, &d) || NativeReal__set(td, sptr, d) < 0) {
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
         }
 	} else {
-		rval.consumed = 0;
+        /* Convert all errors into RC_FAIL */
+        rval.consumed = 0;
 	}
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_REAL, &st);
 	return rval;
@@ -533,9 +496,13 @@ NativeReal_free(const asn_TYPE_descriptor_t *td, void *ptr,
         break;
     case ASFM_FREE_UNDERLYING:
         break;
-    case ASFM_FREE_UNDERLYING_AND_RESET:
-        memset(ptr, 0, sizeof(double));
-        break;
+    case ASFM_FREE_UNDERLYING_AND_RESET: {
+        const asn_NativeReal_specifics_t *specs;
+        size_t float_size;
+        specs = (const asn_NativeReal_specifics_t *)td->specifics;
+        float_size = specs ? specs->float_size : sizeof(double);
+        memset(ptr, 0, float_size);
+    } break;
     }
 }
 
@@ -544,7 +511,7 @@ asn_random_fill_result_t
 NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
                        const asn_encoding_constraints_t *constraints,
                        size_t max_length) {
-    asn_random_fill_result_t result_ok = {ARFILL_OK, sizeof(double)};
+    asn_random_fill_result_t result_ok = {ARFILL_OK, 0};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
     static const double values[] = {
@@ -559,26 +526,18 @@ NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         -FLT_MAX, FLT_MAX,
 #endif
         INFINITY, -INFINITY, NAN};
-    double *st;
+    ssize_t float_set_size;
     double d;
 
-    (void)td;
     (void)constraints;
 
     if(max_length == 0) return result_skipped;
 
     d = values[asn_random_between(0, sizeof(values) / sizeof(values[0]) - 1)];
 
-    if(*sptr) {
-        st = *sptr;
-    } else {
-        st = (double *)(*sptr = CALLOC(1, sizeof(double)));
-        if(!st) {
-            return result_failed;
-        }
-    }
+    float_set_size = NativeReal__set(td, sptr, d);
+    if(float_set_size < 0) return result_failed;
 
-    *st = d;
-
+    result_ok.length = float_set_size;
     return result_ok;
 }

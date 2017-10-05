@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 typedef struct asn_NativeReal_specifics_s {
-    unsigned float_size;    /* 4 for 'float', not 4 for 'double'. */
+    unsigned float_size; /* 4 for 'float', 8 for 'double'. */
 } asn_NativeReal_specifics_t;
 
 extern asn_TYPE_descriptor_t asn_DEF_NativeReal;
