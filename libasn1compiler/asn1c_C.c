@@ -1872,6 +1872,14 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range) {
 
 	if(range->incompatible || range->not_OER_visible) {
 		OUT("{ 0, 0 }");
+    } else if(expr_get_type(arg, arg->expr) == ASN_BASIC_REAL) {
+        if(range->narrowing == NARROW_FLOAT32) {
+            OUT("{ sizeof(float), 0 }");
+        } else if(range->narrowing == NARROW_FLOAT64) {
+            OUT("{ sizeof(double), 0 }");
+        } else {
+            OUT("{ 0, 0 }");
+        }
     } else if(range->left.type == ARE_VALUE && range->left.value >= 0
               && range->right.type == ARE_MAX) {
         OUT("{ 0, 1 }");
