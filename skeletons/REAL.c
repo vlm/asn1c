@@ -952,8 +952,14 @@ REAL_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         -4503599627370496.0, 4503599627370496.0,
         /* 2^100 */
         -1267650600228229401496703205376.0, 1267650600228229401496703205376.0,
-#if __STDC_VERSION__ >= 199901L
+        -FLT_MIN, FLT_MIN,
         -FLT_MAX, FLT_MAX,
+        -DBL_MIN, DBL_MIN,
+        -DBL_MAX, DBL_MAX,
+#ifdef  FLT_TRUE_MIN
+        -FLT_TRUE_MIN, FLT_TRUE_MIN,
+#endif
+#ifdef  DBL_TRUE_MIN
         -DBL_TRUE_MIN, DBL_TRUE_MIN,
 #endif
         INFINITY, -INFINITY, NAN};
