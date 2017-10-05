@@ -875,6 +875,8 @@ REAL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
     ssize_t len_len;
     size_t real_body_len;
 
+    (void)opt_codec_ctx;
+
     if(!constraints) constraints = td->encoding_constraints.oer_constraints;
     if(constraints && constraints->value.width != 0) {
         /* If we're constrained to a narrow float/double representation, we
