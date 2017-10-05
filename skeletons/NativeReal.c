@@ -558,6 +558,7 @@ NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         -1267650600228229401496703205376.0, 1267650600228229401496703205376.0,
 #if __STDC_VERSION__ >= 199901L
         -FLT_MAX, FLT_MAX,
+        -DBL_TRUE_MIN, DBL_TRUE_MIN,
 #endif
         INFINITY, -INFINITY, NAN};
     ssize_t float_set_size;

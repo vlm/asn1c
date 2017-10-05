@@ -122,21 +122,6 @@ static int compar_enumMap_byValue(const void *ap, const void *bp) {
 	return 1;
 }
 
-static int
-REAL_fits_float32(arg_t *arg, asn1p_expr_t *expr) {
-	asn1p_expr_type_e etype = expr_get_type(arg, arg->expr);
-    if(etype == ASN_BASIC_REAL) {
-        asn1cnst_range_t *range = asn1constraint_compute_OER_range(
-            expr->Identifier, etype, expr->combined_constraints, ACT_EL_RANGE,
-            0, 0, 0);
-        int fits = range->narrowing == NARROW_FLOAT32;
-        asn1constraint_range_free(range);
-        return fits;
-    } else {
-        return 0;
-    }
-}
-
 int
 asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
@@ -1313,7 +1298,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		&& expr_elements_count(arg, expr))
 	|| (expr->expr_type == ASN_BASIC_INTEGER
 		&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN)
-	|| REAL_fits_float32(arg, expr)
+	|| asn1c_REAL_fits(arg, expr) == RL_FITS_FLOAT32
 	)
 		etd_spec = ETD_HAS_SPECIFICS;
 	else
@@ -1355,7 +1340,11 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 	REDIR(OT_STAT_DEFS);
 
-	if(REAL_fits_float32(arg, expr)) {
+    /*
+     * By default, NativeReal is double. We only override this if
+     * (OER) constraints suggested that we may use float.
+     */
+	if(asn1c_REAL_fits(arg, expr) == RL_FITS_FLOAT32) {
 		if(!(expr->_type_referenced)) OUT("static ");
 		OUT("const asn_NativeReal_specifics_t asn_SPC_%s_specs_%d = {\n",
 			MKID(expr), expr->_type_unique_index);
@@ -1875,7 +1864,7 @@ emit_single_member_OER_constraint_value(arg_t *arg, asn1cnst_range_t *range) {
     } else if(expr_get_type(arg, arg->expr) == ASN_BASIC_REAL) {
         if(range->narrowing == NARROW_FLOAT32) {
             OUT("{ sizeof(float), 0 }");
-        } else if(range->narrowing == NARROW_FLOAT64) {
+        } else if(range->narrowing == NARROW_DOUBLE64) {
             OUT("{ sizeof(double), 0 }");
         } else {
             OUT("{ 0, 0 }");

@@ -943,7 +943,7 @@ asn1f_real_range_from_WCOMPS(const char *dbg_name,
        && base->left.value == 2 && base->right.value == 2
        && exponent->left.type == ARE_VALUE && exponent->right.type == ARE_VALUE
        && exponent->left.value >= -1074 && exponent->right.value <= 971) {
-        range->narrowing = NARROW_FLOAT64;
+        range->narrowing = NARROW_DOUBLE64;
     }
 
     FREE_MEB();

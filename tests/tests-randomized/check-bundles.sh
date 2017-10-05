@@ -14,10 +14,11 @@ usage() {
     echo "  $0 [--dirty] -t \"<ASN.1 text defining type T, in string form>\""
     echo "  $0 [--dirty] bundles/<bundle-name.txt> [<line>]"
     echo "Where options are:"
-    echo "  -h          Show this help screen"
-    echo "  -e <syntax> Verify a given encoding explicitly (default is ALL)"
-    echo "  --dirty     Reuse compile results from the previous run(s)"
-    echo "  -t <ASN.1>  Run this particular typel"
+    echo "  -h              Show this help screen"
+    echo "  -e <syntax>     Verify a given encoding explicitly (default is ALL)"
+    echo "  --asn1c <flag>  Add this flag to asn1c"
+    echo "  --dirty         Reuse compile results from the previous run(s)"
+    echo "  -t <ASN.1>      Run this particular typel"
     echo "Examples:"
     echo "  $0 -t UTF8String"
     echo "  $0 -t \"T ::= INTEGER (0..1)\""
@@ -38,6 +39,7 @@ need_clean_before_bundle=1  # Clean before testing a bundle file
 need_clean_before_test=1    # Before each line in a bundle file
 encodings=""    # Default is to verify all supported ASN.1 transfer syntaxes
 parallelism=4
+asn1c_flags=""
 
 make_clean_before_bundle() {
     test "${need_clean_before_bundle}" = "1" && make clean
@@ -81,8 +83,6 @@ verify_asn_type() {
     local where="$*"
     test "x$asn" != "x" || usage
 
-    make_clean_before_test
-
     if echo "$asn" | grep -qv "::="; then
         asn="T ::= $asn"
     fi
@@ -98,11 +98,35 @@ verify_asn_type() {
     fi
 }
 
+# compile_and_test "<text>" "<where found>" [<asn.1 flags>]
 compile_and_test() {
-    local asn="$1"
-    shift
+    if [ "x${asn1c_flags}" != "x" ]; then
+        if ! compile_and_test_with "$@" ${asn1c_flags} ; then
+            return 1
+        fi
+    else
+        if ! compile_and_test_with "$@" ; then
+            echo "Can't compile and test narrow"
+            return 1
+        fi
 
-    if ! asn_compile "$asn" "$*"; then
+        if ! compile_and_test_with "$@" "-fwide-types"; then
+            echo "Can't compile and test wide"
+            return 2
+        fi
+    fi
+
+    return 0
+}
+
+compile_and_test_with() {
+    local asn="$1"
+    local where="$2"
+    shift 2
+
+    make_clean_before_test
+
+    if ! asn_compile "$asn" "$where" "$@"; then
         echo "Cannot compile ASN.1 $asn"
         return 1
     fi
@@ -170,7 +194,8 @@ compile_and_test() {
 
 asn_compile() {
     local asn="$1"
-    shift
+    local where="$2"
+    shift 2
 
     # Create "INTEGER (1..2)" from "T ::= INTEGER (1..2) -- RMAX=5"
     local short_asn=$(echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[^ ]* //;')
@@ -180,10 +205,10 @@ asn_compile() {
 
     test ! -f Makefile.am   # Protection from accidental clobbering
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
-    echo "-- $*" >> test.asn1
+    echo "-- ${where}" >> test.asn1
     echo "END" >> test.asn1
     if ! ${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons \
-        -gen-OER -gen-PER test.asn1
+        -gen-OER -gen-PER "$@" test.asn1
     then
         return 1
     fi
@@ -199,6 +224,7 @@ asn_compile() {
 while :; do
     case "$1" in
         -h) usage ;;
+        --asn1c) asn1c_flags+="$2"; shift 2; continue ;;
         --dirty)
             need_clean_before_bundle=0
             need_clean_before_test=0

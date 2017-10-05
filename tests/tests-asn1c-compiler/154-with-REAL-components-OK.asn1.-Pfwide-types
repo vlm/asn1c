@@ -149,7 +149,6 @@ xer_type_encoder_f Indirect_IEEE_binary32_encode_xer;
 int
 Indirect_IEEE_binary32_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const UnconstrainedREAL_t *st = (const UnconstrainedREAL_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -160,7 +159,6 @@ Indirect_IEEE_binary32_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -198,16 +196,16 @@ asn_TYPE_descriptor_t asn_DEF_Indirect_IEEE_binary32 = {
 
 /*** <<< INCLUDES [IEEE-binary32-w] >>> ***/
 
-#include <REAL.h>
+#include <NativeReal.h>
 
 /*** <<< TYPE-DECLS [IEEE-binary32-w] >>> ***/
 
-typedef REAL_t	 IEEE_binary32_w_t;
+typedef float	 IEEE_binary32_w_t;
 
 /*** <<< FUNC-DECLS [IEEE-binary32-w] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w;
-extern const asn_REAL_specifics_t asn_SPC_IEEE_binary32_w_specs_1;
+extern const asn_NativeReal_specifics_t asn_SPC_IEEE_binary32_w_specs_1;
 asn_struct_free_f IEEE_binary32_w_free;
 asn_struct_print_f IEEE_binary32_w_print;
 asn_constr_check_f IEEE_binary32_w_constraint;
@@ -221,7 +219,6 @@ xer_type_encoder_f IEEE_binary32_w_encode_xer;
 int
 IEEE_binary32_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const REAL_t *st = (const REAL_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -232,7 +229,6 @@ IEEE_binary32_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -240,7 +236,7 @@ IEEE_binary32_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using REAL,
+ * This type is implemented using NativeReal,
  * so here we adjust the DEF accordingly.
  */
 
@@ -255,7 +251,7 @@ static const ber_tlv_tag_t asn_DEF_IEEE_binary32_w_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w = {
 	"IEEE-binary32-w",
 	"IEEE-binary32-w",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_IEEE_binary32_w_tags_1,
 	sizeof(asn_DEF_IEEE_binary32_w_tags_1)
 		/sizeof(asn_DEF_IEEE_binary32_w_tags_1[0]), /* 1 */
@@ -270,16 +266,16 @@ asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w = {
 
 /*** <<< INCLUDES [IEEE-binary32-0w] >>> ***/
 
-#include <REAL.h>
+#include <NativeReal.h>
 
 /*** <<< TYPE-DECLS [IEEE-binary32-0w] >>> ***/
 
-typedef REAL_t	 IEEE_binary32_0w_t;
+typedef float	 IEEE_binary32_0w_t;
 
 /*** <<< FUNC-DECLS [IEEE-binary32-0w] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_0w;
-extern const asn_REAL_specifics_t asn_SPC_IEEE_binary32_0w_specs_1;
+extern const asn_NativeReal_specifics_t asn_SPC_IEEE_binary32_0w_specs_1;
 asn_struct_free_f IEEE_binary32_0w_free;
 asn_struct_print_f IEEE_binary32_0w_print;
 asn_constr_check_f IEEE_binary32_0w_constraint;
@@ -293,7 +289,6 @@ xer_type_encoder_f IEEE_binary32_0w_encode_xer;
 int
 IEEE_binary32_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const REAL_t *st = (const REAL_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -304,7 +299,6 @@ IEEE_binary32_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -312,7 +306,7 @@ IEEE_binary32_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using REAL,
+ * This type is implemented using NativeReal,
  * so here we adjust the DEF accordingly.
  */
 
@@ -327,7 +321,7 @@ static const ber_tlv_tag_t asn_DEF_IEEE_binary32_0w_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_0w = {
 	"IEEE-binary32-0w",
 	"IEEE-binary32-0w",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_IEEE_binary32_0w_tags_1,
 	sizeof(asn_DEF_IEEE_binary32_0w_tags_1)
 		/sizeof(asn_DEF_IEEE_binary32_0w_tags_1[0]), /* 1 */
@@ -342,16 +336,16 @@ asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_0w = {
 
 /*** <<< INCLUDES [IEEE-binary32-w0] >>> ***/
 
-#include <REAL.h>
+#include <NativeReal.h>
 
 /*** <<< TYPE-DECLS [IEEE-binary32-w0] >>> ***/
 
-typedef REAL_t	 IEEE_binary32_w0_t;
+typedef float	 IEEE_binary32_w0_t;
 
 /*** <<< FUNC-DECLS [IEEE-binary32-w0] >>> ***/
 
 extern asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w0;
-extern const asn_REAL_specifics_t asn_SPC_IEEE_binary32_w0_specs_1;
+extern const asn_NativeReal_specifics_t asn_SPC_IEEE_binary32_w0_specs_1;
 asn_struct_free_f IEEE_binary32_w0_free;
 asn_struct_print_f IEEE_binary32_w0_print;
 asn_constr_check_f IEEE_binary32_w0_constraint;
@@ -365,7 +359,6 @@ xer_type_encoder_f IEEE_binary32_w0_encode_xer;
 int
 IEEE_binary32_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const REAL_t *st = (const REAL_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -376,7 +369,6 @@ IEEE_binary32_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -384,7 +376,7 @@ IEEE_binary32_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using REAL,
+ * This type is implemented using NativeReal,
  * so here we adjust the DEF accordingly.
  */
 
@@ -399,7 +391,7 @@ static const ber_tlv_tag_t asn_DEF_IEEE_binary32_w0_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w0 = {
 	"IEEE-binary32-w0",
 	"IEEE-binary32-w0",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_IEEE_binary32_w0_tags_1,
 	sizeof(asn_DEF_IEEE_binary32_w0_tags_1)
 		/sizeof(asn_DEF_IEEE_binary32_w0_tags_1[0]), /* 1 */
@@ -414,11 +406,11 @@ asn_TYPE_descriptor_t asn_DEF_IEEE_binary32_w0 = {
 
 /*** <<< INCLUDES [IEEE-binary64-w] >>> ***/
 
-#include <REAL.h>
+#include <NativeReal.h>
 
 /*** <<< TYPE-DECLS [IEEE-binary64-w] >>> ***/
 
-typedef REAL_t	 IEEE_binary64_w_t;
+typedef double	 IEEE_binary64_w_t;
 
 /*** <<< FUNC-DECLS [IEEE-binary64-w] >>> ***/
 
@@ -436,7 +428,6 @@ xer_type_encoder_f IEEE_binary64_w_encode_xer;
 int
 IEEE_binary64_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const REAL_t *st = (const REAL_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -447,7 +438,6 @@ IEEE_binary64_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -455,7 +445,7 @@ IEEE_binary64_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using REAL,
+ * This type is implemented using NativeReal,
  * so here we adjust the DEF accordingly.
  */
 
@@ -467,7 +457,7 @@ static const ber_tlv_tag_t asn_DEF_IEEE_binary64_w_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_w = {
 	"IEEE-binary64-w",
 	"IEEE-binary64-w",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_IEEE_binary64_w_tags_1,
 	sizeof(asn_DEF_IEEE_binary64_w_tags_1)
 		/sizeof(asn_DEF_IEEE_binary64_w_tags_1[0]), /* 1 */
@@ -482,11 +472,11 @@ asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_w = {
 
 /*** <<< INCLUDES [IEEE-binary64-0w] >>> ***/
 
-#include <REAL.h>
+#include <NativeReal.h>
 
 /*** <<< TYPE-DECLS [IEEE-binary64-0w] >>> ***/
 
-typedef REAL_t	 IEEE_binary64_0w_t;
+typedef double	 IEEE_binary64_0w_t;
 
 /*** <<< FUNC-DECLS [IEEE-binary64-0w] >>> ***/
 
@@ -504,7 +494,6 @@ xer_type_encoder_f IEEE_binary64_0w_encode_xer;
 int
 IEEE_binary64_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const REAL_t *st = (const REAL_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -515,7 +504,6 @@ IEEE_binary64_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -523,7 +511,7 @@ IEEE_binary64_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using REAL,
+ * This type is implemented using NativeReal,
  * so here we adjust the DEF accordingly.
  */
 
@@ -535,7 +523,7 @@ static const ber_tlv_tag_t asn_DEF_IEEE_binary64_0w_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_0w = {
 	"IEEE-binary64-0w",
 	"IEEE-binary64-0w",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_IEEE_binary64_0w_tags_1,
 	sizeof(asn_DEF_IEEE_binary64_0w_tags_1)
 		/sizeof(asn_DEF_IEEE_binary64_0w_tags_1[0]), /* 1 */
@@ -550,11 +538,11 @@ asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_0w = {
 
 /*** <<< INCLUDES [IEEE-binary64-w0] >>> ***/
 
-#include <REAL.h>
+#include <NativeReal.h>
 
 /*** <<< TYPE-DECLS [IEEE-binary64-w0] >>> ***/
 
-typedef REAL_t	 IEEE_binary64_w0_t;
+typedef double	 IEEE_binary64_w0_t;
 
 /*** <<< FUNC-DECLS [IEEE-binary64-w0] >>> ***/
 
@@ -572,7 +560,6 @@ xer_type_encoder_f IEEE_binary64_w0_encode_xer;
 int
 IEEE_binary64_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const REAL_t *st = (const REAL_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -583,7 +570,6 @@ IEEE_binary64_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -591,7 +577,7 @@ IEEE_binary64_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 /*
- * This type is implemented using REAL,
+ * This type is implemented using NativeReal,
  * so here we adjust the DEF accordingly.
  */
 
@@ -603,7 +589,7 @@ static const ber_tlv_tag_t asn_DEF_IEEE_binary64_w0_tags_1[] = {
 asn_TYPE_descriptor_t asn_DEF_IEEE_binary64_w0 = {
 	"IEEE-binary64-w0",
 	"IEEE-binary64-w0",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_IEEE_binary64_w0_tags_1,
 	sizeof(asn_DEF_IEEE_binary64_w0_tags_1)
 		/sizeof(asn_DEF_IEEE_binary64_w0_tags_1[0]), /* 1 */
@@ -655,7 +641,6 @@ extern asn_TYPE_descriptor_t asn_DEF_Test;
 static int
 indirect_ieee_binary32_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const Indirect_IEEE_binary32_t *st = (const Indirect_IEEE_binary32_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -666,7 +651,6 @@ indirect_ieee_binary32_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -680,7 +664,6 @@ indirect_ieee_binary32_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 static int
 ieee_binary32_w_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const IEEE_binary32_w_t *st = (const IEEE_binary32_w_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -691,7 +674,6 @@ ieee_binary32_w_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -705,7 +687,6 @@ ieee_binary32_w_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 static int
 ieee_binary32_0w_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const IEEE_binary32_0w_t *st = (const IEEE_binary32_0w_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -716,7 +697,6 @@ ieee_binary32_0w_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -730,7 +710,6 @@ ieee_binary32_0w_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 static int
 ieee_binary32_w0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const IEEE_binary32_w0_t *st = (const IEEE_binary32_w0_t *)sptr;
 	
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,
@@ -741,7 +720,6 @@ ieee_binary32_w0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	
 	if(1 /* No applicable constraints whatsoever */) {
-		(void)st; /* Unused variable */
 		/* Nothing is here. See below */
 	}
 	
@@ -787,7 +765,7 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_ieee_binary32_w_3 = {
 	"ieee-binary32-w",
 	"ieee-binary32-w",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_ieee_binary32_w_tags_3,
 	sizeof(asn_DEF_ieee_binary32_w_tags_3)
 		/sizeof(asn_DEF_ieee_binary32_w_tags_3[0]), /* 1 */
@@ -809,7 +787,7 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_ieee_binary32_0w_4 = {
 	"ieee-binary32-0w",
 	"ieee-binary32-0w",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_ieee_binary32_0w_tags_4,
 	sizeof(asn_DEF_ieee_binary32_0w_tags_4)
 		/sizeof(asn_DEF_ieee_binary32_0w_tags_4[0]), /* 1 */
@@ -831,7 +809,7 @@ static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_ieee_binary32_w0_5 = {
 	"ieee-binary32-w0",
 	"ieee-binary32-w0",
-	&asn_OP_REAL,
+	&asn_OP_NativeReal,
 	asn_DEF_ieee_binary32_w0_tags_5,
 	sizeof(asn_DEF_ieee_binary32_w0_tags_5)
 		/sizeof(asn_DEF_ieee_binary32_w0_tags_5[0]), /* 1 */

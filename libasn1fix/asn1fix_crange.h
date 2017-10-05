@@ -16,9 +16,9 @@ typedef struct asn1cnst_range_s {
 	asn1cnst_edge_t right;	/* 10 from (MIN..10) */
 
     enum asn1cnst_range_narrowing {
-        /* Sorted from softest to hardest narrowing */
+        /* Sorted from softest to strictest narrowing */
         NOT_NARROW,
-        NARROW_FLOAT64,
+        NARROW_DOUBLE64,
         NARROW_FLOAT32,
     } narrowing; /* Constrained to a known narrow type */
 

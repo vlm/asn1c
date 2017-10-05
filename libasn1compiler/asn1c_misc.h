@@ -46,4 +46,11 @@ enum asn1c_fitslong_e {
 };
 enum asn1c_fitslong_e asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr);
 
+enum asn1c_fitsfloat_e {
+    RL_NOTFIT,
+    RL_FITS_FLOAT32,
+    RL_FITS_DOUBLE64
+};
+enum asn1c_fitsfloat_e asn1c_REAL_fits(arg_t *arg, asn1p_expr_t *expr);
+
 #endif	/* ASN1_COMPILER_MISC_H */

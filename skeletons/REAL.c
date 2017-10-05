@@ -79,8 +79,8 @@ asn_TYPE_operation_t asn_OP_REAL = {
 	0,
 	0,
 #else
-	0,
-	0,
+	REAL_decode_oer,
+	REAL_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -832,6 +832,90 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 	return 0;
 }
 
+#ifndef ASN_DISABLE_OER_SUPPORT
+
+/*
+ * Encode as Canonical OER
+ */
+asn_enc_rval_t
+REAL_encode_oer(asn_TYPE_descriptor_t *td,
+                const asn_oer_constraints_t *constraints, void *sptr,
+                asn_app_consume_bytes_f *cb, void *app_key) {
+    const REAL_t *st = sptr;
+    asn_enc_rval_t er;
+    ssize_t len_len;
+
+    if(!st || !st->buf || !td)
+        ASN__ENCODE_FAILED;
+
+    if(!constraints) constraints = td->encoding_constraints.oer_constraints;
+    if(constraints && constraints->value.width != 0) {
+        /* If we're constrained to a narrow float/double representation, we
+         * shouldn't have ended up using REAL. Expecting NativeReal. */
+        ASN__ENCODE_FAILED;
+    }
+
+    /* Encode a fake REAL */
+    len_len = oer_serialize_length(st->size, cb, app_key);
+    if(len_len < 0 || cb(st->buf, st->size, app_key) < 0) {
+        ASN__ENCODE_FAILED;
+    } else {
+        er.encoded = len_len + st->size;
+        ASN__ENCODED_OK(er);
+    }
+}
+
+asn_dec_rval_t
+REAL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+                const asn_oer_constraints_t *constraints, void **sptr,
+                const void *ptr, size_t size) {
+    asn_dec_rval_t ok = {RC_OK, 0};
+    REAL_t *st;
+    uint8_t *buf;
+    ssize_t len_len;
+    size_t real_body_len;
+
+    if(!constraints) constraints = td->encoding_constraints.oer_constraints;
+    if(constraints && constraints->value.width != 0) {
+        /* If we're constrained to a narrow float/double representation, we
+         * shouldn't have ended up using REAL. Expecting NativeReal. */
+        ASN__DECODE_FAILED;
+    }
+
+    len_len = oer_fetch_length(ptr, size, &real_body_len);
+    if(len_len < 0) ASN__DECODE_FAILED;
+    if(len_len == 0) ASN__DECODE_STARVED;
+
+    ptr = (const char *)ptr + len_len;
+    size -= len_len;
+
+    if(real_body_len > size) ASN__DECODE_STARVED;
+
+    buf = CALLOC(1, real_body_len + 1);
+    if(!buf) ASN__DECODE_FAILED;
+
+    if(!(st = *sptr)) {
+        st = (*sptr = CALLOC(1, sizeof(REAL_t)));
+        if(!st) {
+            FREEMEM(buf);
+            ASN__DECODE_FAILED;
+        }
+    } else {
+        FREEMEM(st->buf);
+    }
+
+    memcpy(buf, ptr, real_body_len);
+    buf[real_body_len] = '\0';
+
+    st->buf = buf;
+    st->size = real_body_len;
+
+    ok.consumed = len_len + real_body_len;
+    return ok;
+}
+
+#endif  /* ASN_DISABLE_OER_SUPPORT */
+
 #ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
@@ -870,6 +954,7 @@ REAL_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         -1267650600228229401496703205376.0, 1267650600228229401496703205376.0,
 #if __STDC_VERSION__ >= 199901L
         -FLT_MAX, FLT_MAX,
+        -DBL_TRUE_MIN, DBL_TRUE_MIN,
 #endif
         INFINITY, -INFINITY, NAN};
     REAL_t *st;

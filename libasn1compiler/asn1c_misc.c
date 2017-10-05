@@ -235,10 +235,11 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 	case ASN_BASIC_REAL:
-		if((expr->expr_type == ASN_BASIC_REAL
-			&& (_format == TNF_CONSTYPE || !(arg->flags & A1C_USE_WIDE_TYPES)))
-		|| asn1c_type_fits_long(arg, expr)) {
-			switch(_format) {
+        if((expr->expr_type == ASN_BASIC_REAL
+            && (_format == TNF_CONSTYPE || !(arg->flags & A1C_USE_WIDE_TYPES)
+                || asn1c_REAL_fits(arg, expr) != RL_NOTFIT))
+           || asn1c_type_fits_long(arg, expr)) {
+            switch(_format) {
 			case TNF_CONSTYPE:
 				if(expr->expr_type == ASN_BASIC_REAL) {
                     return "double";
@@ -326,6 +327,40 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 
 	assert(!"unreachable");
 	return typename;
+}
+
+static asn1p_expr_type_e
+expr_get_type(arg_t *arg, asn1p_expr_t *expr) {
+        asn1p_expr_t *terminal;
+        terminal = asn1f_find_terminal_type_ex(arg->asn, arg->ns, expr);
+        if(terminal) return terminal->expr_type;
+        return A1TC_INVALID;
+}
+
+enum asn1c_fitsfloat_e
+asn1c_REAL_fits(arg_t *arg, asn1p_expr_t *expr) {
+    asn1p_expr_type_e etype = expr_get_type(arg, arg->expr);
+    if(etype == ASN_BASIC_REAL) {
+        asn1cnst_range_t *range = asn1constraint_compute_OER_range(
+            expr->Identifier, etype, expr->combined_constraints, ACT_EL_RANGE,
+            0, 0, 0);
+        enum asn1c_fitsfloat_e fits;
+        switch(range->narrowing) {
+        case NARROW_FLOAT32:
+            fits = RL_FITS_FLOAT32;
+            break;
+        case NARROW_DOUBLE64:
+            fits = RL_FITS_DOUBLE64;
+            break;
+        default:
+            fits = RL_NOTFIT;
+            break;
+        }
+        asn1constraint_range_free(range);
+        return fits;
+    } else {
+        return 0;
+    }
 }
 
 /*

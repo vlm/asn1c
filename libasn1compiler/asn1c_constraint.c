@@ -80,8 +80,9 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			produce_st = 1;
 		break;
 	case ASN_BASIC_REAL:
-		if((arg->flags & A1C_USE_WIDE_TYPES))
-			produce_st = 1;
+        if((arg->flags & A1C_USE_WIDE_TYPES)
+           && asn1c_REAL_fits(arg, arg->expr) == RL_NOTFIT)
+            produce_st = 1;
 		break;
 	case ASN_BASIC_BIT_STRING:
 	case ASN_BASIC_OCTET_STRING:
