@@ -631,8 +631,8 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		m = ldexp(m, 8) + *ptr;
 
 	if(0)
-	ASN_DEBUG("m=%.10f [%08llx], scF=%d, bF=%d, expval=%d, ldexp()=%f, ldexp()=%f\n",
-		m, *(uint64_t*)&m, scaleF, baseF, expval,
+	ASN_DEBUG("m=%.10f, scF=%d, bF=%d, expval=%d, ldexp()=%f, ldexp()=%f\n",
+		m, scaleF, baseF, expval,
 		ldexp(m, expval * baseF + scaleF),
 		ldexp(m, scaleF) * pow(pow(2, baseF), expval)
 	);
