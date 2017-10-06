@@ -8,6 +8,7 @@ CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
 
 TESTS_ENVIRONMENT=                          \
     CC="${CC}"                              \
+    MAKE="${MAKE}"                          \
     CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}"  \
     LDFLAGS="${LDFLAGS}"                    \
     LIBFUZZER_CFLAGS="${LIBFUZZER_CFLAGS}"  \
