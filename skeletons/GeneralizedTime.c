@@ -4,6 +4,7 @@
  */
 #define	_POSIX_PTHREAD_SEMANTICS	/* for Sun */
 #define	_REENTRANT			/* for Sun */
+#define __EXTENSIONS__                  /* for Sun */
 #ifndef _BSD_SOURCE
 #define _BSD_SOURCE     /* for timegm(3) */
 #endif
@@ -48,7 +49,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 
 #endif	/* _WIN32 */
 
-#if	defined(sun) || defined(_sun_) || defined(__solaris__)
+#if	defined(sun) || defined(__sun) || defined(__solaris__)
 #define	_EMULATE_TIMEGM
 #endif
 
@@ -144,6 +145,7 @@ static long GMTOFF(struct tm a){
 
 #ifndef HAVE_TIMEGM
 #ifdef	_EMULATE_TIMEGM
+#include <stdlib.h>
 static time_t timegm(struct tm *tm) {
 	time_t tloc;
 	ATZVARS;
