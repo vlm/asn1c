@@ -120,7 +120,8 @@ asn1c_compile_expr(arg_t *arg, const asn1c_ioc_table_and_objset_t *opt_ioc) {
 			DEBUG("Parameterized type %s at line %d: %s (%d)",
 				expr->Identifier, expr->_lineno,
 				expr->specializations.pspecs_count
-				? "compiling" : "unused, skipping");
+				? "compiling" : "unused, skipping",
+				expr->specializations.pspecs_count);
 			for(i = 0; i<expr->specializations.pspecs_count; i++) {
 				arg->expr = expr->specializations
 						.pspec[i].my_clone;
