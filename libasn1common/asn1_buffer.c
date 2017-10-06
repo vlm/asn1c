@@ -9,7 +9,7 @@
 
 #include "asn1_buffer.h"
 
-#ifndef HAVE_DECL_VASPRINTF
+#if !defined(HAVE_DECL_VASPRINTF) || (HAVE_DECL_VASPRINTF == 0)
 int vasprintf(char **ret, const char *fmt, va_list args);
 #endif
 
@@ -139,7 +139,7 @@ int abuf_vprintf(abuf *ab, const char *fmt, va_list ap) {
     return ret;
 }
 
-#ifndef HAVE_DECL_VASPRINTF
+#if !defined(HAVE_DECL_VASPRINTF) || (HAVE_DECL_VASPRINTF == 0)
 /* Solaris doesn't have vasprintf(3). */
 int
 vasprintf(char **ret, const char *fmt, va_list args) {
