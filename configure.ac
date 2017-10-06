@@ -68,6 +68,12 @@ AX_CHECK_COMPILE_FLAG([-std=gnu99],
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
       [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Wno-error=unused-variable"])
 
+dnl If -m32 is available to reate 32-bit code,
+dnl treat it like a special case to be checked.
+AX_CHECK_COMPILE_FLAG([-m32], [CFLAGS_M32=-m32], [CFLAGS_M32=""])
+AC_SUBST(CFLAGS_M32)
+AM_CONDITIONAL([EXPLICIT_M32], [test "x${CFLAGS_M32}" != "x"])
+
 dnl Lower the optimization level in tests to aid debugging.
 dnl AX_CHECK_COMPILE_FLAG([-O1],
 dnl    [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -O1"])
@@ -208,7 +214,7 @@ Check out http://llvm.org/docs/LibFuzzer.html])
       ])
 ])
 
-TESTSUITE_CFLAGS="${TESTSUICE_CFLAGS} ${SANITIZER_CFLAGS}"
+TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} ${SANITIZER_CFLAGS}"
 SKELETONS_CFLAGS="${SKELETONS_CFLAGS} ${SANITIZER_CFLAGS}"
 
 AC_SUBST(ADD_CFLAGS)

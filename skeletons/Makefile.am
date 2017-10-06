@@ -19,7 +19,12 @@ uninstall-local:
 	-@echo -n " "
 	-rm -f -r $(DESTDIR)$(pkgdatadir)
 
-check_LTLIBRARIES = libasn1cskeletons.la
+check_LTLIBRARIES = libasn1cskeletons.la libasn1cskeletons_32.la
+
+if EXPLICIT_M32
+libasn1cskeletons_32_la_CFLAGS = $(CFLAGS_M32)
+libasn1cskeletons_32_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
+endif
 
 libasn1cskeletons_la_SOURCES =                  \
     ANY.c ANY.h                                 \
