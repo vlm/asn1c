@@ -29,8 +29,8 @@ usage() {
 RNDTEMP=.tmp.random
 
 srcdir="${srcdir:-.}"
-abs_top_srcdir="${abs_top_srcdir:-$(pwd)/../../}"
-abs_top_builddir="${abs_top_builddir:-$(pwd)/../../}"
+abs_top_srcdir="${abs_top_srcdir:-`pwd`/../../}"
+abs_top_builddir="${abs_top_builddir:-`pwd`/../../}"
 
 tests_succeeded=0
 tests_failed=0
@@ -51,17 +51,18 @@ make_clean_before_test() {
 
 # Get all the type-bearding lines in file and process them individually
 verify_asn_types_in_file() {
-    local filename="$1"
-    local need_line="$2"
+    filename="$1"
+    need_line="$2"
     test "x$filename" != "x" || usage
 
     make_clean_before_bundle
 
     echo "Open [$filename]"
-    local line=0
-    while read -r asn; do
-        line=$((line+1))
-        if echo "$asn" | sed -e 's/--.*//;' | grep -vqi "[A-Z]"; then
+    line=0
+    asn=""
+    while read asn; do
+        line=`echo "$line+1" | bc`
+        if echo "$asn" | sed -e 's/--.*//;' | grep -vi "[A-Z]" > /dev/null; then
             # Ignore lines consisting of just comments.
             continue;
         fi
@@ -78,12 +79,12 @@ verify_asn_types_in_file() {
 }
 
 verify_asn_type() {
-    local asn="$1"
+    asn="$1"
     shift
-    local where="$*"
+    where="$*"
     test "x$asn" != "x" || usage
 
-    if echo "$asn" | grep -qv "::="; then
+    if echo "$asn" | grep -v "::=" > /dev/null; then
         asn="T ::= $asn"
     fi
     echo "Testing [$asn] ${where}"
@@ -91,9 +92,9 @@ verify_asn_type() {
     mkdir -p ${RNDTEMP}
     if (set -e && cd ${RNDTEMP} && compile_and_test "$asn" "${where}"); then
         echo "OK [$asn] ${where}"
-        tests_succeeded=$((tests_succeeded+1))
+        tests_succeeded=`echo "$tests_succeeded + 1" | bc`
     else
-        tests_failed=$((tests_failed+1))
+        tests_failed=`echo "$tests_failed + 1" | bc`
         echo "FAIL [$asn] ${where}"
     fi
 }
@@ -101,16 +102,17 @@ verify_asn_type() {
 # compile_and_test "<text>" "<where found>" [<asn.1 flags>]
 compile_and_test() {
     if [ "x${asn1c_flags}" != "x" ]; then
-        if ! compile_and_test_with "$@" ${asn1c_flags} ; then
+        compile_and_test_with "$@" ${asn1c_flags}
             return 1
-        fi
     else
-        if ! compile_and_test_with "$@" ; then
+        compile_and_test_with "$@"
+        if [ $? -ne 0 ] ; then
             echo "Can't compile and test narrow"
             return 1
         fi
 
-        if ! compile_and_test_with "$@" "-fwide-types"; then
+        compile_and_test_with "$@" "-fwide-types"
+        if [ $? -ne 0 ] ; then
             echo "Can't compile and test wide"
             return 2
         fi
@@ -119,35 +121,52 @@ compile_and_test() {
     return 0
 }
 
+Make() {
+    ${MAKE:-make} -j "${parallelism}" "$@" || return $?
+}
+
+get_param() {
+    param="$1"
+    default="$2"
+    text="$3"
+
+
+    echo "$asn" | awk "/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\"))}END{if(PARAM)print PARAM;else print \"${default}\";}"
+}
+
 compile_and_test_with() {
-    local asn="$1"
-    local where="$2"
+    asn="$1"
+    where="$2"
     shift 2
 
     make_clean_before_test
 
-    if ! asn_compile "$asn" "$where" "$@"; then
+    asn_compile "$asn" "$where" "$@"
+    if [ $? -ne 0 ]; then
         echo "Cannot compile ASN.1 $asn"
         return 1
     fi
 
     rm -f random-test-driver.o
     rm -f random-test-driver
-    if ! make -j${parallelism}; then
+    Make
+    if [ $? -ne 0 ] ; then
         echo "Cannot compile C for $asn in ${RNDTEMP}"
         return 2
     fi
 
     # Maximum size of the random data
-    local rmax=$(echo "$asn" | sed -Ee '/RMAX/!d;s/.*RMAX=([0-9]+).*/\1/')
+    rmax=`get_param RMAX 128 "$asn"`
     if [ "0${rmax}" -lt 1 ]; then rmax=128; fi
 
     echo "Checking random data encode-decode"
-    local round_trip_check_cmd="${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c"
-    if ! eval "$round_trip_check_cmd"; then
+    round_trip_check_cmd="${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c"
+    if eval "$round_trip_check_cmd"; then
+        echo "Random test OK"
+    else
         if [ "x$CC" = "x" ]; then CCSTR=""; else CCSTR="CC=${CC} "; fi
         echo "RETRY:"
-        echo "(cd ${RNDTEMP} && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c)"
+        echo "(cd ${RNDTEMP} && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" ${MAKE:-make} && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c)"
         return 3
     fi
 
@@ -155,20 +174,24 @@ compile_and_test_with() {
     rm -rf random-data
     cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
     cmd="${cmd} ./random-test-driver -s ${rmax} ${encodings} -g random-data"
-    if ! eval "$cmd" ; then
+    if eval "$cmd" ; then
+        echo "Random data generated OK"
+    else
         echo "RETRY:"
         echo "(cd ${RNDTEMP} && $cmd)"
         return 4
     fi
 
     # Do a LibFuzzer based testing
-    local fuzz_time=10
-    local fuzz_cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
+    fuzz_time=10
+    fuzz_cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
     fuzz_cmd="${fuzz_cmd} ./random-test-driver"
     fuzz_cmd="${fuzz_cmd} -timeout=3 -max_total_time=${fuzz_time} -max_len=128"
 
-    if ! grep -q "^fuzz:" Makefile ; then
-        local fuzz_targets=$(echo random-data/* | sed -e 's/random-data./fuzz-/g')
+    if grep "^fuzz:" Makefile >/dev/null ; then
+        echo "No fuzzer defined, skipping fuzzing"
+    else
+        fuzz_targets=`echo random-data/* | sed -e 's/random-data./fuzz-/g'`
         {
         echo "fuzz: $fuzz_targets"
         echo "fuzz-%: random-data/% random-test-driver"
@@ -177,17 +200,22 @@ compile_and_test_with() {
     fi
 
     # If LIBFUZZER_CFLAGS are properly defined, do the fuzz test as well
-    if echo "${LIBFUZZER_CFLAGS}" | grep -qi "[a-z]"; then
+    if echo "${LIBFUZZER_CFLAGS}" | grep -i "[a-z]" > /dev/null; then
 
         echo "Recompiling for fuzzing..."
         rm -f random-test-driver.o
         rm -f random-test-driver
-        CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" make -j${parallelism}
+        CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" Make
+        if [ $? -ne 0 ]; then
+            echo "Recompile failed"
+            return 4
+        fi
 
         echo "Fuzzing will take a multiple of $fuzz_time seconds..."
-        if ! make -j${parallelism} fuzz ; then
+        Make fuzz
+        if [ $? -ne 0 ]; then
             echo "RETRY:"
-            echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make fuzz)"
+            echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" ${MAKE:-make} fuzz)"
             return 5
         fi
     fi
@@ -196,23 +224,25 @@ compile_and_test_with() {
 }
 
 asn_compile() {
-    local asn="$1"
-    local where="$2"
+    asn="$1"
+    where="$2"
     shift 2
 
     # Create "INTEGER (1..2)" from "T ::= INTEGER (1..2) -- RMAX=5"
-    local short_asn=$(echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[^ ]* //;')
-    if [ $(echo "$short_asn" | grep -c "::=") = 1 ]; then
-        short_asn=$(echo "$short_asn" | sed -e 's/.*::= *//')
+    short_asn=`echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[^ ]* //;'`
+    if [ `echo "$short_asn" | grep -c "::="` = 1 ]; then
+        short_asn=`echo "$short_asn" | sed -e 's/.*::= *//'`
     fi
 
     test ! -f Makefile.am   # Protection from accidental clobbering
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
     echo "-- ${where}" >> test.asn1
     echo "END" >> test.asn1
-    if ! "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
+    if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
         -gen-OER -gen-PER "$@" test.asn1
     then
+        echo "ASN.1 compiled OK"
+    else
         return 1
     fi
     rm -f converter-example.c
@@ -240,7 +270,7 @@ while :; do
             parallelism=1   # Better for debuggability
             verify_asn_type "$2" || exit 1 ;;
         "")
-            for bundle in $(echo bundles/*txt | sort -nr); do
+            for bundle in `echo bundles/*txt | sort -nr`; do
                 verify_asn_types_in_file "$bundle"
             done
         ;;
