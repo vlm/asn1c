@@ -81,7 +81,7 @@ NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr, int ilevel,
         char *src = (char *)MALLOC(srcsize);
         src_used_malloc = 1;
 #endif
-        if (!src) ASN__ENCODE_FAILED;
+        if(!src) ASN__ENCODE_FAILED;
 
         er.encoded = snprintf(src, srcsize, "<%s/>", el->enum_name);
         assert(er.encoded > 0 && (size_t)er.encoded < srcsize);
