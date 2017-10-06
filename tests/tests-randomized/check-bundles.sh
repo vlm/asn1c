@@ -59,13 +59,13 @@ verify_asn_types_in_file() {
 
     echo "Open [$filename]"
     local line=0
-    while read asn; do
+    while read -r asn; do
         line=$((line+1))
         if echo "$asn" | sed -e 's/--.*//;' | grep -vqi "[A-Z]"; then
             # Ignore lines consisting of just comments.
             continue;
         fi
-        if [ "x$need_line" != "x" -a "$need_line" != "$line" ]; then
+        if [ "x$need_line" != "x" ] && [ "$need_line" != "$line" ]; then
             # We need a different line.
             continue;
         fi
@@ -143,7 +143,8 @@ compile_and_test_with() {
     if [ "0${rmax}" -lt 1 ]; then rmax=128; fi
 
     echo "Checking random data encode-decode"
-    if ! eval ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c; then
+    local round_trip_check_cmd="${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c"
+    if ! eval "$round_trip_check_cmd"; then
         if [ "x$CC" = "x" ]; then CCSTR=""; else CCSTR="CC=${CC} "; fi
         echo "RETRY:"
         echo "(cd ${RNDTEMP} && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c)"
@@ -153,7 +154,7 @@ compile_and_test_with() {
     echo "Generating new random data"
     rm -rf random-data
     cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
-    cmd+=" ./random-test-driver -s ${rmax} ${encodings} -g random-data"
+    cmd="${cmd} ./random-test-driver -s ${rmax} ${encodings} -g random-data"
     if ! eval "$cmd" ; then
         echo "RETRY:"
         echo "(cd ${RNDTEMP} && $cmd)"
@@ -163,14 +164,16 @@ compile_and_test_with() {
     # Do a LibFuzzer based testing
     local fuzz_time=10
     local fuzz_cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
-    fuzz_cmd+=" ./random-test-driver"
-    fuzz_cmd+=" -timeout=3 -max_total_time=${fuzz_time} -max_len=128"
+    fuzz_cmd="${fuzz_cmd} ./random-test-driver"
+    fuzz_cmd="${fuzz_cmd} -timeout=3 -max_total_time=${fuzz_time} -max_len=128"
 
     if ! grep -q "^fuzz:" Makefile ; then
         local fuzz_targets=$(echo random-data/* | sed -e 's/random-data./fuzz-/g')
-        echo "fuzz: $fuzz_targets" >> Makefile
-        echo "fuzz-%: random-data/% random-test-driver" >> Makefile
-        echo "	ASN1_DATA_DIR=\$< ${fuzz_cmd} \$<" >> Makefile
+        {
+        echo "fuzz: $fuzz_targets"
+        echo "fuzz-%: random-data/% random-test-driver"
+        echo "	ASN1_DATA_DIR=\$< ${fuzz_cmd} \$<"
+        } >> Makefile
     fi
 
     # If LIBFUZZER_CFLAGS are properly defined, do the fuzz test as well
@@ -181,7 +184,7 @@ compile_and_test_with() {
         rm -f random-test-driver
         CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" make -j${parallelism}
 
-        echo "Fuzzing $data_dir will take $fuzz_time seconds..."
+        echo "Fuzzing will take a multiple of $fuzz_time seconds..."
         if ! make -j${parallelism} fuzz ; then
             echo "RETRY:"
             echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" make fuzz)"
@@ -207,7 +210,7 @@ asn_compile() {
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
     echo "-- ${where}" >> test.asn1
     echo "END" >> test.asn1
-    if ! ${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons \
+    if ! "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
         -gen-OER -gen-PER "$@" test.asn1
     then
         return 1
@@ -224,14 +227,14 @@ asn_compile() {
 while :; do
     case "$1" in
         -h) usage ;;
-        --asn1c) asn1c_flags+="$2"; shift 2; continue ;;
+        --asn1c) asn1c_flags="${asn1c_flags} $2"; shift 2; continue ;;
         --dirty)
             need_clean_before_bundle=0
             need_clean_before_test=0
             shift
             continue
             ;;
-        -e) encodings+=" -e $2"; shift 2; continue;;
+        -e) encodings="${encodings} -e $2"; shift 2; continue;;
         -j) parallelism="$1"; shift 2; continue;;
         -t)
             parallelism=1   # Better for debuggability
@@ -248,7 +251,7 @@ while :; do
     break
 done
 
-if [ "$tests_succeeded" != "0" -a "$tests_failed" = "0" ]; then
+if [ "$tests_succeeded" != "0" ] && [ "$tests_failed" = "0" ]; then
     echo "OK $tests_succeeded tests"
 else
     echo "FAILED $tests_failed tests, OK $tests_succeeded tests"
