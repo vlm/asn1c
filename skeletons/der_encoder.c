@@ -86,7 +86,7 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 	ssize_t *lens;
 	int lens_used_malloc = 0;
 	int i;
-	ber_tlv_tag_t *tags_buf = NULL;
+	ber_tlv_tag_t *tags_buf;
 	int tags_buf_used_malloc = 0;
 
 	ASN_DEBUG("Writing tags (%s, tm=%d, tc=%d, tag=%s, mtc=%d)",
