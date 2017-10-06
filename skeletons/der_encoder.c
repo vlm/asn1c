@@ -84,7 +84,10 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 	int tags_count;			/* Number of tags */
 	size_t overall_length;
 	ssize_t *lens;
+	int lens_used_malloc = 0;
 	int i;
+	ber_tlv_tag_t *tags_buf = NULL;
+	int tags_buf_used_malloc = 0;
 
 	ASN_DEBUG("Writing tags (%s, tm=%d, tc=%d, tag=%s, mtc=%d)",
 		sd->name, tag_mode, sd->tags_count,
@@ -102,9 +105,13 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 		 * and initialize it appropriately.
 		 */
 		int stag_offset;
-		ber_tlv_tag_t *tags_buf;
+#ifndef DISABLE_ALLOCA
 		tags_buf = (ber_tlv_tag_t *)alloca((sd->tags_count + 1) * sizeof(ber_tlv_tag_t));
-		if(!tags_buf) {	/* Can fail on !x86 */
+#else
+		tags_buf = (ber_tlv_tag_t *)MALLOC((sd->tags_count + 1) * sizeof(ber_tlv_tag_t));
+		tags_buf_used_malloc = 1;
+#endif
+		if(!tags_buf) {
 			errno = ENOMEM;
 			return -1;
 		}
@@ -123,11 +130,19 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 	}
 
 	/* No tags to write */
-	if(tags_count == 0)
+	if(tags_count == 0) {
+		if(tags_buf_used_malloc) FREEMEM(tags_buf);
 		return 0;
+	}
 
+#ifndef DISABLE_ALLOCA
 	lens = (ssize_t *)alloca(tags_count * sizeof(lens[0]));
+#else
+	lens = (ssize_t *)MALLOC(tags_count * sizeof(lens[0]));
+	lens_used_malloc = 1;
+#endif
 	if(!lens) {
+		if(tags_buf_used_malloc) FREEMEM(tags_buf);
 		errno = ENOMEM;
 		return -1;
 	}
@@ -139,12 +154,20 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 	overall_length = struct_length;
 	for(i = tags_count - 1; i >= 0; --i) {
 		lens[i] = der_write_TL(tags[i], overall_length, 0, 0, 0);
-		if(lens[i] == -1) return -1;
+		if(lens[i] == -1) {
+			if(tags_buf_used_malloc) FREEMEM(tags_buf);
+			if(lens_used_malloc) FREEMEM(lens);
+			return -1;
+		}
 		overall_length += lens[i];
 		lens[i] = overall_length - lens[i];
 	}
 
-	if(!cb) return overall_length - struct_length;
+	if(!cb) {
+		if(tags_buf_used_malloc) FREEMEM(tags_buf);
+		if(lens_used_malloc) FREEMEM(lens);
+		return overall_length - struct_length;
+	}
 
 	ASN_DEBUG("Encoding %s TL sequence (%d elements)", sd->name,
                   tags_count);
@@ -160,8 +183,15 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 		_constr = (last_tag_form || i < (tags_count - 1));
 
 		len = der_write_TL(tags[i], lens[i], cb, app_key, _constr);
-		if(len == -1) return -1;
+		if(len == -1) {
+			if(tags_buf_used_malloc) FREEMEM(tags_buf);
+			if(lens_used_malloc) FREEMEM(lens);
+			return -1;
+		}
 	}
+
+	if(tags_buf_used_malloc) FREEMEM(tags_buf);
+	if(lens_used_malloc) FREEMEM(lens);
 
 	return overall_length - struct_length;
 }

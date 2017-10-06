@@ -246,6 +246,14 @@ AC_CHECK_FUNCS(timegm)
 AC_CHECK_DECLS(alloca strcasecmp)
 AC_TRY_LINK_FUNC([symlink],[AC_DEFINE([HAVE_SYMLINK], 1, [Define to 1 if you have the symlink function.])])
 
+AC_ARG_ENABLE([alloca],
+    AC_HELP_STRING([--enable-alloca],[whether to enable the use of alloca() [default=yes]]),
+    [AS_IF([test "x$enable_alloca" = "xno"],
+        [AC_DEFINE([DISABLE_ALLOCA], [], [Disable the use of alloca])]
+    )],
+    []
+)
+
 dnl Use pandoc to generate manual pages.
 AC_PATH_PROG([PANDOC], pandoc)
 AM_CONDITIONAL([HAVE_PANDOC], [test -n "$PANDOC"])

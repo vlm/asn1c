@@ -441,6 +441,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
 	const asn_TYPE_tag2member_t *t2m;
 	asn_TYPE_tag2member_t *t2m_build;
+	int t2m_build_used_malloc = 0;
 	size_t t2m_count;
 	ssize_t ret;
 	size_t edx;
@@ -449,9 +450,15 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Use existing, or build our own tags map.
 	 */
 	if(t2m_build_own) {
+#ifndef DISABLE_ALLOCA
 		t2m_build = (asn_TYPE_tag2member_t *)alloca(
 				td->elements_count * sizeof(t2m_build[0]));
-		if(!t2m_build) ASN__ENCODE_FAILED; /* There are such platforms */
+#else
+		t2m_build = (asn_TYPE_tag2member_t *)MALLOC(
+				td->elements_count * sizeof(t2m_build[0]));
+		t2m_build_used_malloc = 1;
+#endif
+		if(!t2m_build) ASN__ENCODE_FAILED;
 		t2m_count = 0;
 	} else {
 		t2m_build = NULL;
@@ -476,9 +483,11 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
 			if(!*memb_ptr2) {
-				if(!elm->optional)
+				if(!elm->optional) {
+					if(t2m_build_used_malloc) FREEMEM(t2m_build);
 					/* Mandatory elements missing */
 					ASN__ENCODE_FAILED;
+				}
 				if(t2m_build_own) {
 					t2m_build[t2m_count].el_no = edx;
 					t2m_build[t2m_count].el_tag = 0;
@@ -504,8 +513,10 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag,
 			0, 0);
-		if(tmper.encoded == -1)
+		if(tmper.encoded == -1) {
+			if(t2m_build_used_malloc) FREEMEM(t2m_build);
 			return tmper;
+		}
 		computed_size += tmper.encoded;
 
 		/*
@@ -546,10 +557,16 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Encode the TLV for the sequence itself.
 	 */
 	ret = der_write_tags(td, computed_size, tag_mode, 1, tag, cb, app_key);
-	if(ret == -1) ASN__ENCODE_FAILED;
+	if(ret == -1) {
+		if(t2m_build_used_malloc) FREEMEM(t2m_build);
+		ASN__ENCODE_FAILED;
+	}
 	er.encoded = computed_size + ret;
 
-	if(!cb) ASN__ENCODED_OK(er);
+	if(!cb) {
+		if(t2m_build_used_malloc) FREEMEM(t2m_build);
+		ASN__ENCODED_OK(er);
+	}
 
 	/*
 	 * Encode all members.
@@ -578,10 +595,14 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 
 		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag, cb, app_key);
-		if(tmper.encoded == -1)
+		if(tmper.encoded == -1) {
+			if(t2m_build_used_malloc) FREEMEM(t2m_build);
 			return tmper;
+		}
 		computed_size -= tmper.encoded;
 	}
+
+	if(t2m_build_used_malloc) FREEMEM(t2m_build);
 
 	if(computed_size != 0) {
 		/*
