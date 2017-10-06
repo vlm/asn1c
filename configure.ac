@@ -244,6 +244,7 @@ AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
 AC_CHECK_FUNCS(timegm)
 AC_CHECK_DECLS(alloca strcasecmp)
+AC_CHECK_DECLS(vasprintf)
 AC_TRY_LINK_FUNC([symlink],[AC_DEFINE([HAVE_SYMLINK], 1, [Define to 1 if you have the symlink function.])])
 
 dnl Use pandoc to generate manual pages.

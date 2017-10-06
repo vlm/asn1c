@@ -5,8 +5,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
+#include "config.h"
 
 #include "asn1_buffer.h"
+
+#ifndef HAVE_DECL_VASPRINTF
+int vasprintf(char **ret, const char *fmt, va_list args);
+#endif
 
 /*
  * Create and destroy the buffer.
@@ -134,3 +139,33 @@ int abuf_vprintf(abuf *ab, const char *fmt, va_list ap) {
     return ret;
 }
 
+#ifndef HAVE_DECL_VASPRINTF
+/* Solaris doesn't have vasprintf(3). */
+int
+vasprintf(char **ret, const char *fmt, va_list args) {
+    int actual_length = -1;
+    va_list copy;
+    va_copy(copy, args);
+
+    int suggested = vsnprintf(NULL, 0, fmt, args);
+    if(suggested >= 0) {
+        *ret = malloc(suggested + 1);
+        if(*ret) {
+            int actual_length = vsnprintf(*ret, suggested + 1, fmt, copy);
+            if(actual_length >= 0) {
+                assert(actual_length == suggested);
+                assert((*ret)[actual_length] == '\0');
+            } else {
+                free(*ret);
+                *ret = 0;
+            }
+        }
+    } else {
+        *ret = NULL;
+        assert(suggested >= 0); /* Can't function like this */
+    }
+    va_end(args);
+
+    return actual_length;
+}
+#endif
