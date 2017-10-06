@@ -501,10 +501,20 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 		/* FALL THROUGH */
 	case ST_DIGITS_TRAILSPACE:
 		/* The last symbol encountered was a digit. */
-		switch(asn_strtol_lim(dec_value_start, &dec_value_end, &dec_value)) {
+		switch(asn_strtoimax_lim(dec_value_start, &dec_value_end, &dec_value)) {
 		case ASN_STRTOX_OK:
-			break;
+                        if(dec_value >= LONG_MIN && dec_value <= LONG_MAX) {
+			        break;
+                        } else {
+                                /*
+                                 * We model INTEGER on long for XER,
+                                 * to avoid rewriting all the tests at once.
+                                 */
+                                ASN_DEBUG("INTEGER exceeds long range");
+                                /* Fall through */
+                        }
 		case ASN_STRTOX_ERROR_RANGE:
+                        ASN_DEBUG("INTEGER decode %s hit range limit", td->name);
 			return XPBD_DECODER_LIMIT;
 		case ASN_STRTOX_ERROR_INVAL:
 		case ASN_STRTOX_EXPECT_MORE:
@@ -533,8 +543,10 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 	 * Convert the result of parsing of enumeration or a straight
 	 * decimal value into a BER representation.
 	 */
-	if(asn_long2INTEGER(st, dec_value))
+	if(asn_imax2INTEGER(st, dec_value)) {
+                ASN_DEBUG("INTEGER decode %s conversion failed", td->name);
 		return XPBD_SYSTEM_FAILURE;
+        }
 
 	return XPBD_BODY_CONSUMED;
 }
