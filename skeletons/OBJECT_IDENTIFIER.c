@@ -56,6 +56,15 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 };
 
 
+/*
+ * Endianness check. Will be optimized out by the compiler.
+ */
+static int
+little_endian() {
+    int le_check = 1;
+    return *(char *)&le_check;
+}
+
 int
 OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
@@ -81,7 +90,6 @@ OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 
 int
 OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, signed int add, void *rvbufp, unsigned int rvsize) {
-	unsigned LE CC_NOTUSED = 1; /* Little endian (x86) */
 	const uint8_t *arcend = arcbuf + arclen;	/* End of arc */
 	unsigned int cache = 0;	/* No more than 14 significant bits */
 	unsigned char *rvbuf = (unsigned char *)rvbufp;
@@ -126,15 +134,15 @@ OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, sig
 			arcbuf++;
 		}
 	}
-
 	/* Faster path for common size */
-	if(rvsize == (CHAR_BIT * sizeof(unsigned long))) {
+	if(rvsize == (CHAR_BIT * sizeof(unsigned long))
+        && (arcend-arcbuf) <= (ssize_t)sizeof(unsigned long)) {
 		unsigned long accum;
 		/* Gather all bits into the accumulator */
 		for(accum = cache; arcbuf < arcend; arcbuf++)
 			accum = (accum << 7) | (*arcbuf & ~0x80);
 		if(accum < (unsigned)-add
-		|| accum > (ULONG_MAX-(unsigned long)(-add))) {
+		|| accum > ULONG_MAX-(unsigned long)(-add)) {
 			errno = ERANGE;	/* Overflow */
 			return -1;
 		}
@@ -143,15 +151,14 @@ OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, unsigned int arclen, sig
 		return 0;
 	}
 
-#ifndef	WORDS_BIGENDIAN
-	if(*(unsigned char *)&LE) {	/* Little endian (x86) */
+	if(little_endian()) {	/* Little endian (x86) */
 		/* "Convert" to big endian */
 		rvbuf += rvsize / CHAR_BIT - 1;
 		rvstart--;
 		inc = -1;	/* Descending */
-	} else
-#endif	/* !WORDS_BIGENDIAN */
-		inc = +1;	/* Big endian is known [at compile time] */
+	} else {
+		inc = +1;	/* Big endian */
+        }
 
 	{
 		int bits;	/* typically no more than 3-4 bits */
@@ -401,7 +408,6 @@ OBJECT_IDENTIFIER_get_arcs(const OBJECT_IDENTIFIER_t *oid, void *arcs,
 			/*
 			 * First two arcs are encoded through the backdoor.
 			 */
-			unsigned LE = 1;	/* Little endian */
 			int first_arc;
 			num_arcs++;
 			if(!arc_slots) { num_arcs++; continue; }
@@ -414,7 +420,7 @@ OBJECT_IDENTIFIER_get_arcs(const OBJECT_IDENTIFIER_t *oid, void *arcs,
 			add = -40 * first_arc;
 			memset(arcs, 0, arc_type_size);
 			*(unsigned char *)((char *)arcs
-				+ ((*(char *)&LE)?0:(arc_type_size - 1)))
+				+ (little_endian()?0:(arc_type_size - 1)))
 					= first_arc;
 			arcs = ((char *)arcs) + arc_type_size;
 		}
@@ -423,8 +429,9 @@ OBJECT_IDENTIFIER_get_arcs(const OBJECT_IDENTIFIER_t *oid, void *arcs,
 		if(arcs < arcs_end) {
 			if(OBJECT_IDENTIFIER_get_single_arc(&oid->buf[startn],
 				i - startn + 1, add,
-					arcs, arc_type_size))
+					arcs, arc_type_size)) {
 				return -1;
+                        }
 			startn = i + 1;
 			arcs = ((char *)arcs) + arc_type_size;
 			add = 0;
@@ -448,19 +455,13 @@ OBJECT_IDENTIFIER_set_single_arc(uint8_t *arcbuf, const void *arcval, unsigned i
 	 * assert(arcval_size <= 16);
 	 * assert(arcbuf);
 	 */
-#ifdef	WORDS_BIGENDIAN
-	const unsigned isLittleEndian = 0;
-#else
-	unsigned LE = 1;
-	unsigned isLittleEndian = *(char *)&LE;
-#endif
 	const uint8_t *tend, *tp;
 	unsigned int cache;
 	uint8_t *bp = arcbuf;
 	int bits;
 	uint8_t buffer[16];
 
-	if(isLittleEndian && !prepared_order) {
+	if(little_endian() && !prepared_order) {
 		const uint8_t *a = (const unsigned char *)arcval + arcval_size - 1;
 		const uint8_t *aend = (const uint8_t *)arcval;
 		uint8_t *msb = buffer + arcval_size - 1;
@@ -511,8 +512,6 @@ int
 OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, const void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
 	uint8_t *buf;
 	uint8_t *bp;
-	unsigned LE = 1;	/* Little endian (x86) */
-	unsigned isLittleEndian = *((char *)&LE);
 	unsigned int arc0;
 	unsigned int arc1;
 	unsigned size;
@@ -540,7 +539,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, const void *arcs, unsigned 
 		break;
 	default:
 		arc1 = arc0 = 0;
-		if(isLittleEndian) {	/* Little endian (x86) */
+		if(little_endian()) {	/* Little endian (x86) */
 			const unsigned char *ps, *pe;
 			/* If more significant bytes are present,
 			 * make them > 255 quick */
@@ -613,7 +612,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *oid, const void *arcs, unsigned 
 		/* Copy the second (1'st) arcs[1] into the first_value */
 		*fv++ = 0;
 		arcs = ((const char *)arcs) + arc_type_size;
-		if(isLittleEndian) {
+		if(little_endian()) {
 			const uint8_t *aend = (const unsigned char *)arcs - 1;
 			const uint8_t *a1 = (const unsigned char *)arcs + arc_type_size - 1;
 			for(; a1 > aend; fv++, a1--) *fv = *a1;
