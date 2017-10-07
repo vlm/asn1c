@@ -147,29 +147,17 @@ int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_val
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits) {
-	/*
-	 * Assume signed number can be safely coerced into
-	 * unsigned of the same range.
-	 * The following testing code will likely be optimized out
-	 * by compiler if it is true.
-	 */
-	unsigned long uvalue1 = ULONG_MAX;
-	         long svalue  = uvalue1;
-	unsigned long uvalue2 = svalue;
-	assert(uvalue1 == uvalue2);
-	return uper_put_constrained_whole_number_u(po, v, nbits);
-}
-
-int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits) {
-	if(nbits <= 31) {
-		return per_put_few_bits(po, v, nbits);
-	} else {
-		/* Put higher portion first, followed by lower 31-bit */
-		if(uper_put_constrained_whole_number_u(po, v >> 31, nbits - 31))
-			return -1;
-		return per_put_few_bits(po, v, 31);
-	}
+int
+uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v,
+                                    int nbits) {
+    if(nbits <= 31) {
+        return per_put_few_bits(po, v, nbits);
+    } else {
+        /* Put higher portion first, followed by lower 31-bit */
+        if(uper_put_constrained_whole_number_u(po, v >> 31, nbits - 31))
+            return -1;
+        return per_put_few_bits(po, v, 31);
+    }
 }
 
 /*
@@ -227,3 +215,81 @@ uper_put_nslength(asn_per_outp_t *po, size_t length) {
     return 0;
 }
 
+static int
+per__long_range(long lb, long ub, unsigned long *range_r) {
+    unsigned long bounds_range;
+    if((ub < 0) == (lb < 0)) {
+        bounds_range = ub - lb;
+    } else if(lb < 0) {
+        assert(ub >= 0);
+        bounds_range = 1 + ((unsigned long)ub + (unsigned long)-(lb + 1));
+    } else {
+        assert(!"Unreachable");
+        return -1;
+    }
+    *range_r = bounds_range;
+    return 0;
+}
+
+int
+per_long_range_rebase(long v, long lb, long ub, unsigned long *output) {
+    unsigned long range;
+
+    assert(lb <= ub);
+
+    if(v < lb || v > ub || per__long_range(lb, ub, &range) < 0) {
+        /* Range error. */
+        return -1;
+    }
+
+    /*
+     * Fundamentally what we're doing is returning (v-lb).
+     * However, this triggers undefined behavior when the word width
+     * of signed (v) is the same as the size of unsigned (*output).
+     * In practice, it triggers the UndefinedSanitizer. Therefore we shall
+     * compute the ranges accurately to avoid C's undefined behavior.
+     */
+    if((v < 0) == (lb < 0)) {
+        *output = v-lb;
+        return 0;
+    } else if(v < 0) {
+        unsigned long rebased = 1 + (unsigned long)-(v+1) + (unsigned long)lb;
+        assert(rebased <= range);   /* By construction */
+        *output = rebased;
+        return 0;
+    } else if(lb < 0) {
+        unsigned long rebased = 1 + (unsigned long)-(lb+1) + (unsigned long)v;
+        assert(rebased <= range);   /* By construction */
+        *output = rebased;
+        return 0;
+    } else {
+        assert(!"Unreachable");
+        return -1;
+    }
+}
+
+int
+per_long_range_unrebase(unsigned long inp, long lb, long ub, long *outp) {
+    unsigned long range;
+
+    if(per__long_range(lb, ub, &range) != 0) {
+        return -1;
+    }
+
+    if(inp > range) {
+        /*
+         * We can encode something in the given number of bits that technically
+         * exceeds the range. This is an avenue for security errors,
+         * so we don't allow that.
+         */
+        return -1;
+    }
+
+    if(inp <= LONG_MAX) {
+        *outp = (long)inp + lb;
+    } else {
+        *outp = (lb + LONG_MAX + 1) + (long)((inp - LONG_MAX) - 1);
+    }
+
+    return 0;
+}

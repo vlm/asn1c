@@ -69,8 +69,19 @@ typedef struct asn_bit_outp_s asn_per_outp_t;
 #define per_put_many_bits(out, src, nbits) asn_put_many_bits(out, src, nbits)
 #define per_put_aligned_flush(out) asn_put_aligned_flush(out)
 
+
+/*
+ * Rebase the given value as an offset into the range specified by the
+ * lower bound (lb) and upper bound (ub).
+ * RETURN VALUES:
+ *  -1: Conversion failed due to range problems.
+ *   0: Conversion was successful.
+ */
+int per_long_range_rebase(long v, long lb, long ub, unsigned long *output);
+/* The inverse operation: restores the value by the offset and its bounds. */
+int per_long_range_unrebase(unsigned long inp, long lb, long ub, long *outp);
+
 /* X.691-2008/11, #11.5 */
-int uper_put_constrained_whole_number_s(asn_per_outp_t *po, long v, int nbits);
 int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits);
 
 /*
