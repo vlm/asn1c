@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include <asn_codecs.h>
+#include <asn_application.h>
 #include <INTEGER.h>
 
 #define CHECK_DECODE(code, a, b, c, d, e, f)    check_decode(__LINE__, code, a, b, c, d, e, f)

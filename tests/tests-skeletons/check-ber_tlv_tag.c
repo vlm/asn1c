@@ -145,5 +145,6 @@ check_encode(struct tag_control_s *ctrl) {
 		}
 	}
 	printf("\n");
+
 }
 

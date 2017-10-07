@@ -40,6 +40,11 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 		printf("%d: Recoding %s %ld [%ld..%lu]\n", lineno,
 		  unsigned_ ? "unsigned" : "signed", value, lbound, ubound);
 
+    if(ubound > LONG_MAX) {
+        printf("Skipped test, unsupported\n");
+        return;
+    }
+
 	memset(&st, 0, sizeof(st));
 	memset(&po, 0, sizeof(po));
 	memset(&pd, 0, sizeof(pd));
@@ -89,8 +94,12 @@ check_per_encode_constrained(int lineno, int unsigned_, long value, long lbound,
 			| ((uint32_t)po.tmpspace[2] << 8)
 			| ((uint32_t)po.tmpspace[3] << 0);
 		recovered_value = (unsigned long)recovered_value >> (32 - bit_range);
-		recovered_value += cts.value.lower_bound;
-		assert((long)recovered_value == value);
+        if(per_long_range_unrebase(recovered_value, cts.value.lower_bound,
+                                   cts.value.upper_bound, &recovered_value)
+           < 0) {
+            assert(!"Unreachable");
+        }
+		assert(recovered_value == value);
 	}
 	assert(po.nboff == (size_t)((bit_range == 32) ? 0 : (8 - (32 - bit_range))));
 	assert(po.nbits ==  8 * (sizeof(po.tmpspace) - (po.buffer-po.tmpspace)));
@@ -173,6 +182,7 @@ main() {
 	CHECK(0, -2147483648, -2147483648, 2147483647, 32);
 	CHECK(0, -10, -2147483648, 2147483647, 32);
 	CHECK(0,  -1, -2147483648, 2147483647, 32);
+	CHECK(0,   0, INT32_MIN, INT32_MAX, 32);
 	CHECK(0,   0, -2147483648, 2147483647, 32);
 	CHECK(0,   1, -2147483648, 2147483647, 32);
 	CHECK(0,  10, -2147483648, 2147483647, 32);
@@ -183,13 +193,17 @@ main() {
 	CHECK(1, 10, 0, 4294967295UL, 32);
 	CHECK(1, 2000000000, 0, 4294967295UL, 32);
 	CHECK(1, 2147483647, 0, 4294967295UL, 32);
+
+#ifdef  TEST_64BIT
 	CHECK(1, 2147483648, 0, 4294967295UL, 32);
 	CHECK(1, 4000000000, 0, 4294967295UL, 32);
 	CHECK(1, 4294967295UL, 0, 4294967295UL, 32);
+#endif
 
 	CHECK(1, 10, 10, 4294967285UL, 32);
 	CHECK(1, 11, 10, 4294967285UL, 32);
 
+#ifdef  TEST_64BIT
 	if(sizeof(long) > sizeof(uint32_t)) {
 		CHECK(0,   0, -10, 4294967285UL, 32);
 		CHECK(0,   1, -10, 4294967285UL, 32);
@@ -211,6 +225,7 @@ main() {
 		CHECK(u, 2147483648, 0, 4294967295UL, 32);
 		CHECK(u, 4000000000, 0, 4294967295UL, 32);
 	}
+#endif
  }
 
   return 0;

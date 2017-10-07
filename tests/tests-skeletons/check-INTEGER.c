@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include <asn_application.h>
 #include <INTEGER.h>
+
+#define CHECK_XER(a,b,c)        check_xer(__LINE__, a, b, c)
 
 static char *shared_scratch_start;
 
@@ -144,13 +147,13 @@ check_unsigned(uint8_t *buf, int size, unsigned long check_long, int check_ret) 
 }
 
 static void
-check_xer(int tofail, char *xmldata, long orig_value) {
+check_xer(int lineno, int tofail, char *xmldata, long orig_value) {
 	INTEGER_t *st = 0;
 	asn_dec_rval_t rc;
 	long value;
 	int ret;
 
-	printf("[%s] vs %ld: ", xmldata, orig_value);
+	printf("%03d: [%s] vs %ld: ", lineno, xmldata, orig_value);
 
 	rc = xer_decode(0, &asn_DEF_INTEGER, (void *)&st,
 		xmldata, strlen(xmldata));
@@ -160,7 +163,10 @@ check_xer(int tofail, char *xmldata, long orig_value) {
 		ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
 		return;
 	}
-	assert(!tofail);
+        if(tofail) {
+                printf("\tnot failed, as expected!\n");
+	        assert(!tofail);
+        }
 
 	ret = asn_INTEGER2long(st, &value);
 	assert(ret == 0);
@@ -213,80 +219,84 @@ main() {
 	UCHECK(buf15, 0x80000000UL, 0);
 	UCHECK(buf16, 0xffff0000UL, 0);
 
-	check_xer(-1, "", 0);
-	check_xer(-1, "<INTEGER></INTEGER>", 0);
-	check_xer(-1, "<INTEGER> </INTEGER>", 0);
-	check_xer(-1, "<INTEGER>-</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>+</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>+-</INTEGER>", 0);
-	check_xer(-1, "<INTEGER> -</INTEGER>", 0);
-	check_xer(-1, "<INTEGER> +</INTEGER>", 0);
-	check_xer(-1, "<INTEGER> +-</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>- </INTEGER>", 0);
-	check_xer(-1, "<INTEGER>+ </INTEGER>", 0);
-	check_xer(-1, "<INTEGER>+- </INTEGER>", 0);
-	check_xer(-1, "<INTEGER> - </INTEGER>", 0);
-	check_xer(-1, "<INTEGER> + </INTEGER>", 0);
-	check_xer(-1, "<INTEGER> +- </INTEGER>", 0);
-	check_xer(0, "<INTEGER>+0</INTEGER>", 0);
-	check_xer(0, "<INTEGER>-0</INTEGER>", 0);
-	check_xer(0, "<INTEGER>+1</INTEGER>", 1);
-	check_xer(0, "<INTEGER>-1</INTEGER>", -1);
-	check_xer(0, "<INTEGER>1</INTEGER>", 1);
-	check_xer(0, "<INTEGER>-15</INTEGER>", -15);
-	check_xer(0, "<INTEGER>+15</INTEGER>", 15);
-	check_xer(0, "<INTEGER>15</INTEGER>", 15);
-	check_xer(0, "<INTEGER> 15</INTEGER>", 15);
-	check_xer(0, "<INTEGER> 15 </INTEGER>", 15);
-	check_xer(0, "<INTEGER>15 </INTEGER>", 15);
-	check_xer(0, "<INTEGER> +15 </INTEGER>", 15);
-	check_xer(-1, "<INTEGER> +15 -</INTEGER>", 0);
-	check_xer(-1, "<INTEGER> +15 1</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>+ 15</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>12<z>34</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>12 <z>34</INTEGER>", 0);
-	check_xer(-1, "<INTEGER>12 <z></INTEGER>", 0);
-	check_xer(0, "<INTEGER>1234</INTEGER>", 1234);
-	check_xer(-1, "<INTEGER>1234 5678</INTEGER>", 0);
-	check_xer(0, "<INTEGER>-2147483647</INTEGER>", -2147483647);
-	check_xer(0, "<INTEGER>-2147483648</INTEGER>", -2147483647-1);
-	check_xer(0, "<INTEGER>+2147483647</INTEGER>", 2147483647);
-	check_xer(0, "<INTEGER>2147483647</INTEGER>", 2147483647);
+	CHECK_XER(-1, "", 0);
+	CHECK_XER(-1, "<INTEGER></INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> </INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>-</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>+</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>+-</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> -</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> +</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> +-</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>- </INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>+ </INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>+- </INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> - </INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> + </INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> +- </INTEGER>", 0);
+	CHECK_XER(0, "<INTEGER>+0</INTEGER>", 0);
+	CHECK_XER(0, "<INTEGER>-0</INTEGER>", 0);
+	CHECK_XER(0, "<INTEGER>+1</INTEGER>", 1);
+	CHECK_XER(0, "<INTEGER>-1</INTEGER>", -1);
+	CHECK_XER(0, "<INTEGER>1</INTEGER>", 1);
+	CHECK_XER(0, "<INTEGER>-15</INTEGER>", -15);
+	CHECK_XER(0, "<INTEGER>+15</INTEGER>", 15);
+	CHECK_XER(0, "<INTEGER>15</INTEGER>", 15);
+	CHECK_XER(0, "<INTEGER> 15</INTEGER>", 15);
+	CHECK_XER(0, "<INTEGER> 15 </INTEGER>", 15);
+	CHECK_XER(0, "<INTEGER>15 </INTEGER>", 15);
+	CHECK_XER(0, "<INTEGER> +15 </INTEGER>", 15);
+	CHECK_XER(-1, "<INTEGER> +15 -</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER> +15 1</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>+ 15</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>12<z>34</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>12 <z>34</INTEGER>", 0);
+	CHECK_XER(-1, "<INTEGER>12 <z></INTEGER>", 0);
+	CHECK_XER(0, "<INTEGER>1234</INTEGER>", 1234);
+	CHECK_XER(-1, "<INTEGER>1234 5678</INTEGER>", 0);
+	CHECK_XER(0, "<INTEGER>-2147483647</INTEGER>", -2147483647);
+	CHECK_XER(0, "<INTEGER>-2147483648</INTEGER>", -2147483647-1);
+	CHECK_XER(0, "<INTEGER>+2147483647</INTEGER>", 2147483647);
+	CHECK_XER(0, "<INTEGER>2147483647</INTEGER>", 2147483647);
 	if(sizeof(long) == 4) {
-		check_xer( 0, "<INTEGER>-2147483648</INTEGER>", -2147483648);
-		check_xer(-1, "<INTEGER>-2147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>2147483648</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>2147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>3147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>4147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>5147483649</INTEGER>", 0); /* special */
-		check_xer(-1, "<INTEGER>9147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>9999999999</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-5147483649</INTEGER>", 0);/* special */
-		check_xer(-1, "<INTEGER>-9147483649</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-9999999999</INTEGER>", 0);
+		CHECK_XER( 0, "<INTEGER>-2147483648</INTEGER>", -2147483648);
+		CHECK_XER(-1, "<INTEGER>-2147483649</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>2147483648</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>2147483649</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>3147483649</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>4147483649</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>5147483649</INTEGER>", 0); /* special */
+		CHECK_XER(-1, "<INTEGER>9147483649</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>9999999999</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>-5147483649</INTEGER>", 0);/* special */
+		CHECK_XER(-1, "<INTEGER>-9147483649</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>-9999999999</INTEGER>", 0);
 	}
+#ifdef  TEST_64BIT
 	if(sizeof(long) == 8) {
-		check_xer(0, "<INTEGER>2147483648</INTEGER>", 2147483648);
-		check_xer(0, "<INTEGER>2147483649</INTEGER>", 2147483649);
-		check_xer(0, "<INTEGER>3147483649</INTEGER>", 3147483649);
-		check_xer(0, "<INTEGER>4147483649</INTEGER>", 4147483649);
-		check_xer(0, "<INTEGER>5147483649</INTEGER>", 5147483649);
-		check_xer(0, "<INTEGER>9147483649</INTEGER>", 9147483649);
-		check_xer(0, "<INTEGER>9999999999</INTEGER>", 9999999999);
-		check_xer(0, "<INTEGER>9223372036854775807</INTEGER>", 9223372036854775807);
-		check_xer(-1, "<INTEGER>9223372036854775808</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>10223372036854775807</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>50223372036854775807</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>100223372036854775807</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>500223372036854775807</INTEGER>", 0);
-		check_xer(0, "<INTEGER>-9223372036854775808</INTEGER>", -9223372036854775807-1);
-		check_xer(-1, "<INTEGER>-9223372036854775809</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-10223372036854775807</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-50223372036854775807</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-100223372036854775807</INTEGER>", 0);
-		check_xer(-1, "<INTEGER>-500223372036854775807</INTEGER>", 0);
-	}
+		CHECK_XER(0, "<INTEGER>2147483648</INTEGER>", 2147483648);
+		CHECK_XER(0, "<INTEGER>2147483649</INTEGER>", 2147483649);
+		CHECK_XER(0, "<INTEGER>3147483649</INTEGER>", 3147483649);
+		CHECK_XER(0, "<INTEGER>4147483649</INTEGER>", 4147483649);
+		CHECK_XER(0, "<INTEGER>5147483649</INTEGER>", 5147483649);
+		CHECK_XER(0, "<INTEGER>9147483649</INTEGER>", 9147483649);
+		CHECK_XER(0, "<INTEGER>9999999999</INTEGER>", 9999999999);
+		CHECK_XER(0, "<INTEGER>9223372036854775807</INTEGER>", 9223372036854775807);
+		CHECK_XER(-1, "<INTEGER>9223372036854775808</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>10223372036854775807</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>50223372036854775807</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>100223372036854775807</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>500223372036854775807</INTEGER>", 0);
+		CHECK_XER(0, "<INTEGER>-9223372036854775808</INTEGER>", -9223372036854775807-1);
+		CHECK_XER(-1, "<INTEGER>-9223372036854775809</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>-10223372036854775807</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>-50223372036854775807</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>-100223372036854775807</INTEGER>", 0);
+		CHECK_XER(-1, "<INTEGER>-500223372036854775807</INTEGER>", 0);
+	} else {
+                assert(sizeof(long) == 8);
+        }
+#endif
 
 	return 0;
 }

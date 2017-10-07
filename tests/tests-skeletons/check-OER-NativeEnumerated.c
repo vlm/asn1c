@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include <asn_codecs.h>
+#include <asn_application.h>
 #include <NativeEnumerated.h>
 
 #define CHECK_DECODE(code, a, b, c)    check_decode(__LINE__, code, a, b, c)
 #define CHECK_ROUNDTRIP(a) check_roundtrip(__LINE__, a);
 
 static void
-check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const char *buf, size_t size) {
+check_decode(int lineno, enum asn_dec_rval_code_e code, long control, const char *buf, size_t size) {
     static char *code_s[] = { "RC_OK", "RC_WMORE", "RC_FAIL", "<error>" };
 
-    fprintf(stderr, "\n%d: OER decode (control %" PRIdMAX ")\n", lineno, control);
+    fprintf(stderr, "\n%d: OER decode (control %ld)\n", lineno, control);
 
     long value;
     long *value_ptr = &value;
@@ -25,7 +25,7 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
                                       (void **)&value_ptr, buf, size);
     if(ret.code != RC_OK) {
         /* Basic OER decode does not work */
-        fprintf(stderr, "%d: Failed oer_decode(ctl=%" PRIdMAX ", size=%zu)\n",
+        fprintf(stderr, "%d: Failed oer_decode(ctl=%ld, size=%zu)\n",
                 lineno, control, size);
         if(ret.code == code) {
             fprintf(stderr, "  (That was expected)\n");
@@ -38,18 +38,17 @@ check_decode(int lineno, enum asn_dec_rval_code_e code, intmax_t control, const 
             assert(ret.code == code);
         }
     } else {
-        intmax_t outcome = value;
+        long outcome = value;
         if(outcome != control) {
             /* Decoded value is wrong */
             fprintf(stderr,
-                    "%d: Decode result %" PRIdMAX " is not expected %" PRIdMAX
-                    "\n",
+                    "%d: Decode result %ld is not expected %ld\n",
                     lineno, outcome, control);
             assert(outcome == control);
         }
     }
 
-    fprintf(stderr, "%d: Decode result %" PRIdMAX "\n", lineno, control);
+    fprintf(stderr, "%d: Decode result %ld\n", lineno, control);
 }
 
 static void
@@ -66,14 +65,13 @@ dump_data(int lineno, const uint8_t *buf, size_t size) {
 }
 
 static void
-check_roundtrip(int lineno, intmax_t control) {
+check_roundtrip(int lineno, long control) {
     uint8_t tmpbuf[32];
     size_t tmpbuf_size;
-
-    fprintf(stderr, "\n%d: OER round-trip value %" PRIdMAX "\n", lineno, control);
-
     asn_enc_rval_t er;
     asn_dec_rval_t ret;
+
+    fprintf(stderr, "\n%d: OER round-trip value %ld\n", lineno, control);
 
     long value_out = control;
     long value_in = -42;
@@ -95,22 +93,21 @@ check_roundtrip(int lineno, intmax_t control) {
                                                    tmpbuf, tmpbuf_size);
     if(ret.code != RC_OK) {
         /* Basic OER decode does not work */
-        fprintf(stderr, "%d: Failed oer_decode(value=%" PRIdMAX ", size=%zu)\n",
+        fprintf(stderr, "%d: Failed oer_decode(value=%ld, size=%zu)\n",
                 lineno, control, tmpbuf_size);
         assert(ret.code == 0);
     } else {
-        intmax_t outcome = value_in;
+        long outcome = value_in;
         if(outcome != control) {
             /* Decoded value is wrong */
             fprintf(stderr,
-                    "%d: Decode result %" PRIdMAX " is not expected %" PRIdMAX
-                    "\n",
+                    "%d: Decode result %ld is not expected %ld\n",
                     lineno, outcome, control);
             assert(outcome == control);
         }
     }
 
-    fprintf(stderr, "%d: Decode result %" PRIdMAX "\n", lineno, control);
+    fprintf(stderr, "%d: Decode result %ld\n", lineno, control);
 }
 
 int
@@ -161,32 +158,13 @@ main() {
     CHECK_ROUNDTRIP(65536);
     CHECK_ROUNDTRIP(32000);
 
-    for(size_t i = 0; i < 7 ; i++) {
-        intmax_t value = (intmax_t)1 << i;
+    for(size_t i = 0; i < 8 * sizeof(long) - 1; i++) {
+        long value = (long)1 << i;
         CHECK_ROUNDTRIP(value);
         value = -value;
         CHECK_ROUNDTRIP(value);
     }
 
-    for(size_t i = 0; i < 16 ; i++) {
-        intmax_t value = (intmax_t)1 << i;
-        CHECK_ROUNDTRIP(value);
-        value = -value;
-        CHECK_ROUNDTRIP(value);
-    }
-
-    for(size_t i = 0; i < 32 ; i++) {
-        intmax_t value = (intmax_t)1 << i;
-        CHECK_ROUNDTRIP(value);
-        value = -value;
-        CHECK_ROUNDTRIP(value);
-    }
-
-    for(size_t i = 0; i < 8 * sizeof(intmax_t) - 1; i++) {
-        intmax_t value = (intmax_t)1 << i;
-        CHECK_ROUNDTRIP(value);
-        value = -value;
-        CHECK_ROUNDTRIP(value);
-    }
-
+    CHECK_ROUNDTRIP(LONG_MIN);
+    CHECK_ROUNDTRIP(LONG_MAX);
 }

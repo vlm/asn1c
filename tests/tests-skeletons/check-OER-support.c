@@ -11,13 +11,16 @@ static int fill_buffer(const void *data, size_t size, void *app_key) {
     return 0;
 }
 
+#define CHECK(a, b) check_round_trip(__LINE__, a, b)
+
 static void
-check_round_trip(size_t length) {
-    fprintf(stderr, "Round-trip for %zu\n", length);
+check_round_trip(int lineno, int ok, size_t length) {
+    fprintf(stderr, "%03d: Round-trip for %zu\n", lineno, length);
 
     /* Serialize */
     size_t enc_len = 0;
-    size_t enc_len_len = oer_serialize_length(length, fill_buffer, &enc_len);
+    ssize_t enc_len_len = oer_serialize_length(length, fill_buffer, &enc_len);
+    assert(enc_len_len > 0);
     assert(enc_len == enc_len_len);
 
     /* Deserialize */
@@ -26,32 +29,38 @@ check_round_trip(size_t length) {
         size_t ret = oer_fetch_length(buffer, part, &recovered_length);
         assert(ret == 0);   /* More data expected. */
     }
-    size_t dec_len = oer_fetch_length(buffer, enc_len, &recovered_length);
-    assert(dec_len == enc_len);
-    if(recovered_length != length) {
-        fprintf(stderr, "Round-trip failed %zu->%zu (encoded %zd, decoded %zd)\n",
-                length, recovered_length, enc_len, dec_len);
-        assert(recovered_length == length);
+    ssize_t dec_len = oer_fetch_length(buffer, enc_len, &recovered_length);
+    if(ok) {
+        assert(dec_len == enc_len);
+        if(recovered_length != length) {
+            fprintf(stderr,
+                    "Round-trip failed %zu->%zu (encoded %zd, decoded %zd)\n",
+                    length, recovered_length, enc_len, dec_len);
+            assert(recovered_length == length);
+        }
+    } else {
+        assert(dec_len == -1);
     }
 }
 
 int main() {
+    int bits64 = sizeof(size_t) > 4;
 
-    check_round_trip(0);
-    check_round_trip(1);
-    check_round_trip(127);
-    check_round_trip(128);
-    check_round_trip(129);
-    check_round_trip(255);
-    check_round_trip(256);
-    check_round_trip(65534);
-    check_round_trip(65535);
-    check_round_trip(65536);
-    check_round_trip(65538);
-    check_round_trip(16000000);
-    check_round_trip(16777216);
-    check_round_trip(2147483648);
-    check_round_trip(4294967296);
+    CHECK(1, 0);
+    CHECK(1, 1);
+    CHECK(1, 127);
+    CHECK(1, 128);
+    CHECK(1, 129);
+    CHECK(1, 255);
+    CHECK(1, 256);
+    CHECK(1, 65534);
+    CHECK(1, 65535);
+    CHECK(1, 65536);
+    CHECK(1, 65538);
+    CHECK(1, 16000000);
+    CHECK(1, 16777216);
+    CHECK(bits64, 2147483648);
+    CHECK(bits64, 4294967295UL);
 
 }
 

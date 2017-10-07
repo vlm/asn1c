@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <errno.h>
 #include <sys/time.h>
 
 #include <OBJECT_IDENTIFIER.h>
@@ -13,7 +14,7 @@ _print(const void *buffer, size_t size, void *app_key) {
 }
 
 static void
-check_OID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
+check_OID(int lineno, uint8_t *buf, size_t len, unsigned *ck_buf, int ck_len) {
 	OBJECT_IDENTIFIER_t *oid;
 	asn_dec_rval_t rval;
 	unsigned long arcs[10];
@@ -23,7 +24,7 @@ check_OID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf("%03d: Checking {", lineno);
 	for(i = 0; i < (int)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
-	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
+	for(i = 0; i < ck_len; i++) { printf("%s%u", i?" ":"", ck_buf[i]); }
 	printf("}\n");
 
 	oid = NULL;
@@ -51,7 +52,7 @@ check_OID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	for(i = 0; i < alen; i++) {
 		printf(" %lu", arcs[i]);
 		if(alen == ck_len) {
-			assert(arcs[i] == (unsigned long)ck_buf[i]);
+			assert(arcs[i] == ck_buf[i]);
 		}
 	}
 	printf(" }\n");
@@ -61,7 +62,7 @@ check_OID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 }
 
 static void
-check_ROID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
+check_ROID(int lineno, uint8_t *buf, size_t len, unsigned *ck_buf, int ck_len) {
 	RELATIVE_OID_t *oid;
 	asn_dec_rval_t rval;
 	unsigned long arcs[10];
@@ -71,7 +72,7 @@ check_ROID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	printf("%03d: Checking {", lineno);
 	for(i = 0; i < (ssize_t)len; i++) { printf("%s%02x", i?" ":"", buf[i]); }
 	printf("} against {");
-	for(i = 0; i < ck_len; i++) { printf("%s%d", i?" ":"", ck_buf[i]); }
+	for(i = 0; i < ck_len; i++) { printf("%s%u", i?" ":"", ck_buf[i]); }
 	printf("}\n");
 
 	oid = NULL;
@@ -98,96 +99,11 @@ check_ROID(int lineno, uint8_t *buf, size_t len, int *ck_buf, int ck_len) {
 	 */
 	printf("RELATIVE_OID_get_arcs() => {");
 	for(i = 0; i < alen; i++) {
-		printf(" %lu", (unsigned long)arcs[i]);
-		assert(arcs[i] == (unsigned long)ck_buf[i]);
+		printf(" %lu", arcs[i]);
+		assert(arcs[i] == ck_buf[i]);
 	}
 	printf(" }\n");
 	ASN_STRUCT_FREE(asn_DEF_RELATIVE_OID, oid);
-}
-
-/*
- * Encode the specified array of arcs as RELATIVE-OID, decode it and compare.
- */
-static void
-check_REGEN(int lineno, int *arcs, int acount) {
-	static RELATIVE_OID_t oid;
-	unsigned long tmp_arcs[10];
-	int tmp_alen = 10;
-	int alen;
-	int ret;
-	int i;
-
-	if(0) {
-		fprintf(stderr, "%03d: Encoding (R) {", lineno);
-		for(i = 0; i < acount; i++) {
-			fprintf(stderr, " %u", arcs[i]);
-		}
-		fprintf(stderr, " }\n");
-	}
-
-	ret = RELATIVE_OID_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
-	assert(ret == 0);
-
-	memset(tmp_arcs, 'A', sizeof(tmp_arcs));
-	alen = RELATIVE_OID_get_arcs(&oid, tmp_arcs,
-		sizeof(tmp_arcs[0]), tmp_alen);
-	assert(alen >= 0);
-	assert(alen <= tmp_alen);
-	assert(alen == acount);
-
-	if(0) {
-		fprintf(stderr, "Encoded  (R) { ");
-		for(i = 0; i < alen; i++) {
-			fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
-			assert(arcs[i] == (int)tmp_arcs[i]);
-		}
-		fprintf(stderr, "}\n");
-	}
-
-	ASN_STRUCT_RESET(asn_DEF_RELATIVE_OID, &oid);
-}
-
-/*
- * Encode the specified array of arcs as OBJECT IDENTIFIER,
- * decode it and compare.
- */
-static void
-check_REGEN_OID(int lineno, int *arcs, int acount) {
-	static OBJECT_IDENTIFIER_t oid;
-	unsigned long tmp_arcs[10];
-	int tmp_alen = 10;
-	int alen;
-	int ret;
-	int i;
-
-	if(0) {
-		fprintf(stderr, "%03d: Encoding (O) {", lineno);
-		for(i = 0; i < acount; i++) {
-			fprintf(stderr, " %u", arcs[i]);
-		}
-		fprintf(stderr, " }\n");
-	}
-
-	ret = OBJECT_IDENTIFIER_set_arcs(&oid, arcs, sizeof(arcs[0]), acount);
-	assert(ret == 0);
-
-	memset(tmp_arcs, 'A', sizeof(tmp_arcs));
-	alen = OBJECT_IDENTIFIER_get_arcs(&oid,
-		tmp_arcs, sizeof(tmp_arcs[0]), tmp_alen);
-	assert(alen >= 0);
-	assert(alen <= tmp_alen);
-	assert(alen == acount);
-
-	if(0) {
-		fprintf(stderr, "Encoded  (O) { ");
-		for(i = 0; i < alen; i++) {
-			fprintf(stderr, "%lu ", tmp_arcs[i]); fflush(stdout);
-			assert(arcs[i] == (int)tmp_arcs[i]);
-		}
-		fprintf(stderr, "}\n");
-	}
-
-	ASN_STRUCT_RESET(asn_DEF_RELATIVE_OID, &oid);
 }
 
 static int
@@ -288,24 +204,17 @@ static void check_xer(int expect_arcs, char *xer) {
 #define CHECK_ROID(n)                                            \
     check_ROID(__LINE__, buf##n, sizeof(buf##n), buf##n##_check, \
                sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
-#define CHECK_REGEN(n)                    \
-    check_REGEN(__LINE__, buf##n##_check, \
-                sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
-#define CHECK_REGEN_OID(n)                    \
-    check_REGEN_OID(__LINE__, buf##n##_check, \
-                    sizeof(buf##n##_check) / sizeof(buf##n##_check[0]))
 
-int
-main() {
-	int i;
+static void
+check_binary_parsing() {
 
-	/* {joint-iso-itu-t 230 3} */
+    /* {joint-iso-itu-t 230 3} */
 	uint8_t buf1[] = {
 		0x06,	/* OBJECT IDENTIFIER */
 		0x03,	/* Length */
 		0x82, 0x36, 0x03
 	};
-	int buf1_check[] = { 2, 230, 3 };
+	unsigned buf1_check[] = { 2, 230, 3 };
 
 	/* {8571 3 2} */
 	uint8_t buf2[] = {
@@ -313,7 +222,7 @@ main() {
 		0x04,	/* Length */
 		0xC2, 0x7B, 0x03, 0x02
 	};
-	int buf2_check[] = { 8571, 3, 2 };
+	unsigned buf2_check[] = { 8571, 3, 2 };
 
 	/* {joint-iso-itu-t 42 } */
 	uint8_t buf3[] = {
@@ -321,7 +230,7 @@ main() {
 		0x01,	/* Length */
 		0x7A
 	};
-	int buf3_check[] = { 2, 42 };
+	unsigned buf3_check[] = { 2, 42 };
 
 	/* {joint-iso-itu-t 25957 } */
 	uint8_t buf4[] = {
@@ -329,74 +238,36 @@ main() {
 		0x03,	/* Length */
 		0x81, 0x80 + 0x4B, 0x35
 	};
-	int buf4_check[] = { 2, 25957 };
+	unsigned buf4_check[] = { 2, 25957 };
 
-	int buf5_check[] = { 0 };
-	int buf6_check[] = { 1 };
-	int buf7_check[] = { 80, 40 };
-	int buf8_check[] = { 127 };
-	int buf9_check[] = { 128 };
-	int buf10_check[] = { 65535, 65536 };
-	int buf11_check[] = { 100000, 0x20000, 1234, 256, 127, 128 };
-	int buf12_check[] = { 0, 0xffffffff, 0xff00ff00, 0 };
-	int buf13_check[] = { 0, 1, 2 };
-	int buf14_check[] = { 1, 38, 3 };
-	int buf15_check[] = { 0, 0, 0xf000 };
-	int buf16_check[] = { 0, 0, 0, 1, 0 };
-	int buf17_check[] = { 2, 0xffffffAf, 0xff00ff00, 0 };
-	int buf18_check[] = { 2, 2, 1, 1 };
-
-	/* { joint-iso-itu-t 2 1 1 } */
-	uint8_t buf19[] = {
+	/* { jounsigned-iso-itu-t 2 1 1 } */
+	uint8_t buf5[] = {
 		0x06,	/* OBJECT IDENTIFIER */
 		0x03,	/* Length */
 		0x52, 0x01, 0x01
 	};
-	int buf19_check[] = { 2, 2, 1, 1 };
+	unsigned buf5_check[] = { 2, 2, 1, 1 };
 
-	/* { joint-iso-itu-t 2 1 0 1 } */
-	uint8_t buf20[] = {
+	/* { jounsigned-iso-itu-t 2 1 0 1 } */
+	uint8_t buf6[] = {
 		0x06,	/* OBJECT IDENTIFIER */
 		0x04,	/* Length */
 		0x52, 0x01, 0x00, 0x01
 	};
-	int buf20_check[] = { 2, 2, 1, 0, 1 };
+	unsigned buf6_check[] = { 2, 2, 1, 0, 1 };
 
+	CHECK_OID(1);
+	CHECK_ROID(2);
+	CHECK_OID(3);
+	CHECK_OID(4);
+	CHECK_OID(5);
+	CHECK_OID(6);
+}
 
-	CHECK_OID(1);	/* buf1, buf1_check */
-	CHECK_ROID(2);	/* buf2, buf2_check */
-	CHECK_OID(3);	/* buf3, buf3_check */
-	CHECK_OID(4);	/* buf4, buf4_check */
-	CHECK_OID(19);	/* buf19, buf19_check */
-	CHECK_OID(20);	/* buf20, buf20_check */
-
-	CHECK_REGEN(5);	/* Regenerate RELATIVE-OID */
-	CHECK_REGEN(6);
-	CHECK_REGEN(7);
-	CHECK_REGEN(8);
-	CHECK_REGEN(9);
-	CHECK_REGEN(10);
-	CHECK_REGEN(11);
-	CHECK_REGEN(12);
-	CHECK_REGEN(13);
-	CHECK_REGEN(14);
-	CHECK_REGEN(15);
-	CHECK_REGEN(16);
-	CHECK_REGEN(17);
-	CHECK_REGEN_OID(1);	/* Regenerate OBJECT IDENTIFIER */
-	CHECK_REGEN_OID(3);	/* Regenerate OBJECT IDENTIFIER */
-	CHECK_REGEN_OID(4);	/* Regenerate OBJECT IDENTIFIER */
-	CHECK_REGEN_OID(13);
-	CHECK_REGEN_OID(14);
-	CHECK_REGEN_OID(15);
-	CHECK_REGEN_OID(16);
-	CHECK_REGEN_OID(17);
-	CHECK_REGEN_OID(18);
-	CHECK_REGEN_OID(19);
-	CHECK_REGEN_OID(20);
-
-	check_parse("", 0);
-	check_parse(" ", 0);
+static void
+check_text_parsing() {
+    check_parse("", 0);
+    check_parse(" ", 0);
 	check_parse(".", -1);
 	check_parse(" .", -1);
 	check_parse(".1", -1);
@@ -440,24 +311,22 @@ main() {
 	}
 	check_parse("1.900a0000000.3", -1);
 	check_parse("1.900a.3", -1);
+}
 
+static void
+check_xer_parsing() {
 	check_xer(-1, "<t></t>");
 	check_xer(2, "<t>1.2</t>");
 	check_xer(3, "<t>1.2.3</t>");
 	check_xer(3, "<t> 1.2.3 </t>");
 	check_xer(-1, "<t>1.2.3 1</t>");
+}
 
-	for(i = 0; i < 100000; i++) {
-		int bufA_check[3] = { 2, i, rand() };
-		int bufB_check[2] = { rand(), i * 121 };
-		CHECK_REGEN(A);
-		CHECK_REGEN_OID(A);
-		CHECK_REGEN(B);
-		if(i > 100) i++;
-		if(i > 500) i++;
-		if(i > 1000) i += 3;
-		if(i > 5000) i += 151;
-	}
+int
+main() {
+    check_binary_parsing();
+    check_text_parsing();
+    check_xer_parsing();
 
 	if(getenv("CHECK_SPEED")) {
 		/* Useful for developers only */

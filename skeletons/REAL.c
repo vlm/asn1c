@@ -664,12 +664,8 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
  */
 int
 asn_double2REAL(REAL_t *st, double dbl_value) {
-#ifdef	WORDS_BIGENDIAN		/* Known to be big-endian */
-	int littleEndian = 0;
-#else				/* need to test: have no explicit information */
-	unsigned int LE = 1;
-	int littleEndian = *(unsigned char *)&LE;
-#endif
+    double test = -0.0;
+    int float_big_endian = *(const char *)&test != 0;
 	uint8_t buf[16];	/* More than enough for 8-byte dbl_value */
 	uint8_t dscr[sizeof(dbl_value)];	/* double value scratch pad */
 	/* Assertion guards: won't even compile, if unexpected double size */
@@ -731,17 +727,7 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 		return 0;
 	}
 
-	if(littleEndian) {
-		uint8_t *s = ((uint8_t *)&dbl_value) + sizeof(dbl_value) - 2;
-		uint8_t *start = ((uint8_t *)&dbl_value);
-		uint8_t *d;
-
-		bmsign = 0x80 | ((s[1] >> 1) & 0x40);	/* binary mask & - */
-		for(mstop = d = dscr; s >= start; d++, s--) {
-			*d = *s;
-			if(*d) mstop = d;
-		}
-	} else {
+	if(float_big_endian) {
 		uint8_t *s = ((uint8_t *)&dbl_value) + 1;
 		uint8_t *end = ((uint8_t *)&dbl_value) + sizeof(double);
 		uint8_t *d;
@@ -751,7 +737,17 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 			*d = *s;
 			if(*d) mstop = d;
 		}
-	}
+    } else {
+		uint8_t *s = ((uint8_t *)&dbl_value) + sizeof(dbl_value) - 2;
+		uint8_t *start = ((uint8_t *)&dbl_value);
+		uint8_t *d;
+
+		bmsign = 0x80 | ((s[1] >> 1) & 0x40);	/* binary mask & - */
+		for(mstop = d = dscr; s >= start; d++, s--) {
+			*d = *s;
+			if(*d) mstop = d;
+		}
+    }
 
 	/* Remove parts of the exponent, leave mantissa and explicit 1. */
 	dscr[0] = 0x10 | (dscr[0] & 0x0f);
