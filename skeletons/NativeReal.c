@@ -291,8 +291,8 @@ NativeReal_encode_oer(asn_TYPE_descriptor_t *td,
              * That was the whole point of compact encoding!
              */
         } else {
-            assert(wire_size == sizeof(double)
-                   || specs && specs->float_size == wire_size);
+            assert((wire_size == sizeof(double))
+                   || (specs && specs->float_size == wire_size));
             ASN__ENCODE_FAILED;
         }
 
@@ -540,7 +540,6 @@ NativeReal_free(const asn_TYPE_descriptor_t *td, void *ptr,
     }
 }
 
-
 asn_random_fill_result_t
 NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
                        const asn_encoding_constraints_t *constraints,
@@ -548,6 +547,12 @@ NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     asn_random_fill_result_t result_ok = {ARFILL_OK, 0};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
+#ifndef INFINITY
+#define INFINITY (1.0/0.0)
+#endif
+#ifndef NAN
+#define NAN (0.0/0.0)
+#endif
     static const double values[] = {
         0, -0.0, -1, 1, -M_E, M_E, -3.14, 3.14, -M_PI, M_PI, -255, 255,
         /* 2^51 */

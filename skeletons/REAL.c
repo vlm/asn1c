@@ -6,10 +6,13 @@
 #ifndef _BSD_SOURCE
 #define	_BSD_SOURCE		/* To reintroduce finite(3) */
 #endif
+#include <asn_internal.h>
 #if	defined(__alpha)
 #include <sys/resource.h>	/* For INFINITY */
 #endif
-#include <asn_internal.h>
+#if defined(sun) || defined(__sun)
+#include <ieeefp.h>
+#endif
 #include <stdlib.h>	/* for strtod(3) */
 #include <math.h>
 #include <float.h>
@@ -24,10 +27,10 @@
 static volatile double real_zero CC_NOTUSED = 0.0;
 #endif
 #ifndef	NAN
-#define	NAN	(real_zero/real_zero)
+#define	NAN	(0.0/0.0)
 #endif
 #ifndef	INFINITY
-#define	INFINITY	(1.0/real_zero)
+#define	INFINITY	(1.0/0.0)
 #endif
 
 #if defined(__clang__)
