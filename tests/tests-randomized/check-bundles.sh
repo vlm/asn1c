@@ -42,7 +42,9 @@ parallelism=4
 asn1c_flags=""
 
 make_clean_before_bundle() {
-    test "${need_clean_before_bundle}" = "1" && rm -rf ${RNDTEMP}
+    if [ "${need_clean_before_bundle}" = "1" ] ; then
+        (cd ${RNDTEMP} && make clean) || :
+    fi
 }
 
 make_clean_before_test() {
