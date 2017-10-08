@@ -98,7 +98,7 @@ main(int ac, char **av) {
 			filename = dp->d_name;
 #endif	/* _WIN32 */
 			len = strlen(filename);
-			if(len <= 5 || strcmp(filename + len - 5, ".asn1"))
+			if(len <= 5 || !isdigit(filename[0]) || strcmp(filename + len - 5, ".asn1"))
 				continue;
 			ret = check(filename, parser_flags, fixer_flags);
 			if(ret) {
