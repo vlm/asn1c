@@ -36,15 +36,13 @@ tests_succeeded=0
 tests_failed=0
 stop_after_failed=1  # We stop after 3 failures.
 need_clean_before_bundle=1  # Clean before testing a bundle file
-need_clean_before_test=1    # Before each line in a bundle file
+need_clean_before_test=0    # Before each line in a bundle file
 encodings=""    # Default is to verify all supported ASN.1 transfer syntaxes
 parallelism=4
 asn1c_flags=""
 
 make_clean_before_bundle() {
-    if [ "${need_clean_before_bundle}" = "1" ] ; then
-        Make clean
-    fi
+    test "${need_clean_before_bundle}" = "1" && rm -rf ${RNDTEMP}
 }
 
 make_clean_before_test() {
@@ -84,8 +82,8 @@ verify_asn_types_in_file() {
 
 verify_asn_type() {
     asn="$1"
-    shift
-    where="$*"
+    where="$2"
+    shift 2
     test "x$asn" != "x" || usage
 
     if echo "$asn" | grep -v "::=" > /dev/null; then
@@ -103,44 +101,6 @@ verify_asn_type() {
     fi
 }
 
-# compile_and_test "<text>" "<where found>" [<asn.1 flags>]
-compile_and_test() {
-    asn="$1"
-    where="$2"
-    asn_flags="$3"
-
-    if [ "x${asn1c_flags}" != "x" ]; then
-        compile_and_test_with "$asn" "$where" "${asn1c_flags}"
-        if [ $? -ne 0 ] ; then
-            return -1
-        fi
-    else
-        compile_and_test_with "$asn" "$where"
-        if [ $? -ne 0 ] ; then
-            echo "Can't compile and test narrow"
-            return 1
-        fi
-
-        compile_and_test_with "$asn" "$where" "-fwide-types"
-        if [ $? -ne 0 ] ; then
-            echo "Can't compile and test wide"
-            return 2
-        fi
-    fi
-
-    if echo "${CFLAGS_M32}" | grep -i '[a-z]' > /dev/null ; then
-        echo "Trying the same stuff with 32-bit"
-        # Unconditional clean, can't reuse object code.
-        Make clean
-        # -m32 doesn't support leak sanitizing (it hangs), so we remove
-        # ASAN_ENV_FLAGS which enable leak check.
-        CFLAGS="${CFLAGS} ${CFLAGS_M32}" CFLAGS_M32="" ASAN_ENV_FLAGS="" \
-            compile_and_test "$@"
-    fi
-
-    return 0
-}
-
 Make() {
     ${MAKE:-make} -j "${parallelism}" "$@" || return $?
 }
@@ -151,17 +111,17 @@ get_param() {
     text="$3"
 
 
-    echo "$asn" | awk "/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\"))}END{if(PARAM)print PARAM;else print \"${default}\";}"
+    echo "$asn" | awk "/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\")+1)}END{if(PARAM)print PARAM;else print \"${default}\";}"
 }
 
-compile_and_test_with() {
+# compile_and_test "<text>" "<where found>"
+compile_and_test() {
     asn="$1"
     where="$2"
-    shift 2
 
     make_clean_before_test
 
-    asn_compile "$asn" "$where" "$@"
+    asn_compile "$asn" "$where"
     if [ $? -ne 0 ]; then
         echo "Cannot compile ASN.1 $asn"
         return 1
@@ -246,7 +206,6 @@ compile_and_test_with() {
 asn_compile() {
     asn="$1"
     where="$2"
-    shift 2
 
     # Create "INTEGER (1..2)" from "T ::= INTEGER (1..2) -- RMAX=5"
     short_asn=`echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[^ ]* //;'`
@@ -260,7 +219,7 @@ asn_compile() {
     echo "END" >> test.asn1
     echo "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons"
     if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
-        -gen-OER -gen-PER $@ test.asn1
+        -gen-OER -gen-PER ${asn1c_flags} test.asn1
     then
         echo "ASN.1 compiled OK"
     else
@@ -272,6 +231,42 @@ asn_compile() {
     sed -e 's/converter-example/random-test-driver/' \
         < Makefile.am.example >> Makefile
     echo "Makefile.am.example -> Makefile"
+}
+
+# Make up to four different passes:
+#  CFLAGS: | asn1c_flags:
+#   -m64   | -fnative-types
+#   -m32   | -fnative-types
+#   -m64   | -fwide-types
+#   -m32   | -fwide-types
+# *) Of course, -m64 and -fnative-types are just implied.
+test_drive() {
+    func="$1"
+    shift
+
+    if [ "x${asn1c_flags}" = "x" ] ; then
+        # Test for native types and wide types
+        asn1c_flags=" " test_drive "${func}" "$@"
+        asn1c_flags="-fnative-types" test_drive "${func}" "$@"
+        return 0
+    fi
+
+    echo "MODE: default"
+    # Default (likely 64-bit) mode
+    ${func} "$@"
+
+    # 32-bit mode, if available
+    if echo "${CFLAGS_M32}" | grep -i '[a-z]' > /dev/null ; then
+        echo "MODE: 32-bit"
+        # Unconditional clean, can't reuse object code.
+        (cd ${RNDTEMP} && Make clean)
+        # -m32 doesn't support fuzzing (no such library), so we remove fuzzer.
+        # -m32 doesn't support leak sanitizing (it hangs), so we remove
+        # ASAN_ENV_FLAGS which enable leak check.
+        CFLAGS="${CFLAGS} ${CFLAGS_M32}" CFLAGS_M32="" \
+        LIBFUZZER_CFLAGS="" ASAN_ENV_FLAGS="" \
+            ${func} "$@"
+    fi
 }
 
 # Command line parsing
@@ -289,14 +284,14 @@ while :; do
         -j) parallelism="$1"; shift 2; continue;;
         -t)
             parallelism=1   # Better for debuggability
-            verify_asn_type "$2" || exit 1 ;;
+            test_drive verify_asn_type "$2" "(command line)" || exit 1 ;;
         "")
             for bundle in `echo bundles/*txt | sort -nr`; do
-                verify_asn_types_in_file "$bundle"
+                test_drive verify_asn_types_in_file "$bundle"
             done
         ;;
         *)
-            verify_asn_types_in_file "$@"
+            test_drive verify_asn_types_in_file "$@"
         ;;
     esac
     break
