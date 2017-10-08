@@ -67,12 +67,13 @@ TESTS += check-src/check64-136.-gen-OER.c
 endif
 
 EXTRA_DIST =    \
-	data-62     \
-	data-70     \
-	data-119    \
-	data-126    \
-	check-src/check64-134.-gen-PER.c    \
-	check-src/check64-136.-gen-OER.c
+    data-62     \
+    data-70     \
+    data-119    \
+    data-126    \
+    check-src/check64-134.-gen-PER.c    \
+    check-src/check64-136.-gen-OER.c    \
+    check-src/check-42.-fwide-types.cc
 
 clean-local:
 	rm -rf test-*
