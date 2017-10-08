@@ -228,7 +228,7 @@ asn_compile() {
         return 1
     fi
     rm -f converter-example.c
-    ln -sf ../random-test-driver.c || cp ../random-test-driver.c .
+    ln -sf "../${srcdir}/random-test-driver.c" || cp "../${srcdir}/random-test-driver.c" .
     echo "CFLAGS+= -DASN1_TEXT='$short_asn'" > Makefile
     sed -e 's/converter-example/random-test-driver/' \
         < Makefile.am.example >> Makefile
@@ -288,7 +288,7 @@ while :; do
             parallelism=1   # Better for debuggability
             test_drive verify_asn_type "$2" "(command line)" || exit 1 ;;
         "")
-            for bundle in `echo bundles/*txt | sort -nr`; do
+            for bundle in `ls -1 ${srcdir}/bundles/*.txt | sort -nr`; do
                 test_drive verify_asn_types_in_file "$bundle"
             done
         ;;
