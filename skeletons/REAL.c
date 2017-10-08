@@ -63,7 +63,6 @@ static int asn_isfinite(double d) {
 #endif
 #endif  /* clang */
 
-
 /*
  * REAL basic type description.
  */
@@ -835,6 +834,19 @@ asn_double2REAL(REAL_t *st, double dbl_value) {
 	return 0;
 }
 
+int CC_ATTR_NO_SANITIZE("float-cast-overflow")
+asn_double2float(double d, float *outcome) {
+    float f = d;
+
+    *outcome = f;
+
+    if(asn_isfinite(d) == asn_isfinite(f)) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
 #ifndef ASN_DISABLE_OER_SUPPORT
 
 /*
@@ -940,7 +952,6 @@ REAL_encode_uper(asn_TYPE_descriptor_t *td,
 }
 
 #endif  /* ASN_DISABLE_PER_SUPPORT */
-
 
 asn_random_fill_result_t
 REAL_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,

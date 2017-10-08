@@ -47,6 +47,17 @@ ssize_t REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *a
 int asn_REAL2double(const REAL_t *real_ptr, double *d);
 int asn_double2REAL(REAL_t *real_ptr, double d);
 
+/*
+ * Downcast double to float while checking that no overflow occurs.
+ * This allows stricter control of the input data.
+ * RETURN VALUES:
+ *  0: The conversion was successful (perhaps with a loss of precision)
+ * -1: The conversion created overflow into infinities.
+ * The (outcome) is ALWAYS set to a value you'd expect from the
+ * standard silent float to double conversion behavior.
+ */
+int asn_double2float(double d, float *outcome);
+
 #ifdef __cplusplus
 }
 #endif

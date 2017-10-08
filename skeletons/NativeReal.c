@@ -78,6 +78,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	0	/* No specifics */
 };
 
+static size_t NativeReal__float_size(const asn_TYPE_descriptor_t *td);
 static double NativeReal__get_double(const asn_TYPE_descriptor_t *td,
                                      const void *ptr);
 static ssize_t NativeReal__set(const asn_TYPE_descriptor_t *td, void **sptr,
@@ -553,36 +554,48 @@ NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 #ifndef NAN
 #define NAN (0.0/0.0)
 #endif
-    static const double values[] = {
-        0, -0.0, -1, 1, -M_E, M_E, -3.14, 3.14, -M_PI, M_PI, -255, 255,
+    static const double double_values[] = {
+        -M_E, M_E, -M_PI, M_PI, /* Better precision than with floats */
+        -1E+308, 1E+308,
         /* 2^51 */
         -2251799813685248.0, 2251799813685248.0,
         /* 2^52 */
         -4503599627370496.0, 4503599627370496.0,
         /* 2^100 */
         -1267650600228229401496703205376.0, 1267650600228229401496703205376.0,
-        -FLT_MIN, FLT_MIN,
-        -FLT_MAX, FLT_MAX,
         -DBL_MIN, DBL_MIN,
         -DBL_MAX, DBL_MAX,
+#ifdef  DBL_TRUE_MIN
+        -DBL_TRUE_MIN, DBL_TRUE_MIN
+#endif
+    };
+    static const float float_values[] = {
+        0, -0.0, -1, 1, -M_E, M_E, -3.14, 3.14, -M_PI, M_PI, -255, 255,
+        -FLT_MIN, FLT_MIN,
+        -FLT_MAX, FLT_MAX,
 #ifdef  FLT_TRUE_MIN
         -FLT_TRUE_MIN, FLT_TRUE_MIN,
 #endif
-#ifdef  DBL_TRUE_MIN
-        -DBL_TRUE_MIN, DBL_TRUE_MIN,
-#endif
-        INFINITY, -INFINITY, NAN};
-    ssize_t float_set_size;
+        INFINITY, -INFINITY, NAN
+    };
+    ssize_t float_set_size = NativeReal__float_size(td);
+    const size_t n_doubles = sizeof(double_values) / sizeof(double_values[0]);
+    const size_t n_floats = sizeof(float_values) / sizeof(float_values[0]);
     double d;
 
     (void)constraints;
 
     if(max_length == 0) return result_skipped;
 
-    d = values[asn_random_between(0, sizeof(values) / sizeof(values[0]) - 1)];
+    if(float_set_size == sizeof(double) && asn_random_between(0, 1) == 0) {
+        d = double_values[asn_random_between(0, n_doubles - 1)];
+    } else {
+        d = float_values[asn_random_between(0, n_floats - 1)];
+    }
 
-    float_set_size = NativeReal__set(td, sptr, d);
-    if(float_set_size < 0) return result_failed;
+    if(NativeReal__set(td, sptr, d) < 0) {
+        return result_failed;
+    }
 
     result_ok.length = float_set_size;
     return result_ok;
@@ -593,11 +606,16 @@ NativeReal_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
  * Local helper functions.
  */
 
-static double
-NativeReal__get_double(const asn_TYPE_descriptor_t *td, const void *ptr) {
+static size_t
+NativeReal__float_size(const asn_TYPE_descriptor_t *td) {
     const asn_NativeReal_specifics_t *specs =
         (const asn_NativeReal_specifics_t *)td->specifics;
-    size_t float_size = specs ? specs->float_size : sizeof(double);
+    return specs ? specs->float_size : sizeof(double);
+}
+
+static double
+NativeReal__get_double(const asn_TYPE_descriptor_t *td, const void *ptr) {
+    size_t float_size = NativeReal__float_size(td);
     if(float_size == sizeof(float)) {
         return *(const float *)ptr;
     } else {
@@ -607,9 +625,7 @@ NativeReal__get_double(const asn_TYPE_descriptor_t *td, const void *ptr) {
 
 static ssize_t  /* Returns -1 or float size. */
 NativeReal__set(const asn_TYPE_descriptor_t *td, void **sptr, double d) {
-    const asn_NativeReal_specifics_t *specs =
-        (const asn_NativeReal_specifics_t *)td->specifics;
-    size_t float_size = specs ? specs->float_size : sizeof(double);
+    size_t float_size = NativeReal__float_size(td);
     void *native;
 
     if(!(native = *sptr)) {
@@ -620,7 +636,9 @@ NativeReal__set(const asn_TYPE_descriptor_t *td, void **sptr, double d) {
     }
 
     if(float_size == sizeof(float)) {
-        *(float *)native = d;
+        if(asn_double2float(d, (float *)native)) {
+            return -1;
+        }
     } else {
         *(double *)native = d;
     }
