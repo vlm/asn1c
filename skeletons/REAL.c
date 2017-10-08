@@ -168,7 +168,13 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 	do {
 		ret = snprintf(buf, buflen, fmt, d);
 		if(ret < 0) {
+			/* There are some old broken APIs. */
 			buflen <<= 1;
+			if(buflen > 4096) {
+				/* Should be plenty. */
+				if(buf != local_buf) FREEMEM(buf);
+				return -1;
+			}
 		} else if(ret >= buflen) {
 			buflen = ret + 1;
 		} else {
@@ -188,12 +194,12 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		char *dot;
 		char *end = buf + buflen;
 		char *last_zero;
-		char *prev_zero;
+		char *first_zero_in_run;
         char *s;
 
         enum {
             LZSTATE_NOTHING,
-            LZSTATE_SEEN_ZERO
+            LZSTATE_ZEROES
         } lz_state = LZSTATE_NOTHING;
 
 		dot = (buf[0] == 0x2d /* '-' */) ? (buf + 2) : (buf + 1);
@@ -204,16 +210,14 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 		}
 		*dot = 0x2e;		/* Replace possible comma */
 
-		for(prev_zero = last_zero = s = dot + 2; s < end; s++) {
+        for(first_zero_in_run = last_zero = s = dot + 2; s < end; s++) {
             switch(*s) {
             case 0x45: /* 'E' */
-                if(lz_state == LZSTATE_SEEN_ZERO)
-                    last_zero = prev_zero;
+                if(lz_state == LZSTATE_ZEROES) last_zero = first_zero_in_run;
                 break;
-            case 0x30:  /* '0' */
-                if(lz_state == LZSTATE_NOTHING)
-                    prev_zero = s;
-                lz_state = LZSTATE_SEEN_ZERO;
+            case 0x30: /* '0' */
+                if(lz_state == LZSTATE_NOTHING) first_zero_in_run = s;
+                lz_state = LZSTATE_ZEROES;
                 continue;
             default:
                 lz_state = LZSTATE_NOTHING;
@@ -253,7 +257,7 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
                 buflen--;
                 expptr++;
             }
-            if(*last_zero == 0x30) {
+            if(lz_state == LZSTATE_ZEROES) {
                 *last_zero = 0x45;	/* E */
                 buflen -= s - (last_zero + 1);
                 s = last_zero + 1;
