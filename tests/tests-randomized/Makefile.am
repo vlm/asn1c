@@ -10,6 +10,7 @@ TESTS_ENVIRONMENT=                          \
     CC="${CC}"                              \
     MAKE="${MAKE}"                          \
     CFLAGS="${TESTSUITE_CFLAGS} ${CFLAGS}"  \
+    CFLAGS_M32="${CFLAGS_M32}"              \
     LDFLAGS="${LDFLAGS}"                    \
     LIBFUZZER_CFLAGS="${LIBFUZZER_CFLAGS}"  \
     ASAN_ENV_FLAGS="@ASAN_ENV_FLAGS@"       \

@@ -42,11 +42,15 @@ parallelism=4
 asn1c_flags=""
 
 make_clean_before_bundle() {
-    test "${need_clean_before_bundle}" = "1" && rm -rf ${RNDTEMP}
+    if [ "${need_clean_before_bundle}" = "1" ] ; then
+        Make clean
+    fi
 }
 
 make_clean_before_test() {
-    test "${need_clean_before_test}" = "1" && rm -rf ${RNDTEMP}
+    if [ "${need_clean_before_test}" = "1" ] ; then
+        Make clean
+    fi
 }
 
 # Get all the type-bearding lines in file and process them individually
@@ -101,21 +105,37 @@ verify_asn_type() {
 
 # compile_and_test "<text>" "<where found>" [<asn.1 flags>]
 compile_and_test() {
+    asn="$1"
+    where="$2"
+    asn_flags="$3"
+
     if [ "x${asn1c_flags}" != "x" ]; then
-        compile_and_test_with "$@" ${asn1c_flags}
-            return 1
+        compile_and_test_with "$asn" "$where" "${asn1c_flags}"
+        if [ $? -ne 0 ] ; then
+            return -1
+        fi
     else
-        compile_and_test_with "$@"
+        compile_and_test_with "$asn" "$where"
         if [ $? -ne 0 ] ; then
             echo "Can't compile and test narrow"
             return 1
         fi
 
-        compile_and_test_with "$@" "-fwide-types"
+        compile_and_test_with "$asn" "$where" "-fwide-types"
         if [ $? -ne 0 ] ; then
             echo "Can't compile and test wide"
             return 2
         fi
+    fi
+
+    if echo "${CFLAGS_M32}" | grep -i '[a-z]' > /dev/null ; then
+        echo "Trying the same stuff with 32-bit"
+        # Unconditional clean, can't reuse object code.
+        Make clean
+        # -m32 doesn't support leak sanitizing (it hangs), so we remove
+        # ASAN_ENV_FLAGS which enable leak check.
+        CFLAGS="${CFLAGS} ${CFLAGS_M32}" CFLAGS_M32="" ASAN_ENV_FLAGS="" \
+            compile_and_test "$@"
     fi
 
     return 0
@@ -149,7 +169,7 @@ compile_and_test_with() {
 
     rm -f random-test-driver.o
     rm -f random-test-driver
-    Make
+    CFLAGS="${CFLAGS}" Make
     if [ $? -ne 0 ] ; then
         echo "Cannot compile C for $asn in ${RNDTEMP}"
         return 2
@@ -238,8 +258,9 @@ asn_compile() {
     echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
     echo "-- ${where}" >> test.asn1
     echo "END" >> test.asn1
+    echo "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons"
     if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
-        -gen-OER -gen-PER "$@" test.asn1
+        -gen-OER -gen-PER $@ test.asn1
     then
         echo "ASN.1 compiled OK"
     else
