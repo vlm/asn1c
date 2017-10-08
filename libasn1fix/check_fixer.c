@@ -45,7 +45,6 @@ main(int ac, char **av) {
 	enum asn1f_flags fixer_flags  = A1F_NOFLAGS;
 	const char *filename;
 	size_t len;
-	int ret;
 
 	/*
 	 * Just in case when one decides that some flags better be
@@ -69,7 +68,7 @@ main(int ac, char **av) {
                     top_srcdir);
 
         fprintf(stderr, "Testing in %s...\n", top_srcdir);
-        ret = chdir(asn1_tests_dirname->buffer);
+        int ret = chdir(asn1_tests_dirname->buffer);
         if(ret == -1)
             fprintf(stderr, "%s: %s\n", asn1_tests_dirname->buffer,
                     strerror(errno));
@@ -89,59 +88,57 @@ main(int ac, char **av) {
 	/*
 	 * Scan every *.asn1 file and try to parse and fix it.
 	 */
-	if(dir) {
+    if(dir) {
 #ifdef	_WIN32
-		do {
-			filename = c_file.name;
+        do {
+            filename = c_file.name;
 #else
-		while((dp = readdir(dir))) {
-			filename = dp->d_name;
+        while((dp = readdir(dir))) {
+            filename = dp->d_name;
 #endif	/* _WIN32 */
-			len = strlen(filename);
-			if(len <= 5 || !isdigit(filename[0]) || strcmp(filename + len - 5, ".asn1"))
-				continue;
-			ret = check(filename, parser_flags, fixer_flags);
-			if(ret) {
-				fprintf(stderr, "FAILED: %s\n",
-					filename);
-				failed++;
-			}
-			completed++;
+            len = strlen(filename);
+            if(len <= 5 || !isdigit(filename[0])
+               || strcmp(filename + len - 5, ".asn1"))
+                continue;
+            int ret = check(filename, parser_flags, fixer_flags);
+            if(ret) {
+                fprintf(stderr, "FAILED: %s\n", filename);
+                failed++;
+            }
+            completed++;
 #ifdef	_WIN32
-		} while(_findnext(dir, &c_file) == 0);
-		_findclose(dir);
+        } while(_findnext(dir, &c_file) == 0);
+        _findclose(dir);
 #else
-		}
-		closedir(dir);
+        }
+        closedir(dir);
 #endif	/* _WIN32 */
 
 
-		fprintf(stderr,
-			"Tests COMPLETED: %d\n"
-			"Tests FAILED:    %d\n"
-			,
-			completed, failed
-		);
-	} else {
-		int i;
-		for(i = 1; i < ac; i++) {
-			ret = check(av[i], parser_flags, fixer_flags);
-			if(ret) {
-				fprintf(stderr, "FAILED: %s\n", av[i]);
-				failed++;
-			}
-			completed++;
-		}
-	}
+        fprintf(stderr,
+                "Tests COMPLETED: %d\n"
+                "Tests FAILED:    %d\n",
+                completed, failed);
+    } else {
+        for(int i = 1; i < ac; i++) {
+            int ret = check(av[i], parser_flags, fixer_flags);
+            if(ret) {
+                fprintf(stderr, "FAILED: %s\n", av[i]);
+                failed++;
+            }
+            completed++;
+        }
+    }
 
-	if(completed == 0) {
-		fprintf(stderr, "No tests defined?!\n");
-		exit(EX_NOINPUT);
-	}
+    if(completed == 0) {
+        fprintf(stderr, "No tests defined?!\n");
+        exit(EX_NOINPUT);
+    }
 
-	if(failed)
-		exit(EX_DATAERR);
-	return 0;
+    if(failed) {
+        exit(EX_DATAERR);
+    }
+    return 0;
 }
 
 static int
