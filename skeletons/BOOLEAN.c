@@ -415,7 +415,19 @@ BOOLEAN_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         }
     }
 
-    /* Simulate booleans that are sloppily set */
-    *st = asn_random_between(0, 1) ? asn_random_between(1, 0x7fffffff) : 0;
+    /* Simulate booleans that are sloppily set and biased. */
+    switch(asn_random_between(0, 7)) {
+    case 0:
+    case 1:
+    case 2:
+        *st = 0; break;
+    case 3: *st = -1; break;
+    case 4: *st = 1; break;
+    case 5: *st = INT_MIN; break;
+    case 6: *st = INT_MAX; break;
+    default:
+        *st = asn_random_between(INT_MIN, INT_MAX);
+        break;
+    }
     return result_ok;
 }

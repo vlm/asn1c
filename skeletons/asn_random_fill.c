@@ -20,10 +20,37 @@ asn_random_fill(const struct asn_TYPE_descriptor_s *td, void **struct_ptr,
     }
 }
 
+static uintmax_t
+asn__intmax_range(intmax_t lb, intmax_t ub) {
+    assert(lb <= ub);
+    if((ub < 0) == (lb < 0)) {
+        return ub - lb;
+    } else if(lb < 0) {
+        return 1 + ((uintmax_t)ub + (uintmax_t)-(lb + 1));
+    } else {
+        assert(!"Unreachable");
+        return 0;
+    }
+}
+
 intmax_t
-asn_random_between(intmax_t a, intmax_t b) {
-    assert(a <= b);
-    assert((b-a) < RAND_MAX);
-    if(a == b) return a;
-    return a + (random() % (b - a + 1));
+asn_random_between(intmax_t lb, intmax_t rb) {
+    if(lb == rb) {
+        return 0;
+    } else {
+        const uintmax_t intmax_max = ((~(uintmax_t)0) >> 1);
+        uintmax_t range = asn__intmax_range(lb, rb);
+        uintmax_t value = 0;
+        uintmax_t got_entropy = 0;
+
+        assert(RAND_MAX > 0xffffff);    /* Seen 7ffffffd! */
+        assert(range < intmax_max);
+
+        for(; got_entropy < range;) {
+            got_entropy = (got_entropy << 24) | 0xffffff;
+            value = (value << 24) | (random() % 0xffffff);
+        }
+
+        return lb + (intmax_t)(value % (range + 1));
+    }
 }
