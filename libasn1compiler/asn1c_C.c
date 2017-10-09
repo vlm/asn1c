@@ -132,7 +132,8 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 	int eidx;
 	int saved_target = arg->target->target;
 
-	v2e = alloca((el_count + 1) * sizeof(*v2e));
+	v2e = calloc(el_count + 1, sizeof(*v2e));
+	assert(v2e);
 
 	/*
 	 * For all ENUMERATED types and for those INTEGER types which
@@ -162,6 +163,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 					map_extensions = eidx + 1;
 				break;
 			default:
+				free(v2e);
 				return -1;
 			}
 		}
@@ -258,6 +260,7 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 
 	REDIR(saved_target);
 
+	free(v2e);
 	return asn1c_lang_C_type_SIMPLE_TYPE(arg);
 }
 

@@ -62,14 +62,11 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 
 static void
 try_corrupt(uint8_t *buf, size_t size) {
-	uint8_t *tmp;
-	int i;
+	uint8_t tmp[size];
 
 	fprintf(stderr, "\nCorrupting...\n");
 
-	tmp = alloca(size);
-
-	for(i = 0; i < 1000; i++) {
+	for(int i = 0; i < 1000; i++) {
 		int loc;
 		memcpy(tmp, buf, size);
 

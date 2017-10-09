@@ -227,7 +227,6 @@ AC_SUBST(ASAN_ENV_FLAGS)
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(sys/param.h)
-AC_CHECK_HEADERS(alloca.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -249,7 +248,7 @@ AC_CHECK_FUNCS(strtoimax strtoll)
 AC_CHECK_FUNCS(mergesort)
 AC_CHECK_FUNCS(mkstemps)
 AC_CHECK_FUNCS(timegm)
-AC_CHECK_DECLS(alloca strcasecmp)
+AC_CHECK_DECLS(strcasecmp)
 AC_CHECK_DECLS(vasprintf)
 AC_TRY_LINK_FUNC([symlink],[AC_DEFINE([HAVE_SYMLINK], 1, [Define to 1 if you have the symlink function.])])
 

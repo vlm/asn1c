@@ -226,7 +226,7 @@ main(int ac, char **av) {
         ac -= optind;
         av += optind;
     } else {
-        char *bin_name = a1c_basename(av[0]);
+        const char *bin_name = a1c_basename(av[0]);
         fprintf(stderr,
                 "%s: No input files specified. "
                 "Try '%s -h' for more information\n",
@@ -247,15 +247,15 @@ main(int ac, char **av) {
              * compute it from my file name:
              * ./asn1c/asn1c -> ./skeletons
              */
-            char *p;
+            const char *skel_dir;
             size_t len;
 
-            p = a1c_dirname(av[-optind]);
+            skel_dir = a1c_dirname(av[-optind]);
 
-            len = strlen(p) + sizeof("/../skeletons");
+            len = strlen(skel_dir) + sizeof("/../skeletons");
             skeletons_dir = malloc(len);
             assert(skeletons_dir);
-            snprintf(skeletons_dir, len, "%s/../skeletons", p);
+            snprintf(skeletons_dir, len, "%s/../skeletons", skel_dir);
             if(stat(skeletons_dir, &sb)) {
                 fprintf(stderr,
                         "WARNING: skeletons are neither in "

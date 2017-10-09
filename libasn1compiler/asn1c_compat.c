@@ -1,8 +1,8 @@
 #include "asn1c_internal.h"
 #include "asn1c_compat.h"
 
-#ifndef	MAXPATHLEN
-#define	MAXPATHLEN	1024
+#ifndef	PATH_MAX
+#define	PATH_MAX    1024
 #endif
 
 /* Normally file permissions are (DEFFILEMODE & ~umask(2)) */
@@ -41,12 +41,11 @@ int mkstemp(char *template) {
 
 FILE *
 asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
+	char fname[PATH_MAX];
 	int created = 1;
 #ifndef	_WIN32
 	struct stat sb;
 #endif
-	char *fname;
-	size_t len;
 	FILE *fp;
 	int ret;
 	int fd;
@@ -54,13 +53,11 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	/*
 	 * Compute filenames.
 	 */
-	len = strlen(name) + strlen(ext) + sizeof(".XXXXXX");
-	fname = alloca(len);
-	ret = snprintf(fname, len, "%s%s%s", name, ext,
-		opt_tmpname ? ".XXXXXX" : "");
-	assert(ret > 0 && ret < (ssize_t)len);
+    ret = snprintf(fname, sizeof(fname), "%s%s%s", name, ext,
+                   opt_tmpname ? ".XXXXXX" : "");
+    assert(ret > 0 && ret < (ssize_t)sizeof(fname));
 
-	if(opt_tmpname) {
+    if(opt_tmpname) {
 		/*
 		 * Create temporary file.
 		 */
@@ -130,10 +127,9 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	return fp;
 }
 
-
-char *
+const char *
 a1c_basename(const char *path) {
-	static char strbuf[MAXPATHLEN];
+	static char strbuf[PATH_MAX];
 	const char *pend;
 	const char *name;
 
@@ -165,9 +161,9 @@ a1c_basename(const char *path) {
 }
 
 
-char *
+const char *
 a1c_dirname(const char *path) {
-	static char strbuf[MAXPATHLEN];
+	static char strbuf[PATH_MAX];
 	const char *pend;
 	const char *last = 0;
 	int in_slash = 0;

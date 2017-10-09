@@ -188,7 +188,8 @@ compare(T_t *tp, uint8_t *cmp_buf, size_t cmp_buf_size) {
 	size_t i;
 
 	buf_size = cmp_buf_size + 100;
-	buffer = alloca(buf_size);
+    uint8_t scratch[buf_size];
+	buffer = scratch;
 	buf_pos = 0;
 
 	/*
@@ -211,16 +212,17 @@ compare(T_t *tp, uint8_t *cmp_buf, size_t cmp_buf_size) {
 		}
 		assert(buffer[i] == cmp_buf[i]);
 	}
+
+    buffer = 0;
 }
 
 static void
 partial_read(uint8_t *data, size_t size) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
-	size_t i1, i2;
-	uint8_t *data1 = alloca(size);
-	uint8_t *data2 = alloca(size);
-	uint8_t *data3 = alloca(size);
+	uint8_t data1[size];
+	uint8_t data2[size];
+	uint8_t data3[size];
 
 	fprintf(stderr, "\nPartial read sequence...\n");
 
@@ -230,8 +232,8 @@ partial_read(uint8_t *data, size_t size) {
 	 *   ^ data                    ^ data+size
 	 * Try to read block by block.
 	 */
-	for(i1 = 0; i1 < size; i1++) {
-		for(i2 = i1; i2 < size; i2++) {
+	for(size_t i1 = 0; i1 < size; i1++) {
+		for(size_t i2 = i1; i2 < size; i2++) {
 			uint8_t *chunk1 = data;
 			size_t size1 = i1;
 			uint8_t *chunk2 = data + size1;

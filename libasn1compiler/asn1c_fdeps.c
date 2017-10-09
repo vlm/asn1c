@@ -1,11 +1,16 @@
 #include "asn1c_internal.h"
 #include "asn1c_fdeps.h"
 
+#ifndef PATH_MAX
+#define PATH_MAX    1024
+#endif
+
 static asn1c_fdeps_t *asn1c_new_dep(const char *filename);
 static int asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d);
 
 int
 asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *data) {
+	char fname_scratch[PATH_MAX];
 	const char *fname;
 	int i;
 
@@ -30,10 +35,10 @@ asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *d
 			end = strchr(start, '\"');
 		}
 		if(end) {
-			char *p = alloca((end - start) + 1);
-			memcpy(p, start, end - start);
-			p[end-start] = '\0';
-			fname = p;
+			assert((end-start) + 1 < (ssize_t)sizeof(fname_scratch));
+			memcpy(fname_scratch, start, end - start);
+			fname_scratch[end-start] = '\0';
+			fname = fname_scratch;
 		} else {
 			return 0;
 		}

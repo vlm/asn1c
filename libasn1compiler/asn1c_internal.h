@@ -35,10 +35,6 @@
 #endif
 #include <fcntl.h>		/* for open(2) */
 
-#ifdef	HAVE_SYS_PARAM_H
-#include <sys/param.h>	/* For MAXPATHLEN */
-#endif
-
 #include "asn1compiler.h"
 #include "asn1_namespace.h"
 

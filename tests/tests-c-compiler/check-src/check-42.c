@@ -113,7 +113,8 @@ check_serialize() {
 
 	asn_fprint(stderr, &asn_DEF_LogLine, &ll);
 	buf_size = 128;
-	buf = alloca(buf_size);
+	uint8_t scratch[buf_size];
+	buf = scratch;
 	erval = der_encode(&asn_DEF_LogLine, &ll, buf_fill, 0);
 	assert(erval.encoded > 1);
 	fprintf(stderr, "Encoded in %zd bytes\n", erval.encoded);

@@ -302,7 +302,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	out_chunk_t *ot;
 	FILE *fp_c, *fp_h;
 	char *tmpname_c, *tmpname_h;
-	char *name_buf;
+	char name_buf[FILENAME_MAX];
 	const char *header_id;
 	const char *c_retained = "";
 	const char *h_retained = "";
@@ -379,9 +379,9 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	fclose(fp_c);
 	fclose(fp_h);
 
-	name_buf = alloca(strlen(filename) + 3);
+    int ret = snprintf(name_buf, sizeof(name_buf), "%s.c", filename);
+    assert(ret > 0 && ret < (ssize_t)sizeof(name_buf));
 
-	sprintf(name_buf, "%s.c", filename);
 	if(identical_files(name_buf, tmpname_c)) {
 		c_retained = " (contents unchanged)";
 		unlink(tmpname_c);
@@ -521,14 +521,13 @@ real_copy(const char *src, const char *dst) {
 
 static int
 asn1c_copy_over(arg_t *arg, char *path) {
-	char *fname;
 #ifdef	_WIN32
 	int use_real_copy = 1;
 #else
 	int use_real_copy = !(arg->flags & A1C_LINK_SKELETONS);
 #endif
 
-	fname = a1c_basename(path);
+	const char *fname = a1c_basename(path);
 	if(!fname
 	|| (use_real_copy ? real_copy(path, fname) : symlink(path, fname))
 	) {

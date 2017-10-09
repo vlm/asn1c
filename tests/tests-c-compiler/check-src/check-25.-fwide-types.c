@@ -141,14 +141,11 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 
 static void
 try_corrupt(uint8_t *buf, size_t size, int allow_consume) {
-	uint8_t *tmp;
-	int i;
+	uint8_t tmp[size];
 
 	fprintf(stderr, "\nCorrupting...\n");
 
-	tmp = alloca(size);
-
-	for(i = 0; i < 1000; i++) {
+	for(int i = 0; i < 1000; i++) {
 		int loc;
 		memcpy(tmp, buf, size);
 
@@ -173,10 +170,9 @@ static void
 partial_read(uint8_t *buf, size_t size) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
-	size_t i1, i2;
-	uint8_t *tbuf1 = alloca(size);
-	uint8_t *tbuf2 = alloca(size);
-	uint8_t *tbuf3 = alloca(size);
+	uint8_t tbuf1[size];
+	uint8_t tbuf2[size];
+	uint8_t tbuf3[size];
 
 	fprintf(stderr, "\nPartial read sequence...\n");
 
@@ -186,8 +182,8 @@ partial_read(uint8_t *buf, size_t size) {
 	 *   ^ buf                     ^ buf+size
 	 * Try to read block by block.
 	 */
-	for(i1 = 0; i1 < size; i1++) {
-		for(i2 = i1; i2 < size; i2++) {
+	for(size_t i1 = 0; i1 < size; i1++) {
+		for(size_t i2 = i1; i2 < size; i2++) {
 			uint8_t *chunk1 = buf;
 			size_t size1 = i1;
 			uint8_t *chunk2 = buf + size1;

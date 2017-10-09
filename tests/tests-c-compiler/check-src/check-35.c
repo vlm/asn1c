@@ -172,7 +172,8 @@ compare(T_t *tp, uint8_t *cmp_buf, size_t cmp_buf_size) {
 	size_t i;
 
 	buf_size = cmp_buf_size + 100;
-	buf = alloca(buf_size);
+    uint8_t scratch[buf_size];
+	buf = scratch;
 	buf_pos = 0;
 
 	/*
@@ -202,9 +203,9 @@ partial_read(uint8_t *data, size_t size) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
 	size_t i1, i2;
-	uint8_t *data1 = alloca(size);
-	uint8_t *data2 = alloca(size);
-	uint8_t *data3 = alloca(size);
+	uint8_t data1[size];
+	uint8_t data2[size];
+	uint8_t data3[size];
 
 	fprintf(stderr, "\nPartial read sequence...\n");
 
