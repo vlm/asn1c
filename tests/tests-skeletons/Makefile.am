@@ -91,15 +91,14 @@ check_32_PER_INTEGER_CFLAGS=$(CFLAGS_M32)
 check_32_PER_INTEGER_LDADD=$(LDADD_32)
 check_32_PER_INTEGER_SOURCES=check-PER-INTEGER.c
 
-LDADD_32=$(top_builddir)/skeletons/libasn1cskeletons_32.la
+LDADD_32 = -lm $(top_builddir)/skeletons/libasn1cskeletons_32.la
 endif
 
 #Filter out the coverage options from CFLAGS as we don't need
 #code coverage data for the tests executables
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@) \
     -I$(top_srcdir)/skeletons $(TESTSUITE_CFLAGS)
-AM_LDFLAGS = $(top_builddir)/skeletons/libasn1cskeletons.la
-LDADD = -lm
+LDADD = -lm $(top_builddir)/skeletons/libasn1cskeletons.la
 
 TESTS = $(check_PROGRAMS)
 TESTS_ENVIRONMENT=                      \
