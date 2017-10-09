@@ -139,6 +139,8 @@ check_sequence(uint8_t *in, size_t in_size, uint8_t *expected,
   buf2_pos = 0;
   erval = der_encode(&asn_DEF_DefaultSequence, tp, buf2_fill, 0);
   compare_encoding(&erval, expected, expected_size, buf2);
+
+  ASN_STRUCT_RESET(asn_DEF_DefaultSequence, tp);
 }
 
 static void
@@ -160,6 +162,7 @@ check_set(uint8_t *in, size_t in_size, uint8_t *expected,
   buf2_pos = 0;
   erval = der_encode(&asn_DEF_DefaultSet, tp, buf2_fill, 0);
   compare_encoding(&erval, expected, expected_size, buf2);
+  ASN_STRUCT_RESET(asn_DEF_DefaultSet, tp);
 }
 
 int

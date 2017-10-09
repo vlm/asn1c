@@ -42,6 +42,8 @@ verify(int testNo, T_t *ti) {
 
 	xer_fprint(stderr, &asn_DEF_T, ti);
 	xer_fprint(stderr, &asn_DEF_T, to);
+
+	ASN_STRUCT_FREE(asn_DEF_T, to);
 }
 
 int main() {

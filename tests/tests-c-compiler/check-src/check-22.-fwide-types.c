@@ -79,6 +79,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 			);
 		}
 		assert(rval.consumed <= (size_t)consumed);
+		ASN_STRUCT_RESET(asn_DEF_T1, tp);
 		return;
 	}
 
@@ -113,6 +114,8 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	ret = xer_fprint(stderr, &asn_DEF_T1, tp);
 	assert(ret == 0);
 	fprintf(stderr, "=== EOF ===\n");
+
+	ASN_STRUCT_RESET(asn_DEF_T1, tp);
 }
 
 static void

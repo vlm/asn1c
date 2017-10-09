@@ -31,6 +31,7 @@ check(uint8_t *buf, size_t size, size_t consumed) {
 
 	assert(rval.code == RC_OK);
 	assert(rval.consumed == consumed);
+	ASN_STRUCT_RESET(asn_DEF_T, tp);
 }
 
 int

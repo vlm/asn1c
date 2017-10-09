@@ -94,5 +94,7 @@ main() {
 
 	printf("OK\n");
 
+	ASN_STRUCT_RESET(asn_DEF_UserIdentifier, &user);
+	ASN_STRUCT_RESET(asn_DEF_UserIdentifier, &user_new);
 	return ret;
 }

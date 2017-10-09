@@ -150,6 +150,7 @@ load_object_from(const char *fname, unsigned char *fbuf, size_t size, enum encty
 						rval.consumed /= 8;
 						if(mustfail) {
 							fprintf(stderr, "-> (this was expected failure)\n");
+							ASN_STRUCT_FREE(asn_DEF_PDU, st);
 							return 0;
 						}
 					} else {
@@ -167,6 +168,7 @@ load_object_from(const char *fname, unsigned char *fbuf, size_t size, enum encty
 					if((mustfail?1:0) == (rval.code == RC_FAIL)) {
 						if(mustfail) {
 							fprintf(stderr, "-> (this was expected failure)\n");
+							ASN_STRUCT_FREE(asn_DEF_PDU, st);
 							return 0;
 						}
 					} else {
@@ -246,6 +248,7 @@ compare_with_data_out(const char *fname, void *datap, size_t size) {
 	FILE *f;
 	char lastChar;
 	int mustfail, compare;
+	PDU_t *st;
 
 	sprintf(outName, SRCDIR_S "/data-126/%s", fname);
 	strcpy(outName + strlen(outName) - 3, ".out");
@@ -268,7 +271,8 @@ compare_with_data_out(const char *fname, void *datap, size_t size) {
 		fclose(f);
 
 		fprintf(stderr, "Trying to decode [%s]\n", outName);
-		load_object_from(outName, fbuf, rd, AS_PER, mustfail);
+		st = load_object_from(outName, fbuf, rd, AS_PER, mustfail);
+		ASN_STRUCT_FREE(asn_DEF_PDU, st);
 		if(mustfail) return;
 
 		if(compare) {
@@ -291,6 +295,7 @@ process_XER_data(const char *fname, unsigned char *fbuf, size_t size) {
 
 	/* Save and re-load as PER */
 	save_object_as(st, AS_PER);
+	ASN_STRUCT_FREE(asn_DEF_PDU, st);
 	compare_with_data_out(fname, buf, buf_offset);
 	st = load_object_from("buffer", buf, buf_offset, AS_PER, 0);
 	assert(st);

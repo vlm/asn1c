@@ -177,6 +177,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 		}
 		assert(rval.consumed <= consumed);
 	}
+	ASN_STRUCT_RESET(asn_DEF_T, tp);
 }
 
 
@@ -212,6 +213,8 @@ check_xer(uint8_t *buf, uint8_t size, char *xer_sample) {
 	printf("[%s] vs [%s]\n", xer_buf, xer_sample);
 	assert(xer_off == xer_sample_len);
 	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);
+
+	ASN_STRUCT_FREE(asn_DEF_T, tp);
 }
 
 static void

@@ -58,6 +58,8 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 		}
 		assert(rval.consumed <= consumed);
 	}
+
+	ASN_STRUCT_RESET(asn_DEF_T, tp);
 }
 
 static void

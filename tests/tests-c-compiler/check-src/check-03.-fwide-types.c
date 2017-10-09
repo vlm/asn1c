@@ -45,6 +45,8 @@ check_xer(e_Enum2 eval, char *xer_string) {
 	sprintf(buf2, "<Enum2>%s</Enum2>", xer_string);
 	printf("%d -> %s == %s\n", eval, buf, buf2);
 	assert(0 == strcmp(buf, buf2));
+
+	ASN_STRUCT_FREE(asn_DEF_Enum2, e);
 }
 
 int

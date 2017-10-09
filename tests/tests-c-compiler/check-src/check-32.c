@@ -57,6 +57,7 @@ main(int ac, char **av) {
 	assert(swo->seqOfOpt != 0);
 
 	xer_fprint(stderr, &asn_DEF_SeqWithOptional, swo);
+	void *tmp = swo->seqOfOpt;
 	swo->seqOfOpt = 0;
 
 	erv = der_encode_to_buffer(&asn_DEF_SeqWithOptional,
@@ -64,10 +65,15 @@ main(int ac, char **av) {
 	assert(erv.encoded > 0);
 	buf[erv.encoded] = '\0';
 
+	swo->seqOfOpt = tmp;
+	ASN_STRUCT_RESET(asn_DEF_SeqWithMandatory, &swm);
+	ASN_STRUCT_FREE(asn_DEF_SeqWithOptional, swo);
 	swo = 0;
+
 	drv = ber_decode(0, &asn_DEF_SeqWithMandatory, (void **)&swo,
 			buf, erv.encoded);
 	assert(drv.code != RC_OK);
+	ASN_STRUCT_FREE(asn_DEF_SeqWithOptional, swo);
 	swo = 0;
 	drv = ber_decode(0, &asn_DEF_SeqWithOptional, (void **)&swo,
 			buf, erv.encoded);
@@ -76,6 +82,7 @@ main(int ac, char **av) {
 	assert(swo->seqOfOpt == 0);
 
 	xer_fprint(stderr, &asn_DEF_SeqWithOptional, swo);
+	ASN_STRUCT_FREE(asn_DEF_SeqWithOptional, swo);
 
 	printf("Finished\n");
 

@@ -304,6 +304,8 @@ check_xer(uint8_t *data, uint8_t size, char *xer_sample) {
 	assert(er.encoded == (ssize_t)xer_off);
 	assert(xer_off == xer_sample_len);
 	assert(memcmp(xer_buf, xer_sample, xer_off) == 0);
+
+	ASN_STRUCT_FREE(asn_DEF_T, tp);
 }
 
 
