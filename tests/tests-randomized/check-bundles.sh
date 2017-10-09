@@ -43,7 +43,7 @@ asn1c_flags=""
 
 make_clean_before_bundle() {
     if [ "${need_clean_before_bundle}" = "1" ] ; then
-        (cd ${RNDTEMP} && make clean) || :
+        (cd ${RNDTEMP} && Make clean) || :
     fi
 }
 
