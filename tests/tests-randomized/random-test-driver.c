@@ -1,5 +1,6 @@
 #include <T.h>
 
+#include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
@@ -100,6 +101,10 @@ static int
 file_write_cb(const void *data, size_t size, void *key) {
     return fwrite(data, 1, size, (FILE *)key) == size ? 0 : -1;
 }
+
+#ifndef PATH_MAX
+#define PATH_MAX        255
+#endif
 
 static void
 generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, size_t max_random_value_size, int iterations, int debug) {
