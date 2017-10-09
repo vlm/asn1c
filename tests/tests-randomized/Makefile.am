@@ -19,10 +19,14 @@ TESTS_ENVIRONMENT=                          \
     abs_top_builddir=${abs_top_builddir}    \
     ${srcdir}/check-bundles.sh
 
-
 TESTS =
-TESTS += bundles/01-1.txt
-TESTS += bundles/01-2.txt
+TESTS += bundles/01-BOOLEAN-bundle.txt
+TESTS += bundles/02-INTEGER-bundle.txt
+TESTS += bundles/03-ENUMERATED-bundle.txt
+TESTS += bundles/04-REAL-bundle.txt
+TESTS += bundles/05-BIT-STRING-bundle.txt
+TESTS += bundles/06-OCTET-STRING-bundle.txt
+TESTS += bundles/07-VisibleString-bundle.txt
 
 EXTRA_DIST =                    \
     random-test-driver.c        \
