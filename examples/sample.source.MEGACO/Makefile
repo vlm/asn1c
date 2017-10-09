@@ -37,10 +37,10 @@ MegacoMessage.c: ../sample.makefile.regen ../rfc3525-MEDIA-GATEWAY-CONTROL.asn1
 	make
 
 regen-makefile:
-	ASN1CMDOPTS="-fcompound-names" \
-	ASN1MODULES="../rfc3525-MEDIA-GATEWAY-CONTROL.asn1" \
-	ASN1PDU=MegacoMessage \
-	PROGNAME=megaco-dump \
+	ASN_CMDOPTS="-fcompound-names" \
+	ASN_MODULES="../rfc3525-MEDIA-GATEWAY-CONTROL.asn1" \
+	ASN_PDU=MegacoMessage \
+	ASN_PROGRAM=megaco-dump \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-oer check-per

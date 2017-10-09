@@ -38,10 +38,10 @@ DataInterChange.c: ../sample.makefile.regen ../tap3.asn1
 
 regen-makefile:
 	TITLE="GSM TAP3 (Transferred Account Procedure, Version 3) decoder" \
-	ASN1CMDOPTS="" \
-	ASN1MODULES="../tap3.asn1" \
-	ASN1PDU=DataInterChange \
-	PROGNAME=tap3dump \
+	ASN_CMDOPTS="" \
+	ASN_MODULES="../tap3.asn1" \
+	ASN_PDU=DataInterChange \
+	ASN_PROGRAM=tap3dump \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-oer check-per

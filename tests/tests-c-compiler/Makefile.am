@@ -44,7 +44,6 @@ TESTS += check-src/check-39.c
 TESTS += check-src/check-41.-fwide-types.c
 TESTS += check-src/check-41.c
 TESTS += check-src/check-42.c
-TESTS += check-src/check-42.-fwide-types.cc
 TESTS += check-src/check-43.c
 TESTS += check-src/check-44.c
 TESTS += check-src/check-46.c
@@ -72,8 +71,7 @@ EXTRA_DIST =    \
     data-119    \
     data-126    \
     check-src/check64-134.-gen-PER.c    \
-    check-src/check64-136.-gen-OER.c    \
-    check-src/check-42.-fwide-types.cc
+    check-src/check64-136.-gen-OER.c
 
 clean-local:
 	rm -rf test-*

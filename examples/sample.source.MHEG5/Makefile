@@ -477,10 +477,10 @@ InterchangedObject.c: ../sample.makefile.regen ../ISO13522-MHEG-5.asn
 	make
 
 regen-makefile:
-	ASN1CMDOPTS="-fcompound-names" \
-	ASN1MODULES="../ISO13522-MHEG-5.asn" \
-	ASN1PDU=InterchangedObject \
-	PROGNAME=mheg5dump \
+	ASN_CMDOPTS="-fcompound-names" \
+	ASN_MODULES="../ISO13522-MHEG-5.asn" \
+	ASN_PDU=InterchangedObject \
+	ASN_PROGRAM=mheg5dump \
 	CFLAGS="" \
 	../sample.makefile.regen
 

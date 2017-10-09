@@ -16,12 +16,18 @@ TESTS_ENVIRONMENT=                          \
     ASAN_ENV_FLAGS="@ASAN_ENV_FLAGS@"       \
     srcdir=${srcdir}                        \
     abs_top_srcdir=${abs_top_srcdir}        \
-    abs_top_builddir=${abs_top_builddir}
+    abs_top_builddir=${abs_top_builddir}    \
+    ${srcdir}/check-bundles.sh
 
 
-TESTS = $(dist_check_SCRIPTS)
+TESTS =
+TESTS += bundles/01-1.txt
+TESTS += bundles/01-2.txt
 
-EXTRA_DIST = bundles random-test-driver.c
+EXTRA_DIST =                    \
+    random-test-driver.c        \
+    $(srcdir)/bundles/README    \
+    $(srcdir)/bundles/*.txt
 
 clean-local:
-	rm -rf .tmp.random
+	rm -rf .tmp.*

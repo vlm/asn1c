@@ -26,7 +26,7 @@ usage() {
     exit 1
 }
 
-RNDTEMP=.tmp.random
+RNDTEMP="${RNDTEMP:-.tmp.random}"
 
 srcdir="${srcdir:-.}"
 abs_top_srcdir="${abs_top_srcdir:-`pwd`/../../}"
@@ -38,7 +38,7 @@ stop_after_failed=1  # We stop after 3 failures.
 need_clean_before_bundle=1  # Clean before testing a bundle file
 need_clean_before_test=0    # Before each line in a bundle file
 encodings=""    # Default is to verify all supported ASN.1 transfer syntaxes
-parallelism=4
+parallelism=1
 asn1c_flags=""
 
 make_clean_before_bundle() {
@@ -229,9 +229,12 @@ asn_compile() {
     fi
     rm -f converter-example.c
     ln -sf "../${srcdir}/random-test-driver.c" || cp "../${srcdir}/random-test-driver.c" .
-    echo "CFLAGS+= -DASN1_TEXT='$short_asn'" > Makefile
-    sed -e 's/converter-example/random-test-driver/' \
-        < Makefile.am.example >> Makefile
+    {
+    echo "CFLAGS+= -DASN1_TEXT='$short_asn'";
+    echo "ASN_PROGRAM = random-test-driver"
+    echo "ASN_PROGRAM_SOURCES = random-test-driver.c"
+    echo "include Makefile.am.example"
+    } > Makefile
     echo "Makefile.am.example -> Makefile"
 }
 
@@ -271,11 +274,26 @@ test_drive() {
     fi
 }
 
+if echo "$*" | grep ' -- ' > /dev/null; then
+    TEST_DRIVER=`echo "$*"  | sed -e 's/ -- .*/ -- /g'`
+    args=`echo "$*"  | sed -e 's/.* //g'`
+    set "${args}"
+else
+    TEST_DRIVER=""
+fi
+
 # Command line parsing
 while :; do
     case "$1" in
         -h) usage ;;
         --asn1c) asn1c_flags="${asn1c_flags} $2"; shift 2; continue ;;
+        --bundle)
+            shift
+            base=`basename "$1" | sed -e 's/.txt$//'`
+            RNDTEMP=".tmp.${base}"
+            test_drive verify_asn_types_in_file "$@"
+            break
+            ;;
         --dirty)
             need_clean_before_bundle=0
             need_clean_before_test=0
@@ -285,7 +303,6 @@ while :; do
         -e) encodings="${encodings} -e $2"; shift 2; continue;;
         -j) parallelism="$1"; shift 2; continue;;
         -t)
-            parallelism=1   # Better for debuggability
             test_drive verify_asn_type "$2" "(command line)" || exit 1 ;;
         "")
             for bundle in `ls -1 ${srcdir}/bundles/*.txt | sort -nr`; do
@@ -293,7 +310,7 @@ while :; do
             done
         ;;
         *)
-            test_drive verify_asn_types_in_file "$@"
+            exec ${TEST_DRIVER} $0 --bundle "$@"
         ;;
     esac
     break

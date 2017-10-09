@@ -1,33 +1,34 @@
 #!/bin/sh
 #
-# This script attempts to compile the given ASN.1 specification and then
-# transforms the resulting Makefile.am.example tailored to that specification
-# into a customized Makefile.
+# This script attempts to compile the given ASN.1 specification by first
+# building the specialized Makefile.
 #
 # The information which is necessary for this script is passed from the
 # Makefile which is going to be replaced with an updated Makefile.
 #
 
-if test -z "$ASN1PDU"	\
- -o  -z "$ASN1MODULES"	\
- -o  -z "$PROGNAME"	\
+if test -z "$ASN_PDU"	\
+ -o  -z "$ASN_MODULES"	\
+ -o  -z "$ASN_PROGRAM"	\
 ; then
-	echo "ASN1CMDOPTS=\"$ASN1CMDOPTS\""
-	echo "ASN1MODULES=\"$ASN1MODULES\""
-	echo "ASN1PDU=\"$ASN1PDU\""
-	echo "PROGNAME=\"$PROGNAME\""
-	echo "ASN1PDU, ASN1MODULES, and PROGNAME are mandatory"
-	exit
+    cat <<-NOTE
+	ASN_CMDOPTS="$ASN_CMDOPTS"
+	ASN_MODULES="$ASN_MODULES"
+	ASN_PDU="$ASN_PDU"
+	ASN_PROGRAM="$ASN_PROGRAM"
+	ASN_PDU, ASN_MODULES, and ASN_PROGRAM are mandatory.
+NOTE
+	exit 1
 fi
 
-CMDOPTS="-pdu=${ASN1PDU} ${ASN1CMDOPTS} ${ASN1MODULES}"
+EFFECTIVE_CMDOPTS="-pdu=${ASN_PDU} ${ASN_CMDOPTS} ${ASN_MODULES}"
 
 if test -x ../../asn1c/asn1c ; then
-  echo "Compiling ${ASN1MODULES} using local compiler"
-  ../../asn1c/asn1c -S ../../skeletons ${CMDOPTS} || exit $?
+  echo "Compiling ${ASN_MODULES} using local compiler"
+  ../../asn1c/asn1c -S ../../skeletons ${EFFECTIVE_CMDOPTS} || exit $?
 else
-  echo "Compiling ${ASN1MODULES} using system compiler"
-  asn1c ${CMDOPTS} || exit $?
+  echo "Compiling ${ASN_MODULES} using system compiler"
+  asn1c ${EFFECTIVE_CMDOPTS} || exit $?
 fi
 
 if test ! -f Makefile.am.example ; then
@@ -39,107 +40,104 @@ EXTRA_CFLAGS="-DJUNKTEST -D_DEFAULT_SOURCE"
 test -f config.h && EXTRA_CFLAGS="-DHAVE_CONFIG_H ${EXTRA_CFLAGS}"
 test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAGS}"
 
-set -x
-cat Makefile.am.example                                             \
-	| sed -e "s/^include /-include /"                               \
-	| sed -e "s/^TARGET = converter-example/TARGET = ${PROGNAME}/"  \
-	| sed -e "s/^CFLAGS += /CFLAGS += ${EXTRA_CFLAGS} /"            \
-	| sed -e "s/^all: /all: maybe-wip-pause ${ASN1PDU}.c /"         \
-	> Makefile.$$
-set +x
-
-(	echo
-	echo "${ASN1PDU}.c: $0 ${ASN1MODULES}"
+{
+	echo "ASN_PROGRAM = ${ASN_PROGRAM}"
+	echo "CFLAGS += ${EXTRA_CFLAGS}"
+	echo "begin: ${ASN_PDU}.c maybe-wip-pause all"
+    echo
+	echo "-include Makefile.am.example"
+    echo
+	echo "${ASN_PDU}.c: $0 ${ASN_MODULES}"
 	echo "	make regen-makefile"
-	echo "	@touch ${ASN1PDU}.c"
+	echo "	@touch ${ASN_PDU}.c"
 	echo "	make"
 	echo
 	echo "regen-makefile:"
 	test -n "$TITLE" && echo "	TITLE=\"$TITLE\" \\"
-	echo "	ASN1CMDOPTS=\"${ASN1CMDOPTS}\" \\"
-	echo "	ASN1MODULES=\"${ASN1MODULES}\" \\"
-	echo "	ASN1PDU=${ASN1PDU} \\"
-	echo "	PROGNAME=${PROGNAME} \\"
+	echo "	ASN_CMDOPTS=\"${ASN_CMDOPTS}\" \\"
+	echo "	ASN_MODULES=\"${ASN_MODULES}\" \\"
+	echo "	ASN_PDU=${ASN_PDU} \\"
+	echo "	ASN_PROGRAM=${ASN_PROGRAM} \\"
 	echo "	$0"
 	echo
-	echo 'check: ${TARGET} check-ber check-xer check-oer check-per'
+	echo 'check: ${ASN_PROGRAM} check-ber check-xer check-oer check-per'
 	echo '	@echo ================'
 	echo '	@echo All tests passed'
 	echo '	@echo ================'
 	echo
 	echo 'check-ber:'
-	echo "	@if test -f sample-${ASN1PDU}-1.[db]er ; then \\"
+	echo "	@if test -f sample-${ASN_PDU}-1.[db]er ; then \\"
 	echo "	for f in sample-*-*.[db]er; do \\"
 	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -iber -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -ixer -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.2.$$$$ || exit 4; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -iber -onull $$f || exit 5; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -iber -onull $$f || exit 6; \'
+	echo '	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -iber -onull $$f || exit 5; \'
+	echo '	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -iber -onull $$f || exit 6; \'
 	echo '	done; done; fi'
 	echo
 	echo 'check-xer:'
-	echo "	@if test -f sample-${ASN1PDU}-1.xer ; then \\"
+	echo "	@if test -f sample-${ASN_PDU}-1.xer ; then \\"
 	echo "	for f in sample-*-*.xer; do \\"
 	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into DER and back ($$b)..."; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -ixer -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
 	echo '	diff $$f ./.tmp.2.$$$$ || exit 4; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -ixer -onull $$f || exit 5; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -ixer -onull $$f || exit 6; \'
+	echo '	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -ixer -onull $$f || exit 5; \'
+	echo '	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -ixer -onull $$f || exit 6; \'
 	echo '	done; done; fi'
 	echo
 	echo 'check-oer:'
-	echo "	@if test -f sample-${ASN1PDU}-1.*oer ; then \\"
+	echo "	@if test -f sample-${ASN_PDU}-1.*oer ; then \\"
 	echo "	for f in sample-*-*.*oer; do \\"
 	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -ixer -ooer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -ioer -oxer $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -ixer -ooer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
 	echo '	diff $$f ./.tmp.2.$$$$ || exit 4; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	echo "Test junking $$f (please wait) ($$b) ..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 5; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 6; \'
+	echo '	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 5; \'
+	echo '	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -ioer -onull $$f || exit 6; \'
 	echo '	done; done; fi'
 	echo
 	echo 'check-per:'
-	echo "	@if test -f sample-${ASN1PDU}-1-nopad.per ; then \\"
+	echo "	@if test -f sample-${ASN_PDU}-1-nopad.per ; then \\"
 	echo "	for f in sample-*-[1-9]-nopad.per; do \\"
 	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding non-padded $$f ($$pdu) into DER into XER and back ($$b)..."; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 4; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -per-nopad -iper -oder $$f > ./.tmp.1.$$$$ || exit 2; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 3; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -ixer -oder ./.tmp.2.$$$$ > ./.tmp.3.$$$$ || exit 4; \'
 	echo '	diff ./.tmp.1.$$$$ ./.tmp.3.$$$$ || exit 5; \'
 	echo '	rm -f ./.tmp.[123].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 6; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 7; \'
+	echo '	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 6; \'
+	echo '	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 7; \'
 	echo '	done; done; fi'
-	echo "	@if test -f sample-${ASN1PDU}-1.per ; then \\"
+	echo "	@if test -f sample-${ASN_PDU}-1.per ; then \\"
 	echo "	for f in sample-*-[1-9].per; do \\"
 	echo '	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\\1/"`; \'
 	echo '	for b in 1 17 33 980 8192; do \'
 	echo '	echo "Recoding $$f ($$pdu) into DER into XER and back ($$b)..."; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 4; \'
-	echo '	./${TARGET} -p $$pdu -b $$b -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 5; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -iper -oder $$f > ./.tmp.1.$$$$ || exit 3; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -iber -oxer ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 4; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -ixer -oper ./.tmp.2.$$$$ > ./.tmp.1.$$$$ || exit 5; \'
 	echo '	diff $$f ./.tmp.1.$$$$ || exit 6; \'
 	echo '	rm -f ./.tmp.[12].$$$$; \'
 	echo '	echo "Test junking $$f (please wait)..."; \'
-	echo '	./${TARGET} -J0.0001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 7; \'
-	echo '	./${TARGET} -J0.001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 8; \'
+	echo '	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 7; \'
+	echo '	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 8; \'
 	echo '	done; done; fi'
 	echo
 	echo "maybe-wip-pause:"
@@ -148,14 +146,9 @@ set +x
 	echo "distclean: clean"
 	echo '	rm -f $(ASN_MODULE_SOURCES)'
 	echo '	rm -f $(ASN_MODULE_HEADERS)'
-	echo '	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)'
+	echo '	rm -f $(ASN_PROGRAM_SOURCES) $(ASN_PROGRAM_HEADERS)'
 	echo "	rm -f Makefile.am.example"
-) >> Makefile.$$
-
-set -x
-mv Makefile.$$ Makefile || exit $?
-rm Makefile.am.example || exit $?
-set +x
+} > Makefile
 
 echo
 echo "Makefile generation finished"

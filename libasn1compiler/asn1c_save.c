@@ -159,11 +159,11 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
     safe_fprintf(
         mkf,
         "include %s\n\n"
-        "TARGET = converter-example\n"
-        "ASN_LIBRARY=libasncodec.a\n"
         "LIBS += -lm\n"
         "CFLAGS += $(ASN_MODULE_CFLAGS) %s%s-I.\n"
-        "ASN_CONVERTER_SOURCES = ",
+        "ASN_LIBRARY ?= libasncodec.a\n"
+        "ASN_PROGRAM ?= converter-example\n"
+        "ASN_PROGRAM_SOURCES ?= ",
         library_makefile_name,
         (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
         need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
@@ -187,9 +187,9 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
 
 	safe_fprintf(
 		mkf,
-		"\n\nall: $(TARGET)\n"
-		"\n$(TARGET): $(ASN_LIBRARY) $(ASN_CONVERTER_SOURCES:.c=.o)"
-		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TARGET) $(ASN_CONVERTER_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
+		"\n\nall: $(ASN_PROGRAM)\n"
+		"\n$(ASN_PROGRAM): $(ASN_LIBRARY) $(ASN_PROGRAM_SOURCES:.c=.o)"
+		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(ASN_PROGRAM) $(ASN_PROGRAM_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
 		"\n$(ASN_LIBRARY): $(ASN_MODULE_SOURCES:.c=.o)"
 		"\n\t$(AR) rcs $@ $(ASN_MODULE_SOURCES:.c=.o)\n"
 		"\n.SUFFIXES:"
@@ -198,7 +198,7 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
 		"\n\t$(CC) $(CFLAGS) -o $@ -c $<\n"
 		"\nclean:"
 		"\n\trm -f $(TARGET) $(ASN_LIBRARY)"
-		"\n\trm -f $(ASN_MODULE_SOURCES:.c=.o) $(ASN_CONVERTER_SOURCES:.c=.o)\n"
+		"\n\trm -f $(ASN_MODULE_SOURCES:.c=.o) $(ASN_PROGRAM_SOURCES:.c=.o)\n"
 		"\nregen: regenerate-from-asn1-source\n"
 		"\nregenerate-from-asn1-source:\n\t");
 

@@ -38,10 +38,10 @@ DL-DCCH-Message.c: ../sample.makefile.regen ../rrc-7.1.0.asn1
 	make
 
 regen-makefile:
-	ASN1CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
-	ASN1MODULES="../rrc-7.1.0.asn1" \
-	ASN1PDU=DL-DCCH-Message \
-	PROGNAME=rrc-dump \
+	ASN_CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
+	ASN_MODULES="../rrc-7.1.0.asn1" \
+	ASN_PDU=DL-DCCH-Message \
+	ASN_PROGRAM=rrc-dump \
 	../sample.makefile.regen
 
 check: ${TARGET} check-ber check-xer check-oer check-per
