@@ -207,7 +207,9 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 
         terminal = WITH_MODULE_NAMESPACE(
             expr->module, expr_ns,
-            asn1f_find_terminal_type_ex(arg->asn, expr_ns, expr));
+            (expr->meta_type == AMT_TYPEREF) ? 
+                asn1f_lookup_symbol_ex(arg->asn, expr_ns, expr, expr->reference) :
+                asn1f_find_terminal_type_ex(arg->asn, expr_ns, expr));
 
         if(_format == TNF_RSAFE) {
 			if(terminal && terminal->expr_type & ASN_CONSTR_MASK) {
