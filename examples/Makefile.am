@@ -42,7 +42,7 @@ EXTRA_DIST = \
 CLEANFILES = $(ASN1_FILES_1) $(ASN1_FILES_2) $(ASN1_FILES_3)
 
 clean-local:
-	for dir in ${srcdir}/sample.source.*; do (cd $$dir && make distclean); done
+	for dir in ${srcdir}/sample.source.*; do (cd $$dir && make distclean || :); done
 
 dist-hook: clean-local
 	rm -f `find $(distdir) -name "*.core" -or -name ".tmp.*"`
