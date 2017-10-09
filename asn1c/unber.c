@@ -41,6 +41,7 @@
 #include <RELATIVE-OID.c>
 #include <asn_codecs_prim.c>
 #include <asn1p_integer.c>
+#include <asn_internal.c>
 
 #undef COPYRIGHT
 #define COPYRIGHT "Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>\n"

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -449,9 +449,9 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Use existing, or build our own tags map.
 	 */
 	if(t2m_build_own) {
-		t2m_build = (asn_TYPE_tag2member_t *)alloca(
-				td->elements_count * sizeof(t2m_build[0]));
-		if(!t2m_build) ASN__ENCODE_FAILED; /* There are such platforms */
+        t2m_build = (asn_TYPE_tag2member_t *)CALLOC(td->elements_count,
+                                                    sizeof(t2m_build[0]));
+        if(!t2m_build) ASN__ENCODE_FAILED;
 		t2m_count = 0;
 	} else {
 		t2m_build = NULL;
@@ -476,10 +476,12 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		if(elm->flags & ATF_POINTER) {
 			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
 			if(!*memb_ptr2) {
-				if(!elm->optional)
+				if(!elm->optional) {
 					/* Mandatory elements missing */
+					FREEMEM(t2m_build);
 					ASN__ENCODE_FAILED;
-				if(t2m_build_own) {
+				}
+				if(t2m_build) {
 					t2m_build[t2m_count].el_no = edx;
 					t2m_build[t2m_count].el_tag = 0;
 					t2m_count++;
@@ -493,7 +495,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 
 		/* Eliminate default values */
 		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1) {
-			if(t2m_build_own) {
+			if(t2m_build) {
 				t2m_build[t2m_count].el_no = edx;
 				t2m_build[t2m_count].el_tag = 0;
 				t2m_count++;
@@ -511,7 +513,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		/*
 		 * Remember the outmost tag of this member.
 		 */
-		if(t2m_build_own) {
+		if(t2m_build) {
 			t2m_build[t2m_count].el_no = edx;
 			t2m_build[t2m_count].el_tag = asn_TYPE_outmost_tag(
 				elm->type, *memb_ptr2, elm->tag_mode, elm->tag);
@@ -526,7 +528,7 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	/*
 	 * Finalize order of the components.
 	 */
-	if(t2m_build_own) {
+	if(t2m_build) {
 		/*
 		 * Sort the underlying members according to their
 		 * canonical tags order. DER encoding mandates it.
@@ -546,10 +548,16 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	 * Encode the TLV for the sequence itself.
 	 */
 	ret = der_write_tags(td, computed_size, tag_mode, 1, tag, cb, app_key);
-	if(ret == -1) ASN__ENCODE_FAILED;
+	if(ret == -1) {
+		FREEMEM(t2m_build);
+		ASN__ENCODE_FAILED;
+	}
 	er.encoded = computed_size + ret;
 
-	if(!cb) ASN__ENCODED_OK(er);
+	if(!cb) {
+		FREEMEM(t2m_build);
+		ASN__ENCODED_OK(er);
+    }
 
 	/*
 	 * Encode all members.
@@ -587,9 +595,11 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		/*
 		 * Encoded size is not equal to the computed size.
 		 */
+		FREEMEM(t2m_build);
 		ASN__ENCODE_FAILED;
 	}
 
+    FREEMEM(t2m_build);
 	ASN__ENCODED_OK(er);
 }
 

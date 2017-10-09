@@ -1,5 +1,5 @@
-/*-
- * Copyright (c) 2003, 2004, 2007 Lev Walkin <vlm@lionet.info>.
+/*
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
@@ -24,10 +24,6 @@
 #include <limits.h>	/* For LONG_MAX */
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
-
-#ifdef	HAVE_ALLOCA_H
-#include <alloca.h>	/* For alloca(3) */
-#endif
 
 #ifdef	_WIN32
 
@@ -76,30 +72,8 @@ typedef	unsigned int	uint32_t;
 #else	/* !defined(__vxworks) */
 
 #include <inttypes.h>	/* C99 specifies this file */
-/*
- * 1. Earlier FreeBSD version didn't have <stdint.h>,
- * but <inttypes.h> was present.
- * 2. Sun Solaris requires <alloca.h> for alloca(3),
- * but does not have <stdint.h>.
- */
-#if	(!defined(__FreeBSD__) || !defined(_SYS_INTTYPES_H_))
-#if	defined(sun)
-#include <alloca.h>	/* For alloca(3) */
-#include <ieeefp.h>	/* for finite(3) */
-#elif	defined(__hpux)
-#ifdef	__GNUC__
-#include <alloca.h>	/* For alloca(3) */
-#else	/* !__GNUC__ */
-#define inline
-#endif	/* __GNUC__ */
-#else
-#include <stdint.h>	/* SUSv2+ and C99 specify this file, for uintXX_t */
-#endif	/* defined(sun) */
-#endif
-
 #include <netinet/in.h> /* for ntohl() */
 #define	sys_ntohl(foo)	ntohl(foo)
-
 #endif	/* defined(__vxworks) */
 
 #endif	/* _WIN32 */

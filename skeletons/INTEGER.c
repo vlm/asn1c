@@ -122,7 +122,7 @@ static ssize_t
 INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_consume_bytes_f *cb, void *app_key, int plainOrXER) {
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
-    char scratch[32];	/* Enough for 64-bit integer */
+	char scratch[32];
 	uint8_t *buf = st->buf;
 	uint8_t *buf_end = st->buf + st->size;
 	intmax_t value;
@@ -138,19 +138,14 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 	/* Simple case: the integer size is small */
 	if(ret == 0) {
 		const asn_INTEGER_enum_map_t *el;
-		size_t scrsize;
-		char *scr;
-
 		el = (value >= 0 || !specs || !specs->field_unsigned)
 			? INTEGER_map_value2enum(specs, value) : 0;
 		if(el) {
-			scrsize = el->enum_len + 32;
-			scr = (char *)alloca(scrsize);
 			if(plainOrXER == 0)
-				ret = snprintf(scr, scrsize,
+				return asn__format_to_callback(cb, app_key,
 					"%" PRIdMAX " (%s)", value, el->enum_name);
 			else
-				ret = snprintf(scr, scrsize,
+				return asn__format_to_callback(cb, app_key,
 					"<%s/>", el->enum_name);
 		} else if(plainOrXER && specs && specs->strict_enumeration) {
 			ASN_DEBUG("ASN.1 forbids dealing with "
@@ -158,15 +153,10 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 			errno = EPERM;
 			return -1;
 		} else {
-			scrsize = sizeof(scratch);
-			scr = scratch;
-            ret = snprintf(
-                scr, scrsize,
+            return asn__format_to_callback(cb, app_key,
                 (specs && specs->field_unsigned) ? "%" PRIuMAX : "%" PRIdMAX,
                 value);
         }
-		assert(ret > 0 && (size_t)ret < scrsize);
-		return (cb(scr, ret, app_key) < 0) ? -1 : ret;
 	} else if(plainOrXER && specs && specs->strict_enumeration) {
 		/*
 		 * Here and earlier, we cannot encode the ENUMERATED values

@@ -69,6 +69,19 @@ static void CC_PRINTFLIKE(1, 2) ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 #endif	/* ASN_DEBUG */
 
 /*
+ * Print to a callback.
+ * The callback is expected to return negative values on error.
+ * 0 and positive values are treated as success.
+ * RETURN VALUES:
+ *  -1: Failed to format or invoke the callback.
+ *  >0: Size of the data that got delivered to the callback.
+ */
+ssize_t CC_PRINTFLIKE(3, 4)
+asn__format_to_callback(
+    int (*callback)(const void *, size_t, void *key), void *key,
+    const char *fmt, ...);
+
+/*
  * Invoke the application-supplied callback and fail, if something is wrong.
  */
 #define ASN__E_cbc(buf, size) (cb((buf), (size), app_key) < 0)

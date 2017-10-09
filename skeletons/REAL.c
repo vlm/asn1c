@@ -10,9 +10,6 @@
 #if	defined(__alpha)
 #include <sys/resource.h>	/* For INFINITY */
 #endif
-#if defined(sun) || defined(__sun)
-#include <ieeefp.h>
-#endif
 #include <stdlib.h>	/* for strtod(3) */
 #include <math.h>
 #include <float.h>
@@ -519,7 +516,7 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		 * NR3: [ ]*[+-]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)[Ee][+-]?[0-9]+
 		 */
 		double d;
-		char *buf;
+		char *source = 0;
 		char *endptr;
 		int used_malloc = 0;
 
@@ -536,35 +533,31 @@ asn_REAL2double(const REAL_t *st, double *dbl_value) {
 		 * So her we fix both by reallocating, copying and fixing.
 		 */
 		if(st->buf[st->size] != '\0' || memchr(st->buf, ',', st->size)) {
-			uint8_t *p, *end;
+			const uint8_t *p, *end;
 			char *b;
-			if(st->size > 100) {
-				/* Avoid malicious stack overflow in alloca() */
-				buf = (char *)MALLOC(st->size);
-				if(!buf) return -1;
-				used_malloc = 1;
-			} else {
-				buf = alloca(st->size);
-			}
-			b = buf;
+
+            b = source = (char *)MALLOC(st->size + 1);
+            if(!source) return -1;
+            used_malloc = 1;
+
 			/* Copy without the first byte and with 0-termination */
 			for(p = st->buf + 1, end = st->buf + st->size;
 					p < end; b++, p++)
 				*b = (*p == ',') ? '.' : *p;
 			*b = '\0';
 		} else {
-			buf = (char *)&st->buf[1];
+			source = (char *)&st->buf[1];
 		}
 
-		endptr = buf;
-		d = strtod(buf, &endptr);
+		endptr = source;
+		d = strtod(source, &endptr);
 		if(*endptr != '\0') {
 			/* Format is not consistent with ISO 6093 */
-			if(used_malloc) FREEMEM(buf);
+			if(used_malloc) FREEMEM(source);
 			errno = EINVAL;
 			return -1;
 		}
-		if(used_malloc) FREEMEM(buf);
+		if(used_malloc) FREEMEM(source);
 		if(asn_isfinite(d)) {
 			*dbl_value = d;
 			return 0;

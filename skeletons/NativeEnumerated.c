@@ -73,12 +73,9 @@ NativeEnumerated_encode_xer(asn_TYPE_descriptor_t *td, void *sptr, int ilevel,
 
     el = INTEGER_map_value2enum(specs, *native);
     if(el) {
-        size_t srcsize = el->enum_len + 5;
-        char *src = (char *)alloca(srcsize);
-
-        er.encoded = snprintf(src, srcsize, "<%s/>", el->enum_name);
-        assert(er.encoded > 0 && (size_t)er.encoded < srcsize);
-        if(cb(src, er.encoded, app_key) < 0) ASN__ENCODE_FAILED;
+        er.encoded =
+            asn__format_to_callback(cb, app_key, "<%s/>", el->enum_name);
+        if(er.encoded < 0) ASN__ENCODE_FAILED;
         ASN__ENCODED_OK(er);
     } else {
         ASN_DEBUG(

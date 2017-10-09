@@ -74,19 +74,20 @@ der_encode_to_buffer(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
  * Write out leading TL[v] sequence according to the type definition.
  */
 ssize_t
-der_write_tags(asn_TYPE_descriptor_t *sd,
-		size_t struct_length,
-		int tag_mode, int last_tag_form,
-		ber_tlv_tag_t tag,	/* EXPLICIT or IMPLICIT tag */
-		asn_app_consume_bytes_f *cb,
-		void *app_key) {
-	const ber_tlv_tag_t *tags;	/* Copy of tags stream */
-	int tags_count;			/* Number of tags */
-	size_t overall_length;
-	ssize_t *lens;
-	int i;
+der_write_tags(asn_TYPE_descriptor_t *sd, size_t struct_length, int tag_mode,
+               int last_tag_form,
+               ber_tlv_tag_t tag, /* EXPLICIT or IMPLICIT tag */
+               asn_app_consume_bytes_f *cb, void *app_key) {
+#define ASN1_DER_MAX_TAGS_COUNT 4
+    ber_tlv_tag_t
+        tags_buf_scratch[ASN1_DER_MAX_TAGS_COUNT * sizeof(ber_tlv_tag_t)];
+    ssize_t lens[ASN1_DER_MAX_TAGS_COUNT * sizeof(ssize_t)];
+    const ber_tlv_tag_t *tags; /* Copy of tags stream */
+    int tags_count;            /* Number of tags */
+    size_t overall_length;
+    int i;
 
-	ASN_DEBUG("Writing tags (%s, tm=%d, tc=%d, tag=%s, mtc=%d)",
+    ASN_DEBUG("Writing tags (%s, tm=%d, tc=%d, tag=%s, mtc=%d)",
 		sd->name, tag_mode, sd->tags_count,
 		ber_tlv_tag_string(tag),
 		tag_mode
@@ -95,6 +96,11 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 			:sd->tags_count
 	);
 
+    if(sd->tags_count + 1 > ASN1_DER_MAX_TAGS_COUNT) {
+        ASN_DEBUG("System limit %d on tags count", ASN1_DER_MAX_TAGS_COUNT);
+        return -1;
+    }
+
 	if(tag_mode) {
 		/*
 		 * Instead of doing shaman dance like we do in ber_check_tags(),
@@ -102,12 +108,7 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 		 * and initialize it appropriately.
 		 */
 		int stag_offset;
-		ber_tlv_tag_t *tags_buf;
-		tags_buf = (ber_tlv_tag_t *)alloca((sd->tags_count + 1) * sizeof(ber_tlv_tag_t));
-		if(!tags_buf) {	/* Can fail on !x86 */
-			errno = ENOMEM;
-			return -1;
-		}
+		ber_tlv_tag_t *tags_buf = tags_buf_scratch;
 		tags_count = sd->tags_count
 			+ 1	/* EXPLICIT or IMPLICIT tag is given */
 			- ((tag_mode == -1) && sd->tags_count);
@@ -125,12 +126,6 @@ der_write_tags(asn_TYPE_descriptor_t *sd,
 	/* No tags to write */
 	if(tags_count == 0)
 		return 0;
-
-	lens = (ssize_t *)alloca(tags_count * sizeof(lens[0]));
-	if(!lens) {
-		errno = ENOMEM;
-		return -1;
-	}
 
 	/*
 	 * Array of tags is initialized.

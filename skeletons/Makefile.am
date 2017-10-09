@@ -65,9 +65,9 @@ libasn1cskeletons_la_SOURCES =                  \
     asn_SEQUENCE_OF.c asn_SEQUENCE_OF.h         \
     asn_SET_OF.c asn_SET_OF.h                   \
     asn_application.c asn_application.h         \
-    asn_codecs.h                                \
+    asn_system.h asn_codecs.h                   \
     asn_codecs_prim.c asn_codecs_prim.h         \
-    asn_internal.h asn_system.h                 \
+    asn_internal.h asn_internal.c               \
     asn_bit_data.c asn_bit_data.h               \
     asn_random_fill.c asn_random_fill.h         \
     ber_decoder.c ber_decoder.h                 \
