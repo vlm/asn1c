@@ -291,7 +291,7 @@ typedef enum Choice2_PR {
 
 /*** <<< FWD-DECLS [Choice2] >>> ***/
 
-struct Sequence;
+struct TypeRef;
 struct Everything;
 
 /*** <<< TYPE-DECLS [Choice2] >>> ***/
@@ -299,7 +299,7 @@ struct Everything;
 typedef struct Choice2 {
 	Choice2_PR present;
 	union Choice2_u {
-		struct Sequence	*typeref;
+		struct TypeRef	*typeref;
 		/*
 		 * This type is extensible,
 		 * possible extensions are below.

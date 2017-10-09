@@ -7,13 +7,13 @@
 
 /*** <<< FWD-DECLS [Type] >>> ***/
 
-struct Epyt;
+struct EpytRef;
 
 /*** <<< TYPE-DECLS [Type] >>> ***/
 
 typedef struct Type {
 	struct data {
-		A_SEQUENCE_OF(struct Epyt) list;
+		A_SEQUENCE_OF(struct EpytRef) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
