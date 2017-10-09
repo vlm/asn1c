@@ -38,7 +38,8 @@ int main() {
     if(XEQ_SUCCESS != xer_equivalent(&asn_DEF_T, &source, decoded, stderr)) {
         return 1;
     }
-
+    ASN_STRUCT_RESET(asn_DEF_T, &source);
+    ASN_STRUCT_FREE(asn_DEF_T, decoded);
     return 0;
 }
 

@@ -36,6 +36,8 @@ int main() {
         return 1;
     }
 
+    ASN_STRUCT_RESET(asn_DEF_T, &source);
+    ASN_STRUCT_FREE(asn_DEF_T, decoded);
     return 0;
 }
 

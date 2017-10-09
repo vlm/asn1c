@@ -249,6 +249,7 @@ process_XER_data(const char *fname, enum expectation expectation, unsigned char 
 
 	/* Save and re-load as PER */
 	save_object_as(st, expectation, AS_PER);
+	ASN_STRUCT_FREE(asn_DEF_PDU, st);
 	if(expectation == EXP_PER_NOCOMP)
 		return;	/* Already checked */
 	st = load_object_from("buffer", expectation, buf, buf_offset, AS_PER);

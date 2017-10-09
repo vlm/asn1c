@@ -70,6 +70,7 @@ verify(int testNo, T_t *ti) {
 
 	xer_fprint(stderr, &asn_DEF_T, ti);
 	xer_fprint(stderr, &asn_DEF_T, to);
+	ASN_STRUCT_FREE(asn_DEF_T, to);
 }
 
 static void
@@ -95,36 +96,42 @@ int main() {
     l2i(&ti.signed33,    0);
     l2i(&ti.signed33ext, 0);
 	verify(1, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  1);
     ul2i(&ti.unsigned42,  1);
     l2i(&ti.signed33,    1);
     l2i(&ti.signed33ext, 1);
 	verify(2, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  5000000000);
     ul2i(&ti.unsigned42,  3153600000000);
     l2i(&ti.signed33,    4000000000);
     l2i(&ti.signed33ext, 4000000000);
 	verify(3, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33, -1);
     ul2i(&ti.unsigned42,  0);
     l2i(&ti.signed33,    0);
     l2i(&ti.signed33ext, 0);
 	NO_encode(4, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42, -1);
     l2i(&ti.signed33,    0);
     l2i(&ti.signed33ext, 0);
 	NO_encode(5, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  0);
     l2i(&ti.signed33,    -4000000000-1);
     l2i(&ti.signed33ext, 0);
 	NO_encode(6, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  0);
@@ -132,30 +139,35 @@ int main() {
     l2i(&ti.signed33ext, -4000000000-1);
     assert(ti.signed33ext.size == 5);
 	verify(7, &ti); /* signed33ext is extensible */
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  5000000000 + 1);
     ul2i(&ti.unsigned42,  0);
     l2i(&ti.signed33,    0);
     l2i(&ti.signed33ext, 0);
 	NO_encode(8, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  3153600000000 + 1);
     l2i(&ti.signed33,    0);
     l2i(&ti.signed33ext, 0);
 	NO_encode(9, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  5000000000 - 1);
     ul2i(&ti.unsigned42,  3153600000000 - 1);
     l2i(&ti.signed33,    4000000000 - 1);
     l2i(&ti.signed33ext, 4000000000 - 1);
 	verify(10, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
     ul2i(&ti.unsigned33,  0);
     ul2i(&ti.unsigned42,  0);
     l2i(&ti.signed33,    0);
     l2i(&ti.signed33ext, 4000000000 + 1);
 	verify(11, &ti);
+	ASN_STRUCT_RESET(asn_DEF_T, &ti);
 
 	return 0;
 }

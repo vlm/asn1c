@@ -95,6 +95,7 @@ check_2(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 		}
 		assert(rval.consumed <= consumed);
 	}
+	ASN_STRUCT_RESET(*td, tp);
 }
 
 int

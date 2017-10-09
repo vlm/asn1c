@@ -190,6 +190,7 @@ process_XER_data(enum expectation expectation, unsigned char *fbuf, size_t size)
 
 	/* Save and re-load as DER */
 	save_object_as(st, ATS_DER);
+	ASN_STRUCT_FREE(asn_DEF_PDU, st);
 	st = load_object_from(expectation, buf, buf_offset, ATS_BER);
 	assert(st);
 

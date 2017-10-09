@@ -55,5 +55,6 @@ main() {
 		|| (pd.nboff == 16 && pd.buffer == &po.tmpspace[0]));
 	assert(pd.nboff + pd.nbits == 16);
 
+	ASN_STRUCT_FREE(asn_DEF_T, t2);
 	return 0;
 }

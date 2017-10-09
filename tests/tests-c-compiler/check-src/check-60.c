@@ -109,7 +109,7 @@ main() {
 	 * Test the T1 with primitive encoding.
 	 */
 	memset(&t1, 0, sizeof(t1));
-	memset(&t1_new, 0, sizeof(t1_new));
+	ASN_STRUCT_RESET(asn_DEF_T1, &t1_new);
 
 	t1.i = -112233;
 	t1.any.buf = test_any_buf2;
@@ -123,6 +123,7 @@ main() {
 	assert(t1_new.i == -112233);
 	assert(t1_new.any.size == (ssize_t)sizeof(test_any_buf2));
 	assert(memcmp(t1_new.any.buf, test_any_buf2, sizeof(test_any_buf2)) == 0);
+	ASN_STRUCT_RESET(asn_DEF_T1, &t1_new);
 
 	/*
 	 * Test the T2 empty sequence.
@@ -146,8 +147,8 @@ main() {
 	/*
 	 * Test the T2 sequence.
 	 */
-	memset(&t2, 0, sizeof(t2));
-	memset(&t2_new, 0, sizeof(t2_new));
+	ASN_STRUCT_RESET(asn_DEF_T2, &t2);
+	ASN_STRUCT_RESET(asn_DEF_T2, &t2_new);
 
 	t2.i = 332211;
 	t2.any = calloc(1, sizeof(*t2.any));
@@ -166,8 +167,10 @@ main() {
 	/*
 	 * Test the T2 sequence with primitive encoding.
 	 */
-	memset(&t2, 0, sizeof(t2));
-	memset(&t2_new, 0, sizeof(t2_new));
+	t2.any->buf = NULL;
+	t2.any->size = 0;
+	ASN_STRUCT_RESET(asn_DEF_T2, &t2);
+	ASN_STRUCT_RESET(asn_DEF_T2, &t2_new);
 
 	t2.i = 0;
 	t2.any = calloc(1, sizeof(*t2.any));
@@ -188,7 +191,7 @@ main() {
 	 */
 	free(t2.any);
 	t2.any = 0;
-	memset(&t2_new, 0, sizeof(t2_new));
+	ASN_STRUCT_RESET(asn_DEF_T2, &t2_new);
 
 	save_object(&t2, td2);
 	ret = load_object(&t2_new, td2);
