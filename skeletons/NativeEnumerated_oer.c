@@ -9,14 +9,14 @@
 #include <NativeEnumerated.h>
 #include <errno.h>
 
-static intmax_t
+static long
 asn__nativeenumerated_convert(const uint8_t *b, const uint8_t *end) {
-    uintmax_t value;
+    unsigned long value;
 
     /* Perform the sign initialization */
     /* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
     if((*b >> 7)) {
-        value = (uintmax_t)(-1);
+        value = (unsigned long)(-1);
     } else {
         value = 0;
     }
@@ -62,7 +62,7 @@ NativeEnumerated_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
          */
         size_t length = *b & 0x7f;
         const uint8_t *bend;
-        intmax_t value;
+        long value;
 
         if(length < 1 || length > sizeof(*native)) {
             ASN__DECODE_FAILED;
