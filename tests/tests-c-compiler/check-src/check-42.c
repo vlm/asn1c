@@ -90,26 +90,23 @@ buf_fill(const void *buffer, size_t size, void *app_key) {
 static void
 check_serialize() {
 	LogLine_t ll;
-	VariablePartSet_t vps;
-	VariablePart_t vp;
-	VisibleString_t vpart;
+	VariablePartSet_t *vps;
+	VariablePart_t *vp;
+	VisibleString_t *vpart;
 	asn_enc_rval_t erval;
 	int i;
 
 	memset(&ll, 0, sizeof(ll));
-	memset(&vps, 0, sizeof(vps));
-	memset(&vp, 0, sizeof(vp));
-	memset(&vpart, 0, sizeof(vpart));
-	vpart.buf = (uint8_t *)"123";
-	vpart.size = 3;
+	vps = calloc(1, sizeof(*vps));
+	vp = calloc(1, sizeof(*vp));
+	vpart = OCTET_STRING_new_fromBuf(&asn_DEF_VisibleString, "123", 3);
 
-	vp.present = VariablePart_PR_vset;
-	ASN_SET_ADD(&vp.choice.vset, &vpart);
-	vps.resolution.accept_as = accept_as_unknown;
-	ASN_SEQUENCE_ADD(&vps.vparts, &vp);
-	ASN_SEQUENCE_ADD(&ll.varsets, &vps);
-	ll.line_digest.buf = (uint8_t *)"zzz\007";
-	ll.line_digest.size = 4;
+	vp->present = VariablePart_PR_vset;
+	ASN_SET_ADD(&vp->choice.vset, vpart);
+	vps->resolution.accept_as = accept_as_unknown;
+	ASN_SEQUENCE_ADD(&vps->vparts, vp);
+	ASN_SEQUENCE_ADD(&ll.varsets, vps);
+	OCTET_STRING_fromBuf(&ll.line_digest, "zzz\007", 4);
 
 	asn_fprint(stderr, &asn_DEF_LogLine, &ll);
 	buf_size = 128;
@@ -125,6 +122,8 @@ check_serialize() {
 	fprintf(stderr, "\n\n");
 	assert(erval.encoded == sizeof(buf0));
 	assert(memcmp(buf0, buf, sizeof(buf0)) == 0);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_LogLine, &ll);
+	return;
 }
 
 #ifdef ENABLE_LIBFUZZER
