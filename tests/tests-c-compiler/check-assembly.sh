@@ -76,6 +76,7 @@ CFLAGS += -DSRCDIR=../${srcdir}
 CXXFLAGS = \${CFLAGS} ${CXXFLAGS}
 LIBFUZZER_CFLAGS = ${LIBFUZZER_CFLAGS}
 LDFLAGS = ${LDFLAGS:-}
+ASAN_ENV_FLAGS = ${ASAN_ENV_FLAGS:-}
 
 ASN_PROGRAM = check-program
 ASN_PROGRAM_SOURCES = ${source_short}
@@ -120,7 +121,7 @@ check-succeeded: compiled-module \$(ASN_LIBRARY) ${source_short}
 	\$(MAKE) check-program
 	\$(MAKE) check-fuzzer
 	@rm -f check-succeeded
-	./check-program
+	\${ASAN_ENV_FLAGS} ./check-program
 	\$(MAKE) fuzz
 	@touch check-succeeded
 	@echo "OK: ${source_full}"
