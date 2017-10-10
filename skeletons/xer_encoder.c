@@ -230,6 +230,8 @@ xer_equivalent(struct asn_TYPE_descriptor_s *td, void *struct1,
         return XEQ_ROUND_TRIP_FAILED;
     }
 
-    return XEQ_SUCCESS;
+	FREEMEM(xb1.buffer);
+	FREEMEM(xb2.buffer);
+	return XEQ_SUCCESS;
 }
 
