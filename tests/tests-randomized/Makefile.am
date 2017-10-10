@@ -6,6 +6,9 @@ dist_check_SCRIPTS = check-bundles.sh
 #code coverage data for the tests executables
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
 
+# Override single test fuzzing time using "make check FUZZ_TIME=1"
+FUZZ_TIME=10
+
 TESTS_ENVIRONMENT=                          \
     CC="${CC}"                              \
     MAKE="${MAKE}"                          \
@@ -13,6 +16,7 @@ TESTS_ENVIRONMENT=                          \
     CFLAGS_M32="${CFLAGS_M32}"              \
     LDFLAGS="${LDFLAGS}"                    \
     LIBFUZZER_CFLAGS="${LIBFUZZER_CFLAGS}"  \
+    FUZZ_TIME="${FUZZ_TIME}"                \
     ASAN_ENV_FLAGS="@ASAN_ENV_FLAGS@"       \
     srcdir=${srcdir}                        \
     abs_top_srcdir=${abs_top_srcdir}        \

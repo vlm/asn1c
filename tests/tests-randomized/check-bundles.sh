@@ -31,6 +31,8 @@ RNDTEMP="${RNDTEMP:-.tmp.random}"
 srcdir="${srcdir:-.}"
 abs_top_srcdir="${abs_top_srcdir:-`pwd`/../../}"
 abs_top_builddir="${abs_top_builddir:-`pwd`/../../}"
+MAKE="${MAKE:-make}"
+FUZZ_TIME="${FUZZ_TIME:-10}"
 
 tests_succeeded=0
 tests_failed=0
@@ -104,7 +106,7 @@ verify_asn_type() {
 }
 
 Make() {
-    ${MAKE:-make} -j "${parallelism}" "$@" || return $?
+    ${MAKE} -j "${parallelism}" "$@" || return $?
 }
 
 get_param() {
@@ -128,7 +130,7 @@ compile_and_test() {
     where="$2"
 
     if [ "x$CC" = "x" ]; then CCSTR=""; else CCSTR="CC=${CC} "; fi
-    reproduce_make="cd \"${RNDTEMP}\" && ${CCSTR}CFLAGS=\"${CFLAGS}\" ${MAKE:-make}"
+    reproduce_make="cd \"${RNDTEMP}\" && ${CCSTR}CFLAGS=\"${CFLAGS}\" ${MAKE}"
 
     env > .test-environment
     set > .test-set
@@ -176,10 +178,9 @@ compile_and_test() {
     fi
 
     # Do a LibFuzzer based testing
-    fuzz_time=10
     fuzz_cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
     fuzz_cmd="${fuzz_cmd} ./random-test-driver"
-    fuzz_cmd="${fuzz_cmd} -timeout=3 -max_total_time=${fuzz_time} -max_len=128"
+    fuzz_cmd="${fuzz_cmd} -timeout=3 -max_total_time=${FUZZ_TIME} -max_len=128"
 
     if grep "^fuzz:" Makefile >/dev/null ; then
         echo "No fuzzer defined, skipping fuzzing"
@@ -198,7 +199,7 @@ compile_and_test() {
         echo "Recompiling for fuzzing..."
         rm -f random-test-driver.o
         rm -f random-test-driver
-        reproduce_make="cd \"${RNDTEMP}\" && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" ${MAKE:-make}"
+        reproduce_make="cd \"${RNDTEMP}\" && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" ${MAKE}"
         echo "(${reproduce_make})" > .test-reproduce
         CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" Make
         if [ $? -ne 0 ]; then
@@ -206,7 +207,7 @@ compile_and_test() {
             return 4
         fi
 
-        echo "Fuzzing will take a multiple of $fuzz_time seconds..."
+        echo "Fuzzing will take a multiple of ${FUZZ_TIME} seconds..."
         echo "(${reproduce_make} fuzz)" > .test-reproduce
         CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" Make fuzz
         if [ $? -ne 0 ]; then
