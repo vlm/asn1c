@@ -9,7 +9,10 @@ script:
     - autoreconf -iv
     - ./configure --enable-Werror --enable-code-coverage
     - make -j8
-    - make check 2>&1 | tail -10000
+    - make check
+    - set -o pipefail
     - make distcheck 2>&1 | tail -10000
 after_success:
   - test "x$CC" = "xgcc" -o "x$CC" = "xclang" && make code-coverage-capture && coveralls-lcov asn1c-*-coverage.info
+after_failure:
+    - find . -name test-suite.log -exec tail -v -n +1 {} +
