@@ -110,10 +110,15 @@ Make() {
 get_param() {
     param="$1"
     default="$2"
-    text="$3"
+    asn="$3"
 
+    if nawk '' >/dev/null 2>&1 ; then
+        AWK=nawk
+    else
+        AWK=awk
+    fi
 
-    echo "$asn" | awk "/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\")+1)}END{if(PARAM)print PARAM;else print \"${default}\";}"
+    echo "$asn" | ${AWK} "BEGIN{FS=\"[^${param}=0-9]+\"};/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\")+1)}END{if(PARAM)print PARAM;else print \"${default}\";}"
 }
 
 # compile_and_test "<text>" "<where found>"
@@ -210,7 +215,7 @@ asn_compile() {
     where="$2"
 
     # Create "INTEGER (1..2)" from "T ::= INTEGER (1..2) -- RMAX=5"
-    short_asn=`echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[^ ]* //;'`
+    short_asn=`echo "$asn" | sed -e 's/ *--.*//;s/RMAX=[0-9]//;'`
     if [ `echo "$short_asn" | grep -c "::="` = 1 ]; then
         short_asn=`echo "$short_asn" | sed -e 's/.*::= *//'`
     fi
