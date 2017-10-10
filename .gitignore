@@ -58,14 +58,15 @@ doc/docsrc/*.xdv
 /examples/*.asn1
 
 # /examples/*/
-/examples/*/*.c
-/examples/*/*.h
-/examples/*/*dump
-/examples/*/lib*.a
-/examples/*/.tmp.*
-/examples/*/Makefile.am.libasncodec
-!/examples/*/Makefile
-!/examples/*/config.h
+/examples/sample.source.*/*.c
+/examples/sample.source.*/*.h
+/examples/sample.source.*/*dump
+/examples/sample.source.*/lib*.a
+/examples/sample.source.*/.tmp.*
+/examples/sample.source.*/Makefile.am.libasncodec
+/examples/sample.source.*/Makefile.am.example
+!/examples/sample.source.*/Makefile
+!/examples/sample.source.*/config.h
 
 # /libasn1compiler/
 /libasn1compiler/check_compiler
