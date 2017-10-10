@@ -36,7 +36,7 @@ asn__intmax_range(intmax_t lb, intmax_t ub) {
 intmax_t
 asn_random_between(intmax_t lb, intmax_t rb) {
     if(lb == rb) {
-        return 0;
+        return lb;
     } else {
         const uintmax_t intmax_max = ((~(uintmax_t)0) >> 1);
         uintmax_t range = asn__intmax_range(lb, rb);
