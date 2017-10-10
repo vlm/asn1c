@@ -791,25 +791,21 @@ INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
 
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 
+static intmax_t
+asn__integer_convert(const uint8_t *b, const uint8_t *end) {
+    uintmax_t value;
 
-/*
- * This function is only to get rid of Undefined Behavior Sanitizer warning.
- */
-static intmax_t CC_ATTR_NO_SANITIZE("shift-base")
-asn__safe_integer_convert_helper(const uint8_t *b, const uint8_t *end) {
-    intmax_t value;
-
-	/* Perform the sign initialization */
-	/* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
-	if((*b >> 7)) {
-        value = -1;
+    /* Perform the sign initialization */
+    /* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
+    if((*b >> 7)) {
+        value = (uintmax_t)(-1);
     } else {
         value = 0;
     }
 
     /* Conversion engine */
-	for(; b < end; b++) {
-		value = (value << 8) | *b;
+    for(; b < end; b++) {
+        value = (value << 8) | *b;
     }
 
     return value;
@@ -862,7 +858,7 @@ asn_INTEGER2imax(const INTEGER_t *iptr, intmax_t *lptr) {
 		return 0;
 	}
 
-	*lptr = asn__safe_integer_convert_helper(b, end);
+	*lptr = asn__integer_convert(b, end);
 	return 0;
 }
 

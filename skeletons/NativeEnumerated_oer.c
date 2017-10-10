@@ -9,18 +9,14 @@
 #include <NativeEnumerated.h>
 #include <errno.h>
 
-/*
- * This function is only to get rid of Undefined Behavior Sanitizer warning.
- */
-static intmax_t CC_ATTR_NO_SANITIZE("shift-base")
-asn__safe_nativeenumerated_convert_helper(const uint8_t *b,
-                                          const uint8_t *end) {
-    intmax_t value;
+static intmax_t
+asn__nativeenumerated_convert(const uint8_t *b, const uint8_t *end) {
+    uintmax_t value;
 
     /* Perform the sign initialization */
     /* Actually value = -(*b >> 7); gains nothing, yet unreadable! */
     if((*b >> 7)) {
-        value = -1;
+        value = (uintmax_t)(-1);
     } else {
         value = 0;
     }
@@ -77,7 +73,7 @@ NativeEnumerated_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         b++;
         bend = b + length;
 
-        value = asn__safe_nativeenumerated_convert_helper(b, bend);
+        value = asn__nativeenumerated_convert(b, bend);
         if(value < 0) {
             const asn_INTEGER_specifics_t *specs =
                 (const asn_INTEGER_specifics_t *)td->specifics;
