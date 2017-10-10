@@ -80,7 +80,9 @@ xer__buffer_append(const void *buffer, size_t size, void *app_key) {
         size_t new_size = 2 * (xb->allocated_size ? xb->allocated_size : 64);
         char *new_buf = MALLOC(new_size);
         if(!new_buf) return -1;
-        memcpy(new_buf, xb->buffer, xb->buffer_size);
+        if (xb->buffer) {
+            memcpy(new_buf, xb->buffer, xb->buffer_size);
+        }
         FREEMEM(xb->buffer);
         xb->buffer = new_buf;
         xb->allocated_size = new_size;

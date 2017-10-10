@@ -33,7 +33,9 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	unsigned char *b, *bend;
 	(void)app_key;
 	assert(buf_offset + size < sizeof(buf));
-	memcpy(buf + buf_offset, buffer, size);
+	if (buffer) {
+		memcpy(buf + buf_offset, buffer, size);
+	}
 	b = buf + buf_offset;
 	bend = b + size;
 	printf("=> [");
