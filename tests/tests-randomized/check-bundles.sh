@@ -43,7 +43,7 @@ asn1c_flags=""
 
 make_clean_before_bundle() {
     if [ "${need_clean_before_bundle}" = "1" ] ; then
-        (cd ${RNDTEMP} && Make clean) || :
+        (cd "${RNDTEMP}" && Make clean) || :
     fi
 }
 
@@ -94,7 +94,7 @@ verify_asn_type() {
     echo "Testing [$asn] ${where}"
 
     mkdir -p ${RNDTEMP}
-    if (set -e && cd ${RNDTEMP} && compile_and_test "$asn" "${where}"); then
+    if (set -e && cd "${RNDTEMP}" && compile_and_test "$asn" "${where}"); then
         echo "OK [$asn] ${where}"
         tests_succeeded=`echo "$tests_succeeded + 1" | bc`
     else
@@ -122,9 +122,16 @@ get_param() {
 }
 
 # compile_and_test "<text>" "<where found>"
+# This function is executed in the temporary test directory ${RNDTEMP}.
 compile_and_test() {
     asn="$1"
     where="$2"
+
+    if [ "x$CC" = "x" ]; then CCSTR=""; else CCSTR="CC=${CC} "; fi
+    reproduce_make="cd \"${RNDTEMP}\" && ${CCSTR}CFLAGS=\"${CFLAGS}\" ${MAKE:-make}"
+
+    env > .test-environment
+    set > .test-set
 
     make_clean_before_test
 
@@ -148,12 +155,11 @@ compile_and_test() {
 
     echo "Checking random data encode-decode"
     round_trip_check_cmd="${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c"
+    echo "(${reproduce_make} && ${round_trip_check_cmd})" > .test-reproduce
     if eval "$round_trip_check_cmd"; then
         echo "Random test OK"
     else
-        if [ "x$CC" = "x" ]; then CCSTR=""; else CCSTR="CC=${CC} "; fi
-        echo "RETRY:"
-        echo "(cd ${RNDTEMP} && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" ${MAKE:-make} && ${ASAN_ENV_FLAGS} ./random-test-driver -s ${rmax} ${encodings} -c)"
+        { echo "RETRY:"; cat .test-reproduce ; }
         return 3
     fi
 
@@ -161,11 +167,11 @@ compile_and_test() {
     rm -rf random-data
     cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
     cmd="${cmd} ./random-test-driver -s ${rmax} ${encodings} -g random-data"
+    echo "(${reproduce_make} && ${cmd})" > .test-reproduce
     if eval "$cmd" ; then
         echo "Random data generated OK"
     else
-        echo "RETRY:"
-        echo "(cd ${RNDTEMP} && $cmd)"
+        { echo "RETRY:"; cat .test-reproduce ; }
         return 4
     fi
 
@@ -192,6 +198,8 @@ compile_and_test() {
         echo "Recompiling for fuzzing..."
         rm -f random-test-driver.o
         rm -f random-test-driver
+        reproduce_make="cd \"${RNDTEMP}\" && ${CCSTR}CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" ${MAKE:-make}"
+        echo "(${reproduce_make})" > .test-reproduce
         CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" Make
         if [ $? -ne 0 ]; then
             echo "Recompile failed"
@@ -199,10 +207,10 @@ compile_and_test() {
         fi
 
         echo "Fuzzing will take a multiple of $fuzz_time seconds..."
-        Make fuzz
+        echo "(${reproduce_make} fuzz)" > .test-reproduce
+        CFLAGS="${LIBFUZZER_CFLAGS} ${CFLAGS}" Make fuzz
         if [ $? -ne 0 ]; then
-            echo "RETRY:"
-            echo "(cd ${RNDTEMP} && CC=${CC} CFLAGS=\"${LIBFUZZER_CFLAGS} ${CFLAGS}\" ${MAKE:-make} fuzz)"
+            { echo "RETRY:"; cat .test-reproduce ; }
             return 5
         fi
     fi
@@ -221,10 +229,12 @@ asn_compile() {
     fi
 
     test ! -f Makefile.am   # Protection from accidental clobbering
-    echo "Test DEFINITIONS ::= BEGIN $asn" > test.asn1
-    echo "-- ${where}" >> test.asn1
-    echo "END" >> test.asn1
-    echo "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons"
+    {
+    echo "Test DEFINITIONS ::= BEGIN $asn"
+    echo "-- ${where}"
+    echo "END"
+    } > test.asn1
+    echo "${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons"
     if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
         -gen-OER -gen-PER ${asn1c_flags} test.asn1
     then
@@ -238,7 +248,15 @@ asn_compile() {
     echo "CFLAGS+= -DASN1_TEXT='$short_asn'";
     echo "ASN_PROGRAM = random-test-driver"
     echo "ASN_PROGRAM_SOURCES = random-test-driver.c"
+    echo
     echo "include Makefile.am.example"
+    echo
+    echo "all-tests-succeeded: ${abs_top_builddir}/asn1c/asn1c \$(ASN_PROGRAM_SOURCES) \$(ASN_MODULE_SOURCES) \$(ASN_MODULE_HEADERS)"
+    echo "	@rm -f \$@"
+    echo "	@echo Previous try did not go correctly. To reproduce:"
+    echo "	@cat .test-reproduce"
+    echo "	@exit 1"
+    echo
     } > Makefile
     echo "Makefile.am.example -> Makefile"
 }
@@ -261,6 +279,9 @@ test_drive() {
         return 0
     fi
 
+    # Can't reuse object code.
+    rm -rf ${RNDTEMP}
+
     echo "MODE: default"
     # Default (likely 64-bit) mode
     ${func} "$@"
@@ -268,11 +289,13 @@ test_drive() {
     # 32-bit mode, if available
     if echo "${CFLAGS_M32}" | grep -i '[a-z]' > /dev/null ; then
         echo "MODE: 32-bit"
-        # Unconditional clean, can't reuse object code.
-        (cd ${RNDTEMP} && Make clean)
+
+        # Can't reuse object code between modes.
+        rm -rf ${RNDTEMP}
+
         # -m32 doesn't support fuzzing (no such library), so we remove fuzzer.
         # -m32 doesn't support leak sanitizing (it hangs), so we remove
-        # ASAN_ENV_FLAGS which enable leak check.
+        # ASAN_ENV_FLAGS which enable leak check in runtime.
         CFLAGS="${CFLAGS} ${CFLAGS_M32}" CFLAGS_M32="" \
         LIBFUZZER_CFLAGS="" ASAN_ENV_FLAGS="" \
             ${func} "$@"
@@ -294,9 +317,23 @@ while :; do
         --asn1c) asn1c_flags="${asn1c_flags} $2"; shift 2; continue ;;
         --bundle)
             shift
+
+            # Look for the transcript in bundles/NN-*-bundles.txt.log
+            set -x
+
             base=`basename "$1" | sed -e 's/.txt$//'`
             RNDTEMP=".tmp.${base}"
+
+            if Make -C "${RNDTEMP}" all-tests-succeeded >/dev/null 2>&1 ; then
+                echo "Test succeeded before. Not rechecking."
+                tests_succeeded=1
+                break
+            fi
+
             test_drive verify_asn_types_in_file "$@"
+
+            touch "${RNDTEMP}/all-tests-succeeded"
+
             break
             ;;
         --dirty)
