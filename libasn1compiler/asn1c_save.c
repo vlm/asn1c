@@ -197,7 +197,7 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
 		"\n.c.o:"
 		"\n\t$(CC) $(CFLAGS) -o $@ -c $<\n"
 		"\nclean:"
-		"\n\trm -f $(TARGET) $(ASN_LIBRARY)"
+		"\n\trm -f $(ASN_PROGRAM) $(ASN_LIBRARY)"
 		"\n\trm -f $(ASN_MODULE_SOURCES:.c=.o) $(ASN_PROGRAM_SOURCES:.c=.o)\n"
 		"\nregen: regenerate-from-asn1-source\n"
 		"\nregenerate-from-asn1-source:\n\t");
