@@ -1,7 +1,7 @@
 -- Test the REAL (floating point) type.
 T ::= REAL
 T ::= REAL (WITH COMPONENTS { mantissa (-16384..16384), base (2), exponent (-10..10)})
-T ::= REAL (WITH COMPONENTS { mantissa (-16777215..16777215), base (2), exponent (-323..292)})
+T ::= REAL (WITH COMPONENTS { mantissa (-16777215..16777215), base (2), exponent (-149..104)})
 T ::= REAL (WITH COMPONENTS { mantissa (-9007199254740991..9007199254740991), base (2), exponent (-1074..971)})
-T ::= Real32 Real32 ::= REAL (WITH COMPONENTS { mantissa (-16777215..16777215), base (2), exponent (-323..292)})
+T ::= Real32 Real32 ::= REAL (WITH COMPONENTS { mantissa (-16777215..16777215), base (2), exponent (-149..104)})
 T ::= Real64 Real64 ::= REAL (WITH COMPONENTS { mantissa (-9007199254740991..9007199254740991), base (2), exponent (-1074..971)})
