@@ -18,7 +18,7 @@
 #include <string.h>    /* for strerror(3) */
 #include <sysexits.h>    /* for EX_* exit codes */
 #include <errno.h>    /* for errno */
-
+#include <unistd.h>    /* for isatty(3) */
 #include <asn_application.h>
 #include <asn_internal.h>    /* for ASN__DEFAULT_STACK_MAX */
 
