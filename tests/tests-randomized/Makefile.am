@@ -31,6 +31,8 @@ TESTS += bundles/04-REAL-bundle.txt
 TESTS += bundles/05-BIT-STRING-bundle.txt
 TESTS += bundles/06-OCTET-STRING-bundle.txt
 TESTS += bundles/07-VisibleString-bundle.txt
+TESTS += bundles/08-OBJECT-IDENTIFIER-bundle.txt
+TESTS += bundles/09-RELATIVE-OID-bundle.txt
 
 EXTRA_DIST =                    \
     random-test-driver.c        \

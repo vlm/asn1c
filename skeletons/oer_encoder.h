@@ -46,6 +46,11 @@ typedef asn_enc_rval_t(oer_type_encoder_f)(
     );
 
 
+/*
+ * Length-prefixed buffer encoding for primitive types.
+ */
+oer_type_encoder_f oer_encode_primitive;
+
 #ifdef __cplusplus
 }
 #endif

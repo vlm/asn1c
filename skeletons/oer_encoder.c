@@ -3,6 +3,7 @@
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
+#include <asn_codecs_prim.h>
 
 /*
  * The OER encoder of any type.
@@ -76,3 +77,35 @@ oer_encode_to_buffer(struct asn_TYPE_descriptor_s *type_descriptor,
     }
     return ec;
 }
+
+asn_enc_rval_t
+oer_encode_primitive(asn_TYPE_descriptor_t *td,
+                     const asn_oer_constraints_t *constraints, void *sptr,
+                     asn_app_consume_bytes_f *cb, void *app_key) {
+    const ASN__PRIMITIVE_TYPE_t *st = (const ASN__PRIMITIVE_TYPE_t *)sptr;
+    asn_enc_rval_t er = {0, 0, 0};
+    ssize_t ret;
+
+    (void)constraints;
+
+    if(!st) ASN__ENCODE_FAILED;
+
+    ASN_DEBUG("Encoding %s (%zu bytes)", td ? td->name : "", st->size);
+
+    /*
+     * X.696 (08/2015) #27.2
+     */
+    ret = oer_serialize_length(st->size, cb, app_key);
+    if(ret < 0) {
+        ASN__ENCODE_FAILED;
+    }
+    er.encoded += ret;
+
+    er.encoded += st->size;
+    if(cb(st->buf, st->size, app_key) < 0) {
+        ASN__ENCODE_FAILED;
+    } else {
+        ASN__ENCODED_OK(er);
+    }
+}
+

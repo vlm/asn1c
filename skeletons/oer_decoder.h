@@ -59,6 +59,11 @@ ssize_t oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
                           const asn_oer_constraints_t *constraints,
                           void **struct_ptr, const void *bufptr, size_t size);
 
+/*
+ * Length-prefixed buffer decoding for primitive types.
+ */
+oer_type_decoder_f oer_decode_primitive;
+
 
 #ifdef __cplusplus
 }

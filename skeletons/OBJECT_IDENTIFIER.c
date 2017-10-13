@@ -27,8 +27,8 @@ asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER = {
 	0,
 	0,
 #else
-	0,
-	0,
+	OBJECT_IDENTIFIER_decode_oer,
+	OBJECT_IDENTIFIER_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -784,17 +784,23 @@ OBJECT_IDENTIFIER_parse_arcs(const char *oid_text, ssize_t oid_txt_length,
  * value up to the upper limit.
  */
 static uint32_t
-OBJECT_IDENTIFIER__biased_random_arc(int32_t upper_bound) {
+OBJECT_IDENTIFIER__biased_random_arc(uint32_t upper_bound) {
     static const uint16_t values[] = {0, 1, 127, 128, 129, 254, 255, 256};
+    size_t idx;
 
-    size_t idx = asn_random_between(0, 2 * sizeof(values)/sizeof(values[0]));
-    if(idx < sizeof(values) / sizeof(values[0])) {
+    switch(asn_random_between(0, 2)) {
+    case 0:
+        idx = asn_random_between(0, sizeof(values) / sizeof(values[0]) - 1);
         if(values[idx] < upper_bound) {
             return values[idx];
         }
+        /* Fall through */
+    case 1:
+        return asn_random_between(0, upper_bound);
+    case 2:
+    default:
+        return upper_bound;
     }
-
-    return asn_random_between(0, upper_bound);
 }
 
 asn_random_fill_result_t
@@ -821,9 +827,9 @@ OBJECT_IDENTIFIER_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     arcs[0] = asn_random_between(0, 2);
     arcs[1] =
-        OBJECT_IDENTIFIER__biased_random_arc(arcs[0] <= 1 ? 39 : INT32_MAX);
+        OBJECT_IDENTIFIER__biased_random_arc(arcs[0] <= 1 ? 39 : UINT_MAX);
     for(i = 2; i < arcs_len; i++) {
-        arcs[i] = OBJECT_IDENTIFIER__biased_random_arc(INT32_MAX);
+        arcs[i] = OBJECT_IDENTIFIER__biased_random_arc(UINT_MAX);
     }
 
     if(OBJECT_IDENTIFIER_set_arcs(st, arcs, sizeof(arcs[0]), arcs_len)) {

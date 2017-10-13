@@ -30,6 +30,8 @@ asn_random_fill_f  OBJECT_IDENTIFIER_random_fill;
 #define OBJECT_IDENTIFIER_compare        OCTET_STRING_compare
 #define OBJECT_IDENTIFIER_decode_ber     ber_decode_primitive
 #define OBJECT_IDENTIFIER_encode_der     der_encode_primitive
+#define OBJECT_IDENTIFIER_decode_oer     oer_decode_primitive
+#define OBJECT_IDENTIFIER_encode_oer     oer_encode_primitive
 #define OBJECT_IDENTIFIER_decode_uper    OCTET_STRING_decode_uper
 #define OBJECT_IDENTIFIER_encode_uper    OCTET_STRING_encode_uper
 

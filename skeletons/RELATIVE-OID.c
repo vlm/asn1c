@@ -28,8 +28,8 @@ asn_TYPE_operation_t asn_OP_RELATIVE_OID = {
 	0,
 	0,
 #else
-	0,
-	0,
+	RELATIVE_OID_decode_oer,
+	RELATIVE_OID_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -262,12 +262,16 @@ static uint32_t
 RELATIVE_OID__biased_random_arc() {
     static const uint16_t values[] = {0, 1, 127, 128, 129, 254, 255, 256};
 
-    size_t idx = asn_random_between(0, 2 * sizeof(values)/sizeof(values[0]));
-    if(idx < sizeof(values) / sizeof(values[0])) {
-        return values[idx];
+    switch(asn_random_between(0, 2)) {
+    case 0:
+        return values[asn_random_between(
+            0, sizeof(values) / sizeof(values[0]) - 1)];
+    case 1:
+        return asn_random_between(0, UINT_MAX);
+    case 2:
+    default:
+        return UINT_MAX;
     }
-
-    return asn_random_between(0, INT32_MAX);
 }
 
 asn_random_fill_result_t
@@ -278,8 +282,9 @@ RELATIVE_OID_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
     RELATIVE_OID_t *st;
+    const int min_arcs = 1; /* A minimum of 1 arc is required */
+    size_t arcs_len = asn_random_between(min_arcs, 3);
     uint32_t arcs[3];
-    size_t arcs_len = asn_random_between(0, 3);
     size_t i;
 
     (void)constraints;
