@@ -58,31 +58,38 @@ asn_TYPE_descriptor_t asn_DEF_RELATIVE_OID = {
 
 static ssize_t
 RELATIVE_OID__dump_body(const RELATIVE_OID_t *st, asn_app_consume_bytes_f *cb, void *app_key) {
-	ssize_t wrote = 0;
-	ssize_t ret;
-	size_t startn;
-	size_t i;
+    char scratch[32];
+    size_t produced = 0;
+    size_t off = 0;
 
-	for(i = 0, startn = 0; i < st->size; i++) {
-		uint8_t b = st->buf[i];
-		if((b & 0x80))			/* Continuation expected */
-			continue;
-		if(startn) {
-			/* Separate arcs */
-			if(cb(".", 1, app_key) < 0)
-				return -1;
-			wrote++;
-		}
+    for(;;) {
+        asn_oid_arc_t arc;
+        ssize_t rd = OBJECT_IDENTIFIER_get_single_arc(st->buf + off,
+                                                      st->size - off, &arc);
+        if(rd < 0) {
+            return -1;
+        } else if(rd == 0) {
+            /* No more arcs. */
+            break;
+        } else {
+            int ret = snprintf(scratch, sizeof(scratch), "%s%" PRIu32,
+                               off ? "." : "", arc);
+            if(ret >= (ssize_t)sizeof(scratch)) {
+                return -1;
+            }
+            produced += ret;
+            off += rd;
+            assert(off <= st->size);
+            if(cb(scratch, ret, app_key) < 0) return -1;
+        }
+    }
 
-		ret = OBJECT_IDENTIFIER__dump_arc(&st->buf[startn],
-			i - startn + 1, 0, cb, app_key);
-		if(ret < 0) return -1;
-		wrote += ret;
+    if(off != st->size) {
+        ASN_DEBUG("Could not scan to the end of Object Identifier");
+        return -1;
+    }
 
-		startn = i + 1;
-	}
-
-	return wrote;
+	return produced;
 }
 
 int
@@ -111,41 +118,41 @@ RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void 
 	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
 	const char *chunk_end = (const char *)chunk_buf + chunk_size;
 	const char *endptr;
-	long s_arcs[6];
-	long *arcs = s_arcs;
-	int arcs_count;
+	asn_oid_arc_t s_arcs[6];
+	asn_oid_arc_t *arcs = s_arcs;
+	ssize_t num_arcs;
 	int ret;
 
 	(void)td;
 
-	arcs_count = OBJECT_IDENTIFIER_parse_arcs(
-		(const char *)chunk_buf, chunk_size,
-		arcs, sizeof(s_arcs)/sizeof(s_arcs[0]), &endptr);
-	if(arcs_count < 0) {
-		/* Expecting at least one arc arcs */
-		return XPBD_BROKEN_ENCODING;
-	} else if(arcs_count == 0) {
-		return XPBD_NOT_BODY_IGNORE;
-	}
-	assert(endptr == chunk_end);
+    num_arcs = OBJECT_IDENTIFIER_parse_arcs(
+        (const char *)chunk_buf, chunk_size, arcs,
+        sizeof(s_arcs) / sizeof(s_arcs[0]), &endptr);
+    if(num_arcs < 0) {
+        /* Expecting at least one arc arcs */
+        return XPBD_BROKEN_ENCODING;
+    } else if(num_arcs == 0) {
+        return XPBD_NOT_BODY_IGNORE;
+    }
+    assert(endptr == chunk_end);
 
-	if((size_t)arcs_count > sizeof(s_arcs)/sizeof(s_arcs[0])) {
-		arcs = (long *)MALLOC(arcs_count * sizeof(long));
-		if(!arcs) return XPBD_SYSTEM_FAILURE;
-		ret = OBJECT_IDENTIFIER_parse_arcs(
-			(const char *)chunk_buf, chunk_size,
-			arcs, arcs_count, &endptr);
-		if(ret != arcs_count)
-			return XPBD_SYSTEM_FAILURE;	/* assert?.. */
-	}
+    if((size_t)num_arcs > sizeof(s_arcs) / sizeof(s_arcs[0])) {
+        arcs = (asn_oid_arc_t *)MALLOC(num_arcs * sizeof(arcs[0]));
+        if(!arcs) return XPBD_SYSTEM_FAILURE;
+        ret = OBJECT_IDENTIFIER_parse_arcs((const char *)chunk_buf, chunk_size,
+                                           arcs, num_arcs, &endptr);
+        if(ret != num_arcs) {
+            return XPBD_SYSTEM_FAILURE; /* assert?.. */
+        }
+    }
 
-	/*
-	 * Convert arcs into BER representation.
-	 */
-	ret = RELATIVE_OID_set_arcs(st, arcs, sizeof(*arcs), arcs_count);
-	if(arcs != s_arcs) FREEMEM(arcs);
+    /*
+     * Convert arcs into BER representation.
+     */
+    ret = RELATIVE_OID_set_arcs(st, arcs, num_arcs);
+    if(arcs != s_arcs) FREEMEM(arcs);
 
-	return ret ? XPBD_SYSTEM_FAILURE : XPBD_BODY_CONSUMED;
+    return ret ? XPBD_SYSTEM_FAILURE : XPBD_BODY_CONSUMED;
 }
 
 asn_dec_rval_t
@@ -177,48 +184,51 @@ RELATIVE_OID_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	ASN__ENCODED_OK(er);
 }
 
-int
-RELATIVE_OID_get_arcs(const RELATIVE_OID_t *roid,
-	void *arcs, unsigned int arc_type_size, unsigned int arc_slots) {
-	void *arcs_end = (char *)arcs + (arc_slots * arc_type_size);
-	int num_arcs = 0;
-	size_t startn = 0;
-	size_t i;
+ssize_t
+RELATIVE_OID_get_arcs(const RELATIVE_OID_t *st, asn_oid_arc_t *arcs,
+                      size_t arcs_count) {
+    size_t num_arcs = 0;
+    size_t off;
 
-	if(!roid || !roid->buf) {
-		errno = EINVAL;
-		return -1;
-	}
+    if(!st || !st->buf) {
+        errno = EINVAL;
+        return -1;
+    }
 
-	for(i = 0; i < roid->size; i++) {
-		uint8_t b = roid->buf[i];
-		if((b & 0x80))			/* Continuation expected */
-			continue;
+    for(off = 0;;) {
+        asn_oid_arc_t arc;
+        ssize_t rd = OBJECT_IDENTIFIER_get_single_arc(st->buf + off,
+                                                      st->size - off, &arc);
+        if(rd < 0) {
+            return -1;
+        } else if(rd == 0) {
+            /* No more arcs. */
+            break;
+        } else {
+            off += rd;
+            if(num_arcs < arcs_count) {
+                arcs[num_arcs] = arc;
+            }
+            num_arcs++;
+        }
+    }
 
-		if(arcs < arcs_end) {
-			if(OBJECT_IDENTIFIER_get_single_arc(
-				&roid->buf[startn],
-					i - startn + 1, 0,
-					arcs, arc_type_size))
-				return -1;
-			arcs = ((char *)arcs) + arc_type_size;
-			num_arcs++;
-		}
-
-		startn = i + 1;
-	}
+    if(off != st->size) {
+        return -1;
+    }
 
 	return num_arcs;
 }
 
 int
-RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_size, unsigned int arcs_slots) {
-	uint8_t *buf;
+RELATIVE_OID_set_arcs(RELATIVE_OID_t *st, const asn_oid_arc_t *arcs,
+                      size_t arcs_count) {
+    uint8_t *buf;
 	uint8_t *bp;
-	unsigned int size;
-	unsigned int i;
+    size_t size;
+	size_t i;
 
-	if(roid == NULL || arcs == NULL || arc_type_size < 1) {
+	if(!st || !arcs) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -226,8 +236,8 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	/*
 	 * Roughly estimate the maximum size necessary to encode these arcs.
 	 */
-	size = ((arc_type_size * CHAR_BIT + 6) / 7) * arcs_slots;
-	bp = buf = (uint8_t *)MALLOC(size + 1);
+    size = ((sizeof(asn_oid_arc_t) * CHAR_BIT + 6) / 7) * arcs_count;
+    bp = buf = (uint8_t *)MALLOC(size + 1);
 	if(!buf) {
 		/* ENOMEM */
 		return -1;
@@ -236,19 +246,26 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 	/*
 	 * Encode the arcs.
 	 */
-	for(i = 0; i < arcs_slots; i++, arcs = ((char *)arcs) + arc_type_size) {
-		bp += OBJECT_IDENTIFIER_set_single_arc(bp,
-			arcs, arc_type_size, 0);
-	}
+    for(i = 0; i < arcs_count; i++) {
+        ssize_t wrote = OBJECT_IDENTIFIER_set_single_arc(bp, size, arcs[i]);
+        if(wrote <= 0) {
+            FREEMEM(buf);
+            return -1;
+        }
+        assert((size_t)wrote <= size);
+        bp += wrote;
+        size -= wrote;
+    }
 
-	assert((unsigned)(bp - buf) <= size);
+	assert(size >= 0);
 
 	/*
 	 * Replace buffer.
 	 */
-	roid->size = (int)(bp - buf);
-	bp = roid->buf;
-	roid->buf = buf;
+	st->size = bp - buf;
+	bp = st->buf;
+	st->buf = buf;
+	st->buf[st->size] = '\0';
 	if(bp) FREEMEM(bp);
 
 	return 0;
@@ -258,7 +275,7 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *roid, void *arcs, unsigned int arc_type_si
 /*
  * Generate values from the list of interesting values, or just a random value.
  */
-static uint32_t
+static asn_oid_arc_t
 RELATIVE_OID__biased_random_arc() {
     static const uint16_t values[] = {0, 1, 127, 128, 129, 254, 255, 256};
 
@@ -276,15 +293,16 @@ RELATIVE_OID__biased_random_arc() {
 
 asn_random_fill_result_t
 RELATIVE_OID_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
-                              const asn_encoding_constraints_t *constraints,
-                              size_t max_length) {
+                         const asn_encoding_constraints_t *constraints,
+                         size_t max_length) {
     asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
     RELATIVE_OID_t *st;
     const int min_arcs = 1; /* A minimum of 1 arc is required */
-    size_t arcs_len = asn_random_between(min_arcs, 3);
-    uint32_t arcs[3];
+    asn_oid_arc_t arcs[3];
+    size_t arcs_len =
+        asn_random_between(min_arcs, sizeof(arcs) / sizeof(arcs[0]));
     size_t i;
 
     (void)constraints;
@@ -301,7 +319,7 @@ RELATIVE_OID_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         arcs[i] = RELATIVE_OID__biased_random_arc();
     }
 
-    if(RELATIVE_OID_set_arcs(st, arcs, sizeof(arcs[0]), arcs_len)) {
+    if(RELATIVE_OID_set_arcs(st, arcs, arcs_len)) {
         if(st != *sptr) {
             ASN_STRUCT_FREE(*td, st);
         }
@@ -310,5 +328,6 @@ RELATIVE_OID_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     *sptr = st;
 
+    result_ok.length = st->size;
     return result_ok;
 }

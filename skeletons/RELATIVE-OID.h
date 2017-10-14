@@ -37,12 +37,12 @@ asn_random_fill_f  RELATIVE_OID_random_fill;
  **********************************/
 
 /* See OBJECT_IDENTIFIER_get_arcs() function in OBJECT_IDENTIFIER.h */
-int RELATIVE_OID_get_arcs(const RELATIVE_OID_t *_roid,
-	void *arcs, unsigned int arc_type_size, unsigned int arc_slots);
+ssize_t RELATIVE_OID_get_arcs(const RELATIVE_OID_t *, asn_oid_arc_t *arcs,
+                              size_t arcs_count);
 
 /* See OBJECT_IDENTIFIER_set_arcs() function in OBJECT_IDENTIFIER.h */
-int RELATIVE_OID_set_arcs(RELATIVE_OID_t *_roid,
-	void *arcs, unsigned int arc_type_size, unsigned int arcs_slots);
+int RELATIVE_OID_set_arcs(RELATIVE_OID_t *, const asn_oid_arc_t *arcs,
+                          size_t arcs_count);
 
 #ifdef __cplusplus
 }

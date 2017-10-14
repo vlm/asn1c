@@ -38,7 +38,7 @@ int get_asn1c_environment_version(void);	/* Run-time version */
  */
 #ifndef	ASN_DEBUG	/* If debugging code is not defined elsewhere... */
 #if	EMIT_ASN_DEBUG == 1	/* And it was asked to emit this code... */
-#ifdef	__GNUC__
+#if __STDC_VERSION__ >= 199901L
 #ifdef	ASN_THREAD_SAFE
 /* Thread safety requires sacrifice in output indentation:
  * Retain empty definition of ASN_DEBUG_INDENT_ADD. */
@@ -55,10 +55,10 @@ int asn_debug_indent;
 		fprintf(stderr, " (%s:%d)\n",		\
 			__FILE__, __LINE__);		\
 	} while(0)
-#else	/* !__GNUC__ */
+#else	/* !C99 */
 void CC_PRINTFLIKE(1, 2) ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
-#endif	/* __GNUC__ */
+#endif	/* C99 */
 #else	/* EMIT_ASN_DEBUG != 1 */
 #if __STDC_VERSION__ >= 199901L
 #define ASN_DEBUG(...) do{}while(0)

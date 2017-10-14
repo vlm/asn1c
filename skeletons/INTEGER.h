@@ -83,8 +83,14 @@ enum asn_strtox_result_e {
     ASN_STRTOX_OK          =  0,  /* Conversion succeded, number ends at (*end) */
     ASN_STRTOX_EXTRA_DATA  =  1   /* Conversion succeded, but the string has extra stuff */
 };
-enum asn_strtox_result_e asn_strtol_lim(const char *str, const char **end, long *l);
-enum asn_strtox_result_e asn_strtoimax_lim(const char *str, const char **end, intmax_t *l);
+enum asn_strtox_result_e asn_strtol_lim(const char *str, const char **end,
+                                        long *l);
+enum asn_strtox_result_e asn_strtoul_lim(const char *str, const char **end,
+                                         unsigned long *l);
+enum asn_strtox_result_e asn_strtoimax_lim(const char *str, const char **end,
+                                           intmax_t *l);
+enum asn_strtox_result_e asn_strtoumax_lim(const char *str, const char **end,
+                                           uintmax_t *l);
 
 /*
  * Convert the integer value into the corresponding enumeration map entry.

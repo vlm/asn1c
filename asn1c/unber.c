@@ -434,7 +434,7 @@ print_TL(int fin, size_t offset, int level, int constr, ssize_t tlen,
 static int
 print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
         ber_tlv_len_t tlv_len) {
-    asn1c_integer_t *arcs = 0; /* Object identifier arcs */
+    asn_oid_arc_t *arcs = 0; /* Object identifier arcs */
     unsigned char *vbuf = 0;
     asn1p_expr_type_e etype = 0;
     asn1c_integer_t collector = 0;
@@ -577,20 +577,19 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
         break;
     case ASN_BASIC_OBJECT_IDENTIFIER:
         if(vbuf) {
-            OBJECT_IDENTIFIER_t oid;
-            int arcno;
+            OBJECT_IDENTIFIER_t oid = {0, 0};
+            ssize_t arcno;
 
             oid.buf = vbuf;
             oid.size = tlv_len;
 
-            arcno = OBJECT_IDENTIFIER_get_arcs(&oid, arcs, sizeof(*arcs),
-                                               tlv_len + 1);
+            arcno = OBJECT_IDENTIFIER_get_arcs(&oid, arcs, tlv_len + 1);
             if(arcno >= 0) {
                 assert(arcno <= (tlv_len + 1));
                 printf(" F>");
                 for(i = 0; i < arcno; i++) {
                     if(i) printf(".");
-                    printf("%s", asn1p_itoa(arcs[i]));
+                    printf("%" PRIu32, arcs[i]);
                 }
                 FREEMEM(vbuf);
                 vbuf = 0;
@@ -605,13 +604,13 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
             oid.buf = vbuf;
             oid.size = tlv_len;
 
-            arcno = RELATIVE_OID_get_arcs(&oid, arcs, sizeof(*arcs), tlv_len);
+            arcno = RELATIVE_OID_get_arcs(&oid, arcs, tlv_len);
             if(arcno >= 0) {
-                assert(arcno <= (tlv_len + 1));
+                assert(arcno <= tlv_len);
                 printf(" F>");
                 for(i = 0; i < arcno; i++) {
                     if(i) printf(".");
-                    printf("%s", asn1p_itoa(arcs[i]));
+                    printf("%" PRIu32, arcs[i]);
                 }
                 FREEMEM(vbuf);
                 vbuf = 0;

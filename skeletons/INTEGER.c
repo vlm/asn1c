@@ -1028,9 +1028,9 @@ asn_strtoimax_lim(const char *str, const char **end, intmax_t *intp) {
 	intmax_t value;
 
 #define ASN1_INTMAX_MAX ((~(uintmax_t)0) >> 1)
-
     const intmax_t upper_boundary = ASN1_INTMAX_MAX / 10;
 	intmax_t last_digit_max = ASN1_INTMAX_MAX % 10;
+#undef  ASN1_INTMAX_MAX
 
 	if(str >= *end) return ASN_STRTOX_ERROR_INVAL;
 
@@ -1084,6 +1084,66 @@ asn_strtoimax_lim(const char *str, const char **end, intmax_t *intp) {
 	return ASN_STRTOX_OK;
 }
 
+/*
+ * Parse the number in the given string until the given *end position,
+ * returning the position after the last parsed character back using the
+ * same (*end) pointer.
+ * WARNING: This behavior is different from the standard strtoul/strtoumax(3).
+ */
+enum asn_strtox_result_e
+asn_strtoumax_lim(const char *str, const char **end, uintmax_t *uintp) {
+	uintmax_t value;
+
+#define ASN1_UINTMAX_MAX ((~(uintmax_t)0))
+    const uintmax_t upper_boundary = ASN1_UINTMAX_MAX / 10;
+    uintmax_t last_digit_max = ASN1_UINTMAX_MAX % 10;
+#undef ASN1_UINTMAX_MAX
+
+    if(str >= *end) return ASN_STRTOX_ERROR_INVAL;
+
+	switch(*str) {
+	case '-':
+        return ASN_STRTOX_ERROR_INVAL;
+	case '+':
+		str++;
+		if(str >= *end) {
+			*end = str;
+			return ASN_STRTOX_EXPECT_MORE;
+		}
+	}
+
+	for(value = 0; str < (*end); str++) {
+		switch(*str) {
+		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
+		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39: {
+			unsigned int d = *str - '0';
+			if(value < upper_boundary) {
+				value = value * 10 + d;
+			} else if(value == upper_boundary) {
+				if(d <= last_digit_max) {
+                    value = value * 10 + d;
+                } else {
+					*end = str;
+					return ASN_STRTOX_ERROR_RANGE;
+				}
+			} else {
+				*end = str;
+				return ASN_STRTOX_ERROR_RANGE;
+			}
+		    }
+		    continue;
+		default:
+		    *end = str;
+		    *uintp = value;
+		    return ASN_STRTOX_EXTRA_DATA;
+		}
+	}
+
+	*end = str;
+	*uintp = value;
+	return ASN_STRTOX_OK;
+}
+
 enum asn_strtox_result_e
 asn_strtol_lim(const char *str, const char **end, long *lp) {
     intmax_t value;
@@ -1104,6 +1164,36 @@ asn_strtol_lim(const char *str, const char **end, long *lp) {
     case ASN_STRTOX_EXTRA_DATA:
         if(value >= LONG_MIN && value <= LONG_MAX) {
             *lp = value;
+            return ASN_STRTOX_EXTRA_DATA;
+        } else {
+            return ASN_STRTOX_ERROR_RANGE;
+        }
+    }
+
+    assert(!"Unreachable");
+    return ASN_STRTOX_ERROR_INVAL;
+}
+
+enum asn_strtox_result_e
+asn_strtoul_lim(const char *str, const char **end, unsigned long *ulp) {
+    uintmax_t value;
+    switch(asn_strtoumax_lim(str, end, &value)) {
+    case ASN_STRTOX_ERROR_RANGE:
+        return ASN_STRTOX_ERROR_RANGE;
+    case ASN_STRTOX_ERROR_INVAL:
+        return ASN_STRTOX_ERROR_INVAL;
+    case ASN_STRTOX_EXPECT_MORE:
+        return ASN_STRTOX_EXPECT_MORE;
+    case ASN_STRTOX_OK:
+        if(value <= ULONG_MAX) {
+            *ulp = value;
+            return ASN_STRTOX_OK;
+        } else {
+            return ASN_STRTOX_ERROR_RANGE;
+        }
+    case ASN_STRTOX_EXTRA_DATA:
+        if(value <= ULONG_MAX) {
+            *ulp = value;
             return ASN_STRTOX_EXTRA_DATA;
         } else {
             return ASN_STRTOX_ERROR_RANGE;

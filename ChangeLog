@@ -9,6 +9,7 @@
 
     NOTABLE:
     * converter-sample.c renamed into converter-example.c.
+    * OBJECT IDENTIFIER and RELATIVE-OID API simplified.
     * Added random value generation (-R option to converter-example).
     * Added LibFuzzer-based randomized tests for supported transfer syntaxes
       (DER, OER, UPER, XER) into tests/tests-randomized. See the following
