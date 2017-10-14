@@ -1739,8 +1739,10 @@ OCTET_STRING_free(const asn_TYPE_descriptor_t *td, void *sptr,
         break;
     case ASFM_FREE_UNDERLYING_AND_RESET:
         memset(sptr, 0,
-               ((const asn_OCTET_STRING_specifics_t *)(td->specifics))
-                   ->struct_size);
+               td->specifics
+                   ? ((const asn_OCTET_STRING_specifics_t *)(td->specifics))
+                         ->struct_size
+                   : sizeof(OCTET_STRING_t));
         break;
     }
 }
@@ -1828,7 +1830,7 @@ OCTET_STRING_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
                 return 0;
             }
         } else {
-            return ret;
+            return ret < 0 ? -1 : 1;
         }
     } else if(!a && !b) {
         return 0;
