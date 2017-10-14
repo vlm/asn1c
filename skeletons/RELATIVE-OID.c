@@ -257,8 +257,6 @@ RELATIVE_OID_set_arcs(RELATIVE_OID_t *st, const asn_oid_arc_t *arcs,
         size -= wrote;
     }
 
-	assert(size >= 0);
-
 	/*
 	 * Replace buffer.
 	 */

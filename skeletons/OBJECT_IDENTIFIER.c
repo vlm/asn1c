@@ -370,7 +370,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *st, const asn_oid_arc_t *arcs,
                            size_t arc_slots) {
     uint8_t *buf;
     uint8_t *bp;
-    size_t wrote;
+    ssize_t wrote;
     asn_oid_arc_t arc0;
     asn_oid_arc_t arc1;
     size_t size;
@@ -426,7 +426,7 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *st, const asn_oid_arc_t *arcs,
         FREEMEM(buf);
         return -1;
     }
-    assert(wrote <= size);
+    assert((size_t)wrote <= size);
     bp += wrote;
     size -= wrote;
 
@@ -436,13 +436,10 @@ OBJECT_IDENTIFIER_set_arcs(OBJECT_IDENTIFIER_t *st, const asn_oid_arc_t *arcs,
             FREEMEM(buf);
             return -1;
         }
-        assert(wrote <= size);
+        assert((size_t)wrote <= size);
         bp += wrote;
         size -= wrote;
-        assert(wrote <= size);
     }
-
-    assert(size >= 0);
 
     /*
 	 * Replace buffer.
