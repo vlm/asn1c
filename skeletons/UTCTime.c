@@ -31,7 +31,7 @@ static asn_per_constraints_t asn_DEF_UTCTime_constraints = {
 asn_TYPE_operation_t asn_OP_UTCTime = {
 	OCTET_STRING_free,
 	UTCTime_print,
-	OCTET_STRING_compare,   /* Does not deal with time zones. */
+	UTCTime_compare,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_encode_der,    /* Implemented in terms of OCTET STRING */
 	OCTET_STRING_decode_xer_utf8,
@@ -40,8 +40,8 @@ asn_TYPE_operation_t asn_OP_UTCTime = {
 	0,
 	0,
 #else
-	0,
-	0,
+	OCTET_STRING_decode_oer,
+	OCTET_STRING_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -109,7 +109,7 @@ UTCTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 			ASN__ENCODE_FAILED;
 
 		/* Fractions are not allowed in UTCTime */
-		ut = asn_time2GT(0, 0, 1);
+		ut = asn_time2UT(0, &tm, 1);
 		if(!ut) ASN__ENCODE_FAILED;
 
 		rv = OCTET_STRING_encode_xer_utf8(td, sptr, ilevel, flags,
@@ -210,7 +210,7 @@ UTCTime_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     (void)constraints;
 
-    if(max_length < sizeof("yymmddhhmmss")) {
+    if(max_length < sizeof("yymmddhhmmss") && !*sptr) {
         return result_skipped;
     }
 
@@ -225,3 +225,31 @@ UTCTime_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     return result_ok;
 }
+
+int
+UTCTime_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                        const void *bptr) {
+    const GeneralizedTime_t *a = aptr;
+    const GeneralizedTime_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        time_t at = asn_UT2time(a, 0, 0);
+        time_t bt = asn_UT2time(b, 0, 0);
+        if(at < bt) {
+            return -1;
+        } else if(at > bt) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else if(!a && !b) {
+        return 0;
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
+

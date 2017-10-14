@@ -188,6 +188,21 @@ check_fractions() {
 	FREEMEM(gt);
 }
 
+static void
+compare(int lineno, int cmp_control, const char *astr, const char *bstr) {
+    GeneralizedTime_t a = {(uint8_t *)strdup(astr), strlen(astr)};
+    GeneralizedTime_t b = {(uint8_t *)strdup(bstr), strlen(bstr)};
+    int cmp_result = asn_DEF_GeneralizedTime.op->compare_struct(
+        &asn_DEF_GeneralizedTime, &a, &b);
+    if(cmp_result != cmp_control) {
+        fprintf(stderr, "%03d: [%s] == [%s] = %d, expected %d\n", lineno, astr,
+                bstr, cmp_result, cmp_control);
+        assert(cmp_result == cmp_control);
+    }
+    ASN_STRUCT_RESET(asn_DEF_GeneralizedTime, &a);
+    ASN_STRUCT_RESET(asn_DEF_GeneralizedTime, &b);
+}
+
 int
 main(int ac, char **av) {
 	char *tz = getenv("TZ");
@@ -263,6 +278,16 @@ main(int ac, char **av) {
 	RECODE("20050702123312.0000001Z", "20050702123312Z");
 	RECODE("20050702123312.0080010+1056", "20050702013712.008001Z");
 #endif
+
+    compare(__LINE__, 0, "20040125093007", "20040125093007");
+    compare(__LINE__, 0, "20040125093007-0000", "20040125093007Z");
+    compare(__LINE__, 1, "20040125093008", "20040125093007");
+    compare(__LINE__, 1, "20040125093008-0000", "20040125093007-0000");
+    compare(__LINE__, 0, "20040125093008-0000", "20040125093008-0000");
+    compare(__LINE__, 1, "20040125093008-0000", "20040125093007Z");
+    compare(__LINE__, 0, "20040125093007-0000", "20040125093007+0000");
+    compare(__LINE__, 1, "20040125093007-0030", "20040125093007Z");
+    compare(__LINE__, -1, "20040125093007+0030", "20040125093007Z");
 
 	return 0;
 }

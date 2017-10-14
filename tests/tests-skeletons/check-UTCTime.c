@@ -33,6 +33,21 @@ check(char *time_str, time_t sample, int as_gmt) {
 	if(as_gmt) check(time_str, sample, as_gmt);
 }
 
+static void
+compare(int lineno, int cmp_control, const char *astr, const char *bstr) {
+    UTCTime_t a = {(uint8_t *)strdup(astr), strlen(astr)};
+    UTCTime_t b = {(uint8_t *)strdup(bstr), strlen(bstr)};
+    int cmp_result =
+        asn_DEF_UTCTime.op->compare_struct(&asn_DEF_UTCTime, &a, &b);
+    if(cmp_result != cmp_control) {
+        fprintf(stderr, "%03d: [%s] == [%s] = %d, expected %d\n", lineno, astr,
+                bstr, cmp_result, cmp_control);
+        assert(cmp_result == cmp_control);
+    }
+    ASN_STRUCT_RESET(asn_DEF_UTCTime, &a);
+    ASN_STRUCT_RESET(asn_DEF_UTCTime, &b);
+}
+
 int
 main(int ac, char **av) {
 
@@ -56,6 +71,16 @@ main(int ac, char **av) {
 		check("040125093000,01", 1075051800, 0);
 		check("040125093000,1234", 1075051800, 0);
 	}
+
+    compare(__LINE__, 0, "040125093007", "040125093007");
+    compare(__LINE__, 0, "040125093007-0000", "040125093007Z");
+    compare(__LINE__, 1, "040125093008", "040125093007");
+    compare(__LINE__, 1, "040125093008-0000", "040125093007-0000");
+    compare(__LINE__, 0, "040125093008-0000", "040125093008-0000");
+    compare(__LINE__, 1, "040125093008-0000", "040125093007Z");
+    compare(__LINE__, 0, "040125093007-0000", "040125093007+0000");
+    compare(__LINE__, 1, "040125093007-0030", "040125093007Z");
+    compare(__LINE__, -1, "040125093007+0030", "040125093007Z");
 
 	return 0;
 }

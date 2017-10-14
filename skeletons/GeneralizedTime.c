@@ -176,7 +176,7 @@ static asn_per_constraints_t asn_DEF_GeneralizedTime_per_constraints = {
 asn_TYPE_operation_t asn_OP_GeneralizedTime = {
 	OCTET_STRING_free,
 	GeneralizedTime_print,
-	OCTET_STRING_compare,   /* Does not normalize time zones! */
+	GeneralizedTime_compare,
 	OCTET_STRING_decode_ber,    /* Implemented in terms of OCTET STRING */
 	GeneralizedTime_encode_der,
 	OCTET_STRING_decode_xer_utf8,
@@ -185,8 +185,8 @@ asn_TYPE_operation_t asn_OP_GeneralizedTime = {
 	0,
 	0,
 #else
-	0,
-	0,
+	OCTET_STRING_decode_oer,
+	OCTET_STRING_encode_oer,
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
@@ -739,7 +739,7 @@ GeneralizedTime_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     (void)constraints;
 
-    if(max_length < sizeof("yyyymmddhhmmss")) {
+    if(max_length < sizeof("yyyymmddhhmmss") && !*sptr) {
         return result_skipped;
     }
 
@@ -754,3 +754,55 @@ GeneralizedTime_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     return result_ok;
 }
+
+int
+GeneralizedTime_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                        const void *bptr) {
+    const GeneralizedTime_t *a = aptr;
+    const GeneralizedTime_t *b = bptr;
+
+    (void)td;
+
+    if(a && b) {
+        int afrac_value, afrac_digits;
+        int bfrac_value, bfrac_digits;
+        time_t at = asn_GT2time_frac(a, &afrac_value, &afrac_digits, 0, 0);
+        time_t bt = asn_GT2time_frac(b, &bfrac_value, &bfrac_digits, 0, 0);
+        if(at < bt) {
+            return -1;
+        } else if(at > bt) {
+            return 1;
+        } else if(afrac_digits == bfrac_digits) {
+            if(afrac_value == bfrac_value) {
+                return 0;
+            }
+            if(afrac_value < bfrac_value) {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else if(afrac_digits == 0) {
+            return -1;
+        } else if(bfrac_digits == 0) {
+            return 1;
+        } else {
+            double afrac = (double)afrac_value / afrac_digits;
+            double bfrac = (double)bfrac_value / bfrac_digits;
+            if(afrac < bfrac) {
+                return -1;
+            } else if(afrac > bfrac) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    } else if(!a && !b) {
+        return 0;
+    } else if(!a) {
+        return -1;
+    } else {
+        return 1;
+    }
+
+}
+
