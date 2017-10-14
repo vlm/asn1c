@@ -33,6 +33,7 @@ TESTS += bundles/06-OCTET-STRING-bundle.txt
 TESTS += bundles/07-VisibleString-bundle.txt
 TESTS += bundles/08-OBJECT-IDENTIFIER-bundle.txt
 TESTS += bundles/09-RELATIVE-OID-bundle.txt
+TESTS += bundles/10-UTF8String-bundle.txt
 
 EXTRA_DIST =                    \
     random-test-driver.c        \

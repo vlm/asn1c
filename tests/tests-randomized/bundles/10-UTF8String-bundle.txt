@@ -1,0 +1,4 @@
+UTF8String
+UTF8String (SIZE(3))
+UTF8String (FROM("A".."Z"))
+UTF8String (FROM("A".."Z") INTERSECTION SIZE(3))

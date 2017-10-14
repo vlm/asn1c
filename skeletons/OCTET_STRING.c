@@ -1862,6 +1862,66 @@ OCTET_STRING__random_char(unsigned long lb, unsigned long ub) {
     }
 }
 
+
+size_t
+OCTET_STRING_random_length_constrained(
+    const asn_TYPE_descriptor_t *td,
+    const asn_encoding_constraints_t *constraints, size_t max_length) {
+    const unsigned lengths[] = {0,     1,     2,     3,     4,     8,
+                                126,   127,   128,   16383, 16384, 16385,
+                                65534, 65535, 65536, 65537};
+    size_t rnd_len;
+
+    /* Figure out how far we should go */
+    rnd_len = lengths[asn_random_between(
+        0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
+
+    if(!constraints) constraints = &td->encoding_constraints;
+    if(constraints->per_constraints) {
+        const asn_per_constraint_t *pc =
+            &td->encoding_constraints.per_constraints->size;
+        if(pc->flags & APC_CONSTRAINED) {
+            long suggested_upper_bound = pc->upper_bound < (ssize_t)max_length
+                                             ? pc->upper_bound
+                                             : max_length;
+            if(max_length <= (size_t)pc->lower_bound) {
+                return pc->lower_bound;
+            }
+            if(pc->flags & APC_EXTENSIBLE) {
+                switch(asn_random_between(0, 5)) {
+                case 0:
+                    if(pc->lower_bound > 0) {
+                        rnd_len = pc->lower_bound - 1;
+                        break;
+                    }
+                    /* Fall through */
+                case 1:
+                    rnd_len = pc->upper_bound + 1;
+                    break;
+                case 2:
+                    /* Keep rnd_len from the table */
+                    if(rnd_len <= max_length) {
+                        break;
+                    }
+                    /* Fall through */
+                default:
+                    rnd_len = asn_random_between(pc->lower_bound,
+                                                 suggested_upper_bound);
+                }
+            } else {
+                rnd_len =
+                    asn_random_between(pc->lower_bound, suggested_upper_bound);
+            }
+        } else {
+            rnd_len = asn_random_between(0, max_length);
+        }
+    } else if(rnd_len > max_length) {
+        rnd_len = asn_random_between(0, max_length);
+    }
+
+    return rnd_len;
+}
+
 asn_random_fill_result_t
 OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
                          const asn_encoding_constraints_t *constraints,
@@ -1872,9 +1932,6 @@ OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
-    static unsigned lengths[] = {0,     1,     2,     3,     4,     8,
-                                 126,   127,   128,   16383, 16384, 16385,
-                                 65534, 65535, 65536, 65537};
     unsigned int unit_bytes = 1;
     unsigned long clb = 0;  /* Lower bound on char */
     unsigned long cub = 255;  /* Higher bound on char value */
@@ -1884,7 +1941,7 @@ OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     size_t rnd_len;
     OCTET_STRING_t *st;
 
-    if(max_length == 0) return result_skipped;
+    if(max_length == 0 && !*sptr) return result_skipped;
 
     switch(specs->subvariant) {
     default:
@@ -1922,50 +1979,8 @@ OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         }
     }
 
-    /* Figure out how far we should go */
-    rnd_len = lengths[asn_random_between(
-        0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
-    if(constraints->per_constraints) {
-        const asn_per_constraint_t *pc =
-            &td->encoding_constraints.per_constraints->size;
-        if(pc->flags & APC_CONSTRAINED) {
-            long suggested_upper_bound = pc->upper_bound < (ssize_t)max_length
-                                             ? pc->upper_bound
-                                             : max_length;
-            if(max_length < (size_t)pc->lower_bound) {
-                return result_skipped;
-            }
-            if(pc->flags & APC_EXTENSIBLE) {
-                switch(asn_random_between(0, 5)) {
-                case 0:
-                    if(pc->lower_bound > 0) {
-                        rnd_len = pc->lower_bound - 1;
-                        break;
-                    }
-                    /* Fall through */
-                case 1:
-                    rnd_len = pc->upper_bound + 1;
-                    break;
-                case 2:
-                    /* Keep rnd_len from the table */
-                    if(rnd_len < max_length) {
-                        break;
-                    }
-                    /* Fall through */
-                default:
-                    rnd_len = asn_random_between(pc->lower_bound,
-                                                 suggested_upper_bound);
-                }
-            } else {
-                rnd_len =
-                    asn_random_between(pc->lower_bound, suggested_upper_bound);
-            }
-        } else {
-            rnd_len = asn_random_between(0, max_length - 1);
-        }
-    } else if(rnd_len >= max_length) {
-        rnd_len = asn_random_between(0, max_length - 1);
-    }
+    rnd_len =
+        OCTET_STRING_random_length_constrained(td, constraints, max_length);
 
     buf = CALLOC(unit_bytes, rnd_len + 1);
     if(!buf) return result_failed;

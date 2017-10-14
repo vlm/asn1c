@@ -89,6 +89,10 @@ typedef struct asn_OCTET_STRING_specifics_s {
 
 extern asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs;
 
+size_t OCTET_STRING_random_length_constrained(
+    const asn_TYPE_descriptor_t *, const asn_encoding_constraints_t *,
+    size_t max_length);
+
 #ifdef __cplusplus
 }
 #endif

@@ -203,22 +203,21 @@ UTF8String_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 /*
  * Biased function for randomizing UTF-8 sequences.
  */
-static uint32_t
+static size_t
 UTF8String__random_char(uint8_t *b, size_t size) {
-    struct rnd_value {
+    static const struct rnd_value {
         const char *value;
         size_t size;
-    };
-    static const struct rnd_value values[] = {{"\0", 1},
-                                              {"\x01", 1},
-                                              {"\x7f", 1},
-                                              {"\xc2\xa2", 2},
-                                              {"\xe2\x82\xac", 3},
-                                              {"\xf0\x90\x8d\x88", 4},
-                                              {"\xf4\x8f\xbf\xbf", 4}};
+    } values[] = {{"\0", 1},
+                  {"\x01", 1},
+                  {"\x7f", 1},
+                  {"\xc2\xa2", 2},
+                  {"\xe2\x82\xac", 3},
+                  {"\xf0\x90\x8d\x88", 4},
+                  {"\xf4\x8f\xbf\xbf", 4}};
 
     const struct rnd_value *v;
-    size_t max_idx;
+    size_t max_idx = 0;
 
     switch(size) {
     case 0:
@@ -230,8 +229,10 @@ UTF8String__random_char(uint8_t *b, size_t size) {
     case 2:
         max_idx = 3;
         break;
+    default:
     case 4:
-        return sizeof(values) / sizeof(values[0]) - 1;
+        max_idx = sizeof(values) / sizeof(values[0]) - 1;
+        break;
     }
 
     v = &values[asn_random_between(0, max_idx)];
@@ -246,9 +247,6 @@ UTF8String_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     asn_random_fill_result_t result_ok = {ARFILL_OK, 1};
     asn_random_fill_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
-    static unsigned lengths[] = {0,     1,     2,     3,     4,     8,
-                                 126,   127,   128,   16383, 16384, 16385,
-                                 65534, 65535, 65536, 65537};
     uint8_t *buf;
     uint8_t *bend;
     uint8_t *b;
@@ -256,17 +254,11 @@ UTF8String_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     size_t idx;
     UTF8String_t *st;
 
-    (void)td;
-    (void)constraints;
-
-    if(max_length == 0) return result_skipped;
+    if(max_length == 0 && !*sptr) return result_skipped;
 
     /* Figure out how far we should go */
-    rnd_len = lengths[asn_random_between(
-        0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
-    if(4 * rnd_len >= max_length) {
-        rnd_len = asn_random_between(0, (max_length - 1) / 4);
-    }
+    rnd_len = OCTET_STRING_random_length_constrained(td, constraints,
+                                                     max_length / 4);
 
     buf = CALLOC(4, rnd_len + 1);
     if(!buf) return result_failed;
@@ -288,10 +280,11 @@ UTF8String_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
             return result_failed;
         }
     }
-    assert(UTF8String_length(st) == (ssize_t)rnd_len);
 
     st->buf = buf;
     st->size = b - buf;
+
+    assert(UTF8String_length(st) == (ssize_t)rnd_len);
 
     return result_ok;
 }
