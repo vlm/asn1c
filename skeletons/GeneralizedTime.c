@@ -766,8 +766,28 @@ GeneralizedTime_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
     if(a && b) {
         int afrac_value, afrac_digits;
         int bfrac_value, bfrac_digits;
-        time_t at = asn_GT2time_frac(a, &afrac_value, &afrac_digits, 0, 0);
-        time_t bt = asn_GT2time_frac(b, &bfrac_value, &bfrac_digits, 0, 0);
+        int aerr, berr;
+        time_t at, bt;
+
+        errno = EPERM;
+        at = asn_GT2time_frac(a, &afrac_value, &afrac_digits, 0, 0);
+        aerr = errno;
+        errno = EPERM;
+        bt = asn_GT2time_frac(b, &bfrac_value, &bfrac_digits, 0, 0);
+        berr = errno;
+
+        if(at == -1 && aerr != EPERM) {
+            if(bt == -1 && berr != EPERM) {
+                return OCTET_STRING_compare(td, aptr, bptr);
+            } else {
+                return -1;
+            }
+        } else if(bt == -1 && berr != EPERM) {
+            return 1;
+        } else {
+            /* Both values are valid. */
+        }
+
         if(at < bt) {
             return -1;
         } else if(at > bt) {

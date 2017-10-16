@@ -235,8 +235,28 @@ UTCTime_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
     (void)td;
 
     if(a && b) {
-        time_t at = asn_UT2time(a, 0, 0);
-        time_t bt = asn_UT2time(b, 0, 0);
+        time_t at, bt;
+        int aerr, berr;
+
+        errno = EPERM;
+        at = asn_UT2time(a, 0, 0);
+        aerr = errno;
+        errno = EPERM;
+        bt = asn_UT2time(b, 0, 0);
+        berr = errno;
+
+        if(at == -1 && aerr != EPERM) {
+            if(bt == -1 && berr != EPERM) {
+                return OCTET_STRING_compare(td, aptr, bptr);
+            } else {
+                return -1;
+            }
+        } else if(bt == -1 && berr != EPERM) {
+            return 1;
+        } else {
+            /* Both values are valid. */
+        }
+
         if(at < bt) {
             return -1;
         } else if(at > bt) {
