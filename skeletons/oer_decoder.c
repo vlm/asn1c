@@ -64,6 +64,8 @@ oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
     asn_dec_rval_t dr;
     size_t container_len = 0;
     ssize_t len_len;
+    enum asn_struct_free_method dispose_method =
+        (*struct_ptr) ? ASFM_FREE_UNDERLYING_AND_RESET : ASFM_FREE_EVERYTHING;
 
     /* Get the size of a length determinant */
     len_len = oer_fetch_length(bufptr, size, &container_len);
@@ -86,8 +88,7 @@ oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
         return len_len + container_len;
     } else {
         /* Even if RC_WMORE, we can't get more data into a closed container. */
-        ASN_STRUCT_FREE(*td, *struct_ptr);
-        *struct_ptr = 0;
+        td->op->free_struct(td, *struct_ptr, dispose_method);
         return -1;
     }
 }

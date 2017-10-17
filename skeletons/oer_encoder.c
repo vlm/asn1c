@@ -109,3 +109,34 @@ oer_encode_primitive(asn_TYPE_descriptor_t *td,
     }
 }
 
+static int
+oer__count_bytes(const void *buffer, size_t size, void *bytes_ptr) {
+    size_t *bytes = bytes_ptr;
+    *bytes += size;
+    return 0;
+}
+
+ssize_t
+oer_open_type_put(asn_TYPE_descriptor_t *td,
+                  const asn_oer_constraints_t *constraints,
+                  void *sptr, asn_app_consume_bytes_f *cb,
+                  void *app_key) {
+    size_t serialized_byte_count = 0;
+    asn_enc_rval_t er;
+    ssize_t len_len;
+
+    er = td->op->oer_encoder(td, constraints, sptr, oer__count_bytes,
+                             &serialized_byte_count);
+    if(er.encoded == -1) return -1;
+    assert(serialized_byte_count == er.encoded);
+
+    len_len = oer_serialize_length(serialized_byte_count, cb, app_key);
+    if(len_len == -1) return -1;
+
+    er = td->op->oer_encoder(td, constraints, sptr, cb, app_key);
+    if(er.encoded == -1) return -1;
+    assert(serialized_byte_count == er.encoded);
+
+    return er.encoded + len_len;
+}
+

@@ -1,1 +1,11 @@
 CHOICE { null NULL }
+CHOICE { null NULL, ... }
+CHOICE { one NULL, two [2] NULL }
+CHOICE { one NULL, two [2] NULL, ... }
+CHOICE { one NULL, ..., two [2] NULL }
+CHOICE { one NULL, two [2] NULL, ..., three [3] NULL }
+CHOICE { one NULL, ..., two [2] NULL, three [3] NULL }
+CHOICE { one BOOLEAN, ..., two [2] BOOLEAN, three [3] BOOLEAN }
+CHOICE { one BOOLEAN, two BIT STRING (SIZE(1..3)) }
+CHOICE { ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
+CHOICE { one NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }

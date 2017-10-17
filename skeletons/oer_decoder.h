@@ -41,8 +41,8 @@ typedef asn_dec_rval_t(oer_type_decoder_f)(
 /*
  * Swallow the Open Type (X.696 (08/2015), #30) into /dev/null.
  * RETURN VALUES:
- *       0:     More data expected than bufptr contains.
  *      -1:     Fatal error deciphering length.
+ *       0:     More data expected than bufptr contains.
  *      >0:     Number of bytes used from bufptr.
  */
 ssize_t oer_open_type_skip(const void *bufptr, size_t size);

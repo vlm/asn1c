@@ -238,15 +238,20 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *t
         (void)CHOICE_variant_set_presence(td, st, ctx->step + 1);
 
         if(specs->ext_start >= 0 && specs->ext_start <= ctx->step) {
-            /* We're in the extensions group. #20.2 requires Open Type */
-            ASN_DEBUG("Not implemented %s es=%d, edx=%u at %s:%d", td->name,
-                      specs->ext_start, ctx->step, __FILE__, __LINE__);
-            RETURN(RC_FAIL);
+            ssize_t got =
+                oer_open_type_get(opt_codec_ctx, elm->type,
+                                  elm->encoding_constraints.oer_constraints,
+                                  memb_ptr2, ptr, size);
+            if(got < 0) ASN__DECODE_FAILED;
+            if(got == 0) ASN__DECODE_STARVED;
+            rval.code = RC_OK;
+            rval.consumed = got;
+        } else {
+            rval = elm->type->op->oer_decoder(
+                opt_codec_ctx, elm->type,
+                elm->encoding_constraints.oer_constraints, memb_ptr2, ptr,
+                size);
         }
-
-        rval = elm->type->op->oer_decoder(opt_codec_ctx, elm->type,
-                                          elm->encoding_constraints.oer_constraints, memb_ptr2, ptr,
-                                          size);
         rval.consumed += consumed_myself;
         switch(rval.code) {
         case RC_OK:
@@ -319,10 +324,9 @@ CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
     void *memb_ptr;
     ber_tlv_tag_t tag;
     ssize_t tag_len;
-    asn_enc_rval_t er;
+    asn_enc_rval_t er = {0, 0, 0};
 
     (void)constraints;
-    (void)specs;
 
     if(!sptr) ASN__ENCODE_FAILED;
 
@@ -355,10 +359,18 @@ CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
         ASN__ENCODE_FAILED;
     }
 
-    er = elm->type->op->oer_encoder(elm->type, elm->encoding_constraints.oer_constraints, memb_ptr,
-                                    cb, app_key);
-    if(er.encoded >= 0)
-        er.encoded += tag_len;
+    if(specs->ext_start >= 0 && specs->ext_start <= (present-1)) {
+        ssize_t encoded = oer_open_type_put(elm->type,
+                               elm->encoding_constraints.oer_constraints,
+                               memb_ptr, cb, app_key);
+        if(encoded < 0) ASN__ENCODE_FAILED;
+        er.encoded = tag_len + encoded;
+    } else {
+        er = elm->type->op->oer_encoder(
+            elm->type, elm->encoding_constraints.oer_constraints, memb_ptr, cb,
+            app_key);
+        if(er.encoded >= 0) er.encoded += tag_len;
+    }
 
     return er;
 }

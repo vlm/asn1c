@@ -45,6 +45,18 @@ typedef asn_enc_rval_t(oer_type_encoder_f)(
     void *app_key                              /* Arbitrary callback argument */
     );
 
+/*
+ * Write out the Open Type (X.696 (08/2015), #30).
+ * RETURN VALUES:
+ *      -1:     Fatal error encoding the type.
+ *     >=0:     Number of bytes serialized.
+ */
+ssize_t oer_open_type_put(struct asn_TYPE_descriptor_s *td,
+                          const asn_oer_constraints_t *constraints,
+                          void *struct_ptr,
+                          asn_app_consume_bytes_f *consume_bytes_cb,
+                          void *app_key);
+
 
 /*
  * Length-prefixed buffer encoding for primitive types.
