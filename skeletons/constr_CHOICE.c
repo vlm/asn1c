@@ -1176,7 +1176,7 @@ CHOICE_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bp
     unsigned apresent = 0;
     unsigned bpresent = 0;
     const void *amember = _get_member_ptr(td, aptr, &aelm, &apresent);
-    const void *bmember = _get_member_ptr(td, bptr, &belm, &apresent);
+    const void *bmember = _get_member_ptr(td, bptr, &belm, &bpresent);
 
     if(amember && bmember) {
         if(apresent == bpresent) {

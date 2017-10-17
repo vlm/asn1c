@@ -357,7 +357,7 @@ CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
 
     er = elm->type->op->oer_encoder(elm->type, elm->encoding_constraints.oer_constraints, memb_ptr,
                                     cb, app_key);
-    if(er.encoded > 0)
+    if(er.encoded >= 0)
         er.encoded += tag_len;
 
     return er;

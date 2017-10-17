@@ -38,6 +38,7 @@ TESTS += bundles/11-BMPString-bundle.txt
 TESTS += bundles/12-UniversalString-bundle.txt
 TESTS += bundles/13-UTCTime-bundle.txt
 TESTS += bundles/14-GeneralizedTime-bundle.txt
+TESTS += bundles/15-CHOICE-bundle.txt
 
 EXTRA_DIST =                    \
     random-test-driver.c        \
