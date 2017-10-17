@@ -34,8 +34,10 @@ TESTS += bundles/07-VisibleString-bundle.txt
 TESTS += bundles/08-OBJECT-IDENTIFIER-bundle.txt
 TESTS += bundles/09-RELATIVE-OID-bundle.txt
 TESTS += bundles/10-UTF8String-bundle.txt
-TESTS += bundles/11-UTCTime-bundle.txt
-TESTS += bundles/12-GeneralizedTime-bundle.txt
+TESTS += bundles/11-BMPString-bundle.txt
+TESTS += bundles/12-UniversalString-bundle.txt
+TESTS += bundles/13-UTCTime-bundle.txt
+TESTS += bundles/14-GeneralizedTime-bundle.txt
 
 EXTRA_DIST =                    \
     random-test-driver.c        \

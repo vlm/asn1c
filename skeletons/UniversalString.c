@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_internal.h>
@@ -234,5 +234,38 @@ UniversalString_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		return -1;
 
 	return 0;
+}
+
+/*
+ * Biased function for randomizing UCS-4 sequences.
+ */
+static size_t
+UniversalString__random_char(uint8_t *b) {
+    uint32_t code;
+
+    switch(asn_random_between(0, 4)) {
+    case 0:
+        code = 0;
+        break;
+    case 1:
+        code = 1;
+        break;
+    case 2:
+        code = 0xd7ff;  /* End of pre-surrogate block */
+        break;
+    case 3:
+        code = 0xe000;  /* Beginning of post-surrogate block */
+        break;
+    case 4:
+        code = 0x10ffff;
+        break;
+    }
+
+    b[0] = code >> 24;
+    b[1] = code >> 16;
+    b[2] = code >> 8;
+    b[3] = code;
+
+    return 4;
 }
 

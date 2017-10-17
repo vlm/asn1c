@@ -2129,7 +2129,9 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	if((arg->flags & A1C_GEN_PER)
 	&& (expr->combined_constraints
 		|| etype == ASN_BASIC_ENUMERATED
-		|| etype == ASN_CONSTR_CHOICE)
+		|| etype == ASN_CONSTR_CHOICE
+		|| (etype & ASN_STRING_KM_MASK)
+        )
 	) {
 		/* Fall through */
 	} else {
@@ -2978,10 +2980,11 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
         OUT(", ");
 
 		if(arg->flags & A1C_GEN_PER) {
-			if(expr->combined_constraints
-			|| expr->expr_type == ASN_BASIC_ENUMERATED
-			|| expr->expr_type == ASN_CONSTR_CHOICE) {
-				OUT("&asn_PER_type_%s_constr_%d",
+            if(expr->combined_constraints
+               || expr->expr_type == ASN_BASIC_ENUMERATED
+               || expr->expr_type == ASN_CONSTR_CHOICE
+               || (expr->expr_type & ASN_STRING_KM_MASK)) {
+                OUT("&asn_PER_type_%s_constr_%d",
 					expr_id, expr->_type_unique_index);
 			} else {
 				OUT("0");

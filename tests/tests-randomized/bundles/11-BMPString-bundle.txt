@@ -1,0 +1,7 @@
+BMPString
+BMPString (SIZE(0))
+BMPString (SIZE(1))
+BMPString (SIZE(3))
+BMPString (FROM("A".."Z"))
+BMPString (FROM("A".."Z") INTERSECTION SIZE(0))
+BMPString (FROM("A".."Z") INTERSECTION SIZE(3))

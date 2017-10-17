@@ -1,0 +1,7 @@
+UniversalString
+UniversalString (SIZE(0))
+UniversalString (SIZE(1))
+UniversalString (SIZE(3))
+UniversalString (FROM("A".."Z"))
+UniversalString (FROM("A".."Z") INTERSECTION SIZE(0))
+UniversalString (FROM("A".."Z") INTERSECTION SIZE(3))
