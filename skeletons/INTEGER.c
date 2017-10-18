@@ -110,7 +110,7 @@ INTEGER_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
         }
     }
 
-	rval = der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
+    rval = der_encode_primitive(td, st, tag_mode, tag, cb, app_key);
     if(rval.structure_ptr == &effective_integer) {
         rval.structure_ptr = sptr;
     }
