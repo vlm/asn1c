@@ -2466,7 +2466,7 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		OUT("\tFREEMEM(st->buf);\n");
 		OUT("} else {\n");
 		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
-		OUT("\tif(!st) { FREEMEM(nptr); return -1; }\n");
+		OUT("\tif(!st) { FREEMEM(nstr); return -1; }\n");
 		OUT("}\n");
 		OUT("st->buf = nstr;\n");
         OUT("st->size = sizeof(defv) - 1;\n");
