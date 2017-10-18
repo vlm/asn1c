@@ -104,6 +104,7 @@ oer_decode_primitive(const asn_codec_ctx_t *opt_codec_ctx,
     size_t expected_length = 0;
     ssize_t len_len;
 
+    (void)td;
     (void)opt_codec_ctx;
     (void)constraints;
 
