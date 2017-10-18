@@ -491,7 +491,7 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
                   size_in_bits - csiz->lower_bound, csiz->effective_bits);
         ret = per_put_few_bits(
             po,
-            add_trailer ? csiz->lower_bound : size_in_bits - csiz->lower_bound,
+            add_trailer ? csiz->lower_bound : (ssize_t)size_in_bits - csiz->lower_bound,
             csiz->effective_bits);
         if(ret) ASN__ENCODE_FAILED;
         ret = per_put_many_bits(po, st->buf, size_in_bits);
@@ -577,7 +577,7 @@ BIT_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         if(pc->flags & APC_CONSTRAINED) {
             long suggested_upper_bound = pc->upper_bound < (ssize_t)max_length
                                              ? pc->upper_bound
-                                             : max_length;
+                                             : (ssize_t)max_length;
             if(max_length < (size_t)pc->lower_bound) {
                 return result_skipped;
             }
