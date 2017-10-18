@@ -17,4 +17,4 @@ CHOICE { one BOOLEAN, ..., two [2] BOOLEAN, three [3] BOOLEAN }
 CHOICE { one BOOLEAN, two BIT STRING (SIZE(1..3)) }
 CHOICE { null NULL, ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
 CHOICE { one NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
-CHOICE { null NULL, ..., one NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+CHOICE { null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
