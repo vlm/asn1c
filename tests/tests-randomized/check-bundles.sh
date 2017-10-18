@@ -67,7 +67,7 @@ verify_asn_types_in_file() {
     line=0
     asn=""
     while read asn; do
-        line=`echo "$line+1" | bc`
+        line=`expr ${line} + 1`
         if echo "$asn" | sed -e 's/--.*//;' | grep -vi "[A-Z]" > /dev/null; then
             # Ignore lines consisting of just comments.
             continue;
@@ -98,9 +98,9 @@ verify_asn_type() {
     mkdir -p ${RNDTEMP}
     if (set -e && cd "${RNDTEMP}" && compile_and_test "$asn" "${where}"); then
         echo "OK [$asn] ${where}"
-        tests_succeeded=`echo "$tests_succeeded + 1" | bc`
+        tests_succeeded=`expr ${tests_succeeded} + 1`
     else
-        tests_failed=`echo "$tests_failed + 1" | bc`
+        tests_failed=`expr ${tests_failed} + 1`
         echo "FAIL [$asn] ${where}"
     fi
 }
