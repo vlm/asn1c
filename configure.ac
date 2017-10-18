@@ -121,6 +121,8 @@ AC_ARG_ENABLE(test-Werror,
   AS_IF([test x$enable_test_werror != xno], [
       TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Werror -W -Wpointer-arith"
   ])
+AX_CHECK_COMPILE_FLAG([-Wno-format],
+    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-format"])
 
 
 dnl If -m32 is available to create 32-bit code,
