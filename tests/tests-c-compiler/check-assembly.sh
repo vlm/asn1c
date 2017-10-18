@@ -93,6 +93,7 @@ all: compiled-module
 compiled-module: ${asn_module} ${abs_top_builddir}/asn1c/asn1c
 	${abs_top_builddir}/asn1c/asn1c		\\
 		-S ${abs_top_srcdir}/skeletons	\\
+		-flink-skeletons 		\\
 		-Wdebug-compiler		\\
 		${AFLAGS} ${asn_module}
 	rm -f converter-example.c

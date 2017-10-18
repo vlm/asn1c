@@ -237,7 +237,7 @@ asn_compile() {
     } > test.asn1
     echo "${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons"
     if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
-        -gen-OER -gen-PER ${asn1c_flags} test.asn1
+        -gen-OER -gen-PER ${asn1c_flags} -flink-skeletons test.asn1
     then
         echo "ASN.1 compiled OK"
     else
