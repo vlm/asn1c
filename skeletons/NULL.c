@@ -52,10 +52,9 @@ asn_TYPE_descriptor_t asn_DEF_NULL = {
 };
 
 asn_enc_rval_t
-NULL_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t erval;
+NULL_encode_der(const asn_TYPE_descriptor_t *td, const void *ptr, int tag_mode,
+                ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
+    asn_enc_rval_t erval;
 
 	erval.encoded = der_write_tags(td, 0, tag_mode, 0, tag, cb, app_key);
 	if(erval.encoded == -1) {
@@ -67,10 +66,10 @@ NULL_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 }
 
 asn_enc_rval_t
-NULL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t er;
+NULL_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+                enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb,
+                void *app_key) {
+    asn_enc_rval_t er;
 
 	(void)td;
 	(void)sptr;
@@ -86,8 +85,9 @@ NULL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 
 
 static enum xer_pbd_rval
-NULL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
-	(void)td;
+NULL__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
+                      const void *chunk_buf, size_t chunk_size) {
+    (void)td;
 	(void)sptr;
 	(void)chunk_buf;    /* Going to be empty according to the rules below. */
 
@@ -102,10 +102,9 @@ NULL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_b
 
 asn_dec_rval_t
 NULL_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
-
-	return xer_decode_primitive(opt_codec_ctx, td,
+                const asn_TYPE_descriptor_t *td, void **sptr,
+                const char *opt_mname, const void *buf_ptr, size_t size) {
+    return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(NULL_t), opt_mname, buf_ptr, size,
 		NULL__xer_body_decode);
 }
@@ -119,10 +118,9 @@ NULL_compare(const asn_TYPE_descriptor_t *td, const void *a, const void *b) {
 }
 
 int
-NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-
-	(void)td;	/* Unused argument */
+NULL_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+           asn_app_consume_bytes_f *cb, void *app_key) {
+    (void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
 
 	if(sptr) {
@@ -135,9 +133,10 @@ NULL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 #ifndef ASN_DISABLE_OER_SUPPORT
 
 asn_dec_rval_t
-NULL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                  const asn_oer_constraints_t *constraints, void **struct_ptr,
-                  const void *ptr, size_t size) {
+NULL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
+                const asn_TYPE_descriptor_t *td,
+                const asn_oer_constraints_t *constraints, void **struct_ptr,
+                const void *ptr, size_t size) {
     asn_dec_rval_t rv = {RC_OK, 0};
     (void)opt_codec_ctx;
     (void)td;
@@ -149,8 +148,8 @@ NULL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-NULL_encode_oer(asn_TYPE_descriptor_t *td,
-                const asn_oer_constraints_t *constraints, void *sptr,
+NULL_encode_oer(const asn_TYPE_descriptor_t *td,
+                const asn_oer_constraints_t *constraints, const void *sptr,
                 asn_app_consume_bytes_f *cb, void *app_key) {
     asn_enc_rval_t er;
 
@@ -170,7 +169,8 @@ NULL_encode_oer(asn_TYPE_descriptor_t *td,
 #ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-NULL_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+NULL_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
+                 const asn_TYPE_descriptor_t *td,
                  const asn_per_constraints_t *constraints, void **sptr,
                  asn_per_data_t *pd) {
     asn_dec_rval_t rv;
@@ -199,8 +199,8 @@ NULL_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td
 }
 
 asn_enc_rval_t
-NULL_encode_uper(asn_TYPE_descriptor_t *td,
-                 const asn_per_constraints_t *constraints, void *sptr,
+NULL_encode_uper(const asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, const void *sptr,
                  asn_per_outp_t *po) {
     asn_enc_rval_t er;
 

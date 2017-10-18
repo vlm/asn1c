@@ -39,7 +39,7 @@ asn_TYPE_member_t asn_MBR_Collection_16P0_1[] = {
 		.type = &asn_DEF_REAL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -74,7 +74,7 @@ asn_TYPE_member_t asn_MBR_Collection_16P1_3[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -131,7 +131,7 @@ static asn_TYPE_member_t asn_MBR_Bunch_1[] = {
 		.type = &asn_DEF_Collection_16P0,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "field-REAL"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Bunch, field_IA5String),
@@ -140,7 +140,7 @@ static asn_TYPE_member_t asn_MBR_Bunch_1[] = {
 		.type = &asn_DEF_Collection_16P1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "field-IA5String"
 		},
 };

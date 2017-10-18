@@ -306,9 +306,9 @@ REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key) 
 }
 
 int
-REAL_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	const REAL_t *st = (const REAL_t *)sptr;
+REAL_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+           asn_app_consume_bytes_f *cb, void *app_key) {
+    const REAL_t *st = (const REAL_t *)sptr;
 	ssize_t ret;
 	double d;
 
@@ -369,10 +369,10 @@ REAL_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
 }
 
 asn_enc_rval_t
-REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	REAL_t *st = (REAL_t *)sptr;
+REAL_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+                enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb,
+                void *app_key) {
+    const REAL_t *st = (const REAL_t *)sptr;
 	asn_enc_rval_t er;
 	double d;
 
@@ -392,8 +392,9 @@ REAL_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
  * Decode the chunk of XML text encoding REAL.
  */
 static enum xer_pbd_rval
-REAL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
-	REAL_t *st = (REAL_t *)sptr;
+REAL__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
+                      const void *chunk_buf, size_t chunk_size) {
+    REAL_t *st = (REAL_t *)sptr;
 	double value;
 	const char *xerdata = (const char *)chunk_buf;
 	char *endptr = 0;
@@ -458,10 +459,9 @@ REAL__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_b
 
 asn_dec_rval_t
 REAL_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
-
-	return xer_decode_primitive(opt_codec_ctx, td,
+                const asn_TYPE_descriptor_t *td, void **sptr,
+                const char *opt_mname, const void *buf_ptr, size_t size) {
+    return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(REAL_t), opt_mname,
 		buf_ptr, size, REAL__xer_body_decode);
 }
@@ -846,8 +846,8 @@ asn_double2float(double d, float *outcome) {
  * Encode as Canonical OER
  */
 asn_enc_rval_t
-REAL_encode_oer(asn_TYPE_descriptor_t *td,
-                const asn_oer_constraints_t *constraints, void *sptr,
+REAL_encode_oer(const asn_TYPE_descriptor_t *td,
+                const asn_oer_constraints_t *constraints, const void *sptr,
                 asn_app_consume_bytes_f *cb, void *app_key) {
     const REAL_t *st = sptr;
     asn_enc_rval_t er;
@@ -874,7 +874,8 @@ REAL_encode_oer(asn_TYPE_descriptor_t *td,
 }
 
 asn_dec_rval_t
-REAL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+REAL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
+                const asn_TYPE_descriptor_t *td,
                 const asn_oer_constraints_t *constraints, void **sptr,
                 const void *ptr, size_t size) {
     asn_dec_rval_t ok = {RC_OK, 0};
@@ -929,7 +930,8 @@ REAL_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 #ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-REAL_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+REAL_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
+                 const asn_TYPE_descriptor_t *td,
                  const asn_per_constraints_t *constraints, void **sptr,
                  asn_per_data_t *pd) {
     (void)constraints;	/* No PER visible constraints */
@@ -937,8 +939,8 @@ REAL_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td
 }
 
 asn_enc_rval_t
-REAL_encode_uper(asn_TYPE_descriptor_t *td,
-                 const asn_per_constraints_t *constraints, void *sptr,
+REAL_encode_uper(const asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints, const void *sptr,
                  asn_per_outp_t *po) {
     (void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_encode_uper(td, 0, sptr, po);

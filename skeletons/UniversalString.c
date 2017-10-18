@@ -64,13 +64,13 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 };
 
 int
-UniversalString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+UniversalString_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
                            asn_app_constraint_failed_f *ctfailcb,
                            void *app_key) {
     const UniversalString_t *st = (const UniversalString_t *)sptr;
 
     if(st && st->buf) {
-        if(st->size & 3) {
+        if(st->size % 4) {
             ASN__CTFAIL(app_key, td, sptr,
                         "%s: invalid size %zu not divisible by 4 (%s:%d)",
                         td->name, st->size, __FILE__, __LINE__);
@@ -146,9 +146,10 @@ UniversalString__dump(const UniversalString_t *st,
 
 asn_dec_rval_t
 UniversalString_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr,
-		const char *opt_mname, const void *buf_ptr, size_t size) {
-	asn_dec_rval_t rc;
+                           const asn_TYPE_descriptor_t *td, void **sptr,
+                           const char *opt_mname, const void *buf_ptr,
+                           size_t size) {
+    asn_dec_rval_t rc;
 
 	rc = OCTET_STRING_decode_xer_utf8(opt_codec_ctx, td, sptr, opt_mname,
 		buf_ptr, size);
@@ -202,10 +203,10 @@ UniversalString_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_enc_rval_t
-UniversalString_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	const UniversalString_t *st = (const UniversalString_t *)sptr;
+UniversalString_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                           int ilevel, enum xer_encoder_flags_e flags,
+                           asn_app_consume_bytes_f *cb, void *app_key) {
+    const UniversalString_t *st = (const UniversalString_t *)sptr;
 	asn_enc_rval_t er;
 
 	(void)ilevel;
@@ -221,9 +222,9 @@ UniversalString_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-UniversalString_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	const UniversalString_t *st = (const UniversalString_t *)sptr;
+UniversalString_print(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+    const UniversalString_t *st = (const UniversalString_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
@@ -234,38 +235,5 @@ UniversalString_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 		return -1;
 
 	return 0;
-}
-
-/*
- * Biased function for randomizing UCS-4 sequences.
- */
-static size_t
-UniversalString__random_char(uint8_t *b) {
-    uint32_t code;
-
-    switch(asn_random_between(0, 4)) {
-    case 0:
-        code = 0;
-        break;
-    case 1:
-        code = 1;
-        break;
-    case 2:
-        code = 0xd7ff;  /* End of pre-surrogate block */
-        break;
-    case 3:
-        code = 0xe000;  /* Beginning of post-surrogate block */
-        break;
-    case 4:
-        code = 0x10ffff;
-        break;
-    }
-
-    b[0] = code >> 24;
-    b[1] = code >> 16;
-    b[2] = code >> 8;
-    b[3] = code;
-
-    return 4;
 }
 

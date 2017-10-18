@@ -10,9 +10,9 @@
  */
 asn_dec_rval_t
 oer_decode(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *type_descriptor,
-	void **struct_ptr, const void *ptr, size_t size) {
-	asn_codec_ctx_t s_codec_ctx;
+           const asn_TYPE_descriptor_t *type_descriptor, void **struct_ptr,
+           const void *ptr, size_t size) {
+    asn_codec_ctx_t s_codec_ctx;
 
 	/*
 	 * Stack checker requires that the codec context
@@ -58,7 +58,7 @@ oer_open_type_skip(const void *bufptr, size_t size) {
  */
 ssize_t
 oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
-                  struct asn_TYPE_descriptor_s *td,
+                  const struct asn_TYPE_descriptor_s *td,
                   const asn_oer_constraints_t *constraints, void **struct_ptr,
                   const void *bufptr, size_t size) {
     asn_dec_rval_t dr;
@@ -96,7 +96,7 @@ oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
 
 asn_dec_rval_t
 oer_decode_primitive(const asn_codec_ctx_t *opt_codec_ctx,
-                     asn_TYPE_descriptor_t *td,
+                     const asn_TYPE_descriptor_t *td,
                      const asn_oer_constraints_t *constraints, void **sptr,
                      const void *ptr, size_t size) {
     ASN__PRIMITIVE_TYPE_t *st = (ASN__PRIMITIVE_TYPE_t *)*sptr;

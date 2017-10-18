@@ -50,7 +50,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, s),
@@ -59,7 +59,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "s"
 		},
 	{ ATF_POINTER, 1, offsetof(struct T, b),
@@ -68,7 +68,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 };

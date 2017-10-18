@@ -40,7 +40,7 @@ extern asn_TYPE_descriptor_t asn_DEF_LogLine;
 /*** <<< CODE [LogLine] >>> ***/
 
 static int
-memb_varsets_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_varsets_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
@@ -75,7 +75,7 @@ static asn_TYPE_member_t asn_MBR_varsets_3[] = {
 		.type = &asn_DEF_VariablePartSet,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -111,7 +111,7 @@ static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "line-digest"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct LogLine, varsets),
@@ -120,7 +120,7 @@ static asn_TYPE_member_t asn_MBR_LogLine_1[] = {
 		.type = &asn_DEF_varsets_3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_varsets_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "varsets"
 		},
 };
@@ -200,7 +200,7 @@ extern asn_TYPE_member_t asn_MBR_VariablePartSet_1[2];
 /*** <<< CODE [VariablePartSet] >>> ***/
 
 static int
-memb_vparts_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_vparts_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -228,7 +228,7 @@ static asn_TYPE_member_t asn_MBR_vparts_2[] = {
 		.type = &asn_DEF_VariablePart,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -264,7 +264,7 @@ asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
 		.type = &asn_DEF_vparts_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_vparts_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "vparts"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePartSet, resolution),
@@ -273,7 +273,7 @@ asn_TYPE_member_t asn_MBR_VariablePartSet_1[] = {
 		.type = &asn_DEF_ActionItem,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "resolution"
 		},
 };
@@ -369,7 +369,7 @@ extern asn_TYPE_member_t asn_MBR_VariablePart_1[2];
 /*** <<< CODE [VariablePart] >>> ***/
 
 static int
-memb_vset_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_vset_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
@@ -404,7 +404,7 @@ static asn_TYPE_member_t asn_MBR_vset_2[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -440,7 +440,7 @@ static asn_TYPE_member_t asn_MBR_vrange_4[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "from"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct vrange, to),
@@ -449,7 +449,7 @@ static asn_TYPE_member_t asn_MBR_vrange_4[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "to"
 		},
 };
@@ -493,7 +493,7 @@ asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 		.type = &asn_DEF_vset_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_vset_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "vset"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct VariablePart, choice.vrange),
@@ -502,7 +502,7 @@ asn_TYPE_member_t asn_MBR_VariablePart_1[] = {
 		.type = &asn_DEF_vrange_4,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "vrange"
 		},
 };
@@ -517,7 +517,7 @@ asn_CHOICE_specifics_t asn_SPC_VariablePart_specs_1 = {
 	sizeof(((struct VariablePart *)0)->present),
 	.tag2el = asn_MAP_VariablePart_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = 2	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_VariablePart = {
@@ -647,7 +647,7 @@ static asn_TYPE_member_t asn_MBR_email_9[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -683,7 +683,7 @@ static asn_TYPE_member_t asn_MBR_notify_7[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "critical"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct notify, email),
@@ -692,7 +692,7 @@ static asn_TYPE_member_t asn_MBR_notify_7[] = {
 		.type = &asn_DEF_email_9,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "email"
 		},
 };
@@ -736,7 +736,7 @@ asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 		.type = &asn_DEF_accept_as_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "accept-as"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ActionItem, notify),
@@ -745,7 +745,7 @@ asn_TYPE_member_t asn_MBR_ActionItem_1[] = {
 		.type = &asn_DEF_notify_7,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "notify"
 		},
 };

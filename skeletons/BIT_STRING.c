@@ -61,9 +61,9 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
  * BIT STRING generic constraint.
  */
 int
-BIT_STRING_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+BIT_STRING_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+    const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 
 	if(st && st->buf) {
 		if((st->size == 0 && st->bits_unused)
@@ -89,10 +89,10 @@ static const char *_bit_pattern[16] = {
 };
 
 asn_enc_rval_t
-BIT_STRING_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t er;
+BIT_STRING_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      int ilevel, enum xer_encoder_flags_e flags,
+                      asn_app_consume_bytes_f *cb, void *app_key) {
+    asn_enc_rval_t er;
 	char scratch[128];
 	char *p = scratch;
 	char *scend = scratch + (sizeof(scratch) - 10);
@@ -151,9 +151,9 @@ cb_failed:
  * BIT STRING specific contents printer.
  */
 int
-BIT_STRING_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	const char * const h2c = "0123456789ABCDEF";
+BIT_STRING_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+                 asn_app_consume_bytes_f *cb, void *app_key) {
+    const char * const h2c = "0123456789ABCDEF";
 	char scratch[64];
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	uint8_t *buf;
@@ -316,9 +316,9 @@ static asn_per_constraint_t asn_DEF_BIT_STRING_constraint_size = {
 
 asn_dec_rval_t
 BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
-                         asn_TYPE_descriptor_t *td,
-                         const asn_per_constraints_t *constraints, void **sptr,
-                         asn_per_data_t *pd) {
+                       const asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints, void **sptr,
+                       asn_per_data_t *pd) {
     const asn_OCTET_STRING_specifics_t *specs = td->specifics
 		? (const asn_OCTET_STRING_specifics_t *)td->specifics
 		: &asn_SPC_BIT_STRING_specs;
@@ -419,9 +419,9 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_enc_rval_t
-BIT_STRING_encode_uper(asn_TYPE_descriptor_t *td,
-                         const asn_per_constraints_t *constraints, void *sptr,
-                         asn_per_outp_t *po) {
+BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints,
+                       const void *sptr, asn_per_outp_t *po) {
     const asn_OCTET_STRING_specifics_t *specs =
         td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
                       : &asn_SPC_BIT_STRING_specs;
@@ -573,8 +573,7 @@ BIT_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
     if(!constraints) constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
-        const asn_per_constraint_t *pc =
-            &td->encoding_constraints.per_constraints->size;
+        const asn_per_constraint_t *pc = &constraints->per_constraints->size;
         if(pc->flags & APC_CONSTRAINED) {
             long suggested_upper_bound = pc->upper_bound < (ssize_t)max_length
                                              ? pc->upper_bound

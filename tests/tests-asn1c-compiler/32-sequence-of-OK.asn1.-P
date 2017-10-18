@@ -34,7 +34,7 @@ static asn_TYPE_member_t asn_MBR_Programming_1[] = {
 		.type = &asn_DEF_Fault,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -100,7 +100,7 @@ asn_TYPE_member_t asn_MBR_Fault_1[] = {
 		.type = &asn_DEF_Error,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -223,7 +223,7 @@ static asn_TYPE_member_t asn_MBR_seqOfMan_3[] = {
 		.type = &asn_DEF_Error,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -260,7 +260,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithMandatory_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "someString"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithMandatory, seqOfMan),
@@ -269,7 +269,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithMandatory_1[] = {
 		.type = &asn_DEF_seqOfMan_3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "seqOfMan"
 		},
 };
@@ -349,7 +349,7 @@ static asn_TYPE_member_t asn_MBR_seqOfOpt_3[] = {
 		.type = &asn_DEF_Error,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -386,7 +386,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithOptional_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "someString"
 		},
 	{ ATF_POINTER, 1, offsetof(struct SeqWithOptional, seqOfOpt),
@@ -395,7 +395,7 @@ static asn_TYPE_member_t asn_MBR_SeqWithOptional_1[] = {
 		.type = &asn_DEF_seqOfOpt_3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "seqOfOpt"
 		},
 };

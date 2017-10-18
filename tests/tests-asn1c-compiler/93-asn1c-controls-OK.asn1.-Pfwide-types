@@ -29,7 +29,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ainl"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Sequence, aptr),
@@ -38,7 +38,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "aptr"
 		},
 };
@@ -126,7 +126,7 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ainl"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Set, aptr),
@@ -135,7 +135,7 @@ static asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "aptr"
 		},
 };
@@ -235,7 +235,7 @@ static asn_TYPE_member_t asn_MBR_setof_2[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -272,7 +272,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.type = &asn_DEF_setof_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "setof"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice, choice.aptr),
@@ -281,7 +281,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "aptr"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.ainl),
@@ -290,7 +290,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ainl"
 		},
 };
@@ -306,7 +306,7 @@ static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	sizeof(((struct Choice *)0)->present),
 	.tag2el = asn_MAP_Choice_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice = {

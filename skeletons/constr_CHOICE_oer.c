@@ -125,7 +125,8 @@ oer_fetch_tag(const void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
 }
 
 asn_dec_rval_t
-CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
+                  const asn_TYPE_descriptor_t *td,
                   const asn_oer_constraints_t *constraints, void **struct_ptr,
                   const void *ptr, size_t size) {
     /*
@@ -314,14 +315,14 @@ oer_put_tag(ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
  * Encode as Canonical OER.
  */
 asn_enc_rval_t
-CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
-                  const asn_oer_constraints_t *constraints, void *sptr,
+CHOICE_encode_oer(const asn_TYPE_descriptor_t *td,
+                  const asn_oer_constraints_t *constraints, const void *sptr,
                   asn_app_consume_bytes_f *cb, void *app_key) {
     const asn_CHOICE_specifics_t *specs =
         (const asn_CHOICE_specifics_t *)td->specifics;
     asn_TYPE_member_t *elm; /* CHOICE element */
     unsigned present;
-    void *memb_ptr;
+    const void *memb_ptr;
     ber_tlv_tag_t tag;
     ssize_t tag_len;
     asn_enc_rval_t er = {0, 0, 0};
@@ -340,13 +341,14 @@ CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
 
     elm = &td->elements[present-1];
     if(elm->flags & ATF_POINTER) {
-        memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
+        memb_ptr =
+            *(const void *const *)((const char *)sptr + elm->memb_offset);
         if(memb_ptr == 0) {
             /* Mandatory element absent */
             ASN__ENCODE_FAILED;
         }
     } else {
-        memb_ptr = (void *)((char *)sptr + elm->memb_offset);
+        memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
     }
 
     tag = asn_TYPE_outmost_tag(elm->type, memb_ptr, elm->tag_mode, elm->tag);
@@ -359,7 +361,7 @@ CHOICE_encode_oer(asn_TYPE_descriptor_t *td,
         ASN__ENCODE_FAILED;
     }
 
-    if(specs->ext_start >= 0 && specs->ext_start <= (present-1)) {
+    if(specs->ext_start >= 0 && (unsigned)specs->ext_start <= (present-1)) {
         ssize_t encoded = oer_open_type_put(elm->type,
                                elm->encoding_constraints.oer_constraints,
                                memb_ptr, cb, app_key);

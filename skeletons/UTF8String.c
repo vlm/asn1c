@@ -84,9 +84,9 @@ static const int32_t UTF8String_mv[7] = { 0, 0,
 #define	U8E_EINVAL	-5	/* Invalid arguments */
 
 int
-UTF8String_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	ssize_t len = UTF8String_length((const UTF8String_t *)sptr);
+UTF8String_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+    ssize_t len = UTF8String_length((const UTF8String_t *)sptr);
 	switch(len) {
 	case U8E_EINVAL:
 		ASN__CTFAIL(app_key, td, sptr,
@@ -185,9 +185,9 @@ UTF8String_to_wcs(const UTF8String_t *st, uint32_t *dst, size_t dstlen) {
 }
 
 int
-UTF8String_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	const UTF8String_t *st = (const UTF8String_t *)sptr;
+UTF8String_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+                 asn_app_consume_bytes_f *cb, void *app_key) {
+    const UTF8String_t *st = (const UTF8String_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */

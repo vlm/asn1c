@@ -6,10 +6,12 @@
 #include <asn_application.h>
 #include <errno.h>
 
-static asn_enc_rval_t asn_encode_internal(
-    const asn_codec_ctx_t *opt_codec_ctx,
-    enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
-    void *sptr, asn_app_consume_bytes_f *callback, void *callback_key);
+static asn_enc_rval_t asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
+                                          enum asn_transfer_syntax syntax,
+                                          const asn_TYPE_descriptor_t *td,
+                                          const void *sptr,
+                                          asn_app_consume_bytes_f *callback,
+                                          void *callback_key);
 
 
 struct callback_count_bytes_key {
@@ -113,8 +115,9 @@ asn_encode(const asn_codec_ctx_t *opt_codec_ctx,
 
 asn_enc_rval_t
 asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_ctx,
-                     enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
-                     void *sptr, void *buffer, size_t buffer_size) {
+                     enum asn_transfer_syntax syntax,
+                     const asn_TYPE_descriptor_t *td, const void *sptr,
+                     void *buffer, size_t buffer_size) {
     struct overrun_encoder_key buf_key;
     asn_enc_rval_t er;
 
@@ -141,9 +144,9 @@ asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_ctx,
 
 static asn_enc_rval_t
 asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
-                    enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
-                    void *sptr, asn_app_consume_bytes_f *callback,
-                    void *callback_key) {
+                    enum asn_transfer_syntax syntax,
+                    const asn_TYPE_descriptor_t *td, const void *sptr,
+                    asn_app_consume_bytes_f *callback, void *callback_key) {
     asn_enc_rval_t er;
     enum xer_encoder_flags_e xer_flags = XER_F_CANONICAL;
 
@@ -303,9 +306,8 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
 
 asn_dec_rval_t
 asn_decode(const asn_codec_ctx_t *opt_codec_ctx,
-           enum asn_transfer_syntax syntax, struct asn_TYPE_descriptor_s *td,
+           enum asn_transfer_syntax syntax, const asn_TYPE_descriptor_t *td,
            void **sptr, const void *buffer, size_t size) {
-
     if(!td || !td->op || !sptr || (size && !buffer)) {
         ASN__DECODE_FAILED;
     }

@@ -55,11 +55,10 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
     } while(0)
 
 asn_enc_rval_t
-ANY_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-
-	if(flags & XER_F_CANONICAL) {
+ANY_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+               enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb,
+               void *app_key) {
+    if(flags & XER_F_CANONICAL) {
 		/*
 		 * Canonical XER-encoding of ANY type is not supported.
 		 */
@@ -183,7 +182,8 @@ static int ANY__consume_bytes(const void *buffer, size_t size, void *key) {
 #ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
+                const asn_TYPE_descriptor_t *td,
                 const asn_per_constraints_t *constraints, void **sptr,
                 asn_per_data_t *pd) {
     const asn_OCTET_STRING_specifics_t *specs =
@@ -240,8 +240,8 @@ ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-ANY_encode_uper(asn_TYPE_descriptor_t *td,
-                const asn_per_constraints_t *constraints, void *sptr,
+ANY_encode_uper(const asn_TYPE_descriptor_t *td,
+                const asn_per_constraints_t *constraints, const void *sptr,
                 asn_per_outp_t *po) {
     const ANY_t *st = (const ANY_t *)sptr;
     asn_enc_rval_t er = {0, 0, 0};

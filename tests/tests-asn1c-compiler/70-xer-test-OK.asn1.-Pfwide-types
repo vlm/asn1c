@@ -84,7 +84,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "sequence"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.set),
@@ -93,7 +93,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_Set,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "set"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.sequenceOf),
@@ -102,7 +102,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_SequenceOf,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "sequenceOf"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSet),
@@ -111,7 +111,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_ExtensibleSet,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "extensibleSet"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSequence),
@@ -120,7 +120,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_ExtensibleSequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "extensibleSequence"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.extensibleSequence2),
@@ -129,7 +129,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_ExtensibleSequence2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "extensibleSequence2"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfNULL),
@@ -138,7 +138,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_SetOfNULL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "setOfNULL"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfREAL),
@@ -147,7 +147,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_SetOfREAL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "setOfREAL"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfEnums),
@@ -156,7 +156,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_SetOfEnums,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "setOfEnums"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.namedSetOfNULL),
@@ -165,7 +165,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NamedSetOfNULL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "namedSetOfNULL"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.namedSetOfREAL),
@@ -174,7 +174,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NamedSetOfREAL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "namedSetOfREAL"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.namedSetOfEnums),
@@ -183,7 +183,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NamedSetOfEnums,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "namedSetOfEnums"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.seqOfZuka),
@@ -192,7 +192,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_SeqOfZuka,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "seqOfZuka"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.setOfChoice),
@@ -201,7 +201,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_SetOfChoice,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "setOfChoice"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU, choice.namedSetOfChoice),
@@ -210,7 +210,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NamedSetOfChoice,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "namedSetOfChoice"
 		},
 };
@@ -238,7 +238,7 @@ static asn_CHOICE_specifics_t asn_SPC_PDU_specs_1 = {
 	sizeof(((struct PDU *)0)->present),
 	.tag2el = asn_MAP_PDU_tag2el_1,
 	.tag2el_count = 15,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = 15	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU = {
@@ -298,7 +298,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "integer"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Sequence, sequence),
@@ -307,7 +307,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "sequence"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Sequence, bits),
@@ -316,7 +316,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_BIT_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bits"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, string),
@@ -325,7 +325,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "string"
 		},
 };
@@ -410,7 +410,7 @@ asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.type = &asn_DEF_RELATIVE_OID,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "roid"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Set, opaque),
@@ -419,7 +419,7 @@ asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "opaque"
 		},
 };
@@ -560,7 +560,7 @@ asn_TYPE_member_t asn_MBR_ExtensibleSet_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "string"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ExtensibleSet, Enum),
@@ -569,7 +569,7 @@ asn_TYPE_member_t asn_MBR_ExtensibleSet_1[] = {
 		.type = &asn_DEF_enum_4,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "enum"
 		},
 };
@@ -648,7 +648,7 @@ asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "string"
 		},
 	{ ATF_POINTER, 2, offsetof(struct ExtensibleSequence, integer),
@@ -657,7 +657,7 @@ asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "integer"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence, gtime),
@@ -666,7 +666,7 @@ asn_TYPE_member_t asn_MBR_ExtensibleSequence_1[] = {
 		.type = &asn_DEF_GeneralizedTime,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "gtime"
 		},
 };
@@ -739,7 +739,7 @@ asn_TYPE_member_t asn_MBR_ExtensibleSequence2_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "string"
 		},
 	{ ATF_POINTER, 1, offsetof(struct ExtensibleSequence2, integer),
@@ -748,7 +748,7 @@ asn_TYPE_member_t asn_MBR_ExtensibleSequence2_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "integer"
 		},
 };
@@ -815,7 +815,7 @@ asn_TYPE_member_t asn_MBR_SetOfNULL_1[] = {
 		.type = &asn_DEF_NULL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -874,7 +874,7 @@ asn_TYPE_member_t asn_MBR_SetOfREAL_1[] = {
 		.type = &asn_DEF_REAL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -984,7 +984,7 @@ asn_TYPE_member_t asn_MBR_SetOfEnums_1[] = {
 		.type = &asn_DEF_Member_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -1043,7 +1043,7 @@ asn_TYPE_member_t asn_MBR_NamedSetOfNULL_1[] = {
 		.type = &asn_DEF_NULL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "y"
 		},
 };
@@ -1102,7 +1102,7 @@ asn_TYPE_member_t asn_MBR_NamedSetOfREAL_1[] = {
 		.type = &asn_DEF_REAL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "name"
 		},
 };
@@ -1212,7 +1212,7 @@ asn_TYPE_member_t asn_MBR_NamedSetOfEnums_1[] = {
 		.type = &asn_DEF_name_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "name"
 		},
 };
@@ -1271,7 +1271,7 @@ asn_TYPE_member_t asn_MBR_SequenceOf_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "id"
 		},
 };
@@ -1330,7 +1330,7 @@ asn_TYPE_member_t asn_MBR_SeqOfZuka_1[] = {
 		.type = &asn_DEF_NULL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "zuka"
 		},
 };
@@ -1396,7 +1396,7 @@ asn_TYPE_member_t asn_MBR_SetOfChoice_1[] = {
 		.type = &asn_DEF_SimpleChoice,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -1462,7 +1462,7 @@ asn_TYPE_member_t asn_MBR_NamedSetOfChoice_1[] = {
 		.type = &asn_DEF_SimpleChoice,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "whatever"
 		},
 };
@@ -1533,7 +1533,7 @@ asn_TYPE_member_t asn_MBR_SimpleChoice_1[] = {
 		.type = &asn_DEF_NULL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct SimpleChoice, choice.b),
@@ -1542,7 +1542,7 @@ asn_TYPE_member_t asn_MBR_SimpleChoice_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 };
@@ -1557,7 +1557,7 @@ asn_CHOICE_specifics_t asn_SPC_SimpleChoice_specs_1 = {
 	sizeof(((struct SimpleChoice *)0)->present),
 	.tag2el = asn_MAP_SimpleChoice_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_SimpleChoice = {

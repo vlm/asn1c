@@ -89,9 +89,10 @@ asn_TYPE_descriptor_t asn_DEF_PrintableString = {
 
 
 int
-PrintableString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const PrintableString_t *st = (const PrintableString_t *)sptr;
+PrintableString_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                           asn_app_constraint_failed_f *ctfailcb,
+                           void *app_key) {
+    const PrintableString_t *st = (const PrintableString_t *)sptr;
 
 	if(st && st->buf) {
 		uint8_t *buf = st->buf;

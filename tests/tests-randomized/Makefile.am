@@ -24,6 +24,7 @@ TESTS_ENVIRONMENT=                          \
     ${srcdir}/check-bundles.sh
 
 TESTS =
+TESTS += bundles/00-NULL-bundle.txt
 TESTS += bundles/01-BOOLEAN-bundle.txt
 TESTS += bundles/02-INTEGER-bundle.txt
 TESTS += bundles/03-ENUMERATED-bundle.txt

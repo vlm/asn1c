@@ -62,7 +62,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m0"
 		},
 	{ ATF_POINTER, 1, offsetof(struct TestSet, m1),
@@ -71,7 +71,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m2),
@@ -80,7 +80,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m2"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m3),
@@ -89,7 +89,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m3"
 		},
 	{ ATF_POINTER, 1, offsetof(struct TestSet, m4),
@@ -98,7 +98,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m4"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m5),
@@ -107,7 +107,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m5"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m6),
@@ -116,7 +116,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m6"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m7),
@@ -125,7 +125,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m7"
 		},
 	{ ATF_POINTER, 1, offsetof(struct TestSet, m8),
@@ -134,7 +134,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m8"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestSet, m9),
@@ -143,7 +143,7 @@ static asn_TYPE_member_t asn_MBR_TestSet_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m9"
 		},
 };

@@ -107,9 +107,10 @@ oer_fetch_quantity(const void *ptr, size_t size, size_t *qty_r) {
 }
 
 asn_dec_rval_t
-SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                    const asn_oer_constraints_t *constraints, void **struct_ptr,
-                    const void *ptr, size_t size) {
+SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
+                  const asn_TYPE_descriptor_t *td,
+                  const asn_oer_constraints_t *constraints, void **struct_ptr,
+                  const void *ptr, size_t size) {
     const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
     void *st = *struct_ptr; /* Target structure */
@@ -227,13 +228,13 @@ oer_put_quantity(size_t qty, asn_app_consume_bytes_f *cb, void *app_key) {
  * Encode as Canonical OER.
  */
 asn_enc_rval_t
-SET_OF_encode_oer(asn_TYPE_descriptor_t *td,
-                    const asn_oer_constraints_t *constraints, void *sptr,
-                    asn_app_consume_bytes_f *cb, void *app_key) {
+SET_OF_encode_oer(const asn_TYPE_descriptor_t *td,
+                  const asn_oer_constraints_t *constraints, const void *sptr,
+                  asn_app_consume_bytes_f *cb, void *app_key) {
+    const asn_TYPE_member_t *elm;
+    const asn_anonymous_set_ *list;
     size_t computed_size = 0;
     ssize_t qty_len;
-    asn_TYPE_member_t *elm;
-    asn_anonymous_set_ *list;
     int n;
 
     (void)constraints;
@@ -241,7 +242,7 @@ SET_OF_encode_oer(asn_TYPE_descriptor_t *td,
     if(!sptr) ASN__ENCODE_FAILED;
 
     elm = td->elements;
-    list = _A_SET_FROM_VOID(sptr);
+    list = _A_CSET_FROM_VOID(sptr);
 
     qty_len = oer_put_quantity(list->count, cb, app_key);
     if(qty_len < 0) {

@@ -393,7 +393,7 @@ asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.type = &asn_DEF_T2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m1"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Ts, m2),
@@ -402,7 +402,7 @@ asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.type = &asn_DEF_T3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m2"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Ts, m3),
@@ -411,7 +411,7 @@ asn_TYPE_member_t asn_MBR_Ts_1[] = {
 		.type = &asn_DEF_T3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m3"
 		},
 };

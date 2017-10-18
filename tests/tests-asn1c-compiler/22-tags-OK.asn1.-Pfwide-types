@@ -48,7 +48,7 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.n),
@@ -57,7 +57,7 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "n"
 		},
 };
@@ -72,7 +72,7 @@ static asn_CHOICE_specifics_t asn_SPC_b_specs_3 = {
 	sizeof(((struct b *)0)->present),
 	.tag2el = asn_MAP_b_tag2el_3,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
@@ -97,7 +97,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T1, b),
@@ -106,7 +106,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.type = &asn_DEF_b_3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T1, c),
@@ -115,7 +115,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c"
 		},
 };

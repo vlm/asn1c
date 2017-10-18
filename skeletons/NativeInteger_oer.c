@@ -11,7 +11,7 @@
 
 asn_dec_rval_t
 NativeInteger_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
-                         asn_TYPE_descriptor_t *td,
+                         const asn_TYPE_descriptor_t *td,
                          const asn_oer_constraints_t *constraints,
                          void **nint_ptr, const void *ptr, size_t size) {
     const asn_INTEGER_specifics_t *specs =
@@ -68,9 +68,10 @@ NativeInteger_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
  * Encode as Canonical OER.
  */
 asn_enc_rval_t
-NativeInteger_encode_oer(asn_TYPE_descriptor_t *td,
-                         const asn_oer_constraints_t *constraints, void *sptr,
-                         asn_app_consume_bytes_f *cb, void *app_key) {
+NativeInteger_encode_oer(const asn_TYPE_descriptor_t *td,
+                         const asn_oer_constraints_t *constraints,
+                         const void *sptr, asn_app_consume_bytes_f *cb,
+                         void *app_key) {
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     INTEGER_t tmpint;

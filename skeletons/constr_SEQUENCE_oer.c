@@ -66,17 +66,20 @@ element_ptrptr(void *struct_ptr, asn_TYPE_member_t *elm, void **tmp_save_ptr) {
     }
 }
 
-static void *element_ptr(void *struct_ptr, asn_TYPE_member_t *elm) {
+static const void *
+element_ptr(const void *struct_ptr, const asn_TYPE_member_t *elm) {
     if(elm->flags & ATF_POINTER) {
         /* Member is a pointer to another structure */
-        return *(void **)((char *)struct_ptr + elm->memb_offset);
+        return *(const void *const *)((const char *)struct_ptr
+                                      + elm->memb_offset);
     } else {
-        return (void *)((char *)struct_ptr + elm->memb_offset);
+        return (const void *)((const char *)struct_ptr + elm->memb_offset);
     }
 }
 
 asn_dec_rval_t
-SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
+                    const asn_TYPE_descriptor_t *td,
                     const asn_oer_constraints_t *constraints, void **struct_ptr,
                     const void *ptr, size_t size) {
     const asn_SEQUENCE_specifics_t *specs =
@@ -177,11 +180,11 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
                     ASN_DEBUG("Presence map ended prematurely: %d", present);
                     RETURN(RC_FAIL);
                 } else if(present == 0) {
-                    if(elm->default_value) {
+                    if(elm->default_value_set) {
                         /* Fill-in DEFAULT */
                         void *tmp;
-                        if(elm->default_value(1,
-                                              element_ptrptr(st, elm, &tmp))) {
+                        if(elm->default_value_set(
+                               element_ptrptr(st, elm, &tmp))) {
                             RETURN(RC_FAIL);
                         }
                     }
@@ -322,7 +325,8 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
                 /* Fall through */
             case 0:
                 /* Fill-in DEFAULT */
-                if(elm->default_value && elm->default_value(1, memb_ptr2)) {
+                if(elm->default_value_set
+                   && elm->default_value_set(memb_ptr2)) {
                     RETURN(RC_FAIL);
                 }
                 continue;
@@ -388,8 +392,8 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
  * Encode as Canonical OER.
  */
 asn_enc_rval_t
-SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
-                    const asn_oer_constraints_t *constraints, void *sptr,
+SEQUENCE_encode_oer(const asn_TYPE_descriptor_t *td,
+                    const asn_oer_constraints_t *constraints, const void *sptr,
                     asn_app_consume_bytes_f *cb, void *app_key) {
     const asn_SEQUENCE_specifics_t *specs = (const asn_SEQUENCE_specifics_t *)td->specifics;
     size_t computed_size = 0;
@@ -412,10 +416,10 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
             for(edx = specs->ext_after + 1;
                 (ssize_t)edx < specs->ext_before - 1; edx++) {
                 asn_TYPE_member_t *elm = &td->elements[edx];
-                void *memb_ptr = element_ptr(sptr, elm);
+                const void *memb_ptr = element_ptr(sptr, elm);
                 if(memb_ptr) {
-                    if(elm->default_value
-                       && elm->default_value(0, &memb_ptr) == 1) {
+                    if(elm->default_value_cmp
+                       && elm->default_value_cmp(memb_ptr) == 0) {
                         /* Do not encode default values in extensions */
                     } else {
                         has_extensions = 1;
@@ -440,10 +444,10 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
                 if(IN_EXTENSION_GROUP(specs, edx)) break;
 
                 if(elm->optional) {
-                    void *memb_ptr = element_ptr(sptr, elm);
+                    const void *memb_ptr = element_ptr(sptr, elm);
                     uint32_t has_component = memb_ptr != NULL;
-                    if(has_component && elm->default_value
-                       && elm->default_value(0, &memb_ptr) == 1) {
+                    if(has_component && elm->default_value_cmp
+                       && elm->default_value_cmp(&memb_ptr) == 0) {
                         has_component = 0;
                     }
                     ret = asn_put_few_bits(&preamble, has_component, 1);
@@ -464,13 +468,14 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
     for(edx = 0; edx < td->elements_count; edx++) {
         asn_TYPE_member_t *elm = &td->elements[edx];
         asn_enc_rval_t er;
-        void *memb_ptr;
+        const void *memb_ptr;
 
         if(IN_EXTENSION_GROUP(specs, edx)) break;
 
         memb_ptr = element_ptr(sptr, elm);
         if(memb_ptr) {
-            if(elm->default_value && elm->default_value(0, &memb_ptr) == 1) {
+            if(elm->default_value_cmp
+               && elm->default_value_cmp(memb_ptr) == 0) {
                 /* Skip default values in encoding */
                 continue;
             }
@@ -524,9 +529,9 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
         for(edx = specs->ext_after + 1; (ssize_t)edx < specs->ext_before - 1;
             edx++) {
             asn_TYPE_member_t *elm = &td->elements[edx];
-            void *memb_ptr = element_ptr(sptr, elm);
-            if(memb_ptr && elm->default_value
-               && elm->default_value(0, &memb_ptr) == 1) {
+            const void *memb_ptr = element_ptr(sptr, elm);
+            if(memb_ptr && elm->default_value_cmp
+               && elm->default_value_cmp(memb_ptr) == 0) {
                 memb_ptr = 0;   /* Do not encode default value. */
             }
             ret |= asn_put_few_bits(&extadds, memb_ptr ? 1 : 0, 1);
@@ -540,11 +545,11 @@ SEQUENCE_encode_oer(asn_TYPE_descriptor_t *td,
         for(edx = specs->ext_after + 1; (ssize_t)edx < specs->ext_before - 1;
             edx++) {
             asn_TYPE_member_t *elm = &td->elements[edx];
-            void *memb_ptr = element_ptr(sptr, elm);
+            const void *memb_ptr = element_ptr(sptr, elm);
 
             if(memb_ptr) {
-                if(elm->default_value
-                   && elm->default_value(0, &memb_ptr) == 1) {
+                if(elm->default_value_cmp
+                   && elm->default_value_cmp(memb_ptr) == 0) {
                     /* Do not encode default value. */
                 } else {
                     asn_enc_rval_t er = elm->type->op->oer_encoder(

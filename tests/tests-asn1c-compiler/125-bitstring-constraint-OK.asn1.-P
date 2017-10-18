@@ -29,7 +29,7 @@ xer_type_encoder_f T_encode_xer;
 /*** <<< CODE [T] >>> ***/
 
 int
-T_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+T_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	

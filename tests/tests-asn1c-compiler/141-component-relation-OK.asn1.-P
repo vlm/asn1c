@@ -62,7 +62,7 @@ static const asn_ioc_set_t asn_IOS_FrameTypes_1[] = {
 /*** <<< CODE [Frame] >>> ***/
 
 static int
-memb_ident_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ident_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -110,7 +110,7 @@ select_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_s
 }
 
 static int
-memb_value_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_value_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -138,7 +138,7 @@ static asn_TYPE_member_t asn_MBR_value_3[] = {
 		.type = &asn_DEF_PrimitiveMessage,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "PrimitiveMessage"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.ComplexMessage),
@@ -147,7 +147,7 @@ static asn_TYPE_member_t asn_MBR_value_3[] = {
 		.type = &asn_DEF_ComplexMessage,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ComplexMessage"
 		},
 };
@@ -162,7 +162,7 @@ static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	sizeof(((struct value *)0)->present),
 	.tag2el = asn_MAP_value_tag2el_3,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
@@ -187,7 +187,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 		.type = &asn_DEF_ConstrainedInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_ident_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ident"
 		},
 	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct Frame, value),
@@ -196,7 +196,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 		.type = &asn_DEF_value_3,
 		.type_selector = select_value_type,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_value_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "value"
 		},
 };
@@ -255,7 +255,7 @@ xer_type_encoder_f ConstrainedInteger_encode_xer;
 /*** <<< CODE [ConstrainedInteger] >>> ***/
 
 int
-ConstrainedInteger_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+ConstrainedInteger_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	

@@ -70,7 +70,7 @@ static int check_permitted_alphabet_9(const void *sptr) {
 /*** <<< CODE [T] >>> ***/
 
 static int
-memb_con_ia5_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_con_ia5_constraint_6(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	size_t size;
@@ -97,7 +97,7 @@ memb_con_ia5_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_con_utf8_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_con_utf8_constraint_6(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	size_t size;
@@ -129,7 +129,7 @@ memb_con_utf8_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_con_universal_constraint_6(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_con_universal_constraint_6(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	size_t size;
@@ -177,7 +177,7 @@ static asn_TYPE_member_t asn_MBR_unconstrained_2[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "unc-ia5"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct unconstrained, unc_utf8),
@@ -186,7 +186,7 @@ static asn_TYPE_member_t asn_MBR_unconstrained_2[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "unc-utf8"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct unconstrained, unc_universal),
@@ -195,7 +195,7 @@ static asn_TYPE_member_t asn_MBR_unconstrained_2[] = {
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "unc-universal"
 		},
 };
@@ -240,7 +240,7 @@ static asn_TYPE_member_t asn_MBR_constrained_6[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = &asn_OER_memb_con_ia5_constr_7, .per_constraints = 0, .general_constraints =  memb_con_ia5_constraint_6 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "con-ia5"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct constrained, con_utf8),
@@ -249,7 +249,7 @@ static asn_TYPE_member_t asn_MBR_constrained_6[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = &asn_OER_memb_con_utf8_constr_8, .per_constraints = 0, .general_constraints =  memb_con_utf8_constraint_6 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "con-utf8"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct constrained, con_universal),
@@ -258,7 +258,7 @@ static asn_TYPE_member_t asn_MBR_constrained_6[] = {
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
 		{ .oer_constraints = &asn_OER_memb_con_universal_constr_9, .per_constraints = 0, .general_constraints =  memb_con_universal_constraint_6 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "con-universal"
 		},
 };
@@ -303,7 +303,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_unconstrained_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "unconstrained"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, constrained),
@@ -312,7 +312,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_constrained_6,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "constrained"
 		},
 };

@@ -45,7 +45,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "t-a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.t_b),
@@ -54,7 +54,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "t-b"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.t_c),
@@ -63,7 +63,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_Choice1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "t-c"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.t_d),
@@ -72,7 +72,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_Choice2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "t-d"
 		},
 };
@@ -89,7 +89,7 @@ static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
 	sizeof(((struct T *)0)->present),
 	.tag2el = asn_MAP_T_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
@@ -149,7 +149,7 @@ asn_TYPE_member_t asn_MBR_Choice1_1[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c-a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice1, choice.c_b),
@@ -158,7 +158,7 @@ asn_TYPE_member_t asn_MBR_Choice1_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c-b"
 		},
 };
@@ -173,7 +173,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 	sizeof(((struct Choice1 *)0)->present),
 	.tag2el = asn_MAP_Choice1_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
@@ -238,7 +238,7 @@ asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c-a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.c_b),
@@ -247,7 +247,7 @@ asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c-b"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.c_d),
@@ -256,7 +256,7 @@ asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_Choice1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c-d"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.c_e),
@@ -265,7 +265,7 @@ asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_Choice1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c-e"
 		},
 };
@@ -285,7 +285,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	sizeof(((struct Choice2 *)0)->present),
 	.tag2el = asn_MAP_Choice2_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {

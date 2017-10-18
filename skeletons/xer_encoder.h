@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_XER_ENCODER_H_
@@ -24,12 +24,12 @@ enum xer_encoder_flags_e {
  * The XER encoder of any type. May be invoked by the application.
  * Produces CANONICAL-XER and BASIC-XER depending on the (xer_flags).
  */
-asn_enc_rval_t xer_encode(struct asn_TYPE_descriptor_s *type_descriptor,
-		void *struct_ptr,	/* Structure to be encoded */
-		enum xer_encoder_flags_e xer_flags,
-		asn_app_consume_bytes_f *consume_bytes_cb,
-		void *app_key		/* Arbitrary callback argument */
-	);
+asn_enc_rval_t xer_encode(const struct asn_TYPE_descriptor_s *type_descriptor,
+                          const void *struct_ptr, /* Structure to be encoded */
+                          enum xer_encoder_flags_e xer_flags,
+                          asn_app_consume_bytes_f *consume_bytes_cb,
+                          void *app_key /* Arbitrary callback argument */
+);
 
 /*
  * A helper function that uses XER encoding/decoding to verify that:
@@ -50,8 +50,8 @@ enum xer_equivalence_e {
     XEQ_ROUND_TRIP_FAILED /* Bad round-trip */
 };
 enum xer_equivalence_e xer_equivalent(
-    struct asn_TYPE_descriptor_s *type_descriptor, void *struct1, void *struct2,
-    FILE *opt_debug_stream);
+    const struct asn_TYPE_descriptor_s *type_descriptor, const void *struct1,
+    const void *struct2, FILE *opt_debug_stream);
 
 /*
  * The variant of the above function which dumps the BASIC-XER (XER_F_BASIC)
@@ -61,19 +61,20 @@ enum xer_equivalence_e xer_equivalent(
  * 	-1: Problem printing the structure.
  * WARNING: No sensible errno value is returned.
  */
-int xer_fprint(FILE *stream, struct asn_TYPE_descriptor_s *td, void *sptr);
+int xer_fprint(FILE *stream, const struct asn_TYPE_descriptor_s *td,
+               const void *sptr);
 
 /*
  * Type of the generic XER encoder.
  */
-typedef asn_enc_rval_t (xer_type_encoder_f)(
-		struct asn_TYPE_descriptor_s *type_descriptor,
-		void *struct_ptr,	/* Structure to be encoded */
-		int ilevel,		/* Level of indentation */
-		enum xer_encoder_flags_e xer_flags,
-		asn_app_consume_bytes_f *consume_bytes_cb,	/* Callback */
-		void *app_key		/* Arbitrary callback argument */
-	);
+typedef asn_enc_rval_t(xer_type_encoder_f)(
+    const struct asn_TYPE_descriptor_s *type_descriptor,
+    const void *struct_ptr, /* Structure to be encoded */
+    int ilevel,             /* Level of indentation */
+    enum xer_encoder_flags_e xer_flags,
+    asn_app_consume_bytes_f *consume_bytes_cb, /* Callback */
+    void *app_key                              /* Arbitrary callback argument */
+);
 
 #ifdef __cplusplus
 }

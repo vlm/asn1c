@@ -52,23 +52,27 @@ extern asn_TYPE_member_t asn_MBR_Flag_15P1_6[1];
 
 /*** <<< STAT-DEFS [Flag] >>> ***/
 
-static int asn_DFL_2_set_5(int set_value, void **sptr) {
+static int asn_DFL_2_cmp_5(const void *sptr) {
+	const long *st = sptr;
+	
+	if(!st) {
+		return -1; /* No value is not a default value */
+	}
+	
+	/* Test default value 5 */
+	return (*st != 5);
+}
+static int asn_DFL_2_set_5(void **sptr) {
 	long *st = *sptr;
 	
 	if(!st) {
-		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	if(set_value) {
-		/* Install default value 5 */
-		*st = 5;
-		return 0;
-	} else {
-		/* Test default value 5 */
-		return (*st == 5);
-	}
+	/* Install default value 5 */
+	*st = 5;
+	return 0;
 }
 asn_TYPE_member_t asn_MBR_Flag_15P0_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Flag_15P0, field),
@@ -77,7 +81,8 @@ asn_TYPE_member_t asn_MBR_Flag_15P0_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = asn_DFL_2_set_5,	/* DEFAULT 5 */
+		.default_value_cmp = asn_DFL_2_cmp_5,	/* Compare DEFAULT 5 */
+		.default_value_set = asn_DFL_2_set_5,	/* Set DEFAULT 5 */
 		.name = "field"
 		},
 };
@@ -112,23 +117,27 @@ asn_TYPE_descriptor_t asn_DEF_Flag_15P0 = {
 	&asn_SPC_Flag_15P0_specs_1	/* Additional specs */
 };
 
-static int asn_DFL_7_set_5(int set_value, void **sptr) {
+static int asn_DFL_7_cmp_5(const void *sptr) {
+	const long *st = sptr;
+	
+	if(!st) {
+		return -1; /* No value is not a default value */
+	}
+	
+	/* Test default value 5 */
+	return (*st != 5);
+}
+static int asn_DFL_7_set_5(void **sptr) {
 	long *st = *sptr;
 	
 	if(!st) {
-		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	if(set_value) {
-		/* Install default value 5 */
-		*st = 5;
-		return 0;
-	} else {
-		/* Test default value 5 */
-		return (*st == 5);
-	}
+	/* Install default value 5 */
+	*st = 5;
+	return 0;
 }
 static const asn_INTEGER_enum_map_t asn_MAP_field_value2enum_7[] = {
 	{ 3,	3,	"red" },
@@ -175,7 +184,8 @@ asn_TYPE_member_t asn_MBR_Flag_15P1_6[] = {
 		.type = &asn_DEF_field_7,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = asn_DFL_7_set_5,	/* DEFAULT 5 */
+		.default_value_cmp = asn_DFL_7_cmp_5,	/* Compare DEFAULT 5 */
+		.default_value_set = asn_DFL_7_set_5,	/* Set DEFAULT 5 */
 		.name = "field"
 		},
 };

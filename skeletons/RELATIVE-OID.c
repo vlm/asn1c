@@ -93,9 +93,9 @@ RELATIVE_OID__dump_body(const RELATIVE_OID_t *st, asn_app_consume_bytes_f *cb, v
 }
 
 int
-RELATIVE_OID_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
+RELATIVE_OID_print(const asn_TYPE_descriptor_t *td, const void *sptr,
+                   int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+    const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */
@@ -114,8 +114,9 @@ RELATIVE_OID_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
 }
 
 static enum xer_pbd_rval
-RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
-	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
+RELATIVE_OID__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
+                              const void *chunk_buf, size_t chunk_size) {
+    RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
 	const char *chunk_end = (const char *)chunk_buf + chunk_size;
 	const char *endptr;
 	asn_oid_arc_t s_arcs[6];
@@ -157,19 +158,19 @@ RELATIVE_OID__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void 
 
 asn_dec_rval_t
 RELATIVE_OID_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
-
-	return xer_decode_primitive(opt_codec_ctx, td,
+                        const asn_TYPE_descriptor_t *td, void **sptr,
+                        const char *opt_mname, const void *buf_ptr,
+                        size_t size) {
+    return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(RELATIVE_OID_t), opt_mname,
 			buf_ptr, size, RELATIVE_OID__xer_body_decode);
 }
 
 asn_enc_rval_t
-RELATIVE_OID_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	RELATIVE_OID_t *st = (RELATIVE_OID_t *)sptr;
+RELATIVE_OID_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                        int ilevel, enum xer_encoder_flags_e flags,
+                        asn_app_consume_bytes_f *cb, void *app_key) {
+    const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
 	asn_enc_rval_t er;
 
 	(void)ilevel;	/* Unused argument */

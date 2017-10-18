@@ -36,7 +36,7 @@ asn_TYPE_member_t asn_MBR_Forest_1[] = {
 		.type = &asn_DEF_Tree,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -95,7 +95,7 @@ asn_TYPE_member_t asn_MBR_Tree_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "height"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Tree, width),
@@ -104,7 +104,7 @@ asn_TYPE_member_t asn_MBR_Tree_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "width"
 		},
 };
@@ -240,7 +240,7 @@ static asn_TYPE_member_t asn_MBR_trees_2[] = {
 		.type = &asn_DEF_Forest,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -277,7 +277,7 @@ static asn_TYPE_member_t asn_MBR_Member_5[] = {
 		.type = &asn_DEF_BIT_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "cup-of-coffee"
 		},
 };
@@ -320,7 +320,7 @@ static asn_TYPE_member_t asn_MBR_anything_4[] = {
 		.type = &asn_DEF_Member_5,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -357,7 +357,7 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Stuff__other, choice.b),
@@ -366,7 +366,7 @@ static asn_TYPE_member_t asn_MBR_other_9[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 };
@@ -381,7 +381,7 @@ static asn_CHOICE_specifics_t asn_SPC_other_specs_9 = {
 	sizeof(((struct Stuff__other *)0)->present),
 	.tag2el = asn_MAP_other_tag2el_9,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
@@ -406,7 +406,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.type = &asn_DEF_trees_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "trees"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Stuff, anything),
@@ -415,7 +415,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.type = &asn_DEF_anything_4,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "anything"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Stuff, other),
@@ -424,7 +424,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.type = &asn_DEF_other_9,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "other"
 		},
 };

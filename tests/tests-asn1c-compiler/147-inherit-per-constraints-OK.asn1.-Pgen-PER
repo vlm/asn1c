@@ -24,7 +24,7 @@ per_type_encoder_f Short_encode_uper;
 /*** <<< CODE [Short] >>> ***/
 
 int
-Short_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+Short_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -107,7 +107,7 @@ per_type_encoder_f Alias_encode_uper;
 /*** <<< CODE [Alias] >>> ***/
 
 int
-Alias_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+Alias_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -190,7 +190,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Soo;
 /*** <<< CODE [Soo] >>> ***/
 
 static int
-memb_foo_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_foo_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -232,7 +232,7 @@ static asn_TYPE_member_t asn_MBR_Soo_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_foo_constr_2, .general_constraints =  memb_foo_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "foo"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Soo, bar),
@@ -241,7 +241,7 @@ static asn_TYPE_member_t asn_MBR_Soo_1[] = {
 		.type = &asn_DEF_Short,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bar"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Soo, baz),
@@ -250,7 +250,7 @@ static asn_TYPE_member_t asn_MBR_Soo_1[] = {
 		.type = &asn_DEF_Alias,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "baz"
 		},
 };

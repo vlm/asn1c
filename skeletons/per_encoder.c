@@ -2,11 +2,16 @@
 #include <asn_internal.h>
 #include <per_encoder.h>
 
-static asn_enc_rval_t uper_encode_internal(asn_TYPE_descriptor_t *td, const asn_per_constraints_t *, void *sptr, asn_app_consume_bytes_f *cb, void *app_key);
+static asn_enc_rval_t uper_encode_internal(const asn_TYPE_descriptor_t *td,
+                                           const asn_per_constraints_t *,
+                                           const void *sptr,
+                                           asn_app_consume_bytes_f *cb,
+                                           void *app_key);
 
 asn_enc_rval_t
-uper_encode(asn_TYPE_descriptor_t *td, void *sptr, asn_app_consume_bytes_f *cb, void *app_key) {
-	return uper_encode_internal(td, 0, sptr, cb, app_key);
+uper_encode(const asn_TYPE_descriptor_t *td, const void *sptr,
+            asn_app_consume_bytes_f *cb, void *app_key) {
+    return uper_encode_internal(td, 0, sptr, cb, app_key);
 }
 
 /*
@@ -30,8 +35,9 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
 }
 
 asn_enc_rval_t
-uper_encode_to_buffer(asn_TYPE_descriptor_t *td, void *sptr, void *buffer, size_t buffer_size) {
-	enc_to_buf_arg key;
+uper_encode_to_buffer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      void *buffer, size_t buffer_size) {
+    enc_to_buf_arg key;
 
 	key.buffer = buffer;
 	key.left = buffer_size;
@@ -65,9 +71,9 @@ encode_dyn_cb(const void *buffer, size_t size, void *key) {
 	return 0;
 }
 ssize_t
-uper_encode_to_new_buffer(asn_TYPE_descriptor_t *td,
-                          const asn_per_constraints_t *constraints, void *sptr,
-                          void **buffer_r) {
+uper_encode_to_new_buffer(const asn_TYPE_descriptor_t *td,
+                          const asn_per_constraints_t *constraints,
+                          const void *sptr, void **buffer_r) {
     asn_enc_rval_t er;
 	enc_dyn_arg key;
 
@@ -118,10 +124,10 @@ _uper_encode_flush_outp(asn_per_outp_t *po) {
 }
 
 static asn_enc_rval_t
-uper_encode_internal(asn_TYPE_descriptor_t *td,
-                     const asn_per_constraints_t *constraints, void *sptr,
+uper_encode_internal(const asn_TYPE_descriptor_t *td,
+                     const asn_per_constraints_t *constraints, const void *sptr,
                      asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_per_outp_t po;
+    asn_per_outp_t po;
 	asn_enc_rval_t er;
 
 	/*

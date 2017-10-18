@@ -771,10 +771,10 @@ decode_tlv_from_string(const char *datastring) {
  * Dummy functions.
  */
 asn_dec_rval_t
-ber_check_tags(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-               asn_struct_ctx_t *opt_ctx, const void *ptr, size_t size,
-               int tag_mode, int last_tag_form, ber_tlv_len_t *last_length,
-               int *opt_tlv_form) {
+ber_check_tags(const asn_codec_ctx_t *opt_codec_ctx,
+               const asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx,
+               const void *ptr, size_t size, int tag_mode, int last_tag_form,
+               ber_tlv_len_t *last_length, int *opt_tlv_form) {
     asn_dec_rval_t rv = {0, 0};
     (void)opt_codec_ctx;
     (void)td;
@@ -789,7 +789,7 @@ ber_check_tags(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 ssize_t
-der_write_tags(asn_TYPE_descriptor_t *td, size_t slen, int tag_mode,
+der_write_tags(const asn_TYPE_descriptor_t *td, size_t slen, int tag_mode,
                int last_tag_form, ber_tlv_tag_t tag,
                asn_app_consume_bytes_f *cb, void *app_key) {
     (void)td;

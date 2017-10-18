@@ -44,7 +44,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 };
@@ -131,7 +131,7 @@ static asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 };
@@ -216,7 +216,7 @@ static asn_TYPE_member_t asn_MBR_T3_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 };
@@ -230,7 +230,7 @@ static asn_CHOICE_specifics_t asn_SPC_T3_specs_1 = {
 	sizeof(((struct T3 *)0)->present),
 	.tag2el = asn_MAP_T3_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T3 = {
@@ -291,7 +291,7 @@ static asn_TYPE_member_t asn_MBR_T4_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 };
@@ -305,7 +305,7 @@ static asn_CHOICE_specifics_t asn_SPC_T4_specs_1 = {
 	sizeof(((struct T4 *)0)->present),
 	.tag2el = asn_MAP_T4_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T4 = {

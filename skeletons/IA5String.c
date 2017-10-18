@@ -58,9 +58,9 @@ asn_TYPE_descriptor_t asn_DEF_IA5String = {
 };
 
 int
-IA5String_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const IA5String_t *st = (const IA5String_t *)sptr;
+IA5String_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                     asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+    const IA5String_t *st = (const IA5String_t *)sptr;
 
 	if(st && st->buf) {
 		uint8_t *buf = st->buf;

@@ -72,7 +72,7 @@ oer_type_encoder_f B_0_0_encode_oer;
 /*** <<< CODE [B-0-0] >>> ***/
 
 int
-B_0_0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+B_0_0_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -152,7 +152,7 @@ oer_type_encoder_f C_1_2_encode_oer;
 /*** <<< CODE [C-1-2] >>> ***/
 
 int
-C_1_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+C_1_2_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -232,7 +232,7 @@ oer_type_encoder_f D_inv_encode_oer;
 /*** <<< CODE [D-inv] >>> ***/
 
 int
-D_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+D_inv_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -312,7 +312,7 @@ oer_type_encoder_f E_2_5_encode_oer;
 /*** <<< CODE [E-2-5] >>> ***/
 
 int
-E_2_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+E_2_5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -392,7 +392,7 @@ oer_type_encoder_f F_inv_encode_oer;
 /*** <<< CODE [F-inv] >>> ***/
 
 int
-F_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+F_inv_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -472,7 +472,7 @@ oer_type_encoder_f G_3_3_encode_oer;
 /*** <<< CODE [G-3-3] >>> ***/
 
 int
-G_3_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+G_3_3_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -552,7 +552,7 @@ oer_type_encoder_f H_4_5_encode_oer;
 /*** <<< CODE [H-4-5] >>> ***/
 
 int
-H_4_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+H_4_5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -632,7 +632,7 @@ oer_type_encoder_f I_1_5_encode_oer;
 /*** <<< CODE [I-1-5] >>> ***/
 
 int
-I_1_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+I_1_5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -712,7 +712,7 @@ oer_type_encoder_f J_4_5_encode_oer;
 /*** <<< CODE [J-4-5] >>> ***/
 
 int
-J_4_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+J_4_5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -792,7 +792,7 @@ oer_type_encoder_f K_1_4_encode_oer;
 /*** <<< CODE [K-1-4] >>> ***/
 
 int
-K_1_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+K_1_4_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -872,7 +872,7 @@ oer_type_encoder_f L_0_5_encode_oer;
 /*** <<< CODE [L-0-5] >>> ***/
 
 int
-L_0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+L_0_5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -952,7 +952,7 @@ oer_type_encoder_f M_inv_encode_oer;
 /*** <<< CODE [M-inv] >>> ***/
 
 int
-M_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+M_inv_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -1032,7 +1032,7 @@ oer_type_encoder_f N_0_5_encode_oer;
 /*** <<< CODE [N-0-5] >>> ***/
 
 int
-N_0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+N_0_5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -1112,7 +1112,7 @@ oer_type_encoder_f O_inv_encode_oer;
 /*** <<< CODE [O-inv] >>> ***/
 
 int
-O_inv_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+O_inv_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -1192,7 +1192,7 @@ oer_type_encoder_f EConstr_encode_oer;
 /*** <<< CODE [EConstr] >>> ***/
 
 int
-EConstr_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+EConstr_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -1272,7 +1272,7 @@ oer_type_encoder_f FConstr_encode_oer;
 /*** <<< CODE [FConstr] >>> ***/
 
 int
-FConstr_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+FConstr_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	

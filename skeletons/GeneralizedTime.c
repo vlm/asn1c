@@ -219,9 +219,10 @@ asn_TYPE_descriptor_t asn_DEF_GeneralizedTime = {
  * Check that the time looks like the time.
  */
 int
-GeneralizedTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
+GeneralizedTime_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                           asn_app_constraint_failed_f *ctfailcb,
+                           void *app_key) {
+    const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
 	time_t tloc;
 
 	errno = EPERM;			/* Just an unlikely error code */
@@ -237,10 +238,10 @@ GeneralizedTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 asn_enc_rval_t
-GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	GeneralizedTime_t *st = (GeneralizedTime_t *)sptr;
+GeneralizedTime_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
+                           int tag_mode, ber_tlv_tag_t tag,
+                           asn_app_consume_bytes_f *cb, void *app_key) {
+    GeneralizedTime_t *st;
 	asn_enc_rval_t erval;
 	int fv, fd;	/* seconds fraction value and number of digits */
 	struct tm tm;
@@ -249,38 +250,38 @@ GeneralizedTime_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 	/*
 	 * Encode as a canonical DER.
 	 */
-	errno = EPERM;
-	tloc = asn_GT2time_frac(st, &fv, &fd, &tm, 1);	/* Recognize time */
-	if(tloc == -1 && errno != EPERM)
-		/* Failed to recognize time. Fail completely. */
+    errno = EPERM;
+    tloc = asn_GT2time_frac((const GeneralizedTime_t *)sptr, &fv, &fd, &tm,
+                            1); /* Recognize time */
+    if(tloc == -1 && errno != EPERM) {
+        /* Failed to recognize time. Fail completely. */
 		ASN__ENCODE_FAILED;
+    }
 
-	st = asn_time2GT_frac(0, &tm, fv, fd, 1); /* Save time canonically */
-	if(!st) ASN__ENCODE_FAILED;	/* Memory allocation failure. */
+    st = asn_time2GT_frac(0, &tm, fv, fd, 1); /* Save time canonically */
+    if(!st) ASN__ENCODE_FAILED;               /* Memory allocation failure. */
 
-	erval = OCTET_STRING_encode_der(td, st, tag_mode, tag, cb, app_key);
+    erval = OCTET_STRING_encode_der(td, st, tag_mode, tag, cb, app_key);
 
-	FREEMEM(st->buf);
-	FREEMEM(st);
+    ASN_STRUCT_FREE(*td, st);
 
-	return erval;
+    return erval;
 }
 
 #ifndef	ASN___INTERNAL_TEST_MODE
 
 asn_enc_rval_t
-GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-
-	if(flags & XER_F_CANONICAL) {
+GeneralizedTime_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                           int ilevel, enum xer_encoder_flags_e flags,
+                           asn_app_consume_bytes_f *cb, void *app_key) {
+    if(flags & XER_F_CANONICAL) {
 		GeneralizedTime_t *gt;
 		asn_enc_rval_t rv;
 		int fv, fd;		/* fractional parts */
 		struct tm tm;
 
 		errno = EPERM;
-		if(asn_GT2time_frac((GeneralizedTime_t *)sptr,
+		if(asn_GT2time_frac((const GeneralizedTime_t *)sptr,
 					&fv, &fd, &tm, 1) == -1
 				&& errno != EPERM)
 			ASN__ENCODE_FAILED;
@@ -301,9 +302,9 @@ GeneralizedTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 #endif	/* ASN___INTERNAL_TEST_MODE */
 
 int
-GeneralizedTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
+GeneralizedTime_print(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+    const GeneralizedTime_t *st = (const GeneralizedTime_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */

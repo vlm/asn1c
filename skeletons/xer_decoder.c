@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #include <asn_application.h>
@@ -11,9 +11,10 @@
  * Decode the XER encoding of a given type.
  */
 asn_dec_rval_t
-xer_decode(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-		void **struct_ptr, const void *buffer, size_t size) {
-	asn_codec_ctx_t s_codec_ctx;
+xer_decode(const asn_codec_ctx_t *opt_codec_ctx,
+           const asn_TYPE_descriptor_t *td, void **struct_ptr,
+           const void *buffer, size_t size) {
+    asn_codec_ctx_t s_codec_ctx;
 
 	/*
 	 * Stack checker requires that the codec context

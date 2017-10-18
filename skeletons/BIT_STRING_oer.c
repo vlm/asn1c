@@ -10,7 +10,8 @@
 #include <errno.h>
 
 asn_dec_rval_t
-BIT_STRING_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+BIT_STRING_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
+                      const asn_TYPE_descriptor_t *td,
                       const asn_oer_constraints_t *constraints, void **sptr,
                       const void *ptr, size_t size) {
     BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
@@ -89,10 +90,11 @@ BIT_STRING_decode_oer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_
  * Encode as Canonical OER.
  */
 asn_enc_rval_t
-BIT_STRING_encode_oer(asn_TYPE_descriptor_t *td,
-                        const asn_oer_constraints_t *constraints, void *sptr,
-                        asn_app_consume_bytes_f *cb, void *app_key) {
-    BIT_STRING_t *st = (BIT_STRING_t *)sptr;
+BIT_STRING_encode_oer(const asn_TYPE_descriptor_t *td,
+                      const asn_oer_constraints_t *constraints,
+                      const void *sptr, asn_app_consume_bytes_f *cb,
+                      void *app_key) {
+    const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
     asn_enc_rval_t erval = {0, 0, 0};
     const asn_oer_constraints_t *cts =
         constraints ? constraints : td->encoding_constraints.oer_constraints;

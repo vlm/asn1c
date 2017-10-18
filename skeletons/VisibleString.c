@@ -58,9 +58,9 @@ asn_TYPE_descriptor_t asn_DEF_VisibleString = {
 };
 
 int
-VisibleString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const VisibleString_t *st = (const VisibleString_t *)sptr;
+VisibleString_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                         asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+    const VisibleString_t *st = (const VisibleString_t *)sptr;
 
 	if(st && st->buf) {
 		uint8_t *buf = st->buf;

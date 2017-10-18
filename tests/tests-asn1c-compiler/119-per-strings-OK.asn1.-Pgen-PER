@@ -451,7 +451,7 @@ static int check_permitted_alphabet_31(const void *sptr) {
 /*** <<< CODE [PDU] >>> ***/
 
 static int
-memb_ia5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ia5_c_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
@@ -475,7 +475,7 @@ memb_ia5_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_ia5_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ia5_ce_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
@@ -499,7 +499,7 @@ memb_ia5_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_ia5_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ia5_ir_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
@@ -533,7 +533,7 @@ static int asn_PER_MAP_ia5_ir_7_c2v(unsigned int code) {
 	return permitted_alphabet_code2value_7[code];
 }
 static int
-memb_vs_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_vs_c_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	
@@ -557,7 +557,7 @@ memb_vs_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_vs_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_vs_ce_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	
@@ -581,7 +581,7 @@ memb_vs_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_vs_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_vs_ir_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	
@@ -615,7 +615,7 @@ static int asn_PER_MAP_vs_ir_11_c2v(unsigned int code) {
 	return permitted_alphabet_code2value_11[code];
 }
 static int
-memb_pr_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_pr_c_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 	
@@ -639,7 +639,7 @@ memb_pr_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_pr_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_pr_ir_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 	
@@ -673,7 +673,7 @@ static int asn_PER_MAP_pr_ir_14_c2v(unsigned int code) {
 	return permitted_alphabet_code2value_14[code];
 }
 static int
-memb_ns_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ns_c_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const NumericString_t *st = (const NumericString_t *)sptr;
 	
@@ -697,7 +697,7 @@ memb_ns_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_ns_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ns_ce_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const NumericString_t *st = (const NumericString_t *)sptr;
 	
@@ -721,7 +721,7 @@ memb_ns_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_ns_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ns_ir_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const NumericString_t *st = (const NumericString_t *)sptr;
 	
@@ -755,7 +755,7 @@ static int asn_PER_MAP_ns_ir_18_c2v(unsigned int code) {
 	return permitted_alphabet_code2value_18[code];
 }
 static int
-memb_ut_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ut_c_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	size_t size;
@@ -787,7 +787,7 @@ memb_ut_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_ut_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ut_ce_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	size_t size;
@@ -819,7 +819,7 @@ memb_ut_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_ut_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_ut_ir_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	
@@ -843,7 +843,7 @@ memb_ut_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_bm_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_bm_c_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	
@@ -867,7 +867,7 @@ memb_bm_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_bm_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_bm_cs_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	size_t size;
@@ -894,7 +894,7 @@ memb_bm_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_bm_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_bm_ce_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	
@@ -918,7 +918,7 @@ memb_bm_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_bm_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_bm_ir_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BMPString_t *st = (const BMPString_t *)sptr;
 	
@@ -952,7 +952,7 @@ static int asn_PER_MAP_bm_ir_26_c2v(unsigned int code) {
 	return permitted_alphabet_code2value_26[code];
 }
 static int
-memb_us_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_us_c_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	
@@ -976,7 +976,7 @@ memb_us_c_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_us_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_us_cs_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	size_t size;
@@ -1003,7 +1003,7 @@ memb_us_cs_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_us_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_us_ce_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	
@@ -1027,7 +1027,7 @@ memb_us_ce_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_us_ir_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_us_ir_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	
@@ -1190,7 +1190,7 @@ static asn_TYPE_member_t asn_MBR_many_2[] = {
 		.type = &asn_DEF_PDU,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -1227,7 +1227,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_many_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "many"
 		},
 	{ ATF_POINTER, 30, offsetof(struct PDU, ia5),
@@ -1236,7 +1236,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ia5"
 		},
 	{ ATF_POINTER, 29, offsetof(struct PDU, ia5_c),
@@ -1245,7 +1245,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ia5_c_constr_5, .general_constraints =  memb_ia5_c_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ia5-c"
 		},
 	{ ATF_POINTER, 28, offsetof(struct PDU, ia5_ce),
@@ -1254,7 +1254,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ia5_ce_constr_6, .general_constraints =  memb_ia5_ce_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ia5-ce"
 		},
 	{ ATF_POINTER, 27, offsetof(struct PDU, ia5_ir),
@@ -1263,7 +1263,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ia5_ir_constr_7, .general_constraints =  memb_ia5_ir_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ia5-ir"
 		},
 	{ ATF_POINTER, 26, offsetof(struct PDU, vs),
@@ -1272,7 +1272,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "vs"
 		},
 	{ ATF_POINTER, 25, offsetof(struct PDU, vs_c),
@@ -1281,7 +1281,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_vs_c_constr_9, .general_constraints =  memb_vs_c_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "vs-c"
 		},
 	{ ATF_POINTER, 24, offsetof(struct PDU, vs_ce),
@@ -1290,7 +1290,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_vs_ce_constr_10, .general_constraints =  memb_vs_ce_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "vs-ce"
 		},
 	{ ATF_POINTER, 23, offsetof(struct PDU, vs_ir),
@@ -1299,7 +1299,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_VisibleString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_vs_ir_constr_11, .general_constraints =  memb_vs_ir_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "vs-ir"
 		},
 	{ ATF_POINTER, 22, offsetof(struct PDU, pr),
@@ -1308,7 +1308,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_PrintableString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "pr"
 		},
 	{ ATF_POINTER, 21, offsetof(struct PDU, pr_c),
@@ -1317,7 +1317,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_PrintableString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_pr_c_constr_13, .general_constraints =  memb_pr_c_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "pr-c"
 		},
 	{ ATF_POINTER, 20, offsetof(struct PDU, pr_ir),
@@ -1326,7 +1326,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_PrintableString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_pr_ir_constr_14, .general_constraints =  memb_pr_ir_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "pr-ir"
 		},
 	{ ATF_POINTER, 19, offsetof(struct PDU, ns),
@@ -1335,7 +1335,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NumericString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ns"
 		},
 	{ ATF_POINTER, 18, offsetof(struct PDU, ns_c),
@@ -1344,7 +1344,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NumericString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ns_c_constr_16, .general_constraints =  memb_ns_c_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ns-c"
 		},
 	{ ATF_POINTER, 17, offsetof(struct PDU, ns_ce),
@@ -1353,7 +1353,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NumericString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ns_ce_constr_17, .general_constraints =  memb_ns_ce_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ns-ce"
 		},
 	{ ATF_POINTER, 16, offsetof(struct PDU, ns_ir),
@@ -1362,7 +1362,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NumericString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ns_ir_constr_18, .general_constraints =  memb_ns_ir_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ns-ir"
 		},
 	{ ATF_POINTER, 15, offsetof(struct PDU, ut_c),
@@ -1371,7 +1371,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ut_c_constr_19, .general_constraints =  memb_ut_c_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ut-c"
 		},
 	{ ATF_POINTER, 14, offsetof(struct PDU, ut_ce),
@@ -1380,7 +1380,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ut_ce_constr_20, .general_constraints =  memb_ut_ce_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ut-ce"
 		},
 	{ ATF_POINTER, 13, offsetof(struct PDU, ut_ir),
@@ -1389,7 +1389,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_ut_ir_constr_21, .general_constraints =  memb_ut_ir_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ut-ir"
 		},
 	{ ATF_POINTER, 12, offsetof(struct PDU, bm),
@@ -1398,7 +1398,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_BMPString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bm"
 		},
 	{ ATF_POINTER, 11, offsetof(struct PDU, bm_c),
@@ -1407,7 +1407,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_BMPString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_bm_c_constr_23, .general_constraints =  memb_bm_c_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bm-c"
 		},
 	{ ATF_POINTER, 10, offsetof(struct PDU, bm_cs),
@@ -1416,7 +1416,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_BMPString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_bm_cs_constr_24, .general_constraints =  memb_bm_cs_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bm-cs"
 		},
 	{ ATF_POINTER, 9, offsetof(struct PDU, bm_ce),
@@ -1425,7 +1425,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_BMPString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_bm_ce_constr_25, .general_constraints =  memb_bm_ce_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bm-ce"
 		},
 	{ ATF_POINTER, 8, offsetof(struct PDU, bm_ir),
@@ -1434,7 +1434,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_BMPString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_bm_ir_constr_26, .general_constraints =  memb_bm_ir_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bm-ir"
 		},
 	{ ATF_POINTER, 7, offsetof(struct PDU, us),
@@ -1443,7 +1443,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "us"
 		},
 	{ ATF_POINTER, 6, offsetof(struct PDU, us_c),
@@ -1452,7 +1452,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_us_c_constr_28, .general_constraints =  memb_us_c_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "us-c"
 		},
 	{ ATF_POINTER, 5, offsetof(struct PDU, us_cs),
@@ -1461,7 +1461,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_us_cs_constr_29, .general_constraints =  memb_us_cs_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "us-cs"
 		},
 	{ ATF_POINTER, 4, offsetof(struct PDU, us_ce),
@@ -1470,7 +1470,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_us_ce_constr_30, .general_constraints =  memb_us_ce_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "us-ce"
 		},
 	{ ATF_POINTER, 3, offsetof(struct PDU, us_ir),
@@ -1479,7 +1479,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_UniversalString,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_us_ir_constr_31, .general_constraints =  memb_us_ir_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "us-ir"
 		},
 	{ ATF_POINTER, 2, offsetof(struct PDU, real),
@@ -1488,7 +1488,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_NativeReal,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "real"
 		},
 	{ ATF_POINTER, 1, offsetof(struct PDU, oid),
@@ -1497,7 +1497,7 @@ asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "oid"
 		},
 };

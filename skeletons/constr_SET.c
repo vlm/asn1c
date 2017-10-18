@@ -7,7 +7,7 @@
 #include <constr_SET.h>
 
 /* Check that all the mandatory members are present */
-static int _SET_is_populated(asn_TYPE_descriptor_t *td, void *st);
+static int _SET_is_populated(const asn_TYPE_descriptor_t *td, const void *st);
 
 /*
  * Number of bytes left for this structure.
@@ -94,13 +94,14 @@ _t2e_cmp(const void *ap, const void *bp) {
  * The decoder of the SET type.
  */
 asn_dec_rval_t
-SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	void **struct_ptr, const void *ptr, size_t size, int tag_mode) {
-	/*
+SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
+               const asn_TYPE_descriptor_t *td, void **struct_ptr,
+               const void *ptr, size_t size, int tag_mode) {
+    /*
 	 * Bring closer parts of structure description.
 	 */
 	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
-	asn_TYPE_member_t *elements = td->elements;
+	const asn_TYPE_member_t *elements = td->elements;
 
 	/*
 	 * Parts of the structure being constructed.
@@ -392,8 +393,8 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 static int
-_SET_is_populated(asn_TYPE_descriptor_t *td, void *st) {
-	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
+_SET_is_populated(const asn_TYPE_descriptor_t *td, const void *st) {
+    const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	size_t edx;
 
 	/*
@@ -404,8 +405,9 @@ _SET_is_populated(asn_TYPE_descriptor_t *td, void *st) {
 		unsigned int midx, pres, must;
 
 		midx = edx/(8 * sizeof(specs->_mandatory_elements[0]));
-		pres = ((unsigned int *)((char *)st + specs->pres_offset))[midx];
-		must = sys_ntohl(specs->_mandatory_elements[midx]);
+        pres = ((const unsigned int *)((const char *)st
+                                       + specs->pres_offset))[midx];
+        must = sys_ntohl(specs->_mandatory_elements[midx]);
 
 		if((pres & must) == must) {
 			/*
@@ -432,10 +434,9 @@ _SET_is_populated(asn_TYPE_descriptor_t *td, void *st) {
  * The DER encoder of the SET type.
  */
 asn_enc_rval_t
-SET_encode_der(asn_TYPE_descriptor_t *td,
-	void *sptr, int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
+SET_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr, int tag_mode,
+               ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
+    const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	size_t computed_size = 0;
 	asn_enc_rval_t er;
 	int t2m_build_own = (specs->tag2el_count != td->elements_count);
@@ -467,15 +468,16 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 	for(edx = 0; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		asn_enc_rval_t tmper;
-		void *memb_ptr_dontuse; /* Pointer to the member */
-		void **memb_ptr2;	/* Pointer to that pointer */
+		const void *memb_ptr_dontuse; /* Pointer to the member */
+        const void *const *memb_ptr2; /* Pointer to that pointer */
 
-		/*
+        /*
 		 * Compute the length of the encoding of this member.
 		 */
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
-			if(!*memb_ptr2) {
+            memb_ptr2 =
+                (const void *const *)((const char *)sptr + elm->memb_offset);
+            if(!*memb_ptr2) {
 				if(!elm->optional) {
 					/* Mandatory elements missing */
 					FREEMEM(t2m_build);
@@ -489,13 +491,14 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 				continue;
 			}
 		} else {
-			memb_ptr_dontuse = (void *)((char *)sptr + elm->memb_offset);
-			memb_ptr2 = &memb_ptr_dontuse; /* Only use of memb_ptr_dontuse */
+            memb_ptr_dontuse =
+                (const void *)((const char *)sptr + elm->memb_offset);
+            memb_ptr2 = &memb_ptr_dontuse; /* Only use of memb_ptr_dontuse */
 		}
 
 		/* Eliminate default values */
-		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1) {
-			if(t2m_build) {
+        if(elm->default_value_cmp && elm->default_value_cmp(*memb_ptr2) == 0) {
+            if(t2m_build) {
 				t2m_build[t2m_count].el_no = edx;
 				t2m_build[t2m_count].el_tag = 0;
 				t2m_count++;
@@ -566,23 +569,25 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
 		asn_TYPE_member_t *elm;
 		asn_enc_rval_t tmper;
 
-		void *memb_ptr_dontuse;		/* Pointer to the member */
-		void **memb_ptr2;	/* Pointer to that pointer */
+		const void *memb_ptr_dontuse;		/* Pointer to the member */
+        const void *const *memb_ptr2;       /* Pointer to that pointer */
 
-		/* Encode according to the tag order */
+        /* Encode according to the tag order */
 		elm = &td->elements[t2m[edx].el_no];
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr2 = (void **)((char *)sptr + elm->memb_offset);
-			if(!*memb_ptr2) continue;
+            memb_ptr2 =
+                (const void *const *)((const char *)sptr + elm->memb_offset);
+            if(!*memb_ptr2) continue;
 		} else {
-			memb_ptr_dontuse = (void *)((char *)sptr + elm->memb_offset);
-			memb_ptr2 = &memb_ptr_dontuse; /* Only use of memb_ptr_dontuse */
+            memb_ptr_dontuse =
+                (const void *)((const char *)sptr + elm->memb_offset);
+            memb_ptr2 = &memb_ptr_dontuse; /* Only use of memb_ptr_dontuse */
 		}
 
 		/* Eliminate default values */
-		if(elm->default_value && elm->default_value(0, memb_ptr2) == 1)
-			continue;
+        if(elm->default_value_cmp && elm->default_value_cmp(*memb_ptr2) == 0)
+            continue;
 
 		tmper = elm->type->op->der_encoder(elm->type, *memb_ptr2,
 			elm->tag_mode, elm->tag, cb, app_key);
@@ -615,14 +620,14 @@ SET_encode_der(asn_TYPE_descriptor_t *td,
  * Decode the XER (XML) data.
  */
 asn_dec_rval_t
-SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-	void **struct_ptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
-	/*
+SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
+               const asn_TYPE_descriptor_t *td, void **struct_ptr,
+               const char *opt_mname, const void *buf_ptr, size_t size) {
+    /*
 	 * Bring closer parts of structure description.
 	 */
 	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
-	asn_TYPE_member_t *elements = td->elements;
+	const asn_TYPE_member_t *elements = td->elements;
 	const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
 
 	/*
@@ -660,7 +665,7 @@ SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		pxer_chunk_type_e ch_type;	/* XER chunk type */
 		ssize_t ch_size;		/* Chunk size */
 		xer_check_tag_e tcv;		/* Tag check value */
-		asn_TYPE_member_t *elm;
+		const asn_TYPE_member_t *elm;
 
 		/*
 		 * Go inside the inner member of a set.
@@ -831,10 +836,10 @@ SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 }
 
 asn_enc_rval_t
-SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
+SET_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+               enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb,
+               void *app_key) {
+    const asn_SET_specifics_t *specs = (const asn_SET_specifics_t *)td->specifics;
 	asn_enc_rval_t er;
 	int xcan = (flags & XER_F_CANONICAL);
 	const asn_TYPE_tag2member_t *t2m = specs->tag2el_cxer;
@@ -851,25 +856,26 @@ SET_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 	for(edx = 0; edx < t2m_count; edx++) {
 		asn_enc_rval_t tmper;
 		asn_TYPE_member_t *elm;
-		void *memb_ptr;
-		const char *mname;
-		unsigned int mlen;
+        const void *memb_ptr;
+        const char *mname;
+		size_t mlen;
 
 		elm = &td->elements[t2m[edx].el_no];
 		mname = elm->name;
 		mlen = strlen(elm->name);
 
 		if(elm->flags & ATF_POINTER) {
-			memb_ptr = *(void **)((char *)sptr + elm->memb_offset);
-			if(!memb_ptr) {
+            memb_ptr =
+                *(const void *const *)((const char *)sptr + elm->memb_offset);
+            if(!memb_ptr) {
 				if(elm->optional)
 					continue;
 				/* Mandatory element missing */
 				ASN__ENCODE_FAILED;
 			}
 		} else {
-			memb_ptr = (void *)((char *)sptr + elm->memb_offset);
-		}
+            memb_ptr = (const void *)((const char *)sptr + elm->memb_offset);
+        }
 
 		if(!xcan)
 			ASN__TEXT_INDENT(1, ilevel);
@@ -892,9 +898,9 @@ cb_failed:
 }
 
 int
-SET_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	size_t edx;
+SET_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+          asn_app_consume_bytes_f *cb, void *app_key) {
+    size_t edx;
 	int ret;
 
 	if(!sptr) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
@@ -975,9 +981,9 @@ SET_free(const asn_TYPE_descriptor_t *td, void *ptr,
 }
 
 int
-SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	size_t edx;
+SET_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+               asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+    size_t edx;
 
 	if(!sptr) {
 		ASN__CTFAIL(app_key, td, sptr,

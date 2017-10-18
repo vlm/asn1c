@@ -56,9 +56,10 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
 };
 
 int
-OBJECT_IDENTIFIER_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
+OBJECT_IDENTIFIER_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                             asn_app_constraint_failed_f *ctfailcb,
+                             void *app_key) {
+    const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 
 	if(st && st->buf) {
 		if(st->size < 1) {
@@ -182,8 +183,9 @@ OBJECT_IDENTIFIER__dump_body(const OBJECT_IDENTIFIER_t *st,
 }
 
 static enum xer_pbd_rval
-OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
-	OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
+OBJECT_IDENTIFIER__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
+                                   const void *chunk_buf, size_t chunk_size) {
+    OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
 	const char *chunk_end = (const char *)chunk_buf + chunk_size;
 	const char *endptr;
 	asn_oid_arc_t s_arcs[10];
@@ -224,19 +226,19 @@ OBJECT_IDENTIFIER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const 
 
 asn_dec_rval_t
 OBJECT_IDENTIFIER_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
-
-	return xer_decode_primitive(opt_codec_ctx, td,
+                             const asn_TYPE_descriptor_t *td, void **sptr,
+                             const char *opt_mname, const void *buf_ptr,
+                             size_t size) {
+    return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(OBJECT_IDENTIFIER_t), opt_mname,
 			buf_ptr, size, OBJECT_IDENTIFIER__xer_body_decode);
 }
 
 asn_enc_rval_t
-OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
+OBJECT_IDENTIFIER_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                             int ilevel, enum xer_encoder_flags_e flags,
+                             asn_app_consume_bytes_f *cb, void *app_key) {
+    const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 	asn_enc_rval_t er;
 
     (void)ilevel;
@@ -253,9 +255,10 @@ OBJECT_IDENTIFIER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 }
 
 int
-OBJECT_IDENTIFIER_print(asn_TYPE_descriptor_t *td, const void *sptr,
-	int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
-	const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
+OBJECT_IDENTIFIER_print(const asn_TYPE_descriptor_t *td, const void *sptr,
+                        int ilevel, asn_app_consume_bytes_f *cb,
+                        void *app_key) {
+    const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */

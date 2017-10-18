@@ -28,9 +28,9 @@
  */
 asn_dec_rval_t
 ber_decode(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *type_descriptor,
-	void **struct_ptr, const void *ptr, size_t size) {
-	asn_codec_ctx_t s_codec_ctx;
+           const asn_TYPE_descriptor_t *type_descriptor, void **struct_ptr,
+           const void *ptr, size_t size) {
+    asn_codec_ctx_t s_codec_ctx;
 
 	/*
 	 * Stack checker requires that the codec context
@@ -63,10 +63,10 @@ ber_decode(const asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_dec_rval_t
 ber_check_tags(const asn_codec_ctx_t *opt_codec_ctx,
-		asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx,
-		const void *ptr, size_t size, int tag_mode, int last_tag_form,
-		ber_tlv_len_t *last_length, int *opt_tlv_form) {
-	ssize_t consumed_myself = 0;
+               const asn_TYPE_descriptor_t *td, asn_struct_ctx_t *opt_ctx,
+               const void *ptr, size_t size, int tag_mode, int last_tag_form,
+               ber_tlv_len_t *last_length, int *opt_tlv_form) {
+    ssize_t consumed_myself = 0;
 	ssize_t tag_len;
 	ssize_t len_len;
 	ber_tlv_tag_t tlv_tag;

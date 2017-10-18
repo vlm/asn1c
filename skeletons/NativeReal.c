@@ -91,7 +91,7 @@ static void NativeReal__network_swap(size_t float_size, const void *srcp,
  */
 asn_dec_rval_t
 NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
-                      asn_TYPE_descriptor_t *td, void **sptr,
+                      const asn_TYPE_descriptor_t *td, void **sptr,
                       const void *buf_ptr, size_t size, int tag_mode) {
     asn_dec_rval_t rval;
     ber_tlv_len_t length;
@@ -172,9 +172,9 @@ NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
  * Encode the NativeReal using the standard REAL type DER encoder.
  */
 asn_enc_rval_t
-NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
+NativeReal_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      int tag_mode, ber_tlv_tag_t tag,
+                      asn_app_consume_bytes_f *cb, void *app_key) {
     double d = NativeReal__get_double(td, sptr);
     asn_enc_rval_t erval;
 	REAL_t tmp;
@@ -205,10 +205,10 @@ NativeReal_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
  */
 asn_dec_rval_t
 NativeReal_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
-                       asn_TYPE_descriptor_t *td,
+                       const asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints, void **sptr,
                        asn_per_data_t *pd) {
-	asn_dec_rval_t rval;
+    asn_dec_rval_t rval;
     double d;
 	REAL_t tmp;
 	void *ptmp = &tmp;
@@ -238,9 +238,9 @@ NativeReal_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
  * Encode the NativeReal using the OCTET STRING PER encoder.
  */
 asn_enc_rval_t
-NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
-                       const asn_per_constraints_t *constraints, void *sptr,
-                       asn_per_outp_t *po) {
+NativeReal_encode_uper(const asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints,
+                       const void *sptr, asn_per_outp_t *po) {
     double d = NativeReal__get_double(td, sptr);
 	asn_enc_rval_t erval;
 	REAL_t tmp;
@@ -272,9 +272,10 @@ NativeReal_encode_uper(asn_TYPE_descriptor_t *td,
  * Encode as Canonical OER.
  */
 asn_enc_rval_t
-NativeReal_encode_oer(asn_TYPE_descriptor_t *td,
-                   const asn_oer_constraints_t *constraints, void *sptr,
-                   asn_app_consume_bytes_f *cb, void *app_key) {
+NativeReal_encode_oer(const asn_TYPE_descriptor_t *td,
+                      const asn_oer_constraints_t *constraints,
+                      const void *sptr, asn_app_consume_bytes_f *cb,
+                      void *app_key) {
     asn_enc_rval_t er = {0, 0, 0};
 
     if(!constraints) constraints = td->encoding_constraints.oer_constraints;
@@ -335,9 +336,9 @@ NativeReal_encode_oer(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
-                        asn_TYPE_descriptor_t *td,
-                        const asn_oer_constraints_t *constraints, void **sptr,
-                        const void *ptr, size_t size) {
+                      const asn_TYPE_descriptor_t *td,
+                      const asn_oer_constraints_t *constraints, void **sptr,
+                      const void *ptr, size_t size) {
     asn_dec_rval_t ok = {RC_OK, 0};
     double d;
     ssize_t len_len;
@@ -429,9 +430,9 @@ NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
  */
 asn_dec_rval_t
 NativeReal_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
-	asn_dec_rval_t rval;
+                      const asn_TYPE_descriptor_t *td, void **sptr,
+                      const char *opt_mname, const void *buf_ptr, size_t size) {
+    asn_dec_rval_t rval;
 	REAL_t st = { 0, 0 };
 	REAL_t *stp = &st;
 
@@ -452,9 +453,9 @@ NativeReal_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_enc_rval_t
-NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
+NativeReal_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                      int ilevel, enum xer_encoder_flags_e flags,
+                      asn_app_consume_bytes_f *cb, void *app_key) {
     double d = NativeReal__get_double(td, sptr);
 	asn_enc_rval_t er;
 
@@ -470,10 +471,9 @@ NativeReal_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
  * REAL specific human-readable output.
  */
 int
-NativeReal_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-
-	(void)ilevel;	/* Unused argument */
+NativeReal_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+                 asn_app_consume_bytes_f *cb, void *app_key) {
+    (void)ilevel;	/* Unused argument */
 
 	if(sptr) {
         double d = NativeReal__get_double(td, sptr);

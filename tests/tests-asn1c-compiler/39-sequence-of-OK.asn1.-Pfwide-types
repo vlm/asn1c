@@ -42,7 +42,7 @@ static asn_TYPE_member_t asn_MBR_collection_3[] = {
 		.type = &asn_DEF_T2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -78,7 +78,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "int"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, collection),
@@ -87,7 +87,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_collection_3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "collection"
 		},
 };
@@ -155,7 +155,7 @@ asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "flag"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T2, str),
@@ -164,7 +164,7 @@ asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.type = &asn_DEF_UTF8String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "str"
 		},
 };

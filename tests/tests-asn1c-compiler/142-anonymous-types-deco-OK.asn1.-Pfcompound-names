@@ -39,7 +39,7 @@ static asn_TYPE_member_t asn_MBR_CommonType_1[] = {
 		.type = &asn_DEF_Type1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "t1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct CommonType, choice.t2),
@@ -48,7 +48,7 @@ static asn_TYPE_member_t asn_MBR_CommonType_1[] = {
 		.type = &asn_DEF_Type2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "t2"
 		},
 };
@@ -63,7 +63,7 @@ static asn_CHOICE_specifics_t asn_SPC_CommonType_specs_1 = {
 	sizeof(((struct CommonType *)0)->present),
 	.tag2el = asn_MAP_CommonType_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_CommonType = {
@@ -121,7 +121,7 @@ extern asn_TYPE_member_t asn_MBR_Type1_1[1];
 /*** <<< CODE [Type1] >>> ***/
 
 static int
-memb_x_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_x_constraint_2(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	size_t size;
@@ -147,7 +147,7 @@ memb_x_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_y_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_y_constraint_2(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	size_t size;
@@ -182,7 +182,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_x_constraint_2 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "x"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Type1__anonType, y),
@@ -191,7 +191,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_y_constraint_2 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "y"
 		},
 };
@@ -236,7 +236,7 @@ asn_TYPE_member_t asn_MBR_Type1_1[] = {
 		.type = &asn_DEF_anonType_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "anonType"
 		},
 };
@@ -250,7 +250,7 @@ asn_CHOICE_specifics_t asn_SPC_Type1_specs_1 = {
 	sizeof(((struct Type1 *)0)->present),
 	.tag2el = asn_MAP_Type1_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Type1 = {
@@ -308,7 +308,7 @@ extern asn_TYPE_member_t asn_MBR_Type2_1[1];
 /*** <<< CODE [Type2] >>> ***/
 
 static int
-memb_x_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_x_constraint_2(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	size_t size;
@@ -334,7 +334,7 @@ memb_x_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_y_constraint_2(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_y_constraint_2(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	size_t size;
@@ -369,7 +369,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_x_constraint_2 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "x"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Type2__anonType, y),
@@ -378,7 +378,7 @@ static asn_TYPE_member_t asn_MBR_anonType_2[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_y_constraint_2 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "y"
 		},
 };
@@ -423,7 +423,7 @@ asn_TYPE_member_t asn_MBR_Type2_1[] = {
 		.type = &asn_DEF_anonType_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "anonType"
 		},
 };
@@ -437,7 +437,7 @@ asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
 	sizeof(((struct Type2 *)0)->present),
 	.tag2el = asn_MAP_Type2_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Type2 = {

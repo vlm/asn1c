@@ -8,9 +8,9 @@
 #include <errno.h>
 
 asn_dec_rval_t
-OPEN_TYPE_oer_get(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
-                  void *sptr, asn_TYPE_member_t *elm, const void *ptr,
-                  size_t size) {
+OPEN_TYPE_oer_get(const asn_codec_ctx_t *opt_codec_ctx,
+                  const asn_TYPE_descriptor_t *td, void *sptr,
+                  asn_TYPE_member_t *elm, const void *ptr, size_t size) {
     asn_type_selector_result_t selected;
     void *memb_ptr;   /* Pointer to the member */
     void **memb_ptr2; /* Pointer to that pointer */

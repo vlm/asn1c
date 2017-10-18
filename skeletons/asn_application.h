@@ -78,9 +78,8 @@ enum asn_transfer_syntax {
 asn_enc_rval_t asn_encode_to_buffer(
     const asn_codec_ctx_t *opt_codec_parameters, /* See asn_codecs.h */
     enum asn_transfer_syntax,
-    struct asn_TYPE_descriptor_s *type_to_encode,
-    void *structure_to_encode,
-    void *buffer, size_t buffer_size);
+    const struct asn_TYPE_descriptor_s *type_to_encode,
+    const void *structure_to_encode, void *buffer, size_t buffer_size);
 
 
 /*
@@ -118,11 +117,11 @@ asn_enc_rval_t asn_encode(
  */
 asn_dec_rval_t asn_decode(
     const asn_codec_ctx_t *opt_codec_parameters, enum asn_transfer_syntax,
-    struct asn_TYPE_descriptor_s *type_to_decode,
+    const struct asn_TYPE_descriptor_s *type_to_decode,
     void **structure_ptr, /* Pointer to a target structure's pointer */
     const void *buffer,   /* Data to be decoded */
     size_t size           /* Size of that buffer */
-    );
+);
 
 
 /*
@@ -134,7 +133,7 @@ asn_dec_rval_t asn_decode(
  * particular constraint has failed.
  */
 typedef void (asn_app_constraint_failed_f)(void *application_specific_key,
-	struct asn_TYPE_descriptor_s *type_descriptor_which_failed,
+	const struct asn_TYPE_descriptor_s *type_descriptor_which_failed,
 	const void *structure_which_failed_ptr,
 	const char *error_message_format, ...) CC_PRINTFLIKE(4, 5);
 

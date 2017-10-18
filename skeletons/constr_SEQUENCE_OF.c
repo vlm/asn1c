@@ -11,11 +11,11 @@
  * The DER encoder of the SEQUENCE OF type.
  */
 asn_enc_rval_t
-SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_TYPE_member_t *elm = td->elements;
-	asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(ptr);
+SEQUENCE_OF_encode_der(const asn_TYPE_descriptor_t *td, const void *ptr,
+                       int tag_mode, ber_tlv_tag_t tag,
+                       asn_app_consume_bytes_f *cb, void *app_key) {
+    asn_TYPE_member_t *elm = td->elements;
+	const asn_anonymous_sequence_ *list = _A_CSEQUENCE_FROM_VOID(ptr);
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
 	asn_enc_rval_t erval;
@@ -88,17 +88,17 @@ SEQUENCE_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 }
 
 asn_enc_rval_t
-SEQUENCE_OF_encode_xer(asn_TYPE_descriptor_t *td, void *sptr, int ilevel,
-                       enum xer_encoder_flags_e flags,
+SEQUENCE_OF_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                       int ilevel, enum xer_encoder_flags_e flags,
                        asn_app_consume_bytes_f *cb, void *app_key) {
     asn_enc_rval_t er;
     const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
-    asn_TYPE_member_t *elm = td->elements;
-    asn_anonymous_sequence_ *list = _A_SEQUENCE_FROM_VOID(sptr);
+    const asn_TYPE_member_t *elm = td->elements;
+    const asn_anonymous_sequence_ *list = _A_CSEQUENCE_FROM_VOID(sptr);
     const char *mname = specs->as_XMLValueList
                             ? 0
                             : ((*elm->name) ? elm->name : elm->type->xml_tag);
-    unsigned int mlen = mname ? strlen(mname) : 0;
+    size_t mlen = mname ? strlen(mname) : 0;
     int xcan = (flags & XER_F_CANONICAL);
     int i;
 
@@ -140,19 +140,19 @@ cb_failed:
 }
 
 asn_enc_rval_t
-SEQUENCE_OF_encode_uper(asn_TYPE_descriptor_t *td,
-                        const asn_per_constraints_t *constraints, void *sptr,
-                        asn_per_outp_t *po) {
-	asn_anonymous_sequence_ *list;
+SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
+                        const asn_per_constraints_t *constraints,
+                        const void *sptr, asn_per_outp_t *po) {
+    const asn_anonymous_sequence_ *list;
 	const asn_per_constraint_t *ct;
 	asn_enc_rval_t er;
-	asn_TYPE_member_t *elm = td->elements;
+	const asn_TYPE_member_t *elm = td->elements;
 	int seq;
 
 	if(!sptr) ASN__ENCODE_FAILED;
-	list = _A_SEQUENCE_FROM_VOID(sptr);
+    list = _A_CSEQUENCE_FROM_VOID(sptr);
 
-	er.encoded = 0;
+    er.encoded = 0;
 
 	ASN_DEBUG("Encoding %s as SEQUENCE OF (%d)", td->name, list->count);
 

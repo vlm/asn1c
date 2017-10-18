@@ -27,7 +27,7 @@ static asn_TYPE_member_t asn_MBR_Message_1[] = {
 		.type = &asn_DEF_SpecializedContent_21P0,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "content13"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Message, content42),
@@ -36,7 +36,7 @@ static asn_TYPE_member_t asn_MBR_Message_1[] = {
 		.type = &asn_DEF_SpecializedContent_21P1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "content42"
 		},
 };
@@ -105,7 +105,7 @@ extern asn_TYPE_member_t asn_MBR_SpecializedContent_21P1_3[1];
 /*** <<< CODE [SpecializedContent] >>> ***/
 
 static int
-memb_id_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_id_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -130,7 +130,7 @@ memb_id_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_id_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_id_constraint_3(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -164,7 +164,7 @@ asn_TYPE_member_t asn_MBR_SpecializedContent_21P0_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_id_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "id"
 		},
 };
@@ -206,7 +206,7 @@ asn_TYPE_member_t asn_MBR_SpecializedContent_21P1_3[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_id_constraint_3 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "id"
 		},
 };

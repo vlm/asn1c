@@ -32,7 +32,7 @@ extern asn_TYPE_member_t asn_MBR_TestType_16P1_3[1];
 /*** <<< CODE [TestType] >>> ***/
 
 static int
-memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_common_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -59,23 +59,27 @@ memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [TestType] >>> ***/
 
-static int asn_DFL_2_set_0(int set_value, void **sptr) {
+static int asn_DFL_2_cmp_0(const void *sptr) {
+	const long *st = sptr;
+	
+	if(!st) {
+		return -1; /* No value is not a default value */
+	}
+	
+	/* Test default value 0 */
+	return (*st != 0);
+}
+static int asn_DFL_2_set_0(void **sptr) {
 	long *st = *sptr;
 	
 	if(!st) {
-		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	if(set_value) {
-		/* Install default value 0 */
-		*st = 0;
-		return 0;
-	} else {
-		/* Test default value 0 */
-		return (*st == 0);
-	}
+	/* Install default value 0 */
+	*st = 0;
+	return 0;
 }
 asn_TYPE_member_t asn_MBR_TestType_16P0_1[] = {
 	{ ATF_NOFLAGS, 1, offsetof(struct TestType_16P0, common),
@@ -84,7 +88,8 @@ asn_TYPE_member_t asn_MBR_TestType_16P0_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_common_constraint_1 },
-		.default_value = asn_DFL_2_set_0,	/* DEFAULT 0 */
+		.default_value_cmp = asn_DFL_2_cmp_0,	/* Compare DEFAULT 0 */
+		.default_value_set = asn_DFL_2_set_0,	/* Set DEFAULT 0 */
 		.name = "common"
 		},
 };
@@ -119,23 +124,27 @@ asn_TYPE_descriptor_t asn_DEF_TestType_16P0 = {
 	&asn_SPC_TestType_16P0_specs_1	/* Additional specs */
 };
 
-static int asn_DFL_4_set_0(int set_value, void **sptr) {
+static int asn_DFL_4_cmp_0(const void *sptr) {
+	const BOOLEAN_t *st = sptr;
+	
+	if(!st) {
+		return -1; /* No value is not a default value */
+	}
+	
+	/* Test default value 0 */
+	return (*st != 0);
+}
+static int asn_DFL_4_set_0(void **sptr) {
 	BOOLEAN_t *st = *sptr;
 	
 	if(!st) {
-		if(!set_value) return -1;	/* Not a default value */
 		st = (*sptr = CALLOC(1, sizeof(*st)));
 		if(!st) return -1;
 	}
 	
-	if(set_value) {
-		/* Install default value 0 */
-		*st = 0;
-		return 0;
-	} else {
-		/* Test default value 0 */
-		return (*st == 0);
-	}
+	/* Install default value 0 */
+	*st = 0;
+	return 0;
 }
 asn_TYPE_member_t asn_MBR_TestType_16P1_3[] = {
 	{ ATF_NOFLAGS, 1, offsetof(struct TestType_16P1, common),
@@ -144,7 +153,8 @@ asn_TYPE_member_t asn_MBR_TestType_16P1_3[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = asn_DFL_4_set_0,	/* DEFAULT 0 */
+		.default_value_cmp = asn_DFL_4_cmp_0,	/* Compare DEFAULT 0 */
+		.default_value_set = asn_DFL_4_set_0,	/* Set DEFAULT 0 */
 		.name = "common"
 		},
 };
@@ -219,7 +229,7 @@ static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
 		.type = &asn_DEF_TestType_16P0,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "type1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct TestChoice, choice.type2),
@@ -228,7 +238,7 @@ static asn_TYPE_member_t asn_MBR_TestChoice_1[] = {
 		.type = &asn_DEF_TestType_16P1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "type2"
 		},
 };
@@ -243,7 +253,7 @@ static asn_CHOICE_specifics_t asn_SPC_TestChoice_specs_1 = {
 	sizeof(((struct TestChoice *)0)->present),
 	.tag2el = asn_MAP_TestChoice_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_TestChoice = {
@@ -294,7 +304,7 @@ extern asn_TYPE_member_t asn_MBR_AutoType_34P1_3[1];
 /*** <<< CODE [AutoType] >>> ***/
 
 static int
-memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_common_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -319,7 +329,7 @@ memb_common_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static int
-memb_common_constraint_3(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_common_constraint_3(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	BOOLEAN_t value;
 	
@@ -353,7 +363,7 @@ asn_TYPE_member_t asn_MBR_AutoType_34P0_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_common_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "common"
 		},
 };
@@ -395,7 +405,7 @@ asn_TYPE_member_t asn_MBR_AutoType_34P1_3[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_common_constraint_3 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "common"
 		},
 };
@@ -470,7 +480,7 @@ static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
 		.type = &asn_DEF_AutoType_34P0,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "type1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct AutoChoice, choice.type2),
@@ -479,7 +489,7 @@ static asn_TYPE_member_t asn_MBR_AutoChoice_1[] = {
 		.type = &asn_DEF_AutoType_34P1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "type2"
 		},
 };
@@ -494,7 +504,7 @@ static asn_CHOICE_specifics_t asn_SPC_AutoChoice_specs_1 = {
 	sizeof(((struct AutoChoice *)0)->present),
 	.tag2el = asn_MAP_AutoChoice_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_AutoChoice = {

@@ -1,6 +1,5 @@
-/*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
- * All rights reserved.
+/*
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_CONSTR_CHOICE_H_
@@ -28,7 +27,8 @@ typedef struct asn_CHOICE_specifics_s {
 	unsigned tag2el_count;
 
 	/* Canonical ordering of CHOICE elements, for PER */
-	const unsigned *canonical_order;
+	const unsigned *to_canonical_order;
+	const unsigned *from_canonical_order;
 
 	/*
 	 * Extensions-related stuff.

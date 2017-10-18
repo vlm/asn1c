@@ -12,19 +12,17 @@ static ssize_t der_write_TL(ber_tlv_tag_t tag, ber_tlv_len_t len,
  * The DER encoder of any type.
  */
 asn_enc_rval_t
-der_encode(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
-	asn_app_consume_bytes_f *consume_bytes, void *app_key) {
-
-	ASN_DEBUG("DER encoder invoked for %s",
+der_encode(const asn_TYPE_descriptor_t *type_descriptor, const void *struct_ptr,
+           asn_app_consume_bytes_f *consume_bytes, void *app_key) {
+    ASN_DEBUG("DER encoder invoked for %s",
 		type_descriptor->name);
 
 	/*
 	 * Invoke type-specific encoder.
 	 */
-	return type_descriptor->op->der_encoder(type_descriptor,
-		struct_ptr,	/* Pointer to the destination structure */
-		0, 0,
-		consume_bytes, app_key);
+    return type_descriptor->op->der_encoder(
+        type_descriptor, struct_ptr, /* Pointer to the destination structure */
+        0, 0, consume_bytes, app_key);
 }
 
 /*
@@ -51,9 +49,9 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
  * A variant of the der_encode() which encodes the data into the provided buffer
  */
 asn_enc_rval_t
-der_encode_to_buffer(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
-	void *buffer, size_t buffer_size) {
-	enc_to_buf_arg arg;
+der_encode_to_buffer(const asn_TYPE_descriptor_t *type_descriptor,
+                     const void *struct_ptr, void *buffer, size_t buffer_size) {
+    enc_to_buf_arg arg;
 	asn_enc_rval_t ec;
 
 	arg.buffer = buffer;
@@ -74,8 +72,8 @@ der_encode_to_buffer(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
  * Write out leading TL[v] sequence according to the type definition.
  */
 ssize_t
-der_write_tags(asn_TYPE_descriptor_t *sd, size_t struct_length, int tag_mode,
-               int last_tag_form,
+der_write_tags(const asn_TYPE_descriptor_t *sd, size_t struct_length,
+               int tag_mode, int last_tag_form,
                ber_tlv_tag_t tag, /* EXPLICIT or IMPLICIT tag */
                asn_app_consume_bytes_f *cb, void *app_key) {
 #define ASN1_DER_MAX_TAGS_COUNT 4

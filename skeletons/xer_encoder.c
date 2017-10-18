@@ -10,10 +10,10 @@
  * The XER encoder of any type. May be invoked by the application.
  */
 asn_enc_rval_t
-xer_encode(asn_TYPE_descriptor_t *td, void *sptr,
-	enum xer_encoder_flags_e xer_flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	asn_enc_rval_t er = {0, 0, 0};
+xer_encode(const asn_TYPE_descriptor_t *td, const void *sptr,
+           enum xer_encoder_flags_e xer_flags, asn_app_consume_bytes_f *cb,
+           void *app_key) {
+    asn_enc_rval_t er = {0, 0, 0};
 	asn_enc_rval_t tmper;
 	const char *mname;
 	size_t mlen;
@@ -52,8 +52,8 @@ xer__print2fp(const void *buffer, size_t size, void *app_key) {
 }
 
 int
-xer_fprint(FILE *stream, asn_TYPE_descriptor_t *td, void *sptr) {
-	asn_enc_rval_t er;
+xer_fprint(FILE *stream, const asn_TYPE_descriptor_t *td, const void *sptr) {
+    asn_enc_rval_t er;
 
 	if(!stream) stream = stdout;
 	if(!td || !sptr)
@@ -95,8 +95,8 @@ xer__buffer_append(const void *buffer, size_t size, void *app_key) {
 }
 
 enum xer_equivalence_e
-xer_equivalent(struct asn_TYPE_descriptor_s *td, void *struct1,
-               void *struct2, FILE *opt_debug_stream) {
+xer_equivalent(const struct asn_TYPE_descriptor_s *td, const void *struct1,
+               const void *struct2, FILE *opt_debug_stream) {
     struct xer_buffer xb1 = {0, 0, 0};
     struct xer_buffer xb2 = {0, 0, 0};
     asn_enc_rval_t e1, e2;

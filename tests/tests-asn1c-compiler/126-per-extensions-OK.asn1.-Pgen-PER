@@ -43,7 +43,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "str-o"
 		},
 	{ ATF_POINTER, 3, offsetof(struct PDU, str_m),
@@ -52,7 +52,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "str-m"
 		},
 	{ ATF_POINTER, 2, offsetof(struct PDU, singl),
@@ -61,7 +61,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_Singleton,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "singl"
 		},
 	{ ATF_POINTER, 1, offsetof(struct PDU, pdu_2),
@@ -70,7 +70,7 @@ static asn_TYPE_member_t asn_MBR_PDU_1[] = {
 		.type = &asn_DEF_PDU_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "pdu-2"
 		},
 };
@@ -133,31 +133,37 @@ extern asn_TYPE_member_t asn_MBR_Singleton_1[1];
 
 /*** <<< STAT-DEFS [Singleton] >>> ***/
 
-static int asn_DFL_2_set(int set_value, void **sptr) {
+static int asn_DFL_2_cmp(const void *sptr) {
 	static uint8_t defv[] = "z";
-	IA5String_t *st = *sptr;
+	const IA5String_t *st = sptr;
 	
 	if(!st) {
-		if(!set_value) return -1;	/* Not a default value */
-		st = (*sptr = CALLOC(1, sizeof(*st)));
-		if(!st) return -1;
+		return -1; /* No value is not a default value */
 	}
 	
-	if(set_value) {
-		uint8_t *ptr = MALLOC(sizeof(defv));
-		if(!ptr) return -1;
-		memcpy(ptr, &defv, sizeof(defv));
-		FREEMEM(st->buf);
-		st->buf = ptr;
-		st->size = sizeof(defv) - 1;
+	if(st->size == (sizeof(defv) - 1)
+	&& memcmp(st->buf, &defv, sizeof(defv) - 1) == 0)
 		return 0;
-	} else {
-		if(st->size != (sizeof(defv) - 1)
-		|| memcmp(st->buf, &defv, sizeof(defv) - 1))
-			return 0;
-		return 1;
-	}
+	return 1;
+}
+static int asn_DFL_2_set(void **sptr) {
+	static uint8_t defv[] = "z";
+	IA5String_t *st = *sptr;
+	uint8_t *nstr = MALLOC(sizeof(defv));
 	
+	if(!nstr) return -1;
+	memcpy(nstr, defv, sizeof(defv));
+	
+	if((st = *sptr)) {
+		FREEMEM(st->buf);
+	} else {
+		st = (*sptr = CALLOC(1, sizeof(*st)));
+		if(!st) { FREEMEM(nptr); return -1; }
+	}
+	st->buf = nstr;
+	st->size = sizeof(defv) - 1;
+	
+	return 0;
 }
 asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 	{ ATF_POINTER, 1, offsetof(struct Singleton, opt_z),
@@ -166,7 +172,8 @@ asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = asn_DFL_2_set,	/* DEFAULT "z" */
+		.default_value_cmp = asn_DFL_2_cmp,	/* Compare DEFAULT "z" */
+		.default_value_set = asn_DFL_2_set,	/* Set DEFAULT "z" */
 		.name = "opt-z"
 		},
 };
@@ -261,7 +268,7 @@ asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "main"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.ext1),
@@ -270,7 +277,7 @@ asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ext1"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct PDU_2, choice.ext0),
@@ -279,11 +286,12 @@ asn_TYPE_member_t asn_MBR_PDU_2_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ext0"
 		},
 };
-static const unsigned asn_MAP_PDU_2_cmap_1[] = { 0, 2, 1 };
+static const unsigned asn_MAP_PDU_2_to_canonical_1[] = { 0, 2, 1 };
+static const unsigned asn_MAP_PDU_2_from_canonical_1[] = { 0, 2, 1 };
 static const asn_TYPE_tag2member_t asn_MAP_PDU_2_tag2el_1[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 2, 0, 0 }, /* ext0 */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ext1 */
@@ -296,7 +304,8 @@ asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 	sizeof(((struct PDU_2 *)0)->present),
 	.tag2el = asn_MAP_PDU_2_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
-	.canonical_order = asn_MAP_PDU_2_cmap_1,	/* Canonically sorted */
+	.to_canonical_order = asn_MAP_PDU_2_to_canonical_1,
+	.from_canonical_order = asn_MAP_PDU_2_from_canonical_1,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU_2 = {

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2004-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	ASN_CODECS_PRIM_H
@@ -30,21 +30,19 @@ enum xer_pbd_rval {
 	XPBD_NOT_BODY_IGNORE,	/* Not a body format, but safe to ignore */
 	XPBD_BODY_CONSUMED	/* Body is recognized and consumed */
 };
-typedef enum xer_pbd_rval (xer_primitive_body_decoder_f)
-	(asn_TYPE_descriptor_t *td, void *struct_ptr,
-		const void *chunk_buf, size_t chunk_size);
+typedef enum xer_pbd_rval(xer_primitive_body_decoder_f)(
+    const asn_TYPE_descriptor_t *td, void *struct_ptr,
+    const void *chunk_buf, size_t chunk_size);
 
 /*
  * Specific function to decode simple primitive types.
  * Also see xer_decode_general() in xer_decoder.h
  */
-asn_dec_rval_t xer_decode_primitive(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *type_descriptor,
-	void **struct_ptr, size_t struct_size,
-	const char *opt_mname,
-	const void *buf_ptr, size_t size,
-	xer_primitive_body_decoder_f *prim_body_decoder
-);
+asn_dec_rval_t xer_decode_primitive(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    const asn_TYPE_descriptor_t *type_descriptor, void **struct_ptr,
+    size_t struct_size, const char *opt_mname, const void *buf_ptr, size_t size,
+    xer_primitive_body_decoder_f *prim_body_decoder);
 
 #ifdef __cplusplus
 }

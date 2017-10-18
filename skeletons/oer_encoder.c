@@ -9,18 +9,17 @@
  * The OER encoder of any type.
  */
 asn_enc_rval_t
-oer_encode(asn_TYPE_descriptor_t *type_descriptor, void *struct_ptr,
-        asn_app_consume_bytes_f *consume_bytes, void *app_key) {
+oer_encode(const asn_TYPE_descriptor_t *type_descriptor, const void *struct_ptr,
+           asn_app_consume_bytes_f *consume_bytes, void *app_key) {
+    ASN_DEBUG("OER encoder invoked for %s", type_descriptor->name);
 
-        ASN_DEBUG("OER encoder invoked for %s",
-                type_descriptor->name);
-
-        /*
-         * Invoke type-specific encoder.
-         */
-        return type_descriptor->op->oer_encoder(type_descriptor, 0,
-                struct_ptr,     /* Pointer to the destination structure */
-                consume_bytes, app_key);
+    /*
+     * Invoke type-specific encoder.
+     */
+    return type_descriptor->op->oer_encoder(
+        type_descriptor, 0,
+        struct_ptr, /* Pointer to the destination structure */
+        consume_bytes, app_key);
 }
 
 /*
@@ -30,29 +29,29 @@ typedef struct enc_to_buf_arg {
         void *buffer;
         size_t left;
 } enc_to_buf_arg;
-static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
-        enc_to_buf_arg *arg = (enc_to_buf_arg *)key;
+static int
+encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
+    enc_to_buf_arg *arg = (enc_to_buf_arg *)key;
 
-        if(arg->left < size)
-                return -1;      /* Data exceeds the available buffer size */
+    if(arg->left < size) return -1; /* Data exceeds the available buffer size */
 
-        memcpy(arg->buffer, buffer, size);
-        arg->buffer = ((char *)arg->buffer) + size;
-        arg->left -= size;
+    memcpy(arg->buffer, buffer, size);
+    arg->buffer = ((char *)arg->buffer) + size;
+    arg->left -= size;
 
-        return 0;
+    return 0;
 }
 
 /*
  * A variant of the oer_encode() which encodes the data into the provided buffer
  */
 asn_enc_rval_t
-oer_encode_to_buffer(struct asn_TYPE_descriptor_s *type_descriptor,
+oer_encode_to_buffer(const asn_TYPE_descriptor_t *type_descriptor,
                      const asn_oer_constraints_t *constraints,
-                     void *struct_ptr,  /* Structure to be encoded */
-                     void *buffer,      /* Pre-allocated buffer */
-                     size_t buffer_size /* Initial buffer size (maximum) */
-                     ) {
+                     const void *struct_ptr, /* Structure to be encoded */
+                     void *buffer,           /* Pre-allocated buffer */
+                     size_t buffer_size      /* Initial buffer size (maximum) */
+) {
     enc_to_buf_arg arg;
     asn_enc_rval_t ec;
 
@@ -79,8 +78,8 @@ oer_encode_to_buffer(struct asn_TYPE_descriptor_s *type_descriptor,
 }
 
 asn_enc_rval_t
-oer_encode_primitive(asn_TYPE_descriptor_t *td,
-                     const asn_oer_constraints_t *constraints, void *sptr,
+oer_encode_primitive(const asn_TYPE_descriptor_t *td,
+                     const asn_oer_constraints_t *constraints, const void *sptr,
                      asn_app_consume_bytes_f *cb, void *app_key) {
     const ASN__PRIMITIVE_TYPE_t *st = (const ASN__PRIMITIVE_TYPE_t *)sptr;
     asn_enc_rval_t er = {0, 0, 0};
@@ -112,30 +111,30 @@ oer_encode_primitive(asn_TYPE_descriptor_t *td,
 static int
 oer__count_bytes(const void *buffer, size_t size, void *bytes_ptr) {
     size_t *bytes = bytes_ptr;
+    (void)buffer;
     *bytes += size;
     return 0;
 }
 
 ssize_t
-oer_open_type_put(asn_TYPE_descriptor_t *td,
-                  const asn_oer_constraints_t *constraints,
-                  void *sptr, asn_app_consume_bytes_f *cb,
-                  void *app_key) {
+oer_open_type_put(const asn_TYPE_descriptor_t *td,
+                  const asn_oer_constraints_t *constraints, const void *sptr,
+                  asn_app_consume_bytes_f *cb, void *app_key) {
     size_t serialized_byte_count = 0;
     asn_enc_rval_t er;
     ssize_t len_len;
 
     er = td->op->oer_encoder(td, constraints, sptr, oer__count_bytes,
                              &serialized_byte_count);
-    if(er.encoded == -1) return -1;
-    assert(serialized_byte_count == er.encoded);
+    if(er.encoded < 0) return -1;
+    assert(serialized_byte_count == (size_t)er.encoded);
 
     len_len = oer_serialize_length(serialized_byte_count, cb, app_key);
     if(len_len == -1) return -1;
 
     er = td->op->oer_encoder(td, constraints, sptr, cb, app_key);
-    if(er.encoded == -1) return -1;
-    assert(serialized_byte_count == er.encoded);
+    if(er.encoded < 0) return -1;
+    assert(serialized_byte_count == (size_t)er.encoded);
 
     return er.encoded + len_len;
 }

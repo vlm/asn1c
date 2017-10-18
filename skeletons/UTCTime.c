@@ -74,18 +74,17 @@ asn_TYPE_descriptor_t asn_DEF_UTCTime = {
  * Check that the time looks like the time.
  */
 int
-UTCTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const UTCTime_t *st = (const UTCTime_t *)sptr;
+UTCTime_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                   asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+    const UTCTime_t *st = (const UTCTime_t *)sptr;
 	time_t tloc;
 
 	errno = EPERM;			/* Just an unlikely error code */
 	tloc = asn_UT2time(st, 0, 0);
 	if(tloc == -1 && errno != EPERM) {
-		ASN__CTFAIL(app_key, td, sptr,
-			"%s: Invalid time format: %s (%s:%d)",
-			td->name, strerror(errno), __FILE__, __LINE__);
-		return -1;
+        ASN__CTFAIL(app_key, td, sptr, "%s: Invalid time format: %s (%s:%d)",
+                    td->name, strerror(errno), __FILE__, __LINE__);
+        return -1;
 	}
 
 	return 0;
@@ -94,17 +93,16 @@ UTCTime_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 #ifndef	ASN___INTERNAL_TEST_MODE
 
 asn_enc_rval_t
-UTCTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-
-	if(flags & XER_F_CANONICAL) {
+UTCTime_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                   int ilevel, enum xer_encoder_flags_e flags,
+                   asn_app_consume_bytes_f *cb, void *app_key) {
+    if(flags & XER_F_CANONICAL) {
 		asn_enc_rval_t rv;
 		UTCTime_t *ut;
 		struct tm tm;
 
 		errno = EPERM;
-		if(asn_UT2time((UTCTime_t *)sptr, &tm, 1) == -1
+		if(asn_UT2time((const UTCTime_t *)sptr, &tm, 1) == -1
 				&& errno != EPERM)
 			ASN__ENCODE_FAILED;
 
@@ -125,9 +123,9 @@ UTCTime_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 #endif	/* ASN___INTERNAL_TEST_MODE */
 
 int
-UTCTime_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	const UTCTime_t *st = (const UTCTime_t *)sptr;
+UTCTime_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+              asn_app_consume_bytes_f *cb, void *app_key) {
+    const UTCTime_t *st = (const UTCTime_t *)sptr;
 
 	(void)td;	/* Unused argument */
 	(void)ilevel;	/* Unused argument */

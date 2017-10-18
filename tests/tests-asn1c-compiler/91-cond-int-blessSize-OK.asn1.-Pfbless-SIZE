@@ -21,7 +21,7 @@ xer_type_encoder_f OK_Integer1_encode_xer;
 /*** <<< CODE [OK-Integer1] >>> ***/
 
 int
-OK_Integer1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_Integer1_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -87,7 +87,7 @@ xer_type_encoder_f OK_Integer2_encode_xer;
 /*** <<< CODE [OK-Integer2] >>> ***/
 
 int
-OK_Integer2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_Integer2_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -153,7 +153,7 @@ xer_type_encoder_f OK_Integer3_encode_xer;
 /*** <<< CODE [OK-Integer3] >>> ***/
 
 int
-OK_Integer3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_Integer3_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -219,7 +219,7 @@ xer_type_encoder_f OK_Integer4_encode_xer;
 /*** <<< CODE [OK-Integer4] >>> ***/
 
 int
-OK_Integer4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_Integer4_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -285,7 +285,7 @@ xer_type_encoder_f NO_Integer5_encode_xer;
 /*** <<< CODE [NO-Integer5] >>> ***/
 
 int
-NO_Integer5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_Integer5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {

@@ -72,7 +72,7 @@ per_type_encoder_f WeirdlyConstrainedREAL_encode_uper;
 /*** <<< CODE [WeirdlyConstrainedREAL] >>> ***/
 
 int
-WeirdlyConstrainedREAL_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+WeirdlyConstrainedREAL_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	double value;
 	
@@ -156,7 +156,7 @@ per_type_encoder_f Indirect_IEEE_binary32_encode_uper;
 /*** <<< CODE [Indirect-IEEE-binary32] >>> ***/
 
 int
-Indirect_IEEE_binary32_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+Indirect_IEEE_binary32_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -237,7 +237,7 @@ per_type_encoder_f IEEE_binary32_w_encode_uper;
 /*** <<< CODE [IEEE-binary32-w] >>> ***/
 
 int
-IEEE_binary32_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+IEEE_binary32_w_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -318,7 +318,7 @@ per_type_encoder_f IEEE_binary32_0w_encode_uper;
 /*** <<< CODE [IEEE-binary32-0w] >>> ***/
 
 int
-IEEE_binary32_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+IEEE_binary32_0w_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -399,7 +399,7 @@ per_type_encoder_f IEEE_binary32_w0_encode_uper;
 /*** <<< CODE [IEEE-binary32-w0] >>> ***/
 
 int
-IEEE_binary32_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+IEEE_binary32_w0_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -479,7 +479,7 @@ per_type_encoder_f IEEE_binary64_w_encode_uper;
 /*** <<< CODE [IEEE-binary64-w] >>> ***/
 
 int
-IEEE_binary64_w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+IEEE_binary64_w_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -556,7 +556,7 @@ per_type_encoder_f IEEE_binary64_0w_encode_uper;
 /*** <<< CODE [IEEE-binary64-0w] >>> ***/
 
 int
-IEEE_binary64_0w_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+IEEE_binary64_0w_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -633,7 +633,7 @@ per_type_encoder_f IEEE_binary64_w0_encode_uper;
 /*** <<< CODE [IEEE-binary64-w0] >>> ***/
 
 int
-IEEE_binary64_w0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+IEEE_binary64_w0_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -722,7 +722,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Test;
 /*** <<< CODE [Test] >>> ***/
 
 static int
-indirect_ieee_binary32_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+indirect_ieee_binary32_2_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -745,7 +745,7 @@ indirect_ieee_binary32_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static int
-ieee_binary32_w_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+ieee_binary32_w_3_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -768,7 +768,7 @@ ieee_binary32_w_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static int
-ieee_binary32_0w_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+ieee_binary32_0w_4_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -791,7 +791,7 @@ ieee_binary32_0w_4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
  * so here we adjust the DEF accordingly.
  */
 static int
-ieee_binary32_w0_5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+ieee_binary32_w0_5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -934,7 +934,7 @@ static asn_TYPE_member_t asn_MBR_Test_1[] = {
 		.type = &asn_DEF_Indirect_IEEE_binary32,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "indirect-ieee-binary32"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test, ieee_binary32_w),
@@ -943,7 +943,7 @@ static asn_TYPE_member_t asn_MBR_Test_1[] = {
 		.type = &asn_DEF_IEEE_binary32_w,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ieee-binary32-w"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test, ieee_binary32_0w),
@@ -952,7 +952,7 @@ static asn_TYPE_member_t asn_MBR_Test_1[] = {
 		.type = &asn_DEF_IEEE_binary32_0w,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ieee-binary32-0w"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test, ieee_binary32_w0),
@@ -961,7 +961,7 @@ static asn_TYPE_member_t asn_MBR_Test_1[] = {
 		.type = &asn_DEF_IEEE_binary32_w0,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ieee-binary32-w0"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test, ieee_binary64_w),
@@ -970,7 +970,7 @@ static asn_TYPE_member_t asn_MBR_Test_1[] = {
 		.type = &asn_DEF_IEEE_binary64_w,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ieee-binary64-w"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test, ieee_binary64_0w),
@@ -979,7 +979,7 @@ static asn_TYPE_member_t asn_MBR_Test_1[] = {
 		.type = &asn_DEF_IEEE_binary64_0w,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ieee-binary64-0w"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Test, ieee_binary64_w0),
@@ -988,7 +988,7 @@ static asn_TYPE_member_t asn_MBR_Test_1[] = {
 		.type = &asn_DEF_IEEE_binary64_w0,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ieee-binary64-w0"
 		},
 };

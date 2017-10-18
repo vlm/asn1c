@@ -56,10 +56,12 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
  * Encode INTEGER type using DER.
  */
 asn_enc_rval_t
-INTEGER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
-	int tag_mode, ber_tlv_tag_t tag,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	INTEGER_t *st = (INTEGER_t *)sptr;
+INTEGER_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
+                   int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb,
+                   void *app_key) {
+    const INTEGER_t *st = (const INTEGER_t *)sptr;
+    asn_enc_rval_t rval;
+    INTEGER_t effective_integer;
 
 	ASN_DEBUG("%s %s as INTEGER (tm=%d)",
 		cb?"Encoding":"Estimating", td->name, tag_mode);
@@ -96,19 +98,23 @@ INTEGER_encode_der(asn_TYPE_descriptor_t *td, void *sptr,
 		/* Remove leading superfluous bytes from the integer */
 		shift = buf - st->buf;
 		if(shift) {
-			uint8_t *nb = st->buf;
-			uint8_t *end;
+            union {
+                const uint8_t *c_buf;
+                uint8_t *nc_buf;
+            } unconst;
+            unconst.c_buf = st->buf;
+            effective_integer.buf = unconst.nc_buf + shift;
+            effective_integer.size = st->size - shift;
 
-			st->size -= shift;	/* New size, minus bad bytes */
-			end = nb + st->size;
+            st = &effective_integer;
+        }
+    }
 
-			for(; nb < end; nb++, buf++)
-				*nb = *buf;
-		}
-
-	} /* if(1) */
-
-	return der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
+	rval = der_encode_primitive(td, sptr, tag_mode, tag, cb, app_key);
+    if(rval.structure_ptr == &effective_integer) {
+        rval.structure_ptr = sptr;
+    }
+    return rval;
 }
 
 static const asn_INTEGER_enum_map_t *INTEGER_map_enum2value(
@@ -194,12 +200,11 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
  * INTEGER specific human-readable output.
  */
 int
-INTEGER_print(asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
-	asn_app_consume_bytes_f *cb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
+INTEGER_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
+              asn_app_consume_bytes_f *cb, void *app_key) {
+    const INTEGER_t *st = (const INTEGER_t *)sptr;
 	ssize_t ret;
 
-	(void)td;
 	(void)ilevel;
 
 	if(!st || !st->buf)
@@ -311,8 +316,9 @@ INTEGER_st_prealloc(INTEGER_t *st, int min_size) {
  * Decode the chunk of XML text encoding INTEGER.
  */
 static enum xer_pbd_rval
-INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chunk_buf, size_t chunk_size) {
-	INTEGER_t *st = (INTEGER_t *)sptr;
+INTEGER__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
+                         const void *chunk_buf, size_t chunk_size) {
+    INTEGER_t *st = (INTEGER_t *)sptr;
 	intmax_t dec_value;
 	intmax_t hex_value = 0;
 	const char *lp;
@@ -543,19 +549,18 @@ INTEGER__xer_body_decode(asn_TYPE_descriptor_t *td, void *sptr, const void *chun
 
 asn_dec_rval_t
 INTEGER_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
-	asn_TYPE_descriptor_t *td, void **sptr, const char *opt_mname,
-		const void *buf_ptr, size_t size) {
-
-	return xer_decode_primitive(opt_codec_ctx, td,
+                   const asn_TYPE_descriptor_t *td, void **sptr,
+                   const char *opt_mname, const void *buf_ptr, size_t size) {
+    return xer_decode_primitive(opt_codec_ctx, td,
 		sptr, sizeof(INTEGER_t), opt_mname,
 		buf_ptr, size, INTEGER__xer_body_decode);
 }
 
 asn_enc_rval_t
-INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
-	int ilevel, enum xer_encoder_flags_e flags,
-		asn_app_consume_bytes_f *cb, void *app_key) {
-	const INTEGER_t *st = (const INTEGER_t *)sptr;
+INTEGER_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
+                   int ilevel, enum xer_encoder_flags_e flags,
+                   asn_app_consume_bytes_f *cb, void *app_key) {
+    const INTEGER_t *st = (const INTEGER_t *)sptr;
 	asn_enc_rval_t er;
 
 	(void)ilevel;
@@ -573,7 +578,8 @@ INTEGER_encode_xer(asn_TYPE_descriptor_t *td, void *sptr,
 #ifndef	ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
-INTEGER_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+INTEGER_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
+                    const asn_TYPE_descriptor_t *td,
                     const asn_per_constraints_t *constraints, void **sptr,
                     asn_per_data_t *pd) {
     const asn_INTEGER_specifics_t *specs =
@@ -689,13 +695,13 @@ INTEGER_decode_uper(const asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t 
 }
 
 asn_enc_rval_t
-INTEGER_encode_uper(asn_TYPE_descriptor_t *td,
-                    const asn_per_constraints_t *constraints, void *sptr,
+INTEGER_encode_uper(const asn_TYPE_descriptor_t *td,
+                    const asn_per_constraints_t *constraints, const void *sptr,
                     asn_per_outp_t *po) {
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     asn_enc_rval_t er;
-	INTEGER_t *st = (INTEGER_t *)sptr;
+	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	const uint8_t *buf;
 	const uint8_t *end;
 	const asn_per_constraint_t *ct;

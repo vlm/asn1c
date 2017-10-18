@@ -28,7 +28,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T1, any),
@@ -37,7 +37,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.type = &asn_DEF_ANY,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "any"
 		},
 };
@@ -102,7 +102,7 @@ static asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "i"
 		},
 	{ ATF_POINTER, 1, offsetof(struct T2, any),
@@ -111,7 +111,7 @@ static asn_TYPE_member_t asn_MBR_T2_1[] = {
 		.type = &asn_DEF_ANY,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "any"
 		},
 };
@@ -176,7 +176,7 @@ static asn_TYPE_member_t asn_MBR_T3_1[] = {
 		.type = &asn_DEF_ANY,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "any1"
 		},
 	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any2),
@@ -185,7 +185,7 @@ static asn_TYPE_member_t asn_MBR_T3_1[] = {
 		.type = &asn_DEF_ANY,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "any2"
 		},
 };

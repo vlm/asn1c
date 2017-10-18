@@ -68,7 +68,7 @@ xer_type_encoder_f CN_IntegerMinMax_encode_xer;
 /*** <<< CODE [CN-IntegerMinMax] >>> ***/
 
 int
-CN_IntegerMinMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+CN_IntegerMinMax_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {
@@ -134,7 +134,7 @@ xer_type_encoder_f CN_IntegerMinLow_encode_xer;
 /*** <<< CODE [CN-IntegerMinLow] >>> ***/
 
 int
-CN_IntegerMinLow_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+CN_IntegerMinLow_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -206,7 +206,7 @@ xer_type_encoder_f NO_IntegerMinHigh_encode_xer;
 /*** <<< CODE [NO-IntegerMinHigh] >>> ***/
 
 int
-NO_IntegerMinHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_IntegerMinHigh_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
@@ -284,7 +284,7 @@ xer_type_encoder_f NO_IntegerLowHigh_encode_xer;
 /*** <<< CODE [NO-IntegerLowHigh] >>> ***/
 
 int
-NO_IntegerLowHigh_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_IntegerLowHigh_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	unsigned long value;
 	
@@ -361,7 +361,7 @@ xer_type_encoder_f CN_IntegerLowMax_encode_xer;
 /*** <<< CODE [CN-IntegerLowMax] >>> ***/
 
 int
-CN_IntegerLowMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+CN_IntegerLowMax_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	unsigned long value;
 	
@@ -438,7 +438,7 @@ xer_type_encoder_f NO_IntegerHighMax_encode_xer;
 /*** <<< CODE [NO-IntegerHighMax] >>> ***/
 
 int
-NO_IntegerHighMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_IntegerHighMax_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
@@ -516,7 +516,7 @@ xer_type_encoder_f NO_IntegerLowestMax_encode_xer;
 /*** <<< CODE [NO-IntegerLowestMax] >>> ***/
 
 int
-NO_IntegerLowestMax_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_IntegerLowestMax_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
@@ -594,7 +594,7 @@ xer_type_encoder_f NO_IntegerOutRange_encode_xer;
 /*** <<< CODE [NO-IntegerOutRange] >>> ***/
 
 int
-NO_IntegerOutRange_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_IntegerOutRange_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	unsigned long value;
 	
@@ -671,7 +671,7 @@ xer_type_encoder_f NO_IntegerOutValue_encode_xer;
 /*** <<< CODE [NO-IntegerOutValue] >>> ***/
 
 int
-NO_IntegerOutValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_IntegerOutValue_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	unsigned long value;
 	
@@ -748,7 +748,7 @@ xer_type_encoder_f OK_IntegerInRange1_encode_xer;
 /*** <<< CODE [OK-IntegerInRange1] >>> ***/
 
 int
-OK_IntegerInRange1_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_IntegerInRange1_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -820,7 +820,7 @@ xer_type_encoder_f OK_IntegerInRange2_encode_xer;
 /*** <<< CODE [OK-IntegerInRange2] >>> ***/
 
 int
-OK_IntegerInRange2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_IntegerInRange2_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -892,7 +892,7 @@ xer_type_encoder_f OK_IntegerInRange3_encode_xer;
 /*** <<< CODE [OK-IntegerInRange3] >>> ***/
 
 int
-OK_IntegerInRange3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_IntegerInRange3_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -964,7 +964,7 @@ xer_type_encoder_f OK_IntegerInRange4_encode_xer;
 /*** <<< CODE [OK-IntegerInRange4] >>> ***/
 
 int
-OK_IntegerInRange4_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_IntegerInRange4_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -1036,7 +1036,7 @@ xer_type_encoder_f OK_IntegerInRange5_encode_xer;
 /*** <<< CODE [OK-IntegerInRange5] >>> ***/
 
 int
-OK_IntegerInRange5_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+OK_IntegerInRange5_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -1108,7 +1108,7 @@ xer_type_encoder_f NO_IntegerInRange6_encode_xer;
 /*** <<< CODE [NO-IntegerInRange6] >>> ***/
 
 int
-NO_IntegerInRange6_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
+NO_IntegerInRange6_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	
 	if(!sptr) {

@@ -34,7 +34,7 @@ extern asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[3];
 /*** <<< CODE [SIGNED] >>> ***/
 
 static int
-memb_signature_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_signature_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	size_t size;
@@ -74,7 +74,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "version"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, signature),
@@ -83,7 +83,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "signature"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct toBeSigned, issuer),
@@ -92,7 +92,7 @@ static asn_TYPE_member_t asn_MBR_toBeSigned_2[] = {
 		.type = &asn_DEF_Name,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "issuer"
 		},
 };
@@ -137,7 +137,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.type = &asn_DEF_toBeSigned_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "toBeSigned"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct SIGNED_15P0, algorithm),
@@ -146,7 +146,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.type = &asn_DEF_OBJECT_IDENTIFIER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "algorithm"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct SIGNED_15P0, signature),
@@ -155,7 +155,7 @@ asn_TYPE_member_t asn_MBR_SIGNED_15P0_1[] = {
 		.type = &asn_DEF_BIT_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_signature_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "signature"
 		},
 };
@@ -278,7 +278,7 @@ asn_TYPE_member_t asn_MBR_Name_1[] = {
 		.type = &asn_DEF_RelativeDistinguishedName,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -359,7 +359,7 @@ static int check_permitted_alphabet_2(const void *sptr) {
 /*** <<< CODE [RelativeDistinguishedName] >>> ***/
 
 static int
-memb_IA5String_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_IA5String_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	
@@ -392,7 +392,7 @@ asn_TYPE_member_t asn_MBR_RelativeDistinguishedName_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_IA5String_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };

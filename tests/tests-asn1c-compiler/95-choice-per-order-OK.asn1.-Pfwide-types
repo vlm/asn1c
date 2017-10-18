@@ -65,7 +65,7 @@ static asn_TYPE_member_t asn_MBR_ch_4[] = {
 		.type = &asn_DEF_NULL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "null"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct ch, choice.Int),
@@ -74,7 +74,7 @@ static asn_TYPE_member_t asn_MBR_ch_4[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "int"
 		},
 };
@@ -89,7 +89,7 @@ static asn_CHOICE_specifics_t asn_SPC_ch_specs_4 = {
 	sizeof(((struct ch *)0)->present),
 	.tag2el = asn_MAP_ch_tag2el_4,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
@@ -114,7 +114,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.type = &asn_DEF_RELATIVE_OID,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "roid"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.bitstr),
@@ -123,7 +123,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.type = &asn_DEF_BIT_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bitstr"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.ch),
@@ -132,7 +132,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.type = &asn_DEF_ch_4,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ch"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice, choice.Bool),
@@ -141,7 +141,7 @@ static asn_TYPE_member_t asn_MBR_Choice_1[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bool"
 		},
 };
@@ -159,7 +159,7 @@ static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	sizeof(((struct Choice *)0)->present),
 	.tag2el = asn_MAP_Choice_tag2el_1,
 	.tag2el_count = 5,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = 3	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice = {
@@ -217,7 +217,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_BIT_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "bitstr"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice2, choice.roid),
@@ -226,7 +226,7 @@ static asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_RELATIVE_OID,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "roid"
 		},
 };
@@ -241,7 +241,7 @@ static asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	sizeof(((struct Choice2 *)0)->present),
 	.tag2el = asn_MAP_Choice2_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {

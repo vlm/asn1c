@@ -1,6 +1,5 @@
-/*-
- * Copyright (c) 2003, 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
- * All rights reserved.
+/*
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 /*
@@ -97,11 +96,11 @@ typedef void (asn_struct_free_f)(
 /*
  * Print the structure according to its specification.
  */
-typedef int (asn_struct_print_f)(
-		struct asn_TYPE_descriptor_s *type_descriptor,
-		const void *struct_ptr,
-		int level,	/* Indentation level */
-		asn_app_consume_bytes_f *callback, void *app_key);
+typedef int(asn_struct_print_f)(
+    const struct asn_TYPE_descriptor_s *type_descriptor,
+    const void *struct_ptr,
+    int level, /* Indentation level */
+    asn_app_consume_bytes_f *callback, void *app_key);
 
 /*
  * Compare two structs between each other.
@@ -131,7 +130,7 @@ asn_outmost_tag_f asn_TYPE_outmost_tag;
  * Information Object Set driven constraints.
  */
 typedef struct asn_type_selector_result_s {
-    struct asn_TYPE_descriptor_s *type_descriptor; /* Type encoded. */
+    const struct asn_TYPE_descriptor_s *type_descriptor; /* Type encoded. */
     unsigned presence_index; /* Associated choice variant. */
 } asn_type_selector_result_t;
 typedef asn_type_selector_result_t(asn_type_selector_f)(
@@ -227,7 +226,8 @@ typedef struct asn_TYPE_member_s {
     asn_TYPE_descriptor_t *type;            /* Member type descriptor */
     asn_type_selector_f *type_selector;     /* IoS runtime type selector */
     asn_encoding_constraints_t encoding_constraints;
-    int (*default_value)(int setval, void **sptr); /* DEFAULT <value> */
+    int (*default_value_set)(void **sptr);      /* Set DEFAULT <value> */
+    int (*default_value_cmp)(const void *sptr); /* Compare DEFAULT <value> */
     const char *name; /* ASN.1 identifier of the element */
 } asn_TYPE_member_t;
 

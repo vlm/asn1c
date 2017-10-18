@@ -47,7 +47,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T;
 /*** <<< CODE [T] >>> ***/
 
 static int
-memb_char_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_char_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	size_t size;
@@ -116,7 +116,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "int"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Char),
@@ -125,7 +125,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_OCTET_STRING,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_char_constraint_1 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "char"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Class),
@@ -134,7 +134,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_class_4,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "class"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, Double),
@@ -143,7 +143,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_REAL,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "double"
 		},
 };

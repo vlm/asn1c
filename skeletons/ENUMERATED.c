@@ -57,7 +57,7 @@ asn_TYPE_descriptor_t asn_DEF_ENUMERATED = {
 
 asn_dec_rval_t
 ENUMERATED_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
-                      asn_TYPE_descriptor_t *td,
+                      const asn_TYPE_descriptor_t *td,
                       const asn_oer_constraints_t *constraints, void **sptr,
                       const void *ptr, size_t size) {
     asn_dec_rval_t rval;
@@ -81,10 +81,11 @@ ENUMERATED_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_enc_rval_t
-ENUMERATED_encode_oer(asn_TYPE_descriptor_t *td,
-                      const asn_oer_constraints_t *constraints, void *sptr,
-                      asn_app_consume_bytes_f *cb, void *app_key) {
-    ENUMERATED_t *st = (ENUMERATED_t *)sptr;
+ENUMERATED_encode_oer(const asn_TYPE_descriptor_t *td,
+                      const asn_oer_constraints_t *constraints,
+                      const void *sptr, asn_app_consume_bytes_f *cb,
+                      void *app_key) {
+    const ENUMERATED_t *st = sptr;
 	long value;
 
 	if(asn_INTEGER2long(st, &value)) {
@@ -100,7 +101,7 @@ ENUMERATED_encode_oer(asn_TYPE_descriptor_t *td,
 
 asn_dec_rval_t
 ENUMERATED_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
-                       asn_TYPE_descriptor_t *td,
+                       const asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints, void **sptr,
                        asn_per_data_t *pd) {
     asn_dec_rval_t rval;
@@ -124,10 +125,10 @@ ENUMERATED_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_enc_rval_t
-ENUMERATED_encode_uper(asn_TYPE_descriptor_t *td,
-                       const asn_per_constraints_t *constraints, void *sptr,
-                       asn_per_outp_t *po) {
-    ENUMERATED_t *st = (ENUMERATED_t *)sptr;
+ENUMERATED_encode_uper(const asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints,
+                       const void *sptr, asn_per_outp_t *po) {
+    const ENUMERATED_t *st = (const ENUMERATED_t *)sptr;
     long value;
 
     if(asn_INTEGER2long(st, &value)) {

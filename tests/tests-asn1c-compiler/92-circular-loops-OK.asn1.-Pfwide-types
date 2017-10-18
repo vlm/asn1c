@@ -55,7 +55,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_Choice1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ch1"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Everything, ch2),
@@ -64,7 +64,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_Choice2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ch2"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Everything, ch3),
@@ -73,7 +73,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_Choice3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ch3"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Everything, set),
@@ -82,7 +82,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_Set,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "set"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Everything, a),
@@ -91,7 +91,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_Alpha,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Everything, b),
@@ -100,7 +100,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_Beta,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Everything, g),
@@ -109,7 +109,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_Gamma,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "g"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Everything, ot),
@@ -118,7 +118,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_OneTwo,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "ot"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Everything, tt),
@@ -127,7 +127,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_TwoThree,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "tt"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Everything, to),
@@ -136,7 +136,7 @@ asn_TYPE_member_t asn_MBR_Everything_1[] = {
 		.type = &asn_DEF_ThreeOne,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "to"
 		},
 };
@@ -234,7 +234,7 @@ asn_TYPE_member_t asn_MBR_Choice1_1[] = {
 		.type = &asn_DEF_Everything,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "something"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice1, choice.some2),
@@ -243,7 +243,7 @@ asn_TYPE_member_t asn_MBR_Choice1_1[] = {
 		.type = &asn_DEF_Everything,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "some2"
 		},
 };
@@ -258,7 +258,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 	sizeof(((struct Choice1 *)0)->present),
 	.tag2el = asn_MAP_Choice1_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
@@ -330,7 +330,7 @@ asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_TypeRef,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "typeref"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice2, choice.some3),
@@ -339,7 +339,7 @@ asn_TYPE_member_t asn_MBR_Choice2_1[] = {
 		.type = &asn_DEF_Everything,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "some3"
 		},
 };
@@ -354,7 +354,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	sizeof(((struct Choice2 *)0)->present),
 	.tag2el = asn_MAP_Choice2_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
@@ -437,7 +437,7 @@ static asn_TYPE_member_t asn_MBR_a_2[] = {
 		.type = &asn_DEF_Everything,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "aa"
 		},
 };
@@ -481,7 +481,7 @@ static asn_TYPE_member_t asn_MBR_c_5[] = {
 		.type = &asn_DEF_Choice3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -518,7 +518,7 @@ asn_TYPE_member_t asn_MBR_Choice3_1[] = {
 		.type = &asn_DEF_a_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Choice3, choice.b),
@@ -527,7 +527,7 @@ asn_TYPE_member_t asn_MBR_Choice3_1[] = {
 		.type = &asn_DEF_Everything,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Choice3, choice.c),
@@ -536,7 +536,7 @@ asn_TYPE_member_t asn_MBR_Choice3_1[] = {
 		.type = &asn_DEF_c_5,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "c"
 		},
 };
@@ -552,7 +552,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice3_specs_1 = {
 	sizeof(((struct Choice3 *)0)->present),
 	.tag2el = asn_MAP_Choice3_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
-	.canonical_order = 0,
+	0, 0,
 	.ext_start = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice3 = {
@@ -628,7 +628,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "int"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Member, set),
@@ -637,7 +637,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		.type = &asn_DEF_Set,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "set"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Member, seq),
@@ -646,7 +646,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "seq"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Member, set2),
@@ -655,7 +655,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		.type = &asn_DEF_Set,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "set2"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Member, set3),
@@ -664,7 +664,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		.type = &asn_DEF_Set,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "set3"
 		},
 };
@@ -711,7 +711,7 @@ asn_TYPE_member_t asn_MBR_Set_1[] = {
 		.type = &asn_DEF_Member_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = ""
 		},
 };
@@ -786,7 +786,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_POINTER, 3, offsetof(struct Sequence, seq),
@@ -795,7 +795,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_Sequence,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "seq"
 		},
 	{ ATF_POINTER, 2, offsetof(struct Sequence, b),
@@ -804,7 +804,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Sequence, set),
@@ -813,7 +813,7 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_Set,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "set"
 		},
 };
@@ -942,7 +942,7 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.type = &asn_DEF_Beta,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 };
@@ -986,7 +986,7 @@ asn_TYPE_member_t asn_MBR_Alpha_1[] = {
 		.type = &asn_DEF_Beta,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Alpha, b),
@@ -995,7 +995,7 @@ asn_TYPE_member_t asn_MBR_Alpha_1[] = {
 		.type = &asn_DEF_b_3,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 };
@@ -1071,7 +1071,7 @@ asn_TYPE_member_t asn_MBR_Beta_1[] = {
 		.type = &asn_DEF_Alpha,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Beta, g),
@@ -1080,7 +1080,7 @@ asn_TYPE_member_t asn_MBR_Beta_1[] = {
 		.type = &asn_DEF_Gamma,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "g"
 		},
 };
@@ -1159,7 +1159,7 @@ asn_TYPE_member_t asn_MBR_Gamma_1[] = {
 		.type = &asn_DEF_TwoThree,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "o"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Gamma, a),
@@ -1168,7 +1168,7 @@ asn_TYPE_member_t asn_MBR_Gamma_1[] = {
 		.type = &asn_DEF_Alpha,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "a"
 		},
 	{ ATF_POINTER, 0, offsetof(struct Gamma, b),
@@ -1177,7 +1177,7 @@ asn_TYPE_member_t asn_MBR_Gamma_1[] = {
 		.type = &asn_DEF_Beta,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "b"
 		},
 };
@@ -1265,7 +1265,7 @@ asn_TYPE_member_t asn_MBR_OneTwo_1[] = {
 		.type = &asn_DEF_TwoThree,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m12"
 		},
 };
@@ -1356,7 +1356,7 @@ asn_TYPE_member_t asn_MBR_TwoThree_1[] = {
 		.type = &asn_DEF_ThreeOne,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m23"
 		},
 };
@@ -1451,7 +1451,7 @@ asn_TYPE_member_t asn_MBR_ThreeOne_1[] = {
 		.type = &asn_DEF_OneTwo,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "m31"
 		},
 	{ ATF_POINTER, 0, offsetof(struct ThreeOne, g),
@@ -1460,7 +1460,7 @@ asn_TYPE_member_t asn_MBR_ThreeOne_1[] = {
 		.type = &asn_DEF_Gamma,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value = 0,
+		0, 0, /* No default value */
 		.name = "g"
 		},
 };

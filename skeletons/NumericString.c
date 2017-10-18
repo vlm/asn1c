@@ -78,9 +78,9 @@ asn_TYPE_descriptor_t asn_DEF_NumericString = {
 };
 
 int
-NumericString_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
-		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
-	const NumericString_t *st = (const NumericString_t *)sptr;
+NumericString_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+                         asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+    const NumericString_t *st = (const NumericString_t *)sptr;
 
 	if(st && st->buf) {
 		uint8_t *buf = st->buf;

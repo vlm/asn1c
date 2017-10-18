@@ -1,6 +1,5 @@
-/*-
- * Copyright (c) 2003, 2004, 2005 Lev Walkin <vlm@lionet.info>.
- * 	All rights reserved.
+/*
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #ifndef	_OBJECT_IDENTIFIER_H_
