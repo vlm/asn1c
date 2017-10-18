@@ -117,7 +117,7 @@ generate_random_data(enum asn_transfer_syntax syntax, const char *top_dirname, s
         if(enc.syntax == syntax) {
             int r = snprintf(dirname, sizeof(dirname), "%s/%s", top_dirname,
                              enc.dir_name);
-            if(r >= sizeof(dirname) - sizeof("filename.bin")) {
+            if(r < 0 || (size_t)r >= sizeof(dirname) - sizeof("filename.bin")) {
                 fprintf(stderr, "Too long filenames\n");
                 exit(EX_SOFTWARE);
             }
@@ -231,7 +231,7 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
         for(;;) {
             er = asn_encode_to_buffer(
                 0, syntax, &asn_DEF_T, structure, buffer, buffer_size);
-            if(er.encoded == -1) {
+            if(er.encoded < 0) {
                 fprintf(stderr, "Encoded T into %zd bytes\n", er.encoded);
                 fprintf(stderr, "Structure %s:\n",
                         sizeof(ASN1_STR) > 60 ? "T" : ASN1_STR);
@@ -239,7 +239,7 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
                 assert(er.encoded >= 0);
                 exit(EX_SOFTWARE);
             }
-            if(er.encoded > buffer_size && buffer == tmp_buffer) {
+            if((size_t)er.encoded > buffer_size && buffer == tmp_buffer) {
                 if(debug) {
                     fprintf(
                         stderr,
@@ -254,10 +254,10 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
             }
             break;
         }
-        if(er.encoded > buffer_size) {
+        if((size_t)er.encoded > buffer_size) {
             fprintf(stderr, "Data %zd does not fit into buffer %zu\n",
                     er.encoded, buffer_size);
-            assert(er.encoded <= buffer_size);
+            assert((size_t)er.encoded <= buffer_size);
         }
 
         asn_dec_rval_t rval =
@@ -265,12 +265,12 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
                        buffer, er.encoded);
         if(rval.code == RC_OK) {
             /* Everything's cool... or is it? Expecting a proper consumed */
-            if(rval.consumed != er.encoded) {
+            if((ssize_t)rval.consumed != er.encoded) {
                 fprintf(stderr, "Encoded into %zd, yet consumed %zu\n",
                         er.encoded, rval.consumed);
                 fprintf(stderr, "Original random structure:\n");
                 asn_fprint(stderr, &asn_DEF_T, structure);
-                assert(rval.consumed == er.encoded);
+                assert((ssize_t)rval.consumed == er.encoded);
                 exit(EX_SOFTWARE);
             }
         } else {
