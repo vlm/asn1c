@@ -35,7 +35,7 @@ oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
     }
 
     len_len = (first_byte & 0x7f);
-    if((1 + len_len) > size) {
+    if((size_t)(1 + len_len) > size) {
         *len_r = 0;
         return 0;
     }
