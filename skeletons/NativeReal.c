@@ -361,15 +361,24 @@ NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
          */
         NativeReal__network_swap(wire_size, ptr, scratch);
 
+
         switch(wire_size) {
-        case sizeof(double):
-            if(NativeReal__set(td, sptr, *(const double *)scratch) < 0)
-                ASN__DECODE_FAILED;
-            break;
-        case sizeof(float):
-            if(NativeReal__set(td, sptr, *(const float *)scratch) < 0)
-                ASN__DECODE_FAILED;
-            break;
+            case sizeof(double):
+                {
+                    double tmp;
+                    memcpy(&tmp, scratch, sizeof(double));
+                    if(NativeReal__set(td, sptr, tmp) < 0)
+                        ASN__DECODE_FAILED;
+                }
+                break;
+            case sizeof(float):
+                {
+                    float tmp;
+                    memcpy(&tmp, scratch, sizeof(float));
+                    if(NativeReal__set(td, sptr, tmp) < 0)
+                        ASN__DECODE_FAILED;
+                }
+                break;
         default:
             ASN__DECODE_FAILED;
         }
