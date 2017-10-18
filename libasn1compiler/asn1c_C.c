@@ -1129,22 +1129,34 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 		elements = 0;
 	}
 
-	/* Create a canonical elements map */
-	if(elements && (arg->flags & A1C_GEN_PER)) {
-		int i;
-		cmap = compute_canonical_members_order(arg, elements);
-		if(cmap) {
-			OUT("static const unsigned asn_MAP_%s_cmap_%d[] = {",
-				MKID(expr),
-				expr->_type_unique_index);
-			for(i = 0; i < elements; i++) {
-				if(i) OUT(",");
-				OUT(" %d", cmap[i]);
-			}
-			OUT(" };\n");
-			free(cmap);
-		}
-	}
+    /* Create a canonical elements map */
+    if(elements && (arg->flags & A1C_GEN_PER)) {
+        cmap = compute_canonical_members_order(arg, elements);
+        if(cmap) {
+            OUT("static const unsigned asn_MAP_%s_to_canonical_%d[] = {",
+                MKID(expr), expr->_type_unique_index);
+            for(int i = 0; i < elements; i++) {
+                if(i) OUT(",");
+                OUT(" %d", cmap[i]);
+            }
+            OUT(" };\n");
+            OUT("static const unsigned asn_MAP_%s_from_canonical_%d[] = {",
+                MKID(expr), expr->_type_unique_index);
+            for(int i = 0; i < elements; i++) {
+                if(i) OUT(",");
+                int j;
+                for(j = 0; j < elements; j++) {
+                    if(cmap[j] == i) {
+                        OUT(" %d", j);
+                        break;
+                    }
+                }
+                assert(j < elements);
+            }
+            OUT(" };\n");
+            free(cmap);
+        }
+    }
 
 	if(arg->embed) {
 		/*
@@ -1162,24 +1174,27 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 	 */
 	emit_tag2member_map(arg, tag2el, tag2el_count, 0);
 
-	if(!(expr->_type_referenced)) OUT("static ");
-	OUT("asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n",
-		MKID(expr), expr->_type_unique_index);
-	INDENTED(
-		OUT("sizeof(%s),\n", c_name(arg).full_name);
-		OUT("offsetof(%s, _asn_ctx),\n", c_name(arg).full_name);
-		OUT("offsetof(%s, present),\n", c_name(arg).full_name);
-		OUT("sizeof(((%s *)0)->present),\n", c_name(arg).full_name);
-		emit_tag2member_reference(arg, expr, tag2el_count);
-		if(C99_MODE) OUT(".canonical_order = ");
-		if(cmap) OUT("asn_MAP_%s_cmap_%d,\t/* Canonically sorted */\n",
-			MKID(expr), expr->_type_unique_index);
-		else OUT("0,\n");
-		if(C99_MODE) OUT(".ext_start = ");
-		OUT("%d\t/* Extensions start */\n",
-			compute_extensions_start(expr));
-	);
-	OUT("};\n");
+    if(!(expr->_type_referenced)) OUT("static ");
+    OUT("asn_CHOICE_specifics_t asn_SPC_%s_specs_%d = {\n", MKID(expr),
+        expr->_type_unique_index);
+    INDENTED(
+        OUT("sizeof(%s),\n", c_name(arg).full_name);
+        OUT("offsetof(%s, _asn_ctx),\n", c_name(arg).full_name);
+        OUT("offsetof(%s, present),\n", c_name(arg).full_name);
+        OUT("sizeof(((%s *)0)->present),\n", c_name(arg).full_name);
+        emit_tag2member_reference(arg, expr, tag2el_count);
+        if(cmap) {
+            if(C99_MODE) OUT(".to_canonical_order = ");
+            OUT("asn_MAP_%s_to_canonical_%d,\n", MKID(expr),
+                expr->_type_unique_index);
+            if(C99_MODE) OUT(".from_canonical_order = ");
+            OUT("asn_MAP_%s_from_canonical_%d,\n", MKID(expr),
+                expr->_type_unique_index);
+        } else { OUT("0, 0,\n"); }
+        if(C99_MODE) OUT(".ext_start = ");
+        OUT("%d\t/* Extensions start */\n", compute_extensions_start(expr));
+    );
+    OUT("};\n");
 
 	/*
 	 * Emit asn_DEF_xxx table.
@@ -1327,7 +1342,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("int\n");
 		OUT("%s", p);
 		if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
-		OUT("_constraint(asn_TYPE_descriptor_t *td, const void *sptr,\n");
+		OUT("_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,\n");
 		INDENT(+1);
 		OUT("\t\tasn_app_constraint_failed_f *ctfailcb, void *app_key) {");
 		OUT("\n");
@@ -2292,7 +2307,7 @@ safe_string(const uint8_t *buf, int size) {
 }
 
 static void
-emit_default_value(arg_t *arg, asn1p_value_t *v) {
+emit_default_string_value(arg_t *arg, asn1p_value_t *v) {
 
 	OUT("static uint8_t defv[] = ");
 	assert(v->type == ATV_STRING);
@@ -2330,28 +2345,58 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		if(fits_long && !expr->marker.default_value->value.v_integer)
 			expr->marker.flags &= ~EM_INDIRECT;
 		if(!out) {
+            if(C99_MODE) OUT(".default_value_cmp = ");
+			OUT("asn_DFL_%d_cmp_%s,",
+				expr->_type_unique_index,
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
+            OUT("\t/* Compare DEFAULT %s */\n",
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
+            if(C99_MODE) OUT(".default_value_set = ");
 			OUT("asn_DFL_%d_set_%s,",
 				expr->_type_unique_index,
 				asn1p_itoa(expr->marker.default_value->value.v_integer));
-            OUT("\t/* DEFAULT %s */\n",
+            OUT("\t/* Set DEFAULT %s */\n",
 				asn1p_itoa(expr->marker.default_value->value.v_integer));
 			return 1;
 		}
 		REDIR(OT_STAT_DEFS);
-		OUT("static int asn_DFL_%d_set_%s(int set_value, void **sptr) {\n",
+
+		OUT("static int asn_DFL_%d_cmp_%s(const void *sptr) {\n",
+			expr->_type_unique_index,
+			asn1p_itoa(expr->marker.default_value->value.v_integer));
+		INDENT(+1);
+		OUT("const %s *st = sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
+		OUT("\n");
+		OUT("if(!st) {\n");
+        OUT("\treturn -1; /* No value is not a default value */\n");
+		OUT("}\n");
+		OUT("\n");
+		OUT("/* Test default value %s */\n",
+			asn1p_itoa(expr->marker.default_value->value.v_integer));
+		if(fits_long) {
+			OUT("return (*st != %s);\n",
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
+		} else {
+			OUT("long value;\n");
+			OUT("if(asn_INTEGER2long(st, &value))\n");
+			OUT("\treturn -1;\n");
+			OUT("return (value != %s);\n",
+				asn1p_itoa(expr->marker.default_value->value.v_integer));
+		}
+		INDENT(-1);
+		OUT("}\n");
+
+		OUT("static int asn_DFL_%d_set_%s(void **sptr) {\n",
 			expr->_type_unique_index,
 			asn1p_itoa(expr->marker.default_value->value.v_integer));
 		INDENT(+1);
 		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
 		OUT("\n");
 		OUT("if(!st) {\n");
-		OUT("\tif(!set_value) return -1;\t/* Not a default value */\n");
 		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
 		OUT("\tif(!st) return -1;\n");
 		OUT("}\n");
 		OUT("\n");
-		OUT("if(set_value) {\n");
-		INDENT(+1);
 		OUT("/* Install default value %s */\n",
 			asn1p_itoa(expr->marker.default_value->value.v_integer));
 		if(fits_long) {
@@ -2365,24 +2410,8 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 			OUT(");\n");
 		}
 		INDENT(-1);
-		OUT("} else {\n");
-		INDENT(+1);
-		OUT("/* Test default value %s */\n",
-			asn1p_itoa(expr->marker.default_value->value.v_integer));
-		if(fits_long) {
-			OUT("return (*st == %s);\n",
-				asn1p_itoa(expr->marker.default_value->value.v_integer));
-		} else {
-			OUT("long value;\n");
-			OUT("if(asn_INTEGER2long(st, &value))\n");
-			OUT("\treturn -1;\n");
-			OUT("return (value == %s);\n",
-				asn1p_itoa(expr->marker.default_value->value.v_integer));
-		}
-		INDENT(-1);
 		OUT("}\n");
-		INDENT(-1);
-		OUT("}\n");
+
 		REDIR(save_target);
 		return 1;
 	case ASN_BASIC_NULL:
@@ -2394,43 +2423,58 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		|| expr->marker.default_value->type != ATV_STRING)
 			break;
 		if(!out) {
-			OUT("asn_DFL_%d_set,\t/* DEFAULT \"%s\" */\n",
+            if(C99_MODE) OUT(".default_value_cmp = ");
+			OUT("asn_DFL_%d_cmp,\t/* Compare DEFAULT \"%s\" */\n",
+				expr->_type_unique_index,
+				expr->marker.default_value->value.string.buf);
+            if(C99_MODE) OUT(".default_value_set = ");
+			OUT("asn_DFL_%d_set,\t/* Set DEFAULT \"%s\" */\n",
 				expr->_type_unique_index,
 				expr->marker.default_value->value.string.buf);
 			return 1;
 		}
 		REDIR(OT_STAT_DEFS);
-		OUT("static int asn_DFL_%d_set(int set_value, void **sptr) {\n", expr->_type_unique_index);
-		INDENT(+1);
-		emit_default_value(arg, expr->marker.default_value);
+
+        OUT("static int asn_DFL_%d_cmp(const void *sptr) {\n",
+            expr->_type_unique_index);
+        INDENT(+1);
+        emit_default_string_value(arg, expr->marker.default_value);
+        OUT("const %s *st = sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
+        OUT("\n");
+        OUT("if(!st) {\n");
+        OUT("\treturn -1; /* No value is not a default value */\n");
+        OUT("}\n");
+		OUT("\n");
+        OUT("if(st->size == (sizeof(defv) - 1)\n");
+        OUT("&& memcmp(st->buf, &defv, sizeof(defv) - 1) == 0)\n");
+        OUT("\treturn 0;\n");
+        OUT("return 1;\n");
+		INDENT(-1);
+		OUT("}\n");
+
+        OUT("static int asn_DFL_%d_set(void **sptr) {\n",
+            expr->_type_unique_index);
+        INDENT(+1);
+		emit_default_string_value(arg, expr->marker.default_value);
 		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
+        OUT("uint8_t *nstr = MALLOC(sizeof(defv));\n");
 		OUT("\n");
-		OUT("if(!st) {\n");
-		OUT("\tif(!set_value) return -1;\t/* Not a default value */\n");
-		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
-		OUT("\tif(!st) return -1;\n");
-		OUT("}\n");
-		OUT("\n");
-		OUT("if(set_value) {\n");
-		INDENT(+1);
-			OUT("uint8_t *ptr = MALLOC(sizeof(defv));\n");
-			OUT("if(!ptr) return -1;\n");
-			OUT("memcpy(ptr, &defv, sizeof(defv));\n");
-			OUT("FREEMEM(st->buf);\n");
-			OUT("st->buf = ptr;\n");
-			OUT("st->size = sizeof(defv) - 1;\n");
-			OUT("return 0;\n");
-		INDENT(-1);
+        OUT("if(!nstr) return -1;\n");
+        OUT("memcpy(nstr, defv, sizeof(defv));\n");
+        OUT("\n");
+		OUT("if((st = *sptr)) {\n");
+		OUT("\tFREEMEM(st->buf);\n");
 		OUT("} else {\n");
-		INDENT(+1);
-			OUT("if(st->size != (sizeof(defv) - 1)\n");
-			OUT("|| memcmp(st->buf, &defv, sizeof(defv) - 1))\n");
-			OUT("\treturn 0;\n");
-			OUT("return 1;\n");
-		INDENT(-1);
-		OUT("}\n"); OUT("\n");
+		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
+		OUT("\tif(!st) { FREEMEM(nptr); return -1; }\n");
+		OUT("}\n");
+		OUT("st->buf = nstr;\n");
+        OUT("st->size = sizeof(defv) - 1;\n");
+		OUT("\n");
+		OUT("return 0;\n");
 		INDENT(-1);
 		OUT("}\n");
+
 		REDIR(save_target);
 		return 1;
 	  }
@@ -2825,10 +2869,9 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	}
     OUT(" },\n");
 
-	if(C99_MODE) OUT(".default_value = ");
 	if(try_inline_default(arg, expr, 0)) {
 	} else {
-		OUT("0,\n");
+		OUT("0, 0, /* No default value */\n");
 	}
 	if(C99_MODE) OUT(".name = ");
 	if(expr->_anonymous_type && !strcmp(expr->Identifier, "Member")) {
@@ -2850,7 +2893,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	else
 		p = MKID(expr);
 	OUT("static int\n");
-	OUT("memb_%s_constraint_%d(asn_TYPE_descriptor_t *td, const void *sptr,\n", p, arg->expr->_type_unique_index);
+	OUT("memb_%s_constraint_%d(const asn_TYPE_descriptor_t *td, const void *sptr,\n", p, arg->expr->_type_unique_index);
 	INDENT(+1);
 	OUT("\t\tasn_app_constraint_failed_f *ctfailcb, void *app_key) {\n");
 	tmp_arg = *arg;
