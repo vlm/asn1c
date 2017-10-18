@@ -1893,7 +1893,7 @@ OCTET_STRING_random_length_constrained(
         if(pc->flags & APC_CONSTRAINED) {
             long suggested_upper_bound = pc->upper_bound < (ssize_t)max_length
                                              ? pc->upper_bound
-                                             : max_length;
+                                             : (ssize_t)max_length;
             if(max_length <= (size_t)pc->lower_bound) {
                 return pc->lower_bound;
             }
