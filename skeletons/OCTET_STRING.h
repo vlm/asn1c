@@ -72,19 +72,19 @@ OCTET_STRING_t *OCTET_STRING_new_fromBuf(const asn_TYPE_descriptor_t *td,
  ****************************/
 
 typedef struct asn_OCTET_STRING_specifics_s {
-	/*
-	 * Target structure description.
-	 */
-	int struct_size;	/* Size of the structure */
-	int ctx_offset;		/* Offset of the asn_struct_ctx_t member */
+    /*
+     * Target structure description.
+     */
+    unsigned struct_size;   /* Size of the structure */
+    unsigned ctx_offset;    /* Offset of the asn_struct_ctx_t member */
 
-	enum asn_OS_Subvariant {
-		ASN_OSUBV_ANY,	/* The open type (ANY) */
-		ASN_OSUBV_BIT,	/* BIT STRING */
-		ASN_OSUBV_STR,	/* String types, not {BMP,Universal}String  */
-		ASN_OSUBV_U16,	/* 16-bit character (BMPString) */
-		ASN_OSUBV_U32	/* 32-bit character (UniversalString) */
-	} subvariant;
+    enum asn_OS_Subvariant {
+        ASN_OSUBV_ANY, /* The open type (ANY) */
+        ASN_OSUBV_BIT, /* BIT STRING */
+        ASN_OSUBV_STR, /* String types, not {BMP,Universal}String  */
+        ASN_OSUBV_U16, /* 16-bit character (BMPString) */
+        ASN_OSUBV_U32  /* 32-bit character (UniversalString) */
+    } subvariant;
 } asn_OCTET_STRING_specifics_t;
 
 extern asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs;
