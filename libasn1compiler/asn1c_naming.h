@@ -23,6 +23,7 @@ struct c_names {
     const char *presence_name; /* "foo_PR" */
     const char *members_enum;  /* "enum foo" */
     const char *members_name;  /* "e_foo" */
+    const char *compound_name; /* always contain "parent_foo" */
 };
 
 struct c_names c_name(arg_t *);

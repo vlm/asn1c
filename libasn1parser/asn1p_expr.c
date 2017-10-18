@@ -30,6 +30,10 @@ asn1p_expr_set_source(asn1p_expr_t *expr, asn1p_module_t *module, int lineno) {
 
 int
 asn1p_expr_compare(const asn1p_expr_t *a, const asn1p_expr_t *b) {
+    if((a && !b) || (!a && b)) {
+        return -1;
+    }
+
     if(a->meta_type != b->meta_type || a->expr_type != b->expr_type) {
         return -1;
     }
@@ -185,6 +189,8 @@ asn1p_expr_clone_impl(asn1p_expr_t *expr, int skip_extensions, asn1p_expr_t *(*r
 	CLCOPY(tag);
 	CLCOPY(marker.flags);		/* OPTIONAL/DEFAULT */
 	CLCOPY(_mark);
+	CLCOPY(parent_expr);
+	CLCOPY(_type_unique_index);
 
 	clone->data = 0;	/* Do not clone this */
 	clone->data_free = 0;	/* Do not clone this */
@@ -303,6 +309,23 @@ asn1p_expr_add_many(asn1p_expr_t *to, asn1p_expr_t *from_what) {
 	TQ_CONCAT(&(to->members), &(from_what->members), next);
 }
 
+/*
+ * Lookup a child by its name.
+ */
+asn1p_expr_t *
+asn1p_lookup_child(asn1p_expr_t *tc, const char *name) {
+	asn1p_expr_t *child_tc;
+
+	TQ_FOR(child_tc, &(tc->members), next) {
+		if(child_tc->Identifier
+		&& strcmp(child_tc->Identifier, name) == 0) {
+			return child_tc;
+		}
+	}
+
+	errno = ESRCH;
+	return NULL;
+}
 
 /*
  * Destruct the types collection structure.

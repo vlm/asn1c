@@ -173,8 +173,11 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
     construct_base_name(&b_as_member, expr, 0, 1);
 
     static abuf tmp_compoundable_part_name;
+    static abuf compound_part_name;
     abuf_clear(&tmp_compoundable_part_name);
+    abuf_clear(&compound_part_name);
     construct_base_name(&tmp_compoundable_part_name, expr, compound_names, 0);
+    construct_base_name(&compound_part_name, expr, 1, 0);
 
     if(!expr->_anonymous_type) {
         if(arg->embed) {
@@ -204,6 +207,7 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
     names.presence_name = b_presence_name.buffer;
     names.members_enum = b_members_enum.buffer;
     names.members_name = b_members_name.buffer;
+    names.compound_name = compound_part_name.buffer;
 
     /* A _subset_ of names is checked against being globally unique */
     register_global_name(expr, names.base_name);
