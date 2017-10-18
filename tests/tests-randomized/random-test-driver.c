@@ -291,8 +291,10 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
         if(cmp != 0) {
             fprintf(stderr, "Random %s value:\n", ASN1_STR);
             asn_fprint(stderr, &asn_DEF_T, structure);
+            xer_fprint(stderr, &asn_DEF_T, structure);
             fprintf(stderr, "Decoded %s value:\n", ASN1_STR);
             asn_fprint(stderr, &asn_DEF_T, decoded_structure);
+            xer_fprint(stderr, &asn_DEF_T, decoded_structure);
             assert(cmp == 0);
         }
         ASN_STRUCT_FREE(asn_DEF_T, structure);
