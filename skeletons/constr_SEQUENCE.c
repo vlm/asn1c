@@ -1435,7 +1435,7 @@ SEQUENCE_encode_uper(const asn_TYPE_descriptor_t *td,
 	 */
 	ASN_DEBUG("ext_after = %d, ec = %d, eb = %d", specs->ext_after, td->elements_count, specs->ext_before);
 	for(edx = 0; edx < ((specs->ext_after < 0)
-		? td->elements_count : specs->ext_before - 1); edx++) {
+		? td->elements_count : (size_t)specs->ext_before - 1); edx++) {
 
 		asn_TYPE_member_t *elm = &td->elements[edx];
         const void *memb_ptr;         /* Pointer to the member */
