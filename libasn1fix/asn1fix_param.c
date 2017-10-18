@@ -10,6 +10,7 @@ typedef struct resolver_arg {
 
 static asn1p_expr_t *resolve_expr(asn1p_expr_t *, void *resolver_arg);
 static int compare_specializations(const asn1p_expr_t *a, const asn1p_expr_t *b);
+static asn1p_expr_t *find_target_specialization_byvalueset(resolver_arg_t *rarg, asn1p_constraint_t *ct);
 static asn1p_expr_t *find_target_specialization_byref(resolver_arg_t *rarg, asn1p_ref_t *ref);
 static asn1p_expr_t *find_target_specialization_bystr(resolver_arg_t *rarg, char *str);
 
@@ -19,6 +20,7 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	asn1p_expr_t *exc;	/* expr clone */
 	asn1p_expr_t *rpc;	/* rhs_pspecs clone */
 	asn1p_expr_t *m;	/* expr members */
+	asn1p_expr_t *target;
 	void *p;
 	struct asn1p_pspec_s *pspec;
 	int npspecs;
@@ -69,16 +71,18 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	pspec->rhs_pspecs = rpc;
 	pspec->my_clone = exc;
 	exc->spec_index = npspecs;
+	exc->rhs_pspecs = asn1p_expr_clone_with_resolver(expr->rhs_pspecs ?
+					expr->rhs_pspecs : rhs_pspecs,
+					resolve_expr, &rarg);
 
 	/* Passing arguments to members and type references */
-	exc->rhs_pspecs = expr->rhs_pspecs ? expr->rhs_pspecs : rhs_pspecs;
-	if(exc->rhs_pspecs)
-		exc->rhs_pspecs->ref_cnt++;
 
+	target = TQ_FIRST(&expr->members);
 	TQ_FOR(m, &exc->members, next) {
-		m->rhs_pspecs = exc->rhs_pspecs;
-		if (exc->rhs_pspecs)
-			exc->rhs_pspecs->ref_cnt++;
+		m->rhs_pspecs = asn1p_expr_clone_with_resolver(target->rhs_pspecs ?
+						target->rhs_pspecs : exc->rhs_pspecs,
+						resolve_expr, &rarg);
+		target = TQ_NEXT(target, next);
 	}
 
 	DEBUG("Forked new parameterization for %s", expr->Identifier);
@@ -112,6 +116,11 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 		expr = find_target_specialization_bystr(rarg,
 				expr_to_resolve->Identifier);
 		if(!expr) return NULL;
+	} else if(expr_to_resolve->meta_type == AMT_VALUESET) {
+		assert(expr_to_resolve->constraints);
+		expr = find_target_specialization_byvalueset(rarg,
+				expr_to_resolve->constraints);
+		if(!expr) return NULL;
 	} else {
 		errno = ESRCH;
 		return NULL;
@@ -143,6 +152,17 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 }
 
 static asn1p_expr_t *
+find_target_specialization_byvalueset(resolver_arg_t *rarg, asn1p_constraint_t *ct) {
+	asn1p_ref_t *ref;
+
+	assert(ct->type == ACT_EL_TYPE);
+
+	ref = ct->containedSubtype->value.v_type->reference;
+
+	return find_target_specialization_byref(rarg, ref);
+}
+
+static asn1p_expr_t *
 find_target_specialization_byref(resolver_arg_t *rarg, asn1p_ref_t *ref) {
 	char *refstr;
 
@@ -161,6 +181,8 @@ find_target_specialization_bystr(resolver_arg_t *rarg, char *refstr) {
 	arg_t *arg = rarg->arg;
 	asn1p_expr_t *target;
 	int i;
+
+	if(!refstr) return NULL;
 
 	target = TQ_FIRST(&rarg->rhs_pspecs->members);
 	for(i = 0; i < rarg->lhs_params->params_count;
