@@ -68,12 +68,6 @@ AX_CHECK_COMPILE_FLAG([-std=gnu99],
 AX_CHECK_COMPILE_FLAG([-Wno-error=unused-variable],
       [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Wno-error=unused-variable"])
 
-dnl If -m32 is available to reate 32-bit code,
-dnl treat it like a special case to be checked.
-AX_CHECK_COMPILE_FLAG([-m32], [CFLAGS_M32=-m32], [CFLAGS_M32=""])
-AC_SUBST(CFLAGS_M32)
-AM_CONDITIONAL([EXPLICIT_M32], [test "x${CFLAGS_M32}" != "x"])
-
 dnl Lower the optimization level in tests to aid debugging.
 dnl AX_CHECK_COMPILE_FLAG([-O1],
 dnl    [TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -O1"])
@@ -128,6 +122,24 @@ AC_ARG_ENABLE(test-Werror,
       TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Werror -W -Wpointer-arith"
   ])
 
+
+dnl If -m32 is available to create 32-bit code,
+dnl treat it like a special case to be checked.
+AC_ARG_ENABLE([test-32bit],
+    [AS_HELP_STRING([--disable-test-32bit],
+    [Disable tests for 32-bit compatibility])],
+    [disable_test_32bit=$enableval], [disable_test_32bit=maybe])
+AS_IF([test "x$disable_test_32bit" != xno], [
+    AX_CHECK_COMPILE_FLAG([-m32], [CFLAGS_M32=-m32],
+      [
+        CFLAGS_M32=""
+        AS_IF([test "x$disable_test_32bit" != xmaybe], [
+            AC_MSG_FAILURE([--disable-test-32bit=$disable_test_32bit is not supported on a target system.])
+        ])
+      ])
+])
+AC_SUBST(CFLAGS_M32)
+AM_CONDITIONAL([EXPLICIT_M32], [test "x${CFLAGS_M32}" != "x"])
 
 SANITIZER_CFLAGS=""
 
