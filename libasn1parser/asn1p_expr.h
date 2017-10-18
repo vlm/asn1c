@@ -251,7 +251,9 @@ typedef struct asn1p_expr_s {
 	  TM_BROKEN	= (1<<1), /* A warning was already issued */
 	  TM_PERFROMCT	= (1<<2), /* PER FROM() constraint tables emitted */
 	  TM_NAMECLASH	= (1<<3),  /* Name clash found, need to add module name to resolve */
-	  TM_NAMEGIVEN  = (1<<4)  /* The expression has already yielded a name */
+	  TM_NAMEGIVEN  = (1<<4),  /* The expression has already yielded a name */
+	  TM_SKIPinUNION  = (1<<5) /* Do not include this identifier in union again due to name duplication,
+                                      especially for OPENTYPE. */
 	} _mark;
 
 	/*
@@ -280,6 +282,7 @@ asn1p_expr_t *asn1p_expr_clone_with_resolver(asn1p_expr_t *,
 	void *resolver_arg);
 void asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what);
 void asn1p_expr_add_many(asn1p_expr_t *to, asn1p_expr_t *from_what);
+asn1p_expr_t *asn1p_lookup_child(asn1p_expr_t *tc, const char *name);
 int asn1p_expr_compare(const asn1p_expr_t *, const asn1p_expr_t *);
 void asn1p_expr_free(asn1p_expr_t *expr);
 void asn1p_expr_set_source(asn1p_expr_t *, asn1p_module_t *, int lineno);

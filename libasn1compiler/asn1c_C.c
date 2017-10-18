@@ -1065,6 +1065,7 @@ asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc,
     open_type_choice->meta_type = AMT_TYPE;
     open_type_choice->expr_type = ASN_CONSTR_OPEN_TYPE;
     open_type_choice->_type_unique_index = arg->expr->_type_unique_index;
+    open_type_choice->parent_expr = arg->expr->parent_expr;
 
     for(size_t row = 0; row < opt_ioc->ioct->rows; row++) {
         struct asn1p_ioc_cell_s *cell =
@@ -1073,6 +1074,8 @@ asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc,
         if(!cell->value) continue;
 
         asn1p_expr_t *m = asn1p_expr_clone(cell->value, 0);
+        if (asn1p_lookup_child(open_type_choice, m->Identifier))
+            m->_mark |= TM_SKIPinUNION;
         asn1p_expr_add(open_type_choice, m);
     }
 
@@ -1285,11 +1288,14 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			}
 		}
 
+		if(!(expr->_mark & TM_SKIPinUNION))
+			OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
 
-		OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
 		if(!expr->_anonymous_type) {
-			OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
-			OUT("%s", MKID_safe(expr));
+			if(!(expr->_mark & TM_SKIPinUNION)) {
+				OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
+				OUT("%s", MKID_safe(expr));
+			}
 			if((expr->marker.flags & (EM_DEFAULT & ~EM_INDIRECT))
 					== (EM_DEFAULT & ~EM_INDIRECT))
 				OUT("\t/* DEFAULT %s */",
@@ -2659,7 +2665,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
 
     REDIR(OT_CODE);
     OUT("static asn_type_selector_result_t\n");
-    OUT("select_%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", MKID_safe(expr));
+    OUT("select_%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", c_name(arg).compound_name);
     INDENT(+1);
 
     OUT("asn_type_selector_result_t result = {0, 0};\n");
@@ -2717,7 +2723,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("\n");
 
     REDIR(save_target);
-    OUT("select_%s_type", MKID_safe(expr));
+    OUT("select_%s_type", c_name(arg).compound_name);
 
     return 0;
 }
