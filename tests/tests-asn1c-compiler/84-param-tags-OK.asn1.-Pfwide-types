@@ -88,8 +88,8 @@ asn_TYPE_member_t asn_MBR_TestType_16P0_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_common_constraint_1 },
-		.default_value_cmp = asn_DFL_2_cmp_0,	/* Compare DEFAULT 0 */
-		.default_value_set = asn_DFL_2_set_0,	/* Set DEFAULT 0 */
+		.default_value_cmp = &asn_DFL_2_cmp_0,	/* Compare DEFAULT 0 */
+		.default_value_set = &asn_DFL_2_set_0,	/* Set DEFAULT 0 */
 		.name = "common"
 		},
 };
@@ -153,8 +153,8 @@ asn_TYPE_member_t asn_MBR_TestType_16P1_3[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value_cmp = asn_DFL_4_cmp_0,	/* Compare DEFAULT 0 */
-		.default_value_set = asn_DFL_4_set_0,	/* Set DEFAULT 0 */
+		.default_value_cmp = &asn_DFL_4_cmp_0,	/* Compare DEFAULT 0 */
+		.default_value_set = &asn_DFL_4_set_0,	/* Set DEFAULT 0 */
 		.name = "common"
 		},
 };

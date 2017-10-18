@@ -2119,8 +2119,8 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_Int1,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_int1_c_constraint_1 },
-		.default_value_cmp = asn_DFL_2_cmp_3,	/* Compare DEFAULT 3 */
-		.default_value_set = asn_DFL_2_set_3,	/* Set DEFAULT 3 */
+		.default_value_cmp = &asn_DFL_2_cmp_3,	/* Compare DEFAULT 3 */
+		.default_value_set = &asn_DFL_2_set_3,	/* Set DEFAULT 3 */
 		.name = "int1-c"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, int4),
@@ -2147,8 +2147,8 @@ asn_TYPE_member_t asn_MBR_Sequence_1[] = {
 		.type = &asn_DEF_BOOLEAN,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value_cmp = asn_DFL_5_cmp_1,	/* Compare DEFAULT 1 */
-		.default_value_set = asn_DFL_5_set_1,	/* Set DEFAULT 1 */
+		.default_value_cmp = &asn_DFL_5_cmp_1,	/* Compare DEFAULT 1 */
+		.default_value_set = &asn_DFL_5_set_1,	/* Set DEFAULT 1 */
 		.name = "bool"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Sequence, enum_c),

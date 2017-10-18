@@ -81,8 +81,8 @@ asn_TYPE_member_t asn_MBR_Flag_15P0_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value_cmp = asn_DFL_2_cmp_5,	/* Compare DEFAULT 5 */
-		.default_value_set = asn_DFL_2_set_5,	/* Set DEFAULT 5 */
+		.default_value_cmp = &asn_DFL_2_cmp_5,	/* Compare DEFAULT 5 */
+		.default_value_set = &asn_DFL_2_set_5,	/* Set DEFAULT 5 */
 		.name = "field"
 		},
 };
@@ -184,8 +184,8 @@ asn_TYPE_member_t asn_MBR_Flag_15P1_6[] = {
 		.type = &asn_DEF_field_7,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value_cmp = asn_DFL_7_cmp_5,	/* Compare DEFAULT 5 */
-		.default_value_set = asn_DFL_7_set_5,	/* Set DEFAULT 5 */
+		.default_value_cmp = &asn_DFL_7_cmp_5,	/* Compare DEFAULT 5 */
+		.default_value_set = &asn_DFL_7_set_5,	/* Set DEFAULT 5 */
 		.name = "field"
 		},
 };

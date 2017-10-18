@@ -466,8 +466,8 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.type = &asn_DEF_NativeInteger,
 		.type_selector = 0,
 		{ .oer_constraints = &asn_OER_memb_signed8_constr_9, .per_constraints = 0, .general_constraints =  memb_signed8_constraint_1 },
-		.default_value_cmp = asn_DFL_9_cmp_3,	/* Compare DEFAULT 3 */
-		.default_value_set = asn_DFL_9_set_3,	/* Set DEFAULT 3 */
+		.default_value_cmp = &asn_DFL_9_cmp_3,	/* Compare DEFAULT 3 */
+		.default_value_set = &asn_DFL_9_set_3,	/* Set DEFAULT 3 */
 		.name = "signed8"
 		},
 	{ ATF_POINTER, 5, offsetof(struct T, signed16),

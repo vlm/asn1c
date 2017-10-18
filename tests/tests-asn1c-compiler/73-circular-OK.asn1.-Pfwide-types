@@ -518,8 +518,8 @@ asn_TYPE_member_t asn_MBR_Ypet_1[] = {
 		.type = &asn_DEF_INTEGER,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value_cmp = asn_DFL_3_cmp_7,	/* Compare DEFAULT 7 */
-		.default_value_set = asn_DFL_3_set_7,	/* Set DEFAULT 7 */
+		.default_value_cmp = &asn_DFL_3_cmp_7,	/* Compare DEFAULT 7 */
+		.default_value_set = &asn_DFL_3_set_7,	/* Set DEFAULT 7 */
 		.name = "plain"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct Ypet, senums),

@@ -134,7 +134,7 @@ extern asn_TYPE_member_t asn_MBR_Singleton_1[1];
 /*** <<< STAT-DEFS [Singleton] >>> ***/
 
 static int asn_DFL_2_cmp(const void *sptr) {
-	static uint8_t defv[] = "z";
+	static const uint8_t defv[] = "z";
 	const IA5String_t *st = sptr;
 	
 	if(!st) {
@@ -147,18 +147,18 @@ static int asn_DFL_2_cmp(const void *sptr) {
 	return 1;
 }
 static int asn_DFL_2_set(void **sptr) {
-	static uint8_t defv[] = "z";
+	static const uint8_t defv[] = "z";
 	IA5String_t *st = *sptr;
 	uint8_t *nstr = MALLOC(sizeof(defv));
 	
 	if(!nstr) return -1;
 	memcpy(nstr, defv, sizeof(defv));
 	
-	if((st = *sptr)) {
+	if(st) {
 		FREEMEM(st->buf);
 	} else {
 		st = (*sptr = CALLOC(1, sizeof(*st)));
-		if(!st) { FREEMEM(nptr); return -1; }
+		if(!st) { FREEMEM(nstr); return -1; }
 	}
 	st->buf = nstr;
 	st->size = sizeof(defv) - 1;
@@ -172,8 +172,8 @@ asn_TYPE_member_t asn_MBR_Singleton_1[] = {
 		.type = &asn_DEF_IA5String,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value_cmp = asn_DFL_2_cmp,	/* Compare DEFAULT "z" */
-		.default_value_set = asn_DFL_2_set,	/* Set DEFAULT "z" */
+		.default_value_cmp = &asn_DFL_2_cmp,	/* Compare DEFAULT "z" */
+		.default_value_set = &asn_DFL_2_set,	/* Set DEFAULT "z" */
 		.name = "opt-z"
 		},
 };
