@@ -226,8 +226,8 @@ typedef struct asn_TYPE_member_s {
     asn_TYPE_descriptor_t *type;            /* Member type descriptor */
     asn_type_selector_f *type_selector;     /* IoS runtime type selector */
     asn_encoding_constraints_t encoding_constraints;
-    int (*default_value_set)(void **sptr);      /* Set DEFAULT <value> */
     int (*default_value_cmp)(const void *sptr); /* Compare DEFAULT <value> */
+    int (*default_value_set)(void **sptr);      /* Set DEFAULT <value> */
     const char *name; /* ASN.1 identifier of the element */
 } asn_TYPE_member_t;
 

@@ -2309,7 +2309,7 @@ safe_string(const uint8_t *buf, int size) {
 static void
 emit_default_string_value(arg_t *arg, asn1p_value_t *v) {
 
-	OUT("static uint8_t defv[] = ");
+	OUT("static const uint8_t defv[] = ");
 	assert(v->type == ATV_STRING);
 
 	if(safe_string(v->value.string.buf, v->value.string.size)) {
@@ -2346,13 +2346,13 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 			expr->marker.flags &= ~EM_INDIRECT;
 		if(!out) {
             if(C99_MODE) OUT(".default_value_cmp = ");
-			OUT("asn_DFL_%d_cmp_%s,",
+			OUT("&asn_DFL_%d_cmp_%s,",
 				expr->_type_unique_index,
 				asn1p_itoa(expr->marker.default_value->value.v_integer));
             OUT("\t/* Compare DEFAULT %s */\n",
 				asn1p_itoa(expr->marker.default_value->value.v_integer));
             if(C99_MODE) OUT(".default_value_set = ");
-			OUT("asn_DFL_%d_set_%s,",
+			OUT("&asn_DFL_%d_set_%s,",
 				expr->_type_unique_index,
 				asn1p_itoa(expr->marker.default_value->value.v_integer));
             OUT("\t/* Set DEFAULT %s */\n",
@@ -2424,11 +2424,11 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 			break;
 		if(!out) {
             if(C99_MODE) OUT(".default_value_cmp = ");
-			OUT("asn_DFL_%d_cmp,\t/* Compare DEFAULT \"%s\" */\n",
+			OUT("&asn_DFL_%d_cmp,\t/* Compare DEFAULT \"%s\" */\n",
 				expr->_type_unique_index,
 				expr->marker.default_value->value.string.buf);
             if(C99_MODE) OUT(".default_value_set = ");
-			OUT("asn_DFL_%d_set,\t/* Set DEFAULT \"%s\" */\n",
+			OUT("&asn_DFL_%d_set,\t/* Set DEFAULT \"%s\" */\n",
 				expr->_type_unique_index,
 				expr->marker.default_value->value.string.buf);
 			return 1;
@@ -2462,7 +2462,7 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
         OUT("if(!nstr) return -1;\n");
         OUT("memcpy(nstr, defv, sizeof(defv));\n");
         OUT("\n");
-		OUT("if((st = *sptr)) {\n");
+		OUT("if(st) {\n");
 		OUT("\tFREEMEM(st->buf);\n");
 		OUT("} else {\n");
 		OUT("\tst = (*sptr = CALLOC(1, sizeof(*st)));\n");
