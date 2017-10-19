@@ -129,7 +129,7 @@ dnl If requested and -m32 is available to create 32-bit code,
 dnl treat it like a special case to be checked.
 AC_ARG_ENABLE([test-32bit],
     [AS_HELP_STRING([--enable-test-32bit],
-    [Enable tests for 32-bit compatibility])],
+    [enable tests for 32-bit compatibility])],
     [enable_test_32bit=$enableval], [enable_test_32bit=no])
 AS_IF([test "x$enable_test_32bit" != xno], [
     AX_CHECK_COMPILE_FLAG([-m32], [CFLAGS_M32="-m32 -DEXPLICIT_32BIT"],
@@ -146,7 +146,7 @@ SANITIZER_CFLAGS=""
 dnl Enable Undefined Behavior Sanitizer, if supported.
 AC_ARG_ENABLE([test-ubsan],
     [AS_HELP_STRING([--disable-test-ubsan],
-        [Disable Undefined Behavior Sanitizer for tests])],
+        [disable Undefined Behavior Sanitizer for tests])],
     [disable_test_ubsan=$enableval], [disable_test_ubsan=maybe])
 AS_IF([test "x$disable_test_ubsan" != xno], [
     AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=undefined],
@@ -187,7 +187,7 @@ dnl http://clang.llvm.org/docs/AddressSanitizer.html
 ASAN_ENV_FLAGS=""
 AC_ARG_ENABLE([test-asan],
     [AS_HELP_STRING([--disable-test-asan],
-        [Disable Address Sanitizer for tests])],
+        [disable Address Sanitizer for tests])],
     [disable_test_asan=$enableval], [disable_test_asan=maybe])
 AS_IF([test "x$disable_test_asan" != xno], [
     AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=address],
@@ -223,7 +223,7 @@ dnl Enable LibFuzzer, if supported.
 LIBFUZZER_CFLAGS=""
 AC_ARG_ENABLE([test-fuzzer],
     [AS_HELP_STRING([--enable-test-fuzzer],
-        [Enable LLVM LibFuzzer for randomized testing])],
+        [enable LLVM LibFuzzer for randomized testing])],
     [enable_test_fuzzer=$enableval], [enable_test_fuzzer=no])
 AS_IF([test "x$enable_test_fuzzer" != xno], [
     AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=fuzzer],

@@ -13,10 +13,18 @@ Configure with the default settings:
 
 Configure with non-standard settings:
 
-asn1c specific ./configure options include:
+asn1c-specific ./configure options include:
 
-    --enable-Werror
-    --enable-ASN_DEBUG
+  Option                 | Description
+------------------------ | ---------------------------------------------------
+  --enable-ASN_DEBUG     | produce debug log during `make check` testing
+  --enable-code-coverage | whether to enable code coverage support
+  --enable-Werror        | abort compilation after any C compiler warning
+  --enable-test-Werror   | abort compiling tests after any C compiler warning
+  --enable-test-32bit    | enable tests for 32-bit compatibility
+  --disable-test-ubsan   | disable Undefined Behavior Sanitizer for tests
+  --disable-test-asan    | disable Address Sanitizer for tests
+  --enable-test-fuzzer   | enable LLVM LibFuzzer for randomized testing
 
 invoke `./configure --help` for details.
 
