@@ -8,7 +8,7 @@ static void put(asn_per_outp_t *po, size_t length) {
         ssize_t may_write = uper_put_length(po, length, &need_eom);
         fprintf(stderr, "  put %zu\n", may_write);
         assert(may_write >= 0);
-        assert(may_write <= length);
+        assert((size_t)may_write <= length);
         assert(need_eom != 123);
         length -= may_write;
         if(need_eom) {

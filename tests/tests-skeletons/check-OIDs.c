@@ -92,13 +92,13 @@ check_ROID(int lineno, uint8_t *buf, size_t len, unsigned *ck_buf,
 	memset(arcs, 'A', sizeof(arcs));
     alen = RELATIVE_OID_get_arcs(oid, arcs, sizeof(arcs) / sizeof(arcs[0]));
     assert(alen > 0);
-	assert(alen == ck_len);
+	assert((size_t)alen == ck_len);
 
 	/*
 	 * Make sure they are equivalent.
 	 */
 	printf("RELATIVE_OID_get_arcs() => {");
-	for(i = 0; i < alen; i++) {
+	for(i = 0; i < (size_t)alen; i++) {
         printf(" %" PRIu32, arcs[i]);
         assert(arcs[i] == ck_buf[i]);
 	}

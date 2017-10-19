@@ -51,7 +51,7 @@ check_round_trip_OK(asn_TYPE_descriptor_t *td, const char *buf, size_t buflen) {
                     uper_output_buffer, (enc.encoded + 7) / 8, 0, 0);
     int st_out_ct = asn_check_constraints(td, st_out, NULL, NULL);
     assert(st_out_ct == 0);
-    assert(dec.consumed == enc.encoded);
+    assert(dec.consumed == (size_t)enc.encoded);
     assert(st_in->size == st_out->size);
     assert(memcmp(st_in->buf, st_out->buf, st_in->size) == 0);
     assert(st_out->size == buflen);

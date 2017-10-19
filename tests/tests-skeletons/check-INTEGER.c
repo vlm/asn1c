@@ -26,7 +26,7 @@ check(uint8_t *buf, size_t size, long check_long, int check_ret) {
 	long rlong = 123;
 
 	assert(buf);
-	assert(size >= 0);
+	assert(size > 0);
 
 	val.buf = buf;
 	val.size = size;
@@ -133,7 +133,7 @@ check_unsigned(uint8_t *buf, int size, unsigned long check_long, int check_ret) 
 	assert(shared_scratch_start < scratch + sizeof(scratch));
 	assert(ret == 0);
 	ret = snprintf(verify, sizeof(verify), "%lu", check_long);
-	assert(ret < sizeof(verify));
+	assert(ret < (int)sizeof(verify));
 	ret = strcmp(scratch, verify);
 	printf("         [%s] vs [%s]: %d%s\n",
 		scratch, verify, ret,
