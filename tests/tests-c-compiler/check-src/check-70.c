@@ -233,6 +233,7 @@ process(const char *fname) {
 	unsigned char fbuf[4096];
 	char *ext = strrchr(fname, '.');
 	enum expectation expectation;
+	char *cwd;
 	int ret;
 	int rd;
 	FILE *fp;
@@ -253,7 +254,8 @@ process(const char *fname) {
 
 	fprintf(stderr, "\nProcessing file [../%s]\n", fname);
 
-	getcwd(prevdir, sizeof(prevdir));
+	cwd = getcwd(prevdir, sizeof(prevdir));
+	assert(cwd != NULL);
 	ret = chdir(SRCDIR_S "/data-70");
 	assert(ret == 0);
 	fp = fopen(fname, "r");
