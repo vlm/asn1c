@@ -83,8 +83,6 @@ static double NativeReal__get_double(const asn_TYPE_descriptor_t *td,
                                      const void *ptr);
 static ssize_t NativeReal__set(const asn_TYPE_descriptor_t *td, void **sptr,
                                double d);
-static void NativeReal__network_swap(size_t float_size, const void *srcp,
-                                     uint8_t *dst);
 
 /*
  * Decode REAL type.
@@ -267,6 +265,62 @@ NativeReal_encode_uper(const asn_TYPE_descriptor_t *td,
 #endif /* ASN_DISABLE_PER_SUPPORT */
 
 #ifndef ASN_DISABLE_OER_SUPPORT
+
+/*
+ * Swap bytes from/to network, if local is little-endian.
+ * Unused endianness sections are likely removed at compile phase.
+ */
+static void
+NativeReal__network_swap(size_t float_size, const void *srcp, uint8_t *dst) {
+    const uint8_t *src = srcp;
+    double test = -0.0;
+    int float_big_endian = *(const char *)&test != 0;
+    /* In lieu of static_assert(sizeof(double) == 8) */
+    static const char sizeof_double_is_8_a[sizeof(double)-7] CC_NOTUSED;
+    static const char sizeof_double_is_8_b[9-sizeof(double)] CC_NOTUSED;
+    /* In lieu of static_assert(sizeof(sizeof) == 4) */
+    static const char sizeof_float_is_4_a[sizeof(float)-3] CC_NOTUSED;
+    static const char sizeof_float_is_4_b[5-sizeof(float)] CC_NOTUSED;
+
+    switch(float_size) {
+    case sizeof(double):
+        assert(sizeof(double) == 8);
+        if(float_big_endian) {
+            dst[0] = src[0];
+            dst[1] = src[1];
+            dst[2] = src[2];
+            dst[3] = src[3];
+            dst[4] = src[4];
+            dst[5] = src[5];
+            dst[6] = src[6];
+            dst[7] = src[7];
+        } else {
+            dst[0] = src[7];
+            dst[1] = src[6];
+            dst[2] = src[5];
+            dst[3] = src[4];
+            dst[4] = src[3];
+            dst[5] = src[2];
+            dst[6] = src[1];
+            dst[7] = src[0];
+        }
+        return;
+    case sizeof(float):
+        assert(sizeof(float) == 4);
+        if(float_big_endian) {
+            dst[0] = src[0];
+            dst[1] = src[1];
+            dst[2] = src[2];
+            dst[3] = src[3];
+        } else {
+            dst[0] = src[3];
+            dst[1] = src[2];
+            dst[2] = src[1];
+            dst[3] = src[0];
+        }
+        return;
+    }
+}
 
 /*
  * Encode as Canonical OER.
@@ -655,58 +709,3 @@ NativeReal__set(const asn_TYPE_descriptor_t *td, void **sptr, double d) {
     return float_size;
 }
 
-/*
- * Swap bytes from/to network, if local is little-endian.
- * Unused endianness sections are likely removed at compile phase.
- */
-static void
-NativeReal__network_swap(size_t float_size, const void *srcp, uint8_t *dst) {
-    const uint8_t *src = srcp;
-    double test = -0.0;
-    int float_big_endian = *(const char *)&test != 0;
-    /* In lieu of static_assert(sizeof(double) == 8) */
-    static const char sizeof_double_is_8_a[sizeof(double)-7] CC_NOTUSED;
-    static const char sizeof_double_is_8_b[9-sizeof(double)] CC_NOTUSED;
-    /* In lieu of static_assert(sizeof(sizeof) == 4) */
-    static const char sizeof_float_is_4_a[sizeof(float)-3] CC_NOTUSED;
-    static const char sizeof_float_is_4_b[5-sizeof(float)] CC_NOTUSED;
-
-    switch(float_size) {
-    case sizeof(double):
-        assert(sizeof(double) == 8);
-        if(float_big_endian) {
-            dst[0] = src[0];
-            dst[1] = src[1];
-            dst[2] = src[2];
-            dst[3] = src[3];
-            dst[4] = src[4];
-            dst[5] = src[5];
-            dst[6] = src[6];
-            dst[7] = src[7];
-        } else {
-            dst[0] = src[7];
-            dst[1] = src[6];
-            dst[2] = src[5];
-            dst[3] = src[4];
-            dst[4] = src[3];
-            dst[5] = src[2];
-            dst[6] = src[1];
-            dst[7] = src[0];
-        }
-        return;
-    case sizeof(float):
-        assert(sizeof(float) == 4);
-        if(float_big_endian) {
-            dst[0] = src[0];
-            dst[1] = src[1];
-            dst[2] = src[2];
-            dst[3] = src[3];
-        } else {
-            dst[0] = src[3];
-            dst[1] = src[2];
-            dst[2] = src[1];
-            dst[3] = src[0];
-        }
-        return;
-    }
-}

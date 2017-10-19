@@ -100,24 +100,20 @@ buf2_fill(const void *buffer, size_t size, void *app_key) {
 static void
 compare_encoding(asn_enc_rval_t *erval, uint8_t *expected, size_t expected_size,
                  uint8_t *actual) {
-  int i;
 
   assert(erval->encoded != -1);
-  if(erval->encoded != expected_size) {
+  if((size_t)erval->encoded != expected_size) {
     printf("%d != %d\n", (int)erval->encoded, (int)expected_size);
+    assert((size_t)erval->encoded == expected_size);
   }
-  assert(erval->encoded == (ssize_t)expected_size);
-	for(i = 0; i < expected_size; i++) {
-		if(expected[i] != actual[i]) {
-			fprintf(stderr, "Recreated buffer content mismatch:\n");
-			fprintf(stderr, "Byte %d, %x != %x (%d != %d)\n",
-				i,
-				expected[i], actual[i],
-				expected[i], actual[i]
-			);
-		}
-		assert(expected[i] == actual[i]);
-	}
+  for(size_t i = 0; i < expected_size; i++) {
+      if(expected[i] != actual[i]) {
+          fprintf(stderr, "Recreated buffer content mismatch:\n");
+          fprintf(stderr, "Byte %zu, %x != %x (%d != %d)\n", i, expected[i],
+                  actual[i], expected[i], actual[i]);
+      }
+      assert(expected[i] == actual[i]);
+  }
 }
 
 static void

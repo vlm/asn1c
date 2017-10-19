@@ -132,7 +132,7 @@ AC_ARG_ENABLE([test-32bit],
     [Enable tests for 32-bit compatibility])],
     [enable_test_32bit=$enableval], [enable_test_32bit=no])
 AS_IF([test "x$enable_test_32bit" != xno], [
-    AX_CHECK_COMPILE_FLAG([-m32], [CFLAGS_M32=-m32],
+    AX_CHECK_COMPILE_FLAG([-m32], [CFLAGS_M32="-m32 -DEXPLICIT_32BIT"],
       [
         CFLAGS_M32=""
         AC_MSG_FAILURE([--enable-test-32bit=$enable_test_32bit is requested but not supported by the _AC_LANG compiler])

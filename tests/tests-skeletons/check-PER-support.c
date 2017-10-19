@@ -229,10 +229,11 @@ check_range_rebase() {
     OK_REBASE_ROUNDTRIP(LONG_MIN, LONG_MIN, LONG_MAX);
     OK_REBASE_ROUNDTRIP(LONG_MAX, LONG_MIN, LONG_MAX);
 
+#ifndef  EXPLICIT_32BIT
     if(sizeof(long) == 8) {
         OK_REBASE_ROUNDTRIP(0, LONG_MIN, LONG_MAX);
 
-        /* Too wide range, not fit uint32_t */
+        /* Too wide range, would not fit uint32_t */
         OK_REBASE_ROUNDTRIP(INT32_MIN, (long)INT32_MIN - 1,
                             (long)INT32_MAX + 1);
         OK_REBASE_ROUNDTRIP(INT32_MAX, (long)INT32_MIN - 1,
@@ -251,6 +252,7 @@ check_range_rebase() {
         NO_REBASE_ROUNDTRIP(LONG_MIN, INT32_MIN, INT32_MAX);
         NO_REBASE_ROUNDTRIP(LONG_MAX, INT32_MIN, INT32_MAX);
     }
+#endif
 
     OK_REBASE_ROUNDTRIP(-1, LONG_MIN + 1, LONG_MAX - 1);
     OK_REBASE_ROUNDTRIP(0, LONG_MIN + 1, LONG_MAX - 1);

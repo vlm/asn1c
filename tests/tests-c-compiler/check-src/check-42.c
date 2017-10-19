@@ -7,6 +7,18 @@
 
 #include <LogLine.h>
 
+#ifdef ENABLE_LIBFUZZER
+
+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size);
+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+	LogLine_t *lp = 0;
+	(void)ber_decode(0, &asn_DEF_LogLine, (void **)&lp, Data, Size);
+    ASN_STRUCT_FREE(asn_DEF_LogLine, lp);
+    return 0;
+}
+
+#else
+
 uint8_t buf0[] = {
 	48,	/* LogLine SEQUENCE */
 	24,	/* L */
@@ -125,17 +137,6 @@ check_serialize() {
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_LogLine, &ll);
 	return;
 }
-
-#ifdef ENABLE_LIBFUZZER
-
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-	LogLine_t *lp = 0;
-	(void)ber_decode(0, &asn_DEF_LogLine, (void **)&lp, Data, Size);
-    ASN_STRUCT_FREE(asn_DEF_LogLine, lp);
-    return 0;
-}
-
-#else
 
 int
 main(int ac, char **av) {

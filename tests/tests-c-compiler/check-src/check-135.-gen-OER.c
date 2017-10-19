@@ -27,9 +27,9 @@ int main() {
         oer_decode(0, &asn_DEF_T, (void **)&decoded, tmpbuf, er.encoded);
 
     assert(dr.code == RC_OK);
-    if(dr.consumed != er.encoded) {
+    if((ssize_t)dr.consumed != er.encoded) {
         ASN_DEBUG("Consumed %zu, expected %zu", dr.consumed, er.encoded);
-        assert(dr.consumed == er.encoded);
+        assert((ssize_t)dr.consumed == er.encoded);
     }
 
     if(XEQ_SUCCESS != xer_equivalent(&asn_DEF_T, &source, decoded, stderr)) {

@@ -90,9 +90,8 @@ buf_fill(const void *buffer, size_t size, void *app_key) {
 }
 
 static void
-compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
+compare(T_t *tp, uint8_t *cmp_buf, size_t cmp_buf_size) {
 	asn_enc_rval_t erval;
-	int i;
 
 	buf_size = cmp_buf_size + 100;
     uint8_t scratch[buf_size];
@@ -104,14 +103,14 @@ compare(T_t *tp, uint8_t *cmp_buf, int cmp_buf_size) {
 	 */
 	erval = der_encode(&asn_DEF_T, tp, buf_fill, 0);
 	assert(erval.encoded != -1);
-	if(erval.encoded != cmp_buf_size) {
+	if((size_t)erval.encoded != cmp_buf_size) {
 		printf("%zd != %zd\n", erval.encoded, cmp_buf_size);
-	}
-	assert(erval.encoded == cmp_buf_size);
-	for(i = 0; i < cmp_buf_size; i++) {
+        assert((size_t)erval.encoded == cmp_buf_size);
+    }
+	for(size_t i = 0; i < cmp_buf_size; i++) {
 		if(buf[i] != cmp_buf[i]) {
 			fprintf(stderr, "Recreated buffer content mismatch:\n");
-			fprintf(stderr, "Byte %d, %x != %x (%d != %d)\n",
+			fprintf(stderr, "Byte %zd, %x != %x (%d != %d)\n",
 				i,
 				buf[i], cmp_buf[i],
 				buf[i], cmp_buf[i]

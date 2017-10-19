@@ -394,7 +394,7 @@ static int check_permitted_alphabet_29(const void *sptr) {
 				| (ch[1] << 16)
 				| (ch[2] << 8)
 				|  ch[3];
-		if(!(1 /* Constraint matches natural range of cv */)) return -1;
+		(void)cv; /* Unused variable */
 	}
 	return 0;
 }

@@ -25,6 +25,20 @@
 #define SRCDIR_S    STRINGIFY_MACRO(SRCDIR)
 #endif
 
+#ifdef ENABLE_LIBFUZZER
+
+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size);
+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+    PDU_t *st = 0;
+    asn_dec_rval_t rval;
+    rval = asn_decode(0, ATS_BASIC_XER, &asn_DEF_PDU, (void **)&st, Data, Size);
+    assert(rval.consumed <= Size);
+    ASN_STRUCT_FREE(asn_DEF_PDU, st);
+    return 0;
+}
+
+#else
+
 enum expectation {
 	EXP_OK,		/* Encoding/decoding must succeed */
 	EXP_CXER_EXACT,	/* Encoding/decoding using CXER must be exact */
@@ -277,19 +291,6 @@ process(const char *fname) {
 
 	return 1;
 }
-
-#ifdef ENABLE_LIBFUZZER
-
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-    PDU_t *st = 0;
-    asn_dec_rval_t rval;
-    rval = asn_decode(0, ATS_BASIC_XER, &asn_DEF_PDU, (void **)&st, Data, Size);
-    assert(rval.consumed <= Size);
-    ASN_STRUCT_FREE(asn_DEF_PDU, st);
-    return 0;
-}
-
-#else
 
 int
 main() {

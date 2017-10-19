@@ -86,15 +86,12 @@ Int2_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 	
 	value = *(const long *)sptr;
 	
-	if((value >= 0)) {
-		/* Constraint check succeeded */
-		return 0;
-	} else {
-		ASN__CTFAIL(app_key, td, sptr,
-			"%s: constraint failed (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
+	if(1 /* No applicable constraints whatsoever */) {
+		(void)value; /* Unused variable */
+		/* Nothing is here. See below */
 	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*

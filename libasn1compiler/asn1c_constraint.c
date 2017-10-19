@@ -12,7 +12,10 @@ static int emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range);
 static int emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_range_t *r_value);
 static int emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype);
 static asn1p_expr_type_e _find_terminal_type(arg_t *arg);
-static int emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop);
+static abuf *emit_range_comparison_code(asn1cnst_range_t *range,
+                                          const char *varname,
+                                          asn1c_integer_t natural_start,
+                                          asn1c_integer_t natural_stop);
 static int native_long_sign(arg_t *arg, asn1cnst_range_t *r);	/* -1, 0, 1 */
 
 static int
@@ -32,10 +35,10 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_type_e etype;
 	asn1p_constraint_t *ct;
-	int got_something = 0;
 	int alphabet_table_compiled;
 	int produce_st = 0;
 	int ulong_optimize = 0;
+	int value_unsigned = 0;
 	int ret = 0;
 
 	ct = expr->combined_constraints;
@@ -109,6 +112,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 				if(native_long_sign(arg, r_value) >= 0) {
 					ulong_optimize = ulong_optimization(arg, etype, r_size, r_value);
 					if(!ulong_optimize) {
+						value_unsigned = 1;
 						OUT("unsigned long value;\n");
 					}
 				} else {
@@ -167,38 +171,51 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	/*
 	 * Here is an if() {} else {} consrtaint checking code.
 	 */
+	int got_something = 0;
+    int value_unused = 0;
 	OUT("\n");
 	OUT("if(");
 	INDENT(+1);
 		if(r_size) {
-			if(got_something++) { OUT("\n"); OUT(" && "); }
-			OUT("(");
-			emit_range_comparison_code(arg, r_size, "size", 0, -1);
-			OUT(")");
+            abuf *ab = emit_range_comparison_code(r_size, "size", 0, -1);
+            if(ab->length)  {
+                OUT("(%s)", ab->buffer);
+                got_something++;
+            }
+            abuf_free(ab);
 		}
 		if(r_value) {
-			if(got_something++) { OUT("\n"); OUT(" && "); }
-			OUT("(");
-			if(etype == ASN_BASIC_BOOLEAN)
-				emit_range_comparison_code(arg, r_value,
-					"value", 0, 1);
-			else
-				emit_range_comparison_code(arg, r_value,
-					"value", -1, -1);
-			OUT(")");
+			if(got_something) { OUT("\n"); OUT(" && "); }
+            abuf *ab;
+            if(etype == ASN_BASIC_BOOLEAN)
+                ab = emit_range_comparison_code(r_value, "value", 0, 1);
+            else
+                ab = emit_range_comparison_code(r_value, "value",
+                                                value_unsigned ? 0 : -1, -1);
+            if(ab->length)  {
+                OUT("(%s)", ab->buffer);
+                got_something++;
+            } else {
+                value_unused = 1;
+            }
+            abuf_free(ab);
 		}
 		if(alphabet_table_compiled) {
-			if(got_something++) { OUT("\n"); OUT(" && "); }
+			if(got_something) { OUT("\n"); OUT(" && "); }
 			OUT("!check_permitted_alphabet_%d(%s)",
 				arg->expr->_type_unique_index,
 				produce_st ? "st" : "sptr");
-		}
+            got_something++;
+        }
 		if(!got_something) {
 			OUT("1 /* No applicable constraints whatsoever */");
 			OUT(") {\n");
 			INDENT(-1);
 			if(produce_st) {
 				INDENTED(OUT("(void)st; /* Unused variable */\n"));
+			}
+			if(value_unused) {
+				INDENTED(OUT("(void)value; /* Unused variable */\n"));
 			}
 			INDENTED(OUT("/* Nothing is here. See below */\n"));
 			OUT("}\n");
@@ -491,16 +508,11 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	}
 
 	if(range) {
-		OUT("if(!(");
-        int produced_something =
-            emit_range_comparison_code(arg, range, "cv", 0, natural_stop);
-        if(produced_something) {
-            OUT(")) return -1;\n");
+        abuf *ab = emit_range_comparison_code(range, "cv", 0, natural_stop);
+        if(ab->length) {
+            OUT("if(!(%s)) return -1;\n", ab->buffer);
         } else {
-            OUT(")) {\n");
-            OUT("\t(void)cv; /* Unused variable */\n");
-            OUT("\treturn -1;\n");
-            OUT("}\n");
+            OUT("(void)cv; /* Unused variable */\n");
         }
 	} else {
 		OUT("if(!table[cv]) return -1;\n");
@@ -512,58 +524,68 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	return 0;
 }
 
-static int
-emit_range_comparison_code(arg_t *arg, asn1cnst_range_t *range, const char *varname, asn1c_integer_t natural_start, asn1c_integer_t natural_stop) {
-	int ignore_left;
-	int ignore_right;
-	int generated_something = 0;
-	int i;
+static void
+abuf_oint(abuf *ab, asn1c_integer_t v) {
+    if(v == (-2147483647L - 1)) {
+        abuf_printf(ab, "(-2147483647L - 1)");
+    } else {
+        abuf_printf(ab, "%s", asn1p_itoa(v));
+    }
+}
 
-	for(i = -1; i < range->el_count; i++) {
-		asn1cnst_range_t *r;
-		if(i == -1) {
-			if(range->el_count) continue;
-			r = range;
-		} else {
-			if(i) OUT(" || ");
-			r = range->elements[i];
-		}
+static abuf *
+emit_range_comparison_code(asn1cnst_range_t *range, const char *varname,
+                           asn1c_integer_t natural_start,
+                           asn1c_integer_t natural_stop) {
+    abuf *ab = abuf_new();
 
-		if(r != range) OUT("(");
+    if(range->el_count == 0) {
+        int ignore_left =
+            (range->left.type == ARE_MIN)
+            || (natural_start != -1 && range->left.value <= natural_start);
+        int ignore_right =
+            (range->right.type == ARE_MAX)
+            || (natural_stop != -1 && range->right.value >= natural_stop);
 
-		ignore_left = (r->left.type == ARE_MIN)
-				|| (natural_start != -1
-					&& r->left.value <= natural_start);
-		ignore_right = (r->right.type == ARE_MAX)
-				|| (natural_stop != -1
-					&& r->right.value >= natural_stop);
-		if(ignore_left && ignore_right) {
-			OUT("1 /* Constraint matches natural range of %s */",
-				varname);
-			continue;
-		}
+        if(ignore_left && ignore_right) {
+            /* Empty constraint comparison */
+        } else if(ignore_left) {
+            abuf_printf(ab, "%s <= ", varname);
+            abuf_oint(ab, range->right.value);
+        } else if(ignore_right) {
+            abuf_printf(ab, "%s >= ", varname);
+            abuf_oint(ab, range->left.value);
+        } else if(range->left.value == range->right.value) {
+            abuf_printf(ab, "%s == ", varname);
+            abuf_oint(ab, range->right.value);
+        } else {
+            abuf_printf(ab, "%s >= ", varname);
+            abuf_oint(ab, range->left.value);
+            abuf_printf(ab, " && ");
+            abuf_printf(ab, "%s <= ", varname);
+            abuf_oint(ab, range->right.value);
+        }
+    } else {
+        for(int i = 0; i < range->el_count; i++) {
+            asn1cnst_range_t *r = range->elements[i];
 
-		if(ignore_left) {
-			OUT("%s <= ", varname);
-			OINT(r->right.value);
-		} else if(ignore_right) {
-			OUT("%s >= ", varname);
-			OINT(r->left.value);
-		} else if(r->left.value == r->right.value) {
-			OUT("%s == ", varname);
-			OINT(r->right.value);
-		} else {
-			OUT("%s >= ", varname);
-			OINT(r->left.value);
-			OUT(" && ");
-			OUT("%s <= ", varname);
-			OINT(r->right.value);
-		}
-		if(r != range) OUT(")");
-		generated_something = 1;
-	}
+            abuf *rec = emit_range_comparison_code(r, varname, natural_start,
+                                                   natural_stop);
+            if(rec->length) {
+                if(ab->length) {
+                    abuf_str(ab, " || ");
+                }
+                abuf_str(ab, "(");
+                abuf_buf(ab, rec);
+                abuf_str(ab, ")");
+            } else {
+                /* Ignore this part */
+            }
+            abuf_free(rec);
+        }
+    }
 
-	return generated_something;
+    return ab;
 }
 
 static int
