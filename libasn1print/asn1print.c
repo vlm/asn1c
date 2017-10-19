@@ -41,7 +41,7 @@ static int asn1print_expr_dtd(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *t
 
 /* Check printf's error code, to be pedantic. */
 static int safe_printf(const char *fmt, ...) {
-    int ret;
+    int ret = 0;
     va_list ap;
     va_start(ap, fmt);
 
