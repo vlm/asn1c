@@ -39,13 +39,13 @@ static size_t buf_offset;
 
 static int
 _buf_writer(const void *buffer, size_t size, void *app_key) {
-	unsigned char *b, *bend;
 	(void)app_key;
 	assert(buf_offset + size < sizeof(buf));
 	memcpy(buf + buf_offset, buffer, size);
+#ifdef EMIT_ASN_DEBUG
+	unsigned char *b, *bend;
 	b = buf + buf_offset;
 	bend = b + size;
-#ifdef EMIT_ASN_DEBUG
 	fprintf(stderr, "=> [");
 	for(; b < bend; b++) {
 		if(*b >= 32 && *b < 127 && *b != '%')
@@ -97,6 +97,8 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 		rval = xer_encode(&asn_DEF_PDU, st, XER_F_CANONICAL,
 			_buf_writer, 0);
 		break;
+    default:
+        assert(!"Unreachable");
 	}
 
 	if (rval.encoded == -1) {
@@ -173,6 +175,8 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
             case AS_DER:
             case AS_CXER:
                 assert(!"Unexpected DER or CXER load request");
+            default:
+                assert(!"Unreachable");
 			}
 			fbuf_offset += rval.consumed;
 			fbuf_left -= rval.consumed;
