@@ -198,13 +198,20 @@ AS_IF([test "x$disable_test_asan" != xno], [
 [--disable-test-asan=$disable_test_asan is not supported on a target system.
 Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
       ])
-    dnl Address sanitizer sometimes is equipped with the leak sanitizer,
-    dnl so we use -fsanitize=leak to permit ASAN_OPTIONS environment.
+
+    dnl Address sanitizer sometimes is equipped with the leak sanitizer.
     dnl If address sanitizer is not equipped with a leak sanitizer,
     dnl invoking programs with ASAN_OPTIONS=detect_leaks=1 will break them.
-    AX_CHECK_COMPILE_FLAG([-fsanitize=leak], [
+    ASAN_OPTIONS="detect_leaks=1"
+    export ASAN_OPTIONS
+    save_cflags="${CFLAGS}"
+    CFLAGS="${CFLAGS} ${SANITIZER_CFLAGS}"
+    AC_RUN_IFELSE([AC_LANG_PROGRAM()], [
         ASAN_ENV_FLAGS="${ASAN_ENV_FLAGS} ASAN_OPTIONS=detect_leaks=1"
     ])
+    CFLAGS="${save_cflags}"
+    unset ASAN_OPTIONS
+
     dnl Keep error messages nice. Also consider:
     dnl export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
     dnl export ASAN_OPTIONS=symbolize=1
