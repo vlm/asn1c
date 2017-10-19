@@ -2,16 +2,17 @@ language: c
 compiler:
   - gcc
   - clang
+env:
+  - TASK=check CONFIG_FLAGS="--enable-Werror --enable-test-Werror --enable-code-coverage"
+  - TASK=distcheck CONFIG_FLAGS="--enable-Werror --enable-test-Werror" DISTCHECK_CONFIGURE_FLAGS=$CONFIG_FLAGS
 before_install:
   - sudo apt-get install -y gcc-multilib lcov libasan*
   - gem install coveralls-lcov
 script:
-    - autoreconf -iv
-    - ./configure --enable-Werror --enable-code-coverage
-    - make -j8
-    - make check
-    - make distcheck
+  - autoreconf -iv
+  - ./configure $CONFIG_FLAGS
+  - make $TASK
 after_success:
   - test "x$CC" = "xgcc" -o "x$CC" = "xclang" && make code-coverage-capture && coveralls-lcov asn1c-*-coverage.info
 after_failure:
-    - find . -name test-suite.log -exec tail -v -n +1 {} +
+  - find . -name test-suite.log -exec tail -v -n +1 {} +
