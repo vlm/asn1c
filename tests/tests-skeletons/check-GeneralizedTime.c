@@ -190,8 +190,8 @@ check_fractions() {
 
 static void
 compare(int lineno, int cmp_control, const char *astr, const char *bstr) {
-    GeneralizedTime_t a = {(uint8_t *)strdup(astr), strlen(astr)};
-    GeneralizedTime_t b = {(uint8_t *)strdup(bstr), strlen(bstr)};
+    GeneralizedTime_t a = {(uint8_t *)strdup(astr), strlen(astr), {0, 0, 0, 0, 0}};
+    GeneralizedTime_t b = {(uint8_t *)strdup(bstr), strlen(bstr), {0, 0, 0, 0, 0}};
     int cmp_result = asn_DEF_GeneralizedTime.op->compare_struct(
         &asn_DEF_GeneralizedTime, &a, &b);
     if(cmp_result != cmp_control) {

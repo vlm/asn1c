@@ -35,8 +35,8 @@ check(char *time_str, time_t sample, int as_gmt) {
 
 static void
 compare(int lineno, int cmp_control, const char *astr, const char *bstr) {
-    UTCTime_t a = {(uint8_t *)strdup(astr), strlen(astr)};
-    UTCTime_t b = {(uint8_t *)strdup(bstr), strlen(bstr)};
+    UTCTime_t a = {(uint8_t *)strdup(astr), strlen(astr), {0, 0, 0, 0, 0}};
+    UTCTime_t b = {(uint8_t *)strdup(bstr), strlen(bstr), {0, 0, 0, 0, 0}};
     int cmp_result =
         asn_DEF_UTCTime.op->compare_struct(&asn_DEF_UTCTime, &a, &b);
     if(cmp_result != cmp_control) {
