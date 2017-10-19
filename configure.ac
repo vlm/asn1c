@@ -151,7 +151,7 @@ AC_ARG_ENABLE([test-ubsan],
         [Disable Undefined Behavior Sanitizer for tests])],
     [disable_test_ubsan=$enableval], [disable_test_ubsan=maybe])
 AS_IF([test "x$disable_test_ubsan" != xno], [
-    AX_CHECK_COMPILE_FLAG([-fsanitize=undefined],
+    AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=undefined],
       [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=undefined"],
       [
         AS_IF([test "x$disable_test_ubsan" != xmaybe], [
@@ -189,7 +189,7 @@ AC_ARG_ENABLE([test-asan],
         [Disable Address Sanitizer for tests])],
     [disable_test_asan=$enableval], [disable_test_asan=maybe])
 AS_IF([test "x$disable_test_asan" != xno], [
-    AX_CHECK_COMPILE_FLAG([-fsanitize=address],
+    AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=address],
       [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=address"],
       [
         AS_IF([test "x$disable_test_asan" != xmaybe], [
