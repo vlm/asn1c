@@ -211,7 +211,6 @@ Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
           [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-omit-frame-pointer"])
 ])
 
-
 dnl Enable LibFuzzer, if supported.
 LIBFUZZER_CFLAGS=""
 AC_ARG_ENABLE([test-fuzzer],
@@ -219,13 +218,21 @@ AC_ARG_ENABLE([test-fuzzer],
         [Enable LLVM LibFuzzer for randomized testing])],
     [enable_test_fuzzer=$enableval], [enable_test_fuzzer=no])
 AS_IF([test "x$enable_test_fuzzer" != xno], [
-    AX_CHECK_COMPILE_FLAG([-fsanitize=fuzzer],
-      [LIBFUZZER_CFLAGS="${FUZZER_CFLAGS} -fsanitize=fuzzer -DENABLE_LIBFUZZER"],
-      [
-            AC_MSG_FAILURE(
+    AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=fuzzer],
+    [LIBFUZZER_CFLAGS="-fsanitize=fuzzer -DENABLE_LIBFUZZER"],
+    [AC_MSG_FAILURE(
 [--enable-test-fuzzer=$enable_test_fuzzer is not supported on a target system.
-Check out http://llvm.org/docs/LibFuzzer.html])
-      ])
+Check out http://llvm.org/docs/LibFuzzer.html])],
+    [],
+    [AC_LANG_SOURCE([[
+    #include <sys/types.h>
+    int LLVMFuzzerTestOneInput(const unsigned char *Data, size_t Size);
+    int LLVMFuzzerTestOneInput(const unsigned char *Data, size_t Size) {
+        (void)Data;
+        (void)Size;
+        return 0;
+    }
+    ]])])
 ])
 
 TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} ${SANITIZER_CFLAGS}"
