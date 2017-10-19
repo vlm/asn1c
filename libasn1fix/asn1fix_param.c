@@ -112,7 +112,7 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 				expr_to_resolve->reference);
 		if(!expr) return NULL;
 	} else if(expr_to_resolve->meta_type == AMT_VALUE) {
-		assert(expr_to_resolve->value);
+		if(!expr_to_resolve->value) return NULL;
 		expr = find_target_specialization_bystr(rarg,
 				expr_to_resolve->Identifier);
 		if(!expr) return NULL;
@@ -155,7 +155,7 @@ static asn1p_expr_t *
 find_target_specialization_byvalueset(resolver_arg_t *rarg, asn1p_constraint_t *ct) {
 	asn1p_ref_t *ref;
 
-	assert(ct->type == ACT_EL_TYPE);
+	if (ct->type != ACT_EL_TYPE) return NULL;
 
 	ref = ct->containedSubtype->value.v_type->reference;
 
