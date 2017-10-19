@@ -21,7 +21,7 @@ check_round_trip(int lineno, int ok, size_t length) {
     size_t enc_len = 0;
     ssize_t enc_len_len = oer_serialize_length(length, fill_buffer, &enc_len);
     assert(enc_len_len > 0);
-    assert(enc_len == enc_len_len);
+    assert(enc_len == (size_t)enc_len_len);
 
     /* Deserialize */
     size_t recovered_length = 0;
@@ -31,7 +31,8 @@ check_round_trip(int lineno, int ok, size_t length) {
     }
     ssize_t dec_len = oer_fetch_length(buffer, enc_len, &recovered_length);
     if(ok) {
-        assert(dec_len == enc_len);
+        assert(dec_len > 0);
+        assert((size_t)dec_len == enc_len);
         if(recovered_length != length) {
             fprintf(stderr,
                     "Round-trip failed %zu->%zu (encoded %zd, decoded %zd)\n",
