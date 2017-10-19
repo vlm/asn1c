@@ -125,19 +125,17 @@ AX_CHECK_COMPILE_FLAG([-Wno-format],
     [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-format"])
 
 
-dnl If -m32 is available to create 32-bit code,
+dnl If requested and -m32 is available to create 32-bit code,
 dnl treat it like a special case to be checked.
 AC_ARG_ENABLE([test-32bit],
-    [AS_HELP_STRING([--disable-test-32bit],
-    [Disable tests for 32-bit compatibility])],
-    [disable_test_32bit=$enableval], [disable_test_32bit=maybe])
-AS_IF([test "x$disable_test_32bit" != xno], [
+    [AS_HELP_STRING([--enable-test-32bit],
+    [Enable tests for 32-bit compatibility])],
+    [enable_test_32bit=$enableval], [enable_test_32bit=no])
+AS_IF([test "x$enable_test_32bit" != xno], [
     AX_CHECK_COMPILE_FLAG([-m32], [CFLAGS_M32=-m32],
       [
         CFLAGS_M32=""
-        AS_IF([test "x$disable_test_32bit" != xmaybe], [
-            AC_MSG_FAILURE([--disable-test-32bit=$disable_test_32bit is not supported on a target system.])
-        ])
+        AC_MSG_FAILURE([--enable-test-32bit=$enable_test_32bit is requested but not supported by the _AC_LANG compiler])
       ])
 ])
 AC_SUBST(CFLAGS_M32)
