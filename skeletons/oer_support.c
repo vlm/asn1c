@@ -63,7 +63,7 @@ oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
     }
 
     *len_r = len;
-    assert(len_len + 1 == bend - (const uint8_t *)bufptr);
+    assert(len_len + 1 == (size_t)(bend - (const uint8_t *)bufptr));
     return len_len + 1;
 }
 
