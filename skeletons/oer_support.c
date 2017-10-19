@@ -18,7 +18,7 @@
 ssize_t
 oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
     uint8_t first_byte;
-    uint8_t len_len;    /* Length of the length determinant */
+    size_t len_len;    /* Length of the length determinant */
     const uint8_t *b;
     const uint8_t *bend;
     size_t len;
@@ -35,7 +35,7 @@ oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
     }
 
     len_len = (first_byte & 0x7f);
-    if((size_t)(1 + len_len) > size) {
+    if((1 + len_len) > size) {
         *len_r = 0;
         return 0;
     }
