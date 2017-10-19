@@ -2662,10 +2662,10 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
         return -1;
     }
 
-
     REDIR(OT_CODE);
     OUT("static asn_type_selector_result_t\n");
-    OUT("select_%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", c_name(arg).compound_name);
+    OUT("select_%s_", c_name(arg).compound_name);
+    OUT("%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", MKID(expr));
     INDENT(+1);
 
     OUT("asn_type_selector_result_t result = {0, 0};\n");
@@ -2723,7 +2723,8 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("\n");
 
     REDIR(save_target);
-    OUT("select_%s_type", c_name(arg).compound_name);
+    OUT("select_%s_", c_name(arg).compound_name);
+    OUT("%s_type", MKID(expr));
 
     return 0;
 }
