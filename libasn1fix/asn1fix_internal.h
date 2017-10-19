@@ -83,17 +83,23 @@ typedef struct arg_s {
  * Merge the return value of the called function with the already
  * partially computed return value of the current function.
  */
-#define	RET2RVAL(ret,rv) do {					\
-		int __ret = ret;				\
-		switch(__ret) {					\
-		case  0: break;					\
-		case  1: if(rv) break;				\
-		case -1: rv = __ret; break;			\
-		default:					\
-			assert(__ret >= -1 && __ret <= 1);	\
-			rv = -1;				\
-		}						\
-	} while(0)
+#define RET2RVAL(ret, rv)                      \
+    do {                                       \
+        int __ret = ret;                       \
+        switch(__ret) {                        \
+        case 0:                                \
+            break;                             \
+        case 1:                                \
+            if(rv) break;                      \
+            /* Fall through */                 \
+        case -1:                               \
+            rv = __ret;                        \
+            break;                             \
+        default:                               \
+            assert(__ret >= -1 && __ret <= 1); \
+            rv = -1;                           \
+        }                                      \
+    } while(0)
 
 /*
  * Temporary substitute module for the purposes of evaluating expression.

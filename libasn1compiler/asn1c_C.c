@@ -2333,6 +2333,7 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 	switch(etype) {
 	case ASN_BASIC_BOOLEAN:
 		fits_long = 1;
+        /* Fall through */
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 		if(expr->marker.default_value == NULL
@@ -3439,13 +3440,15 @@ static int compar_cameo(const void *ap, const void *bp) {
                                  &atag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE)))
         return 1;
 
-    if(WITH_MODULE_NAMESPACE(b->expr->module, expr_ns,
-                             asn1f_fetch_outmost_tag(
-                                 arg->asn, expr_ns, b->expr->module, b->expr,
-                                 &btag, AFT_IMAGINARY_ANY | AFT_CANON_CHOICE)))
+    if(WITH_MODULE_NAMESPACE(
+           b->expr->module, expr_ns,
+           asn1f_fetch_outmost_tag(arg->asn, expr_ns, b->expr->module, b->expr,
+                                   &btag,
+                                   AFT_IMAGINARY_ANY | AFT_CANON_CHOICE))) {
         return -1;
+    }
 
-	if(atag.tag_class < btag.tag_class)
+    if(atag.tag_class < btag.tag_class)
 		return -1;
 	if(atag.tag_class > btag.tag_class)
 		return 1;

@@ -320,13 +320,13 @@ check_ber_857_encoding(int base, int sign, int scaling_factor, int exponent, int
 	*b |= ((explen - 1) & 0x03);	/* 8.5.7.4 */
 	b++;
 	switch(explen) {
-	case 2: *b++ = (int8_t)(exponent >> 8);
-	case 1: *b++ = (int8_t)exponent;
+	case 2: *b++ = (int8_t)(exponent >> 8); /* Fall through */
+	case 1: *b++ = (int8_t)exponent;    /* Fall through */
 	}
 	switch(mantlen) {
-	case 3: *b++ = (mantissa >> 16) & 0xff;
-	case 2: *b++ = (mantissa >> 8) & 0xff;
-	case 1: *b++ = (mantissa & 0xff);
+	case 3: *b++ = (mantissa >> 16) & 0xff; /* Fall through */
+	case 2: *b++ = (mantissa >> 8) & 0xff;  /* Fall through */
+	case 1: *b++ = (mantissa & 0xff);   /* Fall through */
 	}
 
 	verify = (sign ? -1.0 : 1.0) * ldexp(mantissa, exponent * baseF + scaling_factor);

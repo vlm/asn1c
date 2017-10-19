@@ -497,21 +497,21 @@ INTEGER__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
 		/* FALL THROUGH */
 	case ST_DIGITS_TRAILSPACE:
 		/* The last symbol encountered was a digit. */
-		switch(asn_strtoimax_lim(dec_value_start, &dec_value_end, &dec_value)) {
-		case ASN_STRTOX_OK:
-                        if(dec_value >= LONG_MIN && dec_value <= LONG_MAX) {
-			        break;
-                        } else {
-                                /*
-                                 * We model INTEGER on long for XER,
-                                 * to avoid rewriting all the tests at once.
-                                 */
-                                ASN_DEBUG("INTEGER exceeds long range");
-                                /* Fall through */
-                        }
-		case ASN_STRTOX_ERROR_RANGE:
-                        ASN_DEBUG("INTEGER decode %s hit range limit", td->name);
-			return XPBD_DECODER_LIMIT;
+        switch(asn_strtoimax_lim(dec_value_start, &dec_value_end, &dec_value)) {
+        case ASN_STRTOX_OK:
+            if(dec_value >= LONG_MIN && dec_value <= LONG_MAX) {
+                break;
+            } else {
+                /*
+                 * We model INTEGER on long for XER,
+                 * to avoid rewriting all the tests at once.
+                 */
+                ASN_DEBUG("INTEGER exceeds long range");
+            }
+            /* Fall through */
+        case ASN_STRTOX_ERROR_RANGE:
+            ASN_DEBUG("INTEGER decode %s hit range limit", td->name);
+            return XPBD_DECODER_LIMIT;
 		case ASN_STRTOX_ERROR_INVAL:
 		case ASN_STRTOX_EXPECT_MORE:
 		case ASN_STRTOX_EXTRA_DATA:

@@ -135,6 +135,7 @@ asn1f_fix_constr_ext(arg_t *arg) {
 			case 3:
 				FATAL("Third extension marker "
 				"is not allowed at line %d", v->_lineno);
+                /* Fall through */
 			default:
 				r_value = -1;
 			}

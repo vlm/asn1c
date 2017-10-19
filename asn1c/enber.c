@@ -173,7 +173,6 @@ process_line(const char *fname, char *line, int lineno) {
     ber_tlv_len_t tlv_len;
     ber_tlv_len_t opt_tl_len; /* optional TL length */
     ssize_t ret;
-    (void)fname;
 
     /* Skip the whitespace */
     for(; *line == ' ' || *line == '\t'; line++)
@@ -184,11 +183,15 @@ process_line(const char *fname, char *line, int lineno) {
     switch(*op) {
     case '<': /* That's what we want! A tag opening */
         break;
-    case '-': /* This is a comment (dash-dash) */
-        if(op[1] == *op) case '\r':
+    case '\r':
     case '\n':
     case '#': /* This is a comment */
         return 0;
+    case '-': /* This is a comment (dash-dash) */
+        if(op[1] == '-') {
+            return 0;
+        }
+        /* Fall through */
     default:
         fprintf(stderr, "%s: Missing '<' after whitespace at line %d\n", fname,
                 lineno);

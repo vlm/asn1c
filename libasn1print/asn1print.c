@@ -417,11 +417,11 @@ asn1print_constraint(const asn1p_constraint_t *ct, enum asn1print_flags flags) {
 		safe_printf("PATTERN ");
 		asn1print_value(ct->value, flags);
 		break;
-	case ACT_CA_SET: symno++;
-	case ACT_CA_CRC: symno++;
-	case ACT_CA_CSV: symno++;
-	case ACT_CA_UNI: symno++;
-	case ACT_CA_INT: symno++;
+	case ACT_CA_SET: symno++;   /* Fall through */
+	case ACT_CA_CRC: symno++;   /* Fall through */
+	case ACT_CA_CSV: symno++;   /* Fall through */
+	case ACT_CA_UNI: symno++;   /* Fall through */
+	case ACT_CA_INT: symno++;   /* Fall through */
 	case ACT_CA_EXC:
 		{
 			char *symtable[] = { " EXCEPT ", " ^ ", " | ", ",",

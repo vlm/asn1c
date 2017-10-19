@@ -66,6 +66,7 @@ asn1p_value_compare(const asn1p_value_t *a, const asn1p_value_t *b) {
                   != 0) {
             return -1;
         }
+        return 0;
     case ATV_VALUESET:
         return asn1p_constraint_compare(a->value.constraint,
                                         b->value.constraint);

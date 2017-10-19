@@ -711,8 +711,9 @@ include_type_to_pdu_collection(arg_t *arg) {
 		return 0;
 
     /* Parameterized types can't serve as PDU's without instantiation. */
-    if(arg->expr->lhs_params)
+    if(arg->expr->lhs_params) {
         return 0;
+    }
 
 	if((arg->flags & A1C_PDU_ALL)
 	|| ((arg->flags & A1C_PDU_AUTO) && !arg->expr->_type_referenced)

@@ -328,10 +328,13 @@ main(int ac, char **av) {
     ret = asn1f_process(asn, asn1_fixer_flags,
                         NULL /* default fprintf(stderr) */);
     switch(ret) {
-    case 1:
-        if(!warnings_as_errors) /* Fall through */
-        case 0:
+    case 0:
         break; /* All clear */
+    case 1:
+        if(!warnings_as_errors) {
+            break;
+        }
+        /* Fall through */
     case -1:
         exit_code = EX_DATAERR; /* Fatal failure */
         goto cleanup;
@@ -467,7 +470,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 /*
  * Print the usage screen and exit(EX_USAGE).
  */
-static void
+static void __attribute__((noreturn))
 usage(const char *av0) {
     /* clang-format off */
 	fprintf(stderr,

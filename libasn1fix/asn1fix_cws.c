@@ -125,10 +125,9 @@ _asn1f_parse_object_cb(const uint8_t *buf, size_t size, void *keyp) {
     ret = _asn1f_parse_class_object_data(arg, eclass, row, eclass->with_syntax,
                                          buf, buf + size, 0, 0, key->sequence);
     if(ret) {
-		LOG((int)(ret < 0),
-			"Cannot parse %s of CLASS %s found at line %d",
-			expr->Identifier, eclass->Identifier, expr->_lineno);
-		asn1p_ioc_row_delete(row);
+        LOG(ret, "Cannot parse %s of CLASS %s found at line %d",
+            expr->Identifier, eclass->Identifier, expr->_lineno);
+        asn1p_ioc_row_delete(row);
 		return ret;
 	}
 

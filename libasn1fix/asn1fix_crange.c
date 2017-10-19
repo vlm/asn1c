@@ -1040,8 +1040,9 @@ asn1constraint_compute_constraint_range(
 		range->not_OER_visible = 1;
 
     if(!ct
-       || (range->not_OER_visible && (cpr_flags & CPR_strict_OER_visibility)))
+       || (range->not_OER_visible && (cpr_flags & CPR_strict_OER_visibility))) {
         return range;
+    }
 
 	switch(ct->type) {
 	case ACT_EL_VALUE:

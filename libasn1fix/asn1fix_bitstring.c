@@ -112,6 +112,7 @@ asn1f_fix_bit_string_value(arg_t *arg, asn1p_expr_t *ttype) {
 			break;
 		}
 		/* Fall through: remove trailing zero bits */
+        /* Fall through */
 	case ATV_BITVECTOR:
 		asn1f_BS_remove_trailing_zero_bits(expr->value);
 		break;

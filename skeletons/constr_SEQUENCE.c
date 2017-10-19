@@ -443,6 +443,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 
 	phase3:
 		ctx->phase = 3;
+        /* Fall through */
 	case 3:	/* 00 and other tags expected */
 	case 4:	/* only 00's expected */
 

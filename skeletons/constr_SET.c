@@ -310,7 +310,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 				ADVANCE(rval.consumed);
 				RETURN(RC_WMORE);
 			}
-			/* Fail through */
+			/* Fall through */
 		case RC_FAIL: /* Fatal error */
 			RETURN(RC_FAIL);
 		} /* switch(rval) */
@@ -381,6 +381,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		}
 
 		ctx->phase = 5;
+        /* Fall through */
 	case 5:
 		/* Check that all mandatory elements are present. */
 		if(!_SET_is_populated(td, st))
