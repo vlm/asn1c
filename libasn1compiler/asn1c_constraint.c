@@ -492,8 +492,16 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 
 	if(range) {
 		OUT("if(!(");
-		emit_range_comparison_code(arg, range, "cv", 0, natural_stop);
-		OUT(")) return -1;\n");
+        int produced_something =
+            emit_range_comparison_code(arg, range, "cv", 0, natural_stop);
+        if(produced_something) {
+            OUT(")) return -1;\n");
+        } else {
+            OUT(")) {\n");
+            OUT("\t(void)cv; /* Unused variable */\n");
+            OUT("\treturn -1;\n");
+            OUT("}\n");
+        }
 	} else {
 		OUT("if(!table[cv]) return -1;\n");
 	}
