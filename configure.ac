@@ -156,18 +156,21 @@ AS_IF([test "x$disable_test_ubsan" != xno], [
             AC_MSG_FAILURE(
 [--disable-test-ubsan=$disable_test_ubsan is not supported on a target system.
 https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#how-to-build])])
-      ])
+      ],
+      [],
+      [AC_LANG_PROGRAM([void test(int *);void test(int *n) { *n = 0; }])]
+    )
     AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=undefined],
       [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=undefined"])
 
     dnl Unsigned integer overflow is enabled separately.
-    AX_CHECK_COMPILE_FLAG([-fsanitize=unsigned-integer-overflow],
-      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=unsigned-integer-overflow"])
+    AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=unsigned-integer-overflow],
+      [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=unsigned-integer-overflow"], [], [], [AC_LANG_PROGRAM([int test(unsigned); int test(unsigned n) { return n + 1; }])])
     AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=unsigned-integer-overflow],
       [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=unsigned-integer-overflow"])
 
     dnl Nullability is enabled separately.
-    AX_CHECK_COMPILE_FLAG([-fsanitize=nullability],
+    AX_CHECK_COMPILE_AND_LINK_FLAG([-fsanitize=nullability],
       [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fsanitize=nullability"])
     AX_CHECK_COMPILE_FLAG([-fno-sanitize-recover=nullability],
       [SANITIZER_CFLAGS="${SANITIZER_CFLAGS} -fno-sanitize-recover=nullability"])
