@@ -107,12 +107,6 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
      * Restore parsing context.
      */
     ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
-    if(ctx->ptr == 0) {
-        ctx->ptr = CALLOC(1, sizeof(asn_bit_data_t));
-        if(!ctx->ptr) {
-            RETURN(RC_FAIL);
-        }
-    }
 
     /*
      * Start to parse where left previously.
@@ -122,11 +116,10 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         /*
          * Fetch preamble.
          */
-        asn_bit_data_t *preamble = ctx->ptr;
+        asn_bit_data_t *preamble;
         int has_extensions_bit = (specs->ext_before >= 0);
         size_t preamble_bits = (has_extensions_bit + specs->roms_count);
         size_t preamble_bytes = ((7 + preamble_bits) >> 3);
-        uint8_t *pbytes;
 
         ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 0", td->name);
 
@@ -134,19 +127,16 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
             "Expecting preamble bits %zu for %s (including %d extension bits)",
             preamble_bits, td->name, has_extensions_bit);
 
-        if(size < preamble_bytes) {
+        if(preamble_bytes > size) {
             ASN__DECODE_STARVED;
         }
 
-        pbytes = MALLOC(preamble_bytes + 1);
-        if(!pbytes) {
+        preamble = asn_bit_data_new_contiguous(ptr, preamble_bits);
+        if(!preamble) {
             RETURN(RC_FAIL);
         }
-        preamble->buffer = (const void *)pbytes;
-        memcpy(pbytes, ptr, preamble_bytes);
-        pbytes[preamble_bytes] = '\0';    /* Just in case */
         preamble->nboff = has_extensions_bit;
-        preamble->nbits = preamble_bits;
+        ctx->ptr = preamble;
         ADVANCE(preamble_bytes);
     }
         NEXT_PHASE(ctx);
@@ -157,6 +147,8 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         size_t edx;
 
         ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 1", td->name);
+
+        assert(preamble);
 
         for(edx = (ctx->step >> 1); edx < td->elements_count;
             edx++, ctx->step = (ctx->step & ~1) + 2) {
@@ -231,7 +223,9 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
     }
         NEXT_PHASE(ctx);
         /* FALL THROUGH */
-    case 2: {
+    case 2:
+        assert(ctx->ptr);
+        {
         /* Cleanup preamble. */
         asn_bit_data_t *preamble = ctx->ptr;
         asn_bit_data_t *extadds;
@@ -243,17 +237,9 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         uint8_t unused_bits;
         size_t len = 0;
         ssize_t len_len;
-        uint8_t *ebytes;
-
-        union {
-            const uint8_t *cptr;
-            uint8_t *uptr;
-        } unconst;
 
         ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 2", td->name);
 
-        unconst.cptr = preamble->buffer;
-        FREEMEM(unconst.uptr);
         preamble->buffer = 0; /* Will do extensions_present==1 next time. */
 
         if(!extensions_present) {
@@ -291,19 +277,12 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         }
 
         /* Get the extensions map */
-        ebytes = MALLOC(len + 1);
-        if(!ebytes) {
+        extadds = asn_bit_data_new_contiguous(ptr, len * 8 - unused_bits);
+        if(!extadds) {
             RETURN(RC_FAIL);
         }
-        memcpy(ebytes, ptr, len);
-        ebytes[len] = '\0';
-
-        extadds = preamble;
-        memset(extadds, 0, sizeof(*extadds));
-        extadds->buffer = ebytes;
-        extadds->nboff = 0;
-        extadds->nbits = 8 * len - unused_bits;
-
+        FREEMEM(preamble);
+        ctx->ptr = extadds;
         ADVANCE(len);
     }
         NEXT_PHASE(ctx);

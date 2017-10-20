@@ -24,6 +24,12 @@ typedef struct asn_bit_data_s {
 } asn_bit_data_t;
 
 /*
+ * Create a contiguous non-refillable bit data structure.
+ * Can be freed by FREEMEM().
+ */
+asn_bit_data_t *asn_bit_data_new_contiguous(const void *data, size_t size_bits);
+
+/*
  * Extract a small number of bits (<= 31) from the specified PER data pointer.
  * This function returns -1 if the specified number of bits could not be
  * extracted due to EOD or other conditions.

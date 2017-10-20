@@ -7,6 +7,32 @@
 #include <asn_internal.h>
 #include <asn_bit_data.h>
 
+/*
+ * Create a contiguous non-refillable bit data structure.
+ * Can be freed by FREEMEM().
+ */
+asn_bit_data_t *
+asn_bit_data_new_contiguous(const void *data, size_t size_bits) {
+    size_t size_bytes = (size_bits + 7) / 8;
+    asn_bit_data_t *pd;
+    uint8_t *bytes;
+
+    /* Get the extensions map */
+    pd = CALLOC(1, sizeof(*pd) + size_bytes + 1);
+    if(!pd) {
+        return NULL;
+    }
+    bytes = (void *)(((char *)pd) + sizeof(*pd));
+    memcpy(bytes, data, size_bytes);
+    bytes[size_bytes] = 0;
+    pd->buffer = bytes;
+    pd->nboff = 0;
+    pd->nbits = size_bits;
+
+    return pd;
+}
+
+
 char *
 asn_bit_data_string(asn_bit_data_t *pd) {
 	static char buf[2][32];
