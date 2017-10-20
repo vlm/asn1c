@@ -406,7 +406,8 @@ BOOLEAN_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         }
     }
 
-    if(!constraints) constraints = &td->encoding_constraints;
+    if(!constraints || !constraints->per_constraints)
+        constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
         const asn_per_constraint_t *pc = &constraints->per_constraints->value;
         if(pc->flags & APC_CONSTRAINED) {

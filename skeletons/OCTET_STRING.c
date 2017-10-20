@@ -1886,10 +1886,10 @@ OCTET_STRING_random_length_constrained(
     rnd_len = lengths[asn_random_between(
         0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
 
-    if(!constraints) constraints = &td->encoding_constraints;
+    if(!constraints || !constraints->per_constraints)
+        constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
-        const asn_per_constraint_t *pc =
-            &td->encoding_constraints.per_constraints->size;
+        const asn_per_constraint_t *pc = &constraints->per_constraints->size;
         if(pc->flags & APC_CONSTRAINED) {
             long suggested_upper_bound = pc->upper_bound < (ssize_t)max_length
                                              ? pc->upper_bound
@@ -1977,10 +1977,10 @@ OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         break;
     }
 
-    if(!constraints) constraints = &td->encoding_constraints;
+    if(!constraints || !constraints->per_constraints)
+        constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
-        const asn_per_constraint_t *pc =
-            &td->encoding_constraints.per_constraints->value;
+        const asn_per_constraint_t *pc = &constraints->per_constraints->value;
         if(pc->flags & APC_SEMI_CONSTRAINED) {
             clb = pc->lower_bound;
         } else if(pc->flags & APC_CONSTRAINED) {

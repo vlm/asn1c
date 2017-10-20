@@ -7,6 +7,12 @@ SEQUENCE { ..., null NULL OPTIONAL }
 SEQUENCE { ..., null BOOLEAN }
 SEQUENCE { ..., null BOOLEAN DEFAULT FALSE }
 SEQUENCE { ..., null BOOLEAN DEFAULT TRUE }
+SEQUENCE { str IA5String }
+SEQUENCE { str IA5String OPTIONAL }
+SEQUENCE { str IA5String (SIZE(0)) }
+SEQUENCE { str IA5String (SIZE(0)) OPTIONAL }
+SEQUENCE { str IA5String (SIZE(1)) }
+SEQUENCE { str IA5String (SIZE(1)) OPTIONAL }
 
 SEQUENCE { null NULL }
 SEQUENCE { null NULL, ... }

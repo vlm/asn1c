@@ -571,7 +571,8 @@ BIT_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     /* Figure out how far we should go */
     rnd_bits = lengths[asn_random_between(
         0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
-    if(!constraints) constraints = &td->encoding_constraints;
+    if(!constraints || !constraints->per_constraints)
+        constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
         const asn_per_constraint_t *pc = &constraints->per_constraints->size;
         if(pc->flags & APC_CONSTRAINED) {
