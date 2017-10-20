@@ -70,6 +70,6 @@ SEQUENCE { ..., one NULL, two [2] NULL, ..., three [3] NULL }
 SEQUENCE { ..., one NULL, ..., two [2] NULL, three [3] NULL }
 SEQUENCE { ..., one BOOLEAN, ..., two [2] BOOLEAN, three [3] BOOLEAN }
 SEQUENCE { ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
-SEQUENCE { ..., null NULL, ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
+-- not yet SEQUENCE { ..., null NULL, ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
 SEQUENCE { ..., one NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
-SEQUENCE { ..., null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+-- not yet SEQUENCE { ..., null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
