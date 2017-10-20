@@ -64,9 +64,15 @@ verify_asn_types_in_file() {
     make_clean_before_bundle
 
     echo "Open [$filename]"
-    line=0
-    asn=""
-    while read asn; do
+    for mode in syntax full; do
+      if [ "x${mode}" = "xsyntax" ]; then
+        max_failures=1
+      else
+        max_failures="${stop_after_failed}"
+      fi
+
+      line=0
+      while read asn; do
         line=`expr ${line} + 1`
         if echo "$asn" | sed -e 's/--.*//;' | grep -vi "[A-Z]" > /dev/null; then
             # Ignore lines consisting of just comments.
@@ -76,18 +82,20 @@ verify_asn_types_in_file() {
             # We need a different line.
             continue;
         fi
-        verify_asn_type "$asn" "in $filename $line"
-        if [ "${tests_failed}" = "${stop_after_failed}" ]; then
+        verify_asn_type "$mode" "$asn" "in $filename $line"
+        if [ "${tests_failed}" = "${max_failures}" ]; then
             echo "STOP after ${tests_failed} failures, OK ${tests_succeeded}"
             exit 1
         fi
-    done < "$filename"
+      done < "$filename"
+    done
 }
 
 verify_asn_type() {
-    asn="$1"
-    where="$2"
-    shift 2
+    mode="$1"
+    asn="$2"
+    where="$3"
+    shift 3
     test "x$asn" != "x" || usage
 
     if echo "$asn" | grep -v "::=" > /dev/null; then
@@ -96,6 +104,17 @@ verify_asn_type() {
     echo "Testing [$asn] ${where}"
 
     mkdir -p ${RNDTEMP}
+
+    if [ "x${mode}" = "xsyntax" ]; then
+        if asn1c_invoke "${RNDTEMP}/test.asn1" "$asn" "$where" -P 2>&1 >/dev/null; then
+            return 0
+        else
+            tests_failed=`expr ${tests_failed} + 1`
+            echo "FAIL: ASN.1 ERROR ${where}"
+            return 1
+        fi
+    fi
+
     if (set -e && cd "${RNDTEMP}" && compile_and_test "$asn" "${where}"); then
         echo "OK [$asn] ${where}"
         tests_succeeded=`expr ${tests_succeeded} + 1`
@@ -219,6 +238,27 @@ compile_and_test() {
     return 0
 }
 
+asn1c_invoke() {
+    tmpfile="$1"
+    asn="$2"
+    where="$3"
+    shift 3
+
+    {
+    echo "Test DEFINITIONS ::= BEGIN $asn"
+    echo "-- ${where}"
+    echo "END"
+    } > ${tmpfile}
+    echo "${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons"
+    if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
+        -gen-OER -gen-PER ${asn1c_flags} $@ ${tmpfile}
+    then
+        echo "ASN.1 compiled OK"
+    else
+        return 1
+    fi
+}
+
 asn_compile() {
     asn="$1"
     where="$2"
@@ -230,19 +270,12 @@ asn_compile() {
     fi
 
     test ! -f Makefile.am   # Protection from accidental clobbering
-    {
-    echo "Test DEFINITIONS ::= BEGIN $asn"
-    echo "-- ${where}"
-    echo "END"
-    } > test.asn1
-    echo "${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons"
-    if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
-        -gen-OER -gen-PER ${asn1c_flags} -flink-skeletons test.asn1
-    then
-        echo "ASN.1 compiled OK"
-    else
+
+    asn1c_invoke "test.asn1" "$asn" "$where" "-flink-skeletons"
+    if [ $? != 0 ]; then
         return 1
     fi
+
     rm -f converter-example.c
     ln -sf "../${srcdir}/random-test-driver.c" || cp "../${srcdir}/random-test-driver.c" .
     {
@@ -346,7 +379,7 @@ while :; do
         -e) encodings="${encodings} -e $2"; shift 2; continue;;
         -j) parallelism="$1"; shift 2; continue;;
         -t)
-            test_drive verify_asn_type "$2" "(command line)" || exit 1 ;;
+            test_drive verify_asn_type "full" "$2" "(command line)" || exit 1 ;;
         "")
             for bundle in `ls -1 ${srcdir}/bundles/*.txt | sort -nr`; do
                 test_drive verify_asn_types_in_file "$bundle"
