@@ -1,0 +1,58 @@
+
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .155
+
+ModuleParameterizationMoreThanTwoLevel
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 155 }
+DEFINITIONS ::= BEGIN
+
+    id-TYPE1 PacketId ::= 1
+
+    PacketId ::= INTEGER (0..65535)
+
+    Color ::= ENUMERATED { red(0), green, blue }
+
+    Valid ::= ENUMERATED { crc-nok, crc-ok(1) }
+
+    PACKET ::= CLASS {
+	&id             PacketId     UNIQUE,
+	&color          Color,
+	&Value,
+	&valid          Valid
+    }
+    WITH SYNTAX {
+        ID              &id
+        COLOR           &color
+        TYPE            &Value
+        VALID           &valid
+    }
+
+    ClassItem PACKET ::= {
+        { ID id-TYPE1   COLOR blue   TYPE OCTET STRING VALID crc-ok },
+        ...
+    }
+
+    Packet-List ::= UpperLayer-List { {ClassItem} }
+
+    UpperLayer-List {PACKET : Param} ::= LowerLayer-List { 1, max-items, {Param} }
+
+    LowerLayer-List {INTEGER : low, INTEGER : high, PACKET : Param} ::=
+        SEQUENCE (SIZE (low..high)) OF
+        SinglePacket {{Param}}
+
+    SinglePacket {PACKET : Param} ::=
+        Packet {{Param}}
+
+    Packet {PACKET : Param} ::= SEQUENCE {
+        id      PACKET.&id     ({Param}),
+        color   PACKET.&color  ({Param}{@id}),
+        value   PACKET.&Value  ({Param}{@id})
+    }
+
+    max-items INTEGER ::= 256
+
+END
