@@ -89,6 +89,7 @@ oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
     } else {
         /* Even if RC_WMORE, we can't get more data into a closed container. */
         td->op->free_struct(td, *struct_ptr, dispose_method);
+        *struct_ptr = NULL;
         return -1;
     }
 }

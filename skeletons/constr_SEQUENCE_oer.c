@@ -346,12 +346,6 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                 } else {
                     /* Roll back open type parsing */
                     asn_get_undo(extadds, 1);
-                    if(memb_ptr2 == &tmp_memb_ptr) {
-                        ASN_STRUCT_RESET(*elm->type, *memb_ptr2);
-                    } else {
-                        ASN_STRUCT_FREE(*elm->type, *memb_ptr2);
-                        *memb_ptr2 = NULL;
-                    }
                     RETURN(RC_WMORE);
                 }
                 break;
@@ -563,7 +557,6 @@ SEQUENCE_encode_oer(const asn_TYPE_descriptor_t *td,
                     ssize_t wrote = oer_open_type_put(
                         elm->type, elm->encoding_constraints.oer_constraints,
                         memb_ptr, cb, app_key);
-        ASN_DEBUG("Open type %s encoded in %zd, +computed=%zu", elm->type->name, wrote, computed_size);
                     if(wrote == -1) {
                         ASN__ENCODE_FAILED;
                     }
