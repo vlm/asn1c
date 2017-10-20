@@ -207,9 +207,10 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
 
                 memb_ptr2 = element_ptrptr(st, elm, &save_memb_ptr);
 
-                rval = elm->type->op->oer_decoder(opt_codec_ctx, elm->type,
-                                                  elm->encoding_constraints.oer_constraints,
-                                                  memb_ptr2, ptr, size);
+                rval = elm->type->op->oer_decoder(
+                    opt_codec_ctx, elm->type,
+                    elm->encoding_constraints.oer_constraints, memb_ptr2, ptr,
+                    size);
             }
             switch(rval.code) {
             case RC_OK:
@@ -268,7 +269,7 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         len_len = oer_fetch_length(ptr, size, &len);
         if(len_len > 0) {
             ADVANCE(len_len);
-        } if(len_len < 0) {
+        } else if(len_len < 0) {
             RETURN(RC_FAIL);
         } else {
             RETURN(RC_WMORE);
@@ -314,7 +315,8 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
             asn_bit_data_t *extadds = ctx->ptr;
             size_t edx = ctx->step;
             asn_TYPE_member_t *elm = &td->elements[edx];
-            void **memb_ptr2 = element_ptrptr(st, elm, 0);
+            void *tmp_memb_ptr;
+            void **memb_ptr2 = element_ptrptr(st, elm, &tmp_memb_ptr);
 
             switch(asn_get_few_bits(extadds, 1)) {
             case -1:
@@ -332,9 +334,11 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                 continue;
             case 1: {
                 /* Read OER open type */
-                ssize_t ot_size = oer_open_type_get(opt_codec_ctx, elm->type,
-                                                    elm->encoding_constraints.oer_constraints,
-                                                    memb_ptr2, ptr, size);
+                ssize_t ot_size =
+                    oer_open_type_get(opt_codec_ctx, elm->type,
+                                      elm->encoding_constraints.oer_constraints,
+                                      memb_ptr2, ptr, size);
+                assert(ot_size <= (ssize_t)size);
                 if(ot_size > 0) {
                     ADVANCE(ot_size);
                 } else if(ot_size < 0) {
@@ -342,8 +346,12 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                 } else {
                     /* Roll back open type parsing */
                     asn_get_undo(extadds, 1);
-                    ASN_STRUCT_FREE(*elm->type, *memb_ptr2);
-                    *memb_ptr2 = NULL;
+                    if(memb_ptr2 == &tmp_memb_ptr) {
+                        ASN_STRUCT_RESET(*elm->type, *memb_ptr2);
+                    } else {
+                        ASN_STRUCT_FREE(*elm->type, *memb_ptr2);
+                        *memb_ptr2 = NULL;
+                    }
                     RETURN(RC_WMORE);
                 }
                 break;
@@ -385,7 +393,7 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         }
     }
 
-    return rval;
+    RETURN(RC_OK);
 }
 
 /*
@@ -552,13 +560,14 @@ SEQUENCE_encode_oer(const asn_TYPE_descriptor_t *td,
                    && elm->default_value_cmp(memb_ptr) == 0) {
                     /* Do not encode default value. */
                 } else {
-                    asn_enc_rval_t er = elm->type->op->oer_encoder(
+                    ssize_t wrote = oer_open_type_put(
                         elm->type, elm->encoding_constraints.oer_constraints,
                         memb_ptr, cb, app_key);
-                    if(er.encoded == -1) {
-                        return er;
+        ASN_DEBUG("Open type %s encoded in %zd, +computed=%zu", elm->type->name, wrote, computed_size);
+                    if(wrote == -1) {
+                        ASN__ENCODE_FAILED;
                     }
-                    computed_size += er.encoded;
+                    computed_size += wrote;
                 }
             } else if(!elm->optional) {
                 ASN__ENCODE_FAILED;

@@ -1517,8 +1517,18 @@ SEQUENCE_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
                 *(const void *const *)((const char *)bptr + elm->memb_offset);
             if(!amemb) {
                 if(!bmemb) continue;
+                if(elm->default_value_cmp
+                   && elm->default_value_cmp(bmemb) == 0) {
+                    /* A is absent, but B is present and equal to DEFAULT */
+                    continue;
+                }
                 return -1;
             } else if(!bmemb) {
+                if(elm->default_value_cmp
+                   && elm->default_value_cmp(amemb) == 0) {
+                    /* B is absent, but A is present and equal to DEFAULT */
+                    continue;
+                }
                 return 1;
             }
 		} else {

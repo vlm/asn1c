@@ -136,6 +136,6 @@ oer_open_type_put(const asn_TYPE_descriptor_t *td,
     if(er.encoded < 0) return -1;
     assert(serialized_byte_count == (size_t)er.encoded);
 
-    return er.encoded + len_len;
+    return len_len + er.encoded;
 }
 
