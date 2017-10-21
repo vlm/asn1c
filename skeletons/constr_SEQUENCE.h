@@ -34,9 +34,10 @@ typedef struct asn_SEQUENCE_specifics_s {
 
 	/*
 	 * Description of an extensions group.
+	 * Root components are clustered at the beginning of the structure,
+	 * whereas extensions are clustered at the end. -1 means not extensible.
 	 */
-	signed ext_after;       /* Extensions start after this member */
-	signed ext_before;      /* Extensions stop before this member */
+	signed first_extension;       /* First extension addition */
 } asn_SEQUENCE_specifics_t;
 
 

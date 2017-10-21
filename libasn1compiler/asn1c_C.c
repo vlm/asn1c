@@ -415,8 +415,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int elements;	/* Number of elements */
-	int ext_start = -2;
-	int ext_stop = -2;
+	int first_extension = -1;
 	tag2el_t *tag2el = NULL;
 	int tag2el_count = 0;
 	int tags_count;
@@ -456,9 +455,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				if((++comp_mode) == 1)
-					ext_start = elements - 1;
-				else
-					ext_stop = elements - 1;
+					first_extension = elements;
 				continue;
 			}
 			if(v->marker.flags & EM_OMITABLE)
@@ -546,10 +543,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 	} else {
 		OUT("0, 0, 0,\t/* Optional elements (not needed) */\n");
 	}
-	OUT("%d,\t/* Start extensions */\n",
-			ext_start<0 ? -1 : ext_start);
-	OUT("%d\t/* Stop extensions */\n",
-			(ext_stop<ext_start)?elements+1:(ext_stop<0?-1:ext_stop));
+	OUT("%d,\t/* First extension addition */\n", first_extension);
 	INDENT(-1);
 	OUT("};\n");
 
@@ -1196,7 +1190,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
             OUT("asn_MAP_%s_from_canonical_%d,\n", MKID(expr),
                 expr->_type_unique_index);
         } else { OUT("0, 0,\n"); }
-        if(C99_MODE) OUT(".ext_start = ");
+        if(C99_MODE) OUT(".first_extension = ");
         OUT("%d\t/* Extensions start */\n", compute_extensions_start(expr));
     );
     OUT("};\n");
@@ -3397,7 +3391,7 @@ compute_canonical_members_order(arg_t *arg, int el_count) {
 	int *rmap;
 	asn1p_expr_t *v;
 	int eidx = 0;
-	int ext_start = -1;
+	int first_extension = -1;
 	int nextmax = -1;
 	int already_sorted = 1;
 
@@ -3409,18 +3403,18 @@ compute_canonical_members_order(arg_t *arg, int el_count) {
 			cmap[eidx].eidx = eidx;
 			cmap[eidx].expr = v;
 			eidx++;
-		} else if(ext_start == -1)
-			ext_start = eidx;
+		} else if(first_extension == -1)
+			first_extension = eidx;
 	}
 
 	cameo_arg = arg;
-	if(ext_start == -1) {
+	if(first_extension == -1) {
 		/* Sort the whole thing */
 		qsort(cmap, el_count, sizeof(*cmap), compar_cameo);
 	} else {
 		/* Sort root and extensions independently */
-		qsort(cmap, ext_start, sizeof(*cmap), compar_cameo);
-		qsort(cmap + ext_start, el_count - ext_start,
+		qsort(cmap, first_extension, sizeof(*cmap), compar_cameo);
+		qsort(cmap + first_extension, el_count - first_extension,
 			sizeof(*cmap), compar_cameo);
 	}
 
