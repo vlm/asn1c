@@ -459,7 +459,7 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
     size_in_bits = 8 * st->size - st->bits_unused;
 
     ASN_DEBUG(
-        "Encoding %s into %zu bits"
+        "Encoding %s into %" ASN_PRI_SIZE " bits"
         " (%ld..%ld, effective %d)%s",
         td->name, size_in_bits, csiz->lower_bound, csiz->upper_bound,
         csiz->effective_bits, ct_extensible ? " EXT" : "");
@@ -488,8 +488,8 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
     if(csiz->effective_bits >= 0 && !inext) {
         int add_trailer = (ssize_t)size_in_bits < csiz->lower_bound;
         ASN_DEBUG(
-            "Encoding %zu bytes (%ld), length (in %d bits) trailer %d; actual "
-            "value %zd",
+            "Encoding %" ASN_PRI_SIZE " bytes (%ld), length (in %d bits) trailer %d; actual "
+            "value %" ASN_PRI_SSIZE "",
             st->size, size_in_bits - csiz->lower_bound, csiz->effective_bits,
             add_trailer,
             add_trailer ? 0 : (ssize_t)size_in_bits - csiz->lower_bound);
@@ -516,7 +516,7 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
         ASN__ENCODED_OK(er);
     }
 
-    ASN_DEBUG("Encoding %zu bytes", st->size);
+    ASN_DEBUG("Encoding %" ASN_PRI_SIZE " bytes", st->size);
 
     buf = st->buf;
     do {
@@ -524,7 +524,7 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
         ssize_t maySave = uper_put_length(po, size_in_bits, &need_eom);
         if(maySave < 0) ASN__ENCODE_FAILED;
 
-        ASN_DEBUG("Encoding %zd of %zu", maySave, size_in_bits);
+        ASN_DEBUG("Encoding %" ASN_PRI_SSIZE " of %" ASN_PRI_SIZE "", maySave, size_in_bits);
 
         ret = per_put_many_bits(po, buf, maySave);
         if(ret) ASN__ENCODE_FAILED;

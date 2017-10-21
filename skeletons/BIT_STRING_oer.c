@@ -118,7 +118,7 @@ BIT_STRING_encode_oer(const asn_TYPE_descriptor_t *td,
     if(ct_size >= 0) {
         size_t ct_bytes = (ct_size + 7) >> 3;
         if(st->size > ct_bytes) {
-            ASN_DEBUG("More bits in BIT STRING %s (%zd) than constrained %zd",
+            ASN_DEBUG("More bits in BIT STRING %s (%" ASN_PRI_SSIZE ") than constrained %" ASN_PRI_SSIZE "",
                       td->name, 8 * st->size - st->bits_unused, ct_size);
             ASN__ENCODE_FAILED;
         }

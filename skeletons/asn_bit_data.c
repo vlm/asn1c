@@ -38,13 +38,12 @@ asn_bit_data_string(asn_bit_data_t *pd) {
 	static char buf[2][32];
 	static int n;
 	n = (n+1) % 2;
-	snprintf(buf[n], sizeof(buf[n]),
-		"{m=%ld span %+ld[%d..%d] (%d)}",
-		(long)pd->moved,
-		(((long)pd->buffer) & 0xf),
-		(int)pd->nboff, (int)pd->nbits,
-		(int)(pd->nbits - pd->nboff));
-	return buf[n];
+    snprintf(buf[n], sizeof(buf[n]),
+             "{m=%" ASN_PRI_SIZE " span %" ASN_PRI_SIZE "[%" ASN_PRI_SIZE
+             "..%" ASN_PRI_SIZE "] (%" ASN_PRI_SIZE ")}",
+             pd->moved, ((uintptr_t)(pd->buffer) & 0xf), pd->nboff, pd->nbits,
+             pd->nbits - pd->nboff);
+    return buf[n];
 }
 
 void

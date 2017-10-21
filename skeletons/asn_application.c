@@ -134,7 +134,7 @@ asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_ctx,
                              overrun_encoder_cb, &buf_key);
 
     if(er.encoded >= 0 && (size_t)er.encoded != buf_key.computed_size) {
-        ASN_DEBUG("asn_encode() returned %zd yet produced %zu bytes",
+        ASN_DEBUG("asn_encode() returned %" ASN_PRI_SSIZE " yet produced %" ASN_PRI_SIZE " bytes",
                   er.encoded, buf_key.computed_size);
         assert(er.encoded < 0 || (size_t)er.encoded == buf_key.computed_size);
     }

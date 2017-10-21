@@ -90,7 +90,7 @@ srandomdev(void) {
 #endif  /* JUNKTEST */
 
 /* Debug output function */
-static void
+static void CC_PRINTFLIKE(1, 2)
 DEBUG(const char *fmt, ...) {
     va_list ap;
     if(!opt_debug) return;
@@ -491,7 +491,7 @@ main(int ac, char *av[]) {
                     asn_fprint(stderr, pduType, structure);
                     exit(EX_UNAVAILABLE);
                 }
-                DEBUG("Encoded in %zd bytes of %s", erv.encoded,
+                DEBUG("Encoded in %" ASN_PRI_SSIZE " bytes of %s", erv.encoded,
                       ats_simple_name(osyntax));
             }
 
@@ -529,13 +529,14 @@ buffer_dump() {
     uint8_t *p = DynamicBuffer.data + DynamicBuffer.offset;
     uint8_t *e = p + DynamicBuffer.length - (DynamicBuffer.unbits ? 1 : 0);
     if(!opt_debug) return;
-    DEBUG("Buffer: { d=%p, o=%ld, l=%ld, u=%ld, a=%ld, s=%ld }",
-        DynamicBuffer.data,
-        (long)DynamicBuffer.offset,
-        (long)DynamicBuffer.length,
-        (long)DynamicBuffer.unbits,
-        (long)DynamicBuffer.allocated,
-        (long)DynamicBuffer.bytes_shifted);
+    DEBUG("Buffer: { d=%p, o=%" ASN_PRI_SIZE ", l=%" ASN_PRI_SIZE
+          ", u=%" ASN_PRI_SIZE ", a=%" ASN_PRI_SIZE ", s=%" ASN_PRI_SIZE " }",
+        (const void *)DynamicBuffer.data,
+        DynamicBuffer.offset,
+        DynamicBuffer.length,
+        DynamicBuffer.unbits,
+        DynamicBuffer.allocated,
+        (size_t)DynamicBuffer.bytes_shifted);
     for(; p < e; p++) {
         fprintf(stderr, " %c%c%c%c%c%c%c%c",
             ((*p >> 7) & 1) ? '1' : '0',
@@ -552,9 +553,9 @@ buffer_dump() {
         fprintf(stderr, " ");
         for(shift = 7; shift >= DynamicBuffer.unbits; shift--)
             fprintf(stderr, "%c", ((*p >> shift) & 1) ? '1' : '0');
-        fprintf(stderr, " %ld:%ld\n",
-            (long)DynamicBuffer.length - 1,
-            (long)8 - DynamicBuffer.unbits);
+        fprintf(stderr, " %" ASN_PRI_SSIZE ":%" ASN_PRI_SSIZE "\n",
+                (ssize_t)DynamicBuffer.length - 1,
+                (ssize_t)8 - DynamicBuffer.unbits);
     } else {
         fprintf(stderr, " %ld\n", (long)DynamicBuffer.length);
     }
@@ -633,7 +634,7 @@ buffer_shift_left(size_t offset, int bits) {
     }
     *ptr <<= bits;
 
-    DEBUG("Unbits [%d=>", (int)DynamicBuffer.unbits);
+    DEBUG("Unbits [%" ASN_PRI_SIZE "=>", DynamicBuffer.unbits);
     if(DynamicBuffer.unbits == 0) {
         DynamicBuffer.unbits += bits;
     } else {
@@ -644,16 +645,15 @@ buffer_shift_left(size_t offset, int bits) {
             DynamicBuffer.bytes_shifted++;
         }
     }
-    DEBUG("Unbits =>%d]", (int)DynamicBuffer.unbits);
+    DEBUG("Unbits =>%" ASN_PRI_SIZE "]", DynamicBuffer.unbits);
 
     buffer_dump();
 
-    DEBUG("Shifted. Now (o=%ld, u=%ld l=%ld)",
-        (long)DynamicBuffer.offset,
-        (long)DynamicBuffer.unbits,
-        (long)DynamicBuffer.length);
-    
-
+    DEBUG("Shifted. Now (o=%" ASN_PRI_SIZE ", u=%" ASN_PRI_SIZE
+          " l=%" ASN_PRI_SIZE ")",
+        DynamicBuffer.offset,
+        DynamicBuffer.unbits,
+        DynamicBuffer.length);
 }
 
 /*
@@ -663,15 +663,16 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
 
     if(bytes == 0) return;
 
-    DEBUG("=> add_bytes(%ld) { o=%ld l=%ld u=%ld, s=%ld }",
-        (long)bytes,
-        (long)DynamicBuffer.offset,
-        (long)DynamicBuffer.length,
-        (long)DynamicBuffer.unbits,
-        (long)DynamicBuffer.allocated);
+    DEBUG("=> add_bytes(%" ASN_PRI_SIZE ") { o=%" ASN_PRI_SIZE
+          " l=%" ASN_PRI_SIZE " u=%" ASN_PRI_SIZE ", s=%" ASN_PRI_SIZE " }",
+        bytes,
+        DynamicBuffer.offset,
+        DynamicBuffer.length,
+        DynamicBuffer.unbits,
+        DynamicBuffer.allocated);
 
     if(DynamicBuffer.allocated
-    >= (DynamicBuffer.offset + DynamicBuffer.length + bytes)) {
+       >= (DynamicBuffer.offset + DynamicBuffer.length + bytes)) {
         DEBUG("\tNo buffer reallocation is necessary");
     } else if(bytes <= DynamicBuffer.offset) {
         DEBUG("\tContents shifted by %ld", DynamicBuffer.offset);
@@ -711,12 +712,13 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
         buffer_shift_left(DynamicBuffer.length - bytes, bits);
     }
 
-    DEBUG("<= add_bytes(%ld) { o=%ld l=%ld u=%ld, s=%ld }",
-        (long)bytes,
-        (long)DynamicBuffer.offset,
-        (long)DynamicBuffer.length,
-        (long)DynamicBuffer.unbits,
-        (long)DynamicBuffer.allocated);
+    DEBUG("<= add_bytes(%" ASN_PRI_SIZE ") { o=%" ASN_PRI_SIZE
+          " l=%" ASN_PRI_SIZE " u=%" ASN_PRI_SIZE ", s=%" ASN_PRI_SIZE " }",
+        bytes,
+        DynamicBuffer.offset,
+        DynamicBuffer.length,
+        DynamicBuffer.unbits,
+        DynamicBuffer.allocated);
 }
 
 static int
@@ -803,7 +805,7 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
             i_size = rd;
         }
 
-        DEBUG("Decoding %ld bytes", (long)i_size);
+        DEBUG("Decoding %" ASN_PRI_SIZE " bytes", i_size);
 
 #ifdef    JUNKTEST
         junk_bytes_with_probability(i_bptr, i_size, opt_jprob);
@@ -833,10 +835,9 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
             /* Continue accumulating data */
         }
 
-        DEBUG("decode(%ld) consumed %ld+%db (%ld), code %d",
-            (long)DynamicBuffer.length,
-            (long)rval.consumed, ecbits, (long)i_size,
-            rval.code);
+        DEBUG("decode(%" ASN_PRI_SIZE ") consumed %" ASN_PRI_SIZE
+              "+%db (%" ASN_PRI_SIZE "), code %d",
+              DynamicBuffer.length, rval.consumed, ecbits, i_size, rval.code);
 
         if(DynamicBuffer.allocated == 0) {
             /*

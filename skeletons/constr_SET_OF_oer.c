@@ -153,7 +153,7 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         case -1:
             RETURN(RC_FAIL);
         default:
-    ASN_DEBUG("ptr[] = %02x, advancing %zu, length=%zu", *(const uint8_t *)ptr, len_size, length);
+    ASN_DEBUG("ptr[] = %02x, advancing %" ASN_PRI_SIZE ", length=%" ASN_PRI_SIZE "", *(const uint8_t *)ptr, len_size, length);
             ADVANCE(len_size);
             ctx->left = length;
         }

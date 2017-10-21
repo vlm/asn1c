@@ -126,4 +126,21 @@ typedef	unsigned int	uint32_t;
 #define RSSIZE_MAX   ((ssize_t)(RSIZE_MAX >> 1))
 #endif
 
+#if __STDC_VERSION__ >= 199901L
+#define ASN_PRI_SIZE "zu"
+#define ASN_PRI_SSIZE "zd"
+#define ASN_PRIuMAX PRIuMAX
+#define ASN_PRIdMAX PRIdMAX
+#else
+#define ASN_PRI_SIZE "lu"
+#define ASN_PRI_SSIZE "ld"
+#if LLONG_MAX > LONG_MAX
+#define ASN_PRIuMAX "llu"
+#define ASN_PRIdMAX "lld"
+#else
+#define ASN_PRIuMAX "lu"
+#define ASN_PRIdMAX "ld"
+#endif
+#endif
+
 #endif	/* ASN_SYSTEM_H */

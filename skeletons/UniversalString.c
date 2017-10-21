@@ -72,7 +72,7 @@ UniversalString_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
     if(st && st->buf) {
         if(st->size % 4) {
             ASN__CTFAIL(app_key, td, sptr,
-                        "%s: invalid size %zu not divisible by 4 (%s:%d)",
+                        "%s: invalid size %" ASN_PRI_SIZE " not divisible by 4 (%s:%d)",
                         td->name, st->size, __FILE__, __LINE__);
             return -1;
         }

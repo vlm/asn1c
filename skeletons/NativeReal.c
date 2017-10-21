@@ -473,7 +473,7 @@ NativeReal_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         ret = asn_REAL2double(&tmp, &d);
         if(tmp.buf != scratch) FREEMEM(tmp.buf);
         if(ret) {
-            ASN_DEBUG("REAL decoded in %zu bytes, but can't convert t double",
+            ASN_DEBUG("REAL decoded in %" ASN_PRI_SIZE " bytes, but can't convert t double",
                       real_body_len);
             ASN__DECODE_FAILED;
         }

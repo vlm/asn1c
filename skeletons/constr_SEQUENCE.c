@@ -202,7 +202,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		/*
 		 * MICROPHASE 1: Synchronize decoding.
 		 */
-		ASN_DEBUG("In %s SEQUENCE left %d, edx=%zu flags=%d"
+		ASN_DEBUG("In %s SEQUENCE left %d, edx=%" ASN_PRI_SIZE " flags=%d"
 				" opt=%d ec=%d",
 			td->name, (int)ctx->left, edx,
 			elements[edx].flags, elements[edx].optional,
@@ -226,7 +226,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		 * Fetch the T from TLV.
 		 */
 		tag_len = ber_fetch_tag(ptr, LEFT, &tlv_tag);
-		ASN_DEBUG("Current tag in %s SEQUENCE for element %zu "
+		ASN_DEBUG("Current tag in %s SEQUENCE for element %" ASN_PRI_SIZE " "
 			"(%s) is %s encoded in %d bytes, of frame %ld",
 			td->name, edx, elements[edx].name,
 			ber_tlv_tag_string(tlv_tag), (int)tag_len, (long)LEFT);
@@ -244,7 +244,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
                     RETURN(RC_WMORE);
                 }
             } else if(((const uint8_t *)ptr)[1] == 0) {
-                ASN_DEBUG("edx = %zu, opt = %d, ec=%d", edx,
+                ASN_DEBUG("edx = %" ASN_PRI_SIZE ", opt = %d, ec=%d", edx,
                           elements[edx].optional, td->elements_count);
                 if((edx + elements[edx].optional == td->elements_count)
                    || IN_EXTENSION_GROUP(specs, edx)) {
@@ -342,7 +342,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 			 */
 			if(!IN_EXTENSION_GROUP(specs,
 				edx + elements[edx].optional)) {
-				ASN_DEBUG("Unexpected tag %s (at %zu)",
+				ASN_DEBUG("Unexpected tag %s (at %" ASN_PRI_SIZE ")",
 					ber_tlv_tag_string(tlv_tag), edx);
 				ASN_DEBUG("Expected tag %s (%s)%s",
 					ber_tlv_tag_string(elements[edx].tag),
@@ -355,7 +355,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 				ssize_t skip;
 				edx += elements[edx].optional;
 
-				ASN_DEBUG("Skipping unexpected %s (at %zu)",
+				ASN_DEBUG("Skipping unexpected %s (at %" ASN_PRI_SIZE ")",
 					ber_tlv_tag_string(tlv_tag), edx);
 				skip = ber_skip_length(opt_codec_ctx,
 					BER_TLV_CONSTRUCTED(ptr),
@@ -410,7 +410,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 					memb_ptr2, ptr, LEFT,
 					elements[edx].tag_mode);
 		}
-		ASN_DEBUG("In %s SEQUENCE decoded %zu %s of %d "
+		ASN_DEBUG("In %s SEQUENCE decoded %" ASN_PRI_SIZE " %s of %d "
 			"in %d bytes rval.code %d, size=%d",
 			td->name, edx, elements[edx].type->name,
 			(int)LEFT, (int)rval.consumed, rval.code, (int)size);
@@ -532,7 +532,7 @@ SEQUENCE_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
             memb_ptr2 =
                 (const void *const *)((const char *)sptr + elm->memb_offset);
             if(!*memb_ptr2) {
-				ASN_DEBUG("Element %s %zu not present",
+				ASN_DEBUG("Element %s %" ASN_PRI_SIZE " not present",
 					elm->name, edx);
 				if(elm->optional)
 					continue;
@@ -554,7 +554,7 @@ SEQUENCE_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
 		if(erval.encoded == -1)
 			return erval;
 		computed_size += erval.encoded;
-		ASN_DEBUG("Member %zu %s estimated %ld bytes",
+		ASN_DEBUG("Member %" ASN_PRI_SIZE " %s estimated %ld bytes",
 			edx, elm->name, (long)erval.encoded);
 	}
 
@@ -596,7 +596,7 @@ SEQUENCE_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
 		if(tmperval.encoded == -1)
 			return tmperval;
 		computed_size -= tmperval.encoded;
-		ASN_DEBUG("Member %zu %s of SEQUENCE %s encoded in %ld bytes",
+		ASN_DEBUG("Member %" ASN_PRI_SIZE " %s of SEQUENCE %s encoded in %ld bytes",
 			edx, elm->name, td->name, (long)tmperval.encoded);
 	}
 
@@ -782,7 +782,7 @@ SEQUENCE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 		case XCT_UNKNOWN_OP:
 		case XCT_UNKNOWN_BO:
 
-			ASN_DEBUG("XER/SEQUENCE: tcv=%d, ph=%d, edx=%zu",
+			ASN_DEBUG("XER/SEQUENCE: tcv=%d, ph=%d, edx=%" ASN_PRI_SIZE "",
 				tcv, ctx->phase, edx);
 			if(ctx->phase != 1) {
 				break;	/* Really unexpected */
@@ -820,7 +820,7 @@ SEQUENCE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 				if(n != edx_end)
 					continue;
 			} else {
-				ASN_DEBUG("Out of defined members: %zu/%u",
+				ASN_DEBUG("Out of defined members: %" ASN_PRI_SIZE "/%u",
 					edx, td->elements_count);
 			}
 
@@ -828,7 +828,7 @@ SEQUENCE_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 			if(IN_EXTENSION_GROUP(specs,
 				edx + (edx < td->elements_count
 					? elements[edx].optional : 0))) {
-				ASN_DEBUG("Got anticipated extension at %zu",
+				ASN_DEBUG("Got anticipated extension at %" ASN_PRI_SIZE "",
 					edx);
 				/*
 				 * Check for (XCT_BOTH or XCT_UNKNOWN_BO)
@@ -1197,7 +1197,7 @@ SEQUENCE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		bmlength = uper_get_nslength(pd);
 		if(bmlength < 0) ASN__DECODE_STARVED;
 
-		ASN_DEBUG("Extensions %zd present in %s", bmlength, td->name);
+		ASN_DEBUG("Extensions %" ASN_PRI_SSIZE " present in %s", bmlength, td->name);
 
 		epres = (uint8_t *)MALLOC((bmlength + 15) >> 3);
 		if(!epres) ASN__DECODE_STARVED;
@@ -1331,7 +1331,7 @@ SEQUENCE__handle_extensions(const asn_TYPE_descriptor_t *td, const void *sptr,
 			present = 1;
 		}
 
-        ASN_DEBUG("checking %s:%s (@%zu) present => %d", elm->name,
+        ASN_DEBUG("checking %s:%s (@%" ASN_PRI_SIZE ") present => %d", elm->name,
                   elm->type->name, edx, present);
         exts_count++;
         exts_present += present;
@@ -1439,7 +1439,7 @@ SEQUENCE_encode_uper(const asn_TYPE_descriptor_t *td,
             memb_ptr2 =
                 (const void *const *)((const char *)sptr + elm->memb_offset);
             if(!*memb_ptr2) {
-				ASN_DEBUG("Element %s %zu not present",
+				ASN_DEBUG("Element %s %" ASN_PRI_SIZE " not present",
 					elm->name, edx);
 				if(elm->optional)
 					continue;

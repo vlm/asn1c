@@ -131,7 +131,7 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         ASN_DEBUG("OER SEQUENCE %s Decoding PHASE 0", td->name);
 
         ASN_DEBUG(
-            "Expecting preamble bits %zu for %s (including %d extension bits)",
+            "Expecting preamble bits %" ASN_PRI_SIZE " for %s (including %d extension bits)",
             preamble_bits, td->name, has_extensions_bit);
 
         if(preamble_bytes > size) {
