@@ -432,7 +432,7 @@ SEQUENCE_encode_oer(const asn_TYPE_descriptor_t *td,
                     const void *memb_ptr = element_ptr(sptr, elm);
                     uint32_t has_component = memb_ptr != NULL;
                     if(has_component && elm->default_value_cmp
-                       && elm->default_value_cmp(&memb_ptr) == 0) {
+                       && elm->default_value_cmp(memb_ptr) == 0) {
                         has_component = 0;
                     }
                     ret = asn_put_few_bits(&preamble, has_component, 1);

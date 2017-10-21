@@ -73,3 +73,7 @@ SEQUENCE { ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
 SEQUENCE { ..., null NULL, ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
 SEQUENCE { ..., one NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
 SEQUENCE { ..., null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+
+
+SEQUENCE { one BOOLEAN OPTIONAL, two PrintableString (SIZE(1)), three VisibleString (SIZE(1)) DEFAULT "Z" }
+SEQUENCE { one [1] BOOLEAN OPTIONAL, two [2] BOOLEAN, three [3] BOOLEAN DEFAULT TRUE, four PrintableString (SIZE(1)), five VisibleString (SIZE(1)) DEFAULT "Z" }
