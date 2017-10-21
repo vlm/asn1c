@@ -117,8 +117,10 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
     asn_struct_ctx_t *ctx; /* Decoder context */
     size_t consumed_myself = 0; /* Consumed bytes from ptr. */
 
-    (void)opt_codec_ctx;
     (void)constraints;
+
+    if(ASN__STACK_OVERFLOW_CHECK(opt_codec_ctx))
+        ASN__DECODE_FAILED;
 
     /*
      * Create the target structure if it is not present already.
