@@ -981,7 +981,7 @@ asn_TYPE_operation_t asn_OP_SET_OF = {
 
 asn_random_fill_result_t
 SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
-                   const asn_encoding_constraints_t *constr,
+                   const asn_encoding_constraints_t *constraints,
                    size_t max_length) {
     const asn_SET_OF_specifics_t *specs =
         (const asn_SET_OF_specifics_t *)td->specifics;
@@ -990,11 +990,11 @@ SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
     const asn_TYPE_member_t *elm = td->elements;
     void *st = *sptr;
+    long slb = 0;   /* Lower size bound */
+    long sub = 5;   /* Upper size bound */
     size_t rnd_len;
 
     if(max_length == 0) return result_skipped;
-
-    (void)constr;
 
     if(st == NULL) {
         st = (*sptr = CALLOC(1, specs->struct_size));
@@ -1003,13 +1003,28 @@ SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         }
     }
 
-    rnd_len = asn_random_between(0, 5);
+    if(!constraints || !constraints->per_constraints)
+        constraints = &td->encoding_constraints;
+    if(constraints->per_constraints) {
+        const asn_per_constraint_t *pc = &constraints->per_constraints->size;
+        if(pc->flags & APC_SEMI_CONSTRAINED) {
+            slb = pc->lower_bound;
+            sub = pc->lower_bound + 5;
+        } else if(pc->flags & APC_CONSTRAINED) {
+            slb = pc->lower_bound;
+            sub = pc->upper_bound;
+            if(sub - slb > 5) sub = slb + 5;
+        }
+    }
+
+    rnd_len = asn_random_between(slb, sub);
     for(; rnd_len > 0; rnd_len--) {
         asn_anonymous_set_ *list = _A_SET_FROM_VOID(st);
         void *ptr = 0;
         asn_random_fill_result_t tmpres = elm->type->op->random_fill(
             elm->type, &ptr, &elm->encoding_constraints,
-            max_length > res_ok.length ? max_length - res_ok.length : 0);
+            (max_length > res_ok.length ? max_length - res_ok.length : 0)
+                / rnd_len);
         switch(tmpres.code) {
         case ARFILL_OK:
             ASN_SET_ADD(list, ptr);

@@ -41,6 +41,7 @@ TESTS += bundles/13-UTCTime-bundle.txt
 TESTS += bundles/14-GeneralizedTime-bundle.txt
 TESTS += bundles/15-CHOICE-bundle.txt
 TESTS += bundles/16-SEQUENCE-bundle.txt
+TESTS += bundles/17-SEQUENCE-OF-bundle.txt
 
 EXTRA_DIST =                    \
     random-test-driver.c        \
