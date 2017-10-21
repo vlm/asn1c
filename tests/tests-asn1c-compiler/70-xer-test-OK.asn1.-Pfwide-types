@@ -239,7 +239,7 @@ static asn_CHOICE_specifics_t asn_SPC_PDU_specs_1 = {
 	.tag2el = asn_MAP_PDU_tag2el_1,
 	.tag2el_count = 15,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = 15	/* Extensions start */
+	.first_extension = 15	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",
@@ -344,8 +344,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	.tag2el = asn_MAP_Sequence_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	"Sequence",
@@ -684,8 +683,7 @@ asn_SEQUENCE_specifics_t asn_SPC_ExtensibleSequence_specs_1 = {
 	.tag2el = asn_MAP_ExtensibleSequence_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	0,	/* Start extensions */
-	4	/* Stop extensions */
+	1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
 	"ExtensibleSequence",
@@ -765,8 +763,7 @@ asn_SEQUENCE_specifics_t asn_SPC_ExtensibleSequence2_specs_1 = {
 	.tag2el = asn_MAP_ExtensibleSequence2_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	0,	/* Start extensions */
-	3	/* Stop extensions */
+	1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence2 = {
 	"ExtensibleSequence2",
@@ -1558,7 +1555,7 @@ asn_CHOICE_specifics_t asn_SPC_SimpleChoice_specs_1 = {
 	.tag2el = asn_MAP_SimpleChoice_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_SimpleChoice = {
 	"SimpleChoice",

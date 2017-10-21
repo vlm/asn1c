@@ -110,8 +110,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_toBeSigned_specs_2 = {
 	.tag2el = asn_MAP_toBeSigned_tag2el_2,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_toBeSigned_2 = {
@@ -173,8 +172,7 @@ asn_SEQUENCE_specifics_t asn_SPC_SIGNED_15P0_specs_1 = {
 	.tag2el = asn_MAP_SIGNED_15P0_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_SIGNED_15P0 = {
 	"SIGNED",

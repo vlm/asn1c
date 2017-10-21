@@ -137,8 +137,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_LogLine_specs_1 = {
 	.tag2el = asn_MAP_LogLine_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	3	/* Stop extensions */
+	2,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_LogLine = {
 	"LogLine",
@@ -290,8 +289,7 @@ asn_SEQUENCE_specifics_t asn_SPC_VariablePartSet_specs_1 = {
 	.tag2el = asn_MAP_VariablePartSet_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	3	/* Stop extensions */
+	2,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_VariablePartSet = {
 	"VariablePartSet",
@@ -466,8 +464,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_vrange_specs_4 = {
 	.tag2el = asn_MAP_vrange_tag2el_4,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	3	/* Stop extensions */
+	2,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_vrange_4 = {
@@ -518,7 +515,7 @@ asn_CHOICE_specifics_t asn_SPC_VariablePart_specs_1 = {
 	.tag2el = asn_MAP_VariablePart_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = 2	/* Extensions start */
+	.first_extension = 2	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_VariablePart = {
 	"VariablePart",
@@ -709,8 +706,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_notify_specs_7 = {
 	.tag2el = asn_MAP_notify_tag2el_7,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	3	/* Stop extensions */
+	2,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_notify_7 = {
@@ -762,8 +758,7 @@ asn_SEQUENCE_specifics_t asn_SPC_ActionItem_specs_1 = {
 	.tag2el = asn_MAP_ActionItem_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	3	/* Stop extensions */
+	2,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_ActionItem = {
 	"ActionItem",

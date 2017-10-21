@@ -231,7 +231,7 @@ static asn_CHOICE_specifics_t asn_SPC_T3_specs_1 = {
 	.tag2el = asn_MAP_T3_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = 1	/* Extensions start */
+	.first_extension = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T3 = {
 	"T3",
@@ -306,7 +306,7 @@ static asn_CHOICE_specifics_t asn_SPC_T4_specs_1 = {
 	.tag2el = asn_MAP_T4_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = 1	/* Extensions start */
+	.first_extension = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T4 = {
 	"T4",

@@ -91,8 +91,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 	.tag2el_count = 4,	/* Count of tags in the map */
 	asn_MAP_PDU_oms_1,	/* Optional members */
 	0, 4,	/* Root/Additions */
-	-1,	/* Start extensions */
-	5	/* Stop extensions */
+	0,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",
@@ -191,8 +190,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Singleton_specs_1 = {
 	.tag2el_count = 1,	/* Count of tags in the map */
 	asn_MAP_Singleton_oms_1,	/* Optional members */
 	1, 0,	/* Root/Additions */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Singleton = {
 	"Singleton",
@@ -306,7 +304,7 @@ asn_CHOICE_specifics_t asn_SPC_PDU_2_specs_1 = {
 	.tag2el_count = 3,	/* Count of tags in the map */
 	.to_canonical_order = asn_MAP_PDU_2_to_canonical_1,
 	.from_canonical_order = asn_MAP_PDU_2_from_canonical_1,
-	.ext_start = 1	/* Extensions start */
+	.first_extension = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU_2 = {
 	"PDU-2",

@@ -105,8 +105,7 @@ asn_SEQUENCE_specifics_t asn_SPC_TestType_16P0_specs_1 = {
 	.tag2el = asn_MAP_TestType_16P0_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_TestType_16P0 = {
 	"TestType",
@@ -170,8 +169,7 @@ asn_SEQUENCE_specifics_t asn_SPC_TestType_16P1_specs_3 = {
 	.tag2el = asn_MAP_TestType_16P1_tag2el_3,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_TestType_16P1 = {
 	"TestType",
@@ -254,7 +252,7 @@ static asn_CHOICE_specifics_t asn_SPC_TestChoice_specs_1 = {
 	.tag2el = asn_MAP_TestChoice_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_TestChoice = {
 	"TestChoice",
@@ -379,8 +377,7 @@ asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P0_specs_1 = {
 	.tag2el = asn_MAP_AutoType_34P0_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_AutoType_34P0 = {
 	"AutoType",
@@ -421,8 +418,7 @@ asn_SEQUENCE_specifics_t asn_SPC_AutoType_34P1_specs_3 = {
 	.tag2el = asn_MAP_AutoType_34P1_tag2el_3,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_AutoType_34P1 = {
 	"AutoType",
@@ -505,7 +501,7 @@ static asn_CHOICE_specifics_t asn_SPC_AutoChoice_specs_1 = {
 	.tag2el = asn_MAP_AutoChoice_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_AutoChoice = {
 	"AutoChoice",

@@ -102,7 +102,7 @@ static asn_CHOICE_specifics_t asn_SPC_e_specs_6 = {
 	.tag2el = asn_MAP_e_tag2el_6,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_e_6 = {
@@ -151,7 +151,7 @@ static asn_CHOICE_specifics_t asn_SPC_h_specs_9 = {
 	.tag2el = asn_MAP_h_tag2el_9,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_h_9 = {
@@ -221,7 +221,7 @@ static asn_CHOICE_specifics_t asn_SPC_b_specs_3 = {
 	.tag2el = asn_MAP_b_tag2el_3,
 	.tag2el_count = 5,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_b_3 = {
@@ -276,8 +276,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
 	.tag2el = asn_MAP_T_tag2el_1,
 	.tag2el_count = 6,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",

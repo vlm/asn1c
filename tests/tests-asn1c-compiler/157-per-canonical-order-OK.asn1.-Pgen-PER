@@ -98,7 +98,7 @@ static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
 	.tag2el_count = 4,	/* Count of tags in the map */
 	.to_canonical_order = asn_MAP_T_to_canonical_1,
 	.from_canonical_order = asn_MAP_T_from_canonical_1,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",

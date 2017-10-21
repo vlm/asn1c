@@ -42,8 +42,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_Message_specs_1 = {
 	.tag2el = asn_MAP_Message_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Message = {
 	"Message",
@@ -233,7 +232,7 @@ static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	.tag2el_count = 2,	/* Count of tags in the map */
 	.to_canonical_order = asn_MAP_value_to_canonical_3,
 	.from_canonical_order = asn_MAP_value_from_canonical_3,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_value_3 = {
@@ -282,8 +281,7 @@ asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_30P0_specs_1 = {
 	.tag2el = asn_MAP_SpecializedContent_30P0_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_SpecializedContent_30P0 = {
 	"SpecializedContent",

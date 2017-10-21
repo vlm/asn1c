@@ -171,8 +171,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Test_structure_1_specs_1 = {
 	.tag2el = asn_MAP_Test_structure_1_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Test_structure_1 = {
 	"Test-structure-1",
@@ -333,7 +332,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice_1_specs_1 = {
 	.tag2el = asn_MAP_Choice_1_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice_1 = {
 	"Choice-1",

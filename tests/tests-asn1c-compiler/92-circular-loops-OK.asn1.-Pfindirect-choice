@@ -161,8 +161,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Everything_specs_1 = {
 	.tag2el = asn_MAP_Everything_tag2el_1,
 	.tag2el_count = 10,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Everything = {
 	"Everything",
@@ -259,7 +258,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 	.tag2el = asn_MAP_Choice1_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = 1	/* Extensions start */
+	.first_extension = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	"Choice1",
@@ -356,7 +355,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	.tag2el = asn_MAP_Choice2_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = 1	/* Extensions start */
+	.first_extension = 1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",
@@ -455,8 +454,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_a_specs_2 = {
 	.tag2el = asn_MAP_a_tag2el_2,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_a_2 = {
@@ -554,7 +552,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice3_specs_1 = {
 	.tag2el = asn_MAP_Choice3_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice3 = {
 	"Choice3",
@@ -685,8 +683,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_2 = {
 	.tag2el = asn_MAP_Member_tag2el_2,
 	.tag2el_count = 5,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	3,	/* Start extensions */
-	6	/* Stop extensions */
+	4,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_Member_2 = {
@@ -833,8 +830,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	.tag2el = asn_MAP_Sequence_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	5	/* Stop extensions */
+	2,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	"Sequence",
@@ -960,8 +956,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_b_specs_3 = {
 	.tag2el = asn_MAP_b_tag2el_3,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_b_3 = {
@@ -1013,8 +1008,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Alpha_specs_1 = {
 	.tag2el = asn_MAP_Alpha_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Alpha = {
 	"Alpha",
@@ -1098,8 +1092,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Beta_specs_1 = {
 	.tag2el = asn_MAP_Beta_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Beta = {
 	"Beta",
@@ -1196,8 +1189,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Gamma_specs_1 = {
 	.tag2el = asn_MAP_Gamma_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Gamma = {
 	"Gamma",

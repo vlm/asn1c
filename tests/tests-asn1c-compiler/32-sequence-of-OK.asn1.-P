@@ -161,8 +161,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Error_specs_1 = {
 	0,	/* No top level tags */
 	0,	/* No tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Error = {
 	"Error",
@@ -286,8 +285,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_SeqWithMandatory_specs_1 = {
 	.tag2el = asn_MAP_SeqWithMandatory_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_SeqWithMandatory = {
 	"SeqWithMandatory",
@@ -412,8 +410,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_SeqWithOptional_specs_1 = {
 	.tag2el = asn_MAP_SeqWithOptional_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_SeqWithOptional = {
 	"SeqWithOptional",

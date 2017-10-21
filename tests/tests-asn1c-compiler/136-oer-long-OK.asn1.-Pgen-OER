@@ -541,8 +541,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
 	.tag2el_count = 12,	/* Count of tags in the map */
 	asn_MAP_T_oms_1,	/* Optional members */
 	1, 6,	/* Root/Additions */
-	5,	/* Start extensions */
-	13	/* Stop extensions */
+	6,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",

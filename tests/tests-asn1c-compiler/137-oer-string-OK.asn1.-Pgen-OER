@@ -213,8 +213,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_unconstrained_specs_2 = {
 	.tag2el = asn_MAP_unconstrained_tag2el_2,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_unconstrained_2 = {
@@ -276,8 +275,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_constrained_specs_6 = {
 	.tag2el = asn_MAP_constrained_tag2el_6,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_constrained_6 = {
@@ -329,8 +327,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_T_specs_1 = {
 	.tag2el = asn_MAP_T_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",

@@ -157,7 +157,7 @@ static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	.tag2el = asn_MAP_value_tag2el_3,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_value_3 = {
@@ -206,8 +206,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_Frame_specs_1 = {
 	.tag2el = asn_MAP_Frame_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	3	/* Stop extensions */
+	2,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Frame = {
 	"Frame",
@@ -254,8 +253,7 @@ asn_SEQUENCE_specifics_t asn_SPC_PrimitiveMessage_specs_1 = {
 	0,	/* No top level tags */
 	0,	/* No tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_PrimitiveMessage = {
 	"PrimitiveMessage",
@@ -301,8 +299,7 @@ asn_SEQUENCE_specifics_t asn_SPC_ComplexMessage_specs_1 = {
 	0,	/* No top level tags */
 	0,	/* No tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_ComplexMessage = {
 	"ComplexMessage",
