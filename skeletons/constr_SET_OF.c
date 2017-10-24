@@ -941,6 +941,69 @@ SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	return rv;
 }
 
+struct _uper_encoded {
+	unsigned char *data;
+	size_t len;
+	size_t capacity;
+	int seq;
+};
+
+static void
+_uper_encoded_list_free(struct _uper_encoded *encoded_list, int num_encoded) {
+	for(int idx = 0; idx < num_encoded; idx++) {
+		FREEMEM(encoded_list[idx].data);
+		memset(&encoded_list[idx], 0, sizeof(encoded_list[idx]));
+	}
+	FREEMEM(encoded_list);
+}
+
+static int
+_uper_out(const void *data, size_t size, void *op_key) {
+	struct _uper_encoded *encoded = op_key;
+	size_t remaining = encoded->capacity - encoded->len;
+	if(remaining < size) {
+		void *ptr;
+		/* realloc a minimum of 32 bytes at a time */
+		size_t grow = size - remaining;
+		if (grow < 32) {
+			grow = 32;
+		}
+		ptr = REALLOC(encoded->data, encoded->capacity + grow);
+		if (!ptr) {
+			return -1;
+		}
+		encoded->data = ptr;
+		encoded->capacity += grow;
+	}
+	memcpy(&encoded->data[encoded->len], data, size);
+	encoded->len += size;
+	return 0;
+}
+
+static int
+_uper_encoded_compar(const void *a, const void *b) {
+	/*
+	 "For CANONICAL-PER the encoding of the component values of the set-of type
+	 shall appear in ascending order, the component encodings being compared as
+	 bit strings padded at their trailing ends with as many as seven 0 bits to
+	 an octet boundary, and with 0-octets added to the shorter one if necessary
+	 to make the length equal to that of the longer one."
+	 */
+	const struct _uper_encoded *encoded_a = a;
+	const struct _uper_encoded *encoded_b = b;
+	int result = memcmp(encoded_a->data, encoded_b->data, encoded_a->len > encoded_b->len ? encoded_b->len : encoded_a->len);
+	if(result == 0) {
+		if(encoded_a->len > encoded_b->len) {
+			/* a is greater */
+			result = 1;
+		} else if(encoded_b->len > encoded_a->len) {
+			/* b is greater */
+			result = -1;
+		}
+	}
+	return result;
+}
+
 asn_enc_rval_t
 SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 	const asn_per_constraints_t *constraints, const void *sptr, asn_per_outp_t *po) {
@@ -949,6 +1012,8 @@ SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 	asn_enc_rval_t er;
 	asn_TYPE_member_t *elm = td->elements;
 	int seq;
+	struct _uper_encoded *encoded_list;
+	int num_encoded = 0;
 
 	if(!sptr) ASN__ENCODE_FAILED;
 	list = _A_CSET_FROM_VOID(sptr);
@@ -984,6 +1049,30 @@ SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 			ASN__ENCODE_FAILED;
 	}
 
+	encoded_list = MALLOC(list->count * sizeof(*encoded_list));
+	if(!encoded_list) {
+		ASN__ENCODE_FAILED;
+	}
+
+	/* build an encoded list */
+	for(seq = 0; seq < list->count; seq++) {
+		void *memb_ptr = list->array[seq];
+		if(!memb_ptr) {
+			_uper_encoded_list_free(encoded_list, num_encoded);
+			ASN__ENCODE_FAILED;
+		}
+		encoded_list[seq].seq = seq;
+		er = uper_encode(elm->type, memb_ptr, _uper_out, &encoded_list[seq]);
+		if(er.encoded == -1) {
+			_uper_encoded_list_free(encoded_list, num_encoded);
+			ASN__ENCODE_FAILED;
+		}
+		num_encoded++;
+	}
+
+	/* sort the list */
+	qsort(encoded_list, num_encoded, sizeof(*encoded_list), _uper_encoded_compar);
+
 	for(seq = -1; seq < list->count;) {
 		ssize_t mayEncode;
 		if(seq < 0) seq = 0;
@@ -991,19 +1080,28 @@ SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 			mayEncode = list->count;
 		} else {
 			mayEncode = uper_put_length(po, list->count - seq, 0);
-			if(mayEncode < 0) ASN__ENCODE_FAILED;
+			if(mayEncode < 0) {
+				_uper_encoded_list_free(encoded_list, num_encoded);
+				ASN__ENCODE_FAILED;
+			}
 		}
 
 		while(mayEncode--) {
-			void *memb_ptr = list->array[seq++];
-			if(!memb_ptr) ASN__ENCODE_FAILED;
+			void *memb_ptr = list->array[encoded_list[seq++].seq];
+			if(!memb_ptr) {
+				_uper_encoded_list_free(encoded_list, num_encoded);
+				ASN__ENCODE_FAILED;
+			}
 			er = elm->type->op->uper_encoder(elm->type,
 				elm->encoding_constraints.per_constraints, memb_ptr, po);
-			if(er.encoded == -1)
+			if(er.encoded == -1) {
+				_uper_encoded_list_free(encoded_list, num_encoded);
 				ASN__ENCODE_FAILED;
+			}
 		}
 	}
 
+	_uper_encoded_list_free(encoded_list, num_encoded);
 	ASN__ENCODED_OK(er);
 }
 
