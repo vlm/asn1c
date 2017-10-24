@@ -149,7 +149,7 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 	const asn_per_constraint_t *ct;
 	asn_enc_rval_t er;
 	const asn_TYPE_member_t *elm = td->elements;
-	int seq;
+	size_t encoded_edx;
 
 	if(!sptr) ASN__ENCODE_FAILED;
     list = _A_CSEQUENCE_FROM_VOID(sptr);
@@ -158,58 +158,95 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 
 	ASN_DEBUG("Encoding %s as SEQUENCE OF (%d)", td->name, list->count);
 
-	if(constraints) ct = &constraints->size;
-	else if(td->encoding_constraints.per_constraints)
-		ct = &td->encoding_constraints.per_constraints->size;
-	else ct = 0;
+    if(constraints) ct = &constraints->size;
+    else if(td->encoding_constraints.per_constraints)
+        ct = &td->encoding_constraints.per_constraints->size;
+    else ct = 0;
 
-	/* If extensible constraint, check if size is in root */
-	if(ct) {
-		int not_in_root = (list->count < ct->lower_bound
-				|| list->count > ct->upper_bound);
-		ASN_DEBUG("lb %ld ub %ld %s",
-			ct->lower_bound, ct->upper_bound,
-			ct->flags & APC_EXTENSIBLE ? "ext" : "fix");
-		if(ct->flags & APC_EXTENSIBLE) {
-			/* Declare whether size is in extension root */
-			if(per_put_few_bits(po, not_in_root, 1))
-				ASN__ENCODE_FAILED;
-			if(not_in_root) ct = 0;
-		} else if(not_in_root && ct->effective_bits >= 0)
-			ASN__ENCODE_FAILED;
-	}
+    /* If extensible constraint, check if size is in root */
+    if(ct) {
+        int not_in_root =
+            (list->count < ct->lower_bound || list->count > ct->upper_bound);
+        ASN_DEBUG("lb %ld ub %ld %s", ct->lower_bound, ct->upper_bound,
+                  ct->flags & APC_EXTENSIBLE ? "ext" : "fix");
+        if(ct->flags & APC_EXTENSIBLE) {
+            /* Declare whether size is in extension root */
+            if(per_put_few_bits(po, not_in_root, 1)) ASN__ENCODE_FAILED;
+            if(not_in_root) ct = 0;
+        } else if(not_in_root && ct->effective_bits >= 0) {
+            ASN__ENCODE_FAILED;
+        }
 
-	if(ct && ct->effective_bits >= 0) {
-		/* X.691, #19.5: No length determinant */
-		if(per_put_few_bits(po, list->count - ct->lower_bound,
-				ct->effective_bits))
-			ASN__ENCODE_FAILED;
-	}
+        if(ct && ct->effective_bits >= 0) {
+            /* X.691, #19.5: No length determinant */
+            if(per_put_few_bits(po, list->count - ct->lower_bound,
+                                ct->effective_bits))
+                ASN__ENCODE_FAILED;
+        }
+    }
 
-	for(seq = -1; seq < list->count;) {
-		ssize_t mayEncode;
-		if(seq < 0) seq = 0;
-		if(ct && ct->effective_bits >= 0) {
-			mayEncode = list->count;
-		} else {
-			mayEncode = uper_put_length(po, list->count - seq, 0);
-			if(mayEncode < 0) ASN__ENCODE_FAILED;
-		}
 
-		while(mayEncode--) {
-			void *memb_ptr = list->array[seq++];
-			if(!memb_ptr) ASN__ENCODE_FAILED;
-			er = elm->type->op->uper_encoder(elm->type,
-				elm->encoding_constraints.per_constraints, memb_ptr, po);
-			if(er.encoded == -1)
-				ASN__ENCODE_FAILED;
-		}
-	}
+    for(encoded_edx = 0; (ssize_t)encoded_edx < list->count;) {
+        ssize_t may_encode;
+        size_t edx;
+        int need_eom = 0;
+
+        if(ct && ct->effective_bits >= 0) {
+            may_encode = list->count;
+        } else {
+            may_encode =
+                uper_put_length(po, list->count - encoded_edx, &need_eom);
+            if(may_encode < 0) ASN__ENCODE_FAILED;
+        }
+
+        for(edx = encoded_edx; edx < encoded_edx + may_encode; edx++) {
+            void *memb_ptr = list->array[edx];
+            if(!memb_ptr) ASN__ENCODE_FAILED;
+            er = elm->type->op->uper_encoder(
+                elm->type, elm->encoding_constraints.per_constraints, memb_ptr,
+                po);
+            if(er.encoded == -1) ASN__ENCODE_FAILED;
+        }
+
+        if(need_eom && uper_put_length(po, 0, 0))
+            ASN__ENCODE_FAILED; /* End of Message length */
+
+        encoded_edx += may_encode;
+    }
 
 	ASN__ENCODED_OK(er);
 }
 
 #endif  /* ASN_DISABLE_PER_SUPPORT */
+
+int
+SEQUENCE_OF_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+               const void *bptr) {
+    const asn_anonymous_sequence_ *a = _A_CSEQUENCE_FROM_VOID(aptr);
+    const asn_anonymous_sequence_ *b = _A_CSEQUENCE_FROM_VOID(bptr);
+    ssize_t idx;
+
+    if(a && b) {
+        ssize_t common_length = (a->count < b->count ? a->count : b->count);
+        for(idx = 0; idx < common_length; idx++) {
+            int ret = td->elements->type->op->compare_struct(
+                td->elements->type, a->array[idx], b->array[idx]);
+            if(ret) return ret;
+        }
+
+        if(idx < b->count) /* more elements in b */
+            return -1;    /* a is shorter, so put it first */
+        if(idx < a->count) return 1;
+
+    } else if(!a) {
+        return -1;
+    } else if(!b) {
+        return 1;
+    }
+
+    return 0;
+}
+
 
 asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
 	SEQUENCE_OF_free,

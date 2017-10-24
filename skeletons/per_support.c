@@ -32,6 +32,7 @@ uper_get_length(asn_per_data_t *pd, int ebits, size_t lower_bound,
         value = ((value & 0x3f) << 8) | per_get_few_bits(pd, 8);
         return value; /* potential -1 from per_get_few_bits passes through. */
     } else if(value < 0) {
+        ASN_DEBUG("END of stream reached for PER");
         return -1;
     }
     value &= 0x3f; /* this is "m" from X.691, #11.9.3.8 */

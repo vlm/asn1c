@@ -1,0 +1,34 @@
+SET OF NULL
+SET (SIZE(0)) OF NULL
+SET (SIZE(1)) OF NULL
+SET (SIZE(0..2)) OF NULL
+SET (SIZE(1..2)) OF NULL
+SET (SIZE(1..MAX)) OF NULL
+
+SET OF BOOLEAN
+SET (SIZE(0)) OF BOOLEAN
+SET (SIZE(1)) OF BOOLEAN
+SET (SIZE(0..2)) OF BOOLEAN
+SET (SIZE(1..2)) OF BOOLEAN
+SET (SIZE(1..MAX)) OF BOOLEAN
+
+SET OF PrintableString (SIZE(1))
+SET (SIZE(0)) OF PrintableString (SIZE(1))
+SET (SIZE(1)) OF PrintableString (SIZE(1))
+SET (SIZE(0..2)) OF PrintableString (SIZE(1))
+SET (SIZE(1..2)) OF PrintableString (SIZE(1))
+SET (SIZE(1..MAX)) OF PrintableString (SIZE(1))
+
+SET OF PrintableString (FROM("A".."Z"))
+SET (SIZE(0)) OF PrintableString (FROM("A".."Z"))
+SET (SIZE(1)) OF PrintableString (FROM("A".."Z"))
+SET (SIZE(0..2)) OF PrintableString (FROM("A".."Z"))
+SET (SIZE(1..2)) OF PrintableString (FROM("A".."Z"))
+SET (SIZE(1..MAX)) OF PrintableString (FROM("A".."Z"))
+
+SET OF PrintableString (FROM("A".."Z"))
+
+SET OF NULL    -- RMAX=70000
+SET OF BOOLEAN -- RMAX=70000
+SET (SIZE(2..MAX)) OF BOOLEAN -- RMAX=70000
+SET OF PrintableString (SIZE(1))  --RMAX=16384

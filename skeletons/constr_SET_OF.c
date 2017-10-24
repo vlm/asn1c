@@ -340,7 +340,8 @@ SET_OF__encode_sorted_free(struct _el_buffer *el_buf, size_t count) {
 }
 
 enum SET_OF__encode_method {
-    SOES_DER
+    SOES_DER,   /* Distinguished Encoding Rules */
+    SOES_CUPER  /* Canonical Unaligned Packed Encoding Rules */
 };
 
 static struct _el_buffer *
@@ -361,7 +362,7 @@ SET_OF__encode_sorted(const asn_TYPE_member_t *elm,
 	 */
     for(edx = 0; edx < list->count; edx++) {
         const void *memb_ptr = list->array[edx];
-        struct _el_buffer *encoded_el = &encoded_els[edx];
+        struct _el_buffer *encoding_el = &encoded_els[edx];
         asn_enc_rval_t erval;
 
         if(!memb_ptr) break;
@@ -372,7 +373,17 @@ SET_OF__encode_sorted(const asn_TYPE_member_t *elm,
         switch(method) {
         case SOES_DER:
             erval = elm->type->op->der_encoder(elm->type, memb_ptr, 0, elm->tag,
-                                               _el_addbytes, encoded_el);
+                                               _el_addbytes, encoding_el);
+            break;
+        case SOES_CUPER:
+            erval = uper_encode(elm->type,
+                                elm->encoding_constraints.per_constraints,
+                                memb_ptr, _el_addbytes, encoding_el);
+            if(erval.encoded != -1) {
+                size_t extra_bits = erval.encoded % 8;
+                assert(encoding_el->length == (size_t)(erval.encoded + 7) / 8);
+                encoding_el->bits_unused = (8 - extra_bits) & 0x7;
+            }
             break;
         default:
             assert(!"Unreachable");
@@ -883,6 +894,8 @@ SET_OF_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 	return 0;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
+
 asn_dec_rval_t
 SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                    const asn_TYPE_descriptor_t *td,
@@ -936,9 +949,9 @@ SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		int i;
 		if(nelems < 0) {
 			nelems = uper_get_length(pd, -1, 0, &repeat);
-			ASN_DEBUG("Got to decode %d elements (eff %d)",
-				(int)nelems, (int)(ct ? ct->effective_bits : -1));
-			if(nelems < 0) ASN__DECODE_STARVED;
+            ASN_DEBUG("Got to decode %" ASN_PRI_SSIZE " elements (eff %d)",
+                      nelems, (int)(ct ? ct->effective_bits : -1));
+            if(nelems < 0) ASN__DECODE_STARVED;
 		}
 
 		for(i = 0; i < nelems; i++) {
@@ -973,13 +986,173 @@ SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	return rv;
 }
 
+asn_enc_rval_t
+SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
+                   const asn_per_constraints_t *constraints, const void *sptr,
+                   asn_per_outp_t *po) {
+    const asn_anonymous_set_ *list;
+    const asn_per_constraint_t *ct;
+    const asn_TYPE_member_t *elm = td->elements;
+    struct _el_buffer *encoded_els;
+    asn_enc_rval_t er;
+    size_t encoded_edx;
+
+    if(!sptr) ASN__ENCODE_FAILED;
+
+    list = _A_CSET_FROM_VOID(sptr);
+
+    er.encoded = 0;
+
+    ASN_DEBUG("Encoding %s as SEQUENCE OF (%d)", td->name, list->count);
+
+    if(constraints) ct = &constraints->size;
+    else if(td->encoding_constraints.per_constraints)
+        ct = &td->encoding_constraints.per_constraints->size;
+    else ct = 0;
+
+    /* If extensible constraint, check if size is in root */
+    if(ct) {
+        int not_in_root =
+            (list->count < ct->lower_bound || list->count > ct->upper_bound);
+        ASN_DEBUG("lb %ld ub %ld %s", ct->lower_bound, ct->upper_bound,
+                  ct->flags & APC_EXTENSIBLE ? "ext" : "fix");
+        if(ct->flags & APC_EXTENSIBLE) {
+            /* Declare whether size is in extension root */
+            if(per_put_few_bits(po, not_in_root, 1)) ASN__ENCODE_FAILED;
+            if(not_in_root) ct = 0;
+        } else if(not_in_root && ct->effective_bits >= 0) {
+            ASN__ENCODE_FAILED;
+        }
+
+        if(ct && ct->effective_bits >= 0) {
+            /* X.691, #19.5: No length determinant */
+            if(per_put_few_bits(po, list->count - ct->lower_bound,
+                                ct->effective_bits))
+                ASN__ENCODE_FAILED;
+        }
+    }
+
+    /*
+     * Canonical UPER #22.1 mandates dynamic sorting of the SET OF elements
+     * according to their encodings. Build an array of the encoded elements.
+     */
+    encoded_els = SET_OF__encode_sorted(elm, list, SOES_CUPER);
+
+    for(encoded_edx = 0; (ssize_t)encoded_edx < list->count;) {
+        ssize_t may_encode;
+        ssize_t edx;
+        int need_eom = 0;
+
+        if(ct && ct->effective_bits >= 0) {
+            may_encode = list->count;
+        } else {
+            may_encode =
+                uper_put_length(po, list->count - encoded_edx, &need_eom);
+            if(may_encode < 0) ASN__ENCODE_FAILED;
+        }
+
+        for(edx = 0; edx < may_encode; edx++) {
+            const struct _el_buffer *el = &encoded_els[edx];
+            if(asn_put_many_bits(po, el->buf,
+                                 (8 * el->length) - el->bits_unused) < 0) {
+                break;
+            }
+        }
+
+        if(need_eom && uper_put_length(po, 0, 0))
+            ASN__ENCODE_FAILED; /* End of Message length */
+
+        encoded_edx += may_encode;
+    }
+
+    SET_OF__encode_sorted_free(encoded_els, list->count);
+
+    if((ssize_t)encoded_edx == list->count) {
+        ASN__ENCODED_OK(er);
+    } else {
+        ASN__ENCODE_FAILED;
+    }
+}
+
+
+#endif  /* ASN_DISABLE_PER_SUPPORT */
+
+struct comparable_ptr {
+    const asn_TYPE_descriptor_t *td;
+    const void *sptr;
+};
+
+static int
+SET_OF__compare_cb(const void *aptr, const void *bptr) {
+    const struct comparable_ptr *a = aptr;
+    const struct comparable_ptr *b = bptr;
+    assert(a->td == b->td);
+    return a->td->op->compare_struct(a->td, a->sptr, b->sptr);
+}
+
 int
 SET_OF_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
                const void *bptr) {
-	(void)td;
-	(void)aptr;
-	(void)bptr;
-	/* Not implemented yet. */
+    const asn_anonymous_set_ *a = _A_CSET_FROM_VOID(aptr);
+    const asn_anonymous_set_ *b = _A_CSET_FROM_VOID(bptr);
+
+    if(a && b) {
+        struct comparable_ptr *asorted;
+        struct comparable_ptr *bsorted;
+        ssize_t common_length;
+        ssize_t idx;
+
+        if(a->count == 0) {
+            if(b->count) return -1;
+            return 0;
+        } else if(b->count == 0) {
+            return 1;
+        }
+
+        asorted = MALLOC(a->count * sizeof(asorted[0]));
+        bsorted = MALLOC(b->count * sizeof(bsorted[0]));
+        if(!asorted || !bsorted) {
+            FREEMEM(asorted);
+            FREEMEM(bsorted);
+            return -1;
+        }
+
+        for(idx = 0; idx < a->count; idx++) {
+            asorted[idx].td = td->elements->type;
+            asorted[idx].sptr = a->array[idx];
+        }
+
+        for(idx = 0; idx < b->count; idx++) {
+            bsorted[idx].td = td->elements->type;
+            bsorted[idx].sptr = b->array[idx];
+        }
+
+        qsort(asorted, a->count, sizeof(asorted[0]), SET_OF__compare_cb);
+        qsort(bsorted, b->count, sizeof(bsorted[0]), SET_OF__compare_cb);
+
+        common_length = (a->count < b->count ? a->count : b->count);
+        for(idx = 0; idx < common_length; idx++) {
+            int ret = td->elements->type->op->compare_struct(
+                td->elements->type, asorted[idx].sptr, bsorted[idx].sptr);
+            if(ret) {
+                FREEMEM(asorted);
+                FREEMEM(bsorted);
+                return ret;
+            }
+        }
+
+        FREEMEM(asorted);
+        FREEMEM(bsorted);
+
+        if(idx < b->count) /* more elements in b */
+            return -1;     /* a is shorter, so put it first */
+        if(idx < a->count) return 1;
+    } else if(!a) {
+        return -1;
+    } else if(!b) {
+        return 1;
+    }
+
 	return 0;
 }
 
@@ -1004,7 +1177,7 @@ asn_TYPE_operation_t asn_OP_SET_OF = {
 	0,
 #else
 	SET_OF_decode_uper,
-	0,	/* SET_OF_encode_uper */
+	SET_OF_encode_uper,
 #endif /* ASN_DISABLE_PER_SUPPORT */
 	SET_OF_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -1022,8 +1195,9 @@ SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     asn_random_fill_result_t result_skipped = {ARFILL_SKIPPED, 0};
     const asn_TYPE_member_t *elm = td->elements;
     void *st = *sptr;
+    long max_elements = 5;
     long slb = 0;   /* Lower size bound */
-    long sub = 5;   /* Upper size bound */
+    long sub = 0;   /* Upper size bound */
     size_t rnd_len;
 
     if(max_length == 0) return result_skipped;
@@ -1035,21 +1209,56 @@ SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         }
     }
 
+    switch(asn_random_between(0, 6)) {
+    case 0: max_elements = 0; break;
+    case 1: max_elements = 1; break;
+    case 2: max_elements = 5; break;
+    case 3: max_elements = max_length; break;
+    case 4: max_elements = max_length / 2; break;
+    case 5: max_elements = max_length / 4; break;
+    default: break;
+    }
+    sub = slb + max_elements;
+
     if(!constraints || !constraints->per_constraints)
         constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
         const asn_per_constraint_t *pc = &constraints->per_constraints->size;
         if(pc->flags & APC_SEMI_CONSTRAINED) {
             slb = pc->lower_bound;
-            sub = pc->lower_bound + 5;
+            sub = pc->lower_bound + max_elements;
         } else if(pc->flags & APC_CONSTRAINED) {
             slb = pc->lower_bound;
             sub = pc->upper_bound;
-            if(sub - slb > 5) sub = slb + 5;
+            if(sub - slb > max_elements) sub = slb + max_elements;
         }
     }
 
-    rnd_len = asn_random_between(slb, sub);
+    /* Bias towards edges of allowed space */
+    switch(asn_random_between(0, 4)) {
+    case 0:
+        rnd_len = asn_random_between(slb, sub);
+        break;
+    case 1:
+        if(slb < sub) {
+            rnd_len = asn_random_between(slb + 1, sub);
+            break;
+        }
+        /* Fall through */
+    case 2:
+        rnd_len = asn_random_between(slb, slb);
+        break;
+    case 3:
+        if(slb < sub) {
+            rnd_len = asn_random_between(slb, sub - 1);
+            break;
+        }
+        /* Fall through */
+    case 4:
+        rnd_len = asn_random_between(sub, sub);
+        break;
+    }
+
     for(; rnd_len > 0; rnd_len--) {
         asn_anonymous_set_ *list = _A_SET_FROM_VOID(st);
         void *ptr = 0;
@@ -1060,7 +1269,7 @@ SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         switch(tmpres.code) {
         case ARFILL_OK:
             ASN_SET_ADD(list, ptr);
-            res_ok.length += tmpres.code;
+            res_ok.length += tmpres.length;
             break;
         case ARFILL_SKIPPED:
             break;

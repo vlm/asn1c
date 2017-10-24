@@ -16,9 +16,14 @@ extern "C" {
  * A set specialized functions dealing with the SEQUENCE OF type.
  * Generally implemented using SET OF.
  */
+asn_struct_compare_f SEQUENCE_OF_compare;
+der_type_encoder_f SEQUENCE_OF_encode_der;
+xer_type_encoder_f SEQUENCE_OF_encode_xer;
+per_type_encoder_f SEQUENCE_OF_encode_uper;
+extern asn_TYPE_operation_t asn_OP_SEQUENCE_OF;
+
 #define	SEQUENCE_OF_free	SET_OF_free
 #define	SEQUENCE_OF_print	SET_OF_print
-#define	SEQUENCE_OF_compare	SET_OF_compare
 #define	SEQUENCE_OF_constraint	SET_OF_constraint
 #define	SEQUENCE_OF_decode_ber	SET_OF_decode_ber
 #define	SEQUENCE_OF_decode_xer	SET_OF_decode_xer
@@ -26,10 +31,6 @@ extern "C" {
 #define	SEQUENCE_OF_decode_oer  SET_OF_decode_oer
 #define	SEQUENCE_OF_encode_oer  SET_OF_encode_oer
 #define	SEQUENCE_OF_random_fill SET_OF_random_fill
-der_type_encoder_f SEQUENCE_OF_encode_der;
-xer_type_encoder_f SEQUENCE_OF_encode_xer;
-per_type_encoder_f SEQUENCE_OF_encode_uper;
-extern asn_TYPE_operation_t asn_OP_SEQUENCE_OF;
 
 #ifdef __cplusplus
 }

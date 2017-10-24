@@ -153,7 +153,6 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         case -1:
             RETURN(RC_FAIL);
         default:
-    ASN_DEBUG("ptr[] = %02x, advancing %" ASN_PRI_SIZE ", length=%" ASN_PRI_SIZE "", *(const uint8_t *)ptr, len_size, length);
             ADVANCE(len_size);
             ctx->left = length;
         }
@@ -164,6 +163,8 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         /* Decode components of the extension root */
         asn_TYPE_member_t *elm = td->elements;
         asn_anonymous_set_ *list = _A_SET_FROM_VOID(st);
+        const void *base_ptr = ptr;
+        ber_tlv_len_t base_ctx_left = ctx->left;
 
         assert(td->elements_count == 1);
 
@@ -181,6 +182,15 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                     RETURN(RC_FAIL);
                 } else {
                     ctx->ptr = 0;
+                    /*
+                     * This check is to avoid compression bomb with
+                     * specs like SEQUENCE/SET OF NULL which don't
+                     * consume data at all.
+                     */
+                    if(rv.consumed == 0 && base_ptr == ptr
+                       && (base_ctx_left - ctx->left) > 200) {
+                        ASN__DECODE_FAILED;
+                    }
                     break;
                 }
             case RC_WMORE:
