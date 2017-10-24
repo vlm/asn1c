@@ -964,8 +964,13 @@ SET_OF_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 			ASN_DEBUG("%s SET OF %s decoded %d, %p",
 				td->name, elm->type->name, rv.code, ptr);
 			if(rv.code == RC_OK) {
-				if(ASN_SET_ADD(list, ptr) == 0)
+				if(ASN_SET_ADD(list, ptr) == 0) {
+                    if(rv.consumed == 0 && nelems > 200) {
+                        /* Protect from SET OF NULL compression bombs. */
+                        ASN__DECODE_FAILED;
+                    }
 					continue;
+                }
 				ASN_DEBUG("Failed to add element into %s",
 					td->name);
 				/* Fall through */
