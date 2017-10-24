@@ -139,6 +139,8 @@ cb_failed:
     ASN__ENCODE_FAILED;
 }
 
+#ifndef ASN_DISABLE_PER_SUPPORT
+
 asn_enc_rval_t
 SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
                         const asn_per_constraints_t *constraints,
@@ -207,6 +209,8 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 	ASN__ENCODED_OK(er);
 }
 
+#endif  /* ASN_DISABLE_PER_SUPPORT */
+
 asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
@@ -219,14 +223,14 @@ asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
 	0,
 	0,
 #else
-	SEQUENCE_OF_decode_oer,
-	SEQUENCE_OF_encode_oer,
+	SEQUENCE_OF_decode_oer, /* Same as SET OF decoder. */
+	SEQUENCE_OF_encode_oer, /* Same as SET OF encoder */
 #endif  /* ASN_DISABLE_OER_SUPPORT */
 #ifdef ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
 #else
-	SEQUENCE_OF_decode_uper,
+	SEQUENCE_OF_decode_uper, /* Same as SET OF decoder */
 	SEQUENCE_OF_encode_uper,
 #endif /* ASN_DISABLE_PER_SUPPORT */
 	SEQUENCE_OF_random_fill,
