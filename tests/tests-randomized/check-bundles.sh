@@ -199,7 +199,7 @@ compile_and_test() {
     # Do a LibFuzzer based testing
     fuzz_cmd="${ASAN_ENV_FLAGS} UBSAN_OPTIONS=print_stacktrace=1"
     fuzz_cmd="${fuzz_cmd} ./random-test-driver"
-    fuzz_cmd="${fuzz_cmd} -timeout=3 -max_total_time=${FUZZ_TIME} -max_len=128"
+    fuzz_cmd="${fuzz_cmd} -timeout=3 -max_total_time=${FUZZ_TIME} -max_len=${rmax}"
 
     if grep "^fuzz:" Makefile >/dev/null ; then
         echo "No fuzzer defined, skipping fuzzing"
