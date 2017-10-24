@@ -1243,6 +1243,7 @@ SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
 
     /* Bias towards edges of allowed space */
     switch(asn_random_between(0, 4)) {
+    default:
     case 0:
         rnd_len = asn_random_between(slb, sub);
         break;
