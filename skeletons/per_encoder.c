@@ -80,21 +80,27 @@ typedef struct enc_dyn_arg {
 } enc_dyn_arg;
 static int
 encode_dyn_cb(const void *buffer, size_t size, void *key) {
-	enc_dyn_arg *arg = key;
-	if(arg->length + size >= arg->allocated) {
-		void *p;
-		arg->allocated = arg->allocated ? (arg->allocated << 2) : size;
-		p = REALLOC(arg->buffer, arg->allocated);
-		if(!p) {
-			FREEMEM(arg->buffer);
-			memset(arg, 0, sizeof(*arg));
-			return -1;
-		}
-		arg->buffer = p;
-	}
-	memcpy(((char *)arg->buffer) + arg->length, buffer, size);
-	arg->length += size;
-	return 0;
+    enc_dyn_arg *arg = key;
+    if(arg->length + size >= arg->allocated) {
+        size_t new_size = arg->allocated ? arg->allocated : 8;
+        void *p;
+
+        do {
+            new_size <<= 2;
+        } while(arg->length + size >= new_size);
+
+        p = REALLOC(arg->buffer, new_size);
+        if(!p) {
+            FREEMEM(arg->buffer);
+            memset(arg, 0, sizeof(*arg));
+            return -1;
+        }
+        arg->buffer = p;
+        arg->allocated = new_size;
+    }
+    memcpy(((char *)arg->buffer) + arg->length, buffer, size);
+    arg->length += size;
+    return 0;
 }
 ssize_t
 uper_encode_to_new_buffer(const asn_TYPE_descriptor_t *td,

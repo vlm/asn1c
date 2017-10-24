@@ -279,10 +279,12 @@ static int _el_addbytes(const void *buffer, size_t size, void *el_buf_ptr) {
     struct _el_buffer *el_buf = (struct _el_buffer *)el_buf_ptr;
 
     if(el_buf->length + size > el_buf->allocated_size) {
-        size_t new_size;
+        size_t new_size = el_buf->allocated_size ? el_buf->allocated_size : 8;
         void *p;
 
-        new_size = el_buf->allocated_size ? 2 * el_buf->allocated_size : 16;
+        do {
+            new_size <<= 2;
+        } while(el_buf->length + size > new_size);
 
         p = REALLOC(el_buf->buf, new_size);
         if(p) {
