@@ -17,6 +17,7 @@
         https://medium.com/@levwalkin/compile-llvm-clang-libfuzzer-b61e82718430
       then ensure the new clang is in the way:
         CC=clang CXX=clang++ ./configure --enable-Werror --enable-test-fuzzer
+    * uper_encode() API got new argument (breaks API compatibility).
 
     FIXES:
     * CVE-2017-12966 verified not present.

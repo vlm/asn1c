@@ -77,7 +77,7 @@ save_object_as(PDU_t *st, enum expectation exp, enum enctype how) {
 	 */
 	switch(how) {
 	case AS_PER:
-		rval = uper_encode(&asn_DEF_PDU, st,
+		rval = uper_encode(&asn_DEF_PDU, 0, st,
 			_buf_writer, 0);
 		if(exp == EXP_PER_NOCOMP)
 			assert(rval.encoded == -1);

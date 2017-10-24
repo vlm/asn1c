@@ -2,16 +2,41 @@
 #include <asn_internal.h>
 #include <per_encoder.h>
 
-static asn_enc_rval_t uper_encode_internal(const asn_TYPE_descriptor_t *td,
-                                           const asn_per_constraints_t *,
-                                           const void *sptr,
-                                           asn_app_consume_bytes_f *cb,
-                                           void *app_key);
+static int _uper_encode_flush_outp(asn_per_outp_t *po);
 
 asn_enc_rval_t
-uper_encode(const asn_TYPE_descriptor_t *td, const void *sptr,
+uper_encode(const asn_TYPE_descriptor_t *td,
+            const asn_per_constraints_t *constraints, const void *sptr,
             asn_app_consume_bytes_f *cb, void *app_key) {
-    return uper_encode_internal(td, 0, sptr, cb, app_key);
+    asn_per_outp_t po;
+    asn_enc_rval_t er;
+
+    /*
+     * Invoke type-specific encoder.
+     */
+    if(!td || !td->op->uper_encoder)
+        ASN__ENCODE_FAILED;	/* PER is not compiled in */
+
+    po.buffer = po.tmpspace;
+    po.nboff = 0;
+    po.nbits = 8 * sizeof(po.tmpspace);
+    po.output = cb;
+    po.op_key = app_key;
+    po.flushed_bytes = 0;
+
+    er = td->op->uper_encoder(td, constraints, sptr, &po);
+    if(er.encoded != -1) {
+        size_t bits_to_flush;
+
+        bits_to_flush = ((po.buffer - po.tmpspace) << 3) + po.nboff;
+
+        /* Set number of bits encoded to a firm value */
+        er.encoded = (po.flushed_bytes << 3) + bits_to_flush;
+
+        if(_uper_encode_flush_outp(&po)) ASN__ENCODE_FAILED;
+    }
+
+    return er;
 }
 
 /*
@@ -35,16 +60,17 @@ static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
 }
 
 asn_enc_rval_t
-uper_encode_to_buffer(const asn_TYPE_descriptor_t *td, const void *sptr,
-                      void *buffer, size_t buffer_size) {
+uper_encode_to_buffer(const asn_TYPE_descriptor_t *td,
+                      const asn_per_constraints_t *constraints,
+                      const void *sptr, void *buffer, size_t buffer_size) {
     enc_to_buf_arg key;
 
-	key.buffer = buffer;
-	key.left = buffer_size;
+    key.buffer = buffer;
+    key.left = buffer_size;
 
-	if(td) ASN_DEBUG("Encoding \"%s\" using UNALIGNED PER", td->name);
+    if(td) ASN_DEBUG("Encoding \"%s\" using UNALIGNED PER", td->name);
 
-	return uper_encode_internal(td, 0, sptr, encode_to_buffer_cb, &key);
+    return uper_encode(td, constraints, sptr, encode_to_buffer_cb, &key);
 }
 
 typedef struct enc_dyn_arg {
@@ -79,7 +105,7 @@ uper_encode_to_new_buffer(const asn_TYPE_descriptor_t *td,
 
 	memset(&key, 0, sizeof(key));
 
-	er = uper_encode_internal(td, constraints, sptr, encode_dyn_cb, &key);
+	er = uper_encode(td, constraints, sptr, encode_dyn_cb, &key);
 	switch(er.encoded) {
 	case -1:
 		FREEMEM(key.buffer);
@@ -121,41 +147,5 @@ _uper_encode_flush_outp(asn_per_outp_t *po) {
 	}
 
 	return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
-}
-
-static asn_enc_rval_t
-uper_encode_internal(const asn_TYPE_descriptor_t *td,
-                     const asn_per_constraints_t *constraints, const void *sptr,
-                     asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_per_outp_t po;
-	asn_enc_rval_t er;
-
-	/*
-	 * Invoke type-specific encoder.
-	 */
-	if(!td || !td->op->uper_encoder)
-		ASN__ENCODE_FAILED;	/* PER is not compiled in */
-
-	po.buffer = po.tmpspace;
-	po.nboff = 0;
-	po.nbits = 8 * sizeof(po.tmpspace);
-	po.output = cb;
-	po.op_key = app_key;
-	po.flushed_bytes = 0;
-
-	er = td->op->uper_encoder(td, constraints, sptr, &po);
-	if(er.encoded != -1) {
-		size_t bits_to_flush;
-
-		bits_to_flush = ((po.buffer - po.tmpspace) << 3) + po.nboff;
-
-		/* Set number of bits encoded to a firm value */
-		er.encoded = (po.flushed_bytes << 3) + bits_to_flush;
-
-		if(_uper_encode_flush_outp(&po))
-			ASN__ENCODE_FAILED;
-	}
-
-	return er;
 }
 

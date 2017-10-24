@@ -20,7 +20,7 @@ verify(int testNo, T_t *ti) {
 		ti->small32range, ti->full32range,
 		ti->unsigned32, ti->unsplit32);
 
-	er = uper_encode_to_buffer(&asn_DEF_T, ti, buf, sizeof buf);
+	er = uper_encode_to_buffer(&asn_DEF_T, 0, ti, buf, sizeof buf);
 	assert(er.encoded == 8 * sizeof(buf));
 
 	rv = uper_decode(0, &asn_DEF_T, (void *)&to, buf, sizeof buf, 0, 0);

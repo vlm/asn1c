@@ -16,7 +16,7 @@ verify(int testNo, T_t *ti) {
 	unsigned char buf[8];
 	T_t *to = 0;
 
-	er = uper_encode_to_buffer(&asn_DEF_T, ti, buf, sizeof buf);
+	er = uper_encode_to_buffer(&asn_DEF_T, 0, ti, buf, sizeof buf);
 	fprintf(stderr, "%d IN: %d => %zd\n", testNo, ti->present, er.encoded);
 	assert(er.encoded >= 1);
 	assert(er.encoded <= (ssize_t)(8 * sizeof(buf)));

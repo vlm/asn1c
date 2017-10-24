@@ -66,7 +66,7 @@ save_object_as(PDU_t *st, enum enctype how) {
 	 */
 	switch(how) {
 	case AS_PER:
-		rval = uper_encode(&asn_DEF_PDU, st, _buf_writer, 0);
+		rval = uper_encode(&asn_DEF_PDU, 0, st, _buf_writer, 0);
 		assert(rval.encoded > 0);
 		fprintf(stderr, "SAVED OBJECT IN SIZE %d\n", buf_offset);
 		return;

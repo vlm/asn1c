@@ -48,7 +48,7 @@ verify(int testNo, T_t *ti) {
 		i2l(&ti->signed33), i2l(&ti->signed33ext)
     );
 
-	er = uper_encode_to_buffer(&asn_DEF_T, ti, buf, sizeof buf);
+	er = uper_encode_to_buffer(&asn_DEF_T, 0, ti, buf, sizeof buf);
 	assert(er.encoded >= 33 + 42 + 33 + 1 + 33);
 
 	rv = uper_decode(0, &asn_DEF_T, (void *)&to, buf, sizeof buf, 0, 0);
@@ -83,7 +83,7 @@ NO_encode(int testNo, T_t *ti) {
 		i2l(&ti->signed33), i2l(&ti->signed33ext)
     );
 
-	er = uper_encode_to_buffer(&asn_DEF_T, ti, buf, sizeof buf);
+	er = uper_encode_to_buffer(&asn_DEF_T, 0, ti, buf, sizeof buf);
 	assert(er.encoded == -1);
 }
 

@@ -248,7 +248,7 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
         /* Fall through. */
     case ATS_UNALIGNED_CANONICAL_PER:
         if(td->op->uper_encoder) {
-            er = uper_encode(td, sptr, callback, callback_key);
+            er = uper_encode(td, 0, sptr, callback, callback_key);
             if(er.encoded == -1) {
                 if(er.failed_type && er.failed_type->op->uper_encoder) {
                     errno = EBADF;  /* Structure has incorrect form. */

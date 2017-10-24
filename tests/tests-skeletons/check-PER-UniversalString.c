@@ -22,7 +22,7 @@ check_encode_failed(asn_TYPE_descriptor_t *td, const char *buf, size_t buflen) {
     fprintf(stderr, "%s\n", error_buf);
 
     /* Second signal that something is wrong with the length */
-    asn_enc_rval_t enc = uper_encode_to_buffer(td, st_in, uper_output_buffer,
+    asn_enc_rval_t enc = uper_encode_to_buffer(td, 0, st_in, uper_output_buffer,
                                                sizeof(uper_output_buffer));
     assert(enc.encoded == -1);
 
@@ -42,7 +42,7 @@ check_round_trip_OK(asn_TYPE_descriptor_t *td, const char *buf, size_t buflen) {
     int st_in_ct = asn_check_constraints(td, st_in, NULL, NULL);
     assert(st_in_ct == 0);
     asn_enc_rval_t enc =
-        uper_encode_to_buffer(td, st_in,
+        uper_encode_to_buffer(td, 0, st_in,
                               uper_output_buffer, sizeof(uper_output_buffer));
     assert(enc.encoded > 0);
 

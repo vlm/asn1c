@@ -22,6 +22,7 @@ struct asn_TYPE_descriptor_s;	/* Forward declaration */
  */
 asn_enc_rval_t uper_encode(
     const struct asn_TYPE_descriptor_s *type_descriptor,
+    const asn_per_constraints_t *constraints,
     const void *struct_ptr,                    /* Structure to be encoded */
     asn_app_consume_bytes_f *consume_bytes_cb, /* Data collector */
     void *app_key                              /* Arbitrary callback argument */
@@ -34,6 +35,7 @@ asn_enc_rval_t uper_encode(
  */
 asn_enc_rval_t uper_encode_to_buffer(
     const struct asn_TYPE_descriptor_s *type_descriptor,
+    const asn_per_constraints_t *constraints,
     const void *struct_ptr, /* Structure to be encoded */
     void *buffer,           /* Pre-allocated buffer */
     size_t buffer_size      /* Initial buffer size (max) */
