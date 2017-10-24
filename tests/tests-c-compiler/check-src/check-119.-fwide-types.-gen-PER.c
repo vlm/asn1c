@@ -42,7 +42,7 @@ _buf_writer(const void *buffer, size_t size, void *app_key) {
 	(void)app_key;
 	assert(buf_offset + size < sizeof(buf));
 	memcpy(buf + buf_offset, buffer, size);
-#ifdef EMIT_ASN_DEBUG
+#ifdef ASN_EMIT_DEBUG
 	unsigned char *b, *bend;
 	b = buf + buf_offset;
 	bend = b + size;
@@ -140,7 +140,7 @@ load_object_from(const char *fname, enum expectation expectation, unsigned char 
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,
 					fbuf_left);
-#ifdef  EMIT_ASN_DEBUG
+#ifdef  ASN_EMIT_DEBUG
 			if(st) {
 				fprintf(stderr, "=== currently ===\n");
 				asn_fprint(stderr, &asn_DEF_PDU, st);

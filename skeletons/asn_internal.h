@@ -31,12 +31,17 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 #define	asn_debug_indent	0
 #define ASN_DEBUG_INDENT_ADD(i) do{}while(0)
 
+#ifdef  EMIT_ASN_DEBUG
+#warning "Use ASN_EMIT_DEBUG instead of EMIT_ASN_DEBUG"
+#define ASN_EMIT_DEBUG  EMIT_ASN_DEBUG
+#endif
+
 /*
  * A macro for debugging the ASN.1 internals.
  * You may enable or override it.
  */
 #ifndef	ASN_DEBUG	/* If debugging code is not defined elsewhere... */
-#if	EMIT_ASN_DEBUG == 1	/* And it was asked to emit this code... */
+#if	ASN_EMIT_DEBUG == 1	/* And it was asked to emit this code... */
 #if __STDC_VERSION__ >= 199901L
 #ifdef	ASN_THREAD_SAFE
 /* Thread safety requires sacrifice in output indentation:
@@ -58,13 +63,13 @@ int asn_debug_indent;
 void CC_PRINTFLIKE(1, 2) ASN_DEBUG_f(const char *fmt, ...);
 #define	ASN_DEBUG	ASN_DEBUG_f
 #endif	/* C99 */
-#else	/* EMIT_ASN_DEBUG != 1 */
+#else	/* ASN_EMIT_DEBUG != 1 */
 #if __STDC_VERSION__ >= 199901L
 #define ASN_DEBUG(...) do{}while(0)
 #else   /* not C99 */
 static void CC_PRINTFLIKE(1, 2) ASN_DEBUG(const char *fmt, ...) { (void)fmt; }
 #endif  /* C99 or better */
-#endif	/* EMIT_ASN_DEBUG */
+#endif	/* ASN_EMIT_DEBUG */
 #endif	/* ASN_DEBUG */
 
 /*

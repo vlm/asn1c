@@ -112,7 +112,7 @@ load_object_from(enum expectation expectation, unsigned char *fbuf, size_t size,
 					fbuf_chunk < fbuf_left
 						? fbuf_chunk : fbuf_left,
 					fbuf_left);
-#ifdef  EMIT_ASN_DEBUG
+#ifdef  ASN_EMIT_DEBUG
 			if(st) {
 				fprintf(stderr, "=== currently ===\n");
 				asn_fprint(stderr, &asn_DEF_PDU, st);

@@ -40,8 +40,8 @@ AC_ARG_ENABLE([ASN_DEBUG],
                   [produce debug log during `make check` testing])],
   [enable_asn_debug=$enableval], [enable_asn_debug=no])
   AS_IF([test x$enable_asn_debug != xno], [
-      TESTSUITE_CFLAGS="-DEMIT_ASN_DEBUG"
-      SKELETONS_CFLAGS="-DEMIT_ASN_DEBUG"
+      TESTSUITE_CFLAGS="-DASN_EMIT_DEBUG"
+      SKELETONS_CFLAGS="-DASN_EMIT_DEBUG"
   ])
 
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"])
