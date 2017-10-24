@@ -28,7 +28,6 @@ SET (SIZE(1..MAX)) OF PrintableString (FROM("A".."Z"))
 
 SET OF PrintableString (FROM("A".."Z"))
 
-SET OF NULL    -- RMAX=70000
 SET OF BOOLEAN -- RMAX=70000
 SET (SIZE(2..MAX)) OF BOOLEAN -- RMAX=70000
 SET OF PrintableString (SIZE(1))  --RMAX=16384
