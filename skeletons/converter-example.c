@@ -990,7 +990,6 @@ junk_bytes_with_probability(uint8_t *buf, size_t size, double prob) {
             byte ^= BPROB(0x01);
         }
         if(byte != *ptr) {
-            DEBUG("Junk buf[%d] %02x -> %02x", ptr - buf, *ptr, byte);
             *ptr = byte;
         }
     }
