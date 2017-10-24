@@ -213,7 +213,9 @@ static int
 emit_ioc_cell(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
     OUT("{ \"%s\", ", cell->field->Identifier);
 
-    if(cell->value->meta_type == AMT_VALUE) {
+    if(!cell->value) {
+        /* Ignore */
+    } else if(cell->value->meta_type == AMT_VALUE) {
         GEN_INCLUDE(asn1c_type_name(arg, cell->value, TNF_INCLUDE));
         OUT("aioc__value, ");
         OUT("&asn_DEF_%s, ", asn1c_type_name(arg, cell->value, TNF_SAFE));

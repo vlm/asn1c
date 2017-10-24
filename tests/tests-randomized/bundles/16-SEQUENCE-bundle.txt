@@ -1,0 +1,79 @@
+SEQUENCE { }
+SEQUENCE { ... }
+SEQUENCE { null NULL }
+SEQUENCE { null NULL OPTIONAL }
+SEQUENCE { ..., null NULL }
+SEQUENCE { ..., null NULL OPTIONAL }
+SEQUENCE { ..., null BOOLEAN }
+SEQUENCE { ..., null BOOLEAN DEFAULT FALSE }
+SEQUENCE { ..., null BOOLEAN DEFAULT TRUE }
+SEQUENCE { str IA5String }
+SEQUENCE { str IA5String OPTIONAL }
+SEQUENCE { str IA5String (SIZE(0)) }
+SEQUENCE { str IA5String (SIZE(0)) OPTIONAL }
+SEQUENCE { str IA5String (SIZE(1)) }
+SEQUENCE { str IA5String (SIZE(1)) OPTIONAL }
+
+SEQUENCE { null NULL }
+SEQUENCE { null NULL, ... }
+SEQUENCE { one NULL, two [2] NULL }
+SEQUENCE { one [1] NULL, two [2] NULL }
+SEQUENCE { one [2] NULL, two [1] NULL }
+SEQUENCE { one [1] NULL, two [3] NULL }
+SEQUENCE { one [3] NULL, two [1] NULL }
+SEQUENCE { one [3] NULL, two [1] NULL, three [2] NULL }
+SEQUENCE { one [4] NULL, two [3] NULL, three [1] NULL, four [2] NULL }
+SEQUENCE { one [5] NULL, two [4] NULL, ..., three [3] NULL, four [2] NULL }
+SEQUENCE { null NULL, ..., one [5] NULL, two [4] NULL, three [3] NULL, four [2] NULL }
+SEQUENCE { one NULL, two [2] NULL, ... }
+SEQUENCE { one NULL, ..., two [2] NULL }
+SEQUENCE { one NULL, two [2] NULL, ..., three [3] NULL }
+SEQUENCE { one NULL, ..., two [2] NULL, three [3] NULL }
+SEQUENCE { one BOOLEAN, ..., two [2] BOOLEAN, three [3] BOOLEAN }
+SEQUENCE { one BOOLEAN, two BIT STRING (SIZE(1..3)) }
+SEQUENCE { null NULL, ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
+SEQUENCE { one NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+SEQUENCE { null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+
+SEQUENCE { one NULL, ..., two [2] NULL }
+SEQUENCE { one [1] NULL, ..., two [2] NULL }
+SEQUENCE { one [2] NULL, ..., two [1] NULL }
+SEQUENCE { one [1] NULL, ..., two [3] NULL }
+SEQUENCE { one [3] NULL, ..., two [1] NULL }
+SEQUENCE { one [3] NULL, ..., two [1] NULL, three [2] NULL }
+SEQUENCE { one [4] NULL, ..., two [3] NULL, three [1] NULL, four [2] NULL }
+SEQUENCE { one [5] NULL, ..., two [4] NULL, ..., three [3] NULL, four [2] NULL }
+SEQUENCE { one NULL, ..., two [2] NULL, ... }
+SEQUENCE { one NULL, ..., two [2] NULL, ..., three [3] NULL }
+SEQUENCE { one NULL, ..., two [2] NULL, three [3] NULL }
+SEQUENCE { one BOOLEAN, ..., two [2] BOOLEAN, three [3] BOOLEAN, ... }
+SEQUENCE { one BOOLEAN, ..., two BIT STRING (SIZE(1..3)) }
+SEQUENCE { null NULL, ..., one BOOLEAN, two BIT STRING (SIZE(1..3)), ... }
+SEQUENCE { one NULL, ..., two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+SEQUENCE { null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)), ... }
+SEQUENCE { null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)), ..., four IA5String (SIZE(0)) }
+
+SEQUENCE { ..., null NULL }
+SEQUENCE { ..., null NULL, ... }
+SEQUENCE { ..., one NULL, two [2] NULL }
+SEQUENCE { ..., one [1] NULL, two [2] NULL }
+SEQUENCE { ..., one [2] NULL, two [1] NULL }
+SEQUENCE { ..., one [1] NULL, two [3] NULL }
+SEQUENCE { ..., one [3] NULL, two [1] NULL }
+SEQUENCE { ..., one [3] NULL, two [1] NULL, three [2] NULL }
+SEQUENCE { ..., one [4] NULL, two [3] NULL, three [1] NULL, four [2] NULL }
+SEQUENCE { ..., one [5] NULL, two [4] NULL, ..., three [3] NULL, four [2] NULL }
+SEQUENCE { ..., null NULL, ..., one [5] NULL, two [4] NULL, three [3] NULL, four [2] NULL }
+SEQUENCE { ..., one NULL, two [2] NULL, ... }
+SEQUENCE { ..., one NULL, ..., two [2] NULL }
+SEQUENCE { ..., one NULL, two [2] NULL, ..., three [3] NULL }
+SEQUENCE { ..., one NULL, ..., two [2] NULL, three [3] NULL }
+SEQUENCE { ..., one BOOLEAN, ..., two [2] BOOLEAN, three [3] BOOLEAN }
+SEQUENCE { ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
+SEQUENCE { ..., null NULL, ..., one BOOLEAN, two BIT STRING (SIZE(1..3)) }
+SEQUENCE { ..., one NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+SEQUENCE { ..., null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZE(1..3)) }
+
+
+SEQUENCE { one BOOLEAN OPTIONAL, two PrintableString (SIZE(1)), three VisibleString (SIZE(1)) DEFAULT "Z" }
+SEQUENCE { one [1] BOOLEAN OPTIONAL, two [2] BOOLEAN, three [3] BOOLEAN DEFAULT TRUE, four PrintableString (SIZE(1)), five VisibleString (SIZE(1)) DEFAULT "Z" }

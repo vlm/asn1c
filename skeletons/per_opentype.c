@@ -38,19 +38,20 @@ uper_open_type_put(const asn_TYPE_descriptor_t *td,
     size = uper_encode_to_new_buffer(td, constraints, sptr, &buf);
     if(size <= 0) return -1;
 
-    ASN_DEBUG("Open type put %s of length %zd + overhead (1byte?)", td->name,
+    ASN_DEBUG("Open type put %s of length %" ASN_PRI_SSIZE " + overhead (1byte?)", td->name,
               size);
 
     bptr = buf;
     do {
         int need_eom = 0;
-        ssize_t maySave = uper_put_length(po, size, &need_eom);
-        ASN_DEBUG("Prepending length %zd to %s and allowing to save %d", size,
-                  td->name, (int)maySave);
-        if(maySave < 0) break;
-        if(per_put_many_bits(po, bptr, maySave * 8)) break;
-        bptr = (char *)bptr + maySave;
-        size -= maySave;
+        ssize_t may_save = uper_put_length(po, size, &need_eom);
+        ASN_DEBUG("Prepending length %" ASN_PRI_SSIZE
+                  " to %s and allowing to save %" ASN_PRI_SSIZE,
+                  size, td->name, may_save);
+        if(may_save < 0) break;
+        if(per_put_many_bits(po, bptr, may_save * 8)) break;
+        bptr = (char *)bptr + may_save;
+        size -= may_save;
         if(need_eom && uper_put_length(po, 0, 0)) {
             FREEMEM(buf);
             return -1;

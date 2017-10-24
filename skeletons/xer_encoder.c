@@ -146,7 +146,7 @@ xer_equivalent(const struct asn_TYPE_descriptor_s *td, const void *struct1,
         if(opt_debug_stream) {
             fprintf(opt_debug_stream,
                     "Both structures encoded into the same XER byte stream "
-                    "of size %zu:\n%s",
+                    "of size %" ASN_PRI_SIZE ":\n%s",
                     xb1.buffer_size, xb1.buffer);
         }
     }
@@ -184,8 +184,8 @@ xer_equivalent(const struct asn_TYPE_descriptor_s *td, const void *struct1,
                   != (xb1.buffer_size - rval.consumed))) {
         if(opt_debug_stream) {
             fprintf(opt_debug_stream,
-                    "Round-trip decode of %s required less bytes (%zu) than "
-                    "encoded (%zu)\n",
+                    "Round-trip decode of %s required less bytes (%" ASN_PRI_SIZE ") than "
+                    "encoded (%" ASN_PRI_SIZE ")\n",
                     td->name, rval.consumed, xb1.buffer_size);
         }
         ASN_STRUCT_FREE(*td, sptr);

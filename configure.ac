@@ -114,6 +114,9 @@ AC_ARG_ENABLE(Werror,
         [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -Wgnu"])
   ])
 
+AX_CHECK_COMPILE_FLAG([-Wno-long-long],
+        [SKELETONS_CFLAGS="${SKELETONS_CFLAGS} -Wno-long-long"])
+
 AC_ARG_ENABLE(test-Werror,
   [AS_HELP_STRING([--enable-test-Werror],
                   [abort compiling tests after any C compiler warning])],
@@ -121,9 +124,6 @@ AC_ARG_ENABLE(test-Werror,
   AS_IF([test x$enable_test_werror != xno], [
       TESTSUITE_CFLAGS="${TESTSUITE_CFLAGS} -Werror -W -Wpointer-arith"
   ])
-AX_CHECK_COMPILE_FLAG([-Wno-format],
-    [SKELETONS_CFLAGS="$SKELETONS_CFLAGS -Wno-format"])
-
 
 dnl If requested and -m32 is available to create 32-bit code,
 dnl treat it like a special case to be checked.

@@ -89,7 +89,7 @@ oer_encode_primitive(const asn_TYPE_descriptor_t *td,
 
     if(!st) ASN__ENCODE_FAILED;
 
-    ASN_DEBUG("Encoding %s (%zu bytes)", td ? td->name : "", st->size);
+    ASN_DEBUG("Encoding %s (%" ASN_PRI_SIZE " bytes)", td ? td->name : "", st->size);
 
     /*
      * X.696 (08/2015) #27.2
@@ -136,6 +136,6 @@ oer_open_type_put(const asn_TYPE_descriptor_t *td,
     if(er.encoded < 0) return -1;
     assert(serialized_byte_count == (size_t)er.encoded);
 
-    return er.encoded + len_len;
+    return len_len + er.encoded;
 }
 

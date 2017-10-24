@@ -90,7 +90,7 @@ static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
 	.tag2el = asn_MAP_T_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_T = {
 	"T",
@@ -174,7 +174,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice1_specs_1 = {
 	.tag2el = asn_MAP_Choice1_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice1 = {
 	"Choice1",
@@ -286,7 +286,7 @@ asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	.tag2el = asn_MAP_Choice2_tag2el_1,
 	.tag2el_count = 4,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",

@@ -1574,7 +1574,7 @@ OCTET_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
 		break;
 	}
 
-	ASN_DEBUG("Encoding %s into %zu units of %d bits"
+	ASN_DEBUG("Encoding %s into %" ASN_PRI_SIZE " units of %d bits"
 		" (%ld..%ld, effective %d)%s",
 		td->name, size_in_units, unit_bits,
 		csiz->lower_bound, csiz->upper_bound,
@@ -1604,7 +1604,7 @@ OCTET_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
 	}
 
     if(csiz->effective_bits >= 0 && !inext) {
-        ASN_DEBUG("Encoding %zu bytes (%ld), length in %d bits", st->size,
+        ASN_DEBUG("Encoding %" ASN_PRI_SIZE " bytes (%ld), length in %d bits", st->size,
                   size_in_units - csiz->lower_bound, csiz->effective_bits);
         ret = per_put_few_bits(po, size_in_units - csiz->lower_bound,
                                csiz->effective_bits);
@@ -1616,16 +1616,16 @@ OCTET_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
         ASN__ENCODED_OK(er);
     }
 
-    ASN_DEBUG("Encoding %zu bytes", st->size);
+    ASN_DEBUG("Encoding %" ASN_PRI_SIZE " bytes", st->size);
 
     buf = st->buf;
-    ASN_DEBUG("Encoding %zu in units", size_in_units);
+    ASN_DEBUG("Encoding %" ASN_PRI_SIZE " in units", size_in_units);
     do {
         int need_eom = 0;
         ssize_t may_save = uper_put_length(po, size_in_units, &need_eom);
         if(may_save < 0) ASN__ENCODE_FAILED;
 
-        ASN_DEBUG("Encoding %zd of %zu%s", may_save, size_in_units,
+        ASN_DEBUG("Encoding %" ASN_PRI_SSIZE " of %" ASN_PRI_SIZE "%s", may_save, size_in_units,
                   need_eom ? ",+EOM" : "");
 
         ret = OCTET_STRING_per_put_characters(po, buf, may_save, bpc, unit_bits,
@@ -1886,10 +1886,10 @@ OCTET_STRING_random_length_constrained(
     rnd_len = lengths[asn_random_between(
         0, sizeof(lengths) / sizeof(lengths[0]) - 1)];
 
-    if(!constraints) constraints = &td->encoding_constraints;
+    if(!constraints || !constraints->per_constraints)
+        constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
-        const asn_per_constraint_t *pc =
-            &td->encoding_constraints.per_constraints->size;
+        const asn_per_constraint_t *pc = &constraints->per_constraints->size;
         if(pc->flags & APC_CONSTRAINED) {
             long suggested_upper_bound = pc->upper_bound < (ssize_t)max_length
                                              ? pc->upper_bound
@@ -1977,10 +1977,10 @@ OCTET_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
         break;
     }
 
-    if(!constraints) constraints = &td->encoding_constraints;
+    if(!constraints || !constraints->per_constraints)
+        constraints = &td->encoding_constraints;
     if(constraints->per_constraints) {
-        const asn_per_constraint_t *pc =
-            &td->encoding_constraints.per_constraints->value;
+        const asn_per_constraint_t *pc = &constraints->per_constraints->value;
         if(pc->flags & APC_SEMI_CONSTRAINED) {
             clb = pc->lower_bound;
         } else if(pc->flags & APC_CONSTRAINED) {

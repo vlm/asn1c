@@ -149,7 +149,7 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 		if(el) {
 			if(plainOrXER == 0)
 				return asn__format_to_callback(cb, app_key,
-					"%" PRIdMAX " (%s)", value, el->enum_name);
+					"%" ASN_PRIdMAX " (%s)", value, el->enum_name);
 			else
 				return asn__format_to_callback(cb, app_key,
 					"<%s/>", el->enum_name);
@@ -160,8 +160,10 @@ INTEGER__dump(const asn_TYPE_descriptor_t *td, const INTEGER_t *st, asn_app_cons
 			return -1;
 		} else {
             return asn__format_to_callback(cb, app_key,
-                (specs && specs->field_unsigned) ? "%" PRIuMAX : "%" PRIdMAX,
-                value);
+                                           (specs && specs->field_unsigned)
+                                               ? "%" ASN_PRIuMAX
+                                               : "%" ASN_PRIdMAX,
+                                           value);
         }
 	} else if(plainOrXER && specs && specs->strict_enumeration) {
 		/*
@@ -729,7 +731,7 @@ INTEGER_encode_uper(const asn_TYPE_descriptor_t *td,
 				|| uval > (unsigned long)ct->upper_bound)
 					inext = 1;
 			}
-			ASN_DEBUG("Value %lu (%02x/%zu) lb %lu ub %lu %s",
+			ASN_DEBUG("Value %lu (%02x/%" ASN_PRI_SIZE ") lb %lu ub %lu %s",
 				uval, st->buf[0], st->size,
 				ct->lower_bound, ct->upper_bound,
 				inext ? "ext" : "fix");
@@ -746,7 +748,7 @@ INTEGER_encode_uper(const asn_TYPE_descriptor_t *td,
 				|| value > ct->upper_bound)
 					inext = 1;
 			}
-			ASN_DEBUG("Value %ld (%02x/%zu) lb %ld ub %ld %s",
+			ASN_DEBUG("Value %ld (%02x/%" ASN_PRI_SIZE ") lb %ld ub %ld %s",
 				value, st->buf[0], st->size,
 				ct->lower_bound, ct->upper_bound,
 				inext ? "ext" : "fix");

@@ -1545,8 +1545,7 @@ asn_SEQUENCE_specifics_t asn_SPC_PDU_specs_1 = {
 	.tag2el_count = 31,	/* Count of tags in the map */
 	asn_MAP_PDU_oms_1,	/* Optional members */
 	31, 0,	/* Root/Additions */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_PDU = {
 	"PDU",

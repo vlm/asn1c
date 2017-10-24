@@ -1,0 +1,108 @@
+ModuleParameterizationMoreThanTwoLevel { iso org(3) dod(6) internet(1)
+	private(4) enterprise(1) spelio(9363) software(1) asn1c(5) test(1)
+	156 }
+DEFINITIONS ::=
+BEGIN
+
+TOTAL-CLASS SAMPLE-CLASS ::= {({ IDENTIFIED BY id1-1 } | { WITH CODE 1 IDENTIFIED BY id1-2 }) ({ IDENTIFIED BY id1-1 } | { WITH CODE 1 IDENTIFIED BY id1-2 }) | ({ IDENTIFIED BY id2-1 }) ({ IDENTIFIED BY id2-1 }),...}
+-- Information Object Set has 4 entries:
+--    [       &id][     &code][     &Type]
+-- [1]      id1-1  <no entry>  <no entry> 
+-- [2]      id1-2           1  <no entry> 
+-- [3]      id2-2           1  <no entry> 
+-- [4]      id2-3           2  SampleType 
+
+
+CLASS-1 SAMPLE-CLASS ::= {{ IDENTIFIED BY id1-1 } | { WITH CODE 1 IDENTIFIED BY id1-2 },...,{ TYPE SampleType WITH CODE 2 IDENTIFIED BY id1-3 }}
+-- Information Object Set has 2 entries:
+--    [  &id][&code][&Type]
+-- [1] id1-1  <no entry>  <no entry> 
+-- [2] id1-2      1  <no entry> 
+-- [ ] ...
+
+
+CLASS-2 SAMPLE-CLASS ::= {{ IDENTIFIED BY id2-1 },...,{ WITH CODE 1 IDENTIFIED BY id2-2 } | { TYPE SampleType WITH CODE 2 IDENTIFIED BY id2-3 }}
+-- Information Object Set has 2 entries:
+--    [       &id][     &code][     &Type]
+-- [1]      id2-2           1  <no entry> 
+-- [2]      id2-3           2  SampleType 
+-- [ ] ...
+
+
+SAMPLE-CLASS ::= CLASS {
+    &id	 RELATIVE-OID UNIQUE,
+    &code	 ENUMERATED {
+            request(0),        
+            response(1),        
+            status(2)
+        } DEFAULT 0,
+    &Type	 OPTIONAL
+} WITH SYNTAX { [TYPE &Type] [WITH CODE &code] IDENTIFIED BY &id }
+
+-- Information Object Set has 6 entries:
+--    [       &id][     &code][     &Type]
+-- [1]      id1-1  <no entry>  <no entry> 
+-- [2]      id1-2           1  <no entry> 
+-- [3]      id2-2           1  <no entry> 
+-- [4]      id2-3           2  SampleType 
+-- [5]      id1-3           2  SampleType 
+-- [6]      id2-1  <no entry>  <no entry> 
+
+
+item1-1 SAMPLE-CLASS ::= { IDENTIFIED BY id1-1 }
+-- Information Object Set has 1 entry:
+--    [  &id][&code][&Type]
+-- [1] id1-1  <no entry>  <no entry> 
+
+
+item1-2 SAMPLE-CLASS ::= { WITH CODE 1 IDENTIFIED BY id1-2 }
+-- Information Object Set has 1 entry:
+--    [  &id][&code][&Type]
+-- [1] id1-2      1  <no entry> 
+
+
+item1-3 SAMPLE-CLASS ::= { TYPE SampleType WITH CODE 2 IDENTIFIED BY id1-3 }
+-- Information Object Set has 1 entry:
+--    [       &id][     &code][     &Type]
+-- [1]      id1-3           2  SampleType 
+
+
+item2-1 SAMPLE-CLASS ::= { IDENTIFIED BY id2-1 }
+-- Information Object Set has 1 entry:
+--    [  &id][&code][&Type]
+-- [1] id2-1  <no entry>  <no entry> 
+
+
+item2-2 SAMPLE-CLASS ::= { WITH CODE 1 IDENTIFIED BY id2-2 }
+-- Information Object Set has 1 entry:
+--    [  &id][&code][&Type]
+-- [1] id2-2      1  <no entry> 
+
+
+item2-3 SAMPLE-CLASS ::= { TYPE SampleType WITH CODE 2 IDENTIFIED BY id2-3 }
+-- Information Object Set has 1 entry:
+--    [       &id][     &code][     &Type]
+-- [1]      id2-3           2  SampleType 
+
+
+id1-1 RELATIVE-OID ::= { 1 1 }
+
+id1-2 RELATIVE-OID ::= { 1 2 }
+
+id1-3 RELATIVE-OID ::= { 1 3 }
+
+id2-1 RELATIVE-OID ::= { 2 1 }
+
+id2-2 RELATIVE-OID ::= { 2 2 }
+
+id2-3 RELATIVE-OID ::= { 2 3 }
+
+SampleType ::= SEQUENCE {
+    ...
+}
+
+Salt ::= SET {
+    ...
+}
+
+END

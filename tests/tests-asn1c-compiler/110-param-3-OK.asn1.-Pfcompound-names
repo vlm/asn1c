@@ -98,8 +98,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Flag_15P0_specs_1 = {
 	.tag2el = asn_MAP_Flag_15P0_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Flag_15P0 = {
 	"Flag",
@@ -201,8 +200,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Flag_15P1_specs_6 = {
 	.tag2el = asn_MAP_Flag_15P1_tag2el_6,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Flag_15P1 = {
 	"Flag",

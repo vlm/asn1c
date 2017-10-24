@@ -24,7 +24,7 @@ typedef struct Frame {
 	ConstrainedInteger_t	 ident;
 	struct value {
 		value_PR present;
-		union value_u {
+		union Frame__value_u {
 			PrimitiveMessage_t	 PrimitiveMessage;
 			ComplexMessage_t	 ComplexMessage;
 		} choice;
@@ -87,7 +87,7 @@ memb_ident_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static asn_type_selector_result_t
-select_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+select_Frame_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
 	asn_type_selector_result_t result = {0, 0};
 	const asn_ioc_set_t *itable = asn_IOS_FrameTypes_1;
 	size_t constraining_column = 0; /* &id */
@@ -163,7 +163,7 @@ static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	.tag2el = asn_MAP_value_tag2el_3,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_value_3 = {
@@ -194,7 +194,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		.tag_mode = +1,	/* EXPLICIT tag at current level */
 		.type = &asn_DEF_value_3,
-		.type_selector = select_value_type,
+		.type_selector = select_Frame_value_type,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_value_constraint_1 },
 		0, 0, /* No default value */
 		.name = "value"
@@ -213,8 +213,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_Frame_specs_1 = {
 	.tag2el = asn_MAP_Frame_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	1,	/* Start extensions */
-	3	/* Stop extensions */
+	2,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Frame = {
 	"Frame",
@@ -333,8 +332,7 @@ asn_SEQUENCE_specifics_t asn_SPC_PrimitiveMessage_specs_1 = {
 	0,	/* No top level tags */
 	0,	/* No tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_PrimitiveMessage = {
 	"PrimitiveMessage",
@@ -380,8 +378,7 @@ asn_SEQUENCE_specifics_t asn_SPC_ComplexMessage_specs_1 = {
 	0,	/* No top level tags */
 	0,	/* No tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_ComplexMessage = {
 	"ComplexMessage",

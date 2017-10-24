@@ -220,7 +220,7 @@ ANY_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
         if(raw_len < 0) RETURN(RC_WMORE);
         if(raw_len == 0 && st->buf) break;
 
-        ASN_DEBUG("Got PER length len %zu, %s (%s)", raw_len,
+        ASN_DEBUG("Got PER length len %" ASN_PRI_SIZE ", %s (%s)", raw_len,
                   repeat ? "repeat" : "once", td->name);
         len_bytes = raw_len;
         len_bits = len_bytes * 8;

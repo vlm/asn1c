@@ -2197,8 +2197,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Sequence_specs_1 = {
 	.tag2el = asn_MAP_Sequence_tag2el_1,
 	.tag2el_count = 7,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	5,	/* Start extensions */
-	8	/* Stop extensions */
+	6,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Sequence = {
 	"Sequence",

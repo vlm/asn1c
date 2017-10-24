@@ -64,7 +64,7 @@ static asn_CHOICE_specifics_t asn_SPC_CommonType_specs_1 = {
 	.tag2el = asn_MAP_CommonType_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_CommonType = {
 	"CommonType",
@@ -209,8 +209,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
 	.tag2el = asn_MAP_anonType_tag2el_2,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_anonType_2 = {
@@ -251,7 +250,7 @@ asn_CHOICE_specifics_t asn_SPC_Type1_specs_1 = {
 	.tag2el = asn_MAP_Type1_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Type1 = {
 	"Type1",
@@ -396,8 +395,7 @@ static asn_SEQUENCE_specifics_t asn_SPC_anonType_specs_2 = {
 	.tag2el = asn_MAP_anonType_tag2el_2,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_anonType_2 = {
@@ -438,7 +436,7 @@ asn_CHOICE_specifics_t asn_SPC_Type2_specs_1 = {
 	.tag2el = asn_MAP_Type2_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Type2 = {
 	"Type2",

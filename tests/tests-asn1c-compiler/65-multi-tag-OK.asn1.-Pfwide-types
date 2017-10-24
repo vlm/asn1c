@@ -430,8 +430,7 @@ asn_SEQUENCE_specifics_t asn_SPC_Ts_specs_1 = {
 	.tag2el = asn_MAP_Ts_tag2el_1,
 	.tag2el_count = 3,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
-	-1,	/* Start extensions */
-	-1	/* Stop extensions */
+	-1,	/* First extension addition */
 };
 asn_TYPE_descriptor_t asn_DEF_Ts = {
 	"Ts",

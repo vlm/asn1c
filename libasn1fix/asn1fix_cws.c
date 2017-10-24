@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "asn1fix_internal.h"
 #include "asn1fix_cws.h"
 
@@ -195,6 +197,8 @@ _asn1f_foreach_unparsed(arg_t *arg, const asn1p_constraint_t *ct,
         return _asn1f_foreach_unparsed_union(ct, process, keyp);
     case ACT_CA_CSV:    /* , */
         break;
+    case ACT_EL_VALUE:
+        return 0;
     }
 
     for(size_t i = 0; i < ct->el_count; i++) {
@@ -407,7 +411,7 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 
 	/* This value 100 should be larger than following formatting string */
 	psize = bend - buf + 100;
-	pp = malloc(psize);
+	pp = calloc(1, psize);
 	if(pp == NULL) {
 		free(mivr);
 		return -1;

@@ -90,7 +90,7 @@ static asn_CHOICE_specifics_t asn_SPC_ch_specs_4 = {
 	.tag2el = asn_MAP_ch_tag2el_4,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 static /* Use -fall-defs-global to expose */
 asn_TYPE_descriptor_t asn_DEF_ch_4 = {
@@ -160,7 +160,7 @@ static asn_CHOICE_specifics_t asn_SPC_Choice_specs_1 = {
 	.tag2el = asn_MAP_Choice_tag2el_1,
 	.tag2el_count = 5,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = 3	/* Extensions start */
+	.first_extension = 3	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice = {
 	"Choice",
@@ -242,7 +242,7 @@ static asn_CHOICE_specifics_t asn_SPC_Choice2_specs_1 = {
 	.tag2el = asn_MAP_Choice2_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0,
-	.ext_start = -1	/* Extensions start */
+	.first_extension = -1	/* Extensions start */
 };
 asn_TYPE_descriptor_t asn_DEF_Choice2 = {
 	"Choice2",

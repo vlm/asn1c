@@ -227,6 +227,13 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
         }
         assert(structure != 0);
 
+        if(debug) {
+            fprintf(stderr, "Random structure %s:\n",
+                    sizeof(ASN1_STR) > 60 ? "T" : ASN1_STR);
+            asn_fprint(stderr, &asn_DEF_T, structure);
+            xer_fprint(stderr, &asn_DEF_T, structure);
+        }
+
         asn_enc_rval_t er;
         for(;;) {
             er = asn_encode_to_buffer(
@@ -270,6 +277,8 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
                         er.encoded, rval.consumed);
                 fprintf(stderr, "Original random structure:\n");
                 asn_fprint(stderr, &asn_DEF_T, structure);
+                fprintf(stderr, "Partially decoded %s value:\n", ASN1_STR);
+                asn_fprint(stderr, &asn_DEF_T, decoded_structure);
                 assert((ssize_t)rval.consumed == er.encoded);
                 exit(EX_SOFTWARE);
             }
@@ -288,7 +297,7 @@ check_random_roundtrip(enum asn_transfer_syntax syntax, size_t max_random_value_
          */
         int cmp = asn_DEF_T.op->compare_struct(&asn_DEF_T, structure,
                                                decoded_structure);
-        if(cmp != 0) {
+        if(cmp != 0 || debug) {
             fprintf(stderr, "Random %s value:\n", ASN1_STR);
             asn_fprint(stderr, &asn_DEF_T, structure);
             xer_fprint(stderr, &asn_DEF_T, structure);
@@ -335,7 +344,7 @@ int main(int argc, char **argv) {
             mode = MODE_CHECK_RANDOM_ROUNDTRIP;
             break;
         case 'd':
-            debug = 1;
+            debug++;
             break;
         case 'e':
             enabled_encodings |= 1 << lookup_syntax(optarg);

@@ -1,0 +1,116 @@
+
+/*** <<< INCLUDES [T] >>> ***/
+
+#include <NULL.h>
+#include <constr_CHOICE.h>
+
+/*** <<< DEPS [T] >>> ***/
+
+typedef enum T_PR {
+	T_PR_NOTHING,	/* No components present */
+	T_PR_one,
+	T_PR_two,
+	T_PR_three,
+	T_PR_four
+} T_PR;
+
+/*** <<< TYPE-DECLS [T] >>> ***/
+
+typedef struct T {
+	T_PR present;
+	union T_u {
+		NULL_t	 one;
+		NULL_t	 two;
+		NULL_t	 three;
+		NULL_t	 four;
+	} choice;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} T_t;
+
+/*** <<< FUNC-DECLS [T] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_T;
+
+/*** <<< CTDEFS [T] >>> ***/
+
+static asn_per_constraints_t asn_PER_type_T_constr_1 CC_NOTUSED = {
+	{ APC_CONSTRAINED,	 2,  2,  0,  3 }	/* (0..3) */,
+	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	0, 0	/* No PER value map */
+};
+
+/*** <<< STAT-DEFS [T] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_T_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.one),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_NULL,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "one"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.two),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_NULL,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "two"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.three),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_NULL,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "three"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.four),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = +1,	/* EXPLICIT tag at current level */
+		.type = &asn_DEF_NULL,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "four"
+		},
+};
+static const unsigned asn_MAP_T_to_canonical_1[] = { 2, 3, 1, 0 };
+static const unsigned asn_MAP_T_from_canonical_1[] = { 3, 2, 0, 1 };
+static const asn_TYPE_tag2member_t asn_MAP_T_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 2, 0, 0 }, /* three */
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 3, 0, 0 }, /* four */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 1, 0, 0 }, /* two */
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 0, 0, 0 } /* one */
+};
+static asn_CHOICE_specifics_t asn_SPC_T_specs_1 = {
+	sizeof(struct T),
+	offsetof(struct T, _asn_ctx),
+	offsetof(struct T, present),
+	sizeof(((struct T *)0)->present),
+	.tag2el = asn_MAP_T_tag2el_1,
+	.tag2el_count = 4,	/* Count of tags in the map */
+	.to_canonical_order = asn_MAP_T_to_canonical_1,
+	.from_canonical_order = asn_MAP_T_from_canonical_1,
+	.first_extension = -1	/* Extensions start */
+};
+asn_TYPE_descriptor_t asn_DEF_T = {
+	"T",
+	"T",
+	&asn_OP_CHOICE,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	{ 0, &asn_PER_type_T_constr_1, CHOICE_constraint },
+	asn_MBR_T_1,
+	4,	/* Elements count */
+	&asn_SPC_T_specs_1	/* Additional specs */
+};
+

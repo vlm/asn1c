@@ -415,8 +415,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
 	int elements;	/* Number of elements */
-	int ext_start = -2;
-	int ext_stop = -2;
+	int first_extension = -1;
 	tag2el_t *tag2el = NULL;
 	int tag2el_count = 0;
 	int tags_count;
@@ -456,9 +455,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 		INDENTED(TQ_FOR(v, &(expr->members), next) {
 			if(v->expr_type == A1TC_EXTENSIBLE) {
 				if((++comp_mode) == 1)
-					ext_start = elements - 1;
-				else
-					ext_stop = elements - 1;
+					first_extension = elements;
 				continue;
 			}
 			if(v->marker.flags & EM_OMITABLE)
@@ -546,10 +543,7 @@ asn1c_lang_C_type_SEQUENCE_def(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc
 	} else {
 		OUT("0, 0, 0,\t/* Optional elements (not needed) */\n");
 	}
-	OUT("%d,\t/* Start extensions */\n",
-			ext_start<0 ? -1 : ext_start);
-	OUT("%d\t/* Stop extensions */\n",
-			(ext_stop<ext_start)?elements+1:(ext_stop<0?-1:ext_stop));
+	OUT("%d,\t/* First extension addition */\n", first_extension);
 	INDENT(-1);
 	OUT("};\n");
 
@@ -1065,12 +1059,17 @@ asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc,
     open_type_choice->meta_type = AMT_TYPE;
     open_type_choice->expr_type = ASN_CONSTR_OPEN_TYPE;
     open_type_choice->_type_unique_index = arg->expr->_type_unique_index;
+    open_type_choice->parent_expr = arg->expr->parent_expr;
 
     for(size_t row = 0; row < opt_ioc->ioct->rows; row++) {
         struct asn1p_ioc_cell_s *cell =
             &opt_ioc->ioct->row[row]->column[column_index];
 
+        if(!cell->value) continue;
+
         asn1p_expr_t *m = asn1p_expr_clone(cell->value, 0);
+        if (asn1p_lookup_child(open_type_choice, m->Identifier))
+            m->_mark |= TM_SKIPinUNION;
         asn1p_expr_add(open_type_choice, m);
     }
 
@@ -1191,7 +1190,7 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
             OUT("asn_MAP_%s_from_canonical_%d,\n", MKID(expr),
                 expr->_type_unique_index);
         } else { OUT("0, 0,\n"); }
-        if(C99_MODE) OUT(".ext_start = ");
+        if(C99_MODE) OUT(".first_extension = ");
         OUT("%d\t/* Extensions start */\n", compute_extensions_start(expr));
     );
     OUT("};\n");
@@ -1283,11 +1282,14 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			}
 		}
 
+		if(!(expr->_mark & TM_SKIPinUNION))
+			OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
 
-		OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
 		if(!expr->_anonymous_type) {
-			OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
-			OUT("%s", MKID_safe(expr));
+			if(!(expr->_mark & TM_SKIPinUNION)) {
+				OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
+				OUT("%s", MKID_safe(expr));
+			}
 			if((expr->marker.flags & (EM_DEFAULT & ~EM_INDIRECT))
 					== (EM_DEFAULT & ~EM_INDIRECT))
 				OUT("\t/* DEFAULT %s */",
@@ -2623,8 +2625,10 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     if(expr->meta_type != AMT_TYPEREF
        || expr->expr_type != A1TC_REFERENCE
        || expr->reference->comp_count != 2
-       || expr->reference->components[1].lex_type
-              != RLT_AmpUppercase) {
+       || ((expr->reference->components[1].lex_type
+              != RLT_AmpUppercase)
+            && (expr->reference->components[1].lex_type
+                   != RLT_Amplowercase))) {
         FATAL(
             "Does not look like %s is a CLASS field reference (%s) denoting a type on line "
             "%d",
@@ -2638,7 +2642,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     const char *for_field = expr->reference->components[1].name;
 
     ssize_t for_column = -1;
-    for(size_t cn = 0; cn < opt_ioc->ioct->rows ? opt_ioc->ioct->row[0]->columns : 0;
+    for(size_t cn = 0; cn < (opt_ioc->ioct->rows ? opt_ioc->ioct->row[0]->columns : 0);
         cn++) {
         if(strcmp(for_field,
                   opt_ioc->ioct->row[0]->column[cn].field->Identifier)
@@ -2652,10 +2656,10 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
         return -1;
     }
 
-
     REDIR(OT_CODE);
     OUT("static asn_type_selector_result_t\n");
-    OUT("select_%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", MKID_safe(expr));
+    OUT("select_%s_", c_name(arg).compound_name);
+    OUT("%s_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {\n", MKID(expr));
     INDENT(+1);
 
     OUT("asn_type_selector_result_t result = {0, 0};\n");
@@ -2713,7 +2717,8 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("\n");
 
     REDIR(save_target);
-    OUT("select_%s_type", MKID_safe(expr));
+    OUT("select_%s_", c_name(arg).compound_name);
+    OUT("%s_type", MKID(expr));
 
     return 0;
 }
@@ -3386,7 +3391,7 @@ compute_canonical_members_order(arg_t *arg, int el_count) {
 	int *rmap;
 	asn1p_expr_t *v;
 	int eidx = 0;
-	int ext_start = -1;
+	int first_extension = -1;
 	int nextmax = -1;
 	int already_sorted = 1;
 
@@ -3398,18 +3403,18 @@ compute_canonical_members_order(arg_t *arg, int el_count) {
 			cmap[eidx].eidx = eidx;
 			cmap[eidx].expr = v;
 			eidx++;
-		} else if(ext_start == -1)
-			ext_start = eidx;
+		} else if(first_extension == -1)
+			first_extension = eidx;
 	}
 
 	cameo_arg = arg;
-	if(ext_start == -1) {
+	if(first_extension == -1) {
 		/* Sort the whole thing */
 		qsort(cmap, el_count, sizeof(*cmap), compar_cameo);
 	} else {
 		/* Sort root and extensions independently */
-		qsort(cmap, ext_start, sizeof(*cmap), compar_cameo);
-		qsort(cmap + ext_start, el_count - ext_start,
+		qsort(cmap, first_extension, sizeof(*cmap), compar_cameo);
+		qsort(cmap + first_extension, el_count - first_extension,
 			sizeof(*cmap), compar_cameo);
 	}
 

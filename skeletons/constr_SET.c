@@ -1,4 +1,4 @@
-/*-
+/*
  * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
@@ -235,7 +235,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 			 */
 			edx = t2m->el_no;
 			ctx->step = (edx << 1) + 1;
-			ASN_DEBUG("Got tag %s (%s), edx %zd",
+			ASN_DEBUG("Got tag %s (%s), edx %" ASN_PRI_SSIZE "",
 				ber_tlv_tag_string(tlv_tag), td->name, edx);
 		} else if(specs->extensible == 0) {
 			ASN_DEBUG("Unexpected tag %s "
@@ -273,7 +273,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		 * already decoded elements.
 		 */
 		if(ASN_SET_ISPRESENT2((char *)st + specs->pres_offset, edx)) {
-			ASN_DEBUG("SET %s: Duplicate element %s (%zd)",
+			ASN_DEBUG("SET %s: Duplicate element %s (%" ASN_PRI_SSIZE ")",
 				td->name, elements[edx].name, edx);
 			RETURN(RC_FAIL);
 		}
@@ -678,7 +678,7 @@ SET_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
 
 			if(ASN_SET_ISPRESENT2((char *)st + specs->pres_offset,
 					edx)) {
-				ASN_DEBUG("SET %s: Duplicate element %s (%zd)",
+				ASN_DEBUG("SET %s: Duplicate element %s (%" ASN_PRI_SSIZE ")",
 				td->name, elements[edx].name, edx);
 				RETURN(RC_FAIL);
 			}

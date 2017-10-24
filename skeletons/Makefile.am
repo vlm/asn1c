@@ -1,6 +1,5 @@
 
 CFLAGS = $(filter-out $(CODE_COVERAGE_CFLAGS), @CFLAGS@)
-CFLAGS += ${SKELETONS_CFLAGS}   # Put -std=c89 at the end!
 
 dist_pkgdata_DATA =				\
 		${srcdir}/README		\
@@ -19,13 +18,20 @@ uninstall-local:
 	-@echo -n " "
 	-rm -f -r $(DESTDIR)$(pkgdatadir)
 
-check_LTLIBRARIES = libasn1cskeletons.la libasn1cskeletons_32.la
+check_LTLIBRARIES =             \
+    libasn1cskeletons.la        \
+    libasn1cskeletons_c89.la    \
+    libasn1cskeletons_c89_32.la
+
+libasn1cskeletons_c89_la_CFLAGS = $(SKELETONS_CFLAGS)
+libasn1cskeletons_c89_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
 
 if EXPLICIT_M32
-libasn1cskeletons_32_la_CFLAGS = $(CFLAGS_M32)
-libasn1cskeletons_32_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
+libasn1cskeletons_c89_32_la_CFLAGS = $(SKELETONS_CFLAGS) $(CFLAGS_M32) -Wno-format
+libasn1cskeletons_c89_32_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
 endif
 
+libasn1cskeletons_la_CFLAGS = $(TESTSUITE_CFLAGS)
 libasn1cskeletons_la_SOURCES =                  \
     ANY.c ANY.h                                 \
     BIT_STRING.c BIT_STRING.h                   \
@@ -95,9 +101,21 @@ libasn1cskeletons_la_SOURCES =                  \
     xer_encoder.c xer_encoder.h                 \
     xer_support.c xer_support.h
 
-check_PROGRAMS = check-converter_example
+check_PROGRAMS =                    \
+    check-converter_example         \
+    check-converter_c89_example     \
+    check-converter_c89_32_example
 LDADD = -lm
 
 check_converter_example_CFLAGS = -DNO_ASN_PDU
 check_converter_example_SOURCES = converter-example.c
 check_converter_example_LDADD = libasn1cskeletons.la
+
+check_converter_c89_example_CFLAGS = $(SKELETON_CFLAGS) -DNO_ASN_PDU
+check_converter_c89_example_SOURCES = converter-example.c
+check_converter_c89_example_LDADD = libasn1cskeletons_c89.la
+
+check_converter_c89_32_example_CFLAGS = $(SKELETON_CFLAGS) $(CFLAGS_M32) -DNO_ASN_PDU
+check_converter_c89_32_example_SOURCES = converter-example.c
+check_converter_c89_32_example_LDADD = libasn1cskeletons_c89_32.la
+

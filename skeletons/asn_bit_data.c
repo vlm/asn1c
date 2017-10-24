@@ -7,18 +7,43 @@
 #include <asn_internal.h>
 #include <asn_bit_data.h>
 
+/*
+ * Create a contiguous non-refillable bit data structure.
+ * Can be freed by FREEMEM().
+ */
+asn_bit_data_t *
+asn_bit_data_new_contiguous(const void *data, size_t size_bits) {
+    size_t size_bytes = (size_bits + 7) / 8;
+    asn_bit_data_t *pd;
+    uint8_t *bytes;
+
+    /* Get the extensions map */
+    pd = CALLOC(1, sizeof(*pd) + size_bytes + 1);
+    if(!pd) {
+        return NULL;
+    }
+    bytes = (void *)(((char *)pd) + sizeof(*pd));
+    memcpy(bytes, data, size_bytes);
+    bytes[size_bytes] = 0;
+    pd->buffer = bytes;
+    pd->nboff = 0;
+    pd->nbits = size_bits;
+
+    return pd;
+}
+
+
 char *
 asn_bit_data_string(asn_bit_data_t *pd) {
 	static char buf[2][32];
 	static int n;
 	n = (n+1) % 2;
-	snprintf(buf[n], sizeof(buf[n]),
-		"{m=%ld span %+ld[%d..%d] (%d)}",
-		(long)pd->moved,
-		(((long)pd->buffer) & 0xf),
-		(int)pd->nboff, (int)pd->nbits,
-		(int)(pd->nbits - pd->nboff));
-	return buf[n];
+    snprintf(buf[n], sizeof(buf[n]),
+             "{m=%" ASN_PRI_SIZE " span %" ASN_PRI_SIZE "[%" ASN_PRI_SIZE
+             "..%" ASN_PRI_SIZE "] (%" ASN_PRI_SIZE ")}",
+             pd->moved, ((uintptr_t)(pd->buffer) & 0xf), pd->nboff, pd->nbits,
+             pd->nbits - pd->nboff);
+    return buf[n];
 }
 
 void
