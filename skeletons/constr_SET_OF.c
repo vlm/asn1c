@@ -1054,7 +1054,7 @@ SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 
     for(encoded_edx = 0; (ssize_t)encoded_edx < list->count;) {
         ssize_t may_encode;
-        ssize_t edx;
+        size_t edx;
         int need_eom = 0;
 
         if(ct && ct->effective_bits >= 0) {
@@ -1065,7 +1065,7 @@ SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
             if(may_encode < 0) ASN__ENCODE_FAILED;
         }
 
-        for(edx = 0; edx < may_encode; edx++) {
+        for(edx = encoded_edx; edx < encoded_edx + may_encode; edx++) {
             const struct _el_buffer *el = &encoded_els[edx];
             if(asn_put_many_bits(po, el->buf,
                                  (8 * el->length) - el->bits_unused) < 0) {
