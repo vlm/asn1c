@@ -300,31 +300,38 @@ static int _el_addbytes(const void *buffer, size_t size, void *el_buf_ptr) {
     el_buf->length += size;
     return 0;
 }
+
+static void assert_unused_bits(const struct _el_buffer* p) {
+    if(p->length) {
+        assert((p->buf[p->length-1] & ~(0xff << p->bits_unused)) == 0);
+    } else {
+        assert(p->bits_unused == 0);
+    }
+}
+
 static int _el_buf_cmp(const void *ap, const void *bp) {
     const struct _el_buffer *a = (const struct _el_buffer *)ap;
     const struct _el_buffer *b = (const struct _el_buffer *)bp;
     size_t common_len;
-    int ret;
+    int ret = 0;
 
     if(a->length < b->length)
         common_len = a->length;
     else
         common_len = b->length;
 
-    ret = memcmp(a->buf, b->buf, common_len);
+    //constr_SET_OF.c:315:13: runtime error: null pointer passed as argument 1, which is declared to never be null
+    if (a->buf && b->buf) {
+        ret = memcmp(a->buf, b->buf, common_len);
+    }
     if(ret == 0) {
         if(a->length < b->length)
             ret = -1;
         else if(a->length > b->length)
             ret = 1;
         /* Ignore unused bits. */
-        if(a->length) {
-            assert((a->buf[a->length-1] & ~(0xff << a->bits_unused)) == 0);
-            assert((b->buf[b->length-1] & ~(0xff << b->bits_unused)) == 0);
-        } else {
-            assert(a->bits_unused == 0);
-            assert(b->bits_unused == 0);
-        }
+        assert_unused_bits(a);
+        assert_unused_bits(b);
     }
 
     return ret;
