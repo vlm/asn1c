@@ -183,6 +183,14 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
                                 ct->effective_bits))
                 ASN__ENCODE_FAILED;
         }
+    } else if (list->count == 0) {
+        /* When the list is empty add only the length determinant
+         * X.691, #20.6 and #11.9.4.1
+         */
+        if (uper_put_length(po, 0, 0)) {
+            ASN__ENCODE_FAILED;
+        }
+        ASN__ENCODED_OK(er);
     }
 
 
