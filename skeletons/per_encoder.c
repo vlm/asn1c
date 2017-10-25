@@ -163,57 +163,34 @@ _uper_encode_flush_outp(asn_per_outp_t *po) {
 	return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
 }
 
-static asn_enc_rval_t aper_encode_internal(const asn_TYPE_descriptor_t *td,
-        const asn_per_constraints_t *,
-        const void *sptr, asn_app_consume_bytes_f *cb, void *app_key);
-
-asn_enc_rval_t
-aper_encode(const asn_TYPE_descriptor_t *td,
-            const void *sptr, asn_app_consume_bytes_f *cb, void *app_key) {
-       return aper_encode_internal(td, 0, sptr, cb, app_key);
-}
-
-asn_enc_rval_t
-aper_encode_to_buffer(const asn_TYPE_descriptor_t *td,
-        const void *sptr, void *buffer, size_t buffer_size) {
-	enc_to_buf_arg key;
-
-	key.buffer = buffer;
-	key.left = buffer_size;
-
-	if(td) ASN_DEBUG("Encoding \"%s\" using ALIGNED PER", td->name);
-
-	return aper_encode_internal(td, 0, sptr, encode_to_buffer_cb, &key);
-}
-
 ssize_t
 aper_encode_to_new_buffer(const asn_TYPE_descriptor_t *td,
-        const asn_per_constraints_t *constraints,
-        const void *sptr, void **buffer_r) {
-	asn_enc_rval_t er;
+                          const asn_per_constraints_t *constraints,
+                          const void *sptr, void **buffer_r) {
+    asn_enc_rval_t er;
 	enc_dyn_arg key;
 
 	memset(&key, 0, sizeof(key));
 
-	er = aper_encode_internal(td, constraints, sptr, encode_dyn_cb, &key);
+	er = aper_encode(td, constraints, sptr, encode_dyn_cb, &key);
 	switch(er.encoded) {
-		case -1:
-			FREEMEM(key.buffer);
-			return -1;
-		case 0:
-			FREEMEM(key.buffer);
-			key.buffer = MALLOC(1);
-			if(key.buffer) {
-				*(char *)key.buffer = '\0';
-				*buffer_r = key.buffer;
-				return 1;
-			} else {
-				return -1;
-			}
-		default:
+	case -1:
+		FREEMEM(key.buffer);
+		return -1;
+	case 0:
+		FREEMEM(key.buffer);
+		key.buffer = MALLOC(1);
+		if(key.buffer) {
+			*(char *)key.buffer = '\0';
 			*buffer_r = key.buffer;
-			ASN_DEBUG("Complete encoded in %ld bits", er.encoded);
-			return ((er.encoded + 7) >> 3);
+			return 1;
+		} else {
+			return -1;
+		}
+	default:
+		*buffer_r = key.buffer;
+		ASN_DEBUG("Complete encoded in %ld bits", (long)er.encoded);
+		return ((er.encoded + 7) >> 3);
 	}
 }
 
@@ -237,8 +214,8 @@ _aper_encode_flush_outp(asn_per_outp_t *po) {
 	return 0;
 }
 
-static asn_enc_rval_t
-aper_encode_internal(const asn_TYPE_descriptor_t *td,
+asn_enc_rval_t
+aper_encode(const asn_TYPE_descriptor_t *td,
         const asn_per_constraints_t *constraints,
         const void *sptr, asn_app_consume_bytes_f *cb, void *app_key) {
 	asn_per_outp_t po;

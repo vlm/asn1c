@@ -1594,9 +1594,14 @@ SEQUENCE_decode_aper(const asn_codec_ctx_t *opt_codec_ctx,
 		}
 
 		/* Fetch the member from the stream */
-		ASN_DEBUG("Decoding member %s in %s", elm->name, td->name);
-		rv = elm->type->op->aper_decoder(opt_codec_ctx, elm->type,
-		                                 elm->encoding_constraints.per_constraints, memb_ptr2, pd);
+		ASN_DEBUG("Decoding member \"%s\" in %s", elm->name, td->name);
+
+		if(elm->flags & ATF_OPEN_TYPE) {
+			rv = OPEN_TYPE_aper_get(opt_codec_ctx, td, st, elm, pd);
+		} else {
+			rv = elm->type->op->aper_decoder(opt_codec_ctx, elm->type,
+					elm->encoding_constraints.per_constraints, memb_ptr2, pd);
+		}
 		if(rv.code != RC_OK) {
 			ASN_DEBUG("Failed decode %s in %s",
 			          elm->name, td->name);
