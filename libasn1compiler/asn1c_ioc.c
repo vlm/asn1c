@@ -225,6 +225,9 @@ emit_ioc_cell(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
     } else if(cell->value->meta_type == AMT_TYPEREF) {
         GEN_INCLUDE(asn1c_type_name(arg, cell->value, TNF_INCLUDE));
         OUT("aioc__type, &asn_DEF_%s", MKID(cell->value));
+    } else if(cell->value->meta_type == AMT_TYPE) {
+        GEN_INCLUDE(asn1c_type_name(arg, cell->value, TNF_INCLUDE));
+        OUT("aioc__type, &asn_DEF_%s", asn1c_type_name(arg, cell->value, TNF_SAFE));
     } else {
         return -1;
     }

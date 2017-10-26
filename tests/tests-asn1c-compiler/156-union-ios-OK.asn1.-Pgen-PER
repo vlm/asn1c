@@ -66,9 +66,9 @@ asn_TYPE_descriptor_t asn_DEF_Message = {
 #include <NativeInteger.h>
 #include <ANY.h>
 #include <asn_ioc.h>
-#include <OPEN_TYPE.h>
 #include <BOOLEAN.h>
 #include <OCTET_STRING.h>
+#include <OPEN_TYPE.h>
 #include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
 
@@ -115,13 +115,13 @@ static const long asn_VAL_3_2 = 2;
 static const long asn_VAL_4_3 = 3;
 static const asn_ioc_cell_t asn_IOS_TotalRegionExtension_1_rows[] = {
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_1 },
-	{ "&Type", ,
+	{ "&Type", aioc__type, &asn_DEF_NativeInteger },
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
-	{ "&Type", ,
+	{ "&Type", aioc__type, &asn_DEF_BOOLEAN },
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_3_2 },
-	{ "&Type", ,
+	{ "&Type", aioc__type, &asn_DEF_BOOLEAN },
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_4_3 },
-	{ "&Type", 
+	{ "&Type", aioc__type, &asn_DEF_OCTET_STRING }
 };
 static const asn_ioc_set_t asn_IOS_TotalRegionExtension_1[] = {
 	4, 2, asn_IOS_TotalRegionExtension_1_rows
