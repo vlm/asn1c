@@ -2042,7 +2042,7 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 		} else {
 			if(range->extensible) {
 				OUT("{ APC_SEMI_CONSTRAINED | APC_EXTENSIBLE, "
-					"-1, ");
+					"-1, -1, ");
 			} else {
 				OUT("{ APC_SEMI_CONSTRAINED,\t-1, -1, ");
 			}
