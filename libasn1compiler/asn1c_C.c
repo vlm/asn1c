@@ -1067,9 +1067,10 @@ asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc,
 
         if(!cell->value) continue;
 
+        if(asn1p_lookup_child(open_type_choice, cell->value->Identifier))
+            continue;
+
         asn1p_expr_t *m = asn1p_expr_clone(cell->value, 0);
-        if (asn1p_lookup_child(open_type_choice, m->Identifier))
-            m->_mark |= TM_SKIPinUNION;
         asn1p_expr_add(open_type_choice, m);
     }
 
@@ -1282,14 +1283,11 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			}
 		}
 
-		if(!(expr->_mark & TM_SKIPinUNION))
-			OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
+		OUT("%s", asn1c_type_name(arg, arg->expr, tnfmt));
 
 		if(!expr->_anonymous_type) {
-			if(!(expr->_mark & TM_SKIPinUNION)) {
-				OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
-				OUT("%s", MKID_safe(expr));
-			}
+			OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
+			OUT("%s", MKID_safe(expr));
 			if((expr->marker.flags & (EM_DEFAULT & ~EM_INDIRECT))
 					== (EM_DEFAULT & ~EM_INDIRECT))
 				OUT("\t/* DEFAULT %s */",
