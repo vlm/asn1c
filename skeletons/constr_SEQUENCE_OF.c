@@ -177,13 +177,14 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
             ASN__ENCODE_FAILED;
         }
 
-        if(ct && ct->effective_bits >= 0) {
-            /* X.691, #19.5: No length determinant */
-            if(per_put_few_bits(po, list->count - ct->lower_bound,
-                                ct->effective_bits))
-                ASN__ENCODE_FAILED;
-        }
-    } else if (list->count == 0) {
+    }
+
+    if(ct && ct->effective_bits >= 0) {
+        /* X.691, #19.5: No length determinant */
+        if(per_put_few_bits(po, list->count - ct->lower_bound,
+                            ct->effective_bits))
+            ASN__ENCODE_FAILED;
+    } else if(list->count == 0) {
         /* When the list is empty add only the length determinant
          * X.691, #20.6 and #11.9.4.1
          */
@@ -192,7 +193,6 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
         }
         ASN__ENCODED_OK(er);
     }
-
 
     for(encoded_edx = 0; (ssize_t)encoded_edx < list->count;) {
         ssize_t may_encode;

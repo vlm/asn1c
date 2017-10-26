@@ -1038,13 +1038,23 @@ SET_OF_encode_uper(const asn_TYPE_descriptor_t *td,
             ASN__ENCODE_FAILED;
         }
 
-        if(ct && ct->effective_bits >= 0) {
-            /* X.691, #19.5: No length determinant */
-            if(per_put_few_bits(po, list->count - ct->lower_bound,
-                                ct->effective_bits))
-                ASN__ENCODE_FAILED;
-        }
     }
+
+    if(ct && ct->effective_bits >= 0) {
+        /* X.691, #19.5: No length determinant */
+        if(per_put_few_bits(po, list->count - ct->lower_bound,
+                            ct->effective_bits))
+            ASN__ENCODE_FAILED;
+    } else if(list->count == 0) {
+        /* When the list is empty add only the length determinant
+         * X.691, #20.6 and #11.9.4.1
+         */
+        if (uper_put_length(po, 0, 0)) {
+            ASN__ENCODE_FAILED;
+        }
+        ASN__ENCODED_OK(er);
+    }
+
 
     /*
      * Canonical UPER #22.1 mandates dynamic sorting of the SET OF elements
@@ -1249,8 +1259,48 @@ SET_OF_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     }
 
     /* Bias towards edges of allowed space */
-    switch(asn_random_between(0, 4)) {
+    switch(asn_random_between(-1, 4)) {
     default:
+    case -1:
+        /* Prepare lengths somewhat outside of constrained range. */
+        if(constraints->per_constraints
+           && (constraints->per_constraints->size.flags & APC_EXTENSIBLE)) {
+            switch(asn_random_between(0, 5)) {
+            default:
+            case 0:
+                rnd_len = 0;
+                break;
+            case 1:
+                if(slb > 0) {
+                    rnd_len = slb - 1;
+                } else {
+                    rnd_len = 0;
+                }
+                break;
+            case 2:
+                rnd_len = asn_random_between(0, slb);
+                break;
+            case 3:
+                if(sub < (ssize_t)max_length) {
+                    rnd_len = sub + 1;
+                } else {
+                    rnd_len = max_length;
+                }
+                break;
+            case 4:
+                if(sub < (ssize_t)max_length) {
+                    rnd_len = asn_random_between(sub + 1, max_length);
+                } else {
+                    rnd_len = max_length;
+                }
+                break;
+            case 5:
+                rnd_len = max_length;
+                break;
+            }
+            break;
+        }
+        /* Fall through */
     case 0:
         rnd_len = asn_random_between(slb, sub);
         break;

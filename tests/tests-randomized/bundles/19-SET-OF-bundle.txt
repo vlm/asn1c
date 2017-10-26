@@ -31,3 +31,8 @@ SET OF PrintableString (FROM("A".."Z"))
 SET OF BOOLEAN -- RMAX=70000
 SET (SIZE(2..MAX)) OF BOOLEAN -- RMAX=70000
 SET OF PrintableString (SIZE(1))  --RMAX=16384
+
+-- Mainly verifies encoding when its size is 0.
+SET OF OCTET STRING (SIZE(1))
+SET (SIZE(1..MAX,...)) OF OCTET STRING (SIZE(1))
+SET (SIZE(1..2,...)) OF OCTET STRING (SIZE(1))

@@ -78,3 +78,13 @@ SEQUENCE { ..., null NULL, ..., one [1] NULL, two BOOLEAN, three BIT STRING (SIZ
 SEQUENCE { one BOOLEAN OPTIONAL, two PrintableString (SIZE(1)), three VisibleString (SIZE(1)) DEFAULT "Z" }
 SEQUENCE { one [1] BOOLEAN OPTIONAL, two [2] BOOLEAN, three [3] BOOLEAN DEFAULT TRUE, four PrintableString (SIZE(1)), five VisibleString (SIZE(1)) DEFAULT "Z" }
 SEQUENCE { list SEQUENCE OF PrintableString (SIZE(1)), guard OCTET STRING (SIZE(1)) } -- RMAX=16385
+
+-- Mainly verifies list encoding when its size is 0.
+SEQUENCE { list SET OF OCTET STRING(SIZE(1)), guard OCTET STRING(SIZE(1)) }
+SEQUENCE { list SET (SIZE(1..MAX)) OF OCTET STRING(SIZE(1)), guard OCTET STRING(SIZE(1)) }
+SEQUENCE { list SET (SIZE(1..MAX,...)) OF OCTET STRING(SIZE(1)), guard OCTET STRING(SIZE(1)) }
+SEQUENCE { list SET (SIZE(1..2,...)) OF OCTET STRING(SIZE(1)), guard OCTET STRING(SIZE(1)) }
+SEQUENCE { list SEQUENCE OF OCTET STRING(SIZE(1)), guard OCTET STRING(SIZE(1)) }
+SEQUENCE { list SEQUENCE (SIZE(1..MAX,...)) OF OCTET STRING(SIZE(1)), guard OCTET STRING(SIZE(1)) }
+SEQUENCE { list SEQUENCE (SIZE(1..2,...)) OF OCTET STRING(SIZE(1)), guard OCTET STRING(SIZE(1)) }
+
