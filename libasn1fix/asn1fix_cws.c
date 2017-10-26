@@ -268,7 +268,7 @@ asn1f_parse_class_object(arg_t *arg) {
         .arg = arg,
         .expr = expr,
         .eclass = eclass,
-        .sequence = 0
+        .sequence = eclass->_type_unique_index
     };
 
     if(!expr->ioc_table) {
@@ -294,6 +294,8 @@ asn1f_parse_class_object(arg_t *arg) {
             return -1;
         }
     }
+
+    eclass->_type_unique_index = key.sequence;
 
 	return 0;
 }
