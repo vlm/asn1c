@@ -198,6 +198,14 @@ _asn1f_foreach_unparsed(arg_t *arg, const asn1p_constraint_t *ct,
     case ACT_CA_CSV:    /* , */
         break;
     case ACT_EL_VALUE:
+        if(ct->value->type == ATV_UNPARSED) {
+            if(process
+               && process(ct->value->value.string.buf + 1,
+                          ct->value->value.string.size - 2, key)
+                      != 0) {
+                return -1;
+            }
+        }
         return 0;
     }
 

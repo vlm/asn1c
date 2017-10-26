@@ -111,20 +111,26 @@ extern asn_TYPE_member_t asn_MBR_SpecializedContent_42P0_1[2];
 
 static const long asn_VAL_1_1 = 1;
 static const long asn_VAL_2_2 = 2;
-static const long asn_VAL_3_2 = 2;
-static const long asn_VAL_4_3 = 3;
+static const long asn_VAL_3_3 = 3;
+static const long asn_VAL_4_1 = 1;
+static const long asn_VAL_5_2 = 2;
+static const long asn_VAL_6_3 = 3;
 static const asn_ioc_cell_t asn_IOS_TotalRegionExtension_1_rows[] = {
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_1 },
 	{ "&Type", aioc__type, &asn_DEF_NativeInteger },
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
 	{ "&Type", aioc__type, &asn_DEF_BOOLEAN },
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_3_2 },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_3_3 },
+	{ "&Type", aioc__type, &asn_DEF_OCTET_STRING },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_4_1 },
+	{ "&Type", aioc__type, &asn_DEF_NativeInteger },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_5_2 },
 	{ "&Type", aioc__type, &asn_DEF_BOOLEAN },
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_4_3 },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_6_3 },
 	{ "&Type", aioc__type, &asn_DEF_OCTET_STRING }
 };
 static const asn_ioc_set_t asn_IOS_TotalRegionExtension_1[] = {
-	4, 2, asn_IOS_TotalRegionExtension_1_rows
+	6, 2, asn_IOS_TotalRegionExtension_1_rows
 };
 
 /*** <<< CODE [SpecializedContent] >>> ***/

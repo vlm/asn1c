@@ -551,6 +551,8 @@ asn_TYPE_descriptor_t asn_DEF_SinglePacket_48P0 = {
 #include "Color.h"
 #include <ANY.h>
 #include <asn_ioc.h>
+#include <OCTET_STRING.h>
+#include "Valid.h"
 #include <OPEN_TYPE.h>
 #include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
@@ -559,7 +561,7 @@ asn_TYPE_descriptor_t asn_DEF_SinglePacket_48P0 = {
 
 typedef enum value_PR {
 	value_PR_NOTHING,	/* No components present */
-	
+	value_PR_OCTET_STRING
 } value_PR;
 
 /*** <<< TYPE-DECLS [Packet] >>> ***/
@@ -570,6 +572,7 @@ typedef struct Packet_51P0 {
 	struct value {
 		value_PR present;
 		union Packet_51P0__value_u {
+			OCTET_STRING_t	 OCTET_STRING;
 		} choice;
 		
 		/* Context for parsing across buffer boundaries */
@@ -588,11 +591,17 @@ extern asn_TYPE_member_t asn_MBR_Packet_51P0_1[3];
 
 /*** <<< IOC-TABLES [Packet] >>> ***/
 
+static const long asn_VAL_1_id_TYPE1 = 1;
+static const long asn_VAL_1_blue = 2;
+static const long asn_VAL_1_crc_ok = 1;
 static const asn_ioc_cell_t asn_IOS_ClassItem_1_rows[] = {
-	
+	{ "&id", aioc__value, &asn_DEF_PacketId, &asn_VAL_1_id_TYPE1 },
+	{ "&color", aioc__value, &asn_DEF_Color, &asn_VAL_1_blue },
+	{ "&Value", aioc__type, &asn_DEF_OCTET_STRING },
+	{ "&valid", aioc__value, &asn_DEF_Valid, &asn_VAL_1_crc_ok }
 };
 static const asn_ioc_set_t asn_IOS_ClassItem_1[] = {
-	0, 0, asn_IOS_ClassItem_1_rows
+	1, 4, asn_IOS_ClassItem_1_rows
 };
 
 /*** <<< CODE [Packet] >>> ***/
@@ -622,6 +631,29 @@ memb_id_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 }
 
+static asn_type_selector_result_t
+select_Packet_51P0_color_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+	asn_type_selector_result_t result = {0, 0};
+	const asn_ioc_set_t *itable = asn_IOS_ClassItem_1;
+	size_t constraining_column = 0; /* &id */
+	size_t for_column = 1; /* &color */
+	size_t row;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Packet_51P0, id));
+	
+	for(row=0; row < itable->rows_count; row++) {
+	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
+	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
+	
+	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	        result.type_descriptor = type_cell->type_descriptor;
+	        result.presence_index = row + 1;
+	        break;
+	    }
+	}
+	
+	return result;
+}
+
 static int
 memb_color_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
@@ -639,6 +671,29 @@ memb_color_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 	
 	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+static asn_type_selector_result_t
+select_Packet_51P0_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+	asn_type_selector_result_t result = {0, 0};
+	const asn_ioc_set_t *itable = asn_IOS_ClassItem_1;
+	size_t constraining_column = 0; /* &id */
+	size_t for_column = 2; /* &Value */
+	size_t row;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Packet_51P0, id));
+	
+	for(row=0; row < itable->rows_count; row++) {
+	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
+	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
+	
+	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	        result.type_descriptor = type_cell->type_descriptor;
+	        result.presence_index = row + 1;
+	        break;
+	    }
+	}
+	
+	return result;
 }
 
 static int
@@ -681,13 +736,27 @@ static asn_per_constraints_t asn_PER_memb_value_constr_4 CC_NOTUSED = {
 
 /*** <<< STAT-DEFS [Packet] >>> ***/
 
+static asn_TYPE_member_t asn_MBR_value_4[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.OCTET_STRING),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_OCTET_STRING,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "OCTET STRING"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_value_tag2el_4[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 0, 0, 0 } /* OCTET STRING */
+};
 static asn_CHOICE_specifics_t asn_SPC_value_specs_4 = {
 	sizeof(struct value),
 	offsetof(struct value, _asn_ctx),
 	offsetof(struct value, present),
 	sizeof(((struct value *)0)->present),
-	0,	/* No top level tags */
-	0,	/* No tags in the map */
+	.tag2el = asn_MAP_value_tag2el_4,
+	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0,
 	.first_extension = -1	/* Extensions start */
 };
@@ -701,7 +770,8 @@ asn_TYPE_descriptor_t asn_DEF_value_4 = {
 	0,	/* No tags (pointer) */
 	0,	/* No tags (count) */
 	{ 0, 0, OPEN_TYPE_constraint },
-	0, 0,	/* No members */
+	asn_MBR_value_4,
+	1,	/* Elements count */
 	&asn_SPC_value_specs_4	/* Additional specs */
 };
 
@@ -719,7 +789,7 @@ asn_TYPE_member_t asn_MBR_Packet_51P0_1[] = {
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_Color,
-		.type_selector = 0,
+		.type_selector = select_Packet_51P0_color_type,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_color_constr_3, .general_constraints =  memb_color_constraint_1 },
 		0, 0, /* No default value */
 		.name = "color"
@@ -728,7 +798,7 @@ asn_TYPE_member_t asn_MBR_Packet_51P0_1[] = {
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_value_4,
-		.type_selector = 0,
+		.type_selector = select_Packet_51P0_value_type,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_value_constr_4, .general_constraints =  memb_value_constraint_1 },
 		0, 0, /* No default value */
 		.name = "value"
