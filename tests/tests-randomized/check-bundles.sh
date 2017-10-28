@@ -52,6 +52,13 @@ make_clean_before_bundle() {
 make_clean_before_test() {
     if [ "${need_clean_before_test}" = "1" ] ; then
         Make clean
+    else
+        # Low resolution file system mtime prevents rapid testing
+        # without recompilation. We have to clean at least the most
+        # critical portion of the objects. This will reach our objective
+        # of fast compile times (since most of skeletons are not recompiled),
+        # but won't yield a stale T.o object where newer T.c source exists.
+        rm -f T.o || :
     fi
 }
 
