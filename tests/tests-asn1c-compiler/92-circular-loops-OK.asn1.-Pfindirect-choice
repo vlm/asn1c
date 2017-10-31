@@ -587,7 +587,7 @@ typedef struct Member {
 	long	 Int;
 	struct Set	*set;
 	struct Sequence	*seq;
-	struct Set	*set2	/* OPTIONAL */;
+	struct Set	*set2;	/* OPTIONAL */
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
@@ -752,13 +752,13 @@ struct Set;
 
 typedef struct Sequence {
 	long	 a;
-	struct Sequence	*seq	/* OPTIONAL */;
+	struct Sequence	*seq;	/* OPTIONAL */
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
 	 */
 	long	*b;
-	struct Set	*set	/* OPTIONAL */;
+	struct Set	*set;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -910,7 +910,7 @@ struct Beta;
 typedef struct Alpha {
 	struct Beta	*a;
 	struct b {
-		struct Beta	*b	/* OPTIONAL */;
+		struct Beta	*b;	/* OPTIONAL */
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
@@ -1039,8 +1039,8 @@ struct Gamma;
 /*** <<< TYPE-DECLS [Beta] >>> ***/
 
 typedef struct Beta {
-	struct Alpha	*b	/* OPTIONAL */;
-	struct Gamma	*g	/* OPTIONAL */;
+	struct Alpha	*b;	/* OPTIONAL */
+	struct Gamma	*g;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

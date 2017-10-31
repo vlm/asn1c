@@ -7,9 +7,9 @@
 /*** <<< TYPE-DECLS [Narrow] >>> ***/
 
 typedef struct Narrow_15P0 {
-	long	*narrow1	/* DEFAULT 3 */;
+	long	*narrow1;	/* DEFAULT 3 */
 	long	 narrow2;
-	long	*narrow3	/* OPTIONAL */;
+	long	*narrow3;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

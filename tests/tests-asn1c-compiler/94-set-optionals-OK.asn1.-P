@@ -27,14 +27,14 @@ typedef enum TestSet_PR {
 
 typedef struct TestSet {
 	VisibleString_t	 m0;
-	VisibleString_t	*m1	/* OPTIONAL */;
+	VisibleString_t	*m1;	/* OPTIONAL */
 	VisibleString_t	 m2;
 	VisibleString_t	 m3;
-	VisibleString_t	*m4	/* OPTIONAL */;
+	VisibleString_t	*m4;	/* OPTIONAL */
 	VisibleString_t	 m5;
 	VisibleString_t	 m6;
 	VisibleString_t	 m7;
-	VisibleString_t	*m8	/* OPTIONAL */;
+	VisibleString_t	*m8;	/* OPTIONAL */
 	VisibleString_t	 m9;
 	/*
 	 * This type is extensible,

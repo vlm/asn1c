@@ -65,7 +65,6 @@ int asn1c_compiled_output(arg_t *arg, const char *file, int lineno,
         INDENTED(arg_t _tmp = *arg; _tmp.expr = ev;      \
                  _tmp.default_cb(&_tmp, NULL););         \
         arg->embed--;                                    \
-        if(ev->expr_type != A1TC_EXTENSIBLE) OUT(";\n"); \
         assert(arg->target->target == OT_TYPE_DECLS      \
                || arg->target->target == OT_FWD_DEFS);   \
     } while(0)
@@ -76,7 +75,6 @@ int asn1c_compiled_output(arg_t *arg, const char *file, int lineno,
         INDENTED(arg_t _tmp = *arg; _tmp.expr = ev;                \
                  _tmp.default_cb(&_tmp, ((ioc).ioct ? &ioc : 0));); \
         arg->embed--;                                              \
-        if(ev->expr_type != A1TC_EXTENSIBLE) OUT(";\n");           \
         assert(arg->target->target == OT_TYPE_DECLS                \
                || arg->target->target == OT_FWD_DEFS);             \
     } while(0)

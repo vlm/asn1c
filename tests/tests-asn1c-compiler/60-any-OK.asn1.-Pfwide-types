@@ -82,7 +82,7 @@ asn_TYPE_descriptor_t asn_DEF_T1 = {
 
 typedef struct T2 {
 	INTEGER_t	 i;
-	ANY_t	*any	/* OPTIONAL */;
+	ANY_t	*any;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

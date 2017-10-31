@@ -8,13 +8,13 @@
 /*** <<< TYPE-DECLS [TestType] >>> ***/
 
 typedef struct TestType_16P0 {
-	long	 common	/* DEFAULT 0 */;
+	long	 common;	/* DEFAULT 0 */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } TestType_16P0_t;
 typedef struct TestType_16P1 {
-	BOOLEAN_t	 common	/* DEFAULT 0 */;
+	BOOLEAN_t	 common;	/* DEFAULT 0 */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

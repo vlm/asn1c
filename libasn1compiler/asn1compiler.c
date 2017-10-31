@@ -131,9 +131,6 @@ asn1c_compile_expr(arg_t *arg, const asn1c_ioc_table_and_objset_t *opt_ioc) {
 			arg->expr = expr;	/* Restore */
 		} else {
 			ret = type_cb(arg);
-			if(arg->target->destination[OT_TYPE_DECLS]
-					.indent_level == 0)
-				OUT(";\n");
 		}
 	} else {
 		ret = -1;

@@ -181,8 +181,8 @@ typedef struct Epyt {
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
 	} stype;
-	struct Type	*type	/* OPTIONAL */;
-	struct Ypet	*ypet	/* OPTIONAL */;
+	struct Type	*type;	/* OPTIONAL */
+	struct Ypet	*ypet;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -330,7 +330,7 @@ struct Epyt;
 
 typedef struct Ypet {
 	struct Epyt	*epyt;
-	INTEGER_t	*plain	/* DEFAULT 7 */;
+	INTEGER_t	*plain;	/* DEFAULT 7 */
 	struct senums {
 		A_SET_OF(EnumType_t) list;
 		

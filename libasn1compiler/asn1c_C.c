@@ -372,7 +372,6 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
             }
             INDENT(-1);
             tmp_arg.embed--;
-            if(v->expr_type != A1TC_EXTENSIBLE) OUT(";\n");
         } else {
             EMBED_WITH_IOCT(v, ioc_tao);
         }
@@ -391,6 +390,7 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	} else {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 			c_name(arg).short_name);
+		if(!expr->_anonymous_type) OUT(";\n");
 	}
 
 	return asn1c_lang_C_type_SEQUENCE_def(arg, ioc_tao.ioct ? &ioc_tao : 0);
@@ -633,6 +633,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	} else {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 			c_name(arg).short_name);
+		if(!expr->_anonymous_type) OUT(";\n");
 	}
 
 	return asn1c_lang_C_type_SET_def(arg);
@@ -861,6 +862,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 	} else {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 			c_name(arg).short_name);
+		if(!expr->_anonymous_type) OUT(";\n");
 	}
 
 	/*
@@ -957,7 +959,8 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 	OUT("typedef %s {\n", c_name(arg).presence_enum);
 	INDENTED(
 		int skipComma = 1;
-        OUT("%s,\t/* No components present */\n", c_presence_name(arg, 0));
+		OUT("%s", c_presence_name(arg, 0));
+		OUT("%s\t/* No components present */\n", !TQ_FIRST(&(expr->members)) ? "" : ",");
 		TQ_FOR(v, &(expr->members), next) {
 			if(skipComma) skipComma = 0;
 			else if (v->expr_type == A1TC_EXTENSIBLE && !TQ_NEXT(v, next)) OUT("\n");
@@ -1015,6 +1018,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
 			c_name(arg).short_name);
 	}
+	if(!expr->_anonymous_type) OUT(";\n");
 
 	return asn1c_lang_C_type_CHOICE_def(arg);
 }
@@ -1287,7 +1291,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 		if(!expr->_anonymous_type) {
 			OUT("%s", (expr->marker.flags&EM_INDIRECT)?"\t*":"\t ");
-			OUT("%s", MKID_safe(expr));
+			OUT("%s;", MKID_safe(expr));
 			if((expr->marker.flags & (EM_DEFAULT & ~EM_INDIRECT))
 					== (EM_DEFAULT & ~EM_INDIRECT))
 				OUT("\t/* DEFAULT %s */",
@@ -1296,6 +1300,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 			else if((expr->marker.flags & EM_OPTIONAL)
 					== EM_OPTIONAL)
 				OUT("\t/* OPTIONAL */");
+			OUT("\n");
 		}
 
 	} else {
@@ -1305,9 +1310,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 
 		OUT("typedef %s\t",
 			asn1c_type_name(arg, arg->expr, TNF_CTYPE));
-		OUT("%s%s_t",
+		OUT("%s%s_t%s",
 			(expr->marker.flags & EM_INDIRECT)?"*":" ",
-			MKID(expr));
+			MKID(expr),
+			expr->_anonymous_type ? "":";\n");
 	}
 
 	if((expr->expr_type == ASN_BASIC_ENUMERATED)
