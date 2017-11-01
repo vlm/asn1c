@@ -146,7 +146,7 @@ get_param() {
         AWK=awk
     fi
 
-    echo "$asn" | ${AWK} "BEGIN{FS=\"[^${param}=0-9]+\"};/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\")+1)}END{if(PARAM)print PARAM;else print \"${default}\";}"
+    echo "$asn" | ${AWK} "BEGIN{FS=\"[^${param}=0-9]+\"};/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,1,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\")+1)}END{if(PARAM)print PARAM;else print \"${default}\";}"
 }
 
 # compile_and_test "<text>" "<where found>"
