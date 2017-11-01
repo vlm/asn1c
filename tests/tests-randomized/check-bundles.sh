@@ -58,7 +58,7 @@ make_clean_before_test() {
         # critical portion of the objects. This will reach our objective
         # of fast compile times (since most of skeletons are not recompiled),
         # but won't yield a stale T.o object where newer T.c source exists.
-        rm -f T.o || :
+        rm -f T.o libasncodec.a || :
     fi
 }
 
