@@ -1,0 +1,269 @@
+
+/*** <<< INCLUDES [SeqWithNestedSOS] >>> ***/
+
+#include <UTF8String.h>
+#include <asn_SEQUENCE_OF.h>
+#include <constr_SEQUENCE.h>
+#include <constr_SEQUENCE_OF.h>
+
+/*** <<< FWD-DEFS [SeqWithNestedSOS] >>> ***/
+
+typedef struct SeqWithNestedSOS__sos__Member {
+	UTF8String_t	 anotherString;
+	struct SeqWithNestedSOS__sos__Member__nested_sos {
+		A_SEQUENCE_OF(typedef struct SeqWithNestedSOS__sos__Member__nested_sos__Member {
+			UTF8String_t	 nested_string;
+			
+			/* Context for parsing across buffer boundaries */
+			asn_struct_ctx_t _asn_ctx;
+		} SeqWithNestedSOS__sos__Member__nested_sos__Member;
+		SeqWithNestedSOS__sos__Member__nested_sos__Member) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} nested_sos;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SeqWithNestedSOS__sos__Member;
+
+/*** <<< TYPE-DECLS [SeqWithNestedSOS] >>> ***/
+
+typedef struct SeqWithNestedSOS {
+	UTF8String_t	 someString;
+	struct SeqWithNestedSOS__sos {
+		A_SEQUENCE_OF(SeqWithNestedSOS__sos__Member) list;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} sos;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SeqWithNestedSOS_t;
+
+/*** <<< FUNC-DECLS [SeqWithNestedSOS] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SeqWithNestedSOS;
+
+/*** <<< STAT-DEFS [SeqWithNestedSOS] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Member_7[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithNestedSOS__sos__Member__nested_sos__Member, nested_string),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (4 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_UTF8String,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "nested-string"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Member_tags_7[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Member_tag2el_7[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (4 << 2)), 0, 0, 0 } /* nested-string */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_7 = {
+	sizeof(struct SeqWithNestedSOS__sos__Member__nested_sos__Member),
+	offsetof(struct SeqWithNestedSOS__sos__Member__nested_sos__Member, _asn_ctx),
+	.tag2el = asn_MAP_Member_tag2el_7,
+	.tag2el_count = 1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* First extension addition */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_Member_7 = {
+	"SEQUENCE",
+	"SEQUENCE",
+	&asn_OP_SEQUENCE,
+	asn_DEF_Member_tags_7,
+	sizeof(asn_DEF_Member_tags_7)
+		/sizeof(asn_DEF_Member_tags_7[0]), /* 1 */
+	asn_DEF_Member_tags_7,	/* Same as above */
+	sizeof(asn_DEF_Member_tags_7)
+		/sizeof(asn_DEF_Member_tags_7[0]), /* 1 */
+	{ 0, 0, SEQUENCE_constraint },
+	asn_MBR_Member_7,
+	1,	/* Elements count */
+	&asn_SPC_Member_specs_7	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_nested_sos_6[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Member_7,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = ""
+		},
+};
+static const ber_tlv_tag_t asn_DEF_nested_sos_tags_6[] = {
+	(ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_nested_sos_specs_6 = {
+	sizeof(struct SeqWithNestedSOS__sos__Member__nested_sos),
+	offsetof(struct SeqWithNestedSOS__sos__Member__nested_sos, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_nested_sos_6 = {
+	"nested-sos",
+	"nested-sos",
+	&asn_OP_SEQUENCE_OF,
+	asn_DEF_nested_sos_tags_6,
+	sizeof(asn_DEF_nested_sos_tags_6)
+		/sizeof(asn_DEF_nested_sos_tags_6[0]) - 1, /* 1 */
+	asn_DEF_nested_sos_tags_6,	/* Same as above */
+	sizeof(asn_DEF_nested_sos_tags_6)
+		/sizeof(asn_DEF_nested_sos_tags_6[0]), /* 2 */
+	{ 0, 0, SEQUENCE_OF_constraint },
+	asn_MBR_nested_sos_6,
+	1,	/* Single element */
+	&asn_SPC_nested_sos_specs_6	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_Member_4[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithNestedSOS__sos__Member, anotherString),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (2 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_UTF8String,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "anotherString"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithNestedSOS__sos__Member, nested_sos),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (3 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_nested_sos_6,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "nested-sos"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Member_tags_4[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Member_tag2el_4[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 0, 0, 0 }, /* anotherString */
+    { (ASN_TAG_CLASS_CONTEXT | (3 << 2)), 1, 0, 0 } /* nested-sos */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_4 = {
+	sizeof(struct SeqWithNestedSOS__sos__Member),
+	offsetof(struct SeqWithNestedSOS__sos__Member, _asn_ctx),
+	.tag2el = asn_MAP_Member_tag2el_4,
+	.tag2el_count = 2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* First extension addition */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_Member_4 = {
+	"SEQUENCE",
+	"SEQUENCE",
+	&asn_OP_SEQUENCE,
+	asn_DEF_Member_tags_4,
+	sizeof(asn_DEF_Member_tags_4)
+		/sizeof(asn_DEF_Member_tags_4[0]), /* 1 */
+	asn_DEF_Member_tags_4,	/* Same as above */
+	sizeof(asn_DEF_Member_tags_4)
+		/sizeof(asn_DEF_Member_tags_4[0]), /* 1 */
+	{ 0, 0, SEQUENCE_constraint },
+	asn_MBR_Member_4,
+	2,	/* Elements count */
+	&asn_SPC_Member_specs_4	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_sos_3[] = {
+	{ ATF_POINTER, 0, 0,
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_Member_4,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = ""
+		},
+};
+static const ber_tlv_tag_t asn_DEF_sos_tags_3[] = {
+	(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static asn_SET_OF_specifics_t asn_SPC_sos_specs_3 = {
+	sizeof(struct SeqWithNestedSOS__sos),
+	offsetof(struct SeqWithNestedSOS__sos, _asn_ctx),
+	0,	/* XER encoding is XMLDelimitedItemList */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_sos_3 = {
+	"sos",
+	"sos",
+	&asn_OP_SEQUENCE_OF,
+	asn_DEF_sos_tags_3,
+	sizeof(asn_DEF_sos_tags_3)
+		/sizeof(asn_DEF_sos_tags_3[0]) - 1, /* 1 */
+	asn_DEF_sos_tags_3,	/* Same as above */
+	sizeof(asn_DEF_sos_tags_3)
+		/sizeof(asn_DEF_sos_tags_3[0]), /* 2 */
+	{ 0, 0, SEQUENCE_OF_constraint },
+	asn_MBR_sos_3,
+	1,	/* Single element */
+	&asn_SPC_sos_specs_3	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_SeqWithNestedSOS_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithNestedSOS, someString),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (0 << 2)),
+		.tag_mode = -1,	/* IMPLICIT tag at current level */
+		.type = &asn_DEF_UTF8String,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "someString"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct SeqWithNestedSOS, sos),
+		.tag = (ASN_TAG_CLASS_CONTEXT | (1 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_sos_3,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "sos"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_SeqWithNestedSOS_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_SeqWithNestedSOS_tag2el_1[] = {
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* someString */
+    { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* sos */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_SeqWithNestedSOS_specs_1 = {
+	sizeof(struct SeqWithNestedSOS),
+	offsetof(struct SeqWithNestedSOS, _asn_ctx),
+	.tag2el = asn_MAP_SeqWithNestedSOS_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* First extension addition */
+};
+asn_TYPE_descriptor_t asn_DEF_SeqWithNestedSOS = {
+	"SeqWithNestedSOS",
+	"SeqWithNestedSOS",
+	&asn_OP_SEQUENCE,
+	asn_DEF_SeqWithNestedSOS_tags_1,
+	sizeof(asn_DEF_SeqWithNestedSOS_tags_1)
+		/sizeof(asn_DEF_SeqWithNestedSOS_tags_1[0]), /* 1 */
+	asn_DEF_SeqWithNestedSOS_tags_1,	/* Same as above */
+	sizeof(asn_DEF_SeqWithNestedSOS_tags_1)
+		/sizeof(asn_DEF_SeqWithNestedSOS_tags_1[0]), /* 1 */
+	{ 0, 0, SEQUENCE_constraint },
+	asn_MBR_SeqWithNestedSOS_1,
+	2,	/* Elements count */
+	&asn_SPC_SeqWithNestedSOS_specs_1	/* Additional specs */
+};
+
