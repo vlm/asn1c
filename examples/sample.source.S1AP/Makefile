@@ -1,19 +1,19 @@
-ASN_PROGRAM = rrc-dump
+ASN_PROGRAM = s1ap-dump
 CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE
-begin: DL-DCCH-Message.c maybe-wip-pause all
+begin: S1AP-PDU.c maybe-wip-pause all
 
 -include converter-example.mk
 
-DL-DCCH-Message.c: ../sample.makefile.regen ../lte-rrc-14.4.0.asn1
+S1AP-PDU.c: ../sample.makefile.regen ../s1ap-14.4.0.asn1
 	make regen-makefile
-	@touch DL-DCCH-Message.c
+	@touch S1AP-PDU.c
 	make
 
 regen-makefile:
-	ASN_CMDOPTS="-pdu=auto -fcompound-names -no-gen-OER" \
-	ASN_MODULES="../lte-rrc-14.4.0.asn1" \
-	ASN_PDU=DL-DCCH-Message \
-	ASN_PROGRAM=rrc-dump \
+	ASN_CMDOPTS="-pdu=all -fcompound-names -findirect-choice -fno-include-deps -gen-PER" \
+	ASN_MODULES="../s1ap-14.4.0.asn1" \
+	ASN_PDU=S1AP-PDU \
+	ASN_PROGRAM=s1ap-dump \
 	../sample.makefile.regen
 
 check: ${ASN_PROGRAM} check-ber check-xer check-oer check-per
@@ -22,7 +22,7 @@ check: ${ASN_PROGRAM} check-ber check-xer check-oer check-per
 	@echo ================
 
 check-ber:
-	@if test -f sample-DL-DCCH-Message-1.[db]er ; then \
+	@if test -f sample-S1AP-PDU-1.[db]er ; then \
 	for f in sample-*-*.[db]er; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
@@ -37,7 +37,7 @@ check-ber:
 	done; done; fi
 
 check-xer:
-	@if test -f sample-DL-DCCH-Message-1.xer ; then \
+	@if test -f sample-S1AP-PDU-1.xer ; then \
 	for f in sample-*-*.xer; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
@@ -52,7 +52,7 @@ check-xer:
 	done; done; fi
 
 check-oer:
-	@if test -f sample-DL-DCCH-Message-1.*oer ; then \
+	@if test -f sample-S1AP-PDU-1.*oer ; then \
 	for f in sample-*-*.*oer; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
@@ -67,7 +67,7 @@ check-oer:
 	done; done; fi
 
 check-per:
-	@if test -f sample-DL-DCCH-Message-1-nopad.per ; then \
+	@if test -f sample-S1AP-PDU-1-nopad.per ; then \
 	for f in sample-*-[1-9]-nopad.per; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
@@ -81,7 +81,7 @@ check-per:
 	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 6; \
 	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -per-nopad -iper -onull $$f || exit 7; \
 	done; done; fi
-	@if test -f sample-DL-DCCH-Message-1.per ; then \
+	@if test -f sample-S1AP-PDU-1.per ; then \
 	for f in sample-*-[1-9].per; do \
 	pdu=`echo $$f | sed -E -e "s/sample-([A-Za-z0-9-]+)-[0-9].*/\1/"`; \
 	for b in 1 17 33 980 8192; do \
