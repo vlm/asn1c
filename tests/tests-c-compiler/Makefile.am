@@ -60,11 +60,15 @@ TESTS += check-src/check-72.-fcompound-names.c
 TESTS += check-src/check-73.c
 TESTS += check-src/check-92.-findirect-choice.c
 TESTS += check-src/check-92.c
+TESTS += check-src/check-158.-fcompound-names.c
 
 if TEST_64BIT
 TESTS += check-src/check64-134.-gen-PER.c
 TESTS += check-src/check64-136.-gen-OER.c
 endif
+
+XFAIL_TESTS =
+XFAIL_TESTS += check-src/check-158.-fcompound-names.c
 
 EXTRA_DIST =    \
     data-62     \
