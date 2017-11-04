@@ -11,6 +11,7 @@
 #include "asn1_ref.h"
 #include "asn1_buffer.h"
 #include "asn1_namespace.h"
+#include "asn1_hash.h"
 
 #include "asn1p_integer.h"
 #include "asn1p_list.h"

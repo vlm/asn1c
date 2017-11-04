@@ -36,6 +36,7 @@
 #include <fcntl.h>		/* for open(2) */
 
 #include "asn1compiler.h"
+#include "asn1_hash.h"
 #include "asn1_namespace.h"
 
 struct asn1c_ioc_table_and_objset_s;
