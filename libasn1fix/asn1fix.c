@@ -486,12 +486,19 @@ asn1f_check_duplicate(arg_t *arg) {
 	arg_t tmparg = *arg;
 	int rvalue = 0;
 
+	if(arg->expr->spec_index != -1)
+		return rvalue;
+
+	assert(arg->expr->Identifier);
+
 	/*
 	 * This is a linear scan in search of a similar type.
 	 * The linear scan is just fine for the task, no need to over-optimize.
 	 */
 	TQ_FOR(tmparg.mod, &arg->asn->modules, mod_next) {
 		int critical = 1;	/* FATAL */
+		asn1p_expr_t *v;
+		int diff_files;	/* different files */
 
 		if((arg->mod->_tags & MT_STANDARD_MODULE)
 		!= (tmparg.mod->_tags & MT_STANDARD_MODULE)) {
@@ -499,25 +506,17 @@ asn1f_check_duplicate(arg_t *arg) {
 			critical = 0;	/* WARNING */
 		}
 
-		TQ_FOR(tmparg.expr, &(tmparg.mod->members), next) {
-			int diff_files;	/* different files */
+                if(!(v = (asn1p_expr_t *)asn1_hash_search(tmparg.mod->members_hash, arg->expr->Identifier)))
+			continue;
 
-			assert(tmparg.expr->Identifier);
-			assert(arg->expr->Identifier);
+		if(v == arg->expr)
+			break; 
 
-			if(arg->expr->spec_index != -1)
-				continue;
-
-			if(tmparg.expr == arg->expr) break;
-
-			if(strcmp(tmparg.expr->Identifier,
-				  arg->expr->Identifier))
-				continue;
-
-			/* resolve clash of Identifier in different modules */
-			int oid_exist = (tmparg.expr->module->module_oid && arg->expr->module->module_oid);
-			if ((!oid_exist && strcmp(tmparg.expr->module->ModuleName, arg->expr->module->ModuleName)) ||
-				(oid_exist && !asn1p_oid_compare(tmparg.expr->module->module_oid, arg->expr->module->module_oid))) {
+		/* resolve clash of Identifier in different modules */
+		{
+			int oid_exist = (v->module->module_oid && arg->expr->module->module_oid);
+			if ((!oid_exist && strcmp(v->module->ModuleName, arg->expr->module->ModuleName)) ||
+				(oid_exist && !asn1p_oid_compare(v->module->module_oid, arg->expr->module->module_oid))) {
 
 				tmparg.expr->_mark |= TM_NAMECLASH;
 				arg->expr->_mark |= TM_NAMECLASH;
