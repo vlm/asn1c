@@ -78,6 +78,11 @@ typedef struct asn1p_module_s {
 	TQ_HEAD(struct asn1p_expr_s)	members;
 
 	/*
+	 * Hash of everything that this module defines itself.
+	 */
+	struct asn1_hash_s		*members_hash;
+
+	/*
 	 * Next module in the list.
 	 */
 	TQ_ENTRY(struct asn1p_module_s)
@@ -99,5 +104,6 @@ typedef struct asn1p_module_s {
  */
 asn1p_module_t *asn1p_module_new(void);
 void asn1p_module_free(asn1p_module_t *mod);
+void asn1p_module_build_name_hash(asn1p_module_t *mod);
 
 #endif	/* ASN1_PARSER_MODULE_H */

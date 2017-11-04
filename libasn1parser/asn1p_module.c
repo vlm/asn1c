@@ -42,7 +42,22 @@ asn1p_module_free(asn1p_module_t *mod) {
 		while((expr = TQ_REMOVE(&(mod->members), next)))
 			asn1p_expr_free(expr);
 
+		asn1_hash_destroy(mod->members_hash);
+
 		free(mod);
+	}
+}
+
+void
+asn1p_module_build_name_hash(asn1p_module_t *mod) {
+	asn1p_expr_t *expr;
+
+	if(!mod || mod->members_hash)
+             return;
+
+	TQ_FOR(expr, &(mod->members), next) {
+		asn1_hash_insert(&mod->members_hash,
+                                 expr->Identifier, expr);
 	}
 }
 

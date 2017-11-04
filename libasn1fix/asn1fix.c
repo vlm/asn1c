@@ -80,6 +80,7 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
      * PHASE I.
      */
     TQ_FOR(arg.mod, &(asn->modules), mod_next) {
+        asn1p_module_build_name_hash(arg.mod);
         arg.ns = asn1_namespace_new_from_module(arg.mod, 0);
         ret = asn1f_fix_module__phase_1(&arg);
         /*
