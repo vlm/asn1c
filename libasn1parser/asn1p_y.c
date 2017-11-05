@@ -349,6 +349,7 @@ void asn1p_lexer_hack_push_encoding_control(void);
 extern int asn1p_lineno;
 const char *asn1p_parse_debug_filename;
 #define ASN_FILENAME asn1p_parse_debug_filename
+int ext_num = 1;
 
 /*
  * Process directives as <ASN1C:RepresentAsPointer>
@@ -3087,8 +3088,10 @@ yyreduce:
 #line 1035 "asn1p_y.y"
     {
 		(yyval.a_expr) = (yyvsp[(1) - (5)].a_expr);
-		asn1p_expr_add_many((yyval.a_expr), (yyvsp[(4) - (5)].a_expr));
-		asn1p_expr_free((yyvsp[(4) - (5)].a_expr));
+		(yyvsp[(4) - (5)].a_expr)->meta_type = AMT_TYPE;
+		(yyvsp[(4) - (5)].a_expr)->expr_type = ASN_CONSTR_SEQUENCE;
+		(yyvsp[(4) - (5)].a_expr)->marker.flags |= EM_OPTIONAL;
+		asn1p_expr_add((yyval.a_expr), (yyvsp[(4) - (5)].a_expr));
 	}
     break;
 

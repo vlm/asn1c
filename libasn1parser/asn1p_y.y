@@ -1034,8 +1034,10 @@ ComponentTypeLists:
 	}
 	| ComponentTypeLists ',' TOK_VBracketLeft ComponentTypeLists TOK_VBracketRight {
 		$$ = $1;
-		asn1p_expr_add_many($$, $4);
-		asn1p_expr_free($4);
+		$4->meta_type = AMT_TYPE;
+		$4->expr_type = ASN_CONSTR_SEQUENCE;
+		$4->marker.flags |= EM_OPTIONAL;
+		asn1p_expr_add($$, $4);
 	}
 	;
 

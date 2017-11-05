@@ -329,6 +329,7 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int saved_target = arg->target->target;
     asn1c_ioc_table_and_objset_t ioc_tao;
+	int ext_num = 1;
 
 	DEPENDENCIES;
 
@@ -374,6 +375,15 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
             tmp_arg.embed--;
             if(v->expr_type != A1TC_EXTENSIBLE) OUT(";\n");
         } else {
+            char ext_name[20];
+
+            if((v->expr_type == ASN_CONSTR_SEQUENCE) &&
+               (v->marker.flags & EM_OPTIONAL) &&
+               (v->Identifier == NULL)) {
+                sprintf(ext_name, "ext%d", ext_num++);
+                v->Identifier = strdup(ext_name);
+            }
+
             EMBED_WITH_IOCT(v, ioc_tao);
         }
 	}
@@ -568,6 +578,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	const char *id;
 	int comp_mode = 0;	/* {root,ext=1,root,root,...} */
 	int saved_target = arg->target->target;
+	int ext_num = 1;
 
 	DEPENDENCIES;
 
@@ -603,11 +614,20 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 	}
 
 	TQ_FOR(v, &(expr->members), next) {
+		char ext_name[20];
+
 		if(v->expr_type == A1TC_EXTENSIBLE)
 			if(comp_mode < 3) comp_mode++;
 		if(comp_mode == 1)
 			v->marker.flags |= EM_OMITABLE | EM_INDIRECT;
 		try_inline_default(arg, v, 1);
+
+		if((v->expr_type == ASN_CONSTR_SEQUENCE) &&
+		   (v->marker.flags & EM_OPTIONAL) &&
+		   (v->Identifier == NULL)) {
+			sprintf(ext_name, "ext%d", ext_num++);
+			v->Identifier = strdup(ext_name);
+		}
 		EMBED(v);
 	}
 
