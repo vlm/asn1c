@@ -1541,7 +1541,9 @@ SEQUENCE_decode_aper(const asn_codec_ctx_t *opt_codec_ctx,
 		asn_TYPE_member_t *elm = &td->elements[edx];
 		void *memb_ptr;		/* Pointer to the member */
 		void **memb_ptr2;	/* Pointer to that pointer */
+#if 0
 		int padding;
+#endif
 
 		if(IN_EXTENSION_GROUP(specs, edx))
 			continue;
@@ -1553,7 +1555,7 @@ SEQUENCE_decode_aper(const asn_codec_ctx_t *opt_codec_ctx,
 			memb_ptr = (char *)st + elm->memb_offset;
 			memb_ptr2 = &memb_ptr;
 		}
-
+#if 0
 		/* Get Padding */
 		padding = (8 - (pd->moved % 8)) % 8;
 		if(padding > 0)
@@ -1570,7 +1572,7 @@ SEQUENCE_decode_aper(const asn_codec_ctx_t *opt_codec_ctx,
 				per_get_few_bits(pd, padding);
 		}
 #endif /* dealing with padding */
-
+#endif
 		/* Deal with optionality */
 		if(elm->optional) {
 			int present = per_get_few_bits(&opmd, 1);
