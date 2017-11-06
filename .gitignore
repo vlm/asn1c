@@ -47,6 +47,9 @@ stamp-h*
 /tests/tests-skeletons/check-*
 !/tests/tests-skeletons/check-*.c
 
+# /tests/tests-randomized
+/tests/tests-randomized/test-param-helper
+
 # /doc/docsrc
 doc/docsrc/*.aux
 doc/docsrc/*.dvi
