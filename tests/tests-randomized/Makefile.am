@@ -1,5 +1,6 @@
 @CODE_COVERAGE_RULES@
 
+check_PROGRAMS = test-param-helper
 dist_check_SCRIPTS = check-bundles.sh
 
 #Filter out the coverage options from CFLAGS as we don't need
@@ -19,6 +20,7 @@ TESTS_ENVIRONMENT=                          \
     FUZZ_TIME="${FUZZ_TIME}"                \
     ASAN_ENV_FLAGS="@ASAN_ENV_FLAGS@"       \
     srcdir=${srcdir}                        \
+    builddir=${builddir}                    \
     abs_top_srcdir=${abs_top_srcdir}        \
     abs_top_builddir=${abs_top_builddir}    \
     ${srcdir}/check-bundles.sh

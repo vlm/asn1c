@@ -29,6 +29,7 @@ usage() {
 RNDTEMP="${RNDTEMP:-.tmp.random}"
 
 srcdir="${srcdir:-.}"
+builddir="${builddir:-.}"
 abs_top_srcdir="${abs_top_srcdir:-`pwd`/../../}"
 abs_top_builddir="${abs_top_builddir:-`pwd`/../../}"
 MAKE="${MAKE:-make}"
@@ -140,13 +141,7 @@ get_param() {
     default="$2"
     asn="$3"
 
-    if nawk '' >/dev/null 2>&1 ; then
-        AWK=nawk
-    else
-        AWK=awk
-    fi
-
-    echo "$asn" | ${AWK} "BEGIN{FS=\"[^${param}=0-9]+\"};/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\")+1)}END{if(PARAM)print PARAM;else print \"${default}\";}"
+    "${builddir}/test-param-helper" "${param}" "${default}" "${asn}"
 }
 
 # compile_and_test "<text>" "<where found>"
