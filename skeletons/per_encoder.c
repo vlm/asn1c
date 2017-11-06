@@ -152,6 +152,9 @@ _uper_encode_flush_outp(asn_per_outp_t *po) {
 		buf++;
 	}
 
-	return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
+        if (po->output) {
+                return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
+        }
+        return 0;
 }
 
