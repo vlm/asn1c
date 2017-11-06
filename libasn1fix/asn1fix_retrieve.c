@@ -34,7 +34,6 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 	asn1p_module_t *fromModule;
 	asn1p_expr_t *tc = (asn1p_expr_t *)0;
 	asn1p_expr_t *memb = (asn1p_expr_t *)0;
-	asn1p_expr_t *v = (asn1p_expr_t *)0;
 
 	/*
 	 * Search in which exactly module this name is defined.
@@ -45,18 +44,11 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 			if(strcmp(name, tc->Identifier) == 0)
 				break;
 
-			if(!fromModule)
-				continue;
-
-			TQ_FOR(memb, &(fromModule->members), next) {
-				if((memb->expr_type != ASN_BASIC_ENUMERATED) ||
-					(strcmp(memb->Identifier, tc->Identifier) != 0))
-					continue;
-
-				v = asn1f_lookup_child(memb, name);
-				if (v) break;
-			}
-			if(v) break;
+			if(fromModule &&
+				(memb = asn1_hash_search(fromModule->members_hash, tc->Identifier)) &&
+				(memb->expr_type == ASN_BASIC_ENUMERATED) &&
+				(asn1f_lookup_child(memb, name)))
+				break;
 		}
 		if(tc) break;
 	}
