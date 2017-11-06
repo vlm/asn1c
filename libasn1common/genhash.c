@@ -58,6 +58,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stddef.h>
 #include <errno.h>
 #include "genhash.h"
 
@@ -767,7 +768,7 @@ genhash_empty(genhash_t *h, int freekeys, int freevalues) {
 
 unsigned int
 hashf_int (const void *key) {
-	return (*(const int *)key ^ (*(const int *)key >> 16));
+	return (*(const ptrdiff_t *)key ^ (*(const ptrdiff_t *)key >> 16));
 }
 
 int
@@ -777,7 +778,7 @@ cmpf_int (const void *key1, const void *key2) {
 
 unsigned int
 hashf_void (const void *key) {
-	return ((int)key ^ ((int)key >> 16));
+	return ((ptrdiff_t)key ^ ((ptrdiff_t)key >> 16));
 }
 
 int
