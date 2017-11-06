@@ -29,9 +29,10 @@ usage() {
 RNDTEMP="${RNDTEMP:-.tmp.random}"
 
 srcdir="${srcdir:-.}"
-builddir="${builddir:-.}"
 abs_top_srcdir="${abs_top_srcdir:-`pwd`/../../}"
 abs_top_builddir="${abs_top_builddir:-`pwd`/../../}"
+abs_builddir="${abs_builddir:-`pwd`}"
+export abs_builddir
 MAKE="${MAKE:-make}"
 FUZZ_TIME="${FUZZ_TIME:-10}"
 
@@ -141,7 +142,7 @@ get_param() {
     default="$2"
     asn="$3"
 
-    "${builddir}/test-param-helper" "${param}" "${default}" "${asn}"
+    "${abs_builddir}/test-param-helper" "${param}" "${default}" "${asn}"
 }
 
 # compile_and_test "<text>" "<where found>"

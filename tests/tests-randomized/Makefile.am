@@ -20,7 +20,7 @@ TESTS_ENVIRONMENT=                          \
     FUZZ_TIME="${FUZZ_TIME}"                \
     ASAN_ENV_FLAGS="@ASAN_ENV_FLAGS@"       \
     srcdir=${srcdir}                        \
-    builddir=${builddir}                    \
+    abs_builddir=${abs_builddir}            \
     abs_top_srcdir=${abs_top_srcdir}        \
     abs_top_builddir=${abs_top_builddir}    \
     ${srcdir}/check-bundles.sh
