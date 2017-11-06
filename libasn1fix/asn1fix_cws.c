@@ -389,7 +389,6 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 	char *mivr; /* Most Immediate Value Representation */
 	int new_ref = 1;
 	asn1p_t *asn;
-	asn1p_module_t *mod;
 	asn1p_expr_t *type_expr = (asn1p_expr_t *)NULL;
 	int i, ret = 0, psize;
 	char *pp;
@@ -458,9 +457,13 @@ _asn1f_assign_cell_value(arg_t *arg, struct asn1p_ioc_cell_s *cell,
 		free(mivr);
 		return -1;
 	} else {
-		mod = TQ_FIRST(&(asn->modules));
-		assert(mod);
-		expr = TQ_REMOVE(&(mod->members), next);
+        asn1p_module_t *mod = TQ_FIRST(&(asn->modules));
+        assert(mod);
+
+        /* This member removal is safe with respect to members hash since the
+         * entire asn module will be deleted down below.
+         */
+        expr = TQ_REMOVE(&(mod->members), next);
 		assert(expr);
 
         expr->parent_expr = NULL;

@@ -95,15 +95,14 @@ static asn1p_module_t *currentModule;
 #ifdef	AL_IMPORT
 #error	AL_IMPORT DEFINED ELSEWHERE!
 #endif
-#define	AL_IMPORT(to,where,from,field)	do {				\
-		if(!(from)) break;					\
-		while(TQ_FIRST(&((from)->where))) {			\
-			TQ_ADD(&((to)->where),				\
-				TQ_REMOVE(&((from)->where), field),	\
-				field);					\
-		}							\
-		assert(TQ_FIRST(&((from)->where)) == 0);		\
-	} while(0)
+#define AL_IMPORT(to, where, from, field)                                      \
+    do {                                                                       \
+        if(!(from)) break;                                                     \
+        while(TQ_FIRST(&((from)->where))) {                                    \
+            TQ_ADD(&((to)->where), TQ_REMOVE(&((from)->where), field), field); \
+        }                                                                      \
+        assert(TQ_FIRST(&((from)->where)) == 0);                               \
+    } while(0)
 
 %}
 
@@ -589,7 +588,7 @@ ModuleBody:
 		$$ = asn1p_module_new();
 		AL_IMPORT($$, exports, $1, xp_next);
 		AL_IMPORT($$, imports, $2, xp_next);
-		AL_IMPORT($$, members, $3, next);
+		asn1p_module_move_members($$, $3);
 
 		asn1p_module_free($1);
 		asn1p_module_free($2);
@@ -608,7 +607,7 @@ AssignmentList:
 			$$ = $2;
 			break;
 		}
-		AL_IMPORT($$, members, $2, next);
+        asn1p_module_move_members($$, $2);
 		asn1p_module_free($2);
 	}
 	;
@@ -623,14 +622,14 @@ Assignment:
 		checkmem($$);
 		assert($1->expr_type != A1TC_INVALID);
 		assert($1->meta_type != AMT_INVALID);
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_module_member_add($$, $1);
 	}
 	| ValueAssignment {
 		$$ = asn1p_module_new();
 		checkmem($$);
 		assert($1->expr_type != A1TC_INVALID);
 		assert($1->meta_type != AMT_INVALID);
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_module_member_add($$, $1);
 	}
 	/*
 	 * Value set definition
@@ -644,7 +643,7 @@ Assignment:
 		checkmem($$);
 		assert($1->expr_type != A1TC_INVALID);
 		assert($1->meta_type != AMT_INVALID);
-		TQ_ADD(&($$->members), $1, next);
+		asn1p_module_member_add($$, $1);
 	}
 	| TOK_ENCODING_CONTROL TOK_capitalreference 
 		{ asn1p_lexer_hack_push_encoding_control(); }
@@ -728,11 +727,11 @@ ImportsList:
 	ImportsElement {
 		$$ = asn1p_xports_new();
 		checkmem($$);
-		TQ_ADD(&($$->members), $1, next);
+		TQ_ADD(&($$->xp_members), $1, next);
 	}
 	| ImportsList ',' ImportsElement {
 		$$ = $1;
-		TQ_ADD(&($$->members), $3, next);
+		TQ_ADD(&($$->xp_members), $3, next);
 	}
 	;
 
@@ -789,11 +788,11 @@ ExportsBody:
 	ExportsElement {
 		$$ = asn1p_xports_new();
 		assert($$);
-		TQ_ADD(&($$->members), $1, next);
+		TQ_ADD(&($$->xp_members), $1, next);
 	}
 	| ExportsBody ',' ExportsElement {
 		$$ = $1;
-		TQ_ADD(&($$->members), $3, next);
+		TQ_ADD(&($$->xp_members), $3, next);
 	}
 	;
 
