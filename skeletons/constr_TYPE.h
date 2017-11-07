@@ -242,17 +242,16 @@ typedef struct asn_TYPE_tag2member_s {
 } asn_TYPE_tag2member_t;
 
 /*
- * This function is a wrapper around (td)->print_struct, which prints out
- * the contents of the target language's structure (struct_ptr) into the
- * file pointer (stream) in human readable form.
+ * This function prints out the contents of the target language's structure
+ * (struct_ptr) into the file pointer (stream) in human readable form.
  * RETURN VALUES:
  * 	 0: The structure is printed.
  * 	-1: Problem dumping the structure.
  * (See also xer_fprint() in xer_encoder.h)
  */
-int asn_fprint(FILE *stream,		/* Destination stream descriptor */
-	asn_TYPE_descriptor_t *td,	/* ASN.1 type descriptor */
-	const void *struct_ptr);	/* Structure to be printed */
+int asn_fprint(FILE *stream, /* Destination stream descriptor */
+               const asn_TYPE_descriptor_t *td, /* ASN.1 type descriptor */
+               const void *struct_ptr);         /* Structure to be printed */
 
 #ifdef __cplusplus
 }
