@@ -13,9 +13,9 @@
 \setmonofont{Consolas}
 
 \usepackage{fancyhdr}
+\usepackage{fancyref}
 \usepackage{longtable}
 \usepackage{booktabs}
-\usepackage{varioref}
 \usepackage{url}
 \usepackage{xcolor}
 \usepackage{listings}
@@ -64,7 +64,7 @@
         flexiblecolumns=false
         }
 \lstdefinelanguage{asn1}{
-	morekeywords={DEFINITIONS,BEGIN,END,SEQUENCE,SET,OF,CHOICE,OPTIONAL},
+	morekeywords={DEFINITIONS,BEGIN,END,AUTOMATIC,TAGS,SEQUENCE,SET,OF,CHOICE,OPTIONAL,INTEGER,MAX},
 	morecomment=[l]{--},
 	morecomment=[n]{/*}{*/}
         }
@@ -112,622 +112,7 @@
 
 \tableofcontents{}
 
-\part{Using the ASN.1 Compiler}
-
-
-\chapter{Introduction to the ASN.1 Compiler}
-
-The purpose of the ASN.1 compiler is to convert the specifications
-in ASN.1 notation into some other language. At this moment, only C
-and C++ target languages are supported, the latter is in upward compatibility
-mode.
-
-The compiler reads the specification and emits a series of target
-language structures (C structs, unions, enums) describing the corresponding
-ASN.1 types. The compiler also creates the code which allows automatic
-serialization and deserialization of these structures using several
-standardized encoding rules (BER, DER, OER, PER, XER).
-
-Let's take the following ASN.1 example%
-\footnote{Part \ref{par:ASN.1-Basics} provides a quick reference
-on the ASN.1 notation.}:
-\begin{asn}
-RectangleModule DEFINITIONS ::= BEGIN
-
-Rectangle ::= SEQUENCE {
-    height  INTEGER,        -- Height of the rectangle
-    width   INTEGER         -- Width of the rectangle
-}
-
-END
-\end{asn}
-The asn1c compiler reads this ASN.1 definition and produce the following
-C type:
-\begin{codesample}
-typedef struct Rectangle_s {
-    long height;
-    long width;
-} Rectangle_t;
-\end{codesample}
-The asn1c compiler also creates the code for converting this structure into
-platform-independent wire representation and the decoder
-of such wire representation back into local, machine-specific type.
-These encoders and decoders are also called serializers and deserializers,
-marshallers and unmarshallers, or codecs.
-
-\section{Quick start with asn1c}
-
-After building and installing the compiler, the \cmd{asn1c}
-may be used to compile the ASN.1 modules%
-\footnote{This is probably \textbf{not} what you want to try out right now. Read through the rest of this chapter and check the Section~\ref{sec:Command-line-options}
-to find out about \textbf{-P} and \textbf{-R} options.%
-}:
-\begin{bash}
-asn1c %\emph{<modules.asn>}%
-\end{bash}
-If several ASN.1 modules contain interdependencies, all of the files
-must be specified altogether:
-\begin{bash}
-asn1c %\emph{<module1.asn> <module2.asn> ...}%
-\end{bash}
-The compiler \textbf{-E} and \textbf{-EF} options are used for testing
-the parser and the semantic fixer, respectively. These options will
-instruct the compiler to dump out the parsed (and fixed, if \textbf{-F}
-is involved) ASN.1 specification as it was understood
-by the compiler. It might be useful to check whether a particular
-syntactic construct is properly supported by the compiler.
-\begin{bash}
-asn1c %\textbf{-EF} \emph{<module-to-test.asn>}%
-\end{bash}
-The \textbf{-P} option is used to dump the compiled output on the
-screen instead of creating a bunch of .c and .h files on disk in the
-current directory. You would probably want to start with \textbf{-P}
-option instead of creating a mess in your current directory. Another
-option, \textbf{-R}, asks compiler to only generate the files which
-need to be generated, and supress linking in the numerous support
-files.
-
-Print the compiled output instead of creating multiple source files:
-\begin{bash}
-asn1c %\textbf{-P} \emph{<module-to-compile-and-print.asn>}%
-\end{bash}
-
-\clearpage{}
-\section{Understanding compiler output}
-
-The \cmd{asn1c} compiler produces a number of files:
-\begin{itemize}
-\item A set of .c and .h files for each type defined
-in the ASN.1 specification. These files will be named similarly to
-the ASN.1 types (\textbf{Rectangle.c} and \textbf{Rectangle.h} for the
-RectangleModule ASN.1 module defined in the beginning of this document).
-\item A set of helper .c and .h files which contain the generic encoders,
-decoders and other useful routines.
-Sometimes they are referred to by the term \emph{skeletons}.
-There will be quite a few of them, some
-of them are not even always necessary, but the overall amount of code
-after compilation will be rather small anyway.
-\item A \textbf{Makefile.am.libasncodecs} file which explicitly lists all the
-generated files.
-This makefile can be used on its own to build the just the codec library.
-\item A \textbf{converter-example.c} file containing the \emph{int main()} function with a fully functioning encoder and data format converter. It can convert a given PDU between BER, XER and possibly OER and PER (if \cmd{-gen-OER} or \cmd{-gen-PER} options to \cmd{asn1c} were in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
-\item A \textbf{Makefile.am.example} file which binds together
-\textbf{Makefile.am.libasncodecs} and \textbf{converter-example.c}
-to build a versatile converter and debugger for your data formats.
-\end{itemize}
-It is possible to compile everything with just a couple of instructions:
-\begin{bash}
-asn1c -pdu=%\emph{Rectangle}% *.asn
-make -f Makefile.am.example                   # If you use `make`
-\end{bash}
-or
-\begin{bash}
-asn1c *.asn
-cc -I. -DPDU=%\emph{Rectangle}% -o rectangle.exe *.c   # ... or like this
-\end{bash}
-Refer to the Chapter \ref{cha:Step-by-step-examples} for a sample
-\emph{int main()} function if you want some custom logic and not satisfied
-with the supplied \emph{converter-example.c}.
-
-\clearpage{}
-\section{\label{sec:Command-line-options}Command line options}
-
-The following table summarizes the \cmd{asn1c} command line options.
-
-\renewcommand{\arraystretch}{1.33}
-\begin{longtable}{lp{4in}}
-\textbf{Stage Selection Options} & \textbf{Description}\\
-\midrule
-{\ttfamily -E} & {\small Stop after the parsing stage and print the reconstructed ASN.1
-specification code to the standard output.}\\
-{\ttfamily -F} & {\small Used together with \texttt{-E}, instructs the compiler to stop after
-the ASN.1 syntax tree fixing stage and dump the reconstructed ASN.1
-specification to the standard output.}\\
-{\ttfamily -P} & {\small Dump the compiled output to the standard output instead of
-creating the target language files on disk.}\\
-{\ttfamily -R} & {\small Restrict the compiler to generate only the ASN.1 tables, omitting the usual support code.}\\
-{\ttfamily -S~\emph{<directory>}} & {\small Use the specified directory with ASN.1 skeleton files.}\\
-{\ttfamily -X} & {\small Generate the XML DTD for the specified ASN.1 modules.}\\\\
-\textbf{Warning Options} & \textbf{Description}\\
-\midrule
-{\ttfamily -Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\\
-{\ttfamily -Wdebug-parser} & {\small Enable the parser debugging during the ASN.1 parsing stage.}\\
-{\ttfamily -Wdebug-lexer} & {\small Enable the lexer debugging during the ASN.1 parsing stage.}\\
-{\ttfamily -Wdebug-fixer} & {\small Enable the ASN.1 syntax tree fixer debugging during the fixing stage.}\\
-{\ttfamily -Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\\  \\
-\textbf{Language Options} & \textbf{Description}\\
-\midrule
-{\ttfamily -fbless-SIZE} & {\small Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which this constraint is normally prohibited by the standard.
-This is a violation of an ASN.1 standard and compiler may fail to produce the meaningful code.}\\
-{\ttfamily -fcompound-names} & {\small Use complex names for C structures. Using complex names prevents
-name clashes in case the module reuses the same identifiers in multiple
-contexts.}\\
-{\ttfamily -findirect-choice} & {\small When generating code for a CHOICE type, compile the CHOICE
-members as indirect pointers instead of declaring them inline. Consider
-using this option together with \texttt{-fno-include-deps}
-to prevent circular references.}\\
-{\ttfamily -fincludes-quoted} & {\small Generate \#include lines in "double" instead of <angle> quotes.}\\
-{\ttfamily -fknown-extern-type=\emph{<name>}} & {\small Pretend the specified type is known. The compiler will assume
-the target language source files for the given type have been provided
-manually. }\\
-{\ttfamily -fline-refs} & {\small Include ASN.1 module's line numbers in generated code comments.}\\
-{\ttfamily -fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
-may produce a shorter executable.}\\
-{\ttfamily -fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical dependencies.}\\
-{\ttfamily -funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's structures.}\\
-{\ttfamily -fwide-types} & {\small Use the wide integer types (INTEGER\_t, REAL\_t) instead of machine's native data types (long, double). }\\\\
-\textbf{Codecs Generation Options} & \textbf{Description}\\
-\midrule
-{\ttfamily -gen-OER} & {\small Generate the Octet Encoding Rules (OER) support code.}\\
-{\ttfamily -gen-PER} & {\small Generate the Packed Encoding Rules (PER) support code.}\\
-{\ttfamily -pdu=\{\textbf{all}|\textbf{auto}|\emph{Type}\}} & {\small Create a PDU table for specified types, or discover the Protocol Data Units automatically.
-In case of \texttt{-pdu=\textbf{all}}, all ASN.1 types defined in all modules wil form a PDU table. In case of \texttt{-pdu=\textbf{auto}}, all types not referenced by any other type will form a PDU table. If \texttt{\emph{Type}} is an ASN.1 type identifier, it is added to a PDU table. The last form may be specified multiple times.}\\ \\
-\textbf{Output Options} & \textbf{Description}\\
-\midrule
-{\ttfamily -print-class-matrix} & {\small When \texttt{-EF} options are given, this option instructs the compiler to print out the collected Information Object Class matrix.}\\
-{\ttfamily -print-constraints} & {\small With \texttt{-EF}, this option instructs the compiler
-to explain its internal understanding of subtype constraints.}\\
-{\ttfamily -print-lines} & {\small Generate \texttt{``-{}- \#line''} comments
-in \texttt{-E} output.}\\
-\end{longtable}
-\renewcommand{\arraystretch}{1}
-
-
-\chapter{Using the ASN.1 Compiler}
-
-
-\section[Invoking the codec API]{Invoking the generated ASN.1 codec API}
-
-Let's start with including the necessary header files into your
-application. Normally it is enough to include the header file of
-the main PDU type. For our \emph{Rectangle} module, including the \emph{Rectangle.h} file is sufficient:
-\begin{codesample}
-#include <Rectangle.h>
-\end{codesample}
-The header files defines a C structure corresponding to the ASN.1
-definition of a rectangle and the declaration of the ASN.1
-\emph{type descriptor}. A type descriptor is a special globally accessible
-object which is used as an argument to most of the API functions provided by
-the ASN.1 codec. A type descriptor starts with \emph{asn\_DEF\_\ldots{}}. For example, here is the code which frees the Rectangle\_t structure:
-\begin{codesample}
-Rectangle_t *rect = ...;
-
-ASN_STRUCT_FREE(%\textbf{asn\_DEF\_}%Rectangle, rect);
-\end{codesample}
-This code defines a \emph{rect} pointer which points to the Rectangle\_t
-structure which needs to be freed. The second line uses a generic
-\code{ASN\_STRUCT\_FREE()} macro which invokes the memory deallocation routine
-created specifically for this Rectangle\_t structure.
-The \emph{asn\_DEF\_Rectangle} is the type descriptor which holds
-a collection of routines and operations defined for the Rectangle\_t structure.
-
-The following member functions of the asn\_DEF\_Rectangle type descriptor
-are of interest:
-\begin{description}
-\item [{ber\_decoder}] This is the generic \emph{restartable}%
-\footnote{Restartability mean that if the decoder encounters the end of the buffer it may be invoked again with the rest of the
-buffer to continue decoding.}
-BER decoder (Basic Encoding Rules). This decoder would create and/or
-fill the target structure for you. See Section~\ref{sub:Decoding-BER}.
-\item [{der\_encoder}] This is the generic DER encoder (Distinguished Encoding
-Rules). This encoder will take the target structure and encode it
-into a series of bytes. See Section~\ref{sub:Encoding-DER}. NOTE:
-DER encoding is a subset of BER. Any BER decoder should be able to
-handle any DER input.
-\item [{oer\_decoder}] This is the OER (Octet Encoding Rules) decoder.
-\item [{oer\_encoder}] This is the Canonical OER encoder. This encoder
-will take the target structure and encode it into a series of bytes compatible
-with all BASIC-OER and CANONICAL-OER decoders.
-\item [{uper\_decoder}] This is the Unaligned PER decoder.
-\item [{uper\_encoder}] This is the Unaligned Basic PER encoder. This encoder
-will take the target structure and encode it into a series of bytes.
-\item [{xer\_decoder}] This is the generic XER decoder. It takes both BASIC-XER
-or CANONICAL-XER encodings and deserializes the data into a local,
-machine-dependent representation. See Section~\ref{sub:Decoding-XER}.
-\item [{xer\_encoder}] This is the XER encoder (XML Encoding Rules). This
-encoder will take the target structure and represent it as an XML
-(text) document using either BASIC-XER or CANONICAL-XER encoding rules.
-See Section~\ref{sub:Encoding-XER}.
-
-\item [{check\_constraints}] Check that the contents of the target structure
-are semantically valid and constrained to appropriate implicit or
-explicit subtype constraints. See Section~\ref{sub:Validating-the-target}.
-\item [{print\_struct}] This function convert the contents of the passed
-target structure into human readable form. This form is not formal
-and cannot be converted back into the structure, but it may turn out
-to be useful for debugging or quick-n-dirty printing. See Section~\ref{sub:Printing-the-target}.
-\item [{free\_struct}] This is a generic disposal which frees the target
-structure. See Section~\ref{sub:Freeing-the-target}.
-\end{description}
-Each of the above function takes the type descriptor (\emph{asn\_DEF\_\ldots{}})
-and the target structure (\emph{rect}, as in the example above).
-
-\subsection{\label{sub:Generic-Encoding}Generic encoders and decoders}
-
-Before we start describing specific encoders and decoders, let's step back
-a little and check out a simple high level way.
-
-The asn1c runtime supplies (see \emph{asn\_application.h}) two sets of high level functions, \emph{asn\_encode*} and \emph{asn\_decode*}, which take a transfer syntax selector as the argument. The transfer syntax selector is defined as this:
-
-\begin{codesample}[basicstyle=\scriptsize\listingfont]
-/*
- * A selection of ASN.1 Transfer Syntaxes to use with generalized encoders and decoders.
- */
-enum asn_transfer_syntax {
-    ATS_INVALID,
-    ATS_NONSTANDARD_PLAINTEXT,
-    ATS_BER,
-    ATS_DER,
-    ATS_CER,
-    ATS_BASIC_OER,
-    ATS_CANONICAL_OER,
-    ATS_UNALIGNED_BASIC_PER,
-    ATS_UNALIGNED_CANONICAL_PER,
-    ATS_BASIC_XER,
-    ATS_CANONICAL_XER,
-};
-\end{codesample}
-
-Using this encoding selector, encoding and decoding becomes very generic:
-
-\noindent{}Encoding:
-
-\begin{codesample}[basicstyle=\scriptsize\listingfont]
-uint8_t buffer[128];
-size_t buf_size = sizeof(buffer);
-asn_enc_rval_t er;
-
-er = %\textbf{asn\_encode\emph{\_to\_buffer}}%(0, %\textbf{ATS\_DER}%, &asn_DEF_Rectangle, buffer, buf_size);
-
-if(er.encoded > buf_size) {
-    fprintf(stderr, "Buffer of size %\%%zu is too small for %\%%s, need %\%%zu\n",
-        buf_size, asn_DEF_Rectangle.name, er.encoded);
-}
-\end{codesample}
-
-\noindent{}Decoding:
-
-\begin{codesample}[basicstyle=\scriptsize\listingfont]
-Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
-
-... = %\textbf{asn\_decode}%(0, %\textbf{ATS\_BER}%, &asn_DEF_Rectangle, (void **)%$\underbracket{\textrm{\listingfont \&rect}}$%, buffer, buf_size);
-\end{codesample}
-
-\subsection{\label{sub:Decoding-BER}Decoding BER}
-
-The Basic Encoding Rules describe the most widely used (by the ASN.1
-community) way to encode and decode a given structure in a machine-independent
-way. Several other encoding rules (CER, DER) define a more restrictive
-versions of BER, so the generic BER parser is also capable of decoding
-the data encoded by the CER and DER encoders. The opposite is not true.
-
-\emph{The ASN.1 compiler provides the generic BER decoder which is
-capable of decoding BER, CER and DER encoded data.}
-
-The decoder is restartable (stream-oriented), which means that in
-case the buffer has less data than it is expected, the decoder will
-process whatever there is available and ask for more data to be provided.
-Please note that the decoder may actually process less data than it
-was given in the buffer, which means that you must be able to make
-the next buffer contain the unprocessed part of the previous buffer.
-
-Suppose, you have two buffers of encoded data: 100 bytes and 200 bytes.
-\begin{itemize}
-\item You can concatenate these buffers and feed the BER decoder with 300
-bytes of data, or
-\item You can feed it the first buffer of 100 bytes of data, realize that
-the ber\_decoder consumed only 95 bytes from it and later feed the
-decoder with 205 bytes buffer which consists of 5 unprocessed bytes
-from the first buffer and the additional 200 bytes from the second
-buffer.
-\end{itemize}
-This is not as convenient as it could be (the BER encoder could
-consume the whole 100 bytes and keep these 5 bytes in some temporary
-storage), but in case of existing stream based processing it might
-actually fit well into existing algorithm. Suggestions are welcome.
-
-Here is the example of BER decoding of a simple structure:
-
-\begin{codesample}
-Rectangle_t *
-simple_deserializer(const void *buffer, size_t buf_size) {
-    asn_dec_rval_t rval;
-    Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
-
-    rval = %\textbf{asn\_DEF\_Rectangle.op->ber\_decoder}%(0,
-          &asn_DEF_Rectangle,
-          (void **)%$\underbracket{\textrm{\listingfont \&rect}}$%,    /* Decoder %\emph{changes}% the pointer */
-          buffer, buf_size, 0);
-
-    if(rval%\textbf{.code}% == RC_OK) {
-        return rect;          /* Decoding succeeded */
-    } else {
-        /* Free the partially decoded rectangle */
-        ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
-        return 0;
-    }
-}
-\end{codesample}
-
-The code above defines a function, \emph{simple\_deserializer}, which
-takes a buffer and its length and is expected to return a pointer
-to the Rectangle\_t structure. Inside, it tries to convert the bytes
-passed into the target structure (rect) using the BER decoder and
-returns the rect pointer afterwards. If the structure cannot be deserialized,
-it frees the memory which might be left allocated by the unfinished
-\emph{ber\_decoder} routine and returns 0 (no data). (This \textbf{freeing
-is necessary} because the ber\_decoder is a restartable procedure,
-and may fail just because there is more data needs to be provided
-before decoding could be finalized). The code above obviously does
-not take into account the way the \emph{ber\_decoder()} failed, so
-the freeing is necessary because the part of the buffer may already
-be decoded into the structure by the time something goes wrong.
-
-A little less wordy would be to invoke a globally available \emph{ber\_decode()}
-function instead of dereferencing the asn\_DEF\_Rectangle type descriptor:
-\begin{codesample}
-rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
-\end{codesample}
-Note that the initial (asn\_DEF\_Rectangle.op->ber\_decoder) reference
-is gone, and also the last argument (0) is no longer necessary.
-
-These two ways of BER decoder invocations are fully equivalent.
-
-The BER de\emph{coder} may fail because of (\emph{the following RC\_\ldots{}
-codes are defined in ber\_decoder.h}):
-\begin{itemize}
-\item RC\_WMORE: There is more data expected than it is provided (stream
-mode continuation feature);
-\item RC\_FAIL: General failure to decode the buffer;
-\item \ldots{} other codes may be defined as well.
-\end{itemize}
-Together with the return code (.code) the asn\_dec\_rval\_t type contains
-the number of bytes which is consumed from the buffer. In the previous
-hypothetical example of two buffers (of 100 and 200 bytes), the first
-call to ber\_decode() would return with .code = RC\_WMORE and .consumed
-= 95. The .consumed field of the BER decoder return value is \textbf{always}
-valid, even if the decoder succeeds or fails with any other return
-code.
-
-Look into ber\_decoder.h for the precise definition of ber\_decode()
-and related types.
-
-
-\subsection{\label{sub:Encoding-DER}Encoding DER}
-
-The Distinguished Encoding Rules is the \emph{canonical} variant of
-BER encoding rules. The DER is best suited to encode the structures
-where all the lengths are known beforehand. This is probably exactly
-how you want to encode: either after a BER decoding or after a manual
-fill-up, the target structure contains the data which size is implicitly
-known before encoding. Among other uses, the DER encoding is used
-to encode X.509 certificates.
-
-As with BER decoder, the DER encoder may be invoked either directly
-from the ASN.1 type descriptor (asn\_DEF\_Rectangle) or from the stand-alone
-function, which is somewhat simpler:
-\begin{codesample}
-/*
- * This is the serializer itself.
- * It supplies the DER encoder with the
- * pointer to the custom output function.
- */
-ssize_t
-simple_serializer(FILE *ostream, Rectangle_t *rect) {
-    asn_enc_rval_t er;  /* Encoder return value */
-
-    er = der_encode(&asn_DEF_Rect, rect, write_stream, ostream);
-    if(er%\textbf{.encoded}% == -1) {
-        fprintf(stderr, "Cannot encode %\%%s: %\%%s\n",
-            er%\textbf{.failed\_type}%->name, strerror(errno));
-        return -1;
-    } else {
-        /* Return the number of bytes */
-        return er.encoded;
-    }
-}
-\end{codesample}
-As you see, the DER encoder does not write into some sort of buffer.
-It just invokes the custom function (possible, multiple
-times) which would save the data into appropriate storage. The optional
-argument \emph{app\_key} is opaque for the DER encoder code and just
-used by \emph{\_write\_stream()} as the pointer to the appropriate
-output stream to be used.
-
-If the custom write function is not given (passed as 0), then the
-DER encoder will essentially do the same thing (i.~e., encode the data)
-but no callbacks will be invoked (so the data goes nowhere). It may
-prove useful to determine the size of the structure's encoding before
-actually doing the encoding%
-\footnote{It is actually faster too: the encoder might skip over some computations
-which aren't important for the size determination.%
-}.
-
-Look into der\_encoder.h for the precise definition of der\_encode()
-and related types.
-
-
-\subsection{\label{sub:Encoding-XER}Encoding XER}
-
-The XER stands for XML Encoding Rules, where XML, in turn, is eXtensible
-Markup Language, a text-based format for information exchange. The
-encoder routine API comes in two flavors: stdio-based and callback-based.
-With the callback-based encoder, the encoding process is very similar
-to the DER one, described in Section~\ref{sub:Encoding-DER}. The
-following example uses the definition of write\_stream() from up there.
-\begin{codesample}
-/*
- * This procedure generates an XML document
- * by invoking the XER encoder.
- * NOTE: Do not copy this code verbatim!
- *       If the stdio output is necessary,
- *       use the xer_fprint() procedure instead.
- *       See Section %\ref{sub:Printing-the-target}%.
- */
-int
-print_as_XML(FILE *ostream, Rectangle_t *rect) {
-    asn_enc_rval_t er;  /* Encoder return value */
-
-    er = xer_encode(&asn_DEF_Rectangle, rect,
-        XER_F_BASIC, /* BASIC-XER or CANONICAL-XER */
-        write_stream, ostream);
-
-    return (er.encoded == -1) ? -1 : 0;
-}
-\end{codesample}
-Look into xer\_encoder.h for the precise definition of xer\_encode()
-and related types.
-
-See Section~\ref{sub:Printing-the-target} for the example of stdio-based
-XML encoder and other pretty-printing suggestions.
-
-
-\subsection{\label{sub:Decoding-XER}Decoding XER}
-
-The data encoded using the XER rules can be subsequently decoded using
-the xer\_decode() API call:
-\begin{codesample}
-Rectangle_t *
-XML_to_Rectangle(const void *buffer, size_t buf_size) {
-    asn_dec_rval_t rval;
-    Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
-
-    rval = xer_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
-
-    if(rval%\textbf{.code}% == RC_OK) {
-        return rect;          /* Decoding succeeded */
-    } else {
-        /* Free partially decoded rect */
-        ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
-        return 0;
-    }
-}
-\end{codesample}
-The decoder takes both BASIC-XER and CANONICAL-XER encodings.
-
-The decoder shares its data consumption properties with BER decoder;
-please read the Section~\ref{sub:Decoding-BER} to know more.
-
-Look into xer\_decoder.h for the precise definition of xer\_decode()
-and related types.
-
-
-\subsection{\label{sub:Validating-the-target}Validating the target structure}
-
-Sometimes the target structure needs to be validated. For example,
-if the structure was created by the application (as opposed to being
-decoded from some external source), some important information required
-by the ASN.1 specification might be missing. On the other hand, the
-successful decoding of the data from some external source does not
-necessarily mean that the data is fully valid either. It might well
-be the case that the specification describes some subtype constraints
-that were not taken into account during decoding, and it would actually
-be useful to perform the last check when the data is ready to be encoded
-or when the data has just been decoded to ensure its validity according
-to some stricter rules.
-
-The asn\_check\_constraints() function checks the type for various
-implicit and explicit constraints. It is recommended to use asn\_check\_constraints()
-function after each decoding and before each encoding.
-
-Look into constraints.h for the precise definition of asn\_check\_constraints()
-and related types.
-
-
-\subsection{\label{sub:Printing-the-target}Printing the target structure}
-
-There are two ways to print the target structure: either invoke the
-print\_struct member of the ASN.1 type descriptor, or using the asn\_fprint()
-function, which is a simpler wrapper of the former:
-\begin{codesample}
-asn_fprint(stdout, &asn_DEF_Rectangle, rect);
-\end{codesample}
-Look into constr\_TYPE.h for the precise definition of asn\_fprint()
-and related types.
-
-Another practical alternative to this custom format printing would
-be to invoke XER encoder. The default BASIC-XER encoder performs reasonable
-formatting for the output to be useful and human readable. To invoke
-the XER decoder in a manner similar to asn\_fprint(), use the xer\_fprint()
-call:
-\begin{codesample}
-xer_fprint(stdout, &asn_DEF_Rectangle, rect);
-\end{codesample}
-See Section~\ref{sub:Encoding-XER} for XML-related details.
-
-
-\subsection{\label{sub:Freeing-the-target}Freeing the target structure}
-
-Freeing the structure is slightly more complex than it may seem to.
-When the ASN.1 structure is freed, all the members of the structure
-and their submembers are recursively freed as well.
-The ASN\_STRUCT\_FREE() macro helps with that.
-
-But it might not always be feasible to free the whole structure.
-In the following example, the application programmer defines a custom
-structure with one ASN.1-derived member (rect).
-\begin{codesample}
-struct my_figure {       /* The custom structure */
-    int flags;           /* <some custom member> */
-    /* The type is generated by the ASN.1 compiler */
-    Rectangle_t rect;
-    /* other members of the structure */
-};
-\end{codesample}
-This member is not a reference to the Rectangle\_t, but an in-place inclusion
-of the Rectangle\_t structure.
-If there's a need to free the \code{rect} member, the usual procedure of
-freeing everything must not be applied to the \code{\&rect} pointer itself,
-because it does not point to the beginning of memory block allocated by
-the memory allocation routine, but instead lies within a block allocated for
-the my\_figure structure.
-
-To solve this problem, in addition to ASN\_STRUCT\_FREE() macro, the asn1c
-skeletons define the ASN\_STRUCT\_RESET() macro which doesn't free the passed
-pointer and instead resets the structure into the clean and safe state.
-\begin{codesample}
-/* %\textbf{1. Rectangle\_t is defined within my\_figure}% */
-struct my_figure {
-    Rectangle_t rect;
-} *mf = ...;
-/*
- * Freeing the Rectangle_t
- * without freeing the mf->rect area.
- */
-ASN_STRUCT_RESET(asn_DEF_Rectangle, &mf->rect);
-  
-/* %\textbf{2. Rectangle\_t is a stand-alone pointer}% */
-Rectangle_t *rect = ...;
-/*
- * Freeing the Rectangle_t
- * and freeing the rect pointer.
- */
-ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
-\end{codesample}
-It is safe to invoke both macros with the target structure pointer
-set to 0 (NULL). In this case, the function will do nothing.
-
-\chapter{\label{cha:Step-by-step-examples}Step by step examples}
+\chapter{\label{chap:Quick-start-examples}Quick start examples}
 
 \section{A “Rectangle” converter and debugger}
 
@@ -953,17 +338,12 @@ cc -I. -o %\textbf{\emph{rdecode}} \emph{*.c}%
 named \textbf{rdecode}!
 \end{enumerate}
 
-\chapter{Constraint validation examples}
-
-This chapter shows how to define ASN.1 constraints and use the generated
-validation code.
-
-
-\section{Adding constraints into ``Rectangle'' type}
+\section{Adding constraints to a “Rectangle”}
 
 This example shows how to add basic constraints to the ASN.1 specification
 and how to invoke the constraints validation code in your application.
 \begin{enumerate}
+
 \item Create a file named \textbf{rectangle.asn} with the following contents:
 
 \begin{asn}
@@ -976,19 +356,14 @@ Rectangle ::= SEQUENCE {
 
 END
 \end{asn}
-\item Compile the file according to procedures shown in the previous chapter.
-\item Modify the Rectangle type processing routine (you can start with the
-main() routine shown in the Section~\ref{sec:A-Rectangle-Decoder})
-by placing the following snippet of code \emph{before} encoding and/or
-\emph{after} decoding the Rectangle type%
-\footnote{Placing the constraint checking code \emph{before encoding} helps
-to make sure the data is correct and within constraints before
-sharing the data with anyone else.
-Placing the constraint checking code \emph{after decoding} helps to make sure
-the application got the valid contents before making use of it.%
-}:
 
-\begin{codesample}
+\item Compile the file according to procedures shown in \fref{sec:A-Rectangle-Decoder}.
+\item Modify the Rectangle type processing routine (you can start with the
+main() routine shown in the \fref{sec:A-Rectangle-Decoder})
+by placing the following snippet of code \emph{before} encoding and/or
+\emph{after} decoding the Rectangle type:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
 int ret;           /* Return value */
 char errbuf[128];  /* Buffer for error message */
 size_t errlen = sizeof(errbuf);  /* Size of the buffer */
@@ -998,27 +373,612 @@ size_t errlen = sizeof(errbuf);  /* Size of the buffer */
 ret = asn_check_constraints(&asn_DEF_Rectangle, rectangle, errbuf, &errlen);
 /* assert(errlen < sizeof(errbuf)); // you may rely on that */
 if(ret) {
-    fprintf(stderr, "Constraint validation failed: %\%%s\n",
-            errbuf   /* errbuf is properly null-terminated */
-    );
+    fprintf(stderr, "Constraint validation failed: %\%%s\n", errbuf);
     /* exit(...); // Replace with appropriate action */
  }
 
 /* ... here goes the Rectangle %\emph{encoding}% code ... */
 \end{codesample}
 \item Compile the resulting C code as shown in the previous chapters.
-\item Try to test the constraints checking code by assigning integer value
+\item Test the constraints checking code by assigning integer value
 101 to the \textbf{.height} member of the Rectangle structure, or
-a negative value to the \textbf{.width} member. In either case, the
-program should print ``Constraint validation failed'' message, followed
-by a short explanation why validation did not succeed.
+a negative value to the \textbf{.width} member.
+The program will fail with ``Constraint validation failed'' message.
 \item Done.
 \end{enumerate}
 
-\part{\label{par:ASN.1-Basics}ASN.1 Basics}
+\chapter{ASN.1 Compiler}
+
+\section{The asn1c compiler tool}
+
+The purpose of the ASN.1 compiler is to convert the specifications
+in ASN.1 notation into some other language, such as C.
+
+The compiler reads the specification and emits a series of target
+language structures (C structs, unions, enums) describing the corresponding
+ASN.1 types. The compiler also creates the code which allows automatic
+serialization and deserialization of these structures using several
+standardized encoding rules (BER, DER, OER, PER, XER).
+
+Let's take the following ASN.1 example%
+\footnote{\Fref{chap:Abstract-Syntax-Notation} provides a quick reference
+on the ASN.1 notation.}:
+\begin{asn}
+RectangleModule DEFINITIONS ::= BEGIN
+
+Rectangle ::= SEQUENCE {
+    height  INTEGER,        -- Height of the rectangle
+    width   INTEGER         -- Width of the rectangle
+}
+
+END
+\end{asn}
+The asn1c compiler reads this ASN.1 definition and produce the following
+C type:
+\begin{codesample}
+typedef struct Rectangle_s {
+    long height;
+    long width;
+} Rectangle_t;
+\end{codesample}
+The asn1c compiler also creates the code for converting this structure into
+platform-independent wire representation and the decoder
+of such wire representation back into local, machine-specific type.
+These encoders and decoders are also called serializers and deserializers,
+marshallers and unmarshallers, or codecs.
+
+Compiling ASN.1 modules into C codecs can be as simple as invoking \cmd{asn1c}:
+may be used to compile the ASN.1 modules:
+\begin{bash}
+asn1c %\emph{<modules.asn>}%
+\end{bash}
+
+If several ASN.1 modules contain interdependencies, all of the files
+must be specified altogether:
+\begin{bash}
+asn1c %\emph{<module1.asn> <module2.asn> ...}%
+\end{bash}
+The compiler \textbf{-E} and \textbf{-EF} options are used for testing
+the parser and the semantic fixer, respectively. These options will
+instruct the compiler to dump out the parsed (and fixed, if \textbf{-F}
+is involved) ASN.1 specification as it was understood
+by the compiler. It might be useful to check whether a particular
+syntactic construct is properly supported by the compiler.
+\begin{bash}
+asn1c %\textbf{-EF} \emph{<module-to-test.asn>}%
+\end{bash}
+The \textbf{-P} option is used to dump the compiled output on the
+screen instead of creating a bunch of .c and .h files on disk in the
+current directory. You would probably want to start with \textbf{-P}
+option instead of creating a mess in your current directory. Another
+option, \textbf{-R}, asks compiler to only generate the files which
+need to be generated, and supress linking in the numerous support
+files.
+
+Print the compiled output instead of creating multiple source files:
+\begin{bash}
+asn1c %\textbf{-P} \emph{<module-to-compile-and-print.asn>}%
+\end{bash}
+
+\clearpage{}
+\section{Compiler output}
+
+The \cmd{asn1c} compiler produces a number of files:
+\begin{itemize}
+\item A set of .c and .h files for each type defined
+in the ASN.1 specification. These files will be named similarly to
+the ASN.1 types (\textbf{Rectangle.c} and \textbf{Rectangle.h} for the
+RectangleModule ASN.1 module defined in the beginning of this document).
+\item A set of helper .c and .h files which contain the generic encoders,
+decoders and other useful routines.
+Sometimes they are referred to by the term \emph{skeletons}.
+There will be quite a few of them, some
+of them are not even always necessary, but the overall amount of code
+after compilation will be rather small anyway.
+\item A \textbf{Makefile.am.libasncodecs} file which explicitly lists all the
+generated files.
+This makefile can be used on its own to build the just the codec library.
+\item A \textbf{converter-example.c} file containing the \emph{int main()} function with a fully functioning encoder and data format converter. It can convert a given PDU between BER, XER and possibly OER and PER (if \cmd{-gen-OER} or \cmd{-gen-PER} options to \cmd{asn1c} were in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
+\item A \textbf{Makefile.am.example} file which binds together
+\textbf{Makefile.am.libasncodecs} and \textbf{converter-example.c}
+to build a versatile converter and debugger for your data formats.
+\end{itemize}
+It is possible to compile everything with just a couple of instructions:
+\begin{bash}
+asn1c -pdu=%\emph{Rectangle}% *.asn
+make -f Makefile.am.example                   # If you use `make`
+\end{bash}
+or
+\begin{bash}
+asn1c *.asn
+cc -I. -DPDU=%\emph{Rectangle}% -o rectangle.exe *.c   # ... or like this
+\end{bash}
+Refer to the \fref{chap:Quick-start-examples} for a sample
+\emph{int main()} function if you want some custom logic and not satisfied
+with the supplied \emph{converter-example.c}.
+
+\clearpage{}
+\section{\label{sec:Command-line-options}Command line options}
+
+The following table summarizes the \cmd{asn1c} command line options.
+
+\renewcommand{\arraystretch}{1.33}
+\begin{longtable}{lp{4in}}
+\textbf{Stage Selection Options} & \textbf{Description}\\
+\midrule
+{\ttfamily -E} & {\small Stop after the parsing stage and print the reconstructed ASN.1
+specification code to the standard output.}\\
+{\ttfamily -F} & {\small Used together with \texttt{-E}, instructs the compiler to stop after
+the ASN.1 syntax tree fixing stage and dump the reconstructed ASN.1
+specification to the standard output.}\\
+{\ttfamily -P} & {\small Dump the compiled output to the standard output instead of
+creating the target language files on disk.}\\
+{\ttfamily -R} & {\small Restrict the compiler to generate only the ASN.1 tables, omitting the usual support code.}\\
+{\ttfamily -S~\emph{<directory>}} & {\small Use the specified directory with ASN.1 skeleton files.}\\
+{\ttfamily -X} & {\small Generate the XML DTD for the specified ASN.1 modules.}\\\\
+\textbf{Warning Options} & \textbf{Description}\\
+\midrule
+{\ttfamily -Werror} & {\small Treat warnings as errors; abort if any warning is produced.}\\
+{\ttfamily -Wdebug-parser} & {\small Enable the parser debugging during the ASN.1 parsing stage.}\\
+{\ttfamily -Wdebug-lexer} & {\small Enable the lexer debugging during the ASN.1 parsing stage.}\\
+{\ttfamily -Wdebug-fixer} & {\small Enable the ASN.1 syntax tree fixer debugging during the fixing stage.}\\
+{\ttfamily -Wdebug-compiler} & {\small Enable debugging during the actual compile time.}\\  \\
+\textbf{Language Options} & \textbf{Description}\\
+\midrule
+{\ttfamily -fbless-SIZE} & {\small Allow SIZE() constraint for INTEGER, ENUMERATED, and other types for which this constraint is normally prohibited by the standard.
+This is a violation of an ASN.1 standard and compiler may fail to produce the meaningful code.}\\
+{\ttfamily -fcompound-names} & {\small Use complex names for C structures. Using complex names prevents
+name clashes in case the module reuses the same identifiers in multiple
+contexts.}\\
+{\ttfamily -findirect-choice} & {\small When generating code for a CHOICE type, compile the CHOICE
+members as indirect pointers instead of declaring them inline. Consider
+using this option together with \texttt{-fno-include-deps}
+to prevent circular references.}\\
+{\ttfamily -fincludes-quoted} & {\small Generate \#include lines in "double" instead of <angle> quotes.}\\
+{\ttfamily -fknown-extern-type=\emph{<name>}} & {\small Pretend the specified type is known. The compiler will assume
+the target language source files for the given type have been provided
+manually. }\\
+{\ttfamily -fline-refs} & {\small Include ASN.1 module's line numbers in generated code comments.}\\
+{\ttfamily -fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
+may produce a shorter executable.}\\
+{\ttfamily -fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical dependencies.}\\
+{\ttfamily -funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's structures.}\\
+{\ttfamily -fwide-types} & {\small Use the wide integer types (INTEGER\_t, REAL\_t) instead of machine's native data types (long, double). }\\\\
+\textbf{Codecs Generation Options} & \textbf{Description}\\
+\midrule
+{\ttfamily -gen-OER} & {\small Generate the Octet Encoding Rules (OER) support code.}\\
+{\ttfamily -gen-PER} & {\small Generate the Packed Encoding Rules (PER) support code.}\\
+{\ttfamily -pdu=\{\textbf{all}|\textbf{auto}|\emph{Type}\}} & {\small Create a PDU table for specified types, or discover the Protocol Data Units automatically.
+In case of \texttt{-pdu=\textbf{all}}, all ASN.1 types defined in all modules wil form a PDU table. In case of \texttt{-pdu=\textbf{auto}}, all types not referenced by any other type will form a PDU table. If \texttt{\emph{Type}} is an ASN.1 type identifier, it is added to a PDU table. The last form may be specified multiple times.}\\ \\
+\textbf{Output Options} & \textbf{Description}\\
+\midrule
+{\ttfamily -print-class-matrix} & {\small When \texttt{-EF} options are given, this option instructs the compiler to print out the collected Information Object Class matrix.}\\
+{\ttfamily -print-constraints} & {\small With \texttt{-EF}, this option instructs the compiler
+to explain its internal understanding of subtype constraints.}\\
+{\ttfamily -print-lines} & {\small Generate \texttt{``-{}- \#line''} comments
+in \texttt{-E} output.}\\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
 
 
-\chapter{\label{cha:Abstract-Syntax-Notation:}Abstract Syntax Notation: ASN.1}
+\chapter{API reference}
+
+\section{ASN\_STRUCT\_FREE}
+\section{ASN\_STRUCT\_FREE\_CONTENTS\_ONLY}
+\section{ASN\_STRUCT\_RESET}
+\section{asn\_check\_constraints}
+\section{asn\_decode}
+\section{asn\_encode}
+\section{asn\_encode\_to\_buffer}
+\section{asn\_encode\_to\_new\_buffer}
+\section{asn\_fprint}
+\section{ber\_decode}
+\section{der\_encode}
+\section{der\_encode\_to\_buffer}
+\section{oer\_decode}
+\section{oer\_encode}
+\section{oer\_encode\_to\_buffer}
+\section{uper\_decode}
+\section{uper\_decode\_complete}
+\section{uper\_encode}
+\section{uper\_encode\_to\_buffer}
+\section{uper\_encode\_to\_new\_buffer}
+\section{xer\_decode}
+\section{xer\_encode}
+\section{xer\_equivalent}
+\section{xer\_fprint}
+
+\chapter{API usage examples}
+
+Let's start with including the necessary header files into your
+application. Normally it is enough to include the header file of
+the main PDU type. For our \emph{Rectangle} module, including the \emph{Rectangle.h} file is sufficient:
+\begin{codesample}
+#include <Rectangle.h>
+\end{codesample}
+The header files defines a C structure corresponding to the ASN.1
+definition of a rectangle and the declaration of the ASN.1
+\emph{type descriptor}. A type descriptor is a special globally accessible
+object which is used as an argument to most of the API functions provided by
+the ASN.1 codec. A type descriptor starts with \emph{asn\_DEF\_\ldots{}}. For example, here is the code which frees the Rectangle\_t structure:
+\begin{codesample}
+Rectangle_t *rect = ...;
+
+ASN_STRUCT_FREE(%\textbf{asn\_DEF\_}%Rectangle, rect);
+\end{codesample}
+This code defines a \emph{rect} pointer which points to the Rectangle\_t
+structure which needs to be freed. The second line uses a generic
+\code{ASN\_STRUCT\_FREE()} macro which invokes the memory deallocation routine
+created specifically for this Rectangle\_t structure.
+The \emph{asn\_DEF\_Rectangle} is the type descriptor which holds
+a collection of routines and operations defined for the Rectangle\_t structure.
+
+\section{\label{sec:Generic-Encoding}Generic encoders and decoders}
+
+Before we start describing specific encoders and decoders, let's step back
+a little and check out a simple high level way.
+
+The asn1c runtime supplies (see \emph{asn\_application.h}) two sets of high level functions, \emph{asn\_encode*} and \emph{asn\_decode*}, which take a transfer syntax selector as the argument. The transfer syntax selector is defined as this:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+/*
+ * A selection of ASN.1 Transfer Syntaxes to use with generalized encoders and decoders.
+ */
+enum asn_transfer_syntax {
+    ATS_INVALID,
+    ATS_NONSTANDARD_PLAINTEXT,
+    ATS_BER,
+    ATS_DER,
+    ATS_CER,
+    ATS_BASIC_OER,
+    ATS_CANONICAL_OER,
+    ATS_UNALIGNED_BASIC_PER,
+    ATS_UNALIGNED_CANONICAL_PER,
+    ATS_BASIC_XER,
+    ATS_CANONICAL_XER,
+};
+\end{codesample}
+
+Using this encoding selector, encoding and decoding becomes very generic:
+
+\noindent{}Encoding:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+uint8_t buffer[128];
+size_t buf_size = sizeof(buffer);
+asn_enc_rval_t er;
+
+er = %\textbf{asn\_encode\emph{\_to\_buffer}}%(0, %\textbf{ATS\_DER}%, &asn_DEF_Rectangle, buffer, buf_size);
+
+if(er.encoded > buf_size) {
+    fprintf(stderr, "Buffer of size %\%%zu is too small for %\%%s, need %\%%zu\n",
+        buf_size, asn_DEF_Rectangle.name, er.encoded);
+}
+\end{codesample}
+
+\noindent{}Decoding:
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+
+... = %\textbf{asn\_decode}%(0, %\textbf{ATS\_BER}%, &asn_DEF_Rectangle, (void **)%$\underbracket{\textrm{\listingfont \&rect}}$%, buffer, buf_size);
+\end{codesample}
+
+\section{\label{sec:Decoding-BER}Decoding BER}
+
+The Basic Encoding Rules describe the most widely used (by the ASN.1
+community) way to encode and decode a given structure in a machine-independent
+way. Several other encoding rules (CER, DER) define a more restrictive
+versions of BER, so the generic BER parser is also capable of decoding
+the data encoded by the CER and DER encoders. The opposite is not true.
+
+\emph{The ASN.1 compiler provides the generic BER decoder which is
+capable of decoding BER, CER and DER encoded data.}
+
+The decoder is restartable (stream-oriented), which means that in
+case the buffer has less data than it is expected, the decoder will
+process whatever there is available and ask for more data to be provided.
+Please note that the decoder may actually process less data than it
+was given in the buffer, which means that you must be able to make
+the next buffer contain the unprocessed part of the previous buffer.
+
+Suppose, you have two buffers of encoded data: 100 bytes and 200 bytes.
+\begin{itemize}
+\item You can concatenate these buffers and feed the BER decoder with 300
+bytes of data, or
+\item You can feed it the first buffer of 100 bytes of data, realize that
+the ber\_decoder consumed only 95 bytes from it and later feed the
+decoder with 205 bytes buffer which consists of 5 unprocessed bytes
+from the first buffer and the additional 200 bytes from the second
+buffer.
+\end{itemize}
+This is not as convenient as it could be (the BER encoder could
+consume the whole 100 bytes and keep these 5 bytes in some temporary
+storage), but in case of existing stream based processing it might
+actually fit well into existing algorithm. Suggestions are welcome.
+
+Here is the example of BER decoding of a simple structure:
+
+\begin{codesample}
+Rectangle_t *
+simple_deserializer(const void *buffer, size_t buf_size) {
+    asn_dec_rval_t rval;
+    Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+
+    rval = %\textbf{asn\_DEF\_Rectangle.op->ber\_decoder}%(0,
+          &asn_DEF_Rectangle,
+          (void **)%$\underbracket{\textrm{\listingfont \&rect}}$%,    /* Decoder %\emph{changes}% the pointer */
+          buffer, buf_size, 0);
+
+    if(rval%\textbf{.code}% == RC_OK) {
+        return rect;          /* Decoding succeeded */
+    } else {
+        /* Free the partially decoded rectangle */
+        ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
+        return 0;
+    }
+}
+\end{codesample}
+
+The code above defines a function, \emph{simple\_deserializer}, which
+takes a buffer and its length and is expected to return a pointer
+to the Rectangle\_t structure. Inside, it tries to convert the bytes
+passed into the target structure (rect) using the BER decoder and
+returns the rect pointer afterwards. If the structure cannot be deserialized,
+it frees the memory which might be left allocated by the unfinished
+\emph{ber\_decoder} routine and returns 0 (no data). (This \textbf{freeing
+is necessary} because the ber\_decoder is a restartable procedure,
+and may fail just because there is more data needs to be provided
+before decoding could be finalized). The code above obviously does
+not take into account the way the \emph{ber\_decoder()} failed, so
+the freeing is necessary because the part of the buffer may already
+be decoded into the structure by the time something goes wrong.
+
+A little less wordy would be to invoke a globally available \emph{ber\_decode()}
+function instead of dereferencing the asn\_DEF\_Rectangle type descriptor:
+\begin{codesample}
+rval = ber_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
+\end{codesample}
+Note that the initial (asn\_DEF\_Rectangle.op->ber\_decoder) reference
+is gone, and also the last argument (0) is no longer necessary.
+
+These two ways of BER decoder invocations are fully equivalent.
+
+The BER de\emph{coder} may fail because of (\emph{the following RC\_\ldots{}
+codes are defined in ber\_decoder.h}):
+\begin{itemize}
+\item RC\_WMORE: There is more data expected than it is provided (stream
+mode continuation feature);
+\item RC\_FAIL: General failure to decode the buffer;
+\item \ldots{} other codes may be defined as well.
+\end{itemize}
+Together with the return code (.code) the asn\_dec\_rval\_t type contains
+the number of bytes which is consumed from the buffer. In the previous
+hypothetical example of two buffers (of 100 and 200 bytes), the first
+call to ber\_decode() would return with .code = RC\_WMORE and .consumed
+= 95. The .consumed field of the BER decoder return value is \textbf{always}
+valid, even if the decoder succeeds or fails with any other return
+code.
+
+Look into ber\_decoder.h for the precise definition of ber\_decode()
+and related types.
+
+
+\section{\label{sec:Encoding-DER}Encoding DER}
+
+The Distinguished Encoding Rules is the \emph{canonical} variant of
+BER encoding rules. The DER is best suited to encode the structures
+where all the lengths are known beforehand. This is probably exactly
+how you want to encode: either after a BER decoding or after a manual
+fill-up, the target structure contains the data which size is implicitly
+known before encoding. Among other uses, the DER encoding is used
+to encode X.509 certificates.
+
+As with BER decoder, the DER encoder may be invoked either directly
+from the ASN.1 type descriptor (asn\_DEF\_Rectangle) or from the stand-alone
+function, which is somewhat simpler:
+\begin{codesample}
+/*
+ * This is the serializer itself.
+ * It supplies the DER encoder with the
+ * pointer to the custom output function.
+ */
+ssize_t
+simple_serializer(FILE *ostream, Rectangle_t *rect) {
+    asn_enc_rval_t er;  /* Encoder return value */
+
+    er = der_encode(&asn_DEF_Rect, rect, write_stream, ostream);
+    if(er%\textbf{.encoded}% == -1) {
+        fprintf(stderr, "Cannot encode %\%%s: %\%%s\n",
+            er%\textbf{.failed\_type}%->name, strerror(errno));
+        return -1;
+    } else {
+        /* Return the number of bytes */
+        return er.encoded;
+    }
+}
+\end{codesample}
+As you see, the DER encoder does not write into some sort of buffer.
+It just invokes the custom function (possible, multiple
+times) which would save the data into appropriate storage. The optional
+argument \emph{app\_key} is opaque for the DER encoder code and just
+used by \emph{\_write\_stream()} as the pointer to the appropriate
+output stream to be used.
+
+If the custom write function is not given (passed as 0), then the
+DER encoder will essentially do the same thing (i.~e., encode the data)
+but no callbacks will be invoked (so the data goes nowhere). It may
+prove useful to determine the size of the structure's encoding before
+actually doing the encoding%
+\footnote{It is actually faster too: the encoder might skip over some computations
+which aren't important for the size determination.%
+}.
+
+Look into der\_encoder.h for the precise definition of der\_encode()
+and related types.
+
+
+\section{\label{sec:Encoding-XER}Encoding XER}
+
+The XER stands for XML Encoding Rules, where XML, in turn, is eXtensible
+Markup Language, a text-based format for information exchange. The
+encoder routine API comes in two flavors: stdio-based and callback-based.
+With the callback-based encoder, the encoding process is very similar
+to the DER one, described in \fref{sec:Encoding-DER}. The
+following example uses the definition of write\_stream() from up there.
+\begin{codesample}
+/*
+ * This procedure generates an XML document
+ * by invoking the XER encoder.
+ * NOTE: Do not copy this code verbatim!
+ *       If the stdio output is necessary,
+ *       use the xer_fprint() procedure instead.
+ *       See %\fref{sec:Printing-the-target}%.
+ */
+int
+print_as_XML(FILE *ostream, Rectangle_t *rect) {
+    asn_enc_rval_t er;  /* Encoder return value */
+
+    er = xer_encode(&asn_DEF_Rectangle, rect,
+        XER_F_BASIC, /* BASIC-XER or CANONICAL-XER */
+        write_stream, ostream);
+
+    return (er.encoded == -1) ? -1 : 0;
+}
+\end{codesample}
+Look into xer\_encoder.h for the precise definition of xer\_encode()
+and related types.
+
+See \fref{sec:Printing-the-target} for the example of stdio-based
+XML encoder and other pretty-printing suggestions.
+
+
+\section{\label{sec:Decoding-XER}Decoding XER}
+
+The data encoded using the XER rules can be subsequently decoded using
+the xer\_decode() API call:
+\begin{codesample}
+Rectangle_t *
+XML_to_Rectangle(const void *buffer, size_t buf_size) {
+    asn_dec_rval_t rval;
+    Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+
+    rval = xer_decode(0, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
+
+    if(rval%\textbf{.code}% == RC_OK) {
+        return rect;          /* Decoding succeeded */
+    } else {
+        /* Free partially decoded rect */
+        ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
+        return 0;
+    }
+}
+\end{codesample}
+The decoder takes both BASIC-XER and CANONICAL-XER encodings.
+
+The decoder shares its data consumption properties with BER decoder;
+please read the \fref{sec:Decoding-BER} to know more.
+
+Look into xer\_decoder.h for the precise definition of xer\_decode()
+and related types.
+
+
+\section{\label{sec:Validating-the-target}Validating the target structure}
+
+Sometimes the target structure needs to be validated. For example,
+if the structure was created by the application (as opposed to being
+decoded from some external source), some important information required
+by the ASN.1 specification might be missing. On the other hand, the
+successful decoding of the data from some external source does not
+necessarily mean that the data is fully valid either. It might well
+be the case that the specification describes some subtype constraints
+that were not taken into account during decoding, and it would actually
+be useful to perform the last check when the data is ready to be encoded
+or when the data has just been decoded to ensure its validity according
+to some stricter rules.
+
+The asn\_check\_constraints() function checks the type for various
+implicit and explicit constraints. It is recommended to use asn\_check\_constraints()
+function after each decoding and before each encoding.
+
+Look into constraints.h for the precise definition of asn\_check\_constraints()
+and related types.
+
+
+\section{\label{sec:Printing-the-target}Printing the target structure}
+
+There are two ways to print the target structure: either invoke the
+print\_struct member of the ASN.1 type descriptor, or using the asn\_fprint()
+function, which is a simpler wrapper of the former:
+\begin{codesample}
+asn_fprint(stdout, &asn_DEF_Rectangle, rect);
+\end{codesample}
+Look into constr\_TYPE.h for the precise definition of asn\_fprint()
+and related types.
+
+Another practical alternative to this custom format printing would
+be to invoke XER encoder. The default BASIC-XER encoder performs reasonable
+formatting for the output to be useful and human readable. To invoke
+the XER decoder in a manner similar to asn\_fprint(), use the xer\_fprint()
+call:
+\begin{codesample}
+xer_fprint(stdout, &asn_DEF_Rectangle, rect);
+\end{codesample}
+See \fref{sec:Encoding-XER} for XML-related details.
+
+
+\section{\label{sec:Freeing-the-target}Freeing the target structure}
+
+Freeing the structure is slightly more complex than it may seem to.
+When the ASN.1 structure is freed, all the members of the structure
+and their submembers are recursively freed as well.
+The ASN\_STRUCT\_FREE() macro helps with that.
+
+But it might not always be feasible to free the whole structure.
+In the following example, the application programmer defines a custom
+structure with one ASN.1-derived member (rect).
+\begin{codesample}
+struct my_figure {       /* The custom structure */
+    int flags;           /* <some custom member> */
+    /* The type is generated by the ASN.1 compiler */
+    Rectangle_t rect;
+    /* other members of the structure */
+};
+\end{codesample}
+This member is not a reference to the Rectangle\_t, but an in-place inclusion
+of the Rectangle\_t structure.
+If there's a need to free the \code{rect} member, the usual procedure of
+freeing everything must not be applied to the \code{\&rect} pointer itself,
+because it does not point to the beginning of memory block allocated by
+the memory allocation routine, but instead lies within a block allocated for
+the my\_figure structure.
+
+To solve this problem, in addition to ASN\_STRUCT\_FREE() macro, the asn1c
+skeletons define the ASN\_STRUCT\_RESET() macro which doesn't free the passed
+pointer and instead resets the structure into the clean and safe state.
+\begin{codesample}
+/* %\textbf{1. Rectangle\_t is defined within my\_figure}% */
+struct my_figure {
+    Rectangle_t rect;
+} *mf = ...;
+/*
+ * Freeing the Rectangle_t
+ * without freeing the mf->rect area.
+ */
+ASN_STRUCT_RESET(asn_DEF_Rectangle, &mf->rect);
+  
+/* %\textbf{2. Rectangle\_t is a stand-alone pointer}% */
+Rectangle_t *rect = ...;
+/*
+ * Freeing the Rectangle_t
+ * and freeing the rect pointer.
+ */
+ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
+\end{codesample}
+It is safe to invoke both macros with the target structure pointer
+set to 0 (NULL). In this case, the function will do nothing.
+
+\chapter{\label{chap:Abstract-Syntax-Notation}Abstract Syntax Notation: ASN.1}
 
 \emph{This chapter defines some basic ASN.1 concepts and describes
 several most widely used types. It is by no means an authoritative
