@@ -35,7 +35,7 @@ asn_dec_rval_t uper_decode(
     const struct asn_TYPE_descriptor_s *type_descriptor, /* Type to decode */
     void **struct_ptr,  /* Pointer to a target structure's pointer */
     const void *buffer, /* Data to be decoded */
-    size_t size,        /* Size of data buffer */
+    size_t size,        /* Size of the input data buffer, in bytes */
     int skip_bits,      /* Number of unused leading bits, 0..7 */
     int unused_bits     /* Number of unused tailing bits, 0..7 */
 );
