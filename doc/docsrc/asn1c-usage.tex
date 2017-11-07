@@ -15,6 +15,8 @@
 \usepackage{fancyhdr}
 \usepackage{fancyref}
 \usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage{xcolor}
@@ -31,7 +33,6 @@
 %\def\courierFont{Consolas}
 \setmonofont[Scale=1.05]{\courierFont}
 \setmathfont[Scale=1.05]{Cambria Math}
-
 
 \makeatletter
 
@@ -69,11 +70,15 @@
 	morecomment=[n]{/*}{*/}
         }
 
+\lstnewenvironment{signature}[1][]{\lstset{style=listingStyle,language=C,xleftmargin=0pt,#1}}{}
+\lstnewenvironment{example}[1][]{\lstset{style=listingStyle,language=C,basicstyle=\scriptsize\listingfont,#1}}{}
 \lstnewenvironment{codesample}[1][]{\lstset{style=listingStyle,language=C,#1}}{}
 \lstnewenvironment{bash}[1][]{\lstset{style=listingStyle,language=bash,#1}}{}
 \lstnewenvironment{asn}[1][]{\lstset{style=listingStyle,language=asn1,#1}}{}
 
-\newcommand{\code}[1]{\lstinline{#1}}
+\newcommand{\api}[2]{\hyperref[#1]{\code{#2}}}
+\newcommand{\seealso}[2]{\api{#1}{#2} at page \pageref{#1}}
+\newcommand{\code}[1]{\texttt{\textbf{\lstinline{#1}}}}
 \newcommand{\cmd}[1]{\texttt{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
@@ -93,6 +98,7 @@
 	pdffitwindow,
 	xetex
 ]{hyperref}
+
 
 \makeatother
 
@@ -183,7 +189,7 @@ directory, including the \textbf{Rectangle.c} and \textbf{Rectangle.h}.
 memory and encodes it using BER and XER encoding rules. Let's name
 the file \textbf{main.c}:
 
-\begin{codesample}[basicstyle=\scriptsize\listingfont]
+\begin{example}
 #include <stdio.h>
 #include <sys/types.h>
 #include <Rectangle.h>   /* Rectangle ASN.1 type  */
@@ -239,7 +245,7 @@ int main(int ac, char **av) {
 
     return 0; /* Encoding finished successfully */
  }
-\end{codesample}
+\end{example}
 \item Compile all files together using C compiler (varies by platform):
 
 \begin{bash}
@@ -280,7 +286,7 @@ directory, including the \textbf{Rectangle.c} and \textbf{Rectangle.h}.
 it as it were a BER-encoded Rectangle type, and prints out the text
 (XML) representation of the Rectangle type. Let's name the file \textbf{main.c}:
 
-\begin{codesample}[basicstyle=\scriptsize\listingfont]
+\begin{example}
 #include <stdio.h>
 #include <sys/types.h>
 #include <Rectangle.h>   /* Rectangle ASN.1 type  */
@@ -328,7 +334,7 @@ int main(int ac, char **av) {
 
     return 0; /* Decoding finished successfully */
 }
-\end{codesample}
+\end{example}
 \item Compile all files together using C compiler (varies by platform):
 
 \begin{bash}
@@ -363,7 +369,7 @@ main() routine shown in the \fref{sec:A-Rectangle-Decoder})
 by placing the following snippet of code \emph{before} encoding and/or
 \emph{after} decoding the Rectangle type:
 
-\begin{codesample}[basicstyle=\scriptsize\listingfont]
+\begin{example}
 int ret;           /* Return value */
 char errbuf[128];  /* Buffer for error message */
 size_t errlen = sizeof(errbuf);  /* Size of the buffer */
@@ -378,7 +384,7 @@ if(ret) {
  }
 
 /* ... here goes the Rectangle %\emph{encoding}% code ... */
-\end{codesample}
+\end{example}
 \item Compile the resulting C code as shown in the previous chapters.
 \item Test the constraints checking code by assigning integer value
 101 to the \textbf{.height} member of the Rectangle structure, or
@@ -563,30 +569,536 @@ in \texttt{-E} output.}\\
 
 \chapter{API reference}
 
-\section{ASN\_STRUCT\_FREE}
-\section{ASN\_STRUCT\_FREE\_CONTENTS\_ONLY}
-\section{ASN\_STRUCT\_RESET}
-\section{asn\_check\_constraints}
-\section{asn\_decode}
-\section{asn\_encode}
+The functions desribed in this chapter are to be used by the application
+programmer. These functions won't likely change change or get removed until
+the next major release.
+
+The API calls not listed here are not public and should not be used by the
+application level code.
+
+\clearpage{}
+\section{\label{sec:ASN_STRUCT_FREE}ASN\_STRUCT\_FREE() macro}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+#define ASN_STRUCT_FREE(type_descriptor, struct_ptr)
+\end{signature}
+
+\subsection*{Description}
+
+Recursively releases memory occupied by the structure
+described by the \code{type\_descriptor} and referred to
+by the \code{struct\_ptr} pointer.
+
+Does nothing when \code{struct\_ptr} is NULL.
+
+\subsection*{Return values}
+Does not return a value.
+
+\subsection*{Example}
+
+\begin{example}
+Rectangle_t *rect = ...;
+ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
+\end{example}
+
+\section{\label{sec:ASN_STRUCT_RESET}ASN\_STRUCT\_RESET() macro}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+#define ASN_STRUCT_RESET(type_descriptor, struct_ptr)
+\end{signature}
+
+\subsection*{Description}
+
+Recursively releases memory occupied by the members of the structure
+described by the \code{type\_descriptor} and referred to
+by the \code{struct\_ptr} pointer.
+
+Does not release the memory pointed to by \code{struct\_ptr} itself.
+Instead it clears the memory block by filling it out with 0 bytes.
+
+Does nothing when \code{struct\_ptr} is NULL.
+
+\subsection*{Return values}
+Does not return a value.
+
+\subsection*{Example}
+
+\begin{example}
+struct my_figure {       /* The custom structure */
+    int flags;           /* <some custom member> */
+    /* The type is generated by the ASN.1 compiler */
+    Rectangle_t rect;
+    /* other members of the structure */
+};
+
+struct my_figure *fig = ...;
+ASN_STRUCT_RESET(asn_DEF_Rectangle, &fig->rect);
+\end{example}
+
+\section{asn\_check\_constraints()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+int asn_check_constraints(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const void *struct_ptr, /* Target language's structure */
+    char *errbuf,           /* Returned error description */
+    size_t *errlen          /* Length of the error description */
+);
+\end{signature}
+
+\subsection*{Description}
+
+Validate the structure according to the ASN.1 constraints.
+If errbuf and errlen are given, they shall be pointing to the appropriate
+buffer space and its length before calling this function. Alternatively,
+they could be passed as NULLs. If constraints validation fails,
+errlen will contain the actual number of bytes used in errbuf
+to encode an error message, properly 0-terminated.
+
+\subsection*{Return values}
+
+This function returns 0 in case all ASN.1 constraints are met
+and -1 if one or more ASN.1 constraints were violated.
+
+\subsection*{Example}
+
+\begin{codesample}[basicstyle=\scriptsize\listingfont]
+Rectangle_t *rect = ...;
+
+char errbuf[128];  /* Buffer for error message */
+size_t errlen = sizeof(errbuf);  /* Size of the buffer */
+
+int ret = asn_check_constraints(&asn_DEF_Rectangle, rectangle, errbuf, &errlen);
+/* assert(errlen < sizeof(errbuf)); // Guaranteed: you may rely on that */
+if(ret) {
+    fprintf(stderr, "Constraint validation failed: %\%%s\n", errbuf);
+}
+\end{codesample}
+
+\section{\label{sec:asn_decode}asn\_decode()}
+
+\subsection*{Synopsis}
+\begin{signature}
+asn_dec_rval_t asn_decode(
+    const asn_codec_ctx_t *opt_codec_parameters,
+    enum asn_transfer_syntax syntax,
+    const asn_TYPE_descriptor_t *type_descriptor,
+    void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
+    const void *buffer,   /* Data to be decoded */
+    size_t size           /* Size of that buffer */
+);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{asn\_decode()} function parses the data given by the \code{buffer}
+and \code{size} arguments. The encoding rules are specified in the \code{syntax}
+argument and the type to be decoded is specified by the \code{type_descriptor}.
+
+The \code{struct_ptr_ptr} must point to the memory location which contains the
+pointer to the structure being decoded. Initially the \code{*struct_ptr_ptr}
+pointer is typically set to 0. In that case, \code{asn\_decode()} will
+dynamically allocate memory for the structure and its members as needed
+during the parsing.
+If \code{*struct\_ptr\_ptr} already points to some memory, the \code{asn\_decode()}
+will allocate the subsequent members as needed during the parsing.
+
+\subsection*{Return values}
+
+\input{asn_dec_rval.inc}
+
+The \code{.consumed} value is in bytes, even for PER decoding.
+For PER, use \code{uper\_decode()} in case you need to get
+the number of consumed bits.
+
+\subsection*{Restartability}
+
+Some transfer syntax parsers (such as ATS\_BER) support restartability.
+
+That means that in case the buffer has less data than expected,
+the \code{asn_decode()} will process whatever is available and ask for more
+data to be provided using the RC\_WMORE return \code{.code}.
+
+Note that in the RC\_WMORE case the decoder may have processed less data than
+it is available in the buffer, which means that you must be able to arrange
+the next buffer to contain the unprocessed part of the previous buffer.
+
+The \code{RC_WMORE} code may still be returned by parser not supporting
+restartabilty. In such cases, the partially decoded structure shall be
+discarded and the next invocation should use the extended buffer to parse
+from the very beginning.
+
+\subsection*{Example}
+
+\begin{example}
+Rectangle_t *%$\underbracket{\textrm{\listingfont rect = 0}}$%;    /* %\textbf{\color{red}Note this 0\footnote{Forgetting to properly initialize the pointer to a destination structure is a major source of support requests.}!}% */
+asn_dec_rval_t rval;
+rval = asn_decode(0, ATS_BER, &asn_DEF_Rectangle, (void **)&rect, buffer, buf_size);
+switch(rval.code) {
+case RC_OK:
+    asn_fprint(stdout, &asn_DEF_Rectangle, rect);
+    ASN_STRUCT_FREE(&asn_DEF_Rectangle, rect);
+    break;
+case RC_WMORE:
+case RC_FAIL:
+default:
+    ASN_STRUCT_FREE(&asn_DEF_Rectangle, rect);
+    break;
+}
+\end{example}
+
+\subsection*{See also}
+\seealso{sec:asn_fprint}{asn_fprint()}.
+
+\section{\label{sec:asn_encode}asn\_encode()}
 \section{asn\_encode\_to\_buffer}
+
+\subsection*{Example}
+\begin{example}
+uint8_t buffer[128];
+size_t buf_size = sizeof(buffer);
+asn_enc_rval_t er;
+er = asn_encode_to_buffer(0, ATS_DER, &asn_DEF_Rectangle, buffer, buf_size);
+if(er.encoded > buf_size) {
+   fprintf(stderr, "Buffer of size %\%%zu is too small for %\%%s, need %\%%zu\n",
+       buf_size, asn_DEF_Rectangle.name, er.encoded);
+}
+\end{example}
+
 \section{asn\_encode\_to\_new\_buffer}
-\section{asn\_fprint}
-\section{ber\_decode}
-\section{der\_encode}
+
+\subsection*{Example}
+\begin{example}
+asn_encode_to_new_buffer_result_t res;
+res = asn_encode_to_new_buffer(0, ATS_DER, &asn_DEF_Rectangle, buffer, buf_size);
+if(res.buffer) {
+    /* Encoded successfully. */
+    free(res.buffer);
+} else {
+    fprintf(stderr, "Failed to encode %\%%s, estimated %\%%zd bytes\n",
+        asn_DEF_Rectangle.name, res.result.encoded);
+}
+\end{example}
+
+\section{\label{sec:asn_fprint}asn\_fprint()}
+
+\subsection*{Synopsis}
+\begin{signature}
+int asn_fprint(FILE *stream,    /* Destination file */
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const void *struct_ptr      /* Structure to be printed */
+);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{asn_fprint()} function prints human readable description
+of the target language's structure into the file stream specified by
+\code{stream} pointer.
+
+The output format does not conform to any standard.
+
+The \code{asn_fprint()} function attempts to
+produce a valid output even for incomplete and broken structures, which
+makes it more suitable for debugging complex cases than
+\api{sec:xer_fprint}{xer_fprint()}.
+
+\subsection*{Return values}
+
+\begin{tabular}[h!]{rl}
+0 & Output was successfully made \\
+-1 & Error printing out the structure
+\end{tabular}
+
+\subsection*{Example}
+\begin{example}
+Rectangle_t *rect = ...;
+asn_fprint(stdout, &asn_DEF_Rectangle, rect);
+\end{example}
+
+\subsection*{See also}
+\seealso{sec:xer_fprint}{xer_fprint()}.
+
+\section{\label{sec:asn_random_fill}asn\_random\_fill()}
+
+\subsection*{Synopsis}
+\begin{signature}
+int asn_random_fill(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
+    size_t approx_max_length_limit
+);
+\end{signature}
+
+\subsection*{Description}
+
+Create or initialize a structure with random contents, according to the type
+specification and optional member constraints.
+
+For best results, the code should be generated with \cmd{-gen-PER} option
+to \cmd{asn1c}, that will make it follow the PER visible constraints and
+sometimes break out of extensible contstraints' ranges.
+
+The \code{asn_random_fill()} function has a bias to generate edge case
+values. This property makes it useful for debugging the application level
+code and for security testing, as random data can be a good seed to fuzzing.
+
+The \code{approx_max_length_limit} specifies the approximate limit of the
+resulting structure in units closely resembling bytes. The actual result
+might be several times larger or smaller than the given length limit.
+A rule of thumb way to select the initial value for this parameter
+is to take a typical structure and use twice its DER output size.
+
+\subsection*{Return values}
+
+\begin{tabular}[h!]{rl}
+0 & Structure was properly initialized with random data \\
+-1 & Failure to initialize the structure with random data
+\end{tabular}
+
+\clearpage{}
+\section{\label{sec:ber_decode}ber\_decode()}
+
+\subsection*{Synopsis}
+\begin{signature}
+asn_dec_rval_t ber_decode(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    const asn_TYPE_descriptor_t *type_descriptor,
+    void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
+    const void *buffer,   /* Data to be decoded */
+    size_t size           /* Size of that buffer */
+);
+\end{signature}
+
+\subsection*{Description}
+
+Decode BER, DER and CER data
+(Basic Encoding Rules, Distinguished Encoding Rules, Canonical Encoding Rules),
+as defined by ITU-T~X.690.
+
+DER and CER are different subsets of BER.
+
+Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BER)}.
+
+\subsection*{Return values}
+\input{asn_dec_rval.inc}
+
+The \code{.consumed} value is in bytes.
+
+\subsection*{Restartability}
+
+The \code{ber_decode()} function is restartable (stream-oriented).
+That means that in case the buffer has less data than expected,
+the decoder will process whatever is available and ask for more data
+to be provided using the RC\_WMORE return \code{.code}.
+
+Note that in the RC\_WMORE case the decoder may have processed less data than
+it is available in the buffer, which means that you must be able to arrange
+the next buffer to contain the unprocessed part of the previous buffer.
+
+\subsection*{See also}
+\seealso{sec:der_encode}{der_encode()}.
+
+\section{\label{sec:der_encode}der\_encode}
+
+\subsection*{See also}
+\seealso{sec:ber_decode}{ber_decode()},
+\seealso{sec:asn_decode}{asn_decode(ATS_BER)}.
+
 \section{der\_encode\_to\_buffer}
-\section{oer\_decode}
-\section{oer\_encode}
+
+\clearpage{}
+\section{\label{sec:oer_decode}oer\_decode()}
+
+\subsection*{Synopsis}
+\begin{signature}
+asn_dec_rval_t oer_decode(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    const asn_TYPE_descriptor_t *type_descriptor,
+    void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
+    const void *buffer,   /* Data to be decoded */
+    size_t size           /* Size of that buffer */
+);
+\end{signature}
+
+\subsection*{Description}
+
+Decode the BASIC-OER and CANONICAL-OER (Octet Encoding Rules),
+as defined by ITU-T~X.696.
+
+Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BASIC_OER)}.
+
+\subsection*{Return values}
+\input{asn_dec_rval.inc}
+
+The \code{.consumed} value is in bytes.
+
+\subsection*{Restartability}
+
+The \code{oer_decode()} function is restartable (stream-oriented).
+That means that in case the buffer has less data than expected,
+the decoder will process whatever is available and ask for more data
+to be provided using the RC\_WMORE return \code{.code}.
+
+Note that in the RC\_WMORE case the decoder may have processed less data than
+it is available in the buffer, which means that you must be able to arrange
+the next buffer to contain the unprocessed part of the previous buffer.
+
+\section{\label{sec:oer_encode}oer\_encode}
 \section{oer\_encode\_to\_buffer}
-\section{uper\_decode}
-\section{uper\_decode\_complete}
-\section{uper\_encode}
+
+\clearpage{}
+\section{\label{sec:uper_decode}uper\_decode()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+asn_dec_rval_t uper_decode(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    const asn_TYPE_descriptor_t *type_descriptor,
+    void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
+    const void *buffer,   /* Data to be decoded */
+    size_t size,          /* Size of the input data buffer, bytes */
+    int skip_bits,        /* Number of unused leading bits, 0..7 */
+    int unused_bits       /* Number of unused tailing bits, 0..7 */
+);
+\end{signature}
+
+\subsection*{Description}
+
+Decode the Unaligned BASIC or CANONICAL PER (Packed Encoding Rules),
+as defined by ITU-T~X.691
+
+Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_UNALIGNED_BASIC_PER)}.
+
+\subsection*{Return values}
+\input{asn_dec_rval.inc}
+Note that the \code{.consumed} value is in bits.
+Use \code{(.consumed+7)/8} to convert to bytes.
+
+\subsection*{Restartability}
+The \code{uper_decode()} function is not restartable.
+Failures are final.
+
+\section{uper\_decode\_complete()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+asn_dec_rval_t uper_decode_complete(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    const asn_TYPE_descriptor_t *type_descriptor,
+    void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
+    const void *buffer,   /* Data to be decoded */
+    size_t size           /* Size of data buffer */
+);
+\end{signature}
+
+\subsection*{Description}
+
+Decode a ``Production of a complete encoding'',
+according to ITU-T~X.691 (08/2015) \#11.1.
+
+Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_UNALIGNED_BASIC_PER)}.
+
+\subsection*{Return values}
+\input{asn_dec_rval.inc}
+
+The the \code{.consumed} value is returned in bytes.
+
+\subsection*{Restartability}
+The \code{uper_decode_complete()} function is not restartable.
+Failures are final.
+
+The complete encoding contains at least one byte, so on success
+\code{.consumed} will be greater or equal to 1.
+
+\section{\label{sec:uper_encode}uper\_encode}
 \section{uper\_encode\_to\_buffer}
 \section{uper\_encode\_to\_new\_buffer}
-\section{xer\_decode}
-\section{xer\_encode}
-\section{xer\_equivalent}
-\section{xer\_fprint}
+\clearpage{}
+\section{\label{sec:xer_decode}xer\_decode()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+asn_dec_rval_t xer_decode(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    const asn_TYPE_descriptor_t *type_descriptor,
+    void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
+    const void *buffer,   /* Data to be decoded */
+    size_t size           /* Size of data buffer */
+);
+\end{signature}
+
+\subsection*{Description}
+
+Decode the BASIC-XER and CANONICAL-XER (XML Encoding Rules) encoding,
+as defined by ITU-T~X.693.
+
+Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BASIC_XER)}.
+
+\subsection*{Return values}
+\input{asn_dec_rval.inc}
+
+The \code{.consumed} value is in bytes.
+
+\subsection*{Restartability}
+
+The \code{xer_decode()} function is restartable (stream-oriented).
+That means that in case the buffer has less data than expected,
+the decoder will process whatever is available and ask for more data
+to be provided using the RC\_WMORE return \code{.code}.
+
+Note that in the RC\_WMORE case the decoder may have processed less data than
+it is available in the buffer, which means that you must be able to arrange
+the next buffer to contain the unprocessed part of the previous buffer.
+
+\section{\label{sec:xer_encode}xer\_encode}
+\section{\label{sec:xer_fprint}xer\_fprint()}
+
+\subsection*{Synopsis}
+\begin{signature}
+int xer_fprint(FILE *stream,    /* Destination file */
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const void *struct_ptr      /* Structure to be printed */
+);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{xer_fprint()} function outputs XML-based serialization
+of the given structure into the file stream specified by
+\code{stream} pointer.
+
+The output conforms to BASIC-XER, as defined by ITU-T~X.693.
+
+\subsection*{Return values}
+
+\begin{tabular}[h!]{rl}
+0 & XML output was successfully made \\
+-1 & Error printing out the structure
+\end{tabular}
+
+\noindent{}Since the \code{xer_fprint()} function attempts to produce a conforming output,
+it will likely break on partial structures by writing incomplete data
+to the output stream and returning -1. This makes it less suitable for
+debugging complex cases than \api{sec:asn_fprint}{asn_fprint()}.
+
+\subsection*{Example}
+\begin{example}
+Rectangle_t *rect = ...;
+xer_fprint(stdout, &asn_DEF_Rectangle, rect);
+\end{example}
+
+\subsection*{See also}
+\seealso{sec:asn_fprint}{asn_fprint()}.
 
 \chapter{API usage examples}
 
@@ -608,7 +1120,7 @@ ASN_STRUCT_FREE(%\textbf{asn\_DEF\_}%Rectangle, rect);
 \end{codesample}
 This code defines a \emph{rect} pointer which points to the Rectangle\_t
 structure which needs to be freed. The second line uses a generic
-\code{ASN\_STRUCT\_FREE()} macro which invokes the memory deallocation routine
+\api{sec:ASN_STRUCT_FREE}{ASN\_STRUCT\_FREE()} macro which invokes the memory deallocation routine
 created specifically for this Rectangle\_t structure.
 The \emph{asn\_DEF\_Rectangle} is the type descriptor which holds
 a collection of routines and operations defined for the Rectangle\_t structure.
@@ -618,7 +1130,7 @@ a collection of routines and operations defined for the Rectangle\_t structure.
 Before we start describing specific encoders and decoders, let's step back
 a little and check out a simple high level way.
 
-The asn1c runtime supplies (see \emph{asn\_application.h}) two sets of high level functions, \emph{asn\_encode*} and \emph{asn\_decode*}, which take a transfer syntax selector as the argument. The transfer syntax selector is defined as this:
+The asn1c runtime supplies (see \emph{asn\_application.h}) two sets of high level functions, \api{sec:asn_encode}{asn_encode*} and \api{sec:asn_decode}{asn_decode*}, which take a transfer syntax selector as an argument. The transfer syntax selector is defined as this:
 
 \begin{codesample}[basicstyle=\scriptsize\listingfont]
 /*
@@ -675,12 +1187,14 @@ the data encoded by the CER and DER encoders. The opposite is not true.
 \emph{The ASN.1 compiler provides the generic BER decoder which is
 capable of decoding BER, CER and DER encoded data.}
 
-The decoder is restartable (stream-oriented), which means that in
-case the buffer has less data than it is expected, the decoder will
-process whatever there is available and ask for more data to be provided.
-Please note that the decoder may actually process less data than it
-was given in the buffer, which means that you must be able to make
-the next buffer contain the unprocessed part of the previous buffer.
+The decoder is restartable (stream-oriented).
+That means that in case the buffer has less data than expected,
+the decoder will process whatever is available and ask for more data
+to be provided using the RC\_WMORE return \code{.code}.
+
+Note that in the RC\_WMORE case the decoder may have processed less data than
+it is available in the buffer, which means that you must be able to arrange
+the next buffer to contain the unprocessed part of the previous buffer.
 
 Suppose, you have two buffers of encoded data: 100 bytes and 200 bytes.
 \begin{itemize}

@@ -1,3 +1,10 @@
+
+Upon unsuccessful termination, the \code{*struct_ptr_ptr}
+may contain partially decoded data. This data may be useful for debugging
+(such as by using \code{asn_fprint()}).
+Don't forget to discard the unused partially decoded data by calling
+\code{ASN_STRUCT_FREE()} or \code{ASN_STRUCT_RESET()}.
+
 The return value is returned in a compound structure:
 \begin{codesample}
 typedef struct {
@@ -12,11 +19,11 @@ typedef struct {
 
 The \code{.code} member specifies the decoding outcome.
 
-\begin{description}[labelindent=\parindent]
-\item[RC\_OK] Decoded successfully and completely
-\item[RC\_WMORE] More data expected, call again
-\item[RC\_FAIL] Failed for good
-\end{description}
+\begin{tabular}[h!]{ll}
+\texttt{RC\_OK} & Decoded successfully and completely \\
+\texttt{RC\_WMORE} & More data expected, call again \\
+\texttt{RC\_FAIL} & Failed for good
+\end{tabular}
 
 The \code{.consumed} member specifies the amount of \code{buffer} data
 that was used during parsing, irrespectively of the \code{.code}.
