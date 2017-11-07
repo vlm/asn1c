@@ -32,6 +32,17 @@ asn_enc_rval_t xer_encode(const struct asn_TYPE_descriptor_s *type_descriptor,
 );
 
 /*
+ * The variant of the above function which dumps the BASIC-XER (XER_F_BASIC)
+ * output into the chosen file pointer.
+ * RETURN VALUES:
+ * 	 0: The structure is printed.
+ * 	-1: Problem printing the structure.
+ * WARNING: No sensible errno value is returned.
+ */
+int xer_fprint(FILE *stream, const struct asn_TYPE_descriptor_s *td,
+               const void *struct_ptr);
+
+/*
  * A helper function that uses XER encoding/decoding to verify that:
  * - Both structures encode into the same BASIC XER.
  * - Both resulting XER byte streams can be decoded back.
@@ -52,17 +63,6 @@ enum xer_equivalence_e {
 enum xer_equivalence_e xer_equivalent(
     const struct asn_TYPE_descriptor_s *type_descriptor, const void *struct1,
     const void *struct2, FILE *opt_debug_stream);
-
-/*
- * The variant of the above function which dumps the BASIC-XER (XER_F_BASIC)
- * output into the chosen file pointer.
- * RETURN VALUES:
- * 	 0: The structure is printed.
- * 	-1: Problem printing the structure.
- * WARNING: No sensible errno value is returned.
- */
-int xer_fprint(FILE *stream, const struct asn_TYPE_descriptor_s *td,
-               const void *sptr);
 
 /*
  * Type of the generic XER encoder.
