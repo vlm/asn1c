@@ -724,13 +724,13 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
 
 static int
 is_syntax_PER(enum asn_transfer_syntax syntax) {
-    return (syntax != ATS_UNALIGNED_BASIC_PER
-            && syntax != ATS_UNALIGNED_CANONICAL_PER);
+    return (syntax == ATS_UNALIGNED_BASIC_PER
+            || syntax == ATS_UNALIGNED_CANONICAL_PER);
 }
 
 static int
 restartability_supported(enum asn_transfer_syntax syntax) {
-    return is_syntax_PER(syntax);
+    return !is_syntax_PER(syntax);
 }
 
 static void *
