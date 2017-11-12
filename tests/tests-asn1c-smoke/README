@@ -1,0 +1,2 @@
+Test that asn1c compiler produces compilable code for basic ASN.1 types,
+while trying to disable different codecs and vary other compiler flags.

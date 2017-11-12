@@ -41,6 +41,14 @@ stamp-h*
 /skeletons/check-*
 
 # /tests/
+/tests/tests-asn1c-smoke/Makefile.am.libasncodec
+/tests/tests-asn1c-smoke/Makefile.am.sample
+/tests/tests-asn1c-smoke/*.[acho]
+/tests/tests-asn1c-smoke/*.asn
+/tests/tests-asn1c-smoke/*.txt
+/tests/tests-asn1c-smoke/converter-example
+
+# /tests/
 /tests/tests-c-compiler/test-*
 
 # /tests/tests-skeletons

@@ -1,6 +1,6 @@
-
-tests-asn1c-compiler    - tests behavior of asn1c compiler, textually
-tests-c-compiler        - attempts to compile C results of asn1c output
-tests-skeletons         - verify correctness of "skeletons" code
-tests-randomized        - thorough testing of DER/OER/PER/XER with fuzzing
+tests-asn1c-compiler - asn1c produces expected textual output
+tests-asn1c-smoke    - asn1c compiler produces compilable code for simple types
+tests-c-compiler     - C code compiles and runs, and produces expected result
+tests-skeletons      - "skeletons" code primitives are correct
+tests-randomized     - fuzz-testing of DER/OER/PER/XER codecs
 

@@ -288,6 +288,7 @@ AM_CONDITIONAL([HAVE_PANDOC], [test -n "$PANDOC"])
 AC_CONFIG_FILES([\
 tests/tests-c-compiler/check-src/Makefile   \
 tests/tests-asn1c-compiler/Makefile         \
+tests/tests-asn1c-smoke/Makefile            \
 tests/tests-randomized/Makefile             \
 tests/tests-c-compiler/Makefile             \
 tests/tests-skeletons/Makefile              \
