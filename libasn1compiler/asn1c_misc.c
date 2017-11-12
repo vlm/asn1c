@@ -73,7 +73,7 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 		sptr[sptr_cnt++] = expr->Identifier;
 
 		size += strlen(expr->Identifier);
-		if(expr->spec_index != -1) {
+		if(expr->spec_index != -1 && expr->_lineno) {
 			static char buf[32];
 			size += 1 + snprintf(buf, sizeof buf, "%dP%d",
 				expr->_lineno, expr->spec_index);
@@ -297,6 +297,20 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 				_format = TNF_CTYPE;
 			stdname = 1;
 			typename = ASN_EXPR_TYPE2STR(expr->expr_type);
+			if(_format == TNF_INCLUDE) {
+				if(expr->expr_type == ASN_CONSTR_SEQUENCE)
+					typename = "constr_SEQUENCE";
+				else if(expr->expr_type == ASN_CONSTR_CHOICE)
+					typename = "constr_CHOICE";
+				else if(expr->expr_type == ASN_CONSTR_SET)
+					typename = "constr_SET";
+				else if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF)
+					typename = "constr_SEQUENCE_OF";
+				else if(expr->expr_type == ASN_CONSTR_SET_OF)
+					typename = "constr_SET_OF";
+				else if(expr->expr_type == ASN_CONSTR_OPEN_TYPE)
+					typename = "OPEN_TYPE";
+			}
 		} else {
 			_format = TNF_RSAFE;
 			typename = expr->Identifier;

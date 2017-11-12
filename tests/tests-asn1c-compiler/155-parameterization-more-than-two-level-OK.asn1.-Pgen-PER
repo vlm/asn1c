@@ -501,7 +501,7 @@ asn_TYPE_descriptor_t asn_DEF_LowerLayer_List_45P0 = {
 
 /*** <<< TYPE-DECLS [SinglePacket] >>> ***/
 
-typedef Packet_51P0_t	 SinglePacket_48P0_t;
+typedef ClassItem_51P0_t	 SinglePacket_48P0_t;
 
 /*** <<< FUNC-DECLS [SinglePacket] >>> ***/
 
@@ -519,7 +519,7 @@ per_type_encoder_f SinglePacket_48P0_encode_uper;
 /*** <<< CODE [SinglePacket] >>> ***/
 
 /*
- * This type is implemented using Packet_51P0,
+ * This type is implemented using ClassItem_51P0,
  * so here we adjust the DEF accordingly.
  */
 
@@ -539,9 +539,9 @@ asn_TYPE_descriptor_t asn_DEF_SinglePacket_48P0 = {
 	sizeof(asn_DEF_SinglePacket_48P0_tags_1)
 		/sizeof(asn_DEF_SinglePacket_48P0_tags_1[0]), /* 1 */
 	{ 0, 0, SEQUENCE_constraint },
-	asn_MBR_Packet_51P0_1,
+	asn_MBR_ClassItem_51P0_1,
 	3,	/* Elements count */
-	&asn_SPC_Packet_51P0_specs_1	/* Additional specs */
+	&asn_SPC_ClassItem_51P0_specs_1	/* Additional specs */
 };
 
 
@@ -566,12 +566,12 @@ typedef enum value_PR {
 
 /*** <<< TYPE-DECLS [Packet] >>> ***/
 
-typedef struct Packet_51P0 {
+typedef struct ClassItem_51P0 {
 	PacketId_t	 id;
 	Color_t	 color;
 	struct value {
 		value_PR present;
-		union Packet_51P0__value_u {
+		union ClassItem_51P0__value_u {
 			OCTET_STRING_t	 OCTET_STRING;
 		} choice;
 		
@@ -581,13 +581,13 @@ typedef struct Packet_51P0 {
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} Packet_51P0_t;
+} ClassItem_51P0_t;
 
 /*** <<< FUNC-DECLS [Packet] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_Packet_51P0;
-extern asn_SEQUENCE_specifics_t asn_SPC_Packet_51P0_specs_1;
-extern asn_TYPE_member_t asn_MBR_Packet_51P0_1[3];
+extern asn_TYPE_descriptor_t asn_DEF_ClassItem_51P0;
+extern asn_SEQUENCE_specifics_t asn_SPC_ClassItem_51P0_specs_1;
+extern asn_TYPE_member_t asn_MBR_ClassItem_51P0_1[3];
 
 /*** <<< IOC-TABLES [Packet] >>> ***/
 
@@ -632,13 +632,13 @@ memb_id_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static asn_type_selector_result_t
-select_Packet_51P0_color_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+select_ClassItem_51P0_color_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
 	asn_type_selector_result_t result = {0, 0};
 	const asn_ioc_set_t *itable = asn_IOS_ClassItem_1;
 	size_t constraining_column = 0; /* &id */
 	size_t for_column = 1; /* &color */
 	size_t row;
-	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Packet_51P0, id));
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct ClassItem_51P0, id));
 	
 	for(row=0; row < itable->rows_count; row++) {
 	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
@@ -674,13 +674,13 @@ memb_color_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static asn_type_selector_result_t
-select_Packet_51P0_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+select_ClassItem_51P0_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
 	asn_type_selector_result_t result = {0, 0};
 	const asn_ioc_set_t *itable = asn_IOS_ClassItem_1;
 	size_t constraining_column = 0; /* &id */
 	size_t for_column = 2; /* &Value */
 	size_t row;
-	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Packet_51P0, id));
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct ClassItem_51P0, id));
 	
 	for(row=0; row < itable->rows_count; row++) {
 	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
@@ -775,8 +775,8 @@ asn_TYPE_descriptor_t asn_DEF_value_4 = {
 	&asn_SPC_value_specs_4	/* Additional specs */
 };
 
-asn_TYPE_member_t asn_MBR_Packet_51P0_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct Packet_51P0, id),
+asn_TYPE_member_t asn_MBR_ClassItem_51P0_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct ClassItem_51P0, id),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_PacketId,
@@ -785,53 +785,53 @@ asn_TYPE_member_t asn_MBR_Packet_51P0_1[] = {
 		0, 0, /* No default value */
 		.name = "id"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct Packet_51P0, color),
+	{ ATF_NOFLAGS, 0, offsetof(struct ClassItem_51P0, color),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_Color,
-		.type_selector = select_Packet_51P0_color_type,
+		.type_selector = select_ClassItem_51P0_color_type,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_color_constr_3, .general_constraints =  memb_color_constraint_1 },
 		0, 0, /* No default value */
 		.name = "color"
 		},
-	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct Packet_51P0, value),
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct ClassItem_51P0, value),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_value_4,
-		.type_selector = select_Packet_51P0_value_type,
+		.type_selector = select_ClassItem_51P0_value_type,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_value_constr_4, .general_constraints =  memb_value_constraint_1 },
 		0, 0, /* No default value */
 		.name = "value"
 		},
 };
-static const ber_tlv_tag_t asn_DEF_Packet_51P0_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_ClassItem_51P0_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_Packet_51P0_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_ClassItem_51P0_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* id */
     { (ASN_TAG_CLASS_UNIVERSAL | (10 << 2)), 1, 0, 0 } /* color */
 };
-asn_SEQUENCE_specifics_t asn_SPC_Packet_51P0_specs_1 = {
-	sizeof(struct Packet_51P0),
-	offsetof(struct Packet_51P0, _asn_ctx),
-	.tag2el = asn_MAP_Packet_51P0_tag2el_1,
+asn_SEQUENCE_specifics_t asn_SPC_ClassItem_51P0_specs_1 = {
+	sizeof(struct ClassItem_51P0),
+	offsetof(struct ClassItem_51P0, _asn_ctx),
+	.tag2el = asn_MAP_ClassItem_51P0_tag2el_1,
 	.tag2el_count = 2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* First extension addition */
 };
-asn_TYPE_descriptor_t asn_DEF_Packet_51P0 = {
-	"Packet",
-	"Packet",
+asn_TYPE_descriptor_t asn_DEF_ClassItem_51P0 = {
+	"ClassItem",
+	"ClassItem",
 	&asn_OP_SEQUENCE,
-	asn_DEF_Packet_51P0_tags_1,
-	sizeof(asn_DEF_Packet_51P0_tags_1)
-		/sizeof(asn_DEF_Packet_51P0_tags_1[0]), /* 1 */
-	asn_DEF_Packet_51P0_tags_1,	/* Same as above */
-	sizeof(asn_DEF_Packet_51P0_tags_1)
-		/sizeof(asn_DEF_Packet_51P0_tags_1[0]), /* 1 */
+	asn_DEF_ClassItem_51P0_tags_1,
+	sizeof(asn_DEF_ClassItem_51P0_tags_1)
+		/sizeof(asn_DEF_ClassItem_51P0_tags_1[0]), /* 1 */
+	asn_DEF_ClassItem_51P0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_ClassItem_51P0_tags_1)
+		/sizeof(asn_DEF_ClassItem_51P0_tags_1[0]), /* 1 */
 	{ 0, 0, SEQUENCE_constraint },
-	asn_MBR_Packet_51P0_1,
+	asn_MBR_ClassItem_51P0_1,
 	3,	/* Elements count */
-	&asn_SPC_Packet_51P0_specs_1	/* Additional specs */
+	&asn_SPC_ClassItem_51P0_specs_1	/* Additional specs */
 };
 

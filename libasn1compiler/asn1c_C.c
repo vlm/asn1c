@@ -1304,7 +1304,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		}
 
 	} else {
-		GEN_INCLUDE(asn1c_type_name(arg, expr, TNF_INCLUDE));
+		GEN_POS_INCLUDE_BASE(OT_INCLUDES, expr);
 
 		REDIR(OT_TYPE_DECLS);
 
@@ -3236,13 +3236,8 @@ emit_include_dependencies(arg_t *arg) {
 		if((!(memb->expr_type & ASN_CONSTR_MASK)
 			&& memb->expr_type > ASN_CONSTR_MASK)
 		|| memb->meta_type == AMT_TYPEREF) {
-			if(memb->marker.flags & EM_UNRECURSE) {
-				GEN_POSTINCLUDE(asn1c_type_name(arg,
-					memb, TNF_INCLUDE));
-			} else {
-				GEN_INCLUDE(asn1c_type_name(arg,
-					memb, TNF_INCLUDE));
-			}
+			GEN_POS_INCLUDE_BASE((memb->marker.flags & EM_UNRECURSE) ?
+					OT_POST_INCLUDE : OT_INCLUDES, memb);
 		}
 	}
 
