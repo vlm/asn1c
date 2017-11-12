@@ -9,7 +9,7 @@
 
     NOTABLE:
     * converter-sample.c renamed into converter-example.c.
-    * OBJECT IDENTIFIER and RELATIVE-OID API simplified.
+    * asn1c -no-gen-example option to disable converter-example generation.
     * Added random value generation (-R option to converter-example).
     * Added LibFuzzer-based randomized tests for supported transfer syntaxes
       (DER, OER, UPER, XER) into tests/tests-randomized. See the following
@@ -17,9 +17,9 @@
         https://medium.com/@levwalkin/compile-llvm-clang-libfuzzer-b61e82718430
       then ensure the new clang is in the way:
         CC=clang CXX=clang++ ./configure --enable-Werror --enable-test-fuzzer
+    * OBJECT IDENTIFIER and RELATIVE-OID API simplified.
     * uper_encode() API got new argument (breaks API compatibility).
     * asn1c -gen-XXX flags are deprecated. Use -no-gen-XXX to disable codecs.
-    * asn1c -no-gen-example option to disable converter-example generation.
 
     FIXES:
     * CVE-2017-12966 verified not present.
