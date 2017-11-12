@@ -142,7 +142,7 @@ END
 \item Compile it into the set of .c and .h files using \cmd{asn1c} compiler:
 
 \begin{bash}
-asn1c -gen-OER -gen-PER %\textbf{rectangle.asn}%
+asn1c -no-gen-example %\textbf{rectangle.asn}%
 \end{bash}
 
 \item Create the converter and dumper:
@@ -178,7 +178,7 @@ END
 \item Compile it into the set of .c and .h files using asn1c compiler \cite{ASN1C}:
 
 \begin{bash}
-asn1c %\textbf{rectangle.asn}%
+asn1c -no-gen-example %\textbf{rectangle.asn}%
 \end{bash}
 \item Alternatively, use the Online ASN.1 compiler \cite{AONL} by uploading
 the \textbf{rectangle.asn} file into the Web form and unpacking the
@@ -275,7 +275,7 @@ END
 \item Compile it into the set of .c and .h files using asn1c compiler \cite{ASN1C}:
 
 \begin{bash}
-asn1c %\textbf{rectangle.asn}%
+asn1c -no-gen-example %\textbf{rectangle.asn}%
 \end{bash}
 \item Alternatively, use the Online ASN.1 compiler \cite{AONL} by uploading
 the \textbf{rectangle.asn} file into the Web form and unpacking the
@@ -484,7 +484,7 @@ after compilation will be rather small anyway.
 \item A \textbf{Makefile.am.libasncodecs} file which explicitly lists all the
 generated files.
 This makefile can be used on its own to build the just the codec library.
-\item A \textbf{converter-example.c} file containing the \emph{int main()} function with a fully functioning encoder and data format converter. It can convert a given PDU between BER, XER and possibly OER and PER (if \cmd{-gen-OER} or \cmd{-gen-PER} options to \cmd{asn1c} were in effect). At some point you will want to replace this file with your own file containing the \emph{int main()} function.
+\item A \textbf{converter-example.c} file containing the \emph{int main()} function with a fully functioning encoder and data format converter. It can convert a given PDU between BER, XER, OER and PER. At some point you will want to replace this file with your own file containing the \emph{int main()} function.
 \item A \textbf{Makefile.am.example} file which binds together
 \textbf{Makefile.am.libasncodecs} and \textbf{converter-example.c}
 to build a versatile converter and debugger for your data formats.
@@ -545,15 +545,16 @@ to prevent circular references.}\\
 the target language source files for the given type have been provided
 manually. }\\
 {\ttfamily -fline-refs} & {\small Include ASN.1 module's line numbers in generated code comments.}\\
-{\ttfamily -fno-constraints} & {\small Do not generate ASN.1 subtype constraint checking code. This
+{\ttfamily -fno-constraints} & {\small Do not generate the ASN.1 subtype constraint checking code. This
 may produce a shorter executable.}\\
-{\ttfamily -fno-include-deps} & {\small Do not generate courtesy \#include lines for non-critical dependencies.}\\
+{\ttfamily -fno-include-deps} & {\small Do not generate the courtesy \#include lines for non-critical dependencies.}\\
 {\ttfamily -funnamed-unions} & {\small Enable  unnamed  unions in the definitions of target language's structures.}\\
 {\ttfamily -fwide-types} & {\small Use the wide integer types (INTEGER\_t, REAL\_t) instead of machine's native data types (long, double). }\\\\
 \textbf{Codecs Generation Options} & \textbf{Description}\\
 \midrule
-{\ttfamily -gen-OER} & {\small Generate the Octet Encoding Rules (OER) support code.}\\
-{\ttfamily -gen-PER} & {\small Generate the Packed Encoding Rules (PER) support code.}\\
+{\ttfamily -no-gen-OER} & {\small Do not generate the Octet Encoding Rules (OER, X.696) support code.}\\
+{\ttfamily -no-gen-PER} & {\small Do not generate the Packed Encoding Rules (PER, X.691) support code.}\\
+{\ttfamily -no-gen-example} & {\small Do not generate the ASN.1 format converter example.}\\
 {\ttfamily -pdu=\{\textbf{all}|\textbf{auto}|\emph{Type}\}} & {\small Create a PDU table for specified types, or discover the Protocol Data Units automatically.
 In case of \texttt{-pdu=\textbf{all}}, all ASN.1 types defined in all modules wil form a PDU table. In case of \texttt{-pdu=\textbf{auto}}, all types not referenced by any other type will form a PDU table. If \texttt{\emph{Type}} is an ASN.1 type identifier, it is added to a PDU table. The last form may be specified multiple times.}\\ \\
 \textbf{Output Options} & \textbf{Description}\\
@@ -841,9 +842,10 @@ int asn_random_fill(
 Create or initialize a structure with random contents, according to the type
 specification and optional member constraints.
 
-For best results, the code should be generated with \cmd{-gen-PER} option
-to \cmd{asn1c}, that will make it follow the PER visible constraints and
-sometimes break out of extensible contstraints' ranges.
+For best results the code should be generated without \cmd{-no-gen-PER}
+option to \cmd{asn1c}. Making PER constraints code available in runtime
+will make \code{asn_random_fill} explore the edges of PER-visible constraints
+and sometimes break out of extensible contstraints' ranges.
 
 The \code{asn_random_fill()} function has a bias to generate edge case
 values. This property makes it useful for debugging the application level

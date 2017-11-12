@@ -109,7 +109,11 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *
 			assert(strlen(fname) < (sizeof(buf) / 2));
 			strcpy(dir_end, fname);
 
-			if(asn1c_copy_over(arg, buf) == -1) {
+            if(dlist->elements[i]->usage == FDEP_CONVERTER
+               && !(arg->flags & A1C_GEN_EXAMPLE))
+                continue;
+
+            if(asn1c_copy_over(arg, buf) == -1) {
 				safe_fprintf(mkf, ">>>ABORTED<<<");
 				fclose(mkf);
 				return -1;
@@ -156,7 +160,6 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
                              const char *makefile_name,
                              const char *library_makefile_name, int argc,
                              char **argv) {
-    asn1c_fdeps_t *dlist;
     FILE *mkf;
 
 	mkf = asn1c_open_file(makefile_name, "", 0);
@@ -176,16 +179,18 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
         (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
         need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
 
-	dlist = asn1c_deps_flatten(deps);
-    if(dlist) {
-		/* only CONVERTER data in the makefile */
-		for(int i = 0; i < dlist->el_count; i++) {
-			if(dlist->elements[i]->usage == FDEP_CONVERTER) {
-				safe_fprintf(mkf, "\\\n\t%s", dlist->elements[i]->filename);
-			}
-		}
-		asn1c_deps_freelist(dlist);
-	}
+    if(arg->flags & A1C_GEN_EXAMPLE) {
+        asn1c_fdeps_t *dlist = asn1c_deps_flatten(deps);
+        if(dlist) {
+            /* only CONVERTER data in the makefile */
+            for(int i = 0; i < dlist->el_count; i++) {
+                if(dlist->elements[i]->usage == FDEP_CONVERTER) {
+                    safe_fprintf(mkf, "\\\n\t%s", dlist->elements[i]->filename);
+                }
+            }
+            asn1c_deps_freelist(dlist);
+        }
+    }
 
 	if(need_to_generate_pdu_collection(arg)) {
 		safe_fprintf(mkf, "\\\n\tpdu_collection.c");
@@ -274,9 +279,13 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
         ret = asn1c__save_library_makefile(arg, deps, datadir,
                                            "Makefile.am.libasncodec");
         if(ret) break;
-        ret = asn1c__save_example_makefile(arg, deps, "Makefile.am.example",
-                                         "Makefile.am.libasncodec", argc, argv);
-        if(ret) break;
+
+        if(arg->flags & A1C_GEN_EXAMPLE) {
+            ret = asn1c__save_example_makefile(arg, deps, "Makefile.am.example",
+                                               "Makefile.am.libasncodec", argc,
+                                               argv);
+            if(ret) break;
+        }
     } while(0);
 
     asn1c_deps_freelist(deps);

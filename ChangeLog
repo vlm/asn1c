@@ -18,6 +18,8 @@
       then ensure the new clang is in the way:
         CC=clang CXX=clang++ ./configure --enable-Werror --enable-test-fuzzer
     * uper_encode() API got new argument (breaks API compatibility).
+    * asn1c -gen-XXX flags are deprecated. Use -no-gen-XXX to disable codecs.
+    * asn1c -no-gen-example option to disable converter-example generation.
 
     FIXES:
     * CVE-2017-12966 verified not present.

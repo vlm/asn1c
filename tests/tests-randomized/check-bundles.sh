@@ -254,7 +254,7 @@ asn1c_invoke() {
     } > ${tmpfile}
     echo "${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons"
     if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
-        -gen-OER -gen-PER ${asn1c_flags} $@ ${tmpfile}
+        ${asn1c_flags} $@ ${tmpfile}
     then
         echo "ASN.1 compiled OK"
     else

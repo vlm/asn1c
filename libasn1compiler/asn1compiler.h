@@ -84,6 +84,10 @@ enum asn1c_flags {
 	 * Generate Packed Encoding Rules support code
 	 */
 	A1C_GEN_PER			= 0x80000,
+	/*
+	 * Generate converter-example.c and Makefile.am.example
+	 */
+	A1C_GEN_EXAMPLE     = 0x100000,
 };
 
 /*
