@@ -286,6 +286,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
             return NULL;
         }
 
+        DISPOSE_OF_MY_NAMESPACE();
         my_namespace = asn1_namespace_new_from_module(imports_from, 1);
         DEBUG("Lookup (%s) in %s for line %d", asn1f_printable_reference(ref),
               asn1_namespace_string(my_namespace), ref->_lineno);
@@ -341,6 +342,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
                         ref_tc->Identifier, asn1f_printable_reference(ref),
                         ref->_lineno);
                     errno = EPERM;
+                    DISPOSE_OF_MY_NAMESPACE();
                     return NULL;
                 }
                 if(rhs_pspecs && ref_tc->lhs_params) {
@@ -383,6 +385,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
                         asn1_namespace_string(arg->ns),
                         asn1f_printable_reference(ref), ref->_lineno);
                     errno = ETOOMANYREFS;
+                    DISPOSE_OF_MY_NAMESPACE();
                     return NULL;
                 }
 
