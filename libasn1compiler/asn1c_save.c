@@ -38,14 +38,14 @@ enum include_type_result {
     TI_INCLUDED_FROM_CMDLINE
 };
 
-static int asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
+static int asn1c_dump_streams(const char *destdir, arg_t *arg, asn1c_fdeps_t *, int, char **);
 static int asn1c_print_streams(arg_t *arg);
-static int asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
-static int asn1c_copy_over(arg_t *arg, char *path);
+static int asn1c_save_streams(const char *destdir, arg_t *arg, asn1c_fdeps_t *, int, char **);
+static int asn1c_copy_over(const char *destdir, arg_t *arg, char *path);
 static int identical_files(const char *fname1, const char *fname2);
 static int need_to_generate_pdu_collection(arg_t *arg);
 static abuf *generate_pdu_collection(arg_t *arg);
-static int generate_pdu_collection_file(arg_t *arg);
+static int generate_pdu_collection_file(const char *destdir, arg_t *arg);
 static int generate_preamble(arg_t *, FILE *, int optc, char **argv);
 static enum include_type_result include_type_to_pdu_collection(arg_t *arg);
 static int pdu_collection_has_unused_types(arg_t *arg);
@@ -54,33 +54,33 @@ static void asn1c__cleanup_pdu_type(void);
 static int asn1c__pdu_type_lookup(const char *typename);
 
 static int
-asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *datadir, const char *makefile_name) {
+asn1c__save_library_makefile(const char *destdir, arg_t *arg, const asn1c_fdeps_t *deps, const char *datadir, const char *makefile_name) {
 	asn1c_fdeps_t *dlist;
 	asn1p_module_t *mod;
     FILE *mkf;
 
-	mkf = asn1c_open_file(makefile_name, "", 0);
+	mkf = asn1c_open_file(destdir, makefile_name, "", 0);
 	if(mkf == NULL) {
 		perror(makefile_name);
 		return -1;
 	}
 
-	safe_fprintf(mkf, "ASN_MODULE_SOURCES=");
+	safe_fprintf(mkf, "ASN_MODULE_SRCS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				safe_fprintf(mkf, "\t\\\n\t%s.c",
+				safe_fprintf(mkf, "\t\\\n\t%s%s.c", destdir,
 				asn1c_make_identifier(AMI_MASK_ONLY_SPACES, arg->expr, 0));
 			}
 		}
 	}
-	safe_fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
+	safe_fprintf(mkf, "\n\nASN_MODULE_HDRS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
 				[arg->expr->expr_type].type_cb) {
-				safe_fprintf(mkf, "\t\\\n\t%s.h",
+				safe_fprintf(mkf, "\t\\\n\t%s%s.h", destdir,
 				asn1c_make_identifier(AMI_MASK_ONLY_SPACES, arg->expr, 0));
 			}
 		}
@@ -102,7 +102,7 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *
 		*dir_end++ = '/';
 
 		for(int i = 0; i < dlist->el_count; i++) {
-			char *what_kind;	/* HEADERS or SOURCES */
+			char *what_kind;	/* HDRS or SRCS */
 			char *fname = dlist->elements[i]->filename;
 			char *dotH;
 
@@ -113,7 +113,7 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *
                && !(arg->flags & A1C_GEN_EXAMPLE))
                 continue;
 
-            if(asn1c_copy_over(arg, buf) == -1) {
+            if(asn1c_copy_over(destdir, arg, buf) == -1) {
 				safe_fprintf(mkf, ">>>ABORTED<<<");
 				fclose(mkf);
 				return -1;
@@ -121,14 +121,14 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *
 
 			/* no CONVERTER data in Makefile.am.targets */
 			if(dlist->elements[i]->usage != FDEP_CONVERTER) {
-				/* HEADERS versus SOURCES */
+				/* HDRS versus SRCS */
 				dotH = strrchr(fname, 'h');
 				if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1])
-					what_kind = "HEADERS";
+					what_kind = "HDRS";
 				else
-					what_kind = "SOURCES";
-				safe_fprintf(mkf, "ASN_MODULE_%s+=%s\n",
-					what_kind, fname);
+					what_kind = "SRCS";
+				safe_fprintf(mkf, "ASN_MODULE_%s+=%s%s\n",
+					what_kind, destdir, fname);
 			}
 		}
 
@@ -145,39 +145,41 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *
 	safe_fprintf(
 		mkf,
 		"\n\n"
-		"lib_LTLIBRARIES=libasncodec.la\n"
+		"lib_LTLIBRARIES+=libasncodec.la\n"
 		"libasncodec_la_SOURCES="
-		"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
-		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n");
+		"$(ASN_MODULE_SRCS) $(ASN_MODULE_HDRS)\n"
+		"libasncodec_la_CPPFLAGS=-I$(top_srcdir)/%s\n"
+		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n"
+		"libasncodec_la_LDFLAGS=-lm\n", destdir);
 	fclose(mkf);
-	safe_fprintf(stderr, "Generated Makefile.am.targets\n");
+	safe_fprintf(stderr, "Generated %s%s\n", destdir, makefile_name);
 
     return 0;
 }
 
 static int
-asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
-                             const char *makefile_name,
+asn1c__save_program_makefile(const char *destdir, arg_t *arg, const asn1c_fdeps_t *deps,
+                             const char *program_makefile_name,
                              const char *library_makefile_name, int argc,
                              char **argv) {
     FILE *mkf;
 
-	mkf = asn1c_open_file(makefile_name, "", 0);
+	mkf = asn1c_open_file(destdir, program_makefile_name, "", 0);
 	if(mkf == NULL) {
-		perror(makefile_name);
+		perror(program_makefile_name);
 		return -1;
 	}
-    safe_fprintf(
-        mkf,
-        "include %s\n\n"
-        "LIBS += -lm\n"
-        "CFLAGS += $(ASN_MODULE_CFLAGS) %s%s-I.\n"
-        "ASN_LIBRARY ?= libasncodec.a\n"
-        "ASN_PROGRAM ?= converter-example\n"
-        "ASN_PROGRAM_SOURCES ?= ",
-        library_makefile_name,
-        (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
-        need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
+
+	safe_fprintf(mkf,
+	             "include %s%s\n\n"
+	             "bin_PROGRAMS += asn1convert\n"
+	             "asn1convert_CFLAGS = $(ASN_MODULE_CFLAGS) %s%s\n"
+	             "asn1convert_CPPFLAGS = -I$(top_srcdir)/%s\n"
+	             "asn1convert_LDADD = libasncodec.la\n"
+	             "asn1convert_SOURCES = ",
+	             destdir, library_makefile_name,
+	             (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
+	             need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "", destdir);
 
     if(arg->flags & A1C_GEN_EXAMPLE) {
         asn1c_fdeps_t *dlist = asn1c_deps_flatten(deps);
@@ -185,7 +187,7 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
             /* only CONVERTER data in the makefile */
             for(int i = 0; i < dlist->el_count; i++) {
                 if(dlist->elements[i]->usage == FDEP_CONVERTER) {
-                    safe_fprintf(mkf, "\\\n\t%s", dlist->elements[i]->filename);
+                    safe_fprintf(mkf, "\\\n\t%s%s", destdir, dlist->elements[i]->filename);
                 }
             }
             asn1c_deps_freelist(dlist);
@@ -193,35 +195,73 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
     }
 
 	if(need_to_generate_pdu_collection(arg)) {
-		safe_fprintf(mkf, "\\\n\tpdu_collection.c");
-		if(generate_pdu_collection_file(arg))
+		safe_fprintf(mkf, "\\\n\t%spdu_collection.c", destdir);
+		if(generate_pdu_collection_file(destdir, arg))
 			return -1;
 	}
 
-	safe_fprintf(
-		mkf,
-		"\n\nall: $(ASN_PROGRAM)\n"
-		"\n$(ASN_PROGRAM): $(ASN_LIBRARY) $(ASN_PROGRAM_SOURCES:.c=.o)"
-		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(ASN_PROGRAM) $(ASN_PROGRAM_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
-		"\n$(ASN_LIBRARY): $(ASN_MODULE_SOURCES:.c=.o)"
-		"\n\t$(AR) rcs $@ $(ASN_MODULE_SOURCES:.c=.o)\n"
-		"\n.SUFFIXES:"
-		"\n.SUFFIXES: .c .o\n"
-		"\n.c.o:"
-		"\n\t$(CC) $(CFLAGS) -o $@ -c $<\n"
-		"\nclean:"
-		"\n\trm -f $(ASN_PROGRAM) $(ASN_LIBRARY)"
-		"\n\trm -f $(ASN_MODULE_SOURCES:.c=.o) $(ASN_PROGRAM_SOURCES:.c=.o)\n"
-		"\nregen: regenerate-from-asn1-source\n"
-		"\nregenerate-from-asn1-source:\n\t");
+	safe_fprintf(mkf,
+	             "\nregen: regenerate-from-asn1-source\n"
+	             "\nregenerate-from-asn1-source:\n\t");
 
 	for(int i = 0; i < argc; i++)
 		safe_fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
 	safe_fprintf(mkf, "\n\n");
 
 	fclose(mkf);
-	safe_fprintf(stderr, "Generated %s\n", makefile_name);
-    return 0;
+	safe_fprintf(stderr, "Generated %s%s\n", destdir, program_makefile_name);
+	return 0;
+}
+
+static int
+asn1c__save_autotools_example(const char *destdir,
+                              const char *program_makefile_name) {
+	FILE *fd;
+	const char* confac = "configure.ac";
+	const char* makeam = "Makefile.am";
+
+	if ((access(confac, F_OK) != -1)
+	    || (access(makeam, F_OK) != -1))
+	{
+		safe_fprintf(stderr, "Refusing to overwrite '%s' or '%s'\n", confac, makeam);
+		return -1;
+	}
+
+	fd = asn1c_open_file("", confac, "", 0);
+	if(fd == NULL) {
+		perror(confac);
+		return -1;
+	}
+
+	safe_fprintf(fd,
+	             "AC_INIT([asn1covert],[0.1])\n"
+	             "AM_INIT_AUTOMAKE([-Werror foreign subdir-objects])\n"
+	             "AC_PREREQ([2.62])\n"
+	             "AC_PROG_CC\n"
+	             "LT_INIT\n"
+	             "AM_SILENT_RULES([yes])\n"
+	             "AC_CONFIG_FILES([Makefile])\n"
+	             "AC_OUTPUT\n");
+	fclose(fd);
+	safe_fprintf(stderr, "Generated minimal example %s\n", confac);
+
+	fd = asn1c_open_file("", makeam, "", 0);
+	if(fd == NULL) {
+		perror(makeam);
+		return -1;
+	}
+
+	safe_fprintf(fd,
+	             "bin_PROGRAMS =\n"
+	             "lib_LTLIBRARIES =\n"
+	             "include %s%s\n\n",
+	             destdir, program_makefile_name);
+
+	fclose(fd);
+	safe_fprintf(stderr, "Generated minimal example %s\n", makeam);
+	safe_fprintf(stderr, "\nRun the following to generate a configure script:\n");
+	safe_fprintf(stderr, "$ autoreconf --force --install\n");
+	return 0;
 }
 
 static int
@@ -235,10 +275,12 @@ can_generate_pdu_collection(arg_t *arg) {
 }
 
 int
-asn1c_save_compiled_output(arg_t *arg, const char *datadir,
+asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char* destdir,
 		int argc, int optc, char **argv) {
     asn1c_fdeps_t *deps = 0;
     int ret = -1;
+    const char* program_makefile = "Makefile.am.example";
+    const char* library_makefile = "Makefile.am.libasncodec";
 
     /*
      * Early check that we can properly generate PDU collection.
@@ -262,7 +304,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
             TQ_FOR(arg->expr, &(mod->members), next) {
                 if(asn1_lang_map[arg->expr->meta_type][arg->expr->expr_type]
                        .type_cb) {
-                    if(asn1c_dump_streams(arg, deps, optc, argv)) break;
+                    if(asn1c_dump_streams(destdir, arg, deps, optc, argv)) break;
                 }
             }
         }
@@ -276,16 +318,22 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
             break;
         }
 
-        ret = asn1c__save_library_makefile(arg, deps, datadir,
-                                           "Makefile.am.libasncodec");
+        ret = asn1c__save_library_makefile(destdir, arg, deps, datadir,
+                                           library_makefile);
         if(ret) break;
 
         if(arg->flags & A1C_GEN_EXAMPLE) {
-            ret = asn1c__save_example_makefile(arg, deps, "Makefile.am.example",
-                                               "Makefile.am.libasncodec", argc,
-                                               argv);
+            ret = asn1c__save_program_makefile(destdir, arg, deps,
+                                               program_makefile,
+                                               library_makefile, argc, argv);
             if(ret) break;
+
+            if(arg->flags & A1C_GEN_AUTOTOOLS_EXAMPLE) {
+                ret = asn1c__save_autotools_example(destdir, program_makefile);
+                if(ret) break;
+            }
         }
+        
     } while(0);
 
     asn1c_deps_freelist(deps);
@@ -298,11 +346,11 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
  * Dump the streams.
  */
 static int
-asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv)  {
+asn1c_dump_streams(const char* destdir, arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv)  {
 	if(arg->flags & A1C_PRINT_COMPILED) {
 		return asn1c_print_streams(arg);
 	} else {
-		return asn1c_save_streams(arg, deps, optc, argv);
+		return asn1c_save_streams(destdir, arg, deps, optc, argv);
 	}
 }
 
@@ -330,7 +378,7 @@ asn1c_print_streams(arg_t *arg)  {
 }
 
 static int
-asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
+asn1c_save_streams(const char* destdir, arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	asn1p_expr_t *expr = arg->expr;
 	compiler_streams_t *cs = expr->data;
 	out_chunk_t *ot;
@@ -349,8 +397,8 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	}
 
 	filename = strdup(asn1c_make_identifier(AMI_MASK_ONLY_SPACES, expr, (char*)0));
-	fp_c = asn1c_open_file(filename, ".c", &tmpname_c);
-	fp_h = asn1c_open_file(filename, ".h", &tmpname_h);
+	fp_c = asn1c_open_file(destdir, filename, ".c", &tmpname_c);
+	fp_h = asn1c_open_file(destdir, filename, ".h", &tmpname_h);
 	if(fp_c == NULL || fp_h == NULL) {
 		if(fp_c) { unlink(tmpname_c); free(tmpname_c); fclose(fp_c); }
 		if(fp_h) { unlink(tmpname_h); free(tmpname_h); fclose(fp_h); }
@@ -413,7 +461,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	fclose(fp_c);
 	fclose(fp_h);
 
-    int ret = snprintf(name_buf, sizeof(name_buf), "%s.c", filename);
+    int ret = snprintf(name_buf, sizeof(name_buf), "%s%s.c", destdir, filename);
     assert(ret > 0 && ret < (ssize_t)sizeof(name_buf));
 
 	if(identical_files(name_buf, tmpname_c)) {
@@ -429,7 +477,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 		}
 	}
 
-	sprintf(name_buf, "%s.h", filename);
+	sprintf(name_buf, "%s%s.h", destdir, filename);
 	if(identical_files(name_buf, tmpname_h)) {
 		h_retained = " (contents unchanged)";
 		unlink(tmpname_h);
@@ -446,10 +494,10 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	free(tmpname_c);
 	free(tmpname_h);
 
-	safe_fprintf(stderr, "Compiled %s.c%s\n",
-		filename, c_retained);
-	safe_fprintf(stderr, "Compiled %s.h%s\n",
-		filename, h_retained);
+	safe_fprintf(stderr, "Compiled %s%s.c%s\n",
+		destdir, filename, c_retained);
+	safe_fprintf(stderr, "Compiled %s%s.h%s\n",
+		destdir, filename, h_retained);
 	free(filename);
 	return 0;
 }
@@ -526,7 +574,7 @@ real_copy(const char *src, const char *dst) {
 
 	fpsrc = fopen(src, "r");
 	if(!fpsrc) { errno = EIO; return -1; }
-	fpdst = asn1c_open_file(dst, "", &tmpname);
+	fpdst = asn1c_open_file(NULL, dst, "", &tmpname);
 	if(!fpdst) { fclose(fpsrc); errno = EIO; return -1; }
 
 	while(!feof(fpsrc)) {
@@ -554,14 +602,14 @@ real_copy(const char *src, const char *dst) {
 }
 
 static int
-asn1c_copy_over(arg_t *arg, char *path) {
+asn1c_copy_over(const char* destdir, arg_t *arg, char *path) {
 #ifdef	_WIN32
 	int use_real_copy = 1;
 #else
 	int use_real_copy = !(arg->flags & A1C_LINK_SKELETONS);
 #endif
 
-	const char *fname = a1c_basename(path);
+	const char *fname = a1c_basename(path, destdir);
 	if(!fname
 	|| (use_real_copy ? real_copy(path, fname) : symlink(path, fname))
 	) {
@@ -603,11 +651,11 @@ asn1c_copy_over(arg_t *arg, char *path) {
 
 
 static int
-generate_pdu_collection_file(arg_t *arg) {
+generate_pdu_collection_file(const char* destdir, arg_t *arg) {
     abuf *buf = generate_pdu_collection(arg);
     assert(buf);
 
-    FILE *fp = asn1c_open_file("pdu_collection", ".c", 0);
+    FILE *fp = asn1c_open_file(destdir, "pdu_collection", ".c", 0);
 	if(fp == NULL) {
 		perror("pdu_collection.c");
 		return -1;

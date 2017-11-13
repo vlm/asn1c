@@ -87,13 +87,17 @@ enum asn1c_flags {
 	/*
 	 * Generate converter-example.c and Makefile.am.example
 	 */
-	A1C_GEN_EXAMPLE     = 0x100000,
+	A1C_GEN_EXAMPLE			= 0x100000,
+	/*
+	 * Generate top-level configure.ac and Makefile.am example
+	 */
+	A1C_GEN_AUTOTOOLS_EXAMPLE	= 0x200000,
 };
 
 /*
  * Compile the ASN.1 specification.
  */
-int asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags,
+int asn1_compile(asn1p_t *asn, const char *datadir, const char *destdir, enum asn1c_flags,
 	int argc, int optc, char **argv);
 
 void asn1c__add_pdu_type(const char *typename);
