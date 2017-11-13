@@ -11,7 +11,7 @@ static int asn1c_attach_streams(asn1p_expr_t *expr);
 static int asn1c_detach_streams(asn1p_expr_t *expr);
 
 int
-asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
+asn1_compile(asn1p_t *asn, const char *datadir, const char *destdir, enum asn1c_flags flags,
 		int argc, int optc, char **argv) {
 	arg_t arg_s;
 	arg_t *arg = &arg_s;
@@ -84,7 +84,7 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 	/*
 	 * Save or print out the compiled result.
 	 */
-	if(asn1c_save_compiled_output(arg, datadir, argc, optc, argv))
+	if(asn1c_save_compiled_output(arg, datadir, destdir, argc, optc, argv))
 		return -1;
 
 	TQ_FOR(mod, &(asn->modules), mod_next) {
