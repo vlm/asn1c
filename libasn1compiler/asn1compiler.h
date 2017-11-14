@@ -87,7 +87,11 @@ enum asn1c_flags {
 	/*
 	 * Generate converter-example.c and converter-example.mk
 	 */
-	A1C_GEN_EXAMPLE     = 0x100000,
+	A1C_GEN_EXAMPLE			= 0x100000,
+	/*
+	 * Generate top-level configure.ac and Makefile.am
+	 */
+	A1C_GEN_AUTOTOOLS_EXAMPLE	= 0x200000,
 };
 
 /*

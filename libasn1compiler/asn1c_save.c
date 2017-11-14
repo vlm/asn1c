@@ -294,6 +294,58 @@ asn1c__save_example_am_makefile(arg_t *arg, const asn1c_dep_chainset *deps, cons
 	return 0;
 }
 
+static int
+asn1c__save_autotools_example(const char *destdir,
+                              const char *program_makefile_name) {
+	FILE *fd;
+	const char* confac = "configure.ac";
+	const char* makeam = "Makefile.am";
+
+	if ((access(confac, F_OK) != -1)
+	    || (access(makeam, F_OK) != -1))
+	{
+		safe_fprintf(stderr, "Refusing to overwrite existing '%s' or '%s'\n", confac, makeam);
+		return -1;
+	}
+
+	fd = asn1c_open_file("", confac, "", 0);
+	if(fd == NULL) {
+		perror(confac);
+		return -1;
+	}
+
+	safe_fprintf(fd,
+	             "AC_INIT([asn1convert],[0.1])\n"
+	             "AM_INIT_AUTOMAKE([-Werror foreign subdir-objects])\n"
+	             "AC_PREREQ([2.62])\n"
+	             "AC_PROG_CC\n"
+	             "LT_INIT\n"
+	             "AM_SILENT_RULES([yes])\n"
+	             "AC_CONFIG_FILES([Makefile])\n"
+	             "AC_OUTPUT\n");
+	fclose(fd);
+	safe_fprintf(stderr, "Generated minimal example %s\n", confac);
+
+	fd = asn1c_open_file("", makeam, "", 0);
+	if(fd == NULL) {
+		perror(makeam);
+		return -1;
+	}
+
+	safe_fprintf(fd,
+	             "bin_PROGRAMS =\n"
+	             "lib_LTLIBRARIES =\n"
+	             "include %s%s\n\n",
+	             destdir, program_makefile_name);
+
+	fclose(fd);
+	safe_fprintf(stderr, "Generated minimal example %s\n", makeam);
+	safe_fprintf(stderr, "\nRun the following to generate a configure script:\n");
+	safe_fprintf(stderr, "$ autoreconf --force --install\n");
+	return 0;
+}
+
+static int
 can_generate_pdu_collection(arg_t *arg) {
     abuf *buf = generate_pdu_collection(arg);
     if(!buf) {
@@ -362,6 +414,11 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char *destdir,
                                                   example_am_makefile,
                                                   library_makefile, argc, argv);
             if(ret) break;
+
+            if(arg->flags & A1C_GEN_AUTOTOOLS_EXAMPLE) {
+                ret = asn1c__save_autotools_example(destdir, example_am_makefile);
+                if(ret) break;
+            }
         }
     } while(0);
 
