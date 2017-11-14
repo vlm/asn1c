@@ -21,7 +21,7 @@ NativeEnumerated.h NativeEnumerated.c NativeInteger.h
 NativeInteger.h NativeInteger.c INTEGER.h
 NativeReal.h NativeReal.c REAL.h
 NumericString.h NumericString.c OCTET_STRING.h
-OBJECT_IDENTIFIER.h OBJECT_IDENTIFIER.c INTEGER.h
+OBJECT_IDENTIFIER.h OBJECT_IDENTIFIER.c INTEGER.h OCTET_STRING.h
 ObjectDescriptor.h ObjectDescriptor.c GraphicString.h
 PrintableString.h PrintableString.c OCTET_STRING.h
 REAL.h REAL.c INTEGER.h OCTET_STRING.h
