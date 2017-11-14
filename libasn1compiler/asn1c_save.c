@@ -65,7 +65,7 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 		return -1;
 	}
 
-	safe_fprintf(mkf, "ASN_MODULE_SOURCES=");
+	safe_fprintf(mkf, "ASN_MODULE_SRCS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
@@ -75,7 +75,7 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 			}
 		}
 	}
-	safe_fprintf(mkf, "\n\nASN_MODULE_HEADERS=");
+	safe_fprintf(mkf, "\n\nASN_MODULE_HDRS=");
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
@@ -101,37 +101,37 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 		dir_end = dstpath + dlen;
 		*dir_end++ = '/';
 
-        for(size_t i = 0; i < dlist->deps_count; i++) {
-            char where[32]; /* Location of the */
-			char *what_kind;	/* HEADERS or SOURCES */
-            const asn1c_dep_filename *dep_file = dlist->deps[i];
+		for(size_t i = 0; i < dlist->deps_count; i++) {
+			char where[32]; /* Location of the */
+			char *what_kind;	/* HDRS or SRCS */
+			const asn1c_dep_filename *dep_file = dlist->deps[i];
 			char *fname = dep_file->filename;
 			char *dotH;
 
 			assert(strlen(fname) < (sizeof(dstpath) / 2));
 			strcpy(dir_end, fname);
 
-            if(arg->flags & A1C_DEBUG) {
-                snprintf(where, sizeof(where), "(line %d col %d)",
-                         dep_file->lineno, dep_file->column);
-            } else {
-                where[0] = '\0';
-            }
+			if(arg->flags & A1C_DEBUG) {
+				snprintf(where, sizeof(where), "(line %d col %d)",
+				dep_file->lineno, dep_file->column);
+			} else {
+				where[0] = '\0';
+			}
 
-            if(asn1c_copy_over(arg, dstpath, where) == -1) {
+			if(asn1c_copy_over(arg, dstpath, where) == -1) {
 				safe_fprintf(mkf, ">>>ABORTED<<<");
 				fclose(mkf);
 				return -1;
 			}
 
-            /* HEADERS versus SOURCES */
-            dotH = strrchr(fname, 'h');
-            if(dotH && fname < dotH && dotH[-1] == '.' && !dotH[1]) {
-                what_kind = "HEADERS";
-            } else {
-                what_kind = "SOURCES";
-            }
-            safe_fprintf(mkf, "ASN_MODULE_%s+=%s\n", what_kind, fname);
+			/* HDRS versus SRCS */
+			dotH = strrchr(fname, 'h');
+			if(dotH && fname < dotH && dotH[-1] == '.' && !dotH[1]) {
+				what_kind = "HDRS";
+			} else {
+				what_kind = "SRCS";
+			}
+			safe_fprintf(mkf, "ASN_MODULE_%s+=%s\n", what_kind, fname);
 		}
 
 		asn1c_dep_chain_free(dlist);
@@ -149,7 +149,7 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 		"\n\n"
 		"lib_LTLIBRARIES=libasncodec.la\n"
 		"libasncodec_la_SOURCES="
-		"$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)\n"
+		"$(ASN_MODULE_SRCS) $(ASN_MODULE_HDRS)\n"
 		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n");
 	fclose(mkf);
 	safe_fprintf(stderr, "Generated Makefile.am.targets\n");
@@ -176,7 +176,7 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
         "CFLAGS += $(ASN_MODULE_CFLAGS) %s%s-I.\n"
         "ASN_LIBRARY ?= libasncodec.a\n"
         "ASN_PROGRAM ?= converter-example\n"
-        "ASN_PROGRAM_SOURCES ?= ",
+        "ASN_PROGRAM_SRCS ?= ",
         library_makefile_name,
         (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
         need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
@@ -209,17 +209,17 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 	safe_fprintf(
 		mkf,
 		"\n\nall: $(ASN_PROGRAM)\n"
-		"\n$(ASN_PROGRAM): $(ASN_LIBRARY) $(ASN_PROGRAM_SOURCES:.c=.o)"
-		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(ASN_PROGRAM) $(ASN_PROGRAM_SOURCES:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
-		"\n$(ASN_LIBRARY): $(ASN_MODULE_SOURCES:.c=.o)"
-		"\n\t$(AR) rcs $@ $(ASN_MODULE_SOURCES:.c=.o)\n"
+		"\n$(ASN_PROGRAM): $(ASN_LIBRARY) $(ASN_PROGRAM_SRCS:.c=.o)"
+		"\n\t$(CC) $(CFLAGS) $(CPPFLAGS) -o $(ASN_PROGRAM) $(ASN_PROGRAM_SRCS:.c=.o) $(LDFLAGS) $(ASN_LIBRARY) $(LIBS)\n"
+		"\n$(ASN_LIBRARY): $(ASN_MODULE_SRCS:.c=.o)"
+		"\n\t$(AR) rcs $@ $(ASN_MODULE_SRCS:.c=.o)\n"
 		"\n.SUFFIXES:"
 		"\n.SUFFIXES: .c .o\n"
 		"\n.c.o:"
 		"\n\t$(CC) $(CFLAGS) -o $@ -c $<\n"
 		"\nclean:"
 		"\n\trm -f $(ASN_PROGRAM) $(ASN_LIBRARY)"
-		"\n\trm -f $(ASN_MODULE_SOURCES:.c=.o) $(ASN_PROGRAM_SOURCES:.c=.o)\n"
+		"\n\trm -f $(ASN_MODULE_SRCS:.c=.o) $(ASN_PROGRAM_SRCS:.c=.o)\n"
 		"\nregen: regenerate-from-asn1-source\n"
 		"\nregenerate-from-asn1-source:\n\t");
 

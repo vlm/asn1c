@@ -284,11 +284,11 @@ asn_compile() {
     {
     echo "CFLAGS+= -DASN1_TEXT='$short_asn'";
     echo "ASN_PROGRAM = random-test-driver"
-    echo "ASN_PROGRAM_SOURCES = random-test-driver.c"
+    echo "ASN_PROGRAM_SRCS = random-test-driver.c"
     echo
     echo "include Makefile.am.example"
     echo
-    echo "all-tests-succeeded: ${abs_top_builddir}/asn1c/asn1c \$(ASN_PROGRAM_SOURCES) \$(ASN_MODULE_SOURCES) \$(ASN_MODULE_HEADERS)"
+    echo "all-tests-succeeded: ${abs_top_builddir}/asn1c/asn1c \$(ASN_PROGRAM_SRCS) \$(ASN_MODULE_SRCS) \$(ASN_MODULE_HDRS)"
     echo "	@rm -f \$@"
     echo "	@echo Previous try did not go correctly. To reproduce:"
     echo "	@cat .test-reproduce"

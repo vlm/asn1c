@@ -144,9 +144,9 @@ test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAG
 	echo "	@if [ -f WIP ]; then cat WIP; sleep 2; fi"
 	echo
 	echo "distclean: clean"
-	echo '	rm -f $(ASN_MODULE_SOURCES)'
-	echo '	rm -f $(ASN_MODULE_HEADERS)'
-	echo '	rm -f $(ASN_PROGRAM_SOURCES) $(ASN_PROGRAM_HEADERS)'
+	echo '	rm -f $(ASN_MODULE_SRCS)'
+	echo '	rm -f $(ASN_MODULE_HDRS)'
+	echo '	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)'
 	echo "	rm -f Makefile.am.example"
 } > Makefile
 
