@@ -1,4 +1,4 @@
-ASN_MODULE_SOURCES=	\
+ASN_MODULE_SRCS=	\
 	InterchangedObject.c	\
 	RootClass.c	\
 	GroupClass.c	\
@@ -188,7 +188,7 @@ ASN_MODULE_SOURCES=	\
 	Colour.c	\
 	XYPosition.c
 
-ASN_MODULE_HEADERS=	\
+ASN_MODULE_HDRS=	\
 	InterchangedObject.h	\
 	RootClass.h	\
 	GroupClass.h	\
@@ -378,77 +378,77 @@ ASN_MODULE_HEADERS=	\
 	Colour.h	\
 	XYPosition.h
 
-ASN_MODULE_HEADERS+=BOOLEAN.h
-ASN_MODULE_SOURCES+=BOOLEAN.c
-ASN_MODULE_HEADERS+=INTEGER.h
-ASN_MODULE_HEADERS+=NativeEnumerated.h
-ASN_MODULE_SOURCES+=INTEGER.c
-ASN_MODULE_HEADERS+=NULL.h
-ASN_MODULE_SOURCES+=NULL.c
-ASN_MODULE_SOURCES+=NativeEnumerated.c
-ASN_MODULE_HEADERS+=NativeInteger.h
-ASN_MODULE_SOURCES+=NativeInteger.c
-ASN_MODULE_HEADERS+=asn_SEQUENCE_OF.h
-ASN_MODULE_SOURCES+=asn_SEQUENCE_OF.c
-ASN_MODULE_HEADERS+=asn_SET_OF.h
-ASN_MODULE_SOURCES+=asn_SET_OF.c
-ASN_MODULE_HEADERS+=constr_CHOICE.h
-ASN_MODULE_SOURCES+=constr_CHOICE.c
-ASN_MODULE_HEADERS+=constr_SEQUENCE.h
-ASN_MODULE_SOURCES+=constr_SEQUENCE.c
-ASN_MODULE_HEADERS+=constr_SEQUENCE_OF.h
-ASN_MODULE_SOURCES+=constr_SEQUENCE_OF.c
-ASN_MODULE_HEADERS+=constr_SET_OF.h
-ASN_MODULE_HEADERS+=constr_SET.h
-ASN_MODULE_SOURCES+=constr_SET.c
-ASN_MODULE_SOURCES+=constr_SET_OF.c
-ASN_MODULE_HEADERS+=asn_application.h
-ASN_MODULE_HEADERS+=asn_system.h
-ASN_MODULE_HEADERS+=asn_codecs.h
-ASN_MODULE_HEADERS+=asn_internal.h
-ASN_MODULE_HEADERS+=OCTET_STRING.h
-ASN_MODULE_SOURCES+=OCTET_STRING.c
-ASN_MODULE_HEADERS+=BIT_STRING.h
-ASN_MODULE_SOURCES+=BIT_STRING.c
-ASN_MODULE_SOURCES+=asn_codecs_prim.c
-ASN_MODULE_HEADERS+=asn_codecs_prim.h
-ASN_MODULE_HEADERS+=ber_tlv_length.h
-ASN_MODULE_SOURCES+=ber_tlv_length.c
-ASN_MODULE_HEADERS+=ber_tlv_tag.h
-ASN_MODULE_SOURCES+=ber_tlv_tag.c
-ASN_MODULE_HEADERS+=ber_decoder.h
-ASN_MODULE_SOURCES+=ber_decoder.c
-ASN_MODULE_HEADERS+=der_encoder.h
-ASN_MODULE_SOURCES+=der_encoder.c
-ASN_MODULE_HEADERS+=constr_TYPE.h
-ASN_MODULE_SOURCES+=constr_TYPE.c
-ASN_MODULE_HEADERS+=constraints.h
-ASN_MODULE_SOURCES+=constraints.c
-ASN_MODULE_HEADERS+=xer_support.h
-ASN_MODULE_SOURCES+=xer_support.c
-ASN_MODULE_HEADERS+=xer_decoder.h
-ASN_MODULE_SOURCES+=xer_decoder.c
-ASN_MODULE_HEADERS+=xer_encoder.h
-ASN_MODULE_SOURCES+=xer_encoder.c
-ASN_MODULE_HEADERS+=per_support.h
-ASN_MODULE_SOURCES+=per_support.c
-ASN_MODULE_HEADERS+=per_decoder.h
-ASN_MODULE_SOURCES+=per_decoder.c
-ASN_MODULE_HEADERS+=per_encoder.h
-ASN_MODULE_SOURCES+=per_encoder.c
-ASN_MODULE_HEADERS+=per_opentype.h
-ASN_MODULE_SOURCES+=per_opentype.c
+ASN_MODULE_HDRS+=BOOLEAN.h
+ASN_MODULE_SRCS+=BOOLEAN.c
+ASN_MODULE_HDRS+=INTEGER.h
+ASN_MODULE_HDRS+=NativeEnumerated.h
+ASN_MODULE_SRCS+=INTEGER.c
+ASN_MODULE_HDRS+=NULL.h
+ASN_MODULE_SRCS+=NULL.c
+ASN_MODULE_SRCS+=NativeEnumerated.c
+ASN_MODULE_HDRS+=NativeInteger.h
+ASN_MODULE_SRCS+=NativeInteger.c
+ASN_MODULE_HDRS+=asn_SEQUENCE_OF.h
+ASN_MODULE_SRCS+=asn_SEQUENCE_OF.c
+ASN_MODULE_HDRS+=asn_SET_OF.h
+ASN_MODULE_SRCS+=asn_SET_OF.c
+ASN_MODULE_HDRS+=constr_CHOICE.h
+ASN_MODULE_SRCS+=constr_CHOICE.c
+ASN_MODULE_HDRS+=constr_SEQUENCE.h
+ASN_MODULE_SRCS+=constr_SEQUENCE.c
+ASN_MODULE_HDRS+=constr_SEQUENCE_OF.h
+ASN_MODULE_SRCS+=constr_SEQUENCE_OF.c
+ASN_MODULE_HDRS+=constr_SET_OF.h
+ASN_MODULE_HDRS+=constr_SET.h
+ASN_MODULE_SRCS+=constr_SET.c
+ASN_MODULE_SRCS+=constr_SET_OF.c
+ASN_MODULE_HDRS+=asn_application.h
+ASN_MODULE_HDRS+=asn_system.h
+ASN_MODULE_HDRS+=asn_codecs.h
+ASN_MODULE_HDRS+=asn_internal.h
+ASN_MODULE_HDRS+=OCTET_STRING.h
+ASN_MODULE_SRCS+=OCTET_STRING.c
+ASN_MODULE_HDRS+=BIT_STRING.h
+ASN_MODULE_SRCS+=BIT_STRING.c
+ASN_MODULE_SRCS+=asn_codecs_prim.c
+ASN_MODULE_HDRS+=asn_codecs_prim.h
+ASN_MODULE_HDRS+=ber_tlv_length.h
+ASN_MODULE_SRCS+=ber_tlv_length.c
+ASN_MODULE_HDRS+=ber_tlv_tag.h
+ASN_MODULE_SRCS+=ber_tlv_tag.c
+ASN_MODULE_HDRS+=ber_decoder.h
+ASN_MODULE_SRCS+=ber_decoder.c
+ASN_MODULE_HDRS+=der_encoder.h
+ASN_MODULE_SRCS+=der_encoder.c
+ASN_MODULE_HDRS+=constr_TYPE.h
+ASN_MODULE_SRCS+=constr_TYPE.c
+ASN_MODULE_HDRS+=constraints.h
+ASN_MODULE_SRCS+=constraints.c
+ASN_MODULE_HDRS+=xer_support.h
+ASN_MODULE_SRCS+=xer_support.c
+ASN_MODULE_HDRS+=xer_decoder.h
+ASN_MODULE_SRCS+=xer_decoder.c
+ASN_MODULE_HDRS+=xer_encoder.h
+ASN_MODULE_SRCS+=xer_encoder.c
+ASN_MODULE_HDRS+=per_support.h
+ASN_MODULE_SRCS+=per_support.c
+ASN_MODULE_HDRS+=per_decoder.h
+ASN_MODULE_SRCS+=per_decoder.c
+ASN_MODULE_HDRS+=per_encoder.h
+ASN_MODULE_SRCS+=per_encoder.c
+ASN_MODULE_HDRS+=per_opentype.h
+ASN_MODULE_SRCS+=per_opentype.c
 ASN_CONVERTER_SOURCES+=converter-sample.c
 
 
 lib_LTLIBRARIES=libsomething.la
-libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
+libsomething_la_SOURCES=$(ASN_MODULE_SRCS) $(ASN_MODULE_HDRS)
 
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = mheg5dump
 CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE  -DPDU=InterchangedObject -I.
-OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
+OBJS=${ASN_MODULE_SRCS:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 all: InterchangedObject.c $(TARGET)
 
@@ -547,7 +547,7 @@ check-per:
 	done; done; fi
 
 distclean: clean
-	rm -f $(ASN_MODULE_SOURCES)
-	rm -f $(ASN_MODULE_HEADERS)
+	rm -f $(ASN_MODULE_SRCS)
+	rm -f $(ASN_MODULE_HDRS)
 	rm -f $(ASN_CONVERTER_SOURCES) $(ASN_CONVERTER_HEADERS)
 	rm -f Makefile.am.sample

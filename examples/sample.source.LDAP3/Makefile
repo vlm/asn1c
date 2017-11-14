@@ -101,7 +101,7 @@ maybe-wip-pause:
 	@if [ -f WIP ]; then cat WIP; sleep 2; fi
 
 distclean: clean
-	rm -f $(ASN_MODULE_SOURCES)
-	rm -f $(ASN_MODULE_HEADERS)
-	rm -f $(ASN_PROGRAM_SOURCES) $(ASN_PROGRAM_HEADERS)
+	rm -f $(ASN_MODULE_SRCS)
+	rm -f $(ASN_MODULE_HDRS)
+	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)
 	rm -f Makefile.am.example
