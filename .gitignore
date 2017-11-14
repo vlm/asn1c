@@ -42,7 +42,7 @@ stamp-h*
 
 # /tests/
 /tests/tests-asn1c-smoke/Makefile.am.libasncodec
-/tests/tests-asn1c-smoke/Makefile.am.sample
+/tests/tests-asn1c-smoke/Makefile.am.asn1convert
 /tests/tests-asn1c-smoke/converter-example.mk
 /tests/tests-asn1c-smoke/*.[acho]
 /tests/tests-asn1c-smoke/*.asn
@@ -77,7 +77,7 @@ doc/docsrc/*.xdv
 /examples/sample.source.*/lib*.a
 /examples/sample.source.*/.tmp.*
 /examples/sample.source.*/Makefile.am.libasncodec
-/examples/sample.source.*/Makefile.am.example
+/examples/sample.source.*/Makefile.am.asn1convert
 /examples/sample.source.*/converter-example.mk
 !/examples/sample.source.*/Makefile
 !/examples/sample.source.*/config.h

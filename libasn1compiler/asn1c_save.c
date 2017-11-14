@@ -234,6 +234,66 @@ asn1c__save_example_mk_makefile(arg_t *arg, const asn1c_dep_chainset *deps, cons
 }
 
 static int
+asn1c__save_example_am_makefile(arg_t *arg, const asn1c_dep_chainset *deps, const char *datadir,
+                                const char *destdir, const char *makefile_name,
+                                const char *library_makefile_name, int argc,
+                                char **argv) {
+	FILE *mkf;
+	asn1c_dep_chain *dlist = asn1c_deps_flatten(deps, FDEP_CONVERTER);
+
+	/* Generate example.am snippet */
+	mkf = asn1c_open_file(destdir, makefile_name, "", 0);
+	if(mkf == NULL) {
+		perror(makefile_name);
+		return -1;
+	}
+	safe_fprintf(mkf,
+	             "include %s%s\n\n"
+	             "bin_PROGRAMS += asn1convert\n"
+	             "asn1convert_CFLAGS = $(ASN_MODULE_CFLAGS) %s%s\n"
+	             "asn1convert_CPPFLAGS = -I$(top_srcdir)/%s\n"
+	             "asn1convert_LDADD = libasncodec.la\n"
+	             "asn1convert_SOURCES = ",
+	             destdir, library_makefile_name,
+	             (arg->flags & A1C_PDU_TYPE) ? generate_pdu_C_definition() : "",
+	             need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "", destdir);
+
+	if(dlist) {
+		for(size_t i = 0; i < dlist->deps_count; i++) {
+			char dstpath[PATH_MAX];
+			int ret = snprintf(dstpath, sizeof(dstpath), "%s/%s", datadir,
+			                   dlist->deps[i]->filename);
+			assert(ret > 0 && (size_t)ret < sizeof(dstpath));
+			if(asn1c_copy_over(arg, destdir, dstpath, "implicit") == -1) {
+				safe_fprintf(mkf, ">>>ABORTED<<<");
+				fclose(mkf);
+				return -1;
+			}
+			safe_fprintf(mkf, "\\\n\t%s%s", destdir, dlist->deps[i]->filename);
+		}
+		asn1c_dep_chain_free(dlist);
+	}
+
+	if(need_to_generate_pdu_collection(arg)) {
+		safe_fprintf(mkf, "\\\n\t%spdu_collection.c", destdir);
+		if(generate_pdu_collection_file(arg, destdir))
+			return -1;
+	}
+
+	safe_fprintf(mkf,
+	             "\nregen: regenerate-from-asn1-source\n"
+	             "\nregenerate-from-asn1-source:\n\t");
+
+	for(int i = 0; i < argc; i++)
+		safe_fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
+	safe_fprintf(mkf, "\n\n");
+
+	fclose(mkf);
+	safe_fprintf(stderr, "Generated %s%s\n", destdir, makefile_name);
+
+	return 0;
+}
+
 can_generate_pdu_collection(arg_t *arg) {
     abuf *buf = generate_pdu_collection(arg);
     if(!buf) {
@@ -248,6 +308,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char *destdir,
                            int argc, int optc, char **argv) {
     int ret = -1;
 
+    const char* example_am_makefile = "Makefile.am.asn1convert";
     const char* program_makefile = "converter-example.mk";
     const char* library_makefile = "Makefile.am.libasncodec";
 
@@ -295,6 +356,10 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char *destdir,
         if(arg->flags & A1C_GEN_EXAMPLE) {
             ret = asn1c__save_example_mk_makefile(arg, deps, datadir, destdir,
                                                   program_makefile,
+                                                  library_makefile, argc, argv);
+            if(ret) break;
+            ret = asn1c__save_example_am_makefile(arg, deps, datadir, destdir,
+                                                  example_am_makefile,
                                                   library_makefile, argc, argv);
             if(ret) break;
         }
