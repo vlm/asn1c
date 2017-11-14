@@ -1,15 +1,15 @@
 #include "asn1c_internal.h"
 #include "asn1c_fdeps.h"
 
-static asn1c_dep_filename *asn1c_new_dep_filename(const char *filename);
+static asn1c_dep_filename *asn1c_dep_filename_new(const char *filename);
 static void asn1c_dep_add(asn1c_dep_chain *dlist, const char *filename,
                          int lineno, int column);
-static asn1c_dep_chain *asn1c_new_dep_chain();
+static asn1c_dep_chain *asn1c_dep_chain_new(void);
 
 static asn1c_dep_chain *
 asn1c_dep_chains_add_new(asn1c_dep_chainset *deps,
                          enum asn1c_dep_section section, int active) {
-    asn1c_dep_chain *dc = asn1c_new_dep_chain();
+    asn1c_dep_chain *dc = asn1c_dep_chain_new();
     asn1c_tagged_dep_chain *tc = calloc(1, sizeof(*tc));
     tc->chain = dc;
     tc->section = section;
@@ -150,7 +150,7 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 }
 
 static asn1c_dep_filename *
-asn1c_new_dep_filename(const char *filename) {
+asn1c_dep_filename_new(const char *filename) {
     asn1c_dep_filename *d;
 
     assert(filename);
@@ -164,13 +164,13 @@ asn1c_new_dep_filename(const char *filename) {
 }
 
 static asn1c_dep_chain *
-asn1c_new_dep_chain() {
+asn1c_dep_chain_new() {
     return calloc(1, sizeof(asn1c_dep_chain));
 }
 
 static void
 asn1c_dep_add(asn1c_dep_chain *dlist, const char *filename, int lineno, int column) {
-    asn1c_dep_filename *df = asn1c_new_dep_filename(filename);
+    asn1c_dep_filename *df = asn1c_dep_filename_new(filename);
     df->lineno = lineno;
     df->column = column;
 
@@ -201,7 +201,7 @@ asn1c_deps_flatten(const asn1c_dep_chainset *deps,
 		return 0;
 	}
 
-	dlist = asn1c_new_dep_chain();
+	dlist = asn1c_dep_chain_new();
 
 	for(size_t i = 0; i < deps->chains_count; i++) {
         asn1c_tagged_dep_chain *tc = deps->chains[i];
