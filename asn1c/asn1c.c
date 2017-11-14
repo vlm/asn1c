@@ -127,6 +127,8 @@ main(int ac, char **av) {
                 asn1_compiler_flags |= A1C_GEN_OER;
             } else if(strcmp(optarg, "en-example") == 0) {
                 asn1_compiler_flags |= A1C_GEN_EXAMPLE;
+            } else if(strcmp(optarg, "en-autotools") == 0) {
+                asn1_compiler_flags |= A1C_GEN_AUTOTOOLS_EXAMPLE;
             } else {
                 fprintf(stderr, "-g%s: Invalid argument\n", optarg);
                 exit(EX_USAGE);
@@ -141,6 +143,8 @@ main(int ac, char **av) {
                 asn1_compiler_flags &= ~A1C_GEN_OER;
             } else if(strcmp(optarg, "o-gen-example") == 0) {
                 asn1_compiler_flags &= ~A1C_GEN_EXAMPLE;
+            } else if(strcmp(optarg, "o-gen-autotools") == 0) {
+                asn1_compiler_flags &= ~A1C_GEN_AUTOTOOLS_EXAMPLE;
             } else {
                 fprintf(stderr, "-n%s: Invalid argument\n", optarg);
                 exit(EX_USAGE);
@@ -533,6 +537,7 @@ usage(const char *av0) {
 "  -no-gen-OER           Do not generate the OER (X.696) support code\n"
 "  -no-gen-PER           Do not generate the PER (X.691) support code\n"
 "  -no-gen-example       Do not generate the ASN.1 format converter example\n"
+"  -gen-autotools        Generate example top-level configure.ac and Makefile.am\n"
 "  -pdu={all|auto|Type}  Generate PDU table (discover PDUs automatically)\n"
 "\n"
 
