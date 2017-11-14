@@ -63,8 +63,8 @@ asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 			if(!fromModule)
 				continue;
 
-            asn1p_expr_t *v = v =
-                asn1f_lookup_in_module(fromModule, tc->Identifier);
+            asn1p_expr_t *v =
+                asn1f_lookup_in_module(fromModule, name);
             if(v) break;
 		}
 		if(tc) break;
