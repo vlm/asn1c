@@ -147,10 +147,12 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 	safe_fprintf(
 		mkf,
 		"\n\n"
-		"lib_LTLIBRARIES=libasncodec.la\n"
+		"lib_LTLIBRARIES+=libasncodec.la\n"
 		"libasncodec_la_SOURCES="
 		"$(ASN_MODULE_SRCS) $(ASN_MODULE_HDRS)\n"
-		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n");
+		"libasncodec_la_CPPFLAGS=-I$(top_srcdir)/%s\n"
+		"libasncodec_la_CFLAGS=$(ASN_MODULE_CFLAGS)\n"
+		"libasncodec_la_LDFLAGS=-lm\n", destdir);
 	fclose(mkf);
 	safe_fprintf(stderr, "Generated %s%s\n", destdir, makefile_name);
 
