@@ -8,7 +8,7 @@ top_builddir=${top_builddir:-../..}
 top_srcdir=${top_srcdir:-../..}
 
 cleanup() {
-    rm -rf *.[cho] Makefile.am.* *.txt *.asn
+    rm -rf *.[acho] Makefile.am.* *.txt *.asn
     rm -f converter-example
 }
 
@@ -60,7 +60,6 @@ verify_compile_and_link_variants() {
                 "OCTET STRING" IA5String "IA5String(SIZE(1))" UTF8String \
                 REAL "SET OF INTEGER" "SEQUENCE OF INTEGER"; do
         verify_type_with_variants "$type"
-
     done
 }
 
