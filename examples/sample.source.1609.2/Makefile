@@ -11,7 +11,7 @@ Certificate.c: ../sample.makefile.regen ../IEEE-1609.2-2016.asn1
 
 regen-makefile:
 	TITLE="IEEE 1609.2-2016 decoder" \
-	ASN_CMDOPTS="-pdu=auto -pdu=Ieee1609Dot2Data -fcompound-names -gen-OER" \
+	ASN_CMDOPTS="-pdu=auto -pdu=Ieee1609Dot2Data -fcompound-names" \
 	ASN_MODULES="../IEEE-1609.2-2016.asn1" \
 	ASN_PDU=Certificate \
 	ASN_PROGRAM=1609-2-dump \

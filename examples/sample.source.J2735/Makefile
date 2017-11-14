@@ -11,7 +11,7 @@ MessageFrame.c: ../sample.makefile.regen ../J2735_201603.asn1
 
 regen-makefile:
 	TITLE="J2735 DSRC decoder" \
-	ASN_CMDOPTS="-fcompound-names -gen-PER -pdu=all" \
+	ASN_CMDOPTS="-fcompound-names -pdu=auto" \
 	ASN_MODULES="../J2735_201603.asn1" \
 	ASN_PDU=MessageFrame \
 	ASN_PROGRAM=j2735-dump \

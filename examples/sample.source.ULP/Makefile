@@ -11,7 +11,7 @@ ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
 
 regen-makefile:
 	TITLE="OMA UserPlane Location Protocol decoder" \
-	ASN_CMDOPTS="-pdu=SUPLINIT -fcompound-names -gen-PER" \
+	ASN_CMDOPTS="-pdu=SUPLINIT -fcompound-names -no-gen-OER" \
 	ASN_MODULES="../ulp.asn1" \
 	ASN_PDU=ULP-PDU \
 	ASN_PROGRAM=ulp-dump \
