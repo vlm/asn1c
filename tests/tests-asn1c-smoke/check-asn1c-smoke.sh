@@ -30,7 +30,7 @@ verify() {
 
     cleanup
 
-    asncmd="${top_builddir}/asn1c/asn1c -flink-skeletons -S ${top_srcdir}/skeletons $flags test.asn"
+    asncmd="${top_builddir}/asn1c/asn1c -Wdebug-compiler -flink-skeletons -S ${top_srcdir}/skeletons $flags test.asn"
 
     {
     echo "$asncmd"
@@ -52,9 +52,12 @@ verify_type_with_variants() {
 }
 
 verify_compile_and_link_variants() {
-    for type in INTEGER "ENUMERATED{foo}" NULL BOOLEAN "BIT STRING" \
-                "OBJECT IDENTIFIER" "RELATIVE-OID" "SEQUENCE{f INTEGER}" \
-                "CHOICE{f INTEGER}" "OCTET STRING" IA5String UTF8String \
+    for type in INTEGER "INTEGER(0..1)" "ENUMERATED{foo}" NULL BOOLEAN \
+                "BIT STRING" \
+                "OBJECT IDENTIFIER" "RELATIVE-OID" \
+                "SEQUENCE{f INTEGER}" \
+                "CHOICE{f INTEGER}" \
+                "OCTET STRING" IA5String "IA5String(SIZE(1))" UTF8String \
                 REAL "SET OF INTEGER" "SEQUENCE OF INTEGER"; do
         verify_type_with_variants "$type"
 
@@ -69,6 +72,8 @@ else
         verify_type_with_variants "$type"
     done
 fi
+set +x
 trap '' EXIT ERR
 
 cleanup
+echo "OK"

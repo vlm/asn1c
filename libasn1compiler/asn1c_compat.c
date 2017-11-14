@@ -1,10 +1,6 @@
 #include "asn1c_internal.h"
 #include "asn1c_compat.h"
 
-#ifndef	PATH_MAX
-#define	PATH_MAX    1024
-#endif
-
 /* Normally file permissions are (DEFFILEMODE & ~umask(2)) */
 #ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
 

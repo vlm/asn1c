@@ -38,10 +38,10 @@ enum include_type_result {
     TI_INCLUDED_FROM_CMDLINE
 };
 
-static int asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
+static int asn1c_dump_streams(arg_t *arg, asn1c_dep_chainset *, int, char **);
 static int asn1c_print_streams(arg_t *arg);
-static int asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *, int, char **);
-static int asn1c_copy_over(arg_t *arg, char *path);
+static int asn1c_save_streams(arg_t *arg, asn1c_dep_chainset *, int, char **);
+static int asn1c_copy_over(arg_t *arg, const char *path, const char *msg);
 static int identical_files(const char *fname1, const char *fname2);
 static int need_to_generate_pdu_collection(arg_t *arg);
 static abuf *generate_pdu_collection(arg_t *arg);
@@ -54,8 +54,8 @@ static void asn1c__cleanup_pdu_type(void);
 static int asn1c__pdu_type_lookup(const char *typename);
 
 static int
-asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *datadir, const char *makefile_name) {
-	asn1c_fdeps_t *dlist;
+asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
+                             const char *datadir, const char *makefile_name) {
 	asn1p_module_t *mod;
     FILE *mkf;
 
@@ -90,49 +90,51 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *
 	/*
 	 * Move necessary skeleton files and add them to Makefile.am.targets.
 	 */
-	dlist = asn1c_deps_flatten(deps);
-	if(dlist) {
-		char buf[8129];
+    asn1c_dep_chain *dlist = asn1c_deps_flatten(deps, ~FDEP_CONVERTER);
+    if(dlist) {
+		char dstpath[PATH_MAX];
 		char *dir_end;
 		size_t dlen = strlen(datadir);
 
-		assert(dlen < (sizeof(buf) / 2 - 2));
-		memcpy(buf, datadir, dlen);
-		dir_end = buf + dlen;
+		assert(dlen < (sizeof(dstpath) / 2 - 2));
+		memcpy(dstpath, datadir, dlen);
+		dir_end = dstpath + dlen;
 		*dir_end++ = '/';
 
-		for(int i = 0; i < dlist->el_count; i++) {
+        for(size_t i = 0; i < dlist->deps_count; i++) {
+            char where[32]; /* Location of the */
 			char *what_kind;	/* HEADERS or SOURCES */
-			char *fname = dlist->elements[i]->filename;
+            const asn1c_dep_filename *dep_file = dlist->deps[i];
+			char *fname = dep_file->filename;
 			char *dotH;
 
-			assert(strlen(fname) < (sizeof(buf) / 2));
+			assert(strlen(fname) < (sizeof(dstpath) / 2));
 			strcpy(dir_end, fname);
 
-            if(dlist->elements[i]->usage == FDEP_CONVERTER
-               && !(arg->flags & A1C_GEN_EXAMPLE))
-                continue;
+            if(arg->flags & A1C_DEBUG) {
+                snprintf(where, sizeof(where), "(line %d col %d)",
+                         dep_file->lineno, dep_file->column);
+            } else {
+                where[0] = '\0';
+            }
 
-            if(asn1c_copy_over(arg, buf) == -1) {
+            if(asn1c_copy_over(arg, dstpath, where) == -1) {
 				safe_fprintf(mkf, ">>>ABORTED<<<");
 				fclose(mkf);
 				return -1;
 			}
 
-			/* no CONVERTER data in Makefile.am.targets */
-			if(dlist->elements[i]->usage != FDEP_CONVERTER) {
-				/* HEADERS versus SOURCES */
-				dotH = strrchr(fname, 'h');
-				if(dotH && fname<dotH && dotH[-1] == '.' && !dotH[1])
-					what_kind = "HEADERS";
-				else
-					what_kind = "SOURCES";
-				safe_fprintf(mkf, "ASN_MODULE_%s+=%s\n",
-					what_kind, fname);
-			}
+            /* HEADERS versus SOURCES */
+            dotH = strrchr(fname, 'h');
+            if(dotH && fname < dotH && dotH[-1] == '.' && !dotH[1]) {
+                what_kind = "HEADERS";
+            } else {
+                what_kind = "SOURCES";
+            }
+            safe_fprintf(mkf, "ASN_MODULE_%s+=%s\n", what_kind, fname);
 		}
 
-		asn1c_deps_freelist(dlist);
+		asn1c_dep_chain_free(dlist);
 	}
 
 	safe_fprintf(
@@ -156,8 +158,8 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_fdeps_t *deps, const char *
 }
 
 static int
-asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
-                             const char *makefile_name,
+asn1c__save_example_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
+                             const char *datadir, const char *makefile_name,
                              const char *library_makefile_name, int argc,
                              char **argv) {
     FILE *mkf;
@@ -180,15 +182,21 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_fdeps_t *deps,
         need_to_generate_pdu_collection(arg) ? "-DASN_PDU_COLLECTION " : "");
 
     if(arg->flags & A1C_GEN_EXAMPLE) {
-        asn1c_fdeps_t *dlist = asn1c_deps_flatten(deps);
+        asn1c_dep_chain *dlist = asn1c_deps_flatten(deps, FDEP_CONVERTER);
         if(dlist) {
-            /* only CONVERTER data in the makefile */
-            for(int i = 0; i < dlist->el_count; i++) {
-                if(dlist->elements[i]->usage == FDEP_CONVERTER) {
-                    safe_fprintf(mkf, "\\\n\t%s", dlist->elements[i]->filename);
+            for(size_t i = 0; i < dlist->deps_count; i++) {
+                char dstpath[PATH_MAX];
+                int ret = snprintf(dstpath, sizeof(dstpath), "%s/%s", datadir,
+                                   dlist->deps[i]->filename);
+                assert(ret > 0 && (size_t)ret < sizeof(dstpath));
+                if(asn1c_copy_over(arg, dstpath, "implicit") == -1) {
+                    safe_fprintf(mkf, ">>>ABORTED<<<");
+                    fclose(mkf);
+                    return -1;
                 }
+                safe_fprintf(mkf, "\\\n\t%s", dlist->deps[i]->filename);
             }
-            asn1c_deps_freelist(dlist);
+            asn1c_dep_chain_free(dlist);
         }
     }
 
@@ -237,7 +245,6 @@ can_generate_pdu_collection(arg_t *arg) {
 int
 asn1c_save_compiled_output(arg_t *arg, const char *datadir,
 		int argc, int optc, char **argv) {
-    asn1c_fdeps_t *deps = 0;
     int ret = -1;
 
     /*
@@ -247,6 +254,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
         return -1;
     }
 
+    asn1c_dep_chainset *deps;
     do {
         asn1p_module_t *mod;
 
@@ -281,14 +289,14 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
         if(ret) break;
 
         if(arg->flags & A1C_GEN_EXAMPLE) {
-            ret = asn1c__save_example_makefile(arg, deps, "Makefile.am.example",
-                                               "Makefile.am.libasncodec", argc,
-                                               argv);
+            ret = asn1c__save_example_makefile(
+                arg, deps, datadir, "Makefile.am.example",
+                "Makefile.am.libasncodec", argc, argv);
             if(ret) break;
         }
     } while(0);
 
-    asn1c_deps_freelist(deps);
+    asn1c_dep_chainset_free(deps);
     asn1c__cleanup_pdu_type();
 
     return ret;
@@ -298,8 +306,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir,
  * Dump the streams.
  */
 static int
-asn1c_dump_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv)  {
-	if(arg->flags & A1C_PRINT_COMPILED) {
+asn1c_dump_streams(arg_t *arg, asn1c_dep_chainset *deps, int optc,
+                   char **argv) {
+    if(arg->flags & A1C_PRINT_COMPILED) {
 		return asn1c_print_streams(arg);
 	} else {
 		return asn1c_save_streams(arg, deps, optc, argv);
@@ -330,8 +339,9 @@ asn1c_print_streams(arg_t *arg)  {
 }
 
 static int
-asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
-	asn1p_expr_t *expr = arg->expr;
+asn1c_save_streams(arg_t *arg, asn1c_dep_chainset *deps, int optc,
+                   char **argv) {
+    asn1p_expr_t *expr = arg->expr;
 	compiler_streams_t *cs = expr->data;
 	out_chunk_t *ot;
 	FILE *fp_c, *fp_h;
@@ -373,7 +383,7 @@ asn1c_save_streams(arg_t *arg, asn1c_fdeps_t *deps, int optc, char **argv) {
 	if(TQ_FIRST(&(cs->destination[idx].chunks)) && *msg)		\
 		safe_fprintf(fp, "\n/* %s */\n", msg);			\
 	TQ_FOR(ot, &(cs->destination[idx].chunks), next) {		\
-		if(actdep) asn1c_activate_dependency(deps, 0, ot->buf);	\
+		if(actdep) asn1c_activate_dependency(deps, ot->buf, header_id);	\
 		safe_fwrite(ot->buf, ot->len, 1, fp);			\
 	}								\
 } while(0)
@@ -554,7 +564,7 @@ real_copy(const char *src, const char *dst) {
 }
 
 static int
-asn1c_copy_over(arg_t *arg, char *path) {
+asn1c_copy_over(arg_t *arg, const char *path, const char *msg) {
 #ifdef	_WIN32
 	int use_real_copy = 1;
 #else
@@ -595,10 +605,12 @@ asn1c_copy_over(arg_t *arg, char *path) {
 		}
 	}
 
-	safe_fprintf(stderr, "%s %s\t-> %s\n",
-		use_real_copy ? "Copied" : "Symlinked", path, fname);
+    const int has_msg = msg && *msg;
+    safe_fprintf(stderr, "%s %s\t-> %s%s%s\n",
+                 use_real_copy ? "Copied" : "Symlinked", path, fname,
+                 has_msg ? " " : "", has_msg ? msg : "");
 
-	return 1;
+    return 1;
 }
 
 

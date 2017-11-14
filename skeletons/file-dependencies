@@ -69,17 +69,19 @@ CONVERTER:			# THIS IS A SPECIAL SECTION
 converter-example.c		# A default name for the example transcoder
 
 CODEC-OER:			# THIS IS A SPECIAL SECTION
-oer_decoder.h oer_decoder.c OPEN_TYPE.h # OER decoding support
-oer_encoder.h oer_encoder.c # OER encoding support
-oer_support.h oer_support.c # OER support
+oer_decoder.h
+oer_encoder.h
+oer_support.h
+oer_decoder.h oer_decoder.c OPEN_TYPE.h
+oer_encoder.h oer_encoder.c
+oer_support.h oer_support.c
 OPEN_TYPE.h OPEN_TYPE_oer.c constr_CHOICE.h
-INTEGER_oer.c INTEGER.h
-OCTET_STRING_oer.c
-NativeInteger_oer.c NativeInteger.h
-NativeEnumerated_oer.c NativeEnumerated.h
-constr_SEQUENCE_oer.c constr_SEQUENCE.h
-constr_CHOICE_oer.c
-constr_SET_OF_oer.c constr_SET_OF.h asn_SET_OF.h asn_SET_OF.c
-BIT_STRING_oer.c
+INTEGER.h INTEGER_oer.c
+BIT_STRING.h BIT_STRING_oer.c OCTET_STRING_oer.c
+NativeInteger.h NativeInteger_oer.c
+NativeEnumerated.h NativeEnumerated_oer.c
+constr_CHOICE.h constr_CHOICE_oer.c
+constr_SEQUENCE.h constr_SEQUENCE_oer.c
+constr_SET_OF.h constr_SET_OF_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION
