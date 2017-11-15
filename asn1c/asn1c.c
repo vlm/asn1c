@@ -63,16 +63,19 @@ main(int ac, char **av) {
     int print_arg__fix_n_print = 0; /* Fix and print */
     int warnings_as_errors = 0;     /* Treat warnings as errors */
     char *skeletons_dir = NULL;     /* Directory with supplementary stuff */
+    char destdir[PATH_MAX];         /* Destination directory for generated files */
     asn1p_t *asn = 0;               /* An ASN.1 parsed tree */
     int ret;                        /* Return value from misc functions */
     int ch;                         /* Command line character */
     int i;                          /* Index in some loops */
     int exit_code = 0;              /* Exit code */
 
+    destdir[0] = '\0';
+
     /*
      * Process command-line options.
      */
-    while((ch = getopt(ac, av, "EFf:g:hn:LPp:RS:vW:X")) != -1) switch(ch) {
+    while((ch = getopt(ac, av, "EFf:g:hn:LPp:RS:D:vW:X")) != -1) switch(ch) {
         case 'E':
             print_arg__print_out = 1;
             break;
@@ -179,6 +182,11 @@ main(int ac, char **av) {
         case 'S':
             skeletons_dir = optarg;
             break;
+        case 'D':
+            strncat(destdir, optarg, PATH_MAX - 2); /* leave room for possible trailing '/' */
+            if(destdir[strlen(destdir)-1] != '/')
+                strcat(destdir, "/");
+            break;
         case 'v':
             fprintf(stderr, "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT);
             exit(0);
@@ -241,7 +249,7 @@ main(int ac, char **av) {
         ac -= optind;
         av += optind;
     } else {
-        const char *bin_name = a1c_basename(av[0]);
+        const char *bin_name = a1c_basename(av[0], NULL);
         fprintf(stderr,
                 "%s: No input files specified. "
                 "Try '%s -h' for more information\n",
@@ -370,7 +378,7 @@ main(int ac, char **av) {
      * Compile the ASN.1 tree into a set of source files
      * of another language.
      */
-    if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags, ac + optind,
+    if(asn1_compile(asn, skeletons_dir, destdir, asn1_compiler_flags, ac + optind,
                     optind, av - optind)) {
         exit_code = EX_SOFTWARE;
     }
@@ -499,6 +507,7 @@ usage(const char *av0) {
 "  -R                    Restrict output (tables only, no support code)\n"
 "  -S <dir>              Directory with support (skeleton?) files\n"
 "                        (Default is \"%s\")\n"
+"  -D <dir>              Destination directory for generated files (default current dir)\n"
 "  -X                    Generate and print the XML DTD\n"
 "\n"
 
@@ -532,7 +541,7 @@ usage(const char *av0) {
 "  -print-lines          Generate \"-- #line\" comments in -E output\n"
 
 	,
-	a1c_basename(av0), DATADIR);
+	a1c_basename(av0, NULL), DATADIR);
     /* clang-format on */
     exit(EX_USAGE);
 }
