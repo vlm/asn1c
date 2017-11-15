@@ -129,8 +129,8 @@ typedef int(asn_app_consume_bytes_f)(const void *buffer, size_t size,
 asn_enc_rval_t asn_encode(
     const asn_codec_ctx_t *opt_codec_parameters, /* See asn_codecs.h */
     enum asn_transfer_syntax,
-    struct asn_TYPE_descriptor_s *type_to_encode,
-    void *structure_to_encode,
+    const struct asn_TYPE_descriptor_s *type_to_encode,
+    const void *structure_to_encode,
     asn_app_consume_bytes_f *callback, void *callback_key);
 
 
