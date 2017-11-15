@@ -31,8 +31,8 @@ else
   asn1c ${EFFECTIVE_CMDOPTS} || exit $?
 fi
 
-if test ! -f Makefile.am.example ; then
-	echo "Makefile.am.example is missing"
+if test ! -f converter-example.mk ; then
+	echo "converter-example.mk is missing"
 	exit 1
 fi
 
@@ -45,7 +45,7 @@ test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAG
 	echo "CFLAGS += ${EXTRA_CFLAGS}"
 	echo "begin: ${ASN_PDU}.c maybe-wip-pause all"
     echo
-	echo "-include Makefile.am.example"
+	echo "-include converter-example.mk"
     echo
 	echo "${ASN_PDU}.c: $0 ${ASN_MODULES}"
 	echo "	make regen-makefile"
@@ -147,7 +147,7 @@ test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAG
 	echo '	rm -f $(ASN_MODULE_SRCS)'
 	echo '	rm -f $(ASN_MODULE_HDRS)'
 	echo '	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)'
-	echo "	rm -f Makefile.am.example"
+	echo "	rm -f converter-example.mk"
 } > Makefile
 
 echo

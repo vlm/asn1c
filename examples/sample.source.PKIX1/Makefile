@@ -2,7 +2,7 @@ ASN_PROGRAM = x509dump
 CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE
 begin: Certificate.c maybe-wip-pause all
 
--include Makefile.am.example
+-include converter-example.mk
 
 Certificate.c: ../sample.makefile.regen ../rfc3280-*.asn1
 	make regen-makefile
@@ -103,4 +103,4 @@ distclean: clean
 	rm -f $(ASN_MODULE_SRCS)
 	rm -f $(ASN_MODULE_HDRS)
 	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)
-	rm -f Makefile.am.example
+	rm -f converter-example.mk

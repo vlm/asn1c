@@ -286,7 +286,7 @@ asn_compile() {
     echo "ASN_PROGRAM = random-test-driver"
     echo "ASN_PROGRAM_SRCS = random-test-driver.c"
     echo
-    echo "include Makefile.am.example"
+    echo "include converter-example.mk"
     echo
     echo "all-tests-succeeded: ${abs_top_builddir}/asn1c/asn1c \$(ASN_PROGRAM_SRCS) \$(ASN_MODULE_SRCS) \$(ASN_MODULE_HDRS)"
     echo "	@rm -f \$@"
@@ -295,7 +295,7 @@ asn_compile() {
     echo "	@exit 1"
     echo
     } > Makefile
-    echo "Makefile.am.example -> Makefile"
+    echo "converter-example.mk -> Makefile"
 }
 
 # Make up to four different passes:

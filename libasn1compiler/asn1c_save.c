@@ -160,13 +160,14 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 }
 
 static int
-asn1c__save_example_makefile(arg_t *arg, const asn1c_dep_chainset *deps, const char *datadir,
-                             const char *destdir, const char *makefile_name,
-                             const char *library_makefile_name, int argc,
-                             char **argv) {
+asn1c__save_example_mk_makefile(arg_t *arg, const asn1c_dep_chainset *deps, const char *datadir,
+                                const char *destdir, const char *makefile_name,
+                                const char *library_makefile_name, int argc,
+                                char **argv) {
 	FILE *mkf;
 	asn1c_dep_chain *dlist = asn1c_deps_flatten(deps, FDEP_CONVERTER);
 
+	/* Generate converter-example.mk snippet */
 	mkf = asn1c_open_file(destdir, makefile_name, "", 0);
 	if(mkf == NULL) {
 		perror(makefile_name);
@@ -228,6 +229,7 @@ asn1c__save_example_makefile(arg_t *arg, const asn1c_dep_chainset *deps, const c
 
 	fclose(mkf);
 	safe_fprintf(stderr, "Generated %s%s\n", destdir, makefile_name);
+
 	return 0;
 }
 
@@ -246,7 +248,7 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char *destdir,
                            int argc, int optc, char **argv) {
     int ret = -1;
 
-    const char* program_makefile = "Makefile.am.example";
+    const char* program_makefile = "converter-example.mk";
     const char* library_makefile = "Makefile.am.libasncodec";
 
     /*
@@ -291,9 +293,9 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char *destdir,
         if(ret) break;
 
         if(arg->flags & A1C_GEN_EXAMPLE) {
-            ret = asn1c__save_example_makefile(arg, deps, datadir, destdir,
-                                               program_makefile,
-                                               library_makefile, argc, argv);
+            ret = asn1c__save_example_mk_makefile(arg, deps, datadir, destdir,
+                                                  program_makefile,
+                                                  library_makefile, argc, argv);
             if(ret) break;
         }
     } while(0);

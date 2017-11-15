@@ -8,7 +8,7 @@ top_builddir=${top_builddir:-../..}
 top_srcdir=${top_srcdir:-../..}
 
 cleanup() {
-    rm -rf *.[acho] Makefile.am.* *.txt *.asn
+    rm -rf *.[acho] Makefile.am.* *.mk *.txt *.asn
     rm -f converter-example
 }
 
@@ -34,12 +34,12 @@ verify() {
 
     {
     echo "$asncmd"
-    echo "${MAKE:-make} -f Makefile.am.example"
+    echo "${MAKE:-make} -f converter-example.mk"
     } > status.txt
 
     echo "Module DEFINITIONS::=BEGIN T::=$type END" > test.asn
     $asncmd
-    CFLAGS=-O0 ${MAKE:-make} -f Makefile.am.example | tail -10
+    CFLAGS=-O0 ${MAKE:-make} -f converter-example.mk | tail -10
 }
 
 verify_type_with_variants() {

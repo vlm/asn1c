@@ -84,7 +84,7 @@ ASN_PROGRAM_SRCS = ${source_short}
 CC ?= ${CC}
 CXX ?= ${CXX}
 
--include Makefile.am.example
+-include converter-example.mk
 
 all: compiled-module
 	\$(MAKE) check-program

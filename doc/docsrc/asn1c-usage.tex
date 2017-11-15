@@ -149,7 +149,7 @@ asn1c -no-gen-example %\textbf{rectangle.asn}%
 \item Create the converter and dumper:
 
 \begin{bash}
-make -f Makefile.am.example
+make -f converter-example.mk
 \end{bash}
 
 \item Done. The binary file converter is ready:
@@ -486,14 +486,14 @@ after compilation will be rather small anyway.
 generated files.
 This makefile can be used on its own to build the just the codec library.
 \item A \textbf{converter-example.c} file containing the \emph{int main()} function with a fully functioning encoder and data format converter. It can convert a given PDU between BER, XER, OER and PER. At some point you will want to replace this file with your own file containing the \emph{int main()} function.
-\item A \textbf{Makefile.am.example} file which binds together
+\item A \textbf{converter-example.mk} file which binds together
 \textbf{Makefile.am.libasncodecs} and \textbf{converter-example.c}
 to build a versatile converter and debugger for your data formats.
 \end{itemize}
 It is possible to compile everything with just a couple of instructions:
 \begin{bash}
 asn1c -pdu=%\emph{Rectangle}% *.asn
-make -f Makefile.am.example                   # If you use `make`
+make -f converter-example.mk                   # If you use `make`
 \end{bash}
 or
 \begin{bash}

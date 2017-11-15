@@ -85,7 +85,7 @@ enum asn1c_flags {
 	 */
 	A1C_GEN_PER			= 0x80000,
 	/*
-	 * Generate converter-example.c and Makefile.am.example
+	 * Generate converter-example.c and converter-example.mk
 	 */
 	A1C_GEN_EXAMPLE     = 0x100000,
 };
