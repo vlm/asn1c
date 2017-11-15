@@ -2,7 +2,7 @@ ASN_PROGRAM = 1609-2-dump
 CFLAGS += -DASN_CONVERTER_TITLE="IEEE 1609.2-2016 decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE
 begin: Certificate.c maybe-wip-pause all
 
--include Makefile.am.example
+-include converter-example.mk
 
 Certificate.c: ../sample.makefile.regen ../IEEE-1609.2-2016.asn1
 	make regen-makefile
@@ -104,4 +104,4 @@ distclean: clean
 	rm -f $(ASN_MODULE_SRCS)
 	rm -f $(ASN_MODULE_HDRS)
 	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)
-	rm -f Makefile.am.example
+	rm -f converter-example.mk
