@@ -76,6 +76,7 @@
 \lstnewenvironment{bash}[1][]{\lstset{style=listingStyle,language=bash,#1}}{}
 \lstnewenvironment{asn}[1][]{\lstset{style=listingStyle,language=asn1,#1}}{}
 
+\newcommand{\apisection}[2]{\clearpage\section{\label{#1}#2}}
 \newcommand{\api}[2]{\hyperref[#1]{\code{#2}}}
 \newcommand{\seealso}[2]{\api{#1}{#2} at page \pageref{#1}}
 \newcommand{\code}[1]{\texttt{\textbf{\lstinline{#1}}}}
@@ -577,8 +578,7 @@ the next major release.
 The API calls not listed here are not public and should not be used by the
 application level code.
 
-\clearpage{}
-\section{\label{sec:ASN_STRUCT_FREE}ASN\_STRUCT\_FREE() macro}
+\apisection{sec:ASN_STRUCT_FREE}{ASN\_STRUCT\_FREE() macro}
 
 \subsection*{Synopsis}
 
@@ -604,7 +604,7 @@ Rectangle_t *rect = ...;
 ASN_STRUCT_FREE(asn_DEF_Rectangle, rect);
 \end{example}
 
-\section{\label{sec:ASN_STRUCT_RESET}ASN\_STRUCT\_RESET() macro}
+\apisection{sec:ASN_STRUCT_RESET}{ASN\_STRUCT\_RESET() macro}
 
 \subsection*{Synopsis}
 
@@ -640,7 +640,7 @@ struct my_figure *fig = ...;
 ASN_STRUCT_RESET(asn_DEF_Rectangle, &fig->rect);
 \end{example}
 
-\section{asn\_check\_constraints()}
+\apisection{sec:asn_check_constraints}{asn\_check\_constraints()}
 
 \subsection*{Synopsis}
 
@@ -655,12 +655,13 @@ int asn_check_constraints(
 
 \subsection*{Description}
 
-Validate the structure according to the ASN.1 constraints.
-If errbuf and errlen are given, they shall be pointing to the appropriate
-buffer space and its length before calling this function. Alternatively,
-they could be passed as NULLs. If constraints validation fails,
-errlen will contain the actual number of bytes used in errbuf
-to encode an error message, properly 0-terminated.
+Validate a given structure according to the ASN.1 constraints.
+If \code{errbuf} and \code{errlen} are given, they shall point to the
+appropriate buffer space and its length before calling this function.
+Alternatively, they could be passed as \code{NULL}s.
+If constraints validation fails, \code{errlen} will contain the actual
+number of bytes used in \code{errbuf} to encode an error message.
+The message is going to be properly 0-terminated.
 
 \subsection*{Return values}
 
@@ -682,12 +683,12 @@ if(ret) {
 }
 \end{codesample}
 
-\section{\label{sec:asn_decode}asn\_decode()}
+\apisection{sec:asn_decode}{asn\_decode()}
 
 \subsection*{Synopsis}
 \begin{signature}
 asn_dec_rval_t asn_decode(
-    const asn_codec_ctx_t *opt_codec_parameters,
+    const asn_codec_ctx_t *opt_codec_ctx,
     enum asn_transfer_syntax syntax,
     const asn_TYPE_descriptor_t *type_descriptor,
     void **struct_ptr_ptr,/* Pointer to a target structure's ptr */
@@ -757,27 +758,178 @@ default:
 \subsection*{See also}
 \seealso{sec:asn_fprint}{asn_fprint()}.
 
-\section{\label{sec:asn_encode}asn\_encode()}
-\section{asn\_encode\_to\_buffer}
+\apisection{sec:asn_encode}{asn\_encode()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+#include <asn_application.h>
+
+asn_enc_rval_t asn_encode(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    enum asn_transfer_syntax syntax,
+    const asn_TYPE_descriptor_t *type_to_encode,
+    const void *structure_to_encode,
+    asn_app_consume_bytes_f *callback, void *callback_key);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{asn_encode()} function serializes the given \code{structure_to_encode} using the chosen ASN.1 transfer \code{syntax}.
+
+During serialization, a user-specified \code{callback} is invoked zero
+or more times with bytes of data to add to the output stream (if any), and
+the \code{callback_key}. The signature for the callback is as follows:
+
+\begin{signature}
+typedef int(asn_app_consume_bytes_f)(const void *buffer, size_t size, void *callback_key);
+\end{signature}
+
+\subsection*{Return values}
+\input{asn_enc_rval.inc}
+
+The serialized output size is returned in \textbf{bytes} irrespectively of the
+ASN.1 transfer \code{syntax} chosen.\footnote{This is different from some
+lower level encoding functions, such as \api{sec:uper_encode}{uper_encode()},
+which returns the number of encoded \emph{bits} instead of bytes.}
+
+On error (when \code{.encoded} is set to -1),
+the \code{errno} is set to one of the following values:
+
+\begin{tabular}[h!]{ll}
+\texttt{EINVAL} & Incorrect parameters to the function, such as NULLs \\
+\texttt{ENOENT} & Encoding transfer syntax is not defined (for this type) \\
+\texttt{EBADF} & The structure has invalid form or content constraint failed \\
+\texttt{EIO} & The callback has returned negative value during encoding
+\end{tabular}
 
 \subsection*{Example}
 \begin{example}
-uint8_t buffer[128];
-size_t buf_size = sizeof(buffer);
+static int
+save_to_file(const void *data, size_t size, void *key) {
+    FILE *fp = key;
+    return (fwrite(data, 1, size, fp) == size) ? 0 : -1;
+}
+
+Rectangle_t *rect = ...;
+FILE *fp = ...;
 asn_enc_rval_t er;
-er = asn_encode_to_buffer(0, ATS_DER, &asn_DEF_Rectangle, buffer, buf_size);
-if(er.encoded > buf_size) {
+er = asn_encode(0, ATS_DER, &asn_DEF_Rectangle, rect, save_to_file, fp);
+if(er.encoded == -1) {
+   fprintf(stderr, "Failed to encode %\%%s\n", asn_DEF_Rectangle.name);
+} else {
+   fprintf(stderr, "%\%%s encoded in %\%%zd bytes\n", asn_DEF_Rectangle.name, er.encoded);
+}
+\end{example}
+
+\apisection{sec:asn_encode_to_buffer}{asn\_encode\_to\_buffer()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+#include <asn_application.h>
+
+asn_enc_rval_t asn_encode_to_buffer(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    enum asn_transfer_syntax syntax,
+    const asn_TYPE_descriptor_t *type_to_encode,
+    const void *structure_to_encode,
+    void *buffer, size_t buffer_size);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{asn_encode_to_buffer()} function serializes the given \code{structure_to_encode} using the chosen ASN.1 transfer \code{syntax}.
+
+The function places the serialized data into the given
+\code{buffer} of size \code{buffer_size}.
+
+\subsection*{Return values}
+\input{asn_enc_rval.inc}
+
+The serialized output size is returned in \textbf{bytes} irrespectively of the
+ASN.1 transfer \code{syntax} chosen.\footnote{This is different from some
+lower level encoding functions, such as \api{sec:uper_encode}{uper_encode()},
+which returns the number of encoded \emph{bits} instead of bytes.}
+
+If \code{.encoded} size exceeds the specified \code{buffer_size},
+the serialization effectively failed due to insufficient space. The function
+will succeed if subsequently called with buffer size no less than the returned
+\code{.encoded} size. This behavior modeled after \code{snprintf()}.
+
+On error (when \code{.encoded} is set to -1),
+the \code{errno} is set to one of the following values:
+
+\begin{tabular}[h!]{ll}
+\texttt{EINVAL} & Incorrect parameters to the function, such as NULLs \\
+\texttt{ENOENT} & Encoding transfer syntax is not defined (for this type) \\
+\texttt{EBADF} & The structure has invalid form or content constraint failed
+\end{tabular}
+
+\subsection*{Example}
+\begin{example}
+Rectangle_t *rect = ...;
+uint8_t buffer[128];
+asn_enc_rval_t er;
+er = asn_encode_to_buffer(0, ATS_DER, &asn_DEF_Rectangle, rect, buffer, sizeof(buffer));
+if(er.encoded == -1) {
+   fprintf(stderr, "Serialization of %\%%s failed.\n", asn_DEF_Rectangle.name);
+} else if(er.encoded > sizeof(buffer)) {
    fprintf(stderr, "Buffer of size %\%%zu is too small for %\%%s, need %\%%zu\n",
        buf_size, asn_DEF_Rectangle.name, er.encoded);
 }
 \end{example}
 
-\section{asn\_encode\_to\_new\_buffer}
+\subsection*{See also}
+\seealso{sec:asn_encode_to_new_buffer}{asn_encode_to_new_buffer()}.
+
+\apisection{sec:asn_encode_to_new_buffer}{asn\_encode\_to\_new\_buffer()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+#include <asn_application.h>
+
+typedef struct {
+    void *buffer;   /* NULL if failed to encode. */
+    asn_enc_rval_t result;
+} asn_encode_to_new_buffer_result_t;
+asn_encode_to_new_buffer_result_t asn_encode_to_new_buffer(
+    const asn_codec_ctx_t *opt_codec_ctx,
+    enum asn_transfer_syntax syntax,
+    const asn_TYPE_descriptor_t *type_to_encode,
+    const void *structure_to_encode);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{asn_encode_to_new_buffer()} function serializes the given \code{structure_to_encode} using the chosen ASN.1 transfer \code{syntax}.
+
+The function places the serialized data into the newly allocated buffer
+which it returns in a compound structure.
+
+\subsection*{Return values}
+
+On failure, the \code{.buffer} is set to \code{NULL}
+and \code{.result.encoded} is set to -1. The global \code{errno} is set
+to one of the following values:
+
+\begin{tabular}[h!]{ll}
+\texttt{EINVAL} & Incorrect parameters to the function, such as NULLs \\
+\texttt{ENOENT} & Encoding transfer syntax is not defined (for this type) \\
+\texttt{EBADF} & The structure has invalid form or content constraint failed \\
+\texttt{ENOMEM} & Memory allocation failed due to system or internal limits
+\end{tabular}
+
+\noindent{}On success, the \code{.result.encoded} is set to the number of
+\textbf{bytes} that it took to serialize the structure.
+The \code{.buffer} contains the serialized content.
+The user is responsible for freeing the \code{.buffer}.
 
 \subsection*{Example}
 \begin{example}
 asn_encode_to_new_buffer_result_t res;
-res = asn_encode_to_new_buffer(0, ATS_DER, &asn_DEF_Rectangle, buffer, buf_size);
+res = asn_encode_to_new_buffer(0, ATS_DER, &asn_DEF_Rectangle, rect);
 if(res.buffer) {
     /* Encoded successfully. */
     free(res.buffer);
@@ -787,7 +939,10 @@ if(res.buffer) {
 }
 \end{example}
 
-\section{\label{sec:asn_fprint}asn\_fprint()}
+\subsection*{See also}
+\seealso{sec:asn_encode_to_buffer}{asn_encode_to_buffer()}.
+
+\apisection{sec:asn_fprint}{asn\_fprint()}
 
 \subsection*{Synopsis}
 \begin{signature}
@@ -826,7 +981,7 @@ asn_fprint(stdout, &asn_DEF_Rectangle, rect);
 \subsection*{See also}
 \seealso{sec:xer_fprint}{xer_fprint()}.
 
-\section{\label{sec:asn_random_fill}asn\_random\_fill()}
+\apisection{sec:asn_random_fill}{asn\_random\_fill()}
 
 \subsection*{Synopsis}
 \begin{signature}
@@ -864,8 +1019,7 @@ is to take a typical structure and use twice its DER output size.
 -1 & Failure to initialize the structure with random data
 \end{tabular}
 
-\clearpage{}
-\section{\label{sec:ber_decode}ber\_decode()}
+\apisection{sec:ber_decode}{ber\_decode()}
 
 \subsection*{Synopsis}
 \begin{signature}
@@ -884,9 +1038,9 @@ Decode BER, DER and CER data
 (Basic Encoding Rules, Distinguished Encoding Rules, Canonical Encoding Rules),
 as defined by ITU-T~X.690.
 
-DER and CER are different subsets of BER.
+DER and CER are different subsets of BER.\newline
 
-Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BER)}.
+\noindent\emph{Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BER)}.}
 
 \subsection*{Return values}
 \input{asn_dec_rval.inc}
@@ -907,16 +1061,107 @@ the next buffer to contain the unprocessed part of the previous buffer.
 \subsection*{See also}
 \seealso{sec:der_encode}{der_encode()}.
 
-\section{\label{sec:der_encode}der\_encode}
+\apisection{sec:der_encode}{der\_encode}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+asn_enc_rval_t der_encode(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const void *structure_to_encode,
+    asn_app_consume_bytes_f *callback,
+    void *callback_key
+\end{signature}
+
+\subsection*{Description}
+
+The \code{der_encode()} function serializes the given \code{structure_to_encode} using the DER transfer syntax (a variant of BER, Basic Encoding Rules).
+
+During serialization, a user-specified \code{callback} is invoked zero
+or more times with bytes of data to add to the output stream (if any), and
+the \code{callback_key}. The signature for the callback is as follows:
+
+\begin{signature}
+typedef int(asn_app_consume_bytes_f)(const void *buffer, size_t size, void *callback_key);
+\end{signature}
+
+\noindent\emph{Consider using a more generic function \api{sec:asn_encode}{asn_encode(ATS_DER)}.}
+
+\subsection*{Return values}
+\input{asn_enc_rval.inc}
+
+The serialized output size is returned in \textbf{bytes}.
+
+\subsection*{Example}
+\begin{example}
+static int
+save_to_file(const void *data, size_t size, void *key) {
+    FILE *fp = key;
+    return (fwrite(data, 1, size, fp) == size) ? 0 : -1;
+}
+
+Rectangle_t *rect = ...;
+FILE *fp = ...;
+asn_enc_rval_t er;
+er = der_encode(&asn_DEF_Rectangle, rect, save_to_file, fp);
+if(er.encoded == -1) {
+   fprintf(stderr, "Failed to encode %\%%s\n", asn_DEF_Rectangle.name);
+} else {
+   fprintf(stderr, "%\%%s encoded in %\%%zd bytes\n", asn_DEF_Rectangle.name, er.encoded);
+}
+\end{example}
 
 \subsection*{See also}
 \seealso{sec:ber_decode}{ber_decode()},
 \seealso{sec:asn_decode}{asn_decode(ATS_BER)}.
 
-\section{der\_encode\_to\_buffer}
+\apisection{sec:der_encode_to_buffer}{der\_encode\_to\_buffer()}
 
-\clearpage{}
-\section{\label{sec:oer_decode}oer\_decode()}
+\subsection*{Synopsis}
+
+\begin{signature}
+asn_enc_rval_t der_encode_to_buffer(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const void *structure_to_encode,
+    void *buffer, size_t buffer_size);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{der_encode_to_buffer()} function serializes the given \code{structure_to_encode} using the DER transfer syntax (a variant of BER, Basic Encoding Rules).
+
+The function places the serialized data into the given
+\code{buffer} of size \code{buffer_size}.\newline
+
+\noindent\emph{Consider using a more generic function \api{sec:asn_encode_to_buffer}{asn_encode_to_buffer(ATS_DER)}.}
+
+\subsection*{Return values}
+\input{asn_enc_rval.inc}
+
+The serialized output size is returned in \textbf{bytes}.
+
+The \code{.encoded} never exceeds the available buffer size.\footnote{This
+behavior is different from \api{sec:asn_encode_to_buffer}{asn_encode_to_buffer()}.}
+If the \code{buffer_size} is not sufficient, the \code{.encoded}
+will be set to -1 and encoding would fail.
+
+\subsection*{Example}
+\begin{example}
+Rectangle_t *rect = ...;
+uint8_t buffer[128];
+asn_enc_rval_t er;
+er = der_encode_to_buffer(&asn_DEF_Rectangle, rect, buffer, sizeof(buffer));
+if(er.encoded == -1) {
+   fprintf(stderr, "Serialization of %\%%s failed.\n", asn_DEF_Rectangle.name);
+}
+\end{example}
+
+\subsection*{See also}
+\seealso{sec:ber_decode}{ber_decode()},
+\seealso{sec:asn_decode}{asn_decode(ATS_BER)},
+\seealso{sec:asn_encode_to_buffer}{asn_encode_to_buffer(ATS_DER)}.
+
+\apisection{sec:oer_decode}{oer\_decode()}
 
 \subsection*{Synopsis}
 \begin{signature}
@@ -932,9 +1177,9 @@ asn_dec_rval_t oer_decode(
 \subsection*{Description}
 
 Decode the BASIC-OER and CANONICAL-OER (Octet Encoding Rules),
-as defined by ITU-T~X.696.
+as defined by ITU-T~X.696.\newline
 
-Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BASIC_OER)}.
+\noindent\emph{Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BASIC_OER)}.}
 
 \subsection*{Return values}
 \input{asn_dec_rval.inc}
@@ -952,11 +1197,107 @@ Note that in the RC\_WMORE case the decoder may have processed less data than
 it is available in the buffer, which means that you must be able to arrange
 the next buffer to contain the unprocessed part of the previous buffer.
 
-\section{\label{sec:oer_encode}oer\_encode}
-\section{oer\_encode\_to\_buffer}
+\apisection{sec:oer_encode}{oer\_encode()}
 
-\clearpage{}
-\section{\label{sec:uper_decode}uper\_decode()}
+\subsection*{Synopsis}
+
+\begin{signature}
+asn_enc_rval_t oer_encode(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const void *structure_to_encode,
+    asn_app_consume_bytes_f *callback,
+    void *callback_key);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{oer_encode()} function serializes the given \code{structure_to_encode} using the CANONICAL-OER transfer syntax (Octet Encoding Rules, ITU-T~X.691).
+
+During serialization, a user-specified \code{callback} is invoked zero
+or more times with bytes of data to add to the output stream (if any), and
+the \code{callback_key}. The signature for the callback is as follows:
+
+\begin{signature}
+typedef int(asn_app_consume_bytes_f)(const void *buffer, size_t size, void *callback_key);
+\end{signature}
+
+\noindent\emph{Consider using a more generic function \api{sec:asn_encode}{asn_encode(ATS_CANONICAL_OER)}.}
+
+\subsection*{Return values}
+\input{asn_enc_rval.inc}
+
+The serialized output size is returned in \textbf{bytes}.
+
+\subsection*{Example}
+\begin{example}
+static int
+save_to_file(const void *data, size_t size, void *key) {
+    FILE *fp = key;
+    return (fwrite(data, 1, size, fp) == size) ? 0 : -1;
+}
+
+Rectangle_t *rect = ...;
+FILE *fp = ...;
+asn_enc_rval_t er;
+er = oer_encode(&asn_DEF_Rectangle, rect, save_to_file, fp);
+if(er.encoded == -1) {
+   fprintf(stderr, "Failed to encode %\%%s\n", asn_DEF_Rectangle.name);
+} else {
+   fprintf(stderr, "%\%%s encoded in %\%%zd bytes\n", asn_DEF_Rectangle.name, er.encoded);
+}
+\end{example}
+
+\subsection*{See also}
+\seealso{sec:asn_encode}{asn_encode(ATS_CANONICAL_OER)}.
+
+\apisection{sec:oer_encode_to_buffer}{oer\_encode\_to\_buffer()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+asn_enc_rval_t oer_encode_to_buffer(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const asn_oer_constraints_t *constraints,
+    const void *structure_to_encode,
+    void *buffer, size_t buffer_size);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{oer_encode_to_buffer()} function serializes the given \code{structure_to_encode} using the CANONICAL-OER transfer syntax (Octet Encoding Rules, ITU-T~X.691).
+
+The function places the serialized data into the given
+\code{buffer} of size \code{buffer_size}.\newline
+
+\noindent\emph{Consider using a more generic function \api{sec:asn_encode_to_buffer}{asn_encode_to_buffer(ATS_CANONICAL_OER)}.}
+
+\subsection*{Return values}
+\input{asn_enc_rval.inc}
+
+The serialized output size is returned in \textbf{bytes}.
+
+The \code{.encoded} never exceeds the available buffer size.\footnote{This
+behavior is different from \api{sec:asn_encode_to_buffer}{asn_encode_to_buffer()}.}
+If the \code{buffer_size} is not sufficient, the \code{.encoded}
+will be set to -1 and encoding would fail.
+
+\subsection*{Example}
+\begin{example}
+Rectangle_t *rect = ...;
+uint8_t buffer[128];
+asn_enc_rval_t er;
+er = oer_encode_to_buffer(&asn_DEF_Rectangle, 0, rect, buffer, sizeof(buffer));
+if(er.encoded == -1) {
+   fprintf(stderr, "Serialization of %\%%s failed.\n", asn_DEF_Rectangle.name);
+}
+\end{example}
+
+\subsection*{See also}
+\seealso{sec:ber_decode}{ber_decode()},
+\seealso{sec:asn_decode}{asn_decode(ATS_BER)},
+\seealso{sec:asn_encode_to_buffer}{asn_encode_to_buffer(ATS_DER)}.
+
+\apisection{sec:uper_decode}{uper\_decode()}
 
 \subsection*{Synopsis}
 
@@ -975,9 +1316,9 @@ asn_dec_rval_t uper_decode(
 \subsection*{Description}
 
 Decode the Unaligned BASIC or CANONICAL PER (Packed Encoding Rules),
-as defined by ITU-T~X.691
+as defined by ITU-T~X.691.\newline
 
-Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_UNALIGNED_BASIC_PER)}.
+\noindent\emph{Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_UNALIGNED_BASIC_PER)}.}
 
 \subsection*{Return values}
 \input{asn_dec_rval.inc}
@@ -988,7 +1329,7 @@ Use \code{(.consumed+7)/8} to convert to bytes.
 The \code{uper_decode()} function is not restartable.
 Failures are final.
 
-\section{uper\_decode\_complete()}
+\apisection{sec:uper_decode_complete}{uper\_decode\_complete()}
 
 \subsection*{Synopsis}
 
@@ -1005,14 +1346,14 @@ asn_dec_rval_t uper_decode_complete(
 \subsection*{Description}
 
 Decode a ``Production of a complete encoding'',
-according to ITU-T~X.691 (08/2015) \#11.1.
+according to ITU-T~X.691 (08/2015) \#11.1.\newline
 
-Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_UNALIGNED_BASIC_PER)}.
+\noindent\emph{Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_UNALIGNED_BASIC_PER)}.}
 
 \subsection*{Return values}
 \input{asn_dec_rval.inc}
 
-The the \code{.consumed} value is returned in bytes.
+The the \code{.consumed} value is returned in whole \emph{bytes} (NB).
 
 \subsection*{Restartability}
 The \code{uper_decode_complete()} function is not restartable.
@@ -1021,11 +1362,10 @@ Failures are final.
 The complete encoding contains at least one byte, so on success
 \code{.consumed} will be greater or equal to 1.
 
-\section{\label{sec:uper_encode}uper\_encode}
-\section{uper\_encode\_to\_buffer}
-\section{uper\_encode\_to\_new\_buffer}
-\clearpage{}
-\section{\label{sec:xer_decode}xer\_decode()}
+\apisection{sec:uper_encode}{uper\_encode()}
+\apisection{sec:uper_encode_to_buffer}{uper\_encode\_to\_buffer()}
+\apisection{sec:uper_encode_to_new_buffer}{uper\_encode\_to\_new\_buffer()}
+\apisection{sec:xer_decode}{xer\_decode()}
 
 \subsection*{Synopsis}
 
@@ -1042,9 +1382,9 @@ asn_dec_rval_t xer_decode(
 \subsection*{Description}
 
 Decode the BASIC-XER and CANONICAL-XER (XML Encoding Rules) encoding,
-as defined by ITU-T~X.693.
+as defined by ITU-T~X.693.\newline
 
-Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BASIC_XER)}.
+\noindent\emph{Consider using a more generic function \api{sec:asn_decode}{asn_decode(ATS_BASIC_XER)}.}
 
 \subsection*{Return values}
 \input{asn_dec_rval.inc}
@@ -1062,8 +1402,66 @@ Note that in the RC\_WMORE case the decoder may have processed less data than
 it is available in the buffer, which means that you must be able to arrange
 the next buffer to contain the unprocessed part of the previous buffer.
 
-\section{\label{sec:xer_encode}xer\_encode}
-\section{\label{sec:xer_fprint}xer\_fprint()}
+\apisection{sec:xer_encode}{xer\_encode()}
+
+\subsection*{Synopsis}
+
+\begin{signature}
+enum xer_encoder_flags_e {
+    /* Mode of encoding */
+    XER_F_BASIC     = 0x01, /* BASIC-XER (pretty-printing) */
+    XER_F_CANONICAL = 0x02  /* Canonical XER (strict rules) */
+};
+asn_enc_rval_t xer_encode(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const void *structure_to_encode,
+    enum xer_encoder_flags_e xer_flags,
+    asn_app_consume_bytes_f *callback,
+    void *callback_key);
+\end{signature}
+
+\subsection*{Description}
+
+The \code{xer_encode()} function serializes the given \code{structure_to_encode} using the BASIC-XER or CANONICAL-XER transfer syntax (XML Encoding Rules, ITU-T~X.693).
+
+During serialization, a user-specified \code{callback} is invoked zero
+or more times with bytes of data to add to the output stream (if any), and
+the \code{callback_key}. The signature for the callback is as follows:
+
+\begin{signature}
+typedef int(asn_app_consume_bytes_f)(const void *buffer, size_t size, void *callback_key);
+\end{signature}
+
+\noindent\emph{Consider using a more generic function \api{sec:asn_encode}{asn_encode()} with \texttt{ATS\_BASIC\_XER} or \texttt{ATS\_CANONICAL\_XER} transfer syntax option.}
+
+\subsection*{Return values}
+\input{asn_enc_rval.inc}
+
+The serialized output size is returned in \textbf{bytes}.
+
+\subsection*{Example}
+\begin{example}
+static int
+save_to_file(const void *data, size_t size, void *key) {
+    FILE *fp = key;
+    return (fwrite(data, 1, size, fp) == size) ? 0 : -1;
+}
+
+Rectangle_t *rect = ...;
+FILE *fp = ...;
+asn_enc_rval_t er;
+er = xer_encode(&asn_DEF_Rectangle, rect, XER_F_CANONICAL, save_to_file, fp);
+if(er.encoded == -1) {
+   fprintf(stderr, "Failed to encode %\%%s\n", asn_DEF_Rectangle.name);
+} else {
+   fprintf(stderr, "%\%%s encoded in %\%%zd bytes\n", asn_DEF_Rectangle.name, er.encoded);
+}
+\end{example}
+
+\subsection*{See also}
+\seealso{sec:xer_fprint}{xer_fprint()}.
+
+\apisection{sec:xer_fprint}{xer\_fprint()}
 
 \subsection*{Synopsis}
 \begin{signature}
@@ -1079,7 +1477,7 @@ The \code{xer_fprint()} function outputs XML-based serialization
 of the given structure into the file stream specified by
 \code{stream} pointer.
 
-The output conforms to BASIC-XER, as defined by ITU-T~X.693.
+The output conforms to a BASIC-XER transfer syntax, as defined by ITU-T~X.693.
 
 \subsection*{Return values}
 
@@ -1318,7 +1716,7 @@ As you see, the DER encoder does not write into some sort of buffer.
 It just invokes the custom function (possible, multiple
 times) which would save the data into appropriate storage. The optional
 argument \emph{app\_key} is opaque for the DER encoder code and just
-used by \emph{\_write\_stream()} as the pointer to the appropriate
+used by \emph{write\_stream()} as the pointer to the appropriate
 output stream to be used.
 
 If the custom write function is not given (passed as 0), then the
@@ -1413,39 +1811,32 @@ be useful to perform the last check when the data is ready to be encoded
 or when the data has just been decoded to ensure its validity according
 to some stricter rules.
 
-The asn\_check\_constraints() function checks the type for various
-implicit and explicit constraints. It is recommended to use asn\_check\_constraints()
+The \api{sec:asn_check_constraints}{asn_check_constraints()}
+function checks the type for various
+implicit and explicit constraints. It is recommended to use the
+\code{asn_check_constraints()}
 function after each decoding and before each encoding.
-
-Look into constraints.h for the precise definition of asn\_check\_constraints()
-and related types.
-
 
 \section{\label{sec:Printing-the-target}Printing the target structure}
 
-There are two ways to print the target structure: either invoke the
-print\_struct member of the ASN.1 type descriptor, or using the asn\_fprint()
-function, which is a simpler wrapper of the former:
+To print out the structure for debugging purposes, use the
+\api{sec:asn_fprint}{asn_fprint()} function:
 \begin{codesample}
 asn_fprint(stdout, &asn_DEF_Rectangle, rect);
 \end{codesample}
-Look into constr\_TYPE.h for the precise definition of asn\_fprint()
-and related types.
 
-Another practical alternative to this custom format printing would
-be to invoke XER encoder. The default BASIC-XER encoder performs reasonable
-formatting for the output to be useful and human readable. To invoke
-the XER decoder in a manner similar to asn\_fprint(), use the xer\_fprint()
-call:
+A practical alternative to this custom format printing is to serialize
+the structure into XML. The default BASIC-XER encoder performs reasonable
+formatting for the output to be both useful and human readable.
+Use the \api{sec:xer_fprint}{xer_fprint()} function:
 \begin{codesample}
 xer_fprint(stdout, &asn_DEF_Rectangle, rect);
 \end{codesample}
 See \fref{sec:Encoding-XER} for XML-related details.
 
-
 \section{\label{sec:Freeing-the-target}Freeing the target structure}
 
-Freeing the structure is slightly more complex than it may seem to.
+Freeing the structure is slightly more complex than it may seem.
 When the ASN.1 structure is freed, all the members of the structure
 and their submembers are recursively freed as well.
 The ASN\_STRUCT\_FREE() macro helps with that.

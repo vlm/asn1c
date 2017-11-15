@@ -5,7 +5,7 @@ may contain partially decoded data. This data may be useful for debugging
 Don't forget to discard the unused partially decoded data by calling
 \code{ASN_STRUCT_FREE()} or \code{ASN_STRUCT_RESET()}.
 
-The return value is returned in a compound structure:
+The function returns a compound structure:
 \begin{codesample}
 typedef struct {
     enum {
@@ -17,7 +17,7 @@ typedef struct {
 } asn_dec_rval_t;
 \end{codesample}
 
-The \code{.code} member specifies the decoding outcome.
+\noindent{}The \code{.code} member specifies the decoding outcome.
 
 \begin{tabular}[h!]{ll}
 \texttt{RC\_OK} & Decoded successfully and completely \\
@@ -25,6 +25,6 @@ The \code{.code} member specifies the decoding outcome.
 \texttt{RC\_FAIL} & Failed for good
 \end{tabular}
 
-The \code{.consumed} member specifies the amount of \code{buffer} data
+\noindent{}The \code{.consumed} member specifies the amount of \code{buffer} data
 that was used during parsing, irrespectively of the \code{.code}.
 
