@@ -164,3 +164,25 @@ int asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
     return ret;
 }
 
+abuf *
+asn1p_integer_as_INTEGER(asn1c_integer_t value) {
+    abuf *ab = abuf_new();
+    uint8_t buf[sizeof(value) + 1];
+    uint8_t *bp = buf;
+
+    do {
+        *bp++ = value;
+        value >>= 8;
+    } while(!((value == 0 && !(bp[-1] & 0x80))
+              || (value == -1 && (bp[-1] & 0x80))));
+
+    abuf_printf(ab, "{ (uint8_t *)\"");
+
+    for(const uint8_t *p = bp-1; p >= buf; p--) {
+        abuf_printf(ab, "\\x%02x", *p);
+    }
+
+    abuf_printf(ab, "\\0\", %zu }", bp - buf);
+
+    return ab;
+}

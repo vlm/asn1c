@@ -89,7 +89,7 @@ doc/docsrc/*.xdv
 /libasn1fix/check_*
 
 # /libasn1parser/
-/libasn1parser/check_parser
+/libasn1parser/check_*
 
 #code coverage
 *.gcno
