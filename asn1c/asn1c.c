@@ -63,14 +63,12 @@ main(int ac, char **av) {
     int print_arg__fix_n_print = 0; /* Fix and print */
     int warnings_as_errors = 0;     /* Treat warnings as errors */
     char *skeletons_dir = NULL;     /* Directory with supplementary stuff */
-    char destdir[PATH_MAX];         /* Destination directory for generated files */
+    char *destdir = NULL;           /* Destination for generated files */
     asn1p_t *asn = 0;               /* An ASN.1 parsed tree */
     int ret;                        /* Return value from misc functions */
     int ch;                         /* Command line character */
     int i;                          /* Index in some loops */
     int exit_code = 0;              /* Exit code */
-
-    destdir[0] = '\0';
 
     /*
      * Process command-line options.
@@ -187,9 +185,19 @@ main(int ac, char **av) {
             skeletons_dir = optarg;
             break;
         case 'D':
-            strncat(destdir, optarg, PATH_MAX - 2); /* leave room for possible trailing '/' */
-            if(destdir[strlen(destdir)-1] != '/')
-                strcat(destdir, "/");
+            if(optarg && *optarg) {
+                size_t optarg_len = strlen(optarg);
+                free(destdir);
+                destdir = calloc(1, optarg_len + 2); /* + "/\0" */
+                assert(destdir);
+                strcpy(destdir, optarg);
+                if(destdir[optarg_len - 1] != '/') {
+                    destdir[optarg_len] = '/';
+                }
+            } else {
+                free(destdir);
+                destdir = NULL;
+            }
             break;
         case 'v':
             fprintf(stderr, "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT);
@@ -382,8 +390,8 @@ main(int ac, char **av) {
      * Compile the ASN.1 tree into a set of source files
      * of another language.
      */
-    if(asn1_compile(asn, skeletons_dir, destdir, asn1_compiler_flags, ac + optind,
-                    optind, av - optind)) {
+    if(asn1_compile(asn, skeletons_dir, destdir ? destdir : "",
+                    asn1_compiler_flags, ac + optind, optind, av - optind)) {
         exit_code = EX_SOFTWARE;
     }
 
