@@ -36,8 +36,9 @@ int mkstemp(char *template) {
 #endif
 
 FILE *
-asn1c_open_file(const char* destdir, const char *name, const char *ext, char **opt_tmpname) {
-	char fname[PATH_MAX];
+asn1c_open_file(const char *destdir, const char *name, const char *ext,
+                char **opt_tmpname) {
+    char fname[PATH_MAX];
 	int created = 1;
 #ifndef	_WIN32
 	struct stat sb;
@@ -49,10 +50,8 @@ asn1c_open_file(const char* destdir, const char *name, const char *ext, char **o
 	/*
 	 * Compute filenames.
 	 */
-    ret = snprintf(fname, sizeof(fname), "%s%s%s%s",
-                   opt_tmpname ? "" : destdir,
-                   name, ext,
-                   opt_tmpname ? ".XXXXXX" : "");
+    ret = snprintf(fname, sizeof(fname), "%s%s%s%s", destdir ? destdir : "",
+                   name, ext, opt_tmpname ? ".XXXXXX" : "");
     assert(ret > 0 && ret < (ssize_t)sizeof(fname));
 
     if(opt_tmpname) {
@@ -61,8 +60,10 @@ asn1c_open_file(const char* destdir, const char *name, const char *ext, char **o
 		 */
 		fd = mkstemp(fname);
 #ifndef	_WIN32
-		/* fchmod() does not respect umask */
-		(void)fchmod(fd, REASONABLE_FILE_MODE);
+        if(fd != -1) {
+            /* fchmod() does not respect umask */
+            (void)fchmod(fd, REASONABLE_FILE_MODE);
+        }
 #endif
 	} else {
 		/*
@@ -75,8 +76,14 @@ asn1c_open_file(const char* destdir, const char *name, const char *ext, char **o
 		}
 	}
 	if(fd == -1) {
-		perror(fname);
-		return NULL;
+        struct stat st;
+        if(destdir && stat(destdir, &st) == -1) {
+            fprintf(stderr, "%s: No such directory\n", destdir);
+            return NULL;
+        } else {
+            perror(fname);
+            return NULL;
+        }
 	}
 
 #ifndef	_WIN32
