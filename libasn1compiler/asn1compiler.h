@@ -100,6 +100,9 @@ enum asn1c_flags {
 int asn1_compile(asn1p_t *asn, const char *datadir, const char *destdir, enum asn1c_flags,
 	int argc, int optc, char **argv);
 
+void asn1c_debug_type_naming(asn1p_t *asn, enum asn1c_flags,
+                             char **asn_type_names);
+
 void asn1c__add_pdu_type(const char *typename);
 
 #endif	/* ASN1_COMPILER_H */

@@ -64,6 +64,8 @@ main(int ac, char **av) {
     int warnings_as_errors = 0;     /* Treat warnings as errors */
     char *skeletons_dir = NULL;     /* Directory with supplementary stuff */
     char *destdir = NULL;           /* Destination for generated files */
+    char **debug_type_names = 0;    /* Debug stuff */
+    size_t debug_type_names_count = 0;
     asn1p_t *asn = 0;               /* An ASN.1 parsed tree */
     int ret;                        /* Return value from misc functions */
     int ch;                         /* Command line character */
@@ -73,7 +75,34 @@ main(int ac, char **av) {
     /*
      * Process command-line options.
      */
-    while((ch = getopt(ac, av, "EFf:g:hn:LPp:RS:D:vW:X")) != -1) switch(ch) {
+    while((ch = getopt(ac, av, "D:d:EFf:g:hn:LPp:RS:vW:X")) != -1) switch(ch) {
+        case 'D':
+            if(optarg && *optarg) {
+                size_t optarg_len = strlen(optarg);
+                free(destdir);
+                destdir = calloc(1, optarg_len + 2); /* + "/\0" */
+                assert(destdir);
+                strcpy(destdir, optarg);
+                if(destdir[optarg_len - 1] != '/') {
+                    destdir[optarg_len] = '/';
+                }
+            } else {
+                free(destdir);
+                destdir = NULL;
+            }
+            break;
+        case 'd':
+            if(strncmp(optarg, "ebug-type-naming=", 17) == 0) {
+                char **p = realloc(debug_type_names,
+                                   (debug_type_names_count + 2) * sizeof(*p));
+                assert(p);
+                debug_type_names = p;
+                debug_type_names[debug_type_names_count++] =
+                    strdup(optarg + 17);
+                debug_type_names[debug_type_names_count] = NULL;
+                break;
+            }
+            usage(av[0]);
         case 'E':
             print_arg__print_out = 1;
             break;
@@ -183,21 +212,6 @@ main(int ac, char **av) {
             break;
         case 'S':
             skeletons_dir = optarg;
-            break;
-        case 'D':
-            if(optarg && *optarg) {
-                size_t optarg_len = strlen(optarg);
-                free(destdir);
-                destdir = calloc(1, optarg_len + 2); /* + "/\0" */
-                assert(destdir);
-                strcpy(destdir, optarg);
-                if(destdir[optarg_len - 1] != '/') {
-                    destdir[optarg_len] = '/';
-                }
-            } else {
-                free(destdir);
-                destdir = NULL;
-            }
             break;
         case 'v':
             fprintf(stderr, "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT);
@@ -383,6 +397,14 @@ main(int ac, char **av) {
             exit_code = EX_SOFTWARE;
             goto cleanup;
         }
+        return 0;
+    }
+
+    /*
+     * -debug-type-naming=Type
+     */
+    if(debug_type_names) {
+        asn1c_debug_type_naming(asn, asn1_compiler_flags, debug_type_names);
         return 0;
     }
 
