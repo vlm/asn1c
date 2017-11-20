@@ -101,6 +101,9 @@ main(int ac, char **av) {
                     strdup(optarg + 17);
                 debug_type_names[debug_type_names_count] = NULL;
                 break;
+            } else if(strcmp(optarg, "ebug-output-origin-lines") == 0) {
+                asn1_compiler_flags |= A1C_DEBUG_OUTPUT_ORIGIN_LINES;
+                break;
             }
             usage(av[0]);
         case 'E':

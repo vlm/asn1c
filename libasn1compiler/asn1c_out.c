@@ -6,7 +6,8 @@
  * into appropriate output stream.
  */
 int
-asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
+asn1c_compiled_output(arg_t *arg, const char *source, int lineno, const char *func, const char *fmt,
+                      ...) {
 	struct compiler_stream_destination_s *dst;
 	const char *p;
 	int lf_found;
@@ -45,12 +46,18 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 		}
 		dst->indented = 1;
 		while(i--) {
-			ret = asn1c_compiled_output(arg, "\t");
+			ret = asn1c_compiled_output(arg, source, lineno, func, "\t");
 			if(ret == -1) return -1;
 		}
 	}
 	if(lf_found)
 		dst->indented = 0;
+
+    size_t debug_reserve_size = 0;
+    if(lf_found && (arg->flags & A1C_DEBUG_OUTPUT_ORIGIN_LINES)) {
+        debug_reserve_size =
+            sizeof("\t// :100000 ()") + strlen(source) + strlen(func);
+    }
 
 	/*
 	 * Allocate buffer.
@@ -62,7 +69,7 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	do {
 		void *tmp;
 		m->len <<= 2;
-		tmp = realloc(m->buf, m->len);
+		tmp = realloc(m->buf, m->len + debug_reserve_size);
 		if(tmp) {
 			m->buf = (char *)tmp;
 		} else {
@@ -76,6 +83,15 @@ asn1c_compiled_output(arg_t *arg, const char *fmt, ...) {
 	} while(ret >= (m->len - 1) || ret < 0);
 
 	m->len = ret;
+
+    /* Print out the origin of the lines */
+    if(lf_found && (arg->flags & A1C_DEBUG_OUTPUT_ORIGIN_LINES)) {
+        assert(m->buf[m->len - 1] == '\n');
+        ret = snprintf(m->buf + m->len - 1, debug_reserve_size,
+                       "\t// %s:%03d %s()\n", source, lineno, func);
+        assert(ret > 0 && (size_t)ret < debug_reserve_size);
+        m->len = m->len - 1 + ret;
+    }
 
 	if(arg->target->target == OT_INCLUDES
 	|| arg->target->target == OT_FWD_DECLS

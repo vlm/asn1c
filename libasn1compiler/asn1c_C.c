@@ -2026,7 +2026,7 @@ emit_single_member_PER_constraint(arg_t *arg, asn1cnst_range_t *range, int alpha
 			OUT("{ APC_CONSTRAINED%s,%s% d, % d, ",
 				range->extensible
 					? " | APC_EXTENSIBLE" : "",
-				range->extensible ? " " : "\t", rbits, ebits);
+				range->extensible ? " " : "\t", (int)rbits, (int)ebits);
 
 			if(alphabetsize) {
 				asn1c_integer_t lv = range->left.value;
