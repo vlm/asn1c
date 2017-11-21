@@ -1440,6 +1440,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("per_type_decoder_f %s_decode_uper;\n", p);
 		OUT("per_type_encoder_f %s_encode_uper;\n", p);
 		}
+		if(arg->flags & A1C_GEN_BNER) {
+		OUT("bner_type_decoder_f %s_decode_bner;\n", p);
+		OUT("bner_type_encoder_f %s_encode_bner;\n", p);
+		}
 	}
 
 	REDIR(saved_target);

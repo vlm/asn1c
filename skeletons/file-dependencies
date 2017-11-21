@@ -65,6 +65,9 @@ per_support.h per_support.c	# PER parsing
 per_decoder.h per_decoder.c	# PER decoding support
 per_encoder.h per_encoder.c	# PER encoding support
 per_opentype.h per_opentype.c	# PER "open type" handling
+bner_support.h bner_support.c	# BNER tag support
+bner_decoder.h bner_decoder.c	# BNER decoding support
+bner_encoder.h bner_encoder.c	# BNER encoding support
 
 CONVERTER:			# THIS IS A SPECIAL SECTION
 converter-example.c		# A default name for the example transcoder
@@ -87,3 +90,16 @@ constr_SEQUENCE.h constr_SEQUENCE_oer.c
 constr_SET_OF.h constr_SET_OF_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION
+
+CODEC-BNER:			# THIS IS A SPECIAL SECTION
+constr_CHOICE.h constr_CHOICE_bner.c
+constr_SEQUENCE.h constr_SEQUENCE_bner.c
+constr_SEQUENCE_OF.h constr_SEQUENCE_OF_bner.c constr_SET_OF.h asn_SEQUENCE_OF.h asn_SET_OF.h
+ANY.h ANY_bner.c
+BOOLEAN.h BOOLEAN_bner.c
+INTEGER.h INTEGER_bner.c
+NativeInteger.h NativeInteger_bner.c
+NativeReal.h NativeReal_bner.c
+NULL.h NULL_bner.c
+OCTET_STRING.h OCTET_STRING_bner.c
+REAL.h REAL_bner.c
