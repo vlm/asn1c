@@ -25,12 +25,6 @@ check_LTLIBRARIES =             \
 libasn1cskeletons_c89_la_CFLAGS = $(SKELETONS_CFLAGS)
 libasn1cskeletons_c89_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
 
-if EXPLICIT_M32
-check_LTLIBRARIES += libasn1cskeletons_c89_32.la
-libasn1cskeletons_c89_32_la_CFLAGS = $(SKELETONS_CFLAGS) $(CFLAGS_M32) -Wno-format
-libasn1cskeletons_c89_32_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
-endif
-
 libasn1cskeletons_la_CFLAGS = $(TESTSUITE_CFLAGS)
 libasn1cskeletons_la_SOURCES =                  \
     ANY.c ANY.h                                 \
@@ -106,7 +100,7 @@ check_PROGRAMS =                    \
     check-converter_c89_example
 LDADD = -lm
 
-check_converter_example_CFLAGS = -DNO_ASN_PDU
+check_converter_example_CFLAGS = $(TESTSUITE_CFLAGS) -DNO_ASN_PDU
 check_converter_example_SOURCES = converter-example.c
 check_converter_example_LDADD = libasn1cskeletons.la
 
@@ -115,8 +109,12 @@ check_converter_c89_example_SOURCES = converter-example.c
 check_converter_c89_example_LDADD = libasn1cskeletons_c89.la
 
 if EXPLICIT_M32
+check_LTLIBRARIES += libasn1cskeletons_c89_32.la
+libasn1cskeletons_c89_32_la_CFLAGS = $(CFLAGS_M32) -Wno-format
+libasn1cskeletons_c89_32_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
+
 check_PROGRAMS += check-converter_c89_32_example
-check_converter_c89_32_example_CFLAGS = $(SKELETON_CFLAGS) $(CFLAGS_M32) -DNO_ASN_PDU
+check_converter_c89_32_example_CFLAGS = $(CFLAGS_M32) -DNO_ASN_PDU
 check_converter_c89_32_example_SOURCES = converter-example.c
 check_converter_c89_32_example_LDADD = libasn1cskeletons_c89_32.la
 endif
