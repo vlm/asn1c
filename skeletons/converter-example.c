@@ -126,6 +126,8 @@ ats_simple_name(enum asn_transfer_syntax syntax) {
     case ATS_UNALIGNED_BASIC_PER:
     case ATS_UNALIGNED_CANONICAL_PER:
         return "PER";
+    case ATS_BNER:
+        return "BNER";
     default:
         return "<?>";
     }
@@ -148,6 +150,8 @@ static syntax_selector input_encodings[] = {
      "Input is in Unaligned PER (Packed Encoding Rules)"},
     {"xer", ATS_BASIC_XER, CODEC_OFFSET(xer_decoder),
      "Input is in XER (XML Encoding Rules)"},
+    {"bner", ATS_BNER, CODEC_OFFSET(bner_decoder),
+     "Input is in BNER (BACnet Encoding Rules)"},
     {0, ATS_INVALID, 0, 0}};
 
 static syntax_selector output_encodings[] = {
@@ -159,6 +163,8 @@ static syntax_selector output_encodings[] = {
      "Output as Unaligned PER (Packed Encoding Rules)"},
     {"xer", ATS_BASIC_XER, CODEC_OFFSET(xer_encoder),
      "Output as XER (XML Encoding Rules)"},
+    {"bner", ATS_BNER, CODEC_OFFSET(bner_encoder),
+     "Output as BNER (BACnet Encoding Rules)"},
     {"text", ATS_NONSTANDARD_PLAINTEXT, CODEC_OFFSET(print_struct),
      "Output as plain semi-structured text"},
     {"null", ATS_INVALID, CODEC_OFFSET(print_struct),
@@ -355,7 +361,8 @@ main(int ac, char *av[]) {
         fprintf(stderr, "Where options are:\n");
         for(sel = input_encodings; sel->name; sel++) {
             if(ats_by_name(sel->name, anyPduType, sel)) {
-                fprintf(stderr, "  -i%s        %s%s\n", sel->name,
+                fprintf(stderr, "  -i%s%s       %s%s\n", sel->name,
+                        strlen(sel->name) > 3 ? "" : " ",
                         sel->full_name,
                         (sel->syntax == isyntax) ? " (DEFAULT)" : "");
             }
