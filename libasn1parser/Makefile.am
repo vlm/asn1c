@@ -25,7 +25,7 @@ libasn1parser_la_SOURCES =              \
 
 check_PROGRAMS = check_asn1p_integer
 
-LDADD = ../libasn1common/libasn1common.la libasn1parser.la
+LDADD = $(top_builddir)/libasn1common/libasn1common.la libasn1parser.la
 
 TESTS = $(check_PROGRAMS)
 

@@ -7,6 +7,7 @@ AM_CPPFLAGS =                       \
 
 noinst_LTLIBRARIES = libasn1fix.la
 
+libasn1fix_la_LIBDADD = $(top_builddir)/libasn1common/libasn1common.la
 libasn1fix_la_SOURCES =                         \
     asn1fix.c asn1fix.h                         \
     asn1fix_internal.h                          \
