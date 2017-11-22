@@ -245,7 +245,7 @@ extern asn_TYPE_member_t asn_MBR_Choice_1_1[4];
 
 static asn_TYPE_member_t asn_MBR_or_3[] = {
 	{ ATF_POINTER, 0, 0,
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_Choice_1,
 		.type_selector = 0,
