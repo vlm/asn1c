@@ -42,6 +42,13 @@ asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	OCTET_STRING_decode_bner,
+	OCTET_STRING_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };

@@ -33,8 +33,9 @@ oer_type_decoder_f NativeInteger_decode_oer;
 oer_type_encoder_f NativeInteger_encode_oer;
 per_type_decoder_f NativeInteger_decode_uper;
 per_type_encoder_f NativeInteger_encode_uper;
+bner_type_decoder_f NativeInteger_decode_bner;
+bner_type_encoder_f NativeInteger_encode_bner;
 asn_random_fill_f  NativeInteger_random_fill;
-
 #define NativeInteger_constraint  asn_generic_no_constraint
 
 #ifdef __cplusplus

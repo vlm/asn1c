@@ -1552,6 +1552,13 @@ asn_TYPE_operation_t asn_OP_SEQUENCE = {
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
 #endif /* ASN_DISABLE_PER_SUPPORT */
+#ifdef ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	SEQUENCE_decode_bner,
+	SEQUENCE_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	SEQUENCE_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };

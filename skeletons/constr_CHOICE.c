@@ -1335,6 +1335,13 @@ asn_TYPE_operation_t asn_OP_CHOICE = {
 	CHOICE_decode_uper,
 	CHOICE_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	CHOICE_decode_bner,
+	CHOICE_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	CHOICE_random_fill,
 	CHOICE_outmost_tag
 };

@@ -52,6 +52,9 @@ typedef void asn_oer_constraints_t;
 #include <oer_encoder.h>	/* Octet Encoding Rules encoder */
 #endif
 
+#include <bner_decoder.h>	/* BACnet Encoding Rules decoder */
+#include <bner_encoder.h>	/* BACnet Encoding Rules encoder */
+
 /*
  * Free the structure according to its specification.
  * Use one of ASN_STRUCT_{FREE,RESET,CONTENTS_ONLY} macros instead.
@@ -153,6 +156,8 @@ typedef struct asn_TYPE_operation_s {
     oer_type_encoder_f *oer_encoder;      /* Canonical OER encoder */
     per_type_decoder_f *uper_decoder;     /* Unaligned PER decoder */
     per_type_encoder_f *uper_encoder;     /* Unaligned PER encoder */
+    bner_type_decoder_f *bner_decoder;    /* BACnet Encoding Rules decoder */
+    bner_type_encoder_f *bner_encoder;    /* BACnet Encoding Rules encoder */
     asn_random_fill_f *random_fill;       /* Initialize with a random value */
     asn_outmost_tag_f *outmost_tag;       /* <optional, internal> */
 } asn_TYPE_operation_t;

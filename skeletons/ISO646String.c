@@ -39,6 +39,8 @@ asn_TYPE_operation_t asn_OP_ISO646String = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	0,	/* BNER decode */
+	0,	/* BNER encode */
 	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };

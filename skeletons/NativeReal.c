@@ -62,6 +62,13 @@ asn_TYPE_operation_t asn_OP_NativeReal = {
 	NativeReal_decode_uper,
 	NativeReal_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef  ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	NativeFloat_decode_bner,
+	NativeFloat_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	NativeReal_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
@@ -261,7 +268,6 @@ NativeReal_encode_uper(const asn_TYPE_descriptor_t *td,
 
 	return erval;
 }
-
 #endif /* ASN_DISABLE_PER_SUPPORT */
 
 #ifndef ASN_DISABLE_OER_SUPPORT

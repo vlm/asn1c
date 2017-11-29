@@ -40,6 +40,13 @@ asn_TYPE_operation_t asn_OP_NativeEnumerated = {
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef	ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	NativeInteger_decode_bner,
+	NativeInteger_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	NativeEnumerated_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
