@@ -101,6 +101,7 @@ check_PROGRAMS =                    \
 
 # BNER Support
 libasn1cskeletons_la_SOURCES +=       \
+    bner_support.c bner_support.h     \
     constr_CHOICE_bner.c              \
     constr_SEQUENCE_bner.c            \
     constr_SEQUENCE_OF_bner.c         \
