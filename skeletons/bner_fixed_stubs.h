@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info> and contributors.
+ * All rights reserved.
+ * Redistribution and modifications are permitted subject to BSD license.
+ */
+#ifndef BNER_FIXED_STUBS_H
+#define BNER_FIXED_STUBS_H
+
+#include <asn_application.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern asn_TYPE_operation_t asn_OP_BACnetPDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_Confirmed_Request_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_Unconfirmed_Request_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_SimpleACK_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_ComplexACK_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_SegmentACK_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_Error_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_Reject_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_Abort_PDU;
+extern asn_TYPE_operation_t asn_OP_BACnet_Confirmed_Service_Request;
+extern asn_TYPE_operation_t asn_OP_BACnet_Unconfirmed_Service_Request;
+extern asn_TYPE_operation_t asn_OP_BACnet_Confirmed_Service_ACK;
+extern asn_TYPE_operation_t asn_OP_BACnet_Error;
+
+bner_type_decoder_f CHOICE_decode_BACnetPDU;
+bner_type_encoder_f CHOICE_encode_BACnetPDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_Confirmed_Request_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_Confirmed_Request_PDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_Unconfirmed_Request_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_Unconfirmed_Request_PDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_SimpleACK_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_SimpleACK_PDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_ComplexACK_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_ComplexACK_PDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_SegmentACK_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_SegmentACK_PDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_Error_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_Error_PDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_Reject_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_Reject_PDU;
+bner_type_decoder_f SEQUENCE_decode_BACnet_Abort_PDU;
+bner_type_encoder_f SEQUENCE_encode_BACnet_Abort_PDU;
+bner_type_decoder_f CHOICE_decode_BACnet_Confirmed_Service_Request;
+bner_type_encoder_f CHOICE_encode_BACnet_Confirmed_Service_Request;
+bner_type_decoder_f CHOICE_decode_BACnet_Unconfirmed_Service_Request;
+bner_type_encoder_f CHOICE_encode_BACnet_Unconfirmed_Service_Request;
+bner_type_decoder_f CHOICE_decode_BACnet_Confirmed_Service_ACK;
+bner_type_encoder_f CHOICE_encode_BACnet_Confirmed_Service_ACK;
+bner_type_decoder_f CHOICE_decode_BACnet_Error;
+bner_type_encoder_f CHOICE_encode_BACnet_Error;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* BNER_FIXED_STUBS_H */

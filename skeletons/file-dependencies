@@ -68,6 +68,7 @@ per_opentype.h per_opentype.c	# PER "open type" handling
 bner_support.h bner_support.c	# BNER tag support
 bner_decoder.h bner_decoder.c	# BNER decoding support
 bner_encoder.h bner_encoder.c	# BNER encoding support
+bner_fixed_stubs.h bner_fixed_stubs.c constr_CHOICE.h constr_SEQUENCE.h # BNER fixed encoding rules stubs
 
 CONVERTER:			# THIS IS A SPECIAL SECTION
 converter-example.c		# A default name for the example transcoder

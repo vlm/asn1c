@@ -262,4 +262,6 @@ int asn_fprint(FILE *stream, /* Destination stream descriptor */
 }
 #endif
 
+#include <bner_fixed_stubs.h>
+
 #endif	/* _CONSTR_TYPE_H_ */
