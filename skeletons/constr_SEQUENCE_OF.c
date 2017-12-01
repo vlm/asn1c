@@ -278,6 +278,13 @@ asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
 	SEQUENCE_OF_decode_uper, /* Same as SET OF decoder */
 	SEQUENCE_OF_encode_uper,
 #endif /* ASN_DISABLE_PER_SUPPORT */
+#ifdef ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	SEQUENCE_OF_decode_bner,
+	SEQUENCE_OF_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	SEQUENCE_OF_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };

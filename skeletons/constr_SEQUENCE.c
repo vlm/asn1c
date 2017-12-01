@@ -293,7 +293,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 				edx = n;
 				ctx->step = 1 + 2 * edx;	/* Remember! */
 				goto microphase2;
-			} else if(elements[n].tag == (ber_tlv_tag_t)-1) {
+			} else if(elements[n].tag == ASN_TAG_AMBIGUOUS) {
 				use_bsearch = 1;
 				break;
 			}
@@ -1552,6 +1552,13 @@ asn_TYPE_operation_t asn_OP_SEQUENCE = {
 	SEQUENCE_decode_uper,
 	SEQUENCE_encode_uper,
 #endif /* ASN_DISABLE_PER_SUPPORT */
+#ifdef ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	SEQUENCE_decode_bner,
+	SEQUENCE_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	SEQUENCE_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };

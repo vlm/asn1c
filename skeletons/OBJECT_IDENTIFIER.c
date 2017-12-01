@@ -37,6 +37,8 @@ asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	0,	/* BNER decode */
+	0,	/* BNER encode */
 	OBJECT_IDENTIFIER_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };

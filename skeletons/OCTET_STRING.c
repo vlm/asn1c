@@ -42,6 +42,13 @@ asn_TYPE_operation_t asn_OP_OCTET_STRING = {
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	OCTET_STRING_decode_bner,
+	OCTET_STRING_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };
@@ -153,7 +160,7 @@ OS__add_stack_el(struct _stack *st) {
 		nel = (struct _stack_el *)CALLOC(1, sizeof(struct _stack_el));
 		if(nel == NULL)
 			return NULL;
-	
+
 		if(st->tail) {
 			/* Increase a subcontainment depth */
 			nel->cont_level = st->tail->cont_level + 1;
@@ -741,7 +748,7 @@ OCTET_STRING__handle_control_chars(void *struct_ptr, const void *chunk_buf, size
 			return 0;
 		}
 	}
-	
+
 	return -1;	/* No, it's not */
 }
 
@@ -1646,8 +1653,8 @@ OCTET_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
 #endif  /* ASN_DISABLE_PER_SUPPORT */
 
 int
-OCTET_STRING_print(const asn_TYPE_descriptor_t *td, const void *sptr,
-                   int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
+__OCTET_STRING_print(const asn_TYPE_descriptor_t *td, const void *sptr,
+                     int ilevel, asn_app_consume_bytes_f *cb, void *app_key) {
     const char * const h2c = "0123456789ABCDEF";
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	char scratch[16 * 3 + 4];
@@ -1686,6 +1693,7 @@ OCTET_STRING_print(const asn_TYPE_descriptor_t *td, const void *sptr,
 
 	return 0;
 }
+CC_WEAK_ALIAS(__OCTET_STRING_print, OCTET_STRING_print);
 
 int
 OCTET_STRING_print_utf8(const asn_TYPE_descriptor_t *td, const void *sptr,

@@ -97,6 +97,11 @@ enum asn1c_flags {
 	 * -debug-output-origin-lines
 	 */
 	A1C_DEBUG_OUTPUT_ORIGIN_LINES = 0x400000,
+	/*
+	 * -gen-BNER
+	 * Generate BACnet Encoding Rules support code
+	 */
+	A1C_GEN_BNER			= 0x800000,
 };
 
 /*

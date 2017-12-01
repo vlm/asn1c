@@ -374,6 +374,28 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
         }
         break;
 
+    case ATS_BNER:
+#ifdef ASN_DISABLE_BNER_SUPPORT
+		errno = ENOENT; /* BNER is not defined. */
+        ASN__ENCODE_FAILED;
+		break;
+#else
+		if(td->op->bner_encoder) {
+            er = bner_encode(td, sptr, callback, callback_key);
+            if(er.encoded == -1) {
+                if(er.failed_type && er.failed_type->op->bner_encoder) {
+                    errno = EBADF;  /* Structure has incorrect form. */
+                } else {
+                    errno = ENOENT; /* BNER is not defined for this type. */
+                }
+            }
+        } else {
+            errno = ENOENT; /* Transfer syntax is not defined for this type. */
+            ASN__ENCODE_FAILED;
+        }
+		break;
+#endif  /* ASN_DISABLE_BNER_SUPPORT */
+
     default:
         errno = ENOENT;
         ASN__ENCODE_FAILED;
@@ -435,6 +457,14 @@ asn_decode(const asn_codec_ctx_t *opt_codec_ctx,
     case ATS_BASIC_XER:
     case ATS_CANONICAL_XER:
         return xer_decode(opt_codec_ctx, td, sptr, buffer, size);
+
+    case ATS_BNER:
+#ifdef ASN_DISABLE_BNER_SUPPORT
+		errno = ENOENT;
+        ASN__DECODE_FAILED;
+#else
+		return bner_decode(opt_codec_ctx, td, sptr, buffer, size);
+#endif
     }
 }
 

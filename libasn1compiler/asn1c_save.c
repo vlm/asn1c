@@ -145,7 +145,8 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 	safe_fprintf(
 		mkf,
 		"\n"
-		"ASN_MODULE_CFLAGS=%s%s",
+		"ASN_MODULE_CFLAGS=%s%s%s",
+		(arg->flags & A1C_GEN_BNER) ? "" : "-DASN_DISABLE_BNER_SUPPORT ",
 		(arg->flags & A1C_GEN_OER) ? "" : "-DASN_DISABLE_OER_SUPPORT ",
 		(arg->flags & A1C_GEN_PER) ? "" : "-DASN_DISABLE_PER_SUPPORT ");
 

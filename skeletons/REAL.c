@@ -88,6 +88,13 @@ asn_TYPE_operation_t asn_OP_REAL = {
 	REAL_decode_uper,
 	REAL_encode_uper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+#ifdef  ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	REAL_decode_bner,
+	REAL_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	REAL_random_fill,
 	0	/* Use generic outmost tag fetcher */
 };

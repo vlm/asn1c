@@ -25,6 +25,8 @@ per_type_decoder_f REAL_decode_uper;
 per_type_encoder_f REAL_encode_uper;
 xer_type_decoder_f REAL_decode_xer;
 xer_type_encoder_f REAL_encode_xer;
+bner_type_decoder_f REAL_decode_bner;
+bner_type_encoder_f REAL_encode_bner;
 asn_random_fill_f  REAL_random_fill;
 
 #define REAL_free          ASN__PRIMITIVE_TYPE_free,

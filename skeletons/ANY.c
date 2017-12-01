@@ -32,6 +32,13 @@ asn_TYPE_operation_t asn_OP_ANY = {
 	ANY_decode_uper,
 	ANY_encode_uper,
 #endif  /* ASN_DISABLE_PER_SUPPORT */
+#ifdef ASN_DISABLE_BNER_SUPPORT
+	0,
+	0,
+#else
+	ANY_decode_bner,
+	ANY_encode_bner,
+#endif /* ASN_DISABLE_BNER_SUPPORT */
 	0,	/* Random fill is not defined for ANY type */
 	0	/* Use generic outmost tag fetcher */
 };

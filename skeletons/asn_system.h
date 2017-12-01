@@ -83,8 +83,12 @@ typedef	unsigned int	uint32_t;
 
 #if	__GNUC__ >= 3 || defined(__clang__)
 #define CC_ATTRIBUTE(attr)    __attribute__((attr))
+#define CC_WEAK_ALIAS(name, aliasname) _CC_WEAK_ALIAS(name, aliasname)
+#define _CC_WEAK_ALIAS(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)))
 #else
 #define CC_ATTRIBUTE(attr)
+#define CC_WEAK_ALIAS(name, aliasname)
 #endif
 #define CC_PRINTFLIKE(fmt, var)     CC_ATTRIBUTE(format(printf, fmt, var))
 #define	CC_NOTUSED                  CC_ATTRIBUTE(unused)

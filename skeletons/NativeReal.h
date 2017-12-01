@@ -35,6 +35,10 @@ oer_type_decoder_f NativeReal_decode_oer;
 oer_type_encoder_f NativeReal_encode_oer;
 xer_type_decoder_f NativeReal_decode_xer;
 xer_type_encoder_f NativeReal_encode_xer;
+bner_type_decoder_f NativeFloat_decode_bner;
+bner_type_encoder_f NativeFloat_encode_bner;
+bner_type_decoder_f NativeDouble_decode_bner;
+bner_type_encoder_f NativeDouble_encode_bner;
 asn_random_fill_f  NativeReal_random_fill;
 
 #define NativeReal_constraint  asn_generic_no_constraint

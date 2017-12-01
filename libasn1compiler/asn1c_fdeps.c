@@ -124,6 +124,10 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 					  && strcmp(p, "CODEC-PER:") == 0) {
                     activate = 0;
 					section = FDEP_CODEC_PER;
+				} else if((arg->flags & A1C_GEN_BNER)
+					  && strcmp(p, "CODEC-BNER:") == 0) {
+                    activate = 1;
+					section = FDEP_CODEC_BNER;
 				} else {
 					section = FDEP_IGNORE;
                     activate = 0;

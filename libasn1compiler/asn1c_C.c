@@ -75,6 +75,31 @@ enum etd_spec {
 };
 static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec);
 
+static const char* bner_fixed_encoding_pdus[] = {
+	"BACnetPDU",
+	"BACnet-Confirmed-Request-PDU",
+	"BACnet-Unconfirmed-Request-PDU",
+	"BACnet-SimpleACK-PDU",
+	"BACnet-ComplexACK-PDU",
+	"BACnet-SegmentACK-PDU",
+	"BACnet-Error-PDU",
+	"BACnet-Reject-PDU",
+	"BACnet-Abort-PDU",
+	"BACnet-Confirmed-Service-Request",
+	"BACnet-Unconfirmed-Service-Request",
+	"BACnet-Confirmed-Service-ACK",
+	"BACnet-Error",
+	0
+};
+
+static int is_bner_fixed_encoding_pdu(const char *pdu_type_name) {
+	for (int i = 0; bner_fixed_encoding_pdus[i]; ++i) {
+		if(!strcmp(bner_fixed_encoding_pdus[i], pdu_type_name))
+			return 1;
+	}
+	return 0;
+}
+
 #define	C99_MODE	(!(arg->flags & A1C_NO_C99))
 #define	UNNAMED_UNIONS	(arg->flags & A1C_UNNAMED_UNIONS)
 #define	HIDE_INNER_DEFS	(arg->embed && !(arg->flags & A1C_ALL_DEFS_GLOBAL))
@@ -1440,6 +1465,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("per_type_decoder_f %s_decode_uper;\n", p);
 		OUT("per_type_encoder_f %s_encode_uper;\n", p);
 		}
+		if(arg->flags & A1C_GEN_BNER) {
+		OUT("bner_type_decoder_f %s_decode_bner;\n", p);
+		OUT("bner_type_encoder_f %s_encode_bner;\n", p);
+		}
 	}
 
 	REDIR(saved_target);
@@ -2780,11 +2809,11 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	if(C99_MODE) OUT(".tag = ");
 	if(outmost_tag) {
 		if(outmost_tag->tag_value == -1)
-			OUT("-1 /* Ambiguous tag (ANY?) */");
+			OUT("ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */");
 		else
 			_print_tag(arg, outmost_tag);
 	} else {
-		OUT("-1 /* Ambiguous tag (CHOICE?) */");
+		OUT("ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */");
 	}
 
 	OUT(",\n");
@@ -2976,7 +3005,12 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		if (!p2)
 			p2 = strdup(p);
 
-        OUT("&asn_OP_%s,\n", p2);
+		if(arg->flags & A1C_GEN_BNER
+				&& is_bner_fixed_encoding_pdu(expr->Identifier)) {
+			OUT("&asn_OP_%s,\n", expr_id);
+		} else {
+			OUT("&asn_OP_%s,\n", p2);
+		}
 
 		if(tags_count) {
 			OUT("asn_DEF_%s_tags_%d,\n",

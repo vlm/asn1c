@@ -5,6 +5,8 @@
 #ifndef	_BER_TLV_TAG_H_
 #define	_BER_TLV_TAG_H_
 
+#include <limits.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,7 +17,9 @@ enum asn_tag_class {
 	ASN_TAG_CLASS_CONTEXT		= 2,	/* 0b10 */
 	ASN_TAG_CLASS_PRIVATE		= 3	/* 0b11 */
 };
-typedef unsigned ber_tlv_tag_t;	/* BER TAG from Tag-Length-Value */
+typedef unsigned int ber_tlv_tag_t;	/* BER TAG from Tag-Length-Value */
+
+#define ASN_TAG_AMBIGUOUS UINT_MAX
 
 /*
  * Tag class is encoded together with tag value for optimization purposes.
