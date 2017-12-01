@@ -22,6 +22,7 @@ extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
 extern asn_TYPE_operation_t asn_OP_OCTET_STRING;
 
 asn_struct_free_f OCTET_STRING_free;
+asn_struct_print_f __OCTET_STRING_print;
 asn_struct_print_f OCTET_STRING_print;
 asn_struct_print_f OCTET_STRING_print_utf8;
 asn_struct_compare_f OCTET_STRING_compare;
