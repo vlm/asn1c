@@ -217,6 +217,11 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 			}
 		}
 
+		if(terminal) {
+			expr->module = terminal->module;
+			expr->_mark = terminal->_mark;
+		}
+
 		if(_format == TNF_CTYPE || _format == TNF_CONSTYPE) {
 			/*
 			 * If the component references the type itself,

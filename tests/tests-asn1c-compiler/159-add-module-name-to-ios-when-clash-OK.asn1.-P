@@ -1,0 +1,216 @@
+
+/*** <<< INCLUDES [Rate] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [Rate] >>> ***/
+
+typedef long	 ModuleA_Rate_t;
+
+/*** <<< FUNC-DECLS [Rate] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ModuleA_Rate;
+asn_struct_free_f ModuleA_Rate_free;
+asn_struct_print_f ModuleA_Rate_print;
+asn_constr_check_f ModuleA_Rate_constraint;
+ber_type_decoder_f ModuleA_Rate_decode_ber;
+der_type_encoder_f ModuleA_Rate_encode_der;
+xer_type_decoder_f ModuleA_Rate_decode_xer;
+xer_type_encoder_f ModuleA_Rate_encode_xer;
+
+/*** <<< CODE [Rate] >>> ***/
+
+int
+ModuleA_Rate_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 65535)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< STAT-DEFS [Rate] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_ModuleA_Rate_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_ModuleA_Rate = {
+	"Rate",
+	"Rate",
+	&asn_OP_NativeInteger,
+	asn_DEF_ModuleA_Rate_tags_1,
+	sizeof(asn_DEF_ModuleA_Rate_tags_1)
+		/sizeof(asn_DEF_ModuleA_Rate_tags_1[0]), /* 1 */
+	asn_DEF_ModuleA_Rate_tags_1,	/* Same as above */
+	sizeof(asn_DEF_ModuleA_Rate_tags_1)
+		/sizeof(asn_DEF_ModuleA_Rate_tags_1[0]), /* 1 */
+	{ 0, 0, ModuleA_Rate_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [RefExt] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [RefExt] >>> ***/
+
+typedef long	 RefExt_t;
+
+/*** <<< FUNC-DECLS [RefExt] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_RefExt;
+asn_struct_free_f RefExt_free;
+asn_struct_print_f RefExt_print;
+asn_constr_check_f RefExt_constraint;
+ber_type_decoder_f RefExt_decode_ber;
+der_type_encoder_f RefExt_encode_der;
+xer_type_decoder_f RefExt_decode_xer;
+xer_type_encoder_f RefExt_encode_xer;
+
+/*** <<< CODE [RefExt] >>> ***/
+
+int
+RefExt_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 255)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< STAT-DEFS [RefExt] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_RefExt_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_RefExt = {
+	"RefExt",
+	"RefExt",
+	&asn_OP_NativeInteger,
+	asn_DEF_RefExt_tags_1,
+	sizeof(asn_DEF_RefExt_tags_1)
+		/sizeof(asn_DEF_RefExt_tags_1[0]), /* 1 */
+	asn_DEF_RefExt_tags_1,	/* Same as above */
+	sizeof(asn_DEF_RefExt_tags_1)
+		/sizeof(asn_DEF_RefExt_tags_1[0]), /* 1 */
+	{ 0, 0, RefExt_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
+
+/*** <<< INCLUDES [Rate] >>> ***/
+
+#include <NativeInteger.h>
+
+/*** <<< TYPE-DECLS [Rate] >>> ***/
+
+typedef long	 ModuleB_Rate_t;
+
+/*** <<< FUNC-DECLS [Rate] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_ModuleB_Rate;
+asn_struct_free_f ModuleB_Rate_free;
+asn_struct_print_f ModuleB_Rate_print;
+asn_constr_check_f ModuleB_Rate_constraint;
+ber_type_decoder_f ModuleB_Rate_decode_ber;
+der_type_encoder_f ModuleB_Rate_encode_der;
+xer_type_decoder_f ModuleB_Rate_decode_xer;
+xer_type_encoder_f ModuleB_Rate_encode_xer;
+
+/*** <<< CODE [Rate] >>> ***/
+
+int
+ModuleB_Rate_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	long value;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	value = *(const long *)sptr;
+	
+	if((value >= 0 && value <= 255)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using NativeInteger,
+ * so here we adjust the DEF accordingly.
+ */
+
+/*** <<< STAT-DEFS [Rate] >>> ***/
+
+static const ber_tlv_tag_t asn_DEF_ModuleB_Rate_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
+};
+asn_TYPE_descriptor_t asn_DEF_ModuleB_Rate = {
+	"Rate",
+	"Rate",
+	&asn_OP_NativeInteger,
+	asn_DEF_ModuleB_Rate_tags_1,
+	sizeof(asn_DEF_ModuleB_Rate_tags_1)
+		/sizeof(asn_DEF_ModuleB_Rate_tags_1[0]), /* 1 */
+	asn_DEF_ModuleB_Rate_tags_1,	/* Same as above */
+	sizeof(asn_DEF_ModuleB_Rate_tags_1)
+		/sizeof(asn_DEF_ModuleB_Rate_tags_1[0]), /* 1 */
+	{ 0, 0, ModuleB_Rate_constraint },
+	0, 0,	/* No members */
+	0	/* No specifics */
+};
+
