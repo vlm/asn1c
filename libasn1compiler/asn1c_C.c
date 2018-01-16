@@ -1214,6 +1214,40 @@ asn1c_lang_C_type_CHOICE_def(arg_t *arg) {
 } /* _CHOICE_def() */
 
 int
+asn1c_lang_C_type_REFERENCE_Value(arg_t *arg) {
+	arg_t tmp = *arg;
+	asn1p_expr_t *expr, *ref_type;
+	int saved_target;
+
+	expr = arg->expr;
+	ref_type = WITH_MODULE_NAMESPACE(
+			tmp.expr->module, expr_ns,
+			asn1f_lookup_symbol_ex(tmp.asn, expr_ns, tmp.expr,
+			arg->expr->reference));
+	if(!ref_type)
+		return 0;
+
+	if(!ref_type->data)
+		asn1c_attach_streams(ref_type);
+
+	arg->target = ref_type->data;
+	saved_target = arg->target->target;
+	REDIR(OT_FUNC_DECLS);
+
+	if((ref_type->expr_type == ASN_BASIC_INTEGER) ||
+		(ref_type->expr_type == ASN_BASIC_ENUMERATED)) {
+		OUT("#define %s_", MKID(ref_type));
+		OUT("%s\t", MKID(expr));
+		OUT("((%s)", asn1c_type_name(arg, expr, TNF_CTYPE));
+		OUT("%s)\n", asn1p_itoa(expr->value->value.v_integer));
+	}
+
+	REDIR(saved_target);
+	arg->target = tmp.target;
+	return 0;
+}
+
+int
 asn1c_lang_C_type_REFERENCE(arg_t *arg) {
 	asn1p_ref_t *ref;
 

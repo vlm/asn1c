@@ -7,7 +7,6 @@
 
 static void default_logger_cb(int, const char *fmt, ...);
 static int asn1c_compile_expr(arg_t *arg, const asn1c_ioc_table_and_objset_t *);
-static int asn1c_attach_streams(asn1p_expr_t *expr);
 static int asn1c_detach_streams(asn1p_expr_t *expr);
 
 int
@@ -169,7 +168,7 @@ asn1c_compile_expr(arg_t *arg, const asn1c_ioc_table_and_objset_t *opt_ioc) {
 	return ret;
 }
 
-static int
+int
 asn1c_attach_streams(asn1p_expr_t *expr) {
 	compiler_streams_t *cs;
 	int i;
