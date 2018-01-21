@@ -518,8 +518,11 @@ int
 aper_open_type_skip(const asn_codec_ctx_t *ctx, asn_per_data_t *pd) {
 	asn_TYPE_descriptor_t s_td;
 	asn_dec_rval_t rv;
+	asn_TYPE_operation_t op_t;
 
+	memset(&op_t, 0, sizeof(op_t));
 	s_td.name = "<unknown extension>";
+	s_td.op = &op_t;
 	s_td.op->aper_decoder = uper_sot_suck;
 
 	rv = aper_open_type_get(ctx, &s_td, 0, 0, pd);
