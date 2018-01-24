@@ -2705,7 +2705,7 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
         opt_ioc->objset->_type_unique_index);
     OUT("size_t constraining_column = %zu; /* %s */\n", constraining_column, cfield);
     OUT("size_t for_column = %zu; /* %s */\n", for_column, for_field);
-    OUT("size_t row;\n");
+    OUT("size_t row, presence_index = 0;\n");
 
     const char *tname = asn1c_type_name(arg, constraining_memb, TNF_SAFE);
     if(constraining_memb->marker.flags & EM_INDIRECT) {
@@ -2740,9 +2740,13 @@ emit_member_type_selector(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_ob
     OUT("    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];\n");
     OUT("    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];\n");
     OUT("\n");
+    OUT("    if(type_cell->cell_kind == aioc__undefined)\n");
+    OUT("        continue;\n");
+    OUT("\n");
+    OUT("    presence_index++;\n");
     OUT("    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {\n");
     OUT("        result.type_descriptor = type_cell->type_descriptor;\n");
-    OUT("        result.presence_index = row + 1;\n");
+    OUT("        result.presence_index = presence_index;\n");
     OUT("        break;\n");
     OUT("    }\n");
     OUT("}\n");
