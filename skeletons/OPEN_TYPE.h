@@ -19,6 +19,8 @@ extern "C" {
 #define OPEN_TYPE_encode_der CHOICE_encode_der
 #define OPEN_TYPE_decode_xer NULL
 #define OPEN_TYPE_encode_xer CHOICE_encode_xer
+#define OPEN_TYPE_decode_oer NULL
+#define OPEN_TYPE_encode_oer CHOICE_encode_oer
 #define OPEN_TYPE_decode_uper NULL
 
 extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
