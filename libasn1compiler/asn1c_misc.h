@@ -52,5 +52,6 @@ enum asn1c_fitsfloat_e {
     RL_FITS_DOUBLE64
 };
 enum asn1c_fitsfloat_e asn1c_REAL_fits(arg_t *arg, asn1p_expr_t *expr);
+const char *asn1c_prefix(void);
 
 #endif	/* ASN1_COMPILER_MISC_H */

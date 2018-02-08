@@ -5,7 +5,7 @@
 #include <asn1fix_export.h>
 #include <asn1print.h>
 
-#define MKID(expr) asn1c_make_identifier(0, (expr), 0)
+#define MKID(expr) asn1c_make_identifier(AMI_USE_PREFIX, (expr), 0)
 
 /*
  * Given the table constraint or component relation constraint
