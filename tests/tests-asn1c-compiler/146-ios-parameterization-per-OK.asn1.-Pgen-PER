@@ -115,7 +115,7 @@ static const asn_ioc_cell_t asn_IOS_RegionalExtension_1_rows[] = {
 	{ "&Type", aioc__type, &asn_DEF_BOOLEAN }
 };
 static const asn_ioc_set_t asn_IOS_RegionalExtension_1[] = {
-	2, 2, asn_IOS_RegionalExtension_1_rows
+	{ 2, 2, asn_IOS_RegionalExtension_1_rows }
 };
 
 /*** <<< CODE [SpecializedContent] >>> ***/

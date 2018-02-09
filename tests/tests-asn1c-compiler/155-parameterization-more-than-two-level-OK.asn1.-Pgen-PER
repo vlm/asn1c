@@ -602,7 +602,7 @@ static const asn_ioc_cell_t asn_IOS_ClassItem_1_rows[] = {
 	{ "&valid", aioc__value, &asn_DEF_Valid, &asn_VAL_1_crc_ok }
 };
 static const asn_ioc_set_t asn_IOS_ClassItem_1[] = {
-	1, 4, asn_IOS_ClassItem_1_rows
+	{ 1, 4, asn_IOS_ClassItem_1_rows }
 };
 
 /*** <<< CODE [Packet] >>> ***/

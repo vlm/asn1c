@@ -130,7 +130,7 @@ static const asn_ioc_cell_t asn_IOS_TotalRegionExtension_1_rows[] = {
 	{ "&Type", aioc__type, &asn_DEF_OCTET_STRING }
 };
 static const asn_ioc_set_t asn_IOS_TotalRegionExtension_1[] = {
-	6, 2, asn_IOS_TotalRegionExtension_1_rows
+	{ 6, 2, asn_IOS_TotalRegionExtension_1_rows }
 };
 
 /*** <<< CODE [SpecializedContent] >>> ***/
