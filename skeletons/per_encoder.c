@@ -163,6 +163,20 @@ _uper_encode_flush_outp(asn_per_outp_t *po) {
 	return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
 }
 
+asn_enc_rval_t
+aper_encode_to_buffer(const asn_TYPE_descriptor_t *td,
+                      const asn_per_constraints_t *constraints,
+                      const void *sptr, void *buffer, size_t buffer_size) {
+    enc_to_buf_arg key;
+
+    key.buffer = buffer;
+    key.left = buffer_size;
+
+    if(td) ASN_DEBUG("Encoding \"%s\" using ALIGNED PER", td->name);
+
+    return aper_encode(td, constraints, sptr, encode_to_buffer_cb, &key);
+}
+
 ssize_t
 aper_encode_to_new_buffer(const asn_TYPE_descriptor_t *td,
                           const asn_per_constraints_t *constraints,
