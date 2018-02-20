@@ -765,15 +765,19 @@ INTEGER_encode_uper(const asn_TYPE_descriptor_t *td,
 
 	/* X.691-11/2008, #13.2.2, test if constrained whole number */
 	if(ct && ct->range_bits >= 0) {
-        unsigned long v;
+		unsigned long v;
 		/* #11.5.6 -> #11.3 */
 		ASN_DEBUG("Encoding integer %ld (%lu) with range %d bits",
 			value, value - ct->lower_bound, ct->range_bits);
-        if(per_long_range_rebase(value, ct->lower_bound, ct->upper_bound, &v)) {
-            ASN__ENCODE_FAILED;
-        }
-        if(uper_put_constrained_whole_number_u(po, v, ct->range_bits))
-            ASN__ENCODE_FAILED;
+		if(specs && specs->field_unsigned) {
+			v = (unsigned long)value - (unsigned long)ct->lower_bound;
+		} else {
+			if(per_long_range_rebase(value, ct->lower_bound, ct->upper_bound, &v)) {
+				ASN__ENCODE_FAILED;
+			}
+		}
+		if(uper_put_constrained_whole_number_u(po, v, ct->range_bits))
+			ASN__ENCODE_FAILED;
 		ASN__ENCODED_OK(er);
 	}
 
