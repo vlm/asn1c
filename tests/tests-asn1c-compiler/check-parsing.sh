@@ -31,13 +31,13 @@ for ref in ${top_srcdir}/tests/tests-asn1c-compiler/*.asn1.-*; do
 	newversion=${template}.new
 	PROCESSING="$ref (from $src)"
 	LANG=C sed -e 's/^found in .*/found in .../' < "$ref" > "$oldversion"
-	(${top_builddir}/asn1c/asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" | LANG=C sed -e 's/^found in .*/found in .../' > "$newversion") || ec=$?
+	(${top_builddir}/asn1c/asn1c -S ${top_srcdir}/skeletons -no-gen-OER -no-gen-PER "-$flags" "$src" | LANG=C sed -e 's/^found in .*/found in .../' > "$newversion") || ec=$?
 	if [ $? = 0 ]; then
 		diff $diffArgs "$oldversion" "$newversion" || ec=$?
 	fi
 	rm -f $oldversion $newversion
 	if [ "$1" = "regenerate" ]; then
-		${top_builddir}/asn1c/asn1c -S ${top_srcdir}/skeletons "-$flags" "$src" > "$ref"
+		${top_builddir}/asn1c/asn1c -S ${top_srcdir}/skeletons -no-gen-OER -no-gen-PER "-$flags" "$src" > "$ref"
 	fi
 done
 

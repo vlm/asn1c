@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <libgen.h>
 
+#include "genhash.h"
 #include "asn1fix.h"
 #include "asn1_buffer.h"
 #include "asn1_namespace.h"
@@ -340,11 +341,7 @@ post_fix_check_element(asn1p_module_t *mod, asn1p_expr_t *check_expr) {
 	/*
 	 * Scan in search for the original.
 	 */
-	TQ_FOR(expr, &(mod->members), next) {
-		if(strcmp(expr->Identifier, name) == 0)
-			break;
-	}
-
+    expr = genhash_get(mod->members_hash, name);
 	if(expr == NULL) {
 		fprintf(stderr,
 			"CHECKER: Value \"%s\" requested by "

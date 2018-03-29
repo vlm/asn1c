@@ -2,7 +2,7 @@ ASN_PROGRAM = j2735-dump
 CFLAGS += -DASN_CONVERTER_TITLE="J2735 DSRC decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE
 begin: MessageFrame.c maybe-wip-pause all
 
--include Makefile.am.example
+-include converter-example.mk
 
 MessageFrame.c: ../sample.makefile.regen ../J2735_201603.asn1
 	make regen-makefile
@@ -11,7 +11,7 @@ MessageFrame.c: ../sample.makefile.regen ../J2735_201603.asn1
 
 regen-makefile:
 	TITLE="J2735 DSRC decoder" \
-	ASN_CMDOPTS="-fcompound-names -gen-PER -pdu=all" \
+	ASN_CMDOPTS="-fcompound-names -pdu=auto" \
 	ASN_MODULES="../J2735_201603.asn1" \
 	ASN_PDU=MessageFrame \
 	ASN_PROGRAM=j2735-dump \
@@ -101,7 +101,7 @@ maybe-wip-pause:
 	@if [ -f WIP ]; then cat WIP; sleep 2; fi
 
 distclean: clean
-	rm -f $(ASN_MODULE_SOURCES)
-	rm -f $(ASN_MODULE_HEADERS)
-	rm -f $(ASN_PROGRAM_SOURCES) $(ASN_PROGRAM_HEADERS)
-	rm -f Makefile.am.example
+	rm -f $(ASN_MODULE_SRCS)
+	rm -f $(ASN_MODULE_HDRS)
+	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)
+	rm -f converter-example.mk

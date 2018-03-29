@@ -2,7 +2,7 @@ ASN_PROGRAM = rrc-dump
 CFLAGS += -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE
 begin: DL-DCCH-Message.c maybe-wip-pause all
 
--include Makefile.am.example
+-include converter-example.mk
 
 DL-DCCH-Message.c: ../sample.makefile.regen ../rrc-7.1.0.asn1
 	make regen-makefile
@@ -10,7 +10,7 @@ DL-DCCH-Message.c: ../sample.makefile.regen ../rrc-7.1.0.asn1
 	make
 
 regen-makefile:
-	ASN_CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
+	ASN_CMDOPTS="-pdu=auto -fcompound-names -no-gen-OER" \
 	ASN_MODULES="../rrc-7.1.0.asn1" \
 	ASN_PDU=DL-DCCH-Message \
 	ASN_PROGRAM=rrc-dump \
@@ -100,7 +100,7 @@ maybe-wip-pause:
 	@if [ -f WIP ]; then cat WIP; sleep 2; fi
 
 distclean: clean
-	rm -f $(ASN_MODULE_SOURCES)
-	rm -f $(ASN_MODULE_HEADERS)
-	rm -f $(ASN_PROGRAM_SOURCES) $(ASN_PROGRAM_HEADERS)
-	rm -f Makefile.am.example
+	rm -f $(ASN_MODULE_SRCS)
+	rm -f $(ASN_MODULE_HDRS)
+	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)
+	rm -f converter-example.mk

@@ -3,6 +3,7 @@
 #include "asn1c_misc.h"
 #include "asn1c_misc.h"
 #include <asn1_buffer.h>
+#include <genhash.h>
 
 struct intl_name {
     asn1p_expr_t *expr;
@@ -10,54 +11,64 @@ struct intl_name {
     const char *name;
     TQ_ENTRY(struct intl_name) next;
 };
-static TQ_HEAD(struct intl_name) used_names;
+
+genhash_t *used_names_hash;
+
+static void
+name_entry_destroy(void *np) {
+    struct intl_name *n = np;
+
+    union {
+        const char *c_buf;
+        char *nc_buf;
+    } const_cast;
+
+    asn1p_expr_free(n->expr);
+    asn1p_expr_free(n->clashes_with);
+    const_cast.c_buf = n->name;
+    free(const_cast.nc_buf);
+    free(n);
+}
 
 void
 c_name_clash_finder_init() {
-    TQ_INIT(&used_names);
+    assert(used_names_hash == NULL);
+    used_names_hash =
+        genhash_new(cmpf_string, hashf_string, NULL, name_entry_destroy);
+    assert(used_names_hash);
 }
 
 void
 c_name_clash_finder_destroy() {
-    struct intl_name *n;
-
-    while((n = TQ_REMOVE(&used_names, next))) {
-        union {
-            const char *c_buf;
-            char *nc_buf;
-        } const_cast;
-
-        asn1p_expr_free(n->expr);
-        asn1p_expr_free(n->clashes_with);
-        const_cast.c_buf = n->name;
-        free(const_cast.nc_buf);
-        free(n);
-    }
+    genhash_destroy(used_names_hash);
+    used_names_hash = NULL;
 }
 
 static void
 register_global_name(asn1p_expr_t *expr, const char *name) {
     struct intl_name *n;
 
-    TQ_FOR(n, &used_names, next) {
-        if(strcmp(n->name, name) == 0) {
-            if(!(expr->_mark & TM_NAMEGIVEN) && expr != n->expr) {
-                n->clashes_with = expr;
-                expr->ref_cnt++;
-                return;
-            }
+    n = genhash_get(used_names_hash, (const void *)name);
+    if(n) {
+        if(!(expr->_mark & TM_NAMEGIVEN) && (expr != n->expr)) {
+            n->clashes_with = expr;
+            expr->ref_cnt++;
+            return;
         }
     }
 
     if(expr->_mark & TM_NAMEGIVEN)
         return;
 
+    char *name_copy = strdup(name);
+
     n = calloc(1, sizeof(*n));
     assert(n);
     n->expr = expr;
     expr->ref_cnt++;
-    n->name = strdup(name);
-    TQ_ADD(&used_names, n, next);
+    n->name = name_copy;
+    int ret = genhash_add(used_names_hash, name_copy, n);
+    assert(ret == 0);
 }
 
 int
@@ -66,7 +77,10 @@ c_name_clash(arg_t *arg) {
     size_t n_clashes = 0;
     const size_t max_clashes = 5;
 
-    TQ_FOR(n, &used_names, next) {
+    genhash_iter_t iter;
+
+    genhash_iter_init(&iter, used_names_hash, 0);
+    while(genhash_iter(&iter, NULL, (void *)&n)) {
         if(n->clashes_with) {
             if(n_clashes++ > max_clashes) continue;
             FATAL(
@@ -80,6 +94,8 @@ c_name_clash(arg_t *arg) {
                 n->clashes_with->_lineno);
         }
     }
+
+    genhash_iter_done(&iter);
 
     if(n_clashes > max_clashes) {
         FATAL("... %zu more name clashes not shown", n_clashes - max_clashes);

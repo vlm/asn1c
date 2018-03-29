@@ -11,7 +11,7 @@ static int asn1c_attach_streams(asn1p_expr_t *expr);
 static int asn1c_detach_streams(asn1p_expr_t *expr);
 
 int
-asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
+asn1_compile(asn1p_t *asn, const char *datadir, const char *destdir, enum asn1c_flags flags,
 		int argc, int optc, char **argv) {
 	arg_t arg_s;
 	arg_t *arg = &arg_s;
@@ -84,7 +84,7 @@ asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags flags,
 	/*
 	 * Save or print out the compiled result.
 	 */
-	if(asn1c_save_compiled_output(arg, datadir, argc, optc, argv))
+	if(asn1c_save_compiled_output(arg, datadir, destdir, argc, optc, argv))
 		return -1;
 
 	TQ_FOR(mod, &(asn->modules), mod_next) {
@@ -230,5 +230,57 @@ default_logger_cb(int _severity, const char *fmt, ...) {
 	vfprintf(stderr, fmt, ap);
 	va_end(ap);
 	fprintf(stderr, "\n");
+}
+
+static void
+asn1c_debug_expr_naming(arg_t *arg) {
+    asn1p_expr_t *expr = arg->expr;
+
+    printf("%s: ", expr->Identifier);
+    printf("%s\n", c_names_format(c_name(arg)));
+
+    printf("\n");
+
+}
+
+void
+asn1c_debug_type_naming(asn1p_t *asn, enum asn1c_flags flags,
+                        char **asn_type_names) {
+    arg_t arg_s;
+    arg_t *arg = &arg_s;
+	asn1p_module_t *mod;
+
+    memset(arg, 0, sizeof(*arg));
+	arg->logger_cb = default_logger_cb;
+	arg->flags = flags;
+	arg->asn = asn;
+
+	c_name_clash_finder_init();
+
+	/*
+	 * Compile each individual top level structure.
+	 */
+	TQ_FOR(mod, &(asn->modules), mod_next) {
+        int namespace_shown = 0;
+		TQ_FOR(arg->expr, &(mod->members), next) {
+			arg->ns = asn1_namespace_new_from_module(mod, 0);
+
+            for(char **t = asn_type_names; *t; t++) {
+                if(strcmp(*t, arg->expr->Identifier) == 0) {
+                    if(!namespace_shown) {
+                        namespace_shown = 1;
+                        printf("Namespace %s\n",
+                               asn1_namespace_string(arg->ns));
+                    }
+                    asn1c_debug_expr_naming(arg);
+                }
+            }
+
+            asn1_namespace_free(arg->ns);
+			arg->ns = 0;
+		}
+	}
+
+	c_name_clash_finder_destroy();
 }
 

@@ -84,13 +84,29 @@ enum asn1c_flags {
 	 * Generate Packed Encoding Rules support code
 	 */
 	A1C_GEN_PER			= 0x80000,
+	/*
+	 * Generate converter-example.c and converter-example.mk
+	 */
+	A1C_GEN_EXAMPLE			= 0x100000,
+	/*
+	 * Generate top-level configure.ac and Makefile.am
+	 */
+	A1C_GEN_AUTOTOOLS_EXAMPLE	= 0x200000,
+	/*
+	 * Print the source of generated lines.
+	 * -debug-output-origin-lines
+	 */
+	A1C_DEBUG_OUTPUT_ORIGIN_LINES = 0x400000,
 };
 
 /*
  * Compile the ASN.1 specification.
  */
-int asn1_compile(asn1p_t *asn, const char *datadir, enum asn1c_flags,
+int asn1_compile(asn1p_t *asn, const char *datadir, const char *destdir, enum asn1c_flags,
 	int argc, int optc, char **argv);
+
+void asn1c_debug_type_naming(asn1p_t *asn, enum asn1c_flags,
+                             char **asn_type_names);
 
 void asn1c__add_pdu_type(const char *typename);
 

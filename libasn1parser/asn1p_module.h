@@ -16,6 +16,8 @@ typedef struct asn1p_s {
 asn1p_t *asn1p_new(void);
 void asn1p_delete(asn1p_t *asn);
 
+struct genhash_s;   /* Forward declaration */
+
 /*
  * Flags specific to a module.
  */
@@ -75,7 +77,8 @@ typedef struct asn1p_module_s {
 	/*
 	 * List of everything that this module defines itself.
 	 */
-	TQ_HEAD(struct asn1p_expr_s)	members;
+	TQ_HEAD(struct asn1p_expr_s)	members;   /* Do not access directly */
+    struct genhash_s *members_hash;
 
 	/*
 	 * Next module in the list.
@@ -99,5 +102,9 @@ typedef struct asn1p_module_s {
  */
 asn1p_module_t *asn1p_module_new(void);
 void asn1p_module_free(asn1p_module_t *mod);
+
+void asn1p_module_move_members(asn1p_module_t *to, asn1p_module_t *from);
+void asn1p_module_member_add(asn1p_module_t *mod, struct asn1p_expr_s *expr);
+
 
 #endif	/* ASN1_PARSER_MODULE_H */

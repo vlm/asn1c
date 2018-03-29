@@ -56,12 +56,16 @@ int
 main(int ac, char **av) {
     enum asn1p_flags asn1_parser_flags = A1P_NOFLAGS;
     enum asn1f_flags asn1_fixer_flags = A1F_NOFLAGS;
-    enum asn1c_flags asn1_compiler_flags = A1C_NO_C99;
+    enum asn1c_flags asn1_compiler_flags =
+        A1C_NO_C99 | A1C_GEN_OER | A1C_GEN_PER | A1C_GEN_EXAMPLE;
     enum asn1print_flags asn1_printer_flags = APF_NOFLAGS;
     int print_arg__print_out = 0;   /* Don't compile, just print parsed */
     int print_arg__fix_n_print = 0; /* Fix and print */
     int warnings_as_errors = 0;     /* Treat warnings as errors */
     char *skeletons_dir = NULL;     /* Directory with supplementary stuff */
+    char *destdir = NULL;           /* Destination for generated files */
+    char **debug_type_names = 0;    /* Debug stuff */
+    size_t debug_type_names_count = 0;
     asn1p_t *asn = 0;               /* An ASN.1 parsed tree */
     int ret;                        /* Return value from misc functions */
     int ch;                         /* Command line character */
@@ -71,7 +75,37 @@ main(int ac, char **av) {
     /*
      * Process command-line options.
      */
-    while((ch = getopt(ac, av, "EFf:g:hLPp:RS:vW:X")) != -1) switch(ch) {
+    while((ch = getopt(ac, av, "D:d:EFf:g:hn:LPp:RS:vW:X")) != -1) switch(ch) {
+        case 'D':
+            if(optarg && *optarg) {
+                size_t optarg_len = strlen(optarg);
+                free(destdir);
+                destdir = calloc(1, optarg_len + 2); /* + "/\0" */
+                assert(destdir);
+                strcpy(destdir, optarg);
+                if(destdir[optarg_len - 1] != '/') {
+                    destdir[optarg_len] = '/';
+                }
+            } else {
+                free(destdir);
+                destdir = NULL;
+            }
+            break;
+        case 'd':
+            if(strncmp(optarg, "ebug-type-naming=", 17) == 0) {
+                char **p = realloc(debug_type_names,
+                                   (debug_type_names_count + 2) * sizeof(*p));
+                assert(p);
+                debug_type_names = p;
+                debug_type_names[debug_type_names_count++] =
+                    strdup(optarg + 17);
+                debug_type_names[debug_type_names_count] = NULL;
+                break;
+            } else if(strcmp(optarg, "ebug-output-origin-lines") == 0) {
+                asn1_compiler_flags |= A1C_DEBUG_OUTPUT_ORIGIN_LINES;
+                break;
+            }
+            usage(av[0]);
         case 'E':
             print_arg__print_out = 1;
             break;
@@ -121,6 +155,10 @@ main(int ac, char **av) {
                 asn1_compiler_flags |= A1C_GEN_PER;
             } else if(strcmp(optarg, "en-OER") == 0) {
                 asn1_compiler_flags |= A1C_GEN_OER;
+            } else if(strcmp(optarg, "en-example") == 0) {
+                asn1_compiler_flags |= A1C_GEN_EXAMPLE;
+            } else if(strcmp(optarg, "en-autotools") == 0) {
+                asn1_compiler_flags |= A1C_GEN_AUTOTOOLS_EXAMPLE;
             } else {
                 fprintf(stderr, "-g%s: Invalid argument\n", optarg);
                 exit(EX_USAGE);
@@ -128,6 +166,20 @@ main(int ac, char **av) {
             break;
         case 'h':
             usage(av[0]);
+        case 'n':
+            if(strcmp(optarg, "o-gen-PER") == 0) {
+                asn1_compiler_flags &= ~A1C_GEN_PER;
+            } else if(strcmp(optarg, "o-gen-OER") == 0) {
+                asn1_compiler_flags &= ~A1C_GEN_OER;
+            } else if(strcmp(optarg, "o-gen-example") == 0) {
+                asn1_compiler_flags &= ~A1C_GEN_EXAMPLE;
+            } else if(strcmp(optarg, "o-gen-autotools") == 0) {
+                asn1_compiler_flags &= ~A1C_GEN_AUTOTOOLS_EXAMPLE;
+            } else {
+                fprintf(stderr, "-n%s: Invalid argument\n", optarg);
+                exit(EX_USAGE);
+            }
+            break;
         case 'P':
             asn1_compiler_flags |= A1C_PRINT_COMPILED;
             asn1_compiler_flags &= ~A1C_NO_C99;
@@ -226,7 +278,7 @@ main(int ac, char **av) {
         ac -= optind;
         av += optind;
     } else {
-        const char *bin_name = a1c_basename(av[0]);
+        const char *bin_name = a1c_basename(av[0], NULL);
         fprintf(stderr,
                 "%s: No input files specified. "
                 "Try '%s -h' for more information\n",
@@ -352,11 +404,19 @@ main(int ac, char **av) {
     }
 
     /*
+     * -debug-type-naming=Type
+     */
+    if(debug_type_names) {
+        asn1c_debug_type_naming(asn, asn1_compiler_flags, debug_type_names);
+        return 0;
+    }
+
+    /*
      * Compile the ASN.1 tree into a set of source files
      * of another language.
      */
-    if(asn1_compile(asn, skeletons_dir, asn1_compiler_flags, ac + optind,
-                    optind, av - optind)) {
+    if(asn1_compile(asn, skeletons_dir, destdir ? destdir : "",
+                    asn1_compiler_flags, ac + optind, optind, av - optind)) {
         exit_code = EX_SOFTWARE;
     }
 
@@ -484,6 +544,7 @@ usage(const char *av0) {
 "  -R                    Restrict output (tables only, no support code)\n"
 "  -S <dir>              Directory with support (skeleton?) files\n"
 "                        (Default is \"%s\")\n"
+"  -D <dir>              Destination directory for generated files (default current dir)\n"
 "  -X                    Generate and print the XML DTD\n"
 "\n"
 
@@ -500,14 +561,16 @@ usage(const char *av0) {
 "  -fincludes-quoted     Generate #includes in \"double\" instead of <angle> quotes\n"
 "  -fknown-extern-type=<name>    Pretend the specified type is known\n"
 "  -fline-refs           Include ASN.1 module's line numbers in comments\n"
-"  -fno-constraints      Do not generate constraint checking code\n"
-"  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
+"  -fno-constraints      Do not generate the constraint checking code\n"
+"  -fno-include-deps     Do not generate the courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
 "  -fwide-types          Use INTEGER_t instead of \"long\" by default, etc.\n"
 "\n"
 
-"  -gen-OER              Generate OER (X.696) support code\n"
-"  -gen-PER              Generate PER (X.691) support code\n"
+"  -no-gen-OER           Do not generate the OER (X.696) support code\n"
+"  -no-gen-PER           Do not generate the PER (X.691) support code\n"
+"  -no-gen-example       Do not generate the ASN.1 format converter example\n"
+"  -gen-autotools        Generate example top-level configure.ac and Makefile.am\n"
 "  -pdu={all|auto|Type}  Generate PDU table (discover PDUs automatically)\n"
 "\n"
 
@@ -516,7 +579,7 @@ usage(const char *av0) {
 "  -print-lines          Generate \"-- #line\" comments in -E output\n"
 
 	,
-	a1c_basename(av0), DATADIR);
+	a1c_basename(av0, NULL), DATADIR);
     /* clang-format on */
     exit(EX_USAGE);
 }

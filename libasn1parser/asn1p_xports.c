@@ -13,7 +13,7 @@ asn1p_xports_new() {
 
 	xp = calloc(1, sizeof *xp);
 	if(xp) {
-		TQ_INIT(&(xp->members));
+		TQ_INIT(&(xp->xp_members));
 	}
 
 	return xp;
@@ -30,7 +30,7 @@ asn1p_xports_free(asn1p_xports_t *xp) {
 		free(xp->fromModuleName);
 		asn1p_oid_free(xp->identifier.oid);
 
-		while((expr = TQ_REMOVE(&(xp->members), next)))
+		while((expr = TQ_REMOVE(&(xp->xp_members), next)))
 			asn1p_expr_free(expr);
 
 		free(xp);

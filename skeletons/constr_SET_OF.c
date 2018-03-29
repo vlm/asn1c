@@ -320,7 +320,6 @@ static int _el_buf_cmp(const void *ap, const void *bp) {
     else
         common_len = b->length;
 
-    //constr_SET_OF.c:315:13: runtime error: null pointer passed as argument 1, which is declared to never be null
     if (a->buf && b->buf) {
         ret = memcmp(a->buf, b->buf, common_len);
     }
@@ -489,8 +488,8 @@ SET_OF_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
     SET_OF__encode_sorted_free(encoded_els, list->count);
 
     if(edx == list->count) {
-        assert(computed_size == (size_t)encoding_size);
         asn_enc_rval_t erval;
+        assert(computed_size == (size_t)encoding_size);
         erval.encoded = computed_size;
         ASN__ENCODED_OK(erval);
     } else {

@@ -10,7 +10,7 @@ DL-DCCH-Message.c: ../sample.makefile.regen ../lte-rrc-14.4.0.asn1
 	make
 
 regen-makefile:
-	ASN_CMDOPTS="-pdu=auto -fcompound-names -gen-PER" \
+	ASN_CMDOPTS="-pdu=auto -fcompound-names -gen-PER -no-gen-OER" \
 	ASN_MODULES="../lte-rrc-14.4.0.asn1" \
 	ASN_PDU=DL-DCCH-Message \
 	ASN_PROGRAM=lte-rrc-dump \

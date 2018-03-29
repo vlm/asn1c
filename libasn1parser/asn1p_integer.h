@@ -5,6 +5,8 @@
 #include "config.h"
 #endif	/* HAVE_CONFIG_H */
 
+#include <asn1_buffer.h>
+
 #ifdef	HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif	/* HAVE_SYS_TYPES_H */
@@ -41,5 +43,10 @@ const char *asn1p_itoa(asn1c_integer_t value);   /* Ptr to a static buf */
  */
 int asn1p_itoa_s(char *buf, size_t size,
                  asn1c_integer_t value); /* Return -1 on error, or length. */
+
+/*
+ * Convert asn1c_integer_t into INTEGER_t structure.
+ */
+abuf *asn1p_integer_as_INTEGER(asn1c_integer_t value);
 
 #endif	/* ASN1P_INTEGER_H */

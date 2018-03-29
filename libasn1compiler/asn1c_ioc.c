@@ -175,10 +175,10 @@ emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
                 asn1c_integer_t v = expr_value->value->value.v_integer;
                 if(v >= 0) {
                     if(v <= 127) {
-                        OUT("\"\\x%02x\", 1", v);
+                        OUT("\"\\x%02x\", 1", (int)v);
                         break;
                     } else if(v <= 32767) {
-                        OUT("\"\\x%02x\\x%02x\", 2", (v >> 8), (v & 0xff));
+                        OUT("\"\\x%02x\\x%02x\", 2", (int)(v >> 8), (int)(v & 0xff));
                         break;
                     }
                 }

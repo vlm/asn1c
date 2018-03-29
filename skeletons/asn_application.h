@@ -81,6 +81,28 @@ asn_enc_rval_t asn_encode_to_buffer(
     const struct asn_TYPE_descriptor_s *type_to_encode,
     const void *structure_to_encode, void *buffer, size_t buffer_size);
 
+/*
+ * A variant of asn_encode_to_buffer() with automatically allocated buffer.
+ * RETURN VALUES:
+ * On success, returns a newly allocated (.buffer) containing the whole message.
+ * The message size is returned in (.result.encoded).
+ * On failure:
+ *  (.buffer) is NULL,
+ *  (.result.encoded) as in asn_encode_to_buffer(),
+ *  The errno codes as in asn_encode_to_buffer(), plus the following:
+ *      ENOMEM: Memory allocation failed due to system or internal limits.
+ * The user is responsible for freeing the (.buffer).
+ */
+typedef struct asn_encode_to_new_buffer_result_s {
+    void *buffer;   /* NULL if failed to encode. */
+    asn_enc_rval_t result;
+} asn_encode_to_new_buffer_result_t;
+asn_encode_to_new_buffer_result_t asn_encode_to_new_buffer(
+    const asn_codec_ctx_t *opt_codec_parameters, /* See asn_codecs.h */
+    enum asn_transfer_syntax,
+    const struct asn_TYPE_descriptor_s *type_to_encode,
+    const void *structure_to_encode);
+
 
 /*
  * Generic type of an application-defined callback to return various
@@ -107,8 +129,8 @@ typedef int(asn_app_consume_bytes_f)(const void *buffer, size_t size,
 asn_enc_rval_t asn_encode(
     const asn_codec_ctx_t *opt_codec_parameters, /* See asn_codecs.h */
     enum asn_transfer_syntax,
-    struct asn_TYPE_descriptor_s *type_to_encode,
-    void *structure_to_encode,
+    const struct asn_TYPE_descriptor_s *type_to_encode,
+    const void *structure_to_encode,
     asn_app_consume_bytes_f *callback, void *callback_key);
 
 

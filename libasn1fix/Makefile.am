@@ -31,15 +31,13 @@ libasn1fix_la_SOURCES =                         \
     asn1fix_constraint_compat.c
 
 check_fixer_CPPFLAGS = -DTOP_SRCDIR=${top_srcdir} $(AM_CPPFLAGS)
-check_fixer_LDADD = $(noinst_LTLIBRARIES)           \
-    $(top_builddir)/libasn1common/libasn1common.la  \
-    $(top_builddir)/libasn1parser/libasn1parser.la
 
 check_crange_SOURCES = asn1fix_crange.c asn1fix_constraint_compat.c
 check_crange_CPPFLAGS = -DUNIT_TEST $(AM_CPPFLAGS)
-check_crange_LDADD = $(noinst_LTLIBRARIES)          \
-    $(top_builddir)/libasn1common/libasn1common.la  \
-    $(top_builddir)/libasn1parser/libasn1parser.la
+
+LDADD = $(noinst_LTLIBRARIES)   \
+    $(top_builddir)/libasn1parser/libasn1parser.la  \
+    $(top_builddir)/libasn1common/libasn1common.la
 
 check_PROGRAMS = check_crange check_fixer
 

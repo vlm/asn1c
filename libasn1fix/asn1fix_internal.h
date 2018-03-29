@@ -22,6 +22,7 @@
 
 #include <asn1parser.h>		/* Our lovely ASN.1 parser module */
 #include <asn1_namespace.h>
+#include <genhash.h>
 #include "asn1fix.h"
 
 #ifdef	_WIN32

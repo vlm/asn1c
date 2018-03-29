@@ -7,7 +7,6 @@
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
-#include <NativeInteger.h>
 
 #ifdef __cplusplus
 extern "C" {

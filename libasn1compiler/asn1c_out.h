@@ -39,7 +39,9 @@ typedef struct compiler_streams {
 static char *_compiler_stream2str[] __attribute__ ((unused))
     = { "IGNORE", "INCLUDES", "DEPS", "FWD-DECLS", "FWD-DEFS", "TYPE-DECLS", "FUNC-DECLS", "POST-INCLUDE", "IOC-TABLES", "CTABLES", "CODE", "CTDEFS", "STAT-DEFS" };
 
-int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
+int asn1c_compiled_output(arg_t *arg, const char *file, int lineno,
+                          const char *func, const char *fmt, ...)
+    __attribute__((format(printf, 5, 6)));
 
 
 /*****************************************************************
@@ -80,7 +82,8 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
     } while(0)
 
 /* Output a piece of text into a default stream */
-#define	OUT(fmt, args...)	asn1c_compiled_output(arg, fmt, ##args)
+#define OUT(fmt, args...) \
+    asn1c_compiled_output(arg, __FILE__, __LINE__, __func__, fmt, ##args)
 #define	OUT_NOINDENT(fmt, args...)	do {			\
 	int _saved_indent = INDENT_LEVEL;			\
 	INDENT_LEVEL = 0;					\

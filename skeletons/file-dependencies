@@ -1,37 +1,38 @@
 # This file contains dependency information for the asn1c compiler's skeletons.
 # Feel free to edit this file.
 # The format is like this:
-# 	<filename> <dependent-file> ...
+# 	<filename>                      # Include this file unconditionally
+# 	<filename> <dependent-file> ... # Include dependencies of <filename>.
 #
 
-ANY.h ANY.c
+ANY.h ANY.c OCTET_STRING.h
 OPEN_TYPE.h OPEN_TYPE.c constr_CHOICE.h
-BMPString.h BMPString.c UTF8String.h
+BMPString.h BMPString.c UTF8String.h OCTET_STRING.h
 BOOLEAN.h BOOLEAN.c
 ENUMERATED.h ENUMERATED.c INTEGER.h NativeEnumerated.h
-GeneralString.h GeneralString.c
-GeneralizedTime.h GeneralizedTime.c
-GraphicString.h GraphicString.c
-IA5String.h IA5String.c
+GeneralString.h GeneralString.c OCTET_STRING.h
+GeneralizedTime.h GeneralizedTime.c OCTET_STRING.h
+GraphicString.h GraphicString.c OCTET_STRING.h
+IA5String.h IA5String.c OCTET_STRING.h
 INTEGER.h INTEGER.c
-ISO646String.h ISO646String.c
+ISO646String.h ISO646String.c OCTET_STRING.h
 NULL.h NULL.c BOOLEAN.h
 NativeEnumerated.h NativeEnumerated.c NativeInteger.h
 NativeInteger.h NativeInteger.c INTEGER.h
 NativeReal.h NativeReal.c REAL.h
-NumericString.h NumericString.c
-OBJECT_IDENTIFIER.h OBJECT_IDENTIFIER.c INTEGER.h
+NumericString.h NumericString.c OCTET_STRING.h
+OBJECT_IDENTIFIER.h OBJECT_IDENTIFIER.c INTEGER.h OCTET_STRING.h
 ObjectDescriptor.h ObjectDescriptor.c GraphicString.h
-PrintableString.h PrintableString.c
-REAL.h REAL.c INTEGER.h
-RELATIVE-OID.h RELATIVE-OID.c OBJECT_IDENTIFIER.h
-T61String.h T61String.c
-TeletexString.h TeletexString.c	
-UTCTime.h UTCTime.c GeneralizedTime.h
-UTF8String.h UTF8String.c
-UniversalString.h UniversalString.c UTF8String.h
-VideotexString.h VideotexString.c
-VisibleString.h VisibleString.c
+PrintableString.h PrintableString.c OCTET_STRING.h
+REAL.h REAL.c INTEGER.h OCTET_STRING.h
+RELATIVE-OID.h RELATIVE-OID.c OBJECT_IDENTIFIER.h OCTET_STRING.h
+T61String.h T61String.c OCTET_STRING.h
+TeletexString.h TeletexString.c	 OCTET_STRING.h
+UTCTime.h UTCTime.c GeneralizedTime.h OCTET_STRING.h
+UTF8String.h UTF8String.c OCTET_STRING.h
+UniversalString.h UniversalString.c UTF8String.h OCTET_STRING.h
+VideotexString.h VideotexString.c OCTET_STRING.h
+VisibleString.h VisibleString.c OCTET_STRING.h
 asn_SEQUENCE_OF.h asn_SEQUENCE_OF.c asn_SET_OF.h
 asn_SET_OF.h asn_SET_OF.c
 constr_CHOICE.h constr_CHOICE.c
@@ -48,8 +49,8 @@ asn_codecs.h			# Return types of encoders and decoders
 asn_internal.h asn_internal.c			# Internal stuff
 asn_random_fill.h asn_random_fill.c		# Initialize with a random value
 asn_bit_data.h asn_bit_data.c         # Bit streaming support
-OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
-BIT_STRING.h BIT_STRING.c	# This one is necessary for the above one
+OCTET_STRING.h OCTET_STRING.c
+BIT_STRING.h BIT_STRING.c OCTET_STRING.h
 asn_codecs_prim.c asn_codecs_prim.h	# enc/decoders for primitive types
 ber_tlv_length.h ber_tlv_length.c	# BER TLV L (length)
 ber_tlv_tag.h ber_tlv_tag.c	# BER TLV T (tag)
@@ -69,17 +70,20 @@ CONVERTER:			# THIS IS A SPECIAL SECTION
 converter-example.c		# A default name for the example transcoder
 
 CODEC-OER:			# THIS IS A SPECIAL SECTION
-oer_decoder.h oer_decoder.c OPEN_TYPE.h # OER decoding support
-oer_encoder.h oer_encoder.c # OER encoding support
-oer_support.h oer_support.c # OER support
+oer_decoder.h
+oer_encoder.h
+oer_support.h
+oer_decoder.h oer_decoder.c OPEN_TYPE.h
+oer_encoder.h oer_encoder.c
+oer_support.h oer_support.c
 OPEN_TYPE.h OPEN_TYPE_oer.c constr_CHOICE.h
-INTEGER_oer.c INTEGER.h
-OCTET_STRING_oer.c
-NativeInteger_oer.c NativeInteger.h
-NativeEnumerated_oer.c NativeEnumerated.h
-constr_SEQUENCE_oer.c constr_SEQUENCE.h
-constr_CHOICE_oer.c
-constr_SET_OF_oer.c constr_SET_OF.h asn_SET_OF.h asn_SET_OF.c
-BIT_STRING_oer.c
+INTEGER.h INTEGER_oer.c
+BIT_STRING.h BIT_STRING_oer.c OCTET_STRING.h
+OCTET_STRING.h OCTET_STRING_oer.c
+NativeInteger.h NativeInteger_oer.c
+NativeEnumerated.h NativeEnumerated_oer.c
+constr_CHOICE.h constr_CHOICE_oer.c
+constr_SEQUENCE.h constr_SEQUENCE_oer.c
+constr_SET_OF.h constr_SET_OF_oer.c
 
 CODEC-PER:			# THIS IS A SPECIAL SECTION

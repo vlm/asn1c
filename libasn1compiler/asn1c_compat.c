@@ -1,10 +1,6 @@
 #include "asn1c_internal.h"
 #include "asn1c_compat.h"
 
-#ifndef	PATH_MAX
-#define	PATH_MAX    1024
-#endif
-
 /* Normally file permissions are (DEFFILEMODE & ~umask(2)) */
 #ifndef	DEFFILEMODE	/* Normally in <sys/stat.h> */
 
@@ -40,8 +36,9 @@ int mkstemp(char *template) {
 #endif
 
 FILE *
-asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
-	char fname[PATH_MAX];
+asn1c_open_file(const char *destdir, const char *name, const char *ext,
+                char **opt_tmpname) {
+    char fname[PATH_MAX];
 	int created = 1;
 #ifndef	_WIN32
 	struct stat sb;
@@ -53,8 +50,8 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 	/*
 	 * Compute filenames.
 	 */
-    ret = snprintf(fname, sizeof(fname), "%s%s%s", name, ext,
-                   opt_tmpname ? ".XXXXXX" : "");
+    ret = snprintf(fname, sizeof(fname), "%s%s%s%s", destdir ? destdir : "",
+                   name, ext, opt_tmpname ? ".XXXXXX" : "");
     assert(ret > 0 && ret < (ssize_t)sizeof(fname));
 
     if(opt_tmpname) {
@@ -63,8 +60,10 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 		 */
 		fd = mkstemp(fname);
 #ifndef	_WIN32
-		/* fchmod() does not respect umask */
-		(void)fchmod(fd, REASONABLE_FILE_MODE);
+        if(fd != -1) {
+            /* fchmod() does not respect umask */
+            (void)fchmod(fd, REASONABLE_FILE_MODE);
+        }
 #endif
 	} else {
 		/*
@@ -77,8 +76,14 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 		}
 	}
 	if(fd == -1) {
-		perror(fname);
-		return NULL;
+        struct stat st;
+        if(destdir && stat(destdir, &st) == -1) {
+            fprintf(stderr, "%s: No such directory\n", destdir);
+            return NULL;
+        } else {
+            perror(fname);
+            return NULL;
+        }
 	}
 
 #ifndef	_WIN32
@@ -128,14 +133,20 @@ asn1c_open_file(const char *name, const char *ext, char **opt_tmpname) {
 }
 
 const char *
-a1c_basename(const char *path) {
+a1c_basename(const char *path, const char *destdir) {
 	static char strbuf[PATH_MAX];
 	const char *pend;
 	const char *name;
+	char *sbuf = strbuf;
 
+	if(destdir) {
+		strncpy(strbuf, destdir, PATH_MAX - 1);
+		strbuf[PATH_MAX - 1] = '\0';
+		sbuf = strbuf + strlen(strbuf);
+	}
 	pend = path + strlen(path);
 	if(pend == path) {
-		strcpy(strbuf, ".");
+		strcpy(sbuf, ".");
 		return strbuf;
 	}
 
@@ -143,7 +154,7 @@ a1c_basename(const char *path) {
 	for(pend--; pend > path && *pend == '/'; pend--);
 
 	if(pend == path && *path == '/') {
-		strcpy(strbuf, "/");
+		strcpy(sbuf, "/");
 		return strbuf;
 	}
 
@@ -154,8 +165,8 @@ a1c_basename(const char *path) {
 		return 0;
 	}
 
-	memcpy(strbuf, name, pend - name + 1);
-	strbuf[pend - name + 1] = '\0';
+	memcpy(sbuf, name, pend - name + 1);
+	sbuf[pend - name + 1] = '\0';
 
 	return strbuf;
 }

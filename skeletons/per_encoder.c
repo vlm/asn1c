@@ -4,6 +4,14 @@
 
 static int _uper_encode_flush_outp(asn_per_outp_t *po);
 
+static int
+ignore_output(const void *data, size_t size, void *app_key) {
+    (void)data;
+    (void)size;
+    (void)app_key;
+    return 0;
+}
+
 asn_enc_rval_t
 uper_encode(const asn_TYPE_descriptor_t *td,
             const asn_per_constraints_t *constraints, const void *sptr,
@@ -20,7 +28,7 @@ uper_encode(const asn_TYPE_descriptor_t *td,
     po.buffer = po.tmpspace;
     po.nboff = 0;
     po.nbits = 8 * sizeof(po.tmpspace);
-    po.output = cb;
+    po.output = cb ? cb : ignore_output;
     po.op_key = app_key;
     po.flushed_bytes = 0;
 

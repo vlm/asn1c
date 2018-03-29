@@ -79,12 +79,12 @@ LDFLAGS = ${LDFLAGS:-}
 ASAN_ENV_FLAGS = ${ASAN_ENV_FLAGS:-}
 
 ASN_PROGRAM = check-program
-ASN_PROGRAM_SOURCES = ${source_short}
+ASN_PROGRAM_SRCS = ${source_short}
 
 CC ?= ${CC}
 CXX ?= ${CXX}
 
--include Makefile.am.example
+-include converter-example.mk
 
 all: compiled-module
 	\$(MAKE) check-program

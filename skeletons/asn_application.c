@@ -42,6 +42,12 @@ struct overrun_encoder_key {
     size_t computed_size;
 };
 
+struct dynamic_encoder_key {
+    void *buffer;
+    size_t buffer_size;
+    size_t computed_size;
+};
+
 struct callback_failure_catch_key {
     asn_app_consume_bytes_f *callback;
     void *callback_key;
@@ -71,6 +77,43 @@ overrun_encoder_cb(const void *data, size_t size, void *keyp) {
 }
 
 /*
+ * Encoder which dynamically allocates output, and continues
+ * to count even if allocation failed.
+ */
+static int
+dynamic_encoder_cb(const void *data, size_t size, void *keyp) {
+    struct dynamic_encoder_key *key = keyp;
+
+    if(key->buffer) {
+        if(key->computed_size + size >= key->buffer_size) {
+            void *p;
+            size_t new_size = key->buffer_size;
+
+            do {
+                new_size *= 2;
+            } while(new_size <= key->computed_size + size);
+
+            p = REALLOC(key->buffer, new_size);
+            if(p) {
+                key->buffer = p;
+                key->buffer_size = new_size;
+            } else {
+                FREEMEM(key->buffer);
+                key->buffer = 0;
+                key->buffer_size = 0;
+                key->computed_size += size;
+                return 0;
+            }
+        }
+        memcpy((char *)key->buffer + key->computed_size, data, size);
+    }
+
+    key->computed_size += size;
+
+    return 0;
+}
+
+/*
  * Encoder which help convert the application level encoder failure into EIO.
  */
 static int
@@ -88,8 +131,8 @@ callback_failure_catch_cb(const void *data, size_t size, void *keyp) {
 
 asn_enc_rval_t
 asn_encode(const asn_codec_ctx_t *opt_codec_ctx,
-           enum asn_transfer_syntax syntax, asn_TYPE_descriptor_t *td,
-           void *sptr, asn_app_consume_bytes_f *callback, void *callback_key) {
+           enum asn_transfer_syntax syntax, const asn_TYPE_descriptor_t *td,
+           const void *sptr, asn_app_consume_bytes_f *callback, void *callback_key) {
     struct callback_failure_catch_key cb_key;
     asn_enc_rval_t er;
 
@@ -134,12 +177,47 @@ asn_encode_to_buffer(const asn_codec_ctx_t *opt_codec_ctx,
                              overrun_encoder_cb, &buf_key);
 
     if(er.encoded >= 0 && (size_t)er.encoded != buf_key.computed_size) {
-        ASN_DEBUG("asn_encode() returned %" ASN_PRI_SSIZE " yet produced %" ASN_PRI_SIZE " bytes",
+        ASN_DEBUG("asn_encode() returned %" ASN_PRI_SSIZE
+                  " yet produced %" ASN_PRI_SIZE " bytes",
                   er.encoded, buf_key.computed_size);
         assert(er.encoded < 0 || (size_t)er.encoded == buf_key.computed_size);
     }
 
     return er;
+}
+
+asn_encode_to_new_buffer_result_t
+asn_encode_to_new_buffer(const asn_codec_ctx_t *opt_codec_ctx,
+                         enum asn_transfer_syntax syntax,
+                         const asn_TYPE_descriptor_t *td, const void *sptr) {
+    struct dynamic_encoder_key buf_key;
+    asn_encode_to_new_buffer_result_t res;
+
+    buf_key.buffer_size = 16;
+    buf_key.buffer = MALLOC(buf_key.buffer_size);
+    buf_key.computed_size = 0;
+
+    res.result = asn_encode_internal(opt_codec_ctx, syntax, td, sptr,
+                                     dynamic_encoder_cb, &buf_key);
+
+    if(res.result.encoded >= 0
+       && (size_t)res.result.encoded != buf_key.computed_size) {
+        ASN_DEBUG("asn_encode() returned %" ASN_PRI_SSIZE
+                  " yet produced %" ASN_PRI_SIZE " bytes",
+                  res.result.encoded, buf_key.computed_size);
+        assert(res.result.encoded < 0
+               || (size_t)res.result.encoded == buf_key.computed_size);
+    }
+
+    res.buffer = buf_key.buffer;
+
+    /* 0-terminate just in case. */
+    if(res.buffer) {
+        assert(buf_key.computed_size < buf_key.buffer_size);
+        ((char *)res.buffer)[buf_key.computed_size] = '\0';
+    }
+
+    return res;
 }
 
 static asn_enc_rval_t

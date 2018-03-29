@@ -41,11 +41,23 @@ stamp-h*
 /skeletons/check-*
 
 # /tests/
+/tests/tests-asn1c-smoke/Makefile.am.libasncodec
+/tests/tests-asn1c-smoke/Makefile.am.asn1convert
+/tests/tests-asn1c-smoke/converter-example.mk
+/tests/tests-asn1c-smoke/*.[acho]
+/tests/tests-asn1c-smoke/*.asn
+/tests/tests-asn1c-smoke/*.txt
+/tests/tests-asn1c-smoke/converter-example
+
+# /tests/
 /tests/tests-c-compiler/test-*
 
 # /tests/tests-skeletons
 /tests/tests-skeletons/check-*
 !/tests/tests-skeletons/check-*.c
+
+# /tests/tests-randomized
+/tests/tests-randomized/test-param-helper
 
 # /doc/docsrc
 doc/docsrc/*.aux
@@ -65,7 +77,8 @@ doc/docsrc/*.xdv
 /examples/sample.source.*/lib*.a
 /examples/sample.source.*/.tmp.*
 /examples/sample.source.*/Makefile.am.libasncodec
-/examples/sample.source.*/Makefile.am.example
+/examples/sample.source.*/Makefile.am.asn1convert
+/examples/sample.source.*/converter-example.mk
 !/examples/sample.source.*/Makefile
 !/examples/sample.source.*/config.h
 
@@ -76,7 +89,7 @@ doc/docsrc/*.xdv
 /libasn1fix/check_*
 
 # /libasn1parser/
-/libasn1parser/check_parser
+/libasn1parser/check_*
 
 #code coverage
 *.gcno

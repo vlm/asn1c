@@ -26,7 +26,7 @@ typedef struct asn1p_xports_s {
 	/*
 	 * Number of entities to import.
 	 */
-	TQ_HEAD(struct asn1p_expr_s)	members;
+	TQ_HEAD(struct asn1p_expr_s)	xp_members;
 
 	/*
 	 * Pointer to the next xports structure in whatever list.

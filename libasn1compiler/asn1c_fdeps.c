@@ -1,82 +1,84 @@
 #include "asn1c_internal.h"
 #include "asn1c_fdeps.h"
 
-#ifndef PATH_MAX
-#define PATH_MAX    1024
-#endif
+static asn1c_dep_filename *asn1c_dep_filename_new(const char *filename);
+static void asn1c_dep_add(asn1c_dep_chain *dlist, const char *filename,
+                         int lineno, int column);
+static asn1c_dep_chain *asn1c_dep_chain_new(void);
 
-static asn1c_fdeps_t *asn1c_new_dep(const char *filename);
-static int asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d);
+static asn1c_dep_chain *
+asn1c_dep_chains_add_new(asn1c_dep_chainset *deps,
+                         enum asn1c_dep_section section, int active) {
+    asn1c_dep_chain *dc = asn1c_dep_chain_new();
+    asn1c_tagged_dep_chain *tc = calloc(1, sizeof(*tc));
+    tc->chain = dc;
+    tc->section = section;
+    tc->activated.active = active;
 
-int
-asn1c_activate_dependency(asn1c_fdeps_t *deps, asn1c_fdeps_t *cur, const char *data) {
-	char fname_scratch[PATH_MAX];
-	const char *fname;
-	int i;
+    deps->chains = realloc(deps->chains,
+                           sizeof(deps->chains[0]) * (deps->chains_count + 1));
+    assert(deps->chains);
+    deps->chains[deps->chains_count] = tc;
+    deps->chains_count++;
 
-	if(!deps || !data || !*data)
-		return 0;
-	if(!cur) cur = deps;
-
-	if(cur->usage > FDEP_NOTUSED)
-		return 1;	/* Already activated */
-
-	fname = data;
-	if(*data == '#') {
-		const char *start = data;
-		const char *end = 0;
-
-		start = strchr(data, '<');
-		if(start) {
-			start++;
-			end = strchr(start, '>');
-		} else if((start = strchr(data, '\"'))) {
-			start++;
-			end = strchr(start, '\"');
-		}
-		if(end) {
-			assert((end-start) + 1 < (ssize_t)sizeof(fname_scratch));
-			memcpy(fname_scratch, start, end - start);
-			fname_scratch[end-start] = '\0';
-			fname = fname_scratch;
-		} else {
-			return 0;
-		}
-	}
-
-	if(cur->filename && strcmp(cur->filename, fname) == 0) {
-		cur->usage = FDEP_REFERRED;
-
-		/* Activate subdependencies */
-		for(i = 0; i < cur->el_count; i++) {
-			asn1c_activate_dependency(deps,
-				cur->elements[i],
-				cur->elements[i]->filename);
-		}
-
-		/*
-		 * This might be a link to someplace else.
-		 */
-		return asn1c_activate_dependency(deps, NULL, fname);
-	} else {
-		for(i = 0; i < cur->el_count; i++) {
-			asn1c_activate_dependency(deps,
-				cur->elements[i], fname);
-		}
-	}
-
-	return 0;
+    return dc;
 }
 
-asn1c_fdeps_t *
+void
+asn1c_activate_dependency(asn1c_dep_chainset *deps, const char *data,
+                          const char *by) {
+    char fname_scratch[PATH_MAX];
+
+    if(!deps || !data || !*data) {
+        return;
+    }
+
+    assert(deps->chains_count);
+
+    const char *fname = data;
+    if(*data == '#') {
+        const char *start = data;
+        const char *end = 0;
+
+        start = strchr(data, '<');
+        if(start) {
+            start++;
+            end = strchr(start, '>');
+        } else if((start = strchr(data, '\"'))) {
+            start++;
+            end = strchr(start, '\"');
+        }
+        if(end) {
+            assert((end-start) + 1 < (ssize_t)sizeof(fname_scratch));
+            memcpy(fname_scratch, start, end - start);
+            fname_scratch[end-start] = '\0';
+            fname = fname_scratch;
+        } else {
+            return;
+        }
+    }
+
+    for(size_t i = 0; i < deps->chains_count; i++) {
+        asn1c_tagged_dep_chain *ch = deps->chains[i];
+        if(!ch->activated.active && ch->chain->deps_count > 0
+           && strcmp(ch->chain->deps[0]->filename, fname) == 0) {
+            ch->activated.by = strdup(by);
+            ch->activated.active = 1;
+
+            for(size_t j = 0; j < ch->chain->deps_count; j++) {
+                asn1c_activate_dependency(deps, ch->chain->deps[j]->filename,
+                                          by);
+            }
+        }
+    }
+}
+
+asn1c_dep_chainset *
 asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 	char buf[4096];
-	asn1c_fdeps_t *deps;
-	asn1c_fdeps_t *cur;
+	asn1c_dep_chainset *deps;
 	FILE *f;
-	enum fdep_usage special_section = FDEP_NOTUSED;
-
-	(void)arg;
+    int lineno = 0;
 
 	if(!datadir || strlen(datadir) > sizeof(buf) / 2) {
 		errno = EINVAL;
@@ -88,146 +90,162 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
 	f = fopen(buf, "r");
 	if(!f) return NULL;
 
-	deps = asn1c_new_dep(0);
+	deps = calloc(1, sizeof(*deps));
 	assert(deps);
+    enum asn1c_dep_section section = FDEP_COMMON_FILES;
+    int activate = 0;
 
-	while(fgets(buf, sizeof(buf), f)) {
+    while(fgets(buf, sizeof(buf), f)) {
 		char *p = strchr(buf, '#');
 		if(p) *p = '\0';	/* Remove comments */
 
-		cur = deps;
-		for(p = strtok(buf, " \t\r\n"); p;
+        lineno++;
+
+        asn1c_dep_chain *dc = asn1c_dep_chains_add_new(deps, section, activate);
+
+        for(p = strtok(buf, " \t\r\n"); p;
 				p = strtok(NULL, " \t\r\n")) {
-			asn1c_fdeps_t *d;
 
 			/*
 			 * Special "prefix" section.
 			 */
 			if(strchr(p, ':')) {
-				special_section = FDEP_IGNORE;
 				if(strcmp(p, "COMMON-FILES:") == 0) {
-					special_section = FDEP_COMMON_FILES;
+					section = FDEP_COMMON_FILES;
+                    activate = 1;
 				} else if(strcmp(p, "CONVERTER:") == 0) {
-					special_section = FDEP_CONVERTER;
+                    activate = 1;
+					section = FDEP_CONVERTER;
 				} else if((arg->flags & A1C_GEN_OER)
 					  && strcmp(p, "CODEC-OER:") == 0) {
-					special_section = FDEP_CODEC_OER;
+                    activate = 0;
+					section = FDEP_CODEC_OER;
 				} else if((arg->flags & A1C_GEN_PER)
 					  && strcmp(p, "CODEC-PER:") == 0) {
-					special_section = FDEP_CODEC_PER;
-				}
-				break;
+                    activate = 0;
+					section = FDEP_CODEC_PER;
+				} else {
+					section = FDEP_IGNORE;
+                    activate = 0;
+                }
+                break;
 			}
 
-			if(special_section == FDEP_IGNORE)
-				continue;
-
-			d = asn1c_new_dep(p);
-			d->usage = special_section;
-
-			if(asn1c_dep_add(cur, d) == 1)
-				cur = d;
-		}
+            asn1c_dep_add(dc, p, lineno, p - buf);
+        }
 	}
 
 	fclose(f);
 
+    /* A single filename by itself means that we should include that */
+    for(size_t i = 0; i < deps->chains_count; i++) {
+        asn1c_tagged_dep_chain *ch = deps->chains[i];
+        if(!ch->activated.active && ch->chain->deps_count == 1) {
+            asn1c_activate_dependency(deps, ch->chain->deps[0]->filename,
+                                      "implicit");
+        }
+    }
+
 	return deps;
 }
 
-static asn1c_fdeps_t *
-asn1c_new_dep(const char *filename) {
-	asn1c_fdeps_t *d;
+static asn1c_dep_filename *
+asn1c_dep_filename_new(const char *filename) {
+    asn1c_dep_filename *d;
 
-	d = calloc(1, sizeof(*d));
-	if(filename) {
-		d->filename = strdup(filename);
-		if(!d->filename) return NULL;
-	}
+    assert(filename);
+
+    d = calloc(1, sizeof(*d));
+    assert(d);
+    d->filename = strdup(filename);
+    assert(d->filename);
 
 	return d;
 }
 
-static void
-asn1c_free_dep(asn1c_fdeps_t *d) {
+static asn1c_dep_chain *
+asn1c_dep_chain_new() {
+    return calloc(1, sizeof(asn1c_dep_chain));
+}
 
-	if(d) {
-		if(d->filename) free(d->filename);
-		d->filename = 0;
-		free(d);
-	}
+static void
+asn1c_dep_add(asn1c_dep_chain *dlist, const char *filename, int lineno, int column) {
+    asn1c_dep_filename *df = asn1c_dep_filename_new(filename);
+    df->lineno = lineno;
+    df->column = column;
+
+    dlist->deps =
+        realloc(dlist->deps, (dlist->deps_count + 1) * sizeof(dlist->deps[0]));
+    assert(dlist->deps);
+    dlist->deps[dlist->deps_count] = df;
+    dlist->deps_count += 1;
 }
 
 static int
-asn1c_dep_add(asn1c_fdeps_t *deps, asn1c_fdeps_t *d) {
-	int n;
-
-	/* Check for duplicates */
-	for(n = 0; n < deps->el_count; n++) {
-		if(strcmp(deps->elements[n]->filename, d->filename) == 0)
-			return 0;
-	}
-
-	if(deps->el_count == deps->el_size) {
-		void *p;
-		n = deps->el_size?deps->el_size << 2:16;
-		p = realloc(deps->elements,
-			n * sizeof(deps->elements[0]));
-		assert(p);
-		deps->elements = p;
-		deps->el_size = n;
-	}
-
-	deps->elements[deps->el_count++] = d;
-	return 1;
+asn1c_dep_has_filename(const asn1c_dep_chain *dlist, const char *filename) {
+    for(size_t i = 0; i < dlist->deps_count; i++) {
+        if(strcmp(dlist->deps[i]->filename, filename) == 0) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
-asn1c_fdeps_t *
-asn1c_deps_flatten(const asn1c_fdeps_t *deps) {
-	asn1c_fdeps_t *dlist;
-	asn1c_fdeps_t *d;
+asn1c_dep_chain *
+asn1c_deps_flatten(const asn1c_dep_chainset *deps,
+                   enum asn1c_dep_section include_section) {
+    asn1c_dep_chain *dlist;
 
 	if(!deps) {
 		errno = EINVAL;
 		return 0;
 	}
 
-	dlist = asn1c_new_dep(0);
+	dlist = asn1c_dep_chain_new();
 
-	if(deps->filename && deps->usage != FDEP_NOTUSED) {
-		d = asn1c_new_dep(deps->filename);
-		d->usage = deps->usage;
-		if(!asn1c_dep_add(dlist, d)) {
-			asn1c_free_dep(d);
-		}
-	}
+	for(size_t i = 0; i < deps->chains_count; i++) {
+        asn1c_tagged_dep_chain *tc = deps->chains[i];
+        asn1c_dep_chain *dc = tc->chain;
 
-	for(int i = 0; i < deps->el_count; i++) {
-		d = asn1c_deps_flatten(deps->elements[i]);
-		assert(!d->filename);
-		for(int j = 0; j < d->el_count; j++) {
-			if(asn1c_dep_add(dlist, d->elements[j])) {
-				d->elements[j] = 0;
-			}
-		}
-		asn1c_deps_freelist(d);
-	}
+        if(!tc->activated.active) {
+            continue;
+        }
+        if((tc->section & include_section) == 0) {
+            continue;
+        }
+
+        for(size_t j = 0; j < dc->deps_count; j++) {
+            if(!asn1c_dep_has_filename(dlist, dc->deps[j]->filename))  {
+                asn1c_dep_add(dlist, dc->deps[j]->filename, dc->deps[j]->lineno,
+                              dc->deps[j]->column);
+            }
+        }
+    }
 
 	return dlist;
 }
 
 void
-asn1c_deps_freelist(asn1c_fdeps_t *deps) {
+asn1c_dep_chain_free(asn1c_dep_chain *dc) {
+    if(dc) {
+        for(size_t i = 0; i < dc->deps_count; i++) {
+            asn1c_dep_filename *df = dc->deps[i];
+            free(df->filename);
+            free(df);
+        }
+        free(dc->deps);
+    }
+}
+
+void
+asn1c_dep_chainset_free(asn1c_dep_chainset *deps) {
 	if(deps) {
-		int i;
-		if(deps->elements) {
-			for(i = 0; i < deps->el_count; i++) {
-				asn1c_deps_freelist(deps->elements[i]);
-				deps->elements[i] = 0;
-			}
-			free(deps->elements);
-			deps->elements = 0;			
-		}
-		asn1c_free_dep(deps);
-	}
+        for(size_t i = 0; i < deps->chains_count; i++) {
+            asn1c_dep_chain_free(deps->chains[i]->chain);
+            free(deps->chains[i]->activated.by);
+            free(deps->chains[i]);
+        }
+        free(deps->chains);
+        free(deps);
+    }
 }

@@ -28,35 +28,44 @@ asn1f_lookup_child(asn1p_expr_t *tc, const char *name) {
 	return NULL;
 }
 
+static asn1p_expr_t *
+asn1f_lookup_in_module(asn1p_module_t *mod, const char *name) {
+    asn1p_expr_t *expr = genhash_get(mod->members_hash, name);
+    if(!expr) {
+        asn1p_expr_t *memb;
+        TQ_FOR(memb, &mod->members, next) {
+            if(memb->expr_type == ASN_BASIC_ENUMERATED) {
+                asn1p_expr_t *v = asn1f_lookup_child(memb, name);
+                if(v) return v;
+            }
+        }
+    }
+
+    return expr;
+}
+
 asn1p_module_t *
 asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name) {
 	asn1p_xports_t *xp;
-	asn1p_module_t *fromModule;
-	asn1p_expr_t *tc = (asn1p_expr_t *)0;
-	asn1p_expr_t *memb = (asn1p_expr_t *)0;
-	asn1p_expr_t *v = (asn1p_expr_t *)0;
 
 	/*
 	 * Search in which exactly module this name is defined.
 	 */
 	TQ_FOR(xp, &(mod->imports), xp_next) {
-		fromModule = asn1f_lookup_module(arg, xp->fromModuleName, NULL);
-		TQ_FOR(tc, &(xp->members), next) {
-			if(strcmp(name, tc->Identifier) == 0)
+        asn1p_module_t *fromModule =
+            asn1f_lookup_module(arg, xp->fromModuleName, NULL);
+        asn1p_expr_t *tc = (asn1p_expr_t *)0;
+
+        TQ_FOR(tc, &(xp->xp_members), next) {
+            if(strcmp(name, tc->Identifier) == 0)
 				break;
 
 			if(!fromModule)
 				continue;
 
-			TQ_FOR(memb, &(fromModule->members), next) {
-				if((memb->expr_type != ASN_BASIC_ENUMERATED) ||
-					(strcmp(memb->Identifier, tc->Identifier) != 0))
-					continue;
-
-				v = asn1f_lookup_child(memb, name);
-				if (v) break;
-			}
-			if(v) break;
+            asn1p_expr_t *v =
+                asn1f_lookup_in_module(fromModule, name);
+            if(v) break;
 		}
 		if(tc) break;
 	}
@@ -277,6 +286,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
             return NULL;
         }
 
+        DISPOSE_OF_MY_NAMESPACE();
         my_namespace = asn1_namespace_new_from_module(imports_from, 1);
         DEBUG("Lookup (%s) in %s for line %d", asn1f_printable_reference(ref),
               asn1_namespace_string(my_namespace), ref->_lineno);
@@ -291,8 +301,6 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
         ns_item--) {
         struct asn1_namespace_element_s *ns_el =
             &my_namespace->elements[ns_item];
-        asn1p_expr_t *ref_tc; /* Referenced tc */
-        asn1p_expr_t *v = (asn1p_expr_t *)0;
 
         switch(ns_el->selector) {
         case NAM_SYMBOL:
@@ -312,22 +320,12 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
                 DISPOSE_OF_MY_NAMESPACE();
                 return ns_el->u.symbol.resolution;
             }
-        case NAM_SPACE:
+        case NAM_SPACE: {
+            asn1p_expr_t *ref_tc; /* Referenced tc */
             /*
              * Do a direct symbol search in the given module.
              */
-            TQ_FOR(ref_tc, &(ns_el->u.space.module->members), next) {
-                if(ref_tc->Identifier)
-                    if(strcmp(ref_tc->Identifier, identifier) == 0) break;
-
-                if(ref_tc->expr_type == ASN_BASIC_ENUMERATED) {
-                    v = asn1f_lookup_child(ref_tc, identifier);
-                    if(v) {
-                        ref_tc = v;
-                        break;
-                    }
-                }
-            }
+            ref_tc = asn1f_lookup_in_module(ns_el->u.space.module, identifier);
             if(ref_tc) {
                 /* It is acceptable that we don't use input parameters */
                 if(rhs_pspecs && !ref_tc->lhs_params) {
@@ -344,6 +342,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
                         ref_tc->Identifier, asn1f_printable_reference(ref),
                         ref->_lineno);
                     errno = EPERM;
+                    DISPOSE_OF_MY_NAMESPACE();
                     return NULL;
                 }
                 if(rhs_pspecs && ref_tc->lhs_params) {
@@ -355,6 +354,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
                 DISPOSE_OF_MY_NAMESPACE();
                 return ref_tc;
             }
+        }
 
     /*
             if(!expr && !(arg->expr->_mark & TM_BROKEN)
@@ -385,6 +385,7 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
                         asn1_namespace_string(arg->ns),
                         asn1f_printable_reference(ref), ref->_lineno);
                     errno = ETOOMANYREFS;
+                    DISPOSE_OF_MY_NAMESPACE();
                     return NULL;
                 }
 
@@ -479,6 +480,11 @@ asn1f_find_terminal_thing(arg_t *arg, asn1p_expr_t *expr, enum ftt_what what) {
         ref = expr->reference;
         break;
     case FTT_VALUE:
+
+	DEBUG("%s(%s->%s) meta %d for line %d",
+		"VALUE", expr->Identifier, asn1f_printable_reference(ref),
+		expr->meta_type, expr->_lineno);
+
         assert(expr->meta_type == AMT_VALUE);
         assert(expr->value);
         /* Expression may be a terminal type itself */
@@ -574,7 +580,7 @@ asn1f_compatible_with_exports(arg_t *arg, asn1p_module_t *mod, const char *name)
 		return 0;
 	}
 
-	TQ_FOR(item, &(exports->members), next) {
+	TQ_FOR(item, &(exports->xp_members), next) {
 		if(strcmp(item->Identifier, name) == 0)
 			return 0;
 	}

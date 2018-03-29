@@ -2,7 +2,7 @@ ASN_PROGRAM = ulp-dump
 CFLAGS += -DASN_CONVERTER_TITLE="OMA UserPlane Location Protocol decoder" -DHAVE_CONFIG_H -DJUNKTEST -D_DEFAULT_SOURCE
 begin: ULP-PDU.c maybe-wip-pause all
 
--include Makefile.am.example
+-include converter-example.mk
 
 ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
 	make regen-makefile
@@ -11,7 +11,7 @@ ULP-PDU.c: ../sample.makefile.regen ../ulp.asn1
 
 regen-makefile:
 	TITLE="OMA UserPlane Location Protocol decoder" \
-	ASN_CMDOPTS="-pdu=SUPLINIT -fcompound-names -gen-PER" \
+	ASN_CMDOPTS="-pdu=SUPLINIT -fcompound-names -no-gen-OER" \
 	ASN_MODULES="../ulp.asn1" \
 	ASN_PDU=ULP-PDU \
 	ASN_PROGRAM=ulp-dump \
@@ -101,7 +101,7 @@ maybe-wip-pause:
 	@if [ -f WIP ]; then cat WIP; sleep 2; fi
 
 distclean: clean
-	rm -f $(ASN_MODULE_SOURCES)
-	rm -f $(ASN_MODULE_HEADERS)
-	rm -f $(ASN_PROGRAM_SOURCES) $(ASN_PROGRAM_HEADERS)
-	rm -f Makefile.am.example
+	rm -f $(ASN_MODULE_SRCS)
+	rm -f $(ASN_MODULE_HDRS)
+	rm -f $(ASN_PROGRAM_SRCS) $(ASN_PROGRAM_HDRS)
+	rm -f converter-example.mk

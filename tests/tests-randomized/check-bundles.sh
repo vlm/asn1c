@@ -31,6 +31,8 @@ RNDTEMP="${RNDTEMP:-.tmp.random}"
 srcdir="${srcdir:-.}"
 abs_top_srcdir="${abs_top_srcdir:-`pwd`/../../}"
 abs_top_builddir="${abs_top_builddir:-`pwd`/../../}"
+abs_builddir="${abs_builddir:-`pwd`}"
+export abs_builddir
 MAKE="${MAKE:-make}"
 FUZZ_TIME="${FUZZ_TIME:-10}"
 
@@ -58,7 +60,7 @@ make_clean_before_test() {
         # critical portion of the objects. This will reach our objective
         # of fast compile times (since most of skeletons are not recompiled),
         # but won't yield a stale T.o object where newer T.c source exists.
-        rm -f T.o || :
+        rm -f T.o libasncodec.a || :
     fi
 }
 
@@ -140,13 +142,7 @@ get_param() {
     default="$2"
     asn="$3"
 
-    if nawk '' >/dev/null 2>&1 ; then
-        AWK=nawk
-    else
-        AWK=awk
-    fi
-
-    echo "$asn" | ${AWK} "BEGIN{FS=\"[^${param}=0-9]+\"};/$param=/{for(i=1;i<=NF;i++)if(substr(\$i,0,length(\"${param}=\"))==\"${param}=\")PARAM=substr(\$i,length(\"${param}=\")+1)}END{if(PARAM)print PARAM;else print \"${default}\";}"
+    "${abs_builddir}/test-param-helper" "${param}" "${default}" "${asn}"
 }
 
 # compile_and_test "<text>" "<where found>"
@@ -258,7 +254,7 @@ asn1c_invoke() {
     } > ${tmpfile}
     echo "${abs_top_builddir}/asn1c/asn1c -S ${abs_top_srcdir}/skeletons"
     if "${abs_top_builddir}/asn1c/asn1c" -S "${abs_top_srcdir}/skeletons" \
-        -gen-OER -gen-PER ${asn1c_flags} $@ ${tmpfile}
+        ${asn1c_flags} $@ ${tmpfile}
     then
         echo "ASN.1 compiled OK"
     else
@@ -288,18 +284,18 @@ asn_compile() {
     {
     echo "CFLAGS+= -DASN1_TEXT='$short_asn'";
     echo "ASN_PROGRAM = random-test-driver"
-    echo "ASN_PROGRAM_SOURCES = random-test-driver.c"
+    echo "ASN_PROGRAM_SRCS = random-test-driver.c"
     echo
-    echo "include Makefile.am.example"
+    echo "include converter-example.mk"
     echo
-    echo "all-tests-succeeded: ${abs_top_builddir}/asn1c/asn1c \$(ASN_PROGRAM_SOURCES) \$(ASN_MODULE_SOURCES) \$(ASN_MODULE_HEADERS)"
+    echo "all-tests-succeeded: ${abs_top_builddir}/asn1c/asn1c \$(ASN_PROGRAM_SRCS) \$(ASN_MODULE_SRCS) \$(ASN_MODULE_HDRS)"
     echo "	@rm -f \$@"
     echo "	@echo Previous try did not go correctly. To reproduce:"
     echo "	@cat .test-reproduce"
     echo "	@exit 1"
     echo
     } > Makefile
-    echo "Makefile.am.example -> Makefile"
+    echo "converter-example.mk -> Makefile"
 }
 
 # Make up to four different passes:

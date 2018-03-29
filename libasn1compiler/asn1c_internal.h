@@ -10,6 +10,7 @@
 #include <string.h>		/* for strlen(3) and memset(3) */
 #include <ctype.h>		/* for isalnum(3) */
 #include <sys/types.h>		/* for fstat(2) */
+#include <limits.h>		/* for PATH_MAX */
 #include <stdarg.h>
 #include <errno.h>
 #include <assert.h>
@@ -20,6 +21,10 @@
 
 #ifdef	HAVE_UNISTD_H
 #include <unistd.h>		/* for unlink(2) */
+#endif
+
+#ifndef PATH_MAX
+#define PATH_MAX    1024
 #endif
 
 #ifdef	_WIN32

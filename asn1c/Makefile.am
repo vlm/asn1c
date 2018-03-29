@@ -17,6 +17,9 @@ asn1c_LDADD =                                           \
     $(top_builddir)/libasn1fix/libasn1fix.la            \
     $(top_builddir)/libasn1compiler/libasn1compiler.la
 
+unber_LDADD =                                           \
+    $(top_builddir)/libasn1common/libasn1common.la
+
 bin_PROGRAMS = asn1c unber enber
 
 noinst_HEADERS = sys-common.h

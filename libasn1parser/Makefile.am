@@ -23,6 +23,12 @@ libasn1parser_la_SOURCES =              \
     asn1p_integer.c asn1p_integer.h     \
     asn1p_list.h
 
+check_PROGRAMS = check_asn1p_integer
+
+LDADD = $(top_builddir)/libasn1common/libasn1common.la libasn1parser.la
+
+TESTS = $(check_PROGRAMS)
+
 asn1parser.h: asn1p_expr_str.h
 
 asn1p_expr_str.h: expr-h.pl asn1p_expr.h
