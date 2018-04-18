@@ -11,7 +11,7 @@
  * Given the table constraint or component relation constraint
  * ({ObjectSetName}{...}) returns "ObjectSetName" as a reference.
  */
-const asn1p_ref_t *
+asn1p_ref_t *
 asn1c_get_information_object_set_reference_from_constraint(arg_t *arg,
     const asn1p_constraint_t *ct) {
 
@@ -68,14 +68,14 @@ asn1c_get_ioc_table(arg_t *arg) {
     asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *memb;
     asn1p_expr_t *objset = 0;
-    const asn1p_ref_t *objset_ref = NULL;
+    asn1p_ref_t *objset_ref = NULL;
     asn1c_ioc_table_and_objset_t safe_ioc_tao = {0, 0, 0};
     asn1c_ioc_table_and_objset_t failed_ioc_tao = { 0, 0, 1 };
 
     TQ_FOR(memb, &(expr->members), next) {
         const asn1p_constraint_t *cr_ct =
             asn1p_get_component_relation_constraint(memb->constraints);
-        const asn1p_ref_t *tmpref =
+        asn1p_ref_t *tmpref =
             asn1c_get_information_object_set_reference_from_constraint(arg,
                                                                        cr_ct);
         if(tmpref) {

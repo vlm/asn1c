@@ -38,7 +38,7 @@ asn1p_module_t *asn1f_lookup_module(arg_t *arg,
  * symbol lookup. Not a recursive function.
  */
 asn1p_expr_t *asn1f_lookup_symbol(arg_t *arg, asn1p_expr_t *rhs_pspecs,
-                                  const asn1p_ref_t *ref);
+                                  asn1p_ref_t *ref);
 
 /*
  * Recursively find the original type for the given expression.
