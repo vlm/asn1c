@@ -5,6 +5,7 @@
 #define	ASN1_REFERENCE_H
 
 struct asn1p_module_s;
+struct asn1p_expr_s;
 
 typedef struct asn1p_ref_s {
 
@@ -39,6 +40,7 @@ typedef struct asn1p_ref_s {
 	size_t comp_count;	/* Number of the components in the reference name. */
 	size_t comp_size;	/* Number of allocated structures */
 
+	struct asn1p_expr_s *ref_expr;  /* De-referenced expression */
 	struct asn1p_module_s *module;	/* Defined in module */
 	int _lineno;	/* Number of line in the file */
 } asn1p_ref_t;

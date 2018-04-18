@@ -69,7 +69,12 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 		if(expr->_mark & TM_NAMECLASH) {
 			size += strlen(expr->module->ModuleName) + 2;
 			sptr[sptr_cnt++] = expr->module->ModuleName;
+		} else if (expr->reference && expr->reference->ref_expr &&
+			(expr->reference->ref_expr->_mark & TM_NAMECLASH)) {
+			size += strlen(expr->reference->ref_expr->module->ModuleName) + 2;
+			sptr[sptr_cnt++] = expr->reference->ref_expr->module->ModuleName;
 		}
+
 		sptr[sptr_cnt++] = expr->Identifier;
 
 		size += strlen(expr->Identifier);

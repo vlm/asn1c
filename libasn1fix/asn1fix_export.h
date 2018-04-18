@@ -30,7 +30,7 @@ asn1p_expr_t *asn1f_lookup_symbol_ex(
 		asn1p_t *asn,
 		struct asn1_namespace_s *ns,
 		asn1p_expr_t *expr,
-		const asn1p_ref_t *ref);
+		asn1p_ref_t *ref);
 
 /*
  *  Exportable version of an asn1f_class_access().
