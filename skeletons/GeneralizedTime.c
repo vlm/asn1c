@@ -613,7 +613,7 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value,
 	const unsigned int buf_size =
 		4 + 2 + 2	/* yyyymmdd */
 		+ 2 + 2 + 2	/* hhmmss */
-		+ 1 + 6		/* .ffffff */
+		+ 1 + 9		/* .fffffffff */
 		+ 1 + 4		/* +hhmm */
 		+ 1		/* '\0' */
 		;
