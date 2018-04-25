@@ -666,13 +666,13 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value,
 	 * Deal with fractions.
 	 */
 	if(frac_value > 0 && frac_digits > 0) {
-		char *end = p + 1 + 6;	/* '.' + maximum 6 digits */
+		char *end = p + 1 + 9;	/* '.' + maximum 9 digits */
 		char *z = p;
 		long fbase;
 		*z++ = '.';
 
 		/* Place bounds on precision */
-		while(frac_digits-- > 6)
+		while(frac_digits-- > 9)
 			frac_value /= 10;
 
 		/* emulate fbase = pow(10, frac_digits) */
