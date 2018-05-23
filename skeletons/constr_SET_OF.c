@@ -356,7 +356,7 @@ static struct _el_buffer *
 SET_OF__encode_sorted(const asn_TYPE_member_t *elm,
                       const asn_anonymous_set_ *list,
                       enum SET_OF__encode_method method) {
-    static struct _el_buffer *encoded_els;
+    struct _el_buffer *encoded_els;
     int edx;
 
     encoded_els =
