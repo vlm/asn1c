@@ -5208,9 +5208,10 @@ _convert_bitstring2binary(char *str, int base) {
 	memlen = slen / (8 / baselen);	/* Conservative estimate */
 
 	bv_ptr = binary_vector = malloc(memlen + 1);
-	if(bv_ptr == NULL)
+	if(bv_ptr == NULL) {
 		/* ENOMEM */
 		return NULL;
+	}
 
 	cur_val = 0;
 	bits = 0;

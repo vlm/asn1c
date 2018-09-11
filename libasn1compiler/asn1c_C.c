@@ -2321,9 +2321,24 @@ emit_default_string_value(arg_t *arg, asn1p_value_t *v) {
 		uint8_t *e = v->value.string.size + b;
 		OUT("{ ");
 		for(;b < e; b++)
-			OUT("0x%02x, ", *b);
+			OUT("0x%02X, ", *b);
 		OUT("0 };\n");
 	}
+}
+
+static void
+emit_default_bitstring_value(arg_t *arg, asn1p_value_t *v) {
+
+	OUT("static const uint8_t defv[] = { ");
+	assert(v->type == ATV_BITVECTOR);
+
+	uint8_t *b = v->value.binary_vector.bits;
+	for (int i = 0; i < (v->value.binary_vector.size_in_bits + 7)/8; i++, b++) {
+		OUT("0x%02X", *b);
+		if(i < (v->value.binary_vector.size_in_bits + 7)/8 - 1)
+			OUT(", ");
+	}
+	OUT(" };\n");
 }
 
 static int
@@ -2421,9 +2436,9 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		//expr->marker.flags &= ~EM_INDIRECT;
 		return 0;
 	default:
-	  if(etype & ASN_STRING_KM_MASK) {
-		if(expr->marker.default_value == NULL
-		|| expr->marker.default_value->type != ATV_STRING)
+	  if(expr->marker.default_value) {
+	    if((expr->marker.default_value->type != ATV_STRING) &&
+		(expr->marker.default_value->type != ATV_BITVECTOR))
 			break;
 		if(!out) {
             if(C99_MODE) OUT(".default_value_cmp = ");
@@ -2441,15 +2456,23 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
         OUT("static int asn_DFL_%d_cmp(const void *sptr) {\n",
             expr->_type_unique_index);
         INDENT(+1);
-        emit_default_string_value(arg, expr->marker.default_value);
+	if(expr->marker.default_value->type == ATV_STRING)
+		emit_default_string_value(arg, expr->marker.default_value);
+	else
+		emit_default_bitstring_value(arg, expr->marker.default_value);
         OUT("const %s *st = sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
         OUT("\n");
         OUT("if(!st) {\n");
         OUT("\treturn -1; /* No value is not a default value */\n");
         OUT("}\n");
 		OUT("\n");
-        OUT("if(st->size == (sizeof(defv) - 1)\n");
-        OUT("&& memcmp(st->buf, &defv, sizeof(defv) - 1) == 0)\n");
+	if(expr->marker.default_value->type == ATV_STRING) {
+		OUT("if(st->size == (sizeof(defv) - 1)\n");
+		OUT("&& memcmp(st->buf, &defv, sizeof(defv) - 1) == 0)\n");
+	} else {
+		OUT("if(st->size == (sizeof(defv))\n");
+		OUT("&& memcmp(st->buf, &defv, sizeof(defv)) == 0)\n");
+	}
         OUT("\treturn 0;\n");
         OUT("return 1;\n");
 		INDENT(-1);
@@ -2458,7 +2481,10 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
         OUT("static int asn_DFL_%d_set(void **sptr) {\n",
             expr->_type_unique_index);
         INDENT(+1);
-		emit_default_string_value(arg, expr->marker.default_value);
+        if(expr->marker.default_value->type == ATV_STRING)
+            emit_default_string_value(arg, expr->marker.default_value);
+        else
+            emit_default_bitstring_value(arg, expr->marker.default_value);
 		OUT("%s *st = *sptr;\n", asn1c_type_name(arg, expr, TNF_CTYPE));
         OUT("uint8_t *nstr = MALLOC(sizeof(defv));\n");
 		OUT("\n");
@@ -2472,7 +2498,13 @@ try_inline_default(arg_t *arg, asn1p_expr_t *expr, int out) {
 		OUT("\tif(!st) { FREEMEM(nstr); return -1; }\n");
 		OUT("}\n");
 		OUT("st->buf = nstr;\n");
-        OUT("st->size = sizeof(defv) - 1;\n");
+      if(expr->marker.default_value->type == ATV_STRING) {
+          OUT("st->size = sizeof(defv) - 1;\n");
+      } else {
+          OUT("st->size = sizeof(defv);\n");
+          if(etype == ASN_BASIC_BIT_STRING)
+              OUT("st->bits_unused = %d;\n", (8 - expr->marker.default_value->value.binary_vector.size_in_bits % 8) % 8);
+      }
 		OUT("\n");
 		OUT("return 0;\n");
 		INDENT(-1);
