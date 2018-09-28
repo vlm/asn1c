@@ -1076,6 +1076,13 @@ AlternativeTypeLists:
 		$$ = $1;
 		asn1p_expr_add($$, $3);
 	}
+	| AlternativeTypeLists ',' TOK_VBracketLeft AlternativeTypeLists TOK_VBracketRight {
+		$$ = $1;
+		$4->meta_type = AMT_TYPE;
+		$4->expr_type = ASN_CONSTR_SEQUENCE;
+		$4->marker.flags |= EM_OPTIONAL;
+		asn1p_expr_add($$, $4);
+	}
 	;
 
 AlternativeType:
