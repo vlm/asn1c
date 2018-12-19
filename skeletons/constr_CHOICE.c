@@ -960,7 +960,7 @@ CHOICE_encode_uper(const asn_TYPE_descriptor_t *td,
 		|| present_enc > ct->upper_bound) {
 			if(ct->flags & APC_EXTENSIBLE) {
                 ASN_DEBUG(
-                    "CHOICE member %d (enc %d) is an extension (%ld..%ld)",
+                    "CHOICE member %d (enc %d) is an extension (%jd..%jd)",
                     present, present_enc, ct->lower_bound, ct->upper_bound);
                 if(per_put_few_bits(po, 1, 1))
 					ASN__ENCODE_FAILED;
@@ -971,7 +971,7 @@ CHOICE_encode_uper(const asn_TYPE_descriptor_t *td,
 		}
 	}
 	if(ct && ct->flags & APC_EXTENSIBLE) {
-        ASN_DEBUG("CHOICE member %d (enc %d) is not an extension (%ld..%ld)",
+        ASN_DEBUG("CHOICE member %d (enc %d) is not an extension (%jd..%jd)",
                   present, present_enc, ct->lower_bound, ct->upper_bound);
         if(per_put_few_bits(po, 0, 1))
 			ASN__ENCODE_FAILED;

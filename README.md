@@ -1,3 +1,18 @@
+# Remark
+
+This fork of the ASN.1 C compiler contains (C)OER support as implemented for the
+0.9.29 release and contains following fixes so it can be used on 32bit targets:
+
+- UPER fix for StationID as provided in pull request [#260](https://github.com/vlm/asn1c/pull/260)
+- UPER fix for TimestampITS; solves problem reported in issue [#303](https://github.com/vlm/asn1c/issues/303)
+
+Global description of changes in this fork:
+
+- Changed constraint upper- and lowed bound types from '_long_' to '_intmax\_t_'
+- Changed types for integer conversion from '_long_' to '_intmax\_t_' and '_unsinged long_' to '_uinmax\_t_'
+- Changed print format specifiers accordingly
+
+
 # About
 
 ASN.1 to C compiler takes the ASN.1 module files (example) and generates

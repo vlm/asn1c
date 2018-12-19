@@ -121,9 +121,9 @@ uper_put_nsnnwn(asn_per_outp_t *po, int n) {
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value, int nbits) {
-	unsigned long lhalf;    /* Lower half of the number*/
-	long half;
+int uper_get_constrained_whole_number(asn_per_data_t *pd, uintmax_t *out_value, int nbits) {
+	uintmax_t lhalf;    /* Lower half of the number*/
+	intmax_t half;
 
 	if(nbits <= 31) {
 		half = per_get_few_bits(pd, nbits);
@@ -141,14 +141,14 @@ int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_val
 	if(uper_get_constrained_whole_number(pd, &lhalf, nbits - 31))
 		return -1;
 
-	*out_value = ((unsigned long)half << (nbits - 31)) | lhalf;
+	*out_value = ((uintmax_t)half << (nbits - 31)) | lhalf;
 	return 0;
 }
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
 int
-uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v,
+uper_put_constrained_whole_number_u(asn_per_outp_t *po, uintmax_t v,
                                     int nbits) {
     if(nbits <= 31) {
         return per_put_few_bits(po, v, nbits);
@@ -216,13 +216,13 @@ uper_put_nslength(asn_per_outp_t *po, size_t length) {
 }
 
 static int
-per__long_range(long lb, long ub, unsigned long *range_r) {
-    unsigned long bounds_range;
+per__long_range(intmax_t lb, intmax_t ub, uintmax_t *range_r) {
+    uintmax_t bounds_range;
     if((ub < 0) == (lb < 0)) {
         bounds_range = ub - lb;
     } else if(lb < 0) {
         assert(ub >= 0);
-        bounds_range = 1 + ((unsigned long)ub + (unsigned long)-(lb + 1));
+        bounds_range = 1 + ((uintmax_t)ub + (uintmax_t)-(lb + 1));
     } else {
         assert(!"Unreachable");
         return -1;
@@ -232,8 +232,8 @@ per__long_range(long lb, long ub, unsigned long *range_r) {
 }
 
 int
-per_long_range_rebase(long v, long lb, long ub, unsigned long *output) {
-    unsigned long range;
+per_long_range_rebase(intmax_t v, intmax_t lb, intmax_t ub, uintmax_t *output) {
+    uintmax_t range;
 
     assert(lb <= ub);
 
@@ -253,12 +253,12 @@ per_long_range_rebase(long v, long lb, long ub, unsigned long *output) {
         *output = v-lb;
         return 0;
     } else if(v < 0) {
-        unsigned long rebased = 1 + (unsigned long)-(v+1) + (unsigned long)lb;
+        uintmax_t rebased = 1 + (uintmax_t)-(v+1) + (uintmax_t)lb;
         assert(rebased <= range);   /* By construction */
         *output = rebased;
         return 0;
     } else if(lb < 0) {
-        unsigned long rebased = 1 + (unsigned long)-(lb+1) + (unsigned long)v;
+        uintmax_t rebased = 1 + (uintmax_t)-(lb+1) + (uintmax_t)v;
         assert(rebased <= range);   /* By construction */
         *output = rebased;
         return 0;
@@ -269,8 +269,8 @@ per_long_range_rebase(long v, long lb, long ub, unsigned long *output) {
 }
 
 int
-per_long_range_unrebase(unsigned long inp, long lb, long ub, long *outp) {
-    unsigned long range;
+per_long_range_unrebase(uintmax_t inp, intmax_t lb, intmax_t ub, intmax_t *outp) {
+    uintmax_t range;
 
     if(per__long_range(lb, ub, &range) != 0) {
         return -1;
@@ -285,10 +285,10 @@ per_long_range_unrebase(unsigned long inp, long lb, long ub, long *outp) {
         return -1;
     }
 
-    if(inp <= LONG_MAX) {
-        *outp = (long)inp + lb;
+    if(inp <= LLONG_MAX) {
+        *outp = (intmax_t)inp + lb;
     } else {
-        *outp = (lb + LONG_MAX + 1) + (long)((inp - LONG_MAX) - 1);
+        *outp = (lb + LLONG_MAX + 1) + (intmax_t)((inp - LLONG_MAX) - 1);
     }
 
     return 0;
