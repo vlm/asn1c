@@ -29,8 +29,8 @@ asn_TYPE_operation_t asn_OP_ANY = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0, 0,
 #else
-	ANY_decode_uper,
-	ANY_encode_uper,
+	OCTET_STRING_extension_decode_uper, // ANY_decode_uper,
+	OCTET_STRING_extension_encode_uper, // ANY_encode_uper,
 #endif  /* ASN_DISABLE_PER_SUPPORT */
 	0,	/* Random fill is not defined for ANY type */
 	0	/* Use generic outmost tag fetcher */

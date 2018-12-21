@@ -88,6 +88,13 @@ uper_open_type_get_simple(const asn_codec_ctx_t *ctx,
 			FREEMEM(buf);
 			ASN__DECODE_STARVED;
 		}
+
+		/* why is this needed ???? */
+		if (per_get_few_bits(pd, 1) < 0) {
+			FREEMEM(buf);
+			ASN__DECODE_STARVED;
+		}
+
 		if(bufLen + chunk_bytes > bufSize) {
 			void *ptr;
 			bufSize = chunk_bytes + (bufSize << 2);
