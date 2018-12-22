@@ -1501,16 +1501,17 @@ OCTET_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 }
 
 asn_dec_rval_t
-OCTET_STRING_extension_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
+OCTET_STRING_extension_decode_uper(
+	const asn_codec_ctx_t *opt_codec_ctx,
 	const struct asn_TYPE_descriptor_s *td, 
 	const asn_per_constraints_t *constraints,
 	void **sptr, asn_per_data_t *pd) {
 
 	const asn_OCTET_STRING_specifics_t *specs = td->specifics;
-	asn_per_constraints_t *pc = constraints ? constraints
+	const asn_per_constraints_t *pc = constraints ? constraints
 				: td->encoding_constraints.per_constraints;
-	asn_per_constraint_t *cval;
-	asn_per_constraint_t *csiz;
+	const asn_per_constraint_t *cval;
+	const asn_per_constraint_t *csiz;
 	asn_dec_rval_t rval = { RC_OK, 0 };
 	BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
 	ssize_t consumed_myself = 0;
@@ -1582,12 +1583,11 @@ OCTET_STRING_extension_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	do {
 		ssize_t raw_len;
 		ssize_t len_bytes;
-		ssize_t len_bits;
 		void *p;
 		int ret;
 
 		/* Get the PER length */
-		raw_len = uper_get_length(pd, csiz->effective_bits, &repeat);
+		raw_len = uper_get_length(pd, csiz->effective_bits, csiz->lower_bound, &repeat);
 		if(raw_len < 0) RETURN(RC_WMORE);
 		raw_len += csiz->lower_bound;
 
@@ -1595,19 +1595,13 @@ OCTET_STRING_extension_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 			(long)csiz->effective_bits, (long)raw_len,
 			repeat ? "repeat" : "once", td->name);
 		len_bytes = raw_len;
-		len_bits = len_bytes * unit_bits;
 		p = REALLOC(st->buf, st->size + len_bytes + 1);
 		if(!p) RETURN(RC_FAIL);
 		st->buf = (uint8_t *)p;
 
 		ret = OCTET_STRING_per_get_characters(pd,
 			&st->buf[st->size], raw_len, 1, unit_bits,
-			cval->lower_bound, cval->upper_bound, pc);typedef asn_dec_rval_t(per_type_decoder_f)(
-    const asn_codec_ctx_t *opt_codec_ctx,
-    const struct asn_TYPE_descriptor_s *type_descriptor,
-    const asn_per_constraints_t *constraints, void **struct_ptr,
-    asn_per_data_t *per_data);
-
+			cval->lower_bound, cval->upper_bound, pc);
 
 		if(ret > 0) RETURN(RC_FAIL);
 		if(ret < 0) RETURN(RC_WMORE);
@@ -1765,11 +1759,10 @@ asn_enc_rval_t
 OCTET_STRING_extension_encode_uper(const struct asn_TYPE_descriptor_s *td,
         const asn_per_constraints_t *constraints, const void *sptr, asn_per_outp_t *po) {
 
-	const asn_OCTET_STRING_specifics_t *specs = td->specifics;
-	asn_per_constraints_t *pc = constraints ? constraints
+	const asn_per_constraints_t *pc = constraints ? constraints
 				: td->encoding_constraints.per_constraints;
-	asn_per_constraint_t *cval;
-	asn_per_constraint_t *csiz;
+	const asn_per_constraint_t *cval;
+	const asn_per_constraint_t *csiz;
 	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 	asn_enc_rval_t er = { 0, 0, 0 };
 	int inext = 0;		/* Lies not within extension root */
@@ -1840,20 +1833,20 @@ OCTET_STRING_extension_encode_uper(const struct asn_TYPE_descriptor_s *td,
 			sizeinunits, 1, unit_bits,
 			cval->lower_bound, cval->upper_bound, pc);
 		if(ret) ASN__ENCODE_FAILED;
-		_ASN_ENCODED_OK(er);
+		ASN__ENCODED_OK(er);
 	}
 
 	ASN_DEBUG("Encoding %d bytes", st->size);
 
 	if(sizeinunits == 0) {
-		if(uper_put_length(po, 0))
+		if(uper_put_nslength(po, 0))
 			ASN__ENCODE_FAILED;
-		_ASN_ENCODED_OK(er);
+		ASN__ENCODED_OK(er);
 	}
 
 	buf = st->buf;
 	while(sizeinunits) {
-		ssize_t maySave = uper_put_length(po, sizeinunits);
+		ssize_t maySave = uper_put_nslength(po, sizeinunits);
 		if(maySave < 0) ASN__ENCODE_FAILED;
 
 		ASN_DEBUG("Encoding %ld of %ld",
@@ -1870,7 +1863,7 @@ OCTET_STRING_extension_encode_uper(const struct asn_TYPE_descriptor_s *td,
 		assert(!(maySave & 0x07) || !sizeinunits);
 	}
 
-	_ASN_ENCODED_OK(er);
+	ASN__ENCODED_OK(er);
 }
 
 #endif  /* ASN_DISABLE_PER_SUPPORT */
