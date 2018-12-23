@@ -17,14 +17,14 @@ NativeInteger_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
-    long *native = (long *)*nint_ptr;
+    intmax_t *native = (intmax_t *)*nint_ptr;
     INTEGER_t tmpint;
     INTEGER_t *tmpintptr = &tmpint;
 
     memset(&tmpint, 0, sizeof(tmpint));
 
     if(!native) {
-        native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
+        native = (intmax_t *)(*nint_ptr = CALLOC(1, sizeof(*native)));
         if(!native) ASN__DECODE_FAILED;
     }
 
@@ -40,7 +40,7 @@ NativeInteger_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
     }
 
     if(specs && specs->field_unsigned) {
-        unsigned long ul;
+        uintmax_t ul;
         int ok = asn_INTEGER2ulong(&tmpint, &ul) == 0;
         ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
         if(ok) {
@@ -50,7 +50,7 @@ NativeInteger_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
             return rval;
         }
     } else {
-        long l;
+        intmax_t l;
         int ok = asn_INTEGER2long(&tmpint, &l) == 0;
         ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
         if(ok) {
@@ -75,14 +75,14 @@ NativeInteger_encode_oer(const asn_TYPE_descriptor_t *td,
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     INTEGER_t tmpint;
-    long native;
+    intmax_t native;
 
     if(!sptr) ASN__ENCODE_FAILED;
 
-    native = *(const long *)sptr;
+    native = *(const intmax_t *)sptr;
     memset(&tmpint, 0, sizeof(tmpint));
 
-    ASN_DEBUG("Encoding %s %ld as NativeInteger", td ? td->name : "", native);
+    ASN_DEBUG("Encoding %s %jd as NativeInteger", td ? td->name : "", native);
 
     if((specs && specs->field_unsigned) ? asn_ulong2INTEGER(&tmpint, native)
                                         : asn_long2INTEGER(&tmpint, native)) {

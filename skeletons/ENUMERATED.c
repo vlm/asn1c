@@ -91,10 +91,13 @@ ENUMERATED_encode_oer(const asn_TYPE_descriptor_t *td,
                       void *app_key) {
     const ENUMERATED_t *st = sptr;
 	long value;
+	intmax_t v;
 
-	if(asn_INTEGER2long(st, &value)) {
+	if(asn_INTEGER2long(st, &v)) {
         ASN__ENCODE_FAILED;
     }
+
+	value = (long)v;
 
     return NativeEnumerated_encode_oer(td, constraints, &value, cb, app_key);
 }
@@ -134,10 +137,13 @@ ENUMERATED_encode_uper(const asn_TYPE_descriptor_t *td,
                        const void *sptr, asn_per_outp_t *po) {
     const ENUMERATED_t *st = (const ENUMERATED_t *)sptr;
     long value;
+	intmax_t v;
 
-    if(asn_INTEGER2long(st, &value)) {
+    if(asn_INTEGER2long(st, &v)) {
         ASN__ENCODE_FAILED;
     }
+
+	value = (long)v;
 
     return NativeEnumerated_encode_uper(td, constraints, &value, po);
 }
@@ -170,9 +176,12 @@ ENUMERATED_encode_aper(const asn_TYPE_descriptor_t *td,
                        const void *sptr, asn_per_outp_t *po) {
 	const ENUMERATED_t *st = (const ENUMERATED_t *)sptr;
 	long value;
+	intmax_t v;
 
-	if(asn_INTEGER2long(st, &value))
+	if(asn_INTEGER2long(st, &v))
 		ASN__ENCODE_FAILED;
+
+	value = (long)v;
 
 	return NativeEnumerated_encode_aper(td, constraints, &value, po);
 }
